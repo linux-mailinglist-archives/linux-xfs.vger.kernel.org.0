@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2167-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2377-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 297C48211C5
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:08:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DC28212AC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:03:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE155B21ABC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:08:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E365282B47
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB9238B;
-	Mon,  1 Jan 2024 00:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0ED8802;
+	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuCk1eOQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJA6QKAy"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC94384
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:08:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E250DC433C7;
-	Mon,  1 Jan 2024 00:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C517EE;
+	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C07BC433C7;
+	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067721;
-	bh=hbWr5nmOcsQyTlDi48Ic5uQDAZo4kfazEIl9D1cPvaI=;
+	s=k20201202; t=1704070977;
+	bh=ryjV8Jrw4OGG3FzNh3otD97RHKFVzbHCCZkGrrqFVx8=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=LuCk1eOQMHw7p/3FWpAa/knohflwn4m+Fwo5bKBkFENucOO1LztC3hj7W+gM0WM/F
-	 Q+WAXTg524Rqdi70qnXBtGvaC3ELuoaeuU9TMnqe4rnqSracYe6TjdQvri0knaWy1a
-	 CmaYjlJy45EVj7ZEPEc/PS/LImAfWcxptUjh3QEL2Qx0MQU2Coz3WnFk5+Ma1gciCl
-	 ujd4c+R09OcP/i8zO9WJnbOPFgiKfYRxchRxR14a50uyZdT4CKj0gJ8Xyxq5VumBnT
-	 LkRH2kXVvENIe/9E7Yxuo/QyASQL2RkE/vV2Tyv5UFw4Yl9M6CXtENj4DiP0cWGuch
-	 30mPWSR3f9i/g==
-Date: Sun, 31 Dec 2023 16:08:41 +9900
-Subject: [PATCH 2/9] xfs: give rmap btree cursor error tracepoints their own
- class
+	b=aJA6QKAy3u/A5G+DAS6srTTWvlONw3wvF69oDqTM2/+fayYiSBKqL0yDszIWI4+U+
+	 4ID2Ei/TZf8Y8Uo8DrUuGHSE0AN1nSrqUPsjuZCXGkDwDopu3GV0/9YJd/phCgMZyk
+	 6QX0xMqZhcRv7DCzf2XfUzEdwnKMrpQ5Yv0OvmCMPTWpw1NZbWWf1vO0XBEc6O4YHb
+	 r/t7/mS1ORtp85bdjhk9SR7qk+igBJDKpWGxOWvr4d62MBc6/HmB7nltOkloIe0TCm
+	 ZgYrLh29zV+ehM3eunrgXCjEuRz/59zg+MTo3b/UAxgUiU5x12gSylIeS1tmTnCZqc
+	 pUR5iY/TQCIBg==
+Date: Sun, 31 Dec 2023 17:02:56 +9900
+Subject: [PATCH 6/9] xfs: remove xfs/131 now that we allow reflink on realtime
+ volumes
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405014846.1815232.15906808276779223619.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
-References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405032095.1827358.13900239085409160451.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,129 +53,81 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a new tracepoint class for btree-related errors, then convert all
-the rmap tracepoints to use it.  Also fix the one tracepoint that was
-abusing the old class by making it a separate tracepoint.
+Remove this test, since we now support reflink on the rt volume.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_rmap.c |   33 +++++++++++----------------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
+ tests/xfs/131     |   48 ------------------------------------------------
+ tests/xfs/131.out |    5 -----
+ 2 files changed, 53 deletions(-)
+ delete mode 100755 tests/xfs/131
+ delete mode 100644 tests/xfs/131.out
 
 
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index 8df591840dc..5b2cac8302a 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -110,8 +110,7 @@ xfs_rmap_update(
- 			xfs_rmap_irec_offset_pack(irec));
- 	error = xfs_btree_update(cur, &rec);
- 	if (error)
--		trace_xfs_rmap_update_error(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_update_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -154,8 +153,7 @@ xfs_rmap_insert(
- 	}
- done:
- 	if (error)
--		trace_xfs_rmap_insert_error(rcur->bc_mp,
--				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_insert_error(rcur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -193,8 +191,7 @@ xfs_rmap_delete(
- 	}
- done:
- 	if (error)
--		trace_xfs_rmap_delete_error(rcur->bc_mp,
--				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_delete_error(rcur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -815,8 +812,7 @@ xfs_rmap_unmap(
- 			unwritten, oinfo);
- out_error:
- 	if (error)
--		trace_xfs_rmap_unmap_error(mp, cur->bc_ag.pag->pag_agno,
--				error, _RET_IP_);
-+		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -1138,8 +1134,7 @@ xfs_rmap_map(
- 			unwritten, oinfo);
- out_error:
- 	if (error)
--		trace_xfs_rmap_map_error(mp, cur->bc_ag.pag->pag_agno,
--				error, _RET_IP_);
-+		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -1334,8 +1329,7 @@ xfs_rmap_convert(
- 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
- 		state &= ~RMAP_RIGHT_CONTIG;
- 
--	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
--			_RET_IP_);
-+	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
- 
- 	/* reset the cursor back to PREV */
- 	error = xfs_rmap_lookup_le(cur, bno, owner, offset, oldext, NULL, &i);
-@@ -1688,8 +1682,7 @@ xfs_rmap_convert(
- 			unwritten, oinfo);
- done:
- 	if (error)
--		trace_xfs_rmap_convert_error(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -1812,8 +1805,7 @@ xfs_rmap_convert_shared(
- 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
- 		state &= ~RMAP_RIGHT_CONTIG;
- 
--	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
--			_RET_IP_);
-+	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
- 	/*
- 	 * Switch out based on the FILLING and CONTIG state bits.
- 	 */
-@@ -2115,8 +2107,7 @@ xfs_rmap_convert_shared(
- 			unwritten, oinfo);
- done:
- 	if (error)
--		trace_xfs_rmap_convert_error(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -2315,8 +2306,7 @@ xfs_rmap_unmap_shared(
- 			unwritten, oinfo);
- out_error:
- 	if (error)
--		trace_xfs_rmap_unmap_error(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
-@@ -2476,8 +2466,7 @@ xfs_rmap_map_shared(
- 			unwritten, oinfo);
- out_error:
- 	if (error)
--		trace_xfs_rmap_map_error(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
-+		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
- 	return error;
- }
- 
+diff --git a/tests/xfs/131 b/tests/xfs/131
+deleted file mode 100755
+index 879e2dc6e8..0000000000
+--- a/tests/xfs/131
++++ /dev/null
+@@ -1,48 +0,0 @@
+-#! /bin/bash
+-# SPDX-License-Identifier: GPL-2.0
+-# Copyright (c) 2015, Oracle and/or its affiliates.  All Rights Reserved.
+-#
+-# FS QA Test No. 131
+-#
+-# Ensure that we can't reflink realtime files.
+-#
+-. ./common/preamble
+-_begin_fstest auto quick clone realtime
+-
+-# Override the default cleanup function.
+-_cleanup()
+-{
+-    cd /
+-    umount $SCRATCH_MNT > /dev/null 2>&1
+-    rm -rf $tmp.* $testdir $metadump_file
+-}
+-
+-# Import common functions.
+-. ./common/filter
+-. ./common/reflink
+-
+-# real QA test starts here
+-_supported_fs xfs
+-_require_realtime
+-_require_scratch_reflink
+-_require_cp_reflink
+-
+-echo "Format and mount scratch device"
+-_scratch_mkfs >> $seqres.full
+-_scratch_mount
+-
+-testdir=$SCRATCH_MNT/test-$seq
+-mkdir $testdir
+-
+-echo "Create the original file blocks"
+-blksz=65536
+-$XFS_IO_PROG -R -f -c "truncate $blksz" $testdir/file1
+-
+-echo "Reflink every block"
+-_cp_reflink $testdir/file1 $testdir/file2 2>&1 | _filter_scratch
+-
+-test -s $testdir/file2 && _fail "Should not be able to reflink a realtime file."
+-
+-# success, all done
+-status=0
+-exit
+diff --git a/tests/xfs/131.out b/tests/xfs/131.out
+deleted file mode 100644
+index 3c0186f0c7..0000000000
+--- a/tests/xfs/131.out
++++ /dev/null
+@@ -1,5 +0,0 @@
+-QA output created by 131
+-Format and mount scratch device
+-Create the original file blocks
+-Reflink every block
+-cp: failed to clone 'SCRATCH_MNT/test-131/file2' from 'SCRATCH_MNT/test-131/file1': Invalid argument
 
 
