@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-2186-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2190-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D60C8211D8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:13:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CDB0D8211DC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:14:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1127B1C21C86
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:13:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E665E1C21C82
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:14:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CFA38B;
-	Mon,  1 Jan 2024 00:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 386C2391;
+	Mon,  1 Jan 2024 00:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJf96t/c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoRLaENK"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C209038E
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:13:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EBEC433C8;
-	Mon,  1 Jan 2024 00:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AAA389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:14:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F9DC433C7;
+	Mon,  1 Jan 2024 00:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068019;
-	bh=w8Jcte42nf5N/qdTClHFlMoIWWqI9LWRUI9I/jzdjiA=;
+	s=k20201202; t=1704068081;
+	bh=sjktispdo33sVHopap9yaG8KN8VL46erdgSyAGYyABM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=AJf96t/ciITuDIngW+7vbB5HbkEpxqlXDnjrtSSXZ2TYdClpmpTk2gpBvIkEgZW1m
-	 AdcOPZX60nPS4N1SFeTtsoKbBxADltobIOGX3kgHTq++sS/ADadmaBdf7pbOd5tPlL
-	 rllfKdhmppY1SdPTnYdHg+KEpJLUOU2grFk9oKWEf/EXPiGpasFeHuU0kw8hQLgFW5
-	 Dij8C8FX5D0l5EtuxQ6ZrXtHu30CiBZTkoWva0thyAUIsoef62lw5Nf7Bm75QLjYhW
-	 QpJca7TbcJy/DkzSZTCm76erzvsjjhetELijMyRxCgk4seHHPdg6CV7rwxNDpFz+oZ
-	 1xbh02VMGdZCw==
-Date: Sun, 31 Dec 2023 16:13:38 +9900
-Subject: [PATCH 12/47] xfs: use realtime EFI to free extents when realtime
- rmap is enabled
+	b=UoRLaENKI5byn6gd/dptCk8yYX/QTlgKqhTQbvddq5qitQZB1WVpdC+waZiboU9DI
+	 p4Wwwj6EZwcrROWv7ToOjHu2MzUZ5ItNoU8nyEVMvFr5MRD7VDZ4Ms5Em4kGg0RXkg
+	 CCL1QiL8Zw9OTI41OFWPY8Tk9rrRu2ym5JuhhrMUAnd2sMiSz4wrClZA//VYaODY9Z
+	 i+zdMD6Yo5QomkvJx8Y7aOl6stGyMujnp+Q931ukkftDVxkpm5Zhjdrwz1WML4kUlf
+	 GSzLZJp/WIc1VatJKcUY7v6MeKZKQL5qB7oVMXJogOQPGipQBuiZrxI6mVbKpqh7XM
+	 9J84Zf3MOgNUg==
+Date: Sun, 31 Dec 2023 16:14:41 +9900
+Subject: [PATCH 16/47] xfs: allow queued realtime intents to drain before
+ scrubbing
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015473.1815505.14379564509326274179.stgit@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Message-ID: <170405015526.1815505.9934847494535195493.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,86 +53,176 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When rmap is enabled, XFS expects a certain order of operations, which
-is: 1) remove the file mapping, 2) remove the reverse mapping, and then
-3) free the blocks.  xfs_bmap_del_extent_real tries to do 1 and 3 in the
-same transaction, which means that when rtrmap is enabled, we have to
-use realtime EFIs to maintain the expected order.
+When a writer thread executes a chain of log intent items for the
+realtime volume, the ILOCKs taken during each step are for each rt
+metadata file, not the entire rt volume itself.  Although scrub takes
+all rt metadata ILOCKs, this isn't sufficient to guard against scrub
+checking the rt volume while that writer thread is in the middle of
+finishing a chain because there's no higher level locking primitive
+guarding the realtime volume.
 
+When there's a collision, cross-referencing between data structures
+(e.g. rtrmapbt and rtrefcountbt) yields false corruption events; if
+repair is running, this results in incorrect repairs, which is
+catastrophic.
+
+Fix this by adding to the mount structure the same drain that we use to
+protect scrub against concurrent AG updates, but this time for the
+realtime volume.
+
+[Contains a few cleanups from hch]
+
+Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap.c |   23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ include/xfs_mount.h  |   12 ++++++++++++
+ libxfs/defer_item.c  |   31 +++++++++++++------------------
+ libxfs/xfs_rtgroup.c |    2 ++
+ libxfs/xfs_rtgroup.h |    9 +++++++++
+ 4 files changed, 36 insertions(+), 18 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index 323f60b1128..b84d1ad57f1 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -5051,7 +5051,6 @@ xfs_bmap_del_extent_real(
+diff --git a/include/xfs_mount.h b/include/xfs_mount.h
+index 4e4da5bc4fa..07f9e33b8b2 100644
+--- a/include/xfs_mount.h
++++ b/include/xfs_mount.h
+@@ -333,6 +333,18 @@ struct xfs_defer_drain { /* empty */ };
+ static inline void xfs_perag_intent_hold(struct xfs_perag *pag) {}
+ static inline void xfs_perag_intent_rele(struct xfs_perag *pag) {}
+ 
++struct xfs_rtgroup;
++
++#define xfs_rtgroup_intent_get(mp, rgno) \
++	xfs_rtgroup_get((mp), xfs_rtb_to_rgno((mp), (rgno)))
++#define xfs_rtgroup_intent_put(rtg)		xfs_rtgroup_put(rtg)
++
++static inline void xfs_rtgroup_intent_hold(struct xfs_rtgroup *rtg) { }
++static inline void xfs_rtgroup_intent_rele(struct xfs_rtgroup *rtg) { }
++
++#define xfs_drain_free(dr)		((void)0)
++#define xfs_drain_init(dr)		((void)0)
++
+ static inline void libxfs_buftarg_drain(struct xfs_buftarg *btp)
  {
- 	xfs_fsblock_t		del_endblock=0;	/* first block past del */
- 	xfs_fileoff_t		del_endoff;	/* first offset past del */
--	int			do_fx;	/* free extent at end of routine */
- 	int			error;	/* error return value */
- 	struct xfs_bmbt_irec	got;	/* current extent entry */
- 	xfs_fileoff_t		got_endoff;	/* first offset past got */
-@@ -5064,6 +5063,8 @@ xfs_bmap_del_extent_real(
- 	uint			qfield;	/* quota field to update */
- 	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
- 	struct xfs_bmbt_irec	old;
-+	bool			isrt = xfs_ifork_is_realtime(ip, whichfork);
-+	bool			want_free = !(bflags & XFS_BMAPI_REMAP);
+ 	cache_purge(btp->bcache);
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index a82d23c17cf..e7270d02c4b 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -88,11 +88,8 @@ xfs_extent_free_defer_add(
+ 	struct xfs_mount		*mp = tp->t_mountp;
  
- 	*logflagsp = 0;
- 
-@@ -5095,18 +5096,24 @@ xfs_bmap_del_extent_real(
- 		return -ENOSPC;
- 
- 	*logflagsp = XFS_ILOG_CORE;
--	if (xfs_ifork_is_realtime(ip, whichfork)) {
--		if (!(bflags & XFS_BMAPI_REMAP)) {
-+	if (isrt) {
-+		/*
-+		 * Historically, we did not use EFIs to free realtime extents.
-+		 * However, when reverse mapping is enabled, we must maintain
-+		 * the same order of operations as the data device, which is:
-+		 * Remove the file mapping, remove the reverse mapping, and
-+		 * then free the blocks.  This means that we must delay the
-+		 * freeing until after we've scheduled the rmap update.
-+		 */
-+		if (want_free && !xfs_has_rtrmapbt(mp)) {
- 			error = xfs_rtfree_blocks(tp, del->br_startblock,
- 					del->br_blockcount);
- 			if (error)
- 				return error;
-+			want_free = false;
- 		}
+ 	if (xfs_efi_is_realtime(xefi)) {
+-		xfs_rgnumber_t		rgno;
 -
--		do_fx = 0;
- 		qfield = XFS_TRANS_DQ_RTBCOUNT;
- 	} else {
--		do_fx = 1;
- 		qfield = XFS_TRANS_DQ_BCOUNT;
- 	}
- 	nblks = del->br_blockcount;
-@@ -5256,7 +5263,7 @@ xfs_bmap_del_extent_real(
- 	/*
- 	 * If we need to, add to list of extents to delete.
- 	 */
--	if (do_fx && !(bflags & XFS_BMAPI_REMAP)) {
-+	if (want_free) {
- 		if (xfs_is_reflink_inode(ip) && whichfork == XFS_DATA_FORK) {
- 			xfs_refcount_decrease_extent(tp, del);
- 		} else {
-@@ -5265,6 +5272,8 @@ xfs_bmap_del_extent_real(
- 			if ((bflags & XFS_BMAPI_NODISCARD) ||
- 			    del->br_state == XFS_EXT_UNWRITTEN)
- 				efi_flags |= XFS_FREE_EXTENT_SKIP_DISCARD;
-+			if (isrt)
-+				efi_flags |= XFS_FREE_EXTENT_REALTIME;
+-		rgno = xfs_rtb_to_rgno(mp, xefi->xefi_startblock);
+-		xefi->xefi_rtg = xfs_rtgroup_get(mp, rgno);
+-
++		xefi->xefi_rtg = xfs_rtgroup_intent_get(mp,
++						xefi->xefi_startblock);
+ 		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
+ 				&xfs_rtextent_free_defer_type);
+ 		return;
+@@ -204,7 +201,7 @@ xfs_rtextent_free_cancel_item(
+ {
+ 	struct xfs_extent_free_item	*xefi = xefi_entry(item);
  
- 			error = xfs_free_extent_later(tp, del->br_startblock,
- 					del->br_blockcount, NULL,
+-	xfs_rtgroup_put(xefi->xefi_rtg);
++	xfs_rtgroup_intent_put(xefi->xefi_rtg);
+ 	kmem_cache_free(xfs_extfree_item_cache, xefi);
+ }
+ 
+@@ -338,13 +335,12 @@ xfs_rmap_defer_add(
+ 	 * section updates.
+ 	 */
+ 	if (ri->ri_realtime) {
+-		xfs_rgnumber_t	rgno;
+-
+-		rgno = xfs_rtb_to_rgno(mp, ri->ri_bmap.br_startblock);
+-		ri->ri_rtg = xfs_rtgroup_get(mp, rgno);
++		ri->ri_rtg = xfs_rtgroup_intent_get(mp,
++						ri->ri_bmap.br_startblock);
+ 		xfs_defer_add(tp, &ri->ri_list, &xfs_rtrmap_update_defer_type);
+ 	} else {
+-		ri->ri_pag = xfs_perag_intent_get(mp, ri->ri_bmap.br_startblock);
++		ri->ri_pag = xfs_perag_intent_get(mp,
++						ri->ri_bmap.br_startblock);
+ 		xfs_defer_add(tp, &ri->ri_list, &xfs_rmap_update_defer_type);
+ 	}
+ }
+@@ -445,7 +441,7 @@ xfs_rtrmap_update_cancel_item(
+ {
+ 	struct xfs_rmap_intent		*ri = ri_entry(item);
+ 
+-	xfs_rtgroup_put(ri->ri_rtg);
++	xfs_rtgroup_intent_put(ri->ri_rtg);
+ 	kmem_cache_free(xfs_rmap_intent_cache, ri);
+ }
+ 
+@@ -656,10 +652,8 @@ xfs_bmap_update_get_group(
+ {
+ 	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
+ 		if (xfs_has_rtgroups(mp)) {
+-			xfs_rgnumber_t	rgno;
+-
+-			rgno = xfs_rtb_to_rgno(mp, bi->bi_bmap.br_startblock);
+-			bi->bi_rtg = xfs_rtgroup_get(mp, rgno);
++			bi->bi_rtg = xfs_rtgroup_intent_get(mp,
++						bi->bi_bmap.br_startblock);
+ 		} else {
+ 			bi->bi_rtg = NULL;
+ 		}
+@@ -695,8 +689,9 @@ xfs_bmap_update_put_group(
+ 	struct xfs_bmap_intent	*bi)
+ {
+ 	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
+-		if (xfs_has_rtgroups(bi->bi_owner->i_mount))
+-			xfs_rtgroup_put(bi->bi_rtg);
++		if (xfs_has_rtgroups(bi->bi_owner->i_mount)) {
++			xfs_rtgroup_intent_put(bi->bi_rtg);
++		}
+ 		return;
+ 	}
+ 
+diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
+index 449cd57cf9e..1acf98f8c7e 100644
+--- a/libxfs/xfs_rtgroup.c
++++ b/libxfs/xfs_rtgroup.c
+@@ -159,6 +159,7 @@ xfs_initialize_rtgroups(
+ 		/* Place kernel structure only init below this point. */
+ 		spin_lock_init(&rtg->rtg_state_lock);
+ 		init_waitqueue_head(&rtg->rtg_active_wq);
++		xfs_defer_drain_init(&rtg->rtg_intents_drain);
+ #endif /* __KERNEL__ */
+ 
+ 		/* Active ref owned by mount indicates rtgroup is online. */
+@@ -213,6 +214,7 @@ xfs_free_rtgroups(
+ 		spin_unlock(&mp->m_rtgroup_lock);
+ 		ASSERT(rtg);
+ 		XFS_IS_CORRUPT(mp, atomic_read(&rtg->rtg_ref) != 0);
++		xfs_defer_drain_free(&rtg->rtg_intents_drain);
+ 
+ 		/* drop the mount's active reference */
+ 		xfs_rtgroup_rele(rtg);
+diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
+index 559a5135820..9487c2e0047 100644
+--- a/libxfs/xfs_rtgroup.h
++++ b/libxfs/xfs_rtgroup.h
+@@ -39,6 +39,15 @@ struct xfs_rtgroup {
+ #ifdef __KERNEL__
+ 	/* -- kernel only structures below this line -- */
+ 	spinlock_t		rtg_state_lock;
++
++	/*
++	 * We use xfs_drain to track the number of deferred log intent items
++	 * that have been queued (but not yet processed) so that waiters (e.g.
++	 * scrub) will not lock resources when other threads are in the middle
++	 * of processing a chain of intent items only to find momentary
++	 * inconsistencies.
++	 */
++	struct xfs_defer_drain	rtg_intents_drain;
+ #endif /* __KERNEL__ */
+ };
+ 
 
 
