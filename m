@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2328-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2277-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4B30821276
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:50:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ECB5821236
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:36:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DADAD1C21CA8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:50:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D3431C21C6B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:36:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C976E803;
-	Mon,  1 Jan 2024 00:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87D81375;
+	Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJnUg8Ip"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGDq8Ogn"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35E7EF;
-	Mon,  1 Jan 2024 00:50:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBD6C433C8;
-	Mon,  1 Jan 2024 00:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF81370
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7618AC433C7;
+	Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070210;
-	bh=o7wUg8ZbmhmP2nqpNrlTslzHWcBmT/O/xkTDfERLaLc=;
+	s=k20201202; t=1704069411;
+	bh=S4cuJxAwHa7rTzDnthDRlgpqqTRHTgY3UZhVmRW3Wbo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=hJnUg8IphpJnvtMbIiKfWRkNkZPlXzsDR+AmV6O/C1kts30+PoyRW8m6alFpcGyKt
-	 c+k/b8lc56CYph85pcVlgakr7kRM9nJTDdKnL/FDHkibdXp5xgbvsRl7bO/PfIfVof
-	 uIcsenTTOKfYadx3O0S+Cbura8+mZe8QVa7lRBM1KWY7qTHAXUZy+pIS635D7V41Da
-	 lv/NodNK+1OO8iToiWTuag9a7vEhYGx/YImjK7i27Ardc6u7Yi/WwT8Vh3Pqi6fiVk
-	 dl7WGRcB1/5P3knz5ILcuKIClYYGHFdeG3C9BfpLDS1JmbUaQO+QhNMYV77DX6H3LK
-	 nwpxNGBUpSs9A==
-Date: Sun, 31 Dec 2023 16:50:09 +9900
-Subject: [PATCH 01/11] xfs/122: fix metadirino
+	b=dGDq8OgnSM6hedgDMG2a3TAEP78EXbPVPv9sHvnJanAFxRVB1NV6olHCZ0RxZnaEJ
+	 fM+TLxO9vM5K94kPgjXAMcQkbbswyV90fJQs/zDVGp4I3woJvGEmUvoRP5GaBN26y1
+	 OGIWvyuT5Z8bUkWOybts4uge10U+aHdFzb7I+xuLKNiaBv73Ha3rQyY8D8IVCl7D75
+	 KgKZ37/DTXJR442Z7/E9LDqCs9KdEQTGnr0ewJbnONns/ZYioJAf8aHYwc10DJwHKW
+	 rMQ304Xalb+J7LdI3JJIFt8MO8Dn4MisQ8cIV0CvvEFjb/zrOPdevglrH8aD9+0ZXm
+	 wnH+pw8uGGAsg==
+Date: Sun, 31 Dec 2023 16:36:50 +9900
+Subject: [PATCH 41/42] mkfs: validate CoW extent size hint when rtinherit is
+ set
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405029862.1826032.9120032235595084513.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
-References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405017674.1817107.2226698699690206203.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,25 +53,54 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix xfs/122 to work properly with metadirino.
+Extent size hints exist to nudge the behavior of the file data block
+allocator towards trying to make aligned allocations.  Therefore, it
+doesn't make sense to allow a hint that isn't a multiple of the
+fundamental allocation unit for a given file.
+
+This means that if the sysadmin is formatting with rtinherit set on the
+root dir, validate_cowextsize_hint needs to check the hint value on a
+simulated realtime file to make sure that it's correct.  This hasn't
+been necessary in the past since one cannot have a CoW hint without a
+reflink filesystem, and we previously didn't allow rt reflink
+filesystems.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    1 +
- 1 file changed, 1 insertion(+)
+ mkfs/xfs_mkfs.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 5d14386518..430b805792 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -35,6 +35,7 @@ offsetof(xfs_sb_t, sb_logsunit) = 196
- offsetof(xfs_sb_t, sb_lsn) = 240
- offsetof(xfs_sb_t, sb_magicnum) = 0
- offsetof(xfs_sb_t, sb_meta_uuid) = 248
-+offsetof(xfs_sb_t, sb_metadirino) = 264
- offsetof(xfs_sb_t, sb_pquotino) = 232
- offsetof(xfs_sb_t, sb_qflags) = 176
- offsetof(xfs_sb_t, sb_rblocks) = 16
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 162546cd1e8..bcdfbf6fbf6 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2751,6 +2751,26 @@ _("illegal CoW extent size hint %lld, must be less than %u.\n"),
+ 				min(XFS_MAX_BMBT_EXTLEN, mp->m_sb.sb_agblocks / 2));
+ 		usage();
+ 	}
++
++	/*
++	 * If the value is to be passed on to realtime files, revalidate with
++	 * a realtime file so that we know the hint and flag that get passed on
++	 * to realtime files will be correct.
++	 */
++	if (!(cli->fsx.fsx_xflags & FS_XFLAG_RTINHERIT))
++		return;
++
++	fa = libxfs_inode_validate_cowextsize(mp, cli->fsx.fsx_cowextsize,
++			S_IFREG, XFS_DIFLAG_REALTIME, flags2);
++
++	if (fa) {
++		fprintf(stderr,
++_("illegal CoW extent size hint %lld, must be less than %u and a multiple of %u. %p\n"),
++				(long long)cli->fsx.fsx_cowextsize,
++				min(XFS_MAX_BMBT_EXTLEN, mp->m_sb.sb_agblocks / 2),
++				mp->m_sb.sb_rextsize, fa);
++		usage();
++	}
+ }
+ 
+ /* Complain if this filesystem is not a supported configuration. */
 
 
