@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2257-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2352-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 211C4821222
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:31:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE1A8821291
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:56:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83D97B21947
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:31:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72D961F225DD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D076C1375;
-	Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78BF54A08;
+	Mon,  1 Jan 2024 00:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9CG/cfU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iT4Hh7Z7"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B36C1368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCF0C433C7;
-	Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C564A02;
+	Mon,  1 Jan 2024 00:56:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08468C433C8;
+	Mon,  1 Jan 2024 00:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069098;
-	bh=oaM0J71CzUbPhWLaP5ZCyoW0r00q3RauGAU/FRL5TwM=;
+	s=k20201202; t=1704070586;
+	bh=AEilMhwmNuVwAphEtZ+8Nm71OoXMByvNCvGyNzKbFFs=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=U9CG/cfUH/S4ycK7nxC7b3viI2sNX4N8bSQX/rqTTnxLsvSKvbqudKPrIDLvz5tAp
-	 oydU9JJEbhGpUI2PHAXwdoa4yuZs8VL1rjsm51/fjN3C9zp9bol0JtPluJQsjI1uqC
-	 G0X57Hsh/Aw7PkoqlmqzYEhjbI3avGnkr9nqU6OGC06fBBxCqhGHC5TdLWgFdpC7wU
-	 LcfYLPXLRnb5r7vYSFOut4aljQiPixMR1UQuAHOrF7Sh3HnDeLozMYnMHR6OtnGd75
-	 H884CruvRr60L3q+enMTXcAgfeUBURSF4QMOnyyvlSjp7NWWU2+Y7E5o0qDkcFV6m6
-	 q2Oiqhrd3tpHQ==
-Date: Sun, 31 Dec 2023 16:31:37 +9900
-Subject: [PATCH 21/42] xfs: scrub the realtime refcount btree
+	b=iT4Hh7Z7UZZTxUxlWHsC1Mo0BUz5WA/b7GijUue0W+KYyutqUrbx+9gap2/7B42re
+	 eP9FlTRr/OZ5FbL88bU1+GQWqMbNq5VMLxzyFYZAKNCVgU9bseEz2/14794JevNRiy
+	 jUMjFitoug1jfqE8HXTBjpQhdczkLdj7YcsTviX/uLisP7eThaQ8B1cy+6/U70um3+
+	 mZPDbnagA5KU5XExbsOapOhRMU9QKcClUqjCffv5bfLkIjLtHpoQ9pqdIGQiMcZe3Q
+	 zvk7IVOGc6kVYBXQnwKhO5J4holfvEEAvYCG1kN4C1kTw7H/ae15HNFtpvkd2M/JrN
+	 55Mp++Ko1uWPA==
+Date: Sun, 31 Dec 2023 16:56:25 +9900
+Subject: [PATCH 14/17] xfs/122: udpate test to pick up rtword/suminfo ondisk
+ unions
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017406.1817107.8670798702206742630.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030521.1826350.7421441043948772796.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,51 +53,41 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add code to scrub realtime refcount btrees.
+Update this test to check that the ondisk unions for rt bitmap word and
+rt summary counts are always the correct size.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_fs.h                     |    3 ++-
- man/man2/ioctl_xfs_scrub_metadata.2 |    9 +++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ tests/xfs/122     |    2 +-
+ tests/xfs/122.out |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 0bbdbfb0a8a..7847da61db2 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -738,9 +738,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_RGSUPER	30	/* realtime superblock */
- #define XFS_SCRUB_TYPE_RGBITMAP	31	/* realtime group bitmap */
- #define XFS_SCRUB_TYPE_RTRMAPBT	32	/* rtgroup reverse mapping btree */
-+#define XFS_SCRUB_TYPE_RTREFCBT	33	/* realtime reference count btree */
- 
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	33
-+#define XFS_SCRUB_TYPE_NR	34
- 
- /*
-  * This special type code only applies to the vectored scrub implementation.
-diff --git a/man/man2/ioctl_xfs_scrub_metadata.2 b/man/man2/ioctl_xfs_scrub_metadata.2
-index 79875968d1c..e8717b41ccd 100644
---- a/man/man2/ioctl_xfs_scrub_metadata.2
-+++ b/man/man2/ioctl_xfs_scrub_metadata.2
-@@ -100,11 +100,12 @@ must be zero.
- .PP
- .nf
- .B XFS_SCRUB_TYPE_RGBITMAP
--.fi
--.TP
- .B XFS_SCRUB_TYPE_RTRMAPBT
--Examine a given realtime allocation group's free space bitmap or reverse
--mapping btree, respectively.
-+.fi
-+.TP
-+.B XFS_SCRUB_TYPE_RTREFCBT
-+Examine a given realtime allocation group's free space bitmap, reverse
-+mapping btree, or reference count btree, respectively.
- Records are checked for obviously incorrect values and cross-referenced
- with other allocation group metadata records to ensure that there are no
- conflicts.
+diff --git a/tests/xfs/122 b/tests/xfs/122
+index ba927c77c4..4e5ba1dfee 100755
+--- a/tests/xfs/122
++++ b/tests/xfs/122
+@@ -195,7 +195,7 @@ echo 'int main(int argc, char *argv[]) {' >>$cprog
+ #
+ cat /usr/include/xfs/xfs*.h | indent |\
+ _attribute_filter |\
+-grep -E '(} *xfs_.*_t|^struct xfs_[a-z0-9_]*$)' |\
++grep -E '(} *xfs_.*_t|^(union|struct) xfs_[a-z0-9_]*$)' |\
+ grep -E -v -f $tmp.ignore |\
+ sed -e 's/^.*}[[:space:]]*//g' -e 's/;.*$//g' -e 's/_t, /_t\n/g' |\
+ sort | uniq |\
+diff --git a/tests/xfs/122.out b/tests/xfs/122.out
+index 8bb79ba959..6b03b90c2d 100644
+--- a/tests/xfs/122.out
++++ b/tests/xfs/122.out
+@@ -134,6 +134,8 @@ sizeof(struct xfs_swap_extent) = 64
+ sizeof(struct xfs_sxd_log_format) = 16
+ sizeof(struct xfs_sxi_log_format) = 80
+ sizeof(struct xfs_unmount_log_format) = 8
++sizeof(union xfs_rtword_raw) = 4
++sizeof(union xfs_suminfo_raw) = 4
+ sizeof(xfs_agf_t) = 224
+ sizeof(xfs_agfl_t) = 36
+ sizeof(xfs_agi_t) = 344
 
 
