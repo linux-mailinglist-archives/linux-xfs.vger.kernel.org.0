@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2288-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2297-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFD3A821241
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:39:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 484D382124A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:42:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A57D1F225F3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:39:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FFCB1C21CB4
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCDC7EF;
-	Mon,  1 Jan 2024 00:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B0C7FD;
+	Mon,  1 Jan 2024 00:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OynA42NP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec0f4u/n"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1CC7ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:39:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98642C433C7;
-	Mon,  1 Jan 2024 00:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E377EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:42:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983E0C433C8;
+	Mon,  1 Jan 2024 00:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069583;
-	bh=EU3eSBxdmThdxlxW40GvIEIECQBHRey50jrjagnhtS8=;
+	s=k20201202; t=1704069724;
+	bh=Q29ko0xklu7WgMsKn2ToxV7cTkrhXGB2diVpJ58EJFY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=OynA42NPW+rr2XClxZ2SJbHxYJUs9Rg6i7rCsE8CBHI5FVV8Ep93wlpc1zGBFNIaT
-	 NQlnh2R/UyT7OwoEEO4RYYTYzOhKEWiJuOb+ITYUBhGIU46XlCvprh74snDbw5DW9x
-	 ofSOnfvd3nVKs/YyXqk7skS2QPf31cKmulUvCdxi5PegQ2FxNXtdbxMgr3AiQVRubp
-	 pOgmkXpl1v9y9qVDFSpIgKvwKXmNfaV5p0yhJ+C466aLjmhO/ruFzcm9H9bHTLtW7u
-	 XyytWaH76CaZfTjg5/AsMUO03Y7R1uqRyYVyQrcwj5XKdQwldRxfhvbxOqzCuUV22O
-	 1y4egTZCjgBbw==
-Date: Sun, 31 Dec 2023 16:39:43 +9900
-Subject: [PATCH 1/2] xfs: export reference count information to userspace
+	b=Ec0f4u/nr3+zq7QbegeaSMIwELCd3cscWnZ4vkUzgwhU1WxsIsABPaVTqUQNA6Okk
+	 f4oKd7zjjm9unGtyYE4WOsy3n5U373CH3efKB07FyRfYgoSPExLzJRWCxZmRPWUYZv
+	 62DX+psWKxG+fjq31LKgvuUwA5LeJ/0dMSl3KLdvl5GoWKLP7UgBSb8R+oZqms93I/
+	 VDA920hGp+rrSiccAZbdQV+kCWwQn9iRgn0NDEXtEmbKm9vFUdT3Xx/2r7udstbYyS
+	 qYdFIVKQHfEqRosRhoVIpnEO88ldtUqOyWVWGZ5Z4Cz/0z7YP2xTcN7AWOO4d0rlUy
+	 TFoLuWhssAOpg==
+Date: Sun, 31 Dec 2023 16:42:04 +9900
+Subject: [PATCH 08/10] xfs_spaceman: port relocation structure to 32-bit
+ systems
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405019974.1820694.12989281155330489787.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405019960.1820694.6724336371015732540.stgit@frogsfrogsfrogs>
-References: <170405019960.1820694.6724336371015732540.stgit@frogsfrogsfrogs>
+Message-ID: <170405020431.1820796.10977053037186099530.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
+References: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,352 +53,312 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Export refcount info to userspace so we can prototype a sharing-aware
-defrag/fs rearranging tool.
+We can't use the radix tree to store relocation information on 32-bit
+systems because unsigned longs are not large enough to hold 64-bit
+inodes.  Use an avl64 tree instead.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_fs_staging.h             |   82 ++++++++++++
- man/man2/ioctl_xfs_getfsrefcounts.2 |  239 +++++++++++++++++++++++++++++++++++
- 2 files changed, 321 insertions(+)
- create mode 100644 man/man2/ioctl_xfs_getfsrefcounts.2
+ configure.ac          |    1 
+ include/builddefs.in  |    1 
+ m4/package_libcdev.m4 |   20 +++++
+ spaceman/Makefile     |    4 +
+ spaceman/relocation.c |  203 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 229 insertions(+)
 
 
-diff --git a/libxfs/xfs_fs_staging.h b/libxfs/xfs_fs_staging.h
-index 9f0c03103f0..f7d872f8a88 100644
---- a/libxfs/xfs_fs_staging.h
-+++ b/libxfs/xfs_fs_staging.h
-@@ -221,4 +221,86 @@ struct xfs_rtgroup_geometry {
+diff --git a/configure.ac b/configure.ac
+index 3b36d769eac..db6366dcdab 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -258,6 +258,7 @@ AC_HAVE_MEMFD_CLOEXEC
+ AC_HAVE_MEMFD_NOEXEC_SEAL
+ AC_HAVE_O_TMPFILE
+ AC_HAVE_MKOSTEMP_CLOEXEC
++AC_USE_RADIX_TREE_FOR_INUMS
  
- #define XFS_IOC_RTGROUP_GEOMETRY _IOWR('X', 63, struct xfs_rtgroup_geometry)
+ AC_CONFIG_FILES([include/builddefs])
+ AC_OUTPUT
+diff --git a/include/builddefs.in b/include/builddefs.in
+index 6668e9bbe8b..30c8f301bca 100644
+--- a/include/builddefs.in
++++ b/include/builddefs.in
+@@ -138,6 +138,7 @@ HAVE_MEMFD_CLOEXEC = @have_memfd_cloexec@
+ HAVE_MEMFD_NOEXEC_SEAL = @have_memfd_noexec_seal@
+ HAVE_O_TMPFILE = @have_o_tmpfile@
+ HAVE_MKOSTEMP_CLOEXEC = @have_mkostemp_cloexec@
++USE_RADIX_TREE_FOR_INUMS = @use_radix_tree_for_inums@
  
-+/*
-+ *	Structure for XFS_IOC_GETFSREFCOUNTS.
-+ *
-+ *	The memory layout for this call are the scalar values defined in struct
-+ *	xfs_getfsrefs_head, followed by two struct xfs_getfsrefs that describe
-+ *	the lower and upper bound of mappings to return, followed by an array
-+ *	of struct xfs_getfsrefs mappings.
-+ *
-+ *	fch_iflags control the output of the call, whereas fch_oflags report
-+ *	on the overall record output.  fch_count should be set to the length
-+ *	of the fch_recs array, and fch_entries will be set to the number of
-+ *	entries filled out during each call.  If fch_count is zero, the number
-+ *	of refcount mappings will be returned in fch_entries, though no
-+ *	mappings will be returned.  fch_reserved must be set to zero.
-+ *
-+ *	The two elements in the fch_keys array are used to constrain the
-+ *	output.  The first element in the array should represent the lowest
-+ *	disk mapping ("low key") that the user wants to learn about.  If this
-+ *	value is all zeroes, the filesystem will return the first entry it
-+ *	knows about.  For a subsequent call, the contents of
-+ *	fsrefs_head.fch_recs[fsrefs_head.fch_count - 1] should be copied into
-+ *	fch_keys[0] to have the kernel start where it left off.
-+ *
-+ *	The second element in the fch_keys array should represent the highest
-+ *	disk mapping ("high key") that the user wants to learn about.  If this
-+ *	value is all ones, the filesystem will not stop until it runs out of
-+ *	mapping to return or runs out of space in fch_recs.
-+ *
-+ *	fcr_device can be either a 32-bit cookie representing a device, or a
-+ *	32-bit dev_t if the FCH_OF_DEV_T flag is set.  fcr_physical and
-+ *	fcr_length are expressed in units of bytes.  fcr_owners is the number
-+ *	of owners.
-+ */
-+struct xfs_getfsrefs {
-+	__u32		fcr_device;	/* device id */
-+	__u32		fcr_flags;	/* mapping flags */
-+	__u64		fcr_physical;	/* device offset of segment */
-+	__u64		fcr_owners;	/* number of owners */
-+	__u64		fcr_length;	/* length of segment */
-+	__u64		fcr_reserved[4];	/* must be zero */
+ GCCFLAGS = -funsigned-char -fno-strict-aliasing -Wall
+ #	   -Wbitwise -Wno-transparent-union -Wno-old-initializer -Wno-decl
+diff --git a/m4/package_libcdev.m4 b/m4/package_libcdev.m4
+index 2228697a7a3..003379ec2b8 100644
+--- a/m4/package_libcdev.m4
++++ b/m4/package_libcdev.m4
+@@ -612,3 +612,23 @@ AC_DEFUN([AC_HAVE_MKOSTEMP_CLOEXEC],
+        AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+     AC_SUBST(have_mkostemp_cloexec)
+   ])
++
++#
++# Check if the radix tree index (unsigned long) is large enough to hold a
++# 64-bit inode number
++#
++AC_DEFUN([AC_USE_RADIX_TREE_FOR_INUMS],
++  [ AC_MSG_CHECKING([if radix tree can store XFS inums])
++    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
++#include <sys/param.h>
++#include <stdint.h>
++#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
++    ]], [[
++         typedef uint64_t    xfs_ino_t;
++
++         BUILD_BUG_ON(sizeof(unsigned long) < sizeof(xfs_ino_t));
++         return 0;
++    ]])],[use_radix_tree_for_inums=yes
++       AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
++    AC_SUBST(use_radix_tree_for_inums)
++  ])
+diff --git a/spaceman/Makefile b/spaceman/Makefile
+index 16a13e4bc19..9c866339ac5 100644
+--- a/spaceman/Makefile
++++ b/spaceman/Makefile
+@@ -22,6 +22,10 @@ ifeq ($(HAVE_GETFSMAP),yes)
+ CFILES += freesp.c clearfree.c
+ endif
+ 
++ifeq ($(USE_RADIX_TREE_FOR_INUMS),yes)
++LCFLAGS += -DUSE_RADIX_TREE_FOR_INUMS
++endif
++
+ default: depend $(LTCOMMAND)
+ 
+ include $(BUILDRULES)
+diff --git a/spaceman/relocation.c b/spaceman/relocation.c
+index 7c7d9a2b4b2..1c0db6a1dab 100644
+--- a/spaceman/relocation.c
++++ b/spaceman/relocation.c
+@@ -6,7 +6,11 @@
+ 
+ #include "libxfs.h"
+ #include "libfrog/fsgeom.h"
++#ifdef USE_RADIX_TREE_FOR_INUMS
+ #include "libfrog/radix-tree.h"
++#else
++#include "libfrog/avl64.h"
++#endif /* USE_RADIX_TREE_FOR_INUMS */
+ #include "libfrog/paths.h"
+ #include "command.h"
+ #include "init.h"
+@@ -24,6 +28,7 @@ get_reloc_count(void)
+ 	return inode_count;
+ }
+ 
++#ifdef USE_RADIX_TREE_FOR_INUMS
+ static RADIX_TREE(relocation_data, 0);
+ 
+ bool
+@@ -112,3 +117,201 @@ forget_reloc_ino(
+ {
+ 	radix_tree_delete(&relocation_data, ino);
+ }
++#else
++struct reloc_node {
++	struct avl64node	node;
++	uint64_t		ino;
++	struct inode_path	*ipath;
++	unsigned int		flags;
 +};
 +
-+struct xfs_getfsrefs_head {
-+	__u32		fch_iflags;	/* control flags */
-+	__u32		fch_oflags;	/* output flags */
-+	__u32		fch_count;	/* # of entries in array incl. input */
-+	__u32		fch_entries;	/* # of entries filled in (output). */
-+	__u64		fch_reserved[6];	/* must be zero */
-+
-+	struct xfs_getfsrefs	fch_keys[2];	/* low and high keys for the mapping search */
-+	struct xfs_getfsrefs	fch_recs[];	/* returned records */
-+};
-+
-+/* Size of an fsrefs_head with room for nr records. */
-+static inline unsigned long long
-+xfs_getfsrefs_sizeof(
-+	unsigned int	nr)
++static uint64_t
++reloc_start(
++	struct avl64node	*node)
 +{
-+	return sizeof(struct xfs_getfsrefs_head) + nr * sizeof(struct xfs_getfsrefs);
++	struct reloc_node	*rln;
++
++	rln = container_of(node, struct reloc_node, node);
++	return rln->ino;
 +}
 +
-+/* Start the next fsrefs query at the end of the current query results. */
-+static inline void
-+xfs_getfsrefs_advance(
-+	struct xfs_getfsrefs_head	*head)
++static uint64_t
++reloc_end(
++	struct avl64node	*node)
 +{
-+	head->fch_keys[0] = head->fch_recs[head->fch_entries - 1];
++	struct reloc_node	*rln;
++
++	rln = container_of(node, struct reloc_node, node);
++	return rln->ino + 1;
 +}
 +
-+/*	fch_iflags values - set by XFS_IOC_GETFSREFCOUNTS caller in the header. */
-+/* no flags defined yet */
-+#define FCH_IF_VALID		0
-+
-+/*	fch_oflags values - returned in the header segment only. */
-+#define FCH_OF_DEV_T		(1U << 0)	/* fcr_device values will be dev_t */
-+
-+/*	fcr_flags values - returned for each non-header segment */
-+#define FCR_OF_LAST		(1U << 0)	/* segment is the last in the dataset */
-+
-+/* XXX stealing XFS_IOC_GETBIOSIZE */
-+#define XFS_IOC_GETFSREFCOUNTS		_IOWR('X', 47, struct xfs_getfsrefs_head)
-+
- #endif /* __XFS_FS_STAGING_H__ */
-diff --git a/man/man2/ioctl_xfs_getfsrefcounts.2 b/man/man2/ioctl_xfs_getfsrefcounts.2
-new file mode 100644
-index 00000000000..2c7cfada190
---- /dev/null
-+++ b/man/man2/ioctl_xfs_getfsrefcounts.2
-@@ -0,0 +1,239 @@
-+.\" Copyright (c) 2021-2024 Oracle.  All rights reserved.
-+.\"
-+.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
-+.\" This is free documentation; you can redistribute it and/or
-+.\" modify it under the terms of the GNU General Public License as
-+.\" published by the Free Software Foundation; either version 2 of
-+.\" the License, or (at your option) any later version.
-+.\"
-+.\" The GNU General Public License's references to "object code"
-+.\" and "executables" are to be interpreted as the output of any
-+.\" document formatting or typesetting system, including
-+.\" intermediate and printed output.
-+.\"
-+.\" This manual is distributed in the hope that it will be useful,
-+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
-+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+.\" GNU General Public License for more details.
-+.\"
-+.\" You should have received a copy of the GNU General Public
-+.\" License along with this manual; if not, see
-+.\" <http://www.gnu.org/licenses/>.
-+.\" %%%LICENSE_END
-+.TH IOCTL-XFS-GETFSREFCOUNTS 2 2023-05-08 "XFS"
-+.SH NAME
-+ioctl_xfs_getfsrefcounts \- retrieve the number of owners of space in the filesystem
-+.SH SYNOPSIS
-+.nf
-+.B #include <sys/ioctl.h>
-+.br
-+.B #include <xfs/xfs_fs_staging.h>
-+.PP
-+.BI "int ioctl(int " fd ", XFS_IOC_GETFSREFCOUNTS, struct xfs_fsrefs_head * " arg );
-+.fi
-+.SH DESCRIPTION
-+This
-+.BR ioctl (2)
-+operation retrieves the number of owners for space extents in a filesystem.
-+This information can be used to discover the sharing factor of physical media,
-+among other things.
-+.PP
-+The sole argument to this operation should be a pointer to a single
-+.IR "struct xfs_getfsrefs_head" ":"
-+.PP
-+.in +4n
-+.EX
-+struct xfs_getfsrefs {
-+    __u32 fcr_device;      /* Device ID */
-+    __u32 fcr_flags;       /* Mapping flags */
-+    __u64 fcr_physical;    /* Device offset of segment */
-+    __u64 fcr_owners;      /* Number of Owners */
-+    __u64 fcr_length;      /* Length of segment */
-+    __u64 fcr_reserved[4]; /* Must be zero */
++static struct avl64ops reloc_ops = {
++	reloc_start,
++	reloc_end,
 +};
 +
-+struct xfs_getfsrefs_head {
-+    __u32 fch_iflags;       /* Control flags */
-+    __u32 fch_oflags;       /* Output flags */
-+    __u32 fch_count;        /* # of entries in array incl. input */
-+    __u32 fch_entries;      /* # of entries filled in (output) */
-+    __u64 fch_reserved[6];  /* Must be zero */
-+
-+    struct xfs_getfsrefs fch_keys[2];  /* Low and high keys for
-+                                  the mapping search */
-+    struct xfs_getfsrefs fch_recs[];   /* Returned records */
++static struct avl64tree_desc	relocation_data = {
++	.avl_ops = &reloc_ops,
 +};
-+.EE
-+.in
-+.PP
-+The two
-+.I fch_keys
-+array elements specify the lowest and highest reverse-mapping
-+key for which the application would like physical mapping
-+information.
-+A reverse mapping key consists of the tuple (device, block, owner, offset).
-+The owner and offset fields are part of the key because some filesystems
-+support sharing physical blocks between multiple files and
-+therefore may return multiple mappings for a given physical block.
-+.PP
-+Filesystem mappings are copied into the
-+.I fch_recs
-+array, which immediately follows the header data.
-+.\"
-+.SS Fields of struct xfs_getfsrefs_head
-+The
-+.I fch_iflags
-+field is a bit mask passed to the kernel to alter the output.
-+No flags are currently defined, so the caller must set this value to zero.
-+.PP
-+The
-+.I fch_oflags
-+field is a bit mask of flags set by the kernel concerning the returned mappings.
-+If
-+.B FCH_OF_DEV_T
-+is set, then the
-+.I fcr_device
-+field represents a
-+.I dev_t
-+structure containing the major and minor numbers of the block device.
-+.PP
-+The
-+.I fch_count
-+field contains the number of elements in the array being passed to the
-+kernel.
-+If this value is 0,
-+.I fch_entries
-+will be set to the number of records that would have been returned had
-+the array been large enough;
-+no mapping information will be returned.
-+.PP
-+The
-+.I fch_entries
-+field contains the number of elements in the
-+.I fch_recs
-+array that contain useful information.
-+.PP
-+The
-+.I fch_reserved
-+fields must be set to zero.
-+.\"
-+.SS Keys
-+The two key records in
-+.I fsrefs_head.fch_keys
-+specify the lowest and highest extent records in the keyspace that the caller
-+wants returned.
-+The tuple
-+.RI "(" "device" ", " "physical" ", " "flags" ")"
-+can be used to index any filesystem space record.
-+The format of
-+.I fcr_device
-+in the keys must match the format of the same field in the output records,
-+as defined below.
-+By convention, the field
-+.I fsrefs_head.fch_keys[0]
-+must contain the low key and
-+.I fsrefs_head.fch_keys[1]
-+must contain the high key for the request.
-+.PP
-+For convenience, if
-+.I fcr_length
-+is set in the low key, it will be added to
-+.I fcr_block
-+as appropriate.
-+The caller can take advantage of this subtlety to set up subsequent calls
-+by copying
-+.I fsrefs_head.fch_recs[fsrefs_head.fch_entries \- 1]
-+into the low key.
-+The function
-+.I fsrefs_advance
-+(defined in
-+.IR linux/fsrefcounts.h )
-+provides this functionality.
-+.\"
-+.SS Fields of struct xfs_getfsrefs
-+The
-+.I fcr_device
-+field uniquely identifies the underlying storage device.
-+If the
-+.B FCH_OF_DEV_T
-+flag is set in the header's
-+.I fch_oflags
-+field, this field contains a
-+.I dev_t
-+from which major and minor numbers can be extracted.
-+If the flag is not set, this field contains a value that must be unique
-+for each unique storage device.
-+.PP
-+The
-+.I fcr_physical
-+field contains the disk address of the extent in bytes.
-+.PP
-+The
-+.I fcr_owners
-+field contains the number of owners of this extent.
-+The actual owners can be queried with the
-+.BR FS_IOC_GETFSMAP (2)
-+ioctl.
-+.PP
-+The
-+.I fcr_length
-+field contains the length of the extent in bytes.
-+.PP
-+The
-+.I fcr_flags
-+field is a bit mask of extent state flags.
-+The bits are:
-+.RS 0.4i
-+.TP
-+.B FCR_OF_LAST
-+This is the last record in the data set.
-+.RE
-+.PP
-+The
-+.I fcr_reserved
-+field will be set to zero.
-+.\"
-+.RE
-+.SH RETURN VALUE
-+On error, \-1 is returned, and
-+.I errno
-+is set to indicate the error.
-+.SH ERRORS
-+The error placed in
-+.I errno
-+can be one of, but is not limited to, the following:
-+.TP
-+.B EBADF
-+.IR fd
-+is not open for reading.
-+.TP
-+.B EBADMSG
-+The filesystem has detected a checksum error in the metadata.
-+.TP
-+.B EFAULT
-+The pointer passed in was not mapped to a valid memory address.
-+.TP
-+.B EINVAL
-+The array is not long enough, the keys do not point to a valid part of
-+the filesystem, the low key points to a higher point in the filesystem's
-+physical storage address space than the high key, or a nonzero value
-+was passed in one of the fields that must be zero.
-+.TP
-+.B ENOMEM
-+Insufficient memory to process the request.
-+.TP
-+.B EOPNOTSUPP
-+The filesystem does not support this command.
-+.TP
-+.B EUCLEAN
-+The filesystem metadata is corrupt and needs repair.
-+.SH CONFORMING TO
-+This API is XFS-specific.
-+.SH EXAMPLES
-+See
-+.I io/fsrefs.c
-+in the
-+.I xfsprogs
-+distribution for a sample program.
-+.SH SEE ALSO
-+.BR ioctl (2)
++
++bool
++is_reloc_populated(void)
++{
++	return relocation_data.avl_firstino != NULL;
++}
++
++static inline struct reloc_node *
++reloc_lookup(
++	uint64_t		ino)
++{
++	avl64node_t		*node;
++
++	node = avl64_find(&relocation_data, ino);
++	if (!node)
++		return NULL;
++
++	return container_of(node, struct reloc_node, node);
++}
++
++static inline struct reloc_node *
++reloc_insert(
++	uint64_t		ino)
++{
++	struct reloc_node	*rln;
++	avl64node_t		*node;
++
++	rln = malloc(sizeof(struct reloc_node));
++	if (!rln)
++		return NULL;
++
++	rln->node.avl_nextino = NULL;
++	rln->ino = ino;
++	rln->ipath = UNLINKED_IPATH;
++	rln->flags = 0;
++
++	node = avl64_insert(&relocation_data, &rln->node);
++	if (node == NULL) {
++		free(rln);
++		return NULL;
++	}
++
++	return rln;
++}
++
++bool
++test_reloc_iflag(
++	uint64_t		ino,
++	unsigned int		flag)
++{
++	struct reloc_node	*rln;
++
++	rln = reloc_lookup(ino);
++	if (!rln)
++		return false;
++
++	return rln->flags & flag;
++}
++
++void
++set_reloc_iflag(
++	uint64_t		ino,
++	unsigned int		flag)
++{
++	struct reloc_node	*rln;
++
++	rln = reloc_lookup(ino);
++	if (!rln) {
++		rln = reloc_insert(ino);
++		if (!rln)
++			abort();
++		if (flag != INODE_PATH)
++			inode_count++;
++	}
++	if (flag == INODE_PATH)
++		inode_paths++;
++
++	rln->flags |= flag;
++}
++
++#define avl_for_each_range_safe(pos, n, l, first, last) \
++	for (pos = (first), n = pos->avl_nextino, l = (last)->avl_nextino; \
++			pos != (l); \
++			pos = n, n = pos ? pos->avl_nextino : NULL)
++
++struct inode_path *
++get_next_reloc_ipath(
++	uint64_t		ino)
++{
++	struct avl64node	*firstn;
++	struct avl64node	*lastn;
++	struct avl64node	*pos;
++	struct avl64node	*n;
++	struct avl64node	*l;
++	struct reloc_node	*rln;
++
++	avl64_findranges(&relocation_data, ino - 1, -1ULL, &firstn, &lastn);
++	if (firstn == NULL && lastn == NULL)
++		return NULL;
++
++	avl_for_each_range_safe(pos, n, l, firstn, lastn) {
++		rln = container_of(pos, struct reloc_node, node);
++
++		if (rln->flags & INODE_PATH)
++			return rln->ipath;
++	}
++
++	return NULL;
++}
++
++uint64_t
++get_next_reloc_unlinked(
++	uint64_t		ino)
++{
++	struct avl64node	*firstn;
++	struct avl64node	*lastn;
++	struct avl64node	*pos;
++	struct avl64node	*n;
++	struct avl64node	*l;
++	struct reloc_node	*rln;
++
++	avl64_findranges(&relocation_data, ino - 1, -1ULL, &firstn, &lastn);
++	if (firstn == NULL && lastn == NULL)
++		return 0;
++
++	avl_for_each_range_safe(pos, n, l, firstn, lastn) {
++		rln = container_of(pos, struct reloc_node, node);
++
++		if (!(rln->flags & INODE_PATH))
++			return rln->ino;
++	}
++
++	return 0;
++}
++
++struct inode_path **
++get_reloc_ipath_slot(
++	uint64_t		ino)
++{
++	struct reloc_node	*rln;
++
++	rln = reloc_lookup(ino);
++	if (!rln)
++		return NULL;
++
++	return &rln->ipath;
++}
++
++void
++forget_reloc_ino(
++	uint64_t		ino)
++{
++	struct reloc_node	*rln;
++
++	rln = reloc_lookup(ino);
++	if (!rln)
++		return;
++
++	avl64_delete(&relocation_data, &rln->node);
++	free(rln);
++}
++#endif /* USE_RADIX_TREE_FOR_INUMS */
 
 
