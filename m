@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2215-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2378-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FB1B8211F7
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:21:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 098278212AD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:03:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7C7DB21AF4
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:21:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EF941C21DA1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0A27EE;
-	Mon,  1 Jan 2024 00:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653F1803;
+	Mon,  1 Jan 2024 01:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLQgbpPs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSJr19cm"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B117F9
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:20:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB08C433C8;
-	Mon,  1 Jan 2024 00:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6727F9;
+	Mon,  1 Jan 2024 01:03:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00D2C433C8;
+	Mon,  1 Jan 2024 01:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068456;
-	bh=tCWY6uiQzDZt8viT1RTGgwe+wpBRknJZBLx4jVMUZBA=;
+	s=k20201202; t=1704070992;
+	bh=NsIOAnrzdlE+bWwF2Rc+7zi1weKTWm0JBf8hj+ENiS4=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=fLQgbpPsxnD2c7YE1nglslRMK1rRhOHuTe9SNlIfK5KTPwwAfHAwW9aX1f6aMgtiV
-	 lj6z3xRupH/fRAytRBFz5jD6+xjDjjoif/Ac/tioo1tdFnHwKVpZNg+fr9O1W+kd8c
-	 kx27Nrqxt9ma8NsHiLhv/FhUaRSAbAg3yrs1mZnbVCvSfznhdPKXF3ZlHbR7/4JVRx
-	 Ja+UaGY8Dkf7qV07enEEvXN59dbfFviljasLoMKHR1JJK7dd6/mu+kDDAStjMHvSIB
-	 fD6p1N9G0rcgELbi1qKE/Sw+3Ma3GWU2Uqb3pok9zuJ5nNuYMlPJ2zYGlQHBPCU+m8
-	 rMfvC8Dlx2hnQ==
-Date: Sun, 31 Dec 2023 16:20:56 +9900
-Subject: [PATCH 40/47] xfs_repair: always check realtime file mappings against
- incore info
+	b=gSJr19cmlat1JvkEdanqOu8A6oEy9KgwDYs3kaAtP6yK8BksYQowljBUGo4uSjylC
+	 /7/S04yBbGKELmzztwk+1sL3ZguFRa7/pdjAz9xdmw+1evA31wKKsSiufXPqSzzCUJ
+	 aNp2bntM2Ro1ZacgFR0YZDL5jUQplcEOt69VixenkEAi7/1vj6m69Bu2WQox1HX1/0
+	 XiSVlFHfgVKGL6LyIyJ51xEgHJH/hbbto6YHoePmucV7cgLQQQawt7HL7b9WG3DO3v
+	 +rMHxtghlitm04GOKK1vdxmvkAqIl3WQoNkxH2tGE0iW+/nKjyF/qCAoMTN/Xi7QG9
+	 9dsSg4ShMvbbQ==
+Date: Sun, 31 Dec 2023 17:03:12 +9900
+Subject: [PATCH 7/9] xfs/856: add rtreflink upgrade to test matrix
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015846.1815505.10054977018632373762.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405032108.1827358.4212368779476095141.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,155 +52,33 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Curiously, the xfs_repair code that processes data fork mappings of
-realtime files doesn't actually compare the mappings against the incore
-state map during the !check_dups phase (aka phase 3).  As a result, we
-lose the opportunity to clear damaged realtime data forks before we get
-to crosslinked file checking in phase 4, which results in ondisk
-metadata errors calling do_error, which aborts repair.
-
-Split the process_rt_rec_state code into two functions: one to check the
-mapping, and another to update the incore state.  The first one can be
-called to help us decide if we're going to zap the fork, and the second
-one updates the incore state if we decide to keep the fork.  We already
-do this for regular data files.
+Add realtime reflink to the features that this test will try to
+upgrade.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |   88 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 80 insertions(+), 8 deletions(-)
+ tests/xfs/1856 |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/repair/dinode.c b/repair/dinode.c
-index e08b23a9454..a6713a7bc6b 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -219,7 +219,7 @@ _("data fork in rt ino %" PRIu64 " claims dup rt extent,"
- 	return 0;
- }
- 
--static int
-+static void
- process_rt_rec_state(
- 	struct xfs_mount	*mp,
- 	xfs_ino_t		ino,
-@@ -263,11 +263,78 @@ _("data fork in rt inode %" PRIu64 " found invalid rt extent %"PRIu64" state %d
- 			set_rtbmap(ext, zap_metadata ? XR_E_METADATA :
- 						       XR_E_INUSE);
- 			break;
-+		case XR_E_BAD_STATE:
-+			do_error(
-+_("bad state in rt extent map %" PRIu64 "\n"),
-+				ext);
- 		case XR_E_METADATA:
-+		case XR_E_FS_MAP:
-+		case XR_E_INO:
-+		case XR_E_INUSE_FS:
-+			break;
-+		case XR_E_INUSE:
-+		case XR_E_MULT:
-+			set_rtbmap(ext, XR_E_MULT);
-+			break;
-+		case XR_E_FREE1:
-+		default:
- 			do_error(
-+_("illegal state %d in rt extent %" PRIu64 "\n"),
-+				state, ext);
-+		}
-+		b += mp->m_sb.sb_rextsize;
-+	} while (b < irec->br_startblock + irec->br_blockcount);
-+}
-+
-+/*
-+ * Checks the realtime file's data mapping against in-core extent info, and
-+ * complains if there are discrepancies.  Returns 0 if good, 1 if bad.
-+ */
-+static int
-+check_rt_rec_state(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino,
-+	struct xfs_bmbt_irec	*irec)
-+{
-+	xfs_fsblock_t		b = irec->br_startblock;
-+	xfs_rtblock_t		ext;
-+	int			state;
-+
-+	do {
-+		ext = (xfs_rtblock_t)b / mp->m_sb.sb_rextsize;
-+		state = get_rtbmap(ext);
-+
-+		if ((b % mp->m_sb.sb_rextsize) != 0) {
-+			/*
-+			 * We are midway through a partially written extent.
-+			 * If we don't find the state that gets set in the
-+			 * other clause of this loop body, then we have a
-+			 * partially *mapped* rt extent and should complain.
-+			 */
-+			if (state != XR_E_INUSE && state != XR_E_FREE) {
-+				do_warn(
-+_("data fork in rt inode %" PRIu64 " found invalid rt extent %"PRIu64" state %d at rt block %"PRIu64"\n"),
-+					ino, ext, state, b);
-+				return 1;
-+			}
-+
-+			b = roundup(b, mp->m_sb.sb_rextsize);
-+			continue;
-+		}
-+
-+		/*
-+		 * This is the start of an rt extent.  Complain if there are
-+		 * conflicting states.  We'll set the state elsewhere.
-+		 */
-+		switch (state)  {
-+		case XR_E_FREE:
-+		case XR_E_UNKNOWN:
-+			break;
-+		case XR_E_METADATA:
-+			do_warn(
- _("data fork in rt inode %" PRIu64 " found metadata file block %" PRIu64 " in rt bmap\n"),
- 				ino, ext);
--			break;
-+			return 1;
- 		case XR_E_BAD_STATE:
- 			do_error(
- _("bad state in rt extent map %" PRIu64 "\n"),
-@@ -275,12 +342,12 @@ _("bad state in rt extent map %" PRIu64 "\n"),
- 		case XR_E_FS_MAP:
- 		case XR_E_INO:
- 		case XR_E_INUSE_FS:
--			do_error(
-+			do_warn(
- _("data fork in rt inode %" PRIu64 " found rt metadata extent %" PRIu64 " in rt bmap\n"),
- 				ino, ext);
-+			return 1;
- 		case XR_E_INUSE:
- 		case XR_E_MULT:
--			set_rtbmap(ext, XR_E_MULT);
- 			do_warn(
- _("data fork in rt inode %" PRIu64 " claims used rt extent %" PRIu64 "\n"),
- 				ino, b);
-@@ -341,13 +408,18 @@ _("inode %" PRIu64 " - bad rt extent overflows - start %" PRIu64 ", "
- 		return 1;
- 	}
- 
--	if (check_dups)
--		bad = process_rt_rec_dups(mp, ino, irec);
--	else
--		bad = process_rt_rec_state(mp, ino, zap_metadata, irec);
-+	bad = check_rt_rec_state(mp, ino, irec);
- 	if (bad)
- 		return bad;
- 
-+	if (check_dups) {
-+		bad = process_rt_rec_dups(mp, ino, irec);
-+		if (bad)
-+			return bad;
-+	} else {
-+		process_rt_rec_state(mp, ino, zap_metadata, irec);
-+	}
-+
- 	/*
- 	 * bump up the block counter
- 	 */
+diff --git a/tests/xfs/1856 b/tests/xfs/1856
+index 8453d9bff2..4126c28e5d 100755
+--- a/tests/xfs/1856
++++ b/tests/xfs/1856
+@@ -205,12 +205,13 @@ post_exercise()
+ # upgrade don't spread failure to the rest of the tests.
+ FEATURES=()
+ if rt_configured; then
+-	# rmap wasn't added to rt devices until after metadir and rtgroups
++	# reflink & rmap weren't added to rt devices until after metadir and rtgroups
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
+ 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
+ 	check_repair_upgrade metadir && FEATURES+=("metadir")
+ 	supports_rtgroups && check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
++	supports_rtgroups && check_repair_upgrade reflink && FEATURES+=("reflink")
+ else
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
 
 
