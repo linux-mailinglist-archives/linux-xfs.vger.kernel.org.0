@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2134-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2366-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E137F8211A1
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74F8A8212A1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:00:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0001F1C21C40
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:00:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24942282940
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950B5C2EE;
-	Mon,  1 Jan 2024 00:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A31D7FD;
+	Mon,  1 Jan 2024 01:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CohV0y+n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OR4LtUq3"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6113CC2DE
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C801BC433C8;
-	Mon,  1 Jan 2024 00:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535907ED;
+	Mon,  1 Jan 2024 01:00:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC36C433C7;
+	Mon,  1 Jan 2024 01:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067220;
-	bh=UNehyCrpT2CiQQez/iI3XcEejINKi2g18L7QPXSn0uQ=;
+	s=k20201202; t=1704070805;
+	bh=aatZZfEshMVICDl/LR2THfmIvimPMuKO3zsT1Z6FkzE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=CohV0y+nxEVBHR0f/et2Z02JIGF8QcpXg5a+uoiU/2pdiZJhAjaNYMZAjbKucnwWr
-	 e89U4eQp74ls+Fh8G9VTaMws4YMsNT0OyMpeon+B4YSukPrtXNSoMIO7B8VuuW7HLE
-	 tRSfRqnPSVWNP+N+rvwi2Hr1w0HnhGzzFLF0D5Dm+gDEBfH60Mbmpiw7RqpIpJJVNn
-	 eQYfX3/0soY6OSlqiNANzZToJvjx+/ajtzsg7zqotyW31gBYHfrCX1H/SQoj7IQv8j
-	 ULRUjIpnNQwkTJzaMyg4hjBmB84iT/I0RJ3jzH9BsUlnnabnFHkrZsqHR1n2JEL8aX
-	 KdkI1Pht7xifA==
-Date: Sun, 31 Dec 2023 16:00:20 +9900
-Subject: [PATCH 49/52] xfs_scrub: use histograms to speed up phase 8 on the
- realtime volume
+	b=OR4LtUq3oAvhnrvQsNQRbX1a7eSeXoh+loqEFM92OVfu72RAI5NHRITrziVqpY3d8
+	 cQXEoUoz4NwssuCTuvOAVGxoLBJUDxOR1ePfVITuad9HuoAS2zAgFGKsxzpGpqnMiM
+	 T9dHH3OQOIanmU0fjPzPWs6+Un82vbLXHO5Uc4Bzh2KftGfx5mkCwAWCjxZyYIA0b5
+	 poGDbZ12eR+jyiuiv9xxgyE3/pgrgsP85ApiFVq2LKg2MygIQUqzlKlGrd7BPOzX+d
+	 v9KSJjvZKWUERcQgW30oNMZd0VcgkVvJ/FScp0j9CRcGUElsv5i87T0AdYx52VpbHv
+	 7us0BKLkX1+3w==
+Date: Sun, 31 Dec 2023 17:00:04 +9900
+Subject: [PATCH 09/13] xfs: skip tests if formatting small filesystem fails
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405012817.1811243.7494449792829565677.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
-References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405031352.1826914.14947870409708728287.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,119 +52,45 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use the same statistical methods that we use on the data volume to
-compute the minimum threshold size for fstrims on the realtime volume.
+There are a few tests that try to exercise XFS functionality with an
+unusually small (< 500MB) filesystem.  Formatting can fail if the test
+configuration also specifies a very large realtime device because mkfs
+hits ENOSPC when allocating the realtime metadata.  The test proceeds
+anyway (which causes an immediate mount failure) so we might as well
+skip these.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase7.c    |    7 +++++++
- scrub/phase8.c    |    6 +++++-
- scrub/xfs_scrub.c |    2 ++
- scrub/xfs_scrub.h |    1 +
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ tests/xfs/104 |    1 +
+ tests/xfs/291 |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/scrub/phase7.c b/scrub/phase7.c
-index 475d8f157ee..01097b67879 100644
---- a/scrub/phase7.c
-+++ b/scrub/phase7.c
-@@ -31,6 +31,7 @@ struct summary_counts {
- 
- 	/* Free space histogram, in fsb */
- 	struct histogram	datadev_hist;
-+	struct histogram	rtdev_hist;
- };
- 
- /*
-@@ -56,6 +57,7 @@ summary_count_init(
- 	struct summary_counts	*counts = data;
- 
- 	init_freesp_hist(&counts->datadev_hist);
-+	init_freesp_hist(&counts->rtdev_hist);
- }
- 
- /* Record block usage. */
-@@ -83,6 +85,8 @@ count_block_summary(
- 		blocks = cvt_b_to_off_fsbt(&ctx->mnt, fsmap->fmr_length);
- 		if (fsmap->fmr_device == ctx->fsinfo.fs_datadev)
- 			hist_add(&counts->datadev_hist, blocks);
-+		else if (fsmap->fmr_device == ctx->fsinfo.fs_rtdev)
-+			hist_add(&counts->rtdev_hist, blocks);
- 		return 0;
- 	}
- 
-@@ -124,7 +128,9 @@ add_summaries(
- 	total->agbytes += item->agbytes;
- 
- 	hist_import(&total->datadev_hist, &item->datadev_hist);
-+	hist_import(&total->rtdev_hist, &item->rtdev_hist);
- 	hist_free(&item->datadev_hist);
-+	hist_free(&item->rtdev_hist);
- 	return 0;
- }
- 
-@@ -195,6 +201,7 @@ phase7_func(
- 
- 	/* Preserve free space histograms for phase 8. */
- 	hist_move(&ctx->datadev_hist, &totalcount.datadev_hist);
-+	hist_move(&ctx->rtdev_hist, &totalcount.rtdev_hist);
- 
- 	/* Scan the whole fs. */
- 	error = scrub_count_all_inodes(ctx, &counted_inodes);
-diff --git a/scrub/phase8.c b/scrub/phase8.c
-index 25d1ec3693e..d59bab7009c 100644
---- a/scrub/phase8.c
-+++ b/scrub/phase8.c
-@@ -195,13 +195,17 @@ fstrim_rtdev(
- 	struct scrub_ctx	*ctx)
+diff --git a/tests/xfs/104 b/tests/xfs/104
+index d16f46d8e4..c3d1d18a58 100755
+--- a/tests/xfs/104
++++ b/tests/xfs/104
+@@ -16,6 +16,7 @@ _create_scratch()
  {
- 	struct xfs_fsop_geom	*geo = &ctx->mnt.fsgeom;
-+	uint64_t		minlen_fsb;
-+
-+	minlen_fsb = fstrim_compute_minlen(ctx, &ctx->rtdev_hist);
+ 	echo "*** mkfs"
+ 	_scratch_mkfs_xfs $@ | tee -a $seqres.full | _filter_mkfs 2>$tmp.mkfs
++	test "${PIPESTATUS[0]}" -eq 0 || _notrun "formatting small scratch fs failed"
+ 	. $tmp.mkfs
  
- 	/*
- 	 * The fstrim ioctl pretends that the realtime volume is in the address
- 	 * space immediately after the data volume.  Ignore EINVAL if someone
- 	 * tries to run us on an older kernel.
- 	 */
--	return fstrim_fsblocks(ctx, geo->datablocks, geo->rtblocks, 0, true);
-+	return fstrim_fsblocks(ctx, geo->datablocks, geo->rtblocks,
-+			minlen_fsb, true);
- }
+ 	echo "*** mount"
+diff --git a/tests/xfs/291 b/tests/xfs/291
+index 600dcb2eba..70e5f51cee 100755
+--- a/tests/xfs/291
++++ b/tests/xfs/291
+@@ -18,7 +18,8 @@ _require_command "$XFS_MDRESTORE_PROG" "xfs_mdrestore"
+ # real QA test starts here
+ _require_scratch
+ logblks=$(_scratch_find_xfs_min_logblocks -n size=16k -d size=133m)
+-_scratch_mkfs_xfs -n size=16k -l size=${logblks}b -d size=133m >> $seqres.full 2>&1
++_scratch_mkfs_xfs -n size=16k -l size=${logblks}b -d size=133m >> $seqres.full 2>&1 || \
++	_notrun "formatting small scratch fs failed"
+ _scratch_mount
  
- /* Trim the filesystem, if desired. */
-diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
-index 7c73e4d3cca..c510d9534a8 100644
---- a/scrub/xfs_scrub.c
-+++ b/scrub/xfs_scrub.c
-@@ -713,6 +713,7 @@ main(
- 	int			error;
- 
- 	hist_init(&ctx.datadev_hist);
-+	hist_init(&ctx.rtdev_hist);
- 
- 	fprintf(stdout, "EXPERIMENTAL xfs_scrub program in use! Use at your own risk!\n");
- 	fflush(stdout);
-@@ -944,6 +945,7 @@ main(
- 	unicrash_unload();
- 
- 	hist_free(&ctx.datadev_hist);
-+	hist_free(&ctx.rtdev_hist);
- 
- 	/*
- 	 * If we're being run as a service, the return code must fit the LSB
-diff --git a/scrub/xfs_scrub.h b/scrub/xfs_scrub.h
-index 4d9a028921b..8389551c067 100644
---- a/scrub/xfs_scrub.h
-+++ b/scrub/xfs_scrub.h
-@@ -94,6 +94,7 @@ struct scrub_ctx {
- 
- 	/* Free space histograms, in fsb */
- 	struct histogram	datadev_hist;
-+	struct histogram	rtdev_hist;
- 
- 	/*
- 	 * Pick the largest value for fstrim minlen such that we trim at least
+ # First we cause very badly fragmented freespace, then
 
 
