@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2273-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2160-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A315F821232
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:35:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C19CB8211BE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50ABC282A17
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:35:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 701F928278E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:06:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193111373;
-	Mon,  1 Jan 2024 00:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9549802;
+	Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzeJ5kK5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5w6rgfv"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA31C1362
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:35:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B8B0C433C8;
-	Mon,  1 Jan 2024 00:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961937F9
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 684DCC433C7;
+	Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069348;
-	bh=ZjgH1f6Qu2iiyICfPQHqawq48sY/7vzT1fk96VC//+E=;
+	s=k20201202; t=1704067612;
+	bh=crL7isInhxuf7Trb09E6aSLKAryS1h8t8juwjciF2/M=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=LzeJ5kK5tI42eK1Ge6sDtEc8ZY06J0S6qdbxr46XaGwo/E8zrdY/mGVgmom120STu
-	 QPZpmaHa+LcYAfWwwzX2kU3ZUG394meeNfKq/4x/4zEcDpLf9PkaN3MdgqR2CrW4Pn
-	 JLpazxbu0ykl8sYpmbm5c3fM3Gv61nCQq9O2+GvlJqrsiuci2PEynxpe6IGYrUJXxi
-	 Q2GIHpCyN0qsXf9m2ktL5Q/U+SMw5d6OR9zlRj27UB0LoOKMc+GD1PatDr/24Y7NWx
-	 2ja53E0LVnqCjsNU9OJp0AHLuU0hmJ3jSZermNzggey3ModfABxQZMyliBuMXzRzwV
-	 aZchbz1NwTuCg==
-Date: Sun, 31 Dec 2023 16:35:47 +9900
-Subject: [PATCH 37/42] xfs_repair: allow realtime files to have the reflink
- flag set
+	b=n5w6rgfvdWPYssrus4Svo8lb+q+ArBcJcsLRQZKE4u1nxnFvFB1/QGv0UG3bII4A5
+	 ClbiKfq1fpU1TiIRV1pHtsz3VU2tZuG0Zz2ltkKwzCkN2ZUvz2dSzKbtp3oqcbLU8t
+	 JsfYcLWV6gD2wc5u4JDedN63x/9cy7rxFdFqMXLecw8TQie62a4Vid9w8gWOz+MkBk
+	 6pMPa+pUwr/6usH981em/At8VNIW6pPmvackozIzKyc4LKMnXbC5lClv3WJ+IZETNo
+	 iUDTmGolfn5l6QWSBjZkoFLcQR+G88wsEY4scpbzMq2lvyDsohDmTD+PuAtjklqOaU
+	 IpacsGewDjhGw==
+Date: Sun, 31 Dec 2023 16:06:52 +9900
+Subject: [PATCH 6/8] xfs: remove duplicate asserts in xfs_defer_extent_free
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017621.1817107.12602990400083753927.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Message-ID: <170405014121.1814860.11780010368849686036.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -51,42 +50,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Darrick J. Wong <djwong@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-Now that we allow reflink on the realtime volume, allow that combination
-of inode flags if the feature's enabled.  Note that we now allow inodes
-to have rtinherit even if there's no realtime volume, since the kernel
-has never restricted that.
+The bno/len verification is already done by the calls to
+xfs_verify_rtbext / xfs_verify_fsbext, and reporting a corruption error
+seem like the better handling than tripping an assert anyway.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ libxfs/xfs_alloc.c |   13 -------------
+ 1 file changed, 13 deletions(-)
 
 
-diff --git a/repair/dinode.c b/repair/dinode.c
-index f0c0ba4da4e..2b254b29c4a 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -3199,7 +3199,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
- 		}
+diff --git a/libxfs/xfs_alloc.c b/libxfs/xfs_alloc.c
+index 442a045378c..160563b1b26 100644
+--- a/libxfs/xfs_alloc.c
++++ b/libxfs/xfs_alloc.c
+@@ -2592,23 +2592,10 @@ xfs_defer_extent_free(
+ {
+ 	struct xfs_extent_free_item	*xefi;
+ 	struct xfs_mount		*mp = tp->t_mountp;
+-#ifdef DEBUG
+-	xfs_agnumber_t			agno;
+-	xfs_agblock_t			agbno;
  
- 		if ((flags2 & XFS_DIFLAG2_REFLINK) &&
--		    (flags & (XFS_DIFLAG_REALTIME | XFS_DIFLAG_RTINHERIT))) {
-+		    !xfs_has_rtreflink(mp) &&
-+		    (flags & XFS_DIFLAG_REALTIME)) {
- 			if (!uncertain) {
- 				do_warn(
- 	_("Cannot have a reflinked realtime inode %" PRIu64 "\n"),
-@@ -3231,7 +3232,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
- 		}
+-	ASSERT(bno != NULLFSBLOCK);
+-	ASSERT(len > 0);
+ 	ASSERT(len <= XFS_MAX_BMBT_EXTLEN);
+ 	ASSERT(!isnullstartblock(bno));
+-	agno = XFS_FSB_TO_AGNO(mp, bno);
+-	agbno = XFS_FSB_TO_AGBNO(mp, bno);
+-	ASSERT(agno < mp->m_sb.sb_agcount);
+-	ASSERT(agbno < mp->m_sb.sb_agblocks);
+-	ASSERT(len < mp->m_sb.sb_agblocks);
+-	ASSERT(agbno + len <= mp->m_sb.sb_agblocks);
+-#endif
+ 	ASSERT(!(free_flags & ~XFS_FREE_EXTENT_ALL_FLAGS));
+-	ASSERT(xfs_extfree_item_cache != NULL);
+ 	ASSERT(type != XFS_AG_RESV_AGFL);
  
- 		if ((flags2 & XFS_DIFLAG2_COWEXTSIZE) &&
--		    (flags & (XFS_DIFLAG_REALTIME | XFS_DIFLAG_RTINHERIT))) {
-+		    !xfs_has_rtreflink(mp) &&
-+		    (flags & XFS_DIFLAG_REALTIME)) {
- 			if (!uncertain) {
- 				do_warn(
- 	_("Cannot have CoW extent size hint on a realtime inode %" PRIu64 "\n"),
+ 	if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
 
 
