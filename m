@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2311-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2199-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF7DE821265
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:45:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 877F78211E6
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:17:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 030B21C21D3F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:45:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3077C28299A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:17:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9027BA3C;
-	Mon,  1 Jan 2024 00:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A50038B;
+	Mon,  1 Jan 2024 00:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7j/8nac"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aT4n0518"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718C9BA35;
-	Mon,  1 Jan 2024 00:45:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E3DC433C7;
-	Mon,  1 Jan 2024 00:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16724384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:17:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9800FC433C7;
+	Mon,  1 Jan 2024 00:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069944;
-	bh=f8ynwtIRFwXaM6SCG29/GknoBXX9+TC34h3xNfgOfAA=;
+	s=k20201202; t=1704068222;
+	bh=ovGpr6HXSx1ZuyS7GEjXmiRAX2Szi/yziGmk6ES3pLE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=O7j/8nacmdsK/4kyeKQHt7HOA7EnFjO20Un16dCirp8ACMM4UDHVgz280zQcjwkms
-	 9LXl4zdd/YBatwjPW1a4VO+VZ8HVRVjaM6yyekDPiYKx1qlw6JRe2V3QBtvUFjAhg1
-	 sIj9fzlRU3yYiiXEBNpHUoGk9v+Mbcz/dPwUU6cnk/yGh0deV4HcJxcAHJ6s4AOHDD
-	 Zg23dtPZgszhW0+6nLAVSRaZCutWyzyX3OTwI0MQXPHJ1Xd0kpEmwcJaZ4XeG6ah5F
-	 0eWzbXieE+clNjLHbWEM9dlnrYffION/wNhNRCBlMzqn7X11vDs+JUpbRdfXq7LTlI
-	 yBDUjtXupy9ww==
-Date: Sun, 31 Dec 2023 16:45:43 +9900
-Subject: [PATCH 1/1] xfs: test xfs_scrub services
+	b=aT4n0518IUX4qhC/O8WAECfGCqBsT90CqUD5isIU6wAyWNmN6fxDyiM1EmzuisOCl
+	 SrPeMba7Ulst5XN3irwtD11GMcf//xppcC82K6DjKinlNX56eUcT0fcGYMQIzKFbgK
+	 tdkQyohMVqbaw39t8C63aXzhG9PbmJgD1woaLmX6OhWkXTWMCmWwXLQQ+SzpgcYY4y
+	 /fiHfWvl/qVFN9gXn5iQdYgyWHKHQj0bbMSdmdyQu+vn6Q8Id+jKiYKZ1l3+G5NUQv
+	 QXo4szxa/myqJawh3KPuHi7sjlQt7aVLCXQdlTO5CWKEuyW0bXuXdPBhcKvaDYA+0F
+	 yD+GmQkGw9qnw==
+Date: Sun, 31 Dec 2023 16:17:02 +9900
+Subject: [PATCH 25/47] xfs_db: copy the realtime rmap btree
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
-Message-ID: <170405027224.1823970.12236527305568587932.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405027211.1823970.7781854324106857081.stgit@frogsfrogsfrogs>
-References: <170405027211.1823970.7781854324106857081.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015646.1815505.17570592286285852411.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,212 +52,167 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a pair of new tests that check that xfs_scrub and xfs_scrub_all
-will find and test mounted filesystems.
+Copy the realtime rmapbt when we're metadumping the filesystem.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/rc          |   22 ++++++++
- tests/xfs/1863     |  136 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1863.out |    6 ++
- 3 files changed, 164 insertions(+)
- create mode 100755 tests/xfs/1863
- create mode 100644 tests/xfs/1863.out
+ db/metadump.c |  129 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 129 insertions(+)
 
 
-diff --git a/common/rc b/common/rc
-index a9e0ba7e22..969ff93de7 100644
---- a/common/rc
-+++ b/common/rc
-@@ -5333,6 +5333,7 @@ _soak_loop_running() {
- 	return 0
+diff --git a/db/metadump.c b/db/metadump.c
+index ccf7b89ccd5..c6f6bf1ea17 100644
+--- a/db/metadump.c
++++ b/db/metadump.c
+@@ -589,6 +589,55 @@ copy_rmap_btree(
+ 	return scan_btree(agno, root, levels, TYP_RMAPBT, agf, scanfunc_rmapbt);
  }
  
-+
- _require_unshare() {
- 	unshare -f -r -m -p -U $@ true &>/dev/null || \
- 		_notrun "unshare $*: command not found, should be in util-linux"
-@@ -5345,6 +5346,27 @@ _random_file() {
- 	echo "$basedir/$(ls -U $basedir | shuf -n 1)"
- }
- 
-+_require_program() {
-+	local cmd="$1"
-+	local tag="$2"
-+
-+	test -z "$tag" && tag="$(basename "$cmd")"
-+	command -v "$1" &>/dev/null || _notrun "$tag required"
-+}
-+
-+_require_systemd_service() {
-+	_require_program systemctl systemd
-+
-+	systemctl cat "$1" >/dev/null || \
-+		_notrun "systemd service \"$1\" not found"
-+}
-+
-+_require_systemd_running() {
-+	_require_systemd_service "$1"
-+	test "$(systemctl is-active "$1")" = "active" || \
-+		_notrun "systemd service \"$1\" not running"
-+}
-+
- init_rc
- 
- ################################################################################
-diff --git a/tests/xfs/1863 b/tests/xfs/1863
-new file mode 100755
-index 0000000000..36f10a0826
---- /dev/null
-+++ b/tests/xfs/1863
-@@ -0,0 +1,136 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1863
-+#
-+# Check that the online fsck systemd services find and check the test and
-+# scratch filesystems, and that we can read the health reports after the fact.
-+# IOWs, basic testing for the systemd background services.
-+#
-+. ./common/preamble
-+_begin_fstest auto scrub
-+
-+_cleanup()
++static int
++scanfunc_rtrmapbt(
++	struct xfs_btree_block	*block,
++	xfs_agnumber_t		agno,
++	xfs_agblock_t		agbno,
++	int			level,
++	typnm_t			btype,
++	void			*arg)
 +{
-+	cd /
-+	if [ -n "$new_svcfile" ]; then
-+		rm -f "$new_svcfile"
-+		systemctl daemon-reload
-+	fi
-+	rm -r -f $tmp.*
++	xfs_rtrmap_ptr_t	*pp;
++	int			i;
++	int			numrecs;
++
++	if (level == 0)
++		return 1;
++
++	numrecs = be16_to_cpu(block->bb_numrecs);
++	if (numrecs > mp->m_rtrmap_mxr[1]) {
++		if (metadump.show_warnings)
++			print_warning("invalid numrecs (%u) in %s block %u/%u",
++				numrecs, typtab[btype].name, agno, agbno);
++		return 1;
++	}
++
++	pp = xfs_rtrmap_ptr_addr(block, 1, mp->m_rtrmap_mxr[1]);
++	for (i = 0; i < numrecs; i++) {
++		xfs_agnumber_t	pagno;
++		xfs_agblock_t	pbno;
++
++		pagno = XFS_FSB_TO_AGNO(mp, get_unaligned_be64(&pp[i]));
++		pbno = XFS_FSB_TO_AGBNO(mp, get_unaligned_be64(&pp[i]));
++
++		if (pbno == 0 || pbno > mp->m_sb.sb_agblocks ||
++		    pagno > mp->m_sb.sb_agcount) {
++			if (metadump.show_warnings)
++				print_warning("invalid block number (%u/%u) "
++						"in inode %llu %s block %u/%u",
++						pagno, pbno,
++						(unsigned long long)metadump.cur_ino,
++						typtab[btype].name, agno, agbno);
++			continue;
++		}
++		if (!scan_btree(pagno, pbno, level, btype, arg,
++				scanfunc_rtrmapbt))
++			return 0;
++	}
++	return 1;
 +}
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
+ static int
+ scanfunc_refcntbt(
+ 	struct xfs_btree_block	*block,
+@@ -2319,6 +2368,83 @@ process_exinode(
+ 					whichfork), nex, itype, is_meta);
+ }
+ 
++static int
++process_rtrmap(
++	struct xfs_dinode	*dip,
++	typnm_t			itype)
++{
++	struct xfs_rtrmap_root	*dib;
++	int			i;
++	xfs_rtrmap_ptr_t	*pp;
++	int			level;
++	int			nrecs;
++	int			maxrecs;
++	int			whichfork;
++	typnm_t			btype;
 +
-+# real QA test starts here
++	if (itype == TYP_ATTR && metadump.show_warnings) {
++		print_warning("ignoring rtrmapbt root in inode %llu attr fork",
++				(unsigned long long)metadump.cur_ino);
++		return 1;
++	}
 +
-+_supported_fs xfs
-+_require_systemd_service xfs_scrub@.service
-+_require_systemd_service xfs_scrub_all.service
-+_require_scratch
-+_require_scrub
-+_require_xfs_io_command "scrub"
-+_require_xfs_spaceman_command "health"
-+_require_populate_commands
++	whichfork = XFS_DATA_FORK;
++	btype = TYP_RTRMAPBT;
 +
-+_xfs_skip_online_rebuild
-+_xfs_skip_offline_rebuild
++	dib = (struct xfs_rtrmap_root *)XFS_DFORK_PTR(dip, whichfork);
++	level = be16_to_cpu(dib->bb_level);
++	nrecs = be16_to_cpu(dib->bb_numrecs);
 +
-+# Back when xfs_scrub was really experimental, the systemd service definitions
-+# contained various bugs that resulted in weird problems such as logging
-+# messages sometimes dropping slashes from paths, and the xfs_scrub@ service
-+# being logged as completing long after the process actually stopped.  These
-+# problems were all fixed by the time the --auto-media-scan-stamp option was
-+# added to xfs_scrub_all, so turn off this test for such old codebases.
-+scruball_exe="$(systemctl cat xfs_scrub_all | grep '^ExecStart=' | sed -e 's/ExecStart=//g' -e 's/ .*$//g')"
-+grep -q -- '--auto-media-scan-stamp' "$scruball_exe" || \
-+	_notrun "xfs_scrub service too old, skipping test"
++	if (level > mp->m_rtrmap_maxlevels) {
++		if (metadump.show_warnings)
++			print_warning("invalid level (%u) in inode %lld %s "
++					"root", level,
++					(unsigned long long)metadump.cur_ino,
++					typtab[btype].name);
++		return 1;
++	}
 +
-+orig_svcfile="/lib/systemd/system/xfs_scrub_all.service"
-+test -f "$orig_svcfile" || \
-+	_notrun "cannot find xfs_scrub_all service file"
++	if (level == 0)
++		return 1;
 +
-+new_svcdir="/run/systemd/system/"
-+test -d "$new_svcdir" || \
-+	_notrun "cannot find runtime systemd service dir"
++	maxrecs = libxfs_rtrmapbt_droot_maxrecs(
++			XFS_DFORK_SIZE(dip, mp, whichfork),
++			false);
++	if (nrecs > maxrecs) {
++		if (metadump.show_warnings)
++			print_warning("invalid numrecs (%u) in inode %lld %s "
++					"root", nrecs,
++					(unsigned long long)metadump.cur_ino,
++					typtab[btype].name);
++		return 1;
++	}
 +
-+# We need to make some local mods to the xfs_scrub_all service definition
-+# so we fork it and create a new service just for this test.
-+new_scruball_svc="xfs_scrub_all_fstest.service"
-+systemctl status "$new_scruball_svc" 2>&1 | grep -E -q '(could not be found|Loaded: not-found)' || \
-+	_notrun "systemd service \"$new_scruball_svc\" found, will not mess with this"
++	pp = xfs_rtrmap_droot_ptr_addr(dib, 1, maxrecs);
++	for (i = 0; i < nrecs; i++) {
++		xfs_agnumber_t	ag;
++		xfs_agblock_t	bno;
 +
-+find_scrub_trace() {
-+	local path="$1"
++		ag = XFS_FSB_TO_AGNO(mp, get_unaligned_be64(&pp[i]));
++		bno = XFS_FSB_TO_AGBNO(mp, get_unaligned_be64(&pp[i]));
 +
-+	$XFS_SPACEMAN_PROG -c "health" "$path" | grep -q ": ok$" || \
-+		echo "cannot find evidence that $path was scrubbed"
++		if (bno == 0 || bno > mp->m_sb.sb_agblocks ||
++				ag > mp->m_sb.sb_agcount) {
++			if (metadump.show_warnings)
++				print_warning("invalid block number (%u/%u) "
++						"in inode %llu %s root", ag,
++						bno,
++						(unsigned long long)metadump.cur_ino,
++						typtab[btype].name);
++			continue;
++		}
++
++		if (!scan_btree(ag, bno, level, btype, &itype,
++				scanfunc_rtrmapbt))
++			return 0;
++	}
++	return 1;
 +}
 +
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+_scratch_mount
+ static int
+ process_inode_data(
+ 	struct xfs_dinode	*dip,
+@@ -2363,6 +2489,9 @@ process_inode_data(
+ 
+ 		case XFS_DINODE_FMT_BTREE:
+ 			return process_btinode(dip, itype);
 +
-+run_service() {
-+	systemctl start --wait "$1"
-+
-+	# Sometimes systemctl start --wait returns early due to some external
-+	# event, such as somebody else reloading the daemon, which closes the
-+	# socket.  The CLI has no way to resume waiting for the service once
-+	# the connection breaks, so we'll pgrep for up to 30 seconds until
-+	# there are no xfs_scrub processes running on the system.
-+	for ((i = 0; i < 30; i++)); do
-+		pgrep -f 'xfs_scrub*' > /dev/null 2>&1 || break
-+		sleep 1
-+	done
-+}
-+
-+echo "Scrub Test FS"
-+test_path=$(systemd-escape --path "$TEST_DIR")
-+run_service xfs_scrub@$test_path
-+find_scrub_trace "$TEST_DIR"
-+
-+echo "Scrub Scratch FS"
-+scratch_path=$(systemd-escape --path "$SCRATCH_MNT")
-+run_service xfs_scrub@$scratch_path
-+find_scrub_trace "$SCRATCH_MNT"
-+
-+# Remove the xfs_scrub_all media scan stamp directory (if specified) because we
-+# want to leave the regular system's stamp file alone.
-+mkdir -p $tmp/stamp
-+
-+new_svcfile="$new_svcdir/$new_scruball_svc"
-+cp "$orig_svcfile" "$new_svcfile"
-+
-+execstart="$(grep '^ExecStart=' $new_svcfile | sed -e 's/--auto-media-scan-interval[[:space:]]*[0-9]*[a-z]*//g')"
-+sed -e '/ExecStart=/d' -e '/BindPaths=/d' -i $new_svcfile
-+cat >> "$new_svcfile" << ENDL
-+[Service]
-+$execstart
-+ENDL
-+systemctl daemon-reload
-+
-+# Emit the results of our editing to the full log.
-+systemctl cat "$new_scruball_svc" >> $seqres.full
-+
-+# Cycle both mounts to clear all the incore CHECKED bits.
-+_test_cycle_mount
-+_scratch_cycle_mount
-+
-+echo "Scrub Everything"
-+run_service "$new_scruball_svc"
-+
-+sleep 2 # give systemd a chance to tear down the service container mount tree
-+
-+find_scrub_trace "$TEST_DIR"
-+find_scrub_trace "$SCRATCH_MNT"
-+
-+echo "Scrub Done" | tee -a $seqres.full
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1863.out b/tests/xfs/1863.out
-new file mode 100644
-index 0000000000..a1dd7d4bf4
---- /dev/null
-+++ b/tests/xfs/1863.out
-@@ -0,0 +1,6 @@
-+QA output created by 1863
-+Format and populate
-+Scrub Test FS
-+Scrub Scratch FS
-+Scrub Everything
-+Scrub Done
++		case XFS_DINODE_FMT_RMAP:
++			return process_rtrmap(dip, itype);
+ 	}
+ 	return 1;
+ }
 
 
