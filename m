@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2331-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2164-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91638821279
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:51:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BA0E8211C2
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:08:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A55821C21CC4
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:51:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C473DB21A31
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:08:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36FC80D;
-	Mon,  1 Jan 2024 00:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8217803;
+	Mon,  1 Jan 2024 00:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juZspp4F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rK/zKg7U"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDD37F9;
-	Mon,  1 Jan 2024 00:50:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7B5C433C7;
-	Mon,  1 Jan 2024 00:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742AC7EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:07:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC44AC433C7;
+	Mon,  1 Jan 2024 00:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070257;
-	bh=zWcZvK5otpvmqwZPIb6vjxtYz/oRQJU1IbLgCJ+PSUg=;
+	s=k20201202; t=1704067675;
+	bh=wOGZQHw6EYixleSNRr5RkDzDUVzZH0xbbacM+BbyTjo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=juZspp4FyEFBXsU0bHmBcJyNb23zIOU+B3nAhIzHLohqo0fF4o4HTS0VrRbqW2pPS
-	 woxIpvNZtwLn+D21kruflOUe05bfWJm9VjlpTOgwkPMe6h7k1T95Xus03TDiLGS8Tq
-	 4Zl9MZPFGjSDvrTPhr1Ry24NBIJHbrfDJEZb3tFDIWLN21yxoVaz02xxLr20IQMBQh
-	 tdODUtuFb2mpYFbDdGKwzISjjbMc+8K1ilt5iAIdtLARcCLbf/Vgd0YIB7//L1+3Gp
-	 VVb9yLzXQXx9b0wJQ203wVJ7bfz3cR3nyANmE4emRBH2aFQwoX0vqazAWMs5mCpiUV
-	 FpMC9JziXeiig==
-Date: Sun, 31 Dec 2023 16:50:56 +9900
-Subject: [PATCH 04/11] common/repair: patch up repair sb inode value
- complaints
+	b=rK/zKg7U3r7hhW7Y1NiXh5b+EgUQwg/kEHDyCbkWFm8vUvj1xWZr2BPwUaPqb4eIn
+	 kToy6g1S+e/GISbnxvdDcuqaWAtbTDMn6+BJd8C2TkuSaPeg7jAaIIKub/77l0mPq+
+	 XpZFt1jSFntAeWFL1gD/VXsTnyS4Bw48Ec/qvfpwzcr9p6VUzVeZOCWaU5IrQ6f++S
+	 58kR7daBJ5Uzp+axnOd/q0uCX/ti1uLtpFX1BmfoYtjrJSKwpTCTfUYTeE0N5OkVou
+	 ef2P6E5SY5HEVM4q74yapPqG4iCZtEmVJ9lNc5Zx5b6ZUV6f+SOq7mG6luY1tQLoDI
+	 32CwcxNjIK5Rw==
+Date: Sun, 31 Dec 2023 16:07:54 +9900
+Subject: [PATCH 2/3] xfs: support error injection when freeing rt extents
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405029902.1826032.4276950154935936731.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
-References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405014488.1815106.11785228210366790252.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014459.1815106.2840285507026368491.stgit@frogsfrogsfrogs>
+References: <170405014459.1815106.2840285507026368491.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,30 +52,38 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've refactored xfs_repair to be more consistent in how it
-reports unexpected superblock inode pointer values, we have to fix up
-the fstests repair filters to emulate the old golden output.
+A handful of fstests expect to be able to test what happens when extent
+free intents fail to actually free the extent.  Now that we're
+supporting EFIs for realtime extents, add to xfs_rtfree_extent the same
+injection point that exists in the regular extent freeing code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/repair |    4 ++++
+ libxfs/xfs_rtbitmap.c |    4 ++++
  1 file changed, 4 insertions(+)
 
 
-diff --git a/common/repair b/common/repair
-index 8945d0028c..c3afcfb3e6 100644
---- a/common/repair
-+++ b/common/repair
-@@ -28,6 +28,10 @@ _filter_repair()
- 	perl -ne '
- # for sb
- /- agno = / && next;	# remove each AG line (variable number)
-+s/realtime bitmap inode pointer/realtime bitmap ino pointer/;
-+s/sb realtime bitmap inode value/sb realtime bitmap inode/;
-+s/realtime summary inode pointer/realtime summary ino pointer/;
-+s/sb realtime summary inode value/sb realtime summary inode/;
- s/(pointer to) (\d+)/\1 INO/;
- # Changed inode output in 5.5.0
- s/sb root inode value /sb root inode /;
+diff --git a/libxfs/xfs_rtbitmap.c b/libxfs/xfs_rtbitmap.c
+index 7d29a72be6b..a42e54b28b9 100644
+--- a/libxfs/xfs_rtbitmap.c
++++ b/libxfs/xfs_rtbitmap.c
+@@ -16,6 +16,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_rtbitmap.h"
+ #include "xfs_health.h"
++#include "xfs_errortag.h"
+ 
+ /*
+  * Realtime allocator bitmap functions shared with userspace.
+@@ -1036,6 +1037,9 @@ xfs_rtfree_extent(
+ 	ASSERT(mp->m_rbmip->i_itemp != NULL);
+ 	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
+ 
++	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_FREE_EXTENT))
++		return -EIO;
++
+ 	error = xfs_rtcheck_alloc_range(&args, start, len);
+ 	if (error)
+ 		return error;
 
 
