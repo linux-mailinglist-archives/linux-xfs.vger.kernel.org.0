@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2173-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2395-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 588768211CB
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:10:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA8FB8212BF
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:07:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F8821C21C7A
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:10:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F1A61F22649
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A129B391;
-	Mon,  1 Jan 2024 00:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F3F64A08;
+	Mon,  1 Jan 2024 01:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biegenIq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSqMqbv5"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF1138B
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:10:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE74C433C7;
-	Mon,  1 Jan 2024 00:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF644A04
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 01:07:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E090DC433C7;
+	Mon,  1 Jan 2024 01:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067815;
-	bh=qRYFiKy7ItnHSueIs8dGQR6lzI0wsxgysD1J2Z5BaEk=;
+	s=k20201202; t=1704071258;
+	bh=iLQXLdzrd5w0gnFbKh6DylXPSFmDyHopPpYWz8QlBZQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=biegenIqpI9Pr91R4fL6JqG7WLGqouW4vxG5r+sA04qxiCbTiNCZOxzEwDyGRReYa
-	 z/Ip7FgoWGeTgV5vhzfspfGuZiBCxf6R2qw7PvItcPzMmEy54I+NeQt4r0+rYRfvgs
-	 utpxSFGwUM9ICw/5zqoH8YCbV7mx8Vpu66FniTur+KchzN+edOvC/ujpm2tDXZP/cN
-	 onpZDp6ToJca4OOcz7qIpz9/dISS7Qj126A0a1sNXDsjnEpEIbKqxq7QIslQkFdAFS
-	 soKHJRufQhTgLFkmp/njdhQM/s1lQMUQ1HYBQ1cyIlDkg6p1JCTGGPDiS2qn4XGGOc
-	 gTwQ41sCYVzTg==
-Date: Sun, 31 Dec 2023 16:10:15 +9900
-Subject: [PATCH 8/9] xfs: simplify usage of the rcur local variable in
- xfs_rmap_finish_one
+	b=aSqMqbv5XqS+8/t7a9Vf5LIEhzRUTk+D1ry/3J80xbZiDoIHY6efOrasZOkyZQiUA
+	 +dx91lGpMSxrLu+054+qJZhduMVCJEQj26vQWo/uPkg8bxSKOGYXWpWPd6BlG+sxZe
+	 fqM88zv6FcrigUfYrCDzYdccDpymREC66gUK3Q8/g6vsV4XPHXGmBJHA13ZJkbMQWh
+	 wBOntxdxwfWyAULfQ2sXljozIYaN33cAhVz5ffGKdtQNB+2/wsgoSLyzjuDXoRv80f
+	 sTCAYKzG6g89OnU5kVOE8Zgi3uRfs8CUGmx6syzH5bCV+iFK8QV/d8DT4NvabPH4J6
+	 mYRq8kNQqlrIw==
+Date: Sun, 31 Dec 2023 17:07:38 +9900
+Subject: [PATCH 1/1] design: document new name-value logged attribute variants
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405014922.1815232.16239681065099082707.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
-References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, darrick.wong@oracle.com
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405036215.1829412.10624772030547951296.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405036203.1829412.14716609287158101338.stgit@frogsfrogsfrogs>
+References: <170405036203.1829412.14716609287158101338.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -51,87 +50,118 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Darrick J. Wong <djwong@kernel.org>
 
-Only update rcur when we know the final *pcur value.
+In preparation for parent pointers, we added a few new opcodes for
+logged extended attribute updates.  Document them now.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[djwong: don't leave the caller with a dangling ref]
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c |   18 ++++++++++++++++++
- libxfs/xfs_rmap.c   |    6 ++----
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ .../journaling_log.asciidoc                        |   60 ++++++++++++++++++--
+ 1 file changed, 54 insertions(+), 6 deletions(-)
 
 
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index e7277b54532..d3df56f0a2b 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -28,6 +28,7 @@
- #include "xfs_ag.h"
- #include "xfs_swapext.h"
- #include "defer_item.h"
-+#include "xfs_btree.h"
+diff --git a/design/XFS_Filesystem_Structure/journaling_log.asciidoc b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
+index daf9b225..c91fbb6a 100644
+--- a/design/XFS_Filesystem_Structure/journaling_log.asciidoc
++++ b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
+@@ -730,10 +730,21 @@ of file block mapping operation we want.
+ .Extended attribute update log intent types
+ [options="header"]
+ |=====
+-| Value				| Description
+-| +XFS_ATTRI_OP_FLAGS_SET+	| Set a key/value pair.
+-| +XFS_ATTRI_OP_FLAGS_REMOVE+	| Remove a key/value pair.
+-| +XFS_ATTRI_OP_FLAGS_REPLACE+	| Replace one key/value pair with another.
++| Value					| Description
++| +XFS_ATTRI_OP_FLAGS_SET+		| Associate an attribute name with the
++given value, creating an entry for the name if necessary.
++| +XFS_ATTRI_OP_FLAGS_REMOVE+		| Remove an attribute name and any
++value associated with it.
++| +XFS_ATTRI_OP_FLAGS_REPLACE+		| Remove any value associated with an
++attribute name, then associate the name with the given value.
++| +XFS_ATTRI_OP_FLAGS_NVREMOVE+		| Remove the specific name and value
++from the attribute structure.  The name and value must already exist.
++| +XFS_ATTRI_OP_FLAGS_NVSET+		| Associate an attribute name with the
++given value.  The name and value must not exist in the attribute structure.
++A name associated with a different value will not be removed.
++| +XFS_ATTRI_OP_FLAGS_NVREPLACE+	| Remove a specific name and value from
++the attribute structure, then associate a specific name with a given value.
++The two names and values need not be the same.
+ |=====
  
- /* Dummy defer item ops, since we don't do logging. */
+ The ``extended attribute update intent'' operation comes first; it tells the
+@@ -747,11 +758,17 @@ through the complex update will be replayed fully during log recovery.
+ struct xfs_attri_log_format {
+      uint16_t                  alfi_type;
+      uint16_t                  alfi_size;
+-     uint32_t                  __pad;
++     uint32_t                  alfi_new_value_len;
+      uint64_t                  alfi_id;
+      uint64_t                  alfi_ino;
+      uint32_t                  alfi_op_flags;
+-     uint32_t                  alfi_name_len;
++     union {
++          uint32_t             alfi_name_len;
++          struct {
++              uint16_t         alfi_old_name_len;
++              uint16_t         alfi_new_name_len;
++          };
++     };
+      uint32_t                  alfi_value_len;
+      uint32_t                  alfi_attr_filter;
+ };
+@@ -764,6 +781,11 @@ order, not big-endian like the rest of XFS.
+ *alfi_size*::
+ Size of this log item.  Should be 1.
  
-@@ -370,6 +371,23 @@ xfs_rmap_update_abort_intent(
- {
- }
- 
-+/* Clean up after calling xfs_rmap_finish_one. */
-+STATIC void
-+xfs_rmap_finish_one_cleanup(
-+	struct xfs_trans	*tp,
-+	struct xfs_btree_cur	*rcur,
-+	int			error)
-+{
-+	struct xfs_buf		*agbp = NULL;
++*alfi_new_value_len*::
++For NVREPLACE, this is the length of the new xattr value, and +alfi_value_len+
++contains the length of the old xattr value.
++For all other opcodes, this field must be zero.
 +
-+	if (rcur == NULL)
-+		return;
-+	agbp = rcur->bc_ag.agbp;
-+	xfs_btree_del_cursor(rcur, error);
-+	if (error && agbp)
-+		xfs_trans_brelse(tp, agbp);
-+}
+ *alfi_id*::
+ A 64-bit number that binds the corresponding ATTRD log item to this ATTRI log
+ item.
+@@ -778,6 +800,13 @@ The operation being performed.  The lower byte must be one of the
+ *alfi_name_len*::
+ Length of the name of the extended attribute.  This must not be zero.
+ The attribute name itself is captured in the next log item.
++This field is not defined for the NVREPLACE opcode.
 +
- const struct xfs_defer_op_type xfs_rmap_update_defer_type = {
- 	.name		= "rmap",
- 	.create_intent	= xfs_rmap_update_create_intent,
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index a1a9f4927bd..183e840b7f1 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -2560,7 +2560,7 @@ xfs_rmap_finish_one(
- {
- 	struct xfs_owner_info		oinfo;
- 	struct xfs_mount		*mp = tp->t_mountp;
--	struct xfs_btree_cur		*rcur;
-+	struct xfs_btree_cur		*rcur = *pcur;
- 	struct xfs_buf			*agbp = NULL;
- 	xfs_agblock_t			bno;
- 	bool				unwritten;
-@@ -2575,7 +2575,6 @@ xfs_rmap_finish_one(
- 	 * If we haven't gotten a cursor or the cursor AG doesn't match
- 	 * the startblock, get one now.
- 	 */
--	rcur = *pcur;
- 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
- 		xfs_btree_del_cursor(rcur, 0);
- 		rcur = NULL;
-@@ -2597,9 +2596,8 @@ xfs_rmap_finish_one(
- 			return -EFSCORRUPTED;
- 		}
++*alfi_old_name_len*::
++For NVREPLACE, this is the length of the old name.
++
++*alfi_new_name_len*::
++For NVREPLACE, this is the length of the new name.
  
--		rcur = xfs_rmapbt_init_cursor(mp, tp, agbp, ri->ri_pag);
-+		*pcur = rcur = xfs_rmapbt_init_cursor(mp, tp, agbp, ri->ri_pag);
- 	}
--	*pcur = rcur;
+ *alfi_value_len*::
+ Length of the value of the extended attribute.  This must be zero for remove
+@@ -789,6 +818,25 @@ name.
+ Attribute namespace filter flags.  This must be one of +ATTR_ROOT+,
+ +ATTR_SECURE+, or +ATTR_INCOMPLETE+.
  
- 	xfs_rmap_ino_owner(&oinfo, ri->ri_owner, ri->ri_whichfork,
- 			ri->ri_bmap.br_startoff);
++For a SET or REPLACE opcode, there should be two regions after the ATTRI intent
++item.  The first region contains the attribute name and the second contains the
++attribute value.
++
++For a REMOVE opcode, there should only be one region after the ATTRI intent
++item, and it will contain the attribute name.
++
++For an NVSET or NVREMOVE opcode, there should be one or two regions after the
++ATTRI intent item.  The first region contains the attribute name.  The second
++region, if present, contains the attribute value.
++
++For an NVREPLACE opcode, there should be between two and four regions after the
++ATTRI intent item.  The first region contains the attribute name to remove.
++The second region contains the attribute name to create.  If +alfi_value_len+
++is nonzero, the third region contains the attribute value to remove.  If
+++alfi_new_value_len+ is nonzero, the next region seen contains the attribute
++value to create.  This could be the third region if there was no value to
++remove, or it could be the fourth region.
++
+ [[ATTRD_Log_Item]]
+ === Completion of Extended Attribute Updates
+ 
 
 
