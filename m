@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2292-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2194-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77BFF821245
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:40:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B3478211E0
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:15:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F33791F225EF
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:40:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 76571B21AE9
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99BEB7FD;
-	Mon,  1 Jan 2024 00:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133C3392;
+	Mon,  1 Jan 2024 00:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TX+k2W1h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPv8fDyr"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652407EE
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:40:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A8AC433C7;
-	Mon,  1 Jan 2024 00:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EC2391
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:15:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6440DC433C8;
+	Mon,  1 Jan 2024 00:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069646;
-	bh=uR6U5qNJR2PHkazOLWPItQVFrMbUjauWJmA0/2ojXE4=;
+	s=k20201202; t=1704068144;
+	bh=6HOyrIiqJVi1YN2u54I/xTg+MRxGHhy8nOHyelfD5xs=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=TX+k2W1habeejAu+5y+ACxtNZ11ahLCxUitmtly50QLD/GZPW8mM8yUAH5wUD8das
-	 uKZJGzyBNbODs2XKCKp5/hUl2AJRIetrpfKnzZf0mimEU4MZVn5gXmk6BIUpcxz6Py
-	 RZfVXJ5eidYZ8YrnJxbT85q0dQTbisAK+NtOhChW6GSph1/HbZcETKhPzxj4/D/w2G
-	 PtUnpCHS5ojHh6musikk9iXP+xWvD0mFCIesi0DBCp9ljQGjqgmBwAeC8tRAHRtcPX
-	 Q4bSx16Ji0kt5TY5VpJlbvwIiBQhaireq6Dq5yLKaB1EWpZZFdj+Q+MAyzt+ohVNb8
-	 GekHIhk+NkdfQ==
-Date: Sun, 31 Dec 2023 16:40:45 +9900
-Subject: [PATCH 03/10] xfs_db: get and put blocks on the AGFL
+	b=CPv8fDyrBA8QO1QETFMcczAdoT1Gub20c1NAqcbJ7ALun+6ksLcnkmci0cThq8tIi
+	 ESoFLij0RmW36r+7t9mCOQW39GD3FK2Pj6jUdgX2rbsCQaasByjAKT8JS8dYcIQ07v
+	 meqaqzh1a1SejPrf8vVqLAFkXs1Ct6GxQkdmhndAK5vgIJZcP34K3pJEiWexEbasxv
+	 mKR2oIZMZVCNTvD4CZ2rSlD2fXqROG24LwdwLco9GYowe/275n57gtg3zomDV92whJ
+	 N9uZttfqFczg0gU8C2K1SlG6UfZvmCBGrti+UOt7FzMtTWVh6jg1di0YhJwxe0lF/s
+	 gZzOxxrkdqfGw==
+Date: Sun, 31 Dec 2023 16:15:43 +9900
+Subject: [PATCH 20/47] xfs: create a shadow rmap btree during realtime rmap
+ repair
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405020364.1820796.4627927059186718750.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
-References: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
+Message-ID: <170405015579.1815505.16054821915026842707.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,400 +53,233 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new xfs_db command to let people add and remove blocks from an
-AGFL.  This isn't really related to rmap btree reconstruction, other
-than enabling debugging code to mess around with the AGFL to exercise
-various odd scenarios.
+Create an in-memory btree of rmap records instead of an array.  This
+enables us to do live record collection instead of freezing the fs.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/agfl.c                |  297 ++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/libxfs_api_defs.h |    4 +
- man/man8/xfs_db.8        |   11 ++
- 3 files changed, 308 insertions(+), 4 deletions(-)
+ libxfs/xfbtree.c          |    2 +
+ libxfs/xfs_btree.c        |    2 +
+ libxfs/xfs_btree.h        |    1 
+ libxfs/xfs_rmap.c         |    5 +-
+ libxfs/xfs_rtrmap_btree.c |  123 +++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_rtrmap_btree.h |    9 +++
+ 6 files changed, 141 insertions(+), 1 deletion(-)
 
 
-diff --git a/db/agfl.c b/db/agfl.c
-index f0f3f21a64d..662b6403cb2 100644
---- a/db/agfl.c
-+++ b/db/agfl.c
-@@ -15,13 +15,14 @@
- #include "output.h"
- #include "init.h"
- #include "agfl.h"
-+#include "libfrog/bitmap.h"
+diff --git a/libxfs/xfbtree.c b/libxfs/xfbtree.c
+index b4762393b3a..cdc37561a62 100644
+--- a/libxfs/xfbtree.c
++++ b/libxfs/xfbtree.c
+@@ -253,6 +253,8 @@ xfbtree_dup_cursor(
  
- static int agfl_bno_size(void *obj, int startoff);
- static int agfl_f(int argc, char **argv);
- static void agfl_help(void);
+ 	if (cur->bc_mem.pag)
+ 		ncur->bc_mem.pag = xfs_perag_hold(cur->bc_mem.pag);
++	if (cur->bc_mem.rtg)
++		ncur->bc_mem.rtg = xfs_rtgroup_hold(cur->bc_mem.rtg);
  
- static const cmdinfo_t agfl_cmd =
--	{ "agfl", NULL, agfl_f, 0, 1, 1, N_("[agno]"),
-+	{ "agfl", NULL, agfl_f, 0, -1, 1, N_("[agno] [-g nr] [-p nr]"),
- 	  N_("set address to agfl block"), agfl_help };
+ 	return ncur;
+ }
+diff --git a/libxfs/xfs_btree.c b/libxfs/xfs_btree.c
+index f599dd17d30..450c48ceaf1 100644
+--- a/libxfs/xfs_btree.c
++++ b/libxfs/xfs_btree.c
+@@ -487,6 +487,8 @@ xfs_btree_del_cursor(
+ 	if (cur->bc_flags & XFS_BTREE_IN_XFILE) {
+ 		if (cur->bc_mem.pag)
+ 			xfs_perag_put(cur->bc_mem.pag);
++		if (cur->bc_mem.rtg)
++			xfs_rtgroup_put(cur->bc_mem.rtg);
+ 	}
+ 	kmem_cache_free(cur->bc_cache, cur);
+ }
+diff --git a/libxfs/xfs_btree.h b/libxfs/xfs_btree.h
+index 3559cf5d3a6..4753a5c8476 100644
+--- a/libxfs/xfs_btree.h
++++ b/libxfs/xfs_btree.h
+@@ -269,6 +269,7 @@ struct xfs_btree_cur_mem {
+ 	struct xfbtree			*xfbtree;
+ 	struct xfs_buf			*head_bp;
+ 	struct xfs_perag		*pag;
++	struct xfs_rtgroup		*rtg;
+ };
  
- const field_t	agfl_hfld[] = { {
-@@ -77,10 +78,280 @@ agfl_help(void)
- " for each allocation group.  This acts as a reserved pool of space\n"
- " separate from the general filesystem freespace (not used for user data).\n"
- "\n"
-+" -g quantity\tRemove this many blocks from the AGFL.\n"
-+" -p quantity\tAdd this many blocks to the AGFL.\n"
-+"\n"
- ));
+ struct xfs_btree_level {
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index cf2968cbd7f..42713dd17f4 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -328,8 +328,11 @@ xfs_rmap_check_btrec(
+ 	struct xfs_btree_cur		*cur,
+ 	const struct xfs_rmap_irec	*irec)
+ {
+-	if (cur->bc_btnum == XFS_BTNUM_RTRMAP)
++	if (cur->bc_btnum == XFS_BTNUM_RTRMAP) {
++		if (cur->bc_flags & XFS_BTREE_IN_XFILE)
++			return xfs_rtrmap_check_irec(cur->bc_mem.rtg, irec);
+ 		return xfs_rtrmap_check_irec(cur->bc_ino.rtg, irec);
++	}
  
+ 	if (cur->bc_flags & XFS_BTREE_IN_XFILE)
+ 		return xfs_rmap_check_irec(cur->bc_mem.pag, irec);
+diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
+index 0393da8837a..b5adfe362a7 100644
+--- a/libxfs/xfs_rtrmap_btree.c
++++ b/libxfs/xfs_rtrmap_btree.c
+@@ -26,6 +26,9 @@
+ #include "xfs_bmap.h"
+ #include "xfs_imeta.h"
+ #include "xfs_health.h"
++#include "xfile.h"
++#include "xfbtree.h"
++#include "xfs_btree_mem.h"
+ 
+ static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
+ 
+@@ -555,6 +558,126 @@ xfs_rtrmapbt_stage_cursor(
+ 	return cur;
  }
  
-+struct dump_info {
-+	struct xfs_perag	*pag;
-+	bool			leak;
-+};
-+
-+/* Return blocks freed from the AGFL to the free space btrees. */
-+static int
-+free_grabbed(
-+	uint64_t		start,
-+	uint64_t		length,
-+	void			*data)
++#ifdef CONFIG_XFS_BTREE_IN_XFILE
++/*
++ * Validate an in-memory realtime rmap btree block.  Callers are allowed to
++ * generate an in-memory btree even if the ondisk feature is not enabled.
++ */
++static xfs_failaddr_t
++xfs_rtrmapbt_mem_verify(
++	struct xfs_buf		*bp)
 +{
-+	struct dump_info	*di = data;
-+	struct xfs_perag	*pag = di->pag;
-+	struct xfs_mount	*mp = pag->pag_mount;
-+	struct xfs_trans	*tp;
-+	struct xfs_buf		*agf_bp;
-+	int			error;
++	struct xfs_mount	*mp = bp->b_mount;
++	struct xfs_btree_block	*block = XFS_BUF_TO_BLOCK(bp);
++	xfs_failaddr_t		fa;
++	unsigned int		level;
 +
-+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0,
-+			&tp);
-+	if (error)
-+		return error;
++	if (!xfs_verify_magic(bp, block->bb_magic))
++		return __this_address;
 +
-+	error = -libxfs_alloc_read_agf(pag, tp, 0, &agf_bp);
-+	if (error)
-+		goto out_cancel;
++	fa = xfs_btree_lblock_v5hdr_verify(bp, XFS_RMAP_OWN_UNKNOWN);
++	if (fa)
++		return fa;
 +
-+	error = -libxfs_free_extent(tp, pag, start, length, &XFS_RMAP_OINFO_AG,
-+			XFS_AG_RESV_AGFL);
-+	if (error)
-+		goto out_cancel;
-+
-+	return -libxfs_trans_commit(tp);
-+
-+out_cancel:
-+	libxfs_trans_cancel(tp);
-+	return error;
-+}
-+
-+/* Report blocks freed from the AGFL. */
-+static int
-+dump_grabbed(
-+	uint64_t		start,
-+	uint64_t		length,
-+	void			*data)
-+{
-+	struct dump_info	*di = data;
-+	const char		*fmt;
-+
-+	if (length == 1)
-+		fmt = di->leak ? _("agfl %u: leaked agbno %u\n") :
-+				 _("agfl %u: removed agbno %u\n");
-+	else
-+		fmt = di->leak ? _("agfl %u: leaked agbno %u-%u\n") :
-+				 _("agfl %u: removed agbno %u-%u\n");
-+
-+	printf(fmt, di->pag->pag_agno, (unsigned int)start,
-+			(unsigned int)(start + length - 1));
-+	return 0;
-+}
-+
-+/* Remove blocks from the AGFL. */
-+static int
-+agfl_get(
-+	struct xfs_perag	*pag,
-+	int			quantity)
-+{
-+	struct dump_info	di = {
-+		.pag		= pag,
-+		.leak		= quantity < 0,
-+	};
-+	struct xfs_agf		*agf;
-+	struct xfs_buf		*agf_bp;
-+	struct xfs_trans	*tp;
-+	struct bitmap		*grabbed;
-+	const unsigned int	agfl_size = libxfs_agfl_size(pag->pag_mount);
-+	unsigned int		i;
-+	int			error;
-+
-+	if (!quantity)
-+		return 0;
-+
-+	if (di.leak)
-+		quantity = -quantity;
-+	quantity = min(quantity, agfl_size);
-+
-+	error = bitmap_alloc(&grabbed);
-+	if (error)
-+		goto out;
-+
-+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, quantity, 0,
-+			0, &tp);
-+	if (error)
-+		goto out_bitmap;
-+
-+	error = -libxfs_alloc_read_agf(pag, tp, 0, &agf_bp);
-+	if (error)
-+		goto out_cancel;
-+
-+	agf = agf_bp->b_addr;
-+	quantity = min(quantity, be32_to_cpu(agf->agf_flcount));
-+
-+	for (i = 0; i < quantity; i++) {
-+		xfs_agblock_t	agbno;
-+
-+		error = -libxfs_alloc_get_freelist(pag, tp, agf_bp, &agbno, 0);
-+		if (error)
-+			goto out_cancel;
-+
-+		if (agbno == NULLAGBLOCK) {
-+			error = ENOSPC;
-+			goto out_cancel;
-+		}
-+
-+		error = bitmap_set(grabbed, agbno, 1);
-+		if (error)
-+			goto out_cancel;
++	level = be16_to_cpu(block->bb_level);
++	if (xfs_has_rmapbt(mp)) {
++		if (level >= mp->m_rtrmap_maxlevels)
++			return __this_address;
++	} else {
++		if (level >= xfs_rtrmapbt_maxlevels_ondisk())
++			return __this_address;
 +	}
 +
-+	error = -libxfs_trans_commit(tp);
-+	if (error)
-+		goto out_bitmap;
-+
-+	error = bitmap_iterate(grabbed, dump_grabbed, &di);
-+	if (error)
-+		goto out_bitmap;
-+
-+	if (!di.leak) {
-+		error = bitmap_iterate(grabbed, free_grabbed, &di);
-+		if (error)
-+			goto out_bitmap;
-+	}
-+
-+	bitmap_free(&grabbed);
-+	return 0;
-+
-+out_cancel:
-+	libxfs_trans_cancel(tp);
-+out_bitmap:
-+	bitmap_free(&grabbed);
-+out:
-+	if (error)
-+		printf(_("agfl %u: %s\n"), pag->pag_agno, strerror(error));
-+	return error;
-+}
-+
-+/* Add blocks to the AGFL. */
-+static int
-+agfl_put(
-+	struct xfs_perag	*pag,
-+	int			quantity)
-+{
-+	struct xfs_alloc_arg	args = {
-+		.mp		= pag->pag_mount,
-+		.alignment	= 1,
-+		.minlen		= 1,
-+		.prod		= 1,
-+		.resv		= XFS_AG_RESV_AGFL,
-+		.oinfo		= XFS_RMAP_OINFO_AG,
-+	};
-+	struct xfs_buf		*agfl_bp;
-+	struct xfs_agf		*agf;
-+	struct xfs_trans	*tp;
-+	xfs_fsblock_t		target;
-+	const unsigned int	agfl_size = libxfs_agfl_size(pag->pag_mount);
-+	unsigned int		i;
-+	bool			eoag = quantity < 0;
-+	int			error;
-+
-+	if (!quantity)
-+		return 0;
-+
-+	if (eoag)
-+		quantity = -quantity;
-+	quantity = min(quantity, agfl_size);
-+
-+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, quantity, 0,
-+			0, &tp);
-+	if (error)
-+		return error;
-+	args.tp = tp;
-+
-+	error = -libxfs_alloc_read_agf(pag, tp, 0, &args.agbp);
-+	if (error)
-+		goto out_cancel;
-+
-+	agf = args.agbp->b_addr;
-+	args.maxlen = min(quantity, agfl_size - be32_to_cpu(agf->agf_flcount));
-+
-+	if (eoag)
-+		target = XFS_AGB_TO_FSB(pag->pag_mount, pag->pag_agno,
-+				be32_to_cpu(agf->agf_length) - 1);
-+	else
-+		target = XFS_AGB_TO_FSB(pag->pag_mount, pag->pag_agno, 0);
-+
-+	error = -libxfs_alloc_read_agfl(pag, tp, &agfl_bp);
-+	if (error)
-+		goto out_cancel;
-+
-+	error = -libxfs_alloc_vextent_near_bno(&args, target);
-+	if (error)
-+		goto out_cancel;
-+
-+	if (args.agbno == NULLAGBLOCK) {
-+		error = ENOSPC;
-+		goto out_cancel;
-+	}
-+
-+	for (i = 0; i < args.len; i++) {
-+		error = -libxfs_alloc_put_freelist(pag, tp, args.agbp,
-+				agfl_bp, args.agbno + i, 0);
-+		if (error)
-+			goto out_cancel;
-+	}
-+
-+	if (i == 1)
-+		printf(_("agfl %u: added agbno %u\n"), pag->pag_agno,
-+				args.agbno);
-+	else if (i > 1)
-+		printf(_("agfl %u: added agbno %u-%u\n"), pag->pag_agno,
-+				args.agbno, args.agbno + i - 1);
-+
-+	error = -libxfs_trans_commit(tp);
-+	if (error)
-+		goto out;
-+
-+	return 0;
-+
-+out_cancel:
-+	libxfs_trans_cancel(tp);
-+out:
-+	if (error)
-+		printf(_("agfl %u: %s\n"), pag->pag_agno, strerror(error));
-+	return error;
++	return xfbtree_lblock_verify(bp,
++			xfs_rtrmapbt_maxrecs(mp, xfo_to_b(1), level == 0));
 +}
 +
 +static void
-+agfl_adjust(
-+	struct xfs_mount	*mp,
-+	xfs_agnumber_t		agno,
-+	int			gblocks,
-+	int			pblocks)
++xfs_rtrmapbt_mem_rw_verify(
++	struct xfs_buf	*bp)
 +{
-+	struct xfs_perag	*pag;
-+	int			error;
++	xfs_failaddr_t	fa = xfs_rtrmapbt_mem_verify(bp);
 +
-+	if (!expert_mode) {
-+		printf(_("AGFL get/put only supported in expert mode.\n"));
-+		exitcode = 1;
-+		return;
-+	}
-+
-+	pag = libxfs_perag_get(mp, agno);
-+
-+	error = agfl_get(pag, gblocks);
-+	if (error)
-+		goto out_pag;
-+
-+	error = agfl_put(pag, pblocks);
-+
-+out_pag:
-+	libxfs_perag_put(pag);
-+	if (error)
-+		exitcode = 1;
++	if (fa)
++		xfs_verifier_error(bp, -EFSCORRUPTED, fa);
 +}
 +
- static int
- agfl_f(
- 	int		argc,
-@@ -88,9 +359,25 @@ agfl_f(
- {
- 	xfs_agnumber_t	agno;
- 	char		*p;
-+	int		c;
-+	int		gblocks = 0, pblocks = 0;
++/* skip crc checks on in-memory btrees to save time */
++static const struct xfs_buf_ops xfs_rtrmapbt_mem_buf_ops = {
++	.name			= "xfs_rtrmapbt_mem",
++	.magic			= { 0, cpu_to_be32(XFS_RTRMAP_CRC_MAGIC) },
++	.verify_read		= xfs_rtrmapbt_mem_rw_verify,
++	.verify_write		= xfs_rtrmapbt_mem_rw_verify,
++	.verify_struct		= xfs_rtrmapbt_mem_verify,
++};
++
++static const struct xfs_btree_ops xfs_rtrmapbt_mem_ops = {
++	.rec_len		= sizeof(struct xfs_rmap_rec),
++	.key_len		= 2 * sizeof(struct xfs_rmap_key),
++	.lru_refs		= XFS_RMAP_BTREE_REF,
++	.geom_flags		= XFS_BTREE_CRC_BLOCKS | XFS_BTREE_OVERLAPPING |
++				  XFS_BTREE_LONG_PTRS | XFS_BTREE_IN_XFILE,
++
++	.dup_cursor		= xfbtree_dup_cursor,
++	.set_root		= xfbtree_set_root,
++	.alloc_block		= xfbtree_alloc_block,
++	.free_block		= xfbtree_free_block,
++	.get_minrecs		= xfbtree_get_minrecs,
++	.get_maxrecs		= xfbtree_get_maxrecs,
++	.init_key_from_rec	= xfs_rtrmapbt_init_key_from_rec,
++	.init_high_key_from_rec	= xfs_rtrmapbt_init_high_key_from_rec,
++	.init_rec_from_cur	= xfs_rtrmapbt_init_rec_from_cur,
++	.init_ptr_from_cur	= xfbtree_init_ptr_from_cur,
++	.key_diff		= xfs_rtrmapbt_key_diff,
++	.buf_ops		= &xfs_rtrmapbt_mem_buf_ops,
++	.diff_two_keys		= xfs_rtrmapbt_diff_two_keys,
++	.keys_inorder		= xfs_rtrmapbt_keys_inorder,
++	.recs_inorder		= xfs_rtrmapbt_recs_inorder,
++	.keys_contiguous	= xfs_rtrmapbt_keys_contiguous,
++};
++
++/* Create a cursor for an in-memory btree. */
++struct xfs_btree_cur *
++xfs_rtrmapbt_mem_cursor(
++	struct xfs_rtgroup	*rtg,
++	struct xfs_trans	*tp,
++	struct xfs_buf		*head_bp,
++	struct xfbtree		*xfbtree)
++{
++	struct xfs_btree_cur	*cur;
++	struct xfs_mount	*mp = rtg->rtg_mount;
++
++	/* Overlapping btree; 2 keys per pointer. */
++	cur = xfs_btree_alloc_cursor(mp, tp, XFS_BTNUM_RTRMAP,
++			&xfs_rtrmapbt_mem_ops, mp->m_rtrmap_maxlevels,
++			xfs_rtrmapbt_cur_cache);
++	cur->bc_statoff = XFS_STATS_CALC_INDEX(xs_rmap_2);
++	cur->bc_mem.xfbtree = xfbtree;
++	cur->bc_mem.head_bp = head_bp;
++	cur->bc_nlevels = xfs_btree_mem_head_nlevels(head_bp);
++
++	cur->bc_mem.rtg = xfs_rtgroup_hold(rtg);
++	return cur;
++}
++
++int
++xfs_rtrmapbt_mem_create(
++	struct xfs_mount	*mp,
++	xfs_rgnumber_t		rgno,
++	struct xfs_buftarg	*target,
++	struct xfbtree		**xfbtreep)
++{
++	struct xfbtree_config	cfg = {
++		.btree_ops	= &xfs_rtrmapbt_mem_ops,
++		.target		= target,
++		.flags		= XFBTREE_DIRECT_MAP,
++		.owner		= rgno,
++	};
++
++	return xfbtree_create(mp, &cfg, xfbtreep);
++}
++#endif /* CONFIG_XFS_BTREE_IN_XFILE */
++
+ /*
+  * Install a new rt reverse mapping btree root.  Caller is responsible for
+  * invalidating and freeing the old btree blocks.
+diff --git a/libxfs/xfs_rtrmap_btree.h b/libxfs/xfs_rtrmap_btree.h
+index 5aec719be05..b0a8e8d89f9 100644
+--- a/libxfs/xfs_rtrmap_btree.h
++++ b/libxfs/xfs_rtrmap_btree.h
+@@ -205,4 +205,13 @@ int xfs_rtrmapbt_create(struct xfs_imeta_update *upd, struct xfs_inode **ipp);
+ unsigned long long xfs_rtrmapbt_calc_size(struct xfs_mount *mp,
+ 		unsigned long long len);
  
--	if (argc > 1) {
--		agno = (xfs_agnumber_t)strtoul(argv[1], &p, 0);
-+	while ((c = getopt(argc, argv, "g:p:")) != -1) {
-+		switch (c) {
-+		case 'g':
-+			gblocks = atoi(optarg);
-+			break;
-+		case 'p':
-+			pblocks = atoi(optarg);
-+			break;
-+		default:
-+			agfl_help();
-+			return 1;
-+		}
-+	}
++#ifdef CONFIG_XFS_BTREE_IN_XFILE
++struct xfbtree;
++struct xfs_btree_cur *xfs_rtrmapbt_mem_cursor(struct xfs_rtgroup *rtg,
++		struct xfs_trans *tp, struct xfs_buf *mhead_bp,
++		struct xfbtree *xfbtree);
++int xfs_rtrmapbt_mem_create(struct xfs_mount *mp, xfs_rgnumber_t rgno,
++		struct xfs_buftarg *target, struct xfbtree **xfbtreep);
++#endif /* CONFIG_XFS_BTREE_IN_XFILE */
 +
-+	if (argc > optind) {
-+		agno = (xfs_agnumber_t)strtoul(argv[optind], &p, 0);
- 		if (*p != '\0' || agno >= mp->m_sb.sb_agcount) {
- 			dbprintf(_("bad allocation group number %s\n"), argv[1]);
- 			return 0;
-@@ -98,6 +385,10 @@ agfl_f(
- 		cur_agno = agno;
- 	} else if (cur_agno == NULLAGNUMBER)
- 		cur_agno = 0;
-+
-+	if (gblocks || pblocks)
-+		agfl_adjust(mp, cur_agno, gblocks, pblocks);
-+
- 	ASSERT(typtab[TYP_AGFL].typnm == TYP_AGFL);
- 	set_cur(&typtab[TYP_AGFL],
- 		XFS_AG_DADDR(mp, cur_agno, XFS_AGFL_DADDR(mp)),
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 4e7b3caba4b..52616086ef0 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -30,8 +30,12 @@
- #define xfs_allocbt_maxrecs		libxfs_allocbt_maxrecs
- #define xfs_allocbt_stage_cursor	libxfs_allocbt_stage_cursor
- #define xfs_alloc_fix_freelist		libxfs_alloc_fix_freelist
-+#define xfs_alloc_get_freelist		libxfs_alloc_get_freelist
- #define xfs_alloc_min_freelist		libxfs_alloc_min_freelist
-+#define xfs_alloc_put_freelist		libxfs_alloc_put_freelist
- #define xfs_alloc_read_agf		libxfs_alloc_read_agf
-+#define xfs_alloc_read_agfl		libxfs_alloc_read_agfl
-+#define xfs_alloc_vextent_near_bno	libxfs_alloc_vextent_near_bno
- #define xfs_alloc_vextent_start_ag	libxfs_alloc_vextent_start_ag
- 
- #define xfs_ascii_ci_hashname		libxfs_ascii_ci_hashname
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index 3e80bcc57de..39461398c6a 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -182,10 +182,19 @@ Set current address to the AGF block for allocation group
- .IR agno .
- If no argument is given, use the current allocation group.
- .TP
--.BI "agfl [" agno ]
-+.BI "agfl [" agno "] [\-g " " quantity" "] [\-p " quantity ]
- Set current address to the AGFL block for allocation group
- .IR agno .
- If no argument is given, use the current allocation group.
-+If the
-+.B -g
-+option is specified with a positive quantity, remove that many blocks from the
-+AGFL and put them in the free space btrees.
-+If the quantity is negative, remove the blocks and leak them.
-+If the
-+.B -p
-+option is specified, add that many blocks to the AGFL.
-+If the quantity is negative, the blocks are selected from the end of the AG.
- .TP
- .BI "agi [" agno ]
- Set current address to the AGI block for allocation group
+ #endif	/* __XFS_RTRMAP_BTREE_H__ */
 
 
