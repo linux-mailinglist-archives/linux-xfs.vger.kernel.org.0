@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2160-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2283-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C19CB8211BE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D017082123C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:38:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 701F928278E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:06:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8430D1F20EE3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:38:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9549802;
-	Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB7538D;
+	Mon,  1 Jan 2024 00:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5w6rgfv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGh3sdw8"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961937F9
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 684DCC433C7;
-	Mon,  1 Jan 2024 00:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C640389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:38:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6DAC433C8;
+	Mon,  1 Jan 2024 00:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067612;
-	bh=crL7isInhxuf7Trb09E6aSLKAryS1h8t8juwjciF2/M=;
+	s=k20201202; t=1704069505;
+	bh=vi8EwOohvCKe6L/UMonB9ipugdMGiXeWnn0W1zVWJVI=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=n5w6rgfvdWPYssrus4Svo8lb+q+ArBcJcsLRQZKE4u1nxnFvFB1/QGv0UG3bII4A5
-	 ClbiKfq1fpU1TiIRV1pHtsz3VU2tZuG0Zz2ltkKwzCkN2ZUvz2dSzKbtp3oqcbLU8t
-	 JsfYcLWV6gD2wc5u4JDedN63x/9cy7rxFdFqMXLecw8TQie62a4Vid9w8gWOz+MkBk
-	 6pMPa+pUwr/6usH981em/At8VNIW6pPmvackozIzKyc4LKMnXbC5lClv3WJ+IZETNo
-	 iUDTmGolfn5l6QWSBjZkoFLcQR+G88wsEY4scpbzMq2lvyDsohDmTD+PuAtjklqOaU
-	 IpacsGewDjhGw==
-Date: Sun, 31 Dec 2023 16:06:52 +9900
-Subject: [PATCH 6/8] xfs: remove duplicate asserts in xfs_defer_extent_free
+	b=hGh3sdw8n967E6kei0fKrrH4QQJ51CNJfVM3EobVn6zqZUD3GxLI+4kBUihffMDTN
+	 4hSoDR8yIREYsbEAQBO6rGKTWtM0jFaS5u/o/FfomLdttoPHaChAyJHeClTM2V0/VJ
+	 pXsdQez1vif5kUmptksercHgSYZIZFKHkTBczVSJpeDXJUhBdXBPsGj317Vf+Fx6Gj
+	 wP5lb0Y4QSaPifmHidAQFTanCJURet0R3Ate1p7Xy1gbx18pMgTyb7EaXiUm8yhYJt
+	 OUDjHyJtWwmQf+uqobRWyU+KF2l/E06avTNvPnr0mnitVv0FvBK5zRs+p/Yn0ZuMSs
+	 vJZY5Z12I3LBA==
+Date: Sun, 31 Dec 2023 16:38:24 +9900
+Subject: [PATCH 1/5] xfs: track deferred ops statistics
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405014121.1814860.11780010368849686036.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
-References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405019577.1820520.10283388638932874687.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
+References: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -50,47 +50,91 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Darrick J. Wong <djwong@kernel.org>
 
-The bno/len verification is already done by the calls to
-xfs_verify_rtbext / xfs_verify_fsbext, and reporting a corruption error
-seem like the better handling than tripping an assert anyway.
+Track some basic statistics on how hard we're pushing the defer ops.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_alloc.c |   13 -------------
- 1 file changed, 13 deletions(-)
+ include/xfs_trans.h |    4 ++++
+ libxfs/xfs_defer.c  |   14 ++++++++++++++
+ 2 files changed, 18 insertions(+)
 
 
-diff --git a/libxfs/xfs_alloc.c b/libxfs/xfs_alloc.c
-index 442a045378c..160563b1b26 100644
---- a/libxfs/xfs_alloc.c
-+++ b/libxfs/xfs_alloc.c
-@@ -2592,23 +2592,10 @@ xfs_defer_extent_free(
+diff --git a/include/xfs_trans.h b/include/xfs_trans.h
+index 630bc85ce37..4b4c26b5561 100644
+--- a/include/xfs_trans.h
++++ b/include/xfs_trans.h
+@@ -82,6 +82,10 @@ typedef struct xfs_trans {
+ 	long			t_frextents_delta;/* superblock freextents chg*/
+ 	struct list_head	t_items;	/* log item descriptors */
+ 	struct list_head	t_dfops;	/* deferred operations */
++
++	unsigned int	t_dfops_nr;
++	unsigned int	t_dfops_nr_max;
++	unsigned int	t_dfops_finished;
+ } xfs_trans_t;
+ 
+ void	xfs_trans_init(struct xfs_mount *);
+diff --git a/libxfs/xfs_defer.c b/libxfs/xfs_defer.c
+index 4a1139913b9..2e32939024d 100644
+--- a/libxfs/xfs_defer.c
++++ b/libxfs/xfs_defer.c
+@@ -611,6 +611,8 @@ xfs_defer_finish_one(
+ 	/* Done with the dfp, free it. */
+ 	list_del(&dfp->dfp_list);
+ 	kmem_cache_free(xfs_defer_pending_cache, dfp);
++	tp->t_dfops_nr--;
++	tp->t_dfops_finished++;
+ out:
+ 	if (ops->finish_cleanup)
+ 		ops->finish_cleanup(tp, state, error);
+@@ -673,6 +675,9 @@ xfs_defer_finish_noroll(
+ 
+ 		list_splice_init(&(*tp)->t_dfops, &dop_pending);
+ 
++		(*tp)->t_dfops_nr_max = max((*tp)->t_dfops_nr,
++					    (*tp)->t_dfops_nr_max);
++
+ 		if (has_intents < 0) {
+ 			error = has_intents;
+ 			goto out_shutdown;
+@@ -714,6 +719,7 @@ xfs_defer_finish_noroll(
+ 	xfs_force_shutdown((*tp)->t_mountp, SHUTDOWN_CORRUPT_INCORE);
+ 	trace_xfs_defer_finish_error(*tp, error);
+ 	xfs_defer_cancel_list((*tp)->t_mountp, &dop_pending);
++	(*tp)->t_dfops_nr = 0;
+ 	xfs_defer_cancel(*tp);
+ 	return error;
+ }
+@@ -761,6 +767,7 @@ xfs_defer_cancel(
+ 	trace_xfs_defer_cancel(tp, _RET_IP_);
+ 	xfs_defer_trans_abort(tp, &tp->t_dfops);
+ 	xfs_defer_cancel_list(mp, &tp->t_dfops);
++	tp->t_dfops_nr = 0;
+ }
+ 
+ /*
+@@ -824,6 +831,7 @@ xfs_defer_alloc(
+ 	dfp->dfp_ops = ops;
+ 	INIT_LIST_HEAD(&dfp->dfp_work);
+ 	list_add_tail(&dfp->dfp_list, &tp->t_dfops);
++	tp->t_dfops_nr++;
+ 
+ 	return dfp;
+ }
+@@ -936,6 +944,12 @@ xfs_defer_move(
+ 	struct xfs_trans	*stp)
  {
- 	struct xfs_extent_free_item	*xefi;
- 	struct xfs_mount		*mp = tp->t_mountp;
--#ifdef DEBUG
--	xfs_agnumber_t			agno;
--	xfs_agblock_t			agbno;
+ 	list_splice_init(&stp->t_dfops, &dtp->t_dfops);
++	dtp->t_dfops_nr += stp->t_dfops_nr;
++	dtp->t_dfops_nr_max = stp->t_dfops_nr_max;
++	dtp->t_dfops_finished = stp->t_dfops_finished;
++	stp->t_dfops_nr = 0;
++	stp->t_dfops_nr_max = 0;
++	stp->t_dfops_finished = 0;
  
--	ASSERT(bno != NULLFSBLOCK);
--	ASSERT(len > 0);
- 	ASSERT(len <= XFS_MAX_BMBT_EXTLEN);
- 	ASSERT(!isnullstartblock(bno));
--	agno = XFS_FSB_TO_AGNO(mp, bno);
--	agbno = XFS_FSB_TO_AGBNO(mp, bno);
--	ASSERT(agno < mp->m_sb.sb_agcount);
--	ASSERT(agbno < mp->m_sb.sb_agblocks);
--	ASSERT(len < mp->m_sb.sb_agblocks);
--	ASSERT(agbno + len <= mp->m_sb.sb_agblocks);
--#endif
- 	ASSERT(!(free_flags & ~XFS_FREE_EXTENT_ALL_FLAGS));
--	ASSERT(xfs_extfree_item_cache != NULL);
- 	ASSERT(type != XFS_AG_RESV_AGFL);
- 
- 	if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+ 	/*
+ 	 * Low free space mode was historically controlled by a dfops field.
 
 
