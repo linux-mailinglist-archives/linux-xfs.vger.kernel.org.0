@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2267-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2318-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C758F82122C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:34:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E448482126C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:47:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FFDE282A35
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:34:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECE481C218C3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 468931375;
-	Mon,  1 Jan 2024 00:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29652BA3B;
+	Mon,  1 Jan 2024 00:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0EhSVzt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NdrMCCDa"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129C31370
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:34:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95697C433C7;
-	Mon,  1 Jan 2024 00:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EB1BA35;
+	Mon,  1 Jan 2024 00:47:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0FFCC433C8;
+	Mon,  1 Jan 2024 00:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069254;
-	bh=WHfL1STX2zLfmMlYH2S0UCCbDBfJpiEKtOIJA+mOJ1E=;
+	s=k20201202; t=1704070053;
+	bh=WnWELLq8dqgHMltBcFkzJ1HXhEcgpAd9kgk5fPAD3Wo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Y0EhSVzttDvjDdnnbvi91Q56+zEsP8mNX8Frpt5bSFqyXfv+lIuXR9276egot4t4f
-	 7iXG2Otkz3spzuQDAvySCFnyD8Zh02ZDiDQpP5sMtkwrvhd1XNJfJ1LtjzRZOabott
-	 92CpX/jJsFsJgcvXvp2KijwtGX0nT3ra2MiP7QPZgQS+7qPdSIOl+4ZDqQ0MtrGOyY
-	 jHkF6kNV29UtiBKmg4slQy6R69dOstPS/CxtMmSiV25eC6Yf37Jt5vL+p5UjbN8EUV
-	 LUu3aJeJTyCT0uhOyCDw4Opc29eZcgGllZTRAZ6CgYY4fzWPVFff1UhUIaXxjxGtSQ
-	 IOsR0SwfJuajg==
-Date: Sun, 31 Dec 2023 16:34:14 +9900
-Subject: [PATCH 31/42] xfs_repair: use realtime refcount btree data to check
- block types
+	b=NdrMCCDaQ80yuTFv4z8U4C1ciQkcBg2y2mDbfIb2EDtArRPkpxfbylG6eU3liF0L+
+	 T7qLpCHzmZfNxQRAWz/RaKH775vHk7djqRiZ9BYmWHP+mxfC8KIERtHziE60CN0cw7
+	 82YR3Fij8J+/bjJlV3TwYC8LowfjvhbFJ9K9F2XbPNDXlTNnqckUeXFJ8+nHokdrGC
+	 iR98p5GQwaQWELWM3O29A4wEYlgsl+y5y6CRC88+MHMwOQb/AOs64JmPszUYgtN8ka
+	 gDSQnsDk+TiZPK1PG+fykndKDVhplfwlkIHbOGVS1iTXkJbQEhZDBBGXIVRz1u+GiH
+	 bK+8hAO5be9Tw==
+Date: Sun, 31 Dec 2023 16:47:33 +9900
+Subject: [PATCH 05/11] xfs/021: adapt golden output files for parent pointers
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017539.1817107.6229837989785189155.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: fstests@vger.kernel.org, catherine.hoang@oracle.com,
+ allison.henderson@oracle.com, guan@eryu.me, linux-xfs@vger.kernel.org
+Message-ID: <170405028493.1824869.12702469178835351613.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,608 +53,167 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use the realtime refcount btree to pre-populate the block type information
-so that when repair iterates the primary metadata, we can confirm the
-block type.
+Parent pointers change the xattr structure dramatically, so fix this
+test to handle them.  For the most part we can get away with filtering
+out the parent pointer fields (which xfs_db decodes for us), but the
+namelen/valuelen/attr_filter fields still show through.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |  152 ++++++++++++++++++++++++++++
- repair/rmap.c   |    9 ++
- repair/rmap.h   |    3 +
- repair/scan.c   |  299 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- repair/scan.h   |   33 ++++++
- 5 files changed, 490 insertions(+), 6 deletions(-)
+ common/rc                 |    4 +++
+ tests/xfs/021             |   15 +++++++++--
+ tests/xfs/021.cfg         |    1 +
+ tests/xfs/021.out.default |    0 
+ tests/xfs/021.out.parent  |   62 +++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 80 insertions(+), 2 deletions(-)
+ create mode 100644 tests/xfs/021.cfg
+ rename tests/xfs/{021.out => 021.out.default} (100%)
+ create mode 100644 tests/xfs/021.out.parent
 
 
-diff --git a/repair/dinode.c b/repair/dinode.c
-index a6713a7bc6b..f1cb119df8b 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -274,6 +274,8 @@ _("bad state in rt extent map %" PRIu64 "\n"),
- 			break;
- 		case XR_E_INUSE:
- 		case XR_E_MULT:
-+			if (xfs_has_rtreflink(mp))
-+				break;
- 			set_rtbmap(ext, XR_E_MULT);
- 			break;
- 		case XR_E_FREE1:
-@@ -348,6 +350,8 @@ _("data fork in rt inode %" PRIu64 " found rt metadata extent %" PRIu64 " in rt
- 			return 1;
- 		case XR_E_INUSE:
- 		case XR_E_MULT:
-+			if (xfs_has_rtreflink(mp))
-+				break;
- 			do_warn(
- _("data fork in rt inode %" PRIu64 " claims used rt extent %" PRIu64 "\n"),
- 				ino, b);
-@@ -1012,6 +1016,148 @@ _("bad rtrmap btree ptr 0x%" PRIx64 " in ino %" PRIu64 "\n"),
- 	return suspect ? 1 : 0;
- }
+diff --git a/common/rc b/common/rc
+index 969ff93de7..0898ac08eb 100644
+--- a/common/rc
++++ b/common/rc
+@@ -3419,6 +3419,8 @@ _get_os_name()
  
-+/*
-+ * return 1 if inode should be cleared, 0 otherwise
-+ */
-+static int
-+process_rtrefc(
-+	struct xfs_mount		*mp,
-+	xfs_agnumber_t			agno,
-+	xfs_agino_t			ino,
-+	struct xfs_dinode		*dip,
-+	int				type,
-+	int				*dirty,
-+	xfs_rfsblock_t			*tot,
-+	uint64_t			*nex,
-+	blkmap_t			**blkmapp,
-+	int				check_dups)
-+{
-+	struct refc_priv		priv = { .nr_blocks = 0 };
-+	struct xfs_rtrefcount_root	*dib;
-+	xfs_rtrefcount_ptr_t		*pp;
-+	struct xfs_refcount_key		*kp;
-+	struct xfs_refcount_rec		*rp;
-+	char				*forkname = get_forkname(XFS_DATA_FORK);
-+	xfs_rgblock_t			oldkey, key;
-+	xfs_ino_t			lino;
-+	xfs_fsblock_t			bno;
-+	size_t				droot_sz;
-+	int				i;
-+	int				level;
-+	int				numrecs;
-+	int				dmxr;
-+	int				suspect = 0;
-+	int				error;
+ _link_out_file_named()
+ {
++	test -n "$seqfull" || _fail "need to set seqfull"
 +
-+	/* We rebuild the rtrefcountbt, so no need to process blocks again. */
-+	if (check_dups) {
-+		*tot = be64_to_cpu(dip->di_nblocks);
-+		return 0;
-+	}
-+
-+	lino = XFS_AGINO_TO_INO(mp, agno, ino);
-+
-+	/*
-+	 * This refcount btree inode must be a metadata inode reachable via
-+	 * /realtime/$rgno.refcount in the metadata directory tree.
-+	 */
-+	if (!(dip->di_flags2 & be64_to_cpu(XFS_DIFLAG2_METADIR))) {
-+		do_warn(
-+_("rtrefcount inode %" PRIu64 " not flagged as metadata\n"),
-+			lino);
-+		return 1;
-+	}
-+
-+	priv.rgno = rtgroup_for_rtrefcount_inode(mp, ino);
-+	if (priv.rgno == NULLRGNUMBER) {
-+		do_warn(
-+_("could not associate refcount inode %" PRIu64 " with any rtgroup\n"),
-+			lino);
-+		return 1;
-+	}
-+
-+	dib = (struct xfs_rtrefcount_root *)XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-+	*tot = 0;
-+	*nex = 0;
-+
-+	level = be16_to_cpu(dib->bb_level);
-+	numrecs = be16_to_cpu(dib->bb_numrecs);
-+
-+	if (level > mp->m_rtrefc_maxlevels) {
-+		do_warn(
-+_("bad level %d in inode %" PRIu64 " rtrefcount btree root block\n"),
-+			level, lino);
-+		return 1;
-+	}
-+
-+	/*
-+	 * use rtroot/dfork_dsize since the root block is in the data fork
-+	 */
-+	droot_sz = xfs_rtrefcount_droot_space_calc(level, numrecs);
-+	if (droot_sz > XFS_DFORK_SIZE(dip, mp, XFS_DATA_FORK)) {
-+		do_warn(
-+_("computed size of rtrefcountbt root (%zu bytes) is greater than space in "
-+	  "inode %" PRIu64 " %s fork\n"),
-+				droot_sz, lino, forkname);
-+		return 1;
-+	}
-+
-+	if (level == 0) {
-+		rp = xfs_rtrefcount_droot_rec_addr(dib, 1);
-+		error = process_rtrefc_reclist(mp, rp, numrecs,
-+				&priv, "rtrefcountbt root");
-+		if (error) {
-+			refcount_avoid_check();
-+			return 1;
-+		}
-+		return 0;
-+	}
-+
-+	dmxr = libxfs_rtrefcountbt_droot_maxrecs(
-+			XFS_DFORK_SIZE(dip, mp, XFS_DATA_FORK), false);
-+	pp = xfs_rtrefcount_droot_ptr_addr(dib, 1, dmxr);
-+
-+	/* check for in-order keys */
-+	for (i = 0; i < numrecs; i++)  {
-+		kp = xfs_rtrefcount_droot_key_addr(dib, i + 1);
-+
-+		key = be32_to_cpu(kp->rc_startblock);
-+		if (i == 0) {
-+			oldkey = key;
-+			continue;
-+		}
-+		if (key < oldkey) {
-+			do_warn(
-+_("out of order key %u in rtrefcount root ino %" PRIu64 "\n"),
-+				i, lino);
-+			suspect++;
-+			continue;
-+		}
-+		oldkey = key;
-+	}
-+
-+	/* probe keys */
-+	for (i = 0; i < numrecs; i++)  {
-+		bno = get_unaligned_be64(&pp[i]);
-+
-+		if (!libxfs_verify_fsbno(mp, bno))  {
-+			do_warn(
-+_("bad rtrefcount btree ptr 0x%" PRIx64 " in ino %" PRIu64 "\n"),
-+				bno, lino);
-+			return 1;
-+		}
-+
-+		if (scan_lbtree(bno, level, scan_rtrefcbt,
-+				type, XFS_DATA_FORK, lino, tot, nex, blkmapp,
-+				NULL, 0, 1, check_dups, XFS_RTREFC_CRC_MAGIC,
-+				&priv, &xfs_rtrefcountbt_buf_ops))
-+			return 1;
-+	}
-+
-+	*tot = priv.nr_blocks;
-+	return suspect ? 1 : 0;
-+}
-+
- /*
-  * return 1 if inode should be cleared, 0 otherwise
-  */
-@@ -1807,6 +1953,7 @@ check_dinode_mode_format(
- 		case XFS_DINODE_FMT_RMAP:
- 		case XFS_DINODE_FMT_EXTENTS:
- 		case XFS_DINODE_FMT_BTREE:
-+		case XFS_DINODE_FMT_REFCOUNT:
- 			return 0;
- 		}
- 		return -1;
-@@ -2244,6 +2391,10 @@ process_inode_data_fork(
- 		err = process_rtrmap(mp, agno, ino, dino, type, dirty,
- 				totblocks, nextents, dblkmap, check_dups);
- 		break;
-+	case XFS_DINODE_FMT_REFCOUNT:
-+		err = process_rtrefc(mp, agno, ino, dino, type, dirty,
-+			totblocks, nextents, dblkmap, check_dups);
-+		break;
- 	case XFS_DINODE_FMT_DEV:
- 		err = 0;
- 		break;
-@@ -2304,6 +2455,7 @@ _("would have tried to rebuild inode %"PRIu64" data fork\n"),
- 			break;
- 		case XFS_DINODE_FMT_DEV:
- 		case XFS_DINODE_FMT_RMAP:
-+		case XFS_DINODE_FMT_REFCOUNT:
- 			err = 0;
- 			break;
- 		default:
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 6fd537f533f..b27e3079155 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -258,6 +258,15 @@ bool is_rtrmap_inode(xfs_ino_t ino)
- 	return bitmap_test(rmap_inodes, ino, 1);
- }
+ 	local features=$2
+ 	local suffix=$(FEATURES="$features" perl -e '
+ 		my %feathash;
+@@ -3454,6 +3456,8 @@ _link_out_file()
+ {
+ 	local features
  
-+xfs_rgnumber_t
-+rtgroup_for_rtrefcount_inode(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino)
-+{
-+	/* This will be implemented later. */
-+	return NULLRGNUMBER;
-+}
++	test -n "$seqfull" || _fail "need to set seqfull"
 +
- /*
-  * Initialize per-AG reverse map data.
-  */
-diff --git a/repair/rmap.h b/repair/rmap.h
-index 1f99606a455..051481d2e2d 100644
---- a/repair/rmap.h
-+++ b/repair/rmap.h
-@@ -71,4 +71,7 @@ int populate_rtgroup_rmapbt(struct xfs_rtgroup *rtg, struct xfs_inode *ip,
- 		xfs_filblks_t fdblocks);
- xfs_filblks_t estimate_rtrmapbt_blocks(struct xfs_rtgroup *rtg);
+ 	if [ $# -eq 0 ]; then
+ 		features="$(_get_os_name),$FSTYP"
+ 		if [ -n "$MOUNT_OPTIONS" ]; then
+diff --git a/tests/xfs/021 b/tests/xfs/021
+index 9432e2acb0..ef307fc064 100755
+--- a/tests/xfs/021
++++ b/tests/xfs/021
+@@ -67,6 +67,13 @@ _scratch_mkfs_xfs >/dev/null \
+ echo "*** mount FS"
+ _scratch_mount
  
-+xfs_rgnumber_t rtgroup_for_rtrefcount_inode(struct xfs_mount *mp,
-+		xfs_ino_t ino);
++seqfull=$0
++if _xfs_has_feature $SCRATCH_MNT parent; then
++	_link_out_file "parent"
++else
++	_link_out_file ""
++fi
 +
- #endif /* RMAP_H_ */
-diff --git a/repair/scan.c b/repair/scan.c
-index f04afff60ef..abf605e4978 100644
---- a/repair/scan.c
-+++ b/repair/scan.c
-@@ -1754,12 +1754,6 @@ _("bad %s btree ptr 0x%llx in ino %" PRIu64 "\n"),
- 	return 0;
- }
+ testfile=$SCRATCH_MNT/testfile
+ echo "*** make test file 1"
  
--struct refc_priv {
--	struct xfs_refcount_irec	last_rec;
--	xfs_agblock_t			nr_blocks;
--};
--
--
- static void
- scan_refcbt(
- 	struct xfs_btree_block	*block,
-@@ -1997,6 +1991,299 @@ _("extent (%u/%u) len %u claimed, state is %d\n"),
- 	return;
- }
+@@ -108,7 +115,10 @@ _scratch_unmount >>$seqres.full 2>&1 \
+ echo "*** dump attributes (1)"
  
-+
-+int
-+process_rtrefc_reclist(
-+	struct xfs_mount	*mp,
-+	struct xfs_refcount_rec	*rp,
-+	int			numrecs,
-+	struct refc_priv	*refc_priv,
-+	const char		*name)
-+{
-+	xfs_rtblock_t		lastblock = 0;
-+	xfs_rtblock_t		rtbno, next_rtbno;
-+	int			state;
-+	int			suspect = 0;
-+	int			i;
-+
-+	for (i = 0; i < numrecs; i++) {
-+		enum xfs_refc_domain	domain;
-+		xfs_rgblock_t		b, rgbno, end;
-+		xfs_extlen_t		len;
-+		xfs_nlink_t		nr;
-+
-+		b = rgbno = be32_to_cpu(rp[i].rc_startblock);
-+		len = be32_to_cpu(rp[i].rc_blockcount);
-+		nr = be32_to_cpu(rp[i].rc_refcount);
-+
-+		if (b & XFS_REFC_COWFLAG) {
-+			domain = XFS_REFC_DOMAIN_COW;
-+			rgbno &= ~XFS_REFC_COWFLAG;
-+		} else {
-+			domain = XFS_REFC_DOMAIN_SHARED;
-+		}
-+
-+		if (domain == XFS_REFC_DOMAIN_COW && nr != 1) {
-+			do_warn(
-+_("leftover rt CoW extent has incorrect refcount in record %u of %s\n"),
-+					i, name);
-+			suspect++;
-+		}
-+		if (nr == 1) {
-+			if (domain != XFS_REFC_DOMAIN_COW) {
-+				do_warn(
-+_("leftover rt CoW extent has invalid startblock in record %u of %s\n"),
-+					i, name);
-+				suspect++;
-+			}
-+		}
-+		end = rgbno + len;
-+
-+		rtbno = xfs_rgbno_to_rtb(mp, refc_priv->rgno, rgbno);
-+		if (!libxfs_verify_rtbno(mp, rtbno)) {
-+			do_warn(
-+_("invalid start block %llu in record %u of %s\n"),
-+					(unsigned long long)b, i, name);
-+			suspect++;
-+			continue;
-+		}
-+
-+		next_rtbno = xfs_rgbno_to_rtb(mp, refc_priv->rgno, end);
-+		if (len == 0 || end <= rgbno ||
-+		    !libxfs_verify_rtbno(mp, next_rtbno - 1)) {
-+			do_warn(
-+_("invalid length %llu in record %u of %s\n"),
-+					(unsigned long long)len, i, name);
-+			suspect++;
-+			continue;
-+		}
-+
-+		if (nr == 1) {
-+			xfs_rtxnum_t	rtx, next_rtx;
-+
-+			rtx = xfs_rtb_to_rtx(mp, rtbno);
-+			next_rtx = xfs_rtb_to_rtx(mp, next_rtbno);
-+			for (; rtx < next_rtx; rtx++) {
-+				state = get_rtbmap(rtx);
-+				switch (state) {
-+				case XR_E_UNKNOWN:
-+				case XR_E_COW:
-+					do_warn(
-+_("leftover CoW rtextent (%llu)\n"),
-+						(unsigned long long)rtx);
-+					suspect++;
-+					set_rtbmap(rtx, XR_E_FREE);
-+					break;
-+				default:
-+					do_warn(
-+_("rtextent (%llu) claimed, state is %d\n"),
-+						(unsigned long long)rtx, state);
-+					suspect++;
-+					break;
-+				}
-+			}
-+		} else if (nr < 2 || nr > XFS_REFC_REFCOUNT_MAX) {
-+			do_warn(
-+_("invalid rt reference count %u in record %u of %s\n"),
-+					nr, i, name);
-+			suspect++;
-+			continue;
-+		}
-+
-+		if (b && b <= lastblock) {
-+			do_warn(_(
-+"out-of-order %s btree record %d (%llu %llu) in %s\n"),
-+					name, i, (unsigned long long)b,
-+					(unsigned long long)len, name);
-+			suspect++;
-+		} else {
-+			lastblock = end - 1;
-+		}
-+
-+		/* Is this record mergeable with the last one? */
-+		if (refc_priv->last_rec.rc_domain == domain &&
-+		    refc_priv->last_rec.rc_startblock +
-+		    refc_priv->last_rec.rc_blockcount == rgbno &&
-+		    refc_priv->last_rec.rc_refcount == nr) {
-+			do_warn(
-+_("record %d of %s tree should be merged with previous record\n"),
-+					i, name);
-+			suspect++;
-+			refc_priv->last_rec.rc_blockcount += len;
-+		} else {
-+			refc_priv->last_rec.rc_domain = domain;
-+			refc_priv->last_rec.rc_startblock = rgbno;
-+			refc_priv->last_rec.rc_blockcount = len;
-+			refc_priv->last_rec.rc_refcount = nr;
-+		}
-+
-+		/* XXX: probably want to mark the reflinked areas? */
-+	}
-+
-+	return suspect;
-+}
-+
-+int
-+scan_rtrefcbt(
-+	struct xfs_btree_block		*block,
-+	int				level,
-+	int				type,
-+	int				whichfork,
-+	xfs_fsblock_t			fsbno,
-+	xfs_ino_t			ino,
-+	xfs_rfsblock_t			*tot,
-+	uint64_t			*nex,
-+	struct blkmap			**blkmapp,
-+	bmap_cursor_t			*bm_cursor,
-+	int				suspect,
-+	int				isroot,
-+	int				check_dups,
-+	int				*dirty,
-+	uint64_t			magic,
-+	void				*priv)
-+{
-+	const char			*name = "rtrefcount";
-+	char				rootname[256];
-+	int				i;
-+	xfs_rtrefcount_ptr_t		*pp;
-+	struct xfs_refcount_rec	*rp;
-+	struct refc_priv		*refc_priv = priv;
-+	int				hdr_errors = 0;
-+	int				numrecs;
-+	int				state;
-+	xfs_agnumber_t			agno;
-+	xfs_agblock_t			agbno;
-+	int				error;
-+
-+	agno = XFS_FSB_TO_AGNO(mp, fsbno);
-+	agbno = XFS_FSB_TO_AGBNO(mp, fsbno);
-+
-+	if (magic != XFS_RTREFC_CRC_MAGIC) {
-+		name = "(unknown)";
-+		hdr_errors++;
-+		suspect++;
-+		goto out;
-+	}
-+
-+	if (be32_to_cpu(block->bb_magic) != magic) {
-+		do_warn(_("bad magic # %#x in %s btree block %d/%d\n"),
-+				be32_to_cpu(block->bb_magic), name, agno,
-+				agbno);
-+		hdr_errors++;
-+		if (suspect)
-+			goto out;
-+	}
-+
-+	if (be16_to_cpu(block->bb_level) != level) {
-+		do_warn(_("expected level %d got %d in %s btree block %d/%d\n"),
-+				level, be16_to_cpu(block->bb_level), name,
-+				agno, agbno);
-+		hdr_errors++;
-+		if (suspect)
-+			goto out;
-+	}
-+
-+	refc_priv->nr_blocks++;
-+
-+	/*
-+	 * Check for btree blocks multiply claimed.  We're going to regenerate
-+	 * the btree anyway, so mark the blocks as metadata so they get freed.
-+	 */
-+	state = get_bmap(agno, agbno);
-+	if (!(state == XR_E_UNKNOWN || state == XR_E_INUSE1))  {
-+		do_warn(
-+_("%s btree block claimed (state %d), agno %d, agbno %d, suspect %d\n"),
-+				name, state, agno, agbno, suspect);
-+		goto out;
-+	}
-+	set_bmap(agno, agbno, XR_E_METADATA);
-+
-+	numrecs = be16_to_cpu(block->bb_numrecs);
-+	if (level == 0) {
-+		if (numrecs > mp->m_rtrefc_mxr[0])  {
-+			numrecs = mp->m_rtrefc_mxr[0];
-+			hdr_errors++;
-+		}
-+		if (isroot == 0 && numrecs < mp->m_rtrefc_mnr[0])  {
-+			numrecs = mp->m_rtrefc_mnr[0];
-+			hdr_errors++;
-+		}
-+
-+		if (hdr_errors) {
-+			do_warn(
-+	_("bad btree nrecs (%u, min=%u, max=%u) in %s btree block %u/%u\n"),
-+					be16_to_cpu(block->bb_numrecs),
-+					mp->m_rtrefc_mnr[0],
-+					mp->m_rtrefc_mxr[0], name, agno, agbno);
-+			suspect++;
-+		}
-+
-+		rp = xfs_rtrefcount_rec_addr(block, 1);
-+		snprintf(rootname, 256, "%s btree block %u/%u", name, agno,
-+				agbno);
-+		error = process_rtrefc_reclist(mp, rp, numrecs, refc_priv,
-+				rootname);
-+		if (error)
-+			suspect++;
-+		goto out;
-+	}
-+
-+	/*
-+	 * interior record
-+	 */
-+	pp = xfs_rtrefcount_ptr_addr(block, 1, mp->m_rtrefc_mxr[1]);
-+
-+	if (numrecs > mp->m_rtrefc_mxr[1])  {
-+		numrecs = mp->m_rtrefc_mxr[1];
-+		hdr_errors++;
-+	}
-+	if (isroot == 0 && numrecs < mp->m_rtrefc_mnr[1])  {
-+		numrecs = mp->m_rtrefc_mnr[1];
-+		hdr_errors++;
-+	}
-+
-+	/*
-+	 * don't pass bogus tree flag down further if this block
-+	 * looked ok.  bail out if two levels in a row look bad.
-+	 */
-+	if (hdr_errors)  {
-+		do_warn(
-+	_("bad btree nrecs (%u, min=%u, max=%u) in %s btree block %u/%u\n"),
-+				be16_to_cpu(block->bb_numrecs),
-+				mp->m_rtrefc_mnr[1], mp->m_rtrefc_mxr[1], name,
-+				agno, agbno);
-+		if (suspect)
-+			goto out;
-+		suspect++;
-+	} else if (suspect) {
-+		suspect = 0;
-+	}
-+
-+	for (i = 0; i < numrecs; i++)  {
-+		xfs_fsblock_t		pbno = be64_to_cpu(pp[i]);
-+
-+		if (!libxfs_verify_fsbno(mp, pbno)) {
-+			do_warn(
-+	_("bad btree pointer (%u) in %sbt block %u/%u\n"),
-+					agbno, name, agno, agbno);
-+			suspect++;
-+			return 0;
-+		}
-+
-+		scan_lbtree(pbno, level, scan_rtrefcbt, type, whichfork, ino,
-+				tot, nex, blkmapp, bm_cursor, suspect, 0,
-+				check_dups, magic, refc_priv,
-+				&xfs_rtrefcountbt_buf_ops);
-+	}
-+out:
-+	if (suspect) {
-+		refcount_avoid_check();
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * The following helpers are to help process and validate individual on-disk
-  * inode btree records. We have two possible inode btrees with slightly
-diff --git a/repair/scan.h b/repair/scan.h
-index a624c882734..1643a2397ae 100644
---- a/repair/scan.h
-+++ b/repair/scan.h
-@@ -100,4 +100,37 @@ int scan_rtrmapbt(
- 	uint64_t		magic,
- 	void			*priv);
+ _scratch_xfs_db -r -c "inode $inum_1" -c "print a.sfattr"  | \
+-	sed -e '/secure = /d' | sed -e '/parent = /d'
++	perl -ne '
++/\.secure/ && next;
++/\.parent/ && next;
++	print unless /^\d+:\[.*/;'
  
-+struct refc_priv {
-+	struct xfs_refcount_irec	last_rec;
-+	xfs_agblock_t			nr_blocks;
-+	xfs_rgnumber_t			rgno;
-+};
+ echo "*** dump attributes (2)"
+ 
+@@ -124,10 +134,11 @@ s/info.hdr/info/;
+ /hdr.info.uuid/ && next;
+ /hdr.info.lsn/ && next;
+ /hdr.info.owner/ && next;
++/\.parent/ && next;
+ s/^(hdr.info.magic =) 0x3bee/\1 0xfbee/;
+ s/^(hdr.firstused =) (\d+)/\1 FIRSTUSED/;
+ s/^(hdr.freemap\[0-2] = \[base,size]).*/\1 [FREEMAP..]/;
+-s/^(entries\[0-2] = \[hashval,nameidx,incomplete,root,local]).*/\1 [ENTRIES..]/;
++s/^(entries\[0-[23]] = \[hashval,nameidx,incomplete,root,local]).*/\1 [ENTRIES..]/;
+ 	print unless /^\d+:\[.*/;'
+ 
+ echo "*** done"
+diff --git a/tests/xfs/021.cfg b/tests/xfs/021.cfg
+new file mode 100644
+index 0000000000..73b127260c
+--- /dev/null
++++ b/tests/xfs/021.cfg
+@@ -0,0 +1 @@
++parent: parent
+diff --git a/tests/xfs/021.out b/tests/xfs/021.out.default
+similarity index 100%
+rename from tests/xfs/021.out
+rename to tests/xfs/021.out.default
+diff --git a/tests/xfs/021.out.parent b/tests/xfs/021.out.parent
+new file mode 100644
+index 0000000000..1af1301061
+--- /dev/null
++++ b/tests/xfs/021.out.parent
+@@ -0,0 +1,62 @@
++QA output created by 021
++*** mkfs
++*** mount FS
++*** make test file 1
++# file: <TESTFILE>.1
++user.a1
++user.a2--
 +
-+int
-+process_rtrefc_reclist(
-+	struct xfs_mount	*mp,
-+	struct xfs_refcount_rec	*rp,
-+	int			numrecs,
-+	struct refc_priv	*refc_priv,
-+	const char		*name);
++*** make test file 2
++1+0 records in
++1+0 records out
++# file: <TESTFILE>.2
++user.a1
++user.a2-----
++user.a3
 +
-+int
-+scan_rtrefcbt(
-+	struct xfs_btree_block	*block,
-+	int			level,
-+	int			type,
-+	int			whichfork,
-+	xfs_fsblock_t		bno,
-+	xfs_ino_t		ino,
-+	xfs_rfsblock_t		*tot,
-+	uint64_t		*nex,
-+	struct blkmap		**blkmapp,
-+	bmap_cursor_t		*bm_cursor,
-+	int			suspect,
-+	int			isroot,
-+	int			check_dups,
-+	int			*dirty,
-+	uint64_t		magic,
-+	void			*priv);
++Attribute "a3" had a 65535 byte value for <TESTFILE>.2:
++size of attr value = 65536
 +
- #endif /* _XR_SCAN_H */
++*** unmount FS
++*** dump attributes (1)
++a.sfattr.hdr.totsize = 53
++a.sfattr.hdr.count = 3
++a.sfattr.list[0].namelen = 16
++a.sfattr.list[0].valuelen = 10
++a.sfattr.list[0].root = 0
++a.sfattr.list[1].namelen = 2
++a.sfattr.list[1].valuelen = 3
++a.sfattr.list[1].root = 0
++a.sfattr.list[1].name = "a1"
++a.sfattr.list[1].value = "v1\d"
++a.sfattr.list[2].namelen = 4
++a.sfattr.list[2].valuelen = 5
++a.sfattr.list[2].root = 0
++a.sfattr.list[2].name = "a2--"
++a.sfattr.list[2].value = "v2--\d"
++*** dump attributes (2)
++hdr.info.forw = 0
++hdr.info.back = 0
++hdr.info.magic = 0xfbee
++hdr.count = 4
++hdr.usedbytes = 84
++hdr.firstused = FIRSTUSED
++hdr.holes = 0
++hdr.freemap[0-2] = [base,size] [FREEMAP..]
++entries[0-3] = [hashval,nameidx,incomplete,root,local] [ENTRIES..]
++nvlist[0].valuelen = 8
++nvlist[0].namelen = 2
++nvlist[0].name = "a1"
++nvlist[0].value = "value_1\d"
++nvlist[1].valueblk = 0x1
++nvlist[1].valuelen = 65535
++nvlist[1].namelen = 2
++nvlist[1].name = "a3"
++nvlist[2].valuelen = 10
++nvlist[2].namelen = 16
++nvlist[3].valuelen = 8
++nvlist[3].namelen = 7
++nvlist[3].name = "a2-----"
++nvlist[3].value = "value_2\d"
++*** done
++*** unmount
 
 
