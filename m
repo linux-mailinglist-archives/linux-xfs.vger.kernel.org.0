@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2375-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2178-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82E9D8212AA
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:02:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC87C8211D0
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:11:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7992C1C21D06
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:02:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E99491C21C6B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C679D80D;
-	Mon,  1 Jan 2024 01:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98174392;
+	Mon,  1 Jan 2024 00:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fv3IyO+W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0dkevy1"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0257EE;
-	Mon,  1 Jan 2024 01:02:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3CEAC433C7;
-	Mon,  1 Jan 2024 01:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638F638E
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:11:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4A9C433C7;
+	Mon,  1 Jan 2024 00:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070946;
-	bh=H7LrtpjWIjCPTWP+1OQCQlLph2koDrat4UkLQ1WobcU=;
+	s=k20201202; t=1704067894;
+	bh=ecr4JB+EOM0hNgnbAwUhRoCmEACQjsvd2/rYYjQk5PY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Fv3IyO+WDtpGZHqujGIsfOCJ6hsT6vlHVG3nFKbvGazvVO5f3h5gyYncKzjeQbIXK
-	 LdhMarQEjkXdo1fgJqN6y6Axsc6p9RIuJc+MQb2qHmg7MxfFL79NJoNbUoJKhcZHhu
-	 g1RWWgwW4s23pPrCUt1HKSRoB9IvCfCJ6GLzbqtdNY9XrB1EQfOo2X1JTWHKX9/0SV
-	 Hhyf3oSCGG7n7I0jPRA9w9w7T5R2DXWQaNtK/n4jco3/35PTTNUYLU3w8XsQyT3Z7h
-	 0iNUbqmCn4EwGYTLn/5lHT7oxM9qCOShRU78GEpMmDRIuk79qZs6cmjZF/YiSdh24i
-	 59hZe5DeptnSg==
-Date: Sun, 31 Dec 2023 17:02:25 +9900
-Subject: [PATCH 4/9] xfs/27[24]: adapt for checking files on the realtime
- volume
+	b=M0dkevy1gexoQLrKLftcsK58+DqN9OYjGjT8HSfmY6BoHVgszLTpRUj6RzNrQdkfB
+	 DKgJSyxryTUFMveFWGJjjSS0nKwy1TzwIb4lA0O+RAOFTVFHMeZNDAQYnEKBca3laI
+	 K6fAtcn6Ll1rjIqJTaNaB4xQ3RKrWdmGm3lYCFruXCcGrrvI4E6ChD8iaQvUHUu8RX
+	 K4I2sUzAcStE1F6kjwHvABxU1LRUuZYtuOm6N5Ujk5KXujN3Px7LH9eF5BpObSEEo/
+	 Rug3uWJNiIqO/RQZwsVimGOTi0doqlNGdr7blsqqERxUMya/PODUHiaNGIGtvWqwf5
+	 d6mTvVn7cCGog==
+Date: Sun, 31 Dec 2023 16:11:33 +9900
+Subject: [PATCH 04/47] xfs: realtime rmap btree transaction reservations
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032069.1827358.7647888380084910379.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
-References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015366.1815505.12519901492978076894.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,155 +52,90 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Adapt both tests to behave properly if the two files being tested are on
-the realtime volume.
+Make sure that there's enough log reservation to handle mapping
+and unmapping realtime extents.  We have to reserve enough space
+to handle a split in the rtrmapbt to add the record and a second
+split in the regular rmapbt to record the rtrmapbt split.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/272 |   40 +++++++++++++++++++++++++------------
- tests/xfs/274 |   62 ++++++++++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 70 insertions(+), 32 deletions(-)
+ libxfs/xfs_swapext.c     |    4 +++-
+ libxfs/xfs_trans_resv.c  |   12 ++++++++++--
+ libxfs/xfs_trans_space.h |   13 +++++++++++++
+ 3 files changed, 26 insertions(+), 3 deletions(-)
 
 
-diff --git a/tests/xfs/272 b/tests/xfs/272
-index d5f3a74177..edc5b16967 100755
---- a/tests/xfs/272
-+++ b/tests/xfs/272
-@@ -40,26 +40,40 @@ $here/src/punch-alternating $SCRATCH_MNT/urk >> $seqres.full
- ino=$(stat -c '%i' $SCRATCH_MNT/urk)
+diff --git a/libxfs/xfs_swapext.c b/libxfs/xfs_swapext.c
+index 1f7fbe76a89..36283ea72cd 100644
+--- a/libxfs/xfs_swapext.c
++++ b/libxfs/xfs_swapext.c
+@@ -759,7 +759,9 @@ xfs_swapext_rmapbt_blocks(
+ 	if (!xfs_has_rmapbt(mp))
+ 		return 0;
+ 	if (XFS_IS_REALTIME_INODE(req->ip1))
+-		return 0;
++		return howmany_64(req->nr_exchanges,
++					XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)) *
++			XFS_RTRMAPADD_SPACE_RES(mp);
  
- echo "Get fsmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT >> $seqres.full
- $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT | tr '[]()' '    ' > $TEST_DIR/fsmap
-+cat $TEST_DIR/fsmap >> $seqres.full
+ 	return howmany_64(req->nr_exchanges,
+ 					XFS_MAX_CONTIG_RMAPS_PER_BLOCK(mp)) *
+diff --git a/libxfs/xfs_trans_resv.c b/libxfs/xfs_trans_resv.c
+index 800a2f9ecb8..18efae57975 100644
+--- a/libxfs/xfs_trans_resv.c
++++ b/libxfs/xfs_trans_resv.c
+@@ -211,7 +211,9 @@ xfs_calc_inode_chunk_res(
+  * Per-extent log reservation for the btree changes involved in freeing or
+  * allocating a realtime extent.  We have to be able to log as many rtbitmap
+  * blocks as needed to mark inuse XFS_BMBT_MAX_EXTLEN blocks' worth of realtime
+- * extents, as well as the realtime summary block.
++ * extents, as well as the realtime summary block (t1).  Realtime rmap btree
++ * operations happen in a second transaction, so factor in a couple of rtrmapbt
++ * splits (t2).
+  */
+ static unsigned int
+ xfs_rtalloc_block_count(
+@@ -220,10 +222,16 @@ xfs_rtalloc_block_count(
+ {
+ 	unsigned int		rtbmp_blocks;
+ 	xfs_rtxlen_t		rtxlen;
++	unsigned int		t1, t2 = 0;
  
- echo "Get bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/urk >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/urk | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
- echo "Check bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total}(| [01]*)$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if $XFS_IO_PROG -c 'stat -v' $SCRATCH_MNT/urk | grep -q realtime; then
-+	# file on rt volume
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total}(| [01]*)$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
- 
--echo "Check device field of FS metadata and regular file"
--data_dev=$(grep 'inode btree' $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
--rt_dev=$(grep "${ino}[[:space:]]*[0-9]*\.\.[0-9]*" $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
--test "${data_dev}" = "${rt_dev}" || echo "data ${data_dev} realtime ${rt_dev}?"
-+	echo "Check device field of FS metadata and regular file"
-+else
-+	# file on data volume
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total}(| [01]*)$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
+ 	rtxlen = xfs_extlen_to_rtxlen(mp, XFS_MAX_BMBT_EXTLEN);
+ 	rtbmp_blocks = xfs_rtbitmap_blockcount(mp, rtxlen);
+-	return (rtbmp_blocks + 1) * num_ops;
++	t1 = (rtbmp_blocks + 1) * num_ops;
 +
-+	echo "Check device field of FS metadata and regular file"
-+	data_dev=$(grep 'inode btree' $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
-+	rt_dev=$(grep "${ino}[[:space:]]*[0-9]*\.\.[0-9]*" $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
-+	test "${data_dev}" = "${rt_dev}" || echo "data ${data_dev} realtime ${rt_dev}?"
-+fi
++	if (xfs_has_rmapbt(mp))
++		t2 = num_ops * (2 * mp->m_rtrmap_maxlevels - 1);
++
++	return max(t1, t2);
+ }
  
- # success, all done
- status=0
-diff --git a/tests/xfs/274 b/tests/xfs/274
-index cd483d77bc..f16b49fc1c 100755
---- a/tests/xfs/274
-+++ b/tests/xfs/274
-@@ -40,34 +40,58 @@ _cp_reflink $SCRATCH_MNT/f1 $SCRATCH_MNT/f2
- ino=$(stat -c '%i' $SCRATCH_MNT/f1)
+ /*
+diff --git a/libxfs/xfs_trans_space.h b/libxfs/xfs_trans_space.h
+index 1155ff2d37e..d89b570aafc 100644
+--- a/libxfs/xfs_trans_space.h
++++ b/libxfs/xfs_trans_space.h
+@@ -14,6 +14,19 @@
+ #define XFS_MAX_CONTIG_BMAPS_PER_BLOCK(mp)    \
+ 		(((mp)->m_bmap_dmxr[0]) - ((mp)->m_bmap_dmnr[0]))
  
- echo "Get fsmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT >> $seqres.full
- $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT | tr '[]()' '    ' > $TEST_DIR/fsmap
-+cat $TEST_DIR/fsmap >> $seqres.full
- 
- echo "Get f1 bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f1 >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f1 | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
--echo "Check f1 bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 010[01]{4}$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if _xfs_is_realtime_file $SCRATCH_MNT/f1 && ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+	# file on rt volume
-+	echo "Check f1 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total} 010[01]{4}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+else
-+	# file on data volume
-+	echo "Check f1 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 010[01]{4}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+fi
- 
- echo "Get f2 bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f2 >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f2 | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
--echo "Check f2 bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 010[01]{4}$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if _xfs_is_realtime_file $SCRATCH_MNT/f2 && ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+	echo "Check f2 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total} 010[01]{4}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+else
-+	echo "Check f2 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 010[01]{4}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -E -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+fi
- 
- # success, all done
- status=0
++/* Worst case number of realtime rmaps that can be held in a block. */
++#define XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)    \
++		(((mp)->m_rtrmap_mxr[0]) - ((mp)->m_rtrmap_mnr[0]))
++
++/* Adding one realtime rmap could split every level to the top of the tree. */
++#define XFS_RTRMAPADD_SPACE_RES(mp) ((mp)->m_rtrmap_maxlevels)
++
++/* Blocks we might need to add "b" realtime rmaps to a tree. */
++#define XFS_NRTRMAPADD_SPACE_RES(mp, b) \
++	((((b) + XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp) - 1) / \
++	  XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)) * \
++	  XFS_RTRMAPADD_SPACE_RES(mp))
++
+ /* Worst case number of rmaps that can be held in a block. */
+ #define XFS_MAX_CONTIG_RMAPS_PER_BLOCK(mp)    \
+ 		(((mp)->m_rmap_mxr[0]) - ((mp)->m_rmap_mnr[0]))
 
 
