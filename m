@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2365-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2193-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 811AF82129F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:59:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 705038211DF
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:15:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A76D01C21D83
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:59:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8FBB282953
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:15:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CCF642;
-	Mon,  1 Jan 2024 00:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F512392;
+	Mon,  1 Jan 2024 00:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjMVY1+B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+kEKekY"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1208438D;
-	Mon,  1 Jan 2024 00:59:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746F4C433C8;
-	Mon,  1 Jan 2024 00:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAF3384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:15:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE364C433C8;
+	Mon,  1 Jan 2024 00:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070789;
-	bh=rZQRoAcAh/3zfW2Sh1mMP3nA4r5gUeCjbevpArYJvM4=;
+	s=k20201202; t=1704068128;
+	bh=6yD+AX0UYzhIM5pACBzdVjbHZnp1sv4EAZB1/esRCiw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=VjMVY1+BB30RM2TzdfNcnHZjHWmf5dv0RQ0d1jnntO2y278UenRrGjYK9x5SWxnx9
-	 XAc7ZDRqNZvxokdKRfJ0L7YIFTrPEEgQ3IUdIa2UCsCDjzZYEHJmm1HyNrIUNVxCNN
-	 4s0ciBBD5nNnjufXMN+nve49sUtGf8o+N7dWY0MmJREwklyDDTHOM5ekG2BfMrlz/W
-	 OlMmluCz0X5rDVkUD1xPKL3XQeAws4RhtF7kMKQqz7rBHbD5XPY+C1dCNVKl87pwPZ
-	 z/9nikJPhJD8nT81aXh2ZuRYbW67nC+HFrdx8FImlEgukgNiNvuxX1vUMaS7xxat/4
-	 3ZKbzLsCX2mrQ==
-Date: Sun, 31 Dec 2023 16:59:48 +9900
-Subject: [PATCH 08/13] xfs/3{43,32}: adapt tests for rt extent size greater
- than 1
+	b=L+kEKekYJxRI8tGt4p/R0DoHZPC8G1nF2njTReVGjbmeo3tetbBWCmqqeyHij03JW
+	 uFO/3OYKXe+A0Oq+CpN9sewiEwL0Sr+T9GstyWGR1OfFcdCjNWCmTVMdIEjgj9HvYN
+	 YMwT9F4PsZnCVhaWsY1ngpttvQ6pfuyFGDGMUuIPzRCGxvPIagQ3Lq8fahyFmcNcZX
+	 6XPvHeG/xGXoZTDFHGTlMp/T311+4TQhhQqH8GNTK6RSfJxJVonlzyIPczZMC5uqR3
+	 wlR7lxgRYgyXvmvfmoiCWemJl+GceKvxQkRdSq9OkCH8DtGd1eX8Fi273DjBIcP/9P
+	 h4M7xlhv7MV2A==
+Date: Sun, 31 Dec 2023 16:15:28 +9900
+Subject: [PATCH 19/47] xfs: online repair of the realtime rmap btree
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405031339.1826914.7325295617050633178.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
-References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015565.1815505.17932573368038110051.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,74 +52,39 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Both of these tests for the realtime volume can fail when the rt extent
-size is larger than a single block.
-
-332 is a read-write functionality test that encodes md5sum in the
-output, so we need to skip it if $blksz isn't congruent with the extent
-size, because the fcollapse call will fail.
-
-343 is a test of the rmap btree, so the fix here is simpler -- make
-$blksz the file allocation unit, and get rid of the md5sum in the
-golden output.
+Repair the realtime rmap btree while mounted.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/332     |    6 +-----
- tests/xfs/332.out |    2 --
- tests/xfs/343     |    2 ++
- 3 files changed, 3 insertions(+), 7 deletions(-)
+ libxfs/xfs_rtrmap_btree.c |    2 +-
+ libxfs/xfs_rtrmap_btree.h |    3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/332 b/tests/xfs/332
-index a2d37ee905..c1ac87adcb 100755
---- a/tests/xfs/332
-+++ b/tests/xfs/332
-@@ -28,7 +28,7 @@ rm -f "$seqres.full"
- echo "Format and mount"
- _scratch_mkfs > "$seqres.full" 2>&1
- _scratch_mount
--blksz=65536
-+blksz=$(_get_file_block_size $SCRATCH_MNT) # 65536
- blocks=16
- len=$((blocks * blksz))
+diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
+index 5a25791baa5..0393da8837a 100644
+--- a/libxfs/xfs_rtrmap_btree.c
++++ b/libxfs/xfs_rtrmap_btree.c
+@@ -703,7 +703,7 @@ xfs_rtrmapbt_create_path(
+ }
  
-@@ -45,10 +45,6 @@ $XFS_IO_PROG -c "fpunch $blksz $blksz" \
- 	-c "fcollapse $((9 * blksz)) $blksz" \
- 	-c "finsert $((10 * blksz)) $blksz" $SCRATCH_MNT/f1 >> $seqres.full
+ /* Calculate the rtrmap btree size for some records. */
+-static unsigned long long
++unsigned long long
+ xfs_rtrmapbt_calc_size(
+ 	struct xfs_mount	*mp,
+ 	unsigned long long	len)
+diff --git a/libxfs/xfs_rtrmap_btree.h b/libxfs/xfs_rtrmap_btree.h
+index 108ab8c0aea..5aec719be05 100644
+--- a/libxfs/xfs_rtrmap_btree.h
++++ b/libxfs/xfs_rtrmap_btree.h
+@@ -202,4 +202,7 @@ struct xfs_imeta_update;
  
--echo "Check file"
--md5sum $SCRATCH_MNT/f1 | _filter_scratch
--od -tx1 -Ad -c $SCRATCH_MNT/f1 >> $seqres.full
--
- echo "Unmount"
- _scratch_unmount
+ int xfs_rtrmapbt_create(struct xfs_imeta_update *upd, struct xfs_inode **ipp);
  
-diff --git a/tests/xfs/332.out b/tests/xfs/332.out
-index 9beff7cc37..3a7ca95b40 100644
---- a/tests/xfs/332.out
-+++ b/tests/xfs/332.out
-@@ -2,8 +2,6 @@ QA output created by 332
- Format and mount
- Create some files
- Manipulate file
--Check file
--e45c5707fcf6817e914ffb6ce37a0ac7  SCRATCH_MNT/f1
- Unmount
- Try a regular fsmap
- Try a bad fsmap
-diff --git a/tests/xfs/343 b/tests/xfs/343
-index bffcc7d9ac..fe461847ed 100755
---- a/tests/xfs/343
-+++ b/tests/xfs/343
-@@ -31,6 +31,8 @@ blksz=65536
- blocks=16
- len=$((blocks * blksz))
- 
-+_require_congruent_file_oplen $SCRATCH_MNT $blksz
++unsigned long long xfs_rtrmapbt_calc_size(struct xfs_mount *mp,
++		unsigned long long len);
 +
- echo "Create some files"
- $XFS_IO_PROG -f -R -c "falloc 0 $len" -c "pwrite -S 0x68 -b 1048576 0 $len" $SCRATCH_MNT/f1 >> $seqres.full
- 
+ #endif	/* __XFS_RTRMAP_BTREE_H__ */
 
 
