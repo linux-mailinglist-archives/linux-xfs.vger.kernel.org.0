@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2247-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2290-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7471821218
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:29:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5DDD821243
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:40:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63D95282A09
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:29:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9F5E1C21CC5
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25514391;
-	Mon,  1 Jan 2024 00:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4035C802;
+	Mon,  1 Jan 2024 00:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WP0tgzzs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6t5D7aY"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A65389
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:29:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61085C433C8;
-	Mon,  1 Jan 2024 00:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD687ED
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:40:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3F9C433C8;
+	Mon,  1 Jan 2024 00:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068941;
-	bh=r4tytUpQK0QjafBc3FZ4ez3eNGI5wcCI9sIjze0c6z4=;
+	s=k20201202; t=1704069614;
+	bh=bAzPVhvBi/HYhV/uSt+3+w675yPt1hbABxTLtUXLH3w=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=WP0tgzzs8UWA1bh/iKQlDU8Eu+8Ho8rNsqWAOV42UEU12n+VeXefTWd5OB7DyawgL
-	 t6+rMSyBlc3lILOmgp7wQRIhYNRZPBGeC9aV/qhbh4A0Fq0cFI8/rAKpmj89crFh9i
-	 1z3VvwbpFB5vZOOhhPflqT2Nn5xxXg0RYhZS2aiQq7zsKPu9B1Ac6fx/Uu6znFDOee
-	 wdfIFG++PRFV56QPFhL6BgjQg1kT7hWxpYLFfRPX/lM78L/u8617P2DbziCR8tuZo3
-	 x/Z+w2c+venPcNac/chOXcAHmO+GAXy7LxLz3sqygYySJ8JIC0PCjWAJJLx65bKcaS
-	 HzF51jM50oXMQ==
-Date: Sun, 31 Dec 2023 16:29:00 +9900
-Subject: [PATCH 11/42] xfs: wire up realtime refcount btree cursors
+	b=j6t5D7aYtBSrGdEtx1A6oYV4db7Pf2SG6Wu2jEy8+wsfZiGQg+Kb8U3ReWN1lYY3c
+	 fGnIUuZexqRX6ikRA36ORXNGbdN1O9ZrjirUZrlZP5pLak53LOQZxaHP/ZgClZ8oyW
+	 4YLeDzoLTgc1xgPn2gDJEWS68Ko+VSqSP5tzEatbQ6L8+anlogh3J4ngJtaCgpumMa
+	 7pSsI1ROkYvX/axcgEdLBr7W6ulkGDH/1+jdHrCeTjmGt/f1sYx5QZyUE95mfJq8Wu
+	 ObSQuZWJ6t5MEcymG3RXt9EMOxumQJmebbEW1oqWl1yb3ckSp+ecsa+ZN8moCfQEmh
+	 u4123N+wKM9bQ==
+Date: Sun, 31 Dec 2023 16:40:14 +9900
+Subject: [PATCH 01/10] xfs: add an ioctl to map free space into a file
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017273.1817107.18222077447852897506.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Message-ID: <170405020337.1820796.14472849118957827138.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
+References: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,189 +52,466 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Wire up realtime refcount btree cursors wherever they're needed
-throughout the code base.
+Add a new ioctl to map free physical space into a file, at the same file
+offset as if the file were a sparse image of the physical device backing
+the filesystem.  The intent here is to use this to prototype a free
+space defragmentation tool.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_refcount.c |  101 ++++++++++++++++++++++++++++++++++++++++++++++++-
- libxfs/xfs_rtgroup.c  |   10 +++++
- libxfs/xfs_rtgroup.h  |    5 ++
- 3 files changed, 113 insertions(+), 3 deletions(-)
+ include/xfs_trace.h             |    4 +
+ libxfs/libxfs_priv.h            |   10 +++
+ libxfs/xfs_alloc.c              |   88 +++++++++++++++++++++++
+ libxfs/xfs_alloc.h              |    3 +
+ libxfs/xfs_bmap.c               |  149 +++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_bmap.h               |    3 +
+ libxfs/xfs_fs.h                 |    1 
+ libxfs/xfs_fs_staging.h         |   15 ++++
+ man/man2/ioctl_xfs_map_freesp.2 |   76 ++++++++++++++++++++
+ 9 files changed, 349 insertions(+)
+ create mode 100644 man/man2/ioctl_xfs_map_freesp.2
 
 
-diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index d4ed0f44fa1..3f0f0f41a69 100644
---- a/libxfs/xfs_refcount.c
-+++ b/libxfs/xfs_refcount.c
-@@ -25,6 +25,7 @@
- #include "xfs_health.h"
- #include "defer_item.h"
- #include "xfs_rtgroup.h"
-+#include "xfs_rtrefcount_btree.h"
+diff --git a/include/xfs_trace.h b/include/xfs_trace.h
+index c8368227705..328f276d498 100644
+--- a/include/xfs_trace.h
++++ b/include/xfs_trace.h
+@@ -26,6 +26,8 @@
+ #define trace_xfs_alloc_exact_done(a)		((void) 0)
+ #define trace_xfs_alloc_exact_notfound(a)	((void) 0)
+ #define trace_xfs_alloc_exact_error(a)		((void) 0)
++#define trace_xfs_alloc_find_freesp(...)	((void) 0)
++#define trace_xfs_alloc_find_freesp_done(...)	((void) 0)
+ #define trace_xfs_alloc_near_first(a)		((void) 0)
+ #define trace_xfs_alloc_near_greater(a)		((void) 0)
+ #define trace_xfs_alloc_near_lesser(a)		((void) 0)
+@@ -196,6 +198,8 @@
  
- struct kmem_cache	*xfs_refcount_intent_cache;
+ #define trace_xfs_bmap_pre_update(a,b,c,d)	((void) 0)
+ #define trace_xfs_bmap_post_update(a,b,c,d)	((void) 0)
++#define trace_xfs_bmapi_freesp(...)		((void) 0)
++#define trace_xfs_bmapi_freesp_done(...)	((void) 0)
+ #define trace_xfs_bunmap(a,b,c,d,e)		((void) 0)
+ #define trace_xfs_read_extent(a,b,c,d)		((void) 0)
  
-@@ -1484,6 +1485,33 @@ xfs_refcount_finish_one(
- 	return error;
- }
+diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+index bbe7dd63443..bc8f66aa986 100644
+--- a/libxfs/libxfs_priv.h
++++ b/libxfs/libxfs_priv.h
+@@ -501,6 +501,16 @@ void __xfs_buf_mark_corrupt(struct xfs_buf *bp, xfs_failaddr_t fa);
+ #define xfs_filestream_new_ag(ip,ag)		(0)
+ #define xfs_filestream_select_ag(...)		(-ENOSYS)
  
-+/*
-+ * Set up a continuation a deferred rtrefcount operation by updating the
-+ * intent.  Checks to make sure we're not going to run off the end of the
-+ * rtgroup.
-+ */
++struct xfs_trans;
++
 +static inline int
-+xfs_rtrefcount_continue_op(
-+	struct xfs_btree_cur		*cur,
-+	struct xfs_refcount_intent	*ri,
-+	xfs_agblock_t			new_agbno)
++xfs_rtallocate_extent(struct xfs_trans *tp, xfs_rtblock_t bno,
++		xfs_extlen_t minlen, xfs_extlen_t maxlen, xfs_extlen_t *len,
++		int wasdel, xfs_extlen_t prod, xfs_rtblock_t *rtblock)
 +{
-+	struct xfs_mount		*mp = cur->bc_mp;
-+	struct xfs_rtgroup		*rtg = ri->ri_rtg;
-+
-+	if (XFS_IS_CORRUPT(mp, !xfs_verify_rgbext(rtg, new_agbno,
-+					ri->ri_blockcount))) {
-+		xfs_btree_mark_sick(cur);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	ri->ri_startblock = xfs_rgbno_to_rtb(mp, rtg->rtg_rgno, new_agbno);
-+
-+	ASSERT(xfs_verify_rtbext(mp, ri->ri_startblock, ri->ri_blockcount));
-+	ASSERT(rtg->rtg_rgno == xfs_rtb_to_rgno(mp, ri->ri_startblock));
-+	return 0;
++	return -EOPNOTSUPP;
 +}
 +
- /*
-  * Process one of the deferred realtime refcount operations.  We pass back the
-  * btree cursor to maintain our lock on the btree between calls.
-@@ -1494,8 +1522,77 @@ xfs_rtrefcount_finish_one(
- 	struct xfs_refcount_intent	*ri,
- 	struct xfs_btree_cur		**pcur)
- {
--	ASSERT(0);
--	return -EFSCORRUPTED;
-+	struct xfs_mount		*mp = tp->t_mountp;
-+	struct xfs_btree_cur		*rcur = *pcur;
-+	int				error = 0;
-+	xfs_rgnumber_t			rgno;
-+	xfs_rgblock_t			bno;
-+	unsigned long			nr_ops = 0;
-+	int				shape_changes = 0;
+ #define xfs_trans_inode_buf(tp, bp)		((void) 0)
+ 
+ /* quota bits */
+diff --git a/libxfs/xfs_alloc.c b/libxfs/xfs_alloc.c
+index 589e9ef3003..50626d79c3f 100644
+--- a/libxfs/xfs_alloc.c
++++ b/libxfs/xfs_alloc.c
+@@ -4092,3 +4092,91 @@ xfs_extfree_intent_destroy_cache(void)
+ 	kmem_cache_destroy(xfs_extfree_item_cache);
+ 	xfs_extfree_item_cache = NULL;
+ }
 +
-+	bno = xfs_rtb_to_rgbno(mp, ri->ri_startblock, &rgno);
++/*
++ * Find the next chunk of free space in @pag starting at @agbno and going no
++ * higher than @end_agbno.  Set @agbno and @len to whatever free space we find,
++ * or to @end_agbno if we find no space.
++ */
++int
++xfs_alloc_find_freesp(
++	struct xfs_trans	*tp,
++	struct xfs_perag	*pag,
++	xfs_agblock_t		*agbno,
++	xfs_agblock_t		end_agbno,
++	xfs_extlen_t		*len)
++{
++	struct xfs_mount	*mp = pag->pag_mount;
++	struct xfs_btree_cur	*cur;
++	struct xfs_buf		*agf_bp = NULL;
++	xfs_agblock_t		found_agbno;
++	xfs_extlen_t		found_len;
++	int			found;
++	int			error;
 +
-+	trace_xfs_refcount_deferred(mp, ri);
++	trace_xfs_alloc_find_freesp(mp, pag->pag_agno, *agbno,
++			end_agbno - *agbno);
 +
-+	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_REFCOUNT_FINISH_ONE))
-+		return -EIO;
++	error = xfs_alloc_read_agf(pag, tp, 0, &agf_bp);
++	if (error)
++		return error;
++
++	cur = xfs_allocbt_init_cursor(mp, tp, agf_bp, pag, XFS_BTNUM_BNO);
++
++	/* Try to find a free extent that starts before here. */
++	error = xfs_alloc_lookup_le(cur, *agbno, 0, &found);
++	if (error)
++		goto out_cur;
++	if (found) {
++		error = xfs_alloc_get_rec(cur, &found_agbno, &found_len,
++				&found);
++		if (error)
++			goto out_cur;
++		if (XFS_IS_CORRUPT(mp, !found)) {
++			xfs_btree_mark_sick(cur);
++			error = -EFSCORRUPTED;
++			goto out_cur;
++		}
++
++		if (found_agbno + found_len > *agbno)
++			goto found;
++	}
++
++	/* Examine the next record if free extent not in range. */
++	error = xfs_btree_increment(cur, 0, &found);
++	if (error)
++		goto out_cur;
++	if (!found)
++		goto next_ag;
++
++	error = xfs_alloc_get_rec(cur, &found_agbno, &found_len, &found);
++	if (error)
++		goto out_cur;
++	if (XFS_IS_CORRUPT(mp, !found)) {
++		xfs_btree_mark_sick(cur);
++		error = -EFSCORRUPTED;
++		goto out_cur;
++	}
++
++	if (found_agbno >= end_agbno)
++		goto next_ag;
++
++found:
++	/* Found something, so update the mapping. */
++	trace_xfs_alloc_find_freesp_done(mp, pag->pag_agno, found_agbno,
++			found_len);
++	if (found_agbno < *agbno) {
++		found_len -= *agbno - found_agbno;
++		found_agbno = *agbno;
++	}
++	*len = found_len;
++	*agbno = found_agbno;
++	goto out_cur;
++next_ag:
++	/* Found nothing, so advance the cursor beyond the end of the range. */
++	*agbno = end_agbno;
++	*len = 0;
++out_cur:
++	xfs_btree_del_cursor(cur, error);
++	return error;
++}
+diff --git a/libxfs/xfs_alloc.h b/libxfs/xfs_alloc.h
+index 130026e981e..fedb6dc0443 100644
+--- a/libxfs/xfs_alloc.h
++++ b/libxfs/xfs_alloc.h
+@@ -290,5 +290,8 @@ void xfs_extfree_intent_destroy_cache(void);
+ 
+ xfs_failaddr_t xfs_validate_ag_length(struct xfs_buf *bp, uint32_t seqno,
+ 		uint32_t length);
++int xfs_alloc_find_freesp(struct xfs_trans *tp, struct xfs_perag *pag,
++		xfs_agblock_t *agbno, xfs_agblock_t end_agbno,
++		xfs_extlen_t *len);
+ 
+ #endif	/* __XFS_ALLOC_H__ */
+diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
+index 13bcf146d08..94640a5077c 100644
+--- a/libxfs/xfs_bmap.c
++++ b/libxfs/xfs_bmap.c
+@@ -6436,3 +6436,152 @@ xfs_get_cowextsz_hint(
+ 		return XFS_DEFAULT_COWEXTSZ_HINT;
+ 	return a;
+ }
++
++static inline xfs_fileoff_t
++xfs_fsblock_to_fileoff(
++	struct xfs_mount	*mp,
++	xfs_fsblock_t		fsbno)
++{
++	xfs_daddr_t		daddr = XFS_FSB_TO_DADDR(mp, fsbno);
++
++	return XFS_B_TO_FSB(mp, BBTOB(daddr));
++}
++
++/*
++ * Given a file and a free physical extent, map it into the file at the same
++ * offset if the file were a sparse image of the physical device.  Set @mval to
++ * whatever mapping we added to the file.
++ */
++int
++xfs_bmapi_freesp(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*ip,
++	xfs_fsblock_t		fsbno,
++	xfs_extlen_t		len,
++	struct xfs_bmbt_irec	*mval)
++{
++	struct xfs_bmbt_irec	irec;
++	struct xfs_mount	*mp = ip->i_mount;
++	xfs_fileoff_t		startoff;
++	bool			isrt = XFS_IS_REALTIME_INODE(ip);
++	int			nimaps;
++	int			error;
++
++	trace_xfs_bmapi_freesp(ip, fsbno, len);
++
++	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
++			XFS_IEXT_ADD_NOSPLIT_CNT);
++	if (error)
++		return error;
++
++	if (isrt)
++		startoff = fsbno;
++	else
++		startoff = xfs_fsblock_to_fileoff(mp, fsbno);
++
++	/* Make sure the entire range is a hole. */
++	nimaps = 1;
++	error = xfs_bmapi_read(ip, startoff, len, &irec, &nimaps, 0);
++	if (error)
++		return error;
++
++	if (irec.br_startoff != startoff ||
++	    irec.br_startblock != HOLESTARTBLOCK ||
++	    irec.br_blockcount < len)
++		return -EINVAL;
 +
 +	/*
-+	 * If we haven't gotten a cursor or the cursor AG doesn't match
-+	 * the startblock, get one now.
++	 * Allocate the physical extent.  We should not have dropped the lock
++	 * since the scan of the free space metadata, so this should work,
++	 * though the length may be adjusted to play nicely with metadata space
++	 * reservations.
 +	 */
-+	if (rcur != NULL && rcur->bc_ino.rtg != ri->ri_rtg) {
-+		nr_ops = xrefc_btree_state(rcur)->nr_ops;
-+		shape_changes = xrefc_btree_state(rcur)->shape_changes;
-+		xfs_btree_del_cursor(rcur, 0);
-+		rcur = NULL;
-+		*pcur = NULL;
-+	}
-+	if (rcur == NULL) {
-+		xfs_rtgroup_lock(tp, ri->ri_rtg, XFS_RTGLOCK_REFCOUNT);
-+		*pcur = rcur = xfs_rtrefcountbt_init_cursor(mp, tp, ri->ri_rtg,
-+						ri->ri_rtg->rtg_refcountip);
++	if (isrt) {
++		xfs_rtxnum_t	rtx_in, rtx_out;
++		xfs_extlen_t	rtxlen_in, rtxlen_out;
++		uint32_t	mod;
 +
-+		xrefc_btree_state(rcur)->nr_ops = nr_ops;
-+		xrefc_btree_state(rcur)->shape_changes = shape_changes;
++		rtx_in = xfs_rtb_to_rtxrem(mp, fsbno, &mod);
++		if (mod) {
++			ASSERT(mod == 0);
++			return -EFSCORRUPTED;
++		}
++
++		rtxlen_in = xfs_rtb_to_rtxrem(mp, len, &mod);
++		if (mod) {
++			ASSERT(mod == 0);
++			return -EFSCORRUPTED;
++		}
++
++		error = xfs_rtallocate_extent(tp, rtx_in, 1, rtxlen_in,
++				&rtxlen_out, 0, 1, &rtx_out);
++		if (error)
++			return error;
++		if (rtx_out == NULLRTEXTNO) {
++			/*
++			 * We were promised the space!  In theory there aren't
++			 * any reserve lists that would prevent us from getting
++			 * the space.
++			 */
++			return -ENOSPC;
++		}
++		if (rtx_out != rtx_in) {
++			ASSERT(0);
++			xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
++			return -EFSCORRUPTED;
++		}
++		mval->br_blockcount = rtxlen_out * mp->m_sb.sb_rextsize;
++	} else {
++		struct xfs_alloc_arg	args = {
++			.mp		= mp,
++			.tp		= tp,
++			.oinfo		= XFS_RMAP_OINFO_SKIP_UPDATE,
++			.resv		= XFS_AG_RESV_NONE,
++			.prod		= 1,
++			.datatype	= XFS_ALLOC_USERDATA,
++			.maxlen		= len,
++			.minlen		= 1,
++		};
++		args.pag = xfs_perag_get(mp, XFS_FSB_TO_AGNO(mp, fsbno));
++		error = xfs_alloc_vextent_exact_bno(&args, fsbno);
++		xfs_perag_put(args.pag);
++		if (error)
++			return error;
++		if (args.fsbno == NULLFSBLOCK) {
++			/*
++			 * We were promised the space, but failed to get it.
++			 * This could be because the space is reserved for
++			 * metadata expansion, or it could be because the AGFL
++			 * fixup grabbed the first block we wanted.  Either
++			 * way, if the transaction is dirty we must commit it
++			 * and tell the caller to try again.
++			 */
++			if (tp->t_flags & XFS_TRANS_DIRTY)
++				return -EAGAIN;
++			return -ENOSPC;
++		}
++		if (args.fsbno != fsbno) {
++			ASSERT(0);
++			xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
++			return -EFSCORRUPTED;
++		}
++		mval->br_blockcount = args.len;
 +	}
 +
-+	switch (ri->ri_type) {
-+	case XFS_REFCOUNT_INCREASE:
-+		error = xfs_refcount_adjust(rcur, &bno, &ri->ri_blockcount,
-+				XFS_REFCOUNT_ADJUST_INCREASE);
-+		if (error)
-+			return error;
-+		if (ri->ri_blockcount > 0)
-+			error = xfs_rtrefcount_continue_op(rcur, ri, bno);
-+		break;
-+	case XFS_REFCOUNT_DECREASE:
-+		error = xfs_refcount_adjust(rcur, &bno, &ri->ri_blockcount,
-+				XFS_REFCOUNT_ADJUST_DECREASE);
-+		if (error)
-+			return error;
-+		if (ri->ri_blockcount > 0)
-+			error = xfs_rtrefcount_continue_op(rcur, ri, bno);
-+		break;
-+	case XFS_REFCOUNT_ALLOC_COW:
-+		error = __xfs_refcount_cow_alloc(rcur, bno, ri->ri_blockcount);
-+		if (error)
-+			return error;
-+		ri->ri_blockcount = 0;
-+		break;
-+	case XFS_REFCOUNT_FREE_COW:
-+		error = __xfs_refcount_cow_free(rcur, bno, ri->ri_blockcount);
-+		if (error)
-+			return error;
-+		ri->ri_blockcount = 0;
-+		break;
-+	default:
-+		ASSERT(0);
-+		return -EFSCORRUPTED;
-+	}
-+	if (!error && ri->ri_blockcount > 0)
-+		trace_xfs_refcount_finish_one_leftover(mp, ri);
-+	return error;
- }
++	/* Map extent into file, update quota. */
++	mval->br_startblock = fsbno;
++	mval->br_startoff = startoff;
++	mval->br_state = XFS_EXT_UNWRITTEN;
++
++	trace_xfs_bmapi_freesp_done(ip, mval);
++
++	xfs_bmap_map_extent(tp, ip, XFS_DATA_FORK, mval);
++	if (isrt)
++		xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_RTBCOUNT,
++				mval->br_blockcount);
++	else
++		xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT,
++				mval->br_blockcount);
++
++	return 0;
++}
+diff --git a/libxfs/xfs_bmap.h b/libxfs/xfs_bmap.h
+index 61c195198db..afb54a517f1 100644
+--- a/libxfs/xfs_bmap.h
++++ b/libxfs/xfs_bmap.h
+@@ -197,6 +197,9 @@ int	xfs_bmapi_read(struct xfs_inode *ip, xfs_fileoff_t bno,
+ int	xfs_bmapi_write(struct xfs_trans *tp, struct xfs_inode *ip,
+ 		xfs_fileoff_t bno, xfs_filblks_t len, uint32_t flags,
+ 		xfs_extlen_t total, struct xfs_bmbt_irec *mval, int *nmap);
++int	xfs_bmapi_freesp(struct xfs_trans *tp, struct xfs_inode *ip,
++		xfs_fsblock_t fsbno, xfs_extlen_t len,
++		struct xfs_bmbt_irec *mval);
+ int	xfs_bunmapi(struct xfs_trans *tp, struct xfs_inode *ip,
+ 		xfs_fileoff_t bno, xfs_filblks_t len, uint32_t flags,
+ 		xfs_extnum_t nexts, int *done);
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 96688f9301e..922e9acfdc3 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -864,6 +864,7 @@ struct xfs_scrub_metadata {
+ #define XFS_IOC_AG_GEOMETRY	_IOWR('X', 61, struct xfs_ag_geometry)
+ /*	XFS_IOC_GETPARENTS ---- staging 62         */
+ /*	XFS_IOC_RTGROUP_GEOMETRY - staging 63	   */
++/*	XFS_IOC_MAP_FREESP ---- staging 64	   */
  
  /*
-diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
-index 03eb776ef8b..8d13ba6e0ea 100644
---- a/libxfs/xfs_rtgroup.c
-+++ b/libxfs/xfs_rtgroup.c
-@@ -558,6 +558,13 @@ xfs_rtgroup_lock(
- 		if (tp)
- 			xfs_trans_ijoin(tp, rtg->rtg_rmapip, XFS_ILOCK_EXCL);
- 	}
+  * ioctl commands that replace IRIX syssgi()'s
+diff --git a/libxfs/xfs_fs_staging.h b/libxfs/xfs_fs_staging.h
+index f7d872f8a88..2a9effb7a84 100644
+--- a/libxfs/xfs_fs_staging.h
++++ b/libxfs/xfs_fs_staging.h
+@@ -303,4 +303,19 @@ xfs_getfsrefs_advance(
+ /* XXX stealing XFS_IOC_GETBIOSIZE */
+ #define XFS_IOC_GETFSREFCOUNTS		_IOWR('X', 47, struct xfs_getfsrefs_head)
+ 
++/* map free space to file */
 +
-+	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip) {
-+		xfs_ilock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
-+		if (tp)
-+			xfs_trans_ijoin(tp, rtg->rtg_refcountip,
-+					XFS_ILOCK_EXCL);
-+	}
- }
- 
- /* Unlock metadata inodes associated with this rt group. */
-@@ -570,6 +577,9 @@ xfs_rtgroup_unlock(
- 	ASSERT(!(rtglock_flags & XFS_RTGLOCK_BITMAP_SHARED) ||
- 	       !(rtglock_flags & XFS_RTGLOCK_BITMAP));
- 
-+	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip)
-+		xfs_iunlock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
++struct xfs_map_freesp {
++	__s64	offset;		/* disk address to map, in bytes */
++	__s64	len;		/* length in bytes */
++	__u64	flags;		/* must be zero */
++	__u64	pad;		/* must be zero */
++};
 +
- 	if ((rtglock_flags & XFS_RTGLOCK_RMAP) && rtg->rtg_rmapip)
- 		xfs_iunlock(rtg->rtg_rmapip, XFS_ILOCK_EXCL);
- 
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index bd88a4d7281..659d0c15d2a 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -248,10 +248,13 @@ int xfs_rtgroup_init_secondary_super(struct xfs_mount *mp, xfs_rgnumber_t rgno,
- #define XFS_RTGLOCK_BITMAP_SHARED	(1U << 1)
- /* Lock the rt rmap inode in exclusive mode */
- #define XFS_RTGLOCK_RMAP		(1U << 2)
-+/* Lock the rt refcount inode in exclusive mode */
-+#define XFS_RTGLOCK_REFCOUNT		(1U << 3)
- 
- #define XFS_RTGLOCK_ALL_FLAGS	(XFS_RTGLOCK_BITMAP | \
- 				 XFS_RTGLOCK_BITMAP_SHARED | \
--				 XFS_RTGLOCK_RMAP)
-+				 XFS_RTGLOCK_RMAP | \
-+				 XFS_RTGLOCK_REFCOUNT)
- 
- void xfs_rtgroup_lock(struct xfs_trans *tp, struct xfs_rtgroup *rtg,
- 		unsigned int rtglock_flags);
++/*
++ * XFS_IOC_MAP_FREESP maps all the free physical space in the filesystem into
++ * the file at the same offsets.  This ioctl requires CAP_SYS_ADMIN.
++ */
++#define XFS_IOC_MAP_FREESP	_IOWR('X', 64, struct xfs_map_freesp)
++
+ #endif /* __XFS_FS_STAGING_H__ */
+diff --git a/man/man2/ioctl_xfs_map_freesp.2 b/man/man2/ioctl_xfs_map_freesp.2
+new file mode 100644
+index 00000000000..ca1d9882437
+--- /dev/null
++++ b/man/man2/ioctl_xfs_map_freesp.2
+@@ -0,0 +1,76 @@
++.\" Copyright (c) 2023-2024 Oracle.  All rights reserved.
++.\"
++.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
++.\" SPDX-License-Identifier: GPL-2.0-or-later
++.\" %%%LICENSE_END
++.TH IOCTL-XFS-MAP-FREESP 2 2023-11-17 "XFS"
++.SH NAME
++ioctl_xfs_map_freesp \- map free space into a file
++.SH SYNOPSIS
++.br
++.B #include <xfs/xfs_fs_staging.h>
++.PP
++.BI "int ioctl(int " fd ", XFS_IOC_MAP_FREESP, struct xfs_map_freesp *" arg );
++.SH DESCRIPTION
++Maps free space into the sparse ranges of a regular file.
++This ioctl uses
++.B struct xfs_map_freesp
++to specify the range of free space to be mapped:
++.PP
++.in +4n
++.nf
++struct xfs_map_freesp {
++	__s64   offset;
++	__s64   len;
++	__s64   flags;
++	__s64   pad;
++};
++.fi
++.in
++.PP
++.I offset
++is the physical disk address, in bytes, of the start of the range to scan.
++Each free space extent in this range will be mapped to the file if the
++corresponding range of the file is sparse.
++.PP
++.I len
++is the number of bytes in the range to scan.
++.PP
++.I flags
++must be zero; there are no flags defined yet.
++.PP
++.I pad
++must be zero.
++.SH RETURN VALUE
++On error, \-1 is returned, and
++.I errno
++is set to indicate the error.
++.PP
++.SH ERRORS
++Error codes can be one of, but are not limited to, the following:
++.TP
++.B EFAULT
++The kernel was not able to copy into the userspace buffer.
++.TP
++.B EFSBADCRC
++Metadata checksum validation failed while performing the query.
++.TP
++.B EFSCORRUPTED
++Metadata corruption was encountered while performing the query.
++.TP
++.B EINVAL
++One of the arguments was not valid,
++or the file was not sparse.
++.TP
++.B EIO
++An I/O error was encountered while performing the query.
++.TP
++.B ENOMEM
++There was insufficient memory to perform the query.
++.TP
++.B ENOSPC
++There was insufficient disk space to commit the space mappings.
++.SH CONFORMING TO
++This API is specific to XFS filesystem on the Linux kernel.
++.SH SEE ALSO
++.BR ioctl (2)
 
 
