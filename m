@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2353-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2176-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EFF5821292
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:56:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE4648211CE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:11:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C20BE1C21D6E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:56:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92784B21AA9
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:11:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 210DD4A07;
-	Mon,  1 Jan 2024 00:56:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368E9391;
+	Mon,  1 Jan 2024 00:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbKWbi2J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUnQ3Mpv"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7A54A03;
-	Mon,  1 Jan 2024 00:56:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA676C433C7;
-	Mon,  1 Jan 2024 00:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027F1389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:11:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5338C433C8;
+	Mon,  1 Jan 2024 00:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070601;
-	bh=WfURwhsVtITh/bBLPu/AwDwWUwZY5uQNfWGVEh6ML7c=;
+	s=k20201202; t=1704067862;
+	bh=y+fDsaWxEwi/ehMCf2dbgZalFgVA8BgmBNHu1R+AkeM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=NbKWbi2JKMLHU7C61VADUXxYAXtt8A5zCv30suaW8gQjD54bnBoJcb5rsEA4evrP6
-	 JbdQslHkZ4QZr74yxuVD6QYRB7+kUYd+c23mg9HXS8mI04138yLBHe78ckhgcrIrII
-	 ya7nr/vdjk4Pdo8sNbj9jZQlo5VhMnvpK/T7YVQukEiFz2FUlcHz8/Btxa9tXfdiBe
-	 TLD7D2atB+C3IaIjhQpIqpTrC1LiLm2ovKiHC/P7KhOMoVJvi/5J4VQZUE3+agtT4U
-	 mvM5YLpXpHEZ3rERxLlF5STbONVM5/JMtECbCeiLsFzGoJWq1iCoA0OoKDFqg6btTO
-	 gUkc08LQzX7aQ==
-Date: Sun, 31 Dec 2023 16:56:41 +9900
-Subject: [PATCH 15/17] xfs/27[46],xfs/556: fix tests to deal with rtgroups
- output in bmap/fsmap commands
+	b=TUnQ3Mpvzvf1DONmFxb0q/qckQyFaZwSZtcuHMN4NRAIGNYHCzdiEoPs6z0HTsjpe
+	 EkAlUjf24O9Px4lDECUfnceVGRN6uKrA3jsG/8H6LAPGKNmcz0nbzNNv5s8OrUxzYZ
+	 mE3sPU61PUpNrjUKFU9gaE+KX+P0JqAffbWOXmCT3ejlNhONrZak1W8JxA/AH/CY+0
+	 3SAfbuAWsgGIU0emJnOcWe1zCuAc/ASwLzRwIxglsTZ+NGyarO/jFvIjOTptiklPs7
+	 HD5dK7e7n0FUIq+hyPGS1I/RPsPcUeG22ucNBpIHqUZTuhSGmRE55vLvcmqE5Y0oIj
+	 dIZEyqHVjjJvQ==
+Date: Sun, 31 Dec 2023 16:11:02 +9900
+Subject: [PATCH 02/47] xfs: introduce realtime rmap btree definitions
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405030534.1826350.7625739026116302245.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
-References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015339.1815505.9577554260995888788.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,86 +52,70 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix these tests to deal with the xfs_io bmap and fsmap commands printing
-out realtime group numbers if the feature is enabled.
+Add new realtime rmap btree definitions. The realtime rmap btree will
+be rooted from a hidden inode, but has its own shape and therefore
+needs to have most of its own separate types.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs    |    7 +++++++
- tests/xfs/271 |    3 ++-
- tests/xfs/556 |   16 ++++++++++------
- 3 files changed, 19 insertions(+), 7 deletions(-)
+ libxfs/xfs_btree.h  |    1 +
+ libxfs/xfs_format.h |    7 +++++++
+ libxfs/xfs_types.h  |    5 +++--
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
 
-diff --git a/common/xfs b/common/xfs
-index e66e11f15d..1136d685e7 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -485,6 +485,13 @@ _xfs_has_feature()
- 		feat="rtextents"
- 		feat_regex="[1-9][0-9]*"
- 		;;
-+	"rtgroups")
-+		# any fs with rtgroups enabled will have a nonzero rt group
-+		# size, even if there is no rt device (and hence zero actual
-+		# groups)
-+		feat="rgsize"
-+		feat_regex="[1-9][0-9]*"
-+		;;
- 	esac
+diff --git a/libxfs/xfs_btree.h b/libxfs/xfs_btree.h
+index ce0bc5dfffe..e6571c9157d 100644
+--- a/libxfs/xfs_btree.h
++++ b/libxfs/xfs_btree.h
+@@ -64,6 +64,7 @@ union xfs_btree_rec {
+ #define	XFS_BTNUM_RMAP	((xfs_btnum_t)XFS_BTNUM_RMAPi)
+ #define	XFS_BTNUM_REFC	((xfs_btnum_t)XFS_BTNUM_REFCi)
+ #define	XFS_BTNUM_RCBAG	((xfs_btnum_t)XFS_BTNUM_RCBAGi)
++#define	XFS_BTNUM_RTRMAP ((xfs_btnum_t)XFS_BTNUM_RTRMAPi)
  
- 	local answer="$($XFS_INFO_PROG "$fs" 2>&1 | grep -E -w -c "$feat=$feat_regex")"
-diff --git a/tests/xfs/271 b/tests/xfs/271
-index d67ac4d6c1..74e2c822c1 100755
---- a/tests/xfs/271
-+++ b/tests/xfs/271
-@@ -31,6 +31,7 @@ _scratch_mkfs > "$seqres.full" 2>&1
- _scratch_mount
+ struct xfs_btree_ops;
+ uint32_t xfs_btree_magic(struct xfs_mount *mp, const struct xfs_btree_ops *ops);
+diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
+index 87476c6bb6c..b47d4f16143 100644
+--- a/libxfs/xfs_format.h
++++ b/libxfs/xfs_format.h
+@@ -1746,6 +1746,13 @@ typedef __be32 xfs_rmap_ptr_t;
+ 	 XFS_FIBT_BLOCK(mp) + 1 : \
+ 	 XFS_IBT_BLOCK(mp) + 1)
  
- agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
-+rgcount=$(_xfs_mount_rgcount $SCRATCH_MNT)
- 
- # mkfs lays out btree root blocks in the order bnobt, cntbt, inobt, finobt,
- # rmapbt, refcountbt, and then allocates AGFL blocks.  Since GETFSMAP has the
-@@ -48,7 +49,7 @@ cat $TEST_DIR/fsmap >> $seqres.full
- 
- echo "Check AG header" | tee -a $seqres.full
- grep 'static fs metadata[[:space:]]*[0-9]*[[:space:]]*(0\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
--_within_tolerance "AG header count" $(wc -l < $TEST_DIR/testout) $agcount 0 -v
-+_within_tolerance "AG header count" $(wc -l < $TEST_DIR/testout) $((agcount + rgcount)) 0 -v
- 
- echo "Check freesp/rmap btrees" | tee -a $seqres.full
- grep 'per-AG metadata[[:space:]]*[0-9]*[[:space:]]*([0-9]*\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
-diff --git a/tests/xfs/556 b/tests/xfs/556
-index 061d8d5723..5940226223 100755
---- a/tests/xfs/556
-+++ b/tests/xfs/556
-@@ -47,16 +47,20 @@ victim=$SCRATCH_MNT/a
- file_blksz=$(_get_file_block_size $SCRATCH_MNT)
- $XFS_IO_PROG -f -c "pwrite -S 0x58 0 $((4 * file_blksz))" -c "fsync" $victim >> $seqres.full
- unset errordev
--_xfs_is_realtime_file $victim && errordev="RT"
++/*
++ * Realtime Reverse mapping btree format definitions
++ *
++ * This is a btree for reverse mapping records for realtime volumes
++ */
++#define	XFS_RTRMAP_CRC_MAGIC	0x4d415052	/* 'MAPR' */
 +
-+awk_len_prog='{print $6}'
-+if _xfs_is_realtime_file $victim; then
-+	if ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+		awk_len_prog='{print $4}'
-+	fi
-+	errordev="RT"
-+fi
- bmap_str="$($XFS_IO_PROG -c "bmap -elpv" $victim | grep "^[[:space:]]*0:")"
- echo "$errordev:$bmap_str" >> $seqres.full
+ /*
+  * Reference Count Btree format definitions
+  *
+diff --git a/libxfs/xfs_types.h b/libxfs/xfs_types.h
+index ad2ce83874f..b3edc57dc65 100644
+--- a/libxfs/xfs_types.h
++++ b/libxfs/xfs_types.h
+@@ -126,7 +126,7 @@ typedef enum {
+ typedef enum {
+ 	XFS_BTNUM_BNOi, XFS_BTNUM_CNTi, XFS_BTNUM_RMAPi, XFS_BTNUM_BMAPi,
+ 	XFS_BTNUM_INOi, XFS_BTNUM_FINOi, XFS_BTNUM_REFCi, XFS_BTNUM_RCBAGi,
+-	XFS_BTNUM_MAX
++	XFS_BTNUM_RTRMAPi, XFS_BTNUM_MAX
+ } xfs_btnum_t;
  
- phys="$(echo "$bmap_str" | $AWK_PROG '{print $3}')"
--if [ "$errordev" = "RT" ]; then
--	len="$(echo "$bmap_str" | $AWK_PROG '{print $4}')"
--else
--	len="$(echo "$bmap_str" | $AWK_PROG '{print $6}')"
--fi
-+len="$(echo "$bmap_str" | $AWK_PROG "$awk_len_prog")"
-+
- fs_blksz=$(_get_block_size $SCRATCH_MNT)
- echo "file_blksz:$file_blksz:fs_blksz:$fs_blksz" >> $seqres.full
- kernel_sectors_per_fs_block=$((fs_blksz / 512))
+ #define XFS_BTNUM_STRINGS \
+@@ -137,7 +137,8 @@ typedef enum {
+ 	{ XFS_BTNUM_INOi,	"inobt" }, \
+ 	{ XFS_BTNUM_FINOi,	"finobt" }, \
+ 	{ XFS_BTNUM_REFCi,	"refcbt" }, \
+-	{ XFS_BTNUM_RCBAGi,	"rcbagbt" }
++	{ XFS_BTNUM_RCBAGi,	"rcbagbt" }, \
++	{ XFS_BTNUM_RTRMAPi,	"rtrmapbt" }
+ 
+ struct xfs_name {
+ 	const unsigned char	*name;
 
 
