@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2197-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2303-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 221D28211E3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5728682125A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:43:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4991B1C21C72
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:16:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DE121C21D1B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:43:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B59CE389;
-	Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BC49472;
+	Mon,  1 Jan 2024 00:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4nP7Zu3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQIyVGMH"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81304384
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52205C433C7;
-	Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086AB9464;
+	Mon,  1 Jan 2024 00:43:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F799C433C8;
+	Mon,  1 Jan 2024 00:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068191;
-	bh=HHnhsG+HS1rs8NrdzbvxQDpoiAc7M4/Mp9+5FLeb9kw=;
+	s=k20201202; t=1704069818;
+	bh=4no1kR5Uv3KasvAmfQXSTNVM6RSsc/tOjJE08i9cm5Q=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=h4nP7Zu3317NAqXJ3J/IvnJaPB+HXIxDq5QcQ+sn92+oOCMQt9gQHlmpIk5RWxRBs
-	 h2mhqgteN689ruyc1XP42GZvzCNeCjtME1/lUt+9b+aG6Ds2QmfrhjPBNshOmXnqCt
-	 zh6XJV7SFmItNcd7+6C0ky7EUH6jeUOc6KDATWutz/NSSPYTZjNC1SPXy7Rg03CyRp
-	 e9jXvIjLkJtCy/UPEDmWM6vgpuzLCA7EUoLRfqdE59cmzMYiuKs7Be1N1u5Cj2QCv2
-	 C6cYcpaZ9yXrEPRn+hP65Stk4cBHrAy+QqT2PucAJm7uxCbF5sCXMnIsEy9+173Fci
-	 1/Kb2xyKvG18Q==
-Date: Sun, 31 Dec 2023 16:16:30 +9900
-Subject: [PATCH 23/47] xfs_db: support the realtime rmapbt
+	b=cQIyVGMHSHRQkXJY8GXAGt/yBMCZElZMO4xQeL8pYKoy8h4drUW8h46asPUkrlLH3
+	 FP324UMgC5Al52WmU0odu7y8qfP7CUc4G48ILdMDZf0CZW1a8MIR4Q1StiE1/Es4Bt
+	 pp8l/442kebfGUEKUfeevfDnoh+IckwfCI8L1eHNROskN7IXA+reFFIq2M6XXk/9yF
+	 sCxuvKoI9VSrFidEa6Uq0OdjiQtaq4l3++30FlWd8pes+YJi/lN3hJZx1iowpGhfrv
+	 TfoSM/HR+RGYtEFFWbEjYwqLUD/EvoTkTZduPLt/634jUNgji+fvIkCbAiI8Vqskhq
+	 R9hbfFpBGhaug==
+Date: Sun, 31 Dec 2023 16:43:37 +9900
+Subject: [PATCH 1/1] xfs: test scaling of the mkfs concurrency options
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015619.1815505.6319090856730567215.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
+Message-ID: <170405025944.1823561.5698073164938069178.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405025931.1823561.11251524119820744796.stgit@frogsfrogsfrogs>
+References: <170405025931.1823561.11251524119820744796.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,158 +52,257 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Wire up various parts of xfs_db for realtime rmap support.
+Make sure that the AG count and log size scale up with the new
+concurrency options to mkfs.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/btblock.c             |    3 ++
- db/btdump.c              |   64 ++++++++++++++++++++++++++++++++++++++++++++++
- db/btheight.c            |    5 ++++
- libxfs/libxfs_api_defs.h |    1 +
- man/man8/xfs_db.8        |    3 +-
- 5 files changed, 75 insertions(+), 1 deletion(-)
+ tests/xfs/1842     |   51 +++++++++++++++
+ tests/xfs/1842.out |  177 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 228 insertions(+)
+ create mode 100755 tests/xfs/1842
+ create mode 100644 tests/xfs/1842.out
 
 
-diff --git a/db/btblock.c b/db/btblock.c
-index 5cad166278d..70f6c3f6aed 100644
---- a/db/btblock.c
-+++ b/db/btblock.c
-@@ -147,6 +147,9 @@ block_to_bt(
- 	case TYP_RMAPBT:
- 		magic = crc ? XFS_RMAP_CRC_MAGIC : 0;
- 		break;
-+	case TYP_RTRMAPBT:
-+		magic = crc ? XFS_RTRMAP_CRC_MAGIC : 0;
-+		break;
- 	case TYP_REFCBT:
- 		magic = crc ? XFS_REFC_CRC_MAGIC : 0;
- 		break;
-diff --git a/db/btdump.c b/db/btdump.c
-index 81642cde2b6..9c528e5a11a 100644
---- a/db/btdump.c
-+++ b/db/btdump.c
-@@ -441,6 +441,67 @@ dump_dabtree(
- 	return ret;
- }
- 
-+static bool
-+is_btree_inode(void)
-+{
-+	struct xfs_dinode	*dip;
+diff --git a/tests/xfs/1842 b/tests/xfs/1842
+new file mode 100755
+index 0000000000..41254a1581
+--- /dev/null
++++ b/tests/xfs/1842
+@@ -0,0 +1,51 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1842
++#
++# mkfs concurrency test - ensure the log and agsize scaling works for various
++# concurrency= parameters
++#
++. ./common/preamble
++_begin_fstest log metadata auto quick
 +
-+	dip = iocur_top->data;
-+	return dip->di_format == XFS_DINODE_FMT_RMAP;
++# Import common functions.
++. ./common/filter
++. ./common/reflink
++
++_cleanup()
++{
++	cd /
++	rm -r -f $tmp.* $loop_file
 +}
 +
-+static int
-+dump_btree_inode(
-+	bool			dump_node_blocks)
-+{
-+	char			*prefix;
-+	struct xfs_dinode	*dip;
-+	struct xfs_rtrmap_root	*rtrmap;
-+	int			level;
-+	int			numrecs;
-+	int			ret;
++# real QA test starts here
++_supported_fs xfs
 +
-+	dip = iocur_top->data;
-+	switch (dip->di_format) {
-+	case XFS_DINODE_FMT_RMAP:
-+		prefix = "u3.rtrmapbt";
-+		rtrmap = (struct xfs_rtrmap_root *)XFS_DFORK_DPTR(dip);
-+		level = be16_to_cpu(rtrmap->bb_level);
-+		numrecs = be16_to_cpu(rtrmap->bb_numrecs);
-+		break;
-+	default:
-+		dbprintf("Unknown metadata inode type %u\n", dip->di_format);
-+		return 0;
-+	}
++_require_test
++_require_loop
++$MKFS_XFS_PROG 2>&1 | grep -q concurrency || \
++	_notrun "mkfs does not support concurrency options"
 +
-+	if (numrecs == 0)
-+		return 0;
-+	if (level > 0) {
-+		if (dump_node_blocks) {
-+			ret = eval("print %s.keys", prefix);
-+			if (ret)
-+				goto err;
-+			ret = eval("print %s.ptrs", prefix);
-+			if (ret)
-+				goto err;
-+		}
-+		ret = eval("addr %s.ptrs[1]", prefix);
-+		if (ret)
-+			goto err;
-+		ret = dump_btree_long(dump_node_blocks);
-+	} else {
-+		ret = eval("print %s.recs", prefix);
-+	}
-+	if (ret)
-+		goto err;
++loop_file=$TEST_DIR/$seq.loop
 +
-+	ret = eval("pop");
-+	return ret;
-+err:
-+	eval("pop");
-+	return ret;
-+}
++rm -f "$loop_file"
++for sz in 16M 512M 1G 2G 16G 64G 256G 512G 1T 2T 4T 16T 64T 256T 512T 1P; do
++	for cpus in 2 4 8 16 32 40 64 96 160 512; do
++		truncate -s "$sz" "$loop_file"
++		echo "sz $sz cpus $cpus" >> $seqres.full
++		echo "-----------------" >> $seqres.full
 +
- static int
- btdump_f(
- 	int		argc,
-@@ -488,8 +549,11 @@ btdump_f(
- 		return dump_btree_short(iflag);
- 	case TYP_BMAPBTA:
- 	case TYP_BMAPBTD:
-+	case TYP_RTRMAPBT:
- 		return dump_btree_long(iflag);
- 	case TYP_INODE:
-+		if (is_btree_inode())
-+			return dump_btree_inode(iflag);
- 		return dump_inode(iflag, aflag);
- 	case TYP_ATTR:
- 		return dump_dabtree(iflag, crc ? &attr3_print : &attr_print);
-diff --git a/db/btheight.c b/db/btheight.c
-index 6643489c82c..25ce3400334 100644
---- a/db/btheight.c
-+++ b/db/btheight.c
-@@ -53,6 +53,11 @@ struct btmap {
- 		.maxlevels	= libxfs_rmapbt_maxlevels_ondisk,
- 		.maxrecs	= libxfs_rmapbt_maxrecs,
- 	},
-+	{
-+		.tag		= "rtrmapbt",
-+		.maxlevels	= libxfs_rtrmapbt_maxlevels_ondisk,
-+		.maxrecs	= libxfs_rtrmapbt_maxrecs,
-+	},
- };
- 
- static void
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index e961453052a..4b2fbd7cac9 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -288,6 +288,7 @@
- #define xfs_rtgroup_update_super	libxfs_rtgroup_update_super
- #define xfs_rtrmapbt_create_path	libxfs_rtrmapbt_create_path
- #define xfs_rtrmapbt_droot_maxrecs	libxfs_rtrmapbt_droot_maxrecs
-+#define xfs_rtrmapbt_maxlevels_ondisk	libxfs_rtrmapbt_maxlevels_ondisk
- #define xfs_rtrmapbt_maxrecs		libxfs_rtrmapbt_maxrecs
- 
- #define xfs_sb_from_disk		libxfs_sb_from_disk
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index 0e20108fb51..778e3f9dd70 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -454,8 +454,9 @@ The supported btree types are:
- .IR finobt ,
- .IR bmapbt ,
- .IR refcountbt ,
-+.IR rmapbt ,
- and
--.IR rmapbt .
-+.IR rtrmapbt .
- The magic value
- .I all
- can be used to walk through all btree types.
++		$MKFS_XFS_PROG -f -N "$loop_file" -d concurrency=$cpus -l concurrency=$cpus &> $tmp.mkfsout
++		cat $tmp.mkfsout >> $seqres.full
++
++		_filter_mkfs > /dev/null 2> $tmp.mkfs < $tmp.mkfsout
++		. $tmp.mkfs
++		echo "sz $sz cpus $cpus agcount $agcount logblocks $lblocks"
++	done
++	echo "-----------------"
++done
++
++status=0
++exit
+diff --git a/tests/xfs/1842.out b/tests/xfs/1842.out
+new file mode 100644
+index 0000000000..9d1e22120b
+--- /dev/null
++++ b/tests/xfs/1842.out
+@@ -0,0 +1,177 @@
++QA output created by 1842
++sz 16M cpus 2 agcount 1 logblocks 3075
++sz 16M cpus 4 agcount 1 logblocks 3075
++sz 16M cpus 8 agcount 1 logblocks 3075
++sz 16M cpus 16 agcount 1 logblocks 3075
++sz 16M cpus 32 agcount 1 logblocks 3075
++sz 16M cpus 40 agcount 1 logblocks 3075
++sz 16M cpus 64 agcount 1 logblocks 3075
++sz 16M cpus 96 agcount 1 logblocks 3075
++sz 16M cpus 160 agcount 1 logblocks 3075
++sz 16M cpus 512 agcount 1 logblocks 3075
++-----------------
++sz 512M cpus 2 agcount 4 logblocks 16384
++sz 512M cpus 4 agcount 4 logblocks 16384
++sz 512M cpus 8 agcount 4 logblocks 16384
++sz 512M cpus 16 agcount 4 logblocks 16384
++sz 512M cpus 32 agcount 4 logblocks 16384
++sz 512M cpus 40 agcount 4 logblocks 16384
++sz 512M cpus 64 agcount 4 logblocks 16384
++sz 512M cpus 96 agcount 4 logblocks 16384
++sz 512M cpus 160 agcount 4 logblocks 16384
++sz 512M cpus 512 agcount 4 logblocks 16384
++-----------------
++sz 1G cpus 2 agcount 4 logblocks 16384
++sz 1G cpus 4 agcount 4 logblocks 16384
++sz 1G cpus 8 agcount 4 logblocks 16384
++sz 1G cpus 16 agcount 4 logblocks 22482
++sz 1G cpus 32 agcount 4 logblocks 44964
++sz 1G cpus 40 agcount 4 logblocks 56205
++sz 1G cpus 64 agcount 4 logblocks 65524
++sz 1G cpus 96 agcount 4 logblocks 65524
++sz 1G cpus 160 agcount 4 logblocks 65524
++sz 1G cpus 512 agcount 4 logblocks 65524
++-----------------
++sz 2G cpus 2 agcount 4 logblocks 16384
++sz 2G cpus 4 agcount 4 logblocks 16384
++sz 2G cpus 8 agcount 4 logblocks 16384
++sz 2G cpus 16 agcount 4 logblocks 25650
++sz 2G cpus 32 agcount 4 logblocks 51300
++sz 2G cpus 40 agcount 4 logblocks 64125
++sz 2G cpus 64 agcount 4 logblocks 102600
++sz 2G cpus 96 agcount 4 logblocks 131060
++sz 2G cpus 160 agcount 4 logblocks 131060
++sz 2G cpus 512 agcount 4 logblocks 131060
++-----------------
++sz 16G cpus 2 agcount 4 logblocks 16384
++sz 16G cpus 4 agcount 4 logblocks 16384
++sz 16G cpus 8 agcount 4 logblocks 16384
++sz 16G cpus 16 agcount 4 logblocks 25650
++sz 16G cpus 32 agcount 4 logblocks 51300
++sz 16G cpus 40 agcount 4 logblocks 64125
++sz 16G cpus 64 agcount 4 logblocks 102600
++sz 16G cpus 96 agcount 4 logblocks 153900
++sz 16G cpus 160 agcount 4 logblocks 256500
++sz 16G cpus 512 agcount 4 logblocks 296512
++-----------------
++sz 64G cpus 2 agcount 4 logblocks 16384
++sz 64G cpus 4 agcount 4 logblocks 16384
++sz 64G cpus 8 agcount 8 logblocks 16384
++sz 64G cpus 16 agcount 16 logblocks 25650
++sz 64G cpus 32 agcount 16 logblocks 51300
++sz 64G cpus 40 agcount 16 logblocks 64125
++sz 64G cpus 64 agcount 16 logblocks 102600
++sz 64G cpus 96 agcount 16 logblocks 153900
++sz 64G cpus 160 agcount 16 logblocks 256500
++sz 64G cpus 512 agcount 16 logblocks 296512
++-----------------
++sz 256G cpus 2 agcount 4 logblocks 32768
++sz 256G cpus 4 agcount 4 logblocks 32768
++sz 256G cpus 8 agcount 8 logblocks 32768
++sz 256G cpus 16 agcount 16 logblocks 32768
++sz 256G cpus 32 agcount 32 logblocks 51300
++sz 256G cpus 40 agcount 40 logblocks 64125
++sz 256G cpus 64 agcount 64 logblocks 102600
++sz 256G cpus 96 agcount 64 logblocks 153900
++sz 256G cpus 160 agcount 64 logblocks 256500
++sz 256G cpus 512 agcount 64 logblocks 296512
++-----------------
++sz 512G cpus 2 agcount 4 logblocks 65536
++sz 512G cpus 4 agcount 4 logblocks 65536
++sz 512G cpus 8 agcount 8 logblocks 65536
++sz 512G cpus 16 agcount 16 logblocks 65536
++sz 512G cpus 32 agcount 32 logblocks 65536
++sz 512G cpus 40 agcount 40 logblocks 65535
++sz 512G cpus 64 agcount 64 logblocks 102600
++sz 512G cpus 96 agcount 96 logblocks 153900
++sz 512G cpus 160 agcount 128 logblocks 256500
++sz 512G cpus 512 agcount 128 logblocks 296512
++-----------------
++sz 1T cpus 2 agcount 4 logblocks 131072
++sz 1T cpus 4 agcount 4 logblocks 131072
++sz 1T cpus 8 agcount 8 logblocks 131072
++sz 1T cpus 16 agcount 16 logblocks 131072
++sz 1T cpus 32 agcount 32 logblocks 131072
++sz 1T cpus 40 agcount 40 logblocks 131071
++sz 1T cpus 64 agcount 64 logblocks 131072
++sz 1T cpus 96 agcount 96 logblocks 153900
++sz 1T cpus 160 agcount 160 logblocks 256500
++sz 1T cpus 512 agcount 256 logblocks 296512
++-----------------
++sz 2T cpus 2 agcount 4 logblocks 262144
++sz 2T cpus 4 agcount 4 logblocks 262144
++sz 2T cpus 8 agcount 8 logblocks 262144
++sz 2T cpus 16 agcount 16 logblocks 262144
++sz 2T cpus 32 agcount 32 logblocks 262144
++sz 2T cpus 40 agcount 40 logblocks 262143
++sz 2T cpus 64 agcount 64 logblocks 262144
++sz 2T cpus 96 agcount 96 logblocks 262143
++sz 2T cpus 160 agcount 160 logblocks 262143
++sz 2T cpus 512 agcount 512 logblocks 296512
++-----------------
++sz 4T cpus 2 agcount 4 logblocks 521728
++sz 4T cpus 4 agcount 4 logblocks 521728
++sz 4T cpus 8 agcount 8 logblocks 521728
++sz 4T cpus 16 agcount 16 logblocks 521728
++sz 4T cpus 32 agcount 32 logblocks 521728
++sz 4T cpus 40 agcount 40 logblocks 521728
++sz 4T cpus 64 agcount 64 logblocks 521728
++sz 4T cpus 96 agcount 96 logblocks 521728
++sz 4T cpus 160 agcount 160 logblocks 521728
++sz 4T cpus 512 agcount 512 logblocks 521728
++-----------------
++sz 16T cpus 2 agcount 16 logblocks 521728
++sz 16T cpus 4 agcount 16 logblocks 521728
++sz 16T cpus 8 agcount 16 logblocks 521728
++sz 16T cpus 16 agcount 16 logblocks 521728
++sz 16T cpus 32 agcount 32 logblocks 521728
++sz 16T cpus 40 agcount 40 logblocks 521728
++sz 16T cpus 64 agcount 64 logblocks 521728
++sz 16T cpus 96 agcount 96 logblocks 521728
++sz 16T cpus 160 agcount 160 logblocks 521728
++sz 16T cpus 512 agcount 512 logblocks 521728
++-----------------
++sz 64T cpus 2 agcount 64 logblocks 521728
++sz 64T cpus 4 agcount 64 logblocks 521728
++sz 64T cpus 8 agcount 64 logblocks 521728
++sz 64T cpus 16 agcount 64 logblocks 521728
++sz 64T cpus 32 agcount 64 logblocks 521728
++sz 64T cpus 40 agcount 64 logblocks 521728
++sz 64T cpus 64 agcount 64 logblocks 521728
++sz 64T cpus 96 agcount 96 logblocks 521728
++sz 64T cpus 160 agcount 160 logblocks 521728
++sz 64T cpus 512 agcount 512 logblocks 521728
++-----------------
++sz 256T cpus 2 agcount 256 logblocks 521728
++sz 256T cpus 4 agcount 256 logblocks 521728
++sz 256T cpus 8 agcount 256 logblocks 521728
++sz 256T cpus 16 agcount 256 logblocks 521728
++sz 256T cpus 32 agcount 256 logblocks 521728
++sz 256T cpus 40 agcount 256 logblocks 521728
++sz 256T cpus 64 agcount 256 logblocks 521728
++sz 256T cpus 96 agcount 256 logblocks 521728
++sz 256T cpus 160 agcount 256 logblocks 521728
++sz 256T cpus 512 agcount 512 logblocks 521728
++-----------------
++sz 512T cpus 2 agcount 512 logblocks 521728
++sz 512T cpus 4 agcount 512 logblocks 521728
++sz 512T cpus 8 agcount 512 logblocks 521728
++sz 512T cpus 16 agcount 512 logblocks 521728
++sz 512T cpus 32 agcount 512 logblocks 521728
++sz 512T cpus 40 agcount 512 logblocks 521728
++sz 512T cpus 64 agcount 512 logblocks 521728
++sz 512T cpus 96 agcount 512 logblocks 521728
++sz 512T cpus 160 agcount 512 logblocks 521728
++sz 512T cpus 512 agcount 512 logblocks 521728
++-----------------
++sz 1P cpus 2 agcount 1024 logblocks 521728
++sz 1P cpus 4 agcount 1024 logblocks 521728
++sz 1P cpus 8 agcount 1024 logblocks 521728
++sz 1P cpus 16 agcount 1024 logblocks 521728
++sz 1P cpus 32 agcount 1024 logblocks 521728
++sz 1P cpus 40 agcount 1024 logblocks 521728
++sz 1P cpus 64 agcount 1024 logblocks 521728
++sz 1P cpus 96 agcount 1024 logblocks 521728
++sz 1P cpus 160 agcount 1024 logblocks 521728
++sz 1P cpus 512 agcount 1024 logblocks 521728
++-----------------
 
 
