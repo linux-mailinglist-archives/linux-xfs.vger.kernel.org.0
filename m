@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2170-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2356-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 757518211C8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:09:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B717821295
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:57:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 892741C21C3C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:09:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 909BB1C21D80
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:57:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D630392;
-	Mon,  1 Jan 2024 00:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CACC4A07;
+	Mon,  1 Jan 2024 00:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUAsGfHD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJMozmzb"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5751E38E
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:09:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E048EC433C8;
-	Mon,  1 Jan 2024 00:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84764A02;
+	Mon,  1 Jan 2024 00:57:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A500AC433C8;
+	Mon,  1 Jan 2024 00:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067769;
-	bh=U3kXH8HUtA358UPGU5vNNB0P2XkzNj5NTeoC5oNC0Uw=;
+	s=k20201202; t=1704070648;
+	bh=gr4SMOJ41U2PLOSrBIJPCzWxQeykfR4VWfQXCDEEOZs=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=oUAsGfHDG0BFm5u94p/wS/FIIYBjLxh22fYPNUhU9kIc0ac6jDfi3SO0DU4o/lQhq
-	 djiU40BQaHQHeQvdXXDF3XGrp7/jLkZLkfycPs3qRfn8qXkba+iZAiwO+RrpQ1OLM2
-	 Paoo7uQBMWlXgp3PPUpulGwT8bkzMPFcKcr9mJZY/ZetvPA6QYW5pUqMCiJ1nC1JWH
-	 vc1Mx4cJl0dE7pkuNoyLOTwn2k/lLiyPRIUVClC/wtnAdfV1eXiqpgHsHfUqIWtAhW
-	 aCHAYjy1VO0YKrIbDDFCTXs7D2hyMtwDS4Afx6nl/thPbQ32dSRtqwlrGfUKyeQtuf
-	 6AFVK8klvvBTQ==
-Date: Sun, 31 Dec 2023 16:09:28 +9900
-Subject: [PATCH 5/9] xfs: add a ri_entry helper
+	b=tJMozmzbPqBToCftsFSa/yqbaNK3MAUeohXGT8ukjD7IOqurrkCWOKhUeIn7nW3mo
+	 17Eg6rkpNMr7ctlaPPzzGQx3LCcYndqR4HLW9eUq2z1mAfd3SdcS1msAe7UphkKVCB
+	 cMijmsgnVSTTs+aYYxgKvA5fKP/mJI8dTcK7dd6Vl7ZJ8mkssuPTIEyemQyjjn2Yva
+	 wOl7ELFQIDN4HR60GZ0tUcllwrwCPc6TsjJczgl6jDu1sxpXTKoeGwyPbQzEBZPcz/
+	 xV604IAW5TK8RD4E9YoMAFYEfSson1zC2/VzT6YSuRqtDrB9Rbo/E+yhLZq3IzTKCN
+	 /nYUt89pyeskA==
+Date: Sun, 31 Dec 2023 16:57:28 +9900
+Subject: [PATCH 1/2] xfs: refactor statfs field extraction
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405014884.1815232.3576515918053401150.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
-References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030881.1826812.8733545912595670620.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030868.1826812.10067703094837693199.stgit@frogsfrogsfrogs>
+References: <170405030868.1826812.10067703094837693199.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,71 +52,97 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a helper to translate from the item list head to the
-rmap_intent_item structure and use it so shorten assignments and avoid
-the need for extra local variables.
+Prepare for the next patch by refactoring the open-coded bits that call
+statfs on a mounted xfs filesystem to extract a status field.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c |   20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ common/xfs    |    6 ++++++
+ tests/xfs/176 |    4 ++--
+ tests/xfs/187 |    6 +++---
+ tests/xfs/541 |    6 ++----
+ 4 files changed, 13 insertions(+), 9 deletions(-)
 
 
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index 82b70575bc5..8fc27e9efd4 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -275,6 +275,11 @@ const struct xfs_defer_op_type xfs_agfl_free_defer_type = {
- 
- /* Reverse Mapping */
- 
-+static inline struct xfs_rmap_intent *ri_entry(const struct list_head *e)
-+{
-+	return list_entry(e, struct xfs_rmap_intent, ri_list);
-+}
-+
- /* Sort rmap intents by AG. */
- static int
- xfs_rmap_update_diff_items(
-@@ -282,11 +287,8 @@ xfs_rmap_update_diff_items(
- 	const struct list_head		*a,
- 	const struct list_head		*b)
- {
--	const struct xfs_rmap_intent	*ra;
--	const struct xfs_rmap_intent	*rb;
--
--	ra = container_of(a, struct xfs_rmap_intent, ri_list);
--	rb = container_of(b, struct xfs_rmap_intent, ri_list);
-+	struct xfs_rmap_intent		*ra = ri_entry(a);
-+	struct xfs_rmap_intent		*rb = ri_entry(b);
- 
- 	return ra->ri_pag->pag_agno - rb->ri_pag->pag_agno;
+diff --git a/common/xfs b/common/xfs
+index 313b7045bd..d9aa242ec7 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -2063,3 +2063,9 @@ _require_xfs_scratch_metadir()
+ 		_scratch_unmount
+ 	fi
  }
-@@ -341,11 +343,9 @@ xfs_rmap_update_finish_item(
- 	struct list_head		*item,
- 	struct xfs_btree_cur		**state)
- {
--	struct xfs_rmap_intent		*ri;
-+	struct xfs_rmap_intent		*ri = ri_entry(item);
- 	int				error;
++
++# Extract a statfs attribute of the given mounted XFS filesystem.
++_xfs_statfs_field()
++{
++	$XFS_IO_PROG -c 'statfs' "$1" | grep -E "$2" | cut -d ' ' -f 3
++}
+diff --git a/tests/xfs/176 b/tests/xfs/176
+index 5231b888ba..0af81fcce3 100755
+--- a/tests/xfs/176
++++ b/tests/xfs/176
+@@ -49,7 +49,7 @@ fi
  
--	ri = container_of(item, struct xfs_rmap_intent, ri_list);
--
- 	error = xfs_rmap_finish_one(tp, ri, state);
+ _scratch_mount
+ _xfs_force_bdev data $SCRATCH_MNT
+-old_dblocks=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep geom.datablocks)
++old_dblocks=$(_xfs_statfs_field "$SCRATCH_MNT" geom.datablocks)
  
- 	xfs_rmap_update_put_group(ri);
-@@ -365,9 +365,7 @@ STATIC void
- xfs_rmap_update_cancel_item(
- 	struct list_head		*item)
- {
--	struct xfs_rmap_intent		*ri;
--
--	ri = container_of(item, struct xfs_rmap_intent, ri_list);
-+	struct xfs_rmap_intent		*ri = ri_entry(item);
+ mkdir $SCRATCH_MNT/save/
+ sino=$(stat -c '%i' $SCRATCH_MNT/save)
+@@ -172,7 +172,7 @@ for ((ino = target_ino; ino >= icluster_ino; ino--)); do
+ 	res=$?
  
- 	xfs_rmap_update_put_group(ri);
- 	kmem_cache_free(xfs_rmap_intent_cache, ri);
+ 	# Make sure shrink did not work
+-	new_dblocks=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep geom.datablocks)
++	new_dblocks=$(_xfs_statfs_field "$SCRATCH_MNT" geom.datablocks)
+ 	if [ "$new_dblocks" != "$old_dblocks" ]; then
+ 		echo "should not have shrank $old_dblocks -> $new_dblocks"
+ 		break
+diff --git a/tests/xfs/187 b/tests/xfs/187
+index 14c3b37670..03d92d0890 100755
+--- a/tests/xfs/187
++++ b/tests/xfs/187
+@@ -79,8 +79,8 @@ _xfs_force_bdev realtime $SCRATCH_MNT
+ 
+ # Set the extent size hint larger than the realtime extent size.  This is
+ # necessary to exercise the minlen constraints on the realtime allocator.
+-fsbsize=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep geom.bsize | awk '{print $3}')
+-rtextsize_blks=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep geom.rtextsize | awk '{print $3}')
++fsbsize=$(_xfs_statfs_field "$SCRATCH_MNT" geom.bsize)
++rtextsize_blks=$(_xfs_statfs_field "$SCRATCH_MNT" geom.rtextsize)
+ extsize=$((2 * rtextsize_blks * fsbsize))
+ 
+ echo "rtextsize_blks=$rtextsize_blks extsize=$extsize" >> $seqres.full
+@@ -136,7 +136,7 @@ rtextsize_bytes=$((fsbsize * rtextsize_blks))
+ $here/src/punch-alternating $SCRATCH_MNT/bigfile -o $((punch_off / rtextsize_bytes))
+ 
+ # Make sure we have some free rtextents.
+-free_rtx=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep statfs.f_bavail | awk '{print $3}')
++free_rtx=$(_xfs_statfs_field "$SCRATCH_MNT" statfs.f_bavail)
+ if [ $free_rtx -eq 0 ]; then
+ 	echo "Expected fragmented free rt space, found none."
+ fi
+diff --git a/tests/xfs/541 b/tests/xfs/541
+index ae2fd819d5..3a0a9d5390 100755
+--- a/tests/xfs/541
++++ b/tests/xfs/541
+@@ -83,13 +83,11 @@ test $grow_extszhint -eq 0 || \
+ 	echo "expected post-grow extszhint 0, got $grow_extszhint"
+ 
+ # Check that we now have rt extents.
+-rtextents=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | \
+-	grep 'geom.rtextents' | cut -d ' ' -f 3)
++rtextents=$(_xfs_statfs_field "$SCRATCH_MNT" geom.rtextents)
+ test $rtextents -gt 0 || echo "expected rtextents > 0"
+ 
+ # Check the new rt extent size.
+-after_rtextsz_blocks=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | \
+-	grep 'geom.rtextsize' | cut -d ' ' -f 3)
++after_rtextsz_blocks=$(_xfs_statfs_field "$SCRATCH_MNT" geom.rtextsize)
+ test $after_rtextsz_blocks -eq $new_rtextsz_blocks || \
+ 	echo "expected rtextsize $new_rtextsz_blocks, got $after_rtextsz_blocks"
+ 
 
 
