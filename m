@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2364-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2315-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 845BD82129D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:59:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47A72821269
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:46:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 233131F22607
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:59:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D65DF282AD3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:46:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE4A802;
-	Mon,  1 Jan 2024 00:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF0EBA3A;
+	Mon,  1 Jan 2024 00:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRamzwR1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6soGt6W"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5219F7ED;
-	Mon,  1 Jan 2024 00:59:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6318C433C8;
-	Mon,  1 Jan 2024 00:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4672BBA32;
+	Mon,  1 Jan 2024 00:46:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C39C433C8;
+	Mon,  1 Jan 2024 00:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070773;
-	bh=5tGYjlAVtTsCmR1z/8/XOITcG+nNZq/DfjTeq+f8+nc=;
+	s=k20201202; t=1704070006;
+	bh=RrhqPbTimsUcSTsu21yzl32Eh29JC9NHW05Pw44yDyg=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=dRamzwR1NFkbup5MSQlhDx5lCWoFSiAe32RH1rZyx/zASVK/vM/GW9Oy8Rny627BX
-	 oQoYZvGhUEhQDOq4zBeZisLuxQWy9bo2mudu6XcsF4cTvNve1g+zwSzfPJjPlBYkny
-	 uhYyODggDLrC4Cen42OBkQ0lsunKss6MGfaozIUFNA1n3lgjOoJcfY1ygcmgEgu2lv
-	 g40zXVueVMJpYouLPJNg/KCfQ0Ceis9BnXK3VT/KwkgQmgfrnXcheJWJE+mPA1MV0x
-	 ui+abxjzkfFOGH7SJ98b8EbDBwnlQIK3LT5HfRc7ORlHX06QKwXaV+yfHe7EBJwMUA
-	 BDDwSEmlTQhYg==
-Date: Sun, 31 Dec 2023 16:59:33 +9900
-Subject: [PATCH 07/13] xfs/341: update test for rtgroup-based rmap
+	b=s6soGt6W5ZDQxN0cvWm6eAqyzvKm98kuEIbogWS9Wtd4ekIKO2gFPVjV6eXqeL2wc
+	 TAhaEFSY6zYOeQa8stFLT94CWDWiwTPBCC42DztoTm29E4fe1No1X/mFQylc4QPM3w
+	 vU/WaEDBz9u5dgN8BmYYTXKo3amN+ZtJzOmSyPvrAoj1t4oK4UoJ68jaxkOZ9aAD0G
+	 5+AulkcDj81dnDC374U9QSk79FQVSsVgLtFuS5IjUUJn18yTLstB8zldfjxRAjroen
+	 duBhwVt9H+ZthLdv9c2GpzYfjQ30FV6XnD9ul74PjeGsJlaC2iGuKO7hKwXhGst6zE
+	 krLVPLXr+8SVA==
+Date: Sun, 31 Dec 2023 16:46:46 +9900
+Subject: [PATCH 02/11] xfs/206: filter out the parent= status from mkfs
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405031325.1826914.2968755576593092081.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
-References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: fstests@vger.kernel.org, catherine.hoang@oracle.com,
+ allison.henderson@oracle.com, guan@eryu.me, linux-xfs@vger.kernel.org
+Message-ID: <170405028454.1824869.85735145276487131.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,59 +53,28 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we're sharding the realtime volume into multiple allocation
-groups, update this test to reflect the new reality.  The realtime rmap
-btree record and key sizes have shrunk, and we can't guarantee that a
-quick file write actually hits the same rt group as the one we fuzzed,
-so eliminate the file write test since we're really only curious if
-xfs_repair will fix the problem.
+Filter out the parent pointer bits from the mkfs output so that we don't
+cause a regression in this test.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/341     |   10 +++-------
- tests/xfs/341.out |    1 -
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ tests/xfs/206 |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/341 b/tests/xfs/341
-index 8861e751a9..561054f0bd 100755
---- a/tests/xfs/341
-+++ b/tests/xfs/341
-@@ -32,10 +32,10 @@ blksz="$(_get_block_size $SCRATCH_MNT)"
- rtextsz_blks=$((rtextsz / blksz))
+diff --git a/tests/xfs/206 b/tests/xfs/206
+index cb346b6dc9..f7f12ff1f9 100755
+--- a/tests/xfs/206
++++ b/tests/xfs/206
+@@ -64,7 +64,8 @@ mkfs_filter()
+ 	    -e "s/\(sunit=\)\([0-9]* blks,\)/\10 blks,/" \
+ 	    -e "s/, lazy-count=[0-9]//" \
+ 	    -e "/.*crc=/d" \
+-	    -e "/^Default configuration/d"
++	    -e "/^Default configuration/d" \
++	    -e 's/, parent=[01]//'
+ }
  
- # inode core size is at least 176 bytes; btree header is 56 bytes;
--# rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
-+# rtrmap record is 24 bytes; and rtrmap key/pointer are 48 bytes.
- i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
--i_ptrs=$(( (isize - i_core_size) / 56 ))
--bt_recs=$(( (blksz - 56) / 32 ))
-+i_ptrs=$(( (isize - i_core_size) / 48 ))
-+bt_recs=$(( (blksz - 56) / 24 ))
- 
- blocks=$((i_ptrs * bt_recs + 1))
- len=$((blocks * rtextsz))
-@@ -57,10 +57,6 @@ _scratch_xfs_db -x -c 'path -m /realtime/0.rmap' \
- 	-c "write u3.rtrmapbt.ptrs[1] $fsbno" -c 'p' >> $seqres.full
- _scratch_mount
- 
--echo "Try to create more files"
--$XFS_IO_PROG -f -R -c "pwrite -S 0x68 0 9999" $SCRATCH_MNT/f5 >> $seqres.full 2>&1
--test -e $SCRATCH_MNT/f5 && echo "should not have been able to write f5"
--
- echo "Repair fs"
- _scratch_unmount 2>&1 | _filter_scratch
- _repair_scratch_fs >> $seqres.full 2>&1
-diff --git a/tests/xfs/341.out b/tests/xfs/341.out
-index 75a5bc6c61..580d788954 100644
---- a/tests/xfs/341.out
-+++ b/tests/xfs/341.out
-@@ -2,6 +2,5 @@ QA output created by 341
- Format and mount
- Create some files
- Corrupt fs
--Try to create more files
- Repair fs
- Try to create more files (again)
+ # mkfs slightly smaller than that, small log for speed.
 
 
