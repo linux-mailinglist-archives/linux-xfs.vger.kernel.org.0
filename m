@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2258-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2301-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80255821223
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:32:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3022821258
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:43:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2331B218D1
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:31:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C72E31C21D27
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:43:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B581373;
-	Mon,  1 Jan 2024 00:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97C348C05;
+	Mon,  1 Jan 2024 00:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIdQA9EX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOGYau8e"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265231368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:31:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B867C433C8;
-	Mon,  1 Jan 2024 00:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF0A8BEA;
+	Mon,  1 Jan 2024 00:43:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2840FC433C8;
+	Mon,  1 Jan 2024 00:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069113;
-	bh=934PcW4dwNt1BPr54/rQK6Qc+4TDeNhIiLn1HeTLjTM=;
+	s=k20201202; t=1704069787;
+	bh=rHPXov+qTbWS5pe23Vm2Q3xG5ecWJPBAuI5/hUi32Lw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=OIdQA9EXHQgC+hzKCnBscvH9MfwgGVemRrKsT6T4tCVBWcsKbcnv6kriHFxqy60AD
-	 kCRkGKiTFqdkR/DPRXaFLCk2irA9gSPCWMNsfmEnL5PQ6TK8mQ22yV67QWa63PiFv5
-	 QDFrG5e2YDZfmZPf8QcOhpxDPZ6t/hkHyFr89ZS2I+YNx30crVJDfSFpaI1KjAru66
-	 a3nDFQ/B3splhhTYSg3vl4sbwlH36spjBly5cGq0XlVAAk2O+CwofTPY2Devk3042/
-	 jGM+M9/avOdFVkiTvHvKXMFKy/T2kQDZFnNNfHMwwoYCeiUgFfN65lCdDWM8AEUS6e
-	 qaN75HoW/d8Aw==
-Date: Sun, 31 Dec 2023 16:31:53 +9900
-Subject: [PATCH 22/42] xfs: scrub the metadir path of rt refcount btree files
+	b=JOGYau8enQUZbVBi7NoOyiMWkRS4YYk5ZqPGONlxfjeb/mGa+tiqLpDOyKoWX0WNK
+	 zvHwrRU5P0Xn1DwFYeu0cK1BNeKhKAP6bxO2KleDFIf3Mph1cVEtGNKXltIz3pmHyP
+	 /7GAnlNjqBIkmUpYgXj/kCDP1nQZf3yC7sBMEzJNCtOyHAywLYx9GoWcuvkUCJNy3W
+	 PBCobjWsmK8XjRQ3YlbRbtjnBnaoQLGoLGl6i+6TjIePeKtLHMAJnev0yH1UGQEuwo
+	 iDi6vgPTN0XHj+5/L7SexYRaHXnJZXCWxUwHpaYYbNaIB7RAWt1db11sNCVukQ+M/n
+	 qPUXkwI3BoVsQ==
+Date: Sun, 31 Dec 2023 16:43:06 +9900
+Subject: [PATCH 2/3] fuzzy: allow FUZZ_REWRITE_DURATION to control fsstress
+ runtime when fuzzing
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017419.1817107.10086590945379462719.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
+Message-ID: <170405025627.1821776.10663317801956236526.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405025600.1821776.14517378233107318876.stgit@frogsfrogsfrogs>
+References: <170405025600.1821776.14517378233107318876.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,47 +53,69 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new XFS_SCRUB_METAPATH subtype so that we can scrub the metadata
-directory tree path to the refcount btree file for each rt group.
+For each iteration of the fuzz test loop, we try to correct the problem,
+and then we run fsstress on the (allegedly corrected) filesystem to
+check that subsequent use of the filesystem won't crash the kernel or
+panic.
+
+Now that fsstress has a --duration switch, let's add a new config
+variable that people can set to constrain the amount of time that a fuzz
+test run takes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c |    5 +++++
- libxfs/xfs_fs.h |    3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ check        |   12 ++++++++++++
+ common/fuzzy |    7 +++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 290ba0fb8bf..97b3d533910 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -207,6 +207,11 @@ const struct xfrog_scrub_descr xfrog_metapaths[XFS_SCRUB_METAPATH_NR] = {
- 		.descr	= "rmap btree file metadir path",
- 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
- 	},
-+	[XFS_SCRUB_METAPATH_RTREFCBT]	= {
-+		.name	= "rtrefcbt",
-+		.descr	= "refcount btree file metadir path",
-+		.group	= XFROG_SCRUB_GROUP_RTGROUP,
-+	},
- };
+diff --git a/check b/check
+index 71b9fbd075..e567c5e4bb 100755
+--- a/check
++++ b/check
+@@ -382,6 +382,18 @@ if [ -n "$SOAK_DURATION" ]; then
+ 	fi
+ fi
  
- /* Invoke the scrub ioctl.  Returns zero or negative error code. */
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 7847da61db2..4159e96d01a 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -806,9 +806,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_METAPATH_GRPQUOTA	3
- #define XFS_SCRUB_METAPATH_PRJQUOTA	4
- #define XFS_SCRUB_METAPATH_RTRMAPBT	5
-+#define XFS_SCRUB_METAPATH_RTREFCBT	6
++# If the test config specified a fuzz rewrite test duration, see if there are
++# any unit suffixes that need converting to an integer seconds count.
++if [ -n "$FUZZ_REWRITE_DURATION" ]; then
++	FUZZ_REWRITE_DURATION="$(echo "$FUZZ_REWRITE_DURATION" | \
++		sed -e 's/^\([.0-9]*\)\([a-z]\)*/\1 \2/g' | \
++		$AWK_PROG -f $here/src/soak_duration.awk)"
++	if [ $? -ne 0 ]; then
++		status=1
++		exit 1
++	fi
++fi
++
+ if [ -n "$subdir_xfile" ]; then
+ 	for d in $SRC_GROUPS $FSTYP; do
+ 		[ -f $SRC_DIR/$d/$subdir_xfile ] || continue
+diff --git a/common/fuzzy b/common/fuzzy
+index 35cf581cd3..bbf7f83d9e 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -6,15 +6,18 @@
  
- /* Number of metapath sm_ino values */
--#define XFS_SCRUB_METAPATH_NR		6
-+#define XFS_SCRUB_METAPATH_NR		7
+ # Modify various files after a fuzzing operation
+ _scratch_fuzz_modify() {
++	local fsstress_args=(-n $((TIME_FACTOR * 10000)) -p $((LOAD_FACTOR * 4)) )
++	test -n "${FUZZ_REWRITE_DURATION}" && fsstress_args+=("--duration=${FUZZ_REWRITE_DURATION}")
++
+ 	echo "+++ stressing filesystem"
+ 	mkdir -p $SCRATCH_MNT/data
+ 	_xfs_force_bdev data $SCRATCH_MNT/data
+-	$FSSTRESS_PROG -n $((TIME_FACTOR * 10000)) -p $((LOAD_FACTOR * 4)) -d $SCRATCH_MNT/data
++	$FSSTRESS_PROG "${fsstress_args[@]}" -d $SCRATCH_MNT/data
  
- /*
-  * ioctl limits
+ 	if _xfs_has_feature "$SCRATCH_MNT" realtime; then
+ 		mkdir -p $SCRATCH_MNT/rt
+ 		_xfs_force_bdev realtime $SCRATCH_MNT/rt
+-		$FSSTRESS_PROG -n $((TIME_FACTOR * 10000)) -p $((LOAD_FACTOR * 4)) -d $SCRATCH_MNT/rt
++		$FSSTRESS_PROG "${fsstress_args[@]}" -d $SCRATCH_MNT/rt
+ 	else
+ 		echo "+++ xfs realtime not configured"
+ 	fi
 
 
