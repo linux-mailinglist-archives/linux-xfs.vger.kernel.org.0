@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2158-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2340-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFA458211BC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C155F821282
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:53:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F8932827E8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:06:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 64FA6B218D1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:53:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21237FD;
-	Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC24803;
+	Mon,  1 Jan 2024 00:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgzzlxdW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3C4JRiD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB147ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27763C433C7;
-	Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C177EE;
+	Mon,  1 Jan 2024 00:53:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208FFC433C8;
+	Mon,  1 Jan 2024 00:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067581;
-	bh=BtXWI/JKI18eNW0L2NjZtE7xTAeLpkSX0rIZxXnduRY=;
+	s=k20201202; t=1704070398;
+	bh=JrNNoZs4D4FgDGNVqNZm1bXpsajWMe9ooFf8O9bwEk0=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=DgzzlxdW/PWIWBalbg1CAvDC14+rkj8tNaRqR+pUEp4GwgIR9OXP9C9TyO0wGr0Pl
-	 5u0cNCYHdzazaHLoza5Or88lNZiaG2RkB9jkWftG9zl+UPYvdbWTpTm+eDUG7qVB0C
-	 YDC5j1goY1NBe9NEHNSQb/zJOgXhfFkcpmPB6MHUhTo7rkpZSoUS3PQ9Y9bPi2jrKa
-	 ndUCzYf9o7RDvJ9ONdyKdu92QsxWKchS4GIwLMPIB3zdR8BnW5WhvPnYKttCZd2hlQ
-	 5JdlWS8UuyMbJhCS6qejeifCdVFU4uTwHQA8UjYKkzSkpQcm+87MwevrTSWC5BpYaZ
-	 RqU5dah+7H3XQ==
-Date: Sun, 31 Dec 2023 16:06:20 +9900
-Subject: [PATCH 4/8] xfs: add a xefi_entry helper
+	b=U3C4JRiDUALn790u4GLFx1eQ1BPtYHu4e2mAzk52AmtmBchMHRasuqqffzohfdEsB
+	 c7eDeq5nUGDT5VEbFeOMmv2FOmLshw28Bm/C4swNE7yYqsbYRUZOcPHAQp0ju2RukY
+	 RI7cgR1Y518e3WCnlroU+txrk1jD4AEI+CROVDn+N2XWs93f7e/nCdyH7BMt/tW+TJ
+	 bL+Cx8Y6/f4Jfn1yzXtzUAE0zccWO51j3YxPWPdN67bG39/Kx6mKzRnV/NmWZ+fpMy
+	 2xtdHOdRTBgazDnDtXKPmskT/T81DaiJ/RcC34n5QUJBPzwcpg+rFncAMwSGAMf8RI
+	 o3QpUiwib2/0Q==
+Date: Sun, 31 Dec 2023 16:53:17 +9900
+Subject: [PATCH 02/17] common/xfs: wipe external logs during mdrestore
+ operations
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405014096.1814860.8871374007628160335.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
-References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030363.1826350.16500443816959304020.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,87 +53,118 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a helper to translate from the item list head to the
-xfs_extent_free_item structure and use it so shorten assignments and
-avoid the need for extra local variables.
+The XFS metadump file format doesn't support the capture of external log
+devices, which means that mdrestore ought to wipe the external log and
+run xfs_repair to rewrite the log device as needed to get the restored
+filesystem to work again.  The common/populate code could already do
+this, so push it to the common xfs helper.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+While we're at it, fix the uncareful usage of SCRATCH_LOGDEV in the
+populate code.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c |   24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ common/fuzzy    |    7 ++++++-
+ common/populate |   19 ++++++-------------
+ common/xfs      |   21 +++++++++++++++++++--
+ 3 files changed, 31 insertions(+), 16 deletions(-)
 
 
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index 2958dcb85e5..5fa54962267 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -32,6 +32,11 @@
- 
- /* Extent Freeing */
- 
-+static inline struct xfs_extent_free_item *xefi_entry(const struct list_head *e)
-+{
-+	return list_entry(e, struct xfs_extent_free_item, xefi_list);
-+}
+diff --git a/common/fuzzy b/common/fuzzy
+index b72b4a9fe7..b72ee3f67f 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -304,7 +304,12 @@ __scratch_xfs_fuzz_unmount()
+ __scratch_xfs_fuzz_mdrestore()
+ {
+ 	__scratch_xfs_fuzz_unmount
+-	_xfs_mdrestore "${POPULATE_METADUMP}" "${SCRATCH_DEV}" || \
 +
- /* Sort bmap items by AG. */
- static int
- xfs_extent_free_diff_items(
-@@ -39,11 +44,8 @@ xfs_extent_free_diff_items(
- 	const struct list_head		*a,
- 	const struct list_head		*b)
- {
--	const struct xfs_extent_free_item *ra;
--	const struct xfs_extent_free_item *rb;
--
--	ra = container_of(a, struct xfs_extent_free_item, xefi_list);
--	rb = container_of(b, struct xfs_extent_free_item, xefi_list);
-+	struct xfs_extent_free_item	*ra = xefi_entry(a);
-+	struct xfs_extent_free_item	*rb = xefi_entry(b);
- 
- 	return ra->xefi_pag->pag_agno - rb->xefi_pag->pag_agno;
++	local logdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
++		logdev=$SCRATCH_LOGDEV
++
++	_xfs_mdrestore "${POPULATE_METADUMP}" "${SCRATCH_DEV}" "${logdev}" || \
+ 		_fail "${POPULATE_METADUMP}: Could not find metadump to restore?"
  }
-@@ -99,12 +101,10 @@ xfs_extent_free_finish_item(
- 	struct xfs_btree_cur		**state)
- {
- 	struct xfs_owner_info		oinfo = { };
--	struct xfs_extent_free_item	*xefi;
-+	struct xfs_extent_free_item	*xefi = xefi_entry(item);
- 	xfs_agblock_t			agbno;
- 	int				error = 0;
  
--	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
--
- 	oinfo.oi_owner = xefi->xefi_owner;
- 	if (xefi->xefi_flags & XFS_EFI_ATTR_FORK)
- 		oinfo.oi_flags |= XFS_OWNER_INFO_ATTR_FORK;
-@@ -143,9 +143,7 @@ STATIC void
- xfs_extent_free_cancel_item(
- 	struct list_head		*item)
- {
--	struct xfs_extent_free_item	*xefi;
--
--	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
-+	struct xfs_extent_free_item	*xefi = xefi_entry(item);
+diff --git a/common/populate b/common/populate
+index 72c88e0651..92a3c5e354 100644
+--- a/common/populate
++++ b/common/populate
+@@ -1011,21 +1011,14 @@ _scratch_populate_cache_tag() {
+ _scratch_populate_restore_cached() {
+ 	local metadump="$1"
  
- 	xfs_extent_free_put_group(xefi);
- 	kmem_cache_free(xfs_extfree_item_cache, xefi);
-@@ -173,13 +171,11 @@ xfs_agfl_free_finish_item(
- {
- 	struct xfs_owner_info		oinfo = { };
- 	struct xfs_mount		*mp = tp->t_mountp;
--	struct xfs_extent_free_item	*xefi;
-+	struct xfs_extent_free_item	*xefi = xefi_entry(item);
- 	struct xfs_buf			*agbp;
- 	int				error;
- 	xfs_agblock_t			agbno;
- 
--	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
++	local logdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
++		logdev=$SCRATCH_LOGDEV
++
+ 	case "${FSTYP}" in
+ 	"xfs")
+-		_xfs_mdrestore "${metadump}" "${SCRATCH_DEV}"
+-		res=$?
+-		test $res -ne 0 && return $res
 -
- 	ASSERT(xefi->xefi_blockcount == 1);
- 	agbno = XFS_FSB_TO_AGBNO(mp, xefi->xefi_startblock);
- 	oinfo.oi_owner = xefi->xefi_owner;
+-		# Cached images should have been unmounted cleanly, so if
+-		# there's an external log we need to wipe it and run repair to
+-		# format it to match this filesystem.
+-		if [ -n "${SCRATCH_LOGDEV}" ]; then
+-			$WIPEFS_PROG -a "${SCRATCH_LOGDEV}"
+-			_scratch_xfs_repair
+-			res=$?
+-		fi
+-		return $res
++		_xfs_mdrestore "${metadump}" "${SCRATCH_DEV}" "${logdev}"
++		return $?
+ 		;;
+ 	"ext2"|"ext3"|"ext4")
+ 		_ext4_mdrestore "${metadump}" "${SCRATCH_DEV}"
+diff --git a/common/xfs b/common/xfs
+index b88491666d..77ba786ece 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -683,7 +683,8 @@ _xfs_metadump() {
+ _xfs_mdrestore() {
+ 	local metadump="$1"
+ 	local device="$2"
+-	shift; shift
++	local logdev="$3"
++	shift; shift; shift
+ 	local options="$@"
+ 
+ 	# If we're configured for compressed dumps and there isn't already an
+@@ -697,6 +698,18 @@ _xfs_mdrestore() {
+ 	test -r "$metadump" || return 1
+ 
+ 	$XFS_MDRESTORE_PROG $options "${metadump}" "${device}"
++	res=$?
++	test $res -ne 0 && return $res
++
++	# mdrestore does not know how to restore an external log.  If there is
++	# one, we need to erase the log header and run xfs_repair to format a
++	# new log header onto the log device.
++	if [ "$logdev" != "none" ]; then
++		$XFS_IO_PROG -d -c 'pwrite -S 0 -q 0 1m' "$logdev"
++		_scratch_xfs_repair >> $seqres.full 2>&1
++		res=$?
++	fi
++	return $res
+ }
+ 
+ # Snapshot the metadata on the scratch device
+@@ -718,7 +731,11 @@ _scratch_xfs_mdrestore()
+ 	local metadump=$1
+ 	shift
+ 
+-	_xfs_mdrestore "$metadump" "$SCRATCH_DEV" "$@"
++	local logdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
++		logdev=$SCRATCH_LOGDEV
++
++	_xfs_mdrestore "$metadump" "$SCRATCH_DEV" "$logdev" "$@"
+ }
+ 
+ # Do not use xfs_repair (offline fsck) to rebuild the filesystem
 
 
