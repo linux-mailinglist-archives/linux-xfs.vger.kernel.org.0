@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2144-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2368-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4224A8211AE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 944578212A3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:00:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD19FB21ACD
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:03:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FDF5282ACE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64B42CA48;
-	Mon,  1 Jan 2024 00:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB407F9;
+	Mon,  1 Jan 2024 01:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExN6WfaH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyJlwtMc"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD31CA43
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:02:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCDEC433C7;
-	Mon,  1 Jan 2024 00:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1763E7ED;
+	Mon,  1 Jan 2024 01:00:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A222C433C8;
+	Mon,  1 Jan 2024 01:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067377;
-	bh=eVufFVh2vGCed9/yqO0uLFGf7RD6cX5bTR/KeIYSuRQ=;
+	s=k20201202; t=1704070836;
+	bh=hA+qaCTrGF0ZydHSDWX/oGQSqrmn1rmcf5eC/q17aoY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=ExN6WfaHTxxoSwKFJ4pZHpzviZswq9gBrkB7lIQ2MWc7hKQn6YDGqAVEeTXhJQW0N
-	 TahPI2rd2Un6RpAIQqB8lR+ijgDeaonVvn1NoIahVF3NLCuV1J3w+nmZ+Kie50kYAf
-	 H5j9jw41ozmL6tCB/RVP4BsMZBdLW22PieB4jasBVXYNW5iQyq2auqOSTmbXsp/sy3
-	 jdwm7ORGIZPsa/vuV6V4l6gwIAlR5S66o/zFAPJpxIC2Cv4eSi1yrjD22AU0t6DHdT
-	 EX32s8gTXSSyPJ/oTzDfEok32cME7UGYiB4jSMb1WM+km/tZzPQpXbZIit+hptTzVy
-	 RXFZLwzberw+g==
-Date: Sun, 31 Dec 2023 16:02:56 +9900
-Subject: [PATCH 07/14] xfs: rearrange xfs_iroot_realloc a bit
+	b=DyJlwtMceWKF+qMIZl7ZRYA5b3pq/Kkq5wzGyr7gv2tfHo+zdARguY5cz0RISpG5L
+	 g9Jtfb/6oJag3lCeRjW30SGyHuSreBxBiDEdUG3kfSBaFCzF/7ueUV40uiWRLyLlpa
+	 IYxSFd2aFSGNkLPujWAyI+6tc4PPvOrxrkkfh3wQZtNTM8uVjrxjA07gkZSfOK2lAz
+	 kQk6GOsXgk2CYGE5YeCe95cyCtXr+lcWkeVZkXhmnzYeZnnzBAbksPCUq7PxghMyl4
+	 eVSXbYldjUVHt/gKm/rKgQrEE9YnEHxgs5kCYGEVEtlwe7P8cc/mZsJecYA8VW8kCJ
+	 p82WfJG1eI/lQ==
+Date: Sun, 31 Dec 2023 17:00:36 +9900
+Subject: [PATCH 11/13] populate: adjust rtrmap calculations for rtgroups
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013295.1812545.14304776159932203859.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
-References: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405031378.1826914.2094696976335341988.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,110 +52,28 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Rearrange the innards of xfs_iroot_realloc so that we can reduce
-duplicated code prior to genericizing the function.  No functional
-changes.
+Now that we've sharded the realtime volume and created per-group rmap
+btrees, we need to adjust downward the size of rtrmapbt records since
+the block counts are now 32-bit instead of 64-bit.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_inode_fork.c |   49 +++++++++++++++++++++--------------------------
- 1 file changed, 22 insertions(+), 27 deletions(-)
+ common/populate |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 81f054cd212..d070e0524b9 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -445,44 +445,46 @@ xfs_ifork_move_broot(
-  */
- void
- xfs_iroot_realloc(
--	xfs_inode_t		*ip,
-+	struct xfs_inode	*ip,
- 	int			rec_diff,
- 	int			whichfork)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
--	int			cur_max;
- 	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
- 	struct xfs_btree_block	*new_broot;
--	int			new_max;
- 	size_t			new_size;
- 	size_t			old_size = ifp->if_broot_bytes;
-+	int			cur_max;
-+	int			new_max;
-+
-+	/* Handle degenerate cases. */
-+	if (rec_diff == 0)
-+		return;
- 
- 	/*
--	 * Handle the degenerate case quietly.
-+	 * If there wasn't any memory allocated before, just allocate it now
-+	 * and get out.
- 	 */
--	if (rec_diff == 0) {
-+	if (old_size == 0) {
-+		ASSERT(rec_diff > 0);
-+
-+		new_size = xfs_bmap_broot_space_calc(mp, rec_diff);
-+		xfs_iroot_alloc(ip, whichfork, new_size);
- 		return;
- 	}
- 
-+	/* Compute the new and old record count and space requirements. */
-+	cur_max = xfs_bmbt_maxrecs(mp, old_size, 0);
-+	new_max = cur_max + rec_diff;
-+	ASSERT(new_max >= 0);
-+	new_size = xfs_bmap_broot_space_calc(mp, new_max);
-+
- 	if (rec_diff > 0) {
--		/*
--		 * If there wasn't any memory allocated before, just
--		 * allocate it now and get out.
--		 */
--		if (old_size == 0) {
--			new_size = xfs_bmap_broot_space_calc(mp, rec_diff);
--			xfs_iroot_alloc(ip, whichfork, new_size);
--			return;
--		}
--
- 		/*
- 		 * If there is already an existing if_broot, then we need
- 		 * to realloc() it and shift the pointers to their new
- 		 * location.
- 		 */
--		cur_max = xfs_bmbt_maxrecs(mp, old_size, 0);
--		new_max = cur_max + rec_diff;
--		new_size = xfs_bmap_broot_space_calc(mp, new_max);
- 		ifp->if_broot = krealloc(ifp->if_broot, new_size,
- 					 GFP_NOFS | __GFP_NOFAIL);
- 		ifp->if_broot_bytes = new_size;
-@@ -494,14 +496,8 @@ xfs_iroot_realloc(
- 	/*
- 	 * rec_diff is less than 0.  In this case, we are shrinking the
- 	 * if_broot buffer.  It must already exist.  If we go to zero
--	 * records, just get rid of the root and clear the status bit.
-+	 * bytes, just get rid of the root and clear the status bit.
- 	 */
--	ASSERT((ifp->if_broot != NULL) && (old_size > 0));
--	cur_max = xfs_bmbt_maxrecs(mp, old_size, 0);
--	new_max = cur_max + rec_diff;
--	ASSERT(new_max >= 0);
--
--	new_size = xfs_bmap_broot_space_calc(mp, new_max);
- 	if (new_size == 0) {
- 		xfs_iroot_free(ip, whichfork);
- 		return;
-@@ -514,8 +510,7 @@ xfs_iroot_realloc(
- 
- 	kmem_free(ifp->if_broot);
- 	ifp->if_broot = new_broot;
--	ifp->if_broot_bytes = (int)new_size;
--	return;
-+	ifp->if_broot_bytes = new_size;
- }
- 
- 
+diff --git a/common/populate b/common/populate
+index dc89eee70e..d8d19bf782 100644
+--- a/common/populate
++++ b/common/populate
+@@ -450,7 +450,7 @@ _scratch_xfs_populate() {
+ 	is_rt="$(_xfs_get_rtextents "$SCRATCH_MNT")"
+ 	if [ $is_rmapbt -gt 0 ] && [ $is_rt -gt 0 ]; then
+ 		echo "+ rtrmapbt btree"
+-		nr="$((blksz * 2 / 32))"
++		nr="$((blksz * 2 / 24))"
+ 		$XFS_IO_PROG -R -f -c 'truncate 0' "${SCRATCH_MNT}/RTRMAPBT"
+ 		__populate_create_file $((blksz * nr)) "${SCRATCH_MNT}/RTRMAPBT"
+ 	fi
 
 
