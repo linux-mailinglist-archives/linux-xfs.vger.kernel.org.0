@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2281-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2248-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 387D582123A
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:38:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B33FA821219
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:29:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4FB11F225BC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:37:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6173A282A01
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:29:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A75161375;
-	Mon,  1 Jan 2024 00:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4BF38E;
+	Mon,  1 Jan 2024 00:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLlWPFk0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMLuDZw7"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743451368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:37:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC598C433C7;
-	Mon,  1 Jan 2024 00:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890AB38B
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:29:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2F7C433C8;
+	Mon,  1 Jan 2024 00:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069474;
-	bh=ZNxv2CSYubuLNIYsl7/i9xfp9phA7MzfBm/s86nAaBU=;
+	s=k20201202; t=1704068957;
+	bh=Q6WINqHcbw3oGP9A+Je7l+Sf8n6+psWgjFO7hJCB40w=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=JLlWPFk0AVKrVGk741b9cuHoOuTUWJa14ejj7oARVEvVCD/oBSyj22LgzGgVxpha2
-	 FNUYkgdhdrEFUbgJZpFArerIOy//ykc4vdIAGccXHKCfGtlfjTaT+JkEh4f3DYR1D5
-	 p5Igzw3Cx2r5/rYv0g/YNVlqYTTrvEBOYlHVQWWjmApgAxSI5OWeRi5rBwfPHwe1GJ
-	 bcdJv+U1mSFJ2Ds3HDcaSTzjDLRqB/tV0oMxUiqcBJIc+srZhwJDiF35RHGbPw2beX
-	 YxLSXp/aiSEIH5zjPQe/P79Gc/ru10OKREHRSaM7tgwCOWcAPc0FUw/jerD7SiFoO7
-	 lDfjO9rzWxzAA==
-Date: Sun, 31 Dec 2023 16:37:53 +9900
-Subject: [PATCH 3/3] mkfs: enable reflink with realtime extent sizes > 1
+	b=MMLuDZw7yN5F/q5HmSUk3G8Xd0LdWB+WemFhWcP3Bty32At0YCsOzGySiZ/86r0G7
+	 Q77k8yb3rJxOnsePkvm81U3yL/GnbUJimMgCv4Jb9ow8AQmCa8o/BKUVSxZPGsFPTM
+	 ecBNyVBuIGXAIWh1kwAOf1HZXMMikbD+hedb+Kal5FoY0TNU6B80hH1OwNIn/9QpYO
+	 5nqLbVDViXzw6CyUqwwxmnvMZ4CtFglg6W8u03K4Jl1jxnHbz4TNBDXbjUgMePswxW
+	 wrQx1d3qBXjlfCPclaScAXWOD2LCXNEQ1E6+LKhrYLw6FXDB00AJwCxtXuNjDtnRaa
+	 AJVm5OYT+6xkw==
+Date: Sun, 31 Dec 2023 16:29:16 +9900
+Subject: [PATCH 12/42] xfs: create routine to allocate and initialize a
+ realtime refcount btree inode
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405018052.1818169.15071829414225680751.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
-References: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
+Message-ID: <170405017286.1817107.17332850317251451184.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,95 +53,71 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Allow creation of filesystems with reflink enabled and realtime extent
-size larger than 1 block.
+Create a library routine to allocate and initialize an empty realtime
+refcountbt inode.  We'll use this for growfs, mkfs, and repair.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/init.c   |    7 -------
- mkfs/xfs_mkfs.c |   37 -------------------------------------
- 2 files changed, 44 deletions(-)
+ libxfs/xfs_rtrefcount_btree.c |   34 ++++++++++++++++++++++++++++++++++
+ libxfs/xfs_rtrefcount_btree.h |    5 +++++
+ 2 files changed, 39 insertions(+)
 
 
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 2e0d3b1ce94..0f626784902 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -300,13 +300,6 @@ rtmount_init(
- 	if (mp->m_sb.sb_rblocks == 0)
- 		return 0;
- 
--	if (xfs_has_reflink(mp) && mp->m_sb.sb_rextsize > 1) {
--		fprintf(stderr,
--	_("%s: Reflink not compatible with realtime extent size > 1. Please try a newer xfsprogs.\n"),
--				progname);
--		return -1;
--	}
--
- 	if (mp->m_rtdev_targp->bt_bdev == 0 && !xfs_is_debugger(mp)) {
- 		fprintf(stderr, _("%s: filesystem has a realtime subvolume\n"),
- 			progname);
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 83ab4a6c316..f2961c4d134 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -2467,24 +2467,6 @@ _("parent pointers not supported on v4 filesystems\n"));
- 	}
- 
- 	if (cli->xi->rt.name) {
--		if (cli->rtextsize && cli->sb_feat.reflink) {
--			if (cli_opt_set(&mopts, M_REFLINK)) {
--				fprintf(stderr,
--_("reflink not supported on realtime devices with rt extent size specified\n"));
--				usage();
--			}
--			cli->sb_feat.reflink = false;
--		}
--		if (cli->blocksize < XFS_MIN_RTEXTSIZE && cli->sb_feat.reflink) {
--			if (cli_opt_set(&mopts, M_REFLINK)) {
--				fprintf(stderr,
--_("reflink not supported on realtime devices with blocksize %d < %d\n"),
--						cli->blocksize,
--						XFS_MIN_RTEXTSIZE);
--				usage();
--			}
--			cli->sb_feat.reflink = false;
--		}
- 		if (!cli->sb_feat.rtgroups && cli->sb_feat.reflink) {
- 			if (cli_opt_set(&mopts, M_REFLINK) &&
- 			    cli_opt_set(&ropts, R_RTGROUPS)) {
-@@ -2664,19 +2646,6 @@ validate_rtextsize(
- 			usage();
- 		}
- 		cfg->rtextblocks = (xfs_extlen_t)(rtextbytes >> cfg->blocklog);
--	} else if (cli->sb_feat.reflink && cli->xi->rt.name) {
--		/*
--		 * reflink doesn't support rt extent size > 1FSB yet, so set
--		 * an extent size of 1FSB.  Make sure we still satisfy the
--		 * minimum rt extent size.
--		 */
--		if (cfg->blocksize < XFS_MIN_RTEXTSIZE) {
--			fprintf(stderr,
--		_("reflink not supported on rt volume with blocksize %d\n"),
--				cfg->blocksize);
--			usage();
--		}
--		cfg->rtextblocks = 1;
- 	} else {
- 		/*
- 		 * If realtime extsize has not been specified by the user,
-@@ -2708,12 +2677,6 @@ validate_rtextsize(
- 		}
- 	}
- 	ASSERT(cfg->rtextblocks);
--
--	if (cli->sb_feat.reflink && cfg->rtblocks > 0 && cfg->rtextblocks > 1) {
--		fprintf(stderr,
--_("reflink not supported on realtime with extent sizes > 1\n"));
--		usage();
--	}
+diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
+index 530bb9d361d..fa04395eed0 100644
+--- a/libxfs/xfs_rtrefcount_btree.c
++++ b/libxfs/xfs_rtrefcount_btree.c
+@@ -764,3 +764,37 @@ xfs_iflush_rtrefcount(
+ 			ifp->if_broot_bytes, dfp,
+ 			XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
  }
++
++/*
++ * Create a realtime refcount btree inode.
++ *
++ * Regardless of the return value, the caller must clean up @upd.  If a new
++ * inode is returned through *ipp, the caller must finish setting up the incore
++ * inode and release it.
++ */
++int
++xfs_rtrefcountbt_create(
++	struct xfs_imeta_update	*upd,
++	struct xfs_inode	**ipp)
++{
++	struct xfs_mount	*mp = upd->mp;
++	struct xfs_ifork	*ifp;
++	int			error;
++
++	error = xfs_imeta_create(upd, S_IFREG, ipp);
++	if (error)
++		return error;
++
++	ifp = xfs_ifork_ptr(upd->ip, XFS_DATA_FORK);
++	ifp->if_format = XFS_DINODE_FMT_REFCOUNT;
++	ASSERT(ifp->if_broot_bytes == 0);
++	ASSERT(ifp->if_bytes == 0);
++
++	/* Initialize the empty incore btree root. */
++	xfs_iroot_alloc(upd->ip, XFS_DATA_FORK,
++			xfs_rtrefcount_broot_space_calc(mp, 0, 0));
++	xfs_btree_init_block(mp, ifp->if_broot, &xfs_rtrefcountbt_ops,
++			0, 0, upd->ip->i_ino);
++	xfs_trans_log_inode(upd->tp, upd->ip, XFS_ILOG_CORE | XFS_ILOG_DBROOT);
++	return 0;
++}
+diff --git a/libxfs/xfs_rtrefcount_btree.h b/libxfs/xfs_rtrefcount_btree.h
+index bd070e54781..749c6fd02f8 100644
+--- a/libxfs/xfs_rtrefcount_btree.h
++++ b/libxfs/xfs_rtrefcount_btree.h
+@@ -188,4 +188,9 @@ void xfs_rtrefcountbt_to_disk(struct xfs_mount *mp,
+ 		struct xfs_rtrefcount_root *dblock, int dblocklen);
+ void xfs_iflush_rtrefcount(struct xfs_inode *ip, struct xfs_dinode *dip);
  
- /* Validate the incoming extsize hint. */
++struct xfs_imeta_update;
++
++int xfs_rtrefcountbt_create(struct xfs_imeta_update *upd,
++		struct xfs_inode **ipp);
++
+ #endif	/* __XFS_RTREFCOUNT_BTREE_H__ */
 
 
