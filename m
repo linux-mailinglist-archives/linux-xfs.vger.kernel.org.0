@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2379-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2169-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7779C8212AE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:03:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAEAD8211C7
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:09:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27A84282B3E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB6F61C21C43
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:09:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67DBD802;
-	Mon,  1 Jan 2024 01:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1564F38E;
+	Mon,  1 Jan 2024 00:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYNRdl7N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgfLcGBO"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314017F9;
-	Mon,  1 Jan 2024 01:03:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBB0C433C8;
-	Mon,  1 Jan 2024 01:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CCB389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:09:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 443E1C433C7;
+	Mon,  1 Jan 2024 00:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071008;
-	bh=v5t/VCu9Eh7EbvI3dy4porQrhQuQOlHnWICHHOqNeCo=;
+	s=k20201202; t=1704067753;
+	bh=GMAfoMqimiJscvoLR7CQenzGGKvZk40u/pbYj/MfZII=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=fYNRdl7NPb4pV/jwI4mYXAGYpxNYeVToyjTvuSD0Xnu3hcES+uBSzHnzvMlHeH9u7
-	 i9rWK8hJmpovDo4N94up2XlWwwE78pvH1fMgZ9aGxRekvYyjfYl7g9rQ8I4WDj8FKa
-	 cj4NXZo+5lT/jkxutoYP7/TfyUE5Eu7utjOenjIeRKa9tqexcg9VZmDP2CHAd+yEYT
-	 NY86SUfbvvBsJeLk6vgWKaqULXn6BZRJA6ksfSezbsQRHZu2wen7vlyDpOY+NRavHp
-	 Gd42jsHBDfU8Va10jZTw3kQ1aQUBoCLC3e3hIcPTCf+zTVf1gE8IMV06QWahLOenJL
-	 WiGKT9lYcwDnQ==
-Date: Sun, 31 Dec 2023 17:03:28 +9900
-Subject: [PATCH 8/9] generic/331,xfs/240: support files that skip delayed
- allocation
+	b=PgfLcGBObOiW+oJkhiTlJGj8XMS3CkaCscHP5ftDsaomEa04/4nV7GFtBhSwW6IxJ
+	 9scJ41SPZiM4M8l8ytHJ2vcxL4SB5/l6S1LbXgyyGD1mksuUDlc4vomnRV0yMRiJ+Q
+	 1WqejpTnbs0BQXucEG38/5lzEB/aeVQ87gjBxR6ROb9QzNcWQucb22a2/jj3u0Sm6H
+	 1GcTG/3K32gZusD2ro3QEmnLJ4h2didsnn13OpwlTaVzSyYaH+MCznDVCFMLEarjvm
+	 OH9jCp1AThX/01OcMahy3PxMvqKgMpDvpB5UBav7YcTSK6XGDmZpraaki8+RqdWjSN
+	 BlUYMGe7aApjg==
+Date: Sun, 31 Dec 2023 16:09:12 +9900
+Subject: [PATCH 4/9] xfs: clean up rmap log intent item tracepoint callsites
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032121.1827358.9242931540348227468.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
-References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405014871.1815232.17265076679281352849.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,103 +52,89 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The goal of this test is to ensure that log recovery finishes a copy on
-write operation in the event of temporary media errors.  It's important
-that the test observe some sort of IO error once we switch the scratch
-device to fail all IOs, but regrettably the test encoded the specific
-behavior of XFS and btrfs when the test was written -- the aio write
-to the page cache doesn't have to touch the disk and succeeds, and the
-fdatasync flushes things to disk and hits the IO error.
-
-However, this is not how things work on the XFS realtime device.  There
-is no delalloc on realtime, so the aio write allocates an unwritten
-extent to stage the write.  The allocation fails due to EIO, so it's the
-write call that fails.  Therefore, all we need to do is to detect an IO
-error at any point between the write and the fdatasync call to be
-satisfied that the test does what we want to do.
+Pass the incore rmap structure to the tracepoints instead of open-coding
+the argument passing.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/generic/331     |   12 ++++++++++--
- tests/generic/331.out |    2 +-
- tests/xfs/240         |   13 +++++++++++--
- tests/xfs/240.out     |    2 +-
- 4 files changed, 23 insertions(+), 6 deletions(-)
+ libxfs/xfs_rmap.c |   22 +++++-----------------
+ libxfs/xfs_rmap.h |   10 ++++++++++
+ 2 files changed, 15 insertions(+), 17 deletions(-)
 
 
-diff --git a/tests/generic/331 b/tests/generic/331
-index 492abedf76..8c665ce4fc 100755
---- a/tests/generic/331
-+++ b/tests/generic/331
-@@ -59,9 +59,17 @@ echo "CoW and unmount"
- $XFS_IO_PROG -f -c "pwrite -S 0x63 $bufsize 1" $testdir/file2 >> $seqres.full
- $XFS_IO_PROG -f -c "pwrite -S 0x63 -b $bufsize 0 $filesize" $TEST_DIR/moo >> $seqres.full
- sync
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index 3c4f705ce59..3c00b05d8d0 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -2575,20 +2575,15 @@ xfs_rmap_finish_one(
+ 	struct xfs_rmap_intent		*ri,
+ 	struct xfs_btree_cur		**pcur)
+ {
++	struct xfs_owner_info		oinfo;
+ 	struct xfs_mount		*mp = tp->t_mountp;
+ 	struct xfs_btree_cur		*rcur;
+ 	struct xfs_buf			*agbp = NULL;
+-	int				error = 0;
+-	struct xfs_owner_info		oinfo;
+ 	xfs_agblock_t			bno;
+ 	bool				unwritten;
++	int				error = 0;
+ 
+-	bno = XFS_FSB_TO_AGBNO(mp, ri->ri_bmap.br_startblock);
+-
+-	trace_xfs_rmap_deferred(mp, ri->ri_pag->pag_agno, ri->ri_type, bno,
+-			ri->ri_owner, ri->ri_whichfork,
+-			ri->ri_bmap.br_startoff, ri->ri_bmap.br_blockcount,
+-			ri->ri_bmap.br_state);
++	trace_xfs_rmap_deferred(mp, ri);
+ 
+ 	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_RMAP_FINISH_ONE))
+ 		return -EIO;
+@@ -2663,15 +2658,6 @@ __xfs_rmap_add(
+ {
+ 	struct xfs_rmap_intent		*ri;
+ 
+-	trace_xfs_rmap_defer(tp->t_mountp,
+-			XFS_FSB_TO_AGNO(tp->t_mountp, bmap->br_startblock),
+-			type,
+-			XFS_FSB_TO_AGBNO(tp->t_mountp, bmap->br_startblock),
+-			owner, whichfork,
+-			bmap->br_startoff,
+-			bmap->br_blockcount,
+-			bmap->br_state);
+-
+ 	ri = kmem_cache_alloc(xfs_rmap_intent_cache, GFP_NOFS | __GFP_NOFAIL);
+ 	INIT_LIST_HEAD(&ri->ri_list);
+ 	ri->ri_type = type;
+@@ -2679,6 +2665,8 @@ __xfs_rmap_add(
+ 	ri->ri_whichfork = whichfork;
+ 	ri->ri_bmap = *bmap;
+ 
++	trace_xfs_rmap_defer(tp->t_mountp, ri);
 +
-+# If the filesystem supports delalloc, then the fdatasync will report an IO
-+# error.  If the write goes directly to disk, then aiocp will return nonzero.
-+unset write_failed
- _dmerror_load_error_table
--$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 >> $seqres.full
--$XFS_IO_PROG -c "fdatasync" $testdir/file2
-+$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 &>> $seqres.full || \
-+	write_failed=1
-+$XFS_IO_PROG -c "fdatasync" $testdir/file2 2>&1 | grep -q 'Input.output error' && \
-+	write_failed=1
-+test -n $write_failed && echo "write failed"
+ 	xfs_rmap_update_get_group(tp->t_mountp, ri);
+ 	xfs_defer_add(tp, &ri->ri_list, &xfs_rmap_update_defer_type);
+ }
+diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
+index 3a153b4801b..f16b07d851d 100644
+--- a/libxfs/xfs_rmap.h
++++ b/libxfs/xfs_rmap.h
+@@ -157,6 +157,16 @@ enum xfs_rmap_intent_type {
+ 	XFS_RMAP_FREE,
+ };
+ 
++#define XFS_RMAP_INTENT_STRINGS \
++	{ XFS_RMAP_MAP,			"map" }, \
++	{ XFS_RMAP_MAP_SHARED,		"map_shared" }, \
++	{ XFS_RMAP_UNMAP,		"unmap" }, \
++	{ XFS_RMAP_UNMAP_SHARED,	"unmap_shared" }, \
++	{ XFS_RMAP_CONVERT,		"cvt" }, \
++	{ XFS_RMAP_CONVERT_SHARED,	"cvt_shared" }, \
++	{ XFS_RMAP_ALLOC,		"alloc" }, \
++	{ XFS_RMAP_FREE,		"free" }
 +
- _dmerror_load_working_table
- _dmerror_unmount
- _dmerror_mount
-diff --git a/tests/generic/331.out b/tests/generic/331.out
-index adbf841d00..d8ccea704b 100644
---- a/tests/generic/331.out
-+++ b/tests/generic/331.out
-@@ -5,7 +5,7 @@ Compare files
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file1
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file2
- CoW and unmount
--fdatasync: Input/output error
-+write failed
- Compare files
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file1
- d94b0ab13385aba594411c174b1cc13c  SCRATCH_MNT/test-331/file2
-diff --git a/tests/xfs/240 b/tests/xfs/240
-index a65c270d23..cabe309201 100755
---- a/tests/xfs/240
-+++ b/tests/xfs/240
-@@ -66,8 +66,17 @@ $XFS_IO_PROG -f -c "pwrite -S 0x63 $bufsize 1" $testdir/file2 >> $seqres.full
- $XFS_IO_PROG -f -c "pwrite -S 0x63 -b $bufsize 0 $filesize" $TEST_DIR/moo >> $seqres.full
- sync
- _dmerror_load_error_table
--$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 >> $seqres.full
--$XFS_IO_PROG -c "fdatasync" $testdir/file2
-+
-+# If the filesystem supports delalloc, then the fdatasync will report an IO
-+# error.  If the write goes directly to disk, then aiocp will return nonzero.
-+unset write_failed
-+_dmerror_load_error_table
-+$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 &>> $seqres.full || \
-+	write_failed=1
-+$XFS_IO_PROG -c "fdatasync" $testdir/file2 2>&1 | grep -q 'Input.output error' && \
-+	write_failed=1
-+test -n $write_failed && echo "write failed"
-+
- _dmerror_load_working_table
- _dmerror_unmount
- _dmerror_mount
-diff --git a/tests/xfs/240.out b/tests/xfs/240.out
-index 1a22e8a389..00bb116e5c 100644
---- a/tests/xfs/240.out
-+++ b/tests/xfs/240.out
-@@ -5,7 +5,7 @@ Compare files
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file1
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file2
- CoW and unmount
--fdatasync: Input/output error
-+write failed
- Compare files
- 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file1
- d94b0ab13385aba594411c174b1cc13c  SCRATCH_MNT/test-240/file2
+ struct xfs_rmap_intent {
+ 	struct list_head			ri_list;
+ 	enum xfs_rmap_intent_type		ri_type;
 
 
