@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2287-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2269-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 453D4821240
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:39:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA4B782122E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:34:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6734282A39
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:39:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A3DC2814D5
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:34:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AABD67EF;
-	Mon,  1 Jan 2024 00:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A385E1373;
+	Mon,  1 Jan 2024 00:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpdgGozP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViPM225u"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F457ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:39:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF37FC433C8;
-	Mon,  1 Jan 2024 00:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B5E1362
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:34:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDF5C433C7;
+	Mon,  1 Jan 2024 00:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069568;
-	bh=gHrb4zg1fpl6CCmmysDDvtRCYlmOt0cpHSnh9+JvRiw=;
+	s=k20201202; t=1704069285;
+	bh=gRx+OHYqQKFjzb3CAvRdMnJdHn/SYYaJ/ItmIQXIMgo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=cpdgGozPEYp/XMb67jRMw21Buij3WaCHspyE14zN28Mz3QxS51rGx4QcqwWBL9PTT
-	 rmtTUTsBd0rqQ5rC/MyZjagKIp0fATZrP0v0hmvOsrzLxdqzH2vfsHmsZT5w1+3d2r
-	 Qi8GiV3FRnloDw+Kz5/16ZQ6WQPtUjiTTMRF3aK96ka1EMNLCozZ/GMHrVXqBEf5Pm
-	 vpKNIhSXL4ZP3bWVQ+aIaj43FLLWcv2lZazt+Njy0oSm3HYqAvIi0RBjqiRHnY+2nH
-	 6lN5VyChReh4hkOxIINvBFpXGAailNjiUHPJdmdYcmQjMgt2g8tww+oxBMuqCZo9Cs
-	 qcmpuTv9q/LOw==
-Date: Sun, 31 Dec 2023 16:39:27 +9900
-Subject: [PATCH 5/5] xfs_io: enhance the aginfo command to control the noalloc
- flag
+	b=ViPM225uWUubrY6lriabnkf+iFTF2mZTYL0HuPPRH3Lgx5r81Tvo3kSewp/9+q0wa
+	 +DbtLq9WW2FVq1JwopACaL1W5uVBjuYHbpr6UU3LPQHN1vHHrl1sSjvUEFIwY4Goin
+	 K+f0emzC0fdzN7wrNs+ts0iwcYwkTxNYgFQs4Cj/jBXpSb6GlqJDjTudjPReougO+f
+	 boNVEVdC0fJttgHIU/RPU67NMQuObSvjBYpsmACF/1jZSlR4HZqAXD2zTtvww8667r
+	 tRrtNOsolwlmNs65Z9TeEt6Xe3QEx8QmH1ZZsbiS6myGvw6NRmyEx/88QRnr67tEzN
+	 TeCT/E56LXing==
+Date: Sun, 31 Dec 2023 16:34:45 +9900
+Subject: [PATCH 33/42] xfs_repair: compute refcount data for the realtime
+ groups
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405019630.1820520.15020176051154391607.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
-References: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
+Message-ID: <170405017567.1817107.13512075903044003457.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,147 +53,139 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Augment the aginfo command to be able to set and clear the noalloc
-state for an AG.
+At the end of phase 4, compute reference count information for realtime
+groups from the realtime rmap information collected, just like we do for
+AGs in the data section.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- io/aginfo.c       |   45 ++++++++++++++++++++++++++++++++++++++++-----
- man/man8/xfs_io.8 |    6 +++++-
- 2 files changed, 45 insertions(+), 6 deletions(-)
+ repair/phase4.c |   19 ++++++++++++++++++-
+ repair/rmap.c   |   17 ++++++++++++-----
+ repair/rmap.h   |    2 +-
+ 3 files changed, 31 insertions(+), 7 deletions(-)
 
 
-diff --git a/io/aginfo.c b/io/aginfo.c
-index 43e0e9c21b8..8345d25c559 100644
---- a/io/aginfo.c
-+++ b/io/aginfo.c
-@@ -19,9 +19,11 @@ static cmdinfo_t rginfo_cmd;
- static int
- report_aginfo(
- 	struct xfs_fd		*xfd,
--	xfs_agnumber_t		agno)
-+	xfs_agnumber_t		agno,
-+	int			oflag)
+diff --git a/repair/phase4.c b/repair/phase4.c
+index b0cb805f30c..e90533689e0 100644
+--- a/repair/phase4.c
++++ b/repair/phase4.c
+@@ -173,13 +173,28 @@ compute_ag_refcounts(
  {
- 	struct xfs_ag_geometry	ageo = { 0 };
-+	bool			update = false;
- 	int			ret;
+ 	int		error;
  
- 	ret = -xfrog_ag_geometry(xfd->fd, agno, &ageo);
-@@ -30,6 +32,26 @@ report_aginfo(
- 		return 1;
- 	}
- 
-+	switch (oflag) {
-+	case 0:
-+		ageo.ag_flags |= XFS_AG_FLAG_UPDATE;
-+		ageo.ag_flags &= ~XFS_AG_FLAG_NOALLOC;
-+		update = true;
-+		break;
-+	case 1:
-+		ageo.ag_flags |= (XFS_AG_FLAG_UPDATE | XFS_AG_FLAG_NOALLOC);
-+		update = true;
-+		break;
-+	}
-+
-+	if (update) {
-+		ret = -xfrog_ag_geometry(xfd->fd, agno, &ageo);
-+		if (ret) {
-+			xfrog_perror(ret, "aginfo update");
-+			return 1;
-+		}
-+	}
-+
- 	printf(_("AG: %u\n"),		ageo.ag_number);
- 	printf(_("Blocks: %u\n"),	ageo.ag_length);
- 	printf(_("Free Blocks: %u\n"),	ageo.ag_freeblks);
-@@ -51,6 +73,7 @@ aginfo_f(
- 	struct xfs_fd		xfd = XFS_FD_INIT(file->fd);
- 	unsigned long long	x;
- 	xfs_agnumber_t		agno = NULLAGNUMBER;
-+	int			oflag = -1;
- 	int			c;
- 	int			ret = 0;
- 
-@@ -61,7 +84,7 @@ aginfo_f(
- 		return 1;
- 	}
- 
--	while ((c = getopt(argc, argv, "a:")) != EOF) {
-+	while ((c = getopt(argc, argv, "a:o:")) != EOF) {
- 		switch (c) {
- 		case 'a':
- 			errno = 0;
-@@ -74,16 +97,27 @@ aginfo_f(
- 			}
- 			agno = x;
- 			break;
-+		case 'o':
-+			errno = 0;
-+			x = strtoll(optarg, NULL, 10);
-+			if (!errno && x != 0 && x != 1)
-+				errno = ERANGE;
-+			if (errno) {
-+				perror("aginfo");
-+				return 1;
-+			}
-+			oflag = x;
-+			break;
- 		default:
- 			return command_usage(&aginfo_cmd);
- 		}
- 	}
- 
- 	if (agno != NULLAGNUMBER) {
--		ret = report_aginfo(&xfd, agno);
-+		ret = report_aginfo(&xfd, agno, oflag);
- 	} else {
- 		for (agno = 0; !ret && agno < xfd.fsgeom.agcount; agno++) {
--			ret = report_aginfo(&xfd, agno);
-+			ret = report_aginfo(&xfd, agno, oflag);
- 		}
- 	}
- 
-@@ -98,6 +132,7 @@ aginfo_help(void)
- "Report allocation group geometry.\n"
- "\n"
- " -a agno  -- Report on the given allocation group.\n"
-+" -o state -- Change the NOALLOC state for this allocation group.\n"
- "\n"));
- 
+-	error = compute_refcounts(wq->wq_ctx, agno);
++	error = compute_refcounts(wq->wq_ctx, false, agno);
+ 	if (error)
+ 		do_error(
+ _("%s while computing reference count records.\n"),
+ 			 strerror(error));
  }
-@@ -107,7 +142,7 @@ static cmdinfo_t aginfo_cmd = {
- 	.cfunc = aginfo_f,
- 	.argmin = 0,
- 	.argmax = -1,
--	.args = "[-a agno]",
-+	.args = "[-a agno] [-o state]",
- 	.flags = CMD_NOMAP_OK,
- 	.help = aginfo_help,
- };
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index f94de0ce40f..4ae47555ae3 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -1240,7 +1240,7 @@ for the current memory mapping.
  
- .SH FILESYSTEM COMMANDS
- .TP
--.BI "aginfo [ \-a " agno " ]"
-+.BI "aginfo [ \-a " agno " ] [ \-o " nr " ]"
- Show information about or update the state of allocation groups.
- .RE
- .RS 1.0i
-@@ -1248,6 +1248,10 @@ Show information about or update the state of allocation groups.
- .TP
- .BI \-a
- Act only on a specific allocation group.
-+.TP
-+.BI \-o
-+If 0, clear the NOALLOC flag.
-+If 1, set the NOALLOC flag.
- .PD
- .RE
++static void
++compute_rt_refcounts(
++	struct workqueue*wq,
++	xfs_agnumber_t	rgno,
++	void		*arg)
++{
++	int		error;
++
++	error = compute_refcounts(wq->wq_ctx, true, rgno);
++	if (error)
++		do_error(
++_("%s while computing realtime reference count records.\n"),
++			 strerror(error));
++}
++
+ static void
+ process_inode_reflink_flags(
+ 	struct workqueue	*wq,
+@@ -227,6 +242,8 @@ process_rmap_data(
+ 	create_work_queue(&wq, mp, platform_nproc());
+ 	for (i = 0; i < mp->m_sb.sb_agcount; i++)
+ 		queue_work(&wq, compute_ag_refcounts, i, NULL);
++	for (i = 0; i < mp->m_sb.sb_rgcount; i++)
++		queue_work(&wq, compute_rt_refcounts, i, NULL);
+ 	destroy_work_queue(&wq);
  
+ 	create_work_queue(&wq, mp, platform_nproc());
+diff --git a/repair/rmap.c b/repair/rmap.c
+index 55b41cfa540..38a508ced16 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -135,6 +135,11 @@ rmaps_init_rt(
+ 	if (error)
+ 		goto nomem;
+ 
++	error = init_slab(&ag_rmap->ar_refcount_items,
++			  sizeof(struct xfs_refcount_irec));
++	if (error)
++		goto nomem;
++
+ 	ag_rmap->rg_rmap_ino = NULLFSINO;
+ 	ag_rmap->rg_refcount_ino = NULLFSINO;
+ 	return;
+@@ -1080,6 +1085,7 @@ mark_reflink_inodes(
+ static void
+ refcount_emit(
+ 	struct xfs_mount	*mp,
++	bool			isrt,
+ 	xfs_agnumber_t		agno,
+ 	xfs_agblock_t		agbno,
+ 	xfs_extlen_t		len,
+@@ -1089,7 +1095,7 @@ refcount_emit(
+ 	int			error;
+ 	struct xfs_slab		*rlslab;
+ 
+-	rlslab = rmaps_for_group(false, agno)->ar_refcount_items;
++	rlslab = rmaps_for_group(isrt, agno)->ar_refcount_items;
+ 	ASSERT(nr_rmaps > 0);
+ 
+ 	dbg_printf("REFL: agno=%u pblk=%u, len=%u -> refcount=%zu\n",
+@@ -1208,6 +1214,7 @@ refcount_push_rmaps_at(
+ int
+ compute_refcounts(
+ 	struct xfs_mount	*mp,
++	bool			isrt,
+ 	xfs_agnumber_t		agno)
+ {
+ 	struct rcbag		*rcstack;
+@@ -1223,12 +1230,12 @@ compute_refcounts(
+ 
+ 	if (!xfs_has_reflink(mp))
+ 		return 0;
+-	if (rmaps_for_group(false, agno)->ar_xfbtree == NULL)
++	if (rmaps_for_group(isrt, agno)->ar_xfbtree == NULL)
+ 		return 0;
+ 
+-	nr_rmaps = rmap_record_count(mp, false, agno);
++	nr_rmaps = rmap_record_count(mp, isrt, agno);
+ 
+-	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rmcur);
++	error = rmap_init_mem_cursor(mp, NULL, isrt, agno, &rmcur);
+ 	if (error)
+ 		return error;
+ 
+@@ -1285,7 +1292,7 @@ compute_refcounts(
+ 			ASSERT(nbno > cbno);
+ 			if (rcbag_count(rcstack) != old_stack_height) {
+ 				if (old_stack_height > 1) {
+-					refcount_emit(mp, agno, cbno,
++					refcount_emit(mp, isrt, agno, cbno,
+ 							nbno - cbno,
+ 							old_stack_height);
+ 				}
+diff --git a/repair/rmap.h b/repair/rmap.h
+index 3e210fac87b..9663b3e3a20 100644
+--- a/repair/rmap.h
++++ b/repair/rmap.h
+@@ -38,7 +38,7 @@ extern int64_t rmap_diffkeys(struct xfs_rmap_irec *kp1,
+ extern void rmap_high_key_from_rec(struct xfs_rmap_irec *rec,
+ 		struct xfs_rmap_irec *key);
+ 
+-extern int compute_refcounts(struct xfs_mount *, xfs_agnumber_t);
++int compute_refcounts(struct xfs_mount *mp, bool isrt, xfs_agnumber_t agno);
+ uint64_t refcount_record_count(struct xfs_mount *mp, xfs_agnumber_t agno);
+ extern int init_refcount_cursor(xfs_agnumber_t, struct xfs_slab_cursor **);
+ extern void refcount_avoid_check(struct xfs_mount *mp);
 
 
