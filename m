@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2212-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2233-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E0068211F4
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:20:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F7782120A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:25:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30A9B1C21C51
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:20:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19DE41C21B97
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:25:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA5E7F9;
-	Mon,  1 Jan 2024 00:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F152F7FD;
+	Mon,  1 Jan 2024 00:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FuLxU774"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHXGmUMD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE707ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:20:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC6E5C433C8;
-	Mon,  1 Jan 2024 00:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6507EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:25:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 413A8C433C7;
+	Mon,  1 Jan 2024 00:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068410;
-	bh=VYKmPvAbGm3z9dxjhV/JrrVda1K1PQQA+kAOUSxzmYw=;
+	s=k20201202; t=1704068722;
+	bh=JG7dtotQDby+Ur1obd3UEDnMjomEGO8/WvpNO296MlU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=FuLxU774JI7abD48fH/5Z6Dq0gPwReg8t2JYYPdqqrh9GZoA1GbKf7Lk0HDmBzItl
-	 01Zn/gZe3E/TqDgzf30I4F9iju30M17Jn4hOyxs+e3rI1PNL3lLwV8uplzp0zAaWhI
-	 I1wCbjcVyjnHSG8SyQjzvPhmVmjyPTAyPJX7svp+yqB0BhJPE3vYqM0x18oxe8WQmE
-	 NIxi9pSJrg7t1UsS3QChOP0LztiSRprRy5uZADPYSxbtv+BWCQDXKJcFu2xVROKf2v
-	 NEkdBnMXMlOAHVeMo/X1V+3eJM4zhZUy1z7LIw/aPWe6txfYohpFYAfGet+lMzikwQ
-	 5Nt3zvrWDxrzg==
-Date: Sun, 31 Dec 2023 16:20:09 +9900
-Subject: [PATCH 37/47] xfs_repair: refactor realtime inode check
+	b=NHXGmUMDczF2hLTuTwftByuQ5pUKBKgLi7NoDP98mNIymNaA3fSfebcwMCHKnaQD7
+	 kLe8xqDxS4d1oIWZnaXUMHBkZ+IcPbShDNhLStkyz+5+7hNFORmhf/UzQ70vgmpI49
+	 b3KcBQps+yosKhvMHtBg5EE5ihRHA/syiAsuNMtkshMpCkNNHp/8/qOufT/b4vkVvw
+	 SEO+sLNtqKw+jbCXJ8Dm3Lq5S/K8tumESQlQ3LagXJfghUeRnue4gWmcbZXlEUSXeF
+	 8s0HvrU7NlxH4ORSCowa7/QIFoPNq4hW76FtHDtdMxSmduYGyA5V8f1Rt0qb6+ix/i
+	 yd40xa5sNs5sg==
+Date: Sun, 31 Dec 2023 16:25:21 +9900
+Subject: [PATCH 6/9] xfs: reuse xfs_refcount_update_cancel_item
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015807.1815505.13941798952905368669.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405016700.1816837.13209062353123602860.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
+References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,122 +52,65 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor the realtime bitmap and summary checks into a helper function.
+Reuse xfs_refcount_update_cancel_item to put the AG/RTG and free the
+item in a few places that currently open code the logic.
 
+Inspired-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |   84 ++++++++++++++++++++++++++-----------------------------
- 1 file changed, 39 insertions(+), 45 deletions(-)
+ libxfs/defer_item.c |   25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
 
-diff --git a/repair/dinode.c b/repair/dinode.c
-index d88bd80783c..450f19eba4f 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -1736,6 +1736,39 @@ check_dinode_mode_format(
- 	return 0;	/* invalid modes are checked elsewhere */
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index 471e4f6867d..e056c3b449b 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -545,6 +545,17 @@ xfs_refcount_update_put_group(
+ 	xfs_perag_intent_put(ri->ri_pag);
  }
  
-+static int
-+process_check_rt_inode(
-+	struct xfs_mount	*mp,
-+	struct xfs_dinode	*dinoc,
-+	xfs_ino_t		lino,
-+	int			*type,
-+	int			*dirty,
-+	int			expected_type,
-+	const char		*tag)
++/* Cancel a deferred refcount update. */
++STATIC void
++xfs_refcount_update_cancel_item(
++	struct list_head		*item)
 +{
-+	xfs_extnum_t		dnextents = xfs_dfork_data_extents(dinoc);
++	struct xfs_refcount_intent	*ri = ci_entry(item);
 +
-+	if (*type != expected_type) {
-+		do_warn(
-+_("%s inode %" PRIu64 " has bad type 0x%x, "),
-+			tag, lino, dinode_fmt(dinoc));
-+		if (!no_modify)  {
-+			do_warn(_("resetting to regular file\n"));
-+			change_dinode_fmt(dinoc, S_IFREG);
-+			*dirty = 1;
-+		} else  {
-+			do_warn(_("would reset to regular file\n"));
-+		}
-+	}
-+	if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
-+		do_warn(
-+_("bad # of extents (%" PRIu64 ") for %s inode %" PRIu64 "\n"),
-+			dnextents, tag, lino);
-+		return 1;
-+	}
-+	return 0;
++	xfs_refcount_update_put_group(ri);
++	kmem_cache_free(xfs_refcount_intent_cache, ri);
 +}
 +
- /*
-  * If inode is a superblock inode, does type check to make sure is it valid.
-  * Returns 0 if it's valid, non-zero if it needs to be cleared.
-@@ -1749,8 +1782,6 @@ process_check_sb_inodes(
- 	int			*type,
- 	int			*dirty)
- {
--	xfs_extnum_t		dnextents;
--
- 	if (lino == mp->m_sb.sb_rootino) {
- 		if (*type != XR_INO_DIR)  {
- 			do_warn(_("root inode %" PRIu64 " has bad type 0x%x\n"),
-@@ -1792,49 +1823,12 @@ process_check_sb_inodes(
- 		}
- 		return 0;
+ /* Process a deferred refcount update. */
+ STATIC int
+ xfs_refcount_update_finish_item(
+@@ -565,8 +576,7 @@ xfs_refcount_update_finish_item(
+ 		return -EAGAIN;
  	}
--	dnextents = xfs_dfork_data_extents(dinoc);
--	if (lino == mp->m_sb.sb_rsumino) {
--		if (*type != XR_INO_RTSUM) {
--			do_warn(
--_("realtime summary inode %" PRIu64 " has bad type 0x%x, "),
--				lino, dinode_fmt(dinoc));
--			if (!no_modify)  {
--				do_warn(_("resetting to regular file\n"));
--				change_dinode_fmt(dinoc, S_IFREG);
--				*dirty = 1;
--			} else  {
--				do_warn(_("would reset to regular file\n"));
--			}
--		}
--		if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
--			do_warn(
--_("bad # of extents (%" PRIu64 ") for realtime summary inode %" PRIu64 "\n"),
--				dnextents, lino);
--			return 1;
--		}
--		return 0;
--	}
--	if (lino == mp->m_sb.sb_rbmino) {
--		if (*type != XR_INO_RTBITMAP) {
--			do_warn(
--_("realtime bitmap inode %" PRIu64 " has bad type 0x%x, "),
--				lino, dinode_fmt(dinoc));
--			if (!no_modify)  {
--				do_warn(_("resetting to regular file\n"));
--				change_dinode_fmt(dinoc, S_IFREG);
--				*dirty = 1;
--			} else  {
--				do_warn(_("would reset to regular file\n"));
--			}
--		}
--		if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
--			do_warn(
--_("bad # of extents (%" PRIu64 ") for realtime bitmap inode %" PRIu64 "\n"),
--				dnextents, lino);
--			return 1;
--		}
--		return 0;
--	}
-+	if (lino == mp->m_sb.sb_rsumino)
-+		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
-+				XR_INO_RTSUM, _("realtime summary"));
-+	if (lino == mp->m_sb.sb_rbmino)
-+		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
-+				XR_INO_RTBITMAP, _("realtime bitmap"));
- 	return 0;
+ 
+-	xfs_refcount_update_put_group(ri);
+-	kmem_cache_free(xfs_refcount_intent_cache, ri);
++	xfs_refcount_update_cancel_item(item);
+ 	return error;
  }
  
+@@ -577,17 +587,6 @@ xfs_refcount_update_abort_intent(
+ {
+ }
+ 
+-/* Cancel a deferred refcount update. */
+-STATIC void
+-xfs_refcount_update_cancel_item(
+-	struct list_head		*item)
+-{
+-	struct xfs_refcount_intent	*ri = ci_entry(item);
+-
+-	xfs_refcount_update_put_group(ri);
+-	kmem_cache_free(xfs_refcount_intent_cache, ri);
+-}
+-
+ const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
+ 	.name		= "refcount",
+ 	.create_intent	= xfs_refcount_update_create_intent,
 
 
