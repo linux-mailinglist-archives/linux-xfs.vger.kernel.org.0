@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2214-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2134-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 545738211F6
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:20:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E137F8211A1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2AF91F2256E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:20:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0001F1C21C40
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:00:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC0B7F9;
-	Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950B5C2EE;
+	Mon,  1 Jan 2024 00:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTodIhOd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CohV0y+n"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7F37EE
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D376C433C8;
-	Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6113CC2DE
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:00:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C801BC433C8;
+	Mon,  1 Jan 2024 00:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068441;
-	bh=gZed8OOJnTwhuniXlz1J2LT8I9K6Y5wINqSPMnH7TT4=;
+	s=k20201202; t=1704067220;
+	bh=UNehyCrpT2CiQQez/iI3XcEejINKi2g18L7QPXSn0uQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=aTodIhOdoUf7lDExIbKGK/FYzSb7CyjQlNGKgEXCKtTI7BVW1fYVkYWmQxQG7W2I1
-	 5V2EMSdOcKBKCcZcQPGBSxLSnvvayIWwlLRckDfrIiR30n48G6AXTPz0/n/TzIVUw9
-	 nzXdgTmw5YPOVf+WRDdrmc1plCo3t3dxAEOYgG1VnD0v4DBECwuljGpaJ7kSrkh4py
-	 T8tqoshMxoz6V4WnQ0XQZFUDMh3cVmnIOpBYTQkJPnUEfJipmvvx9XyESr05blUqTX
-	 il0cOsv7CG2OttUdIsoZEVtGSlNzXUMcNnELRTjjlcu6y+PtQVz9O7r94FL7k6bQST
-	 Uvm926kypdN0w==
-Date: Sun, 31 Dec 2023 16:20:40 +9900
-Subject: [PATCH 39/47] xfs_repair: check existing realtime rmapbt entries
- against observed rmaps
+	b=CohV0y+nxEVBHR0f/et2Z02JIGF8QcpXg5a+uoiU/2pdiZJhAjaNYMZAjbKucnwWr
+	 e89U4eQp74ls+Fh8G9VTaMws4YMsNT0OyMpeon+B4YSukPrtXNSoMIO7B8VuuW7HLE
+	 tRSfRqnPSVWNP+N+rvwi2Hr1w0HnhGzzFLF0D5Dm+gDEBfH60Mbmpiw7RqpIpJJVNn
+	 eQYfX3/0soY6OSlqiNANzZToJvjx+/ajtzsg7zqotyW31gBYHfrCX1H/SQoj7IQv8j
+	 ULRUjIpnNQwkTJzaMyg4hjBmB84iT/I0RJ3jzH9BsUlnnabnFHkrZsqHR1n2JEL8aX
+	 KdkI1Pht7xifA==
+Date: Sun, 31 Dec 2023 16:00:20 +9900
+Subject: [PATCH 49/52] xfs_scrub: use histograms to speed up phase 8 on the
+ realtime volume
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015833.1815505.14998533920029160.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405012817.1811243.7494449792829565677.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
+References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,410 +53,119 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Once we've finished collecting reverse mapping observations from the
-metadata scan, check those observations against the realtime rmap btree
-(particularly if we're in -n mode) to detect rtrmapbt problems.
+Use the same statistical methods that we use on the data volume to
+compute the minimum threshold size for fstrims on the realtime volume.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase4.c |   12 +++
- repair/rmap.c   |  262 ++++++++++++++++++++++++++++++++++++++++++++-----------
- repair/rmap.h   |    2 
- 3 files changed, 223 insertions(+), 53 deletions(-)
+ scrub/phase7.c    |    7 +++++++
+ scrub/phase8.c    |    6 +++++-
+ scrub/xfs_scrub.c |    2 ++
+ scrub/xfs_scrub.h |    1 +
+ 4 files changed, 15 insertions(+), 1 deletion(-)
 
 
-diff --git a/repair/phase4.c b/repair/phase4.c
-index cfdea1460e5..b0cb805f30c 100644
---- a/repair/phase4.c
-+++ b/repair/phase4.c
-@@ -155,6 +155,16 @@ check_rmap_btrees(
- 	rmaps_verify_btree(wq->wq_ctx, agno);
- }
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 475d8f157ee..01097b67879 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -31,6 +31,7 @@ struct summary_counts {
  
-+static void
-+check_rtrmap_btrees(
-+	struct workqueue *wq,
-+	xfs_agnumber_t	agno,
-+	void		*arg)
-+{
-+	rmap_add_fixed_rtgroup_rec(wq->wq_ctx, agno);
-+	rtrmaps_verify_btree(wq->wq_ctx, agno);
-+}
-+
- static void
- compute_ag_refcounts(
- 	struct workqueue*wq,
-@@ -207,6 +217,8 @@ process_rmap_data(
- 	create_work_queue(&wq, mp, platform_nproc());
- 	for (i = 0; i < mp->m_sb.sb_agcount; i++)
- 		queue_work(&wq, check_rmap_btrees, i, NULL);
-+	for (i = 0; i < mp->m_sb.sb_rgcount; i++)
-+		queue_work(&wq, check_rtrmap_btrees, i, NULL);
- 	destroy_work_queue(&wq);
+ 	/* Free space histogram, in fsb */
+ 	struct histogram	datadev_hist;
++	struct histogram	rtdev_hist;
+ };
  
- 	if (!xfs_has_reflink(mp))
-diff --git a/repair/rmap.c b/repair/rmap.c
-index b7e7fbe3f47..5ac7188f12e 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -17,6 +17,7 @@
- #include "libxfs/xfile.h"
- #include "libxfs/xfbtree.h"
- #include "rcbag.h"
-+#include "prefetch.h"
- 
- #undef RMAP_DEBUG
- 
-@@ -682,6 +683,26 @@ rmap_add_fixed_ag_rec(
- 	}
- }
- 
-+/* Add this realtime group's fixed metadata to the incore data. */
-+void
-+rmap_add_fixed_rtgroup_rec(
-+	struct xfs_mount	*mp,
-+	xfs_rgnumber_t		rgno)
-+{
-+	struct xfs_rmap_irec	rmap = {
-+		.rm_startblock	= 0,
-+		.rm_blockcount	= mp->m_sb.sb_rextsize,
-+		.rm_owner	= XFS_RMAP_OWN_FS,
-+		.rm_offset	= 0,
-+		.rm_flags	= 0,
-+	};
-+
-+	if (!rmap_needs_work(mp))
-+		return;
-+
-+	rmap_add_mem_rec(mp, true, rgno, &rmap);
-+}
-+
  /*
-  * Copy the per-AG btree reverse-mapping data into the rmapbt.
-  *
-@@ -1331,62 +1352,25 @@ rmap_is_good(
- #undef NEXTP
- #undef NEXTL
+@@ -56,6 +57,7 @@ summary_count_init(
+ 	struct summary_counts	*counts = data;
  
--/*
-- * Compare the observed reverse mappings against what's in the ag btree.
-- */
--void
--rmaps_verify_btree(
--	struct xfs_mount	*mp,
--	xfs_agnumber_t		agno)
-+static int
-+rmap_compare_records(
-+	struct rmap_mem_cur	*rm_cur,
-+	struct xfs_btree_cur	*bt_cur,
-+	unsigned int		group)
+ 	init_freesp_hist(&counts->datadev_hist);
++	init_freesp_hist(&counts->rtdev_hist);
+ }
+ 
+ /* Record block usage. */
+@@ -83,6 +85,8 @@ count_block_summary(
+ 		blocks = cvt_b_to_off_fsbt(&ctx->mnt, fsmap->fmr_length);
+ 		if (fsmap->fmr_device == ctx->fsinfo.fs_datadev)
+ 			hist_add(&counts->datadev_hist, blocks);
++		else if (fsmap->fmr_device == ctx->fsinfo.fs_rtdev)
++			hist_add(&counts->rtdev_hist, blocks);
+ 		return 0;
+ 	}
+ 
+@@ -124,7 +128,9 @@ add_summaries(
+ 	total->agbytes += item->agbytes;
+ 
+ 	hist_import(&total->datadev_hist, &item->datadev_hist);
++	hist_import(&total->rtdev_hist, &item->rtdev_hist);
+ 	hist_free(&item->datadev_hist);
++	hist_free(&item->rtdev_hist);
+ 	return 0;
+ }
+ 
+@@ -195,6 +201,7 @@ phase7_func(
+ 
+ 	/* Preserve free space histograms for phase 8. */
+ 	hist_move(&ctx->datadev_hist, &totalcount.datadev_hist);
++	hist_move(&ctx->rtdev_hist, &totalcount.rtdev_hist);
+ 
+ 	/* Scan the whole fs. */
+ 	error = scrub_count_all_inodes(ctx, &counted_inodes);
+diff --git a/scrub/phase8.c b/scrub/phase8.c
+index 25d1ec3693e..d59bab7009c 100644
+--- a/scrub/phase8.c
++++ b/scrub/phase8.c
+@@ -195,13 +195,17 @@ fstrim_rtdev(
+ 	struct scrub_ctx	*ctx)
  {
--	struct rmap_mem_cur	rm_cur;
- 	struct xfs_rmap_irec	rm_rec;
- 	struct xfs_rmap_irec	tmp;
--	struct xfs_btree_cur	*bt_cur = NULL;
--	struct xfs_buf		*agbp = NULL;
--	struct xfs_perag	*pag = NULL;
- 	int			have;
+ 	struct xfs_fsop_geom	*geo = &ctx->mnt.fsgeom;
++	uint64_t		minlen_fsb;
++
++	minlen_fsb = fstrim_compute_minlen(ctx, &ctx->rtdev_hist);
+ 
+ 	/*
+ 	 * The fstrim ioctl pretends that the realtime volume is in the address
+ 	 * space immediately after the data volume.  Ignore EINVAL if someone
+ 	 * tries to run us on an older kernel.
+ 	 */
+-	return fstrim_fsblocks(ctx, geo->datablocks, geo->rtblocks, 0, true);
++	return fstrim_fsblocks(ctx, geo->datablocks, geo->rtblocks,
++			minlen_fsb, true);
+ }
+ 
+ /* Trim the filesystem, if desired. */
+diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
+index 7c73e4d3cca..c510d9534a8 100644
+--- a/scrub/xfs_scrub.c
++++ b/scrub/xfs_scrub.c
+@@ -713,6 +713,7 @@ main(
  	int			error;
  
--	if (!xfs_has_rmapbt(mp) || add_rmapbt)
--		return;
--	if (rmapbt_suspect) {
--		if (no_modify && agno == 0)
--			do_warn(_("would rebuild corrupt rmap btrees.\n"));
--		return;
--	}
--
--	/* Create cursors to rmap structures */
--	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rm_cur);
--	if (error) {
--		do_warn(_("Not enough memory to check reverse mappings.\n"));
--		return;
--	}
--
--	pag = libxfs_perag_get(mp, agno);
--	error = -libxfs_alloc_read_agf(pag, NULL, 0, &agbp);
--	if (error) {
--		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
--				agno);
--		goto err_pag;
--	}
--
--	/* Leave the per-ag data "uninitialized" since we rewrite it later */
--	clear_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
--
--	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
--	if (!bt_cur) {
--		do_warn(_("Not enough memory to check reverse mappings.\n"));
--		goto err_agf;
--	}
--
--	while ((error = rmap_get_mem_rec(&rm_cur, &rm_rec)) == 1) {
-+	while ((error = rmap_get_mem_rec(rm_cur, &rm_rec)) == 1) {
- 		error = rmap_lookup(bt_cur, &rm_rec, &tmp, &have);
- 		if (error) {
- 			do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
--					agno, rm_rec.rm_startblock);
--			goto err_cur;
-+					group,
-+					rm_rec.rm_startblock);
-+			return error;
- 		}
+ 	hist_init(&ctx.datadev_hist);
++	hist_init(&ctx.rtdev_hist);
  
- 		/*
-@@ -1401,15 +1385,15 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
- 			if (error) {
- 				do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
--						agno, rm_rec.rm_startblock);
--				goto err_cur;
-+						group, rm_rec.rm_startblock);
-+				return error;
- 			}
- 		}
- 		if (!have) {
- 			do_warn(
- _("Missing reverse-mapping record for (%u/%u) %slen %u owner %"PRId64" \
- %s%soff %"PRIu64"\n"),
--				agno, rm_rec.rm_startblock,
-+				group, rm_rec.rm_startblock,
- 				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
- 					_("unwritten ") : "",
- 				rm_rec.rm_blockcount,
-@@ -1422,12 +1406,12 @@ _("Missing reverse-mapping record for (%u/%u) %slen %u owner %"PRId64" \
- 			continue;
- 		}
+ 	fprintf(stdout, "EXPERIMENTAL xfs_scrub program in use! Use at your own risk!\n");
+ 	fflush(stdout);
+@@ -944,6 +945,7 @@ main(
+ 	unicrash_unload();
  
--		/* Compare each refcount observation against the btree's */
-+		/* Compare each rmap observation against the btree's */
- 		if (!rmap_is_good(&rm_rec, &tmp)) {
- 			do_warn(
- _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- %"PRIu64"; should be (%u/%u) %slen %u owner %"PRId64" %s%soff %"PRIu64"\n"),
--				agno, tmp.rm_startblock,
-+				group, tmp.rm_startblock,
- 				(tmp.rm_flags & XFS_RMAP_UNWRITTEN) ?
- 					_("unwritten ") : "",
- 				tmp.rm_blockcount,
-@@ -1437,7 +1421,7 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- 				(tmp.rm_flags & XFS_RMAP_BMBT_BLOCK) ?
- 					_("bmbt ") : "",
- 				tmp.rm_offset,
--				agno, rm_rec.rm_startblock,
-+				group, rm_rec.rm_startblock,
- 				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
- 					_("unwritten ") : "",
- 				rm_rec.rm_blockcount,
-@@ -1450,8 +1434,61 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- 		}
- 	}
+ 	hist_free(&ctx.datadev_hist);
++	hist_free(&ctx.rtdev_hist);
  
-+	return error;
-+}
-+
-+/*
-+ * Compare the observed reverse mappings against what's in the ag btree.
-+ */
-+void
-+rmaps_verify_btree(
-+	struct xfs_mount	*mp,
-+	xfs_agnumber_t		agno)
-+{
-+	struct rmap_mem_cur	rm_cur;
-+	struct xfs_btree_cur	*bt_cur = NULL;
-+	struct xfs_buf		*agbp = NULL;
-+	struct xfs_perag	*pag = NULL;
-+	int			error;
-+
-+	if (!xfs_has_rmapbt(mp) || add_rmapbt)
-+		return;
-+	if (rmapbt_suspect) {
-+		if (no_modify && agno == 0)
-+			do_warn(_("would rebuild corrupt rmap btrees.\n"));
-+		return;
-+	}
-+
-+	/* Create cursors to rmap structures */
-+	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rm_cur);
-+	if (error) {
-+		do_warn(_("Not enough memory to check reverse mappings.\n"));
-+		return;
-+	}
-+
-+	pag = libxfs_perag_get(mp, agno);
-+	error = -libxfs_alloc_read_agf(pag, NULL, 0, &agbp);
-+	if (error) {
-+		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
-+				agno);
-+		goto err_pag;
-+	}
-+
-+	/* Leave the per-ag data "uninitialized" since we rewrite it later */
-+	clear_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
-+
-+	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
-+	if (!bt_cur) {
-+		do_warn(_("Not enough memory to check reverse mappings.\n"));
-+		goto err_agf;
-+	}
-+
-+	error = rmap_compare_records(&rm_cur, bt_cur, agno);
-+	if (error)
-+		goto err_cur;
-+
- err_cur:
--	libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
-+	libxfs_btree_del_cursor(bt_cur, error);
- err_agf:
- 	libxfs_buf_relse(agbp);
- err_pag:
-@@ -1459,6 +1496,125 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- 	rmap_free_mem_cursor(NULL, &rm_cur, error);
- }
+ 	/*
+ 	 * If we're being run as a service, the return code must fit the LSB
+diff --git a/scrub/xfs_scrub.h b/scrub/xfs_scrub.h
+index 4d9a028921b..8389551c067 100644
+--- a/scrub/xfs_scrub.h
++++ b/scrub/xfs_scrub.h
+@@ -94,6 +94,7 @@ struct scrub_ctx {
  
-+/*
-+ * Thread-safe version of xfs_imeta_iget.
-+ *
-+ * In the kernel, xfs_imeta_iget requires a transaction so that the untrusted
-+ * lookup will not livelock the mount process if the inobt contains a cycle.
-+ * However, the userspace buffer cache only locks buffers if it's told to.
-+ * That only happens when prefetch is enabled.
-+ *
-+ * Depending on allocation patterns, realtime metadata inodes can share the
-+ * same inode cluster buffer.  We don't want libxfs_trans_bjoin in racing iget
-+ * calls to corrupt the incore buffer state, so we impose our own lock here.
-+ * Evidently support orgs will sometimes use no-prefetch lockless mode as a
-+ * last resort if repair gets stuck on a buffer lock elsewhere.
-+ */
-+static inline int
-+threadsafe_imeta_iget(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino,
-+	struct xfs_inode	**ipp)
-+{
-+	static pthread_mutex_t	lock = PTHREAD_MUTEX_INITIALIZER;
-+	struct xfs_trans	*tp;
-+	int			error;
-+
-+	error = -libxfs_trans_alloc_empty(mp, &tp);
-+	if (error)
-+		return error;
-+
-+	if (do_prefetch) {
-+		error = -libxfs_imeta_iget(tp, ino, XFS_DIR3_FT_REG_FILE, ipp);
-+	} else {
-+		pthread_mutex_lock(&lock);
-+		error = -libxfs_imeta_iget(tp, ino, XFS_DIR3_FT_REG_FILE, ipp);
-+		pthread_mutex_unlock(&lock);
-+	}
-+	libxfs_trans_cancel(tp);
-+
-+	return error;
-+}
-+
-+/*
-+ * Compare the observed reverse mappings against what's in the rtgroup btree.
-+ */
-+void
-+rtrmaps_verify_btree(
-+	struct xfs_mount	*mp,
-+	xfs_rgnumber_t		rgno)
-+{
-+	struct rmap_mem_cur	rm_cur;
-+	struct xfs_btree_cur	*bt_cur = NULL;
-+	struct xfs_rtgroup	*rtg = NULL;
-+	struct xfs_ag_rmap	*ar = rmaps_for_group(true, rgno);
-+	struct xfs_inode	*ip = NULL;
-+	int			error;
-+
-+	if (!xfs_has_rmapbt(mp) || add_rmapbt)
-+		return;
-+	if (rmapbt_suspect) {
-+		if (no_modify && rgno == 0)
-+			do_warn(_("would rebuild corrupt rmap btrees.\n"));
-+		return;
-+	}
-+
-+	/* Create cursors to rmap structures */
-+	error = rmap_init_mem_cursor(mp, NULL, true, rgno, &rm_cur);
-+	if (error) {
-+		do_warn(_("Not enough memory to check reverse mappings.\n"));
-+		return;
-+	}
-+
-+	rtg = libxfs_rtgroup_get(mp, rgno);
-+	if (!rtg) {
-+		do_warn(_("Could not load rtgroup %u.\n"), rgno);
-+		goto err_rcur;
-+	}
-+
-+	error = threadsafe_imeta_iget(mp, ar->rg_rmap_ino, &ip);
-+	if (error) {
-+		do_warn(
-+_("Could not load rtgroup %u rmap inode, error %d.\n"),
-+				rgno, error);
-+		goto err_rtg;
-+	}
-+
-+	if (ip->i_df.if_format != XFS_DINODE_FMT_RMAP) {
-+		do_warn(
-+_("rtgroup %u rmap inode has wrong format 0x%x, expected 0x%x\n"),
-+				rgno, ip->i_df.if_format,
-+				XFS_DINODE_FMT_RMAP);
-+		goto err_ino;
-+	}
-+
-+	if (xfs_inode_has_attr_fork(ip) &&
-+	    !(xfs_has_metadir(mp) && xfs_has_parent(mp))) {
-+		do_warn(
-+_("rtgroup %u rmap inode should not have extended attributes\n"), rgno);
-+		goto err_ino;
-+	}
-+
-+	bt_cur = libxfs_rtrmapbt_init_cursor(mp, NULL, rtg, ip);
-+	if (!bt_cur) {
-+		do_warn(_("Not enough memory to check reverse mappings.\n"));
-+		goto err_ino;
-+	}
-+
-+	error = rmap_compare_records(&rm_cur, bt_cur, rgno);
-+	if (error)
-+		goto err_cur;
-+
-+err_cur:
-+	libxfs_btree_del_cursor(bt_cur, error);
-+err_ino:
-+	libxfs_imeta_irele(ip);
-+err_rtg:
-+	libxfs_rtgroup_put(rtg);
-+err_rcur:
-+	rmap_free_mem_cursor(NULL, &rm_cur, error);
-+}
-+
- /*
-  * Compare the key fields of two rmap records -- positive if key1 > key2,
-  * negative if key1 < key2, and zero if equal.
-diff --git a/repair/rmap.h b/repair/rmap.h
-index dd55ba3cc29..dcd834ef242 100644
---- a/repair/rmap.h
-+++ b/repair/rmap.h
-@@ -21,6 +21,7 @@ void rmap_add_bmbt_rec(struct xfs_mount *mp, xfs_ino_t ino, int whichfork,
- bool rmaps_are_mergeable(struct xfs_rmap_irec *r1, struct xfs_rmap_irec *r2);
+ 	/* Free space histograms, in fsb */
+ 	struct histogram	datadev_hist;
++	struct histogram	rtdev_hist;
  
- void rmap_add_fixed_ag_rec(struct xfs_mount *mp, xfs_agnumber_t agno);
-+void rmap_add_fixed_rtgroup_rec(struct xfs_mount *mp, xfs_rgnumber_t rgno);
- 
- int rmap_add_agbtree_mapping(struct xfs_mount *mp, xfs_agnumber_t agno,
- 		xfs_agblock_t agbno, xfs_extlen_t len, uint64_t owner);
-@@ -30,6 +31,7 @@ uint64_t rmap_record_count(struct xfs_mount *mp, bool isrt,
- 		xfs_agnumber_t agno);
- extern void rmap_avoid_check(struct xfs_mount *mp);
- void rmaps_verify_btree(struct xfs_mount *mp, xfs_agnumber_t agno);
-+void rtrmaps_verify_btree(struct xfs_mount *mp, xfs_rgnumber_t rgno);
- 
- extern int64_t rmap_diffkeys(struct xfs_rmap_irec *kp1,
- 		struct xfs_rmap_irec *kp2);
+ 	/*
+ 	 * Pick the largest value for fstrim minlen such that we trim at least
 
 
