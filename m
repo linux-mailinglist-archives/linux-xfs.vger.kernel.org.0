@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2332-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2320-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDFC182127A
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:51:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A5CF82126E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:48:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D3C91F22690
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:51:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C21FC1F233FD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:48:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533C8803;
-	Mon,  1 Jan 2024 00:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C723EBA3E;
+	Mon,  1 Jan 2024 00:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAToLHxt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVVR0Ioh"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD417ED;
-	Mon,  1 Jan 2024 00:51:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E054AC433C7;
-	Mon,  1 Jan 2024 00:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C46BA32;
+	Mon,  1 Jan 2024 00:48:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067EDC433C8;
+	Mon,  1 Jan 2024 00:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070272;
-	bh=RADrQcVQ5hnq6i1FI1tSNwnR/V3ortWIapUM9cZ7++k=;
+	s=k20201202; t=1704070085;
+	bh=5ojAQWLRuwMuldWRkPKiK/uQHSX78DhaKxe/Ap7vFKw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=RAToLHxtBB3v27XX7MnO/vBoxunuMhyxW8U4qw6dgLUdqkLgKdCKAP66Y9XJ5Fyi5
-	 inGpzBOFD7jSCYkII9SFVttPKLDY3XXbhVJdoe8//2yZVirpHZQN89gacD2WmEg1TR
-	 c2vfq6Qu0L+FvJOvfnFGahUL6z2fQ+gWtCjh0fS99f/6cThfvtfI/ydReIle7yiMB9
-	 d2teTSdQ0ZIJCEUr9HBP7J8GnTxUinAG9PGRqQe9I1bwhDs5smqbRRPU7A22CpbQnh
-	 PrGLVDaV+RE/c7m/aHxp9MSoGyir8oxD+TyobADEYUGTmEnKpLtw2JQ0wwRoFNfsdv
-	 T4hNXpZ+G97KA==
-Date: Sun, 31 Dec 2023 16:51:12 +9900
-Subject: [PATCH 05/11] xfs/206: update for metadata directory support
+	b=WVVR0IohL/jXELqwEOyRG6csCZBhm9NtcQtPB+LI2Gf8kjvl9uS+iWbFJu+nfb1HH
+	 pCogra2RDlSEWma8NiWmc3LpnzBlXZsruoWuyT8HE40ef7KnaJRdxeriaVLD6c1Y+B
+	 LAyxtiUQroyz2Uq8+tBEx5gaBrr5+Ol/GcyHxv39RrAPltr5gYCjHuR7Ji3WMXswI5
+	 ZnPcBjZ81S0thaRsET0/lvIgE8c408ECRf0IXsk156vAvvs/Ncr4bjZ8rgCLNpy8xb
+	 HaQYoy50eqhqj9hYsLKxmDsXkkYXpYIMweFXzJrSxWejWgpVyd/UXk1EbS+O27urNi
+	 ys8R7P0ubnc3w==
+Date: Sun, 31 Dec 2023 16:48:04 +9900
+Subject: [PATCH 07/11] xfs/306: fix formatting failures with parent pointers
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405029916.1826032.4300084170108329048.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
-References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: fstests@vger.kernel.org, catherine.hoang@oracle.com,
+ allison.henderson@oracle.com, guan@eryu.me, linux-xfs@vger.kernel.org
+Message-ID: <170405028520.1824869.7940248988690229009.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,28 +53,59 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Filter 'metadir=' out of the golden output so that metadata directories
-don't cause this test to regress.
+The parent pointers feature isn't supported on tiny 20MB filesystems
+because the larger directory transactions result in larger minimum log
+sizes, particularly with nrext64 enabled:
+
+** mkfs failed with extra mkfs options added to " -m rmapbt=0, -i nrext64=1, -n parent=1," by test 306 **
+** attempting to mkfs using only test 306 options: -d size=20m -n size=64k **
+max log size 5108 smaller than min log size 5310, filesystem is too small
+
+We don't support 20M filesystems anymore, so bump the filesystem size up
+to 100M and skip this test if we can't actually format the filesystem.
+Convert the open-coded punch-alternating logic into a call to that
+program to reduce execve overhead, which more than makes up having to
+write 5x as much data to fragment the free space.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/206 |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tests/xfs/306 |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 
-diff --git a/tests/xfs/206 b/tests/xfs/206
-index f7f12ff1f9..9fd9400daf 100755
---- a/tests/xfs/206
-+++ b/tests/xfs/206
-@@ -65,7 +65,8 @@ mkfs_filter()
- 	    -e "s/, lazy-count=[0-9]//" \
- 	    -e "/.*crc=/d" \
- 	    -e "/^Default configuration/d" \
--	    -e 's/, parent=[01]//'
-+	    -e 's/, parent=[01]//' \
-+	    -e '/metadir=.*/d'
- }
+diff --git a/tests/xfs/306 b/tests/xfs/306
+index b57bf4c0a9..152971cfc3 100755
+--- a/tests/xfs/306
++++ b/tests/xfs/306
+@@ -23,6 +23,7 @@ _supported_fs xfs
+ _require_scratch_nocheck	# check complains about single AG fs
+ _require_xfs_io_command "fpunch"
+ _require_command $UUIDGEN_PROG uuidgen
++_require_test_program "punch-alternating"
  
- # mkfs slightly smaller than that, small log for speed.
+ # Disable the scratch rt device to avoid test failures relating to the rt
+ # bitmap consuming all the free space in our small data device.
+@@ -30,7 +31,8 @@ unset SCRATCH_RTDEV
+ 
+ # Create a small fs with a large directory block size. We want to fill up the fs
+ # quickly and then create multi-fsb dirblocks over fragmented free space.
+-_scratch_mkfs_xfs -d size=20m -n size=64k >> $seqres.full 2>&1
++_scratch_mkfs_xfs -d size=100m -n size=64k >> $seqres.full 2>&1 || \
++	_notrun 'could not format tiny scratch fs'
+ _scratch_mount
+ 
+ # Fill a source directory with many largish-named files. 1k uuid-named entries
+@@ -49,10 +51,7 @@ done
+ $XFS_IO_PROG -xc "resblks 16" $SCRATCH_MNT >> $seqres.full 2>&1
+ dd if=/dev/zero of=$SCRATCH_MNT/file bs=4k >> $seqres.full 2>&1
+ $XFS_IO_PROG -c "fsync" $SCRATCH_MNT/file >> $seqres.full 2>&1
+-size=`_get_filesize $SCRATCH_MNT/file`
+-for i in $(seq 0 8192 $size); do
+-	$XFS_IO_PROG -c "fpunch $i 4k" $SCRATCH_MNT/file >> $seqres.full 2>&1
+-done
++$here/src/punch-alternating $SCRATCH_MNT/file
+ 
+ # Replicate the src dir several times into fragmented free space. After one or
+ # two dirs, we should have nothing but non-contiguous directory blocks.
 
 
