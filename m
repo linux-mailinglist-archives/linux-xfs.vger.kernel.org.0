@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-2246-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2268-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9D37821217
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:28:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5437D82122D
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:34:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5CDB1C21C9B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:28:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD9BC1F225D3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:34:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87FAF392;
-	Mon,  1 Jan 2024 00:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC331373;
+	Mon,  1 Jan 2024 00:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="apAZaB8E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fS0NYefE"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477838B
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:28:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29D5C433C8;
-	Mon,  1 Jan 2024 00:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771511368
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:34:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45751C433C7;
+	Mon,  1 Jan 2024 00:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068925;
-	bh=f7qWNAMbO/PaSQT9gi03KiFB5yPpC8v3SX0EbAxvB7Q=;
+	s=k20201202; t=1704069270;
+	bh=GUZNScwxoW4Fsmy0/tfTQT5bkPRb0dbCft+gyyX82sU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=apAZaB8ERTYGEVq70d3s5DCaMPAv8+aHpzN5aP28N6jYCdVvDSm4K74JLZjiG4k9G
-	 hs+TXoNupD0xA9LXGeXQAqsRYmEzFwdtA3fdaXKfBJDywA6mKx+ZjUVryFo4xmyyUk
-	 xwpK/fYkPIBUK1dAZ8OPfcKZZapXqexsqE39TwwsrR1ne9mIcSfzh2OZxVl+z63zZJ
-	 4fCsKoyFK0MTxMIYstjgfDTDpAepzFeFSLR07F+eIqZXSEdj9ysJPQwDcfnv9Jgr5B
-	 k6JIizMCBLqljldUAhOwirTV5Cg42Z6sq3kV5L6HrR3dDau0yrzN7jUAt04rFtPD3s
-	 j1+z2j9NITDIQ==
-Date: Sun, 31 Dec 2023 16:28:45 +9900
-Subject: [PATCH 10/42] xfs: wire up a new inode fork type for the realtime
- refcount
+	b=fS0NYefEJczJScgTV9Wttsvf16Mx9jdfk/1ZoNrzFUFI9R/TztKyaDAcEFwZcJj1u
+	 TFz+E2RszYHqX+5amQCejXSVQc2EJiWLtL+m+eG5tLbbfgIT67a5EvweXp6bEj5+A3
+	 cYu9jDTH1nShFvf+V3aTM5BbKcC15s2RvfYIAbmbnvLJxTFQypoDsl0/jwqs/2nGax
+	 wh+QVrwPVZV0oAWnEbKR4qJ6G/XWnBilHmm6LhHLtU/USeox8bf/nVaMyUzR/HEhTj
+	 20VqHbiiyFR5uKhk19ewBfVqq7UA6p6b8myp65tFlIhNWM3s3YXJux8zpU0fjAMMpW
+	 t8oM4dPUTdJsA==
+Date: Sun, 31 Dec 2023 16:34:29 +9900
+Subject: [PATCH 32/42] xfs_repair: find and mark the rtrefcountbt inode
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017260.1817107.8903448778345145351.stgit@frogsfrogsfrogs>
+Message-ID: <170405017553.1817107.5061364310494033700.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,483 +52,384 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Plumb in the pieces we need to embed the root of the realtime refcount
-btree in an inode's data fork, complete with new fork type and
-on-disk interpretation functions.
+Make sure that we find the realtime refcountbt inode and mark it
+appropriately, just in case we find a rogue inode claiming to
+be an rtrefcount, or just plain garbage in the superblock field.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_format.h           |    8 +
- libxfs/xfs_inode_fork.c       |    8 +
- libxfs/xfs_ondisk.h           |    1 
- libxfs/xfs_rtrefcount_btree.c |  236 +++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_rtrefcount_btree.h |  112 +++++++++++++++++++
- 5 files changed, 362 insertions(+), 3 deletions(-)
+ repair/dino_chunks.c |   11 ++++++
+ repair/dinode.c      |   30 +++++++++++++++
+ repair/dir2.c        |    2 +
+ repair/incore.h      |    1 +
+ repair/rmap.c        |   98 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ repair/rmap.h        |    3 +-
+ repair/scan.c        |    8 ++--
+ 7 files changed, 145 insertions(+), 8 deletions(-)
 
 
-diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index 93a9b8e3b56..ca964befb51 100644
---- a/libxfs/xfs_format.h
-+++ b/libxfs/xfs_format.h
-@@ -1824,6 +1824,14 @@ typedef __be32 xfs_refcount_ptr_t;
-  */
- #define	XFS_RTREFC_CRC_MAGIC	0x52434e54	/* 'RCNT' */
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index b7a5879bf4b..04898643883 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -1025,6 +1025,17 @@ process_inode_chunk(
+ 	_("would clear realtime rmap inode %" PRIu64 "\n"),
+ 						ino);
+ 				}
++			} else if (is_rtrefcount_ino(ino)) {
++				refcount_avoid_check(mp);
++				if (!no_modify)  {
++					do_warn(
++	_("cleared realtime refcount inode %" PRIu64 "\n"),
++						ino);
++				} else  {
++					do_warn(
++	_("would clear realtime refcount inode %" PRIu64 "\n"),
++						ino);
++				}
+ 			} else if (!no_modify)  {
+ 				do_warn(_("cleared inode %" PRIu64 "\n"),
+ 					ino);
+diff --git a/repair/dinode.c b/repair/dinode.c
+index f1cb119df8b..ad4263f9aa8 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -156,6 +156,9 @@ clear_dinode(xfs_mount_t *mp, struct xfs_dinode *dino, xfs_ino_t ino_num)
+ 	if (is_rtrmap_inode(ino_num))
+ 		rmap_avoid_check(mp);
  
-+/*
-+ * rt refcount root header, on-disk form only.
-+ */
-+struct xfs_rtrefcount_root {
-+	__be16		bb_level;	/* 0 is a leaf */
-+	__be16		bb_numrecs;	/* current # of data records */
-+};
++	if (is_rtrefcount_ino(ino_num))
++		refcount_avoid_check(mp);
 +
- /* inode-rooted btree pointer type */
- typedef __be64 xfs_rtrefcount_ptr_t;
+ 	/* and clear the forks */
+ 	memset(XFS_DFORK_DPTR(dino), 0, XFS_LITINO(mp));
+ 	return;
+@@ -1067,6 +1070,12 @@ _("rtrefcount inode %" PRIu64 " not flagged as metadata\n"),
+ 			lino);
+ 		return 1;
+ 	}
++	if (type != XR_INO_RTREFC) {
++		do_warn(
++_("rtrefcount inode %" PRIu64 " was not found in the metadata directory tree\n"),
++			lino);
++		return 1;
++	}
  
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 11cfdc9b2bf..bfc06af904e 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -26,6 +26,7 @@
- #include "xfs_health.h"
- #include "xfs_symlink_remote.h"
- #include "xfs_rtrmap_btree.h"
-+#include "xfs_rtrefcount_btree.h"
+ 	priv.rgno = rtgroup_for_rtrefcount_inode(mp, ino);
+ 	if (priv.rgno == NULLRGNUMBER) {
+@@ -1107,7 +1116,7 @@ _("computed size of rtrefcountbt root (%zu bytes) is greater than space in "
+ 		error = process_rtrefc_reclist(mp, rp, numrecs,
+ 				&priv, "rtrefcountbt root");
+ 		if (error) {
+-			refcount_avoid_check();
++			refcount_avoid_check(mp);
+ 			return 1;
+ 		}
+ 		return 0;
+@@ -2063,6 +2072,9 @@ process_check_sb_inodes(
+ 	if (is_rtrmap_inode(lino))
+ 		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
+ 				XR_INO_RTRMAP, _("realtime rmap btree"));
++	if (is_rtrefcount_ino(lino))
++		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
++				XR_INO_RTREFC, _("realtime refcount btree"));
+ 	return 0;
+ }
  
- struct kmem_cache *xfs_ifork_cache;
- 
-@@ -272,8 +273,7 @@ xfs_iformat_data_fork(
- 		case XFS_DINODE_FMT_REFCOUNT:
- 			if (!xfs_has_rtreflink(ip->i_mount))
- 				return -EFSCORRUPTED;
--			ASSERT(0); /* to be implemented later */
--			return -EFSCORRUPTED;
-+			return xfs_iformat_rtrefcount(ip, dip);
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-@@ -670,7 +670,9 @@ xfs_iflush_fork(
+@@ -2172,6 +2184,18 @@ _("found inode %" PRIu64 " claiming to be a rtrmapbt file, but rmapbt is disable
+ 		}
  		break;
  
- 	case XFS_DINODE_FMT_REFCOUNT:
--		ASSERT(0); /* to be implemented later */
-+		ASSERT(whichfork == XFS_DATA_FORK);
-+		if (iip->ili_fields & brootflag[whichfork])
-+			xfs_iflush_rtrefcount(ip, dip);
- 		break;
- 
++	case XR_INO_RTREFC:
++		/*
++		 * if we have no refcountbt, any inode claiming
++		 * to be a real-time file is bogus
++		 */
++		if (!xfs_has_reflink(mp)) {
++			do_warn(
++_("found inode %" PRIu64 " claiming to be a rtrefcountbt file, but reflink is disabled\n"), lino);
++			return 1;
++		}
++		break;
++
  	default:
-diff --git a/libxfs/xfs_ondisk.h b/libxfs/xfs_ondisk.h
-index 242b6831256..3a5581ecb36 100644
---- a/libxfs/xfs_ondisk.h
-+++ b/libxfs/xfs_ondisk.h
-@@ -80,6 +80,7 @@ xfs_check_ondisk_structs(void)
- 	XFS_CHECK_STRUCT_SIZE(xfs_rtrmap_ptr_t,			8);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_rtrmap_root,		4);
- 	XFS_CHECK_STRUCT_SIZE(xfs_rtrefcount_ptr_t,		8);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_rtrefcount_root,	4);
+ 		break;
+ 	}
+@@ -2201,6 +2225,7 @@ _("bad attr fork offset %d in dev inode %" PRIu64 ", should be %d\n"),
+ 		}
+ 		break;
+ 	case XFS_DINODE_FMT_RMAP:
++	case XFS_DINODE_FMT_REFCOUNT:
+ 		if (!(xfs_has_metadir(mp) && xfs_has_parent(mp))) {
+ 			do_warn(
+ _("metadata inode %" PRIu64 " type %d cannot have attr fork\n"),
+@@ -3311,6 +3336,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
+ 			type = XR_INO_PQUOTA;
+ 		else if (is_rtrmap_inode(lino))
+ 			type = XR_INO_RTRMAP;
++		else if (is_rtrefcount_ino(lino))
++			type = XR_INO_RTREFC;
+ 		else
+ 			type = XR_INO_DATA;
+ 		break;
+@@ -3417,6 +3444,7 @@ _("Bad CoW extent size %u on inode %" PRIu64 ", "),
+ 		case XR_INO_GQUOTA:
+ 		case XR_INO_PQUOTA:
+ 		case XR_INO_RTRMAP:
++		case XR_INO_RTREFC:
+ 			/*
+ 			 * This inode was recognized as being filesystem
+ 			 * metadata, so preserve the inode and its contents for
+diff --git a/repair/dir2.c b/repair/dir2.c
+index 43229b3cd9b..9fd9569ec9f 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -158,6 +158,8 @@ is_meta_ino(
+ 		reason = _("realtime summary");
+ 	else if (is_rtrmap_inode(lino))
+ 		reason = _("realtime rmap");
++	else if (is_rtrefcount_ino(lino))
++		reason = _("realtime refcount");
+ 	else if (lino == mp->m_sb.sb_uquotino)
+ 		reason = _("user quota");
+ 	else if (lino == mp->m_sb.sb_gquotino)
+diff --git a/repair/incore.h b/repair/incore.h
+index 6ee7a662930..5014a2d303c 100644
+--- a/repair/incore.h
++++ b/repair/incore.h
+@@ -222,6 +222,7 @@ int		count_bcnt_extents(xfs_agnumber_t);
+ #define XR_INO_GQUOTA	13		/* group quota inode */
+ #define XR_INO_PQUOTA	14		/* project quota inode */
+ #define XR_INO_RTRMAP	15		/* realtime rmap */
++#define XR_INO_RTREFC	16		/* realtime refcount */
  
- 	/*
- 	 * m68k has problems with xfs_attr_leaf_name_remote_t, but we pad it to
-diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
-index 99eac508cda..530bb9d361d 100644
---- a/libxfs/xfs_rtrefcount_btree.c
-+++ b/libxfs/xfs_rtrefcount_btree.c
-@@ -83,6 +83,41 @@ xfs_rtrefcountbt_get_maxrecs(
- 	return cur->bc_mp->m_rtrefc_mxr[level != 0];
- }
+ /* inode allocation tree */
  
-+/*
-+ * Calculate number of records in a realtime refcount btree inode root.
-+ */
-+unsigned int
-+xfs_rtrefcountbt_droot_maxrecs(
-+	unsigned int		blocklen,
-+	bool			leaf)
-+{
-+	blocklen -= sizeof(struct xfs_rtrefcount_root);
-+
-+	if (leaf)
-+		return blocklen / sizeof(struct xfs_refcount_rec);
-+	return blocklen / (2 * sizeof(struct xfs_refcount_key) +
-+			sizeof(xfs_rtrefcount_ptr_t));
-+}
-+
-+/*
-+ * Get the maximum records we could store in the on-disk format.
-+ *
-+ * For non-root nodes this is equivalent to xfs_rtrefcountbt_get_maxrecs, but
-+ * for the root node this checks the available space in the dinode fork so that
-+ * we can resize the in-memory buffer to match it.  After a resize to the
-+ * maximum size this function returns the same value as
-+ * xfs_rtrefcountbt_get_maxrecs for the root node, too.
-+ */
-+STATIC int
-+xfs_rtrefcountbt_get_dmaxrecs(
-+	struct xfs_btree_cur	*cur,
-+	int			level)
-+{
-+	if (level != cur->bc_nlevels - 1)
-+		return cur->bc_mp->m_rtrefc_mxr[level != 0];
-+	return xfs_rtrefcountbt_droot_maxrecs(cur->bc_ino.forksize, level == 0);
-+}
-+
- STATIC void
- xfs_rtrefcountbt_init_key_from_rec(
- 	union xfs_btree_key		*key,
-@@ -253,6 +288,68 @@ xfs_rtrefcountbt_keys_contiguous(
- 				 be32_to_cpu(key2->refc.rc_startblock));
- }
- 
-+/* Move the rt refcount btree root from one incore buffer to another. */
-+static void
-+xfs_rtrefcountbt_broot_move(
-+	struct xfs_inode	*ip,
-+	int			whichfork,
-+	struct xfs_btree_block	*dst_broot,
-+	size_t			dst_bytes,
-+	struct xfs_btree_block	*src_broot,
-+	size_t			src_bytes,
-+	unsigned int		level,
-+	unsigned int		numrecs)
-+{
-+	struct xfs_mount	*mp = ip->i_mount;
-+	void			*dptr;
-+	void			*sptr;
-+
-+	ASSERT(xfs_rtrefcount_droot_space(src_broot) <=
-+			xfs_inode_fork_size(ip, whichfork));
+diff --git a/repair/rmap.c b/repair/rmap.c
+index b27e3079155..55b41cfa540 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -40,6 +40,12 @@ struct xfs_ag_rmap {
+ 	 * NULLFSINO to signal to phase 6 to link a new inode into the metadir.
+ 	 */
+ 	xfs_ino_t	rg_rmap_ino;
 +
 +	/*
-+	 * We always have to move the pointers because they are not butted
-+	 * against the btree block header.
++	 * inumber of the refcount btree for this rtgroup.  This can be set to
++	 * NULLFSINO to signal to phase 6 to link a new inode into the metadir.
 +	 */
-+	if (numrecs && level > 0) {
-+		sptr = xfs_rtrefcount_broot_ptr_addr(mp, src_broot, 1,
-+				src_bytes);
-+		dptr = xfs_rtrefcount_broot_ptr_addr(mp, dst_broot, 1,
-+				dst_bytes);
-+		memmove(dptr, sptr, numrecs * sizeof(xfs_fsblock_t));
-+	}
-+
-+	if (src_broot == dst_broot)
-+		return;
-+
-+	/*
-+	 * If the root is being totally relocated, we have to migrate the block
-+	 * header and the keys/records that come after it.
-+	 */
-+	memcpy(dst_broot, src_broot, XFS_RTREFCOUNT_BLOCK_LEN);
-+
-+	if (!numrecs)
-+		return;
-+
-+	if (level == 0) {
-+		sptr = xfs_rtrefcount_rec_addr(src_broot, 1);
-+		dptr = xfs_rtrefcount_rec_addr(dst_broot, 1);
-+		memcpy(dptr, sptr,
-+				numrecs * sizeof(struct xfs_refcount_rec));
-+	} else {
-+		sptr = xfs_rtrefcount_key_addr(src_broot, 1);
-+		dptr = xfs_rtrefcount_key_addr(dst_broot, 1);
-+		memcpy(dptr, sptr,
-+				numrecs * sizeof(struct xfs_refcount_key));
-+	}
-+}
-+
-+static const struct xfs_ifork_broot_ops xfs_rtrefcountbt_iroot_ops = {
-+	.maxrecs		= xfs_rtrefcountbt_maxrecs,
-+	.size			= xfs_rtrefcount_broot_space_calc,
-+	.move			= xfs_rtrefcountbt_broot_move,
-+};
-+
- const struct xfs_btree_ops xfs_rtrefcountbt_ops = {
- 	.rec_len		= sizeof(struct xfs_refcount_rec),
- 	.key_len		= sizeof(struct xfs_refcount_key),
-@@ -265,6 +362,7 @@ const struct xfs_btree_ops xfs_rtrefcountbt_ops = {
- 	.free_block		= xfs_btree_free_imeta_block,
- 	.get_minrecs		= xfs_rtrefcountbt_get_minrecs,
- 	.get_maxrecs		= xfs_rtrefcountbt_get_maxrecs,
-+	.get_dmaxrecs		= xfs_rtrefcountbt_get_dmaxrecs,
- 	.init_key_from_rec	= xfs_rtrefcountbt_init_key_from_rec,
- 	.init_high_key_from_rec	= xfs_rtrefcountbt_init_high_key_from_rec,
- 	.init_rec_from_cur	= xfs_rtrefcountbt_init_rec_from_cur,
-@@ -275,6 +373,7 @@ const struct xfs_btree_ops xfs_rtrefcountbt_ops = {
- 	.keys_inorder		= xfs_rtrefcountbt_keys_inorder,
- 	.recs_inorder		= xfs_rtrefcountbt_recs_inorder,
- 	.keys_contiguous	= xfs_rtrefcountbt_keys_contiguous,
-+	.iroot_ops		= &xfs_rtrefcountbt_iroot_ops,
++	xfs_ino_t	rg_refcount_ino;
  };
  
- /* Initialize a new rt refcount btree cursor. */
-@@ -528,3 +627,140 @@ xfs_rtrefcountbt_calc_reserves(
- 	return xfs_rtrefcountbt_max_size(mp,
- 			xfs_rtb_to_rtx(mp, mp->m_sb.sb_rgblocks));
+ static struct xfs_ag_rmap *ag_rmaps;
+@@ -50,6 +56,9 @@ static bool refcbt_suspect;
+ /* Bitmap of rt group rmap inodes reachable via /realtime/$rgno.rmap. */
+ static struct bitmap	*rmap_inodes;
+ 
++/* Bitmap of rt group refcount inodes reachable via /realtime/$rgno.refcount. */
++static struct bitmap	*refcount_inodes;
++
+ static struct xfs_ag_rmap *rmaps_for_group(bool isrt, unsigned int group)
+ {
+ 	if (isrt)
+@@ -127,6 +136,7 @@ rmaps_init_rt(
+ 		goto nomem;
+ 
+ 	ag_rmap->rg_rmap_ino = NULLFSINO;
++	ag_rmap->rg_refcount_ino = NULLFSINO;
+ 	return;
+ nomem:
+ 	do_error(
+@@ -218,6 +228,50 @@ set_rtgroup_rmap_inode(
+ 	return error;
  }
-+
-+/*
-+ * Convert on-disk form of btree root to in-memory form.
-+ */
-+STATIC void
-+xfs_rtrefcountbt_from_disk(
-+	struct xfs_inode		*ip,
-+	struct xfs_rtrefcount_root	*dblock,
-+	int				dblocklen,
-+	struct xfs_btree_block		*rblock)
-+{
-+	struct xfs_mount		*mp = ip->i_mount;
-+	struct xfs_refcount_key	*fkp;
-+	__be64				*fpp;
-+	struct xfs_refcount_key	*tkp;
-+	__be64				*tpp;
-+	struct xfs_refcount_rec	*frp;
-+	struct xfs_refcount_rec	*trp;
-+	unsigned int			numrecs;
-+	unsigned int			maxrecs;
-+	unsigned int			rblocklen;
-+
-+	rblocklen = xfs_rtrefcount_broot_space(mp, dblock);
-+
-+	xfs_btree_init_block(mp, rblock, &xfs_rtrefcountbt_ops, 0, 0,
-+			ip->i_ino);
-+
-+	rblock->bb_level = dblock->bb_level;
-+	rblock->bb_numrecs = dblock->bb_numrecs;
-+
-+	if (be16_to_cpu(rblock->bb_level) > 0) {
-+		maxrecs = xfs_rtrefcountbt_droot_maxrecs(dblocklen, false);
-+		fkp = xfs_rtrefcount_droot_key_addr(dblock, 1);
-+		tkp = xfs_rtrefcount_key_addr(rblock, 1);
-+		fpp = xfs_rtrefcount_droot_ptr_addr(dblock, 1, maxrecs);
-+		tpp = xfs_rtrefcount_broot_ptr_addr(mp, rblock, 1, rblocklen);
-+		numrecs = be16_to_cpu(dblock->bb_numrecs);
-+		memcpy(tkp, fkp, 2 * sizeof(*fkp) * numrecs);
-+		memcpy(tpp, fpp, sizeof(*fpp) * numrecs);
-+	} else {
-+		frp = xfs_rtrefcount_droot_rec_addr(dblock, 1);
-+		trp = xfs_rtrefcount_rec_addr(rblock, 1);
-+		numrecs = be16_to_cpu(dblock->bb_numrecs);
-+		memcpy(trp, frp, sizeof(*frp) * numrecs);
-+	}
-+}
-+
-+/* Load a realtime reference count btree root in from disk. */
-+int
-+xfs_iformat_rtrefcount(
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip)
-+{
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, XFS_DATA_FORK);
-+	struct xfs_rtrefcount_root *dfp = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-+	unsigned int		numrecs;
-+	unsigned int		level;
-+	int			dsize;
-+
-+	dsize = XFS_DFORK_SIZE(dip, mp, XFS_DATA_FORK);
-+	numrecs = be16_to_cpu(dfp->bb_numrecs);
-+	level = be16_to_cpu(dfp->bb_level);
-+
-+	if (level > mp->m_rtrefc_maxlevels ||
-+	    xfs_rtrefcount_droot_space_calc(level, numrecs) > dsize)
-+		return -EFSCORRUPTED;
-+
-+	xfs_iroot_alloc(ip, XFS_DATA_FORK,
-+			xfs_rtrefcount_broot_space_calc(mp, level, numrecs));
-+	xfs_rtrefcountbt_from_disk(ip, dfp, dsize, ifp->if_broot);
-+	return 0;
-+}
-+
-+/*
-+ * Convert in-memory form of btree root to on-disk form.
-+ */
-+void
-+xfs_rtrefcountbt_to_disk(
-+	struct xfs_mount		*mp,
-+	struct xfs_btree_block		*rblock,
-+	int				rblocklen,
-+	struct xfs_rtrefcount_root	*dblock,
-+	int				dblocklen)
-+{
-+	struct xfs_refcount_key	*fkp;
-+	__be64				*fpp;
-+	struct xfs_refcount_key	*tkp;
-+	__be64				*tpp;
-+	struct xfs_refcount_rec	*frp;
-+	struct xfs_refcount_rec	*trp;
-+	unsigned int			maxrecs;
-+	unsigned int			numrecs;
-+
-+	ASSERT(rblock->bb_magic == cpu_to_be32(XFS_RTREFC_CRC_MAGIC));
-+	ASSERT(uuid_equal(&rblock->bb_u.l.bb_uuid, &mp->m_sb.sb_meta_uuid));
-+	ASSERT(rblock->bb_u.l.bb_blkno == cpu_to_be64(XFS_BUF_DADDR_NULL));
-+	ASSERT(rblock->bb_u.l.bb_leftsib == cpu_to_be64(NULLFSBLOCK));
-+	ASSERT(rblock->bb_u.l.bb_rightsib == cpu_to_be64(NULLFSBLOCK));
-+
-+	dblock->bb_level = rblock->bb_level;
-+	dblock->bb_numrecs = rblock->bb_numrecs;
-+
-+	if (be16_to_cpu(rblock->bb_level) > 0) {
-+		maxrecs = xfs_rtrefcountbt_droot_maxrecs(dblocklen, false);
-+		fkp = xfs_rtrefcount_key_addr(rblock, 1);
-+		tkp = xfs_rtrefcount_droot_key_addr(dblock, 1);
-+		fpp = xfs_rtrefcount_broot_ptr_addr(mp, rblock, 1, rblocklen);
-+		tpp = xfs_rtrefcount_droot_ptr_addr(dblock, 1, maxrecs);
-+		numrecs = be16_to_cpu(rblock->bb_numrecs);
-+		memcpy(tkp, fkp, 2 * sizeof(*fkp) * numrecs);
-+		memcpy(tpp, fpp, sizeof(*fpp) * numrecs);
-+	} else {
-+		frp = xfs_rtrefcount_rec_addr(rblock, 1);
-+		trp = xfs_rtrefcount_droot_rec_addr(dblock, 1);
-+		numrecs = be16_to_cpu(rblock->bb_numrecs);
-+		memcpy(trp, frp, sizeof(*frp) * numrecs);
-+	}
-+}
-+
-+/* Flush a realtime reference count btree root out to disk. */
-+void
-+xfs_iflush_rtrefcount(
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip)
-+{
-+	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, XFS_DATA_FORK);
-+	struct xfs_rtrefcount_root *dfp = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-+
-+	ASSERT(ifp->if_broot != NULL);
-+	ASSERT(ifp->if_broot_bytes > 0);
-+	ASSERT(xfs_rtrefcount_droot_space(ifp->if_broot) <=
-+			xfs_inode_fork_size(ip, XFS_DATA_FORK));
-+	xfs_rtrefcountbt_to_disk(ip->i_mount, ifp->if_broot,
-+			ifp->if_broot_bytes, dfp,
-+			XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
-+}
-diff --git a/libxfs/xfs_rtrefcount_btree.h b/libxfs/xfs_rtrefcount_btree.h
-index 045f7b1f728..bd070e54781 100644
---- a/libxfs/xfs_rtrefcount_btree.h
-+++ b/libxfs/xfs_rtrefcount_btree.h
-@@ -27,6 +27,7 @@ void xfs_rtrefcountbt_commit_staged_btree(struct xfs_btree_cur *cur,
- unsigned int xfs_rtrefcountbt_maxrecs(struct xfs_mount *mp,
- 		unsigned int blocklen, bool leaf);
- void xfs_rtrefcountbt_compute_maxlevels(struct xfs_mount *mp);
-+unsigned int xfs_rtrefcountbt_droot_maxrecs(unsigned int blocklen, bool leaf);
  
++static inline int
++set_rtgroup_refcount_inode(
++	struct xfs_mount	*mp,
++	xfs_rgnumber_t		rgno)
++{
++	struct xfs_imeta_path	*path;
++	struct xfs_ag_rmap	*ar = rmaps_for_group(true, rgno);
++	struct xfs_trans	*tp;
++	xfs_ino_t		ino;
++	int			error;
++
++	if (!xfs_has_rtreflink(mp))
++		return 0;
++
++	error = -libxfs_rtrefcountbt_create_path(mp, rgno, &path);
++	if (error)
++		return error;
++
++	error = -libxfs_trans_alloc_empty(mp, &tp);
++	if (error)
++		goto out_path;
++
++	error = -libxfs_imeta_lookup(tp, path, &ino);
++	if (error)
++		goto out_trans;
++
++	if (ino == NULLFSINO || bitmap_test(refcount_inodes, ino, 1)) {
++		error = EFSCORRUPTED;
++		goto out_trans;
++	}
++
++	error = bitmap_set(refcount_inodes, ino, 1);
++	if (error)
++		goto out_trans;
++
++	ar->rg_refcount_ino = ino;
++
++out_trans:
++	libxfs_trans_cancel(tp);
++out_path:
++	libxfs_imeta_free_path(path);
++	return error;
++}
++
+ static void
+ discover_rtgroup_inodes(
+ 	struct xfs_mount	*mp)
+@@ -229,10 +283,20 @@ discover_rtgroup_inodes(
+ 	if (error)
+ 		goto out;
+ 
++	error = bitmap_alloc(&refcount_inodes);
++	if (error) {
++		bitmap_free(&rmap_inodes);
++		goto out;
++	}
++
+ 	for (rgno = 0; rgno < mp->m_sb.sb_rgcount; rgno++) {
+ 		int err2 = set_rtgroup_rmap_inode(mp, rgno);
+ 		if (err2 && !error)
+ 			error = err2;
++
++		err2 = set_rtgroup_refcount_inode(mp, rgno);
++		if (err2 && !error)
++			error = err2;
+ 	}
+ 
+ out:
+@@ -248,6 +312,7 @@ discover_rtgroup_inodes(
+ static inline void
+ free_rtmeta_inode_bitmaps(void)
+ {
++	bitmap_free(&refcount_inodes);
+ 	bitmap_free(&rmap_inodes);
+ }
+ 
+@@ -263,10 +328,28 @@ rtgroup_for_rtrefcount_inode(
+ 	struct xfs_mount	*mp,
+ 	xfs_ino_t		ino)
+ {
+-	/* This will be implemented later. */
++	xfs_rgnumber_t		rgno;
++
++	if (!refcount_inodes)
++		return NULLRGNUMBER;
++
++	for (rgno = 0; rgno < mp->m_sb.sb_rgcount; rgno++) {
++		if (rg_rmaps[rgno].rg_refcount_ino == ino)
++			return rgno;
++	}
++
+ 	return NULLRGNUMBER;
+ }
+ 
++bool
++is_rtrefcount_ino(
++	xfs_ino_t		ino)
++{
++	if (!refcount_inodes)
++		return false;
++	return bitmap_test(refcount_inodes, ino, 1);
++}
++
  /*
-  * Addresses of records, keys, and pointers within an incore rtrefcountbt block.
-@@ -76,4 +77,115 @@ xfs_filblks_t xfs_rtrefcountbt_calc_reserves(struct xfs_mount *mp);
- unsigned long long xfs_rtrefcountbt_calc_size(struct xfs_mount *mp,
- 		unsigned long long len);
+  * Initialize per-AG reverse map data.
+  */
+@@ -1864,8 +1947,19 @@ init_refcount_cursor(
+  * Disable the refcount btree check.
+  */
+ void
+-refcount_avoid_check(void)
++refcount_avoid_check(
++	struct xfs_mount	*mp)
+ {
++	struct xfs_rtgroup	*rtg;
++	xfs_rgnumber_t		rgno;
++
++	for_each_rtgroup(mp, rgno, rtg) {
++		struct xfs_ag_rmap *ar = rmaps_for_group(true, rtg->rtg_rgno);
++
++		ar->rg_refcount_ino = NULLFSINO;
++	}
++
++	bitmap_clear(refcount_inodes, 0, XFS_MAXINUMBER);
+ 	refcbt_suspect = true;
+ }
  
-+/* Addresses of key, pointers, and records within an ondisk rtrefcount block. */
-+
-+static inline struct xfs_refcount_rec *
-+xfs_rtrefcount_droot_rec_addr(
-+	struct xfs_rtrefcount_root	*block,
-+	unsigned int			index)
-+{
-+	return (struct xfs_refcount_rec *)
-+		((char *)(block + 1) +
-+		 (index - 1) * sizeof(struct xfs_refcount_rec));
-+}
-+
-+static inline struct xfs_refcount_key *
-+xfs_rtrefcount_droot_key_addr(
-+	struct xfs_rtrefcount_root	*block,
-+	unsigned int			index)
-+{
-+	return (struct xfs_refcount_key *)
-+		((char *)(block + 1) +
-+		 (index - 1) * sizeof(struct xfs_refcount_key));
-+}
-+
-+static inline xfs_rtrefcount_ptr_t *
-+xfs_rtrefcount_droot_ptr_addr(
-+	struct xfs_rtrefcount_root	*block,
-+	unsigned int			index,
-+	unsigned int			maxrecs)
-+{
-+	return (xfs_rtrefcount_ptr_t *)
-+		((char *)(block + 1) +
-+		 maxrecs * sizeof(struct xfs_refcount_key) +
-+		 (index - 1) * sizeof(xfs_rtrefcount_ptr_t));
-+}
-+
-+/*
-+ * Address of pointers within the incore btree root.
-+ *
-+ * These are to be used when we know the size of the block and
-+ * we don't have a cursor.
-+ */
-+static inline xfs_rtrefcount_ptr_t *
-+xfs_rtrefcount_broot_ptr_addr(
-+	struct xfs_mount	*mp,
-+	struct xfs_btree_block	*bb,
-+	unsigned int		index,
-+	unsigned int		block_size)
-+{
-+	return xfs_rtrefcount_ptr_addr(bb, index,
-+			xfs_rtrefcountbt_maxrecs(mp, block_size, false));
-+}
-+
-+/*
-+ * Compute the space required for the incore btree root containing the given
-+ * number of records.
-+ */
-+static inline size_t
-+xfs_rtrefcount_broot_space_calc(
-+	struct xfs_mount	*mp,
-+	unsigned int		level,
-+	unsigned int		nrecs)
-+{
-+	size_t			sz = XFS_RTREFCOUNT_BLOCK_LEN;
-+
-+	if (level > 0)
-+		return sz + nrecs * (sizeof(struct xfs_refcount_key) +
-+				     sizeof(xfs_rtrefcount_ptr_t));
-+	return sz + nrecs * sizeof(struct xfs_refcount_rec);
-+}
-+
-+/*
-+ * Compute the space required for the incore btree root given the ondisk
-+ * btree root block.
-+ */
-+static inline size_t
-+xfs_rtrefcount_broot_space(struct xfs_mount *mp, struct xfs_rtrefcount_root *bb)
-+{
-+	return xfs_rtrefcount_broot_space_calc(mp, be16_to_cpu(bb->bb_level),
-+			be16_to_cpu(bb->bb_numrecs));
-+}
-+
-+/* Compute the space required for the ondisk root block. */
-+static inline size_t
-+xfs_rtrefcount_droot_space_calc(
-+	unsigned int		level,
-+	unsigned int		nrecs)
-+{
-+	size_t			sz = sizeof(struct xfs_rtrefcount_root);
-+
-+	if (level > 0)
-+		return sz + nrecs * (sizeof(struct xfs_refcount_key) +
-+				     sizeof(xfs_rtrefcount_ptr_t));
-+	return sz + nrecs * sizeof(struct xfs_refcount_rec);
-+}
-+
-+/*
-+ * Compute the space required for the ondisk root block given an incore root
-+ * block.
-+ */
-+static inline size_t
-+xfs_rtrefcount_droot_space(struct xfs_btree_block *bb)
-+{
-+	return xfs_rtrefcount_droot_space_calc(be16_to_cpu(bb->bb_level),
-+			be16_to_cpu(bb->bb_numrecs));
-+}
-+
-+int xfs_iformat_rtrefcount(struct xfs_inode *ip, struct xfs_dinode *dip);
-+void xfs_rtrefcountbt_to_disk(struct xfs_mount *mp,
-+		struct xfs_btree_block *rblock, int rblocklen,
-+		struct xfs_rtrefcount_root *dblock, int dblocklen);
-+void xfs_iflush_rtrefcount(struct xfs_inode *ip, struct xfs_dinode *dip);
-+
- #endif	/* __XFS_RTREFCOUNT_BTREE_H__ */
+diff --git a/repair/rmap.h b/repair/rmap.h
+index 051481d2e2d..3e210fac87b 100644
+--- a/repair/rmap.h
++++ b/repair/rmap.h
+@@ -41,7 +41,7 @@ extern void rmap_high_key_from_rec(struct xfs_rmap_irec *rec,
+ extern int compute_refcounts(struct xfs_mount *, xfs_agnumber_t);
+ uint64_t refcount_record_count(struct xfs_mount *mp, xfs_agnumber_t agno);
+ extern int init_refcount_cursor(xfs_agnumber_t, struct xfs_slab_cursor **);
+-extern void refcount_avoid_check(void);
++extern void refcount_avoid_check(struct xfs_mount *mp);
+ void check_refcounts(struct xfs_mount *mp, xfs_agnumber_t agno);
+ 
+ extern void record_inode_reflink_flag(struct xfs_mount *, struct xfs_dinode *,
+@@ -73,5 +73,6 @@ xfs_filblks_t estimate_rtrmapbt_blocks(struct xfs_rtgroup *rtg);
+ 
+ xfs_rgnumber_t rtgroup_for_rtrefcount_inode(struct xfs_mount *mp,
+ 		xfs_ino_t ino);
++bool is_rtrefcount_ino(xfs_ino_t ino);
+ 
+ #endif /* RMAP_H_ */
+diff --git a/repair/scan.c b/repair/scan.c
+index abf605e4978..88ca5acc040 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -1987,7 +1987,7 @@ _("extent (%u/%u) len %u claimed, state is %d\n"),
+ 	libxfs_perag_put(pag);
+ out:
+ 	if (suspect)
+-		refcount_avoid_check();
++		refcount_avoid_check(mp);
+ 	return;
+ }
+ 
+@@ -2277,7 +2277,7 @@ _("%s btree block claimed (state %d), agno %d, agbno %d, suspect %d\n"),
+ 	}
+ out:
+ 	if (suspect) {
+-		refcount_avoid_check();
++		refcount_avoid_check(mp);
+ 		return 1;
+ 	}
+ 
+@@ -3140,7 +3140,7 @@ validate_agf(
+ 		if (levels == 0 || levels > mp->m_refc_maxlevels) {
+ 			do_warn(_("bad levels %u for refcountbt root, agno %d\n"),
+ 				levels, agno);
+-			refcount_avoid_check();
++			refcount_avoid_check(mp);
+ 		}
+ 
+ 		bno = be32_to_cpu(agf->agf_refcount_root);
+@@ -3158,7 +3158,7 @@ validate_agf(
+ 		} else {
+ 			do_warn(_("bad agbno %u for refcntbt root, agno %d\n"),
+ 				bno, agno);
+-			refcount_avoid_check();
++			refcount_avoid_check(mp);
+ 		}
+ 	}
+ 
 
 
