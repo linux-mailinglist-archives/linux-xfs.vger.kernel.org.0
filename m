@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2135-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2250-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BDA18211A2
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B4C882121B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:29:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33A7C1C21C47
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:00:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FDC91F22524
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2685AC8CF;
-	Mon,  1 Jan 2024 00:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8F4738B;
+	Mon,  1 Jan 2024 00:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7va1hQd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uj/X7Cdl"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57ADC8C8
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:00:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE91C433C8;
-	Mon,  1 Jan 2024 00:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A27384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:29:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E42C433C7;
+	Mon,  1 Jan 2024 00:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067236;
-	bh=fwNXTTCQo0mRencFZi6EWQxbbHH1TsZHuRGfvO3JSaU=;
+	s=k20201202; t=1704068988;
+	bh=xOlyN2BErffcrtIpDWlrsNEmM243k2d6OnmeVBpr8cU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=f7va1hQdhb8JAyLA0ERadlqIhxgSi1T1f3DEvKC3FvD3If1npbWwt9deGQxXupVJY
-	 +LW/kLHfLbYBwlpVZqAngfbVtEkDppkBwa4f0zrFjGnIkNW3wIT2oJ/XkiIV42cpx4
-	 f/LEMoiRO6OPiDzOYQ8ihmjVST8OJghN6ozbz93B77Wo4DDQP3h5pc84NQlyZbhLqz
-	 BTkag8UrJBzYcRZ6mD7GawjfcupJ1VYb/3LtbtOxSCZp63E8t9zvJ1YqDDPT3/WMPT
-	 PcD1awrIzdMnwE8WrUMcafVcwhZ/2c3KZJ0S5bFLAshQ3xvnUXFT4k8GNbDJtrlbwx
-	 vSZoZTIAbTx0w==
-Date: Sun, 31 Dec 2023 16:00:36 +9900
-Subject: [PATCH 50/52] mkfs: add headers to realtime bitmap blocks
+	b=Uj/X7Cdl7FL1eGZvd6D0Rq86h14W/0poRP/ss9Yi9j13zKqAPdCld92JlHWbZJ+9/
+	 mIUPsJEF/B5yfTwgB6dgEm/7TFvuojpQXoWvm7VXbt2xb/PQSUPkrVA4ivMPO/SFL7
+	 a7PH9R8RAh1A0CPpX/CNd/m39ZSr8CWhs8aq1uWfT8XXSj8C6xfCeJrQUmWW84tami
+	 xi5sFSpxkEqFZCGDCYeb3SUSKDB+ad1U+uBvR8UdJQKkrKHvra+M8yKClcaPCv1HJs
+	 0aczKOULqmkR5Q0/geYRe1hn9poGuwR28t5HByN8w85LG5uJbXAQvFlorHljXbDzlV
+	 m+mR1sguH5VXQ==
+Date: Sun, 31 Dec 2023 16:29:47 +9900
+Subject: [PATCH 14/42] xfs: compute rtrmap btree max levels when reflink
+ enabled
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405012831.1811243.12201677426853572539.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
-References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
+Message-ID: <170405017313.1817107.1104272035732046289.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,116 +53,70 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When the rtgroups feature is enabled, format rtbitmap blocks with the
-appropriate block headers.
+Compute the maximum possible height of the realtime rmap btree when
+reflink is enabled.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- mkfs/proto.c    |   51 +++++++++++++++++++++++++++++++++++++++++++++++++++
- mkfs/xfs_mkfs.c |    6 +++++-
- 2 files changed, 56 insertions(+), 1 deletion(-)
+ libxfs/xfs_rtrmap_btree.c |   28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
 
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 36df148018f..f5b7859f9a9 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -852,6 +852,50 @@ rtsummary_create(
- 	mp->m_rsumip = rsumip;
- }
- 
-+/* Initialize block headers of rt free space files. */
-+static int
-+init_rtblock_headers(
-+	struct xfs_inode	*ip,
-+	xfs_fileoff_t		nrblocks,
-+	const struct xfs_buf_ops *ops,
-+	uint32_t		magic)
-+{
-+	struct xfs_bmbt_irec	map;
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_rtbuf_blkinfo *hdr;
-+	xfs_fileoff_t		off = 0;
-+	int			error;
-+
-+	while (off < nrblocks) {
-+		struct xfs_buf	*bp;
-+		xfs_daddr_t	daddr;
-+		int		nimaps = 1;
-+
-+		error = -libxfs_bmapi_read(ip, off, 1, &map, &nimaps, 0);
-+		if (error)
-+			return error;
-+
-+		daddr = XFS_FSB_TO_DADDR(mp, map.br_startblock);
-+		error = -libxfs_buf_get(mp->m_ddev_targp, daddr,
-+				XFS_FSB_TO_BB(mp, map.br_blockcount), &bp);
-+		if (error)
-+			return error;
-+
-+		bp->b_ops = ops;
-+		hdr = bp->b_addr;
-+		hdr->rt_magic = cpu_to_be32(magic);
-+		hdr->rt_owner = cpu_to_be64(ip->i_ino);
-+		hdr->rt_blkno = cpu_to_be64(daddr);
-+		platform_uuid_copy(&hdr->rt_uuid, &mp->m_sb.sb_meta_uuid);
-+		libxfs_buf_mark_dirty(bp);
-+		libxfs_buf_relse(bp);
-+
-+		off = map.br_startoff + map.br_blockcount;
-+	}
-+
-+	return 0;
-+}
-+
- /* Zero the realtime bitmap. */
- static void
- rtbitmap_init(
-@@ -895,6 +939,13 @@ rtbitmap_init(
- 	if (error)
- 		fail(_("Block allocation of the realtime bitmap inode failed"),
- 				error);
-+
-+	if (xfs_has_rtgroups(mp)) {
-+		error = init_rtblock_headers(mp->m_rbmip, mp->m_sb.sb_rbmblocks,
-+				&xfs_rtbitmap_buf_ops, XFS_RTBITMAP_MAGIC);
-+		if (error)
-+			fail(_("Initialization of rtbitmap failed"), error);
-+	}
- }
- 
- /* Zero the realtime summary file. */
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 2330ebebfae..aab1d9130b2 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -909,6 +909,7 @@ struct sb_feat_args {
- 	bool	nodalign;
- 	bool	nortalign;
- 	bool	nrext64;
-+	bool	rtgroups;		/* XFS_SB_FEAT_COMPAT_RTGROUPS */
- };
- 
- struct cli_params {
-@@ -3124,6 +3125,7 @@ validate_rtdev(
- 	struct cli_params	*cli)
+diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
+index b5adfe362a7..b339526a77d 100644
+--- a/libxfs/xfs_rtrmap_btree.c
++++ b/libxfs/xfs_rtrmap_btree.c
+@@ -736,6 +736,7 @@ xfs_rtrmapbt_maxrecs(
+ unsigned int
+ xfs_rtrmapbt_maxlevels_ondisk(void)
  {
- 	struct libxfs_init	*xi = cli->xi;
-+	unsigned int		rbmblocksize = cfg->blocksize;
++	unsigned long long	max_dblocks;
+ 	unsigned int		minrecs[2];
+ 	unsigned int		blocklen;
  
- 	if (!xi->rt.dev) {
- 		if (cli->rtsize) {
-@@ -3167,8 +3169,10 @@ reported by the device (%u).\n"),
- _("cannot have an rt subvolume with zero extents\n"));
- 		usage();
- 	}
-+	if (cfg->sb_feat.rtgroups)
-+		rbmblocksize -= sizeof(struct xfs_rtbuf_blkinfo);
- 	cfg->rtbmblocks = (xfs_extlen_t)howmany(cfg->rtextents,
--						NBBY * cfg->blocksize);
-+						NBBY * rbmblocksize);
+@@ -744,8 +745,20 @@ xfs_rtrmapbt_maxlevels_ondisk(void)
+ 	minrecs[0] = xfs_rtrmapbt_block_maxrecs(blocklen, true) / 2;
+ 	minrecs[1] = xfs_rtrmapbt_block_maxrecs(blocklen, false) / 2;
+ 
+-	/* We need at most one record for every block in an rt group. */
+-	return xfs_btree_compute_maxlevels(minrecs, XFS_MAX_RGBLOCKS);
++	/*
++	 * Compute the asymptotic maxlevels for an rtrmapbt on any rtreflink fs.
++	 *
++	 * On a reflink filesystem, each block in an rtgroup can have up to
++	 * 2^32 (per the refcount record format) owners, which means that
++	 * theoretically we could face up to 2^64 rmap records.  However, we're
++	 * likely to run out of blocks in the data device long before that
++	 * happens, which means that we must compute the max height based on
++	 * what the btree will look like if it consumes almost all the blocks
++	 * in the data device due to maximal sharing factor.
++	 */
++	max_dblocks = -1U; /* max ag count */
++	max_dblocks *= XFS_MAX_CRC_AG_BLOCKS;
++	return xfs_btree_space_to_height(minrecs, max_dblocks);
  }
  
- static bool
+ int __init
+@@ -784,9 +797,20 @@ xfs_rtrmapbt_compute_maxlevels(
+ 	 * maximum height is constrained by the size of the data device and
+ 	 * the height required to store one rmap record for each block in an
+ 	 * rt group.
++	 *
++	 * On a reflink filesystem, each rt block can have up to 2^32 (per the
++	 * refcount record format) owners, which means that theoretically we
++	 * could face up to 2^64 rmap records.  This makes the computation of
++	 * maxlevels based on record count meaningless, so we only consider the
++	 * size of the data device.
+ 	 */
+ 	d_maxlevels = xfs_btree_space_to_height(mp->m_rtrmap_mnr,
+ 				mp->m_sb.sb_dblocks);
++	if (xfs_has_rtreflink(mp)) {
++		mp->m_rtrmap_maxlevels = d_maxlevels + 1;
++		return;
++	}
++
+ 	r_maxlevels = xfs_btree_compute_maxlevels(mp->m_rtrmap_mnr,
+ 				mp->m_sb.sb_rgblocks);
+ 
 
 
