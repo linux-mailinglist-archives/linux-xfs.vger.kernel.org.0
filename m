@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2334-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2348-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E10E82127C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:51:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34A0282128D
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:55:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4FBDB20AED
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:51:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B1B11C21D5E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95520802;
-	Mon,  1 Jan 2024 00:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF874A04;
+	Mon,  1 Jan 2024 00:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQeOuqKL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZYHcYpx"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C97EF;
-	Mon,  1 Jan 2024 00:51:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F81DC433C7;
-	Mon,  1 Jan 2024 00:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B373B46AF;
+	Mon,  1 Jan 2024 00:55:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 483B3C433C8;
+	Mon,  1 Jan 2024 00:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070304;
-	bh=J+wDQk9S7dRGqux9z0+Vowaz4LghVZfn/8EvSMEiWNM=;
+	s=k20201202; t=1704070523;
+	bh=TFHfFp5R+n6VDl1cv6NJ1GP3REczsII2TNse8afcsOw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=IQeOuqKL1xHSQlE+SFgQxYKLkc0+BNfyXXY90oOM3GBrUZb/PJJ76Z0JBBz8ksid/
-	 9XWPkiP31QpbCKEx9Y6/SxymMGvS8BIuSvZkqpETVV6dcAtKJ0hENlUHJ2HnUdoB5N
-	 6+3psddtgtI7ScM6zNjIIsi4V6RnHrn7Wle58sR73LYhmCXcTLdwUoNkC7oVIAuph2
-	 Isq16ZP8mK1U6MHsLwxT5yVWSW298EdKXI2IhgcAhm9qQd4OEoJTssN7owxqxBRnX8
-	 mAqfnCjtkJQe31PGv1hwAi8c2FlE6Slc3fiQGEspo7uMUQa0JL0s4lwLIX71jssCak
-	 H+rE2VFubt7Zw==
-Date: Sun, 31 Dec 2023 16:51:43 +9900
-Subject: [PATCH 07/11] xfs/856: add metadir upgrade to test matrix
+	b=OZYHcYpxKgjFNPOpUKGwo4EUo/iMITs6pX/uE7c8ln7nFV3fC6Qkot4d70tZv8zNu
+	 PVVlL3JnsEH3D/7Twlm8PwbrcN8uuG83R6OwWxX4bAI0gJe1rHnwUE8KE3HdyZIgur
+	 a5cXdHgwicq8IIngedVYccZkTaNHUC/IJ8YBfpFayRdl84esLR8YcWBphnS2RGVYzi
+	 Lw7QkA/enntZ+w1A4LMFTxlmuPF6DVbN9uEiNQRtdILHRoC26doTU0CyL6B2UDHido
+	 PDy3L4zMh00SNsrIKHBEh+YMtvDDk7Rek2C2W0MnrFH2pY5sESE9HbnARZrDI3KgkY
+	 C0p55PMN2/Dbw==
+Date: Sun, 31 Dec 2023 16:55:22 +9900
+Subject: [PATCH 10/17] common: filter rtgroups when we're disabling metadir
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405029942.1826032.15570536793461753536.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
-References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+Message-ID: <170405030468.1826350.14174130190423885732.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,33 +52,29 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add metadata directory trees to the features that this test will try to
-upgrade.
+If we're forcing a filesystem to be created without the metadir feature,
+we should forcibly disable rtgroups as well.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1856 |    2 ++
- 1 file changed, 2 insertions(+)
+ common/xfs |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 
-diff --git a/tests/xfs/1856 b/tests/xfs/1856
-index 84e72d7c81..93bdbaa531 100755
---- a/tests/xfs/1856
-+++ b/tests/xfs/1856
-@@ -173,12 +173,14 @@ if rt_configured; then
- 	check_repair_upgrade finobt && FEATURES+=("finobt")
- 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
- 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
-+	check_repair_upgrade metadir && FEATURES+=("metadir")
- else
- 	check_repair_upgrade finobt && FEATURES+=("finobt")
- 	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
- 	check_repair_upgrade reflink && FEATURES+=("reflink")
- 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
- 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
-+	check_repair_upgrade metadir && FEATURES+=("metadir")
- fi
- 
- test "${#FEATURES[@]}" -eq 0 && \
+diff --git a/common/xfs b/common/xfs
+index aa1c23dd54..e66e11f15d 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1936,6 +1936,10 @@ _scratch_xfs_find_metafile()
+ # Force metadata directories off.
+ _scratch_xfs_force_no_metadir()
+ {
++	if echo "$MKFS_OPTIONS" | grep -q 'rtgroups='; then
++		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/rtgroups=\([01]\)/rtgroups=0/g')"
++	fi
++
+ 	if echo "$MKFS_OPTIONS" | grep -q 'metadir='; then
+ 		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/metadir=\([01]\)/metadir=0/g')"
+ 		return
 
 
