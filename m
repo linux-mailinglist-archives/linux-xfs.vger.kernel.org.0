@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2140-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2237-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35A348211AA
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:02:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC51E82120E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:26:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8C4F2828D7
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:01:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0F42B211A6
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:26:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F0DDCA4C;
-	Mon,  1 Jan 2024 00:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 579ED803;
+	Mon,  1 Jan 2024 00:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRomrjjU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0yCrb0a"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8DACA43
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:01:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2AEAC433C7;
-	Mon,  1 Jan 2024 00:01:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241F47F9
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:26:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E472FC433C8;
+	Mon,  1 Jan 2024 00:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067314;
-	bh=QI9VXgkA8k90ttbFaWmi9rk0dDSCH3eYl+2pWqliPjQ=;
+	s=k20201202; t=1704068785;
+	bh=2EdNrrzP4xM1+O2G/ymmypew6WdlTTTZq25CBfYJWUk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=WRomrjjUH2Ff1v7HlV8+OK3Zi7Fedp9Dr38kjlS6etrpPNTWCAgcmBUp6PmAHpCZB
-	 mnCqQpzCHA2DN3tkg4Cl2mjymkmubDF9WFBIQMqwfCE7qrarS4vUEn7E41OT3OGwl7
-	 X9m0UKWqTXYnksazYd76oUbCnBlqqm1oxDre/U8C1y8DOCS7mCLKVjvep1rLCsBAsx
-	 gsY8MA7TiErhVp5gE6a5ImYwzbbngCEHAg2P0+/SmG+CcN7ebY1V2IbpYOx/GkzuNP
-	 JlhSKSXUwQm9vPMdnpQP930uSQNl7X1PuqXv65eWBcFVwYf6fmYqlGJTsjpPY+sGSi
-	 SYvHlpCfZz1cA==
-Date: Sun, 31 Dec 2023 16:01:54 +9900
-Subject: [PATCH 03/14] xfs: refactor creation of bmap btree roots
+	b=c0yCrb0aCR7/BTQnrd/1Y55EmOObaoF2D5dmeaoAZxWMxnPbAl1muVyZ9Y4rONc7W
+	 HVkVtgZ7WZXG2+SflLwHqcjPwbBOvNIwnGN5drFvtOaVRO4re0OmDyA6+IaXW1DGKr
+	 Rm+kHYI5tVyuiQcnbXJsDA7hk5fD98K+gvki2ie5qeTCA3uLmysx14bOEHn9gB5PPT
+	 x+NKLtf1qr7flH6efFkTgnNql2vMYwJeAC8I+0dMYVx6KK9DJ7tprWaHxkrPcFdbld
+	 1G6gcQLO/d9RIercYP7VJu3W9hHPl9XGuLZHtaMSt4D4FwlsLwoPE5K0hgG60ROy2b
+	 Ef38oPSyvufKA==
+Date: Sun, 31 Dec 2023 16:26:24 +9900
+Subject: [PATCH 01/42] xfs: introduce realtime refcount btree definitions
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013242.1812545.12549775903709255426.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
-References: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
+Message-ID: <170405017138.1817107.14584000489556762268.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,105 +52,69 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've created inode fork helpers to allocate and free btree
-roots, create a new bmap btree helper to create a new bmbt root, and
-refactor the extents <-> btree conversion functions to use our new
-helpers.
+Add new realtime refcount btree definitions. The realtime refcount btree
+will be rooted from a hidden inode, but has its own shape and therefore
+needs to have most of its own separate types.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap.c       |   17 ++++-------------
- libxfs/xfs_bmap_btree.c |   16 ++++++++++++++++
- libxfs/xfs_bmap_btree.h |    2 ++
- 3 files changed, 22 insertions(+), 13 deletions(-)
+ libxfs/xfs_btree.h  |    1 +
+ libxfs/xfs_format.h |    6 ++++++
+ libxfs/xfs_types.h  |    5 +++--
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index d7cbef76067..5935f87833b 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -591,7 +591,7 @@ xfs_bmap_btree_to_extents(
- 	xfs_trans_binval(tp, cbp);
- 	if (cur->bc_levels[0].bp == cbp)
- 		cur->bc_levels[0].bp = NULL;
--	xfs_iroot_realloc(ip, -1, whichfork);
-+	xfs_iroot_free(ip, whichfork);
- 	ASSERT(ifp->if_broot == NULL);
- 	ifp->if_format = XFS_DINODE_FMT_EXTENTS;
- 	*logflagsp |= XFS_ILOG_CORE | xfs_ilog_fext(whichfork);
-@@ -631,20 +631,10 @@ xfs_bmap_extents_to_btree(
- 	ifp = xfs_ifork_ptr(ip, whichfork);
- 	ASSERT(ifp->if_format == XFS_DINODE_FMT_EXTENTS);
+diff --git a/libxfs/xfs_btree.h b/libxfs/xfs_btree.h
+index 4753a5c8476..f58240adda6 100644
+--- a/libxfs/xfs_btree.h
++++ b/libxfs/xfs_btree.h
+@@ -65,6 +65,7 @@ union xfs_btree_rec {
+ #define	XFS_BTNUM_REFC	((xfs_btnum_t)XFS_BTNUM_REFCi)
+ #define	XFS_BTNUM_RCBAG	((xfs_btnum_t)XFS_BTNUM_RCBAGi)
+ #define	XFS_BTNUM_RTRMAP ((xfs_btnum_t)XFS_BTNUM_RTRMAPi)
++#define	XFS_BTNUM_RTREFC ((xfs_btnum_t)XFS_BTNUM_RTREFCi)
  
--	/*
--	 * Make space in the inode incore. This needs to be undone if we fail
--	 * to expand the root.
--	 */
--	xfs_iroot_realloc(ip, 1, whichfork);
--
--	/*
--	 * Fill in the root.
--	 */
--	block = ifp->if_broot;
--	xfs_btree_init_block(mp, block, &xfs_bmbt_ops, 1, 1, ip->i_ino);
- 	/*
- 	 * Need a cursor.  Can't allocate until bb_level is filled in.
- 	 */
-+	xfs_bmbt_iroot_alloc(ip, whichfork);
- 	cur = xfs_bmbt_init_cursor(mp, tp, ip, whichfork);
- 	cur->bc_ino.flags = wasdel ? XFS_BTCUR_BMBT_WASDEL : 0;
- 	/*
-@@ -700,6 +690,7 @@ xfs_bmap_extents_to_btree(
- 	/*
- 	 * Fill in the root key and pointer.
- 	 */
-+	block = ifp->if_broot;
- 	kp = xfs_bmbt_key_addr(mp, block, 1);
- 	arp = xfs_bmbt_rec_addr(mp, ablock, 1);
- 	kp->br_startoff = cpu_to_be64(xfs_bmbt_disk_get_startoff(arp));
-@@ -721,7 +712,7 @@ xfs_bmap_extents_to_btree(
- out_unreserve_dquot:
- 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, -1L);
- out_root_realloc:
--	xfs_iroot_realloc(ip, -1, whichfork);
-+	xfs_iroot_free(ip, whichfork);
- 	ifp->if_format = XFS_DINODE_FMT_EXTENTS;
- 	ASSERT(ifp->if_broot == NULL);
- 	xfs_btree_del_cursor(cur, XFS_BTREE_ERROR);
-diff --git a/libxfs/xfs_bmap_btree.c b/libxfs/xfs_bmap_btree.c
-index be4979894a0..1dd8d12af8f 100644
---- a/libxfs/xfs_bmap_btree.c
-+++ b/libxfs/xfs_bmap_btree.c
-@@ -778,3 +778,19 @@ xfs_bmbt_destroy_cur_cache(void)
- 	kmem_cache_destroy(xfs_bmbt_cur_cache);
- 	xfs_bmbt_cur_cache = NULL;
- }
-+
-+/* Create an incore bmbt btree root block. */
-+void
-+xfs_bmbt_iroot_alloc(
-+	struct xfs_inode	*ip,
-+	int			whichfork)
-+{
-+	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
-+
-+	xfs_iroot_alloc(ip, whichfork,
-+			xfs_bmap_broot_space_calc(ip->i_mount, 1));
-+
-+	/* Fill in the root. */
-+	xfs_btree_init_block(ip->i_mount, ifp->if_broot, &xfs_bmbt_ops, 1, 1,
-+			ip->i_ino);
-+}
-diff --git a/libxfs/xfs_bmap_btree.h b/libxfs/xfs_bmap_btree.h
-index 62fbc4f7c2c..3fe9c4f7f1a 100644
---- a/libxfs/xfs_bmap_btree.h
-+++ b/libxfs/xfs_bmap_btree.h
-@@ -196,4 +196,6 @@ xfs_bmap_bmdr_space(struct xfs_btree_block *bb)
- 	return xfs_bmdr_space_calc(be16_to_cpu(bb->bb_numrecs));
- }
+ struct xfs_btree_ops;
+ uint32_t xfs_btree_magic(struct xfs_mount *mp, const struct xfs_btree_ops *ops);
+diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
+index 1c1910256a9..0dc169fde2e 100644
+--- a/libxfs/xfs_format.h
++++ b/libxfs/xfs_format.h
+@@ -1815,6 +1815,12 @@ struct xfs_refcount_key {
+ /* btree pointer type */
+ typedef __be32 xfs_refcount_ptr_t;
  
-+void xfs_bmbt_iroot_alloc(struct xfs_inode *ip, int whichfork);
-+
- #endif	/* __XFS_BMAP_BTREE_H__ */
++/*
++ * Realtime Reference Count btree format definitions
++ *
++ * This is a btree for reference count records for realtime volumes
++ */
++#define	XFS_RTREFC_CRC_MAGIC	0x52434e54	/* 'RCNT' */
+ 
+ /*
+  * BMAP Btree format definitions
+diff --git a/libxfs/xfs_types.h b/libxfs/xfs_types.h
+index b3edc57dc65..4147ba288ec 100644
+--- a/libxfs/xfs_types.h
++++ b/libxfs/xfs_types.h
+@@ -126,7 +126,7 @@ typedef enum {
+ typedef enum {
+ 	XFS_BTNUM_BNOi, XFS_BTNUM_CNTi, XFS_BTNUM_RMAPi, XFS_BTNUM_BMAPi,
+ 	XFS_BTNUM_INOi, XFS_BTNUM_FINOi, XFS_BTNUM_REFCi, XFS_BTNUM_RCBAGi,
+-	XFS_BTNUM_RTRMAPi, XFS_BTNUM_MAX
++	XFS_BTNUM_RTRMAPi, XFS_BTNUM_RTREFCi, XFS_BTNUM_MAX
+ } xfs_btnum_t;
+ 
+ #define XFS_BTNUM_STRINGS \
+@@ -138,7 +138,8 @@ typedef enum {
+ 	{ XFS_BTNUM_FINOi,	"finobt" }, \
+ 	{ XFS_BTNUM_REFCi,	"refcbt" }, \
+ 	{ XFS_BTNUM_RCBAGi,	"rcbagbt" }, \
+-	{ XFS_BTNUM_RTRMAPi,	"rtrmapbt" }
++	{ XFS_BTNUM_RTRMAPi,	"rtrmapbt" }, \
++	{ XFS_BTNUM_RTREFCi,	"rtrefcbt" }
+ 
+ struct xfs_name {
+ 	const unsigned char	*name;
 
 
