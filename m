@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-2277-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2274-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ECB5821236
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:36:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3A07821233
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:36:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D3431C21C6B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:36:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C74B1F215B0
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:36:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87D81375;
-	Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65641370;
+	Mon,  1 Jan 2024 00:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGDq8Ogn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c41RnNTo"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF81370
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7618AC433C7;
-	Mon,  1 Jan 2024 00:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734141376
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:36:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49AF6C433C7;
+	Mon,  1 Jan 2024 00:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069411;
-	bh=S4cuJxAwHa7rTzDnthDRlgpqqTRHTgY3UZhVmRW3Wbo=;
+	s=k20201202; t=1704069364;
+	bh=mFd+f2n7Oeyg8X/eS5u01YeVGAAcoKqmebIq50is6AE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=dGDq8OgnSM6hedgDMG2a3TAEP78EXbPVPv9sHvnJanAFxRVB1NV6olHCZ0RxZnaEJ
-	 fM+TLxO9vM5K94kPgjXAMcQkbbswyV90fJQs/zDVGp4I3woJvGEmUvoRP5GaBN26y1
-	 OGIWvyuT5Z8bUkWOybts4uge10U+aHdFzb7I+xuLKNiaBv73Ha3rQyY8D8IVCl7D75
-	 KgKZ37/DTXJR442Z7/E9LDqCs9KdEQTGnr0ewJbnONns/ZYioJAf8aHYwc10DJwHKW
-	 rMQ304Xalb+J7LdI3JJIFt8MO8Dn4MisQ8cIV0CvvEFjb/zrOPdevglrH8aD9+0ZXm
-	 wnH+pw8uGGAsg==
-Date: Sun, 31 Dec 2023 16:36:50 +9900
-Subject: [PATCH 41/42] mkfs: validate CoW extent size hint when rtinherit is
- set
+	b=c41RnNToetcw+4VfO7+xs//GAGEyKShKk5EbUJfnANzAiS23p8TUEaofMhVcn4qM/
+	 pZQCnTw2oUBTvdkIX+dFwtuG87UMA3Z+OGnuiq5Dixi8zsu14pIpp+OHjgikBTXM26
+	 xjDMyTcKphWc5TfpgRHh4lPRYWps6wtD2b3b4nMuTo8ZBrEvElVLq689t+DgfxCMxb
+	 LhILHIm224EdVSKGQ1IAcoMruc8nPu2m3L1Pf4Af8xVYOw5dwBtoPoFcdvbcDMKBs2
+	 ++LbUlcbVwpC/s6sKQheHvNsMgOknJVwVTt3EbivOceigBdLmomBbNxFwAYh877E0c
+	 Xm32orh/MaSGQ==
+Date: Sun, 31 Dec 2023 16:36:03 +9900
+Subject: [PATCH 38/42] xfs_repair: validate CoW extent size hint on rtinherit
+ directories
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017674.1817107.2226698699690206203.stgit@frogsfrogsfrogs>
+Message-ID: <170405017634.1817107.4786026043233889277.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,54 +53,100 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Extent size hints exist to nudge the behavior of the file data block
-allocator towards trying to make aligned allocations.  Therefore, it
-doesn't make sense to allow a hint that isn't a multiple of the
-fundamental allocation unit for a given file.
-
-This means that if the sysadmin is formatting with rtinherit set on the
-root dir, validate_cowextsize_hint needs to check the hint value on a
-simulated realtime file to make sure that it's correct.  This hasn't
-been necessary in the past since one cannot have a CoW hint without a
-reflink filesystem, and we previously didn't allow rt reflink
-filesystems.
+XFS allows a sysadmin to change the rt extent size when adding a rt
+section to a filesystem after formatting.  If there are any directories
+with both a cowextsize hint and rtinherit set, the hint could become
+misaligned with the new rextsize.  Offer to fix the problem if we're in
+modify mode and the verifier didn't trip.  If we're in dry run mode,
+we let the kernel fix it.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- mkfs/xfs_mkfs.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ repair/dinode.c |   64 +++++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 21 deletions(-)
 
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 162546cd1e8..bcdfbf6fbf6 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -2751,6 +2751,26 @@ _("illegal CoW extent size hint %lld, must be less than %u.\n"),
- 				min(XFS_MAX_BMBT_EXTLEN, mp->m_sb.sb_agblocks / 2));
- 		usage();
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 2b254b29c4a..df88a162829 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -2808,6 +2808,47 @@ _("Bad extent size hint %u on inode %" PRIu64 ", "),
  	}
-+
-+	/*
-+	 * If the value is to be passed on to realtime files, revalidate with
-+	 * a realtime file so that we know the hint and flag that get passed on
-+	 * to realtime files will be correct.
-+	 */
-+	if (!(cli->fsx.fsx_xflags & FS_XFLAG_RTINHERIT))
-+		return;
-+
-+	fa = libxfs_inode_validate_cowextsize(mp, cli->fsx.fsx_cowextsize,
-+			S_IFREG, XFS_DIFLAG_REALTIME, flags2);
-+
-+	if (fa) {
-+		fprintf(stderr,
-+_("illegal CoW extent size hint %lld, must be less than %u and a multiple of %u. %p\n"),
-+				(long long)cli->fsx.fsx_cowextsize,
-+				min(XFS_MAX_BMBT_EXTLEN, mp->m_sb.sb_agblocks / 2),
-+				mp->m_sb.sb_rextsize, fa);
-+		usage();
-+	}
  }
  
- /* Complain if this filesystem is not a supported configuration. */
++static void
++validate_cowextsize(
++	struct xfs_mount	*mp,
++	struct xfs_dinode	*dino,
++	xfs_ino_t		lino,
++	int			*dirty)
++{
++	uint16_t		flags = be16_to_cpu(dino->di_flags);
++	uint64_t		flags2 = be64_to_cpu(dino->di_flags2);
++	unsigned int		value = be32_to_cpu(dino->di_cowextsize);
++	bool			misaligned = false;
++	bool			bad;
++
++	/*
++	 * XFS allows a sysadmin to change the rt extent size when adding a
++	 * rt section to a filesystem after formatting.  If there are any
++	 * directories with both a cowextsize hint and rtinherit set, the
++	 * hint could become misaligned with the new rextsize.
++	 */
++	if ((flags2 & XFS_DIFLAG2_COWEXTSIZE) &&
++	    (flags & XFS_DIFLAG_RTINHERIT) &&
++	    value % mp->m_sb.sb_rextsize > 0)
++		misaligned = true;
++
++	/* Complain if the verifier fails. */
++	bad = libxfs_inode_validate_cowextsize(mp, value,
++			be16_to_cpu(dino->di_mode), flags, flags2) != NULL;
++	if (bad || misaligned) {
++		do_warn(
++_("Bad CoW extent size hint %u on inode %" PRIu64 ", "),
++				be32_to_cpu(dino->di_cowextsize), lino);
++		if (!no_modify) {
++			do_warn(_("resetting to zero\n"));
++			dino->di_flags2 &= ~cpu_to_be64(XFS_DIFLAG2_COWEXTSIZE);
++			dino->di_cowextsize = 0;
++			*dirty = 1;
++		} else
++			do_warn(_("would reset to zero\n"));
++	}
++}
++
+ /*
+  * returns 0 if the inode is ok, 1 if the inode is corrupt
+  * check_dups can be set to 1 *only* when called by the
+@@ -3385,27 +3426,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
+ 
+ 	validate_extsize(mp, dino, lino, dirty);
+ 
+-	/*
+-	 * Only (regular files and directories) with COWEXTSIZE flags
+-	 * set can have extsize set.
+-	 */
+-	if (dino->di_version >= 3 &&
+-	    libxfs_inode_validate_cowextsize(mp,
+-			be32_to_cpu(dino->di_cowextsize),
+-			be16_to_cpu(dino->di_mode),
+-			be16_to_cpu(dino->di_flags),
+-			be64_to_cpu(dino->di_flags2)) != NULL) {
+-		do_warn(
+-_("Bad CoW extent size %u on inode %" PRIu64 ", "),
+-				be32_to_cpu(dino->di_cowextsize), lino);
+-		if (!no_modify)  {
+-			do_warn(_("resetting to zero\n"));
+-			dino->di_flags2 &= ~cpu_to_be64(XFS_DIFLAG2_COWEXTSIZE);
+-			dino->di_cowextsize = 0;
+-			*dirty = 1;
+-		} else
+-			do_warn(_("would reset to zero\n"));
+-	}
++	if (dino->di_version >= 3)
++		validate_cowextsize(mp, dino, lino, dirty);
+ 
+ 	/* nsec fields cannot be larger than 1 billion */
+ 	check_nsec("atime", lino, dino, &dino->di_atime, dirty);
 
 
