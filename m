@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2139-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2232-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CBB18211A9
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:01:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B103D821209
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:25:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3DFA1C21C62
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:01:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E5242826CB
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:25:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6133ECA4A;
-	Mon,  1 Jan 2024 00:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C8A7F9;
+	Mon,  1 Jan 2024 00:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMfxAFWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IA9+YC7/"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC96CA43
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:01:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF754C433C7;
-	Mon,  1 Jan 2024 00:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A647ED
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:25:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6280C433C8;
+	Mon,  1 Jan 2024 00:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067299;
-	bh=s0EXCCfydEqnCNJ55+0Ip+DSP7KKBIGhyBQQRbHumZw=;
+	s=k20201202; t=1704068706;
+	bh=eyqyI9y4pDC5YcaQI7j3qP4STWt0ttaQFy2OIKIse6o=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=hMfxAFWP/xvTwby31OQY8Y+msJZPbX3ZTh2b6n/HOJ8VXznQAxvFcuXy+0/UEQaf6
-	 N/FDrzq377kZ3vAanb02yCx2hV8WRqAyM1L5s7CcS+uyx3Qu7H1TiXJijjHWcEc26W
-	 YUNeAqExMddnZ7ZR6MV/UWToe87Qz0hbzj9QHn2U+Nz96FJWvkHz9S9daD6PMgamo6
-	 QkUuWIUwYdB4+CtWB0RzzgasglSYU9q8XsNnl59cMWfk5jjYiDWlcQ51JRkQQzNo5W
-	 N26QzqfwDLNEqbjBaW2OW9xJHZdSuBHCOhHi/tgcZ5KWiGXtuThC+GPzVJC0iWB8ZF
-	 RyXY3H5KtX4RQ==
-Date: Sun, 31 Dec 2023 16:01:38 +9900
-Subject: [PATCH 02/14] xfs: refactor the allocation and freeing of incore
- inode fork btree roots
+	b=IA9+YC7/BzlqMt9uCAiowkTjAWeDYYNSbwjAoqbJHJgibeRIv9PVQljOGR5b12h6d
+	 Ur9wzQJo9GT7YyPyG5SkagS4XDqr1el1TtIMzldsPjRvWOg5Bri+1fwjAhC3IAMIgA
+	 MjWrY1S7arwVy6YrdKKgNkYjZVNsZ+Tpk2ov34T3rPkGJ+XKc+ckufZO9N8D0rvYz6
+	 dYOqrcuDXCFvB0Vnu+a/2SODHBMHG5CAjs+AAyYElyNCxDevQC4fzePEv4Jp6HxN9B
+	 Tq31DoqEvWSG2owCgEotxyw2zavJfbNU9/L/anySAqWGBDI/YfEiKaGCeQUoiWppiR
+	 zlZYMk1xa24AA==
+Date: Sun, 31 Dec 2023 16:25:06 +9900
+Subject: [PATCH 5/9] xfs: add a ci_entry helper
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013228.1812545.15094582290392984235.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
-References: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
+Message-ID: <170405016687.1816837.6258236545791657769.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
+References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,124 +52,69 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor the code that allocates and freese the incore inode fork btree
-roots.  This will help us disentangle some of the weird logic when we're
-creating and tearing down inode-based btrees.
+Add a helper to translate from the item list head to the
+refcount_intent_item structure and use it so shorten assignments and
+avoid the need for extra local variables.
 
+Inspired-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_inode_fork.c |   53 +++++++++++++++++++++++++++++++++--------------
- libxfs/xfs_inode_fork.h |    3 +++
- 2 files changed, 40 insertions(+), 16 deletions(-)
+ libxfs/defer_item.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
 
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 2d67e35c7e3..05f7ada0ae3 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -205,8 +205,7 @@ xfs_iformat_btree(
- 		return -EFSCORRUPTED;
- 	}
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index e7270d02c4b..471e4f6867d 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -485,6 +485,11 @@ const struct xfs_defer_op_type xfs_rtrmap_update_defer_type = {
  
--	ifp->if_broot_bytes = size;
--	ifp->if_broot = kmem_alloc(size, KM_NOFS);
-+	xfs_iroot_alloc(ip, whichfork, size);
- 	ASSERT(ifp->if_broot != NULL);
- 	/*
- 	 * Copy and convert from the on-disk structure
-@@ -356,6 +355,32 @@ xfs_iformat_attr_fork(
- 	return error;
- }
+ /* Reference Counting */
  
-+/* Allocate a new incore ifork btree root. */
-+void
-+xfs_iroot_alloc(
-+	struct xfs_inode	*ip,
-+	int			whichfork,
-+	size_t			bytes)
++static inline struct xfs_refcount_intent *ci_entry(const struct list_head *e)
 +{
-+	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
-+
-+	ifp->if_broot = kmem_alloc(bytes, KM_NOFS);
-+	ifp->if_broot_bytes = bytes;
++	return list_entry(e, struct xfs_refcount_intent, ri_list);
 +}
 +
-+/* Free all the memory and state associated with an incore ifork btree root. */
-+void
-+xfs_iroot_free(
-+	struct xfs_inode	*ip,
-+	int			whichfork)
-+{
-+	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
-+
-+	ifp->if_broot_bytes = 0;
-+	kmem_free(ifp->if_broot);
-+	ifp->if_broot = NULL;
-+}
-+
- /*
-  * Reallocate the space for if_broot based on the number of records
-  * being added or deleted as indicated in rec_diff.  Move the records
-@@ -404,8 +429,7 @@ xfs_iroot_realloc(
- 		 */
- 		if (ifp->if_broot_bytes == 0) {
- 			new_size = xfs_bmap_broot_space_calc(mp, rec_diff);
--			ifp->if_broot = kmem_alloc(new_size, KM_NOFS);
--			ifp->if_broot_bytes = (int)new_size;
-+			xfs_iroot_alloc(ip, whichfork, new_size);
- 			return;
- 		}
+ /* Sort refcount intents by AG. */
+ static int
+ xfs_refcount_update_diff_items(
+@@ -492,11 +497,8 @@ xfs_refcount_update_diff_items(
+ 	const struct list_head		*a,
+ 	const struct list_head		*b)
+ {
+-	const struct xfs_refcount_intent *ra;
+-	const struct xfs_refcount_intent *rb;
+-
+-	ra = container_of(a, struct xfs_refcount_intent, ri_list);
+-	rb = container_of(b, struct xfs_refcount_intent, ri_list);
++	struct xfs_refcount_intent	*ra = ci_entry(a);
++	struct xfs_refcount_intent	*rb = ci_entry(b);
  
-@@ -444,17 +468,15 @@ xfs_iroot_realloc(
- 		new_size = xfs_bmap_broot_space_calc(mp, new_max);
- 	else
- 		new_size = 0;
--	if (new_size > 0) {
--		new_broot = kmem_alloc(new_size, KM_NOFS);
--		/*
--		 * First copy over the btree block header.
--		 */
--		memcpy(new_broot, ifp->if_broot,
--			xfs_bmbt_block_len(ip->i_mount));
--	} else {
--		new_broot = NULL;
-+	if (new_size == 0) {
-+		xfs_iroot_free(ip, whichfork);
-+		return;
- 	}
- 
-+	/* First copy over the btree block header. */
-+	new_broot = kmem_alloc(new_size, KM_NOFS);
-+	memcpy(new_broot, ifp->if_broot, xfs_bmbt_block_len(ip->i_mount));
-+
- 	/*
- 	 * Only copy the records and pointers if there are any.
- 	 */
-@@ -478,9 +500,8 @@ xfs_iroot_realloc(
- 	kmem_free(ifp->if_broot);
- 	ifp->if_broot = new_broot;
- 	ifp->if_broot_bytes = (int)new_size;
--	if (ifp->if_broot)
--		ASSERT(xfs_bmap_bmdr_space(ifp->if_broot) <=
--			xfs_inode_fork_size(ip, whichfork));
-+	ASSERT(xfs_bmap_bmdr_space(ifp->if_broot) <=
-+		xfs_inode_fork_size(ip, whichfork));
- 	return;
+ 	return ra->ri_pag->pag_agno - rb->ri_pag->pag_agno;
  }
+@@ -551,10 +553,9 @@ xfs_refcount_update_finish_item(
+ 	struct list_head		*item,
+ 	struct xfs_btree_cur		**state)
+ {
+-	struct xfs_refcount_intent	*ri;
++	struct xfs_refcount_intent	*ri = ci_entry(item);
+ 	int				error;
  
-diff --git a/libxfs/xfs_inode_fork.h b/libxfs/xfs_inode_fork.h
-index ebeb925be09..18ea2d27777 100644
---- a/libxfs/xfs_inode_fork.h
-+++ b/libxfs/xfs_inode_fork.h
-@@ -172,6 +172,9 @@ void		xfs_iflush_fork(struct xfs_inode *, struct xfs_dinode *,
- void		xfs_idestroy_fork(struct xfs_ifork *ifp);
- void		xfs_idata_realloc(struct xfs_inode *ip, int64_t byte_diff,
- 				int whichfork);
-+void		xfs_iroot_alloc(struct xfs_inode *ip, int whichfork,
-+				size_t bytes);
-+void		xfs_iroot_free(struct xfs_inode *ip, int whichfork);
- void		xfs_iroot_realloc(struct xfs_inode *, int, int);
- int		xfs_iread_extents(struct xfs_trans *, struct xfs_inode *, int);
- int		xfs_iextents_copy(struct xfs_inode *, struct xfs_bmbt_rec *,
+-	ri = container_of(item, struct xfs_refcount_intent, ri_list);
+ 	error = xfs_refcount_finish_one(tp, ri, state);
+ 
+ 	/* Did we run out of reservation?  Requeue what we didn't finish. */
+@@ -581,9 +582,7 @@ STATIC void
+ xfs_refcount_update_cancel_item(
+ 	struct list_head		*item)
+ {
+-	struct xfs_refcount_intent	*ri;
+-
+-	ri = container_of(item, struct xfs_refcount_intent, ri_list);
++	struct xfs_refcount_intent	*ri = ci_entry(item);
+ 
+ 	xfs_refcount_update_put_group(ri);
+ 	kmem_cache_free(xfs_refcount_intent_cache, ri);
 
 
