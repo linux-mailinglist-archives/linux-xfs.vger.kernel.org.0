@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2392-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2231-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D48CB8212BC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:06:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F78821208
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:24:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 561C01F2269C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDA3D1F2258F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:24:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB834A03;
-	Mon,  1 Jan 2024 01:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF10E7F9;
+	Mon,  1 Jan 2024 00:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDHlHLyp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbXJFZ03"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B5C469E;
-	Mon,  1 Jan 2024 01:06:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA62EC433C7;
-	Mon,  1 Jan 2024 01:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7907EE
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:24:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14576C433C7;
+	Mon,  1 Jan 2024 00:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071212;
-	bh=PQOXKqTI0ymqlsfOptI3fL4SJuF8SZiLgL00u+l4ieI=;
+	s=k20201202; t=1704068691;
+	bh=mQLvLoWsR8xQnyv5hkRoe4T/lRU8EnO8XIqlmfZHOSY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=jDHlHLypZ6TOl05HTzosP2jzjuPX74t+Rd7Cs6ats0dsCmF8t4VSjndxncJ9K9cyP
-	 Ut5hznwjFTxNzpO9t3RHuD2bhBRgQ3MoCFoecsMx+qVYe6kBslxhABafnnUnwC267l
-	 +LjFBHN+f9pxXo5FkApEIOGMzCrsdicJEXhqgUaVWpCC2MI2U+1a4teDWKjTY4TrPl
-	 cJNSVy759iEw02skal9Lx/8hzD9XSZ7gEZ3kNqLwz0Yhs06Gin8PlznbX0cFDRbO4w
-	 ubtXtR0tOob1xIDdAyNLyYtPIV9tPmorsL+V2052/Hl7fpZUb8y5xMVk2XJ93iwUvG
-	 Bb9Xu9kk85qUg==
-Date: Sun, 31 Dec 2023 17:06:51 +9900
-Subject: [PATCH 1/2] xfs/122: update for XFS_IOC_MAP_FREESP
+	b=WbXJFZ03gaAHRvN5VpiByYXGJo7V8IXAo3eEqSfhZcjJpaK9vRIuF06RSyl/Le9LW
+	 sCOaD/ojM3TdzolC6YQrPSvtgXl75QwgrrMN/HijWUXzAHBrx3UY0LuoW7FGrQBo+/
+	 wBqPG3ygpusUyesbP8lAqz+srdUDW5z8NWZak9ltqLYGkSJDdVSfLkER7O+2UHigf4
+	 ioL5NqrU4F0U9DXf8Zey0V6TAM/t12vqFg55b5q46l56kpMwde5AAZLta5tFnTAi0Z
+	 8YU3Sk5FnutFgYBoPsxrq/VTrkUSAJ7r0xi40DY4UeB7Fo5QdKxOyd9kHgg8BKdeMr
+	 LrEOUhr1WIuBA==
+Date: Sun, 31 Dec 2023 16:24:50 +9900
+Subject: [PATCH 4/9] xfs: clean up refcount log intent item tracepoint
+ callsites
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405034087.1828773.17904902884694706449.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405034074.1828773.1484406890502132195.stgit@frogsfrogsfrogs>
-References: <170405034074.1828773.1484406890502132195.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405016674.1816837.1510641157689213799.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
+References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,25 +53,78 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Update this test to include the new free space mapping ioctl.
+Pass the incore refcount intent structure to the tracepoints instead of
+open-coding the argument passing.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    1 +
- 1 file changed, 1 insertion(+)
+ libxfs/xfs_refcount.c |   14 ++++----------
+ libxfs/xfs_refcount.h |    6 ++++++
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
 
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 4d7e6c1eb4..3134cf1619 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -114,6 +114,7 @@ sizeof(struct xfs_legacy_timestamp) = 8
- sizeof(struct xfs_log_dinode) = 176
- sizeof(struct xfs_log_legacy_timestamp) = 8
- sizeof(struct xfs_map_extent) = 32
-+sizeof(struct xfs_map_freesp) = 32
- sizeof(struct xfs_parent_name_rec) = 16
- sizeof(struct xfs_phys_extent) = 16
- sizeof(struct xfs_refcount_key) = 4
+diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
+index 18b04c38cdd..3ae68ea22e3 100644
+--- a/libxfs/xfs_refcount.c
++++ b/libxfs/xfs_refcount.c
+@@ -1366,9 +1366,7 @@ xfs_refcount_finish_one(
+ 
+ 	bno = XFS_FSB_TO_AGBNO(mp, ri->ri_startblock);
+ 
+-	trace_xfs_refcount_deferred(mp, XFS_FSB_TO_AGNO(mp, ri->ri_startblock),
+-			ri->ri_type, XFS_FSB_TO_AGBNO(mp, ri->ri_startblock),
+-			ri->ri_blockcount);
++	trace_xfs_refcount_deferred(mp, ri);
+ 
+ 	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_REFCOUNT_FINISH_ONE))
+ 		return -EIO;
+@@ -1431,8 +1429,7 @@ xfs_refcount_finish_one(
+ 		return -EFSCORRUPTED;
+ 	}
+ 	if (!error && ri->ri_blockcount > 0)
+-		trace_xfs_refcount_finish_one_leftover(mp, ri->ri_pag->pag_agno,
+-				ri->ri_type, bno, ri->ri_blockcount);
++		trace_xfs_refcount_finish_one_leftover(mp, ri);
+ 	return error;
+ }
+ 
+@@ -1448,11 +1445,6 @@ __xfs_refcount_add(
+ {
+ 	struct xfs_refcount_intent	*ri;
+ 
+-	trace_xfs_refcount_defer(tp->t_mountp,
+-			XFS_FSB_TO_AGNO(tp->t_mountp, startblock),
+-			type, XFS_FSB_TO_AGBNO(tp->t_mountp, startblock),
+-			blockcount);
+-
+ 	ri = kmem_cache_alloc(xfs_refcount_intent_cache,
+ 			GFP_NOFS | __GFP_NOFAIL);
+ 	INIT_LIST_HEAD(&ri->ri_list);
+@@ -1460,6 +1452,8 @@ __xfs_refcount_add(
+ 	ri->ri_startblock = startblock;
+ 	ri->ri_blockcount = blockcount;
+ 
++	trace_xfs_refcount_defer(tp->t_mountp, ri);
++
+ 	xfs_refcount_update_get_group(tp->t_mountp, ri);
+ 	xfs_defer_add(tp, &ri->ri_list, &xfs_refcount_update_defer_type);
+ }
+diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
+index 9b56768a590..01a20621192 100644
+--- a/libxfs/xfs_refcount.h
++++ b/libxfs/xfs_refcount.h
+@@ -48,6 +48,12 @@ enum xfs_refcount_intent_type {
+ 	XFS_REFCOUNT_FREE_COW,
+ };
+ 
++#define XFS_REFCOUNT_INTENT_STRINGS \
++	{ XFS_REFCOUNT_INCREASE,	"incr" }, \
++	{ XFS_REFCOUNT_DECREASE,	"decr" }, \
++	{ XFS_REFCOUNT_ALLOC_COW,	"alloc_cow" }, \
++	{ XFS_REFCOUNT_FREE_COW,	"free_cow" }
++
+ struct xfs_refcount_intent {
+ 	struct list_head			ri_list;
+ 	struct xfs_perag			*ri_pag;
 
 
