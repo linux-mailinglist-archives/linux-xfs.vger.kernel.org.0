@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2286-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2197-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B784E82123F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:39:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 221D28211E3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:16:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F8CE282A2C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:39:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4991B1C21C72
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:16:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1216803;
-	Mon,  1 Jan 2024 00:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B59CE389;
+	Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9PA6IXW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4nP7Zu3"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3CA7F9
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:39:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FCBC433C7;
-	Mon,  1 Jan 2024 00:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81304384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52205C433C7;
+	Mon,  1 Jan 2024 00:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069552;
-	bh=b27XyqnqjDR9oRR9vFpOLESXgkhid9oSYE+uiZU0CiM=;
+	s=k20201202; t=1704068191;
+	bh=HHnhsG+HS1rs8NrdzbvxQDpoiAc7M4/Mp9+5FLeb9kw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=b9PA6IXW3wTvL56ZYt9BojJ2Z4SAj1QM9Um7QWlRYivJ16dKBEVNzFy69MMJwlkVh
-	 rmuEglds7RhFL3DncEcM/O9c83KK2NslnYq+WDdeAGp52T1AVu+JZIVNyDlXCNX8jl
-	 UIok900GJDiGKPsF1oUL3OanLSe+ec24YN5yU5lLiXzMkX6wHT8FjRGLOicaIuW+uv
-	 FANk2Xhv7Xyd8Xu8UZaeEIDgylIrIKbyRBMSAn6wNCcE3RXvQ/S1s2IFtCno0v5gIp
-	 IpTV70tDZ0t0C5xrv6yyCKET2sbysj2nb5S+gbVEFYH2j8is6f58DKyYxXfHgb/RUQ
-	 bNVZyH/+4NFZA==
-Date: Sun, 31 Dec 2023 16:39:11 +9900
-Subject: [PATCH 4/5] xfs: apply noalloc mode to inode allocations too
+	b=h4nP7Zu3317NAqXJ3J/IvnJaPB+HXIxDq5QcQ+sn92+oOCMQt9gQHlmpIk5RWxRBs
+	 h2mhqgteN689ruyc1XP42GZvzCNeCjtME1/lUt+9b+aG6Ds2QmfrhjPBNshOmXnqCt
+	 zh6XJV7SFmItNcd7+6C0ky7EUH6jeUOc6KDATWutz/NSSPYTZjNC1SPXy7Rg03CyRp
+	 e9jXvIjLkJtCy/UPEDmWM6vgpuzLCA7EUoLRfqdE59cmzMYiuKs7Be1N1u5Cj2QCv2
+	 C6cYcpaZ9yXrEPRn+hP65Stk4cBHrAy+QqT2PucAJm7uxCbF5sCXMnIsEy9+173Fci
+	 1/Kb2xyKvG18Q==
+Date: Sun, 31 Dec 2023 16:16:30 +9900
+Subject: [PATCH 23/47] xfs_db: support the realtime rmapbt
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405019617.1820520.17125148444200392717.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
-References: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
+Message-ID: <170405015619.1815505.6319090856730567215.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,34 +52,158 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't allow inode allocations from this group if it's marked noalloc.
+Wire up various parts of xfs_db for realtime rmap support.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_ialloc.c |    3 +++
- 1 file changed, 3 insertions(+)
+ db/btblock.c             |    3 ++
+ db/btdump.c              |   64 ++++++++++++++++++++++++++++++++++++++++++++++
+ db/btheight.c            |    5 ++++
+ libxfs/libxfs_api_defs.h |    1 +
+ man/man8/xfs_db.8        |    3 +-
+ 5 files changed, 75 insertions(+), 1 deletion(-)
 
 
-diff --git a/libxfs/xfs_ialloc.c b/libxfs/xfs_ialloc.c
-index 935f8127c0e..09e494f4089 100644
---- a/libxfs/xfs_ialloc.c
-+++ b/libxfs/xfs_ialloc.c
-@@ -1059,6 +1059,7 @@ xfs_dialloc_ag_inobt(
+diff --git a/db/btblock.c b/db/btblock.c
+index 5cad166278d..70f6c3f6aed 100644
+--- a/db/btblock.c
++++ b/db/btblock.c
+@@ -147,6 +147,9 @@ block_to_bt(
+ 	case TYP_RMAPBT:
+ 		magic = crc ? XFS_RMAP_CRC_MAGIC : 0;
+ 		break;
++	case TYP_RTRMAPBT:
++		magic = crc ? XFS_RTRMAP_CRC_MAGIC : 0;
++		break;
+ 	case TYP_REFCBT:
+ 		magic = crc ? XFS_REFC_CRC_MAGIC : 0;
+ 		break;
+diff --git a/db/btdump.c b/db/btdump.c
+index 81642cde2b6..9c528e5a11a 100644
+--- a/db/btdump.c
++++ b/db/btdump.c
+@@ -441,6 +441,67 @@ dump_dabtree(
+ 	return ret;
+ }
  
- 	ASSERT(xfs_perag_initialised_agi(pag));
- 	ASSERT(xfs_perag_allows_inodes(pag));
-+	ASSERT(!xfs_perag_prohibits_alloc(pag));
- 	ASSERT(pag->pagi_freecount > 0);
++static bool
++is_btree_inode(void)
++{
++	struct xfs_dinode	*dip;
++
++	dip = iocur_top->data;
++	return dip->di_format == XFS_DINODE_FMT_RMAP;
++}
++
++static int
++dump_btree_inode(
++	bool			dump_node_blocks)
++{
++	char			*prefix;
++	struct xfs_dinode	*dip;
++	struct xfs_rtrmap_root	*rtrmap;
++	int			level;
++	int			numrecs;
++	int			ret;
++
++	dip = iocur_top->data;
++	switch (dip->di_format) {
++	case XFS_DINODE_FMT_RMAP:
++		prefix = "u3.rtrmapbt";
++		rtrmap = (struct xfs_rtrmap_root *)XFS_DFORK_DPTR(dip);
++		level = be16_to_cpu(rtrmap->bb_level);
++		numrecs = be16_to_cpu(rtrmap->bb_numrecs);
++		break;
++	default:
++		dbprintf("Unknown metadata inode type %u\n", dip->di_format);
++		return 0;
++	}
++
++	if (numrecs == 0)
++		return 0;
++	if (level > 0) {
++		if (dump_node_blocks) {
++			ret = eval("print %s.keys", prefix);
++			if (ret)
++				goto err;
++			ret = eval("print %s.ptrs", prefix);
++			if (ret)
++				goto err;
++		}
++		ret = eval("addr %s.ptrs[1]", prefix);
++		if (ret)
++			goto err;
++		ret = dump_btree_long(dump_node_blocks);
++	} else {
++		ret = eval("print %s.recs", prefix);
++	}
++	if (ret)
++		goto err;
++
++	ret = eval("pop");
++	return ret;
++err:
++	eval("pop");
++	return ret;
++}
++
+ static int
+ btdump_f(
+ 	int		argc,
+@@ -488,8 +549,11 @@ btdump_f(
+ 		return dump_btree_short(iflag);
+ 	case TYP_BMAPBTA:
+ 	case TYP_BMAPBTD:
++	case TYP_RTRMAPBT:
+ 		return dump_btree_long(iflag);
+ 	case TYP_INODE:
++		if (is_btree_inode())
++			return dump_btree_inode(iflag);
+ 		return dump_inode(iflag, aflag);
+ 	case TYP_ATTR:
+ 		return dump_dabtree(iflag, crc ? &attr3_print : &attr_print);
+diff --git a/db/btheight.c b/db/btheight.c
+index 6643489c82c..25ce3400334 100644
+--- a/db/btheight.c
++++ b/db/btheight.c
+@@ -53,6 +53,11 @@ struct btmap {
+ 		.maxlevels	= libxfs_rmapbt_maxlevels_ondisk,
+ 		.maxrecs	= libxfs_rmapbt_maxrecs,
+ 	},
++	{
++		.tag		= "rtrmapbt",
++		.maxlevels	= libxfs_rtrmapbt_maxlevels_ondisk,
++		.maxrecs	= libxfs_rtrmapbt_maxrecs,
++	},
+ };
  
-  restart_pagno:
-@@ -1687,6 +1688,8 @@ xfs_dialloc_good_ag(
- 		return false;
- 	if (!xfs_perag_allows_inodes(pag))
- 		return false;
-+	if (xfs_perag_prohibits_alloc(pag))
-+		return false;
+ static void
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index e961453052a..4b2fbd7cac9 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -288,6 +288,7 @@
+ #define xfs_rtgroup_update_super	libxfs_rtgroup_update_super
+ #define xfs_rtrmapbt_create_path	libxfs_rtrmapbt_create_path
+ #define xfs_rtrmapbt_droot_maxrecs	libxfs_rtrmapbt_droot_maxrecs
++#define xfs_rtrmapbt_maxlevels_ondisk	libxfs_rtrmapbt_maxlevels_ondisk
+ #define xfs_rtrmapbt_maxrecs		libxfs_rtrmapbt_maxrecs
  
- 	if (!xfs_perag_initialised_agi(pag)) {
- 		error = xfs_ialloc_read_agi(pag, tp, NULL);
+ #define xfs_sb_from_disk		libxfs_sb_from_disk
+diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
+index 0e20108fb51..778e3f9dd70 100644
+--- a/man/man8/xfs_db.8
++++ b/man/man8/xfs_db.8
+@@ -454,8 +454,9 @@ The supported btree types are:
+ .IR finobt ,
+ .IR bmapbt ,
+ .IR refcountbt ,
++.IR rmapbt ,
+ and
+-.IR rmapbt .
++.IR rtrmapbt .
+ The magic value
+ .I all
+ can be used to walk through all btree types.
 
 
