@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2362-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2234-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7291882129B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:59:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAF9882120B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:25:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 748A71C21CC3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:59:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A08D2829F2
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:25:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2D67EF;
-	Mon,  1 Jan 2024 00:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01A37FD;
+	Mon,  1 Jan 2024 00:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8oWNevI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVATvFcD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056F97ED;
-	Mon,  1 Jan 2024 00:59:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864A9C433C8;
-	Mon,  1 Jan 2024 00:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9A37ED
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB17FC433C8;
+	Mon,  1 Jan 2024 00:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070742;
-	bh=MgFLUXCk5rf9uB5i0V7IUBLm99Hr2qikmIU5DayRiA8=;
+	s=k20201202; t=1704068738;
+	bh=ueLlzfXFAadRNJc9jd8/4anPR0BS+wXbDVygxXzMqdE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=A8oWNevIgjUnZPwSz0RF0i9GQWM+Ns3kHvcXw61JhqazCZcW6FuQGjn/g7SDE7PFH
-	 wNLVjYMBHpBBHDvoHHwCJUBYSI9clRPnfw+NnYBGBpIJuO4edzbOn9+3zykhXPhkgo
-	 KVsNl9Rq2QkhUPEZjuYpUXDCv2TnYltVEMhhZntLgrajab81voIwzoA0hwJPIqyQ0J
-	 nTW5AzHsqIAj1VzuEaMpHG1eUz5a4vmM8qUH5e1s6VbZK1ghNs68SnnEhY/FdMew1y
-	 A/kQ8rzgNZ3jeIfF3HbkqcsDbF+n6js11hpx+gBNMwkWj69mcc9+aOyDrAI2w0aEdN
-	 URax+x6o1aWRg==
-Date: Sun, 31 Dec 2023 16:59:02 +9900
-Subject: [PATCH 05/13] xfs/122: update for rtgroups-based realtime rmap btrees
+	b=iVATvFcDbYamNA2zBc/ozfTKQXgRzvcqPoscCNFs5kMBRIH575McsT4ZFsfz10xM6
+	 PT5X5y72hTU5rldsu5p2jn7Hwvg31rdgh71B6X1L3Tn2RyD9/dpYEjUB8txYBGNNiy
+	 Ag+pc6/Ko2Gg7rtyN3BNn3l/17yHRALYxRdIftu1nBeXExUQ3pjucHFIJtuPtu1un4
+	 UKYjGzImoq5CfcMNVtDu1o2rBZ+JWlHUaProoHbDsTOoIFcsOk/b9lVjytmF7wZLhh
+	 hu5Dofu3F9WbS6Rnnw3Ic96F/y+VMrYAZxisL29MTnaAVIXabHc/4gTPPnp5deUORJ
+	 Lk07Fd/rBUl1A==
+Date: Sun, 31 Dec 2023 16:25:37 +9900
+Subject: [PATCH 7/9] xfs: don't bother calling xfs_refcount_finish_one_cleanup
+ in xfs_refcount_finish_one
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405031300.1826914.17433169728736943917.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
-References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405016714.1816837.16218175860775218003.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
+References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,31 +53,100 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've redesigned realtime rmap to require that the rt section
-be sharded into allocation groups of no more than 2^31 blocks, we've
-reduced the size of the ondisk structures and therefore need to update
-this test.
+In xfs_refcount_finish_one we know the cursor is non-zero when calling
+xfs_refcount_finish_one_cleanup and we pass a 0 error variable.  This
+means xfs_refcount_finish_one_cleanup is just doing a
+xfs_btree_del_cursor.
 
+Open code that and move xfs_refcount_finish_one_cleanup to
+fs/xfs/xfs_refcount_item.c.
+
+Inspired-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ libxfs/defer_item.c   |   17 +++++++++++++++++
+ libxfs/xfs_refcount.c |   19 +------------------
+ libxfs/xfs_refcount.h |    2 --
+ 3 files changed, 18 insertions(+), 20 deletions(-)
 
 
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 837286a9d3..f5621cac12 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -120,8 +120,8 @@ sizeof(struct xfs_rmap_key) = 20
- sizeof(struct xfs_rmap_rec) = 24
- sizeof(struct xfs_rtbuf_blkinfo) = 48
- sizeof(struct xfs_rtgroup_geometry) = 128
--sizeof(struct xfs_rtrmap_key) = 24
--sizeof(struct xfs_rtrmap_rec) = 32
-+sizeof(struct xfs_rtrmap_key) = 20
-+sizeof(struct xfs_rtrmap_rec) = 24
- sizeof(struct xfs_rtrmap_root) = 4
- sizeof(struct xfs_rtsb) = 104
- sizeof(struct xfs_rud_log_format) = 16
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index e056c3b449b..58a18c7876d 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -587,6 +587,23 @@ xfs_refcount_update_abort_intent(
+ {
+ }
+ 
++/* Clean up after calling xfs_refcount_finish_one. */
++STATIC void
++xfs_refcount_finish_one_cleanup(
++	struct xfs_trans	*tp,
++	struct xfs_btree_cur	*rcur,
++	int			error)
++{
++	struct xfs_buf		*agbp;
++
++	if (rcur == NULL)
++		return;
++	agbp = rcur->bc_ag.agbp;
++	xfs_btree_del_cursor(rcur, error);
++	if (error)
++		xfs_trans_brelse(tp, agbp);
++}
++
+ const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
+ 	.name		= "refcount",
+ 	.create_intent	= xfs_refcount_update_create_intent,
+diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
+index 3ae68ea22e3..635bbf7f99d 100644
+--- a/libxfs/xfs_refcount.c
++++ b/libxfs/xfs_refcount.c
+@@ -1299,23 +1299,6 @@ xfs_refcount_adjust(
+ 	return error;
+ }
+ 
+-/* Clean up after calling xfs_refcount_finish_one. */
+-void
+-xfs_refcount_finish_one_cleanup(
+-	struct xfs_trans	*tp,
+-	struct xfs_btree_cur	*rcur,
+-	int			error)
+-{
+-	struct xfs_buf		*agbp;
+-
+-	if (rcur == NULL)
+-		return;
+-	agbp = rcur->bc_ag.agbp;
+-	xfs_btree_del_cursor(rcur, error);
+-	if (error)
+-		xfs_trans_brelse(tp, agbp);
+-}
+-
+ /*
+  * Set up a continuation a deferred refcount operation by updating the intent.
+  * Checks to make sure we're not going to run off the end of the AG.
+@@ -1379,7 +1362,7 @@ xfs_refcount_finish_one(
+ 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
+ 		nr_ops = rcur->bc_ag.refc.nr_ops;
+ 		shape_changes = rcur->bc_ag.refc.shape_changes;
+-		xfs_refcount_finish_one_cleanup(tp, rcur, 0);
++		xfs_btree_del_cursor(rcur, 0);
+ 		rcur = NULL;
+ 		*pcur = NULL;
+ 	}
+diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
+index 01a20621192..c94b8f71d40 100644
+--- a/libxfs/xfs_refcount.h
++++ b/libxfs/xfs_refcount.h
+@@ -82,8 +82,6 @@ void xfs_refcount_increase_extent(struct xfs_trans *tp,
+ void xfs_refcount_decrease_extent(struct xfs_trans *tp,
+ 		struct xfs_bmbt_irec *irec);
+ 
+-extern void xfs_refcount_finish_one_cleanup(struct xfs_trans *tp,
+-		struct xfs_btree_cur *rcur, int error);
+ extern int xfs_refcount_finish_one(struct xfs_trans *tp,
+ 		struct xfs_refcount_intent *ri, struct xfs_btree_cur **pcur);
+ 
 
 
