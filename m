@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2377-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2325-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2DC28212AC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:03:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33C03821273
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:49:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E365282B47
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A89C1C21D5B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0ED8802;
-	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BE1803;
+	Mon,  1 Jan 2024 00:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJA6QKAy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2lhwLSx"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C517EE;
-	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C07BC433C7;
-	Mon,  1 Jan 2024 01:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27E17EE;
+	Mon,  1 Jan 2024 00:49:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538B5C433C8;
+	Mon,  1 Jan 2024 00:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070977;
-	bh=ryjV8Jrw4OGG3FzNh3otD97RHKFVzbHCCZkGrrqFVx8=;
+	s=k20201202; t=1704070163;
+	bh=im8zc6XeXwkN1EF4G/Qjmvbip51EkovsRT71tZmHj+A=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=aJA6QKAy3u/A5G+DAS6srTTWvlONw3wvF69oDqTM2/+fayYiSBKqL0yDszIWI4+U+
-	 4ID2Ei/TZf8Y8Uo8DrUuGHSE0AN1nSrqUPsjuZCXGkDwDopu3GV0/9YJd/phCgMZyk
-	 6QX0xMqZhcRv7DCzf2XfUzEdwnKMrpQ5Yv0OvmCMPTWpw1NZbWWf1vO0XBEc6O4YHb
-	 r/t7/mS1ORtp85bdjhk9SR7qk+igBJDKpWGxOWvr4d62MBc6/HmB7nltOkloIe0TCm
-	 ZgYrLh29zV+ehM3eunrgXCjEuRz/59zg+MTo3b/UAxgUiU5x12gSylIeS1tmTnCZqc
-	 pUR5iY/TQCIBg==
-Date: Sun, 31 Dec 2023 17:02:56 +9900
-Subject: [PATCH 6/9] xfs: remove xfs/131 now that we allow reflink on realtime
- volumes
+	b=D2lhwLSxbk3cNv07tq2xO9afMGu59QpdWkeFpu4YzZzW3dO6qoWKec6dBT/c1azSt
+	 wDZaYWtyh5nSdJRmCIoP7f7oBTQJcIjm3hyrA8jkBTdMAB7ix64haZIIhC3DGFGVvI
+	 t80JpvQmMhmcRR/UewynJsQ9gdJ7Jiu3OuRKQVUAEJPbN4RiJUxw/f8TED02Hh4Rep
+	 Gk0Xr6NKswT+G7oUEmQ6mzFAUprjh3T5F+BhvOH6ISneS0CvMIzsOzZ+FtKY1u1bOF
+	 DqHXCaZvOtSgjVCs76VETCO/lu6YZQ93vCsm9ZOtWYjMLJ0yvovAtvFCEyLYmXC1gR
+	 twwk/i6miFf4Q==
+Date: Sun, 31 Dec 2023 16:49:22 +9900
+Subject: [PATCH 1/2] common/fuzzy: stress directory tree modifications with
+ the dirtree tester
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032095.1827358.13900239085409160451.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
-References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org, guan@eryu.me, fstests@vger.kernel.org
+Message-ID: <170405028907.1825187.18368003139938154708.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
+References: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,81 +53,125 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Remove this test, since we now support reflink on the rt volume.
+Stress test the directory tree corruption detector by racing it with
+fsstress.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/131     |   48 ------------------------------------------------
- tests/xfs/131.out |    5 -----
- 2 files changed, 53 deletions(-)
- delete mode 100755 tests/xfs/131
- delete mode 100644 tests/xfs/131.out
+ tests/xfs/1864     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1864.out |    2 ++
+ tests/xfs/1865     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1865.out |    2 ++
+ 4 files changed, 80 insertions(+)
+ create mode 100755 tests/xfs/1864
+ create mode 100644 tests/xfs/1864.out
+ create mode 100755 tests/xfs/1865
+ create mode 100644 tests/xfs/1865.out
 
 
-diff --git a/tests/xfs/131 b/tests/xfs/131
-deleted file mode 100755
-index 879e2dc6e8..0000000000
---- a/tests/xfs/131
-+++ /dev/null
-@@ -1,48 +0,0 @@
--#! /bin/bash
--# SPDX-License-Identifier: GPL-2.0
--# Copyright (c) 2015, Oracle and/or its affiliates.  All Rights Reserved.
--#
--# FS QA Test No. 131
--#
--# Ensure that we can't reflink realtime files.
--#
--. ./common/preamble
--_begin_fstest auto quick clone realtime
--
--# Override the default cleanup function.
--_cleanup()
--{
--    cd /
--    umount $SCRATCH_MNT > /dev/null 2>&1
--    rm -rf $tmp.* $testdir $metadump_file
--}
--
--# Import common functions.
--. ./common/filter
--. ./common/reflink
--
--# real QA test starts here
--_supported_fs xfs
--_require_realtime
--_require_scratch_reflink
--_require_cp_reflink
--
--echo "Format and mount scratch device"
--_scratch_mkfs >> $seqres.full
--_scratch_mount
--
--testdir=$SCRATCH_MNT/test-$seq
--mkdir $testdir
--
--echo "Create the original file blocks"
--blksz=65536
--$XFS_IO_PROG -R -f -c "truncate $blksz" $testdir/file1
--
--echo "Reflink every block"
--_cp_reflink $testdir/file1 $testdir/file2 2>&1 | _filter_scratch
--
--test -s $testdir/file2 && _fail "Should not be able to reflink a realtime file."
--
--# success, all done
--status=0
--exit
-diff --git a/tests/xfs/131.out b/tests/xfs/131.out
-deleted file mode 100644
-index 3c0186f0c7..0000000000
---- a/tests/xfs/131.out
-+++ /dev/null
-@@ -1,5 +0,0 @@
--QA output created by 131
--Format and mount scratch device
--Create the original file blocks
--Reflink every block
--cp: failed to clone 'SCRATCH_MNT/test-131/file2' from 'SCRATCH_MNT/test-131/file1': Invalid argument
+diff --git a/tests/xfs/1864 b/tests/xfs/1864
+new file mode 100755
+index 0000000000..d00bcb28b4
+--- /dev/null
++++ b/tests/xfs/1864
+@@ -0,0 +1,38 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1864
++#
++# Race fsstress and directory tree structure corruption detector for a while to
++# see if we crash or livelock.
++#
++. ./common/preamble
++_begin_fstest scrub dangerous_fsstress_scrub
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_scrub
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_scratch_xfs_stress_scrub -x 'dir' -s "scrub dirtree" -t "%dir%"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/1864.out b/tests/xfs/1864.out
+new file mode 100644
+index 0000000000..472f56323a
+--- /dev/null
++++ b/tests/xfs/1864.out
+@@ -0,0 +1,2 @@
++QA output created by 1864
++Silence is golden
+diff --git a/tests/xfs/1865 b/tests/xfs/1865
+new file mode 100755
+index 0000000000..098891536c
+--- /dev/null
++++ b/tests/xfs/1865
+@@ -0,0 +1,38 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1865
++#
++# Race fsstress and directory tree structure repair for a while to see if we
++# crash or livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_scratch_xfs_stress_online_repair -x 'dir' -s "repair dirtree" -t "%dir%"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/1865.out b/tests/xfs/1865.out
+new file mode 100644
+index 0000000000..9f2fecad3f
+--- /dev/null
++++ b/tests/xfs/1865.out
+@@ -0,0 +1,2 @@
++QA output created by 1865
++Silence is golden
 
 
