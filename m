@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2339-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2253-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32252821281
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:53:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC5F682121E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:30:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 453F81C21D11
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:53:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 703671F2258F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33EB7803;
-	Mon,  1 Jan 2024 00:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 369B91376;
+	Mon,  1 Jan 2024 00:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djlH5oof"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BO9QWw9+"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06327F9;
-	Mon,  1 Jan 2024 00:53:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70683C433C7;
-	Mon,  1 Jan 2024 00:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C4C1370
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:30:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3EFC433C7;
+	Mon,  1 Jan 2024 00:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070382;
-	bh=2Rc2nLnzg8//0iSKEFqfSst3P2h/y98MDXd5+yGNIdk=;
+	s=k20201202; t=1704069035;
+	bh=lCVF5RLdOQltvxlgsPzE/9FGeKBglWYXN1BY6Xjd+yo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=djlH5oofdWNexzL41j2OiYRZ/QVdmUVBTxeSoAGV6t6YxVKtEFIGDXMBfzElk6/30
-	 lAvwF8py4nroE37Dn5TRqUs80SYDKcy8sYZHWj8opPa00sY0ZF3vbC58Qaq+2oHwYT
-	 HsS6YJkU9v4/v/4oEIVhrTpixvqOZhtYcy++kVzJb4JW5dENw12aDnWFEagN5/cjwZ
-	 aPBbLCXSzNB8lAqY2hh8dfHTqwbQ9RQTUZZdUiDuoYuJri7ZPu4wviH1c8J/LRW6qf
-	 AXhqUdSoIxPIBg2EI4hOq3lY54xIEk9YbhBX3aLHlFlRX4L6esLYA2MgLYb/cBQIBW
-	 vvGmicH+ePeZg==
-Date: Sun, 31 Dec 2023 16:53:02 +9900
-Subject: [PATCH 01/17] common/populate: refactor caching of metadumps to a
- helper
+	b=BO9QWw9+v848VodQCNxamzVDhzo3fyLkmYQMFbGoaMBHiAIn6j+vPi68hC1DyDruv
+	 YfpshfAPptYWn3wzs1YCfO6oZRC9BdJnGWdlPVx92lY+d/eWBBaUz6iQUfkNXOCEBI
+	 CH2TtnzyC6ONAOFqXZ3vzu7+L4zqfIr5qPUkkwPRt3yJD1PMSdRzHNQXHRgPDtsyBq
+	 rz+B7SdTsM0BpxGB2pHXtTFUjwEcthwm3vrnnSIF0SAIkYod57WxsoBTfREzSns7Gu
+	 DVK05/FbL8CD3kQMMuqXeU7vzvzZ1OFY3z27xOxi7RrF5U+MaakHKRgHHxdHbNgYP1
+	 oZIVr+cKl/oKg==
+Date: Sun, 31 Dec 2023 16:30:34 +9900
+Subject: [PATCH 17/42] xfs: fix xfs_get_extsz_hint behavior with realtime
+ alwayscow files
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405030350.1826350.18345503384695892303.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
-References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405017352.1817107.13522881012218951368.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,82 +53,37 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Hoist out of _scratch_populate_cached all the code that we use to save a
-metadump of the populated filesystem.  We're going to make this more
-involved for XFS in the next few patches so that we can take advantage
-of the new support for external devices in metadump/mdrestore.
+Currently, we (ab)use xfs_get_extsz_hint so that it always returns a
+nonzero value for realtime files.  This apparently was done to disable
+delayed allocation for realtime files.
+
+However, once we enable realtime reflink, we can also turn on the
+alwayscow flag to force CoW writes to realtime files.  In this case, the
+logic will incorrectly send the write through the delalloc write path.
+
+Fix this by adjusting the logic slightly.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
+ libxfs/xfs_bmap.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 
-diff --git a/common/populate b/common/populate
-index 83cd0eb5db..72c88e0651 100644
---- a/common/populate
-+++ b/common/populate
-@@ -1047,6 +1047,31 @@ _scratch_populate_restore_cached() {
- 	return 1
- }
- 
-+# Take a metadump of the scratch filesystem and cache it for later.
-+_scratch_populate_save_metadump()
-+{
-+	local metadump_file="$1"
-+
-+	case "${FSTYP}" in
-+	"xfs")
-+		local logdev=none
-+		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
-+			logdev=$SCRATCH_LOGDEV
-+
-+		_xfs_metadump "$metadump_file" "$SCRATCH_DEV" "$logdev" \
-+				compress
-+		res=$?
-+		;;
-+	"ext2"|"ext3"|"ext4")
-+		_ext4_metadump "${SCRATCH_DEV}" "${metadump_file}" compress
-+		res=$?
-+		;;
-+	*)
-+		_fail "Don't know how to save a ${FSTYP} filesystem."
-+	esac
-+	return $res
-+}
-+
- # Populate a scratch FS from scratch or from a cached image.
- _scratch_populate_cached() {
- 	local meta_descr="$(_scratch_populate_cache_tag "$@")"
-@@ -1070,26 +1095,20 @@ _scratch_populate_cached() {
- 
- 	# Oh well, just create one from scratch
- 	_scratch_mkfs
--	echo "${meta_descr}" > "${populate_metadump_descr}"
- 	case "${FSTYP}" in
- 	"xfs")
- 		_scratch_xfs_populate $@
- 		_scratch_xfs_populate_check
--
--		local logdev=none
--		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
--			logdev=$SCRATCH_LOGDEV
--
--		_xfs_metadump "$POPULATE_METADUMP" "$SCRATCH_DEV" "$logdev" \
--			compress
- 		;;
- 	"ext2"|"ext3"|"ext4")
- 		_scratch_ext4_populate $@
- 		_scratch_ext4_populate_check
--		_ext4_metadump "${SCRATCH_DEV}" "${POPULATE_METADUMP}" compress
- 		;;
- 	*)
- 		_fail "Don't know how to populate a ${FSTYP} filesystem."
- 		;;
- 	esac
-+
-+	_scratch_populate_save_metadump "${POPULATE_METADUMP}" && \
-+			echo "${meta_descr}" > "${populate_metadump_descr}"
- }
+diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
+index 9e30b4441c1..c87ca1938ec 100644
+--- a/libxfs/xfs_bmap.c
++++ b/libxfs/xfs_bmap.c
+@@ -6378,9 +6378,8 @@ xfs_get_extsz_hint(
+ 	 * No point in aligning allocations if we need to COW to actually
+ 	 * write to them.
+ 	 */
+-	if (xfs_is_always_cow_inode(ip))
+-		return 0;
+-	if ((ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
++	if (!xfs_is_always_cow_inode(ip) &&
++	    (ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
+ 		return ip->i_extsize;
+ 	if (XFS_IS_REALTIME_INODE(ip))
+ 		return ip->i_mount->m_sb.sb_rextsize;
 
 
