@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2315-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2136-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47A72821269
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:46:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 580598211A6
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:01:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D65DF282AD3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:46:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D04D9B219E1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:01:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF0EBA3A;
-	Mon,  1 Jan 2024 00:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB2AFCA59;
+	Mon,  1 Jan 2024 00:00:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6soGt6W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wolba3wa"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4672BBA32;
-	Mon,  1 Jan 2024 00:46:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C39C433C8;
-	Mon,  1 Jan 2024 00:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982B0CA57
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:00:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D57C433C8;
+	Mon,  1 Jan 2024 00:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070006;
-	bh=RrhqPbTimsUcSTsu21yzl32Eh29JC9NHW05Pw44yDyg=;
+	s=k20201202; t=1704067252;
+	bh=ziM/RN7F/5cAkNoa7swlxCeV5PccyBuFjRGYh7N10y4=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=s6soGt6W5ZDQxN0cvWm6eAqyzvKm98kuEIbogWS9Wtd4ekIKO2gFPVjV6eXqeL2wc
-	 TAhaEFSY6zYOeQa8stFLT94CWDWiwTPBCC42DztoTm29E4fe1No1X/mFQylc4QPM3w
-	 vU/WaEDBz9u5dgN8BmYYTXKo3amN+ZtJzOmSyPvrAoj1t4oK4UoJ68jaxkOZ9aAD0G
-	 5+AulkcDj81dnDC374U9QSk79FQVSsVgLtFuS5IjUUJn18yTLstB8zldfjxRAjroen
-	 duBhwVt9H+ZthLdv9c2GpzYfjQ30FV6XnD9ul74PjeGsJlaC2iGuKO7hKwXhGst6zE
-	 krLVPLXr+8SVA==
-Date: Sun, 31 Dec 2023 16:46:46 +9900
-Subject: [PATCH 02/11] xfs/206: filter out the parent= status from mkfs
+	b=Wolba3walPp2dmJ0wxORJJeqSr2UrbRSvsFmupKi3SD/rmOIT0q5ha6FbWYR0/TBA
+	 k/APbXwXSS2UPhv6hKS3M3XuZE2PBpj+7ITLkYaa4cM0E77r+EmSxJuSYjL/ZrYaxr
+	 yKVPy3YwCqtkO43c9wmnso5tKv50PekasEmoaoIq3cx97UMvaAOPzfRgeh5uwC75xw
+	 Jl/G95Y8SddQE32IrDalzoQyPa1Q9HhbbSmZec+up1eVLTJ1klUuFglYyI0Jc7p4Fd
+	 l2eoWhddz61J7n0mZPPn6aLBf8+ZvvK4RsO03tYRlOIk97XBIomEkGFsVSXJz/MzLK
+	 FC3caxSHssUhw==
+Date: Sun, 31 Dec 2023 16:00:51 +9900
+Subject: [PATCH 51/52] mkfs: add headers to realtime summary blocks
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: zlang@redhat.com, djwong@kernel.org
-Cc: fstests@vger.kernel.org, catherine.hoang@oracle.com,
- allison.henderson@oracle.com, guan@eryu.me, linux-xfs@vger.kernel.org
-Message-ID: <170405028454.1824869.85735145276487131.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
-References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405012844.1811243.5518616373565458779.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
+References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,28 +52,33 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Filter out the parent pointer bits from the mkfs output so that we don't
-cause a regression in this test.
+When the rtgroups feature is enabled, format rtsummary blocks with the
+appropriate block headers.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/206 |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mkfs/proto.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 
-diff --git a/tests/xfs/206 b/tests/xfs/206
-index cb346b6dc9..f7f12ff1f9 100755
---- a/tests/xfs/206
-+++ b/tests/xfs/206
-@@ -64,7 +64,8 @@ mkfs_filter()
- 	    -e "s/\(sunit=\)\([0-9]* blks,\)/\10 blks,/" \
- 	    -e "s/, lazy-count=[0-9]//" \
- 	    -e "/.*crc=/d" \
--	    -e "/^Default configuration/d"
-+	    -e "/^Default configuration/d" \
-+	    -e 's/, parent=[01]//'
+diff --git a/mkfs/proto.c b/mkfs/proto.c
+index f5b7859f9a9..b89b114d0d6 100644
+--- a/mkfs/proto.c
++++ b/mkfs/proto.c
+@@ -991,6 +991,14 @@ rtsummary_init(
+ 	if (error)
+ 		fail(_("Block allocation of the realtime summary inode failed"),
+ 				error);
++
++	if (xfs_has_rtgroups(mp)) {
++		error = init_rtblock_headers(mp->m_rsumip,
++				XFS_B_TO_FSB(mp, mp->m_rsumsize),
++				&xfs_rtsummary_buf_ops, XFS_RTSUMMARY_MAGIC);
++		if (error)
++			fail(_("Initialization of rtsummary failed"), error);
++	}
  }
  
- # mkfs slightly smaller than that, small log for speed.
+ /*
 
 
