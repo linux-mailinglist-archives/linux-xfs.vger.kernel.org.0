@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2361-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2376-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D65AA82129A
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:58:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0845D8212AB
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:02:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78C84B21B28
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:58:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E9C31C21D61
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:02:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79B3802;
-	Mon,  1 Jan 2024 00:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FCBE803;
+	Mon,  1 Jan 2024 01:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POcvr6Pt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHNru/oX"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F007EF;
-	Mon,  1 Jan 2024 00:58:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA44BC433C8;
-	Mon,  1 Jan 2024 00:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BF97EF;
+	Mon,  1 Jan 2024 01:02:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87030C433C8;
+	Mon,  1 Jan 2024 01:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070727;
-	bh=XXlbWvWkUPc6diQ1nc573PK6tgbd2IypPrgPrqS6584=;
+	s=k20201202; t=1704070961;
+	bh=zgzSX+sXh/oB3KgXb9RGzPP8BblpJQN7rbqn9NFxIrI=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=POcvr6PtplJt4YwUw+Tf3FXS2VJWSY97tNmrlUbi6KyeKTCuBhyBOk0sk/3h10Cxt
-	 ri8xbaDE5HIyqzMhWAY0NeYR+CyR7PSdFDx0bJtaLkXA8h+QlaKNywgm2FTR0g//ry
-	 eVDkpvFPqTEq6abNxJPczcOUkeRYS3tsT98ZgGsTHSfwzUQk6VuzjKkiQyi3YsO+TC
-	 MPbmuk5dWGc6a/nlvX1QKv49joKLcwVU9+ZOuId4jkE8T7U2OnNNiJa1yWgXiZICgI
-	 KeBJtRzIGaNbXka9XN0cVangmty9ksayIMut9+/mts5NyhnuuPEqtDnw6xwpo/i36b
-	 u9FBqyKmI6vyw==
-Date: Sun, 31 Dec 2023 16:58:46 +9900
-Subject: [PATCH 04/13] xfs/856: add rtrmapbt upgrade to test matrix
+	b=NHNru/oXxOnGvtU4PUS9sDufycyJfCVeJJ4Tl1Zac4WOB44FSX/ikOZafenHN9jUk
+	 XLmNJon/iO6eibdkay4l2fbMcoxR2hDC6GAiWZrM1iJLSp22XR2z2RKmFdR1FPcpt8
+	 iSzZSNrOftPKQjKgP2HhG/ihnPGkWCW9BsnUoG0luHyG0KCiioF7vDpUjnou4f9PCL
+	 /s+P4SgxpGECP/eUfD2ru7CRjNyUdDdPgeRkGgcLI6OujtHS31WZMmUyjNZ+xEcrCe
+	 SyP+PRDvtaTxFND9gpxPnuHZiH0SNPuA3BE40q2OS9YtzJO/s2pK5GpUHIxmff0tNP
+	 o8+dEQQiz5b3w==
+Date: Sun, 31 Dec 2023 17:02:41 +9900
+Subject: [PATCH 5/9] xfs: race fsstress with realtime refcount btree scrub and
+ repair
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405031286.1826914.4787726527598409685.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
-References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+Message-ID: <170405032082.1827358.7127035550813883108.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,87 +53,134 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add realtime reverse mapping btrees to the features that this test will
-try to upgrade.
+Race checking and rebuilding realtime refcount btrees with fsstress.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1856 |   39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ tests/xfs/1818     |   43 +++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1818.out |    2 ++
+ tests/xfs/1819     |   43 +++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1819.out |    2 ++
+ 4 files changed, 90 insertions(+)
+ create mode 100755 tests/xfs/1818
+ create mode 100644 tests/xfs/1818.out
+ create mode 100755 tests/xfs/1819
+ create mode 100644 tests/xfs/1819.out
 
 
-diff --git a/tests/xfs/1856 b/tests/xfs/1856
-index 93bdbaa531..8453d9bff2 100755
---- a/tests/xfs/1856
-+++ b/tests/xfs/1856
-@@ -34,11 +34,46 @@ rt_configured()
- 	test "$USE_EXTERNAL" = "yes" && test -n "$SCRATCH_RTDEV"
- }
- 
-+# Does mkfs support rtgroups?
-+supports_rtgroups()
-+{
-+	$MKFS_XFS_PROG 2>&1 | grep -q 'rtgroups='
+diff --git a/tests/xfs/1818 b/tests/xfs/1818
+new file mode 100755
+index 0000000000..674fff25fa
+--- /dev/null
++++ b/tests/xfs/1818
+@@ -0,0 +1,43 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1818
++#
++# Race fsstress and rt refcount btree scrub for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest scrub dangerous_fsstress_scrub
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
 +}
++_register_cleanup "_cleanup" BUS
 +
-+# Do we need to enable rtgroups at mkfs time to support a feature upgrade test?
-+need_rtgroups()
-+{
-+	local feat="$1"
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
 +
-+	# if realtime isn't configured, we don't need rt groups
-+	rt_configured || return 1
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch
++_require_xfs_stress_scrub
 +
-+	# If we don't even know what realtime rmap is, we don't need rt groups
-+	test -z "${FEATURE_STATE["rmapbt"]}" && return 1
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_has_feature "$SCRATCH_MNT" realtime
++_require_xfs_has_feature "$SCRATCH_MNT" reflink
++_xfs_force_bdev realtime $SCRATCH_MNT
 +
-+	# rt rmap btrees require rt groups but rt groups cannot be added to
-+	# an existing filesystem, so we must force it on at mkfs time
-+	test "${FEATURE_STATE["rmapbt"]}" -eq 1 && return 0
-+	test "$feat" = "rmapbt" && return 0
++_scratch_xfs_stress_scrub -s "scrub rtrefcountbt %rgno%"
 +
-+	return 1
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/1818.out b/tests/xfs/1818.out
+new file mode 100644
+index 0000000000..700d301da1
+--- /dev/null
++++ b/tests/xfs/1818.out
+@@ -0,0 +1,2 @@
++QA output created by 1818
++Silence is golden
+diff --git a/tests/xfs/1819 b/tests/xfs/1819
+new file mode 100755
+index 0000000000..e27a29271f
+--- /dev/null
++++ b/tests/xfs/1819
+@@ -0,0 +1,43 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1819
++#
++# Race fsstress and rt refcount btree scrub for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
 +}
++_register_cleanup "_cleanup" BUS
 +
- # Compute the MKFS_OPTIONS string for a particular feature upgrade test
- compute_mkfs_options()
- {
-+	local feat="$1"
- 	local m_opts=""
- 	local caller_options="$MKFS_OPTIONS"
-+	local rtgroups
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
 +
-+	need_rtgroups "$feat" && rtgroups=1
-+	if echo "$caller_options" | grep -q 'rtgroups='; then
-+		test -z "$rtgroups" && rtgroups=0
-+		caller_options="$(echo "$caller_options" | sed -e 's/rtgroups=*[0-9]*/rtgroups='$rtgroups'/g')"
-+	elif [ -n "$rtgroups" ]; then
-+		caller_options="$caller_options -r rtgroups=$rtgroups"
-+	fi
- 
- 	for feat in "${FEATURES[@]}"; do
- 		local feat_state="${FEATURE_STATE["${feat}"]}"
-@@ -170,10 +205,12 @@ post_exercise()
- # upgrade don't spread failure to the rest of the tests.
- FEATURES=()
- if rt_configured; then
-+	# rmap wasn't added to rt devices until after metadir and rtgroups
- 	check_repair_upgrade finobt && FEATURES+=("finobt")
- 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
- 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
- 	check_repair_upgrade metadir && FEATURES+=("metadir")
-+	supports_rtgroups && check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
- else
- 	check_repair_upgrade finobt && FEATURES+=("finobt")
- 	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
-@@ -196,7 +233,7 @@ for feat in "${FEATURES[@]}"; do
- 
- 	upgrade_start_message "$feat" | _tee_kernlog $seqres.full > /dev/null
- 
--	opts="$(compute_mkfs_options)"
-+	opts="$(compute_mkfs_options "$feat")"
- 	echo "mkfs.xfs $opts" >> $seqres.full
- 
- 	# Format filesystem
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_has_feature "$SCRATCH_MNT" realtime
++_require_xfs_has_feature "$SCRATCH_MNT" reflink
++_xfs_force_bdev realtime $SCRATCH_MNT
++
++_scratch_xfs_stress_online_repair -s "repair rtrefcountbt %rgno%"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/1819.out b/tests/xfs/1819.out
+new file mode 100644
+index 0000000000..041e17ab61
+--- /dev/null
++++ b/tests/xfs/1819.out
+@@ -0,0 +1,2 @@
++QA output created by 1819
++Silence is golden
 
 
