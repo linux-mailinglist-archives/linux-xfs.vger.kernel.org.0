@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2394-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2242-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAF008212BE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:07:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B144821213
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:27:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30BED1F22641
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:07:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6186D1C21C94
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72D24A08;
-	Mon,  1 Jan 2024 01:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92EE87FD;
+	Mon,  1 Jan 2024 00:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3W2MIqa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THXKdEJi"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840F04A03
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 01:07:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C1EC433C7;
-	Mon,  1 Jan 2024 01:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8377EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:27:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27285C433C8;
+	Mon,  1 Jan 2024 00:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071243;
-	bh=m/7HgEyW3smd7LCUVgApY7o/jRFpvkCybcektKRiqaQ=;
+	s=k20201202; t=1704068863;
+	bh=0r5FQvmIWf80pRqQPfIl1LR611YEAXl9r9KY0FB9lTQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=B3W2MIqaj+D+Qj88kwqOXer0vcjZUTefbOgeV3PtzuOulIw0Qhyma5myqdsYypjuE
-	 jR713l41UC8opAagmRtXZukKRuPpQHtAgKOg53HSIhESgRmsx1eQkltnMttaKU6Ew2
-	 rrcUq0WfzeGY6jKOfjTEcxjCsuSRB5DrXJOA3aVFSJAuxQ+EJ3ooxlEscqJtVbRRsT
-	 uAoqyRLiM1VDyDYnv7pr6Izq+Wv/s8LRuioramWPf1JcjBD4FfwYQcM05ZNMafVUy5
-	 jkFa1jvddGJKT54qcXrWOxre5nquzpef586AFIIWxi4YmDzH0ZL86IOO54AOOV1q1W
-	 uC9lysc55ZZfA==
-Date: Sun, 31 Dec 2023 17:07:22 +9900
-Subject: [PATCH 1/1] design: document atomic extent swap log intent structures
+	b=THXKdEJi7tSY0ckhWrwDf+gpuyZhJnn9Z5X6kGBXKcLtKENvGYfkn3q6GMU+nG2dQ
+	 eO0OtmkYU8+hOtmM4rOcYCEYOvXKRgWGVu/dyOP54jtotfTH4p48Q1ZyXHcZNDLb4j
+	 bVZ1B+OAilqMFgLfiYb3+Mv1nUGmOC5wvl5AhdujIRqCF37lUL5+X/axGjcIIccEWG
+	 5Pb26/kElc2r5nh9JtEEGz/NQaQdO/SiMdTRqObU98DGF0wcnlThi5/cyXS0C6nnDX
+	 aRIz/iBSEamNP6iyE/WQIxBGUCjZTIx+2tPZ0jqdYe/f3ygdOYeLSjzvL9ZC/j9FR4
+	 7nhIlZZxjhJyg==
+Date: Sun, 31 Dec 2023 16:27:42 +9900
+Subject: [PATCH 06/42] xfs: prepare refcount functions to deal with
+ rtrefcountbt
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: darrick.wong@oracle.com, djwong@kernel.org
+To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405035797.1829110.9842815227503662882.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405035784.1829110.16772887829212783961.stgit@frogsfrogsfrogs>
-References: <170405035784.1829110.16772887829212783961.stgit@frogsfrogsfrogs>
+Message-ID: <170405017205.1817107.16017049002658007547.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,182 +53,266 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Document the log formats for the atomic extent swapping feature.
+Prepare the high-level refcount functions to deal with the new realtime
+refcountbt and its slightly different conventions.  Provide the ability
+to talk to either refcountbt or rtrefcountbt formats from the same high
+level code.
+
+Note that we leave the _recover_cow_leftovers functions for a separate
+patch so that we can convert it all at once.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- .../allocation_groups.asciidoc                     |    7 +
- .../journaling_log.asciidoc                        |  111 ++++++++++++++++++++
- design/XFS_Filesystem_Structure/magic.asciidoc     |    2 
- 3 files changed, 120 insertions(+)
+ libxfs/xfs_refcount.c |   93 ++++++++++++++++++++++++++++++++++++++++---------
+ libxfs/xfs_refcount.h |    3 ++
+ 2 files changed, 78 insertions(+), 18 deletions(-)
 
 
-diff --git a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-index c0ba16a8..7b128838 100644
---- a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-+++ b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-@@ -470,6 +470,13 @@ the FS log if it doesn't understand the flag.
- | Flag					| Description
- | +XFS_SB_FEAT_INCOMPAT_LOG_XATTRS+	|
- Extended attribute updates have been committed to the ondisk log.
-+| +XFS_SB_FEAT_INCOMPAT_LOG_ATOMIC_SWAP+ |
-+Atomic file content swapping.  The filesystem is capable of swapping the
-+extents mapped to two arbitrary ranges of a file's fork by using intent log
-+items to track the progress of the high level operation.  In other words, a
-+range swap operation can be restarted if the system goes down, which is
-+necessary for userspace to commit of new file contents atomically.  See the
-+section about xref:SXI_Log_Item[extent swap log intents] for more information.
+diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
+index e98d5ea6ca2..2202d9cfb37 100644
+--- a/libxfs/xfs_refcount.c
++++ b/libxfs/xfs_refcount.c
+@@ -24,6 +24,7 @@
+ #include "xfs_ag.h"
+ #include "xfs_health.h"
+ #include "defer_item.h"
++#include "xfs_rtgroup.h"
  
- |=====
+ struct kmem_cache	*xfs_refcount_intent_cache;
  
-diff --git a/design/XFS_Filesystem_Structure/journaling_log.asciidoc b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-index 8ff437fe..daf9b225 100644
---- a/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-+++ b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-@@ -217,6 +217,8 @@ magic number to distinguish themselves.  Buffer data items only appear after
- | +XFS_LI_BUD+			| 0x1245        | xref:BUD_Log_Item[File Block Mapping Update Done]
- | +XFS_LI_ATTRI+		| 0x1246        | xref:ATTRI_Log_Item[Extended Attribute Update Intent]
- | +XFS_LI_ATTRD+		| 0x1247        | xref:ATTRD_Log_Item[Extended Attribute Update Done]
-+| +XFS_LI_SXI+			| 0x1248        | xref:SXI_Log_Item[File Extent Swap Intent]
-+| +XFS_LI_SXD+			| 0x1249        | xref:SXD_Log_Item[File Extent Swap Done]
- |=====
+@@ -40,6 +41,16 @@ STATIC int __xfs_refcount_cow_alloc(struct xfs_btree_cur *rcur,
+ STATIC int __xfs_refcount_cow_free(struct xfs_btree_cur *rcur,
+ 		xfs_agblock_t agbno, xfs_extlen_t aglen);
  
- Note that all log items (except for transaction headers) MUST start with
-@@ -649,6 +651,8 @@ file block mapping operation we want.  The upper three bytes are flag bits.
- | Value				| Description
- | +XFS_BMAP_EXTENT_ATTR_FORK+	| Extent is for the attribute fork.
- | +XFS_BMAP_EXTENT_UNWRITTEN+	| Extent is unwritten.
-+| +XFS_BMAP_EXTENT_REALTIME+	| Mapping applies to the data fork of a
-+realtime file.  This flag cannot be combined with +XFS_BMAP_EXTENT_ATTR_FORK+.
- |=====
++/* Return the maximum startblock number of the refcountbt. */
++static inline xfs_agblock_t
++xrefc_max_startblock(
++	struct xfs_btree_cur	*cur)
++{
++	if (cur->bc_btnum == XFS_BTNUM_RTREFC)
++		return cur->bc_mp->m_sb.sb_rgblocks;
++	return cur->bc_mp->m_sb.sb_agblocks;
++}
++
+ /*
+  * Look up the first record less than or equal to [bno, len] in the btree
+  * given by cur.
+@@ -143,6 +154,37 @@ xfs_refcount_check_irec(
+ 	return NULL;
+ }
  
- The ``file block mapping update intent'' operation comes first; it tells the
-@@ -821,6 +825,113 @@ These regions contain the name and value components of the extended attribute
- being updated, as needed.  There are no magic numbers; each region contains the
- data and nothing else.
++xfs_failaddr_t
++xfs_rtrefcount_check_irec(
++	struct xfs_rtgroup		*rtg,
++	const struct xfs_refcount_irec	*irec)
++{
++	if (irec->rc_blockcount == 0 || irec->rc_blockcount > XFS_REFC_LEN_MAX)
++		return __this_address;
++
++	if (!xfs_refcount_check_domain(irec))
++		return __this_address;
++
++	/* check for valid extent range, including overflow */
++	if (!xfs_verify_rgbext(rtg, irec->rc_startblock, irec->rc_blockcount))
++		return __this_address;
++
++	if (irec->rc_refcount == 0 || irec->rc_refcount > XFS_REFC_REFCOUNT_MAX)
++		return __this_address;
++
++	return NULL;
++}
++
++static inline xfs_failaddr_t
++xfs_refcount_check_btrec(
++	struct xfs_btree_cur		*cur,
++	const struct xfs_refcount_irec	*irec)
++{
++	if (cur->bc_btnum == XFS_BTNUM_RTREFC)
++		return xfs_rtrefcount_check_irec(cur->bc_ino.rtg, irec);
++	return xfs_refcount_check_irec(cur->bc_ag.pag, irec);
++}
++
+ static inline int
+ xfs_refcount_complain_bad_rec(
+ 	struct xfs_btree_cur		*cur,
+@@ -151,9 +193,15 @@ xfs_refcount_complain_bad_rec(
+ {
+ 	struct xfs_mount		*mp = cur->bc_mp;
  
-+[[SXI_Log_Item]]
-+=== File Extent Swap Intent
-+
-+These two log items work together to track the exchange of mapped extents
-+between the forks of two files.  Each operation requires a separate SXI/SXD
-+pair.  The log intent item has the following format:
-+
-+[source, c]
-+----
-+struct xfs_sxi_log_format {
-+     uint16_t                  sxi_type;
-+     uint16_t                  sxi_size;
-+     uint32_t                  __pad;
-+     uint64_t                  sxi_id;
-+     uint64_t                  sxi_inode1;
-+     uint64_t                  sxi_inode2;
-+     uint64_t                  sxi_startoff1;
-+     uint64_t                  sxi_startoff2;
-+     uint64_t                  sxi_blockcount;
-+     uint64_t                  sxi_flags;
-+     int64_t                   sxi_isize1;
-+     int64_t                   sxi_isize2;
-+};
-+----
-+
-+*sxi_type*::
-+The signature of an SXI operation, 0x1246.  This value is in host-endian order,
-+not big-endian like the rest of XFS.
-+
-+*sxi_size*::
-+Size of this log item.  Should be 1.
-+
-+*__pad*::
-+Must be zero.
-+
-+*sxi_id*::
-+A 64-bit number that binds the corresponding SXD log item to this SXI log item.
-+
-+*sxi_inode1*::
-+Inode number of the first file involved in the operation.
-+
-+*sxi_inode2*::
-+Inode number of the second file involved in the operation.
-+
-+*sxi_startoff1*::
-+Starting point within the first file, in units of filesystem blocks.
-+
-+*sxi_startoff2*::
-+Starting point within the second file, in units of filesystem blocks.
-+
-+*sxi_blockcount*::
-+The length to be exchanged, in units of filesystem blocks.
-+
-+*sxi_flags*::
-+Behavioral changes to the operation, as follows:
-+
-+.File Extent Swap Intent Item Flags
-+[options="header"]
-+|=====
-+| Value				   | Description
-+| +XFS_SWAP_EXTENT_ATTR_FORK+	   | Exchange extents between attribute forks.
-+| +XFS_SWAP_EXTENT_SET_SIZES+	   | Exchange the file sizes of the two files
-+after the operation completes.
-+| +XFS_SWAP_EXTENT_INO2_SHORTFORM+ | Convert the second file fork back to
-+inline format after the exchange completes.
-+|=====
-+
-+*sxi_isize1*::
-+The original size of the first file, in bytes.  This is zero if the
-++XFS_SWAP_EXTENT_SET_SIZES+ flag is not set.
-+
-+*sxi_isize2*::
-+The original size of the second file, in bytes.  This is zero if the
-++XFS_SWAP_EXTENT_SET_SIZES+ flag is not set.
-+
-+[[SXD_Log_Item]]
-+=== Completion of File Extent Swap
-+
-+The ``file extent swap done'' operation complements the ``file extent swap
-+intent'' operation.  This second operation indicates that the update actually
-+happened, so that log recovery needn't replay the update.  The SXD and the
-+actual updates are typically found in a new transaction following the
-+transaction in which the SXI was logged.  The completion has this format:
-+
-+[source, c]
-+----
-+struct xfs_sxd_log_format {
-+     uint16_t                  sxd_type;
-+     uint16_t                  sxd_size;
-+     uint32_t                  __pad;
-+     uint64_t                  sxd_sxi_id;
-+};
-+----
-+
-+*sxd_type*::
-+The signature of an SXD operation, 0x1247.  This value is in host-endian order,
-+not big-endian like the rest of XFS.
-+
-+*sxd_size*::
-+Size of this log item.  Should be 1.
-+
-+*__pad*::
-+Must be zero.
-+
-+*sxd_id*::
-+A 64-bit number that binds the corresponding SXI log item to this SXD log item.
-+
- [[Inode_Log_Item]]
- === Inode Updates
+-	xfs_warn(mp,
++	if (cur->bc_btnum == XFS_BTNUM_RTREFC) {
++		xfs_warn(mp,
++ "RT Refcount BTree record corruption in rtgroup %u detected at %pS!",
++				cur->bc_ino.rtg->rtg_rgno, fa);
++	} else {
++		xfs_warn(mp,
+  "Refcount BTree record corruption in AG %d detected at %pS!",
+ 				cur->bc_ag.pag->pag_agno, fa);
++	}
+ 	xfs_warn(mp,
+ 		"Start block 0x%x, block count 0x%x, references 0x%x",
+ 		irec->rc_startblock, irec->rc_blockcount, irec->rc_refcount);
+@@ -179,7 +227,7 @@ xfs_refcount_get_rec(
+ 		return error;
  
-diff --git a/design/XFS_Filesystem_Structure/magic.asciidoc b/design/XFS_Filesystem_Structure/magic.asciidoc
-index a343271a..613e50c0 100644
---- a/design/XFS_Filesystem_Structure/magic.asciidoc
-+++ b/design/XFS_Filesystem_Structure/magic.asciidoc
-@@ -73,6 +73,8 @@ are not aligned to blocks.
- | +XFS_LI_BUD+			| 0x1245        |       | xref:BUD_Log_Item[File Block Mapping Update Done]
- | +XFS_LI_ATTRI+		| 0x1246        |       | xref:ATTRI_Log_Item[Extended Attribute Update Intent]
- | +XFS_LI_ATTRD+		| 0x1247        |       | xref:ATTRD_Log_Item[Extended Attribute Update Done]
-+| +XFS_LI_SXI+			| 0x1248        |       | xref:SXI_Log_Item[File Extent Swap Intent]
-+| +XFS_LI_SXD+			| 0x1249        |       | xref:SXD_Log_Item[File Extent Swap Done]
- |=====
+ 	xfs_refcount_btrec_to_irec(rec, irec);
+-	fa = xfs_refcount_check_irec(cur->bc_ag.pag, irec);
++	fa = xfs_refcount_check_btrec(cur, irec);
+ 	if (fa)
+ 		return xfs_refcount_complain_bad_rec(cur, fa, irec);
  
- = Theoretical Limits
+@@ -1046,6 +1094,15 @@ xfs_refcount_merge_extents(
+ 	return 0;
+ }
+ 
++static inline struct xbtree_refc *
++xrefc_btree_state(
++	struct xfs_btree_cur	*cur)
++{
++	if (cur->bc_btnum == XFS_BTNUM_RTREFC)
++		return &cur->bc_ino.refc;
++	return &cur->bc_ag.refc;
++}
++
+ /*
+  * XXX: This is a pretty hand-wavy estimate.  The penalty for guessing
+  * true incorrectly is a shutdown FS; the penalty for guessing false
+@@ -1063,25 +1120,25 @@ xfs_refcount_still_have_space(
+ 	 * to handle each of the shape changes to the refcount btree.
+ 	 */
+ 	overhead = xfs_allocfree_block_count(cur->bc_mp,
+-				cur->bc_ag.refc.shape_changes);
+-	overhead += cur->bc_mp->m_refc_maxlevels;
++				xrefc_btree_state(cur)->shape_changes);
++	overhead += cur->bc_maxlevels;
+ 	overhead *= cur->bc_mp->m_sb.sb_blocksize;
+ 
+ 	/*
+ 	 * Only allow 2 refcount extent updates per transaction if the
+ 	 * refcount continue update "error" has been injected.
+ 	 */
+-	if (cur->bc_ag.refc.nr_ops > 2 &&
++	if (xrefc_btree_state(cur)->nr_ops > 2 &&
+ 	    XFS_TEST_ERROR(false, cur->bc_mp,
+ 			XFS_ERRTAG_REFCOUNT_CONTINUE_UPDATE))
+ 		return false;
+ 
+-	if (cur->bc_ag.refc.nr_ops == 0)
++	if (xrefc_btree_state(cur)->nr_ops == 0)
+ 		return true;
+ 	else if (overhead > cur->bc_tp->t_log_res)
+ 		return false;
+ 	return  cur->bc_tp->t_log_res - overhead >
+-		cur->bc_ag.refc.nr_ops * XFS_REFCOUNT_ITEM_OVERHEAD;
++		xrefc_btree_state(cur)->nr_ops * XFS_REFCOUNT_ITEM_OVERHEAD;
+ }
+ 
+ /*
+@@ -1116,7 +1173,7 @@ xfs_refcount_adjust_extents(
+ 		if (error)
+ 			goto out_error;
+ 		if (!found_rec || ext.rc_domain != XFS_REFC_DOMAIN_SHARED) {
+-			ext.rc_startblock = cur->bc_mp->m_sb.sb_agblocks;
++			ext.rc_startblock = xrefc_max_startblock(cur);
+ 			ext.rc_blockcount = 0;
+ 			ext.rc_refcount = 0;
+ 			ext.rc_domain = XFS_REFC_DOMAIN_SHARED;
+@@ -1140,7 +1197,7 @@ xfs_refcount_adjust_extents(
+ 			 * Either cover the hole (increment) or
+ 			 * delete the range (decrement).
+ 			 */
+-			cur->bc_ag.refc.nr_ops++;
++			xrefc_btree_state(cur)->nr_ops++;
+ 			if (tmp.rc_refcount) {
+ 				error = xfs_refcount_insert(cur, &tmp,
+ 						&found_tmp);
+@@ -1200,7 +1257,7 @@ xfs_refcount_adjust_extents(
+ 			goto skip;
+ 		ext.rc_refcount += adj;
+ 		trace_xfs_refcount_modify_extent(cur, &ext);
+-		cur->bc_ag.refc.nr_ops++;
++		xrefc_btree_state(cur)->nr_ops++;
+ 		if (ext.rc_refcount > 1) {
+ 			error = xfs_refcount_update(cur, &ext);
+ 			if (error)
+@@ -1286,7 +1343,7 @@ xfs_refcount_adjust(
+ 	if (shape_changed)
+ 		shape_changes++;
+ 	if (shape_changes)
+-		cur->bc_ag.refc.shape_changes++;
++		xrefc_btree_state(cur)->shape_changes++;
+ 
+ 	/* Now that we've taken care of the ends, adjust the middle extents */
+ 	error = xfs_refcount_adjust_extents(cur, agbno, aglen, adj);
+@@ -1360,8 +1417,8 @@ xfs_refcount_finish_one(
+ 	 * the startblock, get one now.
+ 	 */
+ 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
+-		nr_ops = rcur->bc_ag.refc.nr_ops;
+-		shape_changes = rcur->bc_ag.refc.shape_changes;
++		nr_ops = xrefc_btree_state(rcur)->nr_ops;
++		shape_changes = xrefc_btree_state(rcur)->shape_changes;
+ 		xfs_btree_del_cursor(rcur, 0);
+ 		rcur = NULL;
+ 		*pcur = NULL;
+@@ -1374,8 +1431,8 @@ xfs_refcount_finish_one(
+ 
+ 		*pcur = rcur = xfs_refcountbt_init_cursor(mp, tp, agbp,
+ 							  ri->ri_pag);
+-		rcur->bc_ag.refc.nr_ops = nr_ops;
+-		rcur->bc_ag.refc.shape_changes = shape_changes;
++		xrefc_btree_state(rcur)->nr_ops = nr_ops;
++		xrefc_btree_state(rcur)->shape_changes = shape_changes;
+ 	}
+ 
+ 	switch (ri->ri_type) {
+@@ -1666,7 +1723,7 @@ xfs_refcount_adjust_cow_extents(
+ 		goto out_error;
+ 	}
+ 	if (!found_rec) {
+-		ext.rc_startblock = cur->bc_mp->m_sb.sb_agblocks;
++		ext.rc_startblock = xrefc_max_startblock(cur);
+ 		ext.rc_blockcount = 0;
+ 		ext.rc_refcount = 0;
+ 		ext.rc_domain = XFS_REFC_DOMAIN_COW;
+@@ -1877,7 +1934,7 @@ xfs_refcount_recover_extent(
+ 	INIT_LIST_HEAD(&rr->rr_list);
+ 	xfs_refcount_btrec_to_irec(rec, &rr->rr_rrec);
+ 
+-	if (xfs_refcount_check_irec(cur->bc_ag.pag, &rr->rr_rrec) != NULL ||
++	if (xfs_refcount_check_btrec(cur, &rr->rr_rrec) != NULL ||
+ 	    XFS_IS_CORRUPT(cur->bc_mp,
+ 			   rr->rr_rrec.rc_domain != XFS_REFC_DOMAIN_COW)) {
+ 		xfs_btree_mark_sick(cur);
+@@ -2026,7 +2083,7 @@ xfs_refcount_query_range_helper(
+ 	xfs_failaddr_t			fa;
+ 
+ 	xfs_refcount_btrec_to_irec(rec, &irec);
+-	fa = xfs_refcount_check_irec(cur->bc_ag.pag, &irec);
++	fa = xfs_refcount_check_btrec(cur, &irec);
+ 	if (fa)
+ 		return xfs_refcount_complain_bad_rec(cur, fa, &irec);
+ 
+diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
+index 68acb0b1b4a..13344b402a7 100644
+--- a/libxfs/xfs_refcount.h
++++ b/libxfs/xfs_refcount.h
+@@ -12,6 +12,7 @@ struct xfs_perag;
+ struct xfs_btree_cur;
+ struct xfs_bmbt_irec;
+ struct xfs_refcount_irec;
++struct xfs_rtgroup;
+ 
+ extern int xfs_refcount_lookup_le(struct xfs_btree_cur *cur,
+ 		enum xfs_refc_domain domain, xfs_agblock_t bno, int *stat);
+@@ -120,6 +121,8 @@ extern void xfs_refcount_btrec_to_irec(const union xfs_btree_rec *rec,
+ 		struct xfs_refcount_irec *irec);
+ xfs_failaddr_t xfs_refcount_check_irec(struct xfs_perag *pag,
+ 		const struct xfs_refcount_irec *irec);
++xfs_failaddr_t xfs_rtrefcount_check_irec(struct xfs_rtgroup *rtg,
++		const struct xfs_refcount_irec *irec);
+ extern int xfs_refcount_insert(struct xfs_btree_cur *cur,
+ 		struct xfs_refcount_irec *irec, int *stat);
+ 
 
 
