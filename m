@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2313-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2285-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77146821267
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:46:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F92982123E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:39:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C927282A96
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:46:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8C401F225D8
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:39:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E314BBA3B;
-	Mon,  1 Jan 2024 00:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB8A7FD;
+	Mon,  1 Jan 2024 00:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl4wCLa+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/PgQ9Jk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A22BA32;
-	Mon,  1 Jan 2024 00:46:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8077DC433C7;
-	Mon,  1 Jan 2024 00:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226C37EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:38:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A73C433C7;
+	Mon,  1 Jan 2024 00:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069975;
-	bh=uiNBhjMCalL2Vc84JiA+Ch6eBs6JdZQ1GA/clmqV684=;
+	s=k20201202; t=1704069536;
+	bh=sRu7lxnEjcAk7fTqGL8LwMYVhy92nBbxnWn/ApW9fDk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Pl4wCLa+yEThwGb7DCHdMv5p1796a6bE6pMelGPkPCT3zwdHeejuQ+rcOW9ERcYv7
-	 66GPQVRopWlAZgGwaTWm/4jX24nosfoQ62Yd/niKegRPjeW3xiFHMdHuX62gH7bS34
-	 0j0Q/n2JdkYZF4iAuBPgD1nvYNjBpD7sU3kWo8MGWuaqkgZzRGDGz9oHztIz5+C0jW
-	 All4lwCrJO2K4uD3qp9VNtbvNtzGrJQ37ygc2dzq0M+bOWr+TajCASsV3FweKSt533
-	 KHC/2yMQfD7Mtr8J8o2zsUK73mroJA8keZqXEBHrrgZJ7yS0ows7/kI7ja3dfTYoO3
-	 AA5H6b7DUf0jg==
-Date: Sun, 31 Dec 2023 16:46:15 +9900
-Subject: [PATCH 1/1] xfs: test upgrading old features
+	b=C/PgQ9JkveZqRBN6vfb9JCqLmGv/XA4zbfRxrlvjtAymQc/XElSTF8gwch+P6mVXJ
+	 jOggCUWcvRFTLMei+5rmtj7/KOQYwYH0KfCRBKin2cuHbIDh/1jbEjikrzhzfAdYoT
+	 tgkO2JLaNkxRy1iA5s5KVevTluYdoFtDWsJnD+BrlHP6AN8IFSMXoAsdeYht7sSQAC
+	 0CqcA/h5UxZ1nkw+jIu18K6GkYRYzgBhlFCr5nRfDtoiitnB3yjXf69hKJCHU8YD+z
+	 4MIij7U7ZEEZDLOFZ29dqrfeLzGITMNN+QDpnGedTpeQCcMBJnqVec+mWqE55hWGE4
+	 +rA+ocRwj6Vsg==
+Date: Sun, 31 Dec 2023 16:38:56 +9900
+Subject: [PATCH 3/5] xfs: enable userspace to hide an AG from allocation
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
-Message-ID: <170405027834.1824126.3351657672266983074.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405027821.1824126.5951508817499207936.stgit@frogsfrogsfrogs>
-References: <170405027821.1824126.5951508817499207936.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405019603.1820520.5253949405191543987.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
+References: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,277 +52,117 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Test the ability to add older v5 features.
+Add an administrative interface so that userspace can hide an allocation
+group from block allocation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1856     |  247 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1856.out |    2 
- 2 files changed, 249 insertions(+)
- create mode 100755 tests/xfs/1856
- create mode 100644 tests/xfs/1856.out
+ libxfs/xfs_ag.c |   54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_fs.h |    5 +++++
+ 2 files changed, 59 insertions(+)
 
 
-diff --git a/tests/xfs/1856 b/tests/xfs/1856
-new file mode 100755
-index 0000000000..84e72d7c81
---- /dev/null
-+++ b/tests/xfs/1856
-@@ -0,0 +1,247 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1856
-+#
-+# Test upgrading filesystems with new features.
-+#
-+. ./common/preamble
-+_begin_fstest auto mkfs repair
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+
-+# real QA test starts here
-+_supported_fs xfs
-+
-+_require_check_dmesg
-+_require_scratch_nocheck
-+_require_scratch_xfs_crc
-+
-+# Does repair know how to add a particular feature to a filesystem?
-+check_repair_upgrade()
+diff --git a/libxfs/xfs_ag.c b/libxfs/xfs_ag.c
+index c639e8e07d7..abc0a9d89c5 100644
+--- a/libxfs/xfs_ag.c
++++ b/libxfs/xfs_ag.c
+@@ -1073,6 +1073,54 @@ xfs_ag_extend_space(
+ 	return 0;
+ }
+ 
++/* Compute the AG geometry flags. */
++static inline uint32_t
++xfs_ag_calc_geoflags(
++	struct xfs_perag	*pag)
 +{
-+	$XFS_REPAIR_PROG -c "$1=narf" 2>&1 | \
-+		grep -q 'unknown option' && return 1
-+	return 0
++	uint32_t		ret = 0;
++
++	if (xfs_perag_prohibits_alloc(pag))
++		ret |= XFS_AG_FLAG_NOALLOC;
++
++	return ret;
 +}
 +
-+# Are we configured for realtime?
-+rt_configured()
++/*
++ * Compare the current AG geometry flags against the flags in the AG geometry
++ * structure and update the AG state to reflect any changes, then update the
++ * struct to reflect the current status.
++ */
++static inline int
++xfs_ag_update_geoflags(
++	struct xfs_perag	*pag,
++	struct xfs_ag_geometry	*ageo,
++	uint32_t		new_flags)
 +{
-+	test "$USE_EXTERNAL" = "yes" && test -n "$SCRATCH_RTDEV"
++	uint32_t		old_flags = xfs_ag_calc_geoflags(pag);
++	int			error;
++
++	if (!(new_flags & XFS_AG_FLAG_UPDATE)) {
++		ageo->ag_flags = old_flags;
++		return 0;
++	}
++
++	if ((old_flags & XFS_AG_FLAG_NOALLOC) &&
++	    !(new_flags & XFS_AG_FLAG_NOALLOC)) {
++		xfs_ag_clear_noalloc(pag);
++	}
++
++	if (!(old_flags & XFS_AG_FLAG_NOALLOC) &&
++	    (new_flags & XFS_AG_FLAG_NOALLOC)) {
++		error = xfs_ag_set_noalloc(pag);
++		if (error)
++			return error;
++	}
++
++	ageo->ag_flags = xfs_ag_calc_geoflags(pag);
++	return 0;
 +}
 +
-+# Compute the MKFS_OPTIONS string for a particular feature upgrade test
-+compute_mkfs_options()
-+{
-+	local m_opts=""
-+	local caller_options="$MKFS_OPTIONS"
+ /* Retrieve AG geometry. */
+ int
+ xfs_ag_get_geometry(
+@@ -1084,6 +1132,7 @@ xfs_ag_get_geometry(
+ 	struct xfs_agi		*agi;
+ 	struct xfs_agf		*agf;
+ 	unsigned int		freeblks;
++	uint32_t		inflags = ageo->ag_flags;
+ 	int			error;
+ 
+ 	/* Lock the AG headers. */
+@@ -1094,6 +1143,10 @@ xfs_ag_get_geometry(
+ 	if (error)
+ 		goto out_agi;
+ 
++	error = xfs_ag_update_geoflags(pag, ageo, inflags);
++	if (error)
++		goto out;
 +
-+	for feat in "${FEATURES[@]}"; do
-+		local feat_state="${FEATURE_STATE["${feat}"]}"
+ 	/* Fill out form. */
+ 	memset(ageo, 0, sizeof(*ageo));
+ 	ageo->ag_number = pag->pag_agno;
+@@ -1111,6 +1164,7 @@ xfs_ag_get_geometry(
+ 	ageo->ag_freeblks = freeblks;
+ 	xfs_ag_geom_health(pag, ageo);
+ 
++out:
+ 	/* Release resources. */
+ 	xfs_buf_relse(agf_bp);
+ out_agi:
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 4159e96d01a..96688f9301e 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -305,6 +305,11 @@ struct xfs_ag_geometry {
+ #define XFS_AG_GEOM_SICK_REFCNTBT (1 << 9)  /* reference counts */
+ #define XFS_AG_GEOM_SICK_INODES	(1 << 10) /* bad inodes were seen */
+ 
++#define XFS_AG_FLAG_UPDATE	(1 << 0)  /* update flags */
++#define XFS_AG_FLAG_NOALLOC	(1 << 1)  /* do not allocate from this AG */
++#define XFS_AG_FLAG_ALL		(XFS_AG_FLAG_UPDATE | \
++				 XFS_AG_FLAG_NOALLOC)
 +
-+		if echo "$caller_options" | grep -E -w -q "${feat}=[0-9]*"; then
-+			# Change the caller's options
-+			caller_options="$(echo "$caller_options" | \
-+				sed -e "s/\([^[:alnum:]]\)${feat}=[0-9]*/\1${feat}=${feat_state}/g")"
-+		else
-+			# Add it to our list of new mkfs flags
-+			m_opts="${feat}=${feat_state},${m_opts}"
-+		fi
-+	done
-+
-+	test -n "$m_opts" && m_opts=" -m $m_opts"
-+
-+	echo "$caller_options$m_opts"
-+}
-+
-+# Log the start of an upgrade.
-+upgrade_start_message()
-+{
-+	local feat="$1"
-+
-+	echo "Add $feat to filesystem"
-+}
-+
-+# Find dmesg log messages since we started a particular upgrade test
-+dmesg_since_feature_upgrade_start()
-+{
-+	local feat_logmsg="$(upgrade_start_message "$1")"
-+
-+	# search the dmesg log of last run of $seqnum for possible failures
-+	# use sed \cregexpc address type, since $seqnum contains "/"
-+	dmesg | \
-+		tac | \
-+		sed -ne "0,\#run fstests $seqnum at $date_time#p" | \
-+		sed -ne "0,\#${feat_logmsg}#p" | \
-+		tac
-+}
-+
-+# Did the mount fail because this feature is not supported?
-+feature_unsupported()
-+{
-+	local feat="$1"
-+
-+	dmesg_since_feature_upgrade_start "$feat" | \
-+		grep -q 'has unknown.*features'
-+}
-+
-+# Exercise the scratch fs
-+scratch_fsstress()
-+{
-+	echo moo > $SCRATCH_MNT/sample.txt
-+	$FSSTRESS_PROG -n $((TIME_FACTOR * 1000)) -p $((LOAD_FACTOR * 4)) \
-+		-d $SCRATCH_MNT/data >> $seqres.full
-+}
-+
-+# Exercise the filesystem a little bit and emit a manifest.
-+pre_exercise()
-+{
-+	local feat="$1"
-+
-+	_try_scratch_mount &> $tmp.mount
-+	res=$?
-+	# If the kernel doesn't support the filesystem even after a
-+	# fresh format, skip the rest of the upgrade test quietly.
-+	if [ $res -eq 32 ] && feature_unsupported "$feat"; then
-+		echo "mount failed due to unsupported feature $feat" >> $seqres.full
-+		return 1
-+	fi
-+	if [ $res -ne 0 ]; then
-+		cat $tmp.mount
-+		echo "mount failed with $res before upgrading to $feat" | \
-+			tee -a $seqres.full
-+		return 1
-+	fi
-+
-+	scratch_fsstress
-+	find $SCRATCH_MNT -type f -print0 | xargs -r -0 md5sum > $tmp.manifest
-+	_scratch_unmount
-+	return 0
-+}
-+
-+# Check the manifest and exercise the filesystem more
-+post_exercise()
-+{
-+	local feat="$1"
-+
-+	_try_scratch_mount &> $tmp.mount
-+	res=$?
-+	# If the kernel doesn't support the filesystem even after a
-+	# fresh format, skip the rest of the upgrade test quietly.
-+	if [ $res -eq 32 ] && feature_unsupported "$feat"; then
-+		echo "mount failed due to unsupported feature $feat" >> $seqres.full
-+		return 1
-+	fi
-+	if [ $res -ne 0 ]; then
-+		cat $tmp.mount
-+		echo "mount failed with $res after upgrading to $feat" | \
-+			tee -a $seqres.full
-+		return 1
-+	fi
-+
-+	md5sum --quiet -c $tmp.manifest || \
-+		echo "fs contents ^^^ changed after adding $feat"
-+
-+	iam="check" _check_scratch_fs || \
-+		echo "scratch fs check failed after adding $feat"
-+
-+	# Try to mount the fs in case the check unmounted it
-+	_try_scratch_mount &>> $seqres.full
-+
-+	scratch_fsstress
-+
-+	iam="check" _check_scratch_fs || \
-+		echo "scratch fs check failed after exercising $feat"
-+
-+	# Try to unmount the fs in case the check didn't
-+	_scratch_unmount &>> $seqres.full
-+	return 0
-+}
-+
-+# Create a list of fs features in the order that support for them was added
-+# to the kernel driver.  For each feature upgrade test, we enable all the
-+# features that came before it and none of the ones after, which means we're
-+# testing incremental migrations.  We start each run with a clean fs so that
-+# errors and unsatisfied requirements (log size, root ino position, etc) in one
-+# upgrade don't spread failure to the rest of the tests.
-+FEATURES=()
-+if rt_configured; then
-+	check_repair_upgrade finobt && FEATURES+=("finobt")
-+	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
-+	check_repair_upgrade bigtime && FEATURES+=("bigtime")
-+else
-+	check_repair_upgrade finobt && FEATURES+=("finobt")
-+	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
-+	check_repair_upgrade reflink && FEATURES+=("reflink")
-+	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
-+	check_repair_upgrade bigtime && FEATURES+=("bigtime")
-+fi
-+
-+test "${#FEATURES[@]}" -eq 0 && \
-+	_notrun "xfs_repair does not know how to add V5 features"
-+
-+declare -A FEATURE_STATE
-+for f in "${FEATURES[@]}"; do
-+	FEATURE_STATE["$f"]=0
-+done
-+
-+for feat in "${FEATURES[@]}"; do
-+	echo "-----------------------" >> $seqres.full
-+
-+	upgrade_start_message "$feat" | _tee_kernlog $seqres.full > /dev/null
-+
-+	opts="$(compute_mkfs_options)"
-+	echo "mkfs.xfs $opts" >> $seqres.full
-+
-+	# Format filesystem
-+	MKFS_OPTIONS="$opts" _scratch_mkfs &>> $seqres.full
-+	res=$?
-+	outcome="mkfs returns $res for $feat upgrade test"
-+	echo "$outcome" >> $seqres.full
-+	if [ $res -ne 0 ]; then
-+		echo "$outcome"
-+		continue
-+	fi
-+
-+	# Create some files to make things interesting.
-+	pre_exercise "$feat" || break
-+
-+	# Upgrade the fs
-+	_scratch_xfs_repair -c "${feat}=1" &> $tmp.upgrade
-+	res=$?
-+	cat $tmp.upgrade >> $seqres.full
-+	grep -q "^Adding" $tmp.upgrade || \
-+		echo "xfs_repair ignored command to add $feat"
-+
-+	outcome="xfs_repair returns $res while adding $feat"
-+	echo "$outcome" >> $seqres.full
-+	if [ $res -ne 0 ]; then
-+		# Couldn't upgrade filesystem, move on to the next feature.
-+		FEATURE_STATE["$feat"]=1
-+		continue
-+	fi
-+
-+	# Make sure repair runs cleanly afterwards
-+	_scratch_xfs_repair -n &>> $seqres.full
-+	res=$?
-+	outcome="xfs_repair -n returns $res after adding $feat"
-+	echo "$outcome" >> $seqres.full
-+	if [ $res -ne 0 ]; then
-+		echo "$outcome"
-+	fi
-+
-+	# Make sure we can still exercise the filesystem.
-+	post_exercise "$feat" || break
-+
-+	# Update feature state for next run
-+	FEATURE_STATE["$feat"]=1
-+done
-+
-+# success, all done
-+echo Silence is golden.
-+status=0
-+exit
-diff --git a/tests/xfs/1856.out b/tests/xfs/1856.out
-new file mode 100644
-index 0000000000..3c569451b3
---- /dev/null
-+++ b/tests/xfs/1856.out
-@@ -0,0 +1,2 @@
-+QA output created by 1856
-+Silence is golden.
+ /*
+  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
+  */
 
 
