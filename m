@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2219-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2291-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BBBE8211FB
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:22:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C57DF821244
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:40:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1D881C219D8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:22:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60F681F218CD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DD97FD;
-	Mon,  1 Jan 2024 00:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453DE7FD;
+	Mon,  1 Jan 2024 00:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETjxV5wl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+XrR94k"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B147ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:21:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D429C433C8;
-	Mon,  1 Jan 2024 00:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113E57F9
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:40:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CA9C433C8;
+	Mon,  1 Jan 2024 00:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068519;
-	bh=aEoYIRyIy5kN1J+XfkFP7gvMIPr5+aLcYQX7cj9kBFo=;
+	s=k20201202; t=1704069630;
+	bh=ytI1yiozzpMvl5cxYBwwexdPS8/X1qnNlJV0hyfluow=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=ETjxV5wldepX+FvyACiBNCfey1X5fl9j/G4gXoRev7IeZcfPpcp6IsbWumEn2tkcX
-	 /7noO5ZdU/hf6sLhXek29legqLfvvD3f8y93w2Bw9QaXaed3mo86+nxMBKSzDH6i7f
-	 MEahM3Ho52m33aTLxNU+cuoZd0H4geoc6JOgAMnezEd7eo8lR5lqYxbgPRID7Npkub
-	 9S4tQb/HcTOksRuUVdP4ezpnF7l/upGzeboPWtfu25KFS0nqot6PD/e/gVnpiKkiFq
-	 sRbHL27OdN/CPE4iIikZDavoZ+KvxzJIa9kPiOIQjktya8Fnfg+rK+ppS+lLgGC4RZ
-	 nicJ5YlM+FTzw==
-Date: Sun, 31 Dec 2023 16:21:58 +9900
-Subject: [PATCH 44/47] xfs_repair: reserve per-AG space while rebuilding rt
- metadata
+	b=r+XrR94k+rTTF5dC46rqQ9V38ikuMil48AOtgY3AjZGIpDDgsFkn2xcpbs2lWGqo9
+	 alhsL4bDYbsCpx6F7MI8zrnOsWNrs34zyfHUhOwlTC3Y7UtUFJVHbH0BO0rKo43tjJ
+	 26z+UxHz1Y4AG116mLbApbi8KdMvrf4WtXP2L0y6M1K0+viw+tCZNhTcRawuNtvjMj
+	 pXu5cZG69bYq0IM/lqXY3EiPbpJ820kSrBeuqqN1pXOk1/OP5s3AgQ6BRsI7zQnQKE
+	 BD64XLpY6OlNpaSobaPiTDIUxvTsgps3XK0OOdS16lcQ3ETqdBsEKDsW0/Eg1i/gXs
+	 GLdscxgl0SkvA==
+Date: Sun, 31 Dec 2023 16:40:30 +9900
+Subject: [PATCH 02/10] xfs_io: support using XFS_IOC_MAP_FREESP to map free
+ space
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015899.1815505.4353601872526248570.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405020351.1820796.4340744744634500451.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
+References: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,107 +53,93 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Realtime metadata btrees can consume quite a bit of space on a full
-filesystem.  Since the metadata are just regular files, we need to
-make the per-AG reservations to avoid overfilling any of the AGs while
-rebuilding metadata.  This avoids the situation where a filesystem comes
-straight from repair and immediately trips over not having enough space
-in an AG.
+Add a command to call XFS_IOC_MAP_FREESP.  This is experimental code to
+see if we can build a free space defragmenter out of this.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/libxfs.h |    1 +
- repair/phase6.c  |   47 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ io/prealloc.c     |   35 +++++++++++++++++++++++++++++++++++
+ man/man8/xfs_io.8 |    8 +++++++-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
 
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 3ab93158cf7..72f38938f69 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -94,6 +94,7 @@ struct iomap;
- #include "xfs_rtbitmap.h"
- #include "xfs_rtgroup.h"
- #include "xfs_rtrmap_btree.h"
-+#include "xfs_ag_resv.h"
+diff --git a/io/prealloc.c b/io/prealloc.c
+index 5805897a4a0..0de3e142de1 100644
+--- a/io/prealloc.c
++++ b/io/prealloc.c
+@@ -45,6 +45,7 @@ static cmdinfo_t finsert_cmd;
+ static cmdinfo_t fzero_cmd;
+ static cmdinfo_t funshare_cmd;
+ #endif
++static cmdinfo_t fmapfree_cmd;
  
- #ifndef ARRAY_SIZE
- #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-diff --git a/repair/phase6.c b/repair/phase6.c
-index ab5c22ffbb0..fd862362f1d 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -3997,10 +3997,43 @@ reset_rt_metadata_inodes(
- 	}
+ static int
+ offset_length(
+@@ -383,6 +384,30 @@ funshare_f(
  }
+ #endif	/* HAVE_FALLOCATE */
  
 +static int
-+reserve_ag_blocks(
-+	struct xfs_mount	*mp)
++fmapfree_f(
++	int			argc,
++	char			**argv)
 +{
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
-+	int			error = 0;
-+	int			err2;
++	struct xfs_flock64	segment;
++	struct xfs_map_freesp	args = { };
 +
-+	mp->m_finobt_nores = false;
-+
-+	for_each_perag(mp, agno, pag) {
-+		err2 = -libxfs_ag_resv_init(pag, NULL);
-+		if (err2 && !error)
-+			error = err2;
++	if (!offset_length(argv[1], argv[2], &segment)) {
++		exitcode = 1;
++		return 0;
 +	}
 +
-+	return error;
-+}
++	args.offset = segment.l_start;
++	args.len = segment.l_len;
 +
-+static void
-+unreserve_ag_blocks(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
-+
-+	for_each_perag(mp, agno, pag)
-+		libxfs_ag_resv_free(pag);
++	if (ioctl(file->fd, XFS_IOC_MAP_FREESP, &args)) {
++		perror("XFS_IOC_MAP_FREESP");
++		exitcode = 1;
++		return 0;
++	}
++	return 0;
 +}
 +
  void
- phase6(xfs_mount_t *mp)
+ prealloc_init(void)
  {
- 	ino_tree_node_t		*irec;
-+	bool			reserve_perag;
-+	int			error;
- 	int			i;
- 
- 	parent_ptr_init(mp);
-@@ -4040,6 +4073,17 @@ phase6(xfs_mount_t *mp)
- 		do_warn(_("would reinitialize metadata root directory\n"));
- 	}
- 
-+	reserve_perag = xfs_has_realtime(mp) && !no_modify;
-+	if (reserve_perag) {
-+		error = reserve_ag_blocks(mp);
-+		if (error) {
-+			if (error != ENOSPC)
-+				do_warn(
-+	_("could not reserve per-AG space to rebuild realtime metadata"));
-+			reserve_perag = false;
-+		}
-+	}
+@@ -497,4 +522,14 @@ prealloc_init(void)
+ 	_("unshares shared blocks within the range");
+ 	add_command(&funshare_cmd);
+ #endif	/* HAVE_FALLOCATE */
 +
- 	if (need_rbmino)  {
- 		if (!no_modify)  {
- 			if (need_rbmino > 0)
-@@ -4078,6 +4122,9 @@ _("        - resetting contents of realtime bitmap and summary inodes\n"));
- 		}
- 	}
- 
-+	if (reserve_perag)
-+		unreserve_ag_blocks(mp);
-+
- 	reattach_metadir_quota_inodes(mp);
- 
- 	mark_standalone_inodes(mp);
++	fmapfree_cmd.name = "fmapfree";
++	fmapfree_cmd.cfunc = fmapfree_f;
++	fmapfree_cmd.argmin = 2;
++	fmapfree_cmd.argmax = 2;
++	fmapfree_cmd.flags = CMD_NOMAP_OK | CMD_FOREIGN_OK;
++	fmapfree_cmd.args = _("off len");
++	fmapfree_cmd.oneline =
++	_("maps free space into a file");
++	add_command(&fmapfree_cmd);
+ }
+diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
+index 411144151a1..e360d22dc38 100644
+--- a/man/man8/xfs_io.8
++++ b/man/man8/xfs_io.8
+@@ -513,8 +513,14 @@ Call fallocate with FALLOC_FL_INSERT_RANGE flag as described in the
+ .BR fallocate (2)
+ manual page to create the hole by shifting data blocks.
+ .TP
++.BI fmapfree " offset length"
++Maps free physical space into the file by calling XFS_IOC_MAP_FREESP as
++described in the
++.BR XFS_IOC_MAP_FREESP (2)
++manual page.
++.TP
+ .BI fpunch " offset length"
+-Punches (de-allocates) blocks in the file by calling fallocate with 
++Punches (de-allocates) blocks in the file by calling fallocate with
+ the FALLOC_FL_PUNCH_HOLE flag as described in the
+ .BR fallocate (2)
+ manual page.
 
 
