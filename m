@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2264-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2330-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00432821229
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:33:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96178821278
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:50:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85E6C282A2B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:33:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 465F6282A67
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:50:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1771362;
-	Mon,  1 Jan 2024 00:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC31803;
+	Mon,  1 Jan 2024 00:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfTolOI4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0zhdxmH"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7BF1368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:33:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A256C433C8;
-	Mon,  1 Jan 2024 00:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B0E7ED;
+	Mon,  1 Jan 2024 00:50:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95742C433C7;
+	Mon,  1 Jan 2024 00:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069207;
-	bh=56/qTPp6T7G8s4UJaVToZs98ILPBa4HEy6TViFfs6lc=;
+	s=k20201202; t=1704070241;
+	bh=uBUxT52TGiW08mXmtf7JvDkpoElO+sQ4NJECcdU7ghI=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=GfTolOI43kCyjr22+AziTPqApOluUQLJx65FKhaaJ0ghMdO0Asti/0+35B2OQ9eHI
-	 ylnuPRg9iMOE3Ej9wHjMCUpUg8qIS77QVszx0ftygKe40V+UIVq6DxyPkC80F1yLuv
-	 C5gFcrJfed556P0kpjpX0wNN02/8kGNsPe2PKj1vLD7VaR/bGCuYoDms3vHfVyzhXh
-	 Tlr2eTuBjLW4aWdt89XEazJafdMylToLXPg0VmwkFdLNme1Z7DiAmQS8Nh/NWAZXpm
-	 F08HmNJV4qvv4NcofpA0gTNRtEnNOZdjFYcVk6HYoSIppSQpwHkJaKxGyi/hi75+JD
-	 9tQMvBNInESfQ==
-Date: Sun, 31 Dec 2023 16:33:27 +9900
-Subject: [PATCH 28/42] xfs_db: copy the realtime refcount btree
+	b=d0zhdxmHGZghBP7CC+3oKr7vBpaqPk7+PhcXlCgPKC4g3cLLpQ9pJ6WxqsHT4yL2m
+	 H2mVGNa7/2kIXj52UJW09Rw83xdZktORZiemVv8++RkuDkdhLXlyqJrZWzicRYxKmi
+	 qEkc4J1JLhq+BXO0E3S2ngjcOd3Mo4M7+DUNU8JJ0HCdO2IRX63+aZH1NLHv2cGdxa
+	 gzj31KhXz3UOnkW0j5hgcNWflkqML1Asu+aNQSVSf2otwcmNxd3GTjI6Zm2vqW/ZZy
+	 DJ+3zFVDMtnyuDo6oVW8eSd2OXMe1Ib0TD0RNkj0lSMRBvpRVbJmJre3j/ocoGSwCW
+	 uqPh4kSrk+X8Q==
+Date: Sun, 31 Dec 2023 16:50:41 +9900
+Subject: [PATCH 03/11] xfs/{030,033,178}: forcibly disable metadata directory
+ trees
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017500.1817107.14196805252186384913.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405029889.1826032.5600296612089676416.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,167 +53,79 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Copy the realtime refcountbt when we're metadumping the filesystem.
+The golden output for thests tests encode the xfs_repair output when we
+fuzz various parts of the filesystem.  With metadata directory trees
+enabled, however, the golden output changes dramatically to reflect
+reconstruction of the metadata directory tree.
+
+To avoid regressions, add a helper to force metadata directories off via
+MKFS_OPTIONS.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/metadump.c |  129 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
+ common/xfs    |   13 +++++++++++++
+ tests/xfs/030 |    1 +
+ tests/xfs/033 |    1 +
+ tests/xfs/178 |    1 +
+ 4 files changed, 16 insertions(+)
 
 
-diff --git a/db/metadump.c b/db/metadump.c
-index c6f6bf1ea17..6a33335a15b 100644
---- a/db/metadump.c
-+++ b/db/metadump.c
-@@ -710,6 +710,55 @@ copy_refcount_btree(
- 	return scan_btree(agno, root, levels, TYP_REFCBT, agf, scanfunc_refcntbt);
+diff --git a/common/xfs b/common/xfs
+index 48643b7c18..007c8704ce 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1871,3 +1871,16 @@ _scratch_xfs_find_metafile()
+ 	echo "${selector}"
+ 	return 0
  }
- 
-+static int
-+scanfunc_rtrefcbt(
-+	struct xfs_btree_block	*block,
-+	xfs_agnumber_t		agno,
-+	xfs_agblock_t		agbno,
-+	int			level,
-+	typnm_t			btype,
-+	void			*arg)
++
++# Force metadata directories off.
++_scratch_xfs_force_no_metadir()
 +{
-+	xfs_rtrefcount_ptr_t	*pp;
-+	int			i;
-+	int			numrecs;
++	if echo "$MKFS_OPTIONS" | grep -q 'metadir='; then
++		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/metadir=\([01]\)/metadir=0/g')"
++		return
++	fi
 +
-+	if (level == 0)
-+		return 1;
-+
-+	numrecs = be16_to_cpu(block->bb_numrecs);
-+	if (numrecs > mp->m_rtrefc_mxr[1]) {
-+		if (metadump.show_warnings)
-+			print_warning("invalid numrecs (%u) in %s block %u/%u",
-+				numrecs, typtab[btype].name, agno, agbno);
-+		return 1;
-+	}
-+
-+	pp = xfs_rtrefcount_ptr_addr(block, 1, mp->m_rtrefc_mxr[1]);
-+	for (i = 0; i < numrecs; i++) {
-+		xfs_agnumber_t	pagno;
-+		xfs_agblock_t	pbno;
-+
-+		pagno = XFS_FSB_TO_AGNO(mp, get_unaligned_be64(&pp[i]));
-+		pbno = XFS_FSB_TO_AGBNO(mp, get_unaligned_be64(&pp[i]));
-+
-+		if (pbno == 0 || pbno > mp->m_sb.sb_agblocks ||
-+		    pagno > mp->m_sb.sb_agcount) {
-+			if (metadump.show_warnings)
-+				print_warning("invalid block number (%u/%u) "
-+						"in inode %llu %s block %u/%u",
-+						pagno, pbno,
-+						(unsigned long long)metadump.cur_ino,
-+						typtab[btype].name, agno, agbno);
-+			continue;
-+		}
-+		if (!scan_btree(pagno, pbno, level, btype, arg,
-+				scanfunc_rtrefcbt))
-+			return 0;
-+	}
-+	return 1;
++	if grep -q 'metadir=' $MKFS_XFS_PROG; then
++		MKFS_OPTIONS="-m metadir=0 $MKFS_OPTIONS"
++	fi
 +}
-+
- /* filename and extended attribute obfuscation routines */
+diff --git a/tests/xfs/030 b/tests/xfs/030
+index 201a901579..a62ea4fab3 100755
+--- a/tests/xfs/030
++++ b/tests/xfs/030
+@@ -50,6 +50,7 @@ _supported_fs xfs
  
- struct name_ent {
-@@ -2445,6 +2494,83 @@ process_rtrmap(
- 	return 1;
- }
+ _require_scratch
+ _require_no_large_scratch_dev
++_scratch_xfs_force_no_metadir
  
-+static int
-+process_rtrefc(
-+	struct xfs_dinode	*dip,
-+	typnm_t			itype)
-+{
-+	struct xfs_rtrefcount_root	*dib;
-+	int			i;
-+	xfs_rtrefcount_ptr_t	*pp;
-+	int			level;
-+	int			nrecs;
-+	int			maxrecs;
-+	int			whichfork;
-+	typnm_t			btype;
-+
-+	if (itype == TYP_ATTR && metadump.show_warnings) {
-+		print_warning("ignoring rtrefcbt root in inode %llu attr fork",
-+				(unsigned long long)metadump.cur_ino);
-+		return 1;
-+	}
-+
-+	whichfork = XFS_DATA_FORK;
-+	btype = TYP_RTREFCBT;
-+
-+	dib = (struct xfs_rtrefcount_root *)XFS_DFORK_PTR(dip, whichfork);
-+	level = be16_to_cpu(dib->bb_level);
-+	nrecs = be16_to_cpu(dib->bb_numrecs);
-+
-+	if (level > mp->m_rtrefc_maxlevels) {
-+		if (metadump.show_warnings)
-+			print_warning("invalid level (%u) in inode %lld %s "
-+					"root", level,
-+					(unsigned long long)metadump.cur_ino,
-+					typtab[btype].name);
-+		return 1;
-+	}
-+
-+	if (level == 0)
-+		return 1;
-+
-+	maxrecs = libxfs_rtrefcountbt_droot_maxrecs(
-+			XFS_DFORK_SIZE(dip, mp, whichfork),
-+			false);
-+	if (nrecs > maxrecs) {
-+		if (metadump.show_warnings)
-+			print_warning("invalid numrecs (%u) in inode %lld %s "
-+					"root", nrecs,
-+					(unsigned long long)metadump.cur_ino,
-+					typtab[btype].name);
-+		return 1;
-+	}
-+
-+	pp = xfs_rtrefcount_droot_ptr_addr(dib, 1, maxrecs);
-+	for (i = 0; i < nrecs; i++) {
-+		xfs_agnumber_t	ag;
-+		xfs_agblock_t	bno;
-+
-+		ag = XFS_FSB_TO_AGNO(mp, get_unaligned_be64(&pp[i]));
-+		bno = XFS_FSB_TO_AGBNO(mp, get_unaligned_be64(&pp[i]));
-+
-+		if (bno == 0 || bno > mp->m_sb.sb_agblocks ||
-+				ag > mp->m_sb.sb_agcount) {
-+			if (metadump.show_warnings)
-+				print_warning("invalid block number (%u/%u) "
-+						"in inode %llu %s root", ag,
-+						bno,
-+						(unsigned long long)metadump.cur_ino,
-+						typtab[btype].name);
-+			continue;
-+		}
-+
-+		if (!scan_btree(ag, bno, level, btype, &itype,
-+				scanfunc_rtrefcbt))
-+			return 0;
-+	}
-+	return 1;
-+}
-+
- static int
- process_inode_data(
- 	struct xfs_dinode	*dip,
-@@ -2492,6 +2618,9 @@ process_inode_data(
+ DSIZE="-dsize=100m,agcount=6"
  
- 		case XFS_DINODE_FMT_RMAP:
- 			return process_rtrmap(dip, itype);
-+
-+		case XFS_DINODE_FMT_REFCOUNT:
-+			return process_rtrefc(dip, itype);
- 	}
- 	return 1;
- }
+diff --git a/tests/xfs/033 b/tests/xfs/033
+index ef5dc4fa36..e886c15082 100755
+--- a/tests/xfs/033
++++ b/tests/xfs/033
+@@ -53,6 +53,7 @@ _supported_fs xfs
+ 
+ _require_scratch
+ _require_no_large_scratch_dev
++_scratch_xfs_force_no_metadir
+ 
+ # devzero blows away 512byte blocks, so make 512byte inodes (at least)
+ _scratch_mkfs_xfs | _filter_mkfs 2>$tmp.mkfs >/dev/null
+diff --git a/tests/xfs/178 b/tests/xfs/178
+index fee1e92bf3..4e39cc364c 100755
+--- a/tests/xfs/178
++++ b/tests/xfs/178
+@@ -52,6 +52,7 @@ _supported_fs xfs
+ #             fix filesystem, new mkfs.xfs will be fine.
+ 
+ _require_scratch
++_scratch_xfs_force_no_metadir
+ _scratch_mkfs_xfs | _filter_mkfs 2>$tmp.mkfs
+ test "${PIPESTATUS[0]}" -eq 0 || _fail "mkfs failed!"
+ 
 
 
