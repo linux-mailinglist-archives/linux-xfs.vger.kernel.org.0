@@ -1,48 +1,45 @@
-Return-Path: <linux-xfs+bounces-2324-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2208-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5F7D821272
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:49:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AABC8211EF
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BD4A1F23404
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:49:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E2471F22570
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 221AA802;
-	Mon,  1 Jan 2024 00:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB94656;
+	Mon,  1 Jan 2024 00:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmlFyddN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHyF/m7R"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EA7EF;
-	Mon,  1 Jan 2024 00:49:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E68C433C8;
-	Mon,  1 Jan 2024 00:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253E2642
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:19:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3D9C433C8;
+	Mon,  1 Jan 2024 00:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070147;
-	bh=9pTCbXpBc5tPtBGAEvC5ixQAphPN9WMTl4OXQX+2itE=;
+	s=k20201202; t=1704068347;
+	bh=ds0ER+b71NTgT5J7cUPJe0RFyA6JeW6r50sxeNPJb20=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=HmlFyddNI18fOdKd/2loBvrXkzdpopcufbGGiEz4uZiEEGASyL6MxBO4lfyZMSUYw
-	 XjGnEZb4GRKgLgkQ1gnNpI181YtFyTJlezOBb5PbRnXzyhuNXv9PZTPDLm8WpYOoR+
-	 ajYbPqYJaiOSXHeLzU/EP7s3GORvRlXXPpZ35lsjGyySFvd+L0QeLMGL4yYO3RwSP9
-	 eAE6rk2Jpzd/YSzdyhwNGi9PLY8O8GrmulmwxXy0ONyo0dzb5CSd1VNRDi4n3uzCQW
-	 seW5+x5r59SMKYSRXFEhpE5t+6kqH1uPRg0oqA/gXjnHphwdScD9jzJ+l/c9jCrELu
-	 zYugp1pHIw0mw==
-Date: Sun, 31 Dec 2023 16:49:07 +9900
-Subject: [PATCH 11/11] xfs: add parent pointer inject test
+	b=hHyF/m7RzpkjvI61jDB3elsXoV6wGSIA7cdWCEi6bPE/zCzCQPsD+4JwKjueVYege
+	 J2SV0YRcdPnu4L/MqezvDUU+J9pt2zfwZkwK3vUFL0QtPexyt6BJM/tpqr+DZT3ViI
+	 3BS3XYHr4Yw0RQLoCSjHGYmNkMXAlnHp5xyogFjaVE3MLf4qyBFMMfrpxYND0+4v+a
+	 b7mMrSMpXBgMBLXJE1Pt8A28cbceBPrq4FQHcfFb8Qotn2LHfe1dsodCl3twdm+gUH
+	 3sRsQphtXI2GkUTMlOxuT+Wi8k/XCpv3QtyrpW97M+fr4T9pwlGWINgAs5/eLeEDQo
+	 1eQlJ0ilf87XA==
+Date: Sun, 31 Dec 2023 16:19:07 +9900
+Subject: [PATCH 33/47] xfs_repair: flag suspect long-format btree blocks
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: zlang@redhat.com, djwong@kernel.org
-Cc: Allison Henderson <allison.henderson@oracle.com>,
- Catherine Hoang <catherine.hoang@oracle.com>, fstests@vger.kernel.org,
- catherine.hoang@oracle.com, allison.henderson@oracle.com, guan@eryu.me,
- linux-xfs@vger.kernel.org
-Message-ID: <170405028573.1824869.3091340030856582154.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
-References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015752.1815505.8105108722415202517.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,133 +50,130 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Allison Henderson <allison.henderson@oracle.com>
+From: Darrick J. Wong <djwong@kernel.org>
 
-Add a test to verify parent pointers after an error injection and log
-replay.
+Pass a "suspect" counter through scan_lbtree just like we do for
+short-format btree blocks, and increment its value when we encounter
+blocks with bad CRCs or outright corruption.  This makes it so that
+repair actually catches bmbt blocks with bad crcs or other verifier
+errors.
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1853     |   85 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1853.out |   14 +++++++++
- 2 files changed, 99 insertions(+)
- create mode 100755 tests/xfs/1853
- create mode 100644 tests/xfs/1853.out
+ repair/dinode.c |    2 +-
+ repair/scan.c   |   15 ++++++++++++---
+ repair/scan.h   |    3 +++
+ 3 files changed, 16 insertions(+), 4 deletions(-)
 
 
-diff --git a/tests/xfs/1853 b/tests/xfs/1853
-new file mode 100755
-index 0000000000..d5a5050e00
---- /dev/null
-+++ b/tests/xfs/1853
-@@ -0,0 +1,85 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2022-2024 Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 1853
-+#
-+# parent pointer inject test
-+#
-+. ./common/preamble
-+_begin_fstest auto quick parent
-+
-+# get standard environment, filters and checks
-+. ./common/filter
-+. ./common/inject
-+. ./common/parent
-+
-+# Modify as appropriate
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_sysfs debug/larp
-+_require_xfs_io_error_injection "larp"
-+_require_xfs_parent
-+_require_xfs_io_command "parent"
-+
-+# real QA test starts here
-+
-+# Create a directory tree using a protofile and
-+# make sure all inodes created have parent pointers
-+
-+protofile=$tmp.proto
-+
-+cat >$protofile <<EOF
-+DUMMY1
-+0 0
-+: root directory
-+d--777 3 1
-+: a directory
-+testfolder1 d--755 3 1
-+$
-+: back in the root
-+testfolder2 d--755 3 1
-+: done
-+$
-+EOF
-+
-+_scratch_mkfs -f -n parent=1 -p $protofile >>$seqres.full 2>&1 \
-+	|| _fail "mkfs failed"
-+_check_scratch_fs
-+
-+_scratch_mount >>$seqres.full 2>&1 \
-+	|| _fail "mount failed"
-+
-+testfolder1="testfolder1"
-+testfolder2="testfolder2"
-+file4="file4"
-+file5="file5"
-+
-+echo ""
-+
-+# Create files
-+touch $SCRATCH_MNT/$testfolder1/$file4
-+_verify_parent "$testfolder1" "$file4" "$testfolder1/$file4"
-+
-+# Inject error
-+_scratch_inject_error "larp"
-+
-+# Move files
-+mv $SCRATCH_MNT/$testfolder1/$file4 $SCRATCH_MNT/$testfolder2/$file5 2>&1 \
-+	| _filter_scratch
-+
-+# FS should be shut down, touch will fail
-+touch $SCRATCH_MNT/$testfolder2/$file5 2>&1 | _filter_scratch
-+
-+# Remount to replay log
-+_scratch_remount_dump_log >> $seqres.full
-+
-+# FS should be online, touch should succeed
-+touch $SCRATCH_MNT/$testfolder2/$file5
-+
-+# Check files again
-+_verify_parent "$testfolder2" "$file5" "$testfolder2/$file5"
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1853.out b/tests/xfs/1853.out
-new file mode 100644
-index 0000000000..736f6dec00
---- /dev/null
-+++ b/tests/xfs/1853.out
-@@ -0,0 +1,14 @@
-+QA output created by 1853
-+
-+*** testfolder1 OK
-+*** testfolder1/file4 OK
-+*** testfolder1/file4 OK
-+*** Verified parent pointer: name:file4, namelen:5
-+*** Parent pointer OK for child testfolder1/file4
-+mv: cannot stat 'SCRATCH_MNT/testfolder1/file4': Input/output error
-+touch: cannot touch 'SCRATCH_MNT/testfolder2/file5': Input/output error
-+*** testfolder2 OK
-+*** testfolder2/file5 OK
-+*** testfolder2/file5 OK
-+*** Verified parent pointer: name:file5, namelen:5
-+*** Parent pointer OK for child testfolder2/file5
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 31b3cd74139..a0071d5de88 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -872,7 +872,7 @@ _("bad bmap btree ptr 0x%" PRIx64 " in ino %" PRIu64 "\n"),
+ 
+ 		if (scan_lbtree(get_unaligned_be64(&pp[i]), level, scan_bmapbt,
+ 				type, whichfork, lino, tot, nex, blkmapp,
+-				&cursor, 1, check_dups, magic,
++				&cursor, 0, 1, check_dups, magic,
+ 				(void *)zap_metadata, &xfs_bmbt_buf_ops))
+ 			return(1);
+ 		/*
+diff --git a/repair/scan.c b/repair/scan.c
+index 1cd4d0ad2e1..2f8a3348ae1 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -136,6 +136,7 @@ scan_lbtree(
+ 				xfs_extnum_t		*nex,
+ 				blkmap_t		**blkmapp,
+ 				bmap_cursor_t		*bm_cursor,
++				int			suspect,
+ 				int			isroot,
+ 				int			check_dups,
+ 				int			*dirty,
+@@ -148,6 +149,7 @@ scan_lbtree(
+ 	xfs_extnum_t	*nex,
+ 	blkmap_t	**blkmapp,
+ 	bmap_cursor_t	*bm_cursor,
++	int		suspect,
+ 	int		isroot,
+ 	int		check_dups,
+ 	uint64_t	magic,
+@@ -167,6 +169,12 @@ scan_lbtree(
+ 			XFS_FSB_TO_AGBNO(mp, root));
+ 		return(1);
+ 	}
++	if (bp->b_error == -EFSBADCRC || bp->b_error == -EFSCORRUPTED) {
++		do_warn(_("btree block %d/%d is suspect, error %d\n"),
++			XFS_FSB_TO_AGNO(mp, root),
++			XFS_FSB_TO_AGBNO(mp, root), bp->b_error);
++		suspect++;
++	}
+ 
+ 	/*
+ 	 * only check for bad CRC here - caller will determine if there
+@@ -182,7 +190,7 @@ scan_lbtree(
+ 
+ 	err = (*func)(XFS_BUF_TO_BLOCK(bp), nlevels - 1,
+ 			type, whichfork, root, ino, tot, nex, blkmapp,
+-			bm_cursor, isroot, check_dups, &dirty,
++			bm_cursor, suspect, isroot, check_dups, &dirty,
+ 			magic, priv);
+ 
+ 	ASSERT(dirty == 0 || (dirty && !no_modify));
+@@ -209,6 +217,7 @@ scan_bmapbt(
+ 	xfs_extnum_t		*nex,
+ 	blkmap_t		**blkmapp,
+ 	bmap_cursor_t		*bm_cursor,
++	int			suspect,
+ 	int			isroot,
+ 	int			check_dups,
+ 	int			*dirty,
+@@ -516,7 +525,7 @@ _("bad bmap btree ptr 0x%llx in ino %" PRIu64 "\n"),
+ 
+ 		err = scan_lbtree(be64_to_cpu(pp[i]), level, scan_bmapbt,
+ 				type, whichfork, ino, tot, nex, blkmapp,
+-				bm_cursor, 0, check_dups, magic, priv,
++				bm_cursor, suspect, 0, check_dups, magic, priv,
+ 				&xfs_bmbt_buf_ops);
+ 		if (err)
+ 			return(1);
+@@ -584,7 +593,7 @@ _("bad fwd (right) sibling pointer (saw %" PRIu64 " should be NULLFSBLOCK)\n"
+ 				be64_to_cpu(pkey[numrecs - 1].br_startoff);
+ 	}
+ 
+-	return(0);
++	return suspect > 0 ? 1 : 0;
+ }
+ 
+ static void
+diff --git a/repair/scan.h b/repair/scan.h
+index 4da788becbe..aeaf9f1a7f4 100644
+--- a/repair/scan.h
++++ b/repair/scan.h
+@@ -23,6 +23,7 @@ int scan_lbtree(
+ 				xfs_extnum_t		*nex,
+ 				struct blkmap		**blkmapp,
+ 				bmap_cursor_t		*bm_cursor,
++				int			suspect,
+ 				int			isroot,
+ 				int			check_dups,
+ 				int			*dirty,
+@@ -35,6 +36,7 @@ int scan_lbtree(
+ 	xfs_extnum_t	*nex,
+ 	struct blkmap	**blkmapp,
+ 	bmap_cursor_t	*bm_cursor,
++	int		suspect,
+ 	int		isroot,
+ 	int		check_dups,
+ 	uint64_t	magic,
+@@ -52,6 +54,7 @@ int scan_bmapbt(
+ 	xfs_extnum_t		*nex,
+ 	struct blkmap		**blkmapp,
+ 	bmap_cursor_t		*bm_cursor,
++	int			suspect,
+ 	int			isroot,
+ 	int			check_dups,
+ 	int			*dirty,
 
 
