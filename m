@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2226-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2135-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAA8B821203
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:23:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BDA18211A2
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:00:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F34A2829D2
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:23:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33A7C1C21C47
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:00:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D7B7FD;
-	Mon,  1 Jan 2024 00:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2685AC8CF;
+	Mon,  1 Jan 2024 00:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9Z/o8Ku"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7va1hQd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11767EF
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:23:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC42C433C8;
-	Mon,  1 Jan 2024 00:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57ADC8C8
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:00:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE91C433C8;
+	Mon,  1 Jan 2024 00:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068628;
-	bh=qdKEx2rpWozOVsvTtQh6xcauYkBVOVWNlCmgCsr9TzI=;
+	s=k20201202; t=1704067236;
+	bh=fwNXTTCQo0mRencFZi6EWQxbbHH1TsZHuRGfvO3JSaU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=t9Z/o8Kuim/tkqr4/4RVvtbDgorwm1/0J8CJpc5JWpHS017OasSsUBxyGz7Yo1xRZ
-	 F1kjB2jPX7BKmFVIcAKp9YnGItV27eMcKrUzXDARbybV4hz3t4q69tFAYujTyOaMwT
-	 IhOeAAinVrEAmvlKlDwyigUiuJVJJAbwj5Pqr6Gq0iAt+efZpwvFXSgWNvQmqzCqMt
-	 kxHNt+TfUPk5PfA3D2xDajF+ArP07aGvkJX9IJGE1wrAffQzFZe4Dt2AkyZf8Gm7UN
-	 lmuo+zTw8AFza7Akvg5iDQ6culDCNn6UOqBOtLrVCpf9K+9yVPOzGC91q+k8sZYmK4
-	 kJg8+NKrPTBsQ==
-Date: Sun, 31 Dec 2023 16:23:48 +9900
-Subject: [PATCH 4/4] mkfs: use file write helper to populate files
+	b=f7va1hQdhb8JAyLA0ERadlqIhxgSi1T1f3DEvKC3FvD3If1npbWwt9deGQxXupVJY
+	 +LW/kLHfLbYBwlpVZqAngfbVtEkDppkBwa4f0zrFjGnIkNW3wIT2oJ/XkiIV42cpx4
+	 f/LEMoiRO6OPiDzOYQ8ihmjVST8OJghN6ozbz93B77Wo4DDQP3h5pc84NQlyZbhLqz
+	 BTkag8UrJBzYcRZ6mD7GawjfcupJ1VYb/3LtbtOxSCZp63E8t9zvJ1YqDDPT3/WMPT
+	 PcD1awrIzdMnwE8WrUMcafVcwhZ/2c3KZJ0S5bFLAshQ3xvnUXFT4k8GNbDJtrlbwx
+	 vSZoZTIAbTx0w==
+Date: Sun, 31 Dec 2023 16:00:36 +9900
+Subject: [PATCH 50/52] mkfs: add headers to realtime bitmap blocks
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405016291.1816687.462249301510411866.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
-References: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
+Message-ID: <170405012831.1811243.12201677426853572539.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
+References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,162 +52,116 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use the file write helper to write files into the filesystem.
+When the rtgroups feature is enabled, format rtbitmap blocks with the
+appropriate block headers.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/libxfs.h |    2 ++
- libxfs/util.c    |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- mkfs/proto.c     |   26 ++++----------------
- 3 files changed, 76 insertions(+), 21 deletions(-)
+ mkfs/proto.c    |   51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ mkfs/xfs_mkfs.c |    6 +++++-
+ 2 files changed, 56 insertions(+), 1 deletion(-)
 
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 1fc8bc0e97b..46003fe641d 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -176,6 +176,8 @@ extern int	libxfs_log_header(char *, uuid_t *, int, int, int, xfs_lsn_t,
- 
- extern int	libxfs_alloc_file_space(struct xfs_inode *ip, xfs_off_t offset,
- 					xfs_off_t len, uint32_t bmapi_flags);
-+extern int	libxfs_file_write(struct xfs_trans *tp, struct xfs_inode *ip,
-+				  void *buf, size_t len, bool logit);
- 
- /* XXX: this is messy and needs fixing */
- #ifndef __LIBXFS_INTERNAL_XFS_H__
-diff --git a/libxfs/util.c b/libxfs/util.c
-index aec7798a814..f2be9dbf4a2 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -537,3 +537,72 @@ get_random_u32(void)
- 	return ret;
+diff --git a/mkfs/proto.c b/mkfs/proto.c
+index 36df148018f..f5b7859f9a9 100644
+--- a/mkfs/proto.c
++++ b/mkfs/proto.c
+@@ -852,6 +852,50 @@ rtsummary_create(
+ 	mp->m_rsumip = rsumip;
  }
- #endif
-+
-+/*
-+ * Write a buffer to a file on the data device.  We assume there are no holes
-+ * and no unwritten extents.
-+ */
-+int
-+libxfs_file_write(
-+	struct xfs_trans	*tp,
+ 
++/* Initialize block headers of rt free space files. */
++static int
++init_rtblock_headers(
 +	struct xfs_inode	*ip,
-+	void			*buf,
-+	size_t			len,
-+	bool			logit)
++	xfs_fileoff_t		nrblocks,
++	const struct xfs_buf_ops *ops,
++	uint32_t		magic)
 +{
 +	struct xfs_bmbt_irec	map;
 +	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_buf		*bp;
-+	xfs_fileoff_t		bno = 0;
-+	xfs_fileoff_t		end_bno = XFS_B_TO_FSB(mp, len);
-+	size_t			count;
-+	size_t			bcount;
-+	int			nmap;
-+	int			error = 0;
++	struct xfs_rtbuf_blkinfo *hdr;
++	xfs_fileoff_t		off = 0;
++	int			error;
 +
-+	/* Write up to 1MB at a time. */
-+	while (bno < end_bno) {
-+		xfs_filblks_t	maplen;
++	while (off < nrblocks) {
++		struct xfs_buf	*bp;
++		xfs_daddr_t	daddr;
++		int		nimaps = 1;
 +
-+		maplen = min(end_bno - bno, XFS_B_TO_FSBT(mp, 1048576));
-+		nmap = 1;
-+		error = libxfs_bmapi_read(ip, bno, maplen, &map, &nmap, 0);
++		error = -libxfs_bmapi_read(ip, off, 1, &map, &nimaps, 0);
 +		if (error)
 +			return error;
-+		if (nmap != 1)
-+			return -ENOSPC;
 +
-+		if (map.br_startblock == HOLESTARTBLOCK ||
-+		    map.br_state == XFS_EXT_UNWRITTEN)
-+			return -EINVAL;
-+
-+		error = libxfs_trans_get_buf(tp, mp->m_dev,
-+				XFS_FSB_TO_DADDR(mp, map.br_startblock),
-+				XFS_FSB_TO_BB(mp, map.br_blockcount),
-+				0, &bp);
++		daddr = XFS_FSB_TO_DADDR(mp, map.br_startblock);
++		error = -libxfs_buf_get(mp->m_ddev_targp, daddr,
++				XFS_FSB_TO_BB(mp, map.br_blockcount), &bp);
 +		if (error)
-+			break;
-+		bp->b_ops = NULL;
++			return error;
 +
-+		count = min(len, XFS_FSB_TO_B(mp, map.br_blockcount));
-+		memmove(bp->b_addr, buf, count);
-+		bcount = BBTOB(bp->b_length);
-+		if (count < bcount)
-+			memset((char *)bp->b_addr + count, 0, bcount - count);
++		bp->b_ops = ops;
++		hdr = bp->b_addr;
++		hdr->rt_magic = cpu_to_be32(magic);
++		hdr->rt_owner = cpu_to_be64(ip->i_ino);
++		hdr->rt_blkno = cpu_to_be64(daddr);
++		platform_uuid_copy(&hdr->rt_uuid, &mp->m_sb.sb_meta_uuid);
++		libxfs_buf_mark_dirty(bp);
++		libxfs_buf_relse(bp);
 +
-+		if (tp) {
-+			libxfs_trans_log_buf(tp, bp, 0, bcount - 1);
-+		} else {
-+			libxfs_buf_mark_dirty(bp);
-+			libxfs_buf_relse(bp);
-+		}
-+		if (error)
-+			break;
-+
-+		buf += count;
-+		len -= count;
-+		bno += map.br_blockcount;
++		off = map.br_startoff + map.br_blockcount;
 +	}
 +
-+	return error;
++	return 0;
 +}
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 83888572395..436f9ac82b2 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -270,16 +270,12 @@ writefile(
- {
- 	struct xfs_bmbt_irec	map;
- 	struct xfs_mount	*mp;
--	struct xfs_buf		*bp;
--	xfs_daddr_t		d;
- 	xfs_extlen_t		nb;
- 	int			nmap;
- 	int			error;
- 
- 	mp = ip->i_mount;
- 	if (len > 0) {
--		int	bcount;
--
- 		nb = XFS_B_TO_FSB(mp, len);
- 		nmap = 1;
- 		error = -libxfs_bmapi_write(tp, ip, 0, nb, 0, nb, &map, &nmap);
-@@ -289,30 +285,18 @@ writefile(
- 					progname);
- 			exit(1);
- 		}
--		if (error) {
-+		if (error)
- 			fail(_("error allocating space for a file"), error);
--		}
- 		if (nmap != 1) {
- 			fprintf(stderr,
- 				_("%s: cannot allocate space for file\n"),
- 				progname);
- 			exit(1);
- 		}
--		d = XFS_FSB_TO_DADDR(mp, map.br_startblock);
--		error = -libxfs_trans_get_buf(NULL, mp->m_dev, d,
--				nb << mp->m_blkbb_log, 0, &bp);
--		if (error) {
--			fprintf(stderr,
--				_("%s: cannot allocate buffer for file\n"),
--				progname);
--			exit(1);
--		}
--		memmove(bp->b_addr, buf, len);
--		bcount = BBTOB(bp->b_length);
--		if (len < bcount)
--			memset((char *)bp->b_addr + len, 0, bcount - len);
--		libxfs_buf_mark_dirty(bp);
--		libxfs_buf_relse(bp);
 +
-+		error = -libxfs_file_write(tp, ip, buf, len, false);
+ /* Zero the realtime bitmap. */
+ static void
+ rtbitmap_init(
+@@ -895,6 +939,13 @@ rtbitmap_init(
+ 	if (error)
+ 		fail(_("Block allocation of the realtime bitmap inode failed"),
+ 				error);
++
++	if (xfs_has_rtgroups(mp)) {
++		error = init_rtblock_headers(mp->m_rbmip, mp->m_sb.sb_rbmblocks,
++				&xfs_rtbitmap_buf_ops, XFS_RTBITMAP_MAGIC);
 +		if (error)
-+			fail(_("error writing file"), error);
- 	}
- 	ip->i_disk_size = len;
++			fail(_("Initialization of rtbitmap failed"), error);
++	}
  }
+ 
+ /* Zero the realtime summary file. */
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 2330ebebfae..aab1d9130b2 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -909,6 +909,7 @@ struct sb_feat_args {
+ 	bool	nodalign;
+ 	bool	nortalign;
+ 	bool	nrext64;
++	bool	rtgroups;		/* XFS_SB_FEAT_COMPAT_RTGROUPS */
+ };
+ 
+ struct cli_params {
+@@ -3124,6 +3125,7 @@ validate_rtdev(
+ 	struct cli_params	*cli)
+ {
+ 	struct libxfs_init	*xi = cli->xi;
++	unsigned int		rbmblocksize = cfg->blocksize;
+ 
+ 	if (!xi->rt.dev) {
+ 		if (cli->rtsize) {
+@@ -3167,8 +3169,10 @@ reported by the device (%u).\n"),
+ _("cannot have an rt subvolume with zero extents\n"));
+ 		usage();
+ 	}
++	if (cfg->sb_feat.rtgroups)
++		rbmblocksize -= sizeof(struct xfs_rtbuf_blkinfo);
+ 	cfg->rtbmblocks = (xfs_extlen_t)howmany(cfg->rtextents,
+-						NBBY * cfg->blocksize);
++						NBBY * rbmblocksize);
+ }
+ 
+ static bool
 
 
