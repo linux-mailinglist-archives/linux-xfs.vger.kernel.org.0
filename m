@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2172-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2350-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 625F58211CA
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:10:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E691982128F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:56:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BA36281B24
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:10:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 940BB282AAB
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEA638B;
-	Mon,  1 Jan 2024 00:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8D74A07;
+	Mon,  1 Jan 2024 00:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPF19ukd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyW60qky"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A703389
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:10:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB4FC433C8;
-	Mon,  1 Jan 2024 00:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3586E4A02;
+	Mon,  1 Jan 2024 00:55:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F015C433C8;
+	Mon,  1 Jan 2024 00:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067800;
-	bh=UsjfBHgyUYEe/jdja//W3C3UGL0XDewdg4yjonKyVs8=;
+	s=k20201202; t=1704070554;
+	bh=9r3YWrd97eMRBfrifUnTj7hpJqxR5akt/XOxxgrKmGA=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=ZPF19ukdSnGwd2jxMWnOn9XpvV4eljIkDseDrLNO2wu70/eBO2j3NAJGImRYrX+kJ
-	 NDDv7TjycjHvzb4ifu4LgcJDGcJaNWbNT/Oz0GZMnGFfCF4es1Rg8UJnYa8iTFmBVl
-	 EsW7ZEzctKqDXGs5PhHWClTDbSk3iiTMFDn5hgU4tHnHt8M92cTuIOJsMnL68D2RZp
-	 zj5Y8Xzz0UNHHwhPk5h1hnNQv6WqEYAalaFhe+kNj2Qfgxd5EpAWioYcT0XYNQxpLi
-	 n/Npo2iPJmSUIA3iUdAti3ak6babynCMkbCdwXVBIAiobAW3aqjHxIP3zXlKLhheAb
-	 jZg4witCdFNUg==
-Date: Sun, 31 Dec 2023 16:09:59 +9900
-Subject: [PATCH 7/9] xfs: don't bother calling xfs_rmap_finish_one_cleanup in
- xfs_rmap_finish_one
+	b=AyW60qkymBz3WOAphUlCmOk+8FtBQ4exfaay0TutvFi4/VcqlPI1+WS9l7QhtJ+vv
+	 lsUdYddkLbwwCVkY65ssvjrBdnElegPHCYFwVi2EU14JpHtCiOgchc2y41ld1OwWx7
+	 dY42g35QsINqejdwIu0ZV5EDSKYERYXdwivaOccEYxeZ5opY5RXHzfsNmblCSJpoQZ
+	 gLJLKO58ezR874j1WJOJr9qKxpmAoibM+orTsNdL5ufi/Ys3K6uEvsrAchFb0DMnR8
+	 3us4JwwJt8PCU+WPCvRF/1lCRX/UCPXh/nZ0IL83U6tmzel/JMd7y4mxEWjLYETibG
+	 ksqxZBXQSwPKw==
+Date: Sun, 31 Dec 2023 16:55:54 +9900
+Subject: [PATCH 12/17] xfs/449: update test to know about xfs_db -R
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405014910.1815232.12389006596438249563.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
-References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030495.1826350.15828125246602313048.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -51,74 +50,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Darrick J. Wong <djwong@kernel.org>
 
-In xfs_rmap_finish_one we known the cursor is non-zero when calling
-xfs_rmap_finish_one_cleanup and we pass a 0 error variable.  This means
-xfs_rmap_finish_one_cleanup is just doing a xfs_btree_del_cursor.
+The realtime groups feature added a -R flag to xfs_db so that users can
+pass in the realtime device.  Since we've now modified the
+_scratch_xfs_db to use this facility, we can update the test to do exact
+comparisons of the xfs_db info command against the mkfs output.
 
-Open code that and move xfs_rmap_finish_one_cleanup to
-fs/xfs/xfs_rmap_item.c.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-[djwong: minor porting changes]
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_rmap.c |   19 +------------------
- libxfs/xfs_rmap.h |    2 --
- 2 files changed, 1 insertion(+), 20 deletions(-)
+ tests/xfs/449 |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index 3c00b05d8d0..a1a9f4927bd 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -2513,23 +2513,6 @@ xfs_rmap_query_all(
- 	return xfs_btree_query_all(cur, xfs_rmap_query_range_helper, &query);
- }
+diff --git a/tests/xfs/449 b/tests/xfs/449
+index 5374bf2f85..66c443e994 100755
+--- a/tests/xfs/449
++++ b/tests/xfs/449
+@@ -32,7 +32,11 @@ echo DB >> $seqres.full
+ cat $tmp.dbinfo >> $seqres.full
+ # xfs_db doesn't take a rtdev argument, so it reports "realtime=external".
+ # mkfs does, so make a quick substitution
+-diff -u <(cat $tmp.mkfs | sed -e 's/realtime =\/.*extsz=/realtime =external               extsz=/g') $tmp.dbinfo
++if $XFS_DB_PROG --help 2>&1 | grep -q -- '-R rtdev'; then
++	diff -u $tmp.mkfs $tmp.dbinfo
++else
++	diff -u <(cat $tmp.mkfs | sed -e 's/realtime =\/.*extsz=/realtime =external               extsz=/g') $tmp.dbinfo
++fi
  
--/* Clean up after calling xfs_rmap_finish_one. */
--void
--xfs_rmap_finish_one_cleanup(
--	struct xfs_trans	*tp,
--	struct xfs_btree_cur	*rcur,
--	int			error)
--{
--	struct xfs_buf		*agbp;
--
--	if (rcur == NULL)
--		return;
--	agbp = rcur->bc_ag.agbp;
--	xfs_btree_del_cursor(rcur, error);
--	if (error)
--		xfs_trans_brelse(tp, agbp);
--}
--
- /* Commit an rmap operation into the ondisk tree. */
- int
- __xfs_rmap_finish_intent(
-@@ -2594,7 +2577,7 @@ xfs_rmap_finish_one(
- 	 */
- 	rcur = *pcur;
- 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
--		xfs_rmap_finish_one_cleanup(tp, rcur, 0);
-+		xfs_btree_del_cursor(rcur, 0);
- 		rcur = NULL;
- 		*pcur = NULL;
- 	}
-diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
-index f16b07d851d..2513ee36aa2 100644
---- a/libxfs/xfs_rmap.h
-+++ b/libxfs/xfs_rmap.h
-@@ -192,8 +192,6 @@ void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
- void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
- 		xfs_agblock_t bno, xfs_extlen_t len, uint64_t owner);
+ _scratch_mount
  
--void xfs_rmap_finish_one_cleanup(struct xfs_trans *tp,
--		struct xfs_btree_cur *rcur, int error);
- int xfs_rmap_finish_one(struct xfs_trans *tp, struct xfs_rmap_intent *ri,
- 		struct xfs_btree_cur **pcur);
- int __xfs_rmap_finish_intent(struct xfs_btree_cur *rcur,
 
 
