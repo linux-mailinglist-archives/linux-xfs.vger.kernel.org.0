@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2151-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2162-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17F4A8211B5
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:04:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E76388211C0
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:07:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0DF0282962
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:04:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5FE81C218A7
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12A83CA4C;
-	Mon,  1 Jan 2024 00:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C25C802;
+	Mon,  1 Jan 2024 00:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdmM9OEM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7mdIYSI"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D9ACA46
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:04:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2ACC433C7;
-	Mon,  1 Jan 2024 00:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2826B7F9
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:07:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A792BC433C8;
+	Mon,  1 Jan 2024 00:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067471;
-	bh=BjYNrI/mCye+aCefFL7b1KQTA6dl2/2G9bEcL6hezpE=;
+	s=k20201202; t=1704067643;
+	bh=DMpcZS4U/jprPyZkitwuadDbAlklbiNGJZ62OyqbIPM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=CdmM9OEMtkmLJSfqE+aNxxItx0/1QJVMEVzpgNDkhtK+l6637rFqRROOCcBXTV89o
-	 fcvlTzj4FDbSmJeCXfaXbnuy1QRuIuswq1VALzN6mu8WDYG28NLeK1QYyOrIXMi+Qy
-	 2Y09I4Ynud8XP72JeNuwsK/JTeoRJJoOTE4LyOgdWYpuTOR3PJhaRSnmHGfqjPVzkF
-	 vcU/Ec1tYfNqhV3OuA09zTz7rqwhtlHPPxiO5rY7FbTWdpIpWJAFnm4AKMv/nLoVo1
-	 NXmq0D1mKE4nv05aPL/8nfVHCEbbOdQxznWaroJsO0dZYBHsQ9lFasMUNpeU4f1DaZ
-	 h2MFMykYhQuZw==
-Date: Sun, 31 Dec 2023 16:04:31 +9900
-Subject: [PATCH 13/14] xfs: support storing records in the inode core root
+	b=g7mdIYSIUo40BNBUuqYxbb8wPZsbgkBWdxyGBXr2V0Qn/RE+A6FMOvAQFkH1lcVB4
+	 dZDa7Yycu70V1eQb5ybLfBo/MQvFpfGXVKKJxhbFHFE8p16rHh5wEfQAnEO1moiebR
+	 slJCNPh+wzRUNG0i45NviBIzCp3i1ZsSqA7wFw8bV3emZN5DhYJX9FNl0SLkKPBWTN
+	 TPh3E1XxvFLbglfbEThcp8U4dQpCNY47JlajWTnYIems9nfaSU1Yjp27YsoYfD4j7y
+	 v49oeJKNkrhQybU1wQHzwmSXy8htyk7LfsqW0EeK5FN8yx7rVgoo89rodi7g9PEy+g
+	 gvs6J836fQOtg==
+Date: Sun, 31 Dec 2023 16:07:23 +9900
+Subject: [PATCH 8/8] xfs: move xfs_extent_free_defer_add to xfs_extfree_item.c
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013375.1812545.9158447302101408118.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
-References: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
+Message-ID: <170405014147.1814860.1219013882852428238.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,274 +52,136 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add the necessary flags and code so that we can support storing leaf
-records in the inode root block of a btree.  This hasn't been necessary
-before, but the realtime rmapbt will need to be able to do this.
+Move the code that adds the incore xfs_extent_free_item deferred work
+data to a transaction live with the EFI log item code.  This means that
+the allocator code no longer has to know about the inner workings of the
+EFI log items.
+
+As a consequence, we can get rid of the _{get,put}_group helpers.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_btree.c         |  150 ++++++++++++++++++++++++++++++++++++++++----
- libxfs/xfs_btree.h         |    1 
- libxfs/xfs_btree_staging.c |    4 +
- 3 files changed, 141 insertions(+), 14 deletions(-)
+ libxfs/defer_item.c |   28 +++++++++++++++-------------
+ libxfs/defer_item.h |    6 ++++++
+ libxfs/xfs_alloc.c  |   12 ++----------
+ libxfs/xfs_alloc.h  |    3 ---
+ 4 files changed, 23 insertions(+), 26 deletions(-)
 
 
-diff --git a/libxfs/xfs_btree.c b/libxfs/xfs_btree.c
-index 0f0198ae0cd..df13656ffe6 100644
---- a/libxfs/xfs_btree.c
-+++ b/libxfs/xfs_btree.c
-@@ -264,6 +264,11 @@ xfs_btree_check_block(
- 	int			level,	/* level of the btree block */
- 	struct xfs_buf		*bp)	/* buffer containing block, if any */
- {
-+	/* Don't check the inode-core root. */
-+	if ((cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) &&
-+	    level == cur->bc_nlevels - 1)
-+		return 0;
-+
- 	if (cur->bc_flags & XFS_BTREE_LONG_PTRS)
- 		return xfs_btree_check_lblock(cur, block, level, bp);
- 	else
-@@ -1544,12 +1549,16 @@ xfs_btree_log_recs(
- 	int			first,
- 	int			last)
- {
-+	if (!bp) {
-+		xfs_trans_log_inode(cur->bc_tp, cur->bc_ino.ip,
-+				xfs_ilog_fbroot(cur->bc_ino.whichfork));
-+		return;
-+	}
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index b159f22c1c0..9b9bce17f4e 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -27,6 +27,7 @@
+ #include "defer_item.h"
+ #include "xfs_ag.h"
+ #include "xfs_swapext.h"
++#include "defer_item.h"
  
- 	xfs_trans_buf_set_type(cur->bc_tp, bp, XFS_BLFT_BTREE_BUF);
- 	xfs_trans_log_buf(cur->bc_tp, bp,
- 			  xfs_btree_rec_offset(cur, first),
- 			  xfs_btree_rec_offset(cur, last + 1) - 1);
+ /* Dummy defer item ops, since we don't do logging. */
+ 
+@@ -75,21 +76,22 @@ xfs_extent_free_create_done(
+ 	return NULL;
+ }
+ 
+-/* Take an active ref to the AG containing the space we're freeing. */
++/* Add this deferred EFI to the transaction. */
+ void
+-xfs_extent_free_get_group(
+-	struct xfs_mount		*mp,
+-	struct xfs_extent_free_item	*xefi)
++xfs_extent_free_defer_add(
++	struct xfs_trans		*tp,
++	struct xfs_extent_free_item	*xefi,
++	struct xfs_defer_pending	**dfpp)
+ {
++	struct xfs_mount		*mp = tp->t_mountp;
++
+ 	xefi->xefi_pag = xfs_perag_intent_get(mp, xefi->xefi_startblock);
+-}
 -
- }
- 
- /*
-@@ -3079,6 +3088,64 @@ xfs_btree_iroot_realloc(
- 			cur->bc_ops->iroot_ops, rec_diff);
- }
- 
-+/*
-+ * Move the records from a root leaf block to a separate block.
-+ *
-+ * Trickery here: The amount of memory that we need per record for the incore
-+ * root block changes when we convert a leaf block to an internal block.
-+ * Therefore, we copy leaf records into the new btree block (cblock) before
-+ * freeing the incore root block and changing the tree height.
-+ *
-+ * Once we've changed the tree height, we allocate a new incore root block
-+ * (which will now be an internal root block) and populate it with a pointer to
-+ * cblock and the relevant keys.
-+ */
-+STATIC void
-+xfs_btree_promote_leaf_iroot(
-+	struct xfs_btree_cur	*cur,
-+	struct xfs_btree_block	*block,
-+	struct xfs_buf		*cbp,
-+	union xfs_btree_ptr	*cptr,
-+	struct xfs_btree_block	*cblock)
-+{
-+	union xfs_btree_rec	*rp;
-+	union xfs_btree_rec	*crp;
-+	union xfs_btree_key	*kp;
-+	union xfs_btree_ptr	*pp;
-+	size_t			size;
-+	int			numrecs = xfs_btree_get_numrecs(block);
-+
-+	/* Copy the records from the leaf root into the new child block. */
-+	rp = xfs_btree_rec_addr(cur, 1, block);
-+	crp = xfs_btree_rec_addr(cur, 1, cblock);
-+	xfs_btree_copy_recs(cur, crp, rp, numrecs);
-+
-+	/* Zap the old root and change the tree height. */
-+	xfs_iroot_free(cur->bc_ino.ip, cur->bc_ino.whichfork);
-+	cur->bc_nlevels++;
-+	cur->bc_levels[1].ptr = 1;
-+
-+	/*
-+	 * Allocate a new internal root block buffer and reinitialize it to
-+	 * point to a single new child.
-+	 */
-+	size = cur->bc_ops->iroot_ops->size(cur->bc_mp, cur->bc_nlevels - 1, 1);
-+	xfs_iroot_alloc(cur->bc_ino.ip, cur->bc_ino.whichfork, size);
-+	block = xfs_btree_get_iroot(cur);
-+	xfs_btree_init_block(cur->bc_mp, block, cur->bc_ops,
-+			cur->bc_nlevels - 1, 1, cur->bc_ino.ip->i_ino);
-+
-+	pp = xfs_btree_ptr_addr(cur, 1, block);
-+	kp = xfs_btree_key_addr(cur, 1, block);
-+	xfs_btree_copy_ptrs(cur, pp, cptr, 1);
-+	xfs_btree_get_keys(cur, cblock, kp);
-+
-+	/* Attach the new block to the cursor and log it. */
-+	xfs_btree_setbuf(cur, 0, cbp);
-+	xfs_btree_log_block(cur, cbp, XFS_BB_ALL_BITS);
-+	xfs_btree_log_recs(cur, cbp, 1, numrecs);
-+}
-+
- /*
-  * Move the keys and pointers from a root block to a separate block.
-  *
-@@ -3163,7 +3230,7 @@ xfs_btree_new_iroot(
- 	struct xfs_buf		*cbp;		/* buffer for cblock */
- 	struct xfs_btree_block	*block;		/* btree block */
- 	struct xfs_btree_block	*cblock;	/* child btree block */
--	union xfs_btree_ptr	*pp;
-+	union xfs_btree_ptr	aptr;
- 	union xfs_btree_ptr	nptr;		/* new block addr */
- 	int			level;		/* btree level */
- 	int			error;		/* error return code */
-@@ -3175,10 +3242,15 @@ xfs_btree_new_iroot(
- 	level = cur->bc_nlevels - 1;
- 
- 	block = xfs_btree_get_iroot(cur);
--	pp = xfs_btree_ptr_addr(cur, 1, block);
-+	ASSERT(level > 0 || (cur->bc_flags & XFS_BTREE_IROOT_RECORDS));
-+	if (level > 0)
-+		aptr = *xfs_btree_ptr_addr(cur, 1, block);
+-/* Release an active AG ref after some freeing work. */
+-static inline void
+-xfs_extent_free_put_group(
+-	struct xfs_extent_free_item	*xefi)
+-{
+-	xfs_perag_intent_put(xefi->xefi_pag);
++	if (xefi->xefi_agresv == XFS_AG_RESV_AGFL)
++		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
++				&xfs_agfl_free_defer_type);
 +	else
-+		aptr.l = cpu_to_be64(XFS_INO_TO_FSB(cur->bc_mp,
-+				cur->bc_ino.ip->i_ino));
++		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
++				&xfs_extent_free_defer_type);
+ }
  
- 	/* Allocate the new block. If we can't do it, we're toast. Give up. */
--	error = xfs_btree_alloc_block(cur, pp, &nptr, stat);
-+	error = xfs_btree_alloc_block(cur, &aptr, &nptr, stat);
- 	if (error)
- 		goto error0;
- 	if (*stat == 0)
-@@ -3204,10 +3276,14 @@ xfs_btree_new_iroot(
- 			cblock->bb_u.s.bb_blkno = bno;
+ /* Cancel a free extent. */
+@@ -99,7 +101,7 @@ xfs_extent_free_cancel_item(
+ {
+ 	struct xfs_extent_free_item	*xefi = xefi_entry(item);
+ 
+-	xfs_extent_free_put_group(xefi);
++	xfs_perag_intent_put(xefi->xefi_pag);
+ 	kmem_cache_free(xfs_extfree_item_cache, xefi);
+ }
+ 
+diff --git a/libxfs/defer_item.h b/libxfs/defer_item.h
+index a3ef9e079d0..79e957eb8ff 100644
+--- a/libxfs/defer_item.h
++++ b/libxfs/defer_item.h
+@@ -14,4 +14,10 @@ struct xfs_swapext_intent;
+ 
+ void xfs_swapext_defer_add(struct xfs_trans *tp, struct xfs_swapext_intent *sxi);
+ 
++struct xfs_extent_free_item;
++
++void xfs_extent_free_defer_add(struct xfs_trans *tp,
++		struct xfs_extent_free_item *xefi,
++		struct xfs_defer_pending **dfpp);
++
+ #endif /* __LIBXFS_DEFER_ITEM_H_ */
+diff --git a/libxfs/xfs_alloc.c b/libxfs/xfs_alloc.c
+index 2cbdbd4c416..36af2c087b0 100644
+--- a/libxfs/xfs_alloc.c
++++ b/libxfs/xfs_alloc.c
+@@ -23,6 +23,7 @@
+ #include "xfs_ag_resv.h"
+ #include "xfs_bmap.h"
+ #include "xfs_health.h"
++#include "defer_item.h"
+ 
+ struct kmem_cache	*xfs_extfree_item_cache;
+ 
+@@ -2578,16 +2579,7 @@ xfs_defer_extent_free(
+ 		xefi->xefi_owner = XFS_RMAP_OWN_NULL;
  	}
  
--	error = xfs_btree_promote_node_iroot(cur, block, level, cbp, &nptr,
--			cblock);
--	if (error)
--		goto error0;
-+	if (level > 0) {
-+		error = xfs_btree_promote_node_iroot(cur, block, level, cbp,
-+				&nptr, cblock);
-+		if (error)
-+			goto error0;
-+	} else {
-+		xfs_btree_promote_leaf_iroot(cur, block, cbp, &nptr, cblock);
-+	}
- 
- 	*logflags |=
- 		XFS_ILOG_CORE | xfs_ilog_fbroot(cur->bc_ino.whichfork);
-@@ -3704,6 +3780,45 @@ xfs_btree_insert(
- 	return error;
+-	trace_xfs_extent_free_defer(mp, xefi);
+-
+-	xfs_extent_free_get_group(mp, xefi);
+-
+-	if (xefi->xefi_agresv == XFS_AG_RESV_AGFL)
+-		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
+-				&xfs_agfl_free_defer_type);
+-	else
+-		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
+-				&xfs_extent_free_defer_type);
++	xfs_extent_free_defer_add(tp, xefi, dfpp);
+ 	return 0;
  }
  
-+/*
-+ * Move the records from a child leaf block to the root block.
-+ *
-+ * Trickery here: The amount of memory we need per record for the incore root
-+ * block changes when we convert a leaf block to an internal block.  Therefore,
-+ * we free the incore root block, change the tree height, allocate a new incore
-+ * root, and copy the records from the doomed block into the new root.
-+ */
-+STATIC void
-+xfs_btree_demote_leaf_child(
-+	struct xfs_btree_cur	*cur,
-+	struct xfs_btree_block	*cblock,
-+	int			numrecs)
-+{
-+	union xfs_btree_rec	*rp;
-+	union xfs_btree_rec	*crp;
-+	struct xfs_btree_block	*block;
-+	size_t			size;
-+
-+	/* Zap the old root and change the tree height. */
-+	xfs_iroot_free(cur->bc_ino.ip, cur->bc_ino.whichfork);
-+	cur->bc_levels[0].bp = NULL;
-+	cur->bc_nlevels--;
-+
-+	/*
-+	 * Allocate a new internal root block buffer and reinitialize it with
-+	 * the leaf records in the child.
-+	 */
-+	size = cur->bc_ops->iroot_ops->size(cur->bc_mp, 0, numrecs);
-+	xfs_iroot_alloc(cur->bc_ino.ip, cur->bc_ino.whichfork, size);
-+	block = xfs_btree_get_iroot(cur);
-+	xfs_btree_init_block(cur->bc_mp, block, cur->bc_ops, 0, numrecs,
-+			cur->bc_ino.ip->i_ino);
-+
-+	rp = xfs_btree_rec_addr(cur, 1, block);
-+	crp = xfs_btree_rec_addr(cur, 1, cblock);
-+	xfs_btree_copy_recs(cur, rp, crp, numrecs);
-+}
-+
- /*
-  * Move the keyptrs from a child node block to the root block.
-  *
-@@ -3785,14 +3900,19 @@ xfs_btree_kill_iroot(
- #endif
+diff --git a/libxfs/xfs_alloc.h b/libxfs/xfs_alloc.h
+index 2da543fb90e..0ed71a31fe7 100644
+--- a/libxfs/xfs_alloc.h
++++ b/libxfs/xfs_alloc.h
+@@ -254,9 +254,6 @@ struct xfs_extent_free_item {
+ 	enum xfs_ag_resv_type	xefi_agresv;
+ };
  
- 	ASSERT(cur->bc_flags & XFS_BTREE_ROOT_IN_INODE);
--	ASSERT(cur->bc_nlevels > 1);
-+	ASSERT((cur->bc_flags & XFS_BTREE_IROOT_RECORDS) ||
-+	       cur->bc_nlevels > 1);
- 
- 	/*
- 	 * Don't deal with the root block needs to be a leaf case.
- 	 * We're just going to turn the thing back into extents anyway.
- 	 */
- 	level = cur->bc_nlevels - 1;
--	if (level == 1)
-+	if (level == 1 && !(cur->bc_flags & XFS_BTREE_IROOT_RECORDS))
-+		goto out0;
-+
-+	/* If we're already a leaf, jump out. */
-+	if (level == 0)
- 		goto out0;
- 
- 	/*
-@@ -3822,9 +3942,13 @@ xfs_btree_kill_iroot(
- 	ASSERT(xfs_btree_ptr_is_null(cur, &ptr));
- #endif
- 
--	error = xfs_btree_demote_node_child(cur, cblock, level, numrecs);
--	if (error)
--		return error;
-+	if (level > 1) {
-+		error = xfs_btree_demote_node_child(cur, cblock, level,
-+				numrecs);
-+		if (error)
-+			return error;
-+	} else
-+		xfs_btree_demote_leaf_child(cur, cblock, numrecs);
- 
- 	error = xfs_btree_free_block(cur, cbp);
- 	if (error)
-diff --git a/libxfs/xfs_btree.h b/libxfs/xfs_btree.h
-index 7872fc1739b..bb6c2feecea 100644
---- a/libxfs/xfs_btree.h
-+++ b/libxfs/xfs_btree.h
-@@ -337,6 +337,7 @@ xfs_btree_cur_sizeof(unsigned int nlevels)
-  * is dynamically allocated and must be freed when the cursor is deleted.
-  */
- #define XFS_BTREE_STAGING		(1<<5)
-+#define XFS_BTREE_IROOT_RECORDS		(1<<6)	/* iroot can store records */
- 
- /* btree stored in memory; not compatible with ROOT_IN_INODE */
- #ifdef CONFIG_XFS_BTREE_IN_XFILE
-diff --git a/libxfs/xfs_btree_staging.c b/libxfs/xfs_btree_staging.c
-index ec496915433..8b2e41dacff 100644
---- a/libxfs/xfs_btree_staging.c
-+++ b/libxfs/xfs_btree_staging.c
-@@ -710,7 +710,9 @@ xfs_btree_bload_compute_geometry(
- 			 *
- 			 * Note that bmap btrees forbid records in the root.
- 			 */
--			if (level != 0 && nr_this_level <= avg_per_block) {
-+			if ((level != 0 ||
-+			     (cur->bc_flags & XFS_BTREE_IROOT_RECORDS)) &&
-+			    nr_this_level <= avg_per_block) {
- 				nr_blocks++;
- 				break;
- 			}
+-void xfs_extent_free_get_group(struct xfs_mount *mp,
+-		struct xfs_extent_free_item *xefi);
+-
+ #define XFS_EFI_SKIP_DISCARD	(1U << 0) /* don't issue discard */
+ #define XFS_EFI_ATTR_FORK	(1U << 1) /* freeing attr fork block */
+ #define XFS_EFI_BMBT_BLOCK	(1U << 2) /* freeing bmap btree block */
 
 
