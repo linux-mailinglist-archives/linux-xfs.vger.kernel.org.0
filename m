@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2326-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2214-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3CA821274
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:49:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 545738211F6
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:20:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB1E6282B0A
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:49:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2AF91F2256E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DDC7FD;
-	Mon,  1 Jan 2024 00:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC0B7F9;
+	Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGZLACV8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTodIhOd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE1C7ED;
-	Mon,  1 Jan 2024 00:49:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048AFC433C8;
-	Mon,  1 Jan 2024 00:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7F37EE
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D376C433C8;
+	Mon,  1 Jan 2024 00:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070179;
-	bh=0rGAP2nUYoGfBWecZZpNrGvhtQtcbLvm2IEy5aLlduk=;
+	s=k20201202; t=1704068441;
+	bh=gZed8OOJnTwhuniXlz1J2LT8I9K6Y5wINqSPMnH7TT4=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=HGZLACV8maqGsxa+9Bvd0TYzWKL83OGe/KqfsQ956m/yIvESQffHrc5K0+OTKQ9Ok
-	 WyzSlqSeFEty/NOpOX+U5Jm5TxQX7m08/v03+hnL8EOAJttdESW+2AdvWf9WjnCpq+
-	 jEv/KR43d9puY5a/LEk0f7PcxIR+O6aLpJvJXprCjuw2NIaIvsHf1SSfu//hR25Ryp
-	 fDuludGzFWMwOLO/WB9Pegxra7mQKbS/euuL8KGl9JJPJXBrEWSNHe7SIuI3uPmdHL
-	 qx6g3IGcg6KPz/9clfpNh9CQqVxc1IrOMAgeFN2qUf1WJYV3RTjm3+J0XEdmHHzId6
-	 AwWJkvv8exU0g==
-Date: Sun, 31 Dec 2023 16:49:38 +9900
-Subject: [PATCH 2/2] scrub: test correction of directory tree corruptions
+	b=aTodIhOdoUf7lDExIbKGK/FYzSb7CyjQlNGKgEXCKtTI7BVW1fYVkYWmQxQG7W2I1
+	 5V2EMSdOcKBKCcZcQPGBSxLSnvvayIWwlLRckDfrIiR30n48G6AXTPz0/n/TzIVUw9
+	 nzXdgTmw5YPOVf+WRDdrmc1plCo3t3dxAEOYgG1VnD0v4DBECwuljGpaJ7kSrkh4py
+	 T8tqoshMxoz6V4WnQ0XQZFUDMh3cVmnIOpBYTQkJPnUEfJipmvvx9XyESr05blUqTX
+	 il0cOsv7CG2OttUdIsoZEVtGSlNzXUMcNnELRTjjlcu6y+PtQVz9O7r94FL7k6bQST
+	 Uvm926kypdN0w==
+Date: Sun, 31 Dec 2023 16:20:40 +9900
+Subject: [PATCH 39/47] xfs_repair: check existing realtime rmapbt entries
+ against observed rmaps
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: zlang@redhat.com, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org, guan@eryu.me, fstests@vger.kernel.org
-Message-ID: <170405028920.1825187.17678779855858911812.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
-References: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015833.1815505.14998533920029160.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,994 +53,410 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that we can fix directory tree loops and multiply-owned dirs.
+Once we've finished collecting reverse mapping observations from the
+metadata scan, check those observations against the realtime rmap btree
+(particularly if we're in -n mode) to detect rtrmapbt problems.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1866     |  122 ++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1866.out |   19 ++++++
- tests/xfs/1867     |  133 ++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1867.out |   25 ++++++++
- tests/xfs/1868     |  121 ++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1868.out |   21 +++++++
- tests/xfs/1869     |  157 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1869.out |   32 +++++++++++
- tests/xfs/1870     |  146 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1870.out |   30 ++++++++++
- tests/xfs/1871     |   78 ++++++++++++++++++++++++++
- tests/xfs/1871.out |    2 +
- 12 files changed, 886 insertions(+)
- create mode 100755 tests/xfs/1866
- create mode 100644 tests/xfs/1866.out
- create mode 100755 tests/xfs/1867
- create mode 100644 tests/xfs/1867.out
- create mode 100755 tests/xfs/1868
- create mode 100644 tests/xfs/1868.out
- create mode 100755 tests/xfs/1869
- create mode 100644 tests/xfs/1869.out
- create mode 100755 tests/xfs/1870
- create mode 100644 tests/xfs/1870.out
- create mode 100755 tests/xfs/1871
- create mode 100644 tests/xfs/1871.out
+ repair/phase4.c |   12 +++
+ repair/rmap.c   |  262 ++++++++++++++++++++++++++++++++++++++++++++-----------
+ repair/rmap.h   |    2 
+ 3 files changed, 223 insertions(+), 53 deletions(-)
 
 
-diff --git a/tests/xfs/1866 b/tests/xfs/1866
-new file mode 100755
-index 0000000000..280c33da3e
---- /dev/null
-+++ b/tests/xfs/1866
-@@ -0,0 +1,122 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1866
-+#
-+# Functional testing for online fsck of a directory loop that is not accessible
-+# from the root directory.
-+#
-+. ./common/preamble
-+_begin_fstest auto online_repair
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/inject
-+. ./common/fuzzy
-+. ./common/populate
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_db_command "link"
-+_require_xfs_db_command "unlink"
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+prepare_fs() {
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount
-+	__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
-+
-+	# Begin by creating the following directory tree:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	mkdir -p "$SCRATCH_MNT/A/B/C"
-+
-+	root_inum="$(stat -c '%i' "$SCRATCH_MNT/")"
-+	a_inum="$(stat -c '%i' "$SCRATCH_MNT/A")"
-+	b_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B")"
-+	c_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C")"
-+
-+	echo "root: $root_inum; a: $a_inum; b: $b_inum; c: $c_inum" >> $seqres.full
-+
-+	# Next, we complete the loop by creating C["A"]->A and deleting root["A"]->A.
-+	# Directory tree is now:
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["A"]->A
-+	_scratch_unmount
-+
-+	root_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $root_inum")
-+	a_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $a_inum")
-+	b_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $b_inum")
-+	c_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $c_inum")
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before A $a_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db -x \
-+		-c "inode $c_inum" -c "link -i $a_inum A" \
-+		-c "inode $root_inum" -c "unlink A" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db \
-+		-c "echo after root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after A $a_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
+diff --git a/repair/phase4.c b/repair/phase4.c
+index cfdea1460e5..b0cb805f30c 100644
+--- a/repair/phase4.c
++++ b/repair/phase4.c
+@@ -155,6 +155,16 @@ check_rmap_btrees(
+ 	rmaps_verify_btree(wq->wq_ctx, agno);
+ }
+ 
++static void
++check_rtrmap_btrees(
++	struct workqueue *wq,
++	xfs_agnumber_t	agno,
++	void		*arg)
++{
++	rmap_add_fixed_rtgroup_rec(wq->wq_ctx, agno);
++	rtrmaps_verify_btree(wq->wq_ctx, agno);
 +}
 +
-+simple_online_repair() {
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
+ static void
+ compute_ag_refcounts(
+ 	struct workqueue*wq,
+@@ -207,6 +217,8 @@ process_rmap_data(
+ 	create_work_queue(&wq, mp, platform_nproc());
+ 	for (i = 0; i < mp->m_sb.sb_agcount; i++)
+ 		queue_work(&wq, check_rmap_btrees, i, NULL);
++	for (i = 0; i < mp->m_sb.sb_rgcount; i++)
++		queue_work(&wq, check_rtrmap_btrees, i, NULL);
+ 	destroy_work_queue(&wq);
+ 
+ 	if (!xfs_has_reflink(mp))
+diff --git a/repair/rmap.c b/repair/rmap.c
+index b7e7fbe3f47..5ac7188f12e 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -17,6 +17,7 @@
+ #include "libxfs/xfile.h"
+ #include "libxfs/xfbtree.h"
+ #include "rcbag.h"
++#include "prefetch.h"
+ 
+ #undef RMAP_DEBUG
+ 
+@@ -682,6 +683,26 @@ rmap_add_fixed_ag_rec(
+ 	}
+ }
+ 
++/* Add this realtime group's fixed metadata to the incore data. */
++void
++rmap_add_fixed_rtgroup_rec(
++	struct xfs_mount	*mp,
++	xfs_rgnumber_t		rgno)
++{
++	struct xfs_rmap_irec	rmap = {
++		.rm_startblock	= 0,
++		.rm_blockcount	= mp->m_sb.sb_rextsize,
++		.rm_owner	= XFS_RMAP_OWN_FS,
++		.rm_offset	= 0,
++		.rm_flags	= 0,
++	};
 +
-+	echo "repair root"
-+	$XFS_IO_PROG -x -c "repair dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "repair A"
-+	$XFS_IO_PROG -x -c "repair dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "repair B"
-+	$XFS_IO_PROG -x -c "repair dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
++	if (!rmap_needs_work(mp))
++		return;
 +
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
++	rmap_add_mem_rec(mp, true, rgno, &rmap);
 +}
 +
-+# Part 1: Use raw ioctls to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+simple_online_repair
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# Part 2: Use xfs_scrub to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+_scratch_scrub &>> $seqres.full
-+echo "xfs_scrub returned $?" >> $seqres.full
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1866.out b/tests/xfs/1866.out
-new file mode 100644
-index 0000000000..b6b08aea7f
---- /dev/null
-+++ b/tests/xfs/1866.out
-@@ -0,0 +1,19 @@
-+QA output created by 1866
-+check root
-+check A
-+Corruption detected.
-+check B
-+Corruption detected.
-+check C
-+Corruption detected.
-+repair root
-+Metadata did not need repair or optimization.
-+repair A
-+repair B
-+Metadata did not need repair or optimization.
-+repair C
-+Metadata did not need repair or optimization.
-+check root
-+check A
-+check B
-+check C
-diff --git a/tests/xfs/1867 b/tests/xfs/1867
-new file mode 100755
-index 0000000000..2c34b56503
---- /dev/null
-+++ b/tests/xfs/1867
-@@ -0,0 +1,133 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1867
-+#
-+# Functional testing for online fsck of a directory loop that is accessible
-+# from the root directory.
-+#
-+. ./common/preamble
-+_begin_fstest auto online_repair
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/inject
-+. ./common/fuzzy
-+. ./common/populate
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_db_command "link"
-+_require_xfs_db_command "unlink"
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+prepare_fs() {
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount
-+	__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
-+
-+	# Begin by creating the following directory tree:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["D"]->D
-+	mkdir -p "$SCRATCH_MNT/A/B/C/D"
-+
-+	root_inum="$(stat -c '%i' "$SCRATCH_MNT/")"
-+	a_inum="$(stat -c '%i' "$SCRATCH_MNT/A")"
-+	b_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B")"
-+	c_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C")"
-+	d_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C/D")"
-+
-+	echo "root: $root_inum; a: $a_inum; b: $b_inum; c: $c_inum; d: $d_inum" >> $seqres.full
-+
-+	# Next, we complete the loop by creating D["B1"]->B.  Directory tree is now:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["D"]->D
-+	# D["B1"]->B
-+	_scratch_unmount
-+
-+	root_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $root_inum")
-+	a_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $a_inum")
-+	b_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $b_inum")
-+	c_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $c_inum")
-+	d_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $d_inum")
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before D $d_inum" -c "inode $d_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before B $b_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db -x \
-+		-c "inode $d_inum" -c "link -i $b_inum B1" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db \
-+		-c "echo after root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after D $c_inum" -c "inode $d_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after B $a_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
+ /*
+  * Copy the per-AG btree reverse-mapping data into the rmapbt.
+  *
+@@ -1331,62 +1352,25 @@ rmap_is_good(
+ #undef NEXTP
+ #undef NEXTL
+ 
+-/*
+- * Compare the observed reverse mappings against what's in the ag btree.
+- */
+-void
+-rmaps_verify_btree(
+-	struct xfs_mount	*mp,
+-	xfs_agnumber_t		agno)
++static int
++rmap_compare_records(
++	struct rmap_mem_cur	*rm_cur,
++	struct xfs_btree_cur	*bt_cur,
++	unsigned int		group)
+ {
+-	struct rmap_mem_cur	rm_cur;
+ 	struct xfs_rmap_irec	rm_rec;
+ 	struct xfs_rmap_irec	tmp;
+-	struct xfs_btree_cur	*bt_cur = NULL;
+-	struct xfs_buf		*agbp = NULL;
+-	struct xfs_perag	*pag = NULL;
+ 	int			have;
+ 	int			error;
+ 
+-	if (!xfs_has_rmapbt(mp) || add_rmapbt)
+-		return;
+-	if (rmapbt_suspect) {
+-		if (no_modify && agno == 0)
+-			do_warn(_("would rebuild corrupt rmap btrees.\n"));
+-		return;
+-	}
+-
+-	/* Create cursors to rmap structures */
+-	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rm_cur);
+-	if (error) {
+-		do_warn(_("Not enough memory to check reverse mappings.\n"));
+-		return;
+-	}
+-
+-	pag = libxfs_perag_get(mp, agno);
+-	error = -libxfs_alloc_read_agf(pag, NULL, 0, &agbp);
+-	if (error) {
+-		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
+-				agno);
+-		goto err_pag;
+-	}
+-
+-	/* Leave the per-ag data "uninitialized" since we rewrite it later */
+-	clear_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
+-
+-	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
+-	if (!bt_cur) {
+-		do_warn(_("Not enough memory to check reverse mappings.\n"));
+-		goto err_agf;
+-	}
+-
+-	while ((error = rmap_get_mem_rec(&rm_cur, &rm_rec)) == 1) {
++	while ((error = rmap_get_mem_rec(rm_cur, &rm_rec)) == 1) {
+ 		error = rmap_lookup(bt_cur, &rm_rec, &tmp, &have);
+ 		if (error) {
+ 			do_warn(
+ _("Could not read reverse-mapping record for (%u/%u).\n"),
+-					agno, rm_rec.rm_startblock);
+-			goto err_cur;
++					group,
++					rm_rec.rm_startblock);
++			return error;
+ 		}
+ 
+ 		/*
+@@ -1401,15 +1385,15 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
+ 			if (error) {
+ 				do_warn(
+ _("Could not read reverse-mapping record for (%u/%u).\n"),
+-						agno, rm_rec.rm_startblock);
+-				goto err_cur;
++						group, rm_rec.rm_startblock);
++				return error;
+ 			}
+ 		}
+ 		if (!have) {
+ 			do_warn(
+ _("Missing reverse-mapping record for (%u/%u) %slen %u owner %"PRId64" \
+ %s%soff %"PRIu64"\n"),
+-				agno, rm_rec.rm_startblock,
++				group, rm_rec.rm_startblock,
+ 				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
+ 					_("unwritten ") : "",
+ 				rm_rec.rm_blockcount,
+@@ -1422,12 +1406,12 @@ _("Missing reverse-mapping record for (%u/%u) %slen %u owner %"PRId64" \
+ 			continue;
+ 		}
+ 
+-		/* Compare each refcount observation against the btree's */
++		/* Compare each rmap observation against the btree's */
+ 		if (!rmap_is_good(&rm_rec, &tmp)) {
+ 			do_warn(
+ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
+ %"PRIu64"; should be (%u/%u) %slen %u owner %"PRId64" %s%soff %"PRIu64"\n"),
+-				agno, tmp.rm_startblock,
++				group, tmp.rm_startblock,
+ 				(tmp.rm_flags & XFS_RMAP_UNWRITTEN) ?
+ 					_("unwritten ") : "",
+ 				tmp.rm_blockcount,
+@@ -1437,7 +1421,7 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
+ 				(tmp.rm_flags & XFS_RMAP_BMBT_BLOCK) ?
+ 					_("bmbt ") : "",
+ 				tmp.rm_offset,
+-				agno, rm_rec.rm_startblock,
++				group, rm_rec.rm_startblock,
+ 				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
+ 					_("unwritten ") : "",
+ 				rm_rec.rm_blockcount,
+@@ -1450,8 +1434,61 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
+ 		}
+ 	}
+ 
++	return error;
 +}
 +
-+simple_online_repair() {
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
++/*
++ * Compare the observed reverse mappings against what's in the ag btree.
++ */
++void
++rmaps_verify_btree(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno)
++{
++	struct rmap_mem_cur	rm_cur;
++	struct xfs_btree_cur	*bt_cur = NULL;
++	struct xfs_buf		*agbp = NULL;
++	struct xfs_perag	*pag = NULL;
++	int			error;
 +
-+	echo "repair root"
-+	$XFS_IO_PROG -x -c "repair dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "repair A"
-+	$XFS_IO_PROG -x -c "repair dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "repair D"
-+	$XFS_IO_PROG -x -c "repair dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "repair B"
-+	$XFS_IO_PROG -x -c "repair dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "repair D"
-+	$XFS_IO_PROG -x -c "repair dirtree $d_inum $d_gen" $SCRATCH_MNT
++	if (!xfs_has_rmapbt(mp) || add_rmapbt)
++		return;
++	if (rmapbt_suspect) {
++		if (no_modify && agno == 0)
++			do_warn(_("would rebuild corrupt rmap btrees.\n"));
++		return;
++	}
 +
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
++	/* Create cursors to rmap structures */
++	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rm_cur);
++	if (error) {
++		do_warn(_("Not enough memory to check reverse mappings.\n"));
++		return;
++	}
++
++	pag = libxfs_perag_get(mp, agno);
++	error = -libxfs_alloc_read_agf(pag, NULL, 0, &agbp);
++	if (error) {
++		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
++				agno);
++		goto err_pag;
++	}
++
++	/* Leave the per-ag data "uninitialized" since we rewrite it later */
++	clear_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
++
++	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
++	if (!bt_cur) {
++		do_warn(_("Not enough memory to check reverse mappings.\n"));
++		goto err_agf;
++	}
++
++	error = rmap_compare_records(&rm_cur, bt_cur, agno);
++	if (error)
++		goto err_cur;
++
+ err_cur:
+-	libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
++	libxfs_btree_del_cursor(bt_cur, error);
+ err_agf:
+ 	libxfs_buf_relse(agbp);
+ err_pag:
+@@ -1459,6 +1496,125 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
+ 	rmap_free_mem_cursor(NULL, &rm_cur, error);
+ }
+ 
++/*
++ * Thread-safe version of xfs_imeta_iget.
++ *
++ * In the kernel, xfs_imeta_iget requires a transaction so that the untrusted
++ * lookup will not livelock the mount process if the inobt contains a cycle.
++ * However, the userspace buffer cache only locks buffers if it's told to.
++ * That only happens when prefetch is enabled.
++ *
++ * Depending on allocation patterns, realtime metadata inodes can share the
++ * same inode cluster buffer.  We don't want libxfs_trans_bjoin in racing iget
++ * calls to corrupt the incore buffer state, so we impose our own lock here.
++ * Evidently support orgs will sometimes use no-prefetch lockless mode as a
++ * last resort if repair gets stuck on a buffer lock elsewhere.
++ */
++static inline int
++threadsafe_imeta_iget(
++	struct xfs_mount	*mp,
++	xfs_ino_t		ino,
++	struct xfs_inode	**ipp)
++{
++	static pthread_mutex_t	lock = PTHREAD_MUTEX_INITIALIZER;
++	struct xfs_trans	*tp;
++	int			error;
++
++	error = -libxfs_trans_alloc_empty(mp, &tp);
++	if (error)
++		return error;
++
++	if (do_prefetch) {
++		error = -libxfs_imeta_iget(tp, ino, XFS_DIR3_FT_REG_FILE, ipp);
++	} else {
++		pthread_mutex_lock(&lock);
++		error = -libxfs_imeta_iget(tp, ino, XFS_DIR3_FT_REG_FILE, ipp);
++		pthread_mutex_unlock(&lock);
++	}
++	libxfs_trans_cancel(tp);
++
++	return error;
 +}
 +
-+# Part 1: Use raw ioctls to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+simple_online_repair
-+_check_scratch_fs
-+_scratch_unmount
++/*
++ * Compare the observed reverse mappings against what's in the rtgroup btree.
++ */
++void
++rtrmaps_verify_btree(
++	struct xfs_mount	*mp,
++	xfs_rgnumber_t		rgno)
++{
++	struct rmap_mem_cur	rm_cur;
++	struct xfs_btree_cur	*bt_cur = NULL;
++	struct xfs_rtgroup	*rtg = NULL;
++	struct xfs_ag_rmap	*ar = rmaps_for_group(true, rgno);
++	struct xfs_inode	*ip = NULL;
++	int			error;
 +
-+# Part 2: Use xfs_scrub to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+_scratch_scrub &>> $seqres.full
-+echo "xfs_scrub returned $?" >> $seqres.full
-+_check_scratch_fs
-+_scratch_unmount
++	if (!xfs_has_rmapbt(mp) || add_rmapbt)
++		return;
++	if (rmapbt_suspect) {
++		if (no_modify && rgno == 0)
++			do_warn(_("would rebuild corrupt rmap btrees.\n"));
++		return;
++	}
 +
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1867.out b/tests/xfs/1867.out
-new file mode 100644
-index 0000000000..88fbb85e50
---- /dev/null
-+++ b/tests/xfs/1867.out
-@@ -0,0 +1,25 @@
-+QA output created by 1867
-+check root
-+check A
-+check B
-+Corruption detected.
-+check C
-+Corruption detected during cross-referencing.
-+check D
-+Corruption detected during cross-referencing.
-+repair root
-+Metadata did not need repair or optimization.
-+repair A
-+Metadata did not need repair or optimization.
-+repair D
-+Corruption still detected during cross-referencing.
-+repair B
-+repair C
-+Metadata did not need repair or optimization.
-+repair D
-+Metadata did not need repair or optimization.
-+check root
-+check A
-+check B
-+check C
-+check D
-diff --git a/tests/xfs/1868 b/tests/xfs/1868
-new file mode 100755
-index 0000000000..7436343c0c
---- /dev/null
-+++ b/tests/xfs/1868
-@@ -0,0 +1,121 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1868
-+#
-+# Functional testing for online fsck of a directory chain that is not
-+# accessible from the root directory.
-+#
-+. ./common/preamble
-+_begin_fstest auto online_repair
++	/* Create cursors to rmap structures */
++	error = rmap_init_mem_cursor(mp, NULL, true, rgno, &rm_cur);
++	if (error) {
++		do_warn(_("Not enough memory to check reverse mappings.\n"));
++		return;
++	}
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/inject
-+. ./common/fuzzy
-+. ./common/populate
++	rtg = libxfs_rtgroup_get(mp, rgno);
++	if (!rtg) {
++		do_warn(_("Could not load rtgroup %u.\n"), rgno);
++		goto err_rcur;
++	}
 +
-+# real QA test starts here
++	error = threadsafe_imeta_iget(mp, ar->rg_rmap_ino, &ip);
++	if (error) {
++		do_warn(
++_("Could not load rtgroup %u rmap inode, error %d.\n"),
++				rgno, error);
++		goto err_rtg;
++	}
 +
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_db_command "link"
-+_require_xfs_db_command "unlink"
-+_require_scratch
-+_require_xfs_stress_online_repair
++	if (ip->i_df.if_format != XFS_DINODE_FMT_RMAP) {
++		do_warn(
++_("rtgroup %u rmap inode has wrong format 0x%x, expected 0x%x\n"),
++				rgno, ip->i_df.if_format,
++				XFS_DINODE_FMT_RMAP);
++		goto err_ino;
++	}
 +
-+prepare_fs() {
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount
-+	__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
++	if (xfs_inode_has_attr_fork(ip) &&
++	    !(xfs_has_metadir(mp) && xfs_has_parent(mp))) {
++		do_warn(
++_("rtgroup %u rmap inode should not have extended attributes\n"), rgno);
++		goto err_ino;
++	}
 +
-+	# Begin by creating the following directory tree:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	mkdir -p "$SCRATCH_MNT/A/B/C"
++	bt_cur = libxfs_rtrmapbt_init_cursor(mp, NULL, rtg, ip);
++	if (!bt_cur) {
++		do_warn(_("Not enough memory to check reverse mappings.\n"));
++		goto err_ino;
++	}
 +
-+	root_inum="$(stat -c '%i' "$SCRATCH_MNT/")"
-+	a_inum="$(stat -c '%i' "$SCRATCH_MNT/A")"
-+	b_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B")"
-+	c_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C")"
++	error = rmap_compare_records(&rm_cur, bt_cur, rgno);
++	if (error)
++		goto err_cur;
 +
-+	echo "root: $root_inum; a: $a_inum; b: $b_inum; c: $c_inum" >> $seqres.full
-+
-+	# Next, we sever the tree by deleting root["A"]->A.  Directory tree is now:
-+	# A["B"]->B
-+	# B["C"]->C
-+	_scratch_unmount
-+
-+	root_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $root_inum")
-+	a_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $a_inum")
-+	b_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $b_inum")
-+	c_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $c_inum")
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before A $a_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db -x \
-+		-c "inode $root_inum" -c "unlink A" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db \
-+		-c "echo after root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo after A $a_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
++err_cur:
++	libxfs_btree_del_cursor(bt_cur, error);
++err_ino:
++	libxfs_imeta_irele(ip);
++err_rtg:
++	libxfs_rtgroup_put(rtg);
++err_rcur:
++	rmap_free_mem_cursor(NULL, &rm_cur, error);
 +}
 +
-+simple_online_repair() {
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "repair root"
-+	$XFS_IO_PROG -x -c "repair dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "repair A"
-+	$XFS_IO_PROG -x -c "repair dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "repair B"
-+	$XFS_IO_PROG -x -c "repair dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
-+
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+}
-+
-+# Part 1: Use raw ioctls to detect the chain and fix it.
-+prepare_fs
-+_scratch_mount
-+simple_online_repair
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# Part 2: Use xfs_scrub to detect the chain and fix it.
-+prepare_fs
-+_scratch_mount
-+_scratch_scrub &>> $seqres.full
-+echo "xfs_scrub returned $?" >> $seqres.full
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1868.out b/tests/xfs/1868.out
-new file mode 100644
-index 0000000000..f4f444ed52
---- /dev/null
-+++ b/tests/xfs/1868.out
-@@ -0,0 +1,21 @@
-+QA output created by 1868
-+check root
-+check A
-+Corruption detected.
-+check B
-+Corruption detected during cross-referencing.
-+check C
-+Corruption detected during cross-referencing.
-+repair C
-+Corruption still detected during cross-referencing.
-+repair root
-+Metadata did not need repair or optimization.
-+repair A
-+repair B
-+Metadata did not need repair or optimization.
-+repair C
-+Metadata did not need repair or optimization.
-+check root
-+check A
-+check B
-+check C
-diff --git a/tests/xfs/1869 b/tests/xfs/1869
-new file mode 100755
-index 0000000000..188bc0adc8
---- /dev/null
-+++ b/tests/xfs/1869
-@@ -0,0 +1,157 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1869
-+#
-+# Functional testing for online fsck of a multiply-owned directory that is
-+# accessible from the root directory.
-+#
-+. ./common/preamble
-+_begin_fstest auto online_repair
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/inject
-+. ./common/fuzzy
-+. ./common/populate
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_db_command "link"
-+_require_xfs_db_command "unlink"
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+prepare_fs() {
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount
-+	__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
-+
-+	# Begin by creating the following directory tree:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["D"]->D
-+	# root["Z"]->Z
-+	# Z["Y"]->Y
-+	mkdir -p "$SCRATCH_MNT/A/B/C/D" "$SCRATCH_MNT/Z/Y"
-+
-+	root_inum="$(stat -c '%i' "$SCRATCH_MNT/")"
-+	a_inum="$(stat -c '%i' "$SCRATCH_MNT/A")"
-+	b_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B")"
-+	c_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C")"
-+	d_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C/D")"
-+	z_inum="$(stat -c '%i' "$SCRATCH_MNT/Z")"
-+	y_inum="$(stat -c '%i' "$SCRATCH_MNT/Z/Y")"
-+
-+	echo "root: $root_inum; a: $a_inum; b: $b_inum; c: $c_inum; d: $d_inum" >> $seqres.full
-+	echo "root: $root_inum; z: $z_inum; y: $y_inum" >> $seqres.full
-+
-+	# Next, we create the multiply-owned directory by creating Y["C1"]->C.
-+	# Directory tree is now:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["D"]->D
-+	# root["Z"]->Z
-+	# Z["Y"]->Y
-+	# Y["C1"]->C
-+	_scratch_unmount
-+
-+	root_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $root_inum")
-+	a_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $a_inum")
-+	b_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $b_inum")
-+	c_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $c_inum")
-+	d_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $d_inum")
-+	z_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $z_inum")
-+	y_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $y_inum")
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before Y $y_inum" -c "inode $y_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before B $b_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db -x \
-+		-c "inode $y_inum" -c "link -i $c_inum C1" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before Y $y_inum" -c "inode $y_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before B $b_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before C $c_inum" -c "inode $c_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+}
-+
-+simple_online_repair() {
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "check Z"
-+	$XFS_IO_PROG -c "scrub dirtree $z_inum $z_gen" $SCRATCH_MNT
-+	echo "check Y"
-+	$XFS_IO_PROG -c "scrub dirtree $y_inum $y_gen" $SCRATCH_MNT
-+
-+	echo "repair D"
-+	$XFS_IO_PROG -x -c "repair dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "repair root"
-+	$XFS_IO_PROG -x -c "repair dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "repair A"
-+	$XFS_IO_PROG -x -c "repair dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "repair B"
-+	$XFS_IO_PROG -x -c "repair dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "repair D"
-+	$XFS_IO_PROG -x -c "repair dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "repair Z"
-+	$XFS_IO_PROG -x -c "repair dirtree $z_inum $z_gen" $SCRATCH_MNT
-+	echo "repair Y"
-+	$XFS_IO_PROG -x -c "repair dirtree $y_inum $y_gen" $SCRATCH_MNT
-+
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "check Z"
-+	$XFS_IO_PROG -c "scrub dirtree $z_inum $z_gen" $SCRATCH_MNT
-+	echo "check Y"
-+	$XFS_IO_PROG -c "scrub dirtree $y_inum $y_gen" $SCRATCH_MNT
-+}
-+
-+# Part 1: Use raw ioctls to detect the multi-parent dir and fix it.
-+prepare_fs
-+_scratch_mount
-+simple_online_repair
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# Part 2: Use xfs_scrub to detect the multi-parent dir and fix it.
-+prepare_fs
-+_scratch_mount
-+_scratch_scrub &>> $seqres.full
-+echo "xfs_scrub returned $?" >> $seqres.full
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1869.out b/tests/xfs/1869.out
-new file mode 100644
-index 0000000000..a7ea4c2223
---- /dev/null
-+++ b/tests/xfs/1869.out
-@@ -0,0 +1,32 @@
-+QA output created by 1869
-+check root
-+check A
-+check B
-+check C
-+Corruption detected.
-+check D
-+Corruption detected during cross-referencing.
-+check Z
-+check Y
-+repair D
-+Corruption still detected during cross-referencing.
-+repair root
-+Metadata did not need repair or optimization.
-+repair A
-+Metadata did not need repair or optimization.
-+repair B
-+Metadata did not need repair or optimization.
-+repair C
-+repair D
-+Metadata did not need repair or optimization.
-+repair Z
-+Metadata did not need repair or optimization.
-+repair Y
-+Metadata did not need repair or optimization.
-+check root
-+check A
-+check B
-+check C
-+check D
-+check Z
-+check Y
-diff --git a/tests/xfs/1870 b/tests/xfs/1870
-new file mode 100755
-index 0000000000..c4a32de061
---- /dev/null
-+++ b/tests/xfs/1870
-@@ -0,0 +1,146 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1870
-+#
-+# Functional testing for online fsck of a directory loop that is inaccessible
-+# from the root directory and has subdirectories.
-+#
-+. ./common/preamble
-+_begin_fstest auto online_repair
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/inject
-+. ./common/fuzzy
-+. ./common/populate
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_db_command "link"
-+_require_xfs_db_command "unlink"
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+prepare_fs() {
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount
-+	__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
-+
-+	# Begin by creating the following directory tree:
-+	# root["A"]->A
-+	# A["B"]->B
-+	# B["C"]->C
-+	# C["D"]->D
-+	# D["E"]->E
-+	mkdir -p "$SCRATCH_MNT/A/B/C/D/E"
-+
-+	root_inum="$(stat -c '%i' "$SCRATCH_MNT/")"
-+	a_inum="$(stat -c '%i' "$SCRATCH_MNT/A")"
-+	b_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B")"
-+	c_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C")"
-+	d_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C/D")"
-+	e_inum="$(stat -c '%i' "$SCRATCH_MNT/A/B/C/D/E")"
-+
-+	echo "root: $root_inum; a: $a_inum; b: $b_inum; c: $c_inum; d: $d_inum; e: $e_inum" >> $seqres.full
-+
-+	# Complete the loop by creating D["B1"]->B and severing A["B"]->B.  Directory
-+	# tree is now:
-+	# root["A"]->A
-+	# B["C"]->C
-+	# C["D"]->D
-+	# D["E"]->E
-+	# D["B1"]->B
-+	_scratch_unmount
-+
-+	root_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $root_inum")
-+	a_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $a_inum")
-+	b_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $b_inum")
-+	c_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $c_inum")
-+	d_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $d_inum")
-+	e_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $e_inum")
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before A $d_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before D $d_inum" -c "inode $d_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before B $b_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db -x \
-+		-c "inode $d_inum" -c "link -i $b_inum B1" \
-+		-c "inode $a_inum" -c "unlink B" \
-+		>> $seqres.full
-+
-+	_scratch_xfs_db \
-+		-c "echo before root $root_inum" -c "inode $root_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before A $d_inum" -c "inode $a_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before D $d_inum" -c "inode $d_inum" -c 'print core.nlinkv2' -c "ls" \
-+		-c "echo before B $b_inum" -c "inode $b_inum" -c 'print core.nlinkv2' -c "parent" \
-+		>> $seqres.full
-+}
-+
-+simple_online_repair() {
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "check E"
-+	$XFS_IO_PROG -c "scrub dirtree $e_inum $e_gen" $SCRATCH_MNT
-+
-+	echo "repair root"
-+	$XFS_IO_PROG -x -c "repair dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "repair A"
-+	$XFS_IO_PROG -x -c "repair dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "repair E"
-+	$XFS_IO_PROG -x -c "repair dirtree $e_inum $e_gen" $SCRATCH_MNT
-+	echo "repair B"
-+	$XFS_IO_PROG -x -c "repair dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "repair C"
-+	$XFS_IO_PROG -x -c "repair dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "repair D"
-+	$XFS_IO_PROG -x -c "repair dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "repair E"
-+	$XFS_IO_PROG -x -c "repair dirtree $e_inum $e_gen" $SCRATCH_MNT
-+
-+	echo "check root"
-+	$XFS_IO_PROG -c "scrub dirtree $root_inum $root_gen" $SCRATCH_MNT
-+	echo "check A"
-+	$XFS_IO_PROG -c "scrub dirtree $a_inum $a_gen" $SCRATCH_MNT
-+	echo "check B"
-+	$XFS_IO_PROG -c "scrub dirtree $b_inum $b_gen" $SCRATCH_MNT
-+	echo "check C"
-+	$XFS_IO_PROG -c "scrub dirtree $c_inum $c_gen" $SCRATCH_MNT
-+	echo "check D"
-+	$XFS_IO_PROG -c "scrub dirtree $d_inum $d_gen" $SCRATCH_MNT
-+	echo "check E"
-+	$XFS_IO_PROG -c "scrub dirtree $e_inum $e_gen" $SCRATCH_MNT
-+}
-+
-+# Part 1: Use raw ioctls to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+simple_online_repair
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# Part 2: Use xfs_scrub to detect the loop and fix it.
-+prepare_fs
-+_scratch_mount
-+_scratch_scrub &>> $seqres.full
-+echo "xfs_scrub returned $?" >> $seqres.full
-+_check_scratch_fs
-+_scratch_unmount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1870.out b/tests/xfs/1870.out
-new file mode 100644
-index 0000000000..8274c6602c
---- /dev/null
-+++ b/tests/xfs/1870.out
-@@ -0,0 +1,30 @@
-+QA output created by 1870
-+check root
-+check A
-+check B
-+Corruption detected.
-+check C
-+Corruption detected.
-+check D
-+Corruption detected.
-+check E
-+Corruption detected during cross-referencing.
-+repair root
-+Metadata did not need repair or optimization.
-+repair A
-+Metadata did not need repair or optimization.
-+repair E
-+Corruption still detected during cross-referencing.
-+repair B
-+repair C
-+Metadata did not need repair or optimization.
-+repair D
-+Metadata did not need repair or optimization.
-+repair E
-+Metadata did not need repair or optimization.
-+check root
-+check A
-+check B
-+check C
-+check D
-+check E
-diff --git a/tests/xfs/1871 b/tests/xfs/1871
-new file mode 100755
-index 0000000000..760259d18b
---- /dev/null
-+++ b/tests/xfs/1871
-@@ -0,0 +1,78 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1871
-+#
-+# Race rename and directory tree structure corruption detector for a while to
-+# exercise the dirtree code's directory path invalidation and its ability to
-+# handle unlinked directories.
-+#
-+. ./common/preamble
-+_begin_fstest scrub dangerous_fsstress_scrub
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_scrub
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+__stress_scrub_check_commands "%dir%" '' '' 'scrub dirtree'
-+
-+parentA="$SCRATCH_MNT/a"
-+parentB="$SCRATCH_MNT/b"
-+child="$parentA/c/d/e/f/g/h/i/j/k/l/m/n/o/p"
-+unlinked="$SCRATCH_MNT/unlinked"
-+
-+mkdir -p "$parentA" "$parentB" "$child" "$unlinked"
-+
-+# Find handle info for the child so that we can scrub by handle
-+child_inum="$(stat -c '%i' "$child")"
-+_scratch_unmount
-+child_gen=$(_scratch_xfs_get_metadata_field core.gen "inode $child_inum")
-+_scratch_mount
-+
-+# Queue up a bunch of scrub requests per invocation
-+ioargs=()
-+for ((i = 0; i < 100; i++)); do
-+	ioargs+=('-c' "scrub dirtree $child_inum $child_gen")
-+done
-+
-+renamer() {
-+	# Make sure the scrubber handles unlinked directories correctly
-+	# by squatting on an empty directory
-+	cd "$unlinked"
-+	rm -r -f "$unlinked"
-+
-+	# Bounce the second level directory between parents to stress the
-+	# invalidation detector
-+	while [ -e $RUNNING_FILE ]; do
-+		mv "$parentA/c" "$parentB/"
-+		mv "$parentB/c" "$parentA/"
-+	done
-+}
-+
-+RUNNING_FILE="$SCRATCH_MNT/run"
-+touch $RUNNING_FILE
-+renamer &
-+
-+# Exercise the directory tree scrubber in two ways -- scrubbing the lowest
-+# subdir by handle, and running xfs_scrub on the entire fs.
-+while _soak_loop_running $((10 * TIME_FACTOR)); do
-+	$XFS_IO_PROG "${ioargs[@]}" "$SCRATCH_MNT"
-+	XFS_SCRUB_PHASE=5 _scratch_scrub -n >> $seqres.full
-+done
-+rm -f $RUNNING_FILE
-+wait
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/1871.out b/tests/xfs/1871.out
-new file mode 100644
-index 0000000000..24331e63d5
---- /dev/null
-+++ b/tests/xfs/1871.out
-@@ -0,0 +1,2 @@
-+QA output created by 1871
-+Silence is golden
+ /*
+  * Compare the key fields of two rmap records -- positive if key1 > key2,
+  * negative if key1 < key2, and zero if equal.
+diff --git a/repair/rmap.h b/repair/rmap.h
+index dd55ba3cc29..dcd834ef242 100644
+--- a/repair/rmap.h
++++ b/repair/rmap.h
+@@ -21,6 +21,7 @@ void rmap_add_bmbt_rec(struct xfs_mount *mp, xfs_ino_t ino, int whichfork,
+ bool rmaps_are_mergeable(struct xfs_rmap_irec *r1, struct xfs_rmap_irec *r2);
+ 
+ void rmap_add_fixed_ag_rec(struct xfs_mount *mp, xfs_agnumber_t agno);
++void rmap_add_fixed_rtgroup_rec(struct xfs_mount *mp, xfs_rgnumber_t rgno);
+ 
+ int rmap_add_agbtree_mapping(struct xfs_mount *mp, xfs_agnumber_t agno,
+ 		xfs_agblock_t agbno, xfs_extlen_t len, uint64_t owner);
+@@ -30,6 +31,7 @@ uint64_t rmap_record_count(struct xfs_mount *mp, bool isrt,
+ 		xfs_agnumber_t agno);
+ extern void rmap_avoid_check(struct xfs_mount *mp);
+ void rmaps_verify_btree(struct xfs_mount *mp, xfs_agnumber_t agno);
++void rtrmaps_verify_btree(struct xfs_mount *mp, xfs_rgnumber_t rgno);
+ 
+ extern int64_t rmap_diffkeys(struct xfs_rmap_irec *kp1,
+ 		struct xfs_rmap_irec *kp2);
 
 
