@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2279-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2189-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1ED1821238
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:37:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F7578211DB
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:14:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 039051C21CB8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:37:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51F271C21C7F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:14:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232021375;
-	Mon,  1 Jan 2024 00:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F3138E;
+	Mon,  1 Jan 2024 00:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xvk2OJA0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWvxFGON"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B151362
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:37:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36EDC433C8;
-	Mon,  1 Jan 2024 00:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F90384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:14:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA12C433C8;
+	Mon,  1 Jan 2024 00:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069442;
-	bh=LGAKg4ItIUvTiglH6RA8uTvgIgqgDQ/xp0MIE1PphFY=;
+	s=k20201202; t=1704068066;
+	bh=VzH9xyguqN/CJ4FlituhP5sgsw7tPQDIhUdlL7QjTOY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Xvk2OJA0JoNgVwL/j7b23AjVf0xfDaY8LMkwknsC2BDg257CZaMJQ/zjK7VXPkGVs
-	 b8uBz4qmtOQOXTrGHDi6iz7UJHqJaRjnv3kBYqlUPwFW8THKas9eXaRbsTW5eQ3LKt
-	 zfbULtehQPnt6OSQ4aZ0RvJBNmP9l5fhH+h4jYOV/Yb/FWDJ7NiInJzqQLZGseX5cq
-	 AKixG/O0q/ZmvIcQrW5g0MC5eZag+bN9y7aVVutRO7MizgzJa55yN/Hkbhv5yVMofZ
-	 GKBdaLnDqF4EgB5NdnKWFT3xYZWkHvnZzlDOVVXj4JhDcCHMRRup0Aky2li8cGGsBN
-	 nnFK3VxhYD9MQ==
-Date: Sun, 31 Dec 2023 16:37:22 +9900
-Subject: [PATCH 1/3] xfs: enable extent size hints for CoW when rtextsize > 1
+	b=cWvxFGONkBXBBaSdTDJOmJ6kvFIsIRx5z9QV9UBVFaoTMvFMC3IH5fPn13sud0XWW
+	 bK+jJHfe6cjjb6JImjsIpw/VWjKdjNyNLT8tk8RhJiUs6kbTTYhkH6YpDwBipqvd3S
+	 IyRVYuqLUDqTm7QxT6dv4o5Pj8vvv/TpLTcePv1x9UBCBaW8kw6omWsuwtFvFWxqv5
+	 tegSg5n+8RSYqgni3RvGAh6Iq04WpTvKYfy5vHcR6qSkT0A1VXX0KuI5W3Zb0MtDMJ
+	 SJ1AEDmFRVKnqfi9n5UA5P/ZcMiEhTs6HxqOw6kiDTIrs08IX7b2Vc03K6NV0MiVC7
+	 FonBOHLxmE+5Q==
+Date: Sun, 31 Dec 2023 16:14:25 +9900
+Subject: [PATCH 15/47] xfs: report realtime rmap btree corruption errors to
+ the health system
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405018025.1818169.13143459343794388781.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
-References: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
+Message-ID: <170405015513.1815505.15975259091873127380.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,57 +53,106 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-CoW extent size hints are not allowed on filesystems that have large
-realtime extents because we only want to perform the minimum required
-amount of write-around (aka write amplification) for shared extents.
-
-On filesystems where rtextsize > 1, allocations can only be done in
-units of full rt extents, which means that we can only map an entire rt
-extent's worth of blocks into the data fork.  Hole punch requests become
-conversions to unwritten if the request isn't aligned properly.
-
-Because a copy-write fundamentally requires remapping, this means that
-we also can only do copy-writes of a full rt extent.  This is too
-expensive for large hint sizes, since it's all or nothing.
+Whenever we encounter corrupt realtime rmap btree blocks, we should
+report that to the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap.c |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ libxfs/xfs_fs_staging.h               |    1 +
+ libxfs/xfs_health.h                   |    4 +++-
+ libxfs/xfs_inode_fork.c               |    4 +++-
+ libxfs/xfs_rtrmap_btree.c             |    5 ++++-
+ man/man2/ioctl_xfs_rtgroup_geometry.2 |    3 +++
+ 5 files changed, 14 insertions(+), 3 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index bc703b13b7e..13bcf146d08 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -6402,6 +6402,28 @@ xfs_get_cowextsz_hint(
- 	if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
- 		a = ip->i_cowextsize;
- 	if (XFS_IS_REALTIME_INODE(ip)) {
-+		/*
-+		 * For realtime files, the realtime extent is the fundamental
-+		 * unit of allocation.  This means that data sharing and CoW
-+		 * remapping can only be done in those units.  For filesystems
-+		 * where the extent size is larger than one block, write
-+		 * requests that are not aligned to an extent boundary employ
-+		 * an unshare-around strategy to ensure that all pages for a
-+		 * shared extent are fully dirtied.
-+		 *
-+		 * Because the remapping alignment requirement applies equally
-+		 * to all CoW writes, any regular overwrites that could be
-+		 * turned (by a speculative CoW preallocation) into a CoW write
-+		 * must either employ this dirty-around strategy, or be smart
-+		 * enough to ignore the CoW fork mapping unless the entire
-+		 * extent is dirty or becomes shared by writeback time.  Doing
-+		 * the first would dramatically increase write amplification,
-+		 * and the second would require deeper insight into the state
-+		 * of the page cache during a writeback request.  For now, we
-+		 * ignore the hint.
-+		 */
-+		if (ip->i_mount->m_sb.sb_rextsize > 1)
-+			return ip->i_mount->m_sb.sb_rextsize;
- 		b = 0;
- 		if (ip->i_diflags & XFS_DIFLAG_EXTSIZE)
- 			b = ip->i_extsize;
+diff --git a/libxfs/xfs_fs_staging.h b/libxfs/xfs_fs_staging.h
+index 1f573314877..9d5d6af62b6 100644
+--- a/libxfs/xfs_fs_staging.h
++++ b/libxfs/xfs_fs_staging.h
+@@ -216,6 +216,7 @@ struct xfs_rtgroup_geometry {
+ };
+ #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
+ #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
++#define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
+ 
+ #define XFS_IOC_RTGROUP_GEOMETRY _IOWR('X', 63, struct xfs_rtgroup_geometry)
+ 
+diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
+index 1e9938a417b..aeeb6276977 100644
+--- a/libxfs/xfs_health.h
++++ b/libxfs/xfs_health.h
+@@ -68,6 +68,7 @@ struct xfs_rtgroup;
+ #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
+ #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
+ #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
++#define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
+ 
+ /* Observable health issues for AG metadata. */
+ #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
+@@ -113,7 +114,8 @@ struct xfs_rtgroup;
+ 
+ #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
+ 				 XFS_SICK_RT_SUMMARY | \
+-				 XFS_SICK_RT_SUPER)
++				 XFS_SICK_RT_SUPER | \
++				 XFS_SICK_RT_RMAPBT)
+ 
+ #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
+ 				 XFS_SICK_AG_AGF | \
+diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
+index 0e6cd5bacdb..127571527cf 100644
+--- a/libxfs/xfs_inode_fork.c
++++ b/libxfs/xfs_inode_fork.c
+@@ -264,8 +264,10 @@ xfs_iformat_data_fork(
+ 		case XFS_DINODE_FMT_BTREE:
+ 			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
+ 		case XFS_DINODE_FMT_RMAP:
+-			if (!xfs_has_rtrmapbt(ip->i_mount))
++			if (!xfs_has_rtrmapbt(ip->i_mount)) {
++				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 				return -EFSCORRUPTED;
++			}
+ 			return xfs_iformat_rtrmap(ip, dip);
+ 		default:
+ 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
+index 832a58cfe13..5a25791baa5 100644
+--- a/libxfs/xfs_rtrmap_btree.c
++++ b/libxfs/xfs_rtrmap_btree.c
+@@ -25,6 +25,7 @@
+ #include "xfs_rtgroup.h"
+ #include "xfs_bmap.h"
+ #include "xfs_imeta.h"
++#include "xfs_health.h"
+ 
+ static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
+ 
+@@ -798,8 +799,10 @@ xfs_iformat_rtrmap(
+ 	level = be16_to_cpu(dfp->bb_level);
+ 
+ 	if (level > mp->m_rtrmap_maxlevels ||
+-	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize)
++	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize) {
++		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 		return -EFSCORRUPTED;
++	}
+ 
+ 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
+ 			xfs_rtrmap_broot_space_calc(mp, level, numrecs));
+diff --git a/man/man2/ioctl_xfs_rtgroup_geometry.2 b/man/man2/ioctl_xfs_rtgroup_geometry.2
+index ccd931d1e17..38753b93055 100644
+--- a/man/man2/ioctl_xfs_rtgroup_geometry.2
++++ b/man/man2/ioctl_xfs_rtgroup_geometry.2
+@@ -73,6 +73,9 @@ Realtime group superblock.
+ .TP
+ .B XFS_RTGROUP_GEOM_SICK_BITMAP
+ Realtime bitmap for this group.
++.TP
++.B XFS_RTGROUP_GEOM_SICK_RTRMAPBT
++Reverse mapping btree for this group.
+ .RE
+ .SH RETURN VALUE
+ On error, \-1 is returned, and
 
 
