@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2374-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2336-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0FA58212A9
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:02:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D690482127E
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:52:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A07A282B24
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:02:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C1E31F2249C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE91802;
-	Mon,  1 Jan 2024 01:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E081C80D;
+	Mon,  1 Jan 2024 00:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwK1p1G4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDHPOdSc"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B167ED;
-	Mon,  1 Jan 2024 01:02:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 581A8C433C7;
-	Mon,  1 Jan 2024 01:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA83A7F9;
+	Mon,  1 Jan 2024 00:52:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770BAC433C7;
+	Mon,  1 Jan 2024 00:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070930;
-	bh=LaZlLLEP2L/fWf6Rk4ZkhLdi5hc9Fr0Bj0OQjIb0WsM=;
+	s=k20201202; t=1704070335;
+	bh=/aANm7nvLEKfpkuwErFAb72mKDf0v0lHcinO9RN7UVU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=RwK1p1G4gDJILqFxETivP/0lW1obfrpyxudKZ3kThDB8uzQAY1yCf7YMsHoXeAbrl
-	 E3zsVd0XLPGe3ur0XNcEV6yPqDsWP7acnAKSY+t5rBshGb2wnJQAEx7JgEspOZNtFR
-	 XCWcCOn1vqcmJmB4BBnVOBiZT/mPcc20OPEyQ31m4pFm4wYB5HEx1JMVVGzBCN3Ce6
-	 Jx170o0vNkTtEUsetovSg95awdWPG0L9W1zyFKTn6VnA7Y58dmdSP5htsAzmA5t7BV
-	 3owI63ANGYeKz6INBB8N/mJuyvRIR39zYgyV2p78xQAFTdicz/tSGMJZeTLha8nYgO
-	 v9zfpP0/dxHsg==
-Date: Sun, 31 Dec 2023 17:02:09 +9900
-Subject: [PATCH 3/9] xfs: create fuzz tests for the realtime refcount btree
+	b=KDHPOdScsmEjjHy/APAyFzKfK7fq7E0JLg4cjTth4OGjkC1ZWS5TLC7i35XBhoyRd
+	 90voi+HLsnrXf5vtEdk18CcArr26mGh0xIk0T1N8RCcq2gE95SjrMoSMhp7ZJPWNts
+	 ERIrPf5cP4v3lMp20j443MrMFo79D2nL+yzfZnWueMqwLC1xkOqV39Flba6s1JJ97S
+	 MdiTdxqyIS7XLimh6rxlRMFRZyTcAMsDnV4737zAlqx880hwtYLWNWtBBAyAaWw9Zg
+	 37+RVUGUYYrQcvz2Kpu097HjQgzHNVNwHfuOv6yK4mjEqvjTZLZjqRv+vWzNV25+Y4
+	 FCMr4u+pozTsQ==
+Date: Sun, 31 Dec 2023 16:52:15 +9900
+Subject: [PATCH 09/11] xfs: create fuzz tests for metadata directories
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032055.1827358.9623496768181487478.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
-References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+Message-ID: <170405029968.1826032.6023234349919842647.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,79 +52,94 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create fuzz tests for the realtime refcount btree record and key/ptr
-blocks.
+Create fuzz tests to make sure that all the validation works for
+metadata directories and subdirectories.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs         |    4 ++++
- tests/xfs/1538     |   41 +++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1538.out |    4 ++++
- tests/xfs/1539     |   41 +++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1539.out |    4 ++++
- tests/xfs/1540     |   41 +++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1540.out |    4 ++++
- tests/xfs/1541     |   42 ++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1541.out |    4 ++++
- tests/xfs/1542     |   41 +++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1542.out |    4 ++++
- tests/xfs/1543     |   40 ++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1543.out |    4 ++++
- tests/xfs/1544     |   40 ++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1544.out |    4 ++++
- tests/xfs/1545     |   41 +++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1545.out |    4 ++++
- 17 files changed, 363 insertions(+)
- create mode 100755 tests/xfs/1538
- create mode 100644 tests/xfs/1538.out
- create mode 100755 tests/xfs/1539
- create mode 100644 tests/xfs/1539.out
- create mode 100755 tests/xfs/1540
- create mode 100644 tests/xfs/1540.out
- create mode 100755 tests/xfs/1541
- create mode 100644 tests/xfs/1541.out
- create mode 100755 tests/xfs/1542
- create mode 100644 tests/xfs/1542.out
- create mode 100755 tests/xfs/1543
- create mode 100644 tests/xfs/1543.out
- create mode 100755 tests/xfs/1544
- create mode 100644 tests/xfs/1544.out
- create mode 100755 tests/xfs/1545
- create mode 100644 tests/xfs/1545.out
+ common/xfs         |   22 ++++++++++++++++++++++
+ tests/xfs/1546     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1546.out |    4 ++++
+ tests/xfs/1547     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1547.out |    4 ++++
+ tests/xfs/1548     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1548.out |    4 ++++
+ tests/xfs/1549     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1549.out |    4 ++++
+ tests/xfs/1550     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1550.out |    4 ++++
+ tests/xfs/1551     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1551.out |    4 ++++
+ tests/xfs/1552     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1552.out |    4 ++++
+ tests/xfs/1553     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1553.out |    4 ++++
+ 17 files changed, 352 insertions(+)
+ create mode 100755 tests/xfs/1546
+ create mode 100644 tests/xfs/1546.out
+ create mode 100755 tests/xfs/1547
+ create mode 100644 tests/xfs/1547.out
+ create mode 100755 tests/xfs/1548
+ create mode 100644 tests/xfs/1548.out
+ create mode 100755 tests/xfs/1549
+ create mode 100644 tests/xfs/1549.out
+ create mode 100755 tests/xfs/1550
+ create mode 100644 tests/xfs/1550.out
+ create mode 100755 tests/xfs/1551
+ create mode 100644 tests/xfs/1551.out
+ create mode 100755 tests/xfs/1552
+ create mode 100644 tests/xfs/1552.out
+ create mode 100755 tests/xfs/1553
+ create mode 100644 tests/xfs/1553.out
 
 
 diff --git a/common/xfs b/common/xfs
-index b8dd8d4a40..aab04bfb18 100644
+index c6a60119f9..b88491666d 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -1929,6 +1929,10 @@ _scratch_xfs_find_rgbtree_height() {
- 		path_format="/realtime/%u.rmap"
- 		bt_prefix="u3.rtrmapbt"
- 		;;
-+	"refcnt")
-+		path_format="/realtime/%u.refcount"
-+		bt_prefix="u3.rtrefcbt"
-+		;;
- 	*)
- 		_fail "Don't know about rt btree ${bt_type}"
- 		;;
-diff --git a/tests/xfs/1538 b/tests/xfs/1538
+@@ -1913,3 +1913,25 @@ _xfs_calc_hidden_quota_files() {
+ 		echo 0
+ 	fi
+ }
++
++_require_xfs_mkfs_metadir()
++{
++	_scratch_mkfs_xfs_supported -m metadir=1 >/dev/null 2>&1 || \
++		_notrun "mkfs.xfs doesn't have metadir features"
++}
++
++_require_xfs_scratch_metadir()
++{
++	_require_xfs_mkfs_metadir
++	_require_scratch
++
++	_scratch_mkfs -m metadir=1 &> /dev/null
++	_require_scratch_xfs_features METADIR
++	_try_scratch_mount
++	res=$?
++	if [ $res -ne 0 ]; then
++		_notrun "mounting with metadir not supported by filesystem type: $FSTYP"
++	else
++		_scratch_unmount
++	fi
++}
+diff --git a/tests/xfs/1546 b/tests/xfs/1546
 new file mode 100755
-index 0000000000..2bd630fdf1
+index 0000000000..a370eb7abf
 --- /dev/null
-+++ b/tests/xfs/1538
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1546
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1538
++# FS QA Test No. 1546
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt record field.
++# Populate a XFS filesystem and fuzz every metadir root field.
 +# Use xfs_scrub to fix the corruption.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -132,56 +147,52 @@ index 0000000000..2bd630fdf1
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
 +
-+echo "Fuzz rtrefcountbt recs"
-+_scratch_xfs_fuzz_metadata '' 'online' "path -m $path" "addr u${inode_ver}.rtrefcbt.ptrs[1]" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt recs"
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'online' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1538.out b/tests/xfs/1538.out
+diff --git a/tests/xfs/1546.out b/tests/xfs/1546.out
 new file mode 100644
-index 0000000000..968cfd6ef9
+index 0000000000..b72891a758
 --- /dev/null
-+++ b/tests/xfs/1538.out
++++ b/tests/xfs/1546.out
 @@ -0,0 +1,4 @@
-+QA output created by 1538
++QA output created by 1546
 +Format and populate
-+Fuzz rtrefcountbt recs
-+Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1539 b/tests/xfs/1539
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1547 b/tests/xfs/1547
 new file mode 100755
-index 0000000000..8086943211
+index 0000000000..0083924b7b
 --- /dev/null
-+++ b/tests/xfs/1539
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1547
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1539
++# FS QA Test No. 1547
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt record field.
++# Populate a XFS filesystem and fuzz every metadir root field.
 +# Use xfs_repair to fix the corruption.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -189,56 +200,52 @@ index 0000000000..8086943211
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
 +
-+echo "Fuzz rtrefcountbt recs"
-+_scratch_xfs_fuzz_metadata '' 'offline' "path -m $path" "addr u${inode_ver}.rtrefcbt.ptrs[1]" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt recs"
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'offline' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1539.out b/tests/xfs/1539.out
+diff --git a/tests/xfs/1547.out b/tests/xfs/1547.out
 new file mode 100644
-index 0000000000..aa3a963dc2
+index 0000000000..983cc01343
 --- /dev/null
-+++ b/tests/xfs/1539.out
++++ b/tests/xfs/1547.out
 @@ -0,0 +1,4 @@
-+QA output created by 1539
++QA output created by 1547
 +Format and populate
-+Fuzz rtrefcountbt recs
-+Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1540 b/tests/xfs/1540
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1548 b/tests/xfs/1548
 new file mode 100755
-index 0000000000..ab8dee2a02
+index 0000000000..d81c524b07
 --- /dev/null
-+++ b/tests/xfs/1540
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1548
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1540
++# FS QA Test No. 1548
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt record field.
++# Populate a XFS filesystem and fuzz every metadir root field.
 +# Do not fix the filesystem, to test metadata verifiers.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_norepair realtime
++_begin_fstest dangerous_fuzzers dangerous_norepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -246,57 +253,53 @@ index 0000000000..ab8dee2a02
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
 +
-+echo "Fuzz rtrefcountbt recs"
-+_scratch_xfs_fuzz_metadata '' 'none' "path -m $path" "addr u${inode_ver}.rtrefcbt.ptrs[1]" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt recs"
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'none' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1540.out b/tests/xfs/1540.out
+diff --git a/tests/xfs/1548.out b/tests/xfs/1548.out
 new file mode 100644
-index 0000000000..37f3311837
+index 0000000000..9e395bb059
 --- /dev/null
-+++ b/tests/xfs/1540.out
++++ b/tests/xfs/1548.out
 @@ -0,0 +1,4 @@
-+QA output created by 1540
++QA output created by 1548
 +Format and populate
-+Fuzz rtrefcountbt recs
-+Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1541 b/tests/xfs/1541
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1549 b/tests/xfs/1549
 new file mode 100755
-index 0000000000..18312456f4
+index 0000000000..487c73e9e9
 --- /dev/null
-+++ b/tests/xfs/1541
-@@ -0,0 +1,42 @@
++++ b/tests/xfs/1549
+@@ -0,0 +1,38 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1541
++# FS QA Test No. 1549
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt record field.
++# Populate a XFS filesystem and fuzz every metadir root field.
 +# Try online repair and, if necessary, offline repair,
 +# to test the most likely usage pattern.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_bothrepair realtime
++_begin_fstest dangerous_fuzzers dangerous_bothrepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -304,56 +307,52 @@ index 0000000000..18312456f4
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
 +
-+echo "Fuzz rtrefcountbt recs"
-+_scratch_xfs_fuzz_metadata '' 'both' "path -m $path" "addr u${inode_ver}.rtrefcbt.ptrs[1]" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt recs"
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'both' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1541.out b/tests/xfs/1541.out
+diff --git a/tests/xfs/1549.out b/tests/xfs/1549.out
 new file mode 100644
-index 0000000000..35a9b73471
+index 0000000000..22b3d215e3
 --- /dev/null
-+++ b/tests/xfs/1541.out
++++ b/tests/xfs/1549.out
 @@ -0,0 +1,4 @@
-+QA output created by 1541
++QA output created by 1549
 +Format and populate
-+Fuzz rtrefcountbt recs
-+Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1542 b/tests/xfs/1542
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1550 b/tests/xfs/1550
 new file mode 100755
-index 0000000000..9246a31a31
+index 0000000000..8b5b42710c
 --- /dev/null
-+++ b/tests/xfs/1542
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1550
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1542
++# FS QA Test No. 1550
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt key/ptr field.
++# Populate a XFS filesystem and fuzz every metadir subdir field.
 +# Use xfs_scrub to fix the corruption.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -361,56 +360,52 @@ index 0000000000..9246a31a31
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
 +
-+echo "Fuzz rtrefcountbt keyptrs"
-+_scratch_xfs_fuzz_metadata '(rtrefcbt)' 'online' "path -m $path" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt keyptrs"
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'online' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1542.out b/tests/xfs/1542.out
+diff --git a/tests/xfs/1550.out b/tests/xfs/1550.out
 new file mode 100644
-index 0000000000..55d820b4b1
+index 0000000000..7694cd670b
 --- /dev/null
-+++ b/tests/xfs/1542.out
++++ b/tests/xfs/1550.out
 @@ -0,0 +1,4 @@
-+QA output created by 1542
++QA output created by 1550
 +Format and populate
-+Fuzz rtrefcountbt keyptrs
-+Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1543 b/tests/xfs/1543
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1551 b/tests/xfs/1551
 new file mode 100755
-index 0000000000..38afae106a
+index 0000000000..05b0328ef0
 --- /dev/null
-+++ b/tests/xfs/1543
-@@ -0,0 +1,40 @@
++++ b/tests/xfs/1551
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1543
++# FS QA Test No. 1551
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt key/ptr field.
++# Populate a XFS filesystem and fuzz every metadir subdir field.
 +# Use xfs_repair to fix the corruption.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -418,55 +413,52 @@ index 0000000000..38afae106a
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
 +
-+echo "Fuzz rtrefcountbt keyptrs"
-+_scratch_xfs_fuzz_metadata '(rtrefcbt)' 'offline' "path -m $path" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt keyptrs"
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'offline' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1543.out b/tests/xfs/1543.out
+diff --git a/tests/xfs/1551.out b/tests/xfs/1551.out
 new file mode 100644
-index 0000000000..e7afa10744
+index 0000000000..4c3360d08b
 --- /dev/null
-+++ b/tests/xfs/1543.out
++++ b/tests/xfs/1551.out
 @@ -0,0 +1,4 @@
-+QA output created by 1543
++QA output created by 1551
 +Format and populate
-+Fuzz rtrefcountbt keyptrs
-+Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1544 b/tests/xfs/1544
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1552 b/tests/xfs/1552
 new file mode 100755
-index 0000000000..86b11b1955
+index 0000000000..0870837f9c
 --- /dev/null
-+++ b/tests/xfs/1544
-@@ -0,0 +1,40 @@
++++ b/tests/xfs/1552
+@@ -0,0 +1,37 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1544
++# FS QA Test No. 1552
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt key/ptr field.
++# Populate a XFS filesystem and fuzz every metadir subdir field.
 +# Do not fix the filesystem, to test metadata verifiers.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_norepair realtime
++_begin_fstest dangerous_fuzzers dangerous_norepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -474,56 +466,53 @@ index 0000000000..86b11b1955
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
 +
-+echo "Fuzz rtrefcountbt keyptrs"
-+_scratch_xfs_fuzz_metadata '(rtrefcbt)' 'none' "path -m $path" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt keyptrs"
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'none' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1544.out b/tests/xfs/1544.out
+diff --git a/tests/xfs/1552.out b/tests/xfs/1552.out
 new file mode 100644
-index 0000000000..b39532c160
+index 0000000000..6636b1b656
 --- /dev/null
-+++ b/tests/xfs/1544.out
++++ b/tests/xfs/1552.out
 @@ -0,0 +1,4 @@
-+QA output created by 1544
++QA output created by 1552
 +Format and populate
-+Fuzz rtrefcountbt keyptrs
-+Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1545 b/tests/xfs/1545
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1553 b/tests/xfs/1553
 new file mode 100755
-index 0000000000..1dbe03506b
+index 0000000000..ab15e53e27
 --- /dev/null
-+++ b/tests/xfs/1545
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1553
+@@ -0,0 +1,38 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022-2024 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1545
++# FS QA Test No. 1553
 +#
-+# Populate a XFS filesystem and fuzz every rtrefcountbt key/ptr field.
++# Populate a XFS filesystem and fuzz every metadir subdir field.
 +# Try online repair and, if necessary, offline repair,
 +# to test the most likely usage pattern.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_bothrepair realtime
++_begin_fstest dangerous_fuzzers dangerous_bothrepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -531,37 +520,34 @@ index 0000000000..1dbe03506b
 +. ./common/filter
 +. ./common/populate
 +. ./common/fuzzy
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
-+_require_scratch_reflink
++_require_xfs_scratch_metadir
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+path="$(_scratch_xfs_find_rgbtree_height 'refcnt' 2)" || \
-+	_fail "could not find two-level rtrefcountbt"
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
 +
-+echo "Fuzz rtrefcountbt keyptrs"
-+_scratch_xfs_fuzz_metadata '(rtrefcbt)' 'both' "path -m $path" >> $seqres.full
-+echo "Done fuzzing rtrefcountbt keyptrs"
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'both' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1545.out b/tests/xfs/1545.out
+diff --git a/tests/xfs/1553.out b/tests/xfs/1553.out
 new file mode 100644
-index 0000000000..982a0d64df
+index 0000000000..0298fcfddb
 --- /dev/null
-+++ b/tests/xfs/1545.out
++++ b/tests/xfs/1553.out
 @@ -0,0 +1,4 @@
-+QA output created by 1545
++QA output created by 1553
 +Format and populate
-+Fuzz rtrefcountbt keyptrs
-+Done fuzzing rtrefcountbt keyptrs
++Fuzz metadir subdir
++Done fuzzing metadir subdir
 
 
