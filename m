@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2371-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2338-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 100848212A6
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:01:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA07B821280
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:52:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABDF7282A83
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:01:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F0031F21484
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:52:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071F6803;
-	Mon,  1 Jan 2024 01:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 854CA803;
+	Mon,  1 Jan 2024 00:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xip2Mh0E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SApRtcAp"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C285A7ED;
-	Mon,  1 Jan 2024 01:01:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884E7C433C7;
-	Mon,  1 Jan 2024 01:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBA17ED;
+	Mon,  1 Jan 2024 00:52:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9456C433C8;
+	Mon,  1 Jan 2024 00:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070883;
-	bh=5FPdso9T4JvAZCVd+mOgv7MpFc0uDTLhqIb8eZdxn20=;
+	s=k20201202; t=1704070366;
+	bh=tPy+L+JF0wSvbyGlgNcV0r3z6+erjEBI3a7qJgCBLhQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Xip2Mh0E5e/lbgDokOBhRrAT+8NV+UOtAePafA86jLj/PmsNDN7DGsYBfhaq3118N
-	 xi0tfvvFN8t2Zca2EJZyT8T/MTLOgK+XXHCeOpZFo+VXWqco5daICLIZ6jKS4SidCb
-	 VrYYAHnqa8nDwXMFHIHLbuRve07xl8Qv4qoo3M5AymzsIBchud13siy0OkTX2MfiPQ
-	 iYTX0U6yvDSBFWj3z26Bxf/LkaR6zIWJOR/QrnxKqIp9bHstm7HQDxfi3bg9Ca8h1e
-	 neBvKPQzs7DKza+h36r+5GHEDSU/VNc7GyzykZvYQToNO9igby2GTieFzNCRbg0Cz5
-	 fuYBJbZmC0lvA==
-Date: Sun, 31 Dec 2023 17:01:23 +9900
-Subject: [PATCH 1/1] fuzzy: create known output for rt rmap btree fuzz tests
+	b=SApRtcApRCp5Wggwr+ZSRbOfxC01jTUYtloQg0HJIOwn4OZ4lVhKB+1ZQtDKhIZ7I
+	 mPxX+5L2Mne/PKu1d2WhQkQZVQD0Xfko50Hy9/RBOmVcZ76QEFLfLXUmqsh0Ds4np9
+	 UP2bWcU5cid0pkgYxMDrG159qQV0kJRasiZCeQtsszagHatKCtN/aTnVGiwZhJiQPi
+	 ofGwYbkSZAMElJqdiPLAnMV5v2r/JvJYtBU6og9mLVTZn4JQL39BfjsJzlWSG3I6rD
+	 HAswKJV9KtWR5mRDpT04LgfjuDAEBjTxkAB+NQeySwhWoKGv7G6qJn57f0CGLE5yc5
+	 BEdrkD7+tAMRg==
+Date: Sun, 31 Dec 2023 16:52:46 +9900
+Subject: [PATCH 11/11] xfs: test metapath repairs
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405031692.1827280.6296580347361583382.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405031680.1827280.18087377382466462655.stgit@frogsfrogsfrogs>
-References: <170405031680.1827280.18087377382466462655.stgit@frogsfrogsfrogs>
+Message-ID: <170405029995.1826032.5475480252505208153.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,575 +52,176 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
+Functional testing for metadir path checking and repairs.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1528.out |   22 ++++++++
- tests/xfs/1529.out |  138 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/406.out  |   22 ++++++++
- tests/xfs/408.out  |  138 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/409.out  |   15 ++++++
- tests/xfs/481.out  |   22 ++++++++
- tests/xfs/482.out  |  138 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 495 insertions(+)
+ tests/xfs/1874     |  132 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1874.out |   16 ++++++
+ 2 files changed, 148 insertions(+)
+ create mode 100755 tests/xfs/1874
+ create mode 100644 tests/xfs/1874.out
 
 
-diff --git a/tests/xfs/1528.out b/tests/xfs/1528.out
-index b51b640c40..efa31b604e 100644
---- a/tests/xfs/1528.out
-+++ b/tests/xfs/1528.out
-@@ -1,4 +1,26 @@
- QA output created by 1528
- Format and populate
- Fuzz rtrmapbt recs
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
-+recs[2].blockcount = middlebit: offline scrub didn't fail.
-+recs[2].blockcount = lastbit: offline scrub didn't fail.
-+recs[2].blockcount = add: offline scrub didn't fail.
-+recs[3].blockcount = middlebit: offline scrub didn't fail.
-+recs[3].blockcount = add: offline scrub didn't fail.
-+recs[4].blockcount = middlebit: offline scrub didn't fail.
-+recs[4].blockcount = add: offline scrub didn't fail.
-+recs[5].blockcount = middlebit: offline scrub didn't fail.
-+recs[5].blockcount = add: offline scrub didn't fail.
-+recs[6].blockcount = middlebit: offline scrub didn't fail.
-+recs[6].blockcount = add: offline scrub didn't fail.
-+recs[7].blockcount = middlebit: offline scrub didn't fail.
-+recs[7].blockcount = add: offline scrub didn't fail.
-+recs[8].blockcount = middlebit: offline scrub didn't fail.
-+recs[8].blockcount = add: offline scrub didn't fail.
-+recs[9].blockcount = middlebit: offline scrub didn't fail.
-+recs[9].blockcount = add: offline scrub didn't fail.
- Done fuzzing rtrmapbt recs
-diff --git a/tests/xfs/1529.out b/tests/xfs/1529.out
-index 808fcc957f..0810094a43 100644
---- a/tests/xfs/1529.out
-+++ b/tests/xfs/1529.out
-@@ -1,4 +1,142 @@
- QA output created by 1529
- Format and populate
- Fuzz rtrmapbt keyptrs
-+u3.rtrmapbt.keys[1].startblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[1] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[2] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[3] = firstbit: offline scrub didn't fail.
- Done fuzzing rtrmapbt keyptrs
-diff --git a/tests/xfs/406.out b/tests/xfs/406.out
-index 6615533e6c..e95ac52fed 100644
---- a/tests/xfs/406.out
-+++ b/tests/xfs/406.out
-@@ -1,4 +1,26 @@
- QA output created by 406
- Format and populate
- Fuzz rtrmapbt recs
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
-+recs[2].blockcount = middlebit: offline scrub didn't fail.
-+recs[2].blockcount = lastbit: offline scrub didn't fail.
-+recs[2].blockcount = add: offline scrub didn't fail.
-+recs[3].blockcount = middlebit: offline scrub didn't fail.
-+recs[3].blockcount = add: offline scrub didn't fail.
-+recs[4].blockcount = middlebit: offline scrub didn't fail.
-+recs[4].blockcount = add: offline scrub didn't fail.
-+recs[5].blockcount = middlebit: offline scrub didn't fail.
-+recs[5].blockcount = add: offline scrub didn't fail.
-+recs[6].blockcount = middlebit: offline scrub didn't fail.
-+recs[6].blockcount = add: offline scrub didn't fail.
-+recs[7].blockcount = middlebit: offline scrub didn't fail.
-+recs[7].blockcount = add: offline scrub didn't fail.
-+recs[8].blockcount = middlebit: offline scrub didn't fail.
-+recs[8].blockcount = add: offline scrub didn't fail.
-+recs[9].blockcount = middlebit: offline scrub didn't fail.
-+recs[9].blockcount = add: offline scrub didn't fail.
- Done fuzzing rtrmapbt recs
-diff --git a/tests/xfs/408.out b/tests/xfs/408.out
-index c01b2e26ae..5626c59560 100644
---- a/tests/xfs/408.out
-+++ b/tests/xfs/408.out
-@@ -1,4 +1,142 @@
- QA output created by 408
- Format and populate
- Fuzz rtrmapbt keyptrs
-+u3.rtrmapbt.keys[1].startblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[1] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[2] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[3] = firstbit: offline scrub didn't fail.
- Done fuzzing rtrmapbt keyptrs
-diff --git a/tests/xfs/409.out b/tests/xfs/409.out
-index 690ac99b10..3d0a67afa8 100644
---- a/tests/xfs/409.out
-+++ b/tests/xfs/409.out
-@@ -1,4 +1,19 @@
- QA output created by 409
- Format and populate
- Fuzz rtrmapbt keyptrs
-+u3.rtrmapbt.level = ones: mount failed (32).
-+u3.rtrmapbt.level = firstbit: mount failed (32).
-+u3.rtrmapbt.level = middlebit: mount failed (32).
-+u3.rtrmapbt.level = add: mount failed (32).
-+u3.rtrmapbt.level = sub: mount failed (32).
-+u3.rtrmapbt.numrecs = zeroes: online repair failed (1).
-+u3.rtrmapbt.numrecs = zeroes: online re-scrub failed (5).
-+u3.rtrmapbt.numrecs = zeroes: offline re-scrub failed (1).
-+u3.rtrmapbt.numrecs = zeroes: online post-mod scrub failed (4).
-+u3.rtrmapbt.numrecs = zeroes: offline post-mod scrub failed (1).
-+u3.rtrmapbt.numrecs = ones: mount failed (32).
-+u3.rtrmapbt.numrecs = firstbit: mount failed (32).
-+u3.rtrmapbt.numrecs = middlebit: mount failed (32).
-+u3.rtrmapbt.numrecs = add: mount failed (32).
-+u3.rtrmapbt.numrecs = sub: mount failed (32).
- Done fuzzing rtrmapbt keyptrs
-diff --git a/tests/xfs/481.out b/tests/xfs/481.out
-index d570dc8f21..1e080de148 100644
---- a/tests/xfs/481.out
-+++ b/tests/xfs/481.out
-@@ -1,4 +1,26 @@
- QA output created by 481
- Format and populate
- Fuzz rtrmapbt recs
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
-+recs[2].blockcount = middlebit: offline scrub didn't fail.
-+recs[2].blockcount = lastbit: offline scrub didn't fail.
-+recs[2].blockcount = add: offline scrub didn't fail.
-+recs[3].blockcount = middlebit: offline scrub didn't fail.
-+recs[3].blockcount = add: offline scrub didn't fail.
-+recs[4].blockcount = middlebit: offline scrub didn't fail.
-+recs[4].blockcount = add: offline scrub didn't fail.
-+recs[5].blockcount = middlebit: offline scrub didn't fail.
-+recs[5].blockcount = add: offline scrub didn't fail.
-+recs[6].blockcount = middlebit: offline scrub didn't fail.
-+recs[6].blockcount = add: offline scrub didn't fail.
-+recs[7].blockcount = middlebit: offline scrub didn't fail.
-+recs[7].blockcount = add: offline scrub didn't fail.
-+recs[8].blockcount = middlebit: offline scrub didn't fail.
-+recs[8].blockcount = add: offline scrub didn't fail.
-+recs[9].blockcount = middlebit: offline scrub didn't fail.
-+recs[9].blockcount = add: offline scrub didn't fail.
- Done fuzzing rtrmapbt recs
-diff --git a/tests/xfs/482.out b/tests/xfs/482.out
-index 6bdf7a9fc1..c945b7aaf8 100644
---- a/tests/xfs/482.out
-+++ b/tests/xfs/482.out
-@@ -1,4 +1,142 @@
- QA output created by 482
- Format and populate
- Fuzz rtrmapbt keyptrs
-+u3.rtrmapbt.keys[1].startblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[1].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[2].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].startblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].owner_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = zeroes: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].offset_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].attrfork_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = ones: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = middlebit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = lastbit: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = add: offline scrub didn't fail.
-+u3.rtrmapbt.keys[3].bmbtblock_hi = sub: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[1] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[2] = firstbit: offline scrub didn't fail.
-+u3.rtrmapbt.ptrs[3] = firstbit: offline scrub didn't fail.
- Done fuzzing rtrmapbt keyptrs
+diff --git a/tests/xfs/1874 b/tests/xfs/1874
+new file mode 100755
+index 0000000000..a00b58773f
+--- /dev/null
++++ b/tests/xfs/1874
+@@ -0,0 +1,132 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test 1874
++#
++# Functional test of using online repair to fix metadir paths.
++#
++. ./common/preamble
++_begin_fstest auto online_repair
++
++# Override the default cleanup function.
++# _cleanup()
++# {
++# 	cd /
++# 	rm -r -f $tmp.*
++# }
++
++# Import common functions.
++source ./common/filter
++source ./common/inject
++source ./common/fuzzy
++source ./common/quota
++
++# real QA test starts here
++
++# Modify as appropriate.
++_supported_fs xfs
++_require_xfs_db_command "link"
++_require_xfs_db_command "unlink"
++_require_scratch
++_require_xfs_stress_online_repair
++
++prepare_fs() {
++	# Format filesystem
++	_scratch_mkfs | _filter_mkfs 2> $tmp.mkfs >> $seqres.full
++	_scratch_mount
++
++	$XFS_INFO_PROG $SCRATCH_MNT | grep -q 'metadir=1' || \
++		_notrun "metadata directories must be enabled"
++
++	$XFS_INFO_PROG $SCRATCH_MNT | grep -q 'parent=1' || \
++		_notrun "parent pointers must be enabled"
++
++	root_inum="$(stat -c '%i' $SCRATCH_MNT)"
++	__stress_scrub_check_commands "%dir%" '' '' 'scrub metapath'
++	_scratch_unmount
++
++	# Stash the /realtime inode number and gen
++	rt_metadir_inum=$(_scratch_xfs_get_metadata_field v3.inumber 'path -m /realtime')
++	rt_metadir_gen=$(_scratch_xfs_get_metadata_field core.gen 'path -m /realtime')
++
++	# Stash the /realtime/bitmap inode number and gen
++	rbm_inum=$(_scratch_xfs_get_metadata_field v3.inumber 'path -m /realtime/bitmap')
++	rbm_gen=$(_scratch_xfs_get_metadata_field core.gen 'path -m /realtime/bitmap')
++
++	# Fuzz parent pointer in rtbitmap file
++	_scratch_xfs_db -x \
++		-c 'path -m /realtime/bitmap' \
++		-c "write -d a.sfattr.list[0].parent_ino $root_inum" >> $seqres.full.
++}
++
++simple_online_repair() {
++	echo "check /realtime dir" | _tee_kernlog
++	$XFS_IO_PROG -c "scrub directory $rt_metadir_inum $rt_metadir_gen" $SCRATCH_MNT
++
++	echo "check /realtime/bitmap pptr" | _tee_kernlog
++	$XFS_IO_PROG -c "scrub parent $rbm_inum $rbm_gen" $SCRATCH_MNT
++
++	echo "check /realtime/bitmap metapath" | _tee_kernlog
++	$XFS_IO_PROG -c "scrub metapath rtbitmap" $SCRATCH_MNT
++
++	echo "check nlinks" | _tee_kernlog
++	$XFS_IO_PROG -c "scrub nlinks" $SCRATCH_MNT
++
++	# Destroying a metadir path (e.g. /realtime/bitmap) cannot be done
++	# offline because then the mount will fail.  Hence we must use a
++	# specific sequence of online repairs to remove the metadir path link.
++	# Only then can we use the metapath scrubber to restore the link.
++
++	# Force repair the parent directory.  Since /realtime/bitmap has a bad
++	# parent pointer, the "bitmap" entry in /realtime will not be created.
++	echo "fix /realtime dir" | _tee_kernlog
++	$XFS_IO_PROG -x -c "repair -R directory $rt_metadir_inum $rt_metadir_gen" $SCRATCH_MNT
++
++	# Force repair the parent pointer.  Since the "bitmap" entry in
++	# /realtime no longer exists and no other directories count the
++	# rtbitmap as a parent, this will fail cross-referencing after the
++	# repair.
++	echo "fix /realtime/bitmap pptr" | _tee_kernlog
++	$XFS_IO_PROG -x -c "repair -R parent $rbm_inum $rbm_gen" $SCRATCH_MNT
++
++	# Now that we've completely erased the /realtime/bitmap path, check
++	# that the link is indeed lost, and restore the link.
++	echo "fix /realtime/bitmap metapath" | _tee_kernlog
++	$XFS_IO_PROG -x -c "repair metapath rtbitmap" $SCRATCH_MNT
++
++	# Make sure we're not missing any link count
++	echo "fix nlinks" | _tee_kernlog
++	$XFS_IO_PROG -x -c "repair nlinks" $SCRATCH_MNT
++}
++
++# Part 1: Use raw ioctls to detect the error and fix it.
++prepare_fs
++_scratch_mount
++simple_online_repair
++_check_scratch_fs
++_scratch_unmount
++
++# Part 2: Use xfs_scrub to detect the error and fix it.
++prepare_fs
++_scratch_mount
++echo "fix with xfs_scrub" | _tee_kernlog
++_scratch_scrub &>> $seqres.full
++echo "xfs_scrub returned $?" >> $seqres.full
++_check_scratch_fs
++_scratch_unmount
++
++# Part 3: Use xfs_repair to detect the error and fix it.
++prepare_fs
++echo "fix with xfs_repair" | _tee_kernlog
++echo repair?? >> $seqres.full
++_scratch_xfs_repair &>> $seqres.full
++echo "xfs_repair returned $?" >> $seqres.full
++_scratch_mount
++_check_scratch_fs
++_scratch_unmount
++
++echo "done with test" | _tee_kernlog
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1874.out b/tests/xfs/1874.out
+new file mode 100644
+index 0000000000..1c29698283
+--- /dev/null
++++ b/tests/xfs/1874.out
+@@ -0,0 +1,16 @@
++QA output created by 1874
++check /realtime dir
++Corruption detected during cross-referencing.
++check /realtime/bitmap pptr
++Corruption detected during cross-referencing.
++check /realtime/bitmap metapath
++check nlinks
++fix /realtime dir
++fix /realtime/bitmap pptr
++Corruption remains.
++Corruption still detected during cross-referencing.
++fix /realtime/bitmap metapath
++fix nlinks
++fix with xfs_scrub
++fix with xfs_repair
++done with test
 
 
