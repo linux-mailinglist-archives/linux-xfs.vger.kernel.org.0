@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2143-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2225-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95D4F8211AD
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:02:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DAD1821201
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:23:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E33FB21A2C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:02:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32F5E2829D8
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:23:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BADCA49;
-	Mon,  1 Jan 2024 00:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEBE67F9;
+	Mon,  1 Jan 2024 00:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLhCKtXE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQcaBlXw"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B7ECA46
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:02:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9770C433C7;
-	Mon,  1 Jan 2024 00:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779797EE
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:23:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080B3C433C7;
+	Mon,  1 Jan 2024 00:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067361;
-	bh=tjVaQsB6BH0nz1JKaxN6mWhri86sG6kFnmx8R4MTyq0=;
+	s=k20201202; t=1704068613;
+	bh=a5oZHdy1ViwEXbSdSxjLeI9mC+Oh+G1l8QCDPmTW9GU=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=oLhCKtXE8fjkXyAkNe6Fvevtt6xoM/P3nMqTJpYDCOYxBFbR4v8xR2ooH6aKunDQS
-	 zL3dRVYBgXgzk8BZdJEb3LRW6wqn82b1DbTfkG+4ONCbAsHqrF8YirB0DIJ6fe7gMh
-	 U6kDJFQkMavaz+tKasZ1WWWN5aKyCc+ahUPuvK43Qu2CaEufyT96/QWufRuaB4/z68
-	 4456oLT1C97MJUBOkCMVpGAHUxz9C14mUl9/FeRUJDyAkKNG+h2B8CwJHkxMVpnpyr
-	 RstJky0ztsQ+pbmgHyRGjiYsn5ETbbkBzMEYD2j2+1y0XWsyqhtoxa2eHYeWZYrrAm
-	 xnY2Ytl3OEfjg==
-Date: Sun, 31 Dec 2023 16:02:41 +9900
-Subject: [PATCH 06/14] xfs: move the zero records logic into
- xfs_bmap_broot_space_calc
+	b=SQcaBlXw4vXGvFcugU3tOR3gZkZcJtVnFwAivaCPxkK+SMrme6J+eUpXUj/SSfh06
+	 KTl5w0KPdyRFQFrk67kiJwUUA5gw/Mi4XAmijItYk9TFKuBm7CKtmmztqz0xgQ2eJV
+	 BgQAJ5oTmzr+SqSYmRt6ovg6fCE2b4VE2cNDOLJ/9yM4Fu/zO3zmNGo/RgKpNVYVCD
+	 Ht6yCjOdGn0IUn6g+CpoKtTCQfiMpe0zSks0KxX3Hy1w/Ro/+4PZjA6g7OxQgLGrhY
+	 +wFiHhkWxKjXYvKhsD4lM0wNQO8l1yFkbnPGYix355qzEj0SmPjMlC2Xvtrgs7l1kE
+	 5yqvcTwaNZ50g==
+Date: Sun, 31 Dec 2023 16:23:32 +9900
+Subject: [PATCH 3/4] xfs_repair: use libxfs_alloc_file_space to reallocate rt
+ metadata
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013282.1812545.6411434942512618095.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
-References: <170405013189.1812545.1581948480545654103.stgit@frogsfrogsfrogs>
+Message-ID: <170405016277.1816687.11077687941234807759.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
+References: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,53 +53,135 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The bmap btree cannot ever have zero records in an incore btree block.
-If the number of records drops to zero, that means we're converting the
-fork to extents format and are trying to remove the tree.  This logic
-won't hold for the future realtime rmap btree, so move the logic into
-the bmbt code.
+Now that libxfs_alloc_file_space can allocate and zero blocks, use it to
+repair the realtime metadata instead of open-coding all this.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap_btree.h |    7 +++++++
- libxfs/xfs_inode_fork.c |    6 ++----
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ repair/phase6.c |   76 +++++++------------------------------------------------
+ 1 file changed, 10 insertions(+), 66 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap_btree.h b/libxfs/xfs_bmap_btree.h
-index 3fe9c4f7f1a..5a3bae94deb 100644
---- a/libxfs/xfs_bmap_btree.h
-+++ b/libxfs/xfs_bmap_btree.h
-@@ -162,6 +162,13 @@ xfs_bmap_broot_space_calc(
- 	struct xfs_mount	*mp,
- 	unsigned int		nrecs)
+diff --git a/repair/phase6.c b/repair/phase6.c
+index fd862362f1d..c9974623d12 100644
+--- a/repair/phase6.c
++++ b/repair/phase6.c
+@@ -736,15 +736,9 @@ mk_rbmino(
+ 	struct xfs_mount	*mp)
  {
-+	/*
-+	 * If the bmbt root block is empty, we should be converting the fork
-+	 * to extents format.  Hence, the size is zero.
-+	 */
-+	if (nrecs == 0)
-+		return 0;
-+
- 	return xfs_bmbt_block_len(mp) + \
- 	       (nrecs * (sizeof(struct xfs_bmbt_key) + sizeof(xfs_bmbt_ptr_t)));
+ 	struct xfs_imeta_update	upd = { };
+-	struct xfs_trans	*tp = NULL;
+ 	struct xfs_inode	*ip = NULL;
+-	struct xfs_bmbt_irec	*ep;
+ 	int			i;
+-	int			nmap;
+ 	int			error;
+-	xfs_fileoff_t		bno;
+-	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
+-	uint			blocks;
+ 
+ 	/* Reset the realtime bitmap inode. */
+ 	if (!xfs_has_metadir(mp)) {
+@@ -779,36 +773,15 @@ mk_rbmino(
+ 	 * then allocate blocks for file and fill with zeroes (stolen
+ 	 * from mkfs)
+ 	 */
+-	blocks = mp->m_sb.sb_rbmblocks +
+-			XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (error)
+-		res_failed(error);
+-
+-	libxfs_trans_ijoin(tp, ip, 0);
+-	bno = 0;
+-	while (bno < mp->m_sb.sb_rbmblocks) {
+-		nmap = XFS_BMAP_MAX_NMAP;
+-		error = -libxfs_bmapi_write(tp, ip, bno,
+-			  (xfs_extlen_t)(mp->m_sb.sb_rbmblocks - bno),
+-			  0, mp->m_sb.sb_rbmblocks, map, &nmap);
++	if (mp->m_sb.sb_rbmblocks) {
++		error = -libxfs_alloc_file_space(ip, 0,
++				mp->m_sb.sb_rbmblocks << mp->m_sb.sb_blocklog,
++				XFS_BMAPI_ZERO);
+ 		if (error) {
+ 			do_error(
+-			_("couldn't allocate realtime bitmap, error = %d\n"),
++	_("allocation of the realtime bitmap failed, error = %d\n"),
+ 				error);
+ 		}
+-		for (i = 0, ep = map; i < nmap; i++, ep++) {
+-			libxfs_device_zero(mp->m_ddev_targp,
+-				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+-				XFS_FSB_TO_BB(mp, ep->br_blockcount));
+-			bno += ep->br_blockcount;
+-		}
+-	}
+-	error = -libxfs_trans_commit(tp);
+-	if (error) {
+-		do_error(
+-		_("allocation of the realtime bitmap failed, error = %d\n"),
+-			error);
+ 	}
+ 	libxfs_irele(ip);
  }
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index edf6dff28b4..81f054cd212 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -500,10 +500,8 @@ xfs_iroot_realloc(
- 	cur_max = xfs_bmbt_maxrecs(mp, old_size, 0);
- 	new_max = cur_max + rec_diff;
- 	ASSERT(new_max >= 0);
--	if (new_max > 0)
--		new_size = xfs_bmap_broot_space_calc(mp, new_max);
--	else
--		new_size = 0;
-+
-+	new_size = xfs_bmap_broot_space_calc(mp, new_max);
- 	if (new_size == 0) {
- 		xfs_iroot_free(ip, whichfork);
- 		return;
+@@ -996,16 +969,9 @@ mk_rsumino(
+ 	struct xfs_mount	*mp)
+ {
+ 	struct xfs_imeta_update	upd = { };
+-	struct xfs_trans	*tp = NULL;
+ 	struct xfs_inode	*ip = NULL;
+-	struct xfs_bmbt_irec	*ep;
+ 	int			i;
+-	int			nmap;
+ 	int			error;
+-	int			nsumblocks;
+-	xfs_fileoff_t		bno;
+-	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
+-	uint			blocks;
+ 
+ 	/* Reset the realtime summary inode. */
+ 	if (!xfs_has_metadir(mp)) {
+@@ -1040,36 +1006,14 @@ mk_rsumino(
+ 	 * then allocate blocks for file and fill with zeroes (stolen
+ 	 * from mkfs)
+ 	 */
+-	nsumblocks = mp->m_rsumsize >> mp->m_sb.sb_blocklog;
+-	blocks = nsumblocks + XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (error)
+-		res_failed(error);
+-
+-	libxfs_trans_ijoin(tp, ip, 0);
+-	bno = 0;
+-	while (bno < nsumblocks) {
+-		nmap = XFS_BMAP_MAX_NMAP;
+-		error = -libxfs_bmapi_write(tp, ip, bno,
+-			  (xfs_extlen_t)(nsumblocks - bno),
+-			  0, nsumblocks, map, &nmap);
++	if (mp->m_rsumsize) {
++		error = -libxfs_alloc_file_space(ip, 0, mp->m_rsumsize,
++				XFS_BMAPI_ZERO);
+ 		if (error) {
+ 			do_error(
+-		_("couldn't allocate realtime summary inode, error = %d\n"),
+-				error);
+-		}
+-		for (i = 0, ep = map; i < nmap; i++, ep++) {
+-			libxfs_device_zero(mp->m_ddev_targp,
+-				      XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+-				      XFS_FSB_TO_BB(mp, ep->br_blockcount));
+-			bno += ep->br_blockcount;
+-		}
+-	}
+-	error = -libxfs_trans_commit(tp);
+-	if (error) {
+-		do_error(
+ 	_("allocation of the realtime summary ino failed, error = %d\n"),
+-			error);
++				error);
++		}
+ 	}
+ 	libxfs_irele(ip);
+ }
 
 
