@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2325-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2202-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33C03821273
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:49:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CABB18211E9
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:17:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A89C1C21D5B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:49:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A041282793
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:17:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BE1803;
-	Mon,  1 Jan 2024 00:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C0B391;
+	Mon,  1 Jan 2024 00:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2lhwLSx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PhJjKqh6"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27E17EE;
-	Mon,  1 Jan 2024 00:49:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538B5C433C8;
-	Mon,  1 Jan 2024 00:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CAB389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:17:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96365C433C8;
+	Mon,  1 Jan 2024 00:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070163;
-	bh=im8zc6XeXwkN1EF4G/Qjmvbip51EkovsRT71tZmHj+A=;
+	s=k20201202; t=1704068269;
+	bh=xy+j0v0tnp5FHLfj65daebjxmDT1w8g4dcA9OzYy/j8=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=D2lhwLSxbk3cNv07tq2xO9afMGu59QpdWkeFpu4YzZzW3dO6qoWKec6dBT/c1azSt
-	 wDZaYWtyh5nSdJRmCIoP7f7oBTQJcIjm3hyrA8jkBTdMAB7ix64haZIIhC3DGFGVvI
-	 t80JpvQmMhmcRR/UewynJsQ9gdJ7Jiu3OuRKQVUAEJPbN4RiJUxw/f8TED02Hh4Rep
-	 Gk0Xr6NKswT+G7oUEmQ6mzFAUprjh3T5F+BhvOH6ISneS0CvMIzsOzZ+FtKY1u1bOF
-	 DqHXCaZvOtSgjVCs76VETCO/lu6YZQ93vCsm9ZOtWYjMLJ0yvovAtvFCEyLYmXC1gR
-	 twwk/i6miFf4Q==
-Date: Sun, 31 Dec 2023 16:49:22 +9900
-Subject: [PATCH 1/2] common/fuzzy: stress directory tree modifications with
- the dirtree tester
+	b=PhJjKqh6XqFfH0nZfOzmNNluCy/RfKZZYyt71vwOnvhl5sTD+/ohzz7NVyrB3iAs7
+	 0bHmoWkdK1n4CmRMOfsosc+mZ5rWGx9JGcAlIQxOhcPG1UvuHL+S+G5FLWhAYFrJXJ
+	 zlEA6AzTkKx+aotfvn+4pFeY5s8lhkz0MdNeLvVV8K1SRjf7o4YFDu32vQKm36rbNP
+	 Sunrkoi2KJWK3hJyzHN8rVE4EcdfRhTImaVTAI8Iu7krcryrm6gTyrRG23WgJR1nlb
+	 Eq4MD/SxcPiDMiFRQUhrOzlMkPJbtQzCmC8tLDtkGkDvRtoOblAJlrIPKKLBrzn97G
+	 qgCDQPNPxw5Sg==
+Date: Sun, 31 Dec 2023 16:17:49 +9900
+Subject: [PATCH 28/47] libfrog: enable scrubbng of the realtime rmap
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: zlang@redhat.com, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org, guan@eryu.me, fstests@vger.kernel.org
-Message-ID: <170405028907.1825187.18368003139938154708.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
-References: <170405028893.1825187.7753896310306155652.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015686.1815505.2905339464987236573.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,125 +52,42 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Stress test the directory tree corruption detector by racing it with
-fsstress.
+Add a new entry so that we can scrub the rtrmapbt.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1864     |   38 ++++++++++++++++++++++++++++++++++++++
- tests/xfs/1864.out |    2 ++
- tests/xfs/1865     |   38 ++++++++++++++++++++++++++++++++++++++
- tests/xfs/1865.out |    2 ++
- 4 files changed, 80 insertions(+)
- create mode 100755 tests/xfs/1864
- create mode 100644 tests/xfs/1864.out
- create mode 100755 tests/xfs/1865
- create mode 100644 tests/xfs/1865.out
+ libfrog/scrub.c |    5 +++++
+ scrub/repair.c  |    1 +
+ 2 files changed, 6 insertions(+)
 
 
-diff --git a/tests/xfs/1864 b/tests/xfs/1864
-new file mode 100755
-index 0000000000..d00bcb28b4
---- /dev/null
-+++ b/tests/xfs/1864
-@@ -0,0 +1,38 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1864
-+#
-+# Race fsstress and directory tree structure corruption detector for a while to
-+# see if we crash or livelock.
-+#
-+. ./common/preamble
-+_begin_fstest scrub dangerous_fsstress_scrub
-+
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
-+}
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_scrub
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_scratch_xfs_stress_scrub -x 'dir' -s "scrub dirtree" -t "%dir%"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/1864.out b/tests/xfs/1864.out
-new file mode 100644
-index 0000000000..472f56323a
---- /dev/null
-+++ b/tests/xfs/1864.out
-@@ -0,0 +1,2 @@
-+QA output created by 1864
-+Silence is golden
-diff --git a/tests/xfs/1865 b/tests/xfs/1865
-new file mode 100755
-index 0000000000..098891536c
---- /dev/null
-+++ b/tests/xfs/1865
-@@ -0,0 +1,38 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1865
-+#
-+# Race fsstress and directory tree structure repair for a while to see if we
-+# crash or livelock.
-+#
-+. ./common/preamble
-+_begin_fstest online_repair dangerous_fsstress_repair
-+
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
-+}
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_scratch_xfs_stress_online_repair -x 'dir' -s "repair dirtree" -t "%dir%"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/1865.out b/tests/xfs/1865.out
-new file mode 100644
-index 0000000000..9f2fecad3f
---- /dev/null
-+++ b/tests/xfs/1865.out
-@@ -0,0 +1,2 @@
-+QA output created by 1865
-+Silence is golden
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index 8822fc0088c..290ba0fb8bf 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -169,6 +169,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
+ 		.descr	= "realtime group bitmap",
+ 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
+ 	},
++	[XFS_SCRUB_TYPE_RTRMAPBT] = {
++		.name	= "rtrmapbt",
++		.descr	= "realtime reverse mapping btree",
++		.group	= XFROG_SCRUB_GROUP_RTGROUP,
++	},
+ };
+ 
+ const struct xfrog_scrub_descr xfrog_metapaths[XFS_SCRUB_METAPATH_NR] = {
+diff --git a/scrub/repair.c b/scrub/repair.c
+index 43037a7c5e1..fee03f97701 100644
+--- a/scrub/repair.c
++++ b/scrub/repair.c
+@@ -532,6 +532,7 @@ repair_item_difficulty(
+ 
+ 		switch (scrub_type) {
+ 		case XFS_SCRUB_TYPE_RMAPBT:
++		case XFS_SCRUB_TYPE_RTRMAPBT:
+ 			ret |= REPAIR_DIFFICULTY_SECONDARY;
+ 			break;
+ 		case XFS_SCRUB_TYPE_SB:
 
 
