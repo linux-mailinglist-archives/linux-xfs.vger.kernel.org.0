@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2276-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2158-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DFFC821235
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:36:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFA458211BC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0345CB21B0C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:36:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F8932827E8
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:06:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD321376;
-	Mon,  1 Jan 2024 00:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21237FD;
+	Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1ZFkLob"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgzzlxdW"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6891373
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:36:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD90DC433C7;
-	Mon,  1 Jan 2024 00:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB147ED
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27763C433C7;
+	Mon,  1 Jan 2024 00:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069395;
-	bh=v+u+mPyISQVZtBUzvFdpQ9ets9AQy3Xm5xJsGa6Q17k=;
+	s=k20201202; t=1704067581;
+	bh=BtXWI/JKI18eNW0L2NjZtE7xTAeLpkSX0rIZxXnduRY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=D1ZFkLobI77vNmRm+X3XSCxqoJx+2HEk896muWLN+vKS2nvkVr7MD6okBY6GMDtFv
-	 N3ysIGnxpFN1qfM7UfE7hDOV68/aYc0SdXZ27xc1DeiYoj8ZgBgRCFv5ilGa++756m
-	 /Ikh56kX6zqoHYpmOCrtyXftSvmMyB4ZpoAykH6C8KsdD/+7Duw87N/hY91rMzIXIv
-	 +m97nL988RQ8oamotjLCxiwZVXZfih4F0Wd297J+B7gMY6Tl6EErnXZ5CbaQdZPXMI
-	 NKvyOkYkXg/QzkYomAwnWREdFCNkf2s8Ann7nMaiPODcUnNktMde8SJ7mlm4dbhtlc
-	 oXKYUdWJQ6KUg==
-Date: Sun, 31 Dec 2023 16:36:35 +9900
-Subject: [PATCH 40/42] xfs_logprint: report realtime CUIs
+	b=DgzzlxdW/PWIWBalbg1CAvDC14+rkj8tNaRqR+pUEp4GwgIR9OXP9C9TyO0wGr0Pl
+	 5u0cNCYHdzazaHLoza5Or88lNZiaG2RkB9jkWftG9zl+UPYvdbWTpTm+eDUG7qVB0C
+	 YDC5j1goY1NBe9NEHNSQb/zJOgXhfFkcpmPB6MHUhTo7rkpZSoUS3PQ9Y9bPi2jrKa
+	 ndUCzYf9o7RDvJ9ONdyKdu92QsxWKchS4GIwLMPIB3zdR8BnW5WhvPnYKttCZd2hlQ
+	 5JdlWS8UuyMbJhCS6qejeifCdVFU4uTwHQA8UjYKkzSkpQcm+87MwevrTSWC5BpYaZ
+	 RqU5dah+7H3XQ==
+Date: Sun, 31 Dec 2023 16:06:20 +9900
+Subject: [PATCH 4/8] xfs: add a xefi_entry helper
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017660.1817107.5977266260181482154.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Message-ID: <170405014096.1814860.8871374007628160335.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,122 +52,87 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Decode the CUI format just enough to report if an CUI targets the
-realtime device or not.
+Add a helper to translate from the item list head to the
+xfs_extent_free_item structure and use it so shorten assignments and
+avoid the need for extra local variables.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- logprint/log_misc.c      |    2 ++
- logprint/log_print_all.c |    8 ++++++++
- logprint/log_redo.c      |   24 +++++++++++++++++++-----
- 3 files changed, 29 insertions(+), 5 deletions(-)
+ libxfs/defer_item.c |   24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
 
-diff --git a/logprint/log_misc.c b/logprint/log_misc.c
-index 3661b595c53..6dad686d3b2 100644
---- a/logprint/log_misc.c
-+++ b/logprint/log_misc.c
-@@ -1034,12 +1034,14 @@ xlog_print_record(
- 					be32_to_cpu(op_head->oh_len));
- 			break;
- 		    }
-+		    case XFS_LI_CUI_RT:
- 		    case XFS_LI_CUI: {
- 			skip = xlog_print_trans_cui(&ptr,
- 					be32_to_cpu(op_head->oh_len),
- 					continued);
- 			break;
- 		    }
-+		    case XFS_LI_CUD_RT:
- 		    case XFS_LI_CUD: {
- 			skip = xlog_print_trans_cud(&ptr,
- 					be32_to_cpu(op_head->oh_len));
-diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-index e67e2c57f26..2ae642ac000 100644
---- a/logprint/log_print_all.c
-+++ b/logprint/log_print_all.c
-@@ -432,9 +432,11 @@ xlog_recover_print_logitem(
- 	case XFS_LI_RUI:
- 		xlog_recover_print_rui(item);
- 		break;
-+	case XFS_LI_CUD_RT:
- 	case XFS_LI_CUD:
- 		xlog_recover_print_cud(item);
- 		break;
-+	case XFS_LI_CUI_RT:
- 	case XFS_LI_CUI:
- 		xlog_recover_print_cui(item);
- 		break;
-@@ -514,6 +516,12 @@ xlog_recover_print_item(
- 	case XFS_LI_CUI:
- 		printf("CUI");
- 		break;
-+	case XFS_LI_CUD_RT:
-+		printf("CUD_RT");
-+		break;
-+	case XFS_LI_CUI_RT:
-+		printf("CUI_RT");
-+		break;
- 	case XFS_LI_BUD:
- 		printf("BUD");
- 		break;
-diff --git a/logprint/log_redo.c b/logprint/log_redo.c
-index ae6f311f19b..381e819ceb7 100644
---- a/logprint/log_redo.c
-+++ b/logprint/log_redo.c
-@@ -440,6 +440,7 @@ xlog_print_trans_cui(
- 	uint			src_len,
- 	int			continued)
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index 2958dcb85e5..5fa54962267 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -32,6 +32,11 @@
+ 
+ /* Extent Freeing */
+ 
++static inline struct xfs_extent_free_item *xefi_entry(const struct list_head *e)
++{
++	return list_entry(e, struct xfs_extent_free_item, xefi_list);
++}
++
+ /* Sort bmap items by AG. */
+ static int
+ xfs_extent_free_diff_items(
+@@ -39,11 +44,8 @@ xfs_extent_free_diff_items(
+ 	const struct list_head		*a,
+ 	const struct list_head		*b)
  {
-+	const char		*item_name = "CUI?";
- 	struct xfs_cui_log_format	*src_f, *f = NULL;
- 	uint			dst_len;
- 	uint			nextents;
-@@ -480,8 +481,14 @@ xlog_print_trans_cui(
- 		goto error;
- 	}
+-	const struct xfs_extent_free_item *ra;
+-	const struct xfs_extent_free_item *rb;
+-
+-	ra = container_of(a, struct xfs_extent_free_item, xefi_list);
+-	rb = container_of(b, struct xfs_extent_free_item, xefi_list);
++	struct xfs_extent_free_item	*ra = xefi_entry(a);
++	struct xfs_extent_free_item	*rb = xefi_entry(b);
  
--	printf(_("CUI:  #regs: %d	num_extents: %d  id: 0x%llx\n"),
--		f->cui_size, f->cui_nextents, (unsigned long long)f->cui_id);
-+	switch (f->cui_type) {
-+	case XFS_LI_CUI:	item_name = "CUI"; break;
-+	case XFS_LI_CUI_RT:	item_name = "CUI_RT"; break;
-+	}
-+
-+	printf(_("%s:  #regs: %d	num_extents: %d  id: 0x%llx\n"),
-+			item_name, f->cui_size, f->cui_nextents,
-+			(unsigned long long)f->cui_id);
- 
- 	if (continued) {
- 		printf(_("CUI extent data skipped (CONTINUE set, no space)\n"));
-@@ -520,6 +527,7 @@ xlog_print_trans_cud(
- 	char				**ptr,
- 	uint				len)
+ 	return ra->xefi_pag->pag_agno - rb->xefi_pag->pag_agno;
+ }
+@@ -99,12 +101,10 @@ xfs_extent_free_finish_item(
+ 	struct xfs_btree_cur		**state)
  {
-+	const char			*item_name = "CUD?";
- 	struct xfs_cud_log_format	*f;
- 	struct xfs_cud_log_format	lbuf;
+ 	struct xfs_owner_info		oinfo = { };
+-	struct xfs_extent_free_item	*xefi;
++	struct xfs_extent_free_item	*xefi = xefi_entry(item);
+ 	xfs_agblock_t			agbno;
+ 	int				error = 0;
  
-@@ -528,11 +536,17 @@ xlog_print_trans_cud(
+-	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
+-
+ 	oinfo.oi_owner = xefi->xefi_owner;
+ 	if (xefi->xefi_flags & XFS_EFI_ATTR_FORK)
+ 		oinfo.oi_flags |= XFS_OWNER_INFO_ATTR_FORK;
+@@ -143,9 +143,7 @@ STATIC void
+ xfs_extent_free_cancel_item(
+ 	struct list_head		*item)
+ {
+-	struct xfs_extent_free_item	*xefi;
+-
+-	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
++	struct xfs_extent_free_item	*xefi = xefi_entry(item);
  
- 	memcpy(&lbuf, *ptr, min(core_size, len));
- 	f = &lbuf;
-+
-+	switch (f->cud_type) {
-+	case XFS_LI_CUD:	item_name = "CUD"; break;
-+	case XFS_LI_CUD_RT:	item_name = "CUD_RT"; break;
-+	}
-+
- 	*ptr += len;
- 	if (len >= core_size) {
--		printf(_("CUD:  #regs: %d	                 id: 0x%llx\n"),
--			f->cud_size,
--			(unsigned long long)f->cud_cui_id);
-+		printf(_("%s:  #regs: %d	                 id: 0x%llx\n"),
-+				item_name, f->cud_size,
-+				(unsigned long long)f->cud_cui_id);
+ 	xfs_extent_free_put_group(xefi);
+ 	kmem_cache_free(xfs_extfree_item_cache, xefi);
+@@ -173,13 +171,11 @@ xfs_agfl_free_finish_item(
+ {
+ 	struct xfs_owner_info		oinfo = { };
+ 	struct xfs_mount		*mp = tp->t_mountp;
+-	struct xfs_extent_free_item	*xefi;
++	struct xfs_extent_free_item	*xefi = xefi_entry(item);
+ 	struct xfs_buf			*agbp;
+ 	int				error;
+ 	xfs_agblock_t			agbno;
  
- 		/* don't print extents as they are not used */
- 
+-	xefi = container_of(item, struct xfs_extent_free_item, xefi_list);
+-
+ 	ASSERT(xefi->xefi_blockcount == 1);
+ 	agbno = XFS_FSB_TO_AGBNO(mp, xefi->xefi_startblock);
+ 	oinfo.oi_owner = xefi->xefi_owner;
 
 
