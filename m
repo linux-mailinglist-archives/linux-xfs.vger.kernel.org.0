@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2181-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2229-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6148E8211D3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:12:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1A23821206
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:24:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DAD24B21ABC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:12:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B23451C21C69
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:24:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8819B392;
-	Mon,  1 Jan 2024 00:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6F757ED;
+	Mon,  1 Jan 2024 00:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efJTtGZW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ui1CiSIn"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5440438E
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:12:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B4EC433C7;
-	Mon,  1 Jan 2024 00:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25987F9
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:24:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7426CC433C7;
+	Mon,  1 Jan 2024 00:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067941;
-	bh=6J6DqmW0fqw8Pppfo90zwucnq5NuyJ8slmbi5Htrxsc=;
+	s=k20201202; t=1704068675;
+	bh=4eHgG/TI82OxTm4U2KOwiC8afDrwasXbwOHA1K8EPG8=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=efJTtGZW7GClkMl0yH1pz9olqfMGJYjErpi7c6AAw5nPGUvkVZrEEPgEvi5mI7xgm
-	 HdRxyC9LcmOjDJZpwWcLTut/svbwMeX7JS2H/QG9KKRkxQyOuXMKxj+2/whRqjBAuT
-	 9fOs7H8um5Xc5yZw2JcfNiz3RIe7dz5wTpm4SkaN2ntS8L2YQCfcNVZ+Wf3y8RMcqw
-	 sE6GnreVBpMdI6R7N3I2Ioldsjia1ya8CGTIALNneXfe2mIdFIAj3JGXGqb/r/pexU
-	 7Bs5VT6c6URKTDNkfbWDzAQ3ybWnLufMEkQ6+BzXv/mk0Kva8tfb1sZIXJark/i7RQ
-	 SnXemhGDHxI8A==
-Date: Sun, 31 Dec 2023 16:12:20 +9900
-Subject: [PATCH 07/47] xfs: add a realtime flag to the rmap update log redo
- items
+	b=ui1CiSIn6IOKJmdE0STtv8ZyvgWJ9m8dS0r/WygpoRzvZe75064kAmW59yCO+EOGG
+	 oDMzh0YcjWsDrcN5jqImcJX7066aS3G1olkq2OZ2xjGhzfyxztK1fTG6GExfV86FCQ
+	 Yng6syyjg9xPv0c8XdfPXLRaOQVbWakDWjGbs6IRPG3XWpu9seWOftlmF1RMW3k0mE
+	 M3cU7lELlX4PfEJ9OJZMuD7XsNnbTmeZBAHM9KgxydjezkWCSgGTga5SeHyAzsLKSd
+	 O+S5U357BMhL4mO1MhuEJzkHUfX0mf9w/ODxfIkULavhBQm9VQKJu9QoXmynpPVeza
+	 8YnoxZ8emOTHA==
+Date: Sun, 31 Dec 2023 16:24:35 +9900
+Subject: [PATCH 3/9] xfs: prepare refcount btree tracepoints for widening
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015406.1815505.15806508939281366124.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405016661.1816837.9388177485349245842.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
+References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,357 +52,169 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Extend the rmap update (RUI) log items with a new realtime flag that
-indicates that the updates apply against the realtime rmapbt.  We'll
-wire up the actual rmap code later.
+Prepare the rest of refcount btree tracepoints for use with realtime
+reflink by making them take the btree cursor object as a parameter.
+This will save us a lot of trouble later on.
+
+Remove the xfs_refcount_recover_extent tracepoint since it's already
+covered by other refcount tracepoints.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c     |   96 ++++++++++++++++++++++++++++++++++++++++++++++-
- libxfs/xfs_defer.h      |    1 
- libxfs/xfs_log_format.h |    6 ++-
- libxfs/xfs_refcount.c   |    4 +-
- libxfs/xfs_rmap.c       |   32 +++++++++++++---
- libxfs/xfs_rmap.h       |   12 ++++--
- 6 files changed, 138 insertions(+), 13 deletions(-)
+ libxfs/xfs_refcount.c |   42 +++++++++++++++---------------------------
+ 1 file changed, 15 insertions(+), 27 deletions(-)
 
 
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index 5399a20f186..a82d23c17cf 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -29,6 +29,7 @@
- #include "xfs_swapext.h"
- #include "defer_item.h"
- #include "xfs_btree.h"
-+#include "xfs_rtgroup.h"
- 
- /* Dummy defer item ops, since we don't do logging. */
- 
-@@ -329,8 +330,23 @@ xfs_rmap_defer_add(
- 
- 	trace_xfs_rmap_defer(mp, ri);
- 
--	ri->ri_pag = xfs_perag_intent_get(mp, ri->ri_bmap.br_startblock);
--	xfs_defer_add(tp, &ri->ri_list, &xfs_rmap_update_defer_type);
-+	/*
-+	 * Deferred rmap updates for the realtime and data sections must use
-+	 * separate transactions to finish deferred work because updates to
-+	 * realtime metadata files can lock AGFs to allocate btree blocks and
-+	 * we don't want that mixing with the AGF locks taken to finish data
-+	 * section updates.
-+	 */
-+	if (ri->ri_realtime) {
-+		xfs_rgnumber_t	rgno;
-+
-+		rgno = xfs_rtb_to_rgno(mp, ri->ri_bmap.br_startblock);
-+		ri->ri_rtg = xfs_rtgroup_get(mp, rgno);
-+		xfs_defer_add(tp, &ri->ri_list, &xfs_rtrmap_update_defer_type);
-+	} else {
-+		ri->ri_pag = xfs_perag_intent_get(mp, ri->ri_bmap.br_startblock);
-+		xfs_defer_add(tp, &ri->ri_list, &xfs_rmap_update_defer_type);
-+	}
- }
- 
- /* Cancel a deferred rmap update. */
-@@ -395,6 +411,82 @@ const struct xfs_defer_op_type xfs_rmap_update_defer_type = {
- 	.cancel_item	= xfs_rmap_update_cancel_item,
- };
- 
-+/* Sort rmap intents by rtgroup. */
-+static int
-+xfs_rtrmap_update_diff_items(
-+	void				*priv,
-+	const struct list_head		*a,
-+	const struct list_head		*b)
-+{
-+	struct xfs_rmap_intent		*ra = ri_entry(a);
-+	struct xfs_rmap_intent		*rb = ri_entry(b);
-+
-+	return ra->ri_rtg->rtg_rgno - rb->ri_rtg->rtg_rgno;
-+}
-+
-+static struct xfs_log_item *
-+xfs_rtrmap_update_create_intent(
-+	struct xfs_trans		*tp,
-+	struct list_head		*items,
-+	unsigned int			count,
-+	bool				sort)
-+{
-+	struct xfs_mount		*mp = tp->t_mountp;
-+
-+	if (sort)
-+		list_sort(mp, items, xfs_rtrmap_update_diff_items);
-+	return NULL;
-+}
-+
-+/* Cancel a deferred realtime rmap update. */
-+STATIC void
-+xfs_rtrmap_update_cancel_item(
-+	struct list_head		*item)
-+{
-+	struct xfs_rmap_intent		*ri = ri_entry(item);
-+
-+	xfs_rtgroup_put(ri->ri_rtg);
-+	kmem_cache_free(xfs_rmap_intent_cache, ri);
-+}
-+
-+/* Process a deferred realtime rmap update. */
-+STATIC int
-+xfs_rtrmap_update_finish_item(
-+	struct xfs_trans		*tp,
-+	struct xfs_log_item		*done,
-+	struct list_head		*item,
-+	struct xfs_btree_cur		**state)
-+{
-+	struct xfs_rmap_intent		*ri = ri_entry(item);
-+	int				error;
-+
-+	error = xfs_rtrmap_finish_one(tp, ri, state);
-+
-+	xfs_rtrmap_update_cancel_item(item);
-+	return error;
-+}
-+
-+/* Clean up after calling xfs_rtrmap_finish_one. */
-+STATIC void
-+xfs_rtrmap_finish_one_cleanup(
-+	struct xfs_trans	*tp,
-+	struct xfs_btree_cur	*rcur,
-+	int			error)
-+{
-+	if (rcur)
-+		xfs_btree_del_cursor(rcur, error);
-+}
-+
-+const struct xfs_defer_op_type xfs_rtrmap_update_defer_type = {
-+	.name		= "rtrmap",
-+	.create_intent	= xfs_rtrmap_update_create_intent,
-+	.abort_intent	= xfs_rmap_update_abort_intent,
-+	.create_done	= xfs_rmap_update_create_done,
-+	.finish_item	= xfs_rtrmap_update_finish_item,
-+	.finish_cleanup = xfs_rtrmap_finish_one_cleanup,
-+	.cancel_item	= xfs_rtrmap_update_cancel_item,
-+};
-+
- /* Reference Counting */
- 
- /* Sort refcount intents by AG. */
-diff --git a/libxfs/xfs_defer.h b/libxfs/xfs_defer.h
-index b4e1c386768..fddcb4cccbc 100644
---- a/libxfs/xfs_defer.h
-+++ b/libxfs/xfs_defer.h
-@@ -69,6 +69,7 @@ struct xfs_defer_op_type {
- extern const struct xfs_defer_op_type xfs_bmap_update_defer_type;
- extern const struct xfs_defer_op_type xfs_refcount_update_defer_type;
- extern const struct xfs_defer_op_type xfs_rmap_update_defer_type;
-+extern const struct xfs_defer_op_type xfs_rtrmap_update_defer_type;
- extern const struct xfs_defer_op_type xfs_extent_free_defer_type;
- extern const struct xfs_defer_op_type xfs_agfl_free_defer_type;
- extern const struct xfs_defer_op_type xfs_rtextent_free_defer_type;
-diff --git a/libxfs/xfs_log_format.h b/libxfs/xfs_log_format.h
-index 1f5fe4a588e..ea4e88d6657 100644
---- a/libxfs/xfs_log_format.h
-+++ b/libxfs/xfs_log_format.h
-@@ -250,6 +250,8 @@ typedef struct xfs_trans_header {
- #define	XFS_LI_SXD		0x1249  /* extent swap done */
- #define	XFS_LI_EFI_RT		0x124a	/* realtime extent free intent */
- #define	XFS_LI_EFD_RT		0x124b	/* realtime extent free done */
-+#define	XFS_LI_RUI_RT		0x124c	/* realtime rmap update intent */
-+#define	XFS_LI_RUD_RT		0x124d	/* realtime rmap update done */
- 
- #define XFS_LI_TYPE_DESC \
- 	{ XFS_LI_EFI,		"XFS_LI_EFI" }, \
-@@ -271,7 +273,9 @@ typedef struct xfs_trans_header {
- 	{ XFS_LI_SXI,		"XFS_LI_SXI" }, \
- 	{ XFS_LI_SXD,		"XFS_LI_SXD" }, \
- 	{ XFS_LI_EFI_RT,	"XFS_LI_EFI_RT" }, \
--	{ XFS_LI_EFD_RT,	"XFS_LI_EFD_RT" }
-+	{ XFS_LI_EFD_RT,	"XFS_LI_EFD_RT" }, \
-+	{ XFS_LI_RUI_RT,	"XFS_LI_RUI_RT" }, \
-+	{ XFS_LI_RUD_RT,	"XFS_LI_RUD_RT" }
- 
- /*
-  * Inode Log Item Format definitions.
 diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index 9f933d953b9..0e8daab9986 100644
+index 67c9895efb3..18b04c38cdd 100644
 --- a/libxfs/xfs_refcount.c
 +++ b/libxfs/xfs_refcount.c
-@@ -1886,7 +1886,7 @@ xfs_refcount_alloc_cow_extent(
- 	__xfs_refcount_add(tp, XFS_REFCOUNT_ALLOC_COW, fsb, len);
+@@ -182,7 +182,7 @@ xfs_refcount_get_rec(
+ 	if (fa)
+ 		return xfs_refcount_complain_bad_rec(cur, fa, irec);
  
- 	/* Add rmap entry */
--	xfs_rmap_alloc_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
-+	xfs_rmap_alloc_extent(tp, false, fsb, len, XFS_RMAP_OWN_COW);
- }
- 
- /* Forget a CoW staging event in the refcount btree. */
-@@ -1902,7 +1902,7 @@ xfs_refcount_free_cow_extent(
- 		return;
- 
- 	/* Remove rmap entry */
--	xfs_rmap_free_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
-+	xfs_rmap_free_extent(tp, false, fsb, len, XFS_RMAP_OWN_COW);
- 	__xfs_refcount_add(tp, XFS_REFCOUNT_FREE_COW, fsb, len);
- }
- 
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index 007f17cc644..00544d6a20f 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -2681,6 +2681,21 @@ xfs_rmap_finish_one(
+-	trace_xfs_refcount_get(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
++	trace_xfs_refcount_get(cur, irec);
  	return 0;
  }
  
-+/*
-+ * Process one of the deferred realtime rmap operations.  We pass back the
-+ * btree cursor to reduce overhead.
-+ */
-+int
-+xfs_rtrmap_finish_one(
-+	struct xfs_trans		*tp,
-+	struct xfs_rmap_intent		*ri,
-+	struct xfs_btree_cur		**pcur)
-+{
-+	/* coming in a subsequent patch */
-+	ASSERT(0);
-+	return -EFSCORRUPTED;
-+}
-+
- /*
-  * Don't defer an rmap if we aren't an rmap filesystem.
-  */
-@@ -2701,6 +2716,7 @@ __xfs_rmap_add(
- 	struct xfs_trans		*tp,
- 	enum xfs_rmap_intent_type	type,
- 	uint64_t			owner,
-+	bool				isrt,
- 	int				whichfork,
- 	struct xfs_bmbt_irec		*bmap)
+@@ -200,7 +200,7 @@ xfs_refcount_update(
+ 	uint32_t		start;
+ 	int			error;
+ 
+-	trace_xfs_refcount_update(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
++	trace_xfs_refcount_update(cur, irec);
+ 
+ 	start = xfs_refcount_encode_startblock(irec->rc_startblock,
+ 			irec->rc_domain);
+@@ -227,7 +227,7 @@ xfs_refcount_insert(
  {
-@@ -2712,6 +2728,7 @@ __xfs_rmap_add(
- 	ri->ri_owner = owner;
- 	ri->ri_whichfork = whichfork;
- 	ri->ri_bmap = *bmap;
-+	ri->ri_realtime = isrt;
+ 	int				error;
  
- 	xfs_rmap_defer_add(tp, ri);
- }
-@@ -2725,6 +2742,7 @@ xfs_rmap_map_extent(
- 	struct xfs_bmbt_irec	*PREV)
- {
- 	enum xfs_rmap_intent_type type = XFS_RMAP_MAP;
-+	bool			isrt = xfs_ifork_is_realtime(ip, whichfork);
+-	trace_xfs_refcount_insert(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
++	trace_xfs_refcount_insert(cur, irec);
  
- 	if (!xfs_rmap_update_is_needed(tp->t_mountp, whichfork))
- 		return;
-@@ -2732,7 +2750,7 @@ xfs_rmap_map_extent(
- 	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
- 		type = XFS_RMAP_MAP_SHARED;
+ 	cur->bc_rec.rc.rc_startblock = irec->rc_startblock;
+ 	cur->bc_rec.rc.rc_blockcount = irec->rc_blockcount;
+@@ -272,7 +272,7 @@ xfs_refcount_delete(
+ 		error = -EFSCORRUPTED;
+ 		goto out_error;
+ 	}
+-	trace_xfs_refcount_delete(cur->bc_mp, cur->bc_ag.pag->pag_agno, &irec);
++	trace_xfs_refcount_delete(cur, &irec);
+ 	error = xfs_btree_delete(cur, i);
+ 	if (XFS_IS_CORRUPT(cur->bc_mp, *i != 1)) {
+ 		xfs_btree_mark_sick(cur);
+@@ -409,8 +409,7 @@ xfs_refcount_split_extent(
+ 		return 0;
  
--	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
-+	__xfs_rmap_add(tp, type, ip->i_ino, isrt, whichfork, PREV);
- }
+ 	*shape_changed = true;
+-	trace_xfs_refcount_split_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			&rcext, agbno);
++	trace_xfs_refcount_split_extent(cur, &rcext, agbno);
  
- /* Unmap an extent out of a file. */
-@@ -2744,6 +2762,7 @@ xfs_rmap_unmap_extent(
- 	struct xfs_bmbt_irec	*PREV)
- {
- 	enum xfs_rmap_intent_type type = XFS_RMAP_UNMAP;
-+	bool			isrt = xfs_ifork_is_realtime(ip, whichfork);
+ 	/* Establish the right extent. */
+ 	tmp = rcext;
+@@ -453,8 +452,7 @@ xfs_refcount_merge_center_extents(
+ 	int				error;
+ 	int				found_rec;
  
- 	if (!xfs_rmap_update_is_needed(tp->t_mountp, whichfork))
- 		return;
-@@ -2751,7 +2770,7 @@ xfs_rmap_unmap_extent(
- 	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
- 		type = XFS_RMAP_UNMAP_SHARED;
+-	trace_xfs_refcount_merge_center_extents(cur->bc_mp,
+-			cur->bc_ag.pag->pag_agno, left, center, right);
++	trace_xfs_refcount_merge_center_extents(cur, left, center, right);
  
--	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
-+	__xfs_rmap_add(tp, type, ip->i_ino, isrt, whichfork, PREV);
- }
+ 	ASSERT(left->rc_domain == center->rc_domain);
+ 	ASSERT(right->rc_domain == center->rc_domain);
+@@ -535,8 +533,7 @@ xfs_refcount_merge_left_extent(
+ 	int				error;
+ 	int				found_rec;
  
- /*
-@@ -2769,6 +2788,7 @@ xfs_rmap_convert_extent(
- 	struct xfs_bmbt_irec	*PREV)
- {
- 	enum xfs_rmap_intent_type type = XFS_RMAP_CONVERT;
-+	bool			isrt = xfs_ifork_is_realtime(ip, whichfork);
+-	trace_xfs_refcount_merge_left_extent(cur->bc_mp,
+-			cur->bc_ag.pag->pag_agno, left, cleft);
++	trace_xfs_refcount_merge_left_extent(cur, left, cleft);
  
- 	if (!xfs_rmap_update_is_needed(mp, whichfork))
- 		return;
-@@ -2776,13 +2796,14 @@ xfs_rmap_convert_extent(
- 	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
- 		type = XFS_RMAP_CONVERT_SHARED;
+ 	ASSERT(left->rc_domain == cleft->rc_domain);
  
--	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
-+	__xfs_rmap_add(tp, type, ip->i_ino, isrt, whichfork, PREV);
- }
+@@ -600,8 +597,7 @@ xfs_refcount_merge_right_extent(
+ 	int				error;
+ 	int				found_rec;
  
- /* Schedule the creation of an rmap for non-file data. */
- void
- xfs_rmap_alloc_extent(
- 	struct xfs_trans	*tp,
-+	bool			isrt,
- 	xfs_fsblock_t		fsbno,
- 	xfs_extlen_t		len,
- 	uint64_t		owner)
-@@ -2797,13 +2818,14 @@ xfs_rmap_alloc_extent(
- 	bmap.br_startoff = 0;
- 	bmap.br_state = XFS_EXT_NORM;
+-	trace_xfs_refcount_merge_right_extent(cur->bc_mp,
+-			cur->bc_ag.pag->pag_agno, cright, right);
++	trace_xfs_refcount_merge_right_extent(cur, cright, right);
  
--	__xfs_rmap_add(tp, XFS_RMAP_ALLOC, owner, XFS_DATA_FORK, &bmap);
-+	__xfs_rmap_add(tp, XFS_RMAP_ALLOC, owner, isrt, XFS_DATA_FORK, &bmap);
- }
+ 	ASSERT(right->rc_domain == cright->rc_domain);
  
- /* Schedule the deletion of an rmap for non-file data. */
- void
- xfs_rmap_free_extent(
- 	struct xfs_trans	*tp,
-+	bool			isrt,
- 	xfs_fsblock_t		fsbno,
- 	xfs_extlen_t		len,
- 	uint64_t		owner)
-@@ -2818,7 +2840,7 @@ xfs_rmap_free_extent(
- 	bmap.br_startoff = 0;
- 	bmap.br_state = XFS_EXT_NORM;
+@@ -740,8 +736,7 @@ xfs_refcount_find_left_extents(
+ 		cleft->rc_refcount = 1;
+ 		cleft->rc_domain = domain;
+ 	}
+-	trace_xfs_refcount_find_left_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			left, cleft, agbno);
++	trace_xfs_refcount_find_left_extent(cur, left, cleft, agbno);
+ 	return error;
  
--	__xfs_rmap_add(tp, XFS_RMAP_FREE, owner, XFS_DATA_FORK, &bmap);
-+	__xfs_rmap_add(tp, XFS_RMAP_FREE, owner, isrt, XFS_DATA_FORK, &bmap);
- }
+ out_error:
+@@ -834,8 +829,8 @@ xfs_refcount_find_right_extents(
+ 		cright->rc_refcount = 1;
+ 		cright->rc_domain = domain;
+ 	}
+-	trace_xfs_refcount_find_right_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			cright, right, agbno + aglen);
++	trace_xfs_refcount_find_right_extent(cur, cright, right,
++			agbno + aglen);
+ 	return error;
  
- /* Compare rmap records.  Returns -1 if a < b, 1 if a > b, and 0 if equal. */
-diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
-index 762f2f40b6e..3719fc4cbc2 100644
---- a/libxfs/xfs_rmap.h
-+++ b/libxfs/xfs_rmap.h
-@@ -174,7 +174,11 @@ struct xfs_rmap_intent {
- 	int					ri_whichfork;
- 	uint64_t				ri_owner;
- 	struct xfs_bmbt_irec			ri_bmap;
--	struct xfs_perag			*ri_pag;
-+	union {
-+		struct xfs_perag		*ri_pag;
-+		struct xfs_rtgroup		*ri_rtg;
-+	};
-+	bool					ri_realtime;
- };
+ out_error:
+@@ -1138,8 +1133,7 @@ xfs_refcount_adjust_extents(
+ 			tmp.rc_refcount = 1 + adj;
+ 			tmp.rc_domain = XFS_REFC_DOMAIN_SHARED;
  
- /* functions for updating the rmapbt based on bmbt map/unmap operations */
-@@ -185,11 +189,13 @@ void xfs_rmap_unmap_extent(struct xfs_trans *tp, struct xfs_inode *ip,
- void xfs_rmap_convert_extent(struct xfs_mount *mp, struct xfs_trans *tp,
- 		struct xfs_inode *ip, int whichfork,
- 		struct xfs_bmbt_irec *imap);
--void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
-+void xfs_rmap_alloc_extent(struct xfs_trans *tp, bool isrt, xfs_fsblock_t fsbno,
- 		xfs_extlen_t len, uint64_t owner);
--void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
-+void xfs_rmap_free_extent(struct xfs_trans *tp, bool isrt, xfs_fsblock_t fsbno,
- 		xfs_extlen_t len, uint64_t owner);
+-			trace_xfs_refcount_modify_extent(cur->bc_mp,
+-					cur->bc_ag.pag->pag_agno, &tmp);
++			trace_xfs_refcount_modify_extent(cur, &tmp);
  
-+int xfs_rtrmap_finish_one(struct xfs_trans *tp, struct xfs_rmap_intent *ri,
-+		struct xfs_btree_cur **pcur);
- int xfs_rmap_finish_one(struct xfs_trans *tp, struct xfs_rmap_intent *ri,
- 		struct xfs_btree_cur **pcur);
- int __xfs_rmap_finish_intent(struct xfs_btree_cur *rcur,
+ 			/*
+ 			 * Either cover the hole (increment) or
+@@ -1204,8 +1198,7 @@ xfs_refcount_adjust_extents(
+ 		if (ext.rc_refcount == MAXREFCOUNT)
+ 			goto skip;
+ 		ext.rc_refcount += adj;
+-		trace_xfs_refcount_modify_extent(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, &ext);
++		trace_xfs_refcount_modify_extent(cur, &ext);
+ 		cur->bc_ag.refc.nr_ops++;
+ 		if (ext.rc_refcount > 1) {
+ 			error = xfs_refcount_update(cur, &ext);
+@@ -1720,8 +1713,7 @@ xfs_refcount_adjust_cow_extents(
+ 		tmp.rc_refcount = 1;
+ 		tmp.rc_domain = XFS_REFC_DOMAIN_COW;
+ 
+-		trace_xfs_refcount_modify_extent(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, &tmp);
++		trace_xfs_refcount_modify_extent(cur, &tmp);
+ 
+ 		error = xfs_refcount_insert(cur, &tmp,
+ 				&found_tmp);
+@@ -1752,8 +1744,7 @@ xfs_refcount_adjust_cow_extents(
+ 		}
+ 
+ 		ext.rc_refcount = 0;
+-		trace_xfs_refcount_modify_extent(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, &ext);
++		trace_xfs_refcount_modify_extent(cur, &ext);
+ 		error = xfs_refcount_delete(cur, &found_rec);
+ 		if (error)
+ 			goto out_error;
+@@ -1987,9 +1978,6 @@ xfs_refcount_recover_cow_leftovers(
+ 		if (error)
+ 			goto out_free;
+ 
+-		trace_xfs_refcount_recover_extent(mp, pag->pag_agno,
+-				&rr->rr_rrec);
+-
+ 		/* Free the orphan record */
+ 		fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
+ 				rr->rr_rrec.rc_startblock);
 
 
