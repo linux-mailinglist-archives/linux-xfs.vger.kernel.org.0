@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2154-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2247-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E65868211B8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:05:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7471821218
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:29:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5691B1F22570
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:05:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63D95282A09
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC4FF644;
-	Mon,  1 Jan 2024 00:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25514391;
+	Mon,  1 Jan 2024 00:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vM9hloQe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WP0tgzzs"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8530634
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:05:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2D9C433C8;
-	Mon,  1 Jan 2024 00:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A65389
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:29:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61085C433C8;
+	Mon,  1 Jan 2024 00:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067518;
-	bh=NCwCJZ0+D5JIfKiu0TGMQ0XNPhycnWb1RbcwpDWNX5g=;
+	s=k20201202; t=1704068941;
+	bh=r4tytUpQK0QjafBc3FZ4ez3eNGI5wcCI9sIjze0c6z4=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=vM9hloQeShPJ8/cgLucfgSJlg7ZIi5sDTnKmBlIvZ7CcBY+hCVCKie3MP6XoXrW/3
-	 StcF/HN+DdgdzVkc2LuDzlDbviFurKbhGySpPZ13c9NF/j6+Gub3O+EmqzJ6CGBPpI
-	 xk4CyyO1pRx6TCFEp4i1fkJBcN9GizZv8dhx09c/xbkapa5oiJOSbKuUOgtUuqJrfg
-	 xu3zi4itYHmbEtNFsvCQJLJeLv+zg8yCstixnIFBijaFNDGiDRngaw9JedOerYodZQ
-	 WDbBEhnw0OGusx1kFN5tGeeWi1vEUPnlTsfSbpZd54LsuVIX/D7GaeEyhnZtg/K4Eu
-	 8maxof3OdlmpA==
-Date: Sun, 31 Dec 2023 16:05:18 +9900
-Subject: [PATCH 2/2] xfs: allow inode-based btrees to reserve space in the
- data device
+	b=WP0tgzzs8UWA1bh/iKQlDU8Eu+8Ho8rNsqWAOV42UEU12n+VeXefTWd5OB7DyawgL
+	 t6+rMSyBlc3lILOmgp7wQRIhYNRZPBGeC9aV/qhbh4A0Fq0cFI8/rAKpmj89crFh9i
+	 1z3VvwbpFB5vZOOhhPflqT2Nn5xxXg0RYhZS2aiQq7zsKPu9B1Ac6fx/Uu6znFDOee
+	 wdfIFG++PRFV56QPFhL6BgjQg1kT7hWxpYLFfRPX/lM78L/u8617P2DbziCR8tuZo3
+	 x/Z+w2c+venPcNac/chOXcAHmO+GAXy7LxLz3sqygYySJ8JIC0PCjWAJJLx65bKcaS
+	 HzF51jM50oXMQ==
+Date: Sun, 31 Dec 2023 16:29:00 +9900
+Subject: [PATCH 11/42] xfs: wire up realtime refcount btree cursors
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405013726.1813633.879478659620513065.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405013700.1813633.7627597760064686124.stgit@frogsfrogsfrogs>
-References: <170405013700.1813633.7627597760064686124.stgit@frogsfrogsfrogs>
+Message-ID: <170405017273.1817107.18222077447852897506.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,426 +52,189 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a new space reservation scheme so that btree metadata for the
-realtime volume can reserve space in the data device to avoid space
-underruns.
+Wire up realtime refcount btree cursors wherever they're needed
+throughout the code base.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/xfs_inode.h   |    5 +
- include/xfs_mount.h   |    1 
- include/xfs_trace.h   |    7 ++
- io/inject.c           |    1 
- libxfs/init.c         |   11 +++
- libxfs/libxfs_priv.h  |   11 +++
- libxfs/xfs_ag_resv.c  |    3 +
- libxfs/xfs_errortag.h |    4 +
- libxfs/xfs_imeta.c    |  190 +++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_imeta.h    |   11 +++
- libxfs/xfs_types.h    |    7 ++
- 11 files changed, 248 insertions(+), 3 deletions(-)
+ libxfs/xfs_refcount.c |  101 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ libxfs/xfs_rtgroup.c  |   10 +++++
+ libxfs/xfs_rtgroup.h  |    5 ++
+ 3 files changed, 113 insertions(+), 3 deletions(-)
 
 
-diff --git a/include/xfs_inode.h b/include/xfs_inode.h
-index 2675abdffcd..ec73fe192fd 100644
---- a/include/xfs_inode.h
-+++ b/include/xfs_inode.h
-@@ -216,7 +216,10 @@ typedef struct xfs_inode {
- 	struct xfs_ifork	i_df;		/* data fork */
- 	struct xfs_ifork	i_af;		/* attribute fork */
- 	struct xfs_inode_log_item *i_itemp;	/* logging information */
--	unsigned int		i_delayed_blks;	/* count of delay alloc blks */
-+	uint64_t		i_delayed_blks;	/* count of delay alloc blks */
-+	/* Space that has been set aside to root a btree in this file. */
-+	uint64_t		i_meta_resv_asked;
-+
- 	xfs_fsize_t		i_disk_size;	/* number of bytes in file */
- 	xfs_rfsblock_t		i_nblocks;	/* # of direct & btree blocks */
- 	prid_t			i_projid;	/* owner's project id */
-diff --git a/include/xfs_mount.h b/include/xfs_mount.h
-index a2fdd7c2f14..51a02e69776 100644
---- a/include/xfs_mount.h
-+++ b/include/xfs_mount.h
-@@ -99,6 +99,7 @@ typedef struct xfs_mount {
- 	uint			m_rmap_maxlevels; /* max rmap btree levels */
- 	uint			m_refc_maxlevels; /* max refc btree levels */
- 	unsigned int		m_agbtree_maxlevels; /* max level of all AG btrees */
-+	unsigned int		m_rtbtree_maxlevels; /* max level of all rt btrees */
- 	xfs_extlen_t		m_ag_prealloc_blocks; /* reserved ag blocks */
- 	uint			m_alloc_set_aside; /* space we can't use */
- 	uint			m_ag_max_usable; /* max space per AG */
-diff --git a/include/xfs_trace.h b/include/xfs_trace.h
-index 08ec51fc799..5010b35b1f6 100644
---- a/include/xfs_trace.h
-+++ b/include/xfs_trace.h
-@@ -389,4 +389,11 @@
- #define trace_xfs_iunlink_remove(...)		((void) 0)
- #define trace_xfs_iunlink_map_prev_fallback(...)	((void) 0)
- 
-+#define trace_xfs_imeta_resv_alloc_extent(...)	((void) 0)
-+#define trace_xfs_imeta_resv_critical(...)	((void) 0)
-+#define trace_xfs_imeta_resv_free(...)		((void) 0)
-+#define trace_xfs_imeta_resv_free_extent(...)	((void) 0)
-+#define trace_xfs_imeta_resv_init(...)		((void) 0)
-+#define trace_xfs_imeta_resv_init_error(...)	((void) 0)
-+
- #endif /* __TRACE_H__ */
-diff --git a/io/inject.c b/io/inject.c
-index 4b0cd76005c..644baa42b64 100644
---- a/io/inject.c
-+++ b/io/inject.c
-@@ -64,6 +64,7 @@ error_tag(char *name)
- 		{ XFS_ERRTAG_WB_DELAY_MS,		"wb_delay_ms" },
- 		{ XFS_ERRTAG_WRITE_DELAY_MS,		"write_delay_ms" },
- 		{ XFS_ERRTAG_SWAPEXT_FINISH_ONE,	"swapext_finish_one" },
-+		{ XFS_ERRTAG_IMETA_RESV_CRITICAL,	"imeta_resv_critical" },
- 		{ XFS_ERRTAG_MAX,			NULL }
- 	};
- 	int	count;
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 0332a4eeb21..2663485a80d 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -651,6 +651,15 @@ xfs_agbtree_compute_maxlevels(
- 	mp->m_agbtree_maxlevels = max(levels, mp->m_refc_maxlevels);
- }
- 
-+/* Compute maximum possible height for realtime btree types for this fs. */
-+static inline void
-+xfs_rtbtree_compute_maxlevels(
-+	struct xfs_mount	*mp)
-+{
-+	/* This will be filled in later. */
-+	mp->m_rtbtree_maxlevels = 0;
-+}
-+
- /* Compute maximum possible height of all btrees. */
- void
- libxfs_compute_all_maxlevels(
-@@ -667,7 +676,7 @@ libxfs_compute_all_maxlevels(
- 	xfs_refcountbt_compute_maxlevels(mp);
- 
- 	xfs_agbtree_compute_maxlevels(mp);
--
-+	xfs_rtbtree_compute_maxlevels(mp);
- }
- 
- /* Mount the metadata files under the metadata directory tree. */
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 120a41e20a7..bbe7dd63443 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -221,6 +221,17 @@ uint32_t get_random_u32(void);
- #define get_random_u32()	(0)
- #endif
- 
-+static inline int
-+__percpu_counter_compare(uint64_t *count, int64_t rhs, int32_t batch)
-+{
-+	if (*count > rhs)
-+		return 1;
-+	else if (*count < rhs)
-+		return -1;
-+	return 0;
-+}
-+
-+
- #define PAGE_SIZE		getpagesize()
- 
- #define inode_peek_iversion(inode)	(inode)->i_version
-diff --git a/libxfs/xfs_ag_resv.c b/libxfs/xfs_ag_resv.c
-index 542740bb850..5963ff5602b 100644
---- a/libxfs/xfs_ag_resv.c
-+++ b/libxfs/xfs_ag_resv.c
-@@ -112,6 +112,7 @@ xfs_ag_resv_needed(
- 	case XFS_AG_RESV_RMAPBT:
- 		len -= xfs_perag_resv(pag, type)->ar_reserved;
- 		break;
-+	case XFS_AG_RESV_IMETA:
- 	case XFS_AG_RESV_NONE:
- 		/* empty */
- 		break;
-@@ -346,6 +347,7 @@ xfs_ag_resv_alloc_extent(
- 
- 	switch (type) {
- 	case XFS_AG_RESV_AGFL:
-+	case XFS_AG_RESV_IMETA:
- 		return;
- 	case XFS_AG_RESV_METADATA:
- 	case XFS_AG_RESV_RMAPBT:
-@@ -388,6 +390,7 @@ xfs_ag_resv_free_extent(
- 
- 	switch (type) {
- 	case XFS_AG_RESV_AGFL:
-+	case XFS_AG_RESV_IMETA:
- 		return;
- 	case XFS_AG_RESV_METADATA:
- 	case XFS_AG_RESV_RMAPBT:
-diff --git a/libxfs/xfs_errortag.h b/libxfs/xfs_errortag.h
-index 263d62a8d70..f359df69d6b 100644
---- a/libxfs/xfs_errortag.h
-+++ b/libxfs/xfs_errortag.h
-@@ -64,7 +64,8 @@
- #define XFS_ERRTAG_WB_DELAY_MS				42
- #define XFS_ERRTAG_WRITE_DELAY_MS			43
- #define XFS_ERRTAG_SWAPEXT_FINISH_ONE			44
--#define XFS_ERRTAG_MAX					45
-+#define XFS_ERRTAG_IMETA_RESV_CRITICAL			45
-+#define XFS_ERRTAG_MAX					46
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -113,5 +114,6 @@
- #define XFS_RANDOM_WB_DELAY_MS				3000
- #define XFS_RANDOM_WRITE_DELAY_MS			3000
- #define XFS_RANDOM_SWAPEXT_FINISH_ONE			1
-+#define XFS_RANDOM_IMETA_RESV_CRITICAL			4
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/libxfs/xfs_imeta.c b/libxfs/xfs_imeta.c
-index 6ada36d5559..e2b14624381 100644
---- a/libxfs/xfs_imeta.c
-+++ b/libxfs/xfs_imeta.c
-@@ -26,6 +26,9 @@
- #include "xfs_dir2.h"
- #include "xfs_dir2_priv.h"
+diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
+index d4ed0f44fa1..3f0f0f41a69 100644
+--- a/libxfs/xfs_refcount.c
++++ b/libxfs/xfs_refcount.c
+@@ -25,6 +25,7 @@
  #include "xfs_health.h"
-+#include "xfs_errortag.h"
-+#include "xfs_btree.h"
-+#include "xfs_alloc.h"
+ #include "defer_item.h"
+ #include "xfs_rtgroup.h"
++#include "xfs_rtrefcount_btree.h"
  
- /*
-  * Metadata File Management
-@@ -1074,3 +1077,190 @@ xfs_imeta_free_path(
- 	kfree(path->im_path);
- 	kfree(path);
+ struct kmem_cache	*xfs_refcount_intent_cache;
+ 
+@@ -1484,6 +1485,33 @@ xfs_refcount_finish_one(
+ 	return error;
  }
-+
+ 
 +/*
-+ * Is the amount of space that could be allocated towards a given metadata
-+ * file at or beneath a certain threshold?
++ * Set up a continuation a deferred rtrefcount operation by updating the
++ * intent.  Checks to make sure we're not going to run off the end of the
++ * rtgroup.
 + */
-+static inline bool
-+xfs_imeta_resv_can_cover(
-+	struct xfs_inode	*ip,
-+	int64_t			rhs)
++static inline int
++xfs_rtrefcount_continue_op(
++	struct xfs_btree_cur		*cur,
++	struct xfs_refcount_intent	*ri,
++	xfs_agblock_t			new_agbno)
 +{
-+	/*
-+	 * The amount of space that can be allocated to this metadata file is
-+	 * the remaining reservation for the particular metadata file + the
-+	 * global free block count.  Take care of the first case to avoid
-+	 * touching the per-cpu counter.
-+	 */
-+	if (ip->i_delayed_blks >= rhs)
-+		return true;
++	struct xfs_mount		*mp = cur->bc_mp;
++	struct xfs_rtgroup		*rtg = ri->ri_rtg;
 +
-+	/*
-+	 * There aren't enough blocks left in the inode's reservation, but it
-+	 * isn't critical unless there also isn't enough free space.
-+	 */
-+	return __percpu_counter_compare(&ip->i_mount->m_fdblocks,
-+			rhs - ip->i_delayed_blks, 2048) >= 0;
-+}
-+
-+/*
-+ * Is this metadata file critically low on blocks?  For now we'll define that
-+ * as the number of blocks we can get our hands on being less than 10% of what
-+ * we reserved or less than some arbitrary number (maximum btree height).
-+ */
-+bool
-+xfs_imeta_resv_critical(
-+	struct xfs_inode	*ip)
-+{
-+	uint64_t		asked_low_water;
-+
-+	if (!ip)
-+		return false;
-+
-+	ASSERT(xfs_is_metadir_inode(ip));
-+	trace_xfs_imeta_resv_critical(ip, 0);
-+
-+	if (!xfs_imeta_resv_can_cover(ip, ip->i_mount->m_rtbtree_maxlevels))
-+		return true;
-+
-+	asked_low_water = div_u64(ip->i_meta_resv_asked, 10);
-+	if (!xfs_imeta_resv_can_cover(ip, asked_low_water))
-+		return true;
-+
-+	return XFS_TEST_ERROR(false, ip->i_mount,
-+			XFS_ERRTAG_IMETA_RESV_CRITICAL);
-+}
-+
-+/* Allocate a block from the metadata file's reservation. */
-+void
-+xfs_imeta_resv_alloc_extent(
-+	struct xfs_inode	*ip,
-+	struct xfs_alloc_arg	*args)
-+{
-+	int64_t			len = args->len;
-+
-+	ASSERT(xfs_is_metadir_inode(ip));
-+	ASSERT(XFS_IS_DQDETACHED(ip->i_mount, ip));
-+	ASSERT(args->resv == XFS_AG_RESV_IMETA);
-+
-+	trace_xfs_imeta_resv_alloc_extent(ip, args->len);
-+
-+	/*
-+	 * Allocate the blocks from the metadata inode's block reservation
-+	 * and update the ondisk sb counter.
-+	 */
-+	if (ip->i_delayed_blks > 0) {
-+		int64_t		from_resv;
-+
-+		from_resv = min_t(int64_t, len, ip->i_delayed_blks);
-+		ip->i_delayed_blks -= from_resv;
-+		xfs_mod_delalloc(ip->i_mount, -from_resv);
-+		xfs_trans_mod_sb(args->tp, XFS_TRANS_SB_RES_FDBLOCKS,
-+				-from_resv);
-+		len -= from_resv;
++	if (XFS_IS_CORRUPT(mp, !xfs_verify_rgbext(rtg, new_agbno,
++					ri->ri_blockcount))) {
++		xfs_btree_mark_sick(cur);
++		return -EFSCORRUPTED;
 +	}
 +
-+	/*
-+	 * Any allocation in excess of the reservation requires in-core and
-+	 * on-disk fdblocks updates.
-+	 */
-+	if (len)
-+		xfs_trans_mod_sb(args->tp, XFS_TRANS_SB_FDBLOCKS, -len);
++	ri->ri_startblock = xfs_rgbno_to_rtb(mp, rtg->rtg_rgno, new_agbno);
 +
-+	ip->i_nblocks += args->len;
-+	xfs_trans_log_inode(args->tp, ip, XFS_ILOG_CORE);
-+}
-+
-+/* Free a block to the metadata file's reservation. */
-+void
-+xfs_imeta_resv_free_extent(
-+	struct xfs_inode	*ip,
-+	struct xfs_trans	*tp,
-+	xfs_filblks_t		len)
-+{
-+	int64_t			to_resv;
-+
-+	ASSERT(xfs_is_metadir_inode(ip));
-+	ASSERT(XFS_IS_DQDETACHED(ip->i_mount, ip));
-+	trace_xfs_imeta_resv_free_extent(ip, len);
-+
-+	ip->i_nblocks -= len;
-+	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
-+
-+	/*
-+	 * Add the freed blocks back into the inode's delalloc reservation
-+	 * until it reaches the maximum size.  Update the ondisk fdblocks only.
-+	 */
-+	to_resv = ip->i_meta_resv_asked - (ip->i_nblocks + ip->i_delayed_blks);
-+	if (to_resv > 0) {
-+		to_resv = min_t(int64_t, to_resv, len);
-+		ip->i_delayed_blks += to_resv;
-+		xfs_mod_delalloc(ip->i_mount, to_resv);
-+		xfs_trans_mod_sb(tp, XFS_TRANS_SB_RES_FDBLOCKS, to_resv);
-+		len -= to_resv;
-+	}
-+
-+	/*
-+	 * Everything else goes back to the filesystem, so update the in-core
-+	 * and on-disk counters.
-+	 */
-+	if (len)
-+		xfs_trans_mod_sb(tp, XFS_TRANS_SB_FDBLOCKS, len);
-+}
-+
-+/* Release a metadata file's space reservation. */
-+void
-+xfs_imeta_resv_free_inode(
-+	struct xfs_inode	*ip)
-+{
-+	if (!ip)
-+		return;
-+
-+	ASSERT(xfs_is_metadir_inode(ip));
-+	trace_xfs_imeta_resv_free(ip, 0);
-+
-+	xfs_mod_delalloc(ip->i_mount, -ip->i_delayed_blks);
-+	xfs_mod_fdblocks(ip->i_mount, ip->i_delayed_blks, true);
-+	ip->i_delayed_blks = 0;
-+	ip->i_meta_resv_asked = 0;
-+}
-+
-+/* Set up a metadata file's space reservation. */
-+int
-+xfs_imeta_resv_init_inode(
-+	struct xfs_inode	*ip,
-+	xfs_filblks_t		ask)
-+{
-+	xfs_filblks_t		hidden_space;
-+	xfs_filblks_t		used;
-+	int			error;
-+
-+	if (!ip || ip->i_meta_resv_asked > 0)
-+		return 0;
-+
-+	ASSERT(xfs_is_metadir_inode(ip));
-+
-+	/*
-+	 * Space taken by all other metadata btrees are accounted on-disk as
-+	 * used space.  We therefore only hide the space that is reserved but
-+	 * not used by the trees.
-+	 */
-+	used = ip->i_nblocks;
-+	if (used > ask)
-+		ask = used;
-+	hidden_space = ask - used;
-+
-+	error = xfs_mod_fdblocks(ip->i_mount, -(int64_t)hidden_space, true);
-+	if (error) {
-+		trace_xfs_imeta_resv_init_error(ip, error, _RET_IP_);
-+		return error;
-+	}
-+
-+	xfs_mod_delalloc(ip->i_mount, hidden_space);
-+	ip->i_delayed_blks = hidden_space;
-+	ip->i_meta_resv_asked = ask;
-+
-+	trace_xfs_imeta_resv_init(ip, ask);
++	ASSERT(xfs_verify_rtbext(mp, ri->ri_startblock, ri->ri_blockcount));
++	ASSERT(rtg->rtg_rgno == xfs_rtb_to_rgno(mp, ri->ri_startblock));
 +	return 0;
 +}
-diff --git a/libxfs/xfs_imeta.h b/libxfs/xfs_imeta.h
-index 3b5953efc01..f6dda8e5af0 100644
---- a/libxfs/xfs_imeta.h
-+++ b/libxfs/xfs_imeta.h
-@@ -102,6 +102,17 @@ unsigned int xfs_imeta_create_space_res(struct xfs_mount *mp);
- unsigned int xfs_imeta_link_space_res(struct xfs_mount *mp);
- unsigned int xfs_imeta_unlink_space_res(struct xfs_mount *mp);
- 
-+/* Space reservations for metadata inodes. */
-+struct xfs_alloc_arg;
 +
-+bool xfs_imeta_resv_critical(struct xfs_inode *ip);
-+void xfs_imeta_resv_alloc_extent(struct xfs_inode *ip,
-+		struct xfs_alloc_arg *args);
-+void xfs_imeta_resv_free_extent(struct xfs_inode *ip, struct xfs_trans *tp,
-+		xfs_filblks_t len);
-+void xfs_imeta_resv_free_inode(struct xfs_inode *ip);
-+int xfs_imeta_resv_init_inode(struct xfs_inode *ip, xfs_filblks_t ask);
+ /*
+  * Process one of the deferred realtime refcount operations.  We pass back the
+  * btree cursor to maintain our lock on the btree between calls.
+@@ -1494,8 +1522,77 @@ xfs_rtrefcount_finish_one(
+ 	struct xfs_refcount_intent	*ri,
+ 	struct xfs_btree_cur		**pcur)
+ {
+-	ASSERT(0);
+-	return -EFSCORRUPTED;
++	struct xfs_mount		*mp = tp->t_mountp;
++	struct xfs_btree_cur		*rcur = *pcur;
++	int				error = 0;
++	xfs_rgnumber_t			rgno;
++	xfs_rgblock_t			bno;
++	unsigned long			nr_ops = 0;
++	int				shape_changes = 0;
 +
- /* Must be implemented by the libxfs client */
- int xfs_imeta_iget(struct xfs_trans *tp, xfs_ino_t ino, unsigned char ftype,
- 		struct xfs_inode **ipp);
-diff --git a/libxfs/xfs_types.h b/libxfs/xfs_types.h
-index 195471c4385..ad2ce83874f 100644
---- a/libxfs/xfs_types.h
-+++ b/libxfs/xfs_types.h
-@@ -221,6 +221,13 @@ enum xfs_ag_resv_type {
- 	 * altering fdblocks.  If you think you need this you're wrong.
- 	 */
- 	XFS_AG_RESV_IGNORE,
++	bno = xfs_rtb_to_rgbno(mp, ri->ri_startblock, &rgno);
++
++	trace_xfs_refcount_deferred(mp, ri);
++
++	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_REFCOUNT_FINISH_ONE))
++		return -EIO;
 +
 +	/*
-+	 * This allocation activity is being done on behalf of a metadata file.
-+	 * These files maintain their own permanent space reservations and are
-+	 * required to adjust fdblocks using the xfs_imeta_resv_* helpers.
++	 * If we haven't gotten a cursor or the cursor AG doesn't match
++	 * the startblock, get one now.
 +	 */
-+	XFS_AG_RESV_IMETA,
- };
++	if (rcur != NULL && rcur->bc_ino.rtg != ri->ri_rtg) {
++		nr_ops = xrefc_btree_state(rcur)->nr_ops;
++		shape_changes = xrefc_btree_state(rcur)->shape_changes;
++		xfs_btree_del_cursor(rcur, 0);
++		rcur = NULL;
++		*pcur = NULL;
++	}
++	if (rcur == NULL) {
++		xfs_rtgroup_lock(tp, ri->ri_rtg, XFS_RTGLOCK_REFCOUNT);
++		*pcur = rcur = xfs_rtrefcountbt_init_cursor(mp, tp, ri->ri_rtg,
++						ri->ri_rtg->rtg_refcountip);
++
++		xrefc_btree_state(rcur)->nr_ops = nr_ops;
++		xrefc_btree_state(rcur)->shape_changes = shape_changes;
++	}
++
++	switch (ri->ri_type) {
++	case XFS_REFCOUNT_INCREASE:
++		error = xfs_refcount_adjust(rcur, &bno, &ri->ri_blockcount,
++				XFS_REFCOUNT_ADJUST_INCREASE);
++		if (error)
++			return error;
++		if (ri->ri_blockcount > 0)
++			error = xfs_rtrefcount_continue_op(rcur, ri, bno);
++		break;
++	case XFS_REFCOUNT_DECREASE:
++		error = xfs_refcount_adjust(rcur, &bno, &ri->ri_blockcount,
++				XFS_REFCOUNT_ADJUST_DECREASE);
++		if (error)
++			return error;
++		if (ri->ri_blockcount > 0)
++			error = xfs_rtrefcount_continue_op(rcur, ri, bno);
++		break;
++	case XFS_REFCOUNT_ALLOC_COW:
++		error = __xfs_refcount_cow_alloc(rcur, bno, ri->ri_blockcount);
++		if (error)
++			return error;
++		ri->ri_blockcount = 0;
++		break;
++	case XFS_REFCOUNT_FREE_COW:
++		error = __xfs_refcount_cow_free(rcur, bno, ri->ri_blockcount);
++		if (error)
++			return error;
++		ri->ri_blockcount = 0;
++		break;
++	default:
++		ASSERT(0);
++		return -EFSCORRUPTED;
++	}
++	if (!error && ri->ri_blockcount > 0)
++		trace_xfs_refcount_finish_one_leftover(mp, ri);
++	return error;
+ }
  
- /* Results of scanning a btree keyspace to check occupancy. */
+ /*
+diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
+index 03eb776ef8b..8d13ba6e0ea 100644
+--- a/libxfs/xfs_rtgroup.c
++++ b/libxfs/xfs_rtgroup.c
+@@ -558,6 +558,13 @@ xfs_rtgroup_lock(
+ 		if (tp)
+ 			xfs_trans_ijoin(tp, rtg->rtg_rmapip, XFS_ILOCK_EXCL);
+ 	}
++
++	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip) {
++		xfs_ilock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
++		if (tp)
++			xfs_trans_ijoin(tp, rtg->rtg_refcountip,
++					XFS_ILOCK_EXCL);
++	}
+ }
+ 
+ /* Unlock metadata inodes associated with this rt group. */
+@@ -570,6 +577,9 @@ xfs_rtgroup_unlock(
+ 	ASSERT(!(rtglock_flags & XFS_RTGLOCK_BITMAP_SHARED) ||
+ 	       !(rtglock_flags & XFS_RTGLOCK_BITMAP));
+ 
++	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip)
++		xfs_iunlock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
++
+ 	if ((rtglock_flags & XFS_RTGLOCK_RMAP) && rtg->rtg_rmapip)
+ 		xfs_iunlock(rtg->rtg_rmapip, XFS_ILOCK_EXCL);
+ 
+diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
+index bd88a4d7281..659d0c15d2a 100644
+--- a/libxfs/xfs_rtgroup.h
++++ b/libxfs/xfs_rtgroup.h
+@@ -248,10 +248,13 @@ int xfs_rtgroup_init_secondary_super(struct xfs_mount *mp, xfs_rgnumber_t rgno,
+ #define XFS_RTGLOCK_BITMAP_SHARED	(1U << 1)
+ /* Lock the rt rmap inode in exclusive mode */
+ #define XFS_RTGLOCK_RMAP		(1U << 2)
++/* Lock the rt refcount inode in exclusive mode */
++#define XFS_RTGLOCK_REFCOUNT		(1U << 3)
+ 
+ #define XFS_RTGLOCK_ALL_FLAGS	(XFS_RTGLOCK_BITMAP | \
+ 				 XFS_RTGLOCK_BITMAP_SHARED | \
+-				 XFS_RTGLOCK_RMAP)
++				 XFS_RTGLOCK_RMAP | \
++				 XFS_RTGLOCK_REFCOUNT)
+ 
+ void xfs_rtgroup_lock(struct xfs_trans *tp, struct xfs_rtgroup *rtg,
+ 		unsigned int rtglock_flags);
 
 
