@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2206-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2258-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ECF48211EE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:19:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80255821223
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29596B219E2
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:18:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2331B218D1
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E335391;
-	Mon,  1 Jan 2024 00:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B581373;
+	Mon,  1 Jan 2024 00:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeL4Kz7l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIdQA9EX"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA46384
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:18:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D007EC433C9;
-	Mon,  1 Jan 2024 00:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265231368
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:31:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B867C433C8;
+	Mon,  1 Jan 2024 00:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068331;
-	bh=J/Mc5H/lWHPrgqeVao/5YNyfX9MunT6tNZXRv9pM3dc=;
+	s=k20201202; t=1704069113;
+	bh=934PcW4dwNt1BPr54/rQK6Qc+4TDeNhIiLn1HeTLjTM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=AeL4Kz7lVRJgcC47VpRaxVzq3yY2RjQvxakXQS5Y0kW8aXApFELeyP4CG4Uob93rJ
-	 CuiX6+Ubcp5RyxE1RvttvGOHS1pNqUJDCvnznABewYJODCKAWFGdYjrnzxn19+2o5r
-	 iMJZv0Hg1+qa4fUvfDTj9NuRtj/dzkrL0s2Iyfd7jumsuK/0GlzgQjBA1+aEmF3Eso
-	 NGSYkA7+l0uwrOEi6dxkFZ3vjb2WoihITe+kf6OMwmKXah/DUF2apExbIAAjU9/yGu
-	 Yr4fbXcjRED2mJMzSlsOVSOkFE4mkCTtQYau//mShDkcQmMQHF+gGdMO7Na+my/z+P
-	 7XZFCsYb8azbA==
-Date: Sun, 31 Dec 2023 16:18:51 +9900
-Subject: [PATCH 32/47] libxfs: dirty buffers should be marked uptodate too
+	b=OIdQA9EXHQgC+hzKCnBscvH9MfwgGVemRrKsT6T4tCVBWcsKbcnv6kriHFxqy60AD
+	 kCRkGKiTFqdkR/DPRXaFLCk2irA9gSPCWMNsfmEnL5PQ6TK8mQ22yV67QWa63PiFv5
+	 QDFrG5e2YDZfmZPf8QcOhpxDPZ6t/hkHyFr89ZS2I+YNx30crVJDfSFpaI1KjAru66
+	 a3nDFQ/B3splhhTYSg3vl4sbwlH36spjBly5cGq0XlVAAk2O+CwofTPY2Devk3042/
+	 jGM+M9/avOdFVkiTvHvKXMFKy/T2kQDZFnNNfHMwwoYCeiUgFfN65lCdDWM8AEUS6e
+	 qaN75HoW/d8Aw==
+Date: Sun, 31 Dec 2023 16:31:53 +9900
+Subject: [PATCH 22/42] xfs: scrub the metadir path of rt refcount btree files
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015739.1815505.4360949566104494215.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405017419.1817107.10086590945379462719.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,64 +52,47 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-I started fuzz-testing the realtime rmap feature with a very large
-number of realtime allocation groups.  There were so many rt groups that
-repair had to rebuild /realtime in the metadata directory tree, and that
-directory was big enough to spur the creation of a block format
-directory.
-
-Unfortunately, repair then walks both directory trees to look for
-unconnceted files.  This part of phase 6 emits CRC errors on the newly
-created buffers for the /realtime directory, declares the directory to
-be garbage, and moves all the rt rmap inodes to /lost+found, resulting
-in a corrupt fs.
-
-Poking around in gdb, I noticed that the buffer contents were indeed
-zero, and that UPTODATE was not set.  This was very strange, until I
-added a watch on bp->b_flags to watch for accesses.  It turns out that
-xfs_repair's prefetch code will _get a buffer and zero the contents if
-UPTODATE is not set.
-
-The directory tree code in libxfs will also _get a buffer, initialize
-it, and log it to the coordinating transaction, which in this case is
-the transactions used to reconnect the rmap btree inodes to /realtime.
-At no point does any of that code ever set UPTODATE on the buffer, which
-is why prefetch zaps the contents.
-
-Hence change both buffer dirtying functions to set UPTODATE, since a
-dirty buffer is by definition at least as recent as whatever's on disk.
+Add a new XFS_SCRUB_METAPATH subtype so that we can scrub the metadata
+directory tree path to the refcount btree file for each rt group.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/rdwr.c  |    2 +-
- libxfs/trans.c |    1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ libfrog/scrub.c |    5 +++++
+ libxfs/xfs_fs.h |    3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 
-diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-index 17abced06c9..a3b30510926 100644
---- a/libxfs/rdwr.c
-+++ b/libxfs/rdwr.c
-@@ -959,7 +959,7 @@ libxfs_buf_mark_dirty(
- 	 */
- 	bp->b_error = 0;
- 	bp->b_flags &= ~LIBXFS_B_STALE;
--	bp->b_flags |= LIBXFS_B_DIRTY;
-+	bp->b_flags |= LIBXFS_B_DIRTY | LIBXFS_B_UPTODATE;
- }
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index 290ba0fb8bf..97b3d533910 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -207,6 +207,11 @@ const struct xfrog_scrub_descr xfrog_metapaths[XFS_SCRUB_METAPATH_NR] = {
+ 		.descr	= "rmap btree file metadir path",
+ 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
+ 	},
++	[XFS_SCRUB_METAPATH_RTREFCBT]	= {
++		.name	= "rtrefcbt",
++		.descr	= "refcount btree file metadir path",
++		.group	= XFROG_SCRUB_GROUP_RTGROUP,
++	},
+ };
  
- /* Prepare a buffer to be sent to the MRU list. */
-diff --git a/libxfs/trans.c b/libxfs/trans.c
-index aab9923d9ad..3c5d6383e8c 100644
---- a/libxfs/trans.c
-+++ b/libxfs/trans.c
-@@ -716,6 +716,7 @@ libxfs_trans_dirty_buf(
- 	ASSERT(bp->b_transp == tp);
- 	ASSERT(bip != NULL);
+ /* Invoke the scrub ioctl.  Returns zero or negative error code. */
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 7847da61db2..4159e96d01a 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -806,9 +806,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_METAPATH_GRPQUOTA	3
+ #define XFS_SCRUB_METAPATH_PRJQUOTA	4
+ #define XFS_SCRUB_METAPATH_RTRMAPBT	5
++#define XFS_SCRUB_METAPATH_RTREFCBT	6
  
-+	bp->b_flags |= LIBXFS_B_UPTODATE;
- 	tp->t_flags |= XFS_TRANS_DIRTY;
- 	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
- }
+ /* Number of metapath sm_ino values */
+-#define XFS_SCRUB_METAPATH_NR		6
++#define XFS_SCRUB_METAPATH_NR		7
+ 
+ /*
+  * ioctl limits
 
 
