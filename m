@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2278-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2309-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32411821237
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:37:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE04821263
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:45:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C998DB21B19
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:37:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CC8A1F2320D
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:45:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73DA71375;
-	Mon,  1 Jan 2024 00:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CF23BA3E;
+	Mon,  1 Jan 2024 00:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiGFBAD6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uo1bwkma"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A1D1368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:37:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13955C433C7;
-	Mon,  1 Jan 2024 00:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C9ABA37;
+	Mon,  1 Jan 2024 00:45:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D17C433C7;
+	Mon,  1 Jan 2024 00:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069427;
-	bh=9pv1rkYXXMJTeiyVq3v6/cvxZe9xQIMipsUMmfAIY6I=;
+	s=k20201202; t=1704069912;
+	bh=dTPxFzOAwaGVqwgw/skuO7ZxdWLhwV5d3TuExIrQ6+0=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=RiGFBAD6YwC6h9nO0cqh7ioMQMM9+AN/YpktC0qhV22awmhHVf/2j0/4T72pEvDRq
-	 wd8c4ONRg31qoAKW0v7+5B5T2TwviY4QHYJm8MAjP/OeNNNCLT3EO0cliKbPN6EEcN
-	 FAwqVBWmrH/qNIwjwYihGo5cBxha71DA61Ehw6xh7/2EV/TUDCtWW/3ycfQSxcFR9O
-	 Y+opMIOvlL7YHQqaKVJKImciwTbKdIwHqEFdkcBB8fZcknApdN8tRfcKK3tnDRYMfe
-	 F4vSoUGL70zBc4klnXzBxvQDavw+xi43zzUmATOH+QYz8ZZCcucxUR7bHaGxu6O+QI
-	 dYpBiqvkMQ14g==
-Date: Sun, 31 Dec 2023 16:37:06 +9900
-Subject: [PATCH 42/42] mkfs: enable reflink on the realtime device
+	b=Uo1bwkmal4kpueA8vTstOjVUj1G/T7QCnKA/Tug5riptEvNL3qsTDgtWhvJt9Q59b
+	 h2Nu5CwiDzQY5a8Bs5UmR5+Y4dnzYciGDd10s5G1d9qZ/LmYOsZEWht946PPrBVKi/
+	 8yd/wDZbMY1mB4GNM1xJ/I+KzjrWeyBxJ9BGbxRwu5S3uLGPkNDgT55qqPcHgqM6x5
+	 ExIjmp95wJW4kC04Rt6ak1rrqpJBOlAdSZ6os114HYkPO3aHFRntrNPqewyXZAfy6u
+	 T9H+HWwRm+d1ht8gZ1sDqSPbMYrNXfJ7hX7rOkM0B4xCyMHy7UJZYZx0QZKSzApJAx
+	 JsasyIuFp1wXg==
+Date: Sun, 31 Dec 2023 16:45:12 +9900
+Subject: [PATCH 1/2] generic/453: test confusable name detection with 32-bit
+ unicode codepoints
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017688.1817107.10396777646471443602.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
+Message-ID: <170405026914.1823868.15889436477271297160.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405026901.1823868.13486465510706218027.stgit@frogsfrogsfrogs>
+References: <170405026901.1823868.13486465510706218027.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,182 +53,73 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Allow the creation of filesystems with both reflink and realtime volumes
-enabled.  For now we don't support a realtime extent size > 1.
+Test the confusable name detection when there are 32-bit unicode
+sequences in use.  In other words, emoji.  Change the xfs_scrub test to
+dump the output to a file instead of passing huge echo commands around.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/init.c   |    4 ++--
- mkfs/proto.c    |   36 ++++++++++++++++++++++++++++++++++
- mkfs/xfs_mkfs.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 92 insertions(+), 7 deletions(-)
+ tests/generic/453 |   32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
 
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 6add79121b2..2e0d3b1ce94 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -300,9 +300,9 @@ rtmount_init(
- 	if (mp->m_sb.sb_rblocks == 0)
- 		return 0;
+diff --git a/tests/generic/453 b/tests/generic/453
+index a0fb802e9b..930e6408ff 100755
+--- a/tests/generic/453
++++ b/tests/generic/453
+@@ -148,6 +148,10 @@ setf "combmark_\xe1\x80\x9c\xe1\x80\xaf\xe1\x80\xad.txt" "combining marks"
+ setd ".\xe2\x80\x8d" "zero width joiners in dot entry"
+ setd "..\xe2\x80\x8d" "zero width joiners in dotdot entry"
  
--	if (xfs_has_reflink(mp)) {
-+	if (xfs_has_reflink(mp) && mp->m_sb.sb_rextsize > 1) {
- 		fprintf(stderr,
--	_("%s: Reflink not compatible with realtime device. Please try a newer xfsprogs.\n"),
-+	_("%s: Reflink not compatible with realtime extent size > 1. Please try a newer xfsprogs.\n"),
- 				progname);
- 		return -1;
- 	}
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 436f9ac82b2..5b9f3642486 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -884,6 +884,40 @@ rtrmapbt_create(
- 	libxfs_imeta_free_path(path);
- }
++# utf8 sequence mapping to a u32 unicode codepoint that can be confused
++setf "toilet_bowl.\xf0\x9f\x9a\xbd" "toilet emoji"
++setf "toilet_bow\xe2\x80\x8dl.\xf0\x9f\x9a\xbd" "toilet emoji with zero width joiner"
++
+ ls -la $testdir >> $seqres.full
  
-+/* Create the realtime refcount btree inode. */
-+static void
-+rtrefcountbt_create(
-+	struct xfs_rtgroup	*rtg)
-+{
-+	struct xfs_imeta_update	upd;
-+	struct xfs_mount	*mp = rtg->rtg_mount;
-+	struct xfs_imeta_path	*path;
-+	int			error;
-+
-+	error = -libxfs_rtrefcountbt_create_path(mp, rtg->rtg_rgno, &path);
-+	if (error)
-+		fail( _("rtrefcount inode path creation failed"), error);
-+
-+	error = -libxfs_imeta_ensure_dirpath(mp, path);
-+	if (error)
-+		fail(_("rtgroup allocation failed"),
-+				error);
-+
-+	error = -libxfs_imeta_start_create(mp, path, &upd);
-+	if (error)
-+		res_failed(error);
-+
-+	error = -libxfs_rtrefcountbt_create(&upd, &rtg->rtg_refcountip);
-+	if (error)
-+		fail(_("rtrefcount inode creation failed"), error);
-+
-+	error = -libxfs_imeta_commit_update(&upd);
-+	if (error)
-+		fail(_("rtrefcountbt commit failed"), error);
-+
-+	libxfs_imeta_free_path(path);
-+}
-+
- /* Initialize block headers of rt free space files. */
- static int
- init_rtblock_headers(
-@@ -1066,6 +1100,8 @@ rtinit(
- 	for_each_rtgroup(mp, rgno, rtg) {
- 		if (xfs_has_rtrmapbt(mp))
- 			rtrmapbt_create(rtg);
-+		if (xfs_has_rtreflink(mp))
-+			rtrefcountbt_create(rtg);
- 	}
+ echo "Test files"
+@@ -198,6 +202,9 @@ testf "combmark_\xe1\x80\x9c\xe1\x80\xaf\xe1\x80\xad.txt" "combining marks"
+ testd ".\xe2\x80\x8d" "zero width joiners in dot entry"
+ testd "..\xe2\x80\x8d" "zero width joiners in dotdot entry"
  
- 	if (mp->m_sb.sb_rbmblocks == 0)
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index bcdfbf6fbf6..83ab4a6c316 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -2467,12 +2467,36 @@ _("parent pointers not supported on v4 filesystems\n"));
- 	}
- 
- 	if (cli->xi->rt.name) {
--		if (cli->sb_feat.reflink && cli_opt_set(&mopts, M_REFLINK)) {
--			fprintf(stderr,
--_("reflink not supported with realtime devices\n"));
--			usage();
-+		if (cli->rtextsize && cli->sb_feat.reflink) {
-+			if (cli_opt_set(&mopts, M_REFLINK)) {
-+				fprintf(stderr,
-+_("reflink not supported on realtime devices with rt extent size specified\n"));
-+				usage();
-+			}
-+			cli->sb_feat.reflink = false;
-+		}
-+		if (cli->blocksize < XFS_MIN_RTEXTSIZE && cli->sb_feat.reflink) {
-+			if (cli_opt_set(&mopts, M_REFLINK)) {
-+				fprintf(stderr,
-+_("reflink not supported on realtime devices with blocksize %d < %d\n"),
-+						cli->blocksize,
-+						XFS_MIN_RTEXTSIZE);
-+				usage();
-+			}
-+			cli->sb_feat.reflink = false;
-+		}
-+		if (!cli->sb_feat.rtgroups && cli->sb_feat.reflink) {
-+			if (cli_opt_set(&mopts, M_REFLINK) &&
-+			    cli_opt_set(&ropts, R_RTGROUPS)) {
-+				fprintf(stderr,
-+_("reflink not supported on realtime devices without rtgroups feature\n"));
-+				usage();
-+			} else if (cli_opt_set(&mopts, M_REFLINK)) {
-+				cli->sb_feat.rtgroups = true;
-+			} else {
-+				cli->sb_feat.reflink = false;
-+			}
- 		}
--		cli->sb_feat.reflink = false;
- 
- 		if (!cli->sb_feat.rtgroups && cli->sb_feat.rmapbt) {
- 			if (cli_opt_set(&mopts, M_RMAPBT) &&
-@@ -2640,6 +2664,19 @@ validate_rtextsize(
- 			usage();
- 		}
- 		cfg->rtextblocks = (xfs_extlen_t)(rtextbytes >> cfg->blocklog);
-+	} else if (cli->sb_feat.reflink && cli->xi->rt.name) {
-+		/*
-+		 * reflink doesn't support rt extent size > 1FSB yet, so set
-+		 * an extent size of 1FSB.  Make sure we still satisfy the
-+		 * minimum rt extent size.
-+		 */
-+		if (cfg->blocksize < XFS_MIN_RTEXTSIZE) {
-+			fprintf(stderr,
-+		_("reflink not supported on rt volume with blocksize %d\n"),
-+				cfg->blocksize);
-+			usage();
-+		}
-+		cfg->rtextblocks = 1;
- 	} else {
- 		/*
- 		 * If realtime extsize has not been specified by the user,
-@@ -2671,6 +2708,12 @@ validate_rtextsize(
- 		}
- 	}
- 	ASSERT(cfg->rtextblocks);
++testf "toilet_bowl.\xf0\x9f\x9a\xbd" "toilet emoji"
++testf "toilet_bow\xe2\x80\x8dl.\xf0\x9f\x9a\xbd" "toilet emoji with zero width joiner"
 +
-+	if (cli->sb_feat.reflink && cfg->rtblocks > 0 && cfg->rtextblocks > 1) {
-+		fprintf(stderr,
-+_("reflink not supported on realtime with extent sizes > 1\n"));
-+		usage();
-+	}
- }
+ echo "Uniqueness of inodes?"
+ stat -c '%i' "${testdir}/"* | sort | uniq -c | while read nr inum; do
+ 	if [ "${nr}" -gt 1 ]; then
+@@ -208,18 +215,21 @@ done
+ echo "Test XFS online scrub, if applicable"
  
- /* Validate the incoming extsize hint. */
-@@ -4636,10 +4679,16 @@ check_rt_meta_prealloc(
- 		error = -libxfs_imeta_resv_init_inode(rtg->rtg_rmapip, ask);
- 		if (error)
- 			prealloc_fail(mp, error, ask, _("realtime rmap btree"));
+ if _check_xfs_scrub_does_unicode "$SCRATCH_MNT" "$SCRATCH_DEV"; then
+-	output="$(LC_ALL="C.UTF-8" ${XFS_SCRUB_PROG} -v -n "${SCRATCH_MNT}" 2>&1 | filter_scrub)"
+-	echo "${output}" | grep -q "french_" || echo "No complaints about french e accent?"
+-	echo "${output}" | grep -q "greek_" || echo "No complaints about greek letter mess?"
+-	echo "${output}" | grep -q "arabic_" || echo "No complaints about arabic expanded string?"
+-	echo "${output}" | grep -q "mixed_" || echo "No complaints about mixed script confusables?"
+-	echo "${output}" | grep -q "hyphens_" || echo "No complaints about hyphenation confusables?"
+-	echo "${output}" | grep -q "dz_digraph_" || echo "No complaints about single script confusables?"
+-	echo "${output}" | grep -q "inadequate_" || echo "No complaints about inadequate rendering confusables?"
+-	echo "${output}" | grep -q "prohibition_" || echo "No complaints about prohibited sequence confusables?"
+-	echo "${output}" | grep -q "zerojoin_" || echo "No complaints about zero-width join confusables?"
++	LC_ALL="C.UTF-8" ${XFS_SCRUB_PROG} -v -n "${SCRATCH_MNT}" 2>&1 | filter_scrub > $tmp.scrub
 +
-+		ask = libxfs_rtrefcountbt_calc_reserves(mp);
-+		error = -libxfs_imeta_resv_init_inode(rtg->rtg_refcountip, ask);
-+		if (error)
-+			prealloc_fail(mp, error, ask, _("realtime refcount btree"));
- 	}
++	grep -q "french_" $tmp.scrub || echo "No complaints about french e accent?"
++	grep -q "greek_" $tmp.scrub || echo "No complaints about greek letter mess?"
++	grep -q "arabic_" $tmp.scrub || echo "No complaints about arabic expanded string?"
++	grep -q "mixed_" $tmp.scrub || echo "No complaints about mixed script confusables?"
++	grep -q "hyphens_" $tmp.scrub || echo "No complaints about hyphenation confusables?"
++	grep -q "dz_digraph_" $tmp.scrub || echo "No complaints about single script confusables?"
++	grep -q "inadequate_" $tmp.scrub || echo "No complaints about inadequate rendering confusables?"
++	grep -q "prohibition_" $tmp.scrub || echo "No complaints about prohibited sequence confusables?"
++	grep -q "zerojoin_" $tmp.scrub || echo "No complaints about zero-width join confusables?"
++	grep -q "toilet_" $tmp.scrub || echo "No complaints about zero-width join confusables with emoji?"
++
+ 	echo "Actual xfs_scrub output:" >> $seqres.full
+-	echo "${output}" >> $seqres.full
++	cat $tmp.scrub >> $seqres.full
+ fi
  
- 	/* Unreserve the realtime metadata reservations. */
- 	for_each_rtgroup(mp, rgno, rtg) {
-+		libxfs_imeta_resv_free_inode(rtg->rtg_refcountip);
- 		libxfs_imeta_resv_free_inode(rtg->rtg_rmapip);
- 	}
- 
+ # success, all done
 
 
