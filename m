@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2269-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2280-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA4B782122E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:34:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25EB6821239
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A3DC2814D5
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:34:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C13A1C21949
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A385E1373;
-	Mon,  1 Jan 2024 00:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFFF1375;
+	Mon,  1 Jan 2024 00:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViPM225u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nqt2lQ2W"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B5E1362
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:34:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDF5C433C7;
-	Mon,  1 Jan 2024 00:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757931370
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:37:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49082C433C7;
+	Mon,  1 Jan 2024 00:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069285;
-	bh=gRx+OHYqQKFjzb3CAvRdMnJdHn/SYYaJ/ItmIQXIMgo=;
+	s=k20201202; t=1704069458;
+	bh=5UvRm7wgt+nEud3CUVbju/HTMwq5CftDTN/qCgstk/w=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=ViPM225uWUubrY6lriabnkf+iFTF2mZTYL0HuPPRH3Lgx5r81Tvo3kSewp/9+q0wa
-	 +DbtLq9WW2FVq1JwopACaL1W5uVBjuYHbpr6UU3LPQHN1vHHrl1sSjvUEFIwY4Goin
-	 K+f0emzC0fdzN7wrNs+ts0iwcYwkTxNYgFQs4Cj/jBXpSb6GlqJDjTudjPReougO+f
-	 boNVEVdC0fJttgHIU/RPU67NMQuObSvjBYpsmACF/1jZSlR4HZqAXD2zTtvww8667r
-	 tRrtNOsolwlmNs65Z9TeEt6Xe3QEx8QmH1ZZsbiS6myGvw6NRmyEx/88QRnr67tEzN
-	 TeCT/E56LXing==
-Date: Sun, 31 Dec 2023 16:34:45 +9900
-Subject: [PATCH 33/42] xfs_repair: compute refcount data for the realtime
- groups
+	b=Nqt2lQ2WkdChtq3tbseS5saKXUEbgea6hSZXIEy09Ma4AZSX9vtXZ+A3cjmJrO2U4
+	 jTEJxOLzbc3HZAAi4maIPz9ItUBbrEc7O1qlDa2cAUE5QF+cCTnisSQ8C6DbHOuejd
+	 vwnLguCwmxygCQV4NOFQrjVOaBiM+LLnUEJWqJdSi3EurX/oVPrsSI9pfCsTqh8c36
+	 MPE5efulngTy+nv8l8Nk7eR9cWLJiiCiWp6HaJusGM8No8Kthw6+wwjaRUPNXh71+8
+	 571o6NLFvdMF2oeAxBiApznxDmtj+7uOBHD0NKqlY2L8KdsmMhtP2+5ZhwNr3xiOkH
+	 UxqqvxMJZqCSg==
+Date: Sun, 31 Dec 2023 16:37:37 +9900
+Subject: [PATCH 2/3] xfs: fix integer overflow when validating extent size
+ hints
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017567.1817107.13512075903044003457.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Message-ID: <170405018038.1818169.12212197712076555126.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
+References: <170405018010.1818169.15531409874864543325.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,139 +53,105 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-At the end of phase 4, compute reference count information for realtime
-groups from the realtime rmap information collected, just like we do for
-AGs in the data section.
+Both file extent size hints are stored as 32-bit quantities, in units of
+filesystem blocks.  As part of validating the hints, we convert these
+quantities to bytes to ensure that the hint is congruent with the file's
+allocation size.
+
+The maximum possible hint value is 2097151 (aka XFS_MAX_BMBT_EXTLEN).
+If the file allocation unit is larger than 2048, the unit conversion
+will exceed 32 bits in size, which overflows the uint32_t used to store
+the value used in the comparison.  This isn't a problem for files on the
+data device since the hint will always be a multiple of the block size.
+However, this is a problem for realtime files because the rtextent size
+can be any integer number of fs blocks, and truncation of upper bits
+changes the outcome of division.
+
+Eliminate the overflow by performing the congruency check in units of
+blocks, not bytes.  Otherwise, we get errors like this:
+
+$ truncate -s 500T /tmp/a
+$ mkfs.xfs -f -N /tmp/a -d extszinherit=2097151,rtinherit=1 -r extsize=28k
+illegal extent size hint 2097151, must be less than 2097151 and a multiple of 7.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase4.c |   19 ++++++++++++++++++-
- repair/rmap.c   |   17 ++++++++++++-----
- repair/rmap.h   |    2 +-
- 3 files changed, 31 insertions(+), 7 deletions(-)
+ libxfs/xfs_inode_buf.c |   20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
 
-diff --git a/repair/phase4.c b/repair/phase4.c
-index b0cb805f30c..e90533689e0 100644
---- a/repair/phase4.c
-+++ b/repair/phase4.c
-@@ -173,13 +173,28 @@ compute_ag_refcounts(
+diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
+index d9fc254b354..085c128c542 100644
+--- a/libxfs/xfs_inode_buf.c
++++ b/libxfs/xfs_inode_buf.c
+@@ -767,13 +767,11 @@ xfs_inode_validate_extsize(
+ 	bool				rt_flag;
+ 	bool				hint_flag;
+ 	bool				inherit_flag;
+-	uint32_t			extsize_bytes;
+-	uint32_t			blocksize_bytes;
++	uint32_t			alloc_unit = 1;
+ 
+ 	rt_flag = (flags & XFS_DIFLAG_REALTIME);
+ 	hint_flag = (flags & XFS_DIFLAG_EXTSIZE);
+ 	inherit_flag = (flags & XFS_DIFLAG_EXTSZINHERIT);
+-	extsize_bytes = XFS_FSB_TO_B(mp, extsize);
+ 
+ 	/*
+ 	 * This comment describes a historic gap in this verifier function.
+@@ -802,9 +800,7 @@ xfs_inode_validate_extsize(
+ 	 */
+ 
+ 	if (rt_flag)
+-		blocksize_bytes = XFS_FSB_TO_B(mp, mp->m_sb.sb_rextsize);
+-	else
+-		blocksize_bytes = mp->m_sb.sb_blocksize;
++		alloc_unit = mp->m_sb.sb_rextsize;
+ 
+ 	if ((hint_flag || inherit_flag) && !(S_ISDIR(mode) || S_ISREG(mode)))
+ 		return __this_address;
+@@ -822,7 +818,7 @@ xfs_inode_validate_extsize(
+ 	if (mode && !(hint_flag || inherit_flag) && extsize != 0)
+ 		return __this_address;
+ 
+-	if (extsize_bytes % blocksize_bytes)
++	if (extsize % alloc_unit)
+ 		return __this_address;
+ 
+ 	if (extsize > XFS_MAX_BMBT_EXTLEN)
+@@ -857,12 +853,10 @@ xfs_inode_validate_cowextsize(
  {
- 	int		error;
+ 	bool				rt_flag;
+ 	bool				hint_flag;
+-	uint32_t			cowextsize_bytes;
+-	uint32_t			blocksize_bytes;
++	uint32_t			alloc_unit = 1;
  
--	error = compute_refcounts(wq->wq_ctx, agno);
-+	error = compute_refcounts(wq->wq_ctx, false, agno);
- 	if (error)
- 		do_error(
- _("%s while computing reference count records.\n"),
- 			 strerror(error));
- }
+ 	rt_flag = (flags & XFS_DIFLAG_REALTIME);
+ 	hint_flag = (flags2 & XFS_DIFLAG2_COWEXTSIZE);
+-	cowextsize_bytes = XFS_FSB_TO_B(mp, cowextsize);
  
-+static void
-+compute_rt_refcounts(
-+	struct workqueue*wq,
-+	xfs_agnumber_t	rgno,
-+	void		*arg)
-+{
-+	int		error;
-+
-+	error = compute_refcounts(wq->wq_ctx, true, rgno);
-+	if (error)
-+		do_error(
-+_("%s while computing realtime reference count records.\n"),
-+			 strerror(error));
-+}
-+
- static void
- process_inode_reflink_flags(
- 	struct workqueue	*wq,
-@@ -227,6 +242,8 @@ process_rmap_data(
- 	create_work_queue(&wq, mp, platform_nproc());
- 	for (i = 0; i < mp->m_sb.sb_agcount; i++)
- 		queue_work(&wq, compute_ag_refcounts, i, NULL);
-+	for (i = 0; i < mp->m_sb.sb_rgcount; i++)
-+		queue_work(&wq, compute_rt_refcounts, i, NULL);
- 	destroy_work_queue(&wq);
+ 	/*
+ 	 * Similar to extent size hints, a directory can be configured to
+@@ -877,9 +871,7 @@ xfs_inode_validate_cowextsize(
+ 	 */
  
- 	create_work_queue(&wq, mp, platform_nproc());
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 55b41cfa540..38a508ced16 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -135,6 +135,11 @@ rmaps_init_rt(
- 	if (error)
- 		goto nomem;
+ 	if (rt_flag)
+-		blocksize_bytes = XFS_FSB_TO_B(mp, mp->m_sb.sb_rextsize);
+-	else
+-		blocksize_bytes = mp->m_sb.sb_blocksize;
++		alloc_unit = mp->m_sb.sb_rextsize;
  
-+	error = init_slab(&ag_rmap->ar_refcount_items,
-+			  sizeof(struct xfs_refcount_irec));
-+	if (error)
-+		goto nomem;
-+
- 	ag_rmap->rg_rmap_ino = NULLFSINO;
- 	ag_rmap->rg_refcount_ino = NULLFSINO;
- 	return;
-@@ -1080,6 +1085,7 @@ mark_reflink_inodes(
- static void
- refcount_emit(
- 	struct xfs_mount	*mp,
-+	bool			isrt,
- 	xfs_agnumber_t		agno,
- 	xfs_agblock_t		agbno,
- 	xfs_extlen_t		len,
-@@ -1089,7 +1095,7 @@ refcount_emit(
- 	int			error;
- 	struct xfs_slab		*rlslab;
+ 	if (hint_flag && !xfs_has_reflink(mp))
+ 		return __this_address;
+@@ -894,7 +886,7 @@ xfs_inode_validate_cowextsize(
+ 	if (mode && !hint_flag && cowextsize != 0)
+ 		return __this_address;
  
--	rlslab = rmaps_for_group(false, agno)->ar_refcount_items;
-+	rlslab = rmaps_for_group(isrt, agno)->ar_refcount_items;
- 	ASSERT(nr_rmaps > 0);
+-	if (cowextsize_bytes % blocksize_bytes)
++	if (cowextsize % alloc_unit)
+ 		return __this_address;
  
- 	dbg_printf("REFL: agno=%u pblk=%u, len=%u -> refcount=%zu\n",
-@@ -1208,6 +1214,7 @@ refcount_push_rmaps_at(
- int
- compute_refcounts(
- 	struct xfs_mount	*mp,
-+	bool			isrt,
- 	xfs_agnumber_t		agno)
- {
- 	struct rcbag		*rcstack;
-@@ -1223,12 +1230,12 @@ compute_refcounts(
- 
- 	if (!xfs_has_reflink(mp))
- 		return 0;
--	if (rmaps_for_group(false, agno)->ar_xfbtree == NULL)
-+	if (rmaps_for_group(isrt, agno)->ar_xfbtree == NULL)
- 		return 0;
- 
--	nr_rmaps = rmap_record_count(mp, false, agno);
-+	nr_rmaps = rmap_record_count(mp, isrt, agno);
- 
--	error = rmap_init_mem_cursor(mp, NULL, false, agno, &rmcur);
-+	error = rmap_init_mem_cursor(mp, NULL, isrt, agno, &rmcur);
- 	if (error)
- 		return error;
- 
-@@ -1285,7 +1292,7 @@ compute_refcounts(
- 			ASSERT(nbno > cbno);
- 			if (rcbag_count(rcstack) != old_stack_height) {
- 				if (old_stack_height > 1) {
--					refcount_emit(mp, agno, cbno,
-+					refcount_emit(mp, isrt, agno, cbno,
- 							nbno - cbno,
- 							old_stack_height);
- 				}
-diff --git a/repair/rmap.h b/repair/rmap.h
-index 3e210fac87b..9663b3e3a20 100644
---- a/repair/rmap.h
-+++ b/repair/rmap.h
-@@ -38,7 +38,7 @@ extern int64_t rmap_diffkeys(struct xfs_rmap_irec *kp1,
- extern void rmap_high_key_from_rec(struct xfs_rmap_irec *rec,
- 		struct xfs_rmap_irec *key);
- 
--extern int compute_refcounts(struct xfs_mount *, xfs_agnumber_t);
-+int compute_refcounts(struct xfs_mount *mp, bool isrt, xfs_agnumber_t agno);
- uint64_t refcount_record_count(struct xfs_mount *mp, xfs_agnumber_t agno);
- extern int init_refcount_cursor(xfs_agnumber_t, struct xfs_slab_cursor **);
- extern void refcount_avoid_check(struct xfs_mount *mp);
+ 	if (cowextsize > XFS_MAX_BMBT_EXTLEN)
 
 
