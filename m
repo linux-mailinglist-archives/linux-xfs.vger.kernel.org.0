@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2192-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2167-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ACB08211DE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:15:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 297C48211C5
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:08:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A491A2822B5
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:15:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE155B21ABC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:08:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C626238B;
-	Mon,  1 Jan 2024 00:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB9238B;
+	Mon,  1 Jan 2024 00:08:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNqVS8zu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuCk1eOQ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933E4384
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:15:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFBCC433C8;
-	Mon,  1 Jan 2024 00:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC94384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:08:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E250DC433C7;
+	Mon,  1 Jan 2024 00:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068113;
-	bh=x3Y4Nhde1imslMdavfYz54VefE75MYh8QFabXy8VwGo=;
+	s=k20201202; t=1704067721;
+	bh=hbWr5nmOcsQyTlDi48Ic5uQDAZo4kfazEIl9D1cPvaI=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=TNqVS8zuP5PcvFzptHv6U6VmMb9MnxzPvy1bb9wCnQzAAVKuVgmwD9NWii0iIshvl
-	 GDqRXjI4n92fD8TGfeVhn34QDKEZQS/6duynxEE9TBDTrjLfCxXiO98/OeZ3WMDvL1
-	 Cc/sC+kM3O+WtEjObh2HIcbpdUpXdowDSA060CADEQM2x7nzdb4JpU48efEo2/W2wk
-	 t2Vo9GDReG9k3k7sD2HRd8bf0FDM4yr/yAFHYu/CkazkwKo/IZKYqnQuPLrhiyvjHO
-	 7obOOGJBcWlqB3GZEYb4ebGL+R/1vQBGTkKRcp9pC8fSU8H4Rm08if6X+CPr/3QM6W
-	 NQZCVjspmY6Cg==
-Date: Sun, 31 Dec 2023 16:15:12 +9900
-Subject: [PATCH 18/47] xfs: scrub the metadir path of rt rmap btree files
+	b=LuCk1eOQMHw7p/3FWpAa/knohflwn4m+Fwo5bKBkFENucOO1LztC3hj7W+gM0WM/F
+	 Q+WAXTg524Rqdi70qnXBtGvaC3ELuoaeuU9TMnqe4rnqSracYe6TjdQvri0knaWy1a
+	 CmaYjlJy45EVj7ZEPEc/PS/LImAfWcxptUjh3QEL2Qx0MQU2Coz3WnFk5+Ma1gciCl
+	 ujd4c+R09OcP/i8zO9WJnbOPFgiKfYRxchRxR14a50uyZdT4CKj0gJ8Xyxq5VumBnT
+	 LkRH2kXVvENIe/9E7Yxuo/QyASQL2RkE/vV2Tyv5UFw4Yl9M6CXtENj4DiP0cWGuch
+	 30mPWSR3f9i/g==
+Date: Sun, 31 Dec 2023 16:08:41 +9900
+Subject: [PATCH 2/9] xfs: give rmap btree cursor error tracepoints their own
+ class
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015553.1815505.5227863645429649399.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+Message-ID: <170405014846.1815232.15906808276779223619.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
+References: <170405014813.1815232.16195473149230327174.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,61 +53,128 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new XFS_SCRUB_METAPATH subtype so that we can scrub the metadata
-directory tree path to the rmap btree file for each rt group.
+Create a new tracepoint class for btree-related errors, then convert all
+the rmap tracepoints to use it.  Also fix the one tracepoint that was
+abusing the old class by making it a separate tracepoint.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c |    5 +++++
- libxfs/xfs_fs.h |    3 ++-
- scrub/scrub.c   |    3 +++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ libxfs/xfs_rmap.c |   33 +++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index b22770d639c..8822fc0088c 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -197,6 +197,11 @@ const struct xfrog_scrub_descr xfrog_metapaths[XFS_SCRUB_METAPATH_NR] = {
- 		.descr	= "project quota metadir path",
- 		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
-+	[XFS_SCRUB_METAPATH_RTRMAPBT]	= {
-+		.name	= "rtrmapbt",
-+		.descr	= "rmap btree file metadir path",
-+		.group	= XFROG_SCRUB_GROUP_RTGROUP,
-+	},
- };
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index 8df591840dc..5b2cac8302a 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -110,8 +110,7 @@ xfs_rmap_update(
+ 			xfs_rmap_irec_offset_pack(irec));
+ 	error = xfs_btree_update(cur, &rec);
+ 	if (error)
+-		trace_xfs_rmap_update_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_update_error(cur, error, _RET_IP_);
+ 	return error;
+ }
  
- /* Invoke the scrub ioctl.  Returns zero or negative error code. */
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index dcf048aae8c..0bbdbfb0a8a 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -804,9 +804,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_METAPATH_USRQUOTA	2
- #define XFS_SCRUB_METAPATH_GRPQUOTA	3
- #define XFS_SCRUB_METAPATH_PRJQUOTA	4
-+#define XFS_SCRUB_METAPATH_RTRMAPBT	5
+@@ -154,8 +153,7 @@ xfs_rmap_insert(
+ 	}
+ done:
+ 	if (error)
+-		trace_xfs_rmap_insert_error(rcur->bc_mp,
+-				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_insert_error(rcur, error, _RET_IP_);
+ 	return error;
+ }
  
- /* Number of metapath sm_ino values */
--#define XFS_SCRUB_METAPATH_NR		5
-+#define XFS_SCRUB_METAPATH_NR		6
+@@ -193,8 +191,7 @@ xfs_rmap_delete(
+ 	}
+ done:
+ 	if (error)
+-		trace_xfs_rmap_delete_error(rcur->bc_mp,
+-				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_delete_error(rcur, error, _RET_IP_);
+ 	return error;
+ }
  
- /*
-  * ioctl limits
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 8f9fde80263..f20910de855 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -66,6 +66,9 @@ format_metapath_descr(
- 				(unsigned long long)vhead->svh_ino);
+@@ -815,8 +812,7 @@ xfs_rmap_unmap(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_unmap_error(mp, cur->bc_ag.pag->pag_agno,
+-				error, _RET_IP_);
++		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
+ 	return error;
+ }
  
- 	sc = &xfrog_metapaths[vhead->svh_ino];
-+	if (sc->group == XFROG_SCRUB_GROUP_RTGROUP)
-+		return snprintf(buf, buflen, _("rtgroup %u %s"),
-+				vhead->svh_agno, _(sc->descr));
- 	return snprintf(buf, buflen, "%s", _(sc->descr));
+@@ -1138,8 +1134,7 @@ xfs_rmap_map(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_map_error(mp, cur->bc_ag.pag->pag_agno,
+-				error, _RET_IP_);
++		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -1334,8 +1329,7 @@ xfs_rmap_convert(
+ 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
+ 		state &= ~RMAP_RIGHT_CONTIG;
+ 
+-	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
+-			_RET_IP_);
++	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
+ 
+ 	/* reset the cursor back to PREV */
+ 	error = xfs_rmap_lookup_le(cur, bno, owner, offset, oldext, NULL, &i);
+@@ -1688,8 +1682,7 @@ xfs_rmap_convert(
+ 			unwritten, oinfo);
+ done:
+ 	if (error)
+-		trace_xfs_rmap_convert_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -1812,8 +1805,7 @@ xfs_rmap_convert_shared(
+ 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
+ 		state &= ~RMAP_RIGHT_CONTIG;
+ 
+-	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
+-			_RET_IP_);
++	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
+ 	/*
+ 	 * Switch out based on the FILLING and CONTIG state bits.
+ 	 */
+@@ -2115,8 +2107,7 @@ xfs_rmap_convert_shared(
+ 			unwritten, oinfo);
+ done:
+ 	if (error)
+-		trace_xfs_rmap_convert_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -2315,8 +2306,7 @@ xfs_rmap_unmap_shared(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_unmap_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -2476,8 +2466,7 @@ xfs_rmap_map_shared(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_map_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
+ 	return error;
  }
  
 
