@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-2234-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2228-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAF9882120B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:25:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0D39821205
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:24:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A08D2829F2
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:25:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DC702829EC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01A37FD;
-	Mon,  1 Jan 2024 00:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C45C7FD;
+	Mon,  1 Jan 2024 00:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVATvFcD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkY+vTzk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9A37ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:25:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB17FC433C8;
-	Mon,  1 Jan 2024 00:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174427EF
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:24:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63D8C433C7;
+	Mon,  1 Jan 2024 00:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068738;
-	bh=ueLlzfXFAadRNJc9jd8/4anPR0BS+wXbDVygxXzMqdE=;
+	s=k20201202; t=1704068659;
+	bh=BNwdIpPKFBlDRw5hA0Y+A8PqXshVISXAxiamsmADKxY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=iVATvFcDbYamNA2zBc/ozfTKQXgRzvcqPoscCNFs5kMBRIH575McsT4ZFsfz10xM6
-	 PT5X5y72hTU5rldsu5p2jn7Hwvg31rdgh71B6X1L3Tn2RyD9/dpYEjUB8txYBGNNiy
-	 Ag+pc6/Ko2Gg7rtyN3BNn3l/17yHRALYxRdIftu1nBeXExUQ3pjucHFIJtuPtu1un4
-	 UKYjGzImoq5CfcMNVtDu1o2rBZ+JWlHUaProoHbDsTOoIFcsOk/b9lVjytmF7wZLhh
-	 hu5Dofu3F9WbS6Rnnw3Ic96F/y+VMrYAZxisL29MTnaAVIXabHc/4gTPPnp5deUORJ
-	 Lk07Fd/rBUl1A==
-Date: Sun, 31 Dec 2023 16:25:37 +9900
-Subject: [PATCH 7/9] xfs: don't bother calling xfs_refcount_finish_one_cleanup
- in xfs_refcount_finish_one
+	b=gkY+vTzk8b9UluXHCKfiOt/KAmDBI6HnNikHdq+1S4RUfTN1uhS42jloTsVRXHpoQ
+	 STmzEGBZk1kNxjJ3Ak3dA3dpGtPTDd1Bc5BXK9WPTH3627+kQPkmMDA/v0S3MNrTyu
+	 cbeem+Gx/1re1LE/YQtRB1KHapeGfP4p4HLlBpGEfr4egq7n95jd8CJW5AG+rah1No
+	 Zbhv3Nc0VH/6BrNki4/Q3FBOSe0icqh1/AIofVskvxaDdO0taZbQ8fd0YvVYemaDZo
+	 dWQZe66Umqsj5g+OHr1QKpLUOUpzwNP5uVSdMbb7Z0+lG4l8T6eAQ4OYii6Qox6+le
+	 UmnBqlaOrGX/g==
+Date: Sun, 31 Dec 2023 16:24:19 +9900
+Subject: [PATCH 2/9] xfs: create specialized classes for refcount tracepoints
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405016714.1816837.16218175860775218003.stgit@frogsfrogsfrogs>
+Message-ID: <170405016648.1816837.6387518588947985482.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 References: <170405016616.1816837.2298941345938137266.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,100 +52,101 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In xfs_refcount_finish_one we know the cursor is non-zero when calling
-xfs_refcount_finish_one_cleanup and we pass a 0 error variable.  This
-means xfs_refcount_finish_one_cleanup is just doing a
-xfs_btree_del_cursor.
+The only user of the "ag" tracepoint event classes is the refcount
+btree, so rename them to make that obvious and make them take the btree
+cursor to simplify the arguments.  This will save us a lot of trouble
+later on.
 
-Open code that and move xfs_refcount_finish_one_cleanup to
-fs/xfs/xfs_refcount_item.c.
-
-Inspired-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c   |   17 +++++++++++++++++
- libxfs/xfs_refcount.c |   19 +------------------
- libxfs/xfs_refcount.h |    2 --
- 3 files changed, 18 insertions(+), 20 deletions(-)
+ libxfs/xfs_refcount.c |   24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
 
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index e056c3b449b..58a18c7876d 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -587,6 +587,23 @@ xfs_refcount_update_abort_intent(
- {
- }
- 
-+/* Clean up after calling xfs_refcount_finish_one. */
-+STATIC void
-+xfs_refcount_finish_one_cleanup(
-+	struct xfs_trans	*tp,
-+	struct xfs_btree_cur	*rcur,
-+	int			error)
-+{
-+	struct xfs_buf		*agbp;
-+
-+	if (rcur == NULL)
-+		return;
-+	agbp = rcur->bc_ag.agbp;
-+	xfs_btree_del_cursor(rcur, error);
-+	if (error)
-+		xfs_trans_brelse(tp, agbp);
-+}
-+
- const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
- 	.name		= "refcount",
- 	.create_intent	= xfs_refcount_update_create_intent,
 diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index 3ae68ea22e3..635bbf7f99d 100644
+index 9bb7acbdc6f..67c9895efb3 100644
 --- a/libxfs/xfs_refcount.c
 +++ b/libxfs/xfs_refcount.c
-@@ -1299,23 +1299,6 @@ xfs_refcount_adjust(
- 	return error;
- }
+@@ -50,7 +50,7 @@ xfs_refcount_lookup_le(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_LE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -70,7 +70,7 @@ xfs_refcount_lookup_ge(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_GE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -90,7 +90,7 @@ xfs_refcount_lookup_eq(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_LE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -1261,11 +1261,9 @@ xfs_refcount_adjust(
+ 	int			error;
  
--/* Clean up after calling xfs_refcount_finish_one. */
--void
--xfs_refcount_finish_one_cleanup(
--	struct xfs_trans	*tp,
--	struct xfs_btree_cur	*rcur,
--	int			error)
--{
--	struct xfs_buf		*agbp;
--
--	if (rcur == NULL)
--		return;
--	agbp = rcur->bc_ag.agbp;
--	xfs_btree_del_cursor(rcur, error);
--	if (error)
--		xfs_trans_brelse(tp, agbp);
--}
--
- /*
-  * Set up a continuation a deferred refcount operation by updating the intent.
-  * Checks to make sure we're not going to run off the end of the AG.
-@@ -1379,7 +1362,7 @@ xfs_refcount_finish_one(
- 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
- 		nr_ops = rcur->bc_ag.refc.nr_ops;
- 		shape_changes = rcur->bc_ag.refc.shape_changes;
--		xfs_refcount_finish_one_cleanup(tp, rcur, 0);
-+		xfs_btree_del_cursor(rcur, 0);
- 		rcur = NULL;
- 		*pcur = NULL;
+ 	if (adj == XFS_REFCOUNT_ADJUST_INCREASE)
+-		trace_xfs_refcount_increase(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, *agbno, *aglen);
++		trace_xfs_refcount_increase(cur, *agbno, *aglen);
+ 	else
+-		trace_xfs_refcount_decrease(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, *agbno, *aglen);
++		trace_xfs_refcount_decrease(cur, *agbno, *aglen);
+ 
+ 	/*
+ 	 * Ensure that no rcextents cross the boundary of the adjustment range.
+@@ -1525,8 +1523,7 @@ xfs_refcount_find_shared(
+ 	int				have;
+ 	int				error;
+ 
+-	trace_xfs_refcount_find_shared(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_find_shared(cur, agbno, aglen);
+ 
+ 	/* By default, skip the whole range */
+ 	*fbno = NULLAGBLOCK;
+@@ -1613,8 +1610,7 @@ xfs_refcount_find_shared(
  	}
-diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
-index 01a20621192..c94b8f71d40 100644
---- a/libxfs/xfs_refcount.h
-+++ b/libxfs/xfs_refcount.h
-@@ -82,8 +82,6 @@ void xfs_refcount_increase_extent(struct xfs_trans *tp,
- void xfs_refcount_decrease_extent(struct xfs_trans *tp,
- 		struct xfs_bmbt_irec *irec);
  
--extern void xfs_refcount_finish_one_cleanup(struct xfs_trans *tp,
--		struct xfs_btree_cur *rcur, int error);
- extern int xfs_refcount_finish_one(struct xfs_trans *tp,
- 		struct xfs_refcount_intent *ri, struct xfs_btree_cur **pcur);
+ done:
+-	trace_xfs_refcount_find_shared_result(cur->bc_mp,
+-			cur->bc_ag.pag->pag_agno, *fbno, *flen);
++	trace_xfs_refcount_find_shared_result(cur, *fbno, *flen);
  
+ out_error:
+ 	if (error)
+@@ -1832,8 +1828,7 @@ __xfs_refcount_cow_alloc(
+ 	xfs_agblock_t		agbno,
+ 	xfs_extlen_t		aglen)
+ {
+-	trace_xfs_refcount_cow_increase(rcur->bc_mp, rcur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_cow_increase(rcur, agbno, aglen);
+ 
+ 	/* Add refcount btree reservation */
+ 	return xfs_refcount_adjust_cow(rcur, agbno, aglen,
+@@ -1849,8 +1844,7 @@ __xfs_refcount_cow_free(
+ 	xfs_agblock_t		agbno,
+ 	xfs_extlen_t		aglen)
+ {
+-	trace_xfs_refcount_cow_decrease(rcur->bc_mp, rcur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_cow_decrease(rcur, agbno, aglen);
+ 
+ 	/* Remove refcount btree reservation */
+ 	return xfs_refcount_adjust_cow(rcur, agbno, aglen,
 
 
