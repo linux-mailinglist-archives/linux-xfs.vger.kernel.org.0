@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2252-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2398-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0E2482121D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:30:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C8988212C2
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:08:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60F0DB2196D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:30:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3AB11F2268C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:08:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567681362;
-	Mon,  1 Jan 2024 00:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48BCC656;
+	Mon,  1 Jan 2024 01:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYlXf/bD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmK1eXUk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225DF1375
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:30:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD091C433C7;
-	Mon,  1 Jan 2024 00:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146DF644
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 01:08:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28F2C433C7;
+	Mon,  1 Jan 2024 01:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069019;
-	bh=cbPabbEcezgK6l8m/KFrVILKl6kDIWNQLE1IOHXulmc=;
+	s=k20201202; t=1704071305;
+	bh=s2R0ZsChjS8/dZ0VyhmFovh8/AZPWQsnGwlUGuWLpaQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=lYlXf/bD0mUJEeFhS72fboAb43+9LnnPo/LHKz1sr5m17CKDtOKLn8ET+hFmAs3EV
-	 TMrxMTDB7SvIRy3BW/ubQY8xK7EZ+x9aoxOme6MyOK6+KVlP4I3OTxt74K9fx/VdxP
-	 rRkhhyH47lARBvFMZYNECWP4Wwj/KO7zuSWebdFBcbJ0bO+WGXqLlRt/+p3VjJMBvj
-	 Ah8EyaK9j8Jwv7s2UDbA6aTsjZ4KINJnfiVaN0cXNBuR42c928dyDcbrgAAjGTf1l7
-	 FCke0mRJYxqb5+I74jXmRA+QoNHqiSC+su9VukDDvzlzJQyir/EeE0jWUvHfWNpkQr
-	 egq1ST/YVNvjQ==
-Date: Sun, 31 Dec 2023 16:30:19 +9900
-Subject: [PATCH 16/42] xfs: refcover CoW leftovers in the realtime volume
+	b=mmK1eXUkvw+Z6rjgip7bCfESz6B5kPZIWNpz7BASPJoCzsAJgQs6SoXwIoLTAm4b2
+	 /RHOVomL0NBoRYRmRIaVoqJjAzsDw1zQLn4yQmpV3R7hbWZYLawI6Pf4F9TJ6H+jBq
+	 SqxpMtRi+2yjq0Cp7MRGQskWW8UN7ZR9hqeI/8ZVJJ2JRcRoohB08nSYqGLnQJG7NY
+	 q1WymW/B8KaT/JTaJxpSrUnhct4l1clR3ijebIzoVNe/h/tYIMCbr8peUrpXN9hJEM
+	 aDqWJpO/FPp/JIvjtHx3XzuXYBKipRA8BPu9xLQ/0xwySDPFIF5FhyWUhwLjfm7/Jr
+	 /xIb8S+IZN22Q==
+Date: Sun, 31 Dec 2023 17:08:25 +9900
+Subject: [PATCH 1/2] design: move discussion of realtime volumes to a separate
+ section
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
+To: darrick.wong@oracle.com, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017339.1817107.3217896289264332630.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Message-ID: <170405037299.1829872.1512515761534075128.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405037287.1829872.4170922148688875113.stgit@frogsfrogsfrogs>
+References: <170405037287.1829872.4170922148688875113.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -48,152 +49,169 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Scan the realtime refcount tree at mount time to get rid of leftover
-CoW staging extents.
+In preparation for documenting the realtime modernization project, move
+the discussions of the realtime-realted ondisk metadata to a separate
+file.  Since realtime reverse mapping btrees haven't been added to the
+filesystem yet, stop including them in the final output.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_refcount.c |   64 ++++++++++++++++++++++++++++++++++++++-----------
- libxfs/xfs_refcount.h |    4 ++-
- 2 files changed, 53 insertions(+), 15 deletions(-)
+ .../allocation_groups.asciidoc                     |   20 --------
+ .../internal_inodes.asciidoc                       |   36 +-------------
+ design/XFS_Filesystem_Structure/realtime.asciidoc  |   50 ++++++++++++++++++++
+ .../xfs_filesystem_structure.asciidoc              |    2 +
+ 4 files changed, 54 insertions(+), 54 deletions(-)
+ create mode 100644 design/XFS_Filesystem_Structure/realtime.asciidoc
 
 
-diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index 3f0f0f41a69..e094acbe663 100644
---- a/libxfs/xfs_refcount.c
-+++ b/libxfs/xfs_refcount.c
-@@ -2075,14 +2075,15 @@ xfs_refcount_recover_extent(
- }
+diff --git a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
+index bd825207..08151c7c 100644
+--- a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
++++ b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
+@@ -1330,23 +1330,3 @@ core.magic = 0x494e
  
- /* Find and remove leftover CoW reservations. */
--int
--xfs_refcount_recover_cow_leftovers(
-+static int
-+xfs_refcount_recover_group_cow_leftovers(
- 	struct xfs_mount		*mp,
--	struct xfs_perag		*pag)
-+	struct xfs_perag		*pag,
-+	struct xfs_rtgroup		*rtg)
- {
- 	struct xfs_trans		*tp;
- 	struct xfs_btree_cur		*cur;
--	struct xfs_buf			*agbp;
-+	struct xfs_buf			*agbp = NULL;
- 	struct xfs_refcount_recovery	*rr, *n;
- 	struct list_head		debris;
- 	union xfs_btree_irec		low = {
-@@ -2097,7 +2098,12 @@ xfs_refcount_recover_cow_leftovers(
+ The chunk record also indicates that this chunk has 32 inodes, and that the
+ missing inodes are also ``free''.
+-
+-[[Real-time_Devices]]
+-== Real-time Devices
+-
+-The performance of the standard XFS allocator varies depending on the internal
+-state of the various metadata indices enabled on the filesystem.  For
+-applications which need to minimize the jitter of allocation latency, XFS
+-supports the notion of a ``real-time device''.  This is a special device
+-separate from the regular filesystem where extent allocations are tracked with
+-a bitmap and free space is indexed with a two-dimensional array.  If an inode
+-is flagged with +XFS_DIFLAG_REALTIME+, its data will live on the real time
+-device.  The metadata for real time devices is discussed in the section about
+-xref:Real-time_Inodes[real time inodes].
+-
+-By placing the real time device (and the journal) on separate high-performance
+-storage devices, it is possible to reduce most of the unpredictability in I/O
+-response times that come from metadata operations.
+-
+-None of the XFS per-AG B+trees are involved with real time files.  It is not
+-possible for real time files to share data blocks.
+diff --git a/design/XFS_Filesystem_Structure/internal_inodes.asciidoc b/design/XFS_Filesystem_Structure/internal_inodes.asciidoc
+index 42020a5f..e07b5f19 100644
+--- a/design/XFS_Filesystem_Structure/internal_inodes.asciidoc
++++ b/design/XFS_Filesystem_Structure/internal_inodes.asciidoc
+@@ -316,41 +316,9 @@ Log sequence number of the last DQ block write.
+ *dd_crc*::
+ Checksum of the DQ block.
  
- 	/* reflink filesystems mustn't have AGs larger than 2^31-1 blocks */
- 	BUILD_BUG_ON(XFS_MAX_CRC_AG_BLOCKS >= XFS_REFC_COWFLAG);
--	if (mp->m_sb.sb_agblocks > XFS_MAX_CRC_AG_BLOCKS)
-+	if (pag && mp->m_sb.sb_agblocks > XFS_MAX_CRC_AG_BLOCKS)
-+		return -EOPNOTSUPP;
+-
+ [[Real-time_Inodes]]
+ == Real-time Inodes
+ 
+ There are two inodes allocated to managing the real-time device's space, the
+-Bitmap Inode and the Summary Inode.
+-
+-[[Real-Time_Bitmap_Inode]]
+-=== Real-Time Bitmap Inode
+-
+-The real time bitmap inode, +sb_rbmino+, tracks the used/free space in the
+-real-time device using an old-style bitmap. One bit is allocated per real-time
+-extent. The size of an extent is specified by the superblock's +sb_rextsize+
+-value.
+-
+-The number of blocks used by the bitmap inode is equal to the number of
+-real-time extents (+sb_rextents+) divided by the block size (+sb_blocksize+)
+-and bits per byte. This value is stored in +sb_rbmblocks+. The nblocks and
+-extent array for the inode should match this.  Each real time block gets its
+-own bit in the bitmap.
+-
+-[[Real-Time_Summary_Inode]]
+-=== Real-Time Summary Inode
+-
+-The real time summary inode, +sb_rsumino+, tracks the used and free space
+-accounting information for the real-time device.  This file indexes the
+-approximate location of each free extent on the real-time device first by
+-log2(extent size) and then by the real-time bitmap block number.  The size of
+-the summary inode file is equal to +sb_rbmblocks+ × log2(realtime device size)
+-× sizeof(+xfs_suminfo_t+).  The entry for a given log2(extent size) and
+-rtbitmap block number is 0 if there is no free extents of that size at that
+-rtbitmap location, and positive if there are any.
+-
+-This data structure is not particularly space efficient, however it is a very
+-fast way to provide the same data as the two free space B+trees for regular
+-files since the space is preallocated and metadata maintenance is minimal.
+-
+-include::rtrmapbt.asciidoc[]
++xref:Real-Time_Bitmap_Inode[Bitmap Inode] and the
++xref:Real-Time_Summary_Inode[Summary Inode].
+diff --git a/design/XFS_Filesystem_Structure/realtime.asciidoc b/design/XFS_Filesystem_Structure/realtime.asciidoc
+new file mode 100644
+index 00000000..11426e8f
+--- /dev/null
++++ b/design/XFS_Filesystem_Structure/realtime.asciidoc
+@@ -0,0 +1,50 @@
++[[Real-time_Devices]]
++= Real-time Devices
 +
-+	/* rtreflink filesystems can't have rtgroups larger than 2^31-1 blocks */
-+	BUILD_BUG_ON(XFS_MAX_RGBLOCKS >= XFS_REFC_COWFLAG);
-+	if (rtg && mp->m_sb.sb_rgblocks >= XFS_MAX_RGBLOCKS)
- 		return -EOPNOTSUPP;
- 
- 	INIT_LIST_HEAD(&debris);
-@@ -2116,16 +2122,25 @@ xfs_refcount_recover_cow_leftovers(
- 	if (error)
- 		return error;
- 
--	error = xfs_alloc_read_agf(pag, tp, 0, &agbp);
--	if (error)
--		goto out_trans;
--	cur = xfs_refcountbt_init_cursor(mp, tp, agbp, pag);
-+	if (rtg) {
-+		xfs_rtgroup_lock(NULL, rtg, XFS_RTGLOCK_REFCOUNT);
-+		cur = xfs_rtrefcountbt_init_cursor(mp, tp, rtg,
-+				rtg->rtg_refcountip);
-+	} else {
-+		error = xfs_alloc_read_agf(pag, tp, 0, &agbp);
-+		if (error)
-+			goto out_trans;
-+		cur = xfs_refcountbt_init_cursor(mp, tp, agbp, pag);
-+	}
- 
- 	/* Find all the leftover CoW staging extents. */
- 	error = xfs_btree_query_range(cur, &low, &high,
- 			xfs_refcount_recover_extent, &debris);
- 	xfs_btree_del_cursor(cur, error);
--	xfs_trans_brelse(tp, agbp);
-+	if (agbp)
-+		xfs_trans_brelse(tp, agbp);
-+	else
-+		xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_REFCOUNT);
- 	xfs_trans_cancel(tp);
- 	if (error)
- 		goto out_free;
-@@ -2138,15 +2153,20 @@ xfs_refcount_recover_cow_leftovers(
- 			goto out_free;
- 
- 		/* Free the orphan record */
--		fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
--				rr->rr_rrec.rc_startblock);
--		xfs_refcount_free_cow_extent(tp, false, fsb,
-+		if (rtg)
-+			fsb = xfs_rgbno_to_rtb(mp, rtg->rtg_rgno,
-+					rr->rr_rrec.rc_startblock);
-+		else
-+			fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
-+					rr->rr_rrec.rc_startblock);
-+		xfs_refcount_free_cow_extent(tp, rtg != NULL, fsb,
- 				rr->rr_rrec.rc_blockcount);
- 
- 		/* Free the block. */
- 		error = xfs_free_extent_later(tp, fsb,
- 				rr->rr_rrec.rc_blockcount, NULL,
--				XFS_AG_RESV_NONE, 0);
-+				XFS_AG_RESV_NONE,
-+				rtg != NULL ? XFS_FREE_EXTENT_REALTIME : 0);
- 		if (error)
- 			goto out_trans;
- 
-@@ -2170,6 +2190,22 @@ xfs_refcount_recover_cow_leftovers(
- 	return error;
- }
- 
-+int
-+xfs_refcount_recover_cow_leftovers(
-+	struct xfs_mount		*mp,
-+	struct xfs_perag		*pag)
-+{
-+	return xfs_refcount_recover_group_cow_leftovers(mp, pag, NULL);
-+}
++The performance of the standard XFS allocator varies depending on the internal
++state of the various metadata indices enabled on the filesystem.  For
++applications which need to minimize the jitter of allocation latency, XFS
++supports the notion of a ``real-time device''.  This is a special device
++separate from the regular filesystem where extent allocations are tracked with
++a bitmap and free space is indexed with a two-dimensional array.  If an inode
++is flagged with +XFS_DIFLAG_REALTIME+, its data will live on the real time
++device.
 +
-+int
-+xfs_refcount_recover_rtcow_leftovers(
-+	struct xfs_mount		*mp,
-+	struct xfs_rtgroup		*rtg)
-+{
-+	return xfs_refcount_recover_group_cow_leftovers(mp, NULL, rtg);
-+}
++By placing the real time device (and the journal) on separate high-performance
++storage devices, it is possible to reduce most of the unpredictability in I/O
++response times that come from metadata operations.
 +
- /*
-  * Scan part of the keyspace of the refcount records and tell us if the area
-  * has no records, is fully mapped by records, or is partially filled.
-diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
-index 56e5834feb6..18e0479d3d1 100644
---- a/libxfs/xfs_refcount.h
-+++ b/libxfs/xfs_refcount.h
-@@ -97,8 +97,10 @@ void xfs_refcount_alloc_cow_extent(struct xfs_trans *tp, bool isrt,
- 		xfs_fsblock_t fsb, xfs_extlen_t len);
- void xfs_refcount_free_cow_extent(struct xfs_trans *tp, bool isrt,
- 		xfs_fsblock_t fsb, xfs_extlen_t len);
--extern int xfs_refcount_recover_cow_leftovers(struct xfs_mount *mp,
-+int xfs_refcount_recover_cow_leftovers(struct xfs_mount *mp,
- 		struct xfs_perag *pag);
-+int xfs_refcount_recover_rtcow_leftovers(struct xfs_mount *mp,
-+		struct xfs_rtgroup *rtg);
++None of the XFS per-AG B+trees are involved with real time files.  It is not
++possible for real time files to share data blocks.
++
++[[Real-Time_Bitmap_Inode]]
++== Free Space Bitmap Inode
++
++The real time bitmap inode, +sb_rbmino+, tracks the used/free space in the
++real-time device using an old-style bitmap. One bit is allocated per real-time
++extent. The size of an extent is specified by the superblock's +sb_rextsize+
++value.
++
++The number of blocks used by the bitmap inode is equal to the number of
++real-time extents (+sb_rextents+) divided by the block size (+sb_blocksize+)
++and bits per byte. This value is stored in +sb_rbmblocks+. The nblocks and
++extent array for the inode should match this.  Each real time block gets its
++own bit in the bitmap.
++
++[[Real-Time_Summary_Inode]]
++== Free Space Summary Inode
++
++The real time summary inode, +sb_rsumino+, tracks the used and free space
++accounting information for the real-time device.  This file indexes the
++approximate location of each free extent on the real-time device first by
++log2(extent size) and then by the real-time bitmap block number.  The size of
++the summary inode file is equal to +sb_rbmblocks+ × log2(realtime device size)
++× sizeof(+xfs_suminfo_t+).  The entry for a given log2(extent size) and
++rtbitmap block number is 0 if there is no free extents of that size at that
++rtbitmap location, and positive if there are any.
++
++This data structure is not particularly space efficient, however it is a very
++fast way to provide the same data as the two free space B+trees for regular
++files since the space is preallocated and metadata maintenance is minimal.
++
++include::rtrmapbt.asciidoc[]
+diff --git a/design/XFS_Filesystem_Structure/xfs_filesystem_structure.asciidoc b/design/XFS_Filesystem_Structure/xfs_filesystem_structure.asciidoc
+index a95a5806..04cc8e13 100644
+--- a/design/XFS_Filesystem_Structure/xfs_filesystem_structure.asciidoc
++++ b/design/XFS_Filesystem_Structure/xfs_filesystem_structure.asciidoc
+@@ -84,6 +84,8 @@ include::journaling_log.asciidoc[]
  
- /*
-  * While we're adjusting the refcounts records of an extent, we have
+ include::internal_inodes.asciidoc[]
+ 
++include::realtime.asciidoc[]
++
+ :leveloffset: 0
+ 
+ Dynamically Allocated Structures
 
 
