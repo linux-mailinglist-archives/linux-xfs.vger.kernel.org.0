@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2391-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2200-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59F9B8212BB
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:06:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A60F8211E7
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:17:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD6061F2268F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 942D51F224BE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:17:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2028E4437;
-	Mon,  1 Jan 2024 01:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A9538B;
+	Mon,  1 Jan 2024 00:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPog9GEF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6o80nU+"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDFA3FEC;
-	Mon,  1 Jan 2024 01:06:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BEACC433C7;
-	Mon,  1 Jan 2024 01:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D516B384
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:17:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A97C433C7;
+	Mon,  1 Jan 2024 00:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071196;
-	bh=L3IyL9qiRbRr6OTtYdsRANoECBYgNr2NR+Ny8H6ch+w=;
+	s=k20201202; t=1704068238;
+	bh=CaYqbgZ17ZNhRxShHpe+sEjZ+6SlS9zbKdKR4cXj++Y=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=vPog9GEFTO/2FKpPC2mdYr8wEWQrftKm/9izVs91l0xcSdrbwDTSiEzXwLRRgu0AH
-	 7QYaTIq2J1fC+UlnGDTfkpNnZR67oNOkgo9OavlzI/lDT9wjgHyYwiXlIyOF+EIVXd
-	 gdq8NLtSSebfpqjNzgG/Cwz0wUL3Y5+/7S1vUQbGLl0LaRWNh0cf1IlyZkStryXRjB
-	 5tJqIbrjp9W9z8ERjWb3GSRrVYFADwWeSM75K+Bx1iG4yQnijGyaJ0IivjuzWP7ltZ
-	 RBsuxLdmhXOk6fOEc66iW+qvcpJGA3WEERtoR3yd5RkIUHtssBpGACgIco6BBFiQ/W
-	 +SqE6v29gisRQ==
-Date: Sun, 31 Dec 2023 17:06:35 +9900
-Subject: [PATCH 2/2] xfs: test output of new FSREFCOUNTS ioctl
+	b=U6o80nU+U1i3FOzeOjmoL9M+m5uLOZYZWKNaL3Ito7Hw3R/7Xsb4aLDlHK47El1h6
+	 L2x8babXiX2pd1Q9OxHUDp8zlGg0xHxAQah6F5H6Up3Qc8k1zqFFkDQxkUZ3L1UCTR
+	 S/Xh2eAMFHb2jiLIUAIH6ZzxS9fAckVnOTD2iLYL28SM+x1rpBJjM+EqMPf+WoSptj
+	 Ih9LA4e8UTsks1gRvTxvObNaeIzhk/yNLP7pYMWqpNSFb8+hC4PNhSpkncdH2VHWxV
+	 sUqkSj2SHrjrk5oqVRGZ8CmxaUbiXTxB7VZeqHZdYEZjwGUpiqIorqEeAGekmfpQcr
+	 DnmHoaUNh4Zmw==
+Date: Sun, 31 Dec 2023 16:17:17 +9900
+Subject: [PATCH 26/47] xfs_db: make fsmap query the realtime reverse mapping
+ tree
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405033759.1828671.9633159260296053871.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405033732.1828671.2206987916120651051.stgit@frogsfrogsfrogs>
-References: <170405033732.1828671.2206987916120651051.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015659.1815505.10556464363110963669.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,229 +53,234 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure the cursors work properly and that refcounts are correct.
+Extend the 'fsmap' debugger command to support querying the realtime
+rmap btree via a new -r argument.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/rc           |    4 +
- doc/group-names.txt |    1 
- tests/xfs/1921      |  168 +++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1921.out  |    4 +
- 4 files changed, 175 insertions(+), 2 deletions(-)
- create mode 100755 tests/xfs/1921
- create mode 100644 tests/xfs/1921.out
+ db/fsmap.c               |  164 +++++++++++++++++++++++++++++++++++++++++++++-
+ libxfs/libxfs_api_defs.h |    2 +
+ 2 files changed, 162 insertions(+), 4 deletions(-)
 
 
-diff --git a/common/rc b/common/rc
-index 2d67f7dff1..84e509e49b 100644
---- a/common/rc
-+++ b/common/rc
-@@ -2640,8 +2640,8 @@ _require_xfs_io_command()
- 		echo $testio | grep -q "Operation not supported" && \
- 			_notrun "O_TMPFILE is not supported"
- 		;;
--	"fsmap")
--		testio=`$XFS_IO_PROG -f -c "fsmap" $testfile 2>&1`
-+	"fsmap"|"fsrefcounts")
-+		testio=`$XFS_IO_PROG -f -c "$command" $testfile 2>&1`
- 		echo $testio | grep -q "Inappropriate ioctl" && \
- 			_notrun "xfs_io $command support is missing"
- 		;;
-diff --git a/doc/group-names.txt b/doc/group-names.txt
-index 4676825faf..9aec4a4ff8 100644
---- a/doc/group-names.txt
-+++ b/doc/group-names.txt
-@@ -57,6 +57,7 @@ freeze			filesystem freeze tests
- fsck			general fsck tests
- fsmap			FS_IOC_GETFSMAP ioctl
- fsr			XFS free space reorganizer
-+fsrefcounts		FS_IOC_GETFSREFCOUNTS ioctl
- fuzzers			filesystem fuzz tests
- growfs			increasing the size of a filesystem
- hardlink		hardlinks
-diff --git a/tests/xfs/1921 b/tests/xfs/1921
-new file mode 100755
-index 0000000000..28c05e16c7
---- /dev/null
-+++ b/tests/xfs/1921
-@@ -0,0 +1,168 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2021-2024 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1921
-+#
-+# Populate filesystem, check that fsrefcounts -n10000 matches fsrefcounts -n1,
-+# then verify that the refcount information is consistent with the fsmap info.
-+#
-+. ./common/preamble
-+_begin_fstest auto clone fsrefcounts fsmap
-+
-+# Override the default cleanup function.
-+_cleanup()
+diff --git a/db/fsmap.c b/db/fsmap.c
+index 7fd42df2a1c..363c159ec07 100644
+--- a/db/fsmap.c
++++ b/db/fsmap.c
+@@ -102,6 +102,149 @@ fsmap(
+ 	}
+ }
+ 
++static int
++fsmap_rt_fn(
++	struct xfs_btree_cur		*cur,
++	const struct xfs_rmap_irec	*rec,
++	void				*priv)
 +{
-+	cd /
-+	rm -rf $tmp.* $TEST_DIR/a $TEST_DIR/b
++	struct fsmap_info		*info = priv;
++
++	dbprintf(_("%llu: %u/%u len %u owner %lld offset %llu bmbt %d attrfork %d extflag %d\n"),
++		info->nr, cur->bc_ino.rtg->rtg_rgno, rec->rm_startblock,
++		rec->rm_blockcount, rec->rm_owner, rec->rm_offset,
++		!!(rec->rm_flags & XFS_RMAP_BMBT_BLOCK),
++		!!(rec->rm_flags & XFS_RMAP_ATTR_FORK),
++		!!(rec->rm_flags & XFS_RMAP_UNWRITTEN));
++	info->nr++;
++
++	return 0;
 +}
 +
-+# Import common functions.
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_io_command "fsmap"
-+_require_xfs_io_command "fsrefcounts"
-+
-+echo "Format and mount"
-+_scratch_mkfs > $seqres.full 2>&1
-+_scratch_mount >> $seqres.full 2>&1
-+
-+cpus=$(( $(src/feature -o) * 4))
-+
-+# Use fsstress to create a directory tree with some variability
-+FSSTRESS_ARGS=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT -n 4000 $FSSTRESS_AVOID)
-+$FSSTRESS_PROG $FSSTRESS_ARGS >> $seqres.full
-+
-+echo "Compare fsrefcounts" | tee -a $seqres.full
-+$XFS_IO_PROG -c 'fsrefcounts -m -n 65536' $SCRATCH_MNT | grep -v 'EXT:' > $TEST_DIR/a
-+$XFS_IO_PROG -c 'fsrefcounts -m -n 1' $SCRATCH_MNT | grep -v 'EXT:' > $TEST_DIR/b
-+cat $TEST_DIR/a $TEST_DIR/b >> $seqres.full
-+
-+diff -uw $TEST_DIR/a $TEST_DIR/b
-+
-+echo "Compare fsrefcounts to fsmap" | tee -a $seqres.full
-+$XFS_IO_PROG -c 'fsmap -m -n 65536' $SCRATCH_MNT | grep -v 'EXT:' > $TEST_DIR/b
-+cat $TEST_DIR/b >> $seqres.full
-+
-+while IFS=',' read ext major minor pstart pend owners length crap; do
-+	test "$ext" = "EXT" && continue
-+
-+	awk_args=(-'F' ',' '-v' "major=$major" '-v' "minor=$minor" \
-+		  '-v' "pstart=$pstart" '-v' "pend=$pend" '-v' "owners=$owners")
-+
-+	if [ "$owners" -eq 1 ]; then
-+		$AWK_PROG "${awk_args[@]}" \
-+'
-+BEGIN {
-+	printf("Q:%s:%s:%s:%s:%s:\n", major, minor, pstart, pend, owners) > "/dev/stderr";
-+	next_map = -1;
-+}
++static int
++fsmap_rtgroup(
++	struct xfs_rtgroup		*rtg,
++	const struct xfs_rmap_irec	*low,
++	const struct xfs_rmap_irec	*high,
++	struct fsmap_info		*info)
 +{
-+	if ($2 != major || $3 != minor) {
-+		next;
-+	}
-+	if ($5 <= pstart) {
-+		next;
++	struct xfs_mount	*mp = rtg->rtg_mount;
++	struct xfs_trans	*tp;
++	struct xfs_inode	*ip;
++	struct xfs_imeta_path	*path;
++	struct xfs_btree_cur	*bt_cur;
++	xfs_ino_t		ino;
++	int			error;
++
++	error = -libxfs_rtrmapbt_create_path(mp, rtg->rtg_rgno, &path);
++	if (error) {
++		dbprintf(
++ _("Cannot create path to rtgroup %u rmap inode\n"),
++				rtg->rtg_rgno);
++		return error;
 +	}
 +
-+	printf(" A:%s:%s:%s:%s\n", $2, $3, $4, $5) > "/dev/stderr";
-+	if (next_map < 0) {
-+		if ($4 > pstart) {
-+			exit 1
-+		}
-+		next_map = $5 + 1;
-+	} else {
-+		if ($4 != next_map) {
-+			exit 1
-+		}
-+		next_map = $5 + 1;
++	error = -libxfs_trans_alloc_empty(mp, &tp);
++	if (error) {
++		dbprintf(
++ _("Cannot alloc transaction to look up rtgroup %u rmap inode\n"),
++				rtg->rtg_rgno);
++		goto out_path;
 +	}
-+	if (next_map >= pend) {
-+		nextfile;
++		
++	error = -libxfs_imeta_lookup(tp, path, &ino);
++	if (ino == NULLFSINO)
++		error = ENOENT;
++	if (error) {
++		dbprintf(_("Cannot look up rtgroup %u rmap inode, error %d\n"),
++				rtg->rtg_rgno, error);
++		goto out_trans;
++	}
++
++	error = -libxfs_imeta_iget(tp, ino, XFS_DIR3_FT_REG_FILE, &ip);
++	if (error) {
++		dbprintf(_("Cannot load rtgroup %u rmap inode\n"),
++				rtg->rtg_rgno);
++		goto out_trans;
++	}
++
++	bt_cur = libxfs_rtrmapbt_init_cursor(mp, tp, rtg, ip);
++	if (!bt_cur) {
++		dbprintf(_("Not enough memory.\n"));
++		goto out_rele;
++	}
++
++	error = -libxfs_rmap_query_range(bt_cur, low, high, fsmap_rt_fn,
++			info);
++	if (error) {
++		dbprintf(_("Error %d while querying rt fsmap btree.\n"),
++			error);
++		goto out_cur;
++	}
++
++out_cur:
++	libxfs_btree_del_cursor(bt_cur, error);
++out_rele:
++	libxfs_imeta_irele(ip);
++out_trans:
++	libxfs_trans_cancel(tp);
++out_path:
++	libxfs_imeta_free_path(path);
++	return error;
++}
++
++static void
++fsmap_rt(
++	xfs_fsblock_t		start_fsb,
++	xfs_fsblock_t		end_fsb)
++{
++	struct fsmap_info	info;
++	xfs_daddr_t		eofs;
++	struct xfs_rmap_irec	low;
++	struct xfs_rmap_irec	high;
++	struct xfs_rtgroup	*rtg;
++	xfs_rgnumber_t		start_rg;
++	xfs_rgnumber_t		end_rg;
++	int			error;
++
++	if (mp->m_sb.sb_rblocks == 0)
++		return;
++
++	eofs = XFS_FSB_TO_BB(mp, mp->m_sb.sb_rblocks);
++	if (XFS_FSB_TO_DADDR(mp, end_fsb) >= eofs)
++		end_fsb = XFS_DADDR_TO_FSB(mp, eofs - 1);
++
++	low.rm_startblock = xfs_rtb_to_rgbno(mp, start_fsb, &start_rg);
++	low.rm_owner = 0;
++	low.rm_offset = 0;
++	low.rm_flags = 0;
++	high.rm_startblock = -1U;
++	high.rm_owner = ULLONG_MAX;
++	high.rm_offset = ULLONG_MAX;
++	high.rm_flags = XFS_RMAP_ATTR_FORK | XFS_RMAP_BMBT_BLOCK |
++			XFS_RMAP_UNWRITTEN;
++
++	end_rg = xfs_rtb_to_rgno(mp, end_fsb);
++
++	info.nr = 0;
++	for_each_rtgroup_range(mp, start_rg, end_rg, rtg) {
++		xfs_rgnumber_t		rgno;
++
++		if (rtg->rtg_rgno == end_rg)
++			high.rm_startblock = xfs_rtb_to_rgbno(mp, end_fsb,
++					&rgno);
++ 
++		error = fsmap_rtgroup(rtg, &low, &high, &info);
++		if (error) {
++			libxfs_rtgroup_put(rtg);
++			return;
++		}
++
++		if (rtg->rtg_rgno == start_rg)
++			low.rm_startblock = 0;
 +	}
 +}
-+END {
-+	exit 0;
-+}
-+' $TEST_DIR/b 2> $tmp.debug
-+		res=$?
++
+ static int
+ fsmap_f(
+ 	int			argc,
+@@ -111,14 +254,18 @@ fsmap_f(
+ 	int			c;
+ 	xfs_fsblock_t		start_fsb = 0;
+ 	xfs_fsblock_t		end_fsb = NULLFSBLOCK;
++	bool			isrt = false;
+ 
+ 	if (!xfs_has_rmapbt(mp)) {
+ 		dbprintf(_("Filesystem does not support reverse mapping btree.\n"));
+ 		return 0;
+ 	}
+ 
+-	while ((c = getopt(argc, argv, "")) != EOF) {
++	while ((c = getopt(argc, argv, "r")) != EOF) {
+ 		switch (c) {
++		case 'r':
++			isrt = true;
++			break;
+ 		default:
+ 			dbprintf(_("Bad option for fsmap command.\n"));
+ 			return 0;
+@@ -141,14 +288,23 @@ fsmap_f(
+ 		}
+ 	}
+ 
+-	fsmap(start_fsb, end_fsb);
++	if (argc > optind + 2) {
++		exitcode = 1;
++		dbprintf(_("Too many arguments to fsmap.\n"));
++		return 0;
++	}
++
++	if (isrt)
++		fsmap_rt(start_fsb, end_fsb);
 +	else
-+		$AWK_PROG "${awk_args[@]}" \
-+'
-+function max(a, b) {
-+	return a > b ? a : b;
-+}
-+function min(a, b) {
-+	return a < b ? a : b;
-+}
-+BEGIN {
-+	printf("Q:%s:%s:%s:%s:%s:\n", major, minor, pstart, pend, owners) > "/dev/stderr";
-+	refcount_whole = 0;
-+	aborted = 0;
-+}
-+{
-+	if ($2 != major || $3 != minor) {
-+		next;
-+	}
-+	if ($4 >= pend) {
-+		nextfile;
-+	}
-+	if ($5 <= pstart) {
-+		next;
-+	}
-+	if ($6 == "special_0:2") {
-+		/* unknown owner means we cannot distinguish separate owners */
-+		aborted = 1;
-+		exit 0;
-+	}
-+
-+	printf(" A:%s:%s:%s:%s -> %d\n", $2, $3, $4, $5, refcount_whole) > "/dev/stderr";
-+	if ($4 <= pstart && $5 >= pend) {
-+		/* Account for extents that span the whole range */
-+		refcount_whole++;
-+	} else {
-+		/* Otherwise track refcounts per-block as we find them */
-+		for (block = max($4, pstart); block <= min($5, pend); block++) {
-+			refcounts[block]++;
-+		}
-+	}
-+}
-+END {
-+	if (aborted) {
-+		exit 0;
-+	}
-+	deficit = owners - refcount_whole;
-+	printf(" W:%d:%d\n", owners, refcount_whole, deficit) > "/dev/stderr";
-+	if (deficit == 0) {
-+		exit 0;
-+	}
-+
-+	refcount_slivers = 0;
-+	for (block in refcounts) {
-+		printf(" X:%s:%d\n", block, refcounts[block]) > "/dev/stderr";
-+		if (refcounts[block] == deficit) {
-+			refcount_slivers = deficit;
-+		} else {
-+			exit 1;
-+		}
-+	}
-+
-+	refcount_whole += refcount_slivers;
-+	exit owners == refcount_whole ? 0 : 1;
-+}
-+' $TEST_DIR/b 2> $tmp.debug
-+		res=$?
-+	fi
-+	if [ $res -ne 0 ]; then
-+		echo "$major,$minor,$pstart,$pend,$owners not found in fsmap"
-+		cat $tmp.debug >> $seqres.full
-+		break
-+	fi
-+done < $TEST_DIR/a
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1921.out b/tests/xfs/1921.out
-new file mode 100644
-index 0000000000..f5ea660379
---- /dev/null
-+++ b/tests/xfs/1921.out
-@@ -0,0 +1,4 @@
-+QA output created by 1921
-+Format and mount
-+Compare fsrefcounts
-+Compare fsrefcounts to fsmap
++		fsmap(start_fsb, end_fsb);
+ 
+ 	return 0;
+ }
+ 
+ static const cmdinfo_t	fsmap_cmd =
+-	{ "fsmap", NULL, fsmap_f, 0, 2, 0,
+-	  N_("[start_fsb] [end_fsb]"),
++	{ "fsmap", NULL, fsmap_f, 0, -1, 0,
++	  N_("[-r] [start_fsb] [end_fsb]"),
+ 	  N_("display reverse mapping(s)"), NULL };
+ 
+ void
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 4b2fbd7cac9..85a4a131c75 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -284,11 +284,13 @@
+ #define xfs_rtsummary_wordcount		libxfs_rtsummary_wordcount
+ 
+ #define xfs_rtfree_extent		libxfs_rtfree_extent
++#define xfs_rtgroup_put			libxfs_rtgroup_put
+ #define xfs_rtgroup_update_secondary_sbs	libxfs_rtgroup_update_secondary_sbs
+ #define xfs_rtgroup_update_super	libxfs_rtgroup_update_super
+ #define xfs_rtrmapbt_create_path	libxfs_rtrmapbt_create_path
+ #define xfs_rtrmapbt_droot_maxrecs	libxfs_rtrmapbt_droot_maxrecs
+ #define xfs_rtrmapbt_maxlevels_ondisk	libxfs_rtrmapbt_maxlevels_ondisk
++#define xfs_rtrmapbt_init_cursor	libxfs_rtrmapbt_init_cursor
+ #define xfs_rtrmapbt_maxrecs		libxfs_rtrmapbt_maxrecs
+ 
+ #define xfs_sb_from_disk		libxfs_sb_from_disk
 
 
