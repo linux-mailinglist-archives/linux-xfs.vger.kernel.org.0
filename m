@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2251-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2390-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9069D82121C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:30:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A49A8212BA
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:06:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CB9828299F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:30:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AF4E1C21DD0
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:06:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B8981B;
-	Mon,  1 Jan 2024 00:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 747A53C2F;
+	Mon,  1 Jan 2024 01:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaMO+I3P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj0Qrvma"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805C7817
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:30:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 159D3C433C7;
-	Mon,  1 Jan 2024 00:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EACF33ED;
+	Mon,  1 Jan 2024 01:06:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1921C433C7;
+	Mon,  1 Jan 2024 01:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069004;
-	bh=ALyF+uYYA0UEADfi4sd309OQVB7zXmxSsBg34r79TlE=;
+	s=k20201202; t=1704071180;
+	bh=sBv4u4zKJohS8nuo3foqBHDqzW4VVsu9qg0IUy5eBEk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=WaMO+I3PgqP3hh2YV7OHxXvQNj0xmozLzE7Nk6aoM/h8y6xEUGS7yyLa6j918BUot
-	 VwqS9F148548EGGTXQhuwQzyxQBhoLxxTe9wz/ZzUstX15Tq7EFDU+rHCpYsQKyZnL
-	 ZX3QicBDPlq/4ararhFkONC9Ah7ZuulGuCy+eLx07KoJEL2W6RSh/rJ0hFaRJhdwH1
-	 rsSQ3yUAaORasTNS1Kq5OQCBPMIc2Mcm6zLWk6IdZ3LiWuAx5IDWrdiU5gXXiRes03
-	 HOS86GVoXXoB+T+Q3cmzP874rE5cy30TZS7JETuMwZZGDJaVNnxWFOngVvZ0NrFvs5
-	 1PqDMcozoeDjQ==
-Date: Sun, 31 Dec 2023 16:30:03 +9900
-Subject: [PATCH 15/42] xfs: allow inodes to have the realtime and reflink
- flags
+	b=lj0QrvmamA55e++dwm0PuicpP1fdHPx5zMdWdDLX3Ug+yag+bIKzNll5yI2l9/APX
+	 ZcoJINgXqqqLQ2QshwCqRhrDlZWycbL9U//kj5+U5AshHyeGMys/gGGDRcffOmPKk5
+	 96zYfaVaZZDofu7AZa7zBeGduQ3qqQsmt0+RHlYlcyTXrNFUbvDNs9cxqdpbWNTJOV
+	 rlDsDbka4kYMrT++lB+WPMmTvDRF9ESqhuQVFsVGpQGzQ4aEKZx92gZCHbS/qUdIZj
+	 /K328itDvpxLzUwIvgXFNb7ldHSK9ahkxYMhp79bcyLlLwOcXj92fIIm9lCdOKaA8I
+	 /wKtRDW6Ti/KQ==
+Date: Sun, 31 Dec 2023 17:06:20 +9900
+Subject: [PATCH 1/2] xfs/122: update for the getfsrefs ioctl
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017326.1817107.13738094953101859075.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405033746.1828671.7290167831667515266.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405033732.1828671.2206987916120651051.stgit@frogsfrogsfrogs>
+References: <170405033732.1828671.2206987916120651051.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,28 +52,26 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we can share blocks between realtime files, allow this
-combination.
+Add this new ioctl here too.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_inode_buf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tests/xfs/122.out |    2 ++
+ 1 file changed, 2 insertions(+)
 
 
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index 6f4dbe8367b..f4eabd99a60 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -688,7 +688,8 @@ xfs_dinode_verify(
- 		return __this_address;
- 
- 	/* don't let reflink and realtime mix */
--	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME))
-+	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME) &&
-+	    !xfs_has_rtreflink(mp))
- 		return __this_address;
- 
- 	/* COW extent size hint validation */
+diff --git a/tests/xfs/122.out b/tests/xfs/122.out
+index 9c2d2fffb4..4d7e6c1eb4 100644
+--- a/tests/xfs/122.out
++++ b/tests/xfs/122.out
+@@ -101,6 +101,8 @@ sizeof(struct xfs_fsop_ag_resblks) = 64
+ sizeof(struct xfs_fsop_geom) = 256
+ sizeof(struct xfs_fsop_geom_v1) = 112
+ sizeof(struct xfs_fsop_geom_v4) = 112
++sizeof(struct xfs_getfsrefs) = 64
++sizeof(struct xfs_getfsrefs_head) = 192
+ sizeof(struct xfs_getparents) = 96
+ sizeof(struct xfs_getparents_rec) = 24
+ sizeof(struct xfs_icreate_log) = 28
 
 
