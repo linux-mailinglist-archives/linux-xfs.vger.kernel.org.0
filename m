@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2244-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2354-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 565A4821215
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:28:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46AA1821293
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:57:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ECAF1C21C9B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:28:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF53328281A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5EF97EF;
-	Mon,  1 Jan 2024 00:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C0B4A0A;
+	Mon,  1 Jan 2024 00:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GP/S51yZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6bPizjj"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D407ED
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:28:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73868C433C8;
-	Mon,  1 Jan 2024 00:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807234A02;
+	Mon,  1 Jan 2024 00:56:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5423CC433C7;
+	Mon,  1 Jan 2024 00:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068894;
-	bh=hVYj4jbgCPkWdishLeg5Un5RlgH5s4IOYno7rMwZxiw=;
+	s=k20201202; t=1704070617;
+	bh=2wKJIeExmBSnGPppMjYqjoK7wyzOeYykRqabK7WifWk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=GP/S51yZR6QwljGTVmxZfaq+dE8y7dsKcCJLuYUosHW+iCoSItrSzlx4t0rHCkpZc
-	 hfiuMp5Zlu0FpJbGfl4csyWV5Zb41WPA2GQZs14pKK01csd4xQWdYYcLtkz8d4PsYr
-	 N0H8vVM3HzU0Dw66dV9J/fL/xu9EOarU1SmeF1avLc53JkpqIpS+HmrAP4ufqCv4B5
-	 YZ+F0DiWUNf1YMn+ghE+oXvdwklKfZ44m/QaSNuQoqQTaFfzLIwHTbqYZB/dA/a9xC
-	 ZSNeT+zKBGUoMyQl9YwZrIOjjNng4yvXX1xlWGzBOvEXdEU+nQLzI4Y4B4KOJb8C+H
-	 pYLAyHtqAVx2g==
-Date: Sun, 31 Dec 2023 16:28:14 +9900
-Subject: [PATCH 08/42] xfs: add realtime refcount btree inode to metadata
- directory
+	b=e6bPizjj5BaX77lmWqk4SAjxCEGMacJS68RQkVHAsnALPuoLjKBoaSIe/T2iet3wu
+	 YfB4inW0wlUqT4HtLuA8wu9lu6p40Agka54ftUJZEsT8hsU71TCegezDTo7u3eVKle
+	 O8DRzM30PYTNrrESjVbbvsGPWVdpK66h3LoGYO5yFLlrJeT3kiZwGN5jTUTeiATuBz
+	 PDSV8Ta5DWPWzNXZVDppd70v0U16CjV1arP3jMXfbV2j/7Nw+M78k2BbHQ2T/62jrR
+	 SxEMMUK6j7pR544al83/9TCprK2FOx0KsxXc0Cn5J/BDoNw4Gtd7Xdlpk0MNf7pc1g
+	 PNa8uIadyUWSQ==
+Date: Sun, 31 Dec 2023 16:56:56 +9900
+Subject: [PATCH 16/17] common/xfs: capture realtime devices during
+ metadump/mdrestore
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017232.1817107.5732989162467268065.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030547.1826350.12488301162005381994.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,229 +53,222 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a metadir path to select the realtime refcount btree inode and load
-it at mount time.  The rtrefcountbt inode will have a unique extent format
-code, which means that we also have to update the inode validation and
-flush routines to look for it.
+If xfs_metadump supports the -r switch to capture the contents of
+realtime devices and there is a realtime device, add the option to the
+command line to enable preservation.
+
+Similarly, if xfs_mdrestore supports the -r switch and there's an
+external scratch rtdev, pass the option so that we can restore rtdev
+contents.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/init.c                 |    4 ++++
- libxfs/xfs_bmap.c             |    8 ++++++--
- libxfs/xfs_format.h           |    4 +++-
- libxfs/xfs_inode_buf.c        |    8 ++++++++
- libxfs/xfs_inode_fork.c       |    9 +++++++++
- libxfs/xfs_rtgroup.h          |    3 +++
- libxfs/xfs_rtrefcount_btree.c |   33 +++++++++++++++++++++++++++++++++
- libxfs/xfs_rtrefcount_btree.h |    4 ++++
- 8 files changed, 70 insertions(+), 3 deletions(-)
+ common/fuzzy    |    6 ++++-
+ common/populate |   12 ++++++++--
+ common/xfs      |   65 +++++++++++++++++++++++++++++++++++++++++++++++--------
+ 3 files changed, 71 insertions(+), 12 deletions(-)
 
 
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 36b4b486145..6add79121b2 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -970,6 +970,10 @@ libxfs_rtmount_destroy(xfs_mount_t *mp)
- 	xfs_rgnumber_t		rgno;
+diff --git a/common/fuzzy b/common/fuzzy
+index b72ee3f67f..d504f0854e 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -309,7 +309,11 @@ __scratch_xfs_fuzz_mdrestore()
+ 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+ 		logdev=$SCRATCH_LOGDEV
  
- 	for_each_rtgroup(mp, rgno, rtg) {
-+		if (rtg->rtg_refcountip)
-+			libxfs_imeta_irele(rtg->rtg_refcountip);
-+		rtg->rtg_refcountip = NULL;
+-	_xfs_mdrestore "${POPULATE_METADUMP}" "${SCRATCH_DEV}" "${logdev}" || \
++	local rtdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_RTDEV" ] && \
++		rtdev=$SCRATCH_RTDEV
 +
- 		if (rtg->rtg_rmapip)
- 			libxfs_imeta_irele(rtg->rtg_rmapip);
- 		rtg->rtg_rmapip = NULL;
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index 31129fb4884..9e30b4441c1 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -5105,9 +5105,13 @@ xfs_bmap_del_extent_real(
- 		 * the same order of operations as the data device, which is:
- 		 * Remove the file mapping, remove the reverse mapping, and
- 		 * then free the blocks.  This means that we must delay the
--		 * freeing until after we've scheduled the rmap update.
-+		 * freeing until after we've scheduled the rmap update.  If
-+		 * realtime reflink is enabled, use deferred refcount intent
-+		 * items to decide what to do with the extent, just like we do
-+		 * for the data device.
- 		 */
--		if (want_free && !xfs_has_rtrmapbt(mp)) {
-+		if (want_free && !xfs_has_rtrmapbt(mp) &&
-+				 !xfs_has_rtreflink(mp)) {
- 			error = xfs_rtfree_blocks(tp, del->br_startblock,
- 					del->br_blockcount);
- 			if (error)
-diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index c938b814c43..93a9b8e3b56 100644
---- a/libxfs/xfs_format.h
-+++ b/libxfs/xfs_format.h
-@@ -1028,6 +1028,7 @@ enum xfs_dinode_fmt {
- 	XFS_DINODE_FMT_BTREE,		/* struct xfs_bmdr_block */
- 	XFS_DINODE_FMT_UUID,		/* added long ago, but never used */
- 	XFS_DINODE_FMT_RMAP,		/* reverse mapping btree */
-+	XFS_DINODE_FMT_REFCOUNT,	/* reference count btree */
- };
- 
- #define XFS_INODE_FORMAT_STR \
-@@ -1036,7 +1037,8 @@ enum xfs_dinode_fmt {
- 	{ XFS_DINODE_FMT_EXTENTS,	"extent" }, \
- 	{ XFS_DINODE_FMT_BTREE,		"btree" }, \
- 	{ XFS_DINODE_FMT_UUID,		"uuid" }, \
--	{ XFS_DINODE_FMT_RMAP,		"rmap" }
-+	{ XFS_DINODE_FMT_RMAP,		"rmap" }, \
-+	{ XFS_DINODE_FMT_REFCOUNT,	"refcount" }
- 
- /*
-  * Max values for extnum and aextnum.
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index e7bf8ff7046..6f4dbe8367b 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -414,6 +414,12 @@ xfs_dinode_verify_fork(
- 		if (!(dip->di_flags2 & cpu_to_be64(XFS_DIFLAG2_METADIR)))
- 			return __this_address;
- 		break;
-+	case XFS_DINODE_FMT_REFCOUNT:
-+		if (!xfs_has_rtreflink(mp))
-+			return __this_address;
-+		if (!(dip->di_flags2 & cpu_to_be64(XFS_DIFLAG2_METADIR)))
-+			return __this_address;
-+		break;
- 	default:
- 		return __this_address;
- 	}
-@@ -434,6 +440,7 @@ xfs_dinode_verify_forkoff(
- 			return __this_address;
- 		break;
- 	case XFS_DINODE_FMT_RMAP:
-+	case XFS_DINODE_FMT_REFCOUNT:
- 		if (!(xfs_has_metadir(mp) && xfs_has_parent(mp)))
- 			return __this_address;
- 		fallthrough;
-@@ -705,6 +712,7 @@ xfs_dinode_verify(
- 	if (flags2 & XFS_DIFLAG2_METADIR) {
- 		switch (XFS_DFORK_FORMAT(dip, XFS_DATA_FORK)) {
- 		case XFS_DINODE_FMT_RMAP:
-+		case XFS_DINODE_FMT_REFCOUNT:
- 			break;
- 		default:
- 			if (nextents + naextents == 0 && nblocks != 0)
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 127571527cf..11cfdc9b2bf 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -269,6 +269,11 @@ xfs_iformat_data_fork(
- 				return -EFSCORRUPTED;
- 			}
- 			return xfs_iformat_rtrmap(ip, dip);
-+		case XFS_DINODE_FMT_REFCOUNT:
-+			if (!xfs_has_rtreflink(ip->i_mount))
-+				return -EFSCORRUPTED;
-+			ASSERT(0); /* to be implemented later */
-+			return -EFSCORRUPTED;
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-@@ -664,6 +669,10 @@ xfs_iflush_fork(
- 			xfs_iflush_rtrmap(ip, dip);
- 		break;
- 
-+	case XFS_DINODE_FMT_REFCOUNT:
-+		ASSERT(0); /* to be implemented later */
-+		break;
-+
- 	default:
- 		ASSERT(0);
- 		break;
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index 3522527e553..bd88a4d7281 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -25,6 +25,9 @@ struct xfs_rtgroup {
- 	/* reverse mapping btree inode */
- 	struct xfs_inode	*rtg_rmapip;
- 
-+	/* refcount btree inode */
-+	struct xfs_inode	*rtg_refcountip;
-+
- 	/* Number of blocks in this group */
- 	xfs_rgblock_t		rtg_blockcount;
- 
-diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
-index fb4944d570f..425a56578c6 100644
---- a/libxfs/xfs_rtrefcount_btree.c
-+++ b/libxfs/xfs_rtrefcount_btree.c
-@@ -24,6 +24,7 @@
- #include "xfs_cksum.h"
- #include "xfs_rtgroup.h"
- #include "xfs_rtbitmap.h"
-+#include "xfs_imeta.h"
- 
- static struct kmem_cache	*xfs_rtrefcountbt_cur_cache;
- 
-@@ -353,6 +354,7 @@ xfs_rtrefcountbt_commit_staged_btree(
- 	int			flags = XFS_ILOG_CORE | XFS_ILOG_DBROOT;
- 
- 	ASSERT(cur->bc_flags & XFS_BTREE_STAGING);
-+	ASSERT(ifake->if_fork->if_format == XFS_DINODE_FMT_REFCOUNT);
- 
- 	/*
- 	 * Free any resources hanging off the real fork, then shallow-copy the
-@@ -456,3 +458,34 @@ xfs_rtrefcountbt_compute_maxlevels(
- 	/* Add one level to handle the inode root level. */
- 	mp->m_rtrefc_maxlevels = min(d_maxlevels, r_maxlevels) + 1;
++	_xfs_mdrestore "${POPULATE_METADUMP}" "${SCRATCH_DEV}" "${logdev}" "${rtdev}" || \
+ 		_fail "${POPULATE_METADUMP}: Could not find metadump to restore?"
  }
-+
-+#define XFS_RTREFC_NAMELEN		21
-+
-+/* Create the metadata directory path for an rtrefcount btree inode. */
-+int
-+xfs_rtrefcountbt_create_path(
-+	struct xfs_mount	*mp,
-+	xfs_rgnumber_t		rgno,
-+	struct xfs_imeta_path	**pathp)
-+{
-+	struct xfs_imeta_path	*path;
-+	unsigned char		*fname;
-+	int			error;
-+
-+	error = xfs_imeta_create_file_path(mp, 2, &path);
-+	if (error)
-+		return error;
-+
-+	fname = kmalloc(XFS_RTREFC_NAMELEN, GFP_KERNEL);
-+	if (!fname) {
-+		xfs_imeta_free_path(path);
-+		return -ENOMEM;
-+	}
-+
-+	snprintf(fname, XFS_RTREFC_NAMELEN, "%u.refcount", rgno);
-+	path->im_path[0] = "realtime";
-+	path->im_path[1] = fname;
-+	path->im_dynamicmask = 0x2;
-+	*pathp = path;
-+	return 0;
-+}
-diff --git a/libxfs/xfs_rtrefcount_btree.h b/libxfs/xfs_rtrefcount_btree.h
-index 6d23ab3a9ad..ff49e95d1a4 100644
---- a/libxfs/xfs_rtrefcount_btree.h
-+++ b/libxfs/xfs_rtrefcount_btree.h
-@@ -11,6 +11,7 @@ struct xfs_btree_cur;
- struct xfs_mount;
- struct xbtree_ifakeroot;
- struct xfs_rtgroup;
-+struct xfs_imeta_path;
  
- /* refcounts only exist on crc enabled filesystems */
- #define XFS_RTREFCOUNT_BLOCK_LEN	XFS_BTREE_LBLOCK_CRC_LEN
-@@ -68,4 +69,7 @@ unsigned int xfs_rtrefcountbt_maxlevels_ondisk(void);
- int __init xfs_rtrefcountbt_init_cur_cache(void);
- void xfs_rtrefcountbt_destroy_cur_cache(void);
+diff --git a/common/populate b/common/populate
+index 450b024bfc..dc89eee70e 100644
+--- a/common/populate
++++ b/common/populate
+@@ -1017,7 +1017,11 @@ _scratch_populate_restore_cached() {
  
-+int xfs_rtrefcountbt_create_path(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-+		struct xfs_imeta_path **pathp);
+ 	case "${FSTYP}" in
+ 	"xfs")
+-		_xfs_mdrestore "${metadump}" "${SCRATCH_DEV}" "${logdev}"
++		local rtdev=none
++		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_RTDEV" ] && \
++			rtdev=$SCRATCH_RTDEV
 +
- #endif	/* __XFS_RTREFCOUNT_BTREE_H__ */
++		_xfs_mdrestore "${metadump}" "${SCRATCH_DEV}" "${logdev}" "${rtdev}"
+ 		return $?
+ 		;;
+ 	"ext2"|"ext3"|"ext4")
+@@ -1039,8 +1043,12 @@ _scratch_populate_save_metadump()
+ 		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+ 			logdev=$SCRATCH_LOGDEV
+ 
++		local rtdev=none
++		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_RTDEV" ] && \
++			rtdev=$SCRATCH_RTDEV
++
+ 		_xfs_metadump "$metadump_file" "$SCRATCH_DEV" "$logdev" \
+-				compress
++				"$rtdev" compress
+ 		res=$?
+ 		;;
+ 	"ext2"|"ext3"|"ext4")
+diff --git a/common/xfs b/common/xfs
+index 1136d685e7..1ff81f4cc2 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -681,11 +681,17 @@ _xfs_metadump() {
+ 	local metadump="$1"
+ 	local device="$2"
+ 	local logdev="$3"
+-	local compressopt="$4"
+-	shift; shift; shift; shift
++	local rtdev="$4"
++	local compressopt="$5"
++	shift; shift; shift; shift; shift
+ 	local options="$@"
+ 	test -z "$options" && options="-a -o"
+ 	local metadump_has_dash_x
++	local metadump_has_dash_r
++
++	# Does metadump support capturing realtime devices?
++	$XFS_METADUMP_PROG --help 2>&1 | grep -q -- '-r rtdev' && \
++			metadump_has_dash_r=1
+ 
+ 	# Use metadump v2 format unless the user gave us a specific version
+ 	$XFS_METADUMP_PROG --help 2>&1 | grep -q -- '-v version' && \
+@@ -699,6 +705,10 @@ _xfs_metadump() {
+ 		options="$options -l $logdev"
+ 	fi
+ 
++	if [ "$rtdev" != "none" ] && [ -n "$metadump_has_dash_r" ]; then
++		options="$options -r $rtdev"
++	fi
++
+ 	$XFS_METADUMP_PROG $options "$device" "$metadump"
+ 	res=$?
+ 	[ "$compressopt" = "compress" ] && [ -n "$DUMP_COMPRESSOR" ] &&
+@@ -710,14 +720,19 @@ _xfs_mdrestore() {
+ 	local metadump="$1"
+ 	local device="$2"
+ 	local logdev="$3"
+-	shift; shift; shift
++	local rtdev="$4"
++	shift; shift; shift; shift
+ 	local options="$@"
+ 	local need_repair
+ 	local mdrestore_has_dash_l
++	local mdrestore_has_dash_r
+ 
+ 	# Does mdrestore support restoring to external devices?
+ 	$XFS_MDRESTORE_PROG --help 2>&1 | grep -q -- '-l logdev' &&
+ 			mdrestore_has_dash_l=1
++	# Does mdrestore support restoring to realtime devices?
++	$XFS_MDRESTORE_PROG --help 2>&1 | grep -q -- '-r rtdev' &&
++			mdrestore_has_dash_r=1
+ 
+ 	# If we're configured for compressed dumps and there isn't already an
+ 	# uncompressed dump, see if we can use DUMP_COMPRESSOR to decompress
+@@ -743,6 +758,20 @@ _xfs_mdrestore() {
+ 		$XFS_IO_PROG -d -c 'pwrite -S 0 -q 0 1m' "$logdev"
+ 	fi
+ 
++	if [ "$rtdev" != "none" ]; then
++		# We have a realtime device.  If mdrestore supports restoring
++		# to it, configure ourselves to do that.
++		if [ -n "$mdrestore_has_dash_r" ]; then
++			options="$options -r $rtdev"
++		fi
++
++		# Wipe the realtime device.  If mdrestore doesn't support
++		# restoring to realtime devices or the metadump file doesn't
++		# capture the realtime group headers, this is our only chance
++		# to signal that the log header needs to be rewritten.
++		$XFS_IO_PROG -d -c 'pwrite -S 0 -q 0 1m' "$rtdev"
++	fi
++
+ 	$XFS_MDRESTORE_PROG $options "${metadump}" "${device}"
+ 	res=$?
+ 	test $res -ne 0 && return $res
+@@ -757,6 +786,16 @@ _xfs_mdrestore() {
+ 		fi
+ 	fi
+ 
++	# If there's a realtime device, check to see if the restore rewrote the
++	# rt group headers.  If not, we need to run xfs_repair to format new
++	# group headers onto the realtime device.
++	if [ "$rtdev" != "none" ] && [ -z "$need_repair" ]; then
++		magic="$($XFS_IO_PROG -c 'pread -q -v 0 4' "$rtdev")"
++		if [ "$magic" = "00000000:  00 00 00 00  ...." ]; then
++			need_repair=1
++		fi
++	fi
++
+ 	test -z "$need_repair" && return 0
+ 
+ 	echo "repairing fs to fix uncaptured parts of fs." >> $seqres.full
+@@ -768,12 +807,16 @@ _scratch_xfs_metadump()
+ {
+ 	local metadump=$1
+ 	shift
++
+ 	local logdev=none
+-
+ 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+ 		logdev=$SCRATCH_LOGDEV
+ 
+-	_xfs_metadump "$metadump" "$SCRATCH_DEV" "$logdev" nocompress "$@"
++	local rtdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_RTDEV" ] && \
++		rtdev=$SCRATCH_RTDEV
++
++	_xfs_metadump "$metadump" "$SCRATCH_DEV" "$logdev" "$rtdev" nocompress "$@"
+ }
+ 
+ # Restore snapshotted metadata on the scratch device
+@@ -786,7 +829,11 @@ _scratch_xfs_mdrestore()
+ 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+ 		logdev=$SCRATCH_LOGDEV
+ 
+-	_xfs_mdrestore "$metadump" "$SCRATCH_DEV" "$logdev" "$@"
++	local rtdev=none
++	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_RTDEV" ] && \
++		rtdev=$SCRATCH_RTDEV
++
++	_xfs_mdrestore "$metadump" "$SCRATCH_DEV" "$logdev" "$rtdev" "$@"
+ }
+ 
+ # Do not use xfs_repair (offline fsck) to rebuild the filesystem
+@@ -923,7 +970,7 @@ _check_xfs_filesystem()
+ 	if [ "$ok" -ne 1 ] && [ "$DUMP_CORRUPT_FS" = "1" ]; then
+ 		local flatdev="$(basename "$device")"
+ 		_xfs_metadump "$seqres.$flatdev.check.md" "$device" "$logdev" \
+-			compress >> $seqres.full
++			"$rtdev" compress >> $seqres.full
+ 	fi
+ 
+ 	# Optionally test the index rebuilding behavior.
+@@ -956,7 +1003,7 @@ _check_xfs_filesystem()
+ 		if [ "$rebuild_ok" -ne 1 ] && [ "$DUMP_CORRUPT_FS" = "1" ]; then
+ 			local flatdev="$(basename "$device")"
+ 			_xfs_metadump "$seqres.$flatdev.rebuild.md" "$device" \
+-				"$logdev" compress >> $seqres.full
++				"$logdev" "$rtdev" compress >> $seqres.full
+ 		fi
+ 	fi
+ 
+@@ -1040,7 +1087,7 @@ _check_xfs_filesystem()
+ 		if [ "$orebuild_ok" -ne 1 ] && [ "$DUMP_CORRUPT_FS" = "1" ]; then
+ 			local flatdev="$(basename "$device")"
+ 			_xfs_metadump "$seqres.$flatdev.orebuild.md" "$device" \
+-				"$logdev" compress >> $seqres.full
++				"$logdev" "$rtdev" compress >> $seqres.full
+ 		fi
+ 	fi
+ 
 
 
