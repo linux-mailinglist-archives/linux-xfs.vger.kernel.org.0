@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-2254-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2257-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 332E382121F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:30:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 211C4821222
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:31:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C63781F215E3
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:30:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83D97B21947
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:31:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF731375;
-	Mon,  1 Jan 2024 00:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D076C1375;
+	Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKrt7bQa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9CG/cfU"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495411370
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:30:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19FF5C433C7;
-	Mon,  1 Jan 2024 00:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B36C1368
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCF0C433C7;
+	Mon,  1 Jan 2024 00:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069051;
-	bh=mTWu4p1X3SxMwEtIWdn/pUKdB611SHaJr3FexIgNazk=;
+	s=k20201202; t=1704069098;
+	bh=oaM0J71CzUbPhWLaP5ZCyoW0r00q3RauGAU/FRL5TwM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=YKrt7bQa9NLeQboqHjxO+KTtHD3tGaSN1DuqKfd2REjm4N+aHAN/0RwbTS7/jh4fR
-	 d4tFfO3HTOhvrCLZF0GfaP1SSg/mA2rnQ4/JgGDqdfFSb+ZlaD0XiXA45E9shzw/mM
-	 nDpTsvVUfN5hcCDSPQyvpxEMWYRRvhIVY+13xvpobvcpnHuBtdKvsUU/R2/bT3iblD
-	 pq715OduR7vlIEbzy4QFKHBTtnovr/1GzIlhera0Bt+SbHY4iO6t6qWBNG4AhyWik6
-	 sWsDeG2thiUaepFox8uJ3+jypKI1u1kk9y+h6afCYXT8ZdaRay2HqKCQamgfahCehq
-	 ng0RHQwf+ngHA==
-Date: Sun, 31 Dec 2023 16:30:50 +9900
-Subject: [PATCH 18/42] xfs: apply rt extent alignment constraints to CoW
- extsize hint
+	b=U9CG/cfUH/S4ycK7nxC7b3viI2sNX4N8bSQX/rqTTnxLsvSKvbqudKPrIDLvz5tAp
+	 oydU9JJEbhGpUI2PHAXwdoa4yuZs8VL1rjsm51/fjN3C9zp9bol0JtPluJQsjI1uqC
+	 G0X57Hsh/Aw7PkoqlmqzYEhjbI3avGnkr9nqU6OGC06fBBxCqhGHC5TdLWgFdpC7wU
+	 LcfYLPXLRnb5r7vYSFOut4aljQiPixMR1UQuAHOrF7Sh3HnDeLozMYnMHR6OtnGd75
+	 H884CruvRr60L3q+enMTXcAgfeUBURSF4QMOnyyvlSjp7NWWU2+Y7E5o0qDkcFV6m6
+	 q2Oiqhrd3tpHQ==
+Date: Sun, 31 Dec 2023 16:31:37 +9900
+Subject: [PATCH 21/42] xfs: scrub the realtime refcount btree
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017366.1817107.12769277685395608027.stgit@frogsfrogsfrogs>
+Message-ID: <170405017406.1817107.8670798702206742630.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,99 +52,51 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The copy-on-write extent size hint is subject to the same alignment
-constraints as the regular extent size hint.  Since we're in the process
-of adding reflink (and therefore CoW) to the realtime device, we must
-apply the same scattered rextsize alignment validation strategies to
-both hints to deal with the possibility of rextsize changing.
-
-Therefore, fix the inode validator to perform rextsize alignment checks
-on regular realtime files, and to remove misaligned directory hints.
+Add code to scrub realtime refcount btrees.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/logitem.c       |   14 ++++++++++++++
- libxfs/xfs_inode_buf.c |   25 ++++++++++++++++++++-----
- 2 files changed, 34 insertions(+), 5 deletions(-)
+ libxfs/xfs_fs.h                     |    3 ++-
+ man/man2/ioctl_xfs_scrub_metadata.2 |    9 +++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
 
-diff --git a/libxfs/logitem.c b/libxfs/logitem.c
-index 3ce2d7574a3..60f8fcb187d 100644
---- a/libxfs/logitem.c
-+++ b/libxfs/logitem.c
-@@ -233,6 +233,20 @@ xfs_inode_item_precommit(
- 	if (flags & XFS_ILOG_IVERSION)
- 		flags = ((flags & ~XFS_ILOG_IVERSION) | XFS_ILOG_CORE);
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 0bbdbfb0a8a..7847da61db2 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -738,9 +738,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_RGSUPER	30	/* realtime superblock */
+ #define XFS_SCRUB_TYPE_RGBITMAP	31	/* realtime group bitmap */
+ #define XFS_SCRUB_TYPE_RTRMAPBT	32	/* rtgroup reverse mapping btree */
++#define XFS_SCRUB_TYPE_RTREFCBT	33	/* realtime reference count btree */
  
-+	/*
-+	 * Inode verifiers do not check that the CoW extent size hint is an
-+	 * integer multiple of the rt extent size on a directory with both
-+	 * rtinherit and cowextsize flags set.  If we're logging a directory
-+	 * that is misconfigured in this way, clear the hint.
-+	 */
-+	if ((ip->i_diflags & XFS_DIFLAG_RTINHERIT) &&
-+	    (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE) &&
-+	    xfs_extlen_to_rtxmod(ip->i_mount, ip->i_cowextsize) > 0) {
-+		ip->i_diflags2 &= ~XFS_DIFLAG2_COWEXTSIZE;
-+		ip->i_cowextsize = 0;
-+		flags |= XFS_ILOG_CORE;
-+	}
-+
- 	if (!iip->ili_item.li_buf) {
- 		struct xfs_buf	*bp;
- 		int		error;
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index f4eabd99a60..d9fc254b354 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -858,11 +858,29 @@ xfs_inode_validate_cowextsize(
- 	bool				rt_flag;
- 	bool				hint_flag;
- 	uint32_t			cowextsize_bytes;
-+	uint32_t			blocksize_bytes;
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	33
++#define XFS_SCRUB_TYPE_NR	34
  
- 	rt_flag = (flags & XFS_DIFLAG_REALTIME);
- 	hint_flag = (flags2 & XFS_DIFLAG2_COWEXTSIZE);
- 	cowextsize_bytes = XFS_FSB_TO_B(mp, cowextsize);
- 
-+	/*
-+	 * Similar to extent size hints, a directory can be configured to
-+	 * propagate realtime status and a CoW extent size hint to newly
-+	 * created files even if there is no realtime device, and the hints on
-+	 * disk can become misaligned if the sysadmin changes the rt extent
-+	 * size while adding the realtime device.
-+	 *
-+	 * Therefore, we can only enforce the rextsize alignment check against
-+	 * regular realtime files, and rely on callers to decide when alignment
-+	 * checks are appropriate, and fix things up as needed.
-+	 */
-+
-+	if (rt_flag)
-+		blocksize_bytes = XFS_FSB_TO_B(mp, mp->m_sb.sb_rextsize);
-+	else
-+		blocksize_bytes = mp->m_sb.sb_blocksize;
-+
- 	if (hint_flag && !xfs_has_reflink(mp))
- 		return __this_address;
- 
-@@ -876,16 +894,13 @@ xfs_inode_validate_cowextsize(
- 	if (mode && !hint_flag && cowextsize != 0)
- 		return __this_address;
- 
--	if (hint_flag && rt_flag)
--		return __this_address;
--
--	if (cowextsize_bytes % mp->m_sb.sb_blocksize)
-+	if (cowextsize_bytes % blocksize_bytes)
- 		return __this_address;
- 
- 	if (cowextsize > XFS_MAX_BMBT_EXTLEN)
- 		return __this_address;
- 
--	if (cowextsize > mp->m_sb.sb_agblocks / 2)
-+	if (!rt_flag && cowextsize > mp->m_sb.sb_agblocks / 2)
- 		return __this_address;
- 
- 	return NULL;
+ /*
+  * This special type code only applies to the vectored scrub implementation.
+diff --git a/man/man2/ioctl_xfs_scrub_metadata.2 b/man/man2/ioctl_xfs_scrub_metadata.2
+index 79875968d1c..e8717b41ccd 100644
+--- a/man/man2/ioctl_xfs_scrub_metadata.2
++++ b/man/man2/ioctl_xfs_scrub_metadata.2
+@@ -100,11 +100,12 @@ must be zero.
+ .PP
+ .nf
+ .B XFS_SCRUB_TYPE_RGBITMAP
+-.fi
+-.TP
+ .B XFS_SCRUB_TYPE_RTRMAPBT
+-Examine a given realtime allocation group's free space bitmap or reverse
+-mapping btree, respectively.
++.fi
++.TP
++.B XFS_SCRUB_TYPE_RTREFCBT
++Examine a given realtime allocation group's free space bitmap, reverse
++mapping btree, or reference count btree, respectively.
+ Records are checked for obviously incorrect values and cross-referenced
+ with other allocation group metadata records to ensure that there are no
+ conflicts.
 
 
