@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2191-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2365-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 519FE8211DD
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:15:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 811AF82129F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 782D71C21C43
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:15:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A76D01C21D83
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D079E392;
-	Mon,  1 Jan 2024 00:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CCF642;
+	Mon,  1 Jan 2024 00:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKpsh/cW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjMVY1+B"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE0D38E
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:14:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8C1C433C8;
-	Mon,  1 Jan 2024 00:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1208438D;
+	Mon,  1 Jan 2024 00:59:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746F4C433C8;
+	Mon,  1 Jan 2024 00:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068097;
-	bh=PFdtcNrt6Gy5q9/UrBtGtHY6d4MTQGLNxWjKVJPyLqU=;
+	s=k20201202; t=1704070789;
+	bh=rZQRoAcAh/3zfW2Sh1mMP3nA4r5gUeCjbevpArYJvM4=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=NKpsh/cWLRVPfoH9AsIs3tGLH/WcK7amQ5/Lb5ajqCCgAAkx/v+7el3x/RoUGRqmW
-	 ULV3RZObDwd4XBQ9aNIHStka5O7H1aRc4TC5uaMm841NPsXs0ejXH+Ld1MjO5gPFKt
-	 LjzfNWti0qJ5wIu403detElJDM5opZqSkCMmp+wyPY045Im+l90NBn3u2GfoVjNjxa
-	 pp7J6RJFM+eco85mqBGvpdiFr1gCsl2GlfHbIl88sgfBzWwYS2LoWTsxwp0jLLncoS
-	 TDcb3SShso4pAFRiBEb2SIEDWbW4MECER9o8yse7b7ac9Ida2qoer/KWtpokkKl8jX
-	 xqPEJWTQstp9Q==
-Date: Sun, 31 Dec 2023 16:14:56 +9900
-Subject: [PATCH 17/47] xfs: scrub the realtime rmapbt
+	b=VjMVY1+BB30RM2TzdfNcnHZjHWmf5dv0RQ0d1jnntO2y278UenRrGjYK9x5SWxnx9
+	 XAc7ZDRqNZvxokdKRfJ0L7YIFTrPEEgQ3IUdIa2UCsCDjzZYEHJmm1HyNrIUNVxCNN
+	 4s0ciBBD5nNnjufXMN+nve49sUtGf8o+N7dWY0MmJREwklyDDTHOM5ekG2BfMrlz/W
+	 OlMmluCz0X5rDVkUD1xPKL3XQeAws4RhtF7kMKQqz7rBHbD5XPY+C1dCNVKl87pwPZ
+	 z/9nikJPhJD8nT81aXh2ZuRYbW67nC+HFrdx8FImlEgukgNiNvuxX1vUMaS7xxat/4
+	 3ZKbzLsCX2mrQ==
+Date: Sun, 31 Dec 2023 16:59:48 +9900
+Subject: [PATCH 08/13] xfs/3{43,32}: adapt tests for rt extent size greater
+ than 1
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405015540.1815505.4202138808019867178.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405031339.1826914.7325295617050633178.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
+References: <170405031226.1826914.14340556896857027512.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,51 +53,74 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Check the realtime reverse mapping btree against the rtbitmap, and
-modify the rtbitmap scrub to check against the rtrmapbt.
+Both of these tests for the realtime volume can fail when the rt extent
+size is larger than a single block.
+
+332 is a read-write functionality test that encodes md5sum in the
+output, so we need to skip it if $blksz isn't congruent with the extent
+size, because the fcollapse call will fail.
+
+343 is a test of the rmap btree, so the fix here is simpler -- make
+$blksz the file allocation unit, and get rid of the md5sum in the
+golden output.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_fs.h                     |    3 ++-
- man/man2/ioctl_xfs_scrub_metadata.2 |    8 ++++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ tests/xfs/332     |    6 +-----
+ tests/xfs/332.out |    2 --
+ tests/xfs/343     |    2 ++
+ 3 files changed, 3 insertions(+), 7 deletions(-)
 
 
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 102b9273360..dcf048aae8c 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -737,9 +737,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_METAPATH	29	/* metadata directory tree paths */
- #define XFS_SCRUB_TYPE_RGSUPER	30	/* realtime superblock */
- #define XFS_SCRUB_TYPE_RGBITMAP	31	/* realtime group bitmap */
-+#define XFS_SCRUB_TYPE_RTRMAPBT	32	/* rtgroup reverse mapping btree */
+diff --git a/tests/xfs/332 b/tests/xfs/332
+index a2d37ee905..c1ac87adcb 100755
+--- a/tests/xfs/332
++++ b/tests/xfs/332
+@@ -28,7 +28,7 @@ rm -f "$seqres.full"
+ echo "Format and mount"
+ _scratch_mkfs > "$seqres.full" 2>&1
+ _scratch_mount
+-blksz=65536
++blksz=$(_get_file_block_size $SCRATCH_MNT) # 65536
+ blocks=16
+ len=$((blocks * blksz))
  
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	32
-+#define XFS_SCRUB_TYPE_NR	33
+@@ -45,10 +45,6 @@ $XFS_IO_PROG -c "fpunch $blksz $blksz" \
+ 	-c "fcollapse $((9 * blksz)) $blksz" \
+ 	-c "finsert $((10 * blksz)) $blksz" $SCRATCH_MNT/f1 >> $seqres.full
  
- /*
-  * This special type code only applies to the vectored scrub implementation.
-diff --git a/man/man2/ioctl_xfs_scrub_metadata.2 b/man/man2/ioctl_xfs_scrub_metadata.2
-index dc439897c98..79875968d1c 100644
---- a/man/man2/ioctl_xfs_scrub_metadata.2
-+++ b/man/man2/ioctl_xfs_scrub_metadata.2
-@@ -98,9 +98,13 @@ The realtime allocation group number must be given in
- must be zero.
+-echo "Check file"
+-md5sum $SCRATCH_MNT/f1 | _filter_scratch
+-od -tx1 -Ad -c $SCRATCH_MNT/f1 >> $seqres.full
+-
+ echo "Unmount"
+ _scratch_unmount
  
- .PP
--.TP
-+.nf
- .B XFS_SCRUB_TYPE_RGBITMAP
--Examine a given realtime allocation group's free space bitmap.
-+.fi
-+.TP
-+.B XFS_SCRUB_TYPE_RTRMAPBT
-+Examine a given realtime allocation group's free space bitmap or reverse
-+mapping btree, respectively.
- Records are checked for obviously incorrect values and cross-referenced
- with other allocation group metadata records to ensure that there are no
- conflicts.
+diff --git a/tests/xfs/332.out b/tests/xfs/332.out
+index 9beff7cc37..3a7ca95b40 100644
+--- a/tests/xfs/332.out
++++ b/tests/xfs/332.out
+@@ -2,8 +2,6 @@ QA output created by 332
+ Format and mount
+ Create some files
+ Manipulate file
+-Check file
+-e45c5707fcf6817e914ffb6ce37a0ac7  SCRATCH_MNT/f1
+ Unmount
+ Try a regular fsmap
+ Try a bad fsmap
+diff --git a/tests/xfs/343 b/tests/xfs/343
+index bffcc7d9ac..fe461847ed 100755
+--- a/tests/xfs/343
++++ b/tests/xfs/343
+@@ -31,6 +31,8 @@ blksz=65536
+ blocks=16
+ len=$((blocks * blksz))
+ 
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
++
+ echo "Create some files"
+ $XFS_IO_PROG -f -R -c "falloc 0 $len" -c "pwrite -S 0x68 -b 1048576 0 $len" $SCRATCH_MNT/f1 >> $seqres.full
+ 
 
 
