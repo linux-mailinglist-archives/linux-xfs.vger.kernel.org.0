@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2381-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2335-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 947418212B0
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:04:07 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EB7682127D
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:52:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 361A7B21BB1
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:04:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D108FB21B8A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3504C7FD;
-	Mon,  1 Jan 2024 01:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B90803;
+	Mon,  1 Jan 2024 00:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWex3WLZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sP/IBduC"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26677ED;
-	Mon,  1 Jan 2024 01:03:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF45AC433C7;
-	Mon,  1 Jan 2024 01:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8BD7EF;
+	Mon,  1 Jan 2024 00:52:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE46AC433C7;
+	Mon,  1 Jan 2024 00:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071039;
-	bh=lp/ibTbu0SpCLYhexbJtamGg0MrqCgjKX1xNd3SAU68=;
+	s=k20201202; t=1704070319;
+	bh=+36B7195VR9jl2Gu3IH7SWLqhI39xRLJcR776BqQRbg=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=mWex3WLZLL5UWZnffXVsPQXrDnw5NQ1OzZv0I+pVctglI8n7hqFXN9l0lOuLWQHhZ
-	 H5A+vDgGxQeMum1YkZlblG2ucSRMjmpE2E/t8dR634oDbX3of2sH7iTzfWAbyZMfJw
-	 5MWtZJpflEaplzUmthdK+XKLFPqZypb7xv/maXg/LQwOGBrfXrOh/x7+qanui53ymL
-	 Yh7EJOcMFwYbcMpYJfVLj5BMfaVXwjZmdxlldtsMKnlMouB4C3IvUZBXcQLFZKrmfn
-	 QKDqMsyKpwrzh9iNGUbpJnIjQYPP0wghn6wVdDpW7MH65ogE32RtLnGfujHWdxd+XV
-	 fklNJRFrGE33w==
-Date: Sun, 31 Dec 2023 17:03:59 +9900
-Subject: [PATCH 1/1] xfs: baseline golden output for rt refcount btree fuzz
- tests
+	b=sP/IBduCX0RZmRTUkxawCnjkiu+nm2EX9Zrl7dXaQgOPaWPB/KTpQ4jbSPY05JJJY
+	 RjjSuPMacyPGWzT8XDprGBTHU0bOVQr90GzGoS4b3djfG28Haw6fuxC/hVQHVgBOcT
+	 ECO+bvwPkShF/p/2W7x/CkdkIBnA4TUV/KylOESVJWWWYyPl2MrK8QijGQjnpm7Uqd
+	 Qv8Y/bU/6OOiCD5sfZ6isAE66Ogdxoui0tKX8C7W2KYlcYJPQzAcbJBtS21zbT9Tfw
+	 tjXDYjQ+Pp2D8cQtw1sWoZVbH53Lwd/dPzLkUXI79VLW/JaJZJsnLl37ST558yrDr1
+	 My+RuWGqQMfrQ==
+Date: Sun, 31 Dec 2023 16:51:59 +9900
+Subject: [PATCH 08/11] xfs/509: adjust inumbers accounting for metadata
+ directories
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
 Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032420.1827628.1074677672634826187.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032407.1827628.11076526403575631339.stgit@frogsfrogsfrogs>
-References: <170405032407.1827628.11076526403575631339.stgit@frogsfrogsfrogs>
+Message-ID: <170405029955.1826032.8448465090415123895.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
+References: <170405029843.1826032.12205800164831698648.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,137 +53,68 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Record all the currently known failures of the xfs_scrub check and
-repair code for the rt refcount btree fuzz tests.
+The INUMBERS ioctl exports data from the inode btree directly -- the
+number of inodes it reports is taken from ir_freemask and includes all
+the files in the metadata directory tree.  BULKSTAT, on the other hand,
+only reports non-metadata files.  When metadir is enabled, this will
+(eventually) cause a discrepancy in the inode counts that is large
+enough to exceed the tolerances, thereby causing a test failure.
+
+Correct this by counting the files in the metadata directory and
+subtracting that from the INUMBERS totals.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/1539.out |    6 ++++++
- tests/xfs/1540.out |    6 ++++++
- tests/xfs/1541.out |    6 ++++++
- tests/xfs/1542.out |   10 ++++++++++
- tests/xfs/1543.out |    2 ++
- tests/xfs/1544.out |   12 ++++++++++++
- tests/xfs/1545.out |   12 ++++++++++++
- 7 files changed, 54 insertions(+)
+ tests/xfs/509 |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
 
-diff --git a/tests/xfs/1539.out b/tests/xfs/1539.out
-index aa3a963dc2..9f90912f2c 100644
---- a/tests/xfs/1539.out
-+++ b/tests/xfs/1539.out
-@@ -1,4 +1,10 @@
- QA output created by 1539
- Format and populate
- Fuzz rtrefcountbt recs
-+numrecs = lastbit: offline scrub didn't fail.
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
- Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1540.out b/tests/xfs/1540.out
-index 37f3311837..368dbace0f 100644
---- a/tests/xfs/1540.out
-+++ b/tests/xfs/1540.out
-@@ -1,4 +1,10 @@
- QA output created by 1540
- Format and populate
- Fuzz rtrefcountbt recs
-+numrecs = lastbit: offline scrub didn't fail.
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
- Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1541.out b/tests/xfs/1541.out
-index 35a9b73471..4af739233a 100644
---- a/tests/xfs/1541.out
-+++ b/tests/xfs/1541.out
-@@ -1,4 +1,10 @@
- QA output created by 1541
- Format and populate
- Fuzz rtrefcountbt recs
-+numrecs = lastbit: offline scrub didn't fail.
-+leftsib = add: offline scrub didn't fail.
-+rightsib = ones: offline scrub didn't fail.
-+rightsib = firstbit: offline scrub didn't fail.
-+rightsib = lastbit: offline scrub didn't fail.
-+rightsib = add: offline scrub didn't fail.
- Done fuzzing rtrefcountbt recs
-diff --git a/tests/xfs/1542.out b/tests/xfs/1542.out
-index 55d820b4b1..d6acd5257c 100644
---- a/tests/xfs/1542.out
-+++ b/tests/xfs/1542.out
-@@ -1,4 +1,14 @@
- QA output created by 1542
- Format and populate
- Fuzz rtrefcountbt keyptrs
-+u3.rtrefcbt.level = ones: mount failed (32).
-+u3.rtrefcbt.level = firstbit: mount failed (32).
-+u3.rtrefcbt.level = middlebit: mount failed (32).
-+u3.rtrefcbt.level = add: mount failed (32).
-+u3.rtrefcbt.level = sub: mount failed (32).
-+u3.rtrefcbt.numrecs = ones: mount failed (32).
-+u3.rtrefcbt.numrecs = firstbit: mount failed (32).
-+u3.rtrefcbt.numrecs = middlebit: mount failed (32).
-+u3.rtrefcbt.numrecs = add: mount failed (32).
-+u3.rtrefcbt.numrecs = sub: mount failed (32).
- Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1543.out b/tests/xfs/1543.out
-index e7afa10744..59eb5ad149 100644
---- a/tests/xfs/1543.out
-+++ b/tests/xfs/1543.out
-@@ -1,4 +1,6 @@
- QA output created by 1543
- Format and populate
- Fuzz rtrefcountbt keyptrs
-+u3.rtrefcbt.keys[1].startblock = zeroes: offline scrub didn't fail.
-+u3.rtrefcbt.keys[1].startblock = lastbit: offline scrub didn't fail.
- Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1544.out b/tests/xfs/1544.out
-index b39532c160..717f901bb4 100644
---- a/tests/xfs/1544.out
-+++ b/tests/xfs/1544.out
-@@ -1,4 +1,16 @@
- QA output created by 1544
- Format and populate
- Fuzz rtrefcountbt keyptrs
-+u3.rtrefcbt.level = ones: mount failed (32).
-+u3.rtrefcbt.level = firstbit: mount failed (32).
-+u3.rtrefcbt.level = middlebit: mount failed (32).
-+u3.rtrefcbt.level = add: mount failed (32).
-+u3.rtrefcbt.level = sub: mount failed (32).
-+u3.rtrefcbt.numrecs = ones: mount failed (32).
-+u3.rtrefcbt.numrecs = firstbit: mount failed (32).
-+u3.rtrefcbt.numrecs = middlebit: mount failed (32).
-+u3.rtrefcbt.numrecs = add: mount failed (32).
-+u3.rtrefcbt.numrecs = sub: mount failed (32).
-+u3.rtrefcbt.keys[1].startblock = zeroes: offline scrub didn't fail.
-+u3.rtrefcbt.keys[1].startblock = lastbit: offline scrub didn't fail.
- Done fuzzing rtrefcountbt keyptrs
-diff --git a/tests/xfs/1545.out b/tests/xfs/1545.out
-index 982a0d64df..d279dc0db8 100644
---- a/tests/xfs/1545.out
-+++ b/tests/xfs/1545.out
-@@ -1,4 +1,16 @@
- QA output created by 1545
- Format and populate
- Fuzz rtrefcountbt keyptrs
-+u3.rtrefcbt.level = ones: mount failed (32).
-+u3.rtrefcbt.level = firstbit: mount failed (32).
-+u3.rtrefcbt.level = middlebit: mount failed (32).
-+u3.rtrefcbt.level = add: mount failed (32).
-+u3.rtrefcbt.level = sub: mount failed (32).
-+u3.rtrefcbt.numrecs = ones: mount failed (32).
-+u3.rtrefcbt.numrecs = firstbit: mount failed (32).
-+u3.rtrefcbt.numrecs = middlebit: mount failed (32).
-+u3.rtrefcbt.numrecs = add: mount failed (32).
-+u3.rtrefcbt.numrecs = sub: mount failed (32).
-+u3.rtrefcbt.keys[1].startblock = zeroes: offline scrub didn't fail.
-+u3.rtrefcbt.keys[1].startblock = lastbit: offline scrub didn't fail.
- Done fuzzing rtrefcountbt keyptrs
+diff --git a/tests/xfs/509 b/tests/xfs/509
+index d04dfbbfba..b87abef964 100755
+--- a/tests/xfs/509
++++ b/tests/xfs/509
+@@ -91,13 +91,13 @@ inumbers_count()
+ 	bstat_versions | while read v_tag v_flag; do
+ 		echo -n "inumbers all($v_tag): "
+ 		nr=$(inumbers_fs $SCRATCH_MNT $v_flag)
+-		_within_tolerance "inumbers" $nr $expect $tolerance -v
++		_within_tolerance "inumbers" $((nr - METADATA_FILES)) $expect $tolerance -v
+ 
+ 		local agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
+ 		for batchsize in 71 2 1; do
+ 			echo -n "inumbers $batchsize($v_tag): "
+ 			nr=$(inumbers_ag $agcount $batchsize $SCRATCH_MNT $v_flag)
+-			_within_tolerance "inumbers" $nr $expect $tolerance -v
++			_within_tolerance "inumbers" $((nr - METADATA_FILES)) $expect $tolerance -v
+ 		done
+ 	done
+ }
+@@ -143,9 +143,26 @@ _supported_fs xfs
+ DIRCOUNT=8
+ INOCOUNT=$((2048 / DIRCOUNT))
+ 
++# Count everything in the metadata directory tree.
++count_metadir_files() {
++	local metadirs=('/realtime' '/quota')
++	local db_args=('-f')
++
++	for m in "${metadirs[@]}"; do
++		db_args+=('-c' "ls -m $m")
++	done
++
++	local ret=$(_scratch_xfs_db "${db_args[@]}" 2>/dev/null | grep regular | wc -l)
++	test -z "$ret" && ret=0
++	echo $ret
++}
++
+ _scratch_mkfs "-d agcount=$DIRCOUNT" >> $seqres.full 2>&1 || _fail "mkfs failed"
+ _scratch_mount
+ 
++METADATA_FILES=$(count_metadir_files)
++echo "found $METADATA_FILES metadata files" >> $seqres.full
++
+ # Figure out if we have v5 bulkstat/inumbers ioctls.
+ has_v5=
+ bs_root_out="$($XFS_IO_PROG -c 'bulkstat_single root' $SCRATCH_MNT 2>>$seqres.full)"
 
 
