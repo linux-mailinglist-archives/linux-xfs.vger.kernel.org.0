@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2224-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2347-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8E76821200
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:23:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC50E82128C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:55:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A97CF1C21C8D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:23:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D31F71C21D0C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:55:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DE77FD;
-	Mon,  1 Jan 2024 00:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113773D71;
+	Mon,  1 Jan 2024 00:55:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFWBHu98"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXH1WI0c"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9293F7EF
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:23:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64061C433C8;
-	Mon,  1 Jan 2024 00:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCE23C35;
+	Mon,  1 Jan 2024 00:55:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998EFC433C8;
+	Mon,  1 Jan 2024 00:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068597;
-	bh=aoQ82ULdT4tH+WuWx2CcYsk7sJNhhnduY/JmaN4XE0w=;
+	s=k20201202; t=1704070507;
+	bh=fqyySn2E9nD3lk/IWViGdvk6D97X8kWv5pt+qkoHP78=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=kFWBHu98APG+aIvxHc9B1Pb1YEIbIGhgfcVPYzgvoldtXxOzd6KkRSZpIgzcKXo6S
-	 kxcWLoSa38u6aQI63sk66IEh9B9cUTvpAwDRGohFuN+QU0GFngOs63MkE/NtafI3ff
-	 PZfpNohbiykmcbknMddp/cMma5QIl1v0NjA2j/zpSQDfek/yrqVHunAIr+oTj+u0bN
-	 OuNIx4OClxkAPzbqjYv8dSsfspVvY+utTAY4eP+CCdjox0bWq80N8Eq9IeZKpcengz
-	 lNU/ev1QcxXAUaMA+aPv4HAaCYwxJfhXfzYbuidrvqoP77+FW79G+sQJzG31DicMU9
-	 MAIZlAQ1pEtSQ==
-Date: Sun, 31 Dec 2023 16:23:16 +9900
-Subject: [PATCH 2/4] mkfs: use libxfs_alloc_file_space for rtinit
+	b=TXH1WI0clpllBBzuy0WQ2JxR7MaQ+O+xSjG/vP4iYaYo0jksLkAR6SEJdHCOnG1DS
+	 V2v2tNBP6lFEF8vhIVKfUDd2lWc/itKoEWjjHSHKLo4FFaUotfZ9cStb02Wn+vFBOK
+	 Xisz5ViFYjX4+Xa6Q/FENVkC/aUVtQSpIMycNGTSBwL5tsVVW3bg2KRj5vIFeQ38hN
+	 cIbHbJzjOfTJ8nHGEbFSq+dpoY3uYBlD7ibCKbf+0/62biektmw9mwptX0fP7OGZ/X
+	 AQZa+SLOKv2vC4hjzky5nxlOzfQtrJ77WVp48JsoBkfW5f1VDGim7HQPwPF5GuAL4e
+	 +7IggkgMRkhUg==
+Date: Sun, 31 Dec 2023 16:55:07 +9900
+Subject: [PATCH 09/17] common: pass the realtime device to xfs_db when
+ possible
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405016264.1816687.12131453143281118087.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
-References: <170405016236.1816687.16728890385158475127.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405030455.1826350.17236733624947817610.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
+References: <170405030327.1826350.709349465573559319.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,125 +53,62 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Since xfs_bmapi_write can now zero newly allocated blocks, use it to
-initialize the realtime inodes instead of open coding this.
+Teach xfstests to pass the realtime device to xfs_db when it supports
+that option.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- mkfs/proto.c |   80 +++++++++-------------------------------------------------
- 1 file changed, 12 insertions(+), 68 deletions(-)
+ common/xfs |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 5b632d31215..83888572395 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -949,43 +949,14 @@ static void
- rtbitmap_init(
- 	struct xfs_mount	*mp)
+diff --git a/common/xfs b/common/xfs
+index 175de69c63..aa1c23dd54 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -282,10 +282,10 @@ _xfs_check()
  {
--	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
--	struct xfs_trans	*tp;
--	struct xfs_bmbt_irec	*ep;
--	xfs_fileoff_t		bno;
--	uint			blocks;
--	int			i;
--	int			nmap;
- 	int			error;
+ 	OPTS=" "
+ 	DBOPTS=" "
+-	USAGE="Usage: xfs_check [-fsvV] [-l logdev] [-i ino]... [-b bno]... special"
++	USAGE="Usage: xfs_check [-fsvV] [-l logdev] [-r rtdev] [-i ino]... [-b bno]... special"
  
--	blocks = mp->m_sb.sb_rbmblocks +
--			XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
--	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
-+	error = -libxfs_alloc_file_space(mp->m_rbmip, 0,
-+			mp->m_sb.sb_rbmblocks << mp->m_sb.sb_blocklog,
-+			XFS_BMAPI_ZERO);
- 	if (error)
--		res_failed(error);
--
--	libxfs_trans_ijoin(tp, mp->m_rbmip, 0);
--	bno = 0;
--	while (bno < mp->m_sb.sb_rbmblocks) {
--		nmap = XFS_BMAP_MAX_NMAP;
--		error = -libxfs_bmapi_write(tp, mp->m_rbmip, bno,
--				(xfs_extlen_t)(mp->m_sb.sb_rbmblocks - bno),
--				0, mp->m_sb.sb_rbmblocks, map, &nmap);
--		if (error)
--			fail(_("Allocation of the realtime bitmap failed"),
--				error);
--
--		for (i = 0, ep = map; i < nmap; i++, ep++) {
--			libxfs_device_zero(mp->m_ddev_targp,
--				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
--				XFS_FSB_TO_BB(mp, ep->br_blockcount));
--			bno += ep->br_blockcount;
--		}
--	}
--
--	error = -libxfs_trans_commit(tp);
--	if (error)
--		fail(_("Block allocation of the realtime bitmap inode failed"),
-+		fail(
-+	_("Block allocation of the realtime bitmap inode failed"),
- 				error);
+ 	OPTIND=1
+-	while getopts "b:fi:l:stvV" c; do
++	while getopts "b:fi:l:stvVR:" c; do
+ 		case $c in
+ 			s) OPTS=$OPTS"-s ";;
+ 			t) OPTS=$OPTS"-t ";;
+@@ -297,6 +297,7 @@ _xfs_check()
+ 			V) $XFS_DB_PROG -p xfs_check -V
+ 			   return $?
+ 			   ;;
++			r) DBOPTS="$DBOPTS -R $OPTARG";;
+ 		esac
+ 	done
+ 	set -- extra $@
+@@ -340,6 +341,10 @@ _scratch_xfs_db_options()
+ 	SCRATCH_OPTIONS=""
+ 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+ 		SCRATCH_OPTIONS="-l$SCRATCH_LOGDEV"
++	if [ "$USE_EXTERNAL" = yes ] && [ ! -z "$SCRATCH_RTDEV" ]; then
++		$XFS_DB_PROG --help 2>&1 | grep -q -- '-R rtdev' && \
++			SCRATCH_OPTIONS="$SCRATCH_OPTIONS -R$SCRATCH_RTDEV"
++	fi
+ 	echo $SCRATCH_OPTIONS $* $SCRATCH_DEV
+ }
  
- 	if (xfs_has_rtgroups(mp)) {
-@@ -1001,43 +972,13 @@ static void
- rtsummary_init(
- 	struct xfs_mount	*mp)
- {
--	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
--	struct xfs_trans	*tp;
--	struct xfs_bmbt_irec	*ep;
--	xfs_fileoff_t		bno;
--	xfs_extlen_t		nsumblocks;
--	uint			blocks;
--	int			i;
--	int			nmap;
- 	int			error;
+@@ -404,6 +409,11 @@ _scratch_xfs_check()
+ 		SCRATCH_OPTIONS="-l $SCRATCH_LOGDEV"
+ 	[ "$LARGE_SCRATCH_DEV" = yes ] && \
+ 		SCRATCH_OPTIONS=$SCRATCH_OPTIONS" -t"
++	if [ "$USE_EXTERNAL" = yes ] && [ ! -z "$SCRATCH_RTDEV" ]; then
++		$XFS_DB_PROG --help 2>&1 | grep -q -- '-R rtdev' || \
++			_notrun 'xfs_db does not support rt devices'
++		SCRATCH_OPTIONS="$SCRATCH_OPTIONS -R$SCRATCH_RTDEV"
++	fi
+ 	_xfs_check $SCRATCH_OPTIONS $* $SCRATCH_DEV
+ }
  
--	nsumblocks = mp->m_rsumsize >> mp->m_sb.sb_blocklog;
--	blocks = nsumblocks + XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
--	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
-+	error = -libxfs_alloc_file_space(mp->m_rsumip, 0, mp->m_rsumsize,
-+			XFS_BMAPI_ZERO);
- 	if (error)
--		res_failed(error);
--	libxfs_trans_ijoin(tp, mp->m_rsumip, 0);
--
--	bno = 0;
--	while (bno < nsumblocks) {
--		nmap = XFS_BMAP_MAX_NMAP;
--		error = -libxfs_bmapi_write(tp, mp->m_rsumip, bno,
--				(xfs_extlen_t)(nsumblocks - bno),
--				0, nsumblocks, map, &nmap);
--		if (error)
--			fail(_("Allocation of the realtime summary failed"),
--				error);
--
--		for (i = 0, ep = map; i < nmap; i++, ep++) {
--			libxfs_device_zero(mp->m_ddev_targp,
--				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
--				XFS_FSB_TO_BB(mp, ep->br_blockcount));
--			bno += ep->br_blockcount;
--		}
--	}
--	error = -libxfs_trans_commit(tp);
--	if (error)
--		fail(_("Block allocation of the realtime summary inode failed"),
-+		fail(
-+	_("Block allocation of the realtime summary inode failed"),
- 				error);
- 
- 	if (xfs_has_rtgroups(mp)) {
-@@ -1143,6 +1084,9 @@ rtinit(
- 			rtrmapbt_create(rtg);
- 	}
- 
-+	if (mp->m_sb.sb_rbmblocks == 0)
-+		return;
-+
- 	rtbitmap_init(mp);
- 	rtsummary_init(mp);
- 	if (xfs_has_rtgroups(mp))
 
 
