@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-2266-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2271-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F211482122B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:34:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 132E0821230
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:35:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1039A1C21CB9
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:34:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5AC91F225CB
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:35:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F611375;
-	Mon,  1 Jan 2024 00:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F2361375;
+	Mon,  1 Jan 2024 00:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOrUQSMg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UchAHKFU"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E411370
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:33:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47DDC433C7;
-	Mon,  1 Jan 2024 00:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1781368
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:35:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E776C433C7;
+	Mon,  1 Jan 2024 00:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069238;
-	bh=H2k4WpSDyYe/KlIMMFWqsWiEVBE8xBW29x+IshJ7pgY=;
+	s=k20201202; t=1704069317;
+	bh=eI1X+qniVSLExGvXANux1ABoMbjRILFc8Y01ygbsodw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=hOrUQSMgvdWKrPg4AYu9TXU4HBiVDEowwEY8zlVrEFWdcqKTZQshGtbSJbdimSy/z
-	 ZZpnlRuKF0fJtLyaHVSs04RvGrQ2jjHsA75Vjq47IEaocuIEb9akuvHrXlE1sbj9MG
-	 g2eeuTzn0hFJj8ttv2ph1ZzCL+qS7TArNq2EY5tvALkY4Jx5dQWULUMU70ftpE/tdY
-	 IvF9QweFOQgZNCyFwhli1Yd58HqEjr1CpYxIx1nhyGbT2ChpLSiYWcGyGcKQupGQwN
-	 hdhU9LD3NCjctz90U65XTR/58H2sw2wE7nou4GeGnjOsG0xt+N17EOHjmlt3WRba4u
-	 H16O7f7keWGAA==
-Date: Sun, 31 Dec 2023 16:33:58 +9900
-Subject: [PATCH 30/42] xfs_repair: allow CoW staging extents in the realtime
- rmap records
+	b=UchAHKFU6WVHELMIVCrwL5ICq6vSSwwjUWOYBFQWpFjLaolBHqwYSaKg5uThFK37w
+	 tGEwGyI1axhUF806ExX8gSFmayRaCGlhZSJienVRiB3yRO0maPPaHlCp/u5/rBBooN
+	 nDV1IzAMPvcjSEUliTRa/yUiMF/Ce82vh3KTDFzuV2UCHSe/MKvZWATSBA9a8nftnt
+	 DQn+Hkax74HhpGKxhifaM+JRGLLhq4alHDPrYxTY6q6qVEM8DY4F4R/D5hvM22TXTQ
+	 wtsXXcGK4FhEf8ru6Ok3IYdR4ITewiB9TKqyNbZzEP+xrJE0kMIiW16Y1wBm//069l
+	 h7lG9AUudBljA==
+Date: Sun, 31 Dec 2023 16:35:16 +9900
+Subject: [PATCH 35/42] xfs_repair: reject unwritten shared extents
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017526.1817107.5191304566872191050.stgit@frogsfrogsfrogs>
+Message-ID: <170405017593.1817107.2563916821111792576.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,44 +52,63 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't flag the rt rmap btree as having errors if there are CoW staging
-extent records in it and the filesystem supports.  As far as reporting
-leftover staging extents, we'll report them when we scan the rt refcount
-btree, in a future patch.
+We don't allow sharing of unwritten extents, which means that repair
+should reject an unwritten extent if someone else has already claimed
+the space.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/scan.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ repair/dinode.c |   23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
 
-diff --git a/repair/scan.c b/repair/scan.c
-index ba634af8bb1..f04afff60ef 100644
---- a/repair/scan.c
-+++ b/repair/scan.c
-@@ -1416,9 +1416,20 @@ _("invalid length %llu in record %u of %s\n"),
- 			continue;
- 		}
- 
--		/* We only store file data and superblocks in the rtrmap. */
--		if (XFS_RMAP_NON_INODE_OWNER(owner) &&
--		    owner != XFS_RMAP_OWN_FS) {
-+		/*
-+		 * We only store file data, COW data, and superblocks in the
-+		 * rtrmap.
-+		 */
-+		if (owner == XFS_RMAP_OWN_COW) {
-+			if (!xfs_has_reflink(mp)) {
+diff --git a/repair/dinode.c b/repair/dinode.c
+index ad4263f9aa8..f0c0ba4da4e 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -277,7 +277,8 @@ _("bad state in rt extent map %" PRIu64 "\n"),
+ 			break;
+ 		case XR_E_INUSE:
+ 		case XR_E_MULT:
+-			if (xfs_has_rtreflink(mp))
++			if (xfs_has_rtreflink(mp) &&
++			    irec->br_state == XFS_EXT_NORM)
+ 				break;
+ 			set_rtbmap(ext, XR_E_MULT);
+ 			break;
+@@ -353,8 +354,14 @@ _("data fork in rt inode %" PRIu64 " found rt metadata extent %" PRIu64 " in rt
+ 			return 1;
+ 		case XR_E_INUSE:
+ 		case XR_E_MULT:
+-			if (xfs_has_rtreflink(mp))
+-				break;
++			if (xfs_has_rtreflink(mp)) {
++				if (irec->br_state == XFS_EXT_NORM)
++					break;
 +				do_warn(
-+_("invalid CoW staging extent in record %u of %s\n"),
-+						i, name);
-+				suspect++;
-+				continue;
++_("data fork in rt inode %" PRIu64 " claims shared unwritten rt extent %" PRIu64 "\n"),
++					ino, b);
++				return 1;
 +			}
-+		} else if (XFS_RMAP_NON_INODE_OWNER(owner) &&
-+			   owner != XFS_RMAP_OWN_FS) {
  			do_warn(
- _("invalid owner %lld in record %u of %s\n"),
- 				(long long int)owner, i, name);
+ _("data fork in rt inode %" PRIu64 " claims used rt extent %" PRIu64 "\n"),
+ 				ino, b);
+@@ -671,8 +678,14 @@ _("%s fork in inode %" PRIu64 " claims metadata block %" PRIu64 "\n"),
+ 			case XR_E_INUSE:
+ 			case XR_E_MULT:
+ 				if (type == XR_INO_DATA &&
+-				    xfs_has_reflink(mp))
+-					break;
++				    xfs_has_reflink(mp)) {
++					if (irec.br_state == XFS_EXT_NORM)
++						break;
++					do_warn(
++_("%s fork in %s inode %" PRIu64 " claims shared unwritten block %" PRIu64 "\n"),
++						forkname, ftype, ino, b);
++					goto done;
++				}
+ 				do_warn(
+ _("%s fork in %s inode %" PRIu64 " claims used block %" PRIu64 "\n"),
+ 					forkname, ftype, ino, b);
 
 
