@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-2380-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2155-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A09B8212AF
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:03:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CB9F8211B9
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:05:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDDEE282B5B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 738B81C218B3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:05:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBDE7803;
-	Mon,  1 Jan 2024 01:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C894E389;
+	Mon,  1 Jan 2024 00:05:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgoC9bx9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1NfvR/T"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50C67F9;
-	Mon,  1 Jan 2024 01:03:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A3EBC433C7;
-	Mon,  1 Jan 2024 01:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9552819C
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:05:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E97C433C7;
+	Mon,  1 Jan 2024 00:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704071024;
-	bh=Jn8EPPLiIwzwsA/m8ZGWz3YKKTg8B+NLLSD/2m7i0ZE=;
+	s=k20201202; t=1704067534;
+	bh=dBTuLcBHxxG3bO3FFE1moXvOrSAT7gmCwM/axURrUdM=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=SgoC9bx9lac+zvF0oQIwizJmZJuKQlGE/fa2u2WG3iCz4bll+6dEVzmuzhH45809A
-	 XVMAyq1N5YpJhus66Vihv4nC5wNgLqgHLw+pKxeLF1/XiLXWKntJdSWyGbP0+btbFk
-	 Bbc3Hin3gXBGgBAljdyuBetvslPICrKHTGiRCA+wu52nTcMF3iMOdBsDu6Pf8Hs4+U
-	 K/4LtOIi2xFnZ8CyDi8TeqMHTLXEIkD1Jh9jdFb6tVBY+xkwiDUoDgj/3f4S3xUDNf
-	 moK8ARDtzUU9qD9i4n080t1RMQB5jFY6awDWObBQ6ZLs74hE4MtRKYzQxb+LD5Q5J4
-	 3C+j4iGdzFCGg==
-Date: Sun, 31 Dec 2023 17:03:43 +9900
-Subject: [PATCH 9/9] common/xfs: fix _xfs_get_file_block_size when rtinherit
- is set and no rt section
+	b=j1NfvR/Tm6pGtw4Yq1ixTqFhRAO3TdhzD4RKyuHWhu6+rBdQTvn6hL6IOBTopIBBd
+	 mQCz+KO+pbCEXp+TFb3DU0xZidTbIVoc6bsqWXyANwJQ9PUOPEqLxFyESlbpVhX9DP
+	 xMHFSeMzUCTTsDmlZ7ndSIuar4dGPJ4kLqdSxGzqBNgvy1/yGSsYQaxKpUAe4BY+ej
+	 GIGWCyG0hgLTUM6P0krU+tPyUCZmwVCEW+lSfB9tuC572vKkDb0MrzF9WiqRmzk1OQ
+	 MKr5s3oqkhJngvE6o77Z07opOt1rdQFmKxr4nwY7wqWZj0+2eSoWsWyX1bMrPbzsnf
+	 QRdUsBsUgY04A==
+Date: Sun, 31 Dec 2023 16:05:33 +9900
+Subject: [PATCH 1/8] xfs: clean up extent free log intent item tracepoint
+ callsites
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405032134.1827358.4148547989863979616.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
-References: <170405032011.1827358.11723561661069109569.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405014055.1814860.7878254184257730202.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
+References: <170405014035.1814860.4299784888161945873.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,52 +53,64 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-It's possible for the sysadmin to set rtinherit on the directory tree
-even if there isn't a realtime section attached to the filesystem.  When
-this is the case, the realtime flag is /not/ passed to new files, and
-file data is written to the data device.  The file allocation unit for
-the file is the fs blocksize, and it is not correct to use the rt
-extent.
-
-fstests can be fooled into doing the incorrect thing if test runner puts
-'-d rtinherit=1 -r extsize=28k' into MKFS_OPTIONS without configuring a
-realtime device.  This causes many tests to do the wrong thing because
-they think they must operate on units of 28k (and not 4k).  Fix this.
+Pass the incore EFI structure to the tracepoints instead of open-coding
+the argument passing.  This cleans up the call sites a bit.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/xfs_trace.h |    5 ++---
+ libxfs/xfs_alloc.c  |    7 +++----
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
 
-diff --git a/common/xfs b/common/xfs
-index aab04bfb18..69a0eb620c 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -208,6 +208,8 @@ _xfs_get_file_block_size()
- {
- 	local path="$1"
+diff --git a/include/xfs_trace.h b/include/xfs_trace.h
+index 5010b35b1f6..a6ae0ca13b6 100644
+--- a/include/xfs_trace.h
++++ b/include/xfs_trace.h
+@@ -13,8 +13,8 @@
+ #define trace_xfbtree_trans_cancel_buf(...)	((void) 0)
+ #define trace_xfbtree_trans_commit_buf(...)	((void) 0)
  
-+	# If rtinherit or realtime are not set on the path, then all files
-+	# will be created on the data device.
- 	if ! ($XFS_IO_PROG -c "stat -v" "$path" 2>&1 | grep -E -q '(rt-inherit|realtime)'); then
- 		_get_block_size "$path"
- 		return
-@@ -218,6 +220,15 @@ _xfs_get_file_block_size()
- 	while ! $XFS_INFO_PROG "$path" &>/dev/null && [ "$path" != "/" ]; do
- 		path="$(dirname "$path")"
- 	done
-+
-+	# If there's no realtime section, the rtinherit and rextsize settings
-+	# are irrelevant -- all files are created on the data device.
-+	if $XFS_INFO_PROG "$path" | grep -q 'realtime =none'; then
-+		_get_block_size "$path"
-+		return
-+	fi
-+
-+	# Otherwise, report the rt extent size.
- 	_xfs_get_rtextsize "$path"
- }
++#define trace_xfs_agfl_free_defer(...)		((void) 0)
+ #define trace_xfs_agfl_reset(a,b,c,d)		((void) 0)
+-#define trace_xfs_agfl_free_defer(a,b,c,d,e)	((void) 0)
+ #define trace_xfs_alloc_cur_check(a,b,c,d,e,f)	((void) 0)
+ #define trace_xfs_alloc_cur(a)			((void) 0)
+ #define trace_xfs_alloc_cur_left(a)		((void) 0)
+@@ -242,8 +242,7 @@
+ #define trace_xfs_defer_item_pause(...)		((void) 0)
+ #define trace_xfs_defer_item_unpause(...)	((void) 0)
  
+-#define trace_xfs_bmap_free_defer(...)		((void) 0)
+-#define trace_xfs_bmap_free_deferred(...)	((void) 0)
++#define trace_xfs_extent_free_defer(...)	((void) 0)
+ 
+ #define trace_xfs_rmap_map(...)			((void) 0)
+ #define trace_xfs_rmap_map_error(...)		((void) 0)
+diff --git a/libxfs/xfs_alloc.c b/libxfs/xfs_alloc.c
+index 3d7686eadab..08cdfe7e3d3 100644
+--- a/libxfs/xfs_alloc.c
++++ b/libxfs/xfs_alloc.c
+@@ -2569,7 +2569,7 @@ xfs_defer_agfl_block(
+ 	xefi->xefi_owner = oinfo->oi_owner;
+ 	xefi->xefi_agresv = XFS_AG_RESV_AGFL;
+ 
+-	trace_xfs_agfl_free_defer(mp, agno, 0, agbno, 1);
++	trace_xfs_agfl_free_defer(mp, xefi);
+ 
+ 	xfs_extent_free_get_group(mp, xefi);
+ 	xfs_defer_add(tp, &xefi->xefi_list, &xfs_agfl_free_defer_type);
+@@ -2631,9 +2631,8 @@ xfs_defer_extent_free(
+ 	} else {
+ 		xefi->xefi_owner = XFS_RMAP_OWN_NULL;
+ 	}
+-	trace_xfs_bmap_free_defer(mp,
+-			XFS_FSB_TO_AGNO(tp->t_mountp, bno), 0,
+-			XFS_FSB_TO_AGBNO(tp->t_mountp, bno), len);
++
++	trace_xfs_extent_free_defer(mp, xefi);
+ 
+ 	xfs_extent_free_get_group(mp, xefi);
+ 	*dfpp = xfs_defer_add(tp, &xefi->xefi_list, &xfs_extent_free_defer_type);
 
 
