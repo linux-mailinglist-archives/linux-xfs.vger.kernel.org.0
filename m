@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-2357-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2175-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 803C6821296
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:57:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA0EE8211CD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0802AB21B2C
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:57:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B6D81C21939
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:10:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD5354A05;
-	Mon,  1 Jan 2024 00:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A609384;
+	Mon,  1 Jan 2024 00:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NenpGz1q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buHsx0nv"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854104A02;
-	Mon,  1 Jan 2024 00:57:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FB5C433C8;
-	Mon,  1 Jan 2024 00:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570B738B
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:10:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 214A7C433C7;
+	Mon,  1 Jan 2024 00:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704070664;
-	bh=JSbRLtytCKFgJwt/RI9Yunz+T3splF080/n1zkzNzbQ=;
+	s=k20201202; t=1704067847;
+	bh=cai1PsoNxrA36JFDUy4QNm23dPvx9PZeAgiUmXUYPtc=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=NenpGz1qORvpTGuypfEnkQPhGb8ZJJ4jv32KvdZaEPfTB2FVCF/JOITzUsIrmG3aj
-	 FXgxllgsG0lsDPDtaDT9Jz+eUhcnvGeF4LdOwsMEKY9p9Mjb3K36bpBL83+gs6Cnxo
-	 sN8VhT3Kvy9lshUvYLhE44vqP1dktakxtgAavmz0ekb8nF2JBTn69qtbbIVc/h2YmO
-	 zVQ52NBYzoacBcK0O/TizGUmqyqF5ig5rge8k1/9jAS9Q22GEU5IHEYDhJQDf+76/I
-	 Fe/U0D2r7ufSHoUTJUm/rXH6ZrtxCtGHjr0UyUGuwqPgFqF1K04HzNAaO/V8UJJYCk
-	 6rPDWRXR51RLw==
-Date: Sun, 31 Dec 2023 16:57:43 +9900
-Subject: [PATCH 2/2] common/xfs: FITRIM now supports realtime volumes
+	b=buHsx0nv6/0WgeLxTobIOYBrUiS23n3EkUh3IukK1nd5f4JDgQ+0SUk1zhmwURKje
+	 EEJV3vSodZK0QeYJZMb0KoFMC3ao7WCAplt7ITBycn5GjRRcLIAeyJPtpAhDzSMg5X
+	 xig99OzC/j98/qZfsOOIOafsV2u1mFNF/nRn7OiWI3p5oHqyE+/jm69uZYoJ0fR/sq
+	 9UigkItY54pMCNFIC0IDI7jqpyOYgN3MOQ0vhfAHkHCzRMdDDxgexgJz4POclH7LGb
+	 AS7lTmN33H46scs/p9RXt7379sb+vXQeCiwCLb/5Xez6NjHzzTmRxkjaIRVru8xcq+
+	 +keHVdWKop1vw==
+Date: Sun, 31 Dec 2023 16:10:46 +9900
+Subject: [PATCH 01/47] xfs: simplify the xfs_rmap_{alloc,free}_extent calling
+ conventions
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org, zlang@redhat.com
-Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <170405030894.1826812.11882587421223102904.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405030868.1826812.10067703094837693199.stgit@frogsfrogsfrogs>
-References: <170405030868.1826812.10067703094837693199.stgit@frogsfrogsfrogs>
+To: cem@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <170405015325.1815505.2097209138079661055.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,65 +53,138 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-XFS now supports FITRIM to the realtime volume.  Detect this support and
-enable it.
+Simplify the calling conventions by allowing callers to pass a fsbno
+(xfs_fsblock_t) directly into these functions, since we're just going to
+set it in a struct anyway.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs |   40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ libxfs/xfs_refcount.c |    6 ++----
+ libxfs/xfs_rmap.c     |   12 +++++-------
+ libxfs/xfs_rmap.h     |    8 ++++----
+ repair/rmap.c         |    8 ++++----
+ 4 files changed, 15 insertions(+), 19 deletions(-)
 
 
-diff --git a/common/xfs b/common/xfs
-index d9aa242ec7..75f1bbcc3d 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -1937,8 +1937,44 @@ _require_xfs_scratch_atomicswap()
- # of 1024 byte blocks.
- _xfs_discard_max_offset_kb()
- {
--	$XFS_IO_PROG -c 'statfs' "$1" | \
--		awk '{g[$1] = $3} END {print (g["geom.bsize"] * g["geom.datablocks"] / 1024)}'
-+	local statfs
-+
-+	# Use awk to read the statfs output for the XFS filesystem, compute
-+	# the two possible FITRIM offset maximums, and then use some horrid
-+	# bash magic to import the five numbers as an indexed array.  There's
-+	# no better way to do this in bash since you can't readarray to build
-+	# an associative array.  Elements are as follows:
-+	#
-+	# 0: fsblock size in bytes
-+	# 1: Data volume size in fsblocks.
-+	# 2: Realtime volume size in fsblocks.
-+	# 3: Max FITRIM offset if we can only trim the data volume
-+	# 4: Max FITRIM offset if we can trim the data and rt volumes
-+	readarray -t statfs < <($XFS_IO_PROG -c 'statfs' "$1" | \
-+		awk '{g[$1] = $3} END {printf("%d\n%d\n%d\n%d\n%d\n",
-+			g["geom.bsize"],
-+			g["geom.datablocks"],
-+			g["geom.rtblocks"],
-+			g["geom.bsize"] * g["geom.datablocks"] / 1024,
-+			g["geom.bsize"] * (g["geom.datablocks"] + g["geom.rtblocks"]) / 1024);}')
-+
-+	# If the kernel supports discarding the realtime volume, then it will
-+	# not reject a FITRIM for fsblock dblks+1, even if the len/minlen
-+	# arguments are absurd.
-+	if [ "${statfs[2]}" -gt 0 ]; then
-+		if $FSTRIM_PROG -o "$((statfs[0] * statfs[1]))" \
-+				-l "${statfs[0]}" \
-+				-m "$((statfs[0] * 2))" "$1" &>/dev/null; then
-+			# The kernel supports discarding the rt volume, so
-+			# print out the second answer from above.
-+			echo "${statfs[4]}"
-+			return
-+		fi
-+	fi
-+
-+	# The kernel does not support discarding the rt volume or there is no
-+	# rt volume.  Print out the first answer from above.
-+	echo "${statfs[3]}"
+diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
+index 6c6634675c2..9f933d953b9 100644
+--- a/libxfs/xfs_refcount.c
++++ b/libxfs/xfs_refcount.c
+@@ -1886,8 +1886,7 @@ xfs_refcount_alloc_cow_extent(
+ 	__xfs_refcount_add(tp, XFS_REFCOUNT_ALLOC_COW, fsb, len);
+ 
+ 	/* Add rmap entry */
+-	xfs_rmap_alloc_extent(tp, XFS_FSB_TO_AGNO(mp, fsb),
+-			XFS_FSB_TO_AGBNO(mp, fsb), len, XFS_RMAP_OWN_COW);
++	xfs_rmap_alloc_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
  }
  
- # Adjust MKFS_OPTIONS as necessary to avoid having parent pointers formatted
+ /* Forget a CoW staging event in the refcount btree. */
+@@ -1903,8 +1902,7 @@ xfs_refcount_free_cow_extent(
+ 		return;
+ 
+ 	/* Remove rmap entry */
+-	xfs_rmap_free_extent(tp, XFS_FSB_TO_AGNO(mp, fsb),
+-			XFS_FSB_TO_AGBNO(mp, fsb), len, XFS_RMAP_OWN_COW);
++	xfs_rmap_free_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
+ 	__xfs_refcount_add(tp, XFS_REFCOUNT_FREE_COW, fsb, len);
+ }
+ 
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index 24daf0ffb66..3e95599ab8a 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -526,7 +526,7 @@ xfs_rmap_free_check_owner(
+ 	struct xfs_btree_cur	*cur,
+ 	uint64_t		ltoff,
+ 	struct xfs_rmap_irec	*rec,
+-	xfs_filblks_t		len,
++	xfs_extlen_t		len,
+ 	uint64_t		owner,
+ 	uint64_t		offset,
+ 	unsigned int		flags)
+@@ -2717,8 +2717,7 @@ xfs_rmap_convert_extent(
+ void
+ xfs_rmap_alloc_extent(
+ 	struct xfs_trans	*tp,
+-	xfs_agnumber_t		agno,
+-	xfs_agblock_t		bno,
++	xfs_fsblock_t		fsbno,
+ 	xfs_extlen_t		len,
+ 	uint64_t		owner)
+ {
+@@ -2727,7 +2726,7 @@ xfs_rmap_alloc_extent(
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, XFS_DATA_FORK))
+ 		return;
+ 
+-	bmap.br_startblock = XFS_AGB_TO_FSB(tp->t_mountp, agno, bno);
++	bmap.br_startblock = fsbno;
+ 	bmap.br_blockcount = len;
+ 	bmap.br_startoff = 0;
+ 	bmap.br_state = XFS_EXT_NORM;
+@@ -2739,8 +2738,7 @@ xfs_rmap_alloc_extent(
+ void
+ xfs_rmap_free_extent(
+ 	struct xfs_trans	*tp,
+-	xfs_agnumber_t		agno,
+-	xfs_agblock_t		bno,
++	xfs_fsblock_t		fsbno,
+ 	xfs_extlen_t		len,
+ 	uint64_t		owner)
+ {
+@@ -2749,7 +2747,7 @@ xfs_rmap_free_extent(
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, XFS_DATA_FORK))
+ 		return;
+ 
+-	bmap.br_startblock = XFS_AGB_TO_FSB(tp->t_mountp, agno, bno);
++	bmap.br_startblock = fsbno;
+ 	bmap.br_blockcount = len;
+ 	bmap.br_startoff = 0;
+ 	bmap.br_state = XFS_EXT_NORM;
+diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
+index e6240efd6fe..0ccfd7d88e5 100644
+--- a/libxfs/xfs_rmap.h
++++ b/libxfs/xfs_rmap.h
+@@ -184,10 +184,10 @@ void xfs_rmap_unmap_extent(struct xfs_trans *tp, struct xfs_inode *ip,
+ void xfs_rmap_convert_extent(struct xfs_mount *mp, struct xfs_trans *tp,
+ 		struct xfs_inode *ip, int whichfork,
+ 		struct xfs_bmbt_irec *imap);
+-void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
+-		xfs_agblock_t bno, xfs_extlen_t len, uint64_t owner);
+-void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
+-		xfs_agblock_t bno, xfs_extlen_t len, uint64_t owner);
++void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
++		xfs_extlen_t len, uint64_t owner);
++void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
++		xfs_extlen_t len, uint64_t owner);
+ 
+ int xfs_rmap_finish_one(struct xfs_trans *tp, struct xfs_rmap_intent *ri,
+ 		struct xfs_btree_cur **pcur);
+diff --git a/repair/rmap.c b/repair/rmap.c
+index 37fcf923644..265199d2117 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -1278,7 +1278,6 @@ rmap_diffkeys(
+ {
+ 	__u64			oa;
+ 	__u64			ob;
+-	int64_t			d;
+ 	struct xfs_rmap_irec	tmp;
+ 
+ 	tmp = *kp1;
+@@ -1288,9 +1287,10 @@ rmap_diffkeys(
+ 	tmp.rm_flags &= ~XFS_RMAP_REC_FLAGS;
+ 	ob = libxfs_rmap_irec_offset_pack(&tmp);
+ 
+-	d = (int64_t)kp1->rm_startblock - kp2->rm_startblock;
+-	if (d)
+-		return d;
++	if (kp1->rm_startblock > kp2->rm_startblock)
++		return 1;
++	else if (kp2->rm_startblock > kp1->rm_startblock)
++		return -1;
+ 
+ 	if (kp1->rm_owner > kp2->rm_owner)
+ 		return 1;
 
 
