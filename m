@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2296-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2385-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E26E2821249
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:41:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF0108212B4
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:05:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4644BB21B28
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:41:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A16A1F2267B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:05:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A5F87FD;
-	Mon,  1 Jan 2024 00:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA25B802;
+	Mon,  1 Jan 2024 01:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vjzh0Bnl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBe99lT4"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653E17EE
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:41:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94B9C433C8;
-	Mon,  1 Jan 2024 00:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24D97EE;
+	Mon,  1 Jan 2024 01:05:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A69C433C7;
+	Mon,  1 Jan 2024 01:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069709;
-	bh=yfGQUaC895VHyYtOre4lGz7TIPquYZrCNt7IctmAWQI=;
+	s=k20201202; t=1704071102;
+	bh=zv8S0l/G5PKw7wGJ5ukwwq1b6jA613kbQsrFilB3qng=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Vjzh0Bnl9+rAzvzVC6QfRjR1mDQOXXUt0zPTVfoAxS1AFHZuN2K+jixgBtUY5bIjT
-	 QJCX3DrwhNvvkhhv605OFTJZs7vIbNXX3CfVShfXXlJQLjYeqjnWPzlsZjQRVOaq/t
-	 H70E11HBhPaHzK2crhUAxEv1S1AJMDPNaZDHWp/sr9G1mvzpCFiw5GfsxmsgDv+4ee
-	 xzZQ36suP1iVYKaMJPTwQeUusSF3gzdqRGhq7bbPFCpCbbdSjaHgLsl4FaDre4XZFd
-	 gLt1fFFeM6+alxA1uP7gDnp63wM2kCOcxJGz/fKoIC97Nm29Lu+bYzfz0u0vW0Yvky
-	 wTdMXioSCWpMQ==
-Date: Sun, 31 Dec 2023 16:41:48 +9900
-Subject: [PATCH 07/10] xfs_spaceman: wrap radix tree accesses in find_owner.c
+	b=mBe99lT4vfgyRmxo/GtlPtSXJZENlGJe15V0BHCIytDX03tJlVWa4jOw5cmYTnB9G
+	 CEykQxVmjn8HkuhedCQRgaZZvEijYsUqBZmL3UiWfTdlJ2YYEhE5cWVVpvYqwGcVxi
+	 Si30WZaHL/UH0c3UnBmY91O3jL0Rms46Z85Vr9xjO5qGNbaS6wlhSvcY0MAKxer5IU
+	 jS13+g1AE75+GVwnOHhX4W6NMS9ehWnwfMn3gtzihLLYNyPkDqsKGIuzOr/vYu4WQg
+	 9b2zA82ozrhCSWbkPZ99CCp/OvfJqaC5mvQ72AeaLT6yYWD1zfpfdBb1nAHQkt9BwQ
+	 IrVF9XWmOo6nw==
+Date: Sun, 31 Dec 2023 17:05:02 +9900
+Subject: [PATCH 4/5] xfs: test COWing entire rt extents
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405020418.1820796.17700189620459203140.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
-References: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405032789.1827706.9480080283762068776.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405032733.1827706.12312180709769839153.stgit@frogsfrogsfrogs>
+References: <170405032733.1827706.12312180709769839153.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,393 +52,212 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Wrap the raw radix tree accesses here so that we can provide an
-alternate implementation on platforms where radix tree indices cannot
-store a full 64-bit inode number.
+For XFS filesystems with a realtime volume, an extent size larger than
+1FSB, and reflink enabled, we use a "COW around" strategy that detects
+file writes that are not aligned to the rt extent size and enlarges
+those writes to dirty enough page cache so that the entire rt extent can
+be COWed all at once.  This is a functional test to make sure that all
+works properly.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- spaceman/Makefile     |    2 -
- spaceman/find_owner.c |   76 +++++++++------------------------
- spaceman/relocation.c |  114 +++++++++++++++++++++++++++++++++++++++++++++++++
- spaceman/relocation.h |   46 ++++++++++++++++++++
- 4 files changed, 183 insertions(+), 55 deletions(-)
- create mode 100644 spaceman/relocation.c
- create mode 100644 spaceman/relocation.h
+ tests/xfs/1926     |  177 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1926.out |    2 +
+ 2 files changed, 179 insertions(+)
+ create mode 100755 tests/xfs/1926
+ create mode 100644 tests/xfs/1926.out
 
 
-diff --git a/spaceman/Makefile b/spaceman/Makefile
-index 19ce8862131..16a13e4bc19 100644
---- a/spaceman/Makefile
-+++ b/spaceman/Makefile
-@@ -7,7 +7,7 @@ include $(TOPDIR)/include/builddefs
- 
- LTCOMMAND = xfs_spaceman
- HFILES = init.h space.h
--CFILES = find_owner.c info.c init.c file.c health.c move_inode.c prealloc.c trim.c
-+CFILES = find_owner.c info.c init.c file.c health.c move_inode.c prealloc.c relocation.c trim.c
- LSRCFILES = xfs_info.sh
- 
- LLDLIBS = $(LIBHANDLE) $(LIBXCMD) $(LIBFROG) $(LIBHANDLE)
-diff --git a/spaceman/find_owner.c b/spaceman/find_owner.c
-index 7667d9d3660..4e03add75dc 100644
---- a/spaceman/find_owner.c
-+++ b/spaceman/find_owner.c
-@@ -15,19 +15,13 @@
- #include <linux/fsmap.h>
- #include "space.h"
- #include "input.h"
-+#include "relocation.h"
- 
- static cmdinfo_t find_owner_cmd;
- static cmdinfo_t resolve_owner_cmd;
- 
- #define NR_EXTENTS 128
- 
--static RADIX_TREE(inode_tree, 0);
--#define MOVE_INODE	0
--#define MOVE_BLOCKS	1
--#define INODE_PATH	2
--int inode_count;
--int inode_paths;
--
- static void
- track_inode_chunks(
- 	struct xfs_fd	*xfd,
-@@ -39,7 +33,7 @@ track_inode_chunks(
- 	uint64_t	first_ino = cvt_agino_to_ino(xfd, agno,
- 						cvt_agbno_to_agino(xfd, agbno));
- 	uint64_t	num_inodes = cvt_b_to_inode_count(xfd, length);
--	int		i;
-+	uint64_t	i;
- 
- 	printf(_("AG %d\tInode Range to move: 0x%llx - 0x%llx (length 0x%llx)\n"),
- 			agno,
-@@ -47,14 +41,8 @@ track_inode_chunks(
- 			(unsigned long long)first_ino + num_inodes - 1,
- 			(unsigned long long)length);
- 
--	for (i = 0; i < num_inodes; i++) {
--		if (!radix_tree_lookup(&inode_tree, first_ino + i)) {
--			radix_tree_insert(&inode_tree, first_ino + i,
--					(void *)first_ino + i);
--			inode_count++;
--		}
--		radix_tree_tag_set(&inode_tree, first_ino + i, MOVE_INODE);
--	}
-+	for (i = 0; i < num_inodes; i++)
-+		set_reloc_iflag(first_ino + i, MOVE_INODE);
- }
- 
- static void
-@@ -65,7 +53,7 @@ track_inode(
- 	uint64_t	physaddr,
- 	uint64_t	length)
- {
--	if (radix_tree_tag_get(&inode_tree, owner, MOVE_BLOCKS))
-+	if (test_reloc_iflag(owner, MOVE_BLOCKS))
- 		return;
- 
- 	printf(_("AG %d\tInode 0x%llx: blocks to move to move: 0x%llx - 0x%llx\n"),
-@@ -73,11 +61,8 @@ track_inode(
- 			(unsigned long long)owner,
- 			(unsigned long long)physaddr,
- 			(unsigned long long)physaddr + length - 1);
--	if (!radix_tree_lookup(&inode_tree, owner)) {
--		radix_tree_insert(&inode_tree, owner, (void *)owner);
--		inode_count++;
--	}
--	radix_tree_tag_set(&inode_tree, owner, MOVE_BLOCKS);
-+
-+	set_reloc_iflag(owner, MOVE_BLOCKS);
- }
- 
- static void
-@@ -111,7 +96,7 @@ scan_ag(
- 	h->fmr_offset = ULLONG_MAX;
- 
- 	while (true) {
--		printf("Inode count %d\n", inode_count);
-+		printf("Inode count %llu\n", get_reloc_count());
- 		ret = ioctl(xfd->fd, FS_IOC_GETFSMAP, fsmap);
- 		if (ret < 0) {
- 			fprintf(stderr, _("%s: FS_IOC_GETFSMAP [\"%s\"]: %s\n"),
-@@ -245,18 +230,6 @@ find_owner_init(void)
- 	add_command(&find_owner_cmd);
- }
- 
--/*
-- * for each dirent we get returned, look up the inode tree to see if it is an
-- * inode we need to process. If it is, then replace the entry in the tree with
-- * a structure containing the current path and mark the entry as resolved.
-- */
--struct inode_path {
--	uint64_t		ino;
--	struct list_head	path_list;
--	uint32_t		link_count;
--	char			path[1];
--};
--
- static int
- resolve_owner_cb(
- 	const char		*path,
-@@ -266,14 +239,14 @@ resolve_owner_cb(
- {
- 	struct inode_path	*ipath, *slot_ipath;
- 	int			pathlen;
--	void			**slot;
-+	struct inode_path	**slot;
- 
- 	/*
- 	 * Lookup the slot rather than the entry so we can replace the contents
- 	 * without another lookup later on.
- 	 */
--	slot = radix_tree_lookup_slot(&inode_tree, stat->st_ino);
--	if (!slot || *slot == NULL)
-+	slot = get_reloc_ipath_slot(stat->st_ino);
-+	if (!slot)
- 		return 0;
- 
- 	/* Could not get stat data? Fail! */
-@@ -303,11 +276,10 @@ _("Aborting: Storing path %s for inode 0x%lx failed: %s\n"),
- 	 * set the link count of the path to 1 and replace the slot contents
- 	 * with our new_ipath.
- 	 */
--	if (stat->st_ino == (uint64_t)*slot) {
-+	if (*slot == UNLINKED_IPATH) {
- 		ipath->link_count = 1;
- 		*slot = ipath;
--		radix_tree_tag_set(&inode_tree, stat->st_ino, INODE_PATH);
--		inode_paths++;
-+		set_reloc_iflag(stat->st_ino, INODE_PATH);
- 		return 0;
- 	}
- 
-@@ -351,18 +323,15 @@ list_inode_paths(void)
- 		bool		move_blocks;
- 		bool		move_inode;
- 
--		ret = radix_tree_gang_lookup_tag(&inode_tree, (void **)&ipath,
--						idx, 1, INODE_PATH);
--		if (!ret)
-+		ipath = get_next_reloc_ipath(idx);
-+		if (!ipath)
- 			break;
- 		idx = ipath->ino + 1;
- 
- 		/* Grab status tags and remove from tree. */
--		move_blocks = radix_tree_tag_get(&inode_tree, ipath->ino,
--						MOVE_BLOCKS);
--		move_inode = radix_tree_tag_get(&inode_tree, ipath->ino,
--						MOVE_INODE);
--		radix_tree_delete(&inode_tree, ipath->ino);
-+		move_blocks = test_reloc_iflag(ipath->ino, MOVE_BLOCKS);
-+		move_inode = test_reloc_iflag(ipath->ino, MOVE_INODE);
-+		forget_reloc_ino(ipath->ino);
- 
- 		/* Print the initial path with inode number and state. */
- 		printf("0x%.16llx\t%s\t%s\t%8d\t%s\n",
-@@ -400,9 +369,8 @@ list_inode_paths(void)
- 	do {
- 		uint64_t	ino;
- 
--
--		ret = radix_tree_gang_lookup(&inode_tree, (void **)&ino, idx, 1);
--		if (!ret) {
-+		ino = get_next_reloc_unlinked(idx);
-+		if (!ino) {
- 			if (idx != 0)
- 				ret = -EBUSY;
- 			break;
-@@ -410,7 +378,7 @@ list_inode_paths(void)
- 		idx = ino + 1;
- 		printf(_("No path found for inode 0x%llx!\n"),
- 				(unsigned long long)ino);
--		radix_tree_delete(&inode_tree, ino);
-+		forget_reloc_ino(ino);
- 	} while (true);
- 
- 	return ret;
-@@ -426,7 +394,7 @@ resolve_owner_f(
- {
- 	int	ret;
- 
--	if (!inode_tree.rnode) {
-+	if (!is_reloc_populated()) {
- 		fprintf(stderr,
- _("Inode list has not been populated. No inodes to resolve.\n"));
- 		return 0;
-diff --git a/spaceman/relocation.c b/spaceman/relocation.c
-new file mode 100644
-index 00000000000..7c7d9a2b4b2
+diff --git a/tests/xfs/1926 b/tests/xfs/1926
+new file mode 100755
+index 0000000000..91b611f59d
 --- /dev/null
-+++ b/spaceman/relocation.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 Red Hat, Inc.
-+ * All Rights Reserved.
-+ */
++++ b/tests/xfs/1926
+@@ -0,0 +1,177 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023-2024 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1926
++#
++# Functional testing for COWing around realtime extents.
++#
++. ./common/preamble
++_begin_fstest auto clone realtime rw
 +
-+#include "libxfs.h"
-+#include "libfrog/fsgeom.h"
-+#include "libfrog/radix-tree.h"
-+#include "libfrog/paths.h"
-+#include "command.h"
-+#include "init.h"
-+#include "space.h"
-+#include "input.h"
-+#include "relocation.h"
-+#include "handle.h"
-+
-+static unsigned long long inode_count;
-+static unsigned long long inode_paths;
-+
-+unsigned long long
-+get_reloc_count(void)
++_cleanup()
 +{
-+	return inode_count;
++	cd /
++	rm -r -f $tmp.* $testdir
 +}
 +
-+static RADIX_TREE(relocation_data, 0);
++. ./common/reflink
 +
-+bool
-+is_reloc_populated(void)
-+{
-+	return relocation_data.rnode != NULL;
++# real QA test starts here
++
++# Modify as appropriate.
++_supported_fs generic
++_require_test
++_require_test_reflink
++_require_cp_reflink
++
++alloc_unit=$(_get_file_block_size $TEST_DIR)
++blksz=$(_get_block_size $TEST_DIR)
++
++testdir="$TEST_DIR/test-$seq"
++mkdir "$testdir"
++
++filesize="$(( (alloc_unit * 5 / 2) + 512))"
++origfile="$testdir/a"
++testfile0="$testdir/a0"
++testfile1="$testdir/a1"
++testfile2="$testdir/a2"
++testfile3="$testdir/a3"
++testfile4="$testdir/a4"
++testfile5="$testdir/a5"
++testfile6="$testdir/a6"
++testfile7="$testdir/a7"
++testfile8="$testdir/a8"
++testfile9="$testdir/a9"
++testfileA="$testdir/aA"
++testfileB="$testdir/aB"
++
++goldfile0="$testdir/g0"
++goldfile1="$testdir/g1"
++goldfile2="$testdir/g2"
++goldfile3="$testdir/g3"
++goldfile4="$testdir/g4"
++goldfile5="$testdir/g5"
++
++orig_cmd="pwrite -S 0x58 -b 1m 0 $filesize"
++$XFS_IO_PROG -f -c "$orig_cmd" -c fsync "$origfile" >> $seqres.full
++
++_cp_reflink "$origfile" "$testfile0"
++_cp_reflink "$origfile" "$testfile1"
++_cp_reflink "$origfile" "$testfile2"
++_cp_reflink "$origfile" "$testfile3"
++_cp_reflink "$origfile" "$testfile4"
++_cp_reflink "$origfile" "$testfile5"
++_cp_reflink "$origfile" "$testfile6"
++_cp_reflink "$origfile" "$testfile7"
++_cp_reflink "$origfile" "$testfile8"
++_cp_reflink "$origfile" "$testfile9"
++_cp_reflink "$origfile" "$testfileA"
++_cp_reflink "$origfile" "$testfileB"
++
++# First we try a partial ovewrite below EOF
++cmd="pwrite -S 0x59 -b 1m -W 512 512"
++_kernlog "********** buffered write below eof goldfile0"
++$XFS_IO_PROG -c "$cmd" "$testfile0" >> $seqres.full
++_kernlog "********** direct write below eof goldfile0"
++$XFS_IO_PROG -d -c "$cmd" "$testfile1" >> $seqres.full
++_kernlog "********** goldfile0"
++$XFS_IO_PROG -f -c "$orig_cmd" -c "$cmd" -c fsync "$goldfile0" >> $seqres.full
++
++# Next we try an appending write at EOF
++_kernlog "********** appending buffered write goldfile1"
++cmd="pwrite -S 0x5a -b 1m -W $filesize 512"
++$XFS_IO_PROG -c "$cmd" "$testfile2" >> $seqres.full
++_kernlog "********** appending direct write goldfile1"
++$XFS_IO_PROG -d -c "$cmd" "$testfile3" >> $seqres.full
++_kernlog "********** goldfile1"
++$XFS_IO_PROG -f -c "$orig_cmd" -c "$cmd" -c fsync "$goldfile1" >> $seqres.full
++
++# Third we try a pure overwrite of the second block
++_kernlog "********** buffered overwrite second block goldfile2"
++cmd="pwrite -S 0x5b -b 1m -W $alloc_unit $alloc_unit"
++$XFS_IO_PROG -c "$cmd" "$testfile4" >> $seqres.full
++_kernlog "********** direct overwrite second block goldfile2"
++$XFS_IO_PROG -d -c "$cmd" "$testfile5" >> $seqres.full
++_kernlog "********** goldfile2"
++$XFS_IO_PROG -f -c "$orig_cmd" -c "$cmd" -c fsync "$goldfile2" >> $seqres.full
++
++# Fourth we try a small write well beyond EOF
++_kernlog "********** buffered write beyond eof block goldfile3"
++cmd="pwrite -S 0x5c -b 1m -W $(( (filesize * 2) + 512)) 512"
++$XFS_IO_PROG -c "$cmd" "$testfile6" >> $seqres.full
++_kernlog "********** direct write beyond eof block goldfile3"
++$XFS_IO_PROG -d -c "$cmd" "$testfile7" >> $seqres.full
++_kernlog "********** goldfile3"
++$XFS_IO_PROG -f -c "$orig_cmd"  -c "$cmd" -c fsync "$goldfile3" >> $seqres.full
++
++# Fifth we try a large write well beyond EOF
++_kernlog "********** buffered write beyond eof block goldfile4"
++cmd="pwrite -S 0x5d -b 1m -W $(( ((filesize * 2) + 512) & ~(alloc_unit - 1) )) $alloc_unit"
++$XFS_IO_PROG -c "$cmd" "$testfile8" >> $seqres.full
++_kernlog "********** direct write beyond eof block goldfile4"
++$XFS_IO_PROG -d -c "$cmd" "$testfile9" >> $seqres.full
++_kernlog "********** goldfile3"
++$XFS_IO_PROG -f -c "$orig_cmd" -c "$cmd" -c fsync "$goldfile4" >> $seqres.full
++
++# Sixth we try a pure overwrite of the second fsblock
++_kernlog "********** buffered overwrite second fsblock goldfile5"
++cmd="pwrite -S 0x5b -b 1m -W $blksz $alloc_unit"
++$XFS_IO_PROG -c "$cmd" "$testfileA" >> $seqres.full
++_kernlog "********** direct overwrite second fsblock goldfile5"
++$XFS_IO_PROG -d -c "$cmd" "$testfileB" >> $seqres.full
++_kernlog "********** goldfile5"
++$XFS_IO_PROG -f -c "$orig_cmd" -c "$cmd" -c fsync "$goldfile5" >> $seqres.full
++
++_kernlog "********** done"
++
++corruption_noted=
++
++note_corruption() {
++	local fname="$1"
++
++	echo "$fname is bad"
++
++	if [ -z "$corruption_noted" ]; then
++		corruption_noted=1
++		echo "origfile" >> $seqres.full
++		od -tx1 -Ad -c "$origfile" >> $seqres.full
++	fi
++
++	echo "$fname" >> $seqres.full
++	od -tx1 -Ad -c "$testfile1" >> $seqres.full
 +}
 +
-+bool
-+test_reloc_iflag(
-+	uint64_t	ino,
-+	unsigned int	flag)
-+{
-+	return radix_tree_tag_get(&relocation_data, ino, flag);
-+}
++echo "before remount" >> $seqres.full
++cmp -s "$goldfile0" "$testfile0" || note_corruption "$testfile0"
++cmp -s "$goldfile0" "$testfile1" || note_corruption "$testfile1"
++cmp -s "$goldfile1" "$testfile2" || note_corruption "$testfile2"
++cmp -s "$goldfile1" "$testfile3" || note_corruption "$testfile3"
++cmp -s "$goldfile2" "$testfile4" || note_corruption "$testfile4"
++cmp -s "$goldfile2" "$testfile5" || note_corruption "$testfile5"
++cmp -s "$goldfile3" "$testfile6" || note_corruption "$testfile6"
++cmp -s "$goldfile3" "$testfile7" || note_corruption "$testfile7"
++cmp -s "$goldfile4" "$testfile8" || note_corruption "$testfile8"
++cmp -s "$goldfile4" "$testfile9" || note_corruption "$testfile9"
++cmp -s "$goldfile5" "$testfileA" || note_corruption "$testfileA"
++cmp -s "$goldfile5" "$testfileB" || note_corruption "$testfileB"
 +
-+void
-+set_reloc_iflag(
-+	uint64_t	ino,
-+	unsigned int	flag)
-+{
-+	if (!radix_tree_lookup(&relocation_data, ino)) {
-+		radix_tree_insert(&relocation_data, ino, UNLINKED_IPATH);
-+		if (flag != INODE_PATH)
-+			inode_count++;
-+	}
-+	if (flag == INODE_PATH)
-+		inode_paths++;
++_test_cycle_mount
 +
-+	radix_tree_tag_set(&relocation_data, ino, flag);
-+}
++echo "after remount" >> $seqres.full
++cmp -s "$goldfile0" "$testfile0" || note_corruption "$testfile0"
++cmp -s "$goldfile0" "$testfile1" || note_corruption "$testfile1"
++cmp -s "$goldfile1" "$testfile2" || note_corruption "$testfile2"
++cmp -s "$goldfile1" "$testfile3" || note_corruption "$testfile3"
++cmp -s "$goldfile2" "$testfile4" || note_corruption "$testfile4"
++cmp -s "$goldfile2" "$testfile5" || note_corruption "$testfile5"
++cmp -s "$goldfile3" "$testfile6" || note_corruption "$testfile6"
++cmp -s "$goldfile3" "$testfile7" || note_corruption "$testfile7"
++cmp -s "$goldfile4" "$testfile8" || note_corruption "$testfile8"
++cmp -s "$goldfile4" "$testfile9" || note_corruption "$testfile9"
++cmp -s "$goldfile5" "$testfileA" || note_corruption "$testfileA"
++cmp -s "$goldfile5" "$testfileB" || note_corruption "$testfileB"
 +
-+struct inode_path *
-+get_next_reloc_ipath(
-+	uint64_t	ino)
-+{
-+	struct inode_path	*ipath;
-+	int			ret;
-+
-+	ret = radix_tree_gang_lookup_tag(&relocation_data, (void **)&ipath,
-+			ino, 1, INODE_PATH);
-+	if (!ret)
-+		return NULL;
-+	return ipath;
-+}
-+
-+uint64_t
-+get_next_reloc_unlinked(
-+	uint64_t	ino)
-+{
-+	uint64_t	next_ino;
-+	int		ret;
-+
-+	ret = radix_tree_gang_lookup(&relocation_data, (void **)&next_ino, ino,
-+			1);
-+	if (!ret)
-+		return 0;
-+	return next_ino;
-+}
-+
-+/*
-+ * Return a pointer to a pointer where the caller can read or write a pointer
-+ * to an inode path structure.
-+ *
-+ * The pointed-to pointer will be set to UNLINKED_IPATH if there is no ipath
-+ * associated with this inode but the inode has been flagged for relocation.
-+ *
-+ * Returns NULL if the inode is not flagged for relocation.
-+ */
-+struct inode_path **
-+get_reloc_ipath_slot(
-+	uint64_t		ino)
-+{
-+	struct inode_path	**slot;
-+
-+	slot = (struct inode_path **)radix_tree_lookup_slot(&relocation_data,
-+			ino);
-+	if (!slot || *slot == NULL)
-+		return NULL;
-+	return slot;
-+}
-+
-+void
-+forget_reloc_ino(
-+	uint64_t		ino)
-+{
-+	radix_tree_delete(&relocation_data, ino);
-+}
-diff --git a/spaceman/relocation.h b/spaceman/relocation.h
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/1926.out b/tests/xfs/1926.out
 new file mode 100644
-index 00000000000..f05a871915d
+index 0000000000..a56601b969
 --- /dev/null
-+++ b/spaceman/relocation.h
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 Red Hat, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef XFS_SPACEMAN_RELOCATION_H_
-+#define XFS_SPACEMAN_RELOCATION_H_
-+
-+bool is_reloc_populated(void);
-+unsigned long long get_reloc_count(void);
-+
-+/*
-+ * Tags for the relocation_data tree that indicate what it contains and the
-+ * discovery information that needed to be stored.
-+ */
-+#define MOVE_INODE	0
-+#define MOVE_BLOCKS	1
-+#define INODE_PATH	2
-+
-+bool test_reloc_iflag(uint64_t ino, unsigned int flag);
-+void set_reloc_iflag(uint64_t ino, unsigned int flag);
-+struct inode_path *get_next_reloc_ipath(uint64_t ino);
-+uint64_t get_next_reloc_unlinked(uint64_t ino);
-+struct inode_path **get_reloc_ipath_slot(uint64_t ino);
-+void forget_reloc_ino(uint64_t ino);
-+
-+/*
-+ * When the entry in the relocation_data tree is tagged with INODE_PATH, the
-+ * entry contains a structure that tracks the discovered paths to the inode. If
-+ * the inode has multiple hard links, then we chain each individual path found
-+ * via the path_list and record the number of paths in the link_count entry.
-+ */
-+struct inode_path {
-+	uint64_t		ino;
-+	struct list_head	path_list;
-+	uint32_t		link_count;
-+	char			path[1];
-+};
-+
-+/*
-+ * Sentinel value for inodes that we have to move but haven't yet found a path
-+ * to.
-+ */
-+#define UNLINKED_IPATH		((struct inode_path *)1)
-+
-+#endif /* XFS_SPACEMAN_RELOCATION_H_ */
++++ b/tests/xfs/1926.out
+@@ -0,0 +1,2 @@
++QA output created by 1926
++Silence is golden
 
 
