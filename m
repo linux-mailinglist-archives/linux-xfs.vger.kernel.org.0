@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-2302-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2384-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB4AD821259
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:43:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3C0A8212B3
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 02:04:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F1C31C21D4F
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:43:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EE4A9B21A65
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789D68F70;
-	Mon,  1 Jan 2024 00:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C59F802;
+	Mon,  1 Jan 2024 01:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7s2A1Fr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpWmOV96"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414998F5B;
-	Mon,  1 Jan 2024 00:43:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28F7C433C7;
-	Mon,  1 Jan 2024 00:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132FA7ED;
+	Mon,  1 Jan 2024 01:04:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0218C433C8;
+	Mon,  1 Jan 2024 01:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069802;
-	bh=O2HlMEr4j4zMWn2d/2gxKGEqM4DbFyga+89yC9qa2h4=;
+	s=k20201202; t=1704071086;
+	bh=pEWxttbe7ZFy++6/xveUJs/muewSFpCu/5fWwGCCLFk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=V7s2A1FrRcgIuV7LdvclwjPVWQzM3ZLdMpRG0ApjxYre7Bv84GmTJP2rN5qhuqOnz
-	 ZI6k2I6YxuvmjHU2LdrJbG5+68JAAZICMH+jXo3BWbt6eaB8gZS5K2pDuE2Akf0AeK
-	 NtEPbNaKdD/9+dkUEaMmAUCUwFAno9ozxeotTCCOKpQ4j5Qn3EhApvXRdC9h04sZii
-	 4P5LQW0qomSc6/yEXri/GYqq/XQNdyMldKUOnR0fhry2ErNpxeLE1WqYgmUiOw9/aH
-	 ywOiJQK2Wyk8+tkneRdg/wy+vHUXJwdmcv/QpjK+p5spV9bZOWoMS1xV7P7hfD1WqZ
-	 MGx36HU6AA+IQ==
-Date: Sun, 31 Dec 2023 16:43:22 +9900
-Subject: [PATCH 3/3] fuzzy: test other dquot ids
+	b=WpWmOV967nrn+gvaeSgs+uxl7qZL5BAVl+FKH2sFumKR6eTVlw5YBpVvpcO8ZjARg
+	 2JC2vqNudi7MMotbf5EXIZttn1pjAsM+quB1Q9J8WKKIuU474jW/z5S3ch1mrfbjlz
+	 cEk2SObMxCf9sRxG9Mxksq2aLsPMyYPgou0QGyUk2wAXqOT4v9FEKV+djzD9ko6Rmi
+	 OlE94PD45du3weD2oV6VyefnVlcP+y1l1KzLo4U/f3Om0VjDdhxUhNvK7nFjk3avXl
+	 uoFcqqELau6gW4Qx4o2Y9IkWowjJxi7+Hi3rPSFxwrVPyB9kTTBNZnLgLaw1hEVAy0
+	 Aelg9RXbcZ53Q==
+Date: Sun, 31 Dec 2023 17:04:46 +9900
+Subject: [PATCH 3/5] misc: add more congruent oplen testing
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
-Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
-Message-ID: <170405025640.1821776.3192555943023683779.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405025600.1821776.14517378233107318876.stgit@frogsfrogsfrogs>
-References: <170405025600.1821776.14517378233107318876.stgit@frogsfrogsfrogs>
+Cc: guan@eryu.me, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Message-ID: <170405032776.1827706.12287719690033943992.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405032733.1827706.12312180709769839153.stgit@frogsfrogsfrogs>
+References: <170405032733.1827706.12312180709769839153.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,326 +52,266 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
+Do more checking for file allocation operation op length congruency.
+This prevents tests from failing with EINVAL when the realtime extent
+size is something weird like 28k or 1GB.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy    |   14 ++++++++++++++
- common/populate |   14 ++++++++++++++
- tests/xfs/425   |   10 +++++++---
- tests/xfs/426   |   10 +++++++---
- tests/xfs/427   |   10 +++++++---
- tests/xfs/428   |   10 +++++++---
- tests/xfs/429   |   10 +++++++---
- tests/xfs/430   |   10 +++++++---
- tests/xfs/487   |   10 +++++++---
- tests/xfs/488   |   10 +++++++---
- tests/xfs/489   |   10 +++++++---
- tests/xfs/779   |   10 +++++++---
- tests/xfs/780   |   10 +++++++---
- tests/xfs/781   |   10 +++++++---
- 14 files changed, 112 insertions(+), 36 deletions(-)
+ tests/generic/145 |    1 +
+ tests/generic/147 |    1 +
+ tests/generic/261 |    1 +
+ tests/generic/262 |    1 +
+ tests/generic/331 |    1 +
+ tests/generic/353 |    2 +-
+ tests/generic/517 |    1 +
+ tests/generic/657 |    1 +
+ tests/generic/658 |    1 +
+ tests/generic/659 |    1 +
+ tests/generic/660 |    1 +
+ tests/generic/663 |    1 +
+ tests/generic/664 |    1 +
+ tests/generic/665 |    1 +
+ tests/generic/670 |    1 +
+ tests/generic/672 |    1 +
+ tests/xfs/420     |    3 +++
+ tests/xfs/421     |    3 +++
+ tests/xfs/792     |    1 +
+ 19 files changed, 23 insertions(+), 1 deletion(-)
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index bbf7f83d9e..b72b4a9fe7 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -678,6 +678,20 @@ _scratch_xfs_set_xattr_fuzz_types() {
- 	SCRATCH_XFS_XATTR_FUZZ_TYPES=(EXTENTS_REMOTE3K EXTENTS_REMOTE4K LEAF NODE)
+diff --git a/tests/generic/145 b/tests/generic/145
+index f213f53be8..81fc5f6c2f 100755
+--- a/tests/generic/145
++++ b/tests/generic/145
+@@ -36,6 +36,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $TEST_DIR $blksz
+ _pwrite_byte 0x61 0 $blksz $testdir/file1 >> $seqres.full
+ _pwrite_byte 0x62 $blksz $blksz $testdir/file1 >> $seqres.full
+ _pwrite_byte 0x63 $((blksz * 2)) $blksz $testdir/file1 >> $seqres.full
+diff --git a/tests/generic/147 b/tests/generic/147
+index 113800944b..bb17bb1c0b 100755
+--- a/tests/generic/147
++++ b/tests/generic/147
+@@ -35,6 +35,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $TEST_DIR $blksz
+ _pwrite_byte 0x61 0 $blksz $testdir/file1 >> $seqres.full
+ _pwrite_byte 0x62 $blksz $blksz $testdir/file1 >> $seqres.full
+ _pwrite_byte 0x63 $((blksz * 2)) $blksz $testdir/file1 >> $seqres.full
+diff --git a/tests/generic/261 b/tests/generic/261
+index 93c1c349b1..deb360288e 100755
+--- a/tests/generic/261
++++ b/tests/generic/261
+@@ -29,6 +29,7 @@ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
+ 
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=5
+ filesize=$((blksz * nr))
+ 
+diff --git a/tests/generic/262 b/tests/generic/262
+index 46e88f8731..f296e37e02 100755
+--- a/tests/generic/262
++++ b/tests/generic/262
+@@ -29,6 +29,7 @@ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
+ 
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=4
+ filesize=$((blksz * nr))
+ 
+diff --git a/tests/generic/331 b/tests/generic/331
+index 8c665ce4fc..9b6801e16f 100755
+--- a/tests/generic/331
++++ b/tests/generic/331
+@@ -38,6 +38,7 @@ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
+ 
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=640
+ bufnr=128
+ filesize=$((blksz * nr))
+diff --git a/tests/generic/353 b/tests/generic/353
+index c563972510..6dbb0d4c24 100755
+--- a/tests/generic/353
++++ b/tests/generic/353
+@@ -30,7 +30,7 @@ _scratch_mkfs > /dev/null 2>&1
+ _scratch_mount
+ 
+ blocksize=$(_get_file_block_size $SCRATCH_MNT)
+-
++_require_congruent_file_oplen $SCRATCH_MNT $blocksize
+ file1="$SCRATCH_MNT/file1"
+ file2="$SCRATCH_MNT/file2"
+ extmap1="$SCRATCH_MNT/extmap1"
+diff --git a/tests/generic/517 b/tests/generic/517
+index cf3031ed2d..229358d06b 100755
+--- a/tests/generic/517
++++ b/tests/generic/517
+@@ -21,6 +21,7 @@ _require_scratch_dedupe
+ 
+ _scratch_mkfs >>$seqres.full 2>&1
+ _scratch_mount
++_require_congruent_file_oplen $SCRATCH_MNT 65536
+ 
+ # The first byte with a value of 0xae starts at an offset (512Kb + 100) which is
+ # not a multiple of the block size.
+diff --git a/tests/generic/657 b/tests/generic/657
+index e0fecd544c..9f4673dda3 100755
+--- a/tests/generic/657
++++ b/tests/generic/657
+@@ -30,6 +30,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _pwrite_byte 0x61 0 $filesize $testdir/file1 >> $seqres.full
+diff --git a/tests/generic/658 b/tests/generic/658
+index a5cbadaaa5..e9519c25e2 100755
+--- a/tests/generic/658
++++ b/tests/generic/658
+@@ -31,6 +31,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _weave_reflink_regular $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/659 b/tests/generic/659
+index ccc2d7950d..05436edfab 100755
+--- a/tests/generic/659
++++ b/tests/generic/659
+@@ -31,6 +31,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _weave_reflink_unwritten $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/660 b/tests/generic/660
+index bc17dc5e59..52b0d1ea9e 100755
+--- a/tests/generic/660
++++ b/tests/generic/660
+@@ -31,6 +31,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _weave_reflink_holes $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/663 b/tests/generic/663
+index 658a5b7004..692c77b745 100755
+--- a/tests/generic/663
++++ b/tests/generic/663
+@@ -32,6 +32,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _sweave_reflink_regular $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/664 b/tests/generic/664
+index 3009101fdc..40fb8c6d92 100755
+--- a/tests/generic/664
++++ b/tests/generic/664
+@@ -34,6 +34,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _sweave_reflink_unwritten $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/665 b/tests/generic/665
+index 86ba578720..ee511755e6 100755
+--- a/tests/generic/665
++++ b/tests/generic/665
+@@ -34,6 +34,7 @@ mkdir $testdir
+ 
+ echo "Create the original files"
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=64
+ filesize=$((blksz * nr))
+ _sweave_reflink_holes $blksz $nr $testdir/file1 $testdir/file3 >> $seqres.full
+diff --git a/tests/generic/670 b/tests/generic/670
+index 67de167405..80f9fe6d4f 100755
+--- a/tests/generic/670
++++ b/tests/generic/670
+@@ -31,6 +31,7 @@ mkdir $testdir
+ loops=512
+ nr_loops=$((loops - 1))
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ 
+ echo "Initialize files"
+ echo >> $seqres.full
+diff --git a/tests/generic/672 b/tests/generic/672
+index 9e3a97ec5e..0710a04294 100755
+--- a/tests/generic/672
++++ b/tests/generic/672
+@@ -30,6 +30,7 @@ mkdir $testdir
+ loops=1024
+ nr_loops=$((loops - 1))
+ blksz=65536
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ 
+ echo "Initialize files"
+ echo >> $seqres.full
+diff --git a/tests/xfs/420 b/tests/xfs/420
+index d38772c9d9..51f87bc304 100755
+--- a/tests/xfs/420
++++ b/tests/xfs/420
+@@ -69,6 +69,9 @@ exercise_lseek() {
  }
  
-+# Sets the array SCRATCH_XFS_QUOTA_FUZZ_IDS to the list of dquot ids available
-+# for fuzzing.  By default, this list contains 0 (root), 4242 (non-root), and
-+# 8484 (zero counts).  Users can override this by setting
-+# SCRATCH_XFS_LIST_FUZZ_QUOTAIDS in the environment.
-+_scratch_xfs_set_quota_fuzz_ids() {
-+	if [ -n "${SCRATCH_XFS_LIST_FUZZ_QUOTAIDS}" ]; then
-+		mapfile -t SCRATCH_XFS_QUOTA_FUZZ_IDS < \
-+				<(echo "${SCRATCH_XFS_LIST_FUZZ_QUOTAIDS}" | tr '[ ,]' '[\n\n]')
-+		return
-+	fi
-+
-+	SCRATCH_XFS_QUOTA_FUZZ_IDS=(0 4242 8484)
-+}
-+
- # Grab the list of available fuzzing verbs
- _scratch_xfs_list_fuzz_verbs() {
- 	if [ -n "${SCRATCH_XFS_LIST_FUZZ_VERBS}" ]; then
-diff --git a/common/populate b/common/populate
-index 3d233073c9..8097151919 100644
---- a/common/populate
-+++ b/common/populate
-@@ -360,6 +360,20 @@ _scratch_xfs_populate() {
- 	mknod "${SCRATCH_MNT}/S_IFBLK" b 1 1
- 	mknod "${SCRATCH_MNT}/S_IFIFO" p
+ blksz=65536
++# Golden output encodes SEEK_HOLE/DATA output, which depends on COW only
++# happening on $blksz granularity
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=8
+ filesize=$((blksz * nr))
  
-+	# non-root dquot
-+	local nonroot_id=4242
-+	echo "${nonroot_id}" > "${SCRATCH_MNT}/non_root_dquot"
-+	chown "${nonroot_id}:${nonroot_id}" "${SCRATCH_MNT}/non_root_dquot"
-+	$XFS_IO_PROG -c "chproj ${nonroot_id}" "${SCRATCH_MNT}/non_root_dquot"
-+
-+	# empty dquot
-+	local empty_id=8484
-+	echo "${empty_id}" > "${SCRATCH_MNT}/empty_dquot"
-+	chown "${empty_id}:${empty_id}" "${SCRATCH_MNT}/empty_dquot"
-+	$XFS_IO_PROG -c "chproj ${empty_id}" "${SCRATCH_MNT}/empty_dquot"
-+	chown "0:0" "${SCRATCH_MNT}/empty_dquot"
-+	$XFS_IO_PROG -c "chproj 0" "${SCRATCH_MNT}/empty_dquot"
-+
- 	# special file with an xattr
- 	setfacl -P -m u:nobody:r ${SCRATCH_MNT}/S_IFCHR
+diff --git a/tests/xfs/421 b/tests/xfs/421
+index 027ae47c21..429333e349 100755
+--- a/tests/xfs/421
++++ b/tests/xfs/421
+@@ -51,6 +51,9 @@ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
  
-diff --git a/tests/xfs/425 b/tests/xfs/425
-index c2e16ee87e..5275e594b2 100755
---- a/tests/xfs/425
-+++ b/tests/xfs/425
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'usrquota' || _notrun "user quota disabled"
+ blksz=65536
++# Golden output encodes SEEK_HOLE/DATA output, which depends on COW only
++# happening on $blksz granularity
++_require_congruent_file_oplen $SCRATCH_MNT $blksz
+ nr=8
+ filesize=$((blksz * nr))
  
--echo "Fuzz user 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -u 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz user $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -u $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
+diff --git a/tests/xfs/792 b/tests/xfs/792
+index bfbfbce4aa..bfbfd8bfbc 100755
+--- a/tests/xfs/792
++++ b/tests/xfs/792
+@@ -32,6 +32,7 @@ _require_xfs_io_error_injection "bmap_finish_one"
  
- # success, all done
- status=0
-diff --git a/tests/xfs/426 b/tests/xfs/426
-index e52b15f28d..06f0f44b62 100755
---- a/tests/xfs/426
-+++ b/tests/xfs/426
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'usrquota' || _notrun "user quota disabled"
+ _scratch_mkfs >> $seqres.full
+ _scratch_mount
++_require_congruent_file_oplen $SCRATCH_MNT 65536
  
--echo "Fuzz user 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'online'  "dquot -u 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz user $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'online'  "dquot -u $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/427 b/tests/xfs/427
-index 19f45fbd81..327cddd879 100755
---- a/tests/xfs/427
-+++ b/tests/xfs/427
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'grpquota' || _notrun "group quota disabled"
- 
--echo "Fuzz group 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -g 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz group $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -g $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/428 b/tests/xfs/428
-index 338e659df2..80b05b8450 100755
---- a/tests/xfs/428
-+++ b/tests/xfs/428
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'grpquota' || _notrun "group quota disabled"
- 
--echo "Fuzz group 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'online'  "dquot -g 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz group $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'online'  "dquot -g $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/429 b/tests/xfs/429
-index a4aeb6e440..5fa3b2ce29 100755
---- a/tests/xfs/429
-+++ b/tests/xfs/429
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'prjquota' || _notrun "project quota disabled"
- 
--echo "Fuzz project 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -p 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz project $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'offline'  "dquot -p $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/430 b/tests/xfs/430
-index d94f65bd14..6f5c772dfb 100755
---- a/tests/xfs/430
-+++ b/tests/xfs/430
-@@ -27,9 +27,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'prjquota' || _notrun "project quota disabled"
- 
--echo "Fuzz project 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'online'  "dquot -p 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz project $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'online'  "dquot -p $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/487 b/tests/xfs/487
-index 337541bbcd..a688593950 100755
---- a/tests/xfs/487
-+++ b/tests/xfs/487
-@@ -28,9 +28,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'usrquota' || _notrun "user quota disabled"
- 
--echo "Fuzz user 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'none'  "dquot -u 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz user $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'none'  "dquot -u $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/488 b/tests/xfs/488
-index 4347768964..0d54ab8c7d 100755
---- a/tests/xfs/488
-+++ b/tests/xfs/488
-@@ -28,9 +28,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'grpquota' || _notrun "group quota disabled"
- 
--echo "Fuzz group 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'none'  "dquot -g 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz group $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'none'  "dquot -g $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/489 b/tests/xfs/489
-index c70e674ccc..012416f989 100755
---- a/tests/xfs/489
-+++ b/tests/xfs/489
-@@ -28,9 +28,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'prjquota' || _notrun "project quota disabled"
- 
--echo "Fuzz project 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'none'  "dquot -p 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz project $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'none'  "dquot -p $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/779 b/tests/xfs/779
-index fe0de3087a..05f2718632 100755
---- a/tests/xfs/779
-+++ b/tests/xfs/779
-@@ -29,9 +29,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'usrquota' || _notrun "user quota disabled"
- 
--echo "Fuzz user 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'both'  "dquot -u 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz user $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'both'  "dquot -u $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/780 b/tests/xfs/780
-index 0a23473538..9dd8f4527e 100755
---- a/tests/xfs/780
-+++ b/tests/xfs/780
-@@ -29,9 +29,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'grpquota' || _notrun "group quota disabled"
- 
--echo "Fuzz group 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'both'  "dquot -g 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz group $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'both'  "dquot -g $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/781 b/tests/xfs/781
-index ada0f8a1ca..604c9bdd87 100755
---- a/tests/xfs/781
-+++ b/tests/xfs/781
-@@ -29,9 +29,13 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- echo "${MOUNT_OPTIONS}" | grep -q 'prjquota' || _notrun "project quota disabled"
- 
--echo "Fuzz project 0 dquot"
--_scratch_xfs_fuzz_metadata '' 'both'  "dquot -p 0" >> $seqres.full
--echo "Done fuzzing dquot"
-+_scratch_xfs_set_quota_fuzz_ids
-+
-+for id in "${SCRATCH_XFS_QUOTA_FUZZ_IDS[@]}"; do
-+	echo "Fuzz project $id dquot"
-+	_scratch_xfs_fuzz_metadata '' 'both'  "dquot -p $id" >> $seqres.full
-+	echo "Done fuzzing dquot"
-+done
- 
- # success, all done
- status=0
+ # Create original file
+ _pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
 
 
