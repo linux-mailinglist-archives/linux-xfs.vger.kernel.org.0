@@ -1,46 +1,45 @@
-Return-Path: <linux-xfs+bounces-2256-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2222-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B313821221
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:31:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B54538211FE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:22:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3710D1F225AF
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:31:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 408401F2115F
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CE0B1362;
-	Mon,  1 Jan 2024 00:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933EA7F9;
+	Mon,  1 Jan 2024 00:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btMx+snJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ob4X5iMR"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9341368
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:31:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B501C433C7;
-	Mon,  1 Jan 2024 00:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A0C7EE
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:22:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F926C433C8;
+	Mon,  1 Jan 2024 00:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704069082;
-	bh=p7SzpXFfWKx9X/L1JBQACXNCAqBhgILpCVro/FX3bmk=;
+	s=k20201202; t=1704068566;
+	bh=06HFhubAFrWaD0QX4+r0olLKrHpzwe8D6YOj7OEbY94=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=btMx+snJZKzlMxEctM+XChpd9C4rkDJHvUzQR8u8paBBTjXYIofSzGxxDc9lE6Gzf
-	 GIPvOQ3CS7+RIdrXMBH8Hept1DIcDGtCyWmMJQQLlcxtvZiG1HrnfHw/3cq7goD5Ib
-	 AphtOi5wH5FFj3wjn4CYegumNvljagqHjdhW6SeAbQhDpXzAToAARZw6Y3W/vOD9fR
-	 3rPgBK8tDm0Wiib7Z+6Fz2H+QDslMmCIhyzmXjSTvZ/YOmb1RF8BYWxTsjB46Y5wNp
-	 vjVX3+v6x/S3jJ23eoF/Vn9v9plcbJ+6GJyvE5xClKzI4BKHf1Sb7dR9urgIrYrfYo
-	 aAJ9yImU7MF7Q==
-Date: Sun, 31 Dec 2023 16:31:21 +9900
-Subject: [PATCH 20/42] xfs: report realtime refcount btree corruption errors
- to the health system
+	b=ob4X5iMRv9ueRmXkYSCTbBuzV2149fKrAXLAUhQYirf03fIMq8oERPqnw9B2vGchw
+	 +PdntPF5GuHFpT5WTr90vMduwjqasYhhFGBXFoUwZ1ZV+oMvPqgY7aob6tLoAJFWlp
+	 gtKnQcgOFqzElRpWYfhvWrMGszX55KRs/XiQ8TaufBcDF9krNDtdQNi7ZeN9I9xMLJ
+	 C/HbtE6/A02+H58VlUiU48WcGckSxyJwVK3GEexomBUvgioqGcXuK0BAYrNN6i+0zG
+	 Fg5GgPasLDtQD8PxDF2MR6gI0HbEDosTmvui6WQ0mzWYsli628e9GfBRYepAsQ4X72
+	 MKe5r6aa9ZUQA==
+Date: Sun, 31 Dec 2023 16:22:45 +9900
+Subject: [PATCH 47/47] mkfs: create the realtime rmap inode
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405017393.1817107.357076305390627042.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
-References: <170405017092.1817107.5442809166380700367.stgit@frogsfrogsfrogs>
+Message-ID: <170405015939.1815505.5116508316707037900.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,106 +52,227 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Whenever we encounter corrupt realtime refcount btree blocks, we should
-report that to the health monitoring system for later reporting.
+Create a realtime rmapbt inode if we format the fs with realtime
+and rmap.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_fs_staging.h               |    1 +
- libxfs/xfs_health.h                   |    4 +++-
- libxfs/xfs_inode_fork.c               |    4 +++-
- libxfs/xfs_rtrefcount_btree.c         |    5 ++++-
- man/man2/ioctl_xfs_rtgroup_geometry.2 |    3 +++
- 5 files changed, 14 insertions(+), 3 deletions(-)
+ libxfs/init.c   |    7 ----
+ mkfs/proto.c    |   56 ++++++++++++++++++++++++++++++++++
+ mkfs/xfs_mkfs.c |   90 ++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 141 insertions(+), 12 deletions(-)
 
 
-diff --git a/libxfs/xfs_fs_staging.h b/libxfs/xfs_fs_staging.h
-index 9d5d6af62b6..9f0c03103f0 100644
---- a/libxfs/xfs_fs_staging.h
-+++ b/libxfs/xfs_fs_staging.h
-@@ -217,6 +217,7 @@ struct xfs_rtgroup_geometry {
- #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
- #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
- #define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
-+#define XFS_RTGROUP_GEOM_SICK_REFCNTBT	(1 << 3)  /* reference counts */
+diff --git a/libxfs/init.c b/libxfs/init.c
+index ba0b9a87f2d..18bd2116c50 100644
+--- a/libxfs/init.c
++++ b/libxfs/init.c
+@@ -307,13 +307,6 @@ rtmount_init(
+ 		return -1;
+ 	}
  
- #define XFS_IOC_RTGROUP_GEOMETRY _IOWR('X', 63, struct xfs_rtgroup_geometry)
+-	if (xfs_has_rmapbt(mp)) {
+-		fprintf(stderr,
+-	_("%s: Reverse mapping btree not compatible with realtime device. Please try a newer xfsprogs.\n"),
+-				progname);
+-		return -1;
+-	}
+-
+ 	if (mp->m_rtdev_targp->bt_bdev == 0 && !xfs_is_debugger(mp)) {
+ 		fprintf(stderr, _("%s: filesystem has a realtime subvolume\n"),
+ 			progname);
+diff --git a/mkfs/proto.c b/mkfs/proto.c
+index 5239f9ec413..d575d9c511e 100644
+--- a/mkfs/proto.c
++++ b/mkfs/proto.c
+@@ -852,6 +852,54 @@ rtsummary_create(
+ 	mp->m_rsumip = rsumip;
+ }
  
-diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
-index aeeb6276977..4fe4daca4c4 100644
---- a/libxfs/xfs_health.h
-+++ b/libxfs/xfs_health.h
-@@ -69,6 +69,7 @@ struct xfs_rtgroup;
- #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
- #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
- #define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
-+#define XFS_SICK_RT_REFCNTBT	(1 << 4)  /* reference counts */
++/* Create the realtime rmap btree inode. */
++static void
++rtrmapbt_create(
++	struct xfs_rtgroup	*rtg)
++{
++	struct xfs_imeta_update	upd;
++	struct xfs_rmap_irec	rmap = {
++		.rm_startblock	= 0,
++		.rm_blockcount	= rtg->rtg_mount->m_sb.sb_rextsize,
++		.rm_owner	= XFS_RMAP_OWN_FS,
++		.rm_offset	= 0,
++		.rm_flags	= 0,
++	};
++	struct xfs_mount	*mp = rtg->rtg_mount;
++	struct xfs_imeta_path	*path;
++	struct xfs_btree_cur	*cur;
++	int			error;
++
++	error = -libxfs_rtrmapbt_create_path(mp, rtg->rtg_rgno, &path);
++	if (error)
++		fail( _("rtrmap inode path creation failed"), error);
++
++	error = -libxfs_imeta_ensure_dirpath(mp, path);
++	if (error)
++		fail(_("rtgroup directory allocation failed"), error);
++
++	error = -libxfs_imeta_start_create(mp, path, &upd);
++	if (error)
++		res_failed(error);
++
++	error = -libxfs_rtrmapbt_create(&upd, &rtg->rtg_rmapip);
++	if (error)
++		fail(_("rtrmap inode creation failed"), error);
++
++	/* Adding an rmap for the rtgroup super should fit in the data fork */
++	cur = libxfs_rtrmapbt_init_cursor(mp, upd.tp, rtg, rtg->rtg_rmapip);
++	error = -libxfs_rmap_map_raw(cur, &rmap);
++	libxfs_btree_del_cursor(cur, error);
++	if (error)
++		fail(_("rtrmapbt initialization failed"), error);
++
++	error = -libxfs_imeta_commit_update(&upd);
++	if (error)
++		fail(_("rtrmapbt commit failed"), error);
++
++	libxfs_imeta_free_path(path);
++}
++
+ /* Initialize block headers of rt free space files. */
+ static int
+ init_rtblock_headers(
+@@ -1084,9 +1132,17 @@ static void
+ rtinit(
+ 	struct xfs_mount	*mp)
+ {
++	struct xfs_rtgroup	*rtg;
++	xfs_rgnumber_t		rgno;
++
+ 	rtbitmap_create(mp);
+ 	rtsummary_create(mp);
  
- /* Observable health issues for AG metadata. */
- #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
-@@ -115,7 +116,8 @@ struct xfs_rtgroup;
- #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
- 				 XFS_SICK_RT_SUMMARY | \
- 				 XFS_SICK_RT_SUPER | \
--				 XFS_SICK_RT_RMAPBT)
-+				 XFS_SICK_RT_RMAPBT | \
-+				 XFS_SICK_RT_REFCNTBT)
- 
- #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
- 				 XFS_SICK_AG_AGF | \
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index bfc06af904e..a25f6bd1f20 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -271,8 +271,10 @@ xfs_iformat_data_fork(
- 			}
- 			return xfs_iformat_rtrmap(ip, dip);
- 		case XFS_DINODE_FMT_REFCOUNT:
--			if (!xfs_has_rtreflink(ip->i_mount))
-+			if (!xfs_has_rtreflink(ip->i_mount)) {
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 				return -EFSCORRUPTED;
-+			}
- 			return xfs_iformat_rtrefcount(ip, dip);
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
-diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
-index fa04395eed0..035e41137a6 100644
---- a/libxfs/xfs_rtrefcount_btree.c
-+++ b/libxfs/xfs_rtrefcount_btree.c
-@@ -25,6 +25,7 @@
- #include "xfs_rtgroup.h"
- #include "xfs_rtbitmap.h"
- #include "xfs_imeta.h"
-+#include "xfs_health.h"
- 
- static struct kmem_cache	*xfs_rtrefcountbt_cur_cache;
- 
-@@ -692,8 +693,10 @@ xfs_iformat_rtrefcount(
- 	level = be16_to_cpu(dfp->bb_level);
- 
- 	if (level > mp->m_rtrefc_maxlevels ||
--	    xfs_rtrefcount_droot_space_calc(level, numrecs) > dsize)
-+	    xfs_rtrefcount_droot_space_calc(level, numrecs) > dsize) {
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
++	for_each_rtgroup(mp, rgno, rtg) {
++		if (xfs_has_rtrmapbt(mp))
++			rtrmapbt_create(rtg);
 +	}
++
+ 	rtbitmap_init(mp);
+ 	rtsummary_init(mp);
+ 	if (xfs_has_rtgroups(mp))
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 66532b8c9b6..162546cd1e8 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2474,12 +2474,18 @@ _("reflink not supported with realtime devices\n"));
+ 		}
+ 		cli->sb_feat.reflink = false;
  
- 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
- 			xfs_rtrefcount_broot_space_calc(mp, level, numrecs));
-diff --git a/man/man2/ioctl_xfs_rtgroup_geometry.2 b/man/man2/ioctl_xfs_rtgroup_geometry.2
-index 38753b93055..0e4e4592b22 100644
---- a/man/man2/ioctl_xfs_rtgroup_geometry.2
-+++ b/man/man2/ioctl_xfs_rtgroup_geometry.2
-@@ -76,6 +76,9 @@ Realtime bitmap for this group.
- .TP
- .B XFS_RTGROUP_GEOM_SICK_RTRMAPBT
- Reverse mapping btree for this group.
-+.TP
-+.B XFS_RTGROUP_GEOM_SICK_REFCNTBT
-+Reference count btree for this group.
- .RE
- .SH RETURN VALUE
- On error, \-1 is returned, and
+-		if (cli->sb_feat.rmapbt && cli_opt_set(&mopts, M_RMAPBT)) {
+-			fprintf(stderr,
+-_("rmapbt not supported with realtime devices\n"));
+-			usage();
++		if (!cli->sb_feat.rtgroups && cli->sb_feat.rmapbt) {
++			if (cli_opt_set(&mopts, M_RMAPBT) &&
++			    cli_opt_set(&ropts, R_RTGROUPS)) {
++				fprintf(stderr,
++_("rmapbt not supported on realtime devices without rtgroups feature\n"));
++				usage();
++			} else if (cli_opt_set(&mopts, M_RMAPBT)) {
++				cli->sb_feat.rtgroups = true;
++			} else {
++				cli->sb_feat.rmapbt = false;
++			}
+ 		}
+-		cli->sb_feat.rmapbt = false;
+ 	}
+ 
+ 	if ((cli->fsx.fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
+@@ -4553,6 +4559,77 @@ cfgfile_parse(
+ 		cli->cfgfile);
+ }
+ 
++static inline void
++prealloc_fail(
++	struct xfs_mount	*mp,
++	int			error,
++	xfs_filblks_t		ask,
++	const char		*tag)
++{
++	if (error == ENOSPC)
++		fprintf(stderr,
++	_("%s: cannot handle expansion of %s; need %llu free blocks, have %llu\n"),
++				progname, tag, (unsigned long long)ask,
++				(unsigned long long)mp->m_sb.sb_fdblocks);
++	else
++		fprintf(stderr,
++	_("%s: error %d while checking free space for %s\n"),
++				progname, error, tag);
++	exit(1);
++}
++
++/*
++ * Make sure there's enough space on the data device to handle realtime
++ * metadata btree expansions.
++ */
++static void
++check_rt_meta_prealloc(
++	struct xfs_mount	*mp)
++{
++	struct xfs_perag	*pag;
++	struct xfs_rtgroup	*rtg;
++	xfs_agnumber_t		agno;
++	xfs_rgnumber_t		rgno;
++	xfs_filblks_t		ask;
++	int			error;
++
++	/*
++	 * First create all the per-AG reservations, since they take from the
++	 * free block count.  Each AG should start with enough free space for
++	 * the per-AG reservation.
++	 */
++	mp->m_finobt_nores = false;
++
++	for_each_perag(mp, agno, pag) {
++		error = -libxfs_ag_resv_init(pag, NULL);
++		if (error && error != ENOSPC) {
++			fprintf(stderr,
++	_("%s: error %d while checking AG free space for realtime metadata\n"),
++					progname, error);
++			exit(1);
++		}
++	}
++
++	/* Realtime metadata btree inode */
++	for_each_rtgroup(mp, rgno, rtg) {
++		ask = libxfs_rtrmapbt_calc_reserves(mp);
++		error = -libxfs_imeta_resv_init_inode(rtg->rtg_rmapip, ask);
++		if (error)
++			prealloc_fail(mp, error, ask, _("realtime rmap btree"));
++	}
++
++	/* Unreserve the realtime metadata reservations. */
++	for_each_rtgroup(mp, rgno, rtg) {
++		libxfs_imeta_resv_free_inode(rtg->rtg_rmapip);
++	}
++
++	/* Unreserve the per-AG reservations. */
++	for_each_perag(mp, agno, pag)
++		libxfs_ag_resv_free(pag);
++
++	mp->m_finobt_nores = false;
++}
++
+ int
+ main(
+ 	int			argc,
+@@ -4922,6 +4999,9 @@ main(
+ 	 */
+ 	check_root_ino(mp);
+ 
++	/* Make sure we can handle space preallocations of rt metadata btrees */
++	check_rt_meta_prealloc(mp);
++
+ 	/*
+ 	 * Re-write multiple secondary superblocks with rootinode field set
+ 	 */
 
 
