@@ -1,46 +1,48 @@
-Return-Path: <linux-xfs+bounces-2190-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2322-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDB0D8211DC
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:14:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8538821270
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:48:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E665E1C21C82
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:14:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C8F01F233C7
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:48:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 386C2391;
-	Mon,  1 Jan 2024 00:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7CD803;
+	Mon,  1 Jan 2024 00:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoRLaENK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZM1q0Rz"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AAA389
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:14:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F9DC433C7;
-	Mon,  1 Jan 2024 00:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C846C7ED;
+	Mon,  1 Jan 2024 00:48:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0ACC433C7;
+	Mon,  1 Jan 2024 00:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704068081;
-	bh=sjktispdo33sVHopap9yaG8KN8VL46erdgSyAGYyABM=;
+	s=k20201202; t=1704070116;
+	bh=oDYRjPULvAUVBH18acev/5lsyqXVzNrXp6N7V+QR0Xs=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=UoRLaENKI5byn6gd/dptCk8yYX/QTlgKqhTQbvddq5qitQZB1WVpdC+waZiboU9DI
-	 p4Wwwj6EZwcrROWv7ToOjHu2MzUZ5ItNoU8nyEVMvFr5MRD7VDZ4Ms5Em4kGg0RXkg
-	 CCL1QiL8Zw9OTI41OFWPY8Tk9rrRu2ym5JuhhrMUAnd2sMiSz4wrClZA//VYaODY9Z
-	 i+zdMD6Yo5QomkvJx8Y7aOl6stGyMujnp+Q931ukkftDVxkpm5Zhjdrwz1WML4kUlf
-	 GSzLZJp/WIc1VatJKcUY7v6MeKZKQL5qB7oVMXJogOQPGipQBuiZrxI6mVbKpqh7XM
-	 9J84Zf3MOgNUg==
-Date: Sun, 31 Dec 2023 16:14:41 +9900
-Subject: [PATCH 16/47] xfs: allow queued realtime intents to drain before
- scrubbing
+	b=jZM1q0RzIUvNC6FKKgwysCt9Jyat6dRagA7GFmdd2TUGA+TLlByAg6T70+j7Y0H6X
+	 aN8JbkTkb2f+ocIWeOU3Ku1sucekcyTGORXfW/IKeACyBhgwkXdoeA9oe0/KjZ0l9K
+	 y0Y6cwjA6XHJcB6TlY2JSGVUfm/QA/fJJX6UbHxIiXspSQNZqwlRbtmfADGL0UHPhB
+	 L0lza002tQBoAGJgiTI9Nsp82zXCMAdSWPKP4pUG8UOy1VfWRFLXLs5TecgSE4Jh4v
+	 2s2zC2HvgKj8M+RianKi2XJsJXrYJop+33aQJREpr0U7/l+14yjZbUz4VU/Tart2c1
+	 G5zuqFMPEZXcA==
+Date: Sun, 31 Dec 2023 16:48:35 +9900
+Subject: [PATCH 09/11] xfs: add parent pointer test
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170405015526.1815505.9934847494535195493.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
-References: <170405015275.1815505.16749821217116487639.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: Allison Henderson <allison.henderson@oracle.com>,
+ Catherine Hoang <catherine.hoang@oracle.com>, fstests@vger.kernel.org,
+ catherine.hoang@oracle.com, allison.henderson@oracle.com, guan@eryu.me,
+ linux-xfs@vger.kernel.org
+Message-ID: <170405028546.1824869.14814463737616268265.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
+References: <170405028421.1824869.17871351204326094851.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -51,178 +53,233 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-From: Darrick J. Wong <djwong@kernel.org>
+From: Allison Henderson <allison.henderson@oracle.com>
 
-When a writer thread executes a chain of log intent items for the
-realtime volume, the ILOCKs taken during each step are for each rt
-metadata file, not the entire rt volume itself.  Although scrub takes
-all rt metadata ILOCKs, this isn't sufficient to guard against scrub
-checking the rt volume while that writer thread is in the middle of
-finishing a chain because there's no higher level locking primitive
-guarding the realtime volume.
+Add a test to verify basic parent pointers operations (create, move, link,
+unlink, rename, overwrite).
 
-When there's a collision, cross-referencing between data structures
-(e.g. rtrmapbt and rtrefcountbt) yields false corruption events; if
-repair is running, this results in incorrect repairs, which is
-catastrophic.
-
-Fix this by adding to the mount structure the same drain that we use to
-protect scrub against concurrent AG updates, but this time for the
-realtime volume.
-
-[Contains a few cleanups from hch]
-
-Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+[djwong: test the xfs_io parent -p argument too]
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/xfs_mount.h  |   12 ++++++++++++
- libxfs/defer_item.c  |   31 +++++++++++++------------------
- libxfs/xfs_rtgroup.c |    2 ++
- libxfs/xfs_rtgroup.h |    9 +++++++++
- 4 files changed, 36 insertions(+), 18 deletions(-)
+ doc/group-names.txt |    1 
+ tests/xfs/1851      |  116 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1851.out  |   69 ++++++++++++++++++++++++++++++
+ 3 files changed, 186 insertions(+)
+ create mode 100755 tests/xfs/1851
+ create mode 100644 tests/xfs/1851.out
 
 
-diff --git a/include/xfs_mount.h b/include/xfs_mount.h
-index 4e4da5bc4fa..07f9e33b8b2 100644
---- a/include/xfs_mount.h
-+++ b/include/xfs_mount.h
-@@ -333,6 +333,18 @@ struct xfs_defer_drain { /* empty */ };
- static inline void xfs_perag_intent_hold(struct xfs_perag *pag) {}
- static inline void xfs_perag_intent_rele(struct xfs_perag *pag) {}
- 
-+struct xfs_rtgroup;
+diff --git a/doc/group-names.txt b/doc/group-names.txt
+index fec6bf71ab..4676825faf 100644
+--- a/doc/group-names.txt
++++ b/doc/group-names.txt
+@@ -83,6 +83,7 @@ nfs4_acl		NFSv4 access control lists
+ nonsamefs		overlayfs layers on different filesystems
+ online_repair		online repair functionality tests
+ other			dumping ground, do not add more tests to this group
++parent			Parent pointer tests
+ pattern			specific IO pattern tests
+ perms			access control and permission checking
+ pipe			pipe functionality
+diff --git a/tests/xfs/1851 b/tests/xfs/1851
+new file mode 100755
+index 0000000000..6cfc7cce79
+--- /dev/null
++++ b/tests/xfs/1851
+@@ -0,0 +1,116 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022-2024 Oracle and/or its affiliates.  All Rights Reserved.
++#
++# FS QA Test No. 1851
++#
++# simple parent pointer test
++#
 +
-+#define xfs_rtgroup_intent_get(mp, rgno) \
-+	xfs_rtgroup_get((mp), xfs_rtb_to_rgno((mp), (rgno)))
-+#define xfs_rtgroup_intent_put(rtg)		xfs_rtgroup_put(rtg)
++. ./common/preamble
++_begin_fstest auto quick parent
 +
-+static inline void xfs_rtgroup_intent_hold(struct xfs_rtgroup *rtg) { }
-+static inline void xfs_rtgroup_intent_rele(struct xfs_rtgroup *rtg) { }
++# get standard environment, filters and checks
++. ./common/parent
++. ./common/filter
 +
-+#define xfs_drain_free(dr)		((void)0)
-+#define xfs_drain_init(dr)		((void)0)
++# Modify as appropriate
++_supported_fs xfs
++_require_scratch
++_require_xfs_sysfs debug/larp
++_require_xfs_parent
++_require_xfs_io_command "parent"
 +
- static inline void libxfs_buftarg_drain(struct xfs_buftarg *btp)
- {
- 	cache_purge(btp->bcache);
-diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
-index a82d23c17cf..e7270d02c4b 100644
---- a/libxfs/defer_item.c
-+++ b/libxfs/defer_item.c
-@@ -88,11 +88,8 @@ xfs_extent_free_defer_add(
- 	struct xfs_mount		*mp = tp->t_mountp;
- 
- 	if (xfs_efi_is_realtime(xefi)) {
--		xfs_rgnumber_t		rgno;
--
--		rgno = xfs_rtb_to_rgno(mp, xefi->xefi_startblock);
--		xefi->xefi_rtg = xfs_rtgroup_get(mp, rgno);
--
-+		xefi->xefi_rtg = xfs_rtgroup_intent_get(mp,
-+						xefi->xefi_startblock);
- 		*dfpp = xfs_defer_add(tp, &xefi->xefi_list,
- 				&xfs_rtextent_free_defer_type);
- 		return;
-@@ -204,7 +201,7 @@ xfs_rtextent_free_cancel_item(
- {
- 	struct xfs_extent_free_item	*xefi = xefi_entry(item);
- 
--	xfs_rtgroup_put(xefi->xefi_rtg);
-+	xfs_rtgroup_intent_put(xefi->xefi_rtg);
- 	kmem_cache_free(xfs_extfree_item_cache, xefi);
- }
- 
-@@ -338,13 +335,12 @@ xfs_rmap_defer_add(
- 	 * section updates.
- 	 */
- 	if (ri->ri_realtime) {
--		xfs_rgnumber_t	rgno;
--
--		rgno = xfs_rtb_to_rgno(mp, ri->ri_bmap.br_startblock);
--		ri->ri_rtg = xfs_rtgroup_get(mp, rgno);
-+		ri->ri_rtg = xfs_rtgroup_intent_get(mp,
-+						ri->ri_bmap.br_startblock);
- 		xfs_defer_add(tp, &ri->ri_list, &xfs_rtrmap_update_defer_type);
- 	} else {
--		ri->ri_pag = xfs_perag_intent_get(mp, ri->ri_bmap.br_startblock);
-+		ri->ri_pag = xfs_perag_intent_get(mp,
-+						ri->ri_bmap.br_startblock);
- 		xfs_defer_add(tp, &ri->ri_list, &xfs_rmap_update_defer_type);
- 	}
- }
-@@ -445,7 +441,7 @@ xfs_rtrmap_update_cancel_item(
- {
- 	struct xfs_rmap_intent		*ri = ri_entry(item);
- 
--	xfs_rtgroup_put(ri->ri_rtg);
-+	xfs_rtgroup_intent_put(ri->ri_rtg);
- 	kmem_cache_free(xfs_rmap_intent_cache, ri);
- }
- 
-@@ -656,10 +652,8 @@ xfs_bmap_update_get_group(
- {
- 	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
- 		if (xfs_has_rtgroups(mp)) {
--			xfs_rgnumber_t	rgno;
--
--			rgno = xfs_rtb_to_rgno(mp, bi->bi_bmap.br_startblock);
--			bi->bi_rtg = xfs_rtgroup_get(mp, rgno);
-+			bi->bi_rtg = xfs_rtgroup_intent_get(mp,
-+						bi->bi_bmap.br_startblock);
- 		} else {
- 			bi->bi_rtg = NULL;
- 		}
-@@ -695,8 +689,9 @@ xfs_bmap_update_put_group(
- 	struct xfs_bmap_intent	*bi)
- {
- 	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
--		if (xfs_has_rtgroups(bi->bi_owner->i_mount))
--			xfs_rtgroup_put(bi->bi_rtg);
-+		if (xfs_has_rtgroups(bi->bi_owner->i_mount)) {
-+			xfs_rtgroup_intent_put(bi->bi_rtg);
-+		}
- 		return;
- 	}
- 
-diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
-index 449cd57cf9e..1acf98f8c7e 100644
---- a/libxfs/xfs_rtgroup.c
-+++ b/libxfs/xfs_rtgroup.c
-@@ -159,6 +159,7 @@ xfs_initialize_rtgroups(
- 		/* Place kernel structure only init below this point. */
- 		spin_lock_init(&rtg->rtg_state_lock);
- 		init_waitqueue_head(&rtg->rtg_active_wq);
-+		xfs_defer_drain_init(&rtg->rtg_intents_drain);
- #endif /* __KERNEL__ */
- 
- 		/* Active ref owned by mount indicates rtgroup is online. */
-@@ -213,6 +214,7 @@ xfs_free_rtgroups(
- 		spin_unlock(&mp->m_rtgroup_lock);
- 		ASSERT(rtg);
- 		XFS_IS_CORRUPT(mp, atomic_read(&rtg->rtg_ref) != 0);
-+		xfs_defer_drain_free(&rtg->rtg_intents_drain);
- 
- 		/* drop the mount's active reference */
- 		xfs_rtgroup_rele(rtg);
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index 559a5135820..9487c2e0047 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -39,6 +39,15 @@ struct xfs_rtgroup {
- #ifdef __KERNEL__
- 	/* -- kernel only structures below this line -- */
- 	spinlock_t		rtg_state_lock;
++# real QA test starts here
 +
-+	/*
-+	 * We use xfs_drain to track the number of deferred log intent items
-+	 * that have been queued (but not yet processed) so that waiters (e.g.
-+	 * scrub) will not lock resources when other threads are in the middle
-+	 * of processing a chain of intent items only to find momentary
-+	 * inconsistencies.
-+	 */
-+	struct xfs_defer_drain	rtg_intents_drain;
- #endif /* __KERNEL__ */
- };
- 
++# Create a directory tree using a protofile and
++# make sure all inodes created have parent pointers
++
++protofile=$tmp.proto
++
++cat >$protofile <<EOF
++DUMMY1
++0 0
++: root directory
++d--777 3 1
++: a directory
++testfolder1 d--755 3 1
++file1 ---755 3 1 /dev/null
++$
++: back in the root
++testfolder2 d--755 3 1
++file2 ---755 3 1 /dev/null
++: done
++$
++EOF
++
++_scratch_mkfs -f -n parent=1 -p $protofile >>$seqres.full 2>&1 \
++	|| _fail "mkfs failed"
++_check_scratch_fs
++
++_scratch_mount >>$seqres.full 2>&1 \
++	|| _fail "mount failed"
++
++testfolder1="testfolder1"
++testfolder2="testfolder2"
++file1="file1"
++file2="file2"
++file3="file3"
++file1_ln="file1_link"
++
++echo ""
++# Create parent pointer test
++_verify_parent "$testfolder1" "$file1" "$testfolder1/$file1"
++
++echo ""
++# Move parent pointer test
++mv $SCRATCH_MNT/$testfolder1/$file1 $SCRATCH_MNT/$testfolder2/$file1
++_verify_parent "$testfolder2" "$file1" "$testfolder2/$file1"
++
++echo ""
++# Hard link parent pointer test
++ln $SCRATCH_MNT/$testfolder2/$file1 $SCRATCH_MNT/$testfolder1/$file1_ln
++_verify_parent "$testfolder1" "$file1_ln" "$testfolder1/$file1_ln"
++_verify_parent "$testfolder1" "$file1_ln" "$testfolder2/$file1"
++_verify_parent "$testfolder2" "$file1"    "$testfolder1/$file1_ln"
++_verify_parent "$testfolder2" "$file1"    "$testfolder2/$file1"
++
++echo ""
++# Remove hard link parent pointer test
++ino="$(stat -c '%i' $SCRATCH_MNT/$testfolder2/$file1)"
++rm $SCRATCH_MNT/$testfolder2/$file1
++_verify_parent "$testfolder1" "$file1_ln" "$testfolder1/$file1_ln"
++_verify_no_parent "$file1" "$ino" "$testfolder1/$file1_ln"
++
++echo ""
++# Rename parent pointer test
++ino="$(stat -c '%i' $SCRATCH_MNT/$testfolder1/$file1_ln)"
++mv $SCRATCH_MNT/$testfolder1/$file1_ln $SCRATCH_MNT/$testfolder1/$file2
++_verify_parent "$testfolder1" "$file2" "$testfolder1/$file2"
++_verify_no_parent "$file1_ln" "$ino" "$testfolder1/$file2"
++
++echo ""
++# Over write parent pointer test
++touch $SCRATCH_MNT/$testfolder2/$file3
++_verify_parent "$testfolder2" "$file3" "$testfolder2/$file3"
++ino="$(stat -c '%i' $SCRATCH_MNT/$testfolder2/$file3)"
++mv -f $SCRATCH_MNT/$testfolder2/$file3 $SCRATCH_MNT/$testfolder1/$file2
++_verify_parent "$testfolder1" "$file2" "$testfolder1/$file2"
++
++# Make sure that parent -p filtering works
++mkdir -p $SCRATCH_MNT/dira/ $SCRATCH_MNT/dirb/
++dira_inum=$(stat -c '%i' $SCRATCH_MNT/dira)
++dirb_inum=$(stat -c '%i' $SCRATCH_MNT/dirb)
++touch $SCRATCH_MNT/gorn
++ln $SCRATCH_MNT/gorn $SCRATCH_MNT/dira/file1
++ln $SCRATCH_MNT/gorn $SCRATCH_MNT/dirb/file1
++echo look for both
++$XFS_IO_PROG -c 'parent -p' $SCRATCH_MNT/gorn | _filter_scratch
++echo look for dira
++$XFS_IO_PROG -c 'parent -p -n dira' -c "parent -p -i $dira_inum" $SCRATCH_MNT/gorn | _filter_scratch
++echo look for dirb
++$XFS_IO_PROG -c 'parent -p -n dirb' -c "parent -p -i $dirb_inum" $SCRATCH_MNT/gorn | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1851.out b/tests/xfs/1851.out
+new file mode 100644
+index 0000000000..99a9d42892
+--- /dev/null
++++ b/tests/xfs/1851.out
+@@ -0,0 +1,69 @@
++QA output created by 1851
++
++*** testfolder1 OK
++*** testfolder1/file1 OK
++*** testfolder1/file1 OK
++*** Verified parent pointer: name:file1, namelen:5
++*** Parent pointer OK for child testfolder1/file1
++
++*** testfolder2 OK
++*** testfolder2/file1 OK
++*** testfolder2/file1 OK
++*** Verified parent pointer: name:file1, namelen:5
++*** Parent pointer OK for child testfolder2/file1
++
++*** testfolder1 OK
++*** testfolder1/file1_link OK
++*** testfolder1/file1_link OK
++*** Verified parent pointer: name:file1_link, namelen:10
++*** Parent pointer OK for child testfolder1/file1_link
++*** testfolder1 OK
++*** testfolder2/file1 OK
++*** testfolder1/file1_link OK
++*** Verified parent pointer: name:file1_link, namelen:10
++*** Parent pointer OK for child testfolder2/file1
++*** testfolder2 OK
++*** testfolder1/file1_link OK
++*** testfolder2/file1 OK
++*** Verified parent pointer: name:file1, namelen:5
++*** Parent pointer OK for child testfolder1/file1_link
++*** testfolder2 OK
++*** testfolder2/file1 OK
++*** testfolder2/file1 OK
++*** Verified parent pointer: name:file1, namelen:5
++*** Parent pointer OK for child testfolder2/file1
++
++*** testfolder1 OK
++*** testfolder1/file1_link OK
++*** testfolder1/file1_link OK
++*** Verified parent pointer: name:file1_link, namelen:10
++*** Parent pointer OK for child testfolder1/file1_link
++*** testfolder1/file1_link OK
++
++*** testfolder1 OK
++*** testfolder1/file2 OK
++*** testfolder1/file2 OK
++*** Verified parent pointer: name:file2, namelen:5
++*** Parent pointer OK for child testfolder1/file2
++*** testfolder1/file2 OK
++
++*** testfolder2 OK
++*** testfolder2/file3 OK
++*** testfolder2/file3 OK
++*** Verified parent pointer: name:file3, namelen:5
++*** Parent pointer OK for child testfolder2/file3
++*** testfolder1 OK
++*** testfolder1/file2 OK
++*** testfolder1/file2 OK
++*** Verified parent pointer: name:file2, namelen:5
++*** Parent pointer OK for child testfolder1/file2
++look for both
++SCRATCH_MNT/gorn
++SCRATCH_MNT/dira/file1
++SCRATCH_MNT/dirb/file1
++look for dira
++SCRATCH_MNT/dira/file1
++SCRATCH_MNT/dira/file1
++look for dirb
++SCRATCH_MNT/dirb/file1
++SCRATCH_MNT/dirb/file1
 
 
