@@ -2,101 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9993B10168
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2019 23:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2189101CB
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2019 23:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfD3VH2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Apr 2019 17:07:28 -0400
-Received: from tmailer.gwdg.de ([134.76.10.23]:39806 "EHLO tmailer.gwdg.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfD3VH2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 30 Apr 2019 17:07:28 -0400
-Received: from mailgw.tuebingen.mpg.de ([192.124.27.5] helo=tuebingen.mpg.de)
-        by mailer.gwdg.de with esmtp (Exim 4.90_1)
-        (envelope-from <maan@tuebingen.mpg.de>)
-        id 1hLZyH-00044Z-Gx; Tue, 30 Apr 2019 23:07:25 +0200
-Received: from [10.37.80.2] (HELO mailhost.tuebingen.mpg.de)
-  by tuebingen.mpg.de (CommuniGate Pro SMTP 6.2.6)
-  with SMTP id 22791534; Tue, 30 Apr 2019 23:08:51 +0200
-Received: by mailhost.tuebingen.mpg.de (sSMTP sendmail emulation); Tue, 30 Apr 2019 23:07:24 +0200
-Date:   Tue, 30 Apr 2019 23:07:24 +0200
-From:   Andre Noll <maan@tuebingen.mpg.de>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
-Message-ID: <20190430210724.GD2780@tuebingen.mpg.de>
-References: <20190430121420.GW2780@tuebingen.mpg.de>
- <20190430151151.GF5207@magnolia>
- <20190430162506.GZ2780@tuebingen.mpg.de>
- <20190430174042.GH5207@magnolia>
- <20190430190525.GB2780@tuebingen.mpg.de>
- <20190430191825.GF5217@magnolia>
+        id S1726061AbfD3V0Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Apr 2019 17:26:16 -0400
+Received: from mail-io1-f44.google.com ([209.85.166.44]:38513 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfD3V0Q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Apr 2019 17:26:16 -0400
+Received: by mail-io1-f44.google.com with SMTP id y6so13520630ior.5
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 14:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Fhpq4dEUU4+wakHbGtp6CxFMV6hP2xykbGkk3K1MIow=;
+        b=JUD+/982NCdE0TP9Huvg/FetqIqY1SzzRdnWX/ArlGwjUGKCAaoDYlURALOrJvMjbV
+         4bEOMUnab6U2ZEJP3qC/lFWq7wcZJMTsBHxrS2ufwKBjSwbGYIL9M9Y4Qr58jvMuAgVz
+         5XJaGRkt7cggLGuukQ5wr6LJXBfW94WZB5qnFg0m70IXBzblRBlX8qVJt/OEFESL1+kr
+         tbRqC0JHygwCbu5+BhB/7vq/pck3LAEDwoxD/BO0Ihl8S+SESTqu+PcbnHsmNJxT2itC
+         e2DVXyREuReyTudOshfJc490RKWD6JxUMX78H0dNl/DBknUtVcl4F6xCFYk4PISmgHnd
+         AL2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Fhpq4dEUU4+wakHbGtp6CxFMV6hP2xykbGkk3K1MIow=;
+        b=SpZV1CPrh9NEcp1eb4qb4FRVCBhdWKSlpEKDJglMm2xRcasQcsFo30Bb6GwTwVZAWh
+         YjvG4cdkLfzSuIbCt1JW5N6mdRR4Ac6oET7IfwTxOuQYy0Ko0X5qnh6NuZVD9huHUp/0
+         kWG1DoBSy9XNYu8AKMHJCxLb37fP6YUS1K4RBjuj38aY4mAbkNeimEaSEkbHJmFbwHSg
+         vnP7Qu5g/ckAynUO/UPyyiEPpcH9aoryxvXfP0ElIlq2AXahjnas3G47kCjtvS8akJRh
+         0qGPY5qiGLbBuQODVgREJMjBeGFF655QzzIh5ebXs+YVZB/v1Waj6pMo5vFTRQIn4nQX
+         X7kQ==
+X-Gm-Message-State: APjAAAUMWI6OuHwbLWGos51hv4axBiMxT0wB0DbzvpOconc43q+C+rZ3
+        6c8SPf3+QcLMYmoLHbnfwr+hicU8oYckSLI9BKaj8TWm
+X-Google-Smtp-Source: APXvYqwYVhC2Oz6rM2PQEwcny1Xe80eo9IhYgaidUwfLb9avc2x/Rn1lkKaPul7Sl2zeEOi61Eq14YtZ8i/8ECFChAE=
+X-Received: by 2002:a6b:ea0e:: with SMTP id m14mr34857018ioc.86.1556659575079;
+ Tue, 30 Apr 2019 14:26:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="eu8nj/18vubUeVCi"
-Content-Disposition: inline
-In-Reply-To: <20190430191825.GF5217@magnolia>
-User-Agent: Mutt/1.11.4 (207b9306) (2019-03-13)
-X-Spam-Level: $
-X-Virus-Scanned: (clean) by clamav
+From:   Michael Allison <trailhounds@gmail.com>
+Date:   Tue, 30 Apr 2019 16:26:04 -0500
+Message-ID: <CA+nYfY_TkSbXZ5kCbAeQN-PthsV5suomdrMqJ3H0tbNx2ZQ3xQ@mail.gmail.com>
+Subject: XFS performance decrease as filesystem approaches full
+To:     linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hello,
 
---eu8nj/18vubUeVCi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 12:18, Darrick J. Wong wrote
-> > commit f847bda4d612744ff1812788417bd8df41a806d3
-> > Author: Dave Chinner <dchinner@redhat.com>
-> > Date:   Mon Nov 19 13:31:08 2018 -0800
-> >=20
-> >     xfs: finobt AG reserves don't consider last AG can be a runt
-> >    =20
-> >     This is a backport of upstream commit c08768977b9 and the part of
-> >     21ec54168b36 which is needed by c08768977b9.
->=20
-> You could send this patch to the stable list, but my guess is that
-> they'd prefer a straight backport of all three commits...
+Many filesystems begin to show decreased performance as the available
+free space in the defined filesystem approaches the maximum available
+blocks. Are there any guidelines about this sort of performance drag
+available for XFS?
 
-Hm, cherry-picking the first commit onto 4.9,171 already gives
-four conflicting files. The conflicts are trivial to resolve (git
-cherry-pick -xX theirs 21ec54168b36 does it), but that doesn't
-compile because xfs_btree_query_all() is missing.  So e9a2599a249ed
-(xfs: create a function to query all records in a btree) is needed as
-well. But then, applying 86210fbebae (xfs: move various type verifiers
-to common file) on top of that gives non-trivial conflicts.
 
-So, for automatic backporting we would need to cherry-pick even more,
-and each backported commit should be tested of course. Given this, do
-you still think Greg prefers a rather large set of straight backports
-over the simple commit that just pulls in the missing function?
+Thanks,
 
-I guess the important question is how much impact this issue
-has on production systems (i.e., on CONFIG_XFS_DEBUG=3Dn kernels,
-where the assert statement is not compiled in). If the unpatched
-xfs_inobt_max_size() is very unlikely to cause problems on such
-systems, we might as well live with it.
 
-Thanks
-Andre
---=20
-Max Planck Institute for Developmental Biology
-Max-Planck-Ring 5, 72076 T=C3=BCbingen, Germany. Phone: (+49) 7071 601 829
-http://people.tuebingen.mpg.de/maan/
+Mike
 
---eu8nj/18vubUeVCi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSHtF/cbZGyylvqq1Ra2jVAMQCTDwUCXMi5CQAKCRBa2jVAMQCT
-DyqRAJ9haZLNWKNF1m2TNS7qlvy9B+Og7QCgkgF+uEQORJ7ALymtB4oypC+7MUY=
-=LEL+
------END PGP SIGNATURE-----
-
---eu8nj/18vubUeVCi--
+michael allison | 303-817-9002 | My LinkedIn Profile
