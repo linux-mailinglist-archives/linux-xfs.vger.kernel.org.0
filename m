@@ -2,183 +2,198 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DDD0FC85
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2019 17:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4378BFD1B
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2019 17:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbfD3PMJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Apr 2019 11:12:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44360 "EHLO
+        id S1726167AbfD3PnS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Apr 2019 11:43:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51242 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3PMI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Apr 2019 11:12:08 -0400
+        with ESMTP id S1725906AbfD3PnS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Apr 2019 11:43:18 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3UF9Ujn096308;
-        Tue, 30 Apr 2019 15:11:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=83hxG6+OCrtcAQc1iFypRez11xIxYN4H3ZA18BWmsRQ=;
- b=djRa+RCCyZ/1hVv654VO3xJail+dpbxpk2UoDYuFTIzd52/1p9uuOp5zhlwcXIsSgt2l
- 8bVidgdwJmDm4O+9dQuIH9Oh9vtjXF9fd4eXf1lJyXvK8uHVEbayhg/8mLCOLE1QCcCV
- EWaOpindFiiI4A2pISrct/LHpdls+KHJggH08rfJcyHsTtCWlrwgJfbfbOHB2065q9Wy
- ahnDIcSnguDrp6x/16Jiad0X5vGR0rrcxhyJ00M3a5yopUyHYG6i04w/clNGCpMW2yH8
- ypKYfu0E0fETPVzuu6JBs940cA1OCDbFTm/DKrAuSNodDxPQtjKeZQY5MdXBm5mrRYI9 DA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2s5j5u1w5n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 15:11:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3UFBRgJ003542;
-        Tue, 30 Apr 2019 15:11:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2s5u511ssn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 15:11:55 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3UFBq6Z002697;
-        Tue, 30 Apr 2019 15:11:55 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3UFYEwj119569
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 15:43:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=lmmVXMdXl6guBlZU6g/oT0H7hkW4YlYyBbuNpIwtqWY=;
+ b=XR4se0qnj3FgB6KBXGoWuJZv+QqWBm9X0Divuw3i52RRVGSuCzLI6oliYvJOC9AR31Fc
+ YyUZZMGFusYsQDjOxsyB175b53W6jdDdFSsDTkO1Kljs3Exg5hGsW47dnW8YdsM+oAkI
+ sdA70TzX35q2OLBjJ9toES8Qnu8jKbn36oEvY3GhQX4MkVf+QDYiOcrJZOuwQlBrmBJ4
+ Y2IfRn4jXij0wdb7xAiQP9f6C3oTe6z41T6oGAGUSmC//lF8Om+K2g/POncBwhoshrtC
+ aiYh3XA8OGmXPqfHMM4BcEUhChAvSQoE1z30FBLabrbadF5v+VGMqywvjPa/cSE8yUIC dg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2s5j5u23u6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 15:43:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3UFghhw138301
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 15:43:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2s4d4akemm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 15:43:16 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3UFhFSJ021704
+        for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2019 15:43:15 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Apr 2019 08:11:52 -0700
-Date:   Tue, 30 Apr 2019 08:11:51 -0700
+        with ESMTP ; Tue, 30 Apr 2019 08:43:15 -0700
+Date:   Tue, 30 Apr 2019 08:43:12 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andre Noll <maan@tuebingen.mpg.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
-Message-ID: <20190430151151.GF5207@magnolia>
-References: <20190430121420.GW2780@tuebingen.mpg.de>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 75efa57d0bf5
+Message-ID: <20190430154312.GG5207@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190430121420.GW2780@tuebingen.mpg.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904300094
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
+ engine=8.0.1-1810050000 definitions=main-1904300096
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904300094
+ definitions=main-1904300096
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 02:14:20PM +0200, Andre Noll wrote:
-> Hi
-> 
-> I'm hitting the assertion below when mounting an xfs filesystem
-> stored on a thin LV. The mount command segfaults, the machine
-> is unusable afterwards and requires a hard reset. This is 100%
-> reproducible. xfs_repair did not report any inconsistencies and did
-> not fix the issue.
-> 
-> [  546.622715] XFS (dm-6): Mounting V5 Filesystem
-> [  546.867893] XFS (dm-6): Ending clean mount
-> [  546.898846] XFS: Assertion failed: xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved + xfs_perag_resv(pag, XFS_AG_RESV_AGFL)->ar_reserved <= pag->pagf_freeblks + pag->pagf_flcount, file: /ebio/maan/scm/OTHER/linux/fs/xfs/libxfs/xfs_ag_resv.c, line: 308
-> [  546.899089] ------------[ cut here ]------------
-> [  546.899177] kernel BUG at /ebio/maan/scm/OTHER/linux/fs/xfs/xfs_message.c:113!
-> [  546.899303] invalid opcode: 0000 [#1] SMP
-> [  546.899392] CPU: 6 PID: 3196 Comm: mount Not tainted 4.9.171 #16
-> [  546.899485] Hardware name: Supermicro Super Server/H11SSL-i, BIOS 1.0c 10/04/2018
-> [  546.899611] task: ffff881ffb56de00 task.stack: ffffc9000dd04000
-> [  546.899704] RIP: 0010:[<ffffffff8130c81b>]  [<ffffffff8130c81b>] assfail+0x1b/0x20
-> [  546.899882] RSP: 0018:ffffc9000dd07c98  EFLAGS: 00010282
-> [  546.899972] RAX: 00000000ffffffea RBX: ffff881ff519c000 RCX: 0000000000000000
-> [  546.900069] RDX: 00000000ffffffc0 RSI: 000000000000000a RDI: ffffffff8192384b
-> [  546.900167] RBP: ffffc9000dd07c98 R08: 0000000000000000 R09: 0000000000000000
-> [  546.900264] R10: 000000000000000a R11: f000000000000000 R12: ffff881ffbbe0000
-> [  546.900360] R13: 0000000000000064 R14: ffff881ffbbe0000 R15: 0000000000000000
-> [  546.900458] FS:  00007fec47b56080(0000) GS:ffff88201fa00000(0000) knlGS:0000000000000000
-> [  546.900585] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  546.900677] CR2: 00007fec4633b000 CR3: 00000007f6aa1000 CR4: 00000000003406f0
-> [  546.900773] Stack:
-> [  546.900852]  ffffc9000dd07cd0 ffffffff812dd46d 0000000000000064 0000000000000000
-> [  546.901157]  0000000000000064 ffff881ff519c000 0000000000000000 ffffc9000dd07d08
-> [  546.901462]  ffffffff812faac5 ffff881ffbbe0000 ffff881ffbbe0640 ffff881ffbbe0928
-> [  546.901766] Call Trace:
-> [  546.901850]  [<ffffffff812dd46d>] xfs_ag_resv_init+0x16d/0x180
-> [  546.901947]  [<ffffffff812faac5>] xfs_fs_reserve_ag_blocks+0x35/0xb0
-> [  546.902041]  [<ffffffff8130de21>] xfs_mountfs+0x891/0x9c0
-> [  546.902133]  [<ffffffff8131433d>] xfs_fs_fill_super+0x3fd/0x550
-> [  546.902229]  [<ffffffff8113ede7>] mount_bdev+0x177/0x1b0
-> [  546.902321]  [<ffffffff81313f40>] ? xfs_finish_flags+0x130/0x130
-> [  546.902415]  [<ffffffff813126e0>] xfs_fs_mount+0x10/0x20
-> [  546.902505]  [<ffffffff8113efff>] mount_fs+0xf/0xa0
-> [  546.902598]  [<ffffffff81159328>] vfs_kern_mount.part.11+0x58/0x100
-> [  546.902692]  [<ffffffff8115b5f0>] do_mount+0x1a0/0xc50
-> [  546.902784]  [<ffffffff8110860d>] ? memdup_user+0x3d/0x70
-> [  546.902876]  [<ffffffff8115c395>] SyS_mount+0x55/0xe0
-> [  546.902968]  [<ffffffff810018e6>] do_syscall_64+0x56/0xc0
-> [  546.903063]  [<ffffffff8169771b>] entry_SYSCALL_64_after_swapgs+0x58/0xc2
-> [  546.903159] Code: 48 c7 c7 10 04 95 81 e8 c4 42 d4 ff 5d c3 66 90 55 48 89 f1 41 89 d0 48 c7 c6 40 04 95 81 48 89 fa 31 ff 48 89 e5 e8 65 fa ff ff <0f> 0b 0f 1f 00 55 48 63 f6 49 89 f9 41 b8 01 00 00 00 b9 10 00 
-> [  546.906798] RIP  [<ffffffff8130c81b>] assfail+0x1b/0x20
-> [  546.906934]  RSP <ffffc9000dd07c98>
-> [  546.907029] ---[ end trace deeb8384ab04a23c ]---
-> 
-> To see why the assertion triggers, I added
-> 
->         xfs_warn(NULL, "a: %u", xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved);
->         xfs_warn(NULL, "b: %u", xfs_perag_resv(pag, XFS_AG_RESV_AGFL)->ar_reserved);
->         xfs_warn(NULL, "c: %u", pag->pagf_freeblks);
->         xfs_warn(NULL, "d: %u", pag->pagf_flcount);
-> 
-> right before the ASSERT() in xfs_ag_resv.c. Looks like
-> pag->pagf_freeblks is way too small:
-> 
-> [  149.777035] XFS: a: 267367
-> [  149.777036] XFS: b: 0
-> [  149.777036] XFS: c: 6388
-> [  149.777037] XFS: d: 4
-> 
-> Fortunately, this is new hardware which is not yet in production use,
-> and the filesystem in question only contains a few dummy files. So
-> I can test patches.
+Hi folks,
 
-The assert (and your very helpful debugging xfs_warns) indicate that for
-the kernel was trying to reserve 267,367 blocks to guarantee space for
-metadata btrees in an allocation group (AG) that has only 6,392 blocks
-remaining.
+The for-next branch of the xfs-linux repository at:
 
-This per-AG block reservation exists to avoid running out of space for
-metadata in worst case situations (needing space midway through a
-transaction on a nearly full fs).  The assert your machine hit is a
-debugging warning to alert developers to the per-AG block reservation
-system deciding that it won't be able to handle all cases.
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-Hmmm, what features does this filesystem have enabled?
+has just been updated.
 
-Given that XFS_AG_RESV_METADATA > 0 and there's no warning about the
-experimental reflink feature, that implies that the free inode btree
-(finobt) feature is enabled?
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.  This is more or less what I intend to submit for 5.2,
+though bug fixes are accepted at any time.
 
-The awkward thing about the finobt reservation is that it was added long
-after the finobt feature was enabled, to fix a corner case in that code.
-If you're coming from an older kernel, there might not be enough free
-space in the AG to guarantee space for the finobt.
+** NOTE **: I rewrote the git history slightly to attach the Fixes tag
+to "xfs: add missing error check in xfs_prepare_shift".  Sorry for the
+inconvenience, but I thought it worth the extra work.
 
-(Maybe we ought to turn that ASSERT into a xfs_warn or something...?)
+The new head of the for-next branch is commit:
 
-In any case, if you're /not/ trying to debug the XFS code itself, you
-could set CONFIG_XFS_DEBUG=n to turn off all the programmer debugging
-pieces (which will improve fs performance substantially).
+75efa57d0bf5 xfs: add online scrub for superblock counters
 
-If you want all the verbose debugging checks without the kernel hang
-behavior you could set CONFIG_XFS_DEBUG=n and CONFIG_XFS_WARN=y.
+New Commits:
 
---D
+Brian Foster (7):
+      [4d09807f2046] xfs: fix use after free in buf log item unlock assert
+      [545aa41f5cba] xfs: wake commit waiters on CIL abort before log item abort
+      [22fedd80b652] xfs: shutdown after buf release in iflush cluster abort path
+      [1ca89fbc48e1] xfs: don't account extra agfl blocks as available
+      [945c941fcd82] xfs: make tr_growdata a permanent transaction
+      [362f5e745ae2] xfs: assert that we don't enter agfl freeing with a non-permanent transaction
+      [1749d1ea89bd] xfs: add missing error check in xfs_prepare_shift()
 
-> 
-> Best
-> Andre
-> -- 
-> Max Planck Institute for Developmental Biology
-> Max-Planck-Ring 5, 72076 Tübingen, Germany. Phone: (+49) 7071 601 829
-> http://people.tuebingen.mpg.de/maan/
+Christoph Hellwig (1):
+      [94079285756d] xfs: don't parse the mtpt mount option
+
+Darrick J. Wong (27):
+      [6772c1f11206] xfs: track metadata health status
+      [39353ff6e96f] xfs: replace the BAD_SUMMARY mount flag with the equivalent health code
+      [519841c207de] xfs: clear BAD_SUMMARY if unmounting an unhealthy filesystem
+      [7cd5006bdb6f] xfs: add a new ioctl to describe allocation group geometry
+      [c23232d40935] xfs: report fs and rt health via geometry structure
+      [1302c6a24fd9] xfs: report AG health via AG geometry ioctl
+      [89d139d5ad46] xfs: report inode health via bulkstat
+      [9d71e15586fd] xfs: refactor scrub context initialization
+      [f8c2a2257ca1] xfs: collapse scrub bool state flags into a single unsigned int
+      [160b5a784525] xfs: hoist the already_fixed variable to the scrub context
+      [4860a05d2475] xfs: scrub/repair should update filesystem metadata health
+      [4fb7951fde64] xfs: scrub should only cross-reference with healthy btrees
+      [cb357bf3d105] xfs: implement per-inode writeback completion queues
+      [28408243706e] xfs: remove unused m_data_workqueue
+      [3994fc489575] xfs: merge adjacent io completions of the same type
+      [1fdeaea4d92c] xfs: abort unaligned nowait directio early
+      [903b1fc2737f] xfs: widen quota block counters to 64-bit integers
+      [394aafdc15da] xfs: widen inode delalloc block counter to 64-bits
+      [078f4a7d3109] xfs: kill the xfs_dqtrx_t typedef
+      [3de5eab3fde1] xfs: unlock inode when xfs_ioctl_setattr_get_trans can't get transaction
+      [f60be90fc9a9] xfs: fix broken bhold behavior in xrep_roll_ag_trans
+      [9fe82b8c422b] xfs: track delayed allocation reservations across the filesystem
+      [ed30dcbd901c] xfs: rename the speculative block allocation reclaim toggle functions
+      [9a1f3049f473] xfs: allow scrubbers to pause background reclaim
+      [47cd97b5b239] xfs: scrub should check incore counters against ondisk headers
+      [710d707d2fa9] xfs: always rejoin held resources during defer roll
+      [75efa57d0bf5] xfs: add online scrub for superblock counters
+
+Dave Chinner (1):
+      [1b6d968de22b] xfs: bump XFS_IOC_FSGEOMETRY to v5 structures
+
+Wang Shilong (1):
+      [2bf9d264efed] xfs,fstrim: fix to return correct minlen
 
 
+Code Diffstat:
+
+ fs/xfs/Makefile                |   3 +
+ fs/xfs/libxfs/xfs_ag.c         |  54 ++++++
+ fs/xfs/libxfs/xfs_ag.h         |   2 +
+ fs/xfs/libxfs/xfs_alloc.c      |  13 +-
+ fs/xfs/libxfs/xfs_attr.c       |  35 ++--
+ fs/xfs/libxfs/xfs_attr.h       |   2 +-
+ fs/xfs/libxfs/xfs_bmap.c       |  17 +-
+ fs/xfs/libxfs/xfs_defer.c      |  14 +-
+ fs/xfs/libxfs/xfs_fs.h         | 139 +++++++++++----
+ fs/xfs/libxfs/xfs_health.h     | 190 ++++++++++++++++++++
+ fs/xfs/libxfs/xfs_sb.c         |  10 +-
+ fs/xfs/libxfs/xfs_trans_resv.c |   6 +-
+ fs/xfs/libxfs/xfs_types.c      |   2 +-
+ fs/xfs/libxfs/xfs_types.h      |   2 +
+ fs/xfs/scrub/agheader.c        |  20 +++
+ fs/xfs/scrub/common.c          |  47 ++++-
+ fs/xfs/scrub/common.h          |   4 +
+ fs/xfs/scrub/fscounters.c      | 366 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/health.c          | 237 +++++++++++++++++++++++++
+ fs/xfs/scrub/health.h          |  14 ++
+ fs/xfs/scrub/ialloc.c          |   4 +-
+ fs/xfs/scrub/parent.c          |   2 +-
+ fs/xfs/scrub/quota.c           |   2 +-
+ fs/xfs/scrub/repair.c          |  34 ++--
+ fs/xfs/scrub/repair.h          |   5 +-
+ fs/xfs/scrub/scrub.c           |  49 ++++--
+ fs/xfs/scrub/scrub.h           |  27 ++-
+ fs/xfs/scrub/trace.h           |  63 ++++++-
+ fs/xfs/xfs_aops.c              | 135 ++++++++++++--
+ fs/xfs/xfs_aops.h              |   1 -
+ fs/xfs/xfs_bmap_util.c         |   2 +
+ fs/xfs/xfs_buf_item.c          |   4 +-
+ fs/xfs/xfs_discard.c           |   3 +-
+ fs/xfs/xfs_dquot.c             |  17 +-
+ fs/xfs/xfs_file.c              |   6 +-
+ fs/xfs/xfs_health.c            | 392 +++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_icache.c            |  11 +-
+ fs/xfs/xfs_icache.h            |   4 +-
+ fs/xfs/xfs_inode.c             |   4 +-
+ fs/xfs/xfs_inode.h             |  17 +-
+ fs/xfs/xfs_ioctl.c             |  55 +++---
+ fs/xfs/xfs_ioctl32.c           |   4 +-
+ fs/xfs/xfs_itable.c            |   2 +
+ fs/xfs/xfs_log.c               |   3 +-
+ fs/xfs/xfs_log_cil.c           |  21 ++-
+ fs/xfs/xfs_mount.c             |  35 +++-
+ fs/xfs/xfs_mount.h             |  32 +++-
+ fs/xfs/xfs_qm.c                |   3 +-
+ fs/xfs/xfs_qm.h                |   8 +-
+ fs/xfs/xfs_quota.h             |  37 ++--
+ fs/xfs/xfs_super.c             |  33 ++--
+ fs/xfs/xfs_trace.h             |  76 ++++++++
+ fs/xfs/xfs_trans_dquot.c       |  52 +++---
+ 53 files changed, 2062 insertions(+), 258 deletions(-)
+ create mode 100644 fs/xfs/libxfs/xfs_health.h
+ create mode 100644 fs/xfs/scrub/fscounters.c
+ create mode 100644 fs/xfs/scrub/health.c
+ create mode 100644 fs/xfs/scrub/health.h
+ create mode 100644 fs/xfs/xfs_health.c
