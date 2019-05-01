@@ -2,60 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AE5D10786
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 13:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E0B108BC
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 16:05:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfEALkK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 May 2019 07:40:10 -0400
-Received: from smtp1.linuxfoundation.org ([140.211.169.13]:39270 "EHLO
-        smtp1.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfEALkJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 May 2019 07:40:09 -0400
-X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 May 2019 07:40:09 EDT
-Received: from rt.cvo.linuxfoundation.org (rt.cvo.linuxfoundation.org [172.17.192.131])
-        by smtp1.linuxfoundation.org (Postfix) with ESMTPS id DB2F3876;
-        Wed,  1 May 2019 11:34:03 +0000 (UTC)
-Received: by rt.cvo.linuxfoundation.org (Postfix, from userid 48)
-        id D4D1D27E; Wed,  1 May 2019 11:34:03 +0000 (UTC)
-Subject: Re: [Kernel.org Helpdesk #61233] Please add linux-xfs@vger.kernel.org to lore.kernel.org
-From:   "Amir Goldstein via RT" <kernel-helpdesk@rt.linuxfoundation.org>
-Reply-To: kernel-helpdesk@rt.linuxfoundation.org
-In-Reply-To: <CAOQ4uxiMTQB3joKNj7gJs+TEo4Ru+tGVbYtN1twkonTC7+WU8A@mail.gmail.com>
-References: <RT-Ticket-61233@linuxfoundation>
- <20180923010246.GB4590@magnolia>
- <rt-4.4.0-14016-1537793643-303.61233-6-0@linuxfoundation>
- <CAOQ4uxiMTQB3joKNj7gJs+TEo4Ru+tGVbYtN1twkonTC7+WU8A@mail.gmail.com>
-Message-ID: <rt-4.4.0-12783-1556710443-1750.61233-6-0@linuxfoundation>
-X-RT-Loop-Prevention: linuxfoundation.org
-X-RT-Ticket: linuxfoundation.org #61233
-X-Managed-BY: RT 4.4.0 (http://www.bestpractical.com/rt/)
-X-RT-Originator: amir73il@gmail.com
-To:     darrick.wong@oracle.com
-CC:     linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-X-RT-Original-Encoding: utf-8
-Date:   Wed, 01 May 2019 07:34:03 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726434AbfEAOFF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 May 2019 10:05:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41234 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfEAOFF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 1 May 2019 10:05:05 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EC3630ADBCC
+        for <linux-xfs@vger.kernel.org>; Wed,  1 May 2019 14:05:05 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF38517502
+        for <linux-xfs@vger.kernel.org>; Wed,  1 May 2019 14:05:04 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] xfs: rely on minleft instead of total for bmbt res
+Date:   Wed,  1 May 2019 10:05:02 -0400
+Message-Id: <20190501140504.16435-1-bfoster@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 01 May 2019 14:05:05 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 9:03 AM Konstantin Ryabitsev via RT
-<kernel-helpdesk@rt.linuxfoundation.org> wrote:
->
-> On 2018-09-22 21:02:50, darrick.wong@oracle.com wrote:
-> > Hi, it would be great if you could start archiving the
-> > linux-xfs@vger.kernel.org mailing list on lore.kernel.org.
->
-> The agent has been subscribed to the list. Please proceed with archive collection.
->
+Hi all,
 
-Darrick,
+This is a follow up to the RFC[1] I posted the other day. After poking
+around some more, I noticed that the bmapi allocation code already set
+args.minleft based on the state of the associated fork. Based on the
+reasoning in the commit logs, it seems that a bunch of the 'args.total =
+extent length + bmbt res' bmapi allocation callers were superfluous and
+could just rely on the existing minleft logic.
 
-Do you know what's holding that process back?
+Note that this doesn't address the other users of args.total (inode,
+dquot, xattr, etc.). It remains to be seen whether there is still value
+in having something like args.extra instead of args.total. For one,
+passing zero is somewhat of a landmine if transaction block reservations
+happen to change. It would be nice to clean this all up so the
+additional reservation portion of the mapping request is explicit and
+robust, particularly for callers where minlen < maxlen. As it is, it's
+still kind of pointless to specify minlen < maxlen and total >= maxlen
+because if we can't satisfy maxlen, the total check in
+xfs_alloc_space_available() will never pass until xfs_bmap_btalloc()
+reduces args.total, and it's set to minlen essentially ignoring what the
+caller set it to originally. That might not matter so much in cases
+where the allocation is a strict minlen == maxlen request and we're
+going to simply pass or fail.
 
-Thanks,
-Amir.
+In summary, this whole mechanism is still quite hairy and could probably
+use further improvements. For that reason, careful review of patch 2 is
+probably in order. So far, this has survived a full fstests auto run
+with default geometry and an enospc group run with an agsize=20MB
+geometry (~750+ AGs). I'm currently (sllloowlly) repeating the auto
+group run with the latter format and perhaps will follow that up with an
+fsstress cycle that slams the fs into -ENOSPC for a longish period of
+time (hours/days).
+
+Thoughts, reviews, flames appreciated. 
+
+Brian
+
+[1] https://marc.info/?l=linux-xfs&m=155628702230215&w=2
+
+Brian Foster (2):
+  xfs: drop minlen before tossing alignment on bmap allocs
+  xfs: don't set bmapi total block req where minleft is sufficient
+
+ fs/xfs/libxfs/xfs_bmap.c | 13 +++++++++----
+ fs/xfs/xfs_bmap_util.c   |  4 ++--
+ fs/xfs/xfs_dquot.c       |  4 ++--
+ fs/xfs/xfs_iomap.c       |  4 ++--
+ fs/xfs/xfs_reflink.c     |  4 ++--
+ fs/xfs/xfs_rtalloc.c     |  3 +--
+ 6 files changed, 18 insertions(+), 14 deletions(-)
+
+-- 
+2.17.2
 
