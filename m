@@ -2,135 +2,459 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA55310A32
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 17:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3DAF10A51
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 17:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfEAPjC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 May 2019 11:39:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfEAPjC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 May 2019 11:39:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41Fca5m195986;
-        Wed, 1 May 2019 15:38:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=7lWVHCATQxZy3dMPQYweHfvcXPTud9y3Q9mIXo77vmw=;
- b=kL6x7X9Ol5kh+4mD/CsAmfz558NMGdbykkNhYDcn3GowTm04gGV7xEKZ5mYzcM4nGLcA
- vnRjHMN43QtKRNerwhAjFPFSTlStChyqG1cLaVjmttkFma9NuWY2LP1yDUozL9pXhFHJ
- +pKRTxdIhnXOaOSc41YVbqkMbLhdM/eMI3+M1lMj5qoqDroaSqQLtQADTSn8o57nAl8x
- yfJSUsg407IKuPCOFJQNWB+tp9bCmTziw8IxC0QFf5pYTRcRnrid2z16IF9cVgDXSoUf
- TE6CtyPO8uqUPdcOBKBZaCNFtQ8WDmt6meoqJnEGouBFeMktCK7gRNGSv30KruCc5fsP Yg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2s6xhybcde-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 May 2019 15:38:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x41FZjfW066201;
-        Wed, 1 May 2019 15:36:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2s6xhhaqxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 May 2019 15:36:47 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x41FajKR022091;
-        Wed, 1 May 2019 15:36:47 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 01 May 2019 08:36:45 -0700
-Date:   Wed, 1 May 2019 08:36:43 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andre Noll <maan@tuebingen.mpg.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
-Message-ID: <20190501153643.GL5207@magnolia>
-References: <20190430121420.GW2780@tuebingen.mpg.de>
- <20190430151151.GF5207@magnolia>
- <20190430162506.GZ2780@tuebingen.mpg.de>
- <20190430174042.GH5207@magnolia>
- <20190430190525.GB2780@tuebingen.mpg.de>
- <20190430191825.GF5217@magnolia>
- <20190430210724.GD2780@tuebingen.mpg.de>
+        id S1726452AbfEAPz5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 May 2019 11:55:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52134 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbfEAPz4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 1 May 2019 11:55:56 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5ACA7307D91F
+        for <linux-xfs@vger.kernel.org>; Wed,  1 May 2019 15:55:56 +0000 (UTC)
+Received: from Liberator-6.local (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3BF690A8
+        for <linux-xfs@vger.kernel.org>; Wed,  1 May 2019 15:55:55 +0000 (UTC)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] xfs: change some error-less functions to void types
+Message-ID: <a8eec37c-0cb1-0dc6-aa65-7248e367fc08@redhat.com>
+Date:   Wed, 1 May 2019 10:55:54 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190430210724.GD2780@tuebingen.mpg.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905010098
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9243 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905010099
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 01 May 2019 15:55:56 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:07:24PM +0200, Andre Noll wrote:
-> On Tue, Apr 30, 12:18, Darrick J. Wong wrote
-> > > commit f847bda4d612744ff1812788417bd8df41a806d3
-> > > Author: Dave Chinner <dchinner@redhat.com>
-> > > Date:   Mon Nov 19 13:31:08 2018 -0800
-> > > 
-> > >     xfs: finobt AG reserves don't consider last AG can be a runt
-> > >     
-> > >     This is a backport of upstream commit c08768977b9 and the part of
-> > >     21ec54168b36 which is needed by c08768977b9.
-> > 
-> > You could send this patch to the stable list, but my guess is that
-> > they'd prefer a straight backport of all three commits...
-> 
-> Hm, cherry-picking the first commit onto 4.9,171 already gives
-> four conflicting files. The conflicts are trivial to resolve (git
-> cherry-pick -xX theirs 21ec54168b36 does it), but that doesn't
-> compile because xfs_btree_query_all() is missing.  So e9a2599a249ed
-> (xfs: create a function to query all records in a btree) is needed as
-> well. But then, applying 86210fbebae (xfs: move various type verifiers
-> to common file) on top of that gives non-trivial conflicts.
+There are several functions which have no opportunity to retun
+an error, and don't contain any ASSERTs which could be argued
+to be better constructed as error cases.  So, make them voids
+to simplify the callers.
 
-Ah, I suspected that might happen.  Backports are hard. :(
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
 
-I suppose one saving grace of the patch you sent is that it'll likely
-break the build if anyone ever /does/ attempt a backport of those first
-two commits.  Perhaps that is the most practical way forward.
+I had sent this a while back, and Darrick had concerns about a
+few functions which maybe /should/ return errors; I tried to avoid
+changing anything which was remotely close to that case, and stick
+to the simple/obvious ones.
 
-> So, for automatic backporting we would need to cherry-pick even more,
-> and each backported commit should be tested of course. Given this, do
-> you still think Greg prefers a rather large set of straight backports
-> over the simple commit that just pulls in the missing function?
-
-I think you'd have to ask him that, if you decide not to send
-yesterday's patch.
-
-> I guess the important question is how much impact this issue
-> has on production systems (i.e., on CONFIG_XFS_DEBUG=n kernels,
-> where the assert statement is not compiled in). If the unpatched
-> xfs_inobt_max_size() is very unlikely to cause problems on such
-> systems, we might as well live with it.
-
-...but it's unlikely to cause problems since the allocator will probably
-pass over that runt AG so long as the others have more space and it will
-mostly stay empty.
-
-(He says knocking on wood knowing that he's now tempted fate :P)
-
---D
-
-> 
-> Thanks
-> Andre
-> -- 
-> Max Planck Institute for Developmental Biology
-> Max-Planck-Ring 5, 72076 Tübingen, Germany. Phone: (+49) 7071 601 829
-> http://people.tuebingen.mpg.de/maan/
-
+diff --git a/fs/xfs/libxfs/xfs_dquot_buf.c b/fs/xfs/libxfs/xfs_dquot_buf.c
+index fb5bd9a804f6..e12f2962f80f 100644
+--- a/fs/xfs/libxfs/xfs_dquot_buf.c
++++ b/fs/xfs/libxfs/xfs_dquot_buf.c
+@@ -110,7 +110,7 @@ xfs_dqblk_verify(
+ /*
+  * Do some primitive error checking on ondisk dquot data structures.
+  */
+-int
++void
+ xfs_dqblk_repair(
+ 	struct xfs_mount	*mp,
+ 	struct xfs_dqblk	*dqb,
+@@ -134,7 +134,7 @@ xfs_dqblk_repair(
+ 				 XFS_DQUOT_CRC_OFF);
+ 	}
+ 
+-	return 0;
++	return;
+ }
+ 
+ STATIC bool
+diff --git a/fs/xfs/libxfs/xfs_quota_defs.h b/fs/xfs/libxfs/xfs_quota_defs.h
+index 4bfdd5f4c6af..b2113b17e53c 100644
+--- a/fs/xfs/libxfs/xfs_quota_defs.h
++++ b/fs/xfs/libxfs/xfs_quota_defs.h
+@@ -142,7 +142,7 @@ extern xfs_failaddr_t xfs_dquot_verify(struct xfs_mount *mp,
+ extern xfs_failaddr_t xfs_dqblk_verify(struct xfs_mount *mp,
+ 		struct xfs_dqblk *dqb, xfs_dqid_t id, uint type);
+ extern int xfs_calc_dquots_per_chunk(unsigned int nbblks);
+-extern int xfs_dqblk_repair(struct xfs_mount *mp, struct xfs_dqblk *dqb,
++extern void xfs_dqblk_repair(struct xfs_mount *mp, struct xfs_dqblk *dqb,
+ 		xfs_dqid_t id, uint type);
+ 
+ #endif	/* __XFS_QUOTA_H__ */
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 6fab49f6070b..fb3e22462cec 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -1085,7 +1085,7 @@ xfs_sync_sb_buf(
+ 	return error;
+ }
+ 
+-int
++void
+ xfs_fs_geometry(
+ 	struct xfs_sb		*sbp,
+ 	struct xfs_fsop_geom	*geo,
+@@ -1109,13 +1109,13 @@ xfs_fs_geometry(
+ 	memcpy(geo->uuid, &sbp->sb_uuid, sizeof(sbp->sb_uuid));
+ 
+ 	if (struct_version < 2)
+-		return 0;
++		return;
+ 
+ 	geo->sunit = sbp->sb_unit;
+ 	geo->swidth = sbp->sb_width;
+ 
+ 	if (struct_version < 3)
+-		return 0;
++		return;
+ 
+ 	geo->version = XFS_FSOP_GEOM_VERSION;
+ 	geo->flags = XFS_FSOP_GEOM_FLAGS_NLINK |
+@@ -1159,7 +1159,7 @@ xfs_fs_geometry(
+ 	geo->dirblocksize = xfs_dir2_dirblock_bytes(sbp);
+ 
+ 	if (struct_version < 4)
+-		return 0;
++		return;
+ 
+ 	if (xfs_sb_version_haslogv2(sbp))
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_LOGV2;
+@@ -1167,11 +1167,11 @@ xfs_fs_geometry(
+ 	geo->logsunit = sbp->sb_logsunit;
+ 
+ 	if (struct_version < 5)
+-		return 0;
++		return;
+ 
+ 	geo->version = XFS_FSOP_GEOM_VERSION_V5;
+ 
+-	return 0;
++	return;
+ }
+ 
+ /* Read a secondary superblock. */
+diff --git a/fs/xfs/libxfs/xfs_sb.h b/fs/xfs/libxfs/xfs_sb.h
+index 13564d69800a..92465a9a5162 100644
+--- a/fs/xfs/libxfs/xfs_sb.h
++++ b/fs/xfs/libxfs/xfs_sb.h
+@@ -33,7 +33,7 @@ extern void	xfs_sb_quota_from_disk(struct xfs_sb *sbp);
+ extern int	xfs_update_secondary_sbs(struct xfs_mount *mp);
+ 
+ #define XFS_FS_GEOM_MAX_STRUCT_VER	(4)
+-extern int	xfs_fs_geometry(struct xfs_sb *sbp, struct xfs_fsop_geom *geo,
++extern void	xfs_fs_geometry(struct xfs_sb *sbp, struct xfs_fsop_geom *geo,
+ 				int struct_version);
+ extern int	xfs_sb_read_secondary(struct xfs_mount *mp,
+ 				struct xfs_trans *tp, xfs_agnumber_t agno,
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 584648582ba7..944e22c98dda 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -289,7 +289,7 @@ xfs_growfs_log(
+  * exported through ioctl XFS_IOC_FSCOUNTS
+  */
+ 
+-int
++void
+ xfs_fs_counts(
+ 	xfs_mount_t		*mp,
+ 	xfs_fsop_counts_t	*cnt)
+@@ -302,7 +302,7 @@ xfs_fs_counts(
+ 	spin_lock(&mp->m_sb_lock);
+ 	cnt->freertx = mp->m_sb.sb_frextents;
+ 	spin_unlock(&mp->m_sb_lock);
+-	return 0;
++	return;
+ }
+ 
+ /*
+diff --git a/fs/xfs/xfs_fsops.h b/fs/xfs/xfs_fsops.h
+index d023db0862c2..92869f6ec8d3 100644
+--- a/fs/xfs/xfs_fsops.h
++++ b/fs/xfs/xfs_fsops.h
+@@ -8,7 +8,7 @@
+ 
+ extern int xfs_growfs_data(xfs_mount_t *mp, xfs_growfs_data_t *in);
+ extern int xfs_growfs_log(xfs_mount_t *mp, xfs_growfs_log_t *in);
+-extern int xfs_fs_counts(xfs_mount_t *mp, xfs_fsop_counts_t *cnt);
++extern void xfs_fs_counts(xfs_mount_t *mp, xfs_fsop_counts_t *cnt);
+ extern int xfs_reserve_blocks(xfs_mount_t *mp, uint64_t *inval,
+ 				xfs_fsop_resblks_t *outval);
+ extern int xfs_fs_goingdown(xfs_mount_t *mp, uint32_t inflags);
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 4591598ca04d..c3f036ff50d8 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1116,7 +1116,7 @@ xfs_droplink(
+ /*
+  * Increment the link count on an inode & log the change.
+  */
+-static int
++static void
+ xfs_bumplink(
+ 	xfs_trans_t *tp,
+ 	xfs_inode_t *ip)
+@@ -1126,7 +1126,7 @@ xfs_bumplink(
+ 	ASSERT(ip->i_d.di_version > 1);
+ 	inc_nlink(VFS_I(ip));
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+-	return 0;
++	return;
+ }
+ 
+ int
+@@ -1235,9 +1235,7 @@ xfs_create(
+ 		if (error)
+ 			goto out_trans_cancel;
+ 
+-		error = xfs_bumplink(tp, dp);
+-		if (error)
+-			goto out_trans_cancel;
++		xfs_bumplink(tp, dp);
+ 	}
+ 
+ 	/*
+@@ -1454,9 +1452,7 @@ xfs_link(
+ 	xfs_trans_ichgtime(tp, tdp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
+ 	xfs_trans_log_inode(tp, tdp, XFS_ILOG_CORE);
+ 
+-	error = xfs_bumplink(tp, sip);
+-	if (error)
+-		goto error_return;
++	xfs_bumplink(tp, sip);
+ 
+ 	/*
+ 	 * If this is a synchronous mount, make sure that the
+@@ -3097,9 +3093,7 @@ xfs_cross_rename(
+ 				error = xfs_droplink(tp, dp2);
+ 				if (error)
+ 					goto out_trans_abort;
+-				error = xfs_bumplink(tp, dp1);
+-				if (error)
+-					goto out_trans_abort;
++				xfs_bumplink(tp, dp1);
+ 			}
+ 
+ 			/*
+@@ -3123,9 +3117,7 @@ xfs_cross_rename(
+ 				error = xfs_droplink(tp, dp1);
+ 				if (error)
+ 					goto out_trans_abort;
+-				error = xfs_bumplink(tp, dp2);
+-				if (error)
+-					goto out_trans_abort;
++				xfs_bumplink(tp, dp2);
+ 			}
+ 
+ 			/*
+@@ -3322,9 +3314,7 @@ xfs_rename(
+ 					XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
+ 
+ 		if (new_parent && src_is_directory) {
+-			error = xfs_bumplink(tp, target_dp);
+-			if (error)
+-				goto out_trans_cancel;
++			xfs_bumplink(tp, target_dp);
+ 		}
+ 	} else { /* target_ip != NULL */
+ 		/*
+@@ -3443,9 +3433,7 @@ xfs_rename(
+ 	 */
+ 	if (wip) {
+ 		ASSERT(VFS_I(wip)->i_nlink == 0);
+-		error = xfs_bumplink(tp, wip);
+-		if (error)
+-			goto out_trans_cancel;
++		xfs_bumplink(tp, wip);
+ 		error = xfs_iunlink_remove(tp, wip);
+ 		if (error)
+ 			goto out_trans_cancel;
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 21d6f433c375..d7dfc13f30f5 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -788,11 +788,8 @@ xfs_ioc_fsgeometry(
+ {
+ 	struct xfs_fsop_geom	fsgeo;
+ 	size_t			len;
+-	int			error;
+ 
+-	error = xfs_fs_geometry(&mp->m_sb, &fsgeo, struct_version);
+-	if (error)
+-		return error;
++	xfs_fs_geometry(&mp->m_sb, &fsgeo, struct_version);
+ 
+ 	if (struct_version <= 3)
+ 		len = sizeof(struct xfs_fsop_geom_v1);
+@@ -2046,9 +2043,7 @@ xfs_file_ioctl(
+ 	case XFS_IOC_FSCOUNTS: {
+ 		xfs_fsop_counts_t out;
+ 
+-		error = xfs_fs_counts(mp, &out);
+-		if (error)
+-			return error;
++		xfs_fs_counts(mp, &out);
+ 
+ 		if (copy_to_user(arg, &out, sizeof(out)))
+ 			return -EFAULT;
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index 65997a6315e9..614fc6886d24 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -53,11 +53,8 @@ xfs_compat_ioc_fsgeometry_v1(
+ 	compat_xfs_fsop_geom_v1_t __user *arg32)
+ {
+ 	struct xfs_fsop_geom	  fsgeo;
+-	int			  error;
+ 
+-	error = xfs_fs_geometry(&mp->m_sb, &fsgeo, 3);
+-	if (error)
+-		return error;
++	xfs_fs_geometry(&mp->m_sb, &fsgeo, 3);
+ 	/* The 32-bit variant simply has some padding at the end */
+ 	if (copy_to_user(arg32, &fsgeo, sizeof(struct compat_xfs_fsop_geom_v1)))
+ 		return -EFAULT;
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 457ced3ee3e1..d8fb48025696 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1780,7 +1780,7 @@ xlog_cksum(
+  * ensure that completes before tearing down the iclogbufs. Hence we need to
+  * hold the buffer lock across the log IO to acheive that.
+  */
+-STATIC int
++STATIC void
+ xlog_bdstrat(
+ 	struct xfs_buf		*bp)
+ {
+@@ -1797,11 +1797,11 @@ xlog_bdstrat(
+ 		 * doing it here. Similarly, IO completion will unlock the
+ 		 * buffer, so we don't do it here.
+ 		 */
+-		return 0;
++		return;
+ 	}
+ 
+ 	xfs_buf_submit(bp);
+-	return 0;
++	return;
+ }
+ 
+ /*
+@@ -1840,7 +1840,6 @@ xlog_sync(
+ 	uint		count_init;	/* initial count before roundup */
+ 	int		roundoff;       /* roundoff to BB or stripe */
+ 	int		split = 0;	/* split write into two regions */
+-	int		error;
+ 	int		v2 = xfs_sb_version_haslogv2(&log->l_mp->m_sb);
+ 	int		size;
+ 
+@@ -1959,11 +1958,8 @@ xlog_sync(
+ 	 * Don't call xfs_bwrite here. We do log-syncs even when the filesystem
+ 	 * is shutting down.
+ 	 */
+-	error = xlog_bdstrat(bp);
+-	if (error) {
+-		xfs_buf_ioerror_alert(bp, "xlog_sync");
+-		return error;
+-	}
++	xlog_bdstrat(bp);
++
+ 	if (split) {
+ 		bp = iclog->ic_log->l_xbuf;
+ 		XFS_BUF_SET_ADDR(bp, 0);	     /* logical 0 */
+@@ -1978,11 +1974,7 @@ xlog_sync(
+ 
+ 		/* account for internal log which doesn't start at block #0 */
+ 		XFS_BUF_SET_ADDR(bp, XFS_BUF_ADDR(bp) + log->l_logBBstart);
+-		error = xlog_bdstrat(bp);
+-		if (error) {
+-			xfs_buf_ioerror_alert(bp, "xlog_sync (split)");
+-			return error;
+-		}
++		xlog_bdstrat(bp);
+ 	}
+ 	return 0;
+ }	/* xlog_sync */
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 3371d1ff27c4..1036e1a620db 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -5167,7 +5167,7 @@ xlog_recover_process_iunlinks(
+ 	}
+ }
+ 
+-STATIC int
++STATIC void
+ xlog_unpack_data(
+ 	struct xlog_rec_header	*rhead,
+ 	char			*dp,
+@@ -5191,7 +5191,7 @@ xlog_unpack_data(
+ 		}
+ 	}
+ 
+-	return 0;
++	return;
+ }
+ 
+ /*
+@@ -5206,11 +5206,9 @@ xlog_recover_process(
+ 	int			pass,
+ 	struct list_head	*buffer_list)
+ {
+-	int			error;
+ 	__le32			old_crc = rhead->h_crc;
+ 	__le32			crc;
+ 
+-
+ 	crc = xlog_cksum(log, rhead, dp, be32_to_cpu(rhead->h_len));
+ 
+ 	/*
+@@ -5249,9 +5247,7 @@ xlog_recover_process(
+ 			return -EFSCORRUPTED;
+ 	}
+ 
+-	error = xlog_unpack_data(rhead, dp, log);
+-	if (error)
+-		return error;
++	xlog_unpack_data(rhead, dp, log);
+ 
+ 	return xlog_recover_process_data(log, rhash, rhead, dp, pass,
+ 					 buffer_list);
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 86c18f2232ca..5f05f227494c 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -448,7 +448,7 @@ struct proc_xfs_info {
+ 	char		*str;
+ };
+ 
+-STATIC int
++STATIC void
+ xfs_showargs(
+ 	struct xfs_mount	*mp,
+ 	struct seq_file		*m)
+@@ -528,7 +528,7 @@ xfs_showargs(
+ 	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
+ 		seq_puts(m, ",noquota");
+ 
+-	return 0;
++	return;
+ }
+ static uint64_t
+ xfs_max_file_offset(
+@@ -1449,7 +1449,8 @@ xfs_fs_show_options(
+ 	struct seq_file		*m,
+ 	struct dentry		*root)
+ {
+-	return xfs_showargs(XFS_M(root->d_sb), m);
++	xfs_showargs(XFS_M(root->d_sb), m);
++	return 0;
+ }
+ 
+ /*
 
