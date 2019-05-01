@@ -2,29 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3CBF10BAE
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 19:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BDA10BDA
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2019 19:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfEARBC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 May 2019 13:01:02 -0400
-Received: from tmailer.gwdg.de ([134.76.10.23]:34896 "EHLO tmailer.gwdg.de"
+        id S1726077AbfEARPc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 May 2019 13:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfEARBB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 1 May 2019 13:01:01 -0400
-Received: from mailgw.tuebingen.mpg.de ([192.124.27.5] helo=tuebingen.mpg.de)
-        by mailer.gwdg.de with esmtp (Exim 4.90_1)
-        (envelope-from <maan@tuebingen.mpg.de>)
-        id 1hLsbL-0003Dl-5e; Wed, 01 May 2019 19:00:59 +0200
-Received: from [10.37.80.2] (HELO mailhost.tuebingen.mpg.de)
-  by tuebingen.mpg.de (CommuniGate Pro SMTP 6.2.6)
-  with SMTP id 22798765; Wed, 01 May 2019 19:02:25 +0200
-Received: by mailhost.tuebingen.mpg.de (sSMTP sendmail emulation); Wed, 01 May 2019 19:00:58 +0200
-Date:   Wed, 1 May 2019 19:00:58 +0200
-From:   Andre Noll <maan@tuebingen.mpg.de>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
+        id S1726005AbfEARPc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 1 May 2019 13:15:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE9D20835;
+        Wed,  1 May 2019 17:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556730931;
+        bh=aC9O2XTg1ahmOUUSj8FrutdMXzZDtEElEqAqcR9Q6bI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bxPGgH3TVK+qGPC/NFlsdkfoP25FZWJeBCqUWR7hcXjSdLZduxGWuJizXLZGW3kvM
+         J/oee+oIn6InrfIc2DrGcnc7PS//WRu772Ev/HFaTkJFA2fmDMT6KnUqCWyE0u+OQe
+         IN548Bl6cF+RotdEPjxaUct4IbNk/G2lazLaKypo=
+Date:   Wed, 1 May 2019 19:15:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andre Noll <maan@tuebingen.mpg.de>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, stable@vger.kernel.org
 Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
-Message-ID: <20190501170058.GG2780@tuebingen.mpg.de>
+Message-ID: <20190501171529.GB28949@kroah.com>
 References: <20190430121420.GW2780@tuebingen.mpg.de>
  <20190430151151.GF5207@magnolia>
  <20190430162506.GZ2780@tuebingen.mpg.de>
@@ -33,58 +38,53 @@ References: <20190430121420.GW2780@tuebingen.mpg.de>
  <20190430191825.GF5217@magnolia>
  <20190430210724.GD2780@tuebingen.mpg.de>
  <20190501153643.GL5207@magnolia>
+ <20190501165933.GF2780@tuebingen.mpg.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qL6YN2OI1pnKQLYZ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501153643.GL5207@magnolia>
-User-Agent: Mutt/1.11.4 (207b9306) (2019-03-13)
-X-Spam-Level: $
-X-Virus-Scanned: (clean) by clamav
+In-Reply-To: <20190501165933.GF2780@tuebingen.mpg.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Wed, May 01, 2019 at 06:59:33PM +0200, Andre Noll wrote:
+> On Wed, May 01, 08:36, Darrick J. Wong wrote
+> > > > You could send this patch to the stable list, but my guess is that
+> > > > they'd prefer a straight backport of all three commits...
+> > > 
+> > > Hm, cherry-picking the first commit onto 4.9,171 already gives
+> > > four conflicting files. The conflicts are trivial to resolve (git
+> > > cherry-pick -xX theirs 21ec54168b36 does it), but that doesn't
+> > > compile because xfs_btree_query_all() is missing.  So e9a2599a249ed
+> > > (xfs: create a function to query all records in a btree) is needed as
+> > > well. But then, applying 86210fbebae (xfs: move various type verifiers
+> > > to common file) on top of that gives non-trivial conflicts.
+> > 
+> > Ah, I suspected that might happen.  Backports are hard. :(
+> > 
+> > I suppose one saving grace of the patch you sent is that it'll likely
+> > break the build if anyone ever /does/ attempt a backport of those first
+> > two commits.  Perhaps that is the most practical way forward.
+> > 
+> > > So, for automatic backporting we would need to cherry-pick even more,
+> > > and each backported commit should be tested of course. Given this, do
+> > > you still think Greg prefers a rather large set of straight backports
+> > > over the simple commit that just pulls in the missing function?
+> > 
+> > I think you'd have to ask him that, if you decide not to send
+> > yesterday's patch.
+> 
+> Let's try. I've added a sentence to the commit message which explains
+> why a straight backport is not practical, and how to proceed if anyone
+> wants to backport the earlier commits.
+> 
+> Greg: Under the given circumstances, would you be willing to accept
+> the patch below for 4.9?
 
---qL6YN2OI1pnKQLYZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the xfs maintainers say this is ok, it is fine with me.
 
-On Wed, May 01, 08:36, Darrick J. Wong wrote
+thanks,
 
-> > I guess the important question is how much impact this issue
-> > has on production systems (i.e., on CONFIG_XFS_DEBUG=3Dn kernels,
-> > where the assert statement is not compiled in). If the unpatched
-> > xfs_inobt_max_size() is very unlikely to cause problems on such
-> > systems, we might as well live with it.
->=20
-> ...but it's unlikely to cause problems since the allocator will probably
-> pass over that runt AG so long as the others have more space and it will
-> mostly stay empty.
-
-That makes me feel better, as we have many such systems.  Thanks for
-the assessment of risks.
-
-> (He says knocking on wood knowing that he's now tempted fate :P)
-
-One reason more to apply the patch :)
-
-Andre
---=20
-Max Planck Institute for Developmental Biology
-Max-Planck-Ring 5, 72076 T=C3=BCbingen, Germany. Phone: (+49) 7071 601 829
-http://people.tuebingen.mpg.de/maan/
-
---qL6YN2OI1pnKQLYZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSHtF/cbZGyylvqq1Ra2jVAMQCTDwUCXMnQyQAKCRBa2jVAMQCT
-Dx34AJ9NyhXYVUyqoySS2hNOqAa8KZ6kugCgpYbWW/hYgHXAkP/j8LUBeGnNjY4=
-=MEgY
------END PGP SIGNATURE-----
-
---qL6YN2OI1pnKQLYZ--
+greg k-h
