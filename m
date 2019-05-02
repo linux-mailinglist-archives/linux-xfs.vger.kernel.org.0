@@ -2,63 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 734A511066
-	for <lists+linux-xfs@lfdr.de>; Thu,  2 May 2019 01:49:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB9CD1184E
+	for <lists+linux-xfs@lfdr.de>; Thu,  2 May 2019 13:44:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfEAXtn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 May 2019 19:49:43 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59693 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726133AbfEAXtn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 May 2019 19:49:43 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D89AD439EE1;
-        Thu,  2 May 2019 09:49:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hLyyr-0005TG-0p; Thu, 02 May 2019 09:49:41 +1000
-Date:   Thu, 2 May 2019 09:49:39 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH V2] xfs: change some error-less functions to void types
-Message-ID: <20190501234939.GK29573@dread.disaster.area>
-References: <a8eec37c-0cb1-0dc6-aa65-7248e367fc08@redhat.com>
- <2a52ea5e-e056-244b-4d9b-04ed15d996fd@sandeen.net>
+        id S1726308AbfEBLon (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 May 2019 07:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbfEBLon (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 2 May 2019 07:44:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C398A2081C;
+        Thu,  2 May 2019 11:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556797482;
+        bh=+VA/Sm4g5ggag5aOAQ0Qq/PNUKAKGB+PsonZD7CEq7Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uLDjO5wuO9wZ1GlZJahRBosdEVdUJGBGfNhUIZRe5pWu2pelKJlT99YPL08pS6sKE
+         jqM3Jk5BcsnBAAm6MhTbgqLUNRpiGC5CgFpo+bCL3FBSlx733MRJSpMduzudgli9ZN
+         WCZf5uvQyV0Q8CQCp0//ehzcHn/7in3hty10FrhE=
+Date:   Thu, 2 May 2019 13:44:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Andre Noll <maan@tuebingen.mpg.de>, linux-xfs@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
+Message-ID: <20190502114440.GB21563@kroah.com>
+References: <20190430174042.GH5207@magnolia>
+ <20190430190525.GB2780@tuebingen.mpg.de>
+ <20190430191825.GF5217@magnolia>
+ <20190430210724.GD2780@tuebingen.mpg.de>
+ <20190501153643.GL5207@magnolia>
+ <20190501165933.GF2780@tuebingen.mpg.de>
+ <20190501171529.GB28949@kroah.com>
+ <20190501175129.GH2780@tuebingen.mpg.de>
+ <20190501192822.GM5207@magnolia>
+ <20190501221107.GI29573@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a52ea5e-e056-244b-4d9b-04ed15d996fd@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=UJetJGXy c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=zufj7rycC16unmZ_Xx0A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190501221107.GI29573@dread.disaster.area>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 01, 2019 at 05:20:52PM -0500, Eric Sandeen wrote:
-> There are several functions which have no opportunity to retun
-							   return
-
-> an error, and don't contain any ASSERTs which could be argued
-> to be better constructed as error cases.  So, make them voids
-> to simplify the callers.
-
-Does it make the code smaller? :)
-
+On Thu, May 02, 2019 at 08:11:07AM +1000, Dave Chinner wrote:
+> On Wed, May 01, 2019 at 12:28:22PM -0700, Darrick J. Wong wrote:
+> > On Wed, May 01, 2019 at 07:51:29PM +0200, Andre Noll wrote:
+> > > On Wed, May 01, 19:15, Greg Kroah-Hartman wrote
+> > > > On Wed, May 01, 2019 at 06:59:33PM +0200, Andre Noll wrote:
+> > > > > On Wed, May 01, 08:36, Darrick J. Wong wrote
+> > > > > > > > You could send this patch to the stable list, but my guess is that
+> > > > > > > > they'd prefer a straight backport of all three commits...
+> > > > > > > 
+> > > > > > > Hm, cherry-picking the first commit onto 4.9,171 already gives
+> > > > > > > four conflicting files. The conflicts are trivial to resolve (git
+> > > > > > > cherry-pick -xX theirs 21ec54168b36 does it), but that doesn't
+> > > > > > > compile because xfs_btree_query_all() is missing.  So e9a2599a249ed
+> > > > > > > (xfs: create a function to query all records in a btree) is needed as
+> > > > > > > well. But then, applying 86210fbebae (xfs: move various type verifiers
+> > > > > > > to common file) on top of that gives non-trivial conflicts.
+> > > > > > 
+> > > > > > Ah, I suspected that might happen.  Backports are hard. :(
+> > > > > > 
+> > > > > > I suppose one saving grace of the patch you sent is that it'll likely
+> > > > > > break the build if anyone ever /does/ attempt a backport of those first
+> > > > > > two commits.  Perhaps that is the most practical way forward.
+> > > > > > 
+> > > > > > > So, for automatic backporting we would need to cherry-pick even more,
+> > > > > > > and each backported commit should be tested of course. Given this, do
+> > > > > > > you still think Greg prefers a rather large set of straight backports
+> > > > > > > over the simple commit that just pulls in the missing function?
+> > > > > > 
+> > > > > > I think you'd have to ask him that, if you decide not to send
+> > > > > > yesterday's patch.
+> > > > > 
+> > > > > Let's try. I've added a sentence to the commit message which explains
+> > > > > why a straight backport is not practical, and how to proceed if anyone
+> > > > > wants to backport the earlier commits.
+> > > > > 
+> > > > > Greg: Under the given circumstances, would you be willing to accept
+> > > > > the patch below for 4.9?
+> > > > 
+> > > > If the xfs maintainers say this is ok, it is fine with me.
+> > > 
+> > > Darrick said, he's in favor of the patch, so I guess I can add his
+> > > Acked-by. Would you also like to see the ack from Dave (the author
+> > > of the original commit)?
+> > 
+> > FWIW it seems fine to me, though Dave [cc'd] might have stronger opinions...
 > 
-> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> Only thing I care about is whether it is QA'd properly. Greg, Sasha,
+> is the 4.9 stable kernel having fstests run on it as part of the
+> release gating?
 
-LGTM.
+I do not know about fstests, I know Linaro was looking into doing it as
+part of the test suites that they verify before I do a release.  But I
+doubt it's run on an XFS filesystem.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Sasha was doing some work in this area though, Sasha?
 
--- 
-Dave Chinner
-david@fromorbit.com
+greg k-h
