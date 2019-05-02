@@ -2,25 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87BDE11BC4
-	for <lists+linux-xfs@lfdr.de>; Thu,  2 May 2019 16:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5261B11BF5
+	for <lists+linux-xfs@lfdr.de>; Thu,  2 May 2019 16:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfEBOuV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 2 May 2019 10:50:21 -0400
-Received: from sandeen.net ([63.231.237.45]:35764 "EHLO sandeen.net"
+        id S1726268AbfEBO71 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 May 2019 10:59:27 -0400
+Received: from sandeen.net ([63.231.237.45]:36518 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfEBOuV (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 2 May 2019 10:50:21 -0400
+        id S1726197AbfEBO71 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 2 May 2019 10:59:27 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 41E0C11664;
-        Thu,  2 May 2019 09:50:19 -0500 (CDT)
-Subject: [PATCH V3] xfs: change some error-less functions to void types
+        by sandeen.net (Postfix) with ESMTPSA id A59681165F;
+        Thu,  2 May 2019 09:59:25 -0500 (CDT)
+Subject: [PATCH V4] xfs: change some error-less functions to void types
+From:   Eric Sandeen <sandeen@sandeen.net>
 To:     Eric Sandeen <sandeen@redhat.com>,
         linux-xfs <linux-xfs@vger.kernel.org>
 References: <a8eec37c-0cb1-0dc6-aa65-7248e367fc08@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
+ <c12bb330-bb07-ae9c-2812-4fb39e4262dd@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -64,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <c12bb330-bb07-ae9c-2812-4fb39e4262dd@sandeen.net>
-Date:   Thu, 2 May 2019 09:50:19 -0500
+Message-ID: <326a9ca4-1ad4-9d5e-c5fd-628130afe26d@sandeen.net>
+Date:   Thu, 2 May 2019 09:59:26 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a8eec37c-0cb1-0dc6-aa65-7248e367fc08@redhat.com>
+In-Reply-To: <c12bb330-bb07-ae9c-2812-4fb39e4262dd@sandeen.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -93,26 +94,12 @@ V2: Drop changes to xlog_bdstrat for now, as callers still need
 
 V3: Fix commit log typo, drop return at end of void function()
 
+V4: *sigh* re-drop bdstrat.  Somebody take away my keys.
+
 I had sent this a while back, and Darrick had concerns about a
 few functions which maybe /should/ return errors; I tried to avoid
 changing anything which was remotely close to that case, and stick
 to the simple/obvious ones.
-
- libxfs/xfs_dquot_buf.c  |    4 +---
- libxfs/xfs_quota_defs.h |    2 +-
- libxfs/xfs_sb.c         |   12 +++++-------
- libxfs/xfs_sb.h         |    2 +-
- xfs_fsops.c             |    3 +--
- xfs_fsops.h             |    2 +-
- xfs_inode.c             |   27 +++++++--------------------
- xfs_ioctl.c             |    9 ++-------
- xfs_ioctl32.c           |    5 +----
- xfs_log.c               |   20 ++++++--------------
- xfs_log_recover.c       |   10 ++--------
- xfs_super.c             |    8 ++++----
- 12 files changed, 32 insertions(+), 72 deletions(-)
-
-
 
 diff --git a/fs/xfs/libxfs/xfs_dquot_buf.c b/fs/xfs/libxfs/xfs_dquot_buf.c
 index fb5bd9a804f6..88fa11071f9f 100644
@@ -379,68 +366,6 @@ index 65997a6315e9..614fc6886d24 100644
  	/* The 32-bit variant simply has some padding at the end */
  	if (copy_to_user(arg32, &fsgeo, sizeof(struct compat_xfs_fsop_geom_v1)))
  		return -EFAULT;
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 457ced3ee3e1..d8fb48025696 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1780,7 +1780,7 @@ xlog_cksum(
-  * ensure that completes before tearing down the iclogbufs. Hence we need to
-  * hold the buffer lock across the log IO to acheive that.
-  */
--STATIC int
-+STATIC void
- xlog_bdstrat(
- 	struct xfs_buf		*bp)
- {
-@@ -1797,11 +1797,11 @@ xlog_bdstrat(
- 		 * doing it here. Similarly, IO completion will unlock the
- 		 * buffer, so we don't do it here.
- 		 */
--		return 0;
-+		return;
- 	}
- 
- 	xfs_buf_submit(bp);
--	return 0;
-+	return;
- }
- 
- /*
-@@ -1840,7 +1840,6 @@ xlog_sync(
- 	uint		count_init;	/* initial count before roundup */
- 	int		roundoff;       /* roundoff to BB or stripe */
- 	int		split = 0;	/* split write into two regions */
--	int		error;
- 	int		v2 = xfs_sb_version_haslogv2(&log->l_mp->m_sb);
- 	int		size;
- 
-@@ -1959,11 +1958,8 @@ xlog_sync(
- 	 * Don't call xfs_bwrite here. We do log-syncs even when the filesystem
- 	 * is shutting down.
- 	 */
--	error = xlog_bdstrat(bp);
--	if (error) {
--		xfs_buf_ioerror_alert(bp, "xlog_sync");
--		return error;
--	}
-+	xlog_bdstrat(bp);
-+
- 	if (split) {
- 		bp = iclog->ic_log->l_xbuf;
- 		XFS_BUF_SET_ADDR(bp, 0);	     /* logical 0 */
-@@ -1978,11 +1974,7 @@ xlog_sync(
- 
- 		/* account for internal log which doesn't start at block #0 */
- 		XFS_BUF_SET_ADDR(bp, XFS_BUF_ADDR(bp) + log->l_logBBstart);
--		error = xlog_bdstrat(bp);
--		if (error) {
--			xfs_buf_ioerror_alert(bp, "xlog_sync (split)");
--			return error;
--		}
-+		xlog_bdstrat(bp);
- 	}
- 	return 0;
- }	/* xlog_sync */
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
 index 3371d1ff27c4..9329f5adbfbe 100644
 --- a/fs/xfs/xfs_log_recover.c
@@ -520,5 +445,6 @@ index 86c18f2232ca..7668d57c9218 100644
  }
  
  /*
+
 
 
