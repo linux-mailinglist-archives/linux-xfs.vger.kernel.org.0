@@ -2,23 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A491F1344E
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 22:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD8D1344F
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 22:07:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfECUGy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 May 2019 16:06:54 -0400
-Received: from sandeen.net ([63.231.237.45]:41586 "EHLO sandeen.net"
+        id S1725793AbfECUHt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 May 2019 16:07:49 -0400
+Received: from sandeen.net ([63.231.237.45]:41672 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfECUGx (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 3 May 2019 16:06:53 -0400
+        id S1726528AbfECUHt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 3 May 2019 16:07:49 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 62B82560
-        for <linux-xfs@vger.kernel.org>; Fri,  3 May 2019 15:06:50 -0500 (CDT)
+        by sandeen.net (Postfix) with ESMTPSA id D63C6560
+        for <linux-xfs@vger.kernel.org>; Fri,  3 May 2019 15:07:45 -0500 (CDT)
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs master updated to 65dcd3b
+Subject: [ANNOUNCE] xfsprogs v5.0.0 released
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -62,90 +62,115 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <215c5b02-9eb9-e626-f21b-c5c8404ae8e5@sandeen.net>
-Date:   Fri, 3 May 2019 15:06:52 -0500
+Message-ID: <86bfcc3d-129a-7394-b97a-f328c8d1964c@sandeen.net>
+Date:   Fri, 3 May 2019 15:07:47 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="LnyqsBi3QhoQud2HIpHvlZD9c9LYvikdL"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--LnyqsBi3QhoQud2HIpHvlZD9c9LYvikdL
+Content-Type: multipart/mixed; boundary="gqmRxcvIcqW3iLcZuHjkOw0Hpx8f13fyf";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: linux-xfs <linux-xfs@vger.kernel.org>
+Message-ID: <86bfcc3d-129a-7394-b97a-f328c8d1964c@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs v5.0.0 released
+
+--gqmRxcvIcqW3iLcZuHjkOw0Hpx8f13fyf
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+=46rom the "It's Friday" department:
+
+xfsprogs-5.0.0 is out!  Before kernel 5.1 was released!  *phew*
 
 The xfsprogs repository at:
 
 	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
 
-has just been updated.
+has just been updated and tagged with v5.0.0, with tarballs
+available at:
 
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.0.0.tar=
+=2Egz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.0.0.tar=
+=2Exz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.0.0.tar=
+=2Esign
 
-The new head of the master branch is commit:
+Highlights of changes since last release:
 
-Hi folks,
+xfsprogs-5.0.0 (03 May 2019)
+        - xfs_db: scan all sparse inodes when using 'frag' (Jorge Guerra)=
 
-The xfsprogs repository at:
+        - Fix build with newer statx headers (Eric Sandeen)
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+xfsprogs-5.0.0-rc1 (26 Apr 2019)
+        - mkfs: validate extent size hint parameters (Darrick Wong)
+        - xfs_repair: bump on-disk nlink when adding lost+found (Darrick =
+Wong)
+        - xfs_repair: reinitialize root directory nlink correctly (Darric=
+k Wong)
+        - xfs_repair: use lenient verifiers for half-fixed inodes (Darric=
+k Wong)
+        - xfs_repair: acct for btree shrinks when fixing freelist (Darric=
+k Wong)
+        - xfs_repair: better cli option parameter checking (Darrick Wong)=
 
-has just been updated.
+        - xfs_repair: fix deadlock due to failed inode flushes (Dave Chin=
+ner)
+        - xfs_info: handle devices, mountpoints, and loop files (Darrick =
+Wong)
+        - xfs_metadump: fix symlink handling (Darrick Wong)
+        - xfs_io: fix label parsing and validation (Darrick Wong)
+        - xfs_io: print attributes_mask in statx (Darrick Wong)
+        - xfs_scrub: fix Make targets which depend on builddefs (Darrick =
+Wong)
+        - xfs_scrub: check label for misleading characters (Darrick Wong)=
 
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
+        - xfs_scrub: parallelize based on storage not CPUS (Darrick Wong)=
 
-The new head of the master branch is commit:
-
-65dcd3b xfsprogs: Release v5.0.0
-
-New Commits:
-
-Eric Sandeen (2):
-      [868d0cc] xfs_io: rework includes for statx structures
-      [65dcd3b] xfsprogs: Release v5.0.0
-
-Jorge Guerra (1):
-      [0c1d691] xfs_db: scan entire file system when using 'frag'
-
-
-Code Diffstat:
-
- VERSION          | 2 +-
- configure.ac     | 2 +-
- db/frag.c        | 2 +-
- debian/changelog | 6 ++++++
- doc/CHANGES      | 4 ++++
- io/stat.c        | 3 ---
- io/statx.h       | 7 +++++++
- 7 files changed, 20 insertions(+), 6 deletions(-)
- xfsprogs: Release v5.0.0
-
-New Commits:
-
-Eric Sandeen (2):
-      [868d0cc] xfs_io: rework includes for statx structures
-      [65dcd3b] xfsprogs: Release v5.0.0
-
-Jorge Guerra (1):
-      [0c1d691] xfs_db: scan entire file system when using 'frag'
+        - xfs_scrub: activate timer only after system is up (Darrick Wong=
+)
+        - libxfs: fix buffer & inode lifetimes (Darrick Wong)
+        - misc: fix strncpy length complaints from gcc (Darrick Wong)
+        - debian build & packaging fixes (Darrick Wong)
+        - Merge libxfs from kernel 5.0
 
 
-Code Diffstat:
 
- VERSION          | 2 +-
- configure.ac     | 2 +-
- db/frag.c        | 2 +-
- debian/changelog | 6 ++++++
- doc/CHANGES      | 4 ++++
- io/stat.c        | 3 ---
- io/statx.h       | 7 +++++++
- 7 files changed, 20 insertions(+), 6 deletions(-)
+--gqmRxcvIcqW3iLcZuHjkOw0Hpx8f13fyf--
+
+--LnyqsBi3QhoQud2HIpHvlZD9c9LYvikdL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAlzMn5QACgkQIK4WkuE9
+3uAzFRAAqLaSXGLoLugWW/xjOE+sK3VeDf+ZmhxUQiJ6NRTkK5GcXeoc2SkqUdtT
+8qjWbOgIiPbO7JvEov0gTs5fZsfSOf9nVPaXpn9PjfBY3TZMrYYqFZHvI5NOlUGB
+0ATaTBz3VBtZ/JoZF++oIEG/fyPG4Wl7kcGlO1+8Ul9LW+L0e3Lba6usZNx8WVQG
++Ya955kzmCXY71qxRPV1uPLMX0/ZLd8gTcJVTSsSAGZYrIGeSxDMYzAvqQLa2GdS
+v1McjJFmLceOobIFOiSiy9q2pZ/d/rKptfWTjGJJN50duuqYTurYi+u5U0Yw5aJS
+l/if1xMLXBNdTIKOKRjHSATEhbYXvJSJEKrvDC7HHV6J5CpZIdH4TXRoEfjbFeYk
+rLd9hOWgNmx0tsIBNWY+r3Wo4riUfKRajDLy+7PkXdCLOroleO3iD5FuHd7CjQIp
+zR+NhDKHaxXoeegMHfSk0Gq20Q/8+Jgig6x/Wfnrf2zUJskJg/yRMOgXML/t/DYx
+mZax4dp/I0+sE63GpfSHNMxZVvk208hhkB7oitDjwQq2DuSzDuldJ2QcRo49USV/
++RfpY/40O6chlp2i2gde1wzHHSUhM940M+XetSE+vYYMxn4MNvjVmzmdyJOu0WTU
+OPzEieATamx4dXS+PgjvLxP68jlE8zqL3mUv/NPNMzjmTl9Egvw=
+=YdY1
+-----END PGP SIGNATURE-----
+
+--LnyqsBi3QhoQud2HIpHvlZD9c9LYvikdL--
