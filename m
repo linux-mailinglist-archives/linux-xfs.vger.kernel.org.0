@@ -2,91 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6415B12154
-	for <lists+linux-xfs@lfdr.de>; Thu,  2 May 2019 19:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D977125E1
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 02:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfEBR4C (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 2 May 2019 13:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfEBR4C (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 2 May 2019 13:56:02 -0400
-Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CDD620652;
-        Thu,  2 May 2019 17:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556819761;
-        bh=yyOfE5WOPuEC+HAmQynDKOs8Hj8lVMs0jDuisL88W7w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zZcQdJDw1HSHnMkiltPrEPXtM7EWy1aE8XN3GzKqKUlTuU7r9mTIItkCsqNGyDUtp
-         m4nvpr654pmlPZlpjWraFbtCF/DEXj19tzifA7i99k+LM6/qaOKwqLZ3TbRaiyt44t
-         XN8PgDVHTd40liBAQZU5x9zF+8yVU9mZz2VVD3wI=
-Date:   Thu, 2 May 2019 13:55:59 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Andre Noll <maan@tuebingen.mpg.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: xfs: Assertion failed in xfs_ag_resv_init()
-Message-ID: <20190502175559.GB3048@sasha-vm>
-References: <20190501171529.GB28949@kroah.com>
- <20190501175129.GH2780@tuebingen.mpg.de>
- <20190501192822.GM5207@magnolia>
- <20190501221107.GI29573@dread.disaster.area>
- <20190502114440.GB21563@kroah.com>
- <20190502132027.GF11584@sasha-vm>
- <20190502141025.GB13141@kroah.com>
- <20190502152736.GW2780@tuebingen.mpg.de>
- <20190502165244.GB14995@kroah.com>
- <20190502174516.GY2780@tuebingen.mpg.de>
+        id S1726240AbfECA5e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 May 2019 20:57:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48736 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfECA5e (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 May 2019 20:57:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x430sZUC006529;
+        Fri, 3 May 2019 00:57:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=DRyvLT2PeZ3hfE8s0nvHWeyuh2JIb5bZicY9z92SMfg=;
+ b=Pe9UWzG7InxoLtM/gDUCVrnGc9RJlPjuGy6NZiYmbcrvI7zN6MJZws+FVAnwU3QX/tKd
+ OUYPGBesuiT40mT3ZWQ3DmUvX/X7QT679TSgA23vShVM9Umcw5yOUDfiOkQ/pSM95u2R
+ fAdbnFZNmTtUQpyLroo78W8WGKNzJTsxA1vm1AKxZ/3oDSqto6b+DDwlPg6cuniw4/TB
+ lWOAdTCHWBc3fTUIbtFQEPLo9LX5kEaXtsM77/YZN8sMlKLcJvCcZcLxRnH174KHO6Ct
+ fTfzZO6JclLU/lhVKfDi3JkZZU9SlcstQWhhir2jZA2r7QUaaSkv8ewODpKAea5FZDpX /w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2s6xhyv1fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 00:57:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x430tf4J093718;
+        Fri, 3 May 2019 00:57:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2s7p8a2ux4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 00:57:22 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x430vLAw006241;
+        Fri, 3 May 2019 00:57:21 GMT
+Received: from localhost (/10.145.179.89)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 May 2019 17:57:21 -0700
+Date:   Thu, 2 May 2019 17:57:17 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@redhat.com>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     xfs <linux-xfs@vger.kernel.org>
+Subject: [PATCH] mkfs: enable reflink and rmap by default
+Message-ID: <20190503005717.GO5207@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502174516.GY2780@tuebingen.mpg.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030004
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030004
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 02, 2019 at 07:45:16PM +0200, Andre Noll wrote:
->On Thu, May 02, 18:52, Greg Kroah-Hartman wrote
->> On Thu, May 02, 2019 at 05:27:36PM +0200, Andre Noll wrote:
->> > On Thu, May 02, 16:10, Greg Kroah-Hartman wrote
->> > > Ok, then how about we hold off on this patch for 4.9.y then.  "no one"
->> > > should be using 4.9.y in a "server system" anymore, unless you happen to
->> > > have an enterprise kernel based on it.  So we should be fine as the
->> > > users of the older kernels don't run xfs.
->> >
->> > Well, we do run xfs on top of bcache on vanilla 4.9 kernels on a few
->> > dozen production servers here. Mainly because we ran into all sorts
->> > of issues with newer kernels (not necessary related to xfs). 4.9,
->> > OTOH, appears to be rock solid for our workload.
->>
->> Great, but what is wrong with 4.14.y or better yet, 4.19.y?  Do those
->> also work for your workload?  If not, we should fix that, and soon :)
->
->Some months ago we tried 4.14 and it was a real disaster: random
->crashes with nothing in the logs on the file servers and unkillable
->hung processes on the compute machines. The thing is, I can't afford
->an extended downtime of these production systems, or test patches, or
->enable debugging options which slow down the systems too much. Also,
->10 of the compute nodes load the nvidia module, so all bets are off
->anyway. But we've seen the hung processes also on the non-gpu nodes
->where the nvidia module is not loaded.
->
->As for 4.19, xfs on bcache was broken until a couple of weeks
->ago. Meanwhile the fix (e578f90d8a9c) went in, so I benchmarked 4.19.x
->on one system briefly. To my surprise the results were *worse* than
->with 4.9. This seems to be another cache bypass issue, but I need to
->have a closer look, and more reliable numbers.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Is this something you can reproduce outside of those 10 magical
-machines?
+Enable reflink and reverse mapping by default.
 
---
-Thanks,
-Sasha
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ mkfs/xfs_mkfs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 0862621a..3874f7dd 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2021,14 +2021,14 @@ _("sparse inodes not supported without CRC support\n"));
+ 		}
+ 		cli->sb_feat.spinodes = false;
+ 
+-		if (cli->sb_feat.rmapbt) {
++		if (cli->sb_feat.rmapbt && cli_opt_set(&mopts, M_RMAPBT)) {
+ 			fprintf(stderr,
+ _("rmapbt not supported without CRC support\n"));
+ 			usage();
+ 		}
+ 		cli->sb_feat.rmapbt = false;
+ 
+-		if (cli->sb_feat.reflink) {
++		if (cli->sb_feat.reflink && cli_opt_set(&mopts, M_REFLINK)) {
+ 			fprintf(stderr,
+ _("reflink not supported without CRC support\n"));
+ 			usage();
+@@ -3934,8 +3934,8 @@ main(
+ 			.dirftype = true,
+ 			.finobt = true,
+ 			.spinodes = true,
+-			.rmapbt = false,
+-			.reflink = false,
++			.rmapbt = true,
++			.reflink = true,
+ 			.parent_pointers = false,
+ 			.nodalign = false,
+ 			.nortalign = false,
