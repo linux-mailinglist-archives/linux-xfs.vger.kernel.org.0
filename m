@@ -2,75 +2,134 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 151F012704
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 07:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9584512745
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 07:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfECFRX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 May 2019 01:17:23 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:40834 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726220AbfECFRX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 May 2019 01:17:23 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id C38023DBEE7;
-        Fri,  3 May 2019 15:17:20 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hMQZS-0007iC-Mh; Fri, 03 May 2019 15:17:18 +1000
-Date:   Fri, 3 May 2019 15:17:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Davidlohr Bueso <dbueso@suse.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [POC][PATCH] xfs: reduce ilock contention on buffered randrw
- workload
-Message-ID: <20190503051718.GM29573@dread.disaster.area>
-References: <20190404165737.30889-1-amir73il@gmail.com>
- <20190404211730.GD26298@dastard>
- <20190408103303.GA18239@quack2.suse.cz>
- <1554741429.3326.43.camel@suse.com>
- <20190411011117.GC29573@dread.disaster.area>
- <20190416122240.GN29573@dread.disaster.area>
- <20190418031013.GX29573@dread.disaster.area>
- <1555611694.18313.12.camel@suse.com>
- <20190420235412.GY29573@dread.disaster.area>
- <20190503041727.GL29573@dread.disaster.area>
+        id S1726585AbfECFtX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 May 2019 01:49:23 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:60080 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfECFtW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 May 2019 01:49:22 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x435n6uU180288;
+        Fri, 3 May 2019 05:49:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=zflXOM923xlmHI9E5+uNaxGQO3sHF2rboR4mSvU4alw=;
+ b=u38kcbcwUVvW4OLRBD7UX3iey250LKoLGLf0f0DCDAYHc8X9CMChPKP7l0dTgCqTNbjD
+ lof7Hzsh4J2+Gxf2+iRHazuvvmHaHNdu9jl4t1/ZreXuguk3cdxMQXDi3dOeYo91DHIM
+ zUMoGyyHvwKvOxUpcBV7KUEmR9tpT7tGRVkG6RT1QR5Mmw4svq0WW4d4+JHIhOmzGbth
+ XoND9QSg3I5KP2zerjr0BncxK4UhpcW0k5ulXaRExcyQOsU82xchMIDdbnA1ecPYjZ1N
+ wj1fvjrbk2m5JqpIiDzJLuDjMX1eT9uYaMcYbozu/59L6VJq1+Hy1D8gsYVVPYVqXozK yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2s6xhymmts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 05:49:10 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x435n9XO004621;
+        Fri, 3 May 2019 05:49:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2s6xhheyf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 05:49:09 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x435n8uZ025697;
+        Fri, 3 May 2019 05:49:08 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 May 2019 22:49:07 -0700
+Date:   Thu, 2 May 2019 22:49:06 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Eric Sandeen <sandeen@redhat.com>, xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [RFC PATCH] mkfs: validate start and end of aligned logs
+Message-ID: <20190503054906.GQ5207@magnolia>
+References: <20190503035312.GP5207@magnolia>
+ <494dcfb7-7ca9-5a95-532c-13d569ccd3da@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503041727.GL29573@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=7-415B0cAAAA:8 a=_g67QGjv7U8_NgNo6WAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <494dcfb7-7ca9-5a95-532c-13d569ccd3da@sandeen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030037
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030037
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 03, 2019 at 02:17:27PM +1000, Dave Chinner wrote:
-> Concept proven.
+On Thu, May 02, 2019 at 11:12:21PM -0500, Eric Sandeen wrote:
 > 
-> Next steps are:
-....
-> 	- work out whether RCU read locking and kfree_rcu() will
-> 	  work with the requirement to do memory allocation while
-> 	  holding rcu_read_lock(). Alternative is an internal
-> 	  garbage collector mechanism, kinda like I've hacked up to
-> 	  simulate kfree_rcu() in userspace.
+> 
+> On 5/2/19 10:53 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Validate that the start and end of the log stay within a single AG if
+> > we adjust either end to align to stripe units.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  mkfs/xfs_mkfs.c |   11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+> > index 3ca8c9dc..0862621a 100644
+> > --- a/mkfs/xfs_mkfs.c
+> > +++ b/mkfs/xfs_mkfs.c
+> > @@ -3070,11 +3070,20 @@ align_internal_log(
+> >  	if ((cfg->logstart % sunit) != 0)
+> >  		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
+> >  
+> > +	/* if our log start rounds into the next AG we're done */
+> > +	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
+> > +			fprintf(stderr,
+> > +_("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
+> > +  "within an allocation group.\n"),
+> > +			(long long) cfg->logstart);
+> > +		usage();
+> > +	}
+> > +
+> >  	/* round up/down the log size now */
+> >  	align_log_size(cfg, sunit);
+> >  
+> >  	/* check the aligned log still fits in an AG. */
+> > -	if (cfg->logblocks > cfg->agsize - XFS_FSB_TO_AGBNO(mp, cfg->logstart)) {
+> > +	if (!xfs_verify_fsbno(mp, cfg->logstart + cfg->logblocks - 1)) {
+> 
+> This used to see if the aligned log size was actually smaller than the AG.
+> 
+> Your new check just makes sure that the end block doesn't land on metadata,
+> right?
+> 
+> i.e. we could end up with:
+> 
+> [ AG 0 ][ AG 1 ]
+> [    log    ]
+> 
+> and pass your new test, because the end of the log doesn't stomp on ag
+> metadata, even though it goes past the end of the start AG... right?
 
-Internal RCU interactions are now solved. Actually very simple in
-the end, should be very easy to integrate into the code.
+DOH.  Yes.  Somewhere in there I coded up a FSB_TO_AGNO(logstart) ==
+FSB_TO_AGNO(logstart + logblocks - 1) but clearly it fell out.
 
-Cheers,
+Derp derp try again tomorrow. :(
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--D
+
+> -Eric
+> 
+> >  		fprintf(stderr,
+> >  _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
+> >    "Must fit within an allocation group.\n"),
+> > 
