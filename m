@@ -2,136 +2,169 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97679126A8
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 06:12:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B8D126AB
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 06:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725379AbfECEMW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 May 2019 00:12:22 -0400
-Received: from sandeen.net ([63.231.237.45]:47210 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfECEMW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 3 May 2019 00:12:22 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 9CBF8560;
-        Thu,  2 May 2019 23:12:19 -0500 (CDT)
-Subject: Re: [RFC PATCH] mkfs: validate start and end of aligned logs
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-References: <20190503035312.GP5207@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <494dcfb7-7ca9-5a95-532c-13d569ccd3da@sandeen.net>
-Date:   Thu, 2 May 2019 23:12:21 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1725798AbfECERf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 May 2019 00:17:35 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47883 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725765AbfECERf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 May 2019 00:17:35 -0400
+Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 5C68810C7FA;
+        Fri,  3 May 2019 14:17:29 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hMPdX-0007M4-4d; Fri, 03 May 2019 14:17:27 +1000
+Date:   Fri, 3 May 2019 14:17:27 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Davidlohr Bueso <dbueso@suse.com>
+Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [POC][PATCH] xfs: reduce ilock contention on buffered randrw
+ workload
+Message-ID: <20190503041727.GL29573@dread.disaster.area>
+References: <20190404165737.30889-1-amir73il@gmail.com>
+ <20190404211730.GD26298@dastard>
+ <20190408103303.GA18239@quack2.suse.cz>
+ <1554741429.3326.43.camel@suse.com>
+ <20190411011117.GC29573@dread.disaster.area>
+ <20190416122240.GN29573@dread.disaster.area>
+ <20190418031013.GX29573@dread.disaster.area>
+ <1555611694.18313.12.camel@suse.com>
+ <20190420235412.GY29573@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20190503035312.GP5207@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190420235412.GY29573@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=UJetJGXy c=1 sm=1 tr=0 cx=a_idp_d
+        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
+        a=7-415B0cAAAA:8 a=D79AUM_G46nmkUiCrisA:9 a=p9yrIyJAQYQFRsFV:21
+        a=oE2srWebBFOnxU3x:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 5/2/19 10:53 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Sun, Apr 21, 2019 at 09:54:12AM +1000, Dave Chinner wrote:
+> On Thu, Apr 18, 2019 at 11:21:34AM -0700, Davidlohr Bueso wrote:
+> > On Thu, 2019-04-18 at 13:10 +1000, Dave Chinner wrote:
+> > > Now the stuff I've been working on has the same interface as
+> > > Davidlohr's patch, so I can swap and change them without thinking
+> > > about it. It's still completely unoptimised, but:
+> > > 
+> > > 			IOPS read/write (direct IO)
+> > > processes	rwsem		DB rangelock	XFS
+> > > rangelock
+> > >  1		78k / 78k	75k / 75k	72k / 72k
+> > >  2		131k / 131k	123k / 123k	133k / 133k
+> > >  4		267k / 267k	183k / 183k	237k / 237k
+> > >  8		372k / 372k	177k / 177k	265k / 265k
+> > >  16		315k / 315k	135k / 135k	228k / 228k
+> > > 
+> > > It's still substantially faster than the interval tree code.
+....
+> > > /me goes off and thinks more about adding optimistic lock coupling
+> > > to the XFS iext btree to get rid of the need for tree-wide
+> > > locking altogether
+> > 
+> > I was not aware of this code.
 > 
-> Validate that the start and end of the log stay within a single AG if
-> we adjust either end to align to stripe units.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  mkfs/xfs_mkfs.c |   11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index 3ca8c9dc..0862621a 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3070,11 +3070,20 @@ align_internal_log(
->  	if ((cfg->logstart % sunit) != 0)
->  		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
->  
-> +	/* if our log start rounds into the next AG we're done */
-> +	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
-> +			fprintf(stderr,
-> +_("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
-> +  "within an allocation group.\n"),
-> +			(long long) cfg->logstart);
-> +		usage();
-> +	}
-> +
->  	/* round up/down the log size now */
->  	align_log_size(cfg, sunit);
->  
->  	/* check the aligned log still fits in an AG. */
-> -	if (cfg->logblocks > cfg->agsize - XFS_FSB_TO_AGBNO(mp, cfg->logstart)) {
-> +	if (!xfs_verify_fsbno(mp, cfg->logstart + cfg->logblocks - 1)) {
+> It's relatively new, and directly tailored to the needs of caching
+> the XFS extent tree - it's not really a generic btree in that it's
+> record store format is the XFS on-disk extent record. i.e. it
+> only stores 54 bits of start offset and 21 bits of length in it's 16
+> byte records, and the rest of the space is for the record data.
 
-This used to see if the aligned log size was actually smaller than the AG.
+SO now I have a mostly working OLC btree based on this tree which is
+plumbed into xfsprogs userspace and some testing code. I think I can
+say now that the code will actually work, and it /should/ scale
+better than a rwsem.
 
-Your new check just makes sure that the end block doesn't land on metadata,
-right?
+The userspace test harness that I have ran a "thread profile" to
+indicated scalability. Basically it ran each thread in a different
+offset range and locked a hundred ranges and then unlocked them, and
+then looped over this. The btree is a single level for the first 14
+locks, 2-level for up to 210 locks, and 3-level for up to 3150
+locks. Hence most of this testing results in the btree being 2-3
+levels and so largely removes the global root node lock as a point
+of contention. It's "best case" for concurrency for an OLC btree.
 
-i.e. we could end up with:
+On a 16p machine:
 
-[ AG 0 ][ AG 1 ]
-[    log    ]
+		     Range lock/unlock ops/s
+threads		mutex btree		OLC btree
+  1		  5239442		  949487
+  2		  1014466		 1398539
+  4		   985940		 2405275
+  8		   733195		 3288435
+  16		   653429		 2809225
 
-and pass your new test, because the end of the log doesn't stomp on ag
-metadata, even though it goes past the end of the start AG... right?
+When looking at these numbers, remember that the mutex btree kernel
+range lock performed a lot better than the interval tree range lock,
+and they were only ~30% down on an rwsem. The mutex btree code shows
+cache residency effects for the single threaded load, hence it looks
+much faster than it is for occasional and multithreaded access.
 
--Eric
+However, at 2 threads (where hot CPU caches don't affect the
+performance), the OLC btree is 40% faster, and at 8 threads it is
+4.5x faster than the mutex btree. The OLC btree starts slowing down
+at 16 threads, largely because the tree itself doesn't have enough
+depth to provide the interior nodes to scale to higher concurrency
+levels without contention, but it's still running at 4.5x faster
+than the mutex btree....
 
->  		fprintf(stderr,
->  _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
->    "Must fit within an allocation group.\n"),
-> 
+The best part is when I run worse case threaded workloads on the
+OLC btree. If I run the same 100-lock loops, but this time change
+the offsets of each thread so they interleave into adjacent records
+in the btree (i.e. every thread touches every leaf), then the
+performance is still pretty damn good:
+
+		     Range lock/unlock ops/s
+threads		Worst Case		Best Case
+  1		  1045991		  949487
+  2		  1530212		 1398539
+  4		  1147099		 2405275
+  8		  1602114		 3288435
+  16		  1731890		 2809225
+
+IOWs, performance is down and somewhat variable around tree
+height changes (4 threads straddles the 2-3 level tree height
+threshold), but it's still a massive improvement on the mutex_btree
+and it's not going backwards as threads are added.
+
+Concept proven.
+
+Next steps are:
+
+	- separate the OLC btree from the XFS iext btree
+	  implementation. It will still have a similar interface
+	  (i.e. can't manipulate the btree records directly), but
+	  there's sufficient difference in structure for them to be
+	  separate implementations.
+	- expand records out to full 64bit extents. The iext tree
+	  memory usage constraints no longer apply, so the record
+	  size can go up a little bit.
+	- work out whether RCU read locking and kfree_rcu() will
+	  work with the requirement to do memory allocation while
+	  holding rcu_read_lock(). Alternative is an internal
+	  garbage collector mechanism, kinda like I've hacked up to
+	  simulate kfree_rcu() in userspace.
+	- fix all the little bugs that still exist in the code.
+	- Think about structural optimisations like parent pointers
+	  to avoid costly path walks to find parents for 
+	  modifications.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
