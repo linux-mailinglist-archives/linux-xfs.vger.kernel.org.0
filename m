@@ -2,141 +2,211 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1046713500
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2019 23:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EAEA139A5
+	for <lists+linux-xfs@lfdr.de>; Sat,  4 May 2019 14:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfECVtf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 May 2019 17:49:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54884 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfECVtf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 May 2019 17:49:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43Ln9Wu190214;
-        Fri, 3 May 2019 21:49:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=y/cLpihV9j7KHK4EUhwAYL39YcXgj0AVibMZxDi2XlE=;
- b=w6s3nEeOUckJ84U43ly2BzclkK9QojlhBNPF+2Hn11HIx2zEMjcsIfA6G35l5NwGsaaG
- /0vjlJv5HsmeDZSPHh76+jvIDAHlwjbjy/Mw+yeZi1iBJDUBFfhCJ9yvnL4nS2bjNUAn
- ReVlfx/x4Qd264enTfQ2ci1O+7JQz4/XyahAXCkAKdKQnxirJKvQOOfQ8/kgEXVikBmO
- 57CUp4aKS4SJqI2VngIRIArsybAQboyICpQErjumPF0sgOXGjZMqkaVfZyF9N9+E3PWx
- exlDi5hP38xqher4RXfAsf7KSYewhxjsgImLteg1XuUeDl3aKvzUDlUTtsQ9PWxAn2kf 9A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2s6xj01atg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 21:49:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43LliBD050189;
-        Fri, 3 May 2019 21:49:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2s7p8ajh63-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 21:49:22 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43LnKGA012724;
-        Fri, 3 May 2019 21:49:21 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 14:49:20 -0700
-Date:   Fri, 3 May 2019 14:49:13 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] mkfs: enable reflink and rmap by default
-Message-ID: <20190503214913.GR5207@magnolia>
-References: <20190503005717.GO5207@magnolia>
- <b406bac9-1899-1714-a14f-472fb4bbaffd@sandeen.net>
+        id S1726408AbfEDMJO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 4 May 2019 08:09:14 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42483 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfEDMJO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 4 May 2019 08:09:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y10so846384lji.9
+        for <linux-xfs@vger.kernel.org>; Sat, 04 May 2019 05:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=uu7ge0vI19W1rki3tXbzvbUs4eQY23eBLcP3AQToAbo=;
+        b=tpw+opsBlDMa2YUpTn59qy/ZXrkcLRvKu2sKPwhM8qbtHnLEK8SrlrroJZXqVJxOeI
+         XA2h3R5vUh0sRvD8j2eKNpLRtLF7v0iXEBoLAf8Hp4vopnIibWtXEA+6m7YKl4GueTjd
+         RakrV9Uu8w/WB3RnNcJvzH7m11zChvujEX/IVAcnrYTTyLGGsAQFtmMiozZ3Qcdyonhb
+         IfBLGtWPaHqJcM/8ohAfiN4A/dhsDgRVFohCiasqHIFxBuT9ltZYELWqmKyLuGQyHXc+
+         xWfENipGlzj8bYWrld1wtguNKamtrDhtGbjU2DxD1hmJVWd5Mq5Abtf6AEYXgup5Rh/4
+         rVug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=uu7ge0vI19W1rki3tXbzvbUs4eQY23eBLcP3AQToAbo=;
+        b=E5PZajKTSHHnTsJg/n7T/mZatFE+gWqGhgXbIzazKXMdMidw41YDbPeSEk/+L1aqnL
+         7VpLbKqTypS0gNiT1VzPCaPDeNODeqwAXE89gLZm1NV6and8qf9Oj+ZywuH25+oAam0v
+         ZRXUSonqWwlrzET2xSpjI0OJkJN98f96tzd9rBThO0ni99ghiFbVIr8nAfRmXgPdNIpH
+         RgecdOoIK9w7pb5DkZsDVBoZT8FHT7WEBlVgSFcM52bQ8k9CElLz+BxRfLcndJhfp14b
+         tRo1UAG9CyCH4u7W+sghZ6CvJvM2phgHb8a3KHptXSQ6pwkLuuwrGPbTlCUTW4PS8tcA
+         f47Q==
+X-Gm-Message-State: APjAAAVZv9+B9Fi2AiPf+uGKcAodXajxDvZgLxpFfgyiwSMDgrNkqAxf
+        5ZbcakF8OPBip63LANepBG73GOyN+EFhbw+Rt1hFJvE16Zo=
+X-Google-Smtp-Source: APXvYqyCj87HIaPMsi1SAmfnzUs10zbwHKMFbz/UrCENDvWG24f/2G8PtvTjgiXplf6eXvkRcCoekEt35xpQTPNfByg=
+X-Received: by 2002:a2e:4457:: with SMTP id r84mr8107638lja.112.1556971750728;
+ Sat, 04 May 2019 05:09:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b406bac9-1899-1714-a14f-472fb4bbaffd@sandeen.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9246 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905030139
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9246 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030140
+From:   Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
+Date:   Sat, 4 May 2019 15:08:59 +0300
+Message-ID: <CAE5jQCfP95cvjkKTmawpbfFLmBVwYZ3t89WED=U3uk4z+7U+CQ@mail.gmail.com>
+Subject: [v5.0.0] Assertion in xfs_repair: dir2.c:1445: process_dir2:
+ Assertion `(ino != mp->m_sb.sb_rootino && ino != *parent) || (ino ==
+ mp->m_sb.sb_rootino && (ino == *parent || need_root_dotdot == 1))'
+To:     linux-xfs@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000021256605880ebcba"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 03, 2019 at 10:55:05AM -0500, Eric Sandeen wrote:
-> On 5/2/19 7:57 PM, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Enable reflink and reverse mapping by default.
-> 
-> Soooo until now, I thought I had understood that rmap was unlikely
-> to be default ever, due to performance impacts.  Is this no longer the case?
+--00000000000021256605880ebcba
+Content-Type: text/plain; charset="UTF-8"
 
-No, it's still the case.
+By fuzzing the xfsprogs 5.0.0 (commit 65dcd3bc), I have found a
+modification to the image, that triggers an assertion in xfs_repair.
+An assertion like this was already fixed almost a year ago (see commit
+77b3425 @ Jun 21 2018), but this reproducer works for the v5.0.0
+xfsprogs release.
 
-> Of course I can't find any emails or IRC logs to indicate I didn't
-> just dream this up...
-> 
-> Also, at this point, remind me again what uses rmap and why it should
-> be enabled now?
+## How to reproduce:
+Clone xfsprogs (commit 65dcd3bc30) and run `make`, then run
 
-TBH it's most useful for enhancing xfs_scrub's powers, so there's no
-reason to enable it by default until at least 5.2 when we finally land
-the last of the scrubbers.  Probably.  One could make a solid argument
-that we ought to wait until the scrub/health code has been stable for
-~6mo before even thinking about rmap by default.
+$ ./repair/xfs_repair -Pnf /tmp/xfs.img
+Cannot get host filesystem geometry.
+Repair may fail if there is a sector size mismatch between
+the image and the host filesystem.
+Phase 1 - find and verify superblock...
+Cannot get host filesystem geometry.
+Repair may fail if there is a sector size mismatch between
+the image and the host filesystem.
+Phase 2 - using internal log
+        - zero log...
+        - scan filesystem freespace and inode maps...
+Metadata CRC error detected at 0x55836064d5a4, xfs_agfl block 0x10003/0x200
+agfl has bad CRC for ag 1
+Metadata CRC error detected at 0x558360680abd, xfs_inobt block 0x20018/0x1000
+btree block 2/3 is suspect, error -74
+Metadata CRC error detected at 0x558360680abd, xfs_inobt block 0x20020/0x1000
+btree block 2/4 is suspect, error -74
+Metadata CRC error detected at 0x55836065120d, xfs_allocbt block 0x8/0x1000
+btree block 0/1 is suspect, error -74
+Metadata CRC error detected at 0x558360680abd, xfs_inobt block 0x20/0x1000
+btree block 0/4 is suspect, error -74
+        - found root inode chunk
+Phase 3 - for each AG...
+        - scan (but don't clear) agi unlinked lists...
+        - process known inodes and perform inode discovery...
+        - agno = 0
+bad CRC for inode 96
+bad CRC for inode 117
+bad CRC for inode 133
+bad CRC for inode 137
+bad CRC for inode 96, would rewrite
+would have corrected root directory 96 .. entry from 9056 to 96
+xfs_repair: dir2.c:1445: process_dir2: Assertion `(ino !=
+mp->m_sb.sb_rootino && ino != *parent) || (ino == mp->m_sb.sb_rootino
+&& (ino == *parent || need_root_dotdot == 1))' failed.
 
-Anyway I'll break this into separate pieces and resend the reflink part
-for 5.1.
+## Stack trace:
 
---D
+(gdb) bt
+#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+#1  0x00007ffff7d36535 in __GI_abort () at abort.c:79
+#2  0x00007ffff7d3640f in __assert_fail_base (fmt=0x7ffff7ec4588
+"%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=0x5555555dc7c0
+"(ino != mp->m_sb.sb_rootino && ino != *parent) || (ino ==
+mp->m_sb.sb_rootino && (ino == *parent || need_root_dotdot == 1))",
+    file=0x5555555dc8b2 "dir2.c", line=1445, function=<optimized out>)
+at assert.c:92
+#3  0x00007ffff7d46012 in __GI___assert_fail
+(assertion=assertion@entry=0x5555555dc7c0 "(ino != mp->m_sb.sb_rootino
+&& ino != *parent) || (ino == mp->m_sb.sb_rootino && (ino == *parent
+|| need_root_dotdot == 1))", file=file@entry=0x5555555dc8b2 "dir2.c",
+    line=line@entry=1445, function=function@entry=0x5555555dca90
+<__PRETTY_FUNCTION__.12672> "process_dir2") at assert.c:101
+#4  0x000055555556ae15 in process_dir2 (mp=mp@entry=0x7fffffffd930,
+ino=ino@entry=96, dip=dip@entry=0x55555565b200,
+ino_discovery=ino_discovery@entry=1,
+dino_dirty=dino_dirty@entry=0x7fffffffd438,
+dirname=dirname@entry=0x5555555dfc7f "", parent=0x7fffffffd440,
+    blkmap=0x0) at dir2.c:1443
+#5  0x00005555555687d1 in process_dinode_int
+(mp=mp@entry=0x7fffffffd930, dino=dino@entry=0x55555565b200,
+agno=agno@entry=0, ino=ino@entry=96, was_free=<optimized out>,
+dirty=dirty@entry=0x7fffffffd438, used=0x7fffffffd434, verify_mode=0,
+uncertain=0, ino_discovery=1,
+    check_dups=0, extra_attr_check=1, isa_dir=0x7fffffffd43c,
+parent=0x7fffffffd440) at dinode.c:2819
+#6  0x0000555555569378 in process_dinode (mp=mp@entry=0x7fffffffd930,
+dino=dino@entry=0x55555565b200, agno=agno@entry=0, ino=ino@entry=96,
+was_free=<optimized out>, dirty=dirty@entry=0x7fffffffd438,
+used=0x7fffffffd434, ino_discovery=1, check_dups=0,
+    extra_attr_check=1, isa_dir=0x7fffffffd43c, parent=0x7fffffffd440)
+at dinode.c:2936
+#7  0x00005555555625cb in process_inode_chunk
+(mp=mp@entry=0x7fffffffd930, agno=agno@entry=0,
+first_irec=first_irec@entry=0x7fffe0005720,
+ino_discovery=ino_discovery@entry=1, check_dups=check_dups@entry=0,
+extra_attr_check=extra_attr_check@entry=1,
+    bogus=0x7fffffffd4d4, num_inos=64) at incore.h:472
+#8  0x000055555556394a in process_aginodes (mp=0x7fffffffd930,
+pf_args=pf_args@entry=0x0, agno=agno@entry=0,
+ino_discovery=ino_discovery@entry=1, check_dups=check_dups@entry=0,
+extra_attr_check=extra_attr_check@entry=1) at dino_chunks.c:1031
+#9  0x000055555556f62f in process_ag_func (wq=0x7fffffffd5d0, agno=0,
+arg=0x0) at phase3.c:67
+#10 0x000055555557cc0b in prefetch_ag_range (work=0x7fffffffd5d0,
+start_ag=<optimized out>, end_ag=4, dirs_only=false,
+func=0x55555556f5e0 <process_ag_func>) at prefetch.c:968
+#11 0x000055555557e675 in do_inode_prefetch
+(mp=mp@entry=0x7fffffffd930, stride=0, func=func@entry=0x55555556f5e0
+<process_ag_func>, check_cache=check_cache@entry=false,
+dirs_only=dirs_only@entry=false) at prefetch.c:1031
+#12 0x000055555556f79b in process_ags (mp=0x7fffffffd930) at phase3.c:135
+#13 phase3 (mp=0x7fffffffd930, scan_threads=32) at phase3.c:135
+#14 0x000055555555a440 in main (argc=<optimized out>, argv=<optimized
+out>) at xfs_repair.c:940
 
-> 
-> -Eric
-> 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  mkfs/xfs_mkfs.c |    8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> > index 0862621a..3874f7dd 100644
-> > --- a/mkfs/xfs_mkfs.c
-> > +++ b/mkfs/xfs_mkfs.c
-> > @@ -2021,14 +2021,14 @@ _("sparse inodes not supported without CRC support\n"));
-> >  		}
-> >  		cli->sb_feat.spinodes = false;
-> >  
-> > -		if (cli->sb_feat.rmapbt) {
-> > +		if (cli->sb_feat.rmapbt && cli_opt_set(&mopts, M_RMAPBT)) {
-> >  			fprintf(stderr,
-> >  _("rmapbt not supported without CRC support\n"));
-> >  			usage();
-> >  		}
-> >  		cli->sb_feat.rmapbt = false;
-> >  
-> > -		if (cli->sb_feat.reflink) {
-> > +		if (cli->sb_feat.reflink && cli_opt_set(&mopts, M_REFLINK)) {
-> >  			fprintf(stderr,
-> >  _("reflink not supported without CRC support\n"));
-> >  			usage();
-> > @@ -3934,8 +3934,8 @@ main(
-> >  			.dirftype = true,
-> >  			.finobt = true,
-> >  			.spinodes = true,
-> > -			.rmapbt = false,
-> > -			.reflink = false,
-> > +			.rmapbt = true,
-> > +			.reflink = true,
-> >  			.parent_pointers = false,
-> >  			.nodalign = false,
-> >  			.nortalign = false,
-> > 
+Best regards
+Anatoly
+
+--00000000000021256605880ebcba
+Content-Type: application/octet-stream; name="xfs.img.bz2"
+Content-Disposition: attachment; filename="xfs.img.bz2"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jv9gbi0c0>
+X-Attachment-Id: f_jv9gbi0c0
+
+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
+JX9+Iu5IpwoSEVIJB+A=
+--00000000000021256605880ebcba--
