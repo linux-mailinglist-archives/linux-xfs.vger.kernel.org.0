@@ -2,215 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60AE71671E
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 17:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C27F16727
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 17:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfEGPqh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 May 2019 11:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfEGPqh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 7 May 2019 11:46:37 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9402087F;
-        Tue,  7 May 2019 15:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557243996;
-        bh=penb8S4fViGUKJbQWsYzyhvsGBxaCjDKIZ8jATHrGD0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=18LtHFvCsfPLrZOB7VMaA18HObI1ydwRxW+80PWInoUC+/lLTvQ3zuCIyhnYdzQk9
-         7ESDca5xHFkL1s7Xurm+sbOAwQmd4Tq1YLCMdk2f7GIVlYYeq6gKfAWVx6GJzdCadv
-         2NxRvZIg1FTCAyntWh8sBpS/h3bu/zaLJEMTrc64=
-Date:   Tue, 7 May 2019 08:46:35 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: new features for 5.2
-Message-ID: <20190507154635.GT5207@magnolia>
+        id S1726977AbfEGPr7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 May 2019 11:47:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59552 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfEGPr6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 May 2019 11:47:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x47FXkLi099171
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 15:47:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=SqO038hg+wvJ49e/orRxjyMLjlnzTb/HSz7s+IYMW48=;
+ b=PEmmCR7g77S9aBnUHu21YCtMzOKNZrMDystyz9rTFajMxoqXbc9oy6l4IU2oxHJcY80m
+ XN/pK3T2K1I4M8EIlvdT9hIe4HRbBaSegDA6n9UoDkzhOWAtkJSxUYpma+Yejm9TBZ8R
+ fE/z59Z6w7XJbtGJ3h3FkTFaPOkuE1zUqDtYFV2YOiHiA60oOgp4WGBdWyPnMDCHZ2UX
+ po/PLOOCBizIBe4thYCAD025QGDcU2m62Ed9p6kcESuvEe/KRVfZdQtPXNYKQ9VjTuFI
+ rBYycy8Euznq7h4vcTmnmSMtYL92SxOtJkTNjYi++NpN6a0CG4HTdu3U3Gln7DOhe5T7 zQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2s94bfxawt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 15:47:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x47Fl2sC040082
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 15:47:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2s9ayey7my-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 15:47:56 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x47FltDq010604
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 15:47:55 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 May 2019 08:47:55 -0700
+Date:   Tue, 7 May 2019 08:47:54 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [PATCH] xfs: don't reserve per-AG space for an internal log
+Message-ID: <20190507154754.GU5207@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070101
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070101
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Here's a big pile of new stuff for XFS for 5.2.  XFS has grown the
-ability to report metadata health status to userspace after online fsck
-checks the filesystem.  The online metadata checking code is (I really
-hope) feature complete with the addition of checks for the global fs
-counters, though it'll remain EXPERIMENTAL for now.
+It turns out that the log can consume nearly all the space in an AG, and
+when this happens this it's possible that there will be less free space
+in the AG than the reservation would try to hide.  On a debug kernel
+this can trigger an ASSERT in xfs/250:
 
-There are also fixes for thundering herds of writeback completions and
-some other deadlocks, fixes for theoretical integer overflow attacks on
-space accounting, and removal of the long-defunct 'mntpt' option which
-was deprecated in the mid-2000s and (it turns out) totally broken since
-2011 (and nobody complained...).
+XFS: Assertion failed: xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved + xfs_perag_resv(pag, XFS_AG_RESV_RMAPBT)->ar_reserved <= pag->pagf_freeblks + pag->pagf_flcount, file: fs/xfs/libxfs/xfs_ag_resv.c, line: 319
 
-The branch merges cleanly against this morning's HEAD (as well as HEAD +
-iomap-5.2-merge) and survived an overnight run of xfstests.  Let me know
-if you run into anything weird along the way.  FYI, I will also be out
-for about 10 days starting Thursday, so if anything urgent comes up
-during that time, please don't hesitate to ask Dave or Eric.
+The log is permanently allocated, so we know we're never going to have
+to expand the btrees to hold any records associated with the log space.
+We therefore can treat the space as if it doesn't exist.
 
---D
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |    9 +++++++++
+ fs/xfs/libxfs/xfs_refcount_btree.c |    9 +++++++++
+ fs/xfs/libxfs/xfs_rmap_btree.c     |    9 +++++++++
+ 3 files changed, 27 insertions(+)
 
-The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
-
-  Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-merge-4
-
-for you to fetch changes up to 910832697cf85536c7fe26edb8bc6f830c4b9bb6:
-
-  xfs: change some error-less functions to void types (2019-05-01 20:26:30 -0700)
-
-----------------------------------------------------------------
-Changes for Linux 5.2:
-
-- Fix some more buffer deadlocks when performing an unmount after a hard
-  shutdown.
-- Fix some minor space accounting issues.
-- Fix some use after free problems.
-- Make the (undocumented) FITRIM behavior consistent with other filesystems.
-- Embiggen the xfs geometry ioctl's data structure.
-- Introduce a new AG geometry ioctl.
-- Introduce a new online health reporting infrastructure and ioctl for
-  userspace to query a filesystem's health status.
-- Enhance online scrub and repair to update the health reports.
-- Reduce thundering herd problems when writeback io completes.
-- Fix some transaction reservation type errors.
-- Fix integer overflow problems with delayed alloc reservation counters.
-- Fix some problems where we would exit to userspace without unlocking.
-- Fix inconsistent behavior when finishing deferred ops fails.
-- Strengthen scrub to check incore data against ondisk metadata.
-- Remove long-broken mntpt mount option.
-- Add an online scrub function for the filesystem summary counters,
-  which should make online metadata scrub more or less feature complete
-  for now.
-- Various cleanups.
-
-----------------------------------------------------------------
-Brian Foster (7):
-      xfs: fix use after free in buf log item unlock assert
-      xfs: wake commit waiters on CIL abort before log item abort
-      xfs: shutdown after buf release in iflush cluster abort path
-      xfs: don't account extra agfl blocks as available
-      xfs: make tr_growdata a permanent transaction
-      xfs: assert that we don't enter agfl freeing with a non-permanent transaction
-      xfs: add missing error check in xfs_prepare_shift()
-
-Christoph Hellwig (1):
-      xfs: don't parse the mtpt mount option
-
-Darrick J. Wong (27):
-      xfs: track metadata health status
-      xfs: replace the BAD_SUMMARY mount flag with the equivalent health code
-      xfs: clear BAD_SUMMARY if unmounting an unhealthy filesystem
-      xfs: add a new ioctl to describe allocation group geometry
-      xfs: report fs and rt health via geometry structure
-      xfs: report AG health via AG geometry ioctl
-      xfs: report inode health via bulkstat
-      xfs: refactor scrub context initialization
-      xfs: collapse scrub bool state flags into a single unsigned int
-      xfs: hoist the already_fixed variable to the scrub context
-      xfs: scrub/repair should update filesystem metadata health
-      xfs: scrub should only cross-reference with healthy btrees
-      xfs: implement per-inode writeback completion queues
-      xfs: remove unused m_data_workqueue
-      xfs: merge adjacent io completions of the same type
-      xfs: abort unaligned nowait directio early
-      xfs: widen quota block counters to 64-bit integers
-      xfs: widen inode delalloc block counter to 64-bits
-      xfs: kill the xfs_dqtrx_t typedef
-      xfs: unlock inode when xfs_ioctl_setattr_get_trans can't get transaction
-      xfs: fix broken bhold behavior in xrep_roll_ag_trans
-      xfs: track delayed allocation reservations across the filesystem
-      xfs: rename the speculative block allocation reclaim toggle functions
-      xfs: allow scrubbers to pause background reclaim
-      xfs: scrub should check incore counters against ondisk headers
-      xfs: always rejoin held resources during defer roll
-      xfs: add online scrub for superblock counters
-
-Dave Chinner (1):
-      xfs: bump XFS_IOC_FSGEOMETRY to v5 structures
-
-Eric Sandeen (1):
-      xfs: change some error-less functions to void types
-
-Wang Shilong (1):
-      xfs,fstrim: fix to return correct minlen
-
- fs/xfs/Makefile                |   3 +
- fs/xfs/libxfs/xfs_ag.c         |  54 ++++++
- fs/xfs/libxfs/xfs_ag.h         |   2 +
- fs/xfs/libxfs/xfs_alloc.c      |  13 +-
- fs/xfs/libxfs/xfs_attr.c       |  35 ++--
- fs/xfs/libxfs/xfs_attr.h       |   2 +-
- fs/xfs/libxfs/xfs_bmap.c       |  17 +-
- fs/xfs/libxfs/xfs_defer.c      |  14 +-
- fs/xfs/libxfs/xfs_dquot_buf.c  |   4 +-
- fs/xfs/libxfs/xfs_fs.h         | 139 +++++++++++----
- fs/xfs/libxfs/xfs_health.h     | 190 ++++++++++++++++++++
- fs/xfs/libxfs/xfs_quota_defs.h |   2 +-
- fs/xfs/libxfs/xfs_sb.c         |  18 +-
- fs/xfs/libxfs/xfs_sb.h         |   2 +-
- fs/xfs/libxfs/xfs_trans_resv.c |   6 +-
- fs/xfs/libxfs/xfs_types.c      |   2 +-
- fs/xfs/libxfs/xfs_types.h      |   2 +
- fs/xfs/scrub/agheader.c        |  20 +++
- fs/xfs/scrub/common.c          |  47 ++++-
- fs/xfs/scrub/common.h          |   4 +
- fs/xfs/scrub/fscounters.c      | 366 ++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/health.c          | 237 +++++++++++++++++++++++++
- fs/xfs/scrub/health.h          |  14 ++
- fs/xfs/scrub/ialloc.c          |   4 +-
- fs/xfs/scrub/parent.c          |   2 +-
- fs/xfs/scrub/quota.c           |   2 +-
- fs/xfs/scrub/repair.c          |  34 ++--
- fs/xfs/scrub/repair.h          |   5 +-
- fs/xfs/scrub/scrub.c           |  49 ++++--
- fs/xfs/scrub/scrub.h           |  27 ++-
- fs/xfs/scrub/trace.h           |  63 ++++++-
- fs/xfs/xfs_aops.c              | 135 ++++++++++++--
- fs/xfs/xfs_aops.h              |   1 -
- fs/xfs/xfs_bmap_util.c         |   2 +
- fs/xfs/xfs_buf_item.c          |   4 +-
- fs/xfs/xfs_discard.c           |   3 +-
- fs/xfs/xfs_dquot.c             |  17 +-
- fs/xfs/xfs_file.c              |   6 +-
- fs/xfs/xfs_fsops.c             |   3 +-
- fs/xfs/xfs_fsops.h             |   2 +-
- fs/xfs/xfs_health.c            | 392 +++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_icache.c            |  11 +-
- fs/xfs/xfs_icache.h            |   4 +-
- fs/xfs/xfs_inode.c             |  31 ++--
- fs/xfs/xfs_inode.h             |  17 +-
- fs/xfs/xfs_ioctl.c             |  62 ++++---
- fs/xfs/xfs_ioctl32.c           |   9 +-
- fs/xfs/xfs_itable.c            |   2 +
- fs/xfs/xfs_log.c               |   3 +-
- fs/xfs/xfs_log_cil.c           |  21 ++-
- fs/xfs/xfs_log_recover.c       |  10 +-
- fs/xfs/xfs_mount.c             |  35 +++-
- fs/xfs/xfs_mount.h             |  32 +++-
- fs/xfs/xfs_qm.c                |   3 +-
- fs/xfs/xfs_qm.h                |   8 +-
- fs/xfs/xfs_quota.h             |  37 ++--
- fs/xfs/xfs_super.c             |  41 ++---
- fs/xfs/xfs_trace.h             |  76 ++++++++
- fs/xfs/xfs_trans_dquot.c       |  52 +++---
- 59 files changed, 2085 insertions(+), 313 deletions(-)
- create mode 100644 fs/xfs/libxfs/xfs_health.h
- create mode 100644 fs/xfs/scrub/fscounters.c
- create mode 100644 fs/xfs/scrub/health.c
- create mode 100644 fs/xfs/scrub/health.h
- create mode 100644 fs/xfs/xfs_health.c
+diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
+index 1080381ff243..bc2dfacd2f4a 100644
+--- a/fs/xfs/libxfs/xfs_ialloc_btree.c
++++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
+@@ -549,6 +549,15 @@ xfs_inobt_max_size(
+ 	if (mp->m_inobt_mxr[0] == 0)
+ 		return 0;
+ 
++	/*
++	 * The log is permanently allocated, so the space it occupies will
++	 * never be available for the kinds of things that would require btree
++	 * expansion.  We therefore can pretend the space isn't there.
++	 */
++	if (mp->m_sb.sb_logstart &&
++	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == agno)
++		agblocks -= mp->m_sb.sb_logblocks;
++
+ 	return xfs_btree_calc_size(mp->m_inobt_mnr,
+ 				(uint64_t)agblocks * mp->m_sb.sb_inopblock /
+ 					XFS_INODES_PER_CHUNK);
+diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
+index 6f47ab876d90..5d9de9b21726 100644
+--- a/fs/xfs/libxfs/xfs_refcount_btree.c
++++ b/fs/xfs/libxfs/xfs_refcount_btree.c
+@@ -427,6 +427,15 @@ xfs_refcountbt_calc_reserves(
+ 	tree_len = be32_to_cpu(agf->agf_refcount_blocks);
+ 	xfs_trans_brelse(tp, agbp);
+ 
++	/*
++	 * The log is permanently allocated, so the space it occupies will
++	 * never be available for the kinds of things that would require btree
++	 * expansion.  We therefore can pretend the space isn't there.
++	 */
++	if (mp->m_sb.sb_logstart &&
++	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == agno)
++		agblocks -= mp->m_sb.sb_logblocks;
++
+ 	*ask += xfs_refcountbt_max_size(mp, agblocks);
+ 	*used += tree_len;
+ 
+diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
+index 5738e11055e6..5d1f8884c888 100644
+--- a/fs/xfs/libxfs/xfs_rmap_btree.c
++++ b/fs/xfs/libxfs/xfs_rmap_btree.c
+@@ -578,6 +578,15 @@ xfs_rmapbt_calc_reserves(
+ 	tree_len = be32_to_cpu(agf->agf_rmap_blocks);
+ 	xfs_trans_brelse(tp, agbp);
+ 
++	/*
++	 * The log is permanently allocated, so the space it occupies will
++	 * never be available for the kinds of things that would require btree
++	 * expansion.  We therefore can pretend the space isn't there.
++	 */
++	if (mp->m_sb.sb_logstart &&
++	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == agno)
++		agblocks -= mp->m_sb.sb_logblocks;
++
+ 	/* Reserve 1% of the AG or enough for 1 block per record. */
+ 	*ask += max(agblocks / 100, xfs_rmapbt_max_size(mp, agblocks));
+ 	*used += tree_len;
