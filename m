@@ -2,86 +2,326 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A01915633
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 00:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23414156DC
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 02:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfEFWvG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 May 2019 18:51:06 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58221 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726063AbfEFWvF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 May 2019 18:51:05 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1D3084388A9;
-        Tue,  7 May 2019 08:51:02 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hNmRp-0004YD-KM; Tue, 07 May 2019 08:51:01 +1000
-Date:   Tue, 7 May 2019 08:51:01 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Rosen Penev <rosenp@gmail.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] db/malloc: Use posix_memalign instead of deprecated
- valloc
-Message-ID: <20190506225101.GN29573@dread.disaster.area>
-References: <20190506210326.29581-1-rosenp@gmail.com>
- <b85f5489-70ed-3145-3989-592ee1de3899@sandeen.net>
+        id S1726101AbfEGAN2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 May 2019 20:13:28 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:45580 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfEGAN2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 May 2019 20:13:28 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4708pnL141623
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 00:13:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=6IXyNb0Czc7g2UFjqjHKHmOCOyGRj7SZEVdpBMNIX18=;
+ b=r/USqVoV5tLIYN2ov7jkvM5ghC/Ca93zM7WGDAA662QvV6Uw896ZgXPlo6sqnFPs5+R4
+ FHQ2Wdrwwip5b0F7EJdbZQW0KOii2r7ma3srKglXumZTXtFs3KIQecyMlVPgfNWKykSj
+ vN7j3oXXDVSCaeCQnSb+E/4zm4iCd/NHsl8Z0cYW3yCxatOACf5KBJJGcCFG+JE3uORz
+ 3xE4zQVjZlE58ExveXt5+9tBBgVKET2rk2e4aID9/2MydjoWPhiin+ai9/y9EEj3SqaC
+ 75mvPxt4hNq5xihmexqjKXqjSHsTeD0gT1XbcKc1eJRN17Lrz/s/q+L6NYjHw7zAUU4E 4A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2s94b5ss92-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 00:13:26 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x470B297101813
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 00:11:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2s9ayejwav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 00:11:25 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x470BOha018681
+        for <linux-xfs@vger.kernel.org>; Tue, 7 May 2019 00:11:24 GMT
+Received: from [192.168.1.226] (/70.176.225.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 May 2019 17:11:24 -0700
+Subject: Re: [PATCH 1/4] xfs_restore: refactor open-coded file creation code
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <155085403848.5141.1866278990901950186.stgit@magnolia>
+ <155085404462.5141.11851529133557195388.stgit@magnolia>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <463f5d1d-a13f-c489-1474-c0b8b3097a71@oracle.com>
+Date:   Mon, 6 May 2019 17:11:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b85f5489-70ed-3145-3989-592ee1de3899@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=QCsuf9VlqjBIDrebahUA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <155085404462.5141.11851529133557195388.stgit@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070000
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070000
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 06, 2019 at 05:20:11PM -0500, Eric Sandeen wrote:
+On 2/22/19 9:47 AM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Create a helper to unlink, recreate, and reserve space in a file so that
+> we don't have two open-coded versions.  We lose the broken ALLOCSP code
+> since it never worked anyway.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>   restore/dirattr.c |   97 ++++++++++++++++++-----------------------------------
+>   restore/dirattr.h |    2 +
+>   restore/namreg.c  |   70 +++-----------------------------------
+>   3 files changed, 41 insertions(+), 128 deletions(-)
 > 
 > 
-> On 5/6/19 4:03 PM, Rosen Penev wrote:
-> > valloc is not available with uClibc-ng as well as being deprecated, which
-> > causes compilation errors. aligned_alloc is not available before C11 so
-> > used posix_memalign.'
-> > 
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  db/malloc.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/db/malloc.c b/db/malloc.c
-> > index 77b3e022..38fe0b05 100644
-> > --- a/db/malloc.c
-> > +++ b/db/malloc.c
-> > @@ -44,8 +44,7 @@ xmalloc(
-> >  {
-> >  	void	*ptr;
-> >  
-> > -	ptr = valloc(size);
-> > -	if (ptr)
-> > +	if(!posix_memalign(&ptr, sysconf(_SC_PAGESIZE), size))
-> 
-> 
-> I'll stick a space after the 'if' but otherwise, seems fine, thanks.
-> 
-> Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+> diff --git a/restore/dirattr.c b/restore/dirattr.c
+> index 5368664..0fb2877 100644
+> --- a/restore/dirattr.c
+> +++ b/restore/dirattr.c
+> @@ -55,6 +55,37 @@
+>   #include "openutil.h"
+>   #include "mmap.h"
+>   
+> +/* Create a file, try to reserve space for it, and return the fd. */
+> +int
+> +create_filled_file(
+> +	const char	*pathname,
+> +	off64_t		size)
+> +{
+> +	struct flock64	fl = {
+> +		.l_len = size,
+> +	};
+> +	int		fd;
+> +	int		ret;
+> +
+> +	(void)unlink(pathname);
+> +
+> +	fd = open(pathname, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+> +	if (fd < 0)
+> +		return fd;
 
-Can we just get rid of db/malloc.[ch]? They are just a set
-of wrappers that exit() when malloc fails, largely used by the
-deprecated xfs_check functionality we still have hidden inside
-xfs_db. Be a useful code self-documentation exercise to get rid
-of them to indicate that the callers don't actually handle malloc
-failures at all....
+Just a nit: I think if you goto done here instead of return, you can 
+remove the extra goto below since it's not having much effect.  I sort 
+of figured people like gotos because they like having one exit point to 
+the function.  Alternatively, if you don't mind having multiple exit 
+points, you can simply return early in patch 4, and avoid the goto all 
+together.
 
-Cheers,
+Allison
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> +
+> +	ret = ioctl(fd, XFS_IOC_RESVSP64, &fl);
+> +	if (ret && errno != ENOTTY)
+> +		mlog(MLOG_VERBOSE | MLOG_NOTE,
+> +_("attempt to reserve %lld bytes for %s using %s failed: %s (%d)\n"),
+> +				size, pathname, "XFS_IOC_RESVSP64",
+> +				strerror(errno), errno);
+> +	if (ret == 0)
+> +		goto done;
+> +
+> +done:
+> +	return fd;
+> +}
+> +
+>   /* structure definitions used locally ****************************************/
+>   
+>   /* node handle limits
+> @@ -238,13 +269,8 @@ dirattr_init(char *hkdir, bool_t resume, uint64_t dircnt)
+>   			return BOOL_FALSE;
+>   		}
+>   	} else {
+> -		/* create the dirattr file, first unlinking any older version
+> -		 * laying around
+> -		 */
+> -		(void)unlink(dtp->dt_pathname);
+> -		dtp->dt_fd = open(dtp->dt_pathname,
+> -				   O_RDWR | O_CREAT | O_EXCL,
+> -				   S_IRUSR | S_IWUSR);
+> +		dtp->dt_fd = create_filled_file(dtp->dt_pathname,
+> +			DIRATTR_PERS_SZ + (dircnt * sizeof(struct dirattr)));
+>   		if (dtp->dt_fd < 0) {
+>   			mlog(MLOG_NORMAL | MLOG_ERROR, _(
+>   			      "could not create directory attributes file %s: "
+> @@ -253,63 +279,6 @@ dirattr_init(char *hkdir, bool_t resume, uint64_t dircnt)
+>   			      strerror(errno));
+>   			return BOOL_FALSE;
+>   		}
+> -
+> -		/* reserve space for the backing store. try to use RESVSP64.
+> -		 * if doesn't work, try ALLOCSP64. the former is faster, as
+> -		 * it does not zero the space.
+> -		 */
+> -		{
+> -		bool_t successpr;
+> -		unsigned int ioctlcmd;
+> -		int loglevel;
+> -		size_t trycnt;
+> -
+> -		for (trycnt = 0,
+> -		      successpr = BOOL_FALSE,
+> -		      ioctlcmd = XFS_IOC_RESVSP64,
+> -		      loglevel = MLOG_VERBOSE
+> -		      ;
+> -		      ! successpr && trycnt < 2
+> -		      ;
+> -		      trycnt++,
+> -		      ioctlcmd = XFS_IOC_ALLOCSP64,
+> -		      loglevel = max(MLOG_NORMAL, loglevel - 1)) {
+> -			off64_t initsz;
+> -			struct flock64 flock64;
+> -			int rval;
+> -
+> -			if (! ioctlcmd) {
+> -				continue;
+> -			}
+> -
+> -			initsz = (off64_t)DIRATTR_PERS_SZ
+> -				 +
+> -				 ((off64_t)dircnt * sizeof(dirattr_t));
+> -			flock64.l_whence = 0;
+> -			flock64.l_start = 0;
+> -			flock64.l_len = initsz;
+> -			rval = ioctl(dtp->dt_fd, ioctlcmd, &flock64);
+> -			if (rval) {
+> -				if (errno != ENOTTY) {
+> -					mlog(loglevel | MLOG_NOTE, _(
+> -					      "attempt to reserve %lld bytes for %s "
+> -					      "using %s "
+> -					      "failed: %s (%d)\n"),
+> -					      initsz,
+> -					      dtp->dt_pathname,
+> -					      ioctlcmd == XFS_IOC_RESVSP64
+> -					      ?
+> -					      "XFS_IOC_RESVSP64"
+> -					      :
+> -					      "XFS_IOC_ALLOCSP64",
+> -					      strerror(errno),
+> -					      errno);
+> -				}
+> -			} else {
+> -				successpr = BOOL_TRUE;
+> -			}
+> -		}
+> -		}
+>   	}
+>   
+>   	/* mmap the persistent descriptor
+> diff --git a/restore/dirattr.h b/restore/dirattr.h
+> index dd37a98..e81e69c 100644
+> --- a/restore/dirattr.h
+> +++ b/restore/dirattr.h
+> @@ -88,4 +88,6 @@ extern bool_t dirattr_cb_extattr(dah_t dah,
+>   				  extattrhdr_t *ahdrp,
+>   				  void *ctxp);
+>   
+> +int create_filled_file(const char *pathname, off64_t size);
+> +
+>   #endif /* DIRATTR_H */
+> diff --git a/restore/namreg.c b/restore/namreg.c
+> index 89fa5ef..d0d5e89 100644
+> --- a/restore/namreg.c
+> +++ b/restore/namreg.c
+> @@ -37,6 +37,10 @@
+>   #include "namreg.h"
+>   #include "openutil.h"
+>   #include "mmap.h"
+> +#include "global.h"
+> +#include "content.h"
+> +#include "content_inode.h"
+> +#include "dirattr.h"
+>   
+>   /* structure definitions used locally ****************************************/
+>   
+> @@ -153,13 +157,8 @@ namreg_init(char *hkdir, bool_t resume, uint64_t inocnt)
+>   			return BOOL_FALSE;
+>   		}
+>   	} else {
+> -		/* create the namreg file, first unlinking any older version
+> -		 * laying around
+> -		 */
+> -		(void)unlink(ntp->nt_pathname);
+> -		ntp->nt_fd = open(ntp->nt_pathname,
+> -				   O_RDWR | O_CREAT | O_EXCL,
+> -				   S_IRUSR | S_IWUSR);
+> +		ntp->nt_fd = create_filled_file(ntp->nt_pathname,
+> +			NAMREG_PERS_SZ + (inocnt * NAMREG_AVGLEN));
+>   		if (ntp->nt_fd < 0) {
+>   			mlog(MLOG_NORMAL | MLOG_ERROR, _(
+>   			      "could not create name registry file %s: "
+> @@ -168,63 +167,6 @@ namreg_init(char *hkdir, bool_t resume, uint64_t inocnt)
+>   			      strerror(errno));
+>   			return BOOL_FALSE;
+>   		}
+> -
+> -		/* reserve space for the backing store. try to use RESVSP64.
+> -		 * if doesn't work, try ALLOCSP64. the former is faster, as
+> -		 * it does not zero the space.
+> -		 */
+> -		{
+> -		bool_t successpr;
+> -		unsigned int ioctlcmd;
+> -		int loglevel;
+> -		size_t trycnt;
+> -
+> -		for (trycnt = 0,
+> -		      successpr = BOOL_FALSE,
+> -		      ioctlcmd = XFS_IOC_RESVSP64,
+> -		      loglevel = MLOG_VERBOSE
+> -		      ;
+> -		      ! successpr && trycnt < 2
+> -		      ;
+> -		      trycnt++,
+> -		      ioctlcmd = XFS_IOC_ALLOCSP64,
+> -		      loglevel = max(MLOG_NORMAL, loglevel - 1)) {
+> -			off64_t initsz;
+> -			struct flock64 flock64;
+> -			int rval;
+> -
+> -			if (! ioctlcmd) {
+> -				continue;
+> -			}
+> -
+> -			initsz = (off64_t)NAMREG_PERS_SZ
+> -				 +
+> -				 ((off64_t)inocnt * NAMREG_AVGLEN);
+> -			flock64.l_whence = 0;
+> -			flock64.l_start = 0;
+> -			flock64.l_len = initsz;
+> -			rval = ioctl(ntp->nt_fd, ioctlcmd, &flock64);
+> -			if (rval) {
+> -				if (errno != ENOTTY) {
+> -					mlog(loglevel | MLOG_NOTE, _(
+> -					      "attempt to reserve %lld bytes for %s "
+> -					      "using %s "
+> -					      "failed: %s (%d)\n"),
+> -					      initsz,
+> -					      ntp->nt_pathname,
+> -					      ioctlcmd == XFS_IOC_RESVSP64
+> -					      ?
+> -					      "XFS_IOC_RESVSP64"
+> -					      :
+> -					      "XFS_IOC_ALLOCSP64",
+> -					      strerror(errno),
+> -					      errno);
+> -				}
+> -			} else {
+> -				successpr = BOOL_TRUE;
+> -			}
+> -		}
+> -		}
+>   	}
+>   
+>   	/* mmap the persistent descriptor
+> 
