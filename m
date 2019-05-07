@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA6F166F5
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 17:37:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1C916700
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 May 2019 17:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfEGPhN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 May 2019 11:37:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37840 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfEGPhN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 May 2019 11:37:13 -0400
-Received: by mail-ot1-f67.google.com with SMTP id u3so9899990otq.4
-        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 08:37:12 -0700 (PDT)
+        id S1726487AbfEGPkl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 May 2019 11:40:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37179 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfEGPkl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 May 2019 11:40:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id u3so9912298otq.4
+        for <linux-xfs@vger.kernel.org>; Tue, 07 May 2019 08:40:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6dOaY+uD9DJjErKzQ4lbx3sa2d0JDi7CHezoB5wTbvY=;
-        b=1RDaQiep4r+5NZ7RO5zftr0FnsMUZwAyLWkMBkR9iTDOBSIJayhPK4u9DWG7+9yxpt
-         9FJnbG3lrhIL0LedEM5ytUIEEGfVVBYdsCV16Q3ZevH87Y7p3IJljktvzFGtbrtOW9jV
-         qgMeHUIAfkrXfVgCh+wJIUgLwx8HPs0Hso14g3nE34tG3uE5Kaf93v1albOqeZ8FtzEo
-         MRnNU+jjU7Bd7Hg2HKOClTmC45crVs8w8TurxKr/6z1WENdYw/y//CLDQEQmIA9Rf7i+
-         OKLRLxxsnQvga0Mn1E5gFobavHOZ9OlvYblRdklzqgaUM3FSIzUzMZWnI38rOf5/Ueyc
-         SI6w==
+        bh=eDjq30ddseBaIw6socWxfPv6NTtk+5QW4X1Ug5iEyJk=;
+        b=P0NmBCU8zUOfaF8xaYZsuZ8crvxFB33fl7wDNB9MZv5fgE9bufZ9uXOFacVBRIyhyk
+         7jy7cEut0ZZu1RaoDtrr50BVaB/CX/skGeBOtXxoGAGKW89ZemgDpFwl6g0BCyZNTY71
+         c96Bv/+lzcoe4YYcd5EMePUR4gTK7GrAqK6itLr2obeqWzYKb3Dql3mDDHzIv1x+/JnT
+         zIvYGvdBDonXfV8sEZV0PvMIvA63l1OoRV+8kWQPCfuhVRSXMOb+jYMxWFhFzCGAXSHH
+         RES21PeWYeTfPIbRNgVP3JVS3PVW0F6JNq0X1vpUrTbfXgSQ4Ev5ZlVumch1kGRMghci
+         mHRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6dOaY+uD9DJjErKzQ4lbx3sa2d0JDi7CHezoB5wTbvY=;
-        b=cSmiTh0s89WR9bVr98hcHhZ+kXlI6F0oj5ymWCf3vCSryvz+RXliaJzMKS/YU6jk5r
-         cC1tLg15ECRsVKaxg9E1YxAHBHmrPlYb3tzqbXbZDug3RIHxphgwEETUsixf5ofRUFTV
-         AuEPFsmEVUsiNqINOyA3ftR0QVRvYLZTAYvhUrCDQxHrW1OwHdTyVaxYj0NwcM2s/ITK
-         MzLoaBGa3GwZu2lgWQo2XGxct40uari3Nyq1UYHzlhi3T7mrrARjGl2+9gXWq4/B3Skn
-         agt7hSqKwjHx0Ur2Clqbv77Vsphu935OtglCd7TPOAKBDliC+xsU77PuXWdJ4MVGi3Fe
-         v7UQ==
-X-Gm-Message-State: APjAAAWHZnQOnalyxO2Bf3WJdMtd2AQmB2IteZ618cHaCmiYjl/wBaSF
-        TnWuG+GXicQVpTz5RKUPv+7G92FXyhO2X0x4YUwgQA==
-X-Google-Smtp-Source: APXvYqxbxERKNtTaVpMxD9jAh6w8zsl3plIje9NPoM99XF0whcoJ/rqAndFua0o+8QlJA2fPNaeXZRcDVPm+ejCVDvk=
-X-Received: by 2002:a9d:222c:: with SMTP id o41mr22019501ota.353.1557243432435;
- Tue, 07 May 2019 08:37:12 -0700 (PDT)
+        bh=eDjq30ddseBaIw6socWxfPv6NTtk+5QW4X1Ug5iEyJk=;
+        b=cyL8tCaiKZItbQE/fmltKRv24bK9MdVwVmNHPIV3hve04IPhoWCfJDKNFBybrVk/Cf
+         VHsB2YRDj1S8I/g8LQF+Pm16ZgfIA8/6Qa5TIRa1Ut/vhtI0jeYTXyM7c8WYd6iD5sCb
+         irmrBa768PiyncbKoc9+vjn46sF3+1wLyeJSKmGdEIky/TUOBYtP+3vvqO69l7h8dOWm
+         3Wlvt9LlEzvJURAG+qjKm7PYjZf57zUngOTjpGkbVDspcgaPA8ZQQtXkR2kIhsaJTyWE
+         iZ3s32EHidCNmVuB55ib93v67b4f9UeYbR/Tb3L4kojCS+DE5Qjhg02uvxHDuwNvzltE
+         nDzA==
+X-Gm-Message-State: APjAAAViO3TxDtakNU431x2APA7W4q0j/ZN9JyJrnLFGgc0P9pQSAxM3
+        WIdyHkRnW1ERBdXBYVxpQE9Xw0Rld5mWQvOryDxr5A==
+X-Google-Smtp-Source: APXvYqxgIWANkc/KHq9kAogc8tqlkqRrOccsWEIKbqAeeZcNH5LiQg3MPoGwMh9hdCCYG0LuKCXgqpIi0akzNLzuZFI=
+X-Received: by 2002:a9d:222c:: with SMTP id o41mr22033787ota.353.1557243640877;
+ Tue, 07 May 2019 08:40:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-7-pagupta@redhat.com>
-In-Reply-To: <20190426050039.17460-7-pagupta@redhat.com>
+References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-4-pagupta@redhat.com>
+In-Reply-To: <20190426050039.17460-4-pagupta@redhat.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 May 2019 08:37:01 -0700
-Message-ID: <CAPcyv4hCP4E4xPkQx25tqhznon6ADwrYJB1yujkrO-A7LUnsmg@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] xfs: disable map_sync for async flush
+Date:   Tue, 7 May 2019 08:40:30 -0700
+Message-ID: <CAPcyv4hRdvypEj4LBTMfUFm80BdpRYbOugrkkj-3Kk_LErXPqQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] libnvdimm: add dax_dev sync flag
 To:     Pankaj Gupta <pagupta@redhat.com>
 Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -87,43 +87,27 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:03 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+On Thu, Apr 25, 2019 at 10:02 PM Pankaj Gupta <pagupta@redhat.com> wrote:
 >
-> Dont support 'MAP_SYNC' with non-DAX files and DAX files
-> with asynchronous dax_device. Virtio pmem provides
-> asynchronous host page cache flush mechanism. We don't
-> support 'MAP_SYNC' with virtio pmem and xfs.
+> This patch adds 'DAXDEV_SYNC' flag which is set
+> for nd_region doing synchronous flush. This later
+> is used to disable MAP_SYNC functionality for
+> ext4 & xfs filesystem for devices don't support
+> synchronous flush.
 >
 > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  fs/xfs/xfs_file.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+[..]
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 0dd316a74a29..c97fc0cc7167 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -7,6 +7,9 @@
+>  #include <linux/radix-tree.h>
+>  #include <asm/pgtable.h>
+>
+> +/* Flag for synchronous flush */
+> +#define DAXDEV_F_SYNC true
 
-Darrick, does this look ok to take through the nvdimm tree?
-
->
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index a7ceae90110e..f17652cca5ff 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1203,11 +1203,14 @@ xfs_file_mmap(
->         struct file     *filp,
->         struct vm_area_struct *vma)
->  {
-> +       struct dax_device       *dax_dev;
-> +
-> +       dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
->         /*
-> -        * We don't support synchronous mappings for non-DAX files. At least
-> -        * until someone comes with a sensible use case.
-> +        * We don't support synchronous mappings for non-DAX files and
-> +        * for DAX files if underneath dax_device is not synchronous.
->          */
-> -       if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
-> +       if (!daxdev_mapping_supported(vma, dax_dev))
->                 return -EOPNOTSUPP;
->
->         file_accessed(filp);
-> --
-> 2.20.1
->
+I'd feel better, i.e. it reads more canonically, if this was defined
+as (1UL << 0) and the argument to alloc_dax() was changed to 'unsigned
+long flags' rather than a bool.
