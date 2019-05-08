@@ -2,139 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F415717B55
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2019 16:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7860117D1F
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2019 17:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbfEHOJD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 May 2019 10:09:03 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:54924 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727543AbfEHOJC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 May 2019 10:09:02 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hONFk-00033K-2a; Wed, 08 May 2019 10:09:00 -0400
-Message-ID: <3985b9feffe11dcdbb86fa8c2d9ffc4bd7ab8458.camel@surriel.com>
-Subject: Re: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
-From:   Rik van Riel <riel@surriel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <dchinner@redhat.com>
-Date:   Wed, 08 May 2019 10:08:59 -0400
-In-Reply-To: <20190507212213.GO29573@dread.disaster.area>
-References: <20190507130528.1d3d471b@imladris.surriel.com>
-         <20190507212213.GO29573@dread.disaster.area>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-LmHS3NdtgcSLKha3w+oN"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1728256AbfEHPXf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 May 2019 11:23:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39216 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbfEHPXe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 8 May 2019 11:23:34 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 924EB3007149;
+        Wed,  8 May 2019 15:23:33 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3BE972E09B;
+        Wed,  8 May 2019 15:23:33 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id B6B4B41F56;
+        Wed,  8 May 2019 15:23:32 +0000 (UTC)
+Date:   Wed, 8 May 2019 11:23:32 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jakub =?utf-8?Q?Staro=C5=84?= <jstaron@google.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
+        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        darrick wong <darrick.wong@oracle.com>,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
+        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
+        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
+        stefanha@redhat.com, pbonzini@redhat.com,
+        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com,
+        smbarber@google.com
+Message-ID: <1482604497.27348783.1557329012320.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-3-pagupta@redhat.com> <3d6479ae-6c39-d614-f1d9-aa1978e2e438@google.com> <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+Subject: Re: [Qemu-devel] [PATCH v7 2/6] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.32, 10.4.195.26]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: PGqRBxt7ac04jwyhY+CEFoY6aRdKvNGTIbxd
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 08 May 2019 15:23:33 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 
---=-LmHS3NdtgcSLKha3w+oN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> > 
+> > > +int virtio_pmem_flush(struct nd_region *nd_region)
+> > > +{
+> > > +        int err;
+> > > +        unsigned long flags;
+> > > +        struct scatterlist *sgs[2], sg, ret;
+> > > +        struct virtio_device *vdev = nd_region->provider_data;
+> > > +        struct virtio_pmem *vpmem = vdev->priv;
+> > > +        struct virtio_pmem_request *req;
+> > > +
+> > > +        might_sleep();
+> > > +        req = kmalloc(sizeof(*req), GFP_KERNEL);
+> > > +        if (!req)
+> > > +                return -ENOMEM;
+> > > +
+> > > +        req->done = req->wq_buf_avail = false;
+> > > +        strcpy(req->name, "FLUSH");
+> > > +        init_waitqueue_head(&req->host_acked);
+> > > +        init_waitqueue_head(&req->wq_buf);
+> > > +        sg_init_one(&sg, req->name, strlen(req->name));
+> > > +        sgs[0] = &sg;
+> > > +        sg_init_one(&ret, &req->ret, sizeof(req->ret));
+> > > +        sgs[1] = &ret;
+> > > +
+> > > +        spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > > +        err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req, GFP_ATOMIC);
+> > > +        if (err) {
+> > > +                dev_err(&vdev->dev, "failed to send command to virtio pmem device\n");
+> > > +
+> > > +                list_add_tail(&vpmem->req_list, &req->list);
+> > > +                spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > > +
+> > > +                /* When host has read buffer, this completes via host_ack */
+> > > +                wait_event(req->wq_buf, req->wq_buf_avail);
+> > > +                spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > > +        }
+> > 
+> > Aren't the arguments in `list_add_tail` swapped? The element we are adding
+> 
 
-On Wed, 2019-05-08 at 07:22 +1000, Dave Chinner wrote:
-> On Tue, May 07, 2019 at 01:05:28PM -0400, Rik van Riel wrote:
-> > The code in xlog_wait uses the spinlock to make adding the task to
-> > the wait queue, and setting the task state to UNINTERRUPTIBLE
-> > atomic
-> > with respect to the waker.
-> >=20
-> > Doing the wakeup after releasing the spinlock opens up the
-> > following
-> > race condition:
-> >=20
-> > - add task to wait queue
-> >=20
-> > -                                      wake up task
-> >=20
-> > - set task state to UNINTERRUPTIBLE
-> >=20
-> > Simply moving the spin_unlock to after the wake_up_all results
-> > in the waker not being able to see a task on the waitqueue before
-> > it has set its state to UNINTERRUPTIBLE.
->=20
-> Yup, seems like an issue. Good find, Rik.
->=20
-> So, what problem is this actually fixing? Was it noticed by
-> inspection, or is it actually manifesting on production machines?
-> If it is manifesting IRL, what are the symptoms (e.g. hang running
-> out of log space?) and do you have a test case or any way to
-> exercise it easily?
+Yes, arguments for 'list_add_tail' should be swapped.
 
-Chris spotted a hung kworker task, in UNINTERRUPTIBLE
-state, but with an empty wait queue. This does not seem
-like something that is easily reproducible.
-
-> And, FWIW, did you check all the other xlog_wait() users for the
-> same problem?
-
-I did not, but am looking now. The xlog_wait code itself
-is fine, but it seems there are a few other wakers that
-are doing the wakeup after releasing the lock.
-
-It looks like xfs_log_force_umount() and the other wakeup=20
-in xlog_state_do_callback() suffer from the same issue.
-
-> > The lock ordering of taking the waitqueue lock inside the
-> > l_icloglock
-> > is already used inside xlog_wait; it is unclear why the waker was
-> > doing
-> > things differently.
->=20
-> Historical, most likely, and the wakeup code has changed in years
-> gone by and a race condition that rarely manifests is unlikely to be
-> noticed.
->=20
-> ....
->=20
-> Yeah, the conversion from counting semaphore outside the iclog lock
-> to use wait queues in 2008 introduced this bug. The wait queue
-> addition was moved inside the lock, the wakeup left outside. So:
-
-It looks like that conversion may have introduced the
-same bug in multiple places.
-
-That first wakeup in xlog_state_do_callback() looks pretty
-straightforward. That spin_unlock could be moved down as well,
-or a lock & unlock pair could be placed around the wake_up_all.
-
-I am not sure about xfs_log_force_umount(). Could the unlock=20
-be moved to after the wake_up_all, or does that create lock
-ordering issues with the xlog_grant_head_wake_all calls?
-Could a simple lock + unlock of log->l_icloglock around the
-wake_up_all do the trick, or is there some other state that
-also needs to stay locked?
+list_add_tail(&req->list, &vpmem->req_list);
 
 
---=20
-All Rights Reversed.
-
---=-LmHS3NdtgcSLKha3w+oN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzS4vsACgkQznnekoTE
-3oNRQwf/QACRyTToqIaz1xndSyWZH+qLqp67i7IrcHPiV9FpCtZbhHSwhCH9EmJ0
-OXnOECSOlEcNJUb2rjgc0tr4tvLR9JtjNipzrLDK4cCcJ705ZSK2Ss1o9trQiOmN
-96W4h0GEV1vyYuTkDkgKL8k34EqGQf4vXcvJExqzZwd8EgzDYXtZ3LRLSvAS8wtC
-aPme3zNJ5XUO/7XPmcVQSEpV0WL28DGUV+HF+8Mufglu6NY1fmeX5n2oJN6rlrQ/
-HFfEMBvtnSSmcdpXWh5lf9FSOSx5nbyNtwGSz2wQ8nAVe+R+R2zUDbJZh9WYU+cn
-gd1fwNQIfXhMPBQtfi8Wv9vg1EbSWg==
-=DMDb
------END PGP SIGNATURE-----
-
---=-LmHS3NdtgcSLKha3w+oN--
-
+Thank you,
+Pankaj
