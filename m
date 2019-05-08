@@ -2,163 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF27817E3D
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2019 18:40:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A1E518032
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2019 21:05:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfEHQkG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 May 2019 12:40:06 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47158 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725889AbfEHQkG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 May 2019 12:40:06 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48GUXGG017006;
-        Wed, 8 May 2019 09:39:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=o64HvOJu7SRrAyBhLSqP68ufXaYaxzP7NBsSHPeQs7E=;
- b=T3MAsMDRI7oBUPWeyDwxWKtAEVt3hPKpX3Jtz4vg9pLKo7uLNKH29wtPK44Dnl4MLCyJ
- M8BY53lOJE7+wMkvLvD9phjiup/5wTKVeKEWWYTn+j3MvKECK6FuKIPtS2eTZgwUJa1V
- ccixVBQBI77vnRWaZXf1euAfejRBY/e/gKA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sc2prg141-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 08 May 2019 09:39:44 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 8 May 2019 09:39:42 -0700
-Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 8 May 2019 09:39:42 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 8 May 2019 09:39:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o64HvOJu7SRrAyBhLSqP68ufXaYaxzP7NBsSHPeQs7E=;
- b=AM41/qiout1BAs2Bxe6ALjC/mwk1BOCMNQ0LRRky5UKlUq9RHEGAlgdmveThA5DgkR9zEfEfzxN4QvyRkrXsjsobIQbMezp2hERFjpARna0ScH+mT13dio0ZoXl704ytaHl8g55SVak3jZnpzYxoNaSYtzDUFgG61m7+xXBWm5o=
-Received: from DM5PR15MB1290.namprd15.prod.outlook.com (10.173.212.17) by
- DM5PR15MB1273.namprd15.prod.outlook.com (10.173.210.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Wed, 8 May 2019 16:39:41 +0000
-Received: from DM5PR15MB1290.namprd15.prod.outlook.com
- ([fe80::6182:329:231e:af13]) by DM5PR15MB1290.namprd15.prod.outlook.com
- ([fe80::6182:329:231e:af13%5]) with mapi id 15.20.1878.019; Wed, 8 May 2019
- 16:39:41 +0000
-From:   Chris Mason <clm@fb.com>
-To:     Dave Chinner <david@fromorbit.com>
-CC:     Rik van Riel <riel@surriel.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
-Thread-Topic: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
-Thread-Index: AQHVBPcY/HUnN5riH06Iaueg4x5436ZgK/GAgAFDUoA=
-Date:   Wed, 8 May 2019 16:39:41 +0000
-Message-ID: <605BF0CA-EB32-46A5-8045-2BAB7EB0BD66@fb.com>
-References: <20190507130528.1d3d471b@imladris.surriel.com>
- <20190507212213.GO29573@dread.disaster.area>
-In-Reply-To: <20190507212213.GO29573@dread.disaster.area>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: MailMate (1.12.4r5594)
-x-clientproxiedby: HK2PR03CA0063.apcprd03.prod.outlook.com
- (2603:1096:202:17::33) To DM5PR15MB1290.namprd15.prod.outlook.com
- (2603:10b6:3:b8::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c094:180::1:db0d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dcca6d8e-6af1-446b-6003-08d6d3d3c441
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR15MB1273;
-x-ms-traffictypediagnostic: DM5PR15MB1273:
-x-microsoft-antispam-prvs: <DM5PR15MB1273F583AA6D4E554B7516DDD3320@DM5PR15MB1273.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(39860400002)(366004)(396003)(189003)(199004)(86362001)(2906002)(54906003)(68736007)(14454004)(6916009)(6246003)(36756003)(4326008)(25786009)(316002)(8936002)(81156014)(81166006)(8676002)(6436002)(50226002)(186003)(7736002)(46003)(229853002)(305945005)(476003)(486006)(446003)(11346002)(6512007)(2616005)(6486002)(33656002)(66476007)(66556008)(64756008)(66446008)(478600001)(71190400001)(71200400001)(66946007)(82746002)(83716004)(76176011)(52116002)(73956011)(6506007)(386003)(5660300002)(53546011)(102836004)(99286004)(6116002)(256004)(14444005)(53936002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1273;H:DM5PR15MB1290.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 15FAq5z3LpLQMoVrMMmhwzcn4S9lGlVJi0saiaLzAzGl6tbDchHMIQ0S9AyoMOHRnO/WtRJSDv1SshalxcqYrmwXT8rsRmA50MF764jNoFPq6CDKISMLjBXVYOYb/b2v64gUn8XKeCdstPaMKbrh4PhO0s79kHtzpwKqmFR4CI9OfEuEldhh9lge8+wf/ag/xadwdfL0XV2iu2J28fyK74V+/J/HA/7/BygoEoWFvvDjeiHl5WCBdt4jacv9RtVa0PuR+CH0XxIu0u3kD9F2Fs+160qDWjvuGp2X22GG8+dES/3KeJLTD7LiYjqARrE6Y4WN6lh6siOPWHANVR4NJoTN0//SuhwUSe7RFZqJkrRkcn4h0I2mUB/7pUdqQaYjGN0FxRKNVDtrQGji89vP0Cpagd9xoFOcp9D2Vb95u9w=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727388AbfEHTFn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 May 2019 15:05:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44935 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbfEHTFn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 May 2019 15:05:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z16so10540078pgv.11
+        for <linux-xfs@vger.kernel.org>; Wed, 08 May 2019 12:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xx1nBdwm/fMIaQ+XRMTVvJx4homKW8vOYVCrjJQah8c=;
+        b=u2CwdPBWUhvunu491lhDVH7O10yitnzRdNYTDcNKNGaaMw+pYsmkpn0J9MsT99d39Y
+         Q/Wk7PGyXcjoc1tha4UuyE89T0rOnD72kAWNnjYRKkjCa0DELX1ElQVVB5fGF3jmFGkX
+         uLZw9HuRYb+PEeZ/PPFrro1K3Iw9vCnd+ELZuZL2OKCDNAb8u9QKbTbbytR8kbwE4FBI
+         Zo/dlYVRRbaMO0EpBIfmHWL9EiKzdxDQc7t8r9e2EKWR9k2JLXoh6H4LfMbZMUTXsaF+
+         muQoMtmzSSBP8hE/rlSXFu27Me96rPxVPBbMGgvYpGy27lg+hjZKYMbf9BMngu5WO2ck
+         kXNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xx1nBdwm/fMIaQ+XRMTVvJx4homKW8vOYVCrjJQah8c=;
+        b=oMK0b0xSiJB5eW+9Jy4X14SuchifcTQuPA3kA2mb7Y/R6794Gq+avUy3eLUT1xOuSe
+         X7+kgxOYjNmt1Xs1M2Efm3bPHOLJVDhO2PbJogDrCdCeIKABXC6NWJVaux8m+cFRzzy4
+         UThqyKxYO9fHyy4YXnHCsv8TsVgs7q7Z9zMR2RM+rNXFX93m+KTjp501k9LBteEvKP92
+         jtTsH2Ugb72T1TXTgmTosjl5Ila8cxVrAN0xBgoHNYrl/o4+axYeL5hqf4QEr9+yFQuU
+         eSV4M6/keaaN3Gl5irVYGxfucDIoTONo0efCwNIE9Xm3fzvX6AdwHC3zRVRR6hYCTcR8
+         IHmQ==
+X-Gm-Message-State: APjAAAUgCYwvtiIs7fb7HjLZP3gTmIjyW8DEuuXbYHj/cpfb7ZqDMN5C
+        M+kxRcb8quULSACPc+WYEO32kg==
+X-Google-Smtp-Source: APXvYqzypNLQt7uc54cFtZOQcJp0DaX+ClanYsAzKwneRj68EqOnfHTAe97HizrDj+ZvHjUmPOl5NA==
+X-Received: by 2002:a65:5cc8:: with SMTP id b8mr47363166pgt.36.1557342342253;
+        Wed, 08 May 2019 12:05:42 -0700 (PDT)
+Received: from jstaron2.mtv.corp.google.com ([2620:15c:202:201:b94f:2527:c39f:ca2d])
+        by smtp.gmail.com with ESMTPSA id 129sm23470533pff.140.2019.05.08.12.05.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 12:05:41 -0700 (PDT)
+From:   =?UTF-8?Q?Jakub_Staro=c5=84?= <jstaron@google.com>
+Subject: Re: [Qemu-devel] [PATCH v7 2/6] virtio-pmem: Add virtio pmem driver
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
+        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        darrick wong <darrick.wong@oracle.com>,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
+        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
+        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
+        stefanha@redhat.com, pbonzini@redhat.com,
+        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com,
+        smbarber@google.com
+References: <20190426050039.17460-1-pagupta@redhat.com>
+ <20190426050039.17460-3-pagupta@redhat.com>
+ <3d6479ae-6c39-d614-f1d9-aa1978e2e438@google.com>
+ <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+Message-ID: <3d643ac5-ea1b-efba-9f42-31b2ed3ab5b0@google.com>
+Date:   Wed, 8 May 2019 12:05:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcca6d8e-6af1-446b-6003-08d6d3d3c441
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 16:39:41.1099
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1273
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080102
-X-FB-Internal: deliver
+In-Reply-To: <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-T24gNyBNYXkgMjAxOSwgYXQgMTc6MjIsIERhdmUgQ2hpbm5lciB3cm90ZToNCg0KPiBPbiBUdWUs
-IE1heSAwNywgMjAxOSBhdCAwMTowNToyOFBNIC0wNDAwLCBSaWsgdmFuIFJpZWwgd3JvdGU6DQo+
-PiBUaGUgY29kZSBpbiB4bG9nX3dhaXQgdXNlcyB0aGUgc3BpbmxvY2sgdG8gbWFrZSBhZGRpbmcg
-dGhlIHRhc2sgdG8NCj4+IHRoZSB3YWl0IHF1ZXVlLCBhbmQgc2V0dGluZyB0aGUgdGFzayBzdGF0
-ZSB0byBVTklOVEVSUlVQVElCTEUgYXRvbWljDQo+PiB3aXRoIHJlc3BlY3QgdG8gdGhlIHdha2Vy
-Lg0KPj4NCj4+IERvaW5nIHRoZSB3YWtldXAgYWZ0ZXIgcmVsZWFzaW5nIHRoZSBzcGlubG9jayBv
-cGVucyB1cCB0aGUgZm9sbG93aW5nDQo+PiByYWNlIGNvbmRpdGlvbjoNCj4+DQo+PiAtIGFkZCB0
-YXNrIHRvIHdhaXQgcXVldWUNCj4+DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB3YWtlIHVwIHRhc2sNCj4+DQo+PiAtIHNldCB0YXNrIHN0YXRlIHRvIFVOSU5URVJS
-VVBUSUJMRQ0KPj4NCj4+IFNpbXBseSBtb3ZpbmcgdGhlIHNwaW5fdW5sb2NrIHRvIGFmdGVyIHRo
-ZSB3YWtlX3VwX2FsbCByZXN1bHRzDQo+PiBpbiB0aGUgd2FrZXIgbm90IGJlaW5nIGFibGUgdG8g
-c2VlIGEgdGFzayBvbiB0aGUgd2FpdHF1ZXVlIGJlZm9yZQ0KPj4gaXQgaGFzIHNldCBpdHMgc3Rh
-dGUgdG8gVU5JTlRFUlJVUFRJQkxFLg0KPg0KPiBZdXAsIHNlZW1zIGxpa2UgYW4gaXNzdWUuIEdv
-b2QgZmluZCwgUmlrLg0KPg0KPiBTbywgd2hhdCBwcm9ibGVtIGlzIHRoaXMgYWN0dWFsbHkgZml4
-aW5nPyBXYXMgaXQgbm90aWNlZCBieQ0KPiBpbnNwZWN0aW9uLCBvciBpcyBpdCBhY3R1YWxseSBt
-YW5pZmVzdGluZyBvbiBwcm9kdWN0aW9uIG1hY2hpbmVzPw0KPiBJZiBpdCBpcyBtYW5pZmVzdGlu
-ZyBJUkwsIHdoYXQgYXJlIHRoZSBzeW1wdG9tcyAoZS5nLiBoYW5nIHJ1bm5pbmcNCj4gb3V0IG9m
-IGxvZyBzcGFjZT8pIGFuZCBkbyB5b3UgaGF2ZSBhIHRlc3QgY2FzZSBvciBhbnkgd2F5IHRvDQo+
-IGV4ZXJjaXNlIGl0IGVhc2lseT8NCg0KVGhlIHN0ZXBzIHRvIHJlcHJvZHVjZSBhcmUgc2VtaS1j
-b21wbGljYXRlZCwgdGhleSBjcmVhdGUgYSBidW5jaCBvZiANCmZpbGVzLCBkbyBzdHVmZiwgYW5k
-IHRoZW4gZGVsZXRlIGFsbCB0aGUgZmlsZXMgaW4gYSBsb29wLiAgSSB0aGluayB0aGV5IA0Kc2hv
-dGd1bm5lZCBpdCBhY3Jvc3MgNTAwIG9yIHNvIG1hY2hpbmVzIHRvIHRyaWdnZXIgNSB0aW1lcywg
-YW5kIHRoZW4gDQpsZWZ0IHRoZSB3cmVja2FnZSBmb3IgdXMgdG8gcG9rZSBhdC4NCg0KVGhlIHN5
-bXB0b21zIHdlcmUgaWRlbnRpY2FsIHRvIHRoZSBidWcgZml4ZWQgaGVyZToNCg0KY29tbWl0IDY5
-NmE1NjIwNzJlM2MxNGJjZDEzYWU1YWNjMTljZGYyNzY3OWU4NjUNCkF1dGhvcjogQnJpYW4gRm9z
-dGVyIDxiZm9zdGVyQHJlZGhhdC5jb20+DQpEYXRlOiAgIFR1ZSBNYXIgMjggMTQ6NTE6NDQgMjAx
-NyAtMDcwMA0KDQp4ZnM6IHVzZSBkZWRpY2F0ZWQgbG9nIHdvcmtlciB3cSB0byBhdm9pZCBkZWFk
-bG9jayB3aXRoIGNpbCB3cQ0KDQpCdXQgc2luY2Ugb3VyIDQuMTYga2VybmVsIGlzIG5ldyB0aGFu
-IHRoYXQsIEkgYnJpZWZseSBob3BlZCB0aGF0IA0KbV9zeW5jX3dvcmtxdWV1ZSBuZWVkZWQgdG8g
-YmUgZmxhZ2dlZCB3aXRoIFdRX01FTV9SRUNMQUlNLiAgSSBkb24ndCBoYXZlIA0KYSBncmVhdCBw
-aWN0dXJlIG9mIGhvdyBhbGwgb2YgdGhlc2Ugd29ya3F1ZXVlcyBpbnRlcmFjdCwgYnV0IEkgZG8g
-dGhpbmsgDQppdCBuZWVkcyBXUV9NRU1fUkVDTEFJTS4gIEl0IGNhbid0IGJlIHRoZSBjYXVzZSBv
-ZiB0aGlzIGRlYWRsb2NrLCB0aGUgDQp3b3JrcXVldWUgd2F0Y2hkb2cgd291bGQgaGF2ZSBmaXJl
-ZC4NCg0KUmlrIG1lbnRpb25lZCB0aGF0IEkgZm91bmQgc2xlZXBpbmcgcHJvY3Mgd2l0aCBhbiBl
-bXB0eSBpY2xvZyB3YWl0cXVldWUgDQpsaXN0LCB3aGljaCBpcyB3aGVuIGhlIG5vdGljZWQgdGhp
-cyByYWNlLiAgV2Ugc2VudCBhIHdha2V1cCB0byB0aGUgDQpzbGVlcGluZyBwcm9jZXNzLCBhbmQg
-ZnRyYWNlIHNob3dlZCB0aGUgcHJvY2VzcyBsb29waW5nIGJhY2sgYXJvdW5kIHRvIA0Kc2xlZXAg
-b24gdGhlIGljbG9nIGFnYWluLiAgTG9uZyBzdG9yeSBzaG9ydCwgUmlrJ3MgcGF0Y2ggZGVmaW5p
-dGVseSANCndvdWxkbid0IGhhdmUgcHJldmVudGVkIHRoZSBkZWFkbG9jaywgYW5kIHRoZSBpY2xv
-ZyB3YWl0cXVldWUgSSB3YXMgDQpwb2tpbmcgbXVzdCBub3QgaGF2ZSBiZWVuIHRoZSBzYW1lIG9u
-ZSB0aGF0IHByb2Nlc3Mgd2FzIHNsZWVwaW5nIG9uLg0KDQpUaGUgYWN0dWFsIHByb2JsZW0gZW5k
-ZWQgdXAgYmVpbmcgdGhlIGJsa21xIElPIHNjaGVkdWxlcnMgc2l0dGluZyBvbiBhIA0KcmVxdWVz
-dC4gIFN3aXRjaGluZyBzY2hlZHVsZXJzIG1ha2VzIHRoZSBib3ggY29tZSBiYWNrIHRvIGxpZmUs
-IHNvIGl0J3MgDQplaXRoZXIgYSBreWJlciBidWcgb3Igc2xpZ2h0bHkgaGlnaGVyIHVwIGluIGJs
-a21xbGFuZC4NCg0KVGhhdCdzIGEgaHVnZSB0YW5nZW50IGFyb3VuZCBhY2tpbmcgUmlrJ3MgcGF0
-Y2gsIGJ1dCBpdCdzIGhhcmQgdG8gYmUgDQpzdXJlIGlmIHdlJ3ZlIGhpdCB0aGUgbG9zdCB3YWtl
-dXAgaW4gcHJvZC4gIEkgY291bGQgc2VhcmNoIHRocm91Z2ggYWxsIA0KdGhlIHJlbGF0ZWQgaHVu
-ZyB0YXNrIHRpbWVvdXRzLCBidXQgdGhleSBhcmUgcHJvYmFibHkgYWxsIHN0dWNrIGluIA0KYmxr
-bXEuDQoNCkFja2VkLWJ1dC1JJ20tc3RpbGwtYmxhbWluZy1KZW5zLWJ5OiBDaHJpcyBNYXNvbiA8
-Y2xtQGZiLmNvbT4NCg0KLWNocmlzDQo=
+On 5/8/19 4:12 AM, Pankaj Gupta wrote:
+> 
+>>
+>> On 4/25/19 10:00 PM, Pankaj Gupta wrote:
+>>
+>>> +void host_ack(struct virtqueue *vq)
+>>> +{
+>>> +	unsigned int len;
+>>> +	unsigned long flags;
+>>> +	struct virtio_pmem_request *req, *req_buf;
+>>> +	struct virtio_pmem *vpmem = vq->vdev->priv;
+>>> +
+>>> +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+>>> +	while ((req = virtqueue_get_buf(vq, &len)) != NULL) {
+>>> +		req->done = true;
+>>> +		wake_up(&req->host_acked);
+>>> +
+>>> +		if (!list_empty(&vpmem->req_list)) {
+>>> +			req_buf = list_first_entry(&vpmem->req_list,
+>>> +					struct virtio_pmem_request, list);
+>>> +			list_del(&vpmem->req_list);
+>>
+>> Shouldn't it be rather `list_del(vpmem->req_list.next)`? We are trying to
+>> unlink
+>> first element of the list and `vpmem->req_list` is just the list head.
+> 
+> This looks correct. We are not deleting head but first entry in 'req_list'
+> which is device corresponding list of pending requests.
+> 
+> Please see below:
+> 
+> /**
+>  * Retrieve the first list entry for the given list pointer.
+>  *
+>  * Example:
+>  * struct foo *first;
+>  * first = list_first_entry(&bar->list_of_foos, struct foo, list_of_foos);
+>  *
+>  * @param ptr The list head
+>  * @param type Data type of the list element to retrieve
+>  * @param member Member name of the struct list_head field in the list element.
+>  * @return A pointer to the first list element.
+>  */
+> #define list_first_entry(ptr, type, member) \
+>     list_entry((ptr)->next, type, member)
+
+Please look at this StackOverflow question:
+https://stackoverflow.com/questions/19675419/deleting-first-element-of-a-list-h-list
+
+Author asks about deleting first element of the queue. In our case
+(and also in the question's author case), `vpmem->req_list` is not element
+of any request struct and not an element of the list. It's just a list head storing 
+`next` and `prev` pointers which are then pointing to respectively first and
+last element of the list. We want to unlink the first element of the list,
+so we need to pass pointer to the first element of the list to
+the `list_del` function - that is, the `vpmem->req_list.next`.
+
+Thank you,
+Jakub Staron
