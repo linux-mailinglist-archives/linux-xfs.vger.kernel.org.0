@@ -2,73 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD1D183B1
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2019 04:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 143A6189B1
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2019 14:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725891AbfEICVP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 May 2019 22:21:15 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:19803 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725842AbfEICVP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 May 2019 22:21:15 -0400
-X-IronPort-AV: E=Sophos;i="5.60,448,1549900800"; 
-   d="scan'208";a="62195015"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 09 May 2019 10:21:14 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id A0D084CDB74D;
-        Thu,  9 May 2019 10:21:13 +0800 (CST)
-Received: from [10.167.215.30] (10.167.215.30) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Thu, 9 May 2019 10:21:14 +0800
-Message-ID: <5CD38E98.8000705@cn.fujitsu.com>
-Date:   Thu, 9 May 2019 10:21:12 +0800
-From:   xuyang <xuyang2018.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        id S1726600AbfEIMY1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 9 May 2019 08:24:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbfEIMY0 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 9 May 2019 08:24:26 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2D91C307D98F;
+        Thu,  9 May 2019 12:24:26 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA6435C226;
+        Thu,  9 May 2019 12:24:25 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 257BD41F58;
+        Thu,  9 May 2019 12:24:25 +0000 (UTC)
+Date:   Thu, 9 May 2019 08:24:24 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Message-ID: <511098535.27565704.1557404664499.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAPcyv4hRdvypEj4LBTMfUFm80BdpRYbOugrkkj-3Kk_LErXPqQ@mail.gmail.com>
+References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-4-pagupta@redhat.com> <CAPcyv4hRdvypEj4LBTMfUFm80BdpRYbOugrkkj-3Kk_LErXPqQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] libnvdimm: add dax_dev sync flag
 MIME-Version: 1.0
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     <guaneryu@gmail.com>, <linux-xfs@vger.kernel.org>,
-        <fstests@vger.kernel.org>
-Subject: Re: [PATCH 0/3] fstests: various fixes
-References: <155724821034.2624631.4172554705843296757.stgit@magnolia>
-In-Reply-To: <155724821034.2624631.4172554705843296757.stgit@magnolia>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.215.30]
-X-yoursite-MailScanner-ID: A0D084CDB74D.AF5A5
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
-X-Spam-Status: No
+X-Originating-IP: [10.67.116.88, 10.4.195.16]
+Thread-Topic: libnvdimm: add dax_dev sync flag
+Thread-Index: ojaRi4mgEPnvOvl3Gx+91mTiXiceZg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 09 May 2019 12:24:26 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-on 2019/05/08 0:56, Darrick J. Wong wrote:
-> Hi all,
->
-> Here are three patches fixing various regressions in xfstests when
-> mkfs.xfs defaults to enabling reflink and/or rmap by default.  Most of
-> the changes deal with the change in minimum log size requirements.  They
-> weren't caught until now because there are a number of tests that call
-> mkfs on a loop device or a file without using MKFS_OPTIONS.
->
-> If you're going to start using this mess, you probably ought to just
-> pull from my git trees, which are linked below.
->
-> This is an extraordinary way to destroy everything.  Enjoy!
-> Comments and questions are, as always, welcome.
->
-> --D
->
-> fstests git tree:
-> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
->
->
->
-Hi
 
-Tested-by: Yang Xu<xuyang2018.jy@cn.fujitsu.com>
+> >
+> > This patch adds 'DAXDEV_SYNC' flag which is set
+> > for nd_region doing synchronous flush. This later
+> > is used to disable MAP_SYNC functionality for
+> > ext4 & xfs filesystem for devices don't support
+> > synchronous flush.
+> >
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> [..]
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index 0dd316a74a29..c97fc0cc7167 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> > @@ -7,6 +7,9 @@
+> >  #include <linux/radix-tree.h>
+> >  #include <asm/pgtable.h>
+> >
+> > +/* Flag for synchronous flush */
+> > +#define DAXDEV_F_SYNC true
+> 
+> I'd feel better, i.e. it reads more canonically, if this was defined
+> as (1UL << 0) and the argument to alloc_dax() was changed to 'unsigned
+> long flags' rather than a bool.
 
+Sure, Will send a v8 with suggested changes.
 
+Thank You,
+Pankaj
 
+> 
