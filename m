@@ -2,104 +2,103 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B6C18BB1
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2019 16:27:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B53CC18EAE
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2019 19:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfEIO1E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 9 May 2019 10:27:04 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:41342 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfEIO1E (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 9 May 2019 10:27:04 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hOk0j-0006iC-Ae; Thu, 09 May 2019 10:27:01 -0400
-Message-ID: <76d44406cae3d0d70e8e4b209a6050a0ab49e764.camel@surriel.com>
-Subject: Re: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
-From:   Rik van Riel <riel@surriel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <dchinner@redhat.com>
-Date:   Thu, 09 May 2019 10:27:00 -0400
-In-Reply-To: <20190508213244.GP29573@dread.disaster.area>
-References: <20190507130528.1d3d471b@imladris.surriel.com>
-         <20190507212213.GO29573@dread.disaster.area>
-         <3985b9feffe11dcdbb86fa8c2d9ffc4bd7ab8458.camel@surriel.com>
-         <20190508213244.GP29573@dread.disaster.area>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-W/e0aVHE5QqcDTd+W71b"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
+        id S1726680AbfEIRIQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 9 May 2019 13:08:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36648 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbfEIRIQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 9 May 2019 13:08:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DC87281F12
+        for <linux-xfs@vger.kernel.org>; Thu,  9 May 2019 16:58:39 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 98BF61001E69
+        for <linux-xfs@vger.kernel.org>; Thu,  9 May 2019 16:58:39 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/6] xfs: rework extent allocation
+Date:   Thu,  9 May 2019 12:58:33 -0400
+Message-Id: <20190509165839.44329-1-bfoster@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 09 May 2019 16:58:39 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hi all,
 
---=-W/e0aVHE5QqcDTd+W71b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This is a first (non-rfc) pass at the XFS extent allocation rework. This
+series aims to 1.) improve the near mode allocation algorithm to have
+better breakdown characteristics by taking advantage of locality
+optimized cntbt lookups instead of relying so heavily on bnobt scans and
+2.) refactor the remaining allocation modes to reuse similar code and
+reduce duplication.
 
-On Thu, 2019-05-09 at 07:32 +1000, Dave Chinner wrote:
+Patches 1 and 2 are cleanups to the small allocation mode fallback
+function.  Patch 3 reworks the near mode allocation algorithm as noted
+above and introduces reusable infrastructure. Patches 4 and 5 rework the
+exact and by-size allocation modes respectively. Patch 6 removes the
+unused bits of the small allocation mode and refactors the remaining
+code into an AGFL allocation helper.
 
-> Hmmm, the first wakeup in xsdc is this one, right:
->=20
-> 	       /* wake up threads waiting in xfs_log_force() */
-> 	       wake_up_all(&iclog->ic_force_wait);
->=20
-> At the end of the iclog iteration loop? That one is under the
-> ic_loglock - the lock is dropped to run callbacks, then picked up
-> again once the callbacks are done and before the ic_callback_lock is
-> dropped (about 10 lines above the wakeup). So unless I'm missing
-> something (like enough coffee!) that one look fine.
+With regard to regression testing, this series survives multiple fstests
+runs with various geometries, such as defaults, abnormally high AG
+counts, and nonstandard block sizes. This also survives several days of
+iterative, concurrent stress loads of fsstress, fs_mark and growfiles
+(xfstests/ltp/growfiles.c) to repeatedly run a filesystem out of space
+without any explosions.
 
-You are right. I failed to spot that the spin_unlock unlocks=20
-a different lock than the spin_lock above it takes.=20
+With regard to performance, I have a user provided metadump image with
+heavy free space fragmentation that demonstrates pathological allocation
+behavior. An fs_mark test against this filesystem image shows an
+improvement from 30-100 files/second to 600-800 f/s. On newly created
+filesystems, I ran a filebench workload of 16 file creator threads
+creating a mix of small (4k-1mb), medium (10mb-100mb) and larger
+(500mb-1g) files and issuing fsyncs which shows comparable performance
+and post-test free space properties with and without the patchset.
+Finally, I've also run some ad hoc tests with fs_mark and fio (fallocate
+and aio engines doing random writes) and observe no notable regressions
+with these patches.
 
-> .....
->=20
-> > I am not sure about xfs_log_force_umount(). Could the unlock=20
-> > be moved to after the wake_up_all, or does that create lock
-> > ordering issues with the xlog_grant_head_wake_all calls?
-> > Could a simple lock + unlock of log->l_icloglock around the
-> > wake_up_all do the trick, or is there some other state that
-> > also needs to stay locked?
->=20
-> Need to be careful which lock is used with which wait queue :)
->=20
-> This one is waking the the xc_commit_wait queue (CIL push commit
-> sequencing wait queue), which is protected by the
-> log->l_cilp->xc_push_lock. That should nest jsut fine inside any
-> locks we are holding at this point, so you should just be able to
-> wrap it.  It's not a common code path, though, it'll only hit this
-> code when the filesystem is already considered to be in an
-> unrecoverable state.
+I may continue to experiment with filebench but so far I've not seen
+anything that shows significant regressions. Let me know if anybody
+would like to see test output or configuration details or whatnot from
+any of that, or would like me to run any additional tests, etc.
 
-Awesome.
+Thoughts, reviews, flames appreciated.
 
---=20
-All Rights Reversed.
+Brian
 
---=-W/e0aVHE5QqcDTd+W71b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+v1:
+- Continued development (various fixes, refinements) on generic bits and
+  near mode implementation.
+- Added patches 4-6 to refactor exact, by-size and small allocation
+  modes.
+rfcv2: https://marc.info/?l=linux-xfs&m=155197946630582&w=2
+- Dropped spurious initial refactoring.
+- Added minlen functionality.
+- Properly tied into near alloc path.
+- General refactoring and cleanups.
+rfcv1: https://marc.info/?l=linux-xfs&m=154479089914351&w=2
 
------BEGIN PGP SIGNATURE-----
+Brian Foster (6):
+  xfs: refactor small allocation helper to skip cntbt attempt
+  xfs: always update params on small allocation
+  xfs: use locality optimized cntbt lookups for near mode allocations
+  xfs: refactor exact extent allocation mode
+  xfs: refactor by-size extent allocation mode
+  xfs: replace small allocation logic with agfl only logic
 
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzUOLQACgkQznnekoTE
-3oNhCQgAspcyzPQilxh6iJCi12zlD4ddHwUIpoXux0E9739G+GTIGCi4EcAd3bfL
-u7LBuYIQmEbWAo4LAtWldRpvKaYNMbbLih4g72nUjqKk7lgvhjqYGSRSfcuZ8y+r
-/Ml8OnXuSNhSKjCGWP2eO/JcrcuNItv60bcXGKpX4Ghonscti6AdxAhDXyiTsz/x
-qyptfc/xdT78bMBPxHhNiaqer5Y6JOv7fIrqz2/I8JkJm59YhowowoVLFpe/6/4F
-dQOw7R8hPrQQ9AdlOGF1+/pzL7FkYktE90jNf00ahvTL9lDZe+FgqvlqRY22f1mC
-/dFnf5ht+gT40TrvpKQmdjJcOzl9kA==
-=UejA
------END PGP SIGNATURE-----
+ fs/xfs/libxfs/xfs_alloc.c | 1375 +++++++++++++++----------------------
+ fs/xfs/xfs_trace.h        |   38 +-
+ 2 files changed, 595 insertions(+), 818 deletions(-)
 
---=-W/e0aVHE5QqcDTd+W71b--
+-- 
+2.17.2
 
