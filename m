@@ -2,272 +2,180 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6D41A17A
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 May 2019 18:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F0A71A19C
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 May 2019 18:36:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfEJQaI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 May 2019 12:30:08 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43585 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727534AbfEJQaI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 May 2019 12:30:08 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z6so3181184qkl.10
-        for <linux-xfs@vger.kernel.org>; Fri, 10 May 2019 09:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QYV9CSnlMGLW/+YNa74BGVcmOFFVV0pQn9SNX0XEZO8=;
-        b=fNamxKCn5wzvPTQsxJ6ATQ+x6RiUoUk29LhjrCwKkGItaD/QlNagi2RFW7O/wOE6yr
-         qyupjAoTgnO8XM5Nul25ySqQXT3M2CuyUVr0YwCOhfbVy9AS//kn3FYZvQNKprcZNp+o
-         jdws6Olfm02NRZsz+e8I4ynklyKYoVlsrteBlu5q9T/c3DGB52HOKERmP/pOfWW5pemg
-         WmJ4M4hJ+F0lItiWO1rXKuNu/WqmPKyCci2mMs0HlFIgsgxb0W/FQToAyNARI2lhFMr7
-         yApmZC+HvJhG0J4m6uMKZ2VNgj3aBK8pYlN1npUMu8i+W8QOzKpMl/M5DvxIX3GBlefh
-         sl/g==
-X-Gm-Message-State: APjAAAUsxCBDxj2ok7SvIGXyib1Bj0X2nkzfuq1hNO92qpXW6EpfXFUm
-        FMZc8jh2t4Q+1/8vuNIUdVOwcw==
-X-Google-Smtp-Source: APXvYqwqGw0tLN1kosrPHP/TgqH7/k5vTToiHq0KOvopgumJI2PV5SFzvIHY16911D9Xeql9Y6Q8tA==
-X-Received: by 2002:a37:4f95:: with SMTP id d143mr9608061qkb.253.1557505806901;
-        Fri, 10 May 2019 09:30:06 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id j4sm3556590qti.49.2019.05.10.09.30.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 09:30:05 -0700 (PDT)
-Date:   Fri, 10 May 2019 12:30:02 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        kilobyte@angband.pl, yuval.shaia@oracle.com, jstaron@google.com
-Subject: Re: [PATCH v8 0/6] virtio pmem driver
-Message-ID: <20190510122935-mutt-send-email-mst@kernel.org>
-References: <20190510155202.14737-1-pagupta@redhat.com>
+        id S1727676AbfEJQgr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 May 2019 12:36:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36216 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727496AbfEJQgr (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 10 May 2019 12:36:47 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 37A7A59475
+        for <linux-xfs@vger.kernel.org>; Fri, 10 May 2019 16:36:47 +0000 (UTC)
+Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A00E5D6A9
+        for <linux-xfs@vger.kernel.org>; Fri, 10 May 2019 16:36:46 +0000 (UTC)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] xfs: remove unused flags arg from getsb interfaces
+Message-ID: <d678aac9-c213-36ef-1149-4d510bf85008@redhat.com>
+Date:   Fri, 10 May 2019 11:36:46 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190510155202.14737-1-pagupta@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 10 May 2019 16:36:47 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 10, 2019 at 09:21:56PM +0530, Pankaj Gupta wrote:
->  Hi Michael & Dan,
-> 
->  Please review/ack the patch series from LIBNVDIMM & VIRTIO side.
+The flags value is always passed as 0 so remove the argument.
 
-Thanks!
-Hope to do this early next week.
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
 
->  We have ack on ext4, xfs patches(4, 5 & 6) patch 2. Still need
->  your ack on nvdimm patches(1 & 3) & virtio patch 2. 
-> 
->  Changes done from v7 are only in patch(2 & 3) and not
->  affecting existing reviews. Request to please review.
->  ----
-> 
->  This patch series has implementation for "virtio pmem". 
->  "virtio pmem" is fake persistent memory(nvdimm) in guest 
->  which allows to bypass the guest page cache. This also
->  implements a VIRTIO based asynchronous flush mechanism.  
->  
->  Sharing guest kernel driver in this patchset with the 
->  changes suggested in v4. Tested with Qemu side device 
->  emulation [6] for virtio-pmem. Documented the impact of
->  possible page cache side channel attacks with suggested
->  countermeasures.
-> 
->  Details of project idea for 'virtio pmem' flushing interface 
->  is shared [3] & [4].
-> 
->  Implementation is divided into two parts:
->  New virtio pmem guest driver and qemu code changes for new 
->  virtio pmem paravirtualized device.
-> 
-> 1. Guest virtio-pmem kernel driver
-> ---------------------------------
->    - Reads persistent memory range from paravirt device and 
->      registers with 'nvdimm_bus'.  
->    - 'nvdimm/pmem' driver uses this information to allocate 
->      persistent memory region and setup filesystem operations 
->      to the allocated memory. 
->    - virtio pmem driver implements asynchronous flushing 
->      interface to flush from guest to host.
-> 
-> 2. Qemu virtio-pmem device
-> ---------------------------------
->    - Creates virtio pmem device and exposes a memory range to 
->      KVM guest. 
->    - At host side this is file backed memory which acts as 
->      persistent memory. 
->    - Qemu side flush uses aio thread pool API's and virtio 
->      for asynchronous guest multi request handling. 
-> 
->    David Hildenbrand CCed also posted a modified version[7] of 
->    qemu virtio-pmem code based on updated Qemu memory device API. 
-> 
->  Virtio-pmem security implications and countermeasures:
->  -----------------------------------------------------
-> 
->  In previous posting of kernel driver, there was discussion [9]
->  on possible implications of page cache side channel attacks with 
->  virtio pmem. After thorough analysis of details of known side 
->  channel attacks, below are the suggestions:
-> 
->  - Depends entirely on how host backing image file is mapped 
->    into guest address space. 
-> 
->  - virtio-pmem device emulation, by default shared mapping is used
->    to map host backing file. It is recommended to use separate
->    backing file at host side for every guest. This will prevent
->    any possibility of executing common code from multiple guests
->    and any chance of inferring guest local data based based on 
->    execution time.
-> 
->  - If backing file is required to be shared among multiple guests 
->    it is recommended to don't support host page cache eviction 
->    commands from the guest driver. This will avoid any possibility
->    of inferring guest local data or host data from another guest. 
-> 
->  - Proposed device specification [8] for virtio-pmem device with 
->    details of possible security implications and suggested 
->    countermeasures for device emulation.
-> 
->  Virtio-pmem errors handling:
->  ----------------------------------------
->   Checked behaviour of virtio-pmem for below types of errors
->   Need suggestions on expected behaviour for handling these errors?
-> 
->   - Hardware Errors: Uncorrectable recoverable Errors: 
->   a] virtio-pmem: 
->     - As per current logic if error page belongs to Qemu process, 
->       host MCE handler isolates(hwpoison) that page and send SIGBUS. 
->       Qemu SIGBUS handler injects exception to KVM guest. 
->     - KVM guest then isolates the page and send SIGBUS to guest 
->       userspace process which has mapped the page. 
->   
->   b] Existing implementation for ACPI pmem driver: 
->     - Handles such errors with MCE notifier and creates a list 
->       of bad blocks. Read/direct access DAX operation return EIO 
->       if accessed memory page fall in bad block list.
->     - It also starts backgound scrubbing.  
->     - Similar functionality can be reused in virtio-pmem with MCE 
->       notifier but without scrubbing(no ACPI/ARS)? Need inputs to 
->       confirm if this behaviour is ok or needs any change?
-> 
-> Changes from PATCH v7: [1]
->  - Corrected pending request queue logic (patch 2) - Jakub Staroń
->  - Used unsigned long flags for passing DAXDEV_F_SYNC (patch 3) - Dan
->  - Fixed typo =>  vma 'flag' to 'vm_flag' (patch 4)
->  - Added rob in patch 6 & patch 2
-> 
-> Changes from PATCH v6: [1]
->  - Corrected comment format in patch 5 & patch 6. [Dave]
->  - Changed variable declaration indentation in patch 6 [Darrick]
->  - Add Reviewed-by tag by 'Jan Kara' in patch 4 & patch 5
-> 
-> Changes from PATCH v5: [2]
->   Changes suggested in by - [Cornelia, Yuval]
-> - Remove assignment chaining in virtio driver
-> - Better error message and remove not required free
-> - Check nd_region before use
-> 
->   Changes suggested by - [Jan Kara]
-> - dax_synchronous() for !CONFIG_DAX
-> - Correct 'daxdev_mapping_supported' comment and non-dax implementation
-> 
->   Changes suggested by - [Dan Williams]
-> - Pass meaningful flag 'DAXDEV_F_SYNC' to alloc_dax
-> - Gate nvdimm_flush instead of additional async parameter
-> - Move block chaining logic to flush callback than common nvdimm_flush
-> - Use NULL flush callback for generic flush for better readability [Dan, Jan]
-> 
-> - Use virtio device id 27 from 25(already used) - [MST]
-> 
-> Changes from PATCH v4:
-> - Factor out MAP_SYNC supported functionality to a common helper
-> 				[Dave, Darrick, Jan]
-> - Comment, indentation and virtqueue_kick failure handle - Yuval Shaia
-> 
-> Changes from PATCH v3: 
-> - Use generic dax_synchronous() helper to check for DAXDEV_SYNC 
->   flag - [Dan, Darrick, Jan]
-> - Add 'is_nvdimm_async' function
-> - Document page cache side channel attacks implications & 
->   countermeasures - [Dave Chinner, Michael]
-> 
-> Changes from PATCH v2: 
-> - Disable MAP_SYNC for ext4 & XFS filesystems - [Dan] 
-> - Use name 'virtio pmem' in place of 'fake dax' 
-> 
-> Changes from PATCH v1: 
-> - 0-day build test for build dependency on libnvdimm 
-> 
->  Changes suggested by - [Dan Williams]
-> - Split the driver into two parts virtio & pmem  
-> - Move queuing of async block request to block layer
-> - Add "sync" parameter in nvdimm_flush function
-> - Use indirect call for nvdimm_flush
-> - Don’t move declarations to common global header e.g nd.h
-> - nvdimm_flush() return 0 or -EIO if it fails
-> - Teach nsio_rw_bytes() that the flush can fail
-> - Rename nvdimm_flush() to generic_nvdimm_flush()
-> - Use 'nd_region->provider_data' for long dereferencing
-> - Remove virtio_pmem_freeze/restore functions
-> - Remove BSD license text with SPDX license text
-> 
-> - Add might_sleep() in virtio_pmem_flush - [Luiz]
-> - Make spin_lock_irqsave() narrow
-> 
-> Pankaj Gupta (6):
->    libnvdimm: nd_region flush callback support
->    virtio-pmem: Add virtio-pmem guest driver
->    libnvdimm: add nd_region buffered dax_dev flag
->    dax: check synchronous mapping is supported
->    ext4: disable map_sync for virtio pmem
->    xfs: disable map_sync for virtio pmem
-> 
-> [1] https://lkml.org/lkml/2019/4/26/36
-> [2] https://lkml.org/lkml/2019/4/23/1092
-> [3] https://www.spinics.net/lists/kvm/msg149761.html
-> [4] https://www.spinics.net/lists/kvm/msg153095.html  
-> [5] https://lkml.org/lkml/2018/8/31/413
-> [6] https://marc.info/?l=linux-kernel&m=153572228719237&w=2 
-> [7] https://marc.info/?l=qemu-devel&m=153555721901824&w=2
-> [8] https://lists.oasis-open.org/archives/virtio-dev/201903/msg00083.html
-> [9] https://lkml.org/lkml/2019/1/9/1191
-> 
->  drivers/acpi/nfit/core.c         |    4 -
->  drivers/dax/bus.c                |    2 
->  drivers/dax/super.c              |   13 +++
->  drivers/md/dm.c                  |    3 
->  drivers/nvdimm/Makefile          |    1 
->  drivers/nvdimm/claim.c           |    6 +
->  drivers/nvdimm/nd.h              |    1 
->  drivers/nvdimm/nd_virtio.c       |  129 +++++++++++++++++++++++++++++++++++++++
->  drivers/nvdimm/pmem.c            |   18 +++--
->  drivers/nvdimm/region_devs.c     |   33 +++++++++
->  drivers/nvdimm/virtio_pmem.c     |  117 +++++++++++++++++++++++++++++++++++
->  drivers/virtio/Kconfig           |   10 +++
->  fs/ext4/file.c                   |   10 +--
->  fs/xfs/xfs_file.c                |    9 +-
->  include/linux/dax.h              |   25 ++++++-
->  include/linux/libnvdimm.h        |    9 ++
->  include/linux/virtio_pmem.h      |   60 ++++++++++++++++++
->  include/uapi/linux/virtio_ids.h  |    1 
->  include/uapi/linux/virtio_pmem.h |   10 +++
->  19 files changed, 436 insertions(+), 25 deletions(-)
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 6fab49f..bebca8f 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -939,7 +939,7 @@ xfs_log_sb(
+ 	struct xfs_trans	*tp)
+ {
+ 	struct xfs_mount	*mp = tp->t_mountp;
+-	struct xfs_buf		*bp = xfs_trans_getsb(tp, mp, 0);
++	struct xfs_buf		*bp = xfs_trans_getsb(tp, mp);
+ 
+ 	mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
+ 	mp->m_sb.sb_ifree = percpu_counter_sum(&mp->m_ifree);
+@@ -1069,7 +1069,7 @@ xfs_sync_sb_buf(
+ 	if (error)
+ 		return error;
+ 
+-	bp = xfs_trans_getsb(tp, mp, 0);
++	bp = xfs_trans_getsb(tp, mp);
+ 	xfs_log_sb(tp);
+ 	xfs_trans_bhold(tp, bp);
+ 	xfs_trans_set_sync(tp);
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 3371d1f..356a80a 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -5693,7 +5693,7 @@ xlog_do_recover(
+ 	 * Now that we've finished replaying all buffer and inode
+ 	 * updates, re-read in the superblock and reverify it.
+ 	 */
+-	bp = xfs_getsb(mp, 0);
++	bp = xfs_getsb(mp);
+ 	bp->b_flags &= ~(XBF_DONE | XBF_ASYNC);
+ 	ASSERT(!(bp->b_flags & XBF_WRITE));
+ 	bp->b_flags |= XBF_READ;
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 6b2bfe8..fd0eb81 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1385,23 +1385,15 @@ xfs_mod_frextents(
+  * xfs_getsb() is called to obtain the buffer for the superblock.
+  * The buffer is returned locked and read in from disk.
+  * The buffer should be released with a call to xfs_brelse().
+- *
+- * If the flags parameter is BUF_TRYLOCK, then we'll only return
+- * the superblock buffer if it can be locked without sleeping.
+- * If it can't then we'll return NULL.
+  */
+ struct xfs_buf *
+ xfs_getsb(
+-	struct xfs_mount	*mp,
+-	int			flags)
++	struct xfs_mount	*mp)
+ {
+ 	struct xfs_buf		*bp = mp->m_sb_bp;
+ 
+-	if (!xfs_buf_trylock(bp)) {
+-		if (flags & XBF_TRYLOCK)
+-			return NULL;
++	if (!xfs_buf_trylock(bp))
+ 		xfs_buf_lock(bp);
+-	}
+ 
+ 	xfs_buf_hold(bp);
+ 	ASSERT(bp->b_flags & XBF_DONE);
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index c81a5cd..11073b4 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -465,7 +465,7 @@ extern int	xfs_mod_fdblocks(struct xfs_mount *mp, int64_t delta,
+ 				 bool reserved);
+ extern int	xfs_mod_frextents(struct xfs_mount *mp, int64_t delta);
+ 
+-extern struct xfs_buf *xfs_getsb(xfs_mount_t *, int);
++extern struct xfs_buf *xfs_getsb(xfs_mount_t *);
+ extern int	xfs_readsb(xfs_mount_t *, int);
+ extern void	xfs_freesb(xfs_mount_t *);
+ extern bool	xfs_fs_writable(struct xfs_mount *mp, int level);
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 912b42f..0746b32 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -452,7 +452,7 @@ xfs_trans_apply_sb_deltas(
+ 	xfs_buf_t	*bp;
+ 	int		whole = 0;
+ 
+-	bp = xfs_trans_getsb(tp, tp->t_mountp, 0);
++	bp = xfs_trans_getsb(tp, tp->t_mountp);
+ 	sbp = XFS_BUF_TO_SBP(bp);
+ 
+ 	/*
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index c6e1c57..fd35da1 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -203,7 +203,7 @@ xfs_trans_read_buf(
+ 				      flags, bpp, ops);
+ }
+ 
+-struct xfs_buf	*xfs_trans_getsb(xfs_trans_t *, struct xfs_mount *, int);
++struct xfs_buf	*xfs_trans_getsb(xfs_trans_t *, struct xfs_mount *);
+ 
+ void		xfs_trans_brelse(xfs_trans_t *, struct xfs_buf *);
+ void		xfs_trans_bjoin(xfs_trans_t *, struct xfs_buf *);
+diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
+index 7d65ebf..a1764a1 100644
+--- a/fs/xfs/xfs_trans_buf.c
++++ b/fs/xfs/xfs_trans_buf.c
+@@ -174,8 +174,7 @@ xfs_trans_get_buf_map(
+ xfs_buf_t *
+ xfs_trans_getsb(
+ 	xfs_trans_t		*tp,
+-	struct xfs_mount	*mp,
+-	int			flags)
++	struct xfs_mount	*mp)
+ {
+ 	xfs_buf_t		*bp;
+ 	struct xfs_buf_log_item	*bip;
+@@ -185,7 +184,7 @@ xfs_trans_getsb(
+ 	 * if tp is NULL.
+ 	 */
+ 	if (tp == NULL)
+-		return xfs_getsb(mp, flags);
++		return xfs_getsb(mp);
+ 
+ 	/*
+ 	 * If the superblock buffer already has this transaction
+@@ -203,7 +202,7 @@ xfs_trans_getsb(
+ 		return bp;
+ 	}
+ 
+-	bp = xfs_getsb(mp, flags);
++	bp = xfs_getsb(mp);
+ 	if (bp == NULL)
+ 		return NULL;
+ 
+
