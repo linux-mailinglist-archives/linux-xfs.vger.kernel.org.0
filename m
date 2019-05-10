@@ -2,22 +2,22 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B7641A3E7
+	by mail.lfdr.de (Postfix) with ESMTP id 547091A3E8
 	for <lists+linux-xfs@lfdr.de>; Fri, 10 May 2019 22:18:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfEJUSo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1727835AbfEJUSo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Fri, 10 May 2019 16:18:44 -0400
-Received: from sandeen.net ([63.231.237.45]:36096 "EHLO sandeen.net"
+Received: from sandeen.net ([63.231.237.45]:36098 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727832AbfEJUSn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S1727828AbfEJUSn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Fri, 10 May 2019 16:18:43 -0400
 Received: by sandeen.net (Postfix, from userid 500)
-        id C5D8111662; Fri, 10 May 2019 15:18:31 -0500 (CDT)
+        id DF8E011663; Fri, 10 May 2019 15:18:31 -0500 (CDT)
 From:   Eric Sandeen <sandeen@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 07/11] libxfs: create new file buf_item.c
-Date:   Fri, 10 May 2019 15:18:26 -0500
-Message-Id: <1557519510-10602-8-git-send-email-sandeen@redhat.com>
+Subject: [PATCH 08/11] libxfs: create new file inode_item.c
+Date:   Fri, 10 May 2019 15:18:27 -0500
+Message-Id: <1557519510-10602-9-git-send-email-sandeen@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1557519510-10602-1-git-send-email-sandeen@redhat.com>
 References: <1557519510-10602-1-git-send-email-sandeen@redhat.com>
@@ -26,37 +26,40 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Pull functions out of libxfs/* into buf_item.c, if they roughly match
-the kernel's xfs_buf_item.c file.
+Pull functions out of libxfs/* into inode_item.c, if they roughly match
+the kernel's xfs_inode_item.c file.
 
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
- libxfs/Makefile      |   1 +
- libxfs/buf_item.c    | 146 +++++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/libxfs_priv.h |   2 +
- libxfs/logitem.c     |  77 ---------------------------
- libxfs/trans.c       |  55 -------------------
- 5 files changed, 149 insertions(+), 132 deletions(-)
- create mode 100644 libxfs/buf_item.c
+ libxfs/Makefile      |   2 +-
+ libxfs/inode_item.c  | 117 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/libxfs_priv.h |   3 ++
+ libxfs/logitem.c     |  43 -------------------
+ libxfs/trans.c       |  75 ---------------------------------
+ 5 files changed, 121 insertions(+), 119 deletions(-)
+ create mode 100644 libxfs/inode_item.c
+ delete mode 100644 libxfs/logitem.c
 
 diff --git a/libxfs/Makefile b/libxfs/Makefile
-index da0ce79..820ffb0 100644
+index 820ffb0..fe58ce9 100644
 --- a/libxfs/Makefile
 +++ b/libxfs/Makefile
-@@ -52,6 +52,7 @@ HFILES = \
- 	xfs_dir2_priv.h
- 
- CFILES = cache.c \
-+	buf_item.c \
+@@ -55,8 +55,8 @@ CFILES = cache.c \
+ 	buf_item.c \
  	defer_item.c \
  	init.c \
++	inode_item.c \
  	kmem.c \
-diff --git a/libxfs/buf_item.c b/libxfs/buf_item.c
+-	logitem.c \
+ 	rdwr.c \
+ 	trans.c \
+ 	trans_buf.c \
+diff --git a/libxfs/inode_item.c b/libxfs/inode_item.c
 new file mode 100644
-index 0000000..2e64c8c
+index 0000000..4e9b1af
 --- /dev/null
-+++ b/libxfs/buf_item.c
-@@ -0,0 +1,146 @@
++++ b/libxfs/inode_item.c
+@@ -0,0 +1,117 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
@@ -70,323 +73,273 @@ index 0000000..2e64c8c
 +#include "xfs_log_format.h"
 +#include "xfs_trans_resv.h"
 +#include "xfs_mount.h"
-+#include "xfs_trans.h"
++#include "xfs_inode_buf.h"
++#include "xfs_inode_fork.h"
 +#include "xfs_inode.h"
++#include "xfs_trans.h"
 +
-+kmem_zone_t	*xfs_buf_item_zone;
-+
-+/*
-+ * The following are from fs/xfs/xfs_buf_item.c
-+ */
-+
-+void
-+xfs_buf_item_put(
-+	struct xfs_buf_log_item	*bip)
-+{
-+	struct xfs_buf		*bp = bip->bli_buf;
-+
-+	bp->b_log_item = NULL;
-+	kmem_zone_free(xfs_buf_item_zone, bip);
-+}
-+
-+void
-+buf_item_unlock(
-+	xfs_buf_log_item_t	*bip)
-+{
-+	xfs_buf_t		*bp = bip->bli_buf;
-+	uint			hold;
-+
-+	/* Clear the buffer's association with this transaction. */
-+	bip->bli_buf->b_transp = NULL;
-+
-+	hold = bip->bli_flags & XFS_BLI_HOLD;
-+	bip->bli_flags &= ~XFS_BLI_HOLD;
-+	xfs_buf_item_put(bip);
-+	if (!hold)
-+		libxfs_putbuf(bp);
-+}
++kmem_zone_t	*xfs_ili_zone;		/* inode log item zone */
 +
 +/*
-+ * Allocate a new buf log item to go with the given buffer.
-+ * Set the buffer's b_log_item field to point to the new
-+ * buf log item.  If there are other item's attached to the
-+ * buffer (see xfs_buf_attach_iodone() below), then put the
-+ * buf log item at the front.
++ * Initialize the inode log item for a newly allocated (in-core) inode.
 + */
 +void
-+xfs_buf_item_init(
-+	xfs_buf_t		*bp,
++xfs_inode_item_init(
++	xfs_inode_t		*ip,
 +	xfs_mount_t		*mp)
 +{
-+	xfs_log_item_t		*lip;
-+	xfs_buf_log_item_t	*bip;
++	xfs_inode_log_item_t	*iip;
 +
++	ASSERT(ip->i_itemp == NULL);
++	iip = ip->i_itemp = (xfs_inode_log_item_t *)
++			kmem_zone_zalloc(xfs_ili_zone, KM_SLEEP);
 +#ifdef LI_DEBUG
-+	fprintf(stderr, "buf_item_init for buffer %p\n", bp);
++	fprintf(stderr, "inode_item_init for inode %llu, iip=%p\n",
++		ip->i_ino, iip);
 +#endif
 +
-+	/*
-+	 * Check to see if there is already a buf log item for
-+	 * this buffer.	 If there is, it is guaranteed to be
-+	 * the first.  If we do already have one, there is
-+	 * nothing to do here so return.
-+	 */
-+	XFS_BUF_SET_BDSTRAT_FUNC(bp, xfs_bdstrat_cb);
-+	if (bp->b_log_item != NULL) {
-+		lip = bp->b_log_item;
-+		if (lip->li_type == XFS_LI_BUF) {
-+#ifdef LI_DEBUG
-+			fprintf(stderr,
-+				"reused buf item %p for pre-logged buffer %p\n",
-+				lip, bp);
-+#endif
-+			return;
-+		}
-+	}
++	iip->ili_item.li_type = XFS_LI_INODE;
++	iip->ili_item.li_mountp = mp;
++	INIT_LIST_HEAD(&iip->ili_item.li_trans);
++	iip->ili_inode = ip;
++}
 +
-+	bip = (xfs_buf_log_item_t *)kmem_zone_zalloc(xfs_buf_item_zone,
-+						    KM_SLEEP);
-+#ifdef LI_DEBUG
-+	fprintf(stderr, "adding buf item %p for not-logged buffer %p\n",
-+		bip, bp);
-+#endif
-+	bip->bli_item.li_type = XFS_LI_BUF;
-+	bip->bli_item.li_mountp = mp;
-+	INIT_LIST_HEAD(&bip->bli_item.li_trans);
-+	bip->bli_buf = bp;
-+	bip->bli_format.blf_type = XFS_LI_BUF;
-+	bip->bli_format.blf_blkno = (int64_t)XFS_BUF_ADDR(bp);
-+	bip->bli_format.blf_len = (unsigned short)BTOBB(bp->b_bcount);
-+	bp->b_log_item = bip;
++static void
++xfs_inode_item_put(
++	struct xfs_inode_log_item	*iip)
++{
++	struct xfs_inode		*ip = iip->ili_inode;
++
++	ip->i_itemp = NULL;
++	kmem_zone_free(xfs_ili_zone, iip);
 +}
 +
 +/*
-+ * Mark bytes first through last inclusive as dirty in the buf
-+ * item's bitmap.
++ * Transaction commital code follows (i.e. write to disk in libxfs)
++ *
++ * XXX (dgc): should failure to flush the inode (e.g. due to uncorrected
++ * corruption) result in transaction commit failure w/ EFSCORRUPTED?
 + */
 +void
-+xfs_buf_item_log(
-+	xfs_buf_log_item_t	*bip,
-+	uint			first,
-+	uint			last)
++inode_item_done(
++	xfs_inode_log_item_t	*iip)
 +{
++	xfs_dinode_t		*dip;
++	xfs_inode_t		*ip;
++	xfs_mount_t		*mp;
++	xfs_buf_t		*bp;
++	int			error;
++
++	ip = iip->ili_inode;
++	mp = iip->ili_item.li_mountp;
++	ASSERT(ip != NULL);
++
++	if (!(iip->ili_fields & XFS_ILOG_ALL))
++		goto free;
++
 +	/*
-+	 * Mark the item as having some dirty data for
-+	 * quick reference in xfs_buf_item_dirty.
++	 * Get the buffer containing the on-disk inode.
 +	 */
-+	bip->bli_flags |= XFS_BLI_DIRTY;
++	error = xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &bp, 0, 0);
++	if (error) {
++		fprintf(stderr, _("%s: warning - imap_to_bp failed (%d)\n"),
++			progname, error);
++		goto free;
++	}
++
++	/*
++	 * Flush the inode and disassociate it from the transaction regardless
++	 * of whether the flush succeed or not. If we fail the flush, make sure
++	 * we still release the buffer reference we currently hold.
++	 */
++	error = libxfs_iflush_int(ip, bp);
++	bp->b_transp = NULL;	/* remove xact ptr */
++
++	if (error) {
++		fprintf(stderr, _("%s: warning - iflush_int failed (%d)\n"),
++			progname, error);
++		libxfs_putbuf(bp);
++		goto free;
++	}
++
++	libxfs_writebuf(bp, 0);
++#ifdef XACT_DEBUG
++	fprintf(stderr, "flushing dirty inode %llu, buffer %p\n",
++			ip->i_ino, bp);
++#endif
++free:
++	xfs_inode_item_put(iip);
 +}
 +
 +void
-+buf_item_done(
-+	xfs_buf_log_item_t	*bip)
++inode_item_unlock(
++	xfs_inode_log_item_t    *iip)
 +{
-+	xfs_buf_t		*bp;
-+	int			hold;
-+
-+	bp = bip->bli_buf;
-+	ASSERT(bp != NULL);
-+	bp->b_transp = NULL;			/* remove xact ptr */
-+
-+	hold = (bip->bli_flags & XFS_BLI_HOLD);
-+	if (bip->bli_flags & XFS_BLI_DIRTY) {
-+#ifdef XACT_DEBUG
-+		fprintf(stderr, "flushing/staling buffer %p (hold=%d)\n",
-+			bp, hold);
-+#endif
-+		libxfs_writebuf_int(bp, 0);
-+	}
-+
-+	bip->bli_flags &= ~XFS_BLI_HOLD;
-+	xfs_buf_item_put(bip);
-+	if (hold)
-+		return;
-+	libxfs_putbuf(bp);
++	xfs_inode_item_put(iip);
 +}
 diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 7c07188..155b782 100644
+index 155b782..cf808d3 100644
 --- a/libxfs/libxfs_priv.h
 +++ b/libxfs/libxfs_priv.h
-@@ -520,6 +520,8 @@ void xfs_inode_item_init(struct xfs_inode *, struct xfs_mount *);
+@@ -491,6 +491,7 @@ struct xfs_log_item;
+ struct xfs_buf;
+ struct xfs_buf_map;
+ struct xfs_buf_log_item;
++struct xfs_inode_log_item;
+ struct xfs_buftarg;
+ 
+ /* xfs_attr.c */
+@@ -515,6 +516,8 @@ void xfs_trans_del_item(struct xfs_log_item *);
+ 
+ /* xfs_inode_item.c */
+ void xfs_inode_item_init(struct xfs_inode *, struct xfs_mount *);
++void inode_item_done(struct xfs_inode_log_item *iip);
++void inode_item_unlock(struct xfs_inode_log_item *iip);
+ 
+ /* xfs_buf_item.c */
  void xfs_buf_item_init(struct xfs_buf *, struct xfs_mount *);
- void xfs_buf_item_log(struct xfs_buf_log_item *, uint, uint);
- void xfs_buf_item_put(struct xfs_buf_log_item *bip);
-+void buf_item_unlock(struct xfs_buf_log_item *bip);
-+void buf_item_done(struct xfs_buf_log_item *bip);
- 
- /* xfs_trans_buf.c */
- struct xfs_buf *xfs_trans_buf_item_match(struct xfs_trans *,
 diff --git a/libxfs/logitem.c b/libxfs/logitem.c
-index ce34c68..c80e2ed 100644
+deleted file mode 100644
+index c80e2ed..0000000
 --- a/libxfs/logitem.c
-+++ b/libxfs/logitem.c
-@@ -16,86 +16,9 @@
- #include "xfs_inode.h"
- #include "xfs_trans.h"
- 
--kmem_zone_t	*xfs_buf_item_zone;
- kmem_zone_t	*xfs_ili_zone;		/* inode log item zone */
- 
- /*
-- * The following are from fs/xfs/xfs_buf_item.c
++++ /dev/null
+@@ -1,43 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+- * All Rights Reserved.
 - */
 -
+-#include "libxfs_priv.h"
+-#include "xfs_fs.h"
+-#include "xfs_shared.h"
+-#include "xfs_format.h"
+-#include "xfs_log_format.h"
+-#include "xfs_trans_resv.h"
+-#include "xfs_mount.h"
+-#include "xfs_inode_buf.h"
+-#include "xfs_inode_fork.h"
+-#include "xfs_inode.h"
+-#include "xfs_trans.h"
+-
+-kmem_zone_t	*xfs_ili_zone;		/* inode log item zone */
+-
 -/*
-- * Allocate a new buf log item to go with the given buffer.
-- * Set the buffer's b_log_item field to point to the new
-- * buf log item.  If there are other item's attached to the
-- * buffer (see xfs_buf_attach_iodone() below), then put the
-- * buf log item at the front.
+- * Initialize the inode log item for a newly allocated (in-core) inode.
 - */
 -void
--xfs_buf_item_init(
--	xfs_buf_t		*bp,
+-xfs_inode_item_init(
+-	xfs_inode_t		*ip,
 -	xfs_mount_t		*mp)
 -{
--	xfs_log_item_t		*lip;
--	xfs_buf_log_item_t	*bip;
+-	xfs_inode_log_item_t	*iip;
 -
+-	ASSERT(ip->i_itemp == NULL);
+-	iip = ip->i_itemp = (xfs_inode_log_item_t *)
+-			kmem_zone_zalloc(xfs_ili_zone, KM_SLEEP);
 -#ifdef LI_DEBUG
--	fprintf(stderr, "buf_item_init for buffer %p\n", bp);
+-	fprintf(stderr, "inode_item_init for inode %llu, iip=%p\n",
+-		ip->i_ino, iip);
 -#endif
 -
--	/*
--	 * Check to see if there is already a buf log item for
--	 * this buffer.	 If there is, it is guaranteed to be
--	 * the first.  If we do already have one, there is
--	 * nothing to do here so return.
--	 */
--	XFS_BUF_SET_BDSTRAT_FUNC(bp, xfs_bdstrat_cb);
--	if (bp->b_log_item != NULL) {
--		lip = bp->b_log_item;
--		if (lip->li_type == XFS_LI_BUF) {
--#ifdef LI_DEBUG
--			fprintf(stderr,
--				"reused buf item %p for pre-logged buffer %p\n",
--				lip, bp);
--#endif
--			return;
--		}
--	}
--
--	bip = (xfs_buf_log_item_t *)kmem_zone_zalloc(xfs_buf_item_zone,
--						    KM_SLEEP);
--#ifdef LI_DEBUG
--	fprintf(stderr, "adding buf item %p for not-logged buffer %p\n",
--		bip, bp);
--#endif
--	bip->bli_item.li_type = XFS_LI_BUF;
--	bip->bli_item.li_mountp = mp;
--	INIT_LIST_HEAD(&bip->bli_item.li_trans);
--	bip->bli_buf = bp;
--	bip->bli_format.blf_type = XFS_LI_BUF;
--	bip->bli_format.blf_blkno = (int64_t)XFS_BUF_ADDR(bp);
--	bip->bli_format.blf_len = (unsigned short)BTOBB(bp->b_bcount);
--	bp->b_log_item = bip;
+-	iip->ili_item.li_type = XFS_LI_INODE;
+-	iip->ili_item.li_mountp = mp;
+-	INIT_LIST_HEAD(&iip->ili_item.li_trans);
+-	iip->ili_inode = ip;
 -}
--
--
--/*
-- * Mark bytes first through last inclusive as dirty in the buf
-- * item's bitmap.
-- */
--void
--xfs_buf_item_log(
--	xfs_buf_log_item_t	*bip,
--	uint			first,
--	uint			last)
--{
--	/*
--	 * Mark the item as having some dirty data for
--	 * quick reference in xfs_buf_item_dirty.
--	 */
--	bip->bli_flags |= XFS_BLI_DIRTY;
--}
--
--/*
-  * Initialize the inode log item for a newly allocated (in-core) inode.
-  */
- void
 diff --git a/libxfs/trans.c b/libxfs/trans.c
-index 295f167..7d3899c 100644
+index 7d3899c..b062e07 100644
 --- a/libxfs/trans.c
 +++ b/libxfs/trans.c
-@@ -422,16 +422,6 @@ xfs_trans_roll_inode(
- 	return error;
- }
- 
--void
--xfs_buf_item_put(
--	struct xfs_buf_log_item	*bip)
--{
--	struct xfs_buf		*bp = bip->bli_buf;
--
--	bp->b_log_item = NULL;
--	kmem_zone_free(xfs_buf_item_zone, bip);
--}
--
- /*
-  * Record the indicated change to the given field for application
-  * to the file system's superblock when the transaction commits.
-@@ -548,34 +538,6 @@ free:
+@@ -470,74 +470,6 @@ _("Transaction block reservation exceeded! %u > %u\n"),
  }
  
  static void
--buf_item_done(
--	xfs_buf_log_item_t	*bip)
+-xfs_inode_item_put(
+-	struct xfs_inode_log_item	*iip)
 -{
+-	struct xfs_inode		*ip = iip->ili_inode;
+-
+-	ip->i_itemp = NULL;
+-	kmem_zone_free(xfs_ili_zone, iip);
+-}
+-
+-
+-/*
+- * Transaction commital code follows (i.e. write to disk in libxfs)
+- *
+- * XXX (dgc): should failure to flush the inode (e.g. due to uncorrected
+- * corruption) result in transaction commit failure w/ EFSCORRUPTED?
+- */
+-static void
+-inode_item_done(
+-	xfs_inode_log_item_t	*iip)
+-{
+-	xfs_dinode_t		*dip;
+-	xfs_inode_t		*ip;
+-	xfs_mount_t		*mp;
 -	xfs_buf_t		*bp;
--	int			hold;
--	extern kmem_zone_t	*xfs_buf_item_zone;
+-	int			error;
 -
--	bp = bip->bli_buf;
--	ASSERT(bp != NULL);
--	bp->b_transp = NULL;			/* remove xact ptr */
+-	ip = iip->ili_inode;
+-	mp = iip->ili_item.li_mountp;
+-	ASSERT(ip != NULL);
 -
--	hold = (bip->bli_flags & XFS_BLI_HOLD);
--	if (bip->bli_flags & XFS_BLI_DIRTY) {
--#ifdef XACT_DEBUG
--		fprintf(stderr, "flushing/staling buffer %p (hold=%d)\n",
--			bp, hold);
--#endif
--		libxfs_writebuf_int(bp, 0);
+-	if (!(iip->ili_fields & XFS_ILOG_ALL))
+-		goto free;
+-
+-	/*
+-	 * Get the buffer containing the on-disk inode.
+-	 */
+-	error = xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &bp, 0, 0);
+-	if (error) {
+-		fprintf(stderr, _("%s: warning - imap_to_bp failed (%d)\n"),
+-			progname, error);
+-		goto free;
 -	}
 -
--	bip->bli_flags &= ~XFS_BLI_HOLD;
--	xfs_buf_item_put(bip);
--	if (hold)
--		return;
--	libxfs_putbuf(bp);
+-	/*
+-	 * Flush the inode and disassociate it from the transaction regardless
+-	 * of whether the flush succeed or not. If we fail the flush, make sure
+-	 * we still release the buffer reference we currently hold.
+-	 */
+-	error = libxfs_iflush_int(ip, bp);
+-	bp->b_transp = NULL;	/* remove xact ptr */
+-
+-	if (error) {
+-		fprintf(stderr, _("%s: warning - iflush_int failed (%d)\n"),
+-			progname, error);
+-		libxfs_putbuf(bp);
+-		goto free;
+-	}
+-
+-	libxfs_writebuf(bp, 0);
+-#ifdef XACT_DEBUG
+-	fprintf(stderr, "flushing dirty inode %llu, buffer %p\n",
+-			ip->i_ino, bp);
+-#endif
+-free:
+-	xfs_inode_item_put(iip);
 -}
 -
 -static void
  trans_committed(
  	xfs_trans_t		*tp)
  {
-@@ -597,23 +559,6 @@ trans_committed(
+@@ -558,13 +490,6 @@ trans_committed(
+ 	}
  }
  
- static void
--buf_item_unlock(
--	xfs_buf_log_item_t	*bip)
+-static void
+-inode_item_unlock(
+-	xfs_inode_log_item_t	*iip)
 -{
--	xfs_buf_t		*bp = bip->bli_buf;
--	uint			hold;
--
--	/* Clear the buffer's association with this transaction. */
--	bip->bli_buf->b_transp = NULL;
--
--	hold = bip->bli_flags & XFS_BLI_HOLD;
--	bip->bli_flags &= ~XFS_BLI_HOLD;
--	xfs_buf_item_put(bip);
--	if (!hold)
--		libxfs_putbuf(bp);
+-	xfs_inode_item_put(iip);
 -}
 -
--static void
- inode_item_unlock(
- 	xfs_inode_log_item_t	*iip)
- {
+ /* Detach and unlock all of the items in a transaction */
+ static void
+ xfs_trans_free_items(
 -- 
 1.8.3.1
 
