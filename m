@@ -2,265 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FAB418EA5
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2019 19:05:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83EA1199DC
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 May 2019 10:47:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEIRFb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 9 May 2019 13:05:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33200 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfEIRFb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 9 May 2019 13:05:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B4B330842A9
-        for <linux-xfs@vger.kernel.org>; Thu,  9 May 2019 16:58:42 +0000 (UTC)
-Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 164E410018FB
-        for <linux-xfs@vger.kernel.org>; Thu,  9 May 2019 16:58:42 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 6/6] xfs: replace small allocation logic with agfl only logic
-Date:   Thu,  9 May 2019 12:58:39 -0400
-Message-Id: <20190509165839.44329-7-bfoster@redhat.com>
-In-Reply-To: <20190509165839.44329-1-bfoster@redhat.com>
-References: <20190509165839.44329-1-bfoster@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 09 May 2019 16:58:42 +0000 (UTC)
+        id S1727075AbfEJIr2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 May 2019 04:47:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33225 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfEJIr1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 May 2019 04:47:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z28so2878065pfk.0;
+        Fri, 10 May 2019 01:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WqCXTNkuQG1i3mARsjRWF5vIr29cQXpm6UafewnDp24=;
+        b=MGOre1dmn5ojm/Scv86X33BJGTR6VVet4K6CquGu5yr6R8L5hrXvEw47gWUIpCGfyQ
+         kqALGxiMLQh9OPh6WxXM+SerViFzsz4lCyJ2obbwq+i4AmkNtvhvocCTBcJ9z/Zb3+Ye
+         J4a/0mZNuY+hYJvKx+cs5nwUgQPid9YFQ5b87tblOaPU5416DmK+1HSgEohu49bV+1xm
+         st75BhOkEjlx++SzLS15aQPvLi4rJfW+Ioko+5sQs4dTZ02lsX1OXZELjxsHFkWMnOAK
+         XIxrWUImVVWyip9Q2nWexlCxx7Eybn2KCo17DRZUhuLxHVLyMLemSYj31VDtOXU6zZnF
+         srbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WqCXTNkuQG1i3mARsjRWF5vIr29cQXpm6UafewnDp24=;
+        b=mBTG3bNz3IrUupCwy8f4yyjWHoHYlkCXl+/+nzLIAdltqjTSIf0l+8l3956QiNzEIV
+         x5DuJEypKWJBzBAr8qP0FkSnVICTYsz3SF+6MpYZbT6NS/dggR3biLNdFtgRWq/qZnlq
+         mkddBezs+vC5O3HmC8C38aPjyJrzqQr23kgSqRaVEP7lsLe/tcG7qLp8qAFkZMhUcNEw
+         jcb8V7I1xzrV0vWZl28r/i9kjM0fbdmqTvHk35Y5YRQX2k9DW7AVcXW5sg7RjC0Ic359
+         W7UQq+x0vTlUgF4Dcc8qR+2+vDeZdS22zE8bNT7in79hHTj+tloHSS2cahktae7Sdlu8
+         85xw==
+X-Gm-Message-State: APjAAAWRyNKScv6ng/W8H3DvWbCTsrxP7vwKn9uPMHZseYiSf/zzko8l
+        dgws4FpMyWWHtGsPDEyKmx9SXi9raOK/rg==
+X-Google-Smtp-Source: APXvYqw8S1bZgn0TNkOdO1MfKlAYMb3ifMs2ivqdiOXlOk8q4eKkN7tZCkAOJQq3xIZxJ3QHh9/DFQ==
+X-Received: by 2002:a62:5653:: with SMTP id k80mr12037585pfb.144.1557478047038;
+        Fri, 10 May 2019 01:47:27 -0700 (PDT)
+Received: from localhost ([128.199.137.77])
+        by smtp.gmail.com with ESMTPSA id s11sm7073166pga.36.2019.05.10.01.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 01:47:26 -0700 (PDT)
+Date:   Fri, 10 May 2019 16:47:20 +0800
+From:   Eryu Guan <guaneryu@gmail.com>
+To:     xuyang <xuyang2018.jy@cn.fujitsu.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 0/3] fstests: various fixes
+Message-ID: <20190510084720.GG15846@desktop>
+References: <155724821034.2624631.4172554705843296757.stgit@magnolia>
+ <5CD38E98.8000705@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5CD38E98.8000705@cn.fujitsu.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that the various extent allocation modes have been reworked,
-there are no more users of a large portion of
-xfs_alloc_ag_vextent_small(). Remove the unnecessary record handling
-logic, refactor and rename this function to a simple AGFL allocation
-helper and simplify the interface.
+On Thu, May 09, 2019 at 10:21:12AM +0800, xuyang wrote:
+> on 2019/05/08 0:56, Darrick J. Wong wrote:
+> > Hi all,
+> > 
+> > Here are three patches fixing various regressions in xfstests when
+> > mkfs.xfs defaults to enabling reflink and/or rmap by default.  Most of
+> > the changes deal with the change in minimum log size requirements.  They
+> > weren't caught until now because there are a number of tests that call
+> > mkfs on a loop device or a file without using MKFS_OPTIONS.
+> > 
+> > If you're going to start using this mess, you probably ought to just
+> > pull from my git trees, which are linked below.
+> > 
+> > This is an extraordinary way to destroy everything.  Enjoy!
+> > Comments and questions are, as always, welcome.
+> > 
+> > --D
+> > 
+> > fstests git tree:
+> > https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
+> > 
+> > 
+> > 
+> Hi
+> 
+> Tested-by: Yang Xu<xuyang2018.jy@cn.fujitsu.com>
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/libxfs/xfs_alloc.c | 141 ++++++++++++++------------------------
- fs/xfs/xfs_trace.h        |   7 +-
- 2 files changed, 56 insertions(+), 92 deletions(-)
+Thanks for the testing! Just want to make sure that you tested all the
+three patches so that I can add your Tested-by tag too all of them?
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 0b121cb5ef3f..4f2fa44a1460 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -39,8 +39,7 @@ struct workqueue_struct *xfs_alloc_wq;
- #define	XFSA_FIXUP_CNT_OK	2
- 
- STATIC int xfs_alloc_ag_vextent_type(struct xfs_alloc_arg *);
--STATIC int xfs_alloc_ag_vextent_small(xfs_alloc_arg_t *,
--		xfs_btree_cur_t *, xfs_agblock_t *, xfs_extlen_t *, int *);
-+STATIC int xfs_alloc_ag_vextent_agfl(struct xfs_alloc_arg *, xfs_agblock_t *);
- 
- /*
-  * Size of the AGFL.  For CRC-enabled filesystes we steal a couple of slots in
-@@ -1318,7 +1317,6 @@ xfs_alloc_ag_vextent_type(
- 	int			error;		/* error code */
- 	int			i;		/* result code, temporary */
- 	xfs_agblock_t		bno;	      /* start bno of left side entry */
--	xfs_extlen_t		len;		/* length of left side entry */
- 
- 	/* handle unitialized agbno range so caller doesn't have to */
- 	if (!args->min_agbno && !args->max_agbno)
-@@ -1365,14 +1363,16 @@ xfs_alloc_ag_vextent_type(
- 		 * empty. We don't pass a cursor so this returns an AGFL block
- 		 * (i == 0) or nothing.
- 		 */
--		error = xfs_alloc_ag_vextent_small(args, NULL, &bno, &len, &i);
-+		error = xfs_alloc_ag_vextent_agfl(args, &bno);
- 		if (error)
- 			goto out;
--		ASSERT(i == 0 || (i && len == 0));
- 		trace_xfs_alloc_near_noentry(args);
- 
- 		args->agbno = bno;
--		args->len = len;
-+		if (bno != NULLAGBLOCK) {
-+			args->wasfromfl = 1;
-+			args->len = 1;
-+		}
- 	}
- 
- out:
-@@ -1383,108 +1383,73 @@ xfs_alloc_ag_vextent_type(
- }
- 
- /*
-- * Deal with the case where only small freespaces remain.
-- * Either return the contents of the last freespace record,
-- * or allocate space from the freelist if there is nothing in the tree.
-+ * Attempt to allocate from the AGFL. This is a last resort when no other free
-+ * space is available.
-  */
--STATIC int			/* error */
--xfs_alloc_ag_vextent_small(
-+STATIC int
-+xfs_alloc_ag_vextent_agfl(
- 	struct xfs_alloc_arg	*args,	/* allocation argument structure */
--	struct xfs_btree_cur	*ccur,	/* optional by-size cursor */
--	xfs_agblock_t		*fbnop,	/* result block number */
--	xfs_extlen_t		*flenp,	/* result length */
--	int			*stat)	/* status: 0-freelist, 1-normal/none */
-+	xfs_agblock_t		*fbnop)	/* result block number */
- {
- 	int			error = 0;
- 	xfs_agblock_t		fbno;
--	xfs_extlen_t		flen;
--	int			i = 0;
-+
-+	*fbnop = NULLAGBLOCK;
- 
- 	/*
--	 * If a cntbt cursor is provided, try to allocate the largest record in
--	 * the tree. Try the AGFL if the cntbt is empty, otherwise fail the
--	 * allocation. Make sure to respect minleft even when pulling from the
--	 * freelist.
-+	 * The AGFL can only perform unaligned, single block allocations. Also
-+	 * make sure this isn't an allocation for the AGFL itself and to respect
-+	 * minleft before we take a block.
- 	 */
--	if (ccur)
--		error = xfs_btree_decrement(ccur, 0, &i);
-+	if (args->minlen != 1 || args->alignment != 1 ||
-+	    args->resv == XFS_AG_RESV_AGFL ||
-+	    (be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_flcount) <=
-+	     args->minleft)) {
-+		trace_xfs_alloc_agfl_notenough(args);
-+		goto out;
-+	}
-+
-+	error = xfs_alloc_get_freelist(args->tp, args->agbp, &fbno, 0);
- 	if (error)
--		goto error0;
--	if (i) {
--		error = xfs_alloc_get_rec(ccur, &fbno, &flen, &i);
--		if (error)
--			goto error0;
--		XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
--	} else if (args->minlen == 1 && args->alignment == 1 &&
--		   args->resv != XFS_AG_RESV_AGFL &&
--		   (be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_flcount) >
--		    args->minleft)) {
--		error = xfs_alloc_get_freelist(args->tp, args->agbp, &fbno, 0);
--		if (error)
--			goto error0;
--		if (fbno != NULLAGBLOCK) {
--			xfs_extent_busy_reuse(args->mp, args->agno, fbno, 1,
--			      xfs_alloc_allow_busy_reuse(args->datatype));
-+		goto out;
- 
--			if (xfs_alloc_is_userdata(args->datatype)) {
--				xfs_buf_t	*bp;
-+	if (fbno == NULLAGBLOCK)
-+		goto out;
- 
--				bp = xfs_btree_get_bufs(args->mp, args->tp,
--					args->agno, fbno, 0);
--				if (!bp) {
--					error = -EFSCORRUPTED;
--					goto error0;
--				}
--				xfs_trans_binval(args->tp, bp);
--			}
--			XFS_WANT_CORRUPTED_GOTO(args->mp,
--				args->agbno + args->len <=
--				be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_length),
--				error0);
--			args->wasfromfl = 1;
--			trace_xfs_alloc_small_freelist(args);
-+	xfs_extent_busy_reuse(args->mp, args->agno, fbno, 1,
-+			      xfs_alloc_allow_busy_reuse(args->datatype));
- 
--			/*
--			 * If we're feeding an AGFL block to something that
--			 * doesn't live in the free space, we need to clear
--			 * out the OWN_AG rmap.
--			 */
--			error = xfs_rmap_free(args->tp, args->agbp, args->agno,
--					fbno, 1, &XFS_RMAP_OINFO_AG);
--			if (error)
--				goto error0;
-+	if (xfs_alloc_is_userdata(args->datatype)) {
-+		struct xfs_buf	*bp;
- 
--			*fbnop = args->agbno = fbno;
--			*flenp = args->len = 1;
--			*stat = 0;
--			return 0;
-+		bp = xfs_btree_get_bufs(args->mp, args->tp, args->agno, fbno,
-+					0);
-+		if (!bp) {
-+			error = -EFSCORRUPTED;
-+			goto out;
- 		}
--		/*
--		 * Nothing in the freelist.
--		 */
--		else
--			flen = 0;
--	} else {
--		fbno = NULLAGBLOCK;
--		flen = 0;
-+		xfs_trans_binval(args->tp, bp);
- 	}
-+	XFS_WANT_CORRUPTED_GOTO(args->mp,
-+		fbno < be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_length),
-+		out);
- 
- 	/*
--	 * Can't do the allocation, give up.
-+	 * If we're feeding an AGFL block to something that doesn't live in the
-+	 * free space, we need to clear out the OWN_AG rmap.
- 	 */
--	if (flen < args->minlen) {
--		args->agbno = NULLAGBLOCK;
--		trace_xfs_alloc_small_notenough(args);
--		flen = 0;
--	}
-+	error = xfs_rmap_free(args->tp, args->agbp, args->agno, fbno, 1,
-+			      &XFS_RMAP_OINFO_AG);
-+	if (error)
-+		goto out;
-+
- 	*fbnop = fbno;
--	*flenp = flen;
--	*stat = 1;
--	trace_xfs_alloc_small_done(args);
--	return 0;
- 
--error0:
--	trace_xfs_alloc_small_error(args);
-+out:
-+	if (error)
-+		trace_xfs_alloc_agfl_error(args);
-+	else
-+		trace_xfs_alloc_agfl_done(args);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 54be8e30ab11..e0df6e8bc87a 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1640,10 +1640,9 @@ DEFINE_ALLOC_EVENT(xfs_alloc_near_noentry);
- DEFINE_ALLOC_EVENT(xfs_alloc_near_busy);
- DEFINE_ALLOC_EVENT(xfs_alloc_cur);
- DEFINE_ALLOC_EVENT(xfs_alloc_size_done);
--DEFINE_ALLOC_EVENT(xfs_alloc_small_freelist);
--DEFINE_ALLOC_EVENT(xfs_alloc_small_notenough);
--DEFINE_ALLOC_EVENT(xfs_alloc_small_done);
--DEFINE_ALLOC_EVENT(xfs_alloc_small_error);
-+DEFINE_ALLOC_EVENT(xfs_alloc_agfl_notenough);
-+DEFINE_ALLOC_EVENT(xfs_alloc_agfl_done);
-+DEFINE_ALLOC_EVENT(xfs_alloc_agfl_error);
- DEFINE_ALLOC_EVENT(xfs_alloc_vextent_badargs);
- DEFINE_ALLOC_EVENT(xfs_alloc_vextent_nofix);
- DEFINE_ALLOC_EVENT(xfs_alloc_vextent_noagbp);
--- 
-2.17.2
-
+Thanks,
+Eryu
