@@ -2,440 +2,231 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0148B1FA17
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 20:37:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E4CF1FBA7
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 22:46:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfEOShf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 14:37:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46398 "EHLO mx1.redhat.com"
+        id S1727420AbfEOUqT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 16:46:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37562 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726159AbfEOShe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 May 2019 14:37:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726170AbfEOUqS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 May 2019 16:46:18 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7CC937EEB
-        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 18:37:33 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78ABE5D9C3
-        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 18:37:33 +0000 (UTC)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH] xfs: remove unused flag arguments
-Message-ID: <ed89244f-cc3a-6bcf-316c-68edc8aee4cc@redhat.com>
-Date:   Wed, 15 May 2019 13:37:32 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 42E323082B46;
+        Wed, 15 May 2019 20:46:17 +0000 (UTC)
+Received: from [10.36.116.133] (ovpn-116-133.ams2.redhat.com [10.36.116.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C6766266C;
+        Wed, 15 May 2019 20:46:01 +0000 (UTC)
+Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+To:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, mst@redhat.com
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@fromorbit.com,
+        cohuck@redhat.com, xiaoguangrong.eric@gmail.com,
+        pbonzini@redhat.com, kilobyte@angband.pl, yuval.shaia@oracle.com,
+        jstaron@google.com
+References: <20190514145422.16923-1-pagupta@redhat.com>
+ <20190514145422.16923-3-pagupta@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
+Date:   Wed, 15 May 2019 22:46:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190514145422.16923-3-pagupta@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 15 May 2019 18:37:33 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 15 May 2019 20:46:17 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-There are several functions which take a flag argument that is
-only ever passed as "0," so remove these arguments.
+> +	vpmem->vdev = vdev;
+> +	vdev->priv = vpmem;
+> +	err = init_vq(vpmem);
+> +	if (err) {
+> +		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
+> +		goto out_err;
+> +	}
+> +
+> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +			start, &vpmem->start);
+> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +			size, &vpmem->size);
+> +
+> +	res.start = vpmem->start;
+> +	res.end   = vpmem->start + vpmem->size-1;
 
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
+nit: " - 1;"
 
-(motivated by simplifying userspace libxfs, TBH)
+> +	vpmem->nd_desc.provider_name = "virtio-pmem";
+> +	vpmem->nd_desc.module = THIS_MODULE;
+> +
+> +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+> +						&vpmem->nd_desc);
+> +	if (!vpmem->nvdimm_bus) {
+> +		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
+> +		err = -ENXIO;
+> +		goto out_vq;
+> +	}
+> +
+> +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
+> +
+> +	ndr_desc.res = &res;
+> +	ndr_desc.numa_node = nid;
+> +	ndr_desc.flush = async_pmem_flush;
+> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+> +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+> +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
+> +	if (!nd_region) {
+> +		dev_err(&vdev->dev, "failed to create nvdimm region\n");
+> +		err = -ENXIO;
+> +		goto out_nd;
+> +	}
+> +	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
+> +	return 0;
+> +out_nd:
+> +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
+> +out_vq:
+> +	vdev->config->del_vqs(vdev);
+> +out_err:
+> +	return err;
+> +}
+> +
+> +static void virtio_pmem_remove(struct virtio_device *vdev)
+> +{
+> +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+> +
+> +	nvdimm_bus_unregister(nvdimm_bus);
+> +	vdev->config->del_vqs(vdev);
+> +	vdev->config->reset(vdev);
+> +}
+> +
+> +static struct virtio_driver virtio_pmem_driver = {
+> +	.driver.name		= KBUILD_MODNAME,
+> +	.driver.owner		= THIS_MODULE,
+> +	.id_table		= id_table,
+> +	.probe			= virtio_pmem_probe,
+> +	.remove			= virtio_pmem_remove,
+> +};
+> +
+> +module_virtio_driver(virtio_pmem_driver);
+> +MODULE_DEVICE_TABLE(virtio, id_table);
+> +MODULE_DESCRIPTION("Virtio pmem driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+> new file mode 100644
+> index 000000000000..ab1da877575d
+> --- /dev/null
+> +++ b/drivers/nvdimm/virtio_pmem.h
+> @@ -0,0 +1,60 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * virtio_pmem.h: virtio pmem Driver
+> + *
+> + * Discovers persistent memory range information
+> + * from host and provides a virtio based flushing
+> + * interface.
+> + **/
+> +
+> +#ifndef _LINUX_VIRTIO_PMEM_H
+> +#define _LINUX_VIRTIO_PMEM_H
+> +
+> +#include <linux/virtio_ids.h>
+> +#include <linux/module.h>
+> +#include <linux/virtio_config.h>
+> +#include <uapi/linux/virtio_pmem.h>
+> +#include <linux/libnvdimm.h>
+> +#include <linux/spinlock.h>
+> +
+> +struct virtio_pmem_request {
+> +	/* Host return status corresponding to flush request */
+> +	int ret;
+> +
+> +	/* command name*/
+> +	char name[16];
 
- libxfs/xfs_ag.c          |    8 ++++----
- libxfs/xfs_alloc.c       |    4 ++--
- libxfs/xfs_attr_remote.c |    2 +-
- libxfs/xfs_bmap.c        |   14 +++++++-------
- libxfs/xfs_btree.c       |   30 +++++++++++-------------------
- libxfs/xfs_btree.h       |   10 +++-------
- libxfs/xfs_sb.c          |    2 +-
- scrub/repair.c           |    2 +-
- xfs_bmap_util.c          |    6 +++---
- xfs_buf.h                |    5 ++---
- 10 files changed, 35 insertions(+), 48 deletions(-)
+So ... why are we sending string commands and expect native-endianess
+integers and don't define a proper request/response structure + request
+types in include/uapi/linux/virtio_pmem.h like
+
+struct virtio_pmem_resp {
+	__virtio32 ret;
+}
+
+#define VIRTIO_PMEM_REQ_TYPE_FLUSH	1
+struct virtio_pmem_req {
+	__virtio16 type;
+}
+
+... and this way we also define a proper endianess format for exchange
+and keep it extensible
+
+@MST, what's your take on this?
 
 
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index b0c89f5..5efb827 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -53,7 +53,7 @@
- 	struct xfs_buf		*bp,
- 	struct aghdr_init_data	*id)
- {
--	xfs_btree_init_block(mp, bp, id->type, 0, 0, id->agno, 0);
-+	xfs_btree_init_block(mp, bp, id->type, 0, 0, id->agno);
- }
- 
- /*
-@@ -67,7 +67,7 @@
- {
- 	struct xfs_alloc_rec	*arec;
- 
--	xfs_btree_init_block(mp, bp, XFS_BTNUM_BNO, 0, 1, id->agno, 0);
-+	xfs_btree_init_block(mp, bp, XFS_BTNUM_BNO, 0, 1, id->agno);
- 	arec = XFS_ALLOC_REC_ADDR(mp, XFS_BUF_TO_BLOCK(bp), 1);
- 	arec->ar_startblock = cpu_to_be32(mp->m_ag_prealloc_blocks);
- 	arec->ar_blockcount = cpu_to_be32(id->agsize -
-@@ -82,7 +82,7 @@
- {
- 	struct xfs_alloc_rec	*arec;
- 
--	xfs_btree_init_block(mp, bp, XFS_BTNUM_CNT, 0, 1, id->agno, 0);
-+	xfs_btree_init_block(mp, bp, XFS_BTNUM_CNT, 0, 1, id->agno);
- 	arec = XFS_ALLOC_REC_ADDR(mp, XFS_BUF_TO_BLOCK(bp), 1);
- 	arec->ar_startblock = cpu_to_be32(mp->m_ag_prealloc_blocks);
- 	arec->ar_blockcount = cpu_to_be32(id->agsize -
-@@ -101,7 +101,7 @@
- 	struct xfs_btree_block	*block = XFS_BUF_TO_BLOCK(bp);
- 	struct xfs_rmap_rec	*rrec;
- 
--	xfs_btree_init_block(mp, bp, XFS_BTNUM_RMAP, 0, 4, id->agno, 0);
-+	xfs_btree_init_block(mp, bp, XFS_BTNUM_RMAP, 0, 4, id->agno);
- 
- 	/*
- 	 * mark the AG header regions as static metadata The BNO
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index a9ff3cf..dbbff82 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1627,7 +1627,7 @@ STATIC int xfs_alloc_ag_vextent_small(xfs_alloc_arg_t *,
- 				xfs_buf_t	*bp;
- 
- 				bp = xfs_btree_get_bufs(args->mp, args->tp,
--					args->agno, fbno, 0);
-+					args->agno, fbno);
- 				if (!bp) {
- 					error = -EFSCORRUPTED;
- 					goto error0;
-@@ -2095,7 +2095,7 @@ STATIC int xfs_alloc_ag_vextent_small(xfs_alloc_arg_t *,
- 	if (error)
- 		return error;
- 
--	bp = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno, 0);
-+	bp = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno);
- 	if (!bp)
- 		return -EFSCORRUPTED;
- 	xfs_trans_binval(tp, bp);
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index 65ff600..8b47f91 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -535,7 +535,7 @@
- 		dblkno = XFS_FSB_TO_DADDR(mp, map.br_startblock),
- 		dblkcnt = XFS_FSB_TO_BB(mp, map.br_blockcount);
- 
--		bp = xfs_buf_get(mp->m_ddev_targp, dblkno, dblkcnt, 0);
-+		bp = xfs_buf_get(mp->m_ddev_targp, dblkno, dblkcnt);
- 		if (!bp)
- 			return -ENOMEM;
- 		bp->b_ops = &xfs_attr3_rmt_buf_ops;
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 356ebd1..4133bc46 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -370,7 +370,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 		bp = xfs_bmap_get_bp(cur, XFS_FSB_TO_DADDR(mp, bno));
- 		if (!bp) {
- 			bp_release = 1;
--			error = xfs_btree_read_bufl(mp, NULL, bno, 0, &bp,
-+			error = xfs_btree_read_bufl(mp, NULL, bno, &bp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
- 			if (error)
-@@ -454,7 +454,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 		bp = xfs_bmap_get_bp(cur, XFS_FSB_TO_DADDR(mp, bno));
- 		if (!bp) {
- 			bp_release = 1;
--			error = xfs_btree_read_bufl(mp, NULL, bno, 0, &bp,
-+			error = xfs_btree_read_bufl(mp, NULL, bno, &bp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
- 			if (error)
-@@ -619,7 +619,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 	XFS_WANT_CORRUPTED_RETURN(cur->bc_mp,
- 			xfs_btree_check_lptr(cur, cbno, 1));
- #endif
--	error = xfs_btree_read_bufl(mp, tp, cbno, 0, &cbp, XFS_BMAP_BTREE_REF,
-+	error = xfs_btree_read_bufl(mp, tp, cbno, &cbp, XFS_BMAP_BTREE_REF,
- 				&xfs_bmbt_buf_ops);
- 	if (error)
- 		return error;
-@@ -732,7 +732,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 	cur->bc_private.b.allocated++;
- 	ip->i_d.di_nblocks++;
- 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, 1L);
--	abp = xfs_btree_get_bufl(mp, tp, args.fsbno, 0);
-+	abp = xfs_btree_get_bufl(mp, tp, args.fsbno);
- 	if (!abp) {
- 		error = -EFSCORRUPTED;
- 		goto out_unreserve_dquot;
-@@ -878,7 +878,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 	ASSERT(args.fsbno != NULLFSBLOCK);
- 	ASSERT(args.len == 1);
- 	tp->t_firstblock = args.fsbno;
--	bp = xfs_btree_get_bufl(args.mp, tp, args.fsbno, 0);
-+	bp = xfs_btree_get_bufl(args.mp, tp, args.fsbno);
- 
- 	/*
- 	 * Initialize the block, copy the data and log the remote buffer.
-@@ -1203,7 +1203,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 	 * pointer (leftmost) at each level.
- 	 */
- 	while (level-- > 0) {
--		error = xfs_btree_read_bufl(mp, tp, bno, 0, &bp,
-+		error = xfs_btree_read_bufl(mp, tp, bno, &bp,
- 				XFS_BMAP_BTREE_REF, &xfs_bmbt_buf_ops);
- 		if (error)
- 			goto out;
-@@ -1276,7 +1276,7 @@ static inline bool xfs_bmap_wants_extents(struct xfs_inode *ip, int whichfork)
- 		 */
- 		if (bno == NULLFSBLOCK)
- 			break;
--		error = xfs_btree_read_bufl(mp, tp, bno, 0, &bp,
-+		error = xfs_btree_read_bufl(mp, tp, bno, &bp,
- 				XFS_BMAP_BTREE_REF, &xfs_bmbt_buf_ops);
- 		if (error)
- 			goto out;
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index bbdae2b..7d3d7c4 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -691,14 +691,13 @@ struct xfs_btree_block *		/* generic btree block pointer */
- xfs_btree_get_bufl(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_fsblock_t	fsbno,		/* file system block number */
--	uint		lock)		/* lock flags for get_buf */
-+	xfs_fsblock_t	fsbno)		/* file system block number */
- {
- 	xfs_daddr_t		d;		/* real disk block address */
- 
- 	ASSERT(fsbno != NULLFSBLOCK);
- 	d = XFS_FSB_TO_DADDR(mp, fsbno);
--	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, lock);
-+	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0);
- }
- 
- /*
-@@ -710,15 +709,14 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_agnumber_t	agno,		/* allocation group number */
--	xfs_agblock_t	agbno,		/* allocation group block number */
--	uint		lock)		/* lock flags for get_buf */
-+	xfs_agblock_t	agbno)		/* allocation group block number */
- {
- 	xfs_daddr_t		d;		/* real disk block address */
- 
- 	ASSERT(agno != NULLAGNUMBER);
- 	ASSERT(agbno != NULLAGBLOCK);
- 	d = XFS_AGB_TO_DADDR(mp, agno, agbno);
--	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, lock);
-+	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0);
- }
- 
- /*
-@@ -845,7 +843,6 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 	struct xfs_mount	*mp,		/* file system mount point */
- 	struct xfs_trans	*tp,		/* transaction pointer */
- 	xfs_fsblock_t		fsbno,		/* file system block number */
--	uint			lock,		/* lock flags for read_buf */
- 	struct xfs_buf		**bpp,		/* buffer for fsbno */
- 	int			refval,		/* ref count value for buffer */
- 	const struct xfs_buf_ops *ops)
-@@ -858,7 +855,7 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 		return -EFSCORRUPTED;
- 	d = XFS_FSB_TO_DADDR(mp, fsbno);
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp, d,
--				   mp->m_bsize, lock, &bp, ops);
-+				   mp->m_bsize, 0, &bp, ops);
- 	if (error)
- 		return error;
- 	if (bp)
-@@ -1185,11 +1182,10 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 	xfs_btnum_t	btnum,
- 	__u16		level,
- 	__u16		numrecs,
--	__u64		owner,
--	unsigned int	flags)
-+	__u64		owner)
- {
- 	xfs_btree_init_block_int(mp, XFS_BUF_TO_BLOCK(bp), bp->b_bn,
--				 btnum, level, numrecs, owner, flags);
-+				 btnum, level, numrecs, owner, 0);
- }
- 
- STATIC void
-@@ -1288,7 +1284,6 @@ struct xfs_btree_block *		/* generic btree block pointer */
- xfs_btree_get_buf_block(
- 	struct xfs_btree_cur	*cur,
- 	union xfs_btree_ptr	*ptr,
--	int			flags,
- 	struct xfs_btree_block	**block,
- 	struct xfs_buf		**bpp)
- {
-@@ -1296,14 +1291,11 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 	xfs_daddr_t		d;
- 	int			error;
- 
--	/* need to sort out how callers deal with failures first */
--	ASSERT(!(flags & XBF_TRYLOCK));
--
- 	error = xfs_btree_ptr_to_daddr(cur, ptr, &d);
- 	if (error)
- 		return error;
- 	*bpp = xfs_trans_get_buf(cur->bc_tp, mp->m_ddev_targp, d,
--				 mp->m_bsize, flags);
-+				 mp->m_bsize, 0);
- 
- 	if (!*bpp)
- 		return -ENOMEM;
-@@ -2706,7 +2698,7 @@ struct xfs_btree_block *		/* generic btree block pointer */
- 	XFS_BTREE_STATS_INC(cur, alloc);
- 
- 	/* Set up the new block as "right". */
--	error = xfs_btree_get_buf_block(cur, &rptr, 0, &right, &rbp);
-+	error = xfs_btree_get_buf_block(cur, &rptr, &right, &rbp);
- 	if (error)
- 		goto error0;
- 
-@@ -2961,7 +2953,7 @@ struct xfs_btree_split_args {
- 	XFS_BTREE_STATS_INC(cur, alloc);
- 
- 	/* Copy the root into a real block. */
--	error = xfs_btree_get_buf_block(cur, &nptr, 0, &cblock, &cbp);
-+	error = xfs_btree_get_buf_block(cur, &nptr, &cblock, &cbp);
- 	if (error)
- 		goto error0;
- 
-@@ -3058,7 +3050,7 @@ struct xfs_btree_split_args {
- 	XFS_BTREE_STATS_INC(cur, alloc);
- 
- 	/* Set up the new block. */
--	error = xfs_btree_get_buf_block(cur, &lptr, 0, &new, &nbp);
-+	error = xfs_btree_get_buf_block(cur, &lptr, &new, &nbp);
- 	if (error)
- 		goto error0;
- 
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index e3b3e9d..8d2b250 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -301,8 +301,7 @@ struct xfs_buf *				/* buffer for fsbno */
- xfs_btree_get_bufl(
- 	struct xfs_mount	*mp,	/* file system mount point */
- 	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_fsblock_t		fsbno,	/* file system block number */
--	uint			lock);	/* lock flags for get_buf */
-+	xfs_fsblock_t		fsbno);	/* file system block number */
- 
- /*
-  * Get a buffer for the block, return it with no data read.
-@@ -313,8 +312,7 @@ struct xfs_buf *				/* buffer for agno/agbno */
- 	struct xfs_mount	*mp,	/* file system mount point */
- 	struct xfs_trans	*tp,	/* transaction pointer */
- 	xfs_agnumber_t		agno,	/* allocation group number */
--	xfs_agblock_t		agbno,	/* allocation group block number */
--	uint			lock);	/* lock flags for get_buf */
-+	xfs_agblock_t		agbno);	/* allocation group block number */
- 
- /*
-  * Check for the cursor referring to the last block at the given level.
-@@ -345,7 +343,6 @@ struct xfs_buf *				/* buffer for agno/agbno */
- 	struct xfs_mount	*mp,	/* file system mount point */
- 	struct xfs_trans	*tp,	/* transaction pointer */
- 	xfs_fsblock_t		fsbno,	/* file system block number */
--	uint			lock,	/* lock flags for read_buf */
- 	struct xfs_buf		**bpp,	/* buffer for fsbno */
- 	int			refval,	/* ref count value for buffer */
- 	const struct xfs_buf_ops *ops);
-@@ -383,8 +380,7 @@ struct xfs_buf *				/* buffer for agno/agbno */
- 	xfs_btnum_t	btnum,
- 	__u16		level,
- 	__u16		numrecs,
--	__u64		owner,
--	unsigned int	flags);
-+	__u64		owner);
- 
- void
- xfs_btree_init_block_int(
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index e76a3e5..8bca140 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1005,7 +1005,7 @@ struct xfs_perag *
- 
- 		bp = xfs_buf_get(mp->m_ddev_targp,
- 				 XFS_AG_DADDR(mp, agno, XFS_SB_DADDR),
--				 XFS_FSS_TO_BB(mp, 1), 0);
-+				 XFS_FSS_TO_BB(mp, 1));
- 		/*
- 		 * If we get an error reading or writing alternate superblocks,
- 		 * continue.  xfs_repair chooses the "best" superblock based
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index eb358f0..e710005 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -357,7 +357,7 @@
- 	bp = xfs_trans_get_buf(tp, mp->m_ddev_targp, XFS_FSB_TO_DADDR(mp, fsb),
- 			XFS_FSB_TO_BB(mp, 1), 0);
- 	xfs_buf_zero(bp, 0, BBTOB(bp->b_length));
--	xfs_btree_init_block(mp, bp, btnum, 0, 0, sc->sa.agno, 0);
-+	xfs_btree_init_block(mp, bp, btnum, 0, 0, sc->sa.agno);
- 	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_BTREE_BUF);
- 	xfs_trans_log_buf(tp, bp, 0, bp->b_length);
- 	bp->b_ops = ops;
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 06d07f1..b8fa6d3 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -276,7 +276,7 @@
- 	struct xfs_btree_block	*block, *nextblock;
- 	int			numrecs;
- 
--	error = xfs_btree_read_bufl(mp, tp, bno, 0, &bp, XFS_BMAP_BTREE_REF,
-+	error = xfs_btree_read_bufl(mp, tp, bno, &bp, XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
- 	if (error)
- 		return error;
-@@ -287,7 +287,7 @@
- 		/* Not at node above leaves, count this level of nodes */
- 		nextbno = be64_to_cpu(block->bb_u.l.bb_rightsib);
- 		while (nextbno != NULLFSBLOCK) {
--			error = xfs_btree_read_bufl(mp, tp, nextbno, 0, &nbp,
-+			error = xfs_btree_read_bufl(mp, tp, nextbno, &nbp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
- 			if (error)
-@@ -321,7 +321,7 @@
- 			if (nextbno == NULLFSBLOCK)
- 				break;
- 			bno = nextbno;
--			error = xfs_btree_read_bufl(mp, tp, bno, 0, &bp,
-+			error = xfs_btree_read_bufl(mp, tp, bno, &bp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
- 			if (error)
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index d0b96e0..f13c018 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -239,11 +239,10 @@ void xfs_buf_readahead_map(struct xfs_buftarg *target,
- xfs_buf_get(
- 	struct xfs_buftarg	*target,
- 	xfs_daddr_t		blkno,
--	size_t			numblks,
--	xfs_buf_flags_t		flags)
-+	size_t			numblks)
- {
- 	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
--	return xfs_buf_get_map(target, &map, 1, flags);
-+	return xfs_buf_get_map(target, &map, 1, 0);
- }
- 
- static inline struct xfs_buf *
+-- 
 
+Thanks,
+
+David / dhildenb
