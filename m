@@ -2,279 +2,147 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 251CA1E5FB
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 02:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3E01E6CC
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 04:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfEOARq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 May 2019 20:17:46 -0400
-Received: from sandeen.net ([63.231.237.45]:40680 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfEOARp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 14 May 2019 20:17:45 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id B55DF1725B;
-        Tue, 14 May 2019 19:17:28 -0500 (CDT)
-Subject: [PATCH 03/11 V2] libxfs: remove unused cruft
-To:     Eric Sandeen <sandeen@redhat.com>, linux-xfs@vger.kernel.org
-References: <1557519510-10602-1-git-send-email-sandeen@redhat.com>
- <1557519510-10602-4-git-send-email-sandeen@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <7b7e0bb3-3fac-6602-cff0-c868d6d0540c@sandeen.net>
-Date:   Tue, 14 May 2019 19:17:44 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1726190AbfEOCFy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 May 2019 22:05:54 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:49435 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbfEOCFy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 May 2019 22:05:54 -0400
+Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 3B8E93DBE74;
+        Wed, 15 May 2019 12:05:48 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hQjIh-00015Y-P0; Wed, 15 May 2019 12:05:47 +1000
+Date:   Wed, 15 May 2019 12:05:47 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Jorge Guerra <jorge.guerra@gmail.com>, linux-xfs@vger.kernel.org,
+        osandov@osandov.com, Jorge Guerra <jorgeguerra@fb.com>
+Subject: Re: [PATCH] xfs_db: add extent count and file size histograms
+Message-ID: <20190515020547.GT29573@dread.disaster.area>
+References: <20190514185026.73788-1-jorgeguerra@gmail.com>
+ <20190514233119.GS29573@dread.disaster.area>
+ <f121a7d3-ef90-2777-3074-dee302a3ad28@sandeen.net>
 MIME-Version: 1.0
-In-Reply-To: <1557519510-10602-4-git-send-email-sandeen@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f121a7d3-ef90-2777-3074-dee302a3ad28@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
+        a=7-415B0cAAAA:8 a=o_I1kUpBIWk2FYKGYO4A:9 a=xflSxGUffjXdSp4B:21
+        a=GeHzX8sGLQ2JZ5dB:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Remove many unused #defines and functions.
+On Tue, May 14, 2019 at 07:06:52PM -0500, Eric Sandeen wrote:
+> On 5/14/19 6:31 PM, Dave Chinner wrote:
+> > On Tue, May 14, 2019 at 11:50:26AM -0700, Jorge Guerra wrote:
+> >> Maximum extents in a file 14
+> >> Histogram of number of extents per file:
+> >>     bucket =       count        % of total
+> >> <=       1 =      350934        97.696 %
+> >> <=       2 =        6231        1.735 %
+> >> <=       4 =        1001        0.279 %
+> >> <=       8 =         953        0.265 %
+> >> <=      16 =          92        0.026 %
+> >> Maximum file size 26.508 MB
+> >> Histogram of file size:
+> >>     bucket =    allocated           used        overhead(bytes)
+> >> <=    4 KB =           0              62           314048512 0.13%
+> >> <=    8 KB =           0          119911        127209263104 53.28%
+> >> <=   16 KB =           0           14543         15350194176 6.43%
+> >> <=   32 KB =         909           12330         11851161600 4.96%
+> >> <=   64 KB =          92            6704          6828642304 2.86%
+> >> <=  128 KB =           1            7132          6933372928 2.90%
+> >> <=  256 KB =           0           10013          8753799168 3.67%
+> >> <=  512 KB =           0           13616          9049227264 3.79%
+> >> <=    1 MB =           1           15056          4774912000 2.00%
+> >> <=    2 MB =      198662           17168          9690226688 4.06%
+> >> <=    4 MB =       28639           21073         11806654464 4.94%
+> >> <=    8 MB =       35169           29878         14200553472 5.95%
+> >> <=   16 MB =       95667           91633         11939287040 5.00%
+> >> <=   32 MB =          71              62            28471742 0.01%
+> >> capacity used (bytes): 1097735533058 (1022.346 GB)
+> >> capacity allocated (bytes): 1336497410048 (1.216 TB)
+> >> block overhead (bytes): 238761885182 (21.750 %)
+> > 
+> > BTW, "bytes" as a display unit is stupidly verbose and largely
+> > unnecessary. The byte count is /always/ going to be a multiple of
+> > the filesystem block size, and the first thing anyone who wants to
+> > use this for diagnosis is going to have to do is return the byte
+> > count to filesystem blocks (which is what the filesystem itself
+> > tracks everything in. ANd then when you have PB scale filesystems,
+> > anything more than 3 significant digits is just impossible to read
+> > and compare - that "overhead" column (what the "overhead" even
+> > mean?) is largely impossible to read and determine what the actual
+> > capacity used is without counting individual digits in each number.
+> 
+> But if the whole point is trying to figure out "internal fragmentation"
+> then it's the only unit that makes sense, right?  This is the "15 bytes"
+> of a 15 byte file (or extent) allocated into a 4k block.
 
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
+Urk. I missed that - I saw "-s" and assumed that, like the other
+extent histogram printing commands we have, it meant "print summary
+information". i.e. the last 3 lines in the above output.
 
-V2: Remove libxfs_trans_ijoin_ref as well
+But the rest of it? It comes back to my comment "what does overhead
+even mean"?  All it is a measure of how many bytes are allocated in
+extents vs the file size. It assumes that if there is more bytes
+allocated in extents than the file size, then the excess is "wasted
+space".
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 2bdef70..230bc3e 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -154,9 +154,6 @@ extern int	libxfs_log_header(char *, uuid_t *, int, int, int, xfs_lsn_t,
- extern int	libxfs_alloc_file_space (struct xfs_inode *, xfs_off_t,
- 				xfs_off_t, int, int);
- 
--extern void	libxfs_fs_repair_cmn_err(int, struct xfs_mount *, char *, ...);
--extern void	libxfs_fs_cmn_err(int, struct xfs_mount *, char *, ...);
--
- /* XXX: this is messy and needs fixing */
- #ifndef __LIBXFS_INTERNAL_XFS_H__
- extern void cmn_err(int, char *, ...);
-diff --git a/include/xfs_trans.h b/include/xfs_trans.h
-index 832bde1..10b7453 100644
---- a/include/xfs_trans.h
-+++ b/include/xfs_trans.h
-@@ -47,13 +47,6 @@ typedef struct xfs_buf_log_item {
- #define XFS_BLI_STALE			(1<<2)
- #define XFS_BLI_INODE_ALLOC_BUF		(1<<3)
- 
--typedef struct xfs_dq_logitem {
--	xfs_log_item_t		qli_item;	/* common portion */
--	struct xfs_dquot	*qli_dquot;	/* dquot ptr */
--	xfs_lsn_t		qli_flush_lsn;	/* lsn at last flush */
--	xfs_dq_logformat_t	qli_format;	/* logged structure */
--} xfs_dq_logitem_t;
--
- typedef struct xfs_qoff_logitem {
- 	xfs_log_item_t		qql_item;	/* common portion */
- 	struct xfs_qoff_logitem	*qql_start_lip;	/* qoff-start logitem, if any */
-@@ -64,7 +57,6 @@ typedef struct xfs_qoff_logitem {
- #define XFS_DEFER_OPS_NR_BUFS	2	/* join up to two buffers */
- 
- typedef struct xfs_trans {
--	unsigned int	t_type;			/* transaction type */
- 	unsigned int	t_log_res;		/* amt of log space resvd */
- 	unsigned int	t_log_count;		/* count for perm log res */
- 	unsigned int	t_blk_res;		/* # of blocks resvd */
-@@ -98,7 +90,6 @@ void xfs_defer_cancel(struct xfs_trans *);
- struct xfs_buf *libxfs_trans_getsb(struct xfs_trans *, struct xfs_mount *, int);
- 
- void	libxfs_trans_ijoin(struct xfs_trans *, struct xfs_inode *, uint);
--void	libxfs_trans_ijoin_ref(struct xfs_trans *, struct xfs_inode *, int);
- void	libxfs_trans_log_inode (struct xfs_trans *, struct xfs_inode *,
- 				uint);
- int	libxfs_trans_roll_inode (struct xfs_trans **, struct xfs_inode *);
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index bb0f07b..1150ec9 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -16,9 +16,6 @@
- #define xfs_highbit32			libxfs_highbit32
- #define xfs_highbit64			libxfs_highbit64
- 
--#define xfs_fs_repair_cmn_err		libxfs_fs_repair_cmn_err
--#define xfs_fs_cmn_err			libxfs_fs_cmn_err
--
- #define xfs_trans_alloc			libxfs_trans_alloc
- #define xfs_trans_alloc_empty		libxfs_trans_alloc_empty
- #define xfs_trans_add_item		libxfs_trans_add_item
-@@ -61,7 +58,6 @@
- #define xfs_bmapi_write			libxfs_bmapi_write
- #define xfs_bmapi_read			libxfs_bmapi_read
- #define xfs_bunmapi			libxfs_bunmapi
--#define xfs_bmbt_get_all		libxfs_bmbt_get_all
- #define xfs_rtfree_extent		libxfs_rtfree_extent
- #define xfs_verify_rtbno		libxfs_verify_rtbno
- #define xfs_verify_ino			libxfs_verify_ino
-@@ -70,7 +66,6 @@
- #define xfs_defer_finish		libxfs_defer_finish
- #define xfs_defer_cancel		libxfs_defer_cancel
- 
--#define xfs_da_brelse			libxfs_da_brelse
- #define xfs_da_hashname			libxfs_da_hashname
- #define xfs_da_shrink_inode		libxfs_da_shrink_inode
- #define xfs_da_read_buf			libxfs_da_read_buf
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index a2a8388..d668a15 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -122,7 +122,6 @@ enum ce { CE_DEBUG, CE_CONT, CE_NOTE, CE_WARN, CE_ALERT, CE_PANIC };
- #define xfs_warn(mp,fmt,args...)		cmn_err(CE_WARN,fmt, ## args)
- #define xfs_err(mp,fmt,args...)			cmn_err(CE_ALERT,fmt, ## args)
- #define xfs_alert(mp,fmt,args...)		cmn_err(CE_ALERT,fmt, ## args)
--#define xfs_alert_tag(mp,tag,fmt,args...)	cmn_err(CE_ALERT,fmt, ## args)
- 
- #define xfs_hex_dump(d,n)		((void) 0)
- #define xfs_stack_trace()		((void) 0)
-@@ -195,8 +194,6 @@ enum ce { CE_DEBUG, CE_CONT, CE_NOTE, CE_WARN, CE_ALERT, CE_PANIC };
- #endif
- 
- /* miscellaneous kernel routines not in user space */
--#define down_read(a)		((void) 0)
--#define up_read(a)		((void) 0)
- #define spin_lock_init(a)	((void) 0)
- #define spin_lock(a)		((void) 0)
- #define spin_unlock(a)		((void) 0)
-@@ -400,7 +397,6 @@ roundup_64(uint64_t x, uint32_t y)
- 
- #define XBRW_READ			LIBXFS_BREAD
- #define XBRW_WRITE			LIBXFS_BWRITE
--#define xfs_buf_iomove(bp,off,len,data,f)	libxfs_iomove(bp,off,len,data,f)
- #define xfs_buf_zero(bp,off,len)     libxfs_iomove(bp,off,len,NULL,LIBXFS_BZERO)
- 
- /* mount stuff */
-@@ -436,8 +432,6 @@ roundup_64(uint64_t x, uint32_t y)
- #define xfs_sort					qsort
- 
- #define xfs_ilock(ip,mode)				((void) 0)
--#define xfs_ilock_nowait(ip,mode)			((void) 0)
--#define xfs_ilock_demote(ip,mode)			((void) 0)
- #define xfs_ilock_data_map_shared(ip)			(0)
- #define xfs_ilock_attr_map_shared(ip)			(0)
- #define xfs_iunlock(ip,mode)				({	\
-@@ -470,9 +464,6 @@ roundup_64(uint64_t x, uint32_t y)
- #define xfs_filestream_lookup_ag(ip)		(0)
- #define xfs_filestream_new_ag(ip,ag)		(0)
- 
--#define xfs_log_force(mp,flags)			((void) 0)
--#define XFS_LOG_SYNC				1
--
- /* quota bits */
- #define xfs_trans_mod_dquot_byino(t,i,f,d)		((void) 0)
- #define xfs_trans_reserve_quota_nblks(t,i,b,n,f)	(0)
-diff --git a/libxfs/trans.c b/libxfs/trans.c
-index 64131b2..ee79047 100644
---- a/libxfs/trans.c
-+++ b/libxfs/trans.c
-@@ -360,21 +360,6 @@ libxfs_trans_ijoin(
- }
- 
- void
--libxfs_trans_ijoin_ref(
--	xfs_trans_t		*tp,
--	xfs_inode_t		*ip,
--	int			lock_flags)
--{
--	ASSERT(ip->i_itemp != NULL);
--
--	xfs_trans_ijoin(tp, ip, lock_flags);
--
--#ifdef XACT_DEBUG
--	fprintf(stderr, "ijoin_ref'd inode %llu, transaction %p\n", ip->i_ino, tp);
--#endif
--}
--
--void
- libxfs_trans_inode_alloc_buf(
- 	xfs_trans_t		*tp,
- 	xfs_buf_t		*bp)
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 9fe9a36..8c9954f 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -603,35 +603,6 @@ libxfs_inode_alloc(
- 	return error;
- }
- 
--/*
-- * Userspace versions of common diagnostic routines (varargs fun).
-- */
--void
--libxfs_fs_repair_cmn_err(int level, xfs_mount_t *mp, char *fmt, ...)
--{
--	va_list	ap;
--
--	va_start(ap, fmt);
--	vfprintf(stderr, fmt, ap);
--	fprintf(stderr, "  This is a bug.\n");
--	fprintf(stderr, "%s version %s\n", progname, VERSION);
--	fprintf(stderr,
--		"Please capture the filesystem metadata with xfs_metadump and\n"
--		"report it to linux-xfs@vger.kernel.org\n");
--	va_end(ap);
--}
--
--void
--libxfs_fs_cmn_err(int level, xfs_mount_t *mp, char *fmt, ...)
--{
--	va_list	ap;
--
--	va_start(ap, fmt);
--	vfprintf(stderr, fmt, ap);
--	fputs("\n", stderr);
--	va_end(ap);
--}
--
- void
- cmn_err(int level, char *fmt, ...)
- {
+This is not a measure of "internal fragmentation". It doesn't take
+into account the fact we can (and do) allocate extents beyond EOF
+that are there (temporarily or permanently) for the file to be
+extended into without physically fragmenting the file. These can go
+away at any time, so one scan might show massive "internal
+fragmentation" and then a minute later after the EOF block scanner
+runs there is none. i.e. without changing the file data, the layout
+of the file within EOF, or file size, "internal fragmentation" can
+just magically disappear.
 
+It doesn't take into account sparse files. Well, it does by
+ignoring them which is another flag that this isn't measuring
+internal fragmentation because even sparse files can be internally
+fragmented.
+
+Which is another thing this doesn't take into account: the amount of
+data actually written to the files. e.g. a preallocated, zero length
+file is "internally fragmented" by this criteria, but the same empty
+file with a file size that matches the preallocation is not
+"internally fragmented". Yet an actual internally fragmented file
+(e.g. preallocate 1MB, set size to 1MB, write 4k at 256k) will not
+actually be noticed by this code....
+
+IOWs, what is being reported here is exactly the same information
+that "stat(blocks) vs stat(size)" will tell you, which makes me
+wonder why the method of gathering it (full fs scan via xfs_db) is
+being used when this could be done with a simple script based around
+this:
+
+$ find /mntpt -type f -exec stat -c "%s %b" {} \; | histogram_script
+
+I have no problems with adding analysis and reporting functionality
+to the filesystem tools, but they have to be done the right way, and
+not duplicate functionality and information that can be trivially
+obtained from userspace with a script and basic utilities. IMO,
+there has to be some substantial benefit from implementing the
+functionality using deep, dark filesystem gubbins that can't be
+acheived in any other way for it be worth the additional code
+maintenance burden....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
