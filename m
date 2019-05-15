@@ -2,186 +2,254 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39DDE1FC0D
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 23:07:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4F91FCA7
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 May 2019 00:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfEOVHh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 17:07:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46602 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfEOVHg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 May 2019 17:07:36 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j49so1354290otc.13
-        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 14:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zEAiaEFTDEo5AHTXNi1igG//m3yl73MYATUt/TyQM/s=;
-        b=JldDYW+LTAR5BoMmvzt3GhFBKSNFCQljO95A7CQF8h7lezT59wkCmoZR8HlZNeo3ZX
-         ACz18is11PqZLJkpbZTbPrVApVsXuwCwQzpumDKhMYUGYyeEKSs4shc89Funjj7rmnrR
-         zPCblVOMVW4B/FdfDdDBm0eQtlDpcEoDreFJYHB2TrhXh9porw+VCF0gkgtOPIdPF4AY
-         hPK/m0cAXNVhKubNUJt+B+Ge41ks183CJ7yggGXayFgFqQhy+nfr59BSRoNiAIUor77P
-         UmqXqpMAHdjAUWsPGhNLbi9iUpZ9FsKZwds3Nd3zmasJxQ+15Rm38l4yGAgNrmpf7grH
-         OFBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zEAiaEFTDEo5AHTXNi1igG//m3yl73MYATUt/TyQM/s=;
-        b=qVJYlxIJ0G4WsyfX4FABgPGRGVSjcWI2S0G6LoZaj0FWSenJzjA6ll5YOnpmw6Mm1y
-         jYOPkCUQGDWxAfPrGbqeiwnhOsrVPQ0QTC5X+qh9V7tlisV35d6MZyNzdjuA4HGmXSp1
-         vJ9saAqWdo/N7STDU6FmR1JmHFTgf4uBhhldSUnoZOGlKj8u0Marm8GIykljSU/tkNqg
-         BjzobYSKJDQ25Y1Yk1YkjHc65SdfnJa82ruN1NuPsJcUvTvaEGKfJKqoLCvcz2I2MGwO
-         1UZH9wmgnPNmAaMG5Qx6MtoDXwnTsNDYS+Fn/GWvDtBb0Wa7yZs5LIlUEn9LJjQxclVF
-         kUFQ==
-X-Gm-Message-State: APjAAAWJH5CSbSjJvRs8CU7xX6HYlqgwDrnmLmMIdWtS/G7F1KFZTEJM
-        n2asID+F5zCd5yzyQWsIVQHxC4P4rtlVEFFZgmNEmQ==
-X-Google-Smtp-Source: APXvYqyDA/EWUSXzmLh3QyRTwliJkHZQ726n1NRYV2Be3duzD6pV8jVLvRmpMo63mBrfvCQmmCONZIUwdUcOhHdo8aI=
-X-Received: by 2002:a05:6830:14d3:: with SMTP id t19mr27993804otq.57.1557954454945;
- Wed, 15 May 2019 14:07:34 -0700 (PDT)
+        id S1725953AbfEOWz1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 18:55:27 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47802 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725937AbfEOWz1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 May 2019 18:55:27 -0400
+Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 89FB1108D47C;
+        Thu, 16 May 2019 08:55:23 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hR2nx-0000U0-Rc; Thu, 16 May 2019 08:55:21 +1000
+Date:   Thu, 16 May 2019 08:55:21 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jorge Guerra <jorge.guerra@gmail.com>
+Cc:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org,
+        Omar Sandoval <osandov@osandov.com>,
+        Jorge Guerra <jorgeguerra@fb.com>
+Subject: Re: [PATCH] xfs_db: add extent count and file size histograms
+Message-ID: <20190515225521.GA29573@dread.disaster.area>
+References: <20190514185026.73788-1-jorgeguerra@gmail.com>
+ <20190514233119.GS29573@dread.disaster.area>
+ <f121a7d3-ef90-2777-3074-dee302a3ad28@sandeen.net>
+ <20190515020547.GT29573@dread.disaster.area>
+ <CAEFkGAzWKdS4B+jzbWZ8vivqASeQrJVxFQOio913uBiVOG0zrA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-2-pagupta@redhat.com>
-In-Reply-To: <20190514145422.16923-2-pagupta@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 15 May 2019 14:07:23 -0700
-Message-ID: <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
-Subject: Re: [PATCH v9 1/7] libnvdimm: nd_region flush callback support
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEFkGAzWKdS4B+jzbWZ8vivqASeQrJVxFQOio913uBiVOG0zrA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
+        a=7-415B0cAAAA:8 a=A72CctHEorPLOuz9pgkA:9 a=TwHioJI-g183NHq7:21
+        a=tBe9WHzLXKGBfaAC:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 14, 2019 at 7:55 AM Pankaj Gupta <pagupta@redhat.com> wrote:
->
-> This patch adds functionality to perform flush from guest
-> to host over VIRTIO. We are registering a callback based
-> on 'nd_region' type. virtio_pmem driver requires this special
-> flush function. For rest of the region types we are registering
-> existing flush function. Report error returned by host fsync
-> failure to userspace.
->
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  drivers/acpi/nfit/core.c     |  4 ++--
->  drivers/nvdimm/claim.c       |  6 ++++--
->  drivers/nvdimm/nd.h          |  1 +
->  drivers/nvdimm/pmem.c        | 13 ++++++++-----
->  drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
->  include/linux/libnvdimm.h    |  8 +++++++-
->  6 files changed, 46 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> index 5a389a4f4f65..08dde76cf459 100644
-> --- a/drivers/acpi/nfit/core.c
-> +++ b/drivers/acpi/nfit/core.c
-> @@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk=
-, unsigned int bw,
->                 offset =3D to_interleave_offset(offset, mmio);
->
->         writeq(cmd, mmio->addr.base + offset);
-> -       nvdimm_flush(nfit_blk->nd_region);
-> +       nvdimm_flush(nfit_blk->nd_region, NULL);
->
->         if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
->                 readq(mmio->addr.base + offset);
-> @@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk =
-*nfit_blk,
->         }
->
->         if (rw)
-> -               nvdimm_flush(nfit_blk->nd_region);
-> +               nvdimm_flush(nfit_blk->nd_region, NULL);
->
->         rc =3D read_blk_stat(nfit_blk, lane) ? -EIO : 0;
->         return rc;
-> diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-> index fb667bf469c7..13510bae1e6f 100644
-> --- a/drivers/nvdimm/claim.c
-> +++ b/drivers/nvdimm/claim.c
-> @@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common *=
-ndns,
->         struct nd_namespace_io *nsio =3D to_nd_namespace_io(&ndns->dev);
->         unsigned int sz_align =3D ALIGN(size + (offset & (512 - 1)), 512)=
-;
->         sector_t sector =3D offset >> 9;
-> -       int rc =3D 0;
-> +       int rc =3D 0, ret =3D 0;
->
->         if (unlikely(!size))
->                 return 0;
-> @@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common *=
-ndns,
->         }
->
->         memcpy_flushcache(nsio->addr + offset, buf, size);
-> -       nvdimm_flush(to_nd_region(ndns->dev.parent));
-> +       ret =3D nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
-> +       if (ret)
-> +               rc =3D ret;
->
->         return rc;
->  }
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index a5ac3b240293..0c74d2428bd7 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -159,6 +159,7 @@ struct nd_region {
->         struct badblocks bb;
->         struct nd_interleave_set *nd_set;
->         struct nd_percpu_lane __percpu *lane;
-> +       int (*flush)(struct nd_region *nd_region, struct bio *bio);
+On Wed, May 15, 2019 at 09:39:01AM -0700, Jorge Guerra wrote:
+> On Tue, May 14, 2019 at 7:05 PM Dave Chinner <david@fromorbit.com> wrote:
+> > On Tue, May 14, 2019 at 07:06:52PM -0500, Eric Sandeen wrote:
+> > > On 5/14/19 6:31 PM, Dave Chinner wrote:
+> > This is not a measure of "internal fragmentation". It doesn't take
+> > into account the fact we can (and do) allocate extents beyond EOF
+> > that are there (temporarily or permanently) for the file to be
+> > extended into without physically fragmenting the file. These can go
+> > away at any time, so one scan might show massive "internal
+> > fragmentation" and then a minute later after the EOF block scanner
+> > runs there is none. i.e. without changing the file data, the layout
+> > of the file within EOF, or file size, "internal fragmentation" can
+> > just magically disappear.
+> 
+> I see, how much is do we expect this to be (i.e 1%, 10%? of the file
+> size?).  In other words what's the order of magnitude of the
+> "preemtive" allocation compared to the total space in the file system?
 
-So this triggers:
+Specualtive delalloc can be up to MAXEXTLEN on large files. It is
+typically the size of the file again as the file is growing. i.e. if
+the file is 64k, we'll preallocate 64k. if it's 1GB, we'll prealloc
+1GB, if it's over 8GB (MAXEXTLEN on a 4k block size filesystem),
+then we'll prealloc 8GB.
 
-In file included from drivers/nvdimm/e820.c:7:
-./include/linux/libnvdimm.h:140:51: warning: =E2=80=98struct bio=E2=80=99 d=
-eclared
-inside parameter list will not be visible outside of this definition
-or declaration
-  int (*flush)(struct nd_region *nd_region, struct bio *bio);
-                                                   ^~~
-I was already feeling uneasy about trying to squeeze this into v5.2,
-but this warning and the continued drip of comments leads me to
-conclude that this driver would do well to wait one more development
-cycle. Lets close out the final fixups and let this driver soak in
--next. Then for the v5.3 cycle I'll redouble my efforts towards the
-goal of closing patch acceptance at the -rc6 / -rc7 development
-milestone.
+This typically is not removed when the file is closed - it is
+typically removed when the file has not been modified for a few
+minutes and the EOF block scanner runs over it, the inode is cycled
+out of cache or we hit an ENOSPC condition, in which case the EOF
+block scanner is run to clean up such prealloc before we attempt
+allocation again. THe amount of speculative prealloc is dialled back
+as the filesystem gets nearer to ENOSPC (>95% capacity) or the user
+starts to run out of quota space.
+
+So, yes, it can be a large amount of space that is consumed
+temporarily, but the amount is workload dependent. The
+reality is that almost no-one notices that XFS does this or the
+extent to which XFS makes liberal use of free space for
+fragmentation avoidance...
+
+Of course, the filesystem has no real control over user directed
+preallocation beyond EOF (i.e. fallocate()) and we do not ever
+remove that unless the user runs ftruncate(). Hence the space
+beyond EOF might be a direct result of the applications that are
+running and not filesystem behaviour related at all...
+
+> > It doesn't take into account sparse files. Well, it does by
+> > ignoring them which is another flag that this isn't measuring
+> > internal fragmentation because even sparse files can be internally
+> > fragmented.
+> >
+> > Which is another thing this doesn't take into account: the amount of
+> > data actually written to the files. e.g. a preallocated, zero length
+> > file is "internally fragmented" by this criteria, but the same empty
+> > file with a file size that matches the preallocation is not
+> > "internally fragmented". Yet an actual internally fragmented file
+> > (e.g. preallocate 1MB, set size to 1MB, write 4k at 256k) will not
+> > actually be noticed by this code....
+> 
+> Interesting, how can we better account for these?
+
+If it is preallocated space, then you need to scan each file to
+determine the ratio of written to unwritten extents in the file.
+(i.e. allocated space that contains data vs allocated space that
+does not contain data). Basically, you need something similar to
+what xfs_fsr is doing to determine if files need defragmentation or
+not...
+
+> > IOWs, what is being reported here is exactly the same information
+> > that "stat(blocks) vs stat(size)" will tell you, which makes me
+> > wonder why the method of gathering it (full fs scan via xfs_db) is
+> > being used when this could be done with a simple script based around
+> > this:
+> >
+> > $ find /mntpt -type f -exec stat -c "%s %b" {} \; | histogram_script
+> 
+> While this is true that this can be measured via a simply a script,
+> I'd like to point out that it would be significantly more inefficient,
+> for instance:
+> 
+> # time find /mnt/pt -type f -exec stat -c "%s %b" {} \; > /tmp/file-sizes
+> 
+> real    27m38.885s
+> user    3m29.774s
+> sys     17m9.272s
+
+That's close on CPU bound, so I'm betting most of that time is in
+fork/exec for the stat binary for each file that find pipes out.
+
+e.g on my workstation, which has ~50,000 read iops @ QD=1 capability
+on the root filesystem:
+
+$  time sudo find / -type f > /tmp/files
+
+real	0m8.707s
+user	0m1.006s
+sys	0m2.571s
+
+$ wc -l /tmp/files
+1832634 /tmp/files
+
+So, 1.8m files traversed in under 9 seconds - this didn't stat the
+inodes because ftype. How long does the example script take?
+
+$ time sudo find / -type f -exec stat -c "%s %b" {} \; > /tmp/file-sizes
+<still waiting after 10 minutes>
+.....
+
+While we are waiting, lets just get rid of the fork/exec overhead,
+eh?
+
+$ time sudo sh -c 'find / -type f |xargs -d "\n" stat -c "%s %b" > /tmp/files-size-2'
+
+real	0m4.712s
+user	0m2.732s
+sys	0m5.073s
+
+Ok, a fair bunch of the directory heirarchy and inodes were cached,
+but the actual stat takes almost no time at all and almost no CPU
+usage.
+
+Back to the fork-exec script, still waiting for it to finish,
+despite the entire file set now residing in kernel memory.
+
+Fmeh, I'm just going to kill it.
+
+....
+real	26m34.542s
+user	18m58.183s
+sys	7m38.125s
+$ wc -l /tmp/file-sizes
+1824062 /tmp/file-sizes
+
+Oh, it was almost done. IOWs, the /implementation/ was the problem
+
+I think by now you understand that I gave an example of how the
+information you are querying is already available through normal
+POSIX APIs, not that it was the most optimal way of running that
+query through those APIs.
+
+It is, however, /trivial/ to do this query traversal query at max IO
+speed even using scripts - using xargs to batch arguments to
+utilities to avoid fork/exec overhead is sysadmin 101 stuff...
+
+> # echo "frag -s -e" | time /tmp/xfs_db -r /dev/sdb1
+> [...]
+> 0.44user 2.48system 0:05.42elapsed 53%CPU (0avgtext+0avgdata 996000maxresident)k
+> 2079416inputs+0outputs (0major+248446minor)pagefaults 0swaps
+> 
+> That's 5.4s vs +27 minutes without considering the time to build the histogram.
+
+Yup, but now you've explained why you are trying to use xfs_db in
+inappropriate ways: performance.
+
+Despite the fact directory traversal can be fast, it is still not
+the most IO efficient way to iterate inodes. xfs_db does that by
+reading the inodes in ascending order from the AGI btrees, meaning
+it's a single sequential pass across the filesystem to parse indoes
+a chunk at a time.
+
+The sad fact about all this is that we've been able to do this from
+userspace with XFS since .... 1994.  It's called bulkstat. I say
+this is sad because I've lost count of the number of times people
+have wasted time trying to re-invent the wheel rather than just
+asking the experts a simple question and being told about bulkstat
+or GETFSMAP....
+
+Yup, there's even a basic test program in fstests that outputs stat
+information from bulkstat that you can filter to report the info you
+are generating histograms from:
+
+$ time sudo src/bstat / | grep -A1 "mode 01" | awk -e '/blksize/ { print $4, $6 }' > /tmp/bstat-sizes
+
+real	0m11.317s
+user	0m8.686s
+sys	0m5.909s
+
+Again, this is /not an optimal implementation/ but just an example
+that this functionality is available to userspace. Targeted
+implementations can be found in tools like xfs_fsr and xfsdump which
+use bulkstat to find the indoes they need to operate on much faster
+than a directory walk ever will acheive....
+
+> > I have no problems with adding analysis and reporting functionality
+> > to the filesystem tools, but they have to be done the right way, and
+> > not duplicate functionality and information that can be trivially
+> > obtained from userspace with a script and basic utilities. IMO,
+> > there has to be some substantial benefit from implementing the
+> > functionality using deep, dark filesystem gubbins that can't be
+> > acheived in any other way for it be worth the additional code
+> > maintenance burden....
+> 
+> In my view, the efficiency gain should justify the need to for this
+> tool.
+
+As I said, I have no objections to such functionality if it is /done
+the right way/. I'm not arguing against providing such functionality
+to users, I'm pointing out that the implementation has issues that
+will cause problems for users that try to use this functionality
+and trying to let you know how to implement it safely without giving
+up any of the efficiency gains.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
