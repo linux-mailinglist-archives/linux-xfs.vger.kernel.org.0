@@ -2,114 +2,244 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF2611FBBE
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 22:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D5E41FBC7
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 22:53:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfEOUvI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 16:51:08 -0400
-Received: from sandeen.net ([63.231.237.45]:49624 "EHLO sandeen.net"
+        id S1727766AbfEOUxJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 16:53:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37800 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbfEOUvI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 May 2019 16:51:08 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726985AbfEOUxJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 May 2019 16:53:09 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 193901170D;
-        Wed, 15 May 2019 15:50:50 -0500 (CDT)
-Subject: Re: xfsdump confused by ino's < root ino
-To:     Omar Sandoval <osandov@osandov.com>, linux-xfs@vger.kernel.org,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20190515204732.GA4466@vader>
-From:   Eric Sandeen <sandeen@sandeen.net>
+        by mx1.redhat.com (Postfix) with ESMTPS id C8B8B309264F;
+        Wed, 15 May 2019 20:53:07 +0000 (UTC)
+Received: from [10.36.116.133] (ovpn-116-133.ams2.redhat.com [10.36.116.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C08460BE5;
+        Wed, 15 May 2019 20:52:54 +0000 (UTC)
+Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+From:   David Hildenbrand <david@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, mst@redhat.com
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@fromorbit.com,
+        cohuck@redhat.com, xiaoguangrong.eric@gmail.com,
+        pbonzini@redhat.com, kilobyte@angband.pl, yuval.shaia@oracle.com,
+        jstaron@google.com
+References: <20190514145422.16923-1-pagupta@redhat.com>
+ <20190514145422.16923-3-pagupta@redhat.com>
+ <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
- nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
- WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
- vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
- ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
- sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
- BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
- gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
- LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
- dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
- bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
- aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
- UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
- EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
- sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
- 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
- gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
- 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
- 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
- WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
- Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
- X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
- SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
- 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
- GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
- 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
- Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
- ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
- TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
- gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
- AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
- YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
- mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
- LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
- LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
- MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
- JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
- Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
- m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
- fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <f37ae69d-39a6-b2d0-1cc9-806d1d597086@sandeen.net>
-Date:   Wed, 15 May 2019 15:51:07 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <1d6f6964-4653-ebf3-554f-666fda3779f1@redhat.com>
+Date:   Wed, 15 May 2019 22:52:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190515204732.GA4466@vader>
+In-Reply-To: <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 15 May 2019 20:53:08 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/15/19 3:47 PM, Omar Sandoval wrote:
-> Hi,
+On 15.05.19 22:46, David Hildenbrand wrote:
+>> +	vpmem->vdev = vdev;
+>> +	vdev->priv = vpmem;
+>> +	err = init_vq(vpmem);
+>> +	if (err) {
+>> +		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
+>> +		goto out_err;
+>> +	}
+>> +
+>> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+>> +			start, &vpmem->start);
+>> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+>> +			size, &vpmem->size);
+>> +
+>> +	res.start = vpmem->start;
+>> +	res.end   = vpmem->start + vpmem->size-1;
 > 
-> We use xfsdump and xfsrestore (v3.1.7) to back up one of our storage
-> systems, and we ran into an issue where xfsdump prints the following for
-> a mount which isn't a bind mount:
+> nit: " - 1;"
 > 
-> /sbin/xfsdump: NOTE: root ino 136 differs from mount dir ino 256, bind mount?
+>> +	vpmem->nd_desc.provider_name = "virtio-pmem";
+>> +	vpmem->nd_desc.module = THIS_MODULE;
+>> +
+>> +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+>> +						&vpmem->nd_desc);
+>> +	if (!vpmem->nvdimm_bus) {
+>> +		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
+>> +		err = -ENXIO;
+>> +		goto out_vq;
+>> +	}
+>> +
+>> +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
+>> +
+>> +	ndr_desc.res = &res;
+>> +	ndr_desc.numa_node = nid;
+>> +	ndr_desc.flush = async_pmem_flush;
+>> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+>> +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+>> +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
+>> +	if (!nd_region) {
+>> +		dev_err(&vdev->dev, "failed to create nvdimm region\n");
+>> +		err = -ENXIO;
+>> +		goto out_nd;
+>> +	}
+>> +	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
+>> +	return 0;
+>> +out_nd:
+>> +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
+>> +out_vq:
+>> +	vdev->config->del_vqs(vdev);
+>> +out_err:
+>> +	return err;
+>> +}
+>> +
+>> +static void virtio_pmem_remove(struct virtio_device *vdev)
+>> +{
+>> +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+>> +
+>> +	nvdimm_bus_unregister(nvdimm_bus);
+>> +	vdev->config->del_vqs(vdev);
+>> +	vdev->config->reset(vdev);
+>> +}
+>> +
+>> +static struct virtio_driver virtio_pmem_driver = {
+>> +	.driver.name		= KBUILD_MODNAME,
+>> +	.driver.owner		= THIS_MODULE,
+>> +	.id_table		= id_table,
+>> +	.probe			= virtio_pmem_probe,
+>> +	.remove			= virtio_pmem_remove,
+>> +};
+>> +
+>> +module_virtio_driver(virtio_pmem_driver);
+>> +MODULE_DEVICE_TABLE(virtio, id_table);
+>> +MODULE_DESCRIPTION("Virtio pmem driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+>> new file mode 100644
+>> index 000000000000..ab1da877575d
+>> --- /dev/null
+>> +++ b/drivers/nvdimm/virtio_pmem.h
+>> @@ -0,0 +1,60 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * virtio_pmem.h: virtio pmem Driver
+>> + *
+>> + * Discovers persistent memory range information
+>> + * from host and provides a virtio based flushing
+>> + * interface.
+>> + **/
+>> +
+>> +#ifndef _LINUX_VIRTIO_PMEM_H
+>> +#define _LINUX_VIRTIO_PMEM_H
+>> +
+>> +#include <linux/virtio_ids.h>
+>> +#include <linux/module.h>
+>> +#include <linux/virtio_config.h>
+>> +#include <uapi/linux/virtio_pmem.h>
+>> +#include <linux/libnvdimm.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +struct virtio_pmem_request {
+>> +	/* Host return status corresponding to flush request */
+>> +	int ret;
+>> +
+>> +	/* command name*/
+>> +	char name[16];
 > 
-> Which also results in a crash from xfsrestore:
+> So ... why are we sending string commands and expect native-endianess
+> integers and don't define a proper request/response structure + request
+> types in include/uapi/linux/virtio_pmem.h like
 > 
-> xfsrestore: tree.c:757: tree_begindir: Assertion `ino != persp->p_rootino || hardh == persp->p_rooth' failed.
-> 
-> Looking at [1], xfsdump uses bulkstat to get the minimum inode number on
-> the filesystem. But, at least one of our filesystems has a root inode
-> number of 256 and uses inode numbers 136-199, which tricks xfsdump into
-> thinking that the filesystem is bind mounted. Is this an invalid
-> assumption in xfsdump, or is it filesystem corruption?
-> 
-> Thanks!
-> 
-> 1: https://git.kernel.org/pub/scm/fs/xfs/xfsdump-dev.git/commit/?id=25195ebf107dc81b1b7cea1476764950e1d6cc9d
+> struct virtio_pmem_resp {
+> 	__virtio32 ret;
+> }
 
-Yep, this is that heuristic going wrong.  We (I) didn't realize that we could ever
-get inode numbers allocated which were less than the root inode, but alas.
+FWIW, I wonder if we should even properly translate return values and
+define types like
 
-It's an invalid assumption in xfsdump.  I guess we need to find a way
-out of this ... the goal was to detect bind mounts, but apparently
-the situation you have is more common than expected (well, we expected
-it to not exist ...)
+VIRTIO_PMEM_RESP_TYPE_OK	0
+VIRTIO_PMEM_RESP_TYPE_EIO	1
 
-For now just using an older version of xfsdump should be a workaround,
-sorry about that.
+..
 
--Eric
+> 
+> #define VIRTIO_PMEM_REQ_TYPE_FLUSH	1
+> struct virtio_pmem_req {
+> 	__virtio16 type;
+> }
+> 
+> ... and this way we also define a proper endianess format for exchange
+> and keep it extensible
+> 
+> @MST, what's your take on this?
+> 
+> 
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
