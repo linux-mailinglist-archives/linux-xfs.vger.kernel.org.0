@@ -2,66 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 889C01F6C0
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 16:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C60161F806
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 17:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfEOOma (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 10:42:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34546 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfEOOma (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 May 2019 10:42:30 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F36530A01B1;
-        Wed, 15 May 2019 14:42:30 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8A6A63B8B;
-        Wed, 15 May 2019 14:42:29 +0000 (UTC)
-Date:   Wed, 15 May 2019 10:42:28 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/6] xfs: refactor by-size extent allocation mode
-Message-ID: <20190515144227.GE2898@bfoster>
-References: <20190509165839.44329-1-bfoster@redhat.com>
- <20190509165839.44329-6-bfoster@redhat.com>
- <20190510173413.GD18992@infradead.org>
- <20190513154610.GF61135@bfoster>
- <20190515081016.GJ29211@infradead.org>
+        id S1728407AbfEOP5f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 11:57:35 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:40529 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEOP5f (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 May 2019 11:57:35 -0400
+Received: by mail-lj1-f172.google.com with SMTP id d15so257828ljc.7
+        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 08:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=79A4BTL8ExzweRzFS8quFeHLFVif5As3EVU1vOW0R6k=;
+        b=SajgcHYELnxAc2JODlKl8LZJMaDj+/oc88LJomoaTJerkFcXmqEPoo0wRKQuKXKWu6
+         4NFuNyVmUaA8NXBn8O6y8IQCU0BXi4fr5u93dVNcyBed4KHBS6DvK/78ffWwB/7+r9UM
+         SB0ON5AEW2Z5C03GN65JRU8LyU3UvFwMNBzwNpT4sjB4l5K55xe2G/DSn2/rU9RGsjE6
+         uxfX61nAn9W40/qGGjEZ0iP/rMwO06QBn6HVNnua6wrfeER3yvxQeGckSDr6UPJbbFjq
+         MmyfE8OhOwTK8JcG7WEmu30SWDHql8rCBQ7ivnPM3bdU8Xxo3vTB/5Yy7WB+NbUwDKLE
+         oSXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=79A4BTL8ExzweRzFS8quFeHLFVif5As3EVU1vOW0R6k=;
+        b=Gya3WRGuaYifrlhQ/KydDEZYn4H0uVWeBzedaS6mEpFJkSvuMR2XuiMJWAteyqGlgR
+         +JQfLygv8g9//UlDYU7+6HH0JuI04DRXG635du8gAASXlsFKUgoZp4GmVN/1kZNLdMQd
+         flZnpE5DnujcoD25jRAy0pa4UnJgzvfYkKAQiOhOJG+42na0vZefkjGi1yx4RIgYXRb3
+         nrrdIb2OJsqNtxfb2Tzggy0O4kP0AMqZpipg2VCJ6IDAwkjuhSgEozzg9w7iX87OeOBe
+         +S/WJ12jSt/OJw63hyMp5XvgWKkjKHhoZqNn+9WFQkGi2my3iIGf78wE6Q1+0N4DZcsj
+         RDQA==
+X-Gm-Message-State: APjAAAWPcaKy1/Dcm8dokoJkwMLYlXYKs+3pQeJHcoqcs3fJ4aSzGC5a
+        is94YZEQvAHyxkQ6Lp7gN/W5mNhwOwb0GDr1Y4I=
+X-Google-Smtp-Source: APXvYqy0TplImBZ62UxNmSkrXqe6PLaBPdBFiMMwxx6zMGiBYyy/dzZkydd6HZy3xAQMN2wZKKvNODWQZ/gI5gYX15Q=
+X-Received: by 2002:a2e:206:: with SMTP id 6mr18817543ljc.59.1557935852585;
+ Wed, 15 May 2019 08:57:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515081016.GJ29211@infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 15 May 2019 14:42:30 +0000 (UTC)
+References: <20190514185026.73788-1-jorgeguerra@gmail.com> <4a47cdc4-4a96-cf78-9e48-83d6cd0fe65f@sandeen.net>
+In-Reply-To: <4a47cdc4-4a96-cf78-9e48-83d6cd0fe65f@sandeen.net>
+From:   Jorge Guerra <jorge.guerra@gmail.com>
+Date:   Wed, 15 May 2019 08:57:21 -0700
+Message-ID: <CAEFkGAx1A3-XXqWSssa3QQsTZW-8BuVU_D+Dq2sYfKAKs0+t_w@mail.gmail.com>
+Subject: Re: [PATCH] xfs_db: add extent count and file size histograms
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org, Omar Sandoval <osandov@osandov.com>,
+        Jorge Guerra <jorgeguerra@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:10:16AM -0700, Christoph Hellwig wrote:
-> > WRT to merging the functions, I'm a little concerned about the result
-> > being too large. What do you think about folding in _vextent_type() but
-> > at the same time factoring out the rmap/counter/resv post alloc bits
-> > into an xfs_alloc_ag_vextent_accounting() helper or some such?
-> 
-> Sounds good to me.  I've looked at the function and another nice thing
-> to do would be to not pass the ret bno to xfs_alloc_ag_vextent_agfl,
-> but let that function fill out the args structure return value itself.
-> 
+Thanks Eric,
 
-I believe that's what the existing xfs_alloc_ag_vextent_small() function
-does if it happens to allocate from the AGFL. I initially found that
-inconsistent, but looking at the additional refactoring with the _type()
-function folded away and whatnot I think it's actually better. I'll push
-the args update back down into the AGFL helper.
+I'm addressing these comments.  Will send an update once we have an
+agreement with Dave into how and where to implement this.
 
-> Also for the trace piints that still say near in them - maybe we should
-> change that near to ag?
+On Tue, May 14, 2019 at 1:02 PM Eric Sandeen <sandeen@sandeen.net> wrote:
+>
+> On 5/14/19 1:50 PM, Jorge Guerra wrote:
+> > +             dbprintf(_("capacity used (bytes): %llu (%.3f %cB)\n"),
+> > +             extstats.logicalused, answer, iec_prefixes[i]);
+>
+> I think I missed this instance of "indent please" and probably others...
+>
+> (I'm kind of wondering about carrying 'used' in bytes, but I suppose we're
+> ok until we really get zettabyte filesytems in the wild) ;)
+>
+> -Eric
 
-Yeah, I need to make another pass over the tracepoints...
 
-Brian
+
+-- 
+Jorge E Guerra D
