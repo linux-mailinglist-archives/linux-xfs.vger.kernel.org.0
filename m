@@ -2,135 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20BA21F2C9
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 14:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86DBE1F492
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 14:39:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfEOMHE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 08:07:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47014 "EHLO mx1.redhat.com"
+        id S1726642AbfEOMi7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 08:38:59 -0400
+Received: from sandeen.net ([63.231.237.45]:40502 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729653AbfEOMHD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 May 2019 08:07:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726392AbfEOMi6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 May 2019 08:38:58 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 18518C04B94F;
-        Wed, 15 May 2019 12:07:03 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B643B1001E61;
-        Wed, 15 May 2019 12:07:02 +0000 (UTC)
-Date:   Wed, 15 May 2019 08:07:01 -0400
-From:   Brian Foster <bfoster@redhat.com>
+        by sandeen.net (Postfix) with ESMTPSA id BB682116F4;
+        Wed, 15 May 2019 07:38:40 -0500 (CDT)
+Subject: Re: [PATCH 05/11] libxfs: de-libxfsify core(-ish) functions.
 To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: Linus' tree hangs in generic/530
-Message-ID: <20190515120657.GA2898@bfoster>
-References: <20190515063208.GA6981@infradead.org>
+Cc:     Eric Sandeen <sandeen@redhat.com>, linux-xfs@vger.kernel.org
+References: <1557519510-10602-1-git-send-email-sandeen@redhat.com>
+ <1557519510-10602-6-git-send-email-sandeen@redhat.com>
+ <b78a858b-8be1-ced1-0f16-f4a916a2e2ca@sandeen.net>
+ <20190515065215.GE29211@infradead.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <7c001628-3557-12e5-dec8-60ff525008d9@sandeen.net>
+Date:   Wed, 15 May 2019 07:38:56 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515063208.GA6981@infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 15 May 2019 12:07:03 +0000 (UTC)
+In-Reply-To: <20190515065215.GE29211@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:32:08PM -0700, Christoph Hellwig wrote:
-> When running the xfstests auto group on x86_64, 4k fs and reflink
-> I get the following hang in generic/530.  Did anyone else notice it?
+
+
+On 5/15/19 1:52 AM, Christoph Hellwig wrote:
+> On Fri, May 10, 2019 at 04:41:03PM -0500, Eric Sandeen wrote:
+>> On 5/10/19 3:18 PM, Eric Sandeen wrote:
+>>> There are a ton of "libxfs_" prefixed functions in libxfs/trans.c which
+>>> are only called internally by code in libxfs/ - As I understand it,
+>>> these should probably be just "xfs_" functions, and indeed many
+>>> of them have counterparts in the kernel libxfs/ code.  This is one
+>>> small step towards better sync-up of some of the misc libxfs/*
+>>> transaction code with kernel code.
+>>
+>> I should have changed internal callers too, will resend after other
+>> review.
+> 
+> I have to admit I never got this whole libxfs renaming.  Why can't
+> we just use the xfs_* namespace for libxfs as well to start with?
 > 
 
-I've seen this test take forever on older kernels without the associated
-kernel fixes (the unlinked inode cache, I think), but I don't recall
-seeing anything like this on for-next. I just ran a few more iterations
-without any problems.
+I'm struggling to understand it as well.  I have a 2nd patch to move
+still more of the shared-ish xfs functions to strip off the "lib" part,
+and for the rest I don't know - I'm trying to get to where I understand
+the original intent of all this ...
 
-It looks like we're waiting on log reservation space for some reason,
-which seems strange given that nothing else should be running at this
-point of the mount.
-
-FWIW, I'm on a smallish block device in a resource limited VM. From
-530.full:
-
-meta-data=/dev/mapper/test-scratch isize=512    agcount=4, agsize=983040 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=1, sparse=1, rmapbt=0
-         =                       reflink=1
-data     =                       bsize=4096   blocks=3932160, imaxpct=25
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-log      =internal log           bsize=4096   blocks=2560, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-create
-Opened 49997 files in 18.09s.
-umount
-Unmount took 1s.
-
-Have you determined whether this is actually hung btw as opposed to
-hitting some kind of sequence with pathological performance that isn't
-typically hit during the test? I don't recall whether the older kernel
-tests I referred to above resulted in task hung warnings or not, but I
-guess it wouldn't surprise me given how long the tests seemed to take to
-complete (I eventually just killed and expunged them).
-
-Brian
-
-> generic/530	[   41.352893] run fstests generic/530 at 2019-05-15 06:25:17
-> [   41.750323] XFS (vdc): Mounting V5 Filesystem
-> [   41.760564] XFS (vdc): Ending clean mount
-> [   41.780058] XFS (vdc): User initiated shutdown received. Shutting down filesm
-> [   41.786504] XFS (vdc): Unmounting Filesystem
-> [   42.065589] XFS (vdc): Mounting V5 Filesystem
-> [   42.074010] XFS (vdc): Ending clean mount
-> [   45.567686] XFS (vdc): User initiated shutdown received. Shutting down filesm
-> [   46.129502] XFS (vdc): Unmounting Filesystem
-> [   46.630663] XFS (vdc): Mounting V5 Filesystem
-> [   46.902250] XFS (vdc): Starting recovery (logdev: internal)
-> [   69.622105] random: crng init done
-> [   69.622587] random: 7 urandom warning(s) missed due to ratelimiting
-> [  243.000576] INFO: task mount:4446 blocked for more than 120 seconds.
-> [  243.004255]       Not tainted 5.1.0+ #4615
-> [  243.006585] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this.
-> [  243.010465] mount           D    0  4446   4228 0x00004000
-> [  243.013467] Call Trace:
-> [  243.014736]  ? __schedule+0x2e3/0x870
-> [  243.016576]  schedule+0x28/0x90
-> [  243.019076]  xlog_grant_head_wait+0x4e/0x2b0
-> [  243.021715]  xlog_grant_head_check+0xeb/0x160
-> [  243.024000]  xfs_log_reserve+0x10d/0x330
-> [  243.025690]  ? __percpu_counter_compare+0x14/0x60
-> [  243.027829]  xfs_trans_reserve+0x1a7/0x2b0
-> [  243.029854]  xfs_trans_alloc+0xc7/0x1e0
-> [  243.031662]  xfs_inactive_ifree+0x1a8/0x1f0
-> [  243.033055]  xfs_inactive+0xf7/0x260
-> [  243.034261]  xfs_fs_destroy_inode+0xcc/0x2c0
-> [  243.035551]  destroy_inode+0x36/0x70
-> [  243.036734]  xlog_recover_process_one_iunlink+0xeb/0x170
-> [  243.038142]  xlog_recover_process_iunlinks.isra.32+0x77/0xc0
-> [  243.039428]  xlog_recover_finish+0x2e/0x90
-> [  243.040479]  xfs_log_mount_finish+0x5a/0x100
-> [  243.041470]  xfs_mountfs+0x560/0x990
-> [  243.042288]  ? xfs_mru_cache_create+0x186/0x1e0
-> [  243.043139]  xfs_fs_fill_super+0x4fc/0x710
-> [  243.043953]  ? xfs_test_remount_options+0x50/0x50
-> [  243.044916]  mount_bdev+0x17a/0x1b0
-> [  243.045693]  legacy_get_tree+0x2b/0x50
-> [  243.046358]  vfs_get_tree+0x23/0xe0
-> [  243.046997]  do_mount+0x2da/0xa40
-> [  243.047693]  ? memdup_user+0x39/0x60
-> [  243.048543]  ksys_mount+0xb1/0xd0
-> [  243.049367]  __x64_sys_mount+0x1c/0x20
-> [  243.050117]  do_syscall_64+0x4b/0x190
-> [  243.050847]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  243.051652] RIP: 0033:0x7fd9fb8b27fa
-> [  243.052220] Code: Bad RIP value.
-> [  243.052784] RSP: 002b:00007ffd46b484a8 EFLAGS: 00000202 ORIG_RAX: 00000000005
-> [  243.054026] RAX: ffffffffffffffda RBX: 00005646aad78970 RCX: 00007fd9fb8b27fa
-> [  243.055109] RDX: 00005646aad78b50 RSI: 00005646aad78b90 RDI: 00005646aad78b70
-> [  243.056088] RBP: 0000000000000000 R08: 0000000000000000 R09: 00005646aad78b50
-> [  243.057080] R10: 00000000c0ed0000 R11: 0000000000000202 R12: 00005646aad78b70
-> [  243.058081] R13: 00005646aad78b50 R14: 0000000000000000 R15: 00000000ffffffff
+Thanks,
+-Eric
