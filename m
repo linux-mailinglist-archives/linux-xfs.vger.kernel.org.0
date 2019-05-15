@@ -2,80 +2,148 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 281321FBAE
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 22:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC45A1FBB7
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2019 22:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEOUrf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 May 2019 16:47:35 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:41243 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfEOUrf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 May 2019 16:47:35 -0400
-Received: by mail-pl1-f176.google.com with SMTP id f12so431796plt.8
-        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 13:47:35 -0700 (PDT)
+        id S1727317AbfEOUtJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 May 2019 16:49:09 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45706 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfEOUtI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 May 2019 16:49:08 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w144so810056oie.12
+        for <linux-xfs@vger.kernel.org>; Wed, 15 May 2019 13:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hCSQTm0EH9NefFrALPeGOEdNIPIUXYAKnHYfhXJl2RE=;
-        b=QMXR5JvN4n0oa91weHy66Lnlgb7TVRy3NFItA4i1JU1SkKkqYmq/WNRzkXkbpKEzeD
-         /v693hZCjkEK+wvWXEHg/dd7GtxfeY2Rq05Ly5XmqfgqrkcLHwWciTTrCjW682hG5lES
-         92CEtDNU5xsDVrK5wPjLwXsLCC+x7rcNB0/FFzy7JWw05hx0/ItuAiaH8HaUF9ucgVOK
-         zpiYMW0jrel0zQF+9+20P74K/i3xLO0MpFDEe69O81X2v/iU69yxs7FOpI605x+Rxa0Y
-         L4pf0jK5L0qsgux61+1laMQ4twXUMqgXv1xmP2xHyyAwwjZSpT4IM84yxjitKJlOjzUN
-         D0Zw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e4kuu9yC2IGARpDlHp3ONWA+CXX8IcBRGF2a1wpOmUI=;
+        b=Xrsk/LtY64WEnj9luwHstQr/vldj3FFs0v4BjRZAzdGdLcSlF9SqwRFLIkegzPHAwK
+         4BwtJSHQVRbiUejXql7JFlZJLxJDitd+1N9vZBZp9AH7V4H3tF8C8YrWWR2scfqIvklg
+         K3++RgNbjyAcHvsO/gtBY9KzOiuwBdRxZ9uNTFcjGbcpIU3ySWcKBqx1i7aYED7uA8We
+         wfFf0dayHlB1izT9baOTeQixtzK3OgVjTQ6b6HX+qmLkPmX0ef8xTCNg+LPpZh1HotLT
+         NK2turIQ2FHb03Mu3tIJfJn8adJ/JeZmQFe6DvMuBLC9/f4qF9rSl3qlHKudtMX7ueMn
+         BOXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hCSQTm0EH9NefFrALPeGOEdNIPIUXYAKnHYfhXJl2RE=;
-        b=Tur/FBWmQHYgzq/SYq4RMVIo+8qyDZnYe4sDyiM6HiUrIM+s1ugYsOfZ1RwsxpXy1m
-         qkFZp3Eu/QSfEGdfQRvRFhN+xErH7nHEiA0PE43SC5a3GAx+cV7rbcKVa6oBwlJSSVdx
-         DseloMWpgBBaWbB3A5IS817bseyDwgttnizvgKURqAMYi3Zr6RLdPCaANb69ecAReVe+
-         C+8fssFn1HZs1OCx9vh+DWrPYfuZvYwSkWYmcQ7x+Qi/mFK+gyDpX5gi/ESX/AWnv4UL
-         k8nDkB9wnsq2orrP73IBQWbXTk5ozgpU6z6n/Xz/sKypqG2r8NivTVLpBJ5MGtTsxcr/
-         fqZQ==
-X-Gm-Message-State: APjAAAVQCiS8NYtwF5U3OlKGuc5E5hLx3068UdyR4JolxGIBt6ncCKay
-        HlZZMoG0idNSiBqDLJrW1zh5YYrvAJM=
-X-Google-Smtp-Source: APXvYqxXmEfI1w1B21xwYB/5A87tEzAiG7uPFOMPFYEoOi2TNeCv7WpAQClv0OARHCvnL/5d0nTpUA==
-X-Received: by 2002:a17:902:3143:: with SMTP id w61mr38899713plb.292.1557953253816;
-        Wed, 15 May 2019 13:47:33 -0700 (PDT)
-Received: from vader ([2620:10d:c090:180::cdd6])
-        by smtp.gmail.com with ESMTPSA id k26sm3682772pfi.136.2019.05.15.13.47.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 15 May 2019 13:47:33 -0700 (PDT)
-Date:   Wed, 15 May 2019 13:47:32 -0700
-From:   Omar Sandoval <osandov@osandov.com>
-To:     linux-xfs@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>
-Subject: xfsdump confused by ino's < root ino
-Message-ID: <20190515204732.GA4466@vader>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e4kuu9yC2IGARpDlHp3ONWA+CXX8IcBRGF2a1wpOmUI=;
+        b=McI5YE0Mra1hDFsVlfGXD4MDI4gNd3KdUjsi6ruCNo3rQ97rrg/rrfmhdSliTTxDhE
+         jWo7iO4RzDOjAPGfz3kIDCH/cO47zBsjrZ/5oebrsFUMIzmws2SxfmiznpLIu62uH6bo
+         I5Fe95Hc7NGIj8JPjdKgaseGJIuFEKOcJ6FTEkOn3412AJyuaggOzEvig8CZnmr1G9t9
+         kEkE6MtO8YNaAQYbFbculqCexOEaA1HgeKXVJG8UAMw4Vq4WcCfBse6R+eBI1OXlz/3z
+         GjwdW/1af3Zt9f9guhhrs/IDlsytfEJXcMUgP7E0+/aGN8MktRnoaYF+JTClL5YBJk/A
+         /sYg==
+X-Gm-Message-State: APjAAAXBYIHmeUSYDTbldmnaXytKU1dUf42EIaZuMJaaYgcT48+NL80k
+        gTPoXoiGN8rwDDBkAVEuA0NPKdagVcj0ZGldZGo/6Wc+
+X-Google-Smtp-Source: APXvYqyO6g2r/WhDKBmVOOTl4sYnhhJyyQJvRNxhfafK8+4MMPFpeaS+xqdpic/meUQecZLwA+0URassFkWkwJjqLWc=
+X-Received: by 2002:aca:b641:: with SMTP id g62mr5296871oif.149.1557953347952;
+ Wed, 15 May 2019 13:49:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-5-pagupta@redhat.com>
+In-Reply-To: <20190514145422.16923-5-pagupta@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 15 May 2019 13:48:57 -0700
+Message-ID: <CAPcyv4jp+9eBQMX+KXhT1oZRkxLeCp9r9g9hFUCRw=OcuQ9wmQ@mail.gmail.com>
+Subject: Re: [PATCH v9 4/7] dm: enable synchronous dax
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        device-mapper development <dm-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+[ add Mike and dm-devel ]
 
-We use xfsdump and xfsrestore (v3.1.7) to back up one of our storage
-systems, and we ran into an issue where xfsdump prints the following for
-a mount which isn't a bind mount:
+Mike, any concerns with the below addition to the device-mapper-dax
+implementation?
 
-/sbin/xfsdump: NOTE: root ino 136 differs from mount dir ino 256, bind mount?
-
-Which also results in a crash from xfsrestore:
-
-xfsrestore: tree.c:757: tree_begindir: Assertion `ino != persp->p_rootino || hardh == persp->p_rooth' failed.
-
-Looking at [1], xfsdump uses bulkstat to get the minimum inode number on
-the filesystem. But, at least one of our filesystems has a root inode
-number of 256 and uses inode numbers 136-199, which tricks xfsdump into
-thinking that the filesystem is bind mounted. Is this an invalid
-assumption in xfsdump, or is it filesystem corruption?
-
-Thanks!
-
-1: https://git.kernel.org/pub/scm/fs/xfs/xfsdump-dev.git/commit/?id=25195ebf107dc81b1b7cea1476764950e1d6cc9d
+On Tue, May 14, 2019 at 7:58 AM Pankaj Gupta <pagupta@redhat.com> wrote:
+>
+>  This patch sets dax device 'DAXDEV_SYNC' flag if all the target
+>  devices of device mapper support synchrononous DAX. If device
+>  mapper consists of both synchronous and asynchronous dax devices,
+>  we don't set 'DAXDEV_SYNC' flag.
+>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+>  drivers/md/dm-table.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index cde3b49b2a91..1cce626ff576 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -886,10 +886,17 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+>         return bdev_dax_supported(dev->bdev, PAGE_SIZE);
+>  }
+>
+> +static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
+> +                              sector_t start, sector_t len, void *data)
+> +{
+> +       return dax_synchronous(dev->dax_dev);
+> +}
+> +
+>  static bool dm_table_supports_dax(struct dm_table *t)
+>  {
+>         struct dm_target *ti;
+>         unsigned i;
+> +       bool dax_sync = true;
+>
+>         /* Ensure that all targets support DAX. */
+>         for (i = 0; i < dm_table_get_num_targets(t); i++) {
+> @@ -901,7 +908,14 @@ static bool dm_table_supports_dax(struct dm_table *t)
+>                 if (!ti->type->iterate_devices ||
+>                     !ti->type->iterate_devices(ti, device_supports_dax, NULL))
+>                         return false;
+> +
+> +               /* Check devices support synchronous DAX */
+> +               if (dax_sync &&
+> +                   !ti->type->iterate_devices(ti, device_synchronous, NULL))
+> +                       dax_sync = false;
+>         }
+> +       if (dax_sync)
+> +               set_dax_synchronous(t->md->dax_dev);
+>
+>         return true;
+>  }
+> --
+> 2.20.1
+>
