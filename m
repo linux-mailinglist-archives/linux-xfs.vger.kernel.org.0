@@ -2,537 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFF8A2146D
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 09:33:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E91082152D
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 10:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfEQHdB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 May 2019 03:33:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45650 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbfEQHdB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 03:33:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
-        Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qrW93c9jt7NQHJvWKY7Ok+KhP7saHzH4o7mIWpLAiSs=; b=eEzAQ5y8YMQl+JrKNiu0rh+pY
-        ElFK5+1wYM3gJuHFcfMPmkQD7XjbeWW6WUwhg7UZszh3So34lZ5RwPPXwFgdBjUl3WqgXgYZmOVao
-        TRo7MTURfo36+MeifYTTX70U5t6ckdfmwjN9nLqOmuVGaSxRzPD3lN2P8QFzAjtEPSvd4Hp47wi++
-        RW2CG0WiOqMtjHLMsH5VmGckLhg5qbbTkY9nr/k1uFAieJ4ap3Dz0oHpLbDRBI2v/CYgAV743xM2P
-        yF9oSWLZ6rSo0w7P63xDas9I5tK4QRXFNc14NNpaAe/261JgIWtM9uX73dibQr21OzAEDmH+i9vnU
-        WCGapv2HQ==;
-Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRXMS-00013p-SU
-        for linux-xfs@vger.kernel.org; Fri, 17 May 2019 07:33:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 20/20] xfs: merge xfs_trans_bmap.c into xfs_bmap_item.c
-Date:   Fri, 17 May 2019 09:31:19 +0200
-Message-Id: <20190517073119.30178-21-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190517073119.30178-1-hch@lst.de>
+        id S1727361AbfEQIQz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 May 2019 04:16:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48272 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727386AbfEQIQz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 17 May 2019 04:16:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF56AAE87;
+        Fri, 17 May 2019 08:16:53 +0000 (UTC)
+Subject: Re: [PATCH 13/20] xfs: merge xfs_efd_init into xfs_trans_get_efd
+To:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
 References: <20190517073119.30178-1-hch@lst.de>
+ <20190517073119.30178-14-hch@lst.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBFiKBz4BEADNHZmqwhuN6EAzXj9SpPpH/nSSP8YgfwoOqwrP+JR4pIqRK0AWWeWCSwmZ
+ T7g+RbfPFlmQp+EwFWOtABXlKC54zgSf+uulGwx5JAUFVUIRBmnHOYi/lUiE0yhpnb1KCA7f
+ u/W+DkwGerXqhhe9TvQoGwgCKNfzFPZoM+gZrm+kWv03QLUCr210n4cwaCPJ0Nr9Z3c582xc
+ bCUVbsjt7BN0CFa2BByulrx5xD9sDAYIqfLCcZetAqsTRGxM7LD0kh5WlKzOeAXj5r8DOrU2
+ GdZS33uKZI/kZJZVytSmZpswDsKhnGzRN1BANGP8sC+WD4eRXajOmNh2HL4P+meO1TlM3GLl
+ EQd2shHFY0qjEo7wxKZI1RyZZ5AgJnSmehrPCyuIyVY210CbMaIKHUIsTqRgY5GaNME24w7h
+ TyyVCy2qAM8fLJ4Vw5bycM/u5xfWm7gyTb9V1TkZ3o1MTrEsrcqFiRrBY94Rs0oQkZvunqia
+ c+NprYSaOG1Cta14o94eMH271Kka/reEwSZkC7T+o9hZ4zi2CcLcY0DXj0qdId7vUKSJjEep
+ c++s8ncFekh1MPhkOgNj8pk17OAESanmDwksmzh1j12lgA5lTFPrJeRNu6/isC2zyZhTwMWs
+ k3LkcTa8ZXxh0RfWAqgx/ogKPk4ZxOXQEZetkEyTFghbRH2BIwARAQABtCNOaWtvbGF5IEJv
+ cmlzb3YgPG5ib3Jpc292QHN1c2UuY29tPokCOAQTAQIAIgUCWIo48QIbAwYLCQgHAwIGFQgC
+ CQoLBBYCAwECHgECF4AACgkQcb6CRuU/KFc0eg/9GLD3wTQz9iZHMFbjiqTCitD7B6dTLV1C
+ ddZVlC8Hm/TophPts1bWZORAmYIihHHI1EIF19+bfIr46pvfTu0yFrJDLOADMDH+Ufzsfy2v
+ HSqqWV/nOSWGXzh8bgg/ncLwrIdEwBQBN9SDS6aqsglagvwFD91UCg/TshLlRxD5BOnuzfzI
+ Leyx2c6YmH7Oa1R4MX9Jo79SaKwdHt2yRN3SochVtxCyafDlZsE/efp21pMiaK1HoCOZTBp5
+ VzrIP85GATh18pN7YR9CuPxxN0V6IzT7IlhS4Jgj0NXh6vi1DlmKspr+FOevu4RVXqqcNTSS
+ E2rycB2v6cttH21UUdu/0FtMBKh+rv8+yD49FxMYnTi1jwVzr208vDdRU2v7Ij/TxYt/v4O8
+ V+jNRKy5Fevca/1xroQBICXsNoFLr10X5IjmhAhqIH8Atpz/89ItS3+HWuE4BHB6RRLM0gy8
+ T7rN6ja+KegOGikp/VTwBlszhvfLhyoyjXI44Tf3oLSFM+8+qG3B7MNBHOt60CQlMkq0fGXd
+ mm4xENl/SSeHsiomdveeq7cNGpHi6i6ntZK33XJLwvyf00PD7tip/GUj0Dic/ZUsoPSTF/mG
+ EpuQiUZs8X2xjK/AS/l3wa4Kz2tlcOKSKpIpna7V1+CMNkNzaCOlbv7QwprAerKYywPCoOSC
+ 7P25Ag0EWIoHPgEQAMiUqvRBZNvPvki34O/dcTodvLSyOmK/MMBDrzN8Cnk302XfnGlW/YAQ
+ csMWISKKSpStc6tmD+2Y0z9WjyRqFr3EGfH1RXSv9Z1vmfPzU42jsdZn667UxrRcVQXUgoKg
+ QYx055Q2FdUeaZSaivoIBD9WtJq/66UPXRRr4H/+Y5FaUZx+gWNGmBT6a0S/GQnHb9g3nonD
+ jmDKGw+YO4P6aEMxyy3k9PstaoiyBXnzQASzdOi39BgWQuZfIQjN0aW+Dm8kOAfT5i/yk59h
+ VV6v3NLHBjHVw9kHli3jwvsizIX9X2W8tb1SefaVxqvqO1132AO8V9CbE1DcVT8fzICvGi42
+ FoV/k0QOGwq+LmLf0t04Q0csEl+h69ZcqeBSQcIMm/Ir+NorfCr6HjrB6lW7giBkQl6hhomn
+ l1mtDP6MTdbyYzEiBFcwQD4terc7S/8ELRRybWQHQp7sxQM/Lnuhs77MgY/e6c5AVWnMKd/z
+ MKm4ru7A8+8gdHeydrRQSWDaVbfy3Hup0Ia76J9FaolnjB8YLUOJPdhI2vbvNCQ2ipxw3Y3c
+ KhVIpGYqwdvFIiz0Fej7wnJICIrpJs/+XLQHyqcmERn3s/iWwBpeogrx2Lf8AGezqnv9woq7
+ OSoWlwXDJiUdaqPEB/HmGfqoRRN20jx+OOvuaBMPAPb+aKJyle8zABEBAAGJAh8EGAECAAkF
+ AliKBz4CGwwACgkQcb6CRuU/KFdacg/+M3V3Ti9JYZEiIyVhqs+yHb6NMI1R0kkAmzsGQ1jU
+ zSQUz9AVMR6T7v2fIETTT/f5Oout0+Hi9cY8uLpk8CWno9V9eR/B7Ifs2pAA8lh2nW43FFwp
+ IDiSuDbH6oTLmiGCB206IvSuaQCp1fed8U6yuqGFcnf0ZpJm/sILG2ECdFK9RYnMIaeqlNQm
+ iZicBY2lmlYFBEaMXHoy+K7nbOuizPWdUKoKHq+tmZ3iA+qL5s6Qlm4trH28/fPpFuOmgP8P
+ K+7LpYLNSl1oQUr+WlqilPAuLcCo5Vdl7M7VFLMq4xxY/dY99aZx0ZJQYFx0w/6UkbDdFLzN
+ upT7NIN68lZRucImffiWyN7CjH23X3Tni8bS9ubo7OON68NbPz1YIaYaHmnVQCjDyDXkQoKC
+ R82Vf9mf5slj0Vlpf+/Wpsv/TH8X32ajva37oEQTkWNMsDxyw3aPSps6MaMafcN7k60y2Wk/
+ TCiLsRHFfMHFY6/lq/c0ZdOsGjgpIK0G0z6et9YU6MaPuKwNY4kBdjPNBwHreucrQVUdqRRm
+ RcxmGC6ohvpqVGfhT48ZPZKZEWM+tZky0mO7bhZYxMXyVjBn4EoNTsXy1et9Y1dU3HVJ8fod
+ 5UqrNrzIQFbdeM0/JqSLrtlTcXKJ7cYFa9ZM2AP7UIN9n1UWxq+OPY9YMOewVfYtL8M=
+Message-ID: <790a6cfb-7fb9-db50-05c4-ba91fb7628b0@suse.com>
+Date:   Fri, 17 May 2019 11:16:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190517073119.30178-14-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Keep all bmap item related code together.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/Makefile         |   1 -
- fs/xfs/xfs_bmap_item.c  | 200 ++++++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_trans.h      |  11 --
- fs/xfs/xfs_trans_bmap.c | 216 ----------------------------------------
- 4 files changed, 199 insertions(+), 229 deletions(-)
- delete mode 100644 fs/xfs/xfs_trans_bmap.c
 
-diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
-index 1730664770c5..9161af54a87c 100644
---- a/fs/xfs/Makefile
-+++ b/fs/xfs/Makefile
-@@ -104,7 +104,6 @@ xfs-y				+= xfs_log.o \
- 				   xfs_rmap_item.o \
- 				   xfs_log_recover.o \
- 				   xfs_trans_ail.o \
--				   xfs_trans_bmap.o \
- 				   xfs_trans_buf.o \
- 				   xfs_trans_inode.o
- 
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 40385c8b752a..ce5cf8aea3a4 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -6,6 +6,7 @@
- #include "xfs.h"
- #include "xfs_fs.h"
- #include "xfs_format.h"
-+#include "xfs_shared.h"
- #include "xfs_log_format.h"
- #include "xfs_trans_resv.h"
- #include "xfs_bit.h"
-@@ -212,7 +213,7 @@ static const struct xfs_item_ops xfs_bud_item_ops = {
- 	.iop_release	= xfs_bud_item_release,
- };
- 
--struct xfs_bud_log_item *
-+static struct xfs_bud_log_item *
- xfs_trans_get_bud(
- 	struct xfs_trans		*tp,
- 	struct xfs_bui_log_item		*buip)
-@@ -229,6 +230,203 @@ xfs_trans_get_bud(
- 	return budp;
- }
- 
-+/*
-+ * Finish an bmap update and log it to the BUD. Note that the
-+ * transaction is marked dirty regardless of whether the bmap update
-+ * succeeds or fails to support the BUI/BUD lifecycle rules.
-+ */
-+static int
-+xfs_trans_log_finish_bmap_update(
-+	struct xfs_trans		*tp,
-+	struct xfs_bud_log_item		*budp,
-+	enum xfs_bmap_intent_type	type,
-+	struct xfs_inode		*ip,
-+	int				whichfork,
-+	xfs_fileoff_t			startoff,
-+	xfs_fsblock_t			startblock,
-+	xfs_filblks_t			*blockcount,
-+	xfs_exntst_t			state)
-+{
-+	int				error;
-+
-+	error = xfs_bmap_finish_one(tp, ip, type, whichfork, startoff,
-+			startblock, blockcount, state);
-+
-+	/*
-+	 * Mark the transaction dirty, even on error. This ensures the
-+	 * transaction is aborted, which:
-+	 *
-+	 * 1.) releases the BUI and frees the BUD
-+	 * 2.) shuts down the filesystem
-+	 */
-+	tp->t_flags |= XFS_TRANS_DIRTY;
-+	set_bit(XFS_LI_DIRTY, &budp->bud_item.li_flags);
-+
-+	return error;
-+}
-+
-+/* Sort bmap intents by inode. */
-+static int
-+xfs_bmap_update_diff_items(
-+	void				*priv,
-+	struct list_head		*a,
-+	struct list_head		*b)
-+{
-+	struct xfs_bmap_intent		*ba;
-+	struct xfs_bmap_intent		*bb;
-+
-+	ba = container_of(a, struct xfs_bmap_intent, bi_list);
-+	bb = container_of(b, struct xfs_bmap_intent, bi_list);
-+	return ba->bi_owner->i_ino - bb->bi_owner->i_ino;
-+}
-+
-+/* Get an BUI. */
-+STATIC void *
-+xfs_bmap_update_create_intent(
-+	struct xfs_trans		*tp,
-+	unsigned int			count)
-+{
-+	struct xfs_bui_log_item		*buip;
-+
-+	ASSERT(count == XFS_BUI_MAX_FAST_EXTENTS);
-+	ASSERT(tp != NULL);
-+
-+	buip = xfs_bui_init(tp->t_mountp);
-+	ASSERT(buip != NULL);
-+
-+	/*
-+	 * Get a log_item_desc to point at the new item.
-+	 */
-+	xfs_trans_add_item(tp, &buip->bui_item);
-+	return buip;
-+}
-+
-+/* Set the map extent flags for this mapping. */
-+static void
-+xfs_trans_set_bmap_flags(
-+	struct xfs_map_extent		*bmap,
-+	enum xfs_bmap_intent_type	type,
-+	int				whichfork,
-+	xfs_exntst_t			state)
-+{
-+	bmap->me_flags = 0;
-+	switch (type) {
-+	case XFS_BMAP_MAP:
-+	case XFS_BMAP_UNMAP:
-+		bmap->me_flags = type;
-+		break;
-+	default:
-+		ASSERT(0);
-+	}
-+	if (state == XFS_EXT_UNWRITTEN)
-+		bmap->me_flags |= XFS_BMAP_EXTENT_UNWRITTEN;
-+	if (whichfork == XFS_ATTR_FORK)
-+		bmap->me_flags |= XFS_BMAP_EXTENT_ATTR_FORK;
-+}
-+
-+/* Log bmap updates in the intent item. */
-+STATIC void
-+xfs_bmap_update_log_item(
-+	struct xfs_trans		*tp,
-+	void				*intent,
-+	struct list_head		*item)
-+{
-+	struct xfs_bui_log_item		*buip = intent;
-+	struct xfs_bmap_intent		*bmap;
-+	uint				next_extent;
-+	struct xfs_map_extent		*map;
-+
-+	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
-+
-+	tp->t_flags |= XFS_TRANS_DIRTY;
-+	set_bit(XFS_LI_DIRTY, &buip->bui_item.li_flags);
-+
-+	/*
-+	 * atomic_inc_return gives us the value after the increment;
-+	 * we want to use it as an array index so we need to subtract 1 from
-+	 * it.
-+	 */
-+	next_extent = atomic_inc_return(&buip->bui_next_extent) - 1;
-+	ASSERT(next_extent < buip->bui_format.bui_nextents);
-+	map = &buip->bui_format.bui_extents[next_extent];
-+	map->me_owner = bmap->bi_owner->i_ino;
-+	map->me_startblock = bmap->bi_bmap.br_startblock;
-+	map->me_startoff = bmap->bi_bmap.br_startoff;
-+	map->me_len = bmap->bi_bmap.br_blockcount;
-+	xfs_trans_set_bmap_flags(map, bmap->bi_type, bmap->bi_whichfork,
-+			bmap->bi_bmap.br_state);
-+}
-+
-+/* Get an BUD so we can process all the deferred rmap updates. */
-+STATIC void *
-+xfs_bmap_update_create_done(
-+	struct xfs_trans		*tp,
-+	void				*intent,
-+	unsigned int			count)
-+{
-+	return xfs_trans_get_bud(tp, intent);
-+}
-+
-+/* Process a deferred rmap update. */
-+STATIC int
-+xfs_bmap_update_finish_item(
-+	struct xfs_trans		*tp,
-+	struct list_head		*item,
-+	void				*done_item,
-+	void				**state)
-+{
-+	struct xfs_bmap_intent		*bmap;
-+	xfs_filblks_t			count;
-+	int				error;
-+
-+	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
-+	count = bmap->bi_bmap.br_blockcount;
-+	error = xfs_trans_log_finish_bmap_update(tp, done_item,
-+			bmap->bi_type,
-+			bmap->bi_owner, bmap->bi_whichfork,
-+			bmap->bi_bmap.br_startoff,
-+			bmap->bi_bmap.br_startblock,
-+			&count,
-+			bmap->bi_bmap.br_state);
-+	if (!error && count > 0) {
-+		ASSERT(bmap->bi_type == XFS_BMAP_UNMAP);
-+		bmap->bi_bmap.br_blockcount = count;
-+		return -EAGAIN;
-+	}
-+	kmem_free(bmap);
-+	return error;
-+}
-+
-+/* Abort all pending BUIs. */
-+STATIC void
-+xfs_bmap_update_abort_intent(
-+	void				*intent)
-+{
-+	xfs_bui_release(intent);
-+}
-+
-+/* Cancel a deferred rmap update. */
-+STATIC void
-+xfs_bmap_update_cancel_item(
-+	struct list_head		*item)
-+{
-+	struct xfs_bmap_intent		*bmap;
-+
-+	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
-+	kmem_free(bmap);
-+}
-+
-+const struct xfs_defer_op_type xfs_bmap_update_defer_type = {
-+	.max_items	= XFS_BUI_MAX_FAST_EXTENTS,
-+	.diff_items	= xfs_bmap_update_diff_items,
-+	.create_intent	= xfs_bmap_update_create_intent,
-+	.abort_intent	= xfs_bmap_update_abort_intent,
-+	.log_item	= xfs_bmap_update_log_item,
-+	.create_done	= xfs_bmap_update_create_done,
-+	.finish_item	= xfs_bmap_update_finish_item,
-+	.cancel_item	= xfs_bmap_update_cancel_item,
-+};
-+
- /*
-  * Process a bmap update intent item that was recovered from the log.
-  * We need to update some inode's bmbt.
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index bb411d8c41cf..d3dcabc27b97 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -244,15 +244,4 @@ void		xfs_trans_buf_copy_type(struct xfs_buf *dst_bp,
- 
- extern kmem_zone_t	*xfs_trans_zone;
- 
--/* mapping updates */
--enum xfs_bmap_intent_type;
--
--struct xfs_bud_log_item *xfs_trans_get_bud(struct xfs_trans *tp,
--		struct xfs_bui_log_item *buip);
--int xfs_trans_log_finish_bmap_update(struct xfs_trans *tp,
--		struct xfs_bud_log_item *rudp, enum xfs_bmap_intent_type type,
--		struct xfs_inode *ip, int whichfork, xfs_fileoff_t startoff,
--		xfs_fsblock_t startblock, xfs_filblks_t *blockcount,
--		xfs_exntst_t state);
--
- #endif	/* __XFS_TRANS_H__ */
-diff --git a/fs/xfs/xfs_trans_bmap.c b/fs/xfs/xfs_trans_bmap.c
-deleted file mode 100644
-index c6f5b217d17c..000000000000
---- a/fs/xfs/xfs_trans_bmap.c
-+++ /dev/null
-@@ -1,216 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- * Copyright (C) 2016 Oracle.  All Rights Reserved.
-- * Author: Darrick J. Wong <darrick.wong@oracle.com>
-- */
--#include "xfs.h"
--#include "xfs_fs.h"
--#include "xfs_shared.h"
--#include "xfs_format.h"
--#include "xfs_log_format.h"
--#include "xfs_trans_resv.h"
--#include "xfs_mount.h"
--#include "xfs_defer.h"
--#include "xfs_trans.h"
--#include "xfs_trans_priv.h"
--#include "xfs_bmap_item.h"
--#include "xfs_alloc.h"
--#include "xfs_bmap.h"
--#include "xfs_inode.h"
--
--/*
-- * Finish an bmap update and log it to the BUD. Note that the
-- * transaction is marked dirty regardless of whether the bmap update
-- * succeeds or fails to support the BUI/BUD lifecycle rules.
-- */
--int
--xfs_trans_log_finish_bmap_update(
--	struct xfs_trans		*tp,
--	struct xfs_bud_log_item		*budp,
--	enum xfs_bmap_intent_type	type,
--	struct xfs_inode		*ip,
--	int				whichfork,
--	xfs_fileoff_t			startoff,
--	xfs_fsblock_t			startblock,
--	xfs_filblks_t			*blockcount,
--	xfs_exntst_t			state)
--{
--	int				error;
--
--	error = xfs_bmap_finish_one(tp, ip, type, whichfork, startoff,
--			startblock, blockcount, state);
--
--	/*
--	 * Mark the transaction dirty, even on error. This ensures the
--	 * transaction is aborted, which:
--	 *
--	 * 1.) releases the BUI and frees the BUD
--	 * 2.) shuts down the filesystem
--	 */
--	tp->t_flags |= XFS_TRANS_DIRTY;
--	set_bit(XFS_LI_DIRTY, &budp->bud_item.li_flags);
--
--	return error;
--}
--
--/* Sort bmap intents by inode. */
--static int
--xfs_bmap_update_diff_items(
--	void				*priv,
--	struct list_head		*a,
--	struct list_head		*b)
--{
--	struct xfs_bmap_intent		*ba;
--	struct xfs_bmap_intent		*bb;
--
--	ba = container_of(a, struct xfs_bmap_intent, bi_list);
--	bb = container_of(b, struct xfs_bmap_intent, bi_list);
--	return ba->bi_owner->i_ino - bb->bi_owner->i_ino;
--}
--
--/* Get an BUI. */
--STATIC void *
--xfs_bmap_update_create_intent(
--	struct xfs_trans		*tp,
--	unsigned int			count)
--{
--	struct xfs_bui_log_item		*buip;
--
--	ASSERT(count == XFS_BUI_MAX_FAST_EXTENTS);
--	ASSERT(tp != NULL);
--
--	buip = xfs_bui_init(tp->t_mountp);
--	ASSERT(buip != NULL);
--
--	/*
--	 * Get a log_item_desc to point at the new item.
--	 */
--	xfs_trans_add_item(tp, &buip->bui_item);
--	return buip;
--}
--
--/* Set the map extent flags for this mapping. */
--static void
--xfs_trans_set_bmap_flags(
--	struct xfs_map_extent		*bmap,
--	enum xfs_bmap_intent_type	type,
--	int				whichfork,
--	xfs_exntst_t			state)
--{
--	bmap->me_flags = 0;
--	switch (type) {
--	case XFS_BMAP_MAP:
--	case XFS_BMAP_UNMAP:
--		bmap->me_flags = type;
--		break;
--	default:
--		ASSERT(0);
--	}
--	if (state == XFS_EXT_UNWRITTEN)
--		bmap->me_flags |= XFS_BMAP_EXTENT_UNWRITTEN;
--	if (whichfork == XFS_ATTR_FORK)
--		bmap->me_flags |= XFS_BMAP_EXTENT_ATTR_FORK;
--}
--
--/* Log bmap updates in the intent item. */
--STATIC void
--xfs_bmap_update_log_item(
--	struct xfs_trans		*tp,
--	void				*intent,
--	struct list_head		*item)
--{
--	struct xfs_bui_log_item		*buip = intent;
--	struct xfs_bmap_intent		*bmap;
--	uint				next_extent;
--	struct xfs_map_extent		*map;
--
--	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
--
--	tp->t_flags |= XFS_TRANS_DIRTY;
--	set_bit(XFS_LI_DIRTY, &buip->bui_item.li_flags);
--
--	/*
--	 * atomic_inc_return gives us the value after the increment;
--	 * we want to use it as an array index so we need to subtract 1 from
--	 * it.
--	 */
--	next_extent = atomic_inc_return(&buip->bui_next_extent) - 1;
--	ASSERT(next_extent < buip->bui_format.bui_nextents);
--	map = &buip->bui_format.bui_extents[next_extent];
--	map->me_owner = bmap->bi_owner->i_ino;
--	map->me_startblock = bmap->bi_bmap.br_startblock;
--	map->me_startoff = bmap->bi_bmap.br_startoff;
--	map->me_len = bmap->bi_bmap.br_blockcount;
--	xfs_trans_set_bmap_flags(map, bmap->bi_type, bmap->bi_whichfork,
--			bmap->bi_bmap.br_state);
--}
--
--/* Get an BUD so we can process all the deferred rmap updates. */
--STATIC void *
--xfs_bmap_update_create_done(
--	struct xfs_trans		*tp,
--	void				*intent,
--	unsigned int			count)
--{
--	return xfs_trans_get_bud(tp, intent);
--}
--
--/* Process a deferred rmap update. */
--STATIC int
--xfs_bmap_update_finish_item(
--	struct xfs_trans		*tp,
--	struct list_head		*item,
--	void				*done_item,
--	void				**state)
--{
--	struct xfs_bmap_intent		*bmap;
--	xfs_filblks_t			count;
--	int				error;
--
--	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
--	count = bmap->bi_bmap.br_blockcount;
--	error = xfs_trans_log_finish_bmap_update(tp, done_item,
--			bmap->bi_type,
--			bmap->bi_owner, bmap->bi_whichfork,
--			bmap->bi_bmap.br_startoff,
--			bmap->bi_bmap.br_startblock,
--			&count,
--			bmap->bi_bmap.br_state);
--	if (!error && count > 0) {
--		ASSERT(bmap->bi_type == XFS_BMAP_UNMAP);
--		bmap->bi_bmap.br_blockcount = count;
--		return -EAGAIN;
--	}
--	kmem_free(bmap);
--	return error;
--}
--
--/* Abort all pending BUIs. */
--STATIC void
--xfs_bmap_update_abort_intent(
--	void				*intent)
--{
--	xfs_bui_release(intent);
--}
--
--/* Cancel a deferred rmap update. */
--STATIC void
--xfs_bmap_update_cancel_item(
--	struct list_head		*item)
--{
--	struct xfs_bmap_intent		*bmap;
--
--	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
--	kmem_free(bmap);
--}
--
--const struct xfs_defer_op_type xfs_bmap_update_defer_type = {
--	.max_items	= XFS_BUI_MAX_FAST_EXTENTS,
--	.diff_items	= xfs_bmap_update_diff_items,
--	.create_intent	= xfs_bmap_update_create_intent,
--	.abort_intent	= xfs_bmap_update_abort_intent,
--	.log_item	= xfs_bmap_update_log_item,
--	.create_done	= xfs_bmap_update_create_done,
--	.finish_item	= xfs_bmap_update_finish_item,
--	.cancel_item	= xfs_bmap_update_cancel_item,
--};
--- 
-2.20.1
+On 17.05.19 г. 10:31 ч., Christoph Hellwig wrote:
+> There is no good reason to keep these two functions separate.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_extfree_item.c  | 27 +++++++++++++++------------
+>  fs/xfs/xfs_extfree_item.h  |  2 --
+>  fs/xfs/xfs_trans_extfree.c | 26 --------------------------
+>  3 files changed, 15 insertions(+), 40 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+> index bb0b1e942d00..ccf95cb8234c 100644
+> --- a/fs/xfs/xfs_extfree_item.c
+> +++ b/fs/xfs/xfs_extfree_item.c
+> @@ -312,32 +312,35 @@ static const struct xfs_item_ops xfs_efd_item_ops = {
+>  };
+>  
+>  /*
+> - * Allocate and initialize an efd item with the given number of extents.
+> + * Allocate an "extent free done" log item that will hold nextents worth of
+> + * extents.  The caller must use all nextents extents, because we are not
+> + * flexible about this at all.
+>   */
+>  struct xfs_efd_log_item *
+> -xfs_efd_init(
+> -	struct xfs_mount	*mp,
+> -	struct xfs_efi_log_item	*efip,
+> -	uint			nextents)
+> -
+> +xfs_trans_get_efd(
+> +	struct xfs_trans		*tp,
+> +	struct xfs_efi_log_item		*efip,
+> +	unsigned int			nextents)
+>  {
+> -	struct xfs_efd_log_item	*efdp;
+> -	uint			size;
+> +	struct xfs_efd_log_item		*efdp;
+>  
+>  	ASSERT(nextents > 0);
+> +
+>  	if (nextents > XFS_EFD_MAX_FAST_EXTENTS) {
+> -		size = (uint)(sizeof(xfs_efd_log_item_t) +
+> -			((nextents - 1) * sizeof(xfs_extent_t)));
+> -		efdp = kmem_zalloc(size, KM_SLEEP);
+> +		efdp = kmem_zalloc(sizeof(struct xfs_efd_log_item) +
+> +				(nextents - 1) * sizeof(struct xfs_extent),
+> +				KM_SLEEP);
 
+xfs_efd_log is really a struct which ends with an array. I think it will
+make it slightly more obvious if you use the newly introduced
+struct_size like so:
+
+kmem_zalloc(struct_size(efdp, efd_format.efd_extents, nextents -1),
+KM_SLEEP)
+
+
+<snip>
