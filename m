@@ -2,124 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9DA521374
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 07:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6DA7213EB
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 08:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfEQFgA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 May 2019 01:36:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51660 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbfEQFgA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 17 May 2019 01:36:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DB4D81DE6;
-        Fri, 17 May 2019 05:35:59 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58AE01001DD2;
-        Fri, 17 May 2019 05:35:59 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0AB9A1806B10;
-        Fri, 17 May 2019 05:35:59 +0000 (UTC)
-Date:   Fri, 17 May 2019 01:35:58 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Jakub =?utf-8?Q?Staro=C5=84?= <jstaron@google.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
-        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
-        adilger kernel <adilger.kernel@dilger.ca>, smbarber@google.com,
-        zwisler@kernel.org, aarcange@redhat.com,
-        dave jiang <dave.jiang@intel.com>,
-        darrick wong <darrick.wong@oracle.com>,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
-        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
-        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
-        stefanha@redhat.com, pbonzini@redhat.com,
-        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com
-Message-ID: <1954162775.29408078.1558071358974.JavaMail.zimbra@redhat.com>
-In-Reply-To: <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
-Subject: Re: [Qemu-devel] [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+        id S1727726AbfEQG7r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 May 2019 02:59:47 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:36695 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727218AbfEQG7r (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 02:59:47 -0400
+Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id B05FA3DCD56;
+        Fri, 17 May 2019 16:59:45 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hRWqG-000495-05; Fri, 17 May 2019 16:59:44 +1000
+Date:   Fri, 17 May 2019 16:59:43 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Hou Tao <houtao1@huawei.com>
+Cc:     linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: Question about commit b450672fb66b ("iomap: sub-block dio needs
+ to zeroout beyond EOF")
+Message-ID: <20190517065943.GC29573@dread.disaster.area>
+References: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.188, 10.4.195.1]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: Jfq72a6Lppgn6G/na6kHvdhmTQkM6g==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 17 May 2019 05:35:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
+        a=7-415B0cAAAA:8 a=j08KucHQaZICYD-6fhUA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-Hi Jakub,
-
+On Fri, May 17, 2019 at 10:41:44AM +0800, Hou Tao wrote:
+> Hi,
 > 
-> On 5/14/19 7:54 AM, Pankaj Gupta wrote:
-> > +		if (!list_empty(&vpmem->req_list)) {
-> > +			req_buf = list_first_entry(&vpmem->req_list,
-> > +					struct virtio_pmem_request, list);
-> > +			req_buf->wq_buf_avail = true;
-> > +			wake_up(&req_buf->wq_buf);
-> > +			list_del(&req_buf->list);
-> Yes, this change is the right one, thank you!
-
-Thank you for the confirmation.
-
+> I don't understand why the commit b450672fb66b ("iomap: sub-block dio needs to zeroout beyond EOF") is needed here:
 > 
-> > +	 /*
-> > +	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
-> > +	  * queue does not have free descriptor. We add the request
-> > +	  * to req_list and wait for host_ack to wake us up when free
-> > +	  * slots are available.
-> > +	  */
-> > +	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req,
-> > +					GFP_ATOMIC)) == -ENOSPC) {
-> > +
-> > +		dev_err(&vdev->dev, "failed to send command to virtio pmem" \
-> > +			"device, no free slots in the virtqueue\n");
-> > +		req->wq_buf_avail = false;
-> > +		list_add_tail(&req->list, &vpmem->req_list);
-> > +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > +
-> > +		/* A host response results in "host_ack" getting called */
-> > +		wait_event(req->wq_buf, req->wq_buf_avail);
-> > +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
-> > +	}
-> > +	err1 = virtqueue_kick(vpmem->req_vq);
-> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > +
-> > +	/*
-> > +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
-> > +	 * do anything about that.
-> > +	 */
-> > +	if (err || !err1) {
-> > +		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
-> > +		err = -EIO;
-> > +	} else {
-> > +		/* A host repsonse results in "host_ack" getting called */
-> > +		wait_event(req->host_acked, req->done);
-> > +		err = req->ret;
-> > +I confirm that the failures I was facing with the `-ENOSPC` error path are
-> > not present in v9.
-
-Can I take it your reviewed/acked-by? or tested-by tag? for the virtio patch :)
-
-Thank you,
-Pankaj
-
+> diff --git a/fs/iomap.c b/fs/iomap.c
+> index 72f3864a2e6b..77c214194edf 100644
+> --- a/fs/iomap.c
+> +++ b/fs/iomap.c
+> @@ -1677,7 +1677,14 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+>                 dio->submit.cookie = submit_bio(bio);
+>         } while (nr_pages);
 > 
-> Best,
-> Jakub Staron
+> -       if (need_zeroout) {
+> +       /*
+> +        * We need to zeroout the tail of a sub-block write if the extent type
+> +        * requires zeroing or the write extends beyond EOF. If we don't zero
+> +        * the block tail in the latter case, we can expose stale data via mmap
+> +        * reads of the EOF block.
+> +        */
+> +       if (need_zeroout ||
+> +           ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
+>                 /* zero out from the end of the write to the end of the block */
+>                 pad = pos & (fs_block_size - 1);
+>                 if (pad)
 > 
-> 
+> If need_zeroout is false, it means the block neither is a unwritten block nor
+> a newly-mapped block, but that also means the block must had been a unwritten block
+> or a newly-mapped block before this write, so the block must have been zeroed, correct ?
+
+No. One the contrary, it's a direct IO write to beyond the end of
+the file which means the block has not been zeroed at all. If it is
+an unwritten extent, it most definitely does not contain zeroes
+(unwritten extents are a flag in the extent metadata, not zeroed
+disk space) and so it doesn't matter it is written or unwritten we
+must zero it before we update the file size.
+
+Why? Because if we then mmap the page that spans EOF, whatever is on
+disk beyond EOF is exposed to the user process. Hence if we don't
+zero the tail of the block beyond EOF during DIO writes then we can
+leak stale information to unprivileged users....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
