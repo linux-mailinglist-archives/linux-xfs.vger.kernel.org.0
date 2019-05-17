@@ -2,86 +2,216 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 301E521227
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 04:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8500121361
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 07:31:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfEQCnf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 May 2019 22:43:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8202 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfEQCnf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 16 May 2019 22:43:35 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 29472C5C1F9814967D7E;
-        Fri, 17 May 2019 10:43:33 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.14) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 May 2019
- 10:43:28 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     <linux-xfs@vger.kernel.org>, <david@fromorbit.com>
-CC:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: Question about commit b450672fb66b ("iomap: sub-block dio needs to
- zeroout beyond EOF")
-Message-ID: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
-Date:   Fri, 17 May 2019 10:41:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1727806AbfEQFbp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 May 2019 01:31:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60624 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727089AbfEQFbp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 17 May 2019 01:31:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C7FAE811DC;
+        Fri, 17 May 2019 05:31:43 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FC4660BE5;
+        Fri, 17 May 2019 05:31:43 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7045B1806B10;
+        Fri, 17 May 2019 05:31:41 +0000 (UTC)
+Date:   Fri, 17 May 2019 01:31:40 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
+        jasowang@redhat.com, david@fromorbit.com, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        jstaron@google.com, linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
+Message-ID: <1808083054.29407926.1558071100913.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190516095618-mutt-send-email-mst@kernel.org>
+References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com> <20190516095618-mutt-send-email-mst@kernel.org>
+Subject: Re: [Qemu-devel] [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.14]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.67.116.188, 10.4.195.6]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: FMi3zX+ydzvNE+LRIfWGkFwCXnTU+g==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 17 May 2019 05:31:44 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
 
-I don't understand why the commit b450672fb66b ("iomap: sub-block dio needs to zeroout beyond EOF") is needed here:
+> 
+> On Wed, May 15, 2019 at 10:46:00PM +0200, David Hildenbrand wrote:
+> > > +	vpmem->vdev = vdev;
+> > > +	vdev->priv = vpmem;
+> > > +	err = init_vq(vpmem);
+> > > +	if (err) {
+> > > +		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
+> > > +		goto out_err;
+> > > +	}
+> > > +
+> > > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > > +			start, &vpmem->start);
+> > > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > > +			size, &vpmem->size);
+> > > +
+> > > +	res.start = vpmem->start;
+> > > +	res.end   = vpmem->start + vpmem->size-1;
+> > 
+> > nit: " - 1;"
+> > 
+> > > +	vpmem->nd_desc.provider_name = "virtio-pmem";
+> > > +	vpmem->nd_desc.module = THIS_MODULE;
+> > > +
+> > > +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+> > > +						&vpmem->nd_desc);
+> > > +	if (!vpmem->nvdimm_bus) {
+> > > +		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
+> > > +		err = -ENXIO;
+> > > +		goto out_vq;
+> > > +	}
+> > > +
+> > > +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
+> > > +
+> > > +	ndr_desc.res = &res;
+> > > +	ndr_desc.numa_node = nid;
+> > > +	ndr_desc.flush = async_pmem_flush;
+> > > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+> > > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+> > > +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
+> > > +	if (!nd_region) {
+> > > +		dev_err(&vdev->dev, "failed to create nvdimm region\n");
+> > > +		err = -ENXIO;
+> > > +		goto out_nd;
+> > > +	}
+> > > +	nd_region->provider_data =
+> > > dev_to_virtio(nd_region->dev.parent->parent);
+> > > +	return 0;
+> > > +out_nd:
+> > > +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
+> > > +out_vq:
+> > > +	vdev->config->del_vqs(vdev);
+> > > +out_err:
+> > > +	return err;
+> > > +}
+> > > +
+> > > +static void virtio_pmem_remove(struct virtio_device *vdev)
+> > > +{
+> > > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+> > > +
+> > > +	nvdimm_bus_unregister(nvdimm_bus);
+> > > +	vdev->config->del_vqs(vdev);
+> > > +	vdev->config->reset(vdev);
+> > > +}
+> > > +
+> > > +static struct virtio_driver virtio_pmem_driver = {
+> > > +	.driver.name		= KBUILD_MODNAME,
+> > > +	.driver.owner		= THIS_MODULE,
+> > > +	.id_table		= id_table,
+> > > +	.probe			= virtio_pmem_probe,
+> > > +	.remove			= virtio_pmem_remove,
+> > > +};
+> > > +
+> > > +module_virtio_driver(virtio_pmem_driver);
+> > > +MODULE_DEVICE_TABLE(virtio, id_table);
+> > > +MODULE_DESCRIPTION("Virtio pmem driver");
+> > > +MODULE_LICENSE("GPL");
+> > > diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+> > > new file mode 100644
+> > > index 000000000000..ab1da877575d
+> > > --- /dev/null
+> > > +++ b/drivers/nvdimm/virtio_pmem.h
+> > > @@ -0,0 +1,60 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * virtio_pmem.h: virtio pmem Driver
+> > > + *
+> > > + * Discovers persistent memory range information
+> > > + * from host and provides a virtio based flushing
+> > > + * interface.
+> > > + **/
+> > > +
+> > > +#ifndef _LINUX_VIRTIO_PMEM_H
+> > > +#define _LINUX_VIRTIO_PMEM_H
+> > > +
+> > > +#include <linux/virtio_ids.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/virtio_config.h>
+> > > +#include <uapi/linux/virtio_pmem.h>
+> > > +#include <linux/libnvdimm.h>
+> > > +#include <linux/spinlock.h>
+> > > +
+> > > +struct virtio_pmem_request {
+> > > +	/* Host return status corresponding to flush request */
+> > > +	int ret;
+> > > +
+> > > +	/* command name*/
+> > > +	char name[16];
+> > 
+> > So ... why are we sending string commands and expect native-endianess
+> > integers and don't define a proper request/response structure + request
+> > types in include/uapi/linux/virtio_pmem.h like
+> 
+> passing names could be ok.
+> I missed the fact we return a native endian int.
+> Pls fix that.
 
-diff --git a/fs/iomap.c b/fs/iomap.c
-index 72f3864a2e6b..77c214194edf 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -1677,7 +1677,14 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
-                dio->submit.cookie = submit_bio(bio);
-        } while (nr_pages);
+Sure. will fix this.
 
--       if (need_zeroout) {
-+       /*
-+        * We need to zeroout the tail of a sub-block write if the extent type
-+        * requires zeroing or the write extends beyond EOF. If we don't zero
-+        * the block tail in the latter case, we can expose stale data via mmap
-+        * reads of the EOF block.
-+        */
-+       if (need_zeroout ||
-+           ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
-                /* zero out from the end of the write to the end of the block */
-                pad = pos & (fs_block_size - 1);
-                if (pad)
+> 
+> 
+> > 
+> > struct virtio_pmem_resp {
+> > 	__virtio32 ret;
+> > }
+> > 
+> > #define VIRTIO_PMEM_REQ_TYPE_FLUSH	1
+> > struct virtio_pmem_req {
+> > 	__virtio16 type;
+> > }
+> > 
+> > ... and this way we also define a proper endianess format for exchange
+> > and keep it extensible
+> > 
+> > @MST, what's your take on this?
+> 
+> Extensions can always use feature bits so I don't think
+> it's a problem.
 
-If need_zeroout is false, it means the block neither is a unwritten block nor
-a newly-mapped block, but that also means the block must had been a unwritten block
-or a newly-mapped block before this write, so the block must have been zeroed, correct ?
+That was exactly my thought when I implemented this. Though I am
+fine with separate structures for request/response and I made the
+change. 
 
-It also introduces unnecessary sub-block zeroing if we repeat the same sub-block write.
+Thank you for all the comments.
 
-I also have tried to reproduce the problem by using fsx as noted in the commit message,
-but cann't reproduce it. Maybe I do it in the wrong way:
-
-$ ./ltp/fsx -d -g H -H -z -C -I -w 1024 -F -r 1024 -t 4096 -Z /tmp/xfs/fsx
-
-The XFS related with /tmp/xfs is formatted with "-b size=4096". I also try "-b size=1024",
-but still no luck.
-
-Could someone explain the scenario in which the extra block zeroing is needed ? Thanks.
-
-Regards,
-Tao
-
-
-
-
-
+Best regards,
+Pankaj 
+> > 
+> > --
+> > 
+> > Thanks,
+> > 
+> > David / dhildenb
+> 
+> 
