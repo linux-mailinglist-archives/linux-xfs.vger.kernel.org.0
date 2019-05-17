@@ -2,119 +2,127 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00A3920FB1
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 May 2019 22:41:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4571C21130
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 02:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEPUln (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 May 2019 16:41:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44152 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfEPUln (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 16 May 2019 16:41:43 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3DB62301E12F
-        for <linux-xfs@vger.kernel.org>; Thu, 16 May 2019 20:41:43 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10238798A9
-        for <linux-xfs@vger.kernel.org>; Thu, 16 May 2019 20:41:42 +0000 (UTC)
-Subject: [PATCH 8/3] xfs: factor log item initialisation
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-References: <8fc2eb9e-78c4-df39-3b8f-9109720ab680@redhat.com>
-From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <31991357-c836-6a50-4203-dae25c051def@redhat.com>
-Date:   Thu, 16 May 2019 15:41:41 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1727474AbfEQARt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 May 2019 20:17:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43967 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfEQARt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 May 2019 20:17:49 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t22so2347240pgi.10
+        for <linux-xfs@vger.kernel.org>; Thu, 16 May 2019 17:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=grI6nIUF/mMOBdv6LrPvHsdNVES0yai/LfFYIZ4bkWY=;
+        b=trB5X+v2CFHJR5/h5Ogo8pnGEbixSq/5SbMCfW0BvmcDG2zeRdzxHL4lknPMI8JsaG
+         91o9aNowjUtiTckfyBLWY/pZJBmRERl33EcI9dq0zR0lXd+XHl45wImJtwD6qTmBiD3C
+         YvIdILOfNr02D208IUOgX7xjB1B80gLQERVK/akSkqvFqS79gmXpU/duephS4OxkvMCj
+         iFkaZbcWb+04sJYfOvlYsPNWM7LK/oP8HkDOryS8f1XdKVoMLZUlQ8YVZMbBQiMDnraB
+         fYXacmGWn0btEdYeftIv0rPSsHpeCBXpkkAwnfL+k2zqdhfQJ6WS6TGQ7DeGxI98ZyT1
+         d5aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=grI6nIUF/mMOBdv6LrPvHsdNVES0yai/LfFYIZ4bkWY=;
+        b=QK3xZSct9KQsvrcp/rBk1xMw2c3459BjHq36pLxLC4+O6lTsItLwmV+75E3vddmkn8
+         v79ktUmSCt1JePdz/eFNRUXMvW7bb41Y2CkiVvYOnVazliozXQJ0epXFwLlcHv/L1YB6
+         WPH9qNqfnMjiWH4mGkoOXVnjxoLamTjpXY/UHbvhcdJ7l4vPul9PfhOFnIvoJCkYxuLc
+         6QQWkMaDI9Wz3fjWQec6w5uPxij4B4nP2drS+E4GJUqWjj6MJ2ix+a+1PaQZX0tvxC2o
+         0GXqXh0rvsIXLDUyGBtQpqKmRlaAR3+Qq0RhuvOm7a8TUGdIsrzZw/1zYI+y1Sk2FKRQ
+         /38A==
+X-Gm-Message-State: APjAAAVuoKG22uJkzKAJgN7iqXatY0MwCpUzVzvAk4Ejf+LHEF3Ts0bW
+        0xqu2tnie9s/4g9QcIia/zIKEA==
+X-Google-Smtp-Source: APXvYqyv1iVBQbL6jyOdYGu6UtPQiwVBUuqofcSXUoK/ck1DMyLzSDgzGJaT2Ro5WErOmsiHR9V/gQ==
+X-Received: by 2002:a63:d816:: with SMTP id b22mr52619479pgh.16.1558051959951;
+        Thu, 16 May 2019 17:12:39 -0700 (PDT)
+Received: from jstaron2.mtv.corp.google.com ([2620:15c:202:201:b94f:2527:c39f:ca2d])
+        by smtp.gmail.com with ESMTPSA id a6sm7245768pgd.67.2019.05.16.17.12.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 17:12:39 -0700 (PDT)
+Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+To:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        kilobyte@angband.pl, yuval.shaia@oracle.com, smbarber@google.com
+References: <20190514145422.16923-1-pagupta@redhat.com>
+ <20190514145422.16923-3-pagupta@redhat.com>
+From:   =?UTF-8?Q?Jakub_Staro=c5=84?= <jstaron@google.com>
+Message-ID: <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
+Date:   Thu, 16 May 2019 17:12:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <8fc2eb9e-78c4-df39-3b8f-9109720ab680@redhat.com>
+In-Reply-To: <20190514145422.16923-3-pagupta@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 16 May 2019 20:41:43 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Each log item type does manual initialisation of the log item.
-Delayed logging introduces new fields that need initialisation, so
-factor all the open coded initialisation into a common function
-first.
+On 5/14/19 7:54 AM, Pankaj Gupta wrote:
+> +		if (!list_empty(&vpmem->req_list)) {
+> +			req_buf = list_first_entry(&vpmem->req_list,
+> +					struct virtio_pmem_request, list);
+> +			req_buf->wq_buf_avail = true;
+> +			wake_up(&req_buf->wq_buf);
+> +			list_del(&req_buf->list);
+Yes, this change is the right one, thank you!
 
-Source kernel commit: 43f5efc5b59db1b66e39fe9fdfc4ba6a27152afa
+> +	 /*
+> +	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
+> +	  * queue does not have free descriptor. We add the request
+> +	  * to req_list and wait for host_ack to wake us up when free
+> +	  * slots are available.
+> +	  */
+> +	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req,
+> +					GFP_ATOMIC)) == -ENOSPC) {
+> +
+> +		dev_err(&vdev->dev, "failed to send command to virtio pmem" \
+> +			"device, no free slots in the virtqueue\n");
+> +		req->wq_buf_avail = false;
+> +		list_add_tail(&req->list, &vpmem->req_list);
+> +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> +
+> +		/* A host response results in "host_ack" getting called */
+> +		wait_event(req->wq_buf, req->wq_buf_avail);
+> +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> +	}
+> +	err1 = virtqueue_kick(vpmem->req_vq);
+> +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> +
+> +	/*
+> +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
+> +	 * do anything about that.
+> +	 */
+> +	if (err || !err1) {
+> +		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
+> +		err = -EIO;
+> +	} else {
+> +		/* A host repsonse results in "host_ack" getting called */
+> +		wait_event(req->host_acked, req->done);
+> +		err = req->ret;
+> +I confirm that the failures I was facing with the `-ENOSPC` error path are not present in v9.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
- libxfs/libxfs_priv.h |  1 +
- libxfs/logitem.c     |  8 ++------
- libxfs/util.c        | 12 ++++++++++++
- 3 files changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 157a99d6..7551ed65 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -564,6 +564,7 @@ int xfs_zero_extent(struct xfs_inode *ip, xfs_fsblock_t start_fsb,
- 
- 
- bool xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
-+void xfs_log_item_init(struct xfs_mount *, struct xfs_log_item *, int);
- #define xfs_log_in_recovery(mp)	(false)
- 
- /* xfs_icache.c */
-diff --git a/libxfs/logitem.c b/libxfs/logitem.c
-index e862ab4f..14c62f67 100644
---- a/libxfs/logitem.c
-+++ b/libxfs/logitem.c
-@@ -103,9 +103,7 @@ xfs_buf_item_init(
- 	fprintf(stderr, "adding buf item %p for not-logged buffer %p\n",
- 		bip, bp);
- #endif
--	bip->bli_item.li_type = XFS_LI_BUF;
--	bip->bli_item.li_mountp = mp;
--	INIT_LIST_HEAD(&bip->bli_item.li_trans);
-+	xfs_log_item_init(mp, &bip->bli_item, XFS_LI_BUF);
- 	bip->bli_buf = bp;
- 	bip->__bli_format.blf_type = XFS_LI_BUF;
- 	bip->__bli_format.blf_blkno = (int64_t)XFS_BUF_ADDR(bp);
-@@ -149,8 +147,6 @@ xfs_inode_item_init(
- 		ip->i_ino, iip);
- #endif
- 
--	iip->ili_item.li_type = XFS_LI_INODE;
--	iip->ili_item.li_mountp = mp;
--	INIT_LIST_HEAD(&iip->ili_item.li_trans);
-+	xfs_log_item_init(mp, &iip->ili_item, XFS_LI_INODE);
- 	iip->ili_inode = ip;
- }
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 4901123a..aff91080 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -691,6 +691,18 @@ xfs_log_check_lsn(
- 	return true;
- }
- 
-+void
-+xfs_log_item_init(
-+	struct xfs_mount	*mp,
-+	struct xfs_log_item	*item,
-+	int			type)
-+{
-+	item->li_mountp = mp; 
-+	item->li_type = type;
-+        
-+	INIT_LIST_HEAD(&item->li_trans);
-+}   
-+
- static struct xfs_buftarg *
- xfs_find_bdev_for_inode(
- 	struct xfs_inode	*ip)
--- 
-2.17.0
-
+Best,
+Jakub Staron
