@@ -2,127 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4571C21130
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 02:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 301E521227
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 04:43:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfEQARt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 May 2019 20:17:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43967 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfEQARt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 May 2019 20:17:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so2347240pgi.10
-        for <linux-xfs@vger.kernel.org>; Thu, 16 May 2019 17:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=grI6nIUF/mMOBdv6LrPvHsdNVES0yai/LfFYIZ4bkWY=;
-        b=trB5X+v2CFHJR5/h5Ogo8pnGEbixSq/5SbMCfW0BvmcDG2zeRdzxHL4lknPMI8JsaG
-         91o9aNowjUtiTckfyBLWY/pZJBmRERl33EcI9dq0zR0lXd+XHl45wImJtwD6qTmBiD3C
-         YvIdILOfNr02D208IUOgX7xjB1B80gLQERVK/akSkqvFqS79gmXpU/duephS4OxkvMCj
-         iFkaZbcWb+04sJYfOvlYsPNWM7LK/oP8HkDOryS8f1XdKVoMLZUlQ8YVZMbBQiMDnraB
-         fYXacmGWn0btEdYeftIv0rPSsHpeCBXpkkAwnfL+k2zqdhfQJ6WS6TGQ7DeGxI98ZyT1
-         d5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=grI6nIUF/mMOBdv6LrPvHsdNVES0yai/LfFYIZ4bkWY=;
-        b=QK3xZSct9KQsvrcp/rBk1xMw2c3459BjHq36pLxLC4+O6lTsItLwmV+75E3vddmkn8
-         v79ktUmSCt1JePdz/eFNRUXMvW7bb41Y2CkiVvYOnVazliozXQJ0epXFwLlcHv/L1YB6
-         WPH9qNqfnMjiWH4mGkoOXVnjxoLamTjpXY/UHbvhcdJ7l4vPul9PfhOFnIvoJCkYxuLc
-         6QQWkMaDI9Wz3fjWQec6w5uPxij4B4nP2drS+E4GJUqWjj6MJ2ix+a+1PaQZX0tvxC2o
-         0GXqXh0rvsIXLDUyGBtQpqKmRlaAR3+Qq0RhuvOm7a8TUGdIsrzZw/1zYI+y1Sk2FKRQ
-         /38A==
-X-Gm-Message-State: APjAAAVuoKG22uJkzKAJgN7iqXatY0MwCpUzVzvAk4Ejf+LHEF3Ts0bW
-        0xqu2tnie9s/4g9QcIia/zIKEA==
-X-Google-Smtp-Source: APXvYqyv1iVBQbL6jyOdYGu6UtPQiwVBUuqofcSXUoK/ck1DMyLzSDgzGJaT2Ro5WErOmsiHR9V/gQ==
-X-Received: by 2002:a63:d816:: with SMTP id b22mr52619479pgh.16.1558051959951;
-        Thu, 16 May 2019 17:12:39 -0700 (PDT)
-Received: from jstaron2.mtv.corp.google.com ([2620:15c:202:201:b94f:2527:c39f:ca2d])
-        by smtp.gmail.com with ESMTPSA id a6sm7245768pgd.67.2019.05.16.17.12.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 17:12:39 -0700 (PDT)
-Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
-To:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        kilobyte@angband.pl, yuval.shaia@oracle.com, smbarber@google.com
-References: <20190514145422.16923-1-pagupta@redhat.com>
- <20190514145422.16923-3-pagupta@redhat.com>
-From:   =?UTF-8?Q?Jakub_Staro=c5=84?= <jstaron@google.com>
-Message-ID: <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
-Date:   Thu, 16 May 2019 17:12:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726757AbfEQCnf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 May 2019 22:43:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8202 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbfEQCnf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 16 May 2019 22:43:35 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 29472C5C1F9814967D7E;
+        Fri, 17 May 2019 10:43:33 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.14) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 May 2019
+ 10:43:28 +0800
+From:   Hou Tao <houtao1@huawei.com>
+To:     <linux-xfs@vger.kernel.org>, <david@fromorbit.com>
+CC:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Question about commit b450672fb66b ("iomap: sub-block dio needs to
+ zeroout beyond EOF")
+Message-ID: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
+Date:   Fri, 17 May 2019 10:41:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190514145422.16923-3-pagupta@redhat.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.14]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/14/19 7:54 AM, Pankaj Gupta wrote:
-> +		if (!list_empty(&vpmem->req_list)) {
-> +			req_buf = list_first_entry(&vpmem->req_list,
-> +					struct virtio_pmem_request, list);
-> +			req_buf->wq_buf_avail = true;
-> +			wake_up(&req_buf->wq_buf);
-> +			list_del(&req_buf->list);
-Yes, this change is the right one, thank you!
+Hi,
 
-> +	 /*
-> +	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
-> +	  * queue does not have free descriptor. We add the request
-> +	  * to req_list and wait for host_ack to wake us up when free
-> +	  * slots are available.
-> +	  */
-> +	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req,
-> +					GFP_ATOMIC)) == -ENOSPC) {
-> +
-> +		dev_err(&vdev->dev, "failed to send command to virtio pmem" \
-> +			"device, no free slots in the virtqueue\n");
-> +		req->wq_buf_avail = false;
-> +		list_add_tail(&req->list, &vpmem->req_list);
-> +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> +
-> +		/* A host response results in "host_ack" getting called */
-> +		wait_event(req->wq_buf, req->wq_buf_avail);
-> +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
-> +	}
-> +	err1 = virtqueue_kick(vpmem->req_vq);
-> +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> +
-> +	/*
-> +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
-> +	 * do anything about that.
-> +	 */
-> +	if (err || !err1) {
-> +		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
-> +		err = -EIO;
-> +	} else {
-> +		/* A host repsonse results in "host_ack" getting called */
-> +		wait_event(req->host_acked, req->done);
-> +		err = req->ret;
-> +I confirm that the failures I was facing with the `-ENOSPC` error path are not present in v9.
+I don't understand why the commit b450672fb66b ("iomap: sub-block dio needs to zeroout beyond EOF") is needed here:
 
-Best,
-Jakub Staron
+diff --git a/fs/iomap.c b/fs/iomap.c
+index 72f3864a2e6b..77c214194edf 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -1677,7 +1677,14 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+                dio->submit.cookie = submit_bio(bio);
+        } while (nr_pages);
+
+-       if (need_zeroout) {
++       /*
++        * We need to zeroout the tail of a sub-block write if the extent type
++        * requires zeroing or the write extends beyond EOF. If we don't zero
++        * the block tail in the latter case, we can expose stale data via mmap
++        * reads of the EOF block.
++        */
++       if (need_zeroout ||
++           ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
+                /* zero out from the end of the write to the end of the block */
+                pad = pos & (fs_block_size - 1);
+                if (pad)
+
+If need_zeroout is false, it means the block neither is a unwritten block nor
+a newly-mapped block, but that also means the block must had been a unwritten block
+or a newly-mapped block before this write, so the block must have been zeroed, correct ?
+
+It also introduces unnecessary sub-block zeroing if we repeat the same sub-block write.
+
+I also have tried to reproduce the problem by using fsx as noted in the commit message,
+but cann't reproduce it. Maybe I do it in the wrong way:
+
+$ ./ltp/fsx -d -g H -H -z -C -I -w 1024 -F -r 1024 -t 4096 -Z /tmp/xfs/fsx
+
+The XFS related with /tmp/xfs is formatted with "-b size=4096". I also try "-b size=1024",
+but still no luck.
+
+Could someone explain the scenario in which the extra block zeroing is needed ? Thanks.
+
+Regards,
+Tao
+
+
+
+
+
