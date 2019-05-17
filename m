@@ -2,91 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DA7213EB
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 08:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2840821454
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 09:32:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfEQG7r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 May 2019 02:59:47 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:36695 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727218AbfEQG7r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 02:59:47 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id B05FA3DCD56;
-        Fri, 17 May 2019 16:59:45 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hRWqG-000495-05; Fri, 17 May 2019 16:59:44 +1000
-Date:   Fri, 17 May 2019 16:59:43 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: Re: Question about commit b450672fb66b ("iomap: sub-block dio needs
- to zeroout beyond EOF")
-Message-ID: <20190517065943.GC29573@dread.disaster.area>
-References: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
+        id S1728085AbfEQHcJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 May 2019 03:32:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44026 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfEQHcI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 03:32:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9B/xfvEIHrtIA5HJt3b9a4vyMzgLcj4hXB7Hk98qVjA=; b=ndRq3yfIS+bzzqv6MTpECx1wY
+        aWwsS0XA9F5qrKUH2vcuvkUqQf7muxajRMw64SBhemh0NXHy51r3jzFEf+K3enPLdIeLz3bIw+t03
+        HXzjyCV5m1tGRq9bN6+gVdezEO3mRuR6tVV2cT3l2CI1uwlF89k59IXcpqZoSq4ll4wqYTlsj91xm
+        IHipFHBHLjuOmVSDPzzhLM5KjTCC3tHtuJFmFLa0D8OninxoqNQI3qWZ5TaD7DKgSc9IODjBCFmfY
+        +3c3bS5q3Mhhx7UcRduRhb5r2TSEUPZMzOo+wQb5nIaJususgSr7OAzXfiKuX//9gPK6KaNMBmWAi
+        VWwQoHZAg==;
+Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRXLc-0000ht-3L
+        for linux-xfs@vger.kernel.org; Fri, 17 May 2019 07:32:08 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-xfs@vger.kernel.org
+Subject: misc log item related cleanups
+Date:   Fri, 17 May 2019 09:30:59 +0200
+Message-Id: <20190517073119.30178-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b1ba3a1-7ecc-6e1f-c944-26a51baa9747@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=7-415B0cAAAA:8 a=j08KucHQaZICYD-6fhUA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:41:44AM +0800, Hou Tao wrote:
-> Hi,
-> 
-> I don't understand why the commit b450672fb66b ("iomap: sub-block dio needs to zeroout beyond EOF") is needed here:
-> 
-> diff --git a/fs/iomap.c b/fs/iomap.c
-> index 72f3864a2e6b..77c214194edf 100644
-> --- a/fs/iomap.c
-> +++ b/fs/iomap.c
-> @@ -1677,7 +1677,14 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
->                 dio->submit.cookie = submit_bio(bio);
->         } while (nr_pages);
-> 
-> -       if (need_zeroout) {
-> +       /*
-> +        * We need to zeroout the tail of a sub-block write if the extent type
-> +        * requires zeroing or the write extends beyond EOF. If we don't zero
-> +        * the block tail in the latter case, we can expose stale data via mmap
-> +        * reads of the EOF block.
-> +        */
-> +       if (need_zeroout ||
-> +           ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
->                 /* zero out from the end of the write to the end of the block */
->                 pad = pos & (fs_block_size - 1);
->                 if (pad)
-> 
-> If need_zeroout is false, it means the block neither is a unwritten block nor
-> a newly-mapped block, but that also means the block must had been a unwritten block
-> or a newly-mapped block before this write, so the block must have been zeroed, correct ?
+Hi all,
 
-No. One the contrary, it's a direct IO write to beyond the end of
-the file which means the block has not been zeroed at all. If it is
-an unwritten extent, it most definitely does not contain zeroes
-(unwritten extents are a flag in the extent metadata, not zeroed
-disk space) and so it doesn't matter it is written or unwritten we
-must zero it before we update the file size.
+I've recently been trying to debug issue related to latencies related to
+locked buffers and went all over our log item lifecycles for that.
 
-Why? Because if we then mmap the page that spans EOF, whatever is on
-disk beyond EOF is exposed to the user process. Hence if we don't
-zero the tail of the block beyond EOF during DIO writes then we can
-leak stale information to unprivileged users....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+It turns out a lot of code in that area is rather obsfucated and
+redundant.  This series is almost entirely cleanups, but there are lots
+of it.  The only exception is a fix for systematic memory leaks which
+appears entirely theoretical.
