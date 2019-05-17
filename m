@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8526221462
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 09:32:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5961221463
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2019 09:32:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfEQHce (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 May 2019 03:32:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44100 "EHLO
+        id S1728143AbfEQHch (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 May 2019 03:32:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44106 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbfEQHce (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 03:32:34 -0400
+        with ESMTP id S1728365AbfEQHch (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 May 2019 03:32:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=w++Gk/B+SOkuWMQQIpfD0ISYo5TGCZBQHdAonrpoASw=; b=fI76Edop5/uqePmISe04pQzHI
-        CJv9wArEYGlPjblXFdkHs29PrKd+pDqD6zhk1zdsL5UVOmv54ZqBA31VH2CuF4oMiPC1TCBkxUhIZ
-        eG+THkueKFHRwtCgsQvfJ4xo8Tv08G5vbyvDx0yzRb45u5jguVqDSGDLq2eaPvLoc/2/soH++axCq
-        KrURejoUwK3rc8oj/SEsKtFaaR2armmyGxcvCRYJaB9dnaO6JD0lHmi2U+UGk+qvQgTl5Gt8xIvZu
-        xDYhFR/kEvuhaJwTxp8QwGw21atD2Zczu25dKslWr3mTpE19V8HXiJ74rDvPHo6itSX0izNrYjNmC
-        oOQEKMV3A==;
+         bh=zzFC+meSIrEYGlgIMDsxeQ99mNGgMMhEDenRpavBmJ8=; b=DZ9oV+HMlsWJGI/DaRZ5TTSCJ
+        4ZxkINZIQsGZKKNX8XFNO5Dzvt7K4pgpV1GjKxDYCGQmMZQIDIq7TWoz/RpdxDVApppzizAoNdPmt
+        3Xyd3kfRLkCaskCUduX9jhbecsD1oDuEbveK181LZcW429RrOX/lE5UuUxzgZmSCRezejrJ4GUVAN
+        mMUFyE2nijIPTxSTtOrkSD2Lsor26MPuUBAkl9n4Y8k0+ZwuTUVHmK6nFR4FrnqoU+HOz0s2yhWWE
+        S150RMxfx4d7vriay/dNzTRMyx4MvCwdINWVuY8tEVRRBl586r+QbjJbuSuz8jfO99DOnTDEdRgfw
+        QiFC1HTlA==;
 Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRXM1-0000lv-EB
-        for linux-xfs@vger.kernel.org; Fri, 17 May 2019 07:32:33 +0000
+        id 1hRXM4-0000mP-0q
+        for linux-xfs@vger.kernel.org; Fri, 17 May 2019 07:32:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 10/20] xfs: remove the xfs_log_item_t typedef
-Date:   Fri, 17 May 2019 09:31:09 +0200
-Message-Id: <20190517073119.30178-11-hch@lst.de>
+Subject: [PATCH 11/20] xfs: use a list_head for iclog callbacks
+Date:   Fri, 17 May 2019 09:31:10 +0200
+Message-Id: <20190517073119.30178-12-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517073119.30178-1-hch@lst.de>
 References: <20190517073119.30178-1-hch@lst.de>
@@ -43,339 +43,276 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Replace the hand grown linked list handling and cil context attachment
+with the standard list_head structure.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf_item.c     |  6 +++---
- fs/xfs/xfs_buf_item.h     |  6 +++---
- fs/xfs/xfs_dquot_item.h   |  4 ++--
- fs/xfs/xfs_extfree_item.h |  4 ++--
- fs/xfs/xfs_inode.c        | 12 +++++------
- fs/xfs/xfs_inode_item.h   |  2 +-
- fs/xfs/xfs_log_recover.c  |  2 +-
- fs/xfs/xfs_trans.h        | 16 +++++++-------
- fs/xfs/xfs_trans_ail.c    | 44 +++++++++++++++++++--------------------
- 9 files changed, 48 insertions(+), 48 deletions(-)
+ fs/xfs/xfs_log.c      | 51 ++++++++-----------------------------------
+ fs/xfs/xfs_log.h      | 15 +++----------
+ fs/xfs/xfs_log_cil.c  | 31 ++++++++++++++++++++------
+ fs/xfs/xfs_log_priv.h | 10 +++------
+ 4 files changed, 39 insertions(+), 68 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 7193ee9ca5b8..05eefc677cd8 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -981,9 +981,9 @@ xfs_buf_item_relse(
-  */
- void
- xfs_buf_attach_iodone(
--	xfs_buf_t	*bp,
--	void		(*cb)(xfs_buf_t *, xfs_log_item_t *),
--	xfs_log_item_t	*lip)
-+	struct xfs_buf		*bp,
-+	void			(*cb)(struct xfs_buf *, struct xfs_log_item *),
-+	struct xfs_log_item	*lip)
- {
- 	ASSERT(xfs_buf_islocked(bp));
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 1eb0938165fc..0d6fb374dbe8 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -538,32 +538,6 @@ xfs_log_done(
+ 	return lsn;
+ }
  
-diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
-index 90f65f891fab..4a054b11011a 100644
---- a/fs/xfs/xfs_buf_item.h
-+++ b/fs/xfs/xfs_buf_item.h
-@@ -39,7 +39,7 @@ struct xfs_buf_log_item;
-  * locked, and which 128 byte chunks of the buffer are dirty.
-  */
- struct xfs_buf_log_item {
--	xfs_log_item_t		bli_item;	/* common item structure */
-+	struct xfs_log_item	bli_item;	/* common item structure */
- 	struct xfs_buf		*bli_buf;	/* real buffer pointer */
- 	unsigned int		bli_flags;	/* misc flags */
- 	unsigned int		bli_recur;	/* lock recursion count */
-@@ -55,8 +55,8 @@ bool	xfs_buf_item_put(struct xfs_buf_log_item *);
- void	xfs_buf_item_log(struct xfs_buf_log_item *, uint, uint);
- bool	xfs_buf_item_dirty_format(struct xfs_buf_log_item *);
- void	xfs_buf_attach_iodone(struct xfs_buf *,
--			      void(*)(struct xfs_buf *, xfs_log_item_t *),
--			      xfs_log_item_t *);
-+			      void(*)(struct xfs_buf *, struct xfs_log_item *),
-+			      struct xfs_log_item *);
- void	xfs_buf_iodone_callbacks(struct xfs_buf *);
- void	xfs_buf_iodone(struct xfs_buf *, struct xfs_log_item *);
- bool	xfs_buf_resubmit_failed_buffers(struct xfs_buf *,
-diff --git a/fs/xfs/xfs_dquot_item.h b/fs/xfs/xfs_dquot_item.h
-index db9df710a308..1aed34ccdabc 100644
---- a/fs/xfs/xfs_dquot_item.h
-+++ b/fs/xfs/xfs_dquot_item.h
-@@ -12,13 +12,13 @@ struct xfs_mount;
- struct xfs_qoff_logitem;
+-/*
+- * Attaches a new iclog I/O completion callback routine during
+- * transaction commit.  If the log is in error state, a non-zero
+- * return code is handed back and the caller is responsible for
+- * executing the callback at an appropriate time.
+- */
+-int
+-xfs_log_notify(
+-	struct xlog_in_core	*iclog,
+-	xfs_log_callback_t	*cb)
+-{
+-	int	abortflg;
+-
+-	spin_lock(&iclog->ic_callback_lock);
+-	abortflg = (iclog->ic_state & XLOG_STATE_IOERROR);
+-	if (!abortflg) {
+-		ASSERT_ALWAYS((iclog->ic_state == XLOG_STATE_ACTIVE) ||
+-			      (iclog->ic_state == XLOG_STATE_WANT_SYNC));
+-		cb->cb_next = NULL;
+-		*(iclog->ic_callback_tail) = cb;
+-		iclog->ic_callback_tail = &(cb->cb_next);
+-	}
+-	spin_unlock(&iclog->ic_callback_lock);
+-	return abortflg;
+-}
+-
+ int
+ xfs_log_release_iclog(
+ 	struct xfs_mount	*mp,
+@@ -1554,7 +1528,7 @@ xlog_alloc_log(
+ 		iclog->ic_log = log;
+ 		atomic_set(&iclog->ic_refcnt, 0);
+ 		spin_lock_init(&iclog->ic_callback_lock);
+-		iclog->ic_callback_tail = &(iclog->ic_callback);
++		INIT_LIST_HEAD(&iclog->ic_callbacks);
+ 		iclog->ic_datap = (char *)iclog->ic_data + log->l_iclog_hsize;
  
- typedef struct xfs_dq_logitem {
--	xfs_log_item_t		 qli_item;	   /* common portion */
-+	struct xfs_log_item	 qli_item;	   /* common portion */
- 	struct xfs_dquot	*qli_dquot;	   /* dquot ptr */
- 	xfs_lsn_t		 qli_flush_lsn;	   /* lsn at last flush */
- } xfs_dq_logitem_t;
+ 		init_waitqueue_head(&iclog->ic_force_wait);
+@@ -2600,7 +2574,7 @@ xlog_state_clean_log(
+ 		if (iclog->ic_state == XLOG_STATE_DIRTY) {
+ 			iclog->ic_state	= XLOG_STATE_ACTIVE;
+ 			iclog->ic_offset       = 0;
+-			ASSERT(iclog->ic_callback == NULL);
++			ASSERT(list_empty_careful(&iclog->ic_callbacks));
+ 			/*
+ 			 * If the number of ops in this iclog indicate it just
+ 			 * contains the dummy transaction, we can
+@@ -2700,7 +2674,6 @@ xlog_state_do_callback(
+ 	xlog_in_core_t	   *iclog;
+ 	xlog_in_core_t	   *first_iclog;	/* used to know when we've
+ 						 * processed all iclogs once */
+-	xfs_log_callback_t *cb, *cb_next;
+ 	int		   flushcnt = 0;
+ 	xfs_lsn_t	   lowest_lsn;
+ 	int		   ioerrors;	/* counter: iclogs with errors */
+@@ -2811,7 +2784,7 @@ xlog_state_do_callback(
+ 				 */
+ 				ASSERT(XFS_LSN_CMP(atomic64_read(&log->l_last_sync_lsn),
+ 					be64_to_cpu(iclog->ic_header.h_lsn)) <= 0);
+-				if (iclog->ic_callback)
++				if (!list_empty_careful(&iclog->ic_callbacks))
+ 					atomic64_set(&log->l_last_sync_lsn,
+ 						be64_to_cpu(iclog->ic_header.h_lsn));
  
- typedef struct xfs_qoff_logitem {
--	xfs_log_item_t		 qql_item;	/* common portion */
-+	struct xfs_log_item	 qql_item;	/* common portion */
- 	struct xfs_qoff_logitem *qql_start_lip; /* qoff-start logitem, if any */
- 	unsigned int		qql_flags;
- } xfs_qoff_logitem_t;
-diff --git a/fs/xfs/xfs_extfree_item.h b/fs/xfs/xfs_extfree_item.h
-index 2a6a895ca73e..b0dc4ebe8892 100644
---- a/fs/xfs/xfs_extfree_item.h
-+++ b/fs/xfs/xfs_extfree_item.h
-@@ -51,7 +51,7 @@ struct kmem_zone;
-  * AIL, so at this point both the EFI and EFD are freed.
-  */
- typedef struct xfs_efi_log_item {
--	xfs_log_item_t		efi_item;
-+	struct xfs_log_item	efi_item;
- 	atomic_t		efi_refcount;
- 	atomic_t		efi_next_extent;
- 	unsigned long		efi_flags;	/* misc flags */
-@@ -64,7 +64,7 @@ typedef struct xfs_efi_log_item {
-  * have been freed.
-  */
- typedef struct xfs_efd_log_item {
--	xfs_log_item_t		efd_item;
-+	struct xfs_log_item	efd_item;
- 	xfs_efi_log_item_t	*efd_efip;
- 	uint			efd_next_extent;
- 	xfs_efd_log_format_t	efd_format;
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 419eae485ff3..6076bae6eb21 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -441,12 +441,12 @@ xfs_lock_inumorder(int lock_mode, int subclass)
+@@ -2828,26 +2801,20 @@ xlog_state_do_callback(
+ 			 * callbacks being added.
+ 			 */
+ 			spin_lock(&iclog->ic_callback_lock);
+-			cb = iclog->ic_callback;
+-			while (cb) {
+-				iclog->ic_callback_tail = &(iclog->ic_callback);
+-				iclog->ic_callback = NULL;
+-				spin_unlock(&iclog->ic_callback_lock);
++			while (!list_empty(&iclog->ic_callbacks)) {
++				LIST_HEAD(tmp);
+ 
+-				/* perform callbacks in the order given */
+-				for (; cb; cb = cb_next) {
+-					cb_next = cb->cb_next;
+-					cb->cb_func(cb->cb_arg, aborted);
+-				}
++				list_splice_init(&iclog->ic_callbacks, &tmp);
++
++				spin_unlock(&iclog->ic_callback_lock);
++				xlog_cil_process_commited(&tmp, aborted);
+ 				spin_lock(&iclog->ic_callback_lock);
+-				cb = iclog->ic_callback;
+ 			}
+ 
+ 			loopdidcallbacks++;
+ 			funcdidcallbacks++;
+ 
+ 			spin_lock(&log->l_icloglock);
+-			ASSERT(iclog->ic_callback == NULL);
+ 			spin_unlock(&iclog->ic_callback_lock);
+ 			if (!(iclog->ic_state & XLOG_STATE_IOERROR))
+ 				iclog->ic_state = XLOG_STATE_DIRTY;
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index 4450a2a26a1a..fac46af28cf5 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -6,6 +6,8 @@
+ #ifndef	__XFS_LOG_H__
+ #define __XFS_LOG_H__
+ 
++struct xfs_cil_ctx;
++
+ struct xfs_log_vec {
+ 	struct xfs_log_vec	*lv_next;	/* next lv in build list */
+ 	int			lv_niovecs;	/* number of iovecs in lv */
+@@ -71,16 +73,6 @@ xlog_copy_iovec(struct xfs_log_vec *lv, struct xfs_log_iovec **vecp,
+ 	return buf;
+ }
+ 
+-/*
+- * Structure used to pass callback function and the function's argument
+- * to the log manager.
+- */
+-typedef struct xfs_log_callback {
+-	struct xfs_log_callback	*cb_next;
+-	void			(*cb_func)(void *, bool);
+-	void			*cb_arg;
+-} xfs_log_callback_t;
+-
+ /*
+  * By comparing each component, we don't have to worry about extra
+  * endian issues in treating two 32 bit numbers as one 64 bit number
+@@ -129,8 +121,6 @@ int	xfs_log_mount_cancel(struct xfs_mount *);
+ xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
+ xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
+ void	  xfs_log_space_wake(struct xfs_mount *mp);
+-int	  xfs_log_notify(struct xlog_in_core	*iclog,
+-			 struct xfs_log_callback *callback_entry);
+ int	  xfs_log_release_iclog(struct xfs_mount *mp,
+ 			 struct xlog_in_core	 *iclog);
+ int	  xfs_log_reserve(struct xfs_mount *mp,
+@@ -148,6 +138,7 @@ void	  xfs_log_ticket_put(struct xlog_ticket *ticket);
+ 
+ void	xfs_log_commit_cil(struct xfs_mount *mp, struct xfs_trans *tp,
+ 				xfs_lsn_t *commit_lsn, bool regrant);
++void	xlog_cil_process_commited(struct list_head *list, bool aborted);
+ bool	xfs_log_item_in_current_chkpt(struct xfs_log_item *lip);
+ 
+ void	xfs_log_work_queue(struct xfs_mount *mp);
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index 4cb459f21ad4..b6b30b8e22af 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -577,10 +577,9 @@ xlog_discard_busy_extents(
   */
  static void
- xfs_lock_inodes(
--	xfs_inode_t	**ips,
--	int		inodes,
--	uint		lock_mode)
-+	struct xfs_inode	**ips,
-+	int			inodes,
-+	uint			lock_mode)
+ xlog_cil_committed(
+-	void	*args,
+-	bool	abort)
++	struct xfs_cil_ctx	*ctx,
++	bool			abort)
  {
--	int		attempts = 0, i, j, try_lock;
--	xfs_log_item_t	*lp;
-+	int			attempts = 0, i, j, try_lock;
-+	struct xfs_log_item	*lp;
+-	struct xfs_cil_ctx	*ctx = args;
+ 	struct xfs_mount	*mp = ctx->cil->xc_log->l_mp;
  
  	/*
- 	 * Currently supports between 2 and 5 inodes with exclusive locking.  We
-@@ -551,7 +551,7 @@ xfs_lock_two_inodes(
- 	struct xfs_inode	*temp;
- 	uint			mode_temp;
- 	int			attempts = 0;
--	xfs_log_item_t		*lp;
-+	struct xfs_log_item	*lp;
+@@ -615,6 +614,20 @@ xlog_cil_committed(
+ 		kmem_free(ctx);
+ }
  
- 	ASSERT(hweight32(ip0_mode) == 1);
- 	ASSERT(hweight32(ip1_mode) == 1);
-diff --git a/fs/xfs/xfs_inode_item.h b/fs/xfs/xfs_inode_item.h
-index 27081eba220c..07a60e74c39c 100644
---- a/fs/xfs/xfs_inode_item.h
-+++ b/fs/xfs/xfs_inode_item.h
-@@ -14,7 +14,7 @@ struct xfs_inode;
++void
++xlog_cil_process_commited(
++	struct list_head	*list,
++	bool			aborted)
++{
++	struct xfs_cil_ctx	*ctx;
++
++	while ((ctx = list_first_entry_or_null(list,
++			struct xfs_cil_ctx, iclog_entry))) {
++		list_del(&ctx->iclog_entry);
++		xlog_cil_committed(ctx, aborted);
++	}
++}
++
+ /*
+  * Push the Committed Item List to the log. If @push_seq flag is zero, then it
+  * is a background flush and so we can chose to ignore it. Otherwise, if the
+@@ -837,11 +850,15 @@ xlog_cil_push(
+ 		goto out_abort;
+ 
+ 	/* attach all the transactions w/ busy extents to iclog */
+-	ctx->log_cb.cb_func = xlog_cil_committed;
+-	ctx->log_cb.cb_arg = ctx;
+-	error = xfs_log_notify(commit_iclog, &ctx->log_cb);
+-	if (error)
++	spin_lock(&commit_iclog->ic_callback_lock);
++	if (commit_iclog->ic_state & XLOG_STATE_IOERROR) {
++		spin_unlock(&commit_iclog->ic_callback_lock);
+ 		goto out_abort;
++	}
++	ASSERT_ALWAYS(commit_iclog->ic_state == XLOG_STATE_ACTIVE ||
++		      commit_iclog->ic_state == XLOG_STATE_WANT_SYNC);
++	list_add_tail(&ctx->iclog_entry, &commit_iclog->ic_callbacks);
++	spin_unlock(&commit_iclog->ic_callback_lock);
+ 
+ 	/*
+ 	 * now the checkpoint commit is complete and we've attached the
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index b5f82cb36202..5c188ccb8568 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -10,7 +10,6 @@ struct xfs_buf;
+ struct xlog;
+ struct xlog_ticket;
  struct xfs_mount;
- 
- typedef struct xfs_inode_log_item {
--	xfs_log_item_t		ili_item;	   /* common portion */
-+	struct xfs_log_item	ili_item;	   /* common portion */
- 	struct xfs_inode	*ili_inode;	   /* inode ptr */
- 	xfs_lsn_t		ili_flush_lsn;	   /* lsn at last flush */
- 	xfs_lsn_t		ili_last_lsn;	   /* lsn at last transaction */
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 9329f5adbfbe..76023ea49356 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -3463,7 +3463,7 @@ xlog_recover_efd_pass2(
- {
- 	xfs_efd_log_format_t	*efd_formatp;
- 	xfs_efi_log_item_t	*efip = NULL;
--	xfs_log_item_t		*lip;
-+	struct xfs_log_item	*lip;
- 	uint64_t		efi_id;
- 	struct xfs_ail_cursor	cur;
- 	struct xfs_ail		*ailp = log->l_ailp;
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index a38af44344bf..7a6ee0c2ce20 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -27,7 +27,7 @@ struct xfs_cud_log_item;
- struct xfs_bui_log_item;
- struct xfs_bud_log_item;
- 
--typedef struct xfs_log_item {
-+struct xfs_log_item {
- 	struct list_head		li_ail;		/* AIL pointers */
- 	struct list_head		li_trans;	/* transaction list */
- 	xfs_lsn_t			li_lsn;		/* last on-disk lsn */
-@@ -48,7 +48,7 @@ typedef struct xfs_log_item {
- 	struct xfs_log_vec		*li_lv;		/* active log vector */
- 	struct xfs_log_vec		*li_lv_shadow;	/* standby vector */
- 	xfs_lsn_t			li_seq;		/* CIL commit seq */
--} xfs_log_item_t;
-+};
+-struct xfs_log_callback;
  
  /*
-  * li_flags use the (set/test/clear)_bit atomic interfaces because updates can
-@@ -68,15 +68,15 @@ typedef struct xfs_log_item {
+  * Flags for log structure
+@@ -181,8 +180,6 @@ typedef struct xlog_ticket {
+  * - ic_next is the pointer to the next iclog in the ring.
+  * - ic_bp is a pointer to the buffer used to write this incore log to disk.
+  * - ic_log is a pointer back to the global log structure.
+- * - ic_callback is a linked list of callback function/argument pairs to be
+- *	called after an iclog finishes writing.
+  * - ic_size is the full size of the header plus data.
+  * - ic_offset is the current number of bytes written to in this iclog.
+  * - ic_refcnt is bumped when someone is writing to the log.
+@@ -193,7 +190,7 @@ typedef struct xlog_ticket {
+  * structure cacheline aligned. The following fields can be contended on
+  * by independent processes:
+  *
+- *	- ic_callback_*
++ *	- ic_callbacks
+  *	- ic_refcnt
+  *	- fields protected by the global l_icloglock
+  *
+@@ -216,8 +213,7 @@ typedef struct xlog_in_core {
  
- struct xfs_item_ops {
- 	unsigned flags;
--	void (*iop_size)(xfs_log_item_t *, int *, int *);
--	void (*iop_format)(xfs_log_item_t *, struct xfs_log_vec *);
--	void (*iop_pin)(xfs_log_item_t *);
--	void (*iop_unpin)(xfs_log_item_t *, int remove);
-+	void (*iop_size)(struct xfs_log_item *, int *, int *);
-+	void (*iop_format)(struct xfs_log_item *, struct xfs_log_vec *);
-+	void (*iop_pin)(struct xfs_log_item *);
-+	void (*iop_unpin)(struct xfs_log_item *, int remove);
- 	uint (*iop_push)(struct xfs_log_item *, struct list_head *);
- 	void (*iop_committing)(struct xfs_log_item *, xfs_lsn_t commit_lsn);
- 	void (*iop_release)(struct xfs_log_item *);
--	xfs_lsn_t (*iop_committed)(xfs_log_item_t *, xfs_lsn_t);
--	void (*iop_error)(xfs_log_item_t *, xfs_buf_t *);
-+	xfs_lsn_t (*iop_committed)(struct xfs_log_item *, xfs_lsn_t);
-+	void (*iop_error)(struct xfs_log_item *, xfs_buf_t *);
+ 	/* Callback structures need their own cacheline */
+ 	spinlock_t		ic_callback_lock ____cacheline_aligned_in_smp;
+-	struct xfs_log_callback	*ic_callback;
+-	struct xfs_log_callback	**ic_callback_tail;
++	struct list_head	ic_callbacks;
+ 
+ 	/* reference counts need their own cacheline */
+ 	atomic_t		ic_refcnt ____cacheline_aligned_in_smp;
+@@ -243,7 +239,7 @@ struct xfs_cil_ctx {
+ 	int			space_used;	/* aggregate size of regions */
+ 	struct list_head	busy_extents;	/* busy extents in chkpt */
+ 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+-	struct xfs_log_callback	log_cb;		/* completion callback hook. */
++	struct list_head	iclog_entry;
+ 	struct list_head	committing;	/* ctx committing list */
+ 	struct work_struct	discard_endio_work;
  };
- 
- /*
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 8509c4b59760..f239344fda1a 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -74,29 +74,29 @@ xfs_ail_check(
-  * Return a pointer to the last item in the AIL.  If the AIL is empty, then
-  * return NULL.
-  */
--static xfs_log_item_t *
-+static struct xfs_log_item *
- xfs_ail_max(
- 	struct xfs_ail  *ailp)
- {
- 	if (list_empty(&ailp->ail_head))
- 		return NULL;
- 
--	return list_entry(ailp->ail_head.prev, xfs_log_item_t, li_ail);
-+	return list_entry(ailp->ail_head.prev, struct xfs_log_item, li_ail);
- }
- 
- /*
-  * Return a pointer to the item which follows the given item in the AIL.  If
-  * the given item is the last item in the list, then return NULL.
-  */
--static xfs_log_item_t *
-+static struct xfs_log_item *
- xfs_ail_next(
--	struct xfs_ail  *ailp,
--	xfs_log_item_t  *lip)
-+	struct xfs_ail		*ailp,
-+	struct xfs_log_item	*lip)
- {
- 	if (lip->li_ail.next == &ailp->ail_head)
- 		return NULL;
- 
--	return list_first_entry(&lip->li_ail, xfs_log_item_t, li_ail);
-+	return list_first_entry(&lip->li_ail, struct xfs_log_item, li_ail);
- }
- 
- /*
-@@ -109,10 +109,10 @@ xfs_ail_next(
-  */
- xfs_lsn_t
- xfs_ail_min_lsn(
--	struct xfs_ail	*ailp)
-+	struct xfs_ail		*ailp)
- {
--	xfs_lsn_t	lsn = 0;
--	xfs_log_item_t	*lip;
-+	xfs_lsn_t		lsn = 0;
-+	struct xfs_log_item	*lip;
- 
- 	spin_lock(&ailp->ail_lock);
- 	lip = xfs_ail_min(ailp);
-@@ -128,10 +128,10 @@ xfs_ail_min_lsn(
-  */
- static xfs_lsn_t
- xfs_ail_max_lsn(
--	struct xfs_ail  *ailp)
-+	struct xfs_ail		*ailp)
- {
--	xfs_lsn_t       lsn = 0;
--	xfs_log_item_t  *lip;
-+	xfs_lsn_t       	lsn = 0;
-+	struct xfs_log_item	*lip;
- 
- 	spin_lock(&ailp->ail_lock);
- 	lip = xfs_ail_max(ailp);
-@@ -216,13 +216,13 @@ xfs_trans_ail_cursor_clear(
-  * ascending traversal.  Pass a @lsn of zero to initialise the cursor to the
-  * first item in the AIL. Returns NULL if the list is empty.
-  */
--xfs_log_item_t *
-+struct xfs_log_item *
- xfs_trans_ail_cursor_first(
- 	struct xfs_ail		*ailp,
- 	struct xfs_ail_cursor	*cur,
- 	xfs_lsn_t		lsn)
- {
--	xfs_log_item_t		*lip;
-+	struct xfs_log_item	*lip;
- 
- 	xfs_trans_ail_cursor_init(ailp, cur);
- 
-@@ -248,7 +248,7 @@ __xfs_trans_ail_cursor_last(
- 	struct xfs_ail		*ailp,
- 	xfs_lsn_t		lsn)
- {
--	xfs_log_item_t		*lip;
-+	struct xfs_log_item	*lip;
- 
- 	list_for_each_entry_reverse(lip, &ailp->ail_head, li_ail) {
- 		if (XFS_LSN_CMP(lip->li_lsn, lsn) <= 0)
-@@ -327,8 +327,8 @@ xfs_ail_splice(
-  */
- static void
- xfs_ail_delete(
--	struct xfs_ail  *ailp,
--	xfs_log_item_t  *lip)
-+	struct xfs_ail		*ailp,
-+	struct xfs_log_item	*lip)
- {
- 	xfs_ail_check(ailp, lip);
- 	list_del(&lip->li_ail);
-@@ -358,7 +358,7 @@ xfsaild_push(
- {
- 	xfs_mount_t		*mp = ailp->ail_mount;
- 	struct xfs_ail_cursor	cur;
--	xfs_log_item_t		*lip;
-+	struct xfs_log_item	*lip;
- 	xfs_lsn_t		lsn;
- 	xfs_lsn_t		target;
- 	long			tout;
-@@ -613,10 +613,10 @@ xfsaild(
-  */
- void
- xfs_ail_push(
--	struct xfs_ail	*ailp,
--	xfs_lsn_t	threshold_lsn)
-+	struct xfs_ail		*ailp,
-+	xfs_lsn_t		threshold_lsn)
- {
--	xfs_log_item_t	*lip;
-+	struct xfs_log_item	*lip;
- 
- 	lip = xfs_ail_min(ailp);
- 	if (!lip || XFS_FORCED_SHUTDOWN(ailp->ail_mount) ||
-@@ -701,7 +701,7 @@ xfs_trans_ail_update_bulk(
- 	int			nr_items,
- 	xfs_lsn_t		lsn) __releases(ailp->ail_lock)
- {
--	xfs_log_item_t		*mlip;
-+	struct xfs_log_item	*mlip;
- 	int			mlip_changed = 0;
- 	int			i;
- 	LIST_HEAD(tmp);
 -- 
 2.20.1
 
