@@ -2,96 +2,323 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84223241C2
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 22:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65A992427A
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 23:05:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfETUIg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 16:08:36 -0400
-Received: from sandeen.net ([63.231.237.45]:48992 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfETUIg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 16:08:36 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 4670078A9;
-        Mon, 20 May 2019 15:08:33 -0500 (CDT)
-Subject: Re: [PATCH] xfsdump: add a space after commas and semicolons where
- was none
-To:     Jan Tulak <jtulak@redhat.com>, linux-xfs@vger.kernel.org
-References: <20190517115254.54436-1-jtulak@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <44e13bbb-40b6-dcd0-9fd2-1243101cffe6@sandeen.net>
-Date:   Mon, 20 May 2019 15:08:35 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1725776AbfETVF0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 17:05:26 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47840 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfETVF0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 17:05:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KL3oo5046431
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 21:05:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=A9X0gJVzPSTb6WsRsmSYhcfFjdkUrqua58QMMRtmEF8=;
+ b=pVudeVqIq7IUGgItYzzZQO9slw/Qbt8Ee8wJvJuxFcC+QWqdxFVPowJdtxjL8youKf2x
+ wOugRl1wo+zwr7SsXiU0sCn8BoK1LxktfBakYuvdx2gBelTK1pav9qWqlFFJx9BOhw92
+ soAomPpU7dWflo00FTfbxiKPJpvrml9XJSusY6Lf3siT5DTW0w8jSVEu5cZuhUKh50kt
+ PgNKtwnmfqq0yhYucjis3LU6JoiaNf+ZptE6+ir4y5vvj4JYTbkU6rqw/Lw5hIjco8gU
+ 1RDJ5fZd5pytcW1eJ6ABjJqgeqADh/C2NK/bu1B40EVA7emUU50ogEt6DDsN42OGBhM3 ow== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sj9ft9k6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 21:05:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KL4Bxh080257
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 21:05:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2sm046knap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 21:05:23 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KL5LI8027860
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 21:05:22 GMT
+Received: from localhost (/10.159.247.197)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 May 2019 21:05:21 +0000
+Date:   Mon, 20 May 2019 14:05:20 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Allison Collins <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/4] xfs_restore: refactor open-coded file creation code
+Message-ID: <20190520210520.GB5335@magnolia>
+References: <155085403848.5141.1866278990901950186.stgit@magnolia>
+ <155085404462.5141.11851529133557195388.stgit@magnolia>
+ <463f5d1d-a13f-c489-1474-c0b8b3097a71@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190517115254.54436-1-jtulak@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <463f5d1d-a13f-c489-1474-c0b8b3097a71@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905200132
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905200132
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/17/19 6:52 AM, Jan Tulak wrote:
-> @@ -3130,7 +3130,7 @@ static tsi_cmd_tbl_t tsi_cmd_tbl[] = {
->  	{ "cd",		"[ <path> ]",			tsi_cmd_cd,	1, 2 },
->  	{ "add",	"[ <path> ]",			tsi_cmd_add,	1, 2 },
->  	{ "delete",	"[ <path> ]",			tsi_cmd_delete,	1, 2 },
-> -	{ "extract",	"",				tsi_cmd_extract,1, 1 },
-> +	{ "extract",	"",				tsi_cmd_extract, 1, 1 },
->  	{ "quit",	"",				tsi_cmd_quit,	1, 1 },
->  	{ "help",	"",				tsi_cmd_help,	1, 1 },
->  };
+On Mon, May 06, 2019 at 05:11:23PM -0700, Allison Collins wrote:
+> On 2/22/19 9:47 AM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Create a helper to unlink, recreate, and reserve space in a file so that
+> > we don't have two open-coded versions.  We lose the broken ALLOCSP code
+> > since it never worked anyway.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >   restore/dirattr.c |   97 ++++++++++++++++++-----------------------------------
+> >   restore/dirattr.h |    2 +
+> >   restore/namreg.c  |   70 +++-----------------------------------
+> >   3 files changed, 41 insertions(+), 128 deletions(-)
+> > 
+> > 
+> > diff --git a/restore/dirattr.c b/restore/dirattr.c
+> > index 5368664..0fb2877 100644
+> > --- a/restore/dirattr.c
+> > +++ b/restore/dirattr.c
+> > @@ -55,6 +55,37 @@
+> >   #include "openutil.h"
+> >   #include "mmap.h"
+> > +/* Create a file, try to reserve space for it, and return the fd. */
+> > +int
+> > +create_filled_file(
+> > +	const char	*pathname,
+> > +	off64_t		size)
+> > +{
+> > +	struct flock64	fl = {
+> > +		.l_len = size,
+> > +	};
+> > +	int		fd;
+> > +	int		ret;
+> > +
+> > +	(void)unlink(pathname);
+> > +
+> > +	fd = open(pathname, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+> > +	if (fd < 0)
+> > +		return fd;
+> 
+> Just a nit: I think if you goto done here instead of return, you can remove
+> the extra goto below since it's not having much effect.  I sort of figured
+> people like gotos because they like having one exit point to the function.
+> Alternatively, if you don't mind having multiple exit points, you can simply
+> return early in patch 4, and avoid the goto all together.
 
-I dropped a couple of hunks like this one, where bending the rules can
-actually help readability by keeping things aligned.
+Hmm, you're right, let's just return fd directly instead of all this
+goto nonsense.
 
-Otherwise, looks fine, thanks.
+--D
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+> Allison
+> 
+> > +
+> > +	ret = ioctl(fd, XFS_IOC_RESVSP64, &fl);
+> > +	if (ret && errno != ENOTTY)
+> > +		mlog(MLOG_VERBOSE | MLOG_NOTE,
+> > +_("attempt to reserve %lld bytes for %s using %s failed: %s (%d)\n"),
+> > +				size, pathname, "XFS_IOC_RESVSP64",
+> > +				strerror(errno), errno);
+> > +	if (ret == 0)
+> > +		goto done;
+> > +
+> > +done:
+> > +	return fd;
+> > +}
+> > +
+> >   /* structure definitions used locally ****************************************/
+> >   /* node handle limits
+> > @@ -238,13 +269,8 @@ dirattr_init(char *hkdir, bool_t resume, uint64_t dircnt)
+> >   			return BOOL_FALSE;
+> >   		}
+> >   	} else {
+> > -		/* create the dirattr file, first unlinking any older version
+> > -		 * laying around
+> > -		 */
+> > -		(void)unlink(dtp->dt_pathname);
+> > -		dtp->dt_fd = open(dtp->dt_pathname,
+> > -				   O_RDWR | O_CREAT | O_EXCL,
+> > -				   S_IRUSR | S_IWUSR);
+> > +		dtp->dt_fd = create_filled_file(dtp->dt_pathname,
+> > +			DIRATTR_PERS_SZ + (dircnt * sizeof(struct dirattr)));
+> >   		if (dtp->dt_fd < 0) {
+> >   			mlog(MLOG_NORMAL | MLOG_ERROR, _(
+> >   			      "could not create directory attributes file %s: "
+> > @@ -253,63 +279,6 @@ dirattr_init(char *hkdir, bool_t resume, uint64_t dircnt)
+> >   			      strerror(errno));
+> >   			return BOOL_FALSE;
+> >   		}
+> > -
+> > -		/* reserve space for the backing store. try to use RESVSP64.
+> > -		 * if doesn't work, try ALLOCSP64. the former is faster, as
+> > -		 * it does not zero the space.
+> > -		 */
+> > -		{
+> > -		bool_t successpr;
+> > -		unsigned int ioctlcmd;
+> > -		int loglevel;
+> > -		size_t trycnt;
+> > -
+> > -		for (trycnt = 0,
+> > -		      successpr = BOOL_FALSE,
+> > -		      ioctlcmd = XFS_IOC_RESVSP64,
+> > -		      loglevel = MLOG_VERBOSE
+> > -		      ;
+> > -		      ! successpr && trycnt < 2
+> > -		      ;
+> > -		      trycnt++,
+> > -		      ioctlcmd = XFS_IOC_ALLOCSP64,
+> > -		      loglevel = max(MLOG_NORMAL, loglevel - 1)) {
+> > -			off64_t initsz;
+> > -			struct flock64 flock64;
+> > -			int rval;
+> > -
+> > -			if (! ioctlcmd) {
+> > -				continue;
+> > -			}
+> > -
+> > -			initsz = (off64_t)DIRATTR_PERS_SZ
+> > -				 +
+> > -				 ((off64_t)dircnt * sizeof(dirattr_t));
+> > -			flock64.l_whence = 0;
+> > -			flock64.l_start = 0;
+> > -			flock64.l_len = initsz;
+> > -			rval = ioctl(dtp->dt_fd, ioctlcmd, &flock64);
+> > -			if (rval) {
+> > -				if (errno != ENOTTY) {
+> > -					mlog(loglevel | MLOG_NOTE, _(
+> > -					      "attempt to reserve %lld bytes for %s "
+> > -					      "using %s "
+> > -					      "failed: %s (%d)\n"),
+> > -					      initsz,
+> > -					      dtp->dt_pathname,
+> > -					      ioctlcmd == XFS_IOC_RESVSP64
+> > -					      ?
+> > -					      "XFS_IOC_RESVSP64"
+> > -					      :
+> > -					      "XFS_IOC_ALLOCSP64",
+> > -					      strerror(errno),
+> > -					      errno);
+> > -				}
+> > -			} else {
+> > -				successpr = BOOL_TRUE;
+> > -			}
+> > -		}
+> > -		}
+> >   	}
+> >   	/* mmap the persistent descriptor
+> > diff --git a/restore/dirattr.h b/restore/dirattr.h
+> > index dd37a98..e81e69c 100644
+> > --- a/restore/dirattr.h
+> > +++ b/restore/dirattr.h
+> > @@ -88,4 +88,6 @@ extern bool_t dirattr_cb_extattr(dah_t dah,
+> >   				  extattrhdr_t *ahdrp,
+> >   				  void *ctxp);
+> > +int create_filled_file(const char *pathname, off64_t size);
+> > +
+> >   #endif /* DIRATTR_H */
+> > diff --git a/restore/namreg.c b/restore/namreg.c
+> > index 89fa5ef..d0d5e89 100644
+> > --- a/restore/namreg.c
+> > +++ b/restore/namreg.c
+> > @@ -37,6 +37,10 @@
+> >   #include "namreg.h"
+> >   #include "openutil.h"
+> >   #include "mmap.h"
+> > +#include "global.h"
+> > +#include "content.h"
+> > +#include "content_inode.h"
+> > +#include "dirattr.h"
+> >   /* structure definitions used locally ****************************************/
+> > @@ -153,13 +157,8 @@ namreg_init(char *hkdir, bool_t resume, uint64_t inocnt)
+> >   			return BOOL_FALSE;
+> >   		}
+> >   	} else {
+> > -		/* create the namreg file, first unlinking any older version
+> > -		 * laying around
+> > -		 */
+> > -		(void)unlink(ntp->nt_pathname);
+> > -		ntp->nt_fd = open(ntp->nt_pathname,
+> > -				   O_RDWR | O_CREAT | O_EXCL,
+> > -				   S_IRUSR | S_IWUSR);
+> > +		ntp->nt_fd = create_filled_file(ntp->nt_pathname,
+> > +			NAMREG_PERS_SZ + (inocnt * NAMREG_AVGLEN));
+> >   		if (ntp->nt_fd < 0) {
+> >   			mlog(MLOG_NORMAL | MLOG_ERROR, _(
+> >   			      "could not create name registry file %s: "
+> > @@ -168,63 +167,6 @@ namreg_init(char *hkdir, bool_t resume, uint64_t inocnt)
+> >   			      strerror(errno));
+> >   			return BOOL_FALSE;
+> >   		}
+> > -
+> > -		/* reserve space for the backing store. try to use RESVSP64.
+> > -		 * if doesn't work, try ALLOCSP64. the former is faster, as
+> > -		 * it does not zero the space.
+> > -		 */
+> > -		{
+> > -		bool_t successpr;
+> > -		unsigned int ioctlcmd;
+> > -		int loglevel;
+> > -		size_t trycnt;
+> > -
+> > -		for (trycnt = 0,
+> > -		      successpr = BOOL_FALSE,
+> > -		      ioctlcmd = XFS_IOC_RESVSP64,
+> > -		      loglevel = MLOG_VERBOSE
+> > -		      ;
+> > -		      ! successpr && trycnt < 2
+> > -		      ;
+> > -		      trycnt++,
+> > -		      ioctlcmd = XFS_IOC_ALLOCSP64,
+> > -		      loglevel = max(MLOG_NORMAL, loglevel - 1)) {
+> > -			off64_t initsz;
+> > -			struct flock64 flock64;
+> > -			int rval;
+> > -
+> > -			if (! ioctlcmd) {
+> > -				continue;
+> > -			}
+> > -
+> > -			initsz = (off64_t)NAMREG_PERS_SZ
+> > -				 +
+> > -				 ((off64_t)inocnt * NAMREG_AVGLEN);
+> > -			flock64.l_whence = 0;
+> > -			flock64.l_start = 0;
+> > -			flock64.l_len = initsz;
+> > -			rval = ioctl(ntp->nt_fd, ioctlcmd, &flock64);
+> > -			if (rval) {
+> > -				if (errno != ENOTTY) {
+> > -					mlog(loglevel | MLOG_NOTE, _(
+> > -					      "attempt to reserve %lld bytes for %s "
+> > -					      "using %s "
+> > -					      "failed: %s (%d)\n"),
+> > -					      initsz,
+> > -					      ntp->nt_pathname,
+> > -					      ioctlcmd == XFS_IOC_RESVSP64
+> > -					      ?
+> > -					      "XFS_IOC_RESVSP64"
+> > -					      :
+> > -					      "XFS_IOC_ALLOCSP64",
+> > -					      strerror(errno),
+> > -					      errno);
+> > -				}
+> > -			} else {
+> > -				successpr = BOOL_TRUE;
+> > -			}
+> > -		}
+> > -		}
+> >   	}
+> >   	/* mmap the persistent descriptor
+> > 
