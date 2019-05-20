@@ -2,44 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE2323C8D
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 17:51:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F10BD23C8F
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 17:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbfETPvq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 11:51:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:10197 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387764AbfETPvq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 11:51:46 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6F33C8763A;
-        Mon, 20 May 2019 15:51:45 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 044C85DD80;
-        Mon, 20 May 2019 15:51:44 +0000 (UTC)
-Date:   Mon, 20 May 2019 11:51:43 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     bugzilla-daemon@bugzilla.kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [Bug 203655] New: XFS: Assertion failed: 0, xfs_log_recover.c,
- line: 551
-Message-ID: <20190520155139.GA32784@bfoster>
-References: <bug-203655-201763@https.bugzilla.kernel.org/>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        id S2387764AbfETPv4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 20 May 2019 11:51:56 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:33970 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390599AbfETPvz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 11:51:55 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 13AFD288DD
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 15:51:55 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id 08559288E4; Mon, 20 May 2019 15:51:55 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 203655] XFS: Assertion failed: 0, xfs_log_recover.c, line: 551
+Date:   Mon, 20 May 2019 15:51:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: bfoster@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-203655-201763-gWqFnE56EZ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-203655-201763@https.bugzilla.kernel.org/>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 20 May 2019 15:51:45 +0000 (UTC)
+References: <bug-203655-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:47:07AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=203655
+
+--- Comment #1 from bfoster@redhat.com ---
+On Mon, May 20, 2019 at 10:47:07AM +0000, bugzilla-daemon@bugzilla.kernel.org
+wrote:
 > https://bugzilla.kernel.org/show_bug.cgi?id=203655
 > 
 >             Bug ID: 203655
@@ -91,7 +110,8 @@ On Mon, May 20, 2019 at 10:47:07AM +0000, bugzilla-daemon@bugzilla.kernel.org wr
 > Ubuntu-1.8.2-1ubuntu1 04/01/2014
 > [   20.772171] RIP: 0010:assfail+0x54/0x60
 > [   20.772539] Code: fa 48 c1 ea 03 0f b6 04 02 48 89 fa 83 e2 07 38 d0 7f 04
-> 84 c0 75 0c 80 3d 30 42 c7 02 00 75 0a 0f 0b c3 e8 0e e5 99 ff eb ed <0f> 0b 66
+> 84 c0 75 0c 80 3d 30 42 c7 02 00 75 0a 0f 0b c3 e8 0e e5 99 ff eb ed <0f> 0b
+> 66
 > 2e 0f 1f 84 00 00 00 00 00 48 63 f6 6a 01 49 89 f9 56 ba
 > [   20.774809] RSP: 0018:ffff88806c0d75c8 EFLAGS: 00010202
 > [   20.775479] RAX: 0000000000000004 RBX: 00000000000018b6 RCX:
@@ -176,7 +196,8 @@ On Mon, May 20, 2019 at 10:47:07AM +0000, bugzilla-daemon@bugzilla.kernel.org wr
 > [   20.817557]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > [   20.818238] RIP: 0033:0x7f7fb578048a
 > [   20.818727] Code: 48 8b 0d 11 fa 2a 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e
-> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01
+> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d
+> 01
 > f0 ff ff 73 01 c3 48 8b 0d de f9 2a 00 f7 d8 64 89 01 48
 > [   20.821228] RSP: 002b:00007ffe0ce9b038 EFLAGS: 00000202 ORIG_RAX:
 > 00000000000000a5
@@ -196,7 +217,8 @@ On Mon, May 20, 2019 at 10:47:07AM +0000, bugzilla-daemon@bugzilla.kernel.org wr
 > [   20.828586] ---[ end trace 6f4df2d64ffcde14 ]---
 > [   20.829232] RIP: 0010:assfail+0x54/0x60
 > [   20.829754] Code: fa 48 c1 ea 03 0f b6 04 02 48 89 fa 83 e2 07 38 d0 7f 04
-> 84 c0 75 0c 80 3d 30 42 c7 02 00 75 0a 0f 0b c3 e8 0e e5 99 ff eb ed <0f> 0b 66
+> 84 c0 75 0c 80 3d 30 42 c7 02 00 75 0a 0f 0b c3 e8 0e e5 99 ff eb ed <0f> 0b
+> 66
 > 2e 0f 1f 84 00 00 00 00 00 48 63 f6 6a 01 49 89 f9 56 ba
 > [   20.832274] RSP: 0018:ffff88806c0d75c8 EFLAGS: 00010202
 > [   20.833002] RAX: 0000000000000004 RBX: 00000000000018b6 RCX:
@@ -272,3 +294,7 @@ Recovery is always going to fail in this scenario, so whether this is a
 bug or not probably depends more on how the log got into this state.
 
 Brian
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
