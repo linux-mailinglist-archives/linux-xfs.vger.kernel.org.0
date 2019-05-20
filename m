@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A03A23D04
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABA0123D05
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392554AbfETQPC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 12:15:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37088 "EHLO
+        id S2389396AbfETQPF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 12:15:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37128 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392549AbfETQPC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:02 -0400
+        with ESMTP id S2389045AbfETQPF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Jnw7hsXCMg4iYTA81paQUzkJYGiZF+6XYvTUQ1SMTUc=; b=cE4YJpPdo3eBbbvDiuYbVUS5/
-        hBFz//UKNhEctXck6GAAf5ekeAEctMn+EkydLacS+SNSDFFy5QsgtHZGN5/L/j2NJ6YdWp/YutED6
-        FSdM+JgwRNz3XxF3Ha0KizvxsJ7H4F87pcrezcN+5P/tWTIV25JoAYMn3n6O90vlFcKF6QbqHB/6k
-        oKIl2VO5DSictpww8T4JbyOH/tqwuFlNWHogfbEKFRs26W1Z/w9jCAYfnxHUVmWd+3jpAtcg4vK5q
-        eO68+sJJ+rk7vkb6g2cuWtx98gPcV+eTLQN8et8kuZLySwl1dFSirFfzzV/D82qSVRybp0g+t5CyR
-        YMzkJzrTw==;
+         bh=o1p8sdBSXWXVIMgyUCz0pNaN1jtg5Omc5cEcXGrUffo=; b=MsywldrZCUlfU5V/8IybO8NpI
+        +QwKPaNIi9R/nttn44v4WrwHQG/e5vxVyf0WN79KwqyZPqna6pn/fWV6KmJNvi2msY9Z09AZCKfQA
+        gwPEO1wsZOn/jp56nH27bSMvgCQMz66txUc1KSrrqRubDGt/Vn3SPGtNE+YD5w3fdGPu6POphaORE
+        dsOCZV971gvibqZM0x5m4svcro5bCM+/tfcsqVnDv7LhP346o+f2fcgwfv2EOoINYbIVwUw6u1B5x
+        cqK2lh1e2RrIjKTimwK8jzqlfDYesAvWnWQTPZEK9xQElMsOwWEfG5Oqh446anNOAhHENSh5w3hYR
+        l0TI5iLYA==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSkwH-0005gl-Gu
-        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:02 +0000
+        id 1hSkwK-0005nA-Fq
+        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 07/17] xfs: factor out splitting of an iclog from xlog_sync
-Date:   Mon, 20 May 2019 18:13:37 +0200
-Message-Id: <20190520161347.3044-8-hch@lst.de>
+Subject: [PATCH 08/17] xfs: split iclog size calculation out of xlog_sync
+Date:   Mon, 20 May 2019 18:13:38 +0200
+Message-Id: <20190520161347.3044-9-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520161347.3044-1-hch@lst.de>
 References: <20190520161347.3044-1-hch@lst.de>
@@ -43,126 +43,106 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Split out a self-contained chunk of code from xlog_sync that calculates
-the split offset for an iclog that wraps the log end and bumps the
-cycles for the second half.
-
-Use the chance to bring some sanity to the variables used to track the
-split in xlog_sync by not changing the count variable, and instead use
-split as the offset for the split and use those to calculate the
-sizes and offsets for the two write buffers.
+Split out another selfcountained bit of code from xlog_sync.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log.c | 63 +++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 30 deletions(-)
+ fs/xfs/xfs_log.c | 64 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 38 insertions(+), 26 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 16159532825a..acfa1b1a85c2 100644
+index acfa1b1a85c2..9950b1bb77a9 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -1775,6 +1775,32 @@ xlog_write_iclog(
- 	xfs_buf_submit(bp);
+@@ -1801,6 +1801,36 @@ xlog_split_iclog(
+ 	return split_offset;
  }
  
-+/*
-+ * Bump the cycle numbers at the start of each block in the part of the iclog
-+ * that ends up in the buffer that gets written to the start of the log.
-+ *
-+ * Watch out for the header magic number case, though.
-+ */
-+static unsigned int
-+xlog_split_iclog(
++static int
++xlog_calc_iclog_size(
 +	struct xlog		*log,
-+	void			*data,
-+	uint64_t		bno,
-+	unsigned int		count)
++	struct xlog_in_core	*iclog,
++	uint32_t		*roundoff)
 +{
-+	unsigned int		split_offset = BBTOB(log->l_logBBsize - bno), i;
++	bool			v2 = xfs_sb_version_haslogv2(&log->l_mp->m_sb);
++	uint32_t		count_init, count;
 +
-+	for (i = split_offset; i < count; i += BBSIZE) {
-+		uint32_t cycle = get_unaligned_be32(data + i);
++	/* Add for LR header */
++	count_init = log->l_iclog_hsize + iclog->ic_offset;
 +
-+		if (++cycle == XLOG_HEADER_MAGIC_NUM)
-+			cycle++;
-+		put_unaligned_be32(cycle, data + i);
++	/* Round out the log write size */
++	if (v2 && log->l_mp->m_sb.sb_logsunit > 1) {
++		/* we have a v2 stripe unit to use */
++		count = XLOG_LSUNITTOB(log, XLOG_BTOLSUNIT(log, count_init));
++	} else {
++		count = BBTOB(BTOBB(count_init));
 +	}
 +
-+	return split_offset;
++	ASSERT(count >= count_init);
++	*roundoff = count - count_init;
++
++	if (v2 && log->l_mp->m_sb.sb_logsunit > 1)
++		ASSERT(*roundoff < log->l_mp->m_sb.sb_logsunit);
++	else
++		ASSERT(*roundoff < BBTOB(1));
++	return count;
 +}
 +
  /*
   * Flush out the in-core log (iclog) to the on-disk log in an asynchronous 
   * fashion.  Previously, we should have moved the current iclog
-@@ -1803,13 +1829,12 @@ xlog_sync(
+@@ -1829,35 +1859,17 @@ xlog_sync(
  	struct xlog		*log,
  	struct xlog_in_core	*iclog)
  {
--	int		i;
- 	uint		count;		/* byte count of bwrite */
- 	uint		count_init;	/* initial count before roundup */
- 	int		roundoff;       /* roundoff to BB or stripe */
--	int		split = 0;	/* split write into two regions */
- 	int		v2 = xfs_sb_version_haslogv2(&log->l_mp->m_sb);
- 	uint64_t	bno;
-+	unsigned int	split = 0;
- 	int		size;
- 	bool		flush = true;
+-	uint		count;		/* byte count of bwrite */
+-	uint		count_init;	/* initial count before roundup */
+-	int		roundoff;       /* roundoff to BB or stripe */
+-	int		v2 = xfs_sb_version_haslogv2(&log->l_mp->m_sb);
+-	uint64_t	bno;
+-	unsigned int	split = 0;
+-	int		size;
+-	bool		flush = true;
++	unsigned int		count;		/* byte count of bwrite */
++	unsigned int		roundoff;       /* roundoff to BB or stripe */
++	uint64_t		bno;
++	unsigned int		split = 0;
++	unsigned int		size;
++	bool			flush = true;
  
-@@ -1852,32 +1877,8 @@ xlog_sync(
- 	bno = BLOCK_LSN(be64_to_cpu(iclog->ic_header.h_lsn));
+ 	XFS_STATS_INC(log->l_mp, xs_log_writes);
+ 	ASSERT(atomic_read(&iclog->ic_refcnt) == 0);
  
- 	/* Do we need to split this write into 2 parts? */
--	if (bno + BTOBB(count) > log->l_logBBsize) {
--		char		*dptr;
+-	/* Add for LR header */
+-	count_init = log->l_iclog_hsize + iclog->ic_offset;
 -
--		split = count - (BBTOB(log->l_logBBsize - bno));
--		count = BBTOB(log->l_logBBsize - bno);
--		iclog->ic_bwritecnt = 2;
--
--		/*
--		 * Bump the cycle numbers at the start of each block in the
--		 * part of the iclog that ends up in the buffer that gets
--		 * written to the start of the log.
--		 *
--		 * Watch out for the header magic number case, though.
--		 */
--		dptr = (char *)&iclog->ic_header + count;
--		for (i = 0; i < split; i += BBSIZE) {
--			uint32_t cycle = be32_to_cpu(*(__be32 *)dptr);
--			if (++cycle == XLOG_HEADER_MAGIC_NUM)
--				cycle++;
--			*(__be32 *)dptr = cpu_to_be32(cycle);
--
--			dptr += BBSIZE;
--		}
+-	/* Round out the log write size */
+-	if (v2 && log->l_mp->m_sb.sb_logsunit > 1) {
+-		/* we have a v2 stripe unit to use */
+-		count = XLOG_LSUNITTOB(log, XLOG_BTOLSUNIT(log, count_init));
 -	} else {
--		iclog->ic_bwritecnt = 1;
+-		count = BBTOB(BTOBB(count_init));
 -	}
-+	if (bno + BTOBB(count) > log->l_logBBsize)
-+		split = xlog_split_iclog(log, &iclog->ic_header, bno, count);
+-	roundoff = count - count_init;
+-	ASSERT(roundoff >= 0);
+-	ASSERT((v2 && log->l_mp->m_sb.sb_logsunit > 1 && 
+-                roundoff < log->l_mp->m_sb.sb_logsunit)
+-		|| 
+-		(log->l_mp->m_sb.sb_logsunit <= 1 && 
+-		 roundoff < BBTOB(1)));
++	count = xlog_calc_iclog_size(log, iclog, &roundoff);
  
- 	/* calculcate the checksum */
- 	iclog->ic_header.h_crc = xlog_cksum(log, &iclog->ic_header,
-@@ -1910,14 +1911,16 @@ xlog_sync(
- 		flush = false;
- 	}
+ 	/* move grant heads by roundoff in sync */
+ 	xlog_grant_add_space(log, &log->l_reserve_head.grant, roundoff);
+@@ -1868,7 +1880,7 @@ xlog_sync(
  
--	iclog->ic_bp->b_io_length = BTOBB(count);
-+	iclog->ic_bp->b_io_length = BTOBB(split ? split : count);
-+	iclog->ic_bwritecnt = split ? 2 : 1;
+ 	/* real byte length */
+ 	size = iclog->ic_offset;
+-	if (v2)
++	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb))
+ 		size += roundoff;
+ 	iclog->ic_header.h_len = cpu_to_be32(size);
  
- 	xlog_verify_iclog(log, iclog, count, true);
- 	xlog_write_iclog(log, iclog, iclog->ic_bp, bno, flush);
- 
- 	if (split) {
- 		xfs_buf_associate_memory(iclog->ic_log->l_xbuf,
--				(char *)&iclog->ic_header + count, split);
-+				(char *)&iclog->ic_header + split,
-+				count - split);
- 		xlog_write_iclog(log, iclog, iclog->ic_log->l_xbuf, 0, false);
- 	}
- }
 -- 
 2.20.1
 
