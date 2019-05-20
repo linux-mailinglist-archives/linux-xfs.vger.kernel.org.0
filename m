@@ -2,170 +2,178 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7696A22BEF
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 08:15:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C43622FE4
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 11:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfETGPp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 20 May 2019 02:15:45 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:34004 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727130AbfETGPp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 02:15:45 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 23D43285F2
-        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 06:15:44 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id 187AE28676; Mon, 20 May 2019 06:15:44 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 203653] New: XFS: Internal error xlog_clear_stale_blocks(2) at
- line 1794 of file ../fs/xfs/xfs_log_recover.c
-Date:   Mon, 20 May 2019 06:15:42 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: midwinter1993@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression attachments.created
-Message-ID: <bug-203653-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1731231AbfETJKx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 05:10:53 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37235 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfETJKx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 05:10:53 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 186so5573443ywo.4;
+        Mon, 20 May 2019 02:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WO0nb0i3TlfUEi3Ta1dEHoPzpd1bYnb4mrBSpQaLWfM=;
+        b=Xv0hYodwAou2zdmZxFJFkZxUeVf2epBSGZOWi2TyQkrLXK8DUAYF+ifb6tHe6uP1uJ
+         WpIFKZqzTWDvwDlxDgVUR8RUElqV6b5mzhbhGUonKzOHzxIGbAfME2G07FUKU2zb8XCl
+         kT1nIN4zh1LvcCTOmQeYmbJG6jMj8IX+OyaJ8uYq9msIUvr1n6BVU/Sg7iEt7A4rJZP6
+         l26TIYtOAS+ByK2yoLoRUFW6ywzCkUOPdHMh3A2VoVhAUIp59Ikd0eZefAk8OcUUmC+J
+         3YaaybhHqRgI1WA7XetpaCtWYUokDERoaOGtAXYMBoxHzFRbsI9JbgMJv2bUzKnpSM0z
+         P/NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WO0nb0i3TlfUEi3Ta1dEHoPzpd1bYnb4mrBSpQaLWfM=;
+        b=eYOrWPR030iZWhZsRO0nHPUDOy0pzDriqNlX+sKWBZby3Ji9YGGc87StT9RnAQ/TXO
+         AagjbZVMpq26aOytdZYrIc7WuZ0WdocDRLEFkCqyC7kXZfR+Oh0jZhOlMfknZEmujUO0
+         kJA63vcExrdeQqXHTykQK6sis2Oh3sgIKvm8u8mOPelb8/vI0xfbhu2Z5+0uW7mKmAxI
+         Hm/vmTIHzDXVibEGk1n6ufvEMwuwr70B9q5kK8YsKNy1KutuQM8TaCTpgOs++Ohur4v2
+         R8AZNt7cXviajV4v3ilLFMJZYUtSn5cM2TYfEbq8RRk/JXFpuw51pmYPAQpF+XGQ+QlA
+         QsKA==
+X-Gm-Message-State: APjAAAWDxyTf561eOQec2t30li/AH1aVq3RHTkjaqjfTQV8KpfSwcfcG
+        G3MmSfn7vxLwSDhD2eCoQFldiaHjGjR9oxu2QalVkUpS
+X-Google-Smtp-Source: APXvYqx9mTAu+qQpn6hP0ibWMhR1UvqszSsJ9fuDVbqrSlIwIjiQ3UEY9jsYVs6CD9h8EHaHcN+sZy7TcOhwoQejgec=
+X-Received: by 2002:a81:3344:: with SMTP id z65mr2829786ywz.294.1558343451573;
+ Mon, 20 May 2019 02:10:51 -0700 (PDT)
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20181203083416.28978-1-david@fromorbit.com> <20181203083416.28978-2-david@fromorbit.com>
+ <CAOQ4uxhOQY8M5rbgHKREN5qpeDGHv0-xK3r37Lj6XfqFoE4qjg@mail.gmail.com>
+ <20181204151332.GA32245@infradead.org> <20181204212948.GO6311@dastard>
+ <CAN-5tyGU=y5JO5UNcmn3rX1gRyK_UxjQvQ+kCsP34_NT2-mQ_A@mail.gmail.com> <20181204223102.GR6311@dastard>
+In-Reply-To: <20181204223102.GR6311@dastard>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 20 May 2019 12:10:39 +0300
+Message-ID: <CAOQ4uxhPoJ2vOwGN7PFWkD6+_zdTeMAhT4KphnyktaQ23zqvBw@mail.gmail.com>
+Subject: Re: [PATCH 01/11] vfs: copy_file_range source range over EOF should fail
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        ceph-devel@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203653
+On Wed, Dec 5, 2018 at 12:31 AM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Tue, Dec 04, 2018 at 04:47:18PM -0500, Olga Kornievskaia wrote:
+> > On Tue, Dec 4, 2018 at 4:35 PM Dave Chinner <david@fromorbit.com> wrote:
+> > >
+> > > On Tue, Dec 04, 2018 at 07:13:32AM -0800, Christoph Hellwig wrote:
+> > > > On Mon, Dec 03, 2018 at 02:46:20PM +0200, Amir Goldstein wrote:
+> > > > > > From: Dave Chinner <dchinner@redhat.com>
+> > > > > >
+> > > > > > The man page says:
+> > > > > >
+> > > > > > EINVAL Requested range extends beyond the end of the source file
+> > > > > >
+> > > > > > But the current behaviour is that copy_file_range does a short
+> > > > > > copy up to the source file EOF. Fix the kernel behaviour to match
+> > > > > > the behaviour described in the man page.
+> > > >
+> > > > I think the behavior implemented is a lot more useful than the one
+> > > > documented..
+> > >
+> > > The current behaviour is really nasty. Because copy_file_range() can
+> > > return short copies, the caller has to implement a loop to ensure
+> > > the range hey want get copied.  When the source range you are
+> > > trying to copy overlaps source EOF, this loop:
+> > >
+> > >         while (len > 0) {
+> > >                 ret = copy_file_range(... len ...)
+> > >                 ...
+> > >                 off_in += ret;
+> > >                 off_out += ret;
+> > >                 len -= ret;
+> > >         }
+> > >
+> > > Currently the fallback code copies up to the end of the source file
+> > > on the first copy and then fails the second copy with EINVAL because
+> > > the source range is now completely beyond EOF.
+> > >
+> > > So, from an application perspective, did the copy succeed or did it
+> > > fail?
+> > >
+> > > Existing tools that exercise copy_file_range (like xfs_io) consider
+> > > this a failure, because the second copy_file_range() call returns
+> > > EINVAL and not some "there is no more to copy" marker like read()
+> > > returning 0 bytes when attempting to read beyond EOF.
+> > >
+> > > IOWs, we cannot tell the difference between a real error and a short
+> > > copy because the input range spans EOF and it was silently
+> > > shortened. That's the API problem we need to fix here - the existing
+> > > behaviour is really crappy for applications. Erroring out
+> > > immmediately is one solution, and it's what the man page says should
+> > > happen so that is what I implemented.
+> > >
+> > > Realistically, though, I think an attempt to read beyond EOF for the
+> > > copy should result in behaviour like read() (i.e. return 0 bytes),
+> > > not EINVAL. The existing behaviour needs to change, though.
+> >
+> > There are two checks to consider
+> > 1. pos_in >= EOF should return EINVAL
+> > 2. however what's perhaps should be relaxed is pos_in+len >= EOF
+> > should return a short copy.
+> >
+> > Having check#1 enforced allows to us to differentiate between a real
+> > error and a short copy.
+>
+> That's what the code does right now and *exactly what I'm trying to
+> fix* because it EINVAL is ambiguous and not an indicator that we've
+> reached the end of the source file. EINVAL can indicate several
+> different errors, so it really has to be treated as a "copy failed"
+> error by applications.
+>
+> Have a look at read/pread() - they return 0 in this case to indicate
+> a short read, and the value of zero is explicitly defined as meaning
+> "read position is beyond EOF".  Applications know straight away that
+> there is no more data to be read and there was no error, so can
+> terminate on a successful short read.
+>
+> We need to allow applications to terminate copy loops on a
+> successful short copy. IOWs, applications need to either:
+>
+>         - get an immediate error saying the range is invalid rather
+>           than doing a short copy (as per the man page); or
+>         - have an explicit marker to say "no more data to be copied"
+>
+> Applications need the "no more data to copy" case to be explicit and
+> unambiguous so they can make sane decisions about whether a short
+> copy was successful because the file was shorter than expected or
+> whether a short copy was a result of a real error being encountered.
+> The current behaviour is largely unusable for applications because
+> they have to guess at the reason for EINVAL part way through a
+> copy....
+>
 
-            Bug ID: 203653
-           Summary: XFS: Internal error xlog_clear_stale_blocks(2) at line
-                    1794 of file ../fs/xfs/xfs_log_recover.c
-           Product: File System
-           Version: 2.5
-    Kernel Version: 5.1.3
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: XFS
-          Assignee: filesystem_xfs@kernel-bugs.kernel.org
-          Reporter: midwinter1993@gmail.com
-        Regression: No
+Dave,
 
-Created attachment 282847
-  --> https://bugzilla.kernel.org/attachment.cgi?id=282847&action=edit
-Crafted image
+I went a head and implemented the desired behavior.
+However, while testing I observed that the desired behavior is already
+the existing behavior. For example, trying to copy 10 bytes from a 2 bytes file,
+xfs_io copy loop ends as expected:
+copy_file_range(4, [0], 3, [0], 10, 0)  = 2
+copy_file_range(4, [2], 3, [2], 8, 0)   = 0
 
-### When mounting the image (in the attached file), XFS prints an internal
-error.
-### Tested under kernel 5.1.3 and 4.4.0.
+This was tested on ext4 and xfs with reflink on recent kernel as well as on
+v4.20-rc1 (era of original patch set).
 
-### Reproduce
+Where and how did you observe the EINVAL behavior described above?
+(besides man page that is). There are even xfstests (which you modified)
+that verify the return 0 for past EOF behavior.
 
-1. download `image.tar.gz`
-2. uncompress it: 
-> tar -xzvf image.tar.gz
+For now, I am just dropping this patch from the patch series.
+Let me know if I am missing something.
 
-3. mount it: 
-> mkdir dd
-> mount bingo.img dd
-
-4. check result:
-> dmesg
-
---- Following is the core dump (under kernel 5.1.3) ---
-```
-[   67.737771] XFS (loop0): Internal error xlog_clear_stale_blocks(2) at line
-1794 of file ../fs/xfs/xfs_log_recover.c.  Caller xlog_find_tail+0x622/0x7b0
-[   67.742886] CPU: 0 PID: 2114 Comm: mount Not tainted 5.1.3 #2
-[   67.744338] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[   67.746410] Call Trace:
-[   67.746983]  dump_stack+0x5b/0x8b
-[   67.747718]  xlog_clear_stale_blocks+0x2d5/0x3d0
-[   67.748389]  xlog_find_tail+0x622/0x7b0
-[   67.748934]  ? _sched_setscheduler+0x107/0x180
-[   67.749559]  ? xlog_verify_head+0x4d0/0x4d0
-[   67.750148]  ? __sched_setscheduler+0x1c90/0x1d70
-[   67.750810]  ? check_preempt_wakeup+0x2c6/0x840
-[   67.751440]  ? ttwu_do_wakeup.isra.92+0x13/0x2b0
-[   67.752079]  xlog_recover+0x89/0x470
-[   67.752551]  ? xlog_find_tail+0x7b0/0x7b0
-[   67.753084]  ? kmem_alloc+0x81/0x130
-[   67.753562]  xfs_log_mount+0x291/0x660
-[   67.754063]  xfs_mountfs+0x1059/0x1bd0
-[   67.754565]  ? xfs_mount_reset_sbqflags+0x130/0x130
-[   67.755216]  ? kasan_unpoison_shadow+0x31/0x40
-[   67.755810]  ? __kasan_kmalloc+0xd5/0xf0
-[   67.756332]  ? kasan_unpoison_shadow+0x31/0x40
-[   67.756918]  ? __kasan_kmalloc+0xd5/0xf0
-[   67.757438]  ? kmem_alloc+0x81/0x130
-[   67.757912]  ? xfs_filestream_put_ag+0x30/0x30
-[   67.758499]  ? xfs_mru_cache_create+0x33b/0x530
-[   67.759099]  xfs_fs_fill_super+0xbca/0x11d0
-[   67.759660]  ? xfs_test_remount_options+0x70/0x70
-[   67.760287]  mount_bdev+0x25d/0x310
-[   67.760751]  ? xfs_finish_flags+0x390/0x390
-[   67.761306]  legacy_get_tree+0xe4/0x1c0
-[   67.761817]  vfs_get_tree+0x80/0x370
-[   67.762295]  do_mount+0xd8c/0x2320
-[   67.762755]  ? lockref_put_return+0x130/0x130
-[   67.763333]  ? __fsnotify_update_child_dentry_flags.part.3+0x2e0/0x2e0
-[   67.764191]  ? copy_mount_string+0x20/0x20
-[   67.764732]  ? kasan_unpoison_shadow+0x31/0x40
-[   67.765315]  ? __kasan_kmalloc+0xd5/0xf0
-[   67.765830]  ? strndup_user+0x42/0x90
-[   67.766316]  ? __kmalloc_track_caller+0xc7/0x1c0
-[   67.766928]  ? _copy_from_user+0x73/0xa0
-[   67.767449]  ? memdup_user+0x39/0x60
-[   67.767931]  ksys_mount+0x79/0xc0
-[   67.768376]  __x64_sys_mount+0xb5/0x150
-[   67.768889]  do_syscall_64+0x8c/0x280
-[   67.769377]  ? async_page_fault+0x8/0x30
-[   67.769906]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   67.770577] RIP: 0033:0x7f0c5185d48a
-[   67.771053] Code: 48 8b 0d 11 fa 2a 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e
-0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00
-0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d de f9 2a 00 f7 d8 64 89 01 48
-[   67.773494] RSP: 002b:00007fff68c36b38 EFLAGS: 00000202 ORIG_RAX:
-00000000000000a5
-[   67.774493] RAX: ffffffffffffffda RBX: 00005565e0f62080 RCX:
-00007f0c5185d48a
-[   67.775420] RDX: 00005565e0f68db0 RSI: 00005565e0f63f60 RDI:
-00005565e0f68d90
-[   67.776358] RBP: 0000000000000000 R08: 0000000000000000 R09:
-0000000000000020
-[   67.777292] R10: 00000000c0ed0000 R11: 0000000000000202 R12:
-00005565e0f68d90
-[   67.778227] R13: 00005565e0f68db0 R14: 0000000000000000 R15:
-00000000ffffffff
-[   67.779226] XFS (loop0): failed to locate log tail
-[   67.779881] XFS (loop0): log mount/recovery failed: error -117
-[   67.780969] XFS (loop0): log mount failed
-```
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Thanks,
+Amir.
