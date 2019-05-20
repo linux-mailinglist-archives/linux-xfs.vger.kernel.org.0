@@ -2,44 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC303239CB
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 16:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E7D23A0B
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 16:30:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfETOWv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 10:22:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46662 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729967AbfETOW3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 10:22:29 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C190307D874;
-        Mon, 20 May 2019 14:22:23 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4352D79800;
-        Mon, 20 May 2019 14:22:22 +0000 (UTC)
-Date:   Mon, 20 May 2019 10:22:20 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     bugzilla-daemon@bugzilla.kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [Bug 203653] New: XFS: Internal error xlog_clear_stale_blocks(2)
- at line 1794 of file ../fs/xfs/xfs_log_recover.c
-Message-ID: <20190520142220.GM31317@bfoster>
-References: <bug-203653-201763@https.bugzilla.kernel.org/>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        id S2389231AbfETOai convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 20 May 2019 10:30:38 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:53238 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731054AbfETOah (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 10:30:37 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 8EA42288EF
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 14:30:36 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id 7B6A0288EE; Mon, 20 May 2019 14:30:36 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 203653] XFS: Internal error xlog_clear_stale_blocks(2) at line
+ 1794 of file ../fs/xfs/xfs_log_recover.c
+Date:   Mon, 20 May 2019 14:30:34 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: bfoster@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-203653-201763-7xoeyr3RHN@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-203653-201763@https.bugzilla.kernel.org/>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 20 May 2019 14:22:28 +0000 (UTC)
+References: <bug-203653-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 20, 2019 at 06:15:42AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=203653
+
+--- Comment #1 from bfoster@redhat.com ---
+On Mon, May 20, 2019 at 06:15:42AM +0000, bugzilla-daemon@bugzilla.kernel.org
+wrote:
 > https://bugzilla.kernel.org/show_bug.cgi?id=203653
 > 
 >             Bug ID: 203653
@@ -201,3 +221,7 @@ all, this seems like expected behavior for the associated image. The
 more interesting question is how this corruption was caused.
 
 Brian
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
