@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B512437A
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 00:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D496F24373
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 00:31:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfETWdM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 18:33:12 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:57858 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfETWdM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 18:33:12 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMSXoJ119724;
-        Mon, 20 May 2019 22:33:06 GMT
+        id S1726491AbfETWbT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 18:31:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58446 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfETWbT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 18:31:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMTCLP120379;
+        Mon, 20 May 2019 22:31:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=xAPR8RcB+FT73VX7B7Spaky50R+Uvlc/7jYZO34MR18=;
- b=GR4uNhEmy7WWlEuzPdSJIDkQbOCINMF481oo6re+svtX6x4dZn1QvBQfaAOmaJxpiLwf
- jzCOGpnXOJaj3426FtyudUqE84FZlHdUWqOrzTs88oHyO3xO9D2XiyLUJEsPLOTrvyoj
- rqYgdbY2yOOc6e05sLZnqmumiRKlL5Lznx3dy4khYHoYcGA6ll+bsqvgA3MwsyspckCl
- fLHGpBqo5Aj6by6IczKkvT2VpKZJJpLnh+KX3hG61IZvikkaSjcjn6PkFR6sfwd4FALQ
- ucg1oK8f5d/7zfycf93hSt4bMUJC0AK7LgyqMyKH7wdhIUPnWg1MpkB80g1efcVvLP2m JQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2sj7jdj1vb-1
+ bh=od69YGy0r05gFuikfH71p2D4yWiCZkJ+DwRAV1jKGHM=;
+ b=b86Utr7Sz7/1Bfik8MhCdznQJ4oExDd6jX/2t3ZKtufuqOqQIilIxoZB7qXyfhlh9NZS
+ 6odeXEr/SL/b020Om0wPW6v+Glbfd+V+z5ELLC/8fpsIUw+lyD1r3N4yCi8N1skE/b8N
+ lwFknADssmWi0vGdgVg6fUxK/l2pQdkakJvNNkQacuCYX9/4qNYDTKrMadj7/6sEPdzh
+ eCSG2qRyp0j0aOMm9VQN2+kmsapEfYmDqZazJ+T5sHgnvWBJY+L7KnX1bDd4oC4TAlmm
+ DEsQhDu5wvhgIs/1RlCH9VOTQdh1RI3a2aMj9op82i7FYd7dCqYIJdFUxXSx53dEoun0 MA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2sjapq9qgh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 22:33:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMTSRd035230;
-        Mon, 20 May 2019 22:31:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2sks1xute8-1
+        Mon, 20 May 2019 22:31:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMTcBX173129;
+        Mon, 20 May 2019 22:31:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sks1j3tvu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 22:31:05 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KMV5Wk025729;
-        Mon, 20 May 2019 22:31:05 GMT
+        Mon, 20 May 2019 22:31:13 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KMVBBK002794;
+        Mon, 20 May 2019 22:31:12 GMT
 Received: from localhost (/10.159.247.197)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 22:31:05 +0000
-Subject: [PATCH 2/3] generic/530,
- xfs/501: pass fs shutdown handle to t_open_tmpfiles
+        with ESMTP ; Mon, 20 May 2019 22:31:11 +0000
+Subject: [PATCH 3/3] generic,
+ xfs: use _scratch_shutdown instead of calling src/godown
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, jefflexu@linux.alibaba.com,
         amir73il@gmail.com, fstests@vger.kernel.org
-Date:   Mon, 20 May 2019 15:31:04 -0700
-Message-ID: <155839146420.62682.1995545484813176181.stgit@magnolia>
+Date:   Mon, 20 May 2019 15:31:10 -0700
+Message-ID: <155839147057.62682.15559355049172171217.stgit@magnolia>
 In-Reply-To: <155839145160.62682.10916303376882370723.stgit@magnolia>
 References: <155839145160.62682.10916303376882370723.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -72,134 +72,103 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-So it turns out that overlayfs can't pass FS_IOC_SHUTDOWN to the lower
-filesystems and so xfstests works around this by creating shutdown
-helpers for the scratch fs to direct the shutdown ioctl to wherever it
-needs to go to shut down the filesystem -- SCRATCH_MNT on normal
-filesystems and OVL_BASE_SCRATCH_MNT when -overlay is enabled.  This
-means that t_open_tmpfiles cannot simply use one of the open tempfiles
-to shut down the filesystem.
-
-Commit f8f57747222 tried to "fix" this by ripping the shutdown code out,
-but this made the tests useless.  Fix this instead by creating a
-xfstests helper to return a path that can be used to shut down the
-filesystem and then pass that path to t_open_tmpfiles so that we can
-shut down the filesystem when overlayfs is enabled.
+Overlayfs introduces some complexity with regards to what path we have
+to use to shut down the scratch filesystem: it's SCRATCH_MNT for regular
+filesystems, but it's OVL_BASE_SCRATCH_MNT (i.e. the lower mount of the
+overlay) if overlayfs is enabled.  The helper works through all that, so
+we might as well use it.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- common/rc             |   11 +++++++++++
- src/t_open_tmpfiles.c |   20 +++++++++++++-------
- tests/generic/530     |    2 +-
- tests/xfs/501         |    2 +-
- 4 files changed, 26 insertions(+), 9 deletions(-)
+ tests/generic/050 |    2 +-
+ tests/xfs/051     |    2 +-
+ tests/xfs/079     |    2 +-
+ tests/xfs/121     |    4 ++--
+ tests/xfs/181     |    4 ++--
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
 
-diff --git a/common/rc b/common/rc
-index 27c8bb7a..f577e5e3 100644
---- a/common/rc
-+++ b/common/rc
-@@ -393,6 +393,17 @@ _scratch_shutdown()
- 	fi
- }
+diff --git a/tests/generic/050 b/tests/generic/050
+index 9a327165..91632d2d 100755
+--- a/tests/generic/050
++++ b/tests/generic/050
+@@ -92,7 +92,7 @@ echo "touch files"
+ touch $SCRATCH_MNT/{0,1,2,3,4,5,6,7,8,9}{0,1,2,3,4,5,6,7,8,9}
  
-+# Return a file path that can be used to shut down the scratch filesystem.
-+# Caller should _require_scratch_shutdown before using this.
-+_scratch_shutdown_handle()
-+{
-+	if [ $FSTYP = "overlay" ]; then
-+		echo $OVL_BASE_SCRATCH_MNT
-+	else
-+		echo $SCRATCH_MNT
-+	fi
-+}
-+
- _test_mount()
- {
-     if [ "$FSTYP" == "overlay" ]; then
-diff --git a/src/t_open_tmpfiles.c b/src/t_open_tmpfiles.c
-index da9390fd..258b0c95 100644
---- a/src/t_open_tmpfiles.c
-+++ b/src/t_open_tmpfiles.c
-@@ -24,7 +24,7 @@ static int min_fd = -1;
- static int max_fd = -1;
- static unsigned int nr_opened = 0;
- static float start_time;
--static int shutdown_fs = 0;
-+static int shutdown_fd = -1;
+ echo "going down:"
+-src/godown -f $SCRATCH_MNT
++_scratch_shutdown -f
  
- void clock_time(float *time)
- {
-@@ -69,7 +69,7 @@ void die(void)
- 				end_time - start_time);
- 		fflush(stdout);
+ echo "unmounting shutdown filesystem:"
+ _scratch_unmount 2>&1 | _filter_scratch
+diff --git a/tests/xfs/051 b/tests/xfs/051
+index bcc824f8..105fa9ff 100755
+--- a/tests/xfs/051
++++ b/tests/xfs/051
+@@ -47,7 +47,7 @@ _scratch_mount
+ # recovery.
+ $FSSTRESS_PROG -n 9999 -p 2 -w -d $SCRATCH_MNT > /dev/null 2>&1 &
+ sleep 5
+-src/godown -f $SCRATCH_MNT
++_scratch_shutdown -f
+ $KILLALL_PROG -q $FSSTRESS_PROG
+ wait
+ _scratch_unmount
+diff --git a/tests/xfs/079 b/tests/xfs/079
+index bf965a7f..67250495 100755
+--- a/tests/xfs/079
++++ b/tests/xfs/079
+@@ -56,7 +56,7 @@ _scratch_mount "-o logbsize=32k"
+ # Run a workload to dirty the log, wait a bit and shutdown the fs.
+ $FSSTRESS_PROG -d $SCRATCH_MNT -p 4 -n 99999999 >> $seqres.full 2>&1 &
+ sleep 10
+-./src/godown -f $SCRATCH_MNT
++_scratch_shutdown -f
+ wait
  
--		if (shutdown_fs) {
-+		if (shutdown_fd >= 0) {
- 			/*
- 			 * Flush the log so that we have to process the
- 			 * unlinked inodes the next time we mount.
-@@ -77,7 +77,7 @@ void die(void)
- 			int flag = XFS_FSOP_GOING_FLAGS_LOGFLUSH;
- 			int ret;
+ # Remount with a different log buffer size. Going from 32k to 64k increases the
+diff --git a/tests/xfs/121 b/tests/xfs/121
+index d82a367f..2e3914b7 100755
+--- a/tests/xfs/121
++++ b/tests/xfs/121
+@@ -52,7 +52,7 @@ src/multi_open_unlink -f $SCRATCH_MNT/test_file -n $num_files -s $delay &
+ sleep 3
  
--			ret = ioctl(min_fd, XFS_IOC_GOINGDOWN, &flag);
-+			ret = ioctl(shutdown_fd, XFS_IOC_GOINGDOWN, &flag);
- 			if (ret) {
- 				perror("shutdown");
- 				exit(2);
-@@ -148,8 +148,9 @@ void leak_tmpfile(void)
+ echo "godown"
+-src/godown -v -f $SCRATCH_MNT >> $seqres.full
++_scratch_shutdown -v -f >> $seqres.full
  
- /*
-  * Try to put as many files on the unlinked list and then kill them.
-- * The first argument is a directory to chdir into; passing any second arg
-- * will shut down the fs instead of closing files.
-+ * The first argument is a directory to chdir into; the second argumennt (if
-+ * provided) is a file path that will be opened and then used to shut down the
-+ * fs before the program exits.
-  */
- int main(int argc, char *argv[])
- {
-@@ -160,8 +161,13 @@ int main(int argc, char *argv[])
- 		if (ret)
- 			perror(argv[1]);
- 	}
--	if (argc > 2 && !strcmp(argv[2], "shutdown"))
--		shutdown_fs = 1;
-+	if (argc > 2) {
-+		shutdown_fd = open(argv[2], O_RDONLY);
-+		if (shutdown_fd < 0) {
-+			perror(argv[2]);
-+			return 1;
-+		}
-+	}
+ # time for multi_open_unlink to exit out after its delay
+ # so we have no references and can unmount
+@@ -69,7 +69,7 @@ _try_scratch_mount $mnt >>$seqres.full 2>&1 \
+     || _fail "mount failed: $mnt $MOUNT_OPTIONS"
  
- 	clock_time(&start_time);
- 	while (1)
-diff --git a/tests/generic/530 b/tests/generic/530
-index b0d188b1..cb874ace 100755
---- a/tests/generic/530
-+++ b/tests/generic/530
-@@ -49,7 +49,7 @@ ulimit -n $max_files
+ echo "godown"
+-src/godown -v -f $SCRATCH_MNT >> $seqres.full
++_scratch_shutdown -v -f >> $seqres.full
  
- # Open a lot of unlinked files
- echo create >> $seqres.full
--$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
-+$here/src/t_open_tmpfiles $SCRATCH_MNT $(_scratch_shutdown_handle) >> $seqres.full
+ echo "unmount"
+ _scratch_unmount
+diff --git a/tests/xfs/181 b/tests/xfs/181
+index 882a974b..dba69a70 100755
+--- a/tests/xfs/181
++++ b/tests/xfs/181
+@@ -65,7 +65,7 @@ pid=$!
+ sleep 10
  
- # Unmount to prove that we can clean it all
- echo umount >> $seqres.full
-diff --git a/tests/xfs/501 b/tests/xfs/501
-index 974f3414..4be03b31 100755
---- a/tests/xfs/501
-+++ b/tests/xfs/501
-@@ -54,7 +54,7 @@ ulimit -n $max_files
+ echo "godown"
+-src/godown -v -f $SCRATCH_MNT >> $seqres.full
++_scratch_shutdown -v -f >> $seqres.full
  
- # Open a lot of unlinked files
- echo create >> $seqres.full
--$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
-+$here/src/t_open_tmpfiles $SCRATCH_MNT $(_scratch_shutdown_handle) >> $seqres.full
+ # kill the multi_open_unlink
+ kill $pid 2>/dev/null
+@@ -83,7 +83,7 @@ _scratch_mount $mnt >>$seqres.full 2>&1 \
+     || _fail "mount failed: $mnt $MOUNT_OPTIONS"
  
- # Unmount to prove that we can clean it all
- echo umount >> $seqres.full
+ echo "godown"
+-src/godown -v -f $SCRATCH_MNT >> $seqres.full
++_scratch_shutdown -v -f >> $seqres.full
+ 
+ echo "unmount"
+ _scratch_unmount
 
