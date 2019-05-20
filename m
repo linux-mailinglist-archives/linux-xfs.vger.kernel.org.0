@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23AC023D0C
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EED523D0D
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbfETQP0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 12:15:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37218 "EHLO
+        id S2389156AbfETQP3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 12:15:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37224 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732368AbfETQP0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:26 -0400
+        with ESMTP id S1732368AbfETQP3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Rak5Qt7zpEEgaSKIvYAC94mttd5zouTqUW3s479REMM=; b=kJ2BxKaPniilSmvZiwve1dpn5
-        UmM3zcho/AFtMUwC53JbMk9fEzBYrzSZofs7qhcRs0LYZHpxDSQzgY6L/DIf3XdgOtJm4ryg36dgA
-        VgLlDWlWDn1zv+cVIY7JjYnNmuNITHaEOC9loZbe2pOOngz//egwsAYRl6yn17mUHucmPlyHrPEye
-        hTKpvugmE2pWVPKTDLqv83xiv60EYQyOR00XsZpCJiIq3WStMsYAda9hMw6J046HQSQPXNVxz15YR
-        gzeDTHSZWCNg89edeVC1XkUzkDq8AOcDIyVkJ/W/3C8kb0UjhIwtPjSp6SbGKCVKwnOHoFydLB5fV
-        7s3Kc9DdA==;
+         bh=r5XSWpyDBSp2F3DML5+Mmy8OmCmd07Jfh6se71FQ+oI=; b=OEfMc+p9a2DUYe7xAfOx5yCAC
+        TGS8kNnTcBddEZnbWqdt80zCODWV7OM+x9G1SXxPBAA9ZHNmjirIIvVhfDjZOX2MJaP4x+DvbVEuc
+        TwMeDskQRs7P1wbTSS7V/FMm7Es8PCZzdOpNhQv+PACZ8s/OluDwfLR6gLBXSj9uMFIh2mKjuY765
+        /kdppzjP0S6uf82msirchC88keZg5B9NJ5rspR2nPllCeqRZ5QybYPLP9QnGrNrMczPxVUWNYvwx9
+        FKnQtubHfnN4p3RLSK5OQHQP/y+Kns1WgAIptDYw7BLTY8hhpp3rsCtGemWl5Wa3T7SAS4nMA5CMB
+        U4pJ9yrGw==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSkwf-0006wg-Sj
-        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:26 +0000
+        id 1hSkwi-0006wz-Rz
+        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:29 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 15/17] xfs: remove unused buffer cache APIs
-Date:   Mon, 20 May 2019 18:13:45 +0200
-Message-Id: <20190520161347.3044-16-hch@lst.de>
+Subject: [PATCH 16/17] xfs: properly type the b_log_item field in struct xfs_buf
+Date:   Mon, 20 May 2019 18:13:46 +0200
+Message-Id: <20190520161347.3044-17-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520161347.3044-1-hch@lst.de>
 References: <20190520161347.3044-1-hch@lst.de>
@@ -43,209 +43,27 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that the log code uses bios directly we can drop various special
-cases in the buffer cache code.
+Now that the log code doesn't abuse this field any more we can
+declare it as a struct xfs_buf_log_item pointer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf.c | 94 ++----------------------------------------------
- fs/xfs/xfs_buf.h | 27 --------------
- 2 files changed, 2 insertions(+), 119 deletions(-)
+ fs/xfs/xfs_buf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index be8afa1673c7..d44097e645a5 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -213,7 +213,7 @@ xfs_buf_free_maps(
- 	}
- }
- 
--struct xfs_buf *
-+static struct xfs_buf *
- _xfs_buf_alloc(
- 	struct xfs_buftarg	*target,
- 	struct xfs_buf_map	*map,
-@@ -909,83 +909,6 @@ xfs_buf_read_uncached(
- 	return 0;
- }
- 
--/*
-- * Return a buffer allocated as an empty buffer and associated to external
-- * memory via xfs_buf_associate_memory() back to it's empty state.
-- */
--void
--xfs_buf_set_empty(
--	struct xfs_buf		*bp,
--	size_t			numblks)
--{
--	if (bp->b_pages)
--		_xfs_buf_free_pages(bp);
--
--	bp->b_pages = NULL;
--	bp->b_page_count = 0;
--	bp->b_addr = NULL;
--	bp->b_length = numblks;
--	bp->b_io_length = numblks;
--
--	ASSERT(bp->b_map_count == 1);
--	bp->b_bn = XFS_BUF_DADDR_NULL;
--	bp->b_maps[0].bm_bn = XFS_BUF_DADDR_NULL;
--	bp->b_maps[0].bm_len = bp->b_length;
--}
--
--static inline struct page *
--mem_to_page(
--	void			*addr)
--{
--	if ((!is_vmalloc_addr(addr))) {
--		return virt_to_page(addr);
--	} else {
--		return vmalloc_to_page(addr);
--	}
--}
--
--int
--xfs_buf_associate_memory(
--	xfs_buf_t		*bp,
--	void			*mem,
--	size_t			len)
--{
--	int			rval;
--	int			i = 0;
--	unsigned long		pageaddr;
--	unsigned long		offset;
--	size_t			buflen;
--	int			page_count;
--
--	pageaddr = (unsigned long)mem & PAGE_MASK;
--	offset = (unsigned long)mem - pageaddr;
--	buflen = PAGE_ALIGN(len + offset);
--	page_count = buflen >> PAGE_SHIFT;
--
--	/* Free any previous set of page pointers */
--	if (bp->b_pages)
--		_xfs_buf_free_pages(bp);
--
--	bp->b_pages = NULL;
--	bp->b_addr = mem;
--
--	rval = _xfs_buf_get_pages(bp, page_count);
--	if (rval)
--		return rval;
--
--	bp->b_offset = offset;
--
--	for (i = 0; i < bp->b_page_count; i++) {
--		bp->b_pages[i] = mem_to_page((void *)pageaddr);
--		pageaddr += PAGE_SIZE;
--	}
--
--	bp->b_io_length = BTOBB(len);
--	bp->b_length = BTOBB(buflen);
--
--	return 0;
--}
--
- xfs_buf_t *
- xfs_buf_get_uncached(
- 	struct xfs_buftarg	*target,
-@@ -1269,7 +1192,7 @@ xfs_buf_ioend_async(
- 	struct xfs_buf	*bp)
- {
- 	INIT_WORK(&bp->b_ioend_work, xfs_buf_ioend_work);
--	queue_work(bp->b_ioend_wq, &bp->b_ioend_work);
-+	queue_work(bp->b_target->bt_mount->m_buf_workqueue, &bp->b_ioend_work);
- }
- 
- void
-@@ -1436,21 +1359,8 @@ _xfs_buf_ioapply(
- 	 */
- 	bp->b_error = 0;
- 
--	/*
--	 * Initialize the I/O completion workqueue if we haven't yet or the
--	 * submitter has not opted to specify a custom one.
--	 */
--	if (!bp->b_ioend_wq)
--		bp->b_ioend_wq = bp->b_target->bt_mount->m_buf_workqueue;
--
- 	if (bp->b_flags & XBF_WRITE) {
- 		op = REQ_OP_WRITE;
--		if (bp->b_flags & XBF_SYNCIO)
--			op_flags = REQ_SYNC;
--		if (bp->b_flags & XBF_FUA)
--			op_flags |= REQ_FUA;
--		if (bp->b_flags & XBF_FLUSH)
--			op_flags |= REQ_PREFLUSH;
- 
- 		/*
- 		 * Run the write verifier callback function if it exists. If
 diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 61691d9a5bc9..2440c3ab85a8 100644
+index 2440c3ab85a8..27f05db07214 100644
 --- a/fs/xfs/xfs_buf.h
 +++ b/fs/xfs/xfs_buf.h
-@@ -30,11 +30,6 @@
- #define XBF_STALE	 (1 << 6) /* buffer has been staled, do not find it */
- #define XBF_WRITE_FAIL	 (1 << 7) /* async writes have failed on this buffer */
- 
--/* I/O hints for the BIO layer */
--#define XBF_SYNCIO	 (1 << 10)/* treat this buffer as synchronous I/O */
--#define XBF_FUA		 (1 << 11)/* force cache write through mode */
--#define XBF_FLUSH	 (1 << 12)/* flush the disk cache before a write */
--
- /* flags used only as arguments to access routines */
- #define XBF_TRYLOCK	 (1 << 16)/* lock requested, but do not wait */
- #define XBF_UNMAPPED	 (1 << 17)/* do not map the buffer */
-@@ -55,9 +50,6 @@ typedef unsigned int xfs_buf_flags_t;
- 	{ XBF_DONE,		"DONE" }, \
- 	{ XBF_STALE,		"STALE" }, \
- 	{ XBF_WRITE_FAIL,	"WRITE_FAIL" }, \
--	{ XBF_SYNCIO,		"SYNCIO" }, \
--	{ XBF_FUA,		"FUA" }, \
--	{ XBF_FLUSH,		"FLUSH" }, \
- 	{ XBF_TRYLOCK,		"TRYLOCK" },	/* should never be set */\
- 	{ XBF_UNMAPPED,		"UNMAPPED" },	/* ditto */\
- 	{ _XBF_PAGES,		"PAGES" }, \
-@@ -156,7 +148,6 @@ typedef struct xfs_buf {
- 	xfs_buftarg_t		*b_target;	/* buffer target (device) */
- 	void			*b_addr;	/* virtual address of buffer */
+@@ -150,7 +150,7 @@ typedef struct xfs_buf {
  	struct work_struct	b_ioend_work;
--	struct workqueue_struct	*b_ioend_wq;	/* I/O completion wq */
  	xfs_buf_iodone_t	b_iodone;	/* I/O completion function */
  	struct completion	b_iowait;	/* queue for I/O waiters */
- 	void			*b_log_item;
-@@ -201,21 +192,6 @@ struct xfs_buf *xfs_buf_incore(struct xfs_buftarg *target,
- 			   xfs_daddr_t blkno, size_t numblks,
- 			   xfs_buf_flags_t flags);
- 
--struct xfs_buf *_xfs_buf_alloc(struct xfs_buftarg *target,
--			       struct xfs_buf_map *map, int nmaps,
--			       xfs_buf_flags_t flags);
--
--static inline struct xfs_buf *
--xfs_buf_alloc(
--	struct xfs_buftarg	*target,
--	xfs_daddr_t		blkno,
--	size_t			numblks,
--	xfs_buf_flags_t		flags)
--{
--	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
--	return _xfs_buf_alloc(target, &map, 1, flags);
--}
--
- struct xfs_buf *xfs_buf_get_map(struct xfs_buftarg *target,
- 			       struct xfs_buf_map *map, int nmaps,
- 			       xfs_buf_flags_t flags);
-@@ -261,9 +237,6 @@ xfs_buf_readahead(
- 	return xfs_buf_readahead_map(target, &map, 1, ops);
- }
- 
--void xfs_buf_set_empty(struct xfs_buf *bp, size_t numblks);
--int xfs_buf_associate_memory(struct xfs_buf *bp, void *mem, size_t length);
--
- struct xfs_buf *xfs_buf_get_uncached(struct xfs_buftarg *target, size_t numblks,
- 				int flags);
- int xfs_buf_read_uncached(struct xfs_buftarg *target, xfs_daddr_t daddr,
+-	void			*b_log_item;
++	struct xfs_buf_log_item	*b_log_item;
+ 	struct list_head	b_li_list;	/* Log items list head */
+ 	struct xfs_trans	*b_transp;
+ 	struct page		**b_pages;	/* array of page pointers */
 -- 
 2.20.1
 
