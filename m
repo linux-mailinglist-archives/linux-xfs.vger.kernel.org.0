@@ -2,99 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62D5C24359
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 00:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B48B24371
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 00:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfETWJH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 18:09:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40242 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfETWJG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 18:09:06 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KLt1KH096696;
-        Mon, 20 May 2019 22:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=psiVQp/W0vlqNlnUuqSsaisybl1WmwZK8yssdTyCi78=;
- b=mdcv8viS+B1tBB6ujAqCS3GCjo2O/i2d9fHvmGewNDAzKaPXqSugELH08GDGg7WdX4oI
- 3esyEeZrg6fn4VzwX63Xm5dDiHpezY44vjlelf7SpMh8A3UyrD0xpnVAlv3PKLvr18X1
- hoiiivDafxGamqp0fjoqHQZaa33jCwicRCnJQRXK1f1HheQxo31Pb5JTKCxKC/GxSDjL
- IzwZb8JKGB3O8SPNr0NZfegONesGRmaPofz7XLGFPcDtqrtIhWidFqwGe2HoG6eVz8Vj
- c9YED+tnJS9xq1adMerR0oLNBju/ta9HA49u7wgjCGn5sa7hvXqEPCsmnYoYM1BKQazr 1w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2sjapq9nfq-1
+        id S1726023AbfETWbA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 18:31:00 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:55958 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfETWa7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 18:30:59 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMSXsW119721;
+        Mon, 20 May 2019 22:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=JECZrm0hTpSh5KZnINYVqA5Sx49/zLDqv5zTAG3V3ts=;
+ b=Xp0n0UDRCRQJ+vljWLI0evQMlitqgZdABTbv5K9gwKapA70Cubx/WSnDbT3AoXKGspIe
+ 4C3I5lxz1fr7DoDJiV4cROSwMVAWbaSKCu9nnSXebNSsus6tg/Z/+yba4CBuIxwW8B7q
+ aisDpnwLIkGCoV4HzeOzBPwJyhIxfOPyuAQtl0UFB4a1wXRfUvsOqKudhfuZukJHZt1H
+ D2+PY2j4r+3EyNVAvLw+EK3D7KvF5HDLHl/jUJpjyoYULaJXCc2NbjQlSopM/EcYzuaq
+ pPvbDbQ3kRP5/d8bki9yxiH6xQk9sbATdQoD8YgORpNwlYjLh8IU78mlSetNDJv+gEt9 1A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2sj7jdj1m9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 22:09:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KM80hT021607;
-        Mon, 20 May 2019 22:09:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2sm046me8q-1
+        Mon, 20 May 2019 22:30:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMUGrX186224;
+        Mon, 20 May 2019 22:30:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2skudb1tck-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 22:09:00 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KM90Hm012091;
-        Mon, 20 May 2019 22:09:00 GMT
+        Mon, 20 May 2019 22:30:54 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KMUqUg029502;
+        Mon, 20 May 2019 22:30:53 GMT
 Received: from localhost (/10.159.247.197)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 22:09:00 +0000
-Date:   Mon, 20 May 2019 15:08:59 -0700
+        with ESMTP ; Mon, 20 May 2019 22:30:52 +0000
+Subject: [PATCH 0/3] fstests: various fixes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/20] xfs: fix a trivial comment typo in the
- xfs_trans_committed_bulk
-Message-ID: <20190520220859.GE5335@magnolia>
-References: <20190517073119.30178-1-hch@lst.de>
- <20190517073119.30178-2-hch@lst.de>
+To:     guaneryu@gmail.com, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, jefflexu@linux.alibaba.com,
+        amir73il@gmail.com, fstests@vger.kernel.org
+Date:   Mon, 20 May 2019 15:30:51 -0700
+Message-ID: <155839145160.62682.10916303376882370723.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517073119.30178-2-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=708
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905200136
+ engine=8.0.1-1810050000 definitions=main-1905200138
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=760 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200136
+ definitions=main-1905200138
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:31:00AM +0200, Christoph Hellwig wrote:
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi all,
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+The first two patches fix t_open_tmpfiles to shut down the scratch
+filesystem properly by reverting a broken fix and teaching xfstests to
+pass the relevant handles around.  The final patch cleans up some open
+coded src/godown calls against the scratch fs to use the wrapper.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
 
-> ---
->  fs/xfs/xfs_trans.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> index 912b42f5fe4a..19f91312561a 100644
-> --- a/fs/xfs/xfs_trans.c
-> +++ b/fs/xfs/xfs_trans.c
-> @@ -815,7 +815,7 @@ xfs_log_item_batch_insert(
->   *
->   * If we are called with the aborted flag set, it is because a log write during
->   * a CIL checkpoint commit has failed. In this case, all the items in the
-> - * checkpoint have already gone through iop_commited and iop_unlock, which
-> + * checkpoint have already gone through iop_committed and iop_unlock, which
->   * means that checkpoint commit abort handling is treated exactly the same
->   * as an iclog write error even though we haven't started any IO yet. Hence in
->   * this case all we need to do is iop_committed processing, followed by an
-> -- 
-> 2.20.1
-> 
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
