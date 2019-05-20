@@ -2,117 +2,192 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 782B1232BF
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 13:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B38AF237C5
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 15:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733206AbfETLiT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 07:38:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37908 "EHLO mx1.redhat.com"
+        id S1730570AbfETNMf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 09:12:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36324 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733241AbfETLiQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 07:38:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1730513AbfETNMf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 20 May 2019 09:12:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 540DE88306;
-        Mon, 20 May 2019 11:38:16 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B40C1796;
+        Mon, 20 May 2019 13:12:35 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F12AB27BD2;
-        Mon, 20 May 2019 11:38:15 +0000 (UTC)
-Date:   Mon, 20 May 2019 07:38:14 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2BD0704DB;
+        Mon, 20 May 2019 13:12:34 +0000 (UTC)
+Date:   Mon, 20 May 2019 09:12:33 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 07/20] xfs: split iop_unlock
-Message-ID: <20190520113811.GA31317@bfoster>
+Subject: Re: [PATCH 11/20] xfs: use a list_head for iclog callbacks
+Message-ID: <20190520131232.GB31317@bfoster>
 References: <20190517073119.30178-1-hch@lst.de>
- <20190517073119.30178-8-hch@lst.de>
- <20190517174915.GG7888@bfoster>
- <20190520061043.GG31977@lst.de>
+ <20190517073119.30178-12-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520061043.GG31977@lst.de>
+In-Reply-To: <20190517073119.30178-12-hch@lst.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 20 May 2019 11:38:16 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 20 May 2019 13:12:35 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 20, 2019 at 08:10:43AM +0200, Christoph Hellwig wrote:
-> On Fri, May 17, 2019 at 01:49:16PM -0400, Brian Foster wrote:
-> > Refactoring aside, I see that the majority of this patch is focused on
-> > intent log item implementations. I don't think an item leak is possible
-> > here because we intentionally dirty transactions when either an intent
-> > or done item is logged. See xfs_extent_free_log_item() and
-> > xfs_trans_free_extent() for examples associated with the EFI/EFD items.
+On Fri, May 17, 2019 at 09:31:10AM +0200, Christoph Hellwig wrote:
+> Replace the hand grown linked list handling and cil context attachment
+> with the standard list_head structure.
 > 
-> That's why I said theoretical.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_log.c      | 51 ++++++++-----------------------------------
+>  fs/xfs/xfs_log.h      | 15 +++----------
+>  fs/xfs/xfs_log_cil.c  | 31 ++++++++++++++++++++------
+>  fs/xfs/xfs_log_priv.h | 10 +++------
+>  4 files changed, 39 insertions(+), 68 deletions(-)
 > 
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index 1eb0938165fc..0d6fb374dbe8 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+...
+> @@ -2828,26 +2801,20 @@ xlog_state_do_callback(
+>  			 * callbacks being added.
+>  			 */
+>  			spin_lock(&iclog->ic_callback_lock);
+> -			cb = iclog->ic_callback;
+> -			while (cb) {
+> -				iclog->ic_callback_tail = &(iclog->ic_callback);
+> -				iclog->ic_callback = NULL;
+> -				spin_unlock(&iclog->ic_callback_lock);
+> +			while (!list_empty(&iclog->ic_callbacks)) {
+> +				LIST_HEAD(tmp);
+>  
+> -				/* perform callbacks in the order given */
+> -				for (; cb; cb = cb_next) {
+> -					cb_next = cb->cb_next;
+> -					cb->cb_func(cb->cb_arg, aborted);
+> -				}
+> +				list_splice_init(&iclog->ic_callbacks, &tmp);
+> +
+> +				spin_unlock(&iclog->ic_callback_lock);
+> +				xlog_cil_process_commited(&tmp, aborted);
 
-The current commit log says it's either rare or doesn't occur in
-practice, which leaves the question open. I'm pointing out that for the
-codepaths affected by this patch, I don't think it can occur.
+s/commited/committed/ please.
 
-I agree that it's still a theoretical possibility based on the current
-log item interface and intent item implementations...
+>  				spin_lock(&iclog->ic_callback_lock);
+> -				cb = iclog->ic_callback;
+>  			}
+>  
+...
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index 4cb459f21ad4..b6b30b8e22af 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+...
+> @@ -615,6 +614,20 @@ xlog_cil_committed(
+>  		kmem_free(ctx);
+>  }
+>  
+> +void
+> +xlog_cil_process_commited(
+> +	struct list_head	*list,
+> +	bool			aborted)
+> +{
+> +	struct xfs_cil_ctx	*ctx;
+> +
+> +	while ((ctx = list_first_entry_or_null(list,
 
-> > On one hand this logic supports the current item reference counting
-> > logic (for example, so we know whether to drop the log's reference to an
-> > EFI on transaction abort or wait until physical log commit time). On the
-> > other hand, the items themselves must be logged to disk so we have to
-> > mark them dirty (along with the transaction on behalf of the item) for
-> > that reason as well. FWIW, I do think the current approach of adding the
-> > intent item and dirtying it separately is slightly confusing,
-> > particularly since I'm not sure we have any valid use case to have a
-> > clean intent/done item in a transaction.
+Are double braces necessary here?
+
+> +			struct xfs_cil_ctx, iclog_entry))) {
+> +		list_del(&ctx->iclog_entry);
+> +		xlog_cil_committed(ctx, aborted);
+> +	}
+> +}
+...
+> @@ -837,11 +850,15 @@ xlog_cil_push(
+>  		goto out_abort;
+>  
+>  	/* attach all the transactions w/ busy extents to iclog */
+
+Any idea what this ^ comment means? ISTM it's misplaced or stale. If so,
+we might as well toss/replace it.
+
+With those nits fixed:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+> -	ctx->log_cb.cb_func = xlog_cil_committed;
+> -	ctx->log_cb.cb_arg = ctx;
+> -	error = xfs_log_notify(commit_iclog, &ctx->log_cb);
+> -	if (error)
+> +	spin_lock(&commit_iclog->ic_callback_lock);
+> +	if (commit_iclog->ic_state & XLOG_STATE_IOERROR) {
+> +		spin_unlock(&commit_iclog->ic_callback_lock);
+>  		goto out_abort;
+> +	}
+> +	ASSERT_ALWAYS(commit_iclog->ic_state == XLOG_STATE_ACTIVE ||
+> +		      commit_iclog->ic_state == XLOG_STATE_WANT_SYNC);
+> +	list_add_tail(&ctx->iclog_entry, &commit_iclog->ic_callbacks);
+> +	spin_unlock(&commit_iclog->ic_callback_lock);
+>  
+>  	/*
+>  	 * now the checkpoint commit is complete and we've attached the
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index b5f82cb36202..5c188ccb8568 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -10,7 +10,6 @@ struct xfs_buf;
+>  struct xlog;
+>  struct xlog_ticket;
+>  struct xfs_mount;
+> -struct xfs_log_callback;
+>  
+>  /*
+>   * Flags for log structure
+> @@ -181,8 +180,6 @@ typedef struct xlog_ticket {
+>   * - ic_next is the pointer to the next iclog in the ring.
+>   * - ic_bp is a pointer to the buffer used to write this incore log to disk.
+>   * - ic_log is a pointer back to the global log structure.
+> - * - ic_callback is a linked list of callback function/argument pairs to be
+> - *	called after an iclog finishes writing.
+>   * - ic_size is the full size of the header plus data.
+>   * - ic_offset is the current number of bytes written to in this iclog.
+>   * - ic_refcnt is bumped when someone is writing to the log.
+> @@ -193,7 +190,7 @@ typedef struct xlog_ticket {
+>   * structure cacheline aligned. The following fields can be contended on
+>   * by independent processes:
+>   *
+> - *	- ic_callback_*
+> + *	- ic_callbacks
+>   *	- ic_refcnt
+>   *	- fields protected by the global l_icloglock
+>   *
+> @@ -216,8 +213,7 @@ typedef struct xlog_in_core {
+>  
+>  	/* Callback structures need their own cacheline */
+>  	spinlock_t		ic_callback_lock ____cacheline_aligned_in_smp;
+> -	struct xfs_log_callback	*ic_callback;
+> -	struct xfs_log_callback	**ic_callback_tail;
+> +	struct list_head	ic_callbacks;
+>  
+>  	/* reference counts need their own cacheline */
+>  	atomic_t		ic_refcnt ____cacheline_aligned_in_smp;
+> @@ -243,7 +239,7 @@ struct xfs_cil_ctx {
+>  	int			space_used;	/* aggregate size of regions */
+>  	struct list_head	busy_extents;	/* busy extents in chkpt */
+>  	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+> -	struct xfs_log_callback	log_cb;		/* completion callback hook. */
+> +	struct list_head	iclog_entry;
+>  	struct list_head	committing;	/* ctx committing list */
+>  	struct work_struct	discard_endio_work;
+>  };
+> -- 
+> 2.20.1
 > 
-> Indeed.  I think there is plenty of opportunity for futher wok here.
-> 
-> > I suppose this kind of refactoring might still make sense on its own if
-> > the resulting code is more clear or streamlined. I.e., perhaps there's
-> > no need for the separate ->iop_committing() and ->iop_unlock() callbacks
-> > invoked one after the other. That said, I think the commit log should
-> > probably be updated to focus on that (unless I'm missing something about
-> > the potential leak). Hm?
-> 
-> The streamlining was the the point.  I just noticed that if we were
-> every to about a clean intent item we'd leak it while doing that.
-
-Ok, then I'd just suggest to update the commit log. I guess it's easier
-for me to just suggest one, so for example (feel free to use, modify or
-replace):
-
----
-
-iop_unlock() is called when comitting or cancelling a transaction. In
-the latter case, the transaction may or may not be aborted. While there
-is no known problem with the current code in practice, this
-implementation is limited in that any log item implementation that might
-want to differentiate between a commit and a cancel must rely on the
-aborted state. The aborted bit is only set when the cancelled
-transaction is dirty, however. This means that there is no way to
-distinguish between a commit and a clean transaction cancel.
-
-For example, intent log items currently rely on this distinction. The
-log item is either transferred to the CIL on commit or released on
-transaction cancel. There is currently no possibility for a clean intent
-log item in a transaction, but if that state is ever introduced a cancel
-of such a transaction will immediately result in memory leaks of the
-associated log item(s). This is an interface deficiency and landmine.
-
-To clean this up, replace ->iop_unlock() with an ->iop_release()
-callback that is specific to transaction cancel. The existing
-->iop_committing() callback occurs at the same time as ->iop_unlock() in
-the commit path and there is no need for two separate callbacks here.
-Overload ->iop_committing() with the current commit time ->iop_unlock()
-implementations to eliminate the need for the latter and further
-simplify the interface.
-
----
-
-I'll try to get through the rest of this series today..
-
-Brian
