@@ -2,222 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29BF5237C6
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 15:19:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2C48237CE
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 15:19:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbfETNMq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 09:12:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34858 "EHLO mx1.redhat.com"
+        id S1731708AbfETNM7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 09:12:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42084 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730513AbfETNMq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 09:12:46 -0400
+        id S1730458AbfETNM6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 20 May 2019 09:12:58 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E462A3082E4F;
-        Mon, 20 May 2019 13:12:45 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 405053082AFF;
+        Mon, 20 May 2019 13:12:58 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D1E9100EBDF;
-        Mon, 20 May 2019 13:12:45 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:12:43 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D9E461001F5D;
+        Mon, 20 May 2019 13:12:57 +0000 (UTC)
+Date:   Mon, 20 May 2019 09:12:56 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 12/20] xfs: remove a pointless comment duplicated above
- all xfs_item_ops instances
-Message-ID: <20190520131243.GC31317@bfoster>
+Subject: Re: [PATCH 13/20] xfs: merge xfs_efd_init into xfs_trans_get_efd
+Message-ID: <20190520131255.GD31317@bfoster>
 References: <20190517073119.30178-1-hch@lst.de>
- <20190517073119.30178-13-hch@lst.de>
+ <20190517073119.30178-14-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517073119.30178-13-hch@lst.de>
+In-Reply-To: <20190517073119.30178-14-hch@lst.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 20 May 2019 13:12:45 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 20 May 2019 13:12:58 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:31:11AM +0200, Christoph Hellwig wrote:
+On Fri, May 17, 2019 at 09:31:12AM +0200, Christoph Hellwig wrote:
+> There is no good reason to keep these two functions separate.
+> 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
 
+Looks good, and there's only one more user of the xfs_efd_log_item_t
+typedef. ;)
+
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/xfs_bmap_item.c     | 6 ------
->  fs/xfs/xfs_buf_item.c      | 3 ---
->  fs/xfs/xfs_dquot_item.c    | 6 ------
->  fs/xfs/xfs_extfree_item.c  | 6 ------
->  fs/xfs/xfs_icreate_item.c  | 3 ---
->  fs/xfs/xfs_inode_item.c    | 3 ---
->  fs/xfs/xfs_refcount_item.c | 6 ------
->  fs/xfs/xfs_rmap_item.c     | 6 ------
->  8 files changed, 39 deletions(-)
+>  fs/xfs/xfs_extfree_item.c  | 27 +++++++++++++++------------
+>  fs/xfs/xfs_extfree_item.h  |  2 --
+>  fs/xfs/xfs_trans_extfree.c | 26 --------------------------
+>  3 files changed, 15 insertions(+), 40 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-> index d7ceb2d1ae82..46dcadf790c2 100644
-> --- a/fs/xfs/xfs_bmap_item.c
-> +++ b/fs/xfs/xfs_bmap_item.c
-> @@ -125,9 +125,6 @@ xfs_bui_item_release(
->  	xfs_bui_release(BUI_ITEM(lip));
->  }
->  
-> -/*
-> - * This is the ops vector shared by all bui log items.
-> - */
->  static const struct xfs_item_ops xfs_bui_item_ops = {
->  	.iop_size	= xfs_bui_item_size,
->  	.iop_format	= xfs_bui_item_format,
-> @@ -208,9 +205,6 @@ xfs_bud_item_release(
->  	kmem_zone_free(xfs_bud_zone, budp);
->  }
->  
-> -/*
-> - * This is the ops vector shared by all bud log items.
-> - */
->  static const struct xfs_item_ops xfs_bud_item_ops = {
->  	.flags		= XFS_ITEM_RELEASE_ON_COMMIT,
->  	.iop_size	= xfs_bud_item_size,
-> diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-> index 05eefc677cd8..2c7aef61ea92 100644
-> --- a/fs/xfs/xfs_buf_item.c
-> +++ b/fs/xfs/xfs_buf_item.c
-> @@ -679,9 +679,6 @@ xfs_buf_item_committed(
->  	return lsn;
->  }
->  
-> -/*
-> - * This is the ops vector shared by all buf log items.
-> - */
->  static const struct xfs_item_ops xfs_buf_item_ops = {
->  	.iop_size	= xfs_buf_item_size,
->  	.iop_format	= xfs_buf_item_format,
-> diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-> index b8fd81641dfc..ade4520d3fdf 100644
-> --- a/fs/xfs/xfs_dquot_item.c
-> +++ b/fs/xfs/xfs_dquot_item.c
-> @@ -222,9 +222,6 @@ xfs_qm_dquot_logitem_committing(
->  	return xfs_qm_dquot_logitem_release(lip);
->  }
->  
-> -/*
-> - * This is the ops vector for dquots
-> - */
->  static const struct xfs_item_ops xfs_dquot_item_ops = {
->  	.iop_size	= xfs_qm_dquot_logitem_size,
->  	.iop_format	= xfs_qm_dquot_logitem_format,
-> @@ -320,9 +317,6 @@ static const struct xfs_item_ops xfs_qm_qoffend_logitem_ops = {
->  	.iop_committed	= xfs_qm_qoffend_logitem_committed,
->  };
->  
-> -/*
-> - * This is the ops vector shared by all quotaoff-start log items.
-> - */
->  static const struct xfs_item_ops xfs_qm_qoff_logitem_ops = {
->  	.iop_size	= xfs_qm_qoff_logitem_size,
->  	.iop_format	= xfs_qm_qoff_logitem_format,
 > diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-> index 762eb288dfe8..bb0b1e942d00 100644
+> index bb0b1e942d00..ccf95cb8234c 100644
 > --- a/fs/xfs/xfs_extfree_item.c
 > +++ b/fs/xfs/xfs_extfree_item.c
-> @@ -135,9 +135,6 @@ xfs_efi_item_release(
->  	xfs_efi_release(EFI_ITEM(lip));
+> @@ -312,32 +312,35 @@ static const struct xfs_item_ops xfs_efd_item_ops = {
+>  };
+>  
+>  /*
+> - * Allocate and initialize an efd item with the given number of extents.
+> + * Allocate an "extent free done" log item that will hold nextents worth of
+> + * extents.  The caller must use all nextents extents, because we are not
+> + * flexible about this at all.
+>   */
+>  struct xfs_efd_log_item *
+> -xfs_efd_init(
+> -	struct xfs_mount	*mp,
+> -	struct xfs_efi_log_item	*efip,
+> -	uint			nextents)
+> -
+> +xfs_trans_get_efd(
+> +	struct xfs_trans		*tp,
+> +	struct xfs_efi_log_item		*efip,
+> +	unsigned int			nextents)
+>  {
+> -	struct xfs_efd_log_item	*efdp;
+> -	uint			size;
+> +	struct xfs_efd_log_item		*efdp;
+>  
+>  	ASSERT(nextents > 0);
+> +
+>  	if (nextents > XFS_EFD_MAX_FAST_EXTENTS) {
+> -		size = (uint)(sizeof(xfs_efd_log_item_t) +
+> -			((nextents - 1) * sizeof(xfs_extent_t)));
+> -		efdp = kmem_zalloc(size, KM_SLEEP);
+> +		efdp = kmem_zalloc(sizeof(struct xfs_efd_log_item) +
+> +				(nextents - 1) * sizeof(struct xfs_extent),
+> +				KM_SLEEP);
+>  	} else {
+>  		efdp = kmem_zone_zalloc(xfs_efd_zone, KM_SLEEP);
+>  	}
+>  
+> -	xfs_log_item_init(mp, &efdp->efd_item, XFS_LI_EFD, &xfs_efd_item_ops);
+> +	xfs_log_item_init(tp->t_mountp, &efdp->efd_item, XFS_LI_EFD,
+> +			  &xfs_efd_item_ops);
+>  	efdp->efd_efip = efip;
+>  	efdp->efd_format.efd_nextents = nextents;
+>  	efdp->efd_format.efd_efi_id = efip->efi_format.efi_id;
+>  
+> +	xfs_trans_add_item(tp, &efdp->efd_item);
+>  	return efdp;
 >  }
 >  
-> -/*
-> - * This is the ops vector shared by all efi log items.
-> - */
->  static const struct xfs_item_ops xfs_efi_item_ops = {
->  	.iop_size	= xfs_efi_item_size,
->  	.iop_format	= xfs_efi_item_format,
-> @@ -307,9 +304,6 @@ xfs_efd_item_release(
->  	xfs_efd_item_free(efdp);
->  }
+> diff --git a/fs/xfs/xfs_extfree_item.h b/fs/xfs/xfs_extfree_item.h
+> index b0dc4ebe8892..16aaab06d4ec 100644
+> --- a/fs/xfs/xfs_extfree_item.h
+> +++ b/fs/xfs/xfs_extfree_item.h
+> @@ -79,8 +79,6 @@ extern struct kmem_zone	*xfs_efi_zone;
+>  extern struct kmem_zone	*xfs_efd_zone;
+>  
+>  xfs_efi_log_item_t	*xfs_efi_init(struct xfs_mount *, uint);
+> -xfs_efd_log_item_t	*xfs_efd_init(struct xfs_mount *, xfs_efi_log_item_t *,
+> -				      uint);
+>  int			xfs_efi_copy_format(xfs_log_iovec_t *buf,
+>  					    xfs_efi_log_format_t *dst_efi_fmt);
+>  void			xfs_efi_item_free(xfs_efi_log_item_t *);
+> diff --git a/fs/xfs/xfs_trans_extfree.c b/fs/xfs/xfs_trans_extfree.c
+> index 8ee7a3f8bb20..20ab1c9d758f 100644
+> --- a/fs/xfs/xfs_trans_extfree.c
+> +++ b/fs/xfs/xfs_trans_extfree.c
+> @@ -19,32 +19,6 @@
+>  #include "xfs_bmap.h"
+>  #include "xfs_trace.h"
 >  
 > -/*
-> - * This is the ops vector shared by all efd log items.
+> - * This routine is called to allocate an "extent free done"
+> - * log item that will hold nextents worth of extents.  The
+> - * caller must use all nextents extents, because we are not
+> - * flexible about this at all.
 > - */
->  static const struct xfs_item_ops xfs_efd_item_ops = {
->  	.flags		= XFS_ITEM_RELEASE_ON_COMMIT,
->  	.iop_size	= xfs_efd_item_size,
-> diff --git a/fs/xfs/xfs_icreate_item.c b/fs/xfs/xfs_icreate_item.c
-> index eb9cb04635be..4f1ce50ce323 100644
-> --- a/fs/xfs/xfs_icreate_item.c
-> +++ b/fs/xfs/xfs_icreate_item.c
-> @@ -63,9 +63,6 @@ xfs_icreate_item_release(
->  	kmem_zone_free(xfs_icreate_zone, ICR_ITEM(lip));
->  }
->  
-> -/*
-> - * This is the ops vector shared by all buf log items.
-> - */
->  static const struct xfs_item_ops xfs_icreate_item_ops = {
->  	.flags		= XFS_ITEM_RELEASE_ON_COMMIT,
->  	.iop_size	= xfs_icreate_item_size,
-> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-> index a00f0b6aecc7..62847e95b399 100644
-> --- a/fs/xfs/xfs_inode_item.c
-> +++ b/fs/xfs/xfs_inode_item.c
-> @@ -627,9 +627,6 @@ xfs_inode_item_committing(
->  	return xfs_inode_item_release(lip);
->  }
->  
-> -/*
-> - * This is the ops vector shared by all buf log items.
-> - */
->  static const struct xfs_item_ops xfs_inode_item_ops = {
->  	.iop_size	= xfs_inode_item_size,
->  	.iop_format	= xfs_inode_item_format,
-> diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-> index b4ab71ce39fc..2b2f6e7ad867 100644
-> --- a/fs/xfs/xfs_refcount_item.c
-> +++ b/fs/xfs/xfs_refcount_item.c
-> @@ -124,9 +124,6 @@ xfs_cui_item_release(
->  	xfs_cui_release(CUI_ITEM(lip));
->  }
->  
-> -/*
-> - * This is the ops vector shared by all cui log items.
-> - */
->  static const struct xfs_item_ops xfs_cui_item_ops = {
->  	.iop_size	= xfs_cui_item_size,
->  	.iop_format	= xfs_cui_item_format,
-> @@ -213,9 +210,6 @@ xfs_cud_item_release(
->  	kmem_zone_free(xfs_cud_zone, cudp);
->  }
->  
-> -/*
-> - * This is the ops vector shared by all cud log items.
-> - */
->  static const struct xfs_item_ops xfs_cud_item_ops = {
->  	.flags		= XFS_ITEM_RELEASE_ON_COMMIT,
->  	.iop_size	= xfs_cud_item_size,
-> diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-> index 1b35b3d38708..dce1357aef88 100644
-> --- a/fs/xfs/xfs_rmap_item.c
-> +++ b/fs/xfs/xfs_rmap_item.c
-> @@ -123,9 +123,6 @@ xfs_rui_item_release(
->  	xfs_rui_release(RUI_ITEM(lip));
->  }
->  
-> -/*
-> - * This is the ops vector shared by all rui log items.
-> - */
->  static const struct xfs_item_ops xfs_rui_item_ops = {
->  	.iop_size	= xfs_rui_item_size,
->  	.iop_format	= xfs_rui_item_format,
-> @@ -234,9 +231,6 @@ xfs_rud_item_release(
->  	kmem_zone_free(xfs_rud_zone, rudp);
->  }
->  
-> -/*
-> - * This is the ops vector shared by all rud log items.
-> - */
->  static const struct xfs_item_ops xfs_rud_item_ops = {
->  	.flags		= XFS_ITEM_RELEASE_ON_COMMIT,
->  	.iop_size	= xfs_rud_item_size,
+> -struct xfs_efd_log_item *
+> -xfs_trans_get_efd(struct xfs_trans		*tp,
+> -		  struct xfs_efi_log_item	*efip,
+> -		  uint				nextents)
+> -{
+> -	struct xfs_efd_log_item			*efdp;
+> -
+> -	ASSERT(tp != NULL);
+> -	ASSERT(nextents > 0);
+> -
+> -	efdp = xfs_efd_init(tp->t_mountp, efip, nextents);
+> -	ASSERT(efdp != NULL);
+> -
+> -	/*
+> -	 * Get a log_item_desc to point at the new item.
+> -	 */
+> -	xfs_trans_add_item(tp, &efdp->efd_item);
+> -	return efdp;
+> -}
+> -
+>  /*
+>   * Free an extent and log it to the EFD. Note that the transaction is marked
+>   * dirty regardless of whether the extent free succeeds or fails to support the
 > -- 
 > 2.20.1
 > 
