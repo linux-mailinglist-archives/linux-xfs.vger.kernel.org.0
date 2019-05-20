@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 709DB23D0B
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AC023D0C
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 May 2019 18:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387485AbfETQPY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 12:15:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37204 "EHLO
+        id S2389410AbfETQP0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 12:15:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37218 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732368AbfETQPX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:23 -0400
+        with ESMTP id S1732368AbfETQP0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 12:15:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k9gpLcDgJ90RTnbO7pXSN2DjHMcy1cNi++942zlJTyc=; b=myUc2711YKsxgVmxIbbwIphlW
-        UQPl9ZTKTXAtaC1LJl9BlXbgJ57M7SH+DHJ90I19v25wDZfYNeraXLXQsSmzwGRo1iYUr4hecwt7J
-        vkYvZAfU+YZy8+moM68x1ix/rjPIO7YOpCU+giiONdqeKynh9I5Ucv4xJX+0u3iddZ+5APOc8bXwq
-        mcjJ4tL/lpCaKiJIQF6PM8OTd0x4VU4jWXkS6EfqNbAq5S0Shu+DziwYynb3LTLUYaHdM8ygVsoVg
-        4WlkI3vcHMZQX0MREZzr4rfg0rtamNawd7ez1Gh/u6BD5zjI27FFz8P/nuAqAQadIEU2Eb1YdGzBT
-        ao3a7acqA==;
+         bh=Rak5Qt7zpEEgaSKIvYAC94mttd5zouTqUW3s479REMM=; b=kJ2BxKaPniilSmvZiwve1dpn5
+        UmM3zcho/AFtMUwC53JbMk9fEzBYrzSZofs7qhcRs0LYZHpxDSQzgY6L/DIf3XdgOtJm4ryg36dgA
+        VgLlDWlWDn1zv+cVIY7JjYnNmuNITHaEOC9loZbe2pOOngz//egwsAYRl6yn17mUHucmPlyHrPEye
+        hTKpvugmE2pWVPKTDLqv83xiv60EYQyOR00XsZpCJiIq3WStMsYAda9hMw6J046HQSQPXNVxz15YR
+        gzeDTHSZWCNg89edeVC1XkUzkDq8AOcDIyVkJ/W/3C8kb0UjhIwtPjSp6SbGKCVKwnOHoFydLB5fV
+        7s3Kc9DdA==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSkwc-0006wF-Tb
-        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:23 +0000
+        id 1hSkwf-0006wg-Sj
+        for linux-xfs@vger.kernel.org; Mon, 20 May 2019 16:15:26 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 14/17] xfs: use bios directly to read and write the log recovery buffers
-Date:   Mon, 20 May 2019 18:13:44 +0200
-Message-Id: <20190520161347.3044-15-hch@lst.de>
+Subject: [PATCH 15/17] xfs: remove unused buffer cache APIs
+Date:   Mon, 20 May 2019 18:13:45 +0200
+Message-Id: <20190520161347.3044-16-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520161347.3044-1-hch@lst.de>
 References: <20190520161347.3044-1-hch@lst.de>
@@ -43,492 +43,209 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The xfs_buf structure is basically used as a glorified container for
-a vmalloc allocation in the log recovery code.  Replace it with a
-real vmalloc implementation and just build bios directly as needed
-to read into or write from it to simplify things a bit.
+Now that the log code uses bios directly we can drop various special
+cases in the buffer cache code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log_recover.c | 266 +++++++++++++++++++--------------------
- 1 file changed, 131 insertions(+), 135 deletions(-)
+ fs/xfs/xfs_buf.c | 94 ++----------------------------------------------
+ fs/xfs/xfs_buf.h | 27 --------------
+ 2 files changed, 2 insertions(+), 119 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 9519956b1ccf..350c9a123dad 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -92,17 +92,14 @@ xlog_verify_bp(
- }
- 
- /*
-- * Allocate a buffer to hold log data.  The buffer needs to be able
-- * to map to a range of nbblks basic blocks at any valid (basic
-- * block) offset within the log.
-+ * Allocate a buffer to hold log data.  The buffer needs to be able to map to
-+ * a range of nbblks basic blocks at any valid offset within the log.
-  */
--STATIC xfs_buf_t *
-+static char *
- xlog_get_bp(
- 	struct xlog	*log,
- 	int		nbblks)
- {
--	struct xfs_buf	*bp;
--
- 	/*
- 	 * Pass log block 0 since we don't have an addr yet, buffer will be
- 	 * verified on read.
-@@ -115,36 +112,30 @@ xlog_get_bp(
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index be8afa1673c7..d44097e645a5 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -213,7 +213,7 @@ xfs_buf_free_maps(
  	}
- 
- 	/*
--	 * We do log I/O in units of log sectors (a power-of-2
--	 * multiple of the basic block size), so we round up the
--	 * requested size to accommodate the basic blocks required
--	 * for complete log sectors.
-+	 * We do log I/O in units of log sectors (a power-of-2 multiple of the
-+	 * basic block size), so we round up the requested size to accommodate
-+	 * the basic blocks required for complete log sectors.
- 	 *
--	 * In addition, the buffer may be used for a non-sector-
--	 * aligned block offset, in which case an I/O of the
--	 * requested size could extend beyond the end of the
--	 * buffer.  If the requested size is only 1 basic block it
--	 * will never straddle a sector boundary, so this won't be
--	 * an issue.  Nor will this be a problem if the log I/O is
--	 * done in basic blocks (sector size 1).  But otherwise we
--	 * extend the buffer by one extra log sector to ensure
--	 * there's space to accommodate this possibility.
-+	 * In addition, the buffer may be used for a non-sector-aligned block
-+	 * offset, in which case an I/O of the requested size could extend
-+	 * beyond the end of the buffer.  If the requested size is only 1 basic
-+	 * block it will never straddle a sector boundary, so this won't be an
-+	 * issue.  Nor will this be a problem if the log I/O is done in basic
-+	 * blocks (sector size 1).  But otherwise we extend the buffer by one
-+	 * extra log sector to ensure there's space to accommodate this
-+	 * possibility.
- 	 */
- 	if (nbblks > 1 && log->l_sectBBsize > 1)
- 		nbblks += log->l_sectBBsize;
- 	nbblks = round_up(nbblks, log->l_sectBBsize);
--
--	bp = xfs_buf_get_uncached(log->l_targ, nbblks, 0);
--	if (bp)
--		xfs_buf_unlock(bp);
--	return bp;
-+	return vmalloc(BBTOB(nbblks));
  }
  
- STATIC void
- xlog_put_bp(
--	xfs_buf_t	*bp)
-+	char		*data)
- {
--	xfs_buf_free(bp);
-+	vfree(data);
- }
- 
- /*
-@@ -159,17 +150,71 @@ xlog_align(
- 	return BBTOB(blk_no & ((xfs_daddr_t)log->l_sectBBsize - 1));
+-struct xfs_buf *
++static struct xfs_buf *
+ _xfs_buf_alloc(
+ 	struct xfs_buftarg	*target,
+ 	struct xfs_buf_map	*map,
+@@ -909,83 +909,6 @@ xfs_buf_read_uncached(
+ 	return 0;
  }
  
 -/*
-- * nbblks should be uint, but oh well.  Just want to catch that 32-bit length.
+- * Return a buffer allocated as an empty buffer and associated to external
+- * memory via xfs_buf_associate_memory() back to it's empty state.
 - */
--STATIC int
--xlog_bread_noalign(
--	struct xlog	*log,
--	xfs_daddr_t	blk_no,
--	int		nbblks,
--	struct xfs_buf	*bp)
-+static struct bio *
-+xlog_alloc_bio(
-+	struct xlog		*log,
-+	xfs_daddr_t		blk_no,
-+	unsigned int		count,
-+	unsigned int		op)
- {
--	int		error;
-+	int			vecs = howmany(count, PAGE_SIZE);
-+	struct bio		*bio;
-+
-+	bio = bio_alloc(GFP_KERNEL, min(vecs, BIO_MAX_PAGES));
-+	bio_set_dev(bio, log->l_targ->bt_bdev);
-+	bio->bi_iter.bi_sector = log->l_logBBstart + blk_no;
-+	bio->bi_opf = op | REQ_META | REQ_SYNC;
-+	return bio;
-+}
-+
-+static int
-+xlog_submit_bio(
-+	struct xlog		*log,
-+	xfs_daddr_t		blk_no,
-+	unsigned int		count,
-+	char			*data,
-+	unsigned int		op)
-+
-+{
-+	int			error;
-+	struct bio		*bio;
-+
-+	bio = xlog_alloc_bio(log, blk_no, count, op);
-+
-+	do {
-+		struct page	*page = vmalloc_to_page(data);
-+		unsigned int	off = offset_in_page(data);
-+		unsigned int	len = min_t(unsigned, count, PAGE_SIZE - off);
-+
-+		while (bio_add_page(bio, page, len, off) != len) {
-+			struct bio	*prev = bio;
-+
-+			bio = xlog_alloc_bio(log, blk_no, count, op);
-+			bio_chain(bio, prev);
-+			submit_bio(prev);
-+		}
-+
-+		data += len;
-+		count -= len;
-+		blk_no += BTOBB(len);
-+	} while (count > 0);
-+
-+	error = submit_bio_wait(bio);
-+	bio_put(bio);
-+
-+	return error;
-+}
-+
-+static int
-+xlog_do_io(
-+	struct xlog		*log,
-+	xfs_daddr_t		blk_no,
-+	unsigned int		nbblks,
-+	char			*data,
-+	unsigned int		op)
-+{
-+	unsigned int		count;
-+	int			error;
- 
- 	if (!xlog_verify_bp(log, blk_no, nbblks)) {
- 		xfs_warn(log->l_mp,
-@@ -181,107 +226,59 @@ xlog_bread_noalign(
- 
- 	blk_no = round_down(blk_no, log->l_sectBBsize);
- 	nbblks = round_up(nbblks, log->l_sectBBsize);
-+	count = BBTOB(nbblks);
- 
- 	ASSERT(nbblks > 0);
--	ASSERT(nbblks <= bp->b_length);
- 
--	XFS_BUF_SET_ADDR(bp, log->l_logBBstart + blk_no);
--	bp->b_flags |= XBF_READ;
--	bp->b_io_length = nbblks;
--	bp->b_error = 0;
-+	if (op == REQ_OP_READ)
-+		flush_kernel_vmap_range(data, count);
-+	error = xlog_submit_bio(log, blk_no, count, data, op);
-+	if (op == REQ_OP_WRITE)
-+		invalidate_kernel_vmap_range(data, count);
- 
--	error = xfs_buf_submit(bp);
--	if (error && !XFS_FORCED_SHUTDOWN(log->l_mp))
--		xfs_buf_ioerror_alert(bp, __func__);
-+	if (error && !XFS_FORCED_SHUTDOWN(log->l_mp)) {
-+		xfs_alert(log->l_mp,
-+			  "log recovery %s I/O error at daddr 0x%llx len %d error %d",
-+			  op == REQ_OP_WRITE ? "write" : "read",
-+			  blk_no, nbblks, error);
-+	}
- 	return error;
- }
- 
- STATIC int
--xlog_bread(
-+xlog_bread_noalign(
- 	struct xlog	*log,
- 	xfs_daddr_t	blk_no,
- 	int		nbblks,
--	struct xfs_buf	*bp,
--	char		**offset)
-+	char		*data)
- {
--	int		error;
+-void
+-xfs_buf_set_empty(
+-	struct xfs_buf		*bp,
+-	size_t			numblks)
+-{
+-	if (bp->b_pages)
+-		_xfs_buf_free_pages(bp);
 -
--	error = xlog_bread_noalign(log, blk_no, nbblks, bp);
--	if (error)
--		return error;
+-	bp->b_pages = NULL;
+-	bp->b_page_count = 0;
+-	bp->b_addr = NULL;
+-	bp->b_length = numblks;
+-	bp->b_io_length = numblks;
 -
--	*offset = bp->b_addr + xlog_align(log, blk_no);
--	return 0;
-+	return xlog_do_io(log, blk_no, nbblks, data, REQ_OP_READ);
- }
- 
--/*
-- * Read at an offset into the buffer. Returns with the buffer in it's original
-- * state regardless of the result of the read.
-- */
- STATIC int
--xlog_bread_offset(
-+xlog_bread(
- 	struct xlog	*log,
--	xfs_daddr_t	blk_no,		/* block to read from */
--	int		nbblks,		/* blocks to read */
--	struct xfs_buf	*bp,
--	char		*offset)
-+	xfs_daddr_t	blk_no,
-+	int		nbblks,
-+	char		*data,
-+	char		**offset)
- {
--	char		*orig_offset = bp->b_addr;
--	int		orig_len = BBTOB(bp->b_length);
--	int		error, error2;
+-	ASSERT(bp->b_map_count == 1);
+-	bp->b_bn = XFS_BUF_DADDR_NULL;
+-	bp->b_maps[0].bm_bn = XFS_BUF_DADDR_NULL;
+-	bp->b_maps[0].bm_len = bp->b_length;
+-}
 -
--	error = xfs_buf_associate_memory(bp, offset, BBTOB(nbblks));
--	if (error)
--		return error;
+-static inline struct page *
+-mem_to_page(
+-	void			*addr)
+-{
+-	if ((!is_vmalloc_addr(addr))) {
+-		return virt_to_page(addr);
+-	} else {
+-		return vmalloc_to_page(addr);
+-	}
+-}
 -
--	error = xlog_bread_noalign(log, blk_no, nbblks, bp);
-+	int		error;
- 
--	/* must reset buffer pointer even on error */
--	error2 = xfs_buf_associate_memory(bp, orig_offset, orig_len);
--	if (error)
--		return error;
--	return error2;
-+	error = xlog_do_io(log, blk_no, nbblks, data, REQ_OP_READ);
-+	if (!error)
-+		*offset = data + xlog_align(log, blk_no);
-+	return error;
- }
- 
--/*
-- * Write out the buffer at the given block for the given number of blocks.
-- * The buffer is kept locked across the write and is returned locked.
-- * This can only be used for synchronous log writes.
-- */
- STATIC int
- xlog_bwrite(
- 	struct xlog	*log,
- 	xfs_daddr_t	blk_no,
- 	int		nbblks,
--	struct xfs_buf	*bp)
-+	char		*data)
- {
--	int		error;
+-int
+-xfs_buf_associate_memory(
+-	xfs_buf_t		*bp,
+-	void			*mem,
+-	size_t			len)
+-{
+-	int			rval;
+-	int			i = 0;
+-	unsigned long		pageaddr;
+-	unsigned long		offset;
+-	size_t			buflen;
+-	int			page_count;
 -
--	if (!xlog_verify_bp(log, blk_no, nbblks)) {
--		xfs_warn(log->l_mp,
--			 "Invalid log block/length (0x%llx, 0x%x) for buffer",
--			 blk_no, nbblks);
--		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_HIGH, log->l_mp);
--		return -EFSCORRUPTED;
+-	pageaddr = (unsigned long)mem & PAGE_MASK;
+-	offset = (unsigned long)mem - pageaddr;
+-	buflen = PAGE_ALIGN(len + offset);
+-	page_count = buflen >> PAGE_SHIFT;
+-
+-	/* Free any previous set of page pointers */
+-	if (bp->b_pages)
+-		_xfs_buf_free_pages(bp);
+-
+-	bp->b_pages = NULL;
+-	bp->b_addr = mem;
+-
+-	rval = _xfs_buf_get_pages(bp, page_count);
+-	if (rval)
+-		return rval;
+-
+-	bp->b_offset = offset;
+-
+-	for (i = 0; i < bp->b_page_count; i++) {
+-		bp->b_pages[i] = mem_to_page((void *)pageaddr);
+-		pageaddr += PAGE_SIZE;
 -	}
 -
--	blk_no = round_down(blk_no, log->l_sectBBsize);
--	nbblks = round_up(nbblks, log->l_sectBBsize);
+-	bp->b_io_length = BTOBB(len);
+-	bp->b_length = BTOBB(buflen);
 -
--	ASSERT(nbblks > 0);
--	ASSERT(nbblks <= bp->b_length);
+-	return 0;
+-}
 -
--	XFS_BUF_SET_ADDR(bp, log->l_logBBstart + blk_no);
--	xfs_buf_hold(bp);
--	xfs_buf_lock(bp);
--	bp->b_io_length = nbblks;
--	bp->b_error = 0;
--
--	error = xfs_bwrite(bp);
--	if (error)
--		xfs_buf_ioerror_alert(bp, __func__);
--	xfs_buf_relse(bp);
--	return error;
-+	return xlog_do_io(log, blk_no, nbblks, data, REQ_OP_WRITE);
+ xfs_buf_t *
+ xfs_buf_get_uncached(
+ 	struct xfs_buftarg	*target,
+@@ -1269,7 +1192,7 @@ xfs_buf_ioend_async(
+ 	struct xfs_buf	*bp)
+ {
+ 	INIT_WORK(&bp->b_ioend_work, xfs_buf_ioend_work);
+-	queue_work(bp->b_ioend_wq, &bp->b_ioend_work);
++	queue_work(bp->b_target->bt_mount->m_buf_workqueue, &bp->b_ioend_work);
  }
  
- #ifdef DEBUG
-@@ -399,7 +396,7 @@ xlog_recover_iodone(
- STATIC int
- xlog_find_cycle_start(
- 	struct xlog	*log,
--	struct xfs_buf	*bp,
-+	char		*bp,
- 	xfs_daddr_t	first_blk,
- 	xfs_daddr_t	*last_blk,
- 	uint		cycle)
-@@ -449,7 +446,7 @@ xlog_find_verify_cycle(
- {
- 	xfs_daddr_t	i, j;
- 	uint		cycle;
--	xfs_buf_t	*bp;
-+	char		*bp;
- 	xfs_daddr_t	bufblks;
- 	char		*buf = NULL;
- 	int		error = 0;
-@@ -516,7 +513,7 @@ xlog_find_verify_log_record(
- 	int			extra_bblks)
- {
- 	xfs_daddr_t		i;
--	xfs_buf_t		*bp;
-+	char			*bp;
- 	char			*offset = NULL;
- 	xlog_rec_header_t	*head = NULL;
- 	int			error = 0;
-@@ -623,7 +620,7 @@ xlog_find_head(
- 	struct xlog	*log,
- 	xfs_daddr_t	*return_head_blk)
- {
--	xfs_buf_t	*bp;
-+	char		*bp;
- 	char		*offset;
- 	xfs_daddr_t	new_blk, first_blk, start_blk, last_blk, head_blk;
- 	int		num_scan_bblks;
-@@ -889,7 +886,7 @@ xlog_rseek_logrec_hdr(
- 	xfs_daddr_t		head_blk,
- 	xfs_daddr_t		tail_blk,
- 	int			count,
--	struct xfs_buf		*bp,
-+	char			*bp,
- 	xfs_daddr_t		*rblk,
- 	struct xlog_rec_header	**rhead,
- 	bool			*wrapped)
-@@ -963,7 +960,7 @@ xlog_seek_logrec_hdr(
- 	xfs_daddr_t		head_blk,
- 	xfs_daddr_t		tail_blk,
- 	int			count,
--	struct xfs_buf		*bp,
-+	char			*bp,
- 	xfs_daddr_t		*rblk,
- 	struct xlog_rec_header	**rhead,
- 	bool			*wrapped)
-@@ -1063,7 +1060,7 @@ xlog_verify_tail(
- 	int			hsize)
- {
- 	struct xlog_rec_header	*thead;
--	struct xfs_buf		*bp;
-+	char			*bp;
- 	xfs_daddr_t		first_bad;
- 	int			error = 0;
- 	bool			wrapped;
-@@ -1145,13 +1142,13 @@ xlog_verify_head(
- 	struct xlog		*log,
- 	xfs_daddr_t		*head_blk,	/* in/out: unverified head */
- 	xfs_daddr_t		*tail_blk,	/* out: tail block */
--	struct xfs_buf		*bp,
-+	char			*bp,
- 	xfs_daddr_t		*rhead_blk,	/* start blk of last record */
- 	struct xlog_rec_header	**rhead,	/* ptr to last record */
- 	bool			*wrapped)	/* last rec. wraps phys. log */
- {
- 	struct xlog_rec_header	*tmp_rhead;
--	struct xfs_buf		*tmp_bp;
-+	char			*tmp_bp;
- 	xfs_daddr_t		first_bad;
- 	xfs_daddr_t		tmp_rhead_blk;
- 	int			found;
-@@ -1260,7 +1257,7 @@ xlog_check_unmount_rec(
- 	xfs_daddr_t		*tail_blk,
- 	struct xlog_rec_header	*rhead,
- 	xfs_daddr_t		rhead_blk,
--	struct xfs_buf		*bp,
-+	char			*bp,
- 	bool			*clean)
- {
- 	struct xlog_op_header	*op_head;
-@@ -1382,7 +1379,7 @@ xlog_find_tail(
- {
- 	xlog_rec_header_t	*rhead;
- 	char			*offset = NULL;
--	xfs_buf_t		*bp;
-+	char			*bp;
- 	int			error;
- 	xfs_daddr_t		rhead_blk;
- 	xfs_lsn_t		tail_lsn;
-@@ -1531,7 +1528,7 @@ xlog_find_zeroed(
- 	struct xlog	*log,
- 	xfs_daddr_t	*blk_no)
- {
--	xfs_buf_t	*bp;
-+	char		*bp;
- 	char		*offset;
- 	uint	        first_cycle, last_cycle;
- 	xfs_daddr_t	new_blk, last_blk, start_blk;
-@@ -1651,7 +1648,7 @@ xlog_write_log_records(
- 	int		tail_block)
- {
- 	char		*offset;
--	xfs_buf_t	*bp;
-+	char		*bp;
- 	int		balign, ealign;
- 	int		sectbb = log->l_sectBBsize;
- 	int		end_block = start_block + blocks;
-@@ -1699,15 +1696,14 @@ xlog_write_log_records(
- 		 */
- 		ealign = round_down(end_block, sectbb);
- 		if (j == 0 && (start_block + endcount > ealign)) {
--			offset = bp->b_addr + BBTOB(ealign - start_block);
--			error = xlog_bread_offset(log, ealign, sectbb,
--							bp, offset);
-+			error = xlog_bread_noalign(log, ealign, sectbb,
-+					bp + BBTOB(ealign - start_block));
- 			if (error)
- 				break;
+ void
+@@ -1436,21 +1359,8 @@ _xfs_buf_ioapply(
+ 	 */
+ 	bp->b_error = 0;
  
- 		}
+-	/*
+-	 * Initialize the I/O completion workqueue if we haven't yet or the
+-	 * submitter has not opted to specify a custom one.
+-	 */
+-	if (!bp->b_ioend_wq)
+-		bp->b_ioend_wq = bp->b_target->bt_mount->m_buf_workqueue;
+-
+ 	if (bp->b_flags & XBF_WRITE) {
+ 		op = REQ_OP_WRITE;
+-		if (bp->b_flags & XBF_SYNCIO)
+-			op_flags = REQ_SYNC;
+-		if (bp->b_flags & XBF_FUA)
+-			op_flags |= REQ_FUA;
+-		if (bp->b_flags & XBF_FLUSH)
+-			op_flags |= REQ_PREFLUSH;
  
--		offset = bp->b_addr + xlog_align(log, start_block);
-+		offset = bp + xlog_align(log, start_block);
- 		for (; j < endcount; j++) {
- 			xlog_add_record(log, offset, cycle, i+j,
- 					tail_cycle, tail_block);
-@@ -5301,7 +5297,7 @@ xlog_do_recovery_pass(
- 	xfs_daddr_t		blk_no, rblk_no;
- 	xfs_daddr_t		rhead_blk;
- 	char			*offset;
--	xfs_buf_t		*hbp, *dbp;
-+	char			*hbp, *dbp;
- 	int			error = 0, h_size, h_len;
- 	int			error2 = 0;
- 	int			bblks, split_bblks;
-@@ -5399,7 +5395,7 @@ xlog_do_recovery_pass(
- 			/*
- 			 * Check for header wrapping around physical end-of-log
- 			 */
--			offset = hbp->b_addr;
-+			offset = hbp;
- 			split_hblks = 0;
- 			wrapped_hblks = 0;
- 			if (blk_no + hblks <= log->l_logBBsize) {
-@@ -5435,8 +5431,8 @@ xlog_do_recovery_pass(
- 				 *   - order is important.
- 				 */
- 				wrapped_hblks = hblks - split_hblks;
--				error = xlog_bread_offset(log, 0,
--						wrapped_hblks, hbp,
-+				error = xlog_bread_noalign(log, 0,
-+						wrapped_hblks,
- 						offset + BBTOB(split_hblks));
- 				if (error)
- 					goto bread_err2;
-@@ -5467,7 +5463,7 @@ xlog_do_recovery_pass(
- 			} else {
- 				/* This log record is split across the
- 				 * physical end of log */
--				offset = dbp->b_addr;
-+				offset = dbp;
- 				split_bblks = 0;
- 				if (blk_no != log->l_logBBsize) {
- 					/* some data is before the physical
-@@ -5496,8 +5492,8 @@ xlog_do_recovery_pass(
- 				 *   _first_, then the log start (LR header end)
- 				 *   - order is important.
- 				 */
--				error = xlog_bread_offset(log, 0,
--						bblks - split_bblks, dbp,
-+				error = xlog_bread_noalign(log, 0,
-+						bblks - split_bblks,
- 						offset + BBTOB(split_bblks));
- 				if (error)
- 					goto bread_err2;
+ 		/*
+ 		 * Run the write verifier callback function if it exists. If
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 61691d9a5bc9..2440c3ab85a8 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -30,11 +30,6 @@
+ #define XBF_STALE	 (1 << 6) /* buffer has been staled, do not find it */
+ #define XBF_WRITE_FAIL	 (1 << 7) /* async writes have failed on this buffer */
+ 
+-/* I/O hints for the BIO layer */
+-#define XBF_SYNCIO	 (1 << 10)/* treat this buffer as synchronous I/O */
+-#define XBF_FUA		 (1 << 11)/* force cache write through mode */
+-#define XBF_FLUSH	 (1 << 12)/* flush the disk cache before a write */
+-
+ /* flags used only as arguments to access routines */
+ #define XBF_TRYLOCK	 (1 << 16)/* lock requested, but do not wait */
+ #define XBF_UNMAPPED	 (1 << 17)/* do not map the buffer */
+@@ -55,9 +50,6 @@ typedef unsigned int xfs_buf_flags_t;
+ 	{ XBF_DONE,		"DONE" }, \
+ 	{ XBF_STALE,		"STALE" }, \
+ 	{ XBF_WRITE_FAIL,	"WRITE_FAIL" }, \
+-	{ XBF_SYNCIO,		"SYNCIO" }, \
+-	{ XBF_FUA,		"FUA" }, \
+-	{ XBF_FLUSH,		"FLUSH" }, \
+ 	{ XBF_TRYLOCK,		"TRYLOCK" },	/* should never be set */\
+ 	{ XBF_UNMAPPED,		"UNMAPPED" },	/* ditto */\
+ 	{ _XBF_PAGES,		"PAGES" }, \
+@@ -156,7 +148,6 @@ typedef struct xfs_buf {
+ 	xfs_buftarg_t		*b_target;	/* buffer target (device) */
+ 	void			*b_addr;	/* virtual address of buffer */
+ 	struct work_struct	b_ioend_work;
+-	struct workqueue_struct	*b_ioend_wq;	/* I/O completion wq */
+ 	xfs_buf_iodone_t	b_iodone;	/* I/O completion function */
+ 	struct completion	b_iowait;	/* queue for I/O waiters */
+ 	void			*b_log_item;
+@@ -201,21 +192,6 @@ struct xfs_buf *xfs_buf_incore(struct xfs_buftarg *target,
+ 			   xfs_daddr_t blkno, size_t numblks,
+ 			   xfs_buf_flags_t flags);
+ 
+-struct xfs_buf *_xfs_buf_alloc(struct xfs_buftarg *target,
+-			       struct xfs_buf_map *map, int nmaps,
+-			       xfs_buf_flags_t flags);
+-
+-static inline struct xfs_buf *
+-xfs_buf_alloc(
+-	struct xfs_buftarg	*target,
+-	xfs_daddr_t		blkno,
+-	size_t			numblks,
+-	xfs_buf_flags_t		flags)
+-{
+-	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+-	return _xfs_buf_alloc(target, &map, 1, flags);
+-}
+-
+ struct xfs_buf *xfs_buf_get_map(struct xfs_buftarg *target,
+ 			       struct xfs_buf_map *map, int nmaps,
+ 			       xfs_buf_flags_t flags);
+@@ -261,9 +237,6 @@ xfs_buf_readahead(
+ 	return xfs_buf_readahead_map(target, &map, 1, ops);
+ }
+ 
+-void xfs_buf_set_empty(struct xfs_buf *bp, size_t numblks);
+-int xfs_buf_associate_memory(struct xfs_buf *bp, void *mem, size_t length);
+-
+ struct xfs_buf *xfs_buf_get_uncached(struct xfs_buftarg *target, size_t numblks,
+ 				int flags);
+ int xfs_buf_read_uncached(struct xfs_buftarg *target, xfs_daddr_t daddr,
 -- 
 2.20.1
 
