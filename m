@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C495243FB
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 01:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD66243FC
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 01:16:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfETXQw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 19:16:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37968 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfETXQw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 19:16:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNDdj9148845;
-        Mon, 20 May 2019 23:16:50 GMT
+        id S1726619AbfETXQ7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 19:16:59 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:36684 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfETXQ7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 19:16:59 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNDd3l149416;
+        Mon, 20 May 2019 23:16:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=I7bBs7Pp4CXb4u2L0b2cYmvy0TI1U5RivE+qjJbLuSM=;
- b=g7w50XqQOPobxjlZC+WIYyipkPNNCxaYr8759TTyRGV4zqgyzToZDyQFvx/XH4N9vGat
- ixydRHvx5N+e26jbUucJGfkS6qJE6lrUahoiIVDd8ZmQbpYdfMmNomjezNfxckM6O+lG
- 0alClmxL9VWZV+IOZCg0W1MCPEBYmeqGrsK2xnmBx/ZvkKzoX7PzBi9g7tap5W4rPxlZ
- JNAgBdBsh1hsZGnZnQJ0GHrQBrh8uBB9ABBICf+1IdOVDlpnXXCgLNgFHydGdOjYz/dx
- qWvPfwHyWa6PityqxUW8O7XO7wZHrgsTTmRTBi4CjxsVEpAlikEJKI7PzTH4NyH+hhf7 hA== 
+ bh=U6aZPRA1tcsHj/SJco3N1TpoUoLMGsBC0uwqQ1AWdH4=;
+ b=3/nFtTDiDX/r2tyAvA5TTFCoq5DMEq02yYflYIG2I+rb8HLp8dBt+XrIX+FISTQD0MQd
+ iiulcql4TdaaldLx9bV5D1P6YH/CFo58lXWwI7CNG79GrFmkOi2Em382lK8JC+gdn1Wd
+ SQyTj7WZRxcEuxa3o0Ct3M3ikuPWEsmxZ/fk7HN2H7f3TO7jiUZUlsKQZgT1P9Vbf7qg
+ XQqTkQ7XDYBKDOSJaZ+NSJMKRLrGc/WBxRqEAJ+zh8kXnsqjwlGakMcaCclJGb2NOxMM
+ mkU4IEcw39PMohxpZdV/XEoRs0iui/Svaq4NaxWZVQAIQAP0PjAtqA5OAh2GLuRXooDn 1w== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2sjapq9u8j-1
+        by aserp2130.oracle.com with ESMTP id 2sj7jdj5hh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:16:50 +0000
+        Mon, 20 May 2019 23:16:56 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNFUsM118772;
-        Mon, 20 May 2019 23:16:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2sks1xv84j-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNFSqc118605;
+        Mon, 20 May 2019 23:16:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2sks1xv86g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:16:49 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KNGmNU015206;
-        Mon, 20 May 2019 23:16:48 GMT
+        Mon, 20 May 2019 23:16:56 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KNGtk6021844;
+        Mon, 20 May 2019 23:16:55 GMT
 Received: from localhost (/10.159.247.197)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 23:16:48 +0000
-Subject: [PATCH 01/12] libxfs: fix attr include mess
+        with ESMTP ; Mon, 20 May 2019 23:16:54 +0000
+Subject: [PATCH 02/12] libxfs: set m_finobt_nores when initializing library
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 20 May 2019 16:16:47 -0700
-Message-ID: <155839420721.68606.5873005194118073203.stgit@magnolia>
+Date:   Mon, 20 May 2019 16:16:53 -0700
+Message-ID: <155839421389.68606.12844536360638603273.stgit@magnolia>
 In-Reply-To: <155839420081.68606.4573219764134939943.stgit@magnolia>
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,95 +70,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Remove all the userspace xfs_attr shim cruft so that we have one
-definition of ATTR_* macros so that we can actually use xfs_attr.c
-routines and include xfs_attr.h without problems.
+We don't generally set up per-ag reservations in userspace, so set this
+flag to true to force transactions to set up block reservations.  This
+isn't necessary for userspace (since we never touch the finobt) but we
+shouldn't leave a logic bomb.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- include/libxfs.h         |   10 +---------
- libxfs/libxfs_api_defs.h |    5 +++++
- libxfs/libxfs_priv.h     |    8 --------
- libxfs/xfs_attr.c        |    1 +
- libxfs/xfs_attr_leaf.c   |    1 +
- 5 files changed, 8 insertions(+), 17 deletions(-)
+ libxfs/init.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 230bc3e8..dd5fe542 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -211,14 +211,6 @@ libxfs_bmbt_disk_get_all(
- int libxfs_rtfree_extent(struct xfs_trans *, xfs_rtblock_t, xfs_extlen_t);
- bool libxfs_verify_rtbno(struct xfs_mount *mp, xfs_rtblock_t rtbno);
+diff --git a/libxfs/init.c b/libxfs/init.c
+index 2f6decc8..1baccb31 100644
+--- a/libxfs/init.c
++++ b/libxfs/init.c
+@@ -640,6 +640,7 @@ libxfs_mount(
  
--/* XXX: need parts of xfs_attr.h in userspace */
--#define LIBXFS_ATTR_ROOT	0x0002	/* use attrs in root namespace */
--#define LIBXFS_ATTR_SECURE	0x0008	/* use attrs in security namespace */
--#define LIBXFS_ATTR_CREATE	0x0010	/* create, but fail if attr exists */
--#define LIBXFS_ATTR_REPLACE	0x0020	/* set, but fail if attr not exists */
--
--int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
--int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
--		 unsigned char *value, int valuelen, int flags);
-+#include "xfs_attr.h"
+ 	libxfs_buftarg_init(mp, dev, logdev, rtdev);
  
- #endif	/* __LIBXFS_H__ */
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 1150ec93..34bb552d 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -144,4 +144,9 @@
- #define xfs_fs_geometry			libxfs_fs_geometry
- #define xfs_init_local_fork		libxfs_init_local_fork
- 
-+#define LIBXFS_ATTR_ROOT		ATTR_ROOT
-+#define LIBXFS_ATTR_SECURE		ATTR_SECURE
-+#define LIBXFS_ATTR_CREATE		ATTR_CREATE
-+#define LIBXFS_ATTR_REPLACE		ATTR_REPLACE
-+
- #endif /* __LIBXFS_API_DEFS_H__ */
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index d668a157..f60bff06 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -104,14 +104,6 @@ extern char    *progname;
-  */
- #define PTR_FMT "%p"
- 
--/* XXX: need to push these out to make LIBXFS_ATTR defines */
--#define ATTR_ROOT			0x0002
--#define ATTR_SECURE			0x0008
--#define ATTR_CREATE			0x0010
--#define ATTR_REPLACE			0x0020
--#define ATTR_KERNOTIME			0
--#define ATTR_KERNOVAL			0
--
- #define XFS_IGET_CREATE			0x1
- #define XFS_IGET_UNTRUSTED		0x2
- 
-diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index b8838302..170e64cf 100644
---- a/libxfs/xfs_attr.c
-+++ b/libxfs/xfs_attr.c
-@@ -20,6 +20,7 @@
- #include "xfs_trans.h"
- #include "xfs_bmap.h"
- #include "xfs_bmap_btree.h"
-+#include "xfs_attr.h"
- #include "xfs_attr_leaf.h"
- #include "xfs_attr_remote.h"
- #include "xfs_trans_space.h"
-diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
-index 679c7d0d..1027ca01 100644
---- a/libxfs/xfs_attr_leaf.c
-+++ b/libxfs/xfs_attr_leaf.c
-@@ -21,6 +21,7 @@
- #include "xfs_bmap.h"
- #include "xfs_attr_sf.h"
- #include "xfs_attr_remote.h"
-+#include "xfs_attr.h"
- #include "xfs_attr_leaf.h"
- #include "xfs_trace.h"
- #include "xfs_cksum.h"
++	mp->m_finobt_nores = true;
+ 	mp->m_flags = (LIBXFS_MOUNT_32BITINODES|LIBXFS_MOUNT_32BITINOOPT);
+ 	mp->m_sb = *sb;
+ 	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_KERNEL);
 
