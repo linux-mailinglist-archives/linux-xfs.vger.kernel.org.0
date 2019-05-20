@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD3724403
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 01:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74FC524404
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 01:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfETXR3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 19:17:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38504 "EHLO
+        id S1727173AbfETXRg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 19:17:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38600 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfETXR3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 19:17:29 -0400
+        with ESMTP id S1726584AbfETXRf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 19:17:35 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNDX8b148806;
-        Mon, 20 May 2019 23:17:27 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNDX5D148824;
+        Mon, 20 May 2019 23:17:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=RE0UWsd4CGApxv3/8Y0/vntT8CCMxx5DTQNzrIegokg=;
- b=M54yOtnyxo5daK0lCO4V33RkIt4XycZ6okqlsPZK3udFu46WBoy+02RVeo6RUwl339UC
- GGrmY2WeLUirp7Z07IhbaFjdCjw2cXPlPOkyHXIDz2WR8miooe+8h5Kek5Dz0gYWBUtY
- HN/hcjEZX/6HZv9ToGPIqzZn/5nG5DnnA0Ej1FFeh3JKsgRN16u6gRl6/jRStx1EeBIW
- hjbguJ5fk6DQvZgcvhoUwfsO7wVEPB3ou8MRfFByI2krpydRnOYgNfIU2xmCXU49gRfK
- 1onb5madw4/+WuKacZ+IkL89tWYyQFJLezFwHVlhLA9dbIyIbVEMnyNz4p5XimOzYnrp LQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2sjapq9ub8-1
+ bh=Okru09u4Z/UKpPNO29JaL1W7hlb5tppeuFV5VIcp7/g=;
+ b=teajE8wsq57m0Q1is1fQGhAIFieMoEQQnq804VU/SvGAtut3RrtlvIAr4QFxwOtJXN0a
+ kYrT68OS4MuljUOr/4ykkd+sjLPGo0Cfj8c/jx10VepEuCfRNz4h2SL8jvym2R+Wdm2b
+ 2ChNx2NRmzWPs/LxWiSsI9AbjD7hswN5TgyIc7rMpud9V8dmSWoH5HdqCZyYQySGo/L/
+ PBng04D9PrhtUrC5Rv7hGmMYQDp177IKWNAJq0wgppI0G3DRWZUrVHc5S8W362yqr88p
+ 5jAdS4WPIMBdqDqCAEVRxGuwY+pcCNwN5UGae5blXUuLkHgpJ/jT7mzknuPddiUKiKuZ oA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2sjapq9ubr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:17:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNGoOu074188;
-        Mon, 20 May 2019 23:17:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2skudb28hp-1
+        Mon, 20 May 2019 23:17:33 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNHT6v123684;
+        Mon, 20 May 2019 23:17:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2sks1xv8kx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:17:26 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KNHQhQ007982;
-        Mon, 20 May 2019 23:17:26 GMT
+        Mon, 20 May 2019 23:17:32 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KNHWNk015672;
+        Mon, 20 May 2019 23:17:32 GMT
 Received: from localhost (/10.159.247.197)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 23:17:26 +0000
-Subject: [PATCH 07/12] libfrog: fix bitmap return values
+        with ESMTP ; Mon, 20 May 2019 23:17:32 +0000
+Subject: [PATCH 08/12] xfs_repair: refactor namecheck functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 20 May 2019 16:17:25 -0700
-Message-ID: <155839424514.68606.14562327454853103352.stgit@magnolia>
+Date:   Mon, 20 May 2019 16:17:31 -0700
+Message-ID: <155839425128.68606.14448412166622032502.stgit@magnolia>
 In-Reply-To: <155839420081.68606.4573219764134939943.stgit@magnolia>
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +53,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1905200142
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905200142
@@ -70,328 +70,186 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Fix the return types of non-predicate bitmap functions to return the
-usual negative error codes instead of the "moveon" boolean.
+Now that we have name check functions in libxfs, use them instead of our
+custom versions.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- include/bitmap.h |    8 +++--
- libfrog/bitmap.c |   86 ++++++++++++++++++++++++++----------------------------
- repair/rmap.c    |   18 ++++++++---
- scrub/phase6.c   |   18 ++++-------
- 4 files changed, 65 insertions(+), 65 deletions(-)
+ libxfs/libxfs_api_defs.h |    2 ++
+ repair/attr_repair.c     |   32 +++++++++++++-------------------
+ repair/da_util.c         |   27 ---------------------------
+ repair/da_util.h         |    6 ------
+ repair/dir2.c            |   12 ++----------
+ 5 files changed, 17 insertions(+), 62 deletions(-)
 
 
-diff --git a/include/bitmap.h b/include/bitmap.h
-index e29a4335..99a2fb23 100644
---- a/include/bitmap.h
-+++ b/include/bitmap.h
-@@ -11,11 +11,11 @@ struct bitmap {
- 	struct avl64tree_desc	*bt_tree;
- };
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 34bb552d..71a7ef53 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -143,6 +143,8 @@
+ #define xfs_default_ifork_ops		libxfs_default_ifork_ops
+ #define xfs_fs_geometry			libxfs_fs_geometry
+ #define xfs_init_local_fork		libxfs_init_local_fork
++#define xfs_dir2_namecheck		libxfs_dir2_namecheck
++#define xfs_attr_namecheck		libxfs_attr_namecheck
  
--bool bitmap_init(struct bitmap **bmap);
-+int bitmap_init(struct bitmap **bmap);
- void bitmap_free(struct bitmap **bmap);
--bool bitmap_set(struct bitmap *bmap, uint64_t start, uint64_t length);
--bool bitmap_iterate(struct bitmap *bmap,
--		bool (*fn)(uint64_t, uint64_t, void *), void *arg);
-+int bitmap_set(struct bitmap *bmap, uint64_t start, uint64_t length);
-+int bitmap_iterate(struct bitmap *bmap, int (*fn)(uint64_t, uint64_t, void *),
-+		void *arg);
- bool bitmap_test(struct bitmap *bmap, uint64_t start,
- 		uint64_t len);
- bool bitmap_empty(struct bitmap *bmap);
-diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
-index 450ebe0a..4dafc4c9 100644
---- a/libfrog/bitmap.c
-+++ b/libfrog/bitmap.c
-@@ -66,7 +66,7 @@ static struct avl64ops bitmap_ops = {
- };
+ #define LIBXFS_ATTR_ROOT		ATTR_ROOT
+ #define LIBXFS_ATTR_SECURE		ATTR_SECURE
+diff --git a/repair/attr_repair.c b/repair/attr_repair.c
+index 5ad81c09..9a44f610 100644
+--- a/repair/attr_repair.c
++++ b/repair/attr_repair.c
+@@ -122,14 +122,6 @@ set_da_freemap(xfs_mount_t *mp, da_freemap_t *map, int start, int stop)
+  * fork being emptied and put in shortform format.
+  */
  
- /* Initialize a bitmap. */
--bool
-+int
- bitmap_init(
- 	struct bitmap		**bmapp)
- {
-@@ -74,18 +74,18 @@ bitmap_init(
- 
- 	bmap = calloc(1, sizeof(struct bitmap));
- 	if (!bmap)
--		return false;
-+		return -ENOMEM;
- 	bmap->bt_tree = malloc(sizeof(struct avl64tree_desc));
- 	if (!bmap->bt_tree) {
- 		free(bmap);
--		return false;
-+		return -ENOMEM;
- 	}
- 
- 	pthread_mutex_init(&bmap->bt_lock, NULL);
- 	avl64_init_tree(bmap->bt_tree, &bitmap_ops);
- 	*bmapp = bmap;
- 
--	return true;
-+	return 0;
- }
- 
- /* Free a bitmap. */
-@@ -127,8 +127,31 @@ bitmap_node_init(
- 	return ext;
- }
- 
-+/* Create a new bitmap node and insert it. */
-+static inline int
-+__bitmap_insert(
-+	struct bitmap		*bmap,
-+	uint64_t		start,
-+	uint64_t		length)
-+{
-+	struct bitmap_node	*ext;
-+	struct avl64node	*node;
-+
-+	ext = bitmap_node_init(start, length);
-+	if (!ext)
-+		return -ENOMEM;
-+
-+	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
-+	if (node == NULL) {
-+		free(ext);
-+		return -EEXIST;
-+	}
-+
-+	return 0;
-+}
-+
- /* Set a region of bits (locked). */
--static bool
-+static int
- __bitmap_set(
- 	struct bitmap		*bmap,
- 	uint64_t		start,
-@@ -142,28 +165,14 @@ __bitmap_set(
- 	struct bitmap_node	*ext;
- 	uint64_t		new_start;
- 	uint64_t		new_length;
--	struct avl64node	*node;
--	bool			res = true;
- 
- 	/* Find any existing nodes adjacent or within that range. */
- 	avl64_findranges(bmap->bt_tree, start - 1, start + length + 1,
- 			&firstn, &lastn);
- 
- 	/* Nothing, just insert a new extent. */
--	if (firstn == NULL && lastn == NULL) {
--		ext = bitmap_node_init(start, length);
--		if (!ext)
--			return false;
+-static int
+-attr_namecheck(
+-	uint8_t	*name,
+-	int	length)
+-{
+-	return namecheck((char *)name, length, false);
+-}
 -
--		node = avl64_insert(bmap->bt_tree, &ext->btn_node);
--		if (node == NULL) {
--			free(ext);
--			errno = EEXIST;
--			return false;
--		}
--
--		return true;
--	}
-+	if (firstn == NULL && lastn == NULL)
-+		return __bitmap_insert(bmap, start, length);
- 
- 	assert(firstn != NULL && lastn != NULL);
- 	new_start = start;
-@@ -175,7 +184,7 @@ __bitmap_set(
- 		/* Bail if the new extent is contained within an old one. */
- 		if (ext->btn_start <= start &&
- 		    ext->btn_start + ext->btn_length >= start + length)
--			return res;
-+			return 0;
- 
- 		/* Check for overlapping and adjacent extents. */
- 		if (ext->btn_start + ext->btn_length >= start ||
-@@ -195,28 +204,17 @@ __bitmap_set(
+ /*
+  * This routine just checks what security needs are for attribute values
+  * only called when root flag is set, otherwise these names could exist in
+@@ -301,8 +293,8 @@ process_shortform_attr(
  		}
- 	}
  
--	ext = bitmap_node_init(new_start, new_length);
--	if (!ext)
--		return false;
+ 		/* namecheck checks for null chars in attr names. */
+-		if (attr_namecheck(currententry->nameval,
+-						currententry->namelen)) {
++		if (!libxfs_attr_namecheck(currententry->nameval,
++					   currententry->namelen)) {
+ 			do_warn(
+ 	_("entry contains illegal character in shortform attribute name\n"));
+ 			junkit = 1;
+@@ -464,8 +456,9 @@ process_leaf_attr_local(
+ 	xfs_attr_leaf_name_local_t *local;
+ 
+ 	local = xfs_attr3_leaf_name_local(leaf, i);
+-	if (local->namelen == 0 || attr_namecheck(local->nameval,
+-							local->namelen)) {
++	if (local->namelen == 0 ||
++	    !libxfs_attr_namecheck(local->nameval,
++				   local->namelen)) {
+ 		do_warn(
+ 	_("attribute entry %d in attr block %u, inode %" PRIu64 " has bad name (namelen = %d)\n"),
+ 			i, da_bno, ino, local->namelen);
+@@ -519,13 +512,14 @@ process_leaf_attr_remote(
+ 
+ 	remotep = xfs_attr3_leaf_name_remote(leaf, i);
+ 
+-	if (remotep->namelen == 0 || attr_namecheck(remotep->name,
+-						remotep->namelen) ||
+-			be32_to_cpu(entry->hashval) !=
+-				libxfs_da_hashname((unsigned char *)&remotep->name[0],
+-						remotep->namelen) ||
+-			be32_to_cpu(entry->hashval) < last_hashval ||
+-			be32_to_cpu(remotep->valueblk) == 0) {
++	if (remotep->namelen == 0 ||
++	    !libxfs_attr_namecheck(remotep->name,
++				   remotep->namelen) ||
++	    be32_to_cpu(entry->hashval) !=
++			libxfs_da_hashname((unsigned char *)&remotep->name[0],
++					   remotep->namelen) ||
++	    be32_to_cpu(entry->hashval) < last_hashval ||
++	    be32_to_cpu(remotep->valueblk) == 0) {
+ 		do_warn(
+ 	_("inconsistent remote attribute entry %d in attr block %u, ino %" PRIu64 "\n"), i, da_bno, ino);
+ 		return -1;
+diff --git a/repair/da_util.c b/repair/da_util.c
+index 4a258e58..8c818ea1 100644
+--- a/repair/da_util.c
++++ b/repair/da_util.c
+@@ -12,33 +12,6 @@
+ #include "bmap.h"
+ #include "da_util.h"
+ 
+-/*
+- * Takes a name and length (name need not be null-terminated) and whether
+- * we are checking a dir (as opposed to an attr).
+- * Returns 1 if the name contains a NUL or if a directory entry contains a '/'.
+- * Returns 0 if the name checks out.
+- */
+-int
+-namecheck(
+-	char	*name,
+-	int	length,
+-	bool	isadir)
+-{
+-	char	*c;
+-	int	i;
 -
--	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
--	if (node == NULL) {
--		free(ext);
--		errno = EEXIST;
--		return false;
+-	ASSERT(length < MAXNAMELEN);
+-
+-	for (c = name, i = 0; i < length; i++, c++) {
+-		if (isadir && *c == '/')
+-			return 1;
+-		if (*c == '\0')
+-			return 1;
 -	}
 -
--	return res;
-+	return __bitmap_insert(bmap, new_start, new_length);
+-	return 0;
+-}
+-
+ /*
+  * the cursor gets passed up and down the da btree processing
+  * routines.  The interior block processing routines use the
+diff --git a/repair/da_util.h b/repair/da_util.h
+index 041dff74..90fec00c 100644
+--- a/repair/da_util.h
++++ b/repair/da_util.h
+@@ -24,12 +24,6 @@ typedef struct da_bt_cursor {
+ 	struct blkmap		*blkmap;
+ } da_bt_cursor_t;
+ 
+-int
+-namecheck(
+-	char		*name,
+-	int		length,
+-	bool		isadir);
+-
+ struct xfs_buf *
+ da_read_buf(
+ 	xfs_mount_t	*mp,
+diff --git a/repair/dir2.c b/repair/dir2.c
+index 094ecb3d..4ac0084e 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -44,14 +44,6 @@ _("malloc failed (%zu bytes) dir2_add_badlist:ino %" PRIu64 "\n"),
+ 	l->ino = ino;
  }
  
- /* Set a region of bits. */
--bool
-+int
- bitmap_set(
- 	struct bitmap		*bmap,
- 	uint64_t		start,
- 	uint64_t		length)
- {
--	bool			res;
-+	int			res;
- 
- 	pthread_mutex_lock(&bmap->bt_lock);
- 	res = __bitmap_set(bmap, start, length);
-@@ -308,26 +306,26 @@ bitmap_clear(
- 
- #ifdef DEBUG
- /* Iterate the set regions of this bitmap. */
--bool
-+int
- bitmap_iterate(
- 	struct bitmap		*bmap,
--	bool			(*fn)(uint64_t, uint64_t, void *),
-+	int			(*fn)(uint64_t, uint64_t, void *),
- 	void			*arg)
- {
- 	struct avl64node	*node;
- 	struct bitmap_node	*ext;
--	bool			moveon = true;
-+	int			error = 0;
- 
- 	pthread_mutex_lock(&bmap->bt_lock);
- 	avl_for_each(bmap->bt_tree, node) {
- 		ext = container_of(node, struct bitmap_node, btn_node);
--		moveon = fn(ext->btn_start, ext->btn_length, arg);
--		if (!moveon)
-+		error = fn(ext->btn_start, ext->btn_length, arg);
-+		if (error)
- 			break;
- 	}
- 	pthread_mutex_unlock(&bmap->bt_lock);
- 
--	return moveon;
-+	return error;
- }
- #endif
- 
-@@ -372,14 +370,14 @@ bitmap_empty(
- }
- 
- #ifdef DEBUG
--static bool
-+static int
- bitmap_dump_fn(
- 	uint64_t		startblock,
- 	uint64_t		blockcount,
- 	void			*arg)
- {
- 	printf("%"PRIu64":%"PRIu64"\n", startblock, blockcount);
--	return true;
-+	return 0;
- }
- 
- /* Dump bitmap. */
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 19cceca3..47828a06 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -490,16 +490,22 @@ rmap_store_ag_btree_rec(
- 	error = init_slab_cursor(ag_rmap->ar_raw_rmaps, rmap_compare, &rm_cur);
- 	if (error)
- 		goto err;
--	if (!bitmap_init(&own_ag_bitmap)) {
--		error = -ENOMEM;
-+	error = -bitmap_init(&own_ag_bitmap);
-+	if (error)
- 		goto err_slab;
--	}
- 	while ((rm_rec = pop_slab_cursor(rm_cur)) != NULL) {
- 		if (rm_rec->rm_owner != XFS_RMAP_OWN_AG)
- 			continue;
--		if (!bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
--					rm_rec->rm_blockcount)) {
--			error = EFSCORRUPTED;
-+		error = -bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
-+					rm_rec->rm_blockcount);
-+		if (error) {
-+			/*
-+			 * If this range is already set, then the incore rmap
-+			 * records for the AG free space btrees overlap and
-+			 * we're toast because that is not allowed.
-+			 */
-+			if (error == EEXIST)
-+				error = EFSCORRUPTED;
- 			goto err_slab;
- 		}
- 	}
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 4b25f3bb..66e6451c 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -341,7 +341,6 @@ xfs_check_rmap_ioerr(
- 	struct media_verify_state	*vs = arg;
- 	struct bitmap			*tree;
- 	dev_t				dev;
--	bool				moveon;
- 
- 	dev = xfs_disk_to_dev(ctx, disk);
- 
-@@ -356,8 +355,8 @@ xfs_check_rmap_ioerr(
- 	else
- 		tree = NULL;
- 	if (tree) {
--		moveon = bitmap_set(tree, start, length);
--		if (!moveon)
-+		errno = -bitmap_set(tree, start, length);
-+		if (errno)
- 			str_errno(ctx, ctx->mntpoint);
- 	}
- 
-@@ -454,16 +453,16 @@ xfs_scan_blocks(
- 	struct scrub_ctx		*ctx)
- {
- 	struct media_verify_state	vs = { NULL };
--	bool				moveon;
-+	bool				moveon = false;
- 
--	moveon = bitmap_init(&vs.d_bad);
--	if (!moveon) {
-+	errno = -bitmap_init(&vs.d_bad);
-+	if (errno) {
- 		str_errno(ctx, ctx->mntpoint);
- 		goto out;
- 	}
- 
--	moveon = bitmap_init(&vs.r_bad);
--	if (!moveon) {
-+	errno = -bitmap_init(&vs.r_bad);
-+	if (errno) {
- 		str_errno(ctx, ctx->mntpoint);
- 		goto out_dbad;
- 	}
-@@ -472,7 +471,6 @@ xfs_scan_blocks(
- 			ctx->geo.blocksize, xfs_check_rmap_ioerr,
- 			scrub_nproc(ctx));
- 	if (!vs.rvp_data) {
--		moveon = false;
- 		str_info(ctx, ctx->mntpoint,
- _("Could not create data device media verifier."));
- 		goto out_rbad;
-@@ -482,7 +480,6 @@ _("Could not create data device media verifier."));
- 				ctx->geo.blocksize, xfs_check_rmap_ioerr,
- 				scrub_nproc(ctx));
- 		if (!vs.rvp_log) {
--			moveon = false;
- 			str_info(ctx, ctx->mntpoint,
- 	_("Could not create log device media verifier."));
- 			goto out_datapool;
-@@ -493,7 +490,6 @@ _("Could not create data device media verifier."));
- 				ctx->geo.blocksize, xfs_check_rmap_ioerr,
- 				scrub_nproc(ctx));
- 		if (!vs.rvp_realtime) {
--			moveon = false;
- 			str_info(ctx, ctx->mntpoint,
- 	_("Could not create realtime device media verifier."));
- 			goto out_logpool;
+-static int
+-dir_namecheck(
+-	uint8_t	*name,
+-	int	length)
+-{
+-	return namecheck((char *)name, length, true);
+-}
+-
+ int
+ dir2_is_badino(
+ 	xfs_ino_t	ino)
+@@ -318,7 +310,7 @@ _("entry #%d %s in shortform dir %" PRIu64),
+ 		 * the length value is stored in a byte
+ 		 * so it can't be too big, it can only wrap
+ 		 */
+-		if (dir_namecheck(sfep->name, namelen)) {
++		if (!libxfs_dir2_namecheck(sfep->name, namelen)) {
+ 			/*
+ 			 * junk entry
+ 			 */
+@@ -789,7 +781,7 @@ _("\twould clear inode number in entry at offset %" PRIdPTR "...\n"),
+ 		 * during phase 4.
+ 		 */
+ 		junkit = dep->name[0] == '/';
+-		nm_illegal = dir_namecheck(dep->name, dep->namelen);
++		nm_illegal = !libxfs_dir2_namecheck(dep->name, dep->namelen);
+ 		if (ino_discovery && nm_illegal) {
+ 			do_warn(
+ _("entry at block %u offset %" PRIdPTR " in directory inode %" PRIu64 " has illegal name \"%*.*s\": "),
 
