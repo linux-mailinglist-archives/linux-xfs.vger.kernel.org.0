@@ -2,175 +2,425 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64439243CC
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 00:58:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16798243DE
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 01:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfETW6g (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 18:58:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36938 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfETW6g (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 18:58:36 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE5A6356D2;
-        Mon, 20 May 2019 22:58:30 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71D28611C3;
-        Mon, 20 May 2019 22:58:30 +0000 (UTC)
-Subject: Re: [PATCH 6/3] libxfs: factor common xfs_trans_bjoin code
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1727273AbfETXA5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 19:00:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53456 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfETXA5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 19:00:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMxLLx139807;
+        Mon, 20 May 2019 23:00:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=7Nva6T8F+r6nmrxx2ho+qtwFTQDl4mol7pxvY2ohEYE=;
+ b=tDoUDIHkBjtYJkYvuopCf9LqigUSDNXg4YuLed0BY+ogd1wtruXOnokjyYA9ZnfQfEGl
+ OHgrntCC7ATSllY58GdW3djBaEXmhTEG9rqu0a9l0rUWpz4kQ08WHhA38xjTSVNWekMF
+ f2X1qzE4G/2K0ZJtXZ9w+KDEfoYgDAZhBVHOoevH1WYIFC6yTEjWCHVz+Xh3cP9mjU0k
+ TqvYXjBQLgrEk0iNoxvg5eppC+DeZDx5+/Usl3TYvarFZDOOC/cEPF1U4qaeeY9wvbpE
+ h4oOkKBPP1c8lTSrrIQgil3UHxWWp2mEaWvYu5EUEtTc5OA1YWtAOrPqaID3FxkJhv8+ zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2sjapq9ss0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 23:00:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KMxkGd028316;
+        Mon, 20 May 2019 23:00:49 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2sks1j42wm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 23:00:49 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KN0mRR012067;
+        Mon, 20 May 2019 23:00:49 GMT
+Received: from localhost (/10.159.247.197)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 May 2019 23:00:48 +0000
+Date:   Mon, 20 May 2019 16:00:47 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@redhat.com>
 Cc:     linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 10/3] libxfs: share kernel's xfs_trans_inode.c
+Message-ID: <20190520230043.GH5335@magnolia>
 References: <8fc2eb9e-78c4-df39-3b8f-9109720ab680@redhat.com>
- <3a54f934-5651-d709-1503-b583f9e044e9@redhat.com>
- <20190520225620.GG5335@magnolia>
-From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <467b059a-e99c-a2dc-5c63-606212e5505f@redhat.com>
-Date:   Mon, 20 May 2019 17:58:29 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+ <f26c134c-2e06-4985-8f31-e067ce5d6956@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520225620.GG5335@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 20 May 2019 22:58:35 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f26c134c-2e06-4985-8f31-e067ce5d6956@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905200140
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905200141
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/20/19 5:56 PM, Darrick J. Wong wrote:
-> On Thu, May 16, 2019 at 03:39:49PM -0500, Eric Sandeen wrote:
->> Most of xfs_trans_bjoin is duplicated in xfs_trans_get_buf_map,
->> xfs_trans_getsb and xfs_trans_read_buf_map.  Add a new
->> _xfs_trans_bjoin which can be called by all three functions.
->>
->> Source kernel commit: d7e84f413726876c0ec66bbf90770f69841f7663
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> Reviewed-by: Dave Chinner <david@fromorbit.com>
->> Signed-off-by: Alex Elder <aelder@sgi.com>
->> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
->> ---
->>  libxfs/trans.c | 53 +++++++++++++++++++++++++++++++++++++-------------
->>  1 file changed, 39 insertions(+), 14 deletions(-)
->>
->> diff --git a/libxfs/trans.c b/libxfs/trans.c
->> index f3c28fa7..f78222fd 100644
->> --- a/libxfs/trans.c
->> +++ b/libxfs/trans.c
->> @@ -537,19 +537,50 @@ xfs_trans_binval(
->>  	tp->t_flags |= XFS_TRANS_DIRTY;
->>  }
->>  
->> -void
->> -xfs_trans_bjoin(
->> -	xfs_trans_t		*tp,
->> -	xfs_buf_t		*bp)
->> +/*
->> + * Add the locked buffer to the transaction.
->> + *
->> + * The buffer must be locked, and it cannot be associated with any
->> + * transaction.
->> + *
->> + * If the buffer does not yet have a buf log item associated with it,
->> + * then allocate one for it.  Then add the buf item to the transaction.
->> + */
->> +STATIC void
->> +_xfs_trans_bjoin(
->> +	struct xfs_trans	*tp,
->> +	struct xfs_buf		*bp,
->> +	int			reset_recur)
+On Fri, May 17, 2019 at 02:50:15PM -0500, Eric Sandeen wrote:
+> Now that the majority of cosmetic changes and compat shims
+> are in place, we can directly share kernelspace's
+> xfs_trans_inode.c with just a couple more small tweaks.
+> In addition to the file move,
 > 
-> bool?
-
-If you fix it in the kernel I'll merge it to xfsprogs ;)
-
->>  {
->> -	xfs_buf_log_item_t	*bip;
->> +	struct xfs_buf_log_item	*bip;
->>  
->>  	ASSERT(bp->b_transp == NULL);
->>  
->> +        /*
->> +	 * The xfs_buf_log_item pointer is stored in b_log_item.  If
->> +	 * it doesn't have one yet, then allocate one and initialize it.
->> +	 * The checks to see if one is there are in xfs_buf_item_init().
->> +	 */
->>  	xfs_buf_item_init(bp, tp->t_mountp);
->>  	bip = bp->b_log_item;
->> +	if (reset_recur)
->> +		bip->bli_recur = 0;
->> +
->> +	/*
->> +	 * Attach the item to the transaction so we can find it in
->> +	 * xfs_trans_get_buf() and friends.
->> +	 */
->>  	xfs_trans_add_item(tp, (xfs_log_item_t *)bip);
+> * ili_fsync_fields is added to xfs_inode_log_item (but not used)
+> * test_and_set_bit() helper is created
 > 
-> Kill typedef here               ^^^^^^?
-
-ditto.
-
-Point of all this is to match the kernel for easier future syncups.
-
-(oh wait, actually, this is fixed in a later patch, getting rid of the dumb
-cast altogether)
-
--Eric
-
-> --D
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> ---
 > 
->>  	bp->b_transp = tp;
->> +
->> +}
->> +
->> +void
->> +xfs_trans_bjoin(
->> +	struct xfs_trans	*tp,
->> +	struct xfs_buf		*bp)
->> +{
->> +	_xfs_trans_bjoin(tp, bp, 0);
->>  	trace_xfs_trans_bjoin(bp->b_log_item);
->>  }
->>  
->> @@ -594,9 +625,7 @@ xfs_trans_get_buf_map(
->>  	if (bp == NULL)
->>  		return NULL;
->>  
->> -	xfs_trans_bjoin(tp, bp);
->> -	bip = bp->b_log_item;
->> -	bip->bli_recur = 0;
->> +	_xfs_trans_bjoin(tp, bp, 1);
->>  	trace_xfs_trans_get_buf(bp->b_log_item);
->>  	return bp;
->>  }
->> @@ -626,9 +655,7 @@ xfs_trans_getsb(
->>  
->>  	bp = xfs_getsb(mp);
->>  
->> -	xfs_trans_bjoin(tp, bp);
->> -	bip = bp->b_log_item;
->> -	bip->bli_recur = 0;
->> +	_xfs_trans_bjoin(tp, bp, 1);
->>  	trace_xfs_trans_getsb(bp->b_log_item);
->>  	return bp;
->>  }
->> @@ -677,9 +704,7 @@ xfs_trans_read_buf_map(
->>  	if (bp->b_error)
->>  		goto out_relse;
->>  
->> -	xfs_trans_bjoin(tp, bp);
->> -	bip = bp->b_log_item;
->> -	bip->bli_recur = 0;
->> +	_xfs_trans_bjoin(tp, bp, 1);
->>  done:
->>  	trace_xfs_trans_read_buf(bp->b_log_item);
->>  	*bpp = bp;
->> -- 
->> 2.17.0
->>
+> To finish the sync, we probably need to move the file under
+> libxfs/ in kernelspace, and add XFS_ICHGTIME_CREATE handling
+> unless that's deemed undesirable, in which case we can probably
+> just carry the delta in userspace...
 
+I already did that as part of the metadir feature series I sent last
+December... :)
+
+Nevertheless, I eventually need xfs_trans_ichgtime to accept all four of
+the MOD/CHG/CREATE/ACCESS flags, so this is fine.
+
+--D
+
+> diff --git a/include/xfs_trans.h b/include/xfs_trans.h
+> index fe03ba64..cdaa69d8 100644
+> --- a/include/xfs_trans.h
+> +++ b/include/xfs_trans.h
+> @@ -30,8 +30,9 @@ typedef struct xfs_inode_log_item {
+>  	xfs_log_item_t		ili_item;		/* common portion */
+>  	struct xfs_inode	*ili_inode;		/* inode pointer */
+>  	unsigned short		ili_lock_flags;		/* lock flags */
+> -	unsigned int		ili_fields;		/* fields to be logged */
+>  	unsigned int		ili_last_fields;	/* fields when flushed*/
+> +	unsigned int		ili_fields;		/* fields to be logged */
+> +	unsigned int		ili_fsync_fields;	/* ignored by userspace */
+>  } xfs_inode_log_item_t;
+>  
+>  typedef struct xfs_buf_log_item {
+> diff --git a/libxfs/Makefile b/libxfs/Makefile
+> index 160498d7..8c681e0b 100644
+> --- a/libxfs/Makefile
+> +++ b/libxfs/Makefile
+> @@ -93,6 +93,7 @@ CFILES = cache.c \
+>  	xfs_rtbitmap.c \
+>  	xfs_sb.c \
+>  	xfs_symlink_remote.c \
+> +	xfs_trans_inode.c \
+>  	xfs_trans_resv.c \
+>  	xfs_types.c
+>  
+> diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+> index 7551ed65..fc785664 100644
+> --- a/libxfs/libxfs_priv.h
+> +++ b/libxfs/libxfs_priv.h
+> @@ -608,6 +608,15 @@ static inline int test_bit(int nr, const volatile unsigned long *addr)
+>  	return *p & mask;
+>  }
+>  
+> +/* Sets and returns original value of the bit */
+> +static inline int test_and_set_bit(int nr, volatile unsigned long *addr)
+> +{
+> +	if (test_bit(nr, addr))
+> +		return 1;
+> +	set_bit(nr, addr);
+> +	return 0;
+> +}
+> +
+>  /* Keep static checkers quiet about nonstatic functions by exporting */
+>  int xfs_inode_hasattr(struct xfs_inode *ip);
+>  int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+> diff --git a/libxfs/trans.c b/libxfs/trans.c
+> index 6ef4841f..29dd10f7 100644
+> --- a/libxfs/trans.c
+> +++ b/libxfs/trans.c
+> @@ -330,25 +330,6 @@ xfs_trans_cancel(
+>  	xfs_trans_free(tp);
+>  }
+>  
+> -void
+> -xfs_trans_ijoin(
+> -	xfs_trans_t		*tp,
+> -	xfs_inode_t		*ip,
+> -	uint			lock_flags)
+> -{
+> -	xfs_inode_log_item_t	*iip;
+> -
+> -	if (ip->i_itemp == NULL)
+> -		xfs_inode_item_init(ip, ip->i_mount);
+> -	iip = ip->i_itemp;
+> -	ASSERT(iip->ili_inode != NULL);
+> -
+> -	ASSERT(iip->ili_lock_flags == 0);
+> -	iip->ili_lock_flags = lock_flags;
+> -
+> -	xfs_trans_add_item(tp, &iip->ili_item);
+> -}
+> -
+>  void
+>  xfs_trans_inode_alloc_buf(
+>  	xfs_trans_t		*tp,
+> @@ -362,52 +343,6 @@ xfs_trans_inode_alloc_buf(
+>  	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_DINO_BUF);
+>  }
+>  
+> -/*
+> - * This is called to mark the fields indicated in fieldmask as needing
+> - * to be logged when the transaction is committed.  The inode must
+> - * already be associated with the given transaction.
+> - *
+> - * The values for fieldmask are defined in xfs_log_format.h.  We always
+> - * log all of the core inode if any of it has changed, and we always log
+> - * all of the inline data/extents/b-tree root if any of them has changed.
+> - */
+> -void
+> -xfs_trans_log_inode(
+> -	xfs_trans_t		*tp,
+> -	xfs_inode_t		*ip,
+> -	uint			flags)
+> -{
+> -	ASSERT(ip->i_itemp != NULL);
+> -
+> -	tp->t_flags |= XFS_TRANS_DIRTY;
+> -	set_bit(XFS_LI_DIRTY, &ip->i_itemp->ili_item.li_flags);
+> -
+> -	/*
+> -	 * Always OR in the bits from the ili_last_fields field.
+> -	 * This is to coordinate with the xfs_iflush() and xfs_iflush_done()
+> -	 * routines in the eventual clearing of the ilf_fields bits.
+> -	 * See the big comment in xfs_iflush() for an explanation of
+> -	 * this coordination mechanism.
+> -	 */
+> -	flags |= ip->i_itemp->ili_last_fields;
+> -	ip->i_itemp->ili_fields |= flags;
+> -}
+> -
+> -int
+> -xfs_trans_roll_inode(
+> -	struct xfs_trans	**tpp,
+> -	struct xfs_inode	*ip)
+> -{
+> -	int			error;
+> -
+> -	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE);
+> -	error = xfs_trans_roll(tpp);
+> -	if (!error)
+> -		xfs_trans_ijoin(*tpp, ip, 0);
+> -	return error;
+> -}
+> -
+> -
+>  /*
+>   * Mark a buffer dirty in the transaction.
+>   */
+> diff --git a/libxfs/util.c b/libxfs/util.c
+> index 1734ae9a..5a89bd03 100644
+> --- a/libxfs/util.c
+> +++ b/libxfs/util.c
+> @@ -149,33 +149,6 @@ current_time(struct inode *inode)
+>  	return tv;
+>  }
+>  
+> -/*
+> - * Change the requested timestamp in the given inode.
+> - */
+> -void
+> -xfs_trans_ichgtime(
+> -	struct xfs_trans	*tp,
+> -	struct xfs_inode	*ip,
+> -	int			flags)
+> -{
+> -	struct inode		*inode = VFS_I(ip);
+> -	struct timespec64	tv;
+> -
+> -	ASSERT(tp);
+> -	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> -
+> -	tv = current_time(inode);
+> -
+> -	if (flags & XFS_ICHGTIME_MOD)
+> -		VFS_I(ip)->i_mtime = tv;
+> -	if (flags & XFS_ICHGTIME_CHG)
+> -		VFS_I(ip)->i_ctime = tv;
+> -	if (flags & XFS_ICHGTIME_CREATE) {
+> -		ip->i_d.di_crtime.t_sec = (int32_t)tv.tv_sec;
+> -		ip->i_d.di_crtime.t_nsec = (int32_t)tv.tv_nsec;
+> -	}
+> -}
+> -
+>  STATIC uint16_t
+>  xfs_flags2diflags(
+>  	struct xfs_inode	*ip,
+> diff --git a/libxfs/xfs_trans_inode.c b/libxfs/xfs_trans_inode.c
+> new file mode 100644
+> index 00000000..87e6335b
+> --- /dev/null
+> +++ b/libxfs/xfs_trans_inode.c
+> @@ -0,0 +1,155 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2000,2005 Silicon Graphics, Inc.
+> + * All Rights Reserved.
+> + */
+> +#include "libxfs_priv.h"
+> +#include "xfs_fs.h"
+> +#include "xfs_shared.h"
+> +#include "xfs_format.h"
+> +#include "xfs_log_format.h"
+> +#include "xfs_trans_resv.h"
+> +#include "xfs_mount.h"
+> +#include "xfs_inode.h"
+> +#include "xfs_trans.h"
+> +#include "xfs_trace.h"
+> +
+> +/*
+> + * Add a locked inode to the transaction.
+> + *
+> + * The inode must be locked, and it cannot be associated with any transaction.
+> + * If lock_flags is non-zero the inode will be unlocked on transaction commit.
+> + */
+> +void
+> +xfs_trans_ijoin(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_inode	*ip,
+> +	uint			lock_flags)
+> +{
+> +	xfs_inode_log_item_t	*iip;
+> +
+> +	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> +	if (ip->i_itemp == NULL)
+> +		xfs_inode_item_init(ip, ip->i_mount);
+> +	iip = ip->i_itemp;
+> +
+> +	ASSERT(iip->ili_lock_flags == 0);
+> +	iip->ili_lock_flags = lock_flags;
+> +
+> +	/*
+> +	 * Get a log_item_desc to point at the new item.
+> +	 */
+> +	xfs_trans_add_item(tp, &iip->ili_item);
+> +}
+> +
+> +/*
+> + * Transactional inode timestamp update. Requires the inode to be locked and
+> + * joined to the transaction supplied. Relies on the transaction subsystem to
+> + * track dirty state and update/writeback the inode accordingly.
+> + */
+> +void
+> +xfs_trans_ichgtime(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_inode	*ip,
+> +	int			flags)
+> +{
+> +	struct inode		*inode = VFS_I(ip);
+> +	struct timespec64 tv;
+> +
+> +	ASSERT(tp);
+> +	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> +
+> +	tv = current_time(inode);
+> +
+> +	if (flags & XFS_ICHGTIME_MOD)
+> +		inode->i_mtime = tv;
+> +	if (flags & XFS_ICHGTIME_CHG)
+> +		inode->i_ctime = tv;
+> +	if (flags & XFS_ICHGTIME_CREATE) {
+> +		ip->i_d.di_crtime.t_sec = (int32_t)tv.tv_sec;
+> +		ip->i_d.di_crtime.t_nsec = (int32_t)tv.tv_nsec;
+> +	}
+> +}
+> +
+> +/*
+> + * This is called to mark the fields indicated in fieldmask as needing
+> + * to be logged when the transaction is committed.  The inode must
+> + * already be associated with the given transaction.
+> + *
+> + * The values for fieldmask are defined in xfs_inode_item.h.  We always
+> + * log all of the core inode if any of it has changed, and we always log
+> + * all of the inline data/extents/b-tree root if any of them has changed.
+> + */
+> +void
+> +xfs_trans_log_inode(
+> +	xfs_trans_t	*tp,
+> +	xfs_inode_t	*ip,
+> +	uint		flags)
+> +{
+> +	struct inode	*inode = VFS_I(ip);
+> +
+> +	ASSERT(ip->i_itemp != NULL);
+> +	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> +
+> +	/*
+> +	 * Don't bother with i_lock for the I_DIRTY_TIME check here, as races
+> +	 * don't matter - we either will need an extra transaction in 24 hours
+> +	 * to log the timestamps, or will clear already cleared fields in the
+> +	 * worst case.
+> +	 */
+> +	if (inode->i_state & (I_DIRTY_TIME | I_DIRTY_TIME_EXPIRED)) {
+> +		spin_lock(&inode->i_lock);
+> +		inode->i_state &= ~(I_DIRTY_TIME | I_DIRTY_TIME_EXPIRED);
+> +		spin_unlock(&inode->i_lock);
+> +	}
+> +
+> +	/*
+> +	 * Record the specific change for fdatasync optimisation. This
+> +	 * allows fdatasync to skip log forces for inodes that are only
+> +	 * timestamp dirty. We do this before the change count so that
+> +	 * the core being logged in this case does not impact on fdatasync
+> +	 * behaviour.
+> +	 */
+> +	ip->i_itemp->ili_fsync_fields |= flags;
+> +
+> +	/*
+> +	 * First time we log the inode in a transaction, bump the inode change
+> +	 * counter if it is configured for this to occur. While we have the
+> +	 * inode locked exclusively for metadata modification, we can usually
+> +	 * avoid setting XFS_ILOG_CORE if no one has queried the value since
+> +	 * the last time it was incremented. If we have XFS_ILOG_CORE already
+> +	 * set however, then go ahead and bump the i_version counter
+> +	 * unconditionally.
+> +	 */
+> +	if (!test_and_set_bit(XFS_LI_DIRTY, &ip->i_itemp->ili_item.li_flags) &&
+> +	    IS_I_VERSION(VFS_I(ip))) {
+> +		if (inode_maybe_inc_iversion(VFS_I(ip), flags & XFS_ILOG_CORE))
+> +			flags |= XFS_ILOG_CORE;
+> +	}
+> +
+> +	tp->t_flags |= XFS_TRANS_DIRTY;
+> +
+> +	/*
+> +	 * Always OR in the bits from the ili_last_fields field.
+> +	 * This is to coordinate with the xfs_iflush() and xfs_iflush_done()
+> +	 * routines in the eventual clearing of the ili_fields bits.
+> +	 * See the big comment in xfs_iflush() for an explanation of
+> +	 * this coordination mechanism.
+> +	 */
+> +	flags |= ip->i_itemp->ili_last_fields;
+> +	ip->i_itemp->ili_fields |= flags;
+> +}
+> +
+> +int
+> +xfs_trans_roll_inode(
+> +	struct xfs_trans	**tpp,
+> +	struct xfs_inode	*ip)
+> +{
+> +	int			error;
+> +
+> +	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE);
+> +	error = xfs_trans_roll(tpp);
+> +	if (!error)
+> +		xfs_trans_ijoin(*tpp, ip, 0);
+> +	return error;
+> +}
+> 
