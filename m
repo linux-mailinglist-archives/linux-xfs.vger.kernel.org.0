@@ -2,199 +2,268 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4F124760
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 07:12:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C66E7247A8
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 07:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbfEUFMy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 01:12:54 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:41523 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfEUFMy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 01:12:54 -0400
-Received: by mail-yb1-f194.google.com with SMTP id d2so1473555ybh.8;
-        Mon, 20 May 2019 22:12:53 -0700 (PDT)
+        id S1727655AbfEUFxF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 01:53:05 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:37340 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfEUFxE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 01:53:04 -0400
+Received: by mail-yw1-f67.google.com with SMTP id 186so6852429ywo.4;
+        Mon, 20 May 2019 22:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mFl4Di+WVAGVBpne9KAPbnxflB8k+Vdx7srqDbqyTEw=;
-        b=aJqruwhWnXfZLQHPHSlie0rHuBN5YSUtZuE85xOuHbXMwASWn8VnKM1IIXs5VyxaPt
-         J0p+CR3i7tx1L+KPu5vAwv7nTK3cjtBZ4gshkycGe2EAkDuFAF57fBr5f8SwIB8Ktn+C
-         BxaTsXXGM0qavMRf0ZAGKb4HmKYouAlPA1v088/r/oe5cG48kaZj13mP4V20kuqG+T0b
-         VHB9BxB1kjmnQEeKwDfim+96eC1oahQNKUSnyJQHpgaYF4vDDYwKtIr8pn/1VHfso0SM
-         nx8Be6yZEbOcVADxM0b176SrniByd9ufQbZqUzRQkZ7eCuHJZHpdiZ4AKiP7KlOGXgyX
-         O2cQ==
+        bh=uK0emkVrsqGKeKCiH2odgGuk2wkMBSrXqKthY8RV7To=;
+        b=iZ1mSfiSQWFrm2ofUptWw5Ut1AEwOK0wT9dJ+SY1icUbRs1Kw/a2fVQd5m1diS/z3J
+         obXO4vmQrmm4ziVe8AjJYb8VEKlH8RV4aq4TtUKp29Xlvq1cPfgBly+1dBUl2hBe8iQg
+         LPkweMDY3cU7wRyjjmuolWFuf46pH3Vugbv9RUHklIotqaAkYN8dtjj2IM5hMEbJE+b4
+         1fIVnegYI1wksFEmkU0Y85tr1+6JVs6cbiW+80GgYbNuZPBKpJSLlC4jDbeWLm3auiam
+         l+MQOPZU+20sudmcvBoCZUiASSNSxzFAvvFnvSnNUgBoD4I3C5cgxk889NbkuMNEjtIG
+         TV5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mFl4Di+WVAGVBpne9KAPbnxflB8k+Vdx7srqDbqyTEw=;
-        b=q9wtg7H/uc1QBu+mFx5LW4ZR+msNpDBU5nEOXvytNSicryWPBUD7OZt/r1NiCr+9q6
-         UZYdMdVYGUgyVIv6QN+GwGvUQe1EGsHY5hzoJ/oUwr0dzYu47A/Lay6jUVZrrCRdxajA
-         AypCJiH1mfuxVdl9pFq5TPP2KSjqeuzbh0Zct/0ui4W18fMvl2LyHoK5OUFBnZn+jIgl
-         BO1msMB0wElgI0Ie53EN9lW8DoMgVDh9OYcauAlmxwCiC3c0T3k1xN6w+Itu5TebTw8j
-         AFuR2ZhJPisVeTU8BlN2QR3uL2w2sFG0Jg5NWn+tXnKaevpSk4p/P0xSckN02s5jzae3
-         7duA==
-X-Gm-Message-State: APjAAAWHQnMUu2qlnbSI1UIqGWMufT+hyR3iFhshNICCELjlVW+wElJe
-        Shlyk3OcJ9hOg9y5N1YAoOtFquChPnoCzfUVpDY=
-X-Google-Smtp-Source: APXvYqxmUUoIlYJIurPoI2Xvn8zSk3N0b92q0Ot0A+swf+Qjj/lUsQhQAru25+RNNcWHoa7hWpamJkoEsCHyPywVoKY=
-X-Received: by 2002:a25:c983:: with SMTP id z125mr34459362ybf.45.1558415572714;
- Mon, 20 May 2019 22:12:52 -0700 (PDT)
+        bh=uK0emkVrsqGKeKCiH2odgGuk2wkMBSrXqKthY8RV7To=;
+        b=AYfZ3YuPJaGPVXscqntdltJj4ABPLILfJUBk+YFQSdn/xe7tV68tD/JZ0thYzy/jGF
+         R0dAU9TNZlDhnE6XjJ1tpgg0h8+D4hv+crAsdTxfgpFVN3YZE4NvbD/BPZesqMRMRwTP
+         r7EUWcWNg0aZhWOeuQm4/JO0L4nHCVc+cmmeIgJjZqVTnA6Z8OIU6I+lnTLa9re1c6bJ
+         e/d6OCSbjUs+JeZll/IXflIXp/u/uvgXNljte9z5LJRFA17t6lQWL26HL95lQalgFvbk
+         QcvN2yl7F2Vh/tpCXAb5J6V2x31ftI031b0ZdFlCuc6TOFjzdXx62QKqnhNjCvxw1pDB
+         qsRA==
+X-Gm-Message-State: APjAAAXGpEwceRP43Pw8enwDxAe2W0zAu/JKmPy9et1iqaNHm+6TW/AZ
+        Ff7qlIAgAs5W/kW9ETyJW2TTZl2KgU3ZwLb+eoA=
+X-Google-Smtp-Source: APXvYqxBP8n4T+H5UZSoNTkjwpChzWPd5ZPM8sapnzQurKHQZ8lxQHkTjj4jNN/P7vZwXPfz4s4jHh64BZqSFh+XvEw=
+X-Received: by 2002:a81:3344:: with SMTP id z65mr5808059ywz.294.1558417983731;
+ Mon, 20 May 2019 22:53:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <155839145160.62682.10916303376882370723.stgit@magnolia> <155839146420.62682.1995545484813176181.stgit@magnolia>
-In-Reply-To: <155839146420.62682.1995545484813176181.stgit@magnolia>
+References: <20181203083416.28978-1-david@fromorbit.com> <20181203083952.GC6311@dastard>
+In-Reply-To: <20181203083952.GC6311@dastard>
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 21 May 2019 08:12:41 +0300
-Message-ID: <CAOQ4uxjj6HtEOk7FWkabZn1x34+gEUVLqqiU0JkcEtddQf0j_g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] generic/530, xfs/501: pass fs shutdown handle to t_open_tmpfiles
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
+Date:   Tue, 21 May 2019 08:52:52 +0300
+Message-ID: <CAOQ4uxgeMJWBQn-WRUuqb=Dok4tZ8VBCKusGNLU-MYWGedm89A@mail.gmail.com>
+Subject: Re: [PATCH 12/11] man-pages: copy_file_range updates
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-xfs <linux-xfs@vger.kernel.org>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        fstests <fstests@vger.kernel.org>
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        ceph-devel@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        linux-api@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 21, 2019 at 1:33 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+On Mon, Dec 3, 2018 at 10:40 AM Dave Chinner <david@fromorbit.com> wrote:
 >
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+> From: Dave Chinner <dchinner@redhat.com>
 >
-> So it turns out that overlayfs can't pass FS_IOC_SHUTDOWN to the lower
-> filesystems and so xfstests works around this by creating shutdown
-> helpers for the scratch fs to direct the shutdown ioctl to wherever it
-> needs to go to shut down the filesystem -- SCRATCH_MNT on normal
-> filesystems and OVL_BASE_SCRATCH_MNT when -overlay is enabled.  This
-> means that t_open_tmpfiles cannot simply use one of the open tempfiles
-> to shut down the filesystem.
->
-> Commit f8f57747222 tried to "fix" this by ripping the shutdown code out,
-> but this made the tests useless.  Fix this instead by creating a
-> xfstests helper to return a path that can be used to shut down the
-> filesystem and then pass that path to t_open_tmpfiles so that we can
-> shut down the filesystem when overlayfs is enabled.
->
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Update with all the missing errors the syscall can return, the
+> behaviour the syscall should have w.r.t. to copies within single
+> files, etc.
 
-Thanks for sorting that out.
+Below are the changes I have made to V2 of this man-page update in accordance to
+agreed change of behavior (i.e. short copy up to EOF).
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+This is a heads up before posting to verify my interpretation is correct.
+I still have more testing to do before posting.
 
+The main thing is adding:
+ .BR copy_file_range ()
+ will return the number of bytes copied between files.
+ This could be less than the length originally requested.
++If the file offset of
++.I fd_in
++is at or past the end of file, no bytes are copied, and
++.BR copy_file_range ()
++returns zero.
+
+But see also other changes below...
+
+>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
 > ---
->  common/rc             |   11 +++++++++++
->  src/t_open_tmpfiles.c |   20 +++++++++++++-------
->  tests/generic/530     |    2 +-
->  tests/xfs/501         |    2 +-
->  4 files changed, 26 insertions(+), 9 deletions(-)
+>  man2/copy_file_range.2 | 94 +++++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 77 insertions(+), 17 deletions(-)
 >
->
-> diff --git a/common/rc b/common/rc
-> index 27c8bb7a..f577e5e3 100644
-> --- a/common/rc
-> +++ b/common/rc
-> @@ -393,6 +393,17 @@ _scratch_shutdown()
->         fi
->  }
->
-> +# Return a file path that can be used to shut down the scratch filesystem.
-> +# Caller should _require_scratch_shutdown before using this.
-> +_scratch_shutdown_handle()
-> +{
-> +       if [ $FSTYP = "overlay" ]; then
-> +               echo $OVL_BASE_SCRATCH_MNT
-> +       else
-> +               echo $SCRATCH_MNT
-> +       fi
-> +}
-> +
->  _test_mount()
->  {
->      if [ "$FSTYP" == "overlay" ]; then
-> diff --git a/src/t_open_tmpfiles.c b/src/t_open_tmpfiles.c
-> index da9390fd..258b0c95 100644
-> --- a/src/t_open_tmpfiles.c
-> +++ b/src/t_open_tmpfiles.c
-> @@ -24,7 +24,7 @@ static int min_fd = -1;
->  static int max_fd = -1;
->  static unsigned int nr_opened = 0;
->  static float start_time;
-> -static int shutdown_fs = 0;
-> +static int shutdown_fd = -1;
->
->  void clock_time(float *time)
->  {
-> @@ -69,7 +69,7 @@ void die(void)
->                                 end_time - start_time);
->                 fflush(stdout);
->
-> -               if (shutdown_fs) {
-> +               if (shutdown_fd >= 0) {
->                         /*
->                          * Flush the log so that we have to process the
->                          * unlinked inodes the next time we mount.
-> @@ -77,7 +77,7 @@ void die(void)
->                         int flag = XFS_FSOP_GOING_FLAGS_LOGFLUSH;
->                         int ret;
->
-> -                       ret = ioctl(min_fd, XFS_IOC_GOINGDOWN, &flag);
-> +                       ret = ioctl(shutdown_fd, XFS_IOC_GOINGDOWN, &flag);
->                         if (ret) {
->                                 perror("shutdown");
->                                 exit(2);
-> @@ -148,8 +148,9 @@ void leak_tmpfile(void)
->
->  /*
->   * Try to put as many files on the unlinked list and then kill them.
-> - * The first argument is a directory to chdir into; passing any second arg
-> - * will shut down the fs instead of closing files.
-> + * The first argument is a directory to chdir into; the second argumennt (if
-> + * provided) is a file path that will be opened and then used to shut down the
-> + * fs before the program exits.
->   */
->  int main(int argc, char *argv[])
->  {
-> @@ -160,8 +161,13 @@ int main(int argc, char *argv[])
->                 if (ret)
->                         perror(argv[1]);
->         }
-> -       if (argc > 2 && !strcmp(argv[2], "shutdown"))
-> -               shutdown_fs = 1;
-> +       if (argc > 2) {
-> +               shutdown_fd = open(argv[2], O_RDONLY);
-> +               if (shutdown_fd < 0) {
-> +                       perror(argv[2]);
-> +                       return 1;
-> +               }
-> +       }
->
->         clock_time(&start_time);
->         while (1)
-> diff --git a/tests/generic/530 b/tests/generic/530
-> index b0d188b1..cb874ace 100755
-> --- a/tests/generic/530
-> +++ b/tests/generic/530
-> @@ -49,7 +49,7 @@ ulimit -n $max_files
->
->  # Open a lot of unlinked files
->  echo create >> $seqres.full
-> -$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
-> +$here/src/t_open_tmpfiles $SCRATCH_MNT $(_scratch_shutdown_handle) >> $seqres.full
->
->  # Unmount to prove that we can clean it all
->  echo umount >> $seqres.full
-> diff --git a/tests/xfs/501 b/tests/xfs/501
-> index 974f3414..4be03b31 100755
-> --- a/tests/xfs/501
-> +++ b/tests/xfs/501
-> @@ -54,7 +54,7 @@ ulimit -n $max_files
->
->  # Open a lot of unlinked files
->  echo create >> $seqres.full
-> -$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
-> +$here/src/t_open_tmpfiles $SCRATCH_MNT $(_scratch_shutdown_handle) >> $seqres.full
->
->  # Unmount to prove that we can clean it all
->  echo umount >> $seqres.full
->
+> diff --git a/man2/copy_file_range.2 b/man2/copy_file_range.2
+> index 20374abb21f0..23b00c2f3fea 100644
+> --- a/man2/copy_file_range.2
+> +++ b/man2/copy_file_range.2
+> @@ -42,9 +42,9 @@ without the additional cost of transferring data from the kernel to user space
+>  and then back into the kernel.
+>  It copies up to
+>  .I len
+> -bytes of data from file descriptor
+> +bytes of data from the source file descriptor
+>  .I fd_in
+> -to file descriptor
+> +to target file descriptor
+>  .IR fd_out ,
+>  overwriting any data that exists within the requested range of the target file.
+>  .PP
+> @@ -74,6 +74,11 @@ is not changed, but
+>  .I off_in
+>  is adjusted appropriately.
+>  .PP
+> +.I fd_in
+> +and
+> +.I fd_out
+> +can refer to the same file. If they refer to the same file, then the source and
+> +target ranges are not allowed to overlap.
+>  .PP
+>  The
+>  .I flags
+> @@ -93,34 +98,73 @@ is set to indicate the error.
+>  .SH ERRORS
+>  .TP
+>  .B EBADF
+> -One or more file descriptors are not valid; or
+> +One or more file descriptors are not valid.
+> +.TP
+> +.B EBADF
+>  .I fd_in
+>  is not open for reading; or
+>  .I fd_out
+> -is not open for writing; or
+> -the
+> +is not open for writing.
+> +.TP
+> +.B EBADF
+> +The
+>  .B O_APPEND
+>  flag is set for the open file description referred to by
+>  .IR fd_out .
+>  .TP
+>  .B EFBIG
+> -An attempt was made to write a file that exceeds the implementation-defined
+> -maximum file size or the process's file size limit,
+> -or to write at a position past the maximum allowed offset.
+> +An attempt was made to write at a position past the maximum file offset the
+> +kernel supports.
+
+Updated to "...attempt made to read or write..."
+
+> +.TP
+> +.B EFBIG
+> +An attempt was made to write a range that exceeds the allowed maximum file size.
+> +The maximum file size differs between filesystem implemenations and can be
+> +different to the maximum allowed file offset.
+> +.TP
+> +.B EFBIG
+> +An attempt was made to write beyond the process's file size resource
+> +limit. This may also result in the process receiving a
+> +.I SIGXFSZ
+> +signal.
+>  .TP
+>  .B EINVAL
+> -Requested range extends beyond the end of the source file; or the
+
+Removed this.
+
+> -.I flags
+> -argument is not 0.
+> +.I (off_in + len)
+> +spans the end of the source file.
+>  .TP
+> -.B EIO
+> -A low-level I/O error occurred while copying.
+> +.B EINVAL
+> +.I fd_in
+> +and
+> +.I fd_out
+> +refer to the same file and the source and target ranges overlap.
+> +.TP
+> +.B EINVAL
+> +.I fd_in
+> +or
+> +.I fd_out
+> +is not a regular file.
+>  .TP
+>  .B EISDIR
+>  .I fd_in
+>  or
+>  .I fd_out
+>  refers to a directory.
+> +.B EINVAL
+> +The
+> +.I flags
+> +argument is not 0.
+> +.TP
+> +.B EINVAL
+> +.I off_in
+> +or
+> +.I (off_in + len)
+> +is beyond the maximum valid file offset.
+
+Removed this. Updated entry for EFBIG with in offset.
+
+> +.TP
+> +.B EOVERFLOW
+> +The requested source or destination range is too large to represent in the
+> +specified data types.
+> +.TP
+> +.B EIO
+> +A low-level I/O error occurred while copying.
+>  .TP
+>  .B ENOMEM
+>  Out of memory.
+> @@ -128,16 +172,32 @@ Out of memory.
+>  .B ENOSPC
+>  There is not enough space on the target filesystem to complete the copy.
+>  .TP
+> -.B EXDEV
+> -The files referred to by
+> -.IR file_in " and " file_out
+
+Kept this one with added "(pre Linux 5.3)"
+
+> -are not on the same mounted filesystem.
+> +.B TXTBSY
+> +.I fd_in
+> +or
+> +.I fd_out
+> +refers to an active swap file.
+> +.TP
+> +.B EPERM
+> +.I fd_out
+> +refers to an immutable file.
+> +.TP
+> +.B EACCES
+> +The user does not have write permissions for the destination file.
+>  .SH VERSIONS
+>  The
+>  .BR copy_file_range ()
+>  system call first appeared in Linux 4.5, but glibc 2.27 provides a user-space
+>  emulation when it is not available.
+>  .\" https://sourceware.org/git/?p=glibc.git;a=commit;f=posix/unistd.h;h=bad7a0c81f501fbbcc79af9eaa4b8254441c4a1f
+> +.PP
+> +A major rework of the kernel implementation occurred in 4.21. Areas of the API
+> +that weren't clearly defined were clarified and the API bounds are much more
+> +strictly checked than on earlier kernels. Applications should target the
+> +behaviour and requirements of 4.21 kernels.
+> +.PP
+> +First support for cross-filesystem copies was introduced in Linux 4.21. Older
+> +kernels will return -EXDEV when cross-filesystem copies are attempted.
+>  .SH CONFORMING TO
+>  The
+>  .BR copy_file_range ()
+
+Updates example loop termination condition to:
+         len \-= ret;
+-    } while (len > 0);
++    } while (len > 0 && ret > 0);
+
+
+WIP is available here:
+https://github.com/amir73il/man-pages/commits/copy_file_range
+
+Thanks,
+Amir.
