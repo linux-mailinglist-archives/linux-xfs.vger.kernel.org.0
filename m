@@ -2,99 +2,75 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 694AA245B2
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 03:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA681245D9
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 04:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfEUBnl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 May 2019 21:43:41 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36013 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727347AbfEUBnl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 21:43:41 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 01C98CF7C;
-        Tue, 21 May 2019 11:43:38 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hStoW-0004K4-VK; Tue, 21 May 2019 11:43:36 +1000
-Date:   Tue, 21 May 2019 11:43:36 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Tim Smith <tim.smith@vaultcloud.com.au>
+        id S1726335AbfEUCKU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 May 2019 22:10:20 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:41814 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfEUCKU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 May 2019 22:10:20 -0400
+Received: by mail-ot1-f45.google.com with SMTP id l25so6533281otp.8
+        for <linux-xfs@vger.kernel.org>; Mon, 20 May 2019 19:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vaultcloud-com-au.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N9KxDyH5sZlnanonQgCIESV9nUjPnd6roFLl0SeXN88=;
+        b=JHPEJzmLMUxKGOQfYkJ2Wyey4xSxCk2nCsB3HHxFHcYpUIxoaPOnzP0HsGmyUKdd8b
+         yoX7P+EjsTzpvRvZNt3dxwvUc0SvtUvhCNQdcF3udwDQfHCbdPCq9fJctdboV8qJl91j
+         GTUxNhMKNKhdb2DeHSwnf72OZK1cPFTxKgenAJ5YgX848xa+6tKYGzKkK4OH1FkBf4bo
+         t1GnZ63qHTiwYAViglcKx2NaUCW32WE5S3ebfzgdHz3AakguUWnpc8tOYfhTWam3oSva
+         nsz9GrPJZnqHXJXQ4eHAPYUmgDkcu/D+kNhBgT28dg3WzVVacVFxIsb+v6A9r88VrJQi
+         0Drw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N9KxDyH5sZlnanonQgCIESV9nUjPnd6roFLl0SeXN88=;
+        b=EucG6layCmQiEthqPB4sUpDyk13sd+QECB6YQzhsc0IUv7RayLBjKaHZvV5VSVGPoe
+         rg+FUPJ4qI1l3A1yjcwFOUBTtBh9v3oNTlsGDccqwuz249mWdqDTo9DDq8qyJ5tiDud7
+         Nzo0t7oWlBPaNwADyh4/MwAWa6S54Xr2kzdyjgmY6l98tQyIvXmwy0lOSIMQ74PH/ndA
+         wZfl53O+U/E/eY43IiR/xKTBix5+bs3PQBW36nt6cbhLXpWpNiQRgrQSR8iv5MPGsxR2
+         knF4M2ALeBiOLOGZk+bfT313ExUm9B/6WPjGN9npdyCiURNWR13VIWWesMICMRQU01sf
+         DvvQ==
+X-Gm-Message-State: APjAAAVmp8wUUAyK/jhok6scR4jglRoWzhQEeNnK3BTPz+vSEOGTnC/P
+        OAQVlIV1aaXNqxYexUrgrlUgQkIQBEYKWtRfSHZ4w4Dmev0=
+X-Google-Smtp-Source: APXvYqyk5w+OqsVI3QQQIpUYrDuzfHalaMePmzGKx0P3AaggAOCRNkbg49gDRDHa8BIgOz7IcC/nVjPMBi1S26TT+cU=
+X-Received: by 2002:a9d:1b6d:: with SMTP id l100mr25982506otl.15.1558404620040;
+ Mon, 20 May 2019 19:10:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHgs-5XkA5xFgxgSaX9m70gduuO1beq6fiY7UEGv1ad6bd19Hw@mail.gmail.com>
+ <20190513140943.GC61135@bfoster> <683a9b7b-ad5c-5e91-893e-daaa68a853c9@sandeen.net>
+ <CAHgs-5Vybp+diCoecfEWbHLRScNnsHKW7-4rwhXH3H+hfcfoLg@mail.gmail.com> <20190521014336.GG29573@dread.disaster.area>
+In-Reply-To: <20190521014336.GG29573@dread.disaster.area>
+From:   Tim Smith <tim.smith@vaultcloud.com.au>
+Date:   Tue, 21 May 2019 12:10:09 +1000
+Message-ID: <CAHgs-5V1v976so3BF7OhbSk0KypqSVwE5b4c0jWgRBCRvuaSPA@mail.gmail.com>
+Subject: Re: xfs filesystem reports negative usage - reoccurring problem
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Eric Sandeen <sandeen@sandeen.net>,
         Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: xfs filesystem reports negative usage - reoccurring problem
-Message-ID: <20190521014336.GG29573@dread.disaster.area>
-References: <CAHgs-5XkA5xFgxgSaX9m70gduuO1beq6fiY7UEGv1ad6bd19Hw@mail.gmail.com>
- <20190513140943.GC61135@bfoster>
- <683a9b7b-ad5c-5e91-893e-daaa68a853c9@sandeen.net>
- <CAHgs-5Vybp+diCoecfEWbHLRScNnsHKW7-4rwhXH3H+hfcfoLg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHgs-5Vybp+diCoecfEWbHLRScNnsHKW7-4rwhXH3H+hfcfoLg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=5xOlfOR4AAAA:8 a=7-415B0cAAAA:8 a=viKHoHOUbtcr1SxXpNYA:9
-        a=CjuIK1q_8ugA:10 a=SGlsW6VomvECssOqsvzv:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 21, 2019 at 09:39:02AM +1000, Tim Smith wrote:
-> On Tue, May 14, 2019 at 1:06 AM Eric Sandeen <sandeen@sandeen.net> wrote:
-> > I'm kind of interested in what xfs_repair finds in this case.
-> 
-> $ sudo xfs_repair -m 4096 -v /dev/sdad
-> Phase 1 - find and verify superblock...
->         - block cache size set to 342176 entries
-> Phase 2 - using internal log
->         - zero log...
-> zero_log: head block 159752 tail block 159752
->         - scan filesystem freespace and inode maps...
-> sb_fdblocks 4725279343, counted 430312047
+On Tue, May 21, 2019 at 11:43 AM Dave Chinner <david@fromorbit.com> wrote:
+> 8756a5af1819 ("libxfs: add more bounds checking to sb sanity checks")
+> 2e9e6481e2a7 ("xfs: detect and fix bad summary counts at mount")
+>
+> were both merged in 4.19. Well, that would explain why you aren't
+> seeing warnings or having it fixed automatically on detection.
+>
+> IOWs, whatever the cause of your single bit error is, I don't know,
+> but it would seem that recent kernels will detect the condition and
+> automatically fix themselves at mount time.
 
-$ printf %x 4725279343
-119a60a6f
-$ printf %x 430312047
- 19a60a6f
+This kit is in a legacy environment to be (eventually) decommissioned,
+so I'll patch the kernel to work around the issue until we can put the
+hardware to bed.
 
-You definitely have uncorrected single bit errors occuring 
-on your systems.
-
-If the filesystem was writing this bad fdblock count to disk, then
-xfs_validate_sb_write() would be firing this warning:
-
-	xfs_warn(mp, "SB summary counter sanity check failed");
-
-when the superblock is written back on unmount. That write would
-then fail, and that would leave the log dirty. Then after log
-recovery we'd rebuild the counters from the AGFs because it wasn't a
-clean unmount, and the problem would go away. If the log was clean,
-then we'd see that the fdblocks count was invalid, and we'd rebuild
-the counters from the AGFs and the problem would go away.
-
-But you are saying that unmount/mount doesn't fix it, which means
-you must be running a sufficiently old kernel that it doesn't detect
-these conditions, issue warnings and automatically repair itself.
-Yup:
-
-8756a5af1819 ("libxfs: add more bounds checking to sb sanity checks")
-2e9e6481e2a7 ("xfs: detect and fix bad summary counts at mount")
-
-were both merged in 4.19. Well, that would explain why you aren't
-seeing warnings or having it fixed automatically on detection.
-
-IOWs, whatever the cause of your single bit error is, I don't know,
-but it would seem that recent kernels will detect the condition and
-automatically fix themselves at mount time.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Absolute legend! Thank you for all your help!
