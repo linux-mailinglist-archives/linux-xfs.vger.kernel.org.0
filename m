@@ -2,22 +2,22 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3574B24678
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 05:47:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85A9824677
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 05:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEUDrN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726392AbfEUDrN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 20 May 2019 23:47:13 -0400
-Received: from sandeen.net ([63.231.237.45]:56372 "EHLO sandeen.net"
+Received: from sandeen.net ([63.231.237.45]:56374 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727045AbfEUDrM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 May 2019 23:47:12 -0400
+        id S1727026AbfEUDrN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 20 May 2019 23:47:13 -0400
 Received: by sandeen.net (Postfix, from userid 500)
-        id 5B74315D71; Mon, 20 May 2019 22:47:09 -0500 (CDT)
+        id 65C0315D92; Mon, 20 May 2019 22:47:09 -0500 (CDT)
 From:   Eric Sandeen <sandeen@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 6/7] libxfs: create current_time helper and sync xfs_trans_ichgtime
-Date:   Mon, 20 May 2019 22:47:06 -0500
-Message-Id: <1558410427-1837-7-git-send-email-sandeen@redhat.com>
+Subject: [PATCH 7/7] libxfs: share kernel's xfs_trans_inode.c
+Date:   Mon, 20 May 2019 22:47:07 -0500
+Message-Id: <1558410427-1837-8-git-send-email-sandeen@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1558410427-1837-1-git-send-email-sandeen@redhat.com>
 References: <1558410427-1837-1-git-send-email-sandeen@redhat.com>
@@ -26,108 +26,195 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Make xfs_trans_ichgtime() almost match kernelspace by creating a
-new current_time() helper to match the kernel utility.
+Now that the majority of cosmetic changes and compat shims
+are in place, we can directly share kernelspace's
+xfs_trans_inode.c with just a couple more small tweaks.
+In addition to the file move,
 
-This reduces still more cosmetic change.  We may want to sync the
-creation flag over to the kernel even though it's not used today.
+* ili_fsync_fields is added to xfs_inode_log_item (but not used)
+* test_and_set_bit() helper is created
 
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Eric Sandeen <sandeen@sandeen.net>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Eric Sandeen <sandeen@sandeen.net>
 ---
- include/xfs_inode.h | 14 ++++++++++++++
- libxfs/util.c       | 28 ++++++++++++++++++++--------
- 2 files changed, 34 insertions(+), 8 deletions(-)
+ include/xfs_trans.h  |  3 ++-
+ libxfs/Makefile      |  1 +
+ libxfs/libxfs_priv.h |  9 ++++++++
+ libxfs/trans.c       | 65 ----------------------------------------------------
+ libxfs/util.c        | 27 ----------------------
+ 5 files changed, 12 insertions(+), 93 deletions(-)
 
-diff --git a/include/xfs_inode.h b/include/xfs_inode.h
-index 88b58ac..9565adc 100644
---- a/include/xfs_inode.h
-+++ b/include/xfs_inode.h
-@@ -17,6 +17,16 @@ struct xfs_inode_log_item;
- struct xfs_dir_ops;
+diff --git a/include/xfs_trans.h b/include/xfs_trans.h
+index 118fa0b..60e1dbd 100644
+--- a/include/xfs_trans.h
++++ b/include/xfs_trans.h
+@@ -30,8 +30,9 @@ typedef struct xfs_inode_log_item {
+ 	xfs_log_item_t		ili_item;		/* common portion */
+ 	struct xfs_inode	*ili_inode;		/* inode pointer */
+ 	unsigned short		ili_lock_flags;		/* lock flags */
+-	unsigned int		ili_fields;		/* fields to be logged */
+ 	unsigned int		ili_last_fields;	/* fields when flushed*/
++	unsigned int		ili_fields;		/* fields to be logged */
++	unsigned int		ili_fsync_fields;	/* ignored by userspace */
+ } xfs_inode_log_item_t;
  
- /*
-+ * These are not actually used, they are only for userspace build
-+ * compatibility in code that looks at i_state
-+ */
-+#define I_DIRTY_TIME		0
-+#define I_DIRTY_TIME_EXPIRED	0
-+
-+#define IS_I_VERSION(inode)			(0)
-+#define inode_maybe_inc_iversion(inode,flags)	(0)
-+
-+/*
-  * Inode interface. This fakes up a "VFS inode" to make the xfs_inode appear
-  * similar to the kernel which now is used tohold certain parts of the on-disk
-  * metadata.
-@@ -25,6 +35,7 @@ struct inode {
- 	mode_t		i_mode;
- 	uint32_t	i_nlink;
- 	xfs_dev_t	i_rdev;		/* This actually holds xfs_dev_t */
-+	unsigned long	i_state;	/* Not actually used in userspace */
- 	uint32_t	i_generation;
- 	uint64_t	i_version;
- 	struct timespec	i_atime;
-@@ -149,6 +160,9 @@ extern void	libxfs_trans_ichgtime(struct xfs_trans *,
- 				struct xfs_inode *, int);
- extern int	libxfs_iflush_int (struct xfs_inode *, struct xfs_buf *);
+ typedef struct xfs_buf_log_item {
+diff --git a/libxfs/Makefile b/libxfs/Makefile
+index 160498d..8c681e0 100644
+--- a/libxfs/Makefile
++++ b/libxfs/Makefile
+@@ -93,6 +93,7 @@ CFILES = cache.c \
+ 	xfs_rtbitmap.c \
+ 	xfs_sb.c \
+ 	xfs_symlink_remote.c \
++	xfs_trans_inode.c \
+ 	xfs_trans_resv.c \
+ 	xfs_types.c
  
-+#define timespec64 timespec
-+extern struct timespec64 current_time(struct inode *inode);
-+
- /* Inode Cache Interfaces */
- extern bool	libxfs_inode_verify_forks(struct xfs_inode *ip);
- extern int	libxfs_iget(struct xfs_mount *, struct xfs_trans *, xfs_ino_t,
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 0496dcb..2ba9dc2 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -136,11 +136,21 @@ xfs_log_calc_unit_res(
- 	return unit_bytes;
+diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+index a8c0f0b..c75b92d 100644
+--- a/libxfs/libxfs_priv.h
++++ b/libxfs/libxfs_priv.h
+@@ -608,6 +608,15 @@ static inline int test_bit(int nr, const volatile unsigned long *addr)
+ 	return *p & mask;
  }
  
-+struct timespec64
-+current_time(struct inode *inode)
++/* Sets and returns original value of the bit */
++static inline int test_and_set_bit(int nr, volatile unsigned long *addr)
 +{
-+	struct timespec64	tv;
-+	struct timeval		stv;
-+
-+	gettimeofday(&stv, (struct timezone *)0);
-+	tv.tv_sec = stv.tv_sec;
-+	tv.tv_nsec = stv.tv_usec * 1000;
-+
-+	return tv;
++	if (test_bit(nr, addr))
++		return 1;
++	set_bit(nr, addr);
++	return 0;
 +}
 +
+ /* Keep static checkers quiet about nonstatic functions by exporting */
+ int xfs_inode_hasattr(struct xfs_inode *ip);
+ int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+diff --git a/libxfs/trans.c b/libxfs/trans.c
+index c7a1d52..5c56b4f 100644
+--- a/libxfs/trans.c
++++ b/libxfs/trans.c
+@@ -331,25 +331,6 @@ libxfs_trans_cancel(
+ }
+ 
+ void
+-libxfs_trans_ijoin(
+-	xfs_trans_t		*tp,
+-	xfs_inode_t		*ip,
+-	uint			lock_flags)
+-{
+-	xfs_inode_log_item_t	*iip;
+-
+-	if (ip->i_itemp == NULL)
+-		xfs_inode_item_init(ip, ip->i_mount);
+-	iip = ip->i_itemp;
+-	ASSERT(iip->ili_inode != NULL);
+-
+-	ASSERT(iip->ili_lock_flags == 0);
+-	iip->ili_lock_flags = lock_flags;
+-
+-	xfs_trans_add_item(tp, &iip->ili_item);
+-}
+-
+-void
+ libxfs_trans_inode_alloc_buf(
+ 	xfs_trans_t		*tp,
+ 	xfs_buf_t		*bp)
+@@ -363,52 +344,6 @@ libxfs_trans_inode_alloc_buf(
+ }
+ 
  /*
-  * Change the requested timestamp in the given inode.
+- * This is called to mark the fields indicated in fieldmask as needing
+- * to be logged when the transaction is committed.  The inode must
+- * already be associated with the given transaction.
 - *
-- * This was once shared with the kernel, but has diverged to the point
-- * where it's no longer worth the hassle of maintaining common code.
+- * The values for fieldmask are defined in xfs_log_format.h.  We always
+- * log all of the core inode if any of it has changed, and we always log
+- * all of the inline data/extents/b-tree root if any of them has changed.
+- */
+-void
+-xfs_trans_log_inode(
+-	xfs_trans_t		*tp,
+-	xfs_inode_t		*ip,
+-	uint			flags)
+-{
+-	ASSERT(ip->i_itemp != NULL);
+-
+-	tp->t_flags |= XFS_TRANS_DIRTY;
+-	set_bit(XFS_LI_DIRTY, &ip->i_itemp->ili_item.li_flags);
+-
+-	/*
+-	 * Always OR in the bits from the ili_last_fields field.
+-	 * This is to coordinate with the xfs_iflush() and xfs_iflush_done()
+-	 * routines in the eventual clearing of the ilf_fields bits.
+-	 * See the big comment in xfs_iflush() for an explanation of
+-	 * this coordination mechanism.
+-	 */
+-	flags |= ip->i_itemp->ili_last_fields;
+-	ip->i_itemp->ili_fields |= flags;
+-}
+-
+-int
+-libxfs_trans_roll_inode(
+-	struct xfs_trans	**tpp,
+-	struct xfs_inode	*ip)
+-{
+-	int			error;
+-
+-	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE);
+-	error = xfs_trans_roll(tpp);
+-	if (!error)
+-		xfs_trans_ijoin(*tpp, ip, 0);
+-	return error;
+-}
+-
+-
+-/*
+  * Mark a buffer dirty in the transaction.
   */
  void
- libxfs_trans_ichgtime(
-@@ -148,12 +158,14 @@ libxfs_trans_ichgtime(
- 	struct xfs_inode	*ip,
- 	int			flags)
- {
--	struct timespec tv;
--	struct timeval	stv;
-+	struct inode		*inode = VFS_I(ip);
-+	struct timespec64	tv;
-+
-+	ASSERT(tp);
-+	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+
-+	tv = current_time(inode);
+diff --git a/libxfs/util.c b/libxfs/util.c
+index 2ba9dc2..171a172 100644
+--- a/libxfs/util.c
++++ b/libxfs/util.c
+@@ -149,33 +149,6 @@ current_time(struct inode *inode)
+ 	return tv;
+ }
  
--	gettimeofday(&stv, (struct timezone *)0);
--	tv.tv_sec = stv.tv_sec;
--	tv.tv_nsec = stv.tv_usec * 1000;
- 	if (flags & XFS_ICHGTIME_MOD)
- 		VFS_I(ip)->i_mtime = tv;
- 	if (flags & XFS_ICHGTIME_CHG)
+-/*
+- * Change the requested timestamp in the given inode.
+- */
+-void
+-libxfs_trans_ichgtime(
+-	struct xfs_trans	*tp,
+-	struct xfs_inode	*ip,
+-	int			flags)
+-{
+-	struct inode		*inode = VFS_I(ip);
+-	struct timespec64	tv;
+-
+-	ASSERT(tp);
+-	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+-
+-	tv = current_time(inode);
+-
+-	if (flags & XFS_ICHGTIME_MOD)
+-		VFS_I(ip)->i_mtime = tv;
+-	if (flags & XFS_ICHGTIME_CHG)
+-		VFS_I(ip)->i_ctime = tv;
+-	if (flags & XFS_ICHGTIME_CREATE) {
+-		ip->i_d.di_crtime.t_sec = (int32_t)tv.tv_sec;
+-		ip->i_d.di_crtime.t_nsec = (int32_t)tv.tv_nsec;
+-	}
+-}
+-
+ STATIC uint16_t
+ xfs_flags2diflags(
+ 	struct xfs_inode	*ip,
 -- 
 1.8.3.1
 
