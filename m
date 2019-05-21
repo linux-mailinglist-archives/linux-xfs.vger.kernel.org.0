@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 870792581D
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD37425820
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEUTSp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 15:18:45 -0400
-Received: from sandeen.net ([63.231.237.45]:43658 "EHLO sandeen.net"
+        id S1726718AbfEUTTH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 15:19:07 -0400
+Received: from sandeen.net ([63.231.237.45]:43676 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbfEUTSo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 15:18:44 -0400
+        id S1726525AbfEUTTH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 15:19:07 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 9327215D6E;
-        Tue, 21 May 2019 14:18:40 -0500 (CDT)
-Subject: Re: [PATCH 09/12] xfs_scrub: fix background-mode sleep throttling
+        by sandeen.net (Postfix) with ESMTPSA id 0624D15D6E;
+        Tue, 21 May 2019 14:19:03 -0500 (CDT)
+Subject: Re: [PATCH 10/12] mkfs: allow setting dax flag on root directory
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839425742.68606.18377767804648563349.stgit@magnolia>
+ <155839426866.68606.8424427245250373556.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <cd4cdc09-8cb2-e6dc-ec5b-95894a4faeb7@sandeen.net>
-Date:   Tue, 21 May 2019 14:18:43 -0500
+Message-ID: <b95c9911-5f36-0b35-1508-b00e041f58ba@sandeen.net>
+Date:   Tue, 21 May 2019 14:19:05 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155839425742.68606.18377767804648563349.stgit@magnolia>
+In-Reply-To: <155839426866.68606.8424427245250373556.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,57 +79,87 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
 On 5/20/19 6:17 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> The comment preceding background_sleep() is wrong -- the function sleeps
-> 100us, not 100ms, for every '-b' passed in after the first one.  This is
-> really not obvious from the magic numbers, so fix the comment and use
-> symbolic constants for easier reading.
+> Teach mkfs to set the DAX flag on the root directory so that all new
+> files can be created in dax mode.  This is a complement to removing the
+> mount option.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-Ok, looks like man page was already correct.
-
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-
 > ---
->  scrub/common.c |   12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+>  man/man8/mkfs.xfs.8 |   11 +++++++++++
+>  mkfs/xfs_mkfs.c     |   11 +++++++++++
+>  2 files changed, 22 insertions(+)
+
+I'll tuck this away for 2024 when we decide what to do about dax.
+
+-Eric
+
 > 
-> 
-> diff --git a/scrub/common.c b/scrub/common.c
-> index c877c7c8..1cd2b7ba 100644
-> --- a/scrub/common.c
-> +++ b/scrub/common.c
-> @@ -253,21 +253,23 @@ scrub_nproc_workqueue(
->  }
+> diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8
+> index 4b8c78c3..0137f164 100644
+> --- a/man/man8/mkfs.xfs.8
+> +++ b/man/man8/mkfs.xfs.8
+> @@ -391,6 +391,17 @@ All inodes created by
+>  will have this extent size hint applied.
+>  The value must be provided in units of filesystem blocks.
+>  Directories will pass on this hint to newly created children.
+> +.TP
+> +.BI dax= value
+> +All inodes created by
+> +.B mkfs.xfs
+> +will have the DAX flag set.
+> +This means that directories will pass the flag on to newly created files
+> +and files will use the DAX IO paths when possible.
+> +This value is either 1 to enable the use or 0 to disable.
+> +By default,
+> +.B mkfs.xfs
+> +will not enable DAX mode.
+>  .RE
+>  .TP
+>  .B \-f
+> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+> index 09106648..5b66074d 100644
+> --- a/mkfs/xfs_mkfs.c
+> +++ b/mkfs/xfs_mkfs.c
+> @@ -59,6 +59,7 @@ enum {
+>  	D_PROJINHERIT,
+>  	D_EXTSZINHERIT,
+>  	D_COWEXTSIZE,
+> +	D_DAX,
+>  	D_MAX_OPTS,
+>  };
 >  
->  /*
-> - * Sleep for 100ms * however many -b we got past the initial one.
-> + * Sleep for 100us * however many -b we got past the initial one.
->   * This is an (albeit clumsy) way to throttle scrub activity.
->   */
-> +#define NSEC_PER_SEC	1000000000ULL
-> +#define NSEC_PER_USEC	1000ULL
->  void
->  background_sleep(void)
->  {
-> -	unsigned long long	time;
-> +	unsigned long long	time_ns;
->  	struct timespec		tv;
+> @@ -253,6 +254,7 @@ static struct opt_params dopts = {
+>  		[D_PROJINHERIT] = "projinherit",
+>  		[D_EXTSZINHERIT] = "extszinherit",
+>  		[D_COWEXTSIZE] = "cowextsize",
+> +		[D_DAX] = "dax",
+>  	},
+>  	.subopt_params = {
+>  		{ .index = D_AGCOUNT,
+> @@ -368,6 +370,12 @@ static struct opt_params dopts = {
+>  		  .maxval = UINT_MAX,
+>  		  .defaultval = SUBOPT_NEEDS_VAL,
+>  		},
+> +		{ .index = D_DAX,
+> +		  .conflicts = { { NULL, LAST_CONFLICT } },
+> +		  .minval = 0,
+> +		  .maxval = 1,
+> +		  .defaultval = 1,
+> +		},
+>  	},
+>  };
 >  
->  	if (bg_mode < 2)
->  		return;
->  
-> -	time = 100000ULL * (bg_mode - 1);
-> -	tv.tv_sec = time / 1000000;
-> -	tv.tv_nsec = time % 1000000;
-> +	time_ns =  100 * NSEC_PER_USEC * (bg_mode - 1);
-> +	tv.tv_sec = time_ns / NSEC_PER_SEC;
-> +	tv.tv_nsec = time_ns % NSEC_PER_SEC;
->  	nanosleep(&tv, NULL);
->  }
->  
+> @@ -1465,6 +1473,9 @@ data_opts_parser(
+>  		cli->fsx.fsx_cowextsize = getnum(value, opts, subopt);
+>  		cli->fsx.fsx_xflags |= FS_XFLAG_COWEXTSIZE;
+>  		break;
+> +	case D_DAX:
+> +		cli->fsx.fsx_xflags |= FS_XFLAG_DAX;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
 > 
