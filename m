@@ -2,22 +2,22 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 118DA24676
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 05:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5671424674
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 05:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfEUDrN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1727026AbfEUDrN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 20 May 2019 23:47:13 -0400
-Received: from sandeen.net ([63.231.237.45]:56368 "EHLO sandeen.net"
+Received: from sandeen.net ([63.231.237.45]:56370 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbfEUDrM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S1726265AbfEUDrM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Mon, 20 May 2019 23:47:12 -0400
 Received: by sandeen.net (Postfix, from userid 500)
-        id 3816C1170B; Mon, 20 May 2019 22:47:09 -0500 (CDT)
+        id 5889315D6E; Mon, 20 May 2019 22:47:09 -0500 (CDT)
 From:   Eric Sandeen <sandeen@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/7] libxfs: fix argument to xfs_trans_add_item
-Date:   Mon, 20 May 2019 22:47:04 -0500
-Message-Id: <1558410427-1837-5-git-send-email-sandeen@redhat.com>
+Subject: [PATCH 5/7] xfs: factor log item initialisation
+Date:   Mon, 20 May 2019 22:47:05 -0500
+Message-Id: <1558410427-1837-6-git-send-email-sandeen@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1558410427-1837-1-git-send-email-sandeen@redhat.com>
 References: <1558410427-1837-1-git-send-email-sandeen@redhat.com>
@@ -26,43 +26,90 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The hack of casting an inode_log_item or buf_log_item to a
-xfs_log_item_t is pretty gross; yes it's the first member in the
-structure, but yuk.  Pass in the correct structure member.
+From: Dave Chinner <dchinner@redhat.com>
 
-This was fixed in the kernel with commit e98c414f9
-("xfs: simplify log item descriptor tracking")
+Each log item type does manual initialisation of the log item.
+Delayed logging introduces new fields that need initialisation, so
+factor all the open coded initialisation into a common function
+first.
 
+Source kernel commit: 43f5efc5b59db1b66e39fe9fdfc4ba6a27152afa
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+[sandeen: merge to userspace]
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Eric Sandeen <sandeen@sandeen.net>
----
- libxfs/trans.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/libxfs/trans.c b/libxfs/trans.c
-index dc924fa..c7a1d52 100644
---- a/libxfs/trans.c
-+++ b/libxfs/trans.c
-@@ -346,7 +346,7 @@ libxfs_trans_ijoin(
- 	ASSERT(iip->ili_lock_flags == 0);
- 	iip->ili_lock_flags = lock_flags;
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
+ libxfs/libxfs_priv.h |  1 +
+ libxfs/logitem.c     |  8 ++------
+ libxfs/util.c        | 12 ++++++++++++
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+index d668a15..a8c0f0b 100644
+--- a/libxfs/libxfs_priv.h
++++ b/libxfs/libxfs_priv.h
+@@ -564,6 +564,7 @@ int libxfs_zero_extent(struct xfs_inode *ip, xfs_fsblock_t start_fsb,
  
--	xfs_trans_add_item(tp, (xfs_log_item_t *)(iip));
-+	xfs_trans_add_item(tp, &iip->ili_item);
+ 
+ bool xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
++void xfs_log_item_init(struct xfs_mount *, struct xfs_log_item *, int);
+ #define xfs_log_in_recovery(mp)	(false)
+ 
+ /* xfs_icache.c */
+diff --git a/libxfs/logitem.c b/libxfs/logitem.c
+index e862ab4..14c62f6 100644
+--- a/libxfs/logitem.c
++++ b/libxfs/logitem.c
+@@ -103,9 +103,7 @@ xfs_buf_item_init(
+ 	fprintf(stderr, "adding buf item %p for not-logged buffer %p\n",
+ 		bip, bp);
+ #endif
+-	bip->bli_item.li_type = XFS_LI_BUF;
+-	bip->bli_item.li_mountp = mp;
+-	INIT_LIST_HEAD(&bip->bli_item.li_trans);
++	xfs_log_item_init(mp, &bip->bli_item, XFS_LI_BUF);
+ 	bip->bli_buf = bp;
+ 	bip->__bli_format.blf_type = XFS_LI_BUF;
+ 	bip->__bli_format.blf_blkno = (int64_t)XFS_BUF_ADDR(bp);
+@@ -149,8 +147,6 @@ xfs_inode_item_init(
+ 		ip->i_ino, iip);
+ #endif
+ 
+-	iip->ili_item.li_type = XFS_LI_INODE;
+-	iip->ili_item.li_mountp = mp;
+-	INIT_LIST_HEAD(&iip->ili_item.li_trans);
++	xfs_log_item_init(mp, &iip->ili_item, XFS_LI_INODE);
+ 	iip->ili_inode = ip;
+ }
+diff --git a/libxfs/util.c b/libxfs/util.c
+index 8c9954f..0496dcb 100644
+--- a/libxfs/util.c
++++ b/libxfs/util.c
+@@ -692,6 +692,18 @@ xfs_log_check_lsn(
+ 	return true;
  }
  
- void
-@@ -570,7 +570,7 @@ _libxfs_trans_bjoin(
- 	 * Attach the item to the transaction so we can find it in
- 	 * xfs_trans_get_buf() and friends.
- 	 */
--	xfs_trans_add_item(tp, (xfs_log_item_t *)bip);
-+	xfs_trans_add_item(tp, &bip->bli_item);
- 	bp->b_transp = tp;
- 
- }
++void
++xfs_log_item_init(
++	struct xfs_mount	*mp,
++	struct xfs_log_item	*item,
++	int			type)
++{
++	item->li_mountp = mp; 
++	item->li_type = type;
++        
++	INIT_LIST_HEAD(&item->li_trans);
++}   
++
+ static struct xfs_buftarg *
+ xfs_find_bdev_for_inode(
+ 	struct xfs_inode	*ip)
 -- 
 1.8.3.1
 
