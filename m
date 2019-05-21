@@ -2,30 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2A4425831
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 908CF2583B
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:24:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfEUTUw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 15:20:52 -0400
-Received: from sandeen.net ([63.231.237.45]:43846 "EHLO sandeen.net"
+        id S1727015AbfEUTYm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 15:24:42 -0400
+Received: from sandeen.net ([63.231.237.45]:44158 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbfEUTUw (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 15:20:52 -0400
+        id S1726771AbfEUTYm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 15:24:42 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 3FA2215D6E;
-        Tue, 21 May 2019 14:20:48 -0500 (CDT)
-Subject: Re: [PATCH 07/12] libfrog: fix bitmap return values
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
+        by sandeen.net (Postfix) with ESMTPSA id E00BD15D6E;
+        Tue, 21 May 2019 14:24:37 -0500 (CDT)
+Subject: Re: [PATCH 11/12] mkfs: validate start and end of aligned logs
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839424514.68606.14562327454853103352.stgit@magnolia>
- <5caa6c9e-3a42-6c8e-101b-c198af77e765@sandeen.net>
- <20190521170103.GD5141@magnolia>
- <c281d3c3-5385-90a3-125a-8a620944c971@sandeen.net>
- <20190521191946.GA5657@infradead.org>
+ <155839427473.68606.3900005341580158051.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -70,34 +65,75 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <d3a556b7-95ad-9fc9-1867-cd71d43f00e8@sandeen.net>
-Date:   Tue, 21 May 2019 14:20:51 -0500
+Message-ID: <03cd588a-f4b0-0c79-4862-31ae0e5cd3dd@sandeen.net>
+Date:   Tue, 21 May 2019 14:24:40 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521191946.GA5657@infradead.org>
+In-Reply-To: <155839427473.68606.3900005341580158051.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 5/21/19 2:19 PM, Christoph Hellwig wrote:
-> On Tue, May 21, 2019 at 01:59:58PM -0500, Eric Sandeen wrote:
->> So yeah I'm of the opinion that unless it's kernel(-ish?) code it should be
->> positive, and I can send a patch to clean up stuff that's not.
->>
->> I can be swayed by counterarguments if you have them.  :)
+On 5/20/19 6:17 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> What speaks against everything is negative?  It isn't like returning
-> positive errors really is a traditional userspace convention, as that
-> is return -1 (negative!) and look at errno..
+> Validate that the start and end of the log stay within a single AG if
+> we adjust either end to align to stripe units.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  mkfs/xfs_mkfs.c |   15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> 
+> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+> index 5b66074d..8f84536e 100644
+> --- a/mkfs/xfs_mkfs.c
+> +++ b/mkfs/xfs_mkfs.c
+> @@ -3044,15 +3044,28 @@ align_internal_log(
+>  	struct xfs_mount	*mp,
+>  	int			sunit)
+>  {
+> +	uint64_t		logend;
+> +
+>  	/* round up log start if necessary */
+>  	if ((cfg->logstart % sunit) != 0)
+>  		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
+>  
+> +	/* if our log start rounds into the next AG we're done */
 
-Sorry, I wasn't clear - I meant returning negative errnos.  That's
-the part that's not consistent.
+/* If our log start overlaps the next AG's metadata, fail */
+
+> +	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
+> +			fprintf(stderr,
+> +_("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
+> +  "within an allocation group.\n"),
+> +			(long long) cfg->logstart);
+
+Hm, should it suggest what should be modified to try again ...?
+
+> +		usage();
+> +	}
+> +
+>  	/* round up/down the log size now */
+>  	align_log_size(cfg, sunit);
+>  
+>  	/* check the aligned log still fits in an AG. */
+> -	if (cfg->logblocks > cfg->agsize - XFS_FSB_TO_AGBNO(mp, cfg->logstart)) {
+> +	logend = cfg->logstart + cfg->logblocks - 1;
+> +	if (XFS_FSB_TO_AGNO(mp, cfg->logstart) != XFS_FSB_TO_AGNO(mp, logend) ||
+> +	    !xfs_verify_fsbno(mp, logend)) {
+
+this xfs_verify_fsbno is probably redundant but can't hurt?
 
 -Eric
+
+>  		fprintf(stderr,
+>  _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
+>    "Must fit within an allocation group.\n"),
+> 
