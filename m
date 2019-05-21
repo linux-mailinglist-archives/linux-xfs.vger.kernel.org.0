@@ -2,25 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D53D2584E
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A959F25854
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfEUTa7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 15:30:59 -0400
-Received: from sandeen.net ([63.231.237.45]:44656 "EHLO sandeen.net"
+        id S1727385AbfEUTdH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 15:33:07 -0400
+Received: from sandeen.net ([63.231.237.45]:44842 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfEUTa6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 15:30:58 -0400
+        id S1727341AbfEUTdH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 15:33:07 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 3715215D6E;
-        Tue, 21 May 2019 14:30:54 -0500 (CDT)
-Subject: [PATCH 12/12 V2] mkfs: enable reflink by default
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
+        by sandeen.net (Postfix) with ESMTPSA id 5CFB415D6E;
+        Tue, 21 May 2019 14:33:03 -0500 (CDT)
+Subject: Re: [PATCH 07/12] libfrog: fix bitmap return values
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839428076.68606.9379127257564633311.stgit@magnolia>
+ <155839424514.68606.14562327454853103352.stgit@magnolia>
+ <5caa6c9e-3a42-6c8e-101b-c198af77e765@sandeen.net>
+ <20190521170103.GD5141@magnolia>
+ <c281d3c3-5385-90a3-125a-8a620944c971@sandeen.net>
+ <20190521191946.GA5657@infradead.org>
+ <d3a556b7-95ad-9fc9-1867-cd71d43f00e8@sandeen.net>
+ <20190521192841.GA18265@infradead.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +72,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <1f5f641c-b6f8-2067-8224-7350f0f51034@sandeen.net>
-Date:   Tue, 21 May 2019 14:30:57 -0500
+Message-ID: <57b864b3-8faf-5449-8975-8d31bd10c43a@sandeen.net>
+Date:   Tue, 21 May 2019 14:33:06 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155839428076.68606.9379127257564633311.stgit@magnolia>
+In-Reply-To: <20190521192841.GA18265@infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -79,86 +86,31 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
-
-Data block sharing (a.k.a. reflink) has been stable for a while, so turn
-it on by default.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-[sandeen: update comments & man page]
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
-
-diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8
-index 4b8c78c..78b1501 100644
---- a/man/man8/mkfs.xfs.8
-+++ b/man/man8/mkfs.xfs.8
-@@ -231,7 +231,7 @@ available for the data forks of regular files.
- .IP
- By default,
- .B mkfs.xfs
--will not create reference count btrees and therefore will not enable the
-+will create reference count btrees and therefore will enable the
- reflink feature.  This feature is only available for filesystems created with
- the (default)
- .B \-m crc=1
-@@ -239,6 +239,13 @@ option set. When the option
- .B \-m crc=0
- is used, the reference count btree feature is not supported and reflink is
- disabled.
-+.IP
-+Note: the filesystem DAX mount option (
-+.B \-o dax
-+) is incompatible with
-+reflink-enabled XFS filesystems.  To use filesystem DAX with XFS, specify the
-+.B \-m reflink=0
-+option to mkfs.xfs to disable the reflink feature.
- .RE
- .TP
- .BI \-d " data_section_options"
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 0910664..ddb25ec 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -1973,15 +1973,15 @@ _("Directory ftype field always enabled on CRC enabled filesystems\n"));
- 			usage();
- 		}
- 
--	} else {
-+	} else {	/* !crcs_enabled */
- 		/*
--		 * The kernel doesn't currently support crc=0,finobt=1
--		 * filesystems. If crcs are not enabled and the user has not
--		 * explicitly turned finobt on, then silently turn it off to
--		 * avoid an unnecessary warning.
-+		 * The kernel doesn't support crc=0,finobt=1 filesystems.
-+		 * If crcs are not enabled and the user has not explicitly
-+		 * turned finobt on, then silently turn it off to avoid an
-+		 * unnecessary warning.
- 		 * If the user explicitly tried to use crc=0,finobt=1,
- 		 * then issue an error.
--		 * The same is also for sparse inodes.
-+		 * The same is also true for sparse inodes and reflink.
- 		 */
- 		if (cli->sb_feat.finobt && cli_opt_set(&mopts, M_FINOBT)) {
- 			fprintf(stderr,
-@@ -2004,7 +2004,7 @@ _("rmapbt not supported without CRC support\n"));
- 		}
- 		cli->sb_feat.rmapbt = false;
- 
--		if (cli->sb_feat.reflink) {
-+		if (cli->sb_feat.reflink && cli_opt_set(&mopts, M_REFLINK)) {
- 			fprintf(stderr,
- _("reflink not supported without CRC support\n"));
- 			usage();
-@@ -3876,7 +3876,7 @@ main(
- 			.finobt = true,
- 			.spinodes = true,
- 			.rmapbt = false,
--			.reflink = false,
-+			.reflink = true,
- 			.parent_pointers = false,
- 			.nodalign = false,
- 			.nortalign = false,
 
 
+On 5/21/19 2:28 PM, Christoph Hellwig wrote:
+> On Tue, May 21, 2019 at 02:20:51PM -0500, Eric Sandeen wrote:
+>>> On Tue, May 21, 2019 at 01:59:58PM -0500, Eric Sandeen wrote:
+>>>> So yeah I'm of the opinion that unless it's kernel(-ish?) code it should be
+>>>> positive, and I can send a patch to clean up stuff that's not.
+>>>>
+>>>> I can be swayed by counterarguments if you have them.  :)
+>>>
+>>> What speaks against everything is negative?  It isn't like returning
+>>> positive errors really is a traditional userspace convention, as that
+>>> is return -1 (negative!) and look at errno..
+>>
+>> Sorry, I wasn't clear - I meant returning negative errnos.  That's
+>> the part that's not consistent.
+> 
+> Yes.  And for libxfs/libfrog/etc stuff I think sticking to that and
+> always returning negative error values sounds sanest to me.  Note that
+> some userspace libraries have adopted that calling convention, for
+> example libaio.
+> 
+
+Oh, I see what you mean.  *shrug* sure, that makes sense.
+
+Sorry, it's my weird old SGI/Irix/ancient-xfs history confusing me.  ;)
+
+-Eric
