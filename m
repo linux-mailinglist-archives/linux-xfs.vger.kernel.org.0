@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADE472473B
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 07:02:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6AB724740
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 07:04:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfEUFCJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 01:02:09 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:33725 "EHLO
+        id S1725793AbfEUFEf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 01:04:35 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:32847 "EHLO
         mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfEUFCJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 01:02:09 -0400
-Received: by mail-yw1-f67.google.com with SMTP id v81so4550045ywe.0;
-        Mon, 20 May 2019 22:02:09 -0700 (PDT)
+        with ESMTP id S1725798AbfEUFEf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 01:04:35 -0400
+Received: by mail-yw1-f67.google.com with SMTP id v81so4551734ywe.0;
+        Mon, 20 May 2019 22:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=teN77TVl6CxhIDIdsQw8FBy02eKmZEPb6P7yrY1EsHc=;
-        b=o69nrCCUTdDP1hau8KrjGsWGGu6srcMXRbq+m3JY2vm7a0Uhv93RNoy2Aa9Wx0tj5a
-         bL3S0iBf42adQPuPAsJxkjJQlkjE8SaptEGFxThhc4VeSCsIqjcHsDqPKqgLiXmzo6Fn
-         r4hMoHU+1JnzmDtjfY9HlKsnI8Gg4HdX0E5XQ9IAbeonQu1ALvh9VZ9h6tw95vfppt22
-         nirQqM9QzK0OKpnb5NhwCFw6r5t86IG5Y+o/sPbbowTXjevPsotHpjZ2A5yMqo8I01Rz
-         X/n3A5fJ4AJlH49WRmYXOYBr+IuF0JUHIj0ikpyxQZ3o09MQ6c2wICBwbRPODmaVbcV4
-         BY6g==
+        bh=bkTlFlylplY2sLbf5X1CbWIIUMamJ5FYlyQvn2i/0Js=;
+        b=Vabx1HSGjFSpa9GLaCXw0/YboHAQpAHIebAD24/DG4SyInJPHBLtGYRNF3UWEMC6Fl
+         gHP0KWgyXWnhl2smLVFc2bUYh1sImpqg7CxPp3EbpcFugHD6nLgM4wWG5iBh9JeeJFyq
+         oHnFtpwbQWafCCXifdY2ocnDdkOozW4EvkiDKONzZ15U9SaMSAUHMAPD+FStRb/qVeMN
+         J0lRwrepARr+MYNZzMTXDBxhFtG1PzsSblMeoMWkNJuV5G51rEw3EVuYQggMJ8GTqTOD
+         kL/6vsaWwiT3ZuB6IldrkrWtGUMs5tNl6IW48zG0AakwDstXP6cT6Vh9kD4WEwBDQQLN
+         tZCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=teN77TVl6CxhIDIdsQw8FBy02eKmZEPb6P7yrY1EsHc=;
-        b=sd7cnC3XqUPpq85otNEtpM3Q4mzIYz3EnBPOb14NWD2IUHi8SgWF1UN7k+0RqNS5/4
-         al9YOx2nRmkeByeTbD+wZrqjJV+/SPjRqBiCXMEUIs2wHSRcGDB1rB9kkRj8JLDwzzlW
-         maN2GoChEnWNrtvtoz/lmqXLMMnP/ySuZGix5UQTWzIMCuo5UVrb+c8z0DjdBpnsuVlw
-         QK6mV4YL3j07S+lHZkee4VHGYR7NeG+Z85Ryhc4m1IwBT4kIHuZTjgVpMPyF+g8rDkYi
-         kA1Yqs6vS9JjS/d5etVazEMMWbKDYvKT4m/4SJRdjiOiZCj3PVrbuBjbxH830pe+3qPm
-         MMYw==
-X-Gm-Message-State: APjAAAXRLOQwwczS9+lu0Bd8tS9tI7X5oe1fmPPqMVEchmV/xCR9scC5
-        nXwOgr3DqjanvH5yvHtJnX7MaHeHW7MGBx62YlU=
-X-Google-Smtp-Source: APXvYqyN/iAg9r0jZWKqGxVoUplvxTq5XSTXjfNTJS/rENdd0+4+Jps07+gxufgVgcwVbv9kw3TN4aiuhiRNBFJW1sw=
-X-Received: by 2002:a81:9ac7:: with SMTP id r190mr24267198ywg.183.1558414928532;
- Mon, 20 May 2019 22:02:08 -0700 (PDT)
+        bh=bkTlFlylplY2sLbf5X1CbWIIUMamJ5FYlyQvn2i/0Js=;
+        b=KcK18ONgbl2FfgTvFBAGANzJlR5oaDVsGNeF1q4vdPhZBhlxPxfWwTecte60llz8Z8
+         AGMuP1lQxPtXwzx2XdUbmV33WU+36dgNj2OyC/M0w/b1gQo+oDgCdyl2th1Y9kA4Io+7
+         Kc0EdTeNoa5csf48gLKGbQggsz528aTWkjHnPLsOg8BP6aeNjYQgDDFoWlt34h8Dp47H
+         94/xLuvf9oqFWnAdAGBAn2yFYwRYZLIad6oVIeJmGEZyED6rVymZv0ObrtLmS4o9XXPV
+         bg5YzwsjufRG98/AaKv7b6f/YVsLgyhZcN8Pr0OgQGBugLDDSRk+/KS6T6RpNq8QJSZ8
+         CkiA==
+X-Gm-Message-State: APjAAAVrmNw9cjrPXdcAssK4/dh+eOasDqMSlQKgUT9IzV/fvy15XN4q
+        CM8trYJFbZr7lBHh2zZopcSLrDuQzxEjHaopfdI=
+X-Google-Smtp-Source: APXvYqyO/BI5kaSNq7HFwOmpEvaMnribHbQ357Hvhdcsc4Kgok1Qxrr7EJjvXg1wZw7mXqXXHUqpoLjmogeE4K6MpME=
+X-Received: by 2002:a0d:d5c1:: with SMTP id x184mr13890097ywd.88.1558415074726;
+ Mon, 20 May 2019 22:04:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <155839145160.62682.10916303376882370723.stgit@magnolia> <155839145791.62682.9311727733965110633.stgit@magnolia>
-In-Reply-To: <155839145791.62682.9311727733965110633.stgit@magnolia>
+References: <155839145160.62682.10916303376882370723.stgit@magnolia> <155839147057.62682.15559355049172171217.stgit@magnolia>
+In-Reply-To: <155839147057.62682.15559355049172171217.stgit@magnolia>
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 21 May 2019 08:01:57 +0300
-Message-ID: <CAOQ4uxiaU2aJ6h1NGv=S8guuFgbPEQ+HwhQ_gPbsCFXmy+Ju+g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] generic/530: revert commit f8f57747222
+Date:   Tue, 21 May 2019 08:04:23 +0300
+Message-ID: <CAOQ4uxhsiM-tCB+RV9P7z6kK_kEwxKpoeAFfc8Y5YwC8F6C40g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] generic, xfs: use _scratch_shutdown instead of
+ calling src/godown
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     Eryu Guan <guaneryu@gmail.com>,
         linux-xfs <linux-xfs@vger.kernel.org>,
@@ -62,94 +63,108 @@ On Tue, May 21, 2019 at 1:31 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 >
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 >
-> Commit f8f57747222 ("generic/530: fix shutdown failure of generic/530 in
-> overlay") improperly clears an overlayfs test failure by shutting down
-> the filesystem after all the tempfiles are closed, which totally defeats
-> the purpose of both generic/530 and xfs/501.  Revert this commit so we
-> can fix it properly.
+> Overlayfs introduces some complexity with regards to what path we have
+> to use to shut down the scratch filesystem: it's SCRATCH_MNT for regular
+> filesystems, but it's OVL_BASE_SCRATCH_MNT (i.e. the lower mount of the
+> overlay) if overlayfs is enabled.  The helper works through all that, so
+> we might as well use it.
 >
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+Thanks for cleaning that up
+
 Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
 > ---
->  src/t_open_tmpfiles.c |   19 +++++++++++++++++++
->  tests/generic/530     |    4 +---
->  tests/xfs/501         |    4 +---
->  3 files changed, 21 insertions(+), 6 deletions(-)
+>  tests/generic/050 |    2 +-
+>  tests/xfs/051     |    2 +-
+>  tests/xfs/079     |    2 +-
+>  tests/xfs/121     |    4 ++--
+>  tests/xfs/181     |    4 ++--
+>  5 files changed, 7 insertions(+), 7 deletions(-)
 >
 >
-> diff --git a/src/t_open_tmpfiles.c b/src/t_open_tmpfiles.c
-> index 0393c6bd..da9390fd 100644
-> --- a/src/t_open_tmpfiles.c
-> +++ b/src/t_open_tmpfiles.c
-> @@ -24,6 +24,7 @@ static int min_fd = -1;
->  static int max_fd = -1;
->  static unsigned int nr_opened = 0;
->  static float start_time;
-> +static int shutdown_fs = 0;
+> diff --git a/tests/generic/050 b/tests/generic/050
+> index 9a327165..91632d2d 100755
+> --- a/tests/generic/050
+> +++ b/tests/generic/050
+> @@ -92,7 +92,7 @@ echo "touch files"
+>  touch $SCRATCH_MNT/{0,1,2,3,4,5,6,7,8,9}{0,1,2,3,4,5,6,7,8,9}
 >
->  void clock_time(float *time)
->  {
-> @@ -68,6 +69,22 @@ void die(void)
->                                 end_time - start_time);
->                 fflush(stdout);
+>  echo "going down:"
+> -src/godown -f $SCRATCH_MNT
+> +_scratch_shutdown -f
 >
-> +               if (shutdown_fs) {
-> +                       /*
-> +                        * Flush the log so that we have to process the
-> +                        * unlinked inodes the next time we mount.
-> +                        */
-> +                       int flag = XFS_FSOP_GOING_FLAGS_LOGFLUSH;
-> +                       int ret;
-> +
-> +                       ret = ioctl(min_fd, XFS_IOC_GOINGDOWN, &flag);
-> +                       if (ret) {
-> +                               perror("shutdown");
-> +                               exit(2);
-> +                       }
-> +                       exit(0);
-> +               }
-> +
->                 clock_time(&start_time);
->                 for (fd = min_fd; fd <= max_fd; fd++)
->                         close(fd);
-> @@ -143,6 +160,8 @@ int main(int argc, char *argv[])
->                 if (ret)
->                         perror(argv[1]);
->         }
-> +       if (argc > 2 && !strcmp(argv[2], "shutdown"))
-> +               shutdown_fs = 1;
+>  echo "unmounting shutdown filesystem:"
+>  _scratch_unmount 2>&1 | _filter_scratch
+> diff --git a/tests/xfs/051 b/tests/xfs/051
+> index bcc824f8..105fa9ff 100755
+> --- a/tests/xfs/051
+> +++ b/tests/xfs/051
+> @@ -47,7 +47,7 @@ _scratch_mount
+>  # recovery.
+>  $FSSTRESS_PROG -n 9999 -p 2 -w -d $SCRATCH_MNT > /dev/null 2>&1 &
+>  sleep 5
+> -src/godown -f $SCRATCH_MNT
+> +_scratch_shutdown -f
+>  $KILLALL_PROG -q $FSSTRESS_PROG
+>  wait
+>  _scratch_unmount
+> diff --git a/tests/xfs/079 b/tests/xfs/079
+> index bf965a7f..67250495 100755
+> --- a/tests/xfs/079
+> +++ b/tests/xfs/079
+> @@ -56,7 +56,7 @@ _scratch_mount "-o logbsize=32k"
+>  # Run a workload to dirty the log, wait a bit and shutdown the fs.
+>  $FSSTRESS_PROG -d $SCRATCH_MNT -p 4 -n 99999999 >> $seqres.full 2>&1 &
+>  sleep 10
+> -./src/godown -f $SCRATCH_MNT
+> +_scratch_shutdown -f
+>  wait
 >
->         clock_time(&start_time);
->         while (1)
-> diff --git a/tests/generic/530 b/tests/generic/530
-> index 56c6d32a..b0d188b1 100755
-> --- a/tests/generic/530
-> +++ b/tests/generic/530
-> @@ -49,9 +49,7 @@ ulimit -n $max_files
+>  # Remount with a different log buffer size. Going from 32k to 64k increases the
+> diff --git a/tests/xfs/121 b/tests/xfs/121
+> index d82a367f..2e3914b7 100755
+> --- a/tests/xfs/121
+> +++ b/tests/xfs/121
+> @@ -52,7 +52,7 @@ src/multi_open_unlink -f $SCRATCH_MNT/test_file -n $num_files -s $delay &
+>  sleep 3
 >
->  # Open a lot of unlinked files
->  echo create >> $seqres.full
-> -$here/src/t_open_tmpfiles $SCRATCH_MNT >> $seqres.full
-> -_scratch_shutdown -f
-> -
-> +$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
+>  echo "godown"
+> -src/godown -v -f $SCRATCH_MNT >> $seqres.full
+> +_scratch_shutdown -v -f >> $seqres.full
 >
->  # Unmount to prove that we can clean it all
->  echo umount >> $seqres.full
-> diff --git a/tests/xfs/501 b/tests/xfs/501
-> index 4be9997c..974f3414 100755
-> --- a/tests/xfs/501
-> +++ b/tests/xfs/501
-> @@ -54,9 +54,7 @@ ulimit -n $max_files
+>  # time for multi_open_unlink to exit out after its delay
+>  # so we have no references and can unmount
+> @@ -69,7 +69,7 @@ _try_scratch_mount $mnt >>$seqres.full 2>&1 \
+>      || _fail "mount failed: $mnt $MOUNT_OPTIONS"
 >
->  # Open a lot of unlinked files
->  echo create >> $seqres.full
-> -$here/src/t_open_tmpfiles $SCRATCH_MNT >> $seqres.full
-> -_scratch_shutdown -f
-> -
-> +$here/src/t_open_tmpfiles $SCRATCH_MNT shutdown >> $seqres.full
+>  echo "godown"
+> -src/godown -v -f $SCRATCH_MNT >> $seqres.full
+> +_scratch_shutdown -v -f >> $seqres.full
 >
->  # Unmount to prove that we can clean it all
->  echo umount >> $seqres.full
+>  echo "unmount"
+>  _scratch_unmount
+> diff --git a/tests/xfs/181 b/tests/xfs/181
+> index 882a974b..dba69a70 100755
+> --- a/tests/xfs/181
+> +++ b/tests/xfs/181
+> @@ -65,7 +65,7 @@ pid=$!
+>  sleep 10
+>
+>  echo "godown"
+> -src/godown -v -f $SCRATCH_MNT >> $seqres.full
+> +_scratch_shutdown -v -f >> $seqres.full
+>
+>  # kill the multi_open_unlink
+>  kill $pid 2>/dev/null
+> @@ -83,7 +83,7 @@ _scratch_mount $mnt >>$seqres.full 2>&1 \
+>      || _fail "mount failed: $mnt $MOUNT_OPTIONS"
+>
+>  echo "godown"
+> -src/godown -v -f $SCRATCH_MNT >> $seqres.full
+> +_scratch_shutdown -v -f >> $seqres.full
+>
+>  echo "unmount"
+>  _scratch_unmount
 >
