@@ -2,27 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5D5B257E6
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:00:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 294292581A
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 21:16:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfEUTAA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 15:00:00 -0400
-Received: from sandeen.net ([63.231.237.45]:42124 "EHLO sandeen.net"
+        id S1726466AbfEUTQL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 15:16:11 -0400
+Received: from sandeen.net ([63.231.237.45]:43432 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfEUTAA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 15:00:00 -0400
+        id S1726419AbfEUTQL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 15:16:11 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 8C45215D6E;
-        Tue, 21 May 2019 13:59:55 -0500 (CDT)
-Subject: Re: [PATCH 07/12] libfrog: fix bitmap return values
+        by sandeen.net (Postfix) with ESMTPSA id E9F7A15D6E;
+        Tue, 21 May 2019 14:16:06 -0500 (CDT)
+Subject: Re: [PATCH 08/12] xfs_repair: refactor namecheck functions
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839424514.68606.14562327454853103352.stgit@magnolia>
- <5caa6c9e-3a42-6c8e-101b-c198af77e765@sandeen.net>
- <20190521170103.GD5141@magnolia>
+ <155839425128.68606.14448412166622032502.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -67,65 +65,208 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <c281d3c3-5385-90a3-125a-8a620944c971@sandeen.net>
-Date:   Tue, 21 May 2019 13:59:58 -0500
+Message-ID: <17704dc3-09a8-6013-7cbb-bb1b0be6911b@sandeen.net>
+Date:   Tue, 21 May 2019 14:16:09 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521170103.GD5141@magnolia>
+In-Reply-To: <155839425128.68606.14448412166622032502.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/21/19 12:01 PM, Darrick J. Wong wrote:
-> On Tue, May 21, 2019 at 11:54:18AM -0500, Eric Sandeen wrote:
->> On 5/20/19 6:17 PM, Darrick J. Wong wrote:
->>> From: Darrick J. Wong <darrick.wong@oracle.com>
->>>
->>> Fix the return types of non-predicate bitmap functions to return the
->>> usual negative error codes instead of the "moveon" boolean.
->>
->> This seems much better, though how did you decide on negative
->> error codes?  They are usual for the kernel, but in userspace
->> we have kind of a mishmash, even in libfrog.
->>
->>   File                 Function                 Line
->> 0 libfrog/paths.c      fs_table_insert          176 error = ENOMEM;
->> 1 libfrog/paths.c      fs_extract_mount_options 354 return ENOMEM;
->> 2 libfrog/radix-tree.c radix_tree_extend        135 return -ENOMEM;
->> 3 libfrog/radix-tree.c radix_tree_insert        188 return -ENOMEM;
->> 4 libfrog/workqueue.c  workqueue_add            110 return ENOMEM;
->>
->> 3 libfrog/paths.c         fs_table_initialise_mounts         384 return ENOENT;
->> 4 libfrog/paths.c         fs_table_initialise_projects       489 error = ENOENT;
->> 5 libfrog/paths.c         fs_table_insert_project_path       560 error = ENOENT;
+On 5/20/19 6:17 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Blindly copying libxfs style. :)
+> Now that we have name check functions in libxfs, use them instead of our
+> custom versions.
 > 
-> I see your point about being consistent within libfrog but OTOH it's
-> messy that we're not consistent across the various xfsprogs libraries.
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+I dig it.
+
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+
+> ---
+>  libxfs/libxfs_api_defs.h |    2 ++
+>  repair/attr_repair.c     |   32 +++++++++++++-------------------
+>  repair/da_util.c         |   27 ---------------------------
+>  repair/da_util.h         |    6 ------
+>  repair/dir2.c            |   12 ++----------
+>  5 files changed, 17 insertions(+), 62 deletions(-)
 > 
-> Uhm.... I'll change it if you want.
-
-If I were king (am I king?) I'd say that kernel code does negative values,
-userspace does positive, and we handle differences at the interface.
-
-Mostly I just want it to be predictable and consistent...
-
-AFAICT everything in libfrog is positive except for the radix-tree stuff,
-which is nominally kernel-ish ...?
-
-Userspace clearly needs some cleanups; mkfs parsers return negative, everything
-else seems positive; a couple metadump functions return negative, the rest is
-positive; most userspace callers of libxfs negate the negative error return...
-
-So yeah I'm of the opinion that unless it's kernel(-ish?) code it should be
-positive, and I can send a patch to clean up stuff that's not.
-
-I can be swayed by counterarguments if you have them.  :)
-
--Eric
+> 
+> diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+> index 34bb552d..71a7ef53 100644
+> --- a/libxfs/libxfs_api_defs.h
+> +++ b/libxfs/libxfs_api_defs.h
+> @@ -143,6 +143,8 @@
+>  #define xfs_default_ifork_ops		libxfs_default_ifork_ops
+>  #define xfs_fs_geometry			libxfs_fs_geometry
+>  #define xfs_init_local_fork		libxfs_init_local_fork
+> +#define xfs_dir2_namecheck		libxfs_dir2_namecheck
+> +#define xfs_attr_namecheck		libxfs_attr_namecheck
+>  
+>  #define LIBXFS_ATTR_ROOT		ATTR_ROOT
+>  #define LIBXFS_ATTR_SECURE		ATTR_SECURE
+> diff --git a/repair/attr_repair.c b/repair/attr_repair.c
+> index 5ad81c09..9a44f610 100644
+> --- a/repair/attr_repair.c
+> +++ b/repair/attr_repair.c
+> @@ -122,14 +122,6 @@ set_da_freemap(xfs_mount_t *mp, da_freemap_t *map, int start, int stop)
+>   * fork being emptied and put in shortform format.
+>   */
+>  
+> -static int
+> -attr_namecheck(
+> -	uint8_t	*name,
+> -	int	length)
+> -{
+> -	return namecheck((char *)name, length, false);
+> -}
+> -
+>  /*
+>   * This routine just checks what security needs are for attribute values
+>   * only called when root flag is set, otherwise these names could exist in
+> @@ -301,8 +293,8 @@ process_shortform_attr(
+>  		}
+>  
+>  		/* namecheck checks for null chars in attr names. */
+> -		if (attr_namecheck(currententry->nameval,
+> -						currententry->namelen)) {
+> +		if (!libxfs_attr_namecheck(currententry->nameval,
+> +					   currententry->namelen)) {
+>  			do_warn(
+>  	_("entry contains illegal character in shortform attribute name\n"));
+>  			junkit = 1;
+> @@ -464,8 +456,9 @@ process_leaf_attr_local(
+>  	xfs_attr_leaf_name_local_t *local;
+>  
+>  	local = xfs_attr3_leaf_name_local(leaf, i);
+> -	if (local->namelen == 0 || attr_namecheck(local->nameval,
+> -							local->namelen)) {
+> +	if (local->namelen == 0 ||
+> +	    !libxfs_attr_namecheck(local->nameval,
+> +				   local->namelen)) {
+>  		do_warn(
+>  	_("attribute entry %d in attr block %u, inode %" PRIu64 " has bad name (namelen = %d)\n"),
+>  			i, da_bno, ino, local->namelen);
+> @@ -519,13 +512,14 @@ process_leaf_attr_remote(
+>  
+>  	remotep = xfs_attr3_leaf_name_remote(leaf, i);
+>  
+> -	if (remotep->namelen == 0 || attr_namecheck(remotep->name,
+> -						remotep->namelen) ||
+> -			be32_to_cpu(entry->hashval) !=
+> -				libxfs_da_hashname((unsigned char *)&remotep->name[0],
+> -						remotep->namelen) ||
+> -			be32_to_cpu(entry->hashval) < last_hashval ||
+> -			be32_to_cpu(remotep->valueblk) == 0) {
+> +	if (remotep->namelen == 0 ||
+> +	    !libxfs_attr_namecheck(remotep->name,
+> +				   remotep->namelen) ||
+> +	    be32_to_cpu(entry->hashval) !=
+> +			libxfs_da_hashname((unsigned char *)&remotep->name[0],
+> +					   remotep->namelen) ||
+> +	    be32_to_cpu(entry->hashval) < last_hashval ||
+> +	    be32_to_cpu(remotep->valueblk) == 0) {
+>  		do_warn(
+>  	_("inconsistent remote attribute entry %d in attr block %u, ino %" PRIu64 "\n"), i, da_bno, ino);
+>  		return -1;
+> diff --git a/repair/da_util.c b/repair/da_util.c
+> index 4a258e58..8c818ea1 100644
+> --- a/repair/da_util.c
+> +++ b/repair/da_util.c
+> @@ -12,33 +12,6 @@
+>  #include "bmap.h"
+>  #include "da_util.h"
+>  
+> -/*
+> - * Takes a name and length (name need not be null-terminated) and whether
+> - * we are checking a dir (as opposed to an attr).
+> - * Returns 1 if the name contains a NUL or if a directory entry contains a '/'.
+> - * Returns 0 if the name checks out.
+> - */
+> -int
+> -namecheck(
+> -	char	*name,
+> -	int	length,
+> -	bool	isadir)
+> -{
+> -	char	*c;
+> -	int	i;
+> -
+> -	ASSERT(length < MAXNAMELEN);
+> -
+> -	for (c = name, i = 0; i < length; i++, c++) {
+> -		if (isadir && *c == '/')
+> -			return 1;
+> -		if (*c == '\0')
+> -			return 1;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  /*
+>   * the cursor gets passed up and down the da btree processing
+>   * routines.  The interior block processing routines use the
+> diff --git a/repair/da_util.h b/repair/da_util.h
+> index 041dff74..90fec00c 100644
+> --- a/repair/da_util.h
+> +++ b/repair/da_util.h
+> @@ -24,12 +24,6 @@ typedef struct da_bt_cursor {
+>  	struct blkmap		*blkmap;
+>  } da_bt_cursor_t;
+>  
+> -int
+> -namecheck(
+> -	char		*name,
+> -	int		length,
+> -	bool		isadir);
+> -
+>  struct xfs_buf *
+>  da_read_buf(
+>  	xfs_mount_t	*mp,
+> diff --git a/repair/dir2.c b/repair/dir2.c
+> index 094ecb3d..4ac0084e 100644
+> --- a/repair/dir2.c
+> +++ b/repair/dir2.c
+> @@ -44,14 +44,6 @@ _("malloc failed (%zu bytes) dir2_add_badlist:ino %" PRIu64 "\n"),
+>  	l->ino = ino;
+>  }
+>  
+> -static int
+> -dir_namecheck(
+> -	uint8_t	*name,
+> -	int	length)
+> -{
+> -	return namecheck((char *)name, length, true);
+> -}
+> -
+>  int
+>  dir2_is_badino(
+>  	xfs_ino_t	ino)
+> @@ -318,7 +310,7 @@ _("entry #%d %s in shortform dir %" PRIu64),
+>  		 * the length value is stored in a byte
+>  		 * so it can't be too big, it can only wrap
+>  		 */
+> -		if (dir_namecheck(sfep->name, namelen)) {
+> +		if (!libxfs_dir2_namecheck(sfep->name, namelen)) {
+>  			/*
+>  			 * junk entry
+>  			 */
+> @@ -789,7 +781,7 @@ _("\twould clear inode number in entry at offset %" PRIdPTR "...\n"),
+>  		 * during phase 4.
+>  		 */
+>  		junkit = dep->name[0] == '/';
+> -		nm_illegal = dir_namecheck(dep->name, dep->namelen);
+> +		nm_illegal = !libxfs_dir2_namecheck(dep->name, dep->namelen);
+>  		if (ino_discovery && nm_illegal) {
+>  			do_warn(
+>  _("entry at block %u offset %" PRIdPTR " in directory inode %" PRIu64 " has illegal name \"%*.*s\": "),
+> 
