@@ -2,167 +2,278 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D2D32550D
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CFD2556D
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfEUQLh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 12:11:37 -0400
-Received: from sandeen.net ([63.231.237.45]:57346 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfEUQLh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 12:11:37 -0400
-Received: from Liberator-6.local (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 0BDED325F
-        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 11:11:32 -0500 (CDT)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 5539639
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <47a8553f-576b-a45b-18b8-be600e0e6c5f@sandeen.net>
-Date:   Tue, 21 May 2019 11:11:35 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1727941AbfEUQVX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 12:21:23 -0400
+Received: from mail-it1-f171.google.com ([209.85.166.171]:52668 "EHLO
+        mail-it1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUQVX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 12:21:23 -0400
+Received: by mail-it1-f171.google.com with SMTP id t184so6043818itf.2
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 09:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=8pSHOGMyBkrfav4UbL52QVMGAg0XGlCzGLyMAgSRWO0=;
+        b=DxRZcfvLtu67HTaS/OYxG0rg6Fd/Bg2tFbtC4eE+ctw3BKdaqTbAoPGwpwPNA4rv1p
+         TfNO9bx2zKHCaS664qaX6LcITdDLF1TBojJ2ym3lY2wopZA/fVt3tk6EnpwzAEaityPw
+         gnOs5zAjb+HDnxjwJyuQWHpmGoXr4JCBJ7eANsAeNtRUQUTbPtSz0IH9yOCD9HIFEosr
+         gfwqGzTwkcpXR3K0U1DVJFETke8/lUgZ1kKUKr1HEucfjQ9YIlezK2L7N5RPGV8LLdxp
+         ZSCeM3N57dCyguQy05oO8Dfy5aLJeaC1jLhvfHWogcQt49kvKx7DA4Tmw3vTxApaKCJl
+         BQFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=8pSHOGMyBkrfav4UbL52QVMGAg0XGlCzGLyMAgSRWO0=;
+        b=sOZlkd1eiQhOYGsYeeOIhoioDrtoTm2IpFr/G5A0YVTE4OCb0jfx0I95+el/XvYh8/
+         1Qnfa/RZCglpTDrgDjVLffYMk4A90h0PVCcwD7DklWCLvpGmujNKKWkTfHuEhyoNYLs4
+         cK1W8nTLdtJXeZEHhHdHrpI/6ETAdiTNGX9nnDFLQvPXj0HNiMqxiqkQE5AdDRhtuv/z
+         isvFEkt+IxHt7rPBPPOBxqvdd6HY/FTvLhkuhLCHlsHTgvYfWYUQcFxffLowviUwRfHa
+         6AOnYEjI4vPwDYgI+ldTfztPr6uWQiCNctizepaMVsb40qLxiuRfPGm5S6fa9Z9HKlZ2
+         Ze3A==
+X-Gm-Message-State: APjAAAVg9GI5n6Eb3P1bqTxg96idDzKqmcLA8Tc0qOvct8nLbyDPLa9X
+        A+ngoKCkjzCjjK7OOH/b52+EOrh5GjC1Hi2cW8Dc4IDL
+X-Google-Smtp-Source: APXvYqwAEOSSSwhow3deChvfqlD1vJ5aojtnfJf4mC6fIL5ESlyZzMwXbb1HAKlpFSHVkSn82WJgynB1hJ/h/JJ4WkY=
+X-Received: by 2002:a02:2a0f:: with SMTP id w15mr10296909jaw.52.1558455681443;
+ Tue, 21 May 2019 09:21:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="POoZA4fFMmLiCDa4EqY8tZwfzG3qZhsDq"
+From:   Jeffrey Baker <jwbaker@gmail.com>
+Date:   Tue, 21 May 2019 09:21:10 -0700
+Message-ID: <CAMCX63xyxZwiPd0602im0M0m4jzSNfB3DcF1RekQ6A-03vXTmg@mail.gmail.com>
+Subject: Recurring hand in XFS inode reclaim on 4.10
+To:     linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---POoZA4fFMmLiCDa4EqY8tZwfzG3qZhsDq
-Content-Type: multipart/mixed; boundary="w4Tw49lgYRsQU628B0gg5si52F0utWIIg";
- protected-headers="v1"
-From: Eric Sandeen <sandeen@sandeen.net>
-To: linux-xfs <linux-xfs@vger.kernel.org>
-Message-ID: <47a8553f-576b-a45b-18b8-be600e0e6c5f@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 5539639
+I have a problem of recurring hangs on machines where I get hung task
+warnings for kswapd and many user threads stuck in lstat. At the time,
+I/O grinds to a halt, although not quite to zero. These hangs happen
+1-2 times per day on a fleet of several thousand machines. We'd like
+to understand the root cause, if it is already known, so we can figure
+out the minimum kernel to which we might want to update.
 
---w4Tw49lgYRsQU628B0gg5si52F0utWIIg
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+These are the hung task stacks:
 
-Hi folks,
+kswapd0         D    0   279      2 0x00000000
+Call Trace:
+ __schedule+0x232/0x700
+ schedule+0x36/0x80
+ schedule_preempt_disabled+0xe/0x10
+ __mutex_lock_slowpath+0x193/0x290
+ mutex_lock+0x2f/0x40
+ xfs_reclaim_inodes_ag+0x288/0x330 [xfs]
+ ? enqueue_entity+0x118/0x640
+ ? check_preempt_curr+0x54/0x90
+ ? ttwu_do_wakeup+0x19/0xe0
+ ? ttwu_do_activate+0x6f/0x80
+ ? try_to_wake_up+0x59/0x3e0
+ ? wake_up_process+0x15/0x20
+ xfs_reclaim_inodes_nr+0x33/0x40 [xfs]
+ xfs_fs_free_cached_objects+0x19/0x20 [xfs]
+ super_cache_scan+0x191/0x1a0
+ shrink_slab.part.40+0x1fa/0x430
+ shrink_slab+0x29/0x30
+ shrink_node+0x108/0x320
+ kswapd+0x34b/0x720
+ kthread+0x109/0x140
+ ? mem_cgroup_shrink_node+0x180/0x180
+ ? kthread_create_on_node+0x60/0x60
+ ret_from_fork+0x2c/0x40
 
-The for-next branch of the xfsprogs repository at:
+kswapd1         D    0   280      2 0x00000000
+Call Trace:
+ __schedule+0x232/0x700
+ schedule+0x36/0x80
+ schedule_timeout+0x235/0x3f0
+ ? blk_finish_plug+0x2c/0x40
+ ? _xfs_buf_ioapply+0x334/0x460 [xfs]
+ wait_for_completion+0xb4/0x140
+ ? wake_up_q+0x70/0x70
+ ? xfs_bwrite+0x24/0x60 [xfs]
+ xfs_buf_submit_wait+0x7f/0x210 [xfs]
+ xfs_bwrite+0x24/0x60 [xfs]
+ xfs_reclaim_inode+0x313/0x340 [xfs]
+ xfs_reclaim_inodes_ag+0x208/0x330 [xfs]
+ ? sched_clock+0x9/0x10
+ ? sched_clock_cpu+0x8f/0xa0
+ ? try_to_wake_up+0x59/0x3e0
+ ? wake_up_process+0x15/0x20
+ xfs_reclaim_inodes_nr+0x33/0x40 [xfs]
+ xfs_fs_free_cached_objects+0x19/0x20 [xfs]
+ super_cache_scan+0x191/0x1a0
+ shrink_slab.part.40+0x1fa/0x430
+ shrink_slab+0x29/0x30
+ shrink_node+0x108/0x320
+ kswapd+0x34b/0x720
+ kthread+0x109/0x140
+ ? mem_cgroup_shrink_node+0x180/0x180
+ ? kthread_create_on_node+0x60/0x60
+ ret_from_fork+0x2c/0x40
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+mysqld          D    0 89015 116527 0x00000080
+Call Trace:
+ __schedule+0x232/0x700
+ ? __remove_hrtimer+0x3c/0x70
+ schedule+0x36/0x80
+ rwsem_down_read_failed+0xf9/0x150
+ ? xfs_ilock_attr_map_shared+0x34/0x40 [xfs]
+ call_rwsem_down_read_failed+0x18/0x30
+ ? xfs_trans_roll+0x40/0x40 [xfs]
+ down_read+0x20/0x40
+ xfs_ilock+0xe5/0x110 [xfs]
+ xfs_ilock_attr_map_shared+0x34/0x40 [xfs]
+ xfs_attr_get+0xd3/0x180 [xfs]
+ xfs_xattr_get+0x4b/0x70 [xfs]
+ __vfs_getxattr+0x57/0x70
+ get_vfs_caps_from_disk+0x59/0x100
+ audit_copy_inode+0x6d/0xb0
+ __audit_inode+0x1bb/0x320
+ filename_lookup+0x128/0x180
+ ? __check_object_size+0x108/0x1e3
+ ? path_get+0x27/0x30
+ ? __audit_getname+0x96/0xb0
+ user_path_at_empty+0x36/0x40
+ vfs_fstatat+0x66/0xc0
+ SYSC_newlstat+0x31/0x60
+ ? syscall_trace_enter+0x1d9/0x2f0
+ ? __audit_syscall_exit+0x230/0x2c0
+ SyS_newlstat+0xe/0x10
+ do_syscall_64+0x5b/0xc0
+ entry_SYSCALL64_slow_path+0x25/0x25
 
-has just been updated.
+All other hung threads are stuck in the third stack.
 
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
+We are using the Ubuntu 16.04 kernel, 4.10.0-40-generic
+#44~16.04.1-Ubuntu. The machines involved have 20-core / 40-thread
+Intel CPUs, 384 GiB of main memory, and four nvme devices in an md
+RAID 0.  The filesystem info is:
 
-The new head of the for-next branch is commit:
+# xfs_info /dev/md0
+meta-data=/dev/md0               isize=256    agcount=6, agsize=268435455 blks
+         =                       sectsz=512   attr=2, projid32bit=0
+         =                       crc=0        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=1562366976, imaxpct=5
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=521728, version=2
+         =                       sectsz=512   sunit=1 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
 
-5539639 libxfs: share kernel's xfs_trans_inode.c
+The tasks above were reported as hung at 22:51:55, so they'd been dead
+since 22:49:55 at the latest.  The stats from around that time seem
+pretty normal.
 
-New Commits:
+# atopsar -r /var/log/atop/atop_20190517 -b 22:48:00 -e 22:53:00 -m
 
-Christoph Hellwig (1):
-      [15b8fe6] libxfs: factor common xfs_trans_bjoin code
+22:48:02  memtotal memfree buffers cached dirty slabmem  swptotal swpfree _mem_
+22:48:07   385598M   2199M    115M 23773M   14M   2435M        0M      0M
+22:48:12   385598M   2151M    115M 23777M   15M   2435M        0M      0M
+22:48:17   385598M   2222M    115M 23781M   16M   2435M        0M      0M
+22:48:22   385598M   2213M    115M 23785M    5M   2435M        0M      0M
+22:48:27   385598M   2198M    115M 23790M   11M   2435M        0M      0M
+22:48:32   385598M   2209M    115M 23791M    9M   2435M        0M      0M
+22:48:37   385598M   2205M    115M 23794M    0M   2435M        0M      0M
+22:48:42   385598M   2199M    115M 23798M    2M   2435M        0M      0M
+22:48:47   385598M   2119M    115M 23799M    1M   2435M        0M      0M
+22:48:52   385598M   2106M    115M 23804M    4M   2450M        0M      0M
+22:48:57   385598M   2095M    115M 23807M    4M   2450M        0M      0M
+22:49:02   385598M   1997M    116M 23814M    6M   2450M        0M      0M
+22:49:07   385598M   1966M    116M 23839M    4M   2451M        0M      0M
+22:49:12   385598M   1989M    116M 23856M   22M   2451M        0M      0M
+22:49:17   385598M   1797M    117M 23863M   29M   2452M        0M      0M
+22:49:22   385598M   1920M    118M 23902M   82M   2451M        0M      0M
+22:49:27   385598M   1875M    118M 23905M   83M   2451M        0M      0M
+22:49:32   385598M   1794M    120M 23925M   94M   2458M        0M      0M
+22:49:37   385598M   1707M    120M 23953M   35M   2459M        0M      0M
+22:49:42   385598M   1618M    120M 23985M   66M   2460M        0M      0M
+22:49:47   385598M   1535M    120M 24016M   95M   2460M        0M      0M
+22:49:52   385598M   1499M    121M 24036M   15M   2460M        0M      0M
+22:49:57   385598M   1440M    121M 24070M   48M   2461M        0M      0M
+22:50:02   385598M   1368M    121M 24095M   73M   2462M        0M      0M
+22:50:07   385598M   1355M    121M 24096M   73M   2461M        0M      0M
+22:50:12   385598M   1368M    121M 24101M   77M   2462M        0M      0M
+22:50:17   385598M   1362M    121M 24102M   78M   2461M        0M      0M
+22:50:22   385598M   1339M    121M 24106M    1M   2461M        0M      0M
+22:50:27   385598M   1329M    121M 24108M    2M   2461M        0M      0M
+22:50:32   385598M   1354M    121M 24109M    2M   2461M        0M      0M
+22:50:37   385598M   1337M    121M 24113M    6M   2461M        0M      0M
+22:50:42   385598M   1316M    121M 24114M    6M   2461M        0M      0M
+22:50:47   385598M   1309M    121M 24119M   11M   2461M        0M      0M
+22:50:52   385598M   1310M    121M 24119M    2M   2461M        0M      0M
+22:50:57   385598M   1305M    121M 24123M    6M   2461M        0M      0M
+22:51:02   385598M   1289M    121M 24123M    7M   2461M        0M      0M
+22:51:07   385598M   1286M    121M 24127M    8M   2462M        0M      0M
+22:51:12   385598M   1312M    121M 24128M    8M   2462M        0M      0M
+22:51:17   385598M   1291M    121M 24128M    9M   2462M        0M      0M
+22:51:22   385598M   1270M    121M 24132M   13M   2462M        0M      0M
+22:51:27   385598M   1283M    121M 24112M    1M   2462M        0M      0M
+22:51:32   385598M   1279M    121M 24116M    5M   2462M        0M      0M
+22:51:37   385598M   1273M    121M 24116M    6M   2462M        0M      0M
+22:51:42   385598M   1275M    121M 24115M    4M   2462M        0M      0M
+22:51:47   385598M   1302M    121M 24081M    6M   2462M        0M      0M
+22:51:52   385598M   1289M    121M 24085M   10M   2462M        0M      0M
+22:51:57   385598M   1285M    121M 24086M    3M   2462M        0M      0M
 
-Dave Chinner (1):
-      [fb34b2d] xfs: factor log item initialisation
+Something is obviously wrong with atop's analysis of md0 I/O rate
+here, but you get the idea: I/O slides over a minute from a reasonable
+rate to near zero, except for one big spike of output.
 
-Eric Sandeen (5):
-      [bc603ef] libxfs: Remove XACT_DEBUG #ifdefs
-      [cebe02e] libxfs: rename bli_format to avoid confusion with bli_for=
-mats
-      [31355f9] libxfs: fix argument to xfs_trans_add_item
-      [b192e77] libxfs: create current_time helper and sync xfs_trans_ich=
-gtime
-      [5539639] libxfs: share kernel's xfs_trans_inode.c
+# atopsar -r /var/log/atop/atop_20190517 -b 22:48:00 -e 22:53:00 -f
 
+22:48:02  disk           busy read/s KB/read  writ/s KB/writ avque avserv _mdd_
+22:48:07  md0              0% 1208.4     6.9  2569.0     6.6   0.0   0.00 ms
+22:48:12  md0              0% 1294.1     7.0  2642.5     6.6   0.0   0.00 ms
+22:48:17  md0              0% 1289.0     6.9  2823.5     6.8   0.0   0.00 ms
+22:48:22  md0              0% 1376.3     6.9  2662.6     6.7   0.0   0.00 ms
+22:48:27  md0              0% 1332.3     6.8  2578.7     6.3   0.0   0.00 ms
+22:48:32  md0              0% 1338.2     6.9  2601.7     6.5   0.0   0.00 ms
+22:48:37  md0              0% 1133.7     6.8  3172.3     6.9   0.0   0.00 ms
+22:48:42  md0              0% 1377.4     6.8  2609.3     6.8   0.0   0.00 ms
+22:48:47  md0              0% 1353.4     6.9  2293.6     6.5   0.0   0.00 ms
+22:48:52  md0              0% 1291.8     6.9  2200.5     6.3   0.0   0.00 ms
+22:48:57  md0              0% 1332.2     7.0  3066.1     6.9   0.0   0.00 ms
+22:49:02  md0              0% 1275.6     6.9  3021.2     6.8   0.0   0.00 ms
+22:49:07  md0              0% 1306.6     6.4  4407.2    10.4   0.0   0.00 ms
+22:49:12  md0              0% 1172.4     6.6  2740.4     7.1   0.0   0.00 ms
+22:49:17  md0              0%  468.4     4.9  2769.7     6.6   0.0   0.00 ms
+22:49:22  md0              0%  422.3     4.9  2950.9     7.0   0.0   0.00 ms
+22:49:27  md0              0%  364.7     4.9  2744.3     7.0   0.0   0.00 ms
+22:49:32  md0              0%  254.6     4.7  6271.1     8.8   0.0   0.00 ms
+22:49:37  md0              0%  289.6     4.6  2108.7     6.8   0.0   0.00 ms
+22:49:42  md0              0%  276.1     4.7  2278.3     6.7   0.0   0.00 ms
+22:49:47  md0              0%  266.2     4.7  1990.3     7.0   0.0   0.00 ms
+22:49:52  md0              0%  274.9     4.7  2051.3     7.0   0.0   0.00 ms
+22:49:57  md0              0%  222.7     4.6  1770.4     7.1   0.0   0.00 ms
+22:50:02  md0              0%  104.1     4.5 22339.5     9.5   0.0   0.00 ms
+22:50:07  md0              0%  132.9     4.4  6208.9     9.1   0.0   0.00 ms
+22:50:12  md0              0%  147.2     4.5   755.7     5.1   0.0   0.00 ms
+22:50:17  md0              0%  127.0     4.4   722.6     5.3   0.0   0.00 ms
+22:50:22  md0              0%  120.5     4.4   703.7     4.9   0.0   0.00 ms
+22:50:27  md0              0%  106.5     4.5   681.7     5.0   0.0   0.00 ms
+22:50:32  md0              0%  121.1     4.5   756.5     4.7   0.0   0.00 ms
+22:50:37  md0              0%  131.9     4.4   696.7     4.8   0.0   0.00 ms
+22:50:42  md0              0%  100.9     4.4   669.6     4.7   0.0   0.00 ms
+22:50:47  md0              0%   72.2     4.4   691.1     6.7   0.0   0.00 ms
+22:50:52  md0              0%    0.0     0.0   320.4     7.6   0.0   0.00 ms
+22:50:57  md0              0%    0.2     4.0   115.1     6.5   0.0   0.00 ms
+22:51:02  md0              0%    0.0     0.0    62.5     5.7   0.0   0.00 ms
+22:51:07  md0              0%    0.2     4.0    23.0     4.2   0.0   0.00 ms
+22:51:12  md0              0%    0.2     4.0    22.6     4.1   0.0   0.00 ms
+22:51:17  md0              0%    0.0     0.0    22.4     4.1   0.0   0.00 ms
+22:51:22  md0              0%    0.2     4.0    26.0     4.4   0.0   0.00 ms
+22:51:27  md0              0%    0.0     0.0    25.4     5.6   0.0   0.00 ms
+22:51:32  md0              0%    0.0     0.0    22.6     4.1   0.0   0.00 ms
+22:51:37  md0              0%    0.0     0.0    21.5     4.1   0.0   0.00 ms
+22:51:42  md0              0%    0.0     0.0    26.0     5.4   0.0   0.00 ms
+22:51:47  md0              0%    0.0     0.0    22.2     4.1   0.0   0.00 ms
+22:51:52  md0              0%    0.0     0.0    23.4     4.1   0.0   0.00 ms
+22:51:57  md0              0%    0.2     4.0    26.0     5.6   0.0   0.00 ms
 
-Code Diffstat:
+Any help would be appreciated.
 
- include/xfs_inode.h      |  14 ++++
- include/xfs_trace.h      |  13 +++
- include/xfs_trans.h      |   5 +-
- libxfs/Makefile          |   1 +
- libxfs/libxfs_priv.h     |  10 +++
- libxfs/logitem.c         |  14 ++--
- libxfs/trans.c           | 209 +++++++++++++++--------------------------=
-------
- libxfs/util.c            |  39 ++++-----
- libxfs/xfs_trans_inode.c | 155 +++++++++++++++++++++++++++++++++++
- 9 files changed, 283 insertions(+), 177 deletions(-)
- create mode 100644 libxfs/xfs_trans_inode.c
-
-
---w4Tw49lgYRsQU628B0gg5si52F0utWIIg--
-
---POoZA4fFMmLiCDa4EqY8tZwfzG3qZhsDq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAlzkIzcACgkQIK4WkuE9
-3uAPZg/+NUF+c9saNklPkmiU9U1oNpvkirpQSMtiRB24Nh6u0u3Q7xSj7JnVDvLC
-DerYrbYeZbOv802LzSiI1XRFBROo83AjWhq6EcYyfBpplk3ubYUQQRFZVJNieIlt
-9Zq1PDaFct3DCvmjlEoi6tpXyxi5rd/YVyUSgzwjilOXkEawkh58reDZuopcCM8L
-9u0h4c+CT5279IWJS+SN9A+WKB+1BJHSx9aopv3xgCxIDof8E+y/s+U5+G+JvqkH
-fWjhwpNqib+3vUkMMDswjlrZcpQVecq7WqNVfFgXixyTKjS4EB7+jOWqldnlSVGQ
-4tnbpEBpE+45wP5UL9o//Rcard6wmUIzWnCJ5JbvPWEMXNvhNp2cSm1bvJkWQ2kc
-MIIeRjLx+aP4QNjUlHehq7mYnnknprfxCiqS/fZ7NXv/B7CMnBULgNnnL3XbpIGV
-dt5NpE3jvD6LK5IawXjnsZIMZxdoH4CEHmlY/2xOvKhk58AYibQiEQ4R4COQz/4s
-wcMCuYRPGFP8sJk60Irjow+VyuA85AfeNd987008W+dw4/A4Ph6Xr1WfQoAkHTem
-NFZe7bDMWzzmJouIsrArI6qnC9qwuaCbrx+Hpqd+xEBBw+3A3ogZgKvpQ852DADf
-OJiGfc13ntAHxBYDbwZXcN5/XmLVjAlKPpxF0e767ErERthfzAs=
-=8x76
------END PGP SIGNATURE-----
-
---POoZA4fFMmLiCDa4EqY8tZwfzG3qZhsDq--
+-jwb
