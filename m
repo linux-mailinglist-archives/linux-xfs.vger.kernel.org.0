@@ -2,25 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 022F125597
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1843C255B1
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:33:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfEUQax (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 12:30:53 -0400
-Received: from sandeen.net ([63.231.237.45]:58850 "EHLO sandeen.net"
+        id S1728065AbfEUQdG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 12:33:06 -0400
+Received: from sandeen.net ([63.231.237.45]:59014 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEUQax (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 12:30:53 -0400
+        id S1728055AbfEUQdF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 12:33:05 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 4DA27325F;
-        Tue, 21 May 2019 11:30:49 -0500 (CDT)
-Subject: Re: [PATCH 01/12] libxfs: fix attr include mess
+        by sandeen.net (Postfix) with ESMTPSA id E567615D6E;
+        Tue, 21 May 2019 11:33:01 -0500 (CDT)
+Subject: Re: [PATCH 02/12] libxfs: set m_finobt_nores when initializing
+ library
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839420721.68606.5873005194118073203.stgit@magnolia>
+ <155839421389.68606.12844536360638603273.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,15 +66,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <6f6804b1-9f23-a0b3-515d-f74f09db3ada@sandeen.net>
-Date:   Tue, 21 May 2019 11:30:52 -0500
+Message-ID: <3bfe3296-1c35-f1f3-1a05-6ab81b124f9c@sandeen.net>
+Date:   Tue, 21 May 2019 11:33:04 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155839420721.68606.5873005194118073203.stgit@magnolia>
+In-Reply-To: <155839421389.68606.12844536360638603273.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,100 +83,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 5/20/19 6:16 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Remove all the userspace xfs_attr shim cruft so that we have one
-> definition of ATTR_* macros so that we can actually use xfs_attr.c
-> routines and include xfs_attr.h without problems.
+> We don't generally set up per-ag reservations in userspace, so set this
+> flag to true to force transactions to set up block reservations.  This
+> isn't necessary for userspace (since we never touch the finobt) but we
+> shouldn't leave a logic bomb.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-<handwaves about namespace for flag #defines ok sure>
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
 > ---
->  include/libxfs.h         |   10 +---------
->  libxfs/libxfs_api_defs.h |    5 +++++
->  libxfs/libxfs_priv.h     |    8 --------
->  libxfs/xfs_attr.c        |    1 +
->  libxfs/xfs_attr_leaf.c   |    1 +
->  5 files changed, 8 insertions(+), 17 deletions(-)
+>  libxfs/init.c |    1 +
+>  1 file changed, 1 insertion(+)
 > 
 > 
-> diff --git a/include/libxfs.h b/include/libxfs.h
-> index 230bc3e8..dd5fe542 100644
-> --- a/include/libxfs.h
-> +++ b/include/libxfs.h
-> @@ -211,14 +211,6 @@ libxfs_bmbt_disk_get_all(
->  int libxfs_rtfree_extent(struct xfs_trans *, xfs_rtblock_t, xfs_extlen_t);
->  bool libxfs_verify_rtbno(struct xfs_mount *mp, xfs_rtblock_t rtbno);
+> diff --git a/libxfs/init.c b/libxfs/init.c
+> index 2f6decc8..1baccb31 100644
+> --- a/libxfs/init.c
+> +++ b/libxfs/init.c
+> @@ -640,6 +640,7 @@ libxfs_mount(
 >  
-> -/* XXX: need parts of xfs_attr.h in userspace */
-> -#define LIBXFS_ATTR_ROOT	0x0002	/* use attrs in root namespace */
-> -#define LIBXFS_ATTR_SECURE	0x0008	/* use attrs in security namespace */
-> -#define LIBXFS_ATTR_CREATE	0x0010	/* create, but fail if attr exists */
-> -#define LIBXFS_ATTR_REPLACE	0x0020	/* set, but fail if attr not exists */
-> -
-> -int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
-> -int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
-> -		 unsigned char *value, int valuelen, int flags);
-> +#include "xfs_attr.h"
+>  	libxfs_buftarg_init(mp, dev, logdev, rtdev);
 >  
->  #endif	/* __LIBXFS_H__ */
-> diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-> index 1150ec93..34bb552d 100644
-> --- a/libxfs/libxfs_api_defs.h
-> +++ b/libxfs/libxfs_api_defs.h
-> @@ -144,4 +144,9 @@
->  #define xfs_fs_geometry			libxfs_fs_geometry
->  #define xfs_init_local_fork		libxfs_init_local_fork
->  
-> +#define LIBXFS_ATTR_ROOT		ATTR_ROOT
-> +#define LIBXFS_ATTR_SECURE		ATTR_SECURE
-> +#define LIBXFS_ATTR_CREATE		ATTR_CREATE
-> +#define LIBXFS_ATTR_REPLACE		ATTR_REPLACE
-> +
->  #endif /* __LIBXFS_API_DEFS_H__ */
-> diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-> index d668a157..f60bff06 100644
-> --- a/libxfs/libxfs_priv.h
-> +++ b/libxfs/libxfs_priv.h
-> @@ -104,14 +104,6 @@ extern char    *progname;
->   */
->  #define PTR_FMT "%p"
->  
-> -/* XXX: need to push these out to make LIBXFS_ATTR defines */
-> -#define ATTR_ROOT			0x0002
-> -#define ATTR_SECURE			0x0008
-> -#define ATTR_CREATE			0x0010
-> -#define ATTR_REPLACE			0x0020
-> -#define ATTR_KERNOTIME			0
-> -#define ATTR_KERNOVAL			0
-> -
->  #define XFS_IGET_CREATE			0x1
->  #define XFS_IGET_UNTRUSTED		0x2
->  
-> diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-> index b8838302..170e64cf 100644
-> --- a/libxfs/xfs_attr.c
-> +++ b/libxfs/xfs_attr.c
-> @@ -20,6 +20,7 @@
->  #include "xfs_trans.h"
->  #include "xfs_bmap.h"
->  #include "xfs_bmap_btree.h"
-> +#include "xfs_attr.h"
->  #include "xfs_attr_leaf.h"
->  #include "xfs_attr_remote.h"
->  #include "xfs_trans_space.h"
-> diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
-> index 679c7d0d..1027ca01 100644
-> --- a/libxfs/xfs_attr_leaf.c
-> +++ b/libxfs/xfs_attr_leaf.c
-> @@ -21,6 +21,7 @@
->  #include "xfs_bmap.h"
->  #include "xfs_attr_sf.h"
->  #include "xfs_attr_remote.h"
-> +#include "xfs_attr.h"
->  #include "xfs_attr_leaf.h"
->  #include "xfs_trace.h"
->  #include "xfs_cksum.h"
+> +	mp->m_finobt_nores = true;
+>  	mp->m_flags = (LIBXFS_MOUNT_32BITINODES|LIBXFS_MOUNT_32BITINOOPT);
+>  	mp->m_sb = *sb;
+>  	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_KERNEL);
 > 
