@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12095255E3
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FA3925630
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfEUQnp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 12:43:45 -0400
-Received: from sandeen.net ([63.231.237.45]:59806 "EHLO sandeen.net"
+        id S1727817AbfEUQyU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 12:54:20 -0400
+Received: from sandeen.net ([63.231.237.45]:60628 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbfEUQnp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 12:43:45 -0400
+        id S1728998AbfEUQyU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 12:54:20 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 29849325F;
-        Tue, 21 May 2019 11:43:41 -0500 (CDT)
-Subject: Re: [PATCH 06/12] misc: remove all use of xfs_fsop_geom_t
+        by sandeen.net (Postfix) with ESMTPSA id D1798325F;
+        Tue, 21 May 2019 11:54:15 -0500 (CDT)
+Subject: Re: [PATCH 07/12] libfrog: fix bitmap return values
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839423901.68606.18360420363137361199.stgit@magnolia>
+ <155839424514.68606.14562327454853103352.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,15 +65,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <210bdf1c-646c-96dd-287d-929178a62b7d@sandeen.net>
-Date:   Tue, 21 May 2019 11:43:43 -0500
+Message-ID: <5caa6c9e-3a42-6c8e-101b-c198af77e765@sandeen.net>
+Date:   Tue, 21 May 2019 11:54:18 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155839423901.68606.18360420363137361199.stgit@magnolia>
+In-Reply-To: <155839424514.68606.14562327454853103352.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,187 +82,345 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 5/20/19 6:17 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Remove all the uses of the old xfs_fsop_geom_t typedef.
+> Fix the return types of non-predicate bitmap functions to return the
+> usual negative error codes instead of the "moveon" boolean.
 
-Ok.  Any complaint if I tab stuff out to line up again when I commit
-it, assuming it doesn't cause 80char problems?
+This seems much better, though how did you decide on negative
+error codes?  They are usual for the kernel, but in userspace
+we have kind of a mishmash, even in libfrog.
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+  File                 Function                 Line
+0 libfrog/paths.c      fs_table_insert          176 error = ENOMEM;
+1 libfrog/paths.c      fs_extract_mount_options 354 return ENOMEM;
+2 libfrog/radix-tree.c radix_tree_extend        135 return -ENOMEM;
+3 libfrog/radix-tree.c radix_tree_insert        188 return -ENOMEM;
+4 libfrog/workqueue.c  workqueue_add            110 return ENOMEM;
+
+3 libfrog/paths.c         fs_table_initialise_mounts         384 return ENOENT;
+4 libfrog/paths.c         fs_table_initialise_projects       489 error = ENOENT;
+5 libfrog/paths.c         fs_table_insert_project_path       560 error = ENOENT;
+
+
 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  growfs/xfs_growfs.c |    4 ++--
->  io/init.c           |    2 +-
->  io/io.h             |    6 +++---
->  io/open.c           |    6 +++---
->  man/man3/xfsctl.3   |    2 +-
->  spaceman/file.c     |    4 ++--
->  spaceman/init.c     |    2 +-
->  spaceman/space.h    |    6 +++---
->  8 files changed, 16 insertions(+), 16 deletions(-)
+>  include/bitmap.h |    8 +++--
+>  libfrog/bitmap.c |   86 ++++++++++++++++++++++++++----------------------------
+>  repair/rmap.c    |   18 ++++++++---
+>  scrub/phase6.c   |   18 ++++-------
+>  4 files changed, 65 insertions(+), 65 deletions(-)
 > 
 > 
-> diff --git a/growfs/xfs_growfs.c b/growfs/xfs_growfs.c
-> index 392e4a00..ffd82f95 100644
-> --- a/growfs/xfs_growfs.c
-> +++ b/growfs/xfs_growfs.c
-> @@ -44,7 +44,7 @@ main(int argc, char **argv)
->  	int			error;	/* we have hit an error */
->  	long			esize;	/* new rt extent size */
->  	int			ffd;	/* mount point file descriptor */
-> -	xfs_fsop_geom_t		geo;	/* current fs geometry */
-> +	struct xfs_fsop_geom	geo;	/* current fs geometry */
->  	int			iflag;	/* -i flag */
->  	int			isint;	/* log is currently internal */
->  	int			lflag;	/* -l flag */
-> @@ -52,7 +52,7 @@ main(int argc, char **argv)
->  	int			maxpct;	/* -m flag value */
->  	int			mflag;	/* -m flag */
->  	int			nflag;	/* -n flag */
-> -	xfs_fsop_geom_t		ngeo;	/* new fs geometry */
-> +	struct xfs_fsop_geom	ngeo;	/* new fs geometry */
->  	int			rflag;	/* -r flag */
->  	long long		rsize;	/* new rt size in fs blocks */
->  	int			xflag;	/* -x flag */
-> diff --git a/io/init.c b/io/init.c
-> index 83f08f2d..7025aea5 100644
-> --- a/io/init.c
-> +++ b/io/init.c
-> @@ -133,7 +133,7 @@ init(
->  	int		c, flags = 0;
->  	char		*sp;
->  	mode_t		mode = 0600;
-> -	xfs_fsop_geom_t	geometry = { 0 };
-> +	struct xfs_fsop_geom geometry = { 0 };
->  	struct fs_path	fsp;
+> diff --git a/include/bitmap.h b/include/bitmap.h
+> index e29a4335..99a2fb23 100644
+> --- a/include/bitmap.h
+> +++ b/include/bitmap.h
+> @@ -11,11 +11,11 @@ struct bitmap {
+>  	struct avl64tree_desc	*bt_tree;
+>  };
 >  
->  	progname = basename(argv[0]);
-> diff --git a/io/io.h b/io/io.h
-> index 6469179e..0848ab98 100644
-> --- a/io/io.h
-> +++ b/io/io.h
-> @@ -38,7 +38,7 @@ typedef struct fileio {
->  	int		fd;		/* open file descriptor */
->  	int		flags;		/* flags describing file state */
->  	char		*name;		/* file name at time of open */
-> -	xfs_fsop_geom_t	geom;		/* XFS filesystem geometry */
-> +	struct xfs_fsop_geom geom;	/* XFS filesystem geometry */
->  	struct fs_path	fs_path;	/* XFS path information */
->  } fileio_t;
+> -bool bitmap_init(struct bitmap **bmap);
+> +int bitmap_init(struct bitmap **bmap);
+>  void bitmap_free(struct bitmap **bmap);
+> -bool bitmap_set(struct bitmap *bmap, uint64_t start, uint64_t length);
+> -bool bitmap_iterate(struct bitmap *bmap,
+> -		bool (*fn)(uint64_t, uint64_t, void *), void *arg);
+> +int bitmap_set(struct bitmap *bmap, uint64_t start, uint64_t length);
+> +int bitmap_iterate(struct bitmap *bmap, int (*fn)(uint64_t, uint64_t, void *),
+> +		void *arg);
+>  bool bitmap_test(struct bitmap *bmap, uint64_t start,
+>  		uint64_t len);
+>  bool bitmap_empty(struct bitmap *bmap);
+> diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
+> index 450ebe0a..4dafc4c9 100644
+> --- a/libfrog/bitmap.c
+> +++ b/libfrog/bitmap.c
+> @@ -66,7 +66,7 @@ static struct avl64ops bitmap_ops = {
+>  };
 >  
-> @@ -70,9 +70,9 @@ extern void *check_mapping_range(mmap_region_t *, off64_t, size_t, int);
->   */
->  
->  extern off64_t		filesize(void);
-> -extern int		openfile(char *, xfs_fsop_geom_t *, int, mode_t,
-> +extern int		openfile(char *, struct xfs_fsop_geom *, int, mode_t,
->  				 struct fs_path *);
-> -extern int		addfile(char *, int , xfs_fsop_geom_t *, int,
-> +extern int		addfile(char *, int , struct xfs_fsop_geom *, int,
->  				struct fs_path *);
->  extern void		printxattr(uint, int, int, const char *, int, int);
->  
-> diff --git a/io/open.c b/io/open.c
-> index 11805cd7..ce7a5362 100644
-> --- a/io/open.c
-> +++ b/io/open.c
-> @@ -51,7 +51,7 @@ static long extsize;
->  int
->  openfile(
->  	char		*path,
-> -	xfs_fsop_geom_t	*geom,
-> +	struct xfs_fsop_geom *geom,
->  	int		flags,
->  	mode_t		mode,
->  	struct fs_path	*fs_path)
-> @@ -156,7 +156,7 @@ int
->  addfile(
->  	char		*name,
->  	int		fd,
-> -	xfs_fsop_geom_t	*geometry,
-> +	struct xfs_fsop_geom *geometry,
->  	int		flags,
->  	struct fs_path	*fs_path)
+>  /* Initialize a bitmap. */
+> -bool
+> +int
+>  bitmap_init(
+>  	struct bitmap		**bmapp)
 >  {
-> @@ -229,7 +229,7 @@ open_f(
->  	int		c, fd, flags = 0;
->  	char		*sp;
->  	mode_t		mode = 0600;
-> -	xfs_fsop_geom_t	geometry = { 0 };
-> +	struct xfs_fsop_geom geometry = { 0 };
->  	struct fs_path	fsp;
+> @@ -74,18 +74,18 @@ bitmap_init(
 >  
->  	if (argc == 1) {
-> diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index 6e5027c4..462ccbd8 100644
-> --- a/man/man3/xfsctl.3
-> +++ b/man/man3/xfsctl.3
-> @@ -640,7 +640,7 @@ operations on XFS filesystems.
->  For
->  .B XFS_IOC_FSGEOMETRY
->  (get filesystem mkfs time information), the output structure is of type
-> -.BR xfs_fsop_geom_t .
-> +.BR struct xfs_fsop_geom .
->  For
->  .B XFS_FS_COUNTS
->  (get filesystem dynamic global information), the output structure is of type
-> diff --git a/spaceman/file.c b/spaceman/file.c
-> index d2acf5db..a9b8461f 100644
-> --- a/spaceman/file.c
-> +++ b/spaceman/file.c
-> @@ -44,7 +44,7 @@ print_f(
->  int
->  openfile(
->  	char		*path,
-> -	xfs_fsop_geom_t	*geom,
-> +	struct xfs_fsop_geom *geom,
->  	struct fs_path	*fs_path)
+>  	bmap = calloc(1, sizeof(struct bitmap));
+>  	if (!bmap)
+> -		return false;
+> +		return -ENOMEM;
+>  	bmap->bt_tree = malloc(sizeof(struct avl64tree_desc));
+>  	if (!bmap->bt_tree) {
+>  		free(bmap);
+> -		return false;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	pthread_mutex_init(&bmap->bt_lock, NULL);
+>  	avl64_init_tree(bmap->bt_tree, &bitmap_ops);
+>  	*bmapp = bmap;
+>  
+> -	return true;
+> +	return 0;
+>  }
+>  
+>  /* Free a bitmap. */
+> @@ -127,8 +127,31 @@ bitmap_node_init(
+>  	return ext;
+>  }
+>  
+> +/* Create a new bitmap node and insert it. */
+> +static inline int
+> +__bitmap_insert(
+> +	struct bitmap		*bmap,
+> +	uint64_t		start,
+> +	uint64_t		length)
+> +{
+> +	struct bitmap_node	*ext;
+> +	struct avl64node	*node;
+> +
+> +	ext = bitmap_node_init(start, length);
+> +	if (!ext)
+> +		return -ENOMEM;
+> +
+> +	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
+> +	if (node == NULL) {
+> +		free(ext);
+> +		return -EEXIST;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /* Set a region of bits (locked). */
+> -static bool
+> +static int
+>  __bitmap_set(
+>  	struct bitmap		*bmap,
+>  	uint64_t		start,
+> @@ -142,28 +165,14 @@ __bitmap_set(
+>  	struct bitmap_node	*ext;
+>  	uint64_t		new_start;
+>  	uint64_t		new_length;
+> -	struct avl64node	*node;
+> -	bool			res = true;
+>  
+>  	/* Find any existing nodes adjacent or within that range. */
+>  	avl64_findranges(bmap->bt_tree, start - 1, start + length + 1,
+>  			&firstn, &lastn);
+>  
+>  	/* Nothing, just insert a new extent. */
+> -	if (firstn == NULL && lastn == NULL) {
+> -		ext = bitmap_node_init(start, length);
+> -		if (!ext)
+> -			return false;
+> -
+> -		node = avl64_insert(bmap->bt_tree, &ext->btn_node);
+> -		if (node == NULL) {
+> -			free(ext);
+> -			errno = EEXIST;
+> -			return false;
+> -		}
+> -
+> -		return true;
+> -	}
+> +	if (firstn == NULL && lastn == NULL)
+> +		return __bitmap_insert(bmap, start, length);
+>  
+>  	assert(firstn != NULL && lastn != NULL);
+>  	new_start = start;
+> @@ -175,7 +184,7 @@ __bitmap_set(
+>  		/* Bail if the new extent is contained within an old one. */
+>  		if (ext->btn_start <= start &&
+>  		    ext->btn_start + ext->btn_length >= start + length)
+> -			return res;
+> +			return 0;
+>  
+>  		/* Check for overlapping and adjacent extents. */
+>  		if (ext->btn_start + ext->btn_length >= start ||
+> @@ -195,28 +204,17 @@ __bitmap_set(
+>  		}
+>  	}
+>  
+> -	ext = bitmap_node_init(new_start, new_length);
+> -	if (!ext)
+> -		return false;
+> -
+> -	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
+> -	if (node == NULL) {
+> -		free(ext);
+> -		errno = EEXIST;
+> -		return false;
+> -	}
+> -
+> -	return res;
+> +	return __bitmap_insert(bmap, new_start, new_length);
+>  }
+>  
+>  /* Set a region of bits. */
+> -bool
+> +int
+>  bitmap_set(
+>  	struct bitmap		*bmap,
+>  	uint64_t		start,
+>  	uint64_t		length)
 >  {
->  	struct fs_path	*fsp;
-> @@ -84,7 +84,7 @@ int
->  addfile(
->  	char		*name,
->  	int		fd,
-> -	xfs_fsop_geom_t	*geometry,
-> +	struct xfs_fsop_geom *geometry,
->  	struct fs_path	*fs_path)
+> -	bool			res;
+> +	int			res;
+>  
+>  	pthread_mutex_lock(&bmap->bt_lock);
+>  	res = __bitmap_set(bmap, start, length);
+> @@ -308,26 +306,26 @@ bitmap_clear(
+>  
+>  #ifdef DEBUG
+>  /* Iterate the set regions of this bitmap. */
+> -bool
+> +int
+>  bitmap_iterate(
+>  	struct bitmap		*bmap,
+> -	bool			(*fn)(uint64_t, uint64_t, void *),
+> +	int			(*fn)(uint64_t, uint64_t, void *),
+>  	void			*arg)
 >  {
->  	char		*filename;
-> diff --git a/spaceman/init.c b/spaceman/init.c
-> index 181a3446..c845f920 100644
-> --- a/spaceman/init.c
-> +++ b/spaceman/init.c
-> @@ -60,7 +60,7 @@ init(
->  	char		**argv)
+>  	struct avl64node	*node;
+>  	struct bitmap_node	*ext;
+> -	bool			moveon = true;
+> +	int			error = 0;
+>  
+>  	pthread_mutex_lock(&bmap->bt_lock);
+>  	avl_for_each(bmap->bt_tree, node) {
+>  		ext = container_of(node, struct bitmap_node, btn_node);
+> -		moveon = fn(ext->btn_start, ext->btn_length, arg);
+> -		if (!moveon)
+> +		error = fn(ext->btn_start, ext->btn_length, arg);
+> +		if (error)
+>  			break;
+>  	}
+>  	pthread_mutex_unlock(&bmap->bt_lock);
+>  
+> -	return moveon;
+> +	return error;
+>  }
+>  #endif
+>  
+> @@ -372,14 +370,14 @@ bitmap_empty(
+>  }
+>  
+>  #ifdef DEBUG
+> -static bool
+> +static int
+>  bitmap_dump_fn(
+>  	uint64_t		startblock,
+>  	uint64_t		blockcount,
+>  	void			*arg)
 >  {
->  	int		c;
-> -	xfs_fsop_geom_t	geometry = { 0 };
-> +	struct xfs_fsop_geom geometry = { 0 };
->  	struct fs_path	fsp;
+>  	printf("%"PRIu64":%"PRIu64"\n", startblock, blockcount);
+> -	return true;
+> +	return 0;
+>  }
 >  
->  	progname = basename(argv[0]);
-> diff --git a/spaceman/space.h b/spaceman/space.h
-> index bf9cc2bf..b246f602 100644
-> --- a/spaceman/space.h
-> +++ b/spaceman/space.h
-> @@ -7,7 +7,7 @@
->  #define XFS_SPACEMAN_SPACE_H_
+>  /* Dump bitmap. */
+> diff --git a/repair/rmap.c b/repair/rmap.c
+> index 19cceca3..47828a06 100644
+> --- a/repair/rmap.c
+> +++ b/repair/rmap.c
+> @@ -490,16 +490,22 @@ rmap_store_ag_btree_rec(
+>  	error = init_slab_cursor(ag_rmap->ar_raw_rmaps, rmap_compare, &rm_cur);
+>  	if (error)
+>  		goto err;
+> -	if (!bitmap_init(&own_ag_bitmap)) {
+> -		error = -ENOMEM;
+> +	error = -bitmap_init(&own_ag_bitmap);
+> +	if (error)
+>  		goto err_slab;
+> -	}
+>  	while ((rm_rec = pop_slab_cursor(rm_cur)) != NULL) {
+>  		if (rm_rec->rm_owner != XFS_RMAP_OWN_AG)
+>  			continue;
+> -		if (!bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
+> -					rm_rec->rm_blockcount)) {
+> -			error = EFSCORRUPTED;
+> +		error = -bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
+> +					rm_rec->rm_blockcount);
+> +		if (error) {
+> +			/*
+> +			 * If this range is already set, then the incore rmap
+> +			 * records for the AG free space btrees overlap and
+> +			 * we're toast because that is not allowed.
+> +			 */
+> +			if (error == EEXIST)
+> +				error = EFSCORRUPTED;
+>  			goto err_slab;
+>  		}
+>  	}
+> diff --git a/scrub/phase6.c b/scrub/phase6.c
+> index 4b25f3bb..66e6451c 100644
+> --- a/scrub/phase6.c
+> +++ b/scrub/phase6.c
+> @@ -341,7 +341,6 @@ xfs_check_rmap_ioerr(
+>  	struct media_verify_state	*vs = arg;
+>  	struct bitmap			*tree;
+>  	dev_t				dev;
+> -	bool				moveon;
 >  
->  typedef struct fileio {
-> -	xfs_fsop_geom_t	geom;		/* XFS filesystem geometry */
-> +	struct xfs_fsop_geom geom;		/* XFS filesystem geometry */
->  	struct fs_path	fs_path;	/* XFS path information */
->  	char		*name;		/* file name at time of open */
->  	int		fd;		/* open file descriptor */
-> @@ -17,8 +17,8 @@ extern fileio_t		*filetable;	/* open file table */
->  extern int		filecount;	/* number of open files */
->  extern fileio_t		*file;		/* active file in file table */
+>  	dev = xfs_disk_to_dev(ctx, disk);
 >  
-> -extern int	openfile(char *, xfs_fsop_geom_t *, struct fs_path *);
-> -extern int	addfile(char *, int , xfs_fsop_geom_t *, struct fs_path *);
-> +extern int	openfile(char *, struct xfs_fsop_geom *, struct fs_path *);
-> +extern int	addfile(char *, int , struct xfs_fsop_geom *, struct fs_path *);
+> @@ -356,8 +355,8 @@ xfs_check_rmap_ioerr(
+>  	else
+>  		tree = NULL;
+>  	if (tree) {
+> -		moveon = bitmap_set(tree, start, length);
+> -		if (!moveon)
+> +		errno = -bitmap_set(tree, start, length);
+> +		if (errno)
+>  			str_errno(ctx, ctx->mntpoint);
+>  	}
 >  
->  extern void	print_init(void);
->  extern void	help_init(void);
+> @@ -454,16 +453,16 @@ xfs_scan_blocks(
+>  	struct scrub_ctx		*ctx)
+>  {
+>  	struct media_verify_state	vs = { NULL };
+> -	bool				moveon;
+> +	bool				moveon = false;
+>  
+> -	moveon = bitmap_init(&vs.d_bad);
+> -	if (!moveon) {
+> +	errno = -bitmap_init(&vs.d_bad);
+> +	if (errno) {
+>  		str_errno(ctx, ctx->mntpoint);
+>  		goto out;
+>  	}
+>  
+> -	moveon = bitmap_init(&vs.r_bad);
+> -	if (!moveon) {
+> +	errno = -bitmap_init(&vs.r_bad);
+> +	if (errno) {
+>  		str_errno(ctx, ctx->mntpoint);
+>  		goto out_dbad;
+>  	}
+> @@ -472,7 +471,6 @@ xfs_scan_blocks(
+>  			ctx->geo.blocksize, xfs_check_rmap_ioerr,
+>  			scrub_nproc(ctx));
+>  	if (!vs.rvp_data) {
+> -		moveon = false;
+>  		str_info(ctx, ctx->mntpoint,
+>  _("Could not create data device media verifier."));
+>  		goto out_rbad;
+> @@ -482,7 +480,6 @@ _("Could not create data device media verifier."));
+>  				ctx->geo.blocksize, xfs_check_rmap_ioerr,
+>  				scrub_nproc(ctx));
+>  		if (!vs.rvp_log) {
+> -			moveon = false;
+>  			str_info(ctx, ctx->mntpoint,
+>  	_("Could not create log device media verifier."));
+>  			goto out_datapool;
+> @@ -493,7 +490,6 @@ _("Could not create data device media verifier."));
+>  				ctx->geo.blocksize, xfs_check_rmap_ioerr,
+>  				scrub_nproc(ctx));
+>  		if (!vs.rvp_realtime) {
+> -			moveon = false;
+>  			str_info(ctx, ctx->mntpoint,
+>  	_("Could not create realtime device media verifier."));
+>  			goto out_logpool;
 > 
