@@ -2,26 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1843C255B1
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15774255C3
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 18:38:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfEUQdG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 12:33:06 -0400
-Received: from sandeen.net ([63.231.237.45]:59014 "EHLO sandeen.net"
+        id S1728005AbfEUQi6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 12:38:58 -0400
+Received: from sandeen.net ([63.231.237.45]:59446 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfEUQdF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 21 May 2019 12:33:05 -0400
+        id S1727946AbfEUQi6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 21 May 2019 12:38:58 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id E567615D6E;
-        Tue, 21 May 2019 11:33:01 -0500 (CDT)
-Subject: Re: [PATCH 02/12] libxfs: set m_finobt_nores when initializing
- library
+        by sandeen.net (Postfix) with ESMTPSA id D6150325F;
+        Tue, 21 May 2019 11:38:53 -0500 (CDT)
+Subject: Re: [PATCH 03/12] libxfs: refactor online geometry queries
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155839420081.68606.4573219764134939943.stgit@magnolia>
- <155839421389.68606.12844536360638603273.stgit@magnolia>
+ <155839422001.68606.12869125311562128404.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -66,47 +65,83 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <3bfe3296-1c35-f1f3-1a05-6ab81b124f9c@sandeen.net>
-Date:   Tue, 21 May 2019 11:33:04 -0500
+Message-ID: <67eb11a7-d468-4b14-ab6d-714bd1de1f72@sandeen.net>
+Date:   Tue, 21 May 2019 11:38:56 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155839421389.68606.12844536360638603273.stgit@magnolia>
+In-Reply-To: <155839422001.68606.12869125311562128404.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/20/19 6:16 PM, Darrick J. Wong wrote:
+On 5/20/19 6:17 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> We don't generally set up per-ag reservations in userspace, so set this
-> flag to true to force transactions to set up block reservations.  This
-> isn't necessary for userspace (since we never touch the finobt) but we
-> shouldn't leave a logic bomb.
-> 
+> Refactor all the open-coded XFS_IOC_FSGEOMETRY queries into a single
+> helper that we can use to standardize behaviors across mixed xfslibs
+> versions.  This is the prelude to introducing a new FSGEOMETRY version
+> in 5.2 and needing to fix the (relatively few) client programs.
+
+Ok, helper is nice, but... libhandle?  I don't see how a geometry ioctl
+wrapper is related to libhandle.  Would this make more sense in libfrog/ ?
+
+-Eric
+
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-
 > ---
->  libxfs/init.c |    1 +
->  1 file changed, 1 insertion(+)
+>  Makefile            |    9 +++++----
+>  fsr/xfs_fsr.c       |   25 +++----------------------
+>  growfs/Makefile     |    5 +++--
+>  growfs/xfs_growfs.c |   24 ++++++++----------------
+>  include/linux.h     |    5 +++++
+>  io/bmap.c           |    2 +-
+>  io/fsmap.c          |    2 +-
+>  io/open.c           |    2 +-
+>  io/stat.c           |    4 ++--
+>  libhandle/Makefile  |    2 +-
+>  libhandle/ioctl.c   |   26 ++++++++++++++++++++++++++
+>  quota/Makefile      |    4 ++--
+>  quota/free.c        |    5 ++---
+>  repair/Makefile     |    6 +++---
+>  repair/xfs_repair.c |    4 ++--
+>  rtcp/Makefile       |    3 +++
+>  rtcp/xfs_rtcp.c     |    6 +++---
+>  scrub/phase1.c      |    2 +-
+>  spaceman/Makefile   |    4 ++--
+>  spaceman/file.c     |    2 +-
+>  spaceman/info.c     |   24 +++++++-----------------
+>  21 files changed, 82 insertions(+), 84 deletions(-)
+>  create mode 100644 libhandle/ioctl.c
 > 
 > 
-> diff --git a/libxfs/init.c b/libxfs/init.c
-> index 2f6decc8..1baccb31 100644
-> --- a/libxfs/init.c
-> +++ b/libxfs/init.c
-> @@ -640,6 +640,7 @@ libxfs_mount(
+> diff --git a/Makefile b/Makefile
+> index 9204bed8..b72a9209 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -99,14 +99,15 @@ $(LIB_SUBDIRS) $(TOOL_SUBDIRS): include libfrog
+>  $(DLIB_SUBDIRS) $(TOOL_SUBDIRS): libxfs
+>  db logprint: libxlog
+>  fsr: libhandle
+> -growfs: libxcmd
+> +growfs: libxcmd libhandle
+>  io: libxcmd libhandle
+> -quota: libxcmd
+> -repair: libxlog libxcmd
+> +quota: libxcmd libhandle
+> +repair: libxlog libxcmd libhandle
+>  copy: libxlog
+>  mkfs: libxcmd
+> -spaceman: libxcmd
+> +spaceman: libxcmd libhandle
+>  scrub: libhandle libxcmd
+> +rtcp: libhandle
 >  
->  	libxfs_buftarg_init(mp, dev, logdev, rtdev);
->  
-> +	mp->m_finobt_nores = true;
->  	mp->m_flags = (LIBXFS_MOUNT_32BITINODES|LIBXFS_MOUNT_32BITINOOPT);
->  	mp->m_sb = *sb;
->  	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_KERNEL);
-> 
+>  ifeq ($(HAVE_BUILDDEFS), yes)
+>  include $(BUILDRULES)
+
+...
