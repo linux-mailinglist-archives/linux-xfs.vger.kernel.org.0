@@ -2,121 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 157E825126
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 15:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1F5C25427
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 May 2019 17:37:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfEUNvk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 May 2019 09:51:40 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46705 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfEUNvj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 09:51:39 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z19so20457681qtz.13
-        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 06:51:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TK1+q9ordzXuZZneT1jdBLnWaxfhFR3So8YN5DgmZPE=;
-        b=R/90qI1JHwfT8rbc+GiHGVAIf4h0qVfcptR1hLtqEelvgTJbPjF2ab0QKNrzcr+VLP
-         4xU6q5IUOkBbLXOTVFMRpWFPfese2zJLEXPl0nmJnnsQdCfKJCtxCi9ZjSJluM1Tn4/I
-         ETWbBoF9dEzvYRxA+hSYhlXYZMwjTh4g9acZ503knhm/Av6mIZJs85Iu8dcoQa6UgW7o
-         Vjk6VRBDpeofpiWM2HxC1N+hB2ae0/LesgDhZmakv1rOmIKwzntXDgWCuk5dB6qUsgB5
-         oQbjFzahLFKR0Z1lOGk3v+00YLb7P0zV8kiNfQapyGdqslY9vAUjh1jPOsWYWw+nFWjE
-         /KOA==
-X-Gm-Message-State: APjAAAWgoSF6UyhbtqcAuF61ahGId7qIlKFhhM+VoRYEUo9GyGmD31Nz
-        hmMOVloyQIR7XKwrpVBgsVqVyg==
-X-Google-Smtp-Source: APXvYqyh4Hn5uFOLIUZJ6Or+HOPTIpSiSFn1uSWJgwWbt4T3Cy3pGgBfYiLTVuICBM9UJLxQWjWXvw==
-X-Received: by 2002:ac8:5218:: with SMTP id r24mr28772252qtn.177.1558446698964;
-        Tue, 21 May 2019 06:51:38 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id q27sm13106373qtf.27.2019.05.21.06.51.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 06:51:37 -0700 (PDT)
-Date:   Tue, 21 May 2019 09:51:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
-        rdunlap@infradead.org, snitzer@redhat.com
-Subject: Re: [PATCH v10 2/7] virtio-pmem: Add virtio pmem driver
-Message-ID: <20190521094543-mutt-send-email-mst@kernel.org>
-References: <20190521133713.31653-1-pagupta@redhat.com>
- <20190521133713.31653-3-pagupta@redhat.com>
+        id S1728269AbfEUPhp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 May 2019 11:37:45 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35596 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfEUPhp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 May 2019 11:37:45 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LFYFGr132480
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 15:37:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=GrU7345dptx6l25mpmvLzmme//dVzrImIjaFZFZixKU=;
+ b=rLzYH3cfnEQ3GoGJ7UTi9kgmhiQ6UDLQkM2AnUytG541ooG/ZPlEjtA6tHXDPBQpBisp
+ zE2YGmb9BdLeN1MhZwj2QdnSUIdU9Ebs8vwpnNLJv5SZQf4+XC5ttWJMhm2ngzp57RTA
+ Q3Ltxu8kkLO2fpY3naovV6mbCBcx7mssTyjH3+WNCYDzFyCMOAHEgPPfQ1HO25O6oVKs
+ vMV0b8rE7k4fE+Vz8PrMn2F2BEhTXI/oLsYbkQ41CMIhoR4MvodT51r5IPkn/Fd1Dp3c
+ 74umIL+HhTK9+NSEFwtqaKdStr5VgVuMMvklbWLzpO1fHsbmZ+FjyzCMKWvlYHl4jGe2 5w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2sj7jdpgbs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 15:37:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LFbeH6116084
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 15:37:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2sks1jh64u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 15:37:43 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4LFbgYj031610
+        for <linux-xfs@vger.kernel.org>; Tue, 21 May 2019 15:37:42 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 15:37:42 +0000
+Date:   Tue, 21 May 2019 08:37:41 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 5cd213b0fec6
+Message-ID: <20190521153741.GA5141@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521133713.31653-3-pagupta@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905210097
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210097
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 21, 2019 at 07:07:08PM +0530, Pankaj Gupta wrote:
-> diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
-> new file mode 100644
-> index 000000000000..7a3e2fe52415
-> --- /dev/null
-> +++ b/include/uapi/linux/virtio_pmem.h
-> @@ -0,0 +1,35 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
-> +/*
-> + * Definitions for virtio-pmem devices.
-> + *
-> + * Copyright (C) 2019 Red Hat, Inc.
-> + *
-> + * Author(s): Pankaj Gupta <pagupta@redhat.com>
-> + */
-> +
-> +#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
-> +#define _UAPI_LINUX_VIRTIO_PMEM_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/virtio_types.h>
-> +#include <linux/virtio_ids.h>
-> +#include <linux/virtio_config.h>
-> +
-> +struct virtio_pmem_config {
-> +	__le64 start;
-> +	__le64 size;
-> +};
-> +
+Hi folks,
 
-config generally should be __u64.
-Are you sure sparse does not complain?
+The for-next branch of the xfs-linux repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the for-next branch is commit:
+
+5cd213b0fec6 xfs: don't reserve per-AG space for an internal log
+
+New Commits:
+
+Darrick J. Wong (1):
+      [5cd213b0fec6] xfs: don't reserve per-AG space for an internal log
 
 
-> +#define VIRTIO_PMEM_REQ_TYPE_FLUSH      0
-> +
-> +struct virtio_pmem_resp {
-> +	/* Host return status corresponding to flush request */
-> +	__virtio32 ret;
-> +};
-> +
-> +struct virtio_pmem_req {
-> +	/* command type */
-> +	__virtio32 type;
-> +};
-> +
-> +#endif
-> -- 
-> 2.20.1
+Code Diffstat:
 
-Sorry why are these __virtio32 not __le32?
-
--- 
-MST
+ fs/xfs/libxfs/xfs_ialloc_btree.c   | 9 +++++++++
+ fs/xfs/libxfs/xfs_refcount_btree.c | 9 +++++++++
+ fs/xfs/libxfs/xfs_rmap_btree.c     | 9 +++++++++
+ 3 files changed, 27 insertions(+)
