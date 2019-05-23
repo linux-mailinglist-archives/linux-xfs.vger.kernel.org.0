@@ -2,109 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38A972820F
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 May 2019 18:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3774128463
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 May 2019 18:58:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfEWQCY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 23 May 2019 12:02:24 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44052 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730790AbfEWQCY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 May 2019 12:02:24 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NFsN2Q100412
-        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 16:02:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=NXvjJ7OjLTvCuNIxptap90g7tkM21yMZBZ7dHScoIbg=;
- b=4fJmxUqHBQ70LHaXaiVoYmSiyzGAYRx5TMDdHfWMozWi0t9GyDi9S0CFB/snDSSH2YrX
- gF/Lak0OF/73fhN6e3Bpnwm6WAvYF1GuVk0kNynUPsApHj1B/kN+y6fM2L9vM+K+9iU5
- 3t4okspf8miRoZ3wCDIMKiIs2aHYAVK0TXCf7aAgko4sJxAWMLw8s20C9Vxhh9tdx6pI
- CgrHJyp5v6K73sClIIhta+9ZLXJNlm6/tWF3CbnCRPaEwmzhJTkMwuCFlW5lUqXixzk/
- SfBmlHVLRn/tiaZ8W1f31Mi3jViIFcnH2kMiGm822ti9dOTDbA/Fni/7akWy3IqFKQEL 4w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2smsk5kdg1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 16:02:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NG1kV8082924
-        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 16:02:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2smsgvk0kt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 16:02:21 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4NG2Kxh010766
-        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 16:02:20 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 16:02:20 +0000
-Date:   Thu, 23 May 2019 09:02:19 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs: fix broken log reservation debugging
-Message-ID: <20190523160219.GH5141@magnolia>
+        id S1730893AbfEWQ57 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 May 2019 12:57:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35136 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730867AbfEWQ56 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 May 2019 12:57:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h11so6175000ljb.2
+        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 09:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ks/LH2oyTEaijoOzEMOK4qT05od1mgbLgD6IvZvC3ac=;
+        b=UrcFcbzEFPGggz1NPXakVDUiIg5mDqTO4045eBb7udfHenM+Veb+rBZ0tlbryVNdJc
+         qa5A4P3tgF5XCLb7D69n65wDt2yEO3fr0UKE7SehnvIvMriAPEG9xpGYM5u8gpQLeOdX
+         1vpQBx74HKkfDoRasFV6IFoGOt3sYNk7jzZac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ks/LH2oyTEaijoOzEMOK4qT05od1mgbLgD6IvZvC3ac=;
+        b=AixVkipdyXQsNtYcw3byfhtgHg3mAaUqerHqFhjW1du54hTh3bqiQicGVxTx8SKdD/
+         y030N7DGRL8dc+v3EKuyAmenFyyYWjyMfikF+CI8wSDYviToCL/X5j+LM+Fhm2ftChQd
+         m5igi2G4uy+BfU9hccn7pXSpF32TzGiuC5s9MtwzMFodG9hwG55BhfCUCrqJinV7A48Z
+         wutyuedEhswhUEp8T+Vrh7nlzBgg6asAATbxf6WQKQG1ZAlMHJ9V1IlaqTsh2xim//WW
+         suVbD1XIIZhfCu/DFrxCp1AYCCMdHW8zjiZsNGMrYWrgeXVURNz1Sh9kn+HW5adKQkhB
+         4Xxg==
+X-Gm-Message-State: APjAAAXaqdV9gcrXiZWdh4/DUTvCt8vegax4YcRMQz5TdpFsyfunFPi8
+        umdT/Iz9hTT+iD5xcG61L3+7BNcShlY=
+X-Google-Smtp-Source: APXvYqyNdyOEs5pib5/fm7nmLadBEBRtXlsMPG49lDEnRXB8wzzXf9+pnOeRuQWNB3+QM2Iqjor0GA==
+X-Received: by 2002:a2e:6c01:: with SMTP id h1mr23659761ljc.103.1558630307807;
+        Thu, 23 May 2019 09:51:47 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id h25sm769lja.41.2019.05.23.09.51.46
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 09:51:46 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id u27so4907273lfg.10
+        for <linux-xfs@vger.kernel.org>; Thu, 23 May 2019 09:51:46 -0700 (PDT)
+X-Received: by 2002:a19:7d42:: with SMTP id y63mr41221787lfc.54.1558630305849;
+ Thu, 23 May 2019 09:51:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905230108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230108
+References: <20190523100013.52a8d2a6@gandalf.local.home> <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
+ <20190523112740.7167aba4@gandalf.local.home>
+In-Reply-To: <20190523112740.7167aba4@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 May 2019 09:51:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whFJqTOk0mSxJGeh38ZxDksgRaMrNV8hqTngiuokyJzew@mail.gmail.com>
+Message-ID: <CAHk-=whFJqTOk0mSxJGeh38ZxDksgRaMrNV8hqTngiuokyJzew@mail.gmail.com>
+Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, May 23, 2019 at 8:27 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I haven't yet tested this, but what about something like the following:
 
-xlog_print_tic_res() is supposed to print a human readable string for
-each element of the log ticket reservation array.  Unfortunately, I
-forgot to update the string array when we added rmap & reflink support,
-so the debug message prints "region[3]: (null) - 352 bytes" which isn't
-useful at all.  Add the missing elements and add a build check so that
-we don't forget again to add a string when adding a new XLOG_REG_TYPE.
+So that at least handles the constant case that the normal "roundup()"
+case also handles.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_log.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+At the same time, in the case you are talking about, I really do
+suspect that we have a (non-constant) power of two, and that you
+should have just used "round_up()" which works fine regardless of
+size, and is always efficient.
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 457ced3ee3e1..2466b0f5b6c4 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2069,7 +2069,7 @@ xlog_print_tic_res(
- 
- 	/* match with XLOG_REG_TYPE_* in xfs_log.h */
- #define REG_TYPE_STR(type, str)	[XLOG_REG_TYPE_##type] = str
--	static char *res_type_str[XLOG_REG_TYPE_MAX + 1] = {
-+	static char *res_type_str[] = {
- 	    REG_TYPE_STR(BFORMAT, "bformat"),
- 	    REG_TYPE_STR(BCHUNK, "bchunk"),
- 	    REG_TYPE_STR(EFI_FORMAT, "efi_format"),
-@@ -2089,8 +2089,15 @@ xlog_print_tic_res(
- 	    REG_TYPE_STR(UNMOUNT, "unmount"),
- 	    REG_TYPE_STR(COMMIT, "commit"),
- 	    REG_TYPE_STR(TRANSHDR, "trans header"),
--	    REG_TYPE_STR(ICREATE, "inode create")
-+	    REG_TYPE_STR(ICREATE, "inode create"),
-+	    REG_TYPE_STR(RUI_FORMAT, "rui_format"),
-+	    REG_TYPE_STR(RUD_FORMAT, "rud_format"),
-+	    REG_TYPE_STR(CUI_FORMAT, "cui_format"),
-+	    REG_TYPE_STR(CUD_FORMAT, "cud_format"),
-+	    REG_TYPE_STR(BUI_FORMAT, "bui_format"),
-+	    REG_TYPE_STR(BUD_FORMAT, "bud_format"),
- 	};
-+	BUILD_BUG_ON(ARRAY_SIZE(res_type_str) != XLOG_REG_TYPE_MAX + 1);
- #undef REG_TYPE_STR
- 
- 	xfs_warn(mp, "ticket reservation summary:");
+On a slight tangent.. Maybe we should have something like this:
+
+#define size_fn(x, prefix, ...) ({                      \
+        typeof(x) __ret;                                \
+        switch (sizeof(x)) {                            \
+        case 1: __ret = prefix##8(__VA_ARGS__); break;  \
+        case 2: __ret = prefix##16(__VA_ARGS__); break; \
+        case 4: __ret = prefix##32(__VA_ARGS__); break; \
+        case 8: __ret = prefix##64(__VA_ARGS__); break; \
+        default: __ret = prefix##bad(__VA_ARGS__);      \
+        } __ret; })
+
+#define type_fn(x, prefix, ...) ({                              \
+        typeof(x) __ret;                                        \
+        if ((typeof(x))-1 > 1)                                  \
+                __ret = size_fn(x, prefix##_u, __VA_ARGS__);    \
+        else                                                    \
+                __ret = size_fn(x, prefix##_s, __VA_ARGS__);    \
+        __ret; })
+
+which would allow typed integer functions like this. So you could do
+something like
+
+     #define round_up(x, y) size_fn(x, round_up_size, x, y)
+
+and then you define functions for round_up_size8/16/32/64 (and you
+have toi declare - but not define - round_up_sizebad()).
+
+Of course, you probably want the usual "at least use 'int'" semantics,
+in which case the "type" should be "(x)+0":
+
+     #define round_up(x, y) size_fn((x)+0, round_up_size, x, y)
+
+ and the 8-bit and 16-bit cases will never be used.
+
+We have a lot of cases where we end up using "type overloading" by
+size. The most explicit case is perhaps "get_user()" and "put_user()",
+but this whole round_up thing is another example.
+
+Maybe we never really care about "char" and "short", and always want
+just the "int-vs-long-vs-longlong"? That would make the cases simpler
+(32 and 64). And maybe we never care about sign. But we could try to
+have some unified helper model like the above..
+
+                  Linus
