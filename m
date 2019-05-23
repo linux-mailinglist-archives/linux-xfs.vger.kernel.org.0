@@ -2,139 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D8328529
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 May 2019 19:42:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98439285E1
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 May 2019 20:25:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfEWRmR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 23 May 2019 13:42:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56390 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731195AbfEWRmR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 May 2019 13:42:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
-        Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pmXPaaj/UKMVDdYhcI0rsBS0ztnCqZvNE2REMSXPHAA=; b=YTWkFgz867WkAzLnH4SmsaUfn
-        GfhyrkxuAMaTCGsBgNvjSbau+Ue+Qw2tLRYKFXrxI5xhCQqmHIVZRi/hyDh5w8++YvAI0hpUvS4uc
-        Ez0UwVvsf/qSwCIZWUl+net/UwQag/8Vh1uALwvBnfOk+e+ZkGi6Wy4AsuvXeIcGGJccy/homd2eD
-        Tj4QsKMGf5iH5AczLTlYTdADNv4lxvDeZi8O4rK8yGNGxIYGfQcwthPmwWr3vB3KApcLbtCCZI6OC
-        II98lByregys7VQgF1S+54myxqZjB5JPLaxPdmj2xMiua9gnZpWag/SdhZkpYGtny6kNLA3HdI70R
-        isqS9/Zsg==;
-Received: from 213-225-10-46.nat.highway.a1.net ([213.225.10.46] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTrjM-0002UW-5x
-        for linux-xfs@vger.kernel.org; Thu, 23 May 2019 17:42:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 20/20] xfs: remove the b_io_length field in struct xfs_buf
-Date:   Thu, 23 May 2019 19:37:42 +0200
-Message-Id: <20190523173742.15551-21-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190523173742.15551-1-hch@lst.de>
-References: <20190523173742.15551-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        id S1731337AbfEWSZS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 May 2019 14:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731237AbfEWSZS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 23 May 2019 14:25:18 -0400
+Subject: Re: [GIT PULL] xfs: fixes for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558635917;
+        bh=4swXZDyheX0+mVhMrRucUExxVjZCYez9cbpbOfSgUMA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TDkAY1qbMjR7TumFE0radCRAWxn8OnVCid5M71m2yOQndOkkrcZ4aq4Ijy/azVNiG
+         hmShr6Nbt2CSgfHlPI3ZLrSJ72HWXeJ5vXZklm+xNO1ycxKe0oAX6VhVFInaCJYNSJ
+         1kzyvGhL3WX/ldtyGLR4gqHP6efoOaVdLGaW+K7E=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190523153346.GG5141@magnolia>
+References: <20190523153346.GG5141@magnolia>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190523153346.GG5141@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/xfs-5.2-fixes-1
+X-PR-Tracked-Commit-Id: 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4dde821e4296e156d133b98ddc4c45861935a4fb
+Message-Id: <155863591788.31149.9259350999930839889.pr-tracker-bot@kernel.org>
+Date:   Thu, 23 May 2019 18:25:17 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     torvalds@linux-foundation.org,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This field is now always idential to b_length.
+The pull request you sent on Thu, 23 May 2019 08:33:46 -0700:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_buf.c         | 5 ++---
- fs/xfs/xfs_buf.h         | 1 -
- fs/xfs/xfs_log_recover.c | 9 ++++-----
- 3 files changed, 6 insertions(+), 9 deletions(-)
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-1
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 68444d20d2ed..26027a93bdd3 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -263,7 +263,6 @@ _xfs_buf_alloc(
- 		bp->b_maps[i].bm_len = map[i].bm_len;
- 		bp->b_length += map[i].bm_len;
- 	}
--	bp->b_io_length = bp->b_length;
- 
- 	atomic_set(&bp->b_pin_count, 0);
- 	init_waitqueue_head(&bp->b_waiters);
-@@ -1407,7 +1406,7 @@ _xfs_buf_ioapply(
- 	 * subsequent call.
- 	 */
- 	offset = bp->b_offset;
--	size = BBTOB(bp->b_io_length);
-+	size = BBTOB(bp->b_length);
- 	blk_start_plug(&plug);
- 	for (i = 0; i < bp->b_map_count; i++) {
- 		xfs_buf_ioapply_map(bp, i, &offset, &size, op, op_flags);
-@@ -1545,7 +1544,7 @@ xfs_buf_iomove(
- 		page_offset = (boff + bp->b_offset) & ~PAGE_MASK;
- 		page = bp->b_pages[page_index];
- 		csize = min_t(size_t, PAGE_SIZE - page_offset,
--				      BBTOB(bp->b_io_length) - boff);
-+				      BBTOB(bp->b_length) - boff);
- 
- 		ASSERT((csize + page_offset) <= PAGE_SIZE);
- 
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 2abd2435d6aa..f95cf810126e 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -164,7 +164,6 @@ typedef struct xfs_buf {
- 	struct xfs_buf_map	*b_maps;	/* compound buffer map */
- 	struct xfs_buf_map	__b_map;	/* inline compound buffer map */
- 	int			b_map_count;
--	int			b_io_length;	/* IO size in BBs */
- 	atomic_t		b_pin_count;	/* pin count */
- 	atomic_t		b_io_remaining;	/* #outstanding I/O requests */
- 	unsigned int		b_page_count;	/* size of page array */
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 403c2c96ed71..bbe5e38e2932 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2086,7 +2086,7 @@ xlog_recover_do_inode_buffer(
- 	if (xfs_sb_version_hascrc(&mp->m_sb))
- 		bp->b_ops = &xfs_inode_buf_ops;
- 
--	inodes_per_buf = BBTOB(bp->b_io_length) >> mp->m_sb.sb_inodelog;
-+	inodes_per_buf = BBTOB(bp->b_length) >> mp->m_sb.sb_inodelog;
- 	for (i = 0; i < inodes_per_buf; i++) {
- 		next_unlinked_offset = (i * mp->m_sb.sb_inodesize) +
- 			offsetof(xfs_dinode_t, di_next_unlinked);
-@@ -2128,8 +2128,7 @@ xlog_recover_do_inode_buffer(
- 
- 		ASSERT(item->ri_buf[item_index].i_addr != NULL);
- 		ASSERT((item->ri_buf[item_index].i_len % XFS_BLF_CHUNK) == 0);
--		ASSERT((reg_buf_offset + reg_buf_bytes) <=
--							BBTOB(bp->b_io_length));
-+		ASSERT((reg_buf_offset + reg_buf_bytes) <= BBTOB(bp->b_length));
- 
- 		/*
- 		 * The current logged region contains a copy of the
-@@ -2594,7 +2593,7 @@ xlog_recover_do_reg_buffer(
- 		ASSERT(nbits > 0);
- 		ASSERT(item->ri_buf[i].i_addr != NULL);
- 		ASSERT(item->ri_buf[i].i_len % XFS_BLF_CHUNK == 0);
--		ASSERT(BBTOB(bp->b_io_length) >=
-+		ASSERT(BBTOB(bp->b_length) >=
- 		       ((uint)bit << XFS_BLF_SHIFT) + (nbits << XFS_BLF_SHIFT));
- 
- 		/*
-@@ -2817,7 +2816,7 @@ xlog_recover_buffer_pass2(
- 	 */
- 	if (XFS_DINODE_MAGIC ==
- 	    be16_to_cpu(*((__be16 *)xfs_buf_offset(bp, 0))) &&
--	    (BBTOB(bp->b_io_length) != max(log->l_mp->m_sb.sb_blocksize,
-+	    (BBTOB(bp->b_length) != max(log->l_mp->m_sb.sb_blocksize,
- 			(uint32_t)log->l_mp->m_inode_cluster_size))) {
- 		xfs_buf_stale(bp);
- 		error = xfs_bwrite(bp);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4dde821e4296e156d133b98ddc4c45861935a4fb
+
+Thank you!
+
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
