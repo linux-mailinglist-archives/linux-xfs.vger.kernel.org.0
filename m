@@ -2,56 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 343322A914
+	by mail.lfdr.de (Postfix) with ESMTP id 9D5C62A915
 	for <lists+linux-xfs@lfdr.de>; Sun, 26 May 2019 10:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfEZIpq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 26 May 2019 04:45:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34809 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfEZIpq (ORCPT
+        id S1727615AbfEZIpr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 26 May 2019 04:45:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36544 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbfEZIpq (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 May 2019 04:45:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so13862346wrt.1;
-        Sun, 26 May 2019 01:45:44 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id s17so13861458wru.3;
+        Sun, 26 May 2019 01:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tckcn1y7FRzPO6G+za+EoFRuwFIstypjqH+5hS8iplw=;
-        b=WlmkaEJpte23u6Dl9zCuzyqbEWvbovqpjI/mZsT2OaHmYeKwdbSFJ6ZElhofx6FE57
-         pTrAgW0ls0WzinBloO6YEtf4gu8VqBPCugDjYFfmVPuMzs8US+nmv7nw1t7enEimD78P
-         03UKsl7pJp6bb+BvWSFcjlf8Z28QCoNK7Oa5uv730n4BE/Qp3ZXWQn5P94vdWFfkK05d
-         LqM2wu0uJAUxoNhD46JTDMh6Br7DStWGJjke3Xfjqj5TSs0VoctBSm3DJbR4u2MHW6XY
-         AMVtJPmVwcbc5bZW0dEOJlhWmMiPlt+/xcwOVGvZ8WePMSD0nfNaF+0debhvP0hEpN0x
-         eDgw==
+        bh=YvfcaysMqm5sUoN6yrpm+q3A2ssaIwvLl370KrpnxxA=;
+        b=T0M5GXcsvuU3HfQD/Pjpk9NuvYovh9/LvCcZ9knf4LFg4BAVJpFo8rdQH0fSXR/aiK
+         DK4Fn7IWb520UT/Qo0W+/AOV0A1bqjMNcc82onzyf7kzPDv1kO6kXebhkPzQSc+xrqP/
+         XNonZwJgOU18yCqLKAn6srGQCyY9lnd5F9X5N9jjuWRa+KbrKzbujuU5hxdLD6/kj1cG
+         oNNqQNVJ0oJ3I1Rep3ATep5NTLXu7yfNcRpFOExUnxclhGgnAafo94aTPsonofvCZBg5
+         sQlozAJQMmYePNTdpnJoQ7VGNRmhTKE4KMnP0CsqbPY8ZlsKoEi15MIJJYgMLERmbYeG
+         C5hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=tckcn1y7FRzPO6G+za+EoFRuwFIstypjqH+5hS8iplw=;
-        b=s1Vlc908UYWMc9ilaJ4SbjIhLbR35CLYdyzG8D513ioIwsT+ALMNmDYYAyiZnP3xKR
-         EsPhKFoDI2Mz35iIadNxNa6vY47ujZyfU1WuJCbJtCrp14KD9eUpCDp7sUpr0Ga3OY2m
-         qOs8JxMjAaoJNIwKyoXvxgsg56gMGAHLCBPHkc/PNiNuryFNQl+q6tf5hnlDwYw86bhp
-         4HAndJISpNzTir/glxIvX98yNm4DPgyVZyIiW+5gP19H/1aemDaFNH1wkEmACV6vq8Y6
-         fGTHya6zCwBmgml5bRhFuEKidNaXZs/IBXWcR2h91UOaC6A0pZnMkhr3c3qHlgioy0yq
-         OKfw==
-X-Gm-Message-State: APjAAAVc6X3Pop0rsjEx4c2MIrAWRUpcXrEyN01a/LJSAjyJbrlTpQ65
-        5Ec3R8mqicOPF9RJ3AEcMVQ=
-X-Google-Smtp-Source: APXvYqw9GFKKMhbAfdF0nCC1+D4AP5s4W/vWJ0y6xJbUrju2jpLcoriYAyMB+N8+IbXCOONpbkvgOQ==
-X-Received: by 2002:adf:f9c5:: with SMTP id w5mr39523188wrr.26.1558860343834;
-        Sun, 26 May 2019 01:45:43 -0700 (PDT)
+        bh=YvfcaysMqm5sUoN6yrpm+q3A2ssaIwvLl370KrpnxxA=;
+        b=VA5FOpT414YAMEuhQLO8nMd7PpMYRRWDPIlA2OvyBcnIg2Nsp58XERvcWgpSCWyIDP
+         mH+rb1tXpOmXRoWErvGES/sIRNCajwJJYv8ziwk6gx/s4kGebZwwb/h2Bbp8K9F2auVm
+         r+ZffZb3GpKHeQjdheyyllrzHI3HTDyIYg8r85BTt+4xKCELwjQhcrTr7X/sZqEBbVJi
+         0CWbg2eMKmsfvXdv7OiPwJ8Dr06b6iF/7PL3Q5Oh1GqvQTDA+09VJLqniV0lhdDRotam
+         PcroMkkzkyZZ6ZtQhwDmEdIYHP2DaD0/IwOXR5HWj4S6cktgsVaqe6VLSbEQ9fTSJJEX
+         /1eQ==
+X-Gm-Message-State: APjAAAVqemYNoyOPXBs4xsa9anAJE3XpHW3IL+oopSCtuzFYIEWSMpNF
+        YLKV6SxWgaCb1tMvFPBo1GQ=
+X-Google-Smtp-Source: APXvYqz0GRIIbwi0QQkeqQSPvpkNDyMT7XxzeFtYpEPBGp3H9qSDmC1FQlAenFAmsryamUnbqHyldQ==
+X-Received: by 2002:adf:b643:: with SMTP id i3mr23738246wre.284.1558860345090;
+        Sun, 26 May 2019 01:45:45 -0700 (PDT)
 Received: from amir-ThinkPad-T480.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
-        by smtp.gmail.com with ESMTPSA id q11sm7089717wmc.15.2019.05.26.01.45.42
+        by smtp.gmail.com with ESMTPSA id q11sm7089717wmc.15.2019.05.26.01.45.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 May 2019 01:45:43 -0700 (PDT)
+        Sun, 26 May 2019 01:45:44 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     Eryu Guan <guaneryu@gmail.com>
 Cc:     Dave Chinner <david@fromorbit.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
-        fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH v2 1/5] generic: create copy_range group
-Date:   Sun, 26 May 2019 11:45:31 +0300
-Message-Id: <20190526084535.999-2-amir73il@gmail.com>
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: [PATCH v2 2/5] generic: copy_file_range immutable file test
+Date:   Sun, 26 May 2019 11:45:32 +0300
+Message-Id: <20190526084535.999-3-amir73il@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190526084535.999-1-amir73il@gmail.com>
 References: <20190526084535.999-1-amir73il@gmail.com>
@@ -60,56 +59,103 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move some tests to the copy_range group so they are distinct
-from the copy group which refers to xfs_copy tests.
+This test case was split out of Dave Chinner's copy_file_range bounds
+check test to reduce the requirements for running the bounds check.
 
-[Amir] Revert copy past EOF behavior change
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- tests/generic/434   |  2 ++
- tests/generic/group | 10 +++++-----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ tests/generic/988     | 59 +++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/988.out |  5 ++++
+ tests/generic/group   |  1 +
+ 3 files changed, 65 insertions(+)
+ create mode 100755 tests/generic/988
+ create mode 100644 tests/generic/988.out
 
-diff --git a/tests/generic/434 b/tests/generic/434
-index 032f933d..edbf49d3 100755
---- a/tests/generic/434
-+++ b/tests/generic/434
-@@ -46,10 +46,12 @@ $XFS_IO_PROG -f -c "copy_range -s 1000 -l 100 $testdir/file" "$testdir/copy"
- md5sum $testdir/copy | _filter_test_dir
- 
- echo "Try to copy to a read-only file"
-+rm -f $testdir/copy
- $XFS_IO_PROG -r -f -c "copy_range -s 0 -l 100 $testdir/file" "$testdir/copy"
- md5sum $testdir/copy | _filter_test_dir
- 
- echo "Try to copy to an append-only file"
-+rm -f $testdir/copy
- $XFS_IO_PROG -a -f -c "copy_range -s 0 -l 100 $testdir/file" "$testdir/copy"
- md5sum $testdir/copy | _filter_test_dir
- 
+diff --git a/tests/generic/988 b/tests/generic/988
+new file mode 100755
+index 00000000..0f4ee4ea
+--- /dev/null
++++ b/tests/generic/988
+@@ -0,0 +1,59 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2018 Red Hat, Inc.  All Rights Reserved.
++#
++# FS QA Test No. 988
++#
++# Check that we cannot copy_file_range() to/from an immutable file
++#
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1	# failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 7 15
++
++_cleanup()
++{
++	$CHATTR_PROG -i $testdir/immutable > /dev/null 2>&1
++	cd /
++	rm -rf $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++
++# real QA test starts here
++_supported_os Linux
++_supported_fs generic
++
++rm -f $seqres.full
++
++_require_test
++_require_chattr i
++_require_xfs_io_command "copy_range"
++_require_xfs_io_command "chattr"
++
++testdir="$TEST_DIR/test-$seq"
++rm -rf $testdir
++mkdir $testdir
++
++rm -f $seqres.full
++
++$XFS_IO_PROG -f -c "pwrite -S 0x61 0 128k" $testdir/file >> $seqres.full 2>&1
++
++# we have to open the file to be immutable rw and hold it open over the
++# chattr command to set it immutable, otherwise we won't be able to open it for
++# writing after it's been made immutable. (i.e. would exercise file mode checks,
++# not immutable inode flag checks).
++echo immutable file returns EPERM
++$XFS_IO_PROG -f -c "pwrite -S 0x61 0 64k" -c fsync $testdir/immutable | _filter_xfs_io
++$XFS_IO_PROG -f -c "chattr +i" -c "copy_range -l 32k $testdir/file" $testdir/immutable
++$XFS_IO_PROG -f -r -c "chattr -i" $testdir/immutable
++
++# success, all done
++status=0
++exit
+diff --git a/tests/generic/988.out b/tests/generic/988.out
+new file mode 100644
+index 00000000..e74a96bf
+--- /dev/null
++++ b/tests/generic/988.out
+@@ -0,0 +1,5 @@
++QA output created by 988
++immutable file returns EPERM
++wrote 65536/65536 bytes at offset 0
++XXX Bytes, X ops; XX:XX:XX.X (XXX YYY/sec and XXX ops/sec)
++copy_range: Operation not permitted
 diff --git a/tests/generic/group b/tests/generic/group
-index 49639fc9..b498eb56 100644
+index b498eb56..20b95c14 100644
 --- a/tests/generic/group
 +++ b/tests/generic/group
-@@ -432,11 +432,11 @@
- 427 auto quick aio rw
- 428 auto quick dax
- 429 auto encrypt
--430 auto quick copy
--431 auto quick copy
--432 auto quick copy
--433 auto quick copy
--434 auto quick copy
-+430 auto quick copy_range
-+431 auto quick copy_range
-+432 auto quick copy_range
-+433 auto quick copy_range
-+434 auto quick copy_range
- 435 auto encrypt
- 436 auto quick rw seek prealloc
- 437 auto quick dax
+@@ -550,3 +550,4 @@
+ 545 auto quick cap
+ 546 auto quick clone enospc log
+ 547 auto quick log
++988 auto quick copy_range
 -- 
 2.17.1
 
