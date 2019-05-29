@@ -2,57 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B2F2E456
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 20:22:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 212372E463
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 20:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfE2SWL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 May 2019 14:22:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49098 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2SWL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 14:22:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIIfH8039102;
-        Wed, 29 May 2019 18:21:16 GMT
+        id S1727559AbfE2SYD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 May 2019 14:24:03 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41622 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2SYD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 14:24:03 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIId0B057287;
+        Wed, 29 May 2019 18:23:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=oyzX8wcX3RU2yRhTpw2cECz2ywhxsINBgbyEYDolhXM=;
- b=eUTqjKnW9k1yBMd6C0j1ZWME3jV+/EaVmtsM/3/eB6RqKTrJY8NURREYmtJKj9tp3ZZY
- 9f4TMRO/mZidJ9QM2tsDfodD5lfu05XNMPQ34wPXmruMQLqT/nDHQPq5tjUszPm08/kV
- rTxKmlkq6wic19cOuunfohEc1ARsSk/DTHDNIszZlCtcmfKyuEGRMPvEC0USfZSKmP2u
- A1PxyZHN693SZM+Jc6h88uVh11Q56O3WZjXgdce7upNBzK2MpXftb0zTGaLgk4aP1SDi
- PtAU3CJA4ydhLpwQug9Uhec03TQcHaDUTUCBGYL9uU+jw09d55oixqFbpjHKAAIHPvmn 0Q== 
+ bh=yN96siC97bGXA079KpRQnuL10xuxNSq6s0e4DVZw93g=;
+ b=dm0D6anYXBe3K+MCrPSny+6dBQfMjrQSywoSfiBo+7YRlux+5udixTmWCQU2Kv8Ko5Op
+ lzCZuyWjvRyHPtAyWmSMQgz4OzeVT4gbdTGsf+YhsMGUALgOrVLtR1SuH8SPA21kpd+E
+ 9VEaI1PfsAgINy3s6Iq+euau3Z0KOSpRUIAtwX/Vy+vIzwOoKLlHjnbzMTVP2hXavYFz
+ c/uoqIDLaYFGpOc+iI8twzL/4the59e8ruSQ7EX+Aelv+pxR07Bxm9yrc9Z2y90YqdXX
+ 2z1TIYls/h1xntFYYk54HOUzHTIVMKDLxjSO/G/Ttlk2jNvIwe4ZSm5nu4sFzl3/DcK4 Ww== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2spw4tkr2p-1
+        by aserp2130.oracle.com with ESMTP id 2spu7dky0w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:21:16 +0000
+        Wed, 29 May 2019 18:23:25 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIKQAt009962;
-        Wed, 29 May 2019 18:21:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2sqh73vbj6-1
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIMNnZ014114;
+        Wed, 29 May 2019 18:23:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2sqh73vccs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:21:15 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TILDFF009388;
-        Wed, 29 May 2019 18:21:14 GMT
+        Wed, 29 May 2019 18:23:25 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TINMLW025084;
+        Wed, 29 May 2019 18:23:22 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 11:21:13 -0700
-Date:   Wed, 29 May 2019 11:21:11 -0700
+        with ESMTP ; Wed, 29 May 2019 11:23:22 -0700
+Date:   Wed, 29 May 2019 11:23:19 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Lukas Czerner <lczerner@redhat.com>
-Cc:     linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, xfs <linux-xfs@vger.kernel.org>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: How to package e2scrub
-Message-ID: <20190529182111.GA5220@magnolia>
-References: <20190529120603.xuet53xgs6ahfvpl@work>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs@vger.kernel.org,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org
+Subject: Re: [PATCH v3 04/13] vfs: remove redundant checks from
+ generic_remap_checks()
+Message-ID: <20190529182319.GD5231@magnolia>
+References: <20190529174318.22424-1-amir73il@gmail.com>
+ <20190529174318.22424-5-amir73il@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529120603.xuet53xgs6ahfvpl@work>
+In-Reply-To: <20190529174318.22424-5-amir73il@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
@@ -61,7 +68,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ma
  engine=8.0.1-1810050000 definitions=main-1905290118
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905290118
@@ -70,68 +77,100 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 02:06:03PM +0200, Lukas Czerner wrote:
-> Hi guys,
+On Wed, May 29, 2019 at 08:43:08PM +0300, Amir Goldstein wrote:
+> The access limit checks on input file range in generic_remap_checks()
+> are redundant because the input file size is guaranteied to be within
+
+"guaranteed"...
+
+> limits and pos+len are already checked to be within input file size.
 > 
-> I am about to release 1.45.2 for Fedora rawhide, but I was thinking
-> about how to package the e2scrub cron job/systemd service.
+> Beyond the fact that the check cannot fail, if it would have failed,
+> it could return -EFBIG for input file range error. There is no precedent
+> for that. -EFBIG is returned in syscalls that would change file length.
+> 
+> With that call removed, we can fold generic_access_check_limits() into
+> generic_write_check_limits().
+> 
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 
-Funny, xfs has the same conundrum.  Adding Eric & xfs list to cc...
-
-> I really do not like the idea of installing cron job and/or the service as
-> a part of regular e2fsprogs package. This can potentially really surprise
-> people in a bad way.
->
-> Note that I've already heard some complaints from debian users about the
-> systemd service being installed on their system after the e2fsprogs
-> update.
-
-Yeah, e2scrub is bitrotting rather faster than I had thought it
-would... but it's only available in Debian unstable.
-
-> What I am going to do is to split the systemd service into a separate
-> package and I'd like to come to some agreement about the name of the
-> package so that we can have the same name across distributions (at least
-> Fedora/Debian/Suse).
-
-Indeed.  Eric picked "xfsprogs-xfs_scrub" for Rawhide, though I find
-that name to be very clunky and would have preferred "xfs_scrub".
-
-> I was thinking about e2scrub-service for systemd service or e2scrub-cron
-> for the cron job. What do you think ?
-
-In /theory/ the cronjob support in e2scrub (and xfs_scrub) were designed
-to step out of the way if systemd is running, so at least in theory (on
-Debian anyway) the two can be in the same package with the end result
-being that e2scrub runs weekly in the background.  I've not tried in
-rhel/suse environments, however.
-
-I also don't see the point of supporting cron *while* systemd is active.
-That increases the amount of corner-case testing we have to do, for
-little gain.  It's enough work to maintain the systemd-with-timers and
-sysvinit-with-cron scenarios.
-
-If you're worried about the stability of systemd timer code, systemd's
-timer support has been stable enough to run e2scrub_all/xfs_scrub_all on
-my systems since late 2015, and I have no interest in supporting either
-on a pre-2016 distro.  Practically speaking, I guess that RHEL8, SLES16,
-and Ubuntu 20.04 will be the first LTS distros to support e2scrub at
-all.
-
-(As for xfs_scrub, it'll barely achieve alpha status in Linux 5.2...)
-
-> Also I decided not to package the cron job for now. But if I decide to
-> package it in the future I'd like to change the e2scrub cron
-> configuration so that it can run on the systems with systemd but make
-> the package conflict with the e2scrub-service so that users are free to
-> decide how they want to use it.
-
-If you do end up creating two packages I'd name the systemd one
-e2scrub-systemd over e2scrub-service.
+Once the changelog is fixed,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
-> Thoughts ?
+> ---
+>  mm/filemap.c | 33 ++++++++++++---------------------
+>  1 file changed, 12 insertions(+), 21 deletions(-)
 > 
-> Thanks!
-> -Lukas
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index a38619a4a6af..44361928bbb0 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2895,24 +2895,11 @@ EXPORT_SYMBOL(read_cache_page_gfp);
+>   * LFS limits.  If pos is under the limit it becomes a short access.  If it
+>   * exceeds the limit we return -EFBIG.
+>   */
+> -static int generic_access_check_limits(struct file *file, loff_t pos,
+> -				       loff_t *count)
+> -{
+> -	struct inode *inode = file->f_mapping->host;
+> -	loff_t max_size = inode->i_sb->s_maxbytes;
+> -
+> -	if (!(file->f_flags & O_LARGEFILE))
+> -		max_size = MAX_NON_LFS;
+> -
+> -	if (unlikely(pos >= max_size))
+> -		return -EFBIG;
+> -	*count = min(*count, max_size - pos);
+> -	return 0;
+> -}
+> -
+>  static int generic_write_check_limits(struct file *file, loff_t pos,
+>  				      loff_t *count)
+>  {
+> +	struct inode *inode = file->f_mapping->host;
+> +	loff_t max_size = inode->i_sb->s_maxbytes;
+>  	loff_t limit = rlimit(RLIMIT_FSIZE);
+>  
+>  	if (limit != RLIM_INFINITY) {
+> @@ -2923,7 +2910,15 @@ static int generic_write_check_limits(struct file *file, loff_t pos,
+>  		*count = min(*count, limit - pos);
+>  	}
+>  
+> -	return generic_access_check_limits(file, pos, count);
+> +	if (!(file->f_flags & O_LARGEFILE))
+> +		max_size = MAX_NON_LFS;
+> +
+> +	if (unlikely(pos >= max_size))
+> +		return -EFBIG;
+> +
+> +	*count = min(*count, max_size - pos);
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -2963,7 +2958,7 @@ EXPORT_SYMBOL(generic_write_checks);
+>  /*
+>   * Performs necessary checks before doing a clone.
+>   *
+> - * Can adjust amount of bytes to clone.
+> + * Can adjust amount of bytes to clone via @req_count argument.
+>   * Returns appropriate error code that caller should return or
+>   * zero in case the clone should be allowed.
+>   */
+> @@ -3001,10 +2996,6 @@ int generic_remap_checks(struct file *file_in, loff_t pos_in,
+>  		return -EINVAL;
+>  	count = min(count, size_in - (uint64_t)pos_in);
+>  
+> -	ret = generic_access_check_limits(file_in, pos_in, &count);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = generic_write_check_limits(file_out, pos_out, &count);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.17.1
+> 
