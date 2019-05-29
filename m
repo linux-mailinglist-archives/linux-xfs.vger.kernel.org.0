@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D792E843
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 May 2019 00:29:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8CCC2E842
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 May 2019 00:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfE2W3a (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726716AbfE2W3a (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 29 May 2019 18:29:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:38458 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfE2W3a (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 18:29:30 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMTSxJ059071
+Received: from userp2130.oracle.com ([156.151.31.86]:44676 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfE2W33 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 18:29:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMTR40040715
         for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:29:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=9Nt6Rg5prR/ZZKQYDY0KyVz45gqtJP9hsc3c+PcgYNs=;
- b=d/IJTAZV+73gnYJEMd8OO2N3BIo4lCuOhsfoZH4hT+EhAy8NQDqwXRRAsfPcspb9MCdD
- hBBUyDUz+Ew7k5HR5qnPfWhIdOmzjaIizUJ2GgcYJ50VSxaUiwh6EU5OivNC2UqEXyFL
- eaePQzW1Lq62Ku9QzOY7VwLqaQuWpojG+BZ3e7HCZIXthsHfBBdLxHlA0Y4IvjP1EESe
- E61kZS30k/+dqF6Wxdyj76+rxAMEAVrnDIowb7Kzom0j1ionbsvVyUson7ywPkL00no/
- DXxOmYXMq51My3kVzW1odZEu49GogVUu8NXtExf0M4bUZFck+QO+NpOYnrGen1FykHUb /w== 
+ bh=DE7N9tNE281KHouxya99nFV6gH8yJGwmKM8fKyuh4CA=;
+ b=ed/antAv181T0xEzUBq66o7flMeMWdKGfYLTFm1tn2o9hPei2eoZgHv6UDHOUTK2S5i0
+ 4u/hM+yLik89urzOQ82x9ALhyhdvQS+A7P8XZ27k41GMZyDYhdeN2TO9CeZF+DRYr2BC
+ oNfhErZ83E2+b5EDH7OV21m8TRiTP8p7Kb5xqW0AeNSccrvYFQj64nJsvAy4Ct38bScH
+ wCC5LAubrWR0+GpJBTjJ/HLp4VWPf2vR09i6ie1zQKKVTHbwiLz8HNQmIO05fqMajrt3
+ WeprH0Yap+DyF9rFsDBPCcYI8RuzvkW1G7x4a4ayjnrxmQnTcf0CSI9JvHPkSoZAJWm3 5w== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2spu7dn1dm-1
+        by userp2130.oracle.com with ESMTP id 2spw4tmtm3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:29:27 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMT0Wa168686
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:29:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2sr31vh96v-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMSx1d168476
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2sr31vh98s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:29:00 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TMSNH7022804
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:23 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:59 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TMSaEp004507
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:36 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 15:28:23 -0700
-Subject: [PATCH 8/9] xfs: specify AG in bulk req
+        with ESMTP ; Wed, 29 May 2019 15:28:36 -0700
+Subject: [PATCH 9/9] xfs: allow bulkstat_single of special inodes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 29 May 2019 15:28:22 -0700
-Message-ID: <155916890260.758159.16766868880768864542.stgit@magnolia>
+Date:   Wed, 29 May 2019 15:28:28 -0700
+Message-ID: <155916890871.758159.15869425204728307163.stgit@magnolia>
 In-Reply-To: <155916885106.758159.3471602893858635007.stgit@magnolia>
 References: <155916885106.758159.3471602893858635007.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +54,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=917
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1905290139
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=950 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905290139
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,271 +70,58 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add a new xfs_bulk_ireq flag to constrain the iteration to a single AG.
-If the passed-in startino value is zero then we start with the first
-inode in the AG that the user passes in; otherwise, we iterate only
-within the same AG as the passed-in inode.
+Create a new ireq flag (for single bulkstats) that enables userspace to
+ask us for a special inode number instead of interpreting @ino as a
+literal inode number.  This enables us to query the root inode easily.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_fs.h |   10 ++++++++--
- fs/xfs/xfs_ioctl.c     |   25 ++++++++++++++++++++++---
- fs/xfs/xfs_itable.c    |    6 +++---
- fs/xfs/xfs_itable.h    |    4 ++++
- fs/xfs/xfs_iwalk.c     |   12 ++++++++++++
- fs/xfs/xfs_iwalk.h     |   22 +++++++++++++++++-----
- fs/xfs/xfs_qm.c        |    3 ++-
- 7 files changed, 68 insertions(+), 14 deletions(-)
+ fs/xfs/libxfs/xfs_fs.h |   11 ++++++++++-
+ fs/xfs/xfs_ioctl.c     |   10 ++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index f9f35139d4b7..77c06850ac52 100644
+index 77c06850ac52..1826aa11b585 100644
 --- a/fs/xfs/libxfs/xfs_fs.h
 +++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -462,11 +462,17 @@ struct xfs_bulk_ireq {
- 	uint32_t	flags;		/* I/O: operation flags		*/
- 	uint32_t	icount;		/* I: count of entries in buffer */
- 	uint32_t	ocount;		/* O: count of entries filled out */
--	uint32_t	reserved32;	/* must be zero			*/
-+	uint32_t	agno;		/* I: see comment for IREQ_AGNO	*/
- 	uint64_t	reserved[5];	/* must be zero			*/
+@@ -482,7 +482,16 @@ struct xfs_ireq {
+ 	uint64_t	reserved[2];	/* must be zero			*/
  };
  
--#define XFS_BULK_IREQ_FLAGS_ALL	(0)
+-#define XFS_IREQ_FLAGS_ALL	(0)
 +/*
-+ * Only return results from the specified @agno.  If @ino is zero, start
-+ * with the first inode of @agno.
++ * The @ino value is a special value, not a literal inode number.  See the
++ * XFS_IREQ_SPECIAL_* values below.
 + */
-+#define XFS_BULK_IREQ_AGNO	(1 << 0)
++#define XFS_IREQ_SPECIAL	(1 << 0)
 +
-+#define XFS_BULK_IREQ_FLAGS_ALL	(XFS_BULK_IREQ_AGNO)
++#define XFS_IREQ_FLAGS_ALL	(XFS_IREQ_SPECIAL)
++
++/* Return the root directory inode. */
++#define XFS_IREQ_SPECIAL_ROOT	(1)
  
- /* Header for a single inode request. */
- struct xfs_ireq {
+ /*
+  * ioctl structures for v5 bulkstat and inumbers requests
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 294039c2ea75..cf48a2bad325 100644
+index cf48a2bad325..605bfff3011f 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -14,6 +14,7 @@
- #include "xfs_ioctl.h"
- #include "xfs_alloc.h"
- #include "xfs_rtalloc.h"
-+#include "xfs_iwalk.h"
- #include "xfs_itable.h"
- #include "xfs_error.h"
- #include "xfs_attr.h"
-@@ -846,18 +847,36 @@ xfs_bulk_ireq_setup(
- 	struct xfs_ibulk	*breq,
- 	void __user		*ubuffer)
- {
--	if (hdr->icount == 0 ||
--	    (hdr->flags & ~XFS_BULK_IREQ_FLAGS_ALL) ||
--	    hdr->reserved32 ||
-+	if (hdr->icount == 0 || (hdr->flags & ~XFS_BULK_IREQ_FLAGS_ALL) ||
+@@ -959,6 +959,16 @@ xfs_ireq_setup(
  	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
  		return -EINVAL;
  
-+	/*
-+	 * The IREQ_AGNO flag means that we only want results from a given AG.
-+	 * If @hdr->ino is zero, we start iterating in that AG.  If @hdr->ino is
-+	 * beyond the specified AG then we return no results.
-+	 */
-+	if (hdr->flags & XFS_BULK_IREQ_AGNO) {
-+		if (hdr->agno >= mp->m_sb.sb_agcount)
++	if (hdr->flags & XFS_IREQ_SPECIAL) {
++		switch (hdr->ino) {
++		case XFS_IREQ_SPECIAL_ROOT:
++			hdr->ino = mp->m_sb.sb_rootino;
++			break;
++		default:
 +			return -EINVAL;
-+
-+		if (hdr->ino == 0)
-+			hdr->ino = XFS_AGINO_TO_INO(mp, hdr->agno, 0);
-+		else if (XFS_INO_TO_AGNO(mp, hdr->ino) < hdr->agno)
-+			return -EINVAL;
-+		else if (XFS_INO_TO_AGNO(mp, hdr->ino) > hdr->agno)
-+			goto no_results;
-+	} else if (hdr->agno)
-+		return -EINVAL;
++		}
++	}
 +
  	if (XFS_INO_TO_AGNO(mp, hdr->ino) >= mp->m_sb.sb_agcount)
- 		goto no_results;
- 
- 	breq->ubuffer = ubuffer;
- 	breq->icount = hdr->icount;
- 	breq->startino = hdr->ino;
-+	if (hdr->flags & XFS_BULK_IREQ_AGNO)
-+		breq->flags |= XFS_IBULK_SAME_AG;
- 	return 0;
- no_results:
- 	hdr->ocount = 0;
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index 8701596976bb..08a8a827d204 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -241,8 +241,8 @@ xfs_bulkstat(
- 	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
- 		return 0;
- 
--	error = xfs_iwalk(breq->mp, NULL, breq->startino, xfs_bulkstat_iwalk,
--			breq->icount, &bc);
-+	error = xfs_iwalk(breq->mp, NULL, breq->startino, breq->flags,
-+			xfs_bulkstat_iwalk, breq->icount, &bc);
- 
- 	/*
- 	 * We found some inodes, so clear the error status and return them.
-@@ -362,7 +362,7 @@ xfs_inumbers(
- 	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
- 		return 0;
- 
--	error = xfs_inobt_walk(breq->mp, NULL, breq->startino,
-+	error = xfs_inobt_walk(breq->mp, NULL, breq->startino, breq->flags,
- 			xfs_inumbers_walk, breq->icount, &ic);
- 
- 	/*
-diff --git a/fs/xfs/xfs_itable.h b/fs/xfs/xfs_itable.h
-index 2987f3eb335f..ae8e9cfca8ad 100644
---- a/fs/xfs/xfs_itable.h
-+++ b/fs/xfs/xfs_itable.h
-@@ -12,8 +12,12 @@ struct xfs_ibulk {
- 	xfs_ino_t		startino; /* start with this inode */
- 	unsigned int		icount;   /* number of elements in ubuffer */
- 	unsigned int		ocount;   /* number of records returned */
-+	unsigned int		flags;    /* see XFS_IBULK_FLAG_* */
- };
- 
-+/* Only iterate within the same AG as startino */
-+#define XFS_IBULK_SAME_AG	(XFS_IWALK_SAME_AG)
-+
- /* Return value that means we want to abort the walk. */
- #define XFS_IBULK_ABORT		(XFS_IWALK_ABORT)
- 
-diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-index afa4b22ffb3d..d21537e0bfbb 100644
---- a/fs/xfs/xfs_iwalk.c
-+++ b/fs/xfs/xfs_iwalk.c
-@@ -479,6 +479,7 @@ xfs_iwalk(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
- 	xfs_ino_t		startino,
-+	unsigned int		flags,
- 	xfs_iwalk_fn		iwalk_fn,
- 	unsigned int		max_prefetch,
- 	void			*data)
-@@ -495,6 +496,7 @@ xfs_iwalk(
- 	int			error;
- 
- 	ASSERT(agno < mp->m_sb.sb_agcount);
-+	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
- 
- 	xfs_iwalk_set_prefetch(&iwag, max_prefetch);
- 	error = xfs_iwalk_allocbuf(&iwag);
-@@ -506,6 +508,8 @@ xfs_iwalk(
- 		if (error)
- 			break;
- 		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-+		if (flags & XFS_INOBT_WALK_SAME_AG)
-+			break;
- 	}
- 
- 	xfs_iwalk_freebuf(&iwag);
-@@ -541,6 +545,7 @@ int
- xfs_iwalk_threaded(
- 	struct xfs_mount	*mp,
- 	xfs_ino_t		startino,
-+	unsigned int		flags,
- 	xfs_iwalk_fn		iwalk_fn,
- 	unsigned int		max_prefetch,
- 	bool			polled,
-@@ -552,6 +557,7 @@ xfs_iwalk_threaded(
- 	int			error;
- 
- 	ASSERT(agno < mp->m_sb.sb_agcount);
-+	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
- 
- 	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
- 	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
-@@ -572,6 +578,8 @@ xfs_iwalk_threaded(
- 		xfs_iwalk_set_prefetch(iwag, max_prefetch);
- 		xfs_pwork_queue(&pctl, &iwag->pwork);
- 		startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-+		if (flags & XFS_INOBT_WALK_SAME_AG)
-+			break;
- 	}
- 
- 	if (polled)
-@@ -672,6 +680,7 @@ xfs_inobt_walk(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
- 	xfs_ino_t		startino,
-+	unsigned int		flags,
- 	xfs_inobt_walk_fn	inobt_walk_fn,
- 	unsigned int		max_prefetch,
- 	void			*data)
-@@ -688,6 +697,7 @@ xfs_inobt_walk(
- 	int			error;
- 
- 	ASSERT(agno < mp->m_sb.sb_agcount);
-+	ASSERT(!(flags & ~XFS_INOBT_WALK_FLAGS_ALL));
- 
- 	xfs_iwalk_set_prefetch(&iwag, max_prefetch * XFS_INODES_PER_CHUNK);
- 	error = xfs_iwalk_allocbuf(&iwag);
-@@ -699,6 +709,8 @@ xfs_inobt_walk(
- 		if (error)
- 			break;
- 		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-+		if (flags & XFS_INOBT_WALK_SAME_AG)
-+			break;
- 	}
- 
- 	xfs_iwalk_freebuf(&iwag);
-diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
-index 20bee93d4676..a0a1bae44362 100644
---- a/fs/xfs/xfs_iwalk.h
-+++ b/fs/xfs/xfs_iwalk.h
-@@ -13,10 +13,16 @@ typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
- #define XFS_IWALK_ABORT	(1)
- 
- int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
--		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, void *data);
-+		unsigned int flags, xfs_iwalk_fn iwalk_fn,
-+		unsigned int max_prefetch, void *data);
- int xfs_iwalk_threaded(struct xfs_mount *mp, xfs_ino_t startino,
--		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, bool poll,
--		void *data);
-+		unsigned int flags, xfs_iwalk_fn iwalk_fn,
-+		unsigned int max_prefetch, bool poll, void *data);
-+
-+/* Only iterate inodes within the same AG as @startino. */
-+#define XFS_IWALK_SAME_AG	(0x1)
-+
-+#define XFS_IWALK_FLAGS_ALL	(XFS_IWALK_SAME_AG)
- 
- /* Walk all inode btree records in the filesystem starting from @startino. */
- typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
-@@ -27,7 +33,13 @@ typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
- #define XFS_INOBT_WALK_ABORT	(XFS_IWALK_ABORT)
- 
- int xfs_inobt_walk(struct xfs_mount *mp, struct xfs_trans *tp,
--		xfs_ino_t startino, xfs_inobt_walk_fn inobt_walk_fn,
--		unsigned int max_prefetch, void *data);
-+		xfs_ino_t startino, unsigned int flags,
-+		xfs_inobt_walk_fn inobt_walk_fn, unsigned int max_prefetch,
-+		void *data);
-+
-+/* Only iterate inobt records within the same AG as @startino. */
-+#define XFS_INOBT_WALK_SAME_AG	(XFS_IWALK_SAME_AG)
-+
-+#define XFS_INOBT_WALK_FLAGS_ALL (XFS_INOBT_WALK_SAME_AG)
- 
- #endif /* __XFS_IWALK_H__ */
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index de6a623ada02..3540238b6130 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1305,7 +1305,8 @@ xfs_qm_quotacheck(
- 		flags |= XFS_PQUOTA_CHKD;
- 	}
- 
--	error = xfs_iwalk_threaded(mp, 0, xfs_qm_dqusage_adjust, 0, true, NULL);
-+	error = xfs_iwalk_threaded(mp, 0, 0, xfs_qm_dqusage_adjust, 0, true,
-+			NULL);
- 	if (error)
- 		goto error_return;
+ 		return -EINVAL;
  
 
