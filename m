@@ -2,150 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 177C72D514
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 07:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E50382D51F
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 07:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbfE2Fa7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 May 2019 01:30:59 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:44834 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2Fa6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 01:30:58 -0400
-Received: by mail-yb1-f196.google.com with SMTP id x187so324309ybc.11;
-        Tue, 28 May 2019 22:30:58 -0700 (PDT)
+        id S1726141AbfE2FjC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 May 2019 01:39:02 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:45716 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfE2FjB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 01:39:01 -0400
+Received: by mail-yb1-f195.google.com with SMTP id e128so327076ybc.12;
+        Tue, 28 May 2019 22:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ecX8IeU4eLhJZSPwsySNajrk7dDNUWBk2s3NMnvp2fs=;
-        b=NqAalIxznx4DG8fW+q5dKNZ7W32S4p0fWAbOoV+ZsIi96Z7To3BGcedeFtD15ahGY+
-         i84jt/VPzknCgi/pe4cl1gHYZ5N+tdnh6c29MCRferQ+kDEztPvBNLLQXvEN3ghwkFDz
-         1vW/8r3+o6z7l9KG7RhbNII8tReTiehfcfMwmJuUUD6wCctOpBapPbX2UrKo3Xlq43AO
-         40MhIWA/KHl8kIiJPWus+8Ag9TZ1tInjxqqzZ0migsEDWjm4zIy4/CPuG2nVy7rdLvGD
-         GcFlgDntG03JWHxlKnDO5/0aU7gdxJGakv/fQ67nWOy39lByn5Yf0UAKrG8Y6R1LMDYM
-         tb3w==
+        bh=vXawYOoYL3iVXFsDCoGpoazEsaewREIFtZ87X0NznBo=;
+        b=UOFBRy2khHWgEKicbD1a2E+aZAQGkNify5UGBgYZa3y+sdQzXJ3Yyi0HX5hO4Da8PQ
+         2APyB3WrMNTWjkYSDhODjmiUNivOY8ESI5ydrxy4WLkFlIjpbpE0YPS1xUYgn+8tg+Tz
+         +3cZtZRoTU9CwJ2Vt4N2xIpXHAqBvj8F9UDfT3DD+Fk6fX4xIvKyIco2JcWai3rc2nGp
+         poXBKSbQ4oJ8FsFlGv5Pv+xScvrn6QEJEAcQHlmV0Y0bIqmpZw8nOHRf2SG+GoFkotNf
+         RjpVGrsOGEXAnFqIgIiOlqEF0rhZ3D1gIMnocfEDPk0lW6h/lNhrAuBBRKBQhHMuv9Wu
+         T1CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ecX8IeU4eLhJZSPwsySNajrk7dDNUWBk2s3NMnvp2fs=;
-        b=Cq8hH8AX0ZAcLgx13/wShGIOfksZTKgM8PbWsE3SRLvvKtZSeh5bAODoqhFzgQQUML
-         gsBL5m/79BWPlv/Cn1cw7gnEvCdtrSV/6l86stR9JJbQ17qdQ/zKOgjiLLV8D8DhklqS
-         GE1/UcaiAvL4vhK+pEKbFgMC+f1LmvDZ8YjmWj8jHYOxH4Smvprj2EVpd0Ev6khvxUF5
-         BEaLAASZ5PobfUUwtoTOO9Kpc/z0/+h+rxk9iDrAiRqAn+Prd1nrd1/Ph9SZAX6UuVsm
-         H421h0xxYO43AzNJeu5PBQoAXOj1yvnmGEGKFqz9XhgV5R5lMaiaMyMy4D2PooUUe7BJ
-         SCqA==
-X-Gm-Message-State: APjAAAXtEULkthILK1daviX9SFoy5DvmNzbmj2/xi6lNah4tD96ICTYM
-        +z/9swMWAeWlrVznanIc9m3ut+ALlJzFX4/0Q3g=
-X-Google-Smtp-Source: APXvYqx46s/k1cRL2oVF/RF4lLZk4jc7Ke0PyQJWeKCBLX2oK76KFBBlVb6gb491Xvd9ze6SJFDV/+YZgiw04fsZJh4=
-X-Received: by 2002:a25:8109:: with SMTP id o9mr28010120ybk.132.1559107857952;
- Tue, 28 May 2019 22:30:57 -0700 (PDT)
+        bh=vXawYOoYL3iVXFsDCoGpoazEsaewREIFtZ87X0NznBo=;
+        b=dusDDpiTB6sQOPQ0jg8S/K3C/7NAVnJkBdx0ygZmMiSIVkkMPvSME6E4bxMtCFS9ir
+         J3UT8/4cSf1WnIIOl1BFEqHfUGlTX4oDmTkO42RyJ+TFrFpu4tzyFeNMA4Sv+C53aL2w
+         CLEomFpU5gSTKQrrSC5+jmrT9n43EFC9X6F6YlivO9Ts6Dknc2W9KhpfzFQ7EG5mL0yX
+         DOMBlD43sWEkhTDBktjGCIMP3x1jGX9081oxjl8catjNAXwsh8I30tGsKr4chIx87Jz8
+         VkHBTX/+k7UBdJOd/k0/iFOfabpaLbxqokIBz/hQ6qwDbbKpRsouDUgSQ5rkAJkygTF0
+         Q8Cg==
+X-Gm-Message-State: APjAAAWog2cToNaA899H1orSWdBiCyq1IkLPGsfQqXaAIfOG9SRgXg3a
+        19rzQkeNLfzDg8yuVCrY50NvOIl2gQuM/B3DIoY=
+X-Google-Smtp-Source: APXvYqxedQWc5ndnnoOxgtJO+TWkV1HPjz/HUq1qcE4fouHr3mtFf6yvJ3r27cgAVJe+Bai7FhvdiKsNYVjx8IGuwXs=
+X-Received: by 2002:a25:d946:: with SMTP id q67mr3637755ybg.126.1559108340796;
+ Tue, 28 May 2019 22:39:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190526084535.999-1-amir73il@gmail.com> <20190526084535.999-5-amir73il@gmail.com>
- <20190529021636.GB5244@magnolia>
-In-Reply-To: <20190529021636.GB5244@magnolia>
+References: <20190527172655.9287-1-amir73il@gmail.com> <20190528202659.GA12412@mit.edu>
+In-Reply-To: <20190528202659.GA12412@mit.edu>
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 29 May 2019 08:30:47 +0300
-Message-ID: <CAOQ4uxgpqpoNEZRT5+WVaAwin5usirgrrhg7OVr3pV_r2qFZ6A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] generic: copy_file_range bounds test
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>, Dave Chinner <david@fromorbit.com>,
-        fstests <fstests@vger.kernel.org>,
+Date:   Wed, 29 May 2019 08:38:49 +0300
+Message-ID: <CAOQ4uxgo5jmwQbLAKQre9=7pLQw=CwMgDaWPaJxi-5NGnPEVPQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] link.2: AT_ATOMIC_DATA and AT_ATOMIC_METADATA
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Jan Kara <jack@suse.cz>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>, Chris Mason <clm@fb.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>
+        Ext4 <linux-ext4@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        linux-api@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 5:16 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+On Tue, May 28, 2019 at 11:27 PM Theodore Ts'o <tytso@mit.edu> wrote:
 >
-> On Sun, May 26, 2019 at 11:45:34AM +0300, Amir Goldstein wrote:
-> > Test that copy_file_range will return the correct errors for various
-> > error conditions and boundary constraints.
+> On Mon, May 27, 2019 at 08:26:55PM +0300, Amir Goldstein wrote:
 > >
-> > [Amir] Split out cross-device copy_range test and use only scratch dev.
-> > Split out immutable/swapfile test cases to reduce the requirements to
-> > run the bounds check to minimum and get coverage for more filesystems.
-> > Remove the tests for read past EOF and write after chmod -r,
-> > because we decided to stick with read(2)/write(2) semantics.
+> > Following our discussions on LSF/MM and beyond [1][2], here is
+> > an RFC documentation patch.
 > >
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > ---
-> >  tests/generic/990     | 123 ++++++++++++++++++++++++++++++++++++++++++
-> >  tests/generic/990.out |  37 +++++++++++++
-> >  tests/generic/group   |   1 +
-> >  3 files changed, 161 insertions(+)
-> >  create mode 100755 tests/generic/990
-> >  create mode 100644 tests/generic/990.out
+> > Ted, I know we discussed limiting the API for linking an O_TMPFILE
+> > to avert the hardlinks issue, but I decided it would be better to
+> > document the hardlinks non-guaranty instead. This will allow me to
+> > replicate the same semantics and documentation to renameat(2).
+> > Let me know how that works out for you.
 > >
-> > diff --git a/tests/generic/990 b/tests/generic/990
-> > new file mode 100755
-> > index 00000000..5e2421b6
-> > --- /dev/null
-> > +++ b/tests/generic/990
-> > @@ -0,0 +1,123 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (c) 2018 Red Hat, Inc.  All Rights Reserved.
-> > +#
-> > +# FS QA Test No. 990
-> > +#
-> > +# Exercise copy_file_range() syscall error conditions.
-> > +#
-> > +seq=`basename $0`
-> > +seqres=$RESULT_DIR/$seq
-> > +echo "QA output created by $seq"
-> > +
-> > +here=`pwd`
-> > +tmp=/tmp/$$
-> > +status=1     # failure is the default!
-> > +trap "_cleanup; exit \$status" 0 1 2 3 7 15
-> > +
-> > +_cleanup()
-> > +{
-> > +     cd /
-> > +     rm -rf $tmp.*
-> > +}
-> > +
-> > +# get standard environment, filters and checks
-> > +. ./common/rc
-> > +. ./common/filter
-> > +
-> > +# real QA test starts here
-> > +_supported_os Linux
-> > +_supported_fs generic
-> > +
-> > +rm -f $seqres.full
-> > +
-> > +_require_test
-> > +_require_xfs_io_command "copy_range"
-> > +#
-> > +# This test effectively requires xfs_io v4.20 with the commits
-> > +#  2a42470b xfs_io: copy_file_range length is a size_t
-> > +#  1a05efba io: open pipes in non-blocking mode
+> > I also decided to try out two separate flags for data and metadata.
+> > I do not find any of those flags very useful without the other, but
+> > documenting them seprately was easier, because of the fsync/fdatasync
+> > reference.  In the end, we are trying to solve a social engineering
+> > problem, so this is the least confusing way I could think of to describe
+> > the new API.
 >
-> So, uh, is this going to cause test hangs on xfsprogs < 4.20?
+> The way you have stated thigs is very confusing, and prone to be
+> misunderstood.  I think it would be helpful to state things in the
+> positive, instead of the negative.
+>
+> Let's review what you had wanted:
+>
+>         *If* the filename is visible in the directory after the crash,
+>         *then* all of the metadata/data that had been written to the file
+>         before the linkat(2) would be visible.
+>
+>         HOWEVER, you did not want to necessarily force an fsync(2) in
+>         order to provide that guarantee.  That is, the filename would
+>         not necessarily be guaranteed to be visible after a crash when
+>         linkat(2) returns, but if the existence of the filename is
+>         persisted, then the data would be too.
+>
+>         Also, at least initially we talked about this only making
+>         sense for O_TMPFILE file desacriptors.  I believe you were
+>         trying to generalize things so it wouldn't necessarily have to
+>         be a file created using O_TMPFILE.  Is that correct?
 
-Yes, from the pipe test case:
-$XFS_IO_PROG -f -c "copy_range -l 32k $testdir/fifo" $testdir/copy
+That is correct. I felt we were limiting ourselves only to avert the
+hardlinks issue, so decided its better to explain that "nlink is not
+part of the inode metadata" that this guarantee refers to.
+I would be happy to get your feedback about the hardlink disclaimer
+since you brought up the concern. It the disclaimer enough?
+Not needed at all?
 
-I could introduce _require_xfs_io_min_ver, but it goes completely
-against "testing features" methodology.
+>
+> So instead of saying "A filesystem that accepts this flag will
+> guaranty, that old inode data will not be exposed in the new linked
+> name."  It's much clearer to state this in the affirmative:
+>
+>         A filesystem which accepts this flag will guarantee that if
+>         the new pathname exists after a crash, all of the data written
+>         to the file at the time of the linkat(2) call will be visible.
+>
 
-I guess I could implement _require_xfs_io_non_block_fifo, but that
-also seems quite ugly to me?
+Sounds good to me. I will take a swing at another patch.
 
-BTW, per your comment about splitting the fifo test case, I believe
-that would be wrong.
-I split the swap/immutable file test cases to provide better bounds
-test coverage for filesystems that do not support swap/immutable
-files.
-If I split the fifo test case, it will provide better bounds test coverage
-for test setups with old xfs_io and new kernel (in old kernel bounds
-test will fail anyway), so what do users gain from that?
-
-Thanks,
+Thanks for the review!
 Amir.
