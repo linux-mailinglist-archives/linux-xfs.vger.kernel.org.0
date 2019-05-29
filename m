@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA1D42E839
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 May 2019 00:28:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B1E52E83A
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 May 2019 00:28:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfE2W2O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 May 2019 18:28:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56406 "EHLO
+        id S1726454AbfE2W2U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 May 2019 18:28:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56510 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfE2W2O (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 18:28:14 -0400
+        with ESMTP id S1726408AbfE2W2U (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 18:28:20 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TM3lqE030452
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:13 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TM3h6I030343
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=QKOLF9R6kO7R2o7BMkBmG+rdn/pNwrIxEb1XW0g9uEM=;
- b=1LFW040O3+e3Br59/+QeImQgiiyGhCvmP5ZAr9fJ+bcAcoDqR9hnNaX1yZ46gOpsPg5u
- oD4cjNFkHIc2GlSkS2lnzxcpXCTVvRrMPXT3Yo6phhBsv++vG/Rbx3rAyqR2KT7YYM3G
- O3RxUL48z4CKyAH5BOQgv5jiPqX0Dd+RvLecm6p9NSDY8xS3MLGnm2RvTXbE3+U6r6t7
- 6I2+xYMcuJtOwN9+dlvJ2mxXE7GpOEUUgICfqdnaXWrh/oPhbwDjuFrnyEazZhYwzXTt
- VLaKM/dGmTLjKrtczp/1p+ipBX+/H11E0jySxXqwH2xGfm2nWqs7sOsxgV7zS+nO3FMC MA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2spxbqcpa1-1
+ bh=3YI2POuhiI8u91Iw8jqy21cP5O83l9qIRWWrvWzvzP8=;
+ b=3d0Ri59UOESS75xIcKYh1sr/4tuVcA545fMKUhPCVge/YSAohWIcVkTPP5n/NeF5viMM
+ O54odAi7YsNE36mL0rGQuh+atCRESrv/IoueLWsDEPyxKIotgymWN1Gw11m+0ctJS4zO
+ wy+eLEoowjVzLIOXk1C0Vq1zlSYQQWxxg/z5XjjFt1/oQ1TVCvtmkj3zQ/bjW0q5Ebg7
+ ZzoIhTNBlK9OHicAUVqcMo79gu/W+G+ygM8N3+Fy2ZKL1vNdyG3INSZJjEhtNA6aaxk5
+ fIN/mmop2lUhTqXIPb9NGSHD2yMzEJUUVo0wgWm2ptDhhMcfLylk1AZja74p4nPP0KJw jw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2spxbqcpaa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMSC8i145396
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2srbdxned5-1
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TMQOSC172659
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2sqh73ym88-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:11 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TMSAS3004211
-        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:11 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:17 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TMSHos023545
+        for <linux-xfs@vger.kernel.org>; Wed, 29 May 2019 22:28:17 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 15:28:10 -0700
-Subject: [PATCH 6/9] xfs: wire up the new v5 bulkstat_single ioctl
+        with ESMTP ; Wed, 29 May 2019 15:28:17 -0700
+Subject: [PATCH 7/9] xfs: wire up the v5 INUMBERS ioctl
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 29 May 2019 15:28:09 -0700
-Message-ID: <155916888978.758159.5450955030930365488.stgit@magnolia>
+Date:   Wed, 29 May 2019 15:28:15 -0700
+Message-ID: <155916889587.758159.4685292951595604048.stgit@magnolia>
 In-Reply-To: <155916885106.758159.3471602893858635007.stgit@magnolia>
 References: <155916885106.758159.3471602893858635007.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,123 +70,73 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Wire up the V5 BULKSTAT_SINGLE ioctl and rename the old one V1.
+Wire up the v5 INUMBERS ioctl and rename the old one to v1.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_fs.h |   16 +++++++++
- fs/xfs/xfs_ioctl.c     |   85 ++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_fs.h |    8 ++++++++
+ fs/xfs/xfs_ioctl.c     |   51 ++++++++++++++++++++++++++++++++++++++++++++++++
  fs/xfs/xfs_ioctl32.c   |    1 +
  fs/xfs/xfs_ondisk.h    |    1 +
- 4 files changed, 103 insertions(+)
+ 4 files changed, 61 insertions(+)
 
 
 diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 960f3542e207..95d0411dae9b 100644
+index 95d0411dae9b..f9f35139d4b7 100644
 --- a/fs/xfs/libxfs/xfs_fs.h
 +++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -468,6 +468,16 @@ struct xfs_bulk_ireq {
+@@ -493,6 +493,13 @@ struct xfs_bulkstat_single_req {
+ 	struct xfs_bulkstat	bulkstat;
+ };
  
- #define XFS_BULK_IREQ_FLAGS_ALL	(0)
- 
-+/* Header for a single inode request. */
-+struct xfs_ireq {
-+	uint64_t	ino;		/* I/O: start with this inode	*/
-+	uint32_t	flags;		/* I/O: operation flags		*/
-+	uint32_t	reserved32;	/* must be zero			*/
-+	uint64_t	reserved[2];	/* must be zero			*/
++struct xfs_inumbers_req {
++	struct xfs_bulk_ireq	hdr;
++	struct xfs_inumbers	inumbers[];
 +};
-+
-+#define XFS_IREQ_FLAGS_ALL	(0)
-+
- /*
-  * ioctl structures for v5 bulkstat and inumbers requests
-  */
-@@ -478,6 +488,11 @@ struct xfs_bulkstat_req {
- #define XFS_BULKSTAT_REQ_SIZE(nr)	(sizeof(struct xfs_bulkstat_req) + \
- 					 (nr) * sizeof(struct xfs_bulkstat))
- 
-+struct xfs_bulkstat_single_req {
-+	struct xfs_ireq		hdr;
-+	struct xfs_bulkstat	bulkstat;
-+};
++#define XFS_INUMBERS_REQ_SIZE(nr)	(sizeof(struct xfs_inumbers_req) + \
++					 (nr) * sizeof(struct xfs_inumbers))
 +
  /*
   * Error injection.
   */
-@@ -780,6 +795,7 @@ struct xfs_scrub_metadata {
- #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
+@@ -796,6 +803,7 @@ struct xfs_scrub_metadata {
  #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
  #define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
-+#define XFS_IOC_BULKSTAT_SINGLE	     _IOR ('X', 128, struct xfs_bulkstat_single_req)
+ #define XFS_IOC_BULKSTAT_SINGLE	     _IOR ('X', 128, struct xfs_bulkstat_single_req)
++#define XFS_IOC_INUMBERS	     _IOR ('X', 129, struct xfs_inumbers_req)
  /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
  
  
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index f6724c75ba97..f6971eb9561e 100644
+index f6971eb9561e..294039c2ea75 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -923,6 +923,89 @@ xfs_ioc_bulkstat(
+@@ -1006,6 +1006,55 @@ xfs_ioc_bulkstat_single(
  	return 0;
  }
  
-+/*
-+ * Check the incoming singleton request @hdr from userspace and initialize the
-+ * internal @breq bulk request appropriately.  Returns 0 if the bulk request
-+ * should proceed; or the usual negative error code.
-+ */
-+static int
-+xfs_ireq_setup(
-+	struct xfs_mount	*mp,
-+	struct xfs_ireq		*hdr,
-+	struct xfs_ibulk	*breq,
-+	void __user		*ubuffer)
-+{
-+	if ((hdr->flags & ~XFS_IREQ_FLAGS_ALL) ||
-+	    hdr->reserved32 ||
-+	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
-+		return -EINVAL;
-+
-+	if (XFS_INO_TO_AGNO(mp, hdr->ino) >= mp->m_sb.sb_agcount)
-+		return -EINVAL;
-+
-+	breq->ubuffer = ubuffer;
-+	breq->icount = 1;
-+	breq->startino = hdr->ino;
-+	return 0;
-+}
-+
-+/*
-+ * Update the userspace singleton request @hdr to reflect the end state of the
-+ * internal bulk request @breq.  If @error is negative then we return just
-+ * that; otherwise we copy the state so that userspace can discover what
-+ * happened.
-+ */
-+static int
-+xfs_ireq_teardown(
-+	struct xfs_ireq		*hdr,
-+	struct xfs_ibulk	*breq,
-+	int			error)
-+{
-+	if (error < 0)
-+		return error;
-+
-+	hdr->ino = breq->startino;
-+	return 0;
-+}
-+
-+/* Handle the v5 bulkstat_single ioctl. */
 +STATIC int
-+xfs_ioc_bulkstat_single(
-+	struct xfs_mount	*mp,
-+	unsigned int		cmd,
-+	struct xfs_bulkstat_single_req __user *arg)
++xfs_inumbers_fmt(
++	struct xfs_ibulk		*breq,
++	const struct xfs_inumbers	*igrp)
 +{
-+	struct xfs_ireq		hdr;
-+	struct xfs_ibulk	breq = {
-+		.mp		= mp,
++	if (copy_to_user(breq->ubuffer, igrp, sizeof(struct xfs_inumbers)))
++		return -EFAULT;
++	return xfs_ibulk_advance(breq, sizeof(struct xfs_inumbers));
++}
++
++/* Handle the v5 inumbers ioctl. */
++STATIC int
++xfs_ioc_inumbers(
++	struct xfs_mount		*mp,
++	unsigned int			cmd,
++	struct xfs_inumbers_req __user	*arg)
++{
++	struct xfs_bulk_ireq		hdr;
++	struct xfs_ibulk		breq = {
++		.mp			= mp,
 +	};
-+	int			error;
++	int				error;
 +
 +	if (!capable(CAP_SYS_ADMIN))
 +		return -EPERM;
@@ -197,13 +147,14 @@ index f6724c75ba97..f6971eb9561e 100644
 +	if (copy_from_user(&hdr, &arg->hdr, sizeof(hdr)))
 +		return -EFAULT;
 +
-+	error = xfs_ireq_setup(mp, &hdr, &breq, &arg->bulkstat);
-+	if (error)
++	error = xfs_bulk_ireq_setup(mp, &hdr, &breq, arg->inumbers);
++	if (error < 0)
 +		return error;
 +
-+	error = xfs_bulkstat_one(&breq, xfs_bulkstat_fmt);
++	if (!error)
++		error = xfs_inumbers(&breq, xfs_inumbers_fmt);
 +
-+	error = xfs_ireq_teardown(&hdr, &breq, error);
++	error = xfs_bulk_ireq_teardown(&hdr, &breq, error);
 +	if (error)
 +		return error;
 +
@@ -216,36 +167,36 @@ index f6724c75ba97..f6971eb9561e 100644
  STATIC int
  xfs_ioc_fsgeometry(
  	struct xfs_mount	*mp,
-@@ -2089,6 +2172,8 @@ xfs_file_ioctl(
- 
- 	case XFS_IOC_BULKSTAT:
+@@ -2174,6 +2223,8 @@ xfs_file_ioctl(
  		return xfs_ioc_bulkstat(mp, cmd, arg);
-+	case XFS_IOC_BULKSTAT_SINGLE:
-+		return xfs_ioc_bulkstat_single(mp, cmd, arg);
+ 	case XFS_IOC_BULKSTAT_SINGLE:
+ 		return xfs_ioc_bulkstat_single(mp, cmd, arg);
++	case XFS_IOC_INUMBERS:
++		return xfs_ioc_inumbers(mp, cmd, arg);
  
  	case XFS_IOC_FSGEOMETRY_V1:
  		return xfs_ioc_fsgeometry(mp, arg, 3);
 diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index 84c342be4536..08a90e3459d1 100644
+index 08a90e3459d1..772086998ab3 100644
 --- a/fs/xfs/xfs_ioctl32.c
 +++ b/fs/xfs/xfs_ioctl32.c
-@@ -577,6 +577,7 @@ xfs_file_compat_ioctl(
- 	case FS_IOC_GETFSMAP:
+@@ -578,6 +578,7 @@ xfs_file_compat_ioctl(
  	case XFS_IOC_SCRUB_METADATA:
  	case XFS_IOC_BULKSTAT:
-+	case XFS_IOC_BULKSTAT_SINGLE:
+ 	case XFS_IOC_BULKSTAT_SINGLE:
++	case XFS_IOC_INUMBERS:
  		return xfs_file_ioctl(filp, cmd, p);
  #if !defined(BROKEN_X86_ALIGNMENT) || defined(CONFIG_X86_X32)
  	/*
 diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index 954484c6eb96..fa1252657b08 100644
+index fa1252657b08..e390e65d2438 100644
 --- a/fs/xfs/xfs_ondisk.h
 +++ b/fs/xfs/xfs_ondisk.h
-@@ -150,6 +150,7 @@ xfs_check_ondisk_structs(void)
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat,		192);
+@@ -151,6 +151,7 @@ xfs_check_ondisk_structs(void)
  	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers,		24);
  	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_req,		64);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_single_req,	224);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_single_req,	224);
++	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers_req,		64);
  }
  
  #endif /* __XFS_ONDISK_H */
