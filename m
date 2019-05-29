@@ -2,134 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC4A2E487
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 20:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A875F2E48D
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 May 2019 20:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfE2Sdt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 May 2019 14:33:49 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:51394 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2Sdt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 May 2019 14:33:49 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIXQbG069667;
-        Wed, 29 May 2019 18:33:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=R/+z/tc0/SAWa0SjP7BukZGNCOg4xR/nOoG03j4CVHg=;
- b=AY8+x7YT5IsFJdGZ5yEg28P8Pb5Qq/PkwNyzpit66iScBYI8KWtUggNJkRFYLyVuhQLF
- pCbL/mCVeHwD20P3DIaRf3HKGDJ89gAaxQZY7xTv2JLGBeBH800nXwE2bNDcj2r2nW3G
- bdntXgcbue4dGK0ymRGzSLMrsIXn2RlQE121bBtu7KXY5EqvR7oFCEeWyA2IYg4oVkOR
- JJRFvWk21dLb8a26pK01BG1F7Dn9YKKobLZ0SOyjFutNg45Piw+Pn8g3lTpg1gnAN89Z
- fhuhNxN/94S2WapfAhE/q+Eb07dctpUtHjtCoqb5yhQ+ChZfjgnYTHuerWyLq5YxWrQ7 dQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2spu7dm0uy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:33:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIX2rG031915;
-        Wed, 29 May 2019 18:33:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sr31ve6aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:33:36 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TIXZWE000659;
-        Wed, 29 May 2019 18:33:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 11:33:35 -0700
-Date:   Wed, 29 May 2019 11:33:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
-        linux-xfs@vger.kernel.org,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org
-Subject: Re: [PATCH v3 08/13] vfs: copy_file_range needs to strip setuid bits
- and update timestamps
-Message-ID: <20190529183333.GH5231@magnolia>
-References: <20190529174318.22424-1-amir73il@gmail.com>
- <20190529174318.22424-9-amir73il@gmail.com>
+        id S1725917AbfE2SeT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 May 2019 14:34:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40810 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfE2SeT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 29 May 2019 14:34:19 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2BCF4C05B1CD;
+        Wed, 29 May 2019 18:34:09 +0000 (UTC)
+Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58804611AD;
+        Wed, 29 May 2019 18:34:07 +0000 (UTC)
+Subject: Re: How to package e2scrub
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Lukas Czerner <lczerner@redhat.com>
+Cc:     linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Theodore Ts'o <tytso@mit.edu>, xfs <linux-xfs@vger.kernel.org>
+References: <20190529120603.xuet53xgs6ahfvpl@work>
+ <20190529182111.GA5220@magnolia>
+From:   Eric Sandeen <sandeen@redhat.com>
+Message-ID: <48b9290c-ac0a-b5b2-ab27-970282ae242e@redhat.com>
+Date:   Wed, 29 May 2019 13:34:06 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529174318.22424-9-amir73il@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290120
+In-Reply-To: <20190529182111.GA5220@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 29 May 2019 18:34:19 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:43:12PM +0300, Amir Goldstein wrote:
-> Because generic_copy_file_range doesn't hold the destination inode lock
-> throughout the copy, strip setuid bits before and after copy.
+On 5/29/19 1:21 PM, Darrick J. Wong wrote:
+> On Wed, May 29, 2019 at 02:06:03PM +0200, Lukas Czerner wrote:
+>> Hi guys,
+>>
+>> I am about to release 1.45.2 for Fedora rawhide, but I was thinking
+>> about how to package the e2scrub cron job/systemd service.
 > 
-> The destination inode mtime is updated before and after the copy and the
-> source inode atime is updated after the copy, similar to
-> generic_file_read_iter().
+> Funny, xfs has the same conundrum.  Adding Eric & xfs list to cc...
 > 
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+>> I really do not like the idea of installing cron job and/or the service as
+>> a part of regular e2fsprogs package. This can potentially really surprise
+>> people in a bad way.
+>>
+>> Note that I've already heard some complaints from debian users about the
+>> systemd service being installed on their system after the e2fsprogs
+>> update.
+> 
+> Yeah, e2scrub is bitrotting rather faster than I had thought it
+> would... but it's only available in Debian unstable.
+> 
+>> What I am going to do is to split the systemd service into a separate
+>> package and I'd like to come to some agreement about the name of the
+>> package so that we can have the same name across distributions (at least
+>> Fedora/Debian/Suse).
+> 
+> Indeed.  Eric picked "xfsprogs-xfs_scrub" for Rawhide, though I find
+> that name to be very clunky and would have preferred "xfs_scrub".
 
-Looks reasonable,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Yes it is a bit clunky but *shrug*
 
---D
+The main motivator for this was one piece uses python3 and that Made People
+Sad who wanted minimal systems with minimal deps but still wanted xfsprogs.
 
-> ---
->  fs/read_write.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index cec7e7b1f693..706ea5f276a7 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1590,8 +1590,27 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
->  				struct file *file_out, loff_t pos_out,
->  				size_t len, unsigned int flags)
->  {
-> -	return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
-> -				len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
-> +	struct inode *inode_out = file_inode(file_out);
-> +	int ret, err;
-> +
-> +	/* Should inode_out lock be held throughout the copy operation? */
-> +	inode_lock(inode_out);
-> +	err = file_modified(file_out);
-> +	inode_unlock(inode_out);
-> +	if (err)
-> +		return err;
-> +
-> +	ret = do_splice_direct(file_in, &pos_in, file_out, &pos_out,
-> +			       len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
-> +
-> +	file_accessed(file_in);
-> +
-> +	/* To be on the safe side, remove privs also after copy */
-> +	inode_lock(inode_out);
-> +	err = file_modified(file_out);
-> +	inode_unlock(inode_out);
-> +
-> +	return err ?: ret;
->  }
->  EXPORT_SYMBOL(generic_copy_file_range);
->  
-> -- 
-> 2.17.1
-> 
+Keeping services separate is a good idea as well, I think.
+
+I don't have a strong opinion on whether /just/ the service should be separate,
+or the scrub util + the service should be separate.
+
+I put all the xfs scrubbing bits in one package in rawhide.
+
+-Eric
