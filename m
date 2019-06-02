@@ -2,138 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32BB831A6E
-	for <lists+linux-xfs@lfdr.de>; Sat,  1 Jun 2019 10:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031BD32349
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Jun 2019 14:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfFAIBz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 1 Jun 2019 04:01:55 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:45805 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfFAIBz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 1 Jun 2019 04:01:55 -0400
-Received: by mail-yb1-f194.google.com with SMTP id v1so1755131ybi.12;
-        Sat, 01 Jun 2019 01:01:54 -0700 (PDT)
+        id S1726170AbfFBMlY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Jun 2019 08:41:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38934 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfFBMlX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Jun 2019 08:41:23 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so8614887wma.4;
+        Sun, 02 Jun 2019 05:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IDmUdYrg9m0qcChSj+6fWlPUSW2T+Ou4D7qok42q+lI=;
-        b=Q8onXTG6YYdAM90JznYzTaLl+23Fv06aSDtcxn/20VQRAsxpKzkF3P/cP8zuSzgf6z
-         zYCcn1xzObUeu/tyIRmSi4q+82cppuJQB6uauq0RNDsegzRKSVkTdtINDo3qjLFp8XgO
-         Lu+7eID26mmkxQlPyYw81IIuVYDTP27gSC1HcYlR4yBnib0BetwROb7Ez16UCxdhE2FB
-         85xpaDU+X77Er7QfDc+BrbAud5vcoyXVgZzfmvXqwv4tzn6TyJt5q+t7XddsW4p/YkSV
-         t/t07H4BLKGxWAZ610L+Jfjqde9PnJlijvXRXULOl8E4dmwcu6PUesgM1+tCFSPuKsqd
-         1SiQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=6eOWmuxl6HjDRu+BizWY9l5qss719/MLNI94PMF3kjs=;
+        b=PK552lPpgp2vYk3SNqNujIJ21cuqLiA6eMsXdKLAGrtWcPlnXhGhVK+MmQSOdNC4qG
+         dDLTLAtbH26kbp4JQAW7nG6cYNej02WGQwxf9sRkJiSv0NNtPRies23MbKPAn/+8IfL4
+         e3PQIZeIXtAuJCppq38lcN1JBgbUuOoQRXOnrADaF8heGnzA4gpzLSIEeJREGRZDuEk9
+         zdXTPhfUMqrAppGbpG3fQeAtwt5mMNs0tQkSnyXfiQnIeqswutjJlykYQt3ffzqTg74y
+         94eTZ4mBDwhwvCVwnqVnDKX91sTdcCyxAkJQMA4dGzFw8S+w95ePR6K95HkOHtfCLl7l
+         al/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IDmUdYrg9m0qcChSj+6fWlPUSW2T+Ou4D7qok42q+lI=;
-        b=eYxqi7iMyJbcnSeus3OUl0GePUyASNImAzNgL4Kro4+oua6SUe2ehWx35tfK8yEBAx
-         D1xLe55t23qXHBiVNLPggqkj9ujqMw0rwbDcEhB6sSQYriiHfM37y5TUMweVuifxPd77
-         X42mFr89bENSTsQoA7mQMWsb5u/EVct91UCqdrBJRtSYEdUkrMDzrxU8GkZ7ayDuZTnT
-         b1aHzAtSBOvH4+5OpAU23T2+FG3ykQ7PzlRqWQjqFVtsuqlHIsGWfUvNxMf1PI0eiNOJ
-         TZS5u5bMACT77AIKPjhjn5ROliC118N3ryM5Mzlmlx1dCnxshrGXfFIlFPFS+073KK6v
-         t8cQ==
-X-Gm-Message-State: APjAAAXTSfWhgYTLzWoKqXnUaiAYmM76oH4WumY3vy+jZyYDlI0BbwVM
-        fa6iFBuBe/9WnywFuobbNrtDvesK8+JLMl08Ykw=
-X-Google-Smtp-Source: APXvYqxltf2hrkqpRMZ8ZR2gGFxjXut4v75QGUWZF3/+eqmqNAyl47GNGLOBkHAxsczxQP8XNYLqwvwbuGUZyN2/lwA=
-X-Received: by 2002:a25:4489:: with SMTP id r131mr7095732yba.14.1559376113788;
- Sat, 01 Jun 2019 01:01:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190527172655.9287-1-amir73il@gmail.com> <20190528202659.GA12412@mit.edu>
- <CAOQ4uxgo5jmwQbLAKQre9=7pLQw=CwMgDaWPaJxi-5NGnPEVPQ@mail.gmail.com>
- <CAOQ4uxgj94WR82iHE4PDGSD0UDxG5sCtr+Sv+t1sOHHmnXFYzQ@mail.gmail.com>
- <20190531164136.GA3066@mit.edu> <20190531224549.GF29573@dread.disaster.area> <20190531232852.GG29573@dread.disaster.area>
-In-Reply-To: <20190531232852.GG29573@dread.disaster.area>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6eOWmuxl6HjDRu+BizWY9l5qss719/MLNI94PMF3kjs=;
+        b=IQ+bd3gMNDZzIhlo+7LCleBcxzsPlVmjhn8E5eoNC6gN5oq9+YhxM92mvf0iPmbk3k
+         MU+K79f3UubwpogxgoWUS5uz7NWCjI2iN1okzJ3qMMxNO3zoavVnDCE5BVFEFqNOwrmg
+         kQ+l2NRygM3FJXCC/BkfIas7QM/g+3LYAkd1XuVhsroFkfjj5CQf5XLX7RoXI5e/HfaH
+         EISaugdf7Pq7F6aX6ta9qZZtQiQYmVYWrBuuSMh6UPM6sRlNBNRPWw7F5WQj4rmkRnv/
+         W4hHiz0QQgj6xQJKL25pzpH9IPfmZpBOHs5nA4wAeIQ4zXKBTujTsMNhWtqgxk6Pw1H0
+         eYzQ==
+X-Gm-Message-State: APjAAAUzAB/e1gRskwBNhOZ98aWYGuPpoFGhxOBczMjDhszFGmYznfZQ
+        EPkkJ7QoyfhBDkQWPiKAZUI=
+X-Google-Smtp-Source: APXvYqyne700Omb9jqSwUoLtwz/6NfphJw/uozGZh/+ujN49GWrdtlnap0C0xqiebSceprkTwLJ2DQ==
+X-Received: by 2002:a1c:7408:: with SMTP id p8mr10895681wmc.161.1559479281366;
+        Sun, 02 Jun 2019 05:41:21 -0700 (PDT)
+Received: from amir-ThinkPad-T480.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
+        by smtp.gmail.com with ESMTPSA id g185sm11214827wmf.30.2019.06.02.05.41.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Jun 2019 05:41:20 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 1 Jun 2019 11:01:42 +0300
-Message-ID: <CAOQ4uxi99NDYMrz-Q7xKta4beQiYFX3-MipZ_RxFNktFTA=vMA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] link.2: AT_ATOMIC_DATA and AT_ATOMIC_METADATA
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Chris Mason <clm@fb.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ext4 <linux-ext4@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Eryu Guan <guaneryu@gmail.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: [PATCH v3 0/6] fstests: copy_file_range() tests
+Date:   Sun,  2 Jun 2019 15:41:08 +0300
+Message-Id: <20190602124114.26810-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jun 1, 2019 at 2:28 AM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Sat, Jun 01, 2019 at 08:45:49AM +1000, Dave Chinner wrote:
-> > Given that we can already use AIO to provide this sort of ordering,
-> > and AIO is vastly faster than synchronous IO, I don't see any point
-> > in adding complex barrier interfaces that can be /easily implemented
-> > in userspace/ using existing AIO primitives. You should start
-> > thinking about expanding libaio with stuff like
-> > "link_after_fdatasync()" and suddenly the whole problem of
-> > filesystem data vs metadata ordering goes away because the
-> > application directly controls all ordering without blocking and
-> > doesn't need to care what the filesystem under it does....
->
-> And let me point out that this is also how userspace can do an
-> efficient atomic rename - rename_after_fdatasync(). i.e. on
-> completion of the AIO_FSYNC, run the rename. This guarantees that
-> the application will see either the old file of the complete new
-> file, and it *doesn't have to wait for the operation to complete*.
-> Once it is in flight, the file will contain the old data until some
-> point in the near future when will it contain the new data....
+Eryu,
 
-What I am looking for is a way to isolate the effects of "atomic rename/link"
-from the rest of the users. Sure there is I/O bandwidth and queued
-bios, but at least isolate other threads working on other files or metadata
-from contending with the "atomic rename" thread of journal flushes and
-the like. Actually, one of my use cases is "atomic rename" of files with
-no data (looking for atomicity w.r.t xattr and mtime), so this "atomic rename"
-thread should not be interfering with other workloads at all.
+This is a re-work of Dave Chinner's copy_file_range() tests which
+I used to verify the kernel fixes of the syscall [1].
 
->
-> Seriously, sit down and work out all the "atomic" data vs metadata
-> behaviours you want, and then tell me how many of them cannot be
-> implemented as "AIO_FSYNC w/ completion callback function" in
-> userspace. This mechanism /guarantees ordering/ at the application
-> level, the application does not block waiting for these data
-> integrity operations to complete, and you don't need any new kernel
-> side functionality to implement this.
+The 2 first tests fix bugs in the interface, so they are appropriate
+for merge IMO.
 
-So I think what I could have used is AIO_BATCH_FSYNC, an interface
-that was proposed by Ric Wheeler and discussed on LSF:
-https://lwn.net/Articles/789024/
-Ric was looking for a way to efficiently fsync a "bunch of files".
-Submitting several AIO_FSYNC calls is not the efficient way of doing that.
-So it is either a new AIO_BATCH_FSYNC and a kernel implementation
-that flushes the inodes and then calls ->sync_fs(), or a new AIO operation
-that just does the ->sync_fs() bit and using sync_file_range() for the inodes.
+The cross-device copy test checks a new functionality, so you may
+want to wait with merging it till after the work is merged upstream.
 
-To be more accurate, the AIO operation that would emulate my
-proposed API more closely is AIO_WAIT_FOR_SYNCFS, as I do not wish
-to impose excessive journal flushes, I just need a completion callback
-when they happened to perform the rename/link.
+The bounds check test depend on a change that was only posted to
+xfsprogs [2]. Without two changes that were merge to xfsprogs v4.20,
+the original test (v1, v2) would hang. Requiring the new copy_range
+flag (copy_range -f) mitigates this problem.
 
->
-> Fundamentally, the assertion that disk cache flushes are not what
-> causes fsync "to be slow" is incorrect. It's the synchronous
-
-Too many double negatives. I am not sure I parsed this correctly.
-But I think by now you understand that I don't care that fsync is "slow".
-I care about frequent fsyncs making the entire system slow down.
-
-Heck, xfs even has a mitigation in place to improve performance
-of too frequent fsyncs, but that mitigation is partly gone since
-47c7d0b19502 xfs: fix incorrect log_flushed on fsync
-
-The situation with frequent fsync on ext4 at the moment is probably
-worse.
-
-I am trying to reduce the number of fsyncs from applications
-and converting fsync to AIO_FSYNC is not going to help with that.
+You may want to wait until the xfs_io change is merged before merging
+the check for the new flag.
 
 Thanks,
 Amir.
+
+[1] https://lore.kernel.org/linux-fsdevel/20190531164701.15112-1-amir73il@gmail.com/
+[2] https://marc.info/?l=linux-xfs&m=155912482124038&w=2
+
+Changes from v2:
+- Change blockdev in test to loop and _require_loop (Olga)
+- Implement and use _require_xfs_io_command copy_range -f
+
+Changes from v1:
+- Remove patch to test EINVAL behavior instead of short copy
+- Remove 'chmod -r' permission drop test case
+- Split out test for swap/immutable file copy
+- Split of cross-device copy test
+
+
+Amir Goldstein (6):
+  generic: create copy_range group
+  generic: copy_file_range immutable file test
+  generic: copy_file_range swapfile test
+  common/rc: check support for xfs_io copy_range -f N
+  generic: copy_file_range bounds test
+  generic: cross-device copy_file_range test
+
+ common/rc             |   9 ++-
+ tests/generic/434     |   2 +
+ tests/generic/988     |  59 +++++++++++++++++++
+ tests/generic/988.out |   5 ++
+ tests/generic/989     |  56 ++++++++++++++++++
+ tests/generic/989.out |   4 ++
+ tests/generic/990     | 132 ++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/990.out |  37 ++++++++++++
+ tests/generic/991     |  56 ++++++++++++++++++
+ tests/generic/991.out |   4 ++
+ tests/generic/group   |  14 +++--
+ 11 files changed, 372 insertions(+), 6 deletions(-)
+ create mode 100755 tests/generic/988
+ create mode 100644 tests/generic/988.out
+ create mode 100755 tests/generic/989
+ create mode 100644 tests/generic/989.out
+ create mode 100755 tests/generic/990
+ create mode 100644 tests/generic/990.out
+ create mode 100755 tests/generic/991
+ create mode 100644 tests/generic/991.out
+
+-- 
+2.17.1
+
