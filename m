@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 382F33234B
+	by mail.lfdr.de (Postfix) with ESMTP id A2DC03234D
 	for <lists+linux-xfs@lfdr.de>; Sun,  2 Jun 2019 14:41:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfFBMl2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Jun 2019 08:41:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54906 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfFBMl2 (ORCPT
+        id S1726084AbfFBMl3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Jun 2019 08:41:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34737 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfFBMl2 (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Jun 2019 08:41:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g135so5563460wme.4;
-        Sun, 02 Jun 2019 05:41:26 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id e16so1206985wrn.1;
+        Sun, 02 Jun 2019 05:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tHETMryGVwSaOgR/Yx7oTEa1ui+4bN17f008odA0yXI=;
-        b=iBDyQp+vCMkD1IDTu/UzXp7v4MtbunVlvFVsLEL39rm9C/JMMI5ZFVQsDF6cl7eoPM
-         lTxZNTNFHR/YGg2gnq94QUKvVYocO+gt12Ar3R22rSZmTXOIvpjHSsmRig5jobkGdRAv
-         Aok3SXNXmEZBKXGXwk3nmd1nL+YIx+tSy1CAtXn+pdayWs4GCAF4dAMR8SGxFRfOAzSd
-         nChWInisP05UVuxObJyUCLE/oGtHYocG5mjrCJUhK93BAqZCH0Jb6GsIJp3y9exibj6h
-         lCpvswp47qbKREHSnJ6LPdcgVRHDVGoOxuJ4ghIu/t+/DitMfcxEPfp0Y4WRI7t7TyF6
-         CK7g==
+        bh=YeE+/BVUjXzXtoRPrMlnZ7zrvZqFsthbg+ijCE7TqkE=;
+        b=gjnt2+49FgfzLTbXMPdMhQADlZ4URIceNw3GlTodGW0Ck/fPXWEwHRxhmbDr1+WjKN
+         6pL+Jfw4vUr8Sv1avpgGiTScmYWyi/0/ZCBoYdipFz/5jNeArWRe7aXju+yOaBp+8fbk
+         t/P5ivx7M8/qthFM9/N6zvmSgkGBCr8vFKXrOOm3JVQbrAmbPt3DkBEc8p0s0g2ZdVMs
+         dXFb2GeyhxyuHRT58waWAkWvbJdOVGWCQZJcFExT+mMlnzKZ1oGEXv44tQYUHL5H7qVe
+         4PkpjB8/YiYKEUC7i5EL9Kv5tQNs0DD+Ji0JAz5saZPbJJPBQVOiDlkkG6ULpwTeoSMw
+         XtUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=tHETMryGVwSaOgR/Yx7oTEa1ui+4bN17f008odA0yXI=;
-        b=aZHK/Zh3ov46A/FdQxFtM65lMJrRuQG/MN6HFsfYkKolFuL0kbpVHUk9CiMGfanbKS
-         X+b9cPfpBddG85eAcU4s2dp+FZ21tCbqdYC76YjwqQoK7sDptUUxIwEumnlN1gBHGlgz
-         wVhgWE1ilOc71oHIonorFFbQkA76kseH4vvpBkNx91zcw2bJiVFmBGOuOMk1hnOS2WC0
-         vN4gJI7w3s1r6KbXJO+G51q+QnXg9Dc7SKCR29X8lS+lR65YA/koYXevAXGNzFCLUpsl
-         1s0p/shZwCmHXSmg16B7YrB1M8qwj8RkblbPPqPe6kZHJgss8ybC1Uo1cu8qgXaurso5
-         q1vA==
-X-Gm-Message-State: APjAAAWBA0twF/odGnFm67Eq5qDnxp90gIKPSMSNeP803XIOzcz5Y7ux
-        Cw2FhzkRy7yhezg8BkSY48Vt5qsK
-X-Google-Smtp-Source: APXvYqyuBU7fGb6Ot08Hk7RHDIPOo0ZmbAylFLvhLyFSkNT7WP3DuMbQEfAan07u1QmA0EtRgEzpdw==
-X-Received: by 2002:a1c:2358:: with SMTP id j85mr11365061wmj.46.1559479285649;
-        Sun, 02 Jun 2019 05:41:25 -0700 (PDT)
+        bh=YeE+/BVUjXzXtoRPrMlnZ7zrvZqFsthbg+ijCE7TqkE=;
+        b=tduUAbDCZwSLyj10UV6dYTupw2X/Ye99WoJli1yeirQ4cHPDw3k97lpYG4PftSxp9u
+         7w/8WXciYY6GIZidOHsxPcn/gWo9OyPCCe0UKWbYkkAYNT5Hu+cONgn1AOR3bcktoHRB
+         adqG4p3ZNO6u2YPta0Fk7yGJAMKhV80HzFYZxixG3P1NoMm1SS2GzNHJCwdGNwHFsrO0
+         TCjOaqeuS1bffkpFIS3XrX711gtXBb9ewZKL4eTHZg0yGgkm51jTKV2yFrQSmTAT7T2V
+         CYri47jmpwfTSjvvlx2PfPi+2zNlFhSGiIlzh3txjII+H0WWqYqW7shmuqejn/0A2rfZ
+         FVyg==
+X-Gm-Message-State: APjAAAXibtNeR+Moa0TVDMy2gAM4SS3nTfXmTzZQ+dW5bEXNoD0G22/J
+        wheFuo0Af85K/933YUVEqYk=
+X-Google-Smtp-Source: APXvYqzidEmmo4dGcjD8hqfuWmHMMckOVMctao7b/Y+OQPZOAMGWxj6UH43Tbs1cTi14VEWrIBrh8A==
+X-Received: by 2002:adf:ea4a:: with SMTP id j10mr1027982wrn.114.1559479286990;
+        Sun, 02 Jun 2019 05:41:26 -0700 (PDT)
 Received: from amir-ThinkPad-T480.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
-        by smtp.gmail.com with ESMTPSA id g185sm11214827wmf.30.2019.06.02.05.41.24
+        by smtp.gmail.com with ESMTPSA id g185sm11214827wmf.30.2019.06.02.05.41.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 05:41:25 -0700 (PDT)
+        Sun, 02 Jun 2019 05:41:26 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     Eryu Guan <guaneryu@gmail.com>
 Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
         Dave Chinner <david@fromorbit.com>,
         Olga Kornievskaia <olga.kornievskaia@gmail.com>,
         fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: [PATCH v3 3/6] generic: copy_file_range swapfile test
-Date:   Sun,  2 Jun 2019 15:41:11 +0300
-Message-Id: <20190602124114.26810-4-amir73il@gmail.com>
+Subject: [PATCH v3 4/6] common/rc: check support for xfs_io copy_range -f N
+Date:   Sun,  2 Jun 2019 15:41:12 +0300
+Message-Id: <20190602124114.26810-5-amir73il@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190602124114.26810-1-amir73il@gmail.com>
 References: <20190602124114.26810-1-amir73il@gmail.com>
@@ -60,99 +60,38 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This test case was split out of Dave Chinner's copy_file_range bounds
-check test to reduce the requirements for running the bounds check.
+Implement "_require_xfs_io_command copy_range -f" to check for
+the option added by following xfsprogs commit:
+
+  xfs_io: allow passing an open file to copy_range
 
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- tests/generic/989     | 56 +++++++++++++++++++++++++++++++++++++++++++
- tests/generic/989.out |  4 ++++
- tests/generic/group   |  1 +
- 3 files changed, 61 insertions(+)
- create mode 100755 tests/generic/989
- create mode 100644 tests/generic/989.out
+ common/rc | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tests/generic/989 b/tests/generic/989
-new file mode 100755
-index 00000000..27c10296
---- /dev/null
-+++ b/tests/generic/989
-@@ -0,0 +1,56 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2018 Red Hat, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 989
-+#
-+# Check that we cannot copy_file_range() to/from a swapfile
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 7 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -rf $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+
-+rm -f $seqres.full
-+
-+_require_scratch
-+_require_xfs_io_command "copy_range"
-+_require_scratch_swapfile
-+
-+_scratch_mkfs 2>&1 >> $seqres.full
-+_scratch_mount
-+
-+testdir=$SCRATCH_MNT
-+
-+rm -f $seqres.full
-+
-+$XFS_IO_PROG -f -c "pwrite -S 0x61 0 128k" $testdir/file >> $seqres.full 2>&1
-+
-+echo swap files return ETXTBUSY
-+_format_swapfile $testdir/swapfile 16m
-+swapon $testdir/swapfile
-+$XFS_IO_PROG -f -c "copy_range -l 32k $testdir/file" $testdir/swapfile
-+$XFS_IO_PROG -f -c "copy_range -l 32k $testdir/swapfile" $testdir/copy
-+swapoff $testdir/swapfile
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/989.out b/tests/generic/989.out
-new file mode 100644
-index 00000000..32da0ce9
---- /dev/null
-+++ b/tests/generic/989.out
-@@ -0,0 +1,4 @@
-+QA output created by 989
-+swap files return ETXTBUSY
-+copy_range: Text file busy
-+copy_range: Text file busy
-diff --git a/tests/generic/group b/tests/generic/group
-index 20b95c14..4c100781 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -551,3 +551,4 @@
- 546 auto quick clone enospc log
- 547 auto quick log
- 988 auto quick copy_range
-+989 auto quick copy_range swap
+diff --git a/common/rc b/common/rc
+index 17b89d5d..0d26b0fc 100644
+--- a/common/rc
++++ b/common/rc
+@@ -2086,9 +2086,16 @@ _require_xfs_io_command()
+ 		;;
+ 	"copy_range")
+ 		local testcopy=$TEST_DIR/$$.copy.xfs_io
++		local copy_opts=$testfile
++		if [ "$param" == "-f" ]; then
++			# source file is the open destination file
++			testcopy=$testfile
++			copy_opts="0 -d 4k"
++		fi
+ 		$XFS_IO_PROG -F -f -c "pwrite 0 4k" $testfile > /dev/null 2>&1
+-		testio=`$XFS_IO_PROG -F -f -c "copy_range $testfile" $testcopy 2>&1`
++		testio=`$XFS_IO_PROG -F -f -c "copy_range $param $copy_opts" $testcopy 2>&1`
+ 		rm -f $testcopy > /dev/null 2>&1
++		param_checked=1
+ 		;;
+ 	"falloc" )
+ 		testio=`$XFS_IO_PROG -F -f -c "falloc $param 0 1m" $testfile 2>&1`
 -- 
 2.17.1
 
