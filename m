@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFEFF336B0
-	for <lists+linux-xfs@lfdr.de>; Mon,  3 Jun 2019 19:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58165336B1
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Jun 2019 19:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfFCRaO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 3 Jun 2019 13:30:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53612 "EHLO
+        id S1728164AbfFCRaQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 3 Jun 2019 13:30:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53630 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfFCRaO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 3 Jun 2019 13:30:14 -0400
+        with ESMTP id S1727754AbfFCRaQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 3 Jun 2019 13:30:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OyeBrULzRSPro5QvtQPW6ckuz02LDeBTx+HxxsZ3W4Y=; b=OVhq+9GopGdtA/7hdv6ocvcuFS
-        SyPLfZH7FSjxLAXzSytGW98q8N5++COK8/oFFQorv4QMzx3s9R/IkBQmbm4Am1C3vszTSyDyWdbLQ
-        tHV9nljoGtMivbCUHmClLlyhfel7QVk6QgFwcIhoeN5KMp/wg+t9ciaB8fAtXGvGTWGT3sckmXelL
-        hrlfOfbdIBogAR6asgaHFf0ebuOsJ4vy6Ej3XnvhaIloZmbO7Z1Hh4OPSueHa2VVAs2mNPfrl004b
-        iRRcW4+guigbWPoXhm2msT+uiFx+Hh77ZKd49Qx9gG9pjDtDSTTUGygSAv/vAWslkvsoP/TOlP+wN
-        7WfOEYvQ==;
+        bh=RXZRulmHxFf/HLld+VuiWejS5i4L6hdCZiHgcYu/FJs=; b=m+df4kEj2mwWV56uLVi1obvrQ0
+        ocYjBBy3OkBpDVaQeOz7fEnJUZ11Oayt35nehuuhY7aVM5y5MqZrX088qYw5WyIIXRLVlHuZbYHQA
+        aqJBpEhOw5I/dvhkRGoU3N11+/gPaEmkEdmdQumlaDJbX1uXK/ETNAtJK6l4bSSNLBuJcIB96RSvM
+        GYwvbc3pHA3rJbjYXDpFcQIuxLuXbJs/5b8DUVNTC3DfHiXjFmfD+bY2fTpV8oDaO1X5UVOS6bq7b
+        3hMekal+eeruWPtT1JOUEf5rAB+QfHUqa955vd55/7M+q05o4hpFYcOxnFwlGQllSN9ITi6qtEm2m
+        +ynk3uwQ==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hXqmj-0003go-Ji; Mon, 03 Jun 2019 17:30:13 +0000
+        id 1hXqmm-0003hJ-16; Mon, 03 Jun 2019 17:30:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 10/20] xfs: update both stat counters together in xlog_sync
-Date:   Mon,  3 Jun 2019 19:29:35 +0200
-Message-Id: <20190603172945.13819-11-hch@lst.de>
+Subject: [PATCH 11/20] xfs: remove the syncing argument from xlog_verify_iclog
+Date:   Mon,  3 Jun 2019 19:29:36 +0200
+Message-Id: <20190603172945.13819-12-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190603172945.13819-1-hch@lst.de>
 References: <20190603172945.13819-1-hch@lst.de>
@@ -43,34 +43,74 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Just a small bit of code tidying up.
+The only caller unconditionally passes true here.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_log.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 02e9ab3af5ee..fa0414b8b111 100644
+index fa0414b8b111..70627debb954 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -1898,7 +1898,6 @@ xlog_sync(
- 	unsigned int		size;
- 	bool			need_flush = true;
+@@ -103,8 +103,7 @@ STATIC void
+ xlog_verify_iclog(
+ 	struct xlog		*log,
+ 	struct xlog_in_core	*iclog,
+-	int			count,
+-	bool                    syncing);
++	int			count);
+ STATIC void
+ xlog_verify_tail_lsn(
+ 	struct xlog		*log,
+@@ -113,7 +112,7 @@ xlog_verify_tail_lsn(
+ #else
+ #define xlog_verify_dest_ptr(a,b)
+ #define xlog_verify_grant_tail(a)
+-#define xlog_verify_iclog(a,b,c,d)
++#define xlog_verify_iclog(a,b,c)
+ #define xlog_verify_tail_lsn(a,b,c)
+ #endif
  
--	XFS_STATS_INC(log->l_mp, xs_log_writes);
- 	ASSERT(atomic_read(&iclog->ic_refcnt) == 0);
+@@ -1958,7 +1957,7 @@ xlog_sync(
+ 	iclog->ic_bp->b_io_length = BTOBB(split ? split : count);
+ 	iclog->ic_bwritecnt = split ? 2 : 1;
  
- 	count = xlog_calc_iclog_size(log, iclog, &roundoff);
-@@ -1916,6 +1915,7 @@ xlog_sync(
- 		size += roundoff;
- 	iclog->ic_header.h_len = cpu_to_be32(size);
+-	xlog_verify_iclog(log, iclog, count, true);
++	xlog_verify_iclog(log, iclog, count);
+ 	xlog_write_iclog(log, iclog, iclog->ic_bp, bno, need_flush);
  
-+	XFS_STATS_INC(log->l_mp, xs_log_writes);
- 	XFS_STATS_ADD(log->l_mp, xs_log_blocks, BTOBB(count));
- 
- 	bno = BLOCK_LSN(be64_to_cpu(iclog->ic_header.h_lsn));
+ 	if (split) {
+@@ -3798,8 +3797,7 @@ STATIC void
+ xlog_verify_iclog(
+ 	struct xlog		*log,
+ 	struct xlog_in_core	*iclog,
+-	int			count,
+-	bool                    syncing)
++	int			count)
+ {
+ 	xlog_op_header_t	*ophead;
+ 	xlog_in_core_t		*icptr;
+@@ -3843,7 +3841,7 @@ xlog_verify_iclog(
+ 		/* clientid is only 1 byte */
+ 		p = &ophead->oh_clientid;
+ 		field_offset = p - base_ptr;
+-		if (!syncing || (field_offset & 0x1ff)) {
++		if (field_offset & 0x1ff) {
+ 			clientid = ophead->oh_clientid;
+ 		} else {
+ 			idx = BTOBBT((char *)&ophead->oh_clientid - iclog->ic_datap);
+@@ -3866,7 +3864,7 @@ xlog_verify_iclog(
+ 		/* check length */
+ 		p = &ophead->oh_len;
+ 		field_offset = p - base_ptr;
+-		if (!syncing || (field_offset & 0x1ff)) {
++		if (field_offset & 0x1ff) {
+ 			op_len = be32_to_cpu(ophead->oh_len);
+ 		} else {
+ 			idx = BTOBBT((uintptr_t)&ophead->oh_len -
 -- 
 2.20.1
 
