@@ -2,162 +2,177 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CC33234F
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Jun 2019 14:41:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E78732766
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Jun 2019 06:25:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfFBMlb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Jun 2019 08:41:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44718 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfFBMlb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Jun 2019 08:41:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w13so9429807wru.11;
-        Sun, 02 Jun 2019 05:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KAqTSWaCfZ2eRPTYfukH/E0JoydIlA6rQXV7TtACnYY=;
-        b=iXL7h8ypG8InUTHRfiClRAyEZN8C7dteH5eN9LzW4jrc2HK+Jr7J4b8scY9CBmMAWk
-         FfsGddp84we9wqQQBu9XkM8aRgesnJ7JmjXJwfHBr9TL5yAWSS4PUk0P6uHeAsYYOJ+z
-         7UDmPOFj+qk3VbQfzsqxCSvOTnV5yzeAuGyLk+Xbdi9Amv5GKqdZ0uZYkQDCqXlAcBcr
-         6L62CbxOZ5wySAFpHvULSmxw1ijN4nq1eN8W/FD7VioIXhiN72J83Zpm5msH/Uy3gt1d
-         QQjCnpdXZdsua0630oKHV2ZZbeHFp5oyFD0HTEqbCcCXrKj9StO21hd59XFg/5LjY9Fr
-         5yww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KAqTSWaCfZ2eRPTYfukH/E0JoydIlA6rQXV7TtACnYY=;
-        b=PxFETq9D9VPC1M3WfXCTekFruyLS9qdc756hqotifgkGYvrLXPxPdGh+bjsjHdOFJs
-         pmJOzCYtJEgkCINgf/5b2GeI7ai2LdBU55bfxtlypsFQG7vp7kxXiut01XavIJjYfdlH
-         6UeuxLQt6nHr2OYXF0tWR3S5O4Azd8nyb6PgqB7j6VbXPs54XGDEhdIz2hzPOO5ipf4/
-         aU8UAa/Vpg7v0KcLdwqJS/mh4yof7N2NcMhnMIMZj0chLu/YLJkD2WMNCfLBJkVTrNQd
-         D8UKT3o2yCVURdWvGSJv5ifRsrd0JX5754DSIxV+tGcZLVK4L17/j5Uf8E9p2JM9S/Rt
-         Lt3A==
-X-Gm-Message-State: APjAAAW+BQBEiP/WcsRQwdIQoDNbo23rtervM+PWM0nW42e28BhsM1eD
-        6kJJRwuygwdTDmurhvaUiXg=
-X-Google-Smtp-Source: APXvYqyML6BT7av3tb+8l4fXkBDQfHD18QUHUQBMvtOyMdcfTEaUD2k79MsiZ6INwWqfNfOuLod/hg==
-X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr2627736wru.264.1559479289996;
-        Sun, 02 Jun 2019 05:41:29 -0700 (PDT)
-Received: from amir-ThinkPad-T480.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
-        by smtp.gmail.com with ESMTPSA id g185sm11214827wmf.30.2019.06.02.05.41.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Jun 2019 05:41:29 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Eryu Guan <guaneryu@gmail.com>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH v3 6/6] generic: cross-device copy_file_range test
-Date:   Sun,  2 Jun 2019 15:41:14 +0300
-Message-Id: <20190602124114.26810-7-amir73il@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190602124114.26810-1-amir73il@gmail.com>
-References: <20190602124114.26810-1-amir73il@gmail.com>
+        id S1726660AbfFCEZu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 3 Jun 2019 00:25:50 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47714 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbfFCEZu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 3 Jun 2019 00:25:50 -0400
+Received: from dread.disaster.area (pa49-180-144-61.pa.nsw.optusnet.com.au [49.180.144.61])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 58010105E579;
+        Mon,  3 Jun 2019 14:25:43 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hXeXU-0003gB-Ot; Mon, 03 Jun 2019 14:25:40 +1000
+Date:   Mon, 3 Jun 2019 14:25:40 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ext4 <linux-ext4@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC][PATCH] link.2: AT_ATOMIC_DATA and AT_ATOMIC_METADATA
+Message-ID: <20190603042540.GH29573@dread.disaster.area>
+References: <20190527172655.9287-1-amir73il@gmail.com>
+ <20190528202659.GA12412@mit.edu>
+ <CAOQ4uxgo5jmwQbLAKQre9=7pLQw=CwMgDaWPaJxi-5NGnPEVPQ@mail.gmail.com>
+ <CAOQ4uxgj94WR82iHE4PDGSD0UDxG5sCtr+Sv+t1sOHHmnXFYzQ@mail.gmail.com>
+ <20190531164136.GA3066@mit.edu>
+ <20190531224549.GF29573@dread.disaster.area>
+ <20190531232852.GG29573@dread.disaster.area>
+ <CAOQ4uxi99NDYMrz-Q7xKta4beQiYFX3-MipZ_RxFNktFTA=vMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxi99NDYMrz-Q7xKta4beQiYFX3-MipZ_RxFNktFTA=vMA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=8RU0RCro9O0HS2ezTvitPg==:117 a=8RU0RCro9O0HS2ezTvitPg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=07d9gI8wAAAA:8 a=hbhAGIz_z3R__8BJwpYA:9
+        a=8xQTuTa32-gkxqBk:21 a=k5YJsRp0j8SCPEeh:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22 a=e2CUPOnPG4QKp8I52DXD:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Old kernels do not support cross-device copy_file_range.
-A new patch set is aimed at allowing cross-device copy_file_range
-using the default in-kernel copy implementation.
+On Sat, Jun 01, 2019 at 11:01:42AM +0300, Amir Goldstein wrote:
+> On Sat, Jun 1, 2019 at 2:28 AM Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > On Sat, Jun 01, 2019 at 08:45:49AM +1000, Dave Chinner wrote:
+> > > Given that we can already use AIO to provide this sort of ordering,
+> > > and AIO is vastly faster than synchronous IO, I don't see any point
+> > > in adding complex barrier interfaces that can be /easily implemented
+> > > in userspace/ using existing AIO primitives. You should start
+> > > thinking about expanding libaio with stuff like
+> > > "link_after_fdatasync()" and suddenly the whole problem of
+> > > filesystem data vs metadata ordering goes away because the
+> > > application directly controls all ordering without blocking and
+> > > doesn't need to care what the filesystem under it does....
+> >
+> > And let me point out that this is also how userspace can do an
+> > efficient atomic rename - rename_after_fdatasync(). i.e. on
+> > completion of the AIO_FSYNC, run the rename. This guarantees that
+> > the application will see either the old file of the complete new
+> > file, and it *doesn't have to wait for the operation to complete*.
+> > Once it is in flight, the file will contain the old data until some
+> > point in the near future when will it contain the new data....
+> 
+> What I am looking for is a way to isolate the effects of "atomic rename/link"
+> from the rest of the users.  Sure there is I/O bandwidth and queued
+> bios, but at least isolate other threads working on other files or metadata
+> from contending with the "atomic rename" thread of journal flushes and
+> the like.
 
-[Amir] Split out cross-device copy_range test to a new test.
+That's not a function of the kernel API. That's a function of the
+implementation behind the kernel API. i.e. The API requires data to
+be written before the rename/link is committed, how that is achieved
+is up to the filesystem. And some filesystems will not be able to
+isolate the API behavioural requirement from other users....
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
- tests/generic/991     | 56 +++++++++++++++++++++++++++++++++++++++++++
- tests/generic/991.out |  4 ++++
- tests/generic/group   |  1 +
- 3 files changed, 61 insertions(+)
- create mode 100755 tests/generic/991
- create mode 100644 tests/generic/991.out
+> Actually, one of my use cases is "atomic rename" of files with
+> no data (looking for atomicity w.r.t xattr and mtime), so this "atomic rename"
+> thread should not be interfering with other workloads at all.
 
-diff --git a/tests/generic/991 b/tests/generic/991
-new file mode 100755
-index 00000000..94266e89
---- /dev/null
-+++ b/tests/generic/991
-@@ -0,0 +1,56 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2018 Red Hat, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 991
-+#
-+# Exercise copy_file_range() across devices
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 7 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -rf $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_os Linux
-+_supported_fs generic
-+
-+rm -f $seqres.full
-+
-+_require_test
-+_require_scratch
-+_require_xfs_io_command "copy_range"
-+
-+_scratch_mkfs 2>&1 >> $seqres.full
-+_scratch_mount
-+
-+
-+testdir=$TEST_DIR/test-$seq
-+rm -rf $testdir
-+mkdir $testdir
-+rm -f $seqres.full
-+
-+$XFS_IO_PROG -f -c "pwrite -S 0x61 0 128k" $testdir/file >> $seqres.full 2>&1
-+
-+$XFS_IO_PROG -f -c "copy_range -l 128k $testdir/file" $SCRATCH_MNT/copy
-+cmp $testdir/file $SCRATCH_MNT/copy
-+echo "md5sums after xdev copy:"
-+md5sum $testdir/file $SCRATCH_MNT/copy | _filter_test_dir | _filter_scratch
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/991.out b/tests/generic/991.out
-new file mode 100644
-index 00000000..19c22dfe
---- /dev/null
-+++ b/tests/generic/991.out
-@@ -0,0 +1,4 @@
-+QA output created by 991
-+md5sums after xdev copy:
-+81615449a98aaaad8dc179b3bec87f38  TEST_DIR/test-991/file
-+81615449a98aaaad8dc179b3bec87f38  SCRATCH_MNT/copy
-diff --git a/tests/generic/group b/tests/generic/group
-index 86802d54..bc5dac3b 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -553,3 +553,4 @@
- 988 auto quick copy_range
- 989 auto quick copy_range swap
- 990 auto quick copy_range
-+991 auto quick copy_range
+Which should already guaranteed because a) rename is supposed to be
+atomic, and b) metadata ordering requirements in journalled
+filesystems. If they lose xattrs across rename, there's something
+seriously wrong with the filesystem implementation.  I'm really not
+sure what you think filesystems are actually doing with metadata
+across rename operations....
+
+> > Seriously, sit down and work out all the "atomic" data vs metadata
+> > behaviours you want, and then tell me how many of them cannot be
+> > implemented as "AIO_FSYNC w/ completion callback function" in
+> > userspace. This mechanism /guarantees ordering/ at the application
+> > level, the application does not block waiting for these data
+> > integrity operations to complete, and you don't need any new kernel
+> > side functionality to implement this.
+> 
+> So I think what I could have used is AIO_BATCH_FSYNC, an interface
+> that was proposed by Ric Wheeler and discussed on LSF:
+> https://lwn.net/Articles/789024/
+> Ric was looking for a way to efficiently fsync a "bunch of files".
+> Submitting several AIO_FSYNC calls is not the efficient way of doing that.
+
+/me sighs.
+
+That's not what I just suggested, and I've already addressed this
+"AIO_FSYNC sucks" FUD in multiple separate threads.  You do realise
+you can submit multiple AIO operations with a single io_submit()
+call, right?
+
+	struct iocb	ioc[10];
+	struct io_event ev[10];
+
+	for (i = 0; i < 10; i++) {
+		io_prep_fsync(&ioc[i], fd[i]);
+		ioc[i]->data = callback_arg[i];
+	}
+
+	io_submit(aio_ctx, 10, &ioc);
+	io_getevents(aio_ctx, 10, 10, ev, NULL);
+
+	for (i = 0; i < 10; i++)
+		post_fsync_callback(&ev[i]);
+
+
+There's your single syscall AIO_BATCH_FSYNC functionality, and it
+implements a per-fd post-fsync callback function. This isn't rocket
+science....
+
+[snip]
+
+> I am trying to reduce the number of fsyncs from applications
+> and converting fsync to AIO_FSYNC is not going to help with that.
+
+Your whole argument is "fsync is inefficient because cache flushes,
+therefore AIO_FSYNC must be inefficient." IOWs, you've already
+decided what is wrong, how it can and can't be fixed and the
+solution you want regardless of whether your assertions are correct
+or not. You haven't provided any evidence that a new kernel API is
+the only viable solution, nor that the existing ones cannot provide
+the functionality you require.
+
+So, in the interests of /informed debate/, please implement what you
+want using batched AIO_FSYNC + rename/linkat completion callback and
+measure what it acheives. Then implement a sync_file_range/linkat
+thread pool that provides the same functionality to the application
+(i.e. writeback concurrency in userspace) and measure it. Then we
+can discuss what the relative overhead is with numbers and can
+perform analysis to determine what the cause of the performance
+differential actually is.
+
+Neither of these things require kernel modifications, but you need
+to provide the evidence that existing APIs are insufficient.
+Indeed, we now have the new async ioring stuff that can run async
+sync_file_range calls, so you probably need to benchmark replacing
+AIO_FSYNC with that interface as well. This new API likely does
+exactly what you want without the journal/device cache flush
+overhead of AIO_FSYNC....
+
+Cheers,
+
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
