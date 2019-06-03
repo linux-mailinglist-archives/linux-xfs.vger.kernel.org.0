@@ -2,99 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B77232E94
-	for <lists+linux-xfs@lfdr.de>; Mon,  3 Jun 2019 13:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8F3132FAF
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Jun 2019 14:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbfFCL0f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 3 Jun 2019 07:26:35 -0400
-Received: from mail1.g1.pair.com ([66.39.3.162]:60306 "EHLO mail1.g1.pair.com"
+        id S1726315AbfFCMcU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 3 Jun 2019 08:32:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45892 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbfFCL0e (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 3 Jun 2019 07:26:34 -0400
-X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Jun 2019 07:26:33 EDT
-Received: from mail1.g1.pair.com (localhost [127.0.0.1])
-        by mail1.g1.pair.com (Postfix) with ESMTP id B533F547763;
-        Mon,  3 Jun 2019 07:19:45 -0400 (EDT)
-Received: from harpe.intellique.com (labo.djinux.com [82.225.196.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726270AbfFCMcU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 3 Jun 2019 08:32:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail1.g1.pair.com (Postfix) with ESMTPSA id 8C69760B01C;
-        Mon,  3 Jun 2019 07:19:44 -0400 (EDT)
-Date:   Mon, 3 Jun 2019 13:19:46 +0200
-From:   Emmanuel Florac <eflorac@intellique.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 2ACE62F8BDB;
+        Mon,  3 Jun 2019 12:32:20 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C81A95B685;
+        Mon,  3 Jun 2019 12:32:18 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 08:32:17 -0400
+From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Lukas Czerner <lczerner@redhat.com>,
-        linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, xfs <linux-xfs@vger.kernel.org>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: How to package e2scrub
-Message-ID: <20190603131946.03930c0e@harpe.intellique.com>
-In-Reply-To: <20190530152855.GA5390@magnolia>
-References: <20190529120603.xuet53xgs6ahfvpl@work>
-        <20190529182111.GA5220@magnolia>
-        <20190530060426.GA30438@infradead.org>
-        <20190530152855.GA5390@magnolia>
-Organization: Intellique
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-slackware-linux-gnu)
+Cc:     xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] xfs: inode btree scrubber should calculate im_boffset
+ correctly
+Message-ID: <20190603123216.GA38223@bfoster>
+References: <20190529002545.GB5231@magnolia>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/H5b_76QovpEvKn1OoeJIwpz"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529002545.GB5231@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 03 Jun 2019 12:32:20 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
---Sig_/H5b_76QovpEvKn1OoeJIwpz
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 28, 2019 at 05:25:45PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The im_boffset field is in units of bytes, whereas XFS_INO_OFFSET
+> returns a value in units of inodes.  Convert the units so that scrub on
+> a 64k-block filesystem works correctly.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
 
-Le Thu, 30 May 2019 08:28:55 -0700
-"Darrick J. Wong" <darrick.wong@oracle.com> =C3=A9crivait:
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-> On Wed, May 29, 2019 at 11:04:26PM -0700, Christoph Hellwig wrote:
-> > On Wed, May 29, 2019 at 11:21:11AM -0700, Darrick J. Wong wrote: =20
-> > > Indeed.  Eric picked "xfsprogs-xfs_scrub" for Rawhide, though I
-> > > find that name to be very clunky and would have preferred
-> > > "xfs_scrub". =20
-> >=20
-> > Why not just xfs-scrub? =20
->=20
-> Slight preference for the package sharing a name with its key
-> ingredient:
->=20
-> # xfs_scrub /home
-> Bad command or file name
-> # apt install xfs_scrub
-> <stuff>
-> # xfs_scrub /home
-> WARNING: ALL DATA ON NON-REMOVABLE DISK
-> DRIVE C: WILL BE LOST!
-> Proceed with Format (Y/N)?
->=20
-> --D
-
-Debian packages always replace _ with - in the package name itself
-because the _ is used to separate the package name proper from the
-version and architecture : package_version_arch.deb.
-
---=20
-------------------------------------------------------------------------
-Emmanuel Florac     |   Direction technique
-                    |   Intellique
-                    |	<eflorac@intellique.com>
-                    |   +33 1 78 94 84 02
-------------------------------------------------------------------------
-
---Sig_/H5b_76QovpEvKn1OoeJIwpz
-Content-Type: application/pgp-signature
-Content-Description: Signature digitale OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iEYEARECAAYFAlz1AlMACgkQX3jQXNUicVZz+ACg0oITUTx4DoH6CgqJ4DaYTL3c
-A7EAoP0uRe2hI334k1c4/XNS/1PBnfUr
-=7WXO
------END PGP SIGNATURE-----
-
---Sig_/H5b_76QovpEvKn1OoeJIwpz--
+>  fs/xfs/scrub/ialloc.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
+> index 693eb51f5efb..9b47117180cb 100644
+> --- a/fs/xfs/scrub/ialloc.c
+> +++ b/fs/xfs/scrub/ialloc.c
+> @@ -252,7 +252,8 @@ xchk_iallocbt_check_cluster(
+>  	ir_holemask = (irec->ir_holemask & cluster_mask);
+>  	imap.im_blkno = XFS_AGB_TO_DADDR(mp, agno, agbno);
+>  	imap.im_len = XFS_FSB_TO_BB(mp, mp->m_blocks_per_cluster);
+> -	imap.im_boffset = XFS_INO_TO_OFFSET(mp, irec->ir_startino);
+> +	imap.im_boffset = XFS_INO_TO_OFFSET(mp, irec->ir_startino) <<
+> +			mp->m_sb.sb_inodelog;
+>  
+>  	if (imap.im_boffset != 0 && cluster_base != 0) {
+>  		ASSERT(imap.im_boffset == 0 || cluster_base == 0);
