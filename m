@@ -2,94 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55AEE34C32
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Jun 2019 17:27:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD0B34CFC
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Jun 2019 18:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfFDP1c (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 4 Jun 2019 11:27:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34038 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbfFDP1c (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Jun 2019 11:27:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54FOPLw130975
-        for <linux-xfs@vger.kernel.org>; Tue, 4 Jun 2019 15:27:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=KPGJm6TfzronfH3PfzL1kkNhuIkJge6USusOPA8Rq0Y=;
- b=1F8IHz0vtsvRRCUo6cKR8orpGra0LTHxtRlqYKOhnpwAtSDIiZT9QYmeyy00vy6POiWI
- z53x3k4lQlkknGsUBij6EoT+r8YQGRj1PVv7oQBFZ0kLTVdGRYd66u/PiV/pt4GVPt2P
- FkHfq4B5qRr74MttcKtLhkplbuAD8uuJ8v8Do+HBx4OKznga+lZJfZfRiTnVljG1ytys
- LW/3W4T1FHB0hMr1FF4ajL4Nt2SbHEO1erh86WXVj1aTANJGV1CX5asVfjGmDxXx8mAX
- h6uBu66fWSOjS3vnmwHouo7Lavdv5VTEDI3IQ7bYoohM/UXPgCNwcNgFWmjyhIHPzayq Lw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2sugstdu0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 04 Jun 2019 15:27:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x54FQjCw182604
-        for <linux-xfs@vger.kernel.org>; Tue, 4 Jun 2019 15:27:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2swngkdp59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 04 Jun 2019 15:27:30 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x54FRTLe032316
-        for <linux-xfs@vger.kernel.org>; Tue, 4 Jun 2019 15:27:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Jun 2019 08:27:29 -0700
-Date:   Tue, 4 Jun 2019 08:27:28 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to 025197ebb08a
-Message-ID: <20190604152728.GA1200817@magnolia>
+        id S1728300AbfFDQMn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 4 Jun 2019 12:12:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38146 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728166AbfFDQMn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 4 Jun 2019 12:12:43 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EDB95C1EB1F1;
+        Tue,  4 Jun 2019 16:12:42 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8162D5C26B;
+        Tue,  4 Jun 2019 16:12:42 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 12:12:40 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 06/20] xfs: don't use REQ_PREFLUSH for split log writes
+Message-ID: <20190604161240.GA44563@bfoster>
+References: <20190603172945.13819-1-hch@lst.de>
+ <20190603172945.13819-7-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906040100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9278 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906040101
+In-Reply-To: <20190603172945.13819-7-hch@lst.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 04 Jun 2019 16:12:43 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+On Mon, Jun 03, 2019 at 07:29:31PM +0200, Christoph Hellwig wrote:
+> If we have to split a log write because it wraps the end of the log we
+> can't just use REQ_PREFLUSH to flush before the first log write,
+> as the writes might get reordered somewhere in the I/O stack.  Issue
+> a manual flush in that case so that the ordering of the two log I/Os
+> doesn't matter.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_log.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index 3b82ca8ac9c8..646a190e5730 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -1941,7 +1941,7 @@ xlog_sync(
+>  	 * synchronously here; for an internal log we can simply use the block
+>  	 * layer state machine for preflushes.
+>  	 */
+> -	if (log->l_mp->m_logdev_targp != log->l_mp->m_ddev_targp)
+> +	if (log->l_mp->m_logdev_targp != log->l_mp->m_ddev_targp || split)
+>  		xfs_blkdev_issue_flush(log->l_mp->m_ddev_targp);
 
-The for-next branch of the xfs-linux repository at:
+I'm curious if this is really necessary. The log record isn't
+recoverable until it's complete on disk (and thus the tail LSN stamped
+in the record header not relevant). As long as the cache flushes before
+the record is completely written, what difference does it make if it was
+made up of two out of order I/Os?
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+Granted log wrapping is not a frequent operation, but the explicit flush
+is a synchronous operation in the log force path whereas the flush flag
+isn't.
 
-has just been updated.
+Brian
 
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.  FWIW these are only bugfixes for 5.2.
-
-The new head of the for-next branch is commit:
-
-025197ebb08a xfs: inode btree scrubber should calculate im_boffset correctly
-
-New Commits:
-
-Darrick J. Wong (2):
-      [d31d718528dd] xfs: fix broken log reservation debugging
-      [025197ebb08a] xfs: inode btree scrubber should calculate im_boffset correctly
-
-
-Code Diffstat:
-
- fs/xfs/scrub/ialloc.c |  3 ++-
- fs/xfs/xfs_log.c      | 11 +++++++++--
- 2 files changed, 11 insertions(+), 3 deletions(-)
+>  	else
+>  		bp->b_flags |= XBF_FLUSH;
+> -- 
+> 2.20.1
+> 
