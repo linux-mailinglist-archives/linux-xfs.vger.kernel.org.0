@@ -2,60 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D931A340CC
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Jun 2019 09:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E9903432B
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Jun 2019 11:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfFDHys (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 4 Jun 2019 03:54:48 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40618 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbfFDHyr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Jun 2019 03:54:47 -0400
-Received: from dread.disaster.area (pa49-180-144-61.pa.nsw.optusnet.com.au [49.180.144.61])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F31A8439FEE;
-        Tue,  4 Jun 2019 17:54:44 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hY4HK-0005NS-ON; Tue, 04 Jun 2019 17:54:42 +1000
-Date:   Tue, 4 Jun 2019 17:54:42 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 04/11] xfs: bulkstat should copy lastip whenever
- userspace supplies one
-Message-ID: <20190604075442.GX29573@dread.disaster.area>
-References: <155916877311.757870.11060347556535201032.stgit@magnolia>
- <155916880004.757870.14054258865473950566.stgit@magnolia>
+        id S1726948AbfFDJ3E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 4 Jun 2019 05:29:04 -0400
+Received: from ns.lynxeye.de ([87.118.118.114]:40447 "EHLO lynxeye.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726877AbfFDJ3E (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 4 Jun 2019 05:29:04 -0400
+X-Greylist: delayed 439 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jun 2019 05:29:04 EDT
+Received: by lynxeye.de (Postfix, from userid 501)
+        id 6B50EE7421F; Tue,  4 Jun 2019 11:21:44 +0200 (CEST)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on lynxeye.de
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=3.0 tests=ALL_TRUSTED,BAYES_00
+        autolearn=ham version=3.3.1
+Received: from brom.techweek.pengutronix.de (unknown [185.66.195.81])
+        by lynxeye.de (Postfix) with ESMTPSA id 4AB12E741C4;
+        Tue,  4 Jun 2019 11:21:43 +0200 (CEST)
+Message-ID: <7a642f570980609ccff126a78f1546265ba913e2.camel@lynxeye.de>
+Subject: understanding xfs vs. ext4 log performance
+From:   Lucas Stach <dev@lynxeye.de>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Tue, 04 Jun 2019 11:21:15 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155916880004.757870.14054258865473950566.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=8RU0RCro9O0HS2ezTvitPg==:117 a=8RU0RCro9O0HS2ezTvitPg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=JuDxSlhT3OO6blO4plAA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:26:40PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> When userspace passes in a @lastip pointer we should copy the results
-> back, even if the @ocount pointer is NULL.
+Hi all,
 
-Makes sense and the code change is simple enough, but this changes
-what we return to userspace, right?  Does any of xfsprogs or fstests
-test code actually exercise this case? If not, how have you
-determined it isn't going to break anything?
+this question is more out of curiosity and because I want to take the
+chance to learn something.
 
-Cheers,
+At work we've stumbled over a workload that seems to hit pathological
+performance on XFS. Basically the critical part of the workload is a
+"rm -rf" of a pretty large directory tree, filled with files of mixed
+size ranging from a few KB to a few MB. The filesystem resides on quite
+slow spinning rust disks, directly attached to the host, so no
+controller with a BBU or something like that involved.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+We've tested the workload with both xfs and ext4, and while the numbers
+aren't completely accurate due to other factors playing into the
+runtime, performance difference between XFS and ext4 seems to be an
+order of magnitude. (Ballpark runtime XFS is 30 mins, while ext4
+handles the remove in ~3 mins).
+
+The XFS performance seems to be completly dominated by log buffer
+writes, which happen with both REQ_PREFLUSH and REQ_FUA set. It's
+pretty obvious why this kills performance on slow spinning rust.
+
+Now the thing I wonder about is why ext4 seems to get a away without
+those costly flags for its log writes. At least blktrace shows almost
+zero PREFLUSH or FUA requests. Is there some fundamental difference in
+how ext4 handles its logging to avoid the need for this ordering and
+forced access, or is it ext just living more dangerously with regard to
+reordered writes?
+
+Does XFS really require such a strong ordering on the log buffer
+writes? I don't understand enough of the XFS transaction code and
+wonder if it would be possible to do the strongly ordered writes only
+on transaction commit.
+
+Regards,
+Lucas
+
