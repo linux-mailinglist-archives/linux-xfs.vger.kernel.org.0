@@ -2,83 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CB3A36122
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Jun 2019 18:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8A1D3635D
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Jun 2019 20:33:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfFEQWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Jun 2019 12:22:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58560 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726670AbfFEQWI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 5 Jun 2019 12:22:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 537BDAD81;
-        Wed,  5 Jun 2019 16:22:07 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 11:22:04 -0500
-From:   Goldwyn Rodrigues <rgoldwyn@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        lsf-pc@lists.linux-foundation.org,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: Re: [Lsf-pc] [LSF/MM TOPIC] The end of the DAX experiment
-Message-ID: <20190605162204.jzou5hry5exly5wx@fiona>
-References: <CAPcyv4jyCDJTpGZB6qVX7_FiaxJfDzWA1cw8dfPjHM2j3j3yqQ@mail.gmail.com>
- <20190214134622.GG4525@dhcp22.suse.cz>
- <CAPcyv4gxFKBQ9eVdn+pNEzBXRfw6Qwfmu21H2i5uj-PyFmRAGQ@mail.gmail.com>
- <20190214191013.GA3420@redhat.com>
- <CAPcyv4jLTdJyTOy715qvBL_j_deiLoBmu_thkUnFKZKMvZL6hA@mail.gmail.com>
- <20190214200840.GB12668@bombadil.infradead.org>
- <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
+        id S1726528AbfFESc6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Jun 2019 14:32:58 -0400
+Received: from mail.qboosh.pl ([217.73.31.61]:46417 "EHLO mail.qboosh.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfFESc6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 5 Jun 2019 14:32:58 -0400
+X-Greylist: delayed 342 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Jun 2019 14:32:57 EDT
+Received: from stranger.qboosh.pl (37-128-11-89.adsl.inetia.pl [37.128.11.89])
+        by mail.qboosh.pl (Postfix) with ESMTPSA id DF28B1A26DA9
+        for <linux-xfs@vger.kernel.org>; Wed,  5 Jun 2019 20:27:17 +0200 (CEST)
+Received: from stranger.qboosh.pl (localhost [127.0.0.1])
+        by stranger.qboosh.pl (8.15.2/8.15.2) with ESMTP id x55ISI4Z030945
+        for <linux-xfs@vger.kernel.org>; Wed, 5 Jun 2019 20:28:18 +0200
+Received: (from qboosh@localhost)
+        by stranger.qboosh.pl (8.15.2/8.15.2/Submit) id x55ISH8i030942
+        for linux-xfs@vger.kernel.org; Wed, 5 Jun 2019 20:28:17 +0200
+Date:   Wed, 5 Jun 2019 20:28:17 +0200
+From:   Jakub Bogusz <qboosh@pld-linux.org>
+To:     linux-xfs@vger.kernel.org
+Subject: Polish translation update for xfsprogs 5.0.0
+Message-ID: <20190605182817.GB3860@stranger.qboosh.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.6.2 (2016-07-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Dan/Jerome,
+Hello,
 
-On 12:20 14/02, Dan Williams wrote:
-> On Thu, Feb 14, 2019 at 12:09 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Feb 14, 2019 at 11:31:24AM -0800, Dan Williams wrote:
-> > > On Thu, Feb 14, 2019 at 11:10 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > > I am just again working on my struct page mapping patchset as well as
-> > > > the generic page write protection that sits on top. I hope to be able
-> > > > to post the v2 in couple weeks. You can always look at my posting last
-> > > > year to see more details.
-> > >
-> > > Yes, I have that in mind as one of the contenders. However, it's not
-> > > clear to me that its a suitable fit for filesystem-reflink. Others
-> > > have floated the 'page proxy' idea, so it would be good to discuss the
-> > > merits of the general approaches.
-> >
-> > ... and my preferred option of putting pfn entries in the page cache.
-> 
-> Another option to include the discussion.
-> 
-> > Or is that what you meant by "page proxy"?
-> 
-> Page proxy would be an object that a filesystem could allocate to
-> point back to a single physical 'struct page *'. The proxy would
-> contain an override for page->index.
+I prepared an update of Polish translation of xfsprogs 5.0.0.
+As previously, because of size (whole file is ~514kB, diff is ~928kB),
+I'm sending just commit header to the list and whole file is available
+to download at:
+http://qboosh.pl/pl.po/xfsprogs-5.0.0.pl.po
 
-Was there any outcome on this and its implementation? I am specifically
-interested in this for DAX support on btrfs/CoW: The TODO comment on
-top of dax_associate_entry() :)
+Commit header:
 
-If there are patches/git tree I could use to base my patches on, it would
-be nice.
+
+From 9a8d9225eb569db53abff1918c1b4d814ef647b5 Mon Sep 17 00:00:00 2001
+From: Jakub Bogusz <qboosh@pld-linux.org>
+Date: Wed, 5 Jun 2019 19:45:49 +0200
+Subject: [PATCH] po/pl.po: update Polish translation for 5.0.0
+
+Polish translation update for xfsprogs 5.0.0
+
+Signed-off-by: Jakub Bogusz <qboosh@pld-linux.org>
+---
+ po/pl.po | 21017 +++++++++++++++++++++++++++--------------------------
+ 1 file changed, 10685 insertions(+), 10332 deletions(-)
+
+diff --git a/po/pl.po b/po/pl.po
+index ab5b11da..adc46d72 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -1,13 +1,13 @@
+ # Polish translation for xfsprogs.
+ # This file is distributed under the same license as the xfsprogs package.
+-# Jakub Bogusz <qboosh@pld-linux.org>, 2006-2018.
++# Jakub Bogusz <qboosh@pld-linux.org>, 2006-2019.
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: xfsprogs 4.15.0\n"
++"Project-Id-Version: xfsprogs 5.0.0\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2018-02-26 20:58+0100\n"
+-"PO-Revision-Date: 2018-02-26 20:59+0100\n"
++"POT-Creation-Date: 2019-05-03 15:03-0500\n"
++"PO-Revision-Date: 2019-06-01 14:52+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+ "Language: pl\n"
+
 
 -- 
-Goldwyn
+Jakub Bogusz    http://qboosh.pl/
