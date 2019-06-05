@@ -2,73 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2C0F36084
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Jun 2019 17:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB3A36122
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Jun 2019 18:22:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfFEPr3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Jun 2019 11:47:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43186 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfFEPr2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:47:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8D1B63078ADC;
-        Wed,  5 Jun 2019 15:47:28 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C6DE5F7C0;
-        Wed,  5 Jun 2019 15:47:26 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 11:47:25 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 06/20] xfs: don't use REQ_PREFLUSH for split log writes
-Message-ID: <20190605154724.GB15671@bfoster>
-References: <20190603172945.13819-1-hch@lst.de>
- <20190603172945.13819-7-hch@lst.de>
- <20190604161240.GA44563@bfoster>
- <20190604224544.GB29573@dread.disaster.area>
- <20190605105112.GA49049@bfoster>
- <20190605151451.GC14846@lst.de>
+        id S1728616AbfFEQWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Jun 2019 12:22:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58560 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726670AbfFEQWI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 5 Jun 2019 12:22:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 537BDAD81;
+        Wed,  5 Jun 2019 16:22:07 +0000 (UTC)
+Date:   Wed, 5 Jun 2019 11:22:04 -0500
+From:   Goldwyn Rodrigues <rgoldwyn@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        lsf-pc@lists.linux-foundation.org,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: [Lsf-pc] [LSF/MM TOPIC] The end of the DAX experiment
+Message-ID: <20190605162204.jzou5hry5exly5wx@fiona>
+References: <CAPcyv4jyCDJTpGZB6qVX7_FiaxJfDzWA1cw8dfPjHM2j3j3yqQ@mail.gmail.com>
+ <20190214134622.GG4525@dhcp22.suse.cz>
+ <CAPcyv4gxFKBQ9eVdn+pNEzBXRfw6Qwfmu21H2i5uj-PyFmRAGQ@mail.gmail.com>
+ <20190214191013.GA3420@redhat.com>
+ <CAPcyv4jLTdJyTOy715qvBL_j_deiLoBmu_thkUnFKZKMvZL6hA@mail.gmail.com>
+ <20190214200840.GB12668@bombadil.infradead.org>
+ <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605151451.GC14846@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 05 Jun 2019 15:47:28 +0000 (UTC)
+In-Reply-To: <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 05:14:51PM +0200, Christoph Hellwig wrote:
-> On Wed, Jun 05, 2019 at 06:51:12AM -0400, Brian Foster wrote:
-> > Yep. Another thing that briefly crossed my mind is whether we could in
-> > theory optimize flushes out if the tail hasn't moved since the last
-> > flush. We'd still have to FUA the log records, but we haven't introduced
-> > any such integrity/ordering requirements if the tail hasn't changed,
-> > right?
-> > 
-> > It's debatable whether that would provide any value, but it might at
-> > least apply to certain scenarios like if the tail happens to be pinned
-> > by a single object across several iclog writes, or if fsyncs or some
-> > other pattern result in smaller/frequent checkpoints relative to
-> > metadata writeback, etc.
+Hi Dan/Jerome,
+
+On 12:20 14/02, Dan Williams wrote:
+> On Thu, Feb 14, 2019 at 12:09 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Thu, Feb 14, 2019 at 11:31:24AM -0800, Dan Williams wrote:
+> > > On Thu, Feb 14, 2019 at 11:10 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > I am just again working on my struct page mapping patchset as well as
+> > > > the generic page write protection that sits on top. I hope to be able
+> > > > to post the v2 in couple weeks. You can always look at my posting last
+> > > > year to see more details.
+> > >
+> > > Yes, I have that in mind as one of the contenders. However, it's not
+> > > clear to me that its a suitable fit for filesystem-reflink. Others
+> > > have floated the 'page proxy' idea, so it would be good to discuss the
+> > > merits of the general approaches.
+> >
+> > ... and my preferred option of putting pfn entries in the page cache.
 > 
-> Well, for the fsync we require the data device to be flushed for
-> the fsync semantics anyway.  So we'd now need to treat that special,
-> simiar to that old log_flushed return parameter hack.
+> Another option to include the discussion.
+> 
+> > Or is that what you meant by "page proxy"?
+> 
+> Page proxy would be an object that a filesystem could allocate to
+> point back to a single physical 'struct page *'. The proxy would
+> contain an override for page->index.
 
-Yeah, good point. It looks like the current fsync code already relies on
-the flush associated with the log force if the log and data devices are
-the same (otherwise we explicitly flush the data dev between data
-writeback and the log force). Any optimization there probably wouldn't
-buy anything for fsync callers that have to write file data. It would
-just shift responsibility of the flush to the fsync and perhaps
-complicate that current log_flushed thing since it also kind of assumes
-an unconditional flush based on iclog state.
+Was there any outcome on this and its implementation? I am specifically
+interested in this for DAX support on btrfs/CoW: The TODO comment on
+top of dax_associate_entry() :)
 
-Brian
+If there are patches/git tree I could use to base my patches on, it would
+be nice.
+
+-- 
+Goldwyn
