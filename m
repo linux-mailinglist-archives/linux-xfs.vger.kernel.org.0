@@ -2,146 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C62133805D
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 00:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D261C38074
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 00:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfFFWOD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 18:14:03 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43162 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726837AbfFFWOC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Jun 2019 18:14:02 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1703F7E2CC3;
-        Fri,  7 Jun 2019 08:13:59 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hZ0d3-0000W5-MZ; Fri, 07 Jun 2019 08:13:01 +1000
-Date:   Fri, 7 Jun 2019 08:13:01 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] xfs: rework extent allocation
-Message-ID: <20190606221301.GC14308@dread.disaster.area>
-References: <20190522180546.17063-1-bfoster@redhat.com>
- <20190523015659.GL29573@dread.disaster.area>
- <20190523125535.GA20099@bfoster>
- <20190523221552.GM29573@dread.disaster.area>
- <20190524120015.GA32730@bfoster>
- <20190525224317.GZ29573@dread.disaster.area>
- <20190531171136.GA26315@bfoster>
- <20190606152101.GA2791@bfoster>
+        id S1728371AbfFFWVR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Jun 2019 18:21:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:65321 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfFFWVR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:21:17 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:21:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,560,1557212400"; 
+   d="scan'208";a="182472132"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Jun 2019 15:21:16 -0700
+Date:   Thu, 6 Jun 2019 15:22:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606152101.GA2791@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=sLE1n750BRiLyhwtwDAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190606195114.GA30714@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 11:21:04AM -0400, Brian Foster wrote:
-> On Fri, May 31, 2019 at 01:11:36PM -0400, Brian Foster wrote:
-> > On Sun, May 26, 2019 at 08:43:17AM +1000, Dave Chinner wrote:
-> > > On Fri, May 24, 2019 at 08:00:18AM -0400, Brian Foster wrote:
-> > > > On Fri, May 24, 2019 at 08:15:52AM +1000, Dave Chinner wrote:
-> > > > > On Thu, May 23, 2019 at 08:55:35AM -0400, Brian Foster wrote:
-> > > > > > Hmmm.. I suppose if I had a script that
-> > > > > > just dumped every applicable stride/delta value for an inode, I could
-> > > > > > dump all of those numbers into a file and we can process it from there..
-> > > > > 
-> > > > > See how the freesp commands work in xfs_db - they just generate a
-> > > > > set of {offset, size} tuples that are then bucketted appropriately.
-> > > > > This is probably the best way to do this at the moment - have xfs_db
-> > > > > walk the inode BMBTs outputting something like {extent size,
-> > > > > distance to next extent} tuples and everything else falls out from
-> > > > > how we bucket that information.
-> > > > > 
-> > > > 
-> > > > That sounds plausible. A bit more involved than what I'm currently
-> > > > working with, but we do already have a blueprint for the scanning
-> > > > implementation required to collect this data via the frag command.
-> > > > Perhaps some of this code between the frag/freesp can be generalized and
-> > > > reused. I'll take a closer look at it.
-> > > > 
-> > > > My only concern is I'd prefer to only go down this path as long as we
-> > > > plan to land the associated command in xfs_db. So this approach suggests
-> > > > to me that we add a "locality" command similar to frag/freesp that
-> > > > presents the locality state of the fs. For now I'm only really concerned
-> > > > with the data associated with known near mode allocations (i.e., such as
-> > > > the extent size:distance relationship you've outlined above) so we can
-> > > > evaluate these algorithmic changes, but this would be for fs devs only
-> > > > so we could always expand on it down the road if we want to assess
-> > > > different allocations. Hm?
-> > > 
-> > > Yup, I'm needing to do similar analysis myself to determine how
-> > > quickly I'm aging the filesystem, so having the tool in xfs_db or
-> > > xfs_spaceman would be very useful.
-> > > 
-> > > FWIW, the tool I've just started writing will just use fallocate and
-> > > truncate to hammer the allocation code as hard and as quickly as
-> > > possible - I want to do accelerated aging of the filesystem, and so
-> > > being able to run tens to hundreds of thousands of free space
-> > > manipulations a second is the goal here....
-> > > 
-> > 
-> > Ok. FWIW, from playing with this so far (before getting distracted for
-> > much of this week) the most straightforward place to add this kind of
-> > functionality turns out to be the frag command itself. It does 99% of
-> > the work required to process data extents already, including pulling the
-> > on-disk records of each inode in-core for processing. I basically just
-> > had to update that code to include all of the record data and add the
-> > locality tracking logic (I haven't got to actually presenting it yet..).
-> > 
+On Thu, Jun 06, 2019 at 04:51:15PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
 > 
-> I managed to collect some preliminary data based on this strategy. I
-....
+> > So I'd like to actually mandate that you *must* hold the file lease until
+> > you unpin all pages in the given range (not just that you have an option to
+> > hold a lease). And I believe the kernel should actually enforce this. That
+> > way we maintain a sane state that if someone uses a physical location of
+> > logical file offset on disk, he has a layout lease. Also once this is done,
+> > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > and kill it if he wishes so.
+> > 
+> > The question is on how to exactly enforce that lease is taken until all
+> > pages are unpinned. I belive it could be done by tracking number of
+> > long-term pinned pages within a lease. Gup_longterm could easily increment
+> > the count when verifying the lease exists, gup_longterm users will somehow
+> > need to propagate corresponding 'filp' (struct file pointer) to
+> > put_user_pages_longterm() callsites so that they can look up appropriate
+> > lease to drop reference - probably I'd just transition all gup_longterm()
+> > users to a saner API similar to the one we have in mm/frame_vector.c where
+> > we don't hand out page pointers but an encapsulating structure that does
+> > all the necessary tracking. Removing a lease would need to block until all
+> > pins are released - this is probably the most hairy part since we need to
+> > handle a case if application just closes the file descriptor which
+> > would
 > 
-> Comparison of the baseline and test data shows a generally similar
-> breakdown between the two.
+> I think if you are going to do this then the 'struct filp' that
+> represents the lease should be held in the kernel (ie inside the RDMA
+> umem) until the kernel is done with it.
 
-Which is the result I wanted to see :)
+Yea there seems merit to this.  I'm still not resolving how this helps track
+who has the pin across a fork.
 
-> Thoughts on any of this data or presentation?
+> 
+> Actually does someone have a pointer to this userspace lease API, I'm
+> not at all familiar with it, thanks
 
-I think it's useful for comparing whether an allocator change has
-affected the overall locality of allocation. If it's working as we
-expect, you should get vastly different results for inode32 vs
-inode64 mount options, with inode32 showing much, much higher
-distances for most allocations, so it might be worth running a quick
-test to confirm that it does, indeed, demonstrate the results we'd
-expect from such a change.
+man fcntl
+	search for SETLEASE
 
-> I could dig further into
-> details or alternatively base the histogram on something like extent
-> size and show the average delta for each extent size bucket, but I'm not
-> sure that will tell us anything profound with respect to this patchset.
+But I had to add the F_LAYOUT lease type.  (Personally I'm for calling it
+F_LONGTERM at this point.  I don't think LAYOUT is compatible with what we are
+proposing here.)
 
-*nod*
+Anyway, yea would be a libc change at lease for man page etc...  But again I
+want to get some buy in before going through all that.
 
-> One thing I noticed while processing this data is that the current
-> dataset skews heavily towards smaller allocations. I still think it's a
-> useful comparison because smaller allocations are more likely to stress
-> either algorithm via a larger locality search space, but I may try to
-> repeat this test with a workload with fewer files and larger allocations
-> and see how that changes things.
+> 
+> And yes, a better output format from GUP would be great..
+> 
+> > Maybe we could block only on explicit lease unlock and just drop the layout
+> > lease on file close and if there are still pinned pages, send SIGKILL to an
+> > application as a reminder it did something stupid...
+> 
+> Which process would you SIGKILL? At least for the rdma case a FD is
+> holding the GUP, so to do the put_user_pages() the kernel needs to
+> close the FD. I guess it would have to kill every process that has the
+> FD open? Seems complicated...
 
-From the testing I've been doing, I think the file count of around
-10k isn't sufficient to really cause severe allocation issues.
-Directory and inodes metadata are great for fragmenting free space,
-so dramtically increasing the number of smaller files might actually
-produce worse behaviour....
+Tending to agree...  But I'm still not opposed to killing bad actors...  ;-)
 
-Cheers,
+NOTE: Jason I think you need to be more clear about the FD you are speaking of.
+I believe you mean the FD which refers to the RMDA context.  That is what I
+called it in my other email.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Ira
+
+> 
+> Regards,
+> Jason
