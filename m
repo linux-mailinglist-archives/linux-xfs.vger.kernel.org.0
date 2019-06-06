@@ -2,176 +2,231 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6621E37A9C
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 19:10:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03DCC37BEF
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 20:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfFFRKs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 13:10:48 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20370 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727512AbfFFRKs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:10:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 10:10:47 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 10:10:46 -0700
-Date:   Thu, 6 Jun 2019 10:11:58 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190606171158.GB11374@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
+        id S1729073AbfFFSMd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Jun 2019 14:12:33 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41463 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFSMc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Jun 2019 14:12:32 -0400
+Received: by mail-yw1-f68.google.com with SMTP id y185so1194091ywy.8
+        for <linux-xfs@vger.kernel.org>; Thu, 06 Jun 2019 11:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7LqHDeDAk+tdHMwsKKaxioTA8UK2su3WxfaC1sw0I0w=;
+        b=NrTr2+NvCmOU01nQPlwRz0Ey5OzyOXniqGSFrARU1OOW/ybG8d2eRsWT+d7smhsDjS
+         U3usvVzgLbA4x+5PVsoybBM11qJ6ARIuEzQwXwF2M2QdIxfG3cCgVSlOu7vgHS4S76bm
+         ACohK0JvI+yLpjnqVrf3/QIS/UbjDN2JsNoQbUSOiOqa177iWMgvOZwCWRK0AhXZdrwA
+         5S+VHncTKkI2s6R6wi417+vycYPLivFkS1cfDiwPth5oIyzJzqeEk1xngZqdiWYCIqov
+         l4GZ/kHdQoeBrpr5jixMrx9FRDPRj3jX3syWX7GpWFgvxbMAgT2FEm5ZMqpvImvBqkUx
+         GYIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7LqHDeDAk+tdHMwsKKaxioTA8UK2su3WxfaC1sw0I0w=;
+        b=lMs+NjFdw8YFGm8u9llUU5EwUy19CUvQSDfBjfwciZYAZknaPhpFB/GQiPxOtxPvxO
+         zIHaPwD9EkRYi0qea4DaXeAVwzdMtuEr1s41jNhZ+X33W6jyDDG7sU5AjkKM1rdlbCZW
+         ZJ+a+N8socOsJejqwBTRDvgv5RaCf/SkXYgSkuLn3eVHKfqPk7x/5sz2ANuUysc1puWd
+         G0ll6VQKpa2pi2S41DgXF+RMynz9OvV3Sq0RyHOep7PInlck1ij0KXsa9QvrXp/c7itz
+         nv/fsx1O22q3VJE/RUFYPigtycTkEQmMXbjGm8lVh6SENsxgzfl9eBD7AeEbr58Uk9Pa
+         hnSQ==
+X-Gm-Message-State: APjAAAWyht/kYNd5MoK1d5XdTF1xeNjtyWK/KQhIIdtGVlv5D/Vu+hAq
+        4MhtakwgxN1Vt2i6MJcqQInJGolbZDZrTUrwZM0=
+X-Google-Smtp-Source: APXvYqxUbsQFiBhixHTlfa+IwMrBx6GR8MPxKFHvYIfXrAxWDfmTIW+z1dYo0GoJ0v82L0/uylp9dBs6j+ZbhD/qViA=
+X-Received: by 2002:a81:47c1:: with SMTP id u184mr26286425ywa.313.1559844751704;
+ Thu, 06 Jun 2019 11:12:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <CABeZSNmcmL3_VvDVvbcneDd3f2jCiu7Pn8YQ7y7mJH8BizaWXw@mail.gmail.com>
+ <680c16d9-cb95-f2b1-b65b-c956b1e5c1ed@sandeen.net>
+In-Reply-To: <680c16d9-cb95-f2b1-b65b-c956b1e5c1ed@sandeen.net>
+From:   Sheena Artrip <sheena.artrip@gmail.com>
+Date:   Thu, 6 Jun 2019 11:12:20 -0700
+Message-ID: <CABeZSNnw=UN9+muYXD-JYV3cECZPUfzxW1y8HE4ks=PCEdFqEQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] xfs_restore: detect rtinherit on destination
+To:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org
+Cc:     sheenobu@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:52:12PM -0700, John Hubbard wrote:
-> On 6/5/19 6:45 PM, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ... V1,000,000   ;-)
-> > 
-> > Pre-requisites:
-> > 	John Hubbard's put_user_pages() patch series.[1]
-> > 	Jan Kara's ext4_break_layouts() fixes[2]
-> > 
-> > Based on the feedback from LSFmm and the LWN article which resulted.  I've
-> > decided to take a slightly different tack on this problem.
-> > 
-> > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > memory which is then truncated.  So really any solution we present which:
-> > 
-> > A) Prevents file system corruption or data leaks
-> > ...and...
-> > B) Informs the user that they did something wrong
-> > 
-> > Should be an acceptable solution.
-> > 
-> > Because this is slightly new behavior.  And because this is gonig to be
-> > specific to DAX (because of the lack of a page cache) we have made the user
-> > "opt in" to this behavior.
-> > 
-> > The following patches implement the following solution.
-> > 
-> > 1) The user has to opt in to allowing GUP pins on a file with a layout lease
-> >    (now made visible).
-> > 2) GUP will fail (EPERM) if a layout lease is not taken
-> > 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
-> > 4) The user has the option of holding the layout lease to receive a SIGIO for
-> >    notification to the original thread that another thread has tried to delete
-> >    their data.  Furthermore this indicates that if the user needs to GUP the
-> >    file again they will need to retake the Layout lease before doing so.
-> > 
-> > 
-> > NOTE: If the user releases the layout lease or if it has been broken by another
-> > operation further GUP operations on the file will fail without re-taking the
-> > lease.  This means that if a user would like to register pieces of a file and
-> > continue to register other pieces later they would be advised to keep the
-> > layout lease, get a SIGIO notification, and retake the lease.
-> > 
-> > NOTE2: Truncation of pages which are not actively pinned will succeed.  Similar
-> > to accessing an mmap to this area GUP pins of that memory may fail.
-> > 
-> 
-> Hi Ira,
-> 
-> Wow, great to see this. This looks like basically the right behavior, IMHO.
-> 
-> 1. We'll need man page additions, to explain it. In fact, even after a quick first
-> pass through, I'm vague on two points:
+On Thu, Jun 6, 2019 at 7:11 AM Eric Sandeen <sandeen@sandeen.net> wrote:
+>
+> On 6/5/19 4:16 PM, Sheena Artrip wrote:
+> > When running xfs_restore with a non-rtdev dump,
+> > it will ignore any rtinherit flags on the destination
+> > and send I/O to the metadata region.
+> >
+> > Instead, detect rtinherit on the destination XFS fileystem root inode
+> > and use that to override the incoming inode flags.
+> >
+> > Original version of this patch missed some branches so multiple
+> > invocations of xfsrestore onto the same fs caused
+> > the rtinherit bit to get re-removed. There could be some
+> > additional edge cases in non-realtime to realtime workflows so
+> > the outstanding question would be: is it worth supporting?
+>
+> Hm, interesting.
+>
+> So this is a mechanism to allow dump/restore to migrate everything
+> to the realtime subvol?  I can't decide if I like this - normally I'd
+> think of an xfsdump/xfsrestore session as more or less replicating the
+> filesystem that was dumped, and not something that will fundamentally
+> change what was dumped.
+>
+> OTOH, we can restore onto any dir we want, and I could see the argument
+> that we should respect things like the rtinherit flag if that's what
+> the destination dir says.
 
-Of course.  But I was not going to go through and attempt to write man pages
-and other docs without some agreement on the final mechanisms.  This works
-which was the basic requirement I had to send an RFC.  :-D  But yes man pages
-and updates to headers etc all have to be done.
+Yes. What is strange is that an xfsrestore onto a rtdev system will
+silently "fill"
+the metadata partition until the available inode count goes to zero and we get
+an ENOSPC. Not yet sure if the file data goes straight to the metadata partition
+or if it's simply accounting for it in the metadata partition.
 
-> 
-> a) I'm not sure how this actually provides "opt-in to new behavior", because I 
-> don't see any CONFIG_* or boot time choices, and it looks like the new behavior 
-> just is there. That is, if user space doesn't set F_LAYOUT on a range, 
-> GUP FOLL_LONGTERM will now fail, which is new behavior. (Did I get that right?)
+I'm guessing xfsrestore should either fail-fast or allow this via
+rtinherit detection. I don't mind putting it behind a flag either.
 
-The opt in is at run time.  Currently GUP FOLL_LONGTERM is _not_ _allowed_ on
-the FS DAX pages at all.  So the default behavior is the same, GUP fails.  (Or
-specifically ibv_reg_mr() fails.  This fails as before, not change there.
+> One thing about the patch - the mechanism you've copied to get the root
+> inode number via bulkstat turns out to be broken ... it's possible
+> to have a non-root inode with the lowest number on the fs, unfortunately.
 
-The Opt in is that if a user knows what is involved they can take the lease and
-the GUP will not fail.  This comes with the price of knowing that other
-processes can't truncate those pages in use.
+I think i saw that on the list but this code is also a near-identical
+copy of what is in xfsdump/content.c.
 
-> 
-> b) Truncate and hole punch behavior, with and without user space having a SIGIO
-> handler. (I'm sure this is obvious after another look through, but it might go
-> nicely in a man page.)
+> But, wouldn't you want to test the rtinherit flag on the target dir anyway,
+> not necessarily the root dir?
 
-Sorry this was not clear.  There are 2 points for this patch set which requires
-the use of catching SIGIO.
+Makes sense. How would I get the rtinherit flag on the target dir? Is there
+a xfs-specific stat function that will give us a xfs_bstat_t for the
+dstdir inode
+I've opened or is it already part of stat64_t?
 
-1) If an application _actually_ does (somehow, somewhere, in some unforseen use
-   case) want to allow a truncate to happen.  They can catch the SIGIO, finish
-   their use of the pages, and release them.  As long as they can do this within
-   the <sysfs>/lease-time-break time they are ok and the truncate can proceed.
-
-2) This is a bit more subtle and something I almost delayed sending these out
-   for.  Currently the implementation of a lease break actually removes the
-   lease from the file.  I did not want this to happen and I was thinking of
-   delaying this patch set to implement something which keeps the lease around
-   but I figured I should get something out for comments.  Jan has proposed
-   something along these lines and I agree with him so I'm going to ask you to
-   read my response to him about the details.
-
-   Anyway so the key here is that currently an app needs the SIGIO to retake
-   the lease if they want to map the file again or in parts based on usage.
-   For example, they may only want to map some of the file for when they are
-   using it and then map another part later.  Without the SIGIO they would lose
-   their lease or would have to just take the lease for each GUP pin (which
-   adds overhead).  Like I said I did not like this but I left it to get
-   something which works out.
-
-> 
-> 2. It *seems* like ext4, xfs are taken care of here, not just for the DAX case,
-> but for general RDMA on them? Or is there more that must be done?
-
-This is limited to DAX.  All the functionality is limited to *_devmap or "is
-DAX" cases.  I'm still thinking that page cache backed files can have a better
-solution for the user.
-
-> 
-> 3. Christophe Hellwig's unified gup patchset wreaks havoc in gup.c, and will
-> conflict violently, as I'm sure you noticed. :)
-
-Yep...  But I needed to get the conversation started on this idea.
-
-Thanks for the feedback!
-Ira
-
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
-> 
+> > Signed-off-by: Sheena Artrip <sheena.artrip@gmail.com>
+> > ---
+> >  restore/content.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >
+> > diff --git a/restore/content.c b/restore/content.c
+> > index 6b22965..96dd698 100644
+> > --- a/restore/content.c
+> > +++ b/restore/content.c
+> > @@ -670,6 +670,9 @@ struct tran {
+> >                  /* to establish critical regions while updating pers
+> >                   * inventory
+> >                   */
+> > +       bool_t t_dstisrealtime;
+> > +               /* to force the realtime flag on incoming inodes
+> > +                */
+> >  };
+> >
+> >  typedef struct tran tran_t;
+> > @@ -1803,6 +1806,51 @@ content_init(int argc, char *argv[], size64_t vmsz)
+> >                  free_handle(fshanp, fshlen);
+> >          }
+> >
+> > +       /* determine if destination root inode has rtinherit.
+> > +        * If so, we should force XFS_REALTIME on the incoming inodes.
+> > +        */
+> > +       if (persp->a.dstdirisxfspr) {
+> > +               stat64_t rootstat;
+> > +               xfs_fsop_bulkreq_t bulkreq;
+> > +               int ocount = 0;
+> > +               xfs_bstat_t *sc_rootxfsstatp;
+> > +
+> > +               int rootfd = open(persp->a.dstdir, O_RDONLY);
+> > +
+> > +               sc_rootxfsstatp =
+> > +                       (xfs_bstat_t *)calloc(1, sizeof(xfs_bstat_t));
+> > +               assert(sc_rootxfsstatp);
+> > +
+> > +               /* Get the inode of the destination folder */
+> > +               int rval = fstat64(rootfd, &rootstat);
+> > +               if (rval) {
+> > +                       (void)close(rootfd);
+> > +                       mlog(MLOG_NORMAL, _(
+> > +                         "could not stat %s\n"),
+> > +                         persp->a.dstdir);
+> > +                       return BOOL_FALSE;
+> > +               }
+> > +
+> > +               /* Get the first valid (i.e. root) inode in this fs */
+> > +               bulkreq.lastip = (__u64 *)&rootstat.st_ino;
+> > +               bulkreq.icount = 1;
+> > +               bulkreq.ubuffer = sc_rootxfsstatp;
+> > +               bulkreq.ocount = &ocount;
+> > +               if (ioctl(rootfd, XFS_IOC_FSBULKSTAT, &bulkreq) < 0) {
+> > +                       (void)close(rootfd);
+> > +                       mlog(MLOG_ERROR,
+> > +                             _("failed to get bulkstat information
+> > for root inode\n"));
+> > +                       return BOOL_FALSE;
+> > +               }
+> > +
+> > +               (void)close(rootfd);
+> > +
+> > +               /* test against rtinherit */
+> > +               if((sc_rootxfsstatp->bs_xflags & XFS_XFLAG_RTINHERIT) != 0) {
+> > +                       tranp->t_dstisrealtime = true;
+> > +               }
+> > +       }
+> > +
+> >          /* map in pers. inv. descriptors, if any. NOTE: this ptr is to be
+> >           * referenced ONLY via the macros provided; the descriptors will be
+> >           * occasionally remapped, causing the ptr to change.
+> > @@ -7270,6 +7318,10 @@ restore_file_cb(void *cp, bool_t linkpr, char
+> > *path1, char *path2)
+> >          bool_t ahcs = contextp->cb_ahcs;
+> >          stream_context_t *strctxp = (stream_context_t *)drivep->d_strmcontextp;
+> >
+> > +       if (tranp->t_dstisrealtime) {
+> > +               bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
+> > +       }
+> > +
+> >          int rval;
+> >          bool_t ok;
+> >
+> > @@ -7480,6 +7532,10 @@ restore_reg(drive_t *drivep,
+> >          if (tranp->t_toconlypr)
+> >                  return BOOL_TRUE;
+> >
+> > +       if (tranp->t_dstisrealtime) {
+> > +             bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
+> > +       }
+> > +
+> >          oflags = O_CREAT | O_RDWR;
+> >          if (persp->a.dstdirisxfspr && bstatp->bs_xflags & XFS_XFLAG_REALTIME)
+> >                  oflags |= O_DIRECT;
+> > @@ -8470,6 +8526,11 @@ restore_extent(filehdr_t *fhdrp,
+> >                  }
+> >                  assert(new_off == off);
+> >          }
+> > +
+> > +       if (tranp->t_dstisrealtime) {
+> > +             bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
+> > +       }
+> > +
+> >          if ((fd != -1) && (bstatp->bs_xflags & XFS_XFLAG_REALTIME)) {
+> >                  if ((ioctl(fd, XFS_IOC_DIOINFO, &da) < 0)) {
+> >                          mlog(MLOG_NORMAL | MLOG_WARNING, _(
+> > @@ -8729,6 +8790,10 @@ restore_extattr(drive_t *drivep,
+> >
+> >          assert(extattrbufp);
+> >
+> > +       if (tranp->t_dstisrealtime) {
+> > +               bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
+> > +       }
+> > +
+> >          if (!isdirpr)
+> >                  isfilerestored = partial_check(bstatp->bs_ino,
+> > bstatp->bs_size);
+> >
+> > --
+> > 2.17.1
+> >
