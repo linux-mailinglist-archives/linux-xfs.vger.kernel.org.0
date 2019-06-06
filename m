@@ -2,140 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB43437D99
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 21:50:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 048BE37D9C
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 21:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfFFTub (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 15:50:31 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:45647 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfFFTub (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Jun 2019 15:50:31 -0400
-Received: by mail-yb1-f194.google.com with SMTP id v1so1367817ybi.12
-        for <linux-xfs@vger.kernel.org>; Thu, 06 Jun 2019 12:50:31 -0700 (PDT)
+        id S1727193AbfFFTvR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Jun 2019 15:51:17 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45932 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfFFTvQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Jun 2019 15:51:16 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s22so2243018qkj.12
+        for <linux-xfs@vger.kernel.org>; Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vVHACjPkg6q2CPTS7+0O4snuX5DXWrfCSdy8JtiRV/w=;
-        b=JVR4zOr3i4tc6z4pBsPUAVmAh7N4aWTAcvsN3BlZZXcjBHR1sc73f/KMCZ50mo2AIE
-         0a6nXKIPsWeyv1aMlEAnFie9OBsPPQfIaJ5Kl2R+NBuo8eZzHAyet61tWAn5ViDoXrGm
-         vnEC7UKxgqeo6IEaWN2U68DXHlxJjy+dHsDIX30nwInumDA4OKJaqdNUqptdb5v6cHK8
-         0J/GvN2X16Y5InPWdwZNXfClPi9JZWssaOp6jR32ThELYV3JJ6oOQMYGoURh8NFfatWF
-         G2G9NbOm9PuCvaqUQWqVBLTt2ocI5bi2wsjOhHV20UVPvcojVAK8ZUfEV4AIuF6Yp9sA
-         j2hw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
+        b=JK8En4/CLh0QaNpMzjO2iMeOMpfrAAx/gr5SgNV/sb4SY2gHe/v8MOPkfC/9wPWIZ9
+         ZL8QsvlzUZu3/QV2sR8DriCxzBeBuTLKUUPKPgdfpcAKVXgCaQb7rGQ3TRW8g1PxMby9
+         +wxeHaZK6IN3egjgnP9IJZ+w011avGG0F3y8TTnoGrINoPzy0TddWA78C+1Q+KMGIdzz
+         92AxUAVNZWhAkEVYstL8INWhYQ829J/YpWO2ZbVyA8ZS8ksWZ7LFyB1R04yWWmr5UAZu
+         N8V2QVFH6XXSPdpk/99Edhk0JJ7bEpSx2FL6IQyeiD+YQVzMZEgvotOVmE8xHx4nh57Z
+         Aq3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vVHACjPkg6q2CPTS7+0O4snuX5DXWrfCSdy8JtiRV/w=;
-        b=oWYleT5x/IDnJPqTw/ZdR3tr8Aq8SEZH0Y9LzTOuzV40ghtg0A423Ig6V3oZ8oPJDr
-         fk7G+li7BcvIk+qKuPLkbsvzLDK27VFKOxRGcxoUjltu0bmsBnOrt5Zhjuyc3Srmh8lB
-         GdGzi90h/+IXvv+aRoGwyF7AO/F4xLD1HIulZX7ZAHvmZreaLeP+j0hhZewbTB8s9jIy
-         oV+5Jp3pJPeR61NxB2CN0/PUXncmSVrYus+Jg48Gx/C3YDWrI6YAn1GRuIGMX9MN5TmU
-         dgNIcTsA0EJPkUkIsSyV4creNPhDIbhznsThpCgMrU+fmXdLIMl78nWo0p1BWCWJABsy
-         Ik4w==
-X-Gm-Message-State: APjAAAUgCz2QsUHZibzLis7r/IFAbnUzQilxyVMBmgJ1EiGSkTWtQNeW
-        VInSK5EFyrOjRC9Bh7f3UlzkGVJJiqE2VRW5f2GxdlZx
-X-Google-Smtp-Source: APXvYqxA9jWFxarJGWHaGJr9oSMjsn8nbh16gKZSsILlpT/cU7Eomy1miOuPK45J9a/lagWs8jxXXRHhIiohQnHAf/Q=
-X-Received: by 2002:a25:a10a:: with SMTP id z10mr23619901ybh.156.1559850630924;
- Thu, 06 Jun 2019 12:50:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
+        b=pMITzjvHGO/T20iABZ13vG2E60ql+oDNDTjCx1lwISYDLKTVcTEkv4jcpogEZlL843
+         /wOyDvO0/97bHD0Xyh8K7lN41davpMK11zhK9MmGgm/48ZugLWhLGku9QcO+w0/wRYCB
+         3ODFxfdK8ji4ubqbSmxDS5o8rXJ15b7dl7OjCKkVXiOPSFhmcsu5DxomFuCZF1y/oTmU
+         PUXx2Vv/OMT8ywdjBZ5oyjD/3LUk+O0rLRZg6CZrBdwg9wY2D/CjoUYZolVWaLfFRoJf
+         KD6tCRR/ekJ2N+7CVw4quubNBm+PWpPKdtGUZMnnyhx4VmnCTp9zs3FqXnN2lKo8L3nt
+         uVrw==
+X-Gm-Message-State: APjAAAVa9JdbWzcM4Lm/KMOCTxfwgyXDbjKIieFCn9xDHXbZtkO4+IjE
+        3PJiXZF0I5aKsTladL32GcAr4Q==
+X-Google-Smtp-Source: APXvYqzyssiuyqvk956epvDv1OTyC6TvGNp+K2MqufTjNzhdzVN0pIMcZor/PXhzGoG5BWQnFWZbfw==
+X-Received: by 2002:a37:a9c3:: with SMTP id s186mr41012233qke.190.1559850676118;
+        Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id t197sm1415555qke.2.2019.06.06.12.51.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 12:51:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hYyPr-00081O-0q; Thu, 06 Jun 2019 16:51:15 -0300
+Date:   Thu, 6 Jun 2019 16:51:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jan Kara <jack@suse.cz>
+Cc:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190606195114.GA30714@ziepe.ca>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
 MIME-Version: 1.0
-References: <CABeZSNmcmL3_VvDVvbcneDd3f2jCiu7Pn8YQ7y7mJH8BizaWXw@mail.gmail.com>
- <680c16d9-cb95-f2b1-b65b-c956b1e5c1ed@sandeen.net> <CABeZSNnw=UN9+muYXD-JYV3cECZPUfzxW1y8HE4ks=PCEdFqEQ@mail.gmail.com>
- <e6968aa2-a5ad-4964-2966-589486e4a251@sandeen.net>
-In-Reply-To: <e6968aa2-a5ad-4964-2966-589486e4a251@sandeen.net>
-From:   Sheena Artrip <sheena.artrip@gmail.com>
-Date:   Thu, 6 Jun 2019 12:50:18 -0700
-Message-ID: <CABeZSN=5GZix+NzeQbfFTbGvmMv619YeOM-+z92W-3R=v1oebQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] xfs_restore: detect rtinherit on destination
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     linux-xfs@vger.kernel.org, sheenobu@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606104203.GF7433@quack2.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 11:39 AM Eric Sandeen <sandeen@sandeen.net> wrote:
->
-> On 6/6/19 1:12 PM, Sheena Artrip wrote:
-> > On Thu, Jun 6, 2019 at 7:11 AM Eric Sandeen <sandeen@sandeen.net> wrote:
-> >>
-> >> On 6/5/19 4:16 PM, Sheena Artrip wrote:
-> >>> When running xfs_restore with a non-rtdev dump,
-> >>> it will ignore any rtinherit flags on the destination
-> >>> and send I/O to the metadata region.
-> >>>
-> >>> Instead, detect rtinherit on the destination XFS fileystem root inode
-> >>> and use that to override the incoming inode flags.
-> >>>
-> >>> Original version of this patch missed some branches so multiple
-> >>> invocations of xfsrestore onto the same fs caused
-> >>> the rtinherit bit to get re-removed. There could be some
-> >>> additional edge cases in non-realtime to realtime workflows so
-> >>> the outstanding question would be: is it worth supporting?
-> >>
-> >> Hm, interesting.
-> >>
-> >> So this is a mechanism to allow dump/restore to migrate everything
-> >> to the realtime subvol?  I can't decide if I like this - normally I'd
-> >> think of an xfsdump/xfsrestore session as more or less replicating the
-> >> filesystem that was dumped, and not something that will fundamentally
-> >> change what was dumped.
-> >>
-> >> OTOH, we can restore onto any dir we want, and I could see the argument
-> >> that we should respect things like the rtinherit flag if that's what
-> >> the destination dir says.
-> >
-> > Yes. What is strange is that an xfsrestore onto a rtdev system will
-> > silently "fill"
->
-> from a filesystem that previously did not have rt files, I guess?
->
+On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
 
-Exactly, yes.
+> So I'd like to actually mandate that you *must* hold the file lease until
+> you unpin all pages in the given range (not just that you have an option to
+> hold a lease). And I believe the kernel should actually enforce this. That
+> way we maintain a sane state that if someone uses a physical location of
+> logical file offset on disk, he has a layout lease. Also once this is done,
+> sysadmin has a reasonably easy way to discover run-away RDMA application
+> and kill it if he wishes so.
+> 
+> The question is on how to exactly enforce that lease is taken until all
+> pages are unpinned. I belive it could be done by tracking number of
+> long-term pinned pages within a lease. Gup_longterm could easily increment
+> the count when verifying the lease exists, gup_longterm users will somehow
+> need to propagate corresponding 'filp' (struct file pointer) to
+> put_user_pages_longterm() callsites so that they can look up appropriate
+> lease to drop reference - probably I'd just transition all gup_longterm()
+> users to a saner API similar to the one we have in mm/frame_vector.c where
+> we don't hand out page pointers but an encapsulating structure that does
+> all the necessary tracking. Removing a lease would need to block until all
+> pins are released - this is probably the most hairy part since we need to
+> handle a case if application just closes the file descriptor which
+> would
 
-> > the metadata partition until the available inode count goes to zero and we get
-> > an ENOSPC. Not yet sure if the file data goes straight to the metadata partition
-> > or if it's simply accounting for it in the metadata partition.
-> >
-> > I'm guessing xfsrestore should either fail-fast or allow this via
-> > rtinherit detection. I don't mind putting it behind a flag either.
->
-> Hm, can you more completely describe the usecase/testcase that leads to
-> the problem?  I just want to make sure I have the whole picture.
->
+I think if you are going to do this then the 'struct filp' that
+represents the lease should be held in the kernel (ie inside the RDMA
+umem) until the kernel is done with it.
 
-The use case is data migration from system A to system B. Traditionally, they've
-all been non-realtime to non-realtime so xfsdump/xfsrestore worked OK.
-Trying the
-same process for non-realtime to realtime brought up these surprising issues.
+Actually does someone have a pointer to this userspace lease API, I'm
+not at all familiar with it, thanks
 
->
-> >> One thing about the patch - the mechanism you've copied to get the root
-> >> inode number via bulkstat turns out to be broken ... it's possible
-> >> to have a non-root inode with the lowest number on the fs, unfortunately.
-> >
-> > I think i saw that on the list but this code is also a near-identical
-> > copy of what is in xfsdump/content.c.
->
-> yeah that's my mistake to fix now ;)
->
-> >> But, wouldn't you want to test the rtinherit flag on the target dir anyway,
-> >> not necessarily the root dir?
-> >
-> > Makes sense. How would I get the rtinherit flag on the target dir? Is there
-> > a xfs-specific stat function that will give us a xfs_bstat_t for the
-> > dstdir inode
-> > I've opened or is it already part of stat64_t?
->
-> it's available via the FS_IOC_FSGETXATTR ioctl:
->
-> # xfs_io -c "chattr +t" mnt/rtdir
-> # strace -e ioctl xfs_io -c lsattr mnt/rtdir
-> ioctl(3, _IOC(_IOC_READ, 0x58, 0x7c, 0x70), 0x7ffd4cab44c0) = 0
-> ioctl(3, FS_IOC_FSGETXATTR, 0x7ffd4cab45a0) = 0
-> -------t-------- mnt/rtdir
+And yes, a better output format from GUP would be great..
 
-Thanks!
+> Maybe we could block only on explicit lease unlock and just drop the layout
+> lease on file close and if there are still pinned pages, send SIGKILL to an
+> application as a reminder it did something stupid...
+
+Which process would you SIGKILL? At least for the rdma case a FD is
+holding the GUP, so to do the put_user_pages() the kernel needs to
+close the FD. I guess it would have to kill every process that has the
+FD open? Seems complicated...
+
+Regards,
+Jason
