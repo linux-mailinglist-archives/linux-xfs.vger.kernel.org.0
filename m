@@ -2,165 +2,76 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5EA3781E
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 17:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A0237931
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 18:09:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfFFPf4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 11:35:56 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40058 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729330AbfFFPf4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Jun 2019 11:35:56 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w196so1873651oie.7
-        for <linux-xfs@vger.kernel.org>; Thu, 06 Jun 2019 08:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1uRCmoXjULyV6kNTp2XKoB1qQmxkPSNDXYL9A3FHXFA=;
-        b=QHJOC2ZZhCoDsF3kkt0jD8pflX+D1g9wOGO30jisMp6VkS20cZbHhajfwYZJVXdiNh
-         JvAq7go3CRc5C+qomPxstLKznxkYPvd1O8ef7VHSAdG1rMnaPbbiOm9MuPNkCt7QxXaR
-         tW2MckCN4CHKIL8N13EVae4FrQAMJth8VAaKv/3gRwubZltnT7kNI3PWIXvq1c0vgZdi
-         L4XQGyBb2kkKpfIMhfb2YWP8o3M95HB+am83dkZODoLq1I1UWGrX6Sp8tjJSrVa2UG3+
-         kN4AXQu3lycB826+fr4/pUl5FixrZTURACJPQlnP2NuCi+p38m+p145UkX/P89XlKLdK
-         QHrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1uRCmoXjULyV6kNTp2XKoB1qQmxkPSNDXYL9A3FHXFA=;
-        b=hUBkYEljUEQtakfGAJjXOE6SFOROBuGpkaWXsysjkIq3o2EPtV9FI7B9I1BHM2JtV+
-         ELmfdQIR0ZJqvzwkzqA/4IKb0yGB4WUeNYWdpnW/+e+M3vIddwAbq6uAN61xSdqPMy+M
-         MuahN+ASdKiL1w9Xusxi03E/UQdE9+X8rea/negpdzYdPns60zGEyAdFY3T9twQx0VGu
-         QN58/RBy17OEARfBeI6ntXwgUDDnlzrZQRFOiOLaAGykwfhw0fEdeA0KY8N9Vb8WYmmA
-         gs8AiIajmB+vqktr+hzOx23hR5iKRCnIfWkq6h+LtCN3ZbjOxHlJuAd7gfqWF8uRMG4e
-         WbYQ==
-X-Gm-Message-State: APjAAAWpD7/LdlZbkFGQp9fG2Fg+dqiAbSi8LBWa7MkiihLEtAAlDkZi
-        Qj+PZjPPIKhB5ixN127WFHnugu+rklUIy+W7sZR5Tw==
-X-Google-Smtp-Source: APXvYqwQgzrGrWeJ2qr6zRt1Kh72wsL96qCKSVk7C2TBZflDvhLK6wlI/C4trmZ0QEDDo8Q9KA4CrwRdXYqf7oGmgHc=
-X-Received: by 2002:aca:bbc5:: with SMTP id l188mr410988oif.73.1559835355090;
- Thu, 06 Jun 2019 08:35:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190606014544.8339-1-ira.weiny@intel.com> <20190606104203.GF7433@quack2.suse.cz>
-In-Reply-To: <20190606104203.GF7433@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 6 Jun 2019 08:35:42 -0700
-Message-ID: <CAPcyv4h-k_5T39fDY+SVrLXG_XETmgz-6N3NjQUteYG7g9NdDQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-To:     Jan Kara <jack@suse.cz>
-Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+        id S1729473AbfFFQJf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Jun 2019 12:09:35 -0400
+Received: from mga14.intel.com ([192.55.52.115]:33754 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729191AbfFFQJe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 6 Jun 2019 12:09:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 09:09:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,559,1557212400"; 
+   d="scan'208";a="182358981"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Jun 2019 09:09:34 -0700
+Date:   Thu, 6 Jun 2019 09:10:46 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
         Dave Chinner <david@fromorbit.com>,
         Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-xfs@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 03/10] mm/gup: Pass flags down to __gup_device_huge*
+ calls
+Message-ID: <20190606161045.GA11331@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606014544.8339-4-ira.weiny@intel.com>
+ <20190606061819.GA20520@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606061819.GA20520@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:42 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
+On Wed, Jun 05, 2019 at 11:18:19PM -0700, Christoph Hellwig wrote:
+> On Wed, Jun 05, 2019 at 06:45:36PM -0700, ira.weiny@intel.com wrote:
 > > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > ... V1,000,000   ;-)
-> >
-> > Pre-requisites:
-> >       John Hubbard's put_user_pages() patch series.[1]
-> >       Jan Kara's ext4_break_layouts() fixes[2]
-> >
-> > Based on the feedback from LSFmm and the LWN article which resulted.  I've
-> > decided to take a slightly different tack on this problem.
-> >
-> > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > memory which is then truncated.  So really any solution we present which:
-> >
-> > A) Prevents file system corruption or data leaks
-> > ...and...
-> > B) Informs the user that they did something wrong
-> >
-> > Should be an acceptable solution.
-> >
-> > Because this is slightly new behavior.  And because this is gonig to be
-> > specific to DAX (because of the lack of a page cache) we have made the user
-> > "opt in" to this behavior.
-> >
-> > The following patches implement the following solution.
-> >
-> > 1) The user has to opt in to allowing GUP pins on a file with a layout lease
-> >    (now made visible).
-> > 2) GUP will fail (EPERM) if a layout lease is not taken
-> > 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
-> > 4) The user has the option of holding the layout lease to receive a SIGIO for
-> >    notification to the original thread that another thread has tried to delete
-> >    their data.  Furthermore this indicates that if the user needs to GUP the
-> >    file again they will need to retake the Layout lease before doing so.
-> >
-> >
-> > NOTE: If the user releases the layout lease or if it has been broken by
-> > another operation further GUP operations on the file will fail without
-> > re-taking the lease.  This means that if a user would like to register
-> > pieces of a file and continue to register other pieces later they would
-> > be advised to keep the layout lease, get a SIGIO notification, and retake
-> > the lease.
-> >
-> > NOTE2: Truncation of pages which are not actively pinned will succeed.
-> > Similar to accessing an mmap to this area GUP pins of that memory may
-> > fail.
->
-> So after some through I'm willing accept the fact that pinned DAX pages
-> will just make truncate / hole punch fail and shove it into a same bucket
-> of situations like "user can open a file and unlink won't delete it" or
-> "ETXTBUSY when user is executing a file being truncated".  The problem I
-> have with this proposal is a lack of visibility from sysadmin POV. For
-> ETXTBUSY or "unlinked but open file" sysadmin can just do lsof, find the
-> problematic process and kill it. There's nothing like that with your
-> proposal since currently once you hold page reference, you can unmap the
-> file, drop layout lease, close the file, and there's no trace that you're
-> responsible for the pinned page anymore.
->
-> So I'd like to actually mandate that you *must* hold the file lease until
-> you unpin all pages in the given range (not just that you have an option to
-> hold a lease). And I believe the kernel should actually enforce this. That
-> way we maintain a sane state that if someone uses a physical location of
-> logical file offset on disk, he has a layout lease. Also once this is done,
-> sysadmin has a reasonably easy way to discover run-away RDMA application
-> and kill it if he wishes so.
+> > 
+> > In order to support checking for a layout lease on a FS DAX inode these
+> > calls need to know if FOLL_LONGTERM was specified.
+> > 
+> > Prepare for this with this patch.
+> 
+> The GUP fast argument passing is a mess.  That is why I've come up
+> with this as part of the (not ready) get_user_pages_fast_bvec
+> implementation:
+> 
+> http://git.infradead.org/users/hch/misc.git/commitdiff/c3d019802dbde5a4cc4160e7ec8ccba479b19f97
 
-Yes, this satisfies the primary concern that made me oppose failing
-truncate. If the administrator determines that reclaiming capacity is
-more important than maintaining active RDMA mappings "lsof + kill" is
-a reasonable way to recover. I'd go so far as to say that anything
-less is an abdication of the kernel's responsibility as an arbiter of
-platform resources.
+Agreed that looks better.
 
-> The question is on how to exactly enforce that lease is taken until all
-> pages are unpinned. I belive it could be done by tracking number of
-> long-term pinned pages within a lease. Gup_longterm could easily increment
-> the count when verifying the lease exists, gup_longterm users will somehow
-> need to propagate corresponding 'filp' (struct file pointer) to
-> put_user_pages_longterm() callsites so that they can look up appropriate
-> lease to drop reference - probably I'd just transition all gup_longterm()
-> users to a saner API similar to the one we have in mm/frame_vector.c where
-> we don't hand out page pointers but an encapsulating structure that does
-> all the necessary tracking. Removing a lease would need to block until all
-> pins are released - this is probably the most hairy part since we need to
-> handle a case if application just closes the file descriptor which would
-> release the lease but OTOH we need to make sure task exit does not deadlock.
-> Maybe we could block only on explicit lease unlock and just drop the layout
-> lease on file close and if there are still pinned pages, send SIGKILL to an
-> application as a reminder it did something stupid...
->
-> What do people think about this?
+And I'm sure I will have to re-roll this to deal with conflicts with this set.
+But for now I needed this for the follow ons and having a nice separate little
+patch like this means I can just drop it after I get your clean up!  :-D
 
-SIGKILL on close() without explicit unlock and wait-on-last-pin with
-explicit unlock sounds reasonable to me.
+Ira
+
