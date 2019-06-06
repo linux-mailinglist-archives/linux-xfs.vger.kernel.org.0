@@ -2,23 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBE1337619
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 16:11:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A103771E
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Jun 2019 16:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfFFOLJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 10:11:09 -0400
-Received: from sandeen.net ([63.231.237.45]:52638 "EHLO sandeen.net"
+        id S1728782AbfFFOtO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Jun 2019 10:49:14 -0400
+Received: from sandeen.net ([63.231.237.45]:55534 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfFFOLI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:11:08 -0400
+        id S1728774AbfFFOtO (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:49:14 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 38B5A2ADF;
-        Thu,  6 Jun 2019 09:10:44 -0500 (CDT)
-Subject: Re: [RFC][PATCH] xfs_restore: detect rtinherit on destination
-To:     Sheena Artrip <sheena.artrip@gmail.com>, linux-xfs@vger.kernel.org
-References: <CABeZSNmcmL3_VvDVvbcneDd3f2jCiu7Pn8YQ7y7mJH8BizaWXw@mail.gmail.com>
+        by sandeen.net (Postfix) with ESMTPSA id E5FFD2ADF;
+        Thu,  6 Jun 2019 09:48:49 -0500 (CDT)
+Subject: Re: Polish translation update for xfsprogs 5.0.0
+To:     Jakub Bogusz <qboosh@pld-linux.org>, linux-xfs@vger.kernel.org
+References: <20190605182817.GB3860@stranger.qboosh.pl>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -63,12 +63,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <680c16d9-cb95-f2b1-b65b-c956b1e5c1ed@sandeen.net>
-Date:   Thu, 6 Jun 2019 09:11:07 -0500
+Message-ID: <6bc3f72d-8313-0fa0-297e-f7aa7061b142@sandeen.net>
+Date:   Thu, 6 Jun 2019 09:49:12 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CABeZSNmcmL3_VvDVvbcneDd3f2jCiu7Pn8YQ7y7mJH8BizaWXw@mail.gmail.com>
+In-Reply-To: <20190605182817.GB3860@stranger.qboosh.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -77,160 +77,58 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/5/19 4:16 PM, Sheena Artrip wrote:
-> When running xfs_restore with a non-rtdev dump,
-> it will ignore any rtinherit flags on the destination
-> and send I/O to the metadata region.
+On 6/5/19 1:28 PM, Jakub Bogusz wrote:
+> Hello,
 > 
-> Instead, detect rtinherit on the destination XFS fileystem root inode
-> and use that to override the incoming inode flags.
+> I prepared an update of Polish translation of xfsprogs 5.0.0.
+> As previously, because of size (whole file is ~514kB, diff is ~928kB),
+> I'm sending just commit header to the list and whole file is available
+> to download at:
+> http://qboosh.pl/pl.po/xfsprogs-5.0.0.pl.po
 > 
-> Original version of this patch missed some branches so multiple
-> invocations of xfsrestore onto the same fs caused
-> the rtinherit bit to get re-removed. There could be some
-> additional edge cases in non-realtime to realtime workflows so
-> the outstanding question would be: is it worth supporting?
+> Commit header:
+> 
+> 
+> From 9a8d9225eb569db53abff1918c1b4d814ef647b5 Mon Sep 17 00:00:00 2001
+> From: Jakub Bogusz <qboosh@pld-linux.org>
+> Date: Wed, 5 Jun 2019 19:45:49 +0200
+> Subject: [PATCH] po/pl.po: update Polish translation for 5.0.0
+> 
+> Polish translation update for xfsprogs 5.0.0
 
-Hm, interesting.
+Super, thanks!
 
-So this is a mechanism to allow dump/restore to migrate everything
-to the realtime subvol?  I can't decide if I like this - normally I'd
-think of an xfsdump/xfsrestore session as more or less replicating the
-filesystem that was dumped, and not something that will fundamentally
-change what was dumped.
-
-OTOH, we can restore onto any dir we want, and I could see the argument
-that we should respect things like the rtinherit flag if that's what
-the destination dir says.
-
-One thing about the patch - the mechanism you've copied to get the root
-inode number via bulkstat turns out to be broken ... it's possible
-to have a non-root inode with the lowest number on the fs, unfortunately.
-
-But, wouldn't you want to test the rtinherit flag on the target dir anyway,
-not necessarily the root dir?
+I really appreciate you keeping this up to date.  Aside - how are we doing
+with translatable strings in general?  Did you run into any problems?
 
 -Eric
 
-> Signed-off-by: Sheena Artrip <sheena.artrip@gmail.com>
+> Signed-off-by: Jakub Bogusz <qboosh@pld-linux.org>
 > ---
->  restore/content.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
+>  po/pl.po | 21017 +++++++++++++++++++++++++++--------------------------
+>  1 file changed, 10685 insertions(+), 10332 deletions(-)
 > 
-> diff --git a/restore/content.c b/restore/content.c
-> index 6b22965..96dd698 100644
-> --- a/restore/content.c
-> +++ b/restore/content.c
-> @@ -670,6 +670,9 @@ struct tran {
->                  /* to establish critical regions while updating pers
->                   * inventory
->                   */
-> +       bool_t t_dstisrealtime;
-> +               /* to force the realtime flag on incoming inodes
-> +                */
->  };
+> diff --git a/po/pl.po b/po/pl.po
+> index ab5b11da..adc46d72 100644
+> --- a/po/pl.po
+> +++ b/po/pl.po
+> @@ -1,13 +1,13 @@
+>  # Polish translation for xfsprogs.
+>  # This file is distributed under the same license as the xfsprogs package.
+> -# Jakub Bogusz <qboosh@pld-linux.org>, 2006-2018.
+> +# Jakub Bogusz <qboosh@pld-linux.org>, 2006-2019.
+>  #
+>  msgid ""
+>  msgstr ""
+> -"Project-Id-Version: xfsprogs 4.15.0\n"
+> +"Project-Id-Version: xfsprogs 5.0.0\n"
+>  "Report-Msgid-Bugs-To: \n"
+> -"POT-Creation-Date: 2018-02-26 20:58+0100\n"
+> -"PO-Revision-Date: 2018-02-26 20:59+0100\n"
+> +"POT-Creation-Date: 2019-05-03 15:03-0500\n"
+> +"PO-Revision-Date: 2019-06-01 14:52+0200\n"
+>  "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+>  "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+>  "Language: pl\n"
 > 
->  typedef struct tran tran_t;
-> @@ -1803,6 +1806,51 @@ content_init(int argc, char *argv[], size64_t vmsz)
->                  free_handle(fshanp, fshlen);
->          }
-> 
-> +       /* determine if destination root inode has rtinherit.
-> +        * If so, we should force XFS_REALTIME on the incoming inodes.
-> +        */
-> +       if (persp->a.dstdirisxfspr) {
-> +               stat64_t rootstat;
-> +               xfs_fsop_bulkreq_t bulkreq;
-> +               int ocount = 0;
-> +               xfs_bstat_t *sc_rootxfsstatp;
-> +
-> +               int rootfd = open(persp->a.dstdir, O_RDONLY);
-> +
-> +               sc_rootxfsstatp =
-> +                       (xfs_bstat_t *)calloc(1, sizeof(xfs_bstat_t));
-> +               assert(sc_rootxfsstatp);
-> +
-> +               /* Get the inode of the destination folder */
-> +               int rval = fstat64(rootfd, &rootstat);
-> +               if (rval) {
-> +                       (void)close(rootfd);
-> +                       mlog(MLOG_NORMAL, _(
-> +                         "could not stat %s\n"),
-> +                         persp->a.dstdir);
-> +                       return BOOL_FALSE;
-> +               }
-> +
-> +               /* Get the first valid (i.e. root) inode in this fs */
-> +               bulkreq.lastip = (__u64 *)&rootstat.st_ino;
-> +               bulkreq.icount = 1;
-> +               bulkreq.ubuffer = sc_rootxfsstatp;
-> +               bulkreq.ocount = &ocount;
-> +               if (ioctl(rootfd, XFS_IOC_FSBULKSTAT, &bulkreq) < 0) {
-> +                       (void)close(rootfd);
-> +                       mlog(MLOG_ERROR,
-> +                             _("failed to get bulkstat information
-> for root inode\n"));
-> +                       return BOOL_FALSE;
-> +               }
-> +
-> +               (void)close(rootfd);
-> +
-> +               /* test against rtinherit */
-> +               if((sc_rootxfsstatp->bs_xflags & XFS_XFLAG_RTINHERIT) != 0) {
-> +                       tranp->t_dstisrealtime = true;
-> +               }
-> +       }
-> +
->          /* map in pers. inv. descriptors, if any. NOTE: this ptr is to be
->           * referenced ONLY via the macros provided; the descriptors will be
->           * occasionally remapped, causing the ptr to change.
-> @@ -7270,6 +7318,10 @@ restore_file_cb(void *cp, bool_t linkpr, char
-> *path1, char *path2)
->          bool_t ahcs = contextp->cb_ahcs;
->          stream_context_t *strctxp = (stream_context_t *)drivep->d_strmcontextp;
-> 
-> +       if (tranp->t_dstisrealtime) {
-> +               bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
-> +       }
-> +
->          int rval;
->          bool_t ok;
-> 
-> @@ -7480,6 +7532,10 @@ restore_reg(drive_t *drivep,
->          if (tranp->t_toconlypr)
->                  return BOOL_TRUE;
-> 
-> +       if (tranp->t_dstisrealtime) {
-> +             bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
-> +       }
-> +
->          oflags = O_CREAT | O_RDWR;
->          if (persp->a.dstdirisxfspr && bstatp->bs_xflags & XFS_XFLAG_REALTIME)
->                  oflags |= O_DIRECT;
-> @@ -8470,6 +8526,11 @@ restore_extent(filehdr_t *fhdrp,
->                  }
->                  assert(new_off == off);
->          }
-> +
-> +       if (tranp->t_dstisrealtime) {
-> +             bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
-> +       }
-> +
->          if ((fd != -1) && (bstatp->bs_xflags & XFS_XFLAG_REALTIME)) {
->                  if ((ioctl(fd, XFS_IOC_DIOINFO, &da) < 0)) {
->                          mlog(MLOG_NORMAL | MLOG_WARNING, _(
-> @@ -8729,6 +8790,10 @@ restore_extattr(drive_t *drivep,
-> 
->          assert(extattrbufp);
-> 
-> +       if (tranp->t_dstisrealtime) {
-> +               bstatp->bs_xflags |= XFS_XFLAG_REALTIME;
-> +       }
-> +
->          if (!isdirpr)
->                  isfilerestored = partial_check(bstatp->bs_ino,
-> bstatp->bs_size);
-> 
-> --
-> 2.17.1
 > 
