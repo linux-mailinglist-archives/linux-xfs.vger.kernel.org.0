@@ -2,166 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B839938323
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 05:30:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E10C638401
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 08:01:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFGDaK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Jun 2019 23:30:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44426 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfFGDaK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 6 Jun 2019 23:30:10 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6DD103091797
-        for <linux-xfs@vger.kernel.org>; Fri,  7 Jun 2019 03:30:10 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EDE880D87
-        for <linux-xfs@vger.kernel.org>; Fri,  7 Jun 2019 03:30:10 +0000 (UTC)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH] xfs: show build options in sysfs
-Message-ID: <97e16da4-e5ad-3049-0f6b-c1e24462e035@redhat.com>
-Date:   Thu, 6 Jun 2019 22:30:09 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        id S1726774AbfFGGAr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Jun 2019 02:00:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43998 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFGGAr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 02:00:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i8so799701oth.10
+        for <linux-xfs@vger.kernel.org>; Thu, 06 Jun 2019 23:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/KxNQ9MI1VotM1MpZhO1sXWtsUgIvWtrmcpqkBhjppA=;
+        b=WfyEYkZegPTmvynLc2fjjKs6d/TdRZHB2mGyi3svr8A4gfvWp7nBiukv2oNPMrRNu3
+         LF5pIX9mWCDEYPKHsg9x8FyxTEXL3Pp4DEsbFXvMjA67etlGXIbfY2hNbJLOqw4TuZAK
+         Bxvkt2hCh3F5rpXtMyj2CBZde6MBilulGBAwGobq2TdvBZsm+WUcNaCHcTKujMNYBYzA
+         Jz+YlbRdrvtxV6qQh4bHw4H4UOWvGsLOnQyJmjDAnpMCiSaVTnMqJomtxlE/4a38CErg
+         OEy8Ur6MMHV2bA7bkrmZl08c3aZp2RHd2Dpw55zuwf2rl9TE1d9/sN4lvF3IDzCodhLY
+         IFJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/KxNQ9MI1VotM1MpZhO1sXWtsUgIvWtrmcpqkBhjppA=;
+        b=NoL/SjR+8l2E46bPnrHslDAoNEa1roFIaU2zluheQsjpSx8Mhw09V6J4Tja+8AJpfh
+         MQXzHE8XhZJMezpvgHZinx9lslRJKKRZW40RriXBVVsSOLnEHnr37UcY2yMkSSLQpB+k
+         CzMyaQZkbmp/MktQ4HHeLaqM6PTzDKV/VESsvRBfx+ixvt6Y4/YHAmrCPHna4AjjfLhm
+         WZqFITf6BB83xcEJpPIJsJavJKMoUWWaEmXhvJ5uB0ZobTYxotK/9XW0P7Ahfy/t3tgr
+         jtO6d0MQm3wYGCLlB97JzDJqCMlbIJZNEqYDZ1geQ+Hdm7fHartR8gODt8PV0Cl/nOxk
+         Up1w==
+X-Gm-Message-State: APjAAAVUIBdRM2jQG829wrifcD0H4o04xf6k44tUwr87cZ30zv2sr7j6
+        Tl3O1FM9GYG3r+yn3m9/ph/0/qf9FKMODq9OeuHfmIl9
+X-Google-Smtp-Source: APXvYqwgOBlvuuzB4VOYDbIT/0knuoEr43azK6XWvG7H+/gVjkfE0RSOiURNIXMgTP5DMZNdOklRtNkV5jBX8cvgDmo=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr17778966otr.207.1559887246873;
+ Thu, 06 Jun 2019 23:00:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 07 Jun 2019 03:30:10 +0000 (UTC)
+References: <CAPcyv4jyCDJTpGZB6qVX7_FiaxJfDzWA1cw8dfPjHM2j3j3yqQ@mail.gmail.com>
+ <20190214134622.GG4525@dhcp22.suse.cz> <CAPcyv4gxFKBQ9eVdn+pNEzBXRfw6Qwfmu21H2i5uj-PyFmRAGQ@mail.gmail.com>
+ <20190214191013.GA3420@redhat.com> <CAPcyv4jLTdJyTOy715qvBL_j_deiLoBmu_thkUnFKZKMvZL6hA@mail.gmail.com>
+ <20190214200840.GB12668@bombadil.infradead.org> <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
+ <20190605162204.jzou5hry5exly5wx@fiona>
+In-Reply-To: <20190605162204.jzou5hry5exly5wx@fiona>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Jun 2019 23:00:35 -0700
+Message-ID: <CAPcyv4gZSsAA+GE9otf=WfKSkGMcTbxgdgSCErNys4sOCdCzuA@mail.gmail.com>
+Subject: Re: [Lsf-pc] [LSF/MM TOPIC] The end of the DAX experiment
+To:     Goldwyn Rodrigues <rgoldwyn@suse.de>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        lsf-pc@lists.linux-foundation.org,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This adds the "build options" string to a sysfs entry:
+On Wed, Jun 5, 2019 at 9:22 AM Goldwyn Rodrigues <rgoldwyn@suse.de> wrote:
+>
+> Hi Dan/Jerome,
+>
+> On 12:20 14/02, Dan Williams wrote:
+> > On Thu, Feb 14, 2019 at 12:09 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Thu, Feb 14, 2019 at 11:31:24AM -0800, Dan Williams wrote:
+> > > > On Thu, Feb 14, 2019 at 11:10 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > > I am just again working on my struct page mapping patchset as well as
+> > > > > the generic page write protection that sits on top. I hope to be able
+> > > > > to post the v2 in couple weeks. You can always look at my posting last
+> > > > > year to see more details.
+> > > >
+> > > > Yes, I have that in mind as one of the contenders. However, it's not
+> > > > clear to me that its a suitable fit for filesystem-reflink. Others
+> > > > have floated the 'page proxy' idea, so it would be good to discuss the
+> > > > merits of the general approaches.
+> > >
+> > > ... and my preferred option of putting pfn entries in the page cache.
+> >
+> > Another option to include the discussion.
+> >
+> > > Or is that what you meant by "page proxy"?
+> >
+> > Page proxy would be an object that a filesystem could allocate to
+> > point back to a single physical 'struct page *'. The proxy would
+> > contain an override for page->index.
+>
+> Was there any outcome on this and its implementation? I am specifically
+> interested in this for DAX support on btrfs/CoW: The TODO comment on
+> top of dax_associate_entry() :)
+>
+> If there are patches/git tree I could use to base my patches on, it would
+> be nice.
 
-# cat /sys/fs/xfs/features/build_opts 
-ACLs, security attributes, realtime, scrub, no debug
-
-because right now we only get it in dmesg and scraping dmesg
-is not a great option.
-
-This is really /build options/, not features as in "on-disk,
-superblock features" like XFS_SB_FEAT_* - putting this under a
-features/ dir will leave the window open open to do supported
-superblock features ala ext4 & f2fs in the future if desired.
-
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
-
-No sure if it would make sense to have i.e.
-
-/sys/fs/xfs/features/build_options
-/sys/fs/xfs/features/finobt
-/sys/fs/xfs/features/rmapbt
-...
-
-all in the same features/ dir ?
-
-Also I didn't test module unload/teardown as I'm testing on xfs root.
-
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index a14d11d78bd8..bc0e7fd63567 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -55,9 +55,10 @@
- static const struct super_operations xfs_super_operations;
- struct bio_set xfs_ioend_bioset;
- 
--static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
-+static struct kset *xfs_kset;			/* top-level xfs sysfs dir */
-+static struct xfs_kobj xfs_features_kobj;	/* global features */
- #ifdef DEBUG
--static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
-+static struct xfs_kobj xfs_dbg_kobj;		/* global debug sysfs attrs */
- #endif
- 
- /*
-@@ -2134,11 +2135,16 @@ init_xfs_fs(void)
- 	if (error)
- 		goto out_free_stats;
- 
-+	xfs_features_kobj.kobject.kset = xfs_kset;
-+	error = xfs_sysfs_init(&xfs_features_kobj, &xfs_features_ktype,
-+				NULL, "features");
-+	if (error)
-+		goto out_remove_stats_kobj;
- #ifdef DEBUG
- 	xfs_dbg_kobj.kobject.kset = xfs_kset;
- 	error = xfs_sysfs_init(&xfs_dbg_kobj, &xfs_dbg_ktype, NULL, "debug");
- 	if (error)
--		goto out_remove_stats_kobj;
-+		goto out_remove_features_kobj;
- #endif
- 
- 	error = xfs_qm_init();
-@@ -2155,8 +2161,10 @@ init_xfs_fs(void)
-  out_remove_dbg_kobj:
- #ifdef DEBUG
- 	xfs_sysfs_del(&xfs_dbg_kobj);
-- out_remove_stats_kobj:
-+ out_remove_features_kobj:
- #endif
-+	xfs_sysfs_del(&xfs_features_kobj);
-+ out_remove_stats_kobj:
- 	xfs_sysfs_del(&xfsstats.xs_kobj);
-  out_free_stats:
- 	free_percpu(xfsstats.xs_stats);
-@@ -2186,6 +2194,7 @@ exit_xfs_fs(void)
- #ifdef DEBUG
- 	xfs_sysfs_del(&xfs_dbg_kobj);
- #endif
-+	xfs_sysfs_del(&xfs_features_kobj);
- 	xfs_sysfs_del(&xfsstats.xs_kobj);
- 	free_percpu(xfsstats.xs_stats);
- 	kset_unregister(xfs_kset);
-diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-index cabda13f3c64..98f36ad16237 100644
---- a/fs/xfs/xfs_sysfs.c
-+++ b/fs/xfs/xfs_sysfs.c
-@@ -222,6 +222,28 @@ struct kobj_type xfs_dbg_ktype = {
- 
- #endif /* DEBUG */
- 
-+/* features */
-+
-+STATIC ssize_t
-+build_opts_show(
-+	struct kobject	*kobject,
-+	char		*buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%s\n", XFS_BUILD_OPTIONS);
-+}
-+XFS_SYSFS_ATTR_RO(build_opts);
-+
-+static struct attribute *xfs_features_attrs[] = {
-+	ATTR_LIST(build_opts),
-+	NULL,
-+};
-+
-+struct kobj_type xfs_features_ktype = {
-+	.release = xfs_sysfs_release,
-+	.sysfs_ops = &xfs_sysfs_ops,
-+	.default_attrs = xfs_features_attrs,
-+};
-+
- /* stats */
- 
- static inline struct xstats *
-diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-index e9f810fc6731..e475f6b7eb91 100644
---- a/fs/xfs/xfs_sysfs.h
-+++ b/fs/xfs/xfs_sysfs.h
-@@ -11,6 +11,7 @@ extern struct kobj_type xfs_mp_ktype;	/* xfs_mount */
- extern struct kobj_type xfs_dbg_ktype;	/* debug */
- extern struct kobj_type xfs_log_ktype;	/* xlog */
- extern struct kobj_type xfs_stats_ktype;	/* stats */
-+extern struct kobj_type xfs_features_ktype;	/* features*/
- 
- static inline struct xfs_kobj *
- to_kobj(struct kobject *kobject)
-
+Half joking, but I was hoping that by the time I had circled back to
+finally reviewing the brtfs dax patches that a solution to this
+problem would be waiting. We spent more time on other DAX topics. I
+recall that Jerome and I were mutually skeptical of each others
+approaches at first glance, but we did not get into the details. So, I
+think it will be a matter of getting the idea coded up. I'm finally
+coming out from under a pile of mm work so I should have some time
+this cycle to push the page proxy idea forward.
