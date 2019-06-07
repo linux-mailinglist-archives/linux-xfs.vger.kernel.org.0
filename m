@@ -2,334 +2,442 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79568391A8
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 18:11:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00734391CF
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 18:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfFGQLB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Jun 2019 12:11:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52492 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfFGQLA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 12:11:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57FsPtk105894
-        for <linux-xfs@vger.kernel.org>; Fri, 7 Jun 2019 16:10:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=0GATtn/g3MMmLfSo1fZWBQJuoDxttHvnT8Qc4BdxWMk=;
- b=YZ2JAgA3jdOifDvTy+fMTUYzw0Oj8jPZW6NV94riHzcG62t1J1tdLdChczKWevgJGMfp
- g7ZpVZtmsiHtcbI/zCTES9IlRJ5UjvPhk5Z3TKZoOFGWb5QSju4zN05idMIU5RGHxdWw
- JSc4YpBlPjWLzi/uXOFGQxfSQiHZ87a9OuF+pmMRBzJu0SFTvudSOFEIQG80TAfFoX1d
- f6EMIpMvYarGdqdF+AMOAGzzd5O0vvLE9kPxe1ORWatl0Ri9lBNdmsyc2jnI+jHcxGez
- A9JpsdbldHVngjPfMkV2kOrDTTfeLqZCZkhQSSIOG7PW1A2qqRIsm5e553KbWl9BJ0tR /g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2suj0qy3x2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 07 Jun 2019 16:10:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57GA3Lq092706
-        for <linux-xfs@vger.kernel.org>; Fri, 7 Jun 2019 16:10:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2swngk3m6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 07 Jun 2019 16:10:58 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57GAuZL026543
-        for <linux-xfs@vger.kernel.org>; Fri, 7 Jun 2019 16:10:57 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 09:10:56 -0700
-Date:   Fri, 7 Jun 2019 09:10:55 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/9] xfs: wire up new v5 bulkstat ioctls
-Message-ID: <20190607161055.GC1688126@magnolia>
-References: <155916885106.758159.3471602893858635007.stgit@magnolia>
- <155916888365.758159.10884362336065224287.stgit@magnolia>
- <dfe26188-ce75-a916-db26-eaf8286882e9@oracle.com>
- <20190606211004.GB1871505@magnolia>
- <a57f8117-2a6e-ad62-f374-20dccef458b3@oracle.com>
+        id S1730013AbfFGQX6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Jun 2019 12:23:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40456 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728486AbfFGQX6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:23:58 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 03E5DAC2E2;
+        Fri,  7 Jun 2019 16:23:52 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6275810ABD91;
+        Fri,  7 Jun 2019 16:23:50 +0000 (UTC)
+Date:   Fri, 7 Jun 2019 12:23:48 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCH 1/1] xfs: check for COW overflows in i_delayed_blks
+Message-ID: <20190607162348.GA58127@bfoster>
+References: <155968302402.1647082.16959798703857853077.stgit@magnolia>
+ <155968303075.1647082.5031279746723706503.stgit@magnolia>
+ <20190606191449.GB2791@bfoster>
+ <20190606200249.GA1688126@magnolia>
+ <20190607112429.GA57123@bfoster>
+ <20190607155309.GD1871505@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a57f8117-2a6e-ad62-f374-20dccef458b3@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070109
+In-Reply-To: <20190607155309.GD1871505@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 07 Jun 2019 16:23:57 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 03:37:40PM -0700, Allison Collins wrote:
-> On 6/6/19 2:10 PM, Darrick J. Wong wrote:
-> > On Wed, Jun 05, 2019 at 03:30:21PM -0700, Allison Collins wrote:
-> > > On 5/29/19 3:28 PM, Darrick J. Wong wrote:
-> > > > From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, Jun 07, 2019 at 08:53:09AM -0700, Darrick J. Wong wrote:
+> On Fri, Jun 07, 2019 at 07:24:33AM -0400, Brian Foster wrote:
+> > On Thu, Jun 06, 2019 at 01:02:49PM -0700, Darrick J. Wong wrote:
+> > > On Thu, Jun 06, 2019 at 03:14:50PM -0400, Brian Foster wrote:
+> > > > On Tue, Jun 04, 2019 at 02:17:10PM -0700, Darrick J. Wong wrote:
+> > > > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > > 
+> > > > > With the new copy on write functionality it's possible to reserve so
+> > > > > much COW space for a file that we end up overflowing i_delayed_blks.
+> > > > > The only user-visible effect of this is to cause totally wrong i_blocks
+> > > > > output in stat, so check for that.
+> > > > > 
+> > > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > > ---
+> > > > >  tests/xfs/907     |  223 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  tests/xfs/907.out |    8 ++
+> > > > >  tests/xfs/group   |    1 
+> > > > >  3 files changed, 232 insertions(+)
+> > > > >  create mode 100755 tests/xfs/907
+> > > > >  create mode 100644 tests/xfs/907.out
+> > > > > 
+> > > > > 
+> > > > > diff --git a/tests/xfs/907 b/tests/xfs/907
+> > > > > new file mode 100755
+> > > > > index 00000000..d85f12da
+> > > > > --- /dev/null
+> > > > > +++ b/tests/xfs/907
+> > > > > @@ -0,0 +1,223 @@
+> > > > > +#! /bin/bash
+> > > > > +# SPDX-License-Identifier: GPL-2.0+
+> > > > > +# Copyright (c) 2019 Oracle, Inc.  All Rights Reserved.
+> > > > > +#
+> > > > > +# FS QA Test No. 907
+> > > > > +#
+> > > > > +# Try to overflow i_delayed_blks by setting the largest cowextsize hint
+> > > > > +# possible, creating a sparse file with a single byte every cowextsize bytes,
+> > > > > +# reflinking it, and retouching every written byte to see if we can create
+> > > > > +# enough speculative COW reservations to overflow i_delayed_blks.
+> > > > > +#
+> > > > > +seq=`basename $0`
+> > > > > +seqres=$RESULT_DIR/$seq
+> > > > > +echo "QA output created by $seq"
+> > > > > +
+> > > > > +here=`pwd`
+> > > > > +tmp=/tmp/$$
+> > > > > +status=1	# failure is the default!
+> > > > > +trap "_cleanup; exit \$status" 0 1 2 3 7 15
+> > > > > +
+> > > > > +_cleanup()
+> > > > > +{
+> > > > > +	cd /
+> > > > > +	test -n "$loop_mount" && $UMOUNT_PROG $loop_mount > /dev/null 2>&1
+> > > > > +	test -n "$loop_dev" && _destroy_loop_device $loop_dev
+> > > > > +	rm -rf $tmp.*
+> > > > > +}
+> > > > > +
+> > > > > +# get standard environment, filters and checks
+> > > > > +. ./common/rc
+> > > > > +. ./common/reflink
+> > > > > +. ./common/filter
+> > > > > +
+> > > > > +# real QA test starts here
+> > > > > +_supported_os Linux
+> > > > > +_supported_fs xfs
+> > > > > +_require_scratch_reflink
+> > > > > +_require_cp_reflink
+> > > > > +_require_loop
+> > > > > +_require_xfs_debug	# needed for xfs_bmap -c
+> > > > > +
+> > > > > +MAXEXTLEN=2097151	# cowextsize can't be more than MAXEXTLEN
+> > > > > +
+> > > > > +echo "Format and mount"
+> > > > > +_scratch_mkfs > "$seqres.full" 2>&1
+> > > > > +_scratch_mount
+> > > > > +
+> > > > > +# Create a huge sparse filesystem on the scratch device because that's what
+> > > > > +# we're going to need to guarantee that we have enough blocks to overflow in
+> > > > > +# the first place.  We need to have at least enough free space on that huge fs
+> > > > > +# to handle one written block every MAXEXTLEN blocks and to reserve 2^32 blocks
+> > > > > +# in the COW fork.  There needs to be sufficient space in the scratch
+> > > > > +# filesystem to handle a 256M log, all the per-AG metadata, and all the data
+> > > > > +# written to the test file.
+> > > > > +#
+> > > > > +# Worst case, a 64k-block fs needs to be about 300TB.  Best case, a 1k block
+> > > > > +# filesystem needs ~5TB.  For the most common 4k case we only need a ~20TB fs.
+> > > > > +#
+> > > > > +# nr_cows is the number of writes we make to the filesystem.
+> > > > > +# blks_needed is the number of free blocks we need in the fs to trigger the
+> > > > > +#     overflow.  The destination file needs to have more than 2^32 blocks
+> > > > > +#     reserved for COW, and the source file needs to have 1 block written every
+> > > > > +#     MAXEXTLEN blocks (i.e. 2^32/MAXEXTLEN blocks) to set up the destination
+> > > > > +#     file.
+> > > > > +# loop_file_sz is the size of the filesystem we have to create to produce the
+> > > > > +#     overflow problems.  This is 20% more than blks_needed, and rounded to the
+> > > > > +#     nearest 512b so losetup doesn't whine.
+> > > > > +# est_nr_ags is a guess at the AG count, assuming that we'll have one AG per
+> > > > > +#     terabyte (which assumes that we need a multi-terabyte filesystem for this
+> > > > > +#     test).  We assume we'll need 16 blocks for AG metadata and 128K for inode
+> > > > > +#     chunks.
+> > > > > +# space_reqd_kb is the size of the huge sparse filesystem --
+> > > > > +#     256M for the log, per-AG metadata, and 10% more space than however much
+> > > > > +#     we will write to both test files.
+> > > > > +blksz=$(_get_file_block_size "$SCRATCH_MNT")
+> > > > > +nr_cows="$(( ((2 ** 32) / MAXEXTLEN) + 100 ))"
+> > > > > +blks_needed="$(( nr_cows * (1 + MAXEXTLEN) ))"
+> > > > > +loop_file_sz="$(( ((blksz * blks_needed) * 12 / 10) / 512 * 512 ))"
+> > > > > +est_nr_ags="$(( (loop_file_sz / (2 ** 40)) + 1 ))"
+> > > > > +est_ag_space_kb="$(( (est_nr_ags * 16 * blksz / 1024) + 128 ))"
+> > > > > +est_file_space_kb="$(( (((nr_cows * blksz) * 11 / 10) / 1024) ))"
+> > > > > +space_reqd_kb="$(( 262144 + est_ag_space_kb + 2 * est_file_space_kb ))"
+> > > > > +cat >> $seqres.full << ENDL
+> > > > > +blksz: $blksz
+> > > > > +nr_cows: $nr_cows
+> > > > > +blks_needed: $blks_needed
+> > > > > +loop_file_sz: $loop_file_sz
+> > > > > +est_nr_ags: $est_nr_ags
+> > > > > +est_ag_space_kb: $est_ag_space_kb
+> > > > > +est_file_space_kb: $est_file_space_kb
+> > > > > +space_reqd_kb: $space_reqd_kb
+> > > > > +ENDL
+> > > > > +_require_fs_space $SCRATCH_MNT $space_reqd_kb
+> > > > > +
 > > > > 
-> > > > Wire up the new v5 BULKSTAT ioctl and rename the old one to V1.
-> > > > 
-> > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > ---
-> > > >    fs/xfs/libxfs/xfs_fs.h |   24 +++++++++++
-> > > >    fs/xfs/xfs_ioctl.c     |  104 ++++++++++++++++++++++++++++++++++++++++++++++++
-> > > >    fs/xfs/xfs_ioctl32.c   |    1
-> > > >    fs/xfs/xfs_ondisk.h    |    1
-> > > >    4 files changed, 129 insertions(+), 1 deletion(-)
-> > > > 
-> > > > 
-> > > > diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-> > > > index 8b8fe78511fb..960f3542e207 100644
-> > > > --- a/fs/xfs/libxfs/xfs_fs.h
-> > > > +++ b/fs/xfs/libxfs/xfs_fs.h
-> > > > @@ -435,7 +435,6 @@ struct xfs_fsop_bulkreq {
-> > > >    	__s32		__user *ocount;	/* output count pointer		*/
-> > > >    };
-> > > > -
-> > > >    /*
-> > > >     * Structures returned from xfs_inumbers routine (XFS_IOC_FSINUMBERS).
-> > > >     */
-> > > > @@ -457,6 +456,28 @@ struct xfs_inumbers {
-> > > >    #define XFS_INUMBERS_VERSION_V1	(1)
-> > > >    #define XFS_INUMBERS_VERSION_V5	(5)
-> > > > +/* Header for bulk inode requests. */
-> > > > +struct xfs_bulk_ireq {
-> > > > +	uint64_t	ino;		/* I/O: start with this inode	*/
-> > > > +	uint32_t	flags;		/* I/O: operation flags		*/
-> > > > +	uint32_t	icount;		/* I: count of entries in buffer */
-> > > > +	uint32_t	ocount;		/* O: count of entries filled out */
-> > > > +	uint32_t	reserved32;	/* must be zero			*/
-> > > > +	uint64_t	reserved[5];	/* must be zero			*/
-> > > > +};
-> > > > +
-> > > > +#define XFS_BULK_IREQ_FLAGS_ALL	(0)
-> > > > +
-> > > > +/*
-> > > > + * ioctl structures for v5 bulkstat and inumbers requests
-> > > > + */
-> > > > +struct xfs_bulkstat_req {
-> > > > +	struct xfs_bulk_ireq	hdr;
-> > > > +	struct xfs_bulkstat	bulkstat[];
-> > > > +};
-> > > > +#define XFS_BULKSTAT_REQ_SIZE(nr)	(sizeof(struct xfs_bulkstat_req) + \
-> > > > +					 (nr) * sizeof(struct xfs_bulkstat))
-> > > > +
-> > > >    /*
-> > > >     * Error injection.
-> > > >     */
-> > > > @@ -758,6 +779,7 @@ struct xfs_scrub_metadata {
-> > > >    #define XFS_IOC_FSGEOMETRY_V4	     _IOR ('X', 124, struct xfs_fsop_geom_v4)
-> > > >    #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
-> > > >    #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
-> > > > +#define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
-> > > >    /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
-> > > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > > > index e43ad688e683..f6724c75ba97 100644
-> > > > --- a/fs/xfs/xfs_ioctl.c
-> > > > +++ b/fs/xfs/xfs_ioctl.c
-> > > > @@ -822,6 +822,107 @@ xfs_ioc_fsbulkstat(
-> > > >    	return 0;
-> > > >    }
-> > > > +/* Return 0 on success or positive error */
-> > > > +static int
-> > > > +xfs_bulkstat_fmt(
-> > > > +	struct xfs_ibulk		*breq,
-> > > > +	const struct xfs_bulkstat	*bstat)
-> > > > +{
-> > > > +	if (copy_to_user(breq->ubuffer, bstat, sizeof(struct xfs_bulkstat)))
-> > > > +		return -EFAULT;
-> > > > +	return xfs_ibulk_advance(breq, sizeof(struct xfs_bulkstat));
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * Check the incoming bulk request @hdr from userspace and initialize the
-> > > > + * internal @breq bulk request appropriately.  Returns 0 if the bulk request
-> > > > + * should proceed; 1 if there's nothing to do; or the usual negative error
-> > > > + * code.
-> > > > + */
-> > > > +static int
-> > > > +xfs_bulk_ireq_setup(
-> > > > +	struct xfs_mount	*mp,
-> > > > +	struct xfs_bulk_ireq	*hdr,
-> > > > +	struct xfs_ibulk	*breq,
-> > > > +	void __user		*ubuffer)
-> > > > +{
-> > > > +	if (hdr->icount == 0 ||
-> > > > +	    (hdr->flags & ~XFS_BULK_IREQ_FLAGS_ALL) ||
-> > > > +	    hdr->reserved32 ||
-> > > > +	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (XFS_INO_TO_AGNO(mp, hdr->ino) >= mp->m_sb.sb_agcount)
-> > > > +		goto no_results;
-> > > > +
-> > > > +	breq->ubuffer = ubuffer;
-> > > > +	breq->icount = hdr->icount;
-> > > > +	breq->startino = hdr->ino;
-> > > > +	return 0;
-> > > > +no_results:
-> > > > +	hdr->ocount = 0;
-> > > > +	return 1;
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * Update the userspace bulk request @hdr to reflect the end state of the
-> > > > + * internal bulk request @breq.  If @error is negative then we return just
-> > > > + * that; otherwise (@error is 0 or 1) we copy the state so that userspace
-> > > > + * can discover what happened.
-> > > > + */
-> > > > +static int
-> > > > +xfs_bulk_ireq_teardown(
-> > > > +	struct xfs_bulk_ireq	*hdr,
-> > > > +	struct xfs_ibulk	*breq,
-> > > > +	int			error)
-> > > > +{
-> > > > +	if (error < 0)
-> > > > +		return error;
-> > > Hmm, passing in error just to bail on error seemed a little out of scope to
-> > > me.  Is there a reason we're doing it here?  Instead of after the preceding
-> > > call made in the caller?  Referenced below.....
+> > > > This seems like it would be simpler to just create the worst case sparse
+> > > > fs (say 300TB or so) then make sure the scratch device has enough free
+> > > > blocks to accommodate the number of COWs (plus slop) that need to occur
+> > > > in the loop fs to overflow the counter. I don't have a 64k box handy,
+> > > > but the metadata size difference between a sparse 20TB fs and 300TB fs
+> > > > over a 4k scratch fs is only a few MB. Hm?
 > > > 
-> > > > +
-> > > > +	hdr->ino = breq->startino;
-> > > > +	hdr->ocount = breq->ocount;
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +/* Handle the v5 bulkstat ioctl. */
-> > > > +STATIC int
-> > > > +xfs_ioc_bulkstat(
-> > > > +	struct xfs_mount		*mp,
-> > > > +	unsigned int			cmd,
-> > > > +	struct xfs_bulkstat_req __user	*arg)
-> > > > +{
-> > > > +	struct xfs_bulk_ireq		hdr;
-> > > > +	struct xfs_ibulk		breq = {
-> > > > +		.mp			= mp,
-> > > > +	};
-> > > > +	int				error;
-> > > > +
-> > > > +	if (!capable(CAP_SYS_ADMIN))
-> > > > +		return -EPERM;
-> > > > +
-> > > > +	if (XFS_FORCED_SHUTDOWN(mp))
-> > > > +		return -EIO;
-> > > > +
-> > > > +	if (copy_from_user(&hdr, &arg->hdr, sizeof(hdr)))
-> > > > +		return -EFAULT;
-> > > > +
-> > > > +	error = xfs_bulk_ireq_setup(mp, &hdr, &breq, arg->bulkstat);
-> > > > +	if (error < 0)
-> > > > +		return error;
-> > > > +
-> > > > +	if (!error)
-> > > > +		error = xfs_bulkstat(&breq, xfs_bulkstat_fmt);
-> > > > +
-> > >          Right here.  How about
+> > > <shrug> Originally it did just hardcode 300T, and Eryu complained that
+> > > xfs_db would OOM when it tried to deal with a 300T filesystem.  I
+> > > changed the test to avoid xfs_db, but then it occurred to me (running on
+> > > a slow arm64 box) that the mkfs and xfs_repair runtimes could be cut
+> > > down considerably if the loop fs was only as large as it needed to be.
 > > > 
-> > >          if (error < 0)
-> > >             return error;
-> > > 
-> > >          It seems functionally equivalent.  If error < 0, teardown will
-> > > bounce it back anyway and then the error check below will toss it back up.
-> > > Is that what you meant?
 > > 
-> > Yeah, I could do that too. :)
-> > 
-> > TBH I only threw it in as a helper function because xfs_bulk_ireq_setup
-> > seemed to need a counterpart; it's such a short function that I could
-> > just opencode it...  Thoughts?
-> > 
-> > --D
+> > Interesting.. do you recall how much of a difference it made? I don't
+> > see much more than a second or two difference on my test vm, but I
+> > haven't tried any slow arm or 64k page boxes.
 > 
-> Sure, I'd be fine with open coding it too.  I think I made a similar comment
-> in patch 6 since these helper functions are so small.  I think if you just
-> add a comment or two about updating the header that would be fine.
+> It was ~15s on x64 (20T), ~180s on arm64 (20T) and ~300s w/ 64k blocks.
+> Granted the slow arm box is a rpi3b+ with 1G RAM in 64bit mode which is
+> probably very stupid.
+> 
+> Oh, hey, qemu arm64 is about half as slow.
+> 
 
-I could even keep the teardown helper and just adjust the calling style:
+Heh, Ok.
 
-	error = xfs_bulk_ireq_setup(...);
-	if (error == 1)
-		goto teardown;
-	else if (error < 0)
-		goto out;
+> > Even then, that could be accomplished with a simple calculation of the
+> > 2^32 block requirement multiplied against the block size plus some slop
+> > value like 1GB without significantly changing timing. I.e., the whole
+> > big hunk above could be reduced to something like:
+> > 
+> > # Calculate the fs size based on block size and the number of delalloc blocks we
+> > # must be able to reserve to overflow. Add some room to account for fs
+> > # metadata overhead and round to 512b so losetup doesn't complain.
+> > nr_cows="$(( ( (2 ** 32) / MAXEXTLEN ) + 100 ))"
+> > loop_file_sz=$(( (nr_cows * MAXEXTLEN * blksz * 12 / 10) / 512 * 512 ))
+> > 
+> > From there, we could either push the _require_fs_space() down after the
+> > mkfs:
+> > 
+> > # Now that we've formatted the filesystem, make sure the scratch fs has enough
+> > # room for $nr_cows blocks in two files, again allowing for some overhead.
+> > _require_fs_space $SCRATCH_MNT $(( ( 2 * nr_cows * blksz * 12 / 10 ) / 1024 ))
+> > 
+> > Or if that's too hacky, just enforce a worst case value for the fs
+> > metadata portion of the required space. As mentioned, the difference I
+> > see between 20T and 300T on a 4k scratch dev is ~6MB. fiemap shows most
+> > of that made up as 40 512b extents, which is 20kb. Extrapolate that out
+> > to a 64k scratch fs and we come in under 20MB. ISTM we could just take
+> > add something like 500MB/1GB to the _require_fs_space() calculation
+> > above to account for the 256MB log + all other fs structure and still
+> > allow the test to run in most cases.
+> > 
+> > Hmmmm.. unless I'm miscalculating, even the nr_cows portion of the
+> > required space only comes out to ~320MB with a 64k scratch dev. Perhaps
+> > we could skip all of this (except for the sizing of the loop file) and
+> > just '_require_fs_space <1GB>' at the top of the test with a couple
+> > lines of comment to document the worst case calculation. That leaves
+> > plenty of extra space and is still small enough that it likely won't
+> > filter out in most test envs. I also don't think we need to push
+> > anything more than the resulting mkfs output to the $seqres.full file,
+> > so altogether that allows us to remove almost a screen full of
+> > calculation cruft from the test (if you account for the huge comment
+> > required to document the calculations).
+> 
+> In practice I noticed that the space usage usually came out around
+> ~780MB for the 300T filesystem, with rmap and reflink both enabled.  I'm
+> tempted just to assume that 1G of space on the scratch fs is fine
+> though.  Maybe I'll just hardwire it to 1.2G and leave it.
+> 
 
-	error = xfs_bulkstat(...);
-	if (error)
-		goto out;
+That includes the log as well? If so, 1.2G sounds reasonable to me.
 
-teardown:
-	error = 0;
-	xfs_bulk_ireq_teardown(...);
+Brian
 
-	if (copy_to_user(...)))
-		return -EFAULT;
-
-out:
-	return error;
-
-Yeah, maybe I'll do that, it's looks more like our normal practice.
-
---D
-
-> Allison
+> > > > > +loop_file=$SCRATCH_MNT/a.img
+> > > > > +loop_mount=$SCRATCH_MNT/a
+> > > > > +$XFS_IO_PROG -f -c "truncate $loop_file_sz" $loop_file
+> > > > > +loop_dev=$(_create_loop_device $loop_file)
+> > > > > +
+> > > > > +# Now we have to create the source file.  The goal is to overflow a 32-bit
+> > > > > +# i_delayed_blks, which means that we have to create at least that many delayed
+> > > > > +# allocation block reservations.  Take advantage of the fact that a cowextsize
+> > > > > +# hint causes creation of large speculative delalloc reservations in the cow
+> > > > > +# fork to reduce the amount of work we have to do.
+> > > > > +#
+> > > > > +# The maximum cowextsize can only be set to MAXEXTLEN fs blocks on a filesystem
+> > > > > +# whose AGs each have more than MAXEXTLEN * 2 blocks.  This we can do easily
+> > > > > +# with a multi-terabyte filesystem, so start by setting up the hint.  Note that
+> > > > > +# the current fsxattr interface specifies its u32 cowextsize hint in units of
+> > > > > +# bytes and therefore can't handle MAXEXTLEN * blksz on most filesystems, so we
+> > > > > +# set it via mkfs because mkfs takes units of fs blocks, not bytes.
+> > > > > +
+> > > > > +_mkfs_dev -d cowextsize=$MAXEXTLEN -l size=256m $loop_dev >> $seqres.full
+> > > > > +mkdir $loop_mount
+> > > > > +mount $loop_dev $loop_mount
+> > > > > +
+> > > > > +echo "Create crazy huge file"
+> > > > > +huge_file="$loop_mount/a"
+> > > > > +touch "$huge_file"
+> > > > > +blksz=$(_get_file_block_size "$loop_mount")
+> > > > > +extsize_bytes="$(( MAXEXTLEN * blksz ))"
+> > > > > +
+> > > > > +# Make sure it actually set a hint.
+> > > > > +curr_cowextsize_str="$($XFS_IO_PROG -c 'cowextsize' "$huge_file")"
+> > > > > +echo "$curr_cowextsize_str" >> $seqres.full
+> > > > > +cowextsize_bytes="$(echo "$curr_cowextsize_str" | sed -e 's/^.\([0-9]*\).*$/\1/g')"
+> > > > > +test "$cowextsize_bytes" -eq 0 && echo "could not set cowextsize?"
+> > > > > +
+> > > > > +# Now we have to seed the file with sparse contents.  Remember, the goal is to
+> > > > > +# create a little more than 2^32 delayed allocation blocks in the COW fork with
+> > > > > +# as little effort as possible.  We know that speculative COW preallocation
+> > > > > +# will create MAXEXTLEN-length reservations for us, so that means we should
+> > > > > +# be able to get away with touching a single byte every extsize_bytes.  We
+> > > > > +# do this backwards to avoid having to move EOF.
+> > > > > +seq $nr_cows -1 0 | while read n; do
+> > > > > +	off="$((n * extsize_bytes))"
+> > > > > +	$XFS_IO_PROG -c "pwrite $off 1" "$huge_file" > /dev/null
+> > > > > +done
+> > > > > +
+> > > > > +echo "Reflink crazy huge file"
+> > > > > +_cp_reflink "$huge_file" "$huge_file.b"
+> > > > > +
+> > > > > +# Now that we've shared all the blocks in the file, we touch them all again
+> > > > > +# to create speculative COW preallocations.
+> > > > > +echo "COW crazy huge file"
+> > > > > +seq $nr_cows -1 0 | while read n; do
+> > > > > +	off="$((n * extsize_bytes))"
+> > > > > +	$XFS_IO_PROG -c "pwrite $off 1" "$huge_file" > /dev/null
+> > > > > +done
+> > > > > +
+> > > > > +# Compare the number of blocks allocated to this file (as reported by stat)
+> > > > > +# against the number of blocks that are in the COW fork.  If either one is
+> > > > > +# less than 2^32 then we have evidence of an overflow problem.
+> > > > > +echo "Check crazy huge file"
+> > > > > +allocated_stat_blocks="$(stat -c %b "$huge_file")"
+> > > > > +stat_blksz="$(stat -c %B "$huge_file")"
+> > > > > +allocated_fsblocks=$(( allocated_stat_blocks * stat_blksz / blksz ))
+> > > > > +
+> > > > > +# Make sure we got enough COW reservations to overflow a 32-bit counter.
+> > > > > +
+> > > > > +# Return the number of delalloc & real blocks given bmap output for a fork of a
+> > > > > +# file.  Output is in units of 512-byte blocks.
+> > > > > +count_fork_blocks() {
+> > > > > +	$AWK_PROG "
+> > > > > +{
+> > > > > +	if (\$3 == \"delalloc\") {
+> > > > > +		x += \$4;
+> > > > > +	} else if (\$3 == \"hole\") {
+> > > > > +		;
+> > > > > +	} else {
+> > > > > +		x += \$6;
+> > > > > +	}
+> > > > > +}
+> > > > > +END {
+> > > > > +	print(x);
+> > > > > +}
+> > > > > +"
+> > > > > +}
+> > > > > +
+> > > > > +# Count the number of blocks allocated to a file based on the xfs_bmap output.
+> > > > > +# Output is in units of filesystem blocks.
+> > > > > +count_file_fork_blocks() {
+> > > > > +	local tag="$1"
+> > > > > +	local file="$2"
+> > > > > +	local args="$3"
+> > > > > +
+> > > > > +	$XFS_IO_PROG -c "bmap $args -l -p -v" "$huge_file" > $tmp.extents
+> > > > > +	echo "$tag fork map" >> $seqres.full
+> > > > > +	cat $tmp.extents >> $seqres.full
+> > > > > +	local sectors="$(count_fork_blocks < $tmp.extents)"
+> > > > > +	echo "$(( sectors / (blksz / 512) ))"
+> > > > > +}
+> > > > > +
+> > > > > +cowblocks=$(count_file_fork_blocks cow "$huge_file" "-c")
+> > > > > +attrblocks=$(count_file_fork_blocks attr "$huge_file" "-a")
+> > > > > +datablocks=$(count_file_fork_blocks data "$huge_file" "")
+> > > > > +
+> > > > > +# Did we create more than 2^32 blocks in the cow fork?
+> > > > > +echo "datablocks is $datablocks" >> $seqres.full
+> > > > > +echo "attrblocks is $attrblocks" >> $seqres.full
+> > > > > +echo "cowblocks is $cowblocks" >> $seqres.full
+> > > > > +test "$cowblocks" -lt $((2 ** 32)) && \
+> > > > > +	echo "cowblocks (${cowblocks}) should be more than 2^32!"
+> > > 
+> > > This part checks that the test did what we expect.
+> > > 
+> > 
+> > Ok, I guess I'd just tweak the one liner comments to explain the purpose
+> > of each of these checks rather than reiterate the code. E.g., for the
+> > check above:
+> > 
+> > # did cow speculative prealloc reserve enough to overflow?
+> > 
+> > > > > +
+> > > > > +# Does stat's block allocation count exceed 2^32?
+> > 
+> > # detect delalloc count overflow via the stat data
+> > 
+> > > > > +echo "stat blocks is $allocated_fsblocks" >> $seqres.full
+> > > > > +test "$allocated_fsblocks" -lt $((2 ** 32)) && \
+> > > > > +	echo "stat blocks (${allocated_fsblocks}) should be more than 2^32!"
+> > > 
+> > > This part detects the problem in the incore state.
+> > > 
+> > > > > +# Finally, does st_blocks match what we computed from the forks?
+> > 
+> > # sanity check the values computed from the forks
+> 
+> Comments added.
+> 
+> --D
 > 
 > > 
-> > > Allison
+> > Brian
+> > 
+> > > > > +expected_allocated_fsblocks=$((datablocks + cowblocks + attrblocks))
+> > > > > +echo "expected stat blocks is $expected_allocated_fsblocks" >> $seqres.full
+> > > > > +
+> > > > > +_within_tolerance "st_blocks" $allocated_fsblocks $expected_allocated_fsblocks 2% -v
 > > > 
-> > > > +	error = xfs_bulk_ireq_teardown(&hdr, &breq, error);
-> > > > +	if (error)
-> > > > +		return error;
-> > > > +
-> > > > +	if (copy_to_user(&arg->hdr, &hdr, sizeof(hdr)))
-> > > > +		return -EFAULT;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >    STATIC int
-> > > >    xfs_ioc_fsgeometry(
-> > > >    	struct xfs_mount	*mp,
-> > > > @@ -1986,6 +2087,9 @@ xfs_file_ioctl(
-> > > >    	case XFS_IOC_FSINUMBERS:
-> > > >    		return xfs_ioc_fsbulkstat(mp, cmd, arg);
-> > > > +	case XFS_IOC_BULKSTAT:
-> > > > +		return xfs_ioc_bulkstat(mp, cmd, arg);
-> > > > +
-> > > >    	case XFS_IOC_FSGEOMETRY_V1:
-> > > >    		return xfs_ioc_fsgeometry(mp, arg, 3);
-> > > >    	case XFS_IOC_FSGEOMETRY_V4:
-> > > > diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-> > > > index bfe71747776b..84c342be4536 100644
-> > > > --- a/fs/xfs/xfs_ioctl32.c
-> > > > +++ b/fs/xfs/xfs_ioctl32.c
-> > > > @@ -576,6 +576,7 @@ xfs_file_compat_ioctl(
-> > > >    	case XFS_IOC_ERROR_CLEARALL:
-> > > >    	case FS_IOC_GETFSMAP:
-> > > >    	case XFS_IOC_SCRUB_METADATA:
-> > > > +	case XFS_IOC_BULKSTAT:
-> > > >    		return xfs_file_ioctl(filp, cmd, p);
-> > > >    #if !defined(BROKEN_X86_ALIGNMENT) || defined(CONFIG_X86_X32)
-> > > >    	/*
-> > > > diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-> > > > index d8f941b4d51c..954484c6eb96 100644
-> > > > --- a/fs/xfs/xfs_ondisk.h
-> > > > +++ b/fs/xfs/xfs_ondisk.h
-> > > > @@ -149,6 +149,7 @@ xfs_check_ondisk_structs(void)
-> > > >    	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat,		192);
-> > > >    	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers,		24);
-> > > > +	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_req,		64);
-> > > >    }
-> > > >    #endif /* __XFS_ONDISK_H */
+> > > And this one on is a second sanity check that the test did roughly what
+> > > we expected.
+> > > 
+> > > > > +
 > > > > 
+> > > > Similar question with the post-processing stuff... how much of this is
+> > > > to detect the problem vs. determine the test sequence did what we
+> > > > expect?
+> > > 
+> > > (Answered above.)
+> > > 
+> > > > Does the fs check below report corruption or is it purely
+> > > > in-core state that ends up broken?
+> > > 
+> > > It's only the incore state that ends up broken.
+> > > 
+> > > --D
+> > > 
+> > > > Brian
+> > > > 
+> > > > > +echo "Test done"
+> > > > > +# Quick check the large sparse fs, but skip xfs_db because it doesn't scale
+> > > > > +# well on a multi-terabyte filesystem.
+> > > > > +LARGE_SCRATCH_DEV=yes _check_xfs_filesystem $loop_dev none none
+> > > > > +
+> > > > > +# success, all done
+> > > > > +status=0
+> > > > > +exit
+> > > > > diff --git a/tests/xfs/907.out b/tests/xfs/907.out
+> > > > > new file mode 100644
+> > > > > index 00000000..cc07d659
+> > > > > --- /dev/null
+> > > > > +++ b/tests/xfs/907.out
+> > > > > @@ -0,0 +1,8 @@
+> > > > > +QA output created by 907
+> > > > > +Format and mount
+> > > > > +Create crazy huge file
+> > > > > +Reflink crazy huge file
+> > > > > +COW crazy huge file
+> > > > > +Check crazy huge file
+> > > > > +st_blocks is in range
+> > > > > +Test done
+> > > > > diff --git a/tests/xfs/group b/tests/xfs/group
+> > > > > index ffe4ae12..e528c559 100644
+> > > > > --- a/tests/xfs/group
+> > > > > +++ b/tests/xfs/group
+> > > > > @@ -504,3 +504,4 @@
+> > > > >  504 auto quick mkfs label
+> > > > >  505 auto quick spaceman
+> > > > >  506 auto quick health
+> > > > > +907 clone
+> > > > > 
