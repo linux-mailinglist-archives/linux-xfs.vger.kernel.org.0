@@ -2,127 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EF9439467
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 20:34:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11AF93949E
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 20:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731839AbfFGSeW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Jun 2019 14:34:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46316 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730978AbfFGSeW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 14:34:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57ITMNN031647;
-        Fri, 7 Jun 2019 18:34:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=QolDy22uOLtBFa3YAasmOe69CPUw0iodu68OQSiZ4/I=;
- b=EL5NpsBTmOzBK4E1TTYSBNZF7Fboir2lPBs3P9MB4V6Y3256Qpzxxnr4BOFbyOiMzcUZ
- CwqkHii0C92he+/EbdutialG4GKTZmUW4oRRIJ/lPjlzcJgPcKL+Cifhtqf6IVvUgmpk
- hvp7wIHAFB6YKYW0ZatlB++vzVLP+VOkjJ4HJ1/9Q0QkhKtA5yju32rU52FCj3UuO/1R
- j6h4KtcEFibA1RFLcaHJaDES9I03Dzc8ZpiEfor1GRQnUX87RLCTs7MJBGn7d2+1h8sd
- OzIwQcwBAu17liXQGF03DhAhVrH825UM4tiPJlDrcLdccLNRLN06eTaFAI59rlPQRk7a Tg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sugstyxkr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 18:34:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57IXxrm045999;
-        Fri, 7 Jun 2019 18:34:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2swngk5pdp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 18:34:11 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57IYB8s001900;
-        Fri, 7 Jun 2019 18:34:11 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 11:34:11 -0700
-Date:   Fri, 7 Jun 2019 11:34:10 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] Documentation: xfs: Fix typo
-Message-ID: <20190607183410.GF1871505@magnolia>
-References: <20190509030549.2253-1-ruansy.fnst@cn.fujitsu.com>
- <20190607114415.32cb32dd@lwn.net>
+        id S1731812AbfFGSuW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Jun 2019 14:50:22 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39600 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730864AbfFGSuV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 14:50:21 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i34so3477430qta.6
+        for <linux-xfs@vger.kernel.org>; Fri, 07 Jun 2019 11:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=981lOBbF7NntqOPGnU+wDEqlWf7ONqp9B0Ou4FbjqoU=;
+        b=oZC9a6nvcosvTmp2Xz2vW0f9gvXIuh4kitLGI6CjsLXK1+Gnu0mccx6TNO5esZKRWN
+         jpusXhxZ6diyXP/2IvDfe4Sozh6aFMls99kKfV0Oh9uEVYvzKsy1COSoqZhzVVpYwP9K
+         DlLyyRWwMTfr89qP7WlB75o9IQD+x/cE6xx3qucV0uEUL41Hb7JpWs/wMh4hLxr3HoJx
+         fc49CEJVp4R714dI4okPWcziniOd2LBG5fbQY9h/Cjd9k+Pglq+pi5j+zKX1QlmTE64r
+         wbxNASKedhU1orq0qO6Me5wbL2KGqE9NauEFAABsOyUfWfONSs2MlnU6mWezKlVjNiry
+         8Hvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=981lOBbF7NntqOPGnU+wDEqlWf7ONqp9B0Ou4FbjqoU=;
+        b=AWhmtp+GAaCpjiaa7L4n6G2h23OUyu3xIWaNeVFrk7WXoNYvnEov4+I2F7PbUMWCfZ
+         hsKyqp9ZnctajwPF95C/QGGKlEUx2okuknCPABDVKvrRWQ989ywOIvqHEFXBb01/ab64
+         I73QFEuv4kXrgPI8V8HoqvtjdSp9o7hjiXe3I9j3L079aSufwftB6Tpg5qdefWiGc6N0
+         se7USI8pSygwXiKfAk1CuPjD/RDy/vvbck0TjANDoW8fc8BVGiFoIJGA1sJKAUy0tdt4
+         MjVEeJ7ycBBRfddqgXZ7GSL0eh02XaaHdrWnTyNKKvYUhYv+GhiueFOdqbtOxIPjICdv
+         lUSg==
+X-Gm-Message-State: APjAAAUk5QngpR/bZVZdN772ObkySIemX+A8w/dKcGPzWOmNbEaVoRze
+        HmSZ9H4MDAtkYODrQHIVTDsCFQ==
+X-Google-Smtp-Source: APXvYqxHzZOVD73PAZq/gC6oUmCxE3JRfnnnGXli2ogTGkWJxAu+ueWdhS//gQBOh+cGCpWnmaBbVg==
+X-Received: by 2002:ac8:444c:: with SMTP id m12mr48345365qtn.306.1559933420780;
+        Fri, 07 Jun 2019 11:50:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id q2sm1527313qkf.44.2019.06.07.11.50.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 11:50:20 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hZJwR-0007vm-HB; Fri, 07 Jun 2019 15:50:19 -0300
+Date:   Fri, 7 Jun 2019 15:50:19 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190607185019.GP14802@ziepe.ca>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607114415.32cb32dd@lwn.net>
+In-Reply-To: <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070123
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:44:15AM -0600, Jonathan Corbet wrote:
-> On Thu, 9 May 2019 11:05:49 +0800
-> Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
-> 
-> > In "Y+P" of this line, there are two non-ASCII characters(0xd9 0x8d)
-> > following behind the 'Y'.  Shown as a small '=' under the '+' in VIM
-> > and a '賺' in webpage[1].
-> > 
-> > I think it's a mistake and remove these strange characters.
-> > 
-> > [1]: https://www.kernel.org/doc/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > 
-> > Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-> > ---
-> >  Documentation/filesystems/xfs-delayed-logging-design.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > index 2ce36439c09f..9a6dd289b17b 100644
-> > --- a/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > +++ b/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > @@ -34,7 +34,7 @@ transaction:
-> >  	   D			A+B+C+D		X+n+m+o
-> >  	    <object written to disk>
-> >  	   E			   E		   Y (> X+n+m+o)
-> > -	   F			  E+F		  Yٍ+p
-> > +	   F			  E+F		  Y+p
-> 
-> OK, that does look funky, applied.
-> 
-> This patch probably should have been copied to the XFS list (added), even
-> though get_maintainer.pl doesn't know that.
+On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
 
-Yeah, it's "Y+p" not "Y<weird plusequals thing>p" in the xfs
-documentation repo:
+> And I think this is related to what Christoph Hellwig is doing with bio_vec and
+> dma.  Really we want drivers out of the page processing business.
 
-https://git.kernel.org/pub/scm/fs/xfs/xfs-documentation.git/tree/design/XFS_Filesystem_Structure/delayed_logging.asciidoc
+At least for RDMA, and a few other places I've noticed, I'd really
+like to get totally out of the handling struct pages game.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+We are DMA based and really only want DMA addresses for the target
+device. I know other places need CPU pages or more complicated
+things.. But I also know there are other drivers like RDMA..
 
-I doubt the value of maintaining duplicate copies of this document in
-the kernel and the xfs documentation repo, and since the xfs docs and
-kernel licences aren't compatible maybe we should withdraw one...
+So I think it would be very helpful to have a driver API something
+like:
 
-...but since Dave is the author I'm gonna punt to him.  IMHO either we
-should claim responsibility for those files in MAINTAINERS or drop them.
-:)
+int get_user_mem_for_dma(struct device *dma_device,
+                void __user *mem, size_t length,
+                struct gup_handle *res,
+                struct 'bio dma list' *dma_list,
+                const struct dma_params *params);
+void put_user_mem_for_dma(struct gup_handle *res, 
+                 struct 'bio dma list' *dma_list);
 
-Thanks for the heads-up,
---D
+And we could hope to put in there all the specialty logic we want to
+have for this flow:
+ - The weird HMM stuff in hmm_range_dma_map()
+ - Interaction with DAX
+ - Interaction with DMA BUF
+ - Holding file leases
+ - PCI peer 2 peer features
+ - Optimizations for huge pages
+ - Handling page dirtying from DMA
+ - etc
 
-> Thanks,
-> 
-> jon
+I think Matthew was suggesting something like this at LS/MM, so +1
+from here..
+
+When Christoph sends his BIO dma work I was thinking of investigating
+this avenue, as we already have something quite similiar in RDMA that
+could perhaps be hoisted out for re-use into mm/
+
+Jason
