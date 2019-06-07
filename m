@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DED14395A8
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 21:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E68743958C
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Jun 2019 21:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfFGTaf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Jun 2019 15:30:35 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:46764 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729172AbfFGTae (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 15:30:34 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JSr9X101216;
-        Fri, 7 Jun 2019 19:30:30 GMT
+        id S1729848AbfFGT2l (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Jun 2019 15:28:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54400 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729625AbfFGT2l (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 15:28:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JSdXZ086504;
+        Fri, 7 Jun 2019 19:28:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=qZePkjmk1QJqYb+4/eGecP7Wfg5S3HMrBzKGBGOgnyQ=;
- b=aRPJyXxcOY3XUALHOojgwwIzEKJPEXKLqVmOQ4TriR0RxjJfDc69NFpWrx4gAxqwjK+a
- Y1CXjY+eRw8LTtTFGSJeKeyK5d2jR2mklbqNiBD9w+PItKQu9FnhRgUZzQZwABBoasM+
- bNnEgArLbOC7TXXYD/h+tIQFd+2TTrSCSmrCpzGyzRO66410rHS/UBixqBmXQcF0ZjQ3
- xZ3M0DW+ttYcQz5adBg0mJB+UZZLxP62olrTWFYMFdG0CnD8S9EmSmjq/kllfI49kecp
- hlSKKlXgtYzPq8NsfwBnwnSNPA/Xudftxf55hjQUBbcSZ6kpKRyKReqVxjFQ2Tsyz9kh gQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sueve0ejj-1
+ bh=R7WmN4bKop7gYYSDgdKOUS+w5eFelt9bwWT6dSyZ6iA=;
+ b=E447eSpOlVZTRLiBU67h8m3w7r9PHID8T327Ts3FiasyEDYSR9fFine0xIwp86hAQymC
+ BLRl5AlTsOMH9oKOKzZvetKRv+sTNQZcjQaePzFwxfHUpVT8SHL9JXCRtPxkgvMz2Twa
+ Biuarn+aX21indUFkcsSvv4dhb2QE7mRzvtng1BQzfZnYB8G795FOdwyFwBlkuQ4CwYc
+ 6Uf9pYTSjfvU5hJBjVgX1WlpWv1eY4+s4XYAOHtr8qDJfzWHryEvgZjFraWPhFZTVVzg
+ qp8vWdc1pyiA75wk9aO+dbUsxBq2sKfMnRKxuCVupj2rnw6/RDxTtVdyWsMlN9+t7jfE 0w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2suj0r02w0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 19:30:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JSG39169315;
-        Fri, 7 Jun 2019 19:28:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2swngk6dfw-1
+        Fri, 07 Jun 2019 19:28:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JSdXd053829;
+        Fri, 7 Jun 2019 19:28:39 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2swnhbgcfa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 19:28:29 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57JST6f030556;
-        Fri, 7 Jun 2019 19:28:29 GMT
+        Fri, 07 Jun 2019 19:28:38 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57JSZem004729;
+        Fri, 7 Jun 2019 19:28:35 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 12:28:29 -0700
-Subject: [PATCH 2/6] libxfs: refactor open-coded bulkstat calls
+        with ESMTP ; Fri, 07 Jun 2019 12:28:35 -0700
+Subject: [PATCH 3/6] libxfs: refactor open-coded INUMBERS calls
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 07 Jun 2019 12:28:28 -0700
-Message-ID: <155993570815.2343365.14008441725903148335.stgit@magnolia>
+Date:   Fri, 07 Jun 2019 12:28:34 -0700
+Message-ID: <155993571460.2343365.17053963096831775316.stgit@magnolia>
 In-Reply-To: <155993569512.2343365.15510991248022865602.stgit@magnolia>
 References: <155993569512.2343365.15510991248022865602.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +53,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906070130
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906070130
@@ -70,311 +70,146 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Refactor the BULKSTAT_SINGLE and BULKSTAT ioctl callsites into helper
-functions.
+Refactor all the INUMBERS ioctl callsites into helper functions.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fsr/xfs_fsr.c      |   37 ++++-------------------------
- include/xfrog.h    |    5 ++++
- io/open.c          |   66 ++++++++++++++++++++++++----------------------------
- io/swapext.c       |   18 ++------------
- libfrog/Makefile   |    1 +
- libfrog/bulkstat.c |   43 ++++++++++++++++++++++++++++++++++
- quota/quot.c       |   17 +++++--------
- scrub/inodes.c     |   28 ++++++----------------
- 8 files changed, 101 insertions(+), 114 deletions(-)
- create mode 100644 libfrog/bulkstat.c
+ include/xfrog.h    |    4 ++++
+ io/imap.c          |   31 ++++++++++++++-----------------
+ io/open.c          |   19 +++++++------------
+ libfrog/bulkstat.c |   19 +++++++++++++++++++
+ scrub/fscounters.c |   18 +++++++-----------
+ scrub/inodes.c     |   21 +++++++--------------
+ 6 files changed, 58 insertions(+), 54 deletions(-)
 
 
-diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
-index 0bfecf37..f35ead90 100644
---- a/fsr/xfs_fsr.c
-+++ b/fsr/xfs_fsr.c
-@@ -102,31 +102,6 @@ static int	nfrags = 0;	/* Debug option: Coerse into specific number
- 				 * of extents */
- static int	openopts = O_CREAT|O_EXCL|O_RDWR|O_DIRECT;
- 
--static int
--xfs_bulkstat_single(int fd, xfs_ino_t *lastip, xfs_bstat_t *ubuffer)
--{
--    xfs_fsop_bulkreq_t  bulkreq;
--
--    bulkreq.lastip = (__u64 *)lastip;
--    bulkreq.icount = 1;
--    bulkreq.ubuffer = ubuffer;
--    bulkreq.ocount = NULL;
--    return ioctl(fd, XFS_IOC_FSBULKSTAT_SINGLE, &bulkreq);
--}
--
--static int
--xfs_bulkstat(int fd, xfs_ino_t *lastip, int icount,
--                    xfs_bstat_t *ubuffer, __s32 *ocount)
--{
--    xfs_fsop_bulkreq_t  bulkreq;
--
--    bulkreq.lastip = (__u64 *)lastip;
--    bulkreq.icount = icount;
--    bulkreq.ubuffer = ubuffer;
--    bulkreq.ocount = ocount;
--    return ioctl(fd, XFS_IOC_FSBULKSTAT, &bulkreq);
--}
--
- static int
- xfs_swapext(int fd, xfs_swapext_t *sx)
- {
-@@ -600,7 +575,7 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
- 	int	fsfd, fd;
- 	int	count = 0;
- 	int	ret;
--	__s32	buflenout;
-+	uint32_t buflenout;
- 	xfs_bstat_t buf[GRABSZ];
- 	char	fname[64];
- 	char	*tname;
-@@ -634,7 +609,7 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
- 
- 	tmp_init(mntdir);
- 
--	while ((ret = xfs_bulkstat(fsfd,
-+	while ((ret = xfrog_bulkstat(fsfd,
- 				&lastino, GRABSZ, &buf[0], &buflenout)) == 0) {
- 		xfs_bstat_t *p;
- 		xfs_bstat_t *endp;
-@@ -690,7 +665,7 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
- 		}
- 	}
- 	if (ret < 0)
--		fsrprintf(_("%s: xfs_bulkstat: %s\n"), progname, strerror(errno));
-+		fsrprintf(_("%s: xfrog_bulkstat: %s\n"), progname, strerror(errno));
- out0:
- 	tmp_close(mntdir);
- 	close(fsfd);
-@@ -752,7 +727,7 @@ fsrfile(char *fname, xfs_ino_t ino)
- 		goto out;
- 	}
- 
--	if ((xfs_bulkstat_single(fsfd, &ino, &statbuf)) < 0) {
-+	if ((xfrog_bulkstat_single(fsfd, ino, &statbuf)) < 0) {
- 		fsrprintf(_("unable to get bstat on %s: %s\n"),
- 			fname, strerror(errno));
- 		goto out;
-@@ -981,7 +956,6 @@ fsr_setup_attr_fork(
- 	i = 0;
- 	do {
- 		xfs_bstat_t	tbstat;
--		xfs_ino_t	ino;
- 		char		name[64];
- 
- 		/*
-@@ -989,8 +963,7 @@ fsr_setup_attr_fork(
- 		 * this to compare against the target and determine what we
- 		 * need to do.
- 		 */
--		ino = tstatbuf.st_ino;
--		if ((xfs_bulkstat_single(tfd, &ino, &tbstat)) < 0) {
-+		if ((xfrog_bulkstat_single(tfd, tstatbuf.st_ino, &tbstat)) < 0) {
- 			fsrprintf(_("unable to get bstat on temp file: %s\n"),
- 						strerror(errno));
- 			return -1;
 diff --git a/include/xfrog.h b/include/xfrog.h
-index b683cf63..4b4e0adc 100644
+index 4b4e0adc..8456d55e 100644
 --- a/include/xfrog.h
 +++ b/include/xfrog.h
-@@ -19,4 +19,9 @@
- struct xfs_fsop_geom;
- int xfrog_geometry(int fd, struct xfs_fsop_geom *fsgeo);
+@@ -24,4 +24,8 @@ int xfrog_bulkstat_single(int fd, uint64_t ino, struct xfs_bstat *ubuffer);
+ int xfrog_bulkstat(int fd, uint64_t *lastino, uint32_t icount,
+ 		struct xfs_bstat *ubuffer, uint32_t *ocount);
  
-+struct xfs_bstat;
-+int xfrog_bulkstat_single(int fd, uint64_t ino, struct xfs_bstat *ubuffer);
-+int xfrog_bulkstat(int fd, uint64_t *lastino, uint32_t icount,
-+		struct xfs_bstat *ubuffer, uint32_t *ocount);
++struct xfs_inogrp;
++int xfrog_inumbers(int fd, uint64_t *lastino, uint32_t icount,
++		struct xfs_inogrp *ubuffer, uint32_t *ocount);
 +
  #endif	/* __XFROG_H__ */
-diff --git a/io/open.c b/io/open.c
-index 997df119..d97903e9 100644
---- a/io/open.c
-+++ b/io/open.c
-@@ -713,19 +713,18 @@ get_last_inode(void)
- 
- static int
- inode_f(
--	  int			argc,
--	  char			**argv)
-+	int			argc,
-+	char			**argv)
- {
--	__s32			count = 0;
--	__u64			result_ino = 0;
--	__u64			userino = NULLFSINO;
-+	struct xfs_bstat	bstat;
-+	uint32_t		count = 0;
-+	uint64_t		result_ino = 0;
-+	uint64_t		userino = NULLFSINO;
- 	char			*p;
- 	int			c;
- 	int			verbose = 0;
- 	int			ret_next = 0;
--	int			cmd = 0;
--	struct xfs_fsop_bulkreq	bulkreq;
--	struct xfs_bstat	bstat;
-+	int			ret;
- 
- 	while ((c = getopt(argc, argv, "nv")) != EOF) {
- 		switch (c) {
-@@ -767,35 +766,32 @@ inode_f(
- 			exitcode = 1;
- 			return 0;
- 		}
-+	} else if (ret_next) {
-+		/* get next inode */
-+		ret = xfrog_bulkstat(file->fd, &userino, 1, &bstat, &count);
-+		if (ret) {
-+			perror("xfsctl");
-+			exitcode = 1;
-+			return 0;
-+		}
-+
-+		/* The next inode in use, or 0 if none */
-+		if (count)
-+			result_ino = bstat.bs_ino;
-+		else
-+			result_ino = 0;
- 	} else {
--		if (ret_next)	/* get next inode */
--			cmd = XFS_IOC_FSBULKSTAT;
--		else		/* get this inode */
--			cmd = XFS_IOC_FSBULKSTAT_SINGLE;
--
--		bulkreq.lastip = &userino;
--		bulkreq.icount = 1;
--		bulkreq.ubuffer = &bstat;
--		bulkreq.ocount = &count;
--
--		if (xfsctl(file->name, file->fd, cmd, &bulkreq)) {
--			if (!ret_next && errno == EINVAL) {
--				/* Not in use */
--				result_ino = 0;
--			} else {
--				perror("xfsctl");
--				exitcode = 1;
--				return 0;
--			}
--		} else if (ret_next) {
--			/* The next inode in use, or 0 if none */
--			if (*bulkreq.ocount)
--				result_ino = bstat.bs_ino;
--			else
--				result_ino = 0;
-+		/* get this inode */
-+		ret = xfrog_bulkstat_single(file->fd, userino, &bstat);
-+		if (ret && errno == EINVAL) {
-+			/* Not in use */
-+			result_ino = 0;
-+		} else if (ret) {
-+			perror("bulkstat_single");
-+			exitcode = 1;
-+			return 0;
- 		} else {
--			/* The inode we asked about */
--			result_ino = userino;
-+			result_ino = bstat.bs_ino;
- 		}
- 	}
- 
-diff --git a/io/swapext.c b/io/swapext.c
-index d360c221..f5e6532f 100644
---- a/io/swapext.c
-+++ b/io/swapext.c
-@@ -8,6 +8,7 @@
+diff --git a/io/imap.c b/io/imap.c
+index fbc8e9e1..69027693 100644
+--- a/io/imap.c
++++ b/io/imap.c
+@@ -8,18 +8,19 @@
  #include "input.h"
  #include "init.h"
  #include "io.h"
 +#include "xfrog.h"
  
- static cmdinfo_t swapext_cmd;
+ static cmdinfo_t imap_cmd;
  
-@@ -20,21 +21,6 @@ swapext_help(void)
+ static int
+ imap_f(int argc, char **argv)
+ {
+-	int		count;
+-	int		nent;
+-	int		i;
+-	__u64		last = 0;
+-	xfs_inogrp_t	*t;
+-	xfs_fsop_bulkreq_t bulkreq;
++	struct xfs_inogrp	*t;
++	uint64_t		last = 0;
++	uint32_t		count;
++	uint32_t		nent;
++	int			i;
++	int			error;
+ 
+ 	if (argc != 2)
+ 		nent = 1;
+@@ -30,14 +31,8 @@ imap_f(int argc, char **argv)
+ 	if (!t)
+ 		return 0;
+ 
+-	bulkreq.lastip  = &last;
+-	bulkreq.icount  = nent;
+-	bulkreq.ubuffer = (void *)t;
+-	bulkreq.ocount  = &count;
+-
+-	while (xfsctl(file->name, file->fd, XFS_IOC_FSINUMBERS, &bulkreq) == 0) {
+-		if (count == 0)
+-			goto out_free;
++	while ((error = xfrog_inumbers(file->fd, &last, nent, t, &count)) == 0 &&
++	       count > 0) {
+ 		for (i = 0; i < count; i++) {
+ 			printf(_("ino %10llu count %2d mask %016llx\n"),
+ 				(unsigned long long)t[i].xi_startino,
+@@ -45,9 +40,11 @@ imap_f(int argc, char **argv)
+ 				(unsigned long long)t[i].xi_allocmask);
+ 		}
+ 	}
+-	perror("xfsctl(XFS_IOC_FSINUMBERS)");
+-	exitcode = 1;
+-out_free:
++
++	if (error) {
++		perror("xfsctl(XFS_IOC_FSINUMBERS)");
++		exitcode = 1;
++	}
+ 	free(t);
+ 	return 0;
+ }
+diff --git a/io/open.c b/io/open.c
+index d97903e9..7bc5a2f3 100644
+--- a/io/open.c
++++ b/io/open.c
+@@ -669,24 +669,19 @@ inode_help(void)
  "\n"));
  }
  
--static int
--xfs_bulkstat_single(
--	int			fd,
--	xfs_ino_t		*lastip,
--	struct xfs_bstat	*ubuffer)
--{
++#define IGROUP_NR	(1024)
+ static __u64
+ get_last_inode(void)
+ {
+-	__u64			lastip = 0;
+-	__u64			lastgrp = 0;
+-	__s32			ocount = 0;
++	uint64_t		lastip = 0;
++	uint32_t		lastgrp = 0;
++	uint32_t		ocount = 0;
+ 	__u64			last_ino;
+-	struct xfs_inogrp	igroup[1024];
 -	struct xfs_fsop_bulkreq	bulkreq;
 -
--	bulkreq.lastip = (__u64 *)lastip;
--	bulkreq.icount = 1;
--	bulkreq.ubuffer = ubuffer;
--	bulkreq.ocount = NULL;
--	return ioctl(fd, XFS_IOC_FSBULKSTAT_SINGLE, &bulkreq);
--}
--
- static int
- swapext_f(
- 	int			argc,
-@@ -60,7 +46,7 @@ swapext_f(
- 		goto out;
- 	}
+-	bulkreq.lastip = &lastip;
+-	bulkreq.ubuffer = &igroup;
+-	bulkreq.icount = sizeof(igroup) / sizeof(struct xfs_inogrp);
+-	bulkreq.ocount = &ocount;
++	struct xfs_inogrp	igroup[IGROUP_NR];
  
--	error = xfs_bulkstat_single(file->fd, &stat.st_ino, &sx.sx_stat);
-+	error = xfrog_bulkstat_single(file->fd, stat.st_ino, &sx.sx_stat);
- 	if (error) {
- 		perror("bulkstat");
- 		goto out;
-diff --git a/libfrog/Makefile b/libfrog/Makefile
-index f5a0539b..05c6f701 100644
---- a/libfrog/Makefile
-+++ b/libfrog/Makefile
-@@ -13,6 +13,7 @@ LT_AGE = 0
- CFILES = \
- avl64.c \
- bitmap.c \
-+bulkstat.c \
- convert.c \
- crc32.c \
- fsgeom.c \
+ 	for (;;) {
+-		if (xfsctl(file->name, file->fd, XFS_IOC_FSINUMBERS,
+-				&bulkreq)) {
++		if (xfrog_inumbers(file->fd, &lastip, IGROUP_NR, igroup,
++					&ocount)) {
+ 			perror("XFS_IOC_FSINUMBERS");
+ 			return 0;
+ 		}
 diff --git a/libfrog/bulkstat.c b/libfrog/bulkstat.c
-new file mode 100644
-index 00000000..c0d3b627
---- /dev/null
+index c0d3b627..1b08bbbd 100644
+--- a/libfrog/bulkstat.c
 +++ b/libfrog/bulkstat.c
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <darrick.wong@oracle.com>
-+ */
-+#include "xfs.h"
+@@ -41,3 +41,22 @@ xfrog_bulkstat(
+ 
+ 	return ioctl(fd, XFS_IOC_FSBULKSTAT, &bulkreq);
+ }
 +
-+/* Bulkstat a single inode. */
++/* Query inode allocation bitmask information. */
 +int
-+xfrog_bulkstat_single(
-+	int			fd,
-+	uint64_t		ino,
-+	struct xfs_bstat	*ubuffer)
-+{
-+	__u64			i = ino;
-+	struct xfs_fsop_bulkreq	bulkreq = {
-+		.lastip		= &i,
-+		.icount		= 1,
-+		.ubuffer	= ubuffer,
-+		.ocount		= NULL,
-+	};
-+
-+	return ioctl(fd, XFS_IOC_FSBULKSTAT_SINGLE, &bulkreq);
-+}
-+
-+/* Bulkstat a bunch of inodes. */
-+int
-+xfrog_bulkstat(
++xfrog_inumbers(
 +	int			fd,
 +	uint64_t		*lastino,
 +	uint32_t		icount,
-+	struct xfs_bstat	*ubuffer,
++	struct xfs_inogrp	*ubuffer,
 +	uint32_t		*ocount)
 +{
 +	struct xfs_fsop_bulkreq	bulkreq = {
@@ -384,140 +219,126 @@ index 00000000..c0d3b627
 +		.ocount		= (__s32 *)ocount,
 +	};
 +
-+	return ioctl(fd, XFS_IOC_FSBULKSTAT, &bulkreq);
++	return ioctl(fd, XFS_IOC_FSINUMBERS, &bulkreq);
 +}
-diff --git a/quota/quot.c b/quota/quot.c
-index d60cf4a8..4639dc5d 100644
---- a/quota/quot.c
-+++ b/quota/quot.c
-@@ -11,6 +11,7 @@
- #include <grp.h>
- #include "init.h"
- #include "quota.h"
-+#include "xfrog.h"
- 
- typedef struct du {
- 	struct du	*next;
-@@ -124,12 +125,11 @@ quot_bulkstat_add(
- static void
- quot_bulkstat_mount(
- 	char			*fsdir,
--	uint			flags)
-+	unsigned int		flags)
- {
--	xfs_fsop_bulkreq_t	bulkreq;
--	xfs_bstat_t		*buf;
--	__u64			last = 0;
--	__s32			count;
-+	struct xfs_bstat	*buf;
-+	uint64_t		last = 0;
-+	uint32_t		count;
- 	int			i, sts, fsfd;
- 	du_t			**dp;
- 
-@@ -158,12 +158,7 @@ quot_bulkstat_mount(
- 		return;
- 	}
- 
--	bulkreq.lastip = &last;
--	bulkreq.icount = NBSTAT;
--	bulkreq.ubuffer = buf;
--	bulkreq.ocount = &count;
--
--	while ((sts = xfsctl(fsdir, fsfd, XFS_IOC_FSBULKSTAT, &bulkreq)) == 0) {
-+	while ((sts = xfrog_bulkstat(fsfd, &last, NBSTAT, buf, &count)) == 0) {
- 		if (count == 0)
- 			break;
- 		for (i = 0; i < count; i++)
-diff --git a/scrub/inodes.c b/scrub/inodes.c
-index 442a5978..7950208d 100644
---- a/scrub/inodes.c
-+++ b/scrub/inodes.c
-@@ -17,6 +17,7 @@
+diff --git a/scrub/fscounters.c b/scrub/fscounters.c
+index 9e93e2a6..492a06c7 100644
+--- a/scrub/fscounters.c
++++ b/scrub/fscounters.c
+@@ -15,6 +15,7 @@
  #include "xfs_scrub.h"
  #include "common.h"
- #include "inodes.h"
+ #include "fscounters.h"
 +#include "xfrog.h"
  
  /*
-  * Iterate a range of inodes.
-@@ -50,17 +51,10 @@ xfs_iterate_inodes_range_check(
- 	struct xfs_inogrp	*inogrp,
- 	struct xfs_bstat	*bstat)
+  * Filesystem counter collection routines.  We can count the number of
+@@ -41,26 +42,21 @@ xfs_count_inodes_range(
+ 	uint64_t		last_ino,
+ 	uint64_t		*count)
  {
--	struct xfs_fsop_bulkreq	onereq = {NULL};
- 	struct xfs_bstat	*bs;
--	__u64			oneino;
--	__s32			onelen = 0;
- 	int			i;
+-	struct xfs_fsop_bulkreq	igrpreq = {NULL};
+ 	struct xfs_inogrp	inogrp;
+-	__u64			igrp_ino;
++	uint64_t		igrp_ino;
+ 	uint64_t		nr = 0;
+-	__s32			igrplen = 0;
++	uint32_t		igrplen = 0;
  	int			error;
  
--	onereq.lastip  = &oneino;
--	onereq.icount  = 1;
--	onereq.ocount  = &onelen;
--
- 	for (i = 0, bs = bstat; i < XFS_INODES_PER_CHUNK; i++) {
- 		if (!(inogrp->xi_allocmask & (1ULL << i)))
- 			continue;
-@@ -70,10 +64,8 @@ xfs_iterate_inodes_range_check(
- 		}
+ 	ASSERT(!(first_ino & (XFS_INODES_PER_CHUNK - 1)));
+ 	ASSERT((last_ino & (XFS_INODES_PER_CHUNK - 1)));
  
- 		/* Load the one inode. */
--		oneino = inogrp->xi_startino + i;
--		onereq.ubuffer = bs;
--		error = ioctl(ctx->mnt_fd, XFS_IOC_FSBULKSTAT_SINGLE,
--				&onereq);
-+		error = xfrog_bulkstat_single(ctx->mnt_fd,
-+				inogrp->xi_startino + i, bs);
- 		if (error || bs->bs_ino != inogrp->xi_startino + i) {
- 			memset(bs, 0, sizeof(struct xfs_bstat));
- 			bs->bs_ino = inogrp->xi_startino + i;
-@@ -99,7 +91,6 @@ xfs_iterate_inodes_range(
+-	igrpreq.lastip  = &igrp_ino;
+-	igrpreq.icount  = 1;
+-	igrpreq.ubuffer = &inogrp;
+-	igrpreq.ocount  = &igrplen;
+-
+ 	igrp_ino = first_ino;
+-	error = ioctl(ctx->mnt_fd, XFS_IOC_FSINUMBERS, &igrpreq);
+-	while (!error && igrplen && inogrp.xi_startino < last_ino) {
++	while ((error = xfrog_inumbers(ctx->mnt_fd, &igrp_ino, 1, &inogrp,
++					&igrplen)) == 0 &&
++	       igrplen > 0 &&
++	       inogrp.xi_startino < last_ino) {
+ 		nr += inogrp.xi_alloccount;
+-		error = ioctl(ctx->mnt_fd, XFS_IOC_FSINUMBERS, &igrpreq);
+ 	}
+ 
+ 	if (error) {
+diff --git a/scrub/inodes.c b/scrub/inodes.c
+index 7950208d..0db16916 100644
+--- a/scrub/inodes.c
++++ b/scrub/inodes.c
+@@ -90,17 +90,16 @@ xfs_iterate_inodes_range(
+ 	xfs_inode_iter_fn	fn,
  	void			*arg)
  {
- 	struct xfs_fsop_bulkreq	igrpreq = {NULL};
--	struct xfs_fsop_bulkreq	bulkreq = {NULL};
+-	struct xfs_fsop_bulkreq	igrpreq = {NULL};
  	struct xfs_handle	handle;
  	struct xfs_inogrp	inogrp;
  	struct xfs_bstat	bstat[XFS_INODES_PER_CHUNK];
-@@ -107,8 +98,8 @@ xfs_iterate_inodes_range(
+ 	char			idescr[DESCR_BUFSZ];
  	char			buf[DESCR_BUFSZ];
  	struct xfs_bstat	*bs;
- 	__u64			igrp_ino;
--	__u64			ino;
--	__s32			bulklen = 0;
-+	uint64_t		ino;
-+	uint32_t		bulklen = 0;
- 	__s32			igrplen = 0;
+-	__u64			igrp_ino;
++	uint64_t		igrp_ino;
+ 	uint64_t		ino;
+ 	uint32_t		bulklen = 0;
+-	__s32			igrplen = 0;
++	uint32_t		igrplen = 0;
  	bool			moveon = true;
  	int			i;
-@@ -117,10 +108,6 @@ xfs_iterate_inodes_range(
- 
+ 	int			error;
+@@ -109,11 +108,6 @@ xfs_iterate_inodes_range(
  
  	memset(bstat, 0, XFS_INODES_PER_CHUNK * sizeof(struct xfs_bstat));
--	bulkreq.lastip  = &ino;
--	bulkreq.icount  = XFS_INODES_PER_CHUNK;
--	bulkreq.ubuffer = &bstat;
--	bulkreq.ocount  = &bulklen;
  
- 	igrpreq.lastip  = &igrp_ino;
- 	igrpreq.icount  = 1;
-@@ -138,14 +125,15 @@ xfs_iterate_inodes_range(
- 	while (!error && igrplen) {
+-	igrpreq.lastip  = &igrp_ino;
+-	igrpreq.icount  = 1;
+-	igrpreq.ubuffer = &inogrp;
+-	igrpreq.ocount  = &igrplen;
+-
+ 	memcpy(&handle.ha_fsid, fshandle, sizeof(handle.ha_fsid));
+ 	handle.ha_fid.fid_len = sizeof(xfs_fid_t) -
+ 			sizeof(handle.ha_fid.fid_len);
+@@ -121,8 +115,9 @@ xfs_iterate_inodes_range(
+ 
+ 	/* Find the inode chunk & alloc mask */
+ 	igrp_ino = first_ino;
+-	error = ioctl(ctx->mnt_fd, XFS_IOC_FSINUMBERS, &igrpreq);
+-	while (!error && igrplen) {
++	while ((error = xfrog_inumbers(ctx->mnt_fd, &igrp_ino, 1, &inogrp,
++					&igrplen)) == 0 &&
++	       igrplen > 0) {
  		/* Load the inodes. */
  		ino = inogrp.xi_startino - 1;
--		bulkreq.icount = inogrp.xi_alloccount;
-+
- 		/*
- 		 * We can have totally empty inode chunks on filesystems where
+ 
+@@ -131,7 +126,7 @@ xfs_iterate_inodes_range(
  		 * there are more than 64 inodes per block.  Skip these.
  		 */
  		if (inogrp.xi_alloccount == 0)
- 			goto igrp_retry;
--		error = ioctl(ctx->mnt_fd, XFS_IOC_FSBULKSTAT, &bulkreq);
-+		error = xfrog_bulkstat(ctx->mnt_fd, &ino, inogrp.xi_alloccount,
-+				bstat, &bulklen);
+-			goto igrp_retry;
++			continue;
+ 		error = xfrog_bulkstat(ctx->mnt_fd, &ino, inogrp.xi_alloccount,
+ 				bstat, &bulklen);
  		if (error)
- 			str_info(ctx, descr, "%s", strerror_r(errno,
- 						buf, DESCR_BUFSZ));
+@@ -155,7 +150,7 @@ xfs_iterate_inodes_range(
+ 				stale_count++;
+ 				if (stale_count < 30) {
+ 					igrp_ino = inogrp.xi_startino;
+-					goto igrp_retry;
++					continue;
+ 				}
+ 				snprintf(idescr, DESCR_BUFSZ, "inode %"PRIu64,
+ 						(uint64_t)bs->bs_ino);
+@@ -177,8 +172,6 @@ _("Changed too many times during scan; giving up."));
+ 		}
+ 
+ 		stale_count = 0;
+-igrp_retry:
+-		error = ioctl(ctx->mnt_fd, XFS_IOC_FSINUMBERS, &igrpreq);
+ 	}
+ 
+ err:
 
