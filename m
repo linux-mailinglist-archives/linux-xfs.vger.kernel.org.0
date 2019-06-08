@@ -2,119 +2,198 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6F8399D7
-	for <lists+linux-xfs@lfdr.de>; Sat,  8 Jun 2019 02:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC5B739B91
+	for <lists+linux-xfs@lfdr.de>; Sat,  8 Jun 2019 09:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfFHALo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Jun 2019 20:11:44 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38024 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729685AbfFHALo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Jun 2019 20:11:44 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 946BC43E794;
-        Sat,  8 Jun 2019 10:11:34 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hZOwO-0001iX-35; Sat, 08 Jun 2019 10:10:36 +1000
-Date:   Sat, 8 Jun 2019 10:10:36 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190608001036.GF14308@dread.disaster.area>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+        id S1726473AbfFHHvh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 8 Jun 2019 03:51:37 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:33609 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFHHvh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 8 Jun 2019 03:51:37 -0400
+Received: by mail-yb1-f195.google.com with SMTP id w127so1672814yba.0
+        for <linux-xfs@vger.kernel.org>; Sat, 08 Jun 2019 00:51:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=23IQU3kpgwjTBNW1bBbQjexMjmpfpsGxJoVq125kBpU=;
+        b=qmWcahKrRUK9EV+GftOtc4hSdD22g4QmrPfItvJkRHpsHh/ZDWqexHP0bzkfnPtnKC
+         CKawGiau1EvA7ZSVxkCphrxAY6xccT0wKycRy8ZDvuXb2WyBv98VLERLGNbnG8dBKOV1
+         +tjmJpg7mZJXfKXSyPM7FPtstu64R1qUrcceu9+KTpYxSbL3jJsAGnvvaxW9CMGuiw/I
+         w9c6+5loDvae8VwCBS/Mz4N7DOTdwmUdtFsrRE635BfMVgw+2bAfBbAFybEvmn3SVl00
+         gU2lIiEui6cARWpUDYxHlCXEpF6Fjbdpjh3G2tAKqKxdmZlLuo2uIJTFyceCfKfvpjqp
+         fyBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=23IQU3kpgwjTBNW1bBbQjexMjmpfpsGxJoVq125kBpU=;
+        b=IKPk+KbFWaJAMZQPW+fiGetFn3RAhmLyC1UPZOMHeb9HJ2jgetlMYcxF9ofw7cDjeR
+         dGBMDDSTTK4WuOMf7mUfVbzhp0KzJxxaEjdR7hCT3mxgAywGVe9Rlruf4hpcnzDxLMb5
+         Uh37v3xH2XmtF+z3vAoPnX57LU7WuPj80kK/hGi6kcAv97P4SQvYyN2oVSEpg14D+aX8
+         T0HVx+pdKnRGWWl2HskFuVOZyVjzDcvzB5Um/tLtNdG3f9H4TG3yf7X9npVncPIdALUr
+         xwDtdhuIBdF2ciNhGdLuK0xdEmQGZCQ3POSAljCPNKE+Nd1rIZIf4cSBh69DVmRFzjVX
+         P9Hw==
+X-Gm-Message-State: APjAAAXYT16u5s/mCIvqp6Y3VgQ7CI9oWCpr44lZxwuVo+seRgJrxJZZ
+        CcQfuJb4hlgG4pYHRndmQW1t3Ide7YKCl5BTW0I=
+X-Google-Smtp-Source: APXvYqx8G2zvJDsZViOmwTkRvvn89vVNiHWnsZsrYHGhVM5GcXO514h7xzD58eyYQDMuw5v+oACMPoVQOu9XrwSgGVQ=
+X-Received: by 2002:a05:6902:4c3:: with SMTP id v3mr27319792ybs.144.1559980296408;
+ Sat, 08 Jun 2019 00:51:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=q-LccRbQMXva6PWEi7oA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190529101330.29470-1-amir73il@gmail.com> <20190529144604.GC5231@magnolia>
+ <CAOQ4uxgxiLGwvbeoKx3P+nvakTA75dh8hsyH4+gv2G=e5T3M=w@mail.gmail.com> <20190531154829.GC5398@magnolia>
+In-Reply-To: <20190531154829.GC5398@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 8 Jun 2019 10:51:26 +0300
+Message-ID: <CAOQ4uxjLqN2s4+dD8WFG7q_zB4bcZDG3oG=9iAEOgaYNHJbC3A@mail.gmail.com>
+Subject: Re: [PATCH] xfs_io: allow passing an open file to copy_range
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Dave Chinner <dchinner@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> On Fri, Jun 07, 2019 at 01:04:26PM +0200, Jan Kara wrote:
-> > On Thu 06-06-19 15:03:30, Ira Weiny wrote:
-> > > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
-> > > > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > So I'd like to actually mandate that you *must* hold the file lease until
-> > > > you unpin all pages in the given range (not just that you have an option to
-> > > > hold a lease). And I believe the kernel should actually enforce this. That
-> > > > way we maintain a sane state that if someone uses a physical location of
-> > > > logical file offset on disk, he has a layout lease. Also once this is done,
-> > > > sysadmin has a reasonably easy way to discover run-away RDMA application
-> > > > and kill it if he wishes so.
-> > > 
-> > > Fair enough.
-> > > 
-> > > I was kind of heading that direction but had not thought this far forward.  I
-> > > was exploring how to have a lease remain on the file even after a "lease
-> > > break".  But that is incompatible with the current semantics of a "layout"
-> > > lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
-> > > out to see what people think of this idea so I did not look at keeping the
-> > > lease.]
-> > > 
-> > > Also hitch is that currently a lease is forcefully broken after
-> > > <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
-> > > lease type with the semantics you describe.
-> > 
-> > I'd do what Dave suggested - add flag to mark lease as unbreakable by
-> > truncate and teach file locking core to handle that. There actually is
-> > support for locks that are not broken after given timeout so there
-> > shouldn't be too many changes need.
-> >  
-> > > Previously I had thought this would be a good idea (for other reasons).  But
-> > > what does everyone think about using a "longterm lease" similar to [1] which
-> > > has the semantics you proppose?  In [1] I was not sure "longterm" was a good
-> > > name but with your proposal I think it makes more sense.
-> > 
-> > As I wrote elsewhere in this thread I think FL_LAYOUT name still makes
-> > sense and I'd add there FL_UNBREAKABLE to mark unusal behavior with
-> > truncate.
-> 
-> Ok I want to make sure I understand what you and Dave are suggesting.
-> 
-> Are you suggesting that we have something like this from user space?
-> 
-> 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
+On Fri, May 31, 2019 at 6:48 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> On Wed, May 29, 2019 at 06:44:09PM +0300, Amir Goldstein wrote:
+> > On Wed, May 29, 2019 at 5:46 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > >
+> > > On Wed, May 29, 2019 at 01:13:30PM +0300, Amir Goldstein wrote:
+> > > > Commit 1a05efba ("io: open pipes in non-blocking mode")
+> > > > addressed a specific copy_range issue with pipes by always opening
+> > > > pipes in non-blocking mode.
+> > > >
+> > > > This change takes a different approach and allows passing any
+> > > > open file as the source file to copy_range.  Besides providing
+> > > > more flexibility to the copy_range command, this allows xfstests
+> > > > to check if xfs_io supports passing an open file to copy_range.
+> > > >
+> > > > The intended usage is:
+> > > > $ mkfifo fifo
+> > > > $ xfs_io -f -n -r -c "open -f dst" -C "copy_range -f 0" fifo
+> > > >
+> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > > ---
+> > > >
+> > > > Darrick,
+> > > >
+> > > > Folowing our discussion on the copy_range bounds test [1],
+> > > > what do you think about using copy_range -f in the copy_range
+> > > > fifo test with a fifo that was explicitly opened non-blocking,
+> > > > instead of trying to figure out if copy_range is going to hang
+> > > > or not?
+> > > >
+> > > > This option is already available with sendfile command and
+> > > > we can make it available for reflink and dedupe commands if
+> > > > we want to. Too bad that these 4 commands have 3 different
+> > > > usage patterns to begin with...
+> > >
+> > > I wonder if there's any sane way to overload the src_file argument such
+> > > that we can pass filetable[] offsets without having to burn more getopt
+> > > flags...?
+> > >
+> > > (Oh wait, I bet you're using the '-f' flag to figure out if xfs_io is
+> > > new enough not to block on fifos, right? :))
+> >
+> > Yes, but this time it is not a hack its a feature..
+>
+> Heh, ok. :)
+>
+> > > But otherwise this seems like a reasonable approach.
+> > >
+> > > > Thanks,
+> > > > Amir.
+> > > >
+> > > > [1] https://marc.info/?l=fstests&m=155910786017989&w=2
+> > > >
+> > > >  io/copy_file_range.c | 30 ++++++++++++++++++++++++------
+> > > >  man/man8/xfs_io.8    | 10 +++++++---
+> > > >  2 files changed, 31 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/io/copy_file_range.c b/io/copy_file_range.c
+> > > > index d069e5bb..1f0d2713 100644
+> > > > --- a/io/copy_file_range.c
+> > > > +++ b/io/copy_file_range.c
+> > > > @@ -26,6 +26,8 @@ copy_range_help(void)
+> > > >                                              file at offset 200\n\
+> > > >   'copy_range some_file' - copies all bytes from some_file into the open file\n\
+> > > >                            at position 0\n\
+> > > > + 'copy_range -f 2' - copies all bytes from open file 2 into the current open file\n\
+> > > > +                          at position 0\n\
+> > > >  "));
+> > > >  }
+> > > >
+> > > > @@ -82,11 +84,12 @@ copy_range_f(int argc, char **argv)
+> > > >       int opt;
+> > > >       int ret;
+> > > >       int fd;
+> > > > +     int src_file_arg = 1;
+> > > >       size_t fsblocksize, fssectsize;
+> > > >
+> > > >       init_cvtnum(&fsblocksize, &fssectsize);
+> > > >
+> > > > -     while ((opt = getopt(argc, argv, "s:d:l:")) != -1) {
+> > > > +     while ((opt = getopt(argc, argv, "s:d:l:f:")) != -1) {
+> > > >               switch (opt) {
+> > > >               case 's':
+> > > >                       src = cvtnum(fsblocksize, fssectsize, optarg);
+> > > > @@ -109,15 +112,30 @@ copy_range_f(int argc, char **argv)
+> > > >                               return 0;
+> > > >                       }
+> > > >                       break;
+> > > > +             case 'f':
+> > > > +                     fd = atoi(argv[1]);
+> > > > +                     if (fd < 0 || fd >= filecount) {
+> > > > +                             printf(_("value %d is out of range (0-%d)\n"),
+> > > > +                                     fd, filecount-1);
+> > > > +                             return 0;
+> > > > +                     }
+> > > > +                     fd = filetable[fd].fd;
+> > > > +                     /* Expect no src_file arg */
+> > > > +                     src_file_arg = 0;
+> > > > +                     break;
+> > > >               }
+> > > >       }
+> > > >
+> > > > -     if (optind != argc - 1)
+> > > > +     if (optind != argc - src_file_arg) {
+> > > > +             fprintf(stderr, "optind=%d, argc=%d, src_file_arg=%d\n", optind, argc, src_file_arg);
+> > > >               return command_usage(&copy_range_cmd);
+> > > > +     }
+> > > >
+> > > > -     fd = openfile(argv[optind], NULL, IO_READONLY, 0, NULL);
+> > > > -     if (fd < 0)
+> > > > -             return 0;
+> > > > +     if (src_file_arg) {
+> > >
+> > > I wonder if it would be easier to declare "int fd = -1" and the only do
+> > > the openfile here if fd < 0?
+> > >
+> >
+> > I started out with if (fd == -1), but I changed to src_file_arg to
+> > unify the condition for (optind != argc - src_file_arg)
+> > and avoid another condition (i.e. argc - (fd == -1 ? 1 : 0))
+>
+> <nod>
+>
+> Looks ok,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+>
 
-Rather than "unbreakable", perhaps a clearer description of the
-policy it entails is "exclusive"?
+Hi Eric,
 
-i.e. what we are talking about here is an exclusive lease that
-prevents other processes from changing the layout. i.e. the
-mechanism used to guarantee a lease is exclusive is that the layout
-becomes "unbreakable" at the filesystem level, but the policy we are
-actually presenting to uses is "exclusive access"...
+This patch might have missed your radar, because it is not on for-next.
+It eventually got RVB Darrick with no requests for changes.
 
-Cheers,
+The change is needed for a new xfstest for copy_file_range
+boundary check fixes.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Please let me know if you have any comments on the patch.
+
+Thanks,
+Amir.
