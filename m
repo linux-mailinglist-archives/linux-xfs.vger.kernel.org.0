@@ -2,196 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 954CD3B173
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 11:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3584E3B171
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 11:02:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388768AbfFJJCq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 05:02:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42932 "EHLO mx1.redhat.com"
+        id S2388601AbfFJJCh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 05:02:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56928 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388190AbfFJJCq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:02:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S2388190AbfFJJCh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 10 Jun 2019 05:02:37 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AF7D3307D854;
-        Mon, 10 Jun 2019 09:02:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E0D0081DFC;
+        Mon, 10 Jun 2019 09:02:36 +0000 (UTC)
 Received: from localhost (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A49647A400;
-        Mon, 10 Jun 2019 09:02:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EAECC5C64D;
+        Mon, 10 Jun 2019 09:02:33 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-xfs@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH V3 1/2] block: introduce 'enum bvec_merge_flags' for __bio_try_merge_page
-Date:   Mon, 10 Jun 2019 17:02:14 +0800
-Message-Id: <20190610090215.14412-2-ming.lei@redhat.com>
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH V3 2/2] block: fix page leak in case of merging to same page
+Date:   Mon, 10 Jun 2019 17:02:15 +0800
+Message-Id: <20190610090215.14412-3-ming.lei@redhat.com>
 In-Reply-To: <20190610090215.14412-1-ming.lei@redhat.com>
 References: <20190610090215.14412-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 10 Jun 2019 09:02:45 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 10 Jun 2019 09:02:37 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Introduce 'enum bvec_merge_flags' and pass it to __bio_try_merge_page,
-we have to deal with several cases related with page reference when
-merging same page to bio(bvec), such as:
+Different iovec may use one same page, then 'pages' array filled
+by iov_iter_get_pages() may get reference of the same page several
+times. If some elements in 'pages' can be merged to same page in
+one bvec by bio_add_page(), bio_release_pages() only drops the
+page's reference once.
 
-1) only merge to same page without putting reference of the same page,
-such as iomap & xfs
+This way causes page leak reported by David Gibson.
 
-2) merge to same page and putting reference of the same page, such as
-__bio_iov_iter_get_pages()
+This issue can be triggered since 576ed913 ("block: use bio_add_page in
+bio_iov_iter_get_pages").
 
+Fixes the issue by putting the page's ref if it is merged to same page.
+
+Cc: David Gibson <david@gibson.dropbear.id.au>
 Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc: linux-xfs@vger.kernel.org
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: Christoph Hellwig <hch@infradead.org>
-Cc: David Gibson <david@gibson.dropbear.id.au>
+Link: https://lkml.org/lkml/2019/4/23/64
+Fixes: 576ed913 ("block: use bio_add_page in bio_iov_iter_get_pages")
+Reported-by: David Gibson <david@gibson.dropbear.id.au>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/bio.c         | 20 ++++++++++++--------
- fs/iomap.c          |  3 ++-
- fs/xfs/xfs_aops.c   |  3 ++-
- include/linux/bio.h | 14 +++++++++++++-
- 4 files changed, 29 insertions(+), 11 deletions(-)
+ block/bio.c         | 12 ++++++++++--
+ include/linux/bio.h |  8 ++++++++
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index 683cbb40f051..39e3b931dc3b 100644
+index 39e3b931dc3b..358ccb5086e6 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -636,7 +636,7 @@ EXPORT_SYMBOL(bio_clone_fast);
- 
- static inline bool page_is_mergeable(const struct bio_vec *bv,
- 		struct page *page, unsigned int len, unsigned int off,
--		bool same_page)
-+		enum bvec_merge_flags flags)
- {
- 	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) +
- 		bv->bv_offset + bv->bv_len - 1;
-@@ -648,13 +648,14 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 		return false;
- 
- 	if ((vec_end_addr & PAGE_MASK) != page_addr) {
--		if (same_page)
-+		if (flags & BVEC_MERGE_TO_SAME_PAGE)
+@@ -652,6 +652,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
  			return false;
  		if (pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
  			return false;
++	/* drop page ref if the page has been added and user asks to do that */
++	} else if (flags & BVEC_MERGE_PUT_SAME_PAGE) {
++		put_page(page);
  	}
  
--	WARN_ON_ONCE(same_page && (len + off) > PAGE_SIZE);
-+	WARN_ON_ONCE((flags & BVEC_MERGE_TO_SAME_PAGE) &&
-+			(len + off) > PAGE_SIZE);
+ 	WARN_ON_ONCE((flags & BVEC_MERGE_TO_SAME_PAGE) &&
+@@ -924,8 +927,13 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 		struct page *page = pages[i];
  
- 	return true;
- }
-@@ -729,8 +730,9 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
- 		if (bvec_gap_to_prev(q, bvec, offset))
- 			return 0;
- 
--		if (page_is_mergeable(bvec, page, len, offset, false) &&
--		    can_add_page_to_seg(q, bvec, page, len, offset)) {
-+		if (page_is_mergeable(bvec, page, len, offset,
-+		    BVEC_MERGE_DEFAULT) && can_add_page_to_seg(q, bvec,
-+		    page, len, offset)) {
- 			bvec->bv_len += len;
- 			goto done;
- 		}
-@@ -779,7 +781,8 @@ EXPORT_SYMBOL(bio_add_pc_page);
-  * Return %true on success or %false on failure.
-  */
- bool __bio_try_merge_page(struct bio *bio, struct page *page,
--		unsigned int len, unsigned int off, bool same_page)
-+		unsigned int len, unsigned int off,
-+		enum bvec_merge_flags flags)
- {
- 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
- 		return false;
-@@ -787,7 +790,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 	if (bio->bi_vcnt > 0) {
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
--		if (page_is_mergeable(bv, page, len, off, same_page)) {
-+		if (page_is_mergeable(bv, page, len, off, flags)) {
- 			bv->bv_len += len;
- 			bio->bi_iter.bi_size += len;
- 			return true;
-@@ -837,7 +840,8 @@ EXPORT_SYMBOL_GPL(__bio_add_page);
- int bio_add_page(struct bio *bio, struct page *page,
- 		 unsigned int len, unsigned int offset)
- {
--	if (!__bio_try_merge_page(bio, page, len, offset, false)) {
-+	if (!__bio_try_merge_page(bio, page, len, offset,
-+				  BVEC_MERGE_DEFAULT)) {
- 		if (bio_full(bio))
- 			return 0;
- 		__bio_add_page(bio, page, len, offset);
-diff --git a/fs/iomap.c b/fs/iomap.c
-index 23ef63fd1669..e04652bbf92a 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -316,7 +316,8 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 	 */
- 	sector = iomap_sector(iomap, pos);
- 	if (ctx->bio && bio_end_sector(ctx->bio) == sector) {
--		if (__bio_try_merge_page(ctx->bio, page, plen, poff, true))
-+		if (__bio_try_merge_page(ctx->bio, page, plen, poff,
-+					 BVEC_MERGE_TO_SAME_PAGE))
- 			goto done;
- 		is_contig = true;
- 	}
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index a6f0f4761a37..7e7385bc3b9e 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -774,7 +774,8 @@ xfs_add_to_ioend(
- 				wpc->imap.br_state, offset, bdev, sector);
+ 		len = min_t(size_t, PAGE_SIZE - offset, left);
+-		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
+-			return -EINVAL;
++
++		if (!__bio_try_merge_page(bio, page, len, offset,
++					BVEC_MERGE_PUT_SAME_PAGE)) {
++			if (WARN_ON_ONCE(bio_full(bio)))
++                                return -EINVAL;
++			__bio_add_page(bio, page, len, offset);
++		}
+ 		offset = 0;
  	}
  
--	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff, true)) {
-+	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
-+				BVEC_MERGE_TO_SAME_PAGE)) {
- 		if (iop)
- 			atomic_inc(&iop->write_count);
- 		if (bio_full(wpc->ioend->io_bio))
 diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 0f23b5682640..ee18895431ba 100644
+index ee18895431ba..0168bc5df8e4 100644
 --- a/include/linux/bio.h
 +++ b/include/linux/bio.h
-@@ -419,11 +419,23 @@ extern void bio_uninit(struct bio *);
- extern void bio_reset(struct bio *);
- void bio_chain(struct bio *, struct bio *);
- 
-+enum bvec_merge_flags {
-+	BVEC_MERGE_DEFAULT,
+@@ -428,6 +428,14 @@ enum bvec_merge_flags {
+ 	 * bvec
+ 	 */
+ 	BVEC_MERGE_TO_SAME_PAGE = BIT(0),
 +
 +	/*
-+	 * only merge if new page is same with bio's last page, this
-+	 * is exactly the behaviour before introducing multi-page
-+	 * bvec
++	 * put refcount of bio's last page if the start page to add is
++	 * same with bio's last page. If user gets refcount of every
++	 * page added to bio before calling bio_add_page, please consider
++	 * to use this flag for avoiding page leak
 +	 */
-+	BVEC_MERGE_TO_SAME_PAGE = BIT(0),
-+};
-+
++	BVEC_MERGE_PUT_SAME_PAGE = BIT(1),
+ };
+ 
  extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
- extern int bio_add_pc_page(struct request_queue *, struct bio *, struct page *,
- 			   unsigned int, unsigned int);
- bool __bio_try_merge_page(struct bio *bio, struct page *page,
--		unsigned int len, unsigned int off, bool same_page);
-+		unsigned int len, unsigned int off,
-+		enum bvec_merge_flags flags);
- void __bio_add_page(struct bio *bio, struct page *page,
- 		unsigned int len, unsigned int off);
- int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter);
 -- 
 2.20.1
 
