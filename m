@@ -2,114 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F337C3ADD9
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 06:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB93C3AE45
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 06:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfFJESr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 00:18:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39144 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfFJESq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 10 Jun 2019 00:18:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 912D781DF5;
-        Mon, 10 Jun 2019 04:18:46 +0000 (UTC)
-Received: from localhost (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 631DB5B685;
-        Mon, 10 Jun 2019 04:18:42 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH V2 2/2] block: fix page leak in case of merging to same page
-Date:   Mon, 10 Jun 2019 12:18:19 +0800
-Message-Id: <20190610041819.11575-3-ming.lei@redhat.com>
-In-Reply-To: <20190610041819.11575-1-ming.lei@redhat.com>
-References: <20190610041819.11575-1-ming.lei@redhat.com>
+        id S2387432AbfFJElw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 00:41:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50236 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfFJElv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 00:41:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5A4djbq014902;
+        Mon, 10 Jun 2019 04:41:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=1rlW4CBK4tGHrpGFthm0IXowDU3XrX/m9jqFgg1EvJs=;
+ b=DdQQTu+/oZ8BF78Vl3tSsb9U84OK1y8XCqxtjn2i+ZxuHFIycqvptntC3PB3NuSjZ7tQ
+ QKmjw7cLnnSLS55U/ubPkdBlIc5x+/YSrW0qZh5QMmB56/r1MWZ5KQXRl0QeVPuYri5+
+ b8xUGpNJqaYNFoP8RM//vtQyCZBGgR0d2Z9NXKJp7dR9DBm8mX2EQ2sonm6F0yVTHxWd
+ cL3ROZ6dfNfUUnA0SIOR+IO8zjh7UvQvrjV9SpTbsHGg/5gzVOr879aAAOa+1TNbjIZx
+ DLlT37EHBXjkErOWeO8NXIvDjq5iKIJ8nShcQcyxc6zsh4mYgLzzqu28s6IQ9mMDnUfe 1w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t04etcn0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 04:41:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5A4en2r188090;
+        Mon, 10 Jun 2019 04:41:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t04hxkmcf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 04:41:47 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5A4fk0T009554;
+        Mon, 10 Jun 2019 04:41:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 09 Jun 2019 21:41:45 -0700
+Date:   Sun, 9 Jun 2019 21:41:44 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/8] mm/fs: don't allow writes to immutable files
+Message-ID: <20190610044144.GA1872750@magnolia>
+References: <155552786671.20411.6442426840435740050.stgit@magnolia>
+ <155552787330.20411.11893581890744963309.stgit@magnolia>
+ <20190610015145.GB3266@mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 10 Jun 2019 04:18:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610015145.GB3266@mit.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9283 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=748
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906100031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9283 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=793 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906100032
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Different iovec may use one same page, then 'pages' array filled
-by iov_iter_get_pages() may get reference of the same page several
-times. If some elements in 'pages' can be merged to same page in
-one bvec by bio_add_page(), bio_release_pages() only drops the
-page's reference once.
+On Sun, Jun 09, 2019 at 09:51:45PM -0400, Theodore Ts'o wrote:
+> On Wed, Apr 17, 2019 at 12:04:33PM -0700, Darrick J. Wong wrote:
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index ab650c21bccd..dfd5eba278d6 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -2149,6 +2149,9 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
+> >  
+> >  	vmf->flags = FAULT_FLAG_WRITE|FAULT_FLAG_MKWRITE;
+> >  
+> > +	if (vmf->vma->vm_file && IS_IMMUTABLE(file_inode(vmf->vma->vm_file)))
+> > +		return VM_FAULT_SIGBUS;
+> > +
+> >  	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
+> >  	/* Restore original flags so that caller is not surprised */
+> >  	vmf->flags = old_flags;
+> 
+> Shouldn't this check be moved before the modification of vmf->flags?
+> It looks like do_page_mkwrite() isn't supposed to be returning with
+> vmf->flags modified, lest "the caller gets surprised".
 
-This way causes page leak reported by David Gibson.
+Yeah, I think that was a merge error during a rebase... :(
 
-This issue can be triggered since 576ed913 ("block: use bio_add_page in
-bio_iov_iter_get_pages").
+Er ... if you're still planning to take this patch through your tree,
+can you move it to above the "vmf->flags = FAULT_FLAG_WRITE..." ?
 
-Fixes the issue by putting the page's ref if it is merged to same page.
+--D
 
-Cc: David Gibson <david@gibson.dropbear.id.au>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: linux-xfs@vger.kernel.org
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christoph Hellwig <hch@infradead.org>
-Link: https://lkml.org/lkml/2019/4/23/64
-Fixes: 576ed913 ("block: use bio_add_page in bio_iov_iter_get_pages")
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/bio.c         | 12 ++++++++++--
- include/linux/bio.h |  1 +
- 2 files changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index 39e3b931dc3b..07a15abc3d11 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -652,6 +652,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 			return false;
- 		if (pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
- 			return false;
-+	/* drop page ref if the page has been added and user asks to do that */
-+	} else if (flags & BVEC_MERGE_PUT_SAME_PAGE) {
-+		put_page(page);
- 	}
- 
- 	WARN_ON_ONCE((flags & BVEC_MERGE_TO_SAME_PAGE) &&
-@@ -924,8 +927,13 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 		struct page *page = pages[i];
- 
- 		len = min_t(size_t, PAGE_SIZE - offset, left);
--		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
--			return -EINVAL;
-+
-+		if (!__bio_try_merge_page(bio, page, len, offset,
-+					BVEC_MERGE_PUT_SAME_PAGE)) {
-+			if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset)
-+						!= len))
-+				return -EINVAL;
-+		}
- 		offset = 0;
- 	}
- 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 48a95bca1703..dec6cf683d8e 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -422,6 +422,7 @@ void bio_chain(struct bio *, struct bio *);
- enum bvec_merge_flags {
- 	BVEC_MERGE_DEFAULT,
- 	BVEC_MERGE_TO_SAME_PAGE = BIT(0),
-+	BVEC_MERGE_PUT_SAME_PAGE = BIT(1),
- };
- 
- extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
--- 
-2.20.1
-
+> 	   	     	       	      	   - Ted
