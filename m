@@ -2,122 +2,298 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4EAC3B60D
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 15:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 166A63B615
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 15:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390345AbfFJNbl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 09:31:41 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54826 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390221AbfFJNbl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 09:31:41 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5ADVV5S007197
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Jun 2019 09:31:32 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 97540420481; Mon, 10 Jun 2019 09:31:31 -0400 (EDT)
-Date:   Mon, 10 Jun 2019 09:31:31 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        fstests <fstests@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] generic: copy_file_range swapfile test
-Message-ID: <20190610133131.GE15963@mit.edu>
-References: <20190602124114.26810-1-amir73il@gmail.com>
- <20190602124114.26810-4-amir73il@gmail.com>
- <20190610035829.GA18429@mit.edu>
- <CAOQ4uxi-s6ncLGjh_u5x4DFK+dvcaobDCqup_ZV3mZOYDRuOEQ@mail.gmail.com>
+        id S2389951AbfFJNeu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 09:34:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36386 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389508AbfFJNeu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 09:34:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VeeFjzU/Z5v0KCw2NR3QMTVCB2dDbxUhNN9wYfHMq5Q=; b=Ky1rHmadlQYh5xR36N1XASmE3
+        8sBUO800RN5BnoG8XeJeEWgwGz2uqyqp7kBhL2d4waHxOW+LAT4UrQPgaIrKGRK+fd1yhoLmLDv8i
+        rRWzo7z+Kl2H6YA4WZQE/Un02Yo7RVjdUVQpeI0QyImsy4zcwnYOmZw0myvt+WWOYfb6SSEwKX4QF
+        lDqalPyDuQOnLKhje8sgillgDijR0Zg/gyYRVDHtLE49sBEjr1vENyEPKBKs85xvIYiZ6q/sScgn7
+        3TZbLVtphGhg2dksWTH5bixBqopA5duoF/RlhmlKxY7lxpMsTm778XCd3sVTNm8tmuidb+LQRUGhT
+        qPZiy+zAw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1haKRi-0007bM-J7; Mon, 10 Jun 2019 13:34:46 +0000
+Date:   Mon, 10 Jun 2019 06:34:46 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2 0/2] block: fix page leak by merging to same page
+Message-ID: <20190610133446.GA28712@infradead.org>
+References: <20190610041819.11575-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi-s6ncLGjh_u5x4DFK+dvcaobDCqup_ZV3mZOYDRuOEQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190610041819.11575-1-ming.lei@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:37:32AM +0300, Amir Goldstein wrote:
->
->Why do you think thhis is xfs_io fall back and not kernel fall back to
->do_splice_direct()? Anyway, both cases allow read from swapfile
->on upstream.
+I don't really like the magic enum types.  I'd rather go back to my
+initial idea to turn the same_page argument into an output parameter,
+so that the callers can act upon it.  Untested patch below:
 
-Ah, I had assumed this was changed that was made because if you are
-implementing copy_file_range in terms of some kind of reflink-like
-mechanism, it becomes super-messy since you know have to break tons
-and tons of COW sharing each time the kernel swaps to the swap file.
 
-I didn't think we had (or maybe we did, and I missed it) a discussion
-about whether reading from a swap file should be prohibited.
-Personally, I think it's security theatre, and not worth the
-effort/overhead, but whatever.... my main complaint was with the
-unnecessary test failures with upstream kernels.
-
-> Trying to understand the desired flow of tests and fixes. 
-> I agree that generic/554 failure may be a test/interface bug that
-> we should fix in a way that current upstream passes the test for
-> ext4. Unless there is objection, I will send a patch to fix the test
-> to only test copy *to* swapfile.
-> 
-> generic/553, OTOH, is expected to fail on upstream kernel.
-> Are you leaving 553 in appliance build in anticipation to upstream fix?
-> I guess the answer is in the ext4 IS_IMMUTABLE patch that you
-> posted and plan to push to upstream/stable sooner than VFS patches.
-
-So I find it kind of annoying when tests land before the fixes do
-upstream.  I still have this in my global_exclude file:
-
-# The proposed fix for generic/484, "locks: change POSIX lock
-# ownership on execve when files_struct is displaced" would break NFS
-# Jeff Layton and Eric Biederman have some ideas for how to address it
-# but fixing it is non-trivial
-generic/484
-
-The generic/484 test landed in August 2018, and as far as I know, the
-issue which it is testing for *still* hasn't been fixed upstream.
-(There were issues raised with the proposed fix, and it looks like the
-people looking at the kernel change have lost interest.)
-
-The problem is that there are people who are trying to use xfstests to
-look for failures, and unless they start digging into the kernel
-archives from last year, they won't understand that generic/484 is a
-known failing test, and it will get fixed....someday.
-
-For people in the know, or for people who use my kvm-xfstests,
-gce-xfstests, it's not a big problem, since I've already blacklisted
-the test.  But not everyone (and in fact, probably most people don't)
-use my front end scripts.
-
-For generic/553, I have a fix in ext4 so it will clear the failure,
-and that's fine, since I think we've all agreed in principle what the
-correct fix will be, and presumably it will get fixed soon.  At that
-point, I might revert the commit from ext4, and rely on the VFS to
-catch the error, but the overhead of a few extra unlikely() tests
-aren't that big.  But yeah, I did that mainly because unnecessary test
-failures because doing an ext4-specific fix didn't have many
-downsides, and one risk of adding tests to the global exclude file is
-that I then have to remember to remove it from the global exclude file
-when the issue is finally fixed upstream.
-
-> Do you think that should there be a different policy w.r.t timing of
-> merging xfstests tests that fail on upstream kernel?
-
-That's my opinion, and generic/484 is the best argument for why we
-should wait.  Other people may have other opinions though, and I have
-a workaround, so I don't feel super-strong about it.  (generic/454 is
-now the second test in my global exclude file.  :-)
-
-At the very *least* there should be a comment in the test that fix is
-pending, and might not be applied yet, with a URL to the mailing list
-discussion.  That will save effort when months (years?) go by, and the
-fix still hasn't landed the upstream kernel....
-
-	       	       	      	      - Ted
+diff --git a/block/bio.c b/block/bio.c
+index 683cbb40f051..d4999ef3b1fb 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -636,7 +636,7 @@ EXPORT_SYMBOL(bio_clone_fast);
+ 
+ static inline bool page_is_mergeable(const struct bio_vec *bv,
+ 		struct page *page, unsigned int len, unsigned int off,
+-		bool same_page)
++		bool *same_page)
+ {
+ 	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) +
+ 		bv->bv_offset + bv->bv_len - 1;
+@@ -647,26 +647,17 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
+ 	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
+ 		return false;
+ 
+-	if ((vec_end_addr & PAGE_MASK) != page_addr) {
+-		if (same_page)
+-			return false;
+-		if (pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
+-			return false;
+-	}
+-
+-	WARN_ON_ONCE(same_page && (len + off) > PAGE_SIZE);
+-
++	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
++	if (!*same_page && pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
++		return false;
+ 	return true;
+ }
+ 
+-/*
+- * Check if the @page can be added to the current segment(@bv), and make
+- * sure to call it only if page_is_mergeable(@bv, @page) is true
+- */
+-static bool can_add_page_to_seg(struct request_queue *q,
+-		struct bio_vec *bv, struct page *page, unsigned len,
+-		unsigned offset)
++static bool bio_try_merge_pc_page(struct request_queue *q, struct bio *bio,
++		struct page *page, unsigned len, unsigned offset,
++		bool *same_page)
+ {
++	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 	unsigned long mask = queue_segment_boundary(q);
+ 	phys_addr_t addr1 = page_to_phys(bv->bv_page) + bv->bv_offset;
+ 	phys_addr_t addr2 = page_to_phys(page) + offset + len - 1;
+@@ -677,7 +668,13 @@ static bool can_add_page_to_seg(struct request_queue *q,
+ 	if (bv->bv_len + len > queue_max_segment_size(q))
+ 		return false;
+ 
+-	return true;
++	/*
++	 * If the queue doesn't support SG gaps and adding this
++	 * offset would create a gap, disallow it.
++	 */
++	if (bvec_gap_to_prev(q, bv, offset))
++		return false;
++	return __bio_try_merge_page(bio, page, len, offset, same_page);
+ }
+ 
+ /**
+@@ -701,6 +698,7 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		bool put_same_page)
+ {
+ 	struct bio_vec *bvec;
++	bool same_page = false;
+ 
+ 	/*
+ 	 * cloned bio must not modify vec list
+@@ -711,29 +709,11 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 	if (((bio->bi_iter.bi_size + len) >> 9) > queue_max_hw_sectors(q))
+ 		return 0;
+ 
+-	if (bio->bi_vcnt > 0) {
+-		bvec = &bio->bi_io_vec[bio->bi_vcnt - 1];
+-
+-		if (page == bvec->bv_page &&
+-		    offset == bvec->bv_offset + bvec->bv_len) {
+-			if (put_same_page)
+-				put_page(page);
+-			bvec->bv_len += len;
+-			goto done;
+-		}
+-
+-		/*
+-		 * If the queue doesn't support SG gaps and adding this
+-		 * offset would create a gap, disallow it.
+-		 */
+-		if (bvec_gap_to_prev(q, bvec, offset))
+-			return 0;
+-
+-		if (page_is_mergeable(bvec, page, len, offset, false) &&
+-		    can_add_page_to_seg(q, bvec, page, len, offset)) {
+-			bvec->bv_len += len;
+-			goto done;
+-		}
++	if (bio->bi_vcnt > 0 &&
++	    bio_try_merge_pc_page(q, bio, page, len, offset, &same_page)) {
++		if (put_same_page && same_page)
++			put_page(page);
++		goto done;
+ 	}
+ 
+ 	if (bio_full(bio))
+@@ -747,8 +727,8 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 	bvec->bv_len = len;
+ 	bvec->bv_offset = offset;
+ 	bio->bi_vcnt++;
+- done:
+ 	bio->bi_iter.bi_size += len;
++ done:
+ 	bio->bi_phys_segments = bio->bi_vcnt;
+ 	bio_set_flag(bio, BIO_SEG_VALID);
+ 	return len;
+@@ -767,8 +747,7 @@ EXPORT_SYMBOL(bio_add_pc_page);
+  * @page: start page to add
+  * @len: length of the data to add
+  * @off: offset of the data relative to @page
+- * @same_page: if %true only merge if the new data is in the same physical
+- *		page as the last segment of the bio.
++ * @same_page: return if the segment has been merged inside the same page
+  *
+  * Try to add the data at @page + @off to the last bvec of @bio.  This is a
+  * a useful optimisation for file systems with a block size smaller than the
+@@ -779,7 +758,7 @@ EXPORT_SYMBOL(bio_add_pc_page);
+  * Return %true on success or %false on failure.
+  */
+ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+-		unsigned int len, unsigned int off, bool same_page)
++		unsigned int len, unsigned int off, bool *same_page)
+ {
+ 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+ 		return false;
+@@ -837,7 +816,9 @@ EXPORT_SYMBOL_GPL(__bio_add_page);
+ int bio_add_page(struct bio *bio, struct page *page,
+ 		 unsigned int len, unsigned int offset)
+ {
+-	if (!__bio_try_merge_page(bio, page, len, offset, false)) {
++	bool same_page = false;
++
++	if (!__bio_try_merge_page(bio, page, len, offset, &same_page)) {
+ 		if (bio_full(bio))
+ 			return 0;
+ 		__bio_add_page(bio, page, len, offset);
+@@ -900,6 +881,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 	unsigned short entries_left = bio->bi_max_vecs - bio->bi_vcnt;
+ 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
+ 	struct page **pages = (struct page **)bv;
++	bool same_page = false;
+ 	ssize_t size, left;
+ 	unsigned len, i;
+ 	size_t offset;
+@@ -920,8 +902,15 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 		struct page *page = pages[i];
+ 
+ 		len = min_t(size_t, PAGE_SIZE - offset, left);
+-		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
+-			return -EINVAL;
++
++		if (__bio_try_merge_page(bio, page, len, offset, &same_page)) {
++			if (same_page)
++				put_page(page);
++		} else {
++			if (WARN_ON_ONCE(bio_full(bio)))
++                                return -EINVAL;
++			__bio_add_page(bio, page, len, offset);
++		}
+ 		offset = 0;
+ 	}
+ 
+diff --git a/fs/iomap.c b/fs/iomap.c
+index 23ef63fd1669..12654c2e78f8 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -287,7 +287,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	struct iomap_readpage_ctx *ctx = data;
+ 	struct page *page = ctx->cur_page;
+ 	struct iomap_page *iop = iomap_page_create(inode, page);
+-	bool is_contig = false;
++	bool same_page = false, is_contig = false;
+ 	loff_t orig_pos = pos;
+ 	unsigned poff, plen;
+ 	sector_t sector;
+@@ -315,10 +315,14 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	 * Try to merge into a previous segment if we can.
+ 	 */
+ 	sector = iomap_sector(iomap, pos);
+-	if (ctx->bio && bio_end_sector(ctx->bio) == sector) {
+-		if (__bio_try_merge_page(ctx->bio, page, plen, poff, true))
+-			goto done;
++	if (ctx->bio && bio_end_sector(ctx->bio) == sector)
+ 		is_contig = true;
++
++	if (is_contig &&
++	    __bio_try_merge_page(ctx->bio, page, plen, poff, &same_page)) {
++		if (!same_page && iop)
++			atomic_inc(&iop->read_count);
++		goto done;
+ 	}
+ 
+ 	/*
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index a6f0f4761a37..8da5e6637771 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -758,6 +758,7 @@ xfs_add_to_ioend(
+ 	struct block_device	*bdev = xfs_find_bdev_for_inode(inode);
+ 	unsigned		len = i_blocksize(inode);
+ 	unsigned		poff = offset & (PAGE_SIZE - 1);
++	bool			merged, same_page = false;
+ 	sector_t		sector;
+ 
+ 	sector = xfs_fsb_to_db(ip, wpc->imap.br_startblock) +
+@@ -774,9 +775,13 @@ xfs_add_to_ioend(
+ 				wpc->imap.br_state, offset, bdev, sector);
+ 	}
+ 
+-	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff, true)) {
+-		if (iop)
+-			atomic_inc(&iop->write_count);
++	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
++			&same_page);
++
++	if (iop && !same_page)
++		atomic_inc(&iop->write_count);
++
++	if (!merged) {
+ 		if (bio_full(wpc->ioend->io_bio))
+ 			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
+ 		bio_add_page(wpc->ioend->io_bio, page, len, poff);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index ea73df36529a..3df3b127b394 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -423,7 +423,7 @@ extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
+ extern int bio_add_pc_page(struct request_queue *, struct bio *, struct page *,
+ 			   unsigned int, unsigned int);
+ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+-		unsigned int len, unsigned int off, bool same_page);
++		unsigned int len, unsigned int off, bool *same_page);
+ void __bio_add_page(struct bio *bio, struct page *page,
+ 		unsigned int len, unsigned int off);
+ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter);
