@@ -2,133 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 604C43B17F
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 11:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 665793B5D4
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 15:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388786AbfFJJIZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 05:08:25 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42114 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388190AbfFJJIZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 05:08:25 -0400
-Received: by mail-yb1-f193.google.com with SMTP id c7so3481525ybs.9;
-        Mon, 10 Jun 2019 02:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ArcrB++u6iKCln3fs8UyCKAhvBXurZHZ1cbgAIv708=;
-        b=ad0WWbFMc4Ajeabj7Z91fDqvifpizkz9LX5dkd0TbQBYaY8jRpls2MI7cZGYvzH+UM
-         Tn2tXh0+4b2KRBZbcQ282ZTPsMEdbdeACdFsqXejfx1RniEsFgHEZgkiSLi5IFi8K4bJ
-         kODImKMl0D9rRKyJPdE9EFE+BEAWZFRppwlFJjo19WyBeBIfzUSTIGQVWQz37LU5G+vy
-         8e3YOoZ7WOQ2d0VjEYRAl8Hr3LxboJsr+rXfSBAdFQMjYzOIuU6QqwfApJTZ9chRo0vI
-         9Xhor+FfgTVTczBq8GfOgeHyQAhgvaZLn4m/oKdFZRdZenWJZbZyrHkhzS/91b2/T9Sp
-         dDUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ArcrB++u6iKCln3fs8UyCKAhvBXurZHZ1cbgAIv708=;
-        b=NwPEA/nNwZL5nzcCSMcX0RcjefR0/OTq5ZHSDQCsTZl3ukyMhlpf9vzQJYqZXh6dII
-         e5T94t17RfBjCYovPJLHRrrQZQ+HPuwtBihjFeUcC84teE7jCh5JR7YoeTUH56t/O7sU
-         esVN1XCaeOORvcfU6FAM/wSDXgi50dDWp3xd9vCnR1W5tLg3pDele5Buqi4T3cuwS5tX
-         iHd48sHtJyRUalog5DuXH40d1ZiNpMMnrVfe8iCKtky11/xHo2fyEVLAWJpVSxHQXNCZ
-         psBefPVC5vZrKge7prDLr18xSDl2HM01ZO8JH6KspOEMU0BMRyN//taO+jJoqlLCfnMk
-         D8cg==
-X-Gm-Message-State: APjAAAW5PXvZ9Hd027SL+uI+lJRJKskLdLaqMzkaT7yeqJY2b7Lup4mi
-        1zkz++LbC5mHa6Fm5HWrKH60gUKeAhxrPOmKHpkmbQ==
-X-Google-Smtp-Source: APXvYqwJpr6dxuYloI5XHCSD/Qwyjo82qTzVnB94UBBIVjOxmeLMfCWga3zewlvUTdFE7ZJ2ASZczpEzCWjefptZMuE=
-X-Received: by 2002:a25:8109:: with SMTP id o9mr29953976ybk.132.1560157704258;
- Mon, 10 Jun 2019 02:08:24 -0700 (PDT)
+        id S2390262AbfFJNOd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 09:14:33 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51506 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388848AbfFJNOd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 09:14:33 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5ADEILt032203
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Jun 2019 09:14:18 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id E4DDE420481; Mon, 10 Jun 2019 09:14:17 -0400 (EDT)
+Date:   Mon, 10 Jun 2019 09:14:17 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/8] mm/fs: don't allow writes to immutable files
+Message-ID: <20190610131417.GD15963@mit.edu>
+References: <155552786671.20411.6442426840435740050.stgit@magnolia>
+ <155552787330.20411.11893581890744963309.stgit@magnolia>
+ <20190610015145.GB3266@mit.edu>
+ <20190610044144.GA1872750@magnolia>
 MIME-Version: 1.0
-References: <20190602124114.26810-1-amir73il@gmail.com> <20190602124114.26810-4-amir73il@gmail.com>
- <20190610035829.GA18429@mit.edu> <CAOQ4uxi-s6ncLGjh_u5x4DFK+dvcaobDCqup_ZV3mZOYDRuOEQ@mail.gmail.com>
-In-Reply-To: <CAOQ4uxi-s6ncLGjh_u5x4DFK+dvcaobDCqup_ZV3mZOYDRuOEQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 10 Jun 2019 12:08:12 +0300
-Message-ID: <CAOQ4uxie1H+9VDO_UjyZXcotnFv+ybfcJdLxX8suP5gOvg_wrA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] generic: copy_file_range swapfile test
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        fstests <fstests@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610044144.GA1872750@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:37 AM Amir Goldstein <amir73il@gmail.com> wrote:
+On Sun, Jun 09, 2019 at 09:41:44PM -0700, Darrick J. Wong wrote:
+> On Sun, Jun 09, 2019 at 09:51:45PM -0400, Theodore Ts'o wrote:
+> > On Wed, Apr 17, 2019 at 12:04:33PM -0700, Darrick J. Wong wrote:
 >
-> On Mon, Jun 10, 2019 at 6:58 AM Theodore Ts'o <tytso@mit.edu> wrote:
-> >
-> > On Sun, Jun 02, 2019 at 03:41:11PM +0300, Amir Goldstein wrote:
-> > > This test case was split out of Dave Chinner's copy_file_range bounds
-> > > check test to reduce the requirements for running the bounds check.
-> > >
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> >
-> > I've just updated to the latest fstests, where this has landed as
-> > generic/554.  This test is failing on ext4, and should fail on all
-> > file systems which do not support copy_file_range (ext4, nfsv3, etc.),
-> > since xfs_io will fall back to emulating this via reading and writing
->
-> Why do you think this is xfs_io fall back and not kernel fall back to
-> do_splice_direct()? Anyway, both cases allow read from swapfile
-> on upstream.
->
-> > the file, and this causes a test failure because:
-> >
-> > > +echo swap files return ETXTBUSY
-> > > +_format_swapfile $testdir/swapfile 16m
-> > > +swapon $testdir/swapfile
-> > > +$XFS_IO_PROG -f -c "copy_range -l 32k $testdir/file" $testdir/swapfile
-> > > +$XFS_IO_PROG -f -c "copy_range -l 32k $testdir/swapfile" $testdir/copy
-> > > +swapoff $testdir/swapfile
-> >
-> > Currently, the VFS doesn't prevent us from reading a swap file.
-> > Perhaps it shouldn't, for security (theatre) reasons, but root can
-> > read the raw block device anyway, so it's really kind of pointless.
-> >
->
-> Hmm, my intention with the copy_file_range() behavior was that
-> it mostly follows user copy limitations/semantics.
-> I guess preventing copy *from* swapfile doesn't make much sense
-> and we should relax this check in the new c_f_r bounds check in VFS.
->
-> > I'm not sure what's the best way fix this, but I'm going to exclude
-> > this test in my test appliance builds for now.
-> >
->
-> Trying to understand the desired flow of tests and fixes.
-> I agree that generic/554 failure may be a test/interface bug that
-> we should fix in a way that current upstream passes the test for
-> ext4. Unless there is objection, I will send a patch to fix the test
-> to only test copy *to* swapfile.
+> > Shouldn't this check be moved before the modification of vmf->flags?
+> > It looks like do_page_mkwrite() isn't supposed to be returning with
+> > vmf->flags modified, lest "the caller gets surprised".
+> 
+> Yeah, I think that was a merge error during a rebase... :(
+> 
+> Er ... if you're still planning to take this patch through your tree,
+> can you move it to above the "vmf->flags = FAULT_FLAG_WRITE..." ?
 
-I made this change and test still failed on upstream ext4, because
-kernel performs copy_file_range() to swapfile.
-To me that seems like a real kernel bug, which is addressed by vfs
-c_f_r patches, so I don't know if you should be excluding the test
-from test appliance after all ?
+I was planning on only taking 8/8 through the ext4 tree.  I also added
+a patch which filtered writes, truncates, and page_mkwrites (but not
+mmap) for immutable files at the ext4 level.
 
-Thanks,
-Amir.
+I *could* take this patch through the mm/fs tree, but I wasn't sure
+what your plans were for the rest of the patch series, and it seemed
+like it hadn't gotten much review/attention from other fs or mm folks
+(well, I guess Brian Foster weighed in).
 
->
-> generic/553, OTOH, is expected to fail on upstream kernel.
-> Are you leaving 553 in appliance build in anticipation to upstream fix?
-> I guess the answer is in the ext4 IS_IMMUTABLE patch that you
-> posted and plan to push to upstream/stable sooner than VFS patches.
->
-> In any case, the VFS c_f_r patches are aiming for v5.3 and
-> I will make sure to promote them for stable as well.
->
-> Do you think that should there be a different policy w.r.t timing of
-> merging xfstests tests that fail on upstream kernel?
->
-> Thanks,
-> Amir.
+What do you think?
+
+						- Ted
+
+
+
