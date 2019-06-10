@@ -2,348 +2,159 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C781D3B695
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 15:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9315B3B69B
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 15:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390268AbfFJN6W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 09:58:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36440 "EHLO mx1.redhat.com"
+        id S2390631AbfFJN64 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 09:58:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44070 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389373AbfFJN6W (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:58:22 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S2390587AbfFJN6y (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 10 Jun 2019 09:58:54 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 950567FDEE;
-        Mon, 10 Jun 2019 13:58:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F6CAC057F3B;
+        Mon, 10 Jun 2019 13:58:54 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 289EF60BF1;
-        Mon, 10 Jun 2019 13:58:21 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 09:58:19 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D80765D6A9;
+        Mon, 10 Jun 2019 13:58:53 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 09:58:52 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] xfs: create simplified inode walk function
-Message-ID: <20190610135816.GA6473@bfoster>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 02/10] xfs: convert quotacheck to use the new iwalk
+ functions
+Message-ID: <20190610135848.GB6473@bfoster>
 References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
- <155968497450.1657646.15305138327955918345.stgit@magnolia>
+ <155968498085.1657646.3518168545540841602.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155968497450.1657646.15305138327955918345.stgit@magnolia>
+In-Reply-To: <155968498085.1657646.3518168545540841602.stgit@magnolia>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 10 Jun 2019 13:58:21 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 10 Jun 2019 13:58:54 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 02:49:34PM -0700, Darrick J. Wong wrote:
+On Tue, Jun 04, 2019 at 02:49:40PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a new iterator function to simplify walking inodes in an XFS
-> filesystem.  This new iterator will replace the existing open-coded
-> walking that goes on in various places.
+> Convert quotacheck to use the new iwalk iterator to dig through the
+> inodes.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
 > ---
->  fs/xfs/Makefile                  |    1 
->  fs/xfs/libxfs/xfs_ialloc_btree.c |   31 +++
->  fs/xfs/libxfs/xfs_ialloc_btree.h |    3 
->  fs/xfs/xfs_itable.c              |    5 
->  fs/xfs/xfs_itable.h              |    8 +
->  fs/xfs/xfs_iwalk.c               |  400 ++++++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_iwalk.h               |   18 ++
->  fs/xfs/xfs_trace.h               |   40 ++++
->  8 files changed, 502 insertions(+), 4 deletions(-)
->  create mode 100644 fs/xfs/xfs_iwalk.c
->  create mode 100644 fs/xfs/xfs_iwalk.h
+>  fs/xfs/xfs_qm.c |   62 ++++++++++++++++++-------------------------------------
+>  1 file changed, 20 insertions(+), 42 deletions(-)
 > 
 > 
+> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+> index aa6b6db3db0e..a5b2260406a8 100644
+> --- a/fs/xfs/xfs_qm.c
+> +++ b/fs/xfs/xfs_qm.c
 ...
-> diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-> index ac4b65da4c2b..cb7eac2f51c0 100644
-> --- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-> +++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-> @@ -564,6 +564,34 @@ xfs_inobt_max_size(
->  					XFS_INODES_PER_CHUNK);
+> @@ -1136,20 +1135,18 @@ xfs_qm_dqusage_adjust(
+>  	 * rootino must have its resources accounted for, not so with the quota
+>  	 * inodes.
+>  	 */
+> -	if (xfs_is_quota_inode(&mp->m_sb, ino)) {
+> -		*res = BULKSTAT_RV_NOTHING;
+> -		return -EINVAL;
+> -	}
+> +	if (xfs_is_quota_inode(&mp->m_sb, ino))
+> +		return 0;
+>  
+>  	/*
+>  	 * We don't _need_ to take the ilock EXCL here because quotacheck runs
+>  	 * at mount time and therefore nobody will be racing chown/chproj.
+>  	 */
+> -	error = xfs_iget(mp, NULL, ino, XFS_IGET_DONTCACHE, 0, &ip);
+> -	if (error) {
+> -		*res = BULKSTAT_RV_NOTHING;
+> +	error = xfs_iget(mp, tp, ino, XFS_IGET_DONTCACHE, 0, &ip);
+
+I was wondering if we should start using IGET_UNTRUSTED here, but I
+guess we're 1.) protected by quotacheck context and 2.) have the same
+record validity semantics as the existing bulkstat walker. LGTM:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+> +	if (error == -EINVAL || error == -ENOENT)
+> +		return 0;
+> +	if (error)
+>  		return error;
+> -	}
+>  
+>  	ASSERT(ip->i_delayed_blks == 0);
+>  
+> @@ -1157,7 +1154,7 @@ xfs_qm_dqusage_adjust(
+>  		struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
+>  
+>  		if (!(ifp->if_flags & XFS_IFEXTENTS)) {
+> -			error = xfs_iread_extents(NULL, ip, XFS_DATA_FORK);
+> +			error = xfs_iread_extents(tp, ip, XFS_DATA_FORK);
+>  			if (error)
+>  				goto error0;
+>  		}
+> @@ -1200,13 +1197,8 @@ xfs_qm_dqusage_adjust(
+>  			goto error0;
+>  	}
+>  
+> -	xfs_irele(ip);
+> -	*res = BULKSTAT_RV_DIDONE;
+> -	return 0;
+> -
+>  error0:
+>  	xfs_irele(ip);
+> -	*res = BULKSTAT_RV_GIVEUP;
+>  	return error;
 >  }
 >  
-> +/* Read AGI and create inobt cursor. */
-> +int
-> +xfs_inobt_cur(
-> +	struct xfs_mount	*mp,
-> +	struct xfs_trans	*tp,
-> +	xfs_agnumber_t		agno,
-> +	struct xfs_btree_cur	**curpp,
-> +	struct xfs_buf		**agi_bpp)
-> +{
-> +	struct xfs_btree_cur	*cur;
-> +	int			error;
-> +
-> +	ASSERT(*agi_bpp == NULL);
-> +
-
-FYI, the xfs_inobt_count_blocks() caller doesn't initialize the pointer
-according to the assert.
-
-> +	error = xfs_ialloc_read_agi(mp, tp, agno, agi_bpp);
-> +	if (error)
-> +		return error;
-> +
-> +	cur = xfs_inobt_init_cursor(mp, tp, *agi_bpp, agno, XFS_BTNUM_INO);
-> +	if (!cur) {
-> +		xfs_trans_brelse(tp, *agi_bpp);
-> +		*agi_bpp = NULL;
-> +		return -ENOMEM;
-> +	}
-> +	*curpp = cur;
-> +	return 0;
-> +}
-> +
->  static int
->  xfs_inobt_count_blocks(
->  	struct xfs_mount	*mp,
-...
-> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-> new file mode 100644
-> index 000000000000..3e6c06e69c75
-> --- /dev/null
-> +++ b/fs/xfs/xfs_iwalk.c
-> @@ -0,0 +1,400 @@
-...
-> +/* Walk all inodes in a single AG, from @iwag->startino to the end of the AG. */
-> +STATIC int
-> +xfs_iwalk_ag(
-> +	struct xfs_iwalk_ag		*iwag)
-> +{
-> +	struct xfs_mount		*mp = iwag->mp;
-> +	struct xfs_trans		*tp = iwag->tp;
-> +	struct xfs_buf			*agi_bp = NULL;
-> +	struct xfs_btree_cur		*cur = NULL;
-> +	xfs_agnumber_t			agno;
-> +	xfs_agino_t			agino;
-> +	int				has_more;
-> +	int				error = 0;
-> +
-> +	/* Set up our cursor at the right place in the inode btree. */
-> +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
-> +	agino = XFS_INO_TO_AGINO(mp, iwag->startino);
-> +	error = xfs_iwalk_ag_start(iwag, agno, agino, &cur, &agi_bp, &has_more);
-> +
-> +	while (!error && has_more) {
-> +		struct xfs_inobt_rec_incore	*irec;
-> +
-> +		cond_resched();
-> +
-> +		/* Fetch the inobt record. */
-> +		irec = &iwag->recs[iwag->nr_recs];
-> +		error = xfs_inobt_get_rec(cur, irec, &has_more);
-> +		if (error || !has_more)
-> +			break;
-> +
-> +		/* No allocated inodes in this chunk; skip it. */
-> +		if (irec->ir_freecount == irec->ir_count) {
-> +			error = xfs_btree_increment(cur, 0, &has_more);
-> +			if (error)
-> +				break;
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * Start readahead for this inode chunk in anticipation of
-> +		 * walking the inodes.
-> +		 */
-> +		xfs_bulkstat_ichunk_ra(mp, agno, irec);
-> +
-> +		/*
-> +		 * If there's space in the buffer for more records, increment
-> +		 * the btree cursor and grab more.
-> +		 */
-> +		if (++iwag->nr_recs < iwag->sz_recs) {
-> +			error = xfs_btree_increment(cur, 0, &has_more);
-> +			if (error || !has_more)
-> +				break;
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * Otherwise, we need to save cursor state and run the callback
-> +		 * function on the cached records.  The run_callbacks function
-> +		 * is supposed to return a cursor pointing to the record where
-> +		 * we would be if we had been able to increment like above.
-> +		 */
-> +		error = xfs_iwalk_run_callbacks(iwag, xfs_iwalk_ag_recs, agno,
-> +				&cur, &agi_bp, &has_more);
-> +	}
-> +
-> +	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
-> +
-> +	/* Walk any records left behind in the cache. */
-> +	if (iwag->nr_recs == 0 || error)
-> +		return error;
-> +
-> +	return xfs_iwalk_ag_recs(iwag);
-
-Hmm, I find the above pattern to process the leftover records a bit
-confusing because of how it is open coded. Could we find a way to reuse
-xfs_iwalk_run_callbacks() in both cases so it looks more obvious? For
-example, pass a flag to indicate whether the callback helper should
-recreate the cursor for continued processing. FWIW, it looks like
-has_more already reflects that state in the current logic above.
-
-> +}
-> +
-> +/*
-> + * Given the number of inodes to prefetch, set the number of inobt records that
-> + * we cache in memory, which controls the number of inodes we try to read
-> + * ahead.
-> + *
-> + * If no max prefetch was given, default to 4096 bytes' worth of inobt records;
-> + * this should be plenty of inodes to read ahead.  This number (256 inobt
-> + * records) was chosen so that the cache is never more than a single memory
-> + * page.
-> + */
-> +static inline void
-> +xfs_iwalk_set_prefetch(
-> +	struct xfs_iwalk_ag	*iwag,
-> +	unsigned int		max_prefetch)
-> +{
-> +	if (max_prefetch)
-> +		iwag->sz_recs = round_up(max_prefetch, XFS_INODES_PER_CHUNK) /
-> +					XFS_INODES_PER_CHUNK;
-> +	else
-> +		iwag->sz_recs = 4096 / sizeof(struct xfs_inobt_rec_incore);
-> +
-
-Perhaps this should use PAGE_SIZE or a related macro?
-
-Brian
-
-> +	/*
-> +	 * Allocate enough space to prefetch at least two records so that we
-> +	 * can cache both the inobt record where the iwalk started and the next
-> +	 * record.  This simplifies the AG inode walk loop setup code.
-> +	 */
-> +	iwag->sz_recs = max_t(unsigned int, iwag->sz_recs, 2);
-> +}
-> +
-> +/*
-> + * Walk all inodes in the filesystem starting from @startino.  The @iwalk_fn
-> + * will be called for each allocated inode, being passed the inode's number and
-> + * @data.  @max_prefetch controls how many inobt records' worth of inodes we
-> + * try to readahead.
-> + */
-> +int
-> +xfs_iwalk(
-> +	struct xfs_mount	*mp,
-> +	struct xfs_trans	*tp,
-> +	xfs_ino_t		startino,
-> +	xfs_iwalk_fn		iwalk_fn,
-> +	unsigned int		max_prefetch,
-> +	void			*data)
-> +{
-> +	struct xfs_iwalk_ag	iwag = {
-> +		.mp		= mp,
-> +		.tp		= tp,
-> +		.iwalk_fn	= iwalk_fn,
-> +		.data		= data,
-> +		.startino	= startino,
-> +	};
-> +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
-> +	int			error;
-> +
-> +	ASSERT(agno < mp->m_sb.sb_agcount);
-> +
-> +	xfs_iwalk_set_prefetch(&iwag, max_prefetch);
-> +	error = xfs_iwalk_alloc(&iwag);
-> +	if (error)
-> +		return error;
-> +
-> +	for (; agno < mp->m_sb.sb_agcount; agno++) {
-> +		error = xfs_iwalk_ag(&iwag);
-> +		if (error)
-> +			break;
-> +		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-> +	}
-> +
-> +	xfs_iwalk_free(&iwag);
-> +	return error;
-> +}
-> diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
-> new file mode 100644
-> index 000000000000..45b1baabcd2d
-> --- /dev/null
-> +++ b/fs/xfs/xfs_iwalk.h
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> + */
-> +#ifndef __XFS_IWALK_H__
-> +#define __XFS_IWALK_H__
-> +
-> +/* Walk all inodes in the filesystem starting from @startino. */
-> +typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
-> +			    xfs_ino_t ino, void *data);
-> +/* Return value (for xfs_iwalk_fn) that aborts the walk immediately. */
-> +#define XFS_IWALK_ABORT	(1)
-> +
-> +int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
-> +		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, void *data);
-> +
-> +#endif /* __XFS_IWALK_H__ */
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index 2464ea351f83..f9bb1d50bc0e 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -3516,6 +3516,46 @@ DEFINE_EVENT(xfs_inode_corrupt_class, name,	\
->  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_sick);
->  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_healthy);
+> @@ -1270,18 +1262,13 @@ STATIC int
+>  xfs_qm_quotacheck(
+>  	xfs_mount_t	*mp)
+>  {
+> -	int			done, count, error, error2;
+> -	xfs_ino_t		lastino;
+> -	size_t			structsz;
+> +	int			error, error2;
+>  	uint			flags;
+>  	LIST_HEAD		(buffer_list);
+>  	struct xfs_inode	*uip = mp->m_quotainfo->qi_uquotaip;
+>  	struct xfs_inode	*gip = mp->m_quotainfo->qi_gquotaip;
+>  	struct xfs_inode	*pip = mp->m_quotainfo->qi_pquotaip;
 >  
-> +TRACE_EVENT(xfs_iwalk_ag,
-> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
-> +		 xfs_agino_t startino),
-> +	TP_ARGS(mp, agno, startino),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(xfs_agnumber_t, agno)
-> +		__field(xfs_agino_t, startino)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = mp->m_super->s_dev;
-> +		__entry->agno = agno;
-> +		__entry->startino = startino;
-> +	),
-> +	TP_printk("dev %d:%d agno %d startino %u",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
-> +		  __entry->startino)
-> +)
-> +
-> +TRACE_EVENT(xfs_iwalk_ag_rec,
-> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
-> +		 struct xfs_inobt_rec_incore *irec),
-> +	TP_ARGS(mp, agno, irec),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(xfs_agnumber_t, agno)
-> +		__field(xfs_agino_t, startino)
-> +		__field(uint64_t, freemask)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = mp->m_super->s_dev;
-> +		__entry->agno = agno;
-> +		__entry->startino = irec->ir_startino;
-> +		__entry->freemask = irec->ir_free;
-> +	),
-> +	TP_printk("dev %d:%d agno %d startino %u freemask 0x%llx",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
-> +		  __entry->startino, __entry->freemask)
-> +)
-> +
->  #endif /* _TRACE_XFS_H */
+> -	count = INT_MAX;
+> -	structsz = 1;
+> -	lastino = 0;
+>  	flags = 0;
 >  
->  #undef TRACE_INCLUDE_PATH
+>  	ASSERT(uip || gip || pip);
+> @@ -1318,18 +1305,9 @@ xfs_qm_quotacheck(
+>  		flags |= XFS_PQUOTA_CHKD;
+>  	}
+>  
+> -	do {
+> -		/*
+> -		 * Iterate thru all the inodes in the file system,
+> -		 * adjusting the corresponding dquot counters in core.
+> -		 */
+> -		error = xfs_bulkstat(mp, &lastino, &count,
+> -				     xfs_qm_dqusage_adjust,
+> -				     structsz, NULL, &done);
+> -		if (error)
+> -			break;
+> -
+> -	} while (!done);
+> +	error = xfs_iwalk(mp, NULL, 0, xfs_qm_dqusage_adjust, 0, NULL);
+> +	if (error)
+> +		goto error_return;
+>  
+>  	/*
+>  	 * We've made all the changes that we need to make incore.  Flush them
 > 
