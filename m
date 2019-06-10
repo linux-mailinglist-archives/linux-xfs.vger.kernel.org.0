@@ -2,68 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34F1E3B8F9
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 18:06:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D32F73B8FA
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 18:06:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391445AbfFJQG2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 12:06:28 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:32936 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391391AbfFJQG2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 12:06:28 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AFwmIp002646;
-        Mon, 10 Jun 2019 16:06:22 GMT
+        id S2391446AbfFJQGc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 12:06:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33126 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391391AbfFJQGc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 12:06:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AFwmFb177659;
+        Mon, 10 Jun 2019 16:06:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=NWkvhza8ynvwYsC1qZewWsp0B55TEdAikKlFfUPZE+Y=;
- b=ZEWmYPZuzha19t0R8ZmPL9bb5nk2gqbHipWQREDmwMXTokojAQrD6pweQwmu9rDM7SXv
- CZLsnXAHWK2JUCQtb7xYY2uB9mfCPsHGuWQ6ljaJsnSIRIMN9Apn53L7Fe0KaR/6SW+Z
- ony4vGg8ynOzuPKEdBqt1jsGK3nhHQ4AmaUd6BthbJrC+NwcE6eypWL+fX3p/HZL+7Od
- edAdBfUX9vtMUAL0Ox5b3prbgtLFeAfSRPQ8om3Gufme47m/oAtsZrhJF7pIo5EOjJca
- xXEt92Yd8b6RB7ZLlxHLXIOTfCMZD2QxBvWRWZGrJMpxmpAVNqP9T1pOTekPZ/HpH8xT Ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2t02heg0ts-1
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=35LE6B7Ini09DnT9GNQejfwmIbE+MCFl54VICp/cirA=;
+ b=owgyJa1wup+uAazy8RUcYMrChbFFDhjRhho3UzbMVEJEfn9rSnKg03aGD3vXu0bkoqOU
+ AwkRKi05kvdOnWynhxnmn7Egdbc91P76GlQXNIbqJKXNO0Gv3PmJwGg0eEi9OfjAPexN
+ cCRVexyzp0ku2oNMKmsaM71g3XtYbCGrMBSCMRsy8MbYptyIeotY08lQmVHDhz8/DQ7j
+ BYugAmZkgPms2SE9qjvaV6jIBuyVyq+VQkAY7xnZVdf5n0PD6bhEJeMfSXRoMR/IxREO
+ jl75W66yLmeQI0/dStWt7WMi3QCiqdC1OrvHMTAY3MpPHrKwZIUkTQXkb/lwWPHkES+c 0g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t04etfv7v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 16:06:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AG4k37018174;
-        Mon, 10 Jun 2019 16:06:21 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2t1jpgxwty-1
+        Mon, 10 Jun 2019 16:06:27 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AG67iX143155;
+        Mon, 10 Jun 2019 16:06:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2t0p9qt3w3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 16:06:21 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5AG6Krc008538;
-        Mon, 10 Jun 2019 16:06:20 GMT
+        Mon, 10 Jun 2019 16:06:26 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5AG6PdH022913;
+        Mon, 10 Jun 2019 16:06:25 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Jun 2019 09:06:19 -0700
-Date:   Mon, 10 Jun 2019 09:06:16 -0700
+        with ESMTP ; Mon, 10 Jun 2019 09:06:25 -0700
+Date:   Mon, 10 Jun 2019 09:06:24 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Eryu Guan <guaneryu@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        fstests <fstests@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] generic: copy_file_range swapfile test
-Message-ID: <20190610160616.GE1688126@magnolia>
-References: <20190602124114.26810-1-amir73il@gmail.com>
- <20190602124114.26810-4-amir73il@gmail.com>
- <20190610035829.GA18429@mit.edu>
- <CAOQ4uxi-s6ncLGjh_u5x4DFK+dvcaobDCqup_ZV3mZOYDRuOEQ@mail.gmail.com>
- <20190610133131.GE15963@mit.edu>
+To:     xfs <linux-xfs@vger.kernel.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        olga.kornievskaia@gmail.com, amir73il@gmail.com,
+        "Theodore Ts'o" <tytso@mit.edu>, Dave Chinner <david@fromorbit.com>
+Subject: [ANNOUNCE] xfs-linux: copy-file-range-fixes updated to fe0da9c09b2d
+Message-ID: <20190610160624.GG1871505@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610133131.GE15963@mit.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=988
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906100109
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
@@ -77,94 +67,54 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:31:31AM -0400, Theodore Ts'o wrote:
-> On Mon, Jun 10, 2019 at 09:37:32AM +0300, Amir Goldstein wrote:
-> >
-> >Why do you think thhis is xfs_io fall back and not kernel fall back to
-> >do_splice_direct()? Anyway, both cases allow read from swapfile
-> >on upstream.
-> 
-> Ah, I had assumed this was changed that was made because if you are
-> implementing copy_file_range in terms of some kind of reflink-like
-> mechanism, it becomes super-messy since you know have to break tons
-> and tons of COW sharing each time the kernel swaps to the swap file.
-> 
-> I didn't think we had (or maybe we did, and I missed it) a discussion
-> about whether reading from a swap file should be prohibited.
-> Personally, I think it's security theatre, and not worth the
-> effort/overhead, but whatever.... my main complaint was with the
-> unnecessary test failures with upstream kernels.
-> 
-> > Trying to understand the desired flow of tests and fixes. 
-> > I agree that generic/554 failure may be a test/interface bug that
-> > we should fix in a way that current upstream passes the test for
-> > ext4. Unless there is objection, I will send a patch to fix the test
-> > to only test copy *to* swapfile.
-> > 
-> > generic/553, OTOH, is expected to fail on upstream kernel.
-> > Are you leaving 553 in appliance build in anticipation to upstream fix?
-> > I guess the answer is in the ext4 IS_IMMUTABLE patch that you
-> > posted and plan to push to upstream/stable sooner than VFS patches.
-> 
-> So I find it kind of annoying when tests land before the fixes do
-> upstream.  I still have this in my global_exclude file:
+Hi folks,
 
-Yeah, it's awkward for VFS fixes because on the one hand we don't want
-to have multiyear regressions like generic/484, but OTOH stuffing tests
-in before code goes upstream enables broader testing by the other fs
-maintainers.
+The copy-file-range-fixes branch of the xfs-linux repository at:
 
-In any case, the fixes are in the copy-range-fixes branch which I'm
-finally publishing...
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-> # The proposed fix for generic/484, "locks: change POSIX lock
-> # ownership on execve when files_struct is displaced" would break NFS
-> # Jeff Layton and Eric Biederman have some ideas for how to address it
-> # but fixing it is non-trivial
+has just been updated.  This is a common branch from which everyone else
+can create their own copy-file-range fix branches for 5.3.  When you
+send your pull request to Linus please let him know that the fixes
+stream out from here like some kind of hydra. :)
 
-Also, uh, can we remove this from the auto and quick groups for now?
+FWIW these patches are the fixes for the problems that have been
+reported in generic/553 and generic/554.
 
---D
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-fsdevel@vger.kernel.org so they can be picked up
+in the next update.
 
-> generic/484
-> 
-> The generic/484 test landed in August 2018, and as far as I know, the
-> issue which it is testing for *still* hasn't been fixed upstream.
-> (There were issues raised with the proposed fix, and it looks like the
-> people looking at the kernel change have lost interest.)
-> 
-> The problem is that there are people who are trying to use xfstests to
-> look for failures, and unless they start digging into the kernel
-> archives from last year, they won't understand that generic/484 is a
-> known failing test, and it will get fixed....someday.
-> 
-> For people in the know, or for people who use my kvm-xfstests,
-> gce-xfstests, it's not a big problem, since I've already blacklisted
-> the test.  But not everyone (and in fact, probably most people don't)
-> use my front end scripts.
-> 
-> For generic/553, I have a fix in ext4 so it will clear the failure,
-> and that's fine, since I think we've all agreed in principle what the
-> correct fix will be, and presumably it will get fixed soon.  At that
-> point, I might revert the commit from ext4, and rely on the VFS to
-> catch the error, but the overhead of a few extra unlikely() tests
-> aren't that big.  But yeah, I did that mainly because unnecessary test
-> failures because doing an ext4-specific fix didn't have many
-> downsides, and one risk of adding tests to the global exclude file is
-> that I then have to remember to remove it from the global exclude file
-> when the issue is finally fixed upstream.
-> 
-> > Do you think that should there be a different policy w.r.t timing of
-> > merging xfstests tests that fail on upstream kernel?
-> 
-> That's my opinion, and generic/484 is the best argument for why we
-> should wait.  Other people may have other opinions though, and I have
-> a workaround, so I don't feel super-strong about it.  (generic/454 is
-> now the second test in my global exclude file.  :-)
-> 
-> At the very *least* there should be a comment in the test that fix is
-> pending, and might not be applied yet, with a URL to the mailing list
-> discussion.  That will save effort when months (years?) go by, and the
-> fix still hasn't landed the upstream kernel....
-> 
-> 	       	       	      	      - Ted
+The new head of the copy-file-range-fixes branch is commit:
+
+fe0da9c09b2d fuse: copy_file_range needs to strip setuid bits and update timestamps
+
+New Commits:
+
+Amir Goldstein (7):
+      [a31713517dac] vfs: introduce generic_file_rw_checks()
+      [646955cd5425] vfs: remove redundant checks from generic_remap_checks()
+      [96e6e8f4a68d] vfs: add missing checks to copy_file_range
+      [e38f7f53c352] vfs: introduce file_modified() helper
+      [8c3f406c097b] xfs: use file_modified() helper
+      [5dae222a5ff0] vfs: allow copy_file_range to copy across devices
+      [fe0da9c09b2d] fuse: copy_file_range needs to strip setuid bits and update timestamps
+
+Dave Chinner (2):
+      [f16acc9d9b37] vfs: introduce generic_copy_file_range()
+      [64bf5ff58dff] vfs: no fallback for ->copy_file_range
+
+
+Code Diffstat:
+
+ fs/ceph/file.c     |  23 ++++++++--
+ fs/cifs/cifsfs.c   |   4 ++
+ fs/fuse/file.c     |  29 +++++++++++--
+ fs/inode.c         |  20 +++++++++
+ fs/nfs/nfs4file.c  |  23 ++++++++--
+ fs/read_write.c    | 124 +++++++++++++++++++++++++++++------------------------
+ fs/xfs/xfs_file.c  |  15 +------
+ include/linux/fs.h |   9 ++++
+ mm/filemap.c       | 110 ++++++++++++++++++++++++++++++++++++++---------
+ 9 files changed, 257 insertions(+), 100 deletions(-)
