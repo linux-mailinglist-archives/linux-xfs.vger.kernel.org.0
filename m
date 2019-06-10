@@ -2,128 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F903BCCF
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 21:28:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10F683BCDC
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jun 2019 21:32:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389147AbfFJT2t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 15:28:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51628 "EHLO mx1.redhat.com"
+        id S2389141AbfFJTcN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 15:32:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57364 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfFJT2s (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:28:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S2389059AbfFJTcN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:32:13 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D9FFB120D7;
-        Mon, 10 Jun 2019 19:28:23 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A734160C47;
-        Mon, 10 Jun 2019 19:28:04 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 15:28:03 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v11 4/7] dm: enable synchronous dax
-Message-ID: <20190610192803.GA29002@redhat.com>
-References: <20190610090730.8589-1-pagupta@redhat.com>
- <20190610090730.8589-5-pagupta@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id EC1B52F8BEB;
+        Mon, 10 Jun 2019 19:32:12 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96D795C1B4;
+        Mon, 10 Jun 2019 19:32:12 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 15:32:10 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 06/10] xfs: change xfs_iwalk_grab_ichunk to use startino,
+ not lastino
+Message-ID: <20190610193210.GH6473@bfoster>
+References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
+ <155968500594.1657646.11152617991338213789.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610090730.8589-5-pagupta@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 10 Jun 2019 19:28:48 +0000 (UTC)
+In-Reply-To: <155968500594.1657646.11152617991338213789.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 10 Jun 2019 19:32:13 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10 2019 at  5:07am -0400,
-Pankaj Gupta <pagupta@redhat.com> wrote:
-
->  This patch sets dax device 'DAXDEV_SYNC' flag if all the target
->  devices of device mapper support synchrononous DAX. If device
->  mapper consists of both synchronous and asynchronous dax devices,
->  we don't set 'DAXDEV_SYNC' flag.
+On Tue, Jun 04, 2019 at 02:50:06PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> Now that the inode chunk grabbing function is a static function in the
+> iwalk code, change its behavior so that @agino is the inode where we
+> want to /start/ the iteration.  This reduces cognitive friction with the
+> callers and simplifes the code.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  drivers/md/dm-table.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/xfs_iwalk.c |   37 +++++++++++++++++--------------------
+>  1 file changed, 17 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-> index 350cf0451456..c5160d846fe6 100644
-> --- a/drivers/md/dm-table.c
-> +++ b/drivers/md/dm-table.c
-> @@ -890,10 +890,17 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
->  			start, len);
+> 
+> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+> index bef0c4907781..9ad017ddbae7 100644
+> --- a/fs/xfs/xfs_iwalk.c
+> +++ b/fs/xfs/xfs_iwalk.c
+> @@ -99,10 +99,10 @@ xfs_iwalk_ichunk_ra(
 >  }
 >  
-> +static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
-> +				       sector_t start, sector_t len, void *data)
-> +{
-> +	return dax_synchronous(dev->dax_dev);
-> +}
-> +
->  bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+>  /*
+> - * Lookup the inode chunk that the given inode lives in and then get the record
+> - * if we found the chunk.  If the inode was not the last in the chunk and there
+> - * are some left allocated, update the data for the pointed-to record as well as
+> - * return the count of grabbed inodes.
+> + * Lookup the inode chunk that the given @agino lives in and then get the
+> + * record if we found the chunk.  Set the bits in @irec's free mask that
+> + * correspond to the inodes before @agino so that we skip them.  This is how we
+> + * restart an inode walk that was interrupted in the middle of an inode record.
+>   */
+>  STATIC int
+>  xfs_iwalk_grab_ichunk(
+> @@ -113,6 +113,7 @@ xfs_iwalk_grab_ichunk(
 >  {
->  	struct dm_target *ti;
->  	unsigned i;
-> +	bool dax_sync = true;
+>  	int				idx;	/* index into inode chunk */
+>  	int				stat;
+> +	int				i;
+>  	int				error = 0;
 >  
->  	/* Ensure that all targets support DAX. */
->  	for (i = 0; i < dm_table_get_num_targets(t); i++) {
-> @@ -906,7 +913,14 @@ bool dm_table_supports_dax(struct dm_table *t, int blocksize)
->  		    !ti->type->iterate_devices(ti, device_supports_dax,
->  			    &blocksize))
->  			return false;
-> +
-> +		/* Check devices support synchronous DAX */
-> +		if (dax_sync &&
-> +		    !ti->type->iterate_devices(ti, device_synchronous, NULL))
-> +			dax_sync = false;
+>  	/* Lookup the inode chunk that this inode lives in */
+> @@ -136,24 +137,20 @@ xfs_iwalk_grab_ichunk(
+>  		return 0;
 >  	}
-> +	if (dax_sync)
-> +		set_dax_synchronous(t->md->dax_dev);
 >  
->  	return true;
+> -	idx = agino - irec->ir_startino + 1;
+> -	if (idx < XFS_INODES_PER_CHUNK &&
+> -	    (xfs_inobt_maskn(idx, XFS_INODES_PER_CHUNK - idx) & ~irec->ir_free)) {
+> -		int	i;
+> +	idx = agino - irec->ir_startino;
+>  
+> -		/* We got a right chunk with some left inodes allocated at it.
+> -		 * Grab the chunk record.  Mark all the uninteresting inodes
+> -		 * free -- because they're before our start point.
+> -		 */
+> -		for (i = 0; i < idx; i++) {
+> -			if (XFS_INOBT_MASK(i) & ~irec->ir_free)
+> -				irec->ir_freecount++;
+> -		}
+> -
+> -		irec->ir_free |= xfs_inobt_maskn(0, idx);
+> -		*icount = irec->ir_count - irec->ir_freecount;
+> +	/*
+> +	 * We got a right chunk with some left inodes allocated at it.  Grab
+> +	 * the chunk record.  Mark all the uninteresting inodes free because
+> +	 * they're before our start point.
+> +	 */
+> +	for (i = 0; i < idx; i++) {
+> +		if (XFS_INOBT_MASK(i) & ~irec->ir_free)
+> +			irec->ir_freecount++;
+>  	}
+>  
+> +	irec->ir_free |= xfs_inobt_maskn(0, idx);
+> +	*icount = irec->ir_count - irec->ir_freecount;
+>  	return 0;
 >  }
-> -- 
-> 2.20.1
+>  
+> @@ -281,7 +278,7 @@ xfs_iwalk_ag_start(
+>  	 * We require a lookup cache of at least two elements so that we don't
+>  	 * have to deal with tearing down the cursor to walk the records.
+>  	 */
+> -	error = xfs_iwalk_grab_ichunk(*curpp, agino - 1, &icount,
+> +	error = xfs_iwalk_grab_ichunk(*curpp, agino, &icount,
+>  			&iwag->recs[iwag->nr_recs]);
+>  	if (error)
+>  		return error;
 > 
-
-dm_table_supports_dax() is called multiple times (from
-dm_table_set_restrictions and dm_table_determine_type).  It is strange
-to have a getter have a side-effect of being a setter too.  Overloading
-like this could get you in trouble in the future.
-
-Are you certain this is what you want?
-
-Or would it be better to refactor dm_table_supports_dax() to take an
-iterate_devices_fn arg and have callers pass the appropriate function?
-Then have dm_table_set_restrictions() caller do:
-
-     if (dm_table_supports_dax(t, device_synchronous, NULL))
-     	  set_dax_synchronous(t->md->dax_dev);
-
-(NULL arg implies dm_table_supports_dax() refactoring would take a int
-*data pointer rather than int type).
-
-Mike
