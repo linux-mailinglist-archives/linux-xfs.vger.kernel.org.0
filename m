@@ -2,115 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0543C611
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 10:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02A393C659
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 10:47:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfFKIjb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jun 2019 04:39:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57712 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725766AbfFKIjb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:39:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 13652AE4D;
-        Tue, 11 Jun 2019 08:39:30 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH] ceph: copy_file_range needs to strip setuid bits and update timestamps
-References: <20190610174007.4818-1-amir73il@gmail.com>
-Date:   Tue, 11 Jun 2019 09:39:27 +0100
-In-Reply-To: <20190610174007.4818-1-amir73il@gmail.com> (Amir Goldstein's
-        message of "Mon, 10 Jun 2019 20:40:07 +0300")
-Message-ID: <87h88w8qio.fsf@suse.com>
+        id S2404599AbfFKIqy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jun 2019 04:46:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39196 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404584AbfFKIqx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jun 2019 04:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cNT8SfWaLkXjgqmsFDWvaOVNESNX+QbYAKxk0xhI0W0=; b=n1b0oFfHVEu6jBHxnX4OfV9rC
+        005648tg5kxnPJqnDPlCqe4TgSU/HgiKUTXmqn0ueBKJ1algMuduGWUdpN/ijDNPfoPPGYymZAMRY
+        OqcfYnd7I7sH5G42Y8kFug3ARqpQdEmCQ+ON2O3wV48wD1t8HxD8g7hxBhvcEQWfH7uO3Kr4Sc27i
+        5Z56VOXWoT9kpXn9AlyIiyiNX4B6bJXiu8ZIAw4DogxaiQ2apJSg5hiH8ZLr5i7XXDgUUDJwTn/Ik
+        zejoNCGHfKIdwxNLwkfySY3l7TRGDpYsCZQsn7XnvrYBvj5Cvk370eOVzuZdtk4mxm3AKPqY1ANPL
+        uriTMZHxg==;
+Received: from [213.208.157.36] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hacQb-0003W8-Kf; Tue, 11 Jun 2019 08:46:50 +0000
+Date:   Tue, 11 Jun 2019 10:46:46 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/20] xfs: stop using XFS_LI_ABORTED as a parameter flag
+Message-ID: <20190611084646.GA22981@infradead.org>
+References: <20190517073119.30178-1-hch@lst.de>
+ <20190517073119.30178-3-hch@lst.de>
+ <20190520220844.GD5335@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520220844.GD5335@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Amir Goldstein <amir73il@gmail.com> writes:
+On Mon, May 20, 2019 at 03:08:44PM -0700, Darrick J. Wong wrote:
+> > -xlog_state_do_callback(
+> > -	struct xlog		*log,
+> > -	int			aborted,
+> > -	struct xlog_in_core	*iclog);
+> > +STATIC void xlog_state_done_syncing(
+> > +	struct xlog_in_core	*iclog,
+> > +	bool			aborted);
+> 
+> I totally mistook this for a function definition. :/
+> 
+> STATIC void xlog_state_done_syncing(struct xlog_in_core *iclog, bool aborted);
+> 
+> ...seems to fit on one line, right?
 
-> Because ceph doesn't hold destination inode lock throughout the copy,
-> strip setuid bits before and after copy.
->
-> The destination inode mtime is updated before and after the copy and the
-> source inode atime is updated after the copy, similar to the filesystem
-> ->read_iter() implementation.
->
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> ---
->
-> Hi Ilya,
->
-> Please consider applying this patch to ceph branch after merging
-> Darrick's copy-file-range-fixes branch from:
->         git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
->
-> The series (including this patch) was tested on ceph by
-> Luis Henriques using new copy_range xfstests.
->
-> AFAIK, only fallback from ceph to generic_copy_file_range()
-> implementation was tested and not the actual ceph clustered
-> copy_file_range.
-
-JFYI I've also run tests that exercise the ceph implementation,
-i.e. that actually do the copy offload.  It's the xfstests that (AFAIR)
-only exercise the generic VFS copy_file_range as they never meet the
-requirements for this copy offload to happen (for example, the copy must
-be at least the same length as the files object size which is 4M by
-default).
-
-Cheers,
--- 
-Luis
-
-
->
-> Thanks,
-> Amir.
->
->  fs/ceph/file.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index c5517ffeb11c..b04c97c7d393 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -1949,6 +1949,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  		goto out;
->  	}
->  
-> +	/* Should dst_inode lock be held throughout the copy operation? */
-> +	inode_lock(dst_inode);
-> +	ret = file_modified(dst_file);
-> +	inode_unlock(dst_inode);
-> +	if (ret < 0) {
-> +		dout("failed to modify dst file before copy (%zd)\n", ret);
-> +		goto out;
-> +	}
-> +
->  	/*
->  	 * We need FILE_WR caps for dst_ci and FILE_RD for src_ci as other
->  	 * clients may have dirty data in their caches.  And OSDs know nothing
-> @@ -2099,6 +2108,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->  out:
->  	ceph_free_cap_flush(prealloc_cf);
->  
-> +	file_accessed(src_file);
-> +	/* To be on the safe side, try to remove privs also after copy */
-> +	inode_lock(dst_inode);
-> +	err = file_modified(dst_file);
-> +	inode_unlock(dst_inode);
-> +	if (err < 0)
-> +		dout("failed to modify dst file after copy (%d)\n", err);
-> +
->  	return ret;
->  }
+Yes, but this style is used by all the forward declarations in
+xfs_log.c.  Eventually we should fix them all, or even better get rid
+of most of them.
