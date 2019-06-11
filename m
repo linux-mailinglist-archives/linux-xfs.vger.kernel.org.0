@@ -2,349 +2,256 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B49983D333
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 19:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085493D33B
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 19:03:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405631AbfFKRBp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jun 2019 13:01:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38952 "EHLO mx1.redhat.com"
+        id S2405656AbfFKRDD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jun 2019 13:03:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56772 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405479AbfFKRBo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:01:44 -0400
+        id S2404282AbfFKRDD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:03:03 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50E50307CDE7;
-        Tue, 11 Jun 2019 17:01:44 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA28A19C70;
-        Tue, 11 Jun 2019 17:01:42 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 13:01:41 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 10/10] xfs: refactor INUMBERS to use iwalk functions
-Message-ID: <20190611170137.GC12395@bfoster>
-References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
- <155968503328.1657646.15035810252397604734.stgit@magnolia>
- <20190611150851.GC10942@bfoster>
- <20190611162127.GT1871505@magnolia>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8D67530C252E;
+        Tue, 11 Jun 2019 17:02:37 +0000 (UTC)
+Received: from gondolin (ovpn-204-147.brq.redhat.com [10.40.204.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E032C19698;
+        Tue, 11 Jun 2019 17:02:14 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 19:02:09 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
+        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
+        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
+        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
+        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
+        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
+        david@redhat.com, david@fromorbit.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
+        rdunlap@infradead.org, snitzer@redhat.com
+Subject: Re: [PATCH v12 2/7] virtio-pmem: Add virtio pmem driver
+Message-ID: <20190611190209.0b25033e.cohuck@redhat.com>
+In-Reply-To: <20190611163802.25352-3-pagupta@redhat.com>
+References: <20190611163802.25352-1-pagupta@redhat.com>
+        <20190611163802.25352-3-pagupta@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611162127.GT1871505@magnolia>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 11 Jun 2019 17:01:44 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 11 Jun 2019 17:03:02 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:21:28AM -0700, Darrick J. Wong wrote:
-> On Tue, Jun 11, 2019 at 11:08:51AM -0400, Brian Foster wrote:
-> > On Tue, Jun 04, 2019 at 02:50:33PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > Now that we have generic functions to walk inode records, refactor the
-> > > INUMBERS implementation to use it.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  fs/xfs/xfs_ioctl.c   |   20 ++++--
-> > >  fs/xfs/xfs_ioctl.h   |    2 +
-> > >  fs/xfs/xfs_ioctl32.c |   35 ++++------
-> > >  fs/xfs/xfs_itable.c  |  168 ++++++++++++++++++++------------------------------
-> > >  fs/xfs/xfs_itable.h  |   22 +------
-> > >  fs/xfs/xfs_iwalk.c   |  161 ++++++++++++++++++++++++++++++++++++++++++++++--
-> > >  fs/xfs/xfs_iwalk.h   |   12 ++++
-> > 
-> > It looks like there's a decent amount of xfs_iwalk code changes in this
-> > patch. That should probably be a separate patch, at minimum to have a
-> > separate changelog to document the changes/updates required for
-> > inumbers.
-> 
-> <nod> I'll break out the iwalk changes into a separate patch so that
-> this one only has the changes needed to wire up the ioctl.
-> 
-> > >  7 files changed, 262 insertions(+), 158 deletions(-)
-> > > 
-> > > 
-> > ...
-> > > diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> > > index 06abe5c9c0ee..bade54d6ac64 100644
-> > > --- a/fs/xfs/xfs_itable.c
-> > > +++ b/fs/xfs/xfs_itable.c
-> > > @@ -259,121 +259,85 @@ xfs_bulkstat(
-> > >  	return error;
-> > >  }
-> > >  
-> > > -int
-> > > -xfs_inumbers_fmt(
-> > > -	void			__user *ubuffer, /* buffer to write to */
-> > > -	const struct xfs_inogrp	*buffer,	/* buffer to read from */
-> > > -	long			count,		/* # of elements to read */
-> > > -	long			*written)	/* # of bytes written */
-> > > +struct xfs_inumbers_chunk {
-> > > +	inumbers_fmt_pf		formatter;
-> > > +	struct xfs_ibulk	*breq;
-> > > +};
-> > > +
-> > > +/*
-> > > + * INUMBERS
-> > > + * ========
-> > > + * This is how we export inode btree records to userspace, so that XFS tools
-> > > + * can figure out where inodes are allocated.
-> > > + */
-> > > +
-> > > +/*
-> > > + * Format the inode group structure and report it somewhere.
-> > > + *
-> > > + * Similar to xfs_bulkstat_one_int, lastino is the inode cursor as we walk
-> > > + * through the filesystem so we move it forward unless there was a runtime
-> > > + * error.  If the formatter tells us the buffer is now full we also move the
-> > > + * cursor forward and abort the walk.
-> > > + */
-> > > +STATIC int
-> > > +xfs_inumbers_walk(
-> > > +	struct xfs_mount	*mp,
-> > > +	struct xfs_trans	*tp,
-> > > +	xfs_agnumber_t		agno,
-> > > +	const struct xfs_inobt_rec_incore *irec,
-> > > +	void			*data)
-> > >  {
-> > > -	if (copy_to_user(ubuffer, buffer, count * sizeof(*buffer)))
-> > > -		return -EFAULT;
-> > > -	*written = count * sizeof(*buffer);
-> > > -	return 0;
-> > > +	struct xfs_inogrp	inogrp = {
-> > > +		.xi_startino	= XFS_AGINO_TO_INO(mp, agno, irec->ir_startino),
-> > > +		.xi_alloccount	= irec->ir_count - irec->ir_freecount,
-> > > +		.xi_allocmask	= ~irec->ir_free,
-> > > +	};
-> > 
-> > Not related to this patch, but I'm wondering if we should be using
-> > xfs_inobt_irec_to_allocmask() here to mask off holes from the resulting
-> > allocation bitmap. Eh, I guess it's misleading either way..
-> 
-> Holes were supposed to be marked in ir_free also, right?
-> 
+On Tue, 11 Jun 2019 22:07:57 +0530
+Pankaj Gupta <pagupta@redhat.com> wrote:
 
-Hm, yeah I think so. So right now holes would be reported as free via
-inumbers, which is probably what we want. Must have been thinking about
-this backwards... disregard!
+> This patch adds virtio-pmem driver for KVM guest.
+> 
+> Guest reads the persistent memory range information from
+> Qemu over VIRTIO and registers it on nvdimm_bus. It also
+> creates a nd_region object with the persistent memory
+> range information so that existing 'nvdimm/pmem' driver
+> can reserve this into system memory map. This way
+> 'virtio-pmem' driver uses existing functionality of pmem
+> driver to register persistent memory compatible for DAX
+> capable filesystems.
+> 
+> This also provides function to perform guest flush over
+> VIRTIO from 'pmem' driver when userspace performs flush
+> on DAX memory range.
+> 
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> Reviewed-by: Yuval Shaia <yuval.shaia@oracle.com>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> Acked-by: Jakub Staron <jstaron@google.com>
+> Tested-by: Jakub Staron <jstaron@google.com>
+> ---
+>  drivers/nvdimm/Makefile          |   1 +
+>  drivers/nvdimm/nd_virtio.c       | 124 +++++++++++++++++++++++++++++++
+>  drivers/nvdimm/virtio_pmem.c     | 122 ++++++++++++++++++++++++++++++
+>  drivers/nvdimm/virtio_pmem.h     |  55 ++++++++++++++
+>  drivers/virtio/Kconfig           |  11 +++
+>  include/uapi/linux/virtio_ids.h  |   1 +
+>  include/uapi/linux/virtio_pmem.h |  35 +++++++++
+>  7 files changed, 349 insertions(+)
+>  create mode 100644 drivers/nvdimm/nd_virtio.c
+>  create mode 100644 drivers/nvdimm/virtio_pmem.c
+>  create mode 100644 drivers/nvdimm/virtio_pmem.h
+>  create mode 100644 include/uapi/linux/virtio_pmem.h
 
-Brian
+Sorry about being late to the party; this one has been sitting in my
+'to review' queue for far too long :(
 
-> So (assuming the irec isn't corrupt) we should be protected against
-> reporting a hole as an "allocated" inode, right?
-> 
-> > > +	struct xfs_inumbers_chunk *ic = data;
-> > > +	xfs_agino_t		agino;
-> > > +	int			error;
-> > > +
-> > > +	error = ic->formatter(ic->breq, &inogrp);
-> > > +	if (error && error != XFS_IBULK_BUFFER_FULL)
-> > > +		return error;
-> > > +	if (error == XFS_IBULK_BUFFER_FULL)
-> > > +		error = XFS_INOBT_WALK_ABORT;
-> > > +
-> > > +	agino = irec->ir_startino + XFS_INODES_PER_CHUNK;
-> > > +	ic->breq->startino = XFS_AGINO_TO_INO(mp, agno, agino);
-> > > +	return error;
-> > >  }
-> > >  
-> > ...
-> > > diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-> > > index c4a9c4c246b7..3a35d1cf7e14 100644
-> > > --- a/fs/xfs/xfs_iwalk.c
-> > > +++ b/fs/xfs/xfs_iwalk.c
-> > ...
-> > > @@ -286,7 +298,7 @@ xfs_iwalk_ag_start(
-> > >  	 * have to deal with tearing down the cursor to walk the records.
-> > >  	 */
-> > >  	error = xfs_iwalk_grab_ichunk(*curpp, agino, &icount,
-> > > -			&iwag->recs[iwag->nr_recs]);
-> > > +			&iwag->recs[iwag->nr_recs], trim);
-> > 
-> > Hmm, it looks like we could lift the lookup from xfs_iwalk_grab_ichunk()
-> > up into xfs_iwalk_ag_start() and avoid needing to pass trim down
-> > multiple levels. In fact, if we're not trimming the record we don't need
-> > to grab the record at all in this path. We could do the lookup (setting
-> > has_more) then bounce right up to the core walker algorithm, right? If
-> > so, that seems a bit cleaner in terms of only using special cased code
-> > when it's actually necessary.
-> 
-> Right.
-> 
-> > 
-> > >  	if (error)
-> > >  		return error;
-> > >  	if (icount)
-> > ...
-> > > @@ -561,3 +574,135 @@ xfs_iwalk_threaded(
-> > ...
-> > > +/*
-> > > + * Walk all inode btree records in a single AG, from @iwag->startino to the end
-> > > + * of the AG.
-> > > + */
-> > > +STATIC int
-> > > +xfs_inobt_walk_ag(
-> > > +	struct xfs_iwalk_ag		*iwag)
-> > > +{
-> > > +	struct xfs_mount		*mp = iwag->mp;
-> > > +	struct xfs_trans		*tp = iwag->tp;
-> > > +	struct xfs_buf			*agi_bp = NULL;
-> > > +	struct xfs_btree_cur		*cur = NULL;
-> > > +	xfs_agnumber_t			agno;
-> > > +	xfs_agino_t			agino;
-> > > +	int				has_more;
-> > > +	int				error = 0;
-> > > +
-> > > +	/* Set up our cursor at the right place in the inode btree. */
-> > > +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
-> > > +	agino = XFS_INO_TO_AGINO(mp, iwag->startino);
-> > > +	error = xfs_iwalk_ag_start(iwag, agno, agino, &cur, &agi_bp, &has_more,
-> > > +			false);
-> > > +
-> > > +	while (!error && has_more && !xfs_pwork_want_abort(&iwag->pwork)) {
-> > > +		struct xfs_inobt_rec_incore	*irec;
-> > > +
-> > > +		cond_resched();
-> > > +
-> > > +		/* Fetch the inobt record. */
-> > > +		irec = &iwag->recs[iwag->nr_recs];
-> > > +		error = xfs_inobt_get_rec(cur, irec, &has_more);
-> > > +		if (error || !has_more)
-> > > +			break;
-> > > +
-> > > +		/*
-> > > +		 * If there's space in the buffer for more records, increment
-> > > +		 * the btree cursor and grab more.
-> > > +		 */
-> > > +		if (++iwag->nr_recs < iwag->sz_recs) {
-> > > +			error = xfs_btree_increment(cur, 0, &has_more);
-> > > +			if (error || !has_more)
-> > > +				break;
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		/*
-> > > +		 * Otherwise, we need to save cursor state and run the callback
-> > > +		 * function on the cached records.  The run_callbacks function
-> > > +		 * is supposed to return a cursor pointing to the record where
-> > > +		 * we would be if we had been able to increment like above.
-> > > +		 */
-> > > +		error = xfs_iwalk_run_callbacks(iwag, xfs_inobt_walk_ag_recs,
-> > > +				agno, &cur, &agi_bp, &has_more);
-> > > +	}
-> > > +
-> > > +	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
-> > > +
-> > > +	/* Walk any records left behind in the cache. */
-> > > +	if (iwag->nr_recs == 0 || error || xfs_pwork_want_abort(&iwag->pwork))
-> > > +		return error;
-> > > +
-> > > +	return xfs_inobt_walk_ag_recs(iwag);
-> > > +}
-> > 
-> > Similar comments apply here as for the previous xfs_iwalk_ag() patch.
-> > Though looking at it, the only differences here are the lack of free
-> > inode check, readahead and the callback function (particularly once you
-> > consider the partial completion refactoring we discussed earlier). I
-> > think this could all be generalized with a single flag such that there's
-> > no need for separate xfs_[inobt|iwalk]_ag() functions.
-> 
-> Yep.  Already refactoring that. :)
-> 
-> > Hmmm.. perhaps we could use a flag or separate function pointers in
-> > struct xfs_iwalk_ag to accomplish the same thing all the way up through
-> > the record walker functions. IOW, xfs_iwalk_ag_recs() looks like it
-> > could call either callback based on which is defined in the
-> > xfs_iwalk_ag.
-> 
-> <nod>
-> 
-> > This could all be done as a separate patch of course, if that's easier.
-> 
-> I might just go back and remove the function pointer from run_callbacks
-> in the earlier patches...
-> 
-> > 
-> > > +
-> > > +/*
-> > > + * Walk all inode btree records in the filesystem starting from @startino.  The
-> > > + * @inobt_walk_fn will be called for each btree record, being passed the incore
-> > > + * record and @data.  @max_prefetch controls how many inobt records we try to
-> > > + * cache ahead of time.
-> > > + */
-> > > +int
-> > > +xfs_inobt_walk(
-> > > +	struct xfs_mount	*mp,
-> > > +	struct xfs_trans	*tp,
-> > > +	xfs_ino_t		startino,
-> > > +	xfs_inobt_walk_fn	inobt_walk_fn,
-> > > +	unsigned int		max_prefetch,
-> > > +	void			*data)
-> > > +{
-> > > +	struct xfs_iwalk_ag	iwag = {
-> > > +		.mp		= mp,
-> > > +		.tp		= tp,
-> > > +		.inobt_walk_fn	= inobt_walk_fn,
-> > > +		.data		= data,
-> > > +		.startino	= startino,
-> > > +		.pwork		= XFS_PWORK_SINGLE_THREADED,
-> > > +	};
-> > > +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
-> > > +	int			error;
-> > > +
-> > > +	ASSERT(agno < mp->m_sb.sb_agcount);
-> > > +
-> > > +	xfs_iwalk_set_prefetch(&iwag, max_prefetch * XFS_INODES_PER_CHUNK);
-> > 
-> > A brief comment above this line would be helpful. Something like:
-> > 
-> > 	/* translate inumbers record count to inode count */
-> 
-> Done.  Thanks for the review!
-> 
-> --D
-> 
-> > Brian
-> > 
-> > > +	error = xfs_iwalk_alloc(&iwag);
-> > > +	if (error)
-> > > +		return error;
-> > > +
-> > > +	for (; agno < mp->m_sb.sb_agcount; agno++) {
-> > > +		error = xfs_inobt_walk_ag(&iwag);
-> > > +		if (error)
-> > > +			break;
-> > > +		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-> > > +	}
-> > > +
-> > > +	xfs_iwalk_free(&iwag);
-> > > +	return error;
-> > > +}
-> > > diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
-> > > index 76d8f87a39ef..20bee93d4676 100644
-> > > --- a/fs/xfs/xfs_iwalk.h
-> > > +++ b/fs/xfs/xfs_iwalk.h
-> > > @@ -18,4 +18,16 @@ int xfs_iwalk_threaded(struct xfs_mount *mp, xfs_ino_t startino,
-> > >  		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, bool poll,
-> > >  		void *data);
-> > >  
-> > > +/* Walk all inode btree records in the filesystem starting from @startino. */
-> > > +typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
-> > > +				 xfs_agnumber_t agno,
-> > > +				 const struct xfs_inobt_rec_incore *irec,
-> > > +				 void *data);
-> > > +/* Return value (for xfs_inobt_walk_fn) that aborts the walk immediately. */
-> > > +#define XFS_INOBT_WALK_ABORT	(XFS_IWALK_ABORT)
-> > > +
-> > > +int xfs_inobt_walk(struct xfs_mount *mp, struct xfs_trans *tp,
-> > > +		xfs_ino_t startino, xfs_inobt_walk_fn inobt_walk_fn,
-> > > +		unsigned int max_prefetch, void *data);
-> > > +
-> > >  #endif /* __XFS_IWALK_H__ */
-> > > 
+(...)
+
+> diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+> new file mode 100644
+> index 000000000000..efc535723517
+> --- /dev/null
+> +++ b/drivers/nvdimm/nd_virtio.c
+> @@ -0,0 +1,124 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * virtio_pmem.c: Virtio pmem Driver
+> + *
+> + * Discovers persistent memory range information
+> + * from host and provides a virtio based flushing
+> + * interface.
+> + */
+> +#include "virtio_pmem.h"
+> +#include "nd.h"
+> +
+> + /* The interrupt handler */
+> +void host_ack(struct virtqueue *vq)
+> +{
+> +	struct virtio_pmem *vpmem = vq->vdev->priv;
+> +	struct virtio_pmem_request *req_data, *req_buf;
+> +	unsigned long flags;
+> +	unsigned int len;
+> +
+> +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> +	while ((req_data = virtqueue_get_buf(vq, &len)) != NULL) {
+> +		req_data->done = true;
+> +		wake_up(&req_data->host_acked);
+> +
+> +		if (!list_empty(&vpmem->req_list)) {
+> +			req_buf = list_first_entry(&vpmem->req_list,
+> +					struct virtio_pmem_request, list);
+> +			req_buf->wq_buf_avail = true;
+> +			wake_up(&req_buf->wq_buf);
+> +			list_del(&req_buf->list);
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(host_ack);
+
+Nit: 'host_ack' looks a bit generic for an exported function... would
+'virtio_pmem_host_ack' maybe be better?
+
+> +
+> + /* The request submission function */
+> +int virtio_pmem_flush(struct nd_region *nd_region)
+
+I don't see an EXPORT_SYMBOL_GPL() for this function... should it get
+one, or should it be made static?
+
+> +{
+> +	struct virtio_device *vdev = nd_region->provider_data;
+> +	struct virtio_pmem *vpmem  = vdev->priv;
+> +	struct virtio_pmem_request *req_data;
+> +	struct scatterlist *sgs[2], sg, ret;
+> +	unsigned long flags;
+> +	int err, err1;
+> +
+> +	might_sleep();
+> +	req_data = kmalloc(sizeof(*req_data), GFP_KERNEL);
+> +	if (!req_data)
+> +		return -ENOMEM;
+> +
+> +	req_data->done = false;
+> +	init_waitqueue_head(&req_data->host_acked);
+> +	init_waitqueue_head(&req_data->wq_buf);
+> +	INIT_LIST_HEAD(&req_data->list);
+> +	req_data->req.type = cpu_to_virtio32(vdev, VIRTIO_PMEM_REQ_TYPE_FLUSH);
+> +	sg_init_one(&sg, &req_data->req, sizeof(req_data->req));
+> +	sgs[0] = &sg;
+> +	sg_init_one(&ret, &req_data->resp.ret, sizeof(req_data->resp));
+> +	sgs[1] = &ret;
+> +
+> +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> +	 /*
+> +	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
+> +	  * queue does not have free descriptor. We add the request
+> +	  * to req_list and wait for host_ack to wake us up when free
+> +	  * slots are available.
+> +	  */
+> +	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
+> +					GFP_ATOMIC)) == -ENOSPC) {
+> +
+> +		dev_err(&vdev->dev, "failed to send command to virtio pmem device, no free slots in the virtqueue\n");
+
+Hm... by the comment above I would have thought that this is not really
+an error, but rather a temporary condition? Maybe downgrade this to
+dev_info()?
+
+> +		req_data->wq_buf_avail = false;
+> +		list_add_tail(&req_data->list, &vpmem->req_list);
+> +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> +
+> +		/* A host response results in "host_ack" getting called */
+> +		wait_event(req_data->wq_buf, req_data->wq_buf_avail);
+> +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> +	}
+> +	err1 = virtqueue_kick(vpmem->req_vq);
+> +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> +	/*
+> +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
+> +	 * do anything about that.
+> +	 */
+
+Does it make sense to kick if you couldn't add at all?
+
+> +	if (err || !err1) {
+> +		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
+
+If this is dev_info, I think the error above really should be dev_info
+as well (and maybe also log the error value)?
+
+> +		err = -EIO;
+> +	} else {
+> +		/* A host repsonse results in "host_ack" getting called */
+> +		wait_event(req_data->host_acked, req_data->done);
+> +		err = virtio32_to_cpu(vdev, req_data->resp.ret);
+> +	}
+> +
+> +	kfree(req_data);
+> +	return err;
+> +};
+> +
+> +/* The asynchronous flush callback function */
+> +int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
+> +{
+> +	/* Create child bio for asynchronous flush and chain with
+> +	 * parent bio. Otherwise directly call nd_region flush.
+> +	 */
+
+Nit: The comment should start with an otherwise empty /* line.
+
+> +	if (bio && bio->bi_iter.bi_sector != -1) {
+> +		struct bio *child = bio_alloc(GFP_ATOMIC, 0);
+> +
+> +		if (!child)
+> +			return -ENOMEM;
+> +		bio_copy_dev(child, bio);
+> +		child->bi_opf = REQ_PREFLUSH;
+> +		child->bi_iter.bi_sector = -1;
+> +		bio_chain(child, bio);
+> +		submit_bio(child);
+> +		return 0;
+> +	}
+> +	if (virtio_pmem_flush(nd_region))
+> +		return -EIO;
+> +
+> +	return 0;
+> +};
+> +EXPORT_SYMBOL_GPL(async_pmem_flush);
+> +MODULE_LICENSE("GPL");
+
+(...)
+
+I have only some more minor comments; on the whole, this looks good to
+me.
