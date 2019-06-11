@@ -2,191 +2,349 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7BC53D331
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 19:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B49983D333
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 19:01:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405085AbfFKRBb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jun 2019 13:01:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33542 "EHLO mx1.redhat.com"
+        id S2405631AbfFKRBp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jun 2019 13:01:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38952 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404861AbfFKRBa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:01:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S2405479AbfFKRBo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:01:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F284730860AA;
-        Tue, 11 Jun 2019 17:01:24 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 50E50307CDE7;
+        Tue, 11 Jun 2019 17:01:44 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 974EE60BF1;
-        Tue, 11 Jun 2019 17:01:23 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 13:01:21 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA28A19C70;
+        Tue, 11 Jun 2019 17:01:42 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 13:01:41 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 09/10] xfs: poll waiting for quotacheck
-Message-ID: <20190611170118.GB12395@bfoster>
+Subject: Re: [PATCH 10/10] xfs: refactor INUMBERS to use iwalk functions
+Message-ID: <20190611170137.GC12395@bfoster>
 References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
- <155968502703.1657646.17911228005649046316.stgit@magnolia>
- <20190611150712.GB10942@bfoster>
- <20190611160627.GS1871505@magnolia>
+ <155968503328.1657646.15035810252397604734.stgit@magnolia>
+ <20190611150851.GC10942@bfoster>
+ <20190611162127.GT1871505@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611160627.GS1871505@magnolia>
+In-Reply-To: <20190611162127.GT1871505@magnolia>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 11 Jun 2019 17:01:30 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 11 Jun 2019 17:01:44 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:06:27AM -0700, Darrick J. Wong wrote:
-> On Tue, Jun 11, 2019 at 11:07:12AM -0400, Brian Foster wrote:
-> > On Tue, Jun 04, 2019 at 02:50:27PM -0700, Darrick J. Wong wrote:
+On Tue, Jun 11, 2019 at 09:21:28AM -0700, Darrick J. Wong wrote:
+> On Tue, Jun 11, 2019 at 11:08:51AM -0400, Brian Foster wrote:
+> > On Tue, Jun 04, 2019 at 02:50:33PM -0700, Darrick J. Wong wrote:
 > > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > > 
-> > > Create a pwork destroy function that uses polling instead of
-> > > uninterruptible sleep to wait for work items to finish so that we can
-> > > touch the softlockup watchdog.  IOWs, gross hack.
+> > > Now that we have generic functions to walk inode records, refactor the
+> > > INUMBERS implementation to use it.
 > > > 
 > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > > ---
+> > >  fs/xfs/xfs_ioctl.c   |   20 ++++--
+> > >  fs/xfs/xfs_ioctl.h   |    2 +
+> > >  fs/xfs/xfs_ioctl32.c |   35 ++++------
+> > >  fs/xfs/xfs_itable.c  |  168 ++++++++++++++++++++------------------------------
+> > >  fs/xfs/xfs_itable.h  |   22 +------
+> > >  fs/xfs/xfs_iwalk.c   |  161 ++++++++++++++++++++++++++++++++++++++++++++++--
+> > >  fs/xfs/xfs_iwalk.h   |   12 ++++
 > > 
-> > Seems reasonable given the quirky circumstances of quotacheck. Just a
-> > couple nits..
-> > 
-> > >  fs/xfs/xfs_iwalk.c |    3 +++
-> > >  fs/xfs/xfs_iwalk.h |    3 ++-
-> > >  fs/xfs/xfs_pwork.c |   21 +++++++++++++++++++++
-> > >  fs/xfs/xfs_pwork.h |    2 ++
-> > >  fs/xfs/xfs_qm.c    |    2 +-
-> > >  5 files changed, 29 insertions(+), 2 deletions(-)
+> > It looks like there's a decent amount of xfs_iwalk code changes in this
+> > patch. That should probably be a separate patch, at minimum to have a
+> > separate changelog to document the changes/updates required for
+> > inumbers.
+> 
+> <nod> I'll break out the iwalk changes into a separate patch so that
+> this one only has the changes needed to wire up the ioctl.
+> 
+> > >  7 files changed, 262 insertions(+), 158 deletions(-)
 > > > 
 > > > 
-> > > diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-> > > index 71ee1628aa70..c4a9c4c246b7 100644
-> > > --- a/fs/xfs/xfs_iwalk.c
-> > > +++ b/fs/xfs/xfs_iwalk.c
-> > > @@ -526,6 +526,7 @@ xfs_iwalk_threaded(
-> > >  	xfs_ino_t		startino,
-> > >  	xfs_iwalk_fn		iwalk_fn,
-> > >  	unsigned int		max_prefetch,
-> > > +	bool			polled,
-> > >  	void			*data)
-> > >  {
-> > >  	struct xfs_pwork_ctl	pctl;
-> > > @@ -556,5 +557,7 @@ xfs_iwalk_threaded(
-> > >  		startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-> > >  	}
-> > >  
-> > > +	if (polled)
-> > > +		return xfs_pwork_destroy_poll(&pctl);
-> > >  	return xfs_pwork_destroy(&pctl);
-> > 
-> > Rather than have duplicate destruction paths, could we rework
-> > xfs_pwork_destroy_poll() to something like xfs_pwork_poll() that just
-> > does the polling and returns, then the caller can fall back into the
-> > current xfs_pwork_destroy()? I.e., this ends up looking like:
-> > 
-> > 	...
-> > 	/* poll to keep soft lockup watchdog quiet */
-> > 	if (polled)
-> > 		xfs_pwork_poll(&pctl);
-> > 	return xfs_pwork_destroy(&pctl);
-> 
-> Sounds good, will do!
-> 
-> > >  }
 > > ...
-> > > diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
-> > > index 19605a3a2482..3b885e0b52ac 100644
-> > > --- a/fs/xfs/xfs_pwork.c
-> > > +++ b/fs/xfs/xfs_pwork.c
-> > ...
-> > > @@ -97,6 +101,23 @@ xfs_pwork_destroy(
-> > >  	return pctl->error;
+> > > diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
+> > > index 06abe5c9c0ee..bade54d6ac64 100644
+> > > --- a/fs/xfs/xfs_itable.c
+> > > +++ b/fs/xfs/xfs_itable.c
+> > > @@ -259,121 +259,85 @@ xfs_bulkstat(
+> > >  	return error;
 > > >  }
 > > >  
+> > > -int
+> > > -xfs_inumbers_fmt(
+> > > -	void			__user *ubuffer, /* buffer to write to */
+> > > -	const struct xfs_inogrp	*buffer,	/* buffer to read from */
+> > > -	long			count,		/* # of elements to read */
+> > > -	long			*written)	/* # of bytes written */
+> > > +struct xfs_inumbers_chunk {
+> > > +	inumbers_fmt_pf		formatter;
+> > > +	struct xfs_ibulk	*breq;
+> > > +};
+> > > +
 > > > +/*
-> > > + * Wait for the work to finish and tear down the control structure.
-> > > + * Continually poll completion status and touch the soft lockup watchdog.
-> > > + * This is for things like mount that hold locks.
+> > > + * INUMBERS
+> > > + * ========
+> > > + * This is how we export inode btree records to userspace, so that XFS tools
+> > > + * can figure out where inodes are allocated.
 > > > + */
-> > > +int
-> > > +xfs_pwork_destroy_poll(
-> > > +	struct xfs_pwork_ctl	*pctl)
-> > > +{
-> > > +	while (atomic_read(&pctl->nr_work) > 0) {
-> > > +		msleep(1);
-> > > +		touch_softlockup_watchdog();
-> > > +	}
+> > > +
+> > > +/*
+> > > + * Format the inode group structure and report it somewhere.
+> > > + *
+> > > + * Similar to xfs_bulkstat_one_int, lastino is the inode cursor as we walk
+> > > + * through the filesystem so we move it forward unless there was a runtime
+> > > + * error.  If the formatter tells us the buffer is now full we also move the
+> > > + * cursor forward and abort the walk.
+> > > + */
+> > > +STATIC int
+> > > +xfs_inumbers_walk(
+> > > +	struct xfs_mount	*mp,
+> > > +	struct xfs_trans	*tp,
+> > > +	xfs_agnumber_t		agno,
+> > > +	const struct xfs_inobt_rec_incore *irec,
+> > > +	void			*data)
+> > >  {
+> > > -	if (copy_to_user(ubuffer, buffer, count * sizeof(*buffer)))
+> > > -		return -EFAULT;
+> > > -	*written = count * sizeof(*buffer);
+> > > -	return 0;
+> > > +	struct xfs_inogrp	inogrp = {
+> > > +		.xi_startino	= XFS_AGINO_TO_INO(mp, agno, irec->ir_startino),
+> > > +		.xi_alloccount	= irec->ir_count - irec->ir_freecount,
+> > > +		.xi_allocmask	= ~irec->ir_free,
+> > > +	};
 > > 
-> > Any idea what the typical watchdog timeout is?
+> > Not related to this patch, but I'm wondering if we should be using
+> > xfs_inobt_irec_to_allocmask() here to mask off holes from the resulting
+> > allocation bitmap. Eh, I guess it's misleading either way..
 > 
-> Usually 30s for the hangcheck timeout.
-> 
-> > I'm curious where the 1ms
-> > comes from and whether we could get away with anything larger. I realize
-> > that might introduce mount latency with the current sleep based
-> > implementation, but we could also consider a waitqueue and using
-> > something like wait_event_timeout() to schedule out for longer time
-> > periods and still wake up immediately when the count drops to 0.
-> 
-> That's a much better approach than this naïve one which waits
-> unnecessarily after the pwork finishes; I'll replace it with this.
-> The kernel doesn't export the hang check timeout variable, so I think
-> I'll just set it to 1s, which should be infrequent enough not to use a
-> lot of CPU and frequent enough that we don't spew warnings everywhere.
+> Holes were supposed to be marked in ir_free also, right?
 > 
 
-Ack, that sounds reasonable to me if the timeout itself is 30s or so.
+Hm, yeah I think so. So right now holes would be reported as free via
+inumbers, which is probably what we want. Must have been thinking about
+this backwards... disregard!
 
 Brian
 
+> So (assuming the irec isn't corrupt) we should be protected against
+> reporting a hole as an "allocated" inode, right?
+> 
+> > > +	struct xfs_inumbers_chunk *ic = data;
+> > > +	xfs_agino_t		agino;
+> > > +	int			error;
+> > > +
+> > > +	error = ic->formatter(ic->breq, &inogrp);
+> > > +	if (error && error != XFS_IBULK_BUFFER_FULL)
+> > > +		return error;
+> > > +	if (error == XFS_IBULK_BUFFER_FULL)
+> > > +		error = XFS_INOBT_WALK_ABORT;
+> > > +
+> > > +	agino = irec->ir_startino + XFS_INODES_PER_CHUNK;
+> > > +	ic->breq->startino = XFS_AGINO_TO_INO(mp, agno, agino);
+> > > +	return error;
+> > >  }
+> > >  
+> > ...
+> > > diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+> > > index c4a9c4c246b7..3a35d1cf7e14 100644
+> > > --- a/fs/xfs/xfs_iwalk.c
+> > > +++ b/fs/xfs/xfs_iwalk.c
+> > ...
+> > > @@ -286,7 +298,7 @@ xfs_iwalk_ag_start(
+> > >  	 * have to deal with tearing down the cursor to walk the records.
+> > >  	 */
+> > >  	error = xfs_iwalk_grab_ichunk(*curpp, agino, &icount,
+> > > -			&iwag->recs[iwag->nr_recs]);
+> > > +			&iwag->recs[iwag->nr_recs], trim);
+> > 
+> > Hmm, it looks like we could lift the lookup from xfs_iwalk_grab_ichunk()
+> > up into xfs_iwalk_ag_start() and avoid needing to pass trim down
+> > multiple levels. In fact, if we're not trimming the record we don't need
+> > to grab the record at all in this path. We could do the lookup (setting
+> > has_more) then bounce right up to the core walker algorithm, right? If
+> > so, that seems a bit cleaner in terms of only using special cased code
+> > when it's actually necessary.
+> 
+> Right.
+> 
+> > 
+> > >  	if (error)
+> > >  		return error;
+> > >  	if (icount)
+> > ...
+> > > @@ -561,3 +574,135 @@ xfs_iwalk_threaded(
+> > ...
+> > > +/*
+> > > + * Walk all inode btree records in a single AG, from @iwag->startino to the end
+> > > + * of the AG.
+> > > + */
+> > > +STATIC int
+> > > +xfs_inobt_walk_ag(
+> > > +	struct xfs_iwalk_ag		*iwag)
+> > > +{
+> > > +	struct xfs_mount		*mp = iwag->mp;
+> > > +	struct xfs_trans		*tp = iwag->tp;
+> > > +	struct xfs_buf			*agi_bp = NULL;
+> > > +	struct xfs_btree_cur		*cur = NULL;
+> > > +	xfs_agnumber_t			agno;
+> > > +	xfs_agino_t			agino;
+> > > +	int				has_more;
+> > > +	int				error = 0;
+> > > +
+> > > +	/* Set up our cursor at the right place in the inode btree. */
+> > > +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
+> > > +	agino = XFS_INO_TO_AGINO(mp, iwag->startino);
+> > > +	error = xfs_iwalk_ag_start(iwag, agno, agino, &cur, &agi_bp, &has_more,
+> > > +			false);
+> > > +
+> > > +	while (!error && has_more && !xfs_pwork_want_abort(&iwag->pwork)) {
+> > > +		struct xfs_inobt_rec_incore	*irec;
+> > > +
+> > > +		cond_resched();
+> > > +
+> > > +		/* Fetch the inobt record. */
+> > > +		irec = &iwag->recs[iwag->nr_recs];
+> > > +		error = xfs_inobt_get_rec(cur, irec, &has_more);
+> > > +		if (error || !has_more)
+> > > +			break;
+> > > +
+> > > +		/*
+> > > +		 * If there's space in the buffer for more records, increment
+> > > +		 * the btree cursor and grab more.
+> > > +		 */
+> > > +		if (++iwag->nr_recs < iwag->sz_recs) {
+> > > +			error = xfs_btree_increment(cur, 0, &has_more);
+> > > +			if (error || !has_more)
+> > > +				break;
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		/*
+> > > +		 * Otherwise, we need to save cursor state and run the callback
+> > > +		 * function on the cached records.  The run_callbacks function
+> > > +		 * is supposed to return a cursor pointing to the record where
+> > > +		 * we would be if we had been able to increment like above.
+> > > +		 */
+> > > +		error = xfs_iwalk_run_callbacks(iwag, xfs_inobt_walk_ag_recs,
+> > > +				agno, &cur, &agi_bp, &has_more);
+> > > +	}
+> > > +
+> > > +	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
+> > > +
+> > > +	/* Walk any records left behind in the cache. */
+> > > +	if (iwag->nr_recs == 0 || error || xfs_pwork_want_abort(&iwag->pwork))
+> > > +		return error;
+> > > +
+> > > +	return xfs_inobt_walk_ag_recs(iwag);
+> > > +}
+> > 
+> > Similar comments apply here as for the previous xfs_iwalk_ag() patch.
+> > Though looking at it, the only differences here are the lack of free
+> > inode check, readahead and the callback function (particularly once you
+> > consider the partial completion refactoring we discussed earlier). I
+> > think this could all be generalized with a single flag such that there's
+> > no need for separate xfs_[inobt|iwalk]_ag() functions.
+> 
+> Yep.  Already refactoring that. :)
+> 
+> > Hmmm.. perhaps we could use a flag or separate function pointers in
+> > struct xfs_iwalk_ag to accomplish the same thing all the way up through
+> > the record walker functions. IOW, xfs_iwalk_ag_recs() looks like it
+> > could call either callback based on which is defined in the
+> > xfs_iwalk_ag.
+> 
+> <nod>
+> 
+> > This could all be done as a separate patch of course, if that's easier.
+> 
+> I might just go back and remove the function pointer from run_callbacks
+> in the earlier patches...
+> 
+> > 
+> > > +
+> > > +/*
+> > > + * Walk all inode btree records in the filesystem starting from @startino.  The
+> > > + * @inobt_walk_fn will be called for each btree record, being passed the incore
+> > > + * record and @data.  @max_prefetch controls how many inobt records we try to
+> > > + * cache ahead of time.
+> > > + */
+> > > +int
+> > > +xfs_inobt_walk(
+> > > +	struct xfs_mount	*mp,
+> > > +	struct xfs_trans	*tp,
+> > > +	xfs_ino_t		startino,
+> > > +	xfs_inobt_walk_fn	inobt_walk_fn,
+> > > +	unsigned int		max_prefetch,
+> > > +	void			*data)
+> > > +{
+> > > +	struct xfs_iwalk_ag	iwag = {
+> > > +		.mp		= mp,
+> > > +		.tp		= tp,
+> > > +		.inobt_walk_fn	= inobt_walk_fn,
+> > > +		.data		= data,
+> > > +		.startino	= startino,
+> > > +		.pwork		= XFS_PWORK_SINGLE_THREADED,
+> > > +	};
+> > > +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
+> > > +	int			error;
+> > > +
+> > > +	ASSERT(agno < mp->m_sb.sb_agcount);
+> > > +
+> > > +	xfs_iwalk_set_prefetch(&iwag, max_prefetch * XFS_INODES_PER_CHUNK);
+> > 
+> > A brief comment above this line would be helpful. Something like:
+> > 
+> > 	/* translate inumbers record count to inode count */
+> 
+> Done.  Thanks for the review!
+> 
 > --D
 > 
 > > Brian
 > > 
+> > > +	error = xfs_iwalk_alloc(&iwag);
+> > > +	if (error)
+> > > +		return error;
 > > > +
-> > > +	return xfs_pwork_destroy(pctl);
+> > > +	for (; agno < mp->m_sb.sb_agcount; agno++) {
+> > > +		error = xfs_inobt_walk_ag(&iwag);
+> > > +		if (error)
+> > > +			break;
+> > > +		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
+> > > +	}
+> > > +
+> > > +	xfs_iwalk_free(&iwag);
+> > > +	return error;
 > > > +}
+> > > diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
+> > > index 76d8f87a39ef..20bee93d4676 100644
+> > > --- a/fs/xfs/xfs_iwalk.h
+> > > +++ b/fs/xfs/xfs_iwalk.h
+> > > @@ -18,4 +18,16 @@ int xfs_iwalk_threaded(struct xfs_mount *mp, xfs_ino_t startino,
+> > >  		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, bool poll,
+> > >  		void *data);
+> > >  
+> > > +/* Walk all inode btree records in the filesystem starting from @startino. */
+> > > +typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
+> > > +				 xfs_agnumber_t agno,
+> > > +				 const struct xfs_inobt_rec_incore *irec,
+> > > +				 void *data);
+> > > +/* Return value (for xfs_inobt_walk_fn) that aborts the walk immediately. */
+> > > +#define XFS_INOBT_WALK_ABORT	(XFS_IWALK_ABORT)
 > > > +
-> > >  /*
-> > >   * Return the amount of parallelism that the data device can handle, or 0 for
-> > >   * no limit.
-> > > diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
-> > > index e0c1354a2d8c..08da723a8dc9 100644
-> > > --- a/fs/xfs/xfs_pwork.h
-> > > +++ b/fs/xfs/xfs_pwork.h
-> > > @@ -18,6 +18,7 @@ struct xfs_pwork_ctl {
-> > >  	struct workqueue_struct	*wq;
-> > >  	struct xfs_mount	*mp;
-> > >  	xfs_pwork_work_fn	work_fn;
-> > > +	atomic_t		nr_work;
-> > >  	int			error;
-> > >  };
-> > >  
-> > > @@ -45,6 +46,7 @@ int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
-> > >  		unsigned int nr_threads);
-> > >  void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
-> > >  int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
-> > > +int xfs_pwork_destroy_poll(struct xfs_pwork_ctl *pctl);
-> > >  unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
-> > >  
-> > >  #endif /* __XFS_PWORK_H__ */
-> > > diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> > > index e4f3785f7a64..de6a623ada02 100644
-> > > --- a/fs/xfs/xfs_qm.c
-> > > +++ b/fs/xfs/xfs_qm.c
-> > > @@ -1305,7 +1305,7 @@ xfs_qm_quotacheck(
-> > >  		flags |= XFS_PQUOTA_CHKD;
-> > >  	}
-> > >  
-> > > -	error = xfs_iwalk_threaded(mp, 0, xfs_qm_dqusage_adjust, 0, NULL);
-> > > +	error = xfs_iwalk_threaded(mp, 0, xfs_qm_dqusage_adjust, 0, true, NULL);
-> > >  	if (error)
-> > >  		goto error_return;
-> > >  
+> > > +int xfs_inobt_walk(struct xfs_mount *mp, struct xfs_trans *tp,
+> > > +		xfs_ino_t startino, xfs_inobt_walk_fn inobt_walk_fn,
+> > > +		unsigned int max_prefetch, void *data);
+> > > +
+> > >  #endif /* __XFS_IWALK_H__ */
 > > > 
