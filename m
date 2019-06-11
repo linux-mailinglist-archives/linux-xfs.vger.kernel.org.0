@@ -2,70 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C7D43C15B
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 04:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D033E3C17F
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 05:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390888AbfFKCv3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 22:51:29 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34066 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390670AbfFKCv3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 22:51:29 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5B2p9oJ002582
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Jun 2019 22:51:09 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D394C420481; Mon, 10 Jun 2019 22:51:08 -0400 (EDT)
-Date:   Mon, 10 Jun 2019 22:51:08 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org
-Subject: Re: [PATCH] vfs: allow copy_file_range from a swapfile
-Message-ID: <20190611025108.GB2774@mit.edu>
-References: <20190610172606.4119-1-amir73il@gmail.com>
- <20190611011612.GQ1871505@magnolia>
+        id S2390884AbfFKDTH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 23:19:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59788 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390856AbfFKDTH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 23:19:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3EDXI098034;
+        Tue, 11 Jun 2019 03:19:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=WD/jtvyPKUSEaApZbB1Y5edzHeb4KFRIisH6xhFpx2I=;
+ b=I8oMXdPF/Cwp+3sy79mu+Y/X0EmXf/TEyt0QidZ3A+yciMDKNMWj3FhRJi9fuGnkriKw
+ H6q7MRe6/P097c2sMOJUUchJ9Yvqzozx6lugl7t7f7qNKDGS54Nw+JmLvurZG9vEVPBG
+ VhsWLKAHFT2FZl4fJWKmXKRTV3eQM0x11aIipD5S8hDDEwVXtrYRApT4bQ71BmH7qV3+
+ 9zBiCKGrRfzSNwOr5fT1atMIGcK0apq5uyDB5K4fOQIanhnzSdpQXmpAd0Ze8xCqvc4E
+ 0LH2sSI/9UDuJk3m8QToDd6U4Tzr8pg2YIqATUzNLZ9/9MGqGYoU4brHOd19FAGmT9ML lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t04etjc7q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 03:19:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3IArP006991;
+        Tue, 11 Jun 2019 03:19:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2t0p9r27w0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 03:19:01 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5B3J0pH018038;
+        Tue, 11 Jun 2019 03:19:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Jun 2019 20:18:59 -0700
+Date:   Mon, 10 Jun 2019 20:18:58 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>, Dave Chinner <david@fromorbit.com>,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] generic/553: fix test description
+Message-ID: <20190611031858.GG1688126@magnolia>
+References: <20190610194545.8146-1-amir73il@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611011612.GQ1871505@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190610194545.8146-1-amir73il@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=946
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906110020
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=998 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906110020
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 06:16:12PM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 10, 2019 at 08:26:06PM +0300, Amir Goldstein wrote:
-> > read(2) is allowed from a swapfile, so copy_file_range(2) should
-> > be allowed as well.
-> > 
-> > Reported-by: Theodore Ts'o <tytso@mit.edu>
-> > Fixes: 96e6e8f4a68d ("vfs: add missing checks to copy_file_range")
-> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > ---
-> > 
-> > Darrick,
-> > 
-> > This fixes the generic/554 issue reported by Ted.
+On Mon, Jun 10, 2019 at 10:45:45PM +0300, Amir Goldstein wrote:
+> The test only checks copy to immutable file
 > 
-> Frankly I think we should go the other way -- non-root doesn't get to
-> copy from or read from swap files.
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 
-The issue is that without this patch, *root* doesn't get to copy from
-swap files.  Non-root shouldn't have access via Unix permissions.  We
-could add a special case if we don't trust system administrators to be
-able to set the Unix permissions correctly, I suppose, but we don't do
-that for block devices when they are mounted....
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-					- Ted
+--D
+
+> ---
+>  tests/generic/553 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tests/generic/553 b/tests/generic/553
+> index efe25d84..117c0ad5 100755
+> --- a/tests/generic/553
+> +++ b/tests/generic/553
+> @@ -4,7 +4,7 @@
+>  #
+>  # FS QA Test No. 553
+>  #
+> -# Check that we cannot copy_file_range() to/from an immutable file
+> +# Check that we cannot copy_file_range() to an immutable file
+>  #
+>  seq=`basename $0`
+>  seqres=$RESULT_DIR/$seq
+> -- 
+> 2.17.1
+> 
