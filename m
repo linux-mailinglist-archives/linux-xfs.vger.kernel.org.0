@@ -2,61 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D32B73D197
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 17:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 438DB3D1AE
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 18:05:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbfFKP7e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jun 2019 11:59:34 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36485 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727549AbfFKP7e (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jun 2019 11:59:34 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5BFxQKU021018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Jun 2019 11:59:27 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 0EA93420481; Tue, 11 Jun 2019 11:59:26 -0400 (EDT)
-Date:   Tue, 11 Jun 2019 11:59:25 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] generic/554: test only copy to active swap file
-Message-ID: <20190611155925.GA5081@mit.edu>
-References: <20190611153916.13360-1-amir73il@gmail.com>
- <20190611153916.13360-2-amir73il@gmail.com>
+        id S2391869AbfFKQEl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jun 2019 12:04:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54794 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390351AbfFKQEk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:04:40 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5E7847FDFE;
+        Tue, 11 Jun 2019 16:04:32 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10197611DA;
+        Tue, 11 Jun 2019 16:04:25 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id D31A018363C0;
+        Tue, 11 Jun 2019 16:04:21 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 12:04:21 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     rdunlap@infradead.org, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
+        zwisler@kernel.org, aarcange@redhat.com,
+        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        imammedo@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        pbonzini@redhat.com, darrick wong <darrick.wong@oracle.com>
+Message-ID: <1006124881.34430329.1560269061491.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190611150427.GA29288@redhat.com>
+References: <20190610090730.8589-1-pagupta@redhat.com> <20190610090730.8589-5-pagupta@redhat.com> <20190610192803.GA29002@redhat.com> <1206355816.34396746.1560258658768.JavaMail.zimbra@redhat.com> <20190611150427.GA29288@redhat.com>
+Subject: Re: [Qemu-devel] [PATCH v11 4/7] dm: enable synchronous dax
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611153916.13360-2-amir73il@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.60, 10.4.195.3]
+Thread-Topic: enable synchronous dax
+Thread-Index: H4DObhswv6RiIzHdNTVFv9g9Hzvnew==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 11 Jun 2019 16:04:40 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 06:39:16PM +0300, Amir Goldstein wrote:
-> Depending on filesystem, copying from active swapfile may be allowed,
-> just as read from swapfile may be allowed.
-> 
-> Note the kernel fix commit in test description.
-> 
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> 
-> Per your and Ted's request, I've documented the kernel fix commit
-> in the new copy_range tests. Those commits are now on Darrick's
-> copy-file-range-fixes branch, which is on its way to linux-next
-> and to kernel 5.3.
 
-Thanks!  Are we sure at this point that the commit won't need to be
-modified / rebased in Darrick's tree?
 
-> +# This is a regression test for kernel commit:
-> +#   a31713517dac ("vfs: introduce generic_file_rw_checks()")
+> 
+> > Hi Mike,
+> > 
+> > Thanks for the review Please find my reply inline.
+> > 
+> > > 
+> > > dm_table_supports_dax() is called multiple times (from
+> > > dm_table_set_restrictions and dm_table_determine_type).  It is strange
+> > > to have a getter have a side-effect of being a setter too.  Overloading
+> > > like this could get you in trouble in the future.
+> > > 
+> > > Are you certain this is what you want?
+> > 
+> > I agree with you.
+> > 
+> > > 
+> > > Or would it be better to refactor dm_table_supports_dax() to take an
+> > > iterate_devices_fn arg and have callers pass the appropriate function?
+> > > Then have dm_table_set_restrictions() caller do:
+> > > 
+> > >      if (dm_table_supports_dax(t, device_synchronous, NULL))
+> > >                set_dax_synchronous(t->md->dax_dev);
+> > > 
+> > > (NULL arg implies dm_table_supports_dax() refactoring would take a int
+> > > *data pointer rather than int type).
+> > > 
+> > > Mike
+> > > 
+> > 
+> > I am sending below patch as per your suggestion. Does it look
+> > near to what you have in mind?
+> 
+> Yes, it does.. just one nit I noticed inlined below.
+> 
+> > diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> > index 350cf0451456..8d89acc8b8c2 100644
+> > --- a/drivers/md/dm-table.c
+> > +++ b/drivers/md/dm-table.c
+> 
+> ...
+> 
+> > @@ -1910,8 +1919,13 @@ void dm_table_set_restrictions(struct dm_table *t,
+> > struct request_queue *q,
+> >         }
+> >         blk_queue_write_cache(q, wc, fua);
+> > 
+> > -       if (dm_table_supports_dax(t, PAGE_SIZE))
+> > +       if (dm_table_supports_dax(t, device_supports_dax, &page_size)) {
+> > +
+> 
+> No need for an empty newline here ^
 
-					 - Ted
+Sure. Will remove this and send official v12 patchset with the updated patch 4.
+
+Thanks,
+Pankaj
+
+> 
+> >                 blk_queue_flag_set(QUEUE_FLAG_DAX, q);
+> > +               if (dm_table_supports_dax(t, device_synchronous, NULL))
+> > +                       set_dax_synchronous(t->md->dax_dev);
+> > +       }
+> >         else
+> >                 blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
+> > 
+> 
+> Thanks,
+> Mike
+> 
+> 
