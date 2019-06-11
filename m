@@ -2,151 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E9E841890
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 01:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B40A7418D8
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 01:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437014AbfFKXFv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jun 2019 19:05:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55736 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436837AbfFKXFv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jun 2019 19:05:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BN4E1W115532;
-        Tue, 11 Jun 2019 23:05:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=LZyGoVEom9nR9joNEj30+mZ34e4DIJs0D0rAM41j3Qc=;
- b=MNY0co/wRJNaOtFiIfcljFEdmwSlwH4/c45WleXHm+CiW6YFYsrMB+iQE43jV2IMoufI
- HntXVeZ2clYViwaSIytP4jpgOJGKQ779vy77/VUswegwkN1JP4O7kSESqTt0+zksR3O0
- V+LCnlNvSzaPI9JUZORW985362Mc7WKRpZkbxMaN1QsvsPpNTym8scSJXxj1BGMQPkUB
- km/ZBvqblbQWLogy8tYWBQtMHwdqb+klzjEu5ap7oX3qDWjm9L7j6RzUqzX1NybAUnX5
- efja6ZpP2v5eAJEMo9s2QEBHt2a23Kvff4XyxJHkpxAKdLZ5fB/Fmb2ukIeGqk786mmy 0A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t04etr3r9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 23:05:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BN4plK073349;
-        Tue, 11 Jun 2019 23:05:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2t1jphq4sb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 23:05:17 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BN5GoL002338;
-        Tue, 11 Jun 2019 23:05:16 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 16:05:16 -0700
-Date:   Tue, 11 Jun 2019 16:05:14 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] xfs: create simplified inode walk function
-Message-ID: <20190611230514.GU1871505@magnolia>
+        id S2405796AbfFKXYs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jun 2019 19:24:48 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43079 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405384AbfFKXYr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jun 2019 19:24:47 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id CF316105F03B;
+        Wed, 12 Jun 2019 09:24:44 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1haq7H-00035u-3q; Wed, 12 Jun 2019 09:23:47 +1000
+Date:   Wed, 12 Jun 2019 09:23:47 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 02/10] xfs: convert quotacheck to use the new iwalk
+ functions
+Message-ID: <20190611232347.GE14363@dread.disaster.area>
 References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
- <155968497450.1657646.15305138327955918345.stgit@magnolia>
- <20190610135816.GA6473@bfoster>
- <20190610165909.GI1871505@magnolia>
- <20190610175509.GF6473@bfoster>
- <20190610231134.GM1871505@magnolia>
- <20190611223341.GD14363@dread.disaster.area>
+ <155968498085.1657646.3518168545540841602.stgit@magnolia>
+ <20190610135848.GB6473@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611223341.GD14363@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110150
+In-Reply-To: <20190610135848.GB6473@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=IQN3rknsCWRaDoeJ1yMA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:33:41AM +1000, Dave Chinner wrote:
-> On Mon, Jun 10, 2019 at 04:11:34PM -0700, Darrick J. Wong wrote:
-> > On Mon, Jun 10, 2019 at 01:55:10PM -0400, Brian Foster wrote:
-> > > > I could extend the comment to explain why we don't use PAGE_SIZE...
-> > > > 
-> > > 
-> > > Sounds good, though what I think would be better is to define a
-> > > IWALK_DEFAULT_RECS or some such somewhere and put the calculation
-> > > details with that.
-> > > 
-> > > Though now that you point out the readahead thing, aren't we at risk of
-> > > a similar problem for users who happen to pass a really large userspace
-> > > buffer? Should we cap the kernel allocation/readahead window in all
-> > > cases and not just the default case?
+On Mon, Jun 10, 2019 at 09:58:52AM -0400, Brian Foster wrote:
+> On Tue, Jun 04, 2019 at 02:49:40PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > Hmm, that's right, we don't want to let userspace arbitrarily determine
-> > the size of the buffer, and I think the current implementation caps it
-> > the readahaead at ... oh, PAGE_SIZE / sizeof(xfs_inogrp_t).
+> > Convert quotacheck to use the new iwalk iterator to dig through the
+> > inodes.
 > > 
-> > Oh, right, and in the V1 patchset Dave said that we should constrain
-> > readahead even further.
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> > ---
+> >  fs/xfs/xfs_qm.c |   62 ++++++++++++++++++-------------------------------------
+> >  1 file changed, 20 insertions(+), 42 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+> > index aa6b6db3db0e..a5b2260406a8 100644
+> > --- a/fs/xfs/xfs_qm.c
+> > +++ b/fs/xfs/xfs_qm.c
+> ...
+> > @@ -1136,20 +1135,18 @@ xfs_qm_dqusage_adjust(
+> >  	 * rootino must have its resources accounted for, not so with the quota
+> >  	 * inodes.
+> >  	 */
+> > -	if (xfs_is_quota_inode(&mp->m_sb, ino)) {
+> > -		*res = BULKSTAT_RV_NOTHING;
+> > -		return -EINVAL;
+> > -	}
+> > +	if (xfs_is_quota_inode(&mp->m_sb, ino))
+> > +		return 0;
+> >  
+> >  	/*
+> >  	 * We don't _need_ to take the ilock EXCL here because quotacheck runs
+> >  	 * at mount time and therefore nobody will be racing chown/chproj.
+> >  	 */
+> > -	error = xfs_iget(mp, NULL, ino, XFS_IGET_DONTCACHE, 0, &ip);
+> > -	if (error) {
+> > -		*res = BULKSTAT_RV_NOTHING;
+> > +	error = xfs_iget(mp, tp, ino, XFS_IGET_DONTCACHE, 0, &ip);
 > 
-> Right, I should explain a bit further why, too - it's about
-> performance.  I've found that a user buffer size of ~1024 inodes is
-> generally enough to max out performance of bulkstat. i.e. somewhere
-> around 1000 inodes per syscall is enough to mostly amortise all of
-> the cost of syscall, setup, readahead, etc vs the CPU overhead of
-> copying all the inodes into the user buffer.
-> 
-> Once the user buffer goes over a few thousand inodes, performance
-> then starts to tail back off - we don't get any gains from trying to
-> bulkstat tens of thousands of inodes at a time, especially under
-> memory pressure because that can push us into readahead and buffer
-> cache thrashing.
+> I was wondering if we should start using IGET_UNTRUSTED here, but I
+> guess we're 1.) protected by quotacheck context and 2.) have the same
+> record validity semantics as the existing bulkstat walker. LGTM:
 
-<nod> I don't mind setting the max inobt record cache buffer size to a
-smaller value (1024 bytes == 4096 inodes readahead?) so we can get a
-little farther into future hardware scalability (or decreases in syscall
-performance :P).
+FWIW, I'd be wanting to go the other way with bulkstat. i.e. finding
+ways of reducing IGET_UNTRUSTED in bulkstat because it adds
+substantial CPU overhead during inode lookup because it has to look
+up the inobt to validate the inode number. i.e. we are locking the
+AGI and doing an inobt lookup on every inode we bulkstat because
+there is some time between the initial inobt lookup and the
+xfs_iget() call and that's when the inode chunk can get removed.
 
-I guess the question here is how to relate the number of inodes the user
-asked for to how many inobt records we have to read to find that many
-allocated inodes?  Or in other words, what's the average ir_freecount
-across all the inobt records?
+IOWs, we only need to validate that the inode buffer still contains
+inodes before we start instantiating inodes from it, but because we
+don't hold any locks across individual inode processing in bulkstat
+we have to revalidate that buffer contains inodes for every
+allocated inode in that buffer. If we had a way of passing a locked
+cluster buffer into xfs_iget to avoid having to look it up and read
+it, we could do a single inode cluster read after validating the
+inobt record is still valid, we could cycle all the remaining inodes
+through xfs_iget() without having to use IGET_UNTRUSTED to validate
+the inode cluster still contains valid inodes on every inode....
 
-Note that this is technically a decrease since the old code would
-reserve 16K for this purpose...
+We still need to cycle inodes through the cache (so bulkstat is
+coherent with other inode operations), but this would substantially
+reduce the per-inode bulkstat CPU overhead, I think....
 
-> > > > /*
-> > > >  * Note: We hardcode 4096 here (instead of, say, PAGE_SIZE) because we want to
-> > > >  * constrain the amount of inode readahead to 16k inodes regardless of CPU:
-> > > >  *
-> > > >  * 4096 bytes / 16 bytes per inobt record = 256 inobt records
-> > > >  * 256 inobt records * 64 inodes per record = 16384 inodes
-> > > >  * 16384 inodes * 512 bytes per inode(?) = 8MB of inode readahead
-> > > >  */
-> 
-> Hence I suspect that even this is overkill - it makes no sense to
-> have a huge readahead window when there has been no measurable
-> performance benefit to doing large inode count bulkstat syscalls.
-> 
-> And, FWIW, readahead probably should also be capped at what the user
-> buffer can hold - no point in reading 16k inodes when the output
-> buffer can only fit 1000 inodes...
+Cheers,
 
-It already is -- the icount parameter from userspace is (eventually) fed
-to xfs_iwalk-set_prefetch.
-
---D
-
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
