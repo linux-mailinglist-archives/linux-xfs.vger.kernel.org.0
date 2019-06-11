@@ -2,63 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F20F3C180
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 05:19:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D913C18D
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2019 05:26:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390894AbfFKDT3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jun 2019 23:19:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50586 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390856AbfFKDT3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 23:19:29 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3JOw3111303;
-        Tue, 11 Jun 2019 03:19:24 GMT
+        id S2390935AbfFKD0T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jun 2019 23:26:19 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:37150 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390856AbfFKD0T (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jun 2019 23:26:19 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3JYbq122570;
+        Tue, 11 Jun 2019 03:26:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=ZOgHarOxF2hEPoyRCnPV7DlgtQgOjXBpTgQFdPUxQIo=;
- b=E4zpRRzamxAPUvCrZEyiQs7FM2MQ9vBiEqVOSF3J5jKc5mP6srqNqjJuHpnLeM1YcYe0
- V1v6UGsSvCrv478u8aWZucA2LqFkXUd0iTOg1uxh5TkC6JdXI2YwxjQzahDFnX6qA0SJ
- wMNfE7M1y9DBpYMeN4I8xYcnYkEHSBLwY1QqbYI2IjEPB44deaiVlOhLRcXkNk95ExiP
- qL6lLTkrsPWHzTistmflHr1t1LORnB4DyAG68Pe1mWjyp+GpdXksBo4Uka5WtUSRbNn7
- uVN+iWeerbAYiRBX+OlkBbr1w5lcVYL1eL6z3/cxP+MqCvpHpRwtKa+yEFyJ3yutQTBw 4A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2t05nqj9jp-1
+ bh=+KMHTpIPHehmYr7PrnoKeQGFw46qVIvlu8jfHMIONJs=;
+ b=lTw3n6sfAuJxerQIcWvvAzMYQN+AqtCPDfst2dOgTcdT2K7l70GXNYMqGHsNnCdk6wWJ
+ c7B8KxtKCiw/HIyg0TzHinvugM77U16TWDIV4RUqydwstE2v/O6WmbklmNTHt9ONL6Hf
+ 8nix+RvdOj4fFnrZWzqEqBGocz0+c/cYECmtDtfNx42zPkkJePXJWXe7Hh7CPw4YOW9s
+ 4yqshFav8Do/yNkdOJCBXL2mI4X3yT493ZlzXH1rdALCUQWxVW53N8gWI7PU+/0hSDva
+ e/vYpQcoD4tQPYop3LFIttJa/6DA6+oherOHnagItEI4/fDKCBn6gnQuy8H0a/HVH5Zq ug== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2t02hejhjw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 03:19:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3JG0J005186;
-        Tue, 11 Jun 2019 03:19:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t024u5qdt-1
+        Tue, 11 Jun 2019 03:26:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B3Q8lN021788;
+        Tue, 11 Jun 2019 03:26:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t0p9r2a63-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 03:19:20 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5B3JJJ0009822;
-        Tue, 11 Jun 2019 03:19:19 GMT
+        Tue, 11 Jun 2019 03:26:08 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5B3Q4J4008815;
+        Tue, 11 Jun 2019 03:26:04 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Jun 2019 20:19:19 -0700
-Date:   Mon, 10 Jun 2019 20:19:17 -0700
+        with ESMTP ; Mon, 10 Jun 2019 20:26:04 -0700
+Date:   Mon, 10 Jun 2019 20:26:03 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>, Dave Chinner <david@fromorbit.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] generic/554: test only copy to active swap file
-Message-ID: <20190611031917.GH1688126@magnolia>
-References: <20190610195317.8516-1-amir73il@gmail.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/8] mm/fs: don't allow writes to immutable files
+Message-ID: <20190611032603.GB1872258@magnolia>
+References: <155552786671.20411.6442426840435740050.stgit@magnolia>
+ <155552787330.20411.11893581890744963309.stgit@magnolia>
+ <20190610015145.GB3266@mit.edu>
+ <20190610044144.GA1872750@magnolia>
+ <20190610131417.GD15963@mit.edu>
+ <20190610160934.GH1871505@magnolia>
+ <20190610204154.GA5466@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610195317.8516-1-amir73il@gmail.com>
+In-Reply-To: <20190610204154.GA5466@mit.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110020
+ engine=8.0.1-1810050000 definitions=main-1906110021
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
@@ -70,67 +76,66 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:53:17PM +0300, Amir Goldstein wrote:
-> Depending on filesystem, copying from active swapfile may be allowed,
-> just as read from swapfile may be allowed.
+On Mon, Jun 11, 2019 at 04:41:54PM -0400, Theodore Ts'o wrote:
+> On Mon, Jun 10, 2019 at 09:09:34AM -0700, Darrick J. Wong wrote:
+> > > I was planning on only taking 8/8 through the ext4 tree.  I also added
+> > > a patch which filtered writes, truncates, and page_mkwrites (but not
+> > > mmap) for immutable files at the ext4 level.
+> > 
+> > *Oh*.  I saw your reply attached to the 1/8 patch and thought that was
+> > the one you were taking.  I was sort of surprised, tbh. :)
 > 
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> Sorry, my bad.  I mis-replied to the wrong e-mail message  :-)
+> 
+> > > I *could* take this patch through the mm/fs tree, but I wasn't sure
+> > > what your plans were for the rest of the patch series, and it seemed
+> > > like it hadn't gotten much review/attention from other fs or mm folks
+> > > (well, I guess Brian Foster weighed in).
+> > 
+> > > What do you think?
+> > 
+> > Not sure.  The comments attached to the LWN story were sort of nasty,
+> > and now that a couple of people said "Oh, well, Debian documented the
+> > inconsistent behavior so just let it be" I haven't felt like
+> > resurrecting the series for 5.3.
+> 
+> Ah, I had missed the LWN article.   <Looks>
+> 
+> Yeah, it's the same set of issues that we had discussed when this
+> first came up.  We can go round and round on this one; It's true that
+> root can now cause random programs which have a file mmap'ed for
+> writing to seg fault, but root has a million ways of killing and
+> otherwise harming running application programs, and it's unlikely
+> files get marked for immutable all that often.  We just have to pick
+> one way of doing things, and let it be same across all the file
+> systems.
+> 
+> My understanding was that XFS had chosen to make the inode immutable
+> as soon as the flag is set (as opposed to forbidding new fd's to be
+> opened which were writeable), and I was OK moving ext4 to that common
+> interpretation of the immmutable bit, even though it would be a change
+> to ext4.
 
-LGTM,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+<nod> It started as "just do this to xfs" and has now become a vfs level
+change...
+
+> And then when I saw that Amir had included a patch that would cause
+> test failures unless that patch series was applied, it seemed that we
+> had all thought that the change was a done deal.  Perhaps we should
+> have had a more explicit discussion when the test was sent for review,
+> but I had assumed it was exclusively a copy_file_range set of tests,
+> so I didn't realize it was going to cause ext4 failures.
+
+And here we see the inconsistent behavior causing developer confusion. :)
+
+I think Amir's c_f_r tests just check the existing behavior (of just
+c_f_r) that you can't (most of the time) copy into a file that you
+opened for write but that the administrator has since marked immutable.
+
+/That/ behavior in turn came from the original implementation that would
+try reflink which would fail on the immutable destination check and then
+fail the whole call ... I think?
 
 --D
 
-> ---
-> 
-> Eryu,
-> 
-> Following feedback by Ted, I've decided it would be better to
-> remove the test case of copy from swap file.
-> There is no reason to deny that copy, but there is also no reason
-> for us to assert that filesystems must allow this functionality.
-> 
-> Even after removing the copy from test case, test still fails
-> on upstream for all filesystems I tested.
-> Tests passes with Darrick's copy-file-range-fixes branch.
-> 
-> Thanks,
-> Amir.
-> 
->  tests/generic/554     | 3 +--
->  tests/generic/554.out | 1 -
->  2 files changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/tests/generic/554 b/tests/generic/554
-> index 10ae4035..c946ca17 100755
-> --- a/tests/generic/554
-> +++ b/tests/generic/554
-> @@ -4,7 +4,7 @@
->  #
->  # FS QA Test No. 554
->  #
-> -# Check that we cannot copy_file_range() to/from a swapfile
-> +# Check that we cannot copy_file_range() to a swapfile
->  #
->  seq=`basename $0`
->  seqres=$RESULT_DIR/$seq
-> @@ -46,7 +46,6 @@ echo swap files return ETXTBUSY
->  _format_swapfile $SCRATCH_MNT/swapfile 16m
->  swapon $SCRATCH_MNT/swapfile
->  $XFS_IO_PROG -f -c "copy_range -l 32k $SCRATCH_MNT/file" $SCRATCH_MNT/swapfile
-> -$XFS_IO_PROG -f -c "copy_range -l 32k $SCRATCH_MNT/swapfile" $SCRATCH_MNT/copy
->  swapoff $SCRATCH_MNT/swapfile
->  
->  # success, all done
-> diff --git a/tests/generic/554.out b/tests/generic/554.out
-> index ffaa7b0a..19385a05 100644
-> --- a/tests/generic/554.out
-> +++ b/tests/generic/554.out
-> @@ -1,4 +1,3 @@
->  QA output created by 554
->  swap files return ETXTBUSY
->  copy_range: Text file busy
-> -copy_range: Text file busy
-> -- 
-> 2.17.1
-> 
+>      	    	       	   	 - Ted
