@@ -2,92 +2,155 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 701174250D
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 14:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF184253C
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 14:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438619AbfFLMJM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jun 2019 08:09:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44682 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405581AbfFLMJM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:09:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83424AE27;
-        Wed, 12 Jun 2019 12:09:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id A86331E4328; Wed, 12 Jun 2019 14:09:07 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 14:09:07 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612120907.GC14578@quack2.suse.cz>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
+        id S1730932AbfFLMNP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jun 2019 08:13:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45448 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730929AbfFLMNO (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:13:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1F9AF30872E3;
+        Wed, 12 Jun 2019 12:13:14 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A535A1F8;
+        Wed, 12 Jun 2019 12:13:12 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 08:13:10 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] xfs: create simplified inode walk function
+Message-ID: <20190612121310.GD12395@bfoster>
+References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
+ <155968497450.1657646.15305138327955918345.stgit@magnolia>
+ <20190610135816.GA6473@bfoster>
+ <20190610165909.GI1871505@magnolia>
+ <20190610175509.GF6473@bfoster>
+ <20190610231134.GM1871505@magnolia>
+ <20190611223341.GD14363@dread.disaster.area>
+ <20190611230514.GU1871505@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612114721.GB3876@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190611230514.GU1871505@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 12 Jun 2019 12:13:14 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
-> On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
-> 
-> > > > The main objection to the current ODP & DAX solution is that very
-> > > > little HW can actually implement it, having the alternative still
-> > > > require HW support doesn't seem like progress.
+On Tue, Jun 11, 2019 at 04:05:14PM -0700, Darrick J. Wong wrote:
+> On Wed, Jun 12, 2019 at 08:33:41AM +1000, Dave Chinner wrote:
+> > On Mon, Jun 10, 2019 at 04:11:34PM -0700, Darrick J. Wong wrote:
+> > > On Mon, Jun 10, 2019 at 01:55:10PM -0400, Brian Foster wrote:
+> > > > > I could extend the comment to explain why we don't use PAGE_SIZE...
+> > > > > 
 > > > > 
-> > > > I think we will eventually start seein some HW be able to do this
-> > > > invalidation, but it won't be universal, and I'd rather leave it
-> > > > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > > > on fire, I need to unplug it).
+> > > > Sounds good, though what I think would be better is to define a
+> > > > IWALK_DEFAULT_RECS or some such somewhere and put the calculation
+> > > > details with that.
+> > > > 
+> > > > Though now that you point out the readahead thing, aren't we at risk of
+> > > > a similar problem for users who happen to pass a really large userspace
+> > > > buffer? Should we cap the kernel allocation/readahead window in all
+> > > > cases and not just the default case?
 > > > 
-> > > Agreed.  I think software wise there is not much some of the devices can do
-> > > with such an "invalidate".
+> > > Hmm, that's right, we don't want to let userspace arbitrarily determine
+> > > the size of the buffer, and I think the current implementation caps it
+> > > the readahaead at ... oh, PAGE_SIZE / sizeof(xfs_inogrp_t).
+> > > 
+> > > Oh, right, and in the V1 patchset Dave said that we should constrain
+> > > readahead even further.
 > > 
-> > So out of curiosity: What does RDMA driver do when userspace just closes
-> > the file pointing to RDMA object? It has to handle that somehow by aborting
-> > everything that's going on... And I wanted similar behavior here.
+> > Right, I should explain a bit further why, too - it's about
+> > performance.  I've found that a user buffer size of ~1024 inodes is
+> > generally enough to max out performance of bulkstat. i.e. somewhere
+> > around 1000 inodes per syscall is enough to mostly amortise all of
+> > the cost of syscall, setup, readahead, etc vs the CPU overhead of
+> > copying all the inodes into the user buffer.
+> > 
+> > Once the user buffer goes over a few thousand inodes, performance
+> > then starts to tail back off - we don't get any gains from trying to
+> > bulkstat tens of thousands of inodes at a time, especially under
+> > memory pressure because that can push us into readahead and buffer
+> > cache thrashing.
 > 
-> It aborts *everything* connected to that file descriptor. Destroying
-> everything avoids creating inconsistencies that destroying a subset
-> would create.
+> <nod> I don't mind setting the max inobt record cache buffer size to a
+> smaller value (1024 bytes == 4096 inodes readahead?) so we can get a
+> little farther into future hardware scalability (or decreases in syscall
+> performance :P).
 > 
-> What has been talked about for lease break is not destroying anything
-> but very selectively saying that one memory region linked to the GUP
-> is no longer functional.
 
-OK, so what I had in mind was that if RDMA app doesn't play by the rules
-and closes the file with existing pins (and thus layout lease) we would
-force it to abort everything. Yes, it is disruptive but then the app didn't
-obey the rule that it has to maintain file lease while holding pins. Thus
-such situation should never happen unless the app is malicious / buggy.
+The 1k baseline presumably applies to the current code. Taking a closer
+look at the current code, we unconditionally allocate a 4 page record
+buffer and start to fill it. For every record we grab, we issue
+readahead on the underlying clusters.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Hmm, that seems like generally what this patchset is doing aside from
+the more variable record buffer allocation. I'm fine with changing
+things like record buffer allocation, readahead semantics, etc. given
+Dave's practical analysis above, but TBH I don't think that should all
+be part of the same patch. IMO, this rework patch should maintain as
+close as possible to current behavior and a subsequent patches in the
+series can tweak record buffer size and whatnot to improve readahead
+logic. That makes this all easier to review, discuss and maintain in the
+event of regression.
+
+> I guess the question here is how to relate the number of inodes the user
+> asked for to how many inobt records we have to read to find that many
+> allocated inodes?  Or in other words, what's the average ir_freecount
+> across all the inobt records?
+> 
+
+The current code basically looks like it allocates an oversized buffer
+and hopes for the best with regard to readahead. If we took a similar
+approach in terms of overestimating the buffer size (assuming not all
+inode records are fully allocated), I suppose we could also track the
+number of cluster readaheads issued and govern the collect/drain
+sequences of the record buffer based on that..? But again, I think we
+should have this as a separate "xfs: make iwalk readahead smarter ..."
+patch that documents Dave's analysis above, perhaps includes some
+numbers, etc..
+
+> Note that this is technically a decrease since the old code would
+> reserve 16K for this purpose...
+> 
+
+Indeed.
+
+Brian
+
+> > > > > /*
+> > > > >  * Note: We hardcode 4096 here (instead of, say, PAGE_SIZE) because we want to
+> > > > >  * constrain the amount of inode readahead to 16k inodes regardless of CPU:
+> > > > >  *
+> > > > >  * 4096 bytes / 16 bytes per inobt record = 256 inobt records
+> > > > >  * 256 inobt records * 64 inodes per record = 16384 inodes
+> > > > >  * 16384 inodes * 512 bytes per inode(?) = 8MB of inode readahead
+> > > > >  */
+> > 
+> > Hence I suspect that even this is overkill - it makes no sense to
+> > have a huge readahead window when there has been no measurable
+> > performance benefit to doing large inode count bulkstat syscalls.
+> > 
+> > And, FWIW, readahead probably should also be capped at what the user
+> > buffer can hold - no point in reading 16k inodes when the output
+> > buffer can only fit 1000 inodes...
+> 
+> It already is -- the icount parameter from userspace is (eventually) fed
+> to xfs_iwalk-set_prefetch.
+> 
+> --D
+> 
+> > Cheers,
+> > 
+> > Dave.
+> > -- 
+> > Dave Chinner
+> > david@fromorbit.com
