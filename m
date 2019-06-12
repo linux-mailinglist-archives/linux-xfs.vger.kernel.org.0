@@ -2,49 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59B8A41E29
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 09:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F9B4204A
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 11:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407000AbfFLHp5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jun 2019 03:45:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:57628 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406508AbfFLHp4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:45:56 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 0775868AFE; Wed, 12 Jun 2019 09:45:28 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 09:45:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: alternative take on the same page merging leak fix
-Message-ID: <20190612074527.GA20491@lst.de>
-References: <20190611151007.13625-1-hch@lst.de> <20190612010922.GA17522@ming.t460p>
+        id S2405666AbfFLJKE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jun 2019 05:10:04 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:22536 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405024AbfFLJKE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 05:10:04 -0400
+X-IronPort-AV: E=Sophos;i="5.63,363,1557158400"; 
+   d="scan'208";a="67069444"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 12 Jun 2019 17:10:01 +0800
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
+        by cn.fujitsu.com (Postfix) with ESMTP id D1F744CDD0CA
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Jun 2019 17:09:59 +0800 (CST)
+Received: from localhost.localdomain (10.167.215.30) by
+ G08CNEXCHPEKD02.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 12 Jun 2019 17:09:57 +0800
+From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+To:     <linux-xfs@vger.kernel.org>
+CC:     Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Subject: [PATCH] mkfs: remove useless log options in usage
+Date:   Wed, 12 Jun 2019 17:09:35 +0800
+Message-ID: <1560330575-2209-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612010922.GA17522@ming.t460p>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.167.215.30]
+X-yoursite-MailScanner-ID: D1F744CDD0CA.AF8CF
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:09:23AM +0800, Ming Lei wrote:
-> We have to backport the fixes to -stable tree, and downstream need to
-> ship the fix too.
-> 
-> The issue is quite serious because the leak is in IO path and the whole
-> system ram can be used up easily on some workloads. So I think the fix
-> should be for 5.2, however, regression risk might be increased by
-> pulling cleanup & re-factor in now.
-> 
-> I really appreciate you may cook a fix-only patch for this issue.
-> Especially the change in add pc page code isn't necessary for fixing
-> the issue.
+Since commit 2cf637cf(mkfs: remove logarithm based CLI options),
+xfsprogs has discarded log options in node_options, remove it in usage.
 
-Patches 3 and 4 have no dependencies on 1 and 2, and should have
-arguably been ordered first in the series.
+Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+---
+ mkfs/xfs_mkfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index db3ad38e..91391b72 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -858,7 +858,7 @@ usage( void )
+ 			    (sunit=value,swidth=value|su=num,sw=num|noalign),\n\
+ 			    sectsize=num\n\
+ /* force overwrite */	[-f]\n\
+-/* inode size */	[-i log=n|perblock=n|size=num,maxpct=n,attr=0|1|2,\n\
++/* inode size */	[-i perblock=n|size=num,maxpct=n,attr=0|1|2,\n\
+ 			    projid32bit=0|1,sparse=0|1]\n\
+ /* no discard */	[-K]\n\
+ /* log subvol */	[-l agnum=n,internal,size=num,logdev=xxx,version=n\n\
+-- 
+2.18.1
+
+
+
