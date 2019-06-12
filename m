@@ -2,264 +2,197 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CCF842BEE
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 18:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955D842CCA
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 18:54:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfFLQS1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jun 2019 12:18:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43090 "EHLO
+        id S2406968AbfFLQyE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jun 2019 12:54:04 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56862 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfFLQS1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 12:18:27 -0400
+        with ESMTP id S1726200AbfFLQyD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 12:54:03 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGHQ6d156467;
-        Wed, 12 Jun 2019 16:17:47 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGmYCp184990;
+        Wed, 12 Jun 2019 16:53:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=pG2uSLNz/LnL3kQ1QG1EPMYa7NeF2BzZoYhxoZcCwts=;
- b=A1lZTq20hH5l4Ue+ejOTuBKyDmOSYQRIDTHfJ15huaACThI+mtMMfdy8VtzzszbmAd48
- Zs2e92udrJskh7yusjBV9VMU6urEDBnHYHoZusm3M9FP8ANuIZtql7EyaqoOW5dIr9oE
- 6xalaiR0KR3PMGGRX8DCww8EwcdmVUcs4t1RK3eH9OOI8EFusaJG9OF6l+xD8zFtTkP8
- oStHSkL7Kj8rSWTfudMzc4sPuWGUvongEy3h5WDaN4XF9Qt9HJ8uvIjGJSErmiDql84S
- H9PIomUxM30yebpKg0dasqiwUEG4w1ANQI1Moytg2ddF+C+qxt7q6za824gmSXkOUFwH Eg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t04etvnrn-1
+ bh=egSym93BCukUJfDrsZ/tz+Bu871wSjbSZpw1y6WdiSs=;
+ b=vrNXPtUQRYDzfeYihK0ZQ2c4SgUasNPay1jHqBdHwVj0XYSZ/WmyQkXvHrIju2/nJkrK
+ hEpwQIJnTmqokTzbPCHpoGz+Aa4CIkdVlz7rXDinKBVJ1zyYDBkyij4CBX5RTuCTkvr3
+ GfnHSadFqCU0zGH/ouz70HmyxrTO/zH4cRx5HsMg9owLwnPPUJhIOckvaYT7RMdtAnIb
+ Kj6XAHEUBgDXob51bSJ1ULeFSwwnHv6It5jqrDYu12UX/PuZTYfVMFOzLu65cd8/xD8Q
+ EPd3bXany2d5bcLTnUuUwMmbfVJs9LeQNm8XgN2s28SIA4Ck+XhkhdsC8N2hOnFyLJ1e HQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t04etvuyj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:17:47 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGGCuO067493;
-        Wed, 12 Jun 2019 16:17:46 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t0p9ry439-1
+        Wed, 12 Jun 2019 16:53:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGrJd9162285;
+        Wed, 12 Jun 2019 16:53:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t024v34sn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:17:45 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CGHjLg027803;
-        Wed, 12 Jun 2019 16:17:45 GMT
+        Wed, 12 Jun 2019 16:53:49 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CGrlMb032236;
+        Wed, 12 Jun 2019 16:53:47 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 09:17:45 -0700
-Date:   Wed, 12 Jun 2019 09:17:44 -0700
+        with ESMTP ; Wed, 12 Jun 2019 09:53:47 -0700
+Date:   Wed, 12 Jun 2019 09:53:46 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     Brian Foster <bfoster@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs: show build options in sysfs
-Message-ID: <20190612161744.GD3773859@magnolia>
-References: <97e16da4-e5ad-3049-0f6b-c1e24462e035@redhat.com>
- <20190607132057.GD57123@bfoster>
- <08f400d3-47e8-77bd-3685-d230e9ff49bd@redhat.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] xfs: create simplified inode walk function
+Message-ID: <20190612165346.GK1688126@magnolia>
+References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
+ <155968497450.1657646.15305138327955918345.stgit@magnolia>
+ <20190610135816.GA6473@bfoster>
+ <20190610165909.GI1871505@magnolia>
+ <20190610175509.GF6473@bfoster>
+ <20190610231134.GM1871505@magnolia>
+ <20190611223341.GD14363@dread.disaster.area>
+ <20190611230514.GU1871505@magnolia>
+ <20190612121310.GD12395@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08f400d3-47e8-77bd-3685-d230e9ff49bd@redhat.com>
+In-Reply-To: <20190612121310.GD12395@bfoster>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120109
+ engine=8.0.1-1810050000 definitions=main-1906120114
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120109
+ definitions=main-1906120114
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 08:41:09AM -0500, Eric Sandeen wrote:
-> On 6/7/19 8:20 AM, Brian Foster wrote:
-> > On Thu, Jun 06, 2019 at 10:30:09PM -0500, Eric Sandeen wrote:
-> >> This adds the "build options" string to a sysfs entry:
-> >>
-> >> # cat /sys/fs/xfs/features/build_opts 
-> >> ACLs, security attributes, realtime, scrub, no debug
-> >>
-> >> because right now we only get it in dmesg and scraping dmesg
-> >> is not a great option.
-> >>
-> >> This is really /build options/, not features as in "on-disk,
-> >> superblock features" like XFS_SB_FEAT_* - putting this under a
-> >> features/ dir will leave the window open open to do supported
-> >> superblock features ala ext4 & f2fs in the future if desired.
-> >>
-> >> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-> >> ---
-> >>
-> >> No sure if it would make sense to have i.e.
-> >>
-> >> /sys/fs/xfs/features/build_options
-> >> /sys/fs/xfs/features/finobt
-> >> /sys/fs/xfs/features/rmapbt
-> >> ...
-> >>
-> >> all in the same features/ dir ?
-> >>
+On Wed, Jun 12, 2019 at 08:13:10AM -0400, Brian Foster wrote:
+> On Tue, Jun 11, 2019 at 04:05:14PM -0700, Darrick J. Wong wrote:
+> > On Wed, Jun 12, 2019 at 08:33:41AM +1000, Dave Chinner wrote:
+> > > On Mon, Jun 10, 2019 at 04:11:34PM -0700, Darrick J. Wong wrote:
+> > > > On Mon, Jun 10, 2019 at 01:55:10PM -0400, Brian Foster wrote:
+> > > > > > I could extend the comment to explain why we don't use PAGE_SIZE...
+> > > > > > 
+> > > > > 
+> > > > > Sounds good, though what I think would be better is to define a
+> > > > > IWALK_DEFAULT_RECS or some such somewhere and put the calculation
+> > > > > details with that.
+> > > > > 
+> > > > > Though now that you point out the readahead thing, aren't we at risk of
+> > > > > a similar problem for users who happen to pass a really large userspace
+> > > > > buffer? Should we cap the kernel allocation/readahead window in all
+> > > > > cases and not just the default case?
+> > > > 
+> > > > Hmm, that's right, we don't want to let userspace arbitrarily determine
+> > > > the size of the buffer, and I think the current implementation caps it
+> > > > the readahaead at ... oh, PAGE_SIZE / sizeof(xfs_inogrp_t).
+> > > > 
+> > > > Oh, right, and in the V1 patchset Dave said that we should constrain
+> > > > readahead even further.
+> > > 
+> > > Right, I should explain a bit further why, too - it's about
+> > > performance.  I've found that a user buffer size of ~1024 inodes is
+> > > generally enough to max out performance of bulkstat. i.e. somewhere
+> > > around 1000 inodes per syscall is enough to mostly amortise all of
+> > > the cost of syscall, setup, readahead, etc vs the CPU overhead of
+> > > copying all the inodes into the user buffer.
+> > > 
+> > > Once the user buffer goes over a few thousand inodes, performance
+> > > then starts to tail back off - we don't get any gains from trying to
+> > > bulkstat tens of thousands of inodes at a time, especially under
+> > > memory pressure because that can push us into readahead and buffer
+> > > cache thrashing.
 > > 
-> > What's the purpose of the features dir, and why an entry per feature as
-> > opposed to a single 'features' file like we're adding for build_opts?
-> 
-> just because ext4 and f2fs did it that way, and supposedly sysfs
-> is one value per file.
-> 
-> also our entire sysfs structure is based around having dirs under xfs/
-> - tbh I haven't yet sorted out how to actually ad a bare file under
-> xfs/ ;)  Of course it's possible but existing infra in our code is friendlier
-> with subdirs of files.  ;)
-
-sysfs_create_file(&xfs_kset.kobj, ATTR_LIST(build_opts)); ?
-
-sysfs is such a pain... I'm pretty sure that's a gross hack since a kset
-doesn't look like it's supposed to have attributes.
-
-> 
-> > Would those per-feature files present any data? The patch seems
-> > reasonable to me in general, but I'd prefer to see the directory
-> > structure thing at least hashed out before we decide on this kind of
-> > placement (as opposed to something like /sys/fs/xfs/build_opts, if that
-> > is possible).
-> 
-> Yeah, that's why I raised the question above, stupid me ;)
-> 
-> > I see that ext4 has a per-file feature dir along these lines:
+> > <nod> I don't mind setting the max inobt record cache buffer size to a
+> > smaller value (1024 bytes == 4096 inodes readahead?) so we can get a
+> > little farther into future hardware scalability (or decreases in syscall
+> > performance :P).
 > > 
-> > $ ls /sys/fs/ext4/features/
-> > batched_discard  encryption  lazy_itable_init  meta_bg_resize  metadata_csum_seed
-> > $ cat /sys/fs/ext4/features/*
-> > supported
-> > supported
-> > supported
-> > supported
-> > supported
-> > 
-> > I'm not sure if those files disappear when a feature is not available or
-> > persist and return something other than "supported?" Are those files
-> > used by anything in userspace?
 > 
-> It's based on what the running code can support, i.e. the total of its
-> COMPAT_FEATURES stuff.
+> The 1k baseline presumably applies to the current code. Taking a closer
+> look at the current code, we unconditionally allocate a 4 page record
+> buffer and start to fill it. For every record we grab, we issue
+> readahead on the underlying clusters.
+> 
+> Hmm, that seems like generally what this patchset is doing aside from
+> the more variable record buffer allocation. I'm fine with changing
+> things like record buffer allocation, readahead semantics, etc. given
+> Dave's practical analysis above, but TBH I don't think that should all
+> be part of the same patch. IMO, this rework patch should maintain as
+> close as possible to current behavior and a subsequent patches in the
+> series can tweak record buffer size and whatnot to improve readahead
+> logic. That makes this all easier to review, discuss and maintain in the
+> event of regression.
 
-If you do, can we please build a feature flags to strings decoder ring
-so that xfs_db/kernel/mkfs/repair can standardize the names for all the
-features?  I'd like to avoid the spinodes/sparse confusion again.
+This also got me thinking that I should look up what INUMBERS does,
+which is that it uses the icount to determine the cache size, up to a
+maximum of PAGE_SIZE.  Since INUMBERS doesn't issue readahead I think
+it's fine to preserve that behavior too... and probably with a separate
+xfs_inobt_walk_set_prefetch function.
+
+> > I guess the question here is how to relate the number of inodes the user
+> > asked for to how many inobt records we have to read to find that many
+> > allocated inodes?  Or in other words, what's the average ir_freecount
+> > across all the inobt records?
+> > 
+> 
+> The current code basically looks like it allocates an oversized buffer
+> and hopes for the best with regard to readahead. If we took a similar
+> approach in terms of overestimating the buffer size (assuming not all
+> inode records are fully allocated), I suppose we could also track the
+> number of cluster readaheads issued and govern the collect/drain
+> sequences of the record buffer based on that..? But again, I think we
+> should have this as a separate "xfs: make iwalk readahead smarter ..."
+> patch that documents Dave's analysis above, perhaps includes some
+> numbers, etc..
+
+Ok.
 
 --D
 
-> 
-> >> Also I didn't test module unload/teardown as I'm testing on xfs root.
-> >>
+> > Note that this is technically a decrease since the old code would
+> > reserve 16K for this purpose...
 > > 
-> > insmod/rmmod works on a quick test on one of my VMs.
 > 
-> thanks, sorry for being lazy there.
+> Indeed.
 > 
-> -Eric
+> Brian
 > 
-> > Brian
+> > > > > > /*
+> > > > > >  * Note: We hardcode 4096 here (instead of, say, PAGE_SIZE) because we want to
+> > > > > >  * constrain the amount of inode readahead to 16k inodes regardless of CPU:
+> > > > > >  *
+> > > > > >  * 4096 bytes / 16 bytes per inobt record = 256 inobt records
+> > > > > >  * 256 inobt records * 64 inodes per record = 16384 inodes
+> > > > > >  * 16384 inodes * 512 bytes per inode(?) = 8MB of inode readahead
+> > > > > >  */
+> > > 
+> > > Hence I suspect that even this is overkill - it makes no sense to
+> > > have a huge readahead window when there has been no measurable
+> > > performance benefit to doing large inode count bulkstat syscalls.
+> > > 
+> > > And, FWIW, readahead probably should also be capped at what the user
+> > > buffer can hold - no point in reading 16k inodes when the output
+> > > buffer can only fit 1000 inodes...
 > > 
-> >> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> >> index a14d11d78bd8..bc0e7fd63567 100644
-> >> --- a/fs/xfs/xfs_super.c
-> >> +++ b/fs/xfs/xfs_super.c
-> >> @@ -55,9 +55,10 @@
-> >>  static const struct super_operations xfs_super_operations;
-> >>  struct bio_set xfs_ioend_bioset;
-> >>  
-> >> -static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
-> >> +static struct kset *xfs_kset;			/* top-level xfs sysfs dir */
-> >> +static struct xfs_kobj xfs_features_kobj;	/* global features */
-> >>  #ifdef DEBUG
-> >> -static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
-> >> +static struct xfs_kobj xfs_dbg_kobj;		/* global debug sysfs attrs */
-> >>  #endif
-> >>  
-> >>  /*
-> >> @@ -2134,11 +2135,16 @@ init_xfs_fs(void)
-> >>  	if (error)
-> >>  		goto out_free_stats;
-> >>  
-> >> +	xfs_features_kobj.kobject.kset = xfs_kset;
-> >> +	error = xfs_sysfs_init(&xfs_features_kobj, &xfs_features_ktype,
-> >> +				NULL, "features");
-> >> +	if (error)
-> >> +		goto out_remove_stats_kobj;
-> >>  #ifdef DEBUG
-> >>  	xfs_dbg_kobj.kobject.kset = xfs_kset;
-> >>  	error = xfs_sysfs_init(&xfs_dbg_kobj, &xfs_dbg_ktype, NULL, "debug");
-> >>  	if (error)
-> >> -		goto out_remove_stats_kobj;
-> >> +		goto out_remove_features_kobj;
-> >>  #endif
-> >>  
-> >>  	error = xfs_qm_init();
-> >> @@ -2155,8 +2161,10 @@ init_xfs_fs(void)
-> >>   out_remove_dbg_kobj:
-> >>  #ifdef DEBUG
-> >>  	xfs_sysfs_del(&xfs_dbg_kobj);
-> >> - out_remove_stats_kobj:
-> >> + out_remove_features_kobj:
-> >>  #endif
-> >> +	xfs_sysfs_del(&xfs_features_kobj);
-> >> + out_remove_stats_kobj:
-> >>  	xfs_sysfs_del(&xfsstats.xs_kobj);
-> >>   out_free_stats:
-> >>  	free_percpu(xfsstats.xs_stats);
-> >> @@ -2186,6 +2194,7 @@ exit_xfs_fs(void)
-> >>  #ifdef DEBUG
-> >>  	xfs_sysfs_del(&xfs_dbg_kobj);
-> >>  #endif
-> >> +	xfs_sysfs_del(&xfs_features_kobj);
-> >>  	xfs_sysfs_del(&xfsstats.xs_kobj);
-> >>  	free_percpu(xfsstats.xs_stats);
-> >>  	kset_unregister(xfs_kset);
-> >> diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-> >> index cabda13f3c64..98f36ad16237 100644
-> >> --- a/fs/xfs/xfs_sysfs.c
-> >> +++ b/fs/xfs/xfs_sysfs.c
-> >> @@ -222,6 +222,28 @@ struct kobj_type xfs_dbg_ktype = {
-> >>  
-> >>  #endif /* DEBUG */
-> >>  
-> >> +/* features */
-> >> +
-> >> +STATIC ssize_t
-> >> +build_opts_show(
-> >> +	struct kobject	*kobject,
-> >> +	char		*buf)
-> >> +{
-> >> +	return snprintf(buf, PAGE_SIZE, "%s\n", XFS_BUILD_OPTIONS);
-> >> +}
-> >> +XFS_SYSFS_ATTR_RO(build_opts);
-> >> +
-> >> +static struct attribute *xfs_features_attrs[] = {
-> >> +	ATTR_LIST(build_opts),
-> >> +	NULL,
-> >> +};
-> >> +
-> >> +struct kobj_type xfs_features_ktype = {
-> >> +	.release = xfs_sysfs_release,
-> >> +	.sysfs_ops = &xfs_sysfs_ops,
-> >> +	.default_attrs = xfs_features_attrs,
-> >> +};
-> >> +
-> >>  /* stats */
-> >>  
-> >>  static inline struct xstats *
-> >> diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-> >> index e9f810fc6731..e475f6b7eb91 100644
-> >> --- a/fs/xfs/xfs_sysfs.h
-> >> +++ b/fs/xfs/xfs_sysfs.h
-> >> @@ -11,6 +11,7 @@ extern struct kobj_type xfs_mp_ktype;	/* xfs_mount */
-> >>  extern struct kobj_type xfs_dbg_ktype;	/* debug */
-> >>  extern struct kobj_type xfs_log_ktype;	/* xlog */
-> >>  extern struct kobj_type xfs_stats_ktype;	/* stats */
-> >> +extern struct kobj_type xfs_features_ktype;	/* features*/
-> >>  
-> >>  static inline struct xfs_kobj *
-> >>  to_kobj(struct kobject *kobject)
-> >>
-> 
+> > It already is -- the icount parameter from userspace is (eventually) fed
+> > to xfs_iwalk-set_prefetch.
+> > 
+> > --D
+> > 
+> > > Cheers,
+> > > 
+> > > Dave.
+> > > -- 
+> > > Dave Chinner
+> > > david@fromorbit.com
