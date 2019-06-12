@@ -2,208 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C87C642DE7
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 19:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E044A42F39
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 20:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389803AbfFLRyi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jun 2019 13:54:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41330 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389700AbfFLRyh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 13:54:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CHn0VS039372;
-        Wed, 12 Jun 2019 17:54:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=ZIB6v0lt/v/pB5pXL4nnQP2SW07fqAIyLgBAuVKD1Mo=;
- b=drg3zBK+Yt3ISbNdQYYqZEnWAQXdCzWV7NtYmqYnXoeMcp/m1IWmP/oZKI0ONNTVpAO9
- G3y/XIqKKraD8ahiMBiZA+E9+ltF8DJnqPr8y1CCo05GcOlTpLFbR9edDaZLKCANqoJa
- +yMbpqfKok9RSuu5KOTMQ9MnFWpyORc2NDyhKaGHaL0Nakh8+epkMAXfT2nhywzsHDhk
- OPAp/7DkURQpWZ4a6P5sAk5IMaYatF13C3yszuBWF+1vtShduqUTRn/lmOz30e78HEUk
- 8s1rfXBJ9LUKSkB2kIE3PKGBdHhN+H/qCVOMcG3GQhQjwIbu5XX4T2B0iDj+uNIeWtdq Pw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t04etw5sh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 17:54:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CHrKwv105760;
-        Wed, 12 Jun 2019 17:54:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2t024v3y6b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 17:54:17 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CHsGQ9006437;
-        Wed, 12 Jun 2019 17:54:16 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 10:54:15 -0700
-Date:   Wed, 12 Jun 2019 10:54:14 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] xfs: create simplified inode walk function
-Message-ID: <20190612175414.GE3773859@magnolia>
-References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
- <155968497450.1657646.15305138327955918345.stgit@magnolia>
- <20190610135816.GA6473@bfoster>
- <20190610165909.GI1871505@magnolia>
- <20190610175509.GF6473@bfoster>
- <20190610231134.GM1871505@magnolia>
- <20190611223341.GD14363@dread.disaster.area>
- <20190611230514.GU1871505@magnolia>
+        id S1727683AbfFLSmK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jun 2019 14:42:10 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41987 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfFLSmF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 14:42:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s184so12455435oie.9
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Jun 2019 11:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tLkmphJnLjEku4wPa26GqmShS2e5likwCcmpQlFLS9E=;
+        b=zfGP+t+9ivTiw9crHzyoG37UKVT39+ZjMSRc6i4RLF5qzgoEzM0PJJFpTl3UpomLM/
+         kX7wxsRh/bfXL05Kn2SjQT8PDTQbpZvw2lUD2P17lgifKk9462SiGOzy9eolZxENP8tF
+         +j8h3CL4xbOvN0NcXJng0ZhfijbK4zlpWlo5g45OKeiNBbSWh4j6EO8XjD4uzxYBWXSc
+         XQXw6jfUAUrXoISJcc1nasZDsCw2vNnJrgvivK5m8U97df7yj+O0/KKRytyMUK2vV5wL
+         CVPInnibqz35AZHLe+QENPOC6d6PXPPLQ6FBHTljTMKMRhnltIiFojDH2RTb0H3+DeCQ
+         awHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tLkmphJnLjEku4wPa26GqmShS2e5likwCcmpQlFLS9E=;
+        b=aNtmUdDFrADYxuc9iFgz/15mF+K27LZw20NqpuQ+0weFwgaRUBgVps2Kte8zHBDjKI
+         4NsLsMJM6krbDSCf7EzZj6O+AkoIKRV7+pWmXKGteW9Kx49Yb73rX+4BZtLPY5DkDqKO
+         fJV0aWU8yI1d4RQ34AuO5oSiOYGwgYIu0EQIlCDz+kqMtPzwj6FyD9LfpAbG44SsckBq
+         rIKKpL9a0DqsWCcGY6QkENtxGPpUpzzJABdPeJX+UC6LfEucR9rfc17Ii0QHJ95t8fP+
+         HAk2x4kFPB3hNG6a2U+nbvlJIwChBamgEl1A7qmFlp0DdPww9eUrD7Xgg8Y5vC6HHeqn
+         htrw==
+X-Gm-Message-State: APjAAAW5Yvo+LqV/Cc/paeiNKoxecmt04zq5oi6hYMZ3UQuUrHsJ/fvJ
+        xNLloJoEaNHlPsCzhjYc2IPqpgwUIPgNiDmL4o8b3g==
+X-Google-Smtp-Source: APXvYqxw8Jxg8VjrdgkzfIw+Yn35hC16YxwrfmO4tE9KRMFgYTyKNK9pqaozSKJ82RqVYk9X5Uls8HWSSM7jkwOY/uo=
+X-Received: by 2002:aca:ed4c:: with SMTP id l73mr412323oih.149.1560364924898;
+ Wed, 12 Jun 2019 11:42:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8t9RHnE3ZwKMSgU+"
-Content-Disposition: inline
-In-Reply-To: <20190611230514.GU1871505@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120120
+References: <20190606014544.8339-1-ira.weiny@intel.com> <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca> <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz> <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com> <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca> <20190612120907.GC14578@quack2.suse.cz>
+In-Reply-To: <20190612120907.GC14578@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 12 Jun 2019 11:41:53 -0700
+Message-ID: <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 5:09 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
+> > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+> >
+> > > > > The main objection to the current ODP & DAX solution is that very
+> > > > > little HW can actually implement it, having the alternative still
+> > > > > require HW support doesn't seem like progress.
+> > > > >
+> > > > > I think we will eventually start seein some HW be able to do this
+> > > > > invalidation, but it won't be universal, and I'd rather leave it
+> > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > > > > on fire, I need to unplug it).
+> > > >
+> > > > Agreed.  I think software wise there is not much some of the devices can do
+> > > > with such an "invalidate".
+> > >
+> > > So out of curiosity: What does RDMA driver do when userspace just closes
+> > > the file pointing to RDMA object? It has to handle that somehow by aborting
+> > > everything that's going on... And I wanted similar behavior here.
+> >
+> > It aborts *everything* connected to that file descriptor. Destroying
+> > everything avoids creating inconsistencies that destroying a subset
+> > would create.
+> >
+> > What has been talked about for lease break is not destroying anything
+> > but very selectively saying that one memory region linked to the GUP
+> > is no longer functional.
+>
+> OK, so what I had in mind was that if RDMA app doesn't play by the rules
+> and closes the file with existing pins (and thus layout lease) we would
+> force it to abort everything. Yes, it is disruptive but then the app didn't
+> obey the rule that it has to maintain file lease while holding pins. Thus
+> such situation should never happen unless the app is malicious / buggy.
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jun 11, 2019 at 04:05:14PM -0700, Darrick J. Wong wrote:
-> On Wed, Jun 12, 2019 at 08:33:41AM +1000, Dave Chinner wrote:
-> > On Mon, Jun 10, 2019 at 04:11:34PM -0700, Darrick J. Wong wrote:
-> > > On Mon, Jun 10, 2019 at 01:55:10PM -0400, Brian Foster wrote:
-> > > > > I could extend the comment to explain why we don't use PAGE_SIZE...
-> > > > > 
-> > > > 
-> > > > Sounds good, though what I think would be better is to define a
-> > > > IWALK_DEFAULT_RECS or some such somewhere and put the calculation
-> > > > details with that.
-> > > > 
-> > > > Though now that you point out the readahead thing, aren't we at risk of
-> > > > a similar problem for users who happen to pass a really large userspace
-> > > > buffer? Should we cap the kernel allocation/readahead window in all
-> > > > cases and not just the default case?
-> > > 
-> > > Hmm, that's right, we don't want to let userspace arbitrarily determine
-> > > the size of the buffer, and I think the current implementation caps it
-> > > the readahaead at ... oh, PAGE_SIZE / sizeof(xfs_inogrp_t).
-> > > 
-> > > Oh, right, and in the V1 patchset Dave said that we should constrain
-> > > readahead even further.
-> > 
-> > Right, I should explain a bit further why, too - it's about
-> > performance.  I've found that a user buffer size of ~1024 inodes is
-> > generally enough to max out performance of bulkstat. i.e. somewhere
-> > around 1000 inodes per syscall is enough to mostly amortise all of
-> > the cost of syscall, setup, readahead, etc vs the CPU overhead of
-> > copying all the inodes into the user buffer.
-> > 
-> > Once the user buffer goes over a few thousand inodes, performance
-> > then starts to tail back off - we don't get any gains from trying to
-> > bulkstat tens of thousands of inodes at a time, especially under
-> > memory pressure because that can push us into readahead and buffer
-> > cache thrashing.
-> 
-> <nod> I don't mind setting the max inobt record cache buffer size to a
-> smaller value (1024 bytes == 4096 inodes readahead?) so we can get a
-> little farther into future hardware scalability (or decreases in syscall
-> performance :P).
-> 
-> I guess the question here is how to relate the number of inodes the user
-> asked for to how many inobt records we have to read to find that many
-> allocated inodes?  Or in other words, what's the average ir_freecount
-> across all the inobt records?
-
-Partial results computed by using xfs_db to dump all the inobt records
-in the fs to look at averge freecounts, and the number of inobt records
-with zero freecount:
-
-Development workstation / and /home:
-4678 total, zerofree 72.49%, avg freecount 4.24
-107940 total, zerofree 94.84%, avg freecount 0.78
-
-This laptop /, /home, and /boot:
-4613 total, zerofree 80.73%, avg freecount 3.11
-49660 total, zerofree 99.54%, avg freecount 0.04
-10 total, zerofree 20.00%, avg freecount 27.40
-
-Backup server / and /home:
-3897 total, zerofree 22.99%, avg freecount 27.08
-55995 total, zerofree 99.87%, avg freecount 0.01
-
-(Note that the root fs is nearly out of space now, thanks journald...)
-
-xfstests host / and $TEST_DIR:
-1834 total, zerofree 76.28%, avg freecount 3.31
-20097 total, zerofree 83.41%, avg freecount 3.62
-
-The script I used to generate these reports is attached.  From this
-admittedly cursory output I "conclude" that bulkstat could get away with
-prefetching (icount / 48) inobt records up to a max of 1000 inodes.
-A more conservative estimate would be (icount / 32) inobt records.
-
---D
-
-> 
-> Note that this is technically a decrease since the old code would
-> reserve 16K for this purpose...
-> 
-> > > > > /*
-> > > > >  * Note: We hardcode 4096 here (instead of, say, PAGE_SIZE) because we want to
-> > > > >  * constrain the amount of inode readahead to 16k inodes regardless of CPU:
-> > > > >  *
-> > > > >  * 4096 bytes / 16 bytes per inobt record = 256 inobt records
-> > > > >  * 256 inobt records * 64 inodes per record = 16384 inodes
-> > > > >  * 16384 inodes * 512 bytes per inode(?) = 8MB of inode readahead
-> > > > >  */
-> > 
-> > Hence I suspect that even this is overkill - it makes no sense to
-> > have a huge readahead window when there has been no measurable
-> > performance benefit to doing large inode count bulkstat syscalls.
-> > 
-> > And, FWIW, readahead probably should also be capped at what the user
-> > buffer can hold - no point in reading 16k inodes when the output
-> > buffer can only fit 1000 inodes...
-> 
-> It already is -- the icount parameter from userspace is (eventually) fed
-> to xfs_iwalk-set_prefetch.
-> 
-> --D
-> 
-> > Cheers,
-> > 
-> > Dave.
-> > -- 
-> > Dave Chinner
-> > david@fromorbit.com
-
---8t9RHnE3ZwKMSgU+
-Content-Type: application/x-sh
-Content-Disposition: attachment; filename="xfsinoload.sh"
-Content-Transfer-Encoding: quoted-printable
-
-#!/bin/bash=0A=0A# Report histogram of inobt record freecounts=0A=0Adie() {=
-=0A	echo "$@" >> /dev/stderr=0A	exit 1=0A}=0A=0Adev=3D"$1"=0Atest -b "${dev=
-}" || die "${dev}: not a block device"=0A=0Aagcount=3D"$(xfs_info "${dev}" =
-| grep agcount=3D | sed -e 's/^.*agcount=3D\([0-9]*\).*$/\1/g')"=0Asparse=
-=3D=0Axfs_info "${dev}" | grep -q sparse=3D1 && sparse=3Dyes=0A=0Arm -f /tm=
-p/barf=0Aseq 0 "$(( agcount - 1 ))" | while read ag; do=0A	xfs_db -f -c "ag=
-i ${ag}" -c "addr root" -c "btdump" "${dev}"=0Adone > /tmp/barf=0A=0Acol=3D=
-2=0Atest -n "${sparse}" && col=3D4=0Agrep : /tmp/barf | awk -F ',' "{print =
-\$${col}}" | sort | uniq -c | sort -g -k 1 | awk '{print $0; if ($2 =3D=3D =
-0) zerofree_nr =3D $1; freecount_total +=3D ($1 * $2); total +=3D $1;}END{p=
-rintf("%d inobt recs; zero free %.2f%% of recs; avg freecount %.2f\n", tota=
-l, zerofree_nr * 100.0 / total, freecount_total / total);}'=0A
---8t9RHnE3ZwKMSgU+--
+When you say 'close' do you mean the final release of the fd? The vma
+keeps a reference to a 'struct file' live even after the fd is closed.
