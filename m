@@ -2,66 +2,206 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 421194220B
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 12:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8D2742211
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jun 2019 12:15:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437970AbfFLKLc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jun 2019 06:11:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48434 "EHLO mx1.redhat.com"
+        id S1726607AbfFLKPL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jun 2019 06:15:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32782 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437611AbfFLKLc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:11:32 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725978AbfFLKPL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:15:11 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 90F2C3007406;
-        Wed, 12 Jun 2019 10:11:25 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EAF2330832D1;
+        Wed, 12 Jun 2019 10:15:10 +0000 (UTC)
 Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5278B2CFA7;
-        Wed, 12 Jun 2019 10:11:17 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 18:11:12 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B30EB46;
+        Wed, 12 Jun 2019 10:15:00 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 18:14:52 +0800
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Jens Axboe <axboe@kernel.dk>,
         David Gibson <david@gibson.dropbear.id.au>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: alternative take on the same page merging leak fix
-Message-ID: <20190612101111.GA16000@ming.t460p>
+Subject: Re: [PATCH 3/5] block: return from __bio_try_merge_page if merging
+ occured in the same page
+Message-ID: <20190612101449.GB16000@ming.t460p>
 References: <20190611151007.13625-1-hch@lst.de>
- <20190612010922.GA17522@ming.t460p>
- <20190612074527.GA20491@lst.de>
+ <20190611151007.13625-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612074527.GA20491@lst.de>
+In-Reply-To: <20190611151007.13625-4-hch@lst.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 12 Jun 2019 10:11:31 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 12 Jun 2019 10:15:11 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:45:27AM +0200, Christoph Hellwig wrote:
-> On Wed, Jun 12, 2019 at 09:09:23AM +0800, Ming Lei wrote:
-> > We have to backport the fixes to -stable tree, and downstream need to
-> > ship the fix too.
-> > 
-> > The issue is quite serious because the leak is in IO path and the whole
-> > system ram can be used up easily on some workloads. So I think the fix
-> > should be for 5.2, however, regression risk might be increased by
-> > pulling cleanup & re-factor in now.
-> > 
-> > I really appreciate you may cook a fix-only patch for this issue.
-> > Especially the change in add pc page code isn't necessary for fixing
-> > the issue.
+On Tue, Jun 11, 2019 at 05:10:05PM +0200, Christoph Hellwig wrote:
+> We currently have an input same_page parameter to __bio_try_merge_page
+> to prohibit merging in the same page.  The rationale for that is that
+> some callers need to account for every page added to a bio.  Instead of
+> letting these callers call twice into the merge code to account for the
+> new vs existing page cases, just turn the paramter into an output one that
+> returns if a merge in the same page occured and let them act accordingly.
 > 
-> Patches 3 and 4 have no dependencies on 1 and 2, and should have
-> arguably been ordered first in the series.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  block/bio.c         | 23 +++++++++--------------
+>  fs/iomap.c          | 12 ++++++++----
+>  fs/xfs/xfs_aops.c   | 11 ++++++++---
+>  include/linux/bio.h |  2 +-
+>  4 files changed, 26 insertions(+), 22 deletions(-)
+> 
+> diff --git a/block/bio.c b/block/bio.c
+> index 85e243ea6a0e..c34327aa9216 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -636,7 +636,7 @@ EXPORT_SYMBOL(bio_clone_fast);
+>  
+>  static inline bool page_is_mergeable(const struct bio_vec *bv,
+>  		struct page *page, unsigned int len, unsigned int off,
+> -		bool same_page)
+> +		bool *same_page)
+>  {
+>  	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) +
+>  		bv->bv_offset + bv->bv_len - 1;
+> @@ -647,15 +647,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
+>  	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
+>  		return false;
+>  
+> -	if ((vec_end_addr & PAGE_MASK) != page_addr) {
+> -		if (same_page)
+> -			return false;
+> -		if (pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
+> -			return false;
+> -	}
+> -
+> -	WARN_ON_ONCE(same_page && (len + off) > PAGE_SIZE);
+> -
+> +	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
+> +	if (!*same_page && pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
+> +		return false;
+>  	return true;
+>  }
+>  
+> @@ -763,8 +757,7 @@ EXPORT_SYMBOL(bio_add_pc_page);
+>   * @page: start page to add
+>   * @len: length of the data to add
+>   * @off: offset of the data relative to @page
+> - * @same_page: if %true only merge if the new data is in the same physical
+> - *		page as the last segment of the bio.
+> + * @same_page: return if the segment has been merged inside the same page
+>   *
+>   * Try to add the data at @page + @off to the last bvec of @bio.  This is a
+>   * a useful optimisation for file systems with a block size smaller than the
+> @@ -775,7 +768,7 @@ EXPORT_SYMBOL(bio_add_pc_page);
+>   * Return %true on success or %false on failure.
+>   */
+>  bool __bio_try_merge_page(struct bio *bio, struct page *page,
+> -		unsigned int len, unsigned int off, bool same_page)
+> +		unsigned int len, unsigned int off, bool *same_page)
+>  {
+>  	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+>  		return false;
+> @@ -833,7 +826,9 @@ EXPORT_SYMBOL_GPL(__bio_add_page);
+>  int bio_add_page(struct bio *bio, struct page *page,
+>  		 unsigned int len, unsigned int offset)
+>  {
+> -	if (!__bio_try_merge_page(bio, page, len, offset, false)) {
+> +	bool same_page = false;
+> +
+> +	if (!__bio_try_merge_page(bio, page, len, offset, &same_page)) {
+>  		if (bio_full(bio))
+>  			return 0;
+>  		__bio_add_page(bio, page, len, offset);
+> diff --git a/fs/iomap.c b/fs/iomap.c
+> index 23ef63fd1669..12654c2e78f8 100644
+> --- a/fs/iomap.c
+> +++ b/fs/iomap.c
+> @@ -287,7 +287,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  	struct iomap_readpage_ctx *ctx = data;
+>  	struct page *page = ctx->cur_page;
+>  	struct iomap_page *iop = iomap_page_create(inode, page);
+> -	bool is_contig = false;
+> +	bool same_page = false, is_contig = false;
+>  	loff_t orig_pos = pos;
+>  	unsigned poff, plen;
+>  	sector_t sector;
+> @@ -315,10 +315,14 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  	 * Try to merge into a previous segment if we can.
+>  	 */
+>  	sector = iomap_sector(iomap, pos);
+> -	if (ctx->bio && bio_end_sector(ctx->bio) == sector) {
+> -		if (__bio_try_merge_page(ctx->bio, page, plen, poff, true))
+> -			goto done;
+> +	if (ctx->bio && bio_end_sector(ctx->bio) == sector)
+>  		is_contig = true;
+> +
+> +	if (is_contig &&
+> +	    __bio_try_merge_page(ctx->bio, page, plen, poff, &same_page)) {
+> +		if (!same_page && iop)
+> +			atomic_inc(&iop->read_count);
+> +		goto done;
+>  	}
+>  
+>  	/*
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index a6f0f4761a37..8da5e6637771 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -758,6 +758,7 @@ xfs_add_to_ioend(
+>  	struct block_device	*bdev = xfs_find_bdev_for_inode(inode);
+>  	unsigned		len = i_blocksize(inode);
+>  	unsigned		poff = offset & (PAGE_SIZE - 1);
+> +	bool			merged, same_page = false;
+>  	sector_t		sector;
+>  
+>  	sector = xfs_fsb_to_db(ip, wpc->imap.br_startblock) +
+> @@ -774,9 +775,13 @@ xfs_add_to_ioend(
+>  				wpc->imap.br_state, offset, bdev, sector);
+>  	}
+>  
+> -	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff, true)) {
+> -		if (iop)
+> -			atomic_inc(&iop->write_count);
+> +	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
+> +			&same_page);
+> +
+> +	if (iop && !same_page)
+> +		atomic_inc(&iop->write_count);
+> +
+> +	if (!merged) {
+>  		if (bio_full(wpc->ioend->io_bio))
+>  			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
+>  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
+> diff --git a/include/linux/bio.h b/include/linux/bio.h
+> index 0f23b5682640..f87abaa898f0 100644
+> --- a/include/linux/bio.h
+> +++ b/include/linux/bio.h
+> @@ -423,7 +423,7 @@ extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
+>  extern int bio_add_pc_page(struct request_queue *, struct bio *, struct page *,
+>  			   unsigned int, unsigned int);
+>  bool __bio_try_merge_page(struct bio *bio, struct page *page,
+> -		unsigned int len, unsigned int off, bool same_page);
+> +		unsigned int len, unsigned int off, bool *same_page);
+>  void __bio_add_page(struct bio *bio, struct page *page,
+>  		unsigned int len, unsigned int off);
+>  int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter);
+> -- 
+> 2.20.1
+> 
 
-OK, that is good to make patch 3 &4 into 5.2, I will give a review
-soon.
+Looks fine for v5.2:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
 
 Thanks,
 Ming
