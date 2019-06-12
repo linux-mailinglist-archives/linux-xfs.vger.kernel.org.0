@@ -2,107 +2,118 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D571447C4
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 19:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031D1447C3
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 19:01:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfFMRBp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 13:01:45 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14785 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729559AbfFLX3F (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Jun 2019 19:29:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 16:29:04 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Jun 2019 16:29:03 -0700
-Date:   Wed, 12 Jun 2019 16:30:24 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612233024.GD14336@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
+        id S1729664AbfFMRBh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 13:01:37 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:43379 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729567AbfFLXeE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jun 2019 19:34:04 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 9269A3DC55E;
+        Thu, 13 Jun 2019 09:34:00 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbCjm-0003ot-S4; Thu, 13 Jun 2019 09:33:02 +1000
+Date:   Thu, 13 Jun 2019 09:33:02 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 02/10] xfs: convert quotacheck to use the new iwalk
+ functions
+Message-ID: <20190612233302.GG14363@dread.disaster.area>
+References: <155968496814.1657646.13743491598480818627.stgit@magnolia>
+ <155968498085.1657646.3518168545540841602.stgit@magnolia>
+ <20190610135848.GB6473@bfoster>
+ <20190611232347.GE14363@dread.disaster.area>
+ <20190612003219.GV1871505@magnolia>
+ <20190612125506.GE12395@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612123751.GD32656@bombadil.infradead.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190612125506.GE12395@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=OyNWoYibOR24XX5vsfwA:9 a=jT7GqvZWwFC8Y1ZD:21
+        a=7V8G_FsW8zfWWrG8:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > > Are you suggesting that we have something like this from user space?
-> > > 
-> > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> > 
-> > Rather than "unbreakable", perhaps a clearer description of the
-> > policy it entails is "exclusive"?
-> > 
-> > i.e. what we are talking about here is an exclusive lease that
-> > prevents other processes from changing the layout. i.e. the
-> > mechanism used to guarantee a lease is exclusive is that the layout
-> > becomes "unbreakable" at the filesystem level, but the policy we are
-> > actually presenting to uses is "exclusive access"...
-> 
-> That's rather different from the normal meaning of 'exclusive' in the
-> context of locks, which is "only one user can have access to this at
-> a time".  As I understand it, this is rather more like a 'shared' or
-> 'read' lock.  The filesystem would be the one which wants an exclusive
-> lock, so it can modify the mapping of logical to physical blocks.
-> 
-> The complication being that by default the filesystem has an exclusive
-> lock on the mapping, and what we're trying to add is the ability for
-> readers to ask the filesystem to give up its exclusive lock.
+On Wed, Jun 12, 2019 at 08:55:06AM -0400, Brian Foster wrote:
+> On Tue, Jun 11, 2019 at 05:32:19PM -0700, Darrick J. Wong wrote:
+> > On Wed, Jun 12, 2019 at 09:23:47AM +1000, Dave Chinner wrote:
+> Since we're already discussing tweaks to readahead, another approach to
+> this problem could be to try and readahead all the way into the inode
+> cache. For example, consider a mechanism where a cluster buffer
+> readahead sets a flag on the buffer that effectively triggers an iget of
+> each allocated inode in the buffer. Darrick has already shown that the
+> inode memory allocation and iget itself has considerable overhead even
+> when the cluster buffer is already cached. We know that's not due to
+> btree lookups because quotacheck isn't using IGET_UNTRUSTED, so perhaps
+> we could amortize more of this cost via readahead.
 
-This is an interesting view...
+The DONTCACHE inode caching semantics of bulkstat tend to conflict
+with "readahead all the way to the inode cache".
 
-And after some more thought, exclusive does not seem like a good name for this
-because technically F_WRLCK _is_ an exclusive lease...
+> The caveats are that would probably be more involved than something that
+> just caches the current cluster buffer and passes it into the iget path.
+> We'd have to rectify readahead in-core inodes against DONTCACHE inodes
+> used by bulkstat, for example, though I don't think that would be too
+> difficult to address via a new inode readahead flag or some such
+> preserve existing DONTCACHE behavior.
 
-In addition, the user does not need to take the "exclusive" write lease to be
-notified of (broken by) an unexpected truncate.  A "read" lease is broken by
-truncate.  (And "write" leases really don't do anything different WRT the
-interaction of the FS and the user app.  Write leases control "exclusive"
-access between other file descriptors.)
+I did try that once, the cache thrashing was .... difficult to
+contain under memory pressure. bulkstat pushes hundreds of thousands
+of inodes a second through the inode cache, and under memory
+pressure it will still cause working set perturbation with DONTCACHE
+being set. Holding DONTCACHE inodes for some time in the cache kinda
+defeats the simple purpose it has, and relying on cache hits to
+convert "readahead" to "dont cache" becomes really nasty when we
+try to use inode readahead for other things (like speeding up
+directory traversals by having xfs_readdir() issue inode readahead).
 
-Another thing to consider is that this patch set _allows_ a truncate/hole punch
-to proceed _if_ the pages being affected are not actually pinned.  So the
-unbreakable/exclusive nature of the lease is not absolute.
+The largest delay in bulkstat is the inode cluster IO latency.
+Getting rid of that is where the biggest win is (hence cluster
+read-ahead). The second largest overhead is the CPU burnt doing
+inode lookups, and on filesystems with lots of inodes, a significant
+amount of that is in the IGET_UNTRUSTED inobt lookup. IOWs, avoiding
+GET_UNTRUSTED is relatively low hanging fruit.
 
-Personally I like this functionality.  I'm not quite sure I can make it work
-with what Jan is suggesting.  But I like it.
+The next limitation for bulkstat is the superblock inode list lock
+contention. Getting rid of the IGET_UNTRUSTED overhead is likely to
+push the lock contention into the severe range (the lock is already
+the largest CPU consumer at 16 threads bulkstating 600,000 inodes/s
+on a 16p machine) so until we get rid of that lock contention, there
+isn't much point in doing major rework to the bulkstat algorithm as
+it doesn't address the limitations that the current algorithm has.
 
-Given the muddied water of "exclusive" and "write" lease I'm now feeling like
-Jeff has a point WRT the conflation of F_RDLCK/F_WRLCK/F_UNLCK and this new
-functionality.
+> It's also likely that passing the buffer into iget would already address
+> most of the overhead associated with the buffer lookup, so there might
+> not be enough tangible benefit at that point. The positive is that it's
+> probably an incremental step on top of an "iget from an existing cluster
+> buffer" mechanism and so could be easily prototyped by hacking in a read
+> side b_iodone handler or something.
 
-Should we use his suggested F_SETLAYOUT/F_GETLAYOUT cmd type?[1]
+We don't want to put inode cache insertion into a IO completion
+routine. Tried it, caused horrible problems with metadata read IO
+latency and substantially increased inode cache lock contention by
+bouncing the radix trees around both submission and completion CPU
+contexts...
 
-Ira
+/me has spent many, many years trying lots of different ways to make
+the inode cache in XFS go faster and has failed most of the time....
 
-[1] https://lkml.org/lkml/2019/6/9/117
+Cheers,
 
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
