@@ -2,121 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D970443FB
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 18:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE1043EDE
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfFMQeO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 12:34:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40610 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730782AbfFMHxk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:53:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6CC4AD1E;
-        Thu, 13 Jun 2019 07:53:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4A7821E4328; Thu, 13 Jun 2019 09:53:33 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 09:53:33 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613075333.GC26505@quack2.suse.cz>
-References: <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
- <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
+        id S1732759AbfFMPxc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 11:53:32 -0400
+Received: from mail-yw1-f43.google.com ([209.85.161.43]:36409 "EHLO
+        mail-yw1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731610AbfFMJCW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 05:02:22 -0400
+Received: by mail-yw1-f43.google.com with SMTP id t126so8039255ywf.3
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 02:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PY4MTSAiyfAeqQ1EoK1phEFJQeBQDmlO5b+7DPU23nU=;
+        b=mndJg9KWLChGfxxzS2vb/V8s5kknc/xKZtS5CQpuL1+pAQ0eriRTinWCBCXzwu/nCy
+         GAUW9C8ZvRIeb6XrV4OFvOC1uGCI7ZnxmPraONbTUhqznblH1gF4QKGU0AdI3l2om7Yj
+         vjLI9JqcFFnkOhqQKacQPS2xQzbVIPoTTitBr0M2MLgCMQaN052vxyK7bDpaLkPdxLiI
+         YansDbXptNh5xhiZg4sE/yRLOAE09Zf35/vW1Y/96g+MDdGfk4qgYYn8XoPF8+te6MLq
+         TGJarpu5v3OPPJq66fIvXuBye9g+TsyLzGO2wrb3TH0eGXacL1de9psKSspngX914DmL
+         roJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PY4MTSAiyfAeqQ1EoK1phEFJQeBQDmlO5b+7DPU23nU=;
+        b=Ile1xzDLQO6Q8iXZiE8OjyIVOtG1P2/sUeIyiTf6VazUjo6I/0q3PA8zInm267wiGq
+         gZ6R+c6qjagFsgpaXvcugsoeyelAfruoyBnTuIPy96ZIctq2gWxRyOwhEv6REdLdqvvn
+         cRP0IAjC2FvT+zjps+O0qE9WMzcZ0b5G4+wlryoD5uwgRBjYJzfSYKmtn1GemVPOkATf
+         ECHOrhGQzT0PdDOCLTkDntaoagYdxBBaGBGdvTVuSLdkXGUrcheCUEcDlIaREtDa4516
+         7Vo4P0Gfjc9aPln88QH9bmf5f8FAPKHdd2Sdu6BMjWnCaFMK4L9WZ6alTDCjcYN02mh5
+         VIGQ==
+X-Gm-Message-State: APjAAAVmJdaqa6smyJa1sgvlvlCMxXOO7muB5af2mTeQU7a0X6FbLQ92
+        JPxrYEpg/ayCKhnhad/b02TwjODsRAhh+z0O
+X-Google-Smtp-Source: APXvYqxHP/XueIS81D/+6MZQNXrdu9gB8OCiZ+WsU0DRJhR7X0LMQ+asZdp6O6UY4xVnjE2/v9mMYA==
+X-Received: by 2002:a81:3314:: with SMTP id z20mr28158534ywz.341.1560416541330;
+        Thu, 13 Jun 2019 02:02:21 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
+        by smtp.gmail.com with ESMTPSA id z6sm621875ywl.50.2019.06.13.02.02.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 02:02:20 -0700 (PDT)
+Subject: Re: alternative take on the same page merging leak fix
+To:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
+Cc:     David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
+References: <20190611151007.13625-1-hch@lst.de>
+ <20190612010922.GA17522@ming.t460p> <20190612074527.GA20491@lst.de>
+ <20190612101111.GA16000@ming.t460p>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5d781312-d28e-5bcc-4294-27facdd4a1e7@kernel.dk>
+Date:   Thu, 13 Jun 2019 03:02:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612101111.GA16000@ming.t460p>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed 12-06-19 15:13:36, Ira Weiny wrote:
-> On Wed, Jun 12, 2019 at 04:14:21PM -0300, Jason Gunthorpe wrote:
-> > On Wed, Jun 12, 2019 at 02:09:07PM +0200, Jan Kara wrote:
-> > > On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
-> > > > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
-> > > > 
-> > > > > > > The main objection to the current ODP & DAX solution is that very
-> > > > > > > little HW can actually implement it, having the alternative still
-> > > > > > > require HW support doesn't seem like progress.
-> > > > > > > 
-> > > > > > > I think we will eventually start seein some HW be able to do this
-> > > > > > > invalidation, but it won't be universal, and I'd rather leave it
-> > > > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > > > > > > on fire, I need to unplug it).
-> > > > > > 
-> > > > > > Agreed.  I think software wise there is not much some of the devices can do
-> > > > > > with such an "invalidate".
-> > > > > 
-> > > > > So out of curiosity: What does RDMA driver do when userspace just closes
-> > > > > the file pointing to RDMA object? It has to handle that somehow by aborting
-> > > > > everything that's going on... And I wanted similar behavior here.
-> > > > 
-> > > > It aborts *everything* connected to that file descriptor. Destroying
-> > > > everything avoids creating inconsistencies that destroying a subset
-> > > > would create.
-> > > > 
-> > > > What has been talked about for lease break is not destroying anything
-> > > > but very selectively saying that one memory region linked to the GUP
-> > > > is no longer functional.
-> > > 
-> > > OK, so what I had in mind was that if RDMA app doesn't play by the rules
-> > > and closes the file with existing pins (and thus layout lease) we would
-> > > force it to abort everything. Yes, it is disruptive but then the app didn't
-> > > obey the rule that it has to maintain file lease while holding pins. Thus
-> > > such situation should never happen unless the app is malicious / buggy.
-> > 
-> > We do have the infrastructure to completely revoke the entire
-> > *content* of a FD (this is called device disassociate). It is
-> > basically close without the app doing close. But again it only works
-> > with some drivers. However, this is more likely something a driver
-> > could support without a HW change though.
-> > 
-> > It is quite destructive as it forcibly kills everything RDMA related
-> > the process(es) are doing, but it is less violent than SIGKILL, and
-> > there is perhaps a way for the app to recover from this, if it is
-> > coded for it.
+On 6/12/19 4:11 AM, Ming Lei wrote:
+> On Wed, Jun 12, 2019 at 09:45:27AM +0200, Christoph Hellwig wrote:
+>> On Wed, Jun 12, 2019 at 09:09:23AM +0800, Ming Lei wrote:
+>>> We have to backport the fixes to -stable tree, and downstream need to
+>>> ship the fix too.
+>>>
+>>> The issue is quite serious because the leak is in IO path and the whole
+>>> system ram can be used up easily on some workloads. So I think the fix
+>>> should be for 5.2, however, regression risk might be increased by
+>>> pulling cleanup & re-factor in now.
+>>>
+>>> I really appreciate you may cook a fix-only patch for this issue.
+>>> Especially the change in add pc page code isn't necessary for fixing
+>>> the issue.
+>>
+>> Patches 3 and 4 have no dependencies on 1 and 2, and should have
+>> arguably been ordered first in the series.
 > 
-> I don't think many are...  I think most would effectively be "killed" if this
-> happened to them.
+> OK, that is good to make patch 3 &4 into 5.2, I will give a review
+> soon.
 
-Yes, I repeat we are in a situation when the application has a bug and
-didn't propely manage its long term pins which are fully under its control.
-So in my mind a situation similar to application using memory it has
-already freed. The kernel has to manage that but we don't really care
-what's left from the application when this happens.
+I'll echo Mings sentiments here, for the series.
 
-That being said I'm not insisting this has to happen - tracking associated
-"RDMA file" with a layout lease and somehow invalidating it on close of a
-leased file is somewhat ugly anyway. But it is still an option if exposing
-pins to userspace for lsof to consume proves even worse...
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jens Axboe
+
