@@ -2,95 +2,358 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C665442D0
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 18:26:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79DA64430D
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 18:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732349AbfFMQ0G (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 12:26:06 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33761 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731470AbfFMQ0G (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 12:26:06 -0400
-Received: by mail-oi1-f196.google.com with SMTP id q186so14912572oia.0
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 09:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wjBnZv2pCLDEwG4yb+2F3joyqEyCgCcLuoiul4+lDtg=;
-        b=KHbKhiCEqP27YRm90NCLuB4c2IplNhmcOcBL7/TKZlk3SiaZQfwA9S0uY/GsQv03Pr
-         aBL2AWfi8XTIFaky9LKQqE+K/NfNYYNrlmFC/I9jOaxHcs4tAfHfjcUQbqcl3RnXxild
-         Tu3HngJ2BWQbjHKSA518A7LMdZsRAI0y2xoRezHhz45e3uyBcpgMb0voTy98I6u2hRnp
-         NYEu7LcFVoYX1llZ3PhX+HJY3OdLwk1vk8E00NF1S8iWedYKuEKJl7E8AOFKwK6O5TC3
-         f4HIkh3G/dWUfgrFHj9h1Gd+qxz3edzqRbXtlNTkaPme0fjX3JDzh/8PrIf6qw6dZLSg
-         gtaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wjBnZv2pCLDEwG4yb+2F3joyqEyCgCcLuoiul4+lDtg=;
-        b=hAXnRH9v7wxUbXY6y0qaxwhsbHIH0V6o+NoXmN/vjhn1q7kU+rwbf9BN+o6+HHIFif
-         HoQAfTwNDDvEBH9noIZB2XFzJkP4fcH9YMkn1tjK4XHwcqoazi4+4JcpZGMGVwEgk/7M
-         sFKMYndPPpKLiizAMomxo5Q2GrfzI83zBsfDLSxHKMjwUmqFZMZ1vPd5QNuYX3OiBPj9
-         /LhfEWe5YDWSbiG8kMLLb1BMYJjy6OfgUS8xON3NR3qrKme3uL5Gjm5j/fhHQJTHwISv
-         HNenSSOSqB5u9ynUWmZuT1EDy/ohAK+MJB/3vM043ldoQa57H5kTp4iFhfknO2NKsxKe
-         1Cfg==
-X-Gm-Message-State: APjAAAVSpJ4DebSyBjp5tTdAPsBhGAuWw9zwhoryzK5LYV2AvaWnvfKq
-        TjSNUSR42KhlrFMT71em/ah9FPWQxBWh0lSYX20bjg==
-X-Google-Smtp-Source: APXvYqyIpO3hOidIsXLbc4Y7aCrEkKlPPSiQhXNkmA/XJwYbaL526BswBcBQAMtK33IEuzEN5c+1wA+6c6zViqiveWY=
-X-Received: by 2002:aca:7c5:: with SMTP id 188mr3423005oih.70.1560443165189;
- Thu, 13 Jun 2019 09:26:05 -0700 (PDT)
+        id S1730954AbfFMQ1J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 12:27:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49626 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727165AbfFMQ1J (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:27:09 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C627730BBE69;
+        Thu, 13 Jun 2019 16:27:08 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BCC552FCE;
+        Thu, 13 Jun 2019 16:27:08 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 12:27:06 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/14] xfs: create simplified inode walk function
+Message-ID: <20190613162703.GB21773@bfoster>
+References: <156032205136.3774243.15725828509940520561.stgit@magnolia>
+ <156032206425.3774243.10420463221575428170.stgit@magnolia>
 MIME-Version: 1.0
-References: <20190607121729.GA14802@ziepe.ca> <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz> <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz> <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com> <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
- <20190612233324.GE14336@iweiny-DESK2.sc.intel.com> <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
- <20190613151354.GC22901@ziepe.ca>
-In-Reply-To: <20190613151354.GC22901@ziepe.ca>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Jun 2019 09:25:54 -0700
-Message-ID: <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156032206425.3774243.10420463221575428170.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 13 Jun 2019 16:27:08 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 8:14 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Jun 12, 2019 at 06:14:46PM -0700, Dan Williams wrote:
-> > > Effectively, we would need a way for an admin to close a specific file
-> > > descriptor (or set of fds) which point to that file.  AFAIK there is no way to
-> > > do that at all, is there?
-> >
-> > Even if there were that gets back to my other question, does RDMA
-> > teardown happen at close(fd), or at final fput() of the 'struct
-> > file'?
->
-> AFAIK there is no kernel side driver hook for close(fd).
->
-> rdma uses a normal chardev so it's lifetime is linked to the file_ops
-> release, which is called on last fput. So all the mmaps, all the dups,
-> everything must go before it releases its resources.
+On Tue, Jun 11, 2019 at 11:47:44PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Create a new iterator function to simplify walking inodes in an XFS
+> filesystem.  This new iterator will replace the existing open-coded
+> walking that goes on in various places.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/Makefile                  |    1 
+>  fs/xfs/libxfs/xfs_ialloc_btree.c |   36 +++
+>  fs/xfs/libxfs/xfs_ialloc_btree.h |    3 
+>  fs/xfs/xfs_itable.c              |    5 
+>  fs/xfs/xfs_itable.h              |    8 +
+>  fs/xfs/xfs_iwalk.c               |  418 ++++++++++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_iwalk.h               |   19 ++
+>  fs/xfs/xfs_trace.h               |   40 ++++
+>  8 files changed, 524 insertions(+), 6 deletions(-)
+>  create mode 100644 fs/xfs/xfs_iwalk.c
+>  create mode 100644 fs/xfs/xfs_iwalk.h
+> 
+> 
+...
+> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+> new file mode 100644
+> index 000000000000..49289588413f
+> --- /dev/null
+> +++ b/fs/xfs/xfs_iwalk.c
+> @@ -0,0 +1,418 @@
+...
+> +/* Allocate memory for a walk. */
+> +STATIC int
+> +xfs_iwalk_alloc(
+> +	struct xfs_iwalk_ag	*iwag)
+> +{
+> +	size_t			size;
+> +
+> +	ASSERT(iwag->recs == NULL);
+> +	iwag->nr_recs = 0;
+> +
+> +	/* Allocate a prefetch buffer for inobt records. */
+> +	size = iwag->sz_recs * sizeof(struct xfs_inobt_rec_incore);
+> +	iwag->recs = kmem_alloc(size, KM_MAYFAIL);
+> +	if (iwag->recs == NULL)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Free memory we allocated for a walk. */
+> +STATIC void
+> +xfs_iwalk_free(
+> +	struct xfs_iwalk_ag	*iwag)
+> +{
+> +	kmem_free(iwag->recs);
 
-Oh, I must have missed where this conversation started talking about
-the driver-device fd. I thought we were talking about the close /
-release of the target file that is MAP_SHARED for the memory
-registration. A release of the driver fd is orthogonal to coordinating
-/ signalling actions relative to the leased file.
+It might be a good idea to ->recs = NULL here since the alloc call
+asserts for that (if any future code happens to free and realloc the
+recs buffer for whatever reason).
+
+> +}
+> +
+...
+> +/* Walk all inodes in a single AG, from @iwag->startino to the end of the AG. */
+> +STATIC int
+> +xfs_iwalk_ag(
+> +	struct xfs_iwalk_ag		*iwag)
+> +{
+> +	struct xfs_mount		*mp = iwag->mp;
+> +	struct xfs_trans		*tp = iwag->tp;
+> +	struct xfs_buf			*agi_bp = NULL;
+> +	struct xfs_btree_cur		*cur = NULL;
+> +	xfs_agnumber_t			agno;
+> +	xfs_agino_t			agino;
+> +	int				has_more;
+> +	int				error = 0;
+> +
+> +	/* Set up our cursor at the right place in the inode btree. */
+> +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
+> +	agino = XFS_INO_TO_AGINO(mp, iwag->startino);
+> +	error = xfs_iwalk_ag_start(iwag, agno, agino, &cur, &agi_bp, &has_more);
+> +
+> +	while (!error && has_more) {
+> +		struct xfs_inobt_rec_incore	*irec;
+> +
+> +		cond_resched();
+> +
+> +		/* Fetch the inobt record. */
+> +		irec = &iwag->recs[iwag->nr_recs];
+> +		error = xfs_inobt_get_rec(cur, irec, &has_more);
+> +		if (error || !has_more)
+> +			break;
+> +
+> +		/* No allocated inodes in this chunk; skip it. */
+> +		if (irec->ir_freecount == irec->ir_count) {
+> +			error = xfs_btree_increment(cur, 0, &has_more);
+> +			if (error)
+> +				break;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Start readahead for this inode chunk in anticipation of
+> +		 * walking the inodes.
+> +		 */
+> +		xfs_bulkstat_ichunk_ra(mp, agno, irec);
+> +
+> +		/*
+> +		 * If there's space in the buffer for more records, increment
+> +		 * the btree cursor and grab more.
+> +		 */
+> +		if (++iwag->nr_recs < iwag->sz_recs) {
+> +			error = xfs_btree_increment(cur, 0, &has_more);
+> +			if (error || !has_more)
+> +				break;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Otherwise, we need to save cursor state and run the callback
+> +		 * function on the cached records.  The run_callbacks function
+> +		 * is supposed to return a cursor pointing to the record where
+> +		 * we would be if we had been able to increment like above.
+> +		 */
+> +		has_more = true;
+
+has_more should always be true if we get here right? If so, perhaps
+better to replace this with ASSERT(has_more).
+
+> +		error = xfs_iwalk_run_callbacks(iwag, agno, &cur, &agi_bp,
+> +				&has_more);
+> +	}
+> +
+> +	if (iwag->nr_recs == 0 || error)
+> +		goto out;
+> +
+> +	/* Walk the unprocessed records in the cache. */
+> +	error = xfs_iwalk_run_callbacks(iwag, agno, &cur, &agi_bp, &has_more);
+> +
+> +out:
+> +	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
+> +	return error;
+> +}
+> +
+> +/*
+> + * Given the number of inodes to prefetch, set the number of inobt records that
+> + * we cache in memory, which controls the number of inodes we try to read
+> + * ahead.
+> + */
+> +static inline void
+> +xfs_iwalk_set_prefetch(
+> +	struct xfs_iwalk_ag	*iwag,
+> +	unsigned int		max_prefetch)
+> +{
+> +	/*
+> +	 * Default to 4096 bytes' worth of inobt records; this should be plenty
+> +	 * of inodes to read ahead.  This number was chosen so that the cache
+> +	 * is never more than a single memory page and the amount of inode
+> +	 * readahead is limited to to 16k inodes regardless of CPU:
+> +	 *
+> +	 * 4096 bytes / 16 bytes per inobt record = 256 inobt records
+> +	 * 256 inobt records * 64 inodes per record = 16384 inodes
+> +	 * 16384 inodes * 512 bytes per inode(?) = 8MB of inode readahead
+> +	 */
+> +	iwag->sz_recs = 4096 / sizeof(struct xfs_inobt_rec_incore);
+> +
+
+So we decided not to preserve current readahead behavior in this patch?
+
+> +	/*
+> +	 * If the caller gives us a desired prefetch amount, round it up to
+> +	 * an even inode chunk and cap it as defined previously.
+> +	 */
+> +	if (max_prefetch) {
+> +		unsigned int	nr;
+> +
+> +		nr = round_up(max_prefetch, XFS_INODES_PER_CHUNK) /
+> +				XFS_INODES_PER_CHUNK;
+> +		iwag->sz_recs = min_t(unsigned int, iwag->sz_recs, nr);
+
+This is comparing the record count calculated above with max_prefetch,
+which the rounding just above suggests is in inodes. BTW, could we add a
+one line /* prefetch in inodes */ comment on the max_prefetch parameter
+line at the top of the function?
+
+Aside from those nits the rest looks good to me.
+
+Brian
+
+> +	}
+> +
+> +	/*
+> +	 * Allocate enough space to prefetch at least two records so that we
+> +	 * can cache both the inobt record where the iwalk started and the next
+> +	 * record.  This simplifies the AG inode walk loop setup code.
+> +	 */
+> +	iwag->sz_recs = max_t(unsigned int, iwag->sz_recs, 2);
+> +}
+> +
+> +/*
+> + * Walk all inodes in the filesystem starting from @startino.  The @iwalk_fn
+> + * will be called for each allocated inode, being passed the inode's number and
+> + * @data.  @max_prefetch controls how many inobt records' worth of inodes we
+> + * try to readahead.
+> + */
+> +int
+> +xfs_iwalk(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_trans	*tp,
+> +	xfs_ino_t		startino,
+> +	xfs_iwalk_fn		iwalk_fn,
+> +	unsigned int		max_prefetch,
+> +	void			*data)
+> +{
+> +	struct xfs_iwalk_ag	iwag = {
+> +		.mp		= mp,
+> +		.tp		= tp,
+> +		.iwalk_fn	= iwalk_fn,
+> +		.data		= data,
+> +		.startino	= startino,
+> +	};
+> +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
+> +	int			error;
+> +
+> +	ASSERT(agno < mp->m_sb.sb_agcount);
+> +
+> +	xfs_iwalk_set_prefetch(&iwag, max_prefetch);
+> +	error = xfs_iwalk_alloc(&iwag);
+> +	if (error)
+> +		return error;
+> +
+> +	for (; agno < mp->m_sb.sb_agcount; agno++) {
+> +		error = xfs_iwalk_ag(&iwag);
+> +		if (error)
+> +			break;
+> +		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
+> +	}
+> +
+> +	xfs_iwalk_free(&iwag);
+> +	return error;
+> +}
+> diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
+> new file mode 100644
+> index 000000000000..9e762e31dadc
+> --- /dev/null
+> +++ b/fs/xfs/xfs_iwalk.h
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
+> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> + */
+> +#ifndef __XFS_IWALK_H__
+> +#define __XFS_IWALK_H__
+> +
+> +/* Walk all inodes in the filesystem starting from @startino. */
+> +typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
+> +			    xfs_ino_t ino, void *data);
+> +/* Return values for xfs_iwalk_fn. */
+> +#define XFS_IWALK_CONTINUE	(XFS_ITER_CONTINUE)
+> +#define XFS_IWALK_ABORT		(XFS_ITER_ABORT)
+> +
+> +int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
+> +		xfs_iwalk_fn iwalk_fn, unsigned int max_prefetch, void *data);
+> +
+> +#endif /* __XFS_IWALK_H__ */
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index 2464ea351f83..f9bb1d50bc0e 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -3516,6 +3516,46 @@ DEFINE_EVENT(xfs_inode_corrupt_class, name,	\
+>  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_sick);
+>  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_healthy);
+>  
+> +TRACE_EVENT(xfs_iwalk_ag,
+> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+> +		 xfs_agino_t startino),
+> +	TP_ARGS(mp, agno, startino),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(xfs_agnumber_t, agno)
+> +		__field(xfs_agino_t, startino)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp->m_super->s_dev;
+> +		__entry->agno = agno;
+> +		__entry->startino = startino;
+> +	),
+> +	TP_printk("dev %d:%d agno %d startino %u",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
+> +		  __entry->startino)
+> +)
+> +
+> +TRACE_EVENT(xfs_iwalk_ag_rec,
+> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+> +		 struct xfs_inobt_rec_incore *irec),
+> +	TP_ARGS(mp, agno, irec),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(xfs_agnumber_t, agno)
+> +		__field(xfs_agino_t, startino)
+> +		__field(uint64_t, freemask)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp->m_super->s_dev;
+> +		__entry->agno = agno;
+> +		__entry->startino = irec->ir_startino;
+> +		__entry->freemask = irec->ir_free;
+> +	),
+> +	TP_printk("dev %d:%d agno %d startino %u freemask 0x%llx",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
+> +		  __entry->startino, __entry->freemask)
+> +)
+> +
+>  #endif /* _TRACE_XFS_H */
+>  
+>  #undef TRACE_INCLUDE_PATH
+> 
