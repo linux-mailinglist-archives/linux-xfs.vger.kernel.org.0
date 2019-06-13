@@ -2,116 +2,147 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAD5A44983
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 19:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D50E9449E6
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 19:48:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfFMRSg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 13:18:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46815 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfFMRSg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 13:18:36 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so23399746qtn.13
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 10:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ECRuDs1AAJXccME5fjhnIagUHhl7wP1zzfkz6zfy+gs=;
-        b=lpafWUUxvoz6cw8t6bvxhkbpKx1MuDJC/6+rsfIk9kELesUHNICDeurjA/f9ZuoaJv
-         lKvrldgcxc6rNvpGlf+9lPT2riW0RE1+HuS2OqxKuK9J/UHHXstRF22tdIYHVfy+KlvT
-         LRXs02nEuzM/Fk4kx+1bbgAFr8bE6dMuPmxEyYZicAywAmS5YuFqquENcwoxV3ALaTJr
-         wrm1jUeHUGOSNU/aAA8xVX35TgozP9YEYH5RVAbReFiyARjThtZ1Rs+sS5w3QP1kXXnb
-         Bg53NxX8LuVo7QxF8lvDT58SoxeM97wjJy7wRjhtAvG+RnkgIyeQxLZquacOghksiJH/
-         /FWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ECRuDs1AAJXccME5fjhnIagUHhl7wP1zzfkz6zfy+gs=;
-        b=gR/3r5w8lGH5QbQxB1Al1J8vWRSHHDAamoFGTPKa/O+Fl27PfbDilBFKBCgGylz33R
-         8bI+v9tDpduJ4n3+HII88kCzsaGg914cDGyd1WNumZltjaSCWjZHbJrSqpO80ExmdnZ9
-         L9OSGhvd90l3tNOVK8i3HqAxxJ/F7SmidQp8wqkSLajRgDt6Ab7axnC1W7pcoPzuv0lF
-         T9K53leTvYKrbe0PP5KDJRYP/TUM3IHkJgoHU3F9DXXBJ/pY+EXRJFxWprmvdzEI4hqk
-         Vj8R4suNjJgN8k+JidFEHxGdxlV0MBZOtAPvsQr3eddkaDttJW1jErMtQuY4CsdDd4ms
-         m/+g==
-X-Gm-Message-State: APjAAAXvSMmEuKCpa/bUHJLk6lue8Y9OQVRyGy8afgaGGCqbYyDYDp3Z
-        WeniYBKNqclH9ESqak/AraArTA==
-X-Google-Smtp-Source: APXvYqxo9wZDsL+u9xxF1oR9luzN2plR83tNtwXpM5LjZTCeK+hD6TjhoexGVCwTWwyvS0UUHoLRyg==
-X-Received: by 2002:aed:3686:: with SMTP id f6mr53799960qtb.30.1560446315300;
-        Thu, 13 Jun 2019 10:18:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id l3sm76969qkd.49.2019.06.13.10.18.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 10:18:34 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hbTMw-000325-3P; Thu, 13 Jun 2019 14:18:34 -0300
-Date:   Thu, 13 Jun 2019 14:18:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
+        id S1726824AbfFMRsr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 13:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfFMRsq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:48:46 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4875420679;
+        Thu, 13 Jun 2019 17:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560448125;
+        bh=7J9Nux+2C7/bgk/c109GwybQXNMP+OZJrJQ0WKB2MDM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=wKmxMYeeuohRNBfiKXFRf1epHECIGe5dPVdzTEFHQDjCtiR74X9OavoanZKTgyiUt
+         EMitOqcLudxyeomD3SNbtVkmWJ5D7uZj6hI/tonNLptuxsdQ4Q7UWUEW295pwFJZcM
+         MHA3sLBS+KqyPcfvaRvjWl4thZAHgj2Mxh7gi06s=
+Message-ID: <38f6f71f6be0b5baaea75417aa4bcf072e625567.camel@kernel.org>
+Subject: Re: [PATCH] ceph: copy_file_range needs to strip setuid bits and
+ update timestamps
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
         Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613171834.GE22901@ziepe.ca>
-References: <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
- <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
- <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
- <20190612233324.GE14336@iweiny-DESK2.sc.intel.com>
- <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
- <20190613151354.GC22901@ziepe.ca>
- <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org
+Date:   Thu, 13 Jun 2019 13:48:42 -0400
+In-Reply-To: <87zhml7ada.fsf@suse.com>
+References: <20190610174007.4818-1-amir73il@gmail.com>
+         <ed2e4b5d26890e96ba9dafcb3dba88427e36e619.camel@kernel.org>
+         <87zhml7ada.fsf@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 09:25:54AM -0700, Dan Williams wrote:
-> On Thu, Jun 13, 2019 at 8:14 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Wed, Jun 12, 2019 at 06:14:46PM -0700, Dan Williams wrote:
-> > > > Effectively, we would need a way for an admin to close a specific file
-> > > > descriptor (or set of fds) which point to that file.  AFAIK there is no way to
-> > > > do that at all, is there?
-> > >
-> > > Even if there were that gets back to my other question, does RDMA
-> > > teardown happen at close(fd), or at final fput() of the 'struct
-> > > file'?
-> >
-> > AFAIK there is no kernel side driver hook for close(fd).
-> >
-> > rdma uses a normal chardev so it's lifetime is linked to the file_ops
-> > release, which is called on last fput. So all the mmaps, all the dups,
-> > everything must go before it releases its resources.
+On Thu, 2019-06-13 at 16:50 +0100, Luis Henriques wrote:
+> Jeff Layton <jlayton@kernel.org> writes:
 > 
-> Oh, I must have missed where this conversation started talking about
-> the driver-device fd. 
+> > On Mon, 2019-06-10 at 20:40 +0300, Amir Goldstein wrote:
+> > > Because ceph doesn't hold destination inode lock throughout the copy,
+> > > strip setuid bits before and after copy.
+> > > 
+> > > The destination inode mtime is updated before and after the copy and the
+> > > source inode atime is updated after the copy, similar to the filesystem
+> > > ->read_iter() implementation.
+> > > 
+> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > ---
+> > > 
+> > > Hi Ilya,
+> > > 
+> > > Please consider applying this patch to ceph branch after merging
+> > > Darrick's copy-file-range-fixes branch from:
+> > >         git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+> > > 
+> > > The series (including this patch) was tested on ceph by
+> > > Luis Henriques using new copy_range xfstests.
+> > > 
+> > > AFAIK, only fallback from ceph to generic_copy_file_range()
+> > > implementation was tested and not the actual ceph clustered
+> > > copy_file_range.
+> > > 
+> > > Thanks,
+> > > Amir.
+> > > 
+> > >  fs/ceph/file.c | 17 +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > > 
+> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > index c5517ffeb11c..b04c97c7d393 100644
+> > > --- a/fs/ceph/file.c
+> > > +++ b/fs/ceph/file.c
+> > > @@ -1949,6 +1949,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >  		goto out;
+> > >  	}
+> > >  
+> > > +	/* Should dst_inode lock be held throughout the copy operation? */
+> > > +	inode_lock(dst_inode);
+> > > +	ret = file_modified(dst_file);
+> > > +	inode_unlock(dst_inode);
+> > > +	if (ret < 0) {
+> > > +		dout("failed to modify dst file before copy (%zd)\n", ret);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > 
+> > I don't see anything that guarantees that the mode of the destination
+> > file is up to date at this point. file_modified() just ends up checking
+> > the mode cached in the inode.
+> > 
+> > I wonder if we ought to fix get_rd_wr_caps() to also acquire a reference
+> > to AUTH_SHARED caps on the destination inode, and then call
+> > file_modified() after we get those caps. That would also mean that we
+> > wouldn't need to do this a second time after the copy.
+> > 
+> > The catch is that if we did need to issue a setattr, I'm not sure if
+> > we'd need to release those caps first.
+> > 
+> > Luis, Zheng, thoughts?
+> 
+> Hmm... I missed that.  IIRC the FILE_WR caps allow to modify some
+> metadata (such as timestamps, and file size).  I suppose it doesn't
+> allow to cache the mode, does it? 
 
-In the first paragraph above where Ira is musing about 'close a
-specific file', he is talking about the driver-device fd.
+No, W caps don't guarantee that the mode won't change. You need As or Ax
+caps for that.
 
-Ie unilaterally closing /dev/uverbs as a punishment for an application
-that used leases wrong: ie that released its lease with the RDMA is
-still ongoing. 
+>  If it does, fixing it would be a
+> matter of moving the code a bit further down.  If it doesn't the
+> ceph_copy_file_range function already has this problem, as it calls
+> file_update_time.  And I wonder if other code paths have this problem
+> too.
+> 
 
-Jason
+I think you mean file_remove_privs, but yes...the write codepath has a
+similar problem. file_remove_privs is called before acquiring any caps,
+so the same thing could happen there too.
+
+It'd be good to fix both places, but taking As cap references in the
+write codepath could have performance impact in some cases. OTOH, they
+don't change that much, so maybe that's OK.
+
+> Obviously, the chunk below will have the same problem.
+> 
+
+Right. If however, we have this code take an As cap reference before
+doing the copy, then we can be sure that the mode can't change until we
+drop them. That way we wouldn't need the second call.
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
