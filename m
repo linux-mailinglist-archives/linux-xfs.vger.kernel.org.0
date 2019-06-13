@@ -2,115 +2,130 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21D4043BF6
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:33:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19AE943AFF
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfFMPcj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 11:32:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41576 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728462AbfFMKrr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 06:47:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GEs9TuIKz96lXRS7FnLGyqSMFlOm6a6Nuvp5RkrDbpg=; b=iMC2hvEIOcyryH8ttvBTFCIwJ
-        +/UTOZxleRRIx/Qk3yqPfUzPCOda7GErke13ZzFQak5ewSoRm8WulpfqNH7Zcz8Q/4E8j/T6eNEmH
-        zqn/a0VQTD+joB/VdqCU1xYbOG/t0Yt1iH7D4MVcM+JnmapUwUFZ9n9jOt8V0iESGcP+afyjOL9pH
-        +Z800XzTY/YS/+CM4flrqhchMwkDHfagPOomV5WMld5ChIy1boYvTjVntNNzTcy5LKpr/Bsx2mf7S
-        S446zK0y8A3V0fwGhTmnFSvXqbCAHfkut7f3C9ZExu7tOQe+5MbplKDwi6MAkqGaZIAtnEYCa3p8M
-        bMZjvH0qQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbNGh-0007DC-6o; Thu, 13 Jun 2019 10:47:43 +0000
-Date:   Thu, 13 Jun 2019 03:47:43 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613104743.GH32656@bombadil.infradead.org>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
- <20190613032320.GG32656@bombadil.infradead.org>
- <20190613043649.GJ14363@dread.disaster.area>
+        id S1732984AbfFMPZN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 11:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731575AbfFMMD7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:03:59 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5C421721;
+        Thu, 13 Jun 2019 12:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560427438;
+        bh=p2FKjRUBwjz5hPRVT7bIqF2K2jvLxaCfR3Nd2QCuhAI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=h7oNytnJoZSKgKryW1tJj9jWvo+nYi59n7LE9Dz/eaP3Mc2jgY3VNdcESIoxlvf+u
+         C0GXDXC/EjUmbNb/AVlxc3XpOYwUovNGErQ2VUEoVEPPUz9Onqp8RncBTcRjN8oQBr
+         hjCcALIYmN7Y1oU3GcpawPyxm6X1xLhhZ9Aq+sh4=
+Message-ID: <ed2e4b5d26890e96ba9dafcb3dba88427e36e619.camel@kernel.org>
+Subject: Re: [PATCH] ceph: copy_file_range needs to strip setuid bits and
+ update timestamps
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org
+Date:   Thu, 13 Jun 2019 08:03:55 -0400
+In-Reply-To: <20190610174007.4818-1-amir73il@gmail.com>
+References: <20190610174007.4818-1-amir73il@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613043649.GJ14363@dread.disaster.area>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 02:36:49PM +1000, Dave Chinner wrote:
-> On Wed, Jun 12, 2019 at 08:23:20PM -0700, Matthew Wilcox wrote:
-> > On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> > > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > > > That's rather different from the normal meaning of 'exclusive' in the
-> > > > context of locks, which is "only one user can have access to this at
-> > > > a time".
-> > > 
-> > > Layout leases are not locks, they are a user access policy object.
-> > > It is the process/fd which holds the lease and it's the process/fd
-> > > that is granted exclusive access.  This is exactly the same semantic
-> > > as O_EXCL provides for granting exclusive access to a block device
-> > > via open(), yes?
-> > 
-> > This isn't my understanding of how RDMA wants this to work, so we should
-> > probably clear that up before we get too far down deciding what name to
-> > give it.
-> > 
-> > For the RDMA usage case, it is entirely possible that both process A
-> > and process B which don't know about each other want to perform RDMA to
-> > file F.  So there will be two layout leases active on this file at the
-> > same time.  It's fine for IOs to simultaneously be active to both leases.
+On Mon, 2019-06-10 at 20:40 +0300, Amir Goldstein wrote:
+> Because ceph doesn't hold destination inode lock throughout the copy,
+> strip setuid bits before and after copy.
 > 
-> Yes, it is.
+> The destination inode mtime is updated before and after the copy and the
+> source inode atime is updated after the copy, similar to the filesystem
+> ->read_iter() implementation.
 > 
-> > But if the filesystem wants to move blocks around, it has to break
-> > both leases.
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
 > 
-> No, the _lease layer_ needs to break both leases when the filesystem
-> calls break_layout().
-
-That's a distinction without a difference as far as userspace is
-concerned.  If process A asks for an exclusive lease (and gets it),
-then process B asks for an exclusive lease (and gets it), that lease
-isn't exclusive!  It's shared.
-
-I think the example you give of O_EXCL is more of a historical accident.
-It's a relatively recent Linuxism that O_EXCL on a block device means
-"this block device is not part of a filesystem", and I don't think
-most userspace programmers are aware of what it means when not paired
-with O_CREAT.
-
-> > If Process C tries to do a write to file F without a lease, there's no
-> > problem, unless a side-effect of the write would be to change the block
-> > mapping,
+> Hi Ilya,
 > 
-> That's a side effect we cannot predict ahead of time. But it's
-> also _completely irrelevant_ to the layout lease layer API and
-> implementation.(*)
+> Please consider applying this patch to ceph branch after merging
+> Darrick's copy-file-range-fixes branch from:
+>         git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+> 
+> The series (including this patch) was tested on ceph by
+> Luis Henriques using new copy_range xfstests.
+> 
+> AFAIK, only fallback from ceph to generic_copy_file_range()
+> implementation was tested and not the actual ceph clustered
+> copy_file_range.
+> 
+> Thanks,
+> Amir.
+> 
+>  fs/ceph/file.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index c5517ffeb11c..b04c97c7d393 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1949,6 +1949,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  		goto out;
+>  	}
+>  
+> +	/* Should dst_inode lock be held throughout the copy operation? */
+> +	inode_lock(dst_inode);
+> +	ret = file_modified(dst_file);
+> +	inode_unlock(dst_inode);
+> +	if (ret < 0) {
+> +		dout("failed to modify dst file before copy (%zd)\n", ret);
+> +		goto out;
+> +	}
+> +
 
-It's irrelevant to the naming, but you brought it up as part of the
-semantics.
+I don't see anything that guarantees that the mode of the destination
+file is up to date at this point. file_modified() just ends up checking
+the mode cached in the inode.
+
+I wonder if we ought to fix get_rd_wr_caps() to also acquire a reference
+to AUTH_SHARED caps on the destination inode, and then call
+file_modified() after we get those caps. That would also mean that we
+wouldn't need to do this a second time after the copy.
+
+The catch is that if we did need to issue a setattr, I'm not sure if
+we'd need to release those caps first.
+
+Luis, Zheng, thoughts?
+
+>  	/*
+>  	 * We need FILE_WR caps for dst_ci and FILE_RD for src_ci as other
+>  	 * clients may have dirty data in their caches.  And OSDs know nothing
+> @@ -2099,6 +2108,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  out:
+>  	ceph_free_cap_flush(prealloc_cf);
+>  
+> +	file_accessed(src_file);
+> +	/* To be on the safe side, try to remove privs also after copy */
+> +	inode_lock(dst_inode);
+> +	err = file_modified(dst_file);
+> +	inode_unlock(dst_inode);
+> +	if (err < 0)
+> +		dout("failed to modify dst file after copy (%d)\n", err);
+> +
+>  	return ret;
+>  }
+>  
+
 
