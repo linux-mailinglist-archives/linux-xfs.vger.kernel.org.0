@@ -2,140 +2,171 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0606A43E7F
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92BBE442A8
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 18:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732758AbfFMPu3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 11:50:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727006AbfFMPu3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:50:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 04871AF47;
-        Thu, 13 Jun 2019 15:50:26 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH] ceph: copy_file_range needs to strip setuid bits and update timestamps
-References: <20190610174007.4818-1-amir73il@gmail.com>
-        <ed2e4b5d26890e96ba9dafcb3dba88427e36e619.camel@kernel.org>
-Date:   Thu, 13 Jun 2019 16:50:25 +0100
-In-Reply-To: <ed2e4b5d26890e96ba9dafcb3dba88427e36e619.camel@kernel.org> (Jeff
-        Layton's message of "Thu, 13 Jun 2019 08:03:55 -0400")
-Message-ID: <87zhml7ada.fsf@suse.com>
+        id S1731835AbfFMQYb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 12:24:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53446 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730997AbfFMQYb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:24:31 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1969C30832E4;
+        Thu, 13 Jun 2019 16:24:30 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2EDE176BA;
+        Thu, 13 Jun 2019 16:24:28 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 12:24:26 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/14] xfs: create iterator error codes
+Message-ID: <20190613162423.GA21773@bfoster>
+References: <156032205136.3774243.15725828509940520561.stgit@magnolia>
+ <156032205794.3774243.2000474980369140298.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156032205794.3774243.2000474980369140298.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 13 Jun 2019 16:24:30 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> writes:
+On Tue, Jun 11, 2019 at 11:47:37PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Currently, xfs doesn't have generic error codes defined for "stop
+> iterating"; we just reuse the XFS_BTREE_QUERY_* return values.  This
+> looks a little weird if we're not actually iterating a btree index.
+> Before we start adding more iterators, we should create general
+> XFS_ITER_{CONTINUE,ABORT} return values and define the XFS_BTREE_QUERY_*
+> ones from that.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
 
-> On Mon, 2019-06-10 at 20:40 +0300, Amir Goldstein wrote:
->> Because ceph doesn't hold destination inode lock throughout the copy,
->> strip setuid bits before and after copy.
->> 
->> The destination inode mtime is updated before and after the copy and the
->> source inode atime is updated after the copy, similar to the filesystem
->> ->read_iter() implementation.
->> 
->> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
->> ---
->> 
->> Hi Ilya,
->> 
->> Please consider applying this patch to ceph branch after merging
->> Darrick's copy-file-range-fixes branch from:
->>         git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
->> 
->> The series (including this patch) was tested on ceph by
->> Luis Henriques using new copy_range xfstests.
->> 
->> AFAIK, only fallback from ceph to generic_copy_file_range()
->> implementation was tested and not the actual ceph clustered
->> copy_file_range.
->> 
->> Thanks,
->> Amir.
->> 
->>  fs/ceph/file.c | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->> 
->> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
->> index c5517ffeb11c..b04c97c7d393 100644
->> --- a/fs/ceph/file.c
->> +++ b/fs/ceph/file.c
->> @@ -1949,6 +1949,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->>  		goto out;
->>  	}
->>  
->> +	/* Should dst_inode lock be held throughout the copy operation? */
->> +	inode_lock(dst_inode);
->> +	ret = file_modified(dst_file);
->> +	inode_unlock(dst_inode);
->> +	if (ret < 0) {
->> +		dout("failed to modify dst file before copy (%zd)\n", ret);
->> +		goto out;
->> +	}
->> +
->
-> I don't see anything that guarantees that the mode of the destination
-> file is up to date at this point. file_modified() just ends up checking
-> the mode cached in the inode.
->
-> I wonder if we ought to fix get_rd_wr_caps() to also acquire a reference
-> to AUTH_SHARED caps on the destination inode, and then call
-> file_modified() after we get those caps. That would also mean that we
-> wouldn't need to do this a second time after the copy.
->
-> The catch is that if we did need to issue a setattr, I'm not sure if
-> we'd need to release those caps first.
->
-> Luis, Zheng, thoughts?
+Have you given any thought to just replacing
+XFS_BTREE_QUERY_RANGE_[ABORT|CONTINUE] with the generic ITER variants
+and using the latter wherever applicable?
 
-Hmm... I missed that.  IIRC the FILE_WR caps allow to modify some
-metadata (such as timestamps, and file size).  I suppose it doesn't
-allow to cache the mode, does it?  If it does, fixing it would be a
-matter of moving the code a bit further down.  If it doesn't the
-ceph_copy_file_range function already has this problem, as it calls
-file_update_time.  And I wonder if other code paths have this problem
-too.
+This patch looks fine either way:
 
-Obviously, the chunk below will have the same problem.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-Cheers,
--- 
-Luis
-
-
->
->>  	/*
->>  	 * We need FILE_WR caps for dst_ci and FILE_RD for src_ci as other
->>  	 * clients may have dirty data in their caches.  And OSDs know nothing
->> @@ -2099,6 +2108,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->>  out:
->>  	ceph_free_cap_flush(prealloc_cf);
->>  
->> +	file_accessed(src_file);
->> +	/* To be on the safe side, try to remove privs also after copy */
->> +	inode_lock(dst_inode);
->> +	err = file_modified(dst_file);
->> +	inode_unlock(dst_inode);
->> +	if (err < 0)
->> +		dout("failed to modify dst file after copy (%d)\n", err);
->> +
->>  	return ret;
->>  }
->>  
->
->
->
+>  fs/xfs/libxfs/xfs_alloc.c  |    2 +-
+>  fs/xfs/libxfs/xfs_btree.h  |    4 ++--
+>  fs/xfs/libxfs/xfs_shared.h |    6 ++++++
+>  fs/xfs/scrub/agheader.c    |    4 ++--
+>  fs/xfs/scrub/repair.c      |    4 ++--
+>  fs/xfs/xfs_dquot.c         |    2 +-
+>  6 files changed, 14 insertions(+), 8 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> index a9ff3cf82cce..b9eb3a8aeaf9 100644
+> --- a/fs/xfs/libxfs/xfs_alloc.c
+> +++ b/fs/xfs/libxfs/xfs_alloc.c
+> @@ -3146,7 +3146,7 @@ xfs_alloc_has_record(
+>  
+>  /*
+>   * Walk all the blocks in the AGFL.  The @walk_fn can return any negative
+> - * error code or XFS_BTREE_QUERY_RANGE_ABORT.
+> + * error code or XFS_ITER_*.
+>   */
+>  int
+>  xfs_agfl_walk(
+> diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+> index e3b3e9dce5da..94530766dd30 100644
+> --- a/fs/xfs/libxfs/xfs_btree.h
+> +++ b/fs/xfs/libxfs/xfs_btree.h
+> @@ -469,8 +469,8 @@ uint xfs_btree_compute_maxlevels(uint *limits, unsigned long len);
+>  unsigned long long xfs_btree_calc_size(uint *limits, unsigned long long len);
+>  
+>  /* return codes */
+> -#define XFS_BTREE_QUERY_RANGE_CONTINUE	0	/* keep iterating */
+> -#define XFS_BTREE_QUERY_RANGE_ABORT	1	/* stop iterating */
+> +#define XFS_BTREE_QUERY_RANGE_CONTINUE	(XFS_ITER_CONTINUE) /* keep iterating */
+> +#define XFS_BTREE_QUERY_RANGE_ABORT	(XFS_ITER_ABORT)    /* stop iterating */
+>  typedef int (*xfs_btree_query_range_fn)(struct xfs_btree_cur *cur,
+>  		union xfs_btree_rec *rec, void *priv);
+>  
+> diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
+> index 4e909791aeac..fa788139dfe3 100644
+> --- a/fs/xfs/libxfs/xfs_shared.h
+> +++ b/fs/xfs/libxfs/xfs_shared.h
+> @@ -136,4 +136,10 @@ void xfs_symlink_local_to_remote(struct xfs_trans *tp, struct xfs_buf *bp,
+>  				 struct xfs_inode *ip, struct xfs_ifork *ifp);
+>  xfs_failaddr_t xfs_symlink_shortform_verify(struct xfs_inode *ip);
+>  
+> +/* Keep iterating the data structure. */
+> +#define XFS_ITER_CONTINUE	(0)
+> +
+> +/* Stop iterating the data structure. */
+> +#define XFS_ITER_ABORT		(1)
+> +
+>  #endif /* __XFS_SHARED_H__ */
+> diff --git a/fs/xfs/scrub/agheader.c b/fs/xfs/scrub/agheader.c
+> index adaeabdefdd3..1d5361f9ebfc 100644
+> --- a/fs/xfs/scrub/agheader.c
+> +++ b/fs/xfs/scrub/agheader.c
+> @@ -646,7 +646,7 @@ xchk_agfl_block(
+>  	xchk_agfl_block_xref(sc, agbno);
+>  
+>  	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+> -		return XFS_BTREE_QUERY_RANGE_ABORT;
+> +		return XFS_ITER_ABORT;
+>  
+>  	return 0;
+>  }
+> @@ -737,7 +737,7 @@ xchk_agfl(
+>  	/* Check the blocks in the AGFL. */
+>  	error = xfs_agfl_walk(sc->mp, XFS_BUF_TO_AGF(sc->sa.agf_bp),
+>  			sc->sa.agfl_bp, xchk_agfl_block, &sai);
+> -	if (error == XFS_BTREE_QUERY_RANGE_ABORT) {
+> +	if (error == XFS_ITER_ABORT) {
+>  		error = 0;
+>  		goto out_free;
+>  	}
+> diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+> index eb358f0f5e0a..e2a352c1bad7 100644
+> --- a/fs/xfs/scrub/repair.c
+> +++ b/fs/xfs/scrub/repair.c
+> @@ -672,7 +672,7 @@ xrep_findroot_agfl_walk(
+>  {
+>  	xfs_agblock_t		*agbno = priv;
+>  
+> -	return (*agbno == bno) ? XFS_BTREE_QUERY_RANGE_ABORT : 0;
+> +	return (*agbno == bno) ? XFS_ITER_ABORT : 0;
+>  }
+>  
+>  /* Does this block match the btree information passed in? */
+> @@ -702,7 +702,7 @@ xrep_findroot_block(
+>  	if (owner == XFS_RMAP_OWN_AG) {
+>  		error = xfs_agfl_walk(mp, ri->agf, ri->agfl_bp,
+>  				xrep_findroot_agfl_walk, &agbno);
+> -		if (error == XFS_BTREE_QUERY_RANGE_ABORT)
+> +		if (error == XFS_ITER_ABORT)
+>  			return 0;
+>  		if (error)
+>  			return error;
+> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+> index a1af984e4913..8674551c5e98 100644
+> --- a/fs/xfs/xfs_dquot.c
+> +++ b/fs/xfs/xfs_dquot.c
+> @@ -1243,7 +1243,7 @@ xfs_qm_exit(void)
+>  /*
+>   * Iterate every dquot of a particular type.  The caller must ensure that the
+>   * particular quota type is active.  iter_fn can return negative error codes,
+> - * or XFS_BTREE_QUERY_RANGE_ABORT to indicate that it wants to stop iterating.
+> + * or XFS_ITER_ABORT to indicate that it wants to stop iterating.
+>   */
+>  int
+>  xfs_qm_dqiterate(
+> 
