@@ -2,97 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FE8443D0D
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:39:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4412043CE4
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:38:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfFMPjS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 11:39:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38668 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731928AbfFMJzo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 05:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=se5RwgsJXpIaRwAJUDF3EubFPW97VYMOUZlHXB89uq8=; b=rV+MBzg7sqo1mUHED0579Ypk5t
-        B23sAkHUq9mrkVlzB0ppko81oqmxrF1ziuEylJ2fyKgaHLCL2B013KzkonbpW4ZaE8r5+s/+xe1Zs
-        HZHb0BOYKLbyeTE46Y0ATLJCPqTakmUJoJfSQNVh2K+RueFUpHQquEvNR/EPPgW8AuHepd3p7pDpL
-        EeDetwgkooiRPjY6N0PQtT1nFh5Sf+M1sVp6ZHDcWpQLPnbOx5BwgU8M6jIhjUy9WNlIKUnzPeoRc
-        +ws+mGBTZ7RG0fSo753w2xnYlaGnHzMnl+WUxB/WC6BmqvYgqGIwjSNCQRwMG7Fn+q0wBY6ubBk4r
-        2JRbp0zw==;
-Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMSI-0008M0-1l; Thu, 13 Jun 2019 09:55:38 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+        id S1727135AbfFMPi3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 11:38:29 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:32791 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727232AbfFMKGZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 06:06:25 -0400
+Received: by mail-ot1-f42.google.com with SMTP id p4so15173437oti.0
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 03:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JgKtp+EVGe0+8Rc9lPcH24Uo2h5Omb1JSYyyLbVl3aU=;
+        b=Bo0PlQP8Crp3OFg26PDH6POmMArttBDrAlU+wwo7QxP0IYimixiOB982bo/8/rg374
+         cvsh0vzg24JnvfdLjIPaLSCi9NzOdxxee8Vlrvq5nhkoX0fe22rPQVE3XL9/ccgBtxJg
+         ilAtAeaKCHViTiN354G58cC6h6rKM08Sm13+yVE51HyF/45EBYGBplFhEA1+vJEobGor
+         KQ0orhQt0FNVgoiCc467Zt5dH/knGL3kR6wxZBULJ3B3vLpzL8Re8hXbgN2FvGyI8Gmt
+         xGDJbX6xV8+6q6cutYCzMGB4GGp5/vAiVUsAkDKBF/T8ndtZ2u+oHxDty2gDh9Ve/PY4
+         mx4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JgKtp+EVGe0+8Rc9lPcH24Uo2h5Omb1JSYyyLbVl3aU=;
+        b=PFiBIJT5LmlFUWuvwptyZGXC+4Iwb76VAG52b3TcnLhxahmLwO24kQw7gB+uCRKaSA
+         5qTz5xltnOsKIFlWUfLgLn+5DCUHmrktVxVOCe95EvJX6PK6P6BGkmOBZOK4qYRLe5EJ
+         poVa7d9o4n4vQ7+N4YLaX3Qtbx8nfuC2guGtCTuh9aAF2GsyfQniTa65wVOnoSj7t1FX
+         fMeA3/biNfW/B1q9pp0j1HbzmAsf6I/ywyDWQ2NBLMnvwpjkXIamLQJlfhbTN8Vb3WI+
+         nA4CQOKDLGOpxWTgKoAlZVtVmMXfjxWSuUjk3LCieHuOm/vRBH8gJaNz2y0CAOc51V4V
+         3dnA==
+X-Gm-Message-State: APjAAAXqLhgElwzhryjUsSizHru4jyBFaptsTERObj8wZJ+wFKsIT2uU
+        pkSUc7RtGX6bOjX8yraDnUI0SkUB6caE+A==
+X-Google-Smtp-Source: APXvYqzYLFkrTVkgnHY4W6nYMSsB9WdZG16Yj2xmRUCUrhdWBhgSPErFYawiIGsEv/xg9cp39VdTFQ==
+X-Received: by 2002:a05:6830:1250:: with SMTP id s16mr3169397otp.158.1560420384602;
+        Thu, 13 Jun 2019 03:06:24 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-107-92-59-183.mycingular.net. [107.92.59.183])
+        by smtp.gmail.com with ESMTPSA id j204sm820809oif.37.2019.06.13.03.06.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 03:06:23 -0700 (PDT)
+Subject: Re: alternative take on the same page merging leak fix v2
+To:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
 Cc:     David Gibson <david@gibson.dropbear.id.au>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: [PATCH 2/2] block: fix page leak when merging to same page
-Date:   Thu, 13 Jun 2019 11:55:29 +0200
-Message-Id: <20190613095529.25005-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613095529.25005-1-hch@lst.de>
 References: <20190613095529.25005-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
+Date:   Thu, 13 Jun 2019 04:04:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190613095529.25005-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When multiple iovecs reference the same page, each get_user_page call
-will add a reference to the page.  But once we've created the bio that
-information gets lost and only a single reference will be dropped after
-I/O completion.  Use the same_page information returned from
-__bio_try_merge_page to drop additional references to pages that were
-already present in the bio.
+On 6/13/19 3:55 AM, Christoph Hellwig wrote:
+> Hi Jens, hi Ming,
+> 
+> this is the tested and split version of what I think is the better
+> fix for the get_user_pages page leak, as it leaves the intelligence
+> in the callers instead of in bio_try_to_merge_page.
+> 
+> Changes since v1:
+>   - drop patches not required for 5.2
+>   - added Reviewed-by tags
 
-Based on a patch from Ming Lei.
+Applied for 5.2, thanks.
 
-Link: https://lkml.org/lkml/2019/4/23/64
-Fixes: 576ed913 ("block: use bio_add_page in bio_iov_iter_get_pages")
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- block/bio.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index 59588c57694d..35b3c568a48f 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -895,6 +895,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 	unsigned short entries_left = bio->bi_max_vecs - bio->bi_vcnt;
- 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
- 	struct page **pages = (struct page **)bv;
-+	bool same_page = false;
- 	ssize_t size, left;
- 	unsigned len, i;
- 	size_t offset;
-@@ -915,8 +916,15 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
- 		struct page *page = pages[i];
- 
- 		len = min_t(size_t, PAGE_SIZE - offset, left);
--		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
--			return -EINVAL;
-+
-+		if (__bio_try_merge_page(bio, page, len, offset, &same_page)) {
-+			if (same_page)
-+				put_page(page);
-+		} else {
-+			if (WARN_ON_ONCE(bio_full(bio)))
-+                                return -EINVAL;
-+			__bio_add_page(bio, page, len, offset);
-+		}
- 		offset = 0;
- 	}
- 
 -- 
-2.20.1
+Jens Axboe
 
