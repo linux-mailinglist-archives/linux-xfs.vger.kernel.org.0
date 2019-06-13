@@ -2,234 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0098944E12
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 23:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC3644E29
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 23:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfFMVFI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 17:05:08 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41724 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfFMVFH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 17:05:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so234887wrm.8
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 14:05:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cTLSYYzfoZC6YrVm9C/5xsaOzaSWuksx9AW180fAmaA=;
-        b=lXXarQBsfHJAL6zPuOY83zKXzljsjQ4DMD9tMIbRxM8Y+RkFksZhlIl6YwUvHpDbeJ
-         iMgJt5MkT3upgE9UWQtmLWj2FpOrzorQ6VKlOVjXXCgDUMraPi00NpXDHlrcKTCzpTqd
-         ZmBBdiXcxMKpM0s+M4+FF46X7knpi8Aq4YBWXYNhEmqW5XRUb15qYRNFTU+bgoWSk04Z
-         +eIuHCzxtzkxHlFHVYlGRtudJ+Y4Jr1cuwy16MBkMtOKYvx3BgUlzRKNTVE0W9qJgUFZ
-         Con13/AtqlpQ1KLjitPAPZ4UpvlYkqzHbUizcE0FQq1J/zKpi1l0M4OPVmo9uYF6Ax1D
-         tEjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=cTLSYYzfoZC6YrVm9C/5xsaOzaSWuksx9AW180fAmaA=;
-        b=VNpqZ20dRbXyMYdasXVYe2JJKGr4L/VfBEmc/FrjIbho/DQ4UQJh7VZiLDmA9WUEP1
-         xUOnCa+uYhMPtV7H7v4b5hZeebnygQxzzIt+jupDN6enSU7VcUl1cza8NhM6ucb60F/k
-         KYwkukqhUPBwDGxpts1WLlgRl70RCd1lS6S2EsGKPPqY2DESzbIoB7ZFzGyAwebMaRxC
-         o8t0lmeLPMRrjpvcFWSFxuCY/lF67Qby59JnsqgZ0mOwroZ6FqjpqFhwaV3lYd3pfyIl
-         Zj7zgnzBL4I3MrTfn1K6TezdW+qng759XFSewfxjukS3jsIe0yyOoDag8ZsXe17+IEOM
-         HbwA==
-X-Gm-Message-State: APjAAAWRVPTsu2W+kVxY8QYuUxxVgx8UwIV7a9Tfy0CeIoPP3/dXAqvc
-        gK6d3QhinGkXZYlX4kSMusQnN/YkGxA=
-X-Google-Smtp-Source: APXvYqyHmKZVWOzOoQxkwdF8yVILxTfGhIqWAJnU+qCTHy87pbm1Ij1qbihTW9YipcqyhJ6Zwx8ZYg==
-X-Received: by 2002:a05:6000:d1:: with SMTP id q17mr9180032wrx.40.1560459903653;
-        Thu, 13 Jun 2019 14:05:03 -0700 (PDT)
-Received: from localhost.localdomain (host86-95-dynamic.24-79-r.retail.telecomitalia.it. [79.24.95.86])
-        by smtp.gmail.com with ESMTPSA id y2sm633326wra.58.2019.06.13.14.05.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 14:05:03 -0700 (PDT)
-From:   Andrea Gelmini <andrea.gelmini@gelma.net>
-To:     linux-xfs@vger.kernel.org
-Cc:     Andrea Gelmini <andrea.gelmini@gelma.net>
-Subject: [PATCH] Fix typos in xfs-documentation
-Date:   Thu, 13 Jun 2019 23:04:59 +0200
-Message-Id: <20190613210459.52794-1-andrea.gelmini@gelma.net>
-X-Mailer: git-send-email 2.22.0.4.ge77e5b94d2
+        id S1730127AbfFMVMC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 17:12:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:28008 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMVMB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:12:01 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:12:01 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 13 Jun 2019 14:12:00 -0700
+Date:   Thu, 13 Jun 2019 14:13:21 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613152755.GI32656@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613152755.GI32656@bombadil.infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
----
- .../filesystem_tunables.asciidoc                   |  6 +++---
- .../xfs_performance_tuning.asciidoc                |  4 ++--
- .../extended_attributes.asciidoc                   |  2 +-
- .../journaling_log.asciidoc                        |  2 +-
- design/XFS_Filesystem_Structure/magic.asciidoc     |  2 +-
- .../XFS_Filesystem_Structure/refcountbt.asciidoc   |  2 +-
- design/xfs-smr-structure.asciidoc                  | 14 +++++++-------
- 7 files changed, 16 insertions(+), 16 deletions(-)
+On Thu, Jun 13, 2019 at 08:27:55AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > e.g. Process A has an exclusive layout lease on file F. It does an
+> > IO to file F. The filesystem IO path checks that Process A owns the
+> > lease on the file and so skips straight through layout breaking
+> > because it owns the lease and is allowed to modify the layout. It
+> > then takes the inode metadata locks to allocate new space and write
+> > new data.
+> > 
+> > Process B now tries to write to file F. The FS checks whether
+> > Process B owns a layout lease on file F. It doesn't, so then it
+> > tries to break the layout lease so the IO can proceed. The layout
+> > breaking code sees that process A has an exclusive layout lease
+> > granted, and so returns -ETXTBSY to process B - it is not allowed to
+> > break the lease and so the IO fails with -ETXTBSY.
+> 
+> This description doesn't match the behaviour that RDMA wants either.
+> Even if Process A has a lease on the file, an IO from Process A which
+> results in blocks being freed from the file is going to result in the
+> RDMA device being able to write to blocks which are now freed (and
+> potentially reallocated to another file).
 
-diff --git a/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc b/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
-index c12981b..c570406 100644
---- a/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
-+++ b/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
-@@ -35,7 +35,7 @@ units as used on the +mkfs.xfs+ command line to configure these parameters.
- The performance examples given in this section are highly dependent on storage,
- CPU and RAM configuration. They are intended as guidelines to illustrate
- behavioural differences, not the exact performance any configuration will
--acheive.
-+achieve.
- =====
- 
- === Directory block size
-@@ -238,7 +238,7 @@ available for storing attributes.
- When attributes are stored in the literal area of the inode, both attribute
- names and attribute values are limited to a maximum size of 254 bytes. If either
- name or value exceeds 254 bytes in length, or the total space used by the
--atributes exceeds the size of the literal area, the entire set of attributes
-+attributes exceeds the size of the literal area, the entire set of attributes
- stored on the inode are pushed to a separate attribute block instead of being
- stored inline.
- 
-@@ -359,7 +359,7 @@ than the maximum, and hence there is no need to reduce the log buffer size for
- fsync heavy workloads.
- 
- The default size of the log buffer is 32KB. The maximum size is 256KB and other
--supported sizes are 64KB, 128KB or power of 2 mulitples of the log stripe unit
-+supported sizes are 64KB, 128KB or power of 2 multiples of the log stripe unit
- between 32KB and 256KB. It can be configured by use of the +logbsize+ mount
- option.
- 
-diff --git a/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc b/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
-index 0310bbd..b249e35 100644
---- a/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
-+++ b/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
-@@ -42,8 +42,8 @@ xref:Knowledge[Knowledge Section].
- 
- The xref:Process[Process section] will cover the typical processes used to
- optimise a filesystem for a given workload. If the workload measurements are not
--accurate or reproducable, then no conclusions can be drawn as to whether a
--configuration changes an improvemnt or not. Hence without a robust testing
-+accurate or reproducible, then no conclusions can be drawn as to whether a
-+configuration changes an improvement or not. Hence without a robust testing
- process, no amount of knowledge or observation will result in a well optimised
- filesystem configuration.
- 
-diff --git a/design/XFS_Filesystem_Structure/extended_attributes.asciidoc b/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
-index 7df2d3d..99f7b35 100644
---- a/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
-+++ b/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
-@@ -460,7 +460,7 @@ size of these entries is determined dynamically.
- A variable-length array of descriptors of remote attributes.  The location and
- size of these entries is determined dynamically.
- 
--On a v5 filesystem, the header becomes +xfs_da3_blkinfo_t+ to accomodate the
-+On a v5 filesystem, the header becomes +xfs_da3_blkinfo_t+ to accommodate the
- extra metadata integrity fields:
- 
- [source, c]
-diff --git a/design/XFS_Filesystem_Structure/journaling_log.asciidoc b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-index 6109458..8421a53 100644
---- a/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-+++ b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
-@@ -810,7 +810,7 @@ missing the +ilf_pad+ field and is 52 bytes long as opposed to 56 bytes.
- This region contains the new contents of a part of an inode, as described in
- the xref:Inode_Log_Item[previous section].  There are no magic numbers.
- 
--If +XFS_ILOG_CORE+ is set in +ilf_fields+, the correpsonding data buffer must
-+If +XFS_ILOG_CORE+ is set in +ilf_fields+, the corresponding data buffer must
- be in the format +struct xfs_icdinode+, which has the same format as the first
- 96 bytes of an xref:On-disk_Inode[inode], but is recorded in host byte order.
- 
-diff --git a/design/XFS_Filesystem_Structure/magic.asciidoc b/design/XFS_Filesystem_Structure/magic.asciidoc
-index 7e62783..9be26f8 100644
---- a/design/XFS_Filesystem_Structure/magic.asciidoc
-+++ b/design/XFS_Filesystem_Structure/magic.asciidoc
-@@ -92,5 +92,5 @@ XFS can create really big filesystems!
- | Max Dir Size          | 32GiB | 32GiB | 32GiB
- |=====
- 
--Linux doesn't suppport files or devices larger than 8EiB, so the block
-+Linux doesn't support files or devices larger than 8EiB, so the block
- limitations are largely ignorable.
-diff --git a/design/XFS_Filesystem_Structure/refcountbt.asciidoc b/design/XFS_Filesystem_Structure/refcountbt.asciidoc
-index 508a9dd..ea8f779 100644
---- a/design/XFS_Filesystem_Structure/refcountbt.asciidoc
-+++ b/design/XFS_Filesystem_Structure/refcountbt.asciidoc
-@@ -6,7 +6,7 @@ This data structure is under construction!  Details may change.
- 
- To support the sharing of file data blocks (reflink), each allocation group has
- its own reference count B+tree, which grows in the allocated space like the
--inode B+trees.  This data could be gleaned by performing an interval query of
-+inode B+trees.  This data could be cleaned by performing an interval query of
- the reverse-mapping B+tree, but doing so would come at a huge performance
- penalty.  Therefore, this data structure is a cache of computable information.
- 
-diff --git a/design/xfs-smr-structure.asciidoc b/design/xfs-smr-structure.asciidoc
-index dd959ab..b970224 100644
---- a/design/xfs-smr-structure.asciidoc
-+++ b/design/xfs-smr-structure.asciidoc
-@@ -67,7 +67,7 @@ next to the metadata zone, but typically metadata writes are not correlated with
- log writes.
- 
- Hence the only real functionality we need to add to the log is the tail pushing
--modificaitons to move the tail into the same zone as the head, as well as being
-+modifications to move the tail into the same zone as the head, as well as being
- able to trigger and block on zone write pointer reset operations.
- 
- The log doesn't actually need to track the zone write pointer, though log
-@@ -90,7 +90,7 @@ packed extent allocation only) to ensure that newly written blocks are allocated
- in a sane manner.
- 
- We're going to need userspace to be able to see the contents of these inodes;
--read only access wil be needed to analyse the contents of the zone, so we're
-+read only access will be needed to analyse the contents of the zone, so we're
- going to need a special directory to expose this information. It would be useful
- to have a ".zones" directory hanging off the root directory that contains all
- the zone allocation inodes so userspace can simply open them.
-@@ -112,14 +112,14 @@ also have other benefits...
- While it seems like tracking free space is trivial for the purposes of
- allocation (and it is!), the complexity comes when we start to delete or
- overwrite data. Suddenly zones no longer contain contiguous ranges of valid
--data; they have "freed" extents in the middle of them that contian stale data.
-+data; they have "freed" extents in the middle of them that contain stale data.
- We can't use that "stale space" until the entire zone is made up of "stale"
- extents. Hence we need a Cleaner.
- 
- === Zone Cleaner
- 
- The purpose of the cleaner is to find zones that are mostly stale space and
--consolidate the remaining referenced data into a new, contigious zone, enabling
-+consolidate the remaining referenced data into a new, contiguous zone, enabling
- us to then "clean" the stale zone and make it available for writing new data
- again.
- 
-@@ -129,7 +129,7 @@ parent pointer functionality. This gives us the mechanism by which we can
- quickly re-organise files that have extents in zones that need cleaning.
- 
- The key word here is "reorganise". We have a tool that already reorganises file
--layout: xfs_fsr. The "Cleaner" is a finely targetted policy for xfs_fsr -
-+layout: xfs_fsr. The "Cleaner" is a finely targeted policy for xfs_fsr -
- instead of trying to minimise fixpel fragments, it finds zones that need
- cleaning by reading their summary info from the /.zones/ directory and analysing
- the free bitmap state if there is a high enough percentage of stale blocks. From
-@@ -200,7 +200,7 @@ random write space for all our metadata......
- 
- A basic guideline is that for 4k blocks and zones of 256MB, we'll need 8kB of
- bitmap space and two inodes, so call it 10kB per 256MB zone. That's 40MB per TB
--for free space bitmaps. We'll want to suport at least 1 million inodes per TB,
-+for free space bitmaps. We'll want to support at least 1 million inodes per TB,
- so that's another 512MB per TB, plus another 256MB per TB for directory
- structures. There's other bits and pieces of metadata as well (attribute space,
- internal freespace btrees, reverse map btrees, etc.
-@@ -316,7 +316,7 @@ spiral.
- I suspect the best we will be able to do with fallocate based preallocation is
- to mark the region as delayed allocation.
- 
--=== Allocation Alignemnt
-+=== Allocation Alignment
- 
- With zone based write pointers, we lose all capability of write alignment to the
- underlying storage - our only choice to write is the current set of write
--- 
-2.22.0.4.ge77e5b94d2
+I don't understand why this would not work for RDMA?  As long as the layout
+does not change the page pins can remain in place.
+
+Ira
 
