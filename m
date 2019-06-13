@@ -2,65 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3DDA43860
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C85C4393C
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 17:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732893AbfFMPFS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 13 Jun 2019 11:05:18 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:42084 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732452AbfFMOPx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 10:15:53 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 7E4E520134
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 14:15:52 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id 7C55620564; Thu, 13 Jun 2019 14:15:52 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 203887] CGroup writeback is not supported by `xfs` filesystem
- leading to errors when using containers.
-Date:   Thu, 13 Jun 2019 14:15:50 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: axel.borja.login@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-203887-201763-zmLgdcXSIq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-203887-201763@https.bugzilla.kernel.org/>
-References: <bug-203887-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1732387AbfFMPMa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 11:12:30 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45928 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388155AbfFMPMV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 11:12:21 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s22so12961883qkj.12
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 08:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R4sEx9DRCkbOcqkLsi6Jkv1GflPMZb75UMnrOJnbtJI=;
+        b=JRz6imxOTGsNuMS76M162KvumiMVyYkKXhz/IAFwKjp3Igi0hICl/m4BUGOuw61YG6
+         Pf3He7hg9Kt6x6X1WZuq8bUrqc1a1W2UmAo8VaUwVPA2GdvPEx7a5YMbLY0nfJoFWaQM
+         YEbV9dRjW/drtmRraCujxYyThEP6QtwiSJs3iYcbutlXVk7Z5dASy1/Oy0G/oorjue0j
+         RzaH6Drn7BTg39I+BUiwTL6fije0cyR1reQqzW1AIca5v1agyVprI5RgkLHLmKlYW9Fi
+         0n1zTcJtV1luwZoUboeqFK2xDSzt81BhwHG/KONzmn78w16+WuqvsJOUxxwdcX8amTie
+         g0WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R4sEx9DRCkbOcqkLsi6Jkv1GflPMZb75UMnrOJnbtJI=;
+        b=okkYeJBq15urATnhCD6HjzNFkotmtwmohWBW2M/O1GxA9vO4Gk0V0GbWaPX2x/d804
+         g8QFsXgclok4bNqL93jOKa1hKN3jE/DS0GsLq0igSSKzFrvj7Hat3q1rqBCzUSM7Px7R
+         9vA4B9KDqKrK7IFD0mWNvTk68/rgGQEEdkm84+uBsmid0oRgmS4FAtHm/pbpa1YYAQzl
+         krp2Qd3DdY0dyjNySsCSRNR1NXHQvxswWJoL3zucBFgt/E67KXgatdmRfiFGVD4zUhkQ
+         tQR6IPQK+OO74Q8AmPto/vHOEeemTC2IvprAs6Nw3TEys5BEovXHDIUG9mAgqFmaygZJ
+         kvPA==
+X-Gm-Message-State: APjAAAXcPMmChkHkunKZe4GKCnMcXsDUWuh4rCdmRjm4DpeQQHGGcXGK
+        RlHVoLbUH8JeWsbhUnsshaK3Hw==
+X-Google-Smtp-Source: APXvYqzM9yCChTgMP3KlIhiG1BK19OOrfQlMOx6JZlNrolhLErYOjGfGuCWD8w4PBuxWllsDgHA6QA==
+X-Received: by 2002:a37:e506:: with SMTP id e6mr3810214qkg.229.1560438740039;
+        Thu, 13 Jun 2019 08:12:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id n10sm1577550qke.72.2019.06.13.08.12.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 08:12:19 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hbROk-0001qR-Po; Thu, 13 Jun 2019 12:12:18 -0300
+Date:   Thu, 13 Jun 2019 12:12:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613151218.GB22901@ziepe.ca>
+References: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca>
+ <20190612120907.GC14578@quack2.suse.cz>
+ <20190612191421.GM3876@ziepe.ca>
+ <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203887
+On Wed, Jun 12, 2019 at 03:54:19PM -0700, Dan Williams wrote:
+> > > My preference would be to avoid this scenario, but if it is really
+> > > necessary, we could probably build it with some work.
+> > >
+> > > The only case we use it today is forced HW hot unplug, so it is rarely
+> > > used and only for an 'emergency' like use case.
+> >
+> > I'd really like to avoid this as well.  I think it will be very confusing for
+> > RDMA apps to have their context suddenly be invalid.  I think if we have a way
+> > for admins to ID who is pinning a file the admin can take more appropriate
+> > action on those processes.   Up to and including killing the process.
+> 
+> Can RDMA context invalidation, "device disassociate", be inflicted on
+> a process from the outside? 
 
---- Comment #1 from axel.borja.login@gmail.com ---
-My nodes are running under RHEL with a kernel 4.14 and I encounter OOM errors
-when writing with xfs.
+Yes, but it is currently only applied to the entire device - ie you do
+'rmmod mlx5_ib' and all the running user space process see that their
+FD has moved to some error and the device is broken.
 
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Targetting the disassociate of only a single FD would be a new thing.
+
+Jason
