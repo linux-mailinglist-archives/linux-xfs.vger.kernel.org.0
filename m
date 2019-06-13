@@ -2,185 +2,234 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 320E044D82
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 22:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0098944E12
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2019 23:05:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbfFMUcx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 16:32:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54105 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfFMUcq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:32:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 13:32:46 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jun 2019 13:32:45 -0700
-Date:   Thu, 13 Jun 2019 13:34:06 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613203406.GB32404@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190612233024.GD14336@iweiny-DESK2.sc.intel.com>
- <20190613005552.GI14363@dread.disaster.area>
+        id S1727291AbfFMVFI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 17:05:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41724 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbfFMVFH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 17:05:07 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so234887wrm.8
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2019 14:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cTLSYYzfoZC6YrVm9C/5xsaOzaSWuksx9AW180fAmaA=;
+        b=lXXarQBsfHJAL6zPuOY83zKXzljsjQ4DMD9tMIbRxM8Y+RkFksZhlIl6YwUvHpDbeJ
+         iMgJt5MkT3upgE9UWQtmLWj2FpOrzorQ6VKlOVjXXCgDUMraPi00NpXDHlrcKTCzpTqd
+         ZmBBdiXcxMKpM0s+M4+FF46X7knpi8Aq4YBWXYNhEmqW5XRUb15qYRNFTU+bgoWSk04Z
+         +eIuHCzxtzkxHlFHVYlGRtudJ+Y4Jr1cuwy16MBkMtOKYvx3BgUlzRKNTVE0W9qJgUFZ
+         Con13/AtqlpQ1KLjitPAPZ4UpvlYkqzHbUizcE0FQq1J/zKpi1l0M4OPVmo9uYF6Ax1D
+         tEjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=cTLSYYzfoZC6YrVm9C/5xsaOzaSWuksx9AW180fAmaA=;
+        b=VNpqZ20dRbXyMYdasXVYe2JJKGr4L/VfBEmc/FrjIbho/DQ4UQJh7VZiLDmA9WUEP1
+         xUOnCa+uYhMPtV7H7v4b5hZeebnygQxzzIt+jupDN6enSU7VcUl1cza8NhM6ucb60F/k
+         KYwkukqhUPBwDGxpts1WLlgRl70RCd1lS6S2EsGKPPqY2DESzbIoB7ZFzGyAwebMaRxC
+         o8t0lmeLPMRrjpvcFWSFxuCY/lF67Qby59JnsqgZ0mOwroZ6FqjpqFhwaV3lYd3pfyIl
+         Zj7zgnzBL4I3MrTfn1K6TezdW+qng759XFSewfxjukS3jsIe0yyOoDag8ZsXe17+IEOM
+         HbwA==
+X-Gm-Message-State: APjAAAWRVPTsu2W+kVxY8QYuUxxVgx8UwIV7a9Tfy0CeIoPP3/dXAqvc
+        gK6d3QhinGkXZYlX4kSMusQnN/YkGxA=
+X-Google-Smtp-Source: APXvYqyHmKZVWOzOoQxkwdF8yVILxTfGhIqWAJnU+qCTHy87pbm1Ij1qbihTW9YipcqyhJ6Zwx8ZYg==
+X-Received: by 2002:a05:6000:d1:: with SMTP id q17mr9180032wrx.40.1560459903653;
+        Thu, 13 Jun 2019 14:05:03 -0700 (PDT)
+Received: from localhost.localdomain (host86-95-dynamic.24-79-r.retail.telecomitalia.it. [79.24.95.86])
+        by smtp.gmail.com with ESMTPSA id y2sm633326wra.58.2019.06.13.14.05.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 14:05:03 -0700 (PDT)
+From:   Andrea Gelmini <andrea.gelmini@gelma.net>
+To:     linux-xfs@vger.kernel.org
+Cc:     Andrea Gelmini <andrea.gelmini@gelma.net>
+Subject: [PATCH] Fix typos in xfs-documentation
+Date:   Thu, 13 Jun 2019 23:04:59 +0200
+Message-Id: <20190613210459.52794-1-andrea.gelmini@gelma.net>
+X-Mailer: git-send-email 2.22.0.4.ge77e5b94d2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613005552.GI14363@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:55:52AM +1000, Dave Chinner wrote:
-> On Wed, Jun 12, 2019 at 04:30:24PM -0700, Ira Weiny wrote:
-> > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > > On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> > > > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > > > > Are you suggesting that we have something like this from user space?
-> > > > > 
-> > > > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> > > > 
-> > > > Rather than "unbreakable", perhaps a clearer description of the
-> > > > policy it entails is "exclusive"?
-> > > > 
-> > > > i.e. what we are talking about here is an exclusive lease that
-> > > > prevents other processes from changing the layout. i.e. the
-> > > > mechanism used to guarantee a lease is exclusive is that the layout
-> > > > becomes "unbreakable" at the filesystem level, but the policy we are
-> > > > actually presenting to uses is "exclusive access"...
-> > > 
-> > > That's rather different from the normal meaning of 'exclusive' in the
-> > > context of locks, which is "only one user can have access to this at
-> > > a time".  As I understand it, this is rather more like a 'shared' or
-> > > 'read' lock.  The filesystem would be the one which wants an exclusive
-> > > lock, so it can modify the mapping of logical to physical blocks.
-> > > 
-> > > The complication being that by default the filesystem has an exclusive
-> > > lock on the mapping, and what we're trying to add is the ability for
-> > > readers to ask the filesystem to give up its exclusive lock.
-> > 
-> > This is an interesting view...
-> > 
-> > And after some more thought, exclusive does not seem like a good name for this
-> > because technically F_WRLCK _is_ an exclusive lease...
-> > 
-> > In addition, the user does not need to take the "exclusive" write lease to be
-> > notified of (broken by) an unexpected truncate.  A "read" lease is broken by
-> > truncate.  (And "write" leases really don't do anything different WRT the
-> > interaction of the FS and the user app.  Write leases control "exclusive"
-> > access between other file descriptors.)
-> 
-> I've been assuming that there is only one type of layout lease -
-> there is no use case I've heard of for read/write layout leases, and
-> like you say there is zero difference in behaviour at the filesystem
-> level - they all have to be broken to allow a non-lease truncate to
-> proceed.
-> 
-> IMO, taking a "read lease" to be able to modify and write to the
-> underlying mapping of a file makes absolutely no sense at all.
-> IOWs, we're talking exaclty about a revokable layout lease vs an
-> exclusive layout lease here, and so read/write really doesn't match
-> the policy or semantics we are trying to provide.
+---
+ .../filesystem_tunables.asciidoc                   |  6 +++---
+ .../xfs_performance_tuning.asciidoc                |  4 ++--
+ .../extended_attributes.asciidoc                   |  2 +-
+ .../journaling_log.asciidoc                        |  2 +-
+ design/XFS_Filesystem_Structure/magic.asciidoc     |  2 +-
+ .../XFS_Filesystem_Structure/refcountbt.asciidoc   |  2 +-
+ design/xfs-smr-structure.asciidoc                  | 14 +++++++-------
+ 7 files changed, 16 insertions(+), 16 deletions(-)
 
-I humbly disagree, at least depending on how you look at it...  :-D
+diff --git a/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc b/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
+index c12981b..c570406 100644
+--- a/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
++++ b/admin/XFS_Performance_Tuning/filesystem_tunables.asciidoc
+@@ -35,7 +35,7 @@ units as used on the +mkfs.xfs+ command line to configure these parameters.
+ The performance examples given in this section are highly dependent on storage,
+ CPU and RAM configuration. They are intended as guidelines to illustrate
+ behavioural differences, not the exact performance any configuration will
+-acheive.
++achieve.
+ =====
+ 
+ === Directory block size
+@@ -238,7 +238,7 @@ available for storing attributes.
+ When attributes are stored in the literal area of the inode, both attribute
+ names and attribute values are limited to a maximum size of 254 bytes. If either
+ name or value exceeds 254 bytes in length, or the total space used by the
+-atributes exceeds the size of the literal area, the entire set of attributes
++attributes exceeds the size of the literal area, the entire set of attributes
+ stored on the inode are pushed to a separate attribute block instead of being
+ stored inline.
+ 
+@@ -359,7 +359,7 @@ than the maximum, and hence there is no need to reduce the log buffer size for
+ fsync heavy workloads.
+ 
+ The default size of the log buffer is 32KB. The maximum size is 256KB and other
+-supported sizes are 64KB, 128KB or power of 2 mulitples of the log stripe unit
++supported sizes are 64KB, 128KB or power of 2 multiples of the log stripe unit
+ between 32KB and 256KB. It can be configured by use of the +logbsize+ mount
+ option.
+ 
+diff --git a/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc b/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
+index 0310bbd..b249e35 100644
+--- a/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
++++ b/admin/XFS_Performance_Tuning/xfs_performance_tuning.asciidoc
+@@ -42,8 +42,8 @@ xref:Knowledge[Knowledge Section].
+ 
+ The xref:Process[Process section] will cover the typical processes used to
+ optimise a filesystem for a given workload. If the workload measurements are not
+-accurate or reproducable, then no conclusions can be drawn as to whether a
+-configuration changes an improvemnt or not. Hence without a robust testing
++accurate or reproducible, then no conclusions can be drawn as to whether a
++configuration changes an improvement or not. Hence without a robust testing
+ process, no amount of knowledge or observation will result in a well optimised
+ filesystem configuration.
+ 
+diff --git a/design/XFS_Filesystem_Structure/extended_attributes.asciidoc b/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
+index 7df2d3d..99f7b35 100644
+--- a/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
++++ b/design/XFS_Filesystem_Structure/extended_attributes.asciidoc
+@@ -460,7 +460,7 @@ size of these entries is determined dynamically.
+ A variable-length array of descriptors of remote attributes.  The location and
+ size of these entries is determined dynamically.
+ 
+-On a v5 filesystem, the header becomes +xfs_da3_blkinfo_t+ to accomodate the
++On a v5 filesystem, the header becomes +xfs_da3_blkinfo_t+ to accommodate the
+ extra metadata integrity fields:
+ 
+ [source, c]
+diff --git a/design/XFS_Filesystem_Structure/journaling_log.asciidoc b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
+index 6109458..8421a53 100644
+--- a/design/XFS_Filesystem_Structure/journaling_log.asciidoc
++++ b/design/XFS_Filesystem_Structure/journaling_log.asciidoc
+@@ -810,7 +810,7 @@ missing the +ilf_pad+ field and is 52 bytes long as opposed to 56 bytes.
+ This region contains the new contents of a part of an inode, as described in
+ the xref:Inode_Log_Item[previous section].  There are no magic numbers.
+ 
+-If +XFS_ILOG_CORE+ is set in +ilf_fields+, the correpsonding data buffer must
++If +XFS_ILOG_CORE+ is set in +ilf_fields+, the corresponding data buffer must
+ be in the format +struct xfs_icdinode+, which has the same format as the first
+ 96 bytes of an xref:On-disk_Inode[inode], but is recorded in host byte order.
+ 
+diff --git a/design/XFS_Filesystem_Structure/magic.asciidoc b/design/XFS_Filesystem_Structure/magic.asciidoc
+index 7e62783..9be26f8 100644
+--- a/design/XFS_Filesystem_Structure/magic.asciidoc
++++ b/design/XFS_Filesystem_Structure/magic.asciidoc
+@@ -92,5 +92,5 @@ XFS can create really big filesystems!
+ | Max Dir Size          | 32GiB | 32GiB | 32GiB
+ |=====
+ 
+-Linux doesn't suppport files or devices larger than 8EiB, so the block
++Linux doesn't support files or devices larger than 8EiB, so the block
+ limitations are largely ignorable.
+diff --git a/design/XFS_Filesystem_Structure/refcountbt.asciidoc b/design/XFS_Filesystem_Structure/refcountbt.asciidoc
+index 508a9dd..ea8f779 100644
+--- a/design/XFS_Filesystem_Structure/refcountbt.asciidoc
++++ b/design/XFS_Filesystem_Structure/refcountbt.asciidoc
+@@ -6,7 +6,7 @@ This data structure is under construction!  Details may change.
+ 
+ To support the sharing of file data blocks (reflink), each allocation group has
+ its own reference count B+tree, which grows in the allocated space like the
+-inode B+trees.  This data could be gleaned by performing an interval query of
++inode B+trees.  This data could be cleaned by performing an interval query of
+ the reverse-mapping B+tree, but doing so would come at a huge performance
+ penalty.  Therefore, this data structure is a cache of computable information.
+ 
+diff --git a/design/xfs-smr-structure.asciidoc b/design/xfs-smr-structure.asciidoc
+index dd959ab..b970224 100644
+--- a/design/xfs-smr-structure.asciidoc
++++ b/design/xfs-smr-structure.asciidoc
+@@ -67,7 +67,7 @@ next to the metadata zone, but typically metadata writes are not correlated with
+ log writes.
+ 
+ Hence the only real functionality we need to add to the log is the tail pushing
+-modificaitons to move the tail into the same zone as the head, as well as being
++modifications to move the tail into the same zone as the head, as well as being
+ able to trigger and block on zone write pointer reset operations.
+ 
+ The log doesn't actually need to track the zone write pointer, though log
+@@ -90,7 +90,7 @@ packed extent allocation only) to ensure that newly written blocks are allocated
+ in a sane manner.
+ 
+ We're going to need userspace to be able to see the contents of these inodes;
+-read only access wil be needed to analyse the contents of the zone, so we're
++read only access will be needed to analyse the contents of the zone, so we're
+ going to need a special directory to expose this information. It would be useful
+ to have a ".zones" directory hanging off the root directory that contains all
+ the zone allocation inodes so userspace can simply open them.
+@@ -112,14 +112,14 @@ also have other benefits...
+ While it seems like tracking free space is trivial for the purposes of
+ allocation (and it is!), the complexity comes when we start to delete or
+ overwrite data. Suddenly zones no longer contain contiguous ranges of valid
+-data; they have "freed" extents in the middle of them that contian stale data.
++data; they have "freed" extents in the middle of them that contain stale data.
+ We can't use that "stale space" until the entire zone is made up of "stale"
+ extents. Hence we need a Cleaner.
+ 
+ === Zone Cleaner
+ 
+ The purpose of the cleaner is to find zones that are mostly stale space and
+-consolidate the remaining referenced data into a new, contigious zone, enabling
++consolidate the remaining referenced data into a new, contiguous zone, enabling
+ us to then "clean" the stale zone and make it available for writing new data
+ again.
+ 
+@@ -129,7 +129,7 @@ parent pointer functionality. This gives us the mechanism by which we can
+ quickly re-organise files that have extents in zones that need cleaning.
+ 
+ The key word here is "reorganise". We have a tool that already reorganises file
+-layout: xfs_fsr. The "Cleaner" is a finely targetted policy for xfs_fsr -
++layout: xfs_fsr. The "Cleaner" is a finely targeted policy for xfs_fsr -
+ instead of trying to minimise fixpel fragments, it finds zones that need
+ cleaning by reading their summary info from the /.zones/ directory and analysing
+ the free bitmap state if there is a high enough percentage of stale blocks. From
+@@ -200,7 +200,7 @@ random write space for all our metadata......
+ 
+ A basic guideline is that for 4k blocks and zones of 256MB, we'll need 8kB of
+ bitmap space and two inodes, so call it 10kB per 256MB zone. That's 40MB per TB
+-for free space bitmaps. We'll want to suport at least 1 million inodes per TB,
++for free space bitmaps. We'll want to support at least 1 million inodes per TB,
+ so that's another 512MB per TB, plus another 256MB per TB for directory
+ structures. There's other bits and pieces of metadata as well (attribute space,
+ internal freespace btrees, reverse map btrees, etc.
+@@ -316,7 +316,7 @@ spiral.
+ I suspect the best we will be able to do with fallocate based preallocation is
+ to mark the region as delayed allocation.
+ 
+-=== Allocation Alignemnt
++=== Allocation Alignment
+ 
+ With zone based write pointers, we lose all capability of write alignment to the
+ underlying storage - our only choice to write is the current set of write
+-- 
+2.22.0.4.ge77e5b94d2
 
-The patches as they stand expect the user to take a "read" layout lease which
-indicates they are currently using "reading" the layout as is.  They are not
-changing ("writing" to) the layout.  They then pin pages which locks parts of
-the layout and therefore they expect no "writers" to change the layout.
-
-The "write" layout lease breaks the "read" layout lease indicating that the
-layout is being written to.  Should the layout be pinned in such a way that the
-layout can't be changed the "layout writer" (truncate) fails.
-
-In fact, this is what NFS does right now.  The lease it puts on the file is of
-"read" type.
-
-nfs4layouts.c:
-static int
-nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
-{
-...
-        fl->fl_flags = FL_LAYOUT;
-        fl->fl_type = F_RDLCK;
-...
-}
-
-I was not changing that much from the NFS patter which meant the break lease
-code worked.
-
-Jans proposal is solid but it means that there is no breaking of the lease.  I
-tried to add an "exclusive" flag to the "write" lease but the __break_lease()
-code gets weird.  I'm not saying it is not possible.  Just that I have not
-seen a good way to do it.
-
-> 
-> > Another thing to consider is that this patch set _allows_ a truncate/hole punch
-> > to proceed _if_ the pages being affected are not actually pinned.  So the
-> > unbreakable/exclusive nature of the lease is not absolute.
-> 
-> If you're talking about the process that owns the layout lease
-> running the truncate, then that is fine.
-> 
-> However, if you are talking about a process that does not own the
-> layout lease being allowed to truncate a file without first breaking
-> the layout lease, then that is fundamentally broken.
-
-In both cases (local or remote process) the lease is broken prior to the
-attempt to truncate.
-
-> 
-> i.e. If you don't own a layout lease, the layout leases must be
-> broken before the truncate can proceed.
-
-Agreed.
-
->
-> If it's an exclusive lease,
-> then you cannot break the lease and the truncate *must fail before
-> it is started*. i.e.  the layout lease state must be correctly
-> resolved before we start an operation that may modify a file layout.
-> 
-> Determining if we can actually do the truncate based on page state
-> occurs /after/ the lease says the truncate can proceed....
-
-That makes a lot of sense and that is the way the patch currently works.
-
-I need to think on this some more.  Keeping the lease may not be critical.  As
-discussed with Jan; dealing with close() is best dealt with by tracking the
-actual pins on the file.  If that works then we could potentially keep the
-lease semantics closer to what you and I are talking about here.
-
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
