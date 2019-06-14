@@ -2,104 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6D7450BB
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 02:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F12E4511E
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 03:20:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbfFNAgW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 20:36:22 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60257 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725777AbfFNAgV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 20:36:21 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7F8AF43B354;
-        Fri, 14 Jun 2019 10:36:16 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hbaBa-0004jE-EB; Fri, 14 Jun 2019 10:35:18 +1000
-Date:   Fri, 14 Jun 2019 10:35:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190614003518.GL14363@dread.disaster.area>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
- <20190613212112.GB28171@kmo-pixel>
+        id S1725863AbfFNBUB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 21:20:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfFNBUB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 13 Jun 2019 21:20:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EC8A3082E4D;
+        Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A13A6607B2;
+        Fri, 14 Jun 2019 01:19:51 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 09:19:47 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: alternative take on the same page merging leak fix v2
+Message-ID: <20190614011946.GB14436@ming.t460p>
+References: <20190613095529.25005-1-hch@lst.de>
+ <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613212112.GB28171@kmo-pixel>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=6_0dh5WEKKik7Vn-M0YA:9 a=FsNm7XV4SpkFqOcW:21
-        a=cFAAwf0Rn3E3QlG0:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:21:12PM -0400, Kent Overstreet wrote:
-> On Thu, Jun 13, 2019 at 03:13:40PM -0600, Andreas Dilger wrote:
-> > There are definitely workloads that require multiple threads doing non-overlapping
-> > writes to a single file in HPC.  This is becoming an increasingly common problem
-> > as the number of cores on a single client increase, since there is typically one
-> > thread per core trying to write to a shared file.  Using multiple files (one per
-> > core) is possible, but that has file management issues for users when there are a
-> > million cores running on the same job/file (obviously not on the same client node)
-> > dumping data every hour.
+On Thu, Jun 13, 2019 at 04:04:03AM -0600, Jens Axboe wrote:
+> On 6/13/19 3:55 AM, Christoph Hellwig wrote:
+> > Hi Jens, hi Ming,
+> > 
+> > this is the tested and split version of what I think is the better
+> > fix for the get_user_pages page leak, as it leaves the intelligence
+> > in the callers instead of in bio_try_to_merge_page.
+> > 
+> > Changes since v1:
+> >   - drop patches not required for 5.2
+> >   - added Reviewed-by tags
 > 
-> Mixed buffered and O_DIRECT though? That profile looks like just buffered IO to
-> me.
-> 
-> > We were just looking at this exact problem last week, and most of the threads are
-> > spinning in grab_cache_page_nowait->add_to_page_cache_lru() and set_page_dirty()
-> > when writing at 1.9GB/s when they could be writing at 5.8GB/s (when threads are
-> > writing O_DIRECT instead of buffered).  Flame graph is attached for 16-thread case,
-> > but high-end systems today easily have 2-4x that many cores.
-> 
-> Yeah I've been spending some time on buffered IO performance too - 4k page
-> overhead is a killer.
-> 
-> bcachefs has a buffered write path that looks up multiple pages at a time and
-> locks them, and then copies the data to all the pages at once (I stole the idea
-> from btrfs). It was a very significant performance increase.
+> Applied for 5.2, thanks.
 
-Careful with that - locking multiple pages is also a deadlock vector
-that triggers unexpectedly when something conspires to lock pages in
-non-ascending order. e.g.
+Hi Jens & Christoph,
 
-64081362e8ff mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
+Looks the following change is missed in patch 1, otherwise kernel oops
+is triggered during kernel booting:
 
-The fs/iomap.c code avoids this problem by mapping the IO first,
-then iterating pages one at a time until the mapping is consumed,
-then it gets another mapping. It also avoids needing to put a page
-array on stack....
+diff --git a/block/bio.c b/block/bio.c
+index 35b3c568a48f..9ccf07c666f7 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -706,6 +706,8 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		return 0;
+ 
+ 	if (bio->bi_vcnt > 0) {
++		bool same_page;
++
+ 		bvec = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 
+ 		if (page == bvec->bv_page &&
+@@ -723,7 +725,7 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
+ 		if (bvec_gap_to_prev(q, bvec, offset))
+ 			return 0;
+ 
+-		if (page_is_mergeable(bvec, page, len, offset, false) &&
++		if (page_is_mergeable(bvec, page, len, offset, &same_page) &&
+ 		    can_add_page_to_seg(q, bvec, page, len, offset)) {
+ 			bvec->bv_len += len;
+ 			goto done;
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Ming
