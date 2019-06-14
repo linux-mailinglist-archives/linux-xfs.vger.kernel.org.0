@@ -2,87 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F12E4511E
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 03:20:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28F36451CB
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 04:10:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbfFNBUB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Jun 2019 21:20:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36428 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfFNBUB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:20:01 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2EC8A3082E4D;
-        Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A13A6607B2;
-        Fri, 14 Jun 2019 01:19:51 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 09:19:47 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: alternative take on the same page merging leak fix v2
-Message-ID: <20190614011946.GB14436@ming.t460p>
-References: <20190613095529.25005-1-hch@lst.de>
- <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
+        id S1726836AbfFNCKZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Jun 2019 22:10:25 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:47003 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfFNCKZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Jun 2019 22:10:25 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 6E77A3DCE8B;
+        Fri, 14 Jun 2019 12:10:19 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbbeb-0005G5-AA; Fri, 14 Jun 2019 12:09:21 +1000
+Date:   Fri, 14 Jun 2019 12:09:21 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190614020921.GM14363@dread.disaster.area>
+References: <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613152755.GI32656@bombadil.infradead.org>
+ <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
+ <20190613234530.GK22901@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00c908ad-ca33-164d-3741-6c67813c1f0d@kernel.dk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 01:20:01 +0000 (UTC)
+In-Reply-To: <20190613234530.GK22901@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=MIoJepgKeDxvTzH8FPQA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:04:03AM -0600, Jens Axboe wrote:
-> On 6/13/19 3:55 AM, Christoph Hellwig wrote:
-> > Hi Jens, hi Ming,
+On Thu, Jun 13, 2019 at 08:45:30PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 13, 2019 at 02:13:21PM -0700, Ira Weiny wrote:
+> > On Thu, Jun 13, 2019 at 08:27:55AM -0700, Matthew Wilcox wrote:
+> > > On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > > > e.g. Process A has an exclusive layout lease on file F. It does an
+> > > > IO to file F. The filesystem IO path checks that Process A owns the
+> > > > lease on the file and so skips straight through layout breaking
+> > > > because it owns the lease and is allowed to modify the layout. It
+> > > > then takes the inode metadata locks to allocate new space and write
+> > > > new data.
+> > > > 
+> > > > Process B now tries to write to file F. The FS checks whether
+> > > > Process B owns a layout lease on file F. It doesn't, so then it
+> > > > tries to break the layout lease so the IO can proceed. The layout
+> > > > breaking code sees that process A has an exclusive layout lease
+> > > > granted, and so returns -ETXTBSY to process B - it is not allowed to
+> > > > break the lease and so the IO fails with -ETXTBSY.
+> > > 
+> > > This description doesn't match the behaviour that RDMA wants either.
+> > > Even if Process A has a lease on the file, an IO from Process A which
+> > > results in blocks being freed from the file is going to result in the
+> > > RDMA device being able to write to blocks which are now freed (and
+> > > potentially reallocated to another file).
 > > 
-> > this is the tested and split version of what I think is the better
-> > fix for the get_user_pages page leak, as it leaves the intelligence
-> > in the callers instead of in bio_try_to_merge_page.
-> > 
-> > Changes since v1:
-> >   - drop patches not required for 5.2
-> >   - added Reviewed-by tags
+> > I don't understand why this would not work for RDMA?  As long as the layout
+> > does not change the page pins can remain in place.
 > 
-> Applied for 5.2, thanks.
+> Because process A had a layout lease (and presumably a MR) and the
+> layout was still modified in way that invalidates the RDMA MR.
 
-Hi Jens & Christoph,
+The lease holder is allowed to modify the mapping it has a lease
+over. That's necessary so lease holders can write data into
+unallocated space in the file. The lease is there to prevent third
+parties from modifying the layout without the lease holder being
+informed and taking appropriate action to allow that 3rd party
+modification to occur.
 
-Looks the following change is missed in patch 1, otherwise kernel oops
-is triggered during kernel booting:
+If the lease holder modifies the mapping in a way that causes it's
+own internal state to screw up, then that's a bug in the lease
+holder application.
 
-diff --git a/block/bio.c b/block/bio.c
-index 35b3c568a48f..9ccf07c666f7 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -706,6 +706,8 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
- 		return 0;
- 
- 	if (bio->bi_vcnt > 0) {
-+		bool same_page;
-+
- 		bvec = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
- 		if (page == bvec->bv_page &&
-@@ -723,7 +725,7 @@ static int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
- 		if (bvec_gap_to_prev(q, bvec, offset))
- 			return 0;
- 
--		if (page_is_mergeable(bvec, page, len, offset, false) &&
-+		if (page_is_mergeable(bvec, page, len, offset, &same_page) &&
- 		    can_add_page_to_seg(q, bvec, page, len, offset)) {
- 			bvec->bv_len += len;
- 			goto done;
+Cheers,
 
-Thanks,
-Ming
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
