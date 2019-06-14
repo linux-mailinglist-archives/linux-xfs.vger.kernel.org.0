@@ -2,745 +2,336 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B7B7464BD
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 18:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 022304655F
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 19:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725837AbfFNQpd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 14 Jun 2019 12:45:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42770 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfFNQpc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 14 Jun 2019 12:45:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5EGiU8Y042056;
-        Fri, 14 Jun 2019 16:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=66B0xjLBzabaqz2Ye4spTWBkzBDu3M3F1rmEupqZW+4=;
- b=hWQA7PlRwrjaPw/CkArl5NoFFxvL4oj/RKwusAyBKFWOkPbJ2SCSq0sRo7U95KGZ8naR
- 6LjNGOVBaNgJftig8KvsGv8zgQlsHz+cMCVh2DiOUCJGPJCqngZV3VFEt+zQ6JTNpiez
- 8Mgl4sD66ITDDaHw7b4pg63DblT2FE4Wk3tvLL5LXh+CS4eFaMqzzGKSLajg4zckUQpb
- l3y/xNeMeDF9mWON1+vIJPPSiN5c+BXlOJDPkTGN1PUJlOdTAMmT3oiagCPrqxkScmWd
- nJ5Bb3xBsakOGyFLqUoaqPLZNRG9Nl0ByVDEl/oqpxdZU271dzOJsH2mvLOhlHQVGkbu bA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t04eu8g5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 16:45:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5EGhVsY130986;
-        Fri, 14 Jun 2019 16:45:14 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t024w6nbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 16:45:13 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5EGjCZT024242;
-        Fri, 14 Jun 2019 16:45:12 GMT
-Received: from localhost (/70.95.137.242)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 14 Jun 2019 09:45:11 -0700
-Date:   Fri, 14 Jun 2019 09:45:10 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 06/14] xfs: convert bulkstat to new iwalk infrastructure
-Message-ID: <20190614164510.GK3773859@magnolia>
-References: <156032205136.3774243.15725828509940520561.stgit@magnolia>
- <156032208948.3774243.13794437416373501819.stgit@magnolia>
- <20190613163151.GD21773@bfoster>
- <20190613181206.GH3773859@magnolia>
- <20190613230358.GJ3773859@magnolia>
- <20190614111012.GA26586@bfoster>
+        id S1726072AbfFNRIp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 14 Jun 2019 13:08:45 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43643 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFNRIo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 14 Jun 2019 13:08:44 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z24so3266685qtj.10;
+        Fri, 14 Jun 2019 10:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/udZ+XKhmU+OszK8smPM8oGZk8QF4Cy4qCBY6y2RIjs=;
+        b=Zg4GHicSH0SA67Lurj0dHJ8Aalf8qUYYteUtE1xCmNj19Qa1/k3S2EWPIlhNnER/p1
+         kRPQFiS9Pwv+lxXxdP88geqRcOpOjYqSE3TU4edo6ju6PbnBhrM98/WOG54O5R04+WQC
+         By2Mw3ZMEP19GgYHdVwERtogFy5q4ZzaFuPHQFW4fSgzJyg7LlrAdZe92nJrxm54bNbM
+         QD43DkevfZexhbVGhYTAM1SxuPo9lSHoot+WmEgJggik05rfFaHQwMI04h+A9TlU7C9T
+         /4FI48jVDpEmqe32gqDGCY3RtB4N3K9p5HL7CaWJbsKYrJGvW8lVxxFRlCfSchlVNajv
+         /WNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/udZ+XKhmU+OszK8smPM8oGZk8QF4Cy4qCBY6y2RIjs=;
+        b=jSdsOXO2nsWABad0cfVLNkJ8pFEEJnZ4QsUjYPmuZ7okX58OBNcWLuSt27MXLnd1q+
+         df56ZHK0hvCbVIl63gGwumh0qHL+IsDOkaNfBhOM8u2I56hsXxB9j5TDIhlbCkenFWh+
+         SRhWnsmDklf7FAdndAWzWPIDg73PvZDLQQy9ngHTUzrdNYVTmuELsOgx3u9nDl7CvzqX
+         EZok+79jRkrzeCz/0PudePtGWz0BimX8RPBE/+NwoUloV7GQ0S/kpCvhvq7dZ2p8is53
+         5DBJPERCxG+s9osWQ1lFRmUNi60Ui42Mc/3pdoxlQ7MwykNWJA5ApYA6W85flp4fEHwj
+         CuIw==
+X-Gm-Message-State: APjAAAXp09tiHghiDd8vHciN2JhXWwA99te4Uv9U0mDNozr2K+ypjJEq
+        aW7lAKCYB6HxQ18Pz4vIAw==
+X-Google-Smtp-Source: APXvYqyYQmIgrFkFqFuc8FXidyVdqHNPFHGQ2/Xw7RvFkXqhU4kXZeBRb6Ky36ceLTfraSV1T72uhw==
+X-Received: by 2002:a0c:8927:: with SMTP id 36mr9581015qvp.131.1560532123111;
+        Fri, 14 Jun 2019 10:08:43 -0700 (PDT)
+Received: from kmo-pixel ([69.5.123.9])
+        by smtp.gmail.com with ESMTPSA id a21sm2164126qkg.47.2019.06.14.10.08.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 10:08:42 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 13:08:40 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking (was: bcachefs status update) merged)
+Message-ID: <20190614170840.GA32023@kmo-pixel>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614111012.GA26586@bfoster>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906140135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906140135
+In-Reply-To: <20190613235524.GK14363@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:10:12AM -0400, Brian Foster wrote:
-> On Thu, Jun 13, 2019 at 04:03:58PM -0700, Darrick J. Wong wrote:
-> > On Thu, Jun 13, 2019 at 11:12:06AM -0700, Darrick J. Wong wrote:
-> > > On Thu, Jun 13, 2019 at 12:31:54PM -0400, Brian Foster wrote:
-> > > > On Tue, Jun 11, 2019 at 11:48:09PM -0700, Darrick J. Wong wrote:
-> > > > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > > 
-> > > > > Create a new ibulk structure incore to help us deal with bulk inode stat
-> > > > > state tracking and then convert the bulkstat code to use the new iwalk
-> > > > > iterator.  This disentangles inode walking from bulk stat control for
-> > > > > simpler code and enables us to isolate the formatter functions to the
-> > > > > ioctl handling code.
-> > > > > 
-> > > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > > ---
-> > > > >  fs/xfs/xfs_ioctl.c   |   70 ++++++--
-> > > > >  fs/xfs/xfs_ioctl.h   |    5 +
-> > > > >  fs/xfs/xfs_ioctl32.c |   93 ++++++-----
-> > > > >  fs/xfs/xfs_itable.c  |  431 ++++++++++++++++----------------------------------
-> > > > >  fs/xfs/xfs_itable.h  |   79 ++++-----
-> > > > >  5 files changed, 272 insertions(+), 406 deletions(-)
-> > > > > 
-> > > > > 
-> > > > ...
-> > > > > diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-> > > > > index 814ffe6fbab7..5d1c143bac18 100644
-> > > > > --- a/fs/xfs/xfs_ioctl32.c
-> > > > > +++ b/fs/xfs/xfs_ioctl32.c
-> > > > ...
-> > > > > @@ -284,38 +266,59 @@ xfs_compat_ioc_bulkstat(
-> > > > >  		return -EFAULT;
-> > > > >  	bulkreq.ocount = compat_ptr(addr);
-> > > > >  
-> > > > > -	if (copy_from_user(&inlast, bulkreq.lastip, sizeof(__s64)))
-> > > > > +	if (copy_from_user(&lastino, bulkreq.lastip, sizeof(__s64)))
-> > > > >  		return -EFAULT;
-> > > > > +	breq.startino = lastino + 1;
-> > > > >  
+On Fri, Jun 14, 2019 at 09:55:24AM +1000, Dave Chinner wrote:
+> On Thu, Jun 13, 2019 at 02:36:25PM -0400, Kent Overstreet wrote:
+> > On Thu, Jun 13, 2019 at 09:02:24AM +1000, Dave Chinner wrote:
+> > > On Wed, Jun 12, 2019 at 12:21:44PM -0400, Kent Overstreet wrote:
+> > > > Ok, I'm totally on board with returning EDEADLOCK.
 > > > > 
-> > > > Spurious assignment?
+> > > > Question: Would we be ok with returning EDEADLOCK for any IO where the buffer is
+> > > > in the same address space as the file being read/written to, even if the buffer
+> > > > and the IO don't technically overlap?
 > > > 
-> > > Fixed.
+> > > I'd say that depends on the lock granularity. For a range lock,
+> > > we'd be able to do the IO for non-overlapping ranges. For a normal
+> > > mutex or rwsem, then we risk deadlock if the page fault triggers on
+> > > the same address space host as we already have locked for IO. That's
+> > > the case we currently handle with the second IO lock in XFS, ext4,
+> > > btrfs, etc (XFS_MMAPLOCK_* in XFS).
 > > > 
-> > > > > -	if ((count = bulkreq.icount) <= 0)
-> > > > > +	if (bulkreq.icount <= 0)
-> > > > >  		return -EINVAL;
-> > > > >  
-> > > > >  	if (bulkreq.ubuffer == NULL)
-> > > > >  		return -EINVAL;
-> > > > >  
-> > > > > +	breq.ubuffer = bulkreq.ubuffer;
-> > > > > +	breq.icount = bulkreq.icount;
-> > > > > +
-> > > > ...
-> > > > > diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> > > > > index 3ca1c454afe6..58e411e11d6c 100644
-> > > > > --- a/fs/xfs/xfs_itable.c
-> > > > > +++ b/fs/xfs/xfs_itable.c
-> > > > > @@ -14,47 +14,68 @@
-> > > > ...
-> > > > > +STATIC int
-> > > > >  xfs_bulkstat_one_int(
-> > > > > -	struct xfs_mount	*mp,		/* mount point for filesystem */
-> > > > > -	xfs_ino_t		ino,		/* inode to get data for */
-> > > > > -	void __user		*buffer,	/* buffer to place output in */
-> > > > > -	int			ubsize,		/* size of buffer */
-> > > > > -	bulkstat_one_fmt_pf	formatter,	/* formatter, copy to user */
-> > > > > -	int			*ubused,	/* bytes used by me */
-> > > > > -	int			*stat)		/* BULKSTAT_RV_... */
-> > > > > +	struct xfs_mount	*mp,
-> > > > > +	struct xfs_trans	*tp,
-> > > > > +	xfs_ino_t		ino,
-> > > > > +	void			*data)
-> > > > 
-> > > > There's no need for a void pointer here given the current usage. We
-> > > > might as well pass this as bc (and let the caller cast it, if
-> > > > necessary).
-> > > > 
-> > > > That said, it also looks like the only reason we have the
-> > > > xfs_bulkstat_iwalk wrapper caller of this function is to filter out
-> > > > certain error values. If those errors are needed for the single inode
-> > > > case, we could stick something in the bc to toggle that invalid inode
-> > > > filtering behavior and eliminate the need for the wrapper entirely
-> > > > (which would pass _one_int() into the iwalk infra directly and require
-> > > > retaining the void pointer).
-> > > 
-> > > Ok, will do.  That'll help declutter the source file.
+> > > One of the reasons I'm looking at range locks for XFS is to get rid
+> > > of the need for this second mmap lock, as there is no reason for it
+> > > existing if we can lock ranges and EDEADLOCK inside page faults and
+> > > return errors.
 > > 
-> > ...or I won't, because gcc complains that the function pointer passed
-> > into xfs_iwalk() has to have a (void *) as the 4th parameter.  It's not
-> > willing to accept one with a (struct xfs_bstat_chunk *).
-> > 
+> > My concern is that range locks are going to turn out to be both more complicated
+> > and heavier weight, performance wise, than the approach I've taken of just a
+> > single lock per address space.
 > 
-> Hm I don't follow, this function already takes a void *data parameter
-> and we pass bc into xfs_iwalk() as a void*. What am I missing?
+> That's the battle I'm fighting at the moment with them for direct
+> IO(*), but range locks are something I'm doing for XFS and I don't
+> really care if anyone else wants to use them or not.
 
-typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
-			    xfs_ino_t ino, void *data);
+I'm not saying I won't use them :)
 
-gcc doesn't like it if the signature of bulkstat_one_int doesn't match
-xfs_iwalk_fn exactly, even if the only difference is a void pointer vs.
-a structure pointer.
+I just want to do the simple thing first, and then if range locks turn out well
+I don't think it'll be hard to switch bcachefs to them. Or if the simple thing
+turns out to be good enough, even better :)
 
---D
+> (*)Direct IO on XFS is a pure shared lock workload, so the rwsem
+> scales until single atomic update cache line bouncing limits
+> throughput. That means I can max out my hardware at 1.6 million
+> random 4k read/write IOPS (a bit over 6GB/s)(**) to a single file
+> with a rwsem at 32 AIO+DIO dispatch threads. I've only got range
+> locks to about 1.1M IOPS on the same workload, though it's within a
+> couple of percent of a rwsem up to 16 threads...
+> 
+> (**) A small handful of nvme SSDs fed by AIO+DIO are /way faster/
+> than pmem that is emulated with RAM, let alone real pmem which is
+> much slower at random writes than RAM.
+
+So something I should mention is that I've been 
 
 > 
-> Brian
+> > Reason being range locks only help when you've got multiple operations going on
+> > simultaneously that don't conflict - i.e. it's really only going to be useful
+> > for applications that are doing buffered IO and direct IO simultaneously to the
+> > same file.
 > 
-> > Sorry about that. :(
+> Yes, they do that, but that's not why I'm looking at this.  Range
+> locks are primarily for applications that mix multiple different
+> types of operations to the same file concurrently. e.g:
+> 
+> - fallocate and read/write() can be run concurrently if they
+> don't overlap, but right now we serialise them because we have no
+> visibility into what other operations require.
+
+True true. Have you ever seen this be an issue for real applications?
+
+> - buffered read and buffered write can run concurrently if they
+> don't overlap, but right now they are serialised because that's the
+> only way to provide POSIX atomic write vs read semantics (only XFS
+> provides userspace with that guarantee).
+
+We already talked about this on IRC, but it's not the _only_ way - page locks
+suffice if we lock all the pages for the read/write at once, and that's actually
+a really good thing to for performance.
+
+bcachefs doesn't currently provide any guarantees here, but since we already are
+batching up the page operations for buffered writes (and I have patches to do so
+for the buffered read path in filemap.c) I will tweak that slightly to provide
+some sort of guarantee.
+
+This is something I care about in bcachefs because I'm pretty sure I can make
+both the buffered read and write paths work without taking any per inode locks -
+so unrelated IOs to the same file won't be modifying at shared cachelines at
+all. Haven't gotten around to it yet for the buffered write path, but it's on
+the todo list.
+
+> - Sub-block direct IO is serialised against all other direct IO
+> because we can't tell if it overlaps with some other direct IO and
+> so we have to take the slow but safe option - range locks solve that
+> problem, too.
+
+This feels like an internal filesystem implementation detail (not objecting,
+just doesn't sound like something applicable outside xfs to me).
+ 
+> - there's inode_dio_wait() for DIO truncate serialisation
+> because AIO doesn't hold inode locks across IO - range locks can be
+> held all the way to AIO completion so we can get rid of
+> inode_Dio_wait() in XFS and that allows truncate/fallocate to run
+> concurrently with non-overlapping direct IO.
+
+getting rid of inode_dio_wait() and unifying that with other locking would be
+great, for sure.
+
+> - holding non-overlapping range locks on either side of page
+> faults which then gets rid of the need for the special mmap locking
+> path to serialise it against invalidation operations.
+> 
+> IOWs, range locks for IO solve a bunch of long term problems we have
+> in XFS and largely simplify the lock algorithms within the
+> filesystem. And it puts us on the path to introduce range locks for
+> extent mapping serialisation, allowing concurrent mapping lookups
+> and allocation within a single file. It also has the potential to
+> allow us to do concurrent directory modifications....
+
+*nod*
+
+Don't take any of what I'm saying as arguing against range locks. They don't
+seem _as_ useful to me for bcachefs because a lot of what you want them for I
+can already do concurrently - but if they turn out to work better than my
+pagecache add lock I'll happily switch to them later. I'm just reserving
+judgement until I see them and get to play with them.
+
+> IO range locks are not "locking the page cache". IO range locks are
+> purely for managing concurrent IO state in a fine grained manner.
+> The page cache already has it's own locking - that just needs to
+> nest inside IO range locks as teh io locks are what provide the high
+> level exclusion from overlapping page cache operations...
+
+I suppose I worded it badly, my point was just that range locks can be viewed as
+a superset of my pagecache add lock so switching to them would be an easy
+conversion.
+
+> > > > This would simplify things a lot and eliminate a really nasty corner case - page
+> > > > faults trigger readahead. Even if the buffer and the direct IO don't overlap,
+> > > > readahead can pull in pages that do overlap with the dio.
+> > > 
+> > > Page cache readahead needs to be moved under the filesystem IO
+> > > locks. There was a recent thread about how readahead can race with
+> > > hole punching and other fallocate() operations because page cache
+> > > readahead bypasses the filesystem IO locks used to serialise page
+> > > cache invalidation.
+> > > 
+> > > e.g. Readahead can be directed by userspace via fadvise, so we now
+> > > have file->f_op->fadvise() so that filesystems can lock the inode
+> > > before calling generic_fadvise() such that page cache instantiation
+> > > and readahead dispatch can be serialised against page cache
+> > > invalidation. I have a patch for XFS sitting around somewhere that
+> > > implements the ->fadvise method.
 > > 
-> > --D
+> > I just puked a little in my mouth.
+> 
+> Yeah, it's pretty gross. But the page cache simply isn't designed to
+> allow atomic range operations to be performed. We ahven't be able to
+> drag it out of the 1980s - we wrote the fs/iomap.c code so we could
+> do range based extent mapping for IOs rather than the horrible,
+> inefficient page-by-page block mapping the generic page cache code
+> does - that gave us a 30+% increase in buffered IO throughput
+> because we only do a single mapping lookup per IO rather than one
+> per page...
+
+I don't think there's anything _fundamentally_ wrong with the pagecache design -
+i.e. a radix tree of pages.
+
+We do _badly_ need support for arbitrary power of 2 sized pages in the
+pagecache (and it _really_ needs to be compound pages, not just hugepages - a
+lot of the work that's been done that just adds if (hugepage) to page cache code
+is FUCKING RETARDED) - the overhead of working with 4k pages has gotten to be
+completely absurd. But AFAIK the radix tree/xarray side of that is done, what
+needs to be fixed is all the stuff in e.g. filemap.c that assumes it's iterating
+over fixed size pages - that code needs to be reworked to be more like iterating
+over extents.
+
+> That said, the page cache is still far, far slower than direct IO,
+> and the gap is just getting wider and wider as nvme SSDs get faster
+> and faster. PCIe 4 SSDs are just going to make this even more
+> obvious - it's getting to the point where the only reason for having
+> a page cache is to support mmap() and cheap systems with spinning
+> rust storage.
+
+It is true that buffered IO performance is _way_ behind direct IO performance
+today in a lot of situations, but this is mostly due to the fact that we've
+completely dropped the ball and it's 2019 and we're STILL DOING EVERYTHING 4k AT
+A TIME.
+
+> > I think both approaches are workable, but I do think that pushing the locking
+> > down to __add_to_page_cache_locked is fundamentally the better, more correct
+> > approach.
 > > 
-> > > > 
-> > > > >  {
-> > > > > +	struct xfs_bstat_chunk	*bc = data;
-> > > > >  	struct xfs_icdinode	*dic;		/* dinode core info pointer */
-> > > > >  	struct xfs_inode	*ip;		/* incore inode pointer */
-> > > > >  	struct inode		*inode;
-> > > > > -	struct xfs_bstat	*buf;		/* return buffer */
-> > > > > -	int			error = 0;	/* error value */
-> > > > > +	struct xfs_bstat	*buf = bc->buf;
-> > > > > +	int			error = -EINVAL;
-> > > > >  
-> > > > > -	*stat = BULKSTAT_RV_NOTHING;
-> > > > > +	if (xfs_internal_inum(mp, ino))
-> > > > > +		goto out_advance;
-> > > > >  
-> > > > > -	if (!buffer || xfs_internal_inum(mp, ino))
-> > > > > -		return -EINVAL;
-> > > > > -
-> > > > > -	buf = kmem_zalloc(sizeof(*buf), KM_SLEEP | KM_MAYFAIL);
-> > > > > -	if (!buf)
-> > > > > -		return -ENOMEM;
-> > > > > -
-> > > > > -	error = xfs_iget(mp, NULL, ino,
-> > > > > +	error = xfs_iget(mp, tp, ino,
-> > > > >  			 (XFS_IGET_DONTCACHE | XFS_IGET_UNTRUSTED),
-> > > > >  			 XFS_ILOCK_SHARED, &ip);
-> > > > > +	if (error == -ENOENT || error == -EINVAL)
-> > > > > +		goto out_advance;
-> > > > >  	if (error)
-> > > > > -		goto out_free;
-> > > > > +		goto out;
-> > > > >  
-> > > > >  	ASSERT(ip != NULL);
-> > > > >  	ASSERT(ip->i_imap.im_blkno != 0);
-> > > > > @@ -119,43 +140,56 @@ xfs_bulkstat_one_int(
-> > > > >  	xfs_iunlock(ip, XFS_ILOCK_SHARED);
-> > > > >  	xfs_irele(ip);
-> > > > >  
-> > > > > -	error = formatter(buffer, ubsize, ubused, buf);
-> > > > > -	if (!error)
-> > > > > -		*stat = BULKSTAT_RV_DIDONE;
-> > > > > +	error = bc->formatter(bc->breq, buf);
-> > > > > +	if (error == XFS_IBULK_BUFFER_FULL) {
-> > > > > +		error = XFS_IWALK_ABORT;
-> > > > 
-> > > > Related to the earlier patch.. is there a need for IBULK_BUFFER_FULL if
-> > > > the only user converts it to the generic abort error?
-> > > 
-> > > <shrug> I wasn't sure if there was ever going to be a case where the
-> > > formatter function wanted to abort for a reason that wasn't a full
-> > > buffer... though looking at the bulkstat-v5 patches there aren't any.
-> > > I guess I'll just remove BUFFER_FULL, then.
-> > > 
-> > > --D
-> > > 
-> > > > Most of these comments are minor/aesthetic, so:
-> > > > 
-> > > > Reviewed-by: Brian Foster <bfoster@redhat.com>
-> > > > 
-> > > > > +		goto out_advance;
-> > > > > +	}
-> > > > > +	if (error)
-> > > > > +		goto out;
-> > > > >  
-> > > > > - out_free:
-> > > > > -	kmem_free(buf);
-> > > > > +out_advance:
-> > > > > +	/*
-> > > > > +	 * Advance the cursor to the inode that comes after the one we just
-> > > > > +	 * looked at.  We want the caller to move along if the bulkstat
-> > > > > +	 * information was copied successfully; if we tried to grab the inode
-> > > > > +	 * but it's no longer allocated; or if it's internal metadata.
-> > > > > +	 */
-> > > > > +	bc->breq->startino = ino + 1;
-> > > > > +out:
-> > > > >  	return error;
-> > > > >  }
-> > > > >  
-> > > > > -/* Return 0 on success or positive error */
-> > > > > -STATIC int
-> > > > > -xfs_bulkstat_one_fmt(
-> > > > > -	void			__user *ubuffer,
-> > > > > -	int			ubsize,
-> > > > > -	int			*ubused,
-> > > > > -	const xfs_bstat_t	*buffer)
-> > > > > -{
-> > > > > -	if (ubsize < sizeof(*buffer))
-> > > > > -		return -ENOMEM;
-> > > > > -	if (copy_to_user(ubuffer, buffer, sizeof(*buffer)))
-> > > > > -		return -EFAULT;
-> > > > > -	if (ubused)
-> > > > > -		*ubused = sizeof(*buffer);
-> > > > > -	return 0;
-> > > > > -}
-> > > > > -
-> > > > > +/* Bulkstat a single inode. */
-> > > > >  int
-> > > > >  xfs_bulkstat_one(
-> > > > > -	xfs_mount_t	*mp,		/* mount point for filesystem */
-> > > > > -	xfs_ino_t	ino,		/* inode number to get data for */
-> > > > > -	void		__user *buffer,	/* buffer to place output in */
-> > > > > -	int		ubsize,		/* size of buffer */
-> > > > > -	int		*ubused,	/* bytes used by me */
-> > > > > -	int		*stat)		/* BULKSTAT_RV_... */
-> > > > > +	struct xfs_ibulk	*breq,
-> > > > > +	bulkstat_one_fmt_pf	formatter)
-> > > > >  {
-> > > > > -	return xfs_bulkstat_one_int(mp, ino, buffer, ubsize,
-> > > > > -				    xfs_bulkstat_one_fmt, ubused, stat);
-> > > > > +	struct xfs_bstat_chunk	bc = {
-> > > > > +		.formatter	= formatter,
-> > > > > +		.breq		= breq,
-> > > > > +	};
-> > > > > +	int			error;
-> > > > > +
-> > > > > +	ASSERT(breq->icount == 1);
-> > > > > +
-> > > > > +	bc.buf = kmem_zalloc(sizeof(struct xfs_bstat), KM_SLEEP | KM_MAYFAIL);
-> > > > > +	if (!bc.buf)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	error = xfs_bulkstat_one_int(breq->mp, NULL, breq->startino, &bc);
-> > > > > +
-> > > > > +	kmem_free(bc.buf);
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * If we reported one inode to userspace then we abort because we hit
-> > > > > +	 * the end of the buffer.  Don't leak that back to userspace.
-> > > > > +	 */
-> > > > > +	if (error == XFS_IWALK_ABORT)
-> > > > > +		error = 0;
-> > > > > +
-> > > > > +	return error;
-> > > > >  }
-> > > > >  
-> > > > >  /*
-> > > > > @@ -251,256 +285,69 @@ xfs_bulkstat_grab_ichunk(
-> > > > >  
-> > > > >  #define XFS_BULKSTAT_UBLEFT(ubleft)	((ubleft) >= statstruct_size)
-> > > > >  
-> > > > > -struct xfs_bulkstat_agichunk {
-> > > > > -	char		__user **ac_ubuffer;/* pointer into user's buffer */
-> > > > > -	int		ac_ubleft;	/* bytes left in user's buffer */
-> > > > > -	int		ac_ubelem;	/* spaces used in user's buffer */
-> > > > > -};
-> > > > > -
-> > > > > -/*
-> > > > > - * Process inodes in chunk with a pointer to a formatter function
-> > > > > - * that will iget the inode and fill in the appropriate structure.
-> > > > > - */
-> > > > >  static int
-> > > > > -xfs_bulkstat_ag_ichunk(
-> > > > > -	struct xfs_mount		*mp,
-> > > > > -	xfs_agnumber_t			agno,
-> > > > > -	struct xfs_inobt_rec_incore	*irbp,
-> > > > > -	bulkstat_one_pf			formatter,
-> > > > > -	size_t				statstruct_size,
-> > > > > -	struct xfs_bulkstat_agichunk	*acp,
-> > > > > -	xfs_agino_t			*last_agino)
-> > > > > +xfs_bulkstat_iwalk(
-> > > > > +	struct xfs_mount	*mp,
-> > > > > +	struct xfs_trans	*tp,
-> > > > > +	xfs_ino_t		ino,
-> > > > > +	void			*data)
-> > > > >  {
-> > > > > -	char				__user **ubufp = acp->ac_ubuffer;
-> > > > > -	int				chunkidx;
-> > > > > -	int				error = 0;
-> > > > > -	xfs_agino_t			agino = irbp->ir_startino;
-> > > > > -
-> > > > > -	for (chunkidx = 0; chunkidx < XFS_INODES_PER_CHUNK;
-> > > > > -	     chunkidx++, agino++) {
-> > > > > -		int		fmterror;
-> > > > > -		int		ubused;
-> > > > > -
-> > > > > -		/* inode won't fit in buffer, we are done */
-> > > > > -		if (acp->ac_ubleft < statstruct_size)
-> > > > > -			break;
-> > > > > -
-> > > > > -		/* Skip if this inode is free */
-> > > > > -		if (XFS_INOBT_MASK(chunkidx) & irbp->ir_free)
-> > > > > -			continue;
-> > > > > -
-> > > > > -		/* Get the inode and fill in a single buffer */
-> > > > > -		ubused = statstruct_size;
-> > > > > -		error = formatter(mp, XFS_AGINO_TO_INO(mp, agno, agino),
-> > > > > -				  *ubufp, acp->ac_ubleft, &ubused, &fmterror);
-> > > > > -
-> > > > > -		if (fmterror == BULKSTAT_RV_GIVEUP ||
-> > > > > -		    (error && error != -ENOENT && error != -EINVAL)) {
-> > > > > -			acp->ac_ubleft = 0;
-> > > > > -			ASSERT(error);
-> > > > > -			break;
-> > > > > -		}
-> > > > > -
-> > > > > -		/* be careful not to leak error if at end of chunk */
-> > > > > -		if (fmterror == BULKSTAT_RV_NOTHING || error) {
-> > > > > -			error = 0;
-> > > > > -			continue;
-> > > > > -		}
-> > > > > -
-> > > > > -		*ubufp += ubused;
-> > > > > -		acp->ac_ubleft -= ubused;
-> > > > > -		acp->ac_ubelem++;
-> > > > > -	}
-> > > > > -
-> > > > > -	/*
-> > > > > -	 * Post-update *last_agino. At this point, agino will always point one
-> > > > > -	 * inode past the last inode we processed successfully. Hence we
-> > > > > -	 * substract that inode when setting the *last_agino cursor so that we
-> > > > > -	 * return the correct cookie to userspace. On the next bulkstat call,
-> > > > > -	 * the inode under the lastino cookie will be skipped as we have already
-> > > > > -	 * processed it here.
-> > > > > -	 */
-> > > > > -	*last_agino = agino - 1;
-> > > > > +	int			error;
-> > > > >  
-> > > > > +	error = xfs_bulkstat_one_int(mp, tp, ino, data);
-> > > > > +	/* bulkstat just skips over missing inodes */
-> > > > > +	if (error == -ENOENT || error == -EINVAL)
-> > > > > +		return 0;
-> > > > >  	return error;
-> > > > >  }
-> > > > >  
-> > > > >  /*
-> > > > > - * Return stat information in bulk (by-inode) for the filesystem.
-> > > > > + * Check the incoming lastino parameter.
-> > > > > + *
-> > > > > + * We allow any inode value that could map to physical space inside the
-> > > > > + * filesystem because if there are no inodes there, bulkstat moves on to the
-> > > > > + * next chunk.  In other words, the magic agino value of zero takes us to the
-> > > > > + * first chunk in the AG, and an agino value past the end of the AG takes us to
-> > > > > + * the first chunk in the next AG.
-> > > > > + *
-> > > > > + * Therefore we can end early if the requested inode is beyond the end of the
-> > > > > + * filesystem or doesn't map properly.
-> > > > >   */
-> > > > > -int					/* error status */
-> > > > > -xfs_bulkstat(
-> > > > > -	xfs_mount_t		*mp,	/* mount point for filesystem */
-> > > > > -	xfs_ino_t		*lastinop, /* last inode returned */
-> > > > > -	int			*ubcountp, /* size of buffer/count returned */
-> > > > > -	bulkstat_one_pf		formatter, /* func that'd fill a single buf */
-> > > > > -	size_t			statstruct_size, /* sizeof struct filling */
-> > > > > -	char			__user *ubuffer, /* buffer with inode stats */
-> > > > > -	int			*done)	/* 1 if there are more stats to get */
-> > > > > +static inline bool
-> > > > > +xfs_bulkstat_already_done(
-> > > > > +	struct xfs_mount	*mp,
-> > > > > +	xfs_ino_t		startino)
-> > > > >  {
-> > > > > -	xfs_buf_t		*agbp;	/* agi header buffer */
-> > > > > -	xfs_agino_t		agino;	/* inode # in allocation group */
-> > > > > -	xfs_agnumber_t		agno;	/* allocation group number */
-> > > > > -	xfs_btree_cur_t		*cur;	/* btree cursor for ialloc btree */
-> > > > > -	xfs_inobt_rec_incore_t	*irbuf;	/* start of irec buffer */
-> > > > > -	int			nirbuf;	/* size of irbuf */
-> > > > > -	int			ubcount; /* size of user's buffer */
-> > > > > -	struct xfs_bulkstat_agichunk ac;
-> > > > > -	int			error = 0;
-> > > > > +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
-> > > > > +	xfs_agino_t		agino = XFS_INO_TO_AGINO(mp, startino);
-> > > > >  
-> > > > > -	/*
-> > > > > -	 * Get the last inode value, see if there's nothing to do.
-> > > > > -	 */
-> > > > > -	agno = XFS_INO_TO_AGNO(mp, *lastinop);
-> > > > > -	agino = XFS_INO_TO_AGINO(mp, *lastinop);
-> > > > > -	if (agno >= mp->m_sb.sb_agcount ||
-> > > > > -	    *lastinop != XFS_AGINO_TO_INO(mp, agno, agino)) {
-> > > > > -		*done = 1;
-> > > > > -		*ubcountp = 0;
-> > > > > -		return 0;
-> > > > > -	}
-> > > > > +	return agno >= mp->m_sb.sb_agcount ||
-> > > > > +	       startino != XFS_AGINO_TO_INO(mp, agno, agino);
-> > > > > +}
-> > > > >  
-> > > > > -	ubcount = *ubcountp; /* statstruct's */
-> > > > > -	ac.ac_ubuffer = &ubuffer;
-> > > > > -	ac.ac_ubleft = ubcount * statstruct_size; /* bytes */;
-> > > > > -	ac.ac_ubelem = 0;
-> > > > > +/* Return stat information in bulk (by-inode) for the filesystem. */
-> > > > > +int
-> > > > > +xfs_bulkstat(
-> > > > > +	struct xfs_ibulk	*breq,
-> > > > > +	bulkstat_one_fmt_pf	formatter)
-> > > > > +{
-> > > > > +	struct xfs_bstat_chunk	bc = {
-> > > > > +		.formatter	= formatter,
-> > > > > +		.breq		= breq,
-> > > > > +	};
-> > > > > +	int			error;
-> > > > >  
-> > > > > -	*ubcountp = 0;
-> > > > > -	*done = 0;
-> > > > > +	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
-> > > > > +		return 0;
-> > > > >  
-> > > > > -	irbuf = kmem_zalloc_large(PAGE_SIZE * 4, KM_SLEEP);
-> > > > > -	if (!irbuf)
-> > > > > +	bc.buf = kmem_zalloc(sizeof(struct xfs_bstat), KM_SLEEP | KM_MAYFAIL);
-> > > > > +	if (!bc.buf)
-> > > > >  		return -ENOMEM;
-> > > > > -	nirbuf = (PAGE_SIZE * 4) / sizeof(*irbuf);
-> > > > >  
-> > > > > -	/*
-> > > > > -	 * Loop over the allocation groups, starting from the last
-> > > > > -	 * inode returned; 0 means start of the allocation group.
-> > > > > -	 */
-> > > > > -	while (agno < mp->m_sb.sb_agcount) {
-> > > > > -		struct xfs_inobt_rec_incore	*irbp = irbuf;
-> > > > > -		struct xfs_inobt_rec_incore	*irbufend = irbuf + nirbuf;
-> > > > > -		bool				end_of_ag = false;
-> > > > > -		int				icount = 0;
-> > > > > -		int				stat;
-> > > > > +	error = xfs_iwalk(breq->mp, NULL, breq->startino, xfs_bulkstat_iwalk,
-> > > > > +			breq->icount, &bc);
-> > > > >  
-> > > > > -		error = xfs_ialloc_read_agi(mp, NULL, agno, &agbp);
-> > > > > -		if (error)
-> > > > > -			break;
-> > > > > -		/*
-> > > > > -		 * Allocate and initialize a btree cursor for ialloc btree.
-> > > > > -		 */
-> > > > > -		cur = xfs_inobt_init_cursor(mp, NULL, agbp, agno,
-> > > > > -					    XFS_BTNUM_INO);
-> > > > > -		if (agino > 0) {
-> > > > > -			/*
-> > > > > -			 * In the middle of an allocation group, we need to get
-> > > > > -			 * the remainder of the chunk we're in.
-> > > > > -			 */
-> > > > > -			struct xfs_inobt_rec_incore	r;
-> > > > > -
-> > > > > -			error = xfs_bulkstat_grab_ichunk(cur, agino, &icount, &r);
-> > > > > -			if (error)
-> > > > > -				goto del_cursor;
-> > > > > -			if (icount) {
-> > > > > -				irbp->ir_startino = r.ir_startino;
-> > > > > -				irbp->ir_holemask = r.ir_holemask;
-> > > > > -				irbp->ir_count = r.ir_count;
-> > > > > -				irbp->ir_freecount = r.ir_freecount;
-> > > > > -				irbp->ir_free = r.ir_free;
-> > > > > -				irbp++;
-> > > > > -			}
-> > > > > -			/* Increment to the next record */
-> > > > > -			error = xfs_btree_increment(cur, 0, &stat);
-> > > > > -		} else {
-> > > > > -			/* Start of ag.  Lookup the first inode chunk */
-> > > > > -			error = xfs_inobt_lookup(cur, 0, XFS_LOOKUP_GE, &stat);
-> > > > > -		}
-> > > > > -		if (error || stat == 0) {
-> > > > > -			end_of_ag = true;
-> > > > > -			goto del_cursor;
-> > > > > -		}
-> > > > > -
-> > > > > -		/*
-> > > > > -		 * Loop through inode btree records in this ag,
-> > > > > -		 * until we run out of inodes or space in the buffer.
-> > > > > -		 */
-> > > > > -		while (irbp < irbufend && icount < ubcount) {
-> > > > > -			struct xfs_inobt_rec_incore	r;
-> > > > > -
-> > > > > -			error = xfs_inobt_get_rec(cur, &r, &stat);
-> > > > > -			if (error || stat == 0) {
-> > > > > -				end_of_ag = true;
-> > > > > -				goto del_cursor;
-> > > > > -			}
-> > > > > -
-> > > > > -			/*
-> > > > > -			 * If this chunk has any allocated inodes, save it.
-> > > > > -			 * Also start read-ahead now for this chunk.
-> > > > > -			 */
-> > > > > -			if (r.ir_freecount < r.ir_count) {
-> > > > > -				xfs_bulkstat_ichunk_ra(mp, agno, &r);
-> > > > > -				irbp->ir_startino = r.ir_startino;
-> > > > > -				irbp->ir_holemask = r.ir_holemask;
-> > > > > -				irbp->ir_count = r.ir_count;
-> > > > > -				irbp->ir_freecount = r.ir_freecount;
-> > > > > -				irbp->ir_free = r.ir_free;
-> > > > > -				irbp++;
-> > > > > -				icount += r.ir_count - r.ir_freecount;
-> > > > > -			}
-> > > > > -			error = xfs_btree_increment(cur, 0, &stat);
-> > > > > -			if (error || stat == 0) {
-> > > > > -				end_of_ag = true;
-> > > > > -				goto del_cursor;
-> > > > > -			}
-> > > > > -			cond_resched();
-> > > > > -		}
-> > > > > -
-> > > > > -		/*
-> > > > > -		 * Drop the btree buffers and the agi buffer as we can't hold any
-> > > > > -		 * of the locks these represent when calling iget. If there is a
-> > > > > -		 * pending error, then we are done.
-> > > > > -		 */
-> > > > > -del_cursor:
-> > > > > -		xfs_btree_del_cursor(cur, error);
-> > > > > -		xfs_buf_relse(agbp);
-> > > > > -		if (error)
-> > > > > -			break;
-> > > > > -		/*
-> > > > > -		 * Now format all the good inodes into the user's buffer. The
-> > > > > -		 * call to xfs_bulkstat_ag_ichunk() sets up the agino pointer
-> > > > > -		 * for the next loop iteration.
-> > > > > -		 */
-> > > > > -		irbufend = irbp;
-> > > > > -		for (irbp = irbuf;
-> > > > > -		     irbp < irbufend && ac.ac_ubleft >= statstruct_size;
-> > > > > -		     irbp++) {
-> > > > > -			error = xfs_bulkstat_ag_ichunk(mp, agno, irbp,
-> > > > > -					formatter, statstruct_size, &ac,
-> > > > > -					&agino);
-> > > > > -			if (error)
-> > > > > -				break;
-> > > > > -
-> > > > > -			cond_resched();
-> > > > > -		}
-> > > > > -
-> > > > > -		/*
-> > > > > -		 * If we've run out of space or had a formatting error, we
-> > > > > -		 * are now done
-> > > > > -		 */
-> > > > > -		if (ac.ac_ubleft < statstruct_size || error)
-> > > > > -			break;
-> > > > > -
-> > > > > -		if (end_of_ag) {
-> > > > > -			agno++;
-> > > > > -			agino = 0;
-> > > > > -		}
-> > > > > -	}
-> > > > > -	/*
-> > > > > -	 * Done, we're either out of filesystem or space to put the data.
-> > > > > -	 */
-> > > > > -	kmem_free(irbuf);
-> > > > > -	*ubcountp = ac.ac_ubelem;
-> > > > > +	kmem_free(bc.buf);
-> > > > >  
-> > > > >  	/*
-> > > > >  	 * We found some inodes, so clear the error status and return them.
-> > > > > @@ -509,17 +356,9 @@ xfs_bulkstat(
-> > > > >  	 * triggered again and propagated to userspace as there will be no
-> > > > >  	 * formatted inodes in the buffer.
-> > > > >  	 */
-> > > > > -	if (ac.ac_ubelem)
-> > > > > +	if (breq->ocount > 0)
-> > > > >  		error = 0;
-> > > > >  
-> > > > > -	/*
-> > > > > -	 * If we ran out of filesystem, lastino will point off the end of
-> > > > > -	 * the filesystem so the next call will return immediately.
-> > > > > -	 */
-> > > > > -	*lastinop = XFS_AGINO_TO_INO(mp, agno, agino);
-> > > > > -	if (agno >= mp->m_sb.sb_agcount)
-> > > > > -		*done = 1;
-> > > > > -
-> > > > >  	return error;
-> > > > >  }
-> > > > >  
-> > > > > diff --git a/fs/xfs/xfs_itable.h b/fs/xfs/xfs_itable.h
-> > > > > index 369e3f159d4e..7c5f1df360e6 100644
-> > > > > --- a/fs/xfs/xfs_itable.h
-> > > > > +++ b/fs/xfs/xfs_itable.h
-> > > > > @@ -5,63 +5,46 @@
-> > > > >  #ifndef __XFS_ITABLE_H__
-> > > > >  #define	__XFS_ITABLE_H__
-> > > > >  
-> > > > > -/*
-> > > > > - * xfs_bulkstat() is used to fill in xfs_bstat structures as well as dm_stat
-> > > > > - * structures (by the dmi library). This is a pointer to a formatter function
-> > > > > - * that will iget the inode and fill in the appropriate structure.
-> > > > > - * see xfs_bulkstat_one() and xfs_dm_bulkstat_one() in dmapi_xfs.c
-> > > > > - */
-> > > > > -typedef int (*bulkstat_one_pf)(struct xfs_mount	*mp,
-> > > > > -			       xfs_ino_t	ino,
-> > > > > -			       void		__user *buffer,
-> > > > > -			       int		ubsize,
-> > > > > -			       int		*ubused,
-> > > > > -			       int		*stat);
-> > > > > +/* In-memory representation of a userspace request for batch inode data. */
-> > > > > +struct xfs_ibulk {
-> > > > > +	struct xfs_mount	*mp;
-> > > > > +	void __user		*ubuffer; /* user output buffer */
-> > > > > +	xfs_ino_t		startino; /* start with this inode */
-> > > > > +	unsigned int		icount;   /* number of elements in ubuffer */
-> > > > > +	unsigned int		ocount;   /* number of records returned */
-> > > > > +};
-> > > > > +
-> > > > > +/* Return value that means we want to abort the walk. */
-> > > > > +#define XFS_IBULK_ABORT		(XFS_IWALK_ABORT)
-> > > > > +
-> > > > > +/* Return value that means the formatting buffer is now full. */
-> > > > > +#define XFS_IBULK_BUFFER_FULL	(XFS_IBULK_ABORT + 1)
-> > > > >  
-> > > > >  /*
-> > > > > - * Values for stat return value.
-> > > > > + * Advance the user buffer pointer by one record of the given size.  If the
-> > > > > + * buffer is now full, return the appropriate error code.
-> > > > >   */
-> > > > > -#define BULKSTAT_RV_NOTHING	0
-> > > > > -#define BULKSTAT_RV_DIDONE	1
-> > > > > -#define BULKSTAT_RV_GIVEUP	2
-> > > > > +static inline int
-> > > > > +xfs_ibulk_advance(
-> > > > > +	struct xfs_ibulk	*breq,
-> > > > > +	size_t			bytes)
-> > > > > +{
-> > > > > +	char __user		*b = breq->ubuffer;
-> > > > > +
-> > > > > +	breq->ubuffer = b + bytes;
-> > > > > +	breq->ocount++;
-> > > > > +	return breq->ocount == breq->icount ? XFS_IBULK_BUFFER_FULL : 0;
-> > > > > +}
-> > > > >  
-> > > > >  /*
-> > > > >   * Return stat information in bulk (by-inode) for the filesystem.
-> > > > >   */
-> > > > > -int					/* error status */
-> > > > > -xfs_bulkstat(
-> > > > > -	xfs_mount_t	*mp,		/* mount point for filesystem */
-> > > > > -	xfs_ino_t	*lastino,	/* last inode returned */
-> > > > > -	int		*count,		/* size of buffer/count returned */
-> > > > > -	bulkstat_one_pf formatter,	/* func that'd fill a single buf */
-> > > > > -	size_t		statstruct_size,/* sizeof struct that we're filling */
-> > > > > -	char		__user *ubuffer,/* buffer with inode stats */
-> > > > > -	int		*done);		/* 1 if there are more stats to get */
-> > > > >  
-> > > > > -typedef int (*bulkstat_one_fmt_pf)(  /* used size in bytes or negative error */
-> > > > > -	void			__user *ubuffer, /* buffer to write to */
-> > > > > -	int			ubsize,		 /* remaining user buffer sz */
-> > > > > -	int			*ubused,	 /* bytes used by formatter */
-> > > > > -	const xfs_bstat_t	*buffer);        /* buffer to read from */
-> > > > > +typedef int (*bulkstat_one_fmt_pf)(struct xfs_ibulk *breq,
-> > > > > +		const struct xfs_bstat *bstat);
-> > > > >  
-> > > > > -int
-> > > > > -xfs_bulkstat_one_int(
-> > > > > -	xfs_mount_t		*mp,
-> > > > > -	xfs_ino_t		ino,
-> > > > > -	void			__user *buffer,
-> > > > > -	int			ubsize,
-> > > > > -	bulkstat_one_fmt_pf	formatter,
-> > > > > -	int			*ubused,
-> > > > > -	int			*stat);
-> > > > > -
-> > > > > -int
-> > > > > -xfs_bulkstat_one(
-> > > > > -	xfs_mount_t		*mp,
-> > > > > -	xfs_ino_t		ino,
-> > > > > -	void			__user *buffer,
-> > > > > -	int			ubsize,
-> > > > > -	int			*ubused,
-> > > > > -	int			*stat);
-> > > > > +int xfs_bulkstat_one(struct xfs_ibulk *breq, bulkstat_one_fmt_pf formatter);
-> > > > > +int xfs_bulkstat(struct xfs_ibulk *breq, bulkstat_one_fmt_pf formatter);
-> > > > >  
-> > > > >  typedef int (*inumbers_fmt_pf)(
-> > > > >  	void			__user *ubuffer, /* buffer to write to */
-> > > > > 
+> >  - It better matches the semantics of what we're trying to do. All these
+> >    operations we're trying to protect - dio, fallocate, truncate - they all have
+> >    in common that they just want to shoot down a range of the page cache and
+> >    keep it from being readded. And in general, it's better to have locks that
+> >    protect specific data structures ("adding to this radix tree"), vs. large
+> >    critical sections ("the io path").
+> 
+> I disagree :)
+> 
+> The high level IO locks provide the IO concurrency policy for the
+> filesystem. The page cache is an internal structure for caching
+> pages - it is not a structure for efficiently and cleanly
+> implementing IO concurrency policy. That's the mistake the current
+> page cache architecture makes - it tries to be the central control
+> for all the filesystem IO (because filesystems are dumb and the page
+> cache knows best!) but, unfortunately, this does not provide the
+> semantics or functionality that all filesystems want and/or need.
+
+We might be talking past each other a bit.
+
+I think we both agree that there should be a separation of concerns w.r.t.
+locking, and that hanging too much stuff off the page cache has been a mistake
+in the past (e.g. buffer heads).
+
+But that doesn't mean the page cache shouldn't have locking, just that that
+locking should only protect the page cache, not other filesystem state.
+
+I am _not_ arguing that this should replace filesystem IO path locks for other,
+not page cache purposes.
+
+> Just look at the truncate detection mess we have every time we
+> lookup and lock a page anywhere in the mm/ code - do you see any
+> code in all that which detects a hole punch race? Nope, you don't
+> because the filesystems take responsibility for serialising that
+> functionality.
+
+Yeah, I know.
+
+> Unfortunately, we have so much legacy filesystem cruft we'll never get rid of
+> those truncate hacks.
+
+Actually - I honestly think that this page cache add lock is simple and
+straightforward enough to use that converting legacy filesystems to it wouldn't
+be crazypants, and getting rid of all those hacks would be _awesome_. The legacy
+filesystems tend to to implement the really crazy fallocate stuff, it's just
+truncate that really has to be dealt with.
+
+> Don't get me wrong - I'm not opposed to incuding page cache add
+> locking - I'm just saying that the problems it tries to address (and
+> ones it cannot address) are already largely solved in existing
+> filesystems. I suspect that if we do merge this code, whatever
+> locking is added would have to be optional....
+
+That's certainly a fair point. There is more than one way to skin a cat.
+
+Not sure "largely solved" is true though - solved in XFS yes, but these issues
+have not been taken seriously in other filesystems up until pretty recently...
+
+That said, I do think this will prove useful for non bcachefs filesystems at
+some point. Like you alluded to, truncate synchronization is hot garbage in most
+filesystems, and this would give us an easy way of improving that and possibly
+getting rid of those truncate hacks in filemap.c.
+
+And because (on the add side at least) this lock only needs to taken when adding
+pages to the page cache, not when the pages needed are already present - in
+bcachefs at least this is a key enabler for making buffered IO not modify any
+per-inode cachelines in the fast path, and I think other filesystems could do
+the same thing.
