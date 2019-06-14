@@ -2,132 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0343A45D3E
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 14:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99BFE45FF7
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2019 16:05:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfFNM7J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 14 Jun 2019 08:59:09 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:44596 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFNM7I (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 14 Jun 2019 08:59:08 -0400
-Received: by mail-yw1-f66.google.com with SMTP id l79so1040555ywe.11
-        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 05:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H3KkF8Gn4GAb99XKhlkm14/F9ajsQp59cLL3+w94dQM=;
-        b=HbFaHodHDi1R9esy0s/2Dg3m+ORPtg1BTE7l+2s+fIVYF9f41OMHmc65A/qTnbX0D+
-         xZwMzuRI62Gr6b2u2z9l0ByWxSll7sTH1rOsICbVDl4rodH2Nhse9a04ULIDDis2yoiU
-         fXfTvFWpWrbahT2ZFY3+fC6y7of8cG/KtOXPSnRRnZrRIPG4LGc0CmJhENpK7YVtFMsZ
-         x+oa4KtNHCwu02ukSvUI5OZzwDO+HHezxSr/OwifLA5KqCKt7fVD+HLrGUSxp9wwDA1c
-         rMlDYfvvKSUrTrHICEDD1ql5pnOZIK5YkCrAZhvUE0LyV70SuyDHUUjjnX/tNjYX1L2x
-         qPTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H3KkF8Gn4GAb99XKhlkm14/F9ajsQp59cLL3+w94dQM=;
-        b=ttZHGB0mQx1cKth4t+1YxZDBv3Y6oEcYiGICZQ1I4CPM6XaspbNFjhaGci+Mok3dew
-         BpWNR/35oOfaq/5Udukvh0hmGw0SR365GFgneszBV/w7ZYF/UK7CWyvts90RBOqjDMuX
-         bwhgNHAbz7nnTL61pVvZh3FxE9fTm9eQ37aJzed+SnRIVPczYJRN9/nrtGKPUZCHSYLO
-         nrTTTBasxMnimtHH+dslsreOVVDwSdGsuDj1mwwcP/42H0LrQJlARbY1Cfm1Fx4FcGE/
-         pnqx4p+8YS6xIi3ERAGl7OrMo14B9MpkG+3NmY01ARrPNxQp/5Sl9TzvmkmsjHpDAh3m
-         U3Tw==
-X-Gm-Message-State: APjAAAUObuWLDMu4dkty4YueWxpfkJhB/DwbKFqKdxJgeUrfCBVuDZpI
-        z73QUPzHot6dUOTKCco1SLD0dmMi+IwFPzykzoE=
-X-Google-Smtp-Source: APXvYqx4ENb8puA09tVXjZw8mX1xC8MkXlnzBzK7bKYIlHjl8zhrzPttixNOusKIybc++W44FZlVp0Cw3HCVs5UpC00=
-X-Received: by 2002:a0d:f5c4:: with SMTP id e187mr38385779ywf.88.1560517148097;
- Fri, 14 Jun 2019 05:59:08 -0700 (PDT)
+        id S1727123AbfFNOE1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 14 Jun 2019 10:04:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44668 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728267AbfFNOE0 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:04:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1CDE13DE04;
+        Fri, 14 Jun 2019 14:04:26 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7A781001B1B;
+        Fri, 14 Jun 2019 14:04:25 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 10:04:23 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 10/14] xfs: refactor xfs_iwalk_grab_ichunk
+Message-ID: <20190614140423.GB26586@bfoster>
+References: <156032205136.3774243.15725828509940520561.stgit@magnolia>
+ <156032211661.3774243.18392356280083221766.stgit@magnolia>
 MIME-Version: 1.0
-References: <06aade22-b29e-f55e-7f00-39154f220aa6@fb.com>
-In-Reply-To: <06aade22-b29e-f55e-7f00-39154f220aa6@fb.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 14 Jun 2019 15:58:56 +0300
-Message-ID: <CAOQ4uxjTKbwiQpj5FZZZM5Mbq8=jjHna+KU5HP74+UuKdPe1Sw@mail.gmail.com>
-Subject: Re: [PATCH RFC] xfs: drop SYNC_WAIT from xfs_reclaim_inodes_ag during
- slab reclaim
-To:     Chris Mason <clm@fb.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156032211661.3774243.18392356280083221766.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 14 Jun 2019 14:04:26 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 14, 2016 at 3:36 PM Chris Mason <clm@fb.com> wrote:
->
->
-> Hi Dave,
->
-> This is part of a series of patches we're growing to fix a perf
-> regression on a few straggler tiers that are still on v3.10.  In this
-> case, hadoop had to switch back to v3.10 because v4.x is as much as 15%
-> slower on recent kernels.
->
-> Between v3.10 and v4.x, kswapd is less effective overall.  This leads
-> more and more procs to get bogged down in direct reclaim Using SYNC_WAIT
-> in xfs_reclaim_inodes_ag().
->
-> Since slab shrinking happens very early in direct reclaim, we've seen
-> systems with 130GB of ram where hundreds of procs are stuck on the xfs
-> slab shrinker fighting to walk a slab 900MB in size.  They'd have better
-> luck moving on to the page cache instead.
->
-> Also, we're going into direct reclaim much more often than we should
-> because kswapd is getting stuck on XFS inode locks and writeback.
-> Dropping the SYNC_WAIT means that kswapd can move on to other things and
-> let the async worker threads get kicked to work on the inodes.
->
-> We're still working on the series, and this is only compile tested on
-> current Linus git.  I'm working out some better simulations for the
-> hadoop workload to stuff into Mel's tests.  Numbers from prod take
-> roughly 3 days to stabilize, so I haven't isolated this patch from the rest
-> of the series.
->
-> Unpatched v4.x our base allocation stall rate goes up to as much as
-> 200-300/sec, averaging 70/sec.  The series I'm finalizing gets that
-> number down to < 1 /sec.
->
-> Omar Sandoval did some digging and found you added the SYNC_WAIT in
-> response to a workload I sent ages ago.  I tried to make this OOM with
-> fsmark creating empty files, and it has been soaking in memory
-> constrained workloads in production for almost two weeks.
->
-> Signed-off-by: Chris Mason <clm@fb.com>
+On Tue, Jun 11, 2019 at 11:48:36PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> In preparation for reusing the iwalk code for the inogrp walking code
+> (aka INUMBERS), move the initial inobt lookup and retrieval code out of
+> xfs_iwalk_grab_ichunk so that we call the masking code only when we need
+> to trim out the inodes that came before the cursor in the inobt record
+> (aka BULKSTAT).
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  fs/xfs/xfs_icache.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index bf2d607..63938fb 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -1195,7 +1195,7 @@ xfs_reclaim_inodes_nr(
->         xfs_reclaim_work_queue(mp);
->         xfs_ail_push_all(mp->m_ail);
->
-> -       return xfs_reclaim_inodes_ag(mp, SYNC_TRYLOCK | SYNC_WAIT, &nr_to_scan);
-> +       return xfs_reclaim_inodes_ag(mp, SYNC_TRYLOCK, &nr_to_scan);
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/xfs_iwalk.c |   79 ++++++++++++++++++++++++++--------------------------
+>  1 file changed, 39 insertions(+), 40 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+> index a2102fa94ff5..8c4d7e59f86a 100644
+> --- a/fs/xfs/xfs_iwalk.c
+> +++ b/fs/xfs/xfs_iwalk.c
+> @@ -98,43 +98,17 @@ xfs_iwalk_ichunk_ra(
 >  }
->
+>  
 >  /*
-> --
-
-Hi Chris,
-
-We've being seeing memory allocation stalls on some v4.9.y production systems
-involving direct reclaim of xfs inodes.
-
-I saw a similar issue was reported again here:
-https://bugzilla.kernel.org/show_bug.cgi?id=192981
-
-I couldn't find any resolution to the reported issue in upstream
-commits, so I wonder,
-does Facebook still carry this patch? Or was there a proper fix and I missed it?
-
-Thanks,
-Amir.
+> - * Lookup the inode chunk that the given @agino lives in and then get the
+> - * record if we found the chunk.  Set the bits in @irec's free mask that
+> - * correspond to the inodes before @agino so that we skip them.  This is how we
+> - * restart an inode walk that was interrupted in the middle of an inode record.
+> + * Set the bits in @irec's free mask that correspond to the inodes before
+> + * @agino so that we skip them.  This is how we restart an inode walk that was
+> + * interrupted in the middle of an inode record.
+>   */
+> -STATIC int
+> -xfs_iwalk_grab_ichunk(
+> -	struct xfs_btree_cur		*cur,	/* btree cursor */
+> +STATIC void
+> +xfs_iwalk_adjust_start(
+>  	xfs_agino_t			agino,	/* starting inode of chunk */
+> -	int				*icount,/* return # of inodes grabbed */
+>  	struct xfs_inobt_rec_incore	*irec)	/* btree record */
+>  {
+>  	int				idx;	/* index into inode chunk */
+> -	int				stat;
+>  	int				i;
+> -	int				error = 0;
+> -
+> -	/* Lookup the inode chunk that this inode lives in */
+> -	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &stat);
+> -	if (error)
+> -		return error;
+> -	if (!stat) {
+> -		*icount = 0;
+> -		return error;
+> -	}
+> -
+> -	/* Get the record, should always work */
+> -	error = xfs_inobt_get_rec(cur, irec, &stat);
+> -	if (error)
+> -		return error;
+> -	XFS_WANT_CORRUPTED_RETURN(cur->bc_mp, stat == 1);
+> -
+> -	/* Check if the record contains the inode in request */
+> -	if (irec->ir_startino + XFS_INODES_PER_CHUNK <= agino) {
+> -		*icount = 0;
+> -		return 0;
+> -	}
+>  
+>  	idx = agino - irec->ir_startino;
+>  
+> @@ -149,8 +123,6 @@ xfs_iwalk_grab_ichunk(
+>  	}
+>  
+>  	irec->ir_free |= xfs_inobt_maskn(0, idx);
+> -	*icount = irec->ir_count - irec->ir_freecount;
+> -	return 0;
+>  }
+>  
+>  /* Allocate memory for a walk. */
+> @@ -258,7 +230,7 @@ xfs_iwalk_ag_start(
+>  {
+>  	struct xfs_mount	*mp = iwag->mp;
+>  	struct xfs_trans	*tp = iwag->tp;
+> -	int			icount;
+> +	struct xfs_inobt_rec_incore *irec;
+>  	int			error;
+>  
+>  	/* Set up a fresh cursor and empty the inobt cache. */
+> @@ -274,15 +246,40 @@ xfs_iwalk_ag_start(
+>  	/*
+>  	 * Otherwise, we have to grab the inobt record where we left off, stuff
+>  	 * the record into our cache, and then see if there are more records.
+> -	 * We require a lookup cache of at least two elements so that we don't
+> -	 * have to deal with tearing down the cursor to walk the records.
+> +	 * We require a lookup cache of at least two elements so that the
+> +	 * caller doesn't have to deal with tearing down the cursor to walk the
+> +	 * records.
+>  	 */
+> -	error = xfs_iwalk_grab_ichunk(*curpp, agino, &icount,
+> -			&iwag->recs[iwag->nr_recs]);
+> +	error = xfs_inobt_lookup(*curpp, agino, XFS_LOOKUP_LE, has_more);
+> +	if (error)
+> +		return error;
+> +
+> +	/*
+> +	 * If the LE lookup at @agino yields no records, jump ahead to the
+> +	 * inobt cursor increment to see if there are more records to process.
+> +	 */
+> +	if (!*has_more)
+> +		goto out_advance;
+> +
+> +	/* Get the record, should always work */
+> +	irec = &iwag->recs[iwag->nr_recs];
+> +	error = xfs_inobt_get_rec(*curpp, irec, has_more);
+>  	if (error)
+>  		return error;
+> -	if (icount)
+> -		iwag->nr_recs++;
+> +	XFS_WANT_CORRUPTED_RETURN(mp, *has_more == 1);
+> +
+> +	/*
+> +	 * If the LE lookup yielded an inobt record before the cursor position,
+> +	 * skip it and see if there's another one after it.
+> +	 */
+> +	if (irec->ir_startino + XFS_INODES_PER_CHUNK <= agino)
+> +		goto out_advance;
+> +
+> +	/*
+> +	 * If agino fell in the middle of the inode record, make it look like
+> +	 * the inodes up to agino are free so that we don't return them again.
+> +	 */
+> +	xfs_iwalk_adjust_start(agino, irec);
+>  
+>  	/*
+>  	 * set_prefetch is supposed to give us a large enough inobt record
+> @@ -290,8 +287,10 @@ xfs_iwalk_ag_start(
+>  	 * body can cache a record without having to check for cache space
+>  	 * until after it reads an inobt record.
+>  	 */
+> +	iwag->nr_recs++;
+>  	ASSERT(iwag->nr_recs < iwag->sz_recs);
+>  
+> +out_advance:
+>  	return xfs_btree_increment(*curpp, 0, has_more);
+>  }
+>  
+> 
