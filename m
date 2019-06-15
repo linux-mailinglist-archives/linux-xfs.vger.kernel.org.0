@@ -2,100 +2,557 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 012BF46E0B
-	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2019 06:01:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7377F4714D
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2019 18:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725816AbfFOEB0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 15 Jun 2019 00:01:26 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:35623 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfFOEB0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 15 Jun 2019 00:01:26 -0400
-Received: by mail-lf1-f43.google.com with SMTP id a25so3021553lfg.2
-        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 21:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LNCCQDzXq6yRFhVLoEUQSeznUefXALf/b6AvjDf5zbk=;
-        b=K+NlbgNmc77iE+WvrjEBgMNlZucBcKdO/O5/nk7OZOBx6QGiPLKgW6xHqeUKR/z1/9
-         zyhhdNgrB4+1BFo6Zu6tRLbi1YgVBxzcym14Fw3e1Cvu/GabpqLG0GbD6xnKbRNydIPE
-         3038hUhYpnFUOgY2FK0lkFrB+J3deHeUX1FtU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LNCCQDzXq6yRFhVLoEUQSeznUefXALf/b6AvjDf5zbk=;
-        b=ZkwqQ1A9J2UjH8CNrPtL2GIpADpFvSLL5JRSLE0iGfMgz+py0DgyrSjwAgmXQz59oj
-         DB6ihwt4Hqs9CJG2fHAAnhS867DzERGa9steKNfI7pr1xdrgGROiSGt8muDG9WHtCzcD
-         sxX1kb5wqrVJsGof80ni+LSDRu9DYIEK6qZxjWiol1K4t428cRA/VGrJN+X53OQc5/J2
-         qZc+9/8lNOGc2DWeFu8wfOi43w3kZrcWbXlU7JRf9Wslzldw7+j1bXblYZh3l+6d1yY4
-         kf0Zuwk6ISTr+vSRumeWMHZia/GkB8DJQ2br87JLq1/kGUrUhHVgYJ99t212rgaXzrWt
-         zo/A==
-X-Gm-Message-State: APjAAAVKtJDxsY07L/JrKfwoMhCjvtojAhhXeDmZm/ipfVc310SNDEqe
-        dVDltyx+c6cAYDA1hFr5yF1Ubg2KCwQ=
-X-Google-Smtp-Source: APXvYqwZpJiY3AKZp7+E3VYzYJaOt2rCoG1s58hH/2xZhgZRbag6pQFE9BOIDLaiwq83oxA+88e2jw==
-X-Received: by 2002:ac2:4ac5:: with SMTP id m5mr25533638lfp.95.1560571284440;
-        Fri, 14 Jun 2019 21:01:24 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id 25sm890527ljo.38.2019.06.14.21.01.23
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 21:01:24 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id k18so4250297ljc.11
-        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 21:01:23 -0700 (PDT)
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr18772815ljk.72.1560571283486;
- Fri, 14 Jun 2019 21:01:23 -0700 (PDT)
+        id S1725944AbfFOQnr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 15 Jun 2019 12:43:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43230 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfFOQnr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 15 Jun 2019 12:43:47 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5FGeRgN081884;
+        Sat, 15 Jun 2019 16:43:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=FSj1JdeZvSCgWpBPulpPqTdHRQsk8xFPfe7sZawHnsM=;
+ b=cmB7Klu6FCjG8dtBAeGcepyvcYQt9jooWyzRbSfhhI1950ZOMKkCaDmUH7jWUNwQnC0H
+ O8/N5KzrqvJH1QYq0lWo0Q9msGN58itvfJuo3VUmC87HbL69NcsWbFgd+lST/5c80/GR
+ 1E0Cd7ngfX6qif9FvN4hKQ702pkOlhIpEjaOUthA3SxVtWfspzJa9cw9ymgHmcQHcpuc
+ 3ZtspQJ4xvL33qL8ST61H3k2H8P0C3WJGd6kvxqPe0lH45YMVzx3/+FxTiVMRV1qHR8w
+ RCFu7+JRvL8r9Khk2JYlWVFY4a+VQFIgSsaxQJS2Xwh0TEfMBB54DUu/1eU0FBjkuEUF yQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t4rmns7by-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 15 Jun 2019 16:43:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5FGhMIu144753;
+        Sat, 15 Jun 2019 16:43:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t4pqappsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 15 Jun 2019 16:43:39 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5FGhcjm022682;
+        Sat, 15 Jun 2019 16:43:39 GMT
+Received: from localhost (/70.95.137.242)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 15 Jun 2019 09:43:38 -0700
+Date:   Sat, 15 Jun 2019 09:43:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/9] libxfs: break out the GETXATTR/SETXATTR manpage
+Message-ID: <20190615164332.GL3773859@magnolia>
+References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
+ <155993574662.2343530.11024375240678275350.stgit@magnolia>
+ <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel> <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel> <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel> <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 14 Jun 2019 18:01:07 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
-Message-ID: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906150157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906150157
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 5:08 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I do not believe that posix itself actually requires that at all,
-> although extended standards may.
+On Fri, Jun 14, 2019 at 04:17:10PM -0500, Eric Sandeen wrote:
+> On 6/7/19 2:29 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Break out the xfs file attribute get and set ioctls into a separate
+> > manpage to reduce clutter in xfsctl.
+> 
+> <comes up for air>
+> 
+> Now that we've uh, hoisted it to be a generic vfs interface,
+> FS_IOC_FSGETXATTR, shouldn't we be documenting it as that instead
+> of the (old) xfs variant?
 
-So I tried to see if I could find what this perhaps alludes to.
+No, first we document the old xfs ioctl, then we move the manpage over
+to the main man-pages.git project as the vfs ioctl, and then we update
+the xfsprogs manpage to say "Please refer to the VFS documentation but
+in case your system doesn't have it, here you go..." :)
 
-And I suspect it's not in the read/write thing, but the pthreads side
-talks about atomicity.
+> 
+> (honestly that'd be mostly just search and replace for this patch)
+> 
+> Except of course XFS_IOC_FSGETXATTRA has no vfs variant.  :/
+> 
+> I also wonder if FS_IOC_SETFLAGS should be mentioned, and/or a
+> SEE_ALSO because some of the functionality overlaps?
 
-Interesting, but I doubt if that's actually really intentional, since
-the non-thread read/write behavior specifically seems to avoid the
-whole concurrency issue.
+Oh, wow, there's actually a manpage for it...
 
-The pthreads atomicity thing seems to be about not splitting up IO and
-doing it in chunks when you have m:n threading models, but can be
-(mis-)construed to have threads given higher atomicity guarantees than
-processes.
+...bleh, it's the weekend, I'll respond to the rest later.
 
-               Linus
+--D
+
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  man/man2/ioctl_xfs_fsgetxattr.2 |  219 +++++++++++++++++++++++++++++++++++++++
+> >  man/man3/xfsctl.3               |  159 +---------------------------
+> >  2 files changed, 227 insertions(+), 151 deletions(-)
+> >  create mode 100644 man/man2/ioctl_xfs_fsgetxattr.2
+> > 
+> > 
+> > diff --git a/man/man2/ioctl_xfs_fsgetxattr.2 b/man/man2/ioctl_xfs_fsgetxattr.2
+> > new file mode 100644
+> > index 00000000..17276dec
+> > --- /dev/null
+> > +++ b/man/man2/ioctl_xfs_fsgetxattr.2
+> > @@ -0,0 +1,219 @@
+> > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
+> > +.\" SPDX-License-Identifier: GPL-2.0+
+> > +.\" %%%LICENSE_END
+> > +.TH IOCTL-XFS-FSGETXATTR 2 2019-04-16 "XFS"
+> > +.SH NAME
+> > +ioctl_xfs_fsgetxattr \- query information for an open file
+> > +.SH SYNOPSIS
+> > +.br
+> > +.B #include <linux/fs.h>
+> > +.PP
+> > +.BI "int ioctl(int " fd ", XFS_IOC_FSGETXATTR, struct fsxattr *" arg );
+> > +.PP
+> 
+> maybe
+> 
+> .br
+> 
+> here to keep it more compact?  Unless there's a manpage style I'm unaware
+> of?
+> 
+> > +.BI "int ioctl(int " fd ", XFS_IOC_FSGETXATTRA, struct fsxattr *" arg );
+> > +.PP
+> > +.BI "int ioctl(int " fd ", XFS_IOC_FSSETXATTR, struct fsxattr *" arg );
+> > +.SH DESCRIPTION
+> > +Query or set additional attributes associated with files in various file
+> > +systems.
+> 
+> (it was the "various filesystems" which caught my eye and reminded me to
+> ask the first question)
+> 
+> > +The attributes are conveyed in a structure of the form:
+> > +.PP
+> > +.in +4n
+> > +.nf
+> > +struct fsxattr {
+> > +	__u32         fsx_xflags;
+> > +	__u32         fsx_extsize;
+> > +	__u32         fsx_nextents;
+> > +	__u32         fsx_projid;
+> > +	__u32         fsx_cowextsize;
+> > +	unsigned char fsx_pad[8];
+> > +};
+> > +.fi
+> > +.in
+> > +.PP
+> > +.I fsx_xflags
+> > +are extended flags that apply to this file.
+> > +This field can be a combination of the following:
+> > +
+> > +.RS 0.4i
+> > +.TP
+> > +.B FS_XFLAG_REALTIME
+> > +The file is a realtime file.
+> > +This bit can only be changed when the file is empty.
+> > +.TP
+> > +.B FS_XFLAG_PREALLOC
+> > +The file has preallocated space.
+> > +.TP
+> > +.B FS_XFLAG_IMMUTABLE
+> > +The file is immutable - it cannot be modified, deleted or renamed,
+> > +no link can be created to this file and no data can be written to the
+> > +file.
+> > +Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
+> > +capability can set or clear this flag.
+> > +If this flag is set before a
+> > +.B FS_IOC_SETXATTR
+> 
+> (and here you do refer to the non-XFS variant)
+> 
+> > +call and would not be cleared by the call, then no other attributes can be
+> > +changed and
+> > +.B EPERM
+> > +will be returned.
+> > +.TP
+> > +.B FS_XFLAG_APPEND
+> > +The file is append-only - it can only be open in append mode for
+> > +writing.
+> > +Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
+> > +capability can set or clear this flag.
+> > +.TP
+> > +.B FS_XFLAG_SYNC
+> > +All writes to the file are synchronous.
+> > +.TP
+> > +.B FS_XFLAG_NOATIME
+> > +When the file is accessed, its atime record is not modified.
+> > +.TP
+> > +.B FS_XFLAG_NODUMP
+> > +The file should be skipped by backup utilities.
+> > +.TP
+> > +.B FS_XFLAG_RTINHERIT
+> > +Realtime inheritance bit - new files created in the directory
+> > +will be automatically realtime, and new directories created in
+> > +the directory will inherit the inheritance bit.
+> > +.TP
+> > +.B FS_XFLAG_PROJINHERIT
+> > +Project inheritance bit - new files and directories created in
+> > +the directory will inherit the parents project ID.
+> 
+> s/parents/parent directory's/
+> 
+> > +New directories also inherit the project inheritance bit.
+> 
+> also may as well keep the text for RTINHERIT and PROJINHERIT
+> identical other than the bit name/description.
+> 
+> > +.TP
+> > +.B FS_XFLAG_NOSYMLINKS
+> > +Can only be set on a directory and disallows creation of
+> > +symbolic links in that directory.
+> > +.TP
+> > +.B FS_XFLAG_EXTSIZE
+> > +Extent size bit - if a basic extent size value is set on the file
+> > +then the allocator will allocate in multiples of the set size for
+> > +this file (see
+> > +.B fsx_extsize
+> > +below).
+> > +This flag can only be set on a file if it is empty.
+> > +.TP
+> > +.B FS_XFLAG_EXTSZINHERIT
+> > +Extent size inheritance bit - new files and directories created in
+> > +the directory will inherit the parents basic extent size value (see
+> 
+> s/parents/parent directory's/
+> 
+> again probably keep text same as RTINHERIT/PROJINHERIT modulo bit name.
+> 
+> > +.B fsx_extsize
+> > +below).
+> > +Can only be set on a directory.
+> 
+> (i.e. the others "can only be set on a directory" too right?)
+> 
+> > +.TP
+> > +.B FS_XFLAG_NODEFRAG
+> > +No defragment file bit - the file should be skipped during a defragmentation
+> > +operation. When applied to a directory, new files and directories created will
+> > +inherit the no\-defrag bit.
+> > +.TP
+> > +.B FS_XFLAG_FILESTREAM
+> > +Filestream allocator bit - allows a directory to reserve an allocation group
+> > +for exclusive use by files created within that directory.
+> > +Files being written in other directories will not use the same allocation group
+> > +and so files within different directories will not interleave extents on disk.
+> > +The reservation is only active while files are being created and written into
+> > +the directory.
+> > +.TP
+> > +.B FS_XFLAG_DAX
+> > +If the filesystem lives on directly accessible persistent memory, reads and
+> > +writes to this file will go straight to the persistent memory, bypassing the
+> > +page cache.
+> > +A file cannot be reflinked and have the
+> > +.BR FS_XFLAG_DAX
+> > +set at the same time.
+> 
+> Since you can't even mount that way, I suppose not ....
+> 
+> > +That is to say that DAX files cannot share blocks.
+> > +If this flag is set on a directory, files created within that directory will
+> > +have this flag set.
+> 
+> Documenting DAX is a bold move...
+> 
+> Do subdirs not inherit the flag?
+> 
+> 
+> > +.TP
+> > +.B FS_XFLAG_COWEXTSIZE
+> > +Copy on Write Extent size bit - if a CoW extent size value is set on the file,
+> > +the allocator will allocate extents for staging a copy on write operation
+> > +in multiples of the set size for this file (see
+> > +.B fsx_cowextsize
+> > +below).
+> > +If the CoW extent size is set on a directory, then new file and directories
+> > +created in the directory will inherit the parent's CoW extent size value.
+> > +.TP
+> > +.B FS_XFLAG_HASATTR
+> > +The file has extended attributes associated with it.
+> > +.RE
+> > +.PP
+> > +.PD
+> > +
+> > +.PP
+> > +.I fsx_extsize
+> > +is the preferred extent allocation size for data blocks mapped to this file,
+> > +in units of filesystem blocks.
+> > +If this value is zero, the filesystem will choose a default option, which
+> > +is currently zero.
+> > +If
+> > +.B XFS_IOC_FSSETXATTR
+> > +is called with
+> > +.B FS_XFLAG_EXTSIZE
+> > +set in
+> > +.I fsx_xflags
+> > +and this field is zero, the XFLAG will be cleared instead.
+> > +.PP
+> > +.I fsx_nextents
+> > +is the number of data extents in this file.
+> > +If
+> > +.B XFS_IOC_FSGETXATTRA
+> > +was used, then this is the number of extended attribute extents in the file.
+> > +.PP
+> > +.I fsx_projid
+> > +is the project ID of this file.
+> > +.PP
+> > +.I fsx_cowextsize
+> > +is the preferred extent allocation size for copy on write operations
+> > +targeting this file, in units of filesystem blocks.
+> > +If this field is zero, the filesystem will choose a default option,
+> > +which is currently 128 filesystem blocks.
+> > +If
+> > +.B XFS_IOC_FSSETXATTR
+> > +is called with
+> > +.B FS_XFLAG_COWEXTSIZE
+> > +set in
+> > +.I fsx_xflags
+> > +and this field is zero, the XFLAG will be cleared instead.
+> > +
+> > +.PP
+> > +.I fsx_pad
+> > +must be zeroed.
+> > +
+> > +.SH RETURN VALUE
+> > +On error, \-1 is returned, and
+> > +.I errno
+> > +is set to indicate the error.
+> > +.PP
+> > +.SH ERRORS
+> > +Error codes can be one of, but are not limited to, the following:
+> > +.TP
+> > +.B EACCESS
+> > +Caller does not have sufficient access to change the attributes.
+> > +.TP
+> > +.B EFAULT
+> > +The kernel was not able to copy into the userspace buffer.
+> > +.TP
+> > +.B EFSBADCRC
+> > +Metadata checksum validation failed while performing the query.
+> > +.TP
+> > +.B EFSCORRUPTED
+> > +Metadata corruption was encountered while performing the query.
+> > +.TP
+> > +.B EINVAL
+> > +One of the arguments was not valid.
+> > +.TP
+> > +.B EIO
+> > +An I/O error was encountered while performing the query.
+> > +.TP
+> > +.B ENOMEM
+> > +There was insufficient memory to perform the query.
+> > +.TP
+> > +.B EPERM
+> > +Caller did not have permission to change the attributes.
+> > +.SH CONFORMING TO
+> > +This API is implemented by the ext4, xfs, btrfs, and f2fs filesystems on the
+> > +Linux kernel.
+> > +Not all fields may be understood by filesystems other than xfs.
+> > +.SH SEE ALSO
+> > +.BR ioctl (2)
+> > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
+> > index 462ccbd8..2992b5be 100644
+> > --- a/man/man3/xfsctl.3
+> > +++ b/man/man3/xfsctl.3
+> > @@ -132,161 +132,17 @@ will fail with EINVAL.
+> >  All I/O requests are kept consistent with any data brought into
+> >  the cache with an access through a non-direct I/O file descriptor.
+> >  
+> > -.TP
+> > -.B XFS_IOC_FSGETXATTR
+> > -Get additional attributes associated with files in XFS file systems.
+> > -The final argument points to a variable of type
+> > -.BR "struct fsxattr" ,
+> > -whose fields include:
+> > -.B fsx_xflags
+> > -(extended flag bits),
+> > -.B fsx_extsize
+> > -(nominal extent size in file system blocks),
+> > -.B fsx_nextents
+> > -(number of data extents in the file).
+> > -A
+> > -.B fsx_extsize
+> > -value returned indicates that a preferred extent size was previously
+> > -set on the file, a
+> > -.B fsx_extsize
+> > -of zero indicates that the defaults for that filesystem will be used.
+> > -A
+> > -.B fsx_cowextsize
+> > -value returned indicates that a preferred copy on write extent size was
+> > -previously set on the file, whereas a
+> > -.B fsx_cowextsize
+> > -of zero indicates that the defaults for that filesystem will be used.
+> > -The current default for
+> > -.B fsx_cowextsize
+> > -is 128 blocks.
+> > -Currently the meaningful bits for the
+> > -.B fsx_xflags
+> > -field are:
+> > -.PD 0
+> > -.RS
+> > -.TP 1.0i
+> > -.SM "Bit 0 (0x1) \- XFS_XFLAG_REALTIME"
+> > -The file is a realtime file.
+> > -.TP
+> > -.SM "Bit 1 (0x2) \- XFS_XFLAG_PREALLOC"
+> > -The file has preallocated space.
+> > -.TP
+> > -.SM "Bit 3 (0x8) \- XFS_XFLAG_IMMUTABLE"
+> > -The file is immutable - it cannot be modified, deleted or renamed,
+> > -no link can be created to this file and no data can be written to the
+> > -file.
+> > -Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
+> > -capability can set or clear this flag.
+> > -.TP
+> > -.SM "Bit 4 (0x10) \- XFS_XFLAG_APPEND"
+> > -The file is append-only - it can only be open in append mode for
+> > -writing.
+> > -Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
+> > -capability can set or clear this flag.
+> > -.TP
+> > -.SM "Bit 5 (0x20) \- XFS_XFLAG_SYNC"
+> > -All writes to the file are synchronous.
+> > -.TP
+> > -.SM "Bit 6 (0x40) \- XFS_XFLAG_NOATIME"
+> > -When the file is accessed, its atime record is not modified.
+> > -.TP
+> > -.SM "Bit 7 (0x80) \- XFS_XFLAG_NODUMP"
+> > -The file should be skipped by backup utilities.
+> > -.TP
+> > -.SM "Bit 8 (0x100) \- XFS_XFLAG_RTINHERIT"
+> > -Realtime inheritance bit - new files created in the directory
+> > -will be automatically realtime, and new directories created in
+> > -the directory will inherit the inheritance bit.
+> > -.TP
+> > -.SM "Bit 9 (0x200) \- XFS_XFLAG_PROJINHERIT"
+> > -Project inheritance bit - new files and directories created in
+> > -the directory will inherit the parents project ID.  New
+> > -directories also inherit the project inheritance bit.
+> > -.TP
+> > -.SM "Bit 10 (0x400) \- XFS_XFLAG_NOSYMLINKS"
+> > -Can only be set on a directory and disallows creation of
+> > -symbolic links in that directory.
+> > -.TP
+> > -.SM "Bit 11 (0x800) \- XFS_XFLAG_EXTSIZE"
+> > -Extent size bit - if a basic extent size value is set on the file
+> > -then the allocator will allocate in multiples of the set size for
+> > -this file (see
+> > -.B XFS_IOC_FSSETXATTR
+> > -below).
+> > -.TP
+> > -.SM "Bit 12 (0x1000) \- XFS_XFLAG_EXTSZINHERIT"
+> > -Extent size inheritance bit - new files and directories created in
+> > -the directory will inherit the parents basic extent size value (see
+> > -.B XFS_IOC_FSSETXATTR
+> > -below).
+> > -Can only be set on a directory.
+> > -.TP
+> > -.SM "Bit 13 (0x2000) \- XFS_XFLAG_NODEFRAG"
+> > -No defragment file bit - the file should be skipped during a defragmentation
+> > -operation. When applied to a directory, new files and directories created will
+> > -inherit the no\-defrag bit.
+> > -.TP
+> > -.SM "Bit 14 (0x4000) \- XFS_XFLAG_FILESTREAM"
+> > -Filestream allocator bit - allows a directory to reserve an allocation
+> > -group for exclusive use by files created within that directory. Files
+> > -being written in other directories will not use the same allocation
+> > -group and so files within different directories will not interleave
+> > -extents on disk. The reservation is only active while files are being
+> > -created and written into the directory.
+> > -.TP
+> > -.SM "Bit 15 (0x8000) \- XFS_XFLAG_DAX"
+> > -If the filesystem lives on directly accessible persistent memory, reads and
+> > -writes to this file will go straight to the persistent memory, bypassing the
+> > -page cache.
+> > -A file cannot be reflinked and have the
+> > -.BR XFS_XFLAG_DAX
+> > -set at the same time.
+> > -That is to say that DAX files cannot share blocks.
+> > -.TP
+> > -.SM "Bit 16 (0x10000) \- XFS_XFLAG_COWEXTSIZE"
+> > -Copy on Write Extent size bit - if a CoW extent size value is set on the file,
+> > -the allocator will allocate extents for staging a copy on write operation
+> > -in multiples of the set size for this file (see
+> > -.B XFS_IOC_FSSETXATTR
+> > -below).
+> > -If the CoW extent size is set on a directory, then new file and directories
+> > -created in the directory will inherit the parent's CoW extent size value.
+> > -.TP
+> > -.SM "Bit 31 (0x80000000) \- XFS_XFLAG_HASATTR"
+> > -The file has extended attributes associated with it.
+> > -.RE
+> >  .PP
+> > -.PD
+> > -
+> > -.TP
+> > -.B XFS_IOC_FSGETXATTRA
+> > -Identical to
+> > +.nf
+> >  .B XFS_IOC_FSGETXATTR
+> > -except that the
+> > -.B fsx_nextents
+> > -field contains the number of attribute extents in the file.
+> > -
+> > +.B XFS_IOC_FSGETXATTRA
+> > +.fi
+> > +.PD 0
+> >  .TP
+> >  .B XFS_IOC_FSSETXATTR
+> > -Set additional attributes associated with files in XFS file systems.
+> > -The final argument points to a variable of type
+> > -.BR "struct fsxattr" ,
+> > -but only the following fields are used in this call:
+> > -.BR fsx_xflags ,
+> > -.BR fsx_extsize ,
+> > -.BR fsx_cowextsize ,
+> > -and
+> > -.BR fsx_projid .
+> > -The
+> > -.B fsx_xflags
+> > -realtime file bit and the file's extent size may be changed only
+> > -when the file is empty, except in the case of a directory where
+> > -the extent size can be set at any time (this value is only used
+> > -for regular file allocations, so should only be set on a directory
+> > -in conjunction with the XFS_XFLAG_EXTSZINHERIT flag).
+> > -The copy on write extent size,
+> > -.BR fsx_cowextsize ,
+> > -can be set at any time.
+> > +See
+> > +.BR ioctl_xfs_fsgetxattr (2)
+> > +for more information.
+> >  
+> >  .TP
+> >  .B XFS_IOC_GETBMAP
+> > @@ -649,6 +505,7 @@ The remainder of these operations will not be described further
+> >  as they are not of general use to applications.
+> >  
+> >  .SH SEE ALSO
+> > +.BR ioctl_xfs_fsgetxattr (2),
+> >  .BR fstatfs (2),
+> >  .BR statfs (2),
+> >  .BR xfs (5),
+> > 
