@@ -2,62 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E0346D7F
-	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2019 03:23:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 012BF46E0B
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2019 06:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfFOBXo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 14 Jun 2019 21:23:44 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:38713 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfFOBXo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 14 Jun 2019 21:23:44 -0400
-Received: by mail-lf1-f53.google.com with SMTP id b11so2894416lfa.5
-        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 18:23:42 -0700 (PDT)
+        id S1725816AbfFOEB0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 15 Jun 2019 00:01:26 -0400
+Received: from mail-lf1-f43.google.com ([209.85.167.43]:35623 "EHLO
+        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfFOEB0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 15 Jun 2019 00:01:26 -0400
+Received: by mail-lf1-f43.google.com with SMTP id a25so3021553lfg.2
+        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 21:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T0sAjPXXfslJFeHisHU1yrczsKCc0N+yl4i1W3iXGv0=;
-        b=RaOwSCtNqtqtil2BG0A89cO+YIcb7ccAuT10ZjRkB+BM/5iXa5e7ccARHhlDEdfwDb
-         UNWwmuNiXnI+FDpavul6sS3iDMhBtpB7ngwnNuMNvZlWEDtMgPp9OYEojdQ5XLD6tTG6
-         emJyLc9yswuypGzecLiYQUAz3ylLy9F1cagCU=
+        bh=LNCCQDzXq6yRFhVLoEUQSeznUefXALf/b6AvjDf5zbk=;
+        b=K+NlbgNmc77iE+WvrjEBgMNlZucBcKdO/O5/nk7OZOBx6QGiPLKgW6xHqeUKR/z1/9
+         zyhhdNgrB4+1BFo6Zu6tRLbi1YgVBxzcym14Fw3e1Cvu/GabpqLG0GbD6xnKbRNydIPE
+         3038hUhYpnFUOgY2FK0lkFrB+J3deHeUX1FtU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T0sAjPXXfslJFeHisHU1yrczsKCc0N+yl4i1W3iXGv0=;
-        b=YG8G15rrHvtZsG/UyO8oFBKWojYX2cQ4ZZGCkRnPNp0WaAAqlckkQ6fT/fVqCv+QVp
-         UDW8c+1FuUOKYzcYlpPYMu/FbE3gfH4iNT77CWv5YPnLZgQmpYyigdr2cghtfljONIAH
-         zR8fXDwqT2PgoJGTBwOil718WaQpCdHazdPDi1SCLU5ehEkKgRqENo+KvN9gBBj4S7lJ
-         0NY72xXiE5KfarTykLmEzylV3svOE5hisKTbwtZ98cVvgPO8QdPziEDQKbDziz+rjIXd
-         M4ddJ8C4a1pXbjmHT7eFFkVMH8Pq3tQ9BEGg1AgbWFwihoYnc/dEJc4U4c4CsQucocLM
-         O8HQ==
-X-Gm-Message-State: APjAAAUBXRkl57SFK6XhWZ+xbfAiyF9G51Ggo3ZXUB13HBGE689NjRKr
-        RPYf3fGuG/Ya2jII//LuiyNJpBuqyT4=
-X-Google-Smtp-Source: APXvYqz2qi/I6GKZ85u/lAk8MI5seKWKGuOQT08uBcp59+UJbOgceGjmUaR0iwmMnSrPvxNV50hd+w==
-X-Received: by 2002:ac2:518d:: with SMTP id u13mr48345096lfi.40.1560561821093;
-        Fri, 14 Jun 2019 18:23:41 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id h22sm846444ljj.105.2019.06.14.18.23.40
+        bh=LNCCQDzXq6yRFhVLoEUQSeznUefXALf/b6AvjDf5zbk=;
+        b=ZkwqQ1A9J2UjH8CNrPtL2GIpADpFvSLL5JRSLE0iGfMgz+py0DgyrSjwAgmXQz59oj
+         DB6ihwt4Hqs9CJG2fHAAnhS867DzERGa9steKNfI7pr1xdrgGROiSGt8muDG9WHtCzcD
+         sxX1kb5wqrVJsGof80ni+LSDRu9DYIEK6qZxjWiol1K4t428cRA/VGrJN+X53OQc5/J2
+         qZc+9/8lNOGc2DWeFu8wfOi43w3kZrcWbXlU7JRf9Wslzldw7+j1bXblYZh3l+6d1yY4
+         kf0Zuwk6ISTr+vSRumeWMHZia/GkB8DJQ2br87JLq1/kGUrUhHVgYJ99t212rgaXzrWt
+         zo/A==
+X-Gm-Message-State: APjAAAVKtJDxsY07L/JrKfwoMhCjvtojAhhXeDmZm/ipfVc310SNDEqe
+        dVDltyx+c6cAYDA1hFr5yF1Ubg2KCwQ=
+X-Google-Smtp-Source: APXvYqwZpJiY3AKZp7+E3VYzYJaOt2rCoG1s58hH/2xZhgZRbag6pQFE9BOIDLaiwq83oxA+88e2jw==
+X-Received: by 2002:ac2:4ac5:: with SMTP id m5mr25533638lfp.95.1560571284440;
+        Fri, 14 Jun 2019 21:01:24 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id 25sm890527ljo.38.2019.06.14.21.01.23
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 18:23:40 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id d11so2904199lfb.4
-        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 18:23:40 -0700 (PDT)
-X-Received: by 2002:ac2:59c9:: with SMTP id x9mr48522334lfn.52.1560561321789;
- Fri, 14 Jun 2019 18:15:21 -0700 (PDT)
+        Fri, 14 Jun 2019 21:01:24 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id k18so4250297ljc.11
+        for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2019 21:01:23 -0700 (PDT)
+X-Received: by 2002:a2e:b003:: with SMTP id y3mr18772815ljk.72.1560571283486;
+ Fri, 14 Jun 2019 21:01:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190610191420.27007-1-kent.overstreet@gmail.com>
  <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
  <20190611011737.GA28701@kmo-pixel> <20190611043336.GB14363@dread.disaster.area>
  <20190612162144.GA7619@kmo-pixel> <20190612230224.GJ14308@dread.disaster.area>
  <20190613183625.GA28171@kmo-pixel> <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=wj3SQjfHHvE_CNrQAYS2p7bsC=OXEc156cHA_ujyaG0NA@mail.gmail.com> <20190614073053.GQ14363@dread.disaster.area>
-In-Reply-To: <20190614073053.GQ14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 14 Jun 2019 15:15:05 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wgoXo-irWbU1SbKvHuYyAz2nwOkrw2L=+HackVWsXFhpQ@mail.gmail.com>
-Message-ID: <CAHk-=wgoXo-irWbU1SbKvHuYyAz2nwOkrw2L=+HackVWsXFhpQ@mail.gmail.com>
+Date:   Fri, 14 Jun 2019 18:01:07 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+Message-ID: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
 Subject: Re: pagecache locking (was: bcachefs status update) merged)
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
@@ -78,138 +78,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:31 PM Dave Chinner <david@fromorbit.com> wrote:
+On Thu, Jun 13, 2019 at 5:08 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Yes, they do, I see plenty of cases where the page cache works just
-> fine because it is still faster than most storage. But that's _not
-> what I said_.
+> I do not believe that posix itself actually requires that at all,
+> although extended standards may.
 
-I only quoted one small part of your email, because I wanted to point
-out how you again dismissed caches.
+So I tried to see if I could find what this perhaps alludes to.
 
-And yes, that literally _is_ what you said. In other parts of that
-same email you said
+And I suspect it's not in the read/write thing, but the pthreads side
+talks about atomicity.
 
-   "..it's getting to the point where the only reason for having
-    a page cache is to support mmap() and cheap systems with spinning
-    rust storage"
+Interesting, but I doubt if that's actually really intentional, since
+the non-thread read/write behavior specifically seems to avoid the
+whole concurrency issue.
 
-and
+The pthreads atomicity thing seems to be about not splitting up IO and
+doing it in chunks when you have m:n threading models, but can be
+(mis-)construed to have threads given higher atomicity guarantees than
+processes.
 
-  "That's my beef with relying on the page cache - the page cache is
-   rapidly becoming a legacy structure that only serves to slow modern
-   IO subsystems down"
-
-and your whole email was basically a rant against the page cache.
-
-So I only quoted the bare minimum, and pointed out that caching is
-still damn important.
-
-Because most loads cache well.
-
-How you are back-tracking a bit from your statements, but don't go
-saying was misreading you. How else would the above be read? You
-really were saying that caching was "legacy". I called you out on it.
-Now you're trying to back-track.
-
-Yes, you have loads that don't cache well. But that does not mean that
-caching has somehow become irrelevant in the big picture or a "legacy"
-thing at all.
-
-The thing is, I don't even hate DIO. But we always end up clashing
-because you seem to have this mindset where nothing else matters
-(which really came through in that email I replied to).
-
-Do you really wonder why I point out that caching is important?
-Because you seem to actively claim caching doesn't matter. Are you
-happier now that I quoted more of your emails back to you?
-
->         IOWs, you've taken _one
-> single statement_ I made from a huge email about complexities in
-> dealing with IO concurency, the page cache and architectural flaws n
-> the existing code, quoted it out of context, fabricated a completely
-> new context and started ranting about how I know nothing about how
-> caches or the page cache work.
-
-See above. I cut things down a lot, but it wasn't a single statement
-at all. I just boiled it down to the basics.
-
-> Linus, nobody can talk about direct IO without you screaming and
-> tossing all your toys out of the crib.
-
-Dave, look in the mirror some day. You might be surprised.
-
-> So, in the interests of further _civil_ discussion, let me clarify
-> my statement for you: for a highly concurrent application that is
-> crunching through bulk data on large files on high throughput
-> storage, the page cache is still far, far slower than direct IO.
-
-.. and Christ, Dave, we even _agree_ on this.
-
-But when DIO becomes an issue is when you try to claim it makes the
-page cache irrelevant, or a problem.
-
-I also take issue with you then making statements that seem to be
-explicitly designed to be misleading. For DIO, you talk about how XFS
-has no serialization and gets great performance. Then in the very next
-email, you talk about how you think buffered IO has to be excessively
-serialized, and how XFS is the only one who does it properly, and how
-that is a problem for performance. But as far as I can tell, the
-serialization rule you quote is simply not true. But for you it is,
-and only for buffered IO.
-
-It's really as if you were actively trying to make the non-DIO case
-look bad by picking and choosing your rules.
-
-And the thing is, I suspect that the overlap between DIO and cached IO
-shouldn't even need to be there. We've generally tried to just not
-have them interact at all, by just having DIO invalidate the caches
-(which is really really cheap if they don't exist - which should be
-the common case by far!). People almost never mix the two at all, and
-we might be better off aiming to separate them out even more than we
-do now.
-
-That's actually the part I like best about the page cache add lock - I
-may not be a great fan of yet another ad-hoc lock - but I do like how
-it adds minimal overhead to the cached case (because by definition,
-the good cached case is when you don't need to add new pages), while
-hopefully working well together with the whole "invalidate existing
-caches" case for DIO.
-
-I know you don't like the cache flush and invalidation stuff for some
-reason, but I don't even understand why you care. Again, if you're
-actually just doing all DIO, the caches will be empty and not be in
-your way. So normally all that should be really really cheap. Flushing
-and invalidating caches that don't exists isn't really complicated, is
-it?
-
-And if cached state *does* exist, and if it can't be invalidated (for
-example, existing busy mmap or whatever), maybe the solution there is
-"always fall back to buffered/cached IO".
-
-For the cases you care about, that should never happen, after all.
-
-IOW, if anything, I think we should strive for a situation where the
-whole DIO vs cached becomes even _more_ independent. If there are busy
-caches, just fall back to cached IO. It will have lower IO throughput,
-but that's one of the _points_ of caches - they should decrease the
-need for IO, and less IO is what it's all about.
-
-So I don't understand why you hate the page cache so much. For the
-cases you care about, the page cache should be a total non-issue. And
-if the page cache does exist, then it almost by definition means that
-it's not a case you care about.
-
-And yes, yes, maybe some day people won't have SSD's at all, and it's
-all nvdimm's and all filesystem data accesses are DAX, and caching is
-all done by hardware and the page cache will never exist at all. At
-that point a page cache will be legacy.
-
-But honestly, that day is not today. It's decades away, and might
-never happen at all.
-
-So in the meantime, don't pooh-pooh the page cache. It works very well
-indeed, and I say that as somebody who has refused to touch spinning
-media (or indeed bad SSD's) for a decade.
-
-              Linus
+               Linus
