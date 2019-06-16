@@ -2,270 +2,187 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7185B4753D
-	for <lists+linux-xfs@lfdr.de>; Sun, 16 Jun 2019 16:40:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53D29475F7
+	for <lists+linux-xfs@lfdr.de>; Sun, 16 Jun 2019 18:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfFPOkD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 16 Jun 2019 10:40:03 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33095 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfFPOkD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 16 Jun 2019 10:40:03 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k187so4313538pga.0;
-        Sun, 16 Jun 2019 07:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HPORHiKbkOh6Q/xH1GRnOWZlsUgNSN8s2+gFM24tQ/k=;
-        b=gaETkyYpPETJiSpt8P0iJYcqSnGyhNuJCB05O0zF+sF0oLGn1g58A7euWHcr9hT5/c
-         I3Qx6ogzPLkwC5DJAbpOPiLQXtSnEfZCWJP5bYIkVgdnHlOAG6xZM/dYtqvWzI4jVpIX
-         IOUJWdJZF4Baj/lX7kpYwEPLv4Xih7V7a6w3hRXfuuYv52OE2vL1xkv0lr7lGaJsq6Fn
-         sRjgzXRz19sz1DMUlq2iBt8Iq2ze1kWNj4PflUBa3HC/FEzhzqCqafmuKj1F0POGOeM3
-         Mf5Xy+Zajr+mF8P9Ru0M4NEMRA6nrY1joHpznXNF6QiXLDjJbpug4XL0eWMOZWR4oaSs
-         d5bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HPORHiKbkOh6Q/xH1GRnOWZlsUgNSN8s2+gFM24tQ/k=;
-        b=A2XbAvDTPz3zD5VuhxubjJzlYAvnmXoajmpiVFmxXCfORzLUgJqZtnjlXLpmfRa7EN
-         G96KFboGcpU7352yZqrPIOhdyn1XzpH7eoVjlKgj8UNPcbZY+JVm20brJygDUtsTS6LN
-         kkb2+Amj1JXZxKvDHrowjsqCnhZP+Hho0A3Ocf07asQVmo9Ov9kwLtkW12lBRFf6/o8x
-         vjtC0VO8jM9nxErsbTZHmdo46ZOEtDrF63/1k2dzlRgx7A1mKnMII4vvNUfuziK88Av+
-         26SmaATKhhIwq6iOOhglIkq5A9Hs+y8LDoFB880oQfw9D74s44InStkrF7QI2uXgAdjM
-         S/GQ==
-X-Gm-Message-State: APjAAAX1uo4dgfnBOwtc+L62OJ02NVN51j2hbBeVgP1C0CJi7v4dGUNw
-        hKdcZjAuBCblyZDPudpztug=
-X-Google-Smtp-Source: APXvYqyWH9UImv0NYoP7eNKddqx3R8F0YUprq6YdBWew9yNxvmdtxOcVxY//boQPqE1WRpjZWZbRAQ==
-X-Received: by 2002:a17:90a:d3c3:: with SMTP id d3mr21804712pjw.17.1560696002062;
-        Sun, 16 Jun 2019 07:40:02 -0700 (PDT)
-Received: from localhost ([47.254.35.144])
-        by smtp.gmail.com with ESMTPSA id q7sm10053292pfb.32.2019.06.16.07.40.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 07:40:01 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 22:39:56 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Cc:     darrick.wong@oracle.com, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2] xfs/191: update mkfs.xfs input results
-Message-ID: <20190616143956.GC15846@desktop>
-References: <1560414701-2590-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
+        id S1726267AbfFPQuI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 16 Jun 2019 12:50:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37150 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfFPQuI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 16 Jun 2019 12:50:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5GGnM5r049606;
+        Sun, 16 Jun 2019 16:49:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=et8auwxWD5g6MgmRjFeiMyCO7v5iHMPDsGz/kZ48SY0=;
+ b=OeRQCZMRMhaCMKWsRikEwAxXLNJd+pHpg3cVpI4jDBItw1uAHsWro4/bboCG+byKAjEV
+ e78i9GXS+qtZcX5x+xVoB4V6AbaLwESH5AC4p9gcCOeYsdQYW8KbyRGJ3sRBafrNbVr3
+ izOAyGAfGm6yqE1JgOjAGdPiDUPjfRcoG/sF/wjWIa8E2bX4Wiuw7YQX5dP5NkozoIUu
+ GILv2wNk1O5U7Jfo24Suxs8xezFLJ090rNtaG8LYa2CqFNq0L/8TCZ76BZPA1b0W1aza
+ x4Ozc19tV4i2yb7zKz3RGDPEDjElRc0mL8HUFtHil754GxRQMKD77a1VifOM7nxth2F4 Ug== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t4saq35hk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jun 2019 16:49:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5GGn2wZ186868;
+        Sun, 16 Jun 2019 16:49:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2t5h5stsrt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jun 2019 16:49:51 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5GGnovO024075;
+        Sun, 16 Jun 2019 16:49:50 GMT
+Received: from localhost (/70.95.137.242)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 16 Jun 2019 09:49:50 -0700
+Date:   Sun, 16 Jun 2019 09:49:48 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Zorro Lang <zlang@redhat.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: test xfs_info on block device and mountpoint
+Message-ID: <20190616164948.GD1872778@magnolia>
+References: <20190614044954.22022-1-zlang@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560414701-2590-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190614044954.22022-1-zlang@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906160162
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906160162
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-[cc xfs list for xfs specific test]
-
-On Thu, Jun 13, 2019 at 04:31:41PM +0800, Yang Xu wrote:
-> Currently, on 5.2.0-rc4+ kernel, when I run xfs/191-input-validation with upstream xfsprogs,
-> I get the following errors because mkfs.xfs binary has changed a lot.
-
-Lines are too long for commit log, please wrap at column 68.
-
+On Fri, Jun 14, 2019 at 12:49:54PM +0800, Zorro Lang wrote:
+> There was a bug, xfs_info fails on a mounted block device:
 > 
-> --------------------------
-> PLATFORM      -- Linux/x86_64  5.2.0-rc4+
-> MKFS_OPTIONS  -- -f -bsize=4096 /dev/sda11
-> MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/sda11 /mnt/xfstests/scratch
-
-But these quotes don't need to be wrapped.
-
+>   # xfs_info /dev/mapper/testdev
+>   xfs_info: /dev/mapper/testdev contains a mounted filesystem
 > 
-> pass -n size=2b /dev/sda11
-> pass -d agsize=8192b /dev/sda11
-> pass -d agsize=65536s /dev/sda11
-> pass -d su=0,sw=64 /dev/sda11
-> pass -d su=4096s,sw=64 /dev/sda11
-> pass -d su=4096b,sw=64 /dev/sda11
-> pass -l su=10b /dev/sda11
-> fail -n log=15 /dev/sda11
-> fail -r size=65536,rtdev=$fsimg /dev/sda11
-> fail -r rtdev=$fsimg /dev/sda11
-> fail -i log=10 /dev/sda11
-> --------------------------
+>   fatal error -- couldn't initialize XFS library
 > 
-> "pass -d su=0,sw=64 /dev/sda11", expect fail, this behavior has been fixed by commit 16adcb88:
-> (mkfs: more sunit/swidth sanity checking).
+> xfsprogs has fixed it, this case is used to cover this bug.
 > 
-> "fail -n log=15 /dev/sda11" "fail -i log=10 /dev/sda11", expect pass, this option has been removed
-> since commit 2cf637c(mkfs: remove logarithm based CLI option).
-> 
-> "fail -r size=65536,rtdev=$fsimg /dev/sda11" "fail -r rtdev=$fsimg /dev/sda11" works well if we disable
-> reflink, fail if we enable reflink. It fails because reflink was not supported in realtime devices
-> since commit bfa66ec.
-> 
-> I change the expected result for compatibility with current xfsprogs and add rtdev test with reflink .
-> 
-> Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-
-I noticed Darrick provided a Reviewed-by tag, but as Darrick also noted,
-it'd be good to know what do other xfs maintainers think about this
-test.
-
+> Signed-off-by: Zorro Lang <zlang@redhat.com>
 > ---
->  tests/xfs/191-input-validation | 36 ++++++++++++++++++++++------------
->  1 file changed, 24 insertions(+), 12 deletions(-)
+>  tests/xfs/1000     | 65 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/1000.out |  2 ++
+>  tests/xfs/group    |  1 +
+>  3 files changed, 68 insertions(+)
+>  create mode 100755 tests/xfs/1000
+>  create mode 100644 tests/xfs/1000.out
 > 
-> diff --git a/tests/xfs/191-input-validation b/tests/xfs/191-input-validation
-> index b6658015..9fe72051 100755
-> --- a/tests/xfs/191-input-validation
-> +++ b/tests/xfs/191-input-validation
-> @@ -112,10 +112,11 @@ do_mkfs_fail -b size=2b $SCRATCH_DEV
->  do_mkfs_fail -b size=nfi $SCRATCH_DEV
->  do_mkfs_fail -b size=4096nfi $SCRATCH_DEV
->  do_mkfs_fail -n size=2s $SCRATCH_DEV
-> -do_mkfs_fail -n size=2b $SCRATCH_DEV
->  do_mkfs_fail -n size=nfi $SCRATCH_DEV
->  do_mkfs_fail -n size=4096nfi $SCRATCH_DEV
->  
-> +do_mkfs_pass -n size=2b $SCRATCH_DEV
+> diff --git a/tests/xfs/1000 b/tests/xfs/1000
+> new file mode 100755
+> index 00000000..689fe9e7
+> --- /dev/null
+> +++ b/tests/xfs/1000
+> @@ -0,0 +1,65 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2019 Red Hat, Inc.  All Rights Reserved.
+> +#
+> +# FS QA Test No. 1000
+> +#
+> +# test xfs_info on block device and mountpoint
+> +#
+> +seq=`basename $0`
+> +seqres=$RESULT_DIR/$seq
+> +echo "QA output created by $seq"
 > +
->  # bad label length
->  do_mkfs_fail -L thisiswaytoolong $SCRATCH_DEV
->  
-> @@ -129,6 +130,8 @@ do_mkfs_pass -d agsize=32M $SCRATCH_DEV
->  do_mkfs_pass -d agsize=1g $SCRATCH_DEV
->  do_mkfs_pass -d agsize=$((32 * 1024 * 1024)) $SCRATCH_DEV
->  do_mkfs_pass -b size=4096 -d agsize=8192b $SCRATCH_DEV
-> +do_mkfs_pass -d agsize=8192b $SCRATCH_DEV
-> +do_mkfs_pass -d agsize=65536s $SCRATCH_DEV
->  do_mkfs_pass -d sectsize=512,agsize=65536s $SCRATCH_DEV
->  do_mkfs_pass -s size=512 -d agsize=65536s $SCRATCH_DEV
->  do_mkfs_pass -d noalign $SCRATCH_DEV
-> @@ -136,7 +139,10 @@ do_mkfs_pass -d sunit=0,swidth=0 $SCRATCH_DEV
->  do_mkfs_pass -d sunit=8,swidth=8 $SCRATCH_DEV
->  do_mkfs_pass -d sunit=8,swidth=64 $SCRATCH_DEV
->  do_mkfs_pass -d su=0,sw=0 $SCRATCH_DEV
-> +do_mkfs_pass -d su=0,sw=64 $SCRATCH_DEV
->  do_mkfs_pass -d su=4096,sw=1 $SCRATCH_DEV
-> +do_mkfs_pass -d su=4096s,sw=64 $SCRATCH_DEV
-> +do_mkfs_pass -d su=4096b,sw=64 $SCRATCH_DEV
->  do_mkfs_pass -d su=4k,sw=1 $SCRATCH_DEV
->  do_mkfs_pass -d su=4K,sw=8 $SCRATCH_DEV
->  do_mkfs_pass -b size=4096 -d su=1b,sw=8 $SCRATCH_DEV
-> @@ -147,8 +153,6 @@ do_mkfs_pass -s size=512 -d su=8s,sw=8 $SCRATCH_DEV
->  do_mkfs_fail -d size=${fssize}b $SCRATCH_DEV
->  do_mkfs_fail -d size=${fssize}s $SCRATCH_DEV
->  do_mkfs_fail -d size=${fssize}yerk $SCRATCH_DEV
-> -do_mkfs_fail -d agsize=8192b $SCRATCH_DEV
-> -do_mkfs_fail -d agsize=65536s $SCRATCH_DEV
->  do_mkfs_fail -d agsize=32Mbsdfsdo $SCRATCH_DEV
->  do_mkfs_fail -d agsize=1GB $SCRATCH_DEV
->  do_mkfs_fail -d agcount=1k $SCRATCH_DEV
-> @@ -159,13 +163,10 @@ do_mkfs_fail -d sunit=64,swidth=0 $SCRATCH_DEV
->  do_mkfs_fail -d sunit=64,swidth=64,noalign $SCRATCH_DEV
->  do_mkfs_fail -d sunit=64k,swidth=64 $SCRATCH_DEV
->  do_mkfs_fail -d sunit=64,swidth=64m $SCRATCH_DEV
-> -do_mkfs_fail -d su=0,sw=64 $SCRATCH_DEV
->  do_mkfs_fail -d su=4096,sw=0 $SCRATCH_DEV
->  do_mkfs_fail -d su=4097,sw=1 $SCRATCH_DEV
->  do_mkfs_fail -d su=4096,sw=64,noalign $SCRATCH_DEV
->  do_mkfs_fail -d su=4096,sw=64s $SCRATCH_DEV
-> -do_mkfs_fail -d su=4096s,sw=64 $SCRATCH_DEV
-> -do_mkfs_fail -d su=4096b,sw=64 $SCRATCH_DEV
->  do_mkfs_fail -d su=4096garabge,sw=64 $SCRATCH_DEV
->  do_mkfs_fail -d su=4096,sw=64,sunit=64,swidth=64 $SCRATCH_DEV
->  do_mkfs_fail -d sectsize=10,agsize=65536s $SCRATCH_DEV
-> @@ -206,6 +207,7 @@ do_mkfs_pass -l sunit=64 $SCRATCH_DEV
->  do_mkfs_pass -l sunit=64 -d sunit=8,swidth=8 $SCRATCH_DEV
->  do_mkfs_pass -l sunit=8 $SCRATCH_DEV
->  do_mkfs_pass -l su=$((4096*10)) $SCRATCH_DEV
-> +do_mkfs_pass -l su=10b $SCRATCH_DEV
->  do_mkfs_pass -b size=4096 -l su=10b $SCRATCH_DEV
->  do_mkfs_pass -l sectsize=512,su=$((4096*10)) $SCRATCH_DEV
->  do_mkfs_pass -l internal $SCRATCH_DEV
-> @@ -228,7 +230,6 @@ do_mkfs_fail -l agnum=32 $SCRATCH_DEV
->  do_mkfs_fail -l sunit=0  $SCRATCH_DEV
->  do_mkfs_fail -l sunit=63 $SCRATCH_DEV
->  do_mkfs_fail -l su=1 $SCRATCH_DEV
-> -do_mkfs_fail -l su=10b $SCRATCH_DEV
->  do_mkfs_fail -l su=10s $SCRATCH_DEV
->  do_mkfs_fail -l su=$((4096*10+1)) $SCRATCH_DEV
->  do_mkfs_fail -l sectsize=10,agsize=65536s $SCRATCH_DEV
-> @@ -246,7 +247,6 @@ do_mkfs_fail -l version=0  $SCRATCH_DEV
->  
->  # naming section, should pass
->  do_mkfs_pass -n size=65536 $SCRATCH_DEV
-> -do_mkfs_pass -n log=15 $SCRATCH_DEV
->  do_mkfs_pass -n version=2 $SCRATCH_DEV
->  do_mkfs_pass -n version=ci $SCRATCH_DEV
->  do_mkfs_pass -n ftype=0 -m crc=0 $SCRATCH_DEV
-> @@ -257,6 +257,7 @@ do_mkfs_fail -n version=1 $SCRATCH_DEV
->  do_mkfs_fail -n version=cid $SCRATCH_DEV
->  do_mkfs_fail -n ftype=4 $SCRATCH_DEV
->  do_mkfs_fail -n ftype=0 $SCRATCH_DEV
-> +do_mkfs_fail -n log=15 $SCRATCH_DEV
->  
->  reset_fsimg
->  
-> @@ -273,14 +274,24 @@ do_mkfs_fail -m crc=0,finobt=1 $SCRATCH_DEV
->  do_mkfs_fail -m crc=1 -n ftype=0 $SCRATCH_DEV
->  
->  
-> +# realtime section, results depend on reflink
-> +$MKFS_XFS_PROG -f -m reflink=0 $SCRATCH_DEV >/dev/null 2>&1
+> +here=`pwd`
+> +tmp=/tmp/$$
+> +status=1	# failure is the default!
+> +trap "_cleanup; exit \$status" 0 1 2 3 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +	rm -f $tmp.*
+> +}
+> +
+> +# get standard environment, filters and checks
+> +. ./common/rc
+> +
+> +# remove previous $seqres.full before test
+> +rm -f $seqres.full
+> +
+> +# real QA test starts here
+> +_supported_fs xfs
+> +_supported_os Linux
+> +_require_scratch
+> +
+> +test_xfs_info()
+> +{
+> +	local target="$1"
+> +	local file=$tmp.$seq.info
+> +
+> +	$XFS_INFO_PROG $target > $file 2>&1
+> +	if [ $? -ne 0 ];then
+> +		echo "$XFS_INFO_PROG $target fails:"
+> +		cat $file
 
-_scratch_mkfs_xfs_supported -m reflink=0 >/dev/null 2>&1
+Should we compare the contents between the two xfs_info invocations?
 
-This helper doesn't actually create new fs but tests the given param
-with a dry run.
+> +	else
+> +		cat $file >> $seqres.full
+> +	fi
+> +}
+> +
+> +_scratch_mkfs > $seqres.full 2>&1
+> +# test unmounted block device(contains XFS)
+> +# Due to old xfsprogs doesn't support xfs_info a unmounted device, skip it
+> +$XFS_DB_PROG -c "info" $SCRATCH_DEV | grep -q "command info not found"
 
-And I think we need _require_scratch_nocheck instead of
-_require_scratch, as we test mkfs function and do wipefs $SCRATCH_DEV
-before every test now.
+Does _require_xfs_db_command not work here?
 
-Thanks,
-Eryu
+--D
 
-> +if [ $? -eq 0 ]; then
-> +	do_mkfs_pass -m reflink=0 -r rtdev=$fsimg $SCRATCH_DEV
-> +	do_mkfs_pass -m reflink=0 -r size=65536,rtdev=$fsimg $SCRATCH_DEV
-> +	do_mkfs_fail -m reflink=1 -r rtdev=$fsimg $SCRATCH_DEV
-> +	do_mkfs_fail -m reflink=1 -r size=65536,rtdev=$fsimg $SCRATCH_DEV
-> +else
-> +	do_mkfs_pass -r rtdev=$fsimg $SCRATCH_DEV
-> +	do_mkfs_pass -r size=65536,rtdev=$fsimg $SCRATCH_DEV
+> +if [ $? -ne 0 ]; then
+> +	test_xfs_info $SCRATCH_DEV
 > +fi
 > +
+> +_scratch_mount
+> +# test mounted block device and mountpoint
+> +test_xfs_info $SCRATCH_DEV
+> +test_xfs_info $SCRATCH_MNT
 > +
->  # realtime section, should pass
-> -do_mkfs_pass -r rtdev=$fsimg $SCRATCH_DEV
->  do_mkfs_pass -r extsize=4k $SCRATCH_DEV
->  do_mkfs_pass -r extsize=1G $SCRATCH_DEV
-> -do_mkfs_pass -r size=65536,rtdev=$fsimg $SCRATCH_DEV
->  do_mkfs_pass -r noalign $SCRATCH_DEV
->  
-> -
->  # realtime section, should fail
->  do_mkfs_fail -r rtdev=$SCRATCH_DEV
->  do_mkfs_fail -r extsize=256 $SCRATCH_DEV
-> @@ -293,7 +304,6 @@ do_mkfs_fail -r size=65536 $SCRATCH_DEV
->  do_mkfs_pass -i size=256 -m crc=0 $SCRATCH_DEV
->  do_mkfs_pass -i size=512 $SCRATCH_DEV
->  do_mkfs_pass -i size=2048 $SCRATCH_DEV
-> -do_mkfs_pass -i log=10 $SCRATCH_DEV
->  do_mkfs_pass -i perblock=2 $SCRATCH_DEV
->  do_mkfs_pass -i maxpct=10 $SCRATCH_DEV
->  do_mkfs_pass -i maxpct=100 $SCRATCH_DEV
-> @@ -317,6 +327,8 @@ do_mkfs_fail -i align=2 $SCRATCH_DEV
->  do_mkfs_fail -i sparse -m crc=0 $SCRATCH_DEV
->  do_mkfs_fail -i align=0 -m crc=1 $SCRATCH_DEV
->  do_mkfs_fail -i attr=1 -m crc=1 $SCRATCH_DEV
-> +do_mkfs_fail -i log=10 $SCRATCH_DEV
-> +
->  
->  status=0
->  exit
+> +echo "Silence is golden"
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/xfs/1000.out b/tests/xfs/1000.out
+> new file mode 100644
+> index 00000000..681b3b48
+> --- /dev/null
+> +++ b/tests/xfs/1000.out
+> @@ -0,0 +1,2 @@
+> +QA output created by 1000
+> +Silence is golden
+> diff --git a/tests/xfs/group b/tests/xfs/group
+> index ffe4ae12..047fe332 100644
+> --- a/tests/xfs/group
+> +++ b/tests/xfs/group
+> @@ -504,3 +504,4 @@
+>  504 auto quick mkfs label
+>  505 auto quick spaceman
+>  506 auto quick health
+> +1000 auto quick
 > -- 
-> 2.18.1
-> 
-> 
+> 2.17.2
 > 
