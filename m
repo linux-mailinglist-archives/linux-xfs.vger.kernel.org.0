@@ -2,112 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 872ED494C9
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 00:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8864F4956D
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 00:48:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfFQWJ1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 18:09:27 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42544 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbfFQWJ0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 18:09:26 -0400
-Received: by mail-yw1-f67.google.com with SMTP id s5so5787240ywd.9
-        for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2019 15:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=37RAusjL+qGthykpMCesacuiaMCcKpwrg3lD3kxifAk=;
-        b=JUEKsPHUgmCjr0HgasL53mJtqBRgJ8OQvlN0nZf1lVrjCVxaXahCnJ43EDCsWk0QPP
-         ZPuzuzr1RAwyAq/Wj3nAf7wo3HdRJotryxfd8gHLCCqU/ZpswrLBS+NtK92pn+lGxVJx
-         ADp7bb4oi3q9Oe3FKL7vxJOiyDMgXbXUTkJZVB84+72rwY4ir3+jzJLP1MWQRtq+YoiU
-         kYwmrSr6kP27Vs51lRoDdQ+wS3HkjghbIHADwLFp/vsZQStLLJvUlm9txZNheufDaAbs
-         FJl51WFkU9x7VZbD6LTVJC/mZON/cTXyavEH8XwfY3qur8mirLq9lAcUYDi8e1ct4Pjz
-         ZwAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=37RAusjL+qGthykpMCesacuiaMCcKpwrg3lD3kxifAk=;
-        b=RaIsxzUUhYX5ZO3KNrwl7gj+/QWQzUn8PjeJg7tE3SR1T9AtrXxdTjGa361ahzSyOm
-         X5Z9ffQpdGDNQstZHbnEf8qja7fH6mptJA2/f9cMSrYE2P4GlUqvPJtCfXAjHKu9o7f5
-         504ASelXv1LMj9LSQfHkyCXdpXyAweVyMSVZWXi29tR2opZDxQs9VxlWpVEuKwNGZSmT
-         vrPnscfLgowqj/F46Ltg/v6tFIyynYHMJ/WYqkvzeHoW0lPalpoaU8rx2DVhikQKmMev
-         rkMsbcYMdPV5mRSTMTmfr2TLcC/HCR/GL3vpc6OeYJL0DqTmWMXagsnABYHcCaxwQ0Pu
-         kyrw==
-X-Gm-Message-State: APjAAAVzJxfpWiBhgzLuN5AC/uKuHuZDeUFymf0FsZt3qus+M7fccroQ
-        qDB3OIIPd/KAkGb5icp68SPva826OhWF0jEd5UI=
-X-Google-Smtp-Source: APXvYqycrdEhwG/+QIgcgKhyojIzuTuig0nydYXTfFO3Af8ypOsYU9KA9Bsn3JISaWW1qLE+xXDlwr9u0rB1P1dJofM=
-X-Received: by 2002:a81:2343:: with SMTP id j64mr62386867ywj.224.1560809366147;
- Mon, 17 Jun 2019 15:09:26 -0700 (PDT)
+        id S1728024AbfFQWsT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 18:48:19 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:42742 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbfFQWsT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 18:48:19 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 769BE3DC8C8;
+        Tue, 18 Jun 2019 08:48:12 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hd0PC-0005cY-Ew; Tue, 18 Jun 2019 08:47:14 +1000
+Date:   Tue, 18 Jun 2019 08:47:14 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking (was: bcachefs status update) merged)
+Message-ID: <20190617224714.GR14363@dread.disaster.area>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+ <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
 MIME-Version: 1.0
-References: <e6968aa2-a5ad-4964-2966-589486e4a251@sandeen.net>
- <20190606195724.2975689-1-sheenobu@fb.com> <f89a09b5-8a91-51e0-d869-039dbe9a7349@sandeen.net>
- <20190606215008.GA14308@dread.disaster.area> <4a03b347-1a71-857d-af9d-1d7eca00056a@sandeen.net>
- <20190606223607.GE14308@dread.disaster.area>
-In-Reply-To: <20190606223607.GE14308@dread.disaster.area>
-From:   Sheena Artrip <sheena.artrip@gmail.com>
-Date:   Mon, 17 Jun 2019 15:09:15 -0700
-Message-ID: <CABeZSNkGoKhfV2-=CfqSPUsf9CxLNFP5vRa161M_LowfnJ8TzA@mail.gmail.com>
-Subject: Re: [PATCH v2] xfs_restore: detect rtinherit on destination
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Eric Sandeen <sandeen@sandeen.net>,
-        Sheena Artrip <sheenobu@fb.com>, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=Z4Rwk6OoAAAA:8 a=7-415B0cAAAA:8 a=yB7Y4sE8DmJNDpec8TgA:9
+        a=CjuIK1q_8ugA:10 a=HkZW87K1Qel5hWWM3VKY:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:37 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Thu, Jun 06, 2019 at 05:08:12PM -0500, Eric Sandeen wrote:
-> > On 6/6/19 4:50 PM, Dave Chinner wrote:
-> > > My take on this is that we need to decide which allocation policy to
-> > > use - the kernel policy or the dump file policy - in the different
-> > > situations. It's a simple, easy to document and understand solution.
-> > >
-> > > At minimum, if there's a mismatch between rtdev/non-rtdev between
-> > > dump and restore, then restore should not try to restore or clear rt
-> > > flags at all. i.e the rt flags in the dump image should be
-> > > considered invalid in this situation and masked out in the restore
-> > > process. This prevents errors from being reported during restore,
-> > > and it does "the right thing" according to how the user has
-> > > configured the destination directory. i.e.  if the destdir has the
-> > > rtinherit bit set and there's a rtdev present, the kernel policy
-> > > will cause all file data that is restored to be allocated on the
-> > > rtdev. Otherwise the kernel will place it (correctly) on the data
-> > > dev.
-> > >
-> > > In the case where both have rtdevs, but you want to restore to
-> > > ignore the dump file rtdev policy, we really only need to add a CLI
-> > > option to say "ignore rt flags" and that then allows the kernel
-> > > policy to dictate how the restored files are placed in the same way
-> > > that having a rtdev mismatch does.
-> > >
-> > > This is simple, consistent, fulfils the requirements and should have
-> > > no hidden surprises for users....
+On Fri, Jun 14, 2019 at 06:01:07PM -1000, Linus Torvalds wrote:
+> On Thu, Jun 13, 2019 at 5:08 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 > >
-> > Sounds reasonable.  So the CLI flag would say "ignore RT info in the
-> > dump, and write files according to the destination fs policy?"
-> > I think that makes sense.
+> > I do not believe that posix itself actually requires that at all,
+> > although extended standards may.
+> 
+> So I tried to see if I could find what this perhaps alludes to.
+> 
+> And I suspect it's not in the read/write thing, but the pthreads side
+> talks about atomicity.
+>
+> Interesting, but I doubt if that's actually really intentional, since
+> the non-thread read/write behavior specifically seems to avoid the
+> whole concurrency issue.
 
-Any suggested flag name/prefix for this? Last i checked all the single
-letters were taken up?
+The wording of posix changes every time they release a new version
+of the standard, and it's _never_ obvious what behaviour the
+standard is actually meant to define. They are always written with
+sufficient ambiguity and wiggle room that they could mean
+_anything_. The POSIX 2017.1 standard you quoted is quite different
+to older versions, but it's no less ambiguous...
 
-> *nod*
->
-> > Now: do we need to do the same for all inheritable flags?  projid,
-> > extsize, etc?  I think we probably do.
->
-> I disagree. These things are all supported on all destination
-> filesystems, unlike the rtdev. They are also things that can be
-> changed after the fact, unlike rtdev allocation policy. i.e. rtdev
-> has to be set /before/ restore, just about everything else can be
-> set or reset after the fact....
-> Cheers,
->
-> Dave.
-> --
-> Dave Chinner
-> david@fromorbit.com
+> The pthreads atomicity thing seems to be about not splitting up IO and
+> doing it in chunks when you have m:n threading models, but can be
+> (mis-)construed to have threads given higher atomicity guarantees than
+> processes.
+
+Right, but regardless of the spec we have to consider that the
+behaviour of XFS comes from it's Irix heritage (actually from EFS,
+the predecessor of XFS from the late 1980s). i.e. the IO exclusion
+model dates to long before POSIX had anything to say about pthreads,
+and it's wording about atomicity could only refer to to
+multi-process interactions.
+
+These days, however, is the unfortunate reality of a long tail of
+applications developed on other Unix systems under older POSIX
+specifications that are still being ported to and deployed on Linux.
+Hence the completely ambiguous behaviours defined in the older specs
+are still just as important these days as the completely ambiguous
+behaviours defined in the new specifications. :/
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
