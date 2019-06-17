@@ -2,150 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 056C848BDB
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 20:23:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 872ED494C9
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 00:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfFQSX4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 14:23:56 -0400
-Received: from sandeen.net ([63.231.237.45]:51058 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbfFQSX4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:23:56 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id E1A2048C727;
-        Mon, 17 Jun 2019 13:23:16 -0500 (CDT)
-Subject: Re: [PATCH] xfs_info: limit findmnt to find mounted xfs filesystems
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-References: <20190617095447.3748-1-amir73il@gmail.com>
- <20190617182226.GM3773859@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <2d751504-7ab7-fd59-d53d-6ba1f69df932@sandeen.net>
-Date:   Mon, 17 Jun 2019 13:23:54 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
+        id S1727633AbfFQWJ1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 18:09:27 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:42544 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbfFQWJ0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 18:09:26 -0400
+Received: by mail-yw1-f67.google.com with SMTP id s5so5787240ywd.9
+        for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2019 15:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=37RAusjL+qGthykpMCesacuiaMCcKpwrg3lD3kxifAk=;
+        b=JUEKsPHUgmCjr0HgasL53mJtqBRgJ8OQvlN0nZf1lVrjCVxaXahCnJ43EDCsWk0QPP
+         ZPuzuzr1RAwyAq/Wj3nAf7wo3HdRJotryxfd8gHLCCqU/ZpswrLBS+NtK92pn+lGxVJx
+         ADp7bb4oi3q9Oe3FKL7vxJOiyDMgXbXUTkJZVB84+72rwY4ir3+jzJLP1MWQRtq+YoiU
+         kYwmrSr6kP27Vs51lRoDdQ+wS3HkjghbIHADwLFp/vsZQStLLJvUlm9txZNheufDaAbs
+         FJl51WFkU9x7VZbD6LTVJC/mZON/cTXyavEH8XwfY3qur8mirLq9lAcUYDi8e1ct4Pjz
+         ZwAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=37RAusjL+qGthykpMCesacuiaMCcKpwrg3lD3kxifAk=;
+        b=RaIsxzUUhYX5ZO3KNrwl7gj+/QWQzUn8PjeJg7tE3SR1T9AtrXxdTjGa361ahzSyOm
+         X5Z9ffQpdGDNQstZHbnEf8qja7fH6mptJA2/f9cMSrYE2P4GlUqvPJtCfXAjHKu9o7f5
+         504ASelXv1LMj9LSQfHkyCXdpXyAweVyMSVZWXi29tR2opZDxQs9VxlWpVEuKwNGZSmT
+         vrPnscfLgowqj/F46Ltg/v6tFIyynYHMJ/WYqkvzeHoW0lPalpoaU8rx2DVhikQKmMev
+         rkMsbcYMdPV5mRSTMTmfr2TLcC/HCR/GL3vpc6OeYJL0DqTmWMXagsnABYHcCaxwQ0Pu
+         kyrw==
+X-Gm-Message-State: APjAAAVzJxfpWiBhgzLuN5AC/uKuHuZDeUFymf0FsZt3qus+M7fccroQ
+        qDB3OIIPd/KAkGb5icp68SPva826OhWF0jEd5UI=
+X-Google-Smtp-Source: APXvYqycrdEhwG/+QIgcgKhyojIzuTuig0nydYXTfFO3Af8ypOsYU9KA9Bsn3JISaWW1qLE+xXDlwr9u0rB1P1dJofM=
+X-Received: by 2002:a81:2343:: with SMTP id j64mr62386867ywj.224.1560809366147;
+ Mon, 17 Jun 2019 15:09:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190617182226.GM3773859@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <e6968aa2-a5ad-4964-2966-589486e4a251@sandeen.net>
+ <20190606195724.2975689-1-sheenobu@fb.com> <f89a09b5-8a91-51e0-d869-039dbe9a7349@sandeen.net>
+ <20190606215008.GA14308@dread.disaster.area> <4a03b347-1a71-857d-af9d-1d7eca00056a@sandeen.net>
+ <20190606223607.GE14308@dread.disaster.area>
+In-Reply-To: <20190606223607.GE14308@dread.disaster.area>
+From:   Sheena Artrip <sheena.artrip@gmail.com>
+Date:   Mon, 17 Jun 2019 15:09:15 -0700
+Message-ID: <CABeZSNkGoKhfV2-=CfqSPUsf9CxLNFP5vRa161M_LowfnJ8TzA@mail.gmail.com>
+Subject: Re: [PATCH v2] xfs_restore: detect rtinherit on destination
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Eric Sandeen <sandeen@sandeen.net>,
+        Sheena Artrip <sheenobu@fb.com>, linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Thu, Jun 6, 2019 at 3:37 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Thu, Jun 06, 2019 at 05:08:12PM -0500, Eric Sandeen wrote:
+> > On 6/6/19 4:50 PM, Dave Chinner wrote:
+> > > My take on this is that we need to decide which allocation policy to
+> > > use - the kernel policy or the dump file policy - in the different
+> > > situations. It's a simple, easy to document and understand solution.
+> > >
+> > > At minimum, if there's a mismatch between rtdev/non-rtdev between
+> > > dump and restore, then restore should not try to restore or clear rt
+> > > flags at all. i.e the rt flags in the dump image should be
+> > > considered invalid in this situation and masked out in the restore
+> > > process. This prevents errors from being reported during restore,
+> > > and it does "the right thing" according to how the user has
+> > > configured the destination directory. i.e.  if the destdir has the
+> > > rtinherit bit set and there's a rtdev present, the kernel policy
+> > > will cause all file data that is restored to be allocated on the
+> > > rtdev. Otherwise the kernel will place it (correctly) on the data
+> > > dev.
+> > >
+> > > In the case where both have rtdevs, but you want to restore to
+> > > ignore the dump file rtdev policy, we really only need to add a CLI
+> > > option to say "ignore rt flags" and that then allows the kernel
+> > > policy to dictate how the restored files are placed in the same way
+> > > that having a rtdev mismatch does.
+> > >
+> > > This is simple, consistent, fulfils the requirements and should have
+> > > no hidden surprises for users....
+> >
+> > Sounds reasonable.  So the CLI flag would say "ignore RT info in the
+> > dump, and write files according to the destination fs policy?"
+> > I think that makes sense.
 
+Any suggested flag name/prefix for this? Last i checked all the single
+letters were taken up?
 
-On 6/17/19 1:22 PM, Darrick J. Wong wrote:
-> On Mon, Jun 17, 2019 at 12:54:47PM +0300, Amir Goldstein wrote:
->> When running xfstests with -overlay, the xfs mount point
->> (a.k.a $OVL_BASE_SCRATCH_MNT) is used as the $SCRATCH_DEV argument
->> to the overlay mount, like this:
->>
->> /dev/vdf /vdf xfs rw,relatime,attr2,inode64,noquota 0 0
->> /vdf /vdf/ovl-mnt overlay rw,lowerdir=/vdf/lower,upperdir=/vdf/upper...
->>
->> Ever since commit bbb43745, when xfs_info started using findmnt,
->> when calling the helper `_supports_filetype /vdf` it returns false,
->> and reports: "/vdf/ovl-mnt: Not on a mounted XFS filesystem".
->>
->> Fix this ambiguity by preferring to query a mounted XFS filesystem,
->> if one can be found.
->>
->> Fixes: bbb43745 ("xfs_info: use findmnt to handle mounted block devices")
->> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> 
-> Looks good to me, so long as findmnt /has/ a -t option in, uh, whatever
-> enterprise distro(s) for which the xfsprogs maintainer might be a
-> stakeholder. :)
-
-:D
-
--t goes way back so this should be no problem.
-
-Thanks, Amir.
-
--Eric
-
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> --D
-> 
->> ---
->>
->> Eric,
->>
->> FYI, I don't *need* to fix xfs_info in order to fix xfstests
->> and I do plan to send an independent fix to xfstests, but this
->> seems like a correct fix regardless of the specific xfstests
->> regression.
->>
->> Thanks,
->> Amir.
->>
->>  spaceman/xfs_info.sh | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/spaceman/xfs_info.sh b/spaceman/xfs_info.sh
->> index 1bf6d2c3..3b10dc14 100755
->> --- a/spaceman/xfs_info.sh
->> +++ b/spaceman/xfs_info.sh
->> @@ -40,7 +40,7 @@ case $# in
->>  
->>  		# If we find a mountpoint for the device, do a live query;
->>  		# otherwise try reading the fs with xfs_db.
->> -		if mountpt="$(findmnt -f -n -o TARGET "${arg}" 2> /dev/null)"; then
->> +		if mountpt="$(findmnt -t xfs -f -n -o TARGET "${arg}" 2> /dev/null)"; then
->>  			xfs_spaceman -p xfs_info -c "info" $OPTS "${mountpt}"
->>  			status=$?
->>  		else
->> -- 
->> 2.17.1
->>
-> 
+> *nod*
+>
+> > Now: do we need to do the same for all inheritable flags?  projid,
+> > extsize, etc?  I think we probably do.
+>
+> I disagree. These things are all supported on all destination
+> filesystems, unlike the rtdev. They are also things that can be
+> changed after the fact, unlike rtdev allocation policy. i.e. rtdev
+> has to be set /before/ restore, just about everything else can be
+> set or reset after the fact....
+> Cheers,
+>
+> Dave.
+> --
+> Dave Chinner
+> david@fromorbit.com
