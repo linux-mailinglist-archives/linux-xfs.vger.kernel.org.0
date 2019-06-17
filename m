@@ -2,27 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0995748631
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 16:55:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20FC9488B8
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 18:19:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfFQOzq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 10:55:46 -0400
-Received: from sandeen.net ([63.231.237.45]:35654 "EHLO sandeen.net"
+        id S1726005AbfFQQTj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 12:19:39 -0400
+Received: from sandeen.net ([63.231.237.45]:41898 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfFQOzp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:55:45 -0400
+        id S1725863AbfFQQTj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:19:39 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id B7CE8170B40;
-        Mon, 17 Jun 2019 09:55:06 -0500 (CDT)
-Subject: Re: [PATCH 1/9] libxfs: break out the GETXATTR/SETXATTR manpage
+        by sandeen.net (Postfix) with ESMTPSA id C170E3289F5;
+        Mon, 17 Jun 2019 11:18:59 -0500 (CDT)
+Subject: Re: [PATCH 4/9] libxfs: link to the scrub ioctl from xfsctl.3
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
- <155993574662.2343530.11024375240678275350.stgit@magnolia>
- <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
- <20190615164332.GL3773859@magnolia>
+ <155993576618.2343530.17591105410246159765.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -67,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <d1930542-58e7-1709-3847-fe688b08d256@sandeen.net>
-Date:   Mon, 17 Jun 2019 09:55:44 -0500
+Message-ID: <52da2929-8ab7-7109-b16f-208fc676220d@sandeen.net>
+Date:   Mon, 17 Jun 2019 11:19:37 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190615164332.GL3773859@magnolia>
+In-Reply-To: <155993576618.2343530.17591105410246159765.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,40 +79,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/15/19 11:43 AM, Darrick J. Wong wrote:
-> On Fri, Jun 14, 2019 at 04:17:10PM -0500, Eric Sandeen wrote:
->> On 6/7/19 2:29 PM, Darrick J. Wong wrote:
->>> From: Darrick J. Wong <darrick.wong@oracle.com>
->>>
->>> Break out the xfs file attribute get and set ioctls into a separate
->>> manpage to reduce clutter in xfsctl.
->>
->> <comes up for air>
->>
->> Now that we've uh, hoisted it to be a generic vfs interface,
->> FS_IOC_FSGETXATTR, shouldn't we be documenting it as that instead
->> of the (old) xfs variant?
+On 6/7/19 2:29 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> No, first we document the old xfs ioctl, then we move the manpage over
-> to the main man-pages.git project as the vfs ioctl, and then we update
-> the xfsprogs manpage to say "Please refer to the VFS documentation but
-> in case your system doesn't have it, here you go..." :)
-
-I guess it's kind of a sad state of affairs that I'm not quite sure
-if this is serious.  :)
-
->>
->> (honestly that'd be mostly just search and replace for this patch)
->>
->> Except of course XFS_IOC_FSGETXATTRA has no vfs variant.  :/
->>
->> I also wonder if FS_IOC_SETFLAGS should be mentioned, and/or a
->> SEE_ALSO because some of the functionality overlaps?
+> Link to the scrub ioctl documentation from xfsctl.
 > 
-> Oh, wow, there's actually a manpage for it...
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+Seems like every reference to another man page should also be
+explicitly in the SEE ALSO section, no?
+
+(there must be a man page best practices manual somewhere, to be
+sure i'm not just making stuff up?)
+
+> ---
+>  man/man3/xfsctl.3 |    6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> ...bleh, it's the weekend, I'll respond to the rest later.
-
-ok thanks
-
--Eric
+> 
+> diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
+> index 94a6ad4b..cdf0fcfc 100644
+> --- a/man/man3/xfsctl.3
+> +++ b/man/man3/xfsctl.3
+> @@ -411,6 +411,12 @@ See
+>  .BR ioctl_xfs_fsbulkstat (2)
+>  for more information.
+>  
+> +.TP
+> +.B XFS_IOC_SCRUB_METADATA
+> +See
+> +.BR ioctl_xfs_scrub_metadata (2)
+> +for more information.
+> +
+>  .PP
+>  .nf
+>  .B XFS_IOC_THAW
+> 
