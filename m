@@ -2,109 +2,134 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8864F4956D
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 00:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D47534957E
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 00:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfFQWsT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 18:48:19 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:42742 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbfFQWsT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 18:48:19 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 769BE3DC8C8;
-        Tue, 18 Jun 2019 08:48:12 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hd0PC-0005cY-Ew; Tue, 18 Jun 2019 08:47:14 +1000
-Date:   Tue, 18 Jun 2019 08:47:14 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190617224714.GR14363@dread.disaster.area>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+        id S1726336AbfFQW4J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 18:56:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52518 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfFQW4J (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 18:56:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HMrfmb174388;
+        Mon, 17 Jun 2019 22:56:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=bp0DthaU0qP1/5FlopfdvMFAbtxN0qeSNZzMsnOmG84=;
+ b=LV+ysZWyceE+dr2xFHuxm72TtfGvsAEz+CzGgmrmc2/12ujJeGZ3UotQVmcL4ycLsfkn
+ rOB5TERiuTNMbVHQW5UnwEYPk/NN2j/b22sSpSWHeagB8W9fsz9zo5oKxujWh96/yr9/
+ WKZkb+CZPfgeSooEsg/sPjK6rG1e9lInyvY7QN9LEBO1KEC/K5LtkIJXXI9qCOhq43kA
+ MqxGftO6JIJQ8I9m9NpcmJYORSAx4b/+r+5S7O+KRKl0tHOJQZXbQiZBbohw6JMq5vsV
+ kKZwRVMlL2TKDUOMSOYnwpOk8PorFcRj4N9loiGyh4YexJBxzZB1tdPBAm13yinmX488 sQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t4saq907u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 22:56:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HMtAKP189276;
+        Mon, 17 Jun 2019 22:56:01 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t5cpdq9ce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 22:56:01 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HMtxfj007694;
+        Mon, 17 Jun 2019 22:56:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 22:55:59 +0000
+Date:   Mon, 17 Jun 2019 15:55:58 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Sheena Artrip <sheena.artrip@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Sheena Artrip <sheenobu@fb.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs_restore: detect rtinherit on destination
+Message-ID: <20190617225558.GN3773859@magnolia>
+References: <e6968aa2-a5ad-4964-2966-589486e4a251@sandeen.net>
+ <20190606195724.2975689-1-sheenobu@fb.com>
+ <f89a09b5-8a91-51e0-d869-039dbe9a7349@sandeen.net>
+ <20190606215008.GA14308@dread.disaster.area>
+ <4a03b347-1a71-857d-af9d-1d7eca00056a@sandeen.net>
+ <20190606223607.GE14308@dread.disaster.area>
+ <CABeZSNkGoKhfV2-=CfqSPUsf9CxLNFP5vRa161M_LowfnJ8TzA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=Z4Rwk6OoAAAA:8 a=7-415B0cAAAA:8 a=yB7Y4sE8DmJNDpec8TgA:9
-        a=CjuIK1q_8ugA:10 a=HkZW87K1Qel5hWWM3VKY:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <CABeZSNkGoKhfV2-=CfqSPUsf9CxLNFP5vRa161M_LowfnJ8TzA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=861
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170197
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=911 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170198
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:01:07PM -1000, Linus Torvalds wrote:
-> On Thu, Jun 13, 2019 at 5:08 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
+On Mon, Jun 17, 2019 at 03:09:15PM -0700, Sheena Artrip wrote:
+> On Thu, Jun 6, 2019 at 3:37 PM Dave Chinner <david@fromorbit.com> wrote:
 > >
-> > I do not believe that posix itself actually requires that at all,
-> > although extended standards may.
+> > On Thu, Jun 06, 2019 at 05:08:12PM -0500, Eric Sandeen wrote:
+> > > On 6/6/19 4:50 PM, Dave Chinner wrote:
+> > > > My take on this is that we need to decide which allocation policy to
+> > > > use - the kernel policy or the dump file policy - in the different
+> > > > situations. It's a simple, easy to document and understand solution.
+> > > >
+> > > > At minimum, if there's a mismatch between rtdev/non-rtdev between
+> > > > dump and restore, then restore should not try to restore or clear rt
+> > > > flags at all. i.e the rt flags in the dump image should be
+> > > > considered invalid in this situation and masked out in the restore
+> > > > process. This prevents errors from being reported during restore,
+> > > > and it does "the right thing" according to how the user has
+> > > > configured the destination directory. i.e.  if the destdir has the
+> > > > rtinherit bit set and there's a rtdev present, the kernel policy
+> > > > will cause all file data that is restored to be allocated on the
+> > > > rtdev. Otherwise the kernel will place it (correctly) on the data
+> > > > dev.
+> > > >
+> > > > In the case where both have rtdevs, but you want to restore to
+> > > > ignore the dump file rtdev policy, we really only need to add a CLI
+> > > > option to say "ignore rt flags" and that then allows the kernel
+> > > > policy to dictate how the restored files are placed in the same way
+> > > > that having a rtdev mismatch does.
+> > > >
+> > > > This is simple, consistent, fulfils the requirements and should have
+> > > > no hidden surprises for users....
+> > >
+> > > Sounds reasonable.  So the CLI flag would say "ignore RT info in the
+> > > dump, and write files according to the destination fs policy?"
+> > > I think that makes sense.
 > 
-> So I tried to see if I could find what this perhaps alludes to.
-> 
-> And I suspect it's not in the read/write thing, but the pthreads side
-> talks about atomicity.
->
-> Interesting, but I doubt if that's actually really intentional, since
-> the non-thread read/write behavior specifically seems to avoid the
-> whole concurrency issue.
+> Any suggested flag name/prefix for this? Last i checked all the single
+> letters were taken up?
 
-The wording of posix changes every time they release a new version
-of the standard, and it's _never_ obvious what behaviour the
-standard is actually meant to define. They are always written with
-sufficient ambiguity and wiggle room that they could mean
-_anything_. The POSIX 2017.1 standard you quoted is quite different
-to older versions, but it's no less ambiguous...
+I suggest --preserve-xflags=<same letters as xfs_io lsattr command>
 
-> The pthreads atomicity thing seems to be about not splitting up IO and
-> doing it in chunks when you have m:n threading models, but can be
-> (mis-)construed to have threads given higher atomicity guarantees than
-> processes.
+--D
 
-Right, but regardless of the spec we have to consider that the
-behaviour of XFS comes from it's Irix heritage (actually from EFS,
-the predecessor of XFS from the late 1980s). i.e. the IO exclusion
-model dates to long before POSIX had anything to say about pthreads,
-and it's wording about atomicity could only refer to to
-multi-process interactions.
-
-These days, however, is the unfortunate reality of a long tail of
-applications developed on other Unix systems under older POSIX
-specifications that are still being ported to and deployed on Linux.
-Hence the completely ambiguous behaviours defined in the older specs
-are still just as important these days as the completely ambiguous
-behaviours defined in the new specifications. :/
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> > *nod*
+> >
+> > > Now: do we need to do the same for all inheritable flags?  projid,
+> > > extsize, etc?  I think we probably do.
+> >
+> > I disagree. These things are all supported on all destination
+> > filesystems, unlike the rtdev. They are also things that can be
+> > changed after the fact, unlike rtdev allocation policy. i.e. rtdev
+> > has to be set /before/ restore, just about everything else can be
+> > set or reset after the fact....
+> > Cheers,
+> >
+> > Dave.
+> > --
+> > Dave Chinner
+> > david@fromorbit.com
