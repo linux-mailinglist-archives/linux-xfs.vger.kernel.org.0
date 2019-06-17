@@ -2,23 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7B2E48624
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 16:54:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0995748631
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 16:55:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfFQOy2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 10:54:28 -0400
-Received: from sandeen.net ([63.231.237.45]:35532 "EHLO sandeen.net"
+        id S1726065AbfFQOzq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 10:55:46 -0400
+Received: from sandeen.net ([63.231.237.45]:35654 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbfFQOy2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:54:28 -0400
-Received: from Liberator-6.local (liberator [10.0.0.4])
+        id S1726028AbfFQOzp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 17 Jun 2019 10:55:45 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id E2AB117271;
-        Mon, 17 Jun 2019 09:53:48 -0500 (CDT)
-Subject: Re: xfs_db sigsegv, xfs.org wiki and misc
-To:     grin <lxfs@drop.grin.hu>, linux-xfs@vger.kernel.org
-References: <20190617140924.7db29e91@narya.grin.hu>
+        by sandeen.net (Postfix) with ESMTPSA id B7CE8170B40;
+        Mon, 17 Jun 2019 09:55:06 -0500 (CDT)
+Subject: Re: [PATCH 1/9] libxfs: break out the GETXATTR/SETXATTR manpage
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
+ <155993574662.2343530.11024375240678275350.stgit@magnolia>
+ <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
+ <20190615164332.GL3773859@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -63,62 +67,54 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <c5193452-a2a3-703b-764a-6993096f3a81@sandeen.net>
-Date:   Mon, 17 Jun 2019 09:54:26 -0500
+Message-ID: <d1930542-58e7-1709-3847-fe688b08d256@sandeen.net>
+Date:   Mon, 17 Jun 2019 09:55:44 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190617140924.7db29e91@narya.grin.hu>
+In-Reply-To: <20190615164332.GL3773859@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/17/19 7:09 AM, grin wrote:
-> Hello,
+On 6/15/19 11:43 AM, Darrick J. Wong wrote:
+> On Fri, Jun 14, 2019 at 04:17:10PM -0500, Eric Sandeen wrote:
+>> On 6/7/19 2:29 PM, Darrick J. Wong wrote:
+>>> From: Darrick J. Wong <darrick.wong@oracle.com>
+>>>
+>>> Break out the xfs file attribute get and set ioctls into a separate
+>>> manpage to reduce clutter in xfsctl.
+>>
+>> <comes up for air>
+>>
+>> Now that we've uh, hoisted it to be a generic vfs interface,
+>> FS_IOC_FSGETXATTR, shouldn't we be documenting it as that instead
+>> of the (old) xfs variant?
 > 
-> I haven't checked XFS project lately, and that's a decade or so, it
-> means that when I have met a bug I went out and tried to see where and
-> how to report. Just mentioning the following, since you may not be
-> aware from the inside:
+> No, first we document the old xfs ioctl, then we move the manpage over
+> to the main man-pages.git project as the vfs ioctl, and then we update
+> the xfsprogs manpage to say "Please refer to the VFS documentation but
+> in case your system doesn't have it, here you go..." :)
+
+I guess it's kind of a sad state of affairs that I'm not quite sure
+if this is serious.  :)
+
+>>
+>> (honestly that'd be mostly just search and replace for this patch)
+>>
+>> Except of course XFS_IOC_FSGETXATTRA has no vfs variant.  :/
+>>
+>> I also wonder if FS_IOC_SETFLAGS should be mentioned, and/or a
+>> SEE_ALSO because some of the functionality overlaps?
 > 
-> The xfs.org seems to be the "main" xfs website, search gives it first,
-> and has a huge amount of informations. Problem is: most links point to
-> nonexistant pages (SGI links hijacked by HP main page), including those
-> mentioning documentation, development or suggest bug reporting. Only
-> two valid pointers are the #xfs on FreeNode and this mailing list. Some
-> mentioned https://xfs.wiki.kernel.org/ which is bacially impossible to 
-> find unless looking for it specifically, and it doesn't contain much
-> info anyway. So I can't see who to mention this to, maybe you know.
-
-yes sadly no xfs devs own xfs.org
-
-> Anyway. xfs_db SIGSEGV, v5.0, pretty reliably, on
->> inode <n>
->> type inode
->> print 
->  [...lots of output of the extents...]
->  crash
+> Oh, wow, there's actually a manpage for it...
 > 
-> I am not sure how it's handled: whether it's a very low level utility
-> and sigsegv is a way to show "you're doing something wrong", or rather
-> it is a bug and shall be fixed. If you would kindly tell me whether
-> I shall report it anywhere, send metadump, or anything, I would be much
-> happier (to know at least).
-> 
-> (At least one external tool tries to use it and it's bitten by the
-> crash.)
+> ...bleh, it's the weekend, I'll respond to the rest later.
 
-core + binary perhaps?  Or provide a gdb backtrace, or a metadump of the
-filesystem?  If you want to provide a metadump I'd suggest contacting me
-off list to do so.
+ok thanks
 
-Thanks,
 -Eric
-
-> Thanks,
-> g
-> 
