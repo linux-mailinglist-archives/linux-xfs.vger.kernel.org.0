@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DAE489CB
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 19:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 579F5489D0
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2019 19:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfFQRMo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 13:12:44 -0400
-Received: from sandeen.net ([63.231.237.45]:45784 "EHLO sandeen.net"
+        id S1726047AbfFQRPl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 13:15:41 -0400
+Received: from sandeen.net ([63.231.237.45]:46076 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQRMn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:12:43 -0400
+        id S1726005AbfFQRPl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:15:41 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7897048C735;
-        Mon, 17 Jun 2019 12:12:04 -0500 (CDT)
-Subject: Re: [PATCH 6/9] libxfs: break out FSCOUNTS manpage
+        by sandeen.net (Postfix) with ESMTPSA id 4086648C7A5;
+        Mon, 17 Jun 2019 12:15:02 -0500 (CDT)
+Subject: Re: [PATCH 7/9] libxfs: break out the RESBLKS manpage
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
- <155993577871.2343530.12457677945958502175.stgit@magnolia>
+ <155993578504.2343530.9106560408928916864.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <ed87e06d-b762-b6f8-d566-a49faee63b47@sandeen.net>
-Date:   Mon, 17 Jun 2019 12:12:42 -0500
+Message-ID: <8e9a0911-94b0-e18f-c7c3-1c2728443875@sandeen.net>
+Date:   Mon, 17 Jun 2019 12:15:40 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <155993577871.2343530.12457677945958502175.stgit@magnolia>
+In-Reply-To: <155993578504.2343530.9106560408928916864.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,81 +82,67 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/7/19 2:29 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a separate manual page for the FSCOUNTS ioctl so we can document
-> how it works.
+> Create a separate manual page for the RESBLKS ioctls so we can document
+> how they work.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  man/man2/ioctl_xfs_fscounts.2 |   67 +++++++++++++++++++++++++++++++++++++++++
->  man/man3/xfsctl.3             |   14 +++++----
->  2 files changed, 75 insertions(+), 6 deletions(-)
->  create mode 100644 man/man2/ioctl_xfs_fscounts.2
+>  man/man2/ioctl_xfs_getresblks.2 |   65 +++++++++++++++++++++++++++++++++++++++
+>  man/man3/xfsctl.3               |   14 +++++++-
+>  2 files changed, 77 insertions(+), 2 deletions(-)
+>  create mode 100644 man/man2/ioctl_xfs_getresblks.2
 > 
 > 
-> diff --git a/man/man2/ioctl_xfs_fscounts.2 b/man/man2/ioctl_xfs_fscounts.2
+> diff --git a/man/man2/ioctl_xfs_getresblks.2 b/man/man2/ioctl_xfs_getresblks.2
 > new file mode 100644
-> index 00000000..44b214a1
+> index 00000000..57533927
 > --- /dev/null
-> +++ b/man/man2/ioctl_xfs_fscounts.2
-> @@ -0,0 +1,67 @@
+> +++ b/man/man2/ioctl_xfs_getresblks.2
+> @@ -0,0 +1,65 @@
 > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > +.\"
 > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > +.\" SPDX-License-Identifier: GPL-2.0+
 > +.\" %%%LICENSE_END
-> +.TH IOCTL-XFS-FSCOUNTS 2 2019-04-16 "XFS"
+> +.TH IOCTL-XFS-GETRESBLKS 2 2019-04-16 "XFS"
 > +.SH NAME
-> +ioctl_xfs_fscounts \- query XFS summary counter information
+> +ioctl_xfs_getresblks \- query XFS summary counter information
 > +.SH SYNOPSIS
 > +.br
 > +.B #include <xfs/xfs_fs.h>
 > +.PP
-> +.BI "int ioctl(int " fd ", XFS_IOC_FSCOUNTS, struct xfs_fsop_counts *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_GET_RESBLKS, struct xfs_fsop_resblks *" arg );
+> +.PP
+> +.BI "int ioctl(int " fd ", XFS_IOC_SET_RESBLKS, struct xfs_fsop_resblks *" arg );
 > +.SH DESCRIPTION
-> +Query the raw filesystem summary counters.
-> +Unlike
-> +.BR statvfs (3),
-> +the values returned here are the raw values, which do not reflect any
-> +alterations or limits set by quotas.
+> +Query or set the free space reservation information.
+> +These blocks are reserved by the filesystem as a last-ditch attempt to prevent
 
-it's altered by /project/ quotas specifically, right?  Should that be
-made clear?  Or is it more than just project?
+last-ditch is a bit colloquial and possibly not fun for translators?
 
-> +The counter information is conveyed in a structure of the following form:
+s/a last-ditch/an/
+
+> +metadata update failures due to insufficient space.
+> +Only the system administrator can call these ioctls, because overriding the
+> +defaults is extremely dangerous and should never be tried by anyone.
+> +.PP
+> +The reservation information is conveyed in a structure of the following form:
 > +.PP
 > +.in +4n
 > +.nf
-> +struct xfs_fscounts {
-
-xfs_fsop_counts?
-
-(this is the second time there's a misnamed structure (I think?)
-so I feel like double checking them all is in order unless i'm
-missing something?)
-
-> +	__u64   freedata;
-> +	__u64   freertx;
-> +	__u64   freeino;
-> +	__u64   allocino;
+> +struct xfs_fsop_resblks {
+> +	__u64  resblks;
+> +	__u64  resblks_avail;
 > +};
 > +.fi
 > +.in
 > +.PP
-> +.I freedata
-> +is the number of free filesystem blocks on the data device.
+> +.I resblks
+> +is the number of blocks that the filesystem will try to maintain to prevent
+> +critical out of space situations.
 > +.PP
-> +.I freertx
-> +is the number of free xtents on the realtime device.
-
-extents
-
-> +.PP
-> +.I freeino
-> +is the number of inode records that are not in use within the space that has
-> +been allocated for them.
-> +.PP
-> +.I allocino
-> +is the number of inode records for which space has been allocated.
+> +.I resblks_avail
+> +is the number of reserved blocks remaining.
 > +.SH RETURN VALUE
 > +On error, \-1 is returned, and
 > +.I errno
@@ -176,50 +162,46 @@ extents
 > +.TP
 > +.B EIO
 > +An I/O error was encountered while performing the query.
+> +.TP
+> +.B EPERM
+> +Caller does not have permission to call this ioctl.
 > +.SH CONFORMING TO
 > +This API is specific to XFS filesystem on the Linux kernel.
 > +.SH SEE ALSO
 > +.BR ioctl (2)
 > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index 148119a9..007f7d58 100644
+> index 007f7d58..25e51417 100644
 > --- a/man/man3/xfsctl.3
 > +++ b/man/man3/xfsctl.3
-> @@ -390,6 +390,12 @@ See
->  .BR ioctl_xfs_scrub_metadata (2)
+> @@ -396,12 +396,21 @@ See
+>  .BR ioctl_xfs_fscounts (2)
 >  for more information.
 >  
 > +.TP
-> +.B XFS_IOC_FSCOUNTS
+> +.nf
+> +.B XFS_IOC_GET_RESBLKS
+> +.fi
+> +.TP
+> +.B XFS_IOC_SET_RESBLKS
 > +See
-> +.BR ioctl_xfs_fscounts (2)
+> +.BR ioctl_xfs_getresblks (2)
 > +for more information.
+> +Save yourself a lot of frustration and avoid these ioctls.
 > +
 >  .PP
 >  .nf
 >  .B XFS_IOC_THAW
-> @@ -398,16 +404,11 @@ for more information.
->  .B XFS_IOC_SET_RESBLKS
+>  .B XFS_IOC_FREEZE
+> -.B XFS_IOC_GET_RESBLKS
+> -.B XFS_IOC_SET_RESBLKS
 >  .B XFS_IOC_FSGROWFSDATA
 >  .B XFS_IOC_FSGROWFSLOG
-> -.B XFS_IOC_FSGROWFSRT
 >  .fi
->  .TP
-> -.B XFS_IOC_FSCOUNTS
-> +.B XFS_IOC_FSGROWFSRT
->  These interfaces are used to implement various filesystem internal
->  operations on XFS filesystems.
-> -For
-> -.B XFS_FS_COUNTS
-> -(get filesystem dynamic global information), the output structure is of type
-> -.BR xfs_fsop_counts_t .
->  The remainder of these operations will not be described further
->  as they are not of general use to applications.
->  
-> @@ -416,6 +417,7 @@ as they are not of general use to applications.
->  .BR ioctl_xfs_fsop_geometry (2),
+> @@ -418,6 +427,7 @@ as they are not of general use to applications.
 >  .BR ioctl_xfs_fsbulkstat (2),
 >  .BR ioctl_xfs_fsinumbers (2),
-> +.BR ioctl_xfs_fscounts (2),
+>  .BR ioctl_xfs_fscounts (2),
+> +.BR ioctl_xfs_getresblks (2),
 >  .BR fstatfs (2),
 >  .BR statfs (2),
 >  .BR xfs (5),
