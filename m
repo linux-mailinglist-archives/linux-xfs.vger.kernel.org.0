@@ -2,138 +2,391 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8D6495AC
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 01:08:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866B0495DB
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 01:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfFQXIr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jun 2019 19:08:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44720 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfFQXIq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 19:08:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HN4QtW171591;
-        Mon, 17 Jun 2019 23:08:41 GMT
+        id S1727903AbfFQX17 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jun 2019 19:27:59 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37686 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFQX16 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jun 2019 19:27:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HNOEEm100673;
+        Mon, 17 Jun 2019 23:27:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=9VTuoWDoy9Gx15TCZaMxAcoyDgR8w6fhkZ3WxNQyaqQ=;
- b=1JgphGjpyH1WwJhb6Thho6yETi4wmxPdb0Kfk8T3hrLlAUmCY92PgY7rvi8995oEVitd
- vEzf8RfE4Vz5aR5GQ2NWKVioxVuMo7XcBIN4j2SE+zjOeP7j+zYIE57xNWKJpkjbW57p
- w9KtPx/x6etc702McvT4AyFz3Jv5dKfVHWpJAM4ZoWklLiI8YSfDayh+tHuQqR8q8rEn
- dWMfvT985z9jkRD31p+fTXMa8y7LCuI3qdKW0kT5MrjRTc38SbWI/OFtTgAqY5nhCmJz
- Q+jbuVEo1wfmSqkarDlwR/ZzNdmZs4Tl7FUTyzuaTc43h6/WHWC75hVWNmbt+oZD3q06 AQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t4r3th4mg-1
+ bh=yhiDniULoM6L6m0QptO3yKAGjY6LAPvF3g7FczrWRt8=;
+ b=p9fZ2eFxniSGQmYIQ2rirKGoDvEgH9c2UCVfqnohfXB5hcs0qpR6wtWO99BOsuAc4Hqr
+ 4dzip7LeCuKAimz778R4EkPxsnzKmojrECeOYWzVXNRJUaRjVMzD8J62DykmeQabCkLL
+ hCHYZorHwoZqG2h27kX0kkCQuaXCgB+/G1Ww01fWmLxolq1FsBvd89b7+2cz2cI4JaZb
+ gqayPZqyNFFqvZud0jEs2AcBR7WGjbMWYsuhAlxipqx83rUN4Y5tBHaIbeVnjVvwTsJw
+ aYvC+zYXHZlSehJxuGEOc24LWu6SlUpdeIzhX/YmqLqnz9nqntUXT9WtuI6gZ28xJtYt GQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp145r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 23:08:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HN7vkE146684;
-        Mon, 17 Jun 2019 23:08:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2t5h5tdec0-1
+        Mon, 17 Jun 2019 23:27:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HNQTWM129299;
+        Mon, 17 Jun 2019 23:27:53 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2t5mgbmkg7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 23:08:40 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HN8aOj022272;
-        Mon, 17 Jun 2019 23:08:37 GMT
+        Mon, 17 Jun 2019 23:27:52 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5HNRq2a009949;
+        Mon, 17 Jun 2019 23:27:52 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Jun 2019 16:08:36 -0700
-Date:   Mon, 17 Jun 2019 16:08:35 -0700
+        with ESMTP ; Mon, 17 Jun 2019 16:27:52 -0700
+Date:   Mon, 17 Jun 2019 16:27:51 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 05/24] xfs: remove the l_iclog_size_log field from strut
- xlog
-Message-ID: <20190617230835.GO3773859@magnolia>
+Subject: Re: [PATCH 16/24] xfs: use bios directly to write log buffers
+Message-ID: <20190617232751.GP3773859@magnolia>
 References: <20190605191511.32695-1-hch@lst.de>
- <20190605191511.32695-6-hch@lst.de>
+ <20190605191511.32695-17-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605191511.32695-6-hch@lst.de>
+In-Reply-To: <20190605191511.32695-17-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906170200
+ engine=8.0.1-1810050000 definitions=main-1906170202
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906170199
+ definitions=main-1906170202
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 09:14:52PM +0200, Christoph Hellwig wrote:
-> This field is never used, so we can simply kill it.
-
-s/strut xlog/struct xlog/ in the subject; will fix it in the series if I
-end up pulling it in...
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-
+On Wed, Jun 05, 2019 at 09:15:03PM +0200, Christoph Hellwig wrote:
+> Currently the XFS logging code uses the xfs_buf structure and
+> associated APIs to write the log buffers to disk.  This requires
+> various special cases in the log code and is generally not very
+> optimal.
+> 
+> Instead of using a buffer just allocate a kmem_alloc_larger region for
+> each log buffer, and use a bio and bio_vec array embedded in the iclog
+> structure to write the buffer to disk.  This also allows for using
+> the bio split and chaining case to deal with the case of a log
+> buffer wrapping around the end of the log.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_log.c      | 9 ---------
->  fs/xfs/xfs_log_priv.h | 1 -
->  2 files changed, 10 deletions(-)
+>  fs/xfs/xfs_log.c      | 231 ++++++++++++++++++++----------------------
+>  fs/xfs/xfs_log_priv.h |  18 ++--
+>  2 files changed, 119 insertions(+), 130 deletions(-)
 > 
 > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index a2048e46be4e..8033b64092bb 100644
+> index 452d03898fd0..0a8a43d77385 100644
 > --- a/fs/xfs/xfs_log.c
 > +++ b/fs/xfs/xfs_log.c
-> @@ -1307,7 +1307,6 @@ xlog_get_iclog_buffer_size(
->  	struct xfs_mount	*mp,
->  	struct xlog		*log)
+> @@ -1239,32 +1239,30 @@ xlog_space_left(
+>  }
+>  
+>  
+> -/*
+> - * Log function which is called when an io completes.
+> - *
+> - * The log manager needs its own routine, in order to control what
+> - * happens with the buffer after the write completes.
+> - */
+>  static void
+> -xlog_iodone(xfs_buf_t *bp)
+> +xlog_ioend_work(
+> +	struct work_struct	*work)
 >  {
-> -	int size;
->  	int xhdrs;
+> -	struct xlog_in_core	*iclog = bp->b_log_item;
+> -	struct xlog		*l = iclog->ic_log;
+> +	struct xlog_in_core     *iclog =
+> +		container_of(work, struct xlog_in_core, ic_end_io_work);
+> +	struct xlog		*log = iclog->ic_log;
+>  	int			aborted = 0;
+> +	int			error;
 >  
->  	if (mp->m_logbufs <= 0)
-> @@ -1319,13 +1318,6 @@ xlog_get_iclog_buffer_size(
->  	 * Buffer size passed in from mount system call.
+>  #ifdef DEBUG
+>  	/* treat writes with injected CRC errors as failed */
+>  	if (iclog->ic_fail_crc)
+> -		bp->b_error = -EIO;
+> +		error = -EIO;
+> +	else
+>  #endif
+> +		error = blk_status_to_errno(iclog->ic_bio.bi_status);
+
+Ugh, I don't really like this awkwardly split else/#endif construction
+here.  Can we simply do:
+
+error = blk_status_to_errno(iclog->ic_bio.bi_status);
+
+#ifdef DEBUG
+if (iclog->ic_fail_crc)
+	error = -EIO;
+#endif
+
+instead?
+
+>  
+>  	/*
+>  	 * Race to shutdown the filesystem if we see an error.
 >  	 */
->  	if (mp->m_logbsize > 0) {
-> -		size = log->l_iclog_size = mp->m_logbsize;
-> -		log->l_iclog_size_log = 0;
-> -		while (size != 1) {
-> -			log->l_iclog_size_log++;
-> -			size >>= 1;
-> -		}
+> -	if (XFS_TEST_ERROR(bp->b_error, l->l_mp, XFS_ERRTAG_IODONE_IOERR)) {
+> -		xfs_buf_ioerror_alert(bp, __func__);
+> -		xfs_buf_stale(bp);
+> -		xfs_force_shutdown(l->l_mp, SHUTDOWN_LOG_IO_ERROR);
+> +	if (XFS_TEST_ERROR(error, log->l_mp, XFS_ERRTAG_IODONE_IOERR)) {
+> +		xfs_alert(log->l_mp, "log I/O error %d", error);
+> +		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
+>  		/*
+>  		 * This flag will be propagated to the trans-committed
+>  		 * callback routines to let them know that the log-commit
+
+<snip>
+
+> @@ -1747,21 +1731,52 @@ xlog_write_iclog(
+>  	 * tearing down the iclogbufs.  Hence we need to hold the buffer lock
+>  	 * across the log IO to archieve that.
+>  	 */
+> -	xfs_buf_lock(bp);
+> +	down(&iclog->ic_sema);
+>  	if (unlikely(iclog->ic_state & XLOG_STATE_IOERROR)) {
+> -		xfs_buf_ioerror(bp, -EIO);
+> -		xfs_buf_stale(bp);
+> -		xfs_buf_ioend(bp);
+>  		/*
+>  		 * It would seem logical to return EIO here, but we rely on
+>  		 * the log state machine to propagate I/O errors instead of
+> -		 * doing it here. Similarly, IO completion will unlock the
+> -		 * buffer, so we don't do it here.
+> +		 * doing it here.  We kick of the state machine and unlock
+> +		 * the buffer manually, the code needs to be kept in sync
+> +		 * with the I/O completion path.
+>  		 */
+> +		xlog_state_done_syncing(iclog, XFS_LI_ABORTED);
+> +		up(&iclog->ic_sema);
+>  		return;
+>  	}
+>  
+> -	xfs_buf_submit(bp);
+> +	iclog->ic_io_size = count;
+> +
+> +	bio_init(&iclog->ic_bio, iclog->ic_bvec, howmany(count, PAGE_SIZE));
+> +	bio_set_dev(&iclog->ic_bio, log->l_targ->bt_bdev);
+> +	iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart + bno;
+> +	iclog->ic_bio.bi_end_io = xlog_bio_end_io;
+> +	iclog->ic_bio.bi_private = iclog;
+> +	iclog->ic_bio.bi_opf = REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_FUA;
+> +	if (need_flush)
+> +		iclog->ic_bio.bi_opf |= REQ_PREFLUSH;
+> +
+> +	xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, iclog->ic_io_size);
+
+/me is surprised you got all the way through that without making a
+convenience variable, but I guess none of the lines overflow.
+
+--D
+
+> +	if (is_vmalloc_addr(iclog->ic_data))
+> +		flush_kernel_vmap_range(iclog->ic_data, iclog->ic_io_size);
+> +
+> +	/*
+> +	 * If this log buffer would straddle the end of the log we will have
+> +	 * to split it up into two bios, so that we can continue at the start.
+> +	 */
+> +	if (bno + BTOBB(count) > log->l_logBBsize) {
+> +		struct bio *split;
+> +
+> +		split = bio_split(&iclog->ic_bio, log->l_logBBsize - bno,
+> +				  GFP_NOIO, &fs_bio_set);
+> +		bio_chain(split, &iclog->ic_bio);
+> +		submit_bio(split);
+> +
+> +		/* restart at logical offset zero for the remainder */
+> +		iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart;
+> +	}
+> +
+> +	submit_bio(&iclog->ic_bio);
+>  }
+>  
+>  /*
+> @@ -1769,7 +1784,7 @@ xlog_write_iclog(
+>   * written to the start of the log. Watch out for the header magic
+>   * number case, though.
+>   */
+> -static unsigned int
+> +static void
+>  xlog_split_iclog(
+>  	struct xlog		*log,
+>  	void			*data,
+> @@ -1786,8 +1801,6 @@ xlog_split_iclog(
+>  			cycle++;
+>  		put_unaligned_be32(cycle, data + i);
+>  	}
 > -
->  		if (xfs_sb_version_haslogv2(&mp->m_sb)) {
->  			/* # headers = size / 32k
->  			 * one header holds cycles from 32k of data
-> @@ -1346,7 +1338,6 @@ xlog_get_iclog_buffer_size(
+> -	return split_offset;
+>  }
 >  
->  	/* All machines use 32kB buffers by default. */
->  	log->l_iclog_size = XLOG_BIG_RECORD_BSIZE;
-> -	log->l_iclog_size_log = XLOG_BIG_RECORD_BSHIFT;
+>  static int
+> @@ -1854,9 +1867,8 @@ xlog_sync(
+>  	unsigned int		count;		/* byte count of bwrite */
+>  	unsigned int		roundoff;       /* roundoff to BB or stripe */
+>  	uint64_t		bno;
+> -	unsigned int		split = 0;
+>  	unsigned int		size;
+> -	bool			need_flush = true;
+> +	bool			need_flush = true, split = false;
 >  
->  	/* the default log size is 16k or 32k which is one header sector */
->  	log->l_iclog_hsize = BBSIZE;
+>  	ASSERT(atomic_read(&iclog->ic_refcnt) == 0);
+>  
+> @@ -1881,8 +1893,10 @@ xlog_sync(
+>  	bno = BLOCK_LSN(be64_to_cpu(iclog->ic_header.h_lsn));
+>  
+>  	/* Do we need to split this write into 2 parts? */
+> -	if (bno + BTOBB(count) > log->l_logBBsize)
+> -		split = xlog_split_iclog(log, &iclog->ic_header, bno, count);
+> +	if (bno + BTOBB(count) > log->l_logBBsize) {
+> +		xlog_split_iclog(log, &iclog->ic_header, bno, count);
+> +		split = true;
+> +	}
+>  
+>  	/* calculcate the checksum */
+>  	iclog->ic_header.h_crc = xlog_cksum(log, &iclog->ic_header,
+> @@ -1917,18 +1931,8 @@ xlog_sync(
+>  		need_flush = false;
+>  	}
+>  
+> -	iclog->ic_bp->b_io_length = BTOBB(split ? split : count);
+> -	iclog->ic_bwritecnt = split ? 2 : 1;
+> -
+>  	xlog_verify_iclog(log, iclog, count);
+> -	xlog_write_iclog(log, iclog, iclog->ic_bp, bno, need_flush);
+> -
+> -	if (split) {
+> -		xfs_buf_associate_memory(iclog->ic_log->l_xbuf,
+> -				(char *)&iclog->ic_header + split,
+> -				count - split);
+> -		xlog_write_iclog(log, iclog, iclog->ic_log->l_xbuf, 0, false);
+> -	}
+> +	xlog_write_iclog(log, iclog, bno, count, need_flush);
+>  }
+>  
+>  /*
+> @@ -1949,25 +1953,15 @@ xlog_dealloc_log(
+>  	 */
+>  	iclog = log->l_iclog;
+>  	for (i = 0; i < log->l_iclog_bufs; i++) {
+> -		xfs_buf_lock(iclog->ic_bp);
+> -		xfs_buf_unlock(iclog->ic_bp);
+> +		down(&iclog->ic_sema);
+> +		up(&iclog->ic_sema);
+>  		iclog = iclog->ic_next;
+>  	}
+>  
+> -	/*
+> -	 * Always need to ensure that the extra buffer does not point to memory
+> -	 * owned by another log buffer before we free it. Also, cycle the lock
+> -	 * first to ensure we've completed IO on it.
+> -	 */
+> -	xfs_buf_lock(log->l_xbuf);
+> -	xfs_buf_unlock(log->l_xbuf);
+> -	xfs_buf_set_empty(log->l_xbuf, BTOBB(log->l_iclog_size));
+> -	xfs_buf_free(log->l_xbuf);
+> -
+>  	iclog = log->l_iclog;
+>  	for (i = 0; i < log->l_iclog_bufs; i++) {
+> -		xfs_buf_free(iclog->ic_bp);
+>  		next_iclog = iclog->ic_next;
+> +		kmem_free(iclog->ic_data);
+>  		kmem_free(iclog);
+>  		iclog = next_iclog;
+>  	}
+> @@ -2885,8 +2879,6 @@ xlog_state_done_syncing(
+>  	ASSERT(iclog->ic_state == XLOG_STATE_SYNCING ||
+>  	       iclog->ic_state == XLOG_STATE_IOERROR);
+>  	ASSERT(atomic_read(&iclog->ic_refcnt) == 0);
+> -	ASSERT(iclog->ic_bwritecnt == 1 || iclog->ic_bwritecnt == 2);
+> -
+>  
+>  	/*
+>  	 * If we got an error, either on the first buffer, or in the case of
+> @@ -2894,13 +2886,8 @@ xlog_state_done_syncing(
+>  	 * and none should ever be attempted to be written to disk
+>  	 * again.
+>  	 */
+> -	if (iclog->ic_state != XLOG_STATE_IOERROR) {
+> -		if (--iclog->ic_bwritecnt == 1) {
+> -			spin_unlock(&log->l_icloglock);
+> -			return;
+> -		}
+> +	if (iclog->ic_state != XLOG_STATE_IOERROR)
+>  		iclog->ic_state = XLOG_STATE_DONE_SYNC;
+> -	}
+>  
+>  	/*
+>  	 * Someone could be sleeping prior to writing out the next
 > diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-> index b5f82cb36202..78a2abeba895 100644
+> index ac4bca257609..b9c90abb09a2 100644
 > --- a/fs/xfs/xfs_log_priv.h
 > +++ b/fs/xfs/xfs_log_priv.h
-> @@ -361,7 +361,6 @@ struct xlog {
->  	int			l_iclog_heads;  /* # of iclog header sectors */
->  	uint			l_sectBBsize;   /* sector size in BBs (2^n) */
->  	int			l_iclog_size;	/* size of log in bytes */
-> -	int			l_iclog_size_log; /* log power size of log */
->  	int			l_iclog_bufs;	/* number of iclog buffers */
->  	xfs_daddr_t		l_logBBstart;   /* start block of log */
->  	int			l_logsize;      /* size of log in bytes */
+> @@ -178,11 +178,12 @@ typedef struct xlog_ticket {
+>   *	the iclog.
+>   * - ic_forcewait is used to implement synchronous forcing of the iclog to disk.
+>   * - ic_next is the pointer to the next iclog in the ring.
+> - * - ic_bp is a pointer to the buffer used to write this incore log to disk.
+>   * - ic_log is a pointer back to the global log structure.
+>   * - ic_callback is a linked list of callback function/argument pairs to be
+>   *	called after an iclog finishes writing.
+> - * - ic_size is the full size of the header plus data.
+> + * - ic_size is the full size of the log buffer, minus the cycle headers.
+> + * - ic_io_size is the size of the currently pending log buffer write, which
+> + *	might be smaller than ic_size
+>   * - ic_offset is the current number of bytes written to in this iclog.
+>   * - ic_refcnt is bumped when someone is writing to the log.
+>   * - ic_state is the state of the iclog.
+> @@ -205,11 +206,10 @@ typedef struct xlog_in_core {
+>  	wait_queue_head_t	ic_write_wait;
+>  	struct xlog_in_core	*ic_next;
+>  	struct xlog_in_core	*ic_prev;
+> -	struct xfs_buf		*ic_bp;
+>  	struct xlog		*ic_log;
+> -	int			ic_size;
+> -	int			ic_offset;
+> -	int			ic_bwritecnt;
+> +	u32			ic_size;
+> +	u32			ic_io_size;
+> +	u32			ic_offset;
+>  	unsigned short		ic_state;
+>  	char			*ic_datap;	/* pointer to iclog data */
+>  
+> @@ -225,6 +225,10 @@ typedef struct xlog_in_core {
+>  #ifdef DEBUG
+>  	bool			ic_fail_crc : 1;
+>  #endif
+> +	struct semaphore	ic_sema;
+> +	struct work_struct	ic_end_io_work;
+> +	struct bio		ic_bio;
+> +	struct bio_vec		ic_bvec[];
+>  } xlog_in_core_t;
+>  
+>  /*
+> @@ -352,8 +356,6 @@ struct xlog {
+>  	struct xfs_mount	*l_mp;	        /* mount point */
+>  	struct xfs_ail		*l_ailp;	/* AIL log is working with */
+>  	struct xfs_cil		*l_cilp;	/* CIL log is working with */
+> -	struct xfs_buf		*l_xbuf;        /* extra buffer for log
+> -						 * wrapping */
+>  	struct xfs_buftarg	*l_targ;        /* buftarg of log */
+>  	struct delayed_work	l_work;		/* background flush work */
+>  	uint			l_flags;
 > -- 
 > 2.20.1
 > 
