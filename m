@@ -2,348 +2,352 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDF3B4AA79
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 20:57:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EE3C4AAE5
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 21:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbfFRS5q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Jun 2019 14:57:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35662 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730142AbfFRS5p (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 14:57:45 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IIs2iR044979;
-        Tue, 18 Jun 2019 18:57:41 GMT
+        id S1730176AbfFRTOF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Jun 2019 15:14:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43174 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfFRTOE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 15:14:04 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJ9Tnj155399;
+        Tue, 18 Jun 2019 19:14:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=Xe2yvDz4y6sfIKu8RtyinmOptizQOnLLeEJmQA/DoE4=;
- b=uHXniWSvPTAmaxHtq2Zyq5whBA8CsR1AeyRECqkiaJjYabk2qN3pWVdxuJOFNvRvSey5
- gr5MUqdgWxEY/htYPcZ/D4CLgobE4ypB5Rux3+E74MxZbpgy/jHKGnzCmHxZu3u3765J
- AE16cGVI9Jw+YncCPXBg0sShvWARi7HCmzD3mm+f5MbnDb5RQ4DNYRyOLgqpdf7j36eB
- zoi3ni8N59AX1ibfY7jcCHaYphOf+CV23YZq5QVCO6j0FtDHW3+muuFNWngwcixZikfx
- J1AMRnfFE/WoX72GqNSeEyfZhjxp6BgPKqJ2twotFrakAH1qThLR4LMbiIAIBpLJ6rDY Cg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t4rmp69gw-1
+ bh=RNZrN6E+I11lCPS08mjVs/1DDoeIrGC1h0025P2SqiA=;
+ b=xaw6Se42ZlVvLY0N/Xm2xgD2FaQKdlmv9CDItXOPbL/wNBRLiFszOH/gmLXhnMPJkDne
+ xOlvUSw3zR7Ebmv+TldFBo+koYh2pM5pFolTuxabN0ybvV683USiPLiVWdKYOi7UrajH
+ BPH6RrbtbmhoyTBAQRnqKwQM1LcLGpvGfZBei4qDHiRqk/3/ZlHVrVIOD4pI1TnaMmLW
+ F7XuqpOgIuxCjr7mD3thnfc3cQVV/P1xZJA2GuuNE7TerHyi3zixX3JLMT2jV2xnf3LB
+ 2cCUwEOK00yBqZi1Snf6mQhxh/y1PKN89U5KRax37LPwQ9riOOh8Iq0JpRI0UI6lCqRq 8g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t4saqeayh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 18:57:41 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IIvfW4167080;
-        Tue, 18 Jun 2019 18:57:41 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t5mgc4yt2-1
+        Tue, 18 Jun 2019 19:14:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJDAr2077746;
+        Tue, 18 Jun 2019 19:14:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2t5h5txaxv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 18:57:40 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5IIvebR015026;
-        Tue, 18 Jun 2019 18:57:40 GMT
+        Tue, 18 Jun 2019 19:14:00 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5IJDx17030594;
+        Tue, 18 Jun 2019 19:13:59 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 11:57:40 -0700
-Date:   Tue, 18 Jun 2019 11:57:39 -0700
+        with ESMTP ; Tue, 18 Jun 2019 12:13:59 -0700
+Date:   Tue, 18 Jun 2019 12:13:58 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/9] libxfs: break out the GETXATTR/SETXATTR manpage
-Message-ID: <20190618185739.GI5387@magnolia>
+Subject: Re: [PATCH 2/9] libxfs: break out the fsop geometry manpage
+Message-ID: <20190618191358.GJ5387@magnolia>
 References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
- <155993574662.2343530.11024375240678275350.stgit@magnolia>
- <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
+ <155993575303.2343530.6107806014092743035.stgit@magnolia>
+ <f8d67b57-33ed-7e2a-ffc3-4b862811e845@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1def4f4f-e938-76e2-2583-a07fc18b3ed8@sandeen.net>
+In-Reply-To: <f8d67b57-33ed-7e2a-ffc3-4b862811e845@sandeen.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906180150
+ engine=8.0.1-1810050000 definitions=main-1906180152
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906180149
+ definitions=main-1906180152
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:17:10PM -0500, Eric Sandeen wrote:
+On Fri, Jun 14, 2019 at 05:00:30PM -0500, Eric Sandeen wrote:
 > On 6/7/19 2:29 PM, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > Break out the xfs file attribute get and set ioctls into a separate
-> > manpage to reduce clutter in xfsctl.
-> 
-> <comes up for air>
-> 
-> Now that we've uh, hoisted it to be a generic vfs interface,
-> FS_IOC_FSGETXATTR, shouldn't we be documenting it as that instead
-> of the (old) xfs variant?
-> 
-> (honestly that'd be mostly just search and replace for this patch)
-> 
-> Except of course XFS_IOC_FSGETXATTRA has no vfs variant.  :/
-
-Hm, I just realized that "man ioctl_xfs_fssetxattr" would fail because
-there are no redirect files.  I'll add those.
-
-> I also wonder if FS_IOC_SETFLAGS should be mentioned, and/or a
-> SEE_ALSO because some of the functionality overlaps?
-
-Fixed.
-
-> 
+> > Break out the fs geometry ioctl into a separate manpage so that we can
+> > document how it works.
+> > 
 > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  man/man2/ioctl_xfs_fsgetxattr.2 |  219 +++++++++++++++++++++++++++++++++++++++
-> >  man/man3/xfsctl.3               |  159 +---------------------------
-> >  2 files changed, 227 insertions(+), 151 deletions(-)
-> >  create mode 100644 man/man2/ioctl_xfs_fsgetxattr.2
+> >  man/man2/ioctl_xfs_fsop_geometry.2 |  214 ++++++++++++++++++++++++++++++++++++
+> >  man/man3/xfsctl.3                  |   11 +-
+> >  2 files changed, 221 insertions(+), 4 deletions(-)
+> >  create mode 100644 man/man2/ioctl_xfs_fsop_geometry.2
 > > 
 > > 
-> > diff --git a/man/man2/ioctl_xfs_fsgetxattr.2 b/man/man2/ioctl_xfs_fsgetxattr.2
+> > diff --git a/man/man2/ioctl_xfs_fsop_geometry.2 b/man/man2/ioctl_xfs_fsop_geometry.2
 > > new file mode 100644
-> > index 00000000..17276dec
+> > index 00000000..4045e03b
 > > --- /dev/null
-> > +++ b/man/man2/ioctl_xfs_fsgetxattr.2
-> > @@ -0,0 +1,219 @@
+> > +++ b/man/man2/ioctl_xfs_fsop_geometry.2
+> > @@ -0,0 +1,214 @@
+> > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
+> > +.\"
 > > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > > +.\" SPDX-License-Identifier: GPL-2.0+
 > > +.\" %%%LICENSE_END
-> > +.TH IOCTL-XFS-FSGETXATTR 2 2019-04-16 "XFS"
+> > +.TH IOCTL-XFS-FSOP-GEOMETRY 2 2019-04-11 "XFS"
 > > +.SH NAME
-> > +ioctl_xfs_fsgetxattr \- query information for an open file
+> > +ioctl_xfs_fsop_geometry \- report XFS filesystem shape
 > > +.SH SYNOPSIS
 > > +.br
-> > +.B #include <linux/fs.h>
+> > +.B #include <xfs/xfs_fs.h>
 > > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_FSGETXATTR, struct fsxattr *" arg );
+> > +.BI "int ioctl(int " fd ", XFS_IOC_FSOP_GEOMETRY, struct xfs_fsop_geometry *" arg );
 > > +.PP
 > 
-> maybe
+> ditto on the .br?
 > 
-> .br
+> also xfs_fsop_geometry isn't a thing, is it?  xfs_fsop_geom?
 > 
-> here to keep it more compact?  Unless there's a manpage style I'm unaware
-> of?
+> > +.BI "int ioctl(int " fd ", XFS_IOC_FSOP_GEOMETRY_V1, struct xfs_fsop_geometry_v1 *" arg );
+> 
+> and xfs_fsop_geom_v1
 
-Ok.
+Fixed.
 
-> > +.BI "int ioctl(int " fd ", XFS_IOC_FSGETXATTRA, struct fsxattr *" arg );
-> > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_FSSETXATTR, struct fsxattr *" arg );
 > > +.SH DESCRIPTION
-> > +Query or set additional attributes associated with files in various file
-> > +systems.
-> 
-> (it was the "various filesystems" which caught my eye and reminded me to
-> ask the first question)
-> 
-> > +The attributes are conveyed in a structure of the form:
+> > +Report the storage space parameters that influence allocation decisions in
+> > +this XFS filesystem.
+> > +This information is conveyed in a structure of the following form:
 > > +.PP
 > > +.in +4n
 > > +.nf
-> > +struct fsxattr {
-> > +	__u32         fsx_xflags;
-> > +	__u32         fsx_extsize;
-> > +	__u32         fsx_nextents;
-> > +	__u32         fsx_projid;
-> > +	__u32         fsx_cowextsize;
-> > +	unsigned char fsx_pad[8];
+> > +struct xfs_fsop_geom {
+> > +	__u32         blocksize;
+> > +	__u32         rtextsize;
+> > +	__u32         agblocks;
+> > +	__u32         agcount;
+> > +	__u32         logblocks;
+> > +	__u32         sectsize;
+> > +	__u32         inodesize;
+> > +	__u32         imaxpct;
+> > +	__u64         datablocks;
+> > +	__u64         rtblocks;
+> > +	__u64         rtextents;
+> > +	__u64         logstart;
+> > +	unsigned char uuid[16];
+> > +	__u32         sunit;
+> > +	__u32         swidth;
+> > +	__s32         version;
+> > +	__u32         flags;
+> > +	__u32         logsectsize;
+> > +	__u32         rtsectsize;
+> > +	__u32         dirblocksize;
+> > +	/* struct xfs_fsop_geom_v1 stops here. */
+> > +
+> > +	__u32         logsunit;
 > > +};
 > > +.fi
 > > +.in
 > > +.PP
-> > +.I fsx_xflags
-> > +are extended flags that apply to this file.
-> > +This field can be a combination of the following:
-> > +
+> > +.I blocksize
+> > +is the size of a fundamental filesystem block, in bytes.
+> > +.PP
+> > +.I rtextsize
+> > +is the size of an extent on the realtime volume, in bytes.
+> > +.PP
+> > +.I agblocks
+> > +is the size of an allocation group, in units of filesystem blocks.
+> > +.PP
+> > +.I agcount
+> > +is the number of allocation groups in the filesystem.
+> > +.PP
+> > +.I logblocks
+> > +is the size of the log, in units of filesystem blocks.
+> > +.PP
+> > +.I sectsize
+> > +is the smallest amount of data that can be written to the data device
+> > +atomically, in bytes.
+> > +.PP
+> > +.I inodesize
+> > +is the size of an inode record, in bytes.
+> > +.PP
+> > +.I imaxpct
+> > +is the maximum percentage of the filesystem that can be allocated to inode
+> > +record blocks.
+> > +.PP
+> > +.I datablocks
+> > +is the size of the data device, in units of filesystem blocks.
+> > +.PP
+> > +.I rtblocks
+> > +is the size of the realtime device, in units of filesystem blocks.
+> > +.PP
+> > +.I rtextents
+> > +is the number of extents that can be allocated on the realtime device.
+> > +This ought to be
+> > +.RB "( " rtblocks " * " blocksize " ) / " rtextsize .
+> 
+> ought to be?  I'm not sure what that means?
+
+Dropped.
+
+> > +.PP
+> > +.I logstart
+> > +tells the start of the log, in units of filesystem blocks.
+> 
+> contains?
+
+I'll change it to 'is' here.
+
+> > +If the filesystem has an external log, this will be zero.
+> > +.PP
+> > +.I uuid
+> > +is the universal unique identifier of the filesystem.
+> > +.PP
+> > +.I sunit
+> > +is what the filesystem has been told is the size of a RAID stripe unit on the
+> > +underlying data device, in filesystem blocks.
+> > +.PP
+> > +.I swidth
+> > +is what the filesystem has been told is the width of a RAID stripe on the
+> > +underlying data device, in units of RAID stripe units.
+> > +.PP
+> > +.I version
+> > +is the version of this structure.
+> > +This value will be XFS_FSOP_GEOM_VERSION.
+> > +.PP
+> > +.I flags
+> > +tell us what features are enabled on the filesystem.
+> > +This field can be any combination of the following:
 > > +.RS 0.4i
 > > +.TP
-> > +.B FS_XFLAG_REALTIME
-> > +The file is a realtime file.
-> > +This bit can only be changed when the file is empty.
+> > +.B XFS_FSOP_GEOM_FLAGS_ATTR
+> > +Extended attributes are present.
 > > +.TP
-> > +.B FS_XFLAG_PREALLOC
-> > +The file has preallocated space.
-> > +.TP
-> > +.B FS_XFLAG_IMMUTABLE
-> > +The file is immutable - it cannot be modified, deleted or renamed,
-> > +no link can be created to this file and no data can be written to the
-> > +file.
-> > +Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
-> > +capability can set or clear this flag.
-> > +If this flag is set before a
-> > +.B FS_IOC_SETXATTR
+> > +.B XFS_FSOP_GEOM_FLAGS_NLINK
+> > +This filesystem supports up to 2^32 links.
 > 
-> (and here you do refer to the non-XFS variant)
+> and if not it supports what?
+> 
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_QUOTA
+> > +Quotas are enabled.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_IALIGN
+> > +Inodes are aligned for better performance.
+> 
+> aligned to ____ ? (worth trying to explain?)
 
-Oops, fixed to refer to the xfs variant.
-
-> > +call and would not be cleared by the call, then no other attributes can be
-> > +changed and
-> > +.B EPERM
-> > +will be returned.
-> > +.TP
-> > +.B FS_XFLAG_APPEND
-> > +The file is append-only - it can only be open in append mode for
-> > +writing.
-> > +Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
-> > +capability can set or clear this flag.
-> > +.TP
-> > +.B FS_XFLAG_SYNC
-> > +All writes to the file are synchronous.
-> > +.TP
-> > +.B FS_XFLAG_NOATIME
-> > +When the file is accessed, its atime record is not modified.
-> > +.TP
-> > +.B FS_XFLAG_NODUMP
-> > +The file should be skipped by backup utilities.
-> > +.TP
-> > +.B FS_XFLAG_RTINHERIT
-> > +Realtime inheritance bit - new files created in the directory
-> > +will be automatically realtime, and new directories created in
-> > +the directory will inherit the inheritance bit.
-> > +.TP
-> > +.B FS_XFLAG_PROJINHERIT
-> > +Project inheritance bit - new files and directories created in
-> > +the directory will inherit the parents project ID.
-> 
-> s/parents/parent directory's/
-> 
-> > +New directories also inherit the project inheritance bit.
-> 
-> also may as well keep the text for RTINHERIT and PROJINHERIT
-> identical other than the bit name/description.
-> 
-> > +.TP
-> > +.B FS_XFLAG_NOSYMLINKS
-> > +Can only be set on a directory and disallows creation of
-> > +symbolic links in that directory.
-> > +.TP
-> > +.B FS_XFLAG_EXTSIZE
-> > +Extent size bit - if a basic extent size value is set on the file
-> > +then the allocator will allocate in multiples of the set size for
-> > +this file (see
-> > +.B fsx_extsize
-> > +below).
-> > +This flag can only be set on a file if it is empty.
-> > +.TP
-> > +.B FS_XFLAG_EXTSZINHERIT
-> > +Extent size inheritance bit - new files and directories created in
-> > +the directory will inherit the parents basic extent size value (see
-> 
-> s/parents/parent directory's/
-> 
-> again probably keep text same as RTINHERIT/PROJINHERIT modulo bit name.
-> 
-> > +.B fsx_extsize
-> > +below).
-> > +Can only be set on a directory.
-> 
-> (i.e. the others "can only be set on a directory" too right?)
-
-Ok I'll document and standardize the wording for all the inheritance
-behaviors.
+Aligned to ... inode cluster buffer size, which we've never really
+documented outside of "RTFS"? :)
 
 > > +.TP
-> > +.B FS_XFLAG_NODEFRAG
-> > +No defragment file bit - the file should be skipped during a defragmentation
-> > +operation. When applied to a directory, new files and directories created will
-> > +inherit the no\-defrag bit.
+> > +.B XFS_FSOP_GEOM_FLAGS_DALIGN
+> > +Data blocks are aligned for better performance.
 > > +.TP
-> > +.B FS_XFLAG_FILESTREAM
-> > +Filestream allocator bit - allows a directory to reserve an allocation group
-> > +for exclusive use by files created within that directory.
-> > +Files being written in other directories will not use the same allocation group
-> > +and so files within different directories will not interleave extents on disk.
-> > +The reservation is only active while files are being created and written into
-> > +the directory.
+> > +.B XFS_FSOP_GEOM_FLAGS_SHARED
+> > +Unused.
 > > +.TP
-> > +.B FS_XFLAG_DAX
-> > +If the filesystem lives on directly accessible persistent memory, reads and
-> > +writes to this file will go straight to the persistent memory, bypassing the
-> > +page cache.
-> > +A file cannot be reflinked and have the
-> > +.BR FS_XFLAG_DAX
-> > +set at the same time.
+> > +.B XFS_FSOP_GEOM_FLAGS_EXTFLG
+> > +Filesystem supports unwritten extents.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_DIRV2
+> > +Directories maintain free space data for better performance.
 > 
-> Since you can't even mount that way, I suppose not ....
+> I don't remember all the v1->v2 differences but in other places
+> you simply say "contains version 2 format" or whatnot, so that might
+> suffice here.  Also can't do v1 since forever, anyway.  ;)
+
+Fixed.
+
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_LOGV2
+> > +Log uses the V2 format.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_SECTOR
+> > +The log device has a sector size larger than 512 bytes.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_ATTR2
+> > +Filesystem contains V2 extended attributes.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_PROJID32
+> > +Project IDs can be as large as 2^32.
 > 
-> > +That is to say that DAX files cannot share blocks.
-> > +If this flag is set on a directory, files created within that directory will
-> > +have this flag set.
+> otherwise 2^16?
+
+
+yes.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_DIRV2CI
+> > +Case-insensitive lookups are supported on directories.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_LAZYSB
+> > +On-disk superblock counters are updated only at unmount time.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_V5SB
+> > +Metadata blocks are self describing and contain checksums.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_FTYPE
+> > +Directories cache inode types in directory entries.
 > 
-> Documenting DAX is a bold move...
+> s/cache/contain/
 
-<shrug> We introduced an on disk flag and a behavior, now we're stuck
-with it unless there's a /really/ good reason to change it.
+Ok.
 
-> Do subdirs not inherit the flag?
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_FINOBT
+> > +Filesystem maintains an index of free inodes.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_SPINODES
+> > +Filesystem tries harder to allocate inodes when free space is fragmented.
+> 
+> Filesystem may allocate discontinuous inode chunks when free space is fragmented?
 
-They do.
+Ok.
+
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_RMAPBT
+> > +Filesystem stores reverse mappings of blocks to owners.
+> > +.TP
+> > +.B XFS_FSOP_GEOM_FLAGS_REFLINK
+> > +Filesystem supports sharing blocks.
+> 
+> between inodes?
+
+Between files; will fix.
+
+> > +.RE
+> > +
+> > +.PD 1
+> > +.PP
+> > +.I logsectsize
+> > +is the smallest amount of data that can be written to the log device atomically,
+> > +in bytes.
+> 
+> oh hello, we're back to the structure members again!
+> 
+> I wonder if it'd be better to move the flag details down below all the structure descriptions.
+
+Yeah, probably.  I'll do that for all the new manpages since otherwise
+this becomes a mess.
 
 --D
 
-> > +.TP
-> > +.B FS_XFLAG_COWEXTSIZE
-> > +Copy on Write Extent size bit - if a CoW extent size value is set on the file,
-> > +the allocator will allocate extents for staging a copy on write operation
-> > +in multiples of the set size for this file (see
-> > +.B fsx_cowextsize
-> > +below).
-> > +If the CoW extent size is set on a directory, then new file and directories
-> > +created in the directory will inherit the parent's CoW extent size value.
-> > +.TP
-> > +.B FS_XFLAG_HASATTR
-> > +The file has extended attributes associated with it.
-> > +.RE
 > > +.PP
-> > +.PD
-> > +
+> > +.I rtsectsize
+> > +is the smallest amount of data that can be written to the realtime device
+> > +atomically, in bytes.
 > > +.PP
-> > +.I fsx_extsize
-> > +is the preferred extent allocation size for data blocks mapped to this file,
-> > +in units of filesystem blocks.
-> > +If this value is zero, the filesystem will choose a default option, which
-> > +is currently zero.
-> > +If
-> > +.B XFS_IOC_FSSETXATTR
-> > +is called with
-> > +.B FS_XFLAG_EXTSIZE
-> > +set in
-> > +.I fsx_xflags
-> > +and this field is zero, the XFLAG will be cleared instead.
+> > +.I dirblocksize
+> > +is the size of directory blocks, in bytes.
 > > +.PP
-> > +.I fsx_nextents
-> > +is the number of data extents in this file.
-> > +If
-> > +.B XFS_IOC_FSGETXATTRA
-> > +was used, then this is the number of extended attribute extents in the file.
-> > +.PP
-> > +.I fsx_projid
-> > +is the project ID of this file.
-> > +.PP
-> > +.I fsx_cowextsize
-> > +is the preferred extent allocation size for copy on write operations
-> > +targeting this file, in units of filesystem blocks.
-> > +If this field is zero, the filesystem will choose a default option,
-> > +which is currently 128 filesystem blocks.
-> > +If
-> > +.B XFS_IOC_FSSETXATTR
-> > +is called with
-> > +.B FS_XFLAG_COWEXTSIZE
-> > +set in
-> > +.I fsx_xflags
-> > +and this field is zero, the XFLAG will be cleared instead.
-> > +
-> > +.PP
-> > +.I fsx_pad
-> > +must be zeroed.
-> > +
+> > +.I logsunit
+> > +is what the filesystem has been told is the size of a RAID stripe unit on the
+> > +underlying log device, in filesystem blocks.
+> > +This field is meaningful only if the flag
+> > +.B  XFS_FSOP_GEOM_FLAGS_LOGV2
+> > +is set.
 > > +.SH RETURN VALUE
 > > +On error, \-1 is returned, and
 > > +.I errno
@@ -351,9 +355,6 @@ They do.
 > > +.PP
 > > +.SH ERRORS
 > > +Error codes can be one of, but are not limited to, the following:
-> > +.TP
-> > +.B EACCESS
-> > +Caller does not have sufficient access to change the attributes.
 > > +.TP
 > > +.B EFAULT
 > > +The kernel was not able to copy into the userspace buffer.
@@ -364,201 +365,45 @@ They do.
 > > +.B EFSCORRUPTED
 > > +Metadata corruption was encountered while performing the query.
 > > +.TP
-> > +.B EINVAL
-> > +One of the arguments was not valid.
-> > +.TP
 > > +.B EIO
 > > +An I/O error was encountered while performing the query.
-> > +.TP
-> > +.B ENOMEM
-> > +There was insufficient memory to perform the query.
-> > +.TP
-> > +.B EPERM
-> > +Caller did not have permission to change the attributes.
 > > +.SH CONFORMING TO
-> > +This API is implemented by the ext4, xfs, btrfs, and f2fs filesystems on the
-> > +Linux kernel.
-> > +Not all fields may be understood by filesystems other than xfs.
+> > +This API is specific to XFS filesystem on the Linux kernel.
 > > +.SH SEE ALSO
 > > +.BR ioctl (2)
 > > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> > index 462ccbd8..2992b5be 100644
+> > index 2992b5be..1237eac6 100644
 > > --- a/man/man3/xfsctl.3
 > > +++ b/man/man3/xfsctl.3
-> > @@ -132,161 +132,17 @@ will fail with EINVAL.
-> >  All I/O requests are kept consistent with any data brought into
-> >  the cache with an access through a non-direct I/O file descriptor.
+> > @@ -479,6 +479,12 @@ the kernel, except no output count parameter is used (should
+> >  be initialized to zero).
+> >  An error is returned if the inode number is invalid.
 > >  
-> > -.TP
-> > -.B XFS_IOC_FSGETXATTR
-> > -Get additional attributes associated with files in XFS file systems.
-> > -The final argument points to a variable of type
-> > -.BR "struct fsxattr" ,
-> > -whose fields include:
-> > -.B fsx_xflags
-> > -(extended flag bits),
-> > -.B fsx_extsize
-> > -(nominal extent size in file system blocks),
-> > -.B fsx_nextents
-> > -(number of data extents in the file).
-> > -A
-> > -.B fsx_extsize
-> > -value returned indicates that a preferred extent size was previously
-> > -set on the file, a
-> > -.B fsx_extsize
-> > -of zero indicates that the defaults for that filesystem will be used.
-> > -A
-> > -.B fsx_cowextsize
-> > -value returned indicates that a preferred copy on write extent size was
-> > -previously set on the file, whereas a
-> > -.B fsx_cowextsize
-> > -of zero indicates that the defaults for that filesystem will be used.
-> > -The current default for
-> > -.B fsx_cowextsize
-> > -is 128 blocks.
-> > -Currently the meaningful bits for the
-> > -.B fsx_xflags
-> > -field are:
-> > -.PD 0
-> > -.RS
-> > -.TP 1.0i
-> > -.SM "Bit 0 (0x1) \- XFS_XFLAG_REALTIME"
-> > -The file is a realtime file.
-> > -.TP
-> > -.SM "Bit 1 (0x2) \- XFS_XFLAG_PREALLOC"
-> > -The file has preallocated space.
-> > -.TP
-> > -.SM "Bit 3 (0x8) \- XFS_XFLAG_IMMUTABLE"
-> > -The file is immutable - it cannot be modified, deleted or renamed,
-> > -no link can be created to this file and no data can be written to the
-> > -file.
-> > -Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
-> > -capability can set or clear this flag.
-> > -.TP
-> > -.SM "Bit 4 (0x10) \- XFS_XFLAG_APPEND"
-> > -The file is append-only - it can only be open in append mode for
-> > -writing.
-> > -Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE
-> > -capability can set or clear this flag.
-> > -.TP
-> > -.SM "Bit 5 (0x20) \- XFS_XFLAG_SYNC"
-> > -All writes to the file are synchronous.
-> > -.TP
-> > -.SM "Bit 6 (0x40) \- XFS_XFLAG_NOATIME"
-> > -When the file is accessed, its atime record is not modified.
-> > -.TP
-> > -.SM "Bit 7 (0x80) \- XFS_XFLAG_NODUMP"
-> > -The file should be skipped by backup utilities.
-> > -.TP
-> > -.SM "Bit 8 (0x100) \- XFS_XFLAG_RTINHERIT"
-> > -Realtime inheritance bit - new files created in the directory
-> > -will be automatically realtime, and new directories created in
-> > -the directory will inherit the inheritance bit.
-> > -.TP
-> > -.SM "Bit 9 (0x200) \- XFS_XFLAG_PROJINHERIT"
-> > -Project inheritance bit - new files and directories created in
-> > -the directory will inherit the parents project ID.  New
-> > -directories also inherit the project inheritance bit.
-> > -.TP
-> > -.SM "Bit 10 (0x400) \- XFS_XFLAG_NOSYMLINKS"
-> > -Can only be set on a directory and disallows creation of
-> > -symbolic links in that directory.
-> > -.TP
-> > -.SM "Bit 11 (0x800) \- XFS_XFLAG_EXTSIZE"
-> > -Extent size bit - if a basic extent size value is set on the file
-> > -then the allocator will allocate in multiples of the set size for
-> > -this file (see
-> > -.B XFS_IOC_FSSETXATTR
-> > -below).
-> > -.TP
-> > -.SM "Bit 12 (0x1000) \- XFS_XFLAG_EXTSZINHERIT"
-> > -Extent size inheritance bit - new files and directories created in
-> > -the directory will inherit the parents basic extent size value (see
-> > -.B XFS_IOC_FSSETXATTR
-> > -below).
-> > -Can only be set on a directory.
-> > -.TP
-> > -.SM "Bit 13 (0x2000) \- XFS_XFLAG_NODEFRAG"
-> > -No defragment file bit - the file should be skipped during a defragmentation
-> > -operation. When applied to a directory, new files and directories created will
-> > -inherit the no\-defrag bit.
-> > -.TP
-> > -.SM "Bit 14 (0x4000) \- XFS_XFLAG_FILESTREAM"
-> > -Filestream allocator bit - allows a directory to reserve an allocation
-> > -group for exclusive use by files created within that directory. Files
-> > -being written in other directories will not use the same allocation
-> > -group and so files within different directories will not interleave
-> > -extents on disk. The reservation is only active while files are being
-> > -created and written into the directory.
-> > -.TP
-> > -.SM "Bit 15 (0x8000) \- XFS_XFLAG_DAX"
-> > -If the filesystem lives on directly accessible persistent memory, reads and
-> > -writes to this file will go straight to the persistent memory, bypassing the
-> > -page cache.
-> > -A file cannot be reflinked and have the
-> > -.BR XFS_XFLAG_DAX
-> > -set at the same time.
-> > -That is to say that DAX files cannot share blocks.
-> > -.TP
-> > -.SM "Bit 16 (0x10000) \- XFS_XFLAG_COWEXTSIZE"
-> > -Copy on Write Extent size bit - if a CoW extent size value is set on the file,
-> > -the allocator will allocate extents for staging a copy on write operation
-> > -in multiples of the set size for this file (see
-> > -.B XFS_IOC_FSSETXATTR
-> > -below).
-> > -If the CoW extent size is set on a directory, then new file and directories
-> > -created in the directory will inherit the parent's CoW extent size value.
-> > -.TP
-> > -.SM "Bit 31 (0x80000000) \- XFS_XFLAG_HASATTR"
-> > -The file has extended attributes associated with it.
-> > -.RE
-> >  .PP
-> > -.PD
-> > -
-> > -.TP
-> > -.B XFS_IOC_FSGETXATTRA
-> > -Identical to
-> > +.nf
-> >  .B XFS_IOC_FSGETXATTR
-> > -except that the
-> > -.B fsx_nextents
-> > -field contains the number of attribute extents in the file.
-> > -
-> > +.B XFS_IOC_FSGETXATTRA
-> > +.fi
-> > +.PD 0
-> >  .TP
-> >  .B XFS_IOC_FSSETXATTR
-> > -Set additional attributes associated with files in XFS file systems.
-> > -The final argument points to a variable of type
-> > -.BR "struct fsxattr" ,
-> > -but only the following fields are used in this call:
-> > -.BR fsx_xflags ,
-> > -.BR fsx_extsize ,
-> > -.BR fsx_cowextsize ,
-> > -and
-> > -.BR fsx_projid .
-> > -The
-> > -.B fsx_xflags
-> > -realtime file bit and the file's extent size may be changed only
-> > -when the file is empty, except in the case of a directory where
-> > -the extent size can be set at any time (this value is only used
-> > -for regular file allocations, so should only be set on a directory
-> > -in conjunction with the XFS_XFLAG_EXTSZINHERIT flag).
-> > -The copy on write extent size,
-> > -.BR fsx_cowextsize ,
-> > -can be set at any time.
+> > +.TP
+> > +.B XFS_IOC_FSGEOMETRY
 > > +See
-> > +.BR ioctl_xfs_fsgetxattr (2)
+> > +.BR ioctl_xfs_fsop_geometry (2)
 > > +for more information.
-> >  
-> >  .TP
-> >  .B XFS_IOC_GETBMAP
-> > @@ -649,6 +505,7 @@ The remainder of these operations will not be described further
-> >  as they are not of general use to applications.
+> > +
+> >  .PP
+> >  .nf
+> >  .B XFS_IOC_THAW
+> > @@ -494,10 +500,6 @@ An error is returned if the inode number is invalid.
+> >  These interfaces are used to implement various filesystem internal
+> >  operations on XFS filesystems.
+> >  For
+> > -.B XFS_IOC_FSGEOMETRY
+> > -(get filesystem mkfs time information), the output structure is of type
+> > -.BR struct xfs_fsop_geom .
+> > -For
+> >  .B XFS_FS_COUNTS
+> >  (get filesystem dynamic global information), the output structure is of type
+> >  .BR xfs_fsop_counts_t .
+> > @@ -506,6 +508,7 @@ as they are not of general use to applications.
 > >  
 > >  .SH SEE ALSO
-> > +.BR ioctl_xfs_fsgetxattr (2),
+> >  .BR ioctl_xfs_fsgetxattr (2),
+> > +.BR ioctl_xfs_fsop_geometry (2),
 > >  .BR fstatfs (2),
 > >  .BR statfs (2),
 > >  .BR xfs (5),
