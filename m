@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0A9B4AB3B
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 21:54:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C14624AB3E
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 21:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfFRTyK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Jun 2019 15:54:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52818 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730189AbfFRTyJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 15:54:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJs0Bm091550;
-        Tue, 18 Jun 2019 19:54:07 GMT
+        id S1730196AbfFRT4Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Jun 2019 15:56:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45314 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfFRT4Q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 15:56:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJs0Xh189077;
+        Tue, 18 Jun 2019 19:56:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=DVOejyLJOvWTF0s4J1amaF/5dx6zmYfHh4OefdiUKr0=;
- b=vklnXjFc/o5wyU0aeEcJPcGnpM33I8i0vprQzr9RGyo9ncdh4z7qy+t0X14wTKtI7poc
- mDes4Yl3eZuwjuMPefr9M7UpovvkifGlfBUF80sKftMdLbAb59P6Z5Is0O+nFIUB1/ou
- 5nQriGZiUa+wLtJRmT3mDJn9P0Dssa9QZbz28GrTHZCt/norq0dTenmhmR1AqdakFKa0
- 1Fo7XtLHfhdJz4qdBV9WmFmYodxidViMmdw4Syu76Gt9RBIlF4/v7OsFfVW9EnLlaZhM
- YxU6o4R3PCcRwy3XBUcHLjwmOtMl1c2IxLoWv5lu/4yVUJYPuqK098C7NcQRM3Xa2eRS Mg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2t4rmp6h48-1
+ bh=HMMC8upvm53FSSG0H8/mLl1kaJa/oYtc7/yFJ+kOupo=;
+ b=HnIGKpg6DuliGJ1fb4kOKLW8STansmynp/JwdlhWtjxxXxHSJTg5uqn0aA1+5rnzOx8+
+ ZC5RNgLQNDd9p2c97JoKV/HoSwnl5vKMAo27HIaCIYc4tpaHuGmAbbikXpT97SmCJYge
+ 6JeLFnqse3oM8UYHFzQrYKZu23BLcLn8zip/dH9RLLWiQ0kCv2/byk34jwb8DTIjsFVK
+ YmJzEi57kVj7SOJdCxvkoggnOrMT3Re3aG5pjv7gYOCfsv/wzzog0Z/3jrHXwhzRzX4b
+ sYow0IGAg9Q1pgpLENIzrDf/ZjADtAC/0dn0XDZg9gYvKFlQ9PaeH8D1Z/IQFgMescuX aQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t4saqegaq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 19:54:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJraRG103077;
-        Tue, 18 Jun 2019 19:54:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t59ge1ptg-1
+        Tue, 18 Jun 2019 19:56:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IJt8P5166879;
+        Tue, 18 Jun 2019 19:56:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t5h5txu35-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 19:54:05 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5IJs06a021100;
-        Tue, 18 Jun 2019 19:54:00 GMT
+        Tue, 18 Jun 2019 19:56:12 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5IJuCOv031189;
+        Tue, 18 Jun 2019 19:56:12 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 12:54:00 -0700
-Date:   Tue, 18 Jun 2019 12:53:59 -0700
+        with ESMTP ; Tue, 18 Jun 2019 12:56:11 -0700
+Date:   Tue, 18 Jun 2019 12:56:11 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 8/9] libxfs: break out GETBMAP manpage
-Message-ID: <20190618195359.GO5387@magnolia>
+Subject: Re: [PATCH 9/9] libxfs: break out fs shutdown manpage
+Message-ID: <20190618195611.GP5387@magnolia>
 References: <155993574034.2343530.12919951702156931143.stgit@magnolia>
- <155993579119.2343530.16520349159321377883.stgit@magnolia>
- <8fb74e0d-8af4-0187-58b7-a4fc22f67f5c@sandeen.net>
+ <155993579746.2343530.1053923086240021800.stgit@magnolia>
+ <d041c695-f438-c202-4c78-9273d3bdfa2a@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8fb74e0d-8af4-0187-58b7-a4fc22f67f5c@sandeen.net>
+In-Reply-To: <d041c695-f438-c202-4c78-9273d3bdfa2a@sandeen.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
@@ -70,182 +70,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:25:05PM -0500, Eric Sandeen wrote:
+On Mon, Jun 17, 2019 at 12:27:26PM -0500, Eric Sandeen wrote:
 > On 6/7/19 2:29 PM, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > Create a separate manual page for the BMAP ioctls so we can document how
-> > they work.
+> > Create a separate manual page for the fs shutdown ioctl so we can
+> > document how it works.
 > > 
 > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  man/man2/ioctl_xfs_getbmap.2 |  165 ++++++++++++++++++++++++++++++++++++++++++
-> >  man/man3/xfsctl.3            |   61 +++-------------
-> >  2 files changed, 175 insertions(+), 51 deletions(-)
-> >  create mode 100644 man/man2/ioctl_xfs_getbmap.2
+> >  man/man2/ioctl_xfs_goingdown.2 |   61 ++++++++++++++++++++++++++++++++++++++++
+> >  man/man3/xfsctl.3              |    7 +++++
+> >  2 files changed, 68 insertions(+)
+> >  create mode 100644 man/man2/ioctl_xfs_goingdown.2
 > > 
 > > 
-> > diff --git a/man/man2/ioctl_xfs_getbmap.2 b/man/man2/ioctl_xfs_getbmap.2
+> > diff --git a/man/man2/ioctl_xfs_goingdown.2 b/man/man2/ioctl_xfs_goingdown.2
 > > new file mode 100644
-> > index 00000000..5097173b
+> > index 00000000..e9a56f28
 > > --- /dev/null
-> > +++ b/man/man2/ioctl_xfs_getbmap.2
-> > @@ -0,0 +1,165 @@
+> > +++ b/man/man2/ioctl_xfs_goingdown.2
+> > @@ -0,0 +1,61 @@
 > > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > > +.\"
 > > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > > +.\" SPDX-License-Identifier: GPL-2.0+
 > > +.\" %%%LICENSE_END
-> > +.TH IOCTL-XFS-GETBMAP 2 2019-04-11 "XFS"
+> > +.TH IOCTL-XFS-GOINGDOWN 2 2019-04-16 "XFS"
 > > +.SH NAME
-> > +ioctl_xfs_getbmap \- query extent information for an open file
+> > +ioctl_xfs_goingdown \- shut down an XFS filesystem
 > > +.SH SYNOPSIS
 > > +.br
 > > +.B #include <xfs/xfs_fs.h>
 > > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAP, struct getbmap *" arg );
-> > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPA, struct getbmap *" arg );
-> > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPX, struct getbmapx *" arg );
+> > +.BI "int ioctl(int " fd ", XFS_IOC_GOINGDOWN, uint32_t " flags );
 > > +.SH DESCRIPTION
-> > +Get the block map for a segment of a file in an XFS file system.
-> > +The mapping information is conveyed in a structure of the following form:
-> > +.PP
-> > +.in +4n
-> > +.nf
-> > +struct getbmap {
-> > +	__s64   bmv_offset;
-> > +	__s64   bmv_block;
-> > +	__s64   bmv_length;
-> > +	__s32   bmv_count;
-> > +	__s32   bmv_entries;
-> > +};
-> > +.fi
-> > +.in
-> > +.PP
-> > +The
-> > +.B XFS_IOC_GETBMAPX
-> > +ioctl uses a larger version of that structure:
-> > +.PP
-> > +.in +4n
-> > +.nf
-> > +struct getbmapx {
-> > +	__s64   bmv_offset;
-> > +	__s64   bmv_block;
-> > +	__s64   bmv_length;
-> > +	__s32   bmv_count;
-> > +	__s32   bmv_entries;
-> > +	__s32   bmv_iflags;
-> > +	__s32   bmv_oflags;
-> > +	__s32   bmv_unused1;
-> > +	__s32   bmv_unused2;
-> > +};
-> > +.fi
-> > +.in
-> > +.PP
-> > +All sizes and offsets in the structure are in units of 512 bytes.
-> > +.PP
-> > +The first structure in the array is a header and the remaining structures in
-> > +the array contain block map information on return.
-> > +The header controls iterative calls to the command and should be filled out as
-> > +follows:
-> > +.TP
-> > +.B bmv_offset
-> > +The file offset of the area of interest in the file.
-> > +.TP
-> > +.B bmv_length
-> > +The length of the area of interest in the file.
-> > +If this value is set to -1, the length of the interesting area is the rest of
-> > +the file.
-> > +.TP
-> > +.B bmv_count
-> > +The length of the array, including this header.
-> > +.TP
-> > +.B bmv_entries
-> > +The number of entries actually filled in by the call.
-> > +This does not need to be filled out before the call.
-> > +.TP
-> > +.B bmv_iflags
-> > +For the
-> > +.B XFS_IOC_GETBMAPX
-> > +function, this is a combination of the following flags:
-> 
-> specifically mention that they are ORed or is that obvious?
-
-"...this is a bitmask containing a combination of the following
-flags..."
-
-> > +.RS 0.4i
-> > +.TP
-> > +.B BMV_IF_ATTRFORK
-> > +Return information about the extended attribute fork.
-> > +.TP
-> > +.B BMV_IF_PREALLOC
-> > +Return information about unwritten pre-allocated segments.
-> > +.TP
-> > +.B BMV_IF_DELALLOC
-> > +Return information about delayed allocation reservation segments.
-> > +.TP
-> > +.B BMV_IF_NO_HOLES
-> > +Do not return information about holes.
-> > +.RE
-> > +.PD 1
-> 
-> perhaps mention that others (bmv_block ...) are ignored in the header?
-
-Ok.
-
+> > +Shuts down a live XFS filesystem.
+> > +This is a software initiated hard shutdown and should be avoided whenever
+> > +possible.
+> > +After this call completes, the filesystem will be totally unusable and must be
+> > +unmounted.
 > > +
 > > +.PP
-> > +On return from a call, the header is updated so that the command can be
-> > +reused to obtain more information without re-initializing the structures.
-> > +The remainder of the array will be filled out by the call as follows:
-> > +
-> > +.TP
-> > +.B bmv_offset
-> > +File offset of segment.
-> > +.TP
-> > +.B bmv_block
-> > +Physical starting block of segment.
-> > +If this is -1, then the segment is a hole.
-> > +.TP
-> > +.B bmv_length
-> > +Length of segment.
-> > +.TP
-> > +.B bmv_oflags
-> > +The
-> > +.B XFS_IOC_GETBMAPX
-> > +function will fill this field with a combination of the following flags:
+> > +.I flags
+> > +can be one of the following:
 > > +.RS 0.4i
 > > +.TP
-> > +.B BMV_OF_PREALLOC
-> > +The segment is an unwritten pre-allocation.
+> > +.B XFS_FSOP_GOING_FLAGS_DEFAULT
+> > +Flush all dirty data and in-core state to disk, flush the log, then shut down.
 > > +.TP
-> > +.B BMV_OF_DELALLOC
-> > +The segment is a delayed allocation reservation.
+> > +.B XFS_FSOP_GOING_FLAGS_LOGFLUSH
+> > +Flush all pending transactions to the log, then shut down, leaving all dirty
+> > +data unwritten.
 > > +.TP
-> > +.B BMV_OF_LAST
-> > +This segment is the last in the file.
-> > +.TP
-> > +.B BMV_OF_SHARED
-> > +This segment shares blocks with other files.
-> > +.RE
-> > +.PD 1
-> > +.PP
+> > +.B XFS_FSOP_GOING_FLAGS_NOLOGFLUSH
+> > +Shut down, leaving all dirty transactions and dirty data.
 > 
-> .. and maybe mention that i.e. bmv_count is unused in the
-> array of records? *shrug*
+> leaving it ... what?
+> 
+> Maybe "Shut down, without flushing any dirty transactions or data to disk."
 
-Ok.
+"Shut down immediately, without writing pending transactions or dirty data
+to disk." ?
 
 --D
 
-> > +The
-> > +.B XFS_IOC_GETBMAPA
-> > +command is identical to
-> > +.B XFS_IOC_GETBMAP
-> > +except that information about the attribute fork of the file is returned.
+> 
+> > +
 > > +.SH RETURN VALUE
 > > +On error, \-1 is returned, and
 > > +.I errno
@@ -254,9 +145,6 @@ Ok.
 > > +.SH ERRORS
 > > +Error codes can be one of, but are not limited to, the following:
 > > +.TP
-> > +.B EFAULT
-> > +The kernel was not able to copy into the userspace buffer.
-> > +.TP
 > > +.B EFSBADCRC
 > > +Metadata checksum validation failed while performing the query.
 > > +.TP
@@ -264,95 +152,39 @@ Ok.
 > > +Metadata corruption was encountered while performing the query.
 > > +.TP
 > > +.B EINVAL
-> > +One of the arguments was not valid.
+> > +The specified allocation group number is not valid for this filesystem.
 > > +.TP
 > > +.B EIO
 > > +An I/O error was encountered while performing the query.
 > > +.TP
-> > +.B ENOMEM
-> > +There was insufficient memory to perform the query.
+> > +.B EPERM
+> > +Caller did not have permission to shut down the filesystem.
 > > +.SH CONFORMING TO
 > > +This API is specific to XFS filesystem on the Linux kernel.
 > > +.SH SEE ALSO
 > > +.BR ioctl (2)
 > > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> > index 25e51417..e0986afb 100644
+> > index e0986afb..ca96a007 100644
 > > --- a/man/man3/xfsctl.3
 > > +++ b/man/man3/xfsctl.3
-> > @@ -144,59 +144,17 @@ See
-> >  .BR ioctl_xfs_fsgetxattr (2)
+> > @@ -365,6 +365,12 @@ See
 > >  for more information.
+> >  Save yourself a lot of frustration and avoid these ioctls.
 > >  
-> > -.TP
-> > -.B XFS_IOC_GETBMAP
-> > -Get the block map for a segment of a file in an XFS file system.
-> > -The final argument points to an arry of variables of type
-> > -.BR "struct getbmap" .
-> > -All sizes and offsets in the structure are in units of 512 bytes.
-> > -The structure fields include:
-> > -.B bmv_offset
-> > -(file offset of segment),
-> > -.B bmv_block
-> > -(starting block of segment),
-> > -.B bmv_length
-> > -(length of segment),
-> > -.B bmv_count
-> > -(number of array entries, including the first), and
-> > -.B bmv_entries
-> > -(number of entries filled in).
-> > -The first structure in the array is a header, and the remaining
-> > -structures in the array contain block map information on return.
-> > -The header controls iterative calls to the
-> > +.PP
-> > +.nf
-> >  .B XFS_IOC_GETBMAP
-> > -command.
-> > -The caller fills in the
-> > -.B bmv_offset
-> > -and
-> > -.B bmv_length
-> > -fields of the header to indicate the area of interest in the file,
-> > -and fills in the
-> > -.B bmv_count
-> > -field to indicate the length of the array.
-> > -If the
-> > -.B bmv_length
-> > -value is set to \-1 then the length of the interesting area is the rest
-> > -of the file.
-> > -On return from a call, the header is updated so that the command can be
-> > -reused to obtain more information, without re-initializing the structures.
-> > -Also on return, the
-> > -.B bmv_entries
-> > -field of the header is set to the number of array entries actually filled in.
-> > -The non-header structures will be filled in with
-> > -.BR bmv_offset ,
-> > -.BR bmv_block ,
-> > -and
-> > -.BR bmv_length .
-> > -If a region of the file has no blocks (is a hole in the file) then the
-> > -.B bmv_block
-> > -field is set to \-1.
-> > -
-> > -.TP
-> >  .B XFS_IOC_GETBMAPA
-> > -Identical to
-> > -.B XFS_IOC_GETBMAP
-> > -except that information about the attribute fork of the file is returned.
-> > +.fi
-> > +.PD 0
 > > +.TP
-> > +.B XFS_IOC_GETBMAPX
+> > +.B XFS_IOC_GOINGDOWN
 > > +See
-> > +.BR ioctl_getbmap (2)
+> > +.BR ioctl_xfs_goingdown (2)
 > > +for more information.
-> >  
+> > +
 > >  .PP
-> >  .B XFS_IOC_RESVSP
-> > @@ -428,6 +386,7 @@ as they are not of general use to applications.
-> >  .BR ioctl_xfs_fsinumbers (2),
+> >  .nf
+> >  .B XFS_IOC_THAW
+> > @@ -387,6 +393,7 @@ as they are not of general use to applications.
 > >  .BR ioctl_xfs_fscounts (2),
 > >  .BR ioctl_xfs_getresblks (2),
-> > +.BR ioctl_xfs_getbmap (2),
+> >  .BR ioctl_xfs_getbmap (2),
+> > +.BR ioctl_xfs_goingdown (2),
 > >  .BR fstatfs (2),
 > >  .BR statfs (2),
 > >  .BR xfs (5),
