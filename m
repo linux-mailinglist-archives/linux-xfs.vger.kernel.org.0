@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63DAC4ACE7
+	by mail.lfdr.de (Postfix) with ESMTP id D2C944ACE8
 	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2019 23:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbfFRVHT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Jun 2019 17:07:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38140 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731068AbfFRVHN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 17:07:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IL4Fge045604;
-        Tue, 18 Jun 2019 21:07:11 GMT
+        id S1730881AbfFRVHX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Jun 2019 17:07:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54868 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731068AbfFRVHX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jun 2019 17:07:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IL43oL143790;
+        Tue, 18 Jun 2019 21:07:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=R7eHZdFo5VpeykbIJ+fHXXz1JWICxA6vjXnC+u8sv8M=;
- b=D4qdrMqWo1kOAL/Go0lcpeO/iK1USHAi8c/sgV+W6ybWpTVIjtXxf9InuwGblM90qf56
- lkF7J1TS8/sPlNFuRMNvePpgG98w+xtkKfNwpm7VVm2jvmmZaGjG+K4krEfcpUw/HxwC
- pftpZ7V/tUppBaFdnCs7pIYciB7DT/jCuHNmfrhNPlFmeG7FnD2d0/XlwALI+6PC8dNn
- H+AIZlmIXe973BJRNXVNkUEYl0LB1WajOfAt8TsrjjXnClpSjcoiXDShpQbG8H2/8bR2
- BQbdeCnWnPvokvzfNd9dAzzsIfdV8nyh/twUelyRttPtjm9Tv1/VFY5QlxHc/tB0dMcy FA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t4saqertb-1
+ bh=ZaTpbmM0TGO+VrZ+A34FSGarLjneylHsUL3BmqFp2e0=;
+ b=zTmacvvLnAMps8aiQ2UWfVZ0X2/utvXVBxnHsYUoyJHNgJcB61cj2+aU+KRX3qzWUu5h
+ 4t6xBsMEK+r/B6S97CcNfRlUPkn9QB3QCxUpO5vyJnjsNmHwN0DygEubZHF/xg+o4HBv
+ IuA/0ij4sCEmag06zJrRmci4KAKxyW+6FmujUo/5HWVKa8ePq4Rl4UrTCrP1jiKrFT+O
+ XgVyFnJl39vQCWmpM/WD8ysRVtq2Zt7zvelj34XxwuixiQoedpKKVPT7g6OlsbqidlCv
+ KD+9ePvzBxQ3MT+c+EgsAgYwIbL1GW4lQ7ZVuMHeyfg8sVh76tdRqcnERPWJb+qyu27S tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp6t0n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 21:07:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IL6R7i061269;
-        Tue, 18 Jun 2019 21:07:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t5mgc6mku-1
+        Tue, 18 Jun 2019 21:07:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IL78jM128828;
+        Tue, 18 Jun 2019 21:07:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t5h5tyqn4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 21:07:10 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5IL7APT000793;
-        Tue, 18 Jun 2019 21:07:10 GMT
+        Tue, 18 Jun 2019 21:07:17 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5IL7G4t023052;
+        Tue, 18 Jun 2019 21:07:16 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 14:07:09 -0700
-Subject: [PATCH 1/4] dump: _cleanup_dump should only check the scratch fs if
- the test required it
+        with ESMTP ; Tue, 18 Jun 2019 14:07:16 -0700
+Subject: [PATCH 2/4] xfs: rework min log size helper
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 18 Jun 2019 14:07:08 -0700
-Message-ID: <156089202883.345809.17656192140244878661.stgit@magnolia>
+Date:   Tue, 18 Jun 2019 14:07:15 -0700
+Message-ID: <156089203509.345809.3448903728041546348.stgit@magnolia>
 In-Reply-To: <156089201978.345809.17444450351199726553.stgit@magnolia>
 References: <156089201978.345809.17444450351199726553.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,35 +70,118 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-_cleanup_dump always tries to check the scratch fs, even if the caller
-didn't actually _require_scratch.  If a previous test wrote garbage to
-the scratch device then the dump test will fail here when repair
-stumbles over the garbage.
+The recent _scratch_find_xfs_min_logblocks helper has a major thinko in
+it -- it relies on feeding a too-small size to _scratch_do_mkfs so that
+mkfs will tell us the minimum log size.  Unfortunately, _scratch_do_mkfs
+will see that first failure and retry the mkfs without MKFS_OPTIONS,
+which means that we return the minimum log size for the default mkfs
+settings without MKFS_OPTIONS.
 
-This was observed by running xfs/016 and xfs/036 in succession.  xfs/016
-writes 0xc6 to the scratch device and tries to format a small log.  If
-the log is too small the format fails and the test will _notrun.  The
-subsequent xfs/036 will _notrun and then _cleanup_dump if no tape device
-is set, at which point we try to check the scratch device and logprint
-aborts due to the abnormal log size (0xc6c6c6c6).
+This is a problem if someone's running fstests with a set of
+MKFS_OPTIONS that affects the minimum log size.  To fix this, open-code
+the _scratch_do_mkfs retry behavior so that we only do the "retry
+without MKFS_OPTIONS" behavior if the mkfs failed for a reason other
+than the minimum log size check.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- common/dump |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ common/rc  |   13 ++++++++++---
+ common/xfs |   23 +++++++++++++++++++++--
+ 2 files changed, 31 insertions(+), 5 deletions(-)
 
 
-diff --git a/common/dump b/common/dump
-index 7c4c9cd8..2b8e0893 100644
---- a/common/dump
-+++ b/common/dump
-@@ -250,7 +250,7 @@ _cleanup_dump()
- 	mv $dir.$seq $dir
-     done
+diff --git a/common/rc b/common/rc
+index 25203bb4..a38b7f02 100644
+--- a/common/rc
++++ b/common/rc
+@@ -438,6 +438,14 @@ _scratch_mkfs_options()
+     echo $SCRATCH_OPTIONS $MKFS_OPTIONS $* $SCRATCH_DEV
+ }
  
--    if [ $status -ne $NOTRUNSTS ]; then
-+    if [ -f ${RESULT_DIR}/require_scratch ] && [ $status -ne $NOTRUNSTS ]; then
- 	# Sleep added to stop _check_scratch_fs from complaining that the
- 	# scratch_dev is still busy
- 	sleep 10
++# Format the scratch device directly.  First argument is the mkfs command.
++# Second argument are all the parameters.  stdout goes to $tmp.mkfsstd and
++# stderr goes to $tmp.mkfserr.
++__scratch_do_mkfs()
++{
++	eval "$1 $2 $SCRATCH_DEV" 2>$tmp.mkfserr 1>$tmp.mkfsstd
++}
++
+ # Do the actual mkfs work on SCRATCH_DEV. Firstly mkfs with both MKFS_OPTIONS
+ # and user specified mkfs options, if that fails (due to conflicts between mkfs
+ # options), do a second mkfs with only user provided mkfs options.
+@@ -456,8 +464,7 @@ _scratch_do_mkfs()
+ 
+ 	# save mkfs output in case conflict means we need to run again.
+ 	# only the output for the mkfs that applies should be shown
+-	eval "$mkfs_cmd $MKFS_OPTIONS $extra_mkfs_options $SCRATCH_DEV" \
+-		2>$tmp.mkfserr 1>$tmp.mkfsstd
++	__scratch_do_mkfs "$mkfs_cmd" "$MKFS_OPTIONS $extra_mkfs_options"
+ 	mkfs_status=$?
+ 
+ 	# a mkfs failure may be caused by conflicts between $MKFS_OPTIONS and
+@@ -471,7 +478,7 @@ _scratch_do_mkfs()
+ 		) >> $seqres.full
+ 
+ 		# running mkfs again. overwrite previous mkfs output files
+-		eval "$mkfs_cmd $extra_mkfs_options $SCRATCH_DEV" \
++		__scratch_do_mkfs "$mkfs_cmd" "$extra_mkfs_options" \
+ 			2>$tmp.mkfserr 1>$tmp.mkfsstd
+ 		mkfs_status=$?
+ 	fi
+diff --git a/common/xfs b/common/xfs
+index f8dafc6c..8733e2ae 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -87,16 +87,33 @@ _scratch_find_xfs_min_logblocks()
+ 	# minimum log size.
+ 	local XFS_MIN_LOG_BYTES=2097152
+ 
+-	_scratch_do_mkfs "$mkfs_cmd" "cat" $* -N -l size=$XFS_MIN_LOG_BYTES \
+-		2>$tmp.mkfserr 1>$tmp.mkfsstd
++	# Try formatting the filesystem with all the options given and the
++	# minimum log size.  We hope either that this succeeds or that mkfs
++	# tells us the required minimum log size for the feature set.
++	#
++	# We cannot use _scratch_do_mkfs because it will retry /any/ failed
++	# mkfs with MKFS_OPTIONS removed even if the only "failure" was that
++	# the log was too small.
++	local extra_mkfs_options="$* -N -l size=$XFS_MIN_LOG_BYTES"
++	__scratch_do_mkfs "$mkfs_cmd" "$MKFS_OPTIONS $extra_mkfs_options"
+ 	local mkfs_status=$?
+ 
++	# If the format fails for a reason other than the log being too small,
++	# try again without MKFS_OPTIONS because that's what _scratch_do_mkfs
++	# will do if we pass in the log size option.
++	if [ $mkfs_status -ne 0 ] &&
++	   ! grep -q 'log size.*too small, minimum' $tmp.mkfserr; then
++		__scratch_do_mkfs "$mkfs_cmd" "$extra_mkfs_options"
++		local mkfs_status=$?
++	fi
++
+ 	# mkfs suceeded, so we must pick out the log block size to do the
+ 	# unit conversion
+ 	if [ $mkfs_status -eq 0 ]; then
+ 		local blksz="$(grep '^log.*bsize' $tmp.mkfsstd | \
+ 			sed -e 's/log.*bsize=\([0-9]*\).*$/\1/g')"
+ 		echo $((XFS_MIN_LOG_BYTES / blksz))
++		rm -f $tmp.mkfsstd $tmp.mkfserr
+ 		return
+ 	fi
+ 
+@@ -104,6 +121,7 @@ _scratch_find_xfs_min_logblocks()
+ 	if grep -q 'minimum size is' $tmp.mkfserr; then
+ 		grep 'minimum size is' $tmp.mkfserr | \
+ 			sed -e 's/^.*minimum size is \([0-9]*\) blocks/\1/g'
++		rm -f $tmp.mkfsstd $tmp.mkfserr
+ 		return
+ 	fi
+ 
+@@ -111,6 +129,7 @@ _scratch_find_xfs_min_logblocks()
+ 	echo "Cannot determine minimum log size" >&2
+ 	cat $tmp.mkfsstd >> $seqres.full
+ 	cat $tmp.mkfserr >> $seqres.full
++	rm -f $tmp.mkfsstd $tmp.mkfserr
+ }
+ 
+ _scratch_mkfs_xfs()
 
