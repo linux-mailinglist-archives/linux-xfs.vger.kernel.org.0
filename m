@@ -2,121 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 531484D236
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 17:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAD44D43A
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 18:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfFTPck (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 11:32:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38116 "EHLO
+        id S1726530AbfFTQvf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 12:51:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55694 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfFTPck (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 11:32:40 -0400
+        with ESMTP id S1726881AbfFTQvf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 12:51:35 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KFUnEG108080
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Jun 2019 15:32:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=+merp7L/P/Dqew4klUXDgr0ttfCO4QCREcyPFDHveaM=;
- b=23iSBhEgQy8jHkvOMPQMzmpV//6UL4vGQV168etH3VCvpsSrRw98HAYiD4URLn51Z1yV
- tJ/jvYhuVy9FfMt1euiBhA3+3UtJzHnb320kxzN4caFyoEi44mEZMg9XIgDItFSBD2Nc
- fM9AkLcIvx/Uw++ypNAMpOmFIAMlsDj9OyUvEoRGLo2JembEgZ/9nYnFB4NQA5Jm+w8B
- 2bQzr7BtHUtGA7qCV6WcH7K1u9G1cndxzeFFkpcD+fPjtajfjbXTncQUNJJMCV3LHgLc
- OevjwBguPBxIJeczrtfLO3R4pr+tE+pCG9ZYlIFxOJd0N9RlNFA52aHsz6RtOzLQVV3R lQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t7809htmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Jun 2019 15:32:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KFWWa1044065
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Jun 2019 15:32:38 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnBRb173690;
+        Thu, 20 Jun 2019 16:51:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=qNJWXfrLccdOTTxZaVlmy8weneIvhDJmpsLiQt0B+5I=;
+ b=yrvD5hcQFMgPhGR79zC8xqyx9iZ6P/xAMppp19ytahgwH/btu0PYvW45qMriLuqNOotf
+ qjWdCkqRgB9GGnkh5/MQLWTGMe86Nd8icie6uUlFJa64LrRCTKI5+ISPGqNHdoSUVZpr
+ Ad4C11p4h1qM468PCbDyCRDdsyt3KZ8kgFtRezLz4GjYCbR0sjTyCjGr+rWgnJMvx0vW
+ 38W5covhEktZf47j95ruIn6WLxzLiuSboG9N0+fXaq6iQ3XsnWK+Ohp+HiU4KVqN9pY4
+ 4ykO8tJgpR6yxLFzVGoZg9a3cgZ2A5tmGWEZGfdBB6iqWWHgtGZ9HfcNeUvheXFddBW0 qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t7809j7du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 16:51:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGltho053906;
+        Thu, 20 Jun 2019 16:49:32 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t77ypefup-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Jun 2019 15:32:38 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KFWaJQ015015
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Jun 2019 15:32:37 GMT
+        by userp3030.oracle.com with ESMTP id 2t77ynqnw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 16:49:32 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KGnVVK012434;
+        Thu, 20 Jun 2019 16:49:31 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 08:32:36 -0700
-Date:   Thu, 20 Jun 2019 08:32:34 -0700
+        with ESMTP ; Thu, 20 Jun 2019 09:49:30 -0700
+Subject: [PATCH v3 00/12] xfsprogs-5.1: fix various problems
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Allison Collins <allison.henderson@oracle.com>
+To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfsprogs: Fix uninitialized cfg->lsunit
-Message-ID: <20190620153234.GV5387@magnolia>
-References: <20190619182857.9959-1-allison.henderson@oracle.com>
+Date:   Thu, 20 Jun 2019 09:49:29 -0700
+Message-ID: <156104936953.1172531.2121427277342917243.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619182857.9959-1-allison.henderson@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906200113
+ engine=8.0.1-1810050000 definitions=main-1906200122
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906200113
+ definitions=main-1906200122
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 11:28:57AM -0700, Allison Collins wrote:
-> While investigating another mkfs bug, noticed that cfg->lsunit is sometimes
-> left uninitialized when it should not.  This is because calc_stripe_factors
-> in some cases needs cfg->loginternal to be set first.  This is done in
-> validate_logdev. So move calc_stripe_factors below validate_logdev while
-> parsing configs.
+Hi all,
 
-<grumble> The cfg in main() is not (in a manner easily detectable by
-toolz) uninitialized, it's zero-initialized by default and we haven't
-set cfg->loginternal correctly yet...
+Latest respin of patches fixing various problems in xfsprogs.
 
-...what we really need here is enum { FALSE, TRUE, FILENOTFOUND } to
-detect that we're using incorrect garbage data. :P
+The first two patches fix some problems in the number conversion code.
 
-(Really, someone should take a closer look at whether or not there are
-other places where we do things like this...)
+Patches 3-5 introduce a new structure for managing xfs runtime context.
+For now this simply associates a file descriptor with reported xfs geometry
+(and some computed values) that enable us to refactor per-ag calculations
+out of xfs_scrub.  Later we'll use for things like graceful degradation
+when xfsprogs supports bulkstat v5 but the kernel doesn't, and also doing
+per-ag scanning operations.
 
-Anyway, this does solve a problem, so
+Patches 6-8 refactor all utilities to use common libfrog functions to
+retrieve the filesystem geometry, bulkstat, and inumbers.  The helpers
+will make it easier for newer userspace to fall back to older versions
+of ioctls.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Patch 9 strengthens mkfs's log alignment checking code.
+
+Patch 10 fixes xfs_io repair command error reporting.
+
+Patch 11 fixes libxfs-diff to handle files that are in libxfs/ in xfsprogs
+but still in fs/xfs/ in the kernel.
+
+Patch 12 adds a new "btheight" command to xfs_db so that we can calculate
+the size of each level of a theoretical btree.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
 
-> 
-> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-> ---
->  mkfs/xfs_mkfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index ddb25ec..f4a5e4b 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3995,7 +3995,6 @@ main(
->  	cfg.rtblocks = calc_dev_size(cli.rtsize, &cfg, &ropts, R_SIZE, "rt");
->  
->  	validate_rtextsize(&cfg, &cli, &ft);
-> -	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * Open and validate the device configurations
-> @@ -4005,6 +4004,7 @@ main(
->  	validate_datadev(&cfg, &cli);
->  	validate_logdev(&cfg, &cli, &logfile);
->  	validate_rtdev(&cfg, &cli, &rtfile);
-> +	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * At this point when know exactly what size all the devices are,
-> -- 
-> 2.7.4
-> 
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=xfsprogs-5.1-fixes
