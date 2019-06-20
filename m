@@ -2,63 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DAD44D43A
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 18:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA0FD4D43B
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 18:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfFTQvf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 12:51:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55694 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfFTQvf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 12:51:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnBRb173690;
-        Thu, 20 Jun 2019 16:51:33 GMT
+        id S1726979AbfFTQvk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 12:51:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44368 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfFTQvk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 12:51:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnFdY069745;
+        Thu, 20 Jun 2019 16:51:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=qNJWXfrLccdOTTxZaVlmy8weneIvhDJmpsLiQt0B+5I=;
- b=yrvD5hcQFMgPhGR79zC8xqyx9iZ6P/xAMppp19ytahgwH/btu0PYvW45qMriLuqNOotf
- qjWdCkqRgB9GGnkh5/MQLWTGMe86Nd8icie6uUlFJa64LrRCTKI5+ISPGqNHdoSUVZpr
- Ad4C11p4h1qM468PCbDyCRDdsyt3KZ8kgFtRezLz4GjYCbR0sjTyCjGr+rWgnJMvx0vW
- 38W5covhEktZf47j95ruIn6WLxzLiuSboG9N0+fXaq6iQ3XsnWK+Ohp+HiU4KVqN9pY4
- 4ykO8tJgpR6yxLFzVGoZg9a3cgZ2A5tmGWEZGfdBB6iqWWHgtGZ9HfcNeUvheXFddBW0 qg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2t7809j7du-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=81Pr0Cg9EYUl+9RPdf5KWHlPWW65BofaKve5+r3wEmE=;
+ b=Vga31mrgeG+Yt14C3CofAZBJPs+p1N/+mYEavfdMlll18HPDLdWdktqfIG0Nn/8klrJX
+ 1+t5WihVz6FgHMfs1ZO47sqnD8IxlZeyBgJTU05yrF1Mr8Y1gvJ3MgqJJz7t/+ligRfv
+ EyuN8GdkVPCzcn/Rm5VVc8BS/xHKDb6xZ4eYPV4YfxQ1WgpYhyURRTywEnwNv8Rz8lW7
+ dt929SLEJy7YbIpi5UBPHtbKL+v0WNwDXM6eVG7SAlo1yhlbpIdIAHDWEpd/PLEIeuda
+ Ll13NMC0cWrPEOfivXKrRo2/xxnFMTKEcxDz6CFAT5sMQtIyAsaJYmFkdaiPW8Q6eWD4 nQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t7809j9vx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 16:51:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGltho053906;
-        Thu, 20 Jun 2019 16:49:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t77ynqnw1-1
+        Thu, 20 Jun 2019 16:51:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnCIS121147;
+        Thu, 20 Jun 2019 16:49:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t77ynqqat-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 16:49:32 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KGnVVK012434;
-        Thu, 20 Jun 2019 16:49:31 GMT
+        Thu, 20 Jun 2019 16:49:37 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5KGnbg6024274;
+        Thu, 20 Jun 2019 16:49:37 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 09:49:30 -0700
-Subject: [PATCH v3 00/12] xfsprogs-5.1: fix various problems
+        with ESMTP ; Thu, 20 Jun 2019 09:49:37 -0700
+Subject: [PATCH 01/12] libfrog: don't set negative errno in conversion
+ functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 20 Jun 2019 09:49:29 -0700
-Message-ID: <156104936953.1172531.2121427277342917243.stgit@magnolia>
+Date:   Thu, 20 Jun 2019 09:49:36 -0700
+Message-ID: <156104937602.1172531.10936665245404210667.stgit@magnolia>
+In-Reply-To: <156104936953.1172531.2121427277342917243.stgit@magnolia>
+References: <156104936953.1172531.2121427277342917243.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=758
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906200122
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=799 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906200122
 Sender: linux-xfs-owner@vger.kernel.org
@@ -66,41 +69,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Latest respin of patches fixing various problems in xfsprogs.
+Don't set errno to a negative value when we're converting integers.
+That's a kernel thing; this is userspace.
 
-The first two patches fix some problems in the number conversion code.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ libfrog/convert.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Patches 3-5 introduce a new structure for managing xfs runtime context.
-For now this simply associates a file descriptor with reported xfs geometry
-(and some computed values) that enable us to refactor per-ag calculations
-out of xfs_scrub.  Later we'll use for things like graceful degradation
-when xfsprogs supports bulkstat v5 but the kernel doesn't, and also doing
-per-ag scanning operations.
 
-Patches 6-8 refactor all utilities to use common libfrog functions to
-retrieve the filesystem geometry, bulkstat, and inumbers.  The helpers
-will make it easier for newer userspace to fall back to older versions
-of ioctls.
+diff --git a/libfrog/convert.c b/libfrog/convert.c
+index ed4cae7f..62397507 100644
+--- a/libfrog/convert.c
++++ b/libfrog/convert.c
+@@ -47,7 +47,7 @@ cvt_s64(
+ 		return i;
+ 
+ 	/* Not all the input was consumed, return error. */
+-	errno = -ERANGE;
++	errno = ERANGE;
+ 	return INT64_MIN;
+ }
+ 
+@@ -68,7 +68,7 @@ cvt_s32(
+ 	if (errno)
+ 		return i;
+ 	if (i > INT32_MAX || i < INT32_MIN) {
+-		errno = -ERANGE;
++		errno = ERANGE;
+ 		return INT32_MIN;
+ 	}
+ 	return i;
+@@ -91,7 +91,7 @@ cvt_s16(
+ 	if (errno)
+ 		return i;
+ 	if (i > INT16_MAX || i < INT16_MIN) {
+-		errno = -ERANGE;
++		errno = ERANGE;
+ 		return INT16_MIN;
+ 	}
+ 	return i;
+@@ -123,7 +123,7 @@ cvt_u64(
+ 		return i;
+ 
+ 	/* Not all the input was consumed, return error. */
+-	errno = -ERANGE;
++	errno = ERANGE;
+ 	return UINT64_MAX;
+ }
+ 
+@@ -144,7 +144,7 @@ cvt_u32(
+ 	if (errno)
+ 		return i;
+ 	if (i > UINT32_MAX) {
+-		errno = -ERANGE;
++		errno = ERANGE;
+ 		return UINT32_MAX;
+ 	}
+ 	return i;
+@@ -167,7 +167,7 @@ cvt_u16(
+ 	if (errno)
+ 		return i;
+ 	if (i > UINT16_MAX) {
+-		errno = -ERANGE;
++		errno = ERANGE;
+ 		return UINT16_MAX;
+ 	}
+ 	return i;
 
-Patch 9 strengthens mkfs's log alignment checking code.
-
-Patch 10 fixes xfs_io repair command error reporting.
-
-Patch 11 fixes libxfs-diff to handle files that are in libxfs/ in xfsprogs
-but still in fs/xfs/ in the kernel.
-
-Patch 12 adds a new "btheight" command to xfs_db so that we can calculate
-the size of each level of a theoretical btree.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=xfsprogs-5.1-fixes
