@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D6B4D42E
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 18:50:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BAE4D42F
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 18:50:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfFTQub (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 12:50:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43320 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfFTQub (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 12:50:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnKnE070025;
-        Thu, 20 Jun 2019 16:50:29 GMT
+        id S1726551AbfFTQui (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 12:50:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43450 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTQui (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 12:50:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnBoR077911;
+        Thu, 20 Jun 2019 16:50:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=+n6QKfpHBCCm1uFXimUIDVdGNUiG7PUFB9nzTOc6o7I=;
- b=I8PrTMyLp06t1QSg/C/3zbRefWCqVlZLCkRauCNIdkNdD7BKHZXxVhXkBip993qREuSJ
- oIzvyeZG996AmzHCejdFAg6IBQIJzI4iPYw82+PO8nv+nvBiAswnIltnDkqXTy2XIRW4
- e8HCWyeu2k+se6rznC+xqLNItDsh9OsjZ80SagFRKMEmnsoQ+5JnJ+XW/Hd6Rk3kpJKZ
- 4gN27XV4j3mP9XfG3dEIIGznoumyIvyZA+UczK8N0LjQI0onLwFERh1WOvDRpm2k5dYz
- KBqcaGywsOjJRq0vpcrEbWvmZIpFxpL4BnACPYVEFxDh8w+A+XAqI85EI1K7FXp0OtN4 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t7809j9pq-1
+ bh=1FcslxisFxBOaiidtuYlqyFtIGtX9q7PywYIx7GRbXQ=;
+ b=lxBVPg9aKcEzmoo3Y3Dw+DUlroL3dpcvfuT39jPQBbrcbCqTQTxJZL6mydyP2wIOuXjW
+ vb1NhhMur/FIUZdZ/rAXFEYzu5uubya1HKdjdxtg/2aUSvSEvRKZxxuyaj4bT81HlUwd
+ 1ONw5907TrDQ8Lx3mz3uq89su2ZBezB4CsYiq9wXz9CiscDh47qVqR6tGglVqD1joMW0
+ 1GYZHH1UUEtXKOfebTdrK2YCyJ3EN9a7HhhklA+dxfjkXgPq3hLh4TWU3T+8zkzhM147
+ paS3OD+xhb8Zxnz+p4XaBFir9NTswTR+aa7fIO9479YgppPoM+1F1ihfm1WA+eQupP4y 6A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t7809j8p3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 16:50:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGnVJ7182613;
-        Thu, 20 Jun 2019 16:50:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2t7rdx92u7-1
+        Thu, 20 Jun 2019 16:50:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KGneJN057729;
+        Thu, 20 Jun 2019 16:50:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t77ynqpgv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 16:50:28 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5KGoS7B021216;
-        Thu, 20 Jun 2019 16:50:28 GMT
+        Thu, 20 Jun 2019 16:50:36 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KGoZdY020127;
+        Thu, 20 Jun 2019 16:50:35 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 09:50:27 -0700
-Subject: [PATCH 09/12] mkfs: validate start and end of aligned logs
+        with ESMTP ; Thu, 20 Jun 2019 09:50:34 -0700
+Subject: [PATCH 10/12] xfs_io: repair_f should use its own name
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 20 Jun 2019 09:50:27 -0700
-Message-ID: <156104942708.1172531.3848135690205396934.stgit@magnolia>
+Date:   Thu, 20 Jun 2019 09:50:33 -0700
+Message-ID: <156104943322.1172531.14877921651268434165.stgit@magnolia>
 In-Reply-To: <156104936953.1172531.2121427277342917243.stgit@magnolia>
 References: <156104936953.1172531.2121427277342917243.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,47 +70,26 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Validate that the start and end of the log stay within a single AG if
-we adjust either end to align to stripe units.
+If the repair command fails, it should tag the error message with its
+own name ("repair").
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- mkfs/xfs_mkfs.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ io/scrub.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index ddb25ecc..468b8fde 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -3033,15 +3033,28 @@ align_internal_log(
- 	struct xfs_mount	*mp,
- 	int			sunit)
- {
-+	uint64_t		logend;
-+
- 	/* round up log start if necessary */
- 	if ((cfg->logstart % sunit) != 0)
- 		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
+diff --git a/io/scrub.c b/io/scrub.c
+index 2ff1a6af..052497be 100644
+--- a/io/scrub.c
++++ b/io/scrub.c
+@@ -293,7 +293,7 @@ repair_ioctl(
  
-+	/* If our log start overlaps the next AG's metadata, fail. */
-+	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
-+			fprintf(stderr,
-+_("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
-+  "within an allocation group.\n"),
-+			(long long) cfg->logstart);
-+		usage();
-+	}
-+
- 	/* round up/down the log size now */
- 	align_log_size(cfg, sunit);
- 
- 	/* check the aligned log still fits in an AG. */
--	if (cfg->logblocks > cfg->agsize - XFS_FSB_TO_AGBNO(mp, cfg->logstart)) {
-+	logend = cfg->logstart + cfg->logblocks - 1;
-+	if (XFS_FSB_TO_AGNO(mp, cfg->logstart) != XFS_FSB_TO_AGNO(mp, logend) ||
-+	    !xfs_verify_fsbno(mp, logend)) {
- 		fprintf(stderr,
- _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
-   "Must fit within an allocation group.\n"),
+ 	error = ioctl(fd, XFS_IOC_SCRUB_METADATA, &meta);
+ 	if (error)
+-		perror("scrub");
++		perror("repair");
+ 	if (meta.sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		printf(_("Corruption remains.\n"));
+ 	if (meta.sm_flags & XFS_SCRUB_OFLAG_PREEN)
 
