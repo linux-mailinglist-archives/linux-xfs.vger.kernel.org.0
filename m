@@ -2,26 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FAD34D9E2
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 20:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 781FC4D9F7
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 21:08:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfFTS6q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 14:58:46 -0400
-Received: from sandeen.net ([63.231.237.45]:42180 "EHLO sandeen.net"
+        id S1726017AbfFTTIr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 15:08:47 -0400
+Received: from sandeen.net ([63.231.237.45]:43154 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfFTS6q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:58:46 -0400
+        id S1725905AbfFTTIq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 20 Jun 2019 15:08:46 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 97CEA182F1;
-        Thu, 20 Jun 2019 13:58:43 -0500 (CDT)
-Subject: Re: [PATCH 01/12] libfrog: don't set negative errno in conversion
- functions
+        by sandeen.net (Postfix) with ESMTPSA id 01D4D14A25;
+        Thu, 20 Jun 2019 14:08:43 -0500 (CDT)
+Subject: Re: [PATCH 02/12] libfrog: cvt_u64 should use strtoull, not strtoll
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104936953.1172531.2121427277342917243.stgit@magnolia>
- <156104937602.1172531.10936665245404210667.stgit@magnolia>
+ <156104938235.1172531.7192571581132527840.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -66,15 +65,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <2bf07013-3f5b-a9cb-b593-b4355ef46586@sandeen.net>
-Date:   Thu, 20 Jun 2019 13:58:44 -0500
+Message-ID: <2d5f3961-409f-c73c-4d25-c1aa131a556a@sandeen.net>
+Date:   Thu, 20 Jun 2019 14:08:44 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <156104937602.1172531.10936665245404210667.stgit@magnolia>
+In-Reply-To: <156104938235.1172531.7192571581132527840.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -83,78 +82,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:49 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Don't set errno to a negative value when we're converting integers.
-> That's a kernel thing; this is userspace.
+> cvt_u64 converts a string to an unsigned 64-bit number, so it should use
+> strtoull, not strtoll because we don't want negative numbers here.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-<Doge stare>
-
-and it's also "errno" fercryingoutloud ;)
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
 > ---
->  libfrog/convert.c |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  libfrog/convert.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
 > 
 > diff --git a/libfrog/convert.c b/libfrog/convert.c
-> index ed4cae7f..62397507 100644
+> index 62397507..8d4d4077 100644
 > --- a/libfrog/convert.c
 > +++ b/libfrog/convert.c
-> @@ -47,7 +47,7 @@ cvt_s64(
->  		return i;
+> @@ -105,14 +105,14 @@ cvt_s16(
+>   */
+>  uint64_t
+>  cvt_u64(
+> -	char		*s,
+> -	int		base)
+> +	char			*s,
+> +	int			base)
+>  {
+> -	long long	i;
+> -	char		*sp;
+> +	unsigned long long	i;
+> +	char			*sp;
 >  
->  	/* Not all the input was consumed, return error. */
-> -	errno = -ERANGE;
-> +	errno = ERANGE;
->  	return INT64_MIN;
->  }
->  
-> @@ -68,7 +68,7 @@ cvt_s32(
->  	if (errno)
->  		return i;
->  	if (i > INT32_MAX || i < INT32_MIN) {
-> -		errno = -ERANGE;
-> +		errno = ERANGE;
->  		return INT32_MIN;
->  	}
->  	return i;
-> @@ -91,7 +91,7 @@ cvt_s16(
->  	if (errno)
->  		return i;
->  	if (i > INT16_MAX || i < INT16_MIN) {
-> -		errno = -ERANGE;
-> +		errno = ERANGE;
->  		return INT16_MIN;
->  	}
->  	return i;
-> @@ -123,7 +123,7 @@ cvt_u64(
->  		return i;
->  
->  	/* Not all the input was consumed, return error. */
-> -	errno = -ERANGE;
-> +	errno = ERANGE;
->  	return UINT64_MAX;
->  }
->  
-> @@ -144,7 +144,7 @@ cvt_u32(
->  	if (errno)
->  		return i;
->  	if (i > UINT32_MAX) {
-> -		errno = -ERANGE;
-> +		errno = ERANGE;
->  		return UINT32_MAX;
->  	}
->  	return i;
-> @@ -167,7 +167,7 @@ cvt_u16(
->  	if (errno)
->  		return i;
->  	if (i > UINT16_MAX) {
-> -		errno = -ERANGE;
-> +		errno = ERANGE;
->  		return UINT16_MAX;
->  	}
->  	return i;
+>  	errno = 0;
+> -	i = strtoll(s, &sp, base);
+> +	i = strtoull(s, &sp, base);
+>  	/*
+>  	 * If the input would over or underflow, return the clamped
+>  	 * value and let the user check errno.  If we went all the
 > 
