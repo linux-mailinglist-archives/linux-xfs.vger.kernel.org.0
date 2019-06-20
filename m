@@ -2,22 +2,22 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76D3C4DC85
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 23:29:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0A64DC83
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 23:29:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfFTV3k (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 17:29:40 -0400
-Received: from sandeen.net ([63.231.237.45]:55554 "EHLO sandeen.net"
+        id S1726245AbfFTV3j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 17:29:39 -0400
+Received: from sandeen.net ([63.231.237.45]:55556 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfFTV3j (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S1726168AbfFTV3j (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Thu, 20 Jun 2019 17:29:39 -0400
 Received: by sandeen.net (Postfix, from userid 500)
-        id E020F335059; Thu, 20 Jun 2019 16:29:36 -0500 (CDT)
+        id 0E4BB450A9E; Thu, 20 Jun 2019 16:29:37 -0500 (CDT)
 From:   Eric Sandeen <sandeen@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 03/11] xfs_io: remove unneeded includes
-Date:   Thu, 20 Jun 2019 16:29:26 -0500
-Message-Id: <1561066174-13144-4-git-send-email-sandeen@redhat.com>
+Subject: [PATCH 04/11] libfrog: remove unneeded includes
+Date:   Thu, 20 Jun 2019 16:29:27 -0500
+Message-Id: <1561066174-13144-5-git-send-email-sandeen@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1561066174-13144-1-git-send-email-sandeen@redhat.com>
 References: <1561066174-13144-1-git-send-email-sandeen@redhat.com>
@@ -28,229 +28,221 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
- io/bmap.c            | 1 -
- io/copy_file_range.c | 2 --
- io/cowextsize.c      | 1 -
- io/encrypt.c         | 1 -
- io/fiemap.c          | 1 -
- io/file.c            | 1 -
- io/fsmap.c           | 1 -
- io/getrusage.c       | 1 -
- io/init.c            | 2 --
- io/label.c           | 3 ---
- io/log_writes.c      | 1 -
- io/mmap.c            | 1 -
- io/parent.c          | 1 -
- io/reflink.c         | 2 --
- io/scrub.c           | 3 ---
- io/stat.c            | 2 --
- 16 files changed, 24 deletions(-)
+ libfrog/avl64.c      | 1 -
+ libfrog/bitmap.c     | 2 --
+ libfrog/convert.c    | 2 --
+ libfrog/crc32.c      | 1 -
+ libfrog/fsgeom.c     | 1 -
+ libfrog/linux.c      | 4 ----
+ libfrog/list_sort.c  | 1 -
+ libfrog/paths.c      | 4 ----
+ libfrog/projects.c   | 1 -
+ libfrog/ptvar.c      | 3 ---
+ libfrog/radix-tree.c | 3 ---
+ libfrog/topology.c   | 1 -
+ libfrog/util.c       | 1 -
+ libfrog/workqueue.c  | 1 -
+ 14 files changed, 26 deletions(-)
 
-diff --git a/io/bmap.c b/io/bmap.c
-index d408826..a0dd77f 100644
---- a/io/bmap.c
-+++ b/io/bmap.c
-@@ -4,7 +4,6 @@
+diff --git a/libfrog/avl64.c b/libfrog/avl64.c
+index 2547bf3..2147b35 100644
+--- a/libfrog/avl64.c
++++ b/libfrog/avl64.c
+@@ -3,7 +3,6 @@
+  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
   * All Rights Reserved.
   */
- 
--#include "platform_defs.h"
- #include "command.h"
- #include "input.h"
- #include "init.h"
-diff --git a/io/copy_file_range.c b/io/copy_file_range.c
-index d069e5b..576a58d 100644
---- a/io/copy_file_range.c
-+++ b/io/copy_file_range.c
-@@ -4,8 +4,6 @@
-  */
- 
- #include <sys/syscall.h>
--#include <sys/uio.h>
--#include <xfs/xfs.h>
- #include "command.h"
- #include "input.h"
- #include "init.h"
-diff --git a/io/cowextsize.c b/io/cowextsize.c
-index 029605a..bbec335 100644
---- a/io/cowextsize.c
-+++ b/io/cowextsize.c
-@@ -14,7 +14,6 @@
- #include "init.h"
- #include "io.h"
- #include "input.h"
--#include "path.h"
- 
- static cmdinfo_t cowextsize_cmd;
- static long cowextsize;
-diff --git a/io/encrypt.c b/io/encrypt.c
-index 8db3525..4c2ba87 100644
---- a/io/encrypt.c
-+++ b/io/encrypt.c
-@@ -7,7 +7,6 @@
+-#include <stdint.h>
+ #include <stdio.h>
  #include "platform_defs.h"
- #include "command.h"
- #include "init.h"
--#include "path.h"
- #include "io.h"
- 
- #ifndef ARRAY_SIZE
-diff --git a/io/fiemap.c b/io/fiemap.c
-index 485bae1..3bda112 100644
---- a/io/fiemap.c
-+++ b/io/fiemap.c
-@@ -4,7 +4,6 @@
-  * All Rights Reserved.
+ #include "avl64.h"
+diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
+index 4dafc4c..5a4a1f7 100644
+--- a/libfrog/bitmap.c
++++ b/libfrog/bitmap.c
+@@ -4,11 +4,9 @@
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
   */
- 
--#include "platform_defs.h"
- #include "command.h"
- #include "input.h"
- #include <linux/fiemap.h>
-diff --git a/io/file.c b/io/file.c
-index c45486e..0ccf803 100644
---- a/io/file.c
-+++ b/io/file.c
-@@ -6,7 +6,6 @@
- 
- #include "command.h"
- #include "input.h"
--#include <sys/mman.h>
- #include "init.h"
- #include "io.h"
- 
-diff --git a/io/fsmap.c b/io/fsmap.c
-index 477c36f..906d60f 100644
---- a/io/fsmap.c
-+++ b/io/fsmap.c
-@@ -6,7 +6,6 @@
- #include "platform_defs.h"
- #include "command.h"
- #include "init.h"
--#include "path.h"
- #include "io.h"
- #include "input.h"
- 
-diff --git a/io/getrusage.c b/io/getrusage.c
-index 6962913..ba704b7 100644
---- a/io/getrusage.c
-+++ b/io/getrusage.c
-@@ -9,7 +9,6 @@
- #include <sys/time.h>
- #include <sys/resource.h>
- #include "init.h"
--#include "io.h"
- 
- static cmdinfo_t getrusage_cmd;
- 
-diff --git a/io/init.c b/io/init.c
-index 7025aea..4354c64 100644
---- a/io/init.c
-+++ b/io/init.c
-@@ -5,9 +5,7 @@
-  */
- 
+ #include "xfs.h"
+-#include <stdint.h>
+ #include <stdlib.h>
+ #include <assert.h>
  #include <pthread.h>
 -#include "platform_defs.h"
- #include "command.h"
--#include "input.h"
- #include "init.h"
- #include "io.h"
+ #include "avl64.h"
+ #include "list.h"
+ #include "bitmap.h"
+diff --git a/libfrog/convert.c b/libfrog/convert.c
+index ed4cae7..f97c62a 100644
+--- a/libfrog/convert.c
++++ b/libfrog/convert.c
+@@ -3,10 +3,8 @@
+  * Copyright (c) 2003-2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+  */
+-#include "platform_defs.h"
+ #include "input.h"
+ #include <ctype.h>
+-#include <stdbool.h>
  
-diff --git a/io/label.c b/io/label.c
-index 72e0796..5180743 100644
---- a/io/label.c
-+++ b/io/label.c
-@@ -3,10 +3,7 @@
-  * Copyright (c) 2018 Red Hat, Inc. All Rights Reserved.
+ size_t
+ numlen(
+diff --git a/libfrog/crc32.c b/libfrog/crc32.c
+index 526ce95..b4c18c7 100644
+--- a/libfrog/crc32.c
++++ b/libfrog/crc32.c
+@@ -36,7 +36,6 @@
+ /* For endian conversion routines */
+ #include "xfs_arch.h"
+ #include "crc32defs.h"
+-#include "crc32c.h"
+ 
+ /* types specifc to this file */
+ typedef __u8	u8;
+diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
+index 8879d16..9a2aee7 100644
+--- a/libfrog/fsgeom.c
++++ b/libfrog/fsgeom.c
+@@ -3,7 +3,6 @@
+  * Copyright (c) 2000-2005 Silicon Graphics, Inc. All Rights Reserved.
+  */
+ #include "libxfs.h"
+-#include "fsgeom.h"
+ 
+ void
+ xfs_report_geom(
+diff --git a/libfrog/linux.c b/libfrog/linux.c
+index b6c2487..5fc7c6a 100644
+--- a/libfrog/linux.c
++++ b/libfrog/linux.c
+@@ -4,14 +4,10 @@
+  * All Rights Reserved.
   */
  
+-#include <mntent.h>
+ #include <sys/stat.h>
 -#include <sys/ioctl.h>
- #include "platform_defs.h"
--#include "libxfs.h"
--#include "path.h"
- #include "command.h"
- #include "init.h"
- #include "io.h"
-diff --git a/io/log_writes.c b/io/log_writes.c
-index 9c2285f..114f818 100644
---- a/io/log_writes.c
-+++ b/io/log_writes.c
-@@ -8,7 +8,6 @@
- #include <libdevmapper.h>
- #include "command.h"
- #include "init.h"
--#include "io.h"
+ #include <sys/sysinfo.h>
  
- static cmdinfo_t log_writes_cmd;
+ #include "libxfs_priv.h"
+-#include "xfs_fs.h"
+-#include "init.h"
  
-diff --git a/io/mmap.c b/io/mmap.c
-index f9383e5..55b253f 100644
---- a/io/mmap.c
-+++ b/io/mmap.c
-@@ -7,7 +7,6 @@
- #include "command.h"
- #include "input.h"
- #include <sys/mman.h>
--#include <signal.h>
- #include "init.h"
- #include "io.h"
+ extern char *progname;
+ static int max_block_alignment;
+diff --git a/libfrog/list_sort.c b/libfrog/list_sort.c
+index b77eece..e017b8c 100644
+--- a/libfrog/list_sort.c
++++ b/libfrog/list_sort.c
+@@ -1,5 +1,4 @@
+ /* List sorting code from Linux::lib/list_sort.c. */
+-#include <stdlib.h>
+ #include <string.h>
+ #include "list.h"
  
-diff --git a/io/parent.c b/io/parent.c
-index ffa55f6..3db75d6 100644
---- a/io/parent.c
-+++ b/io/parent.c
-@@ -6,7 +6,6 @@
- 
- #include "command.h"
- #include "input.h"
--#include "path.h"
- #include "parent.h"
- #include "handle.h"
- #include "jdm.h"
-diff --git a/io/reflink.c b/io/reflink.c
-index 26eb2e3..815597b 100644
---- a/io/reflink.c
-+++ b/io/reflink.c
+diff --git a/libfrog/paths.c b/libfrog/paths.c
+index 6e26665..7cda1f8 100644
+--- a/libfrog/paths.c
++++ b/libfrog/paths.c
 @@ -4,8 +4,6 @@
   * All Rights Reserved.
   */
  
--#include <sys/uio.h>
--#include <xfs/xfs.h>
- #include "command.h"
+-#include <paths.h>
+-#include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -14,8 +12,6 @@
+ #include <sys/stat.h>
+ #include "path.h"
  #include "input.h"
- #include "init.h"
-diff --git a/io/scrub.c b/io/scrub.c
-index 2ff1a6a..449e39f 100644
---- a/io/scrub.c
-+++ b/io/scrub.c
-@@ -5,11 +5,8 @@
+-#include "project.h"
+-#include <limits.h>
+ 
+ extern char *progname;
+ 
+diff --git a/libfrog/projects.c b/libfrog/projects.c
+index 91bc78f..ec28c04 100644
+--- a/libfrog/projects.c
++++ b/libfrog/projects.c
+@@ -5,7 +5,6 @@
   */
  
- #include <sys/uio.h>
--#include <xfs/xfs.h>
- #include "command.h"
--#include "input.h"
- #include "init.h"
--#include "path.h"
- #include "io.h"
+ #include <stdio.h>
+-#include <stdlib.h>
+ #include <string.h>
+ #include "project.h"
  
- static struct cmdinfo scrub_cmd;
-diff --git a/io/stat.c b/io/stat.c
-index 37c0b2e..fe51aed 100644
---- a/io/stat.c
-+++ b/io/stat.c
-@@ -11,9 +11,7 @@
- #include "init.h"
- #include "io.h"
- #include "statx.h"
+diff --git a/libfrog/ptvar.c b/libfrog/ptvar.c
+index c929683..c8393cc 100644
+--- a/libfrog/ptvar.c
++++ b/libfrog/ptvar.c
+@@ -3,14 +3,11 @@
+  * Copyright (C) 2018 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
+  */
+-#include <stdint.h>
+ #include <stdlib.h>
+ #include <stdbool.h>
+ #include <string.h>
+ #include <assert.h>
+ #include <pthread.h>
+-#include <unistd.h>
+-#include "platform_defs.h"
+ #include "ptvar.h"
+ 
+ /*
+diff --git a/libfrog/radix-tree.c b/libfrog/radix-tree.c
+index c1c7487..de7c588 100644
+--- a/libfrog/radix-tree.c
++++ b/libfrog/radix-tree.c
+@@ -5,9 +5,6 @@
+  * Copyright (C) 2005 SGI, Christoph Lameter <clameter@sgi.com>
+  */
+ #include <stdlib.h>
+-#include <string.h>
+-#include <errno.h>
+-#include <stdint.h>
+ #include "platform_defs.h"
+ #include "radix-tree.h"
+ 
+diff --git a/libfrog/topology.c b/libfrog/topology.c
+index cac164f..b675641 100644
+--- a/libfrog/topology.c
++++ b/libfrog/topology.c
+@@ -4,7 +4,6 @@
+  * All Rights Reserved.
+  */
+ 
 -#include "libxfs.h"
+ #include "libxcmd.h"
+ #ifdef ENABLE_BLKID
+ #  include <blkid/blkid.h>
+diff --git a/libfrog/util.c b/libfrog/util.c
+index ff93518..a3971aa 100644
+--- a/libfrog/util.c
++++ b/libfrog/util.c
+@@ -4,7 +4,6 @@
+  * All Rights Reserved.
+  */
+ #include "platform_defs.h"
+-#include "libfrog.h"
  
--#include <fcntl.h>
- 
- static cmdinfo_t stat_cmd;
- static cmdinfo_t statfs_cmd;
+ /*
+  * libfrog is a collection of miscellaneous userspace utilities.
+diff --git a/libfrog/workqueue.c b/libfrog/workqueue.c
+index 7311477..965ac31 100644
+--- a/libfrog/workqueue.c
++++ b/libfrog/workqueue.c
+@@ -4,7 +4,6 @@
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
+  */
+ #include <pthread.h>
+-#include <signal.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdint.h>
 -- 
 1.8.3.1
 
