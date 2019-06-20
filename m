@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 761FF4DA83
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 21:46:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6814DABE
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 21:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfFTTqd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 15:46:33 -0400
-Received: from sandeen.net ([63.231.237.45]:46422 "EHLO sandeen.net"
+        id S1727053AbfFTTw4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 15:52:56 -0400
+Received: from sandeen.net ([63.231.237.45]:46972 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfFTTqd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 20 Jun 2019 15:46:33 -0400
+        id S1726178AbfFTTw4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 20 Jun 2019 15:52:56 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6175F11679;
-        Thu, 20 Jun 2019 14:46:30 -0500 (CDT)
-Subject: Re: [PATCH 09/12] mkfs: validate start and end of aligned logs
+        by sandeen.net (Postfix) with ESMTPSA id 0CD205A0AF;
+        Thu, 20 Jun 2019 14:52:54 -0500 (CDT)
+Subject: Re: [PATCH 10/12] xfs_io: repair_f should use its own name
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104936953.1172531.2121427277342917243.stgit@magnolia>
- <156104942708.1172531.3848135690205396934.stgit@magnolia>
+ <156104943322.1172531.14877921651268434165.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <6b093274-3ad4-f4b6-4ee5-465ff9ea97cf@sandeen.net>
-Date:   Thu, 20 Jun 2019 14:46:31 -0500
+Message-ID: <0628fbe6-f9ce-6af2-c0e0-0d5bde6d5de9@sandeen.net>
+Date:   Thu, 20 Jun 2019 14:52:55 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <156104942708.1172531.3848135690205396934.stgit@magnolia>
+In-Reply-To: <156104943322.1172531.14877921651268434165.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,50 +82,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:50 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Validate that the start and end of the log stay within a single AG if
-> we adjust either end to align to stripe units.
+> If the repair command fails, it should tag the error message with its
+> own name ("repair").
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
 > ---
->  mkfs/xfs_mkfs.c |   15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+>  io/scrub.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index ddb25ecc..468b8fde 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3033,15 +3033,28 @@ align_internal_log(
->  	struct xfs_mount	*mp,
->  	int			sunit)
->  {
-> +	uint64_t		logend;
-> +
->  	/* round up log start if necessary */
->  	if ((cfg->logstart % sunit) != 0)
->  		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
+> diff --git a/io/scrub.c b/io/scrub.c
+> index 2ff1a6af..052497be 100644
+> --- a/io/scrub.c
+> +++ b/io/scrub.c
+> @@ -293,7 +293,7 @@ repair_ioctl(
 >  
-> +	/* If our log start overlaps the next AG's metadata, fail. */
-> +	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
-> +			fprintf(stderr,
-> +_("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
-> +  "within an allocation group.\n"),
-> +			(long long) cfg->logstart);
-> +		usage();
-> +	}
-> +
->  	/* round up/down the log size now */
->  	align_log_size(cfg, sunit);
->  
->  	/* check the aligned log still fits in an AG. */
-> -	if (cfg->logblocks > cfg->agsize - XFS_FSB_TO_AGBNO(mp, cfg->logstart)) {
-> +	logend = cfg->logstart + cfg->logblocks - 1;
-> +	if (XFS_FSB_TO_AGNO(mp, cfg->logstart) != XFS_FSB_TO_AGNO(mp, logend) ||
-> +	    !xfs_verify_fsbno(mp, logend)) {
->  		fprintf(stderr,
->  _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
->    "Must fit within an allocation group.\n"),
+>  	error = ioctl(fd, XFS_IOC_SCRUB_METADATA, &meta);
+>  	if (error)
+> -		perror("scrub");
+> +		perror("repair");
+>  	if (meta.sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+>  		printf(_("Corruption remains.\n"));
+>  	if (meta.sm_flags & XFS_SCRUB_OFLAG_PREEN)
 > 
