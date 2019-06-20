@@ -2,91 +2,158 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9424DC99
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 23:32:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26B774DCDF
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 23:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfFTVcH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 17:32:07 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59689 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726549AbfFTVcH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 17:32:07 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 712D6439224;
-        Fri, 21 Jun 2019 07:32:05 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1he4e9-0006fZ-E0; Fri, 21 Jun 2019 07:31:05 +1000
-Date:   Fri, 21 Jun 2019 07:31:05 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2] xfs: move xfs_ino_geometry to xfs_shared.h
-Message-ID: <20190620213105.GD26375@dread.disaster.area>
-References: <20190618205935.GS5387@magnolia>
- <20190619011309.GT5387@magnolia>
+        id S1726282AbfFTVkE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 17:40:04 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39864 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfFTVkD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 17:40:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLYHVn088700;
+        Thu, 20 Jun 2019 21:38:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=D3CnJNHOIgWdUG1TcE81fq/bsWj72ILMBiE1tAPqQwo=;
+ b=HKn791tbDcSyV5tTwA4L7n0iz31Dp5T+PYftD80uW1HfTEOKSjNNo8ILTMjO1/Rv8cOI
+ hpROCjBB23fPljyiuqdvwYxNy/xpAecXOJ97+qJXUbuQysBIXp6+kq1M1NohTdSt2o5m
+ bdEHlQfhcUcK9Q2VlmkUVsRBf7mVWZm2yOm4eXP0y5gikqkZmSL3eKCbJdvsPzjLY50k
+ BfxiWb1VEIm42WU1tUp/bKXk3/F6YlHbkAbzrc8pKPgHNgEvkWIV2bY4z7UBJVZQfH8/
+ ZSoTLiWzgKluhc0l9SvuD6uztH108WS7lGdHTqumoJ0SNSOf6qr9qij979gZkZoaMzEB qg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t7809kdj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 21:38:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLacer151050;
+        Thu, 20 Jun 2019 21:36:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2t77ypkrr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Jun 2019 21:36:38 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5KLabeL151041;
+        Thu, 20 Jun 2019 21:36:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t77ypkrqs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 21:36:37 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5KLaWqH007037;
+        Thu, 20 Jun 2019 21:36:32 GMT
+Received: from localhost (/10.145.179.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Jun 2019 14:36:31 -0700
+Date:   Thu, 20 Jun 2019 14:36:29 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 4/6] vfs: don't allow most setxattr to immutable files
+Message-ID: <20190620213629.GB5375@magnolia>
+References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
+ <156022840560.3227213.4776913678782966728.stgit@magnolia>
+ <20190620140345.GI30243@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190619011309.GT5387@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=Hq3NnKovOj3MnDf3MzUA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190620140345.GI30243@quack2.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906200154
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 06:13:09PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Jun 20, 2019 at 04:03:45PM +0200, Jan Kara wrote:
+> On Mon 10-06-19 21:46:45, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > The chattr manpage has this to say about immutable files:
+> > 
+> > "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> > or renamed, no link can be created to this file, most of the file's
+> > metadata can not be modified, and the file can not be opened in write
+> > mode."
+> > 
+> > However, we don't actually check the immutable flag in the setattr code,
+> > which means that we can update inode flags and project ids and extent
+> > size hints on supposedly immutable files.  Therefore, reject setflags
+> > and fssetxattr calls on an immutable file if the file is immutable and
+> > will remain that way.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  fs/inode.c |   31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> > 
+> > 
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index a3757051fd55..adfb458bf533 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -2184,6 +2184,17 @@ int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags)
+> >  	    !capable(CAP_LINUX_IMMUTABLE))
+> >  		return -EPERM;
+> >  
+> > +	/*
+> > +	 * We aren't allowed to change any other flags if the immutable flag is
+> > +	 * already set and is not being unset.
+> > +	 */
+> > +	if ((oldflags & FS_IMMUTABLE_FL) &&
+> > +	    (flags & FS_IMMUTABLE_FL)) {
+> > +		if ((oldflags & ~FS_IMMUTABLE_FL) !=
+> > +		    (flags & ~FS_IMMUTABLE_FL))
 > 
-> The inode geometry structure isn't related to ondisk format; it's
-> support for the mount structure.  Move it to xfs_shared.h.
+> This check looks a bit strange when you've just check FS_IMMUTABLE_FL isn't
+> changing... Why not just oldflags != flags?
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
-> v2: move it to xfs_shared.h, which now every file has to include
-> ---
->  fs/xfs/libxfs/xfs_dir2.c       |    1 +
->  fs/xfs/libxfs/xfs_dir2_block.c |    1 +
->  fs/xfs/libxfs/xfs_dir2_data.c  |    1 +
->  fs/xfs/libxfs/xfs_dir2_leaf.c  |    1 +
->  fs/xfs/libxfs/xfs_dir2_node.c  |    1 +
->  fs/xfs/libxfs/xfs_dir2_sf.c    |    1 +
->  fs/xfs/libxfs/xfs_format.h     |   41 ---------------------------------------
->  fs/xfs/libxfs/xfs_iext_tree.c  |    1 +
->  fs/xfs/libxfs/xfs_inode_fork.c |    1 +
->  fs/xfs/libxfs/xfs_shared.h     |   42 ++++++++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_acl.c               |    1 +
->  fs/xfs/xfs_attr_list.c         |    1 +
->  fs/xfs/xfs_buf.c               |    1 +
->  fs/xfs/xfs_buf_item.c          |    1 +
->  fs/xfs/xfs_dir2_readdir.c      |    1 +
->  fs/xfs/xfs_discard.c           |    1 +
->  fs/xfs/xfs_dquot_item.c        |    1 +
->  fs/xfs/xfs_error.c             |    1 +
->  fs/xfs/xfs_export.c            |    1 +
->  fs/xfs/xfs_filestream.c        |    1 +
->  fs/xfs/xfs_icache.c            |    1 +
->  fs/xfs/xfs_inode_item.c        |    1 +
->  fs/xfs/xfs_ioctl32.c           |    1 +
->  fs/xfs/xfs_message.c           |    1 +
->  fs/xfs/xfs_pnfs.c              |    1 +
->  fs/xfs/xfs_qm_bhv.c            |    1 +
->  fs/xfs/xfs_quotaops.c          |    1 +
->  fs/xfs/xfs_trans_ail.c         |    1 +
->  fs/xfs/xfs_xattr.c             |    1 +
->  29 files changed, 69 insertions(+), 41 deletions(-)
+> > +	if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
+> > +	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE)) {
+> > +		if ((old_fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE) !=
+> > +		    (fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE))
+> 
+> Ditto here...
 
-Bigger patch, but I think it's the right way to do this.
+Good point!  I'll fix it.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+--D
 
--- 
-Dave Chinner
-david@fromorbit.com
+> 
+> > +			return -EPERM;
+> > +		if (old_fa->fsx_projid != fa->fsx_projid)
+> > +			return -EPERM;
+> > +		if ((fa->fsx_xflags & (FS_XFLAG_EXTSIZE |
+> > +				       FS_XFLAG_EXTSZINHERIT)) &&
+> > +		    old_fa->fsx_extsize != fa->fsx_extsize)
+> > +			return -EPERM;
+> > +		if ((old_fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
+> > +		    old_fa->fsx_cowextsize != fa->fsx_cowextsize)
+> > +			return -EPERM;
+> > +	}
+> > +
+> >  	/* Extent size hints of zero turn off the flags. */
+> >  	if (fa->fsx_extsize == 0)
+> >  		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
+> 
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
