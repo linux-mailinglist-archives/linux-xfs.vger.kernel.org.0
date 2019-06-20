@@ -2,100 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBC994DD10
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2019 23:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BA854DD31
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 00:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfFTVxn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Jun 2019 17:53:43 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:58782 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725905AbfFTVxn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 17:53:43 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5KLqDCc014930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 17:52:14 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EC0F4420484; Thu, 20 Jun 2019 17:52:12 -0400 (EDT)
-Date:   Thu, 20 Jun 2019 17:52:12 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 1/6] mm/fs: don't allow writes to immutable files
-Message-ID: <20190620215212.GG4650@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        matthew.garrett@nebula.com, yuchao0@huawei.com,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
- <156022837711.3227213.11787906519006016743.stgit@magnolia>
+        id S1726027AbfFTWHP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Jun 2019 18:07:15 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:54584 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbfFTWHO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Jun 2019 18:07:14 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id BE3BA3DCB41;
+        Fri, 21 Jun 2019 08:07:11 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1he5CA-0006sy-7P; Fri, 21 Jun 2019 08:06:14 +1000
+Date:   Fri, 21 Jun 2019 08:06:14 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 00/11] xfsprogs: remove unneeded #includes
+Message-ID: <20190620220614.GE26375@dread.disaster.area>
+References: <1561066174-13144-1-git-send-email-sandeen@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156022837711.3227213.11787906519006016743.stgit@magnolia>
+In-Reply-To: <1561066174-13144-1-git-send-email-sandeen@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=z9mBUTKy4XBHfgIsgsIA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:46:17PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> The chattr manpage has this to say about immutable files:
-> 
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
-> 
-> Once the flag is set, it is enforced for quite a few file operations,
-> such as fallocate, fpunch, fzero, rm, touch, open, etc.  However, we
-> don't check for immutability when doing a write(), a PROT_WRITE mmap(),
-> a truncate(), or a write to a previously established mmap.
-> 
-> If a program has an open write fd to a file that the administrator
-> subsequently marks immutable, the program still can change the file
-> contents.  Weird!
-> 
-> The ability to write to an immutable file does not follow the manpage
-> promise that immutable files cannot be modified.  Worse yet it's
-> inconsistent with the behavior of other syscalls which don't allow
-> modifications of immutable files.
-> 
-> Therefore, add the necessary checks to make the write, mmap, and
-> truncate behavior consistent with what the manpage says and consistent
-> with other syscalls on filesystems which support IMMUTABLE.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Jun 20, 2019 at 04:29:23PM -0500, Eric Sandeen wrote:
+> This is the result of a mechanical process and ... may have a few
+> oddities, for example removing "init.h" from some utils made me
+> realize that we inherit it from libxfs and also have it in local
 
-I note that this patch doesn't allow writes to swap files.  So Amir's
-generic/554 test will still fail for those file systems that don't use
-copy_file_range.
+We do? That'd be really, really broken if we did - including local
+header files from a global header files is not a good idea.
 
-I'm indifferent as to whether you add a new patch, or include that
-change in this patch, but perhaps we should fix this while we're
-making changes in these code paths?
+/me goes looking, can't find where libxfs.h includes init.h
 
-				- Ted
+libxfs/init.h is private to libxfs/, it's not a global include file,
+and it is included directly in all the libxfs/*.c files that need
+it, which is 3 files - init.c, rdwr.c and util.c. 
+
+> headers; libxfs has a global but so does scrub, etc.  So that stuff
+> can/should be fixed up, but in the meantime, this zaps out a ton
+> of header dependencies, and seems worthwhile.
+
+IMO, this doesn't improve the tangle of header files in userspace.
+All it does is make the include patterns inconsistent across files
+because of the tangled mess of the libxfs/ vs include/ header files
+that was never completely resolved when libxfs was created as a
+shared kernel library....
+
+IOWs, the include pattern I was originally aiming for with the
+libxfs/ shared userspace/kernel library was:
+
+#include "libxfs_priv.h"
+<include shared kernel header files>
+
+And for things outside libxfs/ that use libxfs:
+
+#include "libxfs.h"
+<include local header files>
+
+IOWs, "libxfs_priv.h" contained the includes for all the local
+userspace libxfs includes and defines and non-shared support
+structures, and it would export on build all the header files that
+external code needs to build into include/ via symlinks. This is
+incomplete - stuff like include/xfs_mount.h, xfs_inode.h, etc needs
+to move into libxfs as private header files (similar to how they are
+private in the kernel) and then exported at build time.
+
+Likewise, "libxfs.h" should only contain global include files and
+those exported from libxfs, and that's all the external code should
+include to use /anything/ from libxfs. i.e.  a single include forms
+the external interface to libxfs.
+
+AFAIC, nothing should be including platform or build dependent
+things like platform_defs.h, because that should be pulled in by
+libxfs.h or libxfs_priv.h. And nothing external should need to pull
+in, say, xfs_format.h or xfs_mount.h, because they are all pulled in
+by include/libxfs.h (which it mostly does already).
+
+Hence I'd prefer we finish untangling the header file include mess
+before we cull unneceesary includes. Otherwise we are going to end
+up culling the wrong includes and then have to clean up that mess as
+well to bring the code back to being clean and consistent....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
