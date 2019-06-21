@@ -2,168 +2,201 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 562334E1F1
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 10:32:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 201734E271
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 10:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbfFUIc6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 21 Jun 2019 04:32:58 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:57744 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726057AbfFUIc6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 04:32:58 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id EC466289AF
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 08:32:56 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id E075D289DA; Fri, 21 Jun 2019 08:32:56 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 203947] New: [xfstests generic/475]: general protection fault:
- 0000 [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
-Date:   Fri, 21 Jun 2019 08:32:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zlang@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-203947-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1726282AbfFUI54 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Jun 2019 04:57:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36350 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfFUI5z (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 04:57:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f21so3058862pgi.3;
+        Fri, 21 Jun 2019 01:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nRPQXdqLedtNgscXnRjPfeJWe5ZlldcTjKoE0Uu/TIg=;
+        b=O1TISh7T1gVhVJ1eyDgMWiv287JayGkibe1YG25rTFSlBwRLtIDudtzYp9trWdqF1A
+         jaY9ryzoR8TuHBF0nGsVwvGFoJ73EXeV8sm86Xa8xk6T6K8ZVBfdss/HSpqkCEamZ6Sc
+         2qEVMmuGL8xqDsDg5W/1Ym3MHKmST7sGA9VYtYAJQLD6bWlExCaCqCXo6wHmHmS+Os3x
+         UmUcWVqzPs/QaAQZiQsrGKEmSIeS6kMJC9ps8da76x6+cF1EEbOCXJ998I1rd6WqCXn2
+         yAwFI5FDVuWcNJ45CbRowH1aDa09M4ibG5DdyGOkfbHhKRQZCuGzwMhJAhTWt7/YcWb5
+         QGaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nRPQXdqLedtNgscXnRjPfeJWe5ZlldcTjKoE0Uu/TIg=;
+        b=mYfo1l3y2eGTaLOoKTC0bhW7Q+7k0QzKbQdMrKnZwnaVMCdQebZr3CKwOgRXsl8Po5
+         Ju8KTgiLwC2oedaJN5P+foVErbzGSUWgYFzvRZP0PnU7vWodohQ8b2kxNvvFMthMuzQy
+         +GgsWjeRRwwHZyvJ/rSV7eoEy+fKny0+bcZcAVzVZafZMWzyKiOemV8Wn7+RMaICeQpN
+         UdmXQTWAMal+qOamUc/MONjwCoVOr9+HufkRp5rV3T3bpYy2JuiIaJx60sqZs1cXdweo
+         EAMok3PwptJo+ZlhmwCd8cnytA3pmGmyjDsekUjp5EvHIe4y99iT1eQPMMi/HTAZ7HpU
+         ++EA==
+X-Gm-Message-State: APjAAAVjI01qqgG/ILmRHW88iiR3z7+YiAW8wIBJyxpVc0VzHFqFj+FB
+        4Uahy2oZIZ1xtUBG1S96s1Joz9xutAc=
+X-Google-Smtp-Source: APXvYqwRirxBy6d7CZGh4zWmWfKbRLhEpQUokD5odKVeymNMDzqCQwgOhg5zhytK7Hca5pRecywTpg==
+X-Received: by 2002:a63:ec13:: with SMTP id j19mr16781502pgh.174.1561107474788;
+        Fri, 21 Jun 2019 01:57:54 -0700 (PDT)
+Received: from localhost ([178.128.102.47])
+        by smtp.gmail.com with ESMTPSA id 11sm2585754pfw.33.2019.06.21.01.57.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 21 Jun 2019 01:57:54 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 16:57:48 +0800
+From:   Eryu Guan <guaneryu@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 2/4] xfs: rework min log size helper
+Message-ID: <20190621085748.GH15846@desktop>
+References: <156089201978.345809.17444450351199726553.stgit@magnolia>
+ <156089203509.345809.3448903728041546348.stgit@magnolia>
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156089203509.345809.3448903728041546348.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203947
+On Tue, Jun 18, 2019 at 02:07:15PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The recent _scratch_find_xfs_min_logblocks helper has a major thinko in
+> it -- it relies on feeding a too-small size to _scratch_do_mkfs so that
+> mkfs will tell us the minimum log size.  Unfortunately, _scratch_do_mkfs
+> will see that first failure and retry the mkfs without MKFS_OPTIONS,
+> which means that we return the minimum log size for the default mkfs
+> settings without MKFS_OPTIONS.
+> 
+> This is a problem if someone's running fstests with a set of
+> MKFS_OPTIONS that affects the minimum log size.  To fix this, open-code
+> the _scratch_do_mkfs retry behavior so that we only do the "retry
+> without MKFS_OPTIONS" behavior if the mkfs failed for a reason other
+> than the minimum log size check.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  common/rc  |   13 ++++++++++---
+>  common/xfs |   23 +++++++++++++++++++++--
+>  2 files changed, 31 insertions(+), 5 deletions(-)
+> 
+> 
+> diff --git a/common/rc b/common/rc
+> index 25203bb4..a38b7f02 100644
+> --- a/common/rc
+> +++ b/common/rc
+> @@ -438,6 +438,14 @@ _scratch_mkfs_options()
+>      echo $SCRATCH_OPTIONS $MKFS_OPTIONS $* $SCRATCH_DEV
+>  }
+>  
+> +# Format the scratch device directly.  First argument is the mkfs command.
+> +# Second argument are all the parameters.  stdout goes to $tmp.mkfsstd and
+> +# stderr goes to $tmp.mkfserr.
+> +__scratch_do_mkfs()
+> +{
+> +	eval "$1 $2 $SCRATCH_DEV" 2>$tmp.mkfserr 1>$tmp.mkfsstd
 
-            Bug ID: 203947
-           Summary: [xfstests generic/475]: general protection fault: 0000
-                    [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
-           Product: File System
-           Version: 2.5
-    Kernel Version: xfs-linux xfs-5.3-merge-1
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: XFS
-          Assignee: filesystem_xfs@kernel-bugs.kernel.org
-          Reporter: zlang@redhat.com
-        Regression: No
+I'd prefer leaving stdout and stderr to caller to handle, because ..
 
-Description of problem:
-generic/475 hit a kernel panic on x86_64, the xfs info is:
 
-meta-data=/dev/sda2              isize=512    agcount=16, agsize=245696 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=1, sparse=1, rmapbt=0
-         =                       reflink=1
-data     =                       bsize=4096   blocks=3931136, imaxpct=25
-         =                       sunit=64     swidth=256 blks
-naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-log      =internal log           bsize=4096   blocks=2560, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
+> +}
+> +
+>  # Do the actual mkfs work on SCRATCH_DEV. Firstly mkfs with both MKFS_OPTIONS
+>  # and user specified mkfs options, if that fails (due to conflicts between mkfs
+>  # options), do a second mkfs with only user provided mkfs options.
+> @@ -456,8 +464,7 @@ _scratch_do_mkfs()
+>  
+>  	# save mkfs output in case conflict means we need to run again.
+>  	# only the output for the mkfs that applies should be shown
+> -	eval "$mkfs_cmd $MKFS_OPTIONS $extra_mkfs_options $SCRATCH_DEV" \
+> -		2>$tmp.mkfserr 1>$tmp.mkfsstd
 
-part of panic log:
-....
-[29158.142556] XFS (dm-0): writeback error on sector 19720192 
-[29158.167263] XFS (dm-0): writeback error on sector 29562736 
-[29158.194303] XFS (dm-0): xfs_do_force_shutdown(0x2) called from line 1272 of
-file fs/xfs/xfs_log.c. Return address = 00000000025e6ad7 
-[29158.248165] XFS (dm-0): Log I/O Error Detected. Shutting down filesystem 
-[29158.278321] XFS (dm-0): Please unmount the filesystem and rectify the
-problem(s) 
-[29158.647121] XFS (dm-0): Unmounting Filesystem 
-[29159.265101] XFS (dm-0): Mounting V5 Filesystem 
-[29159.590476] XFS (dm-0): Starting recovery (logdev: internal) 
-[29161.495439] XFS (dm-0): Ending recovery (logdev: internal) 
-[29163.269463] kasan: CONFIG_KASAN_INLINE enabled 
-[29163.291984] kasan: GPF could be caused by NULL-ptr deref or user memory
-access 
-[29163.328565] general protection fault: 0000 [#1] SMP KASAN PTI 
-[29163.354186] CPU: 4 PID: 1049 Comm: kworker/4:3 Not tainted 5.2.0-rc4 #1 
-[29163.383882] Hardware name: HP ProLiant DL360 Gen9, BIOS P89 05/06/2015 
-[29163.413366] Workqueue: xfs-conv/dm-0 xfs_end_io [xfs] 
-[29163.436225] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs] 
-[29163.461648] Code: 03 38 d0 7c 08 84 d2 0f 85 3c 01 00 00 49 8d bc 24 f8 00
-00 00 45 8b 6d 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02
-00 0f 85 33 01 00 00 4d 89 ac 24 f8 00 00 00 48 b8 00 00 
-[29163.546149] RSP: 0018:ffff888070f37c28 EFLAGS: 00010202 
-[29163.569758] RAX: dffffc0000000000 RBX: ffff8880069632c0 RCX:
-ffff8880069632e0 
-[29163.601781] RDX: 000000000000001f RSI: 0000000000000001 RDI:
-00000000000000f8 
-[29163.636304] RBP: ffff8880471c6f00 R08: dffffc0000000000 R09:
-ffffed1008e38e61 
-[29163.669587] R10: 1ffff11008e38dd7 R11: ffff88806f85a8c8 R12:
-0000000000000000 
-[29163.702129] R13: 0000000004208060 R14: 0000000000000001 R15:
-dffffc0000000000 
-[29163.734261] FS:  0000000000000000(0000) GS:ffff88810e400000(0000)
-knlGS:0000000000000000 
-[29163.770758] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
-[29163.797513] CR2: 000055569b8a2000 CR3: 0000000138816002 CR4:
-00000000001606e0 
-[29163.832418] Call Trace: 
-[29163.844440]  xfs_ioend_try_merge+0x42d/0x610 [xfs] 
-[29163.867530]  xfs_end_io+0x217/0x380 [xfs] 
-[29163.885689]  ? xfs_setfilesize+0xe0/0xe0 [xfs] 
-[29163.905876]  process_one_work+0x8f4/0x1760 
-[29163.924473]  ? pwq_dec_nr_in_flight+0x2d0/0x2d0 
-[29163.944767]  worker_thread+0x87/0xb50 
-[29163.961526]  ? __kthread_parkme+0xb6/0x180 
-[29163.979926]  ? process_one_work+0x1760/0x1760 
-[29163.999701]  kthread+0x326/0x3f0 
-[29164.014194]  ? kthread_create_on_node+0xc0/0xc0 
-[29164.034154]  ret_from_fork+0x3a/0x50 
-[29164.050229] Modules linked in: dm_mod iTCO_wdt iTCO_vendor_support
-intel_rapl sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm
-irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_cstate
-intel_uncore intel_rapl_perf pcspkr dax_pmem_compat device_dax nd_pmem
-dax_pmem_core ipmi_ssif sunrpc i2c_i801 lpc_ich ipmi_si hpwdt hpilo sg
-ipmi_devintf ipmi_msghandler acpi_tad ioatdma acpi_power_meter dca xfs
-libcrc32c mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt
-fb_sys_fops sd_mod ttm drm crc32c_intel serio_raw tg3 hpsa scsi_transport_sas
-wmi 
-[29164.284974] ---[ end trace 185128643cc7ea23 ]--- 
-...
-...
+it's easier to know the $tmp.mkfserr and $tmp.mkfsstd files should be
+cleaned up, otherwise it's not that clear where these files come from.
 
-Version-Release number of selected component (if applicable):
-xfs-linux:
- f5b999c03f4c (HEAD -> for-next, tag: xfs-5.3-merge-1, origin/xfs-5.3-merge,
-origin/for-next) xfs: remove unused flag arguments
+> +	__scratch_do_mkfs "$mkfs_cmd" "$MKFS_OPTIONS $extra_mkfs_options"
+>  	mkfs_status=$?
+>  
+>  	# a mkfs failure may be caused by conflicts between $MKFS_OPTIONS and
+> @@ -471,7 +478,7 @@ _scratch_do_mkfs()
+>  		) >> $seqres.full
+>  
+>  		# running mkfs again. overwrite previous mkfs output files
+> -		eval "$mkfs_cmd $extra_mkfs_options $SCRATCH_DEV" \
+> +		__scratch_do_mkfs "$mkfs_cmd" "$extra_mkfs_options" \
+>  			2>$tmp.mkfserr 1>$tmp.mkfsstd
 
-How reproducible:
-Once so far, trying to reproduce it.
+With the implemention in the patch, the "2>$tmp.mkfserr 1>$tmp.mkfsstd"
+part should be removed too, but with the suggested implemention we can
+keep it :)
 
-Steps to Reproduce:
-Loop run generic/475
+>  		mkfs_status=$?
+>  	fi
+> diff --git a/common/xfs b/common/xfs
+> index f8dafc6c..8733e2ae 100644
+> --- a/common/xfs
+> +++ b/common/xfs
+> @@ -87,16 +87,33 @@ _scratch_find_xfs_min_logblocks()
+>  	# minimum log size.
+>  	local XFS_MIN_LOG_BYTES=2097152
+>  
+> -	_scratch_do_mkfs "$mkfs_cmd" "cat" $* -N -l size=$XFS_MIN_LOG_BYTES \
+> -		2>$tmp.mkfserr 1>$tmp.mkfsstd
+> +	# Try formatting the filesystem with all the options given and the
+> +	# minimum log size.  We hope either that this succeeds or that mkfs
+> +	# tells us the required minimum log size for the feature set.
+> +	#
+> +	# We cannot use _scratch_do_mkfs because it will retry /any/ failed
+> +	# mkfs with MKFS_OPTIONS removed even if the only "failure" was that
+> +	# the log was too small.
+> +	local extra_mkfs_options="$* -N -l size=$XFS_MIN_LOG_BYTES"
+> +	__scratch_do_mkfs "$mkfs_cmd" "$MKFS_OPTIONS $extra_mkfs_options"
+>  	local mkfs_status=$?
+>  
+> +	# If the format fails for a reason other than the log being too small,
+> +	# try again without MKFS_OPTIONS because that's what _scratch_do_mkfs
+> +	# will do if we pass in the log size option.
+> +	if [ $mkfs_status -ne 0 ] &&
+> +	   ! grep -q 'log size.*too small, minimum' $tmp.mkfserr; then
+> +		__scratch_do_mkfs "$mkfs_cmd" "$extra_mkfs_options"
+> +		local mkfs_status=$?
 
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+We've already declared mkfs_status as local, no need to do it again
+here.
+
+Thanks,
+Eryu
+
+> +	fi
+> +
+>  	# mkfs suceeded, so we must pick out the log block size to do the
+>  	# unit conversion
+>  	if [ $mkfs_status -eq 0 ]; then
+>  		local blksz="$(grep '^log.*bsize' $tmp.mkfsstd | \
+>  			sed -e 's/log.*bsize=\([0-9]*\).*$/\1/g')"
+>  		echo $((XFS_MIN_LOG_BYTES / blksz))
+> +		rm -f $tmp.mkfsstd $tmp.mkfserr
+>  		return
+>  	fi
+>  
+> @@ -104,6 +121,7 @@ _scratch_find_xfs_min_logblocks()
+>  	if grep -q 'minimum size is' $tmp.mkfserr; then
+>  		grep 'minimum size is' $tmp.mkfserr | \
+>  			sed -e 's/^.*minimum size is \([0-9]*\) blocks/\1/g'
+> +		rm -f $tmp.mkfsstd $tmp.mkfserr
+>  		return
+>  	fi
+>  
+> @@ -111,6 +129,7 @@ _scratch_find_xfs_min_logblocks()
+>  	echo "Cannot determine minimum log size" >&2
+>  	cat $tmp.mkfsstd >> $seqres.full
+>  	cat $tmp.mkfserr >> $seqres.full
+> +	rm -f $tmp.mkfsstd $tmp.mkfserr
+>  }
+>  
+>  _scratch_mkfs_xfs()
+> 
