@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A83FC4EFB4
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 21:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 925214EFB5
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 21:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbfFUT5X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Jun 2019 15:57:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57654 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfFUT5X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 15:57:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LJsHRv100765;
-        Fri, 21 Jun 2019 19:57:21 GMT
+        id S1726194AbfFUT5b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Jun 2019 15:57:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43482 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfFUT5b (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 15:57:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LJs6Zh093957;
+        Fri, 21 Jun 2019 19:57:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=S/9Q7wfk82K25ujRHsHpIwm0KOmA1T8WDm1O2QVuMlA=;
- b=CcgqtI9dAoAJ6Pr0D0L9sER835L9SXT8dO99zTEvydMh6oQM3HGcpt8RX0ULEq4s/phO
- 8Imq1VT/vQ4XLpwsSqWwnP2BYXX7+KCBD/7tJ1IamweVWPeAms042OfCLm89V+WoFYLq
- T+Mc8oBvSnCu2Rjt6rs946tz+yMx/iGx/ycQs6Hmu8oozJl4/qT1VfmhQsSiENgWa0Z4
- lSpe8FCsx3bIaQVoXs78MQJMpCK7zpz5bBBhSorUTF/TfKLzhX8sboN3iSIAJccBvzBK
- i2zPZTs17y+RVui/fFc4Weqi3pjcKeP2vwxMbx/m7sncIOMvSR0GOG0J02leoFBkda3c JQ== 
+ bh=5DGpfYEiDueJJNTDXethZFbd5ZEyMsd3fyfvKc3WnLc=;
+ b=gG3X3e80WkVlYG8kTeiLHFQAMsZrtgefWwcM9BuICsCDAagRAnuJRW/hZ3HY+i6kdzZY
+ oKDcV+JNrLwIxSdbDu4Ed5FHz4OXThwANEmrL1FAZF9HKKDZdCxeesHTkS9MutvbVjq/
+ fHQVCexnCx36HSB9qaU+47fXYC1AX7WHoND1nk/rCFf0PYq9IATEdYw6gHg6CJOS9J5k
+ Vdo1DaY4CKMU/K97a6CGqtigQRckqDQPBSLN2N6Iw8zF7KjlbQ6MoJ+B0p92nP34iP/+
+ tRNhfhG9l3oXEvpISKWkxrW2+YXIuWZhfSa3aTRFnIfMIXLHsa+ZP5pPBakm+75FFnv/ 3g== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t7809r6kp-1
+        by userp2130.oracle.com with ESMTP id 2t7809r8gc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 19:57:21 +0000
+        Fri, 21 Jun 2019 19:57:29 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LJvFcc049513;
-        Fri, 21 Jun 2019 19:57:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2t77ypcesn-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LJvJHg049682;
+        Fri, 21 Jun 2019 19:57:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t77ypcetv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 19:57:20 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5LJvJmI013653;
-        Fri, 21 Jun 2019 19:57:19 GMT
+        Fri, 21 Jun 2019 19:57:28 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LJvRjh007310;
+        Fri, 21 Jun 2019 19:57:27 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 12:57:19 -0700
-Subject: [PATCH 3/6] libxfs: fix uncached buffer refcounting
+        with ESMTP ; Fri, 21 Jun 2019 12:57:27 -0700
+Subject: [PATCH 4/6] libxfs: fix buffer refcounting in delwri_queue
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 21 Jun 2019 12:57:12 -0700
-Message-ID: <156114703289.1643538.16263048212251920271.stgit@magnolia>
+Date:   Fri, 21 Jun 2019 12:57:24 -0700
+Message-ID: <156114704472.1643538.14565976860288969023.stgit@magnolia>
 In-Reply-To: <156114701371.1643538.316410894576032261.stgit@magnolia>
 References: <156114701371.1643538.316410894576032261.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,74 +70,48 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Currently, uncached buffers in userspace are created with zero refcount
-and are fed to cache_node_put when they're released.  This is totally
-broken -- the refcount should be 1 (because the caller now holds a
-reference) and we should never be dumping uncached buffers into the
-cache.  Fix both of these problems.
+In the kernel, xfs_buf_delwri_queue increments the buffer reference
+count before putting the buffer on the buffer list, and the refcount is
+decremented after the io completes for a net refcount change of zero.
+
+In userspace, delwri_queue calls libxfs_writebuf, which puts the buffer.
+delwri_queue is a no-op, for a net refcount change of -1.  This creates
+problems for any callers that expect a net change of zero, so increment
+the buffer refcount before calling writebuf.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libxfs/libxfs_io.h   |   18 ++++++++++++++++++
- libxfs/libxfs_priv.h |    2 --
- libxfs/rdwr.c        |    5 ++++-
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ libxfs/libxfs_io.h   |    7 +++++++
+ libxfs/libxfs_priv.h |    1 -
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 
 diff --git a/libxfs/libxfs_io.h b/libxfs/libxfs_io.h
-index 94261270..b6f8756a 100644
+index b6f8756a..c47a435d 100644
 --- a/libxfs/libxfs_io.h
 +++ b/libxfs/libxfs_io.h
-@@ -225,4 +225,22 @@ xfs_buf_associate_memory(struct xfs_buf *bp, void *mem, size_t len)
- 	return 0;
+@@ -243,4 +243,11 @@ xfs_buf_get_uncached(struct xfs_buftarg *targ, size_t bblen, int flags)
+ 	return bp;
  }
  
-+/*
-+ * Allocate an uncached buffer that points nowhere.  The refcount will be 1,
-+ * and the cache node hash list will be empty to indicate that it's uncached.
-+ */
-+static inline struct xfs_buf *
-+xfs_buf_get_uncached(struct xfs_buftarg *targ, size_t bblen, int flags)
++static inline void
++xfs_buf_delwri_queue(struct xfs_buf *bp, struct list_head *buffer_list)
 +{
-+	struct xfs_buf	*bp;
-+
-+	bp = libxfs_getbufr(targ, XFS_BUF_DADDR_NULL, bblen);
-+	if (!bp)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&bp->b_node.cn_hash);
-+	bp->b_node.cn_count = 1;
-+	return bp;
++	bp->b_node.cn_count++;
++	libxfs_writebuf(bp, 0);
 +}
 +
  #endif	/* __LIBXFS_IO_H__ */
 diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 9004ff0c..eb92942a 100644
+index eb92942a..fd420f4f 100644
 --- a/libxfs/libxfs_priv.h
 +++ b/libxfs/libxfs_priv.h
-@@ -378,8 +378,6 @@ roundup_64(uint64_t x, uint32_t y)
- 	(len) = __bar; /* no set-but-unused warning */	\
- 	NULL;						\
- })
--#define xfs_buf_get_uncached(t,n,f)     \
--	libxfs_getbufr((t), XFS_BUF_DADDR_NULL, (n));
+@@ -381,7 +381,6 @@ roundup_64(uint64_t x, uint32_t y)
  #define xfs_buf_relse(bp)		libxfs_putbuf(bp)
  #define xfs_buf_get(devp,blkno,len)	(libxfs_getbuf((devp), (blkno), (len)))
  #define xfs_bwrite(bp)			libxfs_writebuf((bp), 0)
-diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-index 998862af..9c6c93a7 100644
---- a/libxfs/rdwr.c
-+++ b/libxfs/rdwr.c
-@@ -866,7 +866,10 @@ libxfs_putbuf(xfs_buf_t *bp)
- 		}
- 	}
+-#define xfs_buf_delwri_queue(bp, bl)	libxfs_writebuf((bp), 0)
+ #define xfs_buf_delwri_submit(bl)	(0)
+ #define xfs_buf_oneshot(bp)		((void) 0)
  
--	cache_node_put(libxfs_bcache, (struct cache_node *)bp);
-+	if (!list_empty(&bp->b_node.cn_hash))
-+		cache_node_put(libxfs_bcache, (struct cache_node *)bp);
-+	else if (--bp->b_node.cn_count == 0)
-+		libxfs_putbufr(bp);
- }
- 
- void
 
