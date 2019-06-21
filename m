@@ -2,192 +2,168 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA5B94E195
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 10:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 562334E1F1
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 10:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfFUIFi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Jun 2019 04:05:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46678 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfFUIFi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 04:05:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so3162000pfy.13;
-        Fri, 21 Jun 2019 01:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8cS3aljHQsKxdgIaLDDhnWUz8QbVIOXyKHWLL/HTfcU=;
-        b=A76ahLON65ASI2gNcMFr7R4r2heFospsV6kvEp5b80Rl0+C6qk/9aVr2fKCxUE8U7d
-         WppWbE0fzewji+pMF0h+YL5nBuzScPTnJu3n4mcitEAyEbFrBfSdTTeGvqo98GD1fab9
-         MVgJNNNyxaZHkTvcxZFa9PCJ0E1lLPQ/GbX1/R76YeDDih2yJVWMrwbnR0gwSiOzGr1w
-         DULnOUgjXuZzxBHcfkNwd0R7Cj5NWeFLDm5RVJZV+/c2Ntdbw+9iRQUxJ702/kZYLPS7
-         ZFFUpy8ItzlvDbFt5nUSE6K30oYK65Y64cjp6z+vs31I6VhepMAjx//RKSzSD6ZlW6R5
-         1a3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8cS3aljHQsKxdgIaLDDhnWUz8QbVIOXyKHWLL/HTfcU=;
-        b=Em0tVqIPJc7hL862R9pzSQrOgqd/PljyaoqylskXhL33snFDwtC8vb+PO86SHbwF6U
-         yzqqz++G9N6dfJlKBR3/TCW5DGkkwz5+CNvaGoOhe4oTcnRQN1tv0T7STMkwsl9ON+ua
-         F/yGuHWcyS51stcAQnC5OzHfxStM1Ygqy0e1qlrF5qIVQlm8i7gty07Ug+qAdH7gF52c
-         8toQVy2lU+rz/pKKB2VQJ81zaFBDfi+f16S0ETrEZYRKb3YXQsDifczVFywUZwFmIL5b
-         wKBc7viEQ30MjqkFRmr11fUAsDApBmaE7T1bZl2H1Mc9nnGbWYljtYXblyfe34DEApQL
-         +xkQ==
-X-Gm-Message-State: APjAAAUCy9XvbBqDhhROiQ2kbYfkzdwS1yNjsR6NLCHu62F1zT5YRZK6
-        Q9i0BxKbYOWSOPyQZyMxLOc=
-X-Google-Smtp-Source: APXvYqwReZUGq5jL2XB8cg74tJLWInS7ay9/Ds/E3Sh4wXNbonP54Wj3HgH/137XcVdJLjjwZIY1Fw==
-X-Received: by 2002:a63:fc61:: with SMTP id r33mr17080127pgk.294.1561104337389;
-        Fri, 21 Jun 2019 01:05:37 -0700 (PDT)
-Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id t8sm1832813pfq.31.2019.06.21.01.05.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 21 Jun 2019 01:05:36 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 16:05:31 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: test xfs_info on block device and mountpoint
-Message-ID: <20190621080531.GG15846@desktop>
-References: <20190614044954.22022-1-zlang@redhat.com>
+        id S1726058AbfFUIc6 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 21 Jun 2019 04:32:58 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:57744 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726057AbfFUIc6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 04:32:58 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id EC466289AF
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 08:32:56 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id E075D289DA; Fri, 21 Jun 2019 08:32:56 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 203947] New: [xfstests generic/475]: general protection fault:
+ 0000 [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
+Date:   Fri, 21 Jun 2019 08:32:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: zlang@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-203947-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614044954.22022-1-zlang@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:49:54PM +0800, Zorro Lang wrote:
-> There was a bug, xfs_info fails on a mounted block device:
-> 
->   # xfs_info /dev/mapper/testdev
->   xfs_info: /dev/mapper/testdev contains a mounted filesystem
-> 
->   fatal error -- couldn't initialize XFS library
-> 
-> xfsprogs has fixed it, this case is used to cover this bug.
+https://bugzilla.kernel.org/show_bug.cgi?id=203947
 
-Would you please document the commit that fixed this bug in test
-description?
+            Bug ID: 203947
+           Summary: [xfstests generic/475]: general protection fault: 0000
+                    [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
+           Product: File System
+           Version: 2.5
+    Kernel Version: xfs-linux xfs-5.3-merge-1
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: XFS
+          Assignee: filesystem_xfs@kernel-bugs.kernel.org
+          Reporter: zlang@redhat.com
+        Regression: No
 
-> 
-> Signed-off-by: Zorro Lang <zlang@redhat.com>
-> ---
->  tests/xfs/1000     | 65 ++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/1000.out |  2 ++
+Description of problem:
+generic/475 hit a kernel panic on x86_64, the xfs info is:
 
-I find it easier if you just pick the next free seq number :) If there's
-no conflict I can just apply the patch, and if there's conflict I'll do
-manual edit anyway.
+meta-data=/dev/sda2              isize=512    agcount=16, agsize=245696 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1
+data     =                       bsize=4096   blocks=3931136, imaxpct=25
+         =                       sunit=64     swidth=256 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
 
->  tests/xfs/group    |  1 +
->  3 files changed, 68 insertions(+)
->  create mode 100755 tests/xfs/1000
->  create mode 100644 tests/xfs/1000.out
-> 
-> diff --git a/tests/xfs/1000 b/tests/xfs/1000
-> new file mode 100755
-> index 00000000..689fe9e7
-> --- /dev/null
-> +++ b/tests/xfs/1000
-> @@ -0,0 +1,65 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2019 Red Hat, Inc.  All Rights Reserved.
-> +#
-> +# FS QA Test No. 1000
-> +#
-> +# test xfs_info on block device and mountpoint
-> +#
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -f $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +
-> +# remove previous $seqres.full before test
-> +rm -f $seqres.full
-> +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_scratch
-> +
-> +test_xfs_info()
-> +{
-> +	local target="$1"
-> +	local file=$tmp.$seq.info
-> +
-> +	$XFS_INFO_PROG $target > $file 2>&1
-> +	if [ $? -ne 0 ];then
-> +		echo "$XFS_INFO_PROG $target fails:"
-> +		cat $file
-> +	else
-> +		cat $file >> $seqres.full
-> +	fi
-> +}
-> +
-> +_scratch_mkfs > $seqres.full 2>&1
-> +# test unmounted block device(contains XFS)
-> +# Due to old xfsprogs doesn't support xfs_info a unmounted device, skip it
-> +$XFS_DB_PROG -c "info" $SCRATCH_DEV | grep -q "command info not found"
+part of panic log:
+....
+[29158.142556] XFS (dm-0): writeback error on sector 19720192 
+[29158.167263] XFS (dm-0): writeback error on sector 29562736 
+[29158.194303] XFS (dm-0): xfs_do_force_shutdown(0x2) called from line 1272 of
+file fs/xfs/xfs_log.c. Return address = 00000000025e6ad7 
+[29158.248165] XFS (dm-0): Log I/O Error Detected. Shutting down filesystem 
+[29158.278321] XFS (dm-0): Please unmount the filesystem and rectify the
+problem(s) 
+[29158.647121] XFS (dm-0): Unmounting Filesystem 
+[29159.265101] XFS (dm-0): Mounting V5 Filesystem 
+[29159.590476] XFS (dm-0): Starting recovery (logdev: internal) 
+[29161.495439] XFS (dm-0): Ending recovery (logdev: internal) 
+[29163.269463] kasan: CONFIG_KASAN_INLINE enabled 
+[29163.291984] kasan: GPF could be caused by NULL-ptr deref or user memory
+access 
+[29163.328565] general protection fault: 0000 [#1] SMP KASAN PTI 
+[29163.354186] CPU: 4 PID: 1049 Comm: kworker/4:3 Not tainted 5.2.0-rc4 #1 
+[29163.383882] Hardware name: HP ProLiant DL360 Gen9, BIOS P89 05/06/2015 
+[29163.413366] Workqueue: xfs-conv/dm-0 xfs_end_io [xfs] 
+[29163.436225] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs] 
+[29163.461648] Code: 03 38 d0 7c 08 84 d2 0f 85 3c 01 00 00 49 8d bc 24 f8 00
+00 00 45 8b 6d 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02
+00 0f 85 33 01 00 00 4d 89 ac 24 f8 00 00 00 48 b8 00 00 
+[29163.546149] RSP: 0018:ffff888070f37c28 EFLAGS: 00010202 
+[29163.569758] RAX: dffffc0000000000 RBX: ffff8880069632c0 RCX:
+ffff8880069632e0 
+[29163.601781] RDX: 000000000000001f RSI: 0000000000000001 RDI:
+00000000000000f8 
+[29163.636304] RBP: ffff8880471c6f00 R08: dffffc0000000000 R09:
+ffffed1008e38e61 
+[29163.669587] R10: 1ffff11008e38dd7 R11: ffff88806f85a8c8 R12:
+0000000000000000 
+[29163.702129] R13: 0000000004208060 R14: 0000000000000001 R15:
+dffffc0000000000 
+[29163.734261] FS:  0000000000000000(0000) GS:ffff88810e400000(0000)
+knlGS:0000000000000000 
+[29163.770758] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+[29163.797513] CR2: 000055569b8a2000 CR3: 0000000138816002 CR4:
+00000000001606e0 
+[29163.832418] Call Trace: 
+[29163.844440]  xfs_ioend_try_merge+0x42d/0x610 [xfs] 
+[29163.867530]  xfs_end_io+0x217/0x380 [xfs] 
+[29163.885689]  ? xfs_setfilesize+0xe0/0xe0 [xfs] 
+[29163.905876]  process_one_work+0x8f4/0x1760 
+[29163.924473]  ? pwq_dec_nr_in_flight+0x2d0/0x2d0 
+[29163.944767]  worker_thread+0x87/0xb50 
+[29163.961526]  ? __kthread_parkme+0xb6/0x180 
+[29163.979926]  ? process_one_work+0x1760/0x1760 
+[29163.999701]  kthread+0x326/0x3f0 
+[29164.014194]  ? kthread_create_on_node+0xc0/0xc0 
+[29164.034154]  ret_from_fork+0x3a/0x50 
+[29164.050229] Modules linked in: dm_mod iTCO_wdt iTCO_vendor_support
+intel_rapl sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm
+irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_cstate
+intel_uncore intel_rapl_perf pcspkr dax_pmem_compat device_dax nd_pmem
+dax_pmem_core ipmi_ssif sunrpc i2c_i801 lpc_ich ipmi_si hpwdt hpilo sg
+ipmi_devintf ipmi_msghandler acpi_tad ioatdma acpi_power_meter dca xfs
+libcrc32c mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt
+fb_sys_fops sd_mod ttm drm crc32c_intel serio_raw tg3 hpsa scsi_transport_sas
+wmi 
+[29164.284974] ---[ end trace 185128643cc7ea23 ]--- 
+...
+...
 
-Better to explain why xfs_db is used here instead of xfs_info.
+Version-Release number of selected component (if applicable):
+xfs-linux:
+ f5b999c03f4c (HEAD -> for-next, tag: xfs-5.3-merge-1, origin/xfs-5.3-merge,
+origin/for-next) xfs: remove unused flag arguments
 
-> +if [ $? -ne 0 ]; then
-> +	test_xfs_info $SCRATCH_DEV
-> +fi
+How reproducible:
+Once so far, trying to reproduce it.
 
-And I'd suggest move this test to the end (after umount the scratch dev)
-so we're sure the device contains a valid xfs (which has just been
-mounted & umounted).
+Steps to Reproduce:
+Loop run generic/475
 
-Thanks,
-Eryu
-
-> +
-> +_scratch_mount
-> +# test mounted block device and mountpoint
-> +test_xfs_info $SCRATCH_DEV
-> +test_xfs_info $SCRATCH_MNT
-> +
-> +echo "Silence is golden"
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/1000.out b/tests/xfs/1000.out
-> new file mode 100644
-> index 00000000..681b3b48
-> --- /dev/null
-> +++ b/tests/xfs/1000.out
-> @@ -0,0 +1,2 @@
-> +QA output created by 1000
-> +Silence is golden
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index ffe4ae12..047fe332 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -504,3 +504,4 @@
->  504 auto quick mkfs label
->  505 auto quick spaceman
->  506 auto quick health
-> +1000 auto quick
-> -- 
-> 2.17.2
-> 
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
