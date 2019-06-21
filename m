@@ -2,199 +2,258 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ACCA4ED7B
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 18:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 880004EEEE
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jun 2019 20:51:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbfFUQz4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Jun 2019 12:55:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45332 "EHLO
+        id S1726220AbfFUSvh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Jun 2019 14:51:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60190 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfFUQz4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 12:55:56 -0400
+        with ESMTP id S1726017AbfFUSvg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jun 2019 14:51:36 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LGiE6b156579
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 16:55:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=I7Cg05TWm++PhsXboNEcNygggEgbKmH2KOQiB0XAwc8=;
- b=K3EvMNc/DWa6xvqrC8QWnNz0TYIZngvCWm6inw6qrs0N8/DrS4Ah0ZBlgXH238aKtSTd
- t2o/fppGz8V/8sLPHNA9+MPzGnPnlQ7iDiPJxm0WccNJMEMS4nrY2WhAsQOJAxP2qVR8
- 5r/I2EwRPXwHj3Q6ByEiTPr2+OlHjBBKwDBC89VdYkzxJ3AUP31U74tnpB3cYyLFKANn
- DS021w9s3/7mHiNmqWdKkeqVNLQfFkfjHw3Gce4QEXRwR5jioOqvTsG7aazoGjfb2m0A
- 6Yf007n8hUfuB8G63Dxm+tKdjzTZxJPCiCjoprdV4/xkYaKi1i+94h0/po64lSyGWhxq ig== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t7809qhc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 16:55:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LGsYak161618
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 16:55:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t77yq26bw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 16:55:53 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5LGtqmS026005
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jun 2019 16:55:52 GMT
-Received: from [192.168.1.226] (/70.176.225.12)
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LId7UE045981;
+        Fri, 21 Jun 2019 18:51:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=4BDYGxnVu22b+Nm87uKnrrO7aOPYKtuiAjWtKpGFpHs=;
+ b=hStlTHtfqODXywT3ivhey6e1qIl4UB6OEHf9p7vUOaEnOSKljkb5jd7bjYHyG1BpyJFP
+ IGFupbQlyHcY2SjOjanmLYotOaczc2uZh+qYaTo/G4SNZn2O8YYEcq+gpyM6S+YhoUDY
+ 18zJiylqKOxfz7QDXLHQ0tFJHYUoo7n8Begu00C1ayGKlyueHOC7A219atUuqWEDTNXd
+ Z//l1U6R5RYEsz2jOrLcgn86qWB1I0VR1Rhwwz65Aovrckx+Ep1W5M0TvHNf3TzmQ/ZK
+ cj7M03KEIaZv+wSGAUyfrtrpbXeDKqM5TA90eAsDQzMf3K9BiTiZagIz3pOR3UXU17hh 0Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t7809qycj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 18:51:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5LIpFkO101953;
+        Fri, 21 Jun 2019 18:51:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2t77ypbnax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 18:51:33 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5LIpW6P010747;
+        Fri, 21 Jun 2019 18:51:32 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Jun 2019 16:55:52 +0000
-Subject: Re: [PATCH 2/2] xfs: account for log space when formatting new AGs
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <156105616866.1200596.7212155126558008316.stgit@magnolia>
- <156105618181.1200596.7381990220006852218.stgit@magnolia>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <7f19d19c-8291-57c4-709b-4716fa9db994@oracle.com>
-Date:   Fri, 21 Jun 2019 09:55:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        with ESMTP ; Fri, 21 Jun 2019 11:51:32 -0700
+Date:   Fri, 21 Jun 2019 11:51:30 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Allison Collins <allison.henderson@oracle.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCH 3/4] xfs/016: calculate minimum log size and end locations
+Message-ID: <20190621185130.GB5380@magnolia>
+References: <156089201978.345809.17444450351199726553.stgit@magnolia>
+ <156089204146.345809.516891823391869532.stgit@magnolia>
+ <20190621091851.GI15846@desktop>
+ <fa6036a0-cc9d-7485-5636-8702a6fd1019@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <156105618181.1200596.7381990220006852218.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa6036a0-cc9d-7485-5636-8702a6fd1019@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906210134
+ engine=8.0.1-1810050000 definitions=main-1906210142
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9295 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906210134
+ definitions=main-1906210142
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/20/19 11:43 AM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, Jun 21, 2019 at 09:24:05AM -0700, Allison Collins wrote:
 > 
-> When we're writing out a fresh new AG, make sure that we don't list an
-> internal log as free and that we create the rmap for the region.  growfs
-> never does this, but we will need it when we hook up mkfs.
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Looks ok to me.  Thanks for the comments they help!
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+> On 6/21/19 2:18 AM, Eryu Guan wrote:
+> > On Tue, Jun 18, 2019 at 02:07:21PM -0700, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > xfs/016 looks for corruption in the log when the log wraps.  However,
+> > > it hardcodes the minimum log size and the "95%" point where it wants to
+> > > start the "nudge and check for corruption" part of the test.  New
+> > > features require larger logs, which causes the test to fail when it
+> > > can't mkfs with the smaller log size and when that 95% point doesn't put
+> > > us within 20x "_log_traffic 2"s of the end of the log.
+> > > 
+> > > Fix the first problem by using the new min log size helper and replace
+> > > the 95% figure with an estimate of where we need to be to guarantee that
+> > > the 20x loop wraps the log.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Call for reviews from other XFS folks :)
+> > 
+> > Thanks!
+> > 
+> > Eryu
+> > 
+> > > ---
+> > >   tests/xfs/016     |   50 ++++++++++++++++++++++++++++++++++++++------------
+> > >   tests/xfs/016.out |    1 +
+> > >   2 files changed, 39 insertions(+), 12 deletions(-)
+> > > 
+> > > 
+> > > diff --git a/tests/xfs/016 b/tests/xfs/016
+> > > index 3407a4b1..aed37dca 100755
+> > > --- a/tests/xfs/016
+> > > +++ b/tests/xfs/016
+> > > @@ -44,10 +44,21 @@ _block_filter()
+> > >   _init()
+> > >   {
+> > > +    echo "*** determine log size"
+> > > +    local sz_mb=50
+> > > +    local dsize="-d size=${sz_mb}m"
+> > > +    local lsize="-l size=$(_scratch_find_xfs_min_logblocks $dsize)b"
+> > > +    local force_opts="$dsize $lsize"
+> > > +    _scratch_mkfs_xfs $force_opts >> $seqres.full 2>&1
+> > > +
+> > > +    # set log_size and log_size_bb globally
+> > > +    log_size_bb=`_log_size`
+> > > +    log_size=$((log_size_bb * 512))
+> > > +    echo "log_size_bb = $log_size_bb log_size = $log_size" >> $seqres.full
+> > > +
+> > >       echo "*** reset partition"
+> > > -    $here/src/devzero -b 2048 -n 50 -v 198 $SCRATCH_DEV
+> > > +    $here/src/devzero -b 2048 -n $sz_mb -v 198 $SCRATCH_DEV # write 0xc6
+> > >       echo "*** mkfs"
+> > > -    force_opts="-dsize=50m -lsize=$log_size"
+> > >       #
+> > >       # Do not discard blocks as we check for patterns in free space.
+> > >       #
+> > > @@ -65,6 +76,9 @@ _init()
+> > >       . $tmp.mkfs
+> > >       [ $logsunit -ne 0 ] && \
+> > >           _notrun "Cannot run this test using log MKFS_OPTIONS specified"
+> > > +
+> > > +    # quotas generate extra log traffic so force it off
+> > > +    _qmount_option noquota
+> > >   }
+> > >   _log_traffic()
+> > > @@ -157,6 +171,7 @@ _check_corrupt()
+> > >   # get standard environment, filters and checks
+> > >   . ./common/rc
+> > >   . ./common/filter
+> > > +. ./common/quota
+> > >   # real QA test starts here
+> > >   _supported_fs xfs
+> > > @@ -164,10 +179,6 @@ _supported_os Linux
+> > >   rm -f $seqres.full
+> > > -# mkfs sizes
+> > > -log_size=3493888
+> > > -log_size_bb=`expr $log_size / 512`
+> > > -
+> > >   _require_scratch
+> > >   _init
+> > > @@ -188,18 +199,29 @@ echo "log sunit = $lsunit"			>>$seqres.full
+> > >   [ $head -eq 2 -o $head -eq $((lsunit/512)) ] || \
+> > >       _fail "!!! unexpected initial log position $head vs. $((lsunit/512))"
+> > > -# find how how many blocks per op for 100 ops
+> > > +# find how how many blocks per op for 200 ops
+> > >   # ignore the fact that it will also include an unmount record etc...
+> > >   # this should be small overall
+> > >   echo "    lots of traffic for sampling" >>$seqres.full
+> > > -sample_size_ops=100
+> > > +sample_size_ops=200
+> > >   _log_traffic $sample_size_ops
+> > >   head1=`_log_head`
+> > >   num_blocks=`expr $head1 - $head`
+> > >   blocks_per_op=`echo "scale=3; $num_blocks / $sample_size_ops" | bc`
+> > > +echo "log position = $head1; old log position: $head" >> $seqres.full
+> > >   echo "blocks_per_op = $blocks_per_op" >>$seqres.full
+> > > -num_expected_ops=`echo "$log_size_bb / $blocks_per_op" | bc`
+> > > +
+> > > +# Since this is a log wrapping test, it's critical to push the log head to
+> > > +# the point where it will wrap around within twenty rounds of log traffic.
+> > > +near_end_min=$(echo "$log_size_bb - (10 * $blocks_per_op / 1)" | bc)
+> Is the 1 doing anything here?  It doesn't look like it really effects the
+> result.
 
-> ---
->   fs/xfs/libxfs/xfs_ag.c |   66 ++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 66 insertions(+)
+Yes, it tricks bc into spitting out an integer output because
+blocks_per_op is a floating point number:
+
+$ echo "23236 - (10 * 13.67682 / 1)" | bc
+23100
+$ echo "23236 - (10 * 13.67682)" | bc
+23099.23180
+
+(bash loops do not deal well with floating point numbers)
+
 > 
+> > > +echo "near_end_min = $near_end_min" >>$seqres.full
+> > > +
+> > > +# Estimate the number of ops needed to get the log head close to but not past
+> > > +# near_end_min.  We'd rather fall short and have to step our way closer to the
+> > > +# end than run past the end.
+> > > +num_expected_ops=$(( 8 * $(echo "$log_size_bb / $blocks_per_op" | bc) / 10))
+> Also I was trying to figure out what the constants the 8 and 10 come from?
+> Maybe a few extra variables would clarify.  Thanks!
+
+This test is trying to do a log wrap, so...
+
+1) First we format the fs.
+
+2) Then we do 200 operations to estimate how many log blocks are taken
+   up by a single operation.
+
+3) Then calculate how many ops are needed to get the log to 80% full.
+
+4) Do all those ops in one go. ($num_expected_ops)
+
+5) Slowly step our way to the log is ~10 operations shy of wrapping the
+   log. ($near_end_min)
+
+6) Then we do 20 more iterations to see what happens when we wrap the
+   log.
+
+I'll see about straightening out the comments in this test, though I'm
+not the original author of this test.
+
+--D
+
 > 
-> diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-> index 80a3df7ccab3..57aa85d8e3aa 100644
-> --- a/fs/xfs/libxfs/xfs_ag.c
-> +++ b/fs/xfs/libxfs/xfs_ag.c
-> @@ -10,6 +10,7 @@
->   #include "xfs_shared.h"
->   #include "xfs_format.h"
->   #include "xfs_trans_resv.h"
-> +#include "xfs_bit.h"
->   #include "xfs_sb.h"
->   #include "xfs_mount.h"
->   #include "xfs_btree.h"
-> @@ -44,6 +45,12 @@ xfs_get_aghdr_buf(
->   	return bp;
->   }
->   
-> +static inline bool is_log_ag(struct xfs_mount *mp, struct aghdr_init_data *id)
-> +{
-> +	return mp->m_sb.sb_logstart > 0 &&
-> +	       id->agno == XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart);
-> +}
-> +
->   /*
->    * Generic btree root block init function
->    */
-> @@ -64,11 +71,50 @@ xfs_freesp_init_recs(
->   	struct aghdr_init_data	*id)
->   {
->   	struct xfs_alloc_rec	*arec;
-> +	struct xfs_btree_block	*block = XFS_BUF_TO_BLOCK(bp);
->   
->   	arec = XFS_ALLOC_REC_ADDR(mp, XFS_BUF_TO_BLOCK(bp), 1);
->   	arec->ar_startblock = cpu_to_be32(mp->m_ag_prealloc_blocks);
-> +
-> +	if (is_log_ag(mp, id)) {
-> +		struct xfs_alloc_rec	*nrec;
-> +		xfs_agblock_t		start = XFS_FSB_TO_AGBNO(mp,
-> +							mp->m_sb.sb_logstart);
-> +
-> +		ASSERT(start >= mp->m_ag_prealloc_blocks);
-> +		if (start != mp->m_ag_prealloc_blocks) {
-> +			/*
-> +			 * Modify first record to pad stripe align of log
-> +			 */
-> +			arec->ar_blockcount = cpu_to_be32(start -
-> +						mp->m_ag_prealloc_blocks);
-> +			nrec = arec + 1;
-> +			/*
-> +			 * Insert second record at start of internal log
-> +			 * which then gets trimmed.
-> +			 */
-> +			nrec->ar_startblock = cpu_to_be32(
-> +					be32_to_cpu(arec->ar_startblock) +
-> +					be32_to_cpu(arec->ar_blockcount));
-> +			arec = nrec;
-> +			be16_add_cpu(&block->bb_numrecs, 1);
-> +		}
-> +		/*
-> +		 * Change record start to after the internal log
-> +		 */
-> +		be32_add_cpu(&arec->ar_startblock, mp->m_sb.sb_logblocks);
-> +	}
-> +
-> +	/*
-> +	 * Calculate the record block count and check for the case where
-> +	 * the log might have consumed all available space in the AG. If
-> +	 * so, reset the record count to 0 to avoid exposure of an invalid
-> +	 * record start block.
-> +	 */
->   	arec->ar_blockcount = cpu_to_be32(id->agsize -
->   					  be32_to_cpu(arec->ar_startblock));
-> +	if (!arec->ar_blockcount)
-> +		block->bb_numrecs = 0;
->   }
->   
->   /*
-> @@ -154,6 +200,18 @@ xfs_rmaproot_init(
->   		rrec->rm_offset = 0;
->   		be16_add_cpu(&block->bb_numrecs, 1);
->   	}
-> +
-> +	/* account for the log space */
-> +	if (is_log_ag(mp, id)) {
-> +		rrec = XFS_RMAP_REC_ADDR(block,
-> +				be16_to_cpu(block->bb_numrecs) + 1);
-> +		rrec->rm_startblock = cpu_to_be32(
-> +				XFS_FSB_TO_AGBNO(mp, mp->m_sb.sb_logstart));
-> +		rrec->rm_blockcount = cpu_to_be32(mp->m_sb.sb_logblocks);
-> +		rrec->rm_owner = cpu_to_be64(XFS_RMAP_OWN_LOG);
-> +		rrec->rm_offset = 0;
-> +		be16_add_cpu(&block->bb_numrecs, 1);
-> +	}
->   }
->   
->   /*
-> @@ -214,6 +272,14 @@ xfs_agfblock_init(
->   		agf->agf_refcount_level = cpu_to_be32(1);
->   		agf->agf_refcount_blocks = cpu_to_be32(1);
->   	}
-> +
-> +	if (is_log_ag(mp, id)) {
-> +		int64_t	logblocks = mp->m_sb.sb_logblocks;
-> +
-> +		be32_add_cpu(&agf->agf_freeblks, -logblocks);
-> +		agf->agf_longest = cpu_to_be32(id->agsize -
-> +			XFS_FSB_TO_AGBNO(mp, mp->m_sb.sb_logstart) - logblocks);
-> +	}
->   }
->   
->   static void
+> Allison
 > 
+> > >   echo "num_expected_ops = $num_expected_ops" >>$seqres.full
+> > > +
+> > >   num_expected_to_go=`echo "$num_expected_ops - $sample_size_ops" | bc`
+> > >   echo "num_expected_to_go = $num_expected_to_go" >>$seqres.full
+> > > @@ -208,13 +230,17 @@ _log_traffic $num_expected_to_go
+> > >   head=`_log_head`
+> > >   echo "log position = $head"                     >>$seqres.full
+> > > -# e.g. 3891
+> > > -near_end_min=`echo "0.95 * $log_size_bb" | bc | sed 's/\..*//'`
+> > > -echo "near_end_min = $near_end_min" >>$seqres.full
+> > > +# If we fell short of near_end_min, step our way towards it.
+> > > +while [ $head -lt $near_end_min ]; do
+> > > +	echo "    bump traffic from $head towards $near_end_min" >> $seqres.full
+> > > +	_log_traffic 10 > /dev/null 2>&1
+> > > +	head=$(_log_head)
+> > > +done
+> > >   [ $head -gt $near_end_min -a $head -lt $log_size_bb ] || \
+> > >       _fail "!!! unexpected near end log position $head"
+> > > +# Try to wrap the log, checking for corruption with each advance.
+> > >   for c in `seq 0 20`
+> > >   do
+> > >       echo "   little traffic"            >>$seqres.full
+> > > diff --git a/tests/xfs/016.out b/tests/xfs/016.out
+> > > index f7844cdf..f4c8f88d 100644
+> > > --- a/tests/xfs/016.out
+> > > +++ b/tests/xfs/016.out
+> > > @@ -1,4 +1,5 @@
+> > >   QA output created by 016
+> > > +*** determine log size
+> > >   *** reset partition
+> > >   Wrote 51200.00Kb (value 0xc6)
+> > >   *** mkfs
+> > > 
