@@ -2,175 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 007974F694
-	for <lists+linux-xfs@lfdr.de>; Sat, 22 Jun 2019 17:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DEE4F712
+	for <lists+linux-xfs@lfdr.de>; Sat, 22 Jun 2019 18:29:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfFVPie (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 22 Jun 2019 11:38:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfFVPie (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 22 Jun 2019 11:38:34 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 94DC4308A968;
-        Sat, 22 Jun 2019 15:38:33 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-60.pek2.redhat.com [10.72.12.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56B5219C6A;
-        Sat, 22 Jun 2019 15:38:31 +0000 (UTC)
-From:   Zorro Lang <zlang@redhat.com>
-To:     fstests@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2] xfs: test xfs_info on block device and mountpoint
-Date:   Sat, 22 Jun 2019 23:38:27 +0800
-Message-Id: <20190622153827.4448-1-zlang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sat, 22 Jun 2019 15:38:33 +0000 (UTC)
+        id S1726450AbfFVQ3S (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 22 Jun 2019 12:29:18 -0400
+Received: from sonic316-11.consmr.mail.bf2.yahoo.com ([74.6.130.121]:43022
+        "EHLO sonic316-11.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726480AbfFVQ3J (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 22 Jun 2019 12:29:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220948; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=Sqmma7rQCC9csXbuiUU3W2/3JNoNH7S8264Vtax3p6vjP/GOy3xpD3wbU2PRR9kt9Hpkf+FIWW9PMCnOCaw1O79buHof/+e4XCSgtAjG8InDhCml6NU6QqPjKJ3zDc6ntgnpVqWtJnbhtjoUqIbv1W6GU8NTi8qVdCcmhrTc1IZ6aiOxpvBar7FQmN3jAwZcqruMWVYBgbk1LAoNqGvQ8jjOiTjNhCDJjpcLi94EE60gk+qIfYgu1AQDdd9wVo7X6i3XlVR9KCYw0l7ikZmlDSVkcSrrmJBlognD3+QlW4wko0RiyOGAXy+sEMAa8UXhFfxEEhf+A0WfqKBKwkVQbg==
+X-YMail-OSG: 3TA6aNEVM1mHk4tfSNROwYxIcekGBuzt5YSl8uAf.0_HHQ2LGDBhX2FGT2.Do_z
+ _0DV280q.YGRxDLoRDSJM82e2d5hsgoPZVcKxWsle6Z3oHX8Omo6hY9bu5QjJLY68zQNKFXygJQb
+ l1z62dHRy69xOFvl6tq.81EbMsOh1_cirrcCk2fMX_Jmwx0sebG__1rhE6wzzo_NDP9VbvIqZ9bR
+ 2icQk1E4jS_eT.9i5S8Sf0xsdShl9dMibpAXRU93yOYuHTQIa_P77tZTcStgCsIVxKiDvC3a0NxY
+ 8gZtRhwFdS641nFzLb368UTov.mB4xMHIDhTJv9NazaTg1j8sw18ET29s.TqlBmXHg8vLU94qBpd
+ 5PlUttniCcoNFEJpnLF3UUydECDiL8Z11cc18YJXwsIeDfFkYqHGX5XdA4jNj054mfKUIhoNEakn
+ WUKps59xvPMOhDCVBujS9v_vJClG4fXrBtjl.W_LQqwsSCutxIcdvaqHEtURhc6MkAEPdp4bTGI.
+ srA9smb.rYGHYAQmfGBYSrMpzCORaFwD3sLBOdwCdBjEVVdu.sBEOGddWsx2T8AZRYYy5nvR9Foz
+ bPsz41tE4__SqGjxrktEJ2_s2wIQAUza2deZFDGXc6T62eXwgZpA4Pp2nGTmGbFQ6h4nAMd51HJh
+ T3GzQn8s4GOn.0BKRwZDpwf7w10rv6JPk5nAgLZOaX7LfFs2yeq7fnFrg4OCOiG9MCMxrUNq6gf7
+ VomHdE0MTMCDmL3Ebk4K0YUhXaCTht27MRDaoJusaRVRGavzgn0vj3Z4n7xxu27l7AAqrNZTRmUI
+ n_b8fWLMzkIFoI7ZcmL_O5d2bYctv7x0WqIS4U6onMjRr4HtPSPFTejqwRtmzChG01EgeDt1Xu9J
+ 3fp8ciCxthupmhAtFqCrukMze7VttucN.DpeM8bKmVw1EDgn.s_L.L9fVdDwg2umGkLNazDxoP0_
+ dzbgtjASRdO1.JaxkowN5gRT6rna4oVoAmbHsjQ4rLTjBWSWz8ZqQDlV43apY.buigbJvn4Qmvf1
+ GxhsPAlHlnnGfjZ9pr3BSAVXKd_Qs83vYaBOYxWdXDlwxBl9.1.bnCTqFBLXCTND1BZASE2pli5W
+ fu842ttK3BMCdw5COU_fvmE4HTFnTUQ5tN2a6KHryWZiInkZpWdo8I9xFucw8IlPI3qY2rDSegZk
+ LLEiGCawsrUj04Yg3uv6LVIzJaVvTytAzboyOeQVTgoj.0EfkvEtgpXm3
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:29:08 +0000
+Date:   Sat, 22 Jun 2019 16:29:03 +0000 (UTC)
+From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
+Reply-To: miss.fmayusuf11@gmail.com
+Message-ID: <1743094696.311303.1561220943310@mail.yahoo.com>
+Subject: From:Miss: Fatima Yusuf.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-There was a bug, xfs_info fails on a mounted block device:
 
-  # xfs_info /dev/mapper/testdev
-  xfs_info: /dev/mapper/testdev contains a mounted filesystem
 
-  fatal error -- couldn't initialize XFS library
+From:Miss: Fatima Yusuf.
 
-xfsprogs has fixed it by:
+For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
 
-  bbb43745 xfs_info: use findmnt to handle mounted block devices
+I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
 
-Signed-off-by: Zorro Lang <zlang@redhat.com>
----
+Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
 
-Thanks the reviewing from Darrick and Eryu,
+I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
 
-V2 did below changes:
-1) Compare the contents between the two xfs_info invocations in test_xfs_info()
-2) document the commit that the case cover
-3) Add more comments
-4) Move the test on unmounted device to the end
+I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
 
-Sorry Eryu, I'll keep the case number next time :)
+My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
 
-Thanks,
-Zorro
-
- tests/xfs/1000     | 82 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1000.out |  2 ++
- tests/xfs/group    |  1 +
- 3 files changed, 85 insertions(+)
- create mode 100755 tests/xfs/1000
- create mode 100644 tests/xfs/1000.out
-
-diff --git a/tests/xfs/1000 b/tests/xfs/1000
-new file mode 100755
-index 00000000..721bcdf2
---- /dev/null
-+++ b/tests/xfs/1000
-@@ -0,0 +1,82 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2019 Red Hat, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 1000
-+#
-+# test xfs_info on block device and mountpoint, uncover xfsprogs commit:
-+#    bbb43745 xfs_info: use findmnt to handle mounted block devices
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_supported_os Linux
-+_require_scratch
-+
-+info_file=$tmp.$seq.info
-+
-+test_xfs_info()
-+{
-+	local target="$1"
-+	local tmpfile=$tmp.$seq.info.tmp
-+	local need_cmp=0
-+
-+	# save the *old* xfs_info file, to compare with the new one later
-+	if [ -f $info_file ]; then
-+		cat $info_file > $tmpfile
-+		need_cmp=1
-+	fi
-+
-+	$XFS_INFO_PROG $target > $info_file 2>&1
-+	if [ $? -ne 0 ];then
-+		echo "$XFS_INFO_PROG $target fails:"
-+		cat $info_file
-+	else
-+		cat $info_file >> $seqres.full
-+	fi
-+	# compare the contents between the two xfs_info invocations
-+	if [ $need_cmp -eq 1 ]; then
-+		diff $tmpfile $info_file
-+	fi
-+}
-+
-+_scratch_mkfs > $seqres.full 2>&1
-+_scratch_mount
-+# test mounted block device and mountpoint
-+test_xfs_info $SCRATCH_DEV
-+test_xfs_info $SCRATCH_MNT
-+
-+# test on unmounted block device
-+_scratch_unmount
-+# Due to new xfsprogs use xfs_db 'info' command to get the information of
-+# offline XFS, it supports running on a unmounted device. But old xfsprogs
-+# doesn't support it, so skip that.
-+$XFS_DB_PROG -c "info" $SCRATCH_DEV | grep -q "command info not found"
-+if [ $? -ne 0 ]; then
-+	test_xfs_info $SCRATCH_DEV
-+fi
-+
-+echo "Silence is golden"
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1000.out b/tests/xfs/1000.out
-new file mode 100644
-index 00000000..681b3b48
---- /dev/null
-+++ b/tests/xfs/1000.out
-@@ -0,0 +1,2 @@
-+QA output created by 1000
-+Silence is golden
-diff --git a/tests/xfs/group b/tests/xfs/group
-index ffe4ae12..047fe332 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -504,3 +504,4 @@
- 504 auto quick mkfs label
- 505 auto quick spaceman
- 506 auto quick health
-+1000 auto quick
--- 
-2.17.2
-
+I am waiting to hear from you.
+Yours Sincerely,
+Miss.Fatima Yusuf.
