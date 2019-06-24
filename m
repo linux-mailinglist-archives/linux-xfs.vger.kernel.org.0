@@ -2,280 +2,309 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6985180E
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 18:09:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B3651836
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 18:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfFXQJA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 12:09:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53918 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfFXQJA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 12:09:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFxEFo102550;
-        Mon, 24 Jun 2019 16:08:42 GMT
+        id S1731810AbfFXQSC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 12:18:02 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:32770 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730045AbfFXQSC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 12:18:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OG9RhG120007;
+        Mon, 24 Jun 2019 16:17:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=xaAR1E4Fxz0Cts7pE7vSewbijB30THeaBrz9cGPEzU0=;
- b=EMnzYG7oVb8IMIJ3tAV/ebbrfMQwaICcRVmRJqEVySShYYAXJab8SE5BIv0/ICZTM31k
- wrQah8bDuEvgoahnj7t1SGz5f3SOnUryh/N3bS/t7aBKfwEyTUAZZn2eG619q8DuKDHI
- ZNa7vAMZXkGcpIBDK3tCFFK7yyL7Qu4nELk+xt+bsM0u4Q53GmSRhpbO3ZqSoEj4jKgM
- C//Ig6G/Z85Up0BAdn0x0MbKWPV+vYYxZNhNlt0ZyTg2oWd/MWPk2eJU5W6tOGxyMM6n
- qaXlZwFcRxPKM/WYG7SrRvNWX5wo9e8DaBxSvvYc20oTNJzmUnTpiCi2I1EAsDLMH/KH tA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brsycdh-1
+ bh=QSdJIcYPhRP8AVUdSZIleoEcVMe8cjEDcuPBEeUeRA4=;
+ b=JZfLHyYuVFOmsE2ExpcijqRHL+HP3uqAFjiq6K43XLGL+BmZOLhUrUI5aIXhOy4s+dSt
+ kpMQ1SeaUclXVHn9uLfTngAS8tVq/SZ8jAT0BxqIRxYFxigzUfv0K0iJWEW5GfJsnkCl
+ 3++dcyyyoCSflz0rqVPDBa6f1CqJ1IkZdL3a+pzCx0pLozd+XUAtmZLlPgCcn9t9WYcO
+ JU+b0XKFrygRuJID6YpM5Kh83dEf3iVfryUBiU4xDiWGc4fH6nsywyNdzWKNkI5fFPUU
+ YWijSlkATWRRRfnQOykRJLeuQFT8BKoSGp5u+rVSbYZC6BQ1XWO4eW+jSO2PG/rKdbX8 JQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t9cyq7b37-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:08:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OG7oQP047075;
-        Mon, 24 Jun 2019 16:08:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f3byvj-1
+        Mon, 24 Jun 2019 16:17:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OGHRc0190628;
+        Mon, 24 Jun 2019 16:17:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t9acbkhgt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 16:08:41 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OG8ec2030270;
-        Mon, 24 Jun 2019 16:08:40 GMT
+        Mon, 24 Jun 2019 16:17:27 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OGHL5G011382;
+        Mon, 24 Jun 2019 16:17:21 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 09:08:40 -0700
-Date:   Mon, 24 Jun 2019 09:08:39 -0700
+        with ESMTP ; Mon, 24 Jun 2019 09:17:21 -0700
+Date:   Mon, 24 Jun 2019 09:17:20 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/12] xfs: remove the fork fields in the writepage_ctx
- and ioend
-Message-ID: <20190624160839.GP5387@magnolia>
+Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
+ updates
+Message-ID: <20190624161720.GQ5387@magnolia>
 References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-11-hch@lst.de>
+ <20190624055253.31183-8-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-11-hch@lst.de>
+In-Reply-To: <20190624055253.31183-8-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906240129
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240128
+ definitions=main-1906240129
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:51AM +0200, Christoph Hellwig wrote:
-> In preparation for moving the writeback code to iomap.c, replace the
-> XFS-specific COW fork concept with the iomap IOMAP_F_SHARED flag.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Mon, Jun 24, 2019 at 07:52:48AM +0200, Christoph Hellwig wrote:
+> We have historically decided that we want to preallocate the xfs_trans
+> structure at writeback time so that we don't have to allocate on in
+> the I/O completion handler.  But we treat unwrittent extent and COW
+> fork conversions different already, which proves that the transaction
+> allocations in the end I/O handler are not a problem.  Removing the
+> preallocation gets rid of a lot of corner case code, and also ensures
+> we only allocate one and log a transaction when actually required,
+> as the ioend merging can reduce the number of actual i_size updates
+> significantly.
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+That's what I thought when I wrote the ioend merging patches, but IIRC
+Dave objected on the grounds that most file writes are trivial file
+extending writes and therefore we should leave this alone to avoid
+slowing down the ioend path even if it came at a cost of cancelling a
+lot of empty transactions.
+
+I wasn't 100% convinced it mattered but ran out of time in the
+development window and never got around to researching if it made any
+difference.
+
+So, uh, how much of a hit do we take for having to allocate a
+transaction for a file size extension?  Particularly since we can
+combine those things now?
 
 --D
 
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_aops.c | 40 +++++++++++++++++++++-------------------
->  fs/xfs/xfs_aops.h |  2 +-
->  2 files changed, 22 insertions(+), 20 deletions(-)
+>  fs/xfs/xfs_aops.c | 110 +++++-----------------------------------------
+>  fs/xfs/xfs_aops.h |   1 -
+>  2 files changed, 12 insertions(+), 99 deletions(-)
 > 
 > diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 5d302ebe2a33..d9a7a9e6b912 100644
+> index 633baaaff7ae..017b87b7765f 100644
 > --- a/fs/xfs/xfs_aops.c
 > +++ b/fs/xfs/xfs_aops.c
-> @@ -28,7 +28,6 @@
+> @@ -130,44 +130,23 @@ static inline bool xfs_ioend_is_append(struct xfs_ioend *ioend)
+>  		XFS_I(ioend->io_inode)->i_d.di_size;
+>  }
+>  
+> -STATIC int
+> -xfs_setfilesize_trans_alloc(
+> -	struct xfs_ioend	*ioend)
+> -{
+> -	struct xfs_mount	*mp = XFS_I(ioend->io_inode)->i_mount;
+> -	struct xfs_trans	*tp;
+> -	int			error;
+> -
+> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
+> -	if (error)
+> -		return error;
+> -
+> -	ioend->io_append_trans = tp;
+> -
+> -	/*
+> -	 * We may pass freeze protection with a transaction.  So tell lockdep
+> -	 * we released it.
+> -	 */
+> -	__sb_writers_release(ioend->io_inode->i_sb, SB_FREEZE_FS);
+> -	/*
+> -	 * We hand off the transaction to the completion thread now, so
+> -	 * clear the flag here.
+> -	 */
+> -	current_restore_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
+> -	return 0;
+> -}
+> -
+>  /*
+>   * Update on-disk file size now that data has been written to disk.
 >   */
->  struct xfs_writepage_ctx {
->  	struct iomap		iomap;
-> -	int			fork;
->  	unsigned int		data_seq;
->  	unsigned int		cow_seq;
->  	struct xfs_ioend	*ioend;
-> @@ -204,7 +203,7 @@ xfs_end_ioend(
->  	 */
->  	error = blk_status_to_errno(ioend->io_bio->bi_status);
->  	if (unlikely(error)) {
-> -		if (ioend->io_fork == XFS_COW_FORK)
-> +		if (ioend->io_flags & IOMAP_F_SHARED)
->  			xfs_reflink_cancel_cow_range(ip, offset, size, true);
->  		goto done;
->  	}
-> @@ -212,7 +211,7 @@ xfs_end_ioend(
->  	/*
->  	 * Success: commit the COW or unwritten blocks if needed.
->  	 */
-> -	if (ioend->io_fork == XFS_COW_FORK)
-> +	if (ioend->io_flags & IOMAP_F_SHARED)
+> -STATIC int
+> -__xfs_setfilesize(
+> +int
+> +xfs_setfilesize(
+>  	struct xfs_inode	*ip,
+> -	struct xfs_trans	*tp,
+>  	xfs_off_t		offset,
+>  	size_t			size)
+>  {
+> +	struct xfs_mount	*mp = ip->i_mount;
+> +	struct xfs_trans	*tp;
+>  	xfs_fsize_t		isize;
+> +	int			error;
+> +
+> +	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
+> +	if (error)
+> +		return error;
+>  
+>  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+>  	isize = xfs_new_eof(ip, offset + size);
+> @@ -186,48 +165,6 @@ __xfs_setfilesize(
+>  	return xfs_trans_commit(tp);
+>  }
+>  
+> -int
+> -xfs_setfilesize(
+> -	struct xfs_inode	*ip,
+> -	xfs_off_t		offset,
+> -	size_t			size)
+> -{
+> -	struct xfs_mount	*mp = ip->i_mount;
+> -	struct xfs_trans	*tp;
+> -	int			error;
+> -
+> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
+> -	if (error)
+> -		return error;
+> -
+> -	return __xfs_setfilesize(ip, tp, offset, size);
+> -}
+> -
+> -STATIC int
+> -xfs_setfilesize_ioend(
+> -	struct xfs_ioend	*ioend,
+> -	int			error)
+> -{
+> -	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
+> -	struct xfs_trans	*tp = ioend->io_append_trans;
+> -
+> -	/*
+> -	 * The transaction may have been allocated in the I/O submission thread,
+> -	 * thus we need to mark ourselves as being in a transaction manually.
+> -	 * Similarly for freeze protection.
+> -	 */
+> -	current_set_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
+> -	__sb_writers_acquired(VFS_I(ip)->i_sb, SB_FREEZE_FS);
+> -
+> -	/* we abort the update if there was an IO error */
+> -	if (error) {
+> -		xfs_trans_cancel(tp);
+> -		return error;
+> -	}
+> -
+> -	return __xfs_setfilesize(ip, tp, ioend->io_offset, ioend->io_size);
+> -}
+> -
+>  /*
+>   * IO write completion.
+>   */
+> @@ -267,12 +204,9 @@ xfs_end_ioend(
 >  		error = xfs_reflink_end_cow(ip, offset, size);
 >  	else if (ioend->io_type == IOMAP_UNWRITTEN)
 >  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
-> @@ -233,7 +232,8 @@ xfs_ioend_can_merge(
->  {
->  	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
->  		return false;
-> -	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
-> +	if ((ioend->io_flags & IOMAP_F_SHARED) ^
-> +	    (next->io_flags & IOMAP_F_SHARED))
->  		return false;
->  	if ((ioend->io_type == IOMAP_UNWRITTEN) ^
->  	    (next->io_type == IOMAP_UNWRITTEN))
-> @@ -319,7 +319,7 @@ xfs_end_bio(
->  	struct xfs_mount	*mp = ip->i_mount;
->  	unsigned long		flags;
->  
-> -	if (ioend->io_fork == XFS_COW_FORK ||
-> +	if ((ioend->io_flags & IOMAP_F_SHARED) ||
->  	    ioend->io_type == IOMAP_UNWRITTEN ||
->  	    xfs_ioend_is_append(ioend)) {
->  		spin_lock_irqsave(&ip->i_ioend_lock, flags);
-> @@ -350,7 +350,7 @@ xfs_imap_valid(
->  	 * covers the offset. Be careful to check this first because the caller
->  	 * can revalidate a COW mapping without updating the data seqno.
->  	 */
-> -	if (wpc->fork == XFS_COW_FORK)
-> +	if (wpc->iomap.flags & IOMAP_F_SHARED)
->  		return true;
->  
->  	/*
-> @@ -380,6 +380,7 @@ static int
->  xfs_convert_blocks(
->  	struct xfs_writepage_ctx *wpc,
->  	struct xfs_inode	*ip,
-> +	int			whichfork,
->  	loff_t			offset)
->  {
->  	int			error;
-> @@ -391,8 +392,8 @@ xfs_convert_blocks(
->  	 * delalloc extent if free space is sufficiently fragmented.
->  	 */
->  	do {
-> -		error = xfs_bmapi_convert_delalloc(ip, wpc->fork, offset,
-> -				&wpc->iomap, wpc->fork == XFS_COW_FORK ?
-> +		error = xfs_bmapi_convert_delalloc(ip, whichfork, offset,
-> +				&wpc->iomap, whichfork == XFS_COW_FORK ?
->  					&wpc->cow_seq : &wpc->data_seq);
->  		if (error)
->  			return error;
-> @@ -413,6 +414,7 @@ xfs_map_blocks(
->  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
->  	xfs_fileoff_t		end_fsb = XFS_B_TO_FSB(mp, offset + count);
->  	xfs_fileoff_t		cow_fsb = NULLFILEOFF;
-> +	int			whichfork = XFS_DATA_FORK;
->  	struct xfs_bmbt_irec	imap;
->  	struct xfs_iext_cursor	icur;
->  	int			retries = 0;
-> @@ -461,7 +463,7 @@ xfs_map_blocks(
->  		wpc->cow_seq = READ_ONCE(ip->i_cowfp->if_seq);
->  		xfs_iunlock(ip, XFS_ILOCK_SHARED);
->  
-> -		wpc->fork = XFS_COW_FORK;
-> +		whichfork = XFS_COW_FORK;
->  		goto allocate_blocks;
->  	}
->  
-> @@ -484,8 +486,6 @@ xfs_map_blocks(
->  	wpc->data_seq = READ_ONCE(ip->i_df.if_seq);
->  	xfs_iunlock(ip, XFS_ILOCK_SHARED);
->  
-> -	wpc->fork = XFS_DATA_FORK;
+> -	else
+> -		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
 > -
->  	/* landed in a hole or beyond EOF? */
->  	if (imap.br_startoff > offset_fsb) {
->  		imap.br_blockcount = imap.br_startoff - offset_fsb;
-> @@ -510,10 +510,10 @@ xfs_map_blocks(
->  		goto allocate_blocks;
+> +	if (!error && xfs_ioend_is_append(ioend))
+> +		error = xfs_setfilesize(ip, offset, size);
+>  done:
+> -	if (ioend->io_append_trans)
+> -		error = xfs_setfilesize_ioend(ioend, error);
+>  	list_replace_init(&ioend->io_list, &ioend_list);
+>  	xfs_destroy_ioend(ioend, error);
 >  
->  	xfs_bmbt_to_iomap(ip, &wpc->iomap, &imap, 0);
-> -	trace_xfs_map_blocks_found(ip, offset, count, wpc->fork, &imap);
-> +	trace_xfs_map_blocks_found(ip, offset, count, whichfork, &imap);
->  	return 0;
->  allocate_blocks:
-> -	error = xfs_convert_blocks(wpc, ip, offset);
-> +	error = xfs_convert_blocks(wpc, ip, whichfork, offset);
->  	if (error) {
->  		/*
->  		 * If we failed to find the extent in the COW fork we might have
-> @@ -522,7 +522,8 @@ xfs_map_blocks(
->  		 * the former case, but prevent additional retries to avoid
->  		 * looping forever for the latter case.
->  		 */
-> -		if (error == -EAGAIN && wpc->fork == XFS_COW_FORK && !retries++)
-> +		if (error == -EAGAIN && (wpc->iomap.flags & IOMAP_F_SHARED) &&
-> +		    !retries++)
->  			goto retry;
->  		ASSERT(error != -EAGAIN);
->  		return error;
-> @@ -533,7 +534,7 @@ xfs_map_blocks(
->  	 * original delalloc one.  Trim the return extent to the next COW
->  	 * boundary again to force a re-lookup.
->  	 */
-> -	if (wpc->fork != XFS_COW_FORK && cow_fsb != NULLFILEOFF) {
-> +	if (!(wpc->iomap.flags & IOMAP_F_SHARED) && cow_fsb != NULLFILEOFF) {
->  		loff_t		cow_offset = XFS_FSB_TO_B(mp, cow_fsb);
->  
->  		if (cow_offset < wpc->iomap.offset + wpc->iomap.length)
-> @@ -542,7 +543,7 @@ xfs_map_blocks(
->  
->  	ASSERT(wpc->iomap.offset <= offset);
->  	ASSERT(wpc->iomap.offset + wpc->iomap.length > offset);
-> -	trace_xfs_map_blocks_alloc(ip, offset, count, wpc->fork, &imap);
-> +	trace_xfs_map_blocks_alloc(ip, offset, count, whichfork, &imap);
->  	return 0;
+> @@ -307,8 +241,6 @@ xfs_ioend_can_merge(
+>  		return false;
+>  	if (ioend->io_offset + ioend->io_size != next->io_offset)
+>  		return false;
+> -	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
+> -		return false;
+>  	return true;
 >  }
 >  
-> @@ -567,7 +568,7 @@ xfs_submit_ioend(
->  	int			status)
+> @@ -320,7 +252,6 @@ xfs_ioend_try_merge(
 >  {
->  	/* Convert CoW extents to regular */
-> -	if (!status && ioend->io_fork == XFS_COW_FORK) {
-> +	if (!status && (ioend->io_flags & IOMAP_F_SHARED)) {
->  		/*
->  		 * Yuk. This can do memory allocation, but is not a
->  		 * transactional operation so everything is done in GFP_KERNEL
-> @@ -621,8 +622,8 @@ xfs_alloc_ioend(
+>  	struct xfs_ioend	*next_ioend;
+>  	int			ioend_error;
+> -	int			error;
 >  
->  	ioend = container_of(bio, struct xfs_ioend, io_inline_bio);
->  	INIT_LIST_HEAD(&ioend->io_list);
-> -	ioend->io_fork = wpc->fork;
->  	ioend->io_type = wpc->iomap.type;
-> +	ioend->io_flags = wpc->iomap.flags;
+>  	if (list_empty(more_ioends))
+>  		return;
+> @@ -334,10 +265,6 @@ xfs_ioend_try_merge(
+>  			break;
+>  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+>  		ioend->io_size += next_ioend->io_size;
+> -		if (ioend->io_append_trans) {
+> -			error = xfs_setfilesize_ioend(next_ioend, 1);
+> -			ASSERT(error == 1);
+> -		}
+>  	}
+>  }
+>  
+> @@ -398,7 +325,7 @@ xfs_end_bio(
+>  
+>  	if (ioend->io_fork == XFS_COW_FORK ||
+>  	    ioend->io_type == IOMAP_UNWRITTEN ||
+> -	    ioend->io_append_trans != NULL) {
+> +	    xfs_ioend_is_append(ioend)) {
+>  		spin_lock_irqsave(&ip->i_ioend_lock, flags);
+>  		if (list_empty(&ip->i_ioend_list))
+>  			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
+> @@ -660,18 +587,6 @@ xfs_submit_ioend(
+>  		memalloc_nofs_restore(nofs_flag);
+>  	}
+>  
+> -	/* Reserve log space if we might write beyond the on-disk inode size. */
+> -	if (!status &&
+> -	    (ioend->io_fork == XFS_COW_FORK ||
+> -	     ioend->io_type != IOMAP_UNWRITTEN) &&
+> -	    xfs_ioend_is_append(ioend) &&
+> -	    !ioend->io_append_trans) {
+> -		unsigned nofs_flag = memalloc_nofs_save();
+> -
+> -		status = xfs_setfilesize_trans_alloc(ioend);
+> -		memalloc_nofs_restore(nofs_flag);
+> -	}
+> -
+>  	ioend->io_bio->bi_private = ioend;
+>  	ioend->io_bio->bi_end_io = xfs_end_bio;
+>  
+> @@ -715,7 +630,6 @@ xfs_alloc_ioend(
 >  	ioend->io_inode = inode;
 >  	ioend->io_size = 0;
 >  	ioend->io_offset = offset;
-> @@ -676,7 +677,8 @@ xfs_add_to_ioend(
->  	sector = (wpc->iomap.addr + offset - wpc->iomap.offset) >> 9;
->  
->  	if (!wpc->ioend ||
-> -	    wpc->fork != wpc->ioend->io_fork ||
-> +	    (wpc->iomap.flags & IOMAP_F_SHARED) !=
-> +	    (wpc->ioend->io_flags & IOMAP_F_SHARED) ||
->  	    wpc->iomap.type != wpc->ioend->io_type ||
->  	    sector != bio_end_sector(wpc->ioend->io_bio) ||
->  	    offset != wpc->ioend->io_offset + wpc->ioend->io_size) {
+> -	ioend->io_append_trans = NULL;
+>  	ioend->io_bio = bio;
+>  	return ioend;
+>  }
 > diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-> index 23c087f0bcbf..bf95837c59af 100644
+> index 72e30d1c3bdf..23c087f0bcbf 100644
 > --- a/fs/xfs/xfs_aops.h
 > +++ b/fs/xfs/xfs_aops.h
-> @@ -13,8 +13,8 @@ extern struct bio_set xfs_ioend_bioset;
->   */
->  struct xfs_ioend {
->  	struct list_head	io_list;	/* next ioend in chain */
-> -	int			io_fork;	/* inode fork written back */
->  	u16			io_type;
-> +	u16			io_flags;
+> @@ -18,7 +18,6 @@ struct xfs_ioend {
 >  	struct inode		*io_inode;	/* file being written to */
 >  	size_t			io_size;	/* size of the extent */
 >  	xfs_off_t		io_offset;	/* offset in the file */
+> -	struct xfs_trans	*io_append_trans;/* xact. for size update */
+>  	struct bio		*io_bio;	/* bio being built */
+>  	struct bio		io_inline_bio;	/* MUST BE LAST! */
+>  };
 > -- 
 > 2.20.1
 > 
