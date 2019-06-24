@@ -2,97 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B0BB51EEB
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:06:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAEC651F07
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:16:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfFXXGu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 19:06:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50334 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfFXXGu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:06:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OMxCv9028713;
-        Mon, 24 Jun 2019 23:06:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=8aaz9j1M6LHINBJUlIuo9GoM+F9OMUzYJ50d1fFl5mo=;
- b=d3k/PI56h4xW4/45hjVjCt+Hu7+XBzLfeLsRNu4++T8cCCDtywVk/SnLq1NfhCEuiz6K
- hA4I8Jp8rHWNpfwQf1YEv9UGG9KwIxs8G9Mo2+mlHR7m6NOT7Yl1lXoNzHiioRxfPLhE
- hpJg0q6MunIrBJYxj4R+Qc3UT0Lq7VQ7jgBfM0SbIBmws9netQ9dVhHodOUDCiYBId1v
- GXXoQKIBkQpa8CaSWBo6jRzoe9KWRWOmWZ6goSXZVcfr+KzjytZutUSMc4NdsIMO1ygC
- KqlyGPxEpXo/OBai3/R6eh9CnEckrA1A4UQkJxk169RGONXNcyLuNj0+JtHAgd/GgmNh ng== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brt101h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:06:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ON5Tg5153848;
-        Mon, 24 Jun 2019 23:06:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acbs16x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 23:06:36 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ON6Ykc002346;
-        Mon, 24 Jun 2019 23:06:34 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 16:06:34 -0700
-Date:   Mon, 24 Jun 2019 16:06:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ian Kent <raven@themaw.net>, linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Subject: Re: [PATCH 02/10] xfs: mount-api - refactor suffix_kstrtoint()
-Message-ID: <20190624230633.GB5387@magnolia>
-References: <156134510205.2519.16185588460828778620.stgit@fedora-28>
- <156134510851.2519.2387740442257250106.stgit@fedora-28>
- <20190624172943.GV5387@magnolia>
- <20190624223554.GA7777@dread.disaster.area>
+        id S1728127AbfFXXQf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 19:16:35 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59024 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbfFXXQf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:16:35 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8564B149D6D;
+        Tue, 25 Jun 2019 09:16:30 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hfYBH-0000af-3Z; Tue, 25 Jun 2019 09:15:23 +1000
+Date:   Tue, 25 Jun 2019 09:15:23 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
+ updates
+Message-ID: <20190624231523.GC7777@dread.disaster.area>
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-8-hch@lst.de>
+ <20190624161720.GQ5387@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624223554.GA7777@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240181
+In-Reply-To: <20190624161720.GQ5387@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=oLq8ofgPWqtQ5Z905GkA:9 a=6BQrOku7L8tHAI1q:21
+        a=BwSqpppzWO7tify-:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 08:35:54AM +1000, Dave Chinner wrote:
-> On Mon, Jun 24, 2019 at 10:29:43AM -0700, Darrick J. Wong wrote:
-> > On Mon, Jun 24, 2019 at 10:58:30AM +0800, Ian Kent wrote:
-> > > The mount-api doesn't have a "human unit" parse type yet so
-> > > the options that have values like "10k" etc. still need to
-> > > be converted by the fs.
-> > 
-> > /me wonders if that ought to be lifted to fs_parser.c, or is xfs the
-> > only filesystem that has mount options with unit suffixes?
+On Mon, Jun 24, 2019 at 09:17:20AM -0700, Darrick J. Wong wrote:
+> On Mon, Jun 24, 2019 at 07:52:48AM +0200, Christoph Hellwig wrote:
+> > We have historically decided that we want to preallocate the xfs_trans
+> > structure at writeback time so that we don't have to allocate on in
+> > the I/O completion handler.  But we treat unwrittent extent and COW
+> > fork conversions different already, which proves that the transaction
+> > allocations in the end I/O handler are not a problem.  Removing the
+> > preallocation gets rid of a lot of corner case code, and also ensures
+> > we only allocate one and log a transaction when actually required,
+> > as the ioend merging can reduce the number of actual i_size updates
+> > significantly.
 > 
-> I've suggested the same thing (I've seen this patchset before :)
-> and ISTR it makes everything easier if we just keep it here for this
-> patchset and then lift it once everything is merged...
+> That's what I thought when I wrote the ioend merging patches, but IIRC
+> Dave objected on the grounds that most file writes are trivial file
+> extending writes and therefore we should leave this alone to avoid
+> slowing down the ioend path even if it came at a cost of cancelling a
+> lot of empty transactions.
 
-Ok, fair enough. :)
+The issue is stuff like extracting a tarball, where we might write a
+hundred thousand files and they are all written in a single IO. i.e.
+there is no IO completion merging at all.
 
---D
+> I wasn't 100% convinced it mattered but ran out of time in the
+> development window and never got around to researching if it made any
+> difference.
 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Yeah, it's not all that simple :/
+
+In these cases, we always have to allocate a transaction for every
+file being written. If we do it before we submit the IO, then all
+the transactions are allocated from the single writeback context. If
+we don't have log space, data writeback pauses while the tail of the
+AIL is pushed, metadata writeback occurs, and then the transaction
+allocation for data writeback is woken, and data writeback
+submission continues. It's fairly orderly, and we don't end up
+trying to write back data while we are doing bulk metadata flushing
+from the AIL.
+
+If we delay the transaction allocation to the ioend context and we
+are low on log space, we end up blocking a kworker on a transaction
+allocation which then has to wait for metadata writeback. The
+kworker infrastructure will then issue the next ioend work, which
+then blocks on transaction allocation. Delayed allocation can cause
+thousands of small file IOs to be inflight at the same time due to
+intra-file contiguous allocation and IO merging in the block layer,
+hence we can have thousands of individual IO completions that
+require transaction allocation to be completed.
+
+> So, uh, how much of a hit do we take for having to allocate a
+> transaction for a file size extension?  Particularly since we can
+> combine those things now?
+
+Unless we are out of log space, the transaction allocation and free
+should be largely uncontended and so it's just a small amount of CPU
+usage. i.e it's a slab allocation/free and then lockless space
+reservation/free. If we are out of log space, then we sleep waiting
+for space - the issue really comes down to where it is better to
+sleep in that case....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
