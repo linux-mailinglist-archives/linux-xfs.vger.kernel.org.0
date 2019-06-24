@@ -2,201 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B723A4FEC0
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 03:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0514FFFF
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 05:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfFXByj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 23 Jun 2019 21:54:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54662 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfFXByj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 23 Jun 2019 21:54:39 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 461293082E03;
-        Mon, 24 Jun 2019 01:15:45 +0000 (UTC)
-Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE48619C65;
-        Mon, 24 Jun 2019 01:15:44 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 09:21:03 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        guaneryu@gmail.com
-Subject: Re: [PATCH v2] xfs: test xfs_info on block device and mountpoint
-Message-ID: <20190624012103.GF30864@dhcp-12-102.nay.redhat.com>
-References: <20190622153827.4448-1-zlang@redhat.com>
- <20190623214919.GD5387@magnolia>
+        id S1726965AbfFXDHo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 23 Jun 2019 23:07:44 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:33246
+        "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726323AbfFXDHo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 23 Jun 2019 23:07:44 -0400
+X-Greylist: delayed 557 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Jun 2019 23:07:42 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BbAACVOxBd/3Gu0HYNVx0BAQUBBwU?=
+ =?us-ascii?q?BgVYFAQsBgWeCRYQWk0kGgRGJeIUXi3cJAQEBAQEBAQEBNwEBAYQ6AwKDAzc?=
+ =?us-ascii?q?GDgEDAQEBBAEBAQEEAZB9J1YoDQImAkkWE4UZoklxgTEaihGBDCgBgWGKE3i?=
+ =?us-ascii?q?BB4ERM4MdhB0BC4MlglgEjkqFHFs/lQkJghaTfQyNIAOKGIQQoieBek0uCoM?=
+ =?us-ascii?q?ngk0Xji1ljWABglEBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2BbAACVOxBd/3Gu0HYNVx0BAQUBBwUBgVYFAQsBgWeCR?=
+ =?us-ascii?q?YQWk0kGgRGJeIUXi3cJAQEBAQEBAQEBNwEBAYQ6AwKDAzcGDgEDAQEBBAEBA?=
+ =?us-ascii?q?QEEAZB9J1YoDQImAkkWE4UZoklxgTEaihGBDCgBgWGKE3iBB4ERM4MdhB0BC?=
+ =?us-ascii?q?4MlglgEjkqFHFs/lQkJghaTfQyNIAOKGIQQoieBek0uCoMngk0Xji1ljWABg?=
+ =?us-ascii?q?lEBAQ?=
+X-IronPort-AV: E=Sophos;i="5.63,410,1557158400"; 
+   d="scan'208";a="221015566"
+Received: from unknown (HELO [192.168.1.222]) ([118.208.174.113])
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 24 Jun 2019 10:58:23 +0800
+Subject: [PATCH 01/10] xfs: mount-api - add fs parameter description
+From:   Ian Kent <raven@themaw.net>
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Date:   Mon, 24 Jun 2019 10:58:22 +0800
+Message-ID: <156134510205.2519.16185588460828778620.stgit@fedora-28>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623214919.GD5387@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 24 Jun 2019 01:15:45 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 02:49:19PM -0700, Darrick J. Wong wrote:
-> On Sat, Jun 22, 2019 at 11:38:27PM +0800, Zorro Lang wrote:
-> > There was a bug, xfs_info fails on a mounted block device:
-> > 
-> >   # xfs_info /dev/mapper/testdev
-> >   xfs_info: /dev/mapper/testdev contains a mounted filesystem
-> > 
-> >   fatal error -- couldn't initialize XFS library
-> > 
-> > xfsprogs has fixed it by:
-> > 
-> >   bbb43745 xfs_info: use findmnt to handle mounted block devices
-> > 
-> > Signed-off-by: Zorro Lang <zlang@redhat.com>
-> 
-> Aha!  I remembered something -- xfs/449 already checks for consistency
-> in the various xfs geometry reports that each command provides, so why
-> not just add the $XFS_INFO_PROG $SCRATCH_DEV case at the end?
+The new mount-api uses an array of struct fs_parameter_spec for
+parameter parsing, create this table populated with the xfs mount
+parameters.
 
-Wow, there're so many cases, can't sure what we've covered now:)
+The new mount-api table definition is wider than the token based
+parameter table and interleaving the option description comments
+between each table line is much less readable than adding them to
+the end of each table entry. So add the option description comment
+to each entry line even though it causes quite a few of the entries
+to be longer than 80 characters.
 
-Sure, I can do this change on xfs/449, if Eryu thinks it's fine to increase
-the test coverage of a known case.
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ fs/xfs/xfs_super.c |   48 +++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 3 deletions(-)
 
-Thanks,
-Zorro
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index a14d11d78bd8..ab8145bf6fff 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -51,6 +51,8 @@
+ #include <linux/kthread.h>
+ #include <linux/freezer.h>
+ #include <linux/parser.h>
++#include <linux/fs_context.h>
++#include <linux/fs_parser.h>
+ 
+ static const struct super_operations xfs_super_operations;
+ struct bio_set xfs_ioend_bioset;
+@@ -60,9 +62,6 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
+ static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
+ #endif
+ 
+-/*
+- * Table driven mount option parser.
+- */
+ enum {
+ 	Opt_logbufs, Opt_logbsize, Opt_logdev, Opt_rtdev, Opt_biosize,
+ 	Opt_wsync, Opt_noalign, Opt_swalloc, Opt_sunit, Opt_swidth, Opt_nouuid,
+@@ -122,6 +121,49 @@ static const match_table_t tokens = {
+ 	{Opt_err,	NULL},
+ };
+ 
++static const struct fs_parameter_spec xfs_param_specs[] = {
++ fsparam_u32	("logbufs",    Opt_logbufs),   /* number of XFS log buffers */
++ fsparam_string ("logbsize",   Opt_logbsize),  /* size of XFS log buffers */
++ fsparam_string ("logdev",     Opt_logdev),    /* log device */
++ fsparam_string ("rtdev",      Opt_rtdev),     /* realtime I/O device */
++ fsparam_u32	("biosize",    Opt_biosize),   /* log2 of preferred buffered io size */
++ fsparam_flag	("wsync",      Opt_wsync),     /* safe-mode nfs compatible mount */
++ fsparam_flag	("noalign",    Opt_noalign),   /* turn off stripe alignment */
++ fsparam_flag	("swalloc",    Opt_swalloc),   /* turn on stripe width allocation */
++ fsparam_u32	("sunit",      Opt_sunit),     /* data volume stripe unit */
++ fsparam_u32	("swidth",     Opt_swidth),    /* data volume stripe width */
++ fsparam_flag	("nouuid",     Opt_nouuid),    /* ignore filesystem UUID */
++ fsparam_flag_no("grpid",      Opt_grpid),     /* group-ID from parent directory (or not) */
++ fsparam_flag	("bsdgroups",  Opt_bsdgroups), /* group-ID from parent directory */
++ fsparam_flag	("sysvgroups", Opt_sysvgroups),/* group-ID from current process */
++ fsparam_string ("allocsize",  Opt_allocsize), /* preferred allocation size */
++ fsparam_flag	("norecovery", Opt_norecovery),/* don't run XFS recovery */
++ fsparam_flag	("inode64",    Opt_inode64),   /* inodes can be allocated anywhere */
++ fsparam_flag	("inode32",    Opt_inode32),   /* inode allocation limited to XFS_MAXINUMBER_32 */
++ fsparam_flag_no("ikeep",      Opt_ikeep),     /* do not free (or keep) empty inode clusters */
++ fsparam_flag_no("largeio",    Opt_largeio),   /* report (or do not report) large I/O sizes in stat() */
++ fsparam_flag_no("attr2",      Opt_attr2),     /* do (or do not) use attr2 attribute format */
++ fsparam_flag	("filestreams",Opt_filestreams), /* use filestreams allocator */
++ fsparam_flag_no("quota",      Opt_quota),     /* disk quotas (user) */
++ fsparam_flag	("usrquota",   Opt_usrquota),  /* user quota enabled */
++ fsparam_flag	("grpquota",   Opt_grpquota),  /* group quota enabled */
++ fsparam_flag	("prjquota",   Opt_prjquota),  /* project quota enabled */
++ fsparam_flag	("uquota",     Opt_uquota),    /* user quota (IRIX variant) */
++ fsparam_flag	("gquota",     Opt_gquota),    /* group quota (IRIX variant) */
++ fsparam_flag	("pquota",     Opt_pquota),    /* project quota (IRIX variant) */
++ fsparam_flag	("uqnoenforce",Opt_uqnoenforce), /* user quota limit enforcement */
++ fsparam_flag	("gqnoenforce",Opt_gqnoenforce), /* group quota limit enforcement */
++ fsparam_flag	("pqnoenforce",Opt_pqnoenforce), /* project quota limit enforcement */
++ fsparam_flag	("qnoenforce", Opt_qnoenforce),  /* same as uqnoenforce */
++ fsparam_flag_no("discard",    Opt_discard),   /* Do (or do not) not discard unused blocks */
++ fsparam_flag	("dax",	       Opt_dax),       /* Enable direct access to bdev pages */
++ {}
++};
++
++static const struct fs_parameter_description xfs_fs_parameters = {
++	.name		= "xfs",
++	.specs		= xfs_param_specs,
++};
+ 
+ STATIC int
+ suffix_kstrtoint(const substring_t *s, unsigned int base, int *res)
 
-> 
-> --D
-> 
-> > ---
-> > 
-> > Thanks the reviewing from Darrick and Eryu,
-> > 
-> > V2 did below changes:
-> > 1) Compare the contents between the two xfs_info invocations in test_xfs_info()
-> > 2) document the commit that the case cover
-> > 3) Add more comments
-> > 4) Move the test on unmounted device to the end
-> > 
-> > Sorry Eryu, I'll keep the case number next time :)
-> > 
-> > Thanks,
-> > Zorro
-> > 
-> >  tests/xfs/1000     | 82 ++++++++++++++++++++++++++++++++++++++++++++++
-> >  tests/xfs/1000.out |  2 ++
-> >  tests/xfs/group    |  1 +
-> >  3 files changed, 85 insertions(+)
-> >  create mode 100755 tests/xfs/1000
-> >  create mode 100644 tests/xfs/1000.out
-> > 
-> > diff --git a/tests/xfs/1000 b/tests/xfs/1000
-> > new file mode 100755
-> > index 00000000..721bcdf2
-> > --- /dev/null
-> > +++ b/tests/xfs/1000
-> > @@ -0,0 +1,82 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (c) 2019 Red Hat, Inc.  All Rights Reserved.
-> > +#
-> > +# FS QA Test No. 1000
-> > +#
-> > +# test xfs_info on block device and mountpoint, uncover xfsprogs commit:
-> > +#    bbb43745 xfs_info: use findmnt to handle mounted block devices
-> > +#
-> > +seq=`basename $0`
-> > +seqres=$RESULT_DIR/$seq
-> > +echo "QA output created by $seq"
-> > +
-> > +here=`pwd`
-> > +tmp=/tmp/$$
-> > +status=1	# failure is the default!
-> > +trap "_cleanup; exit \$status" 0 1 2 3 15
-> > +
-> > +_cleanup()
-> > +{
-> > +	cd /
-> > +	rm -f $tmp.*
-> > +}
-> > +
-> > +# get standard environment, filters and checks
-> > +. ./common/rc
-> > +
-> > +# remove previous $seqres.full before test
-> > +rm -f $seqres.full
-> > +
-> > +# real QA test starts here
-> > +_supported_fs xfs
-> > +_supported_os Linux
-> > +_require_scratch
-> > +
-> > +info_file=$tmp.$seq.info
-> > +
-> > +test_xfs_info()
-> > +{
-> > +	local target="$1"
-> > +	local tmpfile=$tmp.$seq.info.tmp
-> > +	local need_cmp=0
-> > +
-> > +	# save the *old* xfs_info file, to compare with the new one later
-> > +	if [ -f $info_file ]; then
-> > +		cat $info_file > $tmpfile
-> > +		need_cmp=1
-> > +	fi
-> > +
-> > +	$XFS_INFO_PROG $target > $info_file 2>&1
-> > +	if [ $? -ne 0 ];then
-> > +		echo "$XFS_INFO_PROG $target fails:"
-> > +		cat $info_file
-> > +	else
-> > +		cat $info_file >> $seqres.full
-> > +	fi
-> > +	# compare the contents between the two xfs_info invocations
-> > +	if [ $need_cmp -eq 1 ]; then
-> > +		diff $tmpfile $info_file
-> > +	fi
-> > +}
-> > +
-> > +_scratch_mkfs > $seqres.full 2>&1
-> > +_scratch_mount
-> > +# test mounted block device and mountpoint
-> > +test_xfs_info $SCRATCH_DEV
-> > +test_xfs_info $SCRATCH_MNT
-> > +
-> > +# test on unmounted block device
-> > +_scratch_unmount
-> > +# Due to new xfsprogs use xfs_db 'info' command to get the information of
-> > +# offline XFS, it supports running on a unmounted device. But old xfsprogs
-> > +# doesn't support it, so skip that.
-> > +$XFS_DB_PROG -c "info" $SCRATCH_DEV | grep -q "command info not found"
-> > +if [ $? -ne 0 ]; then
-> > +	test_xfs_info $SCRATCH_DEV
-> > +fi
-> > +
-> > +echo "Silence is golden"
-> > +# success, all done
-> > +status=0
-> > +exit
-> > diff --git a/tests/xfs/1000.out b/tests/xfs/1000.out
-> > new file mode 100644
-> > index 00000000..681b3b48
-> > --- /dev/null
-> > +++ b/tests/xfs/1000.out
-> > @@ -0,0 +1,2 @@
-> > +QA output created by 1000
-> > +Silence is golden
-> > diff --git a/tests/xfs/group b/tests/xfs/group
-> > index ffe4ae12..047fe332 100644
-> > --- a/tests/xfs/group
-> > +++ b/tests/xfs/group
-> > @@ -504,3 +504,4 @@
-> >  504 auto quick mkfs label
-> >  505 auto quick spaceman
-> >  506 auto quick health
-> > +1000 auto quick
-> > -- 
-> > 2.17.2
-> > 
