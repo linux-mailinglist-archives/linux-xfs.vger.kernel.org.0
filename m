@@ -2,113 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAEC651F07
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E1B51F25
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfFXXQf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 19:16:35 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59024 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbfFXXQf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:16:35 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8564B149D6D;
-        Tue, 25 Jun 2019 09:16:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hfYBH-0000af-3Z; Tue, 25 Jun 2019 09:15:23 +1000
-Date:   Tue, 25 Jun 2019 09:15:23 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
- updates
-Message-ID: <20190624231523.GC7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-8-hch@lst.de>
- <20190624161720.GQ5387@magnolia>
+        id S1728363AbfFXXeu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 19:34:50 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37083 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726424AbfFXXeu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:34:50 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id EDC7E22453;
+        Mon, 24 Jun 2019 19:34:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 24 Jun 2019 19:34:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        fS1IoIZPZsOqFcYrbalz0pY+rIY/ELxvn84lTH6XoNE=; b=QEOpHXxjfNJiqNJa
+        PfyBlllQITSWn8Gvt9SpA/fQmzPdl95yGym15xH0Quh1qAWeNRlPiq6v/BO6bpUO
+        SqaKCp0Yady4KFPaKdwZWT1MUhPPWw3LZtkVVLNa+rFfqAPwKYQ34NgSqFeJbfoC
+        jPLCfayCPrdE3AWiAauDCttxNZC7ZB/QqCYMOHHniQI/HzdiNEL/9Ug3d6rbJrhb
+        skUPw8GRnB3lUAJ18Tl1j2HXryGltt+AYpcfiH9TEbL2DOwNjDwYf8aTohC+WgPv
+        DGL3gVj4NczhTspExOw0hXh4/HKHhieRwGWJJZWtPBrio9Ky/Z3ErgA3hLxxquOf
+        JsWXpw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=fS1IoIZPZsOqFcYrbalz0pY+rIY/ELxvn84lTH6Xo
+        NE=; b=IogERABhbwHSyiSPwroNoFkzV0j3QpnvVOOi6TpN6dfZ3STAw72sLZ2Jv
+        mRpYdJsHAnO1qCkrkW2qOE1biMtVIjyKa2L3C0FBFdWM0LnZVjYyS3qCkuDCuP8H
+        qycCIbojiOV5pnH9MZ2XljrRsfDvg6deUxphXVm0yjoRybGMydKJgCi+9l4Uvs/L
+        kUnBD1p0dUxoEtaGAVgeLSFjivlF95RSRxPt+C0eBXL72rKqHOApjhI5Abei30ck
+        fuI2dTPhCs1+iO8MqT+e8WAaexbMwDsDAKYURtGaquSFB7bN1x0Eb8zO3pC++l7d
+        uo1qUj8J+HT0tiDD9Eg3GebCVmO9g==
+X-ME-Sender: <xms:Fl4RXUrxnA6Z98A7Q0-A_xM0S5S0XCwoWUfIDKbeI6XNWsn53c0eFw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudefgddvgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
+    dujeefrdehfeenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
+    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:Fl4RXVhCpkOeZ8dIv76gTakQS69BNZ0hlacRwewPp02828ZDJzlsGA>
+    <xmx:Fl4RXRAQtAkVgkw9jSjbzNltwIxHkY8uUGP-XMuOOde-1r7wG9maAA>
+    <xmx:Fl4RXaFEwwTb4dK6kpiDWMU_rGMdRfY6Qfh4HwFeJiRgeDdKk7uOtQ>
+    <xmx:Fl4RXUoYxJYCuoaZABW-YIKOMQZZNjjIJVpBdFfpeFUFf36wYtwUrA>
+Received: from pluto.themaw.net (unknown [118.208.173.53])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CFF14380075;
+        Mon, 24 Jun 2019 19:34:45 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by pluto.themaw.net (Postfix) with ESMTP id 0C91F1C0110;
+        Tue, 25 Jun 2019 07:34:42 +0800 (AWST)
+Message-ID: <cca5319857aefccadb64dbcf084185fa8ecf6296.camel@themaw.net>
+Subject: Re: [PATCH 02/10] xfs: mount-api - refactor suffix_kstrtoint()
+From:   Ian Kent <raven@themaw.net>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Date:   Tue, 25 Jun 2019 07:34:41 +0800
+In-Reply-To: <20190624230633.GB5387@magnolia>
+References: <156134510205.2519.16185588460828778620.stgit@fedora-28>
+         <156134510851.2519.2387740442257250106.stgit@fedora-28>
+         <20190624172943.GV5387@magnolia>
+         <20190624223554.GA7777@dread.disaster.area>
+         <20190624230633.GB5387@magnolia>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624161720.GQ5387@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=oLq8ofgPWqtQ5Z905GkA:9 a=6BQrOku7L8tHAI1q:21
-        a=BwSqpppzWO7tify-:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 09:17:20AM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 24, 2019 at 07:52:48AM +0200, Christoph Hellwig wrote:
-> > We have historically decided that we want to preallocate the xfs_trans
-> > structure at writeback time so that we don't have to allocate on in
-> > the I/O completion handler.  But we treat unwrittent extent and COW
-> > fork conversions different already, which proves that the transaction
-> > allocations in the end I/O handler are not a problem.  Removing the
-> > preallocation gets rid of a lot of corner case code, and also ensures
-> > we only allocate one and log a transaction when actually required,
-> > as the ioend merging can reduce the number of actual i_size updates
-> > significantly.
+On Mon, 2019-06-24 at 16:06 -0700, Darrick J. Wong wrote:
+> On Tue, Jun 25, 2019 at 08:35:54AM +1000, Dave Chinner wrote:
+> > On Mon, Jun 24, 2019 at 10:29:43AM -0700, Darrick J. Wong wrote:
+> > > On Mon, Jun 24, 2019 at 10:58:30AM +0800, Ian Kent wrote:
+> > > > The mount-api doesn't have a "human unit" parse type yet so
+> > > > the options that have values like "10k" etc. still need to
+> > > > be converted by the fs.
+> > > 
+> > > /me wonders if that ought to be lifted to fs_parser.c, or is xfs the
+> > > only filesystem that has mount options with unit suffixes?
+> > 
+> > I've suggested the same thing (I've seen this patchset before :)
+> > and ISTR it makes everything easier if we just keep it here for this
+> > patchset and then lift it once everything is merged...
 > 
-> That's what I thought when I wrote the ioend merging patches, but IIRC
-> Dave objected on the grounds that most file writes are trivial file
-> extending writes and therefore we should leave this alone to avoid
-> slowing down the ioend path even if it came at a cost of cancelling a
-> lot of empty transactions.
+> Ok, fair enough. :)
 
-The issue is stuff like extracting a tarball, where we might write a
-hundred thousand files and they are all written in a single IO. i.e.
-there is no IO completion merging at all.
+I mentioned it to David after Dave said much the same thing, David said
+he had done some work on it but I haven't heard more yet.
 
-> I wasn't 100% convinced it mattered but ran out of time in the
-> development window and never got around to researching if it made any
-> difference.
+> 
+> --D
+> 
+> > -Dave.
+> > -- 
+> > Dave Chinner
+> > david@fromorbit.com
 
-Yeah, it's not all that simple :/
-
-In these cases, we always have to allocate a transaction for every
-file being written. If we do it before we submit the IO, then all
-the transactions are allocated from the single writeback context. If
-we don't have log space, data writeback pauses while the tail of the
-AIL is pushed, metadata writeback occurs, and then the transaction
-allocation for data writeback is woken, and data writeback
-submission continues. It's fairly orderly, and we don't end up
-trying to write back data while we are doing bulk metadata flushing
-from the AIL.
-
-If we delay the transaction allocation to the ioend context and we
-are low on log space, we end up blocking a kworker on a transaction
-allocation which then has to wait for metadata writeback. The
-kworker infrastructure will then issue the next ioend work, which
-then blocks on transaction allocation. Delayed allocation can cause
-thousands of small file IOs to be inflight at the same time due to
-intra-file contiguous allocation and IO merging in the block layer,
-hence we can have thousands of individual IO completions that
-require transaction allocation to be completed.
-
-> So, uh, how much of a hit do we take for having to allocate a
-> transaction for a file size extension?  Particularly since we can
-> combine those things now?
-
-Unless we are out of log space, the transaction allocation and free
-should be largely uncontended and so it's just a small amount of CPU
-usage. i.e it's a slab allocation/free and then lockless space
-reservation/free. If we are out of log space, then we sleep waiting
-for space - the issue really comes down to where it is better to
-sleep in that case....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
