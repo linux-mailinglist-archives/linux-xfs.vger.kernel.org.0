@@ -2,63 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B47E51E64
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 00:37:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 270B451EDE
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:00:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfFXWhG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 18:37:06 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46814 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726413AbfFXWhG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 18:37:06 -0400
+        id S1726567AbfFXXAP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 19:00:15 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:48325 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfFXXAP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:00:15 -0400
 Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 43F8A43AF7E;
-        Tue, 25 Jun 2019 08:37:02 +1000 (AEST)
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id F058B3DC80F;
+        Tue, 25 Jun 2019 09:00:11 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hfXZ4-0000PL-LQ; Tue, 25 Jun 2019 08:35:54 +1000
-Date:   Tue, 25 Jun 2019 08:35:54 +1000
+        id 1hfXvU-0000ZQ-Kb; Tue, 25 Jun 2019 08:59:04 +1000
+Date:   Tue, 25 Jun 2019 08:59:04 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Ian Kent <raven@themaw.net>, linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Subject: Re: [PATCH 02/10] xfs: mount-api - refactor suffix_kstrtoint()
-Message-ID: <20190624223554.GA7777@dread.disaster.area>
-References: <156134510205.2519.16185588460828778620.stgit@fedora-28>
- <156134510851.2519.2387740442257250106.stgit@fedora-28>
- <20190624172943.GV5387@magnolia>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/12] xfs: remove XFS_TRANS_NOFS
+Message-ID: <20190624225904.GB7777@dread.disaster.area>
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-7-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624172943.GV5387@magnolia>
+In-Reply-To: <20190624055253.31183-7-hch@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
         a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=hMHMsTzsTvGR3Hs4IMAA:9 a=CjuIK1q_8ugA:10
+        a=7-415B0cAAAA:8 a=cSrwqqIVXR2GPqyHJbwA:9 a=CjuIK1q_8ugA:10
         a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:29:43AM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 24, 2019 at 10:58:30AM +0800, Ian Kent wrote:
-> > The mount-api doesn't have a "human unit" parse type yet so
-> > the options that have values like "10k" etc. still need to
-> > be converted by the fs.
-> 
-> /me wonders if that ought to be lifted to fs_parser.c, or is xfs the
-> only filesystem that has mount options with unit suffixes?
+On Mon, Jun 24, 2019 at 07:52:47AM +0200, Christoph Hellwig wrote:
+> Instead of a magic flag for xfs_trans_alloc, just ensure all callers
+> that can't relclaim through the file system use memalloc_nofs_save to
+> set the per-task nofs flag.
 
-I've suggested the same thing (I've seen this patchset before :)
-and ISTR it makes everything easier if we just keep it here for this
-patchset and then lift it once everything is merged...
+I'm thinking that it would be a good idea to add comments to explain
+exactly what the memalloc_nofs_save/restore() are protecting where
+they are used. Right now the XFS_TRANS_NOFS flag is largely
+undocumented, so a reader is left guessing as to why the flag is
+necessary and what contexts it may apply to. Hence I think we should
+fix that while we are changing over to a different GFP_NOFS
+allocation context mechanism....
 
--Dave.
+Cheers,
+
+Dave.
 -- 
 Dave Chinner
 david@fromorbit.com
