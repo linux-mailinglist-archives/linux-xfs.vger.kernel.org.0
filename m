@@ -2,65 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C6551017
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 17:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B7F651028
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Jun 2019 17:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfFXPPc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 11:15:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56876 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfFXPPc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 11:15:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFECoq071721;
-        Mon, 24 Jun 2019 15:15:02 GMT
+        id S1729222AbfFXPTU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 11:19:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38070 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFXPTU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 11:19:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFE7BH169773;
+        Mon, 24 Jun 2019 15:19:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=K2nF3E6XseZb+sJVbpB/EPZWQ5pUv4zPKdLyAreNOeQ=;
- b=tTbnK/vSuSa/WFsaptNDxZHOGxUMqS8lmHdzq0BRMVHDBGNihqRcZwy7kJVr8k6ag7RL
- X0FIAd02B28xMSzH+fRqWndtIb7Qw/Um9Mqamdp9nUtdjxj9vaVcpJh1z9N+vihDaH90
- Uej6lAZjeSzXYFFtLwsbrh2JTcXgM1yOCvCesULk6OlXMsJNUsMStk17Z1RnI4TiXA7u
- dQya6dyibkajKJgk96csInRebW5GNNeq0m6qcJn/MEvUzrWMtmzakakVu6I9Z3mXL6NI
- EYvFTPHiWPKPmnTV1eXVR5hqYH3kXFGoY5LHfyBIG184Hkdse1xBtXt2+dH3/EDLyowK WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyq7023-1
+ bh=YuwWc0/LElXuwH+t4A0zQc6RQB/x9mfZDbbXxMWVn5c=;
+ b=D0Wis4A5DBhmWI08Bhar+R8XrNIUNn2VmlGNeHzYbyLOnceMahb/5KDzRjIbDdTOc2TT
+ ssF1s5byh+Tde/+puO5scITI+R5ySmdpOuzsCwFSRR7gFlyDCnNjQ7OnliYmxzXPlIiJ
+ tGLnQ/TiizD2RuqT8ip6kc+Ex10SB2F6h2s9pkrQf/rU/f6B1gmGYyW3szOIrW4Ufgo9
+ awVETFPMoGlhwwAhZEGGSDEn5q7Xx3gTO6j8TA2CYtauDIiLFZeH+xDxbXcuOQoBqSgN
+ 55tFvytKjBEJfaCmjTrcy2qOgVo4EgwyWenZ9AyT5hnAzAXj7CrJ7as5r0+rSh0UgCUH qw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pf1e7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 15:15:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFEkLB095843;
-        Mon, 24 Jun 2019 15:15:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tn1ts-1
+        Mon, 24 Jun 2019 15:19:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OFHtgm109986;
+        Mon, 24 Jun 2019 15:19:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t99f3b5gv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 15:15:01 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OFF0xw004130;
-        Mon, 24 Jun 2019 15:15:00 GMT
+        Mon, 24 Jun 2019 15:19:12 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5OFJBog020999;
+        Mon, 24 Jun 2019 15:19:12 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 08:14:59 -0700
-Date:   Mon, 24 Jun 2019 08:14:58 -0700
+        with ESMTP ; Mon, 24 Jun 2019 08:19:11 -0700
+Date:   Mon, 24 Jun 2019 08:19:10 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/12] xfs: simplify xfs_chain_bio
-Message-ID: <20190624151458.GI5387@magnolia>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-3-hch@lst.de>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Christoph Hellwig <hch@lst.de>, fstests@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] shared/011: run on all file system that support cgroup
+ writeback
+Message-ID: <20190624151910.GJ5387@magnolia>
+References: <20190624134407.21365-1-hch@lst.de>
+ <20190624150839.GB6350@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-3-hch@lst.de>
+In-Reply-To: <20190624150839.GB6350@mit.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240122
+ engine=8.0.1-1810050000 definitions=main-1906240123
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
@@ -72,116 +71,45 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:43AM +0200, Christoph Hellwig wrote:
-> Move setting up operation and write hint to xfs_alloc_ioend, and
-> then just copy over all needed information from the previous bio
-> in xfs_chain_bio and stop passing various parameters to it.
+On Mon, Jun 24, 2019 at 11:08:39AM -0400, Theodore Ts'o wrote:
+> On Mon, Jun 24, 2019 at 03:44:07PM +0200, Christoph Hellwig wrote:
+> > Run the cgroup writeback test on xfs, for which I've just posted
+> > a patch to support cgroup writeback as well as ext2 and f2fs, which
+> > have supported cgroup writeback for a while now.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  tests/shared/011 | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tests/shared/011 b/tests/shared/011
+> > index a0ac375d..96ce9d1c 100755
+> > --- a/tests/shared/011
+> > +++ b/tests/shared/011
+> > @@ -39,7 +39,7 @@ rm -f $seqres.full
+> >  # real QA test starts here
+> >  
+> >  # Modify as appropriate.
+> > -_supported_fs ext4 btrfs
+> > +_supported_fs ext2 ext4 f2fs btrfs xfs
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Per my comments in another e-mail thread, given how many of the
+> primary file systems support cgroup-aware writeback, maybe we should
+> just remove the _supported_fs line and move this test to generic?
+> 
+> Whether we like it or not, there are more and more userspace tools
+> which assume that cgroup-aware writeback is a thing.
+> 
+> Alternatively, maybe we should have some standardized way so the
+> kernel can signal whether or not a particular mounted file system
+> supports cgroup-aware writeback?
 
-I always thought it was a little odd that we were still setting bio
-fields in the submission function...
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+I prefer this second option because I'd rather the test suite do the
+work to figure out if cgroup aware writeback is enabled and therefore
+worth testing rather than making everyone's QA department to add another
+conditional known-failure entry for when they want to run new fstests on
+some old LTS/distro kernel.
 
 --D
 
-> ---
->  fs/xfs/xfs_aops.c | 35 +++++++++++++++++------------------
->  1 file changed, 17 insertions(+), 18 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index a6f0f4761a37..9cceb90e77c5 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -665,7 +665,6 @@ xfs_submit_ioend(
->  
->  	ioend->io_bio->bi_private = ioend;
->  	ioend->io_bio->bi_end_io = xfs_end_bio;
-> -	ioend->io_bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
->  
->  	/*
->  	 * If we are failing the IO now, just mark the ioend with an
-> @@ -679,7 +678,6 @@ xfs_submit_ioend(
->  		return status;
->  	}
->  
-> -	ioend->io_bio->bi_write_hint = ioend->io_inode->i_write_hint;
->  	submit_bio(ioend->io_bio);
->  	return 0;
->  }
-> @@ -691,7 +689,8 @@ xfs_alloc_ioend(
->  	xfs_exntst_t		state,
->  	xfs_off_t		offset,
->  	struct block_device	*bdev,
-> -	sector_t		sector)
-> +	sector_t		sector,
-> +	struct writeback_control *wbc)
->  {
->  	struct xfs_ioend	*ioend;
->  	struct bio		*bio;
-> @@ -699,6 +698,8 @@ xfs_alloc_ioend(
->  	bio = bio_alloc_bioset(GFP_NOFS, BIO_MAX_PAGES, &xfs_ioend_bioset);
->  	bio_set_dev(bio, bdev);
->  	bio->bi_iter.bi_sector = sector;
-> +	bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
-> +	bio->bi_write_hint = inode->i_write_hint;
->  
->  	ioend = container_of(bio, struct xfs_ioend, io_inline_bio);
->  	INIT_LIST_HEAD(&ioend->io_list);
-> @@ -719,24 +720,22 @@ xfs_alloc_ioend(
->   * so that the bi_private linkage is set up in the right direction for the
->   * traversal in xfs_destroy_ioend().
->   */
-> -static void
-> +static struct bio *
->  xfs_chain_bio(
-> -	struct xfs_ioend	*ioend,
-> -	struct writeback_control *wbc,
-> -	struct block_device	*bdev,
-> -	sector_t		sector)
-> +	struct bio		*prev)
->  {
->  	struct bio *new;
->  
->  	new = bio_alloc(GFP_NOFS, BIO_MAX_PAGES);
-> -	bio_set_dev(new, bdev);
-> -	new->bi_iter.bi_sector = sector;
-> -	bio_chain(ioend->io_bio, new);
-> -	bio_get(ioend->io_bio);		/* for xfs_destroy_ioend */
-> -	ioend->io_bio->bi_opf = REQ_OP_WRITE | wbc_to_write_flags(wbc);
-> -	ioend->io_bio->bi_write_hint = ioend->io_inode->i_write_hint;
-> -	submit_bio(ioend->io_bio);
-> -	ioend->io_bio = new;
-> +	bio_copy_dev(new, prev);
-> +	new->bi_iter.bi_sector = bio_end_sector(prev);
-> +	new->bi_opf = prev->bi_opf;
-> +	new->bi_write_hint = prev->bi_write_hint;
-> +
-> +	bio_chain(prev, new);
-> +	bio_get(prev);		/* for xfs_destroy_ioend */
-> +	submit_bio(prev);
-> +	return new;
->  }
->  
->  /*
-> @@ -771,14 +770,14 @@ xfs_add_to_ioend(
->  		if (wpc->ioend)
->  			list_add(&wpc->ioend->io_list, iolist);
->  		wpc->ioend = xfs_alloc_ioend(inode, wpc->fork,
-> -				wpc->imap.br_state, offset, bdev, sector);
-> +				wpc->imap.br_state, offset, bdev, sector, wbc);
->  	}
->  
->  	if (!__bio_try_merge_page(wpc->ioend->io_bio, page, len, poff, true)) {
->  		if (iop)
->  			atomic_inc(&iop->write_count);
->  		if (bio_full(wpc->ioend->io_bio))
-> -			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
-> +			wpc->ioend->io_bio = xfs_chain_bio(wpc->ioend->io_bio);
->  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
->  	}
->  
-> -- 
-> 2.20.1
-> 
+> 						- Ted
