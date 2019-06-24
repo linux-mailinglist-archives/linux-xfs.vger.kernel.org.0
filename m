@@ -2,65 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 270B451EDE
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B0BB51EEB
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 01:06:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFXXAP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 19:00:15 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:48325 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfFXXAP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:00:15 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id F058B3DC80F;
-        Tue, 25 Jun 2019 09:00:11 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hfXvU-0000ZQ-Kb; Tue, 25 Jun 2019 08:59:04 +1000
-Date:   Tue, 25 Jun 2019 08:59:04 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/12] xfs: remove XFS_TRANS_NOFS
-Message-ID: <20190624225904.GB7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-7-hch@lst.de>
+        id S1728012AbfFXXGu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 19:06:50 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50334 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfFXXGu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 19:06:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OMxCv9028713;
+        Mon, 24 Jun 2019 23:06:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=8aaz9j1M6LHINBJUlIuo9GoM+F9OMUzYJ50d1fFl5mo=;
+ b=d3k/PI56h4xW4/45hjVjCt+Hu7+XBzLfeLsRNu4++T8cCCDtywVk/SnLq1NfhCEuiz6K
+ hA4I8Jp8rHWNpfwQf1YEv9UGG9KwIxs8G9Mo2+mlHR7m6NOT7Yl1lXoNzHiioRxfPLhE
+ hpJg0q6MunIrBJYxj4R+Qc3UT0Lq7VQ7jgBfM0SbIBmws9netQ9dVhHodOUDCiYBId1v
+ GXXoQKIBkQpa8CaSWBo6jRzoe9KWRWOmWZ6goSXZVcfr+KzjytZutUSMc4NdsIMO1ygC
+ KqlyGPxEpXo/OBai3/R6eh9CnEckrA1A4UQkJxk169RGONXNcyLuNj0+JtHAgd/GgmNh ng== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t9brt101h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 23:06:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ON5Tg5153848;
+        Mon, 24 Jun 2019 23:06:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t9acbs16x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 23:06:36 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ON6Ykc002346;
+        Mon, 24 Jun 2019 23:06:34 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 16:06:34 -0700
+Date:   Mon, 24 Jun 2019 16:06:33 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ian Kent <raven@themaw.net>, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Subject: Re: [PATCH 02/10] xfs: mount-api - refactor suffix_kstrtoint()
+Message-ID: <20190624230633.GB5387@magnolia>
+References: <156134510205.2519.16185588460828778620.stgit@fedora-28>
+ <156134510851.2519.2387740442257250106.stgit@fedora-28>
+ <20190624172943.GV5387@magnolia>
+ <20190624223554.GA7777@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624055253.31183-7-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=cSrwqqIVXR2GPqyHJbwA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190624223554.GA7777@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240181
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:52:47AM +0200, Christoph Hellwig wrote:
-> Instead of a magic flag for xfs_trans_alloc, just ensure all callers
-> that can't relclaim through the file system use memalloc_nofs_save to
-> set the per-task nofs flag.
+On Tue, Jun 25, 2019 at 08:35:54AM +1000, Dave Chinner wrote:
+> On Mon, Jun 24, 2019 at 10:29:43AM -0700, Darrick J. Wong wrote:
+> > On Mon, Jun 24, 2019 at 10:58:30AM +0800, Ian Kent wrote:
+> > > The mount-api doesn't have a "human unit" parse type yet so
+> > > the options that have values like "10k" etc. still need to
+> > > be converted by the fs.
+> > 
+> > /me wonders if that ought to be lifted to fs_parser.c, or is xfs the
+> > only filesystem that has mount options with unit suffixes?
+> 
+> I've suggested the same thing (I've seen this patchset before :)
+> and ISTR it makes everything easier if we just keep it here for this
+> patchset and then lift it once everything is merged...
 
-I'm thinking that it would be a good idea to add comments to explain
-exactly what the memalloc_nofs_save/restore() are protecting where
-they are used. Right now the XFS_TRANS_NOFS flag is largely
-undocumented, so a reader is left guessing as to why the flag is
-necessary and what contexts it may apply to. Hence I think we should
-fix that while we are changing over to a different GFP_NOFS
-allocation context mechanism....
+Ok, fair enough. :)
 
-Cheers,
+--D
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
