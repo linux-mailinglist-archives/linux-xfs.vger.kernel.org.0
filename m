@@ -2,167 +2,217 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E882520DF
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:06:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2864F520D9
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfFYDGQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 23:06:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44288 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfFYDGQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 23:06:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P2xZkP183824;
-        Tue, 25 Jun 2019 03:04:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=y1nTqvm5zm2oVuuxHsrGpbU4gEqHpmqSXspC8Bne9NM=;
- b=BXJlUqAKvMETApXDcsKgEZiNdrmlXkQGnY88kMW3AMxNKcXyyaE6UXAlpYECy+ntv7pH
- 6uhEP1tj4tycY9LMVwQSwCJ1OFoN8XiURaWWP5MgMDhRGeWBYKJ5F+hDMXeWyXvzw09Y
- W93kGqDhXdEUxHJGprg0ZqzGMSQuXc6a6uPIBselde0/QnSPFrNudLSF4JrDCRjZHlSe
- PtPwNFzZ3qhrAqfZeA252/OTt3UOJ6W5XclgLFaB43nqCHJq7hk5QCcLKtksxGRz16et
- vcWpg2Ca0sMBi64yleW6uVf2BPJY2qw2eabFh6Nu+9cNmwvp3CwrP4l2harCRSOmeEeb 1g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brt1hg7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 03:04:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P34h96101926;
-        Tue, 25 Jun 2019 03:04:55 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tx2qw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jun 2019 03:04:55 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5P34tbP102400;
-        Tue, 25 Jun 2019 03:04:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tx2qp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 03:04:54 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5P34gx0001788;
-        Tue, 25 Jun 2019 03:04:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 20:04:41 -0700
-Date:   Mon, 24 Jun 2019 20:04:39 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-efi@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        yuchao0@huawei.com, linux-mm@kvack.org, clm@fb.com,
-        adilger.kernel@dilger.ca, matthew.garrett@nebula.com,
-        linux-nilfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, josef@toxicpanda.com,
-        reiserfs-devel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        dsterba@suse.com, jaegeuk@kernel.org, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        jk@ozlabs.org, jack@suse.com, linux-fsdevel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com
-Subject: Re: [Ocfs2-devel] [PATCH 2/7] vfs: flush and wait for io when
- setting the immutable flag via SETFLAGS
-Message-ID: <20190625030439.GA5379@magnolia>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
- <156116142734.1664939.5074567130774423066.stgit@magnolia>
- <20190624113737.GG32376@quack2.suse.cz>
- <20190624215817.GE1611011@magnolia>
+        id S1730543AbfFYDFy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 23:05:54 -0400
+Received: from sandeen.net ([63.231.237.45]:49896 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728088AbfFYDFy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:05:54 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 95553325F;
+        Mon, 24 Jun 2019 22:05:44 -0500 (CDT)
+Subject: Re: [PATCH 2/2] xfs: convert extents in place for ZERO_RANGE
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+References: <ace9a6b9-3833-ec15-e3df-b9d88985685e@redhat.com>
+ <25a2ebbc-0ec9-f5dd-eba0-4101c80837dd@sandeen.net>
+ <20190625023954.GF7777@dread.disaster.area>
+ <2b135e00-3bfd-f41a-7c43-a0518fc756fe@sandeen.net>
+ <20190625030018.GC5387@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
+ nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
+ WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
+ vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
+ ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
+ sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
+ BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
+ gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
+ LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
+ dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
+ bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
+ aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
+ UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
+ EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
+ sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
+ 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
+ gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
+ 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
+ 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
+ WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
+ Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
+ X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
+ SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
+ 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
+ GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
+ 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
+ Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
+ ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
+ TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
+ gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
+ AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
+ YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
+ mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
+ LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
+ LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
+ MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
+ JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
+ Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
+ m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
+ fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
+Message-ID: <3f8037f0-08ff-98b2-6995-230e7bf33372@sandeen.net>
+Date:   Mon, 24 Jun 2019 22:05:51 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624215817.GE1611011@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250023
+In-Reply-To: <20190625030018.GC5387@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 02:58:17PM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 24, 2019 at 01:37:37PM +0200, Jan Kara wrote:
-> > On Fri 21-06-19 16:57:07, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
-> > > need to ensure that userspace can't continue to write the file after the
-> > > file becomes immutable.  To make that happen, we have to flush all the
-> > > dirty pagecache pages to disk to ensure that we can fail a page fault on
-> > > a mmap'd region, wait for pending directio to complete, and hope the
-> > > caller locked out any new writes by holding the inode lock.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Seeing the way this worked out, is there a reason to have separate
-> > vfs_ioc_setflags_flush_data() instead of folding the functionality in
-> > vfs_ioc_setflags_check() (possibly renaming it to
-> > vfs_ioc_setflags_prepare() to indicate it does already some changes)? I
-> > don't see any place that would need these two separated...
+On 6/24/19 10:00 PM, Darrick J. Wong wrote:
+> On Mon, Jun 24, 2019 at 09:52:03PM -0500, Eric Sandeen wrote:
+>> On 6/24/19 9:39 PM, Dave Chinner wrote:
+>>> On Mon, Jun 24, 2019 at 07:48:11PM -0500, Eric Sandeen wrote:
+>>>> Rather than completely removing and re-allocating a range
+>>>> during ZERO_RANGE fallocate calls, convert whole blocks in the
+>>>> range using xfs_alloc_file_space(XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT)
+>>>> and then zero the edges with xfs_zero_range()
+>>>
+>>> That's what I originally used to implement ZERO_RANGE and that
+>>> had problems with zeroing the partial blocks either side and
+>>> unexpected inode size changes. See commit:
+>>>
+>>> 5d11fb4b9a1d xfs: rework zero range to prevent invalid i_size updates
+>>
+>> Yep I did see that.  It had a lot of hand-rolled partial block stuff
+>> that seems more complex than this, no?  That commit didn't indicate
+>> what the root cause of the failure actually was, AFAICT.
+>>
+>> (funny thought that I skimmed that commit just to see why we had
+>> what we have, but didn't really intentionally re-implement it...
+>> even though I guess I almost did...)
 > 
-> XFS needs them to be separated.
+> FWIW the complaint I had about the fragmentary behavior really only
+> applied to fun and games when one fallocated an ext4 image and then ran
+> mkfs.ext4 which uses zero range which fragmented the image...
 > 
-> If we even /think/ that we're going to be setting the immutable flag
-> then we need to grab the IOLOCK and the MMAPLOCK to prevent further
-> writes while we drain all the directio writes and dirty data.  IO
-> completions for the write draining can take the ILOCK, which means that
-> we can't have grabbed it yet.
+>>> I also remember discussion about zero range being inefficient on
+>>> sparse files and fragmented files - the current implementation
+>>> effectively defragments such files, whilst using XFS_BMAPI_CONVERT
+>>> just leaves all the fragments behind.
+>>
+>> That's true - and it fragments unfragmented files.  Is ZERO_RANGE
+>> supposed to be a defragmenter?
 > 
-> Next, we grab the ILOCK so we can check the new flags against the inode
-> and then update the inode core.
-> 
-> For most filesystems I think it suffices to inode_lock and then do both,
-> though.
+> ...so please remember, the key point we were talking about when we
+> discussed this a year ago was that if the /entire/ zero range maps to a
+> single extent within eof then maybe we ought to just convert it to
+> unwritten.
 
-Heh, lol, that applies to fssetxattr, not to setflags, because xfs
-setflags implementation open-codes the relevant fssetxattr pieces.
-So for setflags we can combine both parts into a single _prepare
-function.
+I remember you mentioning that, but honestly it seems like
+overcomplication to say "ZERO_RANGE will also defragment extents
+in the process, if it can..."
 
---D
+> Note also that for pmem there's a slightly different optimization --
+> if the entire range is mapped by written extents (not necessarily
+> contiguous, just no holes/cow/delalloc/unwritten bits) then we can use
+> blkdev_issue_zeroout to zero memory and clear hwpoison cheaply.
+> 
+>>>> (Note that this changes the rounding direction of the
+>>>> xfs_alloc_file_space range, because we only want to hit whole
+>>>> blocks within the range.)
+>>>>
+>>>> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+>>>> ---
+>>>>
+>>>> <currently running fsx ad infinitum, so far so good>
+>>
+>> <still running, so far so good (4k blocks)>
+>>
+>>>> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+>>>> index 0a96c4d1718e..eae202bfe134 100644
+>>>> --- a/fs/xfs/xfs_bmap_util.c
+>>>> +++ b/fs/xfs/xfs_bmap_util.c
+>>>> @@ -1164,23 +1164,25 @@ xfs_zero_file_space(
+>>>>  
+>>>>  	blksize = 1 << mp->m_sb.sb_blocklog;
+>>>>  
+>>>> +	error = xfs_flush_unmap_range(ip, offset, len);
+>>>> +	if (error)
+>>>> +		return error;
+>>>>  	/*
+>>>> -	 * Punch a hole and prealloc the range. We use hole punch rather than
+>>>> -	 * unwritten extent conversion for two reasons:
+>>>> -	 *
+>>>> -	 * 1.) Hole punch handles partial block zeroing for us.
+>>>> -	 *
+>>>> -	 * 2.) If prealloc returns ENOSPC, the file range is still zero-valued
+>>>> -	 * by virtue of the hole punch.
+>>>> +	 * Convert whole blocks in the range to unwritten, then call iomap
+>>>> +	 * via xfs_zero_range to zero the range.  iomap will skip holes and
+>>>> +	 * unwritten extents, and just zero the edges if needed.  If conversion
+>>>> +	 * fails, iomap will simply write zeros to the whole range.
+>>>> +	 * nb: always_cow doesn't support unwritten extents.
+>>>>  	 */
+>>>> -	error = xfs_free_file_space(ip, offset, len);
+>>>> -	if (error || xfs_is_always_cow_inode(ip))
+>>>> -		return error;
+>>>> +	if (!xfs_is_always_cow_inode(ip))
+>>>> +		xfs_alloc_file_space(ip, round_up(offset, blksize),
+>>>> +				     round_down(offset + len, blksize) -
+>>>> +				     round_up(offset, blksize),
+>>>> +				     XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT);
+>>>
+>>> If this fails with, say, corruption we should abort with an error,
+>>> not ignore it. I think we can only safely ignore ENOSPC and maybe
+>>> EDQUOT here...
+>>
+>> Yes, I suppose so, though if this encounters corruption I'd guess
+>> xfs_zero_range probably would as well but that's just handwaving.
+> 
+> <nod>
+> 
+>>>> -	return xfs_alloc_file_space(ip, round_down(offset, blksize),
+>>>> -				     round_up(offset + len, blksize) -
+>>>> -				     round_down(offset, blksize),
+>>>> -				     XFS_BMAPI_PREALLOC);
+>>>> +	error = xfs_zero_range(ip, offset, len);
+>>>
+>>> What prevents xfs_zero_range() from changing the file size if
+>>> offset + len is beyond EOF and there are allocated extents (from
+>>> delalloc conversion) beyond EOF? (i.e. FALLOC_FL_KEEP_SIZE is set by
+>>> the caller).
+>>
+>> nothing, but AFAIK it does the same today... even w/o extents past
+>> EOF:
+>>
+>> $ xfs_io -f -c "truncate 0" -c "fzero 0 1m" testfile
+> 
+> fzero -k ?
 
-> > > +/*
-> > > + * Flush all pending IO and dirty mappings before setting S_IMMUTABLE on an
-> > > + * inode via FS_IOC_SETFLAGS.  If the flush fails we'll clear the flag before
-> > > + * returning error.
-> > > + *
-> > > + * Note: the caller should be holding i_mutex, or else be sure that
-> > > + * they have exclusive access to the inode structure.
-> > > + */
-> > > +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	if (!vfs_ioc_setflags_need_flush(inode, flags))
-> > > +		return 0;
-> > > +
-> > > +	inode_set_flags(inode, S_IMMUTABLE, S_IMMUTABLE);
-> > > +	ret = inode_flush_data(inode);
-> > > +	if (ret)
-> > > +		inode_set_flags(inode, 0, S_IMMUTABLE);
-> > > +	return ret;
-> > > +}
-> > 
-> > Also this sets S_IMMUTABLE whenever vfs_ioc_setflags_need_flush() returns
-> > true. That is currently the right thing but seems like a landmine waiting
-> > to trip? So I'd just drop the vfs_ioc_setflags_need_flush() abstraction to
-> > make it clear what's going on.
-> 
-> Ok.
-> 
-> --D
-> 
-> > 
-> > 								Honza
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-> 
-> _______________________________________________
-> Ocfs2-devel mailing list
-> Ocfs2-devel@oss.oracle.com
-> https://oss.oracle.com/mailman/listinfo/ocfs2-devel
+$ xfs_io -f -c "truncate 0" -c "fzero -k 0 1m" testfile
+
+$ ls -lh testfile
+-rw-------. 1 sandeen sandeen 0 Jun 24 22:02 testfile
+
+with or without my patches.
+
+(with or without it also seems to allocate 1M past EOF...)
+
+-Eric
+
