@@ -2,27 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A08D5581D
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 21:50:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7AF558D8
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 22:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFYTuA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 15:50:00 -0400
-Received: from sandeen.net ([63.231.237.45]:51492 "EHLO sandeen.net"
+        id S1726557AbfFYU3v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 16:29:51 -0400
+Received: from sandeen.net ([63.231.237.45]:54862 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbfFYTuA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:50:00 -0400
+        id S1726545AbfFYU3u (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:29:50 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 5A7CE182F2;
-        Tue, 25 Jun 2019 14:49:49 -0500 (CDT)
-Subject: Re: Want help with messed-up dump
-To:     Una Thompson <una@unascribed.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-References: <2fE_FncH_93Kynhm46N3zVvFfq26C-AMOypRvdJX2gQM9UPDFVqsyW6svbeS_v1PWpH1lNG7P2cRBL81XDNXn8qioH18PY6aQYwn9_LHwBw=@unascribed.com>
- <df58093d-9b7f-a6e2-5859-bcab9e9617e1@sandeen.net>
- <E0REDMxgD0Z9MMDCXHS6GANHPUbjnE1afm9LzPBon36dr_WRyN0GNZsm9y1Yeagb2HoCqGq60LqFgmAscZvqSKF6mAVTUN8PluTThvD2s2c=@unascribed.com>
+        by sandeen.net (Postfix) with ESMTPSA id 29A6278D0
+        for <linux-xfs@vger.kernel.org>; Tue, 25 Jun 2019 15:29:40 -0500 (CDT)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs for-next updated to 80704dd8
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -66,85 +62,97 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <b519068c-4b52-f234-56d9-af327ecd6de5@sandeen.net>
-Date:   Tue, 25 Jun 2019 14:49:57 -0500
+Message-ID: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+Date:   Tue, 25 Jun 2019 15:29:47 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <E0REDMxgD0Z9MMDCXHS6GANHPUbjnE1afm9LzPBon36dr_WRyN0GNZsm9y1Yeagb2HoCqGq60LqFgmAscZvqSKF6mAVTUN8PluTThvD2s2c=@unascribed.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="DTK5tcwtxK8Ha7FI9cM3yLjHi7WRUODrl"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--DTK5tcwtxK8Ha7FI9cM3yLjHi7WRUODrl
+Content-Type: multipart/mixed; boundary="2aDeQPoMOFcNzn71RUH5jWarwTT20Fl53";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: linux-xfs <linux-xfs@vger.kernel.org>
+Message-ID: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs for-next updated to 80704dd8
+
+--2aDeQPoMOFcNzn71RUH5jWarwTT20Fl53
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi folks,
+
+The for-next branch of the xfsprogs repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+
+has just been updated.
+
+Patches often get missed, so please check if your outstanding
+patches were in this update. If they have not been in this update,
+please resubmit them to linux-xfs@vger.kernel.org so they can be
+picked up in the next update.
+
+The new head of the for-next branch is commit:
+
+80704dd8 (HEAD -> for-next, korg/for-next, refs/patches/for-next/xfs_io__=
+repair_f_should_use_its_own_name.patch) xfs_io: repair_f should use its o=
+wn name
+
+New Commits:
+
+Amir Goldstein (1):
+      [34ea9bb2] xfs_info: limit findmnt to find mounted xfs filesystems
+
+Darrick J. Wong (4):
+      [4f2c97eb] libfrog: don't set negative errno in conversion function=
+s
+      [dde3c46f] libfrog: cvt_u64 should use strtoull, not strtoll
+      [bd7f9d76] mkfs: validate start and end of aligned logs
+      [80704dd8] xfs_io: repair_f should use its own name
 
 
-On 6/25/19 2:04 PM, Una Thompson wrote:
-> On Tuesday, June 25, 2019 6:06 AM, Eric Sandeen wrote:
-> 
->> On 6/25/19 12:00 AM, Una Thompson wrote:
->>
->>> Hi,
->>> Years ago (around 2015, if I remember correctly), while shrinking a 4.3TiB XFS partition on a RAID5 array, I attempted to perform a dump/restore cycle and lost exactly half of my data. (I was shrinking the partition by a few MB to make room for LUKS metadata to encrypt the filesystem.)
->>> The array had 4 disks (3 online, 1 spare) - I took two disks out, degrading the array, to make room for the dump. Rather than join the two disks into a JBOD, I used xfsdump's ability to write two files, as the disks were 3.7TiB each and the filesystem was nearly full. As said, this was years ago, I forget the exact invocation.
->>
->> Unfortunately xfsdump doesn't have a lot of experts anymore, but we can at least try.
->>
->> Just to be clear, you did something like
->>
->> xfsdump .... -f file1 -f file2 ?
-> 
-> Probably something like that; I can't be sure, this was years ago and the system that used to own this array that would have the .bash_history has since failed.
-> 
->>
->> and
->>
->> "The split is done in filesystem inode number (ino) order, at boundaries selected
->> to equalize the size of each stream."
->>
->> and now you only have file2, and file1 is lost?
-> 
-> Yes. However, as far as I can tell, I successfully restored file1 at the time, and still have the restored files.
-> 
->>
->>> After restoring the dump to the new filesystem with the desired smaller size, I realized the filesystem was only half full. I looked around and a bunch of directories and files were missing. I tried xfsrestore again in various ways to try and get it to read both halves of the dump, but it'd always abort with an error when it finished with the first half.
->>> I fully accept this was my fault and is user error, and I chalked it up as a learning experience at the time, and to avoid losing any more data, rejoined the disk with the first part of the dump to the array. However, now, I'm attempting to find some important files from 2011 or so that were on the array that were lost during this messed up dump/restore.
->>> The spare was never used, and still has the second part of the dump on it; the part I believe didn't get restored correctly. The first part is now gone, after the RAID resync and LUKS format.
->>> I've run photorec on the dump in an attempt to recover the files I'm looking for. I've found a few things that are familiar, but I'm mainly looking for a directory, not an archive, and photorec has been little help. Running xfsrestore on the orphaned half of the dump gives an error about a missing directory dump.
->>
->> sharing the exact error you get when you try would be helpful.
-> 
-> Knew I forgot something; sorry.
-> 
->     xfsrestore: using file dump (drive_simple) strategy
->     xfsrestore: version 3.1.6 (dump format 3.0) - type ^C for status and control
->     xfsrestore: searching media for dump
->     xfsrestore: examining media file 0
->     xfsrestore: dump description:
->     xfsrestore: hostname: phi
->     xfsrestore: mount point: /mnt/big
->     xfsrestore: volume: /dev/md0
->     xfsrestore: session time: Wed May 31 06:26:20 2017
->     xfsrestore: level: 0
->     xfsrestore: session label: ""
->     xfsrestore: media label: ""
->     xfsrestore: file system id: 19672483-ca53-4536-a1ff-eaf79740df38
->     xfsrestore: session id: 8cbb75f6-8739-40ba-97fc-880780463595
->     xfsrestore: media id: 9736ac42-07a4-4622-82c8-1a2bdf3e7f0b
->     xfsrestore: searching media for directory dump
->     xfsrestore: ERROR: no directory dump found
->     xfsrestore: restore complete: 0 seconds elapsed
->     xfsrestore: Restore Summary:
->     xfsrestore:   stream 0 /mnt/foo/bigdump2 ERROR (operator error or resource exhaustion)
->     xfsrestore: Restore Status: SUCCESS
-> 
-> Evidently, I did this in 2017. My time perception's pretty warped.
+Code Diffstat:
 
-Ok, so, the directory structure was (I guess) in the first file.  There is surely a way to hack up xfsrestore to just spit out files into 1 top-level dir, maybe with inode numbers appended or something, but it'd take some hackery to do so, and I can't really guarantee that I have the time to look anytime soon, I'm afraid.
+ io/scrub.c           |  2 +-
+ libfrog/convert.c    | 22 +++++++++++-----------
+ mkfs/xfs_mkfs.c      | 15 ++++++++++++++-
+ spaceman/xfs_info.sh |  2 +-
+ 4 files changed, 27 insertions(+), 14 deletions(-)
 
-If I do have some downtime I'll try to look but can't make any promises for now.
 
--Eric
+--2aDeQPoMOFcNzn71RUH5jWarwTT20Fl53--
+
+--DTK5tcwtxK8Ha7FI9cM3yLjHi7WRUODrl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl0ShDwACgkQIK4WkuE9
+3uDNWQ//demfXk2e1/eDN9vDOl6+o6qIpdOKtDoQ/sfQ9xdSnfH9jYXlN6EO3foB
+x/cBWojwCa2ammqKv4GGZVE4zE0u2BH+gSvXCGuL1EGp3Dhoxsp5a/lgBh2Kkcty
+27MFaqM+mif3ntyJk9zj+9Gyx/poySUCiU4qdG0ZHhvECtOZHsWq1lS4HVcJMShN
+u5QHvkcGMgrKx/enpRO38oY06oF4Ylt92aC5uInAsffDdY5C02wW8CKhklfK0M9y
+pkTx/CThkffjMxNrwXsXWbwcIgzmXUdygpIGdUfbeY3zalygA09p1syf8sH3HIwy
+zQ7xJpbYgKBCjgwOGdX3+MSBGCnOEq25V//NpZw6nHXqyuIqJ1yKsWBH4u/khb8H
+eEbzdaCT5RYgSod5+x9DKICkmpjNHqm1pGfugbm7LS92byH8twc/TACnfHhCsQ0k
+mKEW5NKKIFtWV+T1SM5fUsRkqwQ0MlZEcp4bKqEEzd3XoaiJ5HMlYA3nlYvSOspo
+jqOS2Pic4I1lKDi4eqLRpE6QGUdPhq4D28POhXethjjZXFtOpKegMoiDNxZoGZf/
+ON9OxNX/AwgxpP7fswt4sify5YPhCkrJQycTJ01gbQJ143D55RgCHR/RISxN4H/6
+Xcm50ws7TJlr2uVeUiCMJIn2p3mk1Yn1RwhfW7RYlUX5ncLevLQ=
+=XPOj
+-----END PGP SIGNATURE-----
+
+--DTK5tcwtxK8Ha7FI9cM3yLjHi7WRUODrl--
