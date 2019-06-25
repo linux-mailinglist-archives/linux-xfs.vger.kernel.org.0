@@ -2,84 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACC6D52971
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 12:29:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1579752FF2
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 12:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfFYK3b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 06:29:31 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:25669 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726450AbfFYK3a (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 06:29:30 -0400
-X-IronPort-AV: E=Sophos;i="5.63,415,1557158400"; 
-   d="scan'208";a="69236314"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 25 Jun 2019 18:29:22 +0800
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
-        by cn.fujitsu.com (Postfix) with ESMTP id 6E7354CDDAFC;
-        Tue, 25 Jun 2019 18:29:19 +0800 (CST)
-Received: from [10.167.215.30] (10.167.215.30) by
- G08CNEXCHPEKD02.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Tue, 25 Jun 2019 18:29:20 +0800
-Message-ID: <5D11F781.4040906@cn.fujitsu.com>
-Date:   Tue, 25 Jun 2019 18:29:21 +0800
-From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        id S1727064AbfFYKeq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 06:34:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54128 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfFYKeq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 06:34:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/6VAIBDYLsl2k+Jd4TvkY4vdl59S4Sf3vU/eGn4Ihm4=; b=Z6ICy/Zmnx0PSUhIEbGfQOvqs
+        f9bOnB5ep/UfUtiSJOFkQMh5O0vKP3euqNoU7griTJBk/gXNFOvlYrBP/MhIlncB3ahf/VSZPbwli
+        JcPcxrYKMeGNicN2iPduoRmitxm3jK2SZFqqcs2/D4JFyV3BYvmWARm4KR+oTsAPXeLNJju1T6x1p
+        QHsM4s4ylZfmI2eO1AZWerRiFM6piImzlzYPtqC+3gK1zxk3/XgEQ6luIC+x+Ss6AAAhpF84s6aAK
+        JAdQxEUZGkhlyCY6mQybss73RG63yzbSKPZuZIHYmPXuE0oOy/jW/4tgFc0Frzrw6xUL8bAULOki0
+        SbVdf0K5A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfimk-0008OF-2J; Tue, 25 Jun 2019 10:34:46 +0000
+Date:   Tue, 25 Jun 2019 03:34:46 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ian Kent <raven@themaw.net>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 01/10] xfs: mount-api - add fs parameter description
+Message-ID: <20190625103445.GA30156@infradead.org>
+References: <156134510205.2519.16185588460828778620.stgit@fedora-28>
 MIME-Version: 1.0
-To:     Amir Goldstein <amir73il@gmail.com>
-CC:     Theodore Ts'o <tytso@mit.edu>, darrick <darrick.wong@oracle.com>,
-        Murphy Zhou <jencce.kernel@gmail.com>,
-        fstests <fstests@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] generic/554: test only copy to active swap file
-References: <20190611153916.13360-1-amir73il@gmail.com> <20190611153916.13360-2-amir73il@gmail.com> <20190618090238.kmeocxasyxds7lzg@XZHOUW.usersys.redhat.com> <CAOQ4uxhePeTzR1t3e67xY+H0vcvh5toB3S=vdYVKm-skJrM00g@mail.gmail.com> <20190618150242.GA4576@mit.edu> <20190618151144.GB5387@magnolia>
-In-Reply-To: <20190618151144.GB5387@magnolia>
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.215.30]
-X-yoursite-MailScanner-ID: 6E7354CDDAFC.A111B
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156134510205.2519.16185588460828778620.stgit@fedora-28>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-on 2019/06/18 23:11, Darrick J. Wong  wrote:
+This is missing a cover letter to explain the point of this
+series.
 
-> On Tue, Jun 18, 2019 at 11:02:42AM -0400, Theodore Ts'o wrote:
->> On Tue, Jun 18, 2019 at 12:16:45PM +0300, Amir Goldstein wrote:
->>> On Tue, Jun 18, 2019 at 12:02 PM Murphy Zhou<jencce.kernel@gmail.com>  wrote:
->>>> Would you mind updating sha1 after it get merged to Linus tree?
->>>>
->>>> That would be helpful for people tracking this issue.
->>>>
->>> This is the commit id in linux-next and expected to stay the same
->>> when the fix is merged to Linus tree for 5.3.
->> When I talked to Darrick last week, that was *not* the sense I got
->> from him.  It's not necessarily guaranteed to be stable just yet...
-> Darrick hasn't gotten any complaints about the copy-file-range-fixes
-> branch (which has been in for-next for a week now), so he thinks that
-> commit id (a31713517dac) should be stable from here on out.
->
-> (Note that doesn't guarantee that Linus will pull said branch...)
->
-> --D
-Hi Amir
-
-The kernel fix commit message is right?  :-)  Because when I backport this patch into 5.2.0-rc6+ kernel,
-generic/554(553) also fails, it should be commit a5544984af4 (vfs: add missing checks to copy_file_range).
-By the way, a31713517dac ("vfs: introduce generic_file_rw_checks()") doesn't check for immutable and swap file.
-
-I think we can change this message after the fix is merged to Linus tree for 5.3.  What do you think about it?
-
-Thanks
-Yang Xu
-
->>       	   	    			- Ted
->
->
-
-
-
+It adds giant amount of code for not user visible benefit.  Why would
+we want this series?
