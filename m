@@ -2,176 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BA345216E
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:55:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 464BA5225F
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 07:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfFYDzf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 23:55:35 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57184 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726833AbfFYDzf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 23:55:35 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 51B91105F6F2;
-        Tue, 25 Jun 2019 13:55:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hfcXH-0002Gq-Bt; Tue, 25 Jun 2019 13:54:23 +1000
-Date:   Tue, 25 Jun 2019 13:54:23 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 2/2] xfs: convert extents in place for ZERO_RANGE
-Message-ID: <20190625035423.GG7777@dread.disaster.area>
-References: <ace9a6b9-3833-ec15-e3df-b9d88985685e@redhat.com>
- <25a2ebbc-0ec9-f5dd-eba0-4101c80837dd@sandeen.net>
- <20190625023954.GF7777@dread.disaster.area>
- <2b135e00-3bfd-f41a-7c43-a0518fc756fe@sandeen.net>
- <20190625030018.GC5387@magnolia>
- <3f8037f0-08ff-98b2-6995-230e7bf33372@sandeen.net>
+        id S1727604AbfFYFAc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 01:00:32 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:25498 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfFYFAc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 01:00:32 -0400
+Date:   Tue, 25 Jun 2019 05:00:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unascribed.com;
+        s=protonmail; t=1561438829;
+        bh=WRjlQtYG0+8YY9eqfzyOZA8vhzp6CS1XjtY6K5wCYao=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=NahOcLixQfOH1yTyjDhoyjZmMcnptCNz668df1vsuwxqPwgCJwS7ZTMPYLC3d+YCw
+         YtEJ7Sh2NECg1iU6Hr1VWHg+w4oyyRHUOdyyBzEsvK1TDziF/EJHac67CzJ3YBZPez
+         k6rbz45RiEawuuoy4s8uEePFvNlzGjTW0LEg4Jjs=
+To:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+From:   Una Thompson <una@unascribed.com>
+Reply-To: Una Thompson <una@unascribed.com>
+Subject: Want help with messed-up dump
+Message-ID: <2fE_FncH_93Kynhm46N3zVvFfq26C-AMOypRvdJX2gQM9UPDFVqsyW6svbeS_v1PWpH1lNG7P2cRBL81XDNXn8qioH18PY6aQYwn9_LHwBw=@unascribed.com>
+Feedback-ID: WbWEJzREqFRHYBskk46jB4PIVj9gSIzrRxxXcmjS0nAXoZwOQfg0r21eCCI22IVfOM1cGyScAbDWnkbv2ekK-Q==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f8037f0-08ff-98b2-6995-230e7bf33372@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=priqdjwbsF_b5uQ-R2YA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=7.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF autolearn=ham
+        autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.protonmail.ch
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:05:51PM -0500, Eric Sandeen wrote:
-> On 6/24/19 10:00 PM, Darrick J. Wong wrote:
-> > On Mon, Jun 24, 2019 at 09:52:03PM -0500, Eric Sandeen wrote:
-> >> On 6/24/19 9:39 PM, Dave Chinner wrote:
-> >>> On Mon, Jun 24, 2019 at 07:48:11PM -0500, Eric Sandeen wrote:
-> >>>> Rather than completely removing and re-allocating a range
-> >>>> during ZERO_RANGE fallocate calls, convert whole blocks in the
-> >>>> range using xfs_alloc_file_space(XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT)
-> >>>> and then zero the edges with xfs_zero_range()
-> >>>
-> >>> That's what I originally used to implement ZERO_RANGE and that
-> >>> had problems with zeroing the partial blocks either side and
-> >>> unexpected inode size changes. See commit:
-> >>>
-> >>> 5d11fb4b9a1d xfs: rework zero range to prevent invalid i_size updates
-> >>
-> >> Yep I did see that.  It had a lot of hand-rolled partial block stuff
-> >> that seems more complex than this, no?  That commit didn't indicate
-> >> what the root cause of the failure actually was, AFAICT.
-> >>
-> >> (funny thought that I skimmed that commit just to see why we had
-> >> what we have, but didn't really intentionally re-implement it...
-> >> even though I guess I almost did...)
-> > 
-> > FWIW the complaint I had about the fragmentary behavior really only
-> > applied to fun and games when one fallocated an ext4 image and then ran
-> > mkfs.ext4 which uses zero range which fragmented the image...
-> > 
-> >>> I also remember discussion about zero range being inefficient on
-> >>> sparse files and fragmented files - the current implementation
-> >>> effectively defragments such files, whilst using XFS_BMAPI_CONVERT
-> >>> just leaves all the fragments behind.
-> >>
-> >> That's true - and it fragments unfragmented files.  Is ZERO_RANGE
-> >> supposed to be a defragmenter?
-> > 
-> > ...so please remember, the key point we were talking about when we
-> > discussed this a year ago was that if the /entire/ zero range maps to a
-> > single extent within eof then maybe we ought to just convert it to
-> > unwritten.
-> 
-> I remember you mentioning that, but honestly it seems like
-> overcomplication to say "ZERO_RANGE will also defragment extents
-> in the process, if it can..."
+Hi,
 
-Keep in mind that my original implementation of ZERO_RANGE was
-for someone who explicitly requested zeroing of preallocated VM
-image files without reallocating them. Hence the XFS_BMAPI_CONVERT
-implementation. They'd been careful about initial allocation, and
-they wanted to reuse image files for new VMs without perturbing
-their initial careful preallocation patterns.
+Years ago (around 2015, if I remember correctly), while shrinking a 4.3TiB =
+XFS partition on a RAID5 array, I attempted to perform a dump/restore cycle=
+ and lost exactly half of my data. (I was shrinking the partition by a few =
+MB to make room for LUKS metadata to encrypt the filesystem.)
 
-I think the punch+reallocate is a more generally useful behaviour
-because people are far less careful about image file layout (e.g.
-might be using extent size hints or discard within the VM) and so
-we're more likely to see somewhat fragmented files for zeroing than
-we are fully intact.
+The array had 4 disks (3 online, 1 spare) - I took two disks out, degrading=
+ the array, to make room for the dump. Rather than join the two disks into =
+a JBOD, I used xfsdump's ability to write two files, as the disks were 3.7T=
+iB each and the filesystem was nearly full. As said, this was years ago, I =
+forget the exact invocation.
 
-SO, yeah, I can see arguments for both cases, and situations where
-one behaviour would be preferred over the other.
+After restoring the dump to the new filesystem with the desired smaller siz=
+e, I realized the filesystem was only half full. I looked around and a bunc=
+h of directories and files were missing. I tried xfsrestore again in variou=
+s ways to try and get it to read both halves of the dump, but it'd always a=
+bort with an error when it finished with the first half.
 
-Random thought: KEEP_SIZE == I know what I'm doing, just convert in
-place because the layout is as I want it. !KEEP_SIZE = punch and
-preallocate because we are likely changing the file size anyway?
+I fully accept this was my fault and is user error, and I chalked it up as =
+a learning experience at the time, and to avoid losing any more data, rejoi=
+ned the disk with the first part of the dump to the array. However, now, I'=
+m attempting to find some important files from 2011 or so that were on the =
+array that were lost during this messed up dump/restore.
 
-> >>> What prevents xfs_zero_range() from changing the file size if
-> >>> offset + len is beyond EOF and there are allocated extents (from
-> >>> delalloc conversion) beyond EOF? (i.e. FALLOC_FL_KEEP_SIZE is set by
-> >>> the caller).
-> >>
-> >> nothing, but AFAIK it does the same today... even w/o extents past
-> >> EOF:
-> >>
-> >> $ xfs_io -f -c "truncate 0" -c "fzero 0 1m" testfile
-> > 
-> > fzero -k ?
-> 
-> $ xfs_io -f -c "truncate 0" -c "fzero -k 0 1m" testfile
-> 
-> $ ls -lh testfile
-> -rw-------. 1 sandeen sandeen 0 Jun 24 22:02 testfile
-> 
-> with or without my patches.
+The spare was never used, and still has the second part of the dump on it; =
+the part I believe didn't get restored correctly. The first part is now gon=
+e, after the RAID resync and LUKS format.
 
-My concern was about files with pre-existing extents beyond EOF.
-i.e. something like this (on a vanilla kernel):
+I've run photorec on the dump in an attempt to recover the files I'm lookin=
+g for. I've found a few things that are familiar, but I'm mainly looking fo=
+r a directory, not an archive, and photorec has been little help. Running x=
+fsrestore on the orphaned half of the dump gives an error about a missing d=
+irectory dump.
 
-$ xfs_io -f -c "truncate 0"  -c "pwrite 0 16m" -c "fsync" -c "bmap -vp" -c "fzero -k 0 32m" -c "bmap -vp" -c "stat" testfile
-wrote 16777216/16777216 bytes at offset 0
-16 MiB, 4096 ops; 0.0000 sec (700.556 MiB/sec and 179342.3530 ops/sec)
-testfile:
- EXT: FILE-OFFSET      BLOCK-RANGE            AG AG-OFFSET            TOTAL FLAGS
-   0: [0..65407]:      1145960728..1146026135 10 (47331608..47397015) 65408 000000
-testfile:
- EXT: FILE-OFFSET      BLOCK-RANGE            AG AG-OFFSET            TOTAL FLAGS
-   0: [0..65535]:      1146026136..1146091671 10 (47397016..47462551) 65536 010000
-fd.path = "testfile"
-fd.flags = non-sync,non-direct,read-write
-stat.ino = 1342366656
-stat.type = regular file
-stat.size = 16777216
-stat.blocks = 65536
-fsxattr.xflags = 0x2 [-p--------------]
-fsxattr.projid = 0
-fsxattr.extsize = 0
-fsxattr.cowextsize = 0
-fsxattr.nextents = 1
-fsxattr.naextents = 0
-dioattr.mem = 0x200
-dioattr.miniosz = 512
-dioattr.maxiosz = 2147483136
-$
+Is there anything at all I may be able to do to restore the data from this =
+dump? I've tried everything I can think of and have been unsuccessful. I ha=
+ve a feeling by losing the first half of the dump I've made any recovery im=
+possible, but I figured if anyone knew a way for me to climb out of this ho=
+le I've dug for myself, it'd be someone on the XFS list.
 
-So you can see it is 16MiB in size, but has 32MB of blocks allocated
-to it, and it's a different 32MB of blocks that were allocated by
-the delalloc because we punched and reallocated it as an unwritten
-extent.
-
-That's where I'm concerned - that range beyond EOF is no longer
-punched away by this new code, an dit's not unwritten so the
-zero_range is going to iterate and zero it, right?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks
