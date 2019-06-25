@@ -2,319 +2,217 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC1D520C8
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 04:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCB6520CD
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:00:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbfFYCx7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 22:53:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46359 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfFYCx7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 22:53:59 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so7974497pls.13;
-        Mon, 24 Jun 2019 19:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1FF6YSNMxVmazE3U0KALc3b5vTIPEc9OUTX5AVtYYyk=;
-        b=U2c1xc2uO8hutR3Y/ZWgMYXtW6i/cvZa0Lctz2Xo0TkSpWvjk1YaNVJk+8AwEZudDj
-         DtuAIAhjcI/1bJxYn4kJb4crR4SbAxx0H53xo0fQF13RGBZm8aoosANQVbx3m/GI1nw0
-         buU6+uk52/Z0APTZ6B76Jm+C+Xo2BgbO4Uiu4lAMiQUePkFLS+YyJSNKa0BYJaeFdack
-         Xvoo5O/5UW3K+Whecx4ZLEz/Iru5kSuAuGUJPLoTLMnz2buCtRgwmpIT8CGYiatE+CAy
-         hBHpM74EvSTqaw8iVfCY9wn4BXZsfPOxYc5bMN9SFddwQai4QO0npZ/WOi4mc357FSPh
-         G9zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1FF6YSNMxVmazE3U0KALc3b5vTIPEc9OUTX5AVtYYyk=;
-        b=tMhhqEL6MJ631nS+OZ5H1SX2e0QcT7sC2BapB/Zl03WvpD++ZmkjcCJ5tKa7sU7LBn
-         46pXqawt2H4TaxkGRbG9JAwQEGh/zXiuFNN1ytlGCA2SSFV3ub38kdyhZ1PmzNetWC2X
-         QsrSDeWWbgc1xAojvTuYrawcRxPvWlnmD/hbjDOm/DRQeft0vlkJkrqIVqHNGZStGK0o
-         JME4gzNT5hy8o+z4RMGBTfABm0eJ66BKQM4MYvb/BFBoKn21UxX9RFFT2BwkAQB0KiSf
-         h96kBDc6zvLnP00R5CM22C0pRnCP4Ms8u0kq265HBuz5brHNp41L9WGkp8/URKAFNUc2
-         aEpg==
-X-Gm-Message-State: APjAAAXWpAxIvYs6WtCSX49WWVkM2y79qCMubkxN3W0Ue5QVkkbC2Kvo
-        Wicoq2/U3UVMvagPcsjYBDQ=
-X-Google-Smtp-Source: APXvYqykjVw4OFXle0Q0pzSuHDn9maCKdTjwzg1woyJBbZbjtJk2IdZDqKVyAdEzgf3ZLXTD9oLNig==
-X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr35092777plb.105.1561431237976;
-        Mon, 24 Jun 2019 19:53:57 -0700 (PDT)
-Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id u21sm1236682pfm.70.2019.06.24.19.53.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 19:53:56 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 10:53:51 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>, bfoster@redhat.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfs: check for COW overflows in i_delayed_blks
-Message-ID: <20190625025351.GP15846@desktop>
-References: <156089205119.347309.8343884194087205290.stgit@magnolia>
- <156089205776.347309.3970978868590991055.stgit@magnolia>
+        id S1730657AbfFYDAl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 23:00:41 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40570 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730654AbfFYDAl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 23:00:41 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P30CFG184300;
+        Tue, 25 Jun 2019 03:00:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=a7T4K7I8AfoQmJXYAcV69w4yY4QaH7vI5b8ROe3+mig=;
+ b=21zb8e4avKpckIlGT9bbvI2N8FV1M5YHfuZPGasM3ymzkaAY0mHTBCmXh3T+B8BHNG8O
+ gSMqiIZ91DaTC3hzGGa3u64NMZyKtVMqX1vVdu8vaGlTC/0MMfguUiSkJKIs3R1uDMgy
+ jYulznSJmmpvWBNJL2qHvu26zToODAEXG6nEZEfG3AkoJwBoRewKwTllW6qo+rvosBDU
+ ctrc21/RCzPEOZwGIKfY5ZUYBbWqdD/5IrFShyPK3+HsKPsvtDXM0XbAcD3JRCKYWAhk
+ j/yNnVrE13uCB7BFZM9aBn1uQNb7KjuKmKXxxvZS1csI9ooja6HowbnR9CKioxLl9GQn SA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brt1h39-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 03:00:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P2xNsk158041;
+        Tue, 25 Jun 2019 03:00:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7byqst-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 03:00:21 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5P30Kh9012203;
+        Tue, 25 Jun 2019 03:00:20 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 20:00:19 -0700
+Date:   Mon, 24 Jun 2019 20:00:18 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 2/2] xfs: convert extents in place for ZERO_RANGE
+Message-ID: <20190625030018.GC5387@magnolia>
+References: <ace9a6b9-3833-ec15-e3df-b9d88985685e@redhat.com>
+ <25a2ebbc-0ec9-f5dd-eba0-4101c80837dd@sandeen.net>
+ <20190625023954.GF7777@dread.disaster.area>
+ <2b135e00-3bfd-f41a-7c43-a0518fc756fe@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156089205776.347309.3970978868590991055.stgit@magnolia>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <2b135e00-3bfd-f41a-7c43-a0518fc756fe@sandeen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906250022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250023
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 02:07:37PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Mon, Jun 24, 2019 at 09:52:03PM -0500, Eric Sandeen wrote:
+> On 6/24/19 9:39 PM, Dave Chinner wrote:
+> > On Mon, Jun 24, 2019 at 07:48:11PM -0500, Eric Sandeen wrote:
+> >> Rather than completely removing and re-allocating a range
+> >> during ZERO_RANGE fallocate calls, convert whole blocks in the
+> >> range using xfs_alloc_file_space(XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT)
+> >> and then zero the edges with xfs_zero_range()
+> > 
+> > That's what I originally used to implement ZERO_RANGE and that
+> > had problems with zeroing the partial blocks either side and
+> > unexpected inode size changes. See commit:
+> > 
+> > 5d11fb4b9a1d xfs: rework zero range to prevent invalid i_size updates
 > 
-> With the new copy on write functionality it's possible to reserve so
-> much COW space for a file that we end up overflowing i_delayed_blks.
-> The only user-visible effect of this is to cause totally wrong i_blocks
-> output in stat, so check for that.
+> Yep I did see that.  It had a lot of hand-rolled partial block stuff
+> that seems more complex than this, no?  That commit didn't indicate
+> what the root cause of the failure actually was, AFAICT.
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> (funny thought that I skimmed that commit just to see why we had
+> what we have, but didn't really intentionally re-implement it...
+> even though I guess I almost did...)
 
-Test looks fine to me and it runs well too.
+FWIW the complaint I had about the fragmentary behavior really only
+applied to fun and games when one fallocated an ext4 image and then ran
+mkfs.ext4 which uses zero range which fragmented the image...
 
-Brian, really appreciate if you could help review this new version again
-as well!
+> > I also remember discussion about zero range being inefficient on
+> > sparse files and fragmented files - the current implementation
+> > effectively defragments such files, whilst using XFS_BMAPI_CONVERT
+> > just leaves all the fragments behind.
+> 
+> That's true - and it fragments unfragmented files.  Is ZERO_RANGE
+> supposed to be a defragmenter?
 
-Thanks,
-Eryu
+...so please remember, the key point we were talking about when we
+discussed this a year ago was that if the /entire/ zero range maps to a
+single extent within eof then maybe we ought to just convert it to
+unwritten.
 
-> ---
->  tests/xfs/907     |  199 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/907.out |    8 ++
->  tests/xfs/group   |    1 
->  3 files changed, 208 insertions(+)
->  create mode 100755 tests/xfs/907
->  create mode 100644 tests/xfs/907.out
+Note also that for pmem there's a slightly different optimization --
+if the entire range is mapped by written extents (not necessarily
+contiguous, just no holes/cow/delalloc/unwritten bits) then we can use
+blkdev_issue_zeroout to zero memory and clear hwpoison cheaply.
+
+> >> (Note that this changes the rounding direction of the
+> >> xfs_alloc_file_space range, because we only want to hit whole
+> >> blocks within the range.)
+> >>
+> >> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> >> ---
+> >>
+> >> <currently running fsx ad infinitum, so far so good>
 > 
+> <still running, so far so good (4k blocks)>
 > 
-> diff --git a/tests/xfs/907 b/tests/xfs/907
-> new file mode 100755
-> index 00000000..92cd0399
-> --- /dev/null
-> +++ b/tests/xfs/907
-> @@ -0,0 +1,199 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0+
-> +# Copyright (c) 2019 Oracle, Inc.  All Rights Reserved.
-> +#
-> +# FS QA Test No. 907
-> +#
-> +# Try to overflow i_delayed_blks by setting the largest cowextsize hint
-> +# possible, creating a sparse file with a single byte every cowextsize bytes,
-> +# reflinking it, and retouching every written byte to see if we can create
-> +# enough speculative COW reservations to overflow i_delayed_blks.
-> +#
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 7 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	test -n "$loop_mount" && $UMOUNT_PROG $loop_mount > /dev/null 2>&1
-> +	test -n "$loop_dev" && _destroy_loop_device $loop_dev
-> +	rm -rf $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +. ./common/reflink
-> +. ./common/filter
-> +
-> +# real QA test starts here
-> +_supported_os Linux
-> +_supported_fs xfs
-> +_require_scratch_reflink
-> +_require_cp_reflink
-> +_require_loop
-> +_require_xfs_debug	# needed for xfs_bmap -c
-> +
-> +MAXEXTLEN=2097151	# cowextsize can't be more than MAXEXTLEN
-> +
-> +echo "Format and mount"
-> +_scratch_mkfs > "$seqres.full" 2>&1
-> +_scratch_mount
-> +
-> +# Create a huge sparse filesystem on the scratch device because that's what
-> +# we're going to need to guarantee that we have enough blocks to overflow in
-> +# the first place.  We need to have at least enough free space on that huge fs
-> +# to handle one written block every MAXEXTLEN blocks and to reserve 2^32 blocks
-> +# in the COW fork.  There needs to be sufficient space in the scratch
-> +# filesystem to handle a 256M log, all the per-AG metadata, and all the data
-> +# written to the test file.
-> +#
-> +# Worst case, a 64k-block fs needs to be about 300TB.  Best case, a 1k block
-> +# filesystem needs ~5TB.  For the most common 4k case we only need a ~20TB fs.
-> +#
-> +# In practice, the author observed that the space required on the scratch fs
-> +# never exceeded ~800M even for a 300T 6k-block filesystem, so we'll just ask
-> +# for about 1.2GB.
-> +blksz=$(_get_file_block_size "$SCRATCH_MNT")
-> +nr_cows="$(( ((2 ** 32) / MAXEXTLEN) + 100 ))"
-> +blks_needed="$(( nr_cows * (1 + MAXEXTLEN) ))"
-> +loop_file_sz="$(( ((blksz * blks_needed) * 12 / 10) / 512 * 512 ))"
-> +_require_fs_space $SCRATCH_MNT 1234567
-> +
-> +loop_file=$SCRATCH_MNT/a.img
-> +loop_mount=$SCRATCH_MNT/a
-> +$XFS_IO_PROG -f -c "truncate $loop_file_sz" $loop_file
-> +loop_dev=$(_create_loop_device $loop_file)
-> +
-> +# Now we have to create the source file.  The goal is to overflow a 32-bit
-> +# i_delayed_blks, which means that we have to create at least that many delayed
-> +# allocation block reservations.  Take advantage of the fact that a cowextsize
-> +# hint causes creation of large speculative delalloc reservations in the cow
-> +# fork to reduce the amount of work we have to do.
-> +#
-> +# The maximum cowextsize can only be set to MAXEXTLEN fs blocks on a filesystem
-> +# whose AGs each have more than MAXEXTLEN * 2 blocks.  This we can do easily
-> +# with a multi-terabyte filesystem, so start by setting up the hint.  Note that
-> +# the current fsxattr interface specifies its u32 cowextsize hint in units of
-> +# bytes and therefore can't handle MAXEXTLEN * blksz on most filesystems, so we
-> +# set it via mkfs because mkfs takes units of fs blocks, not bytes.
-> +
-> +_mkfs_dev -d cowextsize=$MAXEXTLEN -l size=256m $loop_dev >> $seqres.full
-> +mkdir $loop_mount
-> +mount $loop_dev $loop_mount
-> +
-> +echo "Create crazy huge file"
-> +huge_file="$loop_mount/a"
-> +touch "$huge_file"
-> +blksz=$(_get_file_block_size "$loop_mount")
-> +extsize_bytes="$(( MAXEXTLEN * blksz ))"
-> +
-> +# Make sure it actually set a hint.
-> +curr_cowextsize_str="$($XFS_IO_PROG -c 'cowextsize' "$huge_file")"
-> +echo "$curr_cowextsize_str" >> $seqres.full
-> +cowextsize_bytes="$(echo "$curr_cowextsize_str" | sed -e 's/^.\([0-9]*\).*$/\1/g')"
-> +test "$cowextsize_bytes" -eq 0 && echo "could not set cowextsize?"
-> +
-> +# Now we have to seed the file with sparse contents.  Remember, the goal is to
-> +# create a little more than 2^32 delayed allocation blocks in the COW fork with
-> +# as little effort as possible.  We know that speculative COW preallocation
-> +# will create MAXEXTLEN-length reservations for us, so that means we should
-> +# be able to get away with touching a single byte every extsize_bytes.  We
-> +# do this backwards to avoid having to move EOF.
-> +seq $nr_cows -1 0 | while read n; do
-> +	off="$((n * extsize_bytes))"
-> +	$XFS_IO_PROG -c "pwrite $off 1" "$huge_file" > /dev/null
-> +done
-> +
-> +echo "Reflink crazy huge file"
-> +_cp_reflink "$huge_file" "$huge_file.b"
-> +
-> +# Now that we've shared all the blocks in the file, we touch them all again
-> +# to create speculative COW preallocations.
-> +echo "COW crazy huge file"
-> +seq $nr_cows -1 0 | while read n; do
-> +	off="$((n * extsize_bytes))"
-> +	$XFS_IO_PROG -c "pwrite $off 1" "$huge_file" > /dev/null
-> +done
-> +
-> +# Compare the number of blocks allocated to this file (as reported by stat)
-> +# against the number of blocks that are in the COW fork.  If either one is
-> +# less than 2^32 then we have evidence of an overflow problem.
-> +echo "Check crazy huge file"
-> +allocated_stat_blocks="$(stat -c %b "$huge_file")"
-> +stat_blksz="$(stat -c %B "$huge_file")"
-> +allocated_fsblocks=$(( allocated_stat_blocks * stat_blksz / blksz ))
-> +
-> +# Make sure we got enough COW reservations to overflow a 32-bit counter.
-> +
-> +# Return the number of delalloc & real blocks given bmap output for a fork of a
-> +# file.  Output is in units of 512-byte blocks.
-> +count_fork_blocks() {
-> +	$AWK_PROG "
-> +{
-> +	if (\$3 == \"delalloc\") {
-> +		x += \$4;
-> +	} else if (\$3 == \"hole\") {
-> +		;
-> +	} else {
-> +		x += \$6;
-> +	}
-> +}
-> +END {
-> +	print(x);
-> +}
-> +"
-> +}
-> +
-> +# Count the number of blocks allocated to a file based on the xfs_bmap output.
-> +# Output is in units of filesystem blocks.
-> +count_file_fork_blocks() {
-> +	local tag="$1"
-> +	local file="$2"
-> +	local args="$3"
-> +
-> +	$XFS_IO_PROG -c "bmap $args -l -p -v" "$huge_file" > $tmp.extents
-> +	echo "$tag fork map" >> $seqres.full
-> +	cat $tmp.extents >> $seqres.full
-> +	local sectors="$(count_fork_blocks < $tmp.extents)"
-> +	echo "$(( sectors / (blksz / 512) ))"
-> +}
-> +
-> +cowblocks=$(count_file_fork_blocks cow "$huge_file" "-c")
-> +attrblocks=$(count_file_fork_blocks attr "$huge_file" "-a")
-> +datablocks=$(count_file_fork_blocks data "$huge_file" "")
-> +
-> +# Did we create more than 2^32 blocks in the cow fork?
-> +# Make sure the test actually set us up for the overflow.
-> +echo "datablocks is $datablocks" >> $seqres.full
-> +echo "attrblocks is $attrblocks" >> $seqres.full
-> +echo "cowblocks is $cowblocks" >> $seqres.full
-> +test "$cowblocks" -lt $((2 ** 32)) && \
-> +	echo "cowblocks (${cowblocks}) should be more than 2^32!"
-> +
-> +# Does stat's block allocation count exceed 2^32?
-> +# This is how we detect the incore delalloc count overflow.
-> +echo "stat blocks is $allocated_fsblocks" >> $seqres.full
-> +test "$allocated_fsblocks" -lt $((2 ** 32)) && \
-> +	echo "stat blocks (${allocated_fsblocks}) should be more than 2^32!"
-> +
-> +# Finally, does st_blocks match what we computed from the forks?
-> +# Sanity check the values computed from the forks.
-> +expected_allocated_fsblocks=$((datablocks + cowblocks + attrblocks))
-> +echo "expected stat blocks is $expected_allocated_fsblocks" >> $seqres.full
-> +
-> +_within_tolerance "st_blocks" $allocated_fsblocks $expected_allocated_fsblocks 2% -v
-> +
-> +echo "Test done"
-> +# Quick check the large sparse fs, but skip xfs_db because it doesn't scale
-> +# well on a multi-terabyte filesystem.
-> +LARGE_SCRATCH_DEV=yes _check_xfs_filesystem $loop_dev none none
-> +
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/907.out b/tests/xfs/907.out
-> new file mode 100644
-> index 00000000..cc07d659
-> --- /dev/null
-> +++ b/tests/xfs/907.out
-> @@ -0,0 +1,8 @@
-> +QA output created by 907
-> +Format and mount
-> +Create crazy huge file
-> +Reflink crazy huge file
-> +COW crazy huge file
-> +Check crazy huge file
-> +st_blocks is in range
-> +Test done
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index ffe4ae12..e528c559 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -504,3 +504,4 @@
->  504 auto quick mkfs label
->  505 auto quick spaceman
->  506 auto quick health
-> +907 clone
+> >> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+> >> index 0a96c4d1718e..eae202bfe134 100644
+> >> --- a/fs/xfs/xfs_bmap_util.c
+> >> +++ b/fs/xfs/xfs_bmap_util.c
+> >> @@ -1164,23 +1164,25 @@ xfs_zero_file_space(
+> >>  
+> >>  	blksize = 1 << mp->m_sb.sb_blocklog;
+> >>  
+> >> +	error = xfs_flush_unmap_range(ip, offset, len);
+> >> +	if (error)
+> >> +		return error;
+> >>  	/*
+> >> -	 * Punch a hole and prealloc the range. We use hole punch rather than
+> >> -	 * unwritten extent conversion for two reasons:
+> >> -	 *
+> >> -	 * 1.) Hole punch handles partial block zeroing for us.
+> >> -	 *
+> >> -	 * 2.) If prealloc returns ENOSPC, the file range is still zero-valued
+> >> -	 * by virtue of the hole punch.
+> >> +	 * Convert whole blocks in the range to unwritten, then call iomap
+> >> +	 * via xfs_zero_range to zero the range.  iomap will skip holes and
+> >> +	 * unwritten extents, and just zero the edges if needed.  If conversion
+> >> +	 * fails, iomap will simply write zeros to the whole range.
+> >> +	 * nb: always_cow doesn't support unwritten extents.
+> >>  	 */
+> >> -	error = xfs_free_file_space(ip, offset, len);
+> >> -	if (error || xfs_is_always_cow_inode(ip))
+> >> -		return error;
+> >> +	if (!xfs_is_always_cow_inode(ip))
+> >> +		xfs_alloc_file_space(ip, round_up(offset, blksize),
+> >> +				     round_down(offset + len, blksize) -
+> >> +				     round_up(offset, blksize),
+> >> +				     XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT);
+> > 
+> > If this fails with, say, corruption we should abort with an error,
+> > not ignore it. I think we can only safely ignore ENOSPC and maybe
+> > EDQUOT here...
 > 
+> Yes, I suppose so, though if this encounters corruption I'd guess
+> xfs_zero_range probably would as well but that's just handwaving.
+
+<nod>
+
+> >> -	return xfs_alloc_file_space(ip, round_down(offset, blksize),
+> >> -				     round_up(offset + len, blksize) -
+> >> -				     round_down(offset, blksize),
+> >> -				     XFS_BMAPI_PREALLOC);
+> >> +	error = xfs_zero_range(ip, offset, len);
+> > 
+> > What prevents xfs_zero_range() from changing the file size if
+> > offset + len is beyond EOF and there are allocated extents (from
+> > delalloc conversion) beyond EOF? (i.e. FALLOC_FL_KEEP_SIZE is set by
+> > the caller).
+> 
+> nothing, but AFAIK it does the same today... even w/o extents past
+> EOF:
+> 
+> $ xfs_io -f -c "truncate 0" -c "fzero 0 1m" testfile
+
+fzero -k ?
+
+--D
+
+> 
+> $ ls -lh testfile
+> -rw-------. 1 sandeen sandeen 1.0M Jun 24 21:48 testfile
+> 
+> $ xfs_bmap -vvp testfile
+> testfile:
+>  EXT: FILE-OFFSET      BLOCK-RANGE          AG AG-OFFSET            TOTAL FLAGS
+>    0: [0..2047]:       183206064..183208111  2 (48988336..48990383)  2048 10000
+>  FLAG Values:
+>     010000 Unwritten preallocated extent
+>     001000 Doesn't begin on stripe unit
+>     000100 Doesn't end   on stripe unit
+>     000010 Doesn't begin on stripe width
+>     000001 Doesn't end   on stripe width
+> 
+> At the end of the day it's just one allocation behavior over another,
+> it's not a correctness issue, so if there are concerns I don't have
+> to push it...
+> 
+> -Eric
+>  
+> > Cheers,
+> > 
+> > Dave.
+> > 
