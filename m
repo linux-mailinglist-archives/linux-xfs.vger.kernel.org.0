@@ -2,182 +2,167 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C9C558F7
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 22:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B3D1559B2
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 23:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfFYUho (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 16:37:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44292 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfFYUhn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 16:37:43 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t7so64632plr.11
-        for <linux-xfs@vger.kernel.org>; Tue, 25 Jun 2019 13:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=k9wVBI3MNSxJVQhODLuSRbOf+SmT1l1K5RRF5+DdhGM=;
-        b=i0tlux+8FNEu0ugkEvUUlD4zKy+jo4LmPTngoA6r4KZwHDBk4l5v9aHPUQEnX49/5g
-         z/5lU03hiGUesQ1zP/lPDO/M9fU515Y8oNEl0EKjwdC7dNyZmZQEQEJzGU548pSrAizw
-         AlBCGdOUNg8gVK9FeesIiFWJzJ6YbgT5nrsBvzAUmh99yf7q8hQlgwIm8HPdOmToZugA
-         nEmrM6blVwgyo7dN5eFPje1f1HwAtA+5XwodCP1ntkD5mvR/FwjSqB5AJn7YMTtfEeor
-         5bhYLcubsCaGOlgF0onarHD40ER7JyKcO4a/eslTTHQKCN3GB1Tra4WgBV7T6KYa0chE
-         ps9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=k9wVBI3MNSxJVQhODLuSRbOf+SmT1l1K5RRF5+DdhGM=;
-        b=mljSpEa9TyEyaH/k1/KWkyJt/UR0uvxF42mt3Q6lwduMD9dwmJjFlIDdNQ1vTbvMZ0
-         hkWdXbpwMUwTSQLBzmLUDnIxRpOMyeyz8Pt8VL0d+tCS/YyxPLAa2DJiUQHxVAi+YMEy
-         QhQrVvSTyl2zUi3N1hfvFfY5nYVGmwDeSVhKgVf7TlANpaL9jzfyhVACkaW+NfIIShp9
-         vN+yXRSIWTt1/wWr1Nwxxw2F4daVDYCZu4ukU0lrWaDXrgp2e4CGc8N5sIkwVE3/T4Xc
-         w7pV4P2MdbAdc2I+dFIoLrpBILhmnlwxpkWhBG4ppOsFoDDr+IqVxagJy1vPu0XTIAtT
-         pQCg==
-X-Gm-Message-State: APjAAAWZ7Ql95X2biY0lSbQWlG2Im7QVaFSj76RHLN7XdfmIiu45Ur2u
-        PIy4XwT5Vex8z6HuR4Ekc50g1A==
-X-Google-Smtp-Source: APXvYqxrr/uL0yeWv0l0AFEkJ0fiuFxZszwvIRMBTgsPNJXwasc7ZXW/q9+Il/kiADkCo486i0NA9w==
-X-Received: by 2002:a17:902:f216:: with SMTP id gn22mr690564plb.118.1561495062448;
-        Tue, 25 Jun 2019 13:37:42 -0700 (PDT)
-Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id m4sm4145961pff.108.2019.06.25.13.37.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 13:37:41 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <E84C8EBC-8341-49E5-8EED-0980D158CD50@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v4 0/7] vfs: make immutable files actually immutable
-Date:   Tue, 25 Jun 2019 14:37:37 -0600
-In-Reply-To: <20190625180326.GC2230847@magnolia>
-Cc:     Christoph Hellwig <hch@infradead.org>, matthew.garrett@nebula.com,
-        yuchao0@huawei.com, Theodore Ts'o <tytso@mit.edu>,
-        ard.biesheuvel@linaro.org, Josef Bacik <josef@toxicpanda.com>,
-        Chris Mason <clm@fb.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.com>, dsterba@suse.com,
-        Jaegeuk Kim <jaegeuk@kernel.org>, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
- <20190625103631.GB30156@infradead.org> <20190625180326.GC2230847@magnolia>
-X-Mailer: Apple Mail (2.3273)
+        id S1726040AbfFYVIt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 17:08:49 -0400
+Received: from sandeen.net ([63.231.237.45]:58094 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFYVIs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 25 Jun 2019 17:08:48 -0400
+Received: from Liberator-6.local (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 09BFF1170C
+        for <linux-xfs@vger.kernel.org>; Tue, 25 Jun 2019 16:08:37 -0500 (CDT)
+Subject: [ANNOUNCE] xfsprogs for-next rebased to 8bfb5eac
+From:   Eric Sandeen <sandeen@sandeen.net>
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+References: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <14670eb1-0e0e-b669-7d85-0f4589e13bf9@sandeen.net>
+Date:   Tue, 25 Jun 2019 16:08:45 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR
+Content-Type: multipart/mixed; boundary="cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: linux-xfs <linux-xfs@vger.kernel.org>
+Message-ID: <14670eb1-0e0e-b669-7d85-0f4589e13bf9@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs for-next rebased to 8bfb5eac
+References: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+In-Reply-To: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
 
---Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0
+--cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
 
-On Jun 25, 2019, at 12:03 PM, Darrick J. Wong <darrick.wong@oracle.com> =
-wrote:
->=20
-> On Tue, Jun 25, 2019 at 03:36:31AM -0700, Christoph Hellwig wrote:
->> On Fri, Jun 21, 2019 at 04:56:50PM -0700, Darrick J. Wong wrote:
->>> Hi all,
->>>=20
->>> The chattr(1) manpage has this to say about the immutable bit that
->>> system administrators can set on files:
->>>=20
->>> "A file with the 'i' attribute cannot be modified: it cannot be =
-deleted
->>> or renamed, no link can be created to this file, most of the file's
->>> metadata can not be modified, and the file can not be opened in =
-write
->>> mode."
->>>=20
->>> Given the clause about how the file 'cannot be modified', it is
->>> surprising that programs holding writable file descriptors can =
-continue
->>> to write to and truncate files after the immutable flag has been =
-set,
->>> but they cannot call other things such as utimes, fallocate, unlink,
->>> link, setxattr, or reflink.
->>=20
->> I still think living code beats documentation.  And as far as I can
->> tell the immutable bit never behaved as documented or implemented
->> in this series on Linux, and it originated on Linux.
->=20
-> The behavior has never been consistent -- since the beginning you can
-> keep write()ing to a fd after the file becomes immutable, but you =
-can't
-> ftruncate() it.  I would really like to make the behavior consistent.
-> Since the authors of nearly every new system call and ioctl since the
-> late 1990s have interpreted S_IMMUTABLE to mean "immutable takes =
-effect
-> everywhere immediately" I resolved the inconsistency in favor of that
-> interpretation.
->=20
-> I asked Ted what he thought that that userspace having the ability to
-> continue writing to an immutable file, and he thought it was an
-> implementation bug that had been there for 25 years.  Even he thought
-> that immutable should take effect immediately everywhere.
->=20
->> If you want  hard cut off style immutable flag it should really be a
->> new API, but I don't really see the point.  It isn't like the usual
->> workload is to set the flag on a file actively in use.
->=20
-> FWIW Ted also thought that since it's rare for admins to set +i on a
-> file actively in use we could just change it without forcing everyone
-> onto a new api.
+Hi folks,
 
-On the flip side, it is possible to continue to write to an open fd
-after removing the write permission, and this is a problem we've hit
-in the real world with NFS export, so real applications do this.
+The for-next branch of the xfsprogs repository at:
 
-It may be the same case with immutable files, where an application sets
-the immutable flag immediately after creation, but continues to write
-until it closes the file, so that the file can't be modified by other
-processes, and there isn't a risk that the file is missing the immutable
-flag if the writing process dies before setting it at the end.
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
 
-Cheers, Andreas
+has just been rebased(!)
+
+[I am on fire today, and accidentally pushed some unreviewed manpage
+changes, go, me!]
+
+Patches often get missed, so please check if your outstanding
+patches were in this update. If they have not been in this update,
+please resubmit them to linux-xfs@vger.kernel.org so they can be
+picked up in the next update.
+
+The new head of the master branch is commit:
+
+8bfb5eac (HEAD -> for-next, origin/for-next, korg/for-next) xfs_quota: fi=
+x built-in help for project setup
+
+New Commits:
+
+Amir Goldstein (1):
+      [e0bdad06] xfs_info: limit findmnt to find mounted xfs filesystems
+
+Darrick J. Wong (4):
+      [b6ad9957] libfrog: don't set negative errno in conversion function=
+s
+      [b089256c] libfrog: cvt_u64 should use strtoull, not strtoll
+      [8da52988] mkfs: validate start and end of aligned logs
+      [f1572219] xfs_io: repair_f should use its own name
+
+Eric Sandeen (1):
+      [8bfb5eac] xfs_quota: fix built-in help for project setup
 
 
+Code Diffstat:
+
+ io/scrub.c           |  2 +-
+ libfrog/convert.c    | 22 +++++++++++-----------
+ mkfs/xfs_mkfs.c      | 15 ++++++++++++++-
+ quota/project.c      |  2 +-
+ spaceman/xfs_info.sh |  2 +-
+ 5 files changed, 28 insertions(+), 15 deletions(-)
 
 
+--cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0--
 
-
---Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+--LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - http://gpgtools.org
 
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl0ShhEACgkQcqXauRfM
-H+CbrRAAps35LK3poNlahSXPmgZ5tD+3nAlaeG8JU1XTggnEeHdAHY7wdK713thT
-OumdwU7nj1s+0ngxeUxPU/ZVWyuL2LjugpWEfw8lf0N/16hoTIUPBAe7kXce3jb+
-eg72QT36y1srscGQ/95rv/DPfelxzC7WiVYV7ZHIIF2Cq31B34cZ7GF0zpi6oZSH
-RKioHBOX1Qez1CksvAevhtSGf9e0dF1hNx7gyoVFnGb5V72P7WGGQqWSW4nSJvMe
-xhzkT0wLU28MioHsIcnqwnZJdvCb66Z1FGvAwsNItELe2tch4JzZjVR5sbq/g0+Q
-CpDZk350WiKaFzo9m1TO2Eiiog2vS1bqO+hZuwf7jPqcfIa6Tu9BdCx9U/bKp/rN
-sEtDj+p4qnjTCX2ggozPxye92wzhbF2o25jjoofBh9x9ShQ3GAc/gaTxcR9fpuWJ
-UmMwXwKMVXP/kvBaclrbz/zxaeo3ga7z3mFGgzxU6we9M5x1Lo+ppFxRpEPMIVkW
-LUEIQ4emE6yqzOWLWH6iPnxly9Jtzye3jsiq6s7RPPUGHn1/SCdhVZG130vKEpkC
-IcSmmJGlhPcI8wJ5/gwhAoxm9yLa+t0oH/Y6HUoNc722A3sCVRV5JWoHuK9MKBDK
-IPKKud+iKoNON0zr28k4iNyK1XAO+7yAqjfBAmdm0grbW/nItxg=
-=YBbV
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl0SjV0ACgkQIK4WkuE9
+3uCHFA//XlQvrnVYkubjZd5d/QdVcUNmFvcVNiylaDwp52N+K1RQgbhsth893Afi
+HlSalBZIEmSzdt5SMvMqeMaj1Adh6k1CPoYqxFmFwmcQTC7uTZJhfVZDVmYPL+5L
+8kB+eV8+jLEw1WLmCjL1GyIjmBcW9mtD24Mm9lgCmGCxNZovWXR8rp3t/6xZWauE
+AzZnwP5PYhNzueMHd190XfdiJ9T7HziZkL5OjxYkAnXtfI9UywA03bqhdr2eFbUB
+7H3Yw495y8ox0xrI262k9VbFyrRQ9SGLAerC5YVYgNT+v5c3EIjyHt++ReEtUymY
+LCMzISL3zskRKrxD+tN/iRAuzIjxXc5NzuO9QAM2/gSeykAUyxvpPS+RYaBF2mUL
++C34KftDufprJ15D2LaSbGVi2Ha/vqlRXPX7BWpH3XKgcTE9J2E0swZOULEH4Ar2
+cZrynxUqQ3rYW6u58Nzq4I53pjfOhyaL1XC4beYAniP1btj3/UyOVP2Rvz0KT13r
+O1ZSbsv3dHvR2t54c1H6WQKB18sTq6UDpgrxzRxjmi9dX/7/szTAz2GVaqQ/GhSS
+Rer7f8Ney50ZX+zdl08Wo9gcPHyHDqvDEylF1gmvvH1Fwsy1UqIJg3iMZsMCNHRN
+pcFaGczH29x0+VJsVPiH+t+i2vpgtJBS/euIaH7jk68Qp9PKVto=
+=9pWq
 -----END PGP SIGNATURE-----
 
---Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0--
+--LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR--
