@@ -2,21 +2,21 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30ED252019
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 02:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE3752022
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 02:48:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfFYApd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 20:45:33 -0400
-Received: from sandeen.net ([63.231.237.45]:37644 "EHLO sandeen.net"
+        id S1729654AbfFYAsN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 20:48:13 -0400
+Received: from sandeen.net ([63.231.237.45]:37882 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbfFYApd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:45:33 -0400
+        id S1727648AbfFYAsN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:48:13 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 619CC78CF;
-        Mon, 24 Jun 2019 19:45:24 -0500 (CDT)
-Subject: [PATCH 1/2] xfs: factor range zeroing out of xfs_free_file_space
+        by sandeen.net (Postfix) with ESMTPSA id 3DAE1325F;
+        Mon, 24 Jun 2019 19:48:04 -0500 (CDT)
+Subject: [PATCH 2/2] xfs: convert extents in place for ZERO_RANGE
 To:     Eric Sandeen <sandeen@redhat.com>,
         linux-xfs <linux-xfs@vger.kernel.org>
 References: <ace9a6b9-3833-ec15-e3df-b9d88985685e@redhat.com>
@@ -64,8 +64,8 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <23867a36-6f3b-81fb-e463-dc941617e9de@sandeen.net>
-Date:   Mon, 24 Jun 2019 19:45:32 -0500
+Message-ID: <25a2ebbc-0ec9-f5dd-eba0-4101c80837dd@sandeen.net>
+Date:   Mon, 24 Jun 2019 19:48:11 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
@@ -78,90 +78,62 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Factor out the range zeroing part of xfs_free_file_space into
-a new function, xfs_zero_range, which is a wrapper around
-iomap_zero_range + EOF handling.
+Rather than completely removing and re-allocating a range
+during ZERO_RANGE fallocate calls, convert whole blocks in the
+range using xfs_alloc_file_space(XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT)
+and then zero the edges with xfs_zero_range()
+
+(Note that this changes the rounding direction of the
+xfs_alloc_file_space range, because we only want to hit whole
+blocks within the range.)
 
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
 
+<currently running fsx ad infinitum, so far so good>
+
 diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 2a7e10f26bb0..0a96c4d1718e 100644
+index 0a96c4d1718e..eae202bfe134 100644
 --- a/fs/xfs/xfs_bmap_util.c
 +++ b/fs/xfs/xfs_bmap_util.c
-@@ -1061,6 +1061,37 @@ xfs_flush_unmap_range(
- 	return 0;
- }
+@@ -1164,23 +1164,25 @@ xfs_zero_file_space(
  
-+/*
-+ * Ensure that the specified range is all zeros.
-+ * Unmapped or unwritten blocks are left alone by the iomap mechanism,
-+ * as they already return zero on read.
-+ * This will happily extend i_size if asked to do so.
-+ */
-+static int
-+xfs_zero_range(
-+	struct xfs_inode	*ip,
-+	xfs_off_t		offset,
-+	xfs_off_t		len)
-+{
-+	int			error;
-+
-+	error = iomap_zero_range(VFS_I(ip), offset, len, NULL, &xfs_iomap_ops);
+ 	blksize = 1 << mp->m_sb.sb_blocklog;
+ 
++	error = xfs_flush_unmap_range(ip, offset, len);
 +	if (error)
 +		return error;
-+	/*
-+	 * If we zeroed right up to EOF and EOF straddles a page boundary we
-+	 * must make sure that the post-EOF area is also zeroed because the
-+	 * page could be mmap'd and iomap_zero_range doesn't do that for us.
-+	 * Writeback of the eof page will do this, albeit clumsily.
-+	 */
-+	if (offset + len >= XFS_ISIZE(ip) && offset_in_page(offset + len) > 0) {
-+		error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping,
-+				round_down(offset + len, PAGE_SIZE), LLONG_MAX);
-+	}
+ 	/*
+-	 * Punch a hole and prealloc the range. We use hole punch rather than
+-	 * unwritten extent conversion for two reasons:
+-	 *
+-	 * 1.) Hole punch handles partial block zeroing for us.
+-	 *
+-	 * 2.) If prealloc returns ENOSPC, the file range is still zero-valued
+-	 * by virtue of the hole punch.
++	 * Convert whole blocks in the range to unwritten, then call iomap
++	 * via xfs_zero_range to zero the range.  iomap will skip holes and
++	 * unwritten extents, and just zero the edges if needed.  If conversion
++	 * fails, iomap will simply write zeros to the whole range.
++	 * nb: always_cow doesn't support unwritten extents.
+ 	 */
+-	error = xfs_free_file_space(ip, offset, len);
+-	if (error || xfs_is_always_cow_inode(ip))
+-		return error;
++	if (!xfs_is_always_cow_inode(ip))
++		xfs_alloc_file_space(ip, round_up(offset, blksize),
++				     round_down(offset + len, blksize) -
++				     round_up(offset, blksize),
++				     XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT);
+ 
+-	return xfs_alloc_file_space(ip, round_down(offset, blksize),
+-				     round_up(offset + len, blksize) -
+-				     round_down(offset, blksize),
+-				     XFS_BMAPI_PREALLOC);
++	error = xfs_zero_range(ip, offset, len);
 +
 +	return error;
-+}
-+
- int
- xfs_free_file_space(
- 	struct xfs_inode	*ip,
-@@ -1101,28 +1132,15 @@ xfs_free_file_space(
- 	}
+ }
  
- 	/*
--	 * Now that we've unmap all full blocks we'll have to zero out any
--	 * partial block at the beginning and/or end.  iomap_zero_range is smart
--	 * enough to skip any holes, including those we just created, but we
--	 * must take care not to zero beyond EOF and enlarge i_size.
--	 */
--	if (offset >= XFS_ISIZE(ip))
--		return 0;
--	if (offset + len > XFS_ISIZE(ip))
--		len = XFS_ISIZE(ip) - offset;
--	error = iomap_zero_range(VFS_I(ip), offset, len, NULL, &xfs_iomap_ops);
--	if (error)
--		return error;
--
--	/*
--	 * If we zeroed right up to EOF and EOF straddles a page boundary we
--	 * must make sure that the post-EOF area is also zeroed because the
--	 * page could be mmap'd and iomap_zero_range doesn't do that for us.
--	 * Writeback of the eof page will do this, albeit clumsily.
-+	 * Now that we've unmapped all full blocks we'll have to zero out any
-+	 * partial block at the beginning and/or end.  xfs_zero_range is smart
-+	 * enough to skip any holes, including those we just created.  We don't
-+	 * want to zero beyond EOF and enlarge i_size.
- 	 */
--	if (offset + len >= XFS_ISIZE(ip) && offset_in_page(offset + len) > 0) {
--		error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping,
--				round_down(offset + len, PAGE_SIZE), LLONG_MAX);
-+	if (offset < XFS_ISIZE(ip)) {
-+		if (offset + len > XFS_ISIZE(ip))
-+			len = XFS_ISIZE(ip) - offset;
-+		error = xfs_zero_range(ip, offset, len);
- 	}
- 
- 	return error;
+ static int
 
