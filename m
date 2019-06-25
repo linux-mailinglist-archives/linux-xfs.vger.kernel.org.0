@@ -2,64 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5852955262
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 16:45:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2251C55270
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 16:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfFYOp6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 10:45:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34390 "EHLO
+        id S1731053AbfFYOr1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 10:47:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35902 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730905AbfFYOp6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 10:45:58 -0400
+        with ESMTP id S1730505AbfFYOr1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 10:47:27 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PEdTRU167344;
-        Tue, 25 Jun 2019 14:45:17 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PEdNRQ167283;
+        Tue, 25 Jun 2019 14:47:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=0EUuG3LGzOAP6D3wSMZeh8KZEo6tiXD6ZqjeYMFA07M=;
- b=dr5KWuEr9Y2rQYE6U73yHbzuosJaxne8Vv9WTN3EmUtptHxUk4jCAePfKSZX/EGU9mao
- sVtLUi6cleNPuOkokte7LWCpcaGsMIHNAyytf4eCjSdgyymo9LX5Zj/YYLg8x2jyOaW7
- +JU/4JyztHLU9VSvsr6Yndi6JvJ1KpWDFMNcl6CXoOQvOQErpxKHLRuWo8kZEHw/aJxR
- pOkz1dNOk1YhXhK+ob1aJhkmRrveuv9MNk1LyCrRQID/WCDjH32mqqKliFdUR/xObqHl
- h/zF9FPU8R0dHMUQoBDBaQWLBs4et5FNVTvun5Se4plrv3q/YvZgMNaXDYcgztS+Kgqk 1Q== 
+ in-reply-to; s=corp-2018-07-02;
+ bh=tVz8kO2gLLHtnMQan5xim91ffyHoI4bPRMULVju7siQ=;
+ b=yEWHk7koXcYLvNUFHCQOzZnDhasDLXBZbbvf8R5hJN3XakAgl0CmyBUReSsw49cr/l3D
+ c9+hdlZXXhQadF2mlLFL1UaSgNSDIKnsSvK1HDlirE7A1UZjF/v3vcR30y7c/mc5TKv4
+ WzrxkMYl1oin4mukoAdj1d1bQYQgZ9zZs4tV5PGMS1nfyxZ7XCpIK7iW5bjfd/VzmEcS
+ rm0QC5qdLFnSWTF862B9EuEk9s2H4GT6kA2DtBFRE+YNYZypzFRRaIxoDuqSvRMfbcGu
+ TSW6ub+a7IzXE18YHSi9XpdEQbVb1hR4Wt6qo3cSSioMNTZ4oYWWYy9FEP1KWpz5l3eb tQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t9brt4vc6-1
+        by userp2130.oracle.com with ESMTP id 2t9brt4vqs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 14:45:17 +0000
+        Tue, 25 Jun 2019 14:47:10 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PEhOVf030853;
-        Tue, 25 Jun 2019 14:45:17 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tat7c9aer-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PEjPs2036229;
+        Tue, 25 Jun 2019 14:47:10 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tat7c9bgu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 14:45:17 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5PEjFHc026039;
-        Tue, 25 Jun 2019 14:45:15 GMT
+        Tue, 25 Jun 2019 14:47:09 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5PEl8qd002530;
+        Tue, 25 Jun 2019 14:47:08 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 07:45:15 -0700
-Date:   Tue, 25 Jun 2019 07:45:13 -0700
+        with ESMTP ; Tue, 25 Jun 2019 07:47:08 -0700
+Date:   Tue, 25 Jun 2019 07:47:07 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dave Chinner <david@fromorbit.com>,
         Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
-Message-ID: <20190625144513.GB5379@magnolia>
+Subject: Re: [PATCH 12/12] iomap: add tracing for the address space operations
+Message-ID: <20190625144707.GC5379@magnolia>
 References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-10-hch@lst.de>
- <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
- <20190625101445.GK1462@lst.de>
- <387a9e4b-6a15-5b08-6878-53ed5cfb9bb0@suse.com>
+ <20190624055253.31183-13-hch@lst.de>
+ <20190624234921.GE7777@dread.disaster.area>
+ <20190625101515.GL1462@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <387a9e4b-6a15-5b08-6878-53ed5cfb9bb0@suse.com>
+In-Reply-To: <20190625101515.GL1462@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
@@ -77,55 +75,18 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 03:42:20PM +0300, Nikolay Borisov wrote:
-> 
-> 
-> On 25.06.19 г. 13:14 ч., Christoph Hellwig wrote:
-> > On Mon, Jun 24, 2019 at 07:06:22PM +0300, Nikolay Borisov wrote:
-> >>> +{
-> >>> +	struct list_head	tmp;
-> >>> +
-> >>> +	list_replace_init(&ioend->io_list, &tmp);
-> >>> +	xfs_destroy_ioend(ioend, error);
-> >>> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
-> >>> +		xfs_destroy_ioend(ioend, error);
-> >>
-> >> nit: I'd prefer if the list_pop patch is right before this one since
-> >> this is the first user of it.
+On Tue, Jun 25, 2019 at 12:15:15PM +0200, Christoph Hellwig wrote:
+> On Tue, Jun 25, 2019 at 09:49:21AM +1000, Dave Chinner wrote:
+> > > +#undef TRACE_SYSTEM
+> > > +#define TRACE_SYSTEM iomap
 > > 
-> > I try to keep generic infrastructure first instead of interveawing
-> > it with subystem-specific patches.
-> > 
-> >> Additionally, I don't think list_pop is
-> >> really a net-negative win 
-> > 
-> > What is a "net-negative win" ?
+> > Can you add a comment somewhere here that says these tracepoints are
+> > volatile and we reserve the right to change them at any time so they
+> > don't form any sort of persistent UAPI that we have to maintain?
 > 
-> What I meant was 'net-positive win', in terms of making the code more
-> readable or optimised.
-> 
-> > 
-> >> in comparison to list_for_each_entry_safe
-> >> here. In fact this "delete the list" would seems more idiomatic if
-> >> implemented via list_for_each_entry_safe
-> > 
-> > I disagree.  The for_each loops require an additional next iterator,
-> > and also don't clearly express what is going on, but require additional
-> > spotting of the list_del.
-> 
-> That is of course your opinion. At the very least we can agree to disagree.
-> 
-> What I'm worried about, though, is now you've essentially introduced a
-> new idiom to dispose of lists, which is used only in your code. If it
-> doesn't become more widespread and gradually start replacing current
-> list_for_each_entry_safe usage then you would have increased the public
-> list interface to cater for one specific use case, just because it seems
-> more natural to you. I guess only time will show whether it makes sense
-> to have list_pop_entry
+> Sure.  Note that we don't have any such comment in xfs either..
 
-I for one would love to replace all the opencoded "walk a list and drop
-each entry before we move on" code in fs/xfs/scrub/ with list_pop_entry.
-Quickly scanning fs/xfs/, there seem to be a couple dozen places where
-we could probably do that too.
+I think we ought to add a comment to both of the tracepoint header files
+in xfs then...
 
 --D
