@@ -2,167 +2,356 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B3D1559B2
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 23:08:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A88C855CA1
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 01:53:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbfFYVIt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 17:08:49 -0400
-Received: from sandeen.net ([63.231.237.45]:58094 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFYVIs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 25 Jun 2019 17:08:48 -0400
-Received: from Liberator-6.local (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 09BFF1170C
-        for <linux-xfs@vger.kernel.org>; Tue, 25 Jun 2019 16:08:37 -0500 (CDT)
-Subject: [ANNOUNCE] xfsprogs for-next rebased to 8bfb5eac
-From:   Eric Sandeen <sandeen@sandeen.net>
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-References: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <14670eb1-0e0e-b669-7d85-0f4589e13bf9@sandeen.net>
-Date:   Tue, 25 Jun 2019 16:08:45 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        id S1726077AbfFYXxO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 19:53:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43020 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfFYXxO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 19:53:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PNnRQD021323;
+        Tue, 25 Jun 2019 23:53:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=vlDV/R8Y4zAaVzKlwxV8GHmNVClmIZSbkHyPi4QgVaY=;
+ b=R8iXTW3YLogdR0yXu5YuOKw59TbaZ4p1G3jVjkNtU6CSXXK8vuzwYkZv1mvRkKyaBjVI
+ cjBb3tUW0Brfw2mo224wwXN3YhtsHIzV4ghP+v6IXCnay6PmUC+ojGHTsV0sk0NWeDGf
+ D5Xef/anZjrTO1xOwOuM6+JAGyhHOjry9YdiUaqbPbZ9VbHqeBsUWCyRcDHbc8au08Jw
+ BkZB4W8laAniZmdbxbfyHWAEmRGmjp2PzeGuclMGUt1CBAzMO9kI0lxilpKXD/VBnr34
+ vW8g9t6ZgrMoKh/MT12+L6k+UhHBwm5nvXCApDXqLDlh1HoJBC3AmbY+j2wpP9TAR3sl yA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t9cyqf60v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 23:53:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PNrBkO171583;
+        Tue, 25 Jun 2019 23:53:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7ch3st-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 23:53:11 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5PNr6H1025174;
+        Tue, 25 Jun 2019 23:53:07 GMT
+Received: from localhost (/10.159.230.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Jun 2019 16:53:06 -0700
+Date:   Tue, 25 Jun 2019 16:53:05 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 08/12] libfrog: refactor open-coded INUMBERS calls
+Message-ID: <20190625235305.GA2259292@magnolia>
+References: <156104936953.1172531.2121427277342917243.stgit@magnolia>
+ <156104942067.1172531.15834435379895326132.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156104942067.1172531.15834435379895326132.stgit@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906250197
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250196
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR
-Content-Type: multipart/mixed; boundary="cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0";
- protected-headers="v1"
-From: Eric Sandeen <sandeen@sandeen.net>
-To: linux-xfs <linux-xfs@vger.kernel.org>
-Message-ID: <14670eb1-0e0e-b669-7d85-0f4589e13bf9@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next rebased to 8bfb5eac
-References: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
-In-Reply-To: <637c74e5-01b9-af25-0576-ba544ff8f0e6@sandeen.net>
+On Thu, Jun 20, 2019 at 09:50:20AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Refactor all the INUMBERS ioctl callsites into helper functions.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  include/xfrog.h    |    4 ++++
+>  io/imap.c          |   32 +++++++++++++++-----------------
+>  io/open.c          |   20 ++++++++------------
+>  libfrog/bulkstat.c |   19 +++++++++++++++++++
+>  scrub/fscounters.c |   18 +++++++-----------
+>  scrub/inodes.c     |   23 +++++++++--------------
+>  6 files changed, 62 insertions(+), 54 deletions(-)
+> 
+> 
+> diff --git a/include/xfrog.h b/include/xfrog.h
+> index 176a2e1d..dab1214d 100644
+> --- a/include/xfrog.h
+> +++ b/include/xfrog.h
+> @@ -107,4 +107,8 @@ int xfrog_bulkstat_single(struct xfrog *froggie, uint64_t ino,
+>  int xfrog_bulkstat(struct xfrog *froggie, uint64_t *lastino, uint32_t icount,
+>  		struct xfs_bstat *ubuffer, uint32_t *ocount);
+>  
+> +struct xfs_inogrp;
+> +int xfrog_inumbers(struct xfrog *froggie, uint64_t *lastino, uint32_t icount,
+> +		struct xfs_inogrp *ubuffer, uint32_t *ocount);
+> +
+>  #endif	/* __XFROG_H__ */
+> diff --git a/io/imap.c b/io/imap.c
+> index fbc8e9e1..05a4985d 100644
+> --- a/io/imap.c
+> +++ b/io/imap.c
+> @@ -8,18 +8,20 @@
+>  #include "input.h"
+>  #include "init.h"
+>  #include "io.h"
+> +#include "xfrog.h"
+>  
+>  static cmdinfo_t imap_cmd;
+>  
+>  static int
+>  imap_f(int argc, char **argv)
+>  {
+> -	int		count;
+> -	int		nent;
+> -	int		i;
+> -	__u64		last = 0;
+> -	xfs_inogrp_t	*t;
+> -	xfs_fsop_bulkreq_t bulkreq;
+> +	struct xfrog		frog = XFROG_INIT(file->fd);
+> +	struct xfs_inogrp	*t;
+> +	uint64_t		last = 0;
+> +	uint32_t		count;
+> +	uint32_t		nent;
+> +	int			i;
+> +	int			error;
+>  
+>  	if (argc != 2)
+>  		nent = 1;
+> @@ -30,14 +32,8 @@ imap_f(int argc, char **argv)
+>  	if (!t)
+>  		return 0;
+>  
+> -	bulkreq.lastip  = &last;
+> -	bulkreq.icount  = nent;
+> -	bulkreq.ubuffer = (void *)t;
+> -	bulkreq.ocount  = &count;
+> -
+> -	while (xfsctl(file->name, file->fd, XFS_IOC_FSINUMBERS, &bulkreq) == 0) {
+> -		if (count == 0)
+> -			goto out_free;
+> +	while ((error = xfrog_inumbers(&frog, &last, nent, t, &count)) == 0 &&
+> +	       count > 0) {
+>  		for (i = 0; i < count; i++) {
+>  			printf(_("ino %10llu count %2d mask %016llx\n"),
+>  				(unsigned long long)t[i].xi_startino,
+> @@ -45,9 +41,11 @@ imap_f(int argc, char **argv)
+>  				(unsigned long long)t[i].xi_allocmask);
+>  		}
+>  	}
+> -	perror("xfsctl(XFS_IOC_FSINUMBERS)");
+> -	exitcode = 1;
+> -out_free:
+> +
+> +	if (error) {
+> +		perror("xfsctl(XFS_IOC_FSINUMBERS)");
+> +		exitcode = 1;
+> +	}
+>  	free(t);
+>  	return 0;
+>  }
+> diff --git a/io/open.c b/io/open.c
+> index 36e07dc3..35bcd23a 100644
+> --- a/io/open.c
+> +++ b/io/open.c
+> @@ -669,24 +669,20 @@ inode_help(void)
+>  "\n"));
+>  }
+>  
+> +#define IGROUP_NR	(1024)
+>  static __u64
+>  get_last_inode(void)
+>  {
+> -	__u64			lastip = 0;
+> -	__u64			lastgrp = 0;
+> -	__s32			ocount = 0;
+> +	struct xfrog		frog = XFROG_INIT(file->fd);
+> +	uint64_t		lastip = 0;
+> +	uint32_t		lastgrp = 0;
+> +	uint32_t		ocount = 0;
+>  	__u64			last_ino;
+> -	struct xfs_inogrp	igroup[1024];
+> -	struct xfs_fsop_bulkreq	bulkreq;
+> -
+> -	bulkreq.lastip = &lastip;
+> -	bulkreq.ubuffer = &igroup;
+> -	bulkreq.icount = sizeof(igroup) / sizeof(struct xfs_inogrp);
+> -	bulkreq.ocount = &ocount;
+> +	struct xfs_inogrp	igroup[IGROUP_NR];
+>  
+>  	for (;;) {
+> -		if (xfsctl(file->name, file->fd, XFS_IOC_FSINUMBERS,
+> -				&bulkreq)) {
+> +		if (xfrog_inumbers(&frog, &lastip, IGROUP_NR, igroup,
+> +					&ocount)) {
+>  			perror("XFS_IOC_FSINUMBERS");
+>  			return 0;
+>  		}
+> diff --git a/libfrog/bulkstat.c b/libfrog/bulkstat.c
+> index 30a9e6bc..9ce238b8 100644
+> --- a/libfrog/bulkstat.c
+> +++ b/libfrog/bulkstat.c
+> @@ -42,3 +42,22 @@ xfrog_bulkstat(
+>  
+>  	return ioctl(froggie->fd, XFS_IOC_FSBULKSTAT, &bulkreq);
+>  }
+> +
+> +/* Query inode allocation bitmask information. */
+> +int
+> +xfrog_inumbers(
+> +	struct xfrog		*froggie,
+> +	uint64_t		*lastino,
+> +	uint32_t		icount,
+> +	struct xfs_inogrp	*ubuffer,
+> +	uint32_t		*ocount)
+> +{
+> +	struct xfs_fsop_bulkreq	bulkreq = {
+> +		.lastip		= (__u64 *)lastino,
+> +		.icount		= icount,
+> +		.ubuffer	= ubuffer,
+> +		.ocount		= (__s32 *)ocount,
+> +	};
+> +
+> +	return ioctl(froggie->fd, XFS_IOC_FSINUMBERS, &bulkreq);
+> +}
+> diff --git a/scrub/fscounters.c b/scrub/fscounters.c
+> index adb79b50..cd216b30 100644
+> --- a/scrub/fscounters.c
+> +++ b/scrub/fscounters.c
+> @@ -15,6 +15,7 @@
+>  #include "xfs_scrub.h"
+>  #include "common.h"
+>  #include "fscounters.h"
+> +#include "xfrog.h"
+>  
+>  /*
+>   * Filesystem counter collection routines.  We can count the number of
+> @@ -41,26 +42,21 @@ xfs_count_inodes_range(
+>  	uint64_t		last_ino,
+>  	uint64_t		*count)
+>  {
+> -	struct xfs_fsop_bulkreq	igrpreq = {NULL};
+>  	struct xfs_inogrp	inogrp;
+> -	__u64			igrp_ino;
+> +	uint64_t		igrp_ino;
+>  	uint64_t		nr = 0;
+> -	__s32			igrplen = 0;
+> +	uint32_t		igrplen = 0;
+>  	int			error;
+>  
+>  	ASSERT(!(first_ino & (XFS_INODES_PER_CHUNK - 1)));
+>  	ASSERT((last_ino & (XFS_INODES_PER_CHUNK - 1)));
+>  
+> -	igrpreq.lastip  = &igrp_ino;
+> -	igrpreq.icount  = 1;
+> -	igrpreq.ubuffer = &inogrp;
+> -	igrpreq.ocount  = &igrplen;
+> -
+>  	igrp_ino = first_ino;
+> -	error = ioctl(ctx->mnt.fd, XFS_IOC_FSINUMBERS, &igrpreq);
+> -	while (!error && igrplen && inogrp.xi_startino < last_ino) {
+> +	while (!(error = xfrog_inumbers(&ctx->mnt, &igrp_ino, 1, &inogrp,
+> +			&igrplen))) {
+> +		if (igrplen == 0 || inogrp.xi_startino >= last_ino)
+> +			break;
+>  		nr += inogrp.xi_alloccount;
+> -		error = ioctl(ctx->mnt.fd, XFS_IOC_FSINUMBERS, &igrpreq);
+>  	}
+>  
+>  	if (error) {
+> diff --git a/scrub/inodes.c b/scrub/inodes.c
+> index 09dd0055..dea925be 100644
+> --- a/scrub/inodes.c
+> +++ b/scrub/inodes.c
+> @@ -90,17 +90,16 @@ xfs_iterate_inodes_range(
+>  	xfs_inode_iter_fn	fn,
+>  	void			*arg)
+>  {
+> -	struct xfs_fsop_bulkreq	igrpreq = {NULL};
+>  	struct xfs_handle	handle;
+>  	struct xfs_inogrp	inogrp;
+>  	struct xfs_bstat	bstat[XFS_INODES_PER_CHUNK];
+>  	char			idescr[DESCR_BUFSZ];
+>  	char			buf[DESCR_BUFSZ];
+>  	struct xfs_bstat	*bs;
+> -	__u64			igrp_ino;
+> +	uint64_t		igrp_ino;
+>  	uint64_t		ino;
+>  	uint32_t		bulklen = 0;
+> -	__s32			igrplen = 0;
+> +	uint32_t		igrplen = 0;
+>  	bool			moveon = true;
+>  	int			i;
+>  	int			error;
+> @@ -109,11 +108,6 @@ xfs_iterate_inodes_range(
+>  
+>  	memset(bstat, 0, XFS_INODES_PER_CHUNK * sizeof(struct xfs_bstat));
+>  
+> -	igrpreq.lastip  = &igrp_ino;
+> -	igrpreq.icount  = 1;
+> -	igrpreq.ubuffer = &inogrp;
+> -	igrpreq.ocount  = &igrplen;
+> -
+>  	memcpy(&handle.ha_fsid, fshandle, sizeof(handle.ha_fsid));
+>  	handle.ha_fid.fid_len = sizeof(xfs_fid_t) -
+>  			sizeof(handle.ha_fid.fid_len);
+> @@ -121,8 +115,11 @@ xfs_iterate_inodes_range(
+>  
+>  	/* Find the inode chunk & alloc mask */
+>  	igrp_ino = first_ino;
+> -	error = ioctl(ctx->mnt.fd, XFS_IOC_FSINUMBERS, &igrpreq);
+> -	while (!error && igrplen) {
+> +	while (!(error = xfrog_inumbers(&ctx->mnt, &igrp_ino, 1, &inogrp,
+> +			&igrplen))) {
+> +		if (igrplen == 0)
+> +			break;
+> +
+>  		/* Load the inodes. */
+>  		ino = inogrp.xi_startino - 1;
+>  
+> @@ -131,7 +128,7 @@ xfs_iterate_inodes_range(
+>  		 * there are more than 64 inodes per block.  Skip these.
+>  		 */
+>  		if (inogrp.xi_alloccount == 0)
+> -			goto igrp_retry;
+> +			continue;
+>  		error = xfrog_bulkstat(&ctx->mnt, &ino, inogrp.xi_alloccount,
+>  				bstat, &bulklen);
+>  		if (error)
+> @@ -155,7 +152,7 @@ xfs_iterate_inodes_range(
+>  				stale_count++;
+>  				if (stale_count < 30) {
+>  					igrp_ino = inogrp.xi_startino;
+> -					goto igrp_retry;
+> +					continue;
 
---cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+NAK.
 
-Hi folks,
+This doesn't continue the outer loop like the old code did.
 
-The for-next branch of the xfsprogs repository at:
+--D
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-
-has just been rebased(!)
-
-[I am on fire today, and accidentally pushed some unreviewed manpage
-changes, go, me!]
-
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
-
-The new head of the master branch is commit:
-
-8bfb5eac (HEAD -> for-next, origin/for-next, korg/for-next) xfs_quota: fi=
-x built-in help for project setup
-
-New Commits:
-
-Amir Goldstein (1):
-      [e0bdad06] xfs_info: limit findmnt to find mounted xfs filesystems
-
-Darrick J. Wong (4):
-      [b6ad9957] libfrog: don't set negative errno in conversion function=
-s
-      [b089256c] libfrog: cvt_u64 should use strtoull, not strtoll
-      [8da52988] mkfs: validate start and end of aligned logs
-      [f1572219] xfs_io: repair_f should use its own name
-
-Eric Sandeen (1):
-      [8bfb5eac] xfs_quota: fix built-in help for project setup
-
-
-Code Diffstat:
-
- io/scrub.c           |  2 +-
- libfrog/convert.c    | 22 +++++++++++-----------
- mkfs/xfs_mkfs.c      | 15 ++++++++++++++-
- quota/project.c      |  2 +-
- spaceman/xfs_info.sh |  2 +-
- 5 files changed, 28 insertions(+), 15 deletions(-)
-
-
---cW2K9kKYJ9KMx3k9WcMoiL7AIuE4fRgy0--
-
---LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl0SjV0ACgkQIK4WkuE9
-3uCHFA//XlQvrnVYkubjZd5d/QdVcUNmFvcVNiylaDwp52N+K1RQgbhsth893Afi
-HlSalBZIEmSzdt5SMvMqeMaj1Adh6k1CPoYqxFmFwmcQTC7uTZJhfVZDVmYPL+5L
-8kB+eV8+jLEw1WLmCjL1GyIjmBcW9mtD24Mm9lgCmGCxNZovWXR8rp3t/6xZWauE
-AzZnwP5PYhNzueMHd190XfdiJ9T7HziZkL5OjxYkAnXtfI9UywA03bqhdr2eFbUB
-7H3Yw495y8ox0xrI262k9VbFyrRQ9SGLAerC5YVYgNT+v5c3EIjyHt++ReEtUymY
-LCMzISL3zskRKrxD+tN/iRAuzIjxXc5NzuO9QAM2/gSeykAUyxvpPS+RYaBF2mUL
-+C34KftDufprJ15D2LaSbGVi2Ha/vqlRXPX7BWpH3XKgcTE9J2E0swZOULEH4Ar2
-cZrynxUqQ3rYW6u58Nzq4I53pjfOhyaL1XC4beYAniP1btj3/UyOVP2Rvz0KT13r
-O1ZSbsv3dHvR2t54c1H6WQKB18sTq6UDpgrxzRxjmi9dX/7/szTAz2GVaqQ/GhSS
-Rer7f8Ney50ZX+zdl08Wo9gcPHyHDqvDEylF1gmvvH1Fwsy1UqIJg3iMZsMCNHRN
-pcFaGczH29x0+VJsVPiH+t+i2vpgtJBS/euIaH7jk68Qp9PKVto=
-=9pWq
------END PGP SIGNATURE-----
-
---LBuaNj7teEoAVl9mo8lADRsYgqwoR20DR--
+>  				}
+>  				snprintf(idescr, DESCR_BUFSZ, "inode %"PRIu64,
+>  						(uint64_t)bs->bs_ino);
+> @@ -177,8 +174,6 @@ _("Changed too many times during scan; giving up."));
+>  		}
+>  
+>  		stale_count = 0;
+> -igrp_retry:
+> -		error = ioctl(ctx->mnt.fd, XFS_IOC_FSINUMBERS, &igrpreq);
+>  	}
+>  
+>  err:
+> 
