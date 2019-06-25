@@ -2,40 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F18954CAC
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 12:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1948054CCF
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 12:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfFYKtd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 06:49:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59332 "EHLO
+        id S1732168AbfFYKyi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 06:54:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60734 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfFYKtd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 06:49:33 -0400
+        with ESMTP id S1728078AbfFYKyi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 06:54:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=cltGkpDcG3bPZQdrof1Baq7I5
-        W9cngbyNL/3NRyd97iWWcU/7CW/REmjCpyiIKpA99MasdYjhZ9iyklP2ZMEug6bNdDhRZyoq2Auwr
-        9oZJOaH87Kyz/IS0u3dVKVJ84YJyDRWbBHV1b+UqEN8T7Cx94VjJd6/m8N65zx+bA26t+ps1Z3gb3
-        fg3vkfw+tKz1E/+5PxeohkmVh8Q8PyfxCLYrlstDu9oNXaj2MRoyWAZKyzo01fif0UE1xUAHPeSCa
-        e0aU62l884CUyd2HDAGtt8AUk6bnBqhH9RHbb/nODJt64q7xyboCagAt2hzTk/LyBmwgMORqpRh60
-        o14dRrrCQ==;
+         bh=Vz9EsU+BMp1qYPkPo0lwQQ2lWPTJmqiFxShSC5HxZL8=; b=nBAVGkdglPHpmuYQqFSATJHvp
+        qEilF7DPQiyEZIpSQIzZMPcCB19ggY2hEx92EbZD+IfkhXJZyak79h1VGJHrDEiGWkV7vWdHEwcvG
+        Uia30K8CsEe4KciVwAx9Ueh3ZNWdw+WX0rQuV/+mv6RSULDepJH0TpBhp34CvQXHIF+E3SqeKl+h1
+        M4x4LTLyO9xuSOKuIZjfQoumHfSjD2nHSXzSH8N5h1GHiAmRxpvVGMpCPUokV0wdUvCNSLjPRhyX1
+        eWkvzLLvA59dhTbrV/Jxp6kiY1qeMWIK1b2QPellvvFdOmIPR/rA0YufkoNWt9HeRFDAWMeB3mZv2
+        /tv3kTYFQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfj13-0005LK-AR; Tue, 25 Jun 2019 10:49:33 +0000
-Date:   Tue, 25 Jun 2019 03:49:33 -0700
+        id 1hfj5c-00078N-JV; Tue, 25 Jun 2019 10:54:16 +0000
+Date:   Tue, 25 Jun 2019 03:54:16 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs_repair: don't search for libxfs.h in system headers
-Message-ID: <20190625104933.GJ30156@infradead.org>
-References: <b1265852-70ea-5402-191d-b3843996fc89@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 1/4] vfs: create a generic checking function for
+ FS_IOC_SETFLAGS
+Message-ID: <20190625105416.GA26085@infradead.org>
+References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
+ <156116138140.1664814.9610454726122206157.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b1265852-70ea-5402-191d-b3843996fc89@redhat.com>
+In-Reply-To: <156116138140.1664814.9610454726122206157.stgit@magnolia>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
@@ -43,6 +55,16 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Looks good,
+On Fri, Jun 21, 2019 at 04:56:21PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Create a generic checking function for the incoming FS_IOC_SETFLAGS flag
+> values so that we can standardize the implementations that follow ext4's
+> flag values.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+
+Looks fine:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
