@@ -2,103 +2,176 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6198F5213E
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:25:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BA345216E
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2019 05:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfFYDZi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Jun 2019 23:25:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57574 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfFYDZi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 23:25:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P3OPl5005644;
-        Tue, 25 Jun 2019 03:25:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=DjkWni7c0BjRfL96GDOwn55d9PXgwO4r1wxGfOmb9/o=;
- b=dLFepTpCNdZU50kisQimY7vy3FtlqM6aaIgMKWO4EFIcmpoqYf9Bk3uNoVuXS4Tumfrm
- J9DhTfZU9cUiY8tDnJbOC+O1YO1l7O2uHn0gD5YSD36vEWN0hUYMzVrvu1WM9DPWC521
- iM7kpAOL1yP6OCFGyULG4i6iwKlv2IjDex/Dx3ZEEOZp3b5DLiKSUGqe6uqohRkLPGFx
- EZamv522LomQa79/Xts2HrY8Mt29zvYaU2uxRdmVN92zBL7rfheVl102FLC61LAZIIpg
- jxHeXkYZKmv6/RIt4aobbHMGWFiXYHzA5RZHRl+KkvlTTqguwp9Vzz/FfImaW7uc3L9A rA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t9brt1ke9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 03:25:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P3PN8r015315;
-        Tue, 25 Jun 2019 03:25:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tat7c00uw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 03:25:30 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5P3PThU028028;
-        Tue, 25 Jun 2019 03:25:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 20:25:28 -0700
-Date:   Mon, 24 Jun 2019 20:25:27 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
-Subject: Re: xfs cgroup writeback support
-Message-ID: <20190625032527.GF1611011@magnolia>
-References: <20190624134315.21307-1-hch@lst.de>
+        id S1726862AbfFYDzf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Jun 2019 23:55:35 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57184 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726833AbfFYDzf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Jun 2019 23:55:35 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 51B91105F6F2;
+        Tue, 25 Jun 2019 13:55:30 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hfcXH-0002Gq-Bt; Tue, 25 Jun 2019 13:54:23 +1000
+Date:   Tue, 25 Jun 2019 13:54:23 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 2/2] xfs: convert extents in place for ZERO_RANGE
+Message-ID: <20190625035423.GG7777@dread.disaster.area>
+References: <ace9a6b9-3833-ec15-e3df-b9d88985685e@redhat.com>
+ <25a2ebbc-0ec9-f5dd-eba0-4101c80837dd@sandeen.net>
+ <20190625023954.GF7777@dread.disaster.area>
+ <2b135e00-3bfd-f41a-7c43-a0518fc756fe@sandeen.net>
+ <20190625030018.GC5387@magnolia>
+ <3f8037f0-08ff-98b2-6995-230e7bf33372@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624134315.21307-1-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906250025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250025
+In-Reply-To: <3f8037f0-08ff-98b2-6995-230e7bf33372@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=priqdjwbsF_b5uQ-R2YA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:43:13PM +0200, Christoph Hellwig wrote:
-> Hi all,
+On Mon, Jun 24, 2019 at 10:05:51PM -0500, Eric Sandeen wrote:
+> On 6/24/19 10:00 PM, Darrick J. Wong wrote:
+> > On Mon, Jun 24, 2019 at 09:52:03PM -0500, Eric Sandeen wrote:
+> >> On 6/24/19 9:39 PM, Dave Chinner wrote:
+> >>> On Mon, Jun 24, 2019 at 07:48:11PM -0500, Eric Sandeen wrote:
+> >>>> Rather than completely removing and re-allocating a range
+> >>>> during ZERO_RANGE fallocate calls, convert whole blocks in the
+> >>>> range using xfs_alloc_file_space(XFS_BMAPI_PREALLOC|XFS_BMAPI_CONVERT)
+> >>>> and then zero the edges with xfs_zero_range()
+> >>>
+> >>> That's what I originally used to implement ZERO_RANGE and that
+> >>> had problems with zeroing the partial blocks either side and
+> >>> unexpected inode size changes. See commit:
+> >>>
+> >>> 5d11fb4b9a1d xfs: rework zero range to prevent invalid i_size updates
+> >>
+> >> Yep I did see that.  It had a lot of hand-rolled partial block stuff
+> >> that seems more complex than this, no?  That commit didn't indicate
+> >> what the root cause of the failure actually was, AFAICT.
+> >>
+> >> (funny thought that I skimmed that commit just to see why we had
+> >> what we have, but didn't really intentionally re-implement it...
+> >> even though I guess I almost did...)
+> > 
+> > FWIW the complaint I had about the fragmentary behavior really only
+> > applied to fun and games when one fallocated an ext4 image and then ran
+> > mkfs.ext4 which uses zero range which fragmented the image...
+> > 
+> >>> I also remember discussion about zero range being inefficient on
+> >>> sparse files and fragmented files - the current implementation
+> >>> effectively defragments such files, whilst using XFS_BMAPI_CONVERT
+> >>> just leaves all the fragments behind.
+> >>
+> >> That's true - and it fragments unfragmented files.  Is ZERO_RANGE
+> >> supposed to be a defragmenter?
+> > 
+> > ...so please remember, the key point we were talking about when we
+> > discussed this a year ago was that if the /entire/ zero range maps to a
+> > single extent within eof then maybe we ought to just convert it to
+> > unwritten.
 > 
-> this small series adds cgroup writeback support to XFS.  Unlike
-> the previous iteration of the support a few years ago it also
-> ensures that that trailing bios in an ioend inherit the right
-> cgroup.  It has been tested with the shared/011 xfstests test
-> that was written to test this functionality in all file systems,
-> and manually by Stefan Priebe.
+> I remember you mentioning that, but honestly it seems like
+> overcomplication to say "ZERO_RANGE will also defragment extents
+> in the process, if it can..."
+
+Keep in mind that my original implementation of ZERO_RANGE was
+for someone who explicitly requested zeroing of preallocated VM
+image files without reallocating them. Hence the XFS_BMAPI_CONVERT
+implementation. They'd been careful about initial allocation, and
+they wanted to reuse image files for new VMs without perturbing
+their initial careful preallocation patterns.
+
+I think the punch+reallocate is a more generally useful behaviour
+because people are far less careful about image file layout (e.g.
+might be using extent size hints or discard within the VM) and so
+we're more likely to see somewhat fragmented files for zeroing than
+we are fully intact.
+
+SO, yeah, I can see arguments for both cases, and situations where
+one behaviour would be preferred over the other.
+
+Random thought: KEEP_SIZE == I know what I'm doing, just convert in
+place because the layout is as I want it. !KEEP_SIZE = punch and
+preallocate because we are likely changing the file size anyway?
+
+> >>> What prevents xfs_zero_range() from changing the file size if
+> >>> offset + len is beyond EOF and there are allocated extents (from
+> >>> delalloc conversion) beyond EOF? (i.e. FALLOC_FL_KEEP_SIZE is set by
+> >>> the caller).
+> >>
+> >> nothing, but AFAIK it does the same today... even w/o extents past
+> >> EOF:
+> >>
+> >> $ xfs_io -f -c "truncate 0" -c "fzero 0 1m" testfile
+> > 
+> > fzero -k ?
 > 
-> This work was funded by Profihost AG.
+> $ xfs_io -f -c "truncate 0" -c "fzero -k 0 1m" testfile
 > 
-> Note that the first patch was also in my series to move the xfs
-> writepage code to iomap.c and the second one will conflict with
-> it.  We'll need to sort out which series to merge first, but given
-> how simple this one I would suggest to go for this one.
+> $ ls -lh testfile
+> -rw-------. 1 sandeen sandeen 0 Jun 24 22:02 testfile
+> 
+> with or without my patches.
 
-By the way, did all the things Dave complained about in last year's
-attempt[1] to add cgroup writeback support get fixed?  IIRC someone
-whose name I didn't recognise complained about log starvation due to
-REQ_META bios being charged to the wrong cgroup and other misbehavior.
+My concern was about files with pre-existing extents beyond EOF.
+i.e. something like this (on a vanilla kernel):
 
-Also, I remember that in the earlier 2017 discussion[2] we talked about
-a fstest to test that writeback throttling actually capped bandwidth
-usage correctly.  I haven't been following cgroupwb development since
-2017 -- does it not ratelimit bandwidth now, or is there some test for
-that?  The only test I could find was shared/011 which only tests the
-accounting, not bandwidth.
+$ xfs_io -f -c "truncate 0"  -c "pwrite 0 16m" -c "fsync" -c "bmap -vp" -c "fzero -k 0 32m" -c "bmap -vp" -c "stat" testfile
+wrote 16777216/16777216 bytes at offset 0
+16 MiB, 4096 ops; 0.0000 sec (700.556 MiB/sec and 179342.3530 ops/sec)
+testfile:
+ EXT: FILE-OFFSET      BLOCK-RANGE            AG AG-OFFSET            TOTAL FLAGS
+   0: [0..65407]:      1145960728..1146026135 10 (47331608..47397015) 65408 000000
+testfile:
+ EXT: FILE-OFFSET      BLOCK-RANGE            AG AG-OFFSET            TOTAL FLAGS
+   0: [0..65535]:      1146026136..1146091671 10 (47397016..47462551) 65536 010000
+fd.path = "testfile"
+fd.flags = non-sync,non-direct,read-write
+stat.ino = 1342366656
+stat.type = regular file
+stat.size = 16777216
+stat.blocks = 65536
+fsxattr.xflags = 0x2 [-p--------------]
+fsxattr.projid = 0
+fsxattr.extsize = 0
+fsxattr.cowextsize = 0
+fsxattr.nextents = 1
+fsxattr.naextents = 0
+dioattr.mem = 0x200
+dioattr.miniosz = 512
+dioattr.maxiosz = 2147483136
+$
 
---D
+So you can see it is 16MiB in size, but has 32MB of blocks allocated
+to it, and it's a different 32MB of blocks that were allocated by
+the delalloc because we punched and reallocated it as an unwritten
+extent.
 
-[1] https://patchwork.kernel.org/comment/21658249/
-[2] https://patchwork.kernel.org/comment/21042703/
+That's where I'm concerned - that range beyond EOF is no longer
+punched away by this new code, an dit's not unwritten so the
+zero_range is going to iterate and zero it, right?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
