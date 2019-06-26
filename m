@@ -2,64 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B617572FE
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE196572FF
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfFZUqf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 16:46:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51322 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfFZUqf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:46:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKht9m018308
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:34 GMT
+        id S1726484AbfFZUqh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 16:46:37 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfFZUqh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:46:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKiGkW012429
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=l+OUXTuSZYJknKlChKmxP3SrJQwwHHx+UGEz7P1k8j8=;
- b=LspEt3/MVMEm6dkPac8zs7fE6mSt/yWAwqVPcnuSoM/TIeLTEAKdhWaPjjk/sGT/wIih
- cdZ6PeJfVK0mLCwGT4ZJUC+sqn/KtsulQbU7Xss+WTVZWsMhO8NrtiR0SeUImGlNPxah
- BHwjjZBwqPzVgsF3LdIBwu+H3sXCzNQ+5OPyOBsCshJJ3BA+1wXOV2s9LESMfezTYZwY
- K8Z6WoCrJrQ8XSRyJ0olPc7Ob6+qXpjl3RHvNrJOFXpoGkVN9JiD++L9BLfppkS288Mb
- juXYxZYPS7BYlRypK1tQToVf/wTa5n3ZYltGWiA7WOUtkoaqUcnUFh/rCei/gJ4LJSs9 wA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyqmh4q-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=MYFAtRWapQzda92hgBQCK9WDqhRepbnW5i3DBoUYiJg=;
+ b=A5UAnRGFtE1ybC4QFhxJ25jaQQBQSvM7/1zvRVPh0wKzo80F0hHHH/Qq3+BJk0rjApRN
+ fDIHJgtvLbJGPfMq7UaY0MkZV00u47fKDlGW78t8U54M0sHkgvGgKUbNF5wdzkCejMTU
+ 9MA95S5++NY1gs4gV71pt2VH0cuF1HVyGSWc4odZ/Dw3TRs+dYEJ41bFjEr/ZKj9LkY6
+ 2j8DcoE2FMdQa098BrdC3z3MLRhhuzeimjbWaebwmMOrHhg6V24SB/ixpmBB2pNThU8J
+ 60RVok7orZaYkx8oCNSntNte8skr2S8/2P13U1txA65d97QCNXa9uWki+g0ldvGeOzTa Hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brtcmxf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:34 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKilWO012087
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:33 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uyyt8-1
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKjSGv069245
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tat7d1h0f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:33 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QKkWoW017515
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:32 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:35 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5QKkZDl007908
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 20:46:35 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 13:46:32 -0700
-Subject: [PATCH 9/9] xfs: allow bulkstat_single of special inodes
+        with ESMTP ; Wed, 26 Jun 2019 13:46:34 -0700
+Subject: [PATCH v2 0/6] xfs: scrub-related fixes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, allison.henderson@oracle.com
-Date:   Wed, 26 Jun 2019 13:46:31 -0700
-Message-ID: <156158199168.495715.1433536766420003523.stgit@magnolia>
-In-Reply-To: <156158193320.495715.6675123051075804739.stgit@magnolia>
-References: <156158193320.495715.6675123051075804739.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Wed, 26 Jun 2019 13:46:33 -0700
+Message-ID: <156158199378.495944.4088787757066517679.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=954
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906260240
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906260240
@@ -68,61 +66,36 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Create a new ireq flag (for single bulkstats) that enables userspace to
-ask us for a special inode number instead of interpreting @ino as a
-literal inode number.  This enables us to query the root inode easily.
+I discovered by sampling xfs_scrub stack trace swith a flame graph that
+the attr scrub code has a sizeable oversight -- the xattr scrub code
+always allocates a zeroed 65K temporary buffer before locking the inode,
+even if it then turns out that the inode does not have extended
+attributes.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
----
- fs/xfs/libxfs/xfs_fs.h |   11 ++++++++++-
- fs/xfs/xfs_ioctl.c     |   10 ++++++++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+In addition to the pointless memory allocation, the scrub code itself is
+careful to initialize whatever part of the memory buffer it's going to
+use before reading the contents, which means that the memory clearing is
+not only painful (it's 5% of the sample traces!) but totally pointless.
 
+The first patch does more whack-a-mole cleanup of places where corrupt
+ondisk directory metadata causes ASSERTs instead of -EFSCORRUPTED
+returns.
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 77c06850ac52..1489bce07d66 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -482,7 +482,16 @@ struct xfs_ireq {
- 	uint64_t	reserved[2];	/* must be zero			*/
- };
- 
--#define XFS_IREQ_FLAGS_ALL	(0)
-+/*
-+ * The @ino value is a special value, not a literal inode number.  See the
-+ * XFS_IREQ_SPECIAL_* values below.
-+ */
-+#define XFS_IREQ_SPECIAL	(1 << 0)
-+
-+#define XFS_IREQ_FLAGS_ALL	(XFS_IREQ_SPECIAL)
-+
-+/* Operate on the root directory inode. */
-+#define XFS_IREQ_SPECIAL_ROOT	(1)
- 
- /*
-  * ioctl structures for v5 bulkstat and inumbers requests
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index f71341cd8340..3bb5f980fabf 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -961,6 +961,16 @@ xfs_ireq_setup(
- 	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
- 		return -EINVAL;
- 
-+	if (hdr->flags & XFS_IREQ_SPECIAL) {
-+		switch (hdr->ino) {
-+		case XFS_IREQ_SPECIAL_ROOT:
-+			hdr->ino = mp->m_sb.sb_rootino;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
- 	if (XFS_INO_TO_AGNO(mp, hdr->ino) >= mp->m_sb.sb_agcount)
- 		return -EINVAL;
- 
+The rest of the series first cleans up the open-coded pointer
+calculations where the buffer is concerned, and then restructures the
+code so to allocate the smallest size buffer needed and only just before
+it's actually needed.  The final patch disables buffer zeroing for
+better performance.
 
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=attr-scrub-fixes
