@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C4FA572E5
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C85572E6
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfFZUpS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 16:45:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48810 "EHLO
+        id S1726339AbfFZUp1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 16:45:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48916 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfFZUpS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:45:18 -0400
+        with ESMTP id S1726271AbfFZUp1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:45:27 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKhvmC012234;
-        Wed, 26 Jun 2019 20:45:08 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKi5Ha012345;
+        Wed, 26 Jun 2019 20:45:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=nrTPJx/UDGc0XYPwfbYkIehHzLibkT4n0B9DDarug1Y=;
- b=2gBf173Ol7+5mwRvi/wQ0mDpJK5M4kPhYqv8hoXSyV+rL6DjBHweMTBj7T4htGjMXHRq
- eP2+fnigSFMYgO7q/UrHzSEvITwg7Gf1g9o+WssghMLAGuALlH1ceLZASKgivGrMjU8W
- VXRc8Y5Yy/gSX+P8K/R56Yh/grtt5E7J1jR/RTwbzz7fqTNuzpWd71pS0nbe8iyTZYkN
- YXZ5lquK7PypO9rEdl22f95SX5blWuacs+7ZuA5as7F9oQT7+3/RZzaRoEpu3mCzQeNa
- 35h3WY6ncgMndaS4EOqS/Lw5MNw3iTK0+HeHGUXNtByAD+mau8ZBNcexiS1q1W5cYEle cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brtcmqn-1
+ bh=JYdVpUGk7wFZDyp4Zp1slJcnA6I9GFvi13HquxiQDDc=;
+ b=xBb+PAzqrSem66xBR3swWvjOj+CA7MPW7Kafgcw8L0NDOMUme/dCAs3AnyI5aRNbuPEN
+ ltcycyehhKaFfHBCXrgQZvyjIhrSnKfiwsa8gSE2nH+3iYgJHtFCFRKJd7wRfn20Hk5i
+ UJ3QuD5rjGq3xiEH66Gihb3+v+cuBIsLpnqGhLY8o+fhh9VC4QBZ3uuGXKux9Dm1K5Zy
+ 8KW41F6svqK1FRr23FWqlWotwkxB/PlAqyBgyulFbXaG5yWM33/6B/Kb5xQPavIlFYnH
+ bndDjiABwlo0I/OZYv+hboeaL3Avl8xjpULJReH/Fge77asFIyt+VhTPFEqWPDpLHxhw ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brtcmre-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 20:45:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKhtbp010642;
-        Wed, 26 Jun 2019 20:45:07 GMT
+        Wed, 26 Jun 2019 20:45:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKhVxu063857;
+        Wed, 26 Jun 2019 20:45:16 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t99f4nvk0-1
+        by userp3020.oracle.com with ESMTP id 2tat7d1gdk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 20:45:07 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QKj6Cb016726;
-        Wed, 26 Jun 2019 20:45:06 GMT
+        Wed, 26 Jun 2019 20:45:16 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QKjDNY016783;
+        Wed, 26 Jun 2019 20:45:13 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 13:45:06 -0700
-Subject: [PATCH 11/15] xfs: refactor xfs_iwalk_grab_ichunk
+        with ESMTP ; Wed, 26 Jun 2019 13:45:12 -0700
+Subject: [PATCH 12/15] xfs: refactor iwalk code to handle walking inobt
+ records
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
-Date:   Wed, 26 Jun 2019 13:45:05 -0700
-Message-ID: <156158190541.495087.14922278008233001620.stgit@magnolia>
+Date:   Wed, 26 Jun 2019 13:45:11 -0700
+Message-ID: <156158191149.495087.698588357855856352.stgit@magnolia>
 In-Reply-To: <156158183697.495087.5371839759804528321.stgit@magnolia>
 References: <156158183697.495087.5371839759804528321.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,146 +71,200 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-In preparation for reusing the iwalk code for the inogrp walking code
-(aka INUMBERS), move the initial inobt lookup and retrieval code out of
-xfs_iwalk_grab_ichunk so that we call the masking code only when we need
-to trim out the inodes that came before the cursor in the inobt record
-(aka BULKSTAT).
+Refactor xfs_iwalk_ag_start and xfs_iwalk_ag so that the bits that are
+particular to bulkstat (trimming the start irec, starting inode
+readahead, and skipping empty groups) can be controlled via flags in the
+iwag structure.
+
+This enables us to add a new function to walk all inobt records which
+will be used for the new INUMBERS implementation in the next patch.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_iwalk.c |   79 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 39 insertions(+), 40 deletions(-)
+ fs/xfs/xfs_iwalk.c |  112 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_iwalk.h |   12 ++++++
+ 2 files changed, 121 insertions(+), 3 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-index e0d13f5c9cf9..6d0fb11f84de 100644
+index 6d0fb11f84de..0cd4885c8780 100644
 --- a/fs/xfs/xfs_iwalk.c
 +++ b/fs/xfs/xfs_iwalk.c
-@@ -98,43 +98,17 @@ xfs_iwalk_ichunk_ra(
- }
+@@ -62,7 +62,18 @@ struct xfs_iwalk_ag {
+ 
+ 	/* Inode walk function and data pointer. */
+ 	xfs_iwalk_fn			iwalk_fn;
++	xfs_inobt_walk_fn		inobt_walk_fn;
+ 	void				*data;
++
++	/*
++	 * Make it look like the inodes up to startino are free so that
++	 * bulkstat can start its inode iteration at the correct place without
++	 * needing to special case everywhere.
++	 */
++	unsigned int			trim_start:1;
++
++	/* Skip empty inobt records? */
++	unsigned int			skip_empty:1;
+ };
  
  /*
-- * Lookup the inode chunk that the given @agino lives in and then get the
-- * record if we found the chunk.  Set the bits in @irec's free mask that
-- * correspond to the inodes before @agino so that we skip them.  This is how we
-- * restart an inode walk that was interrupted in the middle of an inode record.
-+ * Set the bits in @irec's free mask that correspond to the inodes before
-+ * @agino so that we skip them.  This is how we restart an inode walk that was
-+ * interrupted in the middle of an inode record.
-  */
--STATIC int
--xfs_iwalk_grab_ichunk(
--	struct xfs_btree_cur		*cur,	/* btree cursor */
-+STATIC void
-+xfs_iwalk_adjust_start(
- 	xfs_agino_t			agino,	/* starting inode of chunk */
--	int				*icount,/* return # of inodes grabbed */
- 	struct xfs_inobt_rec_incore	*irec)	/* btree record */
- {
- 	int				idx;	/* index into inode chunk */
--	int				stat;
- 	int				i;
--	int				error = 0;
--
--	/* Lookup the inode chunk that this inode lives in */
--	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &stat);
--	if (error)
--		return error;
--	if (!stat) {
--		*icount = 0;
--		return error;
--	}
--
--	/* Get the record, should always work */
--	error = xfs_inobt_get_rec(cur, irec, &stat);
--	if (error)
--		return error;
--	XFS_WANT_CORRUPTED_RETURN(cur->bc_mp, stat == 1);
--
--	/* Check if the record contains the inode in request */
--	if (irec->ir_startino + XFS_INODES_PER_CHUNK <= agino) {
--		*icount = 0;
--		return 0;
--	}
+@@ -171,6 +182,16 @@ xfs_iwalk_ag_recs(
  
- 	idx = agino - irec->ir_startino;
+ 		trace_xfs_iwalk_ag_rec(mp, agno, irec);
  
-@@ -149,8 +123,6 @@ xfs_iwalk_grab_ichunk(
- 	}
- 
- 	irec->ir_free |= xfs_inobt_maskn(0, idx);
--	*icount = irec->ir_count - irec->ir_freecount;
--	return 0;
- }
- 
- /* Allocate memory for a walk. */
-@@ -259,7 +231,7 @@ xfs_iwalk_ag_start(
- {
- 	struct xfs_mount	*mp = iwag->mp;
- 	struct xfs_trans	*tp = iwag->tp;
--	int			icount;
-+	struct xfs_inobt_rec_incore *irec;
- 	int			error;
- 
- 	/* Set up a fresh cursor and empty the inobt cache. */
-@@ -275,15 +247,40 @@ xfs_iwalk_ag_start(
- 	/*
- 	 * Otherwise, we have to grab the inobt record where we left off, stuff
- 	 * the record into our cache, and then see if there are more records.
--	 * We require a lookup cache of at least two elements so that we don't
--	 * have to deal with tearing down the cursor to walk the records.
-+	 * We require a lookup cache of at least two elements so that the
-+	 * caller doesn't have to deal with tearing down the cursor to walk the
-+	 * records.
++		if (iwag->inobt_walk_fn) {
++			error = iwag->inobt_walk_fn(mp, tp, agno, irec,
++					iwag->data);
++			if (error)
++				return error;
++		}
++
++		if (!iwag->iwalk_fn)
++			continue;
++
+ 		for (j = 0; j < XFS_INODES_PER_CHUNK; j++) {
+ 			/* Skip if this inode is free */
+ 			if (XFS_INOBT_MASK(j) & irec->ir_free)
+@@ -280,7 +301,8 @@ xfs_iwalk_ag_start(
+ 	 * If agino fell in the middle of the inode record, make it look like
+ 	 * the inodes up to agino are free so that we don't return them again.
  	 */
--	error = xfs_iwalk_grab_ichunk(*curpp, agino, &icount,
--			&iwag->recs[iwag->nr_recs]);
-+	error = xfs_inobt_lookup(*curpp, agino, XFS_LOOKUP_LE, has_more);
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * If the LE lookup at @agino yields no records, jump ahead to the
-+	 * inobt cursor increment to see if there are more records to process.
-+	 */
-+	if (!*has_more)
-+		goto out_advance;
-+
-+	/* Get the record, should always work */
-+	irec = &iwag->recs[iwag->nr_recs];
-+	error = xfs_inobt_get_rec(*curpp, irec, has_more);
- 	if (error)
- 		return error;
--	if (icount)
--		iwag->nr_recs++;
-+	XFS_WANT_CORRUPTED_RETURN(mp, *has_more == 1);
-+
-+	/*
-+	 * If the LE lookup yielded an inobt record before the cursor position,
-+	 * skip it and see if there's another one after it.
-+	 */
-+	if (irec->ir_startino + XFS_INODES_PER_CHUNK <= agino)
-+		goto out_advance;
-+
-+	/*
-+	 * If agino fell in the middle of the inode record, make it look like
-+	 * the inodes up to agino are free so that we don't return them again.
-+	 */
-+	xfs_iwalk_adjust_start(agino, irec);
+-	xfs_iwalk_adjust_start(agino, irec);
++	if (iwag->trim_start)
++		xfs_iwalk_adjust_start(agino, irec);
  
  	/*
  	 * The prefetch calculation is supposed to give us a large enough inobt
-@@ -291,8 +288,10 @@ xfs_iwalk_ag_start(
- 	 * the loop body can cache a record without having to check for cache
- 	 * space until after it reads an inobt record.
- 	 */
-+	iwag->nr_recs++;
- 	ASSERT(iwag->nr_recs < iwag->sz_recs);
+@@ -373,7 +395,7 @@ xfs_iwalk_ag(
+ 			break;
  
-+out_advance:
- 	return xfs_btree_increment(*curpp, 0, has_more);
- }
+ 		/* No allocated inodes in this chunk; skip it. */
+-		if (irec->ir_freecount == irec->ir_count) {
++		if (iwag->skip_empty && irec->ir_freecount == irec->ir_count) {
+ 			error = xfs_btree_increment(cur, 0, &has_more);
+ 			if (error)
+ 				break;
+@@ -384,7 +406,8 @@ xfs_iwalk_ag(
+ 		 * Start readahead for this inode chunk in anticipation of
+ 		 * walking the inodes.
+ 		 */
+-		xfs_iwalk_ichunk_ra(mp, agno, irec);
++		if (iwag->iwalk_fn)
++			xfs_iwalk_ichunk_ra(mp, agno, irec);
  
+ 		/*
+ 		 * If there's space in the buffer for more records, increment
+@@ -495,6 +518,89 @@ xfs_iwalk(
+ 		.data		= data,
+ 		.startino	= startino,
+ 		.sz_recs	= xfs_iwalk_prefetch(inode_records),
++		.trim_start	= 1,
++		.skip_empty	= 1,
++	};
++	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
++	int			error;
++
++	ASSERT(agno < mp->m_sb.sb_agcount);
++
++	error = xfs_iwalk_alloc(&iwag);
++	if (error)
++		return error;
++
++	for (; agno < mp->m_sb.sb_agcount; agno++) {
++		error = xfs_iwalk_ag(&iwag);
++		if (error)
++			break;
++		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
++	}
++
++	xfs_iwalk_free(&iwag);
++	return error;
++}
++
++/*
++ * Allow callers to cache up to a page's worth of inobt records.  This reflects
++ * the existing inumbers prefetching behavior.  Since the inobt walk does not
++ * itself do anything with the inobt records, we can set a fairly high limit
++ * here.
++ */
++#define MAX_INOBT_WALK_PREFETCH	\
++	(PAGE_SIZE / sizeof(struct xfs_inobt_rec_incore))
++
++/*
++ * Given the number of records that the user wanted, set the number of inobt
++ * records that we buffer in memory.  Set the maximum if @inobt_records == 0.
++ */
++static inline unsigned int
++xfs_inobt_walk_prefetch(
++	unsigned int		inobt_records)
++{
++	/*
++	 * If the caller didn't tell us the number of inobt records they
++	 * wanted, assume the maximum prefetch possible for best performance.
++	 */
++	if (inobt_records == 0)
++		inobt_records = MAX_INOBT_WALK_PREFETCH;
++
++	/*
++	 * Allocate enough space to prefetch at least two inobt records so that
++	 * we can cache both the record where the iwalk started and the next
++	 * record.  This simplifies the AG inode walk loop setup code.
++	 */
++	inobt_records = max(inobt_records, 2U);
++
++	/*
++	 * Cap prefetch at that maximum so that we don't use an absurd amount
++	 * of memory.
++	 */
++	return min_t(unsigned int, inobt_records, MAX_INOBT_WALK_PREFETCH);
++}
++
++/*
++ * Walk all inode btree records in the filesystem starting from @startino.  The
++ * @inobt_walk_fn will be called for each btree record, being passed the incore
++ * record and @data.  @max_prefetch controls how many inobt records we try to
++ * cache ahead of time.
++ */
++int
++xfs_inobt_walk(
++	struct xfs_mount	*mp,
++	struct xfs_trans	*tp,
++	xfs_ino_t		startino,
++	xfs_inobt_walk_fn	inobt_walk_fn,
++	unsigned int		inobt_records,
++	void			*data)
++{
++	struct xfs_iwalk_ag	iwag = {
++		.mp		= mp,
++		.tp		= tp,
++		.inobt_walk_fn	= inobt_walk_fn,
++		.data		= data,
++		.startino	= startino,
++		.sz_recs	= xfs_inobt_walk_prefetch(inobt_records),
+ 	};
+ 	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
+ 	int			error;
+diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
+index 7728dfd618a4..94fad060b3e9 100644
+--- a/fs/xfs/xfs_iwalk.h
++++ b/fs/xfs/xfs_iwalk.h
+@@ -16,4 +16,16 @@ typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
+ int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
+ 		xfs_iwalk_fn iwalk_fn, unsigned int inode_records, void *data);
+ 
++/* Walk all inode btree records in the filesystem starting from @startino. */
++typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
++				 xfs_agnumber_t agno,
++				 const struct xfs_inobt_rec_incore *irec,
++				 void *data);
++/* Return value (for xfs_inobt_walk_fn) that aborts the walk immediately. */
++#define XFS_INOBT_WALK_ABORT	(XFS_IWALK_ABORT)
++
++int xfs_inobt_walk(struct xfs_mount *mp, struct xfs_trans *tp,
++		xfs_ino_t startino, xfs_inobt_walk_fn inobt_walk_fn,
++		unsigned int inobt_records, void *data);
++
+ #endif /* __XFS_IWALK_H__ */
 
