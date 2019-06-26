@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B9655E91
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 04:33:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F8955E95
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 04:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFZCdu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 22:33:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58204 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfFZCdq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 22:33:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2Stk9116586
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:44 GMT
+        id S1726442AbfFZCdx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 22:33:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53562 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfFZCdw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 22:33:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2TXRp026689
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=7zhpIODEEv8qOAC5Apa/NANkySKQwuE1Y3ev3GJ07jc=;
- b=cLgkEebbef1MGrQN6l5OPo5LV8+JhXBgR/bHYW+Wj7NI0EYvIWSRxs4NCWb1jy+YCb2m
- QArY/fGGaW3VCKpGBeQFuQzjDmlRRigoNzHDR14OEYLqEZV8DIVQp10DNQTU4YpGjdBa
- Tg3SxtwimmEOTsapiNn/rl1i1S1o6DZvEzpxamhKqWJGsaQj4pNF/W4ComKMprsA1iyH
- v1DYSOlddg0/3jILOcTCFAxCjZXxbQo2zeGLFdKODPxweImDm1SMCUu9ui/8sxhvKjOC
- 3fmH8IaBsZ+sb3HTQbDsx81Y5CItceGYQRJGwFEK5N3eZacoEj1QQYEeHS4im0Yr/H/5 zw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brt7mnq-1
+ bh=aSh6dFDbnzaQKs6TqoLSFMOF7+ia3Oc9PxKNXfZ4a9c=;
+ b=bNiOMm9Vy0w/MtfQStpen5fR9mDhmiK4+6dC1SxY89aLAQreCALjM3IBZSYOvmsPKxmE
+ 2rYCojxikusNQhOeluZVrghBwM/hzHKC0M95t6lxnRKhs9s2+534VYjWrrr2uV0QQiOv
+ K6uwBNhvd9EBbSZq8+IyuAgp2EHrXaQW00gK34k0Z66x+cbx7VoFYPdvWft+VTlB1xXr
+ G5TzpMIDd68IoCAo26O2LbYZqzZL8v+e+gSKCxeIuHH3zIpiGWQpHPgwdy4GiRxdSrE8
+ uv3EFZHaVeKreF9pv6DZ3r1/aGZ4g6DWucFrHX9Cjhl0FJLf40b30+hMQ1Keczr+hI0f ZA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pqjmw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2WYQA021227
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f4719w-1
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2XVHZ152332
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t9accehnk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:44 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5Q2XhZB020665
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:43 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:50 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5Q2XnfE012434
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 02:33:49 GMT
 Received: from localhost (/10.159.230.235)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 19:33:43 -0700
-Subject: [PATCH 1/3] xfs: refactor setflags to use setattr code directly
+        with ESMTP ; Tue, 25 Jun 2019 19:33:49 -0700
+Subject: [PATCH 2/3] xfs: clean up xfs_merge_ioc_xflags
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 25 Jun 2019 19:33:42 -0700
-Message-ID: <156151642236.2283767.1842673695620969733.stgit@magnolia>
+Date:   Tue, 25 Jun 2019 19:33:48 -0700
+Message-ID: <156151642843.2283767.727129075193073597.stgit@magnolia>
 In-Reply-To: <156151641630.2283767.9637137346807567604.stgit@magnolia>
 References: <156151641630.2283767.9637137346807567604.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +54,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=697
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906260028
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=754 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906260027
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,87 +70,75 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Refactor the SETFLAGS implementation to use the SETXATTR code directly
-instead of partially constructing a struct fsxattr and calling bits and
-pieces of the setxattr code.  This reduces code size with no functional
-change.
+Clean up the calling convention since we're editing the fsxattr struct
+anyway.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_ioctl.c |   48 +++---------------------------------------------
- 1 file changed, 3 insertions(+), 45 deletions(-)
+ fs/xfs/xfs_ioctl.c |   32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 723550c8a2e4..7a9076867a30 100644
+index 7a9076867a30..c28f4263bac2 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -1491,11 +1491,8 @@ xfs_ioc_setxflags(
- 	struct file		*filp,
- 	void			__user *arg)
- {
--	struct xfs_trans	*tp;
- 	struct fsxattr		fa;
--	struct fsxattr		old_fa;
- 	unsigned int		flags;
--	int			join_flags = 0;
- 	int			error;
+@@ -829,35 +829,31 @@ xfs_ioc_ag_geometry(
+  * Linux extended inode flags interface.
+  */
  
- 	if (copy_from_user(&flags, arg, sizeof(flags)))
-@@ -1506,52 +1503,13 @@ xfs_ioc_setxflags(
- 		      FS_SYNC_FL))
+-STATIC unsigned int
++static inline void
+ xfs_merge_ioc_xflags(
+-	unsigned int	flags,
+-	unsigned int	start)
++	struct fsxattr	*fa,
++	unsigned int	flags)
+ {
+-	unsigned int	xflags = start;
+-
+ 	if (flags & FS_IMMUTABLE_FL)
+-		xflags |= FS_XFLAG_IMMUTABLE;
++		fa->fsx_xflags |= FS_XFLAG_IMMUTABLE;
+ 	else
+-		xflags &= ~FS_XFLAG_IMMUTABLE;
++		fa->fsx_xflags &= ~FS_XFLAG_IMMUTABLE;
+ 	if (flags & FS_APPEND_FL)
+-		xflags |= FS_XFLAG_APPEND;
++		fa->fsx_xflags |= FS_XFLAG_APPEND;
+ 	else
+-		xflags &= ~FS_XFLAG_APPEND;
++		fa->fsx_xflags &= ~FS_XFLAG_APPEND;
+ 	if (flags & FS_SYNC_FL)
+-		xflags |= FS_XFLAG_SYNC;
++		fa->fsx_xflags |= FS_XFLAG_SYNC;
+ 	else
+-		xflags &= ~FS_XFLAG_SYNC;
++		fa->fsx_xflags &= ~FS_XFLAG_SYNC;
+ 	if (flags & FS_NOATIME_FL)
+-		xflags |= FS_XFLAG_NOATIME;
++		fa->fsx_xflags |= FS_XFLAG_NOATIME;
+ 	else
+-		xflags &= ~FS_XFLAG_NOATIME;
++		fa->fsx_xflags &= ~FS_XFLAG_NOATIME;
+ 	if (flags & FS_NODUMP_FL)
+-		xflags |= FS_XFLAG_NODUMP;
++		fa->fsx_xflags |= FS_XFLAG_NODUMP;
+ 	else
+-		xflags &= ~FS_XFLAG_NODUMP;
+-
+-	return xflags;
++		fa->fsx_xflags &= ~FS_XFLAG_NODUMP;
+ }
+ 
+ STATIC unsigned int
+@@ -1504,7 +1500,7 @@ xfs_ioc_setxflags(
  		return -EOPNOTSUPP;
  
--	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, xfs_ip2xflags(ip));
-+	xfs_fill_fsxattr(ip, false, &fa);
-+	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, fa.fsx_xflags);
+ 	xfs_fill_fsxattr(ip, false, &fa);
+-	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, fa.fsx_xflags);
++	xfs_merge_ioc_xflags(&fa, flags);
  
  	error = mnt_want_write_file(filp);
  	if (error)
- 		return error;
--
--	error = xfs_ioctl_setattr_drain_writes(ip, &fa, &join_flags);
--	if (error) {
--		xfs_iunlock(ip, join_flags);
--		goto out_drop_write;
--	}
--
--	/*
--	 * Changing DAX config may require inode locking for mapping
--	 * invalidation. These need to be held all the way to transaction commit
--	 * or cancel time, so need to be passed through to
--	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
--	 * appropriately.
--	 */
--	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
--	if (error) {
--		xfs_iunlock(ip, join_flags);
--		goto out_drop_write;
--	}
--
--	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
--	if (IS_ERR(tp)) {
--		error = PTR_ERR(tp);
--		goto out_drop_write;
--	}
--
--	xfs_fill_fsxattr(ip, false, &old_fa);
--	error = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, &fa);
--	if (error) {
--		xfs_trans_cancel(tp);
--		goto out_drop_write;
--	}
--
--	error = xfs_ioctl_setattr_xflags(tp, ip, &fa);
--	if (error) {
--		xfs_trans_cancel(tp);
--		goto out_drop_write;
--	}
--
--	error = xfs_trans_commit(tp);
--out_drop_write:
-+	error = xfs_ioctl_setattr(ip, &fa);
- 	mnt_drop_write_file(filp);
- 	return error;
- }
 
