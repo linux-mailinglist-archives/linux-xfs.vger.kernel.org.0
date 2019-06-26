@@ -2,149 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8838573A5
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 23:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0FAE5741F
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 00:10:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfFZVaq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 17:30:46 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:33031 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZVaq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 17:30:46 -0400
-Received: by mail-yb1-f194.google.com with SMTP id n3so219219ybn.0
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 14:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=editshare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n89jGO3NmHHaYGYEUK0S3kZnLyat/XxScY2KIvg7qAU=;
-        b=Z4Vx4Q1qlV9wFWKwV3DDTlZKvOge8sbi3dJ5ecTrTZWFJiWs4983LXATsHdzIMUD2p
-         kUZ/yqlfxCGCOJEU8UcBcOlfJD5YH0595+agjv55HWO5V95BCGI39CHTloAZYN580rQh
-         8dwCcRvHgtt2ZNkiIBeT943O+0TjfwD6yu7YS2uPerFVrZr14HfK5ztZJn3EcSzD/RpB
-         IVSW48g80NDHl/r09YcM+Ffko9GtNbq/Il0QYo5Ps4CJtRItcjUv6vT6rV5nmqRgu3VF
-         G45QacPtZvorm1ySJu6nBnTmYIkMrlz5z29c7ciaJf3AP/b4xMlyi+vMiX7oar0L+gUS
-         hEWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n89jGO3NmHHaYGYEUK0S3kZnLyat/XxScY2KIvg7qAU=;
-        b=mtNbnTrTBVFbZzZwZvZmVeIQH1/1hIQ2u9IVyhzERvPs+sRcnCEOAcTGQb9J0zDtQp
-         cska8ZrxoU7wNqZv0S3TYFqVsCrsDIMpUi0IkWb2kf1vSu1YCIeqwb6xU8InmgPr7/ES
-         2yq8Q1Xsntddz3M2W0039wpiU5TLr2E4lAaoJloOv3wMPGDyT3cHJ0cxWJ2+DGmuhkfj
-         wZwEpc9JvHiAmc/f4pFI2xcEMPZWCZmfOrGSdyb/hsG8sanOLNsiM824YvvfTCxKHqrs
-         Mti/JKVWJc5J4m8hWHRANHoJqu0YPJfoYhpT2cOT9/WddtKPJec/sUC5VgtKR5Fjjwee
-         Yk3A==
-X-Gm-Message-State: APjAAAUjDUBQAMO0u1NBL91NA3vIFu0/cVHR6U/PKWTeX8GNKeTBk4zX
-        e3tAXeQPLqMIRExKrB2NhYrscEjNozPT5B6EIFivuKUCqdOP2w==
-X-Google-Smtp-Source: APXvYqwMURzk6263hm52HWe6J1ceAmE3OApcwoGSFkx+GZr58B/09UN5+nWnZiTh9cPaOwSJrbfdNvUxSecp2oXfFnA=
-X-Received: by 2002:a25:df92:: with SMTP id w140mr390371ybg.71.1561584644842;
- Wed, 26 Jun 2019 14:30:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAFVd4NsBRm_pbySuSc4U=a=G4wiowZ3gFBooLEQZGZJe9V748g@mail.gmail.com>
- <CAJCQCtRD2g1c5uyDurLbt7tedPM8g6f1-74ECAW9cA1Do1yNBQ@mail.gmail.com>
-In-Reply-To: <CAJCQCtRD2g1c5uyDurLbt7tedPM8g6f1-74ECAW9cA1Do1yNBQ@mail.gmail.com>
-From:   Rich Otero <rotero@editshare.com>
-Date:   Wed, 26 Jun 2019 17:30:33 -0400
-Message-ID: <CAFVd4NszdvQ0P4KPo9pRqtRRJxebhtMBqGVAZTmGAPBWe25nFg@mail.gmail.com>
+        id S1726362AbfFZWKw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 18:10:52 -0400
+Received: from sandeen.net ([63.231.237.45]:42134 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfFZWKw (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:10:52 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 626C8479AD9;
+        Wed, 26 Jun 2019 17:10:39 -0500 (CDT)
 Subject: Re: XFS Repair Error
-To:     Chris Murphy <lists@colorremedies.com>
+To:     Rich Otero <rotero@editshare.com>,
+        Chris Murphy <lists@colorremedies.com>
 Cc:     xfs list <linux-xfs@vger.kernel.org>,
         Steve Alves <steve.alves@editshare.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <CAFVd4NsBRm_pbySuSc4U=a=G4wiowZ3gFBooLEQZGZJe9V748g@mail.gmail.com>
+ <CAJCQCtRD2g1c5uyDurLbt7tedPM8g6f1-74ECAW9cA1Do1yNBQ@mail.gmail.com>
+ <CAFVd4NszdvQ0P4KPo9pRqtRRJxebhtMBqGVAZTmGAPBWe25nFg@mail.gmail.com>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
+ nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
+ WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
+ vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
+ ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
+ sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
+ BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
+ gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
+ LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
+ dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
+ bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
+ aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
+ UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
+ EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
+ sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
+ 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
+ gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
+ 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
+ 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
+ WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
+ Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
+ X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
+ SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
+ 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
+ GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
+ 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
+ Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
+ ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
+ TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
+ gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
+ AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
+ YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
+ mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
+ LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
+ LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
+ MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
+ JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
+ Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
+ m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
+ fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
+Message-ID: <660f9958-b10a-3bf4-6910-87a811b2a7c3@sandeen.net>
+Date:   Wed, 26 Jun 2019 17:10:49 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CAFVd4NszdvQ0P4KPo9pRqtRRJxebhtMBqGVAZTmGAPBWe25nFg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> This applies
-> http://xfs.org/index.php/XFS_FAQ#Q:_What_information_should_I_include_when_reporting_a_problem.3F
+On 6/26/19 4:30 PM, Rich Otero wrote:
+>> This applies
+>> http://xfs.org/index.php/XFS_FAQ#Q:_What_information_should_I_include_when_reporting_a_problem.3F
+> 
+> kernel version: 3.12.17
 
-kernel version: 3.12.17
-xfsprogs version: 3.1.7
-number of CPUs: 12
-contents of /proc/meminfo: 32 GiB RAM, 8 GiB swap, memory pressure on
-this server is generally very low
-contents of /proc/mounts: /dev/sdb1 /RAIDS/RAID_1 xfs
-rw,noatime,attr2,inode64,logbsize=256k,sunit=512,swidth=2048,usrquota,grpquota
-0 0
-contents of /proc/partitions: 8       17 54690576384 sdb1
-RAID layout: /dev/sdb is a 16-disk RAID-6 on a Broadcom MegaRAID
-9361-series card
-LVM configuration: none
-type of disks you are using: WDC RE 4 TB SAS (WD4001FYYG-01SL3)
-write cache status of drives: MegaRAID card has writeback enabled for this RAID
-size of BBWC and mode it is running in: unknown
-xfs_info output on the filesystem in question: no longer available
-dmesg output showing all error messages and stack traces: no longer available
+~6 years old :(
 
-> Also, are the disk failures fixed? Is the RAID happy? I'm very
-> skeptical of writing anything, including repairs, let alone rw
-> mounting, a file system that's one a busted or questionably working
-> storage stack. The storage stack needs to be in working order first.
-> Is it?
+> xfsprogs version: 3.1.7
 
-This particular server is used for development purposes and the data
-stored on it is replicated on other servers, so the integrity of the
-data is not very important. We have used XFS in our storage products
-for 15 years, mostly on RAID-5 and RAID-6 using LSI 3ware and Broadcom
-MegaRAID cards. It is not uncommon for disks to fail and be replaced
-and for the RAID to rebuild while the XFS is still in use, and we very
-rarely experience XFS problems during or after the rebuild. In this
-particular case, we suspected a malfunctioning RAID card and replaced
-it, and we are replacing some faulty disks.
+8 years old :(  So, bug reports are not really useful here ;)
 
-> OK why -L ? Was there a previous mount attempt and if so when kernel
-> errors? Was there a previous repair attempt without -L? -L is a heavy
-> hammer that shouldn't be needed unless the log is damaged and if the
-> log is damaged or otherwise can't be replayed, you should get a kernel
-> message about that.
+the filesystem seems to be a disaster, probably due to bad disks - xfs_repair can't repair bad hardware, of course.
 
-Previously, mounting the XFS failed because the "structure must be
-cleaned." That led to the first attempt at xfs_repair without -L,
-which ended in an error complaining that the journal needed to be
-replayed. But since I couldn't mount, that was impossible, so the
-second xfs_repair attempt was with -L.
+current xfs_repair completes for me without error, after spitting out over 450,000 lines of detected corruption issues.
 
-I needed to make this server functional again quickly, and since I
-didn't care about losing the data, I simply reformatted the RAID
-(`mkfs.xfs -f`), so I won't be able to reproduce the xfs_repair error.
-In my eight years using XFS, I've never seen that error before, so I
-thought it would be interesting to report to the list and see what I
-could learn about it.
+so my suggestions going forward would be:
 
-Regards,
-Rich Otero
-EditShare
-rotero@editshare.com
-617-782-0479
+1) fix storage
+2) get newer admin tools for next time
 
-On Wed, Jun 26, 2019 at 5:04 PM Chris Murphy <lists@colorremedies.com> wrote:
->
-> On Wed, Jun 26, 2019 at 2:32 PM Rich Otero <rotero@editshare.com> wrote:
-> >
-> > I have an XFS filesystem of approximately 56 TB on a RAID that has
-> > been experiencing some disk failures. The disk problems seem to have
-> > led to filesystem corruption, so I attempted to repair the filesystem
->
-> This applies
-> http://xfs.org/index.php/XFS_FAQ#Q:_What_information_should_I_include_when_reporting_a_problem.3F
->
-> Also, are the disk failures fixed? Is the RAID happy? I'm very
-> skeptical of writing anything, including repairs, let alone rw
-> mounting, a file system that's one a busted or questionably working
-> storage stack. The storage stack needs to be in working order first.
-> Is it?
->
-> > with `xfs_repair -L <device>`. Xfs_repair finished with a message
-> > stating that an error occurred and to report the bug.
->
-> OK why -L ? Was there a previous mount attempt and if so when kernel
-> errors? Was there a previous repair attempt without -L? -L is a heavy
-> hammer that shouldn't be needed unless the log is damaged and if the
-> log is damaged or otherwise can't be replayed, you should get a kernel
-> message about that.
->
->
-> --
-> Chris Murphy
+I appreciate the report, but not much to do w/ such an old version (and it seems already fixed in any case).
+
+-Eric
