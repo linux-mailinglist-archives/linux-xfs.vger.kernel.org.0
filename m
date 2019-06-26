@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7257D55F09
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 04:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA8E55F0B
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 04:37:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfFZChw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Jun 2019 22:37:52 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59924 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfFZChv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 22:37:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2YRsP120343;
-        Wed, 26 Jun 2019 02:37:49 GMT
+        id S1726766AbfFZCh4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Jun 2019 22:37:56 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55216 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbfFZCh4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Jun 2019 22:37:56 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2YDJw030118;
+        Wed, 26 Jun 2019 02:37:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=IAl8rOtCoRvugR5yWBakd4RibV0kSkpBr5Q69v0mxZM=;
- b=wMXf/5JQ2L+bK6P7hGq6ehfJvwp8cHkYZt+p6fWVF+vtfSCTd9tcScNPT5LhLa7DIAIr
- ZyMajQwLJM48BEB3k7Vq/Gzc+1LCMKizhjSkQE36NH/I/Z12cMVNGMf727PZU9w32gLK
- ebXyrhFmd391BqtiKYv8n8S9BkGnR6b1p294twi6fkXTb0jGDxnRWn+RYEzcZqL+3o5c
- A+41Kapjw/OkmMPQ7KN6+6cbxkSZGM+ZFNpXn7wQHoE1GvFWx4G5dsHX8zF52NdPVhUF
- SbD5wL5A7bB+h7MpzUDrgcElp17a/lHlItIXdskKUo0tFgS8U/xZzSI6TqO19kLC+/xr ZA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brt7mx8-1
+ bh=+vI36jMV6KI6wFDlqeGFdZtO1Y+Mm/yuNb4xLP7i4hQ=;
+ b=sG/nOI7Z0ug/7+/3DP5o6LSxpumP8+fjGUymPOwzD5MWCz4RaAk9D295g5AhSwEBYxAT
+ A4IeYK1Pl+WyRLhiCBRau7Ia/MJaW/7QibFtAwXegxdoU50zOViKTKqB0crLxKO2J59L
+ U1IsBy9vb3fP4u29nZWB2Y7kG0YeP+7MVb7pK6SLVbJbh/a3bcWUZeSyP3mHvMrs/zFr
+ SHcP17RQqUIGmWtLtsS6fHj8Tl4X5cJCziXlAT+nf2X7jVezYd0J27ikdZBXXzeNZNAU
+ loPAbGKC643NFU6YepzF7HsBZr2ofUTp3eTDCK2vFB1OyWPNxFC/p1C4ghHAB6svK/T6 dw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pqjww-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:37:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2bbqt029345;
-        Wed, 26 Jun 2019 02:37:48 GMT
+        Wed, 26 Jun 2019 02:37:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2bb75088795;
+        Wed, 26 Jun 2019 02:37:54 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uh3u8-1
+        by userp3020.oracle.com with ESMTP id 2tat7cjq8x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:37:48 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5Q2blSv014194;
-        Wed, 26 Jun 2019 02:37:47 GMT
+        Wed, 26 Jun 2019 02:37:53 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5Q2brTG014211;
+        Wed, 26 Jun 2019 02:37:53 GMT
 Received: from localhost (/10.159.230.235)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 19:37:46 -0700
-Subject: [PATCH 09/10] xfs_db: add a function to compute btree geometry
+        with ESMTP ; Tue, 25 Jun 2019 19:37:53 -0700
+Subject: [PATCH 10/10] libxfs: move topology declarations into separate
+ header
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 25 Jun 2019 19:37:46 -0700
-Message-ID: <156151666609.2286979.15035390055843235461.stgit@magnolia>
+Date:   Tue, 25 Jun 2019 19:37:52 -0700
+Message-ID: <156151667233.2286979.9157937825247227178.stgit@magnolia>
 In-Reply-To: <156151660523.2286979.13694849827562044045.stgit@magnolia>
 References: <156151660523.2286979.13694849827562044045.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906260029
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906260028
@@ -70,379 +71,141 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add a new command to xfs_db that uses a btree type and a record count
-to report the best and worst case height and level size.  This can be
-used to estimate how overhead a metadata index will add to a filesystem.
+The topology functions live in libfrog now, which means their
+declarations don't belong in libxcmd.h.  Create new header file for
+them.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- db/Makefile              |    2 
- db/btheight.c            |  307 ++++++++++++++++++++++++++++++++++++++++++++++
- db/command.c             |    1 
- db/command.h             |    1 
- libxfs/libxfs_api_defs.h |    2 
- 5 files changed, 312 insertions(+), 1 deletion(-)
- create mode 100644 db/btheight.c
+ include/libxcmd.h  |   31 -------------------------------
+ include/topology.h |   39 +++++++++++++++++++++++++++++++++++++++
+ libfrog/topology.c |    1 +
+ mkfs/xfs_mkfs.c    |    2 +-
+ repair/sb.c        |    1 +
+ 5 files changed, 42 insertions(+), 32 deletions(-)
+ create mode 100644 include/topology.h
 
 
-diff --git a/db/Makefile b/db/Makefile
-index 0941b32e..ed9f56c2 100644
---- a/db/Makefile
-+++ b/db/Makefile
-@@ -14,7 +14,7 @@ HFILES = addr.h agf.h agfl.h agi.h attr.h attrshort.h bit.h block.h bmap.h \
- 	io.h logformat.h malloc.h metadump.h output.h print.h quit.h sb.h \
- 	sig.h strvec.h text.h type.h write.h attrset.h symlink.h fsmap.h \
- 	fuzz.h
--CFILES = $(HFILES:.h=.c) btdump.c convert.c info.c
-+CFILES = $(HFILES:.h=.c) btdump.c btheight.c convert.c info.c
- LSRCFILES = xfs_admin.sh xfs_ncheck.sh xfs_metadump.sh
+diff --git a/include/libxcmd.h b/include/libxcmd.h
+index 20e5d834..7b889b0a 100644
+--- a/include/libxcmd.h
++++ b/include/libxcmd.h
+@@ -10,35 +10,4 @@
+ #include "libxfs.h"
+ #include <sys/time.h>
  
- LLDLIBS	= $(LIBXFS) $(LIBXLOG) $(LIBFROG) $(LIBUUID) $(LIBRT) $(LIBPTHREAD)
-diff --git a/db/btheight.c b/db/btheight.c
+-/*
+- * Device topology information.
+- */
+-typedef struct fs_topology {
+-	int	dsunit;		/* stripe unit - data subvolume */
+-	int	dswidth;	/* stripe width - data subvolume */
+-	int	rtswidth;	/* stripe width - rt subvolume */
+-	int	lsectorsize;	/* logical sector size &*/
+-	int	psectorsize;	/* physical sector size */
+-} fs_topology_t;
+-
+-extern void
+-get_topology(
+-	libxfs_init_t		*xi,
+-	struct fs_topology	*ft,
+-	int			force_overwrite);
+-
+-extern void
+-calc_default_ag_geometry(
+-	int		blocklog,
+-	uint64_t	dblocks,
+-	int		multidisk,
+-	uint64_t	*agsize,
+-	uint64_t	*agcount);
+-
+-extern int
+-check_overwrite(
+-	const char	*device);
+-
+-
+-
+ #endif	/* __LIBXCMD_H__ */
+diff --git a/include/topology.h b/include/topology.h
 new file mode 100644
-index 00000000..84ce6af3
+index 00000000..61ede23a
 --- /dev/null
-+++ b/db/btheight.c
-@@ -0,0 +1,307 @@
-+// SPDX-License-Identifier: GPL-2.0+
++++ b/include/topology.h
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2019 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <darrick.wong@oracle.com>
++ * Copyright (c) 2000-2005 Silicon Graphics, Inc.
++ * All Rights Reserved.
 + */
-+#include "libxfs.h"
-+#include "command.h"
-+#include "output.h"
-+#include "init.h"
-+#include "io.h"
-+#include "type.h"
-+#include "input.h"
-+#include "convert.h"
 +
-+static int refc_maxrecs(struct xfs_mount *mp, int blocklen, int leaf)
-+{
-+	return libxfs_refcountbt_maxrecs(blocklen, leaf != 0);
-+}
++#ifndef __TOPOLOGY_H__
++#define __TOPOLOGY_H__
 +
-+static int rmap_maxrecs(struct xfs_mount *mp, int blocklen, int leaf)
-+{
-+	return libxfs_rmapbt_maxrecs(blocklen, leaf);
-+}
++/*
++ * Device topology information.
++ */
++typedef struct fs_topology {
++	int	dsunit;		/* stripe unit - data subvolume */
++	int	dswidth;	/* stripe width - data subvolume */
++	int	rtswidth;	/* stripe width - rt subvolume */
++	int	lsectorsize;	/* logical sector size &*/
++	int	psectorsize;	/* physical sector size */
++} fs_topology_t;
 +
-+struct btmap {
-+	const char	*tag;
-+	int		(*maxrecs)(struct xfs_mount *mp, int blocklen,
-+				   int leaf);
-+} maps[] = {
-+	{"bnobt", libxfs_allocbt_maxrecs},
-+	{"cntbt", libxfs_allocbt_maxrecs},
-+	{"inobt", libxfs_inobt_maxrecs},
-+	{"finobt", libxfs_inobt_maxrecs},
-+	{"bmapbt", libxfs_bmbt_maxrecs},
-+	{"refcountbt", refc_maxrecs},
-+	{"rmapbt", rmap_maxrecs},
-+};
++extern void
++get_topology(
++	libxfs_init_t		*xi,
++	struct fs_topology	*ft,
++	int			force_overwrite);
 +
-+static void
-+btheight_help(void)
-+{
-+	struct btmap	*m;
-+	int		i;
++extern void
++calc_default_ag_geometry(
++	int		blocklog,
++	uint64_t	dblocks,
++	int		multidisk,
++	uint64_t	*agsize,
++	uint64_t	*agcount);
 +
-+	dbprintf(_(
-+"\n"
-+" For a given number of btree records and a btree type, report the number of\n"
-+" records and blocks for each level of the btree, and the total btree size.\n"
-+" The btree type must be given after the options.  A raw btree geometry can\n"
-+" be provided in the format \"record_bytes:key_bytes:ptr_bytes:header_type\"\n"
-+" where header_type is one of \"short\", \"long\", \"shortcrc\", or \"longcrc\".\n"
-+"\n"
-+" Options:\n"
-+"   -b -- Override the btree block size.\n"
-+"   -n -- Number of records we want to store.\n"
-+"   -w max -- Show only the best case scenario.\n"
-+"   -w min -- Show only the worst case scenario.\n"
-+"\n"
-+" Supported btree types:\n"
-+"   "
-+));
-+	for (i = 0, m = maps; i < ARRAY_SIZE(maps); i++, m++)
-+		printf("%s ", m->tag);
-+	printf("\n");
-+}
++extern int
++check_overwrite(
++	const char	*device);
 +
-+static void
-+calc_height(
-+	unsigned long long	nr_records,
-+	uint			*records_per_block)
-+{
-+	unsigned int		level = 0;
-+	unsigned long long	total_blocks = 0;
-+	unsigned long long	blocks;
-+	char			*levels_suffix = "s";
-+	char			*totblocks_suffix = "s";
-+
-+	while (nr_records) {
-+		unsigned int	level_rpb = records_per_block[level != 0];
-+		char		*recs_suffix = "s";
-+		char		*blocks_suffix = "s";
-+
-+		blocks = (nr_records + level_rpb - 1) / level_rpb;
-+
-+		if (nr_records == 1)
-+			recs_suffix = "";
-+		if (blocks == 1)
-+			blocks_suffix = "";
-+
-+		printf(_("level %u: %llu record%s, %llu block%s\n"),
-+				level, nr_records, recs_suffix, blocks,
-+				blocks_suffix);
-+
-+		total_blocks += blocks;
-+		nr_records = blocks == 1 ? 0 : blocks;
-+		level++;
-+	}
-+
-+	if (level == 1)
-+		levels_suffix = "";
-+	if (total_blocks == 1)
-+		totblocks_suffix = "";
-+
-+	printf(_("%u level%s, %llu block%s total\n"), level, levels_suffix,
-+			total_blocks, totblocks_suffix);
-+}
-+
-+static int
-+construct_records_per_block(
-+	char		*tag,
-+	int		blocksize,
-+	unsigned int	*records_per_block)
-+{
-+	char		*toktag;
-+	struct btmap	*m;
-+	unsigned int	record_size, key_size, ptr_size;
-+	char		*p;
-+	int		i, ret;
-+
-+	for (i = 0, m = maps; i < ARRAY_SIZE(maps); i++, m++) {
-+		if (!strcmp(m->tag, tag)) {
-+			records_per_block[0] = m->maxrecs(mp, blocksize, 1);
-+			records_per_block[1] = m->maxrecs(mp, blocksize, 0);
-+			return 0;
-+		}
-+	}
-+
-+	toktag = strdup(tag);
-+	ret = -1;
-+
-+	p = strtok(toktag, ":");
-+	if (!p) {
-+		fprintf(stderr, _("%s: record size not found.\n"), tag);
-+		goto out;
-+	}
-+	record_size = cvt_u16(p, 0);
-+	if (errno) {
-+		perror(p);
-+		goto out;
-+	}
-+
-+	p = strtok(NULL, ":");
-+	if (!p) {
-+		fprintf(stderr, _("%s: key size not found.\n"), tag);
-+		goto out;
-+	}
-+	key_size = cvt_u16(p, 0);
-+	if (errno) {
-+		perror(p);
-+		goto out;
-+	}
-+
-+	p = strtok(NULL, ":");
-+	if (!p) {
-+		fprintf(stderr, _("%s: pointer size not found.\n"), tag);
-+		goto out;
-+	}
-+	ptr_size = cvt_u16(p, 0);
-+	if (errno) {
-+		perror(p);
-+		goto out;
-+	}
-+
-+	p = strtok(NULL, ":");
-+	if (!p) {
-+		fprintf(stderr, _("%s: header type not found.\n"), tag);
-+		goto out;
-+	}
-+	if (!strcmp(p, "short"))
-+		blocksize -= XFS_BTREE_SBLOCK_LEN;
-+	else if (!strcmp(p, "shortcrc"))
-+		blocksize -= XFS_BTREE_SBLOCK_CRC_LEN;
-+	else if (!strcmp(p, "long"))
-+		blocksize -= XFS_BTREE_LBLOCK_LEN;
-+	else if (!strcmp(p, "longcrc"))
-+		blocksize -= XFS_BTREE_LBLOCK_CRC_LEN;
-+	else {
-+		fprintf(stderr, _("%s: unrecognized btree header type."),
-+				p);
-+		goto out;
-+	}
-+
-+	p = strtok(NULL, ":");
-+	if (p) {
-+		fprintf(stderr,
-+			_("%s: unrecognized raw btree geometry."),
-+				tag);
-+		goto out;
-+	}
-+
-+	records_per_block[0] = blocksize / record_size;
-+	records_per_block[1] = blocksize / (key_size + ptr_size);
-+	ret = 0;
-+out:
-+	free(toktag);
-+	return ret;
-+}
-+
-+#define REPORT_DEFAULT	(-1U)
-+#define REPORT_MAX	(1 << 0)
-+#define REPORT_MIN	(1 << 1)
-+
-+static void
-+report(
-+	char			*tag,
-+	unsigned int		report_what,
-+	unsigned long long	nr_records,
-+	unsigned int		blocksize)
-+{
-+	unsigned int		records_per_block[2];
-+	int			ret;
-+
-+	ret = construct_records_per_block(tag, blocksize, records_per_block);
-+	if (ret) {
-+		printf(_("%s: Unable to determine records per block.\n"),
-+				tag);
-+		return;
-+	}
-+
-+	if (report_what & REPORT_MAX) {
-+		printf(
-+_("%s: best case per %u-byte block: %u records (leaf) / %u keyptrs (node)\n"),
-+				tag, blocksize, records_per_block[0],
-+				records_per_block[1]);
-+
-+		calc_height(nr_records, records_per_block);
-+	}
-+
-+	if (report_what & REPORT_MIN) {
-+		records_per_block[0] /= 2;
-+		records_per_block[1] /= 2;
-+
-+		printf(
-+_("%s: worst case per %u-byte block: %u records (leaf) / %u keyptrs (node)\n"),
-+				tag, blocksize, records_per_block[0],
-+				records_per_block[1]);
-+
-+		calc_height(nr_records, records_per_block);
-+	}
-+}
-+
-+static int
-+btheight_f(
-+	int		argc,
-+	char		**argv)
-+{
-+	long long	blocksize = mp->m_sb.sb_blocksize;
-+	uint64_t	nr_records = 0;
-+	int		report_what = REPORT_DEFAULT;
-+	int		i, c;
-+
-+	while ((c = getopt(argc, argv, "b:n:w:")) != -1) {
-+		switch (c) {
-+		case 'b':
-+			errno = 0;
-+			blocksize = cvtnum(mp->m_sb.sb_blocksize,
-+					mp->m_sb.sb_sectsize,
-+					optarg);
-+			if (errno) {
-+				perror(optarg);
-+				return 0;
-+			}
-+			break;
-+		case 'n':
-+			nr_records = cvt_u64(optarg, 0);
-+			if (errno) {
-+				perror(optarg);
-+				return 0;
-+			}
-+			break;
-+		case 'w':
-+			if (!strcmp(optarg, "min"))
-+				report_what = REPORT_MIN;
-+			else if (!strcmp(optarg, "max"))
-+				report_what = REPORT_MAX;
-+			else {
-+				btheight_help();
-+				return 0;
-+			}
-+			break;
-+		default:
-+			btheight_help();
-+			return 0;
-+		}
-+	}
-+
-+	if (argc == optind || blocksize <= 0 || blocksize > INT_MAX ||
-+	    nr_records == 0) {
-+		btheight_help();
-+		return 0;
-+	}
-+
-+	for (i = optind; i < argc; i++)
-+		report(argv[i], report_what, nr_records, blocksize);
-+
-+	return 0;
-+}
-+
-+static const cmdinfo_t btheight_cmd =
-+	{ "btheight", "b", btheight_f, 1, -1, 0, "[-a] [-i]",
-+	  N_("compute btree heights"), btheight_help };
-+
-+void
-+btheight_init(void)
-+{
-+	add_command(&btheight_cmd);
-+}
-diff --git a/db/command.c b/db/command.c
-index 89a78f03..0fb44efa 100644
---- a/db/command.c
-+++ b/db/command.c
-@@ -113,6 +113,7 @@ init_commands(void)
- 	block_init();
- 	bmap_init();
- 	btdump_init();
-+	btheight_init();
- 	check_init();
- 	convert_init();
- 	crc_init();
-diff --git a/db/command.h b/db/command.h
-index 2f9a7e16..b8499de0 100644
---- a/db/command.h
-+++ b/db/command.h
-@@ -31,3 +31,4 @@ extern void		init_commands(void);
- extern void		convert_init(void);
- extern void		btdump_init(void);
- extern void		info_init(void);
-+extern void		btheight_init(void);
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 71a7ef53..fff160ef 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -124,6 +124,8 @@
- #define xfs_dir_ino_validate		libxfs_dir_ino_validate
- #define xfs_initialize_perag_data	libxfs_initialize_perag_data
- #define xfs_inobt_maxrecs		libxfs_inobt_maxrecs
-+#define xfs_rmapbt_maxrecs		libxfs_rmapbt_maxrecs
-+#define xfs_refcountbt_maxrecs		libxfs_refcountbt_maxrecs
- #define xfs_iread_extents		libxfs_iread_extents
- #define xfs_log_calc_minimum_size	libxfs_log_calc_minimum_size
- #define xfs_perag_get			libxfs_perag_get
++#endif	/* __TOPOLOGY_H__ */
+diff --git a/libfrog/topology.c b/libfrog/topology.c
+index cac164f3..e2f87415 100644
+--- a/libfrog/topology.c
++++ b/libfrog/topology.c
+@@ -10,6 +10,7 @@
+ #  include <blkid/blkid.h>
+ #endif /* ENABLE_BLKID */
+ #include "xfs_multidisk.h"
++#include "topology.h"
+ 
+ #define TERABYTES(count, blog)	((uint64_t)(count) << (40 - (blog)))
+ #define GIGABYTES(count, blog)	((uint64_t)(count) << (30 - (blog)))
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 468b8fde..ade06bf6 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -9,7 +9,7 @@
+ #include "xfs_multidisk.h"
+ #include "libxcmd.h"
+ #include "fsgeom.h"
+-
++#include "topology.h"
+ 
+ #define TERABYTES(count, blog)	((uint64_t)(count) << (40 - (blog)))
+ #define GIGABYTES(count, blog)	((uint64_t)(count) << (30 - (blog)))
+diff --git a/repair/sb.c b/repair/sb.c
+index 119bf219..547969f7 100644
+--- a/repair/sb.c
++++ b/repair/sb.c
+@@ -12,6 +12,7 @@
+ #include "protos.h"
+ #include "err_protos.h"
+ #include "xfs_multidisk.h"
++#include "topology.h"
+ 
+ #define BSIZE	(1024 * 1024)
+ 
 
