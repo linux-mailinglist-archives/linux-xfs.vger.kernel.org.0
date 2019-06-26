@@ -2,54 +2,111 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1024F564ED
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 10:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4060A56827
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 14:03:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfFZIwN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 04:52:13 -0400
-Received: from mail.vodokanal.poltava.ua ([91.219.220.27]:22574 "EHLO
-        mail.vodokanal.poltava.ua" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZIwN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 04:52:13 -0400
-Received: by mail.vodokanal.poltava.ua (Postfix, from userid 80)
-        id E5769228C4D; Wed, 26 Jun 2019 10:42:50 +0300 (EEST)
-Received: from 192.168.0.119
-        (SquirrelMail authenticated user test@vodokanal.poltava.ua)
-        by mail.vodokanal.poltava.ua with HTTP;
-        Wed, 26 Jun 2019 08:42:50 +0100
-Message-ID: <bde6465aa7d28c9da0f69b8f9a8b1696.squirrel@mail.vodokanal.poltava.ua>
-Date:   Wed, 26 Jun 2019 08:42:50 +0100
-Subject: LOANS !!!
-From:   "DIAL DIRECT LOANS SA" <dialdirect@info.org>
-Reply-To: dialdirectinfoloans@mail2consultant.com
-User-Agent: SquirrelMail/1.4.21
+        id S1726131AbfFZMDh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 08:03:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39140 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZMDh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:03:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 53E0781F2F;
+        Wed, 26 Jun 2019 12:03:37 +0000 (UTC)
+Received: from max.com (unknown [10.40.205.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE03F6012E;
+        Wed, 26 Jun 2019 12:03:35 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
+Cc:     cluster-devel@redhat.com, linux-xfs@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 1/2] iomap: don't mark the inode dirty in iomap_write_end
+Date:   Wed, 26 Jun 2019 14:03:32 +0200
+Message-Id: <20190626120333.13310-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Priority: 3 (Normal)
-Importance: Normal
-To:     undisclosed-recipients:;
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 26 Jun 2019 12:03:37 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Marking the inode dirty for each page copied into the page cache can be
+very inefficient for file systems that use the VFS dirty inode tracking,
+and is completely pointless for those that don't use the VFS dirty inode
+tracking.  So instead, only set an iomap flag when changing the in-core
+inode size, and open code the rest of __generic_write_end.
 
-Dial Direct Loan SA
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+---
+ fs/gfs2/bmap.c        |  2 ++
+ fs/iomap.c            | 15 ++++++++++++++-
+ include/linux/iomap.h |  1 +
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-
-Consolidate your debts with Dial Direct Loan SA for your peace of
-mind at a fixed interest rate of 4.75%,personal and business loans
-are also welcome.For details  file in your applications by sending an email
-to:dialdirectinfoloans@mail2consultant.com
-
-
-
-Yours in Service,
-Susan Muller (Mrs.),
-Senior Consultant,
-Loan Application Team
-Dial Direct Loan SA
-Tel No: +27717231058
-
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index 93ea1d529aa3..f4b895fc632d 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1182,6 +1182,8 @@ static int gfs2_iomap_end(struct inode *inode, loff_t pos, loff_t length,
+ 
+ 	if (ip->i_qadata && ip->i_qadata->qa_qd_num)
+ 		gfs2_quota_unlock(ip);
++	if (iomap->flags & IOMAP_F_SIZE_CHANGED)
++		mark_inode_dirty(inode);
+ 	gfs2_write_unlock(inode);
+ 
+ out:
+diff --git a/fs/iomap.c b/fs/iomap.c
+index 12654c2e78f8..97569064faaa 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -777,6 +777,7 @@ iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+ 		unsigned copied, struct page *page, struct iomap *iomap)
+ {
+ 	const struct iomap_page_ops *page_ops = iomap->page_ops;
++	loff_t old_size = inode->i_size;
+ 	int ret;
+ 
+ 	if (iomap->type == IOMAP_INLINE) {
+@@ -788,7 +789,19 @@ iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+ 		ret = __iomap_write_end(inode, pos, len, copied, page, iomap);
+ 	}
+ 
+-	__generic_write_end(inode, pos, ret, page);
++	/*
++	 * Update the in-memory inode size after copying the data into the page
++	 * cache.  It's up to the file system to write the updated size to disk,
++	 * preferably after I/O completion so that no stale data is exposed.
++	 */
++	if (pos + ret > old_size) {
++		i_size_write(inode, pos + ret);
++		iomap->flags |= IOMAP_F_SIZE_CHANGED;
++	}
++	unlock_page(page);
++
++	if (old_size < pos)
++		pagecache_isize_extended(inode, old_size, pos);
+ 	if (page_ops && page_ops->page_done)
+ 		page_ops->page_done(inode, pos, copied, page, iomap);
+ 	put_page(page);
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 2103b94cb1bf..1df9ea187a9a 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -35,6 +35,7 @@ struct vm_fault;
+ #define IOMAP_F_NEW		0x01	/* blocks have been newly allocated */
+ #define IOMAP_F_DIRTY		0x02	/* uncommitted metadata */
+ #define IOMAP_F_BUFFER_HEAD	0x04	/* file system requires buffer heads */
++#define IOMAP_F_SIZE_CHANGED	0x08	/* file size has changed */
+ 
+ /*
+  * Flags that only need to be reported for IOMAP_REPORT requests:
+-- 
+2.20.1
 
