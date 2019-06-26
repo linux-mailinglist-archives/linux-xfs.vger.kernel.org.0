@@ -2,102 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85EB457250
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6DE95729C
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:32:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFZUKV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 16:10:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53740 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZUKV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:10:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QK9CW2179945;
-        Wed, 26 Jun 2019 20:09:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=+gwSshYVuRmT5asPtC7EtaE2rYMHlZqALtRin1Cfo7s=;
- b=2ZHWFR7pAG2Yuh0PbkMJHrIi7GyLlBAEa5ORNAdXauj4d9vcPTDtBbq7CqVDPmFVobs3
- GgBH3eiJuuSLmTgF9TinWPTP3TXaBz1NssvreqJ8PSHAytFP0AJBvwXo8nHrcKXTYR9v
- NqqKi2YtNqBMhbqy2Vj5hohOqrNGa4un0gcvaRxAQmfLpFjC8NgtLBN/Bq+ZtR8uOMGr
- ByeH+iXcEyha5m4wmSMbLJkQD36TR4Jgk5oAwCofsgjJvKFsTcd/LxvE1Jw+fCljP1OK
- F+Ud/nN0jq85GS8iDF/RvUN8ZTR57+dpHjzbIZQvS7qAmavhgPkcRdqLE3mI2skGt+Ld VQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brtcg0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 20:09:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QK8697128008;
-        Wed, 26 Jun 2019 20:09:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t99f4ne1q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 20:09:49 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QK9mAH028224;
-        Wed, 26 Jun 2019 20:09:48 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 13:09:47 -0700
-Date:   Wed, 26 Jun 2019 13:09:46 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] iomap: fix page_done callback for short writes
-Message-ID: <20190626200946.GK5171@magnolia>
-References: <20190626132335.14809-1-agruenba@redhat.com>
- <20190626132335.14809-3-agruenba@redhat.com>
+        id S1726271AbfFZUcP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 16:32:15 -0400
+Received: from mail-yw1-f52.google.com ([209.85.161.52]:33855 "EHLO
+        mail-yw1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZUcP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:32:15 -0400
+Received: by mail-yw1-f52.google.com with SMTP id q128so75764ywc.1
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 13:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=editshare.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=0wnPbmkpx4E3poeNRrq6YPQVy7U0Z19itZT7nonxG/I=;
+        b=Ne27eTqHwmm7NAhDRbZph+6j/e8y0FXwkET7ZjLrV0wAgBBIN2OwN/U1t6950O6Yh5
+         oYRBVZvyduvXqOGWM8F8skg9BKhA6n5uUGjnmVlJNeGPkWbNKjFBNyfa/yGYwsDvsooT
+         ho3Z/POIuaixq/MsgUJpA34aYuiqBUXnogO4GOauyUzy13YRQhm6wEV9m2Hkdcm+SHSA
+         IXgJKsnvx4YyyrQfR2Pwc1hCpzcM3XYhrTvkR+OplhNzRQC/v7sNa1qNZlhlVmrQWyBJ
+         sP1PdUR49tcXW+LaN5IKK/5VF0unjxfNmvd3nvu39d+FEYm3kVV4CAfTB2Pk8jFXWoQ8
+         Hsvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=0wnPbmkpx4E3poeNRrq6YPQVy7U0Z19itZT7nonxG/I=;
+        b=OnFXBeF4DTqWv3h3kMzbfQ2zDdBKlK1h4q15UBYpSOCjNWVfeZearkJPp+U2BqbmLA
+         s8xOEm5lqAqwpgvr3HxBorFz9XlNTZJd7nunBjB1nfA90elox/A1l8HyiAbnkB/h9Gwp
+         d3KplGMOVEo5eLQyQS0xrTzt8DSs//vpJaNjD1N8rFgtYc8+/6KZBgPNgnEORgjUw4Fm
+         N4yLHnbQcqTWV6BqpsXAl6ypEJhNmD6COQSOZO88wyyWkj/UjN6X5lr1MYZxoUIGSnCd
+         +NMQ4zvPQj12MnMDkdGOGfbrp8DK2EGAbqgnLItAXwPvZ1vlM26XvMW5og7t+peMTZ8N
+         8nTg==
+X-Gm-Message-State: APjAAAVkw7CCQ7U3Zm3NYg8N9/NO2h1wyzzL+8URhHzisRnBE58q46Dr
+        qwT30B0mZumIw+cI1RzkIkRDMw1J62VXUe79/r4tJvQ7zPWfig==
+X-Google-Smtp-Source: APXvYqwf5Me3U7ghauaBn1t1bOu0/jboybYsgffT2L1R9MZSvhdoI70y+RUXVtDSKkIlfUITuG+wIyLz6syjlUMh6qA=
+X-Received: by 2002:a81:13d4:: with SMTP id 203mr4195784ywt.181.1561581133780;
+ Wed, 26 Jun 2019 13:32:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626132335.14809-3-agruenba@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906260233
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260233
+From:   Rich Otero <rotero@editshare.com>
+Date:   Wed, 26 Jun 2019 16:32:02 -0400
+Message-ID: <CAFVd4NsBRm_pbySuSc4U=a=G4wiowZ3gFBooLEQZGZJe9V748g@mail.gmail.com>
+Subject: XFS Repair Error
+To:     linux-xfs@vger.kernel.org
+Cc:     Steve Alves <steve.alves@editshare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 03:23:35PM +0200, Andreas Gruenbacher wrote:
-> When we truncate a short write to have it retried, pass the truncated
-> length to the page_done callback instead of the full length.
-> 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+I have an XFS filesystem of approximately 56 TB on a RAID that has
+been experiencing some disk failures. The disk problems seem to have
+led to filesystem corruption, so I attempted to repair the filesystem
+with `xfs_repair -L <device>`. Xfs_repair finished with a message
+stating that an error occurred and to report the bug.
 
-LGTM,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+The requested files are in my Google Drive (links below):
 
---D
+xfs-repair-sdb1.txt: This is the output from `xfs_repair -L
+/dev/sdb1`. I could only save as much as was still in my `screen`
+buffer, so the beginning of the repair may be missing.
+https://drive.google.com/file/d/1CTm4hUumqPLW6FUSnc2ykU-hzH1w0Yug/view?usp=sharing
 
-> ---
->  fs/iomap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/iomap.c b/fs/iomap.c
-> index 97569064faaa..9a9d016b2782 100644
-> --- a/fs/iomap.c
-> +++ b/fs/iomap.c
-> @@ -803,7 +803,7 @@ iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
->  	if (old_size < pos)
->  		pagecache_isize_extended(inode, old_size, pos);
->  	if (page_ops && page_ops->page_done)
-> -		page_ops->page_done(inode, pos, copied, page, iomap);
-> +		page_ops->page_done(inode, pos, ret, page, iomap);
->  	put_page(page);
->  
->  	if (ret < len)
-> -- 
-> 2.20.1
-> 
+xfs-meta-sdb1.bin.tar.gz: This tar archive contains the file generated
+by `xfs_metadump -g /dev/sdb1`.
+https://drive.google.com/file/d/160If17YDVdk5_hEhajlMpFcTvGeIqZsd/view?usp=sharing
+
+Regards,
+Rich Otero
+EditShare
+rotero@editshare.com
+617-782-0479
