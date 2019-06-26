@@ -2,95 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9943B56883
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 14:21:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76188569CF
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 14:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfFZMVQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 08:21:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59914 "EHLO mx1.redhat.com"
+        id S1727517AbfFZMze (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 08:55:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:42926 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZMVP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:21:15 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6DBE3308792C;
-        Wed, 26 Jun 2019 12:20:52 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DAEC5D9C6;
-        Wed, 26 Jun 2019 12:20:49 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 26F8E1806B0E;
-        Wed, 26 Jun 2019 12:20:43 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 08:20:42 -0400 (EDT)
-From:   Bob Peterson <rpeterso@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew garrett <matthew.garrett@nebula.com>, yuchao0@huawei.com,
-        tytso@mit.edu, shaggy@kernel.org,
-        ard biesheuvel <ard.biesheuvel@linaro.org>,
-        josef@toxicpanda.com, hch@infradead.org, clm@fb.com,
-        adilger kernel <adilger.kernel@dilger.ca>, jk@ozlabs.org,
-        jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org,
-        viro@zeniv.linux.org.uk, linux-xfs@vger.kernel.org,
-        jfs-discussion@lists.sourceforge.net, linux-efi@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Christoph Hellwig <hch@lst.de>, ocfs2-devel@oss.oracle.com
-Message-ID: <868182386.37358699.1561551642881.JavaMail.zimbra@redhat.com>
-In-Reply-To: <156151633004.2283456.4175543089138173586.stgit@magnolia>
-References: <156151632209.2283456.3592379873620132456.stgit@magnolia> <156151633004.2283456.4175543089138173586.stgit@magnolia>
-Subject: Re: [Cluster-devel] [PATCH 1/5] vfs: create a generic checking and
- prep function for FS_IOC_SETFLAGS
+        id S1726948AbfFZMzd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:55:33 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C479768B05; Wed, 26 Jun 2019 14:55:02 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 14:55:02 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        cluster-devel@redhat.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] iomap: don't mark the inode dirty in
+ iomap_write_end
+Message-ID: <20190626125502.GB4744@lst.de>
+References: <20190626120333.13310-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.3.116.201, 10.4.195.9]
-Thread-Topic: create a generic checking and prep function for FS_IOC_SETFLAGS
-Thread-Index: 5u1cuSAsKRaw36dS1F+PjLFgFqc7sA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 26 Jun 2019 12:21:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626120333.13310-1-agruenba@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
------ Original Message -----
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Jun 26, 2019 at 02:03:32PM +0200, Andreas Gruenbacher wrote:
+> Marking the inode dirty for each page copied into the page cache can be
+> very inefficient for file systems that use the VFS dirty inode tracking,
+> and is completely pointless for those that don't use the VFS dirty inode
+> tracking.  So instead, only set an iomap flag when changing the in-core
+> inode size, and open code the rest of __generic_write_end.
 > 
-> Create a generic function to check incoming FS_IOC_SETFLAGS flag values
-> and later prepare the inode for updates so that we can standardize the
-> implementations that follow ext4's flag values.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: David Sterba <dsterba@suse.com>
-> ---
->  fs/btrfs/ioctl.c    |   13 +++++--------
->  fs/efivarfs/file.c  |   26 +++++++++++++++++---------
->  fs/ext2/ioctl.c     |   16 ++++------------
->  fs/ext4/ioctl.c     |   13 +++----------
->  fs/f2fs/file.c      |    7 ++++---
->  fs/gfs2/file.c      |   42 +++++++++++++++++++++++++++++-------------
->  fs/hfsplus/ioctl.c  |   21 ++++++++++++---------
->  fs/inode.c          |   24 ++++++++++++++++++++++++
->  fs/jfs/ioctl.c      |   22 +++++++---------------
->  fs/nilfs2/ioctl.c   |    9 ++-------
->  fs/ocfs2/ioctl.c    |   13 +++----------
->  fs/orangefs/file.c  |   35 ++++++++++++++++++++++++++---------
->  fs/reiserfs/ioctl.c |   10 ++++------
->  fs/ubifs/ioctl.c    |   13 +++----------
->  include/linux/fs.h  |    3 +++
->  15 files changed, 146 insertions(+), 121 deletions(-)
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 
-The gfs2 portion looks correct.
+Nitpick: a patch from you should never have me as the first signoff.
+Just drop it, and if you feel fancy add a 'Partially based on code
+from Christoph Hellwig.' sentence.  Not that I care much.
 
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Otherwise looks good:
 
-Regards,
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Bob Peterson
+Doesn't the series also need a third patch reducing the amount
+of mark_inode_dirty calls as per your initial proposal?
