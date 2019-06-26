@@ -2,74 +2,99 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6DE95729C
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:32:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A03B6572DB
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Jun 2019 22:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfFZUcP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jun 2019 16:32:15 -0400
-Received: from mail-yw1-f52.google.com ([209.85.161.52]:33855 "EHLO
-        mail-yw1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZUcP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:32:15 -0400
-Received: by mail-yw1-f52.google.com with SMTP id q128so75764ywc.1
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jun 2019 13:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=editshare.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=0wnPbmkpx4E3poeNRrq6YPQVy7U0Z19itZT7nonxG/I=;
-        b=Ne27eTqHwmm7NAhDRbZph+6j/e8y0FXwkET7ZjLrV0wAgBBIN2OwN/U1t6950O6Yh5
-         oYRBVZvyduvXqOGWM8F8skg9BKhA6n5uUGjnmVlJNeGPkWbNKjFBNyfa/yGYwsDvsooT
-         ho3Z/POIuaixq/MsgUJpA34aYuiqBUXnogO4GOauyUzy13YRQhm6wEV9m2Hkdcm+SHSA
-         IXgJKsnvx4YyyrQfR2Pwc1hCpzcM3XYhrTvkR+OplhNzRQC/v7sNa1qNZlhlVmrQWyBJ
-         sP1PdUR49tcXW+LaN5IKK/5VF0unjxfNmvd3nvu39d+FEYm3kVV4CAfTB2Pk8jFXWoQ8
-         Hsvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=0wnPbmkpx4E3poeNRrq6YPQVy7U0Z19itZT7nonxG/I=;
-        b=OnFXBeF4DTqWv3h3kMzbfQ2zDdBKlK1h4q15UBYpSOCjNWVfeZearkJPp+U2BqbmLA
-         s8xOEm5lqAqwpgvr3HxBorFz9XlNTZJd7nunBjB1nfA90elox/A1l8HyiAbnkB/h9Gwp
-         d3KplGMOVEo5eLQyQS0xrTzt8DSs//vpJaNjD1N8rFgtYc8+/6KZBgPNgnEORgjUw4Fm
-         N4yLHnbQcqTWV6BqpsXAl6ypEJhNmD6COQSOZO88wyyWkj/UjN6X5lr1MYZxoUIGSnCd
-         +NMQ4zvPQj12MnMDkdGOGfbrp8DK2EGAbqgnLItAXwPvZ1vlM26XvMW5og7t+peMTZ8N
-         8nTg==
-X-Gm-Message-State: APjAAAVkw7CCQ7U3Zm3NYg8N9/NO2h1wyzzL+8URhHzisRnBE58q46Dr
-        qwT30B0mZumIw+cI1RzkIkRDMw1J62VXUe79/r4tJvQ7zPWfig==
-X-Google-Smtp-Source: APXvYqwf5Me3U7ghauaBn1t1bOu0/jboybYsgffT2L1R9MZSvhdoI70y+RUXVtDSKkIlfUITuG+wIyLz6syjlUMh6qA=
-X-Received: by 2002:a81:13d4:: with SMTP id 203mr4195784ywt.181.1561581133780;
- Wed, 26 Jun 2019 13:32:13 -0700 (PDT)
+        id S1726339AbfFZUoV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jun 2019 16:44:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40204 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfFZUoV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jun 2019 16:44:21 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKi0CT126161;
+        Wed, 26 Jun 2019 20:44:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=i9DmPyOCH6y6Gz8q/3l9Zf4emWGQzlJjCj91Qo231jY=;
+ b=S+kVr5rk+HKiZAC3aZHGY+kcskA/1hrPAgLYqmKWKtwrNEdA4O35j47lFq5s+msCPX/T
+ S22Sl8LD1QXb8a8jH+8J6vWo5Z+lNWErpIJHlkn11Ay8nxulQemm3W7LJQhHSAN5JZ66
+ XyFWyuTdHgktOECVuyKtFoku41jtkWRcp4LMnMPvvWEpawhzei4DcEmti+qKfYMcghuA
+ H/GNpsIexpou7xVT8RkECIrIP7wZpu7jVE8ZFcAP4DtPLXRie7D5UijK8sGbiZcH9vov
+ IPYqWXvIhoMFs+1VTcPjfc09/3T9AGZyCUfwq4D8Y1PXOdgHBT6OgMn6jw1KsU7puZkJ Sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pvk0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 20:44:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QKhXTB142953;
+        Wed, 26 Jun 2019 20:43:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t9accwdb8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 20:43:59 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5QKhwsf006306;
+        Wed, 26 Jun 2019 20:43:58 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Jun 2019 13:43:58 -0700
+Subject: [PATCH v6 00/15] xfs: refactor and improve inode iteration
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
+Date:   Wed, 26 Jun 2019 13:43:57 -0700
+Message-ID: <156158183697.495087.5371839759804528321.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-From:   Rich Otero <rotero@editshare.com>
-Date:   Wed, 26 Jun 2019 16:32:02 -0400
-Message-ID: <CAFVd4NsBRm_pbySuSc4U=a=G4wiowZ3gFBooLEQZGZJe9V748g@mail.gmail.com>
-Subject: XFS Repair Error
-To:     linux-xfs@vger.kernel.org
-Cc:     Steve Alves <steve.alves@editshare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906260240
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=990 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906260240
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-I have an XFS filesystem of approximately 56 TB on a RAID that has
-been experiencing some disk failures. The disk problems seem to have
-led to filesystem corruption, so I attempted to repair the filesystem
-with `xfs_repair -L <device>`. Xfs_repair finished with a message
-stating that an error occurred and to report the bug.
+Hi all,
 
-The requested files are in my Google Drive (links below):
+This next series refactors all the inode walking code in XFS into a
+single set of helper functions.  The goal is to separate the mechanics
+of iterating a subset of inode in the filesystem from bulkstat.
 
-xfs-repair-sdb1.txt: This is the output from `xfs_repair -L
-/dev/sdb1`. I could only save as much as was still in my `screen`
-buffer, so the beginning of the repair may be missing.
-https://drive.google.com/file/d/1CTm4hUumqPLW6FUSnc2ykU-hzH1w0Yug/view?usp=sharing
+First we clean up a few weird things in XFS, then build a generic inode
+iteration function.  Next, we convert the bulkstat ioctl to use it, then
+fix a few things from some of the code we saved from the old bulkstat
+inode iteration code.  After that, we restructure the code slightly to
+support the inumbers functionality, and then port the inumbers ioctl to
+it too.
 
-xfs-meta-sdb1.bin.tar.gz: This tar archive contains the file generated
-by `xfs_metadump -g /dev/sdb1`.
-https://drive.google.com/file/d/160If17YDVdk5_hEhajlMpFcTvGeIqZsd/view?usp=sharing
+Finally, we introduce a parallel inode walk feature to speed up
+quotacheck on large filesystems.  The justification for this part is a
+little questionable since it needs further discovery of what hardware
+and software this works best on.  It's also an open question of whether
+or not bulkstat could be optimized further.
 
-Regards,
-Rich Otero
-EditShare
-rotero@editshare.com
-617-782-0479
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=parallel-iwalk
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=parallel-iwalk
