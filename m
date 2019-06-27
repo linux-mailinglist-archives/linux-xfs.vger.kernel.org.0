@@ -2,93 +2,129 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 332B3586DD
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 18:18:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B6D587FA
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 19:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfF0QSw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 12:18:52 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:41326 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfF0QSw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 12:18:52 -0400
-Received: by mail-yb1-f196.google.com with SMTP id y67so1852373yba.8
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Jun 2019 09:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zz6cmw43Z4bqXdFehBwYMRrbFUgC5H6h4woIdwEDLcs=;
-        b=Colo3jWJWj3lyXL8CPLRQAl6u0sGVwyTEVmm1STSmKgCrG6tIFCfF6O4hkW2sktFi3
-         eNSPTvNlw8Nvv4dnEZrZM5e+UqI+Tiqv6ICFqTo2OVowtmmnW4FRV6Z3Aq6tNzk30w8y
-         4bdjyaLW0tV+GaagNnPjIgOCROL4dhKLEKr5whm+udboWOzqeE5C4rHhZepKBJr1Xn4i
-         O7/D3IpmxYYhE1Q2FDASssHdK1k1+N2rbi8g/YVQcfuD+PdMke2f3KC4rKqFlqB7OkxH
-         HPx9YFdy8doyvRs1NL5ISx08XC34hoW6mZXJkEpy+biuJPzD2DzTZW3LS+Ju4B03qsQl
-         JpyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zz6cmw43Z4bqXdFehBwYMRrbFUgC5H6h4woIdwEDLcs=;
-        b=CdnZ2YqUMPFIyrj6bktE1CRSz/u2erocNE3fIoQh4/cmyKsD7BSOGP2CI58Rejm/My
-         eOvmu/VdMNcIgXVTtSHfcwDjIE/N6ezRgnx6hkzE0gy2yrPfO0W0F5ndJJaupmHp7rVI
-         7ove57qORV5PFcbQ54UigpledWvxC4N+SKdVLwo9lxU+DSw6tMCeH3GGfzghYMx74tz7
-         CsW4Oi2y/ZtNyDvPOdOxRJnlVZ1PK6YDLGwuABt1WgFqSyYLeqktnz3PQxLCesxzGcLl
-         nRFCCaZpdOTX2T1iUAJY5H4KMhoJA9IoRlTu6phlTgF6GtOUkaMH3P14fU3Jtiz7JgdS
-         LnSA==
-X-Gm-Message-State: APjAAAW07v+mvjZfVBAEm3miVvhR3zJ0Yyh6ihfMc1d1oA1AuGUAVkAT
-        e3hIINhZ7D+nmSmDxBylAM/syOAJz8LBkGe3eVQ=
-X-Google-Smtp-Source: APXvYqyi5XRiYKGhAiAWOg7rms4xVr3C2+QyWGXZ8ATRHtASqRJBaqeM4ArdnkDLx6K9FUzi7aq4gBE2ztkDkuvf6Yo=
-X-Received: by 2002:a25:bf85:: with SMTP id l5mr3244705ybk.45.1561652331284;
- Thu, 27 Jun 2019 09:18:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <a665a93a-0bf8-aedb-2ba3-d4b2fb672970@linux.alibaba.com> <20190627155455.GA30113@42.do-not-panic.com>
-In-Reply-To: <20190627155455.GA30113@42.do-not-panic.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 27 Jun 2019 19:18:40 +0300
-Message-ID: <CAOQ4uxgqgDAdKZDYwmf0M35M3D6Ctn25-VVj3wu5XSj_4c-WdA@mail.gmail.com>
-Subject: Re: [backport request][stable] xfs: xfstests generic/538 failed on xfs
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Alvin Zheng <Alvin@linux.alibaba.com>,
-        gregkh <gregkh@linuxfoundation.org>,
+        id S1726480AbfF0RIR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 13:08:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53756 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfF0RIR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 13:08:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RH4WJ1158114;
+        Thu, 27 Jun 2019 17:08:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=qd4A0mvM0Ngq6zbyx+rmW6vBBHikEcXp7ZIPNNKkKVA=;
+ b=Labos5CwgwhGuTBqiO5Jh2OR9iDmPNQZRWGerA+bzBV95vaUFDrqhHH7fRyK9W8AAFxg
+ nv97i9pt5MeEamWj8XSxgCmNwG2YqoPzb9JxDAHuRR0VJ7ymkDKZaquODPN6T9vcVYvu
+ B1oL69XqIglUYqoETwpL1WzWBDGSeyneq7K5gV/7IygTqsXYkSsZI3roQIN+fCtIMc4d
+ vpDBpSSewAORC05lbd3lqkwtyw7V/3tj0kd5hLkUf5EZVEx0aCCazndGDc/D63MSMCP+
+ FS7HGGjhGjDm+wEXU6w09IYBplnwoBQw31tjTGSe0SuFZcPgC7DxqrNK2ITd+otoxs// PA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t9brthk7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 17:08:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RH8Bq3044035;
+        Thu, 27 Jun 2019 17:08:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t9acdca0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 17:08:12 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RH8A27011733;
+        Thu, 27 Jun 2019 17:08:10 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 10:08:10 -0700
+Date:   Thu, 27 Jun 2019 10:08:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
         linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        "joseph.qi" <joseph.qi@linux.alibaba.com>,
-        caspar <caspar@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable <stable@vger.kernel.org>
+Subject: Re: [STABLE 4.19] fixes for xfs memory and fs corruption
+Message-ID: <20190627170809.GD5179@magnolia>
+References: <155009104740.32028.193157199378698979.stgit@magnolia>
+ <20190213205804.GE32253@magnolia>
+ <CAOQ4uximAfJjNdunY2xK_1DwC2G7v31XWbv64AdO9nYdExUsVw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uximAfJjNdunY2xK_1DwC2G7v31XWbv64AdO9nYdExUsVw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906270197
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906270196
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 6:55 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->
-> On Thu, Jun 27, 2019 at 08:10:56PM +0800, Alvin Zheng wrote:
-> > Hi,
+On Thu, Jun 27, 2019 at 07:12:48PM +0300, Amir Goldstein wrote:
+> Darrick,
+> 
+> Can I have your blessing on the choice of these upstream commits
+> as stable candidates?
+> I did not observe any xfstests regressions when testing v4.19.55
+> with these patches applied.
+
+All four commits look reasonable to me. :)
+
+--D
+
+> Sasha,
+> 
+> Can you run these patches though your xfstests setup?
+> They fix nasty bugs.
+> 
+> Make sure to update xfsprogs to very latest, because
+> generic/530 used to blow up (OOM) my test machine...
+> 
 > >
-> >     I  was using kernel v4.19.y and found that it cannot pass the
-> > generic/538 due to data corruption. I notice that upstream has fix this
-> > issue with commit 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a. Will v4.19.y
-> > backport this patch?
->
-> Hey Alvin,
->
-> Thanks for Bringing this to attention.  I'll look into this a bit more.
-> Time for a new set of stable fixes for v4.19.y. Of course, I welcome
-> Briant's feedback, but if he's busy I'll still look into it.
->
-
-FWIW, I tested -g quick on xfs with reflink=1,rmapbt=1 and did not
-observe any regressions from v4.19.55.
-
-Luis, sorry I forgot to CC you on a request I just sent to consider 4 xfs
-patches for stable to fix generic/529 and generic/530:
-
-3b50086f0c0d xfs: don't overflow xattr listent buffer
-e1f6ca113815 xfs: rename m_inotbt_nores to m_finobt_nores
-15a268d9f263 xfs: reserve blocks for ifree transaction during log recovery
-c4a6bf7f6cc7 xfs: don't ever put nlink > 0 inodes on the unlinked list
-
-If you can run those patches through your setup that would be great.
-
-Thanks,
-Amir.
+> > The first patch fixes a memory corruption that syzkaller found in the
+> > attr listent code;
+> 
+> 3b50086f0c0d xfs: don't overflow xattr listent buffer
+> 
+> > see "generic: posix acl extended attribute memory
+> > corruption test" for the relevant regression test.
+> 
+> Fixed generic/529
+> 
+> >
+> > Patches 2 fixes problems found in XFS's unlinked inode recovery code
+> > that were unearthed by some new testcases.  We're logging nlink==1 temp
+> > files on the iunlinked list (and then the vfs sets nlink to 0 without
+> > telling us) which means that we leak them in recovery if we crash
+> > immediately after the committing the creation of the temp file.
+> >
+> > Patch 3 fixes the problem that ifree during recovery can expand the
+> > finobt but we need to force the ifree code to reserve blocks for the
+> > transaction because perag reservations aren't set up yet.
+> 
+> e1f6ca113815 xfs: rename m_inotbt_nores to m_finobt_nores
+> 15a268d9f263 xfs: reserve blocks for ifree transaction during log recovery
+> c4a6bf7f6cc7 xfs: don't ever put nlink > 0 inodes on the unlinked list
+> 
+> >
+> > See "[PATCH v2 2/2] generic: check the behavior of programs opening a
+> > lot of O_TMPFILE files" for the regression test.
+> >
+> 
+> Fixes generic/530
+> 
+> Thanks,
+> Amir.
