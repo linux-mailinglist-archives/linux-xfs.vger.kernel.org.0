@@ -2,361 +2,199 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B85580D6
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 12:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CF7158124
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 13:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfF0KtS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 06:49:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52196 "EHLO
+        id S1726425AbfF0LG4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 07:06:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55064 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfF0KtR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 06:49:17 -0400
+        with ESMTP id S1726187AbfF0LG4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 07:06:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=W1ba97vqj5fSXcVc3Fg0+/SxTpVq+Cf6Jfltd57wrXE=; b=JnlFKjeAVzpIZSsUphHn8XsiHd
-        Dlp1mHk1n6YRXj8QOaBSJhPEseZXBpAOz91p09O+AVjWD4XK45M31xaaEqwNMd1B7XGe98qak5K4b
-        SGsXKLtPPDhfxuFpOWFwT9UcJtBBkBOmg5uMMQsxXH101W//+otWiGTqGiNTTT0xpYe6TV+f12keY
-        DUpKdckdJ7sx16y7vDIAz7Fp9RmYo4wAyHr3T+BFeWpWIUYrZ2p4Q5oxgHf5xN+sNmvmLEPgMUY0g
-        y4U99IE7HGtEanB/Sbx8PX3JGLoIzcz3M1eRRVNNCrBGtIfH5hKQQJ1+rVmpE72zJwOpVZwlMzArC
-        eqH5d2cA==;
-Received: from 089144214055.atnat0023.highway.a1.net ([89.144.214.55] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgRxr-0005AG-Ep; Thu, 27 Jun 2019 10:49:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 13/13] iomap: add tracing for the address space operations
-Date:   Thu, 27 Jun 2019 12:48:36 +0200
-Message-Id: <20190627104836.25446-14-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627104836.25446-1-hch@lst.de>
-References: <20190627104836.25446-1-hch@lst.de>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XcdY86W4sS3UnwKK7EUNoOiaNw0em85s29XC/aoBx2Y=; b=h1AzhMzKGiNoMbNL5qYGirzXe
+        dTYmXjVOkNiRprvriDInKW8AD/Ph9DGf7FiZLOXRWMlFA/Zr0HrUgmymKAScEzeiQy/Oqx2fhP77g
+        XzfDvbdh0pi1PDYmwMrNFJDHzgbvx5JqQZ39foHuGQJuVq80K2Bob8Em5WNL1HaKZAtXf6qpJUXsq
+        kshU24mLEMAWC5VMzp+ut9ayjqtQlYHkyfje29M81x+VdSBUUAZIqB9h2MOKh3oaMAE2RuI2X++bT
+        2jf5Rm32n9sEfA6o6hyh9D7Ru8rNOo/WLkPGGSCnY/ITuzQM/N1pZOuxzBGZvMLi1WWJmGxjxbszA
+        e1uU7mvkA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgSEw-0003tR-Ev; Thu, 27 Jun 2019 11:06:54 +0000
+Date:   Thu, 27 Jun 2019 04:06:54 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     syzbot <syzbot+b75afdbe271a0d7ac4f6@syzkaller.appspotmail.com>
+Cc:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in xlog_alloc_log
+Message-ID: <20190627110654.GA13946@infradead.org>
+References: <000000000000783d99058c489257@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000783d99058c489257@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Lift the xfs code for tracing address space operations to the iomap
-layer.
+It seems like this is the xlog_alloc_log error path.  We didn't
+really change anything in the circular ioclogs queue handling, so
+maybe thish has been there before, but xfs_buf wasn't wired up to
+kasan to catch it?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap.c                   | 13 +++++-
- fs/xfs/xfs_aops.c            | 27 ++----------
- fs/xfs/xfs_trace.h           | 65 ---------------------------
- include/trace/events/iomap.h | 85 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 100 insertions(+), 90 deletions(-)
- create mode 100644 include/trace/events/iomap.h
+Either way I suspect the right thing to do is to replace the list
+with an array based lookup.  I'll look into that, maybe a reproducer
+appears until then.
 
-diff --git a/fs/iomap.c b/fs/iomap.c
-index bb5c42561398..5db939468499 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -23,7 +23,8 @@
- #include <linux/task_io_accounting_ops.h>
- #include <linux/dax.h>
- #include <linux/sched/signal.h>
--
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/iomap.h>
- #include "internal.h"
- 
- static struct bio_set iomap_ioend_bioset;
-@@ -369,6 +370,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
- 	unsigned poff;
- 	loff_t ret;
- 
-+	trace_iomap_readpage(page->mapping->host, 1);
-+
- 	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
- 		ret = iomap_apply(inode, page_offset(page) + poff,
- 				PAGE_SIZE - poff, 0, ops, &ctx,
-@@ -465,6 +468,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
- 	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
- 	loff_t length = last - pos + PAGE_SIZE, ret = 0;
- 
-+	trace_iomap_readpages(mapping->host, nr_pages);
-+
- 	while (length > 0) {
- 		ret = iomap_apply(mapping->host, pos, length, 0, ops,
- 				&ctx, iomap_readpages_actor);
-@@ -531,6 +536,8 @@ EXPORT_SYMBOL_GPL(iomap_is_partially_uptodate);
- int
- iomap_releasepage(struct page *page, gfp_t gfp_mask)
- {
-+	trace_iomap_releasepage(page->mapping->host, page, 0, 0);
-+
- 	/*
- 	 * mm accommodates an old ext3 case where clean pages might not have had
- 	 * the dirty bit cleared. Thus, it can send actual dirty pages to
-@@ -546,6 +553,8 @@ EXPORT_SYMBOL_GPL(iomap_releasepage);
- void
- iomap_invalidatepage(struct page *page, unsigned int offset, unsigned int len)
- {
-+	trace_iomap_invalidatepage(page->mapping->host, page, offset, len);
-+
- 	/*
- 	 * If we are invalidating the entire page, clear the dirty state from it
- 	 * and release it to avoid unnecessary buildup of the LRU.
-@@ -2586,6 +2595,8 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
- 	u64 end_offset;
- 	loff_t offset;
- 
-+	trace_iomap_writepage(inode, page, 0, 0);
-+
- 	/*
- 	 * Refuse to write the page out if we are called from reclaim context.
- 	 *
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 072750f34fe6..bdcde2ece779 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -540,16 +540,6 @@ xfs_submit_ioend(
- 	return status;
- }
- 
--STATIC void
--xfs_vm_invalidatepage(
--	struct page		*page,
--	unsigned int		offset,
--	unsigned int		length)
--{
--	trace_xfs_invalidatepage(page->mapping->host, page, offset, length);
--	iomap_invalidatepage(page, offset, length);
--}
--
- /*
-  * If the page has delalloc blocks on it, we need to punch them out before we
-  * invalidate the page.  If we don't, we leave a stale delalloc mapping on the
-@@ -584,7 +574,7 @@ xfs_discard_page(
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
--	xfs_vm_invalidatepage(page, 0, PAGE_SIZE);
-+	iomap_invalidatepage(page, 0, PAGE_SIZE);
- }
- 
- static const struct iomap_writeback_ops xfs_writeback_ops = {
-@@ -624,15 +614,6 @@ xfs_dax_writepages(
- 			xfs_find_bdev_for_inode(mapping->host), wbc);
- }
- 
--STATIC int
--xfs_vm_releasepage(
--	struct page		*page,
--	gfp_t			gfp_mask)
--{
--	trace_xfs_releasepage(page->mapping->host, page, 0, 0);
--	return iomap_releasepage(page, gfp_mask);
--}
--
- STATIC sector_t
- xfs_vm_bmap(
- 	struct address_space	*mapping,
-@@ -661,7 +642,6 @@ xfs_vm_readpage(
- 	struct file		*unused,
- 	struct page		*page)
- {
--	trace_xfs_vm_readpage(page->mapping->host, 1);
- 	return iomap_readpage(page, &xfs_iomap_ops);
- }
- 
-@@ -672,7 +652,6 @@ xfs_vm_readpages(
- 	struct list_head	*pages,
- 	unsigned		nr_pages)
- {
--	trace_xfs_vm_readpages(mapping->host, nr_pages);
- 	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
- }
- 
-@@ -692,8 +671,8 @@ const struct address_space_operations xfs_address_space_operations = {
- 	.writepage		= xfs_vm_writepage,
- 	.writepages		= xfs_vm_writepages,
- 	.set_page_dirty		= iomap_set_page_dirty,
--	.releasepage		= xfs_vm_releasepage,
--	.invalidatepage		= xfs_vm_invalidatepage,
-+	.releasepage		= iomap_releasepage,
-+	.invalidatepage		= iomap_invalidatepage,
- 	.bmap			= xfs_vm_bmap,
- 	.direct_IO		= noop_direct_IO,
- 	.migratepage		= iomap_migrate_page,
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 65c920554b96..c44dadb6faba 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1153,71 +1153,6 @@ DEFINE_RW_EVENT(xfs_file_buffered_write);
- DEFINE_RW_EVENT(xfs_file_direct_write);
- DEFINE_RW_EVENT(xfs_file_dax_write);
- 
--DECLARE_EVENT_CLASS(xfs_page_class,
--	TP_PROTO(struct inode *inode, struct page *page, unsigned long off,
--		 unsigned int len),
--	TP_ARGS(inode, page, off, len),
--	TP_STRUCT__entry(
--		__field(dev_t, dev)
--		__field(xfs_ino_t, ino)
--		__field(pgoff_t, pgoff)
--		__field(loff_t, size)
--		__field(unsigned long, offset)
--		__field(unsigned int, length)
--	),
--	TP_fast_assign(
--		__entry->dev = inode->i_sb->s_dev;
--		__entry->ino = XFS_I(inode)->i_ino;
--		__entry->pgoff = page_offset(page);
--		__entry->size = i_size_read(inode);
--		__entry->offset = off;
--		__entry->length = len;
--	),
--	TP_printk("dev %d:%d ino 0x%llx pgoff 0x%lx size 0x%llx offset %lx "
--		  "length %x",
--		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->ino,
--		  __entry->pgoff,
--		  __entry->size,
--		  __entry->offset,
--		  __entry->length)
--)
--
--#define DEFINE_PAGE_EVENT(name)		\
--DEFINE_EVENT(xfs_page_class, name,	\
--	TP_PROTO(struct inode *inode, struct page *page, unsigned long off, \
--		 unsigned int len),	\
--	TP_ARGS(inode, page, off, len))
--DEFINE_PAGE_EVENT(xfs_writepage);
--DEFINE_PAGE_EVENT(xfs_releasepage);
--DEFINE_PAGE_EVENT(xfs_invalidatepage);
--
--DECLARE_EVENT_CLASS(xfs_readpage_class,
--	TP_PROTO(struct inode *inode, int nr_pages),
--	TP_ARGS(inode, nr_pages),
--	TP_STRUCT__entry(
--		__field(dev_t, dev)
--		__field(xfs_ino_t, ino)
--		__field(int, nr_pages)
--	),
--	TP_fast_assign(
--		__entry->dev = inode->i_sb->s_dev;
--		__entry->ino = inode->i_ino;
--		__entry->nr_pages = nr_pages;
--	),
--	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
--		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->ino,
--		  __entry->nr_pages)
--)
--
--#define DEFINE_READPAGE_EVENT(name)		\
--DEFINE_EVENT(xfs_readpage_class, name,	\
--	TP_PROTO(struct inode *inode, int nr_pages), \
--	TP_ARGS(inode, nr_pages))
--DEFINE_READPAGE_EVENT(xfs_vm_readpage);
--DEFINE_READPAGE_EVENT(xfs_vm_readpages);
--
- DECLARE_EVENT_CLASS(xfs_imap_class,
- 	TP_PROTO(struct xfs_inode *ip, xfs_off_t offset, ssize_t count,
- 		 int whichfork, struct xfs_bmbt_irec *irec),
-diff --git a/include/trace/events/iomap.h b/include/trace/events/iomap.h
-new file mode 100644
-index 000000000000..1da90e743e6e
---- /dev/null
-+++ b/include/trace/events/iomap.h
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2009-2019, Christoph Hellwig
-+ * All Rights Reserved.
-+ *
-+ * NOTE: none of these tracepoints shall be consider a stable kernel ABI
-+ * as they can change at any time.
-+ */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM iomap
-+
-+#if !defined(_TRACE_IOMAP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_IOMAP_H
-+
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(iomap_page_class,
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned long off,
-+		 unsigned int len),
-+	TP_ARGS(inode, page, off, len),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(u64, ino)
-+		__field(pgoff_t, pgoff)
-+		__field(loff_t, size)
-+		__field(unsigned long, offset)
-+		__field(unsigned int, length)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = inode->i_sb->s_dev;
-+		__entry->ino = inode->i_ino;
-+		__entry->pgoff = page_offset(page);
-+		__entry->size = i_size_read(inode);
-+		__entry->offset = off;
-+		__entry->length = len;
-+	),
-+	TP_printk("dev %d:%d ino 0x%llx pgoff 0x%lx size 0x%llx offset %lx "
-+		  "length %x",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->ino,
-+		  __entry->pgoff,
-+		  __entry->size,
-+		  __entry->offset,
-+		  __entry->length)
-+)
-+
-+#define DEFINE_PAGE_EVENT(name)		\
-+DEFINE_EVENT(iomap_page_class, name,	\
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned long off, \
-+		 unsigned int len),	\
-+	TP_ARGS(inode, page, off, len))
-+DEFINE_PAGE_EVENT(iomap_writepage);
-+DEFINE_PAGE_EVENT(iomap_releasepage);
-+DEFINE_PAGE_EVENT(iomap_invalidatepage);
-+
-+DECLARE_EVENT_CLASS(iomap_readpage_class,
-+	TP_PROTO(struct inode *inode, int nr_pages),
-+	TP_ARGS(inode, nr_pages),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(u64, ino)
-+		__field(int, nr_pages)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = inode->i_sb->s_dev;
-+		__entry->ino = inode->i_ino;
-+		__entry->nr_pages = nr_pages;
-+	),
-+	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->ino,
-+		  __entry->nr_pages)
-+)
-+
-+#define DEFINE_READPAGE_EVENT(name)		\
-+DEFINE_EVENT(iomap_readpage_class, name,	\
-+	TP_PROTO(struct inode *inode, int nr_pages), \
-+	TP_ARGS(inode, nr_pages))
-+DEFINE_READPAGE_EVENT(iomap_readpage);
-+DEFINE_READPAGE_EVENT(iomap_readpages);
-+
-+#endif /* _TRACE_IOMAP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.20.1
-
+On Wed, Jun 26, 2019 at 11:50:06PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    1dd45f17 Add linux-next specific files for 20190626
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=172479e9a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c1222640552e42a5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b75afdbe271a0d7ac4f6
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b75afdbe271a0d7ac4f6@syzkaller.appspotmail.com
+> 
+> XFS (loop5): Mounting V4 Filesystem
+> ==================================================================
+> BUG: KASAN: use-after-free in xlog_alloc_log+0x1266/0x1380
+> fs/xfs/xfs_log.c:1478
+> Read of size 8 at addr ffff8880693e2990 by task syz-executor.5/12241
+> 
+> CPU: 1 PID: 12241 Comm: syz-executor.5 Not tainted 5.2.0-rc6-next-20190626
+> #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+>  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+>  kasan_report+0x12/0x17 mm/kasan/common.c:614
+>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+>  xlog_alloc_log+0x1266/0x1380 fs/xfs/xfs_log.c:1478
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45bf6a
+> Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 9d 8d fb ff c3 66 2e 0f
+> 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff
+> 0f 83 7a 8d fb ff c3 66 0f 1f 84 00 00 00 00 00
+> RSP: 002b:00007fac99605a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00007fac99605b40 RCX: 000000000045bf6a
+> RDX: 00007fac99605ae0 RSI: 0000000020000000 RDI: 00007fac99605b00
+> RBP: 0000000000000001 R08: 00007fac99605b40 R09: 00007fac99605ae0
+> R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000004
+> R13: 00000000004c858e R14: 00000000004df0e0 R15: 00000000ffffffff
+> 
+> Allocated by task 12241:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+>  __do_kmalloc mm/slab.c:3656 [inline]
+>  __kmalloc+0x163/0x770 mm/slab.c:3665
+>  kmalloc include/linux/slab.h:556 [inline]
+>  kmem_alloc+0xd2/0x200 fs/xfs/kmem.c:24
+>  kmem_zalloc fs/xfs/kmem.h:73 [inline]
+>  xlog_alloc_log+0xbf4/0x1380 fs/xfs/xfs_log.c:1420
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 12241:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x10a/0x2c0 mm/slab.c:3757
+>  kvfree+0x61/0x70 mm/util.c:488
+>  kmem_free fs/xfs/kmem.h:66 [inline]
+>  xlog_alloc_log+0xea9/0x1380 fs/xfs/xfs_log.c:1480
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff8880693e2900
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 144 bytes inside of
+>  1024-byte region [ffff8880693e2900, ffff8880693e2d00)
+> The buggy address belongs to the page:
+> page:ffffea0001a4f880 refcount:1 mapcount:0 mapping:ffff8880aa400c40
+> index:0x0 compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea00018ec788 ffffea0002473908 ffff8880aa400c40
+> raw: 0000000000000000 ffff8880693e2000 0000000100000007 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff8880693e2880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff8880693e2900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff8880693e2980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                          ^
+>  ffff8880693e2a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff8880693e2a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+---end quoted text---
