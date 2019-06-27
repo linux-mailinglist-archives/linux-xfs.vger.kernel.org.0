@@ -2,125 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5981058585
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 17:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B5358674
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 17:55:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfF0P1X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 11:27:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33216 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0P1X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 11:27:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RFOMWC080276;
-        Thu, 27 Jun 2019 15:26:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=nAWucu9SyumY3cWlPIQTvZjPFkXl1Zmmfj8lYBo0gi0=;
- b=HPf1FoygBZJOdvV5uJ/5J7gMppCi1SIhOmuRBJY/rvhVrFw5ruHJqlmkSJ7w9Hle2Ux2
- IiDbQTJKHCYtxih7lTcgmMPBZumTY/Xn0D5pBhOSaHAxYx0HDyw5vUbnmAnYHyxBw1kh
- 3aXKeTgKHtKKe6x8YyEkSUzWzD9NyHU/gwrItEykMbdnRjrAvpn9Ivc0j/8JmDaxbk02
- uPntewJENx0IdzSPtD3C+fHRecrK+WbjRj+TtsygKfQZG8gYgDlyXZUCm0FxwPM+jFcj
- VixPy7Dyz+P5gVabl+6T2NAzqBu4Ou4Z9WrLaGhgSR8x7p6u6IAnWkoWeUUkVpI1POkF fA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t9cyqrxpu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 15:26:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RFPTdw094902;
-        Thu, 27 Jun 2019 15:26:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tat7desuk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 15:26:40 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RFQdpU016219;
-        Thu, 27 Jun 2019 15:26:39 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 08:26:39 -0700
-Date:   Thu, 27 Jun 2019 08:26:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     hch@lst.de, dchinner@redhat.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH -next] xfs: remove duplicated include
-Message-ID: <20190627152638.GN5171@magnolia>
-References: <20190627073323.45516-1-yuehaibing@huawei.com>
+        id S1726578AbfF0Py7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 11:54:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42020 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfF0Py6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 11:54:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k13so1207209pgq.9
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Jun 2019 08:54:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=udbte5nY2DT5VGMdOcG2M7x4xm7Yb8LgI97LBDM8qFY=;
+        b=cC8Vof6C2zF35oZfhOdIv/ovX40Xtaq1FJWJ6HAU09hz4hQk3EBcLU4xZXHAfTbaYI
+         hvkISYW6la0SoFhE8R3JLqvqEa0K2dKszQMFqCcEf4LSf+Wk7QHhA5ZMYW1b53iuXQcP
+         rzjECGDxO7S7dmTwSln1hzcWi0wrGZzLOBhGz/iDtLY7kwyz6BFv998Cu/9EwTz89Ilf
+         bS+PuQHvKwZDa52YSkl0IUu1x7jVUuqNLAS9+FA2koe0x6n7PNI9BEwMGERCOZU7HmGX
+         V4LEg7LW3rpCWy2rtSjlTgrYT8Vq2p0NrkEYr6BXjxyhFk+m5SMLbe7LnJjMgNGWrrE0
+         J1Ug==
+X-Gm-Message-State: APjAAAXpkXWrNP6xSsbraTWmNmpGC8+ZppHEuxu9MqwYnVYVXXVNgZVR
+        9UlPjD5lHfZCKSZ0WArDI5I=
+X-Google-Smtp-Source: APXvYqyEX7QzMT53PMN3QPPzQ36Timt4l2wy4O6nrGKi+WuCBE7fKpdDwAK5qeSN+YwKr5IS6n4Mfw==
+X-Received: by 2002:a17:90a:8a8e:: with SMTP id x14mr6687383pjn.103.1561650897452;
+        Thu, 27 Jun 2019 08:54:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 135sm3384018pfb.137.2019.06.27.08.54.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 08:54:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7A213403ED; Thu, 27 Jun 2019 15:54:55 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 15:54:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Alvin Zheng <Alvin@linux.alibaba.com>
+Cc:     gregkh <gregkh@linuxfoundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>, bfoster@redhat.com,
+        "joseph.qi" <joseph.qi@linux.alibaba.com>,
+        caspar <caspar@linux.alibaba.com>
+Subject: Re: [backport request][stable] xfs: xfstests generic/538 failed on
+ xfs
+Message-ID: <20190627155455.GA30113@42.do-not-panic.com>
+References: <a665a93a-0bf8-aedb-2ba3-d4b2fb672970@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190627073323.45516-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270178
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a665a93a-0bf8-aedb-2ba3-d4b2fb672970@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 03:33:23PM +0800, YueHaibing wrote:
-> Remove duplicated include.
+On Thu, Jun 27, 2019 at 08:10:56PM +0800, Alvin Zheng wrote:
+> Hi,
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>     I  was using kernel v4.19.y and found that it cannot pass the
+> generic/538 due to data corruption. I notice that upstream has fix this
+> issue with commit 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a. Will v4.19.y
+> backport this patch?
 
-NAK, Eric Sandeen already sent this to the list.
+Hey Alvin,
 
---D
+Thanks for Bringing this to attention.  I'll look into this a bit more.
+Time for a new set of stable fixes for v4.19.y. Of course, I welcome
+Briant's feedback, but if he's busy I'll still look into it.
 
-> ---
->  fs/xfs/xfs_extfree_item.c | 1 -
->  fs/xfs/xfs_filestream.c   | 1 -
->  fs/xfs/xfs_pnfs.c         | 1 -
->  3 files changed, 3 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-> index 99fd40eb..e515506 100644
-> --- a/fs/xfs/xfs_extfree_item.c
-> +++ b/fs/xfs/xfs_extfree_item.c
-> @@ -13,7 +13,6 @@
->  #include "xfs_mount.h"
->  #include "xfs_defer.h"
->  #include "xfs_trans.h"
-> -#include "xfs_trans.h"
->  #include "xfs_trans_priv.h"
->  #include "xfs_buf_item.h"
->  #include "xfs_extfree_item.h"
-> diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-> index b1869ae..a6d228c 100644
-> --- a/fs/xfs/xfs_filestream.c
-> +++ b/fs/xfs/xfs_filestream.c
-> @@ -21,7 +21,6 @@
->  #include "xfs_trace.h"
->  #include "xfs_ag_resv.h"
->  #include "xfs_trans.h"
-> -#include "xfs_shared.h"
->  
->  struct xfs_fstrm_item {
->  	struct xfs_mru_cache_elem	mru;
-> diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-> index 2d95355..6018e1c 100644
-> --- a/fs/xfs/xfs_pnfs.c
-> +++ b/fs/xfs/xfs_pnfs.c
-> @@ -17,7 +17,6 @@
->  #include "xfs_bmap_util.h"
->  #include "xfs_error.h"
->  #include "xfs_iomap.h"
-> -#include "xfs_shared.h"
->  #include "xfs_bit.h"
->  #include "xfs_pnfs.h"
->  
-> -- 
-> 2.7.4
-> 
-> 
+  Luis
