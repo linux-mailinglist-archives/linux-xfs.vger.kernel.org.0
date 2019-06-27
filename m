@@ -2,75 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C4A58E0A
-	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 00:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE9CC58E90
+	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 01:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfF0WhI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 18:37:08 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46803 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbfF0WhH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 18:37:07 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 5E47343C48F;
-        Fri, 28 Jun 2019 08:37:05 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hgczl-0001yF-U3; Fri, 28 Jun 2019 08:35:57 +1000
-Date:   Fri, 28 Jun 2019 08:35:57 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] iomap: add tracing for the address space operations
-Message-ID: <20190627223557.GI7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-13-hch@lst.de>
- <20190624234921.GE7777@dread.disaster.area>
- <20190625101515.GL1462@lst.de>
+        id S1726574AbfF0XcT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 19:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfF0XcT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:32:19 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167C12084B;
+        Thu, 27 Jun 2019 23:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561678338;
+        bh=mU1N/t/ui/zL9fYI+5p6MtnN3ZxYI5JKMwlh1ZDaM2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XrAz1gif88GA0ZvGIeVq3QZ+eHkS0xLMghFU3+6GOLr6MCQCp1LugGwXZDCmSa/7b
+         cfNZjsaANO0UFhOKaq9ivmO3Fu/ltzRULF7ho0BRgmNkpxFey126kYtFuMPiPtgCrG
+         N2TV4YM+5bW68c4zHoc4Bb34SRFrZPJuEUCJXeo0=
+Date:   Thu, 27 Jun 2019 19:32:17 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [STABLE 4.19] fixes for xfs memory and fs corruption
+Message-ID: <20190627233216.GD11506@sasha-vm>
+References: <155009104740.32028.193157199378698979.stgit@magnolia>
+ <20190213205804.GE32253@magnolia>
+ <CAOQ4uximAfJjNdunY2xK_1DwC2G7v31XWbv64AdO9nYdExUsVw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190625101515.GL1462@lst.de>
+In-Reply-To: <CAOQ4uximAfJjNdunY2xK_1DwC2G7v31XWbv64AdO9nYdExUsVw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=rMA9bymeoucKrl8lURMA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:15:15PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:49:21AM +1000, Dave Chinner wrote:
-> > > +#undef TRACE_SYSTEM
-> > > +#define TRACE_SYSTEM iomap
-> > 
-> > Can you add a comment somewhere here that says these tracepoints are
-> > volatile and we reserve the right to change them at any time so they
-> > don't form any sort of persistent UAPI that we have to maintain?
-> 
-> Sure.  Note that we don't have any such comment in xfs either..
+On Thu, Jun 27, 2019 at 07:12:48PM +0300, Amir Goldstein wrote:
+>Darrick,
+>
+>Can I have your blessing on the choice of these upstream commits
+>as stable candidates?
+>I did not observe any xfstests regressions when testing v4.19.55
+>with these patches applied.
+>
+>Sasha,
+>
+>Can you run these patches though your xfstests setup?
+>They fix nasty bugs.
 
-Yes, but that is buries inside the xfs code where we largely set our
-own rules. This, however, is generic code where people have a habit
-of arguing that tracepoints are stable API and they can never be
-changed because some random userspace application may have hard
-coded a dependency on it...
+Will do. Tests running now - I'll update tomorrow.
 
-Hence we need to be explicit here that this is diagnostic/debug code
-and anyone who tries to rely on it as a stable API gets to keep all
-the broken bits to themselves.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--
+Thanks,
+Sasha
