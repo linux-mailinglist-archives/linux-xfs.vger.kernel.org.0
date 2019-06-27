@@ -2,100 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B94B5894C
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 19:50:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EE5B589DD
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 20:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfF0Ruc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 13:50:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53956 "EHLO
+        id S1726620AbfF0SXl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 14:23:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48560 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0Ruc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 13:50:32 -0400
+        with ESMTP id S1726523AbfF0SXk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 14:23:40 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RHhqUX194718;
-        Thu, 27 Jun 2019 17:50:15 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIA7rA019301;
+        Thu, 27 Jun 2019 18:23:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=9dcRBZ1oH1Yw3KXHkcZZY5r+tJ0AoB4UqlalnGuOKrw=;
- b=tc2of1B4ZZYeugMVvjoTHZ7potobN0S2vYp0H5R9KvpdjImxhtrW+P+NcGc1HYqgX739
- WDIuhOknuj9aY3+VbQrjtdpfUMOAzcET7s267K5UEMHtzpr2FevYjhzc4AbF76NvU5DZ
- iK7ja0P1SQaYadRPMK0/pkeQXn5SSYslmfUQ0f6Whpx9NMSjorwC3f+j7WXlsCP8ZYag
- o/70+3KRKY6gtVwplHOIfn3h8OkrgVyTx3YDhN7wszwJmL1oPq6FPQKbqE7+qY/GKiFu
- 1bZ8D3xoyi/a1ibwRRf1YkTfkRBI8slj07ygKb3luG7CbY5HUamJ+quSyK1+vU/d56DA pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t9cyqsn5d-1
+ bh=0G6Y8m5n5DfJQPYFH33nWqg2UCy4HW55ipBD/Rtat5M=;
+ b=Xilmx0Vox9z6yWX6MHNl5wonE71OK7Ov/XTfsykPivZ29kYudcH6a72ZMAaFQ6gjUx9i
+ mVDJ8Jx2darKIcFVwEqEs/xAm9tPdVT1TOYHjYK0r6sofcj7FQeZ9lIYil0mBVf6oDqp
+ t9V/of3+k4zx5i3i2YoTNGUKMr8/rOD2WkJtOkC9F402FVQihLwSo5VlpQjgAsB+Nwu2
+ KcXh5r9EPgagzmB+JbJiw59nBL2Ha5FiPft03j85I8fukLgRqWDlSMs/C3Qb1jNeID87
+ oJQyTkLgXxT0528p4rJuQqo763BLvpzvRZqZ9l36ScBbcfRY4N+FUnZmvXcQv/QF2WTw Lg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t9cyqssgw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 17:50:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RHnZnO164797;
-        Thu, 27 Jun 2019 17:50:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2t9acdd265-1
+        Thu, 27 Jun 2019 18:23:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIMUTH180896;
+        Thu, 27 Jun 2019 18:23:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7dhq0c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 17:50:14 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5RHoCA3003961;
-        Thu, 27 Jun 2019 17:50:12 GMT
+        Thu, 27 Jun 2019 18:23:19 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RINHKR014156;
+        Thu, 27 Jun 2019 18:23:17 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 10:50:12 -0700
-Date:   Thu, 27 Jun 2019 10:50:11 -0700
+        with ESMTP ; Thu, 27 Jun 2019 11:23:17 -0700
+Date:   Thu, 27 Jun 2019 11:23:09 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] xfs: remove the unused xfs_count_page_state
- declaration
-Message-ID: <20190627175011.GO5171@magnolia>
+Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
+Message-ID: <20190627182309.GP5171@magnolia>
 References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-3-hch@lst.de>
+ <20190627104836.25446-8-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-3-hch@lst.de>
+In-Reply-To: <20190627104836.25446-8-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270205
+ engine=8.0.1-1810050000 definitions=main-1906270209
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270205
+ definitions=main-1906270208
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:25PM +0200, Christoph Hellwig wrote:
+On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
+> There is no real problem merging ioends that go beyond i_size into an
+> ioend that doesn't.  We just need to move the append transaction to the
+> base ioend.  Also use the opportunity to use a real error code instead
+> of the magic 1 to cancel the transactions, and write a comment
+> explaining the scheme.
+> 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks ok,
+Reading through this patch, I have a feeling it fixes the crash that
+Zorro has been seeing occasionally with generic/475...
+
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/xfs_aops.h | 1 -
->  1 file changed, 1 deletion(-)
+>  fs/xfs/xfs_aops.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-> index f62b03186c62..45a1ea240cbb 100644
-> --- a/fs/xfs/xfs_aops.h
-> +++ b/fs/xfs/xfs_aops.h
-> @@ -28,7 +28,6 @@ extern const struct address_space_operations xfs_dax_aops;
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 8b3070a40245..4ef8343c3759 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -314,11 +314,28 @@ xfs_ioend_can_merge(
+>  		return false;
+>  	if (ioend->io_offset + ioend->io_size != next->io_offset)
+>  		return false;
+> -	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
+> -		return false;
+>  	return true;
+>  }
 >  
->  int	xfs_setfilesize(struct xfs_inode *ip, xfs_off_t offset, size_t size);
+> +/*
+> + * If the to be merged ioend has a preallocated transaction for file
+> + * size updates we need to ensure the ioend it is merged into also
+> + * has one.  If it already has one we can simply cancel the transaction
+> + * as it is guaranteed to be clean.
+> + */
+> +static void
+> +xfs_ioend_merge_append_transactions(
+> +	struct xfs_ioend	*ioend,
+> +	struct xfs_ioend	*next)
+> +{
+> +	if (!ioend->io_append_trans) {
+> +		ioend->io_append_trans = next->io_append_trans;
+> +		next->io_append_trans = NULL;
+> +	} else {
+> +		xfs_setfilesize_ioend(next, -ECANCELED);
+> +	}
+> +}
+> +
+>  /* Try to merge adjacent completions. */
+>  STATIC void
+>  xfs_ioend_try_merge(
+> @@ -327,7 +344,6 @@ xfs_ioend_try_merge(
+>  {
+>  	struct xfs_ioend	*next_ioend;
+>  	int			ioend_error;
+> -	int			error;
 >  
-> -extern void xfs_count_page_state(struct page *, int *, int *);
->  extern struct block_device *xfs_find_bdev_for_inode(struct inode *);
->  extern struct dax_device *xfs_find_daxdev_for_inode(struct inode *);
+>  	if (list_empty(more_ioends))
+>  		return;
+> @@ -341,10 +357,8 @@ xfs_ioend_try_merge(
+>  			break;
+>  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+>  		ioend->io_size += next_ioend->io_size;
+> -		if (ioend->io_append_trans) {
+> -			error = xfs_setfilesize_ioend(next_ioend, 1);
+> -			ASSERT(error == 1);
+> -		}
+> +		if (next_ioend->io_append_trans)
+> +			xfs_ioend_merge_append_transactions(ioend, next_ioend);
+>  	}
+>  }
 >  
 > -- 
 > 2.20.1
