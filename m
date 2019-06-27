@@ -2,152 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EE5B589DD
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 20:23:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41E6E58A10
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jun 2019 20:35:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfF0SXl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 14:23:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48560 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfF0SXk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 14:23:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIA7rA019301;
-        Thu, 27 Jun 2019 18:23:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=0G6Y8m5n5DfJQPYFH33nWqg2UCy4HW55ipBD/Rtat5M=;
- b=Xilmx0Vox9z6yWX6MHNl5wonE71OK7Ov/XTfsykPivZ29kYudcH6a72ZMAaFQ6gjUx9i
- mVDJ8Jx2darKIcFVwEqEs/xAm9tPdVT1TOYHjYK0r6sofcj7FQeZ9lIYil0mBVf6oDqp
- t9V/of3+k4zx5i3i2YoTNGUKMr8/rOD2WkJtOkC9F402FVQihLwSo5VlpQjgAsB+Nwu2
- KcXh5r9EPgagzmB+JbJiw59nBL2Ha5FiPft03j85I8fukLgRqWDlSMs/C3Qb1jNeID87
- oJQyTkLgXxT0528p4rJuQqo763BLvpzvRZqZ9l36ScBbcfRY4N+FUnZmvXcQv/QF2WTw Lg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t9cyqssgw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:23:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIMUTH180896;
-        Thu, 27 Jun 2019 18:23:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tat7dhq0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:23:19 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RINHKR014156;
-        Thu, 27 Jun 2019 18:23:17 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 11:23:17 -0700
-Date:   Thu, 27 Jun 2019 11:23:09 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
-Message-ID: <20190627182309.GP5171@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-8-hch@lst.de>
+        id S1726472AbfF0Sfc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 27 Jun 2019 14:35:32 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:34394 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726384AbfF0Sfc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 14:35:32 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 3C9462844C
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Jun 2019 18:35:31 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id 2E30128475; Thu, 27 Jun 2019 18:35:31 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=ham version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 203947] [xfstests generic/475]: general protection fault: 0000
+ [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
+Date:   Thu, 27 Jun 2019 18:35:30 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: djwong+kernel@djwong.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-203947-201763-BIraDUAzxc@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-203947-201763@https.bugzilla.kernel.org/>
+References: <bug-203947-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-8-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270209
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270208
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
-> There is no real problem merging ioends that go beyond i_size into an
-> ioend that doesn't.  We just need to move the append transaction to the
-> base ioend.  Also use the opportunity to use a real error code instead
-> of the magic 1 to cancel the transactions, and write a comment
-> explaining the scheme.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+https://bugzilla.kernel.org/show_bug.cgi?id=203947
 
-Reading through this patch, I have a feeling it fixes the crash that
-Zorro has been seeing occasionally with generic/475...
+Darrick J. Wong (djwong+kernel@djwong.org) changed:
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |djwong+kernel@djwong.org
 
---D
+--- Comment #2 from Darrick J. Wong (djwong+kernel@djwong.org) ---
+Hmm... so we're clearly in a situation where we have ioend A -> ioend B and
+we're trying to merge A and B.  A has a setfilesize transaction and B does not,
+but current code assumes that if A has one then B must have one and that it
+must cancel B's.  Then we crash trying to cancel the transaction that B doesn't
+have.
 
-> ---
->  fs/xfs/xfs_aops.c | 28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 8b3070a40245..4ef8343c3759 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -314,11 +314,28 @@ xfs_ioend_can_merge(
->  		return false;
->  	if (ioend->io_offset + ioend->io_size != next->io_offset)
->  		return false;
-> -	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
-> -		return false;
->  	return true;
->  }
->  
-> +/*
-> + * If the to be merged ioend has a preallocated transaction for file
-> + * size updates we need to ensure the ioend it is merged into also
-> + * has one.  If it already has one we can simply cancel the transaction
-> + * as it is guaranteed to be clean.
-> + */
-> +static void
-> +xfs_ioend_merge_append_transactions(
-> +	struct xfs_ioend	*ioend,
-> +	struct xfs_ioend	*next)
-> +{
-> +	if (!ioend->io_append_trans) {
-> +		ioend->io_append_trans = next->io_append_trans;
-> +		next->io_append_trans = NULL;
-> +	} else {
-> +		xfs_setfilesize_ioend(next, -ECANCELED);
-> +	}
-> +}
-> +
->  /* Try to merge adjacent completions. */
->  STATIC void
->  xfs_ioend_try_merge(
-> @@ -327,7 +344,6 @@ xfs_ioend_try_merge(
->  {
->  	struct xfs_ioend	*next_ioend;
->  	int			ioend_error;
-> -	int			error;
->  
->  	if (list_empty(more_ioends))
->  		return;
-> @@ -341,10 +357,8 @@ xfs_ioend_try_merge(
->  			break;
->  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
->  		ioend->io_size += next_ioend->io_size;
-> -		if (ioend->io_append_trans) {
-> -			error = xfs_setfilesize_ioend(next_ioend, 1);
-> -			ASSERT(error == 1);
-> -		}
-> +		if (next_ioend->io_append_trans)
-> +			xfs_ioend_merge_append_transactions(ioend, next_ioend);
->  	}
->  }
->  
-> -- 
-> 2.20.1
-> 
+How do we end up in this situation?  I can't trigger it on my systems, but I
+guess this sounds plausible:
+
+1. Dirty pages 0, 1, and 2 of an empty file.
+
+2. Writeback gets scheduled for pages 0 and 2, creating ioends A and C.  Both
+ioends describe writes past the on-disk isize so we allocate transactions.
+
+3. ioend C completes immediately, sets the ondisk isize to (3 * PAGESIZE).
+
+4. Writeback gets scheduled for page 1, creating ioend B.  ioend B describes a
+write within the on-disk isize so we do not allocate setfilesize transaction.
+
+5. ioend A and B complete and are sorted into the per-inode ioend completion
+list.  xfs_ioend_try_merge looks at ioend A, sees that ioend A has a
+setfilesize transaction and that there's an ioend B that can be merged with A.
+
+6. _try_merge tries to call xfs_setfilesize_ioend(ioend B, -1) to cancel ioend
+B's transaction, but as we saw in (4), ioend B has no transaction and crashes.
+
+I wonder how hard it will be to write a regression test for this, since it
+requires fairly tight timing?
+
+Coincidentally, Christoph just posted "xfs: allow merging ioends over append
+boundaries" which I think fixes this problem.  Zorro, can you apply it and
+retry?
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
