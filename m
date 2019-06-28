@@ -2,116 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 863FA591F8
-	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 05:33:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6AEE592FB
+	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 06:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfF1Dd0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 23:33:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46780 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfF1Dd0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 23:33:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3TSew007988;
-        Fri, 28 Jun 2019 03:33:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=XNssvwhy0FbfTsDRiG4Jc4n0gxEcgk+h9kgGBaf6yys=;
- b=B612IMjsJyLVvw8Qo/0g+i+P65yj4D6xHhdGChgwKNAAs37fSaG+C8zwmv8q3ZYuyzJf
- TQ8degHnK0z8iQxvVPJqeO5/NL+HUsZsCJRZuWGIZF2g9GGezRqpN/ctLgPNVS3rAS02
- 8wfH2XhIknCVjBZn9/gwxz0Dgb/4g74fKSj2M2jHm1Ks1NQFJQx605urvkrYO8KkAoAD
- +2EHyi2fh5pYjh46ZuFbfuNkh8JNiH+wGBDfvD24fliuVqs6pQpibiDO3wXk5LyNBiJT
- 9R3R9DoRL87ZupAoACpRmIp1QzcGCOAu28BqVIygTFUNiRYWX9S/lH24IVKA4kcvRxyh Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t9cyqu92g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:33:05 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3VaJo143693;
-        Fri, 28 Jun 2019 03:33:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acdk8w5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:33:04 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S3X4O7003148;
-        Fri, 28 Jun 2019 03:33:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 20:33:03 -0700
-Date:   Thu, 27 Jun 2019 20:33:03 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
-Message-ID: <20190628033303.GA1404256@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-8-hch@lst.de>
- <20190627182309.GP5171@magnolia>
- <20190627214304.GB30113@42.do-not-panic.com>
- <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
+        id S1726566AbfF1Eqr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 28 Jun 2019 00:46:47 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41524 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfF1Eqq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Jun 2019 00:46:46 -0400
+Received: by mail-yb1-f195.google.com with SMTP id y67so2957972yba.8
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Jun 2019 21:46:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mvWAgzuHl/5+C8HqpabuGqFQrSUaLHikx6nhUfSbKaM=;
+        b=qcTTkVOBGmesirKJGbGN1Zr7rQ0Q7MhJfSTKYyI2lz6kkpAbzry6ekYO4rIy583jdl
+         AyNYgjhVygus2fKo0fgbBJvX/ZVMvLOV6YyQ/n8aEVOe33logZPMhXwPhftWmG0tyhoC
+         BKNLB0N8x+DQ7GHUqu7AirT9k3IS7t1Np1IwYjXuAsfMymg5utyp7zQK+AHvffDQektL
+         E3B8wZ7dJeNJKtyjKIL9gl60hdGhqngYQCYZszKVeV2SA7aJ81+s4v4cuuV9hZyLJJUC
+         12TR5F4C0n+UwVIWmaDoiU33Z0SlsJudxmXgUSDogg7Uj2BIPPsn0KyiQbMvrratA56L
+         LfhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mvWAgzuHl/5+C8HqpabuGqFQrSUaLHikx6nhUfSbKaM=;
+        b=YD19IAQXJHzjlUR/GDv9HwIkb7nv0nFmiK1Q6smWVkIOLtwmFGZMepS+SU1FwQtqlk
+         SnSO0CgNH2kwA8dSKaraqP9igSjEV20H7fqsOe+NyomLDL4IHdpMg4EcHl1GJxeEi8fK
+         MhO5zZYMmmhc0SnlLRz8vmdR6y13R3PPYfAKYc5Zmcpf3Dr8GjRS/XhdbkrOLgl/HjTd
+         zYoddavDEQssm8beeEphaCIYs9FlRtNezmvi+MR4QaZ7KchNftkk5k+yN8BllekZ/3nQ
+         7ClhzHq5mcJSA+tdcNBnS3bMwZSfrHlJJFQa+PuHcLBTf+YepQcDl6I3q0KYvEszmnKc
+         0zdA==
+X-Gm-Message-State: APjAAAWIehedcu/b0OlXIUkPB0iUOHUM75xDyMX1W+vVNXZ7NoOrvsQB
+        ghrll3p0NoIU3NeCl8AQqdMRy0H/00pNG4l1VxA=
+X-Google-Smtp-Source: APXvYqz/kcqQDMhCA+RmOGeGSrLwrxuoBiSxJC1ASEvVCLTdRz5oPtqlowGEymEuxXVDI/aMua/AK1UFyLo430Rbk74=
+X-Received: by 2002:a25:744b:: with SMTP id p72mr4975797ybc.439.1561697205998;
+ Thu, 27 Jun 2019 21:46:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=977
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280033
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280033
+References: <a665a93a-0bf8-aedb-2ba3-d4b2fb672970@linux.alibaba.com>
+ <20190627155455.GA30113@42.do-not-panic.com> <CAOQ4uxgqgDAdKZDYwmf0M35M3D6Ctn25-VVj3wu5XSj_4c-WdA@mail.gmail.com>
+ <20190627213520.GG19023@42.do-not-panic.com>
+In-Reply-To: <20190627213520.GG19023@42.do-not-panic.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 28 Jun 2019 07:46:34 +0300
+Message-ID: <CAOQ4uxht-inVEjRWXtkbRPXTA9DvRNTLSPNEZ0Eh=nUhEhNO-A@mail.gmail.com>
+Subject: Re: [backport request][stable] xfs: xfstests generic/538 failed on xfs
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Alvin Zheng <Alvin@linux.alibaba.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        "joseph.qi" <joseph.qi@linux.alibaba.com>,
+        caspar <caspar@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:52:04AM +0800, Zorro Lang wrote:
-> On Thu, Jun 27, 2019 at 09:43:04PM +0000, Luis Chamberlain wrote:
-> > On Thu, Jun 27, 2019 at 11:23:09AM -0700, Darrick J. Wong wrote:
-> > > On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
-> > > > There is no real problem merging ioends that go beyond i_size into an
-> > > > ioend that doesn't.  We just need to move the append transaction to the
-> > > > base ioend.  Also use the opportunity to use a real error code instead
-> > > > of the magic 1 to cancel the transactions, and write a comment
-> > > > explaining the scheme.
-> > > > 
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > 
-> > > Reading through this patch, I have a feeling it fixes the crash that
-> > > Zorro has been seeing occasionally with generic/475...
-> > > 
-> > > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Zorro, can you confirm? If so it would be great to also refer to
-> > the respective bugzilla entry #203947 [0].
-> 
-> Sure, I'll give it a test. But it's so hard to reproduce, I need long enough
-> time to prove "the panic's gone".
-> 
-> BTW, should I only merge this single patch to test, or merge your whole patchset
-> with 13 patches?
+On Fri, Jun 28, 2019 at 12:35 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Thu, Jun 27, 2019 at 07:18:40PM +0300, Amir Goldstein wrote:
+> > On Thu, Jun 27, 2019 at 6:55 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > >
+> > > On Thu, Jun 27, 2019 at 08:10:56PM +0800, Alvin Zheng wrote:
+> > > > Hi,
+> > > >
+> > > >     I  was using kernel v4.19.y and found that it cannot pass the
+> > > > generic/538 due to data corruption. I notice that upstream has fix this
+> > > > issue with commit 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a. Will v4.19.y
+> > > > backport this patch?
+> > >
+> > > Hey Alvin,
+> > >
+> > > Thanks for Bringing this to attention.  I'll look into this a bit more.
+> > > Time for a new set of stable fixes for v4.19.y. Of course, I welcome
+> > > Briant's feedback, but if he's busy I'll still look into it.
+> > >
+> >
+> > FWIW, I tested -g quick on xfs with reflink=1,rmapbt=1 and did not
+> > observe any regressions from v4.19.55.
+>
+> As you may recall I test all agreed upon configurations. Just one is not
+> enough.
 
-Just this one patch.
+Of course. It's just a heads up that testing looks sane so far.
 
---D
+>
+> > Luis, sorry I forgot to CC you on a request I just sent to consider 4 xfs
+> > patches for stable to fix generic/529 and generic/530:
+> >
+> > 3b50086f0c0d xfs: don't overflow xattr listent buffer
+> > e1f6ca113815 xfs: rename m_inotbt_nores to m_finobt_nores
+> > 15a268d9f263 xfs: reserve blocks for ifree transaction during log recovery
+> > c4a6bf7f6cc7 xfs: don't ever put nlink > 0 inodes on the unlinked list
+> >
+> > If you can run those patches through your setup that would be great.
+>
+> Sure, it may take 1-2 weeks, just a heads up. If you're OK with waiting
+> then great. Otherwise I personally cannot vouch for them. What types of
+> tests did you run and what configurations?
+>
 
-> Thanks,
-> Zorro
-> 
-> > 
-> > [0] https://bugzilla.kernel.org/show_bug.cgi?id=203947
-> > 
-> >   Luis
+So far I tested, -g quick with reflink=1,rmapbt=1.
+
+Sasha wrote that more results will be in tomorrow...
+
+Thanks,
+Amir.
