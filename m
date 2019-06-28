@@ -2,152 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A733758FC1
-	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 03:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E7C65917E
+	for <lists+linux-xfs@lfdr.de>; Fri, 28 Jun 2019 04:47:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfF1Bd3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Jun 2019 21:33:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60442 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbfF1Bd3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Jun 2019 21:33:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1SmAF121609;
-        Fri, 28 Jun 2019 01:33:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=iTffa50HD491h3uo63eZ68s9ZeVc6ii6J0ieF1QBP2M=;
- b=GLfhj2ca7KUob0ZvSjm06x0C65UezaKgq7GW3HhBUuzWr4YqU35pwXLgfuiZlxBAZZ51
- RjMBeTvy511th0lgsnpNUKkn1aSq7AvIl272l4m0PTlGhFuUEo8GVB+XU6WzTEY71iA8
- JLbYknd5B7vXb/qs+r0IRJHZOG/DUzjWFT/hQTWocG81R8Wr9JzWi2D83KchFVBwe82O
- rBXZesRhcafmhWKz6qxFOj6Me8ktH2eGfX4R/lBf5O6XHTqWkhKJHj+8mZzipzl+PkSf
- sLp6A7bH+K6Cd7yuKZ8ix+yca4nU52mMxXrn3AUhD6ObUNNEc/zfD6bPQauOXgPcCUHY dA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brtk4w3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 01:33:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1Wwj4003786;
-        Fri, 28 Jun 2019 01:33:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f5apcg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 01:33:00 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S1WvTF002302;
-        Fri, 28 Jun 2019 01:32:57 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 18:32:56 -0700
-Date:   Thu, 27 Jun 2019 18:32:56 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        id S1726476AbfF1Cqo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Jun 2019 22:46:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40188 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbfF1Cqm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:46:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 14D8CC057E65;
+        Fri, 28 Jun 2019 02:46:42 +0000 (UTC)
+Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ECAB1001B16;
+        Fri, 28 Jun 2019 02:46:41 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:52:04 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: lift the xfs writepage code into iomap v2
-Message-ID: <20190628013256.GE5179@magnolia>
+Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
+Message-ID: <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
 References: <20190627104836.25446-1-hch@lst.de>
+ <20190627104836.25446-8-hch@lst.de>
+ <20190627182309.GP5171@magnolia>
+ <20190627214304.GB30113@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-1-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280009
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280008
+In-Reply-To: <20190627214304.GB30113@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 28 Jun 2019 02:46:42 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:23PM +0200, Christoph Hellwig wrote:
-> Hi all,
+On Thu, Jun 27, 2019 at 09:43:04PM +0000, Luis Chamberlain wrote:
+> On Thu, Jun 27, 2019 at 11:23:09AM -0700, Darrick J. Wong wrote:
+> > On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
+> > > There is no real problem merging ioends that go beyond i_size into an
+> > > ioend that doesn't.  We just need to move the append transaction to the
+> > > base ioend.  Also use the opportunity to use a real error code instead
+> > > of the magic 1 to cancel the transactions, and write a comment
+> > > explaining the scheme.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > 
+> > Reading through this patch, I have a feeling it fixes the crash that
+> > Zorro has been seeing occasionally with generic/475...
+> > 
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> this series cleans up the xfs writepage code
+> Zorro, can you confirm? If so it would be great to also refer to
+> the respective bugzilla entry #203947 [0].
 
-Ok.  Patches #2 and #3 are trivial so I put them in my internal branch.
+Sure, I'll give it a test. But it's so hard to reproduce, I need long enough
+time to prove "the panic's gone".
 
-By now I'm sure everyone's noticed that I suspect that patch #7 fixes
-the generic/475 crash that Eryu reported, so I've added it to my
-internal branch for testing.
+BTW, should I only merge this single patch to test, or merge your whole patchset
+with 13 patches?
 
-Patch #8 is a simple cleanup so I put that one in too.  If I notice any
-problems with either of these two patches then I can always back them
-out before the next push to for-next.  I'd wanted to make those cleanups
-for a while and they're more or less what I would've done.
+Thanks,
+Zorro
 
-> and then lifts it to
-> fs/iomap.c so that it could be use by other file system.  I've been
-> wanting to this for a while so that I could eventually convert gfs2
-> over to it, but I never got to it.  Now Damien has a new zonefs
-> file system for semi-raw access to zoned block devices that would
-> like to use the iomap code instead of reinventing it, so I finally
-> had to do the work.
-
-Sooo many conflicted feelings on this question. :)
-
-I agree with Christoph that sharing /high quality/ code in the kernel
-has served the kernel well over the years and I want that to continue.
-Sharing the lower part of our writeback code so filesystems can opt out
-of writing their own code to map dirty pages to storage extents and
-attach them to struct bios is (I think) a good strategy.
-
-However, I don't think sharing crap code in the kernel is serving us
-well. I dislike this recent development where we decide to wire up XFS
-to some new API, beat on it aggressively, and then spend months sorting
-out how to make it work the way people think it does.  I do not wish to
-see any of the iomap code bit rot to the point that it becomes a
-nightmare to someone else.
-
-I think Dave has voiced some valid concerns about our ability to support
-this code over the long term once we start sharing it with other fses.
-XFS has a longish history of sailing away from generic code so that we
-can remove awkward abstractions which aren't working well for us.  If
-we're going to continue to go our own way with things like file locking
-and mapping I wonder how long we'd keep using the iomap ioends before
-moving away again.  How well will that iomap code avoid bitrot once XFS
-does that?
-
-We are already past -rc6, so I think the second part of the series
-(patches #10-13) is too late for 5.3.  I need more time to think about
-how this would work out in the scenario where (a) we take on the extra
-work of ensuring that our writeback improvements don't screw things up
-for everyone else, or (b) we end up forking away after a while.
-
-To be clear, I don't have a problem with the idea of iomap containing a
-common ioend creation library, but I would really like to see what it
-looks like to share the code with actual users.  I haven't seen any yet,
-though at this early stage I am not surprised.
-
-I think what I want to do is to proceed on a provisional basis -- create
-a branch off of the next -rc1 (perhaps omitting the part that removes
-xfs ioend processing) and let's see where zonedfs et. al. go from there.
-
-How does that sound?  Who are the other potential users?
-
-> This new version should have addressed all comments from the review,
-> except that I haven't split iomap.c, which is a little too invasive
-> with other pending changes to the file.  I do however offer to submit
-> a split right at the end of the merge window when it is least invasive.
-
-Already working on it, will send it tomorrow or tonight or something.
-
---D
-
-> Changes since v1:
->  - rebased to the latest xfs for-next tree
->  - keep the preallocated transactions for size updates
->  - rename list_pop to list_pop_entry and related cleanups
->  - better document the nofs context handling
->  - document that the iomap tracepoints are not a stable API
+> 
+> [0] https://bugzilla.kernel.org/show_bug.cgi?id=203947
+> 
+>   Luis
