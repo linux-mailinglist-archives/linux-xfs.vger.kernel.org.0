@@ -2,74 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AE0D5A98B
-	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 10:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 551265A9DE
+	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 11:35:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfF2IFN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 29 Jun 2019 04:05:13 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46231 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbfF2IFN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 29 Jun 2019 04:05:13 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x18so6970577qkn.13
-        for <linux-xfs@vger.kernel.org>; Sat, 29 Jun 2019 01:05:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=E6w7eqY7XRliv+XpmtfZmFOUG0jSHODq/B2ArmRlS+Q=;
-        b=rV7ngH6BrI4kn6qshk5uWeYedI92fQ1Nhfpt/7HTGyStSuGyfaDhiOnwgiH9LAUbOo
-         6LbX5LW/AV4GQEnQAFYlsRBqA3pdevxj/2gw/b0FVWVm5O24CYrK1ZIqcy08G2TFtlde
-         YcSsjfR3ilD/04lGBmcfyDn1NcbK7FFA92zzhhoTYtTVlCSpd7fUXywgzHQNT85kfYxi
-         dkOHLLW+FeA8z4Vm8g+Kd+qlVQOMG+m1df8B2h7w1Q8LsHTIUUHDi5o3WORD94J3H2B5
-         bqv7lTecBe2kULKbWHbRo0MMM0mwwhc7tCu+Gelv0x3WllmAJK3T0PjA9VA8TMKzgAvu
-         MxKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=E6w7eqY7XRliv+XpmtfZmFOUG0jSHODq/B2ArmRlS+Q=;
-        b=AE5q8DfqXk0oNyNj0DPvPAzOQtOYC9BgqTBCEbSInqGCwgyadAW0BM0AyKg133xpfB
-         4/VAEAopuWqVe2uLAGvxm5TbsxnJg5xb/ekKVsM8QhalFMjGMF8oy+64PtKHuH/fdhQI
-         HrH9k8IiilDWmt0a1z2Z651Vcl5fgq9HjnTYDfL1EcLKerCItY0eq0+aDQoWgF2VA7K4
-         1oJpxxEvWIinuGAmgjjpGv7mgE3dFUe5dAFzqTpsGYzYG/tgXXTEwKCrTo+SNGQi4LBV
-         SAn6N5cTrkfgc5YKxgjucUdXs7wtcsiV3K2HEqB4JLdj4u8PzpuPYKnf6g4RYd1lXY9l
-         QXgQ==
-X-Gm-Message-State: APjAAAVl9WXpI4DMVoRJMm+w4Hpa3Q9VqKbx/W0rC0t7Co+hxxU363rZ
-        oUAcBazQkugsj88/FIzAKKe51vsq48MyunsxVE0=
-X-Google-Smtp-Source: APXvYqwUgMSvipM9F9WBGSz7sMivIPGLxQoIIAvtTBugBtL7pcdYqnYxUESX2Ax93PIr+7hVAk+aJnHT//TRdZ6g+Zc=
-X-Received: by 2002:a05:620a:13bc:: with SMTP id m28mr11785284qki.334.1561795511914;
- Sat, 29 Jun 2019 01:05:11 -0700 (PDT)
+        id S1726872AbfF2Jf2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 29 Jun 2019 05:35:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8244 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726839AbfF2Jf2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 29 Jun 2019 05:35:28 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EE1A9BC6EAB6611E79FC;
+        Sat, 29 Jun 2019 17:35:22 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 29 Jun
+ 2019 17:35:00 +0800
+Subject: Re: [PATCH RFC] iomap: introduce IOMAP_TAIL
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <chao@kernel.org>
+References: <20190629073020.22759-1-yuchao0@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <afda5702-1d88-7634-d943-0c413ae3b28f@huawei.com>
+Date:   Sat, 29 Jun 2019 17:34:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Received: by 2002:a05:6214:1024:0:0:0:0 with HTTP; Sat, 29 Jun 2019 01:05:11
- -0700 (PDT)
-Reply-To: dhlinfobj@sfletter.com
-From:   Mr James Wilson <moganjohn4@gmail.com>
-Date:   Sat, 29 Jun 2019 01:05:11 -0700
-Message-ID: <CAJfPT4s9ASJvFBr+24bKA=WLSfyNBZRzru17S5fdYwPSkWc9oA@mail.gmail.com>
-Subject: YOUR ATM PAYMENT
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190629073020.22759-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-Dear:Beneficiary,
+Hi Chao,
 
-I have registered your (ATM CARD) of $2.5usd with DHL Office with
-registration code of (registration Code awb 33xzs). please Contact
-with your delivery information such as, Your Name, Your Address and
-Your Telephone Number:
+On 2019/6/29 15:30, Chao Yu wrote:
+> Some filesystems like erofs/reiserfs have the ability to pack tail
+> data into metadata, however iomap framework can only support mapping
+> inline data with IOMAP_INLINE type, it restricts that:
+> - inline data should be locating at page #0.
+> - inline size should equal to .i_size
+> So we can not use IOMAP_INLINE to handle tail-packing case.
+> 
+> This patch introduces new mapping type IOMAP_TAIL to map tail-packed
+> data for further use of erofs.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/iomap.c            | 22 ++++++++++++++++++++++
+>  include/linux/iomap.h |  1 +
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/fs/iomap.c b/fs/iomap.c
+> index 12654c2e78f8..ae7777ce77d0 100644
+> --- a/fs/iomap.c
+> +++ b/fs/iomap.c
+> @@ -280,6 +280,23 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
+>  	SetPageUptodate(page);
+>  }
+>  
+> +static void
+> +iomap_read_tail_data(struct inode *inode, struct page *page,
+> +		struct iomap *iomap)
+> +{
+> +	size_t size = i_size_read(inode) & (PAGE_SIZE - 1);
+> +	void *addr;
+> +
+> +	if (PageUptodate(page))
+> +		return;
+> +
+> +	addr = kmap_atomic(page);
+> +	memcpy(addr, iomap->inline_data, size);
+> +	memset(addr + size, 0, PAGE_SIZE - size);
 
-DHL Delivery Services
-Contact Person: Mr.David Lood
-DHL Office Benin Republique
-Email: dhlinfo.bj@sfletter.com
-Tel: +229 99402909
+need flush_dcache_page(page) here for new page cache page since
+it's generic iomap code (althrough not necessary for x86, arm), I am not sure...
+see commit d2b2c6dd227b and c01778001a4f...
 
-I have paid for the Delivery fee.The only fee you have to pay is their
-Security fee only.Please indicate the registration Code
+Thanks,
+Gao Xiang
 
-Best Regards,
-Mr James Wilson
+> +	kunmap_atomic(addr);
+> +	SetPageUptodate(page);
+> +}
+> +
+>  static loff_t
+>  iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  		struct iomap *iomap)
+> @@ -298,6 +315,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  		return PAGE_SIZE;
+>  	}
+>  
+> +	if (iomap->type == IOMAP_TAIL) {
+> +		iomap_read_tail_data(inode, page, iomap);
+> +		return PAGE_SIZE;
+> +	}
+> +
+>  	/* zero post-eof blocks as the page may be mapped */
+>  	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
+>  	if (plen == 0)
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 2103b94cb1bf..7e1ee48e3db7 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -25,6 +25,7 @@ struct vm_fault;
+>  #define IOMAP_MAPPED	0x03	/* blocks allocated at @addr */
+>  #define IOMAP_UNWRITTEN	0x04	/* blocks allocated at @addr in unwritten state */
+>  #define IOMAP_INLINE	0x05	/* data inline in the inode */
+> +#define IOMAP_TAIL	0x06	/* tail data packed in metdata */
+>  
+>  /*
+>   * Flags for all iomap mappings:
+> 
