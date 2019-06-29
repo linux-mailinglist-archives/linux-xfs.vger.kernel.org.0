@@ -2,81 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11D8A5ABF6
-	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 16:54:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E966F5ABFD
+	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 17:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfF2Oyu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 29 Jun 2019 10:54:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40774 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfF2Oyt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 29 Jun 2019 10:54:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p11so9180237wre.7;
-        Sat, 29 Jun 2019 07:54:44 -0700 (PDT)
+        id S1726810AbfF2PCQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 29 Jun 2019 11:02:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55327 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfF2PCP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 29 Jun 2019 11:02:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so11765089wmj.5;
+        Sat, 29 Jun 2019 08:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Us7E2m9FjQEVFeyGCN1o9lfo1FB04AlBXh42LqDN8y0=;
-        b=t3CTG0i72xAzx6p3BJgGIXsHvW0f9jW0l6Jy9U39FngkmTdbUyWgmUgSjBaBSgjxwZ
-         e3goDeYsDc5zhjHlNr+pPHzXd0fWkeOfyh5PIzQFMbDC6q+L/lZtCXQX6woVbI2nBBn4
-         TFpoH4hEQsO+r58mp1E8RqwEhwwj/1muUMX9WuIiVz4SaLCWZQr/M3nx99VH3ilINSZ2
-         03EPxllnsK6pEWjZi/fxrKzqBocR3e0VxSfx9GkjTVTRcz8ukvXKrHPLkJQecVA42tIH
-         CFRgXw8U2sRzknBvU7TTp3iSYC8ibBb9rxqJ1UTxg5D8JfS9atpfenxl3v4jc9vNVX5V
-         7NrA==
+        bh=RmVg+EyM8vY2enprLLucS15EEvpU4ufxUwtcS1mzRyo=;
+        b=oX3Bqe2U8qdLUi6K2osj8qWlyegsm/NxhRf230yG6IAR81VZBNuBNvnewCF6G5xRid
+         zAWPIL+kNTX4fiwQQ9dU4dcLZHbgyV2bC4Dhu1PGLhAsAigACIG1ld3uuA0a5gnQwnPt
+         1ihGphQwmuZrbmZf1eEeRs0M+qhdF08W/3S7wRzn/mIQcV2efPbpc5czXoP4Ss07Fvgj
+         xOs1cjPwvYZraDTsD7bKFVhJBrOKc1Kun0sujAV0dyd4te1/CaH14onIbQ+xPYnw7ps6
+         RPgrMHZv4RrSUegE1k7kZBNfHIruf0vDJvaXwUVmEPtC/MrwsoYLD1xrmdlbykNWsfUs
+         GqJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Us7E2m9FjQEVFeyGCN1o9lfo1FB04AlBXh42LqDN8y0=;
-        b=qIbT2uTGiXZe/vxf2ZrsIlrRK9eoMCT6tCZPPxC2AmYmyBLM0Umbw9DthZaO/peNid
-         qwVFTBzln59dYTK5Fi8XzaiJTHRAmLhlEb0d9DNg8a/b7QXOYWyUjeRU9agUN6R+pvxp
-         P5zqOupUcpWa4BRo/gP1kcxSTpCMUj9BCllRP47rU4qRlKe9XOLb4DdMVyDYj5dcA2HT
-         JxrngGd2C0RdF4mSy26gOJ/xdiRT1y3u/TNBUj6CC8nFSNqQ4GQfaAtDBkBxHVLiaYzf
-         1c4bcauXiwsvlnAfCegEJeJoKq3PAdE/+KvewuFXTLhIO3Xgg9gYkYIjITnnX9DMs7lj
-         GNNQ==
-X-Gm-Message-State: APjAAAURbSpMRZF04OYMgfmnaalzKag54pT5pgVb50d7I44DYtUywAyz
-        Md42cu0oLcyPYc8wzRGg4pVJYHix
-X-Google-Smtp-Source: APXvYqw9H+vX1XmHCchAuNC7YSYL85Bliu/U1NYCZMgeqB2FcA+JkHIqTRGPYOQ2M5eBWrf4ZrjOaw==
-X-Received: by 2002:a5d:4cca:: with SMTP id c10mr11440110wrt.233.1561820082823;
-        Sat, 29 Jun 2019 07:54:42 -0700 (PDT)
+        bh=RmVg+EyM8vY2enprLLucS15EEvpU4ufxUwtcS1mzRyo=;
+        b=Pz88zEsujY9ExQNUHfeGqetYcv19fpDjsS1buim7FL90XKrJc+Ty9bf9IU2Gn8UXVu
+         0DRhdg4JNisq+l0Sw5blpLJ5vupKx2c7AwxShhajXPbZBTt63KWp6QDOgMFNlAiNxnu2
+         mSTEH8eQCN97xIoC1KE6Et0GKSWL0LO2pB9fX8JCLF1Vng4qY5vzEc08Jgnl0DaYn5TJ
+         33eXxruyQeTJGGLHwQm5tRjjqbU5Xe0Ho2tVZCGoy0bYpWosEM1Y3kG94YEh289sDNMx
+         Hn7/nFOKJWLfyYi4JgJarRGf8ByeEwg1AyMGbrBzRikGywiVP6kYrrOqhBD/Qk2Hboma
+         Z05Q==
+X-Gm-Message-State: APjAAAVIsRX4b9kSLPR9Wm5XMrH6uHQZ4Peogfwjhn+Lnn6bKpkNectA
+        UeIVdUxYTV0FxvfJ/fOBVHoThVBA
+X-Google-Smtp-Source: APXvYqxttqk+OdyMlYa0Zn9xXTbvJ0wMHwF86dMo+n+Ozu4+WJDyvrKZFddzeBj5YmPNNdfLFoeONw==
+X-Received: by 2002:a1c:9813:: with SMTP id a19mr10588058wme.11.1561820528846;
+        Sat, 29 Jun 2019 08:02:08 -0700 (PDT)
 Received: from localhost ([197.210.35.74])
-        by smtp.gmail.com with ESMTPSA id a13sm3778612wrx.55.2019.06.29.07.54.39
+        by smtp.gmail.com with ESMTPSA id r6sm5610909wmh.11.2019.06.29.08.02.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 29 Jun 2019 07:54:42 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 15:54:33 +0100
+        Sat, 29 Jun 2019 08:02:07 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 16:01:55 +0100
 From:   Sheriff Esseson <sheriffesseson@gmail.com>
 To:     skhan@linuxfoundation.org
 Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Subject: Re: [PATCH v1] Doc : fs : convert xfs.txt to ReST
-Message-ID: <20190629145433.GA10491@localhost>
+Message-ID: <20190629150155.GB10491@localhost>
 References: <20190628214302.GA12096@localhost>
  <20190629010733.GA31770@localhost>
+ <20190629145433.GA10491@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190629010733.GA31770@localhost>
+In-Reply-To: <20190629145433.GA10491@localhost>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 02:25:08AM +0100, Sheriff Esseson wrote:
-> On Fri, Jun 28, 2019 at 10:43:24PM +0100, Sheriff Esseson wrote:
-> > 	Convert xfs.txt to ReST, markup and rename accordingly. Update
-> > 	Documentation/index.rst.
-> > 	
-> > 	While at it, make "value" in "option=value" form xfs options definable by
-> > 	the user, by embedding in angle "<>" brackets, rather than something
-> > 	predifined elsewhere. This is inline with the conventions in manuals.
-> > 	
-> > 	Also, make defaults of boolean options prefixed with "(*)". This is
-> > 	so that options can be compressed to "[no]option" and on a single line, which renders
-> > 	consistently and nicely in htmldocs.
-> > 	lastly, enforce a "one option, one definition" policy to keep things
-> > 	consistent and simple.
+On Sat, Jun 29, 2019 at 03:54:33PM +0100, Sheriff Esseson wrote:
+> On Sat, Jun 29, 2019 at 02:25:08AM +0100, Sheriff Esseson wrote:
+> > On Fri, Jun 28, 2019 at 10:43:24PM +0100, Sheriff Esseson wrote:
+> > > 	Convert xfs.txt to ReST, markup and rename accordingly. Update
+> > > 	Documentation/index.rst.
+> > > 	
+> > > 	While at it, make "value" in "option=value" form xfs options definable by
+> > > 	the user, by embedding in angle "<>" brackets, rather than something
+> > > 	predifined elsewhere. This is inline with the conventions in manuals.
+> > > 	
+> > > 	Also, make defaults of boolean options prefixed with "(*)". This is
+> > > 	so that options can be compressed to "[no]option" and on a single line, which renders
+> > > 	consistently and nicely in htmldocs.
+> > > 	lastly, enforce a "one option, one definition" policy to keep things
+> > > 	consistent and simple.
+> > > 
+> > > Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+> > > ---
+> > > -- 
+> > > 2.22.0
+> > > 
+> > 
+> > Rid Documentation/filesystems/index.rst of ".rst" in toc-tree references.
+> > 
+> > CC xfs-list.
+> > 
+> > Correct email indentation.
 > > 
 > > Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
 > > ---
@@ -84,14 +99,14 @@ On Sat, Jun 29, 2019 at 02:25:08AM +0100, Sheriff Esseson wrote:
 > > 2.22.0
 > > 
 > 
-> Rid Documentation/filesystems/index.rst of ".rst" in toc-tree references.
-> 
-> CC xfs-list.
-> 
-> Correct email indentation.
-> 
 > Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
 > ---
+> 
+> In v2:
+> Update MAINTAINERS.
+> fix indentation/long lines issues.
+> cc Darick and xfs mailing list.
+> 
 > -- 
 > 2.22.0
 > 
@@ -99,10 +114,8 @@ On Sat, Jun 29, 2019 at 02:25:08AM +0100, Sheriff Esseson wrote:
 Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
 ---
 
-In v2:
-Update MAINTAINERS.
-fix indentation/long lines issues.
-cc Darick and xfs mailing list.
+In v2.1:
+cc mentees list.
 
  Documentation/filesystems/index.rst |   5 +-
  Documentation/filesystems/xfs.rst   | 467 +++++++++++++++++++++++++++
