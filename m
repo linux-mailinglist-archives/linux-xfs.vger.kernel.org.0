@@ -2,65 +2,158 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4055A8B4
-	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 05:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 310F55A95C
+	for <lists+linux-xfs@lfdr.de>; Sat, 29 Jun 2019 09:05:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfF2DsI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 28 Jun 2019 23:48:08 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:49746 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726708AbfF2DsI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Jun 2019 23:48:08 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id E0706287E9
-        for <linux-xfs@vger.kernel.org>; Sat, 29 Jun 2019 03:48:07 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id D2CC328796; Sat, 29 Jun 2019 03:48:07 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 203947] [xfstests generic/475]: general protection fault: 0000
- [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
-Date:   Sat, 29 Jun 2019 03:48:07 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zlang@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-203947-201763-UNVr3RLIUD@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-203947-201763@https.bugzilla.kernel.org/>
-References: <bug-203947-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1726819AbfF2HFD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 29 Jun 2019 03:05:03 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:39144 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfF2HFD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 29 Jun 2019 03:05:03 -0400
+Received: by mail-yb1-f193.google.com with SMTP id k4so6253324ybo.6;
+        Sat, 29 Jun 2019 00:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xM/xcvkzohmQdtVDVPIgTFxuHjb4HOBVLFjrfhylohA=;
+        b=Gfu5Pz78tLVKvI8Q9WtRwxoZiso9oqghADUZOQqtlF6a4PF4ZC24i4bhdxEFOWT9mb
+         ogpxVnV34CUKT9Hp3X/zqMkMMajHb+ZB117iqrYsimXsLjh5l46Ev8rT8yc8cIX3yIvp
+         pPvNValE4fvXkmuBjtLVOlUXgnPgouNfZrFrcwZJP2fDEoyBu6UDZfe0+vDH3DvWwhm2
+         zDFMbFYJkqZlfRqwPcIjOiXLiRHvuGtOYey5wWMnlJCELzFsocHIwB5e56zebm7P/vZi
+         S6f79kvT8PuUPJTo2r7gwPTQl2Z6a4vDBem6y6JYpyyoLzjF+dqkakkpoHJf+XnufEOL
+         I8qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xM/xcvkzohmQdtVDVPIgTFxuHjb4HOBVLFjrfhylohA=;
+        b=fGTYzuL+oud727aBlwsLu8xlR47mCfqDSocu+JWOhrYD2fHsRWOtTibjFpG8h+mVmc
+         LtLngKxWk47XmZ/oa/3K+HkWSveSf/fb2Ma9xhmx+aVgZHISopq/ncJ/T6X9WzbpkcG3
+         dH9EKfZuD+w+FsHAfxetAUTkotnokSJGFD9VpbPqMjWz/peR6pe32b9aXzVdIq+RRJ77
+         /YUo0m+e1Fm396bGZKB6HUm7IUde/BxIrtlTkAWwftTDEFXzD2CUHwacQnoagOvALwfX
+         NMz19469BVNfR+LGzqXfF6dNKepBthCmGhaLuPvbz4x78llROCFXnmc5D1YfkQQT1lZ+
+         MMNg==
+X-Gm-Message-State: APjAAAXwKeIIADgcELt2dsFQUJIT/iHki71NzdiXHp7+ZbW3+Bb2Buaz
+        7+5dq0/1ux2psCOMQQ12p1t5yjmNHaA+WJvfpEc=
+X-Google-Smtp-Source: APXvYqxU4FPLSq/gM1nVlP+fbK0BmSrMY2hESytnxCDMdjqY3j5BqEk3eirFdcbLmu5rTiIZzzGPOTH2wPbd9PuZuhY=
+X-Received: by 2002:a25:8489:: with SMTP id v9mr8918225ybk.144.1561791901221;
+ Sat, 29 Jun 2019 00:05:01 -0700 (PDT)
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <156174687561.1557469.7505651950825460767.stgit@magnolia> <156174690758.1557469.9258105121276292687.stgit@magnolia>
+In-Reply-To: <156174690758.1557469.9258105121276292687.stgit@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 29 Jun 2019 10:04:50 +0300
+Message-ID: <CAOQ4uxgG5Kijx=nzFRB0uFPMghJXDfCqxKEWQoePwKZTGO+NMg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] vfs: don't allow most setxattr to immutable files
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, Chao Yu <yuchao0@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, ard.biesheuvel@linaro.org,
+        Josef Bacik <josef@toxicpanda.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chris Mason <clm@fb.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ext4 <linux-ext4@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203947
+On Fri, Jun 28, 2019 at 9:37 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+>
+> The chattr manpage has this to say about immutable files:
+>
+> "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> or renamed, no link can be created to this file, most of the file's
+> metadata can not be modified, and the file can not be opened in write
+> mode."
+>
+> However, we don't actually check the immutable flag in the setattr code,
+> which means that we can update inode flags and project ids and extent
+> size hints on supposedly immutable files.  Therefore, reject setflags
+> and fssetxattr calls on an immutable file if the file is immutable and
+> will remain that way.
+>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/inode.c |   27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+>
+> diff --git a/fs/inode.c b/fs/inode.c
+> index cf07378e5731..4261c709e50e 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -2214,6 +2214,14 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+>             !capable(CAP_LINUX_IMMUTABLE))
+>                 return -EPERM;
+>
+> +       /*
+> +        * We aren't allowed to change any other flags if the immutable flag is
+> +        * already set and is not being unset.
+> +        */
+> +       if ((oldflags & FS_IMMUTABLE_FL) && (flags & FS_IMMUTABLE_FL) &&
+> +           oldflags != flags)
+> +               return -EPERM;
+> +
+>         /*
+>          * Now that we're done checking the new flags, flush all pending IO and
+>          * dirty mappings before setting S_IMMUTABLE on an inode via
+> @@ -2284,6 +2292,25 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
+>             !(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)))
+>                 return -EINVAL;
+>
+> +       /*
+> +        * We aren't allowed to change any fields if the immutable flag is
+> +        * already set and is not being unset.
+> +        */
+> +       if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
+> +           (fa->fsx_xflags & FS_XFLAG_IMMUTABLE)) {
+> +               if (old_fa->fsx_xflags != fa->fsx_xflags)
+> +                       return -EPERM;
+> +               if (old_fa->fsx_projid != fa->fsx_projid)
+> +                       return -EPERM;
+> +               if ((fa->fsx_xflags & (FS_XFLAG_EXTSIZE |
+> +                                      FS_XFLAG_EXTSZINHERIT)) &&
+> +                   old_fa->fsx_extsize != fa->fsx_extsize)
+> +                       return -EPERM;
+> +               if ((old_fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
+> +                   old_fa->fsx_cowextsize != fa->fsx_cowextsize)
+> +                       return -EPERM;
+> +       }
+> +
 
---- Comment #6 from Zorro Lang (zlang@redhat.com) ---
-Please check the attachment to get more details about comment 4. Maybe I should
-report another bug to track this issue.
+I would like to reject this for the sheer effort on my eyes, but
+I'll try harder to rationalize.
 
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+How about memcmp(fa, old_fa, offsetof(struct fsxattr, fsx_pad))?
+
+Would be more robust to future struct fsxattr changes and generally
+more easy on the eyes.
+
+Sure, there is the possibility of userspace passing uninitialized
+fsx_extsize/fsx_cowextsize without setting the flag, but is that
+a real concern for the very few tools that are used to chattr?
+Those tools, when asked to set an attribute, will first get
+struct fsxattr from fs, then change the requested attr and set the
+fsxattr struct. So IMO the chances of this causing any regression
+or unexpected behavior are ridiculously low.
+
+Thanks,
+Amir.
