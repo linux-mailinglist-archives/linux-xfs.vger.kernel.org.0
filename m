@@ -2,115 +2,159 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8ED05B24E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 01:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55BC45B253
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 01:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfF3XLj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 30 Jun 2019 19:11:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46092 "EHLO
+        id S1727234AbfF3XUQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 30 Jun 2019 19:20:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52104 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfF3XLi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 30 Jun 2019 19:11:38 -0400
+        with ESMTP id S1727210AbfF3XUQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 30 Jun 2019 19:20:16 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UN9v6u066248;
-        Sun, 30 Jun 2019 23:11:34 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UNJ10m071968;
+        Sun, 30 Jun 2019 23:19:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=ToxWtqacVfownbbDFFcde5FMgsORBrZOHnuANCbJNqc=;
- b=V0zjCQI7uEgDCnl8P4y7Ql+LZjD0e7u0vNIWNoJh5lWC/XRhAXV5sbZUNpx8T7FH0+EH
- +bUbTjQZAG+SZtuLVbb9r6AuEXWMGlSnlLQsWjoAMJxyZW/tmsPWlU05bCwkDFilH18C
- grrn+9HoRt+u+tkHzzEmQULAMoQ2/sKKwsbP/NsLgcyS+ZPZkiLgE4/CLj99yCFLkcED
- okkzZS4CPYxEKk7fwvpFGyqYjlnypBjLMHglwbSgwCvW8W3SK9etRGgh77ihQvaNZd7z
- kEzFUP8QljafCmOFt5y48PO9TG9EQHwh8qZ84vnZUJ3+EyC218dAGBZp7N3oSaj3wnOx jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2te5tbakhv-1
+ in-reply-to; s=corp-2018-07-02;
+ bh=axz3J6ouM/L8KDPjpHjAo4EOHOdtx8sMNGt8BPk7VLA=;
+ b=AILi/mCQjrO3G1EuhQO/OpdZWqYM3oXIyLFg1hjAAn1FYOkSqfTsF+WFZEBchFGoAL9X
+ NLAofI/xksy1IZBKKlkyIRE51XOA0LMxBr38cYwhV6Eh79xK+5WF0wjqmUi8tbU6L2fA
+ 2nsU+UlryLYUxQhZOGUr/2iugtpTfFGFBRWzMvW1VhWBHU9s99ExjXXvV8r6+sGRQjsh
+ gnB5tBR6Y6xeS128XHsYDhYh4osNm/X+IoWMAoMaeBS5R8TJme85T2wwayBAr/GPpoGm
+ MJFSUgpKFWt4qOrzpTeNmhf+8189SZI7g6QMgWfuaVhzH+8PkREC4MhbXtnk2faNDMHR 7A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2te5tbam1j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 30 Jun 2019 23:11:33 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UN7SiB116455;
-        Sun, 30 Jun 2019 23:11:33 GMT
+        Sun, 30 Jun 2019 23:19:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UNHuAv054192;
+        Sun, 30 Jun 2019 23:19:47 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tebqfnfu8-1
+        by aserp3030.oracle.com with ESMTP id 2tebajwpse-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 30 Jun 2019 23:11:32 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5UNBUAs016678;
-        Sun, 30 Jun 2019 23:11:31 GMT
+        Sun, 30 Jun 2019 23:19:47 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5UNJdJ5019635;
+        Sun, 30 Jun 2019 23:19:39 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 30 Jun 2019 16:11:30 -0700
-Date:   Sun, 30 Jun 2019 16:11:30 -0700
+        with ESMTP ; Sun, 30 Jun 2019 16:19:39 -0700
+Date:   Sun, 30 Jun 2019 16:19:32 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Holger =?iso-8859-1?Q?Hoffst=E4tte?= 
-        <holger@applied-asynchrony.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Include 'xfs: speed up large directory modifications' in 5.3?
-Message-ID: <20190630231130.GA1654093@magnolia>
-References: <56158aa8-c07a-f90f-a166-b2eeb226bb4a@applied-asynchrony.com>
- <20190630153955.GF1404256@magnolia>
- <20190630223605.GK7777@dread.disaster.area>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, gaoxiang25@huawei.com,
+        chao@kernel.org
+Subject: Re: [PATCH RFC] iomap: introduce IOMAP_TAIL
+Message-ID: <20190630231932.GI1404256@magnolia>
+References: <20190629073020.22759-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190630223605.GK7777@dread.disaster.area>
+In-Reply-To: <20190629073020.22759-1-yuchao0@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9304 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906300298
+ engine=8.0.1-1810050000 definitions=main-1906300300
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9304 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906300298
+ definitions=main-1906300301
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:36:05AM +1000, Dave Chinner wrote:
-> On Sun, Jun 30, 2019 at 08:39:55AM -0700, Darrick J. Wong wrote:
-> > On Sun, Jun 30, 2019 at 01:28:09PM +0200, Holger Hoffstätte wrote:
-> > > Hi,
-> > > 
-> > > I have been running with Dave's series for faster directory inserts since
-> > > forever without any issues, and the last revision [1] still applies cleanly
-> > > to current5.2-rc (not sure about xfs-next though).
-> > > Any chance this can be included in 5.3? IMHO it would be a shame if this
-> > > fell through the cracks again.
-> > > 
-> > > Thanks,
-> > > Holger
-> > > 
-> > > [1] https://patchwork.kernel.org/project/xfs/list/?series=34713
-> > 
-> > Christoph reviewed most of the series, but it looked like he and Dave
-> > went back and forth a bit on the second to last patch and Dave never
-> > sent a v2 series or a request to just merge it as is, so I didn't take
-> > any action.  Hey Dave, are you still working on a resubmission for this
-> > series?
-> 
-> It's in my stack somewhere. Not for this cycle. Can't even remember
-> what was the issue with it.  I'm pretty sure that was about when the
-> whole copy file range debacle exploded in our faces, which was why
-> there was no followup back then...
+On Sat, Jun 29, 2019 at 03:30:20PM +0800, Chao Yu wrote:
+> Some filesystems like erofs/reiserfs have the ability to pack tail
+> data into metadata, however iomap framework can only support mapping
+> inline data with IOMAP_INLINE type, it restricts that:
+> - inline data should be locating at page #0.
+> - inline size should equal to .i_size
 
-I vague recollection is that I looked at it and remember thinking it was
-fine except maybe for the tweaks hch suggested, and then copyfilerange
-blew up and that was it, everything got derailed. :(
+Wouldn't it be easier simply to fix the meaning of IOMAP_INLINE so that
+it can be used at something other than offset 0 and length == isize?
+IOWs, make it mean "use the *inline_data pointer to read/write data
+as a direct memory access"?
 
-/me shakes fist at crAPIs....
+I also don't really like the idea of leaving the write paths
+unimplemented in core code, though I suppose as an erofs developer
+you're not likely to have a good means for testing... :/
+
+/me starts wondering if a better solution would be to invent iomaptestfs
+which exists solely to test all iomap code with as little other
+intelligence as possible...
 
 --D
 
-> Cheers,
+> So we can not use IOMAP_INLINE to handle tail-packing case.
 > 
-> Dave.
+> This patch introduces new mapping type IOMAP_TAIL to map tail-packed
+> data for further use of erofs.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/iomap.c            | 22 ++++++++++++++++++++++
+>  include/linux/iomap.h |  1 +
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/fs/iomap.c b/fs/iomap.c
+> index 12654c2e78f8..ae7777ce77d0 100644
+> --- a/fs/iomap.c
+> +++ b/fs/iomap.c
+> @@ -280,6 +280,23 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
+>  	SetPageUptodate(page);
+>  }
+>  
+> +static void
+> +iomap_read_tail_data(struct inode *inode, struct page *page,
+> +		struct iomap *iomap)
+> +{
+> +	size_t size = i_size_read(inode) & (PAGE_SIZE - 1);
+> +	void *addr;
+> +
+> +	if (PageUptodate(page))
+> +		return;
+> +
+> +	addr = kmap_atomic(page);
+> +	memcpy(addr, iomap->inline_data, size);
+> +	memset(addr + size, 0, PAGE_SIZE - size);
+> +	kunmap_atomic(addr);
+> +	SetPageUptodate(page);
+> +}
+> +
+>  static loff_t
+>  iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  		struct iomap *iomap)
+> @@ -298,6 +315,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  		return PAGE_SIZE;
+>  	}
+>  
+> +	if (iomap->type == IOMAP_TAIL) {
+> +		iomap_read_tail_data(inode, page, iomap);
+> +		return PAGE_SIZE;
+> +	}
+> +
+>  	/* zero post-eof blocks as the page may be mapped */
+>  	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
+>  	if (plen == 0)
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 2103b94cb1bf..7e1ee48e3db7 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -25,6 +25,7 @@ struct vm_fault;
+>  #define IOMAP_MAPPED	0x03	/* blocks allocated at @addr */
+>  #define IOMAP_UNWRITTEN	0x04	/* blocks allocated at @addr in unwritten state */
+>  #define IOMAP_INLINE	0x05	/* data inline in the inode */
+> +#define IOMAP_TAIL	0x06	/* tail data packed in metdata */
+>  
+>  /*
+>   * Flags for all iomap mappings:
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> 2.18.0.rc1
+> 
