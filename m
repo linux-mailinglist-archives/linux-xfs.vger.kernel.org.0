@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BBFD5B0AB
-	for <lists+linux-xfs@lfdr.de>; Sun, 30 Jun 2019 18:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E84975B0AD
+	for <lists+linux-xfs@lfdr.de>; Sun, 30 Jun 2019 18:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfF3QeL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 30 Jun 2019 12:34:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57188 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfF3QeK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 30 Jun 2019 12:34:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UGY78F147474
-        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:34:07 GMT
+        id S1726605AbfF3QhK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 30 Jun 2019 12:37:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50888 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfF3QhJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 30 Jun 2019 12:37:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UGXm85138721
+        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:37:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
  subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=p3o5dwC5OSkIcg6TBECPouOhSdwALotaXRTboqeSro0=;
- b=x60rHSfphmgqytRa2lAS+8R/VeRJ92Ne05LdC4Xs1DC4kKufyd79/Z6e3Dnz25sO+c0y
- 5hxjPAShlWbaVZn7V2gyVNLuGCaTPCXCVwGxic8ZEhTgNZtcSr6T0sMPDTFiC5cK2Tvm
- +z4lifBzGZ9a18cq2oK5Up+uhhCLZJpo3hmf7FuQnFspCYYgHB4PEEkPN2Mgzb9M5rH8
- 458+aOhJ5UZ7t8VRn1mTW7zi7Ergirluc5gh+hg6XkDjLZShir5g8iKGwIY3PG0vXU0D
- aH9f863muDmHsMWJqwCMrcATa1/+iYbaCUfoDFkB6Pa77Ex28TbdV/K+tHypaHGVzPLA KQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2te61pj803-1
+ bh=NO0olBeoeY9HTgrfNWH1dN1CPgXuTWQCNx2CHTrIa+s=;
+ b=mk/ibRa6gNxi+5CQehEAYgiGlYieytXNfgeTpTvGkTJe8VJMiIeWLAxmHE/nBcp17lEM
+ Yr7gghjmc/moS+Eo27882+glBiMqYeO99YQNRfWlBrAWK8GaUZO0qxNqwnif8b/BXADT
+ tpaaJUHNonEmXr7CYs/wVlVtgeya9n2UFFDS1T9k93JxAIHtH9h5dofpmajLJftj/VMJ
+ nk9SQIaAuszqBV3jqz5SoKMilAF6pYUz9dmHQXbqXTYbAnGDDVFyIleYyRgNVxGIZEM8
+ FWKhI6JXOL+uMkH6vq24lUbGk7IayIOEm5tRL8dFGT9AriGL8Y+9lmLkEtmvfmBl6pFe 8w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2te61dt7yd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:34:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UGXVDE072870
-        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:34:06 GMT
+        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:37:05 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5UGXRXX096495
+        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:37:05 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2tebqfkm3u-1
+        by aserp3020.oracle.com with ESMTP id 2tebktbq4e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:34:06 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5UGY5IJ020453
-        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:34:05 GMT
+        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:37:04 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5UGb3pk021420
+        for <linux-xfs@vger.kernel.org>; Sun, 30 Jun 2019 16:37:04 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 30 Jun 2019 09:34:05 -0700
-Date:   Sun, 30 Jun 2019 09:34:04 -0700
+        with ESMTP ; Sun, 30 Jun 2019 09:37:03 -0700
+Date:   Sun, 30 Jun 2019 09:37:00 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next *rebased* to 73d30d48749f
-Message-ID: <20190630163404.GG1404256@magnolia>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 332b9caf2d7b
+Message-ID: <20190630163700.GH1404256@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -70,21 +70,19 @@ The for-next branch of the xfs-linux repository at:
 
 	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-has just been rebased.
+has just been updated.
 
-**NOTE** I discovered while bisecting the previous for-next that I
-introduced a build failure in "xfs: move xfs_ino_geometry to xfs_shared.h"
-that I hadn't noticed because apparently 0day doesn't do commit by
-commit build tests anymore?  (Frankly, it doesn't tell me /anything/
-unless it finds failures, so I think I'm not going to rely on cloud
-kernel build tests anymore.)
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
 
-Anyway, I rewrote the branch to fix the bisection error, and now I'm
-pushing it out to for-next.  I'm sorry about the rough ride.
+This branch now includes the vfs and iomap changes that I'm proposing
+for 5.3.
 
 The new head of the for-next branch is commit:
 
-73d30d48749f xfs: remove XFS_TRANS_NOFS
+332b9caf2d7b Merge remote-tracking branch 'korg/vfs-5.3-merge' into for-next-5.3
 
 New Commits:
 
@@ -97,15 +95,20 @@ Amir Goldstein (7):
       [5dae222a5ff0] vfs: allow copy_file_range to copy across devices
       [fe0da9c09b2d] fuse: copy_file_range needs to strip setuid bits and update timestamps
 
+Andreas Gruenbacher (2):
+      [8d3e72a180b4] iomap: don't mark the inode dirty in iomap_write_end
+      [36a7347de097] iomap: fix page_done callback for short writes
+
 Brian Foster (4):
       [2a4f35f984f0] xfs: clean up small allocation helper
       [c63cdd4fc9cc] xfs: move small allocation helper
       [6691cd9267c1] xfs: skip small alloc cntbt logic on NULL cursor
       [7e36a3a63d3e] xfs: always update params on small allocation
 
-Christoph Hellwig (53):
+Christoph Hellwig (54):
       [f9a196ee5ab5] xfs: merge xfs_buf_zero and xfs_buf_iomove
       [76dee76921e1] xfs: remove the debug-only q_transp field from struct xfs_dquot
+      [8af54f291e5c] fs: fold __generic_write_end back into generic_write_end
       [1e85a3670db2] xfs: remove the no-op spinlock_destroy stub
       [153fd7b57ca9] xfs: remove the never used _XBF_COMPOUND flag
       [ce89755cdfea] xfs: renumber XBF_WRITE_FAIL
@@ -158,7 +161,7 @@ Christoph Hellwig (53):
       [fe64e0d26b1c] xfs: simplify xfs_ioend_can_merge
       [73d30d48749f] xfs: remove XFS_TRANS_NOFS
 
-Darrick J. Wong (8):
+Darrick J. Wong (16):
       [ef325959993e] xfs: separate inode geometry
       [494dba7b276e] xfs: refactor inode geometry setup routines
       [490d451fa518] xfs: fix inode_cluster_size rounding mayhem
@@ -167,6 +170,14 @@ Darrick J. Wong (8):
       [5467b34bd1e8] xfs: move xfs_ino_geometry to xfs_shared.h
       [8d90857cff44] xfs: refactor free space btree record initialization
       [f327a00745ff] xfs: account for log space when formatting new AGs
+      [de2baa49bbae] vfs: create a generic checking and prep function for FS_IOC_SETFLAGS
+      [3dd3ba36a8ee] vfs: create a generic checking function for FS_IOC_FSSETXATTR
+      [0e9441bc8f9a] vfs: teach vfs_ioc_fssetxattr_check to check project id info
+      [3437d21bc130] vfs: teach vfs_ioc_fssetxattr_check to check extent size hints
+      [8af74d044d73] vfs: only allow FSSETXATTR to set DAX flag on files and dirs
+      [875e1b258e17] mm/fs: don't allow writes to immutable files
+      [345df584ff3e] Merge remote-tracking branch 'korg/iomap-5.3-merge' into for-next-5.3
+      [332b9caf2d7b] Merge remote-tracking branch 'korg/vfs-5.3-merge' into for-next-5.3
 
 Dave Chinner (2):
       [f16acc9d9b37] vfs: introduce generic_copy_file_range()
@@ -183,12 +194,30 @@ Code Diffstat:
 
  .../filesystems/xfs-self-describing-metadata.txt   |   8 +-
  MAINTAINERS                                        |   6 +
+ fs/attr.c                                          |  13 +-
+ fs/btrfs/ioctl.c                                   |  30 +-
+ fs/buffer.c                                        |  62 +-
  fs/ceph/file.c                                     |  23 +-
  fs/cifs/cifsfs.c                                   |   4 +
+ fs/efivarfs/file.c                                 |  26 +-
+ fs/ext2/ioctl.c                                    |  16 +-
+ fs/ext4/ioctl.c                                    |  51 +-
+ fs/f2fs/file.c                                     |  53 +-
  fs/fuse/file.c                                     |  29 +-
- fs/inode.c                                         |  20 +
+ fs/gfs2/bmap.c                                     |   2 +
+ fs/gfs2/file.c                                     |  42 +-
+ fs/hfsplus/ioctl.c                                 |  21 +-
+ fs/inode.c                                         | 106 ++++
+ fs/internal.h                                      |   2 -
+ fs/iomap.c                                         |  17 +-
+ fs/jfs/ioctl.c                                     |  22 +-
  fs/nfs/nfs4file.c                                  |  23 +-
+ fs/nilfs2/ioctl.c                                  |   9 +-
+ fs/ocfs2/ioctl.c                                   |  13 +-
+ fs/orangefs/file.c                                 |  35 +-
  fs/read_write.c                                    | 124 ++--
+ fs/reiserfs/ioctl.c                                |  10 +-
+ fs/ubifs/ioctl.c                                   |  13 +-
  fs/xfs/Makefile                                    |   7 +-
  fs/xfs/kmem.c                                      |   5 -
  fs/xfs/kmem.h                                      |   8 +
@@ -290,7 +319,7 @@ Code Diffstat:
  fs/xfs/xfs_inode.c                                 |  42 +-
  fs/xfs/xfs_inode_item.c                            |  16 +-
  fs/xfs/xfs_inode_item.h                            |   2 +-
- fs/xfs/xfs_ioctl.c                                 |   9 -
+ fs/xfs/xfs_ioctl.c                                 | 163 +++---
  fs/xfs/xfs_ioctl32.c                               |   7 +-
  fs/xfs/xfs_iomap.c                                 |   5 +-
  fs/xfs/xfs_iops.c                                  |  10 -
@@ -335,9 +364,12 @@ Code Diffstat:
  fs/xfs/xfs_trans_refcount.c                        | 240 --------
  fs/xfs/xfs_trans_rmap.c                            | 257 ---------
  fs/xfs/xfs_xattr.c                                 |   5 +-
- include/linux/fs.h                                 |   9 +
- mm/filemap.c                                       | 110 +++-
- 156 files changed, 2588 insertions(+), 4036 deletions(-)
+ include/linux/fs.h                                 |  21 +
+ include/linux/iomap.h                              |   1 +
+ mm/filemap.c                                       | 113 +++-
+ mm/memory.c                                        |   4 +
+ mm/mmap.c                                          |   8 +-
+ 177 files changed, 2970 insertions(+), 4359 deletions(-)
  create mode 100644 fs/xfs/xfs_bio_io.c
  delete mode 100644 fs/xfs/xfs_trans_bmap.c
  delete mode 100644 fs/xfs/xfs_trans_extfree.c
