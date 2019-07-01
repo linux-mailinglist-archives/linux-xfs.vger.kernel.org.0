@@ -2,185 +2,243 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0564E5B26D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 02:10:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C5165B2A8
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 03:06:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfGAAKN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 30 Jun 2019 20:10:13 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50460 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726402AbfGAAKN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 30 Jun 2019 20:10:13 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BF99143C6B5;
-        Mon,  1 Jul 2019 10:10:07 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hhjsR-0003pM-Ia; Mon, 01 Jul 2019 10:08:59 +1000
-Date:   Mon, 1 Jul 2019 10:08:59 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190701000859.GL7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-12-hch@lst.de>
- <20190624234304.GD7777@dread.disaster.area>
- <20190625101020.GI1462@lst.de>
- <20190628004542.GJ7777@dread.disaster.area>
- <20190628053320.GA26902@lst.de>
+        id S1726402AbfGABGJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 30 Jun 2019 21:06:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40221 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfGABGI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:06:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cThX3R3cz9s4V;
+        Mon,  1 Jul 2019 11:06:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561943165;
+        bh=I10qfJ+8ea8LHMvXkLR3Sm2UqUxEsDLKQNkYrxac6Fc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nUFiFLnhh3vTSqJTjJX5CW+YZVB0u/RWGzWlV9uPx7K5oS7/nOpvkOjhRJGYubVyj
+         RgnvNA5NDnFf2wOCJco2dm+eeJU5oC2wh8xPGC7FILjiQNAcAKGKUT2/4+jioWC434
+         DeBOj9cC5cYkr7FNllRapjOQ3bbLlV91f74tzVQbqHcyRwO4Y0L+lsQE9T0knJ6aWH
+         hoJ3MjnntoOcMv05cHp5fuWgsuJ8rsF8NWL0PxoSYi4sgHf6TLUvTv66sn5keJ8Onb
+         6YsYFNoRsgXRRk+nkA55N6onE4kLVM3/xJeU5JGRV/MNtxMLv6Ij8/GKtRM01pPHXZ
+         yPoimnRXALC1g==
+Date:   Mon, 1 Jul 2019 11:06:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Biggers <ebiggers@google.com>
+Subject: linux-next: manual merge of the xfs tree with the f2fs tree
+Message-ID: <20190701110603.5abcbb2c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628053320.GA26902@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=gcBstl5XYRDGDS1EmpUA:9 a=qcOipdrg3TMiS51E:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/WHgTUq_CIxHe8Gi/4qnrMHz"; protocol="application/pgp-signature"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 07:33:20AM +0200, Christoph Hellwig wrote:
-> On Fri, Jun 28, 2019 at 10:45:42AM +1000, Dave Chinner wrote:
-> > You've already mentioned two new users you want to add. I don't even
-> > have zone capable hardware here to test one of the users you are
-> > indicating will use this code, and I suspect that very few people
-> > do.  That's a non-trivial increase in testing requirements for
-> > filesystem developers and distro QA departments who will want to
-> > change and/or validate this code path.
-> 
-> Why do you assume you have to test it?  Back when we shared
-> generic_file_read with everyone you also didn't test odd change to
-> it with every possible fs.
+--Sig_/WHgTUq_CIxHe8Gi/4qnrMHz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm not sure what function you are referring to here. Can you
-clarify?
+Hi all,
 
-> If you change iomap.c, you'll test it
-> with XFS, and Cc other maintainers so that they get a chance to
-> also test it and comment on it, just like we do with other shared
-> code in the kernel.
+Today's linux-next merge of the xfs tree got a conflict in:
 
-Which is why we've had problems with the generic code paths in the
-past and other filesystems just copy and paste then before making
-signficant modifications. e.g. both ext4 and btrfs re-implement
-write_cache_pages() rather than use the generic writeback code
-because they have slightly different requirements and those
-developers don't want to have to worry about other filesystems every
-time there is an internal filesystem change that affects their
-writeback constraints...
+  fs/f2fs/file.c
 
-That's kinda what I'm getting at here: writeback isn't being shared
-by any of the major filesystems for good reasons...
+between commit:
 
-> > Indeed, integrating gfs2 into the existing generic iomap code has
-> > required quite a bit of munging and adding new code paths and so on.
-> > That's mostly been straight forward because it's just been adding
-> > flags and conditional code to the existing paths. The way we
-> > regularly rewrite sections of the XFS writeback code is a very
-> > different sort of modification, and one that will be much harder to
-> > do if we have to make those changes to generic code.
-> 
-> As the person who has done a lot of the recent rewriting of the
-> writeback code I disagree.  Most of it has been do divorce is from
-> leftovers of the buffer_head based sinle page at a time design from
-> stone age.  Very little is about XFS itself, most of it has been
-> about not being stupid in a fairly generic way.  And every since
-> I got rid of buffer heads xfs_aops.c has been intimately tied
-  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  360985573b55 ("f2fs: separate f2fs i_flags from fs_flags and ext4 i_flags=
+")
 
-*cough*
+from the f2fs tree and commits:
 
-Getting rid of bufferheads in writeback was largely a result of work
-I did over a period of several years, thank you very much. Yes, work
-you did over the same time period also got us there, but it's not
-all your work.
+  de2baa49bbae ("vfs: create a generic checking and prep function for FS_IO=
+C_SETFLAGS")
+  3dd3ba36a8ee ("vfs: create a generic checking function for FS_IOC_FSSETXA=
+TTR")
 
-> into the iomap infrastructure, and I'd rather keep those details in
-> one place.  I.e. with this series now XFS doesn't even need to know
-> about the details of the iomap_page structure and the uptodate
-> bits.  If for example I'd want to add sub-page dirty bits (which I
-> don't if I can avoid it) I can handle this entirely in iomap now
-> instead of spreading around iomap, xfs and duplicating the thing
-> in every copy of the XFS code that would otherwise show up.
+from the xfs tree.
 
-Yes, I understand your motivations, I'm just not convinced that it
-is the right thing to do given the history of this code and the
-history of filesystem writeback code in general....
+I fixed it up (I think - see below) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> > i.e. shared code is good if it's simple and doesn't have a lot of
-> > external dependencies that restrict the type and scope of
-> > modifications that can be made easily. Shared code that is complex
-> > and comes from code that was tightly integrated with a specific
-> > subsystem architecture is going to carry all those architectural
-> > foilbles into the new "generic" code. Once it gets sufficient
-> > users it's going to end up with the same "we can't change this code"
-> > problems that we had with the existing IO path, and we'll go back to
-> > implementing our own writeback path....
-> 
-> From the high level POV I agree with your stance.  But the point is
-> that the writeback code is not tightly integrated with xfs, and that
-
-Except it is....
-
-> is why I don't want it in XFS.  It is on other other hand very
-> tightly integrated with the iomap buffer read and write into pagecache
-> code, which is why I want to keep it together with that.
-
-It's not tightly integrated into the iomap read side or page cache
-implementations.  Writeback currently gets a dirty page, we look up
-a block map, we add it to/create a cached ioend/bio pair.  There are
-four lines of code in the entire XFS writeback code path that
-interact with iomap specific state, and that's the grand total of
-interactions needed to support block size < page size writeback.
-
-IOWs, we barely interact with the page cache or page/iomap state at
-all in writeback anymore - we just write whole pages based on the
-current inode extent map state. Yes, the writepage context, the
-ioends and the extent map structures we use to implement this can be
-made generic, but it's all the other details that are the problem
-here.
-
-e.g. If we have an error, we have to do very XFS specific things
-(like punching out delalloc ranges) and so the generic iomap code
-has a hook for doing this XFS specific thing when necessary.
-
-e.g. XFS requires COW fork manipulation on ioend submission
-(xfs_submit_ioend() calls xfs_reflink_convert_cow()) and this has
-some nasty memory allocation requirements (potential deadlock
-situation). So the generic code has a hook for this XFS specific
-functionality, even though no other filesystem if likely to ever
-need this. And this is something we've been discussion getting rid
-of from the XFS writeback path. i.e. reworking how we do all
-the COW fork interactions in writeback. So some of these hooks are
-suspect even now, and we're already trying to work out how to
-re-work the XFS writeback path to sort out problems we have with it.
-
-That's the point I'm trying to make - the whole "generic" iomap
-writeback API proposal is based around exactly the functionality XFS
-- and only XFS - requires at this point in time. There are no other
-users of this API and until there are, we've got no idea how
-generic this functionality really is and just how much overhead
-making fundamental changes to the XFS writeback code are going to
-entail in future.
-
-IOWs, before we go any further I'd really like to see how the other
-proposed users of this functionality fit into the code and how
-generic these XFS hooks are and what new hooks they require to
-implement their specific functionality...
-
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --cc fs/f2fs/file.c
+index e7c368db8185,8799468724f9..000000000000
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@@ -1645,22 -1648,45 +1645,23 @@@ static int f2fs_file_flush(struct file=20
+  	return 0;
+  }
+ =20
+ -static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+ -{
+ -	struct inode *inode =3D file_inode(filp);
+ -	struct f2fs_inode_info *fi =3D F2FS_I(inode);
+ -	unsigned int flags =3D fi->i_flags;
+ -
+ -	if (IS_ENCRYPTED(inode))
+ -		flags |=3D F2FS_ENCRYPT_FL;
+ -	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+ -		flags |=3D F2FS_INLINE_DATA_FL;
+ -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+ -		flags |=3D F2FS_NOCOW_FL;
+ -
+ -	flags &=3D F2FS_FL_USER_VISIBLE;
+ -
+ -	return put_user(flags, (int __user *)arg);
+ -}
+ -
+ -static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+ +static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+  {
+  	struct f2fs_inode_info *fi =3D F2FS_I(inode);
+ -	unsigned int oldflags;
+ +	u32 oldflags;
++ 	int err;
+ =20
+  	/* Is it quota file? Do not allow user to mess with it */
+  	if (IS_NOQUOTA(inode))
+  		return -EPERM;
+ =20
+ -	flags =3D f2fs_mask_flags(inode->i_mode, flags);
+ -
+  	oldflags =3D fi->i_flags;
+ =20
+- 	if ((iflags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
+- 		if (!capable(CAP_LINUX_IMMUTABLE))
+- 			return -EPERM;
+ -	err =3D vfs_ioc_setflags_prepare(inode, oldflags, flags);
+++	err =3D vfs_ioc_setflags_prepare(inode, oldflags, iflags);
++ 	if (err)
++ 		return err;
+ =20
+ -	flags =3D flags & F2FS_FL_USER_MODIFIABLE;
+ -	flags |=3D oldflags & ~F2FS_FL_USER_MODIFIABLE;
+ -	fi->i_flags =3D flags;
+ +	fi->i_flags =3D iflags | (oldflags & ~mask);
+ =20
+  	if (fi->i_flags & F2FS_PROJINHERIT_FL)
+  		set_inode_flag(inode, FI_PROJ_INHERIT);
+@@@ -2850,53 -2773,35 +2851,33 @@@ static inline u32 f2fs_xflags_to_iflags
+  	return iflags;
+  }
+ =20
+- static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
++ static void f2fs_fill_fsxattr(struct inode *inode, struct fsxattr *fa)
+  {
+- 	struct inode *inode =3D file_inode(filp);
+  	struct f2fs_inode_info *fi =3D F2FS_I(inode);
+- 	struct fsxattr fa;
+ =20
+- 	memset(&fa, 0, sizeof(struct fsxattr));
+- 	fa.fsx_xflags =3D f2fs_iflags_to_xflags(fi->i_flags);
+ -	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags &
+ -						      F2FS_FL_USER_VISIBLE));
+++	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags));
+ =20
+  	if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)))
+- 		fa.fsx_projid =3D (__u32)from_kprojid(&init_user_ns,
+- 							fi->i_projid);
+-=20
+- 	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
+- 		return -EFAULT;
+- 	return 0;
++ 		fa->fsx_projid =3D from_kprojid(&init_user_ns, fi->i_projid);
+  }
+ =20
+- static int f2fs_ioctl_check_project(struct inode *inode, struct fsxattr *=
+fa)
++ static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
+  {
+- 	/*
+- 	 * Project Quota ID state is only allowed to change from within the init
+- 	 * namespace. Enforce that restriction only if we are trying to change
+- 	 * the quota ID state. Everything else is allowed in user namespaces.
+- 	 */
+- 	if (current_user_ns() =3D=3D &init_user_ns)
+- 		return 0;
++ 	struct inode *inode =3D file_inode(filp);
++ 	struct fsxattr fa;
+ =20
+- 	if (__kprojid_val(F2FS_I(inode)->i_projid) !=3D fa->fsx_projid)
+- 		return -EINVAL;
+-=20
+- 	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL) {
+- 		if (!(fa->fsx_xflags & FS_XFLAG_PROJINHERIT))
+- 			return -EINVAL;
+- 	} else {
+- 		if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
+- 			return -EINVAL;
+- 	}
++ 	f2fs_fill_fsxattr(inode, &fa);
+ =20
++ 	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
++ 		return -EFAULT;
+  	return 0;
+  }
+ =20
+  static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
+  {
+  	struct inode *inode =3D file_inode(filp);
+- 	struct fsxattr fa;
+ -	struct f2fs_inode_info *fi =3D F2FS_I(inode);
++ 	struct fsxattr fa, old_fa;
+ -	unsigned int flags;
+ +	u32 iflags;
+  	int err;
+ =20
+  	if (copy_from_user(&fa, (struct fsxattr __user *)arg, sizeof(fa)))
+@@@ -2918,11 -2823,14 +2899,13 @@@
+  		return err;
+ =20
+  	inode_lock(inode);
+- 	err =3D f2fs_ioctl_check_project(inode, &fa);
++=20
++ 	f2fs_fill_fsxattr(inode, &old_fa);
++ 	err =3D vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
+  	if (err)
+  		goto out;
+ -	flags =3D (fi->i_flags & ~F2FS_FL_XFLAG_VISIBLE) |
+ -				(flags & F2FS_FL_XFLAG_VISIBLE);
+ -	err =3D __f2fs_ioc_setflags(inode, flags);
+ +	err =3D f2fs_setflags_common(inode, iflags,
+ +			f2fs_xflags_to_iflags(F2FS_SUPPORTED_XFLAGS));
+  	if (err)
+  		goto out;
+ =20
+
+--Sig_/WHgTUq_CIxHe8Gi/4qnrMHz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZXHsACgkQAVBC80lX
+0GxP6gf+Pl8lwcBYH5ii6HdOz1bH6Ls00UO1G40zosKUfIRsQGgy086i+AS7C03a
+K6V0FA2ltt3FJFXi3st5jgGgEiuyqsVU5TCOmr4p0izz58IX59LVXOcf90MqEZN8
+md1iBOSmuIJyJ0/j3LrUV1d9xr8bj/vEgzI1HKLJy4LKzRyVx4fmHR4ooYMlQyCc
+HpNPF/4PiH4BHkZckOysU7gZ6TRIEcA2PWQHleIFxepU2SjsZ9YdtTISGqe9PRUY
+nh4l9d3+hQYIUBgg9F5LiuJEfJdWIuBkOAHQrYXJMDKkaPr9c7k3cwaLkD15rSYg
+AZQPzhJ5GrKBmB6azd3xy6KyC3nbiQ==
+=rEt8
+-----END PGP SIGNATURE-----
+
+--Sig_/WHgTUq_CIxHe8Gi/4qnrMHz--
