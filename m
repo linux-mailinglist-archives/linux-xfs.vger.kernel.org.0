@@ -2,243 +2,103 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C5165B2A8
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 03:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2695B2AC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 03:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfGABGJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 30 Jun 2019 21:06:09 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40221 "EHLO ozlabs.org"
+        id S1726651AbfGABMM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 30 Jun 2019 21:12:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49557 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGABGI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:06:08 -0400
+        id S1726040AbfGABMM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:12:12 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cThX3R3cz9s4V;
-        Mon,  1 Jul 2019 11:06:04 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cTqY4Wc9z9s00;
+        Mon,  1 Jul 2019 11:12:09 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561943165;
-        bh=I10qfJ+8ea8LHMvXkLR3Sm2UqUxEsDLKQNkYrxac6Fc=;
+        s=201702; t=1561943529;
+        bh=o6gd4NLWj/EtzaylEp5ED6sPC4TTEDVm/KOCAb3wtoY=;
         h=Date:From:To:Cc:Subject:From;
-        b=nUFiFLnhh3vTSqJTjJX5CW+YZVB0u/RWGzWlV9uPx7K5oS7/nOpvkOjhRJGYubVyj
-         RgnvNA5NDnFf2wOCJco2dm+eeJU5oC2wh8xPGC7FILjiQNAcAKGKUT2/4+jioWC434
-         DeBOj9cC5cYkr7FNllRapjOQ3bbLlV91f74tzVQbqHcyRwO4Y0L+lsQE9T0knJ6aWH
-         hoJ3MjnntoOcMv05cHp5fuWgsuJ8rsF8NWL0PxoSYi4sgHf6TLUvTv66sn5keJ8Onb
-         6YsYFNoRsgXRRk+nkA55N6onE4kLVM3/xJeU5JGRV/MNtxMLv6Ij8/GKtRM01pPHXZ
-         yPoimnRXALC1g==
-Date:   Mon, 1 Jul 2019 11:06:03 +1000
+        b=fun4ppSre3K3LV3/4xj7PXIfux9LZBh6FujyY1LYX0X0DKEyNvHahvZc3xIPWBC4P
+         32tCk0a58cPCZ8tem7XkTR63KVuZ+WP9xrNduwnk0oMg6Ag+X5fw47upO9datbLCHm
+         vkYn8ic+GsyPtV8L5vjpbRyye01MPrKwcAmrE7B0rxvce7geKYeJUEiQKM1J0RYgpN
+         3r7q9lEFjUl190A+Gof7kYI6x88IgO9DYGyX5X0P4gbHcB9Rv5pdlxwY1CrzVKhODB
+         H7hxfGKh0tm4RZ7b+2hQP0bGpJClTbZBDfB2KRK5BjWZF72mM81+mLVeFAhtSI9fyz
+         qFWV9o0T60uWA==
+Date:   Mon, 1 Jul 2019 11:12:09 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>
-Subject: linux-next: manual merge of the xfs tree with the f2fs tree
-Message-ID: <20190701110603.5abcbb2c@canb.auug.org.au>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the xfs tree
+Message-ID: <20190701111209.699082b7@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/WHgTUq_CIxHe8Gi/4qnrMHz"; protocol="application/pgp-signature"
+ boundary="Sig_/GiBgqkQeV_Fn=xa4769+.=9"; protocol="application/pgp-signature"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
---Sig_/WHgTUq_CIxHe8Gi/4qnrMHz
+--Sig_/GiBgqkQeV_Fn=xa4769+.=9
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-Today's linux-next merge of the xfs tree got a conflict in:
+After merging the xfs tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-  fs/f2fs/file.c
+fs/orangefs/file.c: In function 'orangefs_getflags':
+fs/orangefs/file.c:372:7: warning: assignment to 'long unsigned int *' from=
+ '__u64' {aka 'long long unsigned int'} makes pointer from integer without =
+a cast [-Wint-conversion]
+  uval =3D val;
+       ^
+fs/orangefs/file.c: In function 'orangefs_ioctl':
+fs/orangefs/file.c:381:24: error: implicit declaration of function 'file_io=
+ctl'; did you mean 'file_path'? [-Werror=3Dimplicit-function-declaration]
+  struct inode *inode =3D file_ioctl(file);
+                        ^~~~~~~~~~
+                        file_path
+fs/orangefs/file.c:381:24: warning: initialization of 'struct inode *' from=
+ 'int' makes pointer from integer without a cast [-Wint-conversion]
+fs/orangefs/file.c:418:35: error: 'old_uval' undeclared (first use in this =
+function); did you mean 'p4d_val'?
+   ret =3D orangefs_getflags(inode, &old_uval);
+                                   ^~~~~~~~
+                                   p4d_val
+fs/orangefs/file.c:418:35: note: each undeclared identifier is reported onl=
+y once for each function it appears in
 
-between commit:
-
-  360985573b55 ("f2fs: separate f2fs i_flags from fs_flags and ext4 i_flags=
-")
-
-from the f2fs tree and commits:
+Caused by commit
 
   de2baa49bbae ("vfs: create a generic checking and prep function for FS_IO=
 C_SETFLAGS")
-  3dd3ba36a8ee ("vfs: create a generic checking function for FS_IOC_FSSETXA=
-TTR")
 
-from the xfs tree.
-
-I fixed it up (I think - see below) and can carry the fix as necessary.
-This is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+I have used the xfs tree from next-20190628 for today.
 
 --=20
 Cheers,
 Stephen Rothwell
 
-diff --cc fs/f2fs/file.c
-index e7c368db8185,8799468724f9..000000000000
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@@ -1645,22 -1648,45 +1645,23 @@@ static int f2fs_file_flush(struct file=20
-  	return 0;
-  }
- =20
- -static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
- -{
- -	struct inode *inode =3D file_inode(filp);
- -	struct f2fs_inode_info *fi =3D F2FS_I(inode);
- -	unsigned int flags =3D fi->i_flags;
- -
- -	if (IS_ENCRYPTED(inode))
- -		flags |=3D F2FS_ENCRYPT_FL;
- -	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
- -		flags |=3D F2FS_INLINE_DATA_FL;
- -	if (is_inode_flag_set(inode, FI_PIN_FILE))
- -		flags |=3D F2FS_NOCOW_FL;
- -
- -	flags &=3D F2FS_FL_USER_VISIBLE;
- -
- -	return put_user(flags, (int __user *)arg);
- -}
- -
- -static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
- +static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
-  {
-  	struct f2fs_inode_info *fi =3D F2FS_I(inode);
- -	unsigned int oldflags;
- +	u32 oldflags;
-+ 	int err;
- =20
-  	/* Is it quota file? Do not allow user to mess with it */
-  	if (IS_NOQUOTA(inode))
-  		return -EPERM;
- =20
- -	flags =3D f2fs_mask_flags(inode->i_mode, flags);
- -
-  	oldflags =3D fi->i_flags;
- =20
-- 	if ((iflags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
-- 		if (!capable(CAP_LINUX_IMMUTABLE))
-- 			return -EPERM;
- -	err =3D vfs_ioc_setflags_prepare(inode, oldflags, flags);
-++	err =3D vfs_ioc_setflags_prepare(inode, oldflags, iflags);
-+ 	if (err)
-+ 		return err;
- =20
- -	flags =3D flags & F2FS_FL_USER_MODIFIABLE;
- -	flags |=3D oldflags & ~F2FS_FL_USER_MODIFIABLE;
- -	fi->i_flags =3D flags;
- +	fi->i_flags =3D iflags | (oldflags & ~mask);
- =20
-  	if (fi->i_flags & F2FS_PROJINHERIT_FL)
-  		set_inode_flag(inode, FI_PROJ_INHERIT);
-@@@ -2850,53 -2773,35 +2851,33 @@@ static inline u32 f2fs_xflags_to_iflags
-  	return iflags;
-  }
- =20
-- static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
-+ static void f2fs_fill_fsxattr(struct inode *inode, struct fsxattr *fa)
-  {
-- 	struct inode *inode =3D file_inode(filp);
-  	struct f2fs_inode_info *fi =3D F2FS_I(inode);
-- 	struct fsxattr fa;
- =20
-- 	memset(&fa, 0, sizeof(struct fsxattr));
-- 	fa.fsx_xflags =3D f2fs_iflags_to_xflags(fi->i_flags);
- -	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags &
- -						      F2FS_FL_USER_VISIBLE));
-++	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags));
- =20
-  	if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)))
-- 		fa.fsx_projid =3D (__u32)from_kprojid(&init_user_ns,
-- 							fi->i_projid);
--=20
-- 	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
-- 		return -EFAULT;
-- 	return 0;
-+ 		fa->fsx_projid =3D from_kprojid(&init_user_ns, fi->i_projid);
-  }
- =20
-- static int f2fs_ioctl_check_project(struct inode *inode, struct fsxattr *=
-fa)
-+ static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
-  {
-- 	/*
-- 	 * Project Quota ID state is only allowed to change from within the init
-- 	 * namespace. Enforce that restriction only if we are trying to change
-- 	 * the quota ID state. Everything else is allowed in user namespaces.
-- 	 */
-- 	if (current_user_ns() =3D=3D &init_user_ns)
-- 		return 0;
-+ 	struct inode *inode =3D file_inode(filp);
-+ 	struct fsxattr fa;
- =20
-- 	if (__kprojid_val(F2FS_I(inode)->i_projid) !=3D fa->fsx_projid)
-- 		return -EINVAL;
--=20
-- 	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL) {
-- 		if (!(fa->fsx_xflags & FS_XFLAG_PROJINHERIT))
-- 			return -EINVAL;
-- 	} else {
-- 		if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
-- 			return -EINVAL;
-- 	}
-+ 	f2fs_fill_fsxattr(inode, &fa);
- =20
-+ 	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
-+ 		return -EFAULT;
-  	return 0;
-  }
- =20
-  static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
-  {
-  	struct inode *inode =3D file_inode(filp);
-- 	struct fsxattr fa;
- -	struct f2fs_inode_info *fi =3D F2FS_I(inode);
-+ 	struct fsxattr fa, old_fa;
- -	unsigned int flags;
- +	u32 iflags;
-  	int err;
- =20
-  	if (copy_from_user(&fa, (struct fsxattr __user *)arg, sizeof(fa)))
-@@@ -2918,11 -2823,14 +2899,13 @@@
-  		return err;
- =20
-  	inode_lock(inode);
-- 	err =3D f2fs_ioctl_check_project(inode, &fa);
-+=20
-+ 	f2fs_fill_fsxattr(inode, &old_fa);
-+ 	err =3D vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
-  	if (err)
-  		goto out;
- -	flags =3D (fi->i_flags & ~F2FS_FL_XFLAG_VISIBLE) |
- -				(flags & F2FS_FL_XFLAG_VISIBLE);
- -	err =3D __f2fs_ioc_setflags(inode, flags);
- +	err =3D f2fs_setflags_common(inode, iflags,
- +			f2fs_xflags_to_iflags(F2FS_SUPPORTED_XFLAGS));
-  	if (err)
-  		goto out;
- =20
-
---Sig_/WHgTUq_CIxHe8Gi/4qnrMHz
+--Sig_/GiBgqkQeV_Fn=xa4769+.=9
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZXHsACgkQAVBC80lX
-0GxP6gf+Pl8lwcBYH5ii6HdOz1bH6Ls00UO1G40zosKUfIRsQGgy086i+AS7C03a
-K6V0FA2ltt3FJFXi3st5jgGgEiuyqsVU5TCOmr4p0izz58IX59LVXOcf90MqEZN8
-md1iBOSmuIJyJ0/j3LrUV1d9xr8bj/vEgzI1HKLJy4LKzRyVx4fmHR4ooYMlQyCc
-HpNPF/4PiH4BHkZckOysU7gZ6TRIEcA2PWQHleIFxepU2SjsZ9YdtTISGqe9PRUY
-nh4l9d3+hQYIUBgg9F5LiuJEfJdWIuBkOAHQrYXJMDKkaPr9c7k3cwaLkD15rSYg
-AZQPzhJ5GrKBmB6azd3xy6KyC3nbiQ==
-=rEt8
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZXekACgkQAVBC80lX
+0GwDoAf+ORrfhB4XavC2KJUhXgoqhs75kuRhvoxtnUb0j15p++q00JVuAoKXDF0e
+AGuNMqTt0+nWCBwe0Ds6Vky/m20YsdT0PccVl2V3UXEDUiNShsNSVtEGuaFkqrIW
+4bJUVNji3kU95lox7L8Rm6wMo1xZazCHvaeAMMMi4MmeoP4Y8oZT63MNJE0je21j
+YOq9QEZiZIdeQ/hud8icxUapL8UMPLgpsOLrcV15NqTM9z+vurqRpKLJlFR9421c
+XAbSX5WIlMBIfWbFCPqP2zuSng/fRJwA6/dSvNiFPDOjG8LNXIb1agCfhk/kqZdM
+aNVbi57y4KdLYYHAo9skpCaHbr91AA==
+=NGNr
 -----END PGP SIGNATURE-----
 
---Sig_/WHgTUq_CIxHe8Gi/4qnrMHz--
+--Sig_/GiBgqkQeV_Fn=xa4769+.=9--
