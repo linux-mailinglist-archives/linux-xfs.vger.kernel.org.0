@@ -2,116 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB8D5BDDD
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 16:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B21E55BDFC
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 16:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfGAOOi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Jul 2019 10:14:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43626 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbfGAOOi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 10:14:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61EE6Kw059564;
-        Mon, 1 Jul 2019 14:14:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=fbnqRpE5+2pU9s0oZ3nl0lcV4p/Ctz2QNkmT4a/2jAU=;
- b=wl87EhXZPXk/0HeEvvvEFJ1RkLsH+hhpYvTkUAWb70o3imZeU0YXmfVHBTBNMbo0s5S5
- EJSTKVYhi6z5mag8SqH5nxfIjHZ778lA5fnFK3FhljOHAjHQgXVoqbmNpowZbnb9G2b9
- zdpLy7PvHsnGLX7SfTJ6hYHHDZSOs4eJIFG1wMKuD5Kd9iQn1RKABtcVlJBm1bF5U2uA
- C5PiA161OF2r88EbhtW4wUcUy7FKftHLT/Yy4MASKzG4kd2pyO4p9o8SJi5qYv6xhgyr
- JeGUIw8HB6lO2oK0O2UYlZYaL/rzKOwcUsc6aM2IhxQyf8lsiCLlJ6lXKvFniJ8XsFwI kA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2te61pnx04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 14:14:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61EDGWD188170;
-        Mon, 1 Jul 2019 14:14:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tebbj6sv3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 14:14:34 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61EEWe8002996;
-        Mon, 1 Jul 2019 14:14:32 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 07:14:32 -0700
-Date:   Mon, 1 Jul 2019 07:14:32 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/6] mkfs: use libxfs to write out new AGs
-Message-ID: <20190701141432.GB1654093@magnolia>
-References: <156114701371.1643538.316410894576032261.stgit@magnolia>
- <156114705924.1643538.6635085530435538461.stgit@magnolia>
- <20190701122504.GM7777@dread.disaster.area>
+        id S1729504AbfGAOUQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Jul 2019 10:20:16 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42940 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbfGAOUQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 10:20:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so20654676ior.9
+        for <linux-xfs@vger.kernel.org>; Mon, 01 Jul 2019 07:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gY2k8VIohQ3ovxqeqDMTJ6ugNx1qArSvmGqVd7Pptw4=;
+        b=NDZmZNXBYjxdVurBwDt9g5WKl0ag//3VUaKT3FtinSCEP5Y94YcX/BINZsZ/Mu3tzi
+         ZSBAxmh2aZkjJfDljLD3Ov9tHbhxX0xpfe8LghnrwYd5yACyUn1fjcssgoswM+UfRz2w
+         pNzJjDgqUeXhutm+dYFFury6s38MOslCTgsNHRkUvW9258TEKv1i1fb+G/k3mzJjwC9w
+         lg4fnlg3a5ETWFvz3FqAiQdUF9RYhlcCPxocYHjc2Tcz5ZtY/6JsRhUSxVVHljPak9lO
+         JJABb2gemEOKBbob3AXWpoMzr5XSfC+HTj2lv5NFKWqaaDa6fe/t4eHyjrI/j8ywZAnG
+         68Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gY2k8VIohQ3ovxqeqDMTJ6ugNx1qArSvmGqVd7Pptw4=;
+        b=alnuHrv8eNyYJrdLHpSgHNdnLtL0ovlO+5FqApmvAbp/vjkPrxM3Dxbk4mEeZfrJoM
+         1BIFDzRH3o7ElqxVEszVIwS3ukTAxRP5svoZrFEG65sFpX8eu64Sss4sXxGFvusHRIXr
+         zYP08sO4h5rnq0lAYH8I83wImbWqFJG6C+RQUbVTTHTpF076JeKt8YgCyQpZmFDCrIii
+         3EVd5ui1E9hRETg7wfFnb+B4bf/gzftaGPwMTuPY6R4SaHrK0JfzZoIqY8aa3meN7vLy
+         odTq7E05t8mCRL+g2vbXF905P2sMk2qgnvnOOobHum3WSXYaKOBa9iq6hwUuINr0QgxW
+         v8aQ==
+X-Gm-Message-State: APjAAAWTEQZWC90iH5phEQEpp4m5agO2J5YcEQD+n+8oDWvHgoYQ1Rri
+        b8pp2+Cl0JqDxcmx++22xpTmmw==
+X-Google-Smtp-Source: APXvYqwSj4J+56s9p49bTmZyPQaGM1CAyE3LWgyIlQfGltnN7r1QlI1141Kni7B/XmjMjAjm5WgT7w==
+X-Received: by 2002:a02:cd83:: with SMTP id l3mr26548737jap.66.1561990815765;
+        Mon, 01 Jul 2019 07:20:15 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id x13sm9765649ioj.18.2019.07.01.07.20.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 07:20:14 -0700 (PDT)
+Subject: Re: [PATCH V2] block: fix .bi_size overflow
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, stable@vger.kernel.org
+References: <20190701071446.22028-1-ming.lei@redhat.com>
+ <8db73c5d-a0e2-00c9-59ab-64314097db26@kernel.dk>
+ <bd45842a-e0fd-28a7-ac79-96f7cb9b66e4@kernel.dk>
+Message-ID: <8b8dc953-e663-e3d8-b991-9d8dba9270be@kernel.dk>
+Date:   Mon, 1 Jul 2019 08:20:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701122504.GM7777@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=968
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907010176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907010176
+In-Reply-To: <bd45842a-e0fd-28a7-ac79-96f7cb9b66e4@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:25:04PM +1000, Dave Chinner wrote:
-> On Fri, Jun 21, 2019 at 12:57:39PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Use the libxfs AG initialization functions to write out the new
-> > filesystem instead of open-coding everything.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> .....
-> > @@ -4087,8 +3770,16 @@ main(
-> >  	/*
-> >  	 * Initialise all the static on disk metadata.
-> >  	 */
-> > +	INIT_LIST_HEAD(&buffer_list);
-> >  	for (agno = 0; agno < cfg.agcount; agno++)
-> > -		initialise_ag_headers(&cfg, mp, sbp, agno, &worst_freelist);
-> > +		initialise_ag_headers(&cfg, mp, sbp, agno, &worst_freelist,
-> > +				&buffer_list);
-> > +
-> > +	if (libxfs_buf_delwri_submit(&buffer_list)) {
-> > +		fprintf(stderr, _("%s: writing AG headers failed\n"),
-> > +				progname);
-> > +		exit(1);
-> > +	}
+On 7/1/19 8:14 AM, Jens Axboe wrote:
+> On 7/1/19 8:05 AM, Jens Axboe wrote:
+>> On 7/1/19 1:14 AM, Ming Lei wrote:
+>>> 'bio->bi_iter.bi_size' is 'unsigned int', which at most hold 4G - 1
+>>> bytes.
+>>>
+>>> Before 07173c3ec276 ("block: enable multipage bvecs"), one bio can
+>>> include very limited pages, and usually at most 256, so the fs bio
+>>> size won't be bigger than 1M bytes most of times.
+>>>
+>>> Since we support multi-page bvec, in theory one fs bio really can
+>>> be added > 1M pages, especially in case of hugepage, or big writeback
+>>> with too many dirty pages. Then there is chance in which .bi_size
+>>> is overflowed.
+>>>
+>>> Fixes this issue by using bio_full() to check if the added segment may
+>>> overflow .bi_size.
+>>
+>> Any objections to queuing this up for 5.3? It's not a new regression
+>> this series.
 > 
-> The problem I came across with this "one big delwri list" construct
-> when adding delwri lists for batched AIO processing is that the
-> memory footprint for high AG count filesystems really blows out. Did
-> you check what happens when you create a filesystem with a few tens
-> of thousands of AGs? 
+> I took a closer look, and applied for 5.3 and removed the stable tag.
+> We'll need to apply your patch for stable, and I added an adapted
+> one for 5.3. I don't want a huge merge hassle because of this.
 
-I did, and then amended this patch to delwri_submit every ~16 or so AGs.
+OK, so we still get conflicts with that, due to both the same page
+merge fix, and Christophs 5.3 changes.
 
-:)
+I ended up pulling in 5.2-rc6 in for-5.3/block, which resolves at
+least most of it, and kept the stable tag since now it's possible
+to backport without too much trouble.
 
-I haven't resent the patch since I figure xfsprogs 5.3 is a ways off...
+-- 
+Jens Axboe
 
---D
-
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
