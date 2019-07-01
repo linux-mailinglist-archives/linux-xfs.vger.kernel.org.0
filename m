@@ -2,78 +2,92 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBD285BB72
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 14:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5F55BD92
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 16:05:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfGAM0S (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Jul 2019 08:26:18 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:59546 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbfGAM0R (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 08:26:17 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 6E3B13DC5A6;
-        Mon,  1 Jul 2019 22:26:15 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hhvMm-0008Fo-7S; Mon, 01 Jul 2019 22:25:04 +1000
-Date:   Mon, 1 Jul 2019 22:25:04 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/6] mkfs: use libxfs to write out new AGs
-Message-ID: <20190701122504.GM7777@dread.disaster.area>
-References: <156114701371.1643538.316410894576032261.stgit@magnolia>
- <156114705924.1643538.6635085530435538461.stgit@magnolia>
+        id S1729285AbfGAOFG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Jul 2019 10:05:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41231 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbfGAOFG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 10:05:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id w25so29035869ioc.8
+        for <linux-xfs@vger.kernel.org>; Mon, 01 Jul 2019 07:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9IU9Vum1iEYXNFUQZJjTlbhqVVSUgpHJpWnEL+ydahk=;
+        b=zJSjcaNlk9MyLQy21nWTiY8jfylj+b2oHUfdD3gsHMqdUrDnNS8H0Qjd/1RxTRCofj
+         bU67WSUYf88+pyHStt0iUmfaB3OqQT2Do1CkVIWW3uLxLDV3gg3qy0aIFH+nrKS4j7Ln
+         4hPzI0zEjU0cUx0RhPZ4Zu/f9Ztj/uE9vkxOdwK6eFA5B10PtX65IvI2ztmg5577svSn
+         U9OXsWI+xAT5Dqe+xDWL/U52PzsOaADKukHP8yAtGuwSmL3QkQXpHOr9B0DaTweEYh6e
+         3WS6WnIVPs4vc4pDx9QiPZvWgcH7asKyLptIE45o6RnSx4nK1ZTEQUJ1rb7U6PYd2Qdt
+         NIPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9IU9Vum1iEYXNFUQZJjTlbhqVVSUgpHJpWnEL+ydahk=;
+        b=jO/2vYcBpboU8d1nhgt5mfbpd1GVy56+W4G8nGY9X11qcqsZfyWW+sEzgS4Q/JgXkx
+         D2WAgoscYDjOqVNElZAqBhoZ6BUocbFrmlXSYqgMVGjF5PrD1FENcGtY78JE5skpWRgu
+         P+b5AmKEHaM+LxjH24wn9VM5sSH1pT0Nig7/JC2XioleIjrTGcUQnN5egjf0EWHwITtt
+         gQibb+DDZ41yNX5GZKpfyz3F/9YLuqZju4k1c/oDkdutHYA3FdsWeY9LHXmA7R8Wmdof
+         piqgWDyyTgg7o6S6Wg+Iqi3ArCpIA9NpizzIyQoUI5OsFSuZjmVgAzjV294RzBP+GsyM
+         XKLw==
+X-Gm-Message-State: APjAAAVm6gNXC96qGpyz/9AdhUbr/oBfF4T1JxpKZB4v+f4rdlOY2o4J
+        qDC9MmA11mzJtreM9acNQBdXbg==
+X-Google-Smtp-Source: APXvYqzhrHY+sRdQ6KZLe3VL0lPbv09Q/COiAF3X6IakXifjdtvvYSO02UJsciHFjbggEaoQ8waVoQ==
+X-Received: by 2002:a6b:b843:: with SMTP id i64mr730492iof.81.1561989905288;
+        Mon, 01 Jul 2019 07:05:05 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w23sm9787246iod.12.2019.07.01.07.05.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 07:05:03 -0700 (PDT)
+Subject: Re: [PATCH V2] block: fix .bi_size overflow
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, stable@vger.kernel.org
+References: <20190701071446.22028-1-ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8db73c5d-a0e2-00c9-59ab-64314097db26@kernel.dk>
+Date:   Mon, 1 Jul 2019 08:05:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156114705924.1643538.6635085530435538461.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=1pkt6STEJ0tzO_72xgMA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190701071446.22028-1-ming.lei@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:57:39PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On 7/1/19 1:14 AM, Ming Lei wrote:
+> 'bio->bi_iter.bi_size' is 'unsigned int', which at most hold 4G - 1
+> bytes.
 > 
-> Use the libxfs AG initialization functions to write out the new
-> filesystem instead of open-coding everything.
+> Before 07173c3ec276 ("block: enable multipage bvecs"), one bio can
+> include very limited pages, and usually at most 256, so the fs bio
+> size won't be bigger than 1M bytes most of times.
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-.....
-> @@ -4087,8 +3770,16 @@ main(
->  	/*
->  	 * Initialise all the static on disk metadata.
->  	 */
-> +	INIT_LIST_HEAD(&buffer_list);
->  	for (agno = 0; agno < cfg.agcount; agno++)
-> -		initialise_ag_headers(&cfg, mp, sbp, agno, &worst_freelist);
-> +		initialise_ag_headers(&cfg, mp, sbp, agno, &worst_freelist,
-> +				&buffer_list);
-> +
-> +	if (libxfs_buf_delwri_submit(&buffer_list)) {
-> +		fprintf(stderr, _("%s: writing AG headers failed\n"),
-> +				progname);
-> +		exit(1);
-> +	}
+> Since we support multi-page bvec, in theory one fs bio really can
+> be added > 1M pages, especially in case of hugepage, or big writeback
+> with too many dirty pages. Then there is chance in which .bi_size
+> is overflowed.
+> 
+> Fixes this issue by using bio_full() to check if the added segment may
+> overflow .bi_size.
 
-The problem I came across with this "one big delwri list" construct
-when adding delwri lists for batched AIO processing is that the
-memory footprint for high AG count filesystems really blows out. Did
-you check what happens when you create a filesystem with a few tens
-of thousands of AGs? 
+Any objections to queuing this up for 5.3? It's not a new regression
+this series.
 
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Jens Axboe
+
