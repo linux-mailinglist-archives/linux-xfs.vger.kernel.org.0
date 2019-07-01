@@ -2,56 +2,174 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48E705B728
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 10:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24315B864
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jul 2019 11:49:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfGAItq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Jul 2019 04:49:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54070 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfGAItq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 04:49:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UIgV7gmEgnM4rtjlSnb6CYa3DCfDzyjEPfuxRn8BHEo=; b=bhiyH5jTqHmMPiGl8Mcw1gUNb
-        Cpw5RKwy4OLBI6Uz0FMQAyOf+ojUXVnrUMAvG67MuEIbYV5CpHkcTajKzgJ3qctjkUey17iWU9EPi
-        f/d9zpvzDtXpYdhhP5Hxn8Y3hz1VYBrMNut65h76upmcJqPC/lN8b35f4bkUorxQjrF5Z918QWK3L
-        SQ8Ho92IezfLcGsA0WVDWA1CyfAlyD8bKOl6Oh4s4qEQ9LsL382PSTxZrRkVwUIWanVYSgQpbOFsk
-        XpP27X/6qQKTfS0w1Kq+ew5lXmVdmBCjjdlsP7YPZS5O8l/xx9IYh/9lm2dPFi4mndKEZ39I3qm3W
-        eN6XggH+g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhs0P-0000iL-Tk; Mon, 01 Jul 2019 08:49:45 +0000
-Date:   Mon, 1 Jul 2019 01:49:45 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [ANNOUNCE] xfs-linux: for-next *rebased* to 73d30d48749f
-Message-ID: <20190701084945.GA1356@infradead.org>
-References: <20190630163404.GG1404256@magnolia>
+        id S1727568AbfGAJtQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Jul 2019 05:49:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40796 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfGAJtQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 05:49:16 -0400
+Received: by mail-io1-f65.google.com with SMTP id n5so27317120ioc.7;
+        Mon, 01 Jul 2019 02:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=abxVXeccHHFb0+Whp7D1V+v/o0Mk6/SKpT3C/dtCC68=;
+        b=Qd0RoIYgOmbLO4vcVd2bxbgA29YXziaH7L2dXbgMce9afQ20fYYlxvLzk9QGHlzSXe
+         oyo3KD7aYkpLcrQQIv57wQANN4OwadpQcCdqDO0FZhPB0h11Ne6GBbsgzALWQ/q9jpZm
+         B7VVZ9WTf6iaWQNgFH2YTOQYpoiVqyF5YbqJVuAjT2DSVF4jEoJyYblPj0f1nhq4tN62
+         jAR9UXb5z6o26yuAhAT2hOJlIWGPoP78h76AeWV2pm5fgA4/DICl77NwjjT0/RnnUnSj
+         stAj3ihu/wtnYI9YDTZy2fYUGqevmBqa6QUhKJhiJeF9XedtBGOjPE7GmSfWUjt0Svhq
+         IASQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abxVXeccHHFb0+Whp7D1V+v/o0Mk6/SKpT3C/dtCC68=;
+        b=F9H8slxjZHyPh1ZxdNy4eTe6k6IBYPv0H8Eqqg4BUGj1j+BGIX4PcAFSoeAE9Snnwy
+         Fzr9yL3UP7z0og6h8pxUWXeP7E977zYxZHK4sufWAE1CcqkkfTxvJvP+3gF9DJE+TOHe
+         dTzk+vFqStlV2plHTPPHB6ilddzvgjuIFVuj8Z6UjAX7Y5h0gzLwNYYMrJYpehR7ShcE
+         b5BB92CWd0S7bfuQNcajB6xia4hOJBmr6N75BCcG9YKzlhcowIJiVoLeB0hyLlWbn9Fi
+         BmV64fFM8NSEfbLT6fMW3KNZiZcMoV+9IIyyTIZuGxbvSDvojO9B5CIkOmyAgblpdTIV
+         g3cQ==
+X-Gm-Message-State: APjAAAXyKkHgAGYIVbAQxtlPbv8HfDARJP66nRlOt3uBVBw4csYB1+IQ
+        sNy5uQFxi1M1LfvMYmTZV3bcMGUKSagUD7e24XH9eGYH
+X-Google-Smtp-Source: APXvYqzBksAhh+3gh8FH8ib5uVMRDD65qcRt5SUtnxTnRk497OcpAaHPQqHt5GicQge6gJ0TIVVCRkeEiYv5VTXoBcA=
+X-Received: by 2002:a6b:7d49:: with SMTP id d9mr20509287ioq.50.1561974555680;
+ Mon, 01 Jul 2019 02:49:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190630163404.GG1404256@magnolia>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190629073020.22759-1-yuchao0@huawei.com> <afda5702-1d88-7634-d943-0c413ae3b28f@huawei.com>
+ <a27e3502-db75-22fa-4545-e588abbbfbf2@huawei.com> <58511d64-aa7a-8ac2-0255-affe0e8d49de@huawei.com>
+In-Reply-To: <58511d64-aa7a-8ac2-0255-affe0e8d49de@huawei.com>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Mon, 1 Jul 2019 11:49:04 +0200
+Message-ID: <CAHpGcMK4ihE1nv7ME0yKKUdBj+Rdr9nBMnxAtQfFFOmK9aEY_A@mail.gmail.com>
+Subject: Re: [PATCH RFC] iomap: introduce IOMAP_TAIL
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        chao@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 09:34:04AM -0700, Darrick J. Wong wrote:
-> **NOTE** I discovered while bisecting the previous for-next that I
-> introduced a build failure in "xfs: move xfs_ino_geometry to xfs_shared.h"
-> that I hadn't noticed because apparently 0day doesn't do commit by
-> commit build tests anymore?  (Frankly, it doesn't tell me /anything/
-> unless it finds failures, so I think I'm not going to rely on cloud
-> kernel build tests anymore.)
+Am Mo., 1. Juli 2019 um 10:04 Uhr schrieb Gao Xiang <gaoxiang25@huawei.com>:
+> On 2019/7/1 14:40, Chao Yu wrote:
+> > Hi Xiang,
+> >
+> > On 2019/6/29 17:34, Gao Xiang wrote:
+> >> Hi Chao,
+> >>
+> >> On 2019/6/29 15:30, Chao Yu wrote:
+> >>> Some filesystems like erofs/reiserfs have the ability to pack tail
+> >>> data into metadata, however iomap framework can only support mapping
+> >>> inline data with IOMAP_INLINE type, it restricts that:
+> >>> - inline data should be locating at page #0.
+> >>> - inline size should equal to .i_size
+> >>> So we can not use IOMAP_INLINE to handle tail-packing case.
+> >>>
+> >>> This patch introduces new mapping type IOMAP_TAIL to map tail-packed
+> >>> data for further use of erofs.
+> >>>
+> >>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>> ---
+> >>>  fs/iomap.c            | 22 ++++++++++++++++++++++
+> >>>  include/linux/iomap.h |  1 +
+> >>>  2 files changed, 23 insertions(+)
+> >>>
+> >>> diff --git a/fs/iomap.c b/fs/iomap.c
+> >>> index 12654c2e78f8..ae7777ce77d0 100644
+> >>> --- a/fs/iomap.c
+> >>> +++ b/fs/iomap.c
+> >>> @@ -280,6 +280,23 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
+> >>>     SetPageUptodate(page);
+> >>>  }
+> >>>
+> >>> +static void
+> >>> +iomap_read_tail_data(struct inode *inode, struct page *page,
+> >>> +           struct iomap *iomap)
+> >>> +{
+> >>> +   size_t size = i_size_read(inode) & (PAGE_SIZE - 1);
+> >>> +   void *addr;
+> >>> +
+> >>> +   if (PageUptodate(page))
+> >>> +           return;
+> >>> +
+> >>> +   addr = kmap_atomic(page);
+> >>> +   memcpy(addr, iomap->inline_data, size);
+> >>> +   memset(addr + size, 0, PAGE_SIZE - size);
+> >>
+> >> need flush_dcache_page(page) here for new page cache page since
+> >> it's generic iomap code (althrough not necessary for x86, arm), I am not sure...
+> >> see commit d2b2c6dd227b and c01778001a4f...
+> >
+> > Thanks for your reminding, these all codes were copied from
+> > iomap_read_inline_data(), so I think we need a separated patch to fix this issue
+> > if necessary.
+>
+> Yes, just a reminder, it is good as it-is.
 
-The buildbot doesn't seem to work at all basically.  Once it a while
-it reports occasional errors for week old trees, but otherwise it
-stays entirely silent, even for completely b0rked trees.  I've been
-bitten by this more than once in the last weeks.
+Not sure if that means that IOMAP_INLINE as is works for you now. In
+any case, if the inline data isn't transparently copied into the page
+cache at index 0, memory-mapped I/O isn't going to work.
+
+The code further assumes that "packed" files consist of exactly one
+IOMAP_INLINE mapping; no IOMAP_MAPPED or other mappings may follow. Is
+it that assumption that's causing you trouble? If so, what's the
+layout at the filesystem level you want to support?
+
+Thanks,
+Andreas
+
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Thanks,
+> >
+> >>
+> >> Thanks,
+> >> Gao Xiang
+> >>
+> >>> +   kunmap_atomic(addr);
+> >>> +   SetPageUptodate(page);
+> >>> +}
+> >>> +
+> >>>  static loff_t
+> >>>  iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+> >>>             struct iomap *iomap)
+> >>> @@ -298,6 +315,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+> >>>             return PAGE_SIZE;
+> >>>     }
+> >>>
+> >>> +   if (iomap->type == IOMAP_TAIL) {
+> >>> +           iomap_read_tail_data(inode, page, iomap);
+> >>> +           return PAGE_SIZE;
+> >>> +   }
+> >>> +
+> >>>     /* zero post-eof blocks as the page may be mapped */
+> >>>     iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
+> >>>     if (plen == 0)
+> >>> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> >>> index 2103b94cb1bf..7e1ee48e3db7 100644
+> >>> --- a/include/linux/iomap.h
+> >>> +++ b/include/linux/iomap.h
+> >>> @@ -25,6 +25,7 @@ struct vm_fault;
+> >>>  #define IOMAP_MAPPED       0x03    /* blocks allocated at @addr */
+> >>>  #define IOMAP_UNWRITTEN    0x04    /* blocks allocated at @addr in unwritten state */
+> >>>  #define IOMAP_INLINE       0x05    /* data inline in the inode */
+> >>> +#define IOMAP_TAIL 0x06    /* tail data packed in metdata */
+> >>>
+> >>>  /*
+> >>>   * Flags for all iomap mappings:
+> >>>
+> >> .
+> >>
