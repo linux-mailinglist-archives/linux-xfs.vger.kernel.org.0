@@ -2,1089 +2,671 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 079965CF76
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 14:31:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 418F05D1A6
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 16:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfGBMbB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jul 2019 08:31:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33330 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfGBMbB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 08:31:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h19so472204wme.0;
-        Tue, 02 Jul 2019 05:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=pLusKkl5/Gls0JxD2lSe7zJslk2BNl2dp5+m2J0yEK4=;
-        b=ACoxbT2oZ25PQB/iMNEeesr0NL4/diQrjBJnhyYMiPlK6d9L3KNF6NSt+1fhzmcB2Q
-         /lgdYkaJza0JWOP29vg8gc5T1SygrnAOgAqAhVsgsWy6XPJxo1ZGrArc6LC/JrDQrKRj
-         sU+VctwWfgO4lnw8nydEhoTjXe8JVsGbTw/kdQyrUQOVtAPKindtkMqqnzMQWyBm5pgm
-         qXF/+b+dOGUQvUXRU+eJhD5/pchevJjs5EdJHRHKxP2+lF8lgtm6bBxN6Kcj0EkG7sA/
-         v0KAJgCH1JqAnWJ4LVpojLHM7rPSNBFj2O8gvutB/omOzfamIre0yZ6x17WqrJlNNnbB
-         r3tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=pLusKkl5/Gls0JxD2lSe7zJslk2BNl2dp5+m2J0yEK4=;
-        b=DWDgMQlluiXKsqdsr/6OIFLHG07g5q4p7u600XMJGBrL2ahlqSa27iFSqwrZn/hXFc
-         x8Zjfi+RNi33LBFzKK55JnzjhY4A+PQbGzdRGoQQUR7KHcckmIb0N/J33oHrzD/mjY+8
-         TDnSqyNcra+t9I+KGCu4qEu8I34EeScHaxObkfYzzaRGuODWUg+oIz3AIzFMi4z75v6e
-         lQ789edLBGe7KVTLbwkOIkZ5wJgtsuvxT63ybMQnSoWSLmXyPxplnAi4vdMlhQV3niiq
-         iJJpsTzT2PKMJJWiOJtx000981i6+Nh5PZqu2ae8iLVqMIpT6/Y0BCnqlONTY8Z0f+og
-         oAeA==
-X-Gm-Message-State: APjAAAWooD6xLuS4F6QbGxF8hrx7oj/tyU6+ejtyzs3qVzdCtue2TEUm
-        6RzRdotIZLoTs/4IisQciek=
-X-Google-Smtp-Source: APXvYqzN2t6P8yQtMD6/yTfteHEzKHM7Fpn/Rl2ST7YWIMBXZvUbZyPaJsug9i/SupfgfITKYWIHpQ==
-X-Received: by 2002:a1c:3b02:: with SMTP id i2mr3137025wma.23.1562070654833;
-        Tue, 02 Jul 2019 05:30:54 -0700 (PDT)
-Received: from localhost ([197.210.35.75])
-        by smtp.gmail.com with ESMTPSA id b2sm10612019wrp.72.2019.07.02.05.30.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 05:30:53 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 13:30:40 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [linux-kernel-mentees] [PATCH v5] Doc : fs : convert xfs.txt to ReST
-Message-ID: <20190702123040.GA30111@localhost>
+        id S1726963AbfGBOXs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jul 2019 10:23:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45998 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbfGBOXs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:23:48 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B4D6A307D860;
+        Tue,  2 Jul 2019 14:23:46 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 337BF1713D;
+        Tue,  2 Jul 2019 14:23:45 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 10:23:43 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/15] xfs: create simplified inode walk function
+Message-ID: <20190702142343.GC2866@bfoster>
+References: <156158183697.495087.5371839759804528321.stgit@magnolia>
+ <156158184956.495087.12203869782949324427.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <156158184956.495087.12203869782949324427.stgit@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 02 Jul 2019 14:23:47 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Convert xfs.txt to ReST, rename and fix broken references, consequently.
+On Wed, Jun 26, 2019 at 01:44:09PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Create a new iterator function to simplify walking inodes in an XFS
+> filesystem.  This new iterator will replace the existing open-coded
+> walking that goes on in various places.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
 
-Make the name "value" in "option=value" look like a variable (that it probably
-is), by embedding in angle "<>" brackets, rather than something predifined
-elsewhere. This is inline with the conventions in manuals.
- 	
-Also, make defaults of boolean options prefixed with "(*)". This is so that
-options can be compressed to "[no]option" and on a single line, which renders
-consistently and nicely in htmldocs.
+Looks good:
 
-lastly, enforce a "one option, one definition" policy to keep things
-consistent and simple.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
-
-v5 aims to comply with the guiding comments on its previous versions.
-
- Documentation/filesystems/dax.txt   |   2 +-
- Documentation/filesystems/index.rst |   5 +-
- Documentation/filesystems/xfs.rst   | 468 +++++++++++++++++++++++++++
- Documentation/filesystems/xfs.txt   | 470 ----------------------------
- MAINTAINERS                         |   2 +-
- 5 files changed, 473 insertions(+), 474 deletions(-)
- create mode 100644 Documentation/filesystems/xfs.rst
- delete mode 100644 Documentation/filesystems/xfs.txt
-
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 6d2c0d340..c333285b8 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
- These filesystems may be used for inspiration:
- - ext2: see Documentation/filesystems/ext2.txt
- - ext4: see Documentation/filesystems/ext4/
--- xfs:  see Documentation/filesystems/xfs.txt
-+- xfs:  see Documentation/filesystems/xfs.rst
- 
- 
- Handling Media Errors
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 1131c34d7..a4cf5fca4 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -16,7 +16,7 @@ algorithms work.
- .. toctree::
-    :maxdepth: 2
- 
--   path-lookup.rst
-+   path-lookup
-    api-summary
-    splice
- 
-@@ -40,4 +40,5 @@ Documentation for individual filesystem types can be found here.
- .. toctree::
-    :maxdepth: 2
- 
--   binderfs.rst
-+   binderfs
-+   xfs
-diff --git a/Documentation/filesystems/xfs.rst b/Documentation/filesystems/xfs.rst
-new file mode 100644
-index 000000000..d36ef042c
---- /dev/null
-+++ b/Documentation/filesystems/xfs.rst
-@@ -0,0 +1,468 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+======================
-+The SGI XFS Filesystem
-+======================
-+
-+XFS is a high performance journaling filesystem which originated
-+on the SGI IRIX platform.  It is completely multi-threaded, can
-+support large files and large filesystems, extended attributes,
-+variable block sizes, is extent based, and makes extensive use of
-+Btrees (directories, extents, free space) to aid both performance
-+and scalability.
-+
-+Refer to the documentation at https://xfs.wiki.kernel.org/
-+for further details.  This implementation is on-disk compatible
-+with the IRIX version of XFS.
-+
-+
-+Mount Options
-+=============
-+
-+When mounting an XFS filesystem, the following options are accepted.  For
-+boolean mount options, the names with the "(*)" prefix is the default behaviour.
-+For example, take a behaviour enabled by default to be a one (1) or, a zero (0)
-+otherwise, ``(*)[no]default`` would be 0 while ``[no](*)default`` , a 1.
-+
-+   allocsize=<size>
-+        Sets the buffered I/O end-of-file preallocation size when doing delayed
-+        allocation writeout (default size is 64KiB).  Valid values for this
-+        option are page size (typically 4KiB) through to 1GiB, inclusive, in
-+        power-of-2 increments.
-+
-+        The default behaviour is for dynamic end-of-file preallocation size,
-+        which uses a set of heuristics to optimise the preallocation size based
-+        on the current allocation patterns within the file and the access
-+        patterns to the file. Specifying a fixed allocsize value turns off the
-+        dynamic behaviour.
-+
-+   [no]attr2
-+        The options enable/disable an "opportunistic" improvement to be made in
-+        the way inline extended attributes are stored on-disk.  When the new
-+        form is used for the first time when ``attr2`` is selected (either when
-+        setting or removing extended attributes) the on-disk superblock feature
-+        bit field will be updated to reflect this format being in use.
-+
-+        The default behaviour is determined by the on-disk feature bit
-+        indicating that ``attr2`` behaviour is active. If either mount option is
-+        set, then that becomes the new default used by the filesystem. However
-+        on CRC enabled filesystems, the ``attr2`` format is always used , and so
-+        will reject the ``noattr2`` mount option if it is set.
-+
-+   (*)[no]discard
-+        Enable/disable the issuing of commands to let the block device reclaim
-+        space freed by the filesystem.  This is useful for SSD devices, thinly
-+        provisioned LUNs and virtual machine images, but may have a performance
-+        impact.
-+
-+        Note: It is currently recommended that you use the ``fstrim``
-+        application to discard unused blocks rather than the ``discard`` mount
-+        option because the performance impact of this option is quite severe.
-+
-+   grpid/bsdgroups
-+   nogrpid/(*)sysvgroups
-+        These options define what group ID a newly created file gets.  When
-+        ``grpid`` is set, it takes the group ID of the directory in which it is
-+        created; otherwise it takes the ``fsgid`` of the current process, unless
-+        the directory has the ``setgid`` bit set, in which case it takes the
-+        ``gid`` from the parent directory, and also gets the ``setgid`` bit set
-+        if it is a directory itself.
-+
-+   filestreams
-+        Make the data allocator use the filestreams allocation mode across the
-+        entire filesystem rather than just on directories configured to use it.
-+
-+   (*)[no]ikeep
-+        When ``ikeep`` is specified, XFS does not delete empty inode clusters
-+        and keeps them around on disk.  When ``noikeep`` is specified, empty
-+        inode clusters are returned to the free space pool.
-+
-+   inode32 | (*)inode64
-+        When ``inode32`` is specified, it indicates that XFS limits inode
-+        creation to locations which will not result in inode numbers with more
-+        than 32 bits of significance.
-+
-+        When ``inode64`` is specified, it indicates that XFS is allowed to
-+        create inodes at any location in the filesystem, including those which
-+        will result in inode numbers occupying more than 32 bits of
-+        significance.
-+
-+        ``inode32`` is provided for backwards compatibility with older systems
-+        and applications, since 64 bits inode numbers might cause problems for
-+        some applications that cannot handle large inode numbers.  If
-+        applications are in use which do not handle inode numbers bigger than 32
-+        bits, the ``inode32`` option should be specified.
-+
-+
-+   (*)[no]largeio
-+        If ``nolargeio`` is specified, the optimal I/O reported in st_blksize by
-+        **stat(2)** will be as small as possible to allow user applications to
-+        avoid inefficient read/modify/write I/O.  This is typically the page
-+        size of the machine, as this is the granularity of the page cache.
-+
-+        If ``largeio`` is specified, a filesystem that was created with a
-+        ``swidth`` specified will return the ``swidth`` value (in bytes) in
-+        st_blksize. If the filesystem does not have a ``swidth`` specified but
-+        does specify an ``allocsize`` then ``allocsize`` (in bytes) will be
-+        returned instead. Otherwise the behaviour is the same as if
-+        ``nolargeio`` was specified.
-+
-+   logbufs=<value>
-+        Set the number of in-memory log buffers to ``value``.  Valid numbers
-+        range from 2-8 inclusive.
-+
-+        The default value is 8 buffers.
-+
-+        If the memory cost of 8 log buffers is too high on small systems, then
-+        it may be reduced at some cost to performance on metadata intensive
-+        workloads. The ``logbsize`` option below controls the size of each
-+        buffer and so is also relevant to this case.
-+
-+   logbsize=<value>
-+        Set the size of each in-memory log buffer to ``value``.  The size may be
-+        specified in bytes, or in kilobytes with a "k" suffix. Valid sizes for
-+        version 1 and version 2 logs are 16384 (16k) and 32768 (32k).  Valid
-+        sizes for version 2 logs also include 65536 (64k), 131072 (128k) and
-+        262144 (256k). The ``logbsize`` must be an integer multiple of the
-+        "log stripe unit" configured at mkfs time.
-+
-+        The default value for for version 1 logs is 32768, while the default
-+        value for version 2 logs is ``MAX(32768, log_sunit)``.
-+
-+   logdev=<device>
-+        Use ``device`` as an external log (metadata journal).  In an XFS
-+        filesystem, the log device can be separate from the data device or
-+        contained within it.
-+
-+   rtdev=<device>
-+        An XFS filesystem has up to three parts: a data section, a log section,
-+        and a real-time section.  The real-time section is optional.  If
-+        enabled, ``rtdev`` sets ``device`` to be used as an external real-time
-+        section, similar to ``logdev`` above.
-+
-+   noalign
-+        Data allocations will not be aligned at stripe unit boundaries. This is
-+        only relevant to filesystems created with non-zero data alignment
-+        parameters (sunit, swidth) by mkfs.
-+
-+   norecovery
-+        The filesystem will be mounted without running log recovery.  If the
-+        filesystem was not cleanly unmounted, it is likely to be inconsistent
-+        when mounted in ``norecovery`` mode.  Some files or directories may not
-+        be accessible because of this.  Filesystems mounted ``norecovery`` must
-+        be mounted read-only or the mount will fail.
-+
-+   nouuid
-+        Don't check for double mounted file systems using the file system uuid.
-+        This is useful to mount LVM snapshot volumes, and often used in
-+        combination with ``norecovery`` for mounting read-only snapshots.
-+
-+   noquota
-+	Forcibly turns off all quota accounting and enforcement
-+	within the filesystem.
-+
-+   uquota/usrquota/uqnoenforce/quota
-+        User disk quota accounting enabled, and limits (optionally) enforced.
-+        Refer to **xfs_quota(8)** for further details.
-+
-+   gquota/grpquota/gqnoenforce
-+        Group disk quota accounting enabled and limits (optionally) enforced.
-+        Refer to **xfs_quota(8)** for further details.
-+
-+   pquota/prjquota/pqnoenforce
-+        Project disk quota accounting enabled and limits (optionally) enforced.
-+        Refer to **xfs_quota(8)** for further details.
-+
-+   sunit=<value>
-+        Used to specify the stripe unit for a RAID device or (in conjunction
-+        with ``swidth`` below) a stripe volume.  ``value`` must be specified in
-+        512-byte block units. This option is only relevant to filesystems that
-+        were created with non-zero data alignment parameters.
-+
-+        The ``sunit`` parameter specified must be compatible with the existing
-+        filesystem alignment characteristics.  In general, that means the only
-+        valid changes to ``sunit`` are increasing it by a power-of-2 multiple.
-+
-+        Typically, this mount option is necessary only after an underlying RAID
-+        device has had its geometry modified, such as adding a new disk to a
-+        RAID5 lun and reshaping it.
-+
-+   swidth=<value>
-+        Used to specify the stripe width for a RAID device or (in conjunction
-+        with ``sunit`` above) a stripe volume.  ``value`` must be specified in
-+        512-byte block units. This option, like ``sunit`` above, is only
-+        relevant to filesystems that were created with non-zero data alignment
-+        parameters.
-+
-+        The ``swidth`` parameter specified must be compatible with the existing
-+        filesystem alignment characteristics.  In general, that means the only
-+        valid swidth values are any integer multiple of a valid ``sunit`` value.
-+
-+        Typically, this mount option is necessary only after an underlying RAID
-+        device has had its geometry modified, such as adding a new disk to a
-+        RAID5 lun and reshaping it.
-+
-+
-+   swalloc
-+        Data allocations will be rounded up to stripe width boundaries when the
-+        current end of file is being extended and the file size is larger than
-+        the stripe width size.
-+
-+   wsync
-+        When specified, all filesystem namespace operations are executed
-+        synchronously. This ensures that when the namespace operation (create,
-+        unlink, etc) completes, the change to the namespace is on stable
-+        storage. This is useful in HA setups where failover must not result in
-+        clients seeing inconsistent namespace presentation during or after a
-+        failover event.
-+
-+
-+Deprecated Mount Options
-+========================
-+
-+  Name				Removal Schedule
-+  ----				----------------
-+
-+
-+Removed Mount Options
-+=====================
-+
-+  Name				Removed
-+  ----				-------
-+  delaylog/nodelaylog		v4.0
-+  ihashsize			v4.0
-+  irixsgid			v4.0
-+  osyncisdsync/osyncisosync	v4.0
-+  barrier			v4.19
-+  nobarrier			v4.19
-+
-+
-+sysctls
-+=======
-+
-+The following sysctls are available for the XFS filesystem:
-+
-+  fs.xfs.stats_clear		(Min: 0  Default: 0  Max: 1)
-+	Setting this to "1" clears accumulated XFS statistics
-+	in /proc/fs/xfs/stat.  It then immediately resets to "0".
-+
-+  fs.xfs.xfssyncd_centisecs	(Min: 100  Default: 3000  Max: 720000)
-+	The interval at which the filesystem flushes metadata
-+	out to disk and runs internal cache cleanup routines.
-+
-+  fs.xfs.filestream_centisecs	(Min: 1  Default: 3000  Max: 360000)
-+	The interval at which the filesystem ages filestreams cache
-+	references and returns timed-out AGs back to the free stream
-+	pool.
-+
-+  fs.xfs.speculative_prealloc_lifetime
-+		(Units: seconds   Min: 1  Default: 300  Max: 86400)
-+	The interval at which the background scanning for inodes
-+	with unused speculative preallocation runs. The scan
-+	removes unused preallocation from clean inodes and releases
-+	the unused space back to the free pool.
-+
-+  fs.xfs.error_level		(Min: 0  Default: 3  Max: 11)
-+	A volume knob for error reporting when internal errors occur.
-+	This will generate detailed messages & backtraces for filesystem
-+	shutdowns, for example.  Current threshold values are:
-+
-+		XFS_ERRLEVEL_OFF:       0
-+		XFS_ERRLEVEL_LOW:       1
-+		XFS_ERRLEVEL_HIGH:      5
-+
-+  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 256)
-+	Causes certain error conditions to call BUG(). Value is a bitmask;
-+	OR together the tags which represent errors which should cause panics:
-+
-+		XFS_NO_PTAG                     0
-+		XFS_PTAG_IFLUSH                 0x00000001
-+		XFS_PTAG_LOGRES                 0x00000002
-+		XFS_PTAG_AILDELETE              0x00000004
-+		XFS_PTAG_ERROR_REPORT           0x00000008
-+		XFS_PTAG_SHUTDOWN_CORRUPT       0x00000010
-+		XFS_PTAG_SHUTDOWN_IOERROR       0x00000020
-+		XFS_PTAG_SHUTDOWN_LOGERROR      0x00000040
-+		XFS_PTAG_FSBLOCK_ZERO           0x00000080
-+		XFS_PTAG_VERIFIER_ERROR         0x00000100
-+
-+	This option is intended for debugging only.
-+
-+  fs.xfs.irix_symlink_mode	(Min: 0  Default: 0  Max: 1)
-+	Controls whether symlinks are created with mode 0777 (default)
-+	or whether their mode is affected by the umask (irix mode).
-+
-+  fs.xfs.irix_sgid_inherit	(Min: 0  Default: 0  Max: 1)
-+	Controls files created in SGID directories.
-+	If the group ID of the new file does not match the effective group
-+	ID or one of the supplementary group IDs of the parent dir, the
-+	ISGID bit is cleared if the irix_sgid_inherit compatibility sysctl
-+	is set.
-+
-+  fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
-+	Setting this to "1" will cause the "sync" flag set
-+	by the **xfs_io(8)** chattr command on a directory to be
-+	inherited by files in that directory.
-+
-+  fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
-+	Setting this to "1" will cause the "nodump" flag set
-+	by the **xfs_io(8)** chattr command on a directory to be
-+	inherited by files in that directory.
-+
-+  fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
-+	Setting this to "1" will cause the "noatime" flag set
-+	by the **xfs_io(8)** chattr command on a directory to be
-+	inherited by files in that directory.
-+
-+  fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
-+	Setting this to "1" will cause the "nosymlinks" flag set
-+	by the **xfs_io(8)** chattr command on a directory to be
-+	inherited by files in that directory.
-+
-+  fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
-+	Setting this to "1" will cause the "nodefrag" flag set
-+	by the **xfs_io(8)** chattr command on a directory to be
-+	inherited by files in that directory.
-+
-+  fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
-+	In "inode32" allocation mode, this option determines how many
-+	files the allocator attempts to allocate in the same allocation
-+	group before moving to the next allocation group.  The intent
-+	is to control the rate at which the allocator moves between
-+	allocation groups when allocating extents for new files.
-+
-+Deprecated Sysctls
-+==================
-+
-+None at present.
-+
-+
-+Removed Sysctls
-+===============
-+
-+  Name				Removed
-+  ----				-------
-+  fs.xfs.xfsbufd_centisec	v4.0
-+  fs.xfs.age_buffer_centisecs	v4.0
-+
-+
-+Error handling
-+==============
-+
-+XFS can act differently according to the type of error found during its
-+operation. The implementation introduces the following concepts to the error
-+handler:
-+
-+ -failure speed:
-+	Defines how fast XFS should propagate an error upwards when a specific
-+	error is found during the filesystem operation. It can propagate
-+	immediately, after a defined number of retries, after a set time period,
-+	or simply retry forever.
-+
-+ -error classes:
-+	Specifies the subsystem the error configuration will apply to, such as
-+	metadata IO or memory allocation. Different subsystems will have
-+	different error handlers for which behaviour can be configured.
-+
-+ -error handlers:
-+	Defines the behavior for a specific error.
-+
-+The filesystem behavior during an error can be set via sysfs files. Each
-+error handler works independently - the first condition met by an error handler
-+for a specific class will cause the error to be propagated rather than reset and
-+retried.
-+
-+The action taken by the filesystem when the error is propagated is context
-+dependent - it may cause a shut down in the case of an unrecoverable error,
-+it may be reported back to userspace, or it may even be ignored because
-+there's nothing useful we can with the error or anyone we can report it to (e.g.
-+during unmount).
-+
-+The configuration files are organized into the following hierarchy for each
-+mounted filesystem:
-+
-+  /sys/fs/xfs/<dev>/error/<class>/<error>/
-+
-+Where:
-+  <dev>
-+	The short device name of the mounted filesystem. This is the same device
-+	name that shows up in XFS kernel error messages as "XFS(<dev>): ..."
-+
-+  <class>
-+	The subsystem the error configuration belongs to. As of 4.9, the defined
-+	classes are:
-+
-+		- "metadata": applies metadata buffer write IO
-+
-+  <error>
-+	The individual error handler configurations.
-+
-+
-+Each filesystem has "global" error configuration options defined in their top
-+level directory:
-+
-+  /sys/fs/xfs/<dev>/error/
-+
-+  fail_at_unmount		(Min:  0  Default:  1  Max: 1)
-+	Defines the filesystem error behavior at unmount time.
-+
-+	If set to a value of 1, XFS will override all other error configurations
-+	during unmount and replace them with "immediate fail" characteristics.
-+	i.e. no retries, no retry timeout. This will always allow unmount to
-+	succeed when there are persistent errors present.
-+
-+	If set to 0, the configured retry behaviour will continue until all
-+	retries and/or timeouts have been exhausted. This will delay unmount
-+	completion when there are persistent errors, and it may prevent the
-+	filesystem from ever unmounting fully in the case of "retry forever"
-+	handler configurations.
-+
-+	Note: there is no guarantee that fail_at_unmount can be set while an
-+	unmount is in progress. It is possible that the sysfs entries are
-+	removed by the unmounting filesystem before a "retry forever" error
-+	handler configuration causes unmount to hang, and hence the filesystem
-+	must be configured appropriately before unmount begins to prevent
-+	unmount hangs.
-+
-+Each filesystem has specific error class handlers that define the error
-+propagation behaviour for specific errors. There is also a "default" error
-+handler defined, which defines the behaviour for all errors that don't have
-+specific handlers defined. Where multiple retry constraints are configuredi for
-+a single error, the first retry configuration that expires will cause the error
-+to be propagated. The handler configurations are found in the directory:
-+
-+  /sys/fs/xfs/<dev>/error/<class>/<error>/
-+
-+  max_retries			(Min: -1  Default: Varies  Max: INTMAX)
-+	Defines the allowed number of retries of a specific error before
-+	the filesystem will propagate the error. The retry count for a given
-+	error context (e.g. a specific metadata buffer) is reset every time
-+	there is a successful completion of the operation.
-+
-+	Setting the value to "-1" will cause XFS to retry forever for this
-+	specific error.
-+
-+	Setting the value to "0" will cause XFS to fail immediately when the
-+	specific error is reported.
-+
-+	Setting the value to "N" (where 0 < N < Max) will make XFS retry the
-+	operation "N" times before propagating the error.
-+
-+  retry_timeout_seconds		(Min:  -1  Default:  Varies  Max: 1 day)
-+	Define the amount of time (in seconds) that the filesystem is
-+	allowed to retry its operations when the specific error is
-+	found.
-+
-+	Setting the value to "-1" will allow XFS to retry forever for this
-+	specific error.
-+
-+	Setting the value to "0" will cause XFS to fail immediately when the
-+	specific error is reported.
-+
-+	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
-+	operation for up to "N" seconds before propagating the error.
-+
-+Note: The default behaviour for a specific error handler is dependent on both
-+the class and error context. For example, the default values for
-+"metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
-+to "fail immediately" behaviour. This is done because ENODEV is a fatal,
-+unrecoverable error no matter how many times the metadata IO is retried.
-diff --git a/Documentation/filesystems/xfs.txt b/Documentation/filesystems/xfs.txt
-deleted file mode 100644
-index a5cbb5e0e..000000000
---- a/Documentation/filesystems/xfs.txt
-+++ /dev/null
-@@ -1,470 +0,0 @@
--
--The SGI XFS Filesystem
--======================
--
--XFS is a high performance journaling filesystem which originated
--on the SGI IRIX platform.  It is completely multi-threaded, can
--support large files and large filesystems, extended attributes,
--variable block sizes, is extent based, and makes extensive use of
--Btrees (directories, extents, free space) to aid both performance
--and scalability.
--
--Refer to the documentation at https://xfs.wiki.kernel.org/
--for further details.  This implementation is on-disk compatible
--with the IRIX version of XFS.
--
--
--Mount Options
--=============
--
--When mounting an XFS filesystem, the following options are accepted.
--For boolean mount options, the names with the (*) suffix is the
--default behaviour.
--
--  allocsize=size
--	Sets the buffered I/O end-of-file preallocation size when
--	doing delayed allocation writeout (default size is 64KiB).
--	Valid values for this option are page size (typically 4KiB)
--	through to 1GiB, inclusive, in power-of-2 increments.
--
--	The default behaviour is for dynamic end-of-file
--	preallocation size, which uses a set of heuristics to
--	optimise the preallocation size based on the current
--	allocation patterns within the file and the access patterns
--	to the file. Specifying a fixed allocsize value turns off
--	the dynamic behaviour.
--
--  attr2
--  noattr2
--	The options enable/disable an "opportunistic" improvement to
--	be made in the way inline extended attributes are stored
--	on-disk.  When the new form is used for the first time when
--	attr2 is selected (either when setting or removing extended
--	attributes) the on-disk superblock feature bit field will be
--	updated to reflect this format being in use.
--
--	The default behaviour is determined by the on-disk feature
--	bit indicating that attr2 behaviour is active. If either
--	mount option it set, then that becomes the new default used
--	by the filesystem.
--
--	CRC enabled filesystems always use the attr2 format, and so
--	will reject the noattr2 mount option if it is set.
--
--  discard
--  nodiscard (*)
--	Enable/disable the issuing of commands to let the block
--	device reclaim space freed by the filesystem.  This is
--	useful for SSD devices, thinly provisioned LUNs and virtual
--	machine images, but may have a performance impact.
--
--	Note: It is currently recommended that you use the fstrim
--	application to discard unused blocks rather than the discard
--	mount option because the performance impact of this option
--	is quite severe.
--
--  grpid/bsdgroups
--  nogrpid/sysvgroups (*)
--	These options define what group ID a newly created file
--	gets.  When grpid is set, it takes the group ID of the
--	directory in which it is created; otherwise it takes the
--	fsgid of the current process, unless the directory has the
--	setgid bit set, in which case it takes the gid from the
--	parent directory, and also gets the setgid bit set if it is
--	a directory itself.
--
--  filestreams
--	Make the data allocator use the filestreams allocation mode
--	across the entire filesystem rather than just on directories
--	configured to use it.
--
--  ikeep
--  noikeep (*)
--	When ikeep is specified, XFS does not delete empty inode
--	clusters and keeps them around on disk.  When noikeep is
--	specified, empty inode clusters are returned to the free
--	space pool.
--
--  inode32
--  inode64 (*)
--	When inode32 is specified, it indicates that XFS limits
--	inode creation to locations which will not result in inode
--	numbers with more than 32 bits of significance.
--
--	When inode64 is specified, it indicates that XFS is allowed
--	to create inodes at any location in the filesystem,
--	including those which will result in inode numbers occupying
--	more than 32 bits of significance. 
--
--	inode32 is provided for backwards compatibility with older
--	systems and applications, since 64 bits inode numbers might
--	cause problems for some applications that cannot handle
--	large inode numbers.  If applications are in use which do
--	not handle inode numbers bigger than 32 bits, the inode32
--	option should be specified.
--
--
--  largeio
--  nolargeio (*)
--	If "nolargeio" is specified, the optimal I/O reported in
--	st_blksize by stat(2) will be as small as possible to allow
--	user applications to avoid inefficient read/modify/write
--	I/O.  This is typically the page size of the machine, as
--	this is the granularity of the page cache.
--
--	If "largeio" specified, a filesystem that was created with a
--	"swidth" specified will return the "swidth" value (in bytes)
--	in st_blksize. If the filesystem does not have a "swidth"
--	specified but does specify an "allocsize" then "allocsize"
--	(in bytes) will be returned instead. Otherwise the behaviour
--	is the same as if "nolargeio" was specified.
--
--  logbufs=value
--	Set the number of in-memory log buffers.  Valid numbers
--	range from 2-8 inclusive.
--
--	The default value is 8 buffers.
--
--	If the memory cost of 8 log buffers is too high on small
--	systems, then it may be reduced at some cost to performance
--	on metadata intensive workloads. The logbsize option below
--	controls the size of each buffer and so is also relevant to
--	this case.
--
--  logbsize=value
--	Set the size of each in-memory log buffer.  The size may be
--	specified in bytes, or in kilobytes with a "k" suffix.
--	Valid sizes for version 1 and version 2 logs are 16384 (16k)
--	and 32768 (32k).  Valid sizes for version 2 logs also
--	include 65536 (64k), 131072 (128k) and 262144 (256k). The
--	logbsize must be an integer multiple of the log
--	stripe unit configured at mkfs time.
--
--	The default value for for version 1 logs is 32768, while the
--	default value for version 2 logs is MAX(32768, log_sunit).
--
--  logdev=device and rtdev=device
--	Use an external log (metadata journal) and/or real-time device.
--	An XFS filesystem has up to three parts: a data section, a log
--	section, and a real-time section.  The real-time section is
--	optional, and the log section can be separate from the data
--	section or contained within it.
--
--  noalign
--	Data allocations will not be aligned at stripe unit
--	boundaries. This is only relevant to filesystems created
--	with non-zero data alignment parameters (sunit, swidth) by
--	mkfs.
--
--  norecovery
--	The filesystem will be mounted without running log recovery.
--	If the filesystem was not cleanly unmounted, it is likely to
--	be inconsistent when mounted in "norecovery" mode.
--	Some files or directories may not be accessible because of this.
--	Filesystems mounted "norecovery" must be mounted read-only or
--	the mount will fail.
--
--  nouuid
--	Don't check for double mounted file systems using the file
--	system uuid.  This is useful to mount LVM snapshot volumes,
--	and often used in combination with "norecovery" for mounting
--	read-only snapshots.
--
--  noquota
--	Forcibly turns off all quota accounting and enforcement
--	within the filesystem.
--
--  uquota/usrquota/uqnoenforce/quota
--	User disk quota accounting enabled, and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
--
--  gquota/grpquota/gqnoenforce
--	Group disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
--
--  pquota/prjquota/pqnoenforce
--	Project disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
--
--  sunit=value and swidth=value
--	Used to specify the stripe unit and width for a RAID device
--	or a stripe volume.  "value" must be specified in 512-byte
--	block units. These options are only relevant to filesystems
--	that were created with non-zero data alignment parameters.
--
--	The sunit and swidth parameters specified must be compatible
--	with the existing filesystem alignment characteristics.  In
--	general, that means the only valid changes to sunit are
--	increasing it by a power-of-2 multiple. Valid swidth values
--	are any integer multiple of a valid sunit value.
--
--	Typically the only time these mount options are necessary if
--	after an underlying RAID device has had it's geometry
--	modified, such as adding a new disk to a RAID5 lun and
--	reshaping it.
--
--  swalloc
--	Data allocations will be rounded up to stripe width boundaries
--	when the current end of file is being extended and the file
--	size is larger than the stripe width size.
--
--  wsync
--	When specified, all filesystem namespace operations are
--	executed synchronously. This ensures that when the namespace
--	operation (create, unlink, etc) completes, the change to the
--	namespace is on stable storage. This is useful in HA setups
--	where failover must not result in clients seeing
--	inconsistent namespace presentation during or after a
--	failover event.
--
--
--Deprecated Mount Options
--========================
--
--  Name				Removal Schedule
--  ----				----------------
--
--
--Removed Mount Options
--=====================
--
--  Name				Removed
--  ----				-------
--  delaylog/nodelaylog		v4.0
--  ihashsize			v4.0
--  irixsgid			v4.0
--  osyncisdsync/osyncisosync	v4.0
--  barrier			v4.19
--  nobarrier			v4.19
--
--
--sysctls
--=======
--
--The following sysctls are available for the XFS filesystem:
--
--  fs.xfs.stats_clear		(Min: 0  Default: 0  Max: 1)
--	Setting this to "1" clears accumulated XFS statistics
--	in /proc/fs/xfs/stat.  It then immediately resets to "0".
--
--  fs.xfs.xfssyncd_centisecs	(Min: 100  Default: 3000  Max: 720000)
--	The interval at which the filesystem flushes metadata
--	out to disk and runs internal cache cleanup routines.
--
--  fs.xfs.filestream_centisecs	(Min: 1  Default: 3000  Max: 360000)
--	The interval at which the filesystem ages filestreams cache
--	references and returns timed-out AGs back to the free stream
--	pool.
--
--  fs.xfs.speculative_prealloc_lifetime
--		(Units: seconds   Min: 1  Default: 300  Max: 86400)
--	The interval at which the background scanning for inodes
--	with unused speculative preallocation runs. The scan
--	removes unused preallocation from clean inodes and releases
--	the unused space back to the free pool.
--
--  fs.xfs.error_level		(Min: 0  Default: 3  Max: 11)
--	A volume knob for error reporting when internal errors occur.
--	This will generate detailed messages & backtraces for filesystem
--	shutdowns, for example.  Current threshold values are:
--
--		XFS_ERRLEVEL_OFF:       0
--		XFS_ERRLEVEL_LOW:       1
--		XFS_ERRLEVEL_HIGH:      5
--
--  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 256)
--	Causes certain error conditions to call BUG(). Value is a bitmask;
--	OR together the tags which represent errors which should cause panics:
--
--		XFS_NO_PTAG                     0
--		XFS_PTAG_IFLUSH                 0x00000001
--		XFS_PTAG_LOGRES                 0x00000002
--		XFS_PTAG_AILDELETE              0x00000004
--		XFS_PTAG_ERROR_REPORT           0x00000008
--		XFS_PTAG_SHUTDOWN_CORRUPT       0x00000010
--		XFS_PTAG_SHUTDOWN_IOERROR       0x00000020
--		XFS_PTAG_SHUTDOWN_LOGERROR      0x00000040
--		XFS_PTAG_FSBLOCK_ZERO           0x00000080
--		XFS_PTAG_VERIFIER_ERROR         0x00000100
--
--	This option is intended for debugging only.
--
--  fs.xfs.irix_symlink_mode	(Min: 0  Default: 0  Max: 1)
--	Controls whether symlinks are created with mode 0777 (default)
--	or whether their mode is affected by the umask (irix mode).
--
--  fs.xfs.irix_sgid_inherit	(Min: 0  Default: 0  Max: 1)
--	Controls files created in SGID directories.
--	If the group ID of the new file does not match the effective group
--	ID or one of the supplementary group IDs of the parent dir, the
--	ISGID bit is cleared if the irix_sgid_inherit compatibility sysctl
--	is set.
--
--  fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
--	Setting this to "1" will cause the "sync" flag set
--	by the xfs_io(8) chattr command on a directory to be
--	inherited by files in that directory.
--
--  fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
--	Setting this to "1" will cause the "nodump" flag set
--	by the xfs_io(8) chattr command on a directory to be
--	inherited by files in that directory.
--
--  fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
--	Setting this to "1" will cause the "noatime" flag set
--	by the xfs_io(8) chattr command on a directory to be
--	inherited by files in that directory.
--
--  fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
--	Setting this to "1" will cause the "nosymlinks" flag set
--	by the xfs_io(8) chattr command on a directory to be
--	inherited by files in that directory.
--
--  fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
--	Setting this to "1" will cause the "nodefrag" flag set
--	by the xfs_io(8) chattr command on a directory to be
--	inherited by files in that directory.
--
--  fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
--	In "inode32" allocation mode, this option determines how many
--	files the allocator attempts to allocate in the same allocation
--	group before moving to the next allocation group.  The intent
--	is to control the rate at which the allocator moves between
--	allocation groups when allocating extents for new files.
--
--Deprecated Sysctls
--==================
--
--None at present.
--
--
--Removed Sysctls
--===============
--
--  Name				Removed
--  ----				-------
--  fs.xfs.xfsbufd_centisec	v4.0
--  fs.xfs.age_buffer_centisecs	v4.0
--
--
--Error handling
--==============
--
--XFS can act differently according to the type of error found during its
--operation. The implementation introduces the following concepts to the error
--handler:
--
-- -failure speed:
--	Defines how fast XFS should propagate an error upwards when a specific
--	error is found during the filesystem operation. It can propagate
--	immediately, after a defined number of retries, after a set time period,
--	or simply retry forever.
--
-- -error classes:
--	Specifies the subsystem the error configuration will apply to, such as
--	metadata IO or memory allocation. Different subsystems will have
--	different error handlers for which behaviour can be configured.
--
-- -error handlers:
--	Defines the behavior for a specific error.
--
--The filesystem behavior during an error can be set via sysfs files. Each
--error handler works independently - the first condition met by an error handler
--for a specific class will cause the error to be propagated rather than reset and
--retried.
--
--The action taken by the filesystem when the error is propagated is context
--dependent - it may cause a shut down in the case of an unrecoverable error,
--it may be reported back to userspace, or it may even be ignored because
--there's nothing useful we can with the error or anyone we can report it to (e.g.
--during unmount).
--
--The configuration files are organized into the following hierarchy for each
--mounted filesystem:
--
--  /sys/fs/xfs/<dev>/error/<class>/<error>/
--
--Where:
--  <dev>
--	The short device name of the mounted filesystem. This is the same device
--	name that shows up in XFS kernel error messages as "XFS(<dev>): ..."
--
--  <class>
--	The subsystem the error configuration belongs to. As of 4.9, the defined
--	classes are:
--
--		- "metadata": applies metadata buffer write IO
--
--  <error>
--	The individual error handler configurations.
--
--
--Each filesystem has "global" error configuration options defined in their top
--level directory:
--
--  /sys/fs/xfs/<dev>/error/
--
--  fail_at_unmount		(Min:  0  Default:  1  Max: 1)
--	Defines the filesystem error behavior at unmount time.
--
--	If set to a value of 1, XFS will override all other error configurations
--	during unmount and replace them with "immediate fail" characteristics.
--	i.e. no retries, no retry timeout. This will always allow unmount to
--	succeed when there are persistent errors present.
--
--	If set to 0, the configured retry behaviour will continue until all
--	retries and/or timeouts have been exhausted. This will delay unmount
--	completion when there are persistent errors, and it may prevent the
--	filesystem from ever unmounting fully in the case of "retry forever"
--	handler configurations.
--
--	Note: there is no guarantee that fail_at_unmount can be set while an
--	unmount is in progress. It is possible that the sysfs entries are
--	removed by the unmounting filesystem before a "retry forever" error
--	handler configuration causes unmount to hang, and hence the filesystem
--	must be configured appropriately before unmount begins to prevent
--	unmount hangs.
--
--Each filesystem has specific error class handlers that define the error
--propagation behaviour for specific errors. There is also a "default" error
--handler defined, which defines the behaviour for all errors that don't have
--specific handlers defined. Where multiple retry constraints are configuredi for
--a single error, the first retry configuration that expires will cause the error
--to be propagated. The handler configurations are found in the directory:
--
--  /sys/fs/xfs/<dev>/error/<class>/<error>/
--
--  max_retries			(Min: -1  Default: Varies  Max: INTMAX)
--	Defines the allowed number of retries of a specific error before
--	the filesystem will propagate the error. The retry count for a given
--	error context (e.g. a specific metadata buffer) is reset every time
--	there is a successful completion of the operation.
--
--	Setting the value to "-1" will cause XFS to retry forever for this
--	specific error.
--
--	Setting the value to "0" will cause XFS to fail immediately when the
--	specific error is reported.
--
--	Setting the value to "N" (where 0 < N < Max) will make XFS retry the
--	operation "N" times before propagating the error.
--
--  retry_timeout_seconds		(Min:  -1  Default:  Varies  Max: 1 day)
--	Define the amount of time (in seconds) that the filesystem is
--	allowed to retry its operations when the specific error is
--	found.
--
--	Setting the value to "-1" will allow XFS to retry forever for this
--	specific error.
--
--	Setting the value to "0" will cause XFS to fail immediately when the
--	specific error is reported.
--
--	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
--	operation for up to "N" seconds before propagating the error.
--
--Note: The default behaviour for a specific error handler is dependent on both
--the class and error context. For example, the default values for
--"metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
--to "fail immediately" behaviour. This is done because ENODEV is a fatal,
--unrecoverable error no matter how many times the metadata IO is retried.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0ed73599..66e972e9a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17364,7 +17364,7 @@ L:	linux-xfs@vger.kernel.org
- W:	http://xfs.org/
- T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
--F:	Documentation/filesystems/xfs.txt
-+F:	Documentation/filesystems/xfs.rst
- F:	fs/xfs/
- 
- XILINX AXI ETHERNET DRIVER
--- 
-2.22.0
-
+>  fs/xfs/Makefile                  |    1 
+>  fs/xfs/libxfs/xfs_ialloc_btree.c |   37 +++-
+>  fs/xfs/libxfs/xfs_ialloc_btree.h |    3 
+>  fs/xfs/xfs_itable.c              |    5 
+>  fs/xfs/xfs_itable.h              |    8 +
+>  fs/xfs/xfs_iwalk.c               |  389 ++++++++++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_iwalk.h               |   19 ++
+>  fs/xfs/xfs_trace.h               |   40 ++++
+>  8 files changed, 496 insertions(+), 6 deletions(-)
+>  create mode 100644 fs/xfs/xfs_iwalk.c
+>  create mode 100644 fs/xfs/xfs_iwalk.h
+> 
+> 
+> diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+> index 91831975363b..74d30ef0dbce 100644
+> --- a/fs/xfs/Makefile
+> +++ b/fs/xfs/Makefile
+> @@ -80,6 +80,7 @@ xfs-y				+= xfs_aops.o \
+>  				   xfs_iops.o \
+>  				   xfs_inode.o \
+>  				   xfs_itable.o \
+> +				   xfs_iwalk.o \
+>  				   xfs_message.o \
+>  				   xfs_mount.o \
+>  				   xfs_mru_cache.o \
+> diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
+> index ac4b65da4c2b..9f416ae08d73 100644
+> --- a/fs/xfs/libxfs/xfs_ialloc_btree.c
+> +++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
+> @@ -564,6 +564,36 @@ xfs_inobt_max_size(
+>  					XFS_INODES_PER_CHUNK);
+>  }
+>  
+> +/* Read AGI and create inobt cursor. */
+> +int
+> +xfs_inobt_cur(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_trans	*tp,
+> +	xfs_agnumber_t		agno,
+> +	xfs_btnum_t		which,
+> +	struct xfs_btree_cur	**curpp,
+> +	struct xfs_buf		**agi_bpp)
+> +{
+> +	struct xfs_btree_cur	*cur;
+> +	int			error;
+> +
+> +	ASSERT(*agi_bpp == NULL);
+> +	ASSERT(*curpp == NULL);
+> +
+> +	error = xfs_ialloc_read_agi(mp, tp, agno, agi_bpp);
+> +	if (error)
+> +		return error;
+> +
+> +	cur = xfs_inobt_init_cursor(mp, tp, *agi_bpp, agno, which);
+> +	if (!cur) {
+> +		xfs_trans_brelse(tp, *agi_bpp);
+> +		*agi_bpp = NULL;
+> +		return -ENOMEM;
+> +	}
+> +	*curpp = cur;
+> +	return 0;
+> +}
+> +
+>  static int
+>  xfs_inobt_count_blocks(
+>  	struct xfs_mount	*mp,
+> @@ -572,15 +602,14 @@ xfs_inobt_count_blocks(
+>  	xfs_btnum_t		btnum,
+>  	xfs_extlen_t		*tree_blocks)
+>  {
+> -	struct xfs_buf		*agbp;
+> -	struct xfs_btree_cur	*cur;
+> +	struct xfs_buf		*agbp = NULL;
+> +	struct xfs_btree_cur	*cur = NULL;
+>  	int			error;
+>  
+> -	error = xfs_ialloc_read_agi(mp, tp, agno, &agbp);
+> +	error = xfs_inobt_cur(mp, tp, agno, btnum, &cur, &agbp);
+>  	if (error)
+>  		return error;
+>  
+> -	cur = xfs_inobt_init_cursor(mp, tp, agbp, agno, btnum);
+>  	error = xfs_btree_count_blocks(cur, tree_blocks);
+>  	xfs_btree_del_cursor(cur, error);
+>  	xfs_trans_brelse(tp, agbp);
+> diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.h b/fs/xfs/libxfs/xfs_ialloc_btree.h
+> index ebdd0c6b8766..951305ecaae1 100644
+> --- a/fs/xfs/libxfs/xfs_ialloc_btree.h
+> +++ b/fs/xfs/libxfs/xfs_ialloc_btree.h
+> @@ -64,5 +64,8 @@ int xfs_finobt_calc_reserves(struct xfs_mount *mp, struct xfs_trans *tp,
+>  		xfs_agnumber_t agno, xfs_extlen_t *ask, xfs_extlen_t *used);
+>  extern xfs_extlen_t xfs_iallocbt_calc_size(struct xfs_mount *mp,
+>  		unsigned long long len);
+> +int xfs_inobt_cur(struct xfs_mount *mp, struct xfs_trans *tp,
+> +		xfs_agnumber_t agno, xfs_btnum_t btnum,
+> +		struct xfs_btree_cur **curpp, struct xfs_buf **agi_bpp);
+>  
+>  #endif	/* __XFS_IALLOC_BTREE_H__ */
+> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
+> index eef307cf90a7..3ca1c454afe6 100644
+> --- a/fs/xfs/xfs_itable.c
+> +++ b/fs/xfs/xfs_itable.c
+> @@ -19,6 +19,7 @@
+>  #include "xfs_trace.h"
+>  #include "xfs_icache.h"
+>  #include "xfs_health.h"
+> +#include "xfs_iwalk.h"
+>  
+>  /*
+>   * Return stat information for one inode.
+> @@ -161,7 +162,7 @@ xfs_bulkstat_one(
+>   * Loop over all clusters in a chunk for a given incore inode allocation btree
+>   * record.  Do a readahead if there are any allocated inodes in that cluster.
+>   */
+> -STATIC void
+> +void
+>  xfs_bulkstat_ichunk_ra(
+>  	struct xfs_mount		*mp,
+>  	xfs_agnumber_t			agno,
+> @@ -195,7 +196,7 @@ xfs_bulkstat_ichunk_ra(
+>   * are some left allocated, update the data for the pointed-to record as well as
+>   * return the count of grabbed inodes.
+>   */
+> -STATIC int
+> +int
+>  xfs_bulkstat_grab_ichunk(
+>  	struct xfs_btree_cur		*cur,	/* btree cursor */
+>  	xfs_agino_t			agino,	/* starting inode of chunk */
+> diff --git a/fs/xfs/xfs_itable.h b/fs/xfs/xfs_itable.h
+> index 8a822285b671..369e3f159d4e 100644
+> --- a/fs/xfs/xfs_itable.h
+> +++ b/fs/xfs/xfs_itable.h
+> @@ -84,4 +84,12 @@ xfs_inumbers(
+>  	void			__user *buffer, /* buffer with inode info */
+>  	inumbers_fmt_pf		formatter);
+>  
+> +/* Temporarily needed while we refactor functions. */
+> +struct xfs_btree_cur;
+> +struct xfs_inobt_rec_incore;
+> +void xfs_bulkstat_ichunk_ra(struct xfs_mount *mp, xfs_agnumber_t agno,
+> +		struct xfs_inobt_rec_incore *irec);
+> +int xfs_bulkstat_grab_ichunk(struct xfs_btree_cur *cur, xfs_agino_t agino,
+> +		int *icount, struct xfs_inobt_rec_incore *irec);
+> +
+>  #endif	/* __XFS_ITABLE_H__ */
+> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+> new file mode 100644
+> index 000000000000..304c41e6ed1d
+> --- /dev/null
+> +++ b/fs/xfs/xfs_iwalk.c
+> @@ -0,0 +1,389 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
+> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> + */
+> +#include "xfs.h"
+> +#include "xfs_fs.h"
+> +#include "xfs_shared.h"
+> +#include "xfs_format.h"
+> +#include "xfs_log_format.h"
+> +#include "xfs_trans_resv.h"
+> +#include "xfs_mount.h"
+> +#include "xfs_inode.h"
+> +#include "xfs_btree.h"
+> +#include "xfs_ialloc.h"
+> +#include "xfs_ialloc_btree.h"
+> +#include "xfs_iwalk.h"
+> +#include "xfs_itable.h"
+> +#include "xfs_error.h"
+> +#include "xfs_trace.h"
+> +#include "xfs_icache.h"
+> +#include "xfs_health.h"
+> +#include "xfs_trans.h"
+> +
+> +/*
+> + * Walking Inodes in the Filesystem
+> + * ================================
+> + *
+> + * This iterator function walks a subset of filesystem inodes in increasing
+> + * order from @startino until there are no more inodes.  For each allocated
+> + * inode it finds, it calls a walk function with the relevant inode number and
+> + * a pointer to caller-provided data.  The walk function can return the usual
+> + * negative error code to stop the iteration; 0 to continue the iteration; or
+> + * XFS_IWALK_ABORT to stop the iteration.  This return value is returned to the
+> + * caller.
+> + *
+> + * Internally, we allow the walk function to do anything, which means that we
+> + * cannot maintain the inobt cursor or our lock on the AGI buffer.  We
+> + * therefore cache the inobt records in kernel memory and only call the walk
+> + * function when our memory buffer is full.  @nr_recs is the number of records
+> + * that we've cached, and @sz_recs is the size of our cache.
+> + *
+> + * It is the responsibility of the walk function to ensure it accesses
+> + * allocated inodes, as the inobt records may be stale by the time they are
+> + * acted upon.
+> + */
+> +
+> +struct xfs_iwalk_ag {
+> +	struct xfs_mount		*mp;
+> +	struct xfs_trans		*tp;
+> +
+> +	/* Where do we start the traversal? */
+> +	xfs_ino_t			startino;
+> +
+> +	/* Array of inobt records we cache. */
+> +	struct xfs_inobt_rec_incore	*recs;
+> +
+> +	/* Number of entries allocated for the @recs array. */
+> +	unsigned int			sz_recs;
+> +
+> +	/* Number of entries in the @recs array that are in use. */
+> +	unsigned int			nr_recs;
+> +
+> +	/* Inode walk function and data pointer. */
+> +	xfs_iwalk_fn			iwalk_fn;
+> +	void				*data;
+> +};
+> +
+> +/* Allocate memory for a walk. */
+> +STATIC int
+> +xfs_iwalk_alloc(
+> +	struct xfs_iwalk_ag	*iwag)
+> +{
+> +	size_t			size;
+> +
+> +	ASSERT(iwag->recs == NULL);
+> +	iwag->nr_recs = 0;
+> +
+> +	/* Allocate a prefetch buffer for inobt records. */
+> +	size = iwag->sz_recs * sizeof(struct xfs_inobt_rec_incore);
+> +	iwag->recs = kmem_alloc(size, KM_MAYFAIL);
+> +	if (iwag->recs == NULL)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Free memory we allocated for a walk. */
+> +STATIC void
+> +xfs_iwalk_free(
+> +	struct xfs_iwalk_ag	*iwag)
+> +{
+> +	kmem_free(iwag->recs);
+> +	iwag->recs = NULL;
+> +}
+> +
+> +/* For each inuse inode in each cached inobt record, call our function. */
+> +STATIC int
+> +xfs_iwalk_ag_recs(
+> +	struct xfs_iwalk_ag		*iwag)
+> +{
+> +	struct xfs_mount		*mp = iwag->mp;
+> +	struct xfs_trans		*tp = iwag->tp;
+> +	xfs_ino_t			ino;
+> +	unsigned int			i, j;
+> +	xfs_agnumber_t			agno;
+> +	int				error;
+> +
+> +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
+> +	for (i = 0; i < iwag->nr_recs; i++) {
+> +		struct xfs_inobt_rec_incore	*irec = &iwag->recs[i];
+> +
+> +		trace_xfs_iwalk_ag_rec(mp, agno, irec);
+> +
+> +		for (j = 0; j < XFS_INODES_PER_CHUNK; j++) {
+> +			/* Skip if this inode is free */
+> +			if (XFS_INOBT_MASK(j) & irec->ir_free)
+> +				continue;
+> +
+> +			/* Otherwise call our function. */
+> +			ino = XFS_AGINO_TO_INO(mp, agno, irec->ir_startino + j);
+> +			error = iwag->iwalk_fn(mp, tp, ino, iwag->data);
+> +			if (error)
+> +				return error;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* Delete cursor and let go of AGI. */
+> +static inline void
+> +xfs_iwalk_del_inobt(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_btree_cur	**curpp,
+> +	struct xfs_buf		**agi_bpp,
+> +	int			error)
+> +{
+> +	if (*curpp) {
+> +		xfs_btree_del_cursor(*curpp, error);
+> +		*curpp = NULL;
+> +	}
+> +	if (*agi_bpp) {
+> +		xfs_trans_brelse(tp, *agi_bpp);
+> +		*agi_bpp = NULL;
+> +	}
+> +}
+> +
+> +/*
+> + * Set ourselves up for walking inobt records starting from a given point in
+> + * the filesystem.
+> + *
+> + * If caller passed in a nonzero start inode number, load the record from the
+> + * inobt and make the record look like all the inodes before agino are free so
+> + * that we skip them, and then move the cursor to the next inobt record.  This
+> + * is how we support starting an iwalk in the middle of an inode chunk.
+> + *
+> + * If the caller passed in a start number of zero, move the cursor to the first
+> + * inobt record.
+> + *
+> + * The caller is responsible for cleaning up the cursor and buffer pointer
+> + * regardless of the error status.
+> + */
+> +STATIC int
+> +xfs_iwalk_ag_start(
+> +	struct xfs_iwalk_ag	*iwag,
+> +	xfs_agnumber_t		agno,
+> +	xfs_agino_t		agino,
+> +	struct xfs_btree_cur	**curpp,
+> +	struct xfs_buf		**agi_bpp,
+> +	int			*has_more)
+> +{
+> +	struct xfs_mount	*mp = iwag->mp;
+> +	struct xfs_trans	*tp = iwag->tp;
+> +	int			icount;
+> +	int			error;
+> +
+> +	/* Set up a fresh cursor and empty the inobt cache. */
+> +	iwag->nr_recs = 0;
+> +	error = xfs_inobt_cur(mp, tp, agno, XFS_BTNUM_INO, curpp, agi_bpp);
+> +	if (error)
+> +		return error;
+> +
+> +	/* Starting at the beginning of the AG?  That's easy! */
+> +	if (agino == 0)
+> +		return xfs_inobt_lookup(*curpp, 0, XFS_LOOKUP_GE, has_more);
+> +
+> +	/*
+> +	 * Otherwise, we have to grab the inobt record where we left off, stuff
+> +	 * the record into our cache, and then see if there are more records.
+> +	 * We require a lookup cache of at least two elements so that we don't
+> +	 * have to deal with tearing down the cursor to walk the records.
+> +	 */
+> +	error = xfs_bulkstat_grab_ichunk(*curpp, agino - 1, &icount,
+> +			&iwag->recs[iwag->nr_recs]);
+> +	if (error)
+> +		return error;
+> +	if (icount)
+> +		iwag->nr_recs++;
+> +
+> +	/*
+> +	 * The prefetch calculation is supposed to give us a large enough inobt
+> +	 * record cache that grab_ichunk can stage a partial first record and
+> +	 * the loop body can cache a record without having to check for cache
+> +	 * space until after it reads an inobt record.
+> +	 */
+> +	ASSERT(iwag->nr_recs < iwag->sz_recs);
+> +
+> +	return xfs_btree_increment(*curpp, 0, has_more);
+> +}
+> +
+> +/*
+> + * The inobt record cache is full, so preserve the inobt cursor state and
+> + * run callbacks on the cached inobt records.  When we're done, restore the
+> + * cursor state to wherever the cursor would have been had the cache not been
+> + * full (and therefore we could've just incremented the cursor) if *@has_more
+> + * is true.  On exit, *@has_more will indicate whether or not the caller should
+> + * try for more inode records.
+> + */
+> +STATIC int
+> +xfs_iwalk_run_callbacks(
+> +	struct xfs_iwalk_ag		*iwag,
+> +	xfs_agnumber_t			agno,
+> +	struct xfs_btree_cur		**curpp,
+> +	struct xfs_buf			**agi_bpp,
+> +	int				*has_more)
+> +{
+> +	struct xfs_mount		*mp = iwag->mp;
+> +	struct xfs_trans		*tp = iwag->tp;
+> +	struct xfs_inobt_rec_incore	*irec;
+> +	xfs_agino_t			restart;
+> +	int				error;
+> +
+> +	ASSERT(iwag->nr_recs > 0);
+> +
+> +	/* Delete cursor but remember the last record we cached... */
+> +	xfs_iwalk_del_inobt(tp, curpp, agi_bpp, 0);
+> +	irec = &iwag->recs[iwag->nr_recs - 1];
+> +	restart = irec->ir_startino + XFS_INODES_PER_CHUNK - 1;
+> +
+> +	error = xfs_iwalk_ag_recs(iwag);
+> +	if (error)
+> +		return error;
+> +
+> +	/* ...empty the cache... */
+> +	iwag->nr_recs = 0;
+> +
+> +	if (!has_more)
+> +		return 0;
+> +
+> +	/* ...and recreate the cursor just past where we left off. */
+> +	error = xfs_inobt_cur(mp, tp, agno, XFS_BTNUM_INO, curpp, agi_bpp);
+> +	if (error)
+> +		return error;
+> +
+> +	return xfs_inobt_lookup(*curpp, restart, XFS_LOOKUP_GE, has_more);
+> +}
+> +
+> +/* Walk all inodes in a single AG, from @iwag->startino to the end of the AG. */
+> +STATIC int
+> +xfs_iwalk_ag(
+> +	struct xfs_iwalk_ag		*iwag)
+> +{
+> +	struct xfs_mount		*mp = iwag->mp;
+> +	struct xfs_trans		*tp = iwag->tp;
+> +	struct xfs_buf			*agi_bp = NULL;
+> +	struct xfs_btree_cur		*cur = NULL;
+> +	xfs_agnumber_t			agno;
+> +	xfs_agino_t			agino;
+> +	int				has_more;
+> +	int				error = 0;
+> +
+> +	/* Set up our cursor at the right place in the inode btree. */
+> +	agno = XFS_INO_TO_AGNO(mp, iwag->startino);
+> +	agino = XFS_INO_TO_AGINO(mp, iwag->startino);
+> +	error = xfs_iwalk_ag_start(iwag, agno, agino, &cur, &agi_bp, &has_more);
+> +
+> +	while (!error && has_more) {
+> +		struct xfs_inobt_rec_incore	*irec;
+> +
+> +		cond_resched();
+> +
+> +		/* Fetch the inobt record. */
+> +		irec = &iwag->recs[iwag->nr_recs];
+> +		error = xfs_inobt_get_rec(cur, irec, &has_more);
+> +		if (error || !has_more)
+> +			break;
+> +
+> +		/* No allocated inodes in this chunk; skip it. */
+> +		if (irec->ir_freecount == irec->ir_count) {
+> +			error = xfs_btree_increment(cur, 0, &has_more);
+> +			if (error)
+> +				break;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Start readahead for this inode chunk in anticipation of
+> +		 * walking the inodes.
+> +		 */
+> +		xfs_bulkstat_ichunk_ra(mp, agno, irec);
+> +
+> +		/*
+> +		 * If there's space in the buffer for more records, increment
+> +		 * the btree cursor and grab more.
+> +		 */
+> +		if (++iwag->nr_recs < iwag->sz_recs) {
+> +			error = xfs_btree_increment(cur, 0, &has_more);
+> +			if (error || !has_more)
+> +				break;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Otherwise, we need to save cursor state and run the callback
+> +		 * function on the cached records.  The run_callbacks function
+> +		 * is supposed to return a cursor pointing to the record where
+> +		 * we would be if we had been able to increment like above.
+> +		 */
+> +		ASSERT(has_more);
+> +		error = xfs_iwalk_run_callbacks(iwag, agno, &cur, &agi_bp,
+> +				&has_more);
+> +	}
+> +
+> +	if (iwag->nr_recs == 0 || error)
+> +		goto out;
+> +
+> +	/* Walk the unprocessed records in the cache. */
+> +	error = xfs_iwalk_run_callbacks(iwag, agno, &cur, &agi_bp, &has_more);
+> +
+> +out:
+> +	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
+> +	return error;
+> +}
+> +
+> +/*
+> + * Given the number of inodes to prefetch, set the number of inobt records that
+> + * we cache in memory, which controls the number of inodes we try to read
+> + * ahead.
+> + */
+> +static inline unsigned int
+> +xfs_iwalk_prefetch(
+> +	unsigned int		inode_records)
+> +{
+> +	return PAGE_SIZE * 4 / sizeof(struct xfs_inobt_rec_incore);
+> +}
+> +
+> +/*
+> + * Walk all inodes in the filesystem starting from @startino.  The @iwalk_fn
+> + * will be called for each allocated inode, being passed the inode's number and
+> + * @data.  @max_prefetch controls how many inobt records' worth of inodes we
+> + * try to readahead.
+> + */
+> +int
+> +xfs_iwalk(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_trans	*tp,
+> +	xfs_ino_t		startino,
+> +	xfs_iwalk_fn		iwalk_fn,
+> +	unsigned int		inode_records,
+> +	void			*data)
+> +{
+> +	struct xfs_iwalk_ag	iwag = {
+> +		.mp		= mp,
+> +		.tp		= tp,
+> +		.iwalk_fn	= iwalk_fn,
+> +		.data		= data,
+> +		.startino	= startino,
+> +		.sz_recs	= xfs_iwalk_prefetch(inode_records),
+> +	};
+> +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
+> +	int			error;
+> +
+> +	ASSERT(agno < mp->m_sb.sb_agcount);
+> +
+> +	error = xfs_iwalk_alloc(&iwag);
+> +	if (error)
+> +		return error;
+> +
+> +	for (; agno < mp->m_sb.sb_agcount; agno++) {
+> +		error = xfs_iwalk_ag(&iwag);
+> +		if (error)
+> +			break;
+> +		iwag.startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
+> +	}
+> +
+> +	xfs_iwalk_free(&iwag);
+> +	return error;
+> +}
+> diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
+> new file mode 100644
+> index 000000000000..7728dfd618a4
+> --- /dev/null
+> +++ b/fs/xfs/xfs_iwalk.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
+> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> + */
+> +#ifndef __XFS_IWALK_H__
+> +#define __XFS_IWALK_H__
+> +
+> +/* Walk all inodes in the filesystem starting from @startino. */
+> +typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
+> +			    xfs_ino_t ino, void *data);
+> +/* Return values for xfs_iwalk_fn. */
+> +#define XFS_IWALK_CONTINUE	(XFS_ITER_CONTINUE)
+> +#define XFS_IWALK_ABORT		(XFS_ITER_ABORT)
+> +
+> +int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
+> +		xfs_iwalk_fn iwalk_fn, unsigned int inode_records, void *data);
+> +
+> +#endif /* __XFS_IWALK_H__ */
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index 2464ea351f83..f9bb1d50bc0e 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -3516,6 +3516,46 @@ DEFINE_EVENT(xfs_inode_corrupt_class, name,	\
+>  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_sick);
+>  DEFINE_INODE_CORRUPT_EVENT(xfs_inode_mark_healthy);
+>  
+> +TRACE_EVENT(xfs_iwalk_ag,
+> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+> +		 xfs_agino_t startino),
+> +	TP_ARGS(mp, agno, startino),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(xfs_agnumber_t, agno)
+> +		__field(xfs_agino_t, startino)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp->m_super->s_dev;
+> +		__entry->agno = agno;
+> +		__entry->startino = startino;
+> +	),
+> +	TP_printk("dev %d:%d agno %d startino %u",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
+> +		  __entry->startino)
+> +)
+> +
+> +TRACE_EVENT(xfs_iwalk_ag_rec,
+> +	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+> +		 struct xfs_inobt_rec_incore *irec),
+> +	TP_ARGS(mp, agno, irec),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(xfs_agnumber_t, agno)
+> +		__field(xfs_agino_t, startino)
+> +		__field(uint64_t, freemask)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp->m_super->s_dev;
+> +		__entry->agno = agno;
+> +		__entry->startino = irec->ir_startino;
+> +		__entry->freemask = irec->ir_free;
+> +	),
+> +	TP_printk("dev %d:%d agno %d startino %u freemask 0x%llx",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->agno,
+> +		  __entry->startino, __entry->freemask)
+> +)
+> +
+>  #endif /* _TRACE_XFS_H */
+>  
+>  #undef TRACE_INCLUDE_PATH
+> 
