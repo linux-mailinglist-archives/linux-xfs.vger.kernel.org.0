@@ -2,543 +2,174 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E80105D563
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 19:40:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D84985D5FE
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 20:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfGBRkf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jul 2019 13:40:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52236 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfGBRke (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:40:34 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D8083082AC3;
-        Tue,  2 Jul 2019 17:40:29 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 95E4718250;
-        Tue,  2 Jul 2019 17:40:27 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 13:40:25 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2 14/15] xfs: multithreaded iwalk implementation
-Message-ID: <20190702174025.GG2866@bfoster>
-References: <156158183697.495087.5371839759804528321.stgit@magnolia>
- <156158192497.495087.5608242533988384883.stgit@magnolia>
- <20190702165342.GS1404256@magnolia>
+        id S1726329AbfGBSPx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jul 2019 14:15:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39868 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGBSPw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 14:15:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 196so8075343pgc.6;
+        Tue, 02 Jul 2019 11:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
+        b=CzVO+nNLbPllxoJSeWpK2BzAWjshDfcdvDMua1IC5sYF6s7Xn/K8TNi9DnqBVo68Fx
+         cb//ZSOn/y6OmS1ekJVl6aQSD8+K55m5nEIKaj4H1Z3OPlV3oZm6j7SLB6TEMAGoIo1h
+         Vd62nu4SH4i2XEg+GURoN8BEPnrYd4pdgqvj8JwMW4oYxIWbkngzzEnXzq22roxJsyTL
+         9h5qT91X25zEqWU9zX8/DnK/dczg/nfva8eCKPA6Cw0Uxk4wByyDw5ycphJpe/b7Thw4
+         zClSZcAXk4o/74nxp5CHWl8rjgsOfnBOmkmO7SSbYCeItcI7kKdBsV63sVN5LczXi1u2
+         Xmqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
+        b=tkUkW+z+M/KSc4y+5gpsL34L2lc5yX9oAyWo6+xpKXE60ZladsddvXL6woHgq6rFA6
+         Imlok114NGSAB0lsxXiX5MamehdeEJesHREeGpj7luP5MTBlaO3aHS1vZPGJ4MaTL74X
+         07Sqq8O1X/j4bsQRNrikFX1GDu3ycj7iO3LRe7IH3HnfdkD0p6eSD04AWmSVA3XIr+nX
+         jSVYTOjthneivjmxJHqHhG14VeOsPHyuvDzONsvDyUI7Eve/Bm5hJwJKZv01c0PrJjhT
+         4XlOdAatnxl9+BA8N0+pIa39e/AoqAtjB607kTSMHmcEc1SbSnoy2dZcNWjikby+ojtE
+         STyQ==
+X-Gm-Message-State: APjAAAW6PjGvdfwHg9tFNjJ7T9oJMNBAogydxYhM52b7Vl0mPknhosZf
+        YMMSOGbVqOh1qOTum+QNUQY=
+X-Google-Smtp-Source: APXvYqwVQlC/FW+sbrMn2V0B2Ksokr49iVLxwe3ctfAlOi8fgHulMFAIrzzcUqEHghzSXodxC0hpsw==
+X-Received: by 2002:a63:f146:: with SMTP id o6mr31297134pgk.179.1562091351993;
+        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id y133sm15016889pfb.28.2019.07.02.11.15.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 23:45:47 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: xfs: xfs_log: Change return type from int to void
+Message-ID: <20190702181547.GA11316@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190702165342.GS1404256@magnolia>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 02 Jul 2019 17:40:34 +0000 (UTC)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 09:53:42AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Create a parallel iwalk implementation and switch quotacheck to use it.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
-> v2: conservative thread count estimates; clean out the xfs_param_t stuff
-> ---
+Change return types of below functions as they never fails
+xfs_log_mount_cancel
+xlog_recover_cancel
+xlog_recover_cancel_intents
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+fix below issue reported by coccicheck
+fs/xfs/xfs_log_recover.c:4886:7-12: Unneeded variable: "error". Return
+"0" on line 4926
 
->  fs/xfs/Makefile      |    1 
->  fs/xfs/xfs_globals.c |    3 +
->  fs/xfs/xfs_iwalk.c   |   82 ++++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_iwalk.h   |    2 +
->  fs/xfs/xfs_pwork.c   |  115 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_pwork.h   |   58 +++++++++++++++++++++++++
->  fs/xfs/xfs_qm.c      |    2 -
->  fs/xfs/xfs_sysctl.h  |    3 +
->  fs/xfs/xfs_sysfs.c   |   40 +++++++++++++++++
->  fs/xfs/xfs_trace.h   |   18 ++++++++
->  10 files changed, 323 insertions(+), 1 deletion(-)
->  create mode 100644 fs/xfs/xfs_pwork.c
->  create mode 100644 fs/xfs/xfs_pwork.h
-> 
-> diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
-> index 6fdd481b3143..266b66613cd6 100644
-> --- a/fs/xfs/Makefile
-> +++ b/fs/xfs/Makefile
-> @@ -92,6 +92,7 @@ xfs-y				+= xfs_aops.o \
->  				   xfs_message.o \
->  				   xfs_mount.o \
->  				   xfs_mru_cache.o \
-> +				   xfs_pwork.o \
->  				   xfs_reflink.o \
->  				   xfs_stats.o \
->  				   xfs_super.o \
-> diff --git a/fs/xfs/xfs_globals.c b/fs/xfs/xfs_globals.c
-> index 4e4a7a299ccb..fa55ab8b8d80 100644
-> --- a/fs/xfs/xfs_globals.c
-> +++ b/fs/xfs/xfs_globals.c
-> @@ -40,4 +40,7 @@ struct xfs_globals xfs_globals = {
->  #else
->  	.bug_on_assert		=	false,	/* assert failures WARN() */
->  #endif
-> +#ifdef DEBUG
-> +	.pwork_threads		=	-1,	/* automatic thread detection */
-> +#endif
->  };
-> diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-> index a0903150d2d8..d610eefed409 100644
-> --- a/fs/xfs/xfs_iwalk.c
-> +++ b/fs/xfs/xfs_iwalk.c
-> @@ -20,6 +20,7 @@
->  #include "xfs_icache.h"
->  #include "xfs_health.h"
->  #include "xfs_trans.h"
-> +#include "xfs_pwork.h"
->  
->  /*
->   * Walking Inodes in the Filesystem
-> @@ -45,6 +46,9 @@
->   */
->  
->  struct xfs_iwalk_ag {
-> +	/* parallel work control data; will be null if single threaded */
-> +	struct xfs_pwork		pwork;
-> +
->  	struct xfs_mount		*mp;
->  	struct xfs_trans		*tp;
->  
-> @@ -182,6 +186,9 @@ xfs_iwalk_ag_recs(
->  
->  		trace_xfs_iwalk_ag_rec(mp, agno, irec);
->  
-> +		if (xfs_pwork_want_abort(&iwag->pwork))
-> +			return 0;
-> +
->  		if (iwag->inobt_walk_fn) {
->  			error = iwag->inobt_walk_fn(mp, tp, agno, irec,
->  					iwag->data);
-> @@ -193,6 +200,9 @@ xfs_iwalk_ag_recs(
->  			continue;
->  
->  		for (j = 0; j < XFS_INODES_PER_CHUNK; j++) {
-> +			if (xfs_pwork_want_abort(&iwag->pwork))
-> +				return 0;
-> +
->  			/* Skip if this inode is free */
->  			if (XFS_INOBT_MASK(j) & irec->ir_free)
->  				continue;
-> @@ -387,6 +397,8 @@ xfs_iwalk_ag(
->  		struct xfs_inobt_rec_incore	*irec;
->  
->  		cond_resched();
-> +		if (xfs_pwork_want_abort(&iwag->pwork))
-> +			goto out;
->  
->  		/* Fetch the inobt record. */
->  		irec = &iwag->recs[iwag->nr_recs];
-> @@ -520,6 +532,7 @@ xfs_iwalk(
->  		.sz_recs	= xfs_iwalk_prefetch(inode_records),
->  		.trim_start	= 1,
->  		.skip_empty	= 1,
-> +		.pwork		= XFS_PWORK_SINGLE_THREADED,
->  	};
->  	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
->  	int			error;
-> @@ -541,6 +554,74 @@ xfs_iwalk(
->  	return error;
->  }
->  
-> +/* Run per-thread iwalk work. */
-> +static int
-> +xfs_iwalk_ag_work(
-> +	struct xfs_mount	*mp,
-> +	struct xfs_pwork	*pwork)
-> +{
-> +	struct xfs_iwalk_ag	*iwag;
-> +	int			error = 0;
-> +
-> +	iwag = container_of(pwork, struct xfs_iwalk_ag, pwork);
-> +	if (xfs_pwork_want_abort(pwork))
-> +		goto out;
-> +
-> +	error = xfs_iwalk_alloc(iwag);
-> +	if (error)
-> +		goto out;
-> +
-> +	error = xfs_iwalk_ag(iwag);
-> +	xfs_iwalk_free(iwag);
-> +out:
-> +	kmem_free(iwag);
-> +	return error;
-> +}
-> +
-> +/*
-> + * Walk all the inodes in the filesystem using multiple threads to process each
-> + * AG.
-> + */
-> +int
-> +xfs_iwalk_threaded(
-> +	struct xfs_mount	*mp,
-> +	xfs_ino_t		startino,
-> +	xfs_iwalk_fn		iwalk_fn,
-> +	unsigned int		inode_records,
-> +	void			*data)
-> +{
-> +	struct xfs_pwork_ctl	pctl;
-> +	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
-> +	unsigned int		nr_threads;
-> +	int			error;
-> +
-> +	ASSERT(agno < mp->m_sb.sb_agcount);
-> +
-> +	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
-> +	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
-> +			nr_threads);
-> +	if (error)
-> +		return error;
-> +
-> +	for (; agno < mp->m_sb.sb_agcount; agno++) {
-> +		struct xfs_iwalk_ag	*iwag;
-> +
-> +		if (xfs_pwork_ctl_want_abort(&pctl))
-> +			break;
-> +
-> +		iwag = kmem_zalloc(sizeof(struct xfs_iwalk_ag), KM_SLEEP);
-> +		iwag->mp = mp;
-> +		iwag->iwalk_fn = iwalk_fn;
-> +		iwag->data = data;
-> +		iwag->startino = startino;
-> +		iwag->sz_recs = xfs_iwalk_prefetch(inode_records);
-> +		xfs_pwork_queue(&pctl, &iwag->pwork);
-> +		startino = XFS_AGINO_TO_INO(mp, agno + 1, 0);
-> +	}
-> +
-> +	return xfs_pwork_destroy(&pctl);
-> +}
-> +
->  /*
->   * Allow callers to cache up to a page's worth of inobt records.  This reflects
->   * the existing inumbers prefetching behavior.  Since the inobt walk does not
-> @@ -601,6 +682,7 @@ xfs_inobt_walk(
->  		.data		= data,
->  		.startino	= startino,
->  		.sz_recs	= xfs_inobt_walk_prefetch(inobt_records),
-> +		.pwork		= XFS_PWORK_SINGLE_THREADED,
->  	};
->  	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
->  	int			error;
-> diff --git a/fs/xfs/xfs_iwalk.h b/fs/xfs/xfs_iwalk.h
-> index 94fad060b3e9..22c31763a9b8 100644
-> --- a/fs/xfs/xfs_iwalk.h
-> +++ b/fs/xfs/xfs_iwalk.h
-> @@ -15,6 +15,8 @@ typedef int (*xfs_iwalk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
->  
->  int xfs_iwalk(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t startino,
->  		xfs_iwalk_fn iwalk_fn, unsigned int inode_records, void *data);
-> +int xfs_iwalk_threaded(struct xfs_mount *mp, xfs_ino_t startino,
-> +		xfs_iwalk_fn iwalk_fn, unsigned int inode_records, void *data);
->  
->  /* Walk all inode btree records in the filesystem starting from @startino. */
->  typedef int (*xfs_inobt_walk_fn)(struct xfs_mount *mp, struct xfs_trans *tp,
-> diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
-> new file mode 100644
-> index 000000000000..fee727d07822
-> --- /dev/null
-> +++ b/fs/xfs/xfs_pwork.c
-> @@ -0,0 +1,115 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> + */
-> +#include "xfs.h"
-> +#include "xfs_fs.h"
-> +#include "xfs_shared.h"
-> +#include "xfs_format.h"
-> +#include "xfs_log_format.h"
-> +#include "xfs_trans_resv.h"
-> +#include "xfs_mount.h"
-> +#include "xfs_trace.h"
-> +#include "xfs_sysctl.h"
-> +#include "xfs_pwork.h"
-> +
-> +/*
-> + * Parallel Work Queue
-> + * ===================
-> + *
-> + * Abstract away the details of running a large and "obviously" parallelizable
-> + * task across multiple CPUs.  Callers initialize the pwork control object with
-> + * a desired level of parallelization and a work function.  Next, they embed
-> + * struct xfs_pwork in whatever structure they use to pass work context to a
-> + * worker thread and queue that pwork.  The work function will be passed the
-> + * pwork item when it is run (from process context) and any returned error will
-> + * be recorded in xfs_pwork_ctl.error.  Work functions should check for errors
-> + * and abort if necessary; the non-zeroness of xfs_pwork_ctl.error does not
-> + * stop workqueue item processing.
-> + *
-> + * This is the rough equivalent of the xfsprogs workqueue code, though we can't
-> + * reuse that name here.
-> + */
-> +
-> +/* Invoke our caller's function. */
-> +static void
-> +xfs_pwork_work(
-> +	struct work_struct	*work)
-> +{
-> +	struct xfs_pwork	*pwork;
-> +	struct xfs_pwork_ctl	*pctl;
-> +	int			error;
-> +
-> +	pwork = container_of(work, struct xfs_pwork, work);
-> +	pctl = pwork->pctl;
-> +	error = pctl->work_fn(pctl->mp, pwork);
-> +	if (error && !pctl->error)
-> +		pctl->error = error;
-> +}
-> +
-> +/*
-> + * Set up control data for parallel work.  @work_fn is the function that will
-> + * be called.  @tag will be written into the kernel threads.  @nr_threads is
-> + * the level of parallelism desired, or 0 for no limit.
-> + */
-> +int
-> +xfs_pwork_init(
-> +	struct xfs_mount	*mp,
-> +	struct xfs_pwork_ctl	*pctl,
-> +	xfs_pwork_work_fn	work_fn,
-> +	const char		*tag,
-> +	unsigned int		nr_threads)
-> +{
-> +#ifdef DEBUG
-> +	if (xfs_globals.pwork_threads >= 0)
-> +		nr_threads = xfs_globals.pwork_threads;
-> +#endif
-> +	trace_xfs_pwork_init(mp, nr_threads, current->pid);
-> +
-> +	pctl->wq = alloc_workqueue("%s-%d", WQ_FREEZABLE, nr_threads, tag,
-> +			current->pid);
-> +	if (!pctl->wq)
-> +		return -ENOMEM;
-> +	pctl->work_fn = work_fn;
-> +	pctl->error = 0;
-> +	pctl->mp = mp;
-> +
-> +	return 0;
-> +}
-> +
-> +/* Queue some parallel work. */
-> +void
-> +xfs_pwork_queue(
-> +	struct xfs_pwork_ctl	*pctl,
-> +	struct xfs_pwork	*pwork)
-> +{
-> +	INIT_WORK(&pwork->work, xfs_pwork_work);
-> +	pwork->pctl = pctl;
-> +	queue_work(pctl->wq, &pwork->work);
-> +}
-> +
-> +/* Wait for the work to finish and tear down the control structure. */
-> +int
-> +xfs_pwork_destroy(
-> +	struct xfs_pwork_ctl	*pctl)
-> +{
-> +	destroy_workqueue(pctl->wq);
-> +	pctl->wq = NULL;
-> +	return pctl->error;
-> +}
-> +
-> +/*
-> + * Return the amount of parallelism that the data device can handle, or 0 for
-> + * no limit.
-> + */
-> +unsigned int
-> +xfs_pwork_guess_datadev_parallelism(
-> +	struct xfs_mount	*mp)
-> +{
-> +	/*
-> +	 * For now we'll go with the most conservative setting possible,
-> +	 * which is two threads for an SSD and 1 thread everywhere else.
-> +	 */
-> +	return blk_queue_nonrot(btp->bt_bdev->bd_queue) ? 2 : 1;
-> +}
-> diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
-> new file mode 100644
-> index 000000000000..99a9d210d49e
-> --- /dev/null
-> +++ b/fs/xfs/xfs_pwork.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2019 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> + */
-> +#ifndef __XFS_PWORK_H__
-> +#define __XFS_PWORK_H__
-> +
-> +struct xfs_pwork;
-> +struct xfs_mount;
-> +
-> +typedef int (*xfs_pwork_work_fn)(struct xfs_mount *mp, struct xfs_pwork *pwork);
-> +
-> +/*
-> + * Parallel work coordination structure.
-> + */
-> +struct xfs_pwork_ctl {
-> +	struct workqueue_struct	*wq;
-> +	struct xfs_mount	*mp;
-> +	xfs_pwork_work_fn	work_fn;
-> +	int			error;
-> +};
-> +
-> +/*
-> + * Embed this parallel work control item inside your own work structure,
-> + * then queue work with it.
-> + */
-> +struct xfs_pwork {
-> +	struct work_struct	work;
-> +	struct xfs_pwork_ctl	*pctl;
-> +};
-> +
-> +#define XFS_PWORK_SINGLE_THREADED	{ .pctl = NULL }
-> +
-> +/* Have we been told to abort? */
-> +static inline bool
-> +xfs_pwork_ctl_want_abort(
-> +	struct xfs_pwork_ctl	*pctl)
-> +{
-> +	return pctl && pctl->error;
-> +}
-> +
-> +/* Have we been told to abort? */
-> +static inline bool
-> +xfs_pwork_want_abort(
-> +	struct xfs_pwork	*pwork)
-> +{
-> +	return xfs_pwork_ctl_want_abort(pwork->pctl);
-> +}
-> +
-> +int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
-> +		xfs_pwork_work_fn work_fn, const char *tag,
-> +		unsigned int nr_threads);
-> +void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
-> +int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
-> +unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
-> +
-> +#endif /* __XFS_PWORK_H__ */
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 588e36fe43f2..fb7a41fdde7f 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -1300,7 +1300,7 @@ xfs_qm_quotacheck(
->  		flags |= XFS_PQUOTA_CHKD;
->  	}
->  
-> -	error = xfs_iwalk(mp, NULL, 0, xfs_qm_dqusage_adjust, 0, NULL);
-> +	error = xfs_iwalk_threaded(mp, 0, xfs_qm_dqusage_adjust, 0, NULL);
->  	if (error)
->  		goto error_return;
->  
-> diff --git a/fs/xfs/xfs_sysctl.h b/fs/xfs/xfs_sysctl.h
-> index ad7f9be13087..8abf4640f1d5 100644
-> --- a/fs/xfs/xfs_sysctl.h
-> +++ b/fs/xfs/xfs_sysctl.h
-> @@ -82,6 +82,9 @@ enum {
->  extern xfs_param_t	xfs_params;
->  
->  struct xfs_globals {
-> +#ifdef DEBUG
-> +	int	pwork_threads;		/* parallel workqueue threads */
-> +#endif
->  	int	log_recovery_delay;	/* log recovery delay (secs) */
->  	int	mount_delay;		/* mount setup delay (secs) */
->  	bool	bug_on_assert;		/* BUG() the kernel on assert failure */
-> diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-> index 688366d42cd8..ddd0bf7a4740 100644
-> --- a/fs/xfs/xfs_sysfs.c
-> +++ b/fs/xfs/xfs_sysfs.c
-> @@ -204,11 +204,51 @@ always_cow_show(
->  }
->  XFS_SYSFS_ATTR_RW(always_cow);
->  
-> +#ifdef DEBUG
-> +/*
-> + * Override how many threads the parallel work queue is allowed to create.
-> + * This has to be a debug-only global (instead of an errortag) because one of
-> + * the main users of parallel workqueues is mount time quotacheck.
-> + */
-> +STATIC ssize_t
-> +pwork_threads_store(
-> +	struct kobject	*kobject,
-> +	const char	*buf,
-> +	size_t		count)
-> +{
-> +	int		ret;
-> +	int		val;
-> +
-> +	ret = kstrtoint(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val < -1 || val > num_possible_cpus())
-> +		return -EINVAL;
-> +
-> +	xfs_globals.pwork_threads = val;
-> +
-> +	return count;
-> +}
-> +
-> +STATIC ssize_t
-> +pwork_threads_show(
-> +	struct kobject	*kobject,
-> +	char		*buf)
-> +{
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", xfs_globals.pwork_threads);
-> +}
-> +XFS_SYSFS_ATTR_RW(pwork_threads);
-> +#endif /* DEBUG */
-> +
->  static struct attribute *xfs_dbg_attrs[] = {
->  	ATTR_LIST(bug_on_assert),
->  	ATTR_LIST(log_recovery_delay),
->  	ATTR_LIST(mount_delay),
->  	ATTR_LIST(always_cow),
-> +#ifdef DEBUG
-> +	ATTR_LIST(pwork_threads),
-> +#endif
->  	NULL,
->  };
->  
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index e61d519961a1..8094b1920eef 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -3557,6 +3557,24 @@ TRACE_EVENT(xfs_iwalk_ag_rec,
->  		  __entry->startino, __entry->freemask)
->  )
->  
-> +TRACE_EVENT(xfs_pwork_init,
-> +	TP_PROTO(struct xfs_mount *mp, unsigned int nr_threads, pid_t pid),
-> +	TP_ARGS(mp, nr_threads, pid),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(unsigned int, nr_threads)
-> +		__field(pid_t, pid)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = mp->m_super->s_dev;
-> +		__entry->nr_threads = nr_threads;
-> +		__entry->pid = pid;
-> +	),
-> +	TP_printk("dev %d:%d nr_threads %u pid %u",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->nr_threads, __entry->pid)
-> +)
-> +
->  #endif /* _TRACE_XFS_H */
->  
->  #undef TRACE_INCLUDE_PATH
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ fs/xfs/xfs_log.c         |  8 ++------
+ fs/xfs/xfs_log.h         |  2 +-
+ fs/xfs/xfs_log_priv.h    |  2 +-
+ fs/xfs/xfs_log_recover.c | 12 +++---------
+ 4 files changed, 7 insertions(+), 17 deletions(-)
+
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index cbaf348..00e9f5c 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -769,16 +769,12 @@ xfs_log_mount_finish(
+  * The mount has failed. Cancel the recovery if it hasn't completed and destroy
+  * the log.
+  */
+-int
++void
+ xfs_log_mount_cancel(
+ 	struct xfs_mount	*mp)
+ {
+-	int			error;
+-
+-	error = xlog_recover_cancel(mp->m_log);
++	xlog_recover_cancel(mp->m_log);
+ 	xfs_log_unmount(mp);
+-
+-	return error;
+ }
+ 
+ /*
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index f27b1cb..84e0680 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -117,7 +117,7 @@ int	  xfs_log_mount(struct xfs_mount	*mp,
+ 			xfs_daddr_t		start_block,
+ 			int		 	num_bblocks);
+ int	  xfs_log_mount_finish(struct xfs_mount *mp);
+-int	xfs_log_mount_cancel(struct xfs_mount *);
++void	xfs_log_mount_cancel(struct xfs_mount *);
+ xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
+ xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
+ void	  xfs_log_space_wake(struct xfs_mount *mp);
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 8acacbc..b880c23 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -418,7 +418,7 @@ xlog_recover(
+ extern int
+ xlog_recover_finish(
+ 	struct xlog		*log);
+-extern int
++extern void
+ xlog_recover_cancel(struct xlog *);
+ 
+ extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 1fc70ac..13d1d3e 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -4875,12 +4875,11 @@ xlog_recover_process_intents(
+  * A cancel occurs when the mount has failed and we're bailing out.
+  * Release all pending log intent items so they don't pin the AIL.
+  */
+-STATIC int
++STATIC void
+ xlog_recover_cancel_intents(
+ 	struct xlog		*log)
+ {
+ 	struct xfs_log_item	*lip;
+-	int			error = 0;
+ 	struct xfs_ail_cursor	cur;
+ 	struct xfs_ail		*ailp;
+ 
+@@ -4920,7 +4919,6 @@ xlog_recover_cancel_intents(
+ 
+ 	xfs_trans_ail_cursor_done(&cur);
+ 	spin_unlock(&ailp->ail_lock);
+-	return error;
+ }
+ 
+ /*
+@@ -5779,16 +5777,12 @@ xlog_recover_finish(
+ 	return 0;
+ }
+ 
+-int
++void
+ xlog_recover_cancel(
+ 	struct xlog	*log)
+ {
+-	int		error = 0;
+-
+ 	if (log->l_flags & XLOG_RECOVERY_NEEDED)
+-		error = xlog_recover_cancel_intents(log);
+-
+-	return error;
++		xlog_recover_cancel_intents(log);
+ }
+ 
+ #if defined(DEBUG)
+-- 
+2.7.4
+
