@@ -2,158 +2,142 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A73D55CC00
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 10:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1FD15CDC7
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 12:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfGBI0N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jul 2019 04:26:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41547 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGBI0M (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 04:26:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so16701760wrm.8
-        for <linux-xfs@vger.kernel.org>; Tue, 02 Jul 2019 01:26:11 -0700 (PDT)
+        id S1726803AbfGBKpp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jul 2019 06:45:45 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:41634 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGBKpp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 06:45:45 -0400
+Received: by mail-yb1-f193.google.com with SMTP id y67so1127843yba.8;
+        Tue, 02 Jul 2019 03:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vlidC+hQ/gD/8v9eleM4nXtfiap8zhCG0j5qbLCVw18=;
+        b=kdVby+/PzZu5i6Y9UcQYatHEHHsEPhAQY+mjVHF6xlggt8o+nszbdHXCHfEBil5H5H
+         UL+/28eYKfUAOv8AvNzRMQHWK/y4MABFSamQhRwNZH1hpEc5BUQCjqITvhev6DLWRzG3
+         uOgpinFcBt7pSePpbwiWspS3cbj7dBXMod+4Z94YngJ+nIPc3qdhbsYftXAC3oBGhakE
+         Bt+6iCjbrfqQEg0SzB1WdrzlyuHEb0JfhuYdop7KFU8fbo4QPvOCj4+Z+NVkWFYsg5RT
+         IRHHoit1jxeDZWaJHULPmpdSPTutxwczS9nSE3h7MYk2MPhM/kHniCv9ovLGXWy3LfTv
+         lmfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=3xWAY0HH3S3kWIXCgsfioRZMKXzbwe3z9wCJISvmWx4=;
-        b=WqSSPeW56GsMKsb+iaYxknvzlWJoGRquUNr+1Ax60vOKn89/Zf+PErMUSAZ0Z/bRHt
-         XdIlA9NlDJ6lo/ocxym30KuycfSo5I9vhNa5vko0YoEuaoNO8yoqpEf8O5SBiRUIwJ/H
-         TYK4/Eo3dPMFWA7viulB2KVmmmj/nqooekUN/6Q8m7v3B55C+t+0jCW/BwTrH5MmZEOL
-         Wucw3pTomMhn9n9GjnH6mWjUUjNHuvSUW5rzQhk0BoJ8Gih78BgNBvCSWuSykak+hrxV
-         jW8oXmzxdxk82cBbGTxAPcGxslAgJ8FjJ09QOAdj8OtyzZERUDAgWHLcLISYmISbN9KX
-         byqA==
-X-Gm-Message-State: APjAAAUB5tvYD+PSpxY7ahAoqRAsiMm1KVvIAzq7WtL7G8ubdNjOiOOm
-        zWDnqWtrpuodAmBQ1ddiziUqdA==
-X-Google-Smtp-Source: APXvYqyMjwQtrcX7acKMuemRIScqB8/CimVX1kuBDKrum9MzEdJhUSHynYzRnkYBsnLi/q/Du4g3yQ==
-X-Received: by 2002:adf:ecd2:: with SMTP id s18mr2086002wro.339.1562055970482;
-        Tue, 02 Jul 2019 01:26:10 -0700 (PDT)
-Received: from pegasus.maiolino.io (ip-89-103-126-188.net.upcbroadband.cz. [89.103.126.188])
-        by smtp.gmail.com with ESMTPSA id t6sm2224206wmb.29.2019.07.02.01.26.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 01:26:09 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 10:26:08 +0200
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfsprogs: Fix uninitialized cfg->lsunit
-Message-ID: <20190702082608.ju5gvqpo2twmm2eh@pegasus.maiolino.io>
-Mail-Followup-To: Allison Collins <allison.henderson@oracle.com>,
-        linux-xfs@vger.kernel.org
-References: <20190701173538.29710-1-allison.henderson@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlidC+hQ/gD/8v9eleM4nXtfiap8zhCG0j5qbLCVw18=;
+        b=kOQko23Rc0IeST7t53H2gjWohdZk/9tmrCy9j0Rme3aK0mIIU5LjQKBiS+ejJnCJLr
+         eXv3MY5B5zssNxt6ivw3b3ZBvK1ZL89h6U4Y+3AIy7lCyyPMsPb/G6izNdRCpd06xd6E
+         pLh/ruAZmfaEUtviP+xATCFMGfeg5ePmN+63xu/FldL9ljRQfqyluhxF2LBRFjCNOzmg
+         NH1VOREpBkgGMKCPlQ1BVPd3q1TOF4cF+KqV12p2Ladm8UDSa0rsfY1id/BS+Xr1YQRm
+         UvHTCY97g7hTBu2cu7OTDhNjAo9ZikyO8JHLd7mxjGRiEsZr/AWbSs/fESX06x1R833k
+         KGPw==
+X-Gm-Message-State: APjAAAV+qRNH++e6+G9m8S/OV+UlGtYWnV7DHAfM2HUbmIWLZUzkYUAg
+        YebvmfFBvHMYW+g+t12VT1xBFQeakkjTeDO9KTg=
+X-Google-Smtp-Source: APXvYqzMdrjXgWGhi/zPaZxEj+t8DhHrW56qP/YMhmryxOT2o02rqdhc3hQ5y4gjPvsnd8KwypjTK3Tgmn2Zfydvxjo=
+X-Received: by 2002:a25:8109:: with SMTP id o9mr16913558ybk.132.1562064343920;
+ Tue, 02 Jul 2019 03:45:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190701173538.29710-1-allison.henderson@oracle.com>
-User-Agent: NeoMutt/20180716
+References: <156174687561.1557469.7505651950825460767.stgit@magnolia>
+ <156174690758.1557469.9258105121276292687.stgit@magnolia> <20190701154200.GK1404256@magnolia>
+In-Reply-To: <20190701154200.GK1404256@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 2 Jul 2019 13:45:32 +0300
+Message-ID: <CAOQ4uxizFXgSa4KzkwxmoPAvpiENg=y0=fsxEC1PkCX5J1ybag@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] vfs: don't allow most setxattr to immutable files
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, Chao Yu <yuchao0@huawei.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chris Mason <clm@fb.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ext4 <linux-ext4@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
-
-On Mon, Jul 01, 2019 at 10:35:38AM -0700, Allison Collins wrote:
-> While investigating another mkfs bug, noticed that cfg->lsunit is sometimes
-> left uninitialized when it should not.  This is because calc_stripe_factors
-> in some cases needs cfg->loginternal to be set first.  This is done in
-> validate_logdev. So move calc_stripe_factors below validate_logdev while
-> parsing configs.
-> 
-
-I believe cfg->lsunit will be left 'uninitialized' every time if it is not
-explicitly set in mkfs command line.
-
-I believe you are referring to this specific part of the code here:
-
-┆       if (lsunit) {
-┆       ┆       /* convert from 512 byte blocks to fs blocks */
-┆       ┆       cfg->lsunit = DTOBT(lsunit, cfg->blocklog);
-┆       } else if (cfg->sb_feat.log_version == 2 && 
-┆       ┆          cfg->loginternal && cfg->dsunit) {
-┆       ┆       /* lsunit and dsunit now in fs blocks */
-┆       ┆       cfg->lsunit = cfg->dsunit;
-┆       }
-
-Which, well, unless we set lsunit at command line, we will always fall into the
-else if and leave cfg->lsunit uninitialized, once we still don't have
-cfg->loginternal set.
-
-This is 'okayish' because we initialize the cfg structure here in main:
-
-struct mkfs_params┆     cfg = {};
-
-
-By default (IIRC), GCC will initialize to 0 all members of the struct, so, we
-are 'safe' here in any case. But, at the same time, (also IIRC), structs should
-not be initialized by empty braces (according to ISO C).
-
-So, while I agree with your patch, while you're still on it, could you please
-also (and if others agree), properly initialize the structs in main(){}?
-
-Like:
-
-@@ -3848,15 +3849,15 @@ main(
-                .isdirect = LIBXFS_DIRECT,
-                .isreadonly = LIBXFS_EXCLUSIVELY,
-        };
--       struct xfs_mount        mbuf = {};
-+       struct xfs_mount        mbuf = {0};
-        struct xfs_mount        *mp = &mbuf;
-        struct xfs_sb           *sbp = &mp->m_sb;
--       struct fs_topology      ft = {};
-+       struct fs_topology      ft = {0};
-        struct cli_params       cli = {
-                .xi = &xi,
-                .loginternal = 1,
-        };
--       struct mkfs_params      cfg = {};
-+       struct mkfs_params      cfg = {0};
- 
-
-
-
-Anyway, this is more a suggestion due ISO C 'formalities' (which I *think* GCC
-would complain if -Wpedantic was enabled), otherwise I can send a patch later
-changing that, if you decide to go with your patch as-is, you can add:
-
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-
-Cheers
-
-> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
+On Mon, Jul 1, 2019 at 7:31 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+>
+> The chattr manpage has this to say about immutable files:
+>
+> "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> or renamed, no link can be created to this file, most of the file's
+> metadata can not be modified, and the file can not be opened in write
+> mode."
+>
+> However, we don't actually check the immutable flag in the setattr code,
+> which means that we can update inode flags and project ids and extent
+> size hints on supposedly immutable files.  Therefore, reject setflags
+> and fssetxattr calls on an immutable file if the file is immutable and
+> will remain that way.
+>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  mkfs/xfs_mkfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index ddb25ec..f4a5e4b 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3995,7 +3995,6 @@ main(
->  	cfg.rtblocks = calc_dev_size(cli.rtsize, &cfg, &ropts, R_SIZE, "rt");
->  
->  	validate_rtextsize(&cfg, &cli, &ft);
-> -	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * Open and validate the device configurations
-> @@ -4005,6 +4004,7 @@ main(
->  	validate_datadev(&cfg, &cli);
->  	validate_logdev(&cfg, &cli, &logfile);
->  	validate_rtdev(&cfg, &cli, &rtfile);
-> +	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * At this point when know exactly what size all the devices are,
-> -- 
-> 2.7.4
-> 
+> v2: use memcmp instead of open coding a bunch of checks
 
--- 
-Carlos
+
+Thanks,
+
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+
+
+> ---
+>  fs/inode.c |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/fs/inode.c b/fs/inode.c
+> index cf07378e5731..31f694e405fe 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -2214,6 +2214,14 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+>             !capable(CAP_LINUX_IMMUTABLE))
+>                 return -EPERM;
+>
+> +       /*
+> +        * We aren't allowed to change any other flags if the immutable flag is
+> +        * already set and is not being unset.
+> +        */
+> +       if ((oldflags & FS_IMMUTABLE_FL) && (flags & FS_IMMUTABLE_FL) &&
+> +           oldflags != flags)
+> +               return -EPERM;
+> +
+>         /*
+>          * Now that we're done checking the new flags, flush all pending IO and
+>          * dirty mappings before setting S_IMMUTABLE on an inode via
+> @@ -2284,6 +2292,15 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
+>             !(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)))
+>                 return -EINVAL;
+>
+> +       /*
+> +        * We aren't allowed to change any fields if the immutable flag is
+> +        * already set and is not being unset.
+> +        */
+> +       if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
+> +           (fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
+> +           memcmp(fa, old_fa, offsetof(struct fsxattr, fsx_pad)))
+> +               return -EPERM;
+> +
+>         /* Extent size hints of zero turn off the flags. */
+>         if (fa->fsx_extsize == 0)
+>                 fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
