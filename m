@@ -2,161 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5F95C5E0
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 01:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D30A5C6AD
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 03:38:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGAXKq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Jul 2019 19:10:46 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54707 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbfGAXKp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Jul 2019 19:10:45 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 811A01ACDC1;
-        Tue,  2 Jul 2019 09:10:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hi5QS-00040R-OE; Tue, 02 Jul 2019 09:09:32 +1000
-Date:   Tue, 2 Jul 2019 09:09:32 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        id S1726869AbfGBBip (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Jul 2019 21:38:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35476 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfGBBip (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:38:45 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DB27EC0AF04D;
+        Tue,  2 Jul 2019 01:38:44 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0F59795AF;
+        Tue,  2 Jul 2019 01:38:35 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 09:38:30 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190701230932.GN7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-12-hch@lst.de>
- <20190624234304.GD7777@dread.disaster.area>
- <20190625101020.GI1462@lst.de>
- <20190628004542.GJ7777@dread.disaster.area>
- <20190628053320.GA26902@lst.de>
- <20190701000859.GL7777@dread.disaster.area>
- <20190701064333.GA20778@lst.de>
+        Christoph Hellwig <hch@lst.de>, stable@vger.kernel.org
+Subject: Re: [PATCH V2] block: fix .bi_size overflow
+Message-ID: <20190702013829.GB8356@ming.t460p>
+References: <20190701071446.22028-1-ming.lei@redhat.com>
+ <8db73c5d-a0e2-00c9-59ab-64314097db26@kernel.dk>
+ <bd45842a-e0fd-28a7-ac79-96f7cb9b66e4@kernel.dk>
+ <8b8dc953-e663-e3d8-b991-9d8dba9270be@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701064333.GA20778@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=EmmQ-hcxAAAA:8 a=7-415B0cAAAA:8 a=Qa3Qb0k2LGP6046GbCIA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <8b8dc953-e663-e3d8-b991-9d8dba9270be@kernel.dk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 02 Jul 2019 01:38:45 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:43:33AM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 01, 2019 at 10:08:59AM +1000, Dave Chinner wrote:
-> > > Why do you assume you have to test it?  Back when we shared
-> > > generic_file_read with everyone you also didn't test odd change to
-> > > it with every possible fs.
+On Mon, Jul 01, 2019 at 08:20:13AM -0600, Jens Axboe wrote:
+> On 7/1/19 8:14 AM, Jens Axboe wrote:
+> > On 7/1/19 8:05 AM, Jens Axboe wrote:
+> >> On 7/1/19 1:14 AM, Ming Lei wrote:
+> >>> 'bio->bi_iter.bi_size' is 'unsigned int', which at most hold 4G - 1
+> >>> bytes.
+> >>>
+> >>> Before 07173c3ec276 ("block: enable multipage bvecs"), one bio can
+> >>> include very limited pages, and usually at most 256, so the fs bio
+> >>> size won't be bigger than 1M bytes most of times.
+> >>>
+> >>> Since we support multi-page bvec, in theory one fs bio really can
+> >>> be added > 1M pages, especially in case of hugepage, or big writeback
+> >>> with too many dirty pages. Then there is chance in which .bi_size
+> >>> is overflowed.
+> >>>
+> >>> Fixes this issue by using bio_full() to check if the added segment may
+> >>> overflow .bi_size.
+> >>
+> >> Any objections to queuing this up for 5.3? It's not a new regression
+> >> this series.
 > > 
-> > I'm not sure what function you are referring to here. Can you
-> > clarify?
+> > I took a closer look, and applied for 5.3 and removed the stable tag.
+> > We'll need to apply your patch for stable, and I added an adapted
+> > one for 5.3. I don't want a huge merge hassle because of this.
 > 
-> Right now it is generic_file_read_iter(), but before iter it was
-> generic_file_readv, generic_file_read, etc.
-
-This generic code never came from XFS, so I'm still not sure what
-you are refering to here? Some pointers to commits would help me
-remember. :/
-
-> > > If you change iomap.c, you'll test it
-> > > with XFS, and Cc other maintainers so that they get a chance to
-> > > also test it and comment on it, just like we do with other shared
-> > > code in the kernel.
-> > 
-> > Which is why we've had problems with the generic code paths in the
-> > past and other filesystems just copy and paste then before making
-> > signficant modifications. e.g. both ext4 and btrfs re-implement
-> > write_cache_pages() rather than use the generic writeback code
-> > because they have slightly different requirements and those
-> > developers don't want to have to worry about other filesystems every
-> > time there is an internal filesystem change that affects their
-> > writeback constraints...
-> > 
-> > That's kinda what I'm getting at here: writeback isn't being shared
-> > by any of the major filesystems for good reasons...
+> OK, so we still get conflicts with that, due to both the same page
+> merge fix, and Christophs 5.3 changes.
 > 
-> I very fundamentally disagree.  It is not shared for a bad reasons,
-> and that is people not understanding the mess that the buffer head
-> based code is, and not wanting to understand it. 
+> I ended up pulling in 5.2-rc6 in for-5.3/block, which resolves at
+> least most of it, and kept the stable tag since now it's possible
+> to backport without too much trouble.
 
-The problem with heavily shared code is that it requires far more
-expertise, knowledge, capability and time to modify it. The code
-essentially ossifies, because changing something fundamental risks
-breaking other stuff that nobody actually understands anymore and is
-unwilling to risk changing.
+Thanks for merging it.
 
-That's not a problem with bufferheads - that's a problem of widely
-shared code that has been slowly hacked to pieces to "fix' random
-problems that show up from different users of the shared code.
+BTW, we need the -stable tag, since Yiding has test case to reproduce
+the issue reliably, which just needs one big machine with enough memory,
+and fast storage, I guess.
 
-When the shared code ossifies like this, the only way to make
-progress is to either copy it and do whatever you need privately,
-or re-implement it completely. ext4 and btrfs have taken the route
-of "copy and modify privately", whereas XFS has taken the
-"re-implement it completely" path.
-
-We're now starting down the "share the XFS re-implementation" and
-we're slowly adding more complexity to the iomap code to handle the
-different things each filesystem that is converted needs. With each
-new fs adding their own little quirks, it gets harder to make
-significant modifications without unknowingly breaking something in
-some other filesystem.
-
-It takes highly capable developers to make serious modifications
-across highly shared code and the reality is that there are very few
-of them around. most developers simply aren't capable of taking on
-such a task, especially given that they see capable, experienced
-developers who won't even try because of past experiences akin to
-a game of Running Man(*)....
-
-Shared code is good, up to the point where the sharing gets so
-complex that even people with the capability are not willing to
-touch/fix the code. That's what happened to bufferheads and it's a
-pattern repeated across lots of kernel infrastructure code. Just
-because you can handle these modifications doesn't mean everyone
-else can or even wants to.
-
-> And I'd much rather fix this than going down the copy an paste and
-> slightly tweak it while fucking up something else route.
-
-The copy-n-paste is a result of developers who have little knowledge
-of things outside their domain of interest/expertise making the sane
-decision to minimise risk of breaking something they know nothing
-about. From an individual subsystem perspective, that's a -good
-decision- to make, and that's the point I was trying to make.
-
-You see that as a bad decision, because you equating "shared code"
-with "high quality" code. The reality is that shared code is often
-poor quality because people get too scared to touch it. That's
-exactly the situation I don't want us to get stuck with, and why I
-want to see how multiple implementations of this abstracted writeback
-path change what we have now before we start moving code about...
-
-i.e. I'm not saying "we shouldn't do this", I'm just saying that "we
-should do this because shared code is good" fundamentally conflicts
-with the fact we've just re-implemented a bunch of stuff because
-the *shared code was really bad*. And taking the same path that lead
-to really bad shared code (i.e. organic growth without planning or
-design) is likely to end up in the same place....
-
-Cheers,
-
-Dave.
-
-(*) https://www.imdb.com/title/tt0093894/
-
-"A wrongly convicted man must try to survive a public execution
-gauntlet staged as a game show."
-
--- 
-Dave Chinner
-david@fromorbit.com
+thanks, 
+Ming
