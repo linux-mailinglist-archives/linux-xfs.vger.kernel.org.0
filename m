@@ -2,174 +2,138 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D84985D5FE
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 20:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63E85D6F4
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2019 21:34:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfGBSPx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jul 2019 14:15:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39868 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfGBSPw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 14:15:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so8075343pgc.6;
-        Tue, 02 Jul 2019 11:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
-        b=CzVO+nNLbPllxoJSeWpK2BzAWjshDfcdvDMua1IC5sYF6s7Xn/K8TNi9DnqBVo68Fx
-         cb//ZSOn/y6OmS1ekJVl6aQSD8+K55m5nEIKaj4H1Z3OPlV3oZm6j7SLB6TEMAGoIo1h
-         Vd62nu4SH4i2XEg+GURoN8BEPnrYd4pdgqvj8JwMW4oYxIWbkngzzEnXzq22roxJsyTL
-         9h5qT91X25zEqWU9zX8/DnK/dczg/nfva8eCKPA6Cw0Uxk4wByyDw5ycphJpe/b7Thw4
-         zClSZcAXk4o/74nxp5CHWl8rjgsOfnBOmkmO7SSbYCeItcI7kKdBsV63sVN5LczXi1u2
-         Xmqw==
+        id S1726430AbfGBTex (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jul 2019 15:34:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33818 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGBTex (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jul 2019 15:34:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so923081plt.1
+        for <linux-xfs@vger.kernel.org>; Tue, 02 Jul 2019 12:34:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
-        b=tkUkW+z+M/KSc4y+5gpsL34L2lc5yX9oAyWo6+xpKXE60ZladsddvXL6woHgq6rFA6
-         Imlok114NGSAB0lsxXiX5MamehdeEJesHREeGpj7luP5MTBlaO3aHS1vZPGJ4MaTL74X
-         07Sqq8O1X/j4bsQRNrikFX1GDu3ycj7iO3LRe7IH3HnfdkD0p6eSD04AWmSVA3XIr+nX
-         jSVYTOjthneivjmxJHqHhG14VeOsPHyuvDzONsvDyUI7Eve/Bm5hJwJKZv01c0PrJjhT
-         4XlOdAatnxl9+BA8N0+pIa39e/AoqAtjB607kTSMHmcEc1SbSnoy2dZcNWjikby+ojtE
-         STyQ==
-X-Gm-Message-State: APjAAAW6PjGvdfwHg9tFNjJ7T9oJMNBAogydxYhM52b7Vl0mPknhosZf
-        YMMSOGbVqOh1qOTum+QNUQY=
-X-Google-Smtp-Source: APXvYqwVQlC/FW+sbrMn2V0B2Ksokr49iVLxwe3ctfAlOi8fgHulMFAIrzzcUqEHghzSXodxC0hpsw==
-X-Received: by 2002:a63:f146:: with SMTP id o6mr31297134pgk.179.1562091351993;
-        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id y133sm15016889pfb.28.2019.07.02.11.15.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 23:45:47 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: xfs: xfs_log: Change return type from int to void
-Message-ID: <20190702181547.GA11316@hari-Inspiron-1545>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lvZGKU6pvzppCGUDAjBrSO2FTrMVzGkuNEgg9x+nY24=;
+        b=Gpux74ZkYtDCta6GfEmfBG9ED+3IUpcT/FoiEf0VEGabDDV7bg7cqgAwEzo1SajhdE
+         8JKUwlWZ7WVShBVxfVuKh9g3AO0YAOxd1/IHZK25HCGtYK0rcHuU0n67Djg8QgXRjEhX
+         8jQNjgCbRrL5meYxeLg491HUSnKFkp9sAZBVMXPvsyIa9hYm2WCWxsbp9SqZVvkLEzX2
+         NHmKRaBaxRQLoytzzyhm6l3myRZemsLOKYBLaVw6CpfBbuEKlsxC58WIvkSLQs6KWAzU
+         wka6WDYzOZXImkNJQI4Dw7Cr9+9rt7kcbeX0tKh++YDWOIBLS/yrs98dgAUPJQaf4Ud8
+         dpdA==
+X-Gm-Message-State: APjAAAVaoO+VTmJbbpf4Za083gTls47jvgAeeima+ORPVuv2UG8YFSg/
+        7yxW5OPaMlr5pB+hvT/zOWU=
+X-Google-Smtp-Source: APXvYqxg88ZlLEjurwSHWkhUgURTclnZETKXucVbGlme6kRUNRNpB68+Lj9N1RGxvfwLSuAXtZolxw==
+X-Received: by 2002:a17:902:5ac4:: with SMTP id g4mr38083874plm.80.1562096092151;
+        Tue, 02 Jul 2019 12:34:52 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v27sm20546704pgn.76.2019.07.02.12.34.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 12:34:50 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 06B9340251; Tue,  2 Jul 2019 19:34:50 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 19:34:49 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Alvin Zheng <Alvin@linux.alibaba.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        "joseph.qi" <joseph.qi@linux.alibaba.com>,
+        caspar <caspar@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [backport request][stable] xfs: xfstests generic/538 failed on
+ xfs
+Message-ID: <20190702193449.GQ19023@42.do-not-panic.com>
+References: <a665a93a-0bf8-aedb-2ba3-d4b2fb672970@linux.alibaba.com>
+ <20190627155455.GA30113@42.do-not-panic.com>
+ <CAOQ4uxgqgDAdKZDYwmf0M35M3D6Ctn25-VVj3wu5XSj_4c-WdA@mail.gmail.com>
+ <20190627213520.GG19023@42.do-not-panic.com>
+ <CAOQ4uxht-inVEjRWXtkbRPXTA9DvRNTLSPNEZ0Eh=nUhEhNO-A@mail.gmail.com>
+ <20190628215051.GE30113@42.do-not-panic.com>
+ <CAOQ4uxgU_Ad50ZJLhmfY0mGHWutNXJU1DhEkA++-Jak2PgkUcA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAOQ4uxgU_Ad50ZJLhmfY0mGHWutNXJU1DhEkA++-Jak2PgkUcA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Change return types of below functions as they never fails
-xfs_log_mount_cancel
-xlog_recover_cancel
-xlog_recover_cancel_intents
+On Sat, Jun 29, 2019 at 10:41:35AM +0300, Amir Goldstein wrote:
+> On Sat, Jun 29, 2019 at 12:50 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Fri, Jun 28, 2019 at 07:46:34AM +0300, Amir Goldstein wrote:
+> > > On Fri, Jun 28, 2019 at 12:35 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > >
+> > > > On Thu, Jun 27, 2019 at 07:18:40PM +0300, Amir Goldstein wrote:
+> > > > > On Thu, Jun 27, 2019 at 6:55 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 27, 2019 at 08:10:56PM +0800, Alvin Zheng wrote:
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > >     I  was using kernel v4.19.y and found that it cannot pass the
+> > > > > > > generic/538 due to data corruption. I notice that upstream has fix this
+> > > > > > > issue with commit 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a. Will v4.19.y
+> > > > > > > backport this patch?
+> > > > > >
+> > > > > > Hey Alvin,
+> > > > > >
+> > > > > > Thanks for Bringing this to attention.  I'll look into this a bit more.
+> > > > > > Time for a new set of stable fixes for v4.19.y. Of course, I welcome
+> > > > > > Briant's feedback, but if he's busy I'll still look into it.
+> > > > > >
+> > > > >
+> > > > > FWIW, I tested -g quick on xfs with reflink=1,rmapbt=1 and did not
+> > > > > observe any regressions from v4.19.55.
+> > > >
+> > > > As you may recall I test all agreed upon configurations. Just one is not
+> > > > enough.
+> > >
+> > > Of course. It's just a heads up that testing looks sane so far.
+> > >
+> > > >
+> > > > > Luis, sorry I forgot to CC you on a request I just sent to consider 4 xfs
+> > > > > patches for stable to fix generic/529 and generic/530:
+> > > > >
+> > > > > 3b50086f0c0d xfs: don't overflow xattr listent buffer
+> > > > > e1f6ca113815 xfs: rename m_inotbt_nores to m_finobt_nores
+> > > > > 15a268d9f263 xfs: reserve blocks for ifree transaction during log recovery
+> > > > > c4a6bf7f6cc7 xfs: don't ever put nlink > 0 inodes on the unlinked list
+> > > > >
+> > > > > If you can run those patches through your setup that would be great.
+> > > >
+> > > > Sure, it may take 1-2 weeks, just a heads up. If you're OK with waiting
+> > > > then great. Otherwise I personally cannot vouch for them. What types of
+> > > > tests did you run and what configurations?
+> > > >
+> > >
+> > > So far I tested, -g quick with reflink=1,rmapbt=1.
+> 
+> FYI, -g auto found no regression with reflink=1,rmapbt=1.
+> 
+> > >
+> > > Sasha wrote that more results will be in tomorrow...
+> >
+> > I'd rather be cautious, how about we wait until I also confirm
+> > no regressions as well. In this case since we already have candidates
+> > you identified, and Darrick vouchces for, I can just jump start the
+> > process and deal with both manually reviewing each of these changes
+> > and also confirming no regressions are in place on my tests as well.
+> >
+> > Then we'd have at least 3 XFS pair of eyeballs reviewing and at least
+> > 2 full independent tests vouching for these.
+> >
+> 
+> Sure, that'd be great. How long does your full run take?
 
-fix below issue reported by coccicheck
-fs/xfs/xfs_log_recover.c:4886:7-12: Unneeded variable: "error". Return
-"0" on line 4926
+Not long, its just I wanted to also add xunit processing support onto
+oscheck as well. I'll start on that now, hopefully it'll all be done
+and tested by end of next week.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- fs/xfs/xfs_log.c         |  8 ++------
- fs/xfs/xfs_log.h         |  2 +-
- fs/xfs/xfs_log_priv.h    |  2 +-
- fs/xfs/xfs_log_recover.c | 12 +++---------
- 4 files changed, 7 insertions(+), 17 deletions(-)
-
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index cbaf348..00e9f5c 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -769,16 +769,12 @@ xfs_log_mount_finish(
-  * The mount has failed. Cancel the recovery if it hasn't completed and destroy
-  * the log.
-  */
--int
-+void
- xfs_log_mount_cancel(
- 	struct xfs_mount	*mp)
- {
--	int			error;
--
--	error = xlog_recover_cancel(mp->m_log);
-+	xlog_recover_cancel(mp->m_log);
- 	xfs_log_unmount(mp);
--
--	return error;
- }
- 
- /*
-diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-index f27b1cb..84e0680 100644
---- a/fs/xfs/xfs_log.h
-+++ b/fs/xfs/xfs_log.h
-@@ -117,7 +117,7 @@ int	  xfs_log_mount(struct xfs_mount	*mp,
- 			xfs_daddr_t		start_block,
- 			int		 	num_bblocks);
- int	  xfs_log_mount_finish(struct xfs_mount *mp);
--int	xfs_log_mount_cancel(struct xfs_mount *);
-+void	xfs_log_mount_cancel(struct xfs_mount *);
- xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
- xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
- void	  xfs_log_space_wake(struct xfs_mount *mp);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 8acacbc..b880c23 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -418,7 +418,7 @@ xlog_recover(
- extern int
- xlog_recover_finish(
- 	struct xlog		*log);
--extern int
-+extern void
- xlog_recover_cancel(struct xlog *);
- 
- extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 1fc70ac..13d1d3e 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -4875,12 +4875,11 @@ xlog_recover_process_intents(
-  * A cancel occurs when the mount has failed and we're bailing out.
-  * Release all pending log intent items so they don't pin the AIL.
-  */
--STATIC int
-+STATIC void
- xlog_recover_cancel_intents(
- 	struct xlog		*log)
- {
- 	struct xfs_log_item	*lip;
--	int			error = 0;
- 	struct xfs_ail_cursor	cur;
- 	struct xfs_ail		*ailp;
- 
-@@ -4920,7 +4919,6 @@ xlog_recover_cancel_intents(
- 
- 	xfs_trans_ail_cursor_done(&cur);
- 	spin_unlock(&ailp->ail_lock);
--	return error;
- }
- 
- /*
-@@ -5779,16 +5777,12 @@ xlog_recover_finish(
- 	return 0;
- }
- 
--int
-+void
- xlog_recover_cancel(
- 	struct xlog	*log)
- {
--	int		error = 0;
--
- 	if (log->l_flags & XLOG_RECOVERY_NEEDED)
--		error = xlog_recover_cancel_intents(log);
--
--	return error;
-+		xlog_recover_cancel_intents(log);
- }
- 
- #if defined(DEBUG)
--- 
-2.7.4
-
+  Luis
