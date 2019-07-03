@@ -2,25 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54F635EAC2
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 19:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADC755EB5A
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 20:14:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfGCRrI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Jul 2019 13:47:08 -0400
-Received: from sandeen.net ([63.231.237.45]:43078 "EHLO sandeen.net"
+        id S1726768AbfGCSOy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Jul 2019 14:14:54 -0400
+Received: from sandeen.net ([63.231.237.45]:45458 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbfGCRrI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:47:08 -0400
+        id S1726550AbfGCSOy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:14:54 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 679B6D5E;
-        Wed,  3 Jul 2019 12:46:45 -0500 (CDT)
+        by sandeen.net (Postfix) with ESMTPSA id BB397D5E;
+        Wed,  3 Jul 2019 13:14:30 -0500 (CDT)
 Subject: Re: [PATCH v2 1/1] xfsprogs: Fix uninitialized cfg->lsunit
+From:   Eric Sandeen <sandeen@sandeen.net>
 To:     Allison Collins <allison.henderson@oracle.com>,
         linux-xfs@vger.kernel.org
 References: <20190702232746.22516-1-allison.henderson@oracle.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
+ <6a2dd675-f392-dc72-4c8c-7061b9222b89@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -64,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <6a2dd675-f392-dc72-4c8c-7061b9222b89@sandeen.net>
-Date:   Wed, 3 Jul 2019 12:47:06 -0500
+Message-ID: <ecd99c92-af67-28b9-2cb4-d8c8f94436d4@sandeen.net>
+Date:   Wed, 3 Jul 2019 13:14:52 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190702232746.22516-1-allison.henderson@oracle.com>
+In-Reply-To: <6a2dd675-f392-dc72-4c8c-7061b9222b89@sandeen.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -78,99 +79,113 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/2/19 6:27 PM, Allison Collins wrote:
-> From: Allison Henderson <allison.henderson@oracle.com>
+On 7/3/19 12:47 PM, Eric Sandeen wrote:
+> On 7/2/19 6:27 PM, Allison Collins wrote:
+>> From: Allison Henderson <allison.henderson@oracle.com>
+>>
+>> While investigating another mkfs bug, noticed that cfg->lsunit is sometimes
+>> left uninitialized when it should not.  This is because calc_stripe_factors
+>> in some cases needs cfg->loginternal to be set first.  This is done in
+>> validate_logdev. So move calc_stripe_factors below validate_logdev while
+>> parsing configs.
+>>
+>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+>> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+>> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 > 
-> While investigating another mkfs bug, noticed that cfg->lsunit is sometimes
-> left uninitialized when it should not.  This is because calc_stripe_factors
-> in some cases needs cfg->loginternal to be set first.  This is done in
-> validate_logdev. So move calc_stripe_factors below validate_logdev while
-> parsing configs.
+> Ok, while I appreciate you taking Carlos's input, the patch now does
+> far more than the commit log says, with no explanation of why it's doing
+> so.  (and there's no indication of what actually changed in V2: - putting
+> that info below the "---" line is helpful)
 > 
-> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+> I'd prefer to take the original patch and if we really want to change
+> how we initialize empty structures, that should be a separate patch, and
+> should hit everywhere we do it, not just mkfs.
 
-Ok, while I appreciate you taking Carlos's input, the patch now does
-far more than the commit log says, with no explanation of why it's doing
-so.  (and there's no indication of what actually changed in V2: - putting
-that info below the "---" line is helpful)
+Ok so I was on track up to here
 
-I'd prefer to take the original patch and if we really want to change
-how we initialize empty structures, that should be a separate patch, and
-should hit everywhere we do it, not just mkfs.
+> But to Carlos's point, cfg->lsunit isn't exactly "uninitialized"
+> (to me, uninitialized means that it was never set, when in fact it was
+> initialized, to zero, right?)
 
-But to Carlos's point, cfg->lsunit isn't exactly "uninitialized"
-(to me, uninitialized means that it was never set, when in fact it was
-initialized, to zero, right?)
+and I guess this is just semantics...
 
-So it's not quite clear to me what's happening here; I guess this test:
+> So it's not quite clear to me what's happening here; I guess this test:
+> 
+>         /*
+>          * check that log sunit is modulo fsblksize or default it to dsunit.
+>          */
+>         if (lsunit) {
+>                 /* convert from 512 byte blocks to fs blocks */
+>                 cfg->lsunit = DTOBT(lsunit, cfg->blocklog);
+>         } else if (cfg->sb_feat.log_version == 2 &&
+>                    cfg->loginternal && cfg->dsunit) {
+>                 /* lsunit and dsunit now in fs blocks */
+>                 cfg->lsunit = cfg->dsunit;
+>         }
+> 
+> is doing the wrong thing because cfg->loginternal hasn't actually been
+> evaluated yet?  Is there a mkfs command that demonstrates the problem
+> which could be included in the changelog?  Does it only happen with
+> external logs?  If you can provide a bit more information about when and
+> how this actually fails, that would improve the changelog for future
+> generations.
 
-        /*
-         * check that log sunit is modulo fsblksize or default it to dsunit.
-         */
-        if (lsunit) {
-                /* convert from 512 byte blocks to fs blocks */
-                cfg->lsunit = DTOBT(lsunit, cfg->blocklog);
-        } else if (cfg->sb_feat.log_version == 2 &&
-                   cfg->loginternal && cfg->dsunit) {
-                /* lsunit and dsunit now in fs blocks */
-                cfg->lsunit = cfg->dsunit;
-        }
+OK, TBH I had confused cfg-> with cli-> (derp) and I see that as you said,
+validate_logdev() sets up cfg->loginternal, sorry.  So I'm ok with V1 and
+its changelog as it stands, I think.
 
-is doing the wrong thing because cfg->loginternal hasn't actually been
-evaluated yet?  Is there a mkfs command that demonstrates the problem
-which could be included in the changelog?  Does it only happen with
-external logs?  If you can provide a bit more information about when and
-how this actually fails, that would improve the changelog for future
-generations.
+Sorry for my confusion and the noise,
 
-(also agreeing w/ darrick that these seem like little time bombs...)
-
-Thanks,
 -Eric
 
-> ---
->  mkfs/xfs_mkfs.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> (also agreeing w/ darrick that these seem like little time bombs...)
 > 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index 468b8fd..6e32403 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3861,15 +3861,15 @@ main(
->  		.isdirect = LIBXFS_DIRECT,
->  		.isreadonly = LIBXFS_EXCLUSIVELY,
->  	};
-> -	struct xfs_mount	mbuf = {};
-> +	struct xfs_mount	mbuf = {0};
->  	struct xfs_mount	*mp = &mbuf;
->  	struct xfs_sb		*sbp = &mp->m_sb;
-> -	struct fs_topology	ft = {};
-> +	struct fs_topology	ft = {0};
->  	struct cli_params	cli = {
->  		.xi = &xi,
->  		.loginternal = 1,
->  	};
-> -	struct mkfs_params	cfg = {};
-> +	struct mkfs_params	cfg = {0};
->  
->  	/* build time defaults */
->  	struct mkfs_default_params	dft = {
-> @@ -4008,7 +4008,6 @@ main(
->  	cfg.rtblocks = calc_dev_size(cli.rtsize, &cfg, &ropts, R_SIZE, "rt");
->  
->  	validate_rtextsize(&cfg, &cli, &ft);
-> -	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * Open and validate the device configurations
-> @@ -4018,6 +4017,7 @@ main(
->  	validate_datadev(&cfg, &cli);
->  	validate_logdev(&cfg, &cli, &logfile);
->  	validate_rtdev(&cfg, &cli, &rtfile);
-> +	calc_stripe_factors(&cfg, &cli, &ft);
->  
->  	/*
->  	 * At this point when know exactly what size all the devices are,
+> Thanks,
+> -Eric
+> 
+>> ---
+>>  mkfs/xfs_mkfs.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+>> index 468b8fd..6e32403 100644
+>> --- a/mkfs/xfs_mkfs.c
+>> +++ b/mkfs/xfs_mkfs.c
+>> @@ -3861,15 +3861,15 @@ main(
+>>  		.isdirect = LIBXFS_DIRECT,
+>>  		.isreadonly = LIBXFS_EXCLUSIVELY,
+>>  	};
+>> -	struct xfs_mount	mbuf = {};
+>> +	struct xfs_mount	mbuf = {0};
+>>  	struct xfs_mount	*mp = &mbuf;
+>>  	struct xfs_sb		*sbp = &mp->m_sb;
+>> -	struct fs_topology	ft = {};
+>> +	struct fs_topology	ft = {0};
+>>  	struct cli_params	cli = {
+>>  		.xi = &xi,
+>>  		.loginternal = 1,
+>>  	};
+>> -	struct mkfs_params	cfg = {};
+>> +	struct mkfs_params	cfg = {0};
+>>  
+>>  	/* build time defaults */
+>>  	struct mkfs_default_params	dft = {
+>> @@ -4008,7 +4008,6 @@ main(
+>>  	cfg.rtblocks = calc_dev_size(cli.rtsize, &cfg, &ropts, R_SIZE, "rt");
+>>  
+>>  	validate_rtextsize(&cfg, &cli, &ft);
+>> -	calc_stripe_factors(&cfg, &cli, &ft);
+>>  
+>>  	/*
+>>  	 * Open and validate the device configurations
+>> @@ -4018,6 +4017,7 @@ main(
+>>  	validate_datadev(&cfg, &cli);
+>>  	validate_logdev(&cfg, &cli, &logfile);
+>>  	validate_rtdev(&cfg, &cli, &rtfile);
+>> +	calc_stripe_factors(&cfg, &cli, &ft);
+>>  
+>>  	/*
+>>  	 * At this point when know exactly what size all the devices are,
+>>
 > 
