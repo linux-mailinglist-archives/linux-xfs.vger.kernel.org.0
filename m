@@ -2,68 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2137E5DCA1
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 04:47:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B825DCD2
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 05:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfGCCrG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jul 2019 22:47:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
+        id S1727074AbfGCDTy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jul 2019 23:19:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45009 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbfGCCrG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:47:06 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727049AbfGCDTy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:19:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47EDB21721;
-        Wed,  3 Jul 2019 02:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562122025;
-        bh=/5rTbplUIS3P82/nrCyz60q08P6DaMOsWJbXI6TJPZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WnyGRBJY1cK7Y1P9+ShEnaQDIJjrrRuWf7l3cnFc0syWchrId8/4MQyjhbKpn6W6f
-         76XtaI37v7uKYFzP8x25w10ch2e+eG6lWHVN5zWwJpddmLIdk024erNPm3UDdFe/Js
-         1cSsKC37qvb0lFZWoglBL+7jc5ZP+q3fPSw7txEo=
-Date:   Tue, 2 Jul 2019 22:47:04 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [STABLE 4.19] fixes for xfs memory and fs corruption
-Message-ID: <20190703024704.GT11506@sasha-vm>
-References: <155009104740.32028.193157199378698979.stgit@magnolia>
- <20190213205804.GE32253@magnolia>
- <CAOQ4uximAfJjNdunY2xK_1DwC2G7v31XWbv64AdO9nYdExUsVw@mail.gmail.com>
- <20190627233216.GD11506@sasha-vm>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dmYy57H3z9s3Z;
+        Wed,  3 Jul 2019 13:19:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562123990;
+        bh=aMWKOPSg19BlgZYYRdTAeDuWdyK4008Ci9t23AgoYmc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WGpDCOMhZ5mCZafXgpr0Q3LbI/LB2ykkEYmFQu39VtYUcGByi5iuGjP3wa+92ncVT
+         byr9vPGP5Kprwo+779+wax1wNMcLwbSwSKjR1tt0i0UMgauJQ0008vKb0WCSpwHvzB
+         R31Kliv5Jq9vepw+Iyah5jNH9sbLM8o2fugowwDcXomGoMksOwBNfnjQq1vseQoyBb
+         a5LRpijyS2xyddbq4UdAYBMzBJL5Xj9LhYQvuno9ulclnLuxsxBxrU1UFYVTCTlKlt
+         Y7KaWz075bmxych4hRQFA948UuaAZyDaosn1XhYVlG+dKC1Wj/+nwn/Dc30cwqVduw
+         gnA8SMgeE/HiA==
+Date:   Wed, 3 Jul 2019 13:19:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the block tree with the xfs tree
+Message-ID: <20190703131948.37b05189@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190627233216.GD11506@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/FYqSM1F0geViJaDykvbS9Vo"; protocol="application/pgp-signature"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 07:32:17PM -0400, Sasha Levin wrote:
->On Thu, Jun 27, 2019 at 07:12:48PM +0300, Amir Goldstein wrote:
->>Darrick,
->>
->>Can I have your blessing on the choice of these upstream commits
->>as stable candidates?
->>I did not observe any xfstests regressions when testing v4.19.55
->>with these patches applied.
->>
->>Sasha,
->>
->>Can you run these patches though your xfstests setup?
->>They fix nasty bugs.
->
->Will do. Tests running now - I'll update tomorrow.
+--Sig_/FYqSM1F0geViJaDykvbS9Vo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I gave it a few more days, and it looks good here.
+Hi all,
 
---
-Thanks,
-Sasha
+Today's linux-next merge of the block tree got a conflict in:
+
+  fs/xfs/xfs_aops.c
+
+between commit:
+
+  a24737359667 ("xfs: simplify xfs_chain_bio")
+
+from the xfs tree and commit:
+
+  79d08f89bb1b ("block: fix .bi_size overflow")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/xfs/xfs_aops.c
+index bb769d9c5250,11f703d4a605..000000000000
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@@ -790,8 -782,8 +790,8 @@@ xfs_add_to_ioend
+  		atomic_inc(&iop->write_count);
+ =20
+  	if (!merged) {
+- 		if (bio_full(wpc->ioend->io_bio))
++ 		if (bio_full(wpc->ioend->io_bio, len))
+ -			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
+ +			wpc->ioend->io_bio =3D xfs_chain_bio(wpc->ioend->io_bio);
+  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
+  	}
+ =20
+
+--Sig_/FYqSM1F0geViJaDykvbS9Vo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0cHtUACgkQAVBC80lX
+0GxjbQf7BHHTZllJ6X240rzOrgZ8DA7+yeR4uy9cFKqJlpTY+2ImMN1UnEVUxLpW
+CppMNCEWVQOMSpLMnkFYt7H+VPbj8Z64Ta6Znv0GxXhYlpgz8AiPx8I1e3Ua3vd+
+oEG5GPh4wNTzBzXjxnPD/BtezzGwvvyZPYxoCqlvOj8A6KvyxnpfgqET88JC2POb
+tvp/BBo8pwVlGhm9vnj5uKPs7YRE4DwC/uWzBZApXLrewdpADXzi3iRAisWclezA
+Uv7rIA3t4RXMN3onQAlsEIuECyNNqO8TTvNng5iLwM94Rr0VQieakCaonRPAv9eg
+RnPFmW8oA9eR6zK14SmKlJXKebzVlg==
+=7nq4
+-----END PGP SIGNATURE-----
+
+--Sig_/FYqSM1F0geViJaDykvbS9Vo--
