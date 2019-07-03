@@ -2,84 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB7C25E5D0
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 15:55:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE5C25E6E9
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 16:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfGCNzi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Jul 2019 09:55:38 -0400
-Received: from sandeen.net ([63.231.237.45]:52240 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfGCNzi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:55:38 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id A01224507BF;
-        Wed,  3 Jul 2019 08:55:14 -0500 (CDT)
+        id S1727259AbfGCOiD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Jul 2019 10:38:03 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37621 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfGCOiD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 3 Jul 2019 10:38:03 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so3121507wrr.4
+        for <linux-xfs@vger.kernel.org>; Wed, 03 Jul 2019 07:38:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=lasZq5Fz9C40OGegUP6w040GqTacb+hR2lXsMebzF7Y=;
+        b=aAdbA33nE53q65OgpgSkQXhB6XLtKQzxnhz9ftSz1lZnasJqmULaeRTUgbll89XLEv
+         VjAOhqzn+1m1lAw5NvDSTt6r3GVLhMkIZ8ooT204Lm3smmaA2QbEWpQa/r8aTYd55D86
+         xPA8fzg5YPHQIDBLVO2Nf8bNmrARSPUc2k9L/vEuhWMuSrGca3EfM31VSx4G8Z9JIgEx
+         9Mx0W7qjlY0JFUPPwZYydfNBB6r60nAPyQjSWw7tSjPPXLqWKsxAtmJLvacdrAvpCx3I
+         FndA1VSqIE8Tbv+mb5/hXGyLDdhnzrWI6kCR2bWgAnkI7IqS6h4RtU5XrPLYD38b99X/
+         zt1w==
+X-Gm-Message-State: APjAAAXYvAxygMQjMcg7XxilkkOdcBZP5BSFJClBDm4Xu59lb98MuYb4
+        9/ptx9fdu9/v1w/J4sFFSXctSVBRf08=
+X-Google-Smtp-Source: APXvYqyxOUuSqyGEsNKgUvXXZSh4CQHn/FxV38JZgb7J05BAP5SdkM+B9kCpNpKVuWsmHwb6OiLJKA==
+X-Received: by 2002:a5d:498f:: with SMTP id r15mr1599385wrq.353.1562164681463;
+        Wed, 03 Jul 2019 07:38:01 -0700 (PDT)
+Received: from pegasus.maiolino.io (ip-89-103-126-188.net.upcbroadband.cz. [89.103.126.188])
+        by smtp.gmail.com with ESMTPSA id z19sm1672780wmi.7.2019.07.03.07.38.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 07:38:00 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 16:37:59 +0200
+From:   Carlos Maiolino <cmaiolino@redhat.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] fs: xfs: xfs_log: Change return type from int to void
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+Message-ID: <20190703143759.qczx4dnjhslh3gys@pegasus.maiolino.io>
+Mail-Followup-To: Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190702181547.GA11316@hari-Inspiron-1545>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <5d3ee4bb-59aa-b1bb-41b5-4e0d80f1638f@sandeen.net>
-Date:   Wed, 3 Jul 2019 08:55:35 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20190702181547.GA11316@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: NeoMutt/20180716
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/2/19 1:15 PM, Hariprasad Kelam wrote:
+On Tue, Jul 02, 2019 at 11:45:47PM +0530, Hariprasad Kelam wrote:
 > Change return types of below functions as they never fails
 > xfs_log_mount_cancel
 > xlog_recover_cancel
@@ -91,10 +67,12 @@ On 7/2/19 1:15 PM, Hariprasad Kelam wrote:
 > 
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-Looks fine, the highest caller in the chain (calling
-xfs_log_mount_cancel) doesn't use the return value, either.
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Looks ok.
+
+You can add:
+
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 
 > ---
 >  fs/xfs/xfs_log.c         |  8 ++------
@@ -197,4 +175,9 @@ Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 >  }
 >  
 >  #if defined(DEBUG)
+> -- 
+> 2.7.4
 > 
+
+-- 
+Carlos
