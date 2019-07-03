@@ -2,198 +2,249 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7C135E558
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 15:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89C765E559
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jul 2019 15:24:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfGCNYB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Jul 2019 09:24:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37132 "EHLO mx1.redhat.com"
+        id S1726628AbfGCNYc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Jul 2019 09:24:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:25057 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbfGCNYB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:24:01 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726621AbfGCNYb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:24:31 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D77A3092652;
-        Wed,  3 Jul 2019 13:24:00 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 244E33001822;
+        Wed,  3 Jul 2019 13:24:31 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E65E860BF3;
-        Wed,  3 Jul 2019 13:23:59 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 09:23:58 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A7A9117995;
+        Wed,  3 Jul 2019 13:24:30 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 09:24:28 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org, allison.henderson@oracle.com
-Subject: Re: [PATCH 4/9] xfs: introduce v5 inode group structure
-Message-ID: <20190703132357.GD26057@bfoster>
+Subject: Re: [PATCH 5/9] xfs: wire up new v5 bulkstat ioctls
+Message-ID: <20190703132428.GE26057@bfoster>
 References: <156158193320.495715.6675123051075804739.stgit@magnolia>
- <156158195888.495715.17662104546912391174.stgit@magnolia>
+ <156158196664.495715.16022753346138162990.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156158195888.495715.17662104546912391174.stgit@magnolia>
+In-Reply-To: <156158196664.495715.16022753346138162990.stgit@magnolia>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 03 Jul 2019 13:24:00 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 03 Jul 2019 13:24:31 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 01:45:58PM -0700, Darrick J. Wong wrote:
+On Wed, Jun 26, 2019 at 01:46:06PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Introduce a new "v5" inode group structure that fixes the alignment
-> and padding problems of the existing structure.
+> Wire up the new v5 BULKSTAT ioctl and rename the old one to V1.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
 
+I don't see any renaming in this patch (or the subsequent that mention
+it).. that aside:
+
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/libxfs/xfs_fs.h |   11 +++++++++++
->  fs/xfs/xfs_ioctl.c     |    9 ++++++---
->  fs/xfs/xfs_ioctl.h     |    2 +-
->  fs/xfs/xfs_ioctl32.c   |   10 +++++++---
->  fs/xfs/xfs_itable.c    |   14 +++++++++++++-
->  fs/xfs/xfs_itable.h    |    4 +++-
->  fs/xfs/xfs_ondisk.h    |    1 +
->  7 files changed, 42 insertions(+), 9 deletions(-)
+>  fs/xfs/libxfs/xfs_fs.h |   24 +++++++++++-
+>  fs/xfs/xfs_ioctl.c     |   98 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_ioctl32.c   |    1 
+>  fs/xfs/xfs_ondisk.h    |    1 
+>  4 files changed, 123 insertions(+), 1 deletion(-)
 > 
 > 
 > diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-> index 132e364eb141..8b8fe78511fb 100644
+> index 8b8fe78511fb..960f3542e207 100644
 > --- a/fs/xfs/libxfs/xfs_fs.h
 > +++ b/fs/xfs/libxfs/xfs_fs.h
-> @@ -445,6 +445,17 @@ struct xfs_inogrp {
->  	__u64		xi_allocmask;	/* mask of allocated inodes	*/
+> @@ -435,7 +435,6 @@ struct xfs_fsop_bulkreq {
+>  	__s32		__user *ocount;	/* output count pointer		*/
 >  };
 >  
-> +/* New inumbers structure that reports v5 features and fixes padding issues */
-> +struct xfs_inumbers {
-> +	uint64_t	xi_startino;	/* starting inode number	*/
-> +	uint64_t	xi_allocmask;	/* mask of allocated inodes	*/
-> +	uint8_t		xi_alloccount;	/* # bits set in allocmask	*/
-> +	uint8_t		xi_version;	/* version			*/
-> +	uint8_t		xi_padding[6];	/* zero				*/
+> -
+>  /*
+>   * Structures returned from xfs_inumbers routine (XFS_IOC_FSINUMBERS).
+>   */
+> @@ -457,6 +456,28 @@ struct xfs_inumbers {
+>  #define XFS_INUMBERS_VERSION_V1	(1)
+>  #define XFS_INUMBERS_VERSION_V5	(5)
+>  
+> +/* Header for bulk inode requests. */
+> +struct xfs_bulk_ireq {
+> +	uint64_t	ino;		/* I/O: start with this inode	*/
+> +	uint32_t	flags;		/* I/O: operation flags		*/
+> +	uint32_t	icount;		/* I: count of entries in buffer */
+> +	uint32_t	ocount;		/* O: count of entries filled out */
+> +	uint32_t	reserved32;	/* must be zero			*/
+> +	uint64_t	reserved[5];	/* must be zero			*/
 > +};
 > +
-> +#define XFS_INUMBERS_VERSION_V1	(1)
-> +#define XFS_INUMBERS_VERSION_V5	(5)
->  
+> +#define XFS_BULK_IREQ_FLAGS_ALL	(0)
+> +
+> +/*
+> + * ioctl structures for v5 bulkstat and inumbers requests
+> + */
+> +struct xfs_bulkstat_req {
+> +	struct xfs_bulk_ireq	hdr;
+> +	struct xfs_bulkstat	bulkstat[];
+> +};
+> +#define XFS_BULKSTAT_REQ_SIZE(nr)	(sizeof(struct xfs_bulkstat_req) + \
+> +					 (nr) * sizeof(struct xfs_bulkstat))
+> +
 >  /*
 >   * Error injection.
+>   */
+> @@ -758,6 +779,7 @@ struct xfs_scrub_metadata {
+>  #define XFS_IOC_FSGEOMETRY_V4	     _IOR ('X', 124, struct xfs_fsop_geom_v4)
+>  #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
+>  #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
+> +#define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
+>  /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
+>  
+>  
 > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 0b8c631d53dd..47580762e154 100644
+> index 47580762e154..cf6a38c2a3ed 100644
 > --- a/fs/xfs/xfs_ioctl.c
 > +++ b/fs/xfs/xfs_ioctl.c
-> @@ -738,10 +738,13 @@ xfs_fsbulkstat_one_fmt(
->  
->  int
->  xfs_fsinumbers_fmt(
-> -	struct xfs_ibulk	*breq,
-> -	const struct xfs_inogrp	*igrp)
-> +	struct xfs_ibulk		*breq,
-> +	const struct xfs_inumbers	*igrp)
->  {
-> -	if (copy_to_user(breq->ubuffer, igrp, sizeof(*igrp)))
-> +	struct xfs_inogrp		ig1;
-> +
-> +	xfs_inumbers_to_inogrp(&ig1, igrp);
-> +	if (copy_to_user(breq->ubuffer, &ig1, sizeof(struct xfs_inogrp)))
->  		return -EFAULT;
->  	return xfs_ibulk_advance(breq, sizeof(struct xfs_inogrp));
+> @@ -827,6 +827,101 @@ xfs_ioc_fsbulkstat(
+>  	return 0;
 >  }
-> diff --git a/fs/xfs/xfs_ioctl.h b/fs/xfs/xfs_ioctl.h
-> index 514d3028a134..654c0bb1bcf8 100644
-> --- a/fs/xfs/xfs_ioctl.h
-> +++ b/fs/xfs/xfs_ioctl.h
-> @@ -83,6 +83,6 @@ struct xfs_inogrp;
 >  
->  int xfs_fsbulkstat_one_fmt(struct xfs_ibulk *breq,
->  			   const struct xfs_bulkstat *bstat);
-> -int xfs_fsinumbers_fmt(struct xfs_ibulk *breq, const struct xfs_inogrp *igrp);
-> +int xfs_fsinumbers_fmt(struct xfs_ibulk *breq, const struct xfs_inumbers *igrp);
+> +/* Return 0 on success or positive error */
+> +static int
+> +xfs_bulkstat_fmt(
+> +	struct xfs_ibulk		*breq,
+> +	const struct xfs_bulkstat	*bstat)
+> +{
+> +	if (copy_to_user(breq->ubuffer, bstat, sizeof(struct xfs_bulkstat)))
+> +		return -EFAULT;
+> +	return xfs_ibulk_advance(breq, sizeof(struct xfs_bulkstat));
+> +}
+> +
+> +/*
+> + * Check the incoming bulk request @hdr from userspace and initialize the
+> + * internal @breq bulk request appropriately.  Returns 0 if the bulk request
+> + * should proceed; XFS_ITER_ABORT if there's nothing to do; or the usual
+> + * negative error code.
+> + */
+> +static int
+> +xfs_bulk_ireq_setup(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_bulk_ireq	*hdr,
+> +	struct xfs_ibulk	*breq,
+> +	void __user		*ubuffer)
+> +{
+> +	if (hdr->icount == 0 ||
+> +	    (hdr->flags & ~XFS_BULK_IREQ_FLAGS_ALL) ||
+> +	    hdr->reserved32 ||
+> +	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
+> +		return -EINVAL;
+> +
+> +	breq->startino = hdr->ino;
+> +	breq->ubuffer = ubuffer;
+> +	breq->icount = hdr->icount;
+> +	breq->ocount = 0;
+> +
+> +	/* Asking for an inode past the end of the FS?  We're done! */
+> +	if (XFS_INO_TO_AGNO(mp, breq->startino) >= mp->m_sb.sb_agcount)
+> +		return XFS_ITER_ABORT;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Update the userspace bulk request @hdr to reflect the end state of the
+> + * internal bulk request @breq.
+> + */
+> +static void
+> +xfs_bulk_ireq_teardown(
+> +	struct xfs_bulk_ireq	*hdr,
+> +	struct xfs_ibulk	*breq)
+> +{
+> +	hdr->ino = breq->startino;
+> +	hdr->ocount = breq->ocount;
+> +}
+> +
+> +/* Handle the v5 bulkstat ioctl. */
+> +STATIC int
+> +xfs_ioc_bulkstat(
+> +	struct xfs_mount		*mp,
+> +	unsigned int			cmd,
+> +	struct xfs_bulkstat_req __user	*arg)
+> +{
+> +	struct xfs_bulk_ireq		hdr;
+> +	struct xfs_ibulk		breq = {
+> +		.mp			= mp,
+> +	};
+> +	int				error;
+> +
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	if (XFS_FORCED_SHUTDOWN(mp))
+> +		return -EIO;
+> +
+> +	if (copy_from_user(&hdr, &arg->hdr, sizeof(hdr)))
+> +		return -EFAULT;
+> +
+> +	error = xfs_bulk_ireq_setup(mp, &hdr, &breq, arg->bulkstat);
+> +	if (error == XFS_ITER_ABORT)
+> +		goto out_teardown;
+> +	if (error < 0)
+> +		return error;
+> +
+> +	error = xfs_bulkstat(&breq, xfs_bulkstat_fmt);
+> +	if (error)
+> +		return error;
+> +
+> +out_teardown:
+> +	xfs_bulk_ireq_teardown(&hdr, &breq);
+> +	if (copy_to_user(&arg->hdr, &hdr, sizeof(hdr)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+>  STATIC int
+>  xfs_ioc_fsgeometry(
+>  	struct xfs_mount	*mp,
+> @@ -1991,6 +2086,9 @@ xfs_file_ioctl(
+>  	case XFS_IOC_FSINUMBERS:
+>  		return xfs_ioc_fsbulkstat(mp, cmd, arg);
 >  
->  #endif
+> +	case XFS_IOC_BULKSTAT:
+> +		return xfs_ioc_bulkstat(mp, cmd, arg);
+> +
+>  	case XFS_IOC_FSGEOMETRY_V1:
+>  		return xfs_ioc_fsgeometry(mp, arg, 3);
+>  	case XFS_IOC_FSGEOMETRY_V4:
 > diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-> index a97612927f9e..41485e2ed431 100644
+> index 41485e2ed431..df107adbdbf3 100644
 > --- a/fs/xfs/xfs_ioctl32.c
 > +++ b/fs/xfs/xfs_ioctl32.c
-> @@ -87,10 +87,14 @@ xfs_compat_growfs_rt_copyin(
->  
->  STATIC int
->  xfs_fsinumbers_fmt_compat(
-> -	struct xfs_ibulk	*breq,
-> -	const struct xfs_inogrp	*igrp)
-> +	struct xfs_ibulk		*breq,
-> +	const struct xfs_inumbers	*ig)
->  {
-> -	struct compat_xfs_inogrp __user *p32 = breq->ubuffer;
-> +	struct compat_xfs_inogrp __user	*p32 = breq->ubuffer;
-> +	struct xfs_inogrp		ig1;
-> +	struct xfs_inogrp		*igrp = &ig1;
-> +
-> +	xfs_inumbers_to_inogrp(&ig1, ig);
->  
->  	if (put_user(igrp->xi_startino,   &p32->xi_startino) ||
->  	    put_user(igrp->xi_alloccount, &p32->xi_alloccount) ||
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index 50c2bb8e13c4..745b04f59132 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -331,10 +331,11 @@ xfs_inumbers_walk(
->  	const struct xfs_inobt_rec_incore *irec,
->  	void			*data)
->  {
-> -	struct xfs_inogrp	inogrp = {
-> +	struct xfs_inumbers	inogrp = {
->  		.xi_startino	= XFS_AGINO_TO_INO(mp, agno, irec->ir_startino),
->  		.xi_alloccount	= irec->ir_count - irec->ir_freecount,
->  		.xi_allocmask	= ~irec->ir_free,
-> +		.xi_version	= XFS_INUMBERS_VERSION_V5,
->  	};
->  	struct xfs_inumbers_chunk *ic = data;
->  	xfs_agino_t		agino;
-> @@ -381,3 +382,14 @@ xfs_inumbers(
->  
->  	return error;
->  }
-> +
-> +/* Convert an inumbers (v5) struct to a inogrp (v1) struct. */
-> +void
-> +xfs_inumbers_to_inogrp(
-> +	struct xfs_inogrp		*ig1,
-> +	const struct xfs_inumbers	*ig)
-> +{
-> +	ig1->xi_startino = ig->xi_startino;
-> +	ig1->xi_alloccount = ig->xi_alloccount;
-> +	ig1->xi_allocmask = ig->xi_allocmask;
-> +}
-> diff --git a/fs/xfs/xfs_itable.h b/fs/xfs/xfs_itable.h
-> index 60e259192056..fa9fb9104c7f 100644
-> --- a/fs/xfs/xfs_itable.h
-> +++ b/fs/xfs/xfs_itable.h
-> @@ -46,8 +46,10 @@ void xfs_bulkstat_to_bstat(struct xfs_mount *mp, struct xfs_bstat *bs1,
->  		const struct xfs_bulkstat *bstat);
->  
->  typedef int (*inumbers_fmt_pf)(struct xfs_ibulk *breq,
-> -		const struct xfs_inogrp *igrp);
-> +		const struct xfs_inumbers *igrp);
->  
->  int xfs_inumbers(struct xfs_ibulk *breq, inumbers_fmt_pf formatter);
-> +void xfs_inumbers_to_inogrp(struct xfs_inogrp *ig1,
-> +		const struct xfs_inumbers *ig);
->  
->  #endif	/* __XFS_ITABLE_H__ */
+> @@ -580,6 +580,7 @@ xfs_file_compat_ioctl(
+>  	case XFS_IOC_ERROR_CLEARALL:
+>  	case FS_IOC_GETFSMAP:
+>  	case XFS_IOC_SCRUB_METADATA:
+> +	case XFS_IOC_BULKSTAT:
+>  		return xfs_file_ioctl(filp, cmd, p);
+>  #if !defined(BROKEN_X86_ALIGNMENT) || defined(CONFIG_X86_X32)
+>  	/*
 > diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-> index 0b4cdda68524..d8f941b4d51c 100644
+> index d8f941b4d51c..954484c6eb96 100644
 > --- a/fs/xfs/xfs_ondisk.h
 > +++ b/fs/xfs/xfs_ondisk.h
-> @@ -148,6 +148,7 @@ xfs_check_ondisk_structs(void)
->  	XFS_CHECK_OFFSET(struct xfs_attr3_leafblock, hdr.info.hdr, 0);
+> @@ -149,6 +149,7 @@ xfs_check_ondisk_structs(void)
 >  
 >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat,		192);
-> +	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers,		24);
+>  	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers,		24);
+> +	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_req,		64);
 >  }
 >  
 >  #endif /* __XFS_ONDISK_H */
