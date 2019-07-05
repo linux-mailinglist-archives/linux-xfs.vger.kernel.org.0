@@ -2,125 +2,222 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37ACC60AB7
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E18560AC3
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfGEREM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 13:04:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48584 "EHLO
+        id S1727487AbfGERJm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 13:09:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53426 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfGEREM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Jul 2019 13:04:12 -0400
+        with ESMTP id S1726903AbfGERJm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Jul 2019 13:09:42 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65H3el0060350;
-        Fri, 5 Jul 2019 17:03:48 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65H8vLT064921;
+        Fri, 5 Jul 2019 17:09:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=cf48QVOut6jCpMcFoHvOMwmiSKSdZUy7UEBub3Io2vg=;
- b=A2u3Wd887PAcUScC+NsLloRI30lTwAAVCmsR0qSrrTyB8FBp6IMZpvBQl1FuGOWxZMT7
- tnPsaclD3jeie+5I31Kt62jrTSRgQW2WEzRIXQRw4dsH/YmYRWv72U55y5P23djZTgYu
- bHG36CbH47rmkE4ceKw3ErGP3gH540KgRuVDAeMwRZs96+552Ieh82RwIF1UQfQzSyZJ
- I9woIqu73QoKcfa/eVdyC0FKUBge6dgK80B8cwPMzAySYRi/LhRIYrwm6bxpx0y5fi4u
- EgeRNuqBPBGFXik2AekA7APxrcYd/Wyv3pMecWzfX58aeW1vz/Dl30n11gfFL3k4O7LR Gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2te5tc3wuc-1
+ bh=pLBfP4G/ZqMRGY59ynC1HAqT7Q5KBFLU3/OjKaKmMr8=;
+ b=uj41S1yIhQ7nqd6XM3kxIwxdYZfAoCR0fItMQ1m4ZUSDFuTsmEOcOnspsW2uS63I6M6Y
+ kL4IB4VTW2pbog5rXJT0GYB3rtiG1pvB2/fRXpn8U08v0k3uziqqjciSbH4ppSemDU7q
+ ZsaXfzqoxqywUFNK/lGPSm9mVel4jRnsiPiwyFRKSSwVQ1Nr84omSyzAgf/LF96OEEPo
+ j2rainVMc3DKnX2N1XxrwfiMZUBnlz3HdnK3l22Q8ha9GA+Mpq3oyWsjbeP+vT3GkE3n
+ gP1Hfwuu6raHWY8uLbefF82kP2Z0IuZhRxSMAWvDu/LviPL4pbUVcVxfU4/kfy4mkUpg CA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2te5tc3xxm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 17:03:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65H2OlO033344;
-        Fri, 5 Jul 2019 17:03:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2th5qmkvv8-1
+        Fri, 05 Jul 2019 17:09:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65H7NVW102914;
+        Fri, 5 Jul 2019 17:09:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2thxrvhusf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 17:03:47 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x65H3kfd008085;
-        Fri, 5 Jul 2019 17:03:46 GMT
+        Fri, 05 Jul 2019 17:09:38 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x65H9bZw006080;
+        Fri, 5 Jul 2019 17:09:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jul 2019 10:03:46 -0700
-Date:   Fri, 5 Jul 2019 10:03:45 -0700
+        with ESMTP ; Fri, 05 Jul 2019 10:09:37 -0700
+Date:   Fri, 5 Jul 2019 10:09:36 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Brian Foster <bfoster@redhat.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/6] xfs: remove more ondisk directory corruption asserts
-Message-ID: <20190705170345.GH1404256@magnolia>
-References: <156158199378.495944.4088787757066517679.stgit@magnolia>
- <156158199994.495944.4584531696054696463.stgit@magnolia>
- <20190705144904.GC37448@bfoster>
+Subject: Re: [PATCH 7/9] man: create a separate RESBLKS ioctl manpage
+Message-ID: <20190705170936.GI1404256@magnolia>
+References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
+ <156104949681.1174403.3533354992259074908.stgit@magnolia>
+ <5427356a-122e-3c7f-08ba-29fdb53b6179@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190705144904.GC37448@bfoster>
+In-Reply-To: <5427356a-122e-3c7f-08ba-29fdb53b6179@sandeen.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9309 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907050210
+ engine=8.0.1-1810050000 definitions=main-1907050211
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9309 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907050210
+ definitions=main-1907050212
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:49:05AM -0400, Brian Foster wrote:
-> On Wed, Jun 26, 2019 at 01:46:40PM -0700, Darrick J. Wong wrote:
+On Fri, Jul 05, 2019 at 11:02:40AM -0500, Eric Sandeen wrote:
+> On 6/20/19 11:51 AM, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > Continue our game of replacing ASSERTs for corrupt ondisk metadata with
-> > EFSCORRUPTED returns.
+> > Create a separate manual page for the xfs RESBLKS ioctls so we can
+> > document how it works.
 > > 
 > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  fs/xfs/libxfs/xfs_da_btree.c  |   19 ++++++++++++-------
-> >  fs/xfs/libxfs/xfs_dir2_node.c |    3 ++-
-> >  2 files changed, 14 insertions(+), 8 deletions(-)
+> >  man/man2/ioctl_xfs_getresblks.2 |   65 +++++++++++++++++++++++++++++++++++++++
+> >  man/man2/ioctl_xfs_setresblks.2 |    1 +
+> >  man/man3/xfsctl.3               |   14 +++++++-
+> >  3 files changed, 78 insertions(+), 2 deletions(-)
+> >  create mode 100644 man/man2/ioctl_xfs_getresblks.2
+> >  create mode 100644 man/man2/ioctl_xfs_setresblks.2
 > > 
 > > 
-> ...
-> > diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-> > index 16731d2d684b..f7f3fb458019 100644
-> > --- a/fs/xfs/libxfs/xfs_dir2_node.c
-> > +++ b/fs/xfs/libxfs/xfs_dir2_node.c
-> > @@ -743,7 +743,8 @@ xfs_dir2_leafn_lookup_for_entry(
-> >  	ents = dp->d_ops->leaf_ents_p(leaf);
-> >  
-> >  	xfs_dir3_leaf_check(dp, bp);
-> > -	ASSERT(leafhdr.count > 0);
-> > +	if (leafhdr.count <= 0)
-> > +		return -EFSCORRUPTED;
+> > diff --git a/man/man2/ioctl_xfs_getresblks.2 b/man/man2/ioctl_xfs_getresblks.2
+> > new file mode 100644
+> > index 00000000..694b4496
+> > --- /dev/null
+> > +++ b/man/man2/ioctl_xfs_getresblks.2
+> > @@ -0,0 +1,65 @@
+> > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
+> > +.\"
+> > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
+> > +.\" SPDX-License-Identifier: GPL-2.0+
+> > +.\" %%%LICENSE_END
+> > +.TH IOCTL-XFS-GETRESBLKS 2 2019-06-17 "XFS"
+> > +.SH NAME
+> > +ioctl_xfs_getresblks \- query XFS summary counter information
+>                                      ^^^^^^^^^^^^^^^
 > 
-> This error return bubbles up to xfs_dir2_leafn_lookup_int() and
-> xfs_da3_node_lookup_int(). The latter has a direct return value as well
-> as a *result return parameter, which unconditionally carries the return
-> value from xfs_dir2_leafn_lookup_int(). xfs_da3_node_lookup_int() has
-> multiple callers, but a quick look at one (xfs_attr_node_addname())
-> suggests we might not handle corruption errors properly via the *result
-> parameter. Perhaps we also need to fix up xfs_da3_node_lookup_int() to
-> return particular errors directly?
+> "query and set XFS free space reservation information"
 
-It would be a good idea to clean up the whole return value/*retval mess
-in that function (and xfs_da3_path_shift where *retval came from) but
-that quickly turned into a bigger cleanup of magic values and dual
-returns, particularly since the dabtree shrinking code turns the
-_path_shift *retval into yet another series of magic int numbers...
+DOH.
 
-...so in the meantime this at least fixes the asserts I see when running
-fuzz testing.  I'll look at the broader cleanup for 5.4.
+Yes, thanks for fixing that. :)
+
+> > +.SH SYNOPSIS
+> > +.br
+> > +.B #include <xfs/xfs_fs.h>
+> > +.PP
+> > +.BI "int ioctl(int " fd ", XFS_IOC_GET_RESBLKS, struct xfs_fsop_resblks *" arg );
+> > +.br
+> > +.BI "int ioctl(int " fd ", XFS_IOC_SET_RESBLKS, struct xfs_fsop_resblks *" arg );
+> > +.SH DESCRIPTION
+> 
+> I wonder if starting with a "don't use" right here would be wise, something like:
+> 
+> "Note: This is a[n] test/debug ioctl intended only for use by XFS filesystem developers."
+
+I'm partial to "This is an extraordinary way to eat your data!" :)
+
+But yes it should have a warning label for SET_RESBLKS.
 
 --D
 
-> 
-> Brian
-> 
+> > +Query or set the free space reservation information.
+> > +These blocks are reserved by the filesystem as a final attempt to prevent
+> > +metadata update failures due to insufficient space.
+> > +Only the system administrator can call these ioctls, because overriding the
+> > +defaults is extremely dangerous and should never be tried by anyone.
+> > +.PP
+> > +The reservation information is conveyed in a structure of the following form:
+> > +.PP
+> > +.in +4n
+> > +.nf
+> > +struct xfs_fsop_resblks {
+> > +	__u64  resblks;
+> > +	__u64  resblks_avail;
+> > +};
+> > +.fi
+> > +.in
+> > +.PP
+> > +.I resblks
+> > +is the number of blocks that the filesystem will try to maintain to prevent
+> > +critical out of space situations.
+> > +.PP
+> > +.I resblks_avail
+> > +is the number of reserved blocks remaining.
+> > +.SH RETURN VALUE
+> > +On error, \-1 is returned, and
+> > +.I errno
+> > +is set to indicate the error.
+> > +.PP
+> > +.SH ERRORS
+> > +Error codes can be one of, but are not limited to, the following:
+> > +.TP
+> > +.B EFSBADCRC
+> > +Metadata checksum validation failed while performing the query.
+> > +.TP
+> > +.B EFSCORRUPTED
+> > +Metadata corruption was encountered while performing the query.
+> > +.TP
+> > +.B EINVAL
+> > +The specified allocation group number is not valid for this filesystem.
+> > +.TP
+> > +.B EIO
+> > +An I/O error was encountered while performing the query.
+> > +.TP
+> > +.B EPERM
+> > +Caller does not have permission to call this ioctl.
+> > +.SH CONFORMING TO
+> > +This API is specific to XFS filesystem on the Linux kernel.
+> > +.SH SEE ALSO
+> > +.BR ioctl (2)
+> > diff --git a/man/man2/ioctl_xfs_setresblks.2 b/man/man2/ioctl_xfs_setresblks.2
+> > new file mode 100644
+> > index 00000000..209bc0a8
+> > --- /dev/null
+> > +++ b/man/man2/ioctl_xfs_setresblks.2
+> > @@ -0,0 +1 @@
+> > +.so man2/ioctl_xfs_getresblks.2
+> > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
+> > index ee3188ec..89975a3c 100644
+> > --- a/man/man3/xfsctl.3
+> > +++ b/man/man3/xfsctl.3
+> > @@ -396,12 +396,21 @@ See
+> >  .BR ioctl_xfs_fscounts (2)
+> >  for more information.
 > >  
-> >  	/*
-> >  	 * Look up the hash value in the leaf entries.
+> > +.TP
+> > +.nf
+> > +.B XFS_IOC_GET_RESBLKS
+> > +.fi
+> > +.TP
+> > +.B XFS_IOC_SET_RESBLKS
+> > +See
+> > +.BR ioctl_xfs_getresblks (2)
+> > +for more information.
+> > +Save yourself a lot of frustration and avoid these ioctls.
+> > +
+> >  .PP
+> >  .nf
+> >  .B XFS_IOC_THAW
+> >  .B XFS_IOC_FREEZE
+> > -.B XFS_IOC_GET_RESBLKS
+> > -.B XFS_IOC_SET_RESBLKS
+> >  .B XFS_IOC_FSGROWFSDATA
+> >  .B XFS_IOC_FSGROWFSLOG
+> >  .fi
+> > @@ -419,6 +428,7 @@ as they are not of general use to applications.
+> >  .BR ioctl_xfs_scrub_metadata (2),
+> >  .BR ioctl_xfs_fsinumbers (2),
+> >  .BR ioctl_xfs_fscounts (2),
+> > +.BR ioctl_xfs_getresblks (2),
+> >  .BR fstatfs (2),
+> >  .BR statfs (2),
+> >  .BR xfs (5),
 > > 
