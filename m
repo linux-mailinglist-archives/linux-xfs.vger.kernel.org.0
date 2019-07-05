@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E9D2609DF
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 18:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA60609FD
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 18:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfGEQCm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 12:02:42 -0400
-Received: from sandeen.net ([63.231.237.45]:46994 "EHLO sandeen.net"
+        id S1726005AbfGEQI4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 12:08:56 -0400
+Received: from sandeen.net ([63.231.237.45]:47500 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfGEQCm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:02:42 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
+        id S1725763AbfGEQI4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 12:08:56 -0400
+Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6E0E32AF1;
-        Fri,  5 Jul 2019 11:02:15 -0500 (CDT)
-Subject: Re: [PATCH 7/9] man: create a separate RESBLKS ioctl manpage
+        by sandeen.net (Postfix) with ESMTPSA id E3C502AF1;
+        Fri,  5 Jul 2019 11:08:29 -0500 (CDT)
+Subject: Re: [PATCH 9/9] man: create a separate xfs shutdown ioctl manpage
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
- <156104949681.1174403.3533354992259074908.stgit@magnolia>
+ <156104950912.1174403.4990641877651635072.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <5427356a-122e-3c7f-08ba-29fdb53b6179@sandeen.net>
-Date:   Fri, 5 Jul 2019 11:02:40 -0500
+Message-ID: <d00e8961-c6f0-4adb-9b83-4750a15e97b1@sandeen.net>
+Date:   Fri, 5 Jul 2019 11:08:54 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <156104949681.1174403.3533354992259074908.stgit@magnolia>
+In-Reply-To: <156104950912.1174403.4990641877651635072.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,73 +82,71 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:51 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a separate manual page for the xfs RESBLKS ioctls so we can
+> Create a separate manual page for the xfs shutdown ioctl so we can
 > document how it works.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  man/man2/ioctl_xfs_getresblks.2 |   65 +++++++++++++++++++++++++++++++++++++++
->  man/man2/ioctl_xfs_setresblks.2 |    1 +
->  man/man3/xfsctl.3               |   14 +++++++-
->  3 files changed, 78 insertions(+), 2 deletions(-)
->  create mode 100644 man/man2/ioctl_xfs_getresblks.2
->  create mode 100644 man/man2/ioctl_xfs_setresblks.2
+>  man/man2/ioctl_xfs_goingdown.2 |   63 ++++++++++++++++++++++++++++++++++++++++
+>  man/man3/xfsctl.3              |    7 ++++
+>  2 files changed, 70 insertions(+)
+>  create mode 100644 man/man2/ioctl_xfs_goingdown.2
 > 
 > 
-> diff --git a/man/man2/ioctl_xfs_getresblks.2 b/man/man2/ioctl_xfs_getresblks.2
+> diff --git a/man/man2/ioctl_xfs_goingdown.2 b/man/man2/ioctl_xfs_goingdown.2
 > new file mode 100644
-> index 00000000..694b4496
+> index 00000000..bedc85c8
 > --- /dev/null
-> +++ b/man/man2/ioctl_xfs_getresblks.2
-> @@ -0,0 +1,65 @@
+> +++ b/man/man2/ioctl_xfs_goingdown.2
+> @@ -0,0 +1,63 @@
 > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > +.\"
 > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > +.\" SPDX-License-Identifier: GPL-2.0+
 > +.\" %%%LICENSE_END
-> +.TH IOCTL-XFS-GETRESBLKS 2 2019-06-17 "XFS"
+> +.TH IOCTL-XFS-GOINGDOWN 2 2019-06-17 "XFS"
 > +.SH NAME
-> +ioctl_xfs_getresblks \- query XFS summary counter information
-                                     ^^^^^^^^^^^^^^^
-
-"query and set XFS free space reservation information"
-
+> +ioctl_xfs_goingdown \- shut down an XFS filesystem
 > +.SH SYNOPSIS
 > +.br
 > +.B #include <xfs/xfs_fs.h>
 > +.PP
-> +.BI "int ioctl(int " fd ", XFS_IOC_GET_RESBLKS, struct xfs_fsop_resblks *" arg );
-> +.br
-> +.BI "int ioctl(int " fd ", XFS_IOC_SET_RESBLKS, struct xfs_fsop_resblks *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_GOINGDOWN, uint32_t " flags );
 > +.SH DESCRIPTION
+> +Shuts down a live XFS filesystem.
+> +This is a software initiated hard shutdown and should be avoided whenever
+> +possible.
+> +After this call completes, the filesystem will be totally unusable and must be
+> +unmounted.
 
-I wonder if starting with a "don't use" right here would be wise, something like:
+That almost sounds permanently destructive.  Perhaps:
 
-"Note: This is a[n] test/debug ioctl intended only for use by XFS filesystem developers."
+"... will be totally unusable until the filesystem has been unmounted and remounted."
 
-> +Query or set the free space reservation information.
-> +These blocks are reserved by the filesystem as a final attempt to prevent
-> +metadata update failures due to insufficient space.
-> +Only the system administrator can call these ioctls, because overriding the
-> +defaults is extremely dangerous and should never be tried by anyone.
+?
+
+> +
 > +.PP
-> +The reservation information is conveyed in a structure of the following form:
-> +.PP
-> +.in +4n
-> +.nf
-> +struct xfs_fsop_resblks {
-> +	__u64  resblks;
-> +	__u64  resblks_avail;
-> +};
-> +.fi
-> +.in
-> +.PP
-> +.I resblks
-> +is the number of blocks that the filesystem will try to maintain to prevent
-> +critical out of space situations.
-> +.PP
-> +.I resblks_avail
-> +is the number of reserved blocks remaining.
+> +.I flags
+> +can be one of the following:
+> +.RS 0.4i
+> +.TP
+> +.B XFS_FSOP_GOING_FLAGS_DEFAULT
+> +Flush all dirty data and in-core state to disk, flush pending transactions to
+> +the log, and shut down.
+
+What exactly do we mean by "in-core state" here?  I'm not sure the average
+reader will know (I'm not sure I know)
+
+> +.TP
+> +.B XFS_FSOP_GOING_FLAGS_LOGFLUSH
+> +Flush all pending transactions to the log and shut down, leaving all dirty
+> +data unwritten.
+> +.TP
+> +.B XFS_FSOP_GOING_FLAGS_NOLOGFLUSH
+> +Shut down immediately, without writing pending transactions or dirty data
+> +to disk.
+> +
 > +.SH RETURN VALUE
 > +On error, \-1 is returned, and
 > +.I errno
@@ -156,6 +154,12 @@ I wonder if starting with a "don't use" right here would be wise, something like
 > +.PP
 > +.SH ERRORS
 > +Error codes can be one of, but are not limited to, the following:
+
+Hm crud, now I wonder about auditing all your stated error codes.
+EPERM, EFAULT, and EINVAL seem to be the only options for this
+particular call.  Maybe that can be a 2nd cleanup, documenting
+an error code that won't happen is harmless...
+
 > +.TP
 > +.B EFSBADCRC
 > +Metadata checksum validation failed while performing the query.
@@ -170,51 +174,33 @@ I wonder if starting with a "don't use" right here would be wise, something like
 > +An I/O error was encountered while performing the query.
 > +.TP
 > +.B EPERM
-> +Caller does not have permission to call this ioctl.
+> +Caller did not have permission to shut down the filesystem.
 > +.SH CONFORMING TO
 > +This API is specific to XFS filesystem on the Linux kernel.
 > +.SH SEE ALSO
 > +.BR ioctl (2)
-> diff --git a/man/man2/ioctl_xfs_setresblks.2 b/man/man2/ioctl_xfs_setresblks.2
-> new file mode 100644
-> index 00000000..209bc0a8
-> --- /dev/null
-> +++ b/man/man2/ioctl_xfs_setresblks.2
-> @@ -0,0 +1 @@
-> +.so man2/ioctl_xfs_getresblks.2
 > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index ee3188ec..89975a3c 100644
+> index 077dd411..7e6588b8 100644
 > --- a/man/man3/xfsctl.3
 > +++ b/man/man3/xfsctl.3
-> @@ -396,12 +396,21 @@ See
->  .BR ioctl_xfs_fscounts (2)
+> @@ -365,6 +365,12 @@ See
 >  for more information.
+>  Save yourself a lot of frustration and avoid these ioctls.
 >  
 > +.TP
-> +.nf
-> +.B XFS_IOC_GET_RESBLKS
-> +.fi
-> +.TP
-> +.B XFS_IOC_SET_RESBLKS
+> +.B XFS_IOC_GOINGDOWN
 > +See
-> +.BR ioctl_xfs_getresblks (2)
+> +.BR ioctl_xfs_goingdown (2)
 > +for more information.
-> +Save yourself a lot of frustration and avoid these ioctls.
 > +
 >  .PP
 >  .nf
 >  .B XFS_IOC_THAW
->  .B XFS_IOC_FREEZE
-> -.B XFS_IOC_GET_RESBLKS
-> -.B XFS_IOC_SET_RESBLKS
->  .B XFS_IOC_FSGROWFSDATA
->  .B XFS_IOC_FSGROWFSLOG
->  .fi
-> @@ -419,6 +428,7 @@ as they are not of general use to applications.
->  .BR ioctl_xfs_scrub_metadata (2),
->  .BR ioctl_xfs_fsinumbers (2),
+> @@ -388,6 +394,7 @@ as they are not of general use to applications.
 >  .BR ioctl_xfs_fscounts (2),
-> +.BR ioctl_xfs_getresblks (2),
+>  .BR ioctl_xfs_getresblks (2),
+>  .BR ioctl_xfs_getbmap (2),
+> +.BR ioctl_xfs_goingdown (2),
 >  .BR fstatfs (2),
 >  .BR statfs (2),
 >  .BR xfs (5),
