@@ -2,152 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62FE560B10
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:26:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEC560B13
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:27:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfGER0m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 13:26:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44646 "EHLO mx1.redhat.com"
+        id S1728110AbfGER1E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 13:27:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42024 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727321AbfGER0m (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Jul 2019 13:26:42 -0400
+        id S1728047AbfGER1E (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 13:27:04 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D453183F3B;
-        Fri,  5 Jul 2019 17:26:41 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F62C308AA11;
+        Fri,  5 Jul 2019 17:27:03 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78C11860DE;
-        Fri,  5 Jul 2019 17:26:41 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 13:26:39 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 37C30860DE;
+        Fri,  5 Jul 2019 17:27:03 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 13:27:01 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/6] xfs: online scrub needn't bother zeroing its
- temporary buffer
-Message-ID: <20190705172639.GJ37448@bfoster>
+Subject: Re: [PATCH 1/6] xfs: remove more ondisk directory corruption asserts
+Message-ID: <20190705172701.GK37448@bfoster>
 References: <156158199378.495944.4088787757066517679.stgit@magnolia>
- <156158203074.495944.13142136337107091755.stgit@magnolia>
- <20190705145246.GH37448@bfoster>
- <20190705163504.GE1404256@magnolia>
+ <156158199994.495944.4584531696054696463.stgit@magnolia>
+ <20190705144904.GC37448@bfoster>
+ <20190705170345.GH1404256@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190705163504.GE1404256@magnolia>
+In-Reply-To: <20190705170345.GH1404256@magnolia>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 05 Jul 2019 17:26:41 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 05 Jul 2019 17:27:03 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 09:35:04AM -0700, Darrick J. Wong wrote:
-> On Fri, Jul 05, 2019 at 10:52:46AM -0400, Brian Foster wrote:
-> > On Wed, Jun 26, 2019 at 01:47:10PM -0700, Darrick J. Wong wrote:
+On Fri, Jul 05, 2019 at 10:03:45AM -0700, Darrick J. Wong wrote:
+> On Fri, Jul 05, 2019 at 10:49:05AM -0400, Brian Foster wrote:
+> > On Wed, Jun 26, 2019 at 01:46:40PM -0700, Darrick J. Wong wrote:
 > > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > > 
-> > > The xattr scrubber functions use the temporary memory buffer either for
-> > > storing bitmaps or for testing if attribute value extraction works.  The
-> > > bitmap code always zeroes what it needs and the value extraction merely
-> > > sets the buffer contents (we never read the contents, we just look for
-> > > return codes), so it's not necessary to waste CPU time zeroing on
-> > > allocation.
+> > > Continue our game of replacing ASSERTs for corrupt ondisk metadata with
+> > > EFSCORRUPTED returns.
 > > > 
-> > 
-> > If we don't need to zero the buffer because we never look at the result,
-> > that suggests we don't need to populate it in the first place right?
-> 
-> We still need to read the attr value into the buffer (at least for
-> remote attr values) because scrub doesn't otherwise check the remote
-> attribute block header.
-> 
-> We never read the contents (because the contents are just arbitrary
-> bytes) but we do need to be able to catch an EFSCORRUPTED if, say, the
-> attribute dabtree points at a corrupt block.
-> 
-
-Ok.. what I'm getting at here is basically wondering if since the buffer
-zeroing was noticeable in performance traces, whether the xattr value
-memory copy might be similarly noticeable for certain datasets (many
-large xattrs?). I suppose that may be less prominent if the buffer
-alloc/zero was unconditional as opposed to tied to the existence of an
-actual xattr, but that doesn't necessarily mean the performance impact
-is zero.
-
-If non-zero, it might be interesting to explore whether some sort of
-lookup interface makes sense for xattrs that essentially do everything
-we currently do via xfs_attr_get() except read the attr. Presumably we
-could avoid the memory copy along with the buffer allocation in that
-case. But that's just a random thought for future consideration,
-certainly not low handing fruit as is this patch. If you have a good
-scrub performance test, an easy experiment might be to run it with a
-hack to skip the buffer allocation, pass a NULL buffer and
-conditionalize the ->value accesses/copies in the xattr code to avoid
-explosions and see whether there's any benefit.
-
-> > > A flame graph analysis showed that we were spending 7% of a xfs_scrub
-> > > run (the whole program, not just the attr scrubber itself) allocating
-> > > and zeroing 64k segments needlessly.
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_da_btree.c  |   19 ++++++++++++-------
+> > >  fs/xfs/libxfs/xfs_dir2_node.c |    3 ++-
+> > >  2 files changed, 14 insertions(+), 8 deletions(-)
 > > > 
+> > > 
+> > ...
+> > > diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+> > > index 16731d2d684b..f7f3fb458019 100644
+> > > --- a/fs/xfs/libxfs/xfs_dir2_node.c
+> > > +++ b/fs/xfs/libxfs/xfs_dir2_node.c
+> > > @@ -743,7 +743,8 @@ xfs_dir2_leafn_lookup_for_entry(
+> > >  	ents = dp->d_ops->leaf_ents_p(leaf);
+> > >  
+> > >  	xfs_dir3_leaf_check(dp, bp);
+> > > -	ASSERT(leafhdr.count > 0);
+> > > +	if (leafhdr.count <= 0)
+> > > +		return -EFSCORRUPTED;
 > > 
-> > How much does this patch help?
+> > This error return bubbles up to xfs_dir2_leafn_lookup_int() and
+> > xfs_da3_node_lookup_int(). The latter has a direct return value as well
+> > as a *result return parameter, which unconditionally carries the return
+> > value from xfs_dir2_leafn_lookup_int(). xfs_da3_node_lookup_int() has
+> > multiple callers, but a quick look at one (xfs_attr_node_addname())
+> > suggests we might not handle corruption errors properly via the *result
+> > parameter. Perhaps we also need to fix up xfs_da3_node_lookup_int() to
+> > return particular errors directly?
 > 
-> About 1-2% I think.  FWIW the "7%" figure represents the smallest
-> improvement I saw in runtimes, where allocation ate 1-2% of the runtime
-> and zeroing accounts for the rest (~5-6%).
-> 
-> Practically speaking, when I retested with NVME flash instead of
-> spinning rust then the improvement jumped to 15-20% overall.
+> It would be a good idea to clean up the whole return value/*retval mess
+> in that function (and xfs_da3_path_shift where *retval came from) but
+> that quickly turned into a bigger cleanup of magic values and dual
+> returns, particularly since the dabtree shrinking code turns the
+> _path_shift *retval into yet another series of magic int numbers...
 > 
 
-Nice!
+Hm.. sure, but in the meantime couldn't this patch just insert a check
+for the obvious -EFSCORRUPTED error in xfs_da3_node_lookup_int() and
+return that directly as opposed to via *result? That function already
+returns -EFSCORRUPTED directly in other places.
+
+As it is, this hunk is kind of strange because it inserts an error
+return in a place where it seems more likely than not to be either
+ignored or misinterpreted if it ever occurs. I'm fine with putting this
+off as a broader cleanup, but in that case I'd prefer to just drop this
+hunk for now and change the assert over when we know the return will be
+handled correctly.
+
+Either option seems reasonable (and FWIW the other bits in this patch
+look fine to me)...
 
 Brian
 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  fs/xfs/scrub/attr.c |    7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > 
-> > > diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-> > > index 09081d8ab34b..d3a6f3dacf0d 100644
-> > > --- a/fs/xfs/scrub/attr.c
-> > > +++ b/fs/xfs/scrub/attr.c
-> > > @@ -64,7 +64,12 @@ xchk_setup_xattr_buf(
-> > >  		sc->buf = NULL;
-> > >  	}
-> > >  
-> > > -	ab = kmem_zalloc_large(sizeof(*ab) + sz, flags);
-> > > +	/*
-> > > +	 * Allocate the big buffer.  We skip zeroing it because that added 7%
-> > > +	 * to the scrub runtime and all the users were careful never to read
-> > > +	 * uninitialized contents.
-> > > +	 */
-> > 
-> > Ok, that suggests the 7% hit was due to zeroing (where the commit log
-> > says "allocating and zeroing"). Either way, we probably don't need such
-> > details in the code. Can we tweak the comment to something like:
-> > 
-> > /*
-> >  * Don't zero the buffer on allocation to avoid runtime overhead. All
-> >  * users must be careful never to read uninitialized contents.
-> >  */ 
-> 
-> Ok, I'll do that.
-> 
-> Thanks for all the review! :)
+> ...so in the meantime this at least fixes the asserts I see when running
+> fuzz testing.  I'll look at the broader cleanup for 5.4.
 > 
 > --D
 > 
 > > 
-> > With that:
+> > Brian
 > > 
-> > Reviewed-by: Brian Foster <bfoster@redhat.com>
-> > 
-> > > +	ab = kmem_alloc_large(sizeof(*ab) + sz, flags);
-> > >  	if (!ab)
-> > >  		return -ENOMEM;
 > > >  
+> > >  	/*
+> > >  	 * Look up the hash value in the leaf entries.
 > > > 
