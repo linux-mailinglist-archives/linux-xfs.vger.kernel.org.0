@@ -2,348 +2,304 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B6BC5FAAF
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Jul 2019 17:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 990C160512
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 13:05:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGDPL2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 4 Jul 2019 11:11:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50534 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfGDPL1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 4 Jul 2019 11:11:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x64F8wgx058499
-        for <linux-xfs@vger.kernel.org>; Thu, 4 Jul 2019 15:11:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=+SzHVyf6wtCJ+pf8aLKZ94kHYFBKkA4eAQjykHMAXjk=;
- b=WJRkhW6wX36FwU763hU8u1kvvnSXqwCVVr/eTW9WAN28i/UcvgG0xdLarOnrpnR2ZsfZ
- pzs0kqjUEC+SbKFT7upTW2wmxvIfRn4nD2d4MX76W1kIMsPyVRhrhbXGmyhBhjGxWiY0
- GRTVnhNdRBTSFyAg2b7eUjAvYd3wRWCPn+vtFQBCQicav+yUBN13vWA12snTTkpwyY/7
- J4Kwb8pS2/dUDKEniOLft+2OY7ZyocQsR7h28BXilmt+15HjEjW2BgnNV9shtXcdhXxU
- sF9ahFKYkfong3SskPbsg9zh/rJqEHXkl2NWqmw0SB6v07tqVOOecR1czpDHRpTQ2Yq9 CQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2te61efach-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 04 Jul 2019 15:11:25 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x64F7f6x194372
-        for <linux-xfs@vger.kernel.org>; Thu, 4 Jul 2019 15:11:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2th9ec1235-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 04 Jul 2019 15:11:24 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x64FBNDe021268
-        for <linux-xfs@vger.kernel.org>; Thu, 4 Jul 2019 15:11:23 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jul 2019 08:11:23 -0700
-Date:   Thu, 4 Jul 2019 08:11:24 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to a7a9250e18b3
-Message-ID: <20190704151124.GB1404256@magnolia>
+        id S1727658AbfGELFg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 07:05:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53956 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727459AbfGELFg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:05:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 98A2730832E6;
+        Fri,  5 Jul 2019 11:05:35 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 178261001B2C;
+        Fri,  5 Jul 2019 11:05:35 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 07:05:33 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, allison.henderson@oracle.com
+Subject: Re: [PATCH 6/9] xfs: wire up the new v5 bulkstat_single ioctl
+Message-ID: <20190705110533.GB36577@bfoster>
+References: <156158193320.495715.6675123051075804739.stgit@magnolia>
+ <156158197298.495715.10824532259700709632.stgit@magnolia>
+ <20190703132441.GF26057@bfoster>
+ <20190703145256.GU1404256@magnolia>
+ <20190703161135.GL26057@bfoster>
+ <20190703200143.GY1404256@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907040191
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907040192
+In-Reply-To: <20190703200143.GY1404256@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 05 Jul 2019 11:05:35 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+On Wed, Jul 03, 2019 at 01:01:43PM -0700, Darrick J. Wong wrote:
+> On Wed, Jul 03, 2019 at 12:11:36PM -0400, Brian Foster wrote:
+> > On Wed, Jul 03, 2019 at 07:52:56AM -0700, Darrick J. Wong wrote:
+> > > On Wed, Jul 03, 2019 at 09:24:41AM -0400, Brian Foster wrote:
+> > > > On Wed, Jun 26, 2019 at 01:46:13PM -0700, Darrick J. Wong wrote:
+> > > > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > > 
+> > > > > Wire up the V5 BULKSTAT_SINGLE ioctl and rename the old one V1.
+> > > > > 
+> > > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > > ---
+> > > > >  fs/xfs/libxfs/xfs_fs.h |   16 ++++++++++
+> > > > >  fs/xfs/xfs_ioctl.c     |   79 ++++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  fs/xfs/xfs_ioctl32.c   |    1 +
+> > > > >  fs/xfs/xfs_ondisk.h    |    1 +
+> > > > >  4 files changed, 97 insertions(+)
+> > > > > 
+> > > > > 
+> > > > > diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+> > > > > index 960f3542e207..95d0411dae9b 100644
+> > > > > --- a/fs/xfs/libxfs/xfs_fs.h
+> > > > > +++ b/fs/xfs/libxfs/xfs_fs.h
+> > > > > @@ -468,6 +468,16 @@ struct xfs_bulk_ireq {
+> > > > >  
+> > > > >  #define XFS_BULK_IREQ_FLAGS_ALL	(0)
+> > > > >  
+> > > > > +/* Header for a single inode request. */
+> > > > > +struct xfs_ireq {
+> > > > > +	uint64_t	ino;		/* I/O: start with this inode	*/
+> > > > > +	uint32_t	flags;		/* I/O: operation flags		*/
+> > > > > +	uint32_t	reserved32;	/* must be zero			*/
+> > > > > +	uint64_t	reserved[2];	/* must be zero			*/
+> > > > > +};
+> > > > > +
+> > > > > +#define XFS_IREQ_FLAGS_ALL	(0)
+> > > > > +
+> > > > >  /*
+> > > > >   * ioctl structures for v5 bulkstat and inumbers requests
+> > > > >   */
+> > > > > @@ -478,6 +488,11 @@ struct xfs_bulkstat_req {
+> > > > >  #define XFS_BULKSTAT_REQ_SIZE(nr)	(sizeof(struct xfs_bulkstat_req) + \
+> > > > >  					 (nr) * sizeof(struct xfs_bulkstat))
+> > > > >  
+> > > > > +struct xfs_bulkstat_single_req {
+> > > > > +	struct xfs_ireq		hdr;
+> > > > > +	struct xfs_bulkstat	bulkstat;
+> > > > > +};
+> > > > > +
+> > > > 
+> > > > What's the reasoning for separate data structures when the single
+> > > > command is basically a subset of standard bulkstat (similar to the older
+> > > > interface)?
+> > > 
+> > > I split them up to avoid having irrelevant bulk_req fields (specifically
+> > > icount and ocount) cluttering up the single_req header.  In patch 9 the
+> > > bulkstat single command grows the ability to request the root inode to
+> > > fix xfsdump's inability to correctly guess the root directory.
+> > > 
+> > 
+> > Ok, figured as much once I got to the magic inode flag patch. It's
+> > probably reasonable either way, the tradeoff to this approach is the
+> > extra boilerplate code associated with processing the separate data
+> > structure.
+> 
+> <nod>
+> 
+> > Thinking about it a bit more.. what was the purpose of the separate
+> > BULKSTAT_SINGLE command in the first place? AFAICT it just toggles the
+> > hacky ->lastip semantic. If we've addressed that with an entirely new
+> > data structure, do we need the separate ioctl at all anymore?
+> 
+> At the moment, somewhat simpler setup in userspace:
+> 
+> 	struct xfs_bulkstat_single_req b = { 0 };
+> 	int ret;
+> 
+> 	b.hdr.ino = some_ino;
+> 	ret = ioctl(fd, XFS_IOC_BULKSTAT_SINGLE, &b);
+> 	if (ret)
+> 		abort();
+> 
+> 	printf("%d\n", b.bulkstat.bs_ino);
+> 
+> vs. a single-inode bulkstat:
+> 
+> 	struct xfs_bulkstat_req *b;
+> 	int ret;
+> 
+> 	b = calloc(1, XFS_BULKSTAT_REQ_SIZE(1));
+> 	if (!b)
+> 		abort();
+> 
+> 	b->hdr.ino = some_ino;
+> 	ret = ioctl(fd, XFS_IOC_BULKSTAT, b);
+> 	if (ret)
+> 		abort();
+> 
+> 	if (b->hdr.ocount)
+> 		printf("%d\n", b->bulkstat[0].bs_ino);
+> 
+> 	free(b);
+> 
+> AFAICT, the main advantages are (1) replacing the heap allocation with a
+> stack allocation and (2) not cluttering the regular bulkstat with the
+> "just grab this one symbolic inode" interface.  We could very well just
+> drop this one, particularly since I'm in the process of wrapping most of
+> the ioctl invocation complexity in libfrog wrapper functions anyway...
+> 
 
-The for-next branch of the xfs-linux repository at:
+That seems preferable to me. I'm not that invested in the semantics
+between bulkstat and bulkstat_single, but if the only reason we
+originally had the latter as a separate ioctl was to deal with the
+->lastip interface wart then I think it would be unfortunate to
+unnecessarily carry that mess forward through another generation of the
+interface that doesn't have the original problem. Userspace should be
+able to easily abstract the single case.
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+Brian
 
-has just been updated.
-
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.  The XFS branch is based off of the copy_file_range
-fixes branch, but I omitted all that from this announcement message.
-
-The new head of the for-next branch is commit:
-
-a7a9250e18b3 fs: xfs: xfs_log: Change return type from int to void
-
-New Commits:
-
-Brian Foster (4):
-      [2a4f35f984f0] xfs: clean up small allocation helper
-      [c63cdd4fc9cc] xfs: move small allocation helper
-      [6691cd9267c1] xfs: skip small alloc cntbt logic on NULL cursor
-      [7e36a3a63d3e] xfs: always update params on small allocation
-
-Christoph Hellwig (53):
-      [f9a196ee5ab5] xfs: merge xfs_buf_zero and xfs_buf_iomove
-      [76dee76921e1] xfs: remove the debug-only q_transp field from struct xfs_dquot
-      [1e85a3670db2] xfs: remove the no-op spinlock_destroy stub
-      [153fd7b57ca9] xfs: remove the never used _XBF_COMPOUND flag
-      [ce89755cdfea] xfs: renumber XBF_WRITE_FAIL
-      [72945d86ddec] xfs: make mem_to_page available outside of xfs_buf.c
-      [76ce9823acf3] xfs: remove the l_iclog_size_log field from struct xlog
-      [4f62282a3696] xfs: cleanup xlog_get_iclog_buffer_size
-      [9bff313253eb] xfs: reformat xlog_get_lowest_lsn
-      [366fc4b898b3] xfs: remove XLOG_STATE_IOABORT
-      [1f9489be0257] xfs: don't use REQ_PREFLUSH for split log writes
-      [94860a301b75] xfs: factor out log buffer writing from xlog_sync
-      [5693384805ab] xfs: factor out splitting of an iclog from xlog_sync
-      [db0a6faf938e] xfs: factor out iclog size calculation from xlog_sync
-      [9b0489c1d191] xfs: update both stat counters together in xlog_sync
-      [abca1f33f869] xfs: remove the syncing argument from xlog_verify_iclog
-      [2d15d2c0e0f7] xfs: make use of the l_targ field in struct xlog
-      [79b54d9bfcdc] xfs: use bios directly to write log buffers
-      [1058d0f5eeb4] xfs: move the log ioend workqueue to struct xlog
-      [18ffb8c3f0bf] xfs: return an offset instead of a pointer from xlog_align
-      [6ad5b3255b9e] xfs: use bios directly to read and write the log recovery buffers
-      [6e9b3dd80f9c] xfs: stop using bp naming for log recovery buffers
-      [0564501ff5e7] xfs: remove unused buffer cache APIs
-      [e99b4bd0cb04] xfs: properly type the b_log_item field in struct xfs_buf
-      [8124b9b6011d] xfs: remove the b_io_length field in struct xfs_buf
-      [dbd329f1e44e] xfs: add struct xfs_mount pointer to struct xfs_buf
-      [086252c34bc2] xfs: fix a trivial comment typo in xfs_trans_committed_bulk
-      [d15cbf2f38b2] xfs: stop using XFS_LI_ABORTED as a parameter flag
-      [e8b78db77d48] xfs: don't require log items to implement optional methods
-      [8e4b20ea83c2] xfs: remove the dummy iop_push implementation for inode creation items
-      [195cd83d1b88] xfs: don't use xfs_trans_free_items in the commit path
-      [ddf92053e45c] xfs: split iop_unlock
-      [9ce632a28a41] xfs: add a flag to release log items on commit
-      [b3b14aacc676] xfs: don't cast inode_log_items to get the log_item
-      [efe2330fdc24] xfs: remove the xfs_log_item_t typedef
-      [89ae379d564c] xfs: use a list_head for iclog callbacks
-      [95cf0e4a0ddc] xfs: remove a pointless comment duplicated above all xfs_item_ops instances
-      [9c5e7c2ae34b] xfs: merge xfs_efd_init into xfs_trans_get_efd
-      [ebeb8e062906] xfs: merge xfs_cud_init into xfs_trans_get_cud
-      [60883447f452] xfs: merge xfs_rud_init into xfs_trans_get_rud
-      [73f0d23633c1] xfs: merge xfs_bud_init into xfs_trans_get_bud
-      [81f400417351] xfs: merge xfs_trans_extfree.c into xfs_extfree_item.c
-      [effd5e96e7d5] xfs: merge xfs_trans_refcount.c into xfs_refcount_item.c
-      [3cfce1e3ce8e] xfs: merge xfs_trans_rmap.c into xfs_rmap_item.c
-      [caeaea985832] xfs: merge xfs_trans_bmap.c into xfs_bmap_item.c
-      [a24737359667] xfs: simplify xfs_chain_bio
-      [adfb5fb46af0] xfs: implement cgroup aware writeback
-      [89b171acb222] xfs: fix iclog allocation size
-      [1fdafce55c2c] xfs: remove the unused xfs_count_page_state declaration
-      [0290d9c1e56f] xfs: fix a comment typo in xfs_submit_ioend
-      [7dbae9fbde8a] xfs: allow merging ioends over append boundaries
-      [fe64e0d26b1c] xfs: simplify xfs_ioend_can_merge
-      [73d30d48749f] xfs: remove XFS_TRANS_NOFS
-
-Darrick J. Wong (22):
-      [ef325959993e] xfs: separate inode geometry
-      [494dba7b276e] xfs: refactor inode geometry setup routines
-      [490d451fa518] xfs: fix inode_cluster_size rounding mayhem
-      [4b4d98cca320] xfs: finish converting to inodes_per_cluster
-      [6dba88870c23] xfs: claim maintainership of loose files
-      [5467b34bd1e8] xfs: move xfs_ino_geometry to xfs_shared.h
-      [8d90857cff44] xfs: refactor free space btree record initialization
-      [f327a00745ff] xfs: account for log space when formatting new AGs
-      [5bb46e3e180d] xfs: create iterator error codes
-      [a211432c27ff] xfs: create simplified inode walk function
-      [ebd126a651f8] xfs: convert quotacheck to use the new iwalk functions
-      [f16fe3ecde62] xfs: bulkstat should copy lastip whenever userspace supplies one
-      [2810bd6840e4] xfs: convert bulkstat to new iwalk infrastructure
-      [938c710d99a6] xfs: calculate inode walk prefetch more carefully
-      [da1d9e591247] xfs: move bulkstat ichunk helpers to iwalk code
-      [5e29f3b72083] xfs: change xfs_iwalk_grab_ichunk to use startino, not lastino
-      [688f7c367877] xfs: clean up long conditionals in xfs_iwalk_ichunk_ra
-      [2b5eb826011b] xfs: refactor xfs_iwalk_grab_ichunk
-      [04b8fba2e1bf] xfs: refactor iwalk code to handle walking inobt records
-      [677717fbd4b0] xfs: refactor INUMBERS to use iwalk functions
-      [40786717c88c] xfs: multithreaded iwalk implementation
-      [3e5a428b264e] xfs: poll waiting for quotacheck
-
-Eric Sandeen (4):
-      [d03a2f1b9fa8] xfs: include WARN, REPAIR build options in XFS_BUILD_OPTIONS
-      [8c9ce2f707a1] xfs: remove unused flags arg from getsb interfaces
-      [f5b999c03f4c] xfs: remove unused flag arguments
-      [250d4b4c4097] xfs: remove unused header files
-
-Hariprasad Kelam (1):
-      [a7a9250e18b3] fs: xfs: xfs_log: Change return type from int to void
-
-
-Code Diffstat:
-
- .../filesystems/xfs-self-describing-metadata.txt   |   8 +-
- MAINTAINERS                                        |   6 +
- fs/xfs/Makefile                                    |   9 +-
- fs/xfs/kmem.c                                      |   5 -
- fs/xfs/kmem.h                                      |   8 +
- fs/xfs/libxfs/xfs_ag.c                             | 100 ++-
- fs/xfs/libxfs/xfs_ag_resv.c                        |   8 -
- fs/xfs/libxfs/xfs_alloc.c                          | 227 ++++---
- fs/xfs/libxfs/xfs_alloc_btree.c                    |   3 +-
- fs/xfs/libxfs/xfs_attr.c                           |   5 -
- fs/xfs/libxfs/xfs_attr_leaf.c                      |  15 +-
- fs/xfs/libxfs/xfs_attr_remote.c                    |  14 +-
- fs/xfs/libxfs/xfs_bit.c                            |   1 -
- fs/xfs/libxfs/xfs_bmap.c                           |  19 +-
- fs/xfs/libxfs/xfs_bmap_btree.c                     |   5 +-
- fs/xfs/libxfs/xfs_btree.c                          |  49 +-
- fs/xfs/libxfs/xfs_btree.h                          |  14 +-
- fs/xfs/libxfs/xfs_da_btree.c                       |  12 +-
- fs/xfs/libxfs/xfs_da_format.c                      |   3 -
- fs/xfs/libxfs/xfs_defer.c                          |   2 -
- fs/xfs/libxfs/xfs_dir2.c                           |   6 +-
- fs/xfs/libxfs/xfs_dir2_block.c                     |  11 +-
- fs/xfs/libxfs/xfs_dir2_data.c                      |  14 +-
- fs/xfs/libxfs/xfs_dir2_leaf.c                      |  11 +-
- fs/xfs/libxfs/xfs_dir2_node.c                      |  10 +-
- fs/xfs/libxfs/xfs_dir2_sf.c                        |   5 +-
- fs/xfs/libxfs/xfs_dquot_buf.c                      |  10 +-
- fs/xfs/libxfs/xfs_format.h                         |   2 +-
- fs/xfs/libxfs/xfs_ialloc.c                         | 245 ++++---
- fs/xfs/libxfs/xfs_ialloc.h                         |  18 +-
- fs/xfs/libxfs/xfs_ialloc_btree.c                   |  56 +-
- fs/xfs/libxfs/xfs_ialloc_btree.h                   |   3 +
- fs/xfs/libxfs/xfs_iext_tree.c                      |   6 +-
- fs/xfs/libxfs/xfs_inode_buf.c                      |   9 +-
- fs/xfs/libxfs/xfs_inode_fork.c                     |   4 +-
- fs/xfs/libxfs/xfs_log_rlimit.c                     |   2 -
- fs/xfs/libxfs/xfs_refcount.c                       |   2 -
- fs/xfs/libxfs/xfs_refcount_btree.c                 |   4 +-
- fs/xfs/libxfs/xfs_rmap.c                           |   7 -
- fs/xfs/libxfs/xfs_rmap_btree.c                     |   6 +-
- fs/xfs/libxfs/xfs_rtbitmap.c                       |   8 -
- fs/xfs/libxfs/xfs_sb.c                             |  39 +-
- fs/xfs/libxfs/xfs_shared.h                         |  49 +-
- fs/xfs/libxfs/xfs_symlink_remote.c                 |  10 +-
- fs/xfs/libxfs/xfs_trans_resv.c                     |  17 +-
- fs/xfs/libxfs/xfs_trans_space.h                    |   7 +-
- fs/xfs/libxfs/xfs_types.c                          |  13 +-
- fs/xfs/scrub/agheader.c                            |  11 +-
- fs/xfs/scrub/agheader_repair.c                     |   5 -
- fs/xfs/scrub/alloc.c                               |   7 -
- fs/xfs/scrub/attr.c                                |  10 -
- fs/xfs/scrub/bitmap.c                              |   5 -
- fs/xfs/scrub/bmap.c                                |   8 -
- fs/xfs/scrub/btree.c                               |   7 -
- fs/xfs/scrub/common.c                              |   8 -
- fs/xfs/scrub/dabtree.c                             |   8 -
- fs/xfs/scrub/dir.c                                 |  10 -
- fs/xfs/scrub/fscounters.c                          |  12 -
- fs/xfs/scrub/health.c                              |   8 -
- fs/xfs/scrub/ialloc.c                              |  28 +-
- fs/xfs/scrub/inode.c                               |  10 -
- fs/xfs/scrub/parent.c                              |   8 -
- fs/xfs/scrub/quota.c                               |  13 +-
- fs/xfs/scrub/refcount.c                            |  10 -
- fs/xfs/scrub/repair.c                              |  14 +-
- fs/xfs/scrub/rmap.c                                |   9 -
- fs/xfs/scrub/rtbitmap.c                            |   7 -
- fs/xfs/scrub/scrub.c                               |  20 -
- fs/xfs/scrub/symlink.c                             |   8 -
- fs/xfs/scrub/trace.c                               |   6 -
- fs/xfs/xfs_acl.c                                   |   4 +-
- fs/xfs/xfs_aops.c                                  | 121 ++--
- fs/xfs/xfs_aops.h                                  |   1 -
- fs/xfs/xfs_attr_inactive.c                         |   7 +-
- fs/xfs/xfs_attr_list.c                             |   7 +-
- fs/xfs/xfs_bio_io.c                                |  61 ++
- fs/xfs/xfs_bmap_item.c                             | 350 +++++-----
- fs/xfs/xfs_bmap_item.h                             |   2 -
- fs/xfs/xfs_bmap_util.c                             |  11 +-
- fs/xfs/xfs_buf.c                                   | 171 +----
- fs/xfs/xfs_buf.h                                   |  53 +-
- fs/xfs/xfs_buf_item.c                              |  40 +-
- fs/xfs/xfs_buf_item.h                              |   6 +-
- fs/xfs/xfs_dir2_readdir.c                          |   5 +-
- fs/xfs/xfs_discard.c                               |   4 +-
- fs/xfs/xfs_dquot.c                                 |   6 +-
- fs/xfs/xfs_dquot.h                                 |   1 -
- fs/xfs/xfs_dquot_item.c                            | 118 +---
- fs/xfs/xfs_dquot_item.h                            |   4 +-
- fs/xfs/xfs_error.c                                 |   3 +-
- fs/xfs/xfs_export.c                                |   4 +-
- fs/xfs/xfs_extfree_item.c                          | 410 +++++++-----
- fs/xfs/xfs_extfree_item.h                          |   6 +-
- fs/xfs/xfs_file.c                                  |  23 +-
- fs/xfs/xfs_filestream.c                            |   5 +-
- fs/xfs/xfs_fsmap.c                                 |   4 -
- fs/xfs/xfs_fsops.c                                 |   8 +-
- fs/xfs/xfs_globals.c                               |   4 +-
- fs/xfs/xfs_health.c                                |   4 -
- fs/xfs/xfs_icache.c                                |   4 +-
- fs/xfs/xfs_icreate_item.c                          |  75 +--
- fs/xfs/xfs_inode.c                                 |  42 +-
- fs/xfs/xfs_inode_item.c                            |  16 +-
- fs/xfs/xfs_inode_item.h                            |   2 +-
- fs/xfs/xfs_ioctl.c                                 |  96 ++-
- fs/xfs/xfs_ioctl.h                                 |   7 +
- fs/xfs/xfs_ioctl32.c                               | 130 ++--
- fs/xfs/xfs_iomap.c                                 |   5 +-
- fs/xfs/xfs_iops.c                                  |  10 -
- fs/xfs/xfs_itable.c                                | 672 ++++++-------------
- fs/xfs/xfs_itable.h                                |  98 +--
- fs/xfs/xfs_iwalk.c                                 | 708 +++++++++++++++++++++
- fs/xfs/xfs_iwalk.h                                 |  34 +
- fs/xfs/xfs_linux.h                                 |   5 +-
- fs/xfs/xfs_log.c                                   | 644 ++++++++-----------
- fs/xfs/xfs_log.h                                   |  17 +-
- fs/xfs/xfs_log_cil.c                               |  51 +-
- fs/xfs/xfs_log_priv.h                              |  36 +-
- fs/xfs/xfs_log_recover.c                           | 463 ++++++--------
- fs/xfs/xfs_message.c                               |   2 +-
- fs/xfs/xfs_mount.c                                 | 102 +--
- fs/xfs/xfs_mount.h                                 |  22 +-
- fs/xfs/xfs_pnfs.c                                  |   9 +-
- fs/xfs/xfs_pwork.c                                 | 136 ++++
- fs/xfs/xfs_pwork.h                                 |  61 ++
- fs/xfs/xfs_qm.c                                    |  67 +-
- fs/xfs/xfs_qm_bhv.c                                |   2 +-
- fs/xfs/xfs_qm_syscalls.c                           |   5 -
- fs/xfs/xfs_quotaops.c                              |   3 +-
- fs/xfs/xfs_refcount_item.c                         | 357 ++++++-----
- fs/xfs/xfs_refcount_item.h                         |   2 -
- fs/xfs/xfs_reflink.c                               |  15 +-
- fs/xfs/xfs_rmap_item.c                             | 380 ++++++-----
- fs/xfs/xfs_rmap_item.h                             |   2 -
- fs/xfs/xfs_rtalloc.c                               |   6 -
- fs/xfs/xfs_stats.c                                 |   1 -
- fs/xfs/xfs_super.c                                 |  32 +-
- fs/xfs/xfs_super.h                                 |  14 +
- fs/xfs/xfs_symlink.c                               |   9 -
- fs/xfs/xfs_sysctl.c                                |   3 -
- fs/xfs/xfs_sysctl.h                                |   3 +
- fs/xfs/xfs_sysfs.c                                 |  42 +-
- fs/xfs/xfs_trace.c                                 |   8 -
- fs/xfs/xfs_trace.h                                 |  61 +-
- fs/xfs/xfs_trans.c                                 |  43 +-
- fs/xfs/xfs_trans.h                                 |  70 +-
- fs/xfs/xfs_trans_ail.c                             |  53 +-
- fs/xfs/xfs_trans_bmap.c                            | 232 -------
- fs/xfs/xfs_trans_buf.c                             |  11 +-
- fs/xfs/xfs_trans_dquot.c                           |  11 -
- fs/xfs/xfs_trans_extfree.c                         | 286 ---------
- fs/xfs/xfs_trans_inode.c                           |   3 -
- fs/xfs/xfs_trans_priv.h                            |   4 +-
- fs/xfs/xfs_trans_refcount.c                        | 240 -------
- fs/xfs/xfs_trans_rmap.c                            | 257 --------
- fs/xfs/xfs_xattr.c                                 |   5 +-
- 156 files changed, 3794 insertions(+), 4642 deletions(-)
- create mode 100644 fs/xfs/xfs_bio_io.c
- create mode 100644 fs/xfs/xfs_iwalk.c
- create mode 100644 fs/xfs/xfs_iwalk.h
- create mode 100644 fs/xfs/xfs_pwork.c
- create mode 100644 fs/xfs/xfs_pwork.h
- delete mode 100644 fs/xfs/xfs_trans_bmap.c
- delete mode 100644 fs/xfs/xfs_trans_extfree.c
- delete mode 100644 fs/xfs/xfs_trans_refcount.c
- delete mode 100644 fs/xfs/xfs_trans_rmap.c
+> --D
+> 
+> > Brian
+> > 
+> > > --D
+> > > 
+> > > > Brian
+> > > > 
+> > > > >  /*
+> > > > >   * Error injection.
+> > > > >   */
+> > > > > @@ -780,6 +795,7 @@ struct xfs_scrub_metadata {
+> > > > >  #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
+> > > > >  #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
+> > > > >  #define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
+> > > > > +#define XFS_IOC_BULKSTAT_SINGLE	     _IOR ('X', 128, struct xfs_bulkstat_single_req)
+> > > > >  /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
+> > > > >  
+> > > > >  
+> > > > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > > > > index cf6a38c2a3ed..2c821fa601a4 100644
+> > > > > --- a/fs/xfs/xfs_ioctl.c
+> > > > > +++ b/fs/xfs/xfs_ioctl.c
+> > > > > @@ -922,6 +922,83 @@ xfs_ioc_bulkstat(
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > > +/*
+> > > > > + * Check the incoming singleton request @hdr from userspace and initialize the
+> > > > > + * internal @breq bulk request appropriately.  Returns 0 if the bulk request
+> > > > > + * should proceed; or the usual negative error code.
+> > > > > + */
+> > > > > +static int
+> > > > > +xfs_ireq_setup(
+> > > > > +	struct xfs_mount	*mp,
+> > > > > +	struct xfs_ireq		*hdr,
+> > > > > +	struct xfs_ibulk	*breq,
+> > > > > +	void __user		*ubuffer)
+> > > > > +{
+> > > > > +	if ((hdr->flags & ~XFS_IREQ_FLAGS_ALL) ||
+> > > > > +	    hdr->reserved32 ||
+> > > > > +	    memchr_inv(hdr->reserved, 0, sizeof(hdr->reserved)))
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	if (XFS_INO_TO_AGNO(mp, hdr->ino) >= mp->m_sb.sb_agcount)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	breq->ubuffer = ubuffer;
+> > > > > +	breq->icount = 1;
+> > > > > +	breq->startino = hdr->ino;
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * Update the userspace singleton request @hdr to reflect the end state of the
+> > > > > + * internal bulk request @breq.  If @error is negative then we return just
+> > > > > + * that; otherwise we copy the state so that userspace can discover what
+> > > > > + * happened.
+> > > > > + */
+> > > > > +static void
+> > > > > +xfs_ireq_teardown(
+> > > > > +	struct xfs_ireq		*hdr,
+> > > > > +	struct xfs_ibulk	*breq)
+> > > > > +{
+> > > > > +	hdr->ino = breq->startino;
+> > > > > +}
+> > > > > +
+> > > > > +/* Handle the v5 bulkstat_single ioctl. */
+> > > > > +STATIC int
+> > > > > +xfs_ioc_bulkstat_single(
+> > > > > +	struct xfs_mount	*mp,
+> > > > > +	unsigned int		cmd,
+> > > > > +	struct xfs_bulkstat_single_req __user *arg)
+> > > > > +{
+> > > > > +	struct xfs_ireq		hdr;
+> > > > > +	struct xfs_ibulk	breq = {
+> > > > > +		.mp		= mp,
+> > > > > +	};
+> > > > > +	int			error;
+> > > > > +
+> > > > > +	if (!capable(CAP_SYS_ADMIN))
+> > > > > +		return -EPERM;
+> > > > > +
+> > > > > +	if (XFS_FORCED_SHUTDOWN(mp))
+> > > > > +		return -EIO;
+> > > > > +
+> > > > > +	if (copy_from_user(&hdr, &arg->hdr, sizeof(hdr)))
+> > > > > +		return -EFAULT;
+> > > > > +
+> > > > > +	error = xfs_ireq_setup(mp, &hdr, &breq, &arg->bulkstat);
+> > > > > +	if (error)
+> > > > > +		return error;
+> > > > > +
+> > > > > +	error = xfs_bulkstat_one(&breq, xfs_bulkstat_fmt);
+> > > > > +	if (error)
+> > > > > +		return error;
+> > > > > +
+> > > > > +	xfs_ireq_teardown(&hdr, &breq);
+> > > > > +	if (copy_to_user(&arg->hdr, &hdr, sizeof(hdr)))
+> > > > > +		return -EFAULT;
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > >  STATIC int
+> > > > >  xfs_ioc_fsgeometry(
+> > > > >  	struct xfs_mount	*mp,
+> > > > > @@ -2088,6 +2165,8 @@ xfs_file_ioctl(
+> > > > >  
+> > > > >  	case XFS_IOC_BULKSTAT:
+> > > > >  		return xfs_ioc_bulkstat(mp, cmd, arg);
+> > > > > +	case XFS_IOC_BULKSTAT_SINGLE:
+> > > > > +		return xfs_ioc_bulkstat_single(mp, cmd, arg);
+> > > > >  
+> > > > >  	case XFS_IOC_FSGEOMETRY_V1:
+> > > > >  		return xfs_ioc_fsgeometry(mp, arg, 3);
+> > > > > diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+> > > > > index df107adbdbf3..6fa0f41dbae5 100644
+> > > > > --- a/fs/xfs/xfs_ioctl32.c
+> > > > > +++ b/fs/xfs/xfs_ioctl32.c
+> > > > > @@ -581,6 +581,7 @@ xfs_file_compat_ioctl(
+> > > > >  	case FS_IOC_GETFSMAP:
+> > > > >  	case XFS_IOC_SCRUB_METADATA:
+> > > > >  	case XFS_IOC_BULKSTAT:
+> > > > > +	case XFS_IOC_BULKSTAT_SINGLE:
+> > > > >  		return xfs_file_ioctl(filp, cmd, p);
+> > > > >  #if !defined(BROKEN_X86_ALIGNMENT) || defined(CONFIG_X86_X32)
+> > > > >  	/*
+> > > > > diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+> > > > > index 954484c6eb96..fa1252657b08 100644
+> > > > > --- a/fs/xfs/xfs_ondisk.h
+> > > > > +++ b/fs/xfs/xfs_ondisk.h
+> > > > > @@ -150,6 +150,7 @@ xfs_check_ondisk_structs(void)
+> > > > >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat,		192);
+> > > > >  	XFS_CHECK_STRUCT_SIZE(struct xfs_inumbers,		24);
+> > > > >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_req,		64);
+> > > > > +	XFS_CHECK_STRUCT_SIZE(struct xfs_bulkstat_single_req,	224);
+> > > > >  }
+> > > > >  
+> > > > >  #endif /* __XFS_ONDISK_H */
+> > > > > 
