@@ -2,411 +2,152 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A08FF60AEF
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62FE560B10
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 19:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfGERTf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 13:19:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49546 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfGERTf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Jul 2019 13:19:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65HIWsJ176695;
-        Fri, 5 Jul 2019 17:19:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=uhEmSLBzHIP2btsQ/raKOaKbLY+ybFqVQ+SnDyuM15w=;
- b=rKzcL8UYP2gHgVzAwCOC3UhwwbzZkJcuLiiY89L9jw4sgAHCRHVxIm2ZKt5okBCdbFaH
- Oh/td27exOWbjkmF8vk1Ib33ZdcuxVm+ZQwIoE4g+x5tHEfqg0aITXUog9u//EImN2m/
- qQ1oNy6TqedsindezvNQN1OMHUzSTfEEXnQ3p4P+bKKeYjv/8Q4Jq6OqUuIqo6kG7ew5
- VFg/tE/pn0vWYxbbnXCbGXCZ3e022hbUp3D9qMHbIWp8irqUQ+Vrj7Enl79IsV4VcWW/
- ypetgsFIsBbAK+0J91Chkpy1Gqwa1xTVD5vQ5HPt+GZr5BBms6kIuVPLcIsWKMiWcYa/ zA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2te61qbxs8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 17:19:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65HIVF0062222;
-        Fri, 5 Jul 2019 17:19:32 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2th5qmm220-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 17:19:32 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x65HJVBk002832;
-        Fri, 5 Jul 2019 17:19:31 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jul 2019 10:19:30 -0700
-Date:   Fri, 5 Jul 2019 10:19:30 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
+        id S1728058AbfGER0m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 13:26:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44646 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727321AbfGER0m (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 13:26:42 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D453183F3B;
+        Fri,  5 Jul 2019 17:26:41 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78C11860DE;
+        Fri,  5 Jul 2019 17:26:41 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 13:26:39 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 8/9] man: create a separate GETBMAPX/GETBMAPA/GETBMAP
- ioctl manpage
-Message-ID: <20190705171929.GK1404256@magnolia>
-References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
- <156104950296.1174403.15218317280608955242.stgit@magnolia>
- <06724ca8-8a13-7e2b-eb68-295ed316e95e@sandeen.net>
+Subject: Re: [PATCH 6/6] xfs: online scrub needn't bother zeroing its
+ temporary buffer
+Message-ID: <20190705172639.GJ37448@bfoster>
+References: <156158199378.495944.4088787757066517679.stgit@magnolia>
+ <156158203074.495944.13142136337107091755.stgit@magnolia>
+ <20190705145246.GH37448@bfoster>
+ <20190705163504.GE1404256@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06724ca8-8a13-7e2b-eb68-295ed316e95e@sandeen.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9309 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907050214
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9309 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907050214
+In-Reply-To: <20190705163504.GE1404256@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 05 Jul 2019 17:26:41 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:53:05AM -0500, Eric Sandeen wrote:
-> On 6/20/19 11:51 AM, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, Jul 05, 2019 at 09:35:04AM -0700, Darrick J. Wong wrote:
+> On Fri, Jul 05, 2019 at 10:52:46AM -0400, Brian Foster wrote:
+> > On Wed, Jun 26, 2019 at 01:47:10PM -0700, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > The xattr scrubber functions use the temporary memory buffer either for
+> > > storing bitmaps or for testing if attribute value extraction works.  The
+> > > bitmap code always zeroes what it needs and the value extraction merely
+> > > sets the buffer contents (we never read the contents, we just look for
+> > > return codes), so it's not necessary to waste CPU time zeroing on
+> > > allocation.
+> > > 
 > > 
-> > Create a separate manual page for the xfs BMAP ioctls so we can document
-> > how they work.
+> > If we don't need to zero the buffer because we never look at the result,
+> > that suggests we don't need to populate it in the first place right?
 > 
-> Same drill ... ;)
+> We still need to read the attr value into the buffer (at least for
+> remote attr values) because scrub doesn't otherwise check the remote
+> attribute block header.
 > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  man/man2/ioctl_xfs_getbmap.2  |    1 
-> >  man/man2/ioctl_xfs_getbmapa.2 |    1 
-> >  man/man2/ioctl_xfs_getbmapx.2 |  172 +++++++++++++++++++++++++++++++++++++++++
-> >  man/man3/xfsctl.3             |   61 ++-------------
-> >  4 files changed, 184 insertions(+), 51 deletions(-)
-> >  create mode 100644 man/man2/ioctl_xfs_getbmap.2
-> >  create mode 100644 man/man2/ioctl_xfs_getbmapa.2
-> >  create mode 100644 man/man2/ioctl_xfs_getbmapx.2
+> We never read the contents (because the contents are just arbitrary
+> bytes) but we do need to be able to catch an EFSCORRUPTED if, say, the
+> attribute dabtree points at a corrupt block.
+> 
+
+Ok.. what I'm getting at here is basically wondering if since the buffer
+zeroing was noticeable in performance traces, whether the xattr value
+memory copy might be similarly noticeable for certain datasets (many
+large xattrs?). I suppose that may be less prominent if the buffer
+alloc/zero was unconditional as opposed to tied to the existence of an
+actual xattr, but that doesn't necessarily mean the performance impact
+is zero.
+
+If non-zero, it might be interesting to explore whether some sort of
+lookup interface makes sense for xattrs that essentially do everything
+we currently do via xfs_attr_get() except read the attr. Presumably we
+could avoid the memory copy along with the buffer allocation in that
+case. But that's just a random thought for future consideration,
+certainly not low handing fruit as is this patch. If you have a good
+scrub performance test, an easy experiment might be to run it with a
+hack to skip the buffer allocation, pass a NULL buffer and
+conditionalize the ->value accesses/copies in the xattr code to avoid
+explosions and see whether there's any benefit.
+
+> > > A flame graph analysis showed that we were spending 7% of a xfs_scrub
+> > > run (the whole program, not just the attr scrubber itself) allocating
+> > > and zeroing 64k segments needlessly.
+> > > 
 > > 
+> > How much does this patch help?
+> 
+> About 1-2% I think.  FWIW the "7%" figure represents the smallest
+> improvement I saw in runtimes, where allocation ate 1-2% of the runtime
+> and zeroing accounts for the rest (~5-6%).
+> 
+> Practically speaking, when I retested with NVME flash instead of
+> spinning rust then the improvement jumped to 15-20% overall.
+> 
+
+Nice!
+
+Brian
+
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > >  fs/xfs/scrub/attr.c |    7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > 
+> > > 
+> > > diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
+> > > index 09081d8ab34b..d3a6f3dacf0d 100644
+> > > --- a/fs/xfs/scrub/attr.c
+> > > +++ b/fs/xfs/scrub/attr.c
+> > > @@ -64,7 +64,12 @@ xchk_setup_xattr_buf(
+> > >  		sc->buf = NULL;
+> > >  	}
+> > >  
+> > > -	ab = kmem_zalloc_large(sizeof(*ab) + sz, flags);
+> > > +	/*
+> > > +	 * Allocate the big buffer.  We skip zeroing it because that added 7%
+> > > +	 * to the scrub runtime and all the users were careful never to read
+> > > +	 * uninitialized contents.
+> > > +	 */
 > > 
-> > diff --git a/man/man2/ioctl_xfs_getbmap.2 b/man/man2/ioctl_xfs_getbmap.2
-> > new file mode 100644
-> > index 00000000..909402fc
-> > --- /dev/null
-> > +++ b/man/man2/ioctl_xfs_getbmap.2
-> > @@ -0,0 +1 @@
-> > +.so man2/ioctl_xfs_getbmapx.2
-> > diff --git a/man/man2/ioctl_xfs_getbmapa.2 b/man/man2/ioctl_xfs_getbmapa.2
-> > new file mode 100644
-> > index 00000000..909402fc
-> > --- /dev/null
-> > +++ b/man/man2/ioctl_xfs_getbmapa.2
-> > @@ -0,0 +1 @@
-> > +.so man2/ioctl_xfs_getbmapx.2
-> > diff --git a/man/man2/ioctl_xfs_getbmapx.2 b/man/man2/ioctl_xfs_getbmapx.2
-> > new file mode 100644
-> > index 00000000..cf21ca32
-> > --- /dev/null
-> > +++ b/man/man2/ioctl_xfs_getbmapx.2
-> > @@ -0,0 +1,172 @@
-> > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
-> > +.\"
-> > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
-> > +.\" SPDX-License-Identifier: GPL-2.0+
-> > +.\" %%%LICENSE_END
-> > +.TH IOCTL-XFS-GETBMAPX 2 2019-06-17 "XFS"
-> > +.SH NAME
-> > +ioctl_xfs_getbmapx \- query extent information for an open file
-> > +.SH SYNOPSIS
-> > +.br
-> > +.B #include <xfs/xfs_fs.h>
-> > +.PP
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAP, struct getbmap *" arg );
-> > +.br
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPA, struct getbmap *" arg );
-> > +.br
-> > +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPX, struct getbmapx *" arg );
-> > +.SH DESCRIPTION
-> > +Get the block map for a segment of a file in an XFS file system.
-> > +The mapping information is conveyed in a structure of the following form:
-> 
-> "conveyed via an array of structures of the following form"
-> 
-> (otherwise below we suddenly refer to "the array" which might leave
-> some heads scratching)
-
-SGTM.
-
-> > +.PP
-> > +.in +4n
-> > +.nf
-> > +struct getbmap {
-> > +	__s64   bmv_offset;
-> > +	__s64   bmv_block;
-> > +	__s64   bmv_length;
-> > +	__s32   bmv_count;
-> > +	__s32   bmv_entries;
-> > +};
-> > +.fi
-> > +.in
-> > +.PP
-> > +The
-> > +.B XFS_IOC_GETBMAPX
-> > +ioctl uses a larger version of that structure:
-> > +.PP
-> > +.in +4n
-> > +.nf
-> > +struct getbmapx {
-> > +	__s64   bmv_offset;
-> > +	__s64   bmv_block;
-> > +	__s64   bmv_length;
-> > +	__s32   bmv_count;
-> > +	__s32   bmv_entries;
-> > +	__s32   bmv_iflags;
-> > +	__s32   bmv_oflags;
-> > +	__s32   bmv_unused1;
-> > +	__s32   bmv_unused2;
-> > +};
-> > +.fi
-> > +.in
-> > +.PP
-> > +All sizes and offsets in the structure are in units of 512 bytes.
-> > +.PP
-> > +The first structure in the array is a header and the remaining structures in
-> > +the array contain block map information on return.
-> > +The header controls iterative calls to the command and should be filled out as
-> > +follows:
-> > +.TP
-> > +.I bmv_offset
-> > +The file offset of the area of interest in the file.
-> > +.TP
-> > +.I bmv_length
-> > +The length of the area of interest in the file.
-> > +If this value is set to -1, the length of the interesting area is the rest of
-> > +the file.
-> > +.TP
-> > +.I bmv_count
-> > +The length of the array, including this header.
-> 
-> "The number of elements in the array, including this header.  The minimum value is 2."
-
-Yes!!  having just tripped over this 2 days ago. :)
-
-> > +.TP
-> > +.I bmv_entries
-> > +The number of entries actually filled in by the call.
-> > +This does not need to be filled out before the call.
-> 
-> I also wonder if we should say something about how to know when iterative
-> calls are done.  Perhaps:
-> 
-> "This value may be zero if no extents were found in the requested
-> range, or if iterated calls have reached the end of the requested
-> range"
-
-Ok.
-
-> > +.TP
-> > +.I bmv_iflags
-> > +For the
-> > +.B XFS_IOC_GETBMAPX
-> > +function, this is a bitmask containing a combination of the following flags:
-> > +.RS 0.4i
-> > +.TP
-> > +.B BMV_IF_ATTRFORK
-> > +Return information about the extended attribute fork.
-> > +.TP
-> > +.B BMV_IF_PREALLOC
-> > +Return information about unwritten pre-allocated segments.
-> > +.TP
-> > +.B BMV_IF_DELALLOC
-> > +Return information about delayed allocation reservation segments.
-> > +.TP
-> > +.B BMV_IF_NO_HOLES
-> > +Do not return information about holes.
-> > +.RE
-> > +.PD 1
-> > +.PP
-> > +The other
-> > +.I bmv_*
-> > +fields in the header are ignored.
-> > +.PP
-> > +On return from a call, the header is updated so that the command can be
-> > +reused to obtain more information without re-initializing the structures.
-> 
-> Perhaps:
-> 
-> "On successful return from a call, the offset and length values in the header
-> are updated so that the command can be reused to obtain more information."
-
-Yes, that is much clearer.
-
-> 
-> > +The remainder of the array will be filled out by the call as follows:
-> 
-> "The remaining elements of the array will be filled out ..."
-
-SGTM.
-
-> > +
-> > +.TP
-> > +.I bmv_offset
-> > +File offset of segment.
-> > +.TP
-> > +.I bmv_block
-> > +Physical starting block of segment.
-> > +If this is -1, then the segment is a hole.
-> > +.TP
-> > +.I bmv_length
-> > +Length of segment.
-> > +.TP
-> > +.I bmv_oflags
-> > +The
-> > +.B XFS_IOC_GETBMAPX
-> > +function will fill this field with a combination of the following flags:
-> > +.RS 0.4i
-> > +.TP
-> > +.B BMV_OF_PREALLOC
-> > +The segment is an unwritten pre-allocation.
-> > +.TP
-> > +.B BMV_OF_DELALLOC
-> > +The segment is a delayed allocation reservation.
-> > +.TP
-> > +.B BMV_OF_LAST
-> > +This segment is the last in the file.
-> > +.TP
-> > +.B BMV_OF_SHARED
-> > +This segment shares blocks with other files.
-> > +.RE
-> > +.PD 1
-> > +.PP
-> > +The other
-> > +.I bmv_*
-> > +fields are ignored in the array of outputted records.
-> 
-> "are unused in the array of output records."
-
-Ok. :)
-
-> -Eric
-> 
-> > +.PP
-> > +The
-> > +.B XFS_IOC_GETBMAPA
-> > +command is identical to
-> > +.B XFS_IOC_GETBMAP
-> > +except that information about the attribute fork of the file is returned.
-> > +.SH RETURN VALUE
-> > +On error, \-1 is returned, and
-> > +.I errno
-> > +is set to indicate the error.
-> > +.PP
-> > +.SH ERRORS
-> > +Error codes can be one of, but are not limited to, the following:
-> > +.TP
-> > +.B EFAULT
-> > +The kernel was not able to copy into the userspace buffer.
-> > +.TP
-> > +.B EFSBADCRC
-> > +Metadata checksum validation failed while performing the query.
-> > +.TP
-> > +.B EFSCORRUPTED
-> > +Metadata corruption was encountered while performing the query.
-> > +.TP
-> > +.B EINVAL
-> > +One of the arguments was not valid.
-> > +.TP
-> > +.B EIO
-> > +An I/O error was encountered while performing the query.
-> > +.TP
-> > +.B ENOMEM
-> > +There was insufficient memory to perform the query.
-> > +.SH CONFORMING TO
-> > +This API is specific to XFS filesystem on the Linux kernel.
-> > +.SH SEE ALSO
-> > +.BR ioctl (2)
-> > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> > index 89975a3c..077dd411 100644
-> > --- a/man/man3/xfsctl.3
-> > +++ b/man/man3/xfsctl.3
-> > @@ -144,59 +144,17 @@ See
-> >  .BR ioctl_xfs_fsgetxattr (2)
-> >  for more information.
-> >  
-> > -.TP
-> > -.B XFS_IOC_GETBMAP
-> > -Get the block map for a segment of a file in an XFS file system.
-> > -The final argument points to an arry of variables of type
-> > -.BR "struct getbmap" .
-> > -All sizes and offsets in the structure are in units of 512 bytes.
-> > -The structure fields include:
-> > -.B bmv_offset
-> > -(file offset of segment),
-> > -.B bmv_block
-> > -(starting block of segment),
-> > -.B bmv_length
-> > -(length of segment),
-> > -.B bmv_count
-> > -(number of array entries, including the first), and
-> > -.B bmv_entries
-> > -(number of entries filled in).
-> > -The first structure in the array is a header, and the remaining
-> > -structures in the array contain block map information on return.
-> > -The header controls iterative calls to the
-> > +.PP
-> > +.nf
-> >  .B XFS_IOC_GETBMAP
-> > -command.
-> > -The caller fills in the
-> > -.B bmv_offset
-> > -and
-> > -.B bmv_length
-> > -fields of the header to indicate the area of interest in the file,
-> > -and fills in the
-> > -.B bmv_count
-> > -field to indicate the length of the array.
-> > -If the
-> > -.B bmv_length
-> > -value is set to \-1 then the length of the interesting area is the rest
-> > -of the file.
-> > -On return from a call, the header is updated so that the command can be
-> > -reused to obtain more information, without re-initializing the structures.
-> > -Also on return, the
-> > -.B bmv_entries
-> > -field of the header is set to the number of array entries actually filled in.
-> > -The non-header structures will be filled in with
-> > -.BR bmv_offset ,
-> > -.BR bmv_block ,
-> > -and
-> > -.BR bmv_length .
-> > -If a region of the file has no blocks (is a hole in the file) then the
-> > -.B bmv_block
-> > -field is set to \-1.
-> > -
-> > -.TP
-> >  .B XFS_IOC_GETBMAPA
-> > -Identical to
-> > -.B XFS_IOC_GETBMAP
-> > -except that information about the attribute fork of the file is returned.
-> > +.fi
-> > +.PD 0
-> > +.TP
-> > +.B XFS_IOC_GETBMAPX
-> > +See
-> > +.BR ioctl_getbmap (2)
-> > +for more information.
-> >  
-> >  .PP
-> >  .B XFS_IOC_RESVSP
-> > @@ -429,6 +387,7 @@ as they are not of general use to applications.
-> >  .BR ioctl_xfs_fsinumbers (2),
-> >  .BR ioctl_xfs_fscounts (2),
-> >  .BR ioctl_xfs_getresblks (2),
-> > +.BR ioctl_xfs_getbmap (2),
-> >  .BR fstatfs (2),
-> >  .BR statfs (2),
-> >  .BR xfs (5),
+> > Ok, that suggests the 7% hit was due to zeroing (where the commit log
+> > says "allocating and zeroing"). Either way, we probably don't need such
+> > details in the code. Can we tweak the comment to something like:
 > > 
+> > /*
+> >  * Don't zero the buffer on allocation to avoid runtime overhead. All
+> >  * users must be careful never to read uninitialized contents.
+> >  */ 
+> 
+> Ok, I'll do that.
+> 
+> Thanks for all the review! :)
+> 
+> --D
+> 
+> > 
+> > With that:
+> > 
+> > Reviewed-by: Brian Foster <bfoster@redhat.com>
+> > 
+> > > +	ab = kmem_alloc_large(sizeof(*ab) + sz, flags);
+> > >  	if (!ab)
+> > >  		return -ENOMEM;
+> > >  
+> > > 
