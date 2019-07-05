@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D166E60906
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 17:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B21666090D
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 17:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfGEPPl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 11:15:41 -0400
-Received: from sandeen.net ([63.231.237.45]:43060 "EHLO sandeen.net"
+        id S1727477AbfGEPQ5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 11:16:57 -0400
+Received: from sandeen.net ([63.231.237.45]:43188 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727918AbfGEPPl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:15:41 -0400
+        id S1726851AbfGEPQ5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 11:16:57 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 9F51F2AF1;
-        Fri,  5 Jul 2019 10:15:14 -0500 (CDT)
-Subject: Re: [PATCH 6/9] man: create a separate FSCOUNTS ioctl manpage
+        by sandeen.net (Postfix) with ESMTPSA id 210DB2AF1;
+        Fri,  5 Jul 2019 10:16:31 -0500 (CDT)
+Subject: Re: [PATCH 5/9] man: create a separate INUMBERS ioctl manpage
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
- <156104948638.1174403.13393187882783073949.stgit@magnolia>
+ <156104948000.1174403.11692931049872468663.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,15 +65,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <7fffd033-5f5f-beba-53c7-cac61e090f26@sandeen.net>
-Date:   Fri, 5 Jul 2019 10:15:39 -0500
+Message-ID: <ba312282-189d-df3c-72f6-53d93781e7b1@sandeen.net>
+Date:   Fri, 5 Jul 2019 10:16:56 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <156104948638.1174403.13393187882783073949.stgit@magnolia>
+In-Reply-To: <156104948000.1174403.11692931049872468663.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,72 +82,121 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:51 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a separate manual page for the xfs FSCOUNTS ioctl so we can
+> Create a separate manual page for the xfs INUMBERS ioctl so we can
 > document how it works.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
+modulo small change to move "last inode". to "last inode."
+
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
 > ---
->  man/man2/ioctl_xfs_fscounts.2 |   69 +++++++++++++++++++++++++++++++++++++++++
->  man/man3/xfsctl.3             |   14 +++++---
->  2 files changed, 77 insertions(+), 6 deletions(-)
->  create mode 100644 man/man2/ioctl_xfs_fscounts.2
+>  man/man2/ioctl_xfs_fsinumbers.2 |  122 +++++++++++++++++++++++++++++++++++++++
+>  man/man3/xfsctl.3               |   34 +----------
+>  2 files changed, 126 insertions(+), 30 deletions(-)
+>  create mode 100644 man/man2/ioctl_xfs_fsinumbers.2
 > 
 > 
-> diff --git a/man/man2/ioctl_xfs_fscounts.2 b/man/man2/ioctl_xfs_fscounts.2
+> diff --git a/man/man2/ioctl_xfs_fsinumbers.2 b/man/man2/ioctl_xfs_fsinumbers.2
 > new file mode 100644
-> index 00000000..eb7df89c
+> index 00000000..04f32109
 > --- /dev/null
-> +++ b/man/man2/ioctl_xfs_fscounts.2
-> @@ -0,0 +1,69 @@
+> +++ b/man/man2/ioctl_xfs_fsinumbers.2
+> @@ -0,0 +1,122 @@
 > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > +.\"
 > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > +.\" SPDX-License-Identifier: GPL-2.0+
 > +.\" %%%LICENSE_END
-> +.TH IOCTL-XFS-FSCOUNTS 2 2019-06-17 "XFS"
+> +.TH IOCTL-XFS-FSINUMBERS 2 2019-06-17 "XFS"
 > +.SH NAME
-> +ioctl_xfs_fscounts \- query XFS summary counter information
+> +ioctl_xfs_fsinumbers \- extract a list of valid inode numbers from an XFS filesystem
 > +.SH SYNOPSIS
 > +.br
 > +.B #include <xfs/xfs_fs.h>
 > +.PP
-> +.BI "int ioctl(int " fd ", XFS_IOC_FSCOUNTS, struct xfs_fsop_counts *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_FSINUMBERS, struct xfs_fsop_bulkreq *" arg );
 > +.SH DESCRIPTION
-> +Query the raw filesystem summary counters.
-> +Unlike
-> +.BR statvfs (3),
-> +the values returned here are the raw values, which do not reflect any
-> +alterations or limits set by project quotas.
-> +The counter information is conveyed in a structure of the following form:
+> +Queries inode allocation information from an XFS filesystem.
+> +It is intended to be called iteratively to obtain the entire set of inodes.
+> +These ioctls use
+> +.B struct xfs_fsop_bulkreq
+> +to set up a bulk transfer with the kernel:
 > +.PP
 > +.in +4n
 > +.nf
-> +struct xfs_fsop_counts {
-> +	__u64   freedata;
-> +	__u64   freertx;
-> +	__u64   freeino;
-> +	__u64   allocino;
+> +struct xfs_fsop_bulkreq {
+> +	__u64   *lastip;
+> +	__s32   count;
+> +	void    *ubuffer;
+> +	__s32   *ocount;
 > +};
 > +.fi
 > +.in
 > +.PP
-> +The fields of this structure are as follows:
+> +.I lastip
+> +points to a value that will receive the number of the "last inode".
+> +This should be set to one less than the number of the first inode for which the
+> +caller wants information, or zero to start with the first inode in the
+> +filesystem.
+> +After the call, this value will be set to the number of the last inode for
+> +which information is supplied.
+> +This field will not be updated if
+> +.I ocount
+> +is NULL.
 > +.PP
-> +.I freedata
-> +is the number of free filesystem blocks on the data device.
+> +.I count
+> +is the number of elements in the
+> +.B ubuffer
+> +array and therefore the number of inode groups for which to return allocation
+> +information.
 > +.PP
-> +.I freertx
-> +is the number of free extents on the realtime device.
+> +.I ocount
+> +points to a value that will receive the number of records returned.
+> +An output value of zero means that there are no more inode groups left to
+> +enumerate.
+> +If this value is NULL, then neither
+> +.I ocount
+> +nor
+> +.I lastip
+> +will be updated.
 > +.PP
-> +.I freeino
-> +is the number of inode records that are not in use within the space that has
-> +been allocated for them.
+> +.I ubuffer
+> +points to a memory buffer where inode group information will be copied.
+> +This buffer must be an array of
+> +.B struct xfs_inogrp
+> +which is described below.
+> +The array must have at least
+> +.I count
+> +elements.
 > +.PP
-> +.I allocino
-> +is the number of inode records for which space has been allocated.
+> +.in +4n
+> +.nf
+> +struct xfs_inogrp {
+> +	__u64   xi_startino;
+> +	__s32   xi_alloccount;
+> +	__u64   xi_allocmask;
+> +}
+> +.fi
+> +.in
+> +.PP
+> +This structure describes inode usage information for a group of 64 consecutive
+> +inode numbers.
+> +The fields are as follows:
+> +.PP
+> +.I xi_startino
+> +is the first inode number of this group.
+> +.PP
+> +.I xi_alloccount
+> +is the number of bits that are set in
+> +.IR xi_allocmask .
+> +This is the number of inodes allocated in this group.
+> +.PP
+> +.I xi_allocmask
+> +is a bitmask of inodes that are allocated in this inode group.
+> +The bitmask is 64 bits long, and the least significant bit corresponds to inode
+> +.BR xi_startino .
 > +.SH RETURN VALUE
 > +On error, \-1 is returned, and
 > +.I errno
@@ -156,6 +205,9 @@ Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 > +.SH ERRORS
 > +Error codes can be one of, but are not limited to, the following:
 > +.TP
+> +.B EFAULT
+> +The kernel was not able to copy into the userspace buffer.
+> +.TP
 > +.B EFSBADCRC
 > +Metadata checksum validation failed while performing the query.
 > +.TP
@@ -163,54 +215,66 @@ Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 > +Metadata corruption was encountered while performing the query.
 > +.TP
 > +.B EINVAL
-> +The specified allocation group number is not valid for this filesystem.
+> +One of the arguments was not valid.
 > +.TP
 > +.B EIO
 > +An I/O error was encountered while performing the query.
+> +.TP
+> +.B ENOMEM
+> +There was insufficient memory to perform the query.
 > +.SH CONFORMING TO
 > +This API is specific to XFS filesystem on the Linux kernel.
 > +.SH SEE ALSO
 > +.BR ioctl (2)
 > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index c14f7d33..ee3188ec 100644
+> index 78fad975..c14f7d33 100644
 > --- a/man/man3/xfsctl.3
 > +++ b/man/man3/xfsctl.3
-> @@ -390,6 +390,12 @@ See
->  .BR ioctl_xfs_scrub_metadata (2)
->  for more information.
->  
-> +.TP
-> +.B XFS_IOC_FSCOUNTS
-> +See
-> +.BR ioctl_xfs_fscounts (2)
-> +for more information.
-> +
+> @@ -368,36 +368,9 @@ can be any open file in the XFS filesystem in question.
 >  .PP
->  .nf
->  .B XFS_IOC_THAW
-> @@ -398,16 +404,11 @@ for more information.
->  .B XFS_IOC_SET_RESBLKS
->  .B XFS_IOC_FSGROWFSDATA
->  .B XFS_IOC_FSGROWFSLOG
-> -.B XFS_IOC_FSGROWFSRT
->  .fi
 >  .TP
-> -.B XFS_IOC_FSCOUNTS
-> +.B XFS_IOC_FSGROWFSRT
->  These interfaces are used to implement various filesystem internal
->  operations on XFS filesystems.
-> -For
-> -.B XFS_FS_COUNTS
-> -(get filesystem dynamic global information), the output structure is of type
-> -.BR xfs_fsop_counts_t .
->  The remainder of these operations will not be described further
->  as they are not of general use to applications.
+>  .B XFS_IOC_FSINUMBERS
+> -This interface is used to extract a list of valid inode numbers from an
+> -XFS filesystem.
+> -It is intended to be called iteratively, to obtain the entire set of inodes.
+> -The information is passed in and out via a structure of type
+> -.B xfs_fsop_bulkreq_t
+> -pointed to by the final argument.
+> -.B lastip
+> -is a pointer to a variable containing the last inode number returned,
+> -initially it should be zero.
+> -.B icount
+> -is the size of the array of structures specified by
+> -.BR ubuffer .
+> -.B ubuffer
+> -is the address of an array of structures, of type
+> -.BR xfs_inogrp_t .
+> -This structure has the following elements:
+> -.B xi_startino
+> -(starting inode number),
+> -.B xi_alloccount
+> -(count of bits set in xi_allocmask), and
+> -.B xi_allocmask
+> -(mask of allocated inodes in this group).
+> -The bitmask is 64 bits long, and the least significant bit corresponds to inode
+> -.B xi_startino.
+> -Each bit is set if the corresponding inode is in use.
+> -.B ocount
+> -is a pointer to a count of returned values, filled in by the call.
+> -An output
+> -.B ocount
+> -value of zero means that the inode table has been exhausted.
+> +See
+> +.BR ioctl_xfs_fsinumbers (2)
+> +for more information.
 >  
-> @@ -417,6 +418,7 @@ as they are not of general use to applications.
+>  .TP
+>  .B XFS_IOC_FSGEOMETRY
+> @@ -443,6 +416,7 @@ as they are not of general use to applications.
+>  .BR ioctl_xfs_fsop_geometry (2),
 >  .BR ioctl_xfs_fsbulkstat (2),
 >  .BR ioctl_xfs_scrub_metadata (2),
->  .BR ioctl_xfs_fsinumbers (2),
-> +.BR ioctl_xfs_fscounts (2),
+> +.BR ioctl_xfs_fsinumbers (2),
 >  .BR fstatfs (2),
 >  .BR statfs (2),
 >  .BR xfs (5),
