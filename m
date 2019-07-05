@@ -2,56 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A600E60E27
-	for <lists+linux-xfs@lfdr.de>; Sat,  6 Jul 2019 01:39:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B743F60E2D
+	for <lists+linux-xfs@lfdr.de>; Sat,  6 Jul 2019 01:53:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfGEXjw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 19:39:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38377 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfGEXjw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Jul 2019 19:39:52 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so22427225ioa.5
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Jul 2019 16:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sq9F33IQp154Hc3CT0DLsiwhph66dbKhKe1mXt9jS+c=;
-        b=Vr37Kcg627ITaKGc4NRCnPxFp8s1zj7IkD4+oUykUPlRg1WnILprYgN7l+ncct94oW
-         zLT0sioTwHFcQo1zR5T4zwpkrw6w4XNpvIPGdbGF9d9NMggFY+XSMpcwi/Zs1squbpHd
-         6NhP1OGDabC/hCXJ04xX9MiXE5Dd4/X2qJQljL3R9W87JGckqXJlJxkaA9RWC1t4i3wz
-         y0OZz7oZQTuNjjMVUUaHodZ3fvkdTMrYnYSCxnIQETW/Q87TzibhTfM6u9Ao7T9tEAwq
-         ycvRg7/JUvGIiEHZbOasUB1qJogTkNrvR9gEgKwltWXXTozfE/iEHyOrRH4/4Uurf/cm
-         pbaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sq9F33IQp154Hc3CT0DLsiwhph66dbKhKe1mXt9jS+c=;
-        b=G87s8DLGydSTxiA9y4Ksm2LKQXCZgcCZ8l9Qrh3SjmbKKweNEERuUdljP05b6lASQa
-         4zbQ+yt3h/ZG7ly8y6ssc0x9yO3wr0yRFNSzB3MLLNV0oIEgih/rRdeWIKHEoW1yILbA
-         mEYj8JGNbyeIeh79oMN9M5BO2thJI/9Km16czb+GGdoRHh1wcTn02nTBZzQZ+r6ZjKZy
-         5U/eziVmn2Vp8Z93koHTua5Ud8+DTkpCaTM2mHHvIOGmfCfX6p2KvGtzfErGSCH3IOrp
-         BFO9k4KvCxC3LVPWmcELaPppykriGCKZfDGx1w5rBmYhMrdfGKsvTF4BGaOe/gsjGPr4
-         klwA==
-X-Gm-Message-State: APjAAAVd9b1jmCxrwXFSUquaXknlugeidLVdmZX5rxylrzMQlWKVrbFu
-        RFowjS2ZL6uHK5C8iC7ZpHGQGJjP3rwSjlJh6B8=
-X-Google-Smtp-Source: APXvYqxnohcjBQRztjf0hYU/JsLzhXw1zLVQnPOhw7NNixBOFSkYP+mSg0IXdNjoA7KZ/Mg3LrOWGvKFlpyJlCkOUqI=
-X-Received: by 2002:a5d:9282:: with SMTP id s2mr6517548iom.36.1562369991307;
- Fri, 05 Jul 2019 16:39:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562310330-16074-1-git-send-email-laoar.shao@gmail.com>
- <20190705090902.GF8231@dhcp22.suse.cz> <CALOAHbAw5mmpYJb4KRahsjO-Jd0nx1CE+m0LOkciuL6eJtavzQ@mail.gmail.com>
- <20190705111043.GJ8231@dhcp22.suse.cz> <CALOAHbA3PL6-sBqdy-sGKC8J9QGe_vn4-QU8J1HG-Pgn60WFJA@mail.gmail.com>
- <20190705151045.GI37448@bfoster>
-In-Reply-To: <20190705151045.GI37448@bfoster>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sat, 6 Jul 2019 07:39:15 +0800
-Message-ID: <CALOAHbApDsrYrxSBLmR+vWWwnf_wqU9sPFvztoFArWu27=aX+A@mail.gmail.com>
-Subject: Re: [PATCH] mm, memcg: support memory.{min, low} protection in cgroup v1
+        id S1726173AbfGEXxf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 19:53:35 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44237 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726069AbfGEXxf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Jul 2019 19:53:35 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 967F1149BDA;
+        Sat,  6 Jul 2019 09:53:29 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hjY06-0005zx-1X; Sat, 06 Jul 2019 09:52:22 +1000
+Date:   Sat, 6 Jul 2019 09:52:22 +1000
+From:   Dave Chinner <david@fromorbit.com>
 To:     Brian Foster <bfoster@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linux MM <linux-mm@kvack.org>,
         Johannes Weiner <hannes@cmpxchg.org>,
@@ -59,16 +29,34 @@ Cc:     Michal Hocko <mhocko@kernel.org>,
         Shakeel Butt <shakeelb@google.com>,
         Yafang Shao <shaoyafang@didiglobal.com>,
         linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] mm, memcg: support memory.{min, low} protection in
+ cgroup v1
+Message-ID: <20190705235222.GE7689@dread.disaster.area>
+References: <1562310330-16074-1-git-send-email-laoar.shao@gmail.com>
+ <20190705090902.GF8231@dhcp22.suse.cz>
+ <CALOAHbAw5mmpYJb4KRahsjO-Jd0nx1CE+m0LOkciuL6eJtavzQ@mail.gmail.com>
+ <20190705111043.GJ8231@dhcp22.suse.cz>
+ <CALOAHbA3PL6-sBqdy-sGKC8J9QGe_vn4-QU8J1HG-Pgn60WFJA@mail.gmail.com>
+ <20190705151045.GI37448@bfoster>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705151045.GI37448@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=ycwi4UZG3aNCvCUHsWIA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 11:11 PM Brian Foster <bfoster@redhat.com> wrote:
->
+On Fri, Jul 05, 2019 at 11:10:45AM -0400, Brian Foster wrote:
 > cc linux-xfs
->
+> 
 > On Fri, Jul 05, 2019 at 10:33:04PM +0800, Yafang Shao wrote:
 > > On Fri, Jul 5, 2019 at 7:10 PM Michal Hocko <mhocko@kernel.org> wrote:
 > > >
@@ -82,11 +70,11 @@ On Fri, Jul 5, 2019 at 11:11 PM Brian Foster <bfoster@redhat.com> wrote:
 > > > Could you be more specific about obstacles with respect to interfaces
 > > > please?
 > > >
-> >
+> > 
 > > Lots of applications will be changed.
 > > Kubernetes, Docker and some other applications which are using cgroup v1,
 > > that will be a trouble, because they are not maintained by us.
-> >
+> > 
 > > > > It may take long time to use cgroup v2 in production envrioment, per
 > > > > my understanding.
 > > > > BTW, the filesystem on our servers is XFS, but the cgroup  v2
@@ -98,25 +86,42 @@ On Fri, Jul 5, 2019 at 11:11 PM Brian Foster <bfoster@redhat.com> wrote:
 > > > actually works. The only throttling we have for v1 is reclaim based one
 > > > which is a huge hammer.
 > > > --
-> >
+> > 
 > > We did it in cgroup v1 in our kernel.
 > > But the upstream still don't support it in cgroup v2.
 > > So my real question is why upstream can't support such an import file system ?
 > > Do you know which companies  besides facebook are using cgroup v2  in
 > > their product enviroment?
-> >
->
+> > 
+> 
 > I think the original issue with regard to XFS cgroupv2 writeback
 > throttling support was that at the time the XFS patch was proposed,
 > there wasn't any test coverage to prove that the code worked (and the
 > original author never followed up). That has since been resolved and
 > Christoph has recently posted a new patch [1], which appears to have
 > been accepted by the maintainer.
->
-> Brian
->
-> [1] https://marc.info/?l=linux-xfs&m=156138379906141&w=2
->
 
-Thanks for your reference.
-I will pay attention to that thread.
+I don't think the validation issue has been resolved.
+
+i.e. we still don't have regression tests that ensure it keeps
+working it in future, or that it works correctly in any specific
+distro setting/configuration. The lack of repeatable QoS validation
+infrastructure was the reason I never merged support for this in the
+first place.
+
+So while the (simple) patch to support it has been merged now,
+there's no guarantee that it will work as expected or continue to do
+so over the long run as nobody upstream or in distro land has a way
+of validating that it is working correctly.
+
+From that perspective, it is still my opinion that one-off "works
+for me" testing isn't sufficient validation for a QoS feature that
+people will use to implement SLAs with $$$ penalities attached to
+QoS failures....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
