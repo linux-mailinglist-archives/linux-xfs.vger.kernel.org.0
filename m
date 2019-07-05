@@ -2,25 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B21666090D
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 17:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD807609C8
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 17:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGEPQ5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 11:16:57 -0400
-Received: from sandeen.net ([63.231.237.45]:43188 "EHLO sandeen.net"
+        id S1726555AbfGEPxI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 11:53:08 -0400
+Received: from sandeen.net ([63.231.237.45]:46154 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfGEPQ5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:16:57 -0400
+        id S1726696AbfGEPxH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 11:53:07 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 210DB2AF1;
-        Fri,  5 Jul 2019 10:16:31 -0500 (CDT)
-Subject: Re: [PATCH 5/9] man: create a separate INUMBERS ioctl manpage
+        by sandeen.net (Postfix) with ESMTPSA id D4E1215D94;
+        Fri,  5 Jul 2019 10:52:40 -0500 (CDT)
+Subject: Re: [PATCH 8/9] man: create a separate GETBMAPX/GETBMAPA/GETBMAP
+ ioctl manpage
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
- <156104948000.1174403.11692931049872468663.stgit@magnolia>
+ <156104950296.1174403.15218317280608955242.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,15 +66,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <ba312282-189d-df3c-72f6-53d93781e7b1@sandeen.net>
-Date:   Fri, 5 Jul 2019 10:16:56 -0500
+Message-ID: <06724ca8-8a13-7e2b-eb68-295ed316e95e@sandeen.net>
+Date:   Fri, 5 Jul 2019 10:53:05 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <156104948000.1174403.11692931049872468663.stgit@magnolia>
+In-Reply-To: <156104950296.1174403.15218317280608955242.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,121 +83,217 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:51 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a separate manual page for the xfs INUMBERS ioctl so we can
-> document how it works.
-> 
+> Create a separate manual page for the xfs BMAP ioctls so we can document
+> how they work.
+
+Same drill ... ;)
+
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-modulo small change to move "last inode". to "last inode."
-
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-
 > ---
->  man/man2/ioctl_xfs_fsinumbers.2 |  122 +++++++++++++++++++++++++++++++++++++++
->  man/man3/xfsctl.3               |   34 +----------
->  2 files changed, 126 insertions(+), 30 deletions(-)
->  create mode 100644 man/man2/ioctl_xfs_fsinumbers.2
+>  man/man2/ioctl_xfs_getbmap.2  |    1 
+>  man/man2/ioctl_xfs_getbmapa.2 |    1 
+>  man/man2/ioctl_xfs_getbmapx.2 |  172 +++++++++++++++++++++++++++++++++++++++++
+>  man/man3/xfsctl.3             |   61 ++-------------
+>  4 files changed, 184 insertions(+), 51 deletions(-)
+>  create mode 100644 man/man2/ioctl_xfs_getbmap.2
+>  create mode 100644 man/man2/ioctl_xfs_getbmapa.2
+>  create mode 100644 man/man2/ioctl_xfs_getbmapx.2
 > 
 > 
-> diff --git a/man/man2/ioctl_xfs_fsinumbers.2 b/man/man2/ioctl_xfs_fsinumbers.2
+> diff --git a/man/man2/ioctl_xfs_getbmap.2 b/man/man2/ioctl_xfs_getbmap.2
 > new file mode 100644
-> index 00000000..04f32109
+> index 00000000..909402fc
 > --- /dev/null
-> +++ b/man/man2/ioctl_xfs_fsinumbers.2
-> @@ -0,0 +1,122 @@
+> +++ b/man/man2/ioctl_xfs_getbmap.2
+> @@ -0,0 +1 @@
+> +.so man2/ioctl_xfs_getbmapx.2
+> diff --git a/man/man2/ioctl_xfs_getbmapa.2 b/man/man2/ioctl_xfs_getbmapa.2
+> new file mode 100644
+> index 00000000..909402fc
+> --- /dev/null
+> +++ b/man/man2/ioctl_xfs_getbmapa.2
+> @@ -0,0 +1 @@
+> +.so man2/ioctl_xfs_getbmapx.2
+> diff --git a/man/man2/ioctl_xfs_getbmapx.2 b/man/man2/ioctl_xfs_getbmapx.2
+> new file mode 100644
+> index 00000000..cf21ca32
+> --- /dev/null
+> +++ b/man/man2/ioctl_xfs_getbmapx.2
+> @@ -0,0 +1,172 @@
 > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > +.\"
 > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > +.\" SPDX-License-Identifier: GPL-2.0+
 > +.\" %%%LICENSE_END
-> +.TH IOCTL-XFS-FSINUMBERS 2 2019-06-17 "XFS"
+> +.TH IOCTL-XFS-GETBMAPX 2 2019-06-17 "XFS"
 > +.SH NAME
-> +ioctl_xfs_fsinumbers \- extract a list of valid inode numbers from an XFS filesystem
+> +ioctl_xfs_getbmapx \- query extent information for an open file
 > +.SH SYNOPSIS
 > +.br
 > +.B #include <xfs/xfs_fs.h>
 > +.PP
-> +.BI "int ioctl(int " fd ", XFS_IOC_FSINUMBERS, struct xfs_fsop_bulkreq *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAP, struct getbmap *" arg );
+> +.br
+> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPA, struct getbmap *" arg );
+> +.br
+> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPX, struct getbmapx *" arg );
 > +.SH DESCRIPTION
-> +Queries inode allocation information from an XFS filesystem.
-> +It is intended to be called iteratively to obtain the entire set of inodes.
-> +These ioctls use
-> +.B struct xfs_fsop_bulkreq
-> +to set up a bulk transfer with the kernel:
+> +Get the block map for a segment of a file in an XFS file system.
+> +The mapping information is conveyed in a structure of the following form:
+
+"conveyed via an array of structures of the following form"
+
+(otherwise below we suddenly refer to "the array" which might leave some heads scratching)
+
 > +.PP
 > +.in +4n
 > +.nf
-> +struct xfs_fsop_bulkreq {
-> +	__u64   *lastip;
-> +	__s32   count;
-> +	void    *ubuffer;
-> +	__s32   *ocount;
+> +struct getbmap {
+> +	__s64   bmv_offset;
+> +	__s64   bmv_block;
+> +	__s64   bmv_length;
+> +	__s32   bmv_count;
+> +	__s32   bmv_entries;
 > +};
 > +.fi
 > +.in
 > +.PP
-> +.I lastip
-> +points to a value that will receive the number of the "last inode".
-> +This should be set to one less than the number of the first inode for which the
-> +caller wants information, or zero to start with the first inode in the
-> +filesystem.
-> +After the call, this value will be set to the number of the last inode for
-> +which information is supplied.
-> +This field will not be updated if
-> +.I ocount
-> +is NULL.
-> +.PP
-> +.I count
-> +is the number of elements in the
-> +.B ubuffer
-> +array and therefore the number of inode groups for which to return allocation
-> +information.
-> +.PP
-> +.I ocount
-> +points to a value that will receive the number of records returned.
-> +An output value of zero means that there are no more inode groups left to
-> +enumerate.
-> +If this value is NULL, then neither
-> +.I ocount
-> +nor
-> +.I lastip
-> +will be updated.
-> +.PP
-> +.I ubuffer
-> +points to a memory buffer where inode group information will be copied.
-> +This buffer must be an array of
-> +.B struct xfs_inogrp
-> +which is described below.
-> +The array must have at least
-> +.I count
-> +elements.
+> +The
+> +.B XFS_IOC_GETBMAPX
+> +ioctl uses a larger version of that structure:
 > +.PP
 > +.in +4n
 > +.nf
-> +struct xfs_inogrp {
-> +	__u64   xi_startino;
-> +	__s32   xi_alloccount;
-> +	__u64   xi_allocmask;
-> +}
+> +struct getbmapx {
+> +	__s64   bmv_offset;
+> +	__s64   bmv_block;
+> +	__s64   bmv_length;
+> +	__s32   bmv_count;
+> +	__s32   bmv_entries;
+> +	__s32   bmv_iflags;
+> +	__s32   bmv_oflags;
+> +	__s32   bmv_unused1;
+> +	__s32   bmv_unused2;
+> +};
 > +.fi
 > +.in
 > +.PP
-> +This structure describes inode usage information for a group of 64 consecutive
-> +inode numbers.
-> +The fields are as follows:
+> +All sizes and offsets in the structure are in units of 512 bytes.
 > +.PP
-> +.I xi_startino
-> +is the first inode number of this group.
+> +The first structure in the array is a header and the remaining structures in
+> +the array contain block map information on return.
+> +The header controls iterative calls to the command and should be filled out as
+> +follows:
+> +.TP
+> +.I bmv_offset
+> +The file offset of the area of interest in the file.
+> +.TP
+> +.I bmv_length
+> +The length of the area of interest in the file.
+> +If this value is set to -1, the length of the interesting area is the rest of
+> +the file.
+> +.TP
+> +.I bmv_count
+> +The length of the array, including this header.
+
+"The number of elements in the array, including this header.  The minimum value is 2."
+
+> +.TP
+> +.I bmv_entries
+> +The number of entries actually filled in by the call.
+> +This does not need to be filled out before the call.
+
+I also wonder if we should say something about how to know when iterative
+calls are done.  Perhaps:
+
+"This value may be zero if no extents were found in the requested
+range, or if iterated calls have reached the end of the requested
+range"
+
+> +.TP
+> +.I bmv_iflags
+> +For the
+> +.B XFS_IOC_GETBMAPX
+> +function, this is a bitmask containing a combination of the following flags:
+> +.RS 0.4i
+> +.TP
+> +.B BMV_IF_ATTRFORK
+> +Return information about the extended attribute fork.
+> +.TP
+> +.B BMV_IF_PREALLOC
+> +Return information about unwritten pre-allocated segments.
+> +.TP
+> +.B BMV_IF_DELALLOC
+> +Return information about delayed allocation reservation segments.
+> +.TP
+> +.B BMV_IF_NO_HOLES
+> +Do not return information about holes.
+> +.RE
+> +.PD 1
 > +.PP
-> +.I xi_alloccount
-> +is the number of bits that are set in
-> +.IR xi_allocmask .
-> +This is the number of inodes allocated in this group.
+> +The other
+> +.I bmv_*
+> +fields in the header are ignored.
 > +.PP
-> +.I xi_allocmask
-> +is a bitmask of inodes that are allocated in this inode group.
-> +The bitmask is 64 bits long, and the least significant bit corresponds to inode
-> +.BR xi_startino .
+> +On return from a call, the header is updated so that the command can be
+> +reused to obtain more information without re-initializing the structures.
+
+Perhaps:
+
+"On successful return from a call, the offset and length values in the header
+are updated so that the command can be reused to obtain more information."
+
+
+> +The remainder of the array will be filled out by the call as follows:
+
+"The remaining elements of the array will be filled out ..."
+
+> +
+> +.TP
+> +.I bmv_offset
+> +File offset of segment.
+> +.TP
+> +.I bmv_block
+> +Physical starting block of segment.
+> +If this is -1, then the segment is a hole.
+> +.TP
+> +.I bmv_length
+> +Length of segment.
+> +.TP
+> +.I bmv_oflags
+> +The
+> +.B XFS_IOC_GETBMAPX
+> +function will fill this field with a combination of the following flags:
+> +.RS 0.4i
+> +.TP
+> +.B BMV_OF_PREALLOC
+> +The segment is an unwritten pre-allocation.
+> +.TP
+> +.B BMV_OF_DELALLOC
+> +The segment is a delayed allocation reservation.
+> +.TP
+> +.B BMV_OF_LAST
+> +This segment is the last in the file.
+> +.TP
+> +.B BMV_OF_SHARED
+> +This segment shares blocks with other files.
+> +.RE
+> +.PD 1
+> +.PP
+> +The other
+> +.I bmv_*
+> +fields are ignored in the array of outputted records.
+
+"are unused in the array of output records."
+
+-Eric
+
+> +.PP
+> +The
+> +.B XFS_IOC_GETBMAPA
+> +command is identical to
+> +.B XFS_IOC_GETBMAP
+> +except that information about the attribute fork of the file is returned.
 > +.SH RETURN VALUE
 > +On error, \-1 is returned, and
 > +.I errno
@@ -227,54 +324,83 @@ Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 > +.SH SEE ALSO
 > +.BR ioctl (2)
 > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index 78fad975..c14f7d33 100644
+> index 89975a3c..077dd411 100644
 > --- a/man/man3/xfsctl.3
 > +++ b/man/man3/xfsctl.3
-> @@ -368,36 +368,9 @@ can be any open file in the XFS filesystem in question.
->  .PP
->  .TP
->  .B XFS_IOC_FSINUMBERS
-> -This interface is used to extract a list of valid inode numbers from an
-> -XFS filesystem.
-> -It is intended to be called iteratively, to obtain the entire set of inodes.
-> -The information is passed in and out via a structure of type
-> -.B xfs_fsop_bulkreq_t
-> -pointed to by the final argument.
-> -.B lastip
-> -is a pointer to a variable containing the last inode number returned,
-> -initially it should be zero.
-> -.B icount
-> -is the size of the array of structures specified by
-> -.BR ubuffer .
-> -.B ubuffer
-> -is the address of an array of structures, of type
-> -.BR xfs_inogrp_t .
-> -This structure has the following elements:
-> -.B xi_startino
-> -(starting inode number),
-> -.B xi_alloccount
-> -(count of bits set in xi_allocmask), and
-> -.B xi_allocmask
-> -(mask of allocated inodes in this group).
-> -The bitmask is 64 bits long, and the least significant bit corresponds to inode
-> -.B xi_startino.
-> -Each bit is set if the corresponding inode is in use.
-> -.B ocount
-> -is a pointer to a count of returned values, filled in by the call.
-> -An output
-> -.B ocount
-> -value of zero means that the inode table has been exhausted.
+> @@ -144,59 +144,17 @@ See
+>  .BR ioctl_xfs_fsgetxattr (2)
+>  for more information.
+>  
+> -.TP
+> -.B XFS_IOC_GETBMAP
+> -Get the block map for a segment of a file in an XFS file system.
+> -The final argument points to an arry of variables of type
+> -.BR "struct getbmap" .
+> -All sizes and offsets in the structure are in units of 512 bytes.
+> -The structure fields include:
+> -.B bmv_offset
+> -(file offset of segment),
+> -.B bmv_block
+> -(starting block of segment),
+> -.B bmv_length
+> -(length of segment),
+> -.B bmv_count
+> -(number of array entries, including the first), and
+> -.B bmv_entries
+> -(number of entries filled in).
+> -The first structure in the array is a header, and the remaining
+> -structures in the array contain block map information on return.
+> -The header controls iterative calls to the
+> +.PP
+> +.nf
+>  .B XFS_IOC_GETBMAP
+> -command.
+> -The caller fills in the
+> -.B bmv_offset
+> -and
+> -.B bmv_length
+> -fields of the header to indicate the area of interest in the file,
+> -and fills in the
+> -.B bmv_count
+> -field to indicate the length of the array.
+> -If the
+> -.B bmv_length
+> -value is set to \-1 then the length of the interesting area is the rest
+> -of the file.
+> -On return from a call, the header is updated so that the command can be
+> -reused to obtain more information, without re-initializing the structures.
+> -Also on return, the
+> -.B bmv_entries
+> -field of the header is set to the number of array entries actually filled in.
+> -The non-header structures will be filled in with
+> -.BR bmv_offset ,
+> -.BR bmv_block ,
+> -and
+> -.BR bmv_length .
+> -If a region of the file has no blocks (is a hole in the file) then the
+> -.B bmv_block
+> -field is set to \-1.
+> -
+> -.TP
+>  .B XFS_IOC_GETBMAPA
+> -Identical to
+> -.B XFS_IOC_GETBMAP
+> -except that information about the attribute fork of the file is returned.
+> +.fi
+> +.PD 0
+> +.TP
+> +.B XFS_IOC_GETBMAPX
 > +See
-> +.BR ioctl_xfs_fsinumbers (2)
+> +.BR ioctl_getbmap (2)
 > +for more information.
 >  
->  .TP
->  .B XFS_IOC_FSGEOMETRY
-> @@ -443,6 +416,7 @@ as they are not of general use to applications.
->  .BR ioctl_xfs_fsop_geometry (2),
->  .BR ioctl_xfs_fsbulkstat (2),
->  .BR ioctl_xfs_scrub_metadata (2),
-> +.BR ioctl_xfs_fsinumbers (2),
+>  .PP
+>  .B XFS_IOC_RESVSP
+> @@ -429,6 +387,7 @@ as they are not of general use to applications.
+>  .BR ioctl_xfs_fsinumbers (2),
+>  .BR ioctl_xfs_fscounts (2),
+>  .BR ioctl_xfs_getresblks (2),
+> +.BR ioctl_xfs_getbmap (2),
 >  .BR fstatfs (2),
 >  .BR statfs (2),
 >  .BR xfs (5),
