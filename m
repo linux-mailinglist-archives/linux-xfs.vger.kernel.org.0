@@ -2,26 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD807609C8
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 17:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E9D2609DF
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jul 2019 18:02:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfGEPxI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Jul 2019 11:53:08 -0400
-Received: from sandeen.net ([63.231.237.45]:46154 "EHLO sandeen.net"
+        id S1727261AbfGEQCm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Jul 2019 12:02:42 -0400
+Received: from sandeen.net ([63.231.237.45]:46994 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfGEPxH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:53:07 -0400
+        id S1725791AbfGEQCm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Jul 2019 12:02:42 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id D4E1215D94;
-        Fri,  5 Jul 2019 10:52:40 -0500 (CDT)
-Subject: Re: [PATCH 8/9] man: create a separate GETBMAPX/GETBMAPA/GETBMAP
- ioctl manpage
+        by sandeen.net (Postfix) with ESMTPSA id 6E0E32AF1;
+        Fri,  5 Jul 2019 11:02:15 -0500 (CDT)
+Subject: Re: [PATCH 7/9] man: create a separate RESBLKS ioctl manpage
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156104944877.1174403.14568482035189263260.stgit@magnolia>
- <156104950296.1174403.15218317280608955242.stgit@magnolia>
+ <156104949681.1174403.3533354992259074908.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -66,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <06724ca8-8a13-7e2b-eb68-295ed316e95e@sandeen.net>
-Date:   Fri, 5 Jul 2019 10:53:05 -0500
+Message-ID: <5427356a-122e-3c7f-08ba-29fdb53b6179@sandeen.net>
+Date:   Fri, 5 Jul 2019 11:02:40 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <156104950296.1174403.15218317280608955242.stgit@magnolia>
+In-Reply-To: <156104949681.1174403.3533354992259074908.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -83,217 +82,73 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 6/20/19 11:51 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Create a separate manual page for the xfs BMAP ioctls so we can document
-> how they work.
-
-Same drill ... ;)
-
+> Create a separate manual page for the xfs RESBLKS ioctls so we can
+> document how it works.
+> 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  man/man2/ioctl_xfs_getbmap.2  |    1 
->  man/man2/ioctl_xfs_getbmapa.2 |    1 
->  man/man2/ioctl_xfs_getbmapx.2 |  172 +++++++++++++++++++++++++++++++++++++++++
->  man/man3/xfsctl.3             |   61 ++-------------
->  4 files changed, 184 insertions(+), 51 deletions(-)
->  create mode 100644 man/man2/ioctl_xfs_getbmap.2
->  create mode 100644 man/man2/ioctl_xfs_getbmapa.2
->  create mode 100644 man/man2/ioctl_xfs_getbmapx.2
+>  man/man2/ioctl_xfs_getresblks.2 |   65 +++++++++++++++++++++++++++++++++++++++
+>  man/man2/ioctl_xfs_setresblks.2 |    1 +
+>  man/man3/xfsctl.3               |   14 +++++++-
+>  3 files changed, 78 insertions(+), 2 deletions(-)
+>  create mode 100644 man/man2/ioctl_xfs_getresblks.2
+>  create mode 100644 man/man2/ioctl_xfs_setresblks.2
 > 
 > 
-> diff --git a/man/man2/ioctl_xfs_getbmap.2 b/man/man2/ioctl_xfs_getbmap.2
+> diff --git a/man/man2/ioctl_xfs_getresblks.2 b/man/man2/ioctl_xfs_getresblks.2
 > new file mode 100644
-> index 00000000..909402fc
+> index 00000000..694b4496
 > --- /dev/null
-> +++ b/man/man2/ioctl_xfs_getbmap.2
-> @@ -0,0 +1 @@
-> +.so man2/ioctl_xfs_getbmapx.2
-> diff --git a/man/man2/ioctl_xfs_getbmapa.2 b/man/man2/ioctl_xfs_getbmapa.2
-> new file mode 100644
-> index 00000000..909402fc
-> --- /dev/null
-> +++ b/man/man2/ioctl_xfs_getbmapa.2
-> @@ -0,0 +1 @@
-> +.so man2/ioctl_xfs_getbmapx.2
-> diff --git a/man/man2/ioctl_xfs_getbmapx.2 b/man/man2/ioctl_xfs_getbmapx.2
-> new file mode 100644
-> index 00000000..cf21ca32
-> --- /dev/null
-> +++ b/man/man2/ioctl_xfs_getbmapx.2
-> @@ -0,0 +1,172 @@
+> +++ b/man/man2/ioctl_xfs_getresblks.2
+> @@ -0,0 +1,65 @@
 > +.\" Copyright (c) 2019, Oracle.  All rights reserved.
 > +.\"
 > +.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
 > +.\" SPDX-License-Identifier: GPL-2.0+
 > +.\" %%%LICENSE_END
-> +.TH IOCTL-XFS-GETBMAPX 2 2019-06-17 "XFS"
+> +.TH IOCTL-XFS-GETRESBLKS 2 2019-06-17 "XFS"
 > +.SH NAME
-> +ioctl_xfs_getbmapx \- query extent information for an open file
+> +ioctl_xfs_getresblks \- query XFS summary counter information
+                                     ^^^^^^^^^^^^^^^
+
+"query and set XFS free space reservation information"
+
 > +.SH SYNOPSIS
 > +.br
 > +.B #include <xfs/xfs_fs.h>
 > +.PP
-> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAP, struct getbmap *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_GET_RESBLKS, struct xfs_fsop_resblks *" arg );
 > +.br
-> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPA, struct getbmap *" arg );
-> +.br
-> +.BI "int ioctl(int " fd ", XFS_IOC_GETBMAPX, struct getbmapx *" arg );
+> +.BI "int ioctl(int " fd ", XFS_IOC_SET_RESBLKS, struct xfs_fsop_resblks *" arg );
 > +.SH DESCRIPTION
-> +Get the block map for a segment of a file in an XFS file system.
-> +The mapping information is conveyed in a structure of the following form:
 
-"conveyed via an array of structures of the following form"
+I wonder if starting with a "don't use" right here would be wise, something like:
 
-(otherwise below we suddenly refer to "the array" which might leave some heads scratching)
+"Note: This is a[n] test/debug ioctl intended only for use by XFS filesystem developers."
 
+> +Query or set the free space reservation information.
+> +These blocks are reserved by the filesystem as a final attempt to prevent
+> +metadata update failures due to insufficient space.
+> +Only the system administrator can call these ioctls, because overriding the
+> +defaults is extremely dangerous and should never be tried by anyone.
+> +.PP
+> +The reservation information is conveyed in a structure of the following form:
 > +.PP
 > +.in +4n
 > +.nf
-> +struct getbmap {
-> +	__s64   bmv_offset;
-> +	__s64   bmv_block;
-> +	__s64   bmv_length;
-> +	__s32   bmv_count;
-> +	__s32   bmv_entries;
+> +struct xfs_fsop_resblks {
+> +	__u64  resblks;
+> +	__u64  resblks_avail;
 > +};
 > +.fi
 > +.in
 > +.PP
-> +The
-> +.B XFS_IOC_GETBMAPX
-> +ioctl uses a larger version of that structure:
+> +.I resblks
+> +is the number of blocks that the filesystem will try to maintain to prevent
+> +critical out of space situations.
 > +.PP
-> +.in +4n
-> +.nf
-> +struct getbmapx {
-> +	__s64   bmv_offset;
-> +	__s64   bmv_block;
-> +	__s64   bmv_length;
-> +	__s32   bmv_count;
-> +	__s32   bmv_entries;
-> +	__s32   bmv_iflags;
-> +	__s32   bmv_oflags;
-> +	__s32   bmv_unused1;
-> +	__s32   bmv_unused2;
-> +};
-> +.fi
-> +.in
-> +.PP
-> +All sizes and offsets in the structure are in units of 512 bytes.
-> +.PP
-> +The first structure in the array is a header and the remaining structures in
-> +the array contain block map information on return.
-> +The header controls iterative calls to the command and should be filled out as
-> +follows:
-> +.TP
-> +.I bmv_offset
-> +The file offset of the area of interest in the file.
-> +.TP
-> +.I bmv_length
-> +The length of the area of interest in the file.
-> +If this value is set to -1, the length of the interesting area is the rest of
-> +the file.
-> +.TP
-> +.I bmv_count
-> +The length of the array, including this header.
-
-"The number of elements in the array, including this header.  The minimum value is 2."
-
-> +.TP
-> +.I bmv_entries
-> +The number of entries actually filled in by the call.
-> +This does not need to be filled out before the call.
-
-I also wonder if we should say something about how to know when iterative
-calls are done.  Perhaps:
-
-"This value may be zero if no extents were found in the requested
-range, or if iterated calls have reached the end of the requested
-range"
-
-> +.TP
-> +.I bmv_iflags
-> +For the
-> +.B XFS_IOC_GETBMAPX
-> +function, this is a bitmask containing a combination of the following flags:
-> +.RS 0.4i
-> +.TP
-> +.B BMV_IF_ATTRFORK
-> +Return information about the extended attribute fork.
-> +.TP
-> +.B BMV_IF_PREALLOC
-> +Return information about unwritten pre-allocated segments.
-> +.TP
-> +.B BMV_IF_DELALLOC
-> +Return information about delayed allocation reservation segments.
-> +.TP
-> +.B BMV_IF_NO_HOLES
-> +Do not return information about holes.
-> +.RE
-> +.PD 1
-> +.PP
-> +The other
-> +.I bmv_*
-> +fields in the header are ignored.
-> +.PP
-> +On return from a call, the header is updated so that the command can be
-> +reused to obtain more information without re-initializing the structures.
-
-Perhaps:
-
-"On successful return from a call, the offset and length values in the header
-are updated so that the command can be reused to obtain more information."
-
-
-> +The remainder of the array will be filled out by the call as follows:
-
-"The remaining elements of the array will be filled out ..."
-
-> +
-> +.TP
-> +.I bmv_offset
-> +File offset of segment.
-> +.TP
-> +.I bmv_block
-> +Physical starting block of segment.
-> +If this is -1, then the segment is a hole.
-> +.TP
-> +.I bmv_length
-> +Length of segment.
-> +.TP
-> +.I bmv_oflags
-> +The
-> +.B XFS_IOC_GETBMAPX
-> +function will fill this field with a combination of the following flags:
-> +.RS 0.4i
-> +.TP
-> +.B BMV_OF_PREALLOC
-> +The segment is an unwritten pre-allocation.
-> +.TP
-> +.B BMV_OF_DELALLOC
-> +The segment is a delayed allocation reservation.
-> +.TP
-> +.B BMV_OF_LAST
-> +This segment is the last in the file.
-> +.TP
-> +.B BMV_OF_SHARED
-> +This segment shares blocks with other files.
-> +.RE
-> +.PD 1
-> +.PP
-> +The other
-> +.I bmv_*
-> +fields are ignored in the array of outputted records.
-
-"are unused in the array of output records."
-
--Eric
-
-> +.PP
-> +The
-> +.B XFS_IOC_GETBMAPA
-> +command is identical to
-> +.B XFS_IOC_GETBMAP
-> +except that information about the attribute fork of the file is returned.
+> +.I resblks_avail
+> +is the number of reserved blocks remaining.
 > +.SH RETURN VALUE
 > +On error, \-1 is returned, and
 > +.I errno
@@ -302,9 +157,6 @@ are updated so that the command can be reused to obtain more information."
 > +.SH ERRORS
 > +Error codes can be one of, but are not limited to, the following:
 > +.TP
-> +.B EFAULT
-> +The kernel was not able to copy into the userspace buffer.
-> +.TP
 > +.B EFSBADCRC
 > +Metadata checksum validation failed while performing the query.
 > +.TP
@@ -312,95 +164,57 @@ are updated so that the command can be reused to obtain more information."
 > +Metadata corruption was encountered while performing the query.
 > +.TP
 > +.B EINVAL
-> +One of the arguments was not valid.
+> +The specified allocation group number is not valid for this filesystem.
 > +.TP
 > +.B EIO
 > +An I/O error was encountered while performing the query.
 > +.TP
-> +.B ENOMEM
-> +There was insufficient memory to perform the query.
+> +.B EPERM
+> +Caller does not have permission to call this ioctl.
 > +.SH CONFORMING TO
 > +This API is specific to XFS filesystem on the Linux kernel.
 > +.SH SEE ALSO
 > +.BR ioctl (2)
+> diff --git a/man/man2/ioctl_xfs_setresblks.2 b/man/man2/ioctl_xfs_setresblks.2
+> new file mode 100644
+> index 00000000..209bc0a8
+> --- /dev/null
+> +++ b/man/man2/ioctl_xfs_setresblks.2
+> @@ -0,0 +1 @@
+> +.so man2/ioctl_xfs_getresblks.2
 > diff --git a/man/man3/xfsctl.3 b/man/man3/xfsctl.3
-> index 89975a3c..077dd411 100644
+> index ee3188ec..89975a3c 100644
 > --- a/man/man3/xfsctl.3
 > +++ b/man/man3/xfsctl.3
-> @@ -144,59 +144,17 @@ See
->  .BR ioctl_xfs_fsgetxattr (2)
+> @@ -396,12 +396,21 @@ See
+>  .BR ioctl_xfs_fscounts (2)
 >  for more information.
 >  
-> -.TP
-> -.B XFS_IOC_GETBMAP
-> -Get the block map for a segment of a file in an XFS file system.
-> -The final argument points to an arry of variables of type
-> -.BR "struct getbmap" .
-> -All sizes and offsets in the structure are in units of 512 bytes.
-> -The structure fields include:
-> -.B bmv_offset
-> -(file offset of segment),
-> -.B bmv_block
-> -(starting block of segment),
-> -.B bmv_length
-> -(length of segment),
-> -.B bmv_count
-> -(number of array entries, including the first), and
-> -.B bmv_entries
-> -(number of entries filled in).
-> -The first structure in the array is a header, and the remaining
-> -structures in the array contain block map information on return.
-> -The header controls iterative calls to the
-> +.PP
-> +.nf
->  .B XFS_IOC_GETBMAP
-> -command.
-> -The caller fills in the
-> -.B bmv_offset
-> -and
-> -.B bmv_length
-> -fields of the header to indicate the area of interest in the file,
-> -and fills in the
-> -.B bmv_count
-> -field to indicate the length of the array.
-> -If the
-> -.B bmv_length
-> -value is set to \-1 then the length of the interesting area is the rest
-> -of the file.
-> -On return from a call, the header is updated so that the command can be
-> -reused to obtain more information, without re-initializing the structures.
-> -Also on return, the
-> -.B bmv_entries
-> -field of the header is set to the number of array entries actually filled in.
-> -The non-header structures will be filled in with
-> -.BR bmv_offset ,
-> -.BR bmv_block ,
-> -and
-> -.BR bmv_length .
-> -If a region of the file has no blocks (is a hole in the file) then the
-> -.B bmv_block
-> -field is set to \-1.
-> -
-> -.TP
->  .B XFS_IOC_GETBMAPA
-> -Identical to
-> -.B XFS_IOC_GETBMAP
-> -except that information about the attribute fork of the file is returned.
-> +.fi
-> +.PD 0
 > +.TP
-> +.B XFS_IOC_GETBMAPX
+> +.nf
+> +.B XFS_IOC_GET_RESBLKS
+> +.fi
+> +.TP
+> +.B XFS_IOC_SET_RESBLKS
 > +See
-> +.BR ioctl_getbmap (2)
+> +.BR ioctl_xfs_getresblks (2)
 > +for more information.
->  
+> +Save yourself a lot of frustration and avoid these ioctls.
+> +
 >  .PP
->  .B XFS_IOC_RESVSP
-> @@ -429,6 +387,7 @@ as they are not of general use to applications.
+>  .nf
+>  .B XFS_IOC_THAW
+>  .B XFS_IOC_FREEZE
+> -.B XFS_IOC_GET_RESBLKS
+> -.B XFS_IOC_SET_RESBLKS
+>  .B XFS_IOC_FSGROWFSDATA
+>  .B XFS_IOC_FSGROWFSLOG
+>  .fi
+> @@ -419,6 +428,7 @@ as they are not of general use to applications.
+>  .BR ioctl_xfs_scrub_metadata (2),
 >  .BR ioctl_xfs_fsinumbers (2),
 >  .BR ioctl_xfs_fscounts (2),
->  .BR ioctl_xfs_getresblks (2),
-> +.BR ioctl_xfs_getbmap (2),
+> +.BR ioctl_xfs_getresblks (2),
 >  .BR fstatfs (2),
 >  .BR statfs (2),
 >  .BR xfs (5),
