@@ -2,108 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 467CA61357
-	for <lists+linux-xfs@lfdr.de>; Sun,  7 Jul 2019 02:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B5A46155D
+	for <lists+linux-xfs@lfdr.de>; Sun,  7 Jul 2019 17:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfGGAUJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 6 Jul 2019 20:20:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51050 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfGGAUJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 6 Jul 2019 20:20:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x670IcQ0104818;
-        Sun, 7 Jul 2019 00:19:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Tvzxczd4IEbttfeFQvBRwSbH/RXkHaLrzkFd68SPf2s=;
- b=Zm3Wk5OUZa9dKam8H2NK6XTQfBM29GfXdeIFKfyxn8Yt9Mw5o6v/LGkKTSW1XC9rTBl7
- mnbo+NhXXDYM4/0Klk/Y63YVBntUqHrTFJzKXeeOaS6rw0S1iKptwawT4W4l6Lt2LzN0
- tLTZrVcmh+maDMcy8Q4UOJLA2wgsrQ08PsTPj8HJmY9AXK+ZBMOZ8my4y5FPmgHYYEaE
- l33q1e5+7CbLDlZVIuCsLAFUCOboCiuukYAHbKMX2+jQZQrJ2st86zi0BvrMBOBVfpFu
- SAZBdWt4zNDfkUtyDX12a3mKXS2AFpeoi4tp8/yukwePMQBT0pjrKnAkqcIcfBDZTGM1 zg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tjk2t9sxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 07 Jul 2019 00:19:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x670IT5J181795;
-        Sun, 7 Jul 2019 00:19:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tjjyjqwr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 07 Jul 2019 00:19:55 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x670JsNp019584;
-        Sun, 7 Jul 2019 00:19:54 GMT
-Received: from [192.168.1.226] (/70.176.225.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 07 Jul 2019 00:19:54 +0000
-Subject: Re: [PATCH] xfs: don't update lastino for FSBULKSTAT_SINGLE
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        xfs <linux-xfs@vger.kernel.org>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     Brian Foster <bfoster@redhat.com>, lkp@01.org
-References: <20190706212517.GH1654093@magnolia>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <bdbee426-9b4e-4179-a207-c84318e5192e@oracle.com>
-Date:   Sat, 6 Jul 2019 17:19:48 -0700
+        id S1725935AbfGGPFV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 7 Jul 2019 11:05:21 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39249 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfGGPFV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 7 Jul 2019 11:05:21 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m10so12262421edv.6;
+        Sun, 07 Jul 2019 08:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6MLgJUsoAl2NKidgAXjyXQSdQ9DIKaTUuz2m0H5fpTc=;
+        b=UF94KMgT2OI+DG6DzuscgNmw8VZQiS9tpSpGSRIYcGhE0j6WWS2sAVLN9ydQ0wEBJ2
+         aot/HQMHjyTBqSh+tZ2NQyBDdnanFmhVa3ciHekLQs0BgzKEIr4VlVL/OhBBSNUICWz7
+         jtBOfTF6Fyx4QJ8hU+vJzOx4Ng00S9TRVTprOIf0i8bKx2MKl1JaFc9MZ0vZGLsjokqg
+         6E30M628GcLb2PX5Ij3GAOW2CUUdJGbR6eOx37gHtAQ684w5i50Mk8Tp7GM+XbNPHKQO
+         XgdooaCWgJmO2U+gc52q7D4ITTxQZa6RqhVCr/YiWcaIl7FtDVcu4cjU5uKUPb1Ga8S0
+         Vupw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6MLgJUsoAl2NKidgAXjyXQSdQ9DIKaTUuz2m0H5fpTc=;
+        b=FCBsfROo4VINrzFtOgdfyoWSvB3QDxv751N8c5IScZKkSaPY+jLRv4OUCVS0C1Ouqb
+         npNpQluejMVi9KAbEaf37TPfwcdpnqJNFtL90G2FAvhv6UgC/tkpaVWwxXP0uDwJtPeS
+         fFVfGEeIsyKtgLtHC8Ti5XGbY14vFzOnOLAak0IlAmU+xpXTAk0/S+89F0c6+eldhP0S
+         r1o7MSxCeL7XIy2BWiaY38Kq+W5BIfpB8UFZRw9MsT3lFoVoUtC4Q2IkPctcPMNLccLA
+         +irWyBU+qzNuydS+A7nLF7+rACKzpuyreTD7ye+HEHfm8f+lPuhHckeAmSash0/R46cU
+         519g==
+X-Gm-Message-State: APjAAAU79O/ssFeW9pjtwg+C4aTOfzzz4AJV/s2z3UFf/BT6gISBpZ6n
+        IDT6E7j6YZz13E3Vdu7cubY=
+X-Google-Smtp-Source: APXvYqz5oc0ldMi+NiJhrGcNKhTIkb+I0SjAlmlp1d7jrl3jjLByYJrIDp1O03mFyQKuAavCz2MrPg==
+X-Received: by 2002:a50:8be8:: with SMTP id n37mr15301756edn.216.1562511919578;
+        Sun, 07 Jul 2019 08:05:19 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.211.18])
+        by smtp.gmail.com with ESMTPSA id j37sm2497291ede.23.2019.07.07.08.05.17
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Jul 2019 08:05:18 -0700 (PDT)
+Subject: Re: pagecache locking
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+ <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+ <20190617224714.GR14363@dread.disaster.area>
+ <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
+ <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+ <20190619103838.GB32409@quack2.suse.cz>
+ <20190619223756.GC26375@dread.disaster.area>
+ <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
+ <20190705233157.GD7689@dread.disaster.area>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <b43e2707-89ec-3afa-8bca-37747ba6c944@gmail.com>
+Date:   Sun, 7 Jul 2019 18:05:16 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190706212517.GH1654093@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190705233157.GD7689@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9310 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907070003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9310 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907070003
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/6/19 2:25 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On 06/07/2019 02:31, Dave Chinner wrote:
+
 > 
-> The kernel test robot found a regression of xfs/054 in the conversion of
-> bulkstat to use the new iwalk infrastructure -- if a caller set *lastip
-> = 128 and invoked FSBULKSTAT_SINGLE, the bstat info would be for inode
-> 128, but *lastip would be increased by the kernel to 129.
+> As long as the IO ranges to the same file *don't overlap*, it should
+> be perfectly safe to take separate range locks (in read or write
+> mode) on either side of the mmap_sem as non-overlapping range locks
+> can be nested and will not self-deadlock.
 > 
-> FSBULKSTAT_SINGLE never incremented lastip before, so it's incorrect to
-> make such an update to the internal lastino value now.
+> The "recursive lock problem" still arises with DIO and page faults
+> inside gup, but it only occurs when the user buffer range overlaps
+> the DIO range to the same file. IOWs, the application is trying to
+> do something that has an undefined result and is likely to result in
+> data corruption. So, in that case I plan to have the gup page faults
+> fail and the DIO return -EDEADLOCK to userspace....
 > 
 
-Looks ok to me.  Thanks!
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+This sounds very cool. I now understand. I hope you put all the tools
+for this in generic places so it will be easier to salvage.
 
-> Fixes: 2810bd6840e463 ("xfs: convert bulkstat to new iwalk infrastructure")
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->   fs/xfs/xfs_ioctl.c |    1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 6bf04e71325b..1876461e5104 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -797,7 +797,6 @@ xfs_ioc_fsbulkstat(
->   		breq.startino = lastino;
->   		breq.icount = 1;
->   		error = xfs_bulkstat_one(&breq, xfs_fsbulkstat_one_fmt);
-> -		lastino = breq.startino;
->   	} else {	/* XFS_IOC_FSBULKSTAT */
->   		breq.startino = lastino ? lastino + 1 : 0;
->   		error = xfs_bulkstat(&breq, xfs_fsbulkstat_one_fmt);
-> 
+One thing I will be very curious to see is how you teach lockdep
+about the "range locks can be nested" thing. I know its possible,
+other places do it, but its something I never understood.
+
+> Cheers,
+> Dave.
+
+[ Ha one more question if you have time:
+
+  In one of the mails, and you also mentioned it before, you said about
+  the rw_read_lock not being able to scale well on mammoth machines
+  over 10ns of cores (maybe you said over 20).
+  I wonder why that happens. Is it because of the atomic operations,
+  or something in the lock algorithm. In my theoretical understanding,
+  as long as there are no write-lock-grabbers, why would the readers
+  interfere with each other?
+]
+
+Thanks
+Boaz
