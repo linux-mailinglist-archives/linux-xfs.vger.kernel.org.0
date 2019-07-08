@@ -2,171 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A046A62686
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 18:41:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F6836271C
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 19:29:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfGHQlv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jul 2019 12:41:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51848 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730383AbfGHQlv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 12:41:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68GXfkc131985
-        for <linux-xfs@vger.kernel.org>; Mon, 8 Jul 2019 16:41:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=QcIQs0DNRXwSxxR7nnhX78VQHdvPUGL/lpy+TRgB4kg=;
- b=5KNu6AveKp0LBCnokp+hb46JZw7NIrb8fojeq7WvkV4/WHaoxDNFHiMqsiTvyFcxTfQc
- HGmbsgxODlNZ4Oxl5fNaGvtoY8M8pAo4Yi1nsj69+RsmOM1Zc0y+cMy0Cq5guEmOdadh
- bmbtUoiJl95R/sGculcV6dE0y6uuqyByUOxpk0GdTmnDoRq5idYWSP1qsBY8IAaglG5m
- nL1h+J3XuqQA9isjvNW4fruFlogJJllXOtWmHx+PopPss5sGhVsfaTxvTR7BXAji+td2
- tkGxX30k8rfYWrMEaT+pUVKNraQoMCQnr+TymgbsE8HK9bv3B7yCLBqck6WRBsEChEdv Xw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tjm9qfgej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 08 Jul 2019 16:41:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68Gbb6V107225
-        for <linux-xfs@vger.kernel.org>; Mon, 8 Jul 2019 16:41:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tjgrtkxe0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 08 Jul 2019 16:41:49 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x68GfmND019065
-        for <linux-xfs@vger.kernel.org>; Mon, 8 Jul 2019 16:41:48 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jul 2019 09:41:48 -0700
-Date:   Mon, 8 Jul 2019 09:41:49 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: refactor setflags to use setattr code directly
-Message-ID: <20190708164149.GO1404256@magnolia>
-References: <156174692684.1557952.3770482995772643434.stgit@magnolia>
- <156174693300.1557952.1660572699951099381.stgit@magnolia>
- <75ea899b-f1db-1f32-e7e4-ad3b001a8592@oracle.com>
+        id S2387717AbfGHR3d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 13:29:33 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36570 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387506AbfGHR3d (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 13:29:33 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so17028103oti.3
+        for <linux-xfs@vger.kernel.org>; Mon, 08 Jul 2019 10:29:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nA6Jna13w+RzGgaq8zqHZyOTzP+Rl2ic3AndNFYmYd4=;
+        b=R413GWV7s8XCdO7ncjkvTbmVzbulyvoMxOh7rxNtvKuDKfvf8ZOh0egGjh5sd5U4nt
+         X/EIB9oyKpdcJPp9g/lD9p3pc+o0GVx16DLbj8fDq1vwA+fLtutbkOvn9PiJCDCL/1dC
+         GvlsAwC1X/V+3n5jfIz+hva17hplcsd7ZkE0K1rJOd9DpiZ1GDoX0uswNMkSm8P9wR0p
+         jDJCW8DE3Rd5aWbzUa5qSeaMbTTRv5fSFj8XUxJEFgA8IG2Y7m8lui3DNFG4InZV56a4
+         m/PXsSaTGv5E5lJJIObqDhD66OiVQeby9vds123TzF8+Bsa4icwuy+DaH00k/8LXa66c
+         i38w==
+X-Gm-Message-State: APjAAAVQ0PUAsydILkm7nitXBnblPLLFJJRGlatF4xpw03PTyjQgkmhl
+        u78mPhpbJuTHitnyP7hMUYlyZx1l1/63+RET3rC3sA==
+X-Google-Smtp-Source: APXvYqx0RPvy74yzmrSczU2RfOeT51FXoyiAVwrmEDfjnlD9nHbQUGYVCsDvdT1tpWknkWW1QJvBsFLFOqZUsxSEAWw=
+X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr15913810oti.341.1562606972599;
+ Mon, 08 Jul 2019 10:29:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75ea899b-f1db-1f32-e7e4-ad3b001a8592@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907080206
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907080206
+References: <20190701215439.19162-1-hch@lst.de> <CAHc6FU5MHCdXENW_Y++hO_qhtCh4XtAHYOaTLzk+1KU=JNpPww@mail.gmail.com>
+ <20190708160351.GA9871@lst.de>
+In-Reply-To: <20190708160351.GA9871@lst.de>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Mon, 8 Jul 2019 19:29:21 +0200
+Message-ID: <CAHc6FU5942i0XrCjUAhR9NCmfLuu7_CoPXNDsdF0X+gCpF1cDQ@mail.gmail.com>
+Subject: Re: RFC: use the iomap writepage path in gfs2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        cluster-devel <cluster-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jul 07, 2019 at 03:29:42PM -0700, Allison Collins wrote:
-> 
-> 
-> On 6/28/19 11:35 AM, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Refactor the SETFLAGS implementation to use the SETXATTR code directly
-> > instead of partially constructing a struct fsxattr and calling bits and
-> > pieces of the setxattr code.  This reduces code size with no functional
-> > change.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >   fs/xfs/xfs_ioctl.c |   48 +++---------------------------------------------
-> >   1 file changed, 3 insertions(+), 45 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > index 552f18554c48..6f55cd7eb34f 100644
-> > --- a/fs/xfs/xfs_ioctl.c
-> > +++ b/fs/xfs/xfs_ioctl.c
-> > @@ -1490,11 +1490,8 @@ xfs_ioc_setxflags(
-> >   	struct file		*filp,
-> >   	void			__user *arg)
-> >   {
-> > -	struct xfs_trans	*tp;
-> >   	struct fsxattr		fa;
-> > -	struct fsxattr		old_fa;
-> >   	unsigned int		flags;
-> > -	int			join_flags = 0;
-> >   	int			error;
-> >   	if (copy_from_user(&flags, arg, sizeof(flags)))
-> > @@ -1505,52 +1502,13 @@ xfs_ioc_setxflags(
-> >   		      FS_SYNC_FL))
-> >   		return -EOPNOTSUPP;
-> > -	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, xfs_ip2xflags(ip));
-> > +	xfs_fill_fsxattr(ip, false, &fa);
-> 
-> While reviewing this patch, it looks like xfs_fill_fsxattr comes in with a
-> different set?  Not sure if you meant to stack them that way.  I may come
-> back to this patch later if there is a dependency.  Or maybe it might make
-> sense to move this patch into the set it depends on?
+On Mon, 8 Jul 2019 at 18:04, Christoph Hellwig <hch@lst.de> wrote:
+> On Thu, Jul 04, 2019 at 12:35:41AM +0200, Andreas Gruenbacher wrote:
+> > Patch "gfs2: implement gfs2_block_zero_range using iomap_zero_range"
+> > isn't quite ready: the gfs2 iomap operations don't handle IOMAP_ZERO
+> > correctly so far, and that needs to be fixed first.
+>
+> What is the issue with IOMAP_ZERO on gfs2?  Zeroing never does block
+> allocations except when on COW extents, which gfs2 doesn't support,
+> so there shouldn't really be any need for additional handling.
 
-This series depends on the two that were posted immediately before it,
-though I admit the cover letters don't really make that explicit.
+We still want to set iomap->page_ops for journalled data files on gfs2.
 
---D
+Also, if we go through the existing gfs2_iomap_begin_write /
+__gfs2_iomap_begin logic for iomap_zero_range, it will work for
+stuffed files as well, and so we can replace stuffed_zero_range with
+iomap_zero_range.
 
-> Allison
-> 
-> > +	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, fa.fsx_xflags);
-> >   	error = mnt_want_write_file(filp);
-> >   	if (error)
-> >   		return error;
-> > -
-> > -	error = xfs_ioctl_setattr_drain_writes(ip, &fa, &join_flags);
-> > -	if (error) {
-> > -		xfs_iunlock(ip, join_flags);
-> > -		goto out_drop_write;
-> > -	}
-> > -
-> > -	/*
-> > -	 * Changing DAX config may require inode locking for mapping
-> > -	 * invalidation. These need to be held all the way to transaction commit
-> > -	 * or cancel time, so need to be passed through to
-> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
-> > -	 * appropriately.
-> > -	 */
-> > -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
-> > -	if (error) {
-> > -		xfs_iunlock(ip, join_flags);
-> > -		goto out_drop_write;
-> > -	}
-> > -
-> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-> > -	if (IS_ERR(tp)) {
-> > -		error = PTR_ERR(tp);
-> > -		goto out_drop_write;
-> > -	}
-> > -
-> > -	xfs_fill_fsxattr(ip, false, &old_fa);
-> > -	error = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, &fa);
-> > -	if (error) {
-> > -		xfs_trans_cancel(tp);
-> > -		goto out_drop_write;
-> > -	}
-> > -
-> > -	error = xfs_ioctl_setattr_xflags(tp, ip, &fa);
-> > -	if (error) {
-> > -		xfs_trans_cancel(tp);
-> > -		goto out_drop_write;
-> > -	}
-> > -
-> > -	error = xfs_trans_commit(tp);
-> > -out_drop_write:
-> > +	error = xfs_ioctl_setattr(ip, &fa);
-> >   	mnt_drop_write_file(filp);
-> >   	return error;
-> >   }
-> > 
+> > Some of the tests assume that the filesystem supports unwritten
+> > extents, trusted xattrs, the usrquota / grpquota / prjquota mount
+> > options. There shouldn't be a huge number of failing tests beyond
+> > that, but I know things aren't perfect.
+>
+> In general xfstests is supposed to have tests for that and not run
+> the tests if not supported.  In most cases this is automatic, but
+> in case a feature can't be autodetect we have a few manual overrides.
+
+Yes, that needs a bit of work. Let's see.
+
+Thanks,
+Andreas
