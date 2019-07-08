@@ -2,79 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6836271C
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 19:29:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F36A56288B
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 20:46:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387717AbfGHR3d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jul 2019 13:29:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36570 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387506AbfGHR3d (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 13:29:33 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r6so17028103oti.3
-        for <linux-xfs@vger.kernel.org>; Mon, 08 Jul 2019 10:29:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nA6Jna13w+RzGgaq8zqHZyOTzP+Rl2ic3AndNFYmYd4=;
-        b=R413GWV7s8XCdO7ncjkvTbmVzbulyvoMxOh7rxNtvKuDKfvf8ZOh0egGjh5sd5U4nt
-         X/EIB9oyKpdcJPp9g/lD9p3pc+o0GVx16DLbj8fDq1vwA+fLtutbkOvn9PiJCDCL/1dC
-         GvlsAwC1X/V+3n5jfIz+hva17hplcsd7ZkE0K1rJOd9DpiZ1GDoX0uswNMkSm8P9wR0p
-         jDJCW8DE3Rd5aWbzUa5qSeaMbTTRv5fSFj8XUxJEFgA8IG2Y7m8lui3DNFG4InZV56a4
-         m/PXsSaTGv5E5lJJIObqDhD66OiVQeby9vds123TzF8+Bsa4icwuy+DaH00k/8LXa66c
-         i38w==
-X-Gm-Message-State: APjAAAVQ0PUAsydILkm7nitXBnblPLLFJJRGlatF4xpw03PTyjQgkmhl
-        u78mPhpbJuTHitnyP7hMUYlyZx1l1/63+RET3rC3sA==
-X-Google-Smtp-Source: APXvYqx0RPvy74yzmrSczU2RfOeT51FXoyiAVwrmEDfjnlD9nHbQUGYVCsDvdT1tpWknkWW1QJvBsFLFOqZUsxSEAWw=
-X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr15913810oti.341.1562606972599;
- Mon, 08 Jul 2019 10:29:32 -0700 (PDT)
+        id S2387785AbfGHSqx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 14:46:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbfGHSqx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 14:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dKndpnfDRuzEXqd8NESls6FfbKscantgDxBPwqxYH2I=; b=ggZMUBppZ87RS3mus7iWCiTgQ
+        rz2CoMNWgChuBgw9eD1CQ8+ATPL1evNAgZLZGdKBKSOxXvnQ9IBD13LuFPBw9m9SZWj7Wh6quOXce
+        d80b/elXqmxei/DpTySs5EoIuFIo9hxKuQ2aioKn04jpLlAUGhXTnD6UxbTmzcO4GIf553j1WpckN
+        DbABu0OmCv4ylMcruTT00rKe2R6DOfmMcBlNCl8020SAJiXw8uJkwN4hK4NsHEOpoTtdQ2zKZdLGi
+        lxEkAurzQCYD1/Lr9R+b0ixwuomleaGbvlmBdkGWxIdfaBeEBNO+gFHVpi+acxYSwWajd+jozxTZ5
+        +FySg7d5w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkYf6-0007Wh-KL; Mon, 08 Jul 2019 18:46:52 +0000
+Date:   Mon, 8 Jul 2019 11:46:52 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 00/11] iomap: regroup code by functional area
+Message-ID: <20190708184652.GB20670@infradead.org>
+References: <156200051933.1790352.5147420943973755350.stgit@magnolia>
 MIME-Version: 1.0
-References: <20190701215439.19162-1-hch@lst.de> <CAHc6FU5MHCdXENW_Y++hO_qhtCh4XtAHYOaTLzk+1KU=JNpPww@mail.gmail.com>
- <20190708160351.GA9871@lst.de>
-In-Reply-To: <20190708160351.GA9871@lst.de>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Mon, 8 Jul 2019 19:29:21 +0200
-Message-ID: <CAHc6FU5942i0XrCjUAhR9NCmfLuu7_CoPXNDsdF0X+gCpF1cDQ@mail.gmail.com>
-Subject: Re: RFC: use the iomap writepage path in gfs2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156200051933.1790352.5147420943973755350.stgit@magnolia>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 18:04, Christoph Hellwig <hch@lst.de> wrote:
-> On Thu, Jul 04, 2019 at 12:35:41AM +0200, Andreas Gruenbacher wrote:
-> > Patch "gfs2: implement gfs2_block_zero_range using iomap_zero_range"
-> > isn't quite ready: the gfs2 iomap operations don't handle IOMAP_ZERO
-> > correctly so far, and that needs to be fixed first.
->
-> What is the issue with IOMAP_ZERO on gfs2?  Zeroing never does block
-> allocations except when on COW extents, which gfs2 doesn't support,
-> so there shouldn't really be any need for additional handling.
+On Mon, Jul 01, 2019 at 10:01:59AM -0700, Darrick J. Wong wrote:
+> Hi all,
+> 
+> This series breaks up fs/iomap.c by grouping the functions by major
+> functional area (swapfiles, fiemap, seek hole/data, directio, buffered
+> writes, buffered reads, page management, and page migration) in separate
+> source code files under fs/iomap/.  No functional changes have been
+> made.
+> 
+> Note that this is not the final format of the patches, because I intend
+> to pick a point towards the end of the merge window (after everyone
+> else's merges have landed), rebase this series atop that, and push it
+> back to Linus.  The RFC is posted so that everyone can provide feedback
+> on the grouping strategy, not line-specific code movements.
+> 
+> This has been lightly tested with fstests.  Enjoy!
+> Comments and questions are, as always, welcome.
 
-We still want to set iomap->page_ops for journalled data files on gfs2.
+Do you have a branch somewhere for the layout?
 
-Also, if we go through the existing gfs2_iomap_begin_write /
-__gfs2_iomap_begin logic for iomap_zero_range, it will work for
-stuffed files as well, and so we can replace stuffed_zero_range with
-iomap_zero_range.
-
-> > Some of the tests assume that the filesystem supports unwritten
-> > extents, trusted xattrs, the usrquota / grpquota / prjquota mount
-> > options. There shouldn't be a huge number of failing tests beyond
-> > that, but I know things aren't perfect.
->
-> In general xfstests is supposed to have tests for that and not run
-> the tests if not supported.  In most cases this is automatic, but
-> in case a feature can't be autodetect we have a few manual overrides.
-
-Yes, that needs a bit of work. Let's see.
-
-Thanks,
-Andreas
+To me it seems to be a little too fine grained and creates tons of tiny
+files, which make hacking the code painful.
