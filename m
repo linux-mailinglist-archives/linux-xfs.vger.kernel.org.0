@@ -2,67 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F36A56288B
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 20:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F81062A06
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 21:59:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387785AbfGHSqx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jul 2019 14:46:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52310 "EHLO
+        id S1731827AbfGHT7H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 15:59:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40672 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfGHSqx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 14:46:53 -0400
+        with ESMTP id S1731783AbfGHT7H (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 15:59:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dKndpnfDRuzEXqd8NESls6FfbKscantgDxBPwqxYH2I=; b=ggZMUBppZ87RS3mus7iWCiTgQ
-        rz2CoMNWgChuBgw9eD1CQ8+ATPL1evNAgZLZGdKBKSOxXvnQ9IBD13LuFPBw9m9SZWj7Wh6quOXce
-        d80b/elXqmxei/DpTySs5EoIuFIo9hxKuQ2aioKn04jpLlAUGhXTnD6UxbTmzcO4GIf553j1WpckN
-        DbABu0OmCv4ylMcruTT00rKe2R6DOfmMcBlNCl8020SAJiXw8uJkwN4hK4NsHEOpoTtdQ2zKZdLGi
-        lxEkAurzQCYD1/Lr9R+b0ixwuomleaGbvlmBdkGWxIdfaBeEBNO+gFHVpi+acxYSwWajd+jozxTZ5
-        +FySg7d5w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkYf6-0007Wh-KL; Mon, 08 Jul 2019 18:46:52 +0000
-Date:   Mon, 8 Jul 2019 11:46:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 00/11] iomap: regroup code by functional area
-Message-ID: <20190708184652.GB20670@infradead.org>
-References: <156200051933.1790352.5147420943973755350.stgit@magnolia>
+         bh=ilP8aKND5J/0FqwOuE2M9iHuTp8wkZ8Ej53ocwpDD5A=; b=OlJFwXxcq+ZUJ7PWk7/2A5ZHb
+        3bGGjiG0Mom0f4MkLNUp9pAJ/dD7aRRwVTE86cilWagEocpLvF39BTymfL0XWttm8HSnzUxonYZ+X
+        7Tfrsb7LiJJkcD9AN8AivNzMuu7QLnuuD/XrySzC3/QWgsZLjYYTkZAoztBtC/e61VOFf2WdB4n5C
+        jU0JnRsfCqZ+QZ78oEL4k8H7jcoHhtStaLIHnWV0rgNLXqSsDjm6LC1NuWsWGO2T7yNWK/haonkH2
+        rvzzcAFahBQoQ8S3vbAdjUQAQipYRsCuXwO6vXIqqL2quflC2bwnlWQej3H8ZiJvNDSVP/040J+Qw
+        EqXAnDmnQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkZn0-00028B-R1; Mon, 08 Jul 2019 19:59:06 +0000
+Date:   Mon, 8 Jul 2019 12:59:06 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Doc : fs : move xfs.txt to
+ admin-guide
+Message-ID: <20190708195906.GH32320@bombadil.infradead.org>
+References: <20190705190412.GB32320@bombadil.infradead.org>
+ <20190705193329.GA20933@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156200051933.1790352.5147420943973755350.stgit@magnolia>
+In-Reply-To: <20190705193329.GA20933@localhost>
 User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:01:59AM -0700, Darrick J. Wong wrote:
-> Hi all,
+On Fri, Jul 05, 2019 at 08:41:48PM +0100, Sheriff Esseson wrote:
+> On Fri, Jul 05, 2019 at 12:04:12PM -0700, Matthew Wilcox wrote:
+> > On Fri, Jul 05, 2019 at 02:14:46PM +0100, Sheriff Esseson wrote:
+> > > As suggested by Matthew Wilcox, xfs.txt is primarily a guide on available
+> > > options when setting up an XFS. This makes it appropriate to be placed under
+> > > the admin-guide tree.
+> > > 
+> > > Thus, move xfs.txt to admin-guide and fix broken references.
+> > 
+> > What happened to the conversion to xfs.rst?
 > 
-> This series breaks up fs/iomap.c by grouping the functions by major
-> functional area (swapfiles, fiemap, seek hole/data, directio, buffered
-> writes, buffered reads, page management, and page migration) in separate
-> source code files under fs/iomap/.  No functional changes have been
-> made.
-> 
-> Note that this is not the final format of the patches, because I intend
-> to pick a point towards the end of the merge window (after everyone
-> else's merges have landed), rebase this series atop that, and push it
-> back to Linus.  The RFC is posted so that everyone can provide feedback
-> on the grouping strategy, not line-specific code movements.
-> 
-> This has been lightly tested with fstests.  Enjoy!
-> Comments and questions are, as always, welcome.
+> Okay, I was thinking placing the file properly should come first before the
+> conversion.
 
-Do you have a branch somewhere for the layout?
-
-To me it seems to be a little too fine grained and creates tons of tiny
-files, which make hacking the code painful.
+But if you move it, then rename it, you have to change all these places
+again.  The minimal conversion you did the first time was quite a nice diff
+to read.
