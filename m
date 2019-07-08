@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9766662594
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 18:03:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBB91625F8
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 18:19:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbfGHQDy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jul 2019 12:03:54 -0400
-Received: from verein.lst.de ([213.95.11.211]:34715 "EHLO verein.lst.de"
+        id S1729310AbfGHQTP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 12:19:15 -0400
+Received: from verein.lst.de ([213.95.11.211]:34828 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388273AbfGHQDy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:03:54 -0400
+        id S1728118AbfGHQTP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:19:15 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 28724227A81; Mon,  8 Jul 2019 18:03:52 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 18:03:51 +0200
+        id B33B3227A81; Mon,  8 Jul 2019 18:19:12 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 18:19:12 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cluster-devel@redhat.com
 Subject: Re: RFC: use the iomap writepage path in gfs2
-Message-ID: <20190708160351.GA9871@lst.de>
-References: <20190701215439.19162-1-hch@lst.de> <CAHc6FU5MHCdXENW_Y++hO_qhtCh4XtAHYOaTLzk+1KU=JNpPww@mail.gmail.com>
+Message-ID: <20190708161912.GA10233@lst.de>
+References: <20190701215439.19162-1-hch@lst.de> <20190708000103.GH7689@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHc6FU5MHCdXENW_Y++hO_qhtCh4XtAHYOaTLzk+1KU=JNpPww@mail.gmail.com>
+In-Reply-To: <20190708000103.GH7689@dread.disaster.area>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 12:35:41AM +0200, Andreas Gruenbacher wrote:
-> Patch "gfs2: implement gfs2_block_zero_range using iomap_zero_range"
-> isn't quite ready: the gfs2 iomap operations don't handle IOMAP_ZERO
-> correctly so far, and that needs to be fixed first.
+On Mon, Jul 08, 2019 at 10:01:03AM +1000, Dave Chinner wrote:
+> Ok, this doesn't look too bad from the iomap perspective, though it
+> does raise more questions. :)
+> 
+> gfs2 now has two iopaths, right? One that uses bufferheads for
+> journalled data, and the other that uses iomap? That seems like it's
+> only a partial conversion - what needs to be done to iomap and gfs2
+> to support the journalled data path so there's a single data IO
+> path?
 
-What is the issue with IOMAP_ZERO on gfs2?  Zeroing never does block
-allocations except when on COW extents, which gfs2 doesn't support,
-so there shouldn't really be any need for additional handling.
-
-> Some of the tests assume that the filesystem supports unwritten
-> extents, trusted xattrs, the usrquota / grpquota / prjquota mount
-> options. There shouldn't be a huge number of failing tests beyond
-> that, but I know things aren't perfect.
-
-In general xfstests is supposed to have tests for that and not run
-the tests if not supported.  In most cases this is automatic, but
-in case a feature can't be autodetect we have a few manual overrides.
+gfs2 always had to very different writeback I/O paths, including a copy
+and pasted versiom of write_cache_pages for journaled data, they just
+diverge a little bit more now. In the longer run I'd also like to add
+journaled data support to iomap for use with XFS, and then also switch
+gfs2 to it. 
