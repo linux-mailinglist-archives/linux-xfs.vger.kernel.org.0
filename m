@@ -2,90 +2,231 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 093B66193B
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 04:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A62E61B50
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 09:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfGHCMl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 7 Jul 2019 22:12:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726105AbfGHCMl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:12:41 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 15E9EBFB2F30FA70EE2E;
-        Mon,  8 Jul 2019 10:12:38 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 8 Jul 2019
- 10:12:28 +0800
-Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
- case
-To:     <hch@infradead.org>, <darrick.wong@oracle.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <andreas.gruenbacher@gmail.com>, <gaoxiang25@huawei.com>,
-        <chao@kernel.org>
-References: <20190703075502.79782-1-yuchao0@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a6d61ef9-0822-e5f4-cf06-a03151390958@huawei.com>
-Date:   Mon, 8 Jul 2019 10:12:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729014AbfGHHiv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 03:38:51 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34079 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbfGHHiv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Jul 2019 03:38:51 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 9FB4814AF58;
+        Mon,  8 Jul 2019 17:38:47 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hkODU-0001gv-Ei; Mon, 08 Jul 2019 17:37:40 +1000
+Date:   Mon, 8 Jul 2019 17:37:40 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 19/24] xfs: use bios directly to read and write the log
+ recovery buffers
+Message-ID: <20190708073740.GI7689@dread.disaster.area>
+References: <20190605191511.32695-1-hch@lst.de>
+ <20190605191511.32695-20-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190703075502.79782-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605191511.32695-20-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=Pfx7ABGgyQLsKXU5_x8A:9 a=ILCsvJsVC21vnpDZ:21
+        a=lzIq-ZMh1DAGYHkO:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Ping, any comments on this patch?
+On Wed, Jun 05, 2019 at 09:15:06PM +0200, Christoph Hellwig wrote:
+> The xfs_buf structure is basically used as a glorified container for
+> a memory allocation in the log recovery code.  Replace it with a
+> call to kmem_alloc_large and a simple abstraction to read into or
+> write from it synchronously using chained bios.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-On 2019/7/3 15:55, Chao Yu wrote:
-> Some filesystems like erofs/reiserfs have the ability to pack tail
-> data into metadata, e.g.:
-> IOMAP_MAPPED [0, 8192]
-> IOMAP_INLINE [8192, 8200]
-> 
-> However current IOMAP_INLINE type has assumption that:
-> - inline data should be locating at page #0.
-> - inline size should equal to .i_size
-> Those restriction fail to convert to use iomap IOMAP_INLINE in erofs,
-> so this patch tries to relieve above limits to make IOMAP_INLINE more
-> generic to cover tail-packing case.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/iomap.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/fs/iomap.c b/fs/iomap.c
-> index 12654c2e78f8..d1c16b692d31 100644
-> --- a/fs/iomap.c
-> +++ b/fs/iomap.c
-> @@ -264,13 +264,12 @@ static void
->  iomap_read_inline_data(struct inode *inode, struct page *page,
->  		struct iomap *iomap)
->  {
-> -	size_t size = i_size_read(inode);
-> +	size_t size = iomap->length;
->  	void *addr;
->  
->  	if (PageUptodate(page))
->  		return;
->  
-> -	BUG_ON(page->index);
->  	BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
->  
->  	addr = kmap_atomic(page);
-> @@ -293,7 +292,6 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  	sector_t sector;
->  
->  	if (iomap->type == IOMAP_INLINE) {
-> -		WARN_ON_ONCE(pos);
->  		iomap_read_inline_data(inode, page, iomap);
->  		return PAGE_SIZE;
->  	}
-> 
+I've bisected a generic/006 failure w/ 5.2 + linux-xfs/for-next down
+to this patch. The failure takes several forms:
+
+	a) slab page list corruption and endless console spew
+	b) failure to verify log record headers finding the header
+	  and asserting:
+
+[  607.977165] XFS (sdf): Mounting V5 Filesystem
+[  608.014844] XFS (sdf): Log inconsistent (didn't find previous header)
+[  608.016296] XFS: Assertion failed: 0, file: fs/xfs/xfs_log_recover.c, line: 471
+
+	c) record corruption being found when trying to verify
+	headers.
+
+It's a completely repeatable failure, running on iscsi block device
+with a 4k sector size. Change the sector size to 512 bytes, the
+issue _appears_ to go away, probably because the different log
+sector sizes result in different IO sizes and shapes and so avoid
+the issue I think is occuring....
+
+> diff --git a/fs/xfs/xfs_bio_io.c b/fs/xfs/xfs_bio_io.c
+> new file mode 100644
+> index 000000000000..757c1d9293eb
+> --- /dev/null
+> +++ b/fs/xfs/xfs_bio_io.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Christoph Hellwig.
+> + */
+> +#include "xfs.h"
+> +
+> +static inline unsigned int bio_max_vecs(unsigned int count)
+> +{
+> +	return min_t(unsigned, howmany(count, PAGE_SIZE), BIO_MAX_PAGES);
+> +}
+> +
+> +int
+> +xfs_rw_bdev(
+> +	struct block_device	*bdev,
+> +	sector_t		sector,
+> +	unsigned int		count,
+> +	char			*data,
+> +	unsigned int		op)
+> +
+> +{
+> +	unsigned int		is_vmalloc = is_vmalloc_addr(data);
+> +	unsigned int		left = count;
+> +	int			error;
+> +	struct bio		*bio;
+> +
+> +	if (is_vmalloc && op == REQ_OP_WRITE)
+> +		flush_kernel_vmap_range(data, count);
+> +
+> +	bio = bio_alloc(GFP_KERNEL, bio_max_vecs(left));
+> +	bio_set_dev(bio, bdev);
+> +	bio->bi_iter.bi_sector = sector;
+> +	bio->bi_opf = op | REQ_META | REQ_SYNC;
+> +
+> +	do {
+> +		struct page	*page = kmem_to_page(data);
+> +		unsigned int	off = offset_in_page(data);
+> +		unsigned int	len = min_t(unsigned, left, PAGE_SIZE - off);
+> +
+> +		while (bio_add_page(bio, page, len, off) != len) {
+> +			struct bio	*prev = bio;
+> +
+> +			bio = bio_alloc(GFP_KERNEL, bio_max_vecs(left));
+> +			bio_copy_dev(bio, prev);
+> +			bio->bi_iter.bi_sector = bio_end_sector(prev);
+> +			bio->bi_opf = prev->bi_opf;
+> +			bio_chain(bio, prev);
+> +
+> +			submit_bio(prev);
+> +		}
+
+I suspect the problem is here. This chains bios in a different order
+to xfs_chain_bio() in the data writeback path, and it looks to be
+mis-behaving.
+
+The tracing I have shows this interesting case right before we hit
+the bad state:
+
+    53.622521: bprint:               xlog_find_zeroed: first_cycle 0x1
+    53.623277: bprint:               xlog_find_zeroed: last_cycle 0x0
+    53.633060: bprint:               xlog_find_zeroed: start_blk 0xf0, last_blk 0x10f0
+    53.633320: bprint:               xlog_find_verify_cycle: bufblks 0x2000
+
+And the I/O that is now issued by xlog_find_verify_cycle() is:
+
+    53.633321: bprint:               xfs_rw_bdev: s 0xa00140, c 0x200000, op 0
+
+for 2MB of log space to see if there's any holes in the iclog range
+prior to the last cycle change. THis is issued as two bios:
+
+    53.633340: bprint:               xfs_rw_bdev: sb prev s 0xa00140 0xa00d10
+    53.633340: block_bio_queue:      8,80 RSM 10486080 + 3024 [mount]
+
+The first is 3024 sectors in length
+
+    53.633350: block_split:          8,80 RSM 10486080 / 10488640 [mount]
+
+which we chain to our next bio and submit it. It is then split
+and chained in the block layer
+
+    53.633352: block_getrq:          8,80 RSM 10486080 + 2560 [mount]
+    53.633353: block_rq_insert:      8,80 RSM 1310720 () 10486080 + 2560 [mount]
+    53.633362: block_rq_issue:       8,80 RSM 1310720 () 10486080 + 2560 [kworker/3:1H]
+    53.633418: block_getrq:          8,80 RSM 10488640 + 464 [mount]
+    53.633420: block_rq_insert:      8,80 RSM 237568 () 10488640 + 464 [mount]
+    53.633426: block_rq_issue:       8,80 RSM 237568 () 10488640 + 464 [kworker/3:1H]
+
+and both bios are issued, and then:
+
+> +
+> +		data += len;
+> +		left -= len;
+> +	} while (left > 0);
+> +
+> +	error = submit_bio_wait(bio);
+> +	bio_put(bio);
+
+    53.633465: bprint:               xfs_rw_bdev: sbw s 0xa00d10 0xa01140
+    53.633466: block_bio_queue:      8,80 RSM 10489104 + 1072 [mount]
+
+we submit our second bio and wait on it to complete.
+
+    53.633471: block_getrq:          8,80 RSM 10489104 + 1072 [mount]
+    53.633472: block_rq_insert:      8,80 RSM 548864 () 10489104 + 1072 [mount]
+    53.633478: block_rq_issue:       8,80 RSM 548864 () 10489104 + 1072 [kworker/3:1H]
+    53.636267: block_rq_complete:    8,80 RSM () 10488640 + 464 [0]
+    53.640807: block_rq_complete:    8,80 RSM () 10489104 + 1072 [0]
+
+So at this point the smaller split bio has completed, as has the second
+bio we called submit_bio_wait() on, but the next trace:
+
+    53.640987: bprint:               xlog_find_zeroed: new_blk 0x10c, last_blk 0x10c
+
+Indicates that submit_bio_wait has completed. The first part of the
+split bio hasn't completed yet, so we have undefined contents in the
+buffer and it finds a zero cycle in the range we were searching. So,
+we call into xlog_find_verify_log_record() which issues new IO at
+the start of the range:
+
+    53.640990: bprint:               xfs_rw_bdev: s 0xa00140, c 0x4000, op 0
+    53.640992: bprint:               xfs_rw_bdev: sbw s 0xa00140 0xa00160
+    53.640993: block_bio_queue:      8,80 RSM 10486080 + 32 [mount]
+    53.640997: block_getrq:          8,80 RSM 10486080 + 32 [mount]
+    53.640998: block_rq_insert:      8,80 RSM 16384 () 10486080 + 32 [mount]
+    53.641010: block_rq_issue:       8,80 RSM 16384 () 10486080 + 32 [kworker/3:1H]
+
+And then we see this happen:
+
+    53.651936: block_rq_complete:    8,80 RSM () 10486080 + 2560 [0]
+    53.652033: block_rq_complete:    8,80 RSM () 10486080 + 32 [0]
+
+There's two completions for overlapping IOs, and one of them is the
+remaining bio that was split in the block layer. And because when we
+actually read that record, we don't find a cycle number change in it
+or even a complete log record, we get this:
+
+    53.652058: console:              [   53.491104] XFS (sdf): Log inconsistent (didn't find previous header)
+    53.653500: console:              [   53.492547] XFS: Assertion failed: 0, file: fs/xfs/xfs_log_recover.c, line: 474
+
+The assert fires.
+
+It looks like blk_split_request() has corrupted out bio chain by
+splitting a bio in the chain and not linking it back together
+correctly.
+
+It's not exactly clear to me how nested bio chaining like this is
+supposed to work, but it looks to me like it is the source of the
+log recovery corruption I'm seeing here...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
