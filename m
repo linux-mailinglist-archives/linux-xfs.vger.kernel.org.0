@@ -2,73 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5B0661E65
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 14:28:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57A2261F93
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Jul 2019 15:31:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGHM2K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jul 2019 08:28:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59768 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727373AbfGHM2K (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:28:10 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3A1C03086214;
-        Mon,  8 Jul 2019 12:28:03 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A19042B1D8;
-        Mon,  8 Jul 2019 12:28:02 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 08:28:00 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        kernel test robot <rong.a.chen@intel.com>, lkp@01.org
-Subject: Re: [PATCH] xfs: don't update lastino for FSBULKSTAT_SINGLE
-Message-ID: <20190708122800.GC51396@bfoster>
-References: <20190706212517.GH1654093@magnolia>
+        id S1731317AbfGHNbT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jul 2019 09:31:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33506 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728124AbfGHNbT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:31:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 04C9FAFF5;
+        Mon,  8 Jul 2019 13:31:16 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 39BF51E159B; Mon,  8 Jul 2019 15:31:14 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 15:31:14 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Boaz Harrosh <openosd@gmail.com>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking
+Message-ID: <20190708133114.GC20507@quack2.suse.cz>
+References: <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+ <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+ <20190617224714.GR14363@dread.disaster.area>
+ <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
+ <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+ <20190619103838.GB32409@quack2.suse.cz>
+ <20190619223756.GC26375@dread.disaster.area>
+ <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
+ <20190705233157.GD7689@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190706212517.GH1654093@magnolia>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 08 Jul 2019 12:28:10 +0000 (UTC)
+In-Reply-To: <20190705233157.GD7689@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jul 06, 2019 at 02:25:17PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Sat 06-07-19 09:31:57, Dave Chinner wrote:
+> On Wed, Jul 03, 2019 at 03:04:45AM +0300, Boaz Harrosh wrote:
+> > On 20/06/2019 01:37, Dave Chinner wrote:
+> > <>
+> > > 
+> > > I'd prefer it doesn't get lifted to the VFS because I'm planning on
+> > > getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
+> > > likely to go away in the near term because a range lock can be
+> > > taken on either side of the mmap_sem in the page fault path.
+> > > 
+> > <>
+> > Sir Dave
+> > 
+> > Sorry if this was answered before. I am please very curious. In the zufs
+> > project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
+> > (Read & writes all take read-locks ...)
+> > The only reason I have it is because of lockdep actually.
+> > 
+> > Specifically for those xfstests that mmap a buffer then direct_IO in/out
+> > of that buffer from/to another file in the same FS or the same file.
+> > (For lockdep its the same case).
 > 
-> The kernel test robot found a regression of xfs/054 in the conversion of
-> bulkstat to use the new iwalk infrastructure -- if a caller set *lastip
-> = 128 and invoked FSBULKSTAT_SINGLE, the bstat info would be for inode
-> 128, but *lastip would be increased by the kernel to 129.
+> Which can deadlock if the same inode rwsem is taken on both sides of
+> the mmap_sem, as lockdep tells you...
 > 
-> FSBULKSTAT_SINGLE never incremented lastip before, so it's incorrect to
-> make such an update to the internal lastino value now.
+> > I would be perfectly happy to recursively _read_lock both from the top
+> > of the page_fault at the DIO path, and under in the page_fault. I'm
+> > _read_locking after all. But lockdep is hard to convince. So I stole the
+> > xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
+> > truncate/punch/clone time when all mapping traversal needs to stop for
+> > the destructive change to take place. (Allocations are done another way
+> > and are race safe with traversal)
+> > 
+> > How do you intend to address this problem with range-locks? ie recursively
+> > taking the same "lock"? because if not for the recursive-ity and lockdep I would
+> > not need the extra lock-object per inode.
 > 
-> Fixes: 2810bd6840e463 ("xfs: convert bulkstat to new iwalk infrastructure")
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
+> As long as the IO ranges to the same file *don't overlap*, it should
+> be perfectly safe to take separate range locks (in read or write
+> mode) on either side of the mmap_sem as non-overlapping range locks
+> can be nested and will not self-deadlock.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+I'd be really careful with nesting range locks. You can have nasty
+situations like:
 
->  fs/xfs/xfs_ioctl.c |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 6bf04e71325b..1876461e5104 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -797,7 +797,6 @@ xfs_ioc_fsbulkstat(
->  		breq.startino = lastino;
->  		breq.icount = 1;
->  		error = xfs_bulkstat_one(&breq, xfs_fsbulkstat_one_fmt);
-> -		lastino = breq.startino;
->  	} else {	/* XFS_IOC_FSBULKSTAT */
->  		breq.startino = lastino ? lastino + 1 : 0;
->  		error = xfs_bulkstat(&breq, xfs_fsbulkstat_one_fmt);
+Thread 1		Thread 2
+read_lock(0,1000)	
+			write_lock(500,1500) -> blocks due to read lock
+read_lock(1001,1500) -> blocks due to write lock (or you have to break
+  fairness and then deal with starvation issues).
+
+So once you allow nesting of range locks, you have to very carefully define
+what is and what is not allowed. That's why in my range lock implementation
+ages back I've decided to treat range lock as a rwsem for deadlock
+verification purposes.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
