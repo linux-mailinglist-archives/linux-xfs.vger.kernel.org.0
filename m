@@ -2,136 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D53663987
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 18:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE48639B0
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 18:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfGIQj6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 12:39:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44810 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGIQj5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 12:39:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69GdE6s161171;
-        Tue, 9 Jul 2019 16:39:52 GMT
+        id S1726133AbfGIQuK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Jul 2019 12:50:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60904 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfGIQuK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 12:50:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69GnQaj070323;
+        Tue, 9 Jul 2019 16:49:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=mWNNIxC852F1T0hY0S7in0tupX7SXeFAcfZFVC9JuHc=;
- b=e9bxnDLdWmEv4iyK7fRYTvsxKk8R/ME6bb5u6O7S9N7U6vXWCvcixpyJ3dnWdGbOgJYO
- QNpskiCWabU4aof3LdgDKZ0Oh4+s+xDlD4mwN31VCpUwYEbrUaatMrojVAYXHJnrmKJx
- Jq+45JPmTksPZyrFDyp1WMg4J8PQdGwWWFuZNMdYffe5G8HgnNJl5EZMBAs03fsf3/Dy
- GtEHDqeRkB64/yVPawheMP7ZJfc8WmejyT7ZVQC6UFw+ZOAvF4NgA0gLmPUzYeHs6iHn
- 3poPhq/2k4/oHDMM767sIDMhiZeZXVO+QN+c/UKLu+tL77SovjP4B8GrDNvdwIPGM6I3 Rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpnfhj-1
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=SA6dzMCTWrij2CwnL3CHgy3imU10Tg6y0fcMO9yW8QI=;
+ b=MjgoVDIchlhL2HArHYeA7DeBhr5PflqMmSEb4iZHjBBBUtJZU3dEhACjSRDp69Ui4iZK
+ uTS8ne32PSgCGiCBbGuNni0FjRJu9HwsxrZyo5FGTWEuh1ZpYKoTOYp/MvySWpfZXRZb
+ w9XuQDoN0U2ASAnJxW0nfiDTIDQKjFYE9hzfrJSxE96PmF0qZpeIPaIA5AxAJSM3hl1g
+ yWQnnOuBqfPghMoyiO+eCL1DNyfYA/v7UPkT/RttbsRx28lbBfvi0Ao6sYG0BdD3Ll8i
+ lkOMeVEkbMLB573BsRUV06uAOnKp0Ntf+ObSIKFPZok1fM6FW+g5tjq6d7rP5cbWFWr/ Hg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tjk2tnk53-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 16:39:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69GcNrl128049;
-        Tue, 9 Jul 2019 16:39:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tjjykwjr9-1
+        Tue, 09 Jul 2019 16:49:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69GmA9x088051;
+        Tue, 9 Jul 2019 16:49:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tjgru7c2n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 16:39:51 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x69GdnRm028412;
-        Tue, 9 Jul 2019 16:39:50 GMT
+        Tue, 09 Jul 2019 16:49:55 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69GnrDo026589;
+        Tue, 9 Jul 2019 16:49:53 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 09:39:49 -0700
-Date:   Tue, 9 Jul 2019 09:39:48 -0700
+        with ESMTP ; Tue, 09 Jul 2019 09:49:53 -0700
+Date:   Tue, 9 Jul 2019 09:49:52 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        Amir Goldstein <amir73il@gmail.com>
-Subject: [GIT PULL] vfs: fix copy_file_range bad behavior
-Message-ID: <20190709163947.GE5164@magnolia>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 00/11] iomap: regroup code by functional area
+Message-ID: <20190709164952.GT1404256@magnolia>
+References: <156200051933.1790352.5147420943973755350.stgit@magnolia>
+ <20190708184652.GB20670@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190708184652.GB20670@infradead.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090195
+ engine=8.0.1-1810050000 definitions=main-1907090198
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090195
+ definitions=main-1907090198
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+On Mon, Jul 08, 2019 at 11:46:52AM -0700, Christoph Hellwig wrote:
+> On Mon, Jul 01, 2019 at 10:01:59AM -0700, Darrick J. Wong wrote:
+> > Hi all,
+> > 
+> > This series breaks up fs/iomap.c by grouping the functions by major
+> > functional area (swapfiles, fiemap, seek hole/data, directio, buffered
+> > writes, buffered reads, page management, and page migration) in separate
+> > source code files under fs/iomap/.  No functional changes have been
+> > made.
+> > 
+> > Note that this is not the final format of the patches, because I intend
+> > to pick a point towards the end of the merge window (after everyone
+> > else's merges have landed), rebase this series atop that, and push it
+> > back to Linus.  The RFC is posted so that everyone can provide feedback
+> > on the grouping strategy, not line-specific code movements.
+> > 
+> > This has been lightly tested with fstests.  Enjoy!
+> > Comments and questions are, as always, welcome.
+> 
+> Do you have a branch somewhere for the layout?
 
-Please pull this series to fix numerous parameter checking problems and
-inconsistent behaviors in the new(ish) copy_file_range system call.  Now
-the system call will actually check its range parameters correctly;
-refuse to copy into files for which the caller does not have sufficient
-privileges; update mtime and strip setuid like file writes are supposed
-to do; and allows copying up to the EOF of the source file instead of
-failing the call like we used to.
+I sent it out to for-next to see what it would collide with:
 
-The branch merges cleanly against this morning's HEAD and survived an
-overnight run of xfstests.  The merge was completely straightforward, so
-please let me know if you run into anything weird.
+https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git/log/?h=iomap-5.3-merge
+
+Though I'll probably rebase it after the mm and block merges (which
+might have already happened).
+
+> To me it seems to be a little too fine grained and creates tons of tiny
+> files, which make hacking the code painful.
+
+It's nine files and now code is grouped by functional area which makes
+it easier to keep track of which functions go with the publicly exposed
+iomap apis.  I don't think we're going to more than a half dozen more
+files ever.
 
 --D
-
-The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
-
-  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/copy-file-range-fixes-1
-
-for you to fetch changes up to fe0da9c09b2dc448ff781d1426ecb36d145ce51b:
-
-  fuse: copy_file_range needs to strip setuid bits and update timestamps (2019-06-09 10:07:07 -0700)
-
-----------------------------------------------------------------
-Changes to copy_file_range for 5.3 from Dave and Amir:
-- Create a generic copy_file_range handler and make individual
-  filesystems responsible for calling it (i.e. no more assuming that
-  do_splice_direct will work or is appropriate)
-- Refactor copy_file_range and remap_range parameter checking where they
-  are the same
-- Install missing copy_file_range parameter checking(!)
-- Remove suid/sgid and update mtime like any other file write
-- Change the behavior so that a copy range crossing the source file's
-  eof will result in a short copy to the source file's eof instead of
-  EINVAL
-- Permit filesystems to decide if they want to handle cross-superblock
-  copy_file_range in their local handlers.
-
-----------------------------------------------------------------
-Amir Goldstein (7):
-      vfs: introduce generic_file_rw_checks()
-      vfs: remove redundant checks from generic_remap_checks()
-      vfs: add missing checks to copy_file_range
-      vfs: introduce file_modified() helper
-      xfs: use file_modified() helper
-      vfs: allow copy_file_range to copy across devices
-      fuse: copy_file_range needs to strip setuid bits and update timestamps
-
-Dave Chinner (2):
-      vfs: introduce generic_copy_file_range()
-      vfs: no fallback for ->copy_file_range
-
- fs/ceph/file.c     |  23 ++++++++--
- fs/cifs/cifsfs.c   |   4 ++
- fs/fuse/file.c     |  29 +++++++++++--
- fs/inode.c         |  20 +++++++++
- fs/nfs/nfs4file.c  |  23 ++++++++--
- fs/read_write.c    | 124 +++++++++++++++++++++++++++++------------------------
- fs/xfs/xfs_file.c  |  15 +------
- include/linux/fs.h |   9 ++++
- mm/filemap.c       | 110 ++++++++++++++++++++++++++++++++++++++---------
- 9 files changed, 257 insertions(+), 100 deletions(-)
