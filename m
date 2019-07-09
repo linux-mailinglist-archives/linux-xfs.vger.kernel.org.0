@@ -2,65 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D93F862FB0
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 06:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A408D6333B
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 11:00:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbfGIEk5 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Tue, 9 Jul 2019 00:40:57 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:49396 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbfGIEk4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 00:40:56 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 31EB2284C3
-        for <linux-xfs@vger.kernel.org>; Tue,  9 Jul 2019 04:40:56 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id 1FD85284F0; Tue,  9 Jul 2019 04:40:56 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=ham version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 204031] [xfstests generic/475]: general protection fault: 0000
- [#1] RIP: 0010:xfs_bmapi_read+0x311/0xb00 [xfs]
-Date:   Tue, 09 Jul 2019 04:40:55 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zlang@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204031-201763-gHzs97LnrS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204031-201763@https.bugzilla.kernel.org/>
-References: <bug-204031-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1726523AbfGIJA7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Tue, 9 Jul 2019 05:00:59 -0400
+Received: from webmail.stormfiber.com ([124.29.202.132]:43444 "EHLO
+        webmail.stormfiber.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGIJA6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 05:00:58 -0400
+X-Greylist: delayed 383 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jul 2019 05:00:57 EDT
+Received: from [192.168.43.18] (197.234.219.46)
+ by webmail.stormfiber.com (Axigen) with ESMTPA id 25DA08;
+ Tue, 9 Jul 2019 13:53:57 +0500
+Message-ID: <1562662464810964231@webmail.stormfiber.com>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Your confirmation is needed
+To:     Recipients <samir@stormfiber.com>
+From:   "Solicitor David" <samir@stormfiber.com>
+Date:   Tue, 09 Jul 2019 09:53:22 +0100
+Reply-To: walletandfiles@gmail.com
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204031
-
---- Comment #1 from Zorro Lang (zlang@redhat.com) ---
-Updata: By merging above patches, I can't reproduce this bug by running
-generic/475 on six different machines 3 days.
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+I have a very important information for you and your family that will definitely interest you but firstly,I want to ensure that you are the one getting this message directly before i release the information to you. I want you to confirm that your email address is still valid and accessed by you. As soon as i receive your response, I will proceed and give you the information. I am taking this preventive measure to avoid getting this important information into the wrong hands because of how sensitive it is. Thanks David
