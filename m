@@ -2,75 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 067B56374D
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 15:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47BB363763
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 16:00:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfGINwd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 09:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfGINwd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:52:33 -0400
-Received: from [192.168.0.101] (unknown [49.65.245.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DD520844;
-        Tue,  9 Jul 2019 13:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562680352;
-        bh=xarlzDc9XL3XreQ+2eiaoGghb7avU3rBbaxLzUdH5VY=;
-        h=Subject:Cc:References:To:From:Date:In-Reply-To:From;
-        b=QpgxXBy3Ik7Yy0x02Ut3hhM0Agi+n/vn1AALkpCs3rqJGKfpG7O/4aqhcUBe0Hw2N
-         sGFarVvEQ28ZsNX6Sc1hEPj6Hf2LGy7PpxLYUe+q+4G9e9wPzkaAOwtbfan1mTS5Xa
-         KC8AQmyCJTUtwRrhY+IFH1B2wDmTv0OAWDLZwgRk=
-Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
- case
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gaoxiang25@huawei.com
-References: <20190703075502.79782-1-yuchao0@huawei.com>
- <20190708160346.GA17715@infradead.org>
-To:     andreas.gruenbacher@gmail.com
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <1c3f46ba-c1e4-3177-d77e-627995bc8f21@kernel.org>
-Date:   Tue, 9 Jul 2019 21:52:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726391AbfGIOA1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Jul 2019 10:00:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfGIOA1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 10:00:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69Dx4kV123361;
+        Tue, 9 Jul 2019 13:59:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=Z5wB35sw+tOLaSeBbctmeZJ/BsBuw/TkoSb9bk1dE0E=;
+ b=idRX1bKK/K9qkluebluVfh9KNzbQil4YH7NKNy4zff9dy20XoFGHhKJrWlwBydWEWgyS
+ bfFzD6KO96zC5JIbg9Iwzqmq0ogxOs7kHMZkSgGHrRX+EZjB3GaWLkfjNlxaEb2fIv2+
+ +MPuRB+UjlIaOFalhCivUe+LrCPk3uC0XeFJ344C8UymWDT1sv7Rkn7UFckfq2DIoAHC
+ sJrewZX3VOC37Y908y8/CRgLEmzcVxW7mNClsjScd1YCR9HFSBzwwpIDe7oCdF9B+2NC
+ etKH2kEdUyM6h9+j9R9bFaPWm6w/tq+MNDHRy2mjo7uVugZBk0J8xKaIdKZPl4e+q22o YA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2tjm9qmf6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 13:59:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69Dw0dB071183;
+        Tue, 9 Jul 2019 13:59:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2tmmh2yv3t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 13:59:43 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69Dxhqi024598;
+        Tue, 9 Jul 2019 13:59:43 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jul 2019 06:59:43 -0700
+Date:   Tue, 9 Jul 2019 06:59:43 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>, Brian Foster <bfoster@redhat.com>
+Subject: [PATCH] xfs: bump INUMBERS cursor correctly in xfs_inumbers_walk
+Message-ID: <20190709135943.GF5167@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20190708160346.GA17715@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907090166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907090167
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019-7-9 0:03, Christoph Hellwig wrote:
-> On Wed, Jul 03, 2019 at 03:55:02PM +0800, Chao Yu wrote:
->> Some filesystems like erofs/reiserfs have the ability to pack tail
->> data into metadata, e.g.:
->> IOMAP_MAPPED [0, 8192]
->> IOMAP_INLINE [8192, 8200]
->>
->> However current IOMAP_INLINE type has assumption that:
->> - inline data should be locating at page #0.
->> - inline size should equal to .i_size
->> Those restriction fail to convert to use iomap IOMAP_INLINE in erofs,
->> so this patch tries to relieve above limits to make IOMAP_INLINE more
->> generic to cover tail-packing case.
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> 
-> This looks good to me, but I'd also like to see a review and gfs2
-> testing from Andreas.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Thanks for your reply. :)
+There's a subtle unit conversion error when we increment the INUMBERS
+cursor at the end of xfs_inumbers_walk.  If there's an inode chunk at
+the very end of the AG /and/ the AG size is a perfect power of two, that
+means we can have inodes, that means that the startino of that last
+chunk (which is in units of AG inodes) will be 63 less than (1 <<
+agino_log).  If we add XFS_INODES_PER_CHUNK to the startino, we end up
+with a startino that's larger than (1 << agino_log) and when we convert
+that back to fs inode units we'll rip off that upper bit and wind up
+back at the start of the AG.
 
-Well, so, Andreas, could you please take a look at this patch and do related
-test on gfs2 if you have time?
+Fix this by converting to units of fs inodes before adding
+XFS_INODES_PER_CHUNK so that we'll harmlessly end up pointing to the
+next AG.
 
-Thanks,
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_itable.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> 
+diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
+index cda8ae94480c..a8a06bb78ea8 100644
+--- a/fs/xfs/xfs_itable.c
++++ b/fs/xfs/xfs_itable.c
+@@ -338,15 +338,14 @@ xfs_inumbers_walk(
+ 		.xi_version	= XFS_INUMBERS_VERSION_V5,
+ 	};
+ 	struct xfs_inumbers_chunk *ic = data;
+-	xfs_agino_t		agino;
+ 	int			error;
+ 
+ 	error = ic->formatter(ic->breq, &inogrp);
+ 	if (error && error != XFS_IBULK_ABORT)
+ 		return error;
+ 
+-	agino = irec->ir_startino + XFS_INODES_PER_CHUNK;
+-	ic->breq->startino = XFS_AGINO_TO_INO(mp, agno, agino);
++	ic->breq->startino = XFS_AGINO_TO_INO(mp, agno, irec->ir_startino) +
++			XFS_INODES_PER_CHUNK;
+ 	return error;
+ }
+ 
