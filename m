@@ -2,97 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92299638B4
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 17:34:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5086638D1
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 17:44:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfGIPe4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 11:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfGIPez (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:34:55 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9261720656;
-        Tue,  9 Jul 2019 15:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562686494;
-        bh=gub/vrZ1KsSeLFGrO8xgrbIV84kVgeYFagd2MwkIbC0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MFWFdmqLBKqQWc5mPJMkSKEKKpzKlpA5PttUb1dRkUc1UAl85uBBky1+d91jh2qXT
-         /9pHxlnwkkcjuVPf92gQxe2YFoU2u9iKR0hHQKGilDVg033Lrn/AUS7lQDtfr+DQKc
-         R/LJNaQVe/NrP+67khS/FgOwGoP9ClBOFoKBlWm8=
-Date:   Tue, 9 Jul 2019 08:34:54 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com
-Subject: [GIT PULL] iomap: new code for 5.3, part 1
-Message-ID: <20190709153454.GQ1404256@magnolia>
+        id S1726115AbfGIPo4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Jul 2019 11:44:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33414 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfGIPoz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 11:44:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhpDM012771;
+        Tue, 9 Jul 2019 15:44:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=/wzADajV2E/+Hy43stYBuuLltwxa7/mYu0GrbCUVsqI=;
+ b=kBvYXxit7jQWYxB5L/JmaqvifmxPF7QT1myV/9L8/QxZ6lA/s+fQVoOa3ltk1+45vphO
+ rbGMe9QqSUj1nqnZ18c/97/U1/ZlEVXH8978r4NzHodURei9ED9RSsRJGwRPgPTSanKd
+ BUbMMOu1/T2CVHDSBmZzOax2Ujel+LMdQH7nKeyiraeIAuC8Z7x4gzTmGd1Cp50vLAGp
+ sVR336SBJg2JmQ4w3SPcFRmOMaiGAXKNrHVFB68t4Iv7I5ldsaxq2Nj0v5qh3MncDweA
+ oMrbfyumDOh6Ib2DfPzh76/iaULIXT1oorxO23Eo9IpduXHvGslIdWjJW0Ceo9LRQd2Y DA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tjk2tn78x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 15:44:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhAiK049010;
+        Tue, 9 Jul 2019 15:44:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2tmwgx0c20-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 15:44:49 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69FimDc028288;
+        Tue, 9 Jul 2019 15:44:48 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jul 2019 08:44:48 -0700
+Date:   Tue, 9 Jul 2019 08:44:47 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 19/24] xfs: use bios directly to read and write the log
+ recovery buffers
+Message-ID: <20190709154447.GR1404256@magnolia>
+References: <20190605191511.32695-1-hch@lst.de>
+ <20190605191511.32695-20-hch@lst.de>
+ <20190708073740.GI7689@dread.disaster.area>
+ <20190708161919.GN1404256@magnolia>
+ <20190708213423.GA18177@lst.de>
+ <20190708221508.GJ7689@dread.disaster.area>
+ <20190709152330.GA3945@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190709152330.GA3945@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=881
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907090184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907090184
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+On Tue, Jul 09, 2019 at 05:23:30PM +0200, Christoph Hellwig wrote:
+> On Tue, Jul 09, 2019 at 08:15:08AM +1000, Dave Chinner wrote:
+> > That fixes the problem I saw, but I think bio_chain() needs some
+> > more checks to prevent this happening in future. It's trivially
+> > easy to chain the bios in the wrong order, very difficult to spot
+> > in review, and difficult to trigger in testing as it requires
+> > chain nesting and adverse IO timing to expose....
+> 
+> Not sure how we can better check it.  At best we can set a flag for a
+> bio that is a chain "child" and complain if someone is calling
+> submit_bio_wait, but that would only really cover the wait case.
 
-Here's the first part of the iomap merge for 5.3.  There are a few fixes
-for gfs2 but otherwise it's pretty quiet so far. The branch merges
-cleanly against this morning's HEAD and survived an overnight run of
-xfstests.  The merge was completely straightforward, so please let me
-know if you run into anything weird.
+I think submit_bio_wait ought to at least WARN_ON_ONCE if it was fed a
+bio with bi_end_io already set, which at least would have made it more
+obvious that we'd screwed something up in this case, even if the
+detection was after we'd already done bio_chain in the wrong order.
 
-For the second part of the merge window I would like to break up iomap.c
-into smaller files grouped by functional area so that it'll be easier in
-the long run to keep the pieces separate and to review incoming patches.
-There won't be any functional changes, as the file can still be split
-very cleanly.
+Granted IIRC Dave sent a fix for a zeroout integer overflow a while ago
+and Jens committed the patch with the debugging assertions removed, so
+... yay?
 
-I prefer to get this done quickly before 5.3-rc1 because I anticipate
-that there will be rather more iomap development work coming for 5.4, so
-my plan is to rebase my splitting series after the mm and block merges
-land and come back in a week or so having let it soak in for-next for
-several days.  Let me know if you'd pefer a different timeline.
+Maybe we just need CONFIG_BLK_DEBUG for these kinds of assertions so
+that ignorant clods like me have another line of defense against bugs
+and the growing crowd of people who care about performance above
+correctness can crash faster. <grumble>
+
+> But one thing I planned to do is to lift xfs_chain_bio to the block
+> layer so that people can use it for any kind of continuation bio
+> instead of duplicating the logic.
+
+That'll help, I suspect. :)
 
 --D
-
-The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
-
-  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-1
-
-for you to fetch changes up to 36a7347de097edf9c4d7203d09fa223c86479674:
-
-  iomap: fix page_done callback for short writes (2019-06-27 17:28:41 -0700)
-
-----------------------------------------------------------------
-New for 5.3:
-- Only mark inode dirty at the end of writing to a file (instead of once
-  for every page written).
-- Fix for an accounting error in the page_done callback.
-
-----------------------------------------------------------------
-Andreas Gruenbacher (2):
-      iomap: don't mark the inode dirty in iomap_write_end
-      iomap: fix page_done callback for short writes
-
-Christoph Hellwig (1):
-      fs: fold __generic_write_end back into generic_write_end
-
- fs/buffer.c           | 62 ++++++++++++++++++++++++---------------------------
- fs/gfs2/bmap.c        |  2 ++
- fs/internal.h         |  2 --
- fs/iomap.c            | 17 ++++++++++++--
- include/linux/iomap.h |  1 +
- 5 files changed, 47 insertions(+), 37 deletions(-)
