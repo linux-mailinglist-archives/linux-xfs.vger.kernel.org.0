@@ -2,72 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5086638D1
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 17:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7FC9638D2
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 17:45:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfGIPo4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 11:44:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33414 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfGIPoz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 11:44:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhpDM012771;
-        Tue, 9 Jul 2019 15:44:50 GMT
+        id S1726241AbfGIPpy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Jul 2019 11:45:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55708 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfGIPpy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 11:45:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhphA023625;
+        Tue, 9 Jul 2019 15:45:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=/wzADajV2E/+Hy43stYBuuLltwxa7/mYu0GrbCUVsqI=;
- b=kBvYXxit7jQWYxB5L/JmaqvifmxPF7QT1myV/9L8/QxZ6lA/s+fQVoOa3ltk1+45vphO
- rbGMe9QqSUj1nqnZ18c/97/U1/ZlEVXH8978r4NzHodURei9ED9RSsRJGwRPgPTSanKd
- BUbMMOu1/T2CVHDSBmZzOax2Ujel+LMdQH7nKeyiraeIAuC8Z7x4gzTmGd1Cp50vLAGp
- sVR336SBJg2JmQ4w3SPcFRmOMaiGAXKNrHVFB68t4Iv7I5ldsaxq2Nj0v5qh3MncDweA
- oMrbfyumDOh6Ib2DfPzh76/iaULIXT1oorxO23Eo9IpduXHvGslIdWjJW0Ceo9LRQd2Y DA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tjk2tn78x-1
+ bh=X+4ve7SMK8E9ELLjV6ojbT1KFqrOD5j3hrkySskPXpw=;
+ b=yImogSMmb4BaU8bCf9l96j+DC2dJarwGqFKT4viAshnQ1KSDSH+nKGzRxvsMFSkhTtbV
+ JpgH8qhPzjZoWS3d0tBSUTaIKyqDgJLs/96X/W3GtN0hS8Yy7dvyVaxNGPi2TQMkBcZ3
+ I0yWC6svu1oG1mXOVhAKLplZwz5z9PaPi1nBhlbggEM3qnifxJpQ0yNH4dWZs/gSu3af
+ ZrJBfE7URZ7Up/BKv37xALh+uDutHeP7oWHQH3yLcwR9kMTlltMjaocxF46BQcPY5ftF
+ oiWhHNQJ2Y5esA7vfaykdsmznLnT3PkNK2kSwdi/T+ufNl5H5JTY/Slo2Gz3iDpvP/uf gg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2tjm9qn4m1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 15:44:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhAiK049010;
-        Tue, 9 Jul 2019 15:44:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tmwgx0c20-1
+        Tue, 09 Jul 2019 15:45:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69FhBWo186193;
+        Tue, 9 Jul 2019 15:45:49 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tjjykvpc5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 15:44:49 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69FimDc028288;
-        Tue, 9 Jul 2019 15:44:48 GMT
+        Tue, 09 Jul 2019 15:45:48 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x69Fjlo3022672;
+        Tue, 9 Jul 2019 15:45:47 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 08:44:48 -0700
-Date:   Tue, 9 Jul 2019 08:44:47 -0700
+        with ESMTP ; Tue, 09 Jul 2019 08:45:47 -0700
+Date:   Tue, 9 Jul 2019 08:45:46 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 19/24] xfs: use bios directly to read and write the log
- recovery buffers
-Message-ID: <20190709154447.GR1404256@magnolia>
-References: <20190605191511.32695-1-hch@lst.de>
- <20190605191511.32695-20-hch@lst.de>
- <20190708073740.GI7689@dread.disaster.area>
- <20190708161919.GN1404256@magnolia>
- <20190708213423.GA18177@lst.de>
- <20190708221508.GJ7689@dread.disaster.area>
- <20190709152330.GA3945@lst.de>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH] xfs: chain bios the right way around in xfs_rw_bdev
+Message-ID: <20190709154546.GS1404256@magnolia>
+References: <20190709152352.27465-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709152330.GA3945@lst.de>
+In-Reply-To: <20190709152352.27465-1-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=881
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=948
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1907090184
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=994 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907090184
 Sender: linux-xfs-owner@vger.kernel.org
@@ -75,36 +68,38 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 05:23:30PM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 09, 2019 at 08:15:08AM +1000, Dave Chinner wrote:
-> > That fixes the problem I saw, but I think bio_chain() needs some
-> > more checks to prevent this happening in future. It's trivially
-> > easy to chain the bios in the wrong order, very difficult to spot
-> > in review, and difficult to trigger in testing as it requires
-> > chain nesting and adverse IO timing to expose....
+On Tue, Jul 09, 2019 at 08:23:52AM -0700, Christoph Hellwig wrote:
+> We need to chain the earlier bios to the later ones, so that
+> submit_bio_wait waits on the bio that all the completions are
+> dispatched to.
 > 
-> Not sure how we can better check it.  At best we can set a flag for a
-> bio that is a chain "child" and complain if someone is calling
-> submit_bio_wait, but that would only really cover the wait case.
+> Fixes: 6ad5b3255b9e ("xfs: use bios directly to read and write the log recovery buffers")
+> Reported-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-I think submit_bio_wait ought to at least WARN_ON_ONCE if it was fed a
-bio with bi_end_io already set, which at least would have made it more
-obvious that we'd screwed something up in this case, even if the
-detection was after we'd already done bio_chain in the wrong order.
+Looks ok to me; anyone else want to add a tested-by?
 
-Granted IIRC Dave sent a fix for a zeroout integer overflow a while ago
-and Jens committed the patch with the debugging assertions removed, so
-... yay?
-
-Maybe we just need CONFIG_BLK_DEBUG for these kinds of assertions so
-that ignorant clods like me have another line of defense against bugs
-and the growing crowd of people who care about performance above
-correctness can crash faster. <grumble>
-
-> But one thing I planned to do is to lift xfs_chain_bio to the block
-> layer so that people can use it for any kind of continuation bio
-> instead of duplicating the logic.
-
-That'll help, I suspect. :)
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
+
+> ---
+>  fs/xfs/xfs_bio_io.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_bio_io.c b/fs/xfs/xfs_bio_io.c
+> index 757c1d9293eb..e2148f2d5d6b 100644
+> --- a/fs/xfs/xfs_bio_io.c
+> +++ b/fs/xfs/xfs_bio_io.c
+> @@ -43,7 +43,7 @@ xfs_rw_bdev(
+>  			bio_copy_dev(bio, prev);
+>  			bio->bi_iter.bi_sector = bio_end_sector(prev);
+>  			bio->bi_opf = prev->bi_opf;
+> -			bio_chain(bio, prev);
+> +			bio_chain(prev, bio);
+>  
+>  			submit_bio(prev);
+>  		}
+> -- 
+> 2.20.1
+> 
