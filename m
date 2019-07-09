@@ -2,83 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE42A63B5B
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 20:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCD3E63C7C
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2019 22:09:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbfGISqA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 14:46:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47714 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfGISp7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 14:45:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t9OheTk/YXmum441O9ftZpFS9er/+zh95pKwld4fGAw=; b=ZcfRHgdS5dZvpbhFJB5Y0+kTo
-        WoQP5pNcBks0NdLdZJBi5ZIvoFX3KLMPFPjbKmoSDcP1t7FO0vcsi5wf/gwHzD7p82IbDDPxr7kuG
-        YJcR0YmuBQF+RaFvPj2L5lS1N9FVSinAFg7VP+kbBifFL9Cdf1205aIQJd/3U4ZW59StzWS6JKWDp
-        XrfCGCf/KOuuhbVCQ6fj4mbl8zKfDMGgi/tVE/c7TIYWuNkOLamj3vglYxwp1ZjFIHi59KAtW/rOz
-        LE/prG1uIYmYS0wZ0yls2oZVJpUfjmYkeECSPltgEWlLBrSE62BTyCqNObVz6/bG2++eqs6odRD/w
-        czShoCIyA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkv7n-00071T-72; Tue, 09 Jul 2019 18:45:59 +0000
-Date:   Tue, 9 Jul 2019 11:45:59 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Sheriff Esseson <sheriffesseson@gmail.com>
-Cc:     skhan@linuxfoundation.org, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [linux-kernel-mentees] [PATCH v6] Doc : fs : convert xfs.txt to
- ReST
-Message-ID: <20190709184559.GL32320@bombadil.infradead.org>
-References: <20190709124859.GA21503@localhost>
+        id S1729577AbfGIUJB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Jul 2019 16:09:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:31371 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729155AbfGIUJB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:09:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1D1D7300BEB6;
+        Tue,  9 Jul 2019 20:09:01 +0000 (UTC)
+Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C61AF7E48D;
+        Tue,  9 Jul 2019 20:09:00 +0000 (UTC)
+To:     linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] mkfs: don't use xfs_verify_fsbno() before m_sb is fully set
+ up
+Message-ID: <d04c688e-4d67-83f4-8401-d064d13bdc33@redhat.com>
+Date:   Tue, 9 Jul 2019 15:09:00 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709124859.GA21503@localhost>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 09 Jul 2019 20:09:01 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 01:48:59PM +0100, Sheriff Esseson wrote:
-> Convert xfs.txt to ReST, rename and fix broken references, consequently.
-> 
-> Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
-> ---
-> 
-> Changes in v6:
-> 	- undo text reflow from v5.
-> 	- fix a typo.
-> 	- change indication of defaults , as suggested by Darrick J. Wong, to
-> 	  keep the read simple.
-> 	- change delimiter of boolean option from a newline to an "or" (clue
-> 	  from something like "<option> and <another option>" in the text)
-> 	  because the former does not render well in html.
-> 
->  Documentation/filesystems/dax.txt             |   2 +-
->  Documentation/filesystems/index.rst           |   1 +
->  .../filesystems/{xfs.txt => xfs.rst}          | 123 +++++++++---------
->  MAINTAINERS                                   |   2 +-
->  4 files changed, 61 insertions(+), 67 deletions(-)
->  rename Documentation/filesystems/{xfs.txt => xfs.rst} (81%)
+Commit 8da5298 mkfs: validate start and end of aligned logs stopped
+open-coding log end block checks, and used xfs_verify_fsbno() instead.
+It also used xfs_verify_fsbno() to validate the log start.  This
+seemed to make sense, but then xfs/306 started failing on 4k sector
+filesystems, which leads to a log striep unite being set on a single
+AG filesystem.
 
-Documentation/{filesystem/xfs.txt => admin-guide/xfs.rst}.
+As it turns out, if xfs_verify_fsbno() is testing a block in the
+last AG, it needs to have mp->m_sb.sb_dblocks set, which isn't done
+until later.  With sb_dblocks unset we can't know how many blocks
+are in the last AG, and hence can't validate it.
 
-> -	If "largeio" specified, a filesystem that was created with a
-> -	"swidth" specified will return the "swidth" value (in bytes)
-> -	in st_blksize. If the filesystem does not have a "swidth"
-> -	specified but does specify an "allocsize" then "allocsize"
-> +	If ``largeio`` specified, a filesystem that was created with a
+To fix all this, go back to open-coding the checks; note that this
+/does/ rely on m_sb.sb_agblklog being set, but that /is/ already
+done in the early call to start_superblock_setup().
 
-surely 'If ``largeio`` is specified' here?
+Fixes: 8da5298 ("mkfs: validate start and end of aligned logs")
+Reported-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
 
-> +	``swidth`` specified will return the ``swidth`` value (in bytes)
-> +	in ``st_blksize``. If the filesystem does not have a ``swidth``
-> +	specified but does specify an ``allocsize`` then ``allocsize``
->  	(in bytes) will be returned instead. Otherwise the behaviour
+Sorry for missing this one in regression testing :/
+
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 468b8fde..4e576a5c 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -3040,7 +3040,7 @@ align_internal_log(
+ 		cfg->logstart = ((cfg->logstart + (sunit - 1)) / sunit) * sunit;
+ 
+ 	/* If our log start overlaps the next AG's metadata, fail. */
+-	if (!xfs_verify_fsbno(mp, cfg->logstart)) {
++	if (XFS_FSB_TO_AGBNO(mp, cfg->logstart) <= XFS_AGFL_BLOCK(mp)) {
+ 			fprintf(stderr,
+ _("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
+   "within an allocation group.\n"),
+@@ -3051,10 +3051,9 @@ _("Due to stripe alignment, the internal log start (%lld) cannot be aligned\n"
+ 	/* round up/down the log size now */
+ 	align_log_size(cfg, sunit);
+ 
+-	/* check the aligned log still fits in an AG. */
++	/* check the aligned log still starts and ends in the same AG. */
+ 	logend = cfg->logstart + cfg->logblocks - 1;
+-	if (XFS_FSB_TO_AGNO(mp, cfg->logstart) != XFS_FSB_TO_AGNO(mp, logend) ||
+-	    !xfs_verify_fsbno(mp, logend)) {
++	if (XFS_FSB_TO_AGNO(mp, cfg->logstart) != XFS_FSB_TO_AGNO(mp, logend)) {
+ 		fprintf(stderr,
+ _("Due to stripe alignment, the internal log size (%lld) is too large.\n"
+   "Must fit within an allocation group.\n"),
+
