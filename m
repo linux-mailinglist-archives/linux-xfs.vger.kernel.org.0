@@ -2,109 +2,179 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C51644E2
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 12:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63EEA64530
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 12:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfGJKEP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 06:04:15 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:35510
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726132AbfGJKEP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 06:04:15 -0400
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id F207B6A191D
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:56:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (100-96-92-226.trex.outbound.svc.cluster.local [100.96.92.226])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 853DB6A1160
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:56:28 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.3);
-        Wed, 10 Jul 2019 09:56:28 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
-X-MailChannels-Auth-Id: dreamhost
-X-Plucky-Harmony: 5c7df2071809ad58_1562752588821_123993838
-X-MC-Loop-Signature: 1562752588821:2395402459
-X-MC-Ingress-Time: 1562752588821
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 239987F131
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
-        :message-id:to:subject:mime-version:content-type
-        :content-transfer-encoding; s=a-j.ru; bh=Qt/VKhOTJ2EPsK5t7t24jNc
-        U6+A=; b=DiH0Vn9zjJSCQgtl538xAgxvag+90FHKvwfACVLyXUiLsXfWyrp5rMH
-        X3b1W0pfX7D6WybkklY1FKrayasnR4532xTpxRaDS5rBvcFfRBjnmHUTbecEmaBY
-        BRyACCE9Zh5uRMq6kFT0iNHRXzE6lrwAw0OZRxb0kplaaYToRNOI=
-Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
-        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: a-j@a-j.ru)
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 339F17FAA6
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:56:24 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 12:56:17 +0300
-X-DH-BACKEND: pdx1-sub0-mail-a65
-From:   Andrey Zhunev <a-j@a-j.ru>
-Message-ID: <871210488.20190710125617@a-j.ru>
-To:     linux-xfs@vger.kernel.org
-Subject: Need help to recover root filesystem after a power supply issue
+        id S1727097AbfGJKaV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 06:30:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2251 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726281AbfGJKaV (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 10 Jul 2019 06:30:21 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9A5FBF2180E151FADF4A;
+        Wed, 10 Jul 2019 18:30:18 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 10 Jul
+ 2019 18:30:07 +0800
+Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
+ case
+To:     =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        <linux-xfs@vger.kernel.org>,
+        "Linux FS-devel Mailing List" <linux-fsdevel@vger.kernel.org>,
+        Gao Xiang <gaoxiang25@huawei.com>, <chao@kernel.org>
+References: <20190703075502.79782-1-yuchao0@huawei.com>
+ <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
+Date:   Wed, 10 Jul 2019 18:30:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: 0
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+In-Reply-To: <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello All,
+Hi Andreas,
 
-I am struggling to recover my system after a PSU failure, and I was
-suggested to ask here for support.
+Thanks for your review in advance. :)
 
-One of the hard drives throws some read errors, and that happen to be
-my root drive...
-My system is CentOS 7, and the root partition is a part of LVM.
+On 2019/7/10 7:32, Andreas Grünbacher wrote:
+> Hi Chao,
+> 
+> Am Mi., 3. Juli 2019 um 09:55 Uhr schrieb Chao Yu <yuchao0@huawei.com>:
+>> Some filesystems like erofs/reiserfs have the ability to pack tail
+>> data into metadata, e.g.:
+>> IOMAP_MAPPED [0, 8192]
+>> IOMAP_INLINE [8192, 8200]
+>>
+>> However current IOMAP_INLINE type has assumption that:
+>> - inline data should be locating at page #0.
+>> - inline size should equal to .i_size
+>> Those restriction fail to convert to use iomap IOMAP_INLINE in erofs,
+>> so this patch tries to relieve above limits to make IOMAP_INLINE more
+>> generic to cover tail-packing case.
+> 
+> this patch suffers from the following problems:
+> 
+> * Fiemap distinguishes between FIEMAP_EXTENT_DATA_INLINE and
+> FIEMAP_EXTENT_DATA_TAIL. Someone will sooner or later inevitably use
+> iomap_fiemap on a filesystem with tail packing, so if we don't make
+> the same distinction in iomap, iomap_fiemap will silently produce the
+> wrong result. This means that IOMAP_TAIL should become a separate
+> mapping type.
 
-[root@mgmt ~]# lvscan
-  ACTIVE            '/dev/centos/root' [<98.83 GiB] inherit
-  ACTIVE            '/dev/centos/home' [<638.31 GiB] inherit
-  ACTIVE            '/dev/centos/swap' [<7.52 GiB] inherit
-[root@mgmt ~]#
+I'm a little confused, IIUC, IOMAP_TAIL and FIEMAP_EXTENT_DATA_TAIL are with
+different semantics:
 
-[root@tftp ~]# file -s /dev/centos/root
-/dev/centos/root: symbolic link to `../dm-3'
-[root@tftp ~]# file -s /dev/centos/home
-/dev/centos/home: symbolic link to `../dm-4'
-[root@tftp ~]# file -s /dev/dm-3
-/dev/dm-3: SGI XFS filesystem data (blksz 4096, inosz 256, v2 dirs)
-[root@tftp ~]# file -s /dev/dm-4
-/dev/dm-4: SGI XFS filesystem data (blksz 4096, inosz 256, v2 dirs)
+- IOMAP_TAIl:
+  we may introduce this flag to cover tail-packing case, in where we merge
+small-sized data in the tail of file into free space of its metadata.
+- FIEMAP_EXTENT_DATA_TAIL:
+quoted from Documentation/filesystems/fiemap.txt
+"  This will also set FIEMAP_EXTENT_NOT_ALIGNED
+Data is packed into a block with data from other files."
+It looks like this flag indicates that blocks from different files stores into
+one common block.
 
+I'm not familiar with fiemap flags' history, but maybe FIEMAP_EXTENT_DATA_TAIL
+should be better to rename to FIEMAP_EXTENT_DATA_PACKING to avoid ambiguity. And
+then FIEMAP_EXTENT_DATA_INLINE will be enough to cover normal inline case and
+tail-packing case?
 
-[root@tftp ~]# xfs_repair /dev/centos/root
-Phase 1 - find and verify superblock...
-superblock read failed, offset 53057945600, size 131072, ag 2, rval -1
+> 
+> * IOMAP_INLINE mappings always start at offset 0 and span an entire
+> page, so they are always page aligned. IOMAP_TAIL mappings only need
 
-fatal error -- Input/output error
-[root@tftp ~]#
+Why can't #0 page consist of more than one block/mapping? I didn't get what's
+difference here.
 
+> to be block aligned. If the block size is smaller than the page size,
 
-smartctl shows some pending sectors on /dev/sda, and no reallocated
-sectors (yet?).
+- reiserfs tries to find last page's content, if the size of that page's valid
+content is smaller than threshold (at least less than one block), reiserfs can
+do the packing.
 
-Can someone please give me a hand to bring root partition back to life
-(ideally)? Or, at least, recover a couple of critical configuration
-files...
+- erofs' block size is 4kb which is the same as page size.
 
+Actually, for IOMAP_TAIL, there is no users who need to map more than one block
+into metadata, so I'm not sure that we should support that, or we just need to
+let code preparing for that to those potential users?
 
----
-Best regards,
- Andrey
+Thanks,
 
+> a tail page can consist of more than one mapping. So
+> iomap_read_inline_data needs to be changed to only copy a single block
+> out of iomap->inline_data, and we need to adjust iomap_write_begin and
+> iomap_readpage_actor accordingly.
+> 
+> * Functions iomap_read_inline_data, iomap_write_end_inline, and
+> iomap_dio_inline_actor currently all assume that we are operating on
+> page 0, and that iomap->inline_data points at the data at offset 0.
+> That's no longer the case for IOMAP_TAIL mappings. We need to look
+> only at the offset within the page / block there.
+> 
+> * There are some asserts like the following int he code:
+> 
+>   BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
+> 
+> Those should probably be tightened to check for block boundaries
+> instead of page boundaries, i.e. something like:
+> 
+>   BUG_ON(size > i_blocksize(inode) -
+> offset_in_block(iomap->inline_data, inode));
+> 
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/iomap.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/fs/iomap.c b/fs/iomap.c
+>> index 12654c2e78f8..d1c16b692d31 100644
+>> --- a/fs/iomap.c
+>> +++ b/fs/iomap.c
+>> @@ -264,13 +264,12 @@ static void
+>>  iomap_read_inline_data(struct inode *inode, struct page *page,
+>>                 struct iomap *iomap)
+>>  {
+>> -       size_t size = i_size_read(inode);
+>> +       size_t size = iomap->length;
+> 
+> Function iomap_read_inline_data fills the entire page here, not only
+> the iomap->length part, so this is wrong. But see my comment above
+> about changing iomap_read_inline_data to read a single block above as
+> well.
+> 
+>>         void *addr;
+>>
+>>         if (PageUptodate(page))
+>>                 return;
+>>
+>> -       BUG_ON(page->index);
+>>         BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
+>>
+>>         addr = kmap_atomic(page);
+>> @@ -293,7 +292,6 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>>         sector_t sector;
+>>
+>>         if (iomap->type == IOMAP_INLINE) {
+>> -               WARN_ON_ONCE(pos);
+>>                 iomap_read_inline_data(inode, page, iomap);
+>>                 return PAGE_SIZE;
+>>         }
+> 
+> Those last two changes look right to me.
+> 
+> Thanks,
+> Andreas
+> .
+> 
