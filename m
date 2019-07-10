@@ -2,108 +2,230 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 548B064CCF
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 21:30:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE88B64E14
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 23:44:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfGJTaY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 15:30:24 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:33363 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfGJTaY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 15:30:24 -0400
-Received: by mail-wr1-f41.google.com with SMTP id n9so3712374wru.0
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 12:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorremedies-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=avw7jyhPFOGY0635g+5QermFg372fHABEWYwIWHYjKM=;
-        b=I4GtgFNK6+orMBfMVFpt8XYMu/3tk2I/Hnr2dhBWel9WncvXbJcVS7eDOBwjyrzcya
-         1zYtNNkqO7GxABWwOmgD0IxAyPSSbT+u+IBJQ6CiEM6UE8MFlI502YNJW0M3+/XcpePg
-         44rY44iw9AwJGhN5BtZpATpxPcMG0NEDnCORwOfaJ5Hses/pn9S5MNIp6D/rqzwNNDil
-         09XwbmaTkf9yHOEDs42sYaGCJg4eHaUw8QBiIoyHNPRN4Ty7EqsvtCOw8+gs6x+CrTst
-         WPAjUVY06Pd6Wo+3F+CuzkhLLGH7Fvucc1mCAT7I83nB2LA+Jitd+SmoktGvo9ebgrBK
-         2bTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=avw7jyhPFOGY0635g+5QermFg372fHABEWYwIWHYjKM=;
-        b=KWd4fSonlw35Ilz4bXqYyvyTExms3wItcxjMtnZOOetYxJj4sDy1y4qAOPMJ4/ok+L
-         sDez/ZAX6TqLE8ZVk0+CPzGhdDarTu2qECe0WSqzP0PMbX/yrPuYOn7OHR3UgxG9sJ5B
-         CPd+nABmluh6HsBE8JL9qZ8Mir5wHbTxGP1BwJxu/lJ28YlqTGJXvRP9YEYsqClcXZZs
-         L+orc+ytxYp5b2prFbRhRowvDrRt9oWyuDN4Ev/4h+JHfPeHAWOhTKpuDnD3Gtf89QJY
-         iz/taXrIJvEUCKkQQCH48BEokI9IUlDUPevsoWq8QUJYruiofyHWsGQqD8F8tBNppcpe
-         UkJw==
-X-Gm-Message-State: APjAAAUDSJpZ7jupSiGKzNZEXcG3v7JCn0uVw9ByMxJ+GkMyzCRcv8iX
-        VqshDbm+FfqRy8xMaU6BuZXtg9Ch79yaNyjkpadJjTNaJEY=
-X-Google-Smtp-Source: APXvYqylwBmrs/ggfRCaNeTw9Vpngau1lkjCEGMgG59Bz/Ho6Z3wK2a/ZWCistU+xh6emfJkSKYSwI7b/Olef4N527Q=
-X-Received: by 2002:adf:dd01:: with SMTP id a1mr14595545wrm.12.1562787022300;
- Wed, 10 Jul 2019 12:30:22 -0700 (PDT)
+        id S1727248AbfGJVoh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 17:44:37 -0400
+Received: from sandeen.net ([63.231.237.45]:46448 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727188AbfGJVoh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 10 Jul 2019 17:44:37 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 25B5E2B08;
+        Wed, 10 Jul 2019 16:44:29 -0500 (CDT)
+Subject: Re: [PATCH] Fix the inconsistency between the code and the manual
+ page of mkfs.xfs.
+To:     Alvin@linux.alibaba.com, linux-xfs@vger.kernel.org,
+        sandeen@redhat.com
+Cc:     caspar@linux.alibaba.com
+References: <1560421580-22920-1-git-send-email-Alvin@linux.alibaba.com>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <aa442f3b-e0ee-ea55-efcd-9aa3a499fdec@sandeen.net>
+Date:   Wed, 10 Jul 2019 16:44:34 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <958316946.20190710124710@a-j.ru> <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
- <1373677058.20190710182851@a-j.ru> <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
- <1015034894.20190710190746@a-j.ru> <CAJCQCtSTPaor-Wo6b1NF3QT_Pi2rO7B9QMbfudZS=9TEt-Oemw@mail.gmail.com>
- <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com>
- <816157686.20190710201614@a-j.ru> <CAJCQCtQ08-hu7Cr2Li4v07r8v1isxZu=_hP3aQpHqJw4D2jCmg@mail.gmail.com>
- <e1dea87a-a2d8-4f4c-8807-4027a1a03a41@telefonica.net>
-In-Reply-To: <e1dea87a-a2d8-4f4c-8807-4027a1a03a41@telefonica.net>
-From:   Chris Murphy <lists@colorremedies.com>
-Date:   Wed, 10 Jul 2019 13:30:11 -0600
-Message-ID: <CAJCQCtS0EfAghBGoL-YVTEANfAXV4Oy7Q+4Q0Jp3xOF-uQhixA@mail.gmail.com>
-Subject: Re: Need help to recover root filesystem after a power supply issue
-To:     "Carlos E. R." <robin.listas@telefonica.net>
-Cc:     xfs list <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1560421580-22920-1-git-send-email-Alvin@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 12:35 PM Carlos E. R.
-<robin.listas@telefonica.net> wrote:
->
-> On 10/07/2019 20.03, Chris Murphy wrote:
-> > On Wed, Jul 10, 2019 at 11:16 AM Andrey Zhunev <a-j@a-j.ru> wrote:
->
-> ...
->
-> >> When reallocated sectors appear - it's clearly a bad sign. If the
-> >> number of reallocated sectors grow - the drive should not be used.
-> >> But it's not that obvious for the pending sectors...
-> >
-> > They're both bad news. It's just a matter of degree. Yes a
-> > manufacturer probably takes the position that pending sectors is and
-> > even remapping is normal drive behavior. But realistically it's not
-> > something anyone wants to have to deal with. It's useful for
-> > curiousity. Use it for Btrfs testing :-D
->
-> I have used some disks with some reallocated sectors for several years
-> after the "event", with not even a single failure afterwards. It should
-> not be fatal. For me, the criteria is that the number does not increase,
-> and that it is not large.
+On 6/13/19 5:26 AM, Alvin@linux.alibaba.com wrote:
+> From: Alvin Zheng <Alvin@linux.alibaba.com>
+> 
+> Signed-off-by: Alvin Zheng <Alvin@linux.alibaba.com>
 
-That is true but it also takes mitigation effort beyond what most
-people are willing or capable of doing. But also there's no way to
-know in advance. SMART just isn't a good predictor.
-
-There may have been a brief period period where some of these
-marginally bad sectors could have been remapped automatically, but
-didn't because of the default short SCT ERC since these are intended
-to be NAS drives, not boot/system drives.
-
-And also, the default kernel command time out of 30 seconds is
-inappropriate for a single boot or system drive. It should be quite a
-bit longer. 30s makes sense only if the drive SCT ERC is shorter than
-that, and it's some kind of RAID setup.
-
-Thus far no one's been willing to budget on setting better defaults.
-Distros say the kernel should default to something safe. And kernel
-developers pretty much say defaults like this one should never be
-changed and it's a distro + use case responsibility to change it. And
-the end result of that going nowhere is users consistently have a
-suboptimal experience, especially the desktop/laptop  use case.
+Sorry for getting to this so late.  First of all, we need a descriptive
+changelog, something like:
 
 
--- 
-Chris Murphy
+
+mkfs.xfs.8: Fix an inconsistency between the code and the man page
+
+The man page currently states that block and sector size units cannot
+be used for other option values unless they are explicitly specified,
+when in fact the default sizes will be used in that case.
+
+Change the man page to clarify this.
+
+
+> ---
+>  man/man8/mkfs.xfs.8 | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8
+> index 4b8c78c..bf2ad54 100644
+> --- a/man/man8/mkfs.xfs.8
+> +++ b/man/man8/mkfs.xfs.8
+> @@ -115,9 +115,12 @@ When specifying parameters in units of sectors or filesystem blocks, the
+>  .B \-s
+>  option or the
+>  .B \-b
+> -option first needs to be added to the command line.
+> -Failure to specify the size of the units will result in illegal value errors
+> -when parameters are quantified in those units.
+> +option can be used to specify the size of the sector or block. The 
+
+trailing whitespace there
+
+> +.B \-s
+> +option and the
+> +.B \-b
+> +should be placed before any options in units of sectors or blocks. If the size of the block
+> +or sector is not specified, the default size (block: 4KiB, sector: 512B) will be used.
+
+ > 80 col lines.
+
+But also, it seems that it's not actually necessary to state them first, as this works
+as expected:
+
+# mkfs/mkfs.xfs -d size=65536b,file,name=fsfile -b size=2k
+                        ^^^^^^                     ^^^^^^^
+meta-data=fsfile                 isize=512    agcount=4, agsize=16384 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1
+data     =                       bsize=2048   blocks=65536, imaxpct=25
+                                       ^^^^          ^^^^^
+         =                       sunit=0      swidth=0 blks
+
+...
+
+# mkfs/mkfs.xfs -d size=65536s,file,name=fsfile -s size=2k
+                        ^^^^^^                     ^^^^^^^
+meta-data=fsfile                 isize=512    agcount=4, agsize=8192 blks
+         =                       sectsz=2048  attr=2, projid32bit=1
+                                        ^^^^
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1
+data     =                       bsize=4096   blocks=32768, imaxpct=25
+                                                     ^^^^^
+         =                       sunit=0      swidth=0 blks
+
+I think this is because we only parse the string to start:
+
+data_opts_parser()
+
+        case D_SIZE:
+                cli->dsize = getstr(value, opts, subopt);
+                break;
+
+and in fact this is true for all the things that can take this type of unit:
+
+        /* parameters that depend on sector/block size being validated. */
+        char    *dsize;
+        char    *agsize;
+        char    *dsu;
+        char    *dirblocksize;
+        char    *logsize;
+        char    *lsu;
+        char    *rtextsize;
+        char    *rtsize;
+
+So we validate blocksize & sector size and move them from cli or defaults
+into cfg, as needed:
+
+        validate_blocksize(&cfg, &cli, &dft);
+        validate_sectorsize(&cfg, &cli, &dft, &ft, dfile, dry_run,
+                            force_overwrite);
+
+and from then on we can start converting other sizes using those units:
+
+        /*
+         * we've now completed basic validation of the features, sector and
+         * block sizes, so from this point onwards we use the values found in
+         * the cfg structure for them, not the command line structure.
+         */ 
+        validate_dirblocksize(&cfg, &cli);
+        validate_inodesize(&cfg, &cli); 
+...
+
+so I think the changes which indicate that -s size and -b size must be stated
+first are not actually correct, as it was intentional to handle them being
+stated in any order.  (I know Dave said otherwise, but I think he was 
+wrong, and he forgot how he wrote this code) ;)
+
+-Eric
+
+>  .PP
+>  Many feature options allow an optional argument of 0 or 1, to explicitly
+>  disable or enable the functionality.
+> @@ -136,9 +139,10 @@ The filesystem block size is specified with a
+>  in bytes. The default value is 4096 bytes (4 KiB), the minimum is 512, and the
+>  maximum is 65536 (64 KiB).
+>  .IP
+> -To specify any options on the command line in units of filesystem blocks, this
+> -option must be specified first so that the filesystem block size is
+> -applied consistently to all options.
+> +If a non-default filesystem block size is specified, the option
+> +must be specified before any options that use filesystem block size
+> +units so that the non-default filesystem block size is applied
+> +consistently to all options.
+>  .IP
+>  Although
+>  .B mkfs.xfs
+> @@ -895,9 +899,10 @@ is 512 bytes. The minimum value for sector size is
+>  must be a power of 2 size and cannot be made larger than the
+>  filesystem block size.
+>  .IP
+> -To specify any options on the command line in units of sectors, this
+> -option must be specified first so that the sector size is
+> -applied consistently to all options.
+> +If a non-default sector size is specified, the option
+> +must be specified before any options that use sector size
+> +units so that the non-default sector size is applied
+> +consistently to all options.
+>  .RE
+>  .TP
+>  .BI \-L " label"
+> 
