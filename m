@@ -2,150 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3191764993
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 17:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12960649F5
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 17:45:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGJP3D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 11:29:03 -0400
-Received: from bonobo.elm.relay.mailchannels.net ([23.83.212.22]:31608 "EHLO
-        bonobo.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727552AbfGJP3C (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 11:29:02 -0400
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id C6D8F228CF;
-        Wed, 10 Jul 2019 15:29:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (100-96-30-63.trex.outbound.svc.cluster.local [100.96.30.63])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id E639322823;
-        Wed, 10 Jul 2019 15:29:00 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.3);
-        Wed, 10 Jul 2019 15:29:01 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
-X-MailChannels-Auth-Id: dreamhost
-X-Minister-Arch: 16b35b895863b5bf_1562772541423_2308817971
-X-MC-Loop-Signature: 1562772541422:2900850836
-X-MC-Ingress-Time: 1562772541422
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 697F182A32;
-        Wed, 10 Jul 2019 08:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
-        :message-id:to:cc:subject:in-reply-to:references:mime-version
-        :content-type:content-transfer-encoding; s=a-j.ru; bh=JOXXKZ1Chh
-        Nxui0sB+eJSCEIkzQ=; b=TM/8gwlhZbCqFmnUPa6VjqWubNBps4HE4bouv9HhFF
-        X5Q6MkUzM2RstfcSbuT6EQzOXoVr6Va9cw4Ee7QVEUXBEmDw/nF0AASTbFQi9tKX
-        TpUp3gfl+Gp/oiu1VCgS2OoTI6aomLN64h3aUI56s002XNll97rliTyNd8h1pPl7
-        g=
-Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
-        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: a-j@a-j.ru)
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 5C1CE82A25;
-        Wed, 10 Jul 2019 08:28:59 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 18:28:51 +0300
-X-DH-BACKEND: pdx1-sub0-mail-a65
-From:   Andrey Zhunev <a-j@a-j.ru>
-Message-ID: <1373677058.20190710182851@a-j.ru>
-To:     Chris Murphy <lists@colorremedies.com>
-CC:     xfs list <linux-xfs@vger.kernel.org>
-Subject: Re: Need help to recover root filesystem after a power supply issue
-In-Reply-To: <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
-References: <958316946.20190710124710@a-j.ru> 
-  <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
+        id S1727281AbfGJPpm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 11:45:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43740 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbfGJPpl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 11:45:41 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so2979077wru.10
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 08:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorremedies-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sIip4+6N0s055OeQjkszWsxeziBGrh2ICQC7CAsXcu0=;
+        b=hJO2E8DrNApEgzhsFzy86b9D4wZr5Rg7Tpwz+27h+/U5QvdsviM+S4rf8xFYWSaKHL
+         gcHlw6hjpAff1YS8O7nqx3MgTKE3r6mhPWCJnw2ew5186PNQSml5XGGEPZMJ2QZdgu23
+         d4MIMpGGatPppxqRY2c45rJg2jOAM33ze+ZdRaUzhamhNyb9igWgEQh1TpjPQMjqfmEr
+         BTEX9UhTD5sdCsmTLweOIYqqIJEZ2EkyKALjQCM0vzatvINSE221blIkb5GdOZa8FViq
+         LxGPe2lrG7q7T1hOXkC49NPVOadYK1XlWKn4tVeZxSQGhUN8ASX9jeBab3kU4Kb0+7Uu
+         tzGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sIip4+6N0s055OeQjkszWsxeziBGrh2ICQC7CAsXcu0=;
+        b=Jt+FKSlGFLEbbO23CpH8d3OeKULYMqL+t/WtSFA2OoPFlVmXkTQ/SAISP34HinowIF
+         F63I+gUVdjKizkZkSwauEN4Asoq+joSZHujjSYKK5h18Jt+cC3yLnJdnWwLICz0xc4/n
+         0MbVhF2bv4S7cFj7szA7cTGIZpcQWO40Oc9icECcLX+/Wt5SNBSDI8XWII/PX7FTCmeX
+         7K2xVjWcuw3tsLlsR33MrLWg9e15QlQF7xLY5+YjrLwbUH9Abz4cFcvNjW5XqTJsYHXJ
+         ysfwaJ+ugugEy+Ednj9WS5F0F7n5zNttgttq6AwaW0BdTMWR0WbPNHbv0hqWcdE8HK34
+         IThQ==
+X-Gm-Message-State: APjAAAWwEXWHNYT81WOzIRrZGS4bBzGmHf1SqNC4t6/UonpizvhjDbK+
+        PckNEn4XaK6ktSl60aK1dfdW1cJcb5V0XlMJr+HU5g==
+X-Google-Smtp-Source: APXvYqwocxz6hIu8PZw1E9xsM5NP+WqUzEEYSOZ6ki2bArmLYaN3U2n7GA7Mc0k7B+gvfHS6DtcX2A/zAckovyy/+A4=
+X-Received: by 2002:a5d:4403:: with SMTP id z3mr32857238wrq.29.1562773539411;
+ Wed, 10 Jul 2019 08:45:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: 0
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigdeltdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufgjfhggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucffohhmrghinhepshhmrghrthhmohhnthhoohhlshdrohhrghenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+References: <958316946.20190710124710@a-j.ru> <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
+ <1373677058.20190710182851@a-j.ru>
+In-Reply-To: <1373677058.20190710182851@a-j.ru>
+From:   Chris Murphy <lists@colorremedies.com>
+Date:   Wed, 10 Jul 2019 09:45:28 -0600
+Message-ID: <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
+Subject: Re: Need help to recover root filesystem after a power supply issue
+To:     Andrey Zhunev <a-j@a-j.ru>
+Cc:     Chris Murphy <lists@colorremedies.com>,
+        xfs list <linux-xfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Wednesday, July 10, 2019, 5:30:37 PM, you wrote:
+On Wed, Jul 10, 2019 at 9:29 AM Andrey Zhunev <a-j@a-j.ru> wrote:
+>
+> Well, this machine is always online (24/7, with a UPS backup power).
+> Yesterday we found it switched OFF, without any signs of life. Trying
+> to switch it on, the PSU made a humming noise and the machine didn't
+> even try to start. So we replaced the PSU. After that, the machine
+> powered on - but refused to boot... Something tells me these two
+> failures are likely related...
 
-> On Wed, Jul 10, 2019 at 3:52 AM Andrey Zhunev <a-j@a-j.ru> wrote:
->>
->> [root@tftp ~]# xfs_repair /dev/centos/root
->> Phase 1 - find and verify superblock...
->> superblock read failed, offset 53057945600, size 131072, ag 2, rval -1
->>
->> fatal error -- Input/output error
->> [root@tftp ~]#
+Most likely the drive is dying and the spin down from power failure
+and subsequent spin up has increased the rate of degradation, and
+that's why they seem related.
 
-> # smartctl -l scterc /dev/
+What do you get for:
 
-> Point it to the physical device. If it's a consumer drive, it might
-> support a configurable SCT ERC. Also need to see the kernel messages
-> at the time of the i/o error. There's some chance if a deep recover
-> read is possible, it'll recover the data. But I don't see how this is
-> related to power supply failure.
+# smarctl -x /dev/sda
 
 
 
-Well, this machine is always online (24/7, with a UPS backup power).
-Yesterday we found it switched OFF, without any signs of life. Trying
-to switch it on, the PSU made a humming noise and the machine didn't
-even try to start. So we replaced the PSU. After that, the machine
-powered on - but refused to boot... Something tells me these two
-failures are likely related...
+>
+>
+>
+> # smartctl -l scterc /dev/sda
+> smartctl 6.5 2016-05-07 r4318 [x86_64-linux-3.10.0-957.el7.x86_64] (local build)
+> Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
+>
+> SCT Error Recovery Control:
+>            Read:     70 (7.0 seconds)
+>           Write:     70 (7.0 seconds)
+
+Good news. This can be raised by a ton and maybe you'll recover the
+bad sectors. You need to do two things. You might have to iterate some
+of this because I don't know what the max SCT ERC value is for this
+make/model drive. Consumer drives can have really high values, upwards
+of three minutes, which is ridiculous but off topic. I'd like to think
+60 seconds would be enough and also below whatever cap the drive
+firmware has. Also, I've had drive firmware crash when issuing
+multiple SCT ERC changes - so if the drive starts doing new crazy
+things, we're not going to know if it's a firmware bug or more likely
+if the drive is continuing to degrade.
+
+I would shoot for a 90 second SCT ERC for reads, and hopefully that's
+long enough and also isn't above the max value for this make/model.
+
+# smartctl -l scterc,900,100
+
+And next, raise the kernel's command timer into the stratosphere so
+that it won't get mad and do a link reset if the drive takes a long
+time to recover.
+
+# echo 180 > /sys/block/sda/device/timeout
+
+In this configuration, it's possible every single read command for a
+(marginally) bad sector will take 90 seconds. So if you have a bunch
+of these, an fsck might take hours. So that's not necessarily how I
+would do it. Best to see the smartctl -x to have some idea how many
+bad sectors there might be.
 
 
 
-# smartctl -l scterc /dev/sda
-smartctl 6.5 2016-05-07 r4318 [x86_64-linux-3.10.0-957.el7.x86_64] (local build)
-Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
+>
+> #
+>
+> This is a WD RED series drive, WD30EFRX.
 
-SCT Error Recovery Control:
-           Read:     70 (7.0 seconds)
-          Write:     70 (7.0 seconds)
+Yeah this is a NAS drive, and this low 70 decisecond value is meant
+for RAID. It's a suboptimal value if you're using it for a boot drive.
+But deal with that later after recovery.
 
-#
+>Jul 10 11:48:05 mgmt kernel: blk_update_request: I/O error, dev sda, sector 54439176
 
-This is a WD RED series drive, WD30EFRX.
-Here are some more of the error messages from kernel log file:
+> Jul 10 11:59:03 mgmt kernel: blk_update_request: I/O error, dev sda, sector 176473048
+> Jul 10 11:59:05 mgmt kernel: blk_update_request: I/O error, dev sda, sector 176473048
 
-Jul 10 11:59:03 mgmt kernel: ata1.00: exception Emask 0x0 SAct 0x100000 SErr 0x0 action 0x0
-Jul 10 11:59:03 mgmt kernel: ata1.00: irq_stat 0x40000008
-Jul 10 11:59:03 mgmt kernel: ata1.00: failed command: READ FPDMA QUEUED
-Jul 10 11:59:03 mgmt kernel: ata1.00: cmd 60/08:a0:d8:c3:84/00:00:0a:00:00/40 tag 20 ncq 4096 in#012         res 41/40:00:d8:c3:84/00:00:0a:00:00/40 Emask 0x409 (media error) <F>
-Jul 10 11:59:03 mgmt kernel: ata1.00: status: { DRDY ERR }
-Jul 10 11:59:03 mgmt kernel: ata1.00: error: { UNC }
-Jul 10 11:59:03 mgmt kernel: ata1.00: configured for UDMA/133
-Jul 10 11:59:03 mgmt kernel: sd 0:0:0:0: [sda] tag#20 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-Jul 10 11:59:03 mgmt kernel: sd 0:0:0:0: [sda] tag#20 Sense Key : Medium Error [current] [descriptor]
-Jul 10 11:59:03 mgmt kernel: sd 0:0:0:0: [sda] tag#20 Add. Sense: Unrecovered read error - auto reallocate failed
-Jul 10 11:59:03 mgmt kernel: sd 0:0:0:0: [sda] tag#20 CDB: Read(16) 88 00 00 00 00 00 0a 84 c3 d8 00 00 00 08 00 00
-Jul 10 11:59:03 mgmt kernel: blk_update_request: I/O error, dev sda, sector 176473048
-Jul 10 11:59:03 mgmt kernel: Buffer I/O error on dev sda, logical block 22059131, async page read
-Jul 10 11:59:03 mgmt kernel: ata1: EH complete
-Jul 10 11:59:05 mgmt kernel: ata1.00: exception Emask 0x0 SAct 0x1000000 SErr 0x0 action 0x0
-Jul 10 11:59:05 mgmt kernel: ata1.00: irq_stat 0x40000008
-Jul 10 11:59:05 mgmt kernel: ata1.00: failed command: READ FPDMA QUEUED
-Jul 10 11:59:05 mgmt kernel: ata1.00: cmd 60/08:c0:d8:c3:84/00:00:0a:00:00/40 tag 24 ncq 4096 in#012         res 41/40:00:d8:c3:84/00:00:0a:00:00/40 Emask 0x409 (media error) <F>
-Jul 10 11:59:05 mgmt kernel: ata1.00: status: { DRDY ERR }
-Jul 10 11:59:05 mgmt kernel: ata1.00: error: { UNC }
-Jul 10 11:59:05 mgmt kernel: ata1.00: configured for UDMA/133
-Jul 10 11:59:05 mgmt kernel: sd 0:0:0:0: [sda] tag#24 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-Jul 10 11:59:05 mgmt kernel: sd 0:0:0:0: [sda] tag#24 Sense Key : Medium Error [current] [descriptor]
-Jul 10 11:59:05 mgmt kernel: sd 0:0:0:0: [sda] tag#24 Add. Sense: Unrecovered read error - auto reallocate failed
-Jul 10 11:59:05 mgmt kernel: sd 0:0:0:0: [sda] tag#24 CDB: Read(16) 88 00 00 00 00 00 0a 84 c3 d8 00 00 00 08 00 00
-Jul 10 11:59:05 mgmt kernel: blk_update_request: I/O error, dev sda, sector 176473048
-Jul 10 11:59:05 mgmt kernel: Buffer I/O error on dev sda, logical block 22059131, async page read
-Jul 10 11:59:05 mgmt kernel: ata1: EH complete
+So at least two bad sectors and they aren't anywhere near each other.
+The smartctl -x command might give us an idea how bad the drive is.
+Anyway, these drives have decent warranties, but they're going to want
+the drive returned to them. So if there's anything sensitive on it and
+it's not encrypted  you'll want it still working long enough to wipe
+it.
 
 
 
-
-
----
-Best regards,
- Andrey
-
-
+-- 
+Chris Murphy
