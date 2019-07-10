@@ -2,129 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2229664B4F
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 19:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 103AD64BD4
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 20:03:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfGJRQe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 13:16:34 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:26765
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726111AbfGJRQe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 13:16:34 -0400
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BE762501B88;
-        Wed, 10 Jul 2019 17:16:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (100-96-14-124.trex.outbound.svc.cluster.local [100.96.14.124])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 536DD502B5C;
-        Wed, 10 Jul 2019 17:16:30 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.3);
-        Wed, 10 Jul 2019 17:16:32 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
-X-MailChannels-Auth-Id: dreamhost
-X-Squirrel-Industry: 0c193ef5351648ba_1562778990848_2840090664
-X-MC-Loop-Signature: 1562778990848:1220974120
-X-MC-Ingress-Time: 1562778990847
-Received: from pdx1-sub0-mail-a65.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 122EA82940;
-        Wed, 10 Jul 2019 10:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
-        :message-id:to:cc:subject:in-reply-to:references:mime-version
-        :content-type:content-transfer-encoding; s=a-j.ru; bh=VMetsobeuu
-        wf5nyfL1gI2JOrqNQ=; b=CFZyHJer9Q+AR78DHf2k5n9rUb3omzUuyrhI9BPkpz
-        bD1+NjIzzw184/u85xsBdN4bPmDw5J1UrlbhU/r7swEiu8OwmEKhOgACQ22cg64r
-        +LgBB3KqfH0xQFFOB2EGQrz0VrzewuFX7a+qC0hR3SOKlQpBMEb6PWXyTOimTuS0
-        M=
-Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
-        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: a-j@a-j.ru)
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 09EE082A4E;
-        Wed, 10 Jul 2019 10:16:22 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 20:16:14 +0300
-X-DH-BACKEND: pdx1-sub0-mail-a65
-From:   Andrey Zhunev <a-j@a-j.ru>
-Message-ID: <816157686.20190710201614@a-j.ru>
-To:     Chris Murphy <lists@colorremedies.com>
-CC:     xfs list <linux-xfs@vger.kernel.org>
-Subject: Re: Need help to recover root filesystem after a power supply issue
-In-Reply-To: <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com>
-References: <958316946.20190710124710@a-j.ru> 
-  <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
-  <1373677058.20190710182851@a-j.ru>
-  <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
-  <1015034894.20190710190746@a-j.ru>
-  <CAJCQCtSTPaor-Wo6b1NF3QT_Pi2rO7B9QMbfudZS=9TEt-Oemw@mail.gmail.com>
-  <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com>
+        id S1727063AbfGJSDY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 14:03:24 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:33522 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfGJSDY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 14:03:24 -0400
+Received: by mail-wr1-f43.google.com with SMTP id n9so3474349wru.0
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 11:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorremedies-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w50yraipRvzVDddxheFY/JtQ7rUBc8/m/dYkpnZQfT8=;
+        b=BA0qDdFxJk12CXals+/XP2viQwlyg5xrevLh6zG6G/663OhWUDIP+7AvPXJFERUfb2
+         rDfrT/oPhycWy1ko33FgpTusCLsy2JY0N6aPrfUu0mpvMe9rm2uxE12bsu1ggkisGmM1
+         /IKIq1/Zij+uyLTtWpot9jTAxI+G0a1iE4qw6KIGd4Glh3kXsJq+Efer2cbCyNWHDK2a
+         tMoMjMH88AVgNXlw93UFc+4qP2VbxymU/5GIErzA2iHLcfXy1nknEpUQogfi3gqHSzVl
+         neqMthzw02S9Qyj1Lr/SMranlm4x5MXpb4tQoubmAlsfo1wgaPt3ociRk3po0R98Psf4
+         ZnSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w50yraipRvzVDddxheFY/JtQ7rUBc8/m/dYkpnZQfT8=;
+        b=YopSj7Q5XldPfFTPzlgzS+nZCMPWDViPqQY1RIFEVL++lwQzGGNIQalSlLziSd/52L
+         u8edS7DSnm0oVRJcIRWQj4yPwMdLjau0OHVDpTr6oCq2QpAFnGFmADR/7B0fcdeAjyiQ
+         Aa2uX+JeaN2MtfFN9S4Q1ETpgqataYaGyvsiDr2HooFtYfnWwD2t+FIuhzDd0AuNDpyV
+         L31UztHER0Vj3FBn7VcM3Amli8ODTljzu/MxJwZGoPyXdrNkH38NIV8urkfIC8qkKs2w
+         pfVBwPMtnr72OVxkxgMnudgN2I6fn0s0/ax2WyBFUtIaKTBrBHyvM9I0eKntStMqAH+n
+         emhA==
+X-Gm-Message-State: APjAAAUNo+RjdCFSILaZ00TblDHYpobIwy208IV8kYJ+x4dSyVcX9N6h
+        GDJfuZNRVigm5z9j9NitiDcw0JNYOVGz5xEsd2grbKx49vw=
+X-Google-Smtp-Source: APXvYqx8d8sqjoMTUWyEg63ctz60vFWair9VHJsOXq7GGPKngs+Tf7dtrxgopIZY0wB1nx58YhqrzR0XvxPv3fUKak0=
+X-Received: by 2002:a5d:4403:: with SMTP id z3mr33335102wrq.29.1562781802231;
+ Wed, 10 Jul 2019 11:03:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: 0
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigdduudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftfghnshhusghstghrihgsvgdpffftgfetoffjqffuvfenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhffkvffujghfgggtgfesthhqvedttddtjeenucfhrhhomheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqnecukfhppedujeekrddugedtrddutddruddtjeenucfrrghrrghmpehmohguvgepshhmthhppdhhvghloheplgdujedvrddvfedrtddrudefudgnpdhinhgvthepudejkedrudegtddruddtrddutdejpdhrvghtuhhrnhdqphgrthhhpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqedpmhgrihhlfhhrohhmpegrqdhjsegrqdhjrdhruhdpnhhrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+References: <958316946.20190710124710@a-j.ru> <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
+ <1373677058.20190710182851@a-j.ru> <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
+ <1015034894.20190710190746@a-j.ru> <CAJCQCtSTPaor-Wo6b1NF3QT_Pi2rO7B9QMbfudZS=9TEt-Oemw@mail.gmail.com>
+ <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com> <816157686.20190710201614@a-j.ru>
+In-Reply-To: <816157686.20190710201614@a-j.ru>
+From:   Chris Murphy <lists@colorremedies.com>
+Date:   Wed, 10 Jul 2019 12:03:11 -0600
+Message-ID: <CAJCQCtQ08-hu7Cr2Li4v07r8v1isxZu=_hP3aQpHqJw4D2jCmg@mail.gmail.com>
+Subject: Re: Need help to recover root filesystem after a power supply issue
+To:     Andrey Zhunev <a-j@a-j.ru>
+Cc:     Chris Murphy <lists@colorremedies.com>,
+        xfs list <linux-xfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Wednesday, July 10, 2019, 7:47:55 PM, you wrote:
-
-> On Wed, Jul 10, 2019 at 10:46 AM Chris Murphy <lists@colorremedies.com> w=
-rote:
->>
->> # smartctl -l scterc,900,100
->> # echo 180 > /sys/block/sda/device/timeout
-
-
-> smartctl command above does need a drive specified...
-
-Indeed! :)
-
-With the commands above, you are increasing the timeout and then fsck
-will try to re-read the sectors, right?
-
-As for the SMART status, the number of pending sectors was 0 before.
-It started to grow after the PSU incident yesterday. Now, since I'm
-doing a ddrescue, all the sectors will be read (or attempted to be
-read). So the pending sectors counter may increase further.
-
-As I understand, when a drive cannot READ a sector, the sector is
-reported as pending. And it will stay like that until either the
-sector is finally read or until it is overwritten. When either of
-these happens, the Pending Sector Counter should decrease.
-In theory, it can go back to 0 (although I didn't follow this closely
-enough, so I never saw a drive like that).
-
-If a drive can't WRITE to a sector, it tries to reallocate it. If it
-succeeds, Reallocated Sectors Counter is increased. If it fails to
-reallocate - I guess there should be another kind of error or a
-counter, but I'm not sure which one.
-
-When reallocated sectors appear - it's clearly a bad sign. If the
-number of reallocated sectors grow - the drive should not be used.
-But it's not that obvious for the pending sectors...
-
-Anyway, as you noted, the drive isn't new already:
-
-
->   9 Power_On_Hours          -O--CK   022   022   000    -    56941
+On Wed, Jul 10, 2019 at 11:16 AM Andrey Zhunev <a-j@a-j.ru> wrote:
 >
-> 56941=C3=B78760 =3D 6.5 years ?
+> Wednesday, July 10, 2019, 7:47:55 PM, you wrote:
 >
-> Doubtful it's under warranty.
+> > On Wed, Jul 10, 2019 at 10:46 AM Chris Murphy <lists@colorremedies.com> wrote:
+> >>
+> >> # smartctl -l scterc,900,100
+> >> # echo 180 > /sys/block/sda/device/timeout
+>
+>
+> > smartctl command above does need a drive specified...
+>
+> Indeed! :)
+>
+> With the commands above, you are increasing the timeout and then fsck
+> will try to re-read the sectors, right?
+
+More correctly, the drive firmware won't timeout, and will try longer
+to recover the data *if* the sectors are marginally bad. If the
+sectors are flat out bad, then the firmware will still (almost)
+immediately give up and at that point nothing else can be done except
+zero the bad sectors and hope fsck can reconstruct what's missing.
+
+Thing is, 68 sectors has a low likelihood of impacting fs metadata,
+because it's a smaller target than your actual data, or free space if
+there's a lot of it.
 
 
-Mmm... yeah... I guess it was one of the early WD30EFRX drives...
-This model was launched about 7 years ago, if I'm not mistaken... :)
+> As for the SMART status, the number of pending sectors was 0 before.
+> It started to grow after the PSU incident yesterday. Now, since I'm
+> doing a ddrescue, all the sectors will be read (or attempted to be
+> read). So the pending sectors counter may increase further.
+
+It's a good and valid tactic to just use ddrescue with the previously
+mentioned modifications for SCT ERC and kernel timeouts, rather than
+directly use fsck on a drive that's clearly dying.
 
 
----
-Best regards,
- Andrey
+> As I understand, when a drive cannot READ a sector, the sector is
+> reported as pending. And it will stay like that until either the
+> sector is finally read or until it is overwritten. When either of
+> these happens, the Pending Sector Counter should decrease.
 
+Sounds about right.
+
+> In theory, it can go back to 0 (although I didn't follow this closely
+> enough, so I never saw a drive like that).
+
+It can and should go to zero once all the pending sectors are
+overwritten with either good data or zeros. It's possible the write
+succeeds to the same sector, in which case it's no longer pending and
+not remapped. It's possible internally the write fails and the drive
+firmware does a remap to make the write succeed, in which case it's no
+longer pending.
+
+If a write fails (externally reported write failure to the kernel),
+then pending sectors will get pinned at that point and only ever go up
+as the drive continues to get worse.
+
+
+> If a drive can't WRITE to a sector, it tries to reallocate it. If it
+> succeeds, Reallocated Sectors Counter is increased. If it fails to
+> reallocate - I guess there should be another kind of error or a
+> counter, but I'm not sure which one.
+
+You get essentially the same UNC type of error you've seen except it's
+a write error instead of read. That's widely considered fatal because
+having a drive that can't write is just not usable for anything (well,
+read only).
+
+>
+> When reallocated sectors appear - it's clearly a bad sign. If the
+> number of reallocated sectors grow - the drive should not be used.
+> But it's not that obvious for the pending sectors...
+
+They're both bad news. It's just a matter of degree. Yes a
+manufacturer probably takes the position that pending sectors is and
+even remapping is normal drive behavior. But realistically it's not
+something anyone wants to have to deal with. It's useful for
+curiousity. Use it for Btrfs testing :-D
+
+
+-- 
+Chris Murphy
