@@ -2,94 +2,167 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4545A64F50
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2019 01:42:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B0A964F54
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2019 01:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfGJXmj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 19:42:39 -0400
-Received: from sonic303-21.consmr.mail.ir2.yahoo.com ([77.238.178.202]:41162
-        "EHLO sonic303-21.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727823AbfGJXmj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 19:42:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1562802156; bh=dk97VOnEirqZGW/C4jJZaUVdSBxy5Zj+0GzwIPvKK30=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=NWn4mMA7TRvb2AsUI6USWmjL+jWMNY8SqXPCPB0Zmdx1gPg1zll4t29tc1oNPXsyhhe2gwAujgi9pD6oa3djsb/wbjN4www/vlwUFTA7C3i8XhqeFJ71zQgVSClmPa5o3VnSm1VBoGz8tjT8TV0VfcazeSyrajNUNL3fiMTDV7EY7qvFc2dEQ6GZw85WPJ6/zhqS3gNX6Fw2CXHoJNokY+mkwEbKHXO5OvNBMSHVh9JICdDzbmzD7QvKmMEFe1Lt9E3xPZnO+CjluBqHOeBR2lxJIK/MQZ+g+GHaKpz6ZaxJkyDlAYE0UbsAU/JIYgeEYO1cNIESs/Qhd+G3WrHbAg==
-X-YMail-OSG: E3F8to0VM1lxsh9FADTaRfvpLst1eRzWVhrH9QDugxBepJ04eijm0ZXK2CQjq_z
- d3J5gTj6JVk93_wRbN4ZvIquLkVgCq0Uac4N2w7NV082cSbr6sz1GBRIofvl0ZSK1C8fKPsWhSV4
- bbBvnWiV4Y315tKvAxulQL9klAarfYafa8XGnzJMwqWzRggrM1Pe7yEfAHghy6dYYTOORhEuSDO.
- A30ELrUL67WOdUbA00HhBanaUN0cyCpc0i65Td.71IZGm6t9qjbO5HMIz2Z.bTAiU0tNi77MSBSA
- bQs4_VVnQbxhs0m5PCYf8TgqDTUg58oEZTpddrzTrmdoxiFhAWzn42gOwpgIV0pwJL.q9Ta.iBNd
- 09zxBa.fg98h2zyrjc3VtKef1LbJhMTHzK74zE8swopH7KNyPaXzd6qKgkcwPAdXxJrlJibcEcBc
- Jbnsel8_iXN0c3ZeCXJgDxKhC4eQPt9MN0TedlzcYR7ezt51Q2lVZaRlyMcx81ikxn1KfhsUSLR7
- QDRyQQ4i6rrdgYWYBkB8B_kuxfc8Hv4UQo_Lpc2OnevRCyN0IY2sowUiV0nG5y.cEq7hElf3vq.N
- 6PQdt7s6CfnFUXqcigYIWc.W.pDTmlcytRc2BLZpJmpsdCuYzJQJ1UiuKkjYyhaPxjZqk4agPLLk
- FxzV6ODxHtY2y96snE1fb2FMiAnFNQIJjj0qEIAbjENER.hz1ZmziKA7ThVjW3qjKCP85U8Skrt_
- 2GU67NHAejgJn9QLLLXQRjcEI0GqXB92cA10lTPWQeMWJPLD5HtBWjoVGR7RaIiJJtIak_iPjN_e
- skGfkmMPl2M5yYK7vVDjHvIRQyXsdHSJmEBfbJHrzysULmQC7fLoBcrj7dlUH1KMcwRw.4x4R7FW
- 1QjvII.Bm9rMWUyriE6DO6gHc9kWgdKQnPmtcNE4eZzwaZG0Y1V7kR.1F_dk3VQfjzouhAG.3KfL
- RMAJ4VYpFuH9Q1J6I744jHTRW.y95iIBwuCrH0eD1FlDVsu4KYB_U5j4dcsyKPGXv4dGGJiJJyH4
- p8NrdkQVqS9lMZNMxDDxoms8BAqhHjtwiWYsi0wQxTNg06JjcXnLQzLQkZ30HEfyHv16ZbE1BEnI
- CfNADe.qah45J5tXIGDCFF7fTh9Mx5Gt9DWnZGl5JQ8UY1fW_K9M1.haRcFzJZ2FNHRYkBQHiMGp
- hpHXVXvj9a5zybkrdIoM47yocnP7YYgoh6ozLGJOljn5h
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Wed, 10 Jul 2019 23:42:36 +0000
-Received: by smtp404.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d9e0da08a84931d992641df66c776383;
-          Wed, 10 Jul 2019 23:42:31 +0000 (UTC)
-Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
- case
-To:     =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, chao@kernel.org
-References: <20190703075502.79782-1-yuchao0@huawei.com>
- <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
- <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
- <CAHpGcMJ_wPJf8KtF3xMP_28pe4Vq4XozFtmd2EuZ+RTqZKQxLA@mail.gmail.com>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <1506e523-109d-7253-ee4b-961c4264781d@aol.com>
-Date:   Thu, 11 Jul 2019 07:42:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727386AbfGJXn5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 19:43:57 -0400
+Received: from bonobo.elm.relay.mailchannels.net ([23.83.212.22]:30959 "EHLO
+        bonobo.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727220AbfGJXn5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 19:43:57 -0400
+X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 0ED3C6A2364
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 23:43:55 +0000 (UTC)
+Received: from pdx1-sub0-mail-a44.g.dreamhost.com (100-96-1-113.trex.outbound.svc.cluster.local [100.96.1.113])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 69CB66A250E
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 23:43:54 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
+Received: from pdx1-sub0-mail-a44.g.dreamhost.com ([TEMPUNAVAIL].
+ [64.90.62.162])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+        by 0.0.0.0:2500 (trex/5.17.3);
+        Wed, 10 Jul 2019 23:43:54 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
+X-MailChannels-Auth-Id: dreamhost
+X-Chemical-Coil: 72c15bb73b8a0251_1562802234699_2096552840
+X-MC-Loop-Signature: 1562802234699:3899712900
+X-MC-Ingress-Time: 1562802234699
+Received: from pdx1-sub0-mail-a44.g.dreamhost.com (localhost [127.0.0.1])
+        by pdx1-sub0-mail-a44.g.dreamhost.com (Postfix) with ESMTP id 9010484229
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 16:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
+        :message-id:to:subject:in-reply-to:references:mime-version
+        :content-type:content-transfer-encoding; s=a-j.ru; bh=F7gDJDXeE3
+        cvanSHPmdFF2vX6vo=; b=A6pPLGchrwWBjoDn0ILzvTI6zFPXY41PW2dywNYjmS
+        4y7P85j5EdXl4Jl0WZe+jQAnMBW8dPPLygWda81OR1M6Ft1wkNeJYEcaWggqdihp
+        FeHNKwoZ9jzHCPs0GsVPgnNegXiIFbqiESOZlGWJoYZPsrkzt8bt2IGjhl32W+D6
+        Q=
+Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
+        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: a-j@a-j.ru)
+        by pdx1-sub0-mail-a44.g.dreamhost.com (Postfix) with ESMTPSA id F3F0A84222
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 16:43:48 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 02:43:40 +0300
+X-DH-BACKEND: pdx1-sub0-mail-a44
+From:   Andrey Zhunev <a-j@a-j.ru>
+Message-ID: <18310556842.20190711024340@a-j.ru>
+To:     xfs list <linux-xfs@vger.kernel.org>
+Subject: Re: Need help to recover root filesystem after a power supply issue
+In-Reply-To: <CAJCQCtS0EfAghBGoL-YVTEANfAXV4Oy7Q+4Q0Jp3xOF-uQhixA@mail.gmail.com>
+References: <958316946.20190710124710@a-j.ru> 
+  <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
+  <1373677058.20190710182851@a-j.ru>
+  <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
+  <1015034894.20190710190746@a-j.ru>
+  <CAJCQCtSTPaor-Wo6b1NF3QT_Pi2rO7B9QMbfudZS=9TEt-Oemw@mail.gmail.com>
+  <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com>
+  <816157686.20190710201614@a-j.ru>
+  <CAJCQCtQ08-hu7Cr2Li4v07r8v1isxZu=_hP3aQpHqJw4D2jCmg@mail.gmail.com>
+  <e1dea87a-a2d8-4f4c-8807-4027a1a03a41@telefonica.net>
+  <CAJCQCtS0EfAghBGoL-YVTEANfAXV4Oy7Q+4Q0Jp3xOF-uQhixA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHpGcMJ_wPJf8KtF3xMP_28pe4Vq4XozFtmd2EuZ+RTqZKQxLA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-VR-OUT-STATUS: OK
+X-VR-OUT-SCORE: 0
+X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeejgddvhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufgjfhggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 
-At 2019/7/11 ??????5:50, Andreas Gr??nbacher Wrote:
-> At this point, can I ask how important this packing mechanism is to
-> you? I can see a point in implementing inline files, which help
-> because there tends to be a large number of very small files. But for
-> not-so-small files, is saving an extra block really worth the trouble,
-> especially given how cheap storage has become?
+Ok, the ddrescue finished copying whatever it was able to recover.
+There were many unreadable sectors near the end of the drive.
+In total, there were over 170 pending sectors reported by SMART.
 
-I would try to answer the above. I think there are several advantages by
-using tail-end packing inline:
-1) It is more cache-friendly. Considering a file "A" accessed by user
-now or recently, we
-?????? tend to (1) get more data about "A" (2) leave more data about "A"
-according to LRU-like assumption
-?????? because it is more likely to be used than the metadata of some other
-files "X", especially for files whose
-?????? tail-end block is relatively small enough (less than a threshold,
-e.g. < 100B just for example);
+I then ran the following commands:
 
-2) for directories files, tail-end packing will boost up those traversal
-performance;
+# smartctl -l scterc,900,100 /dev/sda
+# echo 180 > /sys/block/sda/device/timeout
 
-3) I think tail-end packing is a more generic inline, it saves I/Os for
-generic cases not just to
-?????? save the storage space;
+But this didn't help at all. The unreadable sectors still remained
+unreadable.
 
-"is saving an extra block really worth the trouble" I dont understand
-what exact the trouble is...
+So I wiped them with hdparm:
+# hdparm --yes-i-know-what-i-am-doing --write-sector <sector_number> /dev/sda
+
+I then re-read all these sectors, and they were all read correctly.
+
+The number of pending sectors reported by SMART dropped down to 7.
+Interestingly, there are still NO reallocated sectors reported.
 
 
-Thanks,
-Gao Xiang
+Now, the xfs-repair reported the following:
+
+# xfs_repair /dev/centos/root
+Phase 1 - find and verify superblock...
+Phase 2 - using internal log
+        - zero log...
+ERROR: The filesystem has valuable metadata changes in a log which needs to
+be replayed.  Mount the filesystem to replay the log, and unmount it before
+re-running xfs_repair.  If you are unable to mount the filesystem, then use
+the -L option to destroy the log and attempt a repair.
+Note that destroying the log may cause corruption -- please attempt a mount
+of the filesystem before doing this.
+
+
+But I was still unable to momunt the filesystem:
+
+# mount /dev/centos/root /tmp/root/
+mount: mount /dev/mapper/centos-root on /tmp/root failed: Structure needs cleaning
+
+
+So I went ahead with the '-L', and after some time the xfs_repair
+completed the repair.
+
+
+I can now mount my / partition successfully!
+Most of the data seems to be there (I didn't check all of it, yet).
+
+First thing I checked was the original kernel log. And yes, Chris was
+right! There are a few warnings reporting read errors on /dev/sda.
+These obviously were logged before the PSU failed. So the PSU might
+have been just a coincidence...
+
+
+Thanks a lot to everybody for your great help and support!!!
+
+
+
+BTW, interestingly enough, those 7 pending sectors "disappeared" after
+a power cycle. Maybe they were on some internal space on the HDD, not
+accessible to users?
+The SMART on this drive looks pretty clean now:
+
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  1 Raw_Read_Error_Rate     0x002f   200   200   051    Pre-fail  Always       -       867
+  3 Spin_Up_Time            0x0027   181   179   021    Pre-fail  Always       -       5916
+  4 Start_Stop_Count        0x0032   100   100   000    Old_age   Always       -       175
+  5 Reallocated_Sector_Ct   0x0033   200   200   140    Pre-fail  Always       -       0
+  7 Seek_Error_Rate         0x002e   100   253   000    Old_age   Always       -       0
+  9 Power_On_Hours          0x0032   022   022   000    Old_age   Always       -       56949
+ 10 Spin_Retry_Count        0x0032   100   100   000    Old_age   Always       -       0
+ 11 Calibration_Retry_Count 0x0032   100   100   000    Old_age   Always       -       0
+ 12 Power_Cycle_Count       0x0032   100   100   000    Old_age   Always       -       175
+192 Power-Off_Retract_Count 0x0032   200   200   000    Old_age   Always       -       112
+193 Load_Cycle_Count        0x0032   200   200   000    Old_age   Always       -       62
+194 Temperature_Celsius     0x0022   117   091   000    Old_age   Always       -       33
+196 Reallocated_Event_Count 0x0032   200   200   000    Old_age   Always       -       0
+197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always       -       0
+198 Offline_Uncorrectable   0x0030   100   253   000    Old_age   Offline      -       0
+199 UDMA_CRC_Error_Count    0x0032   200   200   000    Old_age   Always       -       0
+200 Multi_Zone_Error_Rate   0x0008   100   253   000    Old_age   Offline      -       0
+
+
+
+
+---
+Best regards,
+ Andrey
 
