@@ -2,144 +2,176 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 103AD64BD4
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 20:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44CC264C0F
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 20:28:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGJSDY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 14:03:24 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:33522 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbfGJSDY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 14:03:24 -0400
-Received: by mail-wr1-f43.google.com with SMTP id n9so3474349wru.0
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 11:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorremedies-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w50yraipRvzVDddxheFY/JtQ7rUBc8/m/dYkpnZQfT8=;
-        b=BA0qDdFxJk12CXals+/XP2viQwlyg5xrevLh6zG6G/663OhWUDIP+7AvPXJFERUfb2
-         rDfrT/oPhycWy1ko33FgpTusCLsy2JY0N6aPrfUu0mpvMe9rm2uxE12bsu1ggkisGmM1
-         /IKIq1/Zij+uyLTtWpot9jTAxI+G0a1iE4qw6KIGd4Glh3kXsJq+Efer2cbCyNWHDK2a
-         tMoMjMH88AVgNXlw93UFc+4qP2VbxymU/5GIErzA2iHLcfXy1nknEpUQogfi3gqHSzVl
-         neqMthzw02S9Qyj1Lr/SMranlm4x5MXpb4tQoubmAlsfo1wgaPt3ociRk3po0R98Psf4
-         ZnSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w50yraipRvzVDddxheFY/JtQ7rUBc8/m/dYkpnZQfT8=;
-        b=YopSj7Q5XldPfFTPzlgzS+nZCMPWDViPqQY1RIFEVL++lwQzGGNIQalSlLziSd/52L
-         u8edS7DSnm0oVRJcIRWQj4yPwMdLjau0OHVDpTr6oCq2QpAFnGFmADR/7B0fcdeAjyiQ
-         Aa2uX+JeaN2MtfFN9S4Q1ETpgqataYaGyvsiDr2HooFtYfnWwD2t+FIuhzDd0AuNDpyV
-         L31UztHER0Vj3FBn7VcM3Amli8ODTljzu/MxJwZGoPyXdrNkH38NIV8urkfIC8qkKs2w
-         pfVBwPMtnr72OVxkxgMnudgN2I6fn0s0/ax2WyBFUtIaKTBrBHyvM9I0eKntStMqAH+n
-         emhA==
-X-Gm-Message-State: APjAAAUNo+RjdCFSILaZ00TblDHYpobIwy208IV8kYJ+x4dSyVcX9N6h
-        GDJfuZNRVigm5z9j9NitiDcw0JNYOVGz5xEsd2grbKx49vw=
-X-Google-Smtp-Source: APXvYqx8d8sqjoMTUWyEg63ctz60vFWair9VHJsOXq7GGPKngs+Tf7dtrxgopIZY0wB1nx58YhqrzR0XvxPv3fUKak0=
-X-Received: by 2002:a5d:4403:: with SMTP id z3mr33335102wrq.29.1562781802231;
- Wed, 10 Jul 2019 11:03:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <958316946.20190710124710@a-j.ru> <CAJCQCtTpdGxB4r04wPNE+PRV5Jx_m95kShwvLJ5zxdmfw2fnEw@mail.gmail.com>
- <1373677058.20190710182851@a-j.ru> <CAJCQCtSpkAS086zSDCfB1jMQXZuacfE-SfyqQ2td4Ven4GwAzg@mail.gmail.com>
- <1015034894.20190710190746@a-j.ru> <CAJCQCtSTPaor-Wo6b1NF3QT_Pi2rO7B9QMbfudZS=9TEt-Oemw@mail.gmail.com>
- <CAJCQCtQn17ktjatXU5vvFjfsfEJx8EDrq1+b8+O1yvAf7ij96w@mail.gmail.com> <816157686.20190710201614@a-j.ru>
-In-Reply-To: <816157686.20190710201614@a-j.ru>
-From:   Chris Murphy <lists@colorremedies.com>
-Date:   Wed, 10 Jul 2019 12:03:11 -0600
-Message-ID: <CAJCQCtQ08-hu7Cr2Li4v07r8v1isxZu=_hP3aQpHqJw4D2jCmg@mail.gmail.com>
+        id S1727330AbfGJS2E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 14:28:04 -0400
+Received: from relayout01-q02.e.movistar.es ([86.109.101.142]:45279 "EHLO
+        relayout01-q02.e.movistar.es" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727242AbfGJS2E (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 14:28:04 -0400
+X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 14:28:03 EDT
+Received: from relayout01-redir.e.movistar.es (relayout01-redir.e.movistar.es [86.109.101.201])
+        by relayout01-out.e.movistar.es (Postfix) with ESMTP id 45kSFc3t1PzjYWF;
+        Wed, 10 Jul 2019 20:21:56 +0200 (CEST)
+Received: from Telcontar.valinor (70.red-88-9-30.dynamicip.rima-tde.net [88.9.30.70])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: robin.listas2@telefonica.net)
+        by relayout01.e.movistar.es (Postfix) with ESMTPSA id 45kSFc0JG9zfZXM;
+        Wed, 10 Jul 2019 20:21:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by Telcontar.valinor (Postfix) with ESMTP id 3D162320B3B;
+        Wed, 10 Jul 2019 20:21:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at valinor
+Received: from Telcontar.valinor ([127.0.0.1])
+        by localhost (telcontar.valinor [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id LZf7QZFqCvfN; Wed, 10 Jul 2019 20:21:55 +0200 (CEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by Telcontar.valinor (Postfix) with ESMTP id F01E8320B2A;
+        Wed, 10 Jul 2019 20:21:54 +0200 (CEST)
 Subject: Re: Need help to recover root filesystem after a power supply issue
-To:     Andrey Zhunev <a-j@a-j.ru>
-Cc:     Chris Murphy <lists@colorremedies.com>,
-        xfs list <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Andrey Zhunev <a-j@a-j.ru>,
+        Linux-XFS mailing list <linux-xfs@vger.kernel.org>
+References: <871210488.20190710125617@a-j.ru>
+ <fcbcd66e-0c78-f13b-e7aa-1487090d1dfd@sandeen.net>
+ <433120592.20190710165841@a-j.ru>
+ <8bef8d1e-2f5f-a8bd-08d3-fff0dce1256e@sandeen.net>
+ <15810023599.20190710180230@a-j.ru>
+From:   "Carlos E. R." <robin.listas@telefonica.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=robin.listas@telefonica.net; prefer-encrypt=mutual; keydata=
+ mQGiBEBfUmURBADiQy6hqnDUs980vU7Pi0qm/JnurLnZUDDEf8k7H10UnKi8E3ySztQuWsPK
+ 12ccfWCHMKboluffBQA3jf0h1Rl6VZ9brU+rNuqy1eE8bkILhLkoZrsNGXWtzOvRHVSF7dhb
+ GBuuFeqdGiRJPSvezQAi3S8dgXugSLZvbyHV97rATwCgmYzZ9mLrTV9RPMJy07K9SY2ZFFkD
+ /1rvNuU1teq5hm4naypOFrfO2X4foo9+UjuqZpcPnxD4LEfyrjpx5QVNi3zEDGIAbN7exo4X
+ s3VDWnrYZ8lqno4LfTlbuFcgLbAllhW7tYFg4sNW1dWr29VQjghZ8le+Fucx2VJOwv6ILWOr
+ O7Qgj61HUvWlR+doKxQBOxFk50IiBACuUBaWimjjbJKvGjMRimJWdGHHxwo+oMA2ZLnsS7wJ
+ cSIthF8FC8c1pyJwWcLiYcViy3kypJPloTiQqaZqhVx0ouCYFHBOYLaacCddJ7r6KHZyrjjo
+ SegO1vIJn2Y9TolJfuHMNb276A+JPb3gHqm1bfcNHmduKa0gK2NyEkKGWbQwQ2FybG9zIEUu
+ IFIuIChjZXIpIDxyb2Jpbi5saXN0YXNAdGVsZWZvbmljYS5uZXQ+iGEEExECACECGwMGCwkI
+ BwMCAxUCAwMWAgECHgECF4AFAkfpXpcCGQEACgkQtTMYHG2NR9V4DwCePcfkI8iZtIo9WV1O
+ K/ZB8CgMQcMAmwb/JZLJitq0tbzrWeKLZshwGr5puQENBEBfUmYQBACWLO2NmHMU9VM+eTt8
+ 91cIFfXuhdGBXo3rtQx6Ybgh6tgeag0Rziij7xtlgdtWyM+Gj2cSK5M74P3IOiPKp/ALpneW
+ mYEq/11E0zyXPWC5TOXu1/kBfrRvR7sTwB/cXthHESq1j+eEOF//4h0sWrCCKWVwNe7NRy4E
+ XbA6culWCwADBQP/c4MCf14YU1qaIQly79ZgNsSZPq/QiVLFI9LG3asrS1OdiPskVS1GN4OD
+ BaedOGpUcMa/iwabRILH+d3l7lNIBvZ18aRZN85breq9BCmb0AIYgmZiUL2W5dxXh2gQPaqI
+ vF7yvRuGuY5YzC5KqJ7Glpa2wzZ84IdoWAEVMZ+j/uSIRgQYEQIABgUCQF9SZgAKCRC1Mxgc
+ bY1H1br5AKCHpABJhGBMGIozLmKiXQ+2MnFknQCeJZx7e+LQJKDrq4ti5MyK6Hjh1+I=
+Message-ID: <4160fe6c-329c-1e80-c6ed-804a967157f6@telefonica.net>
+Date:   Wed, 10 Jul 2019 20:21:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <15810023599.20190710180230@a-j.ru>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="IdKG5kE77Nfg5iCcN5TZ2Z66HiltE6ekK"
+X-CTCH-Score: 0.000
+X-CTCH-ScoreCust: 0.000
+X-TnetOut-Country: IP: 88.9.30.70 | Country: ES
+X-TnetOut-Information: AntiSPAM and AntiVIRUS on relayout01
+X-TnetOut-MsgID: 45kSFc0JG9zfZXM.AFAE8
+X-TnetOut-SpamCheck: no es spam (whitelisted), Unknown
+X-TnetOut-From: robin.listas@telefonica.net
+X-TnetOut-Watermark: 1563387716.39618@ltsAFHg0ny/0AsLr5FAOgw
+X-Spam-Status: No
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:16 AM Andrey Zhunev <a-j@a-j.ru> wrote:
->
-> Wednesday, July 10, 2019, 7:47:55 PM, you wrote:
->
-> > On Wed, Jul 10, 2019 at 10:46 AM Chris Murphy <lists@colorremedies.com> wrote:
-> >>
-> >> # smartctl -l scterc,900,100
-> >> # echo 180 > /sys/block/sda/device/timeout
->
->
-> > smartctl command above does need a drive specified...
->
-> Indeed! :)
->
-> With the commands above, you are increasing the timeout and then fsck
-> will try to re-read the sectors, right?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--IdKG5kE77Nfg5iCcN5TZ2Z66HiltE6ekK
+Content-Type: multipart/mixed; boundary="G08qvOeFIzjxLjP3NuAwjA2XIPVAOT9B2";
+ protected-headers="v1"
+From: "Carlos E. R." <robin.listas@telefonica.net>
+To: Andrey Zhunev <a-j@a-j.ru>,
+ Linux-XFS mailing list <linux-xfs@vger.kernel.org>
+Message-ID: <4160fe6c-329c-1e80-c6ed-804a967157f6@telefonica.net>
+Subject: Re: Need help to recover root filesystem after a power supply issue
+References: <871210488.20190710125617@a-j.ru>
+ <fcbcd66e-0c78-f13b-e7aa-1487090d1dfd@sandeen.net>
+ <433120592.20190710165841@a-j.ru>
+ <8bef8d1e-2f5f-a8bd-08d3-fff0dce1256e@sandeen.net>
+ <15810023599.20190710180230@a-j.ru>
+In-Reply-To: <15810023599.20190710180230@a-j.ru>
 
-More correctly, the drive firmware won't timeout, and will try longer
-to recover the data *if* the sectors are marginally bad. If the
-sectors are flat out bad, then the firmware will still (almost)
-immediately give up and at that point nothing else can be done except
-zero the bad sectors and hope fsck can reconstruct what's missing.
+--G08qvOeFIzjxLjP3NuAwjA2XIPVAOT9B2
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: quoted-printable
 
-Thing is, 68 sectors has a low likelihood of impacting fs metadata,
-because it's a smaller target than your actual data, or free space if
-there's a lot of it.
+On 10/07/2019 17.02, Andrey Zhunev wrote:
 
+> Ooops, I forgot to paste the error message from dmesg.
+> Here it is:
+>=20
+> Jul 10 11:48:05 mgmt kernel: ata1.00: exception Emask 0x0 SAct 0x180000=
+ SErr 0x0 action 0x0
+> Jul 10 11:48:05 mgmt kernel: ata1.00: irq_stat 0x40000008
+> Jul 10 11:48:05 mgmt kernel: ata1.00: failed command: READ FPDMA QUEUED=
 
-> As for the SMART status, the number of pending sectors was 0 before.
-> It started to grow after the PSU incident yesterday. Now, since I'm
-> doing a ddrescue, all the sectors will be read (or attempted to be
-> read). So the pending sectors counter may increase further.
+> Jul 10 11:48:05 mgmt kernel: ata1.00: cmd 60/00:98:28:ac:3e/01:00:03:00=
+:00/40 tag 19 ncq 131072 in#012         res 41/40:00:08:ad:3e/00:00:03:00=
+:00/40 Emask 0x409 (media error) <F>
+> Jul 10 11:48:05 mgmt kernel: ata1.00: status: { DRDY ERR }
+> Jul 10 11:48:05 mgmt kernel: ata1.00: error: { UNC }
+> Jul 10 11:48:05 mgmt kernel: ata1.00: configured for UDMA/133
+> Jul 10 11:48:05 mgmt kernel: sd 0:0:0:0: [sda] tag#19 FAILED Result: ho=
+stbyte=3DDID_OK driverbyte=3DDRIVER_SENSE
+> Jul 10 11:48:05 mgmt kernel: sd 0:0:0:0: [sda] tag#19 Sense Key : Mediu=
+m Error [current] [descriptor]
+> Jul 10 11:48:05 mgmt kernel: sd 0:0:0:0: [sda] tag#19 Add. Sense: Unrec=
+overed read error - auto reallocate failed
+> Jul 10 11:48:05 mgmt kernel: sd 0:0:0:0: [sda] tag#19 CDB: Read(16) 88 =
+00 00 00 00 00 03 3e ac 28 00 00 01 00 00 00
+> Jul 10 11:48:05 mgmt kernel: blk_update_request: I/O error, dev sda, se=
+ctor 54439176
+> Jul 10 11:48:05 mgmt kernel: ata1: EH complete
+>=20
+> There are several of these.
+> At the moment ddrescue reports 22 read errors (with 35% of the data
+> copied to a new storage). If I remember correctly, the LVM with my
+> root partition is at the end of the drive. This means more errors will
+> likely come... :(=20
+>=20
+> The way I interpret the dmesg message, that's just a read error.
 
-It's a good and valid tactic to just use ddrescue with the previously
-mentioned modifications for SCT ERC and kernel timeouts, rather than
-directly use fsck on a drive that's clearly dying.
+"auto realocate failed" is important. Might indicate the realocation
+area is full :-?
 
+> I'm
+> not sure, but maybe a complete wipe of the drive will even overwrite /
+> clear these unreadable sectors.
+> Well, that's something to be checked after the copy process finishes.
 
-> As I understand, when a drive cannot READ a sector, the sector is
-> reported as pending. And it will stay like that until either the
-> sector is finally read or until it is overwritten. When either of
-> these happens, the Pending Sector Counter should decrease.
-
-Sounds about right.
-
-> In theory, it can go back to 0 (although I didn't follow this closely
-> enough, so I never saw a drive like that).
-
-It can and should go to zero once all the pending sectors are
-overwritten with either good data or zeros. It's possible the write
-succeeds to the same sector, in which case it's no longer pending and
-not remapped. It's possible internally the write fails and the drive
-firmware does a remap to make the write succeed, in which case it's no
-longer pending.
-
-If a write fails (externally reported write failure to the kernel),
-then pending sectors will get pinned at that point and only ever go up
-as the drive continues to get worse.
-
-
-> If a drive can't WRITE to a sector, it tries to reallocate it. If it
-> succeeds, Reallocated Sectors Counter is increased. If it fails to
-> reallocate - I guess there should be another kind of error or a
-> counter, but I'm not sure which one.
-
-You get essentially the same UNC type of error you've seen except it's
-a write error instead of read. That's widely considered fatal because
-having a drive that can't write is just not usable for anything (well,
-read only).
-
->
-> When reallocated sectors appear - it's clearly a bad sign. If the
-> number of reallocated sectors grow - the drive should not be used.
-> But it's not that obvious for the pending sectors...
-
-They're both bad news. It's just a matter of degree. Yes a
-manufacturer probably takes the position that pending sectors is and
-even remapping is normal drive behavior. But realistically it's not
-something anyone wants to have to deal with. It's useful for
-curiousity. Use it for Btrfs testing :-D
+Run the SMART long test after you have made a copy, and watch specially
+for the Current_Pending_Sector, Offline_Uncorrectable, and
+Reallocated_Sector_Ct values. Then overwrite the entire disk with zeroes
+and repeat the test. If the bad sector number increases, dump the disk.
 
 
--- 
-Chris Murphy
+--=20
+Cheers / Saludos,
+
+		Carlos E. R.
+		(from 15.0 x86_64 at Telcontar)
+
+
+--G08qvOeFIzjxLjP3NuAwjA2XIPVAOT9B2--
+
+--IdKG5kE77Nfg5iCcN5TZ2Z66HiltE6ekK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQQZEb51mJKK1KpcU/W1MxgcbY1H1QUCXSYsuQAKCRC1MxgcbY1H
+1UmEAJ4jIJDJiuFGukJ0rZ6mOMZEL0r6nQCfe4qk37Ldb1moFONRZLWHjjc2gm4=
+=mxf9
+-----END PGP SIGNATURE-----
+
+--IdKG5kE77Nfg5iCcN5TZ2Z66HiltE6ekK--
