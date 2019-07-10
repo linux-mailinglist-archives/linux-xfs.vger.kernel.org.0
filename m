@@ -2,155 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA63E643B2
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 10:42:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED68644B2
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 11:52:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfGJIl5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 04:41:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60498 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726198AbfGJIl4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:41:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 413FDAE15;
-        Wed, 10 Jul 2019 08:41:54 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 239281E3F45; Wed, 10 Jul 2019 10:41:53 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 10:41:53 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jan Kara <jack@suse.cz>, Boaz Harrosh <openosd@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190710084153.GA962@quack2.suse.cz>
-References: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
- <20190708133114.GC20507@quack2.suse.cz>
- <20190709234712.GL7689@dread.disaster.area>
+        id S1726141AbfGJJwd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 05:52:33 -0400
+Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:61261
+        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725994AbfGJJwd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 05:52:33 -0400
+X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 05:52:31 EDT
+X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id AFD255E1FE0
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:47:19 +0000 (UTC)
+Received: from pdx1-sub0-mail-a65.g.dreamhost.com (100-96-92-226.trex.outbound.svc.cluster.local [100.96.92.226])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 433D55E1CEA
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:47:19 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
+Received: from pdx1-sub0-mail-a65.g.dreamhost.com ([TEMPUNAVAIL].
+ [64.90.62.162])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+        by 0.0.0.0:2500 (trex/5.17.3);
+        Wed, 10 Jul 2019 09:47:19 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
+X-MailChannels-Auth-Id: dreamhost
+X-Abiding-Squirrel: 43f8830f0703f31c_1562752039558_3156936307
+X-MC-Loop-Signature: 1562752039558:640426488
+X-MC-Ingress-Time: 1562752039558
+Received: from pdx1-sub0-mail-a65.g.dreamhost.com (localhost [127.0.0.1])
+        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 7F68C7F14C
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
+        :message-id:to:subject:mime-version:content-type
+        :content-transfer-encoding; s=a-j.ru; bh=PBtSKeYUp0FkW9ku0nw71u8
+        o/Ng=; b=T4JqIdcqBGJ6+08m2Fx7P/pPpw5h/HsRxcxL3Xo7b6z4KbEbLCNQ/lf
+        CUPQlKgpZ4YAMq4Z7/odJO711Hq/ji9eoqNk2mjWGfsgdoXHnFTmPOUc8/O2rbDQ
+        uUxgdPRfFLD5bprz2bxSNDsxWkA9amx2Y7sBop+hdWeyQo5B5CO8=
+Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
+        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: a-j@a-j.ru)
+        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 8CF027F13A
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:47:17 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 12:47:10 +0300
+X-DH-BACKEND: pdx1-sub0-mail-a65
+From:   Andrey Zhunev <a-j@a-j.ru>
+Message-ID: <958316946.20190710124710@a-j.ru>
+To:     linux-xfs@vger.kernel.org
+Subject: Need help to recover root filesystem after a power supply issue
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709234712.GL7689@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-VR-OUT-STATUS: OK
+X-VR-OUT-SCORE: 0
+X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigddvtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed 10-07-19 09:47:12, Dave Chinner wrote:
-> On Mon, Jul 08, 2019 at 03:31:14PM +0200, Jan Kara wrote:
-> > I'd be really careful with nesting range locks. You can have nasty
-> > situations like:
-> > 
-> > Thread 1		Thread 2
-> > read_lock(0,1000)	
-> > 			write_lock(500,1500) -> blocks due to read lock
-> > read_lock(1001,1500) -> blocks due to write lock (or you have to break
-> >   fairness and then deal with starvation issues).
-> >
-> > So once you allow nesting of range locks, you have to very carefully define
-> > what is and what is not allowed.
-> 
-> Yes. I do understand the problem with rwsem read nesting and how
-> that can translate to reange locks.
-> 
-> That's why my range locks don't even try to block on other pending
-> waiters. The case where read nesting vs write might occur like above
-> is something like copy_file_range() vs truncate, but otherwise for
-> IO locks we simply don't have arbitrarily deep nesting of range
-> locks.
-> 
-> i.e. for your example my range lock would result in:
-> 
-> Thread 1		Thread 2
-> read_lock(0,1000)	
-> 			write_lock(500,1500)
-> 			<finds conflicting read lock>
-> 			<marks read lock as having a write waiter>
-> 			<parks on range lock wait list>
-> <...>
-> read_lock_nested(1001,1500)
-> <no overlapping range in tree>
-> <gets nested range lock>
-> 
-> <....>
-> read_unlock(1001,1500)	<stays blocked because nothing is waiting
-> 		         on (1001,1500) so no wakeup>
-> <....>
-> read_unlock(0,1000)
-> <sees write waiter flag, runs wakeup>
-> 			<gets woken>
-> 			<retries write lock>
-> 			<write lock gained>
-> 
-> IOWs, I'm not trying to complicate the range lock implementation
-> with complex stuff like waiter fairness or anti-starvation semantics
-> at this point in time. Waiters simply don't impact whether a new lock
-> can be gained or not, and hence the limitations of rwsem semantics
-> don't apply.
-> 
-> If such functionality is necessary (and I suspect it will be to
-> prevent AIO from delaying truncate and fallocate-like operations
-> indefinitely) then I'll add a "barrier" lock type (e.g.
-> range_lock_write_barrier()) that will block new range lock attempts
-> across it's span.
-> 
-> However, because this can cause deadlocks like the above, a barrier
-> lock will not block new *_lock_nested() or *_trylock() calls, hence
-> allowing runs of nested range locking to complete and drain without
-> deadlocking on a conflicting barrier range. And that still can't be
-> modelled by existing rwsem semantics....
+Hello All,
 
-Clever :). Thanks for explanation.
+I am struggling to recover my system after a PSU failure.
 
-> > That's why in my range lock implementation
-> > ages back I've decided to treat range lock as a rwsem for deadlock
-> > verification purposes.
-> 
-> IMO, treating a range lock as a rwsem for deadlock purposes defeats
-> the purpose of adding range locks in the first place. The
-> concurrency models are completely different, and some of the
-> limitations on rwsems are a result of implementation choices rather
-> than limitations of a rwsem construct.
+One of the hard drives throws some read errors, and that happen to be
+my root drive...
+My system is CentOS 7, and the root partition is a part of LVM.
 
-Well, even a range lock that cannot nest allows concurrent non-overlapping
-read and write to the same file which rwsem doesn't allow. But I agree that
-your nesting variant offers more (but also at the cost of higher complexity
-of the lock semantics).
+[root@mgmt ~]# lvscan
+  ACTIVE            '/dev/centos/root' [<98.83 GiB] inherit
+  ACTIVE            '/dev/centos/home' [<638.31 GiB] inherit
+  ACTIVE            '/dev/centos/swap' [<7.52 GiB] inherit
+[root@mgmt ~]#
 
-> In reality I couldn't care less about what lockdep can or can't
-> verify. I've always said lockdep is a crutch for people who don't
-> understand locks and the concurrency model of the code they
-> maintain. That obviously extends to the fact that lockdep
-> verification limitations should not limit what we allow new locking
-> primitives to do.
+[root@tftp ~]# file -s /dev/centos/root
+/dev/centos/root: symbolic link to `../dm-3'
+[root@tftp ~]# file -s /dev/centos/home
+/dev/centos/home: symbolic link to `../dm-4'
+[root@tftp ~]# file -s /dev/dm-3
+/dev/dm-3: SGI XFS filesystem data (blksz 4096, inosz 256, v2 dirs)
+[root@tftp ~]# file -s /dev/dm-4
+/dev/dm-4: SGI XFS filesystem data (blksz 4096, inosz 256, v2 dirs)
 
-I didn't say we have to constrain new locking primitives to what lockdep
-can support. It is just a locking correctness verification tool so naturally
-lockdep should be taught to what it needs to know about any locking scheme
-we come up with. And sometimes it is just too much effort which is why e.g.
-page lock still doesn't have lockdep coverage.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+[root@tftp ~]# xfs_repair /dev/centos/root
+Phase 1 - find and verify superblock...
+superblock read failed, offset 53057945600, size 131072, ag 2, rval -1
+
+fatal error -- Input/output error
+[root@tftp ~]#
+
+
+smartctl shows some pending sectors on /dev/sda, and no reallocated
+sectors (yet?).
+
+Can someone please give me a hand to bring root partition back to life
+(ideally)? Or, at least, recover a couple of critical configuration
+files...
+
+
+---
+Best regards,
+ Andrey                    
+
