@@ -2,55 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ED68644B2
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 11:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C51644E2
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 12:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfGJJwd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jul 2019 05:52:33 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:61261
+        id S1726326AbfGJKEP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 06:04:15 -0400
+Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:35510
         "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725994AbfGJJwd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 05:52:33 -0400
-X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 05:52:31 EDT
+        by vger.kernel.org with ESMTP id S1726132AbfGJKEP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jul 2019 06:04:15 -0400
 X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id AFD255E1FE0
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:47:19 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id F207B6A191D
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:56:28 +0000 (UTC)
 Received: from pdx1-sub0-mail-a65.g.dreamhost.com (100-96-92-226.trex.outbound.svc.cluster.local [100.96.92.226])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 433D55E1CEA
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:47:19 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 853DB6A1160
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 09:56:28 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|a-j@a-j.ru
 Received: from pdx1-sub0-mail-a65.g.dreamhost.com ([TEMPUNAVAIL].
  [64.90.62.162])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
         by 0.0.0.0:2500 (trex/5.17.3);
-        Wed, 10 Jul 2019 09:47:19 +0000
+        Wed, 10 Jul 2019 09:56:28 +0000
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|a-j@a-j.ru
 X-MailChannels-Auth-Id: dreamhost
-X-Abiding-Squirrel: 43f8830f0703f31c_1562752039558_3156936307
-X-MC-Loop-Signature: 1562752039558:640426488
-X-MC-Ingress-Time: 1562752039558
+X-Plucky-Harmony: 5c7df2071809ad58_1562752588821_123993838
+X-MC-Loop-Signature: 1562752588821:2395402459
+X-MC-Ingress-Time: 1562752588821
 Received: from pdx1-sub0-mail-a65.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 7F68C7F14C
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:47:18 -0700 (PDT)
+        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTP id 239987F131
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=a-j.ru; h=date:from
         :message-id:to:subject:mime-version:content-type
-        :content-transfer-encoding; s=a-j.ru; bh=PBtSKeYUp0FkW9ku0nw71u8
-        o/Ng=; b=T4JqIdcqBGJ6+08m2Fx7P/pPpw5h/HsRxcxL3Xo7b6z4KbEbLCNQ/lf
-        CUPQlKgpZ4YAMq4Z7/odJO711Hq/ji9eoqNk2mjWGfsgdoXHnFTmPOUc8/O2rbDQ
-        uUxgdPRfFLD5bprz2bxSNDsxWkA9amx2Y7sBop+hdWeyQo5B5CO8=
+        :content-transfer-encoding; s=a-j.ru; bh=Qt/VKhOTJ2EPsK5t7t24jNc
+        U6+A=; b=DiH0Vn9zjJSCQgtl538xAgxvag+90FHKvwfACVLyXUiLsXfWyrp5rMH
+        X3b1W0pfX7D6WybkklY1FKrayasnR4532xTpxRaDS5rBvcFfRBjnmHUTbecEmaBY
+        BRyACCE9Zh5uRMq6kFT0iNHRXzE6lrwAw0OZRxb0kplaaYToRNOI=
 Received: from [172.23.0.131] (broadband-178-140-10-107.ip.moscow.rt.ru [178.140.10.107])
         (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: a-j@a-j.ru)
-        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 8CF027F13A
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:47:17 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 12:47:10 +0300
+        by pdx1-sub0-mail-a65.g.dreamhost.com (Postfix) with ESMTPSA id 339F17FAA6
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Jul 2019 02:56:24 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 12:56:17 +0300
 X-DH-BACKEND: pdx1-sub0-mail-a65
 From:   Andrey Zhunev <a-j@a-j.ru>
-Message-ID: <958316946.20190710124710@a-j.ru>
+Message-ID: <871210488.20190710125617@a-j.ru>
 To:     linux-xfs@vger.kernel.org
 Subject: Need help to recover root filesystem after a power supply issue
 MIME-Version: 1.0
@@ -58,7 +57,7 @@ Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-VR-OUT-STATUS: OK
 X-VR-OUT-SCORE: 0
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigddvtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhkffvufggtgfgsehtjeevtddttddvnecuhfhrohhmpeetnhgurhgvhicukghhuhhnvghvuceorgdqjhesrgdqjhdrrhhuqeenucfkphepudejkedrudegtddruddtrddutdejnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludejvddrvdefrddtrddufedungdpihhnvghtpedujeekrddugedtrddutddruddtjedprhgvthhurhhnqdhprghthheptehnughrvgihucgkhhhunhgvvhcuoegrqdhjsegrqdhjrdhruheqpdhmrghilhhfrhhomheprgdqjhesrgdqjhdrrhhupdhnrhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -66,7 +65,8 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hello All,
 
-I am struggling to recover my system after a PSU failure.
+I am struggling to recover my system after a PSU failure, and I was
+suggested to ask here for support.
 
 One of the hard drives throws some read errors, and that happen to be
 my root drive...
@@ -106,5 +106,5 @@ files...
 
 ---
 Best regards,
- Andrey                    
+ Andrey
 
