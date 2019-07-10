@@ -2,191 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9541963E72
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 01:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57D0B640B2
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jul 2019 07:30:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfGIXs2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Jul 2019 19:48:28 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:36398 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726133AbfGIXs2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Jul 2019 19:48:28 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id E64D43DC978;
-        Wed, 10 Jul 2019 09:48:20 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hkzpI-0000zG-My; Wed, 10 Jul 2019 09:47:12 +1000
-Date:   Wed, 10 Jul 2019 09:47:12 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Boaz Harrosh <openosd@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190709234712.GL7689@dread.disaster.area>
-References: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
- <20190708133114.GC20507@quack2.suse.cz>
+        id S1726997AbfGJFae (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jul 2019 01:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfGJFae (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:30:34 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B078320665;
+        Wed, 10 Jul 2019 05:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562736632;
+        bh=mnyPrRPrkI7hIlrlYJGYMSU3A/sC+kozNSHgEhVuV/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TaJrhTv5tj+C1aAIwl9T2mcPRZpB2q8WigVib+0FvJNei0LY8KxZTp7vUDzhXjCJv
+         tBZy2dXMxQ5E3Lgr4nCbyv61A71PMU8wxZYPbIFVCVsxtWh1hIjxLRzsvAGcJ+Cqdc
+         xK88pHsO23X9IXmOGv0Ry+vAiJdkOemRczm55xn0=
+Date:   Tue, 9 Jul 2019 22:30:30 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+Message-ID: <20190710053030.GB2152@sol.localdomain>
+Mail-Followup-To: Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000089a718058556e1d8@google.com>
+ <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190708133114.GC20507@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=rxuHOKLteiQnnr429Q0A:9 a=0n0zNvapn8EemG9u:21
-        a=17OF_ookA9SLsmvY:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 03:31:14PM +0200, Jan Kara wrote:
-> On Sat 06-07-19 09:31:57, Dave Chinner wrote:
-> > On Wed, Jul 03, 2019 at 03:04:45AM +0300, Boaz Harrosh wrote:
-> > > On 20/06/2019 01:37, Dave Chinner wrote:
-> > > <>
-> > > > 
-> > > > I'd prefer it doesn't get lifted to the VFS because I'm planning on
-> > > > getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
-> > > > likely to go away in the near term because a range lock can be
-> > > > taken on either side of the mmap_sem in the page fault path.
-> > > > 
-> > > <>
-> > > Sir Dave
-> > > 
-> > > Sorry if this was answered before. I am please very curious. In the zufs
-> > > project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
-> > > (Read & writes all take read-locks ...)
-> > > The only reason I have it is because of lockdep actually.
-> > > 
-> > > Specifically for those xfstests that mmap a buffer then direct_IO in/out
-> > > of that buffer from/to another file in the same FS or the same file.
-> > > (For lockdep its the same case).
+[Moved most people to Bcc; syzbot added way too many random people to this.]
+
+Hi Bart,
+
+On Sat, Mar 30, 2019 at 07:17:09PM -0700, Bart Van Assche wrote:
+> On 3/30/19 2:58 PM, syzbot wrote:
+> > syzbot has bisected this bug to:
 > > 
-> > Which can deadlock if the same inode rwsem is taken on both sides of
-> > the mmap_sem, as lockdep tells you...
+> > commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+> > Author: Bart Van Assche <bvanassche@acm.org>
+> > Date:   Thu Feb 14 23:00:54 2019 +0000
 > > 
-> > > I would be perfectly happy to recursively _read_lock both from the top
-> > > of the page_fault at the DIO path, and under in the page_fault. I'm
-> > > _read_locking after all. But lockdep is hard to convince. So I stole the
-> > > xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
-> > > truncate/punch/clone time when all mapping traversal needs to stop for
-> > > the destructive change to take place. (Allocations are done another way
-> > > and are race safe with traversal)
-> > > 
-> > > How do you intend to address this problem with range-locks? ie recursively
-> > > taking the same "lock"? because if not for the recursive-ity and lockdep I would
-> > > not need the extra lock-object per inode.
+> >      kernel/workqueue: Use dynamic lockdep keys for workqueues
 > > 
-> > As long as the IO ranges to the same file *don't overlap*, it should
-> > be perfectly safe to take separate range locks (in read or write
-> > mode) on either side of the mmap_sem as non-overlapping range locks
-> > can be nested and will not self-deadlock.
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f1bacd200000
+> > start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of
+> > git://git.kernel..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1409bacd200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1009bacd200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=6f39a9deb697359fe520
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e1bacd200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1120fe0f200000
+> > 
+> > Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
+> > Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for
+> > workqueues")
+> > 
+> > For information about bisection process see:
+> > https://goo.gl/tpsmEJ#bisection
 > 
-> I'd be really careful with nesting range locks. You can have nasty
-> situations like:
+> Hi Dmitry,
 > 
-> Thread 1		Thread 2
-> read_lock(0,1000)	
-> 			write_lock(500,1500) -> blocks due to read lock
-> read_lock(1001,1500) -> blocks due to write lock (or you have to break
->   fairness and then deal with starvation issues).
->
-> So once you allow nesting of range locks, you have to very carefully define
-> what is and what is not allowed.
+> This bisection result doesn't make sense to me. As one can see, the message
+> "BUG: MAX_STACK_TRACE_ENTRIES too low!" does not occur in the console output
+> the above console output URL points at.
+> 
+> Bart.
 
-Yes. I do understand the problem with rwsem read nesting and how
-that can translate to reange locks.
+This is still happening on mainline, and I think this bisection result is
+probably correct.  syzbot did start hitting something different at the very end
+of the bisection ("WARNING: CPU: 0 PID: 9153 at kernel/locking/lockdep.c:747")
+but that seems to be just because your commit had a lot of bugs in it, which had
+to be fixed by later commits.  In particular, the WARNING seems to have been
+fixed by commit 28d49e282665e ("locking/lockdep: Shrink struct lock_class_key").
 
-That's why my range locks don't even try to block on other pending
-waiters. The case where read nesting vs write might occur like above
-is something like copy_file_range() vs truncate, but otherwise for
-IO locks we simply don't have arbitrarily deep nesting of range
-locks.
+What seems to still be happening is that the dynamic lockdep keys which you
+added make it possible for an unbounded number of entries to be added to the
+fixed length stack_trace[] array in kernel/locking/lockdep.c.  Hence the "BUG:
+MAX_STACK_TRACE_ENTRIES too low!".
 
-i.e. for your example my range lock would result in:
+Am I understanding it correctly?  How did you intend this to work?
 
-Thread 1		Thread 2
-read_lock(0,1000)	
-			write_lock(500,1500)
-			<finds conflicting read lock>
-			<marks read lock as having a write waiter>
-			<parks on range lock wait list>
-<...>
-read_lock_nested(1001,1500)
-<no overlapping range in tree>
-<gets nested range lock>
-
-<....>
-read_unlock(1001,1500)	<stays blocked because nothing is waiting
-		         on (1001,1500) so no wakeup>
-<....>
-read_unlock(0,1000)
-<sees write waiter flag, runs wakeup>
-			<gets woken>
-			<retries write lock>
-			<write lock gained>
-
-IOWs, I'm not trying to complicate the range lock implementation
-with complex stuff like waiter fairness or anti-starvation semantics
-at this point in time. Waiters simply don't impact whether a new lock
-can be gained or not, and hence the limitations of rwsem semantics
-don't apply.
-
-If such functionality is necessary (and I suspect it will be to
-prevent AIO from delaying truncate and fallocate-like operations
-indefinitely) then I'll add a "barrier" lock type (e.g.
-range_lock_write_barrier()) that will block new range lock attempts
-across it's span.
-
-However, because this can cause deadlocks like the above, a barrier
-lock will not block new *_lock_nested() or *_trylock() calls, hence
-allowing runs of nested range locking to complete and drain without
-deadlocking on a conflicting barrier range. And that still can't be
-modelled by existing rwsem semantics....
-
-> That's why in my range lock implementation
-> ages back I've decided to treat range lock as a rwsem for deadlock
-> verification purposes.
-
-IMO, treating a range lock as a rwsem for deadlock purposes defeats
-the purpose of adding range locks in the first place. The
-concurrency models are completely different, and some of the
-limitations on rwsems are a result of implementation choices rather
-than limitations of a rwsem construct.
-
-In reality I couldn't care less about what lockdep can or can't
-verify. I've always said lockdep is a crutch for people who don't
-understand locks and the concurrency model of the code they
-maintain. That obviously extends to the fact that lockdep
-verification limitations should not limit what we allow new locking
-primitives to do.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+- Eric
