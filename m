@@ -2,93 +2,127 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 437B56579B
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2019 15:07:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B39D65821
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2019 15:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfGKNHC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 11 Jul 2019 09:07:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45256 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfGKNHC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 11 Jul 2019 09:07:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uB6GvQipfUImhV08891dUYAhTGVxS2/sDJOSj04yG0k=; b=Ls2Xv81qZlTY6bZagVazu/EV3
-        OyTqTWL9owsatConf5VKPWEgaJeQgkwvg9BpoQDKlBBAePe0mDMdtQlIvHcgxxbV5B5VxCzBpAKzk
-        l+JIGoEy5D/JaC/GJgvEopWxjHmDnuRU9UmoUvt/nMCGh36rSsyp12pfQ3GwXEL+b0ayEsW1xty27
-        xrLYvZQWjGHO1eqbFsgG+YHxH4/gzXr6eTnxAuj+gvE4s+Crxf8VddahxG+1402WOWkELwETJKxac
-        QV+Hc9KSnrPGJrA+j8aUTT5erv/uNIWm2acZnQIO7SZnwix9mNBE8XcTy9BigtkNd5oUEWyICIs9y
-        cRyz0Qavw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlYmf-0004Px-QH; Thu, 11 Jul 2019 13:06:49 +0000
-Date:   Thu, 11 Jul 2019 06:06:49 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Andreas =?iso-8859-1?Q?Gr=FCnbacher?= 
-        <andreas.gruenbacher@gmail.com>, Chao Yu <yuchao0@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, chao@kernel.org
+        id S1726833AbfGKNym (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 11 Jul 2019 09:54:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35228 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726722AbfGKNym (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:54:42 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0B2A661F1E0477FEB895;
+        Thu, 11 Jul 2019 21:54:23 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 11 Jul
+ 2019 21:54:16 +0800
 Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
  case
-Message-ID: <20190711130649.GQ32320@bombadil.infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Gao Xiang <hsiangkao@aol.com>,
+        =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>,
+        Chao Yu <yuchao0@huawei.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        <chao@kernel.org>
 References: <20190703075502.79782-1-yuchao0@huawei.com>
  <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
  <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
  <CAHpGcMJ_wPJf8KtF3xMP_28pe4Vq4XozFtmd2EuZ+RTqZKQxLA@mail.gmail.com>
  <1506e523-109d-7253-ee4b-961c4264781d@aol.com>
+ <20190711130649.GQ32320@bombadil.infradead.org>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <e2c3f973-8000-869e-a2bf-867631c64ab4@huawei.com>
+Date:   Thu, 11 Jul 2019 21:54:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1506e523-109d-7253-ee4b-961c4264781d@aol.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190711130649.GQ32320@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 07:42:20AM +0800, Gao Xiang wrote:
-> 
-> At 2019/7/11 ??????5:50, Andreas Gr??nbacher Wrote:
-> > At this point, can I ask how important this packing mechanism is to
-> > you? I can see a point in implementing inline files, which help
-> > because there tends to be a large number of very small files. But for
-> > not-so-small files, is saving an extra block really worth the trouble,
-> > especially given how cheap storage has become?
-> 
-> I would try to answer the above. I think there are several advantages by
-> using tail-end packing inline:
-> 1) It is more cache-friendly. Considering a file "A" accessed by user
-> now or recently, we
-> ?????? tend to (1) get more data about "A" (2) leave more data about "A"
-> according to LRU-like assumption
-> ?????? because it is more likely to be used than the metadata of some other
-> files "X", especially for files whose
-> ?????? tail-end block is relatively small enough (less than a threshold,
-> e.g. < 100B just for example);
-> 
-> 2) for directories files, tail-end packing will boost up those traversal
-> performance;
-> 
-> 3) I think tail-end packing is a more generic inline, it saves I/Os for
-> generic cases not just to
-> ?????? save the storage space;
-> 
-> "is saving an extra block really worth the trouble" I dont understand
-> what exact the trouble is...
 
-"the trouble" is adding code complexity and additional things to test.
 
-I'm not sure you really understood Andreas' question.  He's saying that he
-understands the performance and space gain from packing short files
-(eg files less than 100 bytes).  But how many files are there between
-4096 and 4196 bytes in size, let alone between 8192 and 8292, 12384 and
-12484 ...
+On 2019/7/11 21:06, Matthew Wilcox wrote:
+> On Thu, Jul 11, 2019 at 07:42:20AM +0800, Gao Xiang wrote:
+>>
+>> At 2019/7/11 ??????5:50, Andreas Gr??nbacher Wrote:
+>>> At this point, can I ask how important this packing mechanism is to
+>>> you? I can see a point in implementing inline files, which help
+>>> because there tends to be a large number of very small files. But for
+>>> not-so-small files, is saving an extra block really worth the trouble,
+>>> especially given how cheap storage has become?
+>>
+>> I would try to answer the above. I think there are several advantages by
+>> using tail-end packing inline:
+>> 1) It is more cache-friendly. Considering a file "A" accessed by user
+>> now or recently, we
+>> ?????? tend to (1) get more data about "A" (2) leave more data about "A"
+>> according to LRU-like assumption
+>> ?????? because it is more likely to be used than the metadata of some other
+>> files "X", especially for files whose
+>> ?????? tail-end block is relatively small enough (less than a threshold,
+>> e.g. < 100B just for example);
+>>
+>> 2) for directories files, tail-end packing will boost up those traversal
+>> performance;
+>>
+>> 3) I think tail-end packing is a more generic inline, it saves I/Os for
+>> generic cases not just to
+>> ?????? save the storage space;
+>>
+>> "is saving an extra block really worth the trouble" I dont understand
+>> what exact the trouble is...
+> 
+> "the trouble" is adding code complexity and additional things to test.
+> 
+> I'm not sure you really understood Andreas' question.  He's saying that he
+> understands the performance and space gain from packing short files
+> (eg files less than 100 bytes).  But how many files are there between
+> 4096 and 4196 bytes in size, let alone between 8192 and 8292, 12384 and
+> 12484 ...
+> 
+> Is optimising for _those_ files worth it?
 
-Is optimising for _those_ files worth it?
+Hi Willy,
+
+Thanks for your kindly explanation.. I get it :) I try to express my thoughts in
+the following aspects...
+
+1) In my thought, I personally think Chao's first patch which adds an additional
+   type could be better for now, maybe we can reduce duplicate code based on that
+   patch even further. What EROFS needs is only a read-only tail-end packing,
+   I think for write we actually need to rethink more carefully (but it doesn't
+   mean complex I think, but I don't do research on this.. I have to be silent...)
+   and maybe we could leave it until a really fs user switching to iomap and mix
+   INLINE and TAIL at that time...
+
+2) EROFS actually has an unfinished feature which supports tail-end packing
+   compresssed data, which means decompressed data could not be so small...
+   and I know that is another matter... So to direct answer the question is
+   that it depends on the userdata and user. For EROFS, tail-end packing
+   inline is easy to implement, and it's a per-file optional feature (not
+   mandatory) and the threshold (< 100B) is not a hardcoded limit as well,
+   which is configured by mkfs users and only help mkfs decide whether the
+   file should enable it or not. it should be useful for all directories
+   at least, and I think it is more cache-friendly for regular files as well
+   so a large range of files configured by users (not just < 100B) can be
+   benefited from this...
+
+Sorry about my English...
+
+Thanks,
+Gao Xiang
+
+> 
+
+
