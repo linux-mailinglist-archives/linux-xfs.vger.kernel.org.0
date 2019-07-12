@@ -2,582 +2,267 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4794B66FCE
-	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 15:14:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68BFF66FDF
+	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 15:18:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfGLNOL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 12 Jul 2019 09:14:11 -0400
-Received: from sandeen.net ([63.231.237.45]:57928 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfGLNOL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:14:11 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 43B901164B;
-        Fri, 12 Jul 2019 08:14:00 -0500 (CDT)
-Subject: Re: [PATCH 01/10] libfrog: refactor online geometry queries
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <156151660523.2286979.13694849827562044045.stgit@magnolia>
- <156151661143.2286979.2427399743977199397.stgit@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <4b0f0074-b509-1a98-dc0b-9f21be4f95ae@sandeen.net>
-Date:   Fri, 12 Jul 2019 08:14:08 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1727488AbfGLNSN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 12 Jul 2019 09:18:13 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:46116 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727363AbfGLNSM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 12 Jul 2019 09:18:12 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 3399E28C3E
+        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 13:18:11 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id 283B328BE0; Fri, 12 Jul 2019 13:18:11 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 203947] [xfstests generic/475]: general protection fault: 0000
+ [#1] RIP: 0010:xfs_setfilesize_ioend+0xb1/0x220 [xfs]
+Date:   Fri, 12 Jul 2019 13:18:09 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: zlang@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-203947-201763-ReLntvoSoN@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-203947-201763@https.bugzilla.kernel.org/>
+References: <bug-203947-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <156151661143.2286979.2427399743977199397.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/25/19 9:36 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Refactor all the open-coded XFS_IOC_FSGEOMETRY queries into a single
-> helper that we can use to standardize behaviors across mixed xfslibs
-> versions.  This is the prelude to introducing a new FSGEOMETRY version
-> in 5.2 and needing to fix the (relatively few) client programs.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=203947
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+--- Comment #14 from Zorro Lang (zlang@redhat.com) ---
+(In reply to Zorro Lang from comment #13)
+> (In reply to Luis Chamberlain from comment #12)
+> > (In reply to Zorro Lang from comment #11)
+> > > (In reply to Zorro Lang from comment #10)
+> > > > (In reply to Darrick J. Wong from comment #9)
+> > > > > Zorro,
+> > > > > 
+> > > > > If you get a chance, can you try this debugging patch, please?
+> > > > 
+> > > > Sure, I'll give it a try. With this bug together ... they both
+> triggered
+> > by
+> > > > g/475. You really write a nice case :)
+> > > > 
+> > > > Both these two bugs are too hard to reproduce, so I only can try my
+> best
+> > to
+> > > > test it, but I can't 100% verify they're fixed even if all test pass,
+> > I'll
+> > > > try to approach 99% :-P
+> > > > 
+> > > > BTW, if this's a separate bug, I'd like to report a new bug to track
+> it,
+> > to
+> > > > avoid confusion.
+> > > > 
+> > > > Thanks,
+> > > > Zorro
+> > > 
+> > > Updata: By merging the patches in comment 2 and comment 9, I can't
+> > reproduce
+> > > this bug and https://bugzilla.kernel.org/show_bug.cgi?id=204031, after
+> > > running generic/475 on six different machines 3 days.
+> > 
+> > Can you try with just the patch in comment 2? Also it doesn't seem clear to
+> > me yet if this is a regression or not. Did this used to work? If not sure
+> > can you try with v4.19 and see if the issue also appears there?
+> 
+> I didn't try to make sure if it's a regression or not. Due to
+> 1. This bug is very hard to be reproduced.
+> 2. The reproducer(generic/475) might easily to trigger some other issues on
+> old kernel.
+> 
+> Any way, I'll give it a try on v4.19, but I can't promise that I can find
+> out if it's a regression:)
 
-> ---
->  Makefile            |    1 +
->  fsr/xfs_fsr.c       |   26 ++++----------------------
->  growfs/xfs_growfs.c |   25 +++++++++----------------
->  include/xfrog.h     |   22 ++++++++++++++++++++++
->  io/bmap.c           |    3 ++-
->  io/fsmap.c          |    3 ++-
->  io/open.c           |    3 ++-
->  io/stat.c           |    5 +++--
->  libfrog/fsgeom.c    |   18 ++++++++++++++++++
->  quota/free.c        |    6 +++---
->  repair/xfs_repair.c |    5 +++--
->  rtcp/Makefile       |    3 +++
->  rtcp/xfs_rtcp.c     |    7 ++++---
->  scrub/phase1.c      |    5 +++--
->  spaceman/file.c     |    3 ++-
->  spaceman/info.c     |   27 +++++++++------------------
->  16 files changed, 90 insertions(+), 72 deletions(-)
->  create mode 100644 include/xfrog.h
-> 
-> 
-> diff --git a/Makefile b/Makefile
-> index 9204bed8..0edc2700 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -107,6 +107,7 @@ copy: libxlog
->  mkfs: libxcmd
->  spaceman: libxcmd
->  scrub: libhandle libxcmd
-> +rtcp: libfrog
->  
->  ifeq ($(HAVE_BUILDDEFS), yes)
->  include $(BUILDRULES)
-> diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
-> index fef6262c..0bfecf37 100644
-> --- a/fsr/xfs_fsr.c
-> +++ b/fsr/xfs_fsr.c
-> @@ -11,6 +11,7 @@
->  #include "xfs_bmap_btree.h"
->  #include "xfs_attr_sf.h"
->  #include "path.h"
-> +#include "xfrog.h"
->  
->  #include <fcntl.h>
->  #include <errno.h>
-> @@ -83,9 +84,8 @@ int cmp(const void *, const void *);
->  static void tmp_init(char *mnt);
->  static char * tmp_next(char *mnt);
->  static void tmp_close(char *mnt);
-> -int xfs_getgeom(int , xfs_fsop_geom_v1_t * );
->  
-> -static xfs_fsop_geom_v1_t fsgeom;	/* geometry of active mounted system */
-> +static struct xfs_fsop_geom fsgeom;	/* geometry of active mounted system */
->  
->  #define NMOUNT 64
->  static int numfs;
-> @@ -102,12 +102,6 @@ static int	nfrags = 0;	/* Debug option: Coerse into specific number
->  				 * of extents */
->  static int	openopts = O_CREAT|O_EXCL|O_RDWR|O_DIRECT;
->  
-> -static int
-> -xfs_fsgeometry(int fd, xfs_fsop_geom_v1_t *geom)
-> -{
-> -    return ioctl(fd, XFS_IOC_FSGEOMETRY_V1, geom);
-> -}
-> -
->  static int
->  xfs_bulkstat_single(int fd, xfs_ino_t *lastip, xfs_bstat_t *ubuffer)
->  {
-> @@ -630,7 +624,7 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
->  		return -1;
->  	}
->  
-> -	if (xfs_getgeom(fsfd, &fsgeom) < 0 ) {
-> +	if (xfrog_geometry(fsfd, &fsgeom) < 0 ) {
->  		fsrprintf(_("Skipping %s: could not get XFS geometry\n"),
->  			  mntdir);
->  		close(fsfd);
-> @@ -772,7 +766,7 @@ fsrfile(char *fname, xfs_ino_t ino)
->  	}
->  
->  	/* Get the fs geometry */
-> -	if (xfs_getgeom(fsfd, &fsgeom) < 0 ) {
-> +	if (xfrog_geometry(fsfd, &fsgeom) < 0 ) {
->  		fsrprintf(_("Unable to get geom on fs for: %s\n"), fname);
->  		goto out;
->  	}
-> @@ -1612,18 +1606,6 @@ getnextents(int fd)
->  	return(nextents);
->  }
->  
-> -/*
-> - * Get the fs geometry
-> - */
-> -int
-> -xfs_getgeom(int fd, xfs_fsop_geom_v1_t * fsgeom)
-> -{
-> -	if (xfs_fsgeometry(fd, fsgeom) < 0) {
-> -		return -1;
-> -	}
-> -	return 0;
-> -}
-> -
->  /*
->   * Get xfs realtime space information
->   */
-> diff --git a/growfs/xfs_growfs.c b/growfs/xfs_growfs.c
-> index 20089d2b..86b1d542 100644
-> --- a/growfs/xfs_growfs.c
-> +++ b/growfs/xfs_growfs.c
-> @@ -7,6 +7,7 @@
->  #include "libxfs.h"
->  #include "path.h"
->  #include "fsgeom.h"
-> +#include "xfrog.h"
->  
->  static void
->  usage(void)
-> @@ -165,22 +166,14 @@ main(int argc, char **argv)
->  	}
->  
->  	/* get the current filesystem size & geometry */
-> -	if (xfsctl(fname, ffd, XFS_IOC_FSGEOMETRY, &geo) < 0) {
-> -		/*
-> -		 * OK, new xfsctl barfed - back off and try earlier version
-> -		 * as we're probably running an older kernel version.
-> -		 * Only field added in the v2 geometry xfsctl is "logsunit"
-> -		 * so we'll zero that out for later display (as zero).
-> -		 */
-> -		geo.logsunit = 0;
-> -		if (xfsctl(fname, ffd, XFS_IOC_FSGEOMETRY_V1, &geo) < 0) {
-> -			fprintf(stderr, _(
-> -				"%s: cannot determine geometry of filesystem"
-> -				" mounted at %s: %s\n"),
-> -				progname, fname, strerror(errno));
-> -			exit(1);
-> -		}
-> +	if (xfrog_geometry(ffd, &geo) < 0) {
-> +		fprintf(stderr, _(
-> +			"%s: cannot determine geometry of filesystem"
-> +			" mounted at %s: %s\n"),
-> +			progname, fname, strerror(errno));
-> +		exit(1);
->  	}
-> +
->  	isint = geo.logstart > 0;
->  
->  	/*
-> @@ -359,7 +352,7 @@ main(int argc, char **argv)
->  		}
->  	}
->  
-> -	if (xfsctl(fname, ffd, XFS_IOC_FSGEOMETRY_V1, &ngeo) < 0) {
-> +	if (xfrog_geometry(ffd, &ngeo) < 0) {
->  		fprintf(stderr, _("%s: XFS_IOC_FSGEOMETRY xfsctl failed: %s\n"),
->  			progname, strerror(errno));
->  		exit(1);
-> diff --git a/include/xfrog.h b/include/xfrog.h
-> new file mode 100644
-> index 00000000..5420b47c
-> --- /dev/null
-> +++ b/include/xfrog.h
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2000-2002 Silicon Graphics, Inc.
-> + * All Rights Reserved.
-> + */
-> +#ifndef __XFROG_H__
-> +#define __XFROG_H__
-> +
-> +/*
-> + * XFS Filesystem Random Online Gluecode
-> + * =====================================
-> + *
-> + * These support functions wrap the more complex xfs ioctls so that xfs
-> + * utilities can take advantage of them without having to deal with graceful
-> + * degradation in the face of new ioctls.  They will also provide higher level
-> + * abstractions when possible.
-> + */
-> +
-> +struct xfs_fsop_geom;
-> +int xfrog_geometry(int fd, struct xfs_fsop_geom *fsgeo);
-> +
-> +#endif	/* __XFROG_H__ */
-> diff --git a/io/bmap.c b/io/bmap.c
-> index d408826a..5f0d12ca 100644
-> --- a/io/bmap.c
-> +++ b/io/bmap.c
-> @@ -9,6 +9,7 @@
->  #include "input.h"
->  #include "init.h"
->  #include "io.h"
-> +#include "xfrog.h"
->  
->  static cmdinfo_t bmap_cmd;
->  
-> @@ -105,7 +106,7 @@ bmap_f(
->  		bmv_iflags &= ~(BMV_IF_PREALLOC|BMV_IF_NO_DMAPI_READ);
->  
->  	if (vflag) {
-> -		c = xfsctl(file->name, file->fd, XFS_IOC_FSGEOMETRY_V1, &fsgeo);
-> +		c = xfrog_geometry(file->fd, &fsgeo);
->  		if (c < 0) {
->  			fprintf(stderr,
->  				_("%s: can't get geometry [\"%s\"]: %s\n"),
-> diff --git a/io/fsmap.c b/io/fsmap.c
-> index 477c36fc..d3ff7dea 100644
-> --- a/io/fsmap.c
-> +++ b/io/fsmap.c
-> @@ -9,6 +9,7 @@
->  #include "path.h"
->  #include "io.h"
->  #include "input.h"
-> +#include "xfrog.h"
->  
->  static cmdinfo_t	fsmap_cmd;
->  static dev_t		xfs_data_dev;
-> @@ -447,7 +448,7 @@ fsmap_f(
->  	}
->  
->  	if (vflag) {
-> -		c = ioctl(file->fd, XFS_IOC_FSGEOMETRY, &fsgeo);
-> +		c = xfrog_geometry(file->fd, &fsgeo);
->  		if (c < 0) {
->  			fprintf(stderr,
->  				_("%s: can't get geometry [\"%s\"]: %s\n"),
-> diff --git a/io/open.c b/io/open.c
-> index c7f5248a..e70c8cb0 100644
-> --- a/io/open.c
-> +++ b/io/open.c
-> @@ -9,6 +9,7 @@
->  #include "init.h"
->  #include "io.h"
->  #include "libxfs.h"
-> +#include "xfrog.h"
->  
->  #ifndef __O_TMPFILE
->  #if defined __alpha__
-> @@ -118,7 +119,7 @@ openfile(
->  	if (flags & IO_PATH) {
->  		/* Can't call ioctl() on O_PATH fds */
->  		memset(geom, 0, sizeof(*geom));
-> -	} else if (xfsctl(path, fd, XFS_IOC_FSGEOMETRY, geom) < 0) {
-> +	} else if (xfrog_geometry(fd, geom) < 0) {
->  		perror("XFS_IOC_FSGEOMETRY");
->  		close(fd);
->  		return -1;
-> diff --git a/io/stat.c b/io/stat.c
-> index 37c0b2e8..f7bbe08b 100644
-> --- a/io/stat.c
-> +++ b/io/stat.c
-> @@ -12,6 +12,7 @@
->  #include "io.h"
->  #include "statx.h"
->  #include "libxfs.h"
-> +#include "xfrog.h"
->  
->  #include <fcntl.h>
->  
-> @@ -194,8 +195,8 @@ statfs_f(
->  	}
->  	if (file->flags & IO_FOREIGN)
->  		return 0;
-> -	if ((xfsctl(file->name, file->fd, XFS_IOC_FSGEOMETRY_V1, &fsgeo)) < 0) {
-> -		perror("XFS_IOC_FSGEOMETRY_V1");
-> +	if (xfrog_geometry(file->fd, &fsgeo) < 0) {
-> +		perror("XFS_IOC_FSGEOMETRY");
->  	} else {
->  		printf(_("geom.bsize = %u\n"), fsgeo.blocksize);
->  		printf(_("geom.agcount = %u\n"), fsgeo.agcount);
-> diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
-> index 8879d161..a6dab3a8 100644
-> --- a/libfrog/fsgeom.c
-> +++ b/libfrog/fsgeom.c
-> @@ -4,6 +4,7 @@
->   */
->  #include "libxfs.h"
->  #include "fsgeom.h"
-> +#include "xfrog.h"
->  
->  void
->  xfs_report_geom(
-> @@ -67,3 +68,20 @@ xfs_report_geom(
->  		geo->rtextsize * geo->blocksize, (unsigned long long)geo->rtblocks,
->  			(unsigned long long)geo->rtextents);
->  }
-> +
-> +/* Try to obtain the xfs geometry. */
-> +int
-> +xfrog_geometry(
-> +	int			fd,
-> +	struct xfs_fsop_geom	*fsgeo)
-> +{
-> +	int			ret;
-> +
-> +	memset(fsgeo, 0, sizeof(*fsgeo));
-> +
-> +	ret = ioctl(fd, XFS_IOC_FSGEOMETRY, fsgeo);
-> +	if (!ret)
-> +		return 0;
-> +
-> +	return ioctl(fd, XFS_IOC_FSGEOMETRY_V1, fsgeo);
-> +}
-> diff --git a/quota/free.c b/quota/free.c
-> index 1d13006e..5432b6a8 100644
-> --- a/quota/free.c
-> +++ b/quota/free.c
-> @@ -8,6 +8,7 @@
->  #include "command.h"
->  #include "init.h"
->  #include "quota.h"
-> +#include "xfrog.h"
->  
->  static cmdinfo_t free_cmd;
->  
-> @@ -67,9 +68,8 @@ mount_free_space_data(
->  	}
->  
->  	if (!(mount->fs_flags & FS_FOREIGN)) {
-> -		if ((xfsctl(mount->fs_dir, fd, XFS_IOC_FSGEOMETRY_V1,
-> -							&fsgeo)) < 0) {
-> -			perror("XFS_IOC_FSGEOMETRY_V1");
-> +		if (xfrog_geometry(fd, &fsgeo) < 0) {
-> +			perror("XFS_IOC_FSGEOMETRY");
->  			close(fd);
->  			return 0;
->  		}
-> diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-> index 9657503f..2efeff2d 100644
-> --- a/repair/xfs_repair.c
-> +++ b/repair/xfs_repair.c
-> @@ -22,6 +22,7 @@
->  #include "dinode.h"
->  #include "slab.h"
->  #include "rmap.h"
-> +#include "xfrog.h"
->  
->  /*
->   * option tables for getsubopt calls
-> @@ -636,11 +637,11 @@ check_fs_vs_host_sectsize(
->  {
->  	int	fd;
->  	long	old_flags;
-> -	struct xfs_fsop_geom_v1 geom = { 0 };
-> +	struct xfs_fsop_geom	geom = { 0 };
->  
->  	fd = libxfs_device_to_fd(x.ddev);
->  
-> -	if (ioctl(fd, XFS_IOC_FSGEOMETRY_V1, &geom) < 0) {
-> +	if (xfrog_geometry(fd, &geom) < 0) {
->  		do_log(_("Cannot get host filesystem geometry.\n"
->  	"Repair may fail if there is a sector size mismatch between\n"
->  	"the image and the host filesystem.\n"));
-> diff --git a/rtcp/Makefile b/rtcp/Makefile
-> index 808b5378..264b4f27 100644
-> --- a/rtcp/Makefile
-> +++ b/rtcp/Makefile
-> @@ -9,6 +9,9 @@ LTCOMMAND = xfs_rtcp
->  CFILES = xfs_rtcp.c
->  LLDFLAGS = -static
->  
-> +LLDLIBS = $(LIBFROG)
-> +LTDEPENDENCIES = $(LIBFROG)
-> +
->  default: depend $(LTCOMMAND)
->  
->  include $(BUILDRULES)
-> diff --git a/rtcp/xfs_rtcp.c b/rtcp/xfs_rtcp.c
-> index f928a86a..0b37ee89 100644
-> --- a/rtcp/xfs_rtcp.c
-> +++ b/rtcp/xfs_rtcp.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include "libxfs.h"
-> +#include "xfrog.h"
->  
->  int rtcp(char *, char *, int);
->  int xfsrtextsize(char *path);
-> @@ -368,8 +369,8 @@ rtcp( char *source, char *target, int fextsize)
->  int
->  xfsrtextsize( char *path)
->  {
-> -	int fd, rval, rtextsize;
-> -	xfs_fsop_geom_v1_t geo;
-> +	struct xfs_fsop_geom	geo;
-> +	int			fd, rval, rtextsize;
->  
->  	fd = open( path, O_RDONLY );
->  	if ( fd < 0 ) {
-> @@ -377,7 +378,7 @@ xfsrtextsize( char *path)
->  			progname, path, strerror(errno));
->  		return -1;
->  	}
-> -	rval = xfsctl( path, fd, XFS_IOC_FSGEOMETRY_V1, &geo );
-> +	rval = xfrog_geometry(fd, &geo);
->  	close(fd);
->  	if ( rval < 0 )
->  		return -1;
-> diff --git a/scrub/phase1.c b/scrub/phase1.c
-> index 04a5f4a9..bd7c9fee 100644
-> --- a/scrub/phase1.c
-> +++ b/scrub/phase1.c
-> @@ -26,6 +26,7 @@
->  #include "disk.h"
->  #include "scrub.h"
->  #include "repair.h"
-> +#include "xfrog.h"
->  
->  /* Phase 1: Find filesystem geometry (and clean up after) */
->  
-> @@ -129,8 +130,8 @@ _("Does not appear to be an XFS filesystem!"));
->  	}
->  
->  	/* Retrieve XFS geometry. */
-> -	error = ioctl(ctx->mnt_fd, XFS_IOC_FSGEOMETRY, &ctx->geo);
-> -	if (error) {
-> +	error = xfrog_geometry(ctx->mnt_fd, &ctx->geo);
-> +	if (error < 0) {
->  		str_errno(ctx, ctx->mntpoint);
->  		return false;
->  	}
-> diff --git a/spaceman/file.c b/spaceman/file.c
-> index 7e33e07e..ef627fdb 100644
-> --- a/spaceman/file.c
-> +++ b/spaceman/file.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include "libxfs.h"
-> +#include "xfrog.h"
->  #include <sys/mman.h>
->  #include "command.h"
->  #include "input.h"
-> @@ -56,7 +57,7 @@ openfile(
->  		return -1;
->  	}
->  
-> -	if (ioctl(fd, XFS_IOC_FSGEOMETRY, geom) < 0) {
-> +	if (xfrog_geometry(fd, geom) < 0) {
->  		if (errno == ENOTTY)
->  			fprintf(stderr,
->  _("%s: Not on a mounted XFS filesystem.\n"),
-> diff --git a/spaceman/info.c b/spaceman/info.c
-> index 01d0744a..5357b430 100644
-> --- a/spaceman/info.c
-> +++ b/spaceman/info.c
-> @@ -4,6 +4,7 @@
->   * Author: Darrick J. Wong <darrick.wong@oracle.com>
->   */
->  #include "libxfs.h"
-> +#include "xfrog.h"
->  #include "command.h"
->  #include "init.h"
->  #include "path.h"
-> @@ -37,24 +38,14 @@ info_f(
->  	}
->  
->  	/* get the current filesystem size & geometry */
-> -	error = ioctl(file->fd, XFS_IOC_FSGEOMETRY, &geo);
-> -	if (error) {
-> -		/*
-> -		 * OK, new xfsctl barfed - back off and try earlier version
-> -		 * as we're probably running an older kernel version.
-> -		 * Only field added in the v2 geometry xfsctl is "logsunit"
-> -		 * so we'll zero that out for later display (as zero).
-> -		 */
-> -		geo.logsunit = 0;
-> -		error = ioctl(file->fd, XFS_IOC_FSGEOMETRY_V1, &geo);
-> -		if (error) {
-> -			fprintf(stderr, _(
-> -				"%s: cannot determine geometry of filesystem"
-> -				" mounted at %s: %s\n"),
-> -				progname, file->name, strerror(errno));
-> -			exitcode = 1;
-> -			return 0;
-> -		}
-> +	error = xfrog_geometry(file->fd, &geo);
-> +	if (error < 0) {
-> +		fprintf(stderr, _(
-> +			"%s: cannot determine geometry of filesystem"
-> +			" mounted at %s: %s\n"),
-> +			progname, file->name, strerror(errno));
-> +		exitcode = 1;
-> +		return 0;
->  	}
->  
->  	xfs_report_geom(&geo, file->fs_path.fs_name, file->fs_path.fs_log,
-> 
+v4.19 reproduced two different panic [1] and [2], but none of them same as
+above issues:
+
+[1]
+[  591.414884] kasan: GPF could be caused by NULL-ptr deref or user memory
+access 
+[  591.422117] general protection fault: 0000 [#1] SMP KASAN PTI 
+[  591.427869] CPU: 19 PID: 17963 Comm: xfsaild/dm-0 Tainted: G    B   W       
+ 4.19.0 #1 
+[  591.435865] Hardware name: Dell Inc. PowerEdge R740/00WGD1, BIOS 1.3.7
+02/08/2018 
+[  591.443394] RIP: 0010:xfs_buf_free+0x20f/0x5b0 [xfs] 
+[  591.448364] Code: 80 02 00 00 0f 86 60 01 00 00 41 80 7d 00 00 0f 85 ff 02
+00 00 48 8b 8b 40 02 00 00 44 89 fa 48 8d 14 d1 48 89 d1 48 c1 e9 03 <42> 80 3c
+21 00 0f 85 c8 02 00 00 48 8b 3a 31 f6 41 83 c7 01 e8 d8 
+[  591.467108] RSP: 0018:ffff880101e3fab0 EFLAGS: 00010246 
+[  591.472334] RAX: 0000000000000000 RBX: ffff880001980680 RCX:
+0000000000000000 
+[  591.479466] RDX: 0000000000000000 RSI: 0000000000000008 RDI:
+ffff8800019808c0 
+[  591.486602] RBP: ffffed0000330120 R08: ffffed0005a681a1 R09:
+ffffed0005a681a0 
+[  591.493730] R10: ffffed0005a681a0 R11: ffff88002d340d03 R12:
+dffffc0000000000 
+[  591.500862] R13: ffffed0000330118 R14: ffff880001980900 R15:
+0000000000000000 
+[  591.507997] FS:  0000000000000000(0000) GS:ffff880119e00000(0000)
+knlGS:0000000000000000 
+[  591.516081] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+[  591.521827] CR2: 00007f39c4ebd228 CR3: 0000000013216002 CR4:
+00000000007606e0 
+[  591.528961] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000 
+[  591.536094] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400 
+[  591.543225] PKRU: 55555554 
+[  591.545936] Call Trace: 
+[  591.548438]  xfs_buf_rele+0x2f8/0xc80 [xfs] 
+[  591.552672]  ? xfs_buf_hold+0x280/0x280 [xfs] 
+[  591.557072]  ? xfs_buf_unlock+0x1ea/0x2d0 [xfs] 
+[  591.561647]  ? __xfs_buf_submit+0x687/0x730 [xfs] 
+[  591.566395]  ? xfs_buf_ioend+0x446/0x6f0 [xfs] 
+[  591.570886]  __xfs_buf_submit+0x687/0x730 [xfs] 
+[  591.575460]  ? xfs_buf_delwri_submit_buffers+0x36b/0xaa0 [xfs] 
+[  591.581328]  xfs_buf_delwri_submit_buffers+0x36b/0xaa0 [xfs] 
+[  591.587036]  ? xfsaild+0x94a/0x25a0 [xfs] 
+[  591.591088]  ? xfs_bwrite+0x150/0x150 [xfs] 
+[  591.595319]  ? xfs_iunlock+0x310/0x480 [xfs] 
+[  591.599637]  ? xfsaild+0x940/0x25a0 [xfs] 
+[  591.603697]  xfsaild+0x94a/0x25a0 [xfs] 
+[  591.607542]  ? finish_task_switch+0xfc/0x6c0 
+[  591.611860]  ? xfs_trans_ail_cursor_first+0x180/0x180 [xfs] 
+[  591.617439]  ? lock_downgrade+0x5e0/0x5e0 
+[  591.621450]  ? __kthread_parkme+0x59/0x180 
+[  591.625553]  ? __kthread_parkme+0xb6/0x180 
+[  591.629699]  ? xfs_trans_ail_cursor_first+0x180/0x180 [xfs] 
+[  591.635273]  kthread+0x31a/0x3e0 
+[  591.638505]  ? kthread_create_worker_on_cpu+0xc0/0xc0 
+[  591.643558]  ret_from_fork+0x3a/0x50 
+[  591.647140] Modules linked in: dm_mod iTCO_wdt iTCO_vendor_support dcdbas
+intel_rapl skx_edac nfit x86_pkg_temp_thermal intel_powerclamp coretemp
+kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel
+intel_cstate intel_uncore intel_rapl_perf dax_pmem device_dax nd_pmem pcspkr sg
+i2c_i801 ipmi_ssif mei_me lpc_ich mei ipmi_si ipmi_devintf ipmi_msghandler
+acpi_power_meter sunrpc ext4 mbcache vfat jbd2 fat xfs libcrc32c sr_mod cdrom
+sd_mod crc32c_intel mgag200 i2c_algo_bit drm_kms_helper mlx5_core syscopyarea
+sysfillrect sysimgblt fb_sys_fops ttm ahci ixgbe libahci mdio i40e drm
+megaraid_sas libata dca tg3 mlxfw 
+[  591.702756] ---[ end trace e658cafc4d56a43f ]--- 
+
+[2]
+[  852.300021] kasan: CONFIG_KASAN_INLINE enabled 
+[  852.304474] kasan: GPF could be caused by NULL-ptr deref or user memory
+access 
+[  852.311699] general protection fault: 0000 [#1] SMP KASAN PTI 
+[  852.317444] CPU: 3 PID: 18390 Comm: fsstress Tainted: G        W        
+4.19.0 #1 
+[  852.325010] Hardware name: Supermicro SYS-1018R-WR/X10SRW-F, BIOS 2.0
+12/17/2015 
+[  852.332464] RIP: 0010:xfs_trans_brelse+0xe7/0x560 [xfs] 
+[  852.337690] Code: 83 7e 03 00 00 89 ed 48 0f a3 2d 74 d0 44 f2 0f 82 bc 02
+00 00 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 38 48 89 fa 48 c1 ea 03 <0f> b6 04
+02 84 c0 74 08 3c 03 0f 8e f2 03 00 00 81 7b 38 3c 12 00 
+[  852.356434] RSP: 0018:ffff8800402b78d8 EFLAGS: 00010202 
+[  852.361660] RAX: dffffc0000000000 RBX: 0000000000000000 RCX:
+0000000000000000 
+[  852.368786] RDX: 0000000000000007 RSI: 000000000000000a RDI:
+0000000000000038 
+[  852.375910] RBP: 0000000000000003 R08: ffffed002307d0e1 R09:
+ffffed002307d0e0 
+[  852.383042] R10: ffffed002307d0e0 R11: ffff8801183e8707 R12:
+ffff880015e74ac0 
+[  852.390165] R13: 0000000000000007 R14: ffff880015e74cf8 R15:
+ffff8800073e3a00 
+[  852.397292] FS:  00007fe0d67d7b80(0000) GS:ffff880118200000(0000)
+knlGS:0000000000000000 
+[  852.405376] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+[  852.411115] CR2: 0000000000dfd000 CR3: 0000000009860002 CR4:
+00000000003606e0 
+[  852.418238] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000 
+[  852.425363] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400 
+[  852.432495] Call Trace: 
+[  852.434996]  xfs_attr_set+0x81c/0xa90 [xfs] 
+[  852.439214]  ? xfs_attr_get+0x530/0x530 [xfs] 
+[  852.443576]  ? avc_has_perm+0xa5/0x4b0 
+[  852.447330]  ? mark_held_locks+0x140/0x140 
+[  852.451427]  ? avc_has_perm+0x283/0x4b0 
+[  852.455267]  ? avc_has_perm_noaudit+0x480/0x480 
+[  852.459800]  ? lock_downgrade+0x5e0/0x5e0 
+[  852.463816]  ? creds_are_invalid+0x43/0xd0 
+[  852.467974]  xfs_xattr_set+0x75/0xe0 [xfs] 
+[  852.472074]  __vfs_setxattr+0xd0/0x130 
+[  852.475824]  ? xattr_resolve_name+0x4e0/0x4e0 
+[  852.480186]  __vfs_setxattr_noperm+0xe7/0x390 
+[  852.484543]  vfs_setxattr+0xa3/0xd0 
+[  852.488035]  setxattr+0x182/0x240 
+[  852.491355]  ? vfs_setxattr+0xd0/0xd0 
+[  852.495022]  ? filename_lookup.part.31+0x1f1/0x360 
+[  852.499815]  ? mark_held_locks+0x140/0x140 
+[  852.503916]  ? filename_parentat.part.30+0x3e0/0x3e0 
+[  852.508882]  ? lock_acquire+0x14f/0x3b0 
+[  852.512718]  ? mnt_want_write+0x3c/0xa0 
+[  852.516560]  ? rcu_sync_lockdep_assert+0xf/0x110 
+[  852.521178]  ? __sb_start_write+0x1b2/0x260 
+[  852.525366]  path_setxattr+0x11b/0x130 
+[  852.529118]  ? setxattr+0x240/0x240 
+[  852.532610]  ? __audit_syscall_exit+0x76b/0xa90 
+[  852.537143]  __x64_sys_setxattr+0xc0/0x160 
+[  852.541244]  do_syscall_64+0xa5/0x4a0 
+[  852.544908]  entry_SYSCALL_64_after_hwframe+0x49/0xbe 
+[  852.549959] RIP: 0033:0x7fe0d5ccd38e 
+[  852.553530] Code: 48 8b 0d fd 2a 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e
+0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 bc 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d ca 2a 2c 00 f7 d8 64 89 01 48 
+[  852.572277] RSP: 002b:00007ffd90fb1ce8 EFLAGS: 00000206 ORIG_RAX:
+00000000000000bc 
+[  852.579843] RAX: ffffffffffffffda RBX: 0000000000000050 RCX:
+00007fe0d5ccd38e 
+[  852.586968] RDX: 0000000000d3da40 RSI: 00007ffd90fb1d10 RDI:
+0000000000d2d3e0 
+[  852.594100] RBP: 0000000000000001 R08: 0000000000000002 R09:
+00007ffd90fb1a57 
+[  852.601224] R10: 0000000000000050 R11: 0000000000000206 R12:
+0000000000000002 
+[  852.608348] R13: 00000000000001ab R14: 0000000000d3da40 R15:
+0000000000000050 
+[  852.615477] Modules linked in: sunrpc ext4 mbcache jbd2 iTCO_wdt
+iTCO_vendor_support intel_rapl sb_edac x86_pkg_temp_thermal coretemp kvm_intel
+kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_cstate
+intel_uncore intel_rapl_perf pcspkr dax_pmem nd_pmem device_dax i2c_i801
+lpc_ich ioatdma joydev mei_me sg mei wmi ipmi_ssif ipmi_si ipmi_devintf
+ipmi_msghandler acpi_power_meter xfs libcrc32c dm_service_time sd_mod ast
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm drm
+crc32c_intel ahci libahci igb mpt3sas libata raid_class dca scsi_transport_sas
+i2c_algo_bit dm_multipath dm_mirror dm_region_hash dm_log dm_mod 
+[  852.672554] ---[ end trace 10bad956ab83813f ]---
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
