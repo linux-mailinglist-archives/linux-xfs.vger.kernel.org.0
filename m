@@ -2,29 +2,29 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC4367638
-	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 23:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8218167640
+	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 23:36:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfGLVeW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 12 Jul 2019 17:34:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54794 "EHLO mx1.redhat.com"
+        id S1728075AbfGLVga (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 12 Jul 2019 17:36:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:7152 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfGLVeW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:34:22 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1728071AbfGLVga (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 12 Jul 2019 17:36:30 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8021804F2
-        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:34:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECC8681E07
+        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
 Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79ADB60A9A
-        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:34:21 +0000 (UTC)
-Subject: [PATCH 1/4] xfsprogs: reorder functions in libxfs/trans.c
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C111819C67
+        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
+Subject: [PATCH 2/4] xfsprogs: cosmetic changes to libxfs/trans.c
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 References: <a40115ca-93e2-6dd2-7940-5911988f8fe4@redhat.com>
 From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <5cfffec2-092e-5409-e89f-48b5fd905ac2@redhat.com>
-Date:   Fri, 12 Jul 2019 16:34:20 -0500
+Message-ID: <5c8fe68f-c5dd-4f23-de03-fa886cd57641@redhat.com>
+Date:   Fri, 12 Jul 2019 16:36:29 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -32,15 +32,19 @@ In-Reply-To: <a40115ca-93e2-6dd2-7940-5911988f8fe4@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 12 Jul 2019 21:34:21 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This puts these functions in libxfs/trans.c in the same order as
-they appear in kernelspace xfs_trans_buf.c for easier comparison.
+Make some completely trivial changes to libxfs/trans.c to more
+closely match kernelspace xfs_trans.c:
+
+- remove some typedefs
+- alter whitespace
+- rename some variables
 
 No functional changes.
 
@@ -48,335 +52,199 @@ Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
 
 diff --git a/libxfs/trans.c b/libxfs/trans.c
-index 5c56b4fe..8954f0fe 100644
+index 8954f0fe..fecefc7a 100644
 --- a/libxfs/trans.c
 +++ b/libxfs/trans.c
-@@ -330,80 +330,6 @@ libxfs_trans_cancel(
- 	xfs_trans_free(tp);
- }
+@@ -361,7 +361,7 @@ _libxfs_trans_bjoin(
  
--void
--libxfs_trans_inode_alloc_buf(
--	xfs_trans_t		*tp,
--	xfs_buf_t		*bp)
--{
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
--
--	ASSERT(bp->b_transp == tp);
--	ASSERT(bip != NULL);
--	bip->bli_flags |= XFS_BLI_INODE_ALLOC_BUF;
--	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_DINO_BUF);
--}
--
--/*
-- * Mark a buffer dirty in the transaction.
-- */
--void
--libxfs_trans_dirty_buf(
--	struct xfs_trans	*tp,
--	struct xfs_buf		*bp)
--{
--	struct xfs_buf_log_item	*bip = bp->b_log_item;
--
--	ASSERT(bp->b_transp == tp);
--	ASSERT(bip != NULL);
--
--	tp->t_flags |= XFS_TRANS_DIRTY;
--	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
--}
--
--/*
-- * This is called to mark bytes first through last inclusive of the given
-- * buffer as needing to be logged when the transaction is committed.
-- * The buffer must already be associated with the given transaction.
-- *
-- * First and last are numbers relative to the beginning of this buffer,
-- * so the first byte in the buffer is numbered 0 regardless of the
-- * value of b_blkno.
-- */
--void
--libxfs_trans_log_buf(
--	struct xfs_trans	*tp,
--	struct xfs_buf		*bp,
--	uint			first,
--	uint			last)
--{
--	struct xfs_buf_log_item	*bip = bp->b_log_item;
--
--	ASSERT((first <= last) && (last < bp->b_bcount));
--
--	xfs_trans_dirty_buf(tp, bp);
--	xfs_buf_item_log(bip, first, last);
--}
--
--/*
-- * For userspace, ordered buffers just need to be marked dirty so
-- * the transaction commit will write them and mark them up-to-date.
-- * In essence, they are just like any other logged buffer in userspace.
-- *
-- * If the buffer is already dirty, trigger the "already logged" return condition.
-- */
--bool
--libxfs_trans_ordered_buf(
--	struct xfs_trans	*tp,
--	struct xfs_buf		*bp)
--{
--	struct xfs_buf_log_item	*bip = bp->b_log_item;
--	bool			ret;
--
--	ret = test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
--	libxfs_trans_log_buf(tp, bp, 0, bp->b_bcount);
--	return ret;
--}
--
- static void
- xfs_buf_item_put(
- 	struct xfs_buf_log_item	*bip)
-@@ -414,63 +340,7 @@ xfs_buf_item_put(
- 	kmem_zone_free(xfs_buf_item_zone, bip);
- }
+ 	ASSERT(bp->b_transp == NULL);
  
--void
--libxfs_trans_brelse(
--	xfs_trans_t		*tp,
--	xfs_buf_t		*bp)
--{
--	xfs_buf_log_item_t	*bip;
--
--	if (tp == NULL) {
--		ASSERT(bp->b_transp == NULL);
--		libxfs_putbuf(bp);
--		return;
--	}
--
--	trace_xfs_trans_brelse(bip);
--	ASSERT(bp->b_transp == tp);
--	bip = bp->b_log_item;
--	ASSERT(bip->bli_item.li_type == XFS_LI_BUF);
--	if (bip->bli_recur > 0) {
--		bip->bli_recur--;
--		return;
--	}
--	/* If dirty/stale, can't release till transaction committed */
--	if (bip->bli_flags & XFS_BLI_STALE)
--		return;
--	if (test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags))
--		return;
--	xfs_trans_del_item(&bip->bli_item);
--	if (bip->bli_flags & XFS_BLI_HOLD)
--		bip->bli_flags &= ~XFS_BLI_HOLD;
--	xfs_buf_item_put(bip);
--	bp->b_transp = NULL;
--	libxfs_putbuf(bp);
--}
--
--void
--libxfs_trans_binval(
--	xfs_trans_t		*tp,
--	xfs_buf_t		*bp)
--{
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
--
--	ASSERT(bp->b_transp == tp);
--	ASSERT(bip != NULL);
--
--	trace_xfs_trans_binval(bip);
--
--	if (bip->bli_flags & XFS_BLI_STALE)
--		return;
--	XFS_BUF_UNDELAYWRITE(bp);
--	xfs_buf_stale(bp);
--	bip->bli_flags |= XFS_BLI_STALE;
--	bip->bli_flags &= ~XFS_BLI_DIRTY;
--	bip->__bli_format.blf_flags &= ~XFS_BLF_INODE_BUF;
--	bip->__bli_format.blf_flags |= XFS_BLF_CANCEL;
--	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
--	tp->t_flags |= XFS_TRANS_DIRTY;
--}
-+/* from xfs_trans_buf.c */
- 
- /*
-  * Add the locked buffer to the transaction.
-@@ -519,20 +389,6 @@ libxfs_trans_bjoin(
+-        /*
++	/*
+ 	 * The xfs_buf_log_item pointer is stored in b_log_item.  If
+ 	 * it doesn't have one yet, then allocate one and initialize it.
+ 	 * The checks to see if one is there are in xfs_buf_item_init().
+@@ -389,21 +389,21 @@ libxfs_trans_bjoin(
  	trace_xfs_trans_bjoin(bp->b_log_item);
  }
  
--void
--libxfs_trans_bhold(
+-xfs_buf_t *
++struct xfs_buf *
+ libxfs_trans_get_buf_map(
+-	xfs_trans_t		*tp,
+-	struct xfs_buftarg	*btp,
++	struct xfs_trans	*tp,
++	struct xfs_buftarg	*target,
+ 	struct xfs_buf_map	*map,
+ 	int			nmaps,
+-	uint			f)
++	uint			flags)
+ {
+ 	xfs_buf_t		*bp;
+-	xfs_buf_log_item_t	*bip;
++	struct xfs_buf_log_item	*bip;
+ 
+ 	if (tp == NULL)
+-		return libxfs_getbuf_map(btp, map, nmaps, 0);
++		return libxfs_getbuf_map(target, map, nmaps, 0);
+ 
+-	bp = xfs_trans_buf_item_match(tp, btp, map, nmaps);
++	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
+ 	if (bp != NULL) {
+ 		ASSERT(bp->b_transp == tp);
+ 		bip = bp->b_log_item;
+@@ -412,7 +412,7 @@ libxfs_trans_get_buf_map(
+ 		return bp;
+ 	}
+ 
+-	bp = libxfs_getbuf_map(btp, map, nmaps, 0);
++	bp = libxfs_getbuf_map(target, map, nmaps, 0);
+ 	if (bp == NULL)
+ 		return NULL;
+ 
+@@ -424,11 +424,11 @@ libxfs_trans_get_buf_map(
+ xfs_buf_t *
+ libxfs_trans_getsb(
+ 	xfs_trans_t		*tp,
+-	xfs_mount_t		*mp,
++	struct xfs_mount	*mp,
+ 	int			flags)
+ {
+ 	xfs_buf_t		*bp;
+-	xfs_buf_log_item_t	*bip;
++	struct xfs_buf_log_item	*bip;
+ 	int			len = XFS_FSS_TO_BB(mp, 1);
+ 	DEFINE_SINGLE_BUF_MAP(map, XFS_SB_DADDR, len);
+ 
+@@ -454,23 +454,23 @@ libxfs_trans_getsb(
+ 
+ int
+ libxfs_trans_read_buf_map(
+-	xfs_mount_t		*mp,
+-	xfs_trans_t		*tp,
+-	struct xfs_buftarg	*btp,
++	struct xfs_mount	*mp,
++	struct xfs_trans	*tp,
++	struct xfs_buftarg	*target,
+ 	struct xfs_buf_map	*map,
+ 	int			nmaps,
+ 	uint			flags,
+-	xfs_buf_t		**bpp,
++	struct xfs_buf		**bpp,
+ 	const struct xfs_buf_ops *ops)
+ {
+-	xfs_buf_t		*bp;
+-	xfs_buf_log_item_t	*bip;
++	struct xfs_buf		*bp;
++	struct xfs_buf_log_item	*bip;
+ 	int			error;
+ 
+ 	*bpp = NULL;
+ 
+ 	if (tp == NULL) {
+-		bp = libxfs_readbuf_map(btp, map, nmaps, flags, ops);
++		bp = libxfs_readbuf_map(target, map, nmaps, flags, ops);
+ 		if (!bp) {
+ 			return (flags & XBF_TRYLOCK) ?  -EAGAIN : -ENOMEM;
+ 		}
+@@ -479,7 +479,7 @@ libxfs_trans_read_buf_map(
+ 		goto done;
+ 	}
+ 
+-	bp = xfs_trans_buf_item_match(tp, btp, map, nmaps);
++	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
+ 	if (bp != NULL) {
+ 		ASSERT(bp->b_transp == tp);
+ 		ASSERT(bp->b_log_item != NULL);
+@@ -489,7 +489,7 @@ libxfs_trans_read_buf_map(
+ 		goto done;
+ 	}
+ 
+-	bp = libxfs_readbuf_map(btp, map, nmaps, flags, ops);
++	bp = libxfs_readbuf_map(target, map, nmaps, flags, ops);
+ 	if (!bp) {
+ 		return (flags & XBF_TRYLOCK) ?  -EAGAIN : -ENOMEM;
+ 	}
+@@ -509,10 +509,10 @@ out_relse:
+ 
+ void
+ libxfs_trans_brelse(
 -	xfs_trans_t		*tp,
 -	xfs_buf_t		*bp)
--{
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
--
--	ASSERT(bp->b_transp == tp);
--	ASSERT(bip != NULL);
--
--	bip->bli_flags |= XFS_BLI_HOLD;
--	trace_xfs_trans_bhold(bip);
--}
--
- xfs_buf_t *
- libxfs_trans_get_buf_map(
++	struct xfs_trans	*tp,
++	struct xfs_buf		*bp)
+ {
+-	xfs_buf_log_item_t	*bip;
++	struct xfs_buf_log_item	*bip;
+ 
+ 	if (tp == NULL) {
+ 		ASSERT(bp->b_transp == NULL);
+@@ -524,19 +524,23 @@ libxfs_trans_brelse(
+ 	ASSERT(bp->b_transp == tp);
+ 	bip = bp->b_log_item;
+ 	ASSERT(bip->bli_item.li_type == XFS_LI_BUF);
++
+ 	if (bip->bli_recur > 0) {
+ 		bip->bli_recur--;
+ 		return;
+ 	}
++
+ 	/* If dirty/stale, can't release till transaction committed */
+ 	if (bip->bli_flags & XFS_BLI_STALE)
+ 		return;
+ 	if (test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags))
+ 		return;
++
+ 	xfs_trans_del_item(&bip->bli_item);
+ 	if (bip->bli_flags & XFS_BLI_HOLD)
+ 		bip->bli_flags &= ~XFS_BLI_HOLD;
+ 	xfs_buf_item_put(bip);
++
+ 	bp->b_transp = NULL;
+ 	libxfs_putbuf(bp);
+ }
+@@ -552,7 +556,7 @@ libxfs_trans_bhold(
  	xfs_trans_t		*tp,
-@@ -651,6 +507,160 @@ out_relse:
- 	return error;
+ 	xfs_buf_t		*bp)
+ {
+-	xfs_buf_log_item_t	*bip = bp->b_log_item;
++	struct xfs_buf_log_item	*bip = bp->b_log_item;
+ 
+ 	ASSERT(bp->b_transp == tp);
+ 	ASSERT(bip != NULL);
+@@ -599,6 +603,7 @@ libxfs_trans_log_buf(
+ 	ASSERT((first <= last) && (last < bp->b_bcount));
+ 
+ 	xfs_trans_dirty_buf(tp, bp);
++
+ 	xfs_buf_item_log(bip, first, last);
  }
  
-+void
-+libxfs_trans_brelse(
-+	xfs_trans_t		*tp,
-+	xfs_buf_t		*bp)
-+{
-+	xfs_buf_log_item_t	*bip;
-+
-+	if (tp == NULL) {
-+		ASSERT(bp->b_transp == NULL);
-+		libxfs_putbuf(bp);
-+		return;
-+	}
-+
-+	trace_xfs_trans_brelse(bip);
-+	ASSERT(bp->b_transp == tp);
-+	bip = bp->b_log_item;
-+	ASSERT(bip->bli_item.li_type == XFS_LI_BUF);
-+	if (bip->bli_recur > 0) {
-+		bip->bli_recur--;
-+		return;
-+	}
-+	/* If dirty/stale, can't release till transaction committed */
-+	if (bip->bli_flags & XFS_BLI_STALE)
-+		return;
-+	if (test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags))
-+		return;
-+	xfs_trans_del_item(&bip->bli_item);
-+	if (bip->bli_flags & XFS_BLI_HOLD)
-+		bip->bli_flags &= ~XFS_BLI_HOLD;
-+	xfs_buf_item_put(bip);
-+	bp->b_transp = NULL;
-+	libxfs_putbuf(bp);
-+}
-+
-+/*
-+ * Mark the buffer as not needing to be unlocked when the buf item's
-+ * iop_unlock() routine is called.  The buffer must already be locked
-+ * and associated with the given transaction.
-+ */
-+/* ARGSUSED */
-+void
-+libxfs_trans_bhold(
-+	xfs_trans_t		*tp,
-+	xfs_buf_t		*bp)
-+{
-+	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+
-+	ASSERT(bp->b_transp == tp);
-+	ASSERT(bip != NULL);
-+
-+	bip->bli_flags |= XFS_BLI_HOLD;
-+	trace_xfs_trans_bhold(bip);
-+}
-+
-+/*
-+ * Mark a buffer dirty in the transaction.
-+ */
-+void
-+libxfs_trans_dirty_buf(
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*bp)
-+{
+@@ -607,7 +612,7 @@ libxfs_trans_binval(
+ 	xfs_trans_t		*tp,
+ 	xfs_buf_t		*bp)
+ {
+-	xfs_buf_log_item_t	*bip = bp->b_log_item;
 +	struct xfs_buf_log_item	*bip = bp->b_log_item;
+ 
+ 	ASSERT(bp->b_transp == tp);
+ 	ASSERT(bip != NULL);
+@@ -618,6 +623,7 @@ libxfs_trans_binval(
+ 		return;
+ 	XFS_BUF_UNDELAYWRITE(bp);
+ 	xfs_buf_stale(bp);
 +
-+	ASSERT(bp->b_transp == tp);
-+	ASSERT(bip != NULL);
-+
-+	tp->t_flags |= XFS_TRANS_DIRTY;
-+	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
-+}
-+
-+/*
-+ * This is called to mark bytes first through last inclusive of the given
-+ * buffer as needing to be logged when the transaction is committed.
-+ * The buffer must already be associated with the given transaction.
-+ *
-+ * First and last are numbers relative to the beginning of this buffer,
-+ * so the first byte in the buffer is numbered 0 regardless of the
-+ * value of b_blkno.
-+ */
-+void
-+libxfs_trans_log_buf(
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*bp,
-+	uint			first,
-+	uint			last)
-+{
+ 	bip->bli_flags |= XFS_BLI_STALE;
+ 	bip->bli_flags &= ~XFS_BLI_DIRTY;
+ 	bip->__bli_format.blf_flags &= ~XFS_BLF_INODE_BUF;
+@@ -631,7 +637,7 @@ libxfs_trans_inode_alloc_buf(
+ 	xfs_trans_t		*tp,
+ 	xfs_buf_t		*bp)
+ {
+-	xfs_buf_log_item_t	*bip = bp->b_log_item;
 +	struct xfs_buf_log_item	*bip = bp->b_log_item;
-+
-+	ASSERT((first <= last) && (last < bp->b_bcount));
-+
-+	xfs_trans_dirty_buf(tp, bp);
-+	xfs_buf_item_log(bip, first, last);
-+}
-+
-+void
-+libxfs_trans_binval(
-+	xfs_trans_t		*tp,
-+	xfs_buf_t		*bp)
-+{
-+	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+
-+	ASSERT(bp->b_transp == tp);
-+	ASSERT(bip != NULL);
-+
-+	trace_xfs_trans_binval(bip);
-+
-+	if (bip->bli_flags & XFS_BLI_STALE)
-+		return;
-+	XFS_BUF_UNDELAYWRITE(bp);
-+	xfs_buf_stale(bp);
-+	bip->bli_flags |= XFS_BLI_STALE;
-+	bip->bli_flags &= ~XFS_BLI_DIRTY;
-+	bip->__bli_format.blf_flags &= ~XFS_BLF_INODE_BUF;
-+	bip->__bli_format.blf_flags |= XFS_BLF_CANCEL;
-+	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
-+	tp->t_flags |= XFS_TRANS_DIRTY;
-+}
-+
-+void
-+libxfs_trans_inode_alloc_buf(
-+	xfs_trans_t		*tp,
-+	xfs_buf_t		*bp)
-+{
-+	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+
-+	ASSERT(bp->b_transp == tp);
-+	ASSERT(bip != NULL);
-+	bip->bli_flags |= XFS_BLI_INODE_ALLOC_BUF;
-+	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_DINO_BUF);
-+}
-+
-+/*
-+ * For userspace, ordered buffers just need to be marked dirty so
-+ * the transaction commit will write them and mark them up-to-date.
-+ * In essence, they are just like any other logged buffer in userspace.
-+ *
-+ * If the buffer is already dirty, trigger the "already logged" return condition.
-+ */
-+bool
-+libxfs_trans_ordered_buf(
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*bp)
-+{
-+	struct xfs_buf_log_item	*bip = bp->b_log_item;
-+	bool			ret;
-+
-+	ret = test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
-+	libxfs_trans_log_buf(tp, bp, 0, bp->b_bcount);
-+	return ret;
-+}
-+
-+/* end of xfs_trans_buf.c */
-+
- /*
-  * Record the indicated change to the given field for application
-  * to the file system's superblock when the transaction commits.
+ 
+ 	ASSERT(bp->b_transp == tp);
+ 	ASSERT(bip != NULL);
+
 
