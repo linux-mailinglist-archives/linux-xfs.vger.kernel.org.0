@@ -2,29 +2,29 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8218167640
-	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 23:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6D667642
+	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 23:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbfGLVga (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 12 Jul 2019 17:36:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:7152 "EHLO mx1.redhat.com"
+        id S1728084AbfGLVio (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 12 Jul 2019 17:38:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34744 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfGLVga (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:36:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1728079AbfGLVin (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 12 Jul 2019 17:38:43 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECC8681E07
-        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 320D1308FC4E
+        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:38:43 +0000 (UTC)
 Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C111819C67
-        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
-Subject: [PATCH 2/4] xfsprogs: cosmetic changes to libxfs/trans.c
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 020305D739
+        for <linux-xfs@vger.kernel.org>; Fri, 12 Jul 2019 21:38:42 +0000 (UTC)
+Subject: [PATCH 3/4] xfsprogs: trivial changes to libxfs/trans.c
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 References: <a40115ca-93e2-6dd2-7940-5911988f8fe4@redhat.com>
 From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <5c8fe68f-c5dd-4f23-de03-fa886cd57641@redhat.com>
-Date:   Fri, 12 Jul 2019 16:36:29 -0500
+Message-ID: <614554f7-2e1a-775e-0828-50b1307f1f09@redhat.com>
+Date:   Fri, 12 Jul 2019 16:38:42 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -32,219 +32,211 @@ In-Reply-To: <a40115ca-93e2-6dd2-7940-5911988f8fe4@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 12 Jul 2019 21:36:29 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 12 Jul 2019 21:38:43 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Make some completely trivial changes to libxfs/trans.c to more
-closely match kernelspace xfs_trans.c:
+Make some mostly trivial changes to libxfs/trans.c to more
+closely match kernelspace xfs_trans.c, including:
 
-- remove some typedefs
-- alter whitespace
-- rename some variables
+- add tracepoint calls
+- add comments
+- add braces
+- change tests for null
+- reorder some tests and initializations
 
-No functional changes.
+This /should/ be no functional changes.
 
 Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
 
+diff --git a/include/xfs_trace.h b/include/xfs_trace.h
+index 43720040..71a7466e 100644
+--- a/include/xfs_trace.h
++++ b/include/xfs_trace.h
+@@ -168,6 +168,8 @@
+ #define trace_xfs_trans_bjoin(a)		((void) 0)
+ #define trace_xfs_trans_bhold(a)		((void) 0)
+ #define trace_xfs_trans_get_buf(a)		((void) 0)
++#define trace_xfs_trans_get_buf_recur(a)	((void) 0)
++#define trace_xfs_trans_log_buf(a)		((void) 0)
+ #define trace_xfs_trans_getsb_recur(a)		((void) 0)
+ #define trace_xfs_trans_getsb(a)		((void) 0)
+ #define trace_xfs_trans_read_buf_recur(a)	((void) 0)
 diff --git a/libxfs/trans.c b/libxfs/trans.c
-index 8954f0fe..fecefc7a 100644
+index fecefc7a..453e5476 100644
 --- a/libxfs/trans.c
 +++ b/libxfs/trans.c
-@@ -361,7 +361,7 @@ _libxfs_trans_bjoin(
- 
- 	ASSERT(bp->b_transp == NULL);
- 
--        /*
-+	/*
- 	 * The xfs_buf_log_item pointer is stored in b_log_item.  If
- 	 * it doesn't have one yet, then allocate one and initialize it.
- 	 * The checks to see if one is there are in xfs_buf_item_init().
-@@ -389,21 +389,21 @@ libxfs_trans_bjoin(
+@@ -389,6 +389,15 @@ libxfs_trans_bjoin(
  	trace_xfs_trans_bjoin(bp->b_log_item);
  }
  
--xfs_buf_t *
-+struct xfs_buf *
++/*
++ * Get and lock the buffer for the caller if it is not already
++ * locked within the given transaction.  If it is already locked
++ * within the transaction, just increment its lock recursion count
++ * and return a pointer to it.
++ *
++ * If the transaction pointer is NULL, make this just a normal
++ * get_buf() call.
++ */
+ struct xfs_buf *
  libxfs_trans_get_buf_map(
--	xfs_trans_t		*tp,
--	struct xfs_buftarg	*btp,
-+	struct xfs_trans	*tp,
-+	struct xfs_buftarg	*target,
- 	struct xfs_buf_map	*map,
- 	int			nmaps,
--	uint			f)
-+	uint			flags)
- {
+ 	struct xfs_trans	*tp,
+@@ -400,21 +409,31 @@ libxfs_trans_get_buf_map(
  	xfs_buf_t		*bp;
--	xfs_buf_log_item_t	*bip;
-+	struct xfs_buf_log_item	*bip;
+ 	struct xfs_buf_log_item	*bip;
  
- 	if (tp == NULL)
--		return libxfs_getbuf_map(btp, map, nmaps, 0);
-+		return libxfs_getbuf_map(target, map, nmaps, 0);
+-	if (tp == NULL)
++	if (!tp)
+ 		return libxfs_getbuf_map(target, map, nmaps, 0);
  
--	bp = xfs_trans_buf_item_match(tp, btp, map, nmaps);
-+	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
++	/*
++	 * If we find the buffer in the cache with this transaction
++	 * pointer in its b_fsprivate2 field, then we know we already
++	 * have it locked.  In this case we just increment the lock
++	 * recursion count and return the buffer to the caller.
++	 */
+ 	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
  	if (bp != NULL) {
  		ASSERT(bp->b_transp == tp);
  		bip = bp->b_log_item;
-@@ -412,7 +412,7 @@ libxfs_trans_get_buf_map(
+ 		ASSERT(bip != NULL);
+ 		bip->bli_recur++;
++		trace_xfs_trans_get_buf_recur(bip);
  		return bp;
  	}
  
--	bp = libxfs_getbuf_map(btp, map, nmaps, 0);
-+	bp = libxfs_getbuf_map(target, map, nmaps, 0);
- 	if (bp == NULL)
+ 	bp = libxfs_getbuf_map(target, map, nmaps, 0);
+-	if (bp == NULL)
++	if (bp == NULL) {
  		return NULL;
++	}
++
++	ASSERT(!bp->b_error);
  
-@@ -424,11 +424,11 @@ libxfs_trans_get_buf_map(
- xfs_buf_t *
- libxfs_trans_getsb(
- 	xfs_trans_t		*tp,
--	xfs_mount_t		*mp,
-+	struct xfs_mount	*mp,
- 	int			flags)
- {
- 	xfs_buf_t		*bp;
--	xfs_buf_log_item_t	*bip;
-+	struct xfs_buf_log_item	*bip;
- 	int			len = XFS_FSS_TO_BB(mp, 1);
- 	DEFINE_SINGLE_BUF_MAP(map, XFS_SB_DADDR, len);
- 
-@@ -454,23 +454,23 @@ libxfs_trans_getsb(
- 
- int
- libxfs_trans_read_buf_map(
--	xfs_mount_t		*mp,
--	xfs_trans_t		*tp,
--	struct xfs_buftarg	*btp,
-+	struct xfs_mount	*mp,
-+	struct xfs_trans	*tp,
-+	struct xfs_buftarg	*target,
- 	struct xfs_buf_map	*map,
- 	int			nmaps,
- 	uint			flags,
--	xfs_buf_t		**bpp,
-+	struct xfs_buf		**bpp,
- 	const struct xfs_buf_ops *ops)
- {
--	xfs_buf_t		*bp;
--	xfs_buf_log_item_t	*bip;
-+	struct xfs_buf		*bp;
-+	struct xfs_buf_log_item	*bip;
- 	int			error;
- 
- 	*bpp = NULL;
- 
- 	if (tp == NULL) {
--		bp = libxfs_readbuf_map(btp, map, nmaps, flags, ops);
-+		bp = libxfs_readbuf_map(target, map, nmaps, flags, ops);
- 		if (!bp) {
- 			return (flags & XBF_TRYLOCK) ?  -EAGAIN : -ENOMEM;
- 		}
-@@ -479,7 +479,7 @@ libxfs_trans_read_buf_map(
- 		goto done;
+ 	_libxfs_trans_bjoin(tp, bp, 1);
+ 	trace_xfs_trans_get_buf(bp->b_log_item);
+@@ -446,6 +465,8 @@ libxfs_trans_getsb(
  	}
  
--	bp = xfs_trans_buf_item_match(tp, btp, map, nmaps);
-+	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
- 	if (bp != NULL) {
+ 	bp = libxfs_getsb(mp, flags);
++	if (bp == NULL)
++		return NULL;
+ 
+ 	_libxfs_trans_bjoin(tp, bp, 1);
+ 	trace_xfs_trans_getsb(bp->b_log_item);
+@@ -480,7 +501,7 @@ libxfs_trans_read_buf_map(
+ 	}
+ 
+ 	bp = xfs_trans_buf_item_match(tp, target, map, nmaps);
+-	if (bp != NULL) {
++	if (bp) {
  		ASSERT(bp->b_transp == tp);
  		ASSERT(bp->b_log_item != NULL);
-@@ -489,7 +489,7 @@ libxfs_trans_read_buf_map(
- 		goto done;
- 	}
+ 		bip = bp->b_log_item;
+@@ -507,38 +528,61 @@ out_relse:
+ 	return error;
+ }
  
--	bp = libxfs_readbuf_map(btp, map, nmaps, flags, ops);
-+	bp = libxfs_readbuf_map(target, map, nmaps, flags, ops);
- 	if (!bp) {
- 		return (flags & XBF_TRYLOCK) ?  -EAGAIN : -ENOMEM;
- 	}
-@@ -509,10 +509,10 @@ out_relse:
- 
++/*
++ * Release a buffer previously joined to the transaction. If the buffer is
++ * modified within this transaction, decrement the recursion count but do not
++ * release the buffer even if the count goes to 0. If the buffer is not modified
++ * within the transaction, decrement the recursion count and release the buffer
++ * if the recursion count goes to 0.
++ *
++ * If the buffer is to be released and it was not already dirty before this
++ * transaction began, then also free the buf_log_item associated with it.
++ *
++ * If the transaction pointer is NULL, this is a normal xfs_buf_relse() call.
++ */
  void
  libxfs_trans_brelse(
--	xfs_trans_t		*tp,
--	xfs_buf_t		*bp)
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*bp)
+ 	struct xfs_trans	*tp,
+ 	struct xfs_buf		*bp)
  {
--	xfs_buf_log_item_t	*bip;
-+	struct xfs_buf_log_item	*bip;
+-	struct xfs_buf_log_item	*bip;
++	struct xfs_buf_log_item	*bip = bp->b_log_item;
  
- 	if (tp == NULL) {
- 		ASSERT(bp->b_transp == NULL);
-@@ -524,19 +524,23 @@ libxfs_trans_brelse(
- 	ASSERT(bp->b_transp == tp);
- 	bip = bp->b_log_item;
- 	ASSERT(bip->bli_item.li_type == XFS_LI_BUF);
+-	if (tp == NULL) {
+-		ASSERT(bp->b_transp == NULL);
++	ASSERT(bp->b_transp == tp);
 +
++	if (!tp) {
+ 		libxfs_putbuf(bp);
+ 		return;
+ 	}
+ 
+ 	trace_xfs_trans_brelse(bip);
+-	ASSERT(bp->b_transp == tp);
+-	bip = bp->b_log_item;
+ 	ASSERT(bip->bli_item.li_type == XFS_LI_BUF);
+ 
++	/*
++	 * If the release is for a recursive lookup, then decrement the count
++	 * and return.
++	 */
  	if (bip->bli_recur > 0) {
  		bip->bli_recur--;
  		return;
  	}
-+
- 	/* If dirty/stale, can't release till transaction committed */
- 	if (bip->bli_flags & XFS_BLI_STALE)
- 		return;
+ 
+-	/* If dirty/stale, can't release till transaction committed */
+-	if (bip->bli_flags & XFS_BLI_STALE)
+-		return;
++	/*
++	 * If the buffer is invalidated or dirty in this transaction, we can't
++	 * release it until we commit.
++	 */
  	if (test_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags))
  		return;
-+
- 	xfs_trans_del_item(&bip->bli_item);
- 	if (bip->bli_flags & XFS_BLI_HOLD)
- 		bip->bli_flags &= ~XFS_BLI_HOLD;
- 	xfs_buf_item_put(bip);
-+
- 	bp->b_transp = NULL;
- 	libxfs_putbuf(bp);
- }
-@@ -552,7 +556,7 @@ libxfs_trans_bhold(
- 	xfs_trans_t		*tp,
- 	xfs_buf_t		*bp)
- {
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+	struct xfs_buf_log_item	*bip = bp->b_log_item;
++	if (bip->bli_flags & XFS_BLI_STALE)
++		return;
  
- 	ASSERT(bp->b_transp == tp);
- 	ASSERT(bip != NULL);
-@@ -599,6 +603,7 @@ libxfs_trans_log_buf(
- 	ASSERT((first <= last) && (last < bp->b_bcount));
++	/*
++	 * Unlink the log item from the transaction and clear the hold flag, if
++	 * set. We wouldn't want the next user of the buffer to get confused.
++	 */
+ 	xfs_trans_del_item(&bip->bli_item);
+-	if (bip->bli_flags & XFS_BLI_HOLD)
+-		bip->bli_flags &= ~XFS_BLI_HOLD;
++	bip->bli_flags &= ~XFS_BLI_HOLD;
++
++	/* drop the reference to the bli */
+ 	xfs_buf_item_put(bip);
+ 
+ 	bp->b_transp = NULL;
+@@ -600,10 +644,11 @@ libxfs_trans_log_buf(
+ {
+ 	struct xfs_buf_log_item	*bip = bp->b_log_item;
+ 
+-	ASSERT((first <= last) && (last < bp->b_bcount));
++	ASSERT(first <= last && last < BBTOB(bp->b_length));
  
  	xfs_trans_dirty_buf(tp, bp);
-+
+ 
++	trace_xfs_trans_log_buf(bip);
  	xfs_buf_item_log(bip, first, last);
  }
  
-@@ -607,7 +612,7 @@ libxfs_trans_binval(
- 	xfs_trans_t		*tp,
- 	xfs_buf_t		*bp)
- {
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+	struct xfs_buf_log_item	*bip = bp->b_log_item;
+@@ -632,6 +677,15 @@ libxfs_trans_binval(
+ 	tp->t_flags |= XFS_TRANS_DIRTY;
+ }
  
- 	ASSERT(bp->b_transp == tp);
- 	ASSERT(bip != NULL);
-@@ -618,6 +623,7 @@ libxfs_trans_binval(
- 		return;
- 	XFS_BUF_UNDELAYWRITE(bp);
- 	xfs_buf_stale(bp);
-+
- 	bip->bli_flags |= XFS_BLI_STALE;
- 	bip->bli_flags &= ~XFS_BLI_DIRTY;
- 	bip->__bli_format.blf_flags &= ~XFS_BLF_INODE_BUF;
-@@ -631,7 +637,7 @@ libxfs_trans_inode_alloc_buf(
++/*
++ * Mark the buffer as being one which contains newly allocated
++ * inodes.  We need to make sure that even if this buffer is
++ * relogged as an 'inode buf' we still recover all of the inode
++ * images in the face of a crash.  This works in coordination with
++ * xfs_buf_item_committed() to ensure that the buffer remains in the
++ * AIL at its original location even after it has been relogged.
++ */
++/* ARGSUSED */
+ void
+ libxfs_trans_inode_alloc_buf(
  	xfs_trans_t		*tp,
- 	xfs_buf_t		*bp)
- {
--	xfs_buf_log_item_t	*bip = bp->b_log_item;
-+	struct xfs_buf_log_item	*bip = bp->b_log_item;
- 
- 	ASSERT(bp->b_transp == tp);
- 	ASSERT(bip != NULL);
-
 
