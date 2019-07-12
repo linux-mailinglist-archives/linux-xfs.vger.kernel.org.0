@@ -2,274 +2,420 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D86D669F2
-	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 11:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C4E166BD0
+	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 13:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbfGLJbi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 12 Jul 2019 05:31:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbfGLJbi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:31:38 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 40087FAAA7E9020E6BB6;
-        Fri, 12 Jul 2019 17:31:35 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 12 Jul
- 2019 17:31:26 +0800
-Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
- case
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        Gao Xiang <gaoxiang25@huawei.com>, <chao@kernel.org>
-References: <20190703075502.79782-1-yuchao0@huawei.com>
- <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
- <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
- <20190711122831.3970-1-agruenba@redhat.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <cb41acf2-f222-102a-d31b-02243c77996c@huawei.com>
-Date:   Fri, 12 Jul 2019 17:31:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726449AbfGLLva (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 12 Jul 2019 07:51:30 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37466 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfGLLva (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 12 Jul 2019 07:51:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so9689712wrr.4;
+        Fri, 12 Jul 2019 04:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=I6zRdMhxaTKNzS6HIZEdUhCn31RG7EuigZxNpj3wua4=;
+        b=RMLFUqdSfEpUzgaSSpyWNyTgeZqPNxMfBILsJHb0+dxWFus95wKDfrXXLWV76PdxXo
+         BB/cwf+rNvy0+ZRUmL4EGksd+84W/3szxyt4/002GUEwZ148oWgvqEkl1kBmPljTSpp9
+         u+BeOqUnMJTgxdW5gUU61qAEGa4OalqQ3wHS06nTD11+/HVrRM2nXIRQNNs6QaXJz9+4
+         bW603pfHbPu9UgJ9qujRjnx1f2tZWm7o8hkl4iY3qZxJkstFkVd5yaemPBAwo2P8eoSo
+         Ynqtj5HjqBOjU1dDoGrP432Mmq20gvHXBv4zqFCeAT332rwY6LwCEZ1fJ4w1WRCBp1u0
+         3eDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=I6zRdMhxaTKNzS6HIZEdUhCn31RG7EuigZxNpj3wua4=;
+        b=nK1G3GKWdtS/3oCGSJIjW0GGRVOVGOsWt2zgRVZ6JwjvbifirVNEtb/qPqwtnnD4qU
+         C9IO39YBMNRMTOmzcTkfL3Hsuvu7WSvtoExwPo0YLPd5iZG5Thk2siqqwheF6d3OA2T4
+         kFzVXoGCI6u6oVejGdxtk/Jqu3c+enCOJK+w+vdmRwj14yIwk5xMNC6qqbWrAOfoDU67
+         d9bFjGumwDRd8J2khHTeV4Y9BpFWhBBqVeYJERxmLk7167i3K8k085AVaEP0ipNEYIw3
+         eY5FbFs0KHvKrItgmzV/5X4tgAZDFeQaK1ZppxUsV2U8O1O8fhQqp7UbDFZyErmjJOn+
+         1Tag==
+X-Gm-Message-State: APjAAAUrHWJsBtEgL3KNgqMd3pGkSGNyaDntycp4IJzyEy3rPvx4bKvv
+        oRPaDMY+7z63r/xCErDqbgY=
+X-Google-Smtp-Source: APXvYqy8AD6tqXlbxn4a9B+FiNWiNqUCksAn8ZP4RuNJSh26zI7cgFE6faZIa1UgGmepUyShRJXswA==
+X-Received: by 2002:adf:de8e:: with SMTP id w14mr11387483wrl.79.1562932286015;
+        Fri, 12 Jul 2019 04:51:26 -0700 (PDT)
+Received: from localhost ([197.211.57.129])
+        by smtp.gmail.com with ESMTPSA id j189sm8992632wmb.48.2019.07.12.04.51.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 04:51:25 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 12:51:18 +0100
+From:   Sheriff Esseson <sheriffesseson@gmail.com>
+To:     skhan@linuxfoundation.org
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        sheriffesseson@gmail.com
+Subject: Re: [PATCH v7] Documentation: filesystem: Convert xfs.txt to ReST
+Message-ID: <20190712115118.GA24483@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20190711122831.3970-1-agruenba@redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019/7/11 20:28, Andreas Gruenbacher wrote:
-> Something along the lines of the attached, broken patch might work in
-> the end.
-> 
-> Andreas
-> 
-> ---
->  fs/buffer.c           | 10 ++++--
->  fs/iomap.c            | 74 +++++++++++++++++++++++++++++--------------
->  include/linux/iomap.h |  3 ++
->  3 files changed, 61 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/buffer.c b/fs/buffer.c
-> index e450c55f6434..8d8668e377ab 100644
-> --- a/fs/buffer.c
-> +++ b/fs/buffer.c
-> @@ -1873,8 +1873,8 @@ void page_zero_new_buffers(struct page *page, unsigned from, unsigned to)
->  EXPORT_SYMBOL(page_zero_new_buffers);
->  
->  static void
-> -iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
-> -		struct iomap *iomap)
-> +iomap_to_bh(struct inode *inode, struct page *page, sector_t block,
-> +		struct buffer_head *bh, struct iomap *iomap)
->  {
->  	loff_t offset = block << inode->i_blkbits;
->  
-> @@ -1924,6 +1924,10 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
->  				inode->i_blkbits;
->  		set_buffer_mapped(bh);
->  		break;
-> +	case IOMAP_INLINE:
-> +		__iomap_read_inline_data(inode, page, iomap);
-> +		set_buffer_uptodate(bh);
-> +		break;
->  	}
->  }
->  
-> @@ -1969,7 +1973,7 @@ int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
->  				if (err)
->  					break;
->  			} else {
-> -				iomap_to_bh(inode, block, bh, iomap);
-> +				iomap_to_bh(inode, page, block, bh, iomap);
->  			}
->  
->  			if (buffer_new(bh)) {
-> diff --git a/fs/iomap.c b/fs/iomap.c
-> index 45aa58e837b5..61188e95def2 100644
-> --- a/fs/iomap.c
-> +++ b/fs/iomap.c
-> @@ -260,24 +260,47 @@ struct iomap_readpage_ctx {
->  	struct list_head	*pages;
->  };
->  
-> -static void
-> -iomap_read_inline_data(struct inode *inode, struct page *page,
-> +#define offset_in_block(offset, inode) \
-> +	((unsigned long)(offset) & (i_blocksize(inode) - 1))
-> +
-> +static bool
-> +inline_data_within_block(struct inode *inode, struct iomap *iomap,
-> +		unsigned int size)
-> +{
-> +	unsigned int off = offset_in_block(iomap->inline_data, inode);
-> +
-> +	return size <= i_blocksize(inode) - off;
-> +}
-> +
-> +void
-> +__iomap_read_inline_data(struct inode *inode, struct page *page,
->  		struct iomap *iomap)
->  {
-> -	size_t size = i_size_read(inode);
-> +	size_t size = offset_in_block(i_size_read(inode), inode);
-> +	unsigned int poff = offset_in_page(iomap->offset);
-> +	unsigned int bsize = i_blocksize(inode);
->  	void *addr;
->  
->  	if (PageUptodate(page))
->  		return;
->  
-> -	BUG_ON(page->index);
-> -	BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
-> +	BUG_ON(!inline_data_within_block(inode, iomap, size));
->  
->  	addr = kmap_atomic(page);
-> -	memcpy(addr, iomap->inline_data, size);
-> -	memset(addr + size, 0, PAGE_SIZE - size);
-> +	memcpy(addr + poff, iomap->inline_data, size);
-> +	memset(addr + poff + size, 0, bsize - size);
->  	kunmap_atomic(addr);
-> -	SetPageUptodate(page);
-> +}
-> +
-> +static void
-> +iomap_read_inline_data(struct inode *inode, struct page *page,
-> +		struct iomap *iomap)
-> +{
-> +	unsigned int poff = offset_in_page(iomap->offset);
-> +	unsigned int bsize = i_blocksize(inode);
-> +
-> +	__iomap_read_inline_data(inode, page, iomap);
-> +	iomap_set_range_uptodate(page, poff, bsize);
->  }
->  
->  static loff_t
-> @@ -292,11 +315,8 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
->  	unsigned poff, plen;
->  	sector_t sector;
->  
-> -	if (iomap->type == IOMAP_INLINE) {
-> -		WARN_ON_ONCE(pos);
-> +	if (iomap->type == IOMAP_INLINE)
->  		iomap_read_inline_data(inode, page, iomap);
-> -		return PAGE_SIZE;
+Convert xfs.txt to ReST and fix broken references. 
 
-Hi Andreas,
+Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+---
 
-Thanks for your patch.
+Changes in v7:
+	- move xfs.rst to admin (Suggested by Matthew Wilcox).
+	- Update admin index.
+	- fix another typo (Caught by Matthew Wilcox).
 
-In my erofs test case, filled inline data will be zeroed out due to we fallback
-to following flow:
+ Documentation/admin-guide/index.rst           |   1 +
+ .../xfs.txt => admin-guide/xfs.rst}           | 123 +++++++++---------
+ Documentation/filesystems/dax.txt             |   2 +-
+ MAINTAINERS                                   |   2 +-
+ 4 files changed, 61 insertions(+), 67 deletions(-)
+ rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (82%)
 
-	if (iomap->type != IOMAP_MAPPED || pos >= i_size_read(inode)) {
-		zero_user(page, poff, plen);
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 24fbe0568eff..0615ea3a744c 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
+    ras
+    bcache
+    ext4
++   xfs
+    binderfs
+    pm/index
+    thunderbolt
+diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
+similarity index 82%
+rename from Documentation/filesystems/xfs.txt
+rename to Documentation/admin-guide/xfs.rst
+index a5cbb5e0e3db..9836ac3428f9 100644
+--- a/Documentation/filesystems/xfs.txt
++++ b/Documentation/admin-guide/xfs.rst
+@@ -1,4 +1,6 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
++======================
+ The SGI XFS Filesystem
+ ======================
+ 
+@@ -18,8 +20,6 @@ Mount Options
+ =============
+ 
+ When mounting an XFS filesystem, the following options are accepted.
+-For boolean mount options, the names with the (*) suffix is the
+-default behaviour.
+ 
+   allocsize=size
+ 	Sets the buffered I/O end-of-file preallocation size when
+@@ -31,46 +31,43 @@ default behaviour.
+ 	preallocation size, which uses a set of heuristics to
+ 	optimise the preallocation size based on the current
+ 	allocation patterns within the file and the access patterns
+-	to the file. Specifying a fixed allocsize value turns off
++	to the file. Specifying a fixed ``allocsize`` value turns off
+ 	the dynamic behaviour.
+ 
+-  attr2
+-  noattr2
++  attr2 or noattr2
+ 	The options enable/disable an "opportunistic" improvement to
+ 	be made in the way inline extended attributes are stored
+ 	on-disk.  When the new form is used for the first time when
+-	attr2 is selected (either when setting or removing extended
++	``attr2`` is selected (either when setting or removing extended
+ 	attributes) the on-disk superblock feature bit field will be
+ 	updated to reflect this format being in use.
+ 
+ 	The default behaviour is determined by the on-disk feature
+-	bit indicating that attr2 behaviour is active. If either
+-	mount option it set, then that becomes the new default used
++	bit indicating that ``attr2`` behaviour is active. If either
++	mount option is set, then that becomes the new default used
+ 	by the filesystem.
+ 
+-	CRC enabled filesystems always use the attr2 format, and so
+-	will reject the noattr2 mount option if it is set.
++	CRC enabled filesystems always use the ``attr2`` format, and so
++	will reject the ``noattr2`` mount option if it is set.
+ 
+-  discard
+-  nodiscard (*)
++  discard or nodiscard (default)
+ 	Enable/disable the issuing of commands to let the block
+ 	device reclaim space freed by the filesystem.  This is
+ 	useful for SSD devices, thinly provisioned LUNs and virtual
+ 	machine images, but may have a performance impact.
+ 
+-	Note: It is currently recommended that you use the fstrim
+-	application to discard unused blocks rather than the discard
++	Note: It is currently recommended that you use the ``fstrim``
++	application to ``discard`` unused blocks rather than the ``discard``
+ 	mount option because the performance impact of this option
+ 	is quite severe.
+ 
+-  grpid/bsdgroups
+-  nogrpid/sysvgroups (*)
++  grpid/bsdgroups or nogrpid/sysvgroups (default)
+ 	These options define what group ID a newly created file
+-	gets.  When grpid is set, it takes the group ID of the
++	gets.  When ``grpid`` is set, it takes the group ID of the
+ 	directory in which it is created; otherwise it takes the
+-	fsgid of the current process, unless the directory has the
+-	setgid bit set, in which case it takes the gid from the
+-	parent directory, and also gets the setgid bit set if it is
++	``fsgid`` of the current process, unless the directory has the
++	``setgid`` bit set, in which case it takes the ``gid`` from the
++	parent directory, and also gets the ``setgid`` bit set if it is
+ 	a directory itself.
+ 
+   filestreams
+@@ -78,46 +75,42 @@ default behaviour.
+ 	across the entire filesystem rather than just on directories
+ 	configured to use it.
+ 
+-  ikeep
+-  noikeep (*)
+-	When ikeep is specified, XFS does not delete empty inode
+-	clusters and keeps them around on disk.  When noikeep is
++  ikeep or noikeep (default)
++	When ``ikeep`` is specified, XFS does not delete empty inode
++	clusters and keeps them around on disk.  When ``noikeep`` is
+ 	specified, empty inode clusters are returned to the free
+ 	space pool.
+ 
+-  inode32
+-  inode64 (*)
+-	When inode32 is specified, it indicates that XFS limits
++  inode32 or inode64 (default)
++	When ``inode32`` is specified, it indicates that XFS limits
+ 	inode creation to locations which will not result in inode
+ 	numbers with more than 32 bits of significance.
+ 
+-	When inode64 is specified, it indicates that XFS is allowed
++	When ``inode64`` is specified, it indicates that XFS is allowed
+ 	to create inodes at any location in the filesystem,
+ 	including those which will result in inode numbers occupying
+-	more than 32 bits of significance. 
++	more than 32 bits of significance.
+ 
+-	inode32 is provided for backwards compatibility with older
++	``inode32`` is provided for backwards compatibility with older
+ 	systems and applications, since 64 bits inode numbers might
+ 	cause problems for some applications that cannot handle
+ 	large inode numbers.  If applications are in use which do
+-	not handle inode numbers bigger than 32 bits, the inode32
++	not handle inode numbers bigger than 32 bits, the ``inode32``
+ 	option should be specified.
+ 
+-
+-  largeio
+-  nolargeio (*)
+-	If "nolargeio" is specified, the optimal I/O reported in
+-	st_blksize by stat(2) will be as small as possible to allow
++  largeio or nolargeio (default)
++	If ``nolargeio`` is specified, the optimal I/O reported in
++	``st_blksize`` by **stat(2)** will be as small as possible to allow
+ 	user applications to avoid inefficient read/modify/write
+ 	I/O.  This is typically the page size of the machine, as
+ 	this is the granularity of the page cache.
+ 
+-	If "largeio" specified, a filesystem that was created with a
+-	"swidth" specified will return the "swidth" value (in bytes)
+-	in st_blksize. If the filesystem does not have a "swidth"
+-	specified but does specify an "allocsize" then "allocsize"
++	If ``largeio`` is specified, a filesystem that was created with a
++	``swidth`` specified will return the ``swidth`` value (in bytes)
++	in ``st_blksize``. If the filesystem does not have a ``swidth``
++	specified but does specify an ``allocsize`` then ``allocsize``
+ 	(in bytes) will be returned instead. Otherwise the behaviour
+-	is the same as if "nolargeio" was specified.
++	is the same as if ``nolargeio`` was specified.
+ 
+   logbufs=value
+ 	Set the number of in-memory log buffers.  Valid numbers
+@@ -127,7 +120,7 @@ default behaviour.
+ 
+ 	If the memory cost of 8 log buffers is too high on small
+ 	systems, then it may be reduced at some cost to performance
+-	on metadata intensive workloads. The logbsize option below
++	on metadata intensive workloads. The ``logbsize`` option below
+ 	controls the size of each buffer and so is also relevant to
+ 	this case.
+ 
+@@ -138,7 +131,7 @@ default behaviour.
+ 	and 32768 (32k).  Valid sizes for version 2 logs also
+ 	include 65536 (64k), 131072 (128k) and 262144 (256k). The
+ 	logbsize must be an integer multiple of the log
+-	stripe unit configured at mkfs time.
++	stripe unit configured at **mkfs(8)** time.
+ 
+ 	The default value for for version 1 logs is 32768, while the
+ 	default value for version 2 logs is MAX(32768, log_sunit).
+@@ -153,21 +146,21 @@ default behaviour.
+   noalign
+ 	Data allocations will not be aligned at stripe unit
+ 	boundaries. This is only relevant to filesystems created
+-	with non-zero data alignment parameters (sunit, swidth) by
+-	mkfs.
++	with non-zero data alignment parameters (``sunit``, ``swidth``) by
++	**mkfs(8)**.
+ 
+   norecovery
+ 	The filesystem will be mounted without running log recovery.
+ 	If the filesystem was not cleanly unmounted, it is likely to
+-	be inconsistent when mounted in "norecovery" mode.
++	be inconsistent when mounted in ``norecovery`` mode.
+ 	Some files or directories may not be accessible because of this.
+-	Filesystems mounted "norecovery" must be mounted read-only or
++	Filesystems mounted ``norecovery`` must be mounted read-only or
+ 	the mount will fail.
+ 
+   nouuid
+ 	Don't check for double mounted file systems using the file
+-	system uuid.  This is useful to mount LVM snapshot volumes,
+-	and often used in combination with "norecovery" for mounting
++	system ``uuid``.  This is useful to mount LVM snapshot volumes,
++	and often used in combination with ``norecovery`` for mounting
+ 	read-only snapshots.
+ 
+   noquota
+@@ -176,15 +169,15 @@ default behaviour.
+ 
+   uquota/usrquota/uqnoenforce/quota
+ 	User disk quota accounting enabled, and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   gquota/grpquota/gqnoenforce
+ 	Group disk quota accounting enabled and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   pquota/prjquota/pqnoenforce
+ 	Project disk quota accounting enabled and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   sunit=value and swidth=value
+ 	Used to specify the stripe unit and width for a RAID device
+@@ -192,11 +185,11 @@ default behaviour.
+ 	block units. These options are only relevant to filesystems
+ 	that were created with non-zero data alignment parameters.
+ 
+-	The sunit and swidth parameters specified must be compatible
++	The ``sunit`` and ``swidth`` parameters specified must be compatible
+ 	with the existing filesystem alignment characteristics.  In
+-	general, that means the only valid changes to sunit are
+-	increasing it by a power-of-2 multiple. Valid swidth values
+-	are any integer multiple of a valid sunit value.
++	general, that means the only valid changes to ``sunit`` are
++	increasing it by a power-of-2 multiple. Valid ``swidth`` values
++	are any integer multiple of a valid ``sunit`` value.
+ 
+ 	Typically the only time these mount options are necessary if
+ 	after an underlying RAID device has had it's geometry
+@@ -302,27 +295,27 @@ The following sysctls are available for the XFS filesystem:
+ 
+   fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "sync" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nodump" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "noatime" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nosymlinks" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nodefrag" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
+@@ -368,7 +361,7 @@ handler:
+  -error handlers:
+ 	Defines the behavior for a specific error.
+ 
+-The filesystem behavior during an error can be set via sysfs files. Each
++The filesystem behavior during an error can be set via ``sysfs`` files. Each
+ error handler works independently - the first condition met by an error handler
+ for a specific class will cause the error to be propagated rather than reset and
+ retried.
+@@ -419,7 +412,7 @@ level directory:
+ 	handler configurations.
+ 
+ 	Note: there is no guarantee that fail_at_unmount can be set while an
+-	unmount is in progress. It is possible that the sysfs entries are
++	unmount is in progress. It is possible that the ``sysfs`` entries are
+ 	removed by the unmounting filesystem before a "retry forever" error
+ 	handler configuration causes unmount to hang, and hence the filesystem
+ 	must be configured appropriately before unmount begins to prevent
+@@ -428,7 +421,7 @@ level directory:
+ Each filesystem has specific error class handlers that define the error
+ propagation behaviour for specific errors. There is also a "default" error
+ handler defined, which defines the behaviour for all errors that don't have
+-specific handlers defined. Where multiple retry constraints are configuredi for
++specific handlers defined. Where multiple retry constraints are configured for
+ a single error, the first retry configuration that expires will cause the error
+ to be propagated. The handler configurations are found in the directory:
+ 
+@@ -463,7 +456,7 @@ to be propagated. The handler configurations are found in the directory:
+ 	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
+ 	operation for up to "N" seconds before propagating the error.
+ 
+-Note: The default behaviour for a specific error handler is dependent on both
++**Note:** The default behaviour for a specific error handler is dependent on both
+ the class and error context. For example, the default values for
+ "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
+ to "fail immediately" behaviour. This is done because ENODEV is a fatal,
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+index 6d2c0d340dea..679729442fd2 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.txt
+@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
+ These filesystems may be used for inspiration:
+ - ext2: see Documentation/filesystems/ext2.txt
+ - ext4: see Documentation/filesystems/ext4/
+-- xfs:  see Documentation/filesystems/xfs.txt
++- xfs:  see Documentation/admin-guide/xfs.rst
+ 
+ 
+ Handling Media Errors
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43ca94856944..3b6e0b6d8cbd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
+ W:	http://xfs.org/
+ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ S:	Supported
+-F:	Documentation/filesystems/xfs.txt
++F:	Documentation/admin-guide/xfs.rst
+ F:	fs/xfs/
+ 
+ XILINX AXI ETHERNET DRIVER
+-- 
+2.22.0
 
-Should we return before this condition check?
-
-Thanks,
-
-> -	}
->  
->  	/* zero post-eof blocks as the page may be mapped */
->  	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
-> @@ -637,6 +657,11 @@ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len,
->  	if (PageUptodate(page))
->  		return 0;
->  
-> +	if (iomap->type == IOMAP_INLINE) {
-> +		iomap_read_inline_data(inode, page, iomap);
-> +		return 0;
-> +	}
-> +
->  	do {
->  		iomap_adjust_read_range(inode, iop, &block_start,
->  				block_end - block_start, &poff, &plen);
-> @@ -682,9 +707,7 @@ iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, unsigned flags,
->  		goto out_no_page;
->  	}
->  
-> -	if (iomap->type == IOMAP_INLINE)
-> -		iomap_read_inline_data(inode, page, iomap);
-> -	else if (iomap->flags & IOMAP_F_BUFFER_HEAD)
-> +	if (iomap->flags & IOMAP_F_BUFFER_HEAD)
->  		status = __block_write_begin_int(page, pos, len, NULL, iomap);
->  	else
->  		status = __iomap_write_begin(inode, pos, len, page, iomap);
-> @@ -761,11 +784,11 @@ iomap_write_end_inline(struct inode *inode, struct page *page,
->  {
->  	void *addr;
->  
-> -	WARN_ON_ONCE(!PageUptodate(page));
-> -	BUG_ON(pos + copied > PAGE_SIZE - offset_in_page(iomap->inline_data));
-> +	BUG_ON(!inline_data_within_block(inode, iomap, pos + copied));
->  
->  	addr = kmap_atomic(page);
-> -	memcpy(iomap->inline_data + pos, addr + pos, copied);
-> +	memcpy(iomap->inline_data + offset_in_block(pos, inode),
-> +	       addr + offset_in_page(pos), copied);
->  	kunmap_atomic(addr);
->  
->  	mark_inode_dirty(inode);
-> @@ -1064,7 +1087,7 @@ iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
->  		const struct iomap_ops *ops)
->  {
->  	unsigned int blocksize = i_blocksize(inode);
-> -	unsigned int off = pos & (blocksize - 1);
-> +	unsigned int off = offset_in_block(pos, inode);
->  
->  	/* Block boundary? Nothing to do */
->  	if (!off)
-> @@ -1772,21 +1795,26 @@ iomap_dio_inline_actor(struct inode *inode, loff_t pos, loff_t length,
->  	struct iov_iter *iter = dio->submit.iter;
->  	size_t copied;
->  
-> -	BUG_ON(pos + length > PAGE_SIZE - offset_in_page(iomap->inline_data));
-> +	BUG_ON(!inline_data_within_block(inode, iomap, pos + length));
->  
->  	if (dio->flags & IOMAP_DIO_WRITE) {
->  		loff_t size = inode->i_size;
->  
->  		if (pos > size)
-> -			memset(iomap->inline_data + size, 0, pos - size);
-> -		copied = copy_from_iter(iomap->inline_data + pos, length, iter);
-> +			memset(iomap->inline_data +
-> +			       offset_in_block(size, inode), 0, pos - size);
-> +		copied = copy_from_iter(iomap->inline_data +
-> +					offset_in_block(pos, inode),
-> +					length, iter);
->  		if (copied) {
->  			if (pos + copied > size)
->  				i_size_write(inode, pos + copied);
->  			mark_inode_dirty(inode);
->  		}
->  	} else {
-> -		copied = copy_to_iter(iomap->inline_data + pos, length, iter);
-> +		copied = copy_to_iter(iomap->inline_data +
-> +				      offset_in_block(pos, inode),
-> +				      length, iter);
->  	}
->  	dio->size += copied;
->  	return copied;
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 2103b94cb1bf..a8a60dd2fdc0 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -131,6 +131,9 @@ static inline struct iomap_page *to_iomap_page(struct page *page)
->  	return NULL;
->  }
->  
-> +void __iomap_read_inline_data(struct inode *inode, struct page *page,
-> +		struct iomap *iomap);
-> +
->  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
->  		const struct iomap_ops *ops);
->  int iomap_readpage(struct page *page, const struct iomap_ops *ops);
-> 
