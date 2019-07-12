@@ -2,125 +2,274 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35BF76694E
-	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 10:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D86D669F2
+	for <lists+linux-xfs@lfdr.de>; Fri, 12 Jul 2019 11:31:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbfGLIrV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 12 Jul 2019 04:47:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48444 "EHLO mx1.suse.de"
+        id S1726002AbfGLJbi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 12 Jul 2019 05:31:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2226 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbfGLIrV (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:47:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1A4B1AF58;
-        Fri, 12 Jul 2019 08:47:19 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 10:47:18 +0200
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH RFC] fs: New zonefs file system
-Message-ID: <20190712084718.GB16276@x250.microfocus.com>
-References: <20190712030017.14321-1-damien.lemoal@wdc.com>
- <20190712080022.GA16276@x250.microfocus.com>
- <BN8PR04MB581241A65E81F79882508F4BE7F20@BN8PR04MB5812.namprd04.prod.outlook.com>
+        id S1725987AbfGLJbi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 12 Jul 2019 05:31:38 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 40087FAAA7E9020E6BB6;
+        Fri, 12 Jul 2019 17:31:35 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 12 Jul
+ 2019 17:31:26 +0800
+Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
+ case
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        Gao Xiang <gaoxiang25@huawei.com>, <chao@kernel.org>
+References: <20190703075502.79782-1-yuchao0@huawei.com>
+ <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
+ <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
+ <20190711122831.3970-1-agruenba@redhat.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cb41acf2-f222-102a-d31b-02243c77996c@huawei.com>
+Date:   Fri, 12 Jul 2019 17:31:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BN8PR04MB581241A65E81F79882508F4BE7F20@BN8PR04MB5812.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190711122831.3970-1-agruenba@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 08:31:32AM +0000, Damien Le Moal wrote:
-[...]
-> > I know I've been advocating for having on-disk metadata, but do we really
-> > sacrifice a whole zone per default? I thought we'll have on-disk metadata
-> > optional (I might be completely off the track here and need more coffee to
-> > wake up though).
+On 2019/7/11 20:28, Andreas Gruenbacher wrote:
+> Something along the lines of the attached, broken patch might work in
+> the end.
 > 
-> Yes, indeed we do not really need the super block for now. But it is still super
-> useful to have so that:
-> 1) libblkid and other such userland tools can probe the disk to see its format,
-> and preserve the usual "use -force option if you really want to overwrite"
-> behavior of all format tools.
-> 2) Still related to previous point, the super block allows commands like:
-> mount /dev/sdX /mnt
-> and
-> mount -t zonefs /dev/sdX /mnt
-> to have the same result. That is, without the super block, if the drive was
-> previously formatted for btrfs or f2fs, the first command will mount that old
-> format, while the second will mount zonefs without necessarily erasing the old
-> FS super block.
-> 3) Having the super block with a version number will allow in the future to add
-> more metadata (e.g. file names as decided by the application) while allowing
-> backward compatibility of the code.
+> Andreas
 > 
-> >> +	end = zones + sbi->s_nr_zones[ZONEFS_ZTYPE_ALL];
-> >> +	for (zone = &zones[1]; zone < end; zone = next) {
-> > 
-> > [...]
-> > 
-> >> +
-> >> +	/* Set defaults */
-> >> +	sbi->s_uid = GLOBAL_ROOT_UID;
-> >> +	sbi->s_gid = GLOBAL_ROOT_GID;
-> >> +	sbi->s_perm = S_IRUSR | S_IWUSR | S_IRGRP; /* 0640 */
-> >> +
-> >> +
-> >> +	ret = zonefs_read_super(sb);
-> >> +	if (ret)
-> >> +		return ret;
-> > 
-> > That would be cool to be controllable via a mount option and have it:
-> > 	sbi->s_uid = opt.uid;
-> > 	sbi->s_gid = opt.gid;
-> > 	sbi->s_perm = opt.mode;
-> > 
-> > or pass these mount options to zonefs_read_super() and they can be set after
-> > the feature validation.
+> ---
+>  fs/buffer.c           | 10 ++++--
+>  fs/iomap.c            | 74 +++++++++++++++++++++++++++++--------------
+>  include/linux/iomap.h |  3 ++
+>  3 files changed, 61 insertions(+), 26 deletions(-)
 > 
-> Yes, I thought of that and even had that implemented in a previous version. I
-> switched to the static format time definition only so that the resulting
-> operation of the FS is a little more like a normal file system, namely, mounting
-> the device does not change file attributes and so can be mounted and seen with
-> the same attribute no matter where it is mounted, regardless of the mount options.
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index e450c55f6434..8d8668e377ab 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -1873,8 +1873,8 @@ void page_zero_new_buffers(struct page *page, unsigned from, unsigned to)
+>  EXPORT_SYMBOL(page_zero_new_buffers);
+>  
+>  static void
+> -iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
+> -		struct iomap *iomap)
+> +iomap_to_bh(struct inode *inode, struct page *page, sector_t block,
+> +		struct buffer_head *bh, struct iomap *iomap)
+>  {
+>  	loff_t offset = block << inode->i_blkbits;
+>  
+> @@ -1924,6 +1924,10 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
+>  				inode->i_blkbits;
+>  		set_buffer_mapped(bh);
+>  		break;
+> +	case IOMAP_INLINE:
+> +		__iomap_read_inline_data(inode, page, iomap);
+> +		set_buffer_uptodate(bh);
+> +		break;
+>  	}
+>  }
+>  
+> @@ -1969,7 +1973,7 @@ int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
+>  				if (err)
+>  					break;
+>  			} else {
+> -				iomap_to_bh(inode, block, bh, iomap);
+> +				iomap_to_bh(inode, page, block, bh, iomap);
+>  			}
+>  
+>  			if (buffer_new(bh)) {
+> diff --git a/fs/iomap.c b/fs/iomap.c
+> index 45aa58e837b5..61188e95def2 100644
+> --- a/fs/iomap.c
+> +++ b/fs/iomap.c
+> @@ -260,24 +260,47 @@ struct iomap_readpage_ctx {
+>  	struct list_head	*pages;
+>  };
+>  
+> -static void
+> -iomap_read_inline_data(struct inode *inode, struct page *page,
+> +#define offset_in_block(offset, inode) \
+> +	((unsigned long)(offset) & (i_blocksize(inode) - 1))
+> +
+> +static bool
+> +inline_data_within_block(struct inode *inode, struct iomap *iomap,
+> +		unsigned int size)
+> +{
+> +	unsigned int off = offset_in_block(iomap->inline_data, inode);
+> +
+> +	return size <= i_blocksize(inode) - off;
+> +}
+> +
+> +void
+> +__iomap_read_inline_data(struct inode *inode, struct page *page,
+>  		struct iomap *iomap)
+>  {
+> -	size_t size = i_size_read(inode);
+> +	size_t size = offset_in_block(i_size_read(inode), inode);
+> +	unsigned int poff = offset_in_page(iomap->offset);
+> +	unsigned int bsize = i_blocksize(inode);
+>  	void *addr;
+>  
+>  	if (PageUptodate(page))
+>  		return;
+>  
+> -	BUG_ON(page->index);
+> -	BUG_ON(size > PAGE_SIZE - offset_in_page(iomap->inline_data));
+> +	BUG_ON(!inline_data_within_block(inode, iomap, size));
+>  
+>  	addr = kmap_atomic(page);
+> -	memcpy(addr, iomap->inline_data, size);
+> -	memset(addr + size, 0, PAGE_SIZE - size);
+> +	memcpy(addr + poff, iomap->inline_data, size);
+> +	memset(addr + poff + size, 0, bsize - size);
+>  	kunmap_atomic(addr);
+> -	SetPageUptodate(page);
+> +}
+> +
+> +static void
+> +iomap_read_inline_data(struct inode *inode, struct page *page,
+> +		struct iomap *iomap)
+> +{
+> +	unsigned int poff = offset_in_page(iomap->offset);
+> +	unsigned int bsize = i_blocksize(inode);
+> +
+> +	__iomap_read_inline_data(inode, page, iomap);
+> +	iomap_set_range_uptodate(page, poff, bsize);
+>  }
+>  
+>  static loff_t
+> @@ -292,11 +315,8 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  	unsigned poff, plen;
+>  	sector_t sector;
+>  
+> -	if (iomap->type == IOMAP_INLINE) {
+> -		WARN_ON_ONCE(pos);
+> +	if (iomap->type == IOMAP_INLINE)
+>  		iomap_read_inline_data(inode, page, iomap);
+> -		return PAGE_SIZE;
 
-[...]
+Hi Andreas,
 
-> > I'd rather not write the uid, gid, permissions and startsect name to the
-> > superblock but have it controllable via a mount option. Just write the feature
-> > to the superblock so we know we _can_ control this per mount.
+Thanks for your patch.
+
+In my erofs test case, filled inline data will be zeroed out due to we fallback
+to following flow:
+
+	if (iomap->type != IOMAP_MAPPED || pos >= i_size_read(inode)) {
+		zero_user(page, poff, plen);
+
+Should we return before this condition check?
+
+Thanks,
+
+> -	}
+>  
+>  	/* zero post-eof blocks as the page may be mapped */
+>  	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
+> @@ -637,6 +657,11 @@ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len,
+>  	if (PageUptodate(page))
+>  		return 0;
+>  
+> +	if (iomap->type == IOMAP_INLINE) {
+> +		iomap_read_inline_data(inode, page, iomap);
+> +		return 0;
+> +	}
+> +
+>  	do {
+>  		iomap_adjust_read_range(inode, iop, &block_start,
+>  				block_end - block_start, &poff, &plen);
+> @@ -682,9 +707,7 @@ iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, unsigned flags,
+>  		goto out_no_page;
+>  	}
+>  
+> -	if (iomap->type == IOMAP_INLINE)
+> -		iomap_read_inline_data(inode, page, iomap);
+> -	else if (iomap->flags & IOMAP_F_BUFFER_HEAD)
+> +	if (iomap->flags & IOMAP_F_BUFFER_HEAD)
+>  		status = __block_write_begin_int(page, pos, len, NULL, iomap);
+>  	else
+>  		status = __iomap_write_begin(inode, pos, len, page, iomap);
+> @@ -761,11 +784,11 @@ iomap_write_end_inline(struct inode *inode, struct page *page,
+>  {
+>  	void *addr;
+>  
+> -	WARN_ON_ONCE(!PageUptodate(page));
+> -	BUG_ON(pos + copied > PAGE_SIZE - offset_in_page(iomap->inline_data));
+> +	BUG_ON(!inline_data_within_block(inode, iomap, pos + copied));
+>  
+>  	addr = kmap_atomic(page);
+> -	memcpy(iomap->inline_data + pos, addr + pos, copied);
+> +	memcpy(iomap->inline_data + offset_in_block(pos, inode),
+> +	       addr + offset_in_page(pos), copied);
+>  	kunmap_atomic(addr);
+>  
+>  	mark_inode_dirty(inode);
+> @@ -1064,7 +1087,7 @@ iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
+>  		const struct iomap_ops *ops)
+>  {
+>  	unsigned int blocksize = i_blocksize(inode);
+> -	unsigned int off = pos & (blocksize - 1);
+> +	unsigned int off = offset_in_block(pos, inode);
+>  
+>  	/* Block boundary? Nothing to do */
+>  	if (!off)
+> @@ -1772,21 +1795,26 @@ iomap_dio_inline_actor(struct inode *inode, loff_t pos, loff_t length,
+>  	struct iov_iter *iter = dio->submit.iter;
+>  	size_t copied;
+>  
+> -	BUG_ON(pos + length > PAGE_SIZE - offset_in_page(iomap->inline_data));
+> +	BUG_ON(!inline_data_within_block(inode, iomap, pos + length));
+>  
+>  	if (dio->flags & IOMAP_DIO_WRITE) {
+>  		loff_t size = inode->i_size;
+>  
+>  		if (pos > size)
+> -			memset(iomap->inline_data + size, 0, pos - size);
+> -		copied = copy_from_iter(iomap->inline_data + pos, length, iter);
+> +			memset(iomap->inline_data +
+> +			       offset_in_block(size, inode), 0, pos - size);
+> +		copied = copy_from_iter(iomap->inline_data +
+> +					offset_in_block(pos, inode),
+> +					length, iter);
+>  		if (copied) {
+>  			if (pos + copied > size)
+>  				i_size_write(inode, pos + copied);
+>  			mark_inode_dirty(inode);
+>  		}
+>  	} else {
+> -		copied = copy_to_iter(iomap->inline_data + pos, length, iter);
+> +		copied = copy_to_iter(iomap->inline_data +
+> +				      offset_in_block(pos, inode),
+> +				      length, iter);
+>  	}
+>  	dio->size += copied;
+>  	return copied;
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 2103b94cb1bf..a8a60dd2fdc0 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -131,6 +131,9 @@ static inline struct iomap_page *to_iomap_page(struct page *page)
+>  	return NULL;
+>  }
+>  
+> +void __iomap_read_inline_data(struct inode *inode, struct page *page,
+> +		struct iomap *iomap);
+> +
+>  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
+>  		const struct iomap_ops *ops);
+>  int iomap_readpage(struct page *page, const struct iomap_ops *ops);
 > 
-> This is another view. See my thinking above. Thoughts ?
-
-Hm, both a valid views and I'm not sure which is better for the production use
-cases either.
-
-With the approach I had in mind one could pre-format dozens of drives and
-deploy them in the field. The admins then can decide what
-UID/GID/Permission/etc.. the application layer needs for a particular drive
-and supply these parameters on mount time.
-
-With the approach you implemented here we don't have the surprises if someone
-accidentally (or maliciously) passed the wrong parameters.
-
-A combined approach is also not 100% discussion free, as what has preference,
-on-disk or mount time.
-
-I'll be thinking about it and come back once I have an idea.
-
-Byte,
-	Johannes
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
