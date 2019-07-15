@@ -2,462 +2,237 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F9C769F10
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jul 2019 00:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BF8769F98
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jul 2019 01:53:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbfGOWkD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 15 Jul 2019 18:40:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44486 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730608AbfGOWkD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Jul 2019 18:40:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so18739143wrf.11;
-        Mon, 15 Jul 2019 15:39:59 -0700 (PDT)
+        id S1727379AbfGOXx0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 15 Jul 2019 19:53:26 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:52460 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731359AbfGOXx0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Jul 2019 19:53:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1563234806; x=1594770806;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=B513hqxlwnv30JRUucMdWAVn82DvB39BEfWCW3Ktpz4=;
+  b=HpnqOjIruYa0AiE+dKVr9FH1WO80MuEth9uIWOt6Y6dN0weEU5W0r75l
+   r3jz95OWNgacb96bD4G0QoyNXqS9r+G54EHpJQHbBQAbf5yLRBPDWE+qt
+   j5bteDacCnQpdxdsAhUqpfYRAw6UlYcBIZ1OJkFy3OXFkKa40m+T+0Lmx
+   fS3E1wpsVGzgRKwl8ryQ5aOt+gbPHeqsKReXgKkqYEAc1lNfaMS0S5Glc
+   cXyRphngC5WDDsZCYAwgHzHrcPEiYmfpLUd74x8VKhYQALvy+wx6VLGCD
+   vbfdaAX2Fx6ifZcNuMxQg/HerVip1+sSCHA1+rI0azoncsRoEpt1Zvf8i
+   g==;
+IronPort-SDR: 5LiRR+jMDG8hlirxYsgO46+ezpeaGzM0FbaQLFNMf02zZ0UZJrHmfpdRG4P20YdX9YRuXJ0US8
+ 80HYTawB60LyKcedTeOoYmNWYA1pGZupBwDO6hL0aDMGjE2p9FGdLTtmR+n77g459CrWTToQCm
+ fMK42p2wEUD/MrcdKhPSvsEzkd0K1c/8UES77KQZVzmaMyg5PP/PZ+mqjpKVGvzePYzEe5eGo7
+ PvzZtWLaRhINVet66OHr1MUepsquo3Rkj+n/6AtUZOOYwYLoZy5Hy3o+F14ayQZihYWYcHUfRx
+ J10=
+X-IronPort-AV: E=Sophos;i="5.63,494,1557158400"; 
+   d="scan'208";a="114256764"
+Received: from mail-dm3nam05lp2057.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.57])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Jul 2019 07:53:24 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I4HPvp/7YAjYZD0gcrkfm5+yrY8SBA/Xw+NuT9/sBj1mnGLmYFQJD9odHlL2sWf6h+6j/ZCTypuqEcAiUtZF5yW4sYj693GhxN9Geuad5uWlygiAnmbg44TSk7t8bLeGtPxI3XvifIqAHHAnWU5T1KxZitEVz+Z0nTEzC0eByYlY5CMzQ8l6BGSKTtiax/tCt3KTbHDHXUYluYSfHCnPk6VJgoWKJUNy4pOBRCqO900Ybg328ojQcT1nc79DKqHyEL4c17OuX8rrrEg6950I6RZPpD+h/tjYsH1gCUTvYu5QtDEL4oBOrggxghRrkMYZksUIFOXBPWfpKIqHTMWhDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B513hqxlwnv30JRUucMdWAVn82DvB39BEfWCW3Ktpz4=;
+ b=fURRSvOJEp0T7jmujqskm8spRPx1ok1ObHSj4I0p8SsLMKbJL8a9Q5DPKcofCzF9c/1fj0NT2YIo2sr1mZYVa2ARKCChxNI2WywFrLbXDGW3Z4dZqhJpSf9w1KV8JK1TpN02D8GtdRlb30fdZZIZWKb+I3BKI0HM02njlt8jHmg1IOjxxMjcfIxZenZxbGf5nB5nSXSq3k6q4QvK62MK2D+wrJHAgzO/jKMNprXUs3cwFOyUuox4WI7wuUzfisvGHLs5Lzq1J4POsz1dacbqry6j0TeXiTAOo0jw+vmVMDTH7oRHScmV5GhPp1gg1t9uBaWtBnYiglyDahjimrF/Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=mqI4EOfS51RrWX+R3Z3hkRylPd09x5J5s/zU8+JEiHc=;
-        b=d5npAWz5SjsAxEN9nkQgsd+f4QlFBn2rCVPuImwwb5BbM0Mdd55l+WKdpVa6o+6ggJ
-         XYIVQ3IASQya2ISTo5VgdvdlpzfCWofKuJxz1yN+th7HI77pCYHgiU/Y9UuJhjakbFe7
-         wzgTS33S4TgG1ei7o3tk7f1SR5ofuy4vgug+Uzr4Lf9OUEU50olGp/+uWTXgdL9zFt04
-         IYtRkKjGJayqSf/FAF+MYSeUkkkN6qnMvFpfC4xnfGpPBOUQVyxI6pavm5XiQFVH2MA6
-         E3/LL6Wgi09dG0F5fROr7iZRXQHz1+YYUrapTNzzC4c4rqtGKDl2quVr0SgBMoWOVq9N
-         VZ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=mqI4EOfS51RrWX+R3Z3hkRylPd09x5J5s/zU8+JEiHc=;
-        b=CJNfcWFXuXnE6uVViLeectLodcP5LZAFGAuPh/UUBcrrm82S6b9EUcBMkfTEQ1MI93
-         FC0vpQmYFHIKvhuX6MyoJtHCZi1YoTQOQw3+ZEnedathHnTnMuEslfVwm0FyieORqw1E
-         Yyd7VT3HQn6ASUjERENzb4hNVdjmz5rqyrNMIWaOcNoULiEp9BzQBXq/j4WxW2a945z1
-         de6oMdkU1t22Jd4LzeL8uZAyyjJtZhlwI4Babwmvb7qD1RXp3k01BA8dnH6dnVHHC8S1
-         4sF+jalISdHPRG/rAsgna5o/86UwRPlCP3UsOSpQAJE6O0MmFj2AFQ4tdxxMG/Pv+PYI
-         gm5A==
-X-Gm-Message-State: APjAAAVP3LgH7ddJJik0rVoTlSQXlrmsHjfa5WYwa7hLN/2xYhm+5J6i
-        Ffz968HFBOh07RhB6plkUMo=
-X-Google-Smtp-Source: APXvYqxUJezZFEyKR9fk4rdqMGxXoaOzA9NBaOts5iaTbKiVKjwIEBmPX4Whp7l5+YwYLA6eP+uKpA==
-X-Received: by 2002:adf:de08:: with SMTP id b8mr6678931wrm.282.1563230398718;
-        Mon, 15 Jul 2019 15:39:58 -0700 (PDT)
-Received: from sheriff-Aspire-5735 ([129.205.112.210])
-        by smtp.gmail.com with ESMTPSA id r123sm17343336wme.7.2019.07.15.15.39.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jul 2019 15:39:58 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 23:39:51 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        sheriffesseson@gmail.com
-Subject: Re: [PATCH v9] Documentation: filesystem: Convert xfs.txt to ReST
-Message-ID: <20190715223950.GC27635@sheriff-Aspire-5735>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B513hqxlwnv30JRUucMdWAVn82DvB39BEfWCW3Ktpz4=;
+ b=lGmiT/P1CQvZGgtrmtF7DzZf9gqyNfEvIx6AHERu4xc6aWcKeXdVT7ga+9hrqUGuK6dZ0ibyQHnl2PV4ad0IOcI0QYwrfXlDAiSz/ZnYMHZfkFyBZ1VUAxuKn/TRGPp01Q7cLuqlu6DvQb9fX3KbAR0L71j/oq2IGvcLXDR7sEU=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB5686.namprd04.prod.outlook.com (20.179.57.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.13; Mon, 15 Jul 2019 23:53:23 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::65a9:db0a:646d:eb1e]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::65a9:db0a:646d:eb1e%6]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
+ 23:53:23 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Viacheslav Dubeyko <slava@dubeyko.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+CC:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Ting Yao <d201577678@hust.edu.cn>
+Subject: Re: [PATCH RFC] fs: New zonefs file system
+Thread-Topic: [PATCH RFC] fs: New zonefs file system
+Thread-Index: AQHVOF31k+9+55ZdEkmKABdH1mzidg==
+Date:   Mon, 15 Jul 2019 23:53:23 +0000
+Message-ID: <BYAPR04MB58168662947D0573419EAD0FE7CF0@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190712030017.14321-1-damien.lemoal@wdc.com>
+ <1562951415.2741.18.camel@dubeyko.com>
+ <BYAPR04MB5816F3DE20A3C82B82192B94E7F20@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <1563209654.2741.39.camel@dubeyko.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 921c6726-cccb-4075-bd5b-08d7097f9f48
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5686;
+x-ms-traffictypediagnostic: BYAPR04MB5686:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR04MB5686EF3788B7287980EA7539E7CF0@BYAPR04MB5686.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(199004)(189003)(6116002)(966005)(25786009)(478600001)(3846002)(102836004)(86362001)(71190400001)(8676002)(8936002)(6436002)(68736007)(2201001)(66556008)(53546011)(6506007)(14454004)(74316002)(186003)(33656002)(26005)(476003)(446003)(305945005)(76176011)(54906003)(7696005)(2906002)(76116006)(229853002)(256004)(53936002)(9686003)(52536014)(7736002)(14444005)(66446008)(316002)(2501003)(4326008)(110136005)(6246003)(66946007)(5660300002)(71200400001)(64756008)(486006)(66066001)(6306002)(99286004)(55016002)(91956017)(66476007)(81156014)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5686;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QeFkvGzC95+b/KLxlERnzYpUp0ElZBhf3b8gc/w/T2w2oMU2VW88wIJxfjKdfRHDgAmzoqL2rKvmNzuYV0I6AMJeDXXICzgrO6uPk5Dc8RlyzWKMzLQbMTYTQtrJQ0FZ1vic3Mv20v5rj0D5uCjE0UvAMf2Lvis04FsYy5HEQUvtU29s7Nal9gPqHEYCYJm9v5cgZo69IRyfwMlihweb2fZtnBB3JbG6EB9s7Fw5rReY6Kj4LQkQTPwePfQCdNf3ypFDzzja8okpLpRlH7uIqxG//JlsGdZQni7gmImXNg3PMjCyr3qwDKrrO1wHIhtHUdj9d6q7+94/y5ytv12lgcTBiekDCi2z3hNlv+rvia2bBsVpMRG5VSyPjRNDYNOcixiG9GNPhy2/FCgBbyxsMogkocVJ386TsYseiXNIpxQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 921c6726-cccb-4075-bd5b-08d7097f9f48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 23:53:23.1277
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5686
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move xfs.txt to admin-guide, convert to ReST and fix broken references.
-
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
-
-Changes in v9:
-	- fix table for "Removed Sysctls".
-	- "Deprecated Mount Options", just like "Deprecated Sysctls",
-	  currently needs no table - remove table. 	
-
- Documentation/admin-guide/index.rst           |   1 +
- .../xfs.txt => admin-guide/xfs.rst}           | 136 +++++++++---------
- Documentation/filesystems/dax.txt             |   2 +-
- MAINTAINERS                                   |   2 +-
- 4 files changed, 68 insertions(+), 73 deletions(-)
- rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
-
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 24fbe0568eff..0615ea3a744c 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
-    ras
-    bcache
-    ext4
-+   xfs
-    binderfs
-    pm/index
-    thunderbolt
-diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
-similarity index 80%
-rename from Documentation/filesystems/xfs.txt
-rename to Documentation/admin-guide/xfs.rst
-index a5cbb5e0e3db..e1b412a3dd29 100644
---- a/Documentation/filesystems/xfs.txt
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -1,4 +1,6 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
-+======================
- The SGI XFS Filesystem
- ======================
- 
-@@ -18,8 +20,6 @@ Mount Options
- =============
- 
- When mounting an XFS filesystem, the following options are accepted.
--For boolean mount options, the names with the (*) suffix is the
--default behaviour.
- 
-   allocsize=size
- 	Sets the buffered I/O end-of-file preallocation size when
-@@ -31,46 +31,43 @@ default behaviour.
- 	preallocation size, which uses a set of heuristics to
- 	optimise the preallocation size based on the current
- 	allocation patterns within the file and the access patterns
--	to the file. Specifying a fixed allocsize value turns off
-+	to the file. Specifying a fixed ``allocsize`` value turns off
- 	the dynamic behaviour.
- 
--  attr2
--  noattr2
-+  attr2 or noattr2
- 	The options enable/disable an "opportunistic" improvement to
- 	be made in the way inline extended attributes are stored
- 	on-disk.  When the new form is used for the first time when
--	attr2 is selected (either when setting or removing extended
-+	``attr2`` is selected (either when setting or removing extended
- 	attributes) the on-disk superblock feature bit field will be
- 	updated to reflect this format being in use.
- 
- 	The default behaviour is determined by the on-disk feature
--	bit indicating that attr2 behaviour is active. If either
--	mount option it set, then that becomes the new default used
-+	bit indicating that ``attr2`` behaviour is active. If either
-+	mount option is set, then that becomes the new default used
- 	by the filesystem.
- 
--	CRC enabled filesystems always use the attr2 format, and so
--	will reject the noattr2 mount option if it is set.
-+	CRC enabled filesystems always use the ``attr2`` format, and so
-+	will reject the ``noattr2`` mount option if it is set.
- 
--  discard
--  nodiscard (*)
-+  discard or nodiscard (default)
- 	Enable/disable the issuing of commands to let the block
- 	device reclaim space freed by the filesystem.  This is
- 	useful for SSD devices, thinly provisioned LUNs and virtual
- 	machine images, but may have a performance impact.
- 
--	Note: It is currently recommended that you use the fstrim
--	application to discard unused blocks rather than the discard
-+	Note: It is currently recommended that you use the ``fstrim``
-+	application to ``discard`` unused blocks rather than the ``discard``
- 	mount option because the performance impact of this option
- 	is quite severe.
- 
--  grpid/bsdgroups
--  nogrpid/sysvgroups (*)
-+  grpid/bsdgroups or nogrpid/sysvgroups (default)
- 	These options define what group ID a newly created file
--	gets.  When grpid is set, it takes the group ID of the
-+	gets.  When ``grpid`` is set, it takes the group ID of the
- 	directory in which it is created; otherwise it takes the
--	fsgid of the current process, unless the directory has the
--	setgid bit set, in which case it takes the gid from the
--	parent directory, and also gets the setgid bit set if it is
-+	``fsgid`` of the current process, unless the directory has the
-+	``setgid`` bit set, in which case it takes the ``gid`` from the
-+	parent directory, and also gets the ``setgid`` bit set if it is
- 	a directory itself.
- 
-   filestreams
-@@ -78,46 +75,42 @@ default behaviour.
- 	across the entire filesystem rather than just on directories
- 	configured to use it.
- 
--  ikeep
--  noikeep (*)
--	When ikeep is specified, XFS does not delete empty inode
--	clusters and keeps them around on disk.  When noikeep is
-+  ikeep or noikeep (default)
-+	When ``ikeep`` is specified, XFS does not delete empty inode
-+	clusters and keeps them around on disk.  When ``noikeep`` is
- 	specified, empty inode clusters are returned to the free
- 	space pool.
- 
--  inode32
--  inode64 (*)
--	When inode32 is specified, it indicates that XFS limits
-+  inode32 or inode64 (default)
-+	When ``inode32`` is specified, it indicates that XFS limits
- 	inode creation to locations which will not result in inode
- 	numbers with more than 32 bits of significance.
- 
--	When inode64 is specified, it indicates that XFS is allowed
-+	When ``inode64`` is specified, it indicates that XFS is allowed
- 	to create inodes at any location in the filesystem,
- 	including those which will result in inode numbers occupying
--	more than 32 bits of significance. 
-+	more than 32 bits of significance.
- 
--	inode32 is provided for backwards compatibility with older
-+	``inode32`` is provided for backwards compatibility with older
- 	systems and applications, since 64 bits inode numbers might
- 	cause problems for some applications that cannot handle
- 	large inode numbers.  If applications are in use which do
--	not handle inode numbers bigger than 32 bits, the inode32
-+	not handle inode numbers bigger than 32 bits, the ``inode32``
- 	option should be specified.
- 
--
--  largeio
--  nolargeio (*)
--	If "nolargeio" is specified, the optimal I/O reported in
--	st_blksize by stat(2) will be as small as possible to allow
-+  largeio or nolargeio (default)
-+	If ``nolargeio`` is specified, the optimal I/O reported in
-+	``st_blksize`` by **stat(2)** will be as small as possible to allow
- 	user applications to avoid inefficient read/modify/write
- 	I/O.  This is typically the page size of the machine, as
- 	this is the granularity of the page cache.
- 
--	If "largeio" specified, a filesystem that was created with a
--	"swidth" specified will return the "swidth" value (in bytes)
--	in st_blksize. If the filesystem does not have a "swidth"
--	specified but does specify an "allocsize" then "allocsize"
-+	If ``largeio`` is specified, a filesystem that was created with a
-+	``swidth`` specified will return the ``swidth`` value (in bytes)
-+	in ``st_blksize``. If the filesystem does not have a ``swidth``
-+	specified but does specify an ``allocsize`` then ``allocsize``
- 	(in bytes) will be returned instead. Otherwise the behaviour
--	is the same as if "nolargeio" was specified.
-+	is the same as if ``nolargeio`` was specified.
- 
-   logbufs=value
- 	Set the number of in-memory log buffers.  Valid numbers
-@@ -127,7 +120,7 @@ default behaviour.
- 
- 	If the memory cost of 8 log buffers is too high on small
- 	systems, then it may be reduced at some cost to performance
--	on metadata intensive workloads. The logbsize option below
-+	on metadata intensive workloads. The ``logbsize`` option below
- 	controls the size of each buffer and so is also relevant to
- 	this case.
- 
-@@ -138,7 +131,7 @@ default behaviour.
- 	and 32768 (32k).  Valid sizes for version 2 logs also
- 	include 65536 (64k), 131072 (128k) and 262144 (256k). The
- 	logbsize must be an integer multiple of the log
--	stripe unit configured at mkfs time.
-+	stripe unit configured at **mkfs(8)** time.
- 
- 	The default value for for version 1 logs is 32768, while the
- 	default value for version 2 logs is MAX(32768, log_sunit).
-@@ -153,21 +146,21 @@ default behaviour.
-   noalign
- 	Data allocations will not be aligned at stripe unit
- 	boundaries. This is only relevant to filesystems created
--	with non-zero data alignment parameters (sunit, swidth) by
--	mkfs.
-+	with non-zero data alignment parameters (``sunit``, ``swidth``) by
-+	**mkfs(8)**.
- 
-   norecovery
- 	The filesystem will be mounted without running log recovery.
- 	If the filesystem was not cleanly unmounted, it is likely to
--	be inconsistent when mounted in "norecovery" mode.
-+	be inconsistent when mounted in ``norecovery`` mode.
- 	Some files or directories may not be accessible because of this.
--	Filesystems mounted "norecovery" must be mounted read-only or
-+	Filesystems mounted ``norecovery`` must be mounted read-only or
- 	the mount will fail.
- 
-   nouuid
- 	Don't check for double mounted file systems using the file
--	system uuid.  This is useful to mount LVM snapshot volumes,
--	and often used in combination with "norecovery" for mounting
-+	system ``uuid``.  This is useful to mount LVM snapshot volumes,
-+	and often used in combination with ``norecovery`` for mounting
- 	read-only snapshots.
- 
-   noquota
-@@ -176,15 +169,15 @@ default behaviour.
- 
-   uquota/usrquota/uqnoenforce/quota
- 	User disk quota accounting enabled, and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   gquota/grpquota/gqnoenforce
- 	Group disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   pquota/prjquota/pqnoenforce
- 	Project disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   sunit=value and swidth=value
- 	Used to specify the stripe unit and width for a RAID device
-@@ -192,11 +185,11 @@ default behaviour.
- 	block units. These options are only relevant to filesystems
- 	that were created with non-zero data alignment parameters.
- 
--	The sunit and swidth parameters specified must be compatible
-+	The ``sunit`` and ``swidth`` parameters specified must be compatible
- 	with the existing filesystem alignment characteristics.  In
--	general, that means the only valid changes to sunit are
--	increasing it by a power-of-2 multiple. Valid swidth values
--	are any integer multiple of a valid sunit value.
-+	general, that means the only valid changes to ``sunit`` are
-+	increasing it by a power-of-2 multiple. Valid ``swidth`` values
-+	are any integer multiple of a valid ``sunit`` value.
- 
- 	Typically the only time these mount options are necessary if
- 	after an underlying RAID device has had it's geometry
-@@ -221,22 +214,22 @@ default behaviour.
- Deprecated Mount Options
- ========================
- 
--  Name				Removal Schedule
--  ----				----------------
-+None at present.
- 
- 
- Removed Mount Options
- =====================
- 
-+===========================     =======
-   Name				Removed
--  ----				-------
-+===========================	=======
-   delaylog/nodelaylog		v4.0
-   ihashsize			v4.0
-   irixsgid			v4.0
-   osyncisdsync/osyncisosync	v4.0
-   barrier			v4.19
-   nobarrier			v4.19
--
-+===========================     =======
- 
- sysctls
- =======
-@@ -302,27 +295,27 @@ The following sysctls are available for the XFS filesystem:
- 
-   fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "sync" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodump" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "noatime" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nosymlinks" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodefrag" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
-@@ -341,11 +334,12 @@ None at present.
- Removed Sysctls
- ===============
- 
-+  ===========================   =======
-   Name				Removed
--  ----				-------
-+  ===========================	=======	
-   fs.xfs.xfsbufd_centisec	v4.0
-   fs.xfs.age_buffer_centisecs	v4.0
--
-+  ===========================   =======
- 
- Error handling
- ==============
-@@ -368,7 +362,7 @@ handler:
-  -error handlers:
- 	Defines the behavior for a specific error.
- 
--The filesystem behavior during an error can be set via sysfs files. Each
-+The filesystem behavior during an error can be set via ``sysfs`` files. Each
- error handler works independently - the first condition met by an error handler
- for a specific class will cause the error to be propagated rather than reset and
- retried.
-@@ -419,7 +413,7 @@ level directory:
- 	handler configurations.
- 
- 	Note: there is no guarantee that fail_at_unmount can be set while an
--	unmount is in progress. It is possible that the sysfs entries are
-+	unmount is in progress. It is possible that the ``sysfs`` entries are
- 	removed by the unmounting filesystem before a "retry forever" error
- 	handler configuration causes unmount to hang, and hence the filesystem
- 	must be configured appropriately before unmount begins to prevent
-@@ -428,7 +422,7 @@ level directory:
- Each filesystem has specific error class handlers that define the error
- propagation behaviour for specific errors. There is also a "default" error
- handler defined, which defines the behaviour for all errors that don't have
--specific handlers defined. Where multiple retry constraints are configuredi for
-+specific handlers defined. Where multiple retry constraints are configured for
- a single error, the first retry configuration that expires will cause the error
- to be propagated. The handler configurations are found in the directory:
- 
-@@ -463,7 +457,7 @@ to be propagated. The handler configurations are found in the directory:
- 	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
- 	operation for up to "N" seconds before propagating the error.
- 
--Note: The default behaviour for a specific error handler is dependent on both
-+**Note:** The default behaviour for a specific error handler is dependent on both
- the class and error context. For example, the default values for
- "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
- to "fail immediately" behaviour. This is done because ENODEV is a fatal,
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 6d2c0d340dea..679729442fd2 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
- These filesystems may be used for inspiration:
- - ext2: see Documentation/filesystems/ext2.txt
- - ext4: see Documentation/filesystems/ext4/
--- xfs:  see Documentation/filesystems/xfs.txt
-+- xfs:  see Documentation/admin-guide/xfs.rst
- 
- 
- Handling Media Errors
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43ca94856944..3b6e0b6d8cbd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
- W:	http://xfs.org/
- T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
--F:	Documentation/filesystems/xfs.txt
-+F:	Documentation/admin-guide/xfs.rst
- F:	fs/xfs/
- 
- XILINX AXI ETHERNET DRIVER
--- 
-2.17.1
-
+On 2019/07/16 1:54, Viacheslav Dubeyko wrote:=0A=
+[...]=0A=
+>>> Do you have in mind some special use-case?=0A=
+>> As the commit message mentions, zonefs is not a traditional file=0A=
+>> system by any=0A=
+>> mean and much closer to a raw block device access interface than=0A=
+>> anything else.=0A=
+>> This is the entire point of this exercise: allow replacing the raw=0A=
+>> block device=0A=
+>> accesses with the easier to use file system API. Raw block device=0A=
+>> access is also=0A=
+>> file API so one could argue that this is nonsense. What I mean here=0A=
+>> is that by=0A=
+>> abstracting zones with files, the user does not need to do the zone=0A=
+>> configuration discovery with ioctl(BLKREPORTZONES), does not need to=0A=
+>> do explicit=0A=
+>> zone resets with ioctl(BLKRESETZONE), does not have to "start from=0A=
+>> one sector=0A=
+>> and write sequentially from there" management for write() calls (i.e.=0A=
+>> seeks),=0A=
+>> etc. This is all replaced with the file abstraction: directory entry=0A=
+>> list=0A=
+>> replace zone information, truncate() replace zone reset, file current=0A=
+>> position=0A=
+>> replaces the application zone write pointer management.=0A=
+>>=0A=
+>> This simplifies implementing support of applications for zoned block=0A=
+>> devices,=0A=
+>> but only in cases where said applications:=0A=
+>> 1) Operate with large files=0A=
+>> 2) have no or only minimal need for random writes=0A=
+>>=0A=
+>> A perfect match for this as mentioned in the commit message are LSM-=0A=
+>> tree based=0A=
+>> applications such as LevelDB or RocksDB. Other examples, related,=0A=
+>> include=0A=
+>> Bluestore distributed object store which uses RocksDB but still has a=0A=
+>> bluefs=0A=
+>> layer that could be replaced with zonefs.=0A=
+>>=0A=
+>> As an illustration of this, Ting Yao of Huazhong University of=0A=
+>> Science and=0A=
+>> Technology (China) and her team modified LevelDB to work with zonefs.=0A=
+>> The early=0A=
+>> prototype code is on github here: https://github.com/PDS-Lab/GearDB/t=0A=
+>> ree/zonefs=0A=
+>>=0A=
+>> LSM-Tree applications typically operate on large files, in the same=0A=
+>> range as=0A=
+>> zoned block device zone size (e.g. 256 MB or so). While this is=0A=
+>> generally a=0A=
+>> parameter that can be changed, the use of zonefs and zoned block=0A=
+>> device forces=0A=
+>> using the zone size as the SSTable file maximum size. This can have=0A=
+>> an impact on=0A=
+>> the DB performance depending on the device type, but that is another=0A=
+>> discussion.=0A=
+>> The point here is the code simplifications that zonefs allows.=0A=
+>>=0A=
+>> For more general purpose use cases (small files, lots of random=0A=
+>> modifications),=0A=
+>> we already have the dm-zoned device mapper and f2fs support and we=0A=
+>> are also=0A=
+>> currently working on btrfs support. These solutions are in my opinion=0A=
+>> more=0A=
+>> appropriate than zonefs to address the points you raised.=0A=
+>>=0A=
+> =0A=
+> Sounds pretty reasonable. But I still have two worries.=0A=
+> =0A=
+> First of all, even modest file system could contain about 100K files on=
+=0A=
+> a volume. So, if our zone is 256 MB then we need in 24 TB storage=0A=
+> device for 100K files. Even if we consider some special use-case of=0A=
+> database, for example, then it's pretty easy to imagine the creation a=0A=
+> lot of files. So, are we ready to provide such huge storage devices=0A=
+> (especially, for the case of SSDs)?=0A=
+=0A=
+The small file use case you are describing is not zonefs target use case. I=
+t=0A=
+does not make any sense to discuss small files in the context of zonefs. If=
+=0A=
+small file is the use case needed for an application, then a "normal" file=
+=0A=
+system should be use such as f2fs or btrfs (zoned block device support is b=
+eing=0A=
+worked on, see patches posted on btrfs list).=0A=
+=0A=
+As mentioned previously, zonefs goal is to represent zones of a zoned block=
+=0A=
+device with files, thus providing a simple abstraction one file =3D=3D one =
+zone and=0A=
+simplifying application implementation. And this means that the only sensib=
+le=0A=
+use case for zonefs is applications using large container like files. LSM-t=
+ree=0A=
+based applications being a very good match in this respect.=0A=
+=0A=
+> Secondly, the allocation scheme is too simplified for my taste and it=0A=
+> could create a significant fragmentation of a volume. Again, 256 MB is=0A=
+> pretty big size. So, I assume that, mostly, it will be allocated only=0A=
+> one zone at first for a created file. If file grows then it means that=0A=
+> it will need to allocate the two contigous zones and to move the file's=
+=0A=
+> content. Finally, it sounds for me that it is possible to create a lot=0A=
+> of holes and to achieve the volume state when it exists a lot of free=0A=
+> space but files will be unable to grow and it will be impossible to add=
+=0A=
+> a new data on the volume. Have you made an estimation of the suggested=0A=
+> allocation scheme?=0A=
+=0A=
+What do you mean allocation scheme ? There is none ! one file =3D=3D one zo=
+ne and=0A=
+all files are fully provisioned and allocated on mount. zonefs does not all=
+ow=0A=
+the creation of files and there is no dynamic "block allocation". Again, pl=
+ease=0A=
+do not consider zonefs as a normal file system. It is closer to a raw block=
+=0A=
+device interface than to a fully featured file system.=0A=
+=0A=
+Best regards.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
