@@ -2,447 +2,943 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2773A67F0E
-	for <lists+linux-xfs@lfdr.de>; Sun, 14 Jul 2019 14:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C3068206
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jul 2019 03:20:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfGNM7A (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 14 Jul 2019 08:59:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46300 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfGNM7A (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 14 Jul 2019 08:59:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so14255836wru.13;
-        Sun, 14 Jul 2019 05:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
-        b=O6MTh72CydHm8Tp/F0gLwOmRCAVrM+ZuPWQjZJitMFIjakZcsjyzKcpN/g72xiiQEg
-         /C08Mibq5VO/VypIpY8z4wr8bvmDbeB5y+e2+x2JZzqShSAh+Pdsd4JQ8rtEJU2caN2n
-         1XofIYR6hlt3heNXq3fMH97u6QmdfDSIaAOCwX0XiVtfisq37BSxaEOVGUdWcDphHR9h
-         Kr/EQPqbpjw3qaSRk73ItkZQm30imprcz+qGZs4bg7J/hwTIM2FHLitQBnXzHuwsYF5e
-         H1zMNAVwAi5XJEEOBWRQQoXicuJ3lbyM4NEqWGW1jKNVvIH8sF/6u2c9S8Vu/d2WaQAI
-         9oQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
-        b=A1erP/v3Z6j5HyrKAWP7g8FOW0XgnYT3XRjhM/xIfDWXLPcSaIpnCi22liRcGXBjsf
-         dXc9jUy3s8MQpA/YSN40K83+94Vav+ZlMkcLJyLiEpkYLjDwi9HY5gRih/rynRbosEap
-         xLHTnWuX9ju1MHXdm3I+uxRgoAnq/i6cFLHP9SJsJR9tdybOcjhZ4s5uZ92nfC/F+ceS
-         n5J1Mv9t+j5SPT10swfwwHqrm/AWenoSdLC8iamAVrnuxJmvBIr43A/zFV1QyPvMpdVG
-         Zgw97XxbiwfDsXjaU/QjNRccwRiWqDP5x6IIqbvITLUNTCNxywMb99um7QrWjrf6thhv
-         tURw==
-X-Gm-Message-State: APjAAAVuEDX5h/YFfKWI5nhBIO10emz08sa9MhH062V9WoJNt+j+AAKK
-        CKqhaJZDb7//LomG8DPnlHYSOr7Z
-X-Google-Smtp-Source: APXvYqy0SnoxLbmLhI+l+W+Fi+pSk5jahgG9GS5wq66P8x4bVzQuUOskyiixsUW7girzH04IITll6g==
-X-Received: by 2002:a5d:5647:: with SMTP id j7mr22929598wrw.191.1563109135481;
-        Sun, 14 Jul 2019 05:58:55 -0700 (PDT)
-Received: from localhost ([41.220.75.172])
-        by smtp.gmail.com with ESMTPSA id o185sm13238127wmo.45.2019.07.14.05.58.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 05:58:54 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 13:58:31 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        sheriffesseson@gmail.com
-Subject: Re: [PATCH v8] Documentation: filesystem: Convert xfs.txt to ReST
-Message-ID: <20190714125831.GA19200@localhost>
+        id S1728934AbfGOBUy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 14 Jul 2019 21:20:54 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:45263 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727006AbfGOBUy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 14 Jul 2019 21:20:54 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 0442C3DDC4E;
+        Mon, 15 Jul 2019 11:20:42 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hmpeR-0006nl-LZ; Mon, 15 Jul 2019 11:19:35 +1000
+Date:   Mon, 15 Jul 2019 11:19:35 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Damien Le Moal <damien.lemoal@wdc.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH RFC] fs: New zonefs file system
+Message-ID: <20190715011935.GM7689@dread.disaster.area>
+References: <20190712030017.14321-1-damien.lemoal@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190712030017.14321-1-damien.lemoal@wdc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=j3wy73O8oSJ45MAQSE8A:9 a=2w8ThLbwMlW6iQc5:21
+        a=Jo8aW4yMUH2SPfeF:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move xfs.txt to admin-guide, convert xfs.txt to ReST and broken references
+Just a few quick things as I read through this to see how it uses
+iomap....
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
+On Fri, Jul 12, 2019 at 12:00:17PM +0900, Damien Le Moal wrote:
+> +static int zonefs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+> +			      unsigned int flags, struct iomap *iomap)
+> +{
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
+> +	loff_t max_isize = zonefs_file_max_size(inode);
+> +	loff_t isize = i_size_read(inode);
+> +
+> +	/*
+> +	 * For sequential zones, enforce direct IO writes. This is already
+> +	 * checked when writes are issued, so warn about this here if we
+> +	 * get buffered write to a sequential file inode.
+> +	 */
+> +	if (WARN_ON_ONCE(zonefs_file_is_seq(inode) && (flags & IOMAP_WRITE) &&
+> +			 (!(flags & IOMAP_DIRECT))))
+                         ^ Excess (..).
 
-changes in v8:
-	- fix table of Deprecated and Removed options.
+> +		return -EIO;
 
- Documentation/admin-guide/index.rst           |   1 +
- .../xfs.txt => admin-guide/xfs.rst}           | 132 +++++++++---------
- Documentation/filesystems/dax.txt             |   2 +-
- MAINTAINERS                                   |   2 +-
- 4 files changed, 67 insertions(+), 70 deletions(-)
- rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
+> +	/* An IO cannot exceed the zone size */
+> +	if (offset >= max_isize)
+> +		return -EFBIG;
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 24fbe0568eff..0615ea3a744c 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
-    ras
-    bcache
-    ext4
-+   xfs
-    binderfs
-    pm/index
-    thunderbolt
-diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
-similarity index 80%
-rename from Documentation/filesystems/xfs.txt
-rename to Documentation/admin-guide/xfs.rst
-index a5cbb5e0e3db..e76665a8f2f2 100644
---- a/Documentation/filesystems/xfs.txt
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -1,4 +1,6 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
-+======================
- The SGI XFS Filesystem
- ======================
- 
-@@ -18,8 +20,6 @@ Mount Options
- =============
- 
- When mounting an XFS filesystem, the following options are accepted.
--For boolean mount options, the names with the (*) suffix is the
--default behaviour.
- 
-   allocsize=size
- 	Sets the buffered I/O end-of-file preallocation size when
-@@ -31,46 +31,43 @@ default behaviour.
- 	preallocation size, which uses a set of heuristics to
- 	optimise the preallocation size based on the current
- 	allocation patterns within the file and the access patterns
--	to the file. Specifying a fixed allocsize value turns off
-+	to the file. Specifying a fixed ``allocsize`` value turns off
- 	the dynamic behaviour.
- 
--  attr2
--  noattr2
-+  attr2 or noattr2
- 	The options enable/disable an "opportunistic" improvement to
- 	be made in the way inline extended attributes are stored
- 	on-disk.  When the new form is used for the first time when
--	attr2 is selected (either when setting or removing extended
-+	``attr2`` is selected (either when setting or removing extended
- 	attributes) the on-disk superblock feature bit field will be
- 	updated to reflect this format being in use.
- 
- 	The default behaviour is determined by the on-disk feature
--	bit indicating that attr2 behaviour is active. If either
--	mount option it set, then that becomes the new default used
-+	bit indicating that ``attr2`` behaviour is active. If either
-+	mount option is set, then that becomes the new default used
- 	by the filesystem.
- 
--	CRC enabled filesystems always use the attr2 format, and so
--	will reject the noattr2 mount option if it is set.
-+	CRC enabled filesystems always use the ``attr2`` format, and so
-+	will reject the ``noattr2`` mount option if it is set.
- 
--  discard
--  nodiscard (*)
-+  discard or nodiscard (default)
- 	Enable/disable the issuing of commands to let the block
- 	device reclaim space freed by the filesystem.  This is
- 	useful for SSD devices, thinly provisioned LUNs and virtual
- 	machine images, but may have a performance impact.
- 
--	Note: It is currently recommended that you use the fstrim
--	application to discard unused blocks rather than the discard
-+	Note: It is currently recommended that you use the ``fstrim``
-+	application to ``discard`` unused blocks rather than the ``discard``
- 	mount option because the performance impact of this option
- 	is quite severe.
- 
--  grpid/bsdgroups
--  nogrpid/sysvgroups (*)
-+  grpid/bsdgroups or nogrpid/sysvgroups (default)
- 	These options define what group ID a newly created file
--	gets.  When grpid is set, it takes the group ID of the
-+	gets.  When ``grpid`` is set, it takes the group ID of the
- 	directory in which it is created; otherwise it takes the
--	fsgid of the current process, unless the directory has the
--	setgid bit set, in which case it takes the gid from the
--	parent directory, and also gets the setgid bit set if it is
-+	``fsgid`` of the current process, unless the directory has the
-+	``setgid`` bit set, in which case it takes the ``gid`` from the
-+	parent directory, and also gets the ``setgid`` bit set if it is
- 	a directory itself.
- 
-   filestreams
-@@ -78,46 +75,42 @@ default behaviour.
- 	across the entire filesystem rather than just on directories
- 	configured to use it.
- 
--  ikeep
--  noikeep (*)
--	When ikeep is specified, XFS does not delete empty inode
--	clusters and keeps them around on disk.  When noikeep is
-+  ikeep or noikeep (default)
-+	When ``ikeep`` is specified, XFS does not delete empty inode
-+	clusters and keeps them around on disk.  When ``noikeep`` is
- 	specified, empty inode clusters are returned to the free
- 	space pool.
- 
--  inode32
--  inode64 (*)
--	When inode32 is specified, it indicates that XFS limits
-+  inode32 or inode64 (default)
-+	When ``inode32`` is specified, it indicates that XFS limits
- 	inode creation to locations which will not result in inode
- 	numbers with more than 32 bits of significance.
- 
--	When inode64 is specified, it indicates that XFS is allowed
-+	When ``inode64`` is specified, it indicates that XFS is allowed
- 	to create inodes at any location in the filesystem,
- 	including those which will result in inode numbers occupying
--	more than 32 bits of significance. 
-+	more than 32 bits of significance.
- 
--	inode32 is provided for backwards compatibility with older
-+	``inode32`` is provided for backwards compatibility with older
- 	systems and applications, since 64 bits inode numbers might
- 	cause problems for some applications that cannot handle
- 	large inode numbers.  If applications are in use which do
--	not handle inode numbers bigger than 32 bits, the inode32
-+	not handle inode numbers bigger than 32 bits, the ``inode32``
- 	option should be specified.
- 
--
--  largeio
--  nolargeio (*)
--	If "nolargeio" is specified, the optimal I/O reported in
--	st_blksize by stat(2) will be as small as possible to allow
-+  largeio or nolargeio (default)
-+	If ``nolargeio`` is specified, the optimal I/O reported in
-+	``st_blksize`` by **stat(2)** will be as small as possible to allow
- 	user applications to avoid inefficient read/modify/write
- 	I/O.  This is typically the page size of the machine, as
- 	this is the granularity of the page cache.
- 
--	If "largeio" specified, a filesystem that was created with a
--	"swidth" specified will return the "swidth" value (in bytes)
--	in st_blksize. If the filesystem does not have a "swidth"
--	specified but does specify an "allocsize" then "allocsize"
-+	If ``largeio`` is specified, a filesystem that was created with a
-+	``swidth`` specified will return the ``swidth`` value (in bytes)
-+	in ``st_blksize``. If the filesystem does not have a ``swidth``
-+	specified but does specify an ``allocsize`` then ``allocsize``
- 	(in bytes) will be returned instead. Otherwise the behaviour
--	is the same as if "nolargeio" was specified.
-+	is the same as if ``nolargeio`` was specified.
- 
-   logbufs=value
- 	Set the number of in-memory log buffers.  Valid numbers
-@@ -127,7 +120,7 @@ default behaviour.
- 
- 	If the memory cost of 8 log buffers is too high on small
- 	systems, then it may be reduced at some cost to performance
--	on metadata intensive workloads. The logbsize option below
-+	on metadata intensive workloads. The ``logbsize`` option below
- 	controls the size of each buffer and so is also relevant to
- 	this case.
- 
-@@ -138,7 +131,7 @@ default behaviour.
- 	and 32768 (32k).  Valid sizes for version 2 logs also
- 	include 65536 (64k), 131072 (128k) and 262144 (256k). The
- 	logbsize must be an integer multiple of the log
--	stripe unit configured at mkfs time.
-+	stripe unit configured at **mkfs(8)** time.
- 
- 	The default value for for version 1 logs is 32768, while the
- 	default value for version 2 logs is MAX(32768, log_sunit).
-@@ -153,21 +146,21 @@ default behaviour.
-   noalign
- 	Data allocations will not be aligned at stripe unit
- 	boundaries. This is only relevant to filesystems created
--	with non-zero data alignment parameters (sunit, swidth) by
--	mkfs.
-+	with non-zero data alignment parameters (``sunit``, ``swidth``) by
-+	**mkfs(8)**.
- 
-   norecovery
- 	The filesystem will be mounted without running log recovery.
- 	If the filesystem was not cleanly unmounted, it is likely to
--	be inconsistent when mounted in "norecovery" mode.
-+	be inconsistent when mounted in ``norecovery`` mode.
- 	Some files or directories may not be accessible because of this.
--	Filesystems mounted "norecovery" must be mounted read-only or
-+	Filesystems mounted ``norecovery`` must be mounted read-only or
- 	the mount will fail.
- 
-   nouuid
- 	Don't check for double mounted file systems using the file
--	system uuid.  This is useful to mount LVM snapshot volumes,
--	and often used in combination with "norecovery" for mounting
-+	system ``uuid``.  This is useful to mount LVM snapshot volumes,
-+	and often used in combination with ``norecovery`` for mounting
- 	read-only snapshots.
- 
-   noquota
-@@ -176,15 +169,15 @@ default behaviour.
- 
-   uquota/usrquota/uqnoenforce/quota
- 	User disk quota accounting enabled, and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   gquota/grpquota/gqnoenforce
- 	Group disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   pquota/prjquota/pqnoenforce
- 	Project disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   sunit=value and swidth=value
- 	Used to specify the stripe unit and width for a RAID device
-@@ -192,11 +185,11 @@ default behaviour.
- 	block units. These options are only relevant to filesystems
- 	that were created with non-zero data alignment parameters.
- 
--	The sunit and swidth parameters specified must be compatible
-+	The ``sunit`` and ``swidth`` parameters specified must be compatible
- 	with the existing filesystem alignment characteristics.  In
--	general, that means the only valid changes to sunit are
--	increasing it by a power-of-2 multiple. Valid swidth values
--	are any integer multiple of a valid sunit value.
-+	general, that means the only valid changes to ``sunit`` are
-+	increasing it by a power-of-2 multiple. Valid ``swidth`` values
-+	are any integer multiple of a valid ``sunit`` value.
- 
- 	Typically the only time these mount options are necessary if
- 	after an underlying RAID device has had it's geometry
-@@ -221,22 +214,25 @@ default behaviour.
- Deprecated Mount Options
- ========================
- 
-+===========================     ================
-   Name				Removal Schedule
--  ----				----------------
-+===========================     ================
-+===========================     ================
- 
- 
- Removed Mount Options
- =====================
- 
-+===========================     =======
-   Name				Removed
--  ----				-------
-+===========================	=======
-   delaylog/nodelaylog		v4.0
-   ihashsize			v4.0
-   irixsgid			v4.0
-   osyncisdsync/osyncisosync	v4.0
-   barrier			v4.19
-   nobarrier			v4.19
--
-+===========================     =======
- 
- sysctls
- =======
-@@ -302,27 +298,27 @@ The following sysctls are available for the XFS filesystem:
- 
-   fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "sync" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodump" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "noatime" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nosymlinks" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodefrag" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
-@@ -368,7 +364,7 @@ handler:
-  -error handlers:
- 	Defines the behavior for a specific error.
- 
--The filesystem behavior during an error can be set via sysfs files. Each
-+The filesystem behavior during an error can be set via ``sysfs`` files. Each
- error handler works independently - the first condition met by an error handler
- for a specific class will cause the error to be propagated rather than reset and
- retried.
-@@ -419,7 +415,7 @@ level directory:
- 	handler configurations.
- 
- 	Note: there is no guarantee that fail_at_unmount can be set while an
--	unmount is in progress. It is possible that the sysfs entries are
-+	unmount is in progress. It is possible that the ``sysfs`` entries are
- 	removed by the unmounting filesystem before a "retry forever" error
- 	handler configuration causes unmount to hang, and hence the filesystem
- 	must be configured appropriately before unmount begins to prevent
-@@ -428,7 +424,7 @@ level directory:
- Each filesystem has specific error class handlers that define the error
- propagation behaviour for specific errors. There is also a "default" error
- handler defined, which defines the behaviour for all errors that don't have
--specific handlers defined. Where multiple retry constraints are configuredi for
-+specific handlers defined. Where multiple retry constraints are configured for
- a single error, the first retry configuration that expires will cause the error
- to be propagated. The handler configurations are found in the directory:
- 
-@@ -463,7 +459,7 @@ to be propagated. The handler configurations are found in the directory:
- 	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
- 	operation for up to "N" seconds before propagating the error.
- 
--Note: The default behaviour for a specific error handler is dependent on both
-+**Note:** The default behaviour for a specific error handler is dependent on both
- the class and error context. For example, the default values for
- "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
- to "fail immediately" behaviour. This is done because ENODEV is a fatal,
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 6d2c0d340dea..679729442fd2 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
- These filesystems may be used for inspiration:
- - ext2: see Documentation/filesystems/ext2.txt
- - ext4: see Documentation/filesystems/ext4/
--- xfs:  see Documentation/filesystems/xfs.txt
-+- xfs:  see Documentation/admin-guide/xfs.rst
- 
- 
- Handling Media Errors
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43ca94856944..3b6e0b6d8cbd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
- W:	http://xfs.org/
- T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
--F:	Documentation/filesystems/xfs.txt
-+F:	Documentation/admin-guide/xfs.rst
- F:	fs/xfs/
- 
- XILINX AXI ETHERNET DRIVER
+So a write() call that is for a length longer than max_isize is
+going to end up being a short write? i.e. iomap_apply() will loop
+mapping the inode until either we reach the end of the user write
+or we hit max_isize?
+
+How is userspace supposed to tell the difference between a short
+write and a write that overruns max_isize?
+
+> +	/* All blocks are always mapped */
+> +	if (offset >= i_size_read(inode)) {
+> +		length = min(length, max_isize - offset);
+> +		iomap->type = IOMAP_UNWRITTEN;
+> +	} else {
+> +		length = min(length, isize - offset);
+> +		iomap->type = IOMAP_MAPPED;
+> +	}
+> +	iomap->offset = offset & (~sbi->s_blocksize_mask);
+> +	iomap->length = (offset + length + sbi->s_blocksize_mask) &
+> +			(~sbi->s_blocksize_mask);
+> +	iomap->addr = zonefs_file_addr(inode) + iomap->offset;
+> +	iomap->bdev = inode->i_sb->s_bdev;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iomap_ops zonefs_iomap_ops = {
+> +	.iomap_begin	= zonefs_iomap_begin,
+> +};
+> +
+> +static int zonefs_readpage(struct file *unused, struct page *page)
+> +{
+> +	return iomap_readpage(page, &zonefs_iomap_ops);
+> +}
+> +
+> +static int zonefs_readpages(struct file *unused, struct address_space *mapping,
+> +			    struct list_head *pages, unsigned int nr_pages)
+> +{
+> +	return iomap_readpages(mapping, pages, nr_pages, &zonefs_iomap_ops);
+> +}
+> +
+> +static int zonefs_map_blocks(struct iomap_writepage_ctx *wpc,
+> +			     struct inode *inode, loff_t offset)
+> +{
+> +	if (offset >= wpc->iomap.offset &&
+> +	    offset < wpc->iomap.offset + wpc->iomap.length)
+> +		return 0;
+> +
+> +	memset(&wpc->iomap, 0, sizeof(wpc->iomap));
+> +	return zonefs_iomap_begin(inode, offset, INT_MAX, 0, &wpc->iomap);
+
+Why is the write length set to INT_MAX here? What happens when we
+get a zone that is larger than 2GB? i.e. the length parameter is a
+loff_t, not an int....
+
+
+> +static int zonefs_truncate_seqfile(struct inode *inode)
+> +{
+> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> +	int ret;
+> +
+> +	/* Serialize against page faults */
+> +	down_write(&zi->i_mmap_sem);
+> +
+> +	ret = blkdev_reset_zones(inode->i_sb->s_bdev,
+> +				 zonefs_file_addr(inode) >> SECTOR_SHIFT,
+> +				 zonefs_file_max_size(inode) >> SECTOR_SHIFT,
+> +				 GFP_KERNEL);
+
+Not sure GFP_KERNEL is safe here. This is called holding a
+filesystem lock here, so it's not immediately clear to me if this
+can deadlock through memory reclaim or not...
+
+> +	if (ret) {
+> +		zonefs_err(inode->i_sb,
+> +			   "zonefs: Reset zone at %llu failed %d",
+> +			   zonefs_file_addr(inode) >> SECTOR_SHIFT,
+> +			   ret);
+
+redundant "zonefs" in error message.
+
+> +	} else {
+> +		truncate_setsize(inode, 0);
+> +		zi->i_wpoffset = 0;
+> +	}
+> +
+> +	up_write(&zi->i_mmap_sem);
+> +
+> +	return ret;
+> +}
+> +
+> +static int zonefs_inode_setattr(struct dentry *dentry, struct iattr *iattr)
+> +{
+> +	struct inode *inode = d_inode(dentry);
+> +	int ret;
+> +
+> +	ret = setattr_prepare(dentry, iattr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if ((iattr->ia_valid & ATTR_UID &&
+> +	     !uid_eq(iattr->ia_uid, inode->i_uid)) ||
+> +	    (iattr->ia_valid & ATTR_GID &&
+> +	     !gid_eq(iattr->ia_gid, inode->i_gid))) {
+> +		ret = dquot_transfer(inode, iattr);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (iattr->ia_valid & ATTR_SIZE) {
+> +		/* The size of conventional zone files cannot be changed */
+> +		if (zonefs_file_is_conv(inode))
+> +			return -EPERM;
+> +
+> +		/*
+> +		 * For sequential zone files, we can only allow truncating to
+> +		 * 0 size which is equivalent to a zone reset.
+> +		 */
+> +		if (iattr->ia_size != 0)
+> +			return -EPERM;
+> +
+> +		ret = zonefs_truncate_seqfile(inode);
+> +		if (ret)
+> +			return ret;
+
+Ok, so we are calling zonefs_truncate_seqfile() holding the i_rwsem
+as well. That does tend to imply GFP_NOFS should probably be used
+for the blkdev_reset_zones() call.
+
+> +	}
+> +
+> +	setattr_copy(inode, iattr);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct inode_operations zonefs_file_inode_operations = {
+> +	.setattr	= zonefs_inode_setattr,
+> +};
+> +
+> +/*
+> + * Open a file.
+> + */
+> +static int zonefs_file_open(struct inode *inode, struct file *file)
+> +{
+> +	/*
+> +	 * Note: here we can do an explicit open of the file zone,
+> +	 * on the first open of the inode. The explicit close can be
+> +	 * done on the last release (close) call for the inode.
+> +	 */
+> +
+> +	return generic_file_open(inode, file);
+> +}
+
+Why is a wrapper needed for this?
+
+> +static int zonefs_file_fsync(struct file *file, loff_t start, loff_t end,
+> +			     int datasync)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +	int ret;
+> +
+> +	/*
+> +	 * Since only direct writes are allowed in sequential files, we only
+> +	 * need a device flush for these files.
+> +	 */
+> +	if (zonefs_file_is_seq(inode))
+> +		goto flush;
+> +
+> +	ret = file_write_and_wait_range(file, start, end);
+> +	if (ret == 0)
+> +		ret = file_check_and_advance_wb_err(file);
+> +	if (ret)
+> +		return ret;
+
+> +
+> +flush:
+> +	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
+
+The goto can be avoided in this case simply:
+
+	if (zonefs_file_is_conv(inode)) {
+		/* do flush */
+	}
+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
+
+> +}
+> +
+> +static vm_fault_t zonefs_filemap_fault(struct vm_fault *vmf)
+> +{
+> +	struct zonefs_inode_info *zi = ZONEFS_I(file_inode(vmf->vma->vm_file));
+> +	vm_fault_t ret;
+> +
+> +	down_read(&zi->i_mmap_sem);
+> +	ret = filemap_fault(vmf);
+> +	up_read(&zi->i_mmap_sem);
+> +
+> +	return ret;
+> +}
+> +
+> +static vm_fault_t zonefs_filemap_page_mkwrite(struct vm_fault *vmf)
+> +{
+> +	struct inode *inode = file_inode(vmf->vma->vm_file);
+> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> +	vm_fault_t ret;
+> +
+> +	sb_start_pagefault(inode->i_sb);
+> +	file_update_time(vmf->vma->vm_file);
+> +
+> +	/* Serialize against truncates */
+> +	down_read(&zi->i_mmap_sem);
+> +	ret = iomap_page_mkwrite(vmf, &zonefs_iomap_ops);
+> +	up_read(&zi->i_mmap_sem);
+> +
+> +	sb_end_pagefault(inode->i_sb);
+> +	return ret;
+> +}
+> +
+> +static const struct vm_operations_struct zonefs_file_vm_ops = {
+> +	.fault		= zonefs_filemap_fault,
+> +	.map_pages	= filemap_map_pages,
+> +	.page_mkwrite	= zonefs_filemap_page_mkwrite,
+> +};
+> +
+> +static int zonefs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> +{
+> +	/*
+> +	 * Conventional zone files can be mmap-ed READ/WRITE.
+> +	 * For sequential zone files, only readonly mappings are possible.
+> +	 */
+> +	if (zonefs_file_is_seq(file_inode(file)) &&
+> +	    (vma->vm_flags & VM_SHARED) && (vma->vm_flags & VM_MAYWRITE))
+> +		return -EINVAL;
+> +
+> +	file_accessed(file);
+> +	vma->vm_ops = &zonefs_file_vm_ops;
+> +
+> +	return 0;
+> +}
+> +
+> +static loff_t zonefs_file_llseek(struct file *file, loff_t offset, int whence)
+> +{
+> +	loff_t isize = i_size_read(file_inode(file));
+> +
+> +	/*
+> +	 * Seeks are limited to below the zone size for conventional zones
+> +	 * and below the zone write pointer for sequential zones. In both
+> +	 * cases, this limit is the inode size.
+> +	 */
+> +	return generic_file_llseek_size(file, offset, whence, isize, isize);
+> +}
+> +
+> +static ssize_t zonefs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> +{
+> +	struct inode *inode = file_inode(iocb->ki_filp);
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
+> +	loff_t max_pos = zonefs_file_max_size(inode);
+> +	size_t count;
+> +	ssize_t ret = 0;
+> +
+> +	/*
+> +	 * Check that the read operation does not go beyond the maximum
+> +	 * file size.
+> +	 */
+> +	if (iocb->ki_pos >= zonefs_file_max_size(inode))
+> +		return -EFBIG;
+> +
+> +	/*
+> +	 * For sequential zones, limit reads to written data.
+> +	 */
+> +	if (zonefs_file_is_seq(inode))
+> +		max_pos = i_size_read(inode);
+> +	if (iocb->ki_pos >= max_pos)
+> +		return 0;
+
+Isn't this true for both types of zone at this point? i.e. at this
+point:
+
+	max_pos = i_size_read(inode);
+	if (iocb->ki_pos >= max_pos)
+		return 0;
+
+because i_size is either the zonefs_file_max_size() for conventional
+zones (which we've already checked) or it's the write pointer for
+a sequential zone. i.e. it's the max position for either case.
+
+> +	iov_iter_truncate(to, max_pos - iocb->ki_pos);
+> +	count = iov_iter_count(to);
+> +	if (!count)
+> +		return 0;
+
+The iov_iter should never be zero length here, because that implies
+the position was >= max_pos and that will be caught by the above
+checks...
+
+> +	/* Direct IO reads must be aligned to device physical sector size */
+> +	if ((iocb->ki_flags & IOCB_DIRECT) &&
+> +	    ((iocb->ki_pos | count) & sbi->s_blocksize_mask))
+> +		return -EINVAL;
+> +
+> +	if (iocb->ki_flags & IOCB_NOWAIT) {
+> +		if (!inode_trylock_shared(inode))
+> +			return -EAGAIN;
+> +	} else {
+> +		inode_lock_shared(inode);
+> +	}
+
+IIUC, write IO completion takes the inode lock to serialise file
+size updates for sequential zones. In that case, shouldn't this lock
+be taken before we do the EOF checks above?
+
+> +	if (iocb->ki_flags & IOCB_DIRECT) {
+> +		file_accessed(iocb->ki_filp);
+> +		ret = iomap_dio_rw(iocb, to, &zonefs_iomap_ops, NULL);
+> +	} else {
+> +		ret = generic_file_read_iter(iocb, to);
+> +	}
+> +
+> +	inode_unlock_shared(inode);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * We got a write error: get the sequenial zone information from the device to
+> + * figure out where the zone write pointer is and verify the inode size against
+> + * it.
+> + */
+> +static int zonefs_write_failed(struct inode *inode, int error)
+> +{
+> +	struct super_block *sb = inode->i_sb;
+> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> +	sector_t sector = zi->i_addr >> SECTOR_SHIFT;
+> +	unsigned int noio_flag;
+> +	struct blk_zone zone;
+> +	int n = 1, ret;
+> +
+> +	zonefs_warn(sb, "Updating inode zone %llu info\n", sector);
+> +
+> +	noio_flag = memalloc_noio_save();
+> +	ret = blkdev_report_zones(sb->s_bdev, sector, &zone, &n);
+> +	memalloc_noio_restore(noio_flag);
+
+What deadlock does the memalloc_noio_save() avoid? There should be a
+comment explaining what problem memalloc_noio_save() avoids
+everywhere it is used like this. If it isn't safe to do GFP_KERNEL
+allocations here under the i_rwsem, then why would it be safe to
+do GFP_KERNEL allocations in the truncate code under the i_rwsem?
+
+> +
+> +	if (!n)
+> +		ret = -EIO;
+> +	if (ret) {
+> +		zonefs_err(sb, "Get zone %llu report failed %d\n",
+> +			   sector, ret);
+> +		return ret;
+> +	}
+> +
+> +	zi->i_wpoffset = (zone.wp - zone.start) << SECTOR_SHIFT;
+> +	if (i_size_read(inode) != zi->i_wpoffset) {
+> +		i_size_write(inode, zi->i_wpoffset);
+> +		truncate_pagecache(inode, zi->i_wpoffset);
+> +	}
+
+This looks .... dangerous. If the write pointer was advanced, but
+the data wasn't written properly, this causes stale data exposure on
+write failure. i.e. it's not failsafe.
+
+I suspect that on a sequential zone write failure and the write
+pointer does not equal the offset of the write, we should consider
+the zone corrupt. Also, this is for direct IO completion for
+sequential writes, yes? So what does the page cache truncation
+acheive given that only direct IO writes are allowed to these files?
+
+> +
+> +	return error;
+> +}
+> +
+> +static int zonefs_update_size(struct inode *inode, loff_t new_pos)
+> +{
+> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> +
+> +	zi->i_wpoffset = new_pos;
+> +	if (new_pos > i_size_read(inode))
+> +		i_size_write(inode, new_pos);
+> +	return 0;
+> +}
+> +
+> +static int zonefs_dio_seqwrite_end_io(struct kiocb *iocb, ssize_t size,
+> +				      unsigned int flags)
+> +{
+> +	struct inode *inode = file_inode(iocb->ki_filp);
+> +	int ret;
+> +
+> +	inode_lock(inode);
+> +	if (size < 0)
+> +		ret = zonefs_write_failed(inode, size);
+> +	else
+> +		ret = zonefs_update_size(inode, iocb->ki_pos + size);
+> +	inode_unlock(inode);
+> +	return ret;
+
+Shouldn't this have a check that it's being called on a sequential
+zone inode?
+
+> +}
+> +
+> +static ssize_t zonefs_file_dio_aio_write(struct kiocb *iocb,
+> +					 struct iov_iter *from)
+> +{
+> +	struct inode *inode = file_inode(iocb->ki_filp);
+> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> +	size_t count;
+> +
+> +	/*
+> +	 * The size of conventional zone files is fixed to the zone size.
+> +	 * So only direct writes to sequential zones need adjusting the
+> +	 * inode size on IO completion.
+> +	 */
+> +	if (zonefs_file_is_conv(inode))
+> +		return iomap_dio_rw(iocb, from, &zonefs_iomap_ops, NULL);
+> +
+> +	/* Enforce append only sequential writes */
+> +	count = iov_iter_count(from);
+> +	if (iocb->ki_pos != zi->i_wpoffset) {
+> +		zonefs_err(inode->i_sb,
+> +			   "Unaligned write at %llu + %zu (wp %llu)\n",
+> +			   iocb->ki_pos, count, zi->i_wpoffset);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (is_sync_kiocb(iocb)) {
+> +		/*
+> +		 * Don't use the end_io callback for synchronous iocbs,
+> +		 * as we'd deadlock on i_rwsem.  Instead perform the same
+> +		 * actions manually here.
+> +		 */
+> +		count = iomap_dio_rw(iocb, from, &zonefs_iomap_ops, NULL);
+> +		if (count < 0)
+> +			return zonefs_write_failed(inode, count);
+> +		zonefs_update_size(inode, iocb->ki_pos);
+> +		return count;
+
+Urk. This locking is nasty, and doesn't avoid the problem.....
+
+> +	}
+> +
+> +	return iomap_dio_rw(iocb, from, &zonefs_iomap_ops,
+> +			    zonefs_dio_seqwrite_end_io);
+
+... because I think this can deadlock.
+
+AFAIA, the rule is that IO completion callbacks cannot take
+a lock that is held across IO submission. The reason is that
+IO can complete so fast that the submission code runs the
+completion. i.e. iomap_dio_rw() can be the function that calls
+iomap_dio_complete() and runs the IO completion.
+
+In which case, this will deadlock because we are already holding the
+i_rwsem and the end_io completion will try to take it again.
+
+
+
+> +}
+> +
+> +static ssize_t zonefs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> +{
+> +	struct inode *inode = file_inode(iocb->ki_filp);
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
+> +	size_t count;
+> +	ssize_t ret;
+> +
+> +	/*
+> +	 * Check that the read operation does not go beyond the file
+> +	 * zone boundary.
+> +	 */
+> +	if (iocb->ki_pos >= zonefs_file_max_size(inode))
+> +		return -EFBIG;
+> +	iov_iter_truncate(from, zonefs_file_max_size(inode) - iocb->ki_pos);
+> +	count = iov_iter_count(from);
+> +
+> +	if (!count)
+> +		return 0;
+> +
+> +	/*
+> +	 * Direct IO writes are mandatory for sequential zones so that write IO
+> +	 * order is preserved. The direct writes also must be aligned to
+> +	 * device physical sector size.
+> +	 */
+> +	if (iocb->ki_flags & IOCB_DIRECT) {
+> +		if ((iocb->ki_pos | count) & sbi->s_blocksize_mask)
+> +			return -EINVAL;
+> +	} else {
+> +		if (zonefs_file_is_seq(inode))
+> +			return -EOPNOTSUPP;
+
+zonefs_iomap_begin() returns -EIO in this case and issues a warning.
+This seems somewhat inconsistent....
+
+> +	}
+> +
+> +	if (iocb->ki_flags & IOCB_NOWAIT) {
+> +		if (!inode_trylock(inode))
+> +			return -EAGAIN;
+> +	} else {
+> +		inode_lock(inode);
+> +	}
+> +
+> +	ret = generic_write_checks(iocb, from);
+> +	if (ret <= 0)
+> +		goto out;
+
+Shouldn't this be done before the iov_iter is truncated?
+
+> +
+> +	if (iocb->ki_flags & IOCB_DIRECT)
+> +		ret = zonefs_file_dio_aio_write(iocb, from);
+> +	else
+> +		ret = iomap_file_buffered_write(iocb, from, &zonefs_iomap_ops);
+> +
+> +out:
+> +	inode_unlock(inode);
+> +
+> +	if (ret > 0 && (!(iocb->ki_flags & IOCB_DIRECT))) {
+> +		iocb->ki_pos += ret;
+> +		ret = generic_write_sync(iocb, ret);
+> +	}
+
+Hmmm. The split of checks and doing stuff between direct IO and
+buffered IO seems a bit arbitrary. e.g. the "sequential zones can
+only do append writes" is in zonefs_file_dio_aio_write(), but we
+do a check that "sequential zones can only do direct IO" here.
+
+And then we have the sync code that can only occur on buffered IO,
+which we don't have a wrapper function for but really should.  And I
+suspect that the locking is going to have to change here because of
+the direct IO issues, so maybe it would be best to split this up
+similar to the way XFS has two completely separate functions for the
+two paths....
+
+
+> +static struct kmem_cache *zonefs_inode_cachep;
+> +
+> +static struct inode *zonefs_alloc_inode(struct super_block *sb)
+> +{
+> +	struct zonefs_inode_info *zi;
+> +
+> +	zi = kmem_cache_alloc(zonefs_inode_cachep, GFP_KERNEL);
+> +	if (!zi)
+> +		return NULL;
+> +
+> +	init_rwsem(&zi->i_mmap_sem);
+> +	inode_init_once(&zi->i_vnode);
+> +
+> +	return &zi->i_vnode;
+> +}
+> +
+> +static void zonefs_destroy_cb(struct rcu_head *head)
+> +{
+> +	struct inode *inode = container_of(head, struct inode, i_rcu);
+> +
+> +	kmem_cache_free(zonefs_inode_cachep, ZONEFS_I(inode));
+> +}
+> +
+> +static void zonefs_destroy_inode(struct inode *inode)
+> +{
+> +	call_rcu(&inode->i_rcu, zonefs_destroy_cb);
+> +}
+
+If this is all the inode destructor is, then implement ->free_inode
+instead. i.e.
+
+zonefs_free_inode(inode)
+{
+	kmem_cache_free(zonefs_inode_cachep, ZONEFS_I(inode));
+}
+
+and the VFS takes care of the RCU freeing of the inode.
+
+> +/*
+> + * File system stat.
+> + */
+> +static int zonefs_statfs(struct dentry *dentry, struct kstatfs *buf)
+> +{
+> +	struct super_block *sb = dentry->d_sb;
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> +	sector_t nr_sectors = sb->s_bdev->bd_part->nr_sects;
+> +	enum zonefs_ztype t;
+> +
+> +	buf->f_type = ZONEFS_MAGIC;
+> +	buf->f_bsize = dentry->d_sb->s_blocksize;
+> +	buf->f_namelen = ZONEFS_NAME_MAX;
+> +
+> +	buf->f_blocks = nr_sectors >> (sb->s_blocksize_bits - SECTOR_SHIFT);
+> +	buf->f_bfree = 0;
+> +	buf->f_bavail = 0;
+> +
+> +	buf->f_files = sbi->s_nr_zones[ZONEFS_ZTYPE_ALL] - 1;
+> +	for (t = ZONEFS_ZTYPE_ALL; t < ZONEFS_ZTYPE_MAX; t++) {
+> +		if (sbi->s_nr_zones[t])
+> +			buf->f_files++;
+> +	}
+> +	buf->f_ffree = 0;
+> +
+> +	/* buf->f_fsid = 0; uuid, see ext2 */
+
+This doesn't tell me anything useful. Does it mean "we should use
+the uuid like ext2" or something else? is it a "TODO:" item?
+
+> +	buf->f_namelen = ZONEFS_NAME_MAX;
+
+You've done this twice. :)
+
+> +static char *zgroups_name[ZONEFS_ZTYPE_MAX] = {
+> +	NULL,
+> +	"cnv",
+> +	"seq"
+> +};
+
+What's the reason for a NULL in the first entry?
+
+> +
+> +/*
+> + * Create a zone group and populate it with zone files.
+> + */
+> +static int zonefs_create_zgroup(struct super_block *sb, struct blk_zone *zones,
+> +				enum zonefs_ztype type)
+> +{
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> +	struct blk_zone *zone, *next, *end;
+> +	char name[ZONEFS_NAME_MAX];
+> +	unsigned int nr_files = 0;
+> +	struct dentry *dir;
+> +
+> +	/* If the group is empty, nothing to do */
+> +	if (!sbi->s_nr_zones[type])
+> +		return 0;
+> +
+> +	dir = zonefs_create_inode(sb->s_root, zgroups_name[type], NULL);
+> +	if (!dir)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * Note: The first zone contains the super block: skip it.
+> +	 */
+> +	end = zones + sbi->s_nr_zones[ZONEFS_ZTYPE_ALL];
+> +	for (zone = &zones[1]; zone < end; zone = next) {
+> +
+> +		next = zone + 1;
+> +		if (zonefs_zone_type(zone) != type)
+> +			continue;
+> +
+> +		/* Ignore offline zones */
+> +		if (zonefs_zone_offline(zone))
+> +			continue;
+> +
+> +		/*
+> +		 * For conventional zones, contiguous zones can be aggregated
+> +		 * together to form larger files.
+> +		 * Note that this overwrites the length of the first zone of
+> +		 * the set of contiguous zones aggregated together.
+> +		 * Only zones with the same condition can be agreggated so that
+> +		 * offline zones are excluded and readonly zones are aggregated
+> +		 * together into a read only file.
+> +		 */
+> +		if (type == ZONEFS_ZTYPE_CNV &&
+> +		    zonefs_has_feature(sbi, ZONEFS_F_AGRCNV)) {
+> +			for (; next < end; next++) {
+> +				if (zonefs_zone_type(next) != type ||
+> +				    next->cond != zone->cond)
+> +					break;
+> +				zone->len += next->len;
+> +			}
+> +		}
+> +
+> +		if (zonefs_has_feature(sbi, ZONEFS_F_STARTSECT_NAME))
+> +			/* Use zone start sector as file names */
+> +			snprintf(name, ZONEFS_NAME_MAX - 1, "%llu",
+> +				 zone->start);
+> +		else
+> +			/* Use file number as file names */
+> +			snprintf(name, ZONEFS_NAME_MAX - 1, "%u", nr_files);
+> +		nr_files++;
+> +
+> +		if (!zonefs_create_inode(dir, name, zone))
+> +			return -ENOMEM;
+
+I guess this means partial setup due to failure needs to be torn
+down by the kill_super() code?
+
+> +	}
+> +
+> +	zonefs_info(sb, "Zone group %d (%s), %u zones -> %u file%s\n",
+> +		    type, zgroups_name[type], sbi->s_nr_zones[type],
+> +		    nr_files, nr_files > 1 ? "s" : "");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct blk_zone *zonefs_get_zone_info(struct super_block *sb)
+> +{
+> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> +	struct block_device *bdev = sb->s_bdev;
+> +	sector_t nr_sectors = bdev->bd_part->nr_sects;
+> +	unsigned int i, n, nr_zones = 0;
+> +	struct blk_zone *zones, *zone;
+> +	sector_t sector = 0;
+> +	int ret;
+> +
+> +	sbi->s_blocksize_mask = sb->s_blocksize - 1;
+> +	sbi->s_nr_zones[ZONEFS_ZTYPE_ALL] = blkdev_nr_zones(bdev);
+> +	zones = kvcalloc(sbi->s_nr_zones[ZONEFS_ZTYPE_ALL],
+> +			 sizeof(struct blk_zone), GFP_KERNEL);
+> +	if (!zones)
+> +		return ERR_PTR(-ENOMEM);
+
+Hmmm. That's a big allocation. That might be several megabytes for a
+typical 16TB SMR drive, right? It might be worth adding a comment
+indicating just how large this is, because it's somewhat unusual in
+kernel space, even for temporary storage.
+
+> --- /dev/null
+> +++ b/fs/zonefs/zonefs.h
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Simple zone file system for zoned block devices.
+> + *
+> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
+> + */
+> +#ifndef __ZONEFS_H__
+> +#define __ZONEFS_H__
+> +
+> +#include <linux/fs.h>
+> +#include <linux/magic.h>
+> +
+> +/*
+> + * Maximum length of file names: this only needs to be large enough to fit
+> + * the zone group directory names and a decimal value of the start sector of
+> + * the zones for file names. 16 characterse is plenty.
+> + */
+> +#define ZONEFS_NAME_MAX		16
+> +
+> +/*
+> + * Zone types: ZONEFS_ZTYPE_SEQWRITE is used for all sequential zone types
+
+ZONEFS_ZTYPE_SEQ?
+
+> + * defined in linux/blkzoned.h, that is, BLK_ZONE_TYPE_SEQWRITE_REQ and
+> + * BLK_ZONE_TYPE_SEQWRITE_PREF.
+> + */
+> +enum zonefs_ztype {
+> +	ZONEFS_ZTYPE_ALL = 0,
+> +	ZONEFS_ZTYPE_CNV,
+> +	ZONEFS_ZTYPE_SEQ,
+> +	ZONEFS_ZTYPE_MAX,
+> +};
+
+What is ZONEFS_ZTYPE_ALL supposed to be used for?
+
+> +static inline bool zonefs_zone_offline(struct blk_zone *zone)
+> +{
+> +	return zone->cond == BLK_ZONE_COND_OFFLINE;
+> +}
+> +
+> +static inline bool zonefs_zone_readonly(struct blk_zone *zone)
+> +{
+> +	return zone->cond == BLK_ZONE_COND_READONLY;
+> +}
+
+These should be block layer helpers as the operate on blk_zone,
+not zonefs structures.
+
+> +
+> +/*
+> + * Inode private data.
+> + */
+> +struct zonefs_inode_info {
+> +	struct inode		i_vnode;
+> +	enum zonefs_ztype	i_ztype;
+> +	loff_t			i_addr;
+> +	loff_t			i_wpoffset;
+> +	loff_t			i_max_size;
+> +	struct rw_semaphore	i_mmap_sem;
+> +};
+> +
+> +static inline struct zonefs_inode_info *ZONEFS_I(struct inode *inode)
+> +{
+> +	return container_of(inode, struct zonefs_inode_info, i_vnode);
+> +}
+> +
+> +static inline bool zonefs_file_is_conv(struct inode *inode)
+> +{
+> +	return ZONEFS_I(inode)->i_ztype == ZONEFS_ZTYPE_CNV;
+> +}
+> +
+> +static inline bool zonefs_file_is_seq(struct inode *inode)
+> +{
+> +	return ZONEFS_I(inode)->i_ztype == ZONEFS_ZTYPE_SEQ;
+> +}
+> +
+> +/*
+> + * Address (byte offset) on disk of a file zone.
+> + */
+> +static inline loff_t zonefs_file_addr(struct inode *inode)
+> +{
+> +	return ZONEFS_I(inode)->i_addr;
+> +}
+
+so it's a disk address, but it's encoded in bytes rather than sectors
+so that makes it an offset. That's kinda confusing coming from a
+filesystem that makes a clear distinction between these two things.
+
+> +
+> +/*
+> + * Maximum possible size of a file (i.e. the zone size).
+> + */
+> +static inline loff_t zonefs_file_max_size(struct inode *inode)
+> +{
+> +	return ZONEFS_I(inode)->i_max_size;
+> +}
+> +
+> +/*
+> + * On-disk super block (block 0).
+> + */
+> +struct zonefs_super {
+> +
+> +	/* Magic number */
+> +	__le32		s_magic;		/*    4 */
+> +
+> +	/* Metadata version number */
+> +	__le32		s_version;		/*    8 */
+> +
+> +	/* Features */
+> +	__le64		s_features;		/*   16 */
+
+On-disk version numbers are kinda redundant when you have
+fine grained feature fields to indicate the on-disk layout...
+
+> +/*
+> + * Feature flags.
+> + */
+> +enum zonefs_features {
+> +	/*
+> +	 * Use a zone start sector value as file name.
+> +	 */
+> +	ZONEFS_F_STARTSECT_NAME,
+> +	/*
+> +	 * Aggregate contiguous conventional zones into a single file.
+> +	 */
+> +	ZONEFS_F_AGRCNV,
+> +	/*
+> +	 * Use super block specified UID for files instead of default.
+> +	 */
+> +	ZONEFS_F_UID,
+> +	/*
+> +	 * Use super block specified GID for files instead of default.
+> +	 */
+> +	ZONEFS_F_GID,
+> +	/*
+> +	 * Use super block specified file permissions instead of default 640.
+> +	 */
+> +	ZONEFS_F_PERM,
+> +};
+
+Are these the on-disk feature bit definitions, or just used in
+memory? Or both?
+
+Cheers,
+
+Dave.
 -- 
-2.22.0
-
+Dave Chinner
+david@fromorbit.com
