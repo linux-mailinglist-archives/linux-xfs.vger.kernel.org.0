@@ -2,59 +2,241 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4783D6A9A9
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jul 2019 15:31:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CBDC6AD23
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jul 2019 18:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733199AbfGPNau (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 16 Jul 2019 09:30:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44158 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbfGPNau (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:30:50 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6F40581F18
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Jul 2019 13:30:50 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 34D825C260
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Jul 2019 13:30:50 +0000 (UTC)
-Subject: Re: [PATCH 4/4] xfsprogs: don't use enum for buffer flags
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-References: <a40115ca-93e2-6dd2-7940-5911988f8fe4@redhat.com>
- <9a4275dd-3e33-1fbb-efd4-57db6f646bff@redhat.com>
- <20190716113805.jx4nch3aclzwjrrc@pegasus.maiolino.io>
-From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <f5b0d9da-ac2b-4337-4462-4cb4e6d1fab3@redhat.com>
-Date:   Tue, 16 Jul 2019 08:30:49 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190716113805.jx4nch3aclzwjrrc@pegasus.maiolino.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S2387920AbfGPQvZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 16 Jul 2019 12:51:25 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39966 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbfGPQvZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Jul 2019 12:51:25 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so10398117pla.7
+        for <linux-xfs@vger.kernel.org>; Tue, 16 Jul 2019 09:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H1MMtwRFdYpRw2iY5883a8MvJnSffRu+XIbwx55RYbA=;
+        b=nh65VsfT32/nfMrwIz6x2klAFGxrY5FOoyVAaO3Rz5FHfOpdOvyAkWGqPHqikvXZjZ
+         iPqh+7kDObcojPnRj2ZGeY0k1zSaoVJWm9ZVcZcYtNDxGOmTlQ+GftcWecJWs8Jp2X9E
+         rhDtgb9VIn1q9vIVDVA7IWgE+kFwoeG/IRLyoSX0Yhybh4HnjUmDvhnvbApz+TkkH/X9
+         eT9/H9SVHMcQCqoj9lcqTiAfs/uHvxo02ee8xe3HEc9zIkvdosS8AfE0Zxq1KTL4Ng4M
+         tEET6hpfo2QnJrKJl81um7KnIDSZE/0Dg9n53Wp96xnBMEiDyvET/ugNeKl5nPDMt/rD
+         0FNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H1MMtwRFdYpRw2iY5883a8MvJnSffRu+XIbwx55RYbA=;
+        b=KakoBTnvA1WlfMWp5GlLetNavlF/aByfS/+L2m+NfwhurFbAzfensKsoKPoyYLNVGT
+         GjCyGFrRt1cIwTuINXoy0dZiEg0X+lWH9tybYBLejAB0NAGiHoq6P4BtR4EqwZi/ZQhI
+         v1J/INAMuh4g2VIQPR4HMSRus19huHhxshVcRmFC+8meqalJmiO2BCyD7cgh6uurBk3p
+         Lowo8fq3LO5G269XuOqrqRylVzVNygS48QWHrZgKnvZKc4ykbYVFJnxcG4QgzRPYc+sH
+         5PwzN+JUl1XQKQpm1aAMANxnkfmJ3bkYEx1TD+Fzad+G4T6eWL7dLb+zK4ZkZw1Ml32A
+         ftlQ==
+X-Gm-Message-State: APjAAAUc+Hua7eHCGvDDVZKe3a5F+qcKcXH1wDMDcTVohM90URoai9Du
+        ytbp19t4Y5Afr5DqxdJ6Zuw=
+X-Google-Smtp-Source: APXvYqythLz8AQCH1UQA8Z/aR9yGXtb1L5pCTf0hfkkW5HTxE5QKbaiZ0JvYIYXqNIAXV4drVojjVg==
+X-Received: by 2002:a17:902:44f:: with SMTP id 73mr37395143ple.192.1563295884431;
+        Tue, 16 Jul 2019 09:51:24 -0700 (PDT)
+Received: from [192.168.1.136] (c-67-169-41-205.hsd1.ca.comcast.net. [67.169.41.205])
+        by smtp.gmail.com with ESMTPSA id r15sm22872819pfh.121.2019.07.16.09.51.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 09:51:23 -0700 (PDT)
+Message-ID: <1563295882.2741.49.camel@dubeyko.com>
+Subject: Re: [PATCH RFC] fs: New zonefs file system
+From:   Viacheslav Dubeyko <slava@dubeyko.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Ting Yao <d201577678@hust.edu.cn>
+Date:   Tue, 16 Jul 2019 09:51:22 -0700
+In-Reply-To: <BYAPR04MB58168662947D0573419EAD0FE7CF0@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190712030017.14321-1-damien.lemoal@wdc.com>
+         <1562951415.2741.18.camel@dubeyko.com>
+         <BYAPR04MB5816F3DE20A3C82B82192B94E7F20@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <1563209654.2741.39.camel@dubeyko.com>
+         <BYAPR04MB58168662947D0573419EAD0FE7CF0@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 16 Jul 2019 13:30:50 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/16/19 6:38 AM, Carlos Maiolino wrote:
->> +typedef unsigned int xfs_buf_flags_t;
-> I'd argue about the need of hiding an unsigned int into a typedef, which IMHO
-> doesn't look necessary here, but I also don't see why not if your main reason is
-> try to care about your sanity and bring xfsprogs code closer to kernel, other
-> than that, the patch is fine and you can add my review tag with or without the
-> typedef.
+On Mon, 2019-07-15 at 23:53 +0000, Damien Le Moal wrote:
+> On 2019/07/16 1:54, Viacheslav Dubeyko wrote:
+> [...]
+> > 
+> > > 
+> > > > 
+> > > > Do you have in mind some special use-case?
+> > > As the commit message mentions, zonefs is not a traditional file
+> > > system by any
+> > > mean and much closer to a raw block device access interface than
+> > > anything else.
+> > > This is the entire point of this exercise: allow replacing the
+> > > raw
+> > > block device
+> > > accesses with the easier to use file system API. Raw block device
+> > > access is also
+> > > file API so one could argue that this is nonsense. What I mean
+> > > here
+> > > is that by
+> > > abstracting zones with files, the user does not need to do the
+> > > zone
+> > > configuration discovery with ioctl(BLKREPORTZONES), does not need
+> > > to
+> > > do explicit
+> > > zone resets with ioctl(BLKRESETZONE), does not have to "start
+> > > from
+> > > one sector
+> > > and write sequentially from there" management for write() calls
+> > > (i.e.
+> > > seeks),
+> > > etc. This is all replaced with the file abstraction: directory
+> > > entry
+> > > list
+> > > replace zone information, truncate() replace zone reset, file
+> > > current
+> > > position
+> > > replaces the application zone write pointer management.
+> > > 
+> > > This simplifies implementing support of applications for zoned
+> > > block
+> > > devices,
+> > > but only in cases where said applications:
+> > > 1) Operate with large files
+> > > 2) have no or only minimal need for random writes
+> > > 
+> > > A perfect match for this as mentioned in the commit message are
+> > > LSM-
+> > > tree based
+> > > applications such as LevelDB or RocksDB. Other examples, related,
+> > > include
+> > > Bluestore distributed object store which uses RocksDB but still
+> > > has a
+> > > bluefs
+> > > layer that could be replaced with zonefs.
+> > > 
+> > > As an illustration of this, Ting Yao of Huazhong University of
+> > > Science and
+> > > Technology (China) and her team modified LevelDB to work with
+> > > zonefs.
+> > > The early
+> > > prototype code is on github here: https://github.com/PDS-Lab/Gear
+> > > DB/t
+> > > ree/zonefs
+> > > 
+> > > LSM-Tree applications typically operate on large files, in the
+> > > same
+> > > range as
+> > > zoned block device zone size (e.g. 256 MB or so). While this is
+> > > generally a
+> > > parameter that can be changed, the use of zonefs and zoned block
+> > > device forces
+> > > using the zone size as the SSTable file maximum size. This can
+> > > have
+> > > an impact on
+> > > the DB performance depending on the device type, but that is
+> > > another
+> > > discussion.
+> > > The point here is the code simplifications that zonefs allows.
+> > > 
+> > > For more general purpose use cases (small files, lots of random
+> > > modifications),
+> > > we already have the dm-zoned device mapper and f2fs support and
+> > > we
+> > > are also
+> > > currently working on btrfs support. These solutions are in my
+> > > opinion
+> > > more
+> > > appropriate than zonefs to address the points you raised.
+> > > 
+> > Sounds pretty reasonable. But I still have two worries.
+> > 
+> > First of all, even modest file system could contain about 100K
+> > files on
+> > a volume. So, if our zone is 256 MB then we need in 24 TB storage
+> > device for 100K files. Even if we consider some special use-case of
+> > database, for example, then it's pretty easy to imagine the
+> > creation a
+> > lot of files. So, are we ready to provide such huge storage devices
+> > (especially, for the case of SSDs)?
+> The small file use case you are describing is not zonefs target use
+> case. It
+> does not make any sense to discuss small files in the context of
+> zonefs. If
+> small file is the use case needed for an application, then a "normal"
+> file
+> system should be use such as f2fs or btrfs (zoned block device
+> support is being
+> worked on, see patches posted on btrfs list).
 > 
-> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-> 
-> Cheers
+> As mentioned previously, zonefs goal is to represent zones of a zoned
+> block
+> device with files, thus providing a simple abstraction one file ==
+> one zone and
+> simplifying application implementation. And this means that the only
+> sensible
+> use case for zonefs is applications using large container like files.
+> LSM-tree
+> based applications being a very good match in this respect.
 > 
 
-The point is to match the kernel code, warts and all.
 
-thanks,
--Eric
+I am talking not about file size but about number of files on the
+volume here. I meant that file system could easily contain about
+100,000 files on the volume. So, if every file uses 256 MB zone then
+100,000 files need in 24 TB volume.
+
+
+> > 
+> > Secondly, the allocation scheme is too simplified for my taste and
+> > it
+> > could create a significant fragmentation of a volume. Again, 256 MB
+> > is
+> > pretty big size. So, I assume that, mostly, it will be allocated
+> > only
+> > one zone at first for a created file. If file grows then it means
+> > that
+> > it will need to allocate the two contigous zones and to move the
+> > file's
+> > content. Finally, it sounds for me that it is possible to create a
+> > lot
+> > of holes and to achieve the volume state when it exists a lot of
+> > free
+> > space but files will be unable to grow and it will be impossible to
+> > add
+> > a new data on the volume. Have you made an estimation of the
+> > suggested
+> > allocation scheme?
+> What do you mean allocation scheme ? There is none ! one file == one
+> zone and
+> all files are fully provisioned and allocated on mount. zonefs does
+> not allow
+> the creation of files and there is no dynamic "block allocation".
+> Again, please
+> do not consider zonefs as a normal file system. It is closer to a raw
+> block
+> device interface than to a fully featured file system.
+> 
+
+OK. It sounds that a file cannot grow beyond the allocated number of
+contigous zone(s) during the mount operation. Am I correct? But if a
+file is needed to be resized what can be done in such case? Should it
+need to re-mount the file system?
+
+By the way, does this approach provides the way to use the device's
+internal parallelism? What should anybody take into account for
+exploiting the device's internal parallelism?
+
+Thanks,
+Viacheslav Dubeyko.
+
