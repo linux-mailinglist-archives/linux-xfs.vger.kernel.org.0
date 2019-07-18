@@ -2,84 +2,84 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9BCF6CD66
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jul 2019 13:31:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4356CE1F
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jul 2019 14:33:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfGRLbM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Jul 2019 07:31:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41327 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRLbM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 07:31:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so46667114ioj.8
-        for <linux-xfs@vger.kernel.org>; Thu, 18 Jul 2019 04:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=1XPGx+u+p8F8GMnToo8nPmZioRN87tGXm60IuHjPK9Q=;
-        b=DgJ7J/TABcW3IDE3KnJmr8LJuMw+mK/2S1w+cndYbvFyLJxaHQ0g2keEQp52bnMa7J
-         etlLMuKgip0h2yURObSjAO/6sgG1ByUJasT4fkzZBXpcd51sKYKpc3R5gT3ih5tYVPb3
-         DasXjFAWsm/rDX0oHOo67WrkcbO80jNSQtJm6Ijg+IkJb2UAD047G7zUlMRWjFzpbMX9
-         ipMdASWXBb/gNrz0IFqkC/bKL4jGdtBGu8OaRCSFPBEuEAacHYQlRZy/yXs6pwHcc+mU
-         h5961ztoQv5loTZ/a+bMZfOAg1IZ0MB7GsnAjp1frKGxWhreLACYQZ8Zh/iU5iaEqmGD
-         XmoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=1XPGx+u+p8F8GMnToo8nPmZioRN87tGXm60IuHjPK9Q=;
-        b=l1xt0cmcvVqwpk9x4kMBoqSFU973F3iRqCZ5rMKTRAie5vvJbRV8Noot/Q/+MNcdib
-         PwYWt0wUdAIeni3kYZvFRdYOBgv5u9wvkMJVl3BaDaDZDxsy3DXnSX0M4yJ3zLVeIm9c
-         83MFVaofpda0+i9UgZScXj8UPNPYUcbm1q7MX/L9NgXO7tbMkws/rPZZfPtqWy9eC9sB
-         yV9ZY0H1hE51faTiUejh3EUAiu+3TKsLARIOOW+UD42I6BCydHE7IHY5YPrL33+CuMQc
-         lcyOS2tLfjz/i+O34+znbtsj723wLoe5HbInRLbRPukpf0GSAQ/BJnlM7Gl+kommtFaR
-         3hWA==
-X-Gm-Message-State: APjAAAVnz45K61rA7yAjiurDha/qkWoR5ITB1Ob/qOMyxcifzTpCAH+s
-        U2qxZoWEz89vZvwhYkdOuaKlEl6jqKXo/cmy0EE=
-X-Google-Smtp-Source: APXvYqwJw77aPGGzvqLyID0Q1JIUDiiPSNzXUOwNbIhU++if52PifPVT/7Yvxtv1jFDVF/aWfaX+pu+X1bVyy/4ECjE=
-X-Received: by 2002:a6b:1ca:: with SMTP id 193mr44284603iob.264.1563449471880;
- Thu, 18 Jul 2019 04:31:11 -0700 (PDT)
+        id S1727692AbfGRMcG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Jul 2019 08:32:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48336 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRMcG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 08:32:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U9ARm0LHzsfKA/fjSbZXF/b4bcHB5wDhnFfsnrw0fBI=; b=cp/SpQku2srKdQX7oy4RTXMkH
+        NfvQMoUrlVtu0cDrJFNXs5DJ52T2bzDEutYStQGvlfscwZD0J94qXqUe4OQeIeuTsEc+lfg+U5ohr
+        ErJukIV2Lb3nSWlbeeK2svTXTnvclzv3JWdMyap6LNnDpP3mB+pSjADlbJ45zIjCwH2ItJQc8WHQh
+        Etn8IB+NtK6+W/TM28fweYIHokPzrtLbWJzovnNdhk65ndrQNTyLWjd2znTyddJzVkqYTQti9Y7pu
+        vMLlIAy0m9Yj7d5AIl9MHGiNcvvDwa1+c9cCYYmAdhYpbvR2ZBhhf6q7Yz8PnEiG4OkUi9H4Ay0b9
+        gB+Nc9GRA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1ho5Zj-0008QN-5Q; Thu, 18 Jul 2019 12:31:55 +0000
+Date:   Thu, 18 Jul 2019 05:31:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gao Xiang <gaoxiang25@huawei.com>, chao@kernel.org
+Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
+ case
+Message-ID: <20190718123155.GA21252@infradead.org>
+References: <20190703075502.79782-1-yuchao0@huawei.com>
+ <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
+ <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
+ <20190711122831.3970-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Reply-To: hololambert@protonmail.com
-Received: by 2002:a92:1801:0:0:0:0:0 with HTTP; Thu, 18 Jul 2019 04:31:11
- -0700 (PDT)
-From:   Holo Lambert <hololambert@gmail.com>
-Date:   Thu, 18 Jul 2019 04:31:11 -0700
-X-Google-Sender-Auth: Oe_K_pEvGaT17oqHi2CYDWHku6E
-Message-ID: <CAA=iW4xRzm8tweV+9PzNwC-D8Z1NcBo2qAhTq0bS3dhmDrHjjQ@mail.gmail.com>
-Subject: Confidential and urgent
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711122831.3970-1-agruenba@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear Friend,
+> +iomap_to_bh(struct inode *inode, struct page *page, sector_t block,
+> +		struct buffer_head *bh, struct iomap *iomap)
+>  {
+>  	loff_t offset = block << inode->i_blkbits;
+>  
+> @@ -1924,6 +1924,10 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
+>  				inode->i_blkbits;
+>  		set_buffer_mapped(bh);
+>  		break;
+> +	case IOMAP_INLINE:
+> +		__iomap_read_inline_data(inode, page, iomap);
+> +		set_buffer_uptodate(bh);
+> +		break;
 
-I am Mr. Holo Lambert, a Lawyer by profession. I am the personal
-attorney to Engr. Zhang, a national of your country, who used to work
-with Chevron Oil Exploration Company in Angola, herein after shall be
-referred to as my client.
+I have to say I hate pushing this into the legacy buffer_head code.
+My hope was that we could get rid of this code rather than adding to it.
 
-On the September 27, 2016, my client was involved in a helicopter
-Crash, and died en route to the company=E2=80=99s Tombua-Landana facility i=
-n
-Angola.
+The other issue is that this now calls iomap functions from buffer.c,
+which I'd also really avoid.
 
-Since then I have made several inquiries to your embassy to locate any
-of my clients extended relatives over there. This has proved
-unsuccessful. I came to know about you through an inquiry I was making
-on the internet, and I found out you shared the same surname with my
-client, which is why I have decided to contact you, in order to assist
-in repatriating his funds and property left behind my office desk
-before they get confiscated or declared serviceable by the bank.
+That being said until the tail packing fs (erofs?) actually uses
+buffer_heads we should not need this hunk, and I don't think erofs
+should have any reason to use buffer_heads.
 
-Please get in touch with me if you wish to collaborate with me.
-(hololambert@protonmail.com)
+> +#define offset_in_block(offset, inode) \
+> +	((unsigned long)(offset) & (i_blocksize(inode) - 1))
 
-Best regards,
+Make this an inline function, please.  I think we also have a few
+other places that could make use of this helper, maybe it might
+even go into fs.h.
 
-Mr. Holo.
+Otherwise this looks sensible to me.
