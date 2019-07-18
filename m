@@ -2,54 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6AA86CE94
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jul 2019 15:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47BE06CED5
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jul 2019 15:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfGRNIj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Jul 2019 09:08:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:59504 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbfGRNIj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:08:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 26DF068BFE; Thu, 18 Jul 2019 15:08:36 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 15:08:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
+        id S1727623AbfGRN1z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Jul 2019 09:27:55 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726513AbfGRN1z (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:27:55 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E362C92388982DDB1E24;
+        Thu, 18 Jul 2019 21:27:51 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 18 Jul
+ 2019 21:27:42 +0800
+Subject: Re: [RFC PATCH] iomap: generalize IOMAP_INLINE to cover tail-packing
+ case
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Chao Yu <yuchao0@huawei.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
-Message-ID: <20190718130835.GA28520@lst.de>
-References: <20190718125509.775525-1-arnd@arndb.de> <20190718125703.GA28332@lst.de> <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <chao@kernel.org>
+References: <20190703075502.79782-1-yuchao0@huawei.com>
+ <CAHpGcM+s77hKMXo=66nWNF7YKa3qhLY9bZrdb4-Lkspyg2CCDw@mail.gmail.com>
+ <39944e50-5888-f900-1954-91be2b12ea5b@huawei.com>
+ <20190711122831.3970-1-agruenba@redhat.com>
+ <20190718123155.GA21252@infradead.org>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <cb859e68-1f7f-48a6-593b-4047963086ba@huawei.com>
+Date:   Thu, 18 Jul 2019 21:27:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190718123155.GA21252@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
-> The inclusion comes from the recently added header check in commit
-> c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
-> 
-> This just tries to include every header by itself to see if there are build
-> failures from missing indirect includes. We probably don't want to
-> add an exception for iomap.h there.
 
-I very much disagree with that check.  We don't need to make every
-header compilable with a setup where it should not be included.
 
-That being said if you feel this is worth fixing I'd rather define
-SECTOR_SIZE/SECTOR_SHIFT unconditionally.
+On 2019/7/18 20:31, Christoph Hellwig wrote:
+> That being said until the tail packing fs (erofs?) actually uses
+> buffer_heads we should not need this hunk, and I don't think erofs
+> should have any reason to use buffer_heads.
+
+Yes, erofs will not use buffer_head to support sub-page blocksize
+in the long term. too heavy and no need...
+
+Thanks,
+Gao Xiang
