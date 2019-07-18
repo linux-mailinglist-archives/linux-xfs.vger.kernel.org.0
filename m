@@ -2,175 +2,150 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1CC6D704
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 01:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B7B06D710
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 01:07:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391695AbfGRXDB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Jul 2019 19:03:01 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:11611 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbfGRXDB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 19:03:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1563490980; x=1595026980;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=ock0+kbA/AdU6ryh9QeT0HyVvIfkPCXilFpp7F+Vzog=;
-  b=KEk2qk4KvN/H6fXjO/EcESdqDHOG7Ri2S7BHBL40zPRAnZp30w9jdCAB
-   1ZbvFsA+QPh2oJl6cCrYzM6nzOuFR3xxoY2mazOGJG7dZWBJ0zuBACYoB
-   Grzrd2NmiZVMdRKXi3wpGedoYR9XFOX2iQzw9CxO2emFg5tHr5hqKqe8w
-   l7lfBmz3zq5DMtCziSmIuyZ/JtmcpS9zCdr5X18YISca2Qlf5UmuR1Ibv
-   7bNexiPw+V0xSsqKhSR/0rTq5DcXNICgZhavOzaW6VZ8tcHQW+z8VC2Ug
-   HRYsPumSa/llUlsq8P+s+XRa3KSjP318OOO48n0LtccPPS80EMo55jkXJ
-   w==;
-IronPort-SDR: AkRNWGFeLOTIfPS/VZgVhsnsNxsTwB4K4CuIElViHdaPmHxcxfACq4F3Y2THUzXbpLGaAyLT2q
- OhFCDHERYmjflPw825eyMUn3nfGVPiNz1wHAqy/XbTfqUL2KjRI+xpn6wCVeTJdB/CpBoawe0n
- srnAIl82eXNuqm71cj8avyhxug0wuvM8eFv9OqJxfHTuePrZAVc3N/R43UTcSiSLOr4gT0J8Cv
- iZdAN5gPEx+aRHBgIYzs6FOvUchPJbn3nZBGMkXWVllVTmfmSwFkOa3BZROHdnlP9oxV/E91Wi
- uvk=
-X-IronPort-AV: E=Sophos;i="5.64,279,1559491200"; 
-   d="scan'208";a="219875140"
-Received: from mail-by2nam03lp2056.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.56])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jul 2019 07:02:44 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EEtzcHLbAlxLg0Z9zv/+629lsao7v6Fi3Js1SevpvTjDjWCUQrpwU8R3Zj5O7WjV6h0iW+MUYOj4FjsRUuXGnyJi0X2mFHRyI6sYVnDSb4yjstE4/E1Q/O/mbpYZeMV3EDJT7VN/ZyT3w9ec4SDZ/M5EFt0tb+Xg2cVry4RDDd61IinPZYG3TrY5git5rsXXvUne9l+uSR8STCvIHQl9eXjYvHtgMPiL+wI3zQ9dWw4sTeYsU7AgIZ/tahw/prCC9a0TChdmzMh7hYwGFPft4MlVl2pFCqMxK9tlK27+j7M3uh5GkJbi3dt+iumyuRML22QD0bpjcE3wZcy+ozlPCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m2jdTyYxz5U3ISxCWcKbN5anLdLDjOGm9Pqo9/1OGSM=;
- b=DPELpb1yS9cpBJxBqC4cVI3bm2bWFmJ1qgrRqcE2aHV6ilp6q2ODVq9naRlVLoLChd/PD2OjwufQWdffPAvcMEPzALJ06fqTKQjQ4lyfPSpYahYhXUoiGXJDdeByPqLxwSgXG65A1d7iwcqvjyvK1i2D8Dmbn4wv69d6tBSuiQ1/aJHfiSoirmEcFBRj2WqRhjFb/wE8+H0qc647+gsGvnm0QOxaA9O9ZPjG4DibgYFC4dnRxReod53nDSTztg9sh8jiPkWcNJsKeFtu9MvTbQMTDh80zCGulIJuND/6P8icjuPEIGcM4t1YrXreq870C4VNyHd+kIogly0pw0ChNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m2jdTyYxz5U3ISxCWcKbN5anLdLDjOGm9Pqo9/1OGSM=;
- b=i717TmK3N4u6jk5AyKfT2tokQnV13upMsvtYtxU/msVjRvxKtQBZsLiXULvldgXZwOGK7ussRXMcEkm2ETyNnPpauRyg4jLQxunYjvV9RmWWV5er+tpVcsgULCfwAEWfeEUWAjxncpmaHpFfNebFzOsOFYrhh+S4KbzQ1kAgv7w=
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
- BYAPR04MB6038.namprd04.prod.outlook.com (20.178.233.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.12; Thu, 18 Jul 2019 23:02:43 +0000
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::65a9:db0a:646d:eb1e]) by BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::65a9:db0a:646d:eb1e%6]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
- 23:02:43 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Jeff Moyer <jmoyer@redhat.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Hannes Reinecke <hare@suse.de>,
-        Ting Yao <d201577678@hust.edu.cn>
-Subject: Re: [PATCH RFC] fs: New zonefs file system
-Thread-Topic: [PATCH RFC] fs: New zonefs file system
-Thread-Index: AQHVOF31k+9+55ZdEkmKABdH1mzidg==
-Date:   Thu, 18 Jul 2019 23:02:43 +0000
-Message-ID: <BYAPR04MB5816B59932372E2D97330308E7C80@BYAPR04MB5816.namprd04.prod.outlook.com>
-References: <20190712030017.14321-1-damien.lemoal@wdc.com>
- <x49zhlbe8li.fsf@segfault.boston.devel.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Damien.LeMoal@wdc.com; 
-x-originating-ip: [60.117.181.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 08a2ac96-dc73-494f-9375-08d70bd40abd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB6038;
-x-ms-traffictypediagnostic: BYAPR04MB6038:
-x-microsoft-antispam-prvs: <BYAPR04MB60386885888F57CB8AE548E5E7C80@BYAPR04MB6038.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(6436002)(2906002)(478600001)(6246003)(71190400001)(71200400001)(52536014)(66946007)(74316002)(8676002)(66476007)(25786009)(81166006)(81156014)(76116006)(91956017)(86362001)(14454004)(66446008)(64756008)(66556008)(8936002)(256004)(14444005)(4326008)(3846002)(6116002)(53546011)(26005)(54906003)(316002)(9686003)(99286004)(446003)(33656002)(68736007)(53936002)(186003)(229853002)(102836004)(486006)(6506007)(7696005)(5660300002)(7736002)(6916009)(66066001)(476003)(55016002)(305945005)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB6038;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: drzx3/6DWkgzds8rswmkSSl4/j3iUT0XLZ48+PfkbtDm6nai0e1IU2gV/oGfvIJl2aB6ZVOaNFBQfcYguOlptyToi/1Cw8CxvZbil0/7h+axokPAJejLNO4PnLaqKZdLOb6EEedo6g8NBnmmP5Yi0iHvg3qxtgRMnwNTlFNeAWi1Fm2B/Hh94q9BSwagh2TCl6o4jLElumfkgU+esc9LcB/oHxMsE+yUBS5KFP1DNeAmxHL8h7FcAJ14oH16vtcISyP+Y0NCdYNBjUw6C7TbxIM/cJ1kXAPuUPB+aFeaG7ydZ0jDuHwPneYtvEiiUr5LnOF9v7+qTsYOT79SORWS2cuL8i9POn+Gn1pzbOSaljeLYp+5wSYN8oki6MOiQUk6nOdIvFM6eVfz8Jt4CkzplHEVyMvCKFLrX07/9gtS2I4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2391616AbfGRXG0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Jul 2019 19:06:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42985 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbfGRXGZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 19:06:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so13276011pff.9;
+        Thu, 18 Jul 2019 16:06:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CDu5Kn4QFjEkN6S2Xi1spwhgFAxF5TT+4s/SdRvC5So=;
+        b=d+kMhlchlK+IwnmxF+LJD6miI6/PJ0pybbjjWICwRUILKsyu7RtojUd0wkxkxMy8WK
+         j6cPU1kB4wCtRjLl+DBzK/HPANbychfiaNdgu+kDPrjHUeA5jdqzmAJ//YT0fseOC5HL
+         5u+ZjCaET3giS5fmnZ4Ewv8zeX4pkcjbcbtjwsq11Xs0bO2LTCMsPvOIy1OXQlO8ZGQC
+         LJnv6vn1T9DGSOd4VLOJIr5BLBeyWBY5VBLDin+bB63EE7qW5ciKShMmE/ZLgRPNGQUC
+         ruhbubEg0gPNa1nyoK3U8TC/aNhmHsXFaf/DKEBT7Mv+78WO+OgiYBwP6DJS6ceaJU7N
+         WEUw==
+X-Gm-Message-State: APjAAAVUZ2MfkvVMR9Kt+itOeF2JAFZM+9Ieaf+cfMC2wk2UZAvh8Yre
+        /dNoLwPo7BZ8/SFIojgSCTs=
+X-Google-Smtp-Source: APXvYqzTE+H408VupO91D8wV4QPH7oeH5wb749VlasrHjqp6Jfh7DA1tBWVa9i20GbITeiMa4nm8dA==
+X-Received: by 2002:a17:90a:c20e:: with SMTP id e14mr11177928pjt.0.1563491184681;
+        Thu, 18 Jul 2019 16:06:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g62sm27651586pje.11.2019.07.18.16.06.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 16:06:19 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 176CB403B8; Thu, 18 Jul 2019 23:06:19 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
+        Alexander.Levin@microsoft.com
+Cc:     stable@vger.kernel.org, amir73il@gmail.com, hch@infradead.org,
+        zlang@redhat.com, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 0/9] xfs: stable fixes for v4.19.y - circa ~ v4.19.58
+Date:   Thu, 18 Jul 2019 23:06:08 +0000
+Message-Id: <20190718230617.7439-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08a2ac96-dc73-494f-9375-08d70bd40abd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 23:02:43.5983
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6038
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Jeff,=0A=
-=0A=
-On 2019/07/18 23:11, Jeff Moyer wrote:=0A=
-> Hi, Damien,=0A=
-> =0A=
-> Did you consider creating a shared library?  I bet that would also=0A=
-> ease application adoption for the use cases you're interested in, and=0A=
-> would have similar performance.=0A=
-> =0A=
-> -Jeff=0A=
-=0A=
-Yes, it would, but to a lesser extent since system calls would need to be=
-=0A=
-replaced with library calls. Earlier work on LevelDB by Ting used the libra=
-ry=0A=
-approach with libzbc, not quite a "libzonefs" but close enough. Working wit=
-h=0A=
-LevelDB code gave me the idea for zonefs. Compared to a library, the added=
-=0A=
-benefits are that specific language bindings are not a problem and further=
-=0A=
-simplify the code changes needed to support zoned block devices. In the cas=
-e of=0A=
-LevelDB for instance, C++ is used and file accesses are using streams, whic=
-h=0A=
-makes using a library a little difficult, and necessitates more changes jus=
-t for=0A=
-the internal application API itself. The needed changes spread beyond the d=
-evice=0A=
-access API.=0A=
-=0A=
-This is I think the main advantage of this simple in-kernel FS over a libra=
-ry:=0A=
-the developer can focus on zone block device specific needs (write sequenti=
-al=0A=
-pattern and garbage collection) and forget about the device access parts as=
- the=0A=
-standard system calls API can be used.=0A=
-=0A=
-Another approach I considered is using FUSE, but went for a regular (albeit=
-=0A=
-simple) in-kernel approach due to performance concerns. While any differenc=
-e in=0A=
-performance for SMR HDDs would probably not be noticeable, performance woul=
-d=0A=
-likely be lower for upcoming NVMe zonenamespace devices compared to the=0A=
-in-kernel approach.=0A=
-=0A=
-But granted, most of the arguments I can put forward for an in-kernel FS=0A=
-solution vs a user shared library solution are mostly subjective. I think t=
-hough=0A=
-that having support directly provided by the kernel brings zoned block devi=
-ces=0A=
-into the "mainstream storage options" rather than having them perceived as=
-=0A=
-fringe solutions that need additional libraries to work correctly. Zoned bl=
-ock=0A=
-devices are not going away and may in fact become more mainstream as=0A=
-implementing higher capacities more and more depends on the sequential writ=
-e=0A=
-interface.=0A=
-=0A=
-Best regards.=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+"Oyez Oyez..." its time for a stable update of fixes for XFS. 4 out of the
+9 fixes here were recommended by Amir, and tested by both Amir and Sasha.
+I've found a few other fixes, and have tested all these changes with
+fstests against the following configurations in fstests sections as per
+oscheck [0] and found no regressions in comparsin to v4.19.58 and by
+running the full set of tests 3 times completely:
+
+  * xfs
+  * xfs_nocrc
+  * xfs_nocrc_512
+  * xfs_reflink
+  * xfs_reflink_1024
+  * xfs_logdev
+  * xfs_realtimedev
+
+Known issues are listed on the expunges files, but its no different than
+the current baseline.
+
+Worth noting is a now known generic/388 crash on xfs_nocrc, xfs_reflink,
+and what may be a new section we should consider to track:
+"xfs_reflink_normapbt" with the following resulting filesystem:
+
+# xfs_info /dev/loop5
+meta-data=/dev/loop5             isize=512    agcount=4, agsize=1310720 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1
+data     =                       bsize=4096   blocks=5242880, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+Do we want to create a baseline and track this configuration for stable
+as well?
+
+There is a stable bug tracking this, kz#204223 [1], and a respective bug
+also present on upstream via kz#204049 [2] which Zorro reported. But,
+again, nothing changes from the baseline.
+
+I'd appreciate further reviews from the patches.
+
+I have some other fixes in mind as well, but I'd rather not delay this
+set and think this is a first good batch.
+
+This also goes out as the first set of stable fixes using oscheck's
+new devops infrastructure built on ansible / vagrant / terraform [3].
+For this release I've used vagrant with KVM, perhaps the next one
+I'll try terraform on whatever cloud solution someone is willing
+to let me use.
+
+You can also find these changes on my 20190718-linux-xfs-4.19.y-v1
+branch on kernel.org [4].
+
+Lemme know if you see any issues or have any questions.
+
+[0] https://gitlab.com/mcgrof/oscheck/blob/master/fstests-configs/xfs.config
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=204223
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=204049
+[3] https://gitlab.com/mcgrof/kdevops
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-stable.git/log/?h=20190718-linux-xfs-4.19.y-v1
+
+Brian Foster (1):
+  xfs: serialize unaligned dio writes against all other dio writes
+
+Darrick J. Wong (6):
+  xfs: fix pagecache truncation prior to reflink
+  xfs: don't overflow xattr listent buffer
+  xfs: rename m_inotbt_nores to m_finobt_nores
+  xfs: don't ever put nlink > 0 inodes on the unlinked list
+  xfs: reserve blocks for ifree transaction during log recovery
+  xfs: abort unaligned nowait directio early
+
+Dave Chinner (1):
+  xfs: flush removing page cache in xfs_reflink_remap_prep
+
+Luis R. Rodriguez (1):
+  xfs: fix reporting supported extra file attributes for statx()
+
+ fs/xfs/libxfs/xfs_ag_resv.c      |  2 +-
+ fs/xfs/libxfs/xfs_ialloc_btree.c |  4 ++--
+ fs/xfs/xfs_attr_list.c           |  1 +
+ fs/xfs/xfs_bmap_util.c           |  2 +-
+ fs/xfs/xfs_bmap_util.h           |  2 ++
+ fs/xfs/xfs_file.c                | 27 +++++++++++++++++----------
+ fs/xfs/xfs_fsops.c               |  1 +
+ fs/xfs/xfs_inode.c               | 18 +++++++-----------
+ fs/xfs/xfs_iops.c                | 21 +++++++++++++++++++--
+ fs/xfs/xfs_mount.h               |  2 +-
+ fs/xfs/xfs_reflink.c             | 16 +++++++++++++---
+ fs/xfs/xfs_super.c               |  7 +++++++
+ fs/xfs/xfs_xattr.c               |  3 +++
+ 13 files changed, 75 insertions(+), 31 deletions(-)
+
+-- 
+2.20.1
+
