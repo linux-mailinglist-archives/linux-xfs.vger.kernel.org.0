@@ -2,72 +2,75 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 099AE6D956
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 05:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97B396E0CA
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 07:59:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfGSD0l convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 18 Jul 2019 23:26:41 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:59482 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726055AbfGSD0l (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 23:26:41 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 39370288C6
-        for <linux-xfs@vger.kernel.org>; Fri, 19 Jul 2019 03:26:40 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id 27A6A288D3; Fri, 19 Jul 2019 03:26:40 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=ham version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 204223] [fstests generic/388 on xfs]: 4.19.58 xfs_nocrc /
- xfs_reflink null pointer dereference at xfs_trans_brelse+0x21
-Date:   Fri, 19 Jul 2019 03:26:39 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mcgrof@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: mcgrof@kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204223-201763-BdHEDLNNmz@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204223-201763@https.bugzilla.kernel.org/>
-References: <bug-204223-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1727248AbfGSF7B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jul 2019 01:59:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58036 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfGSF7B (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 01:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YL6bF1lCV/u18iEbHKkcttQ1IqtcYX9eDlzmkJjoLf8=; b=VEFK2gUsNM+QPdwmELguxBVep
+        WqoDbVJr+dbNt4KUNYZFrDjz7bvGqZnTzzQakjWRLKYV4mXkhWMoz1my1EXTN7EnEXJvWfJ29Ocmb
+        IDAeybLfaNDkw+qE4+fNY2cyWGsHQEV+NgKZC78+b1qCRO9P8dxwlDSYV+ZrA80fSJ8ubHXA16uuw
+        NeXxVy4ZueHplQU9L9UZWNLzWTvdTim584aojeOBarFdQaJ45l0NnynXyiK3iQKfzqlUn8t4xrdyM
+        bcDM5OfAb6bvTkudvzKiaevy4dJf+yapgbveIWtB5RsXYTaOeSFuGcGbPsz05g9ApeKSwc3acdcO3
+        9jIh/s61w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoLux-0007mr-2e; Fri, 19 Jul 2019 05:58:55 +0000
+Date:   Thu, 18 Jul 2019 22:58:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
+Message-ID: <20190719055855.GB29082@infradead.org>
+References: <20190718125509.775525-1-arnd@arndb.de>
+ <20190718125703.GA28332@lst.de>
+ <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+ <20190718130835.GA28520@lst.de>
+ <20190718142525.GE7116@magnolia>
+ <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204223
+On Fri, Jul 19, 2019 at 11:19:15AM +0900, Masahiro Yamada wrote:
+> I started to think
+> compiling all headers is more painful than useful.
+> 
+> 
+> MW is closing, so I am thinking of disabling it for now
+> to take time to re-think.
 
---- Comment #5 from Luis Chamberlain (mcgrof@kernel.org) ---
-(In reply to Luis Chamberlain from comment #0)
-> [129135.499383] BUG: unable to handle kernel NULL pointer dereference at
+For now this seems like the best idea.  In the long run maybe we can
+limit the tests to certain configs, e.g.
 
-<-- snip -->
 
-> [129135.507540] RIP: 0010:xfs_trans_brelse+0x21/0xd0 [xfs]
+headers-$(CONFIG_IOMAP)		+= iomap.h
 
-Reproduced with the "xfs_reflink_normapbt" configuration and can confirm an
-immediate panic on vanilla 4.19.20 with the same trace as above.
+in include/linux/Kbuild
 
--- 
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.
+and base it off that?
