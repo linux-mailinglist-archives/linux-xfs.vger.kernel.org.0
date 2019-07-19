@@ -2,71 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78B546EB28
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 21:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D8D66EB3C
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 21:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfGSTh4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 19 Jul 2019 15:37:56 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:36396 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728613AbfGSThz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 15:37:55 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 1A9ED285D6
-        for <linux-xfs@vger.kernel.org>; Fri, 19 Jul 2019 19:37:55 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id 0F52328759; Fri, 19 Jul 2019 19:37:55 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 204049] [xfstests generic/388]: XFS: Assertion failed:
- ip->i_d.di_format != XFS_DINODE_FMT_BTREE || ip->i_d.di_nextents >
- XFS_IFORK_MAXEXT(ip, XFS_DATA_FORK), file: fs/xfs/xfs_inode.c, line: 3646
-Date:   Fri, 19 Jul 2019 19:37:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mcgrof@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204049-201763-DY0Q4hjoKv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204049-201763@https.bugzilla.kernel.org/>
-References: <bug-204049-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1733223AbfGSTpI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jul 2019 15:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733285AbfGSTpH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 19 Jul 2019 15:45:07 -0400
+Subject: Re: [GIT PULL] iomap: cleanups for 5.3 (part 2)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563565506;
+        bh=AjkeX1/9njlH2GZEKu5i9tUHylTBdJ3HoQAtY022+5I=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=oNvioO0AyHC5kfH0Rx8UoFpkg3m8AWmabEj7fsNBS4XTtiD7yycdc8EjQU1W4Agp9
+         B9+KfmnyoM1RBs5BZmU7oWmicoQrxZpzJ7+0CYrdlk1+vT/sh7/2/VYO/hSoIP+Rrb
+         Wn0GzEjCH070ys+CgsoRqO2MmE8jssOHBsCvx8mg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190719162221.GF7093@magnolia>
+References: <20190719162221.GF7093@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190719162221.GF7093@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/iomap-5.3-merge-4
+X-PR-Tracked-Commit-Id: 5d907307adc14cd5148b07629c2b4535acd06062
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 26473f83703e6bc56114ce4b045000de6efcfff7
+Message-Id: <156356550679.25668.5508035864440295283.pr-tracker-bot@kernel.org>
+Date:   Fri, 19 Jul 2019 19:45:06 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204049
+The pull request you sent on Fri, 19 Jul 2019 09:22:21 -0700:
 
---- Comment #4 from Luis Chamberlain (mcgrof@kernel.org) ---
-The crash observed on stable kernels can be fixed with commit 6958d11f77 ("xfs:
-don't trip over uninitialized buffer on extent read of corrupted inode") merged
-on v5.1.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-4
 
-I can't reproduce the immediate panic on v5.1 with the "xfs_reflink_normapbt"
-anymore, as such I believe this seems like a regression, and you should be able
-to bisect to v5.1 as the good kernel.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/26473f83703e6bc56114ce4b045000de6efcfff7
+
+Thank you!
 
 -- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
