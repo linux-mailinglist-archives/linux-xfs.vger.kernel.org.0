@@ -2,107 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE1976D71A
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 01:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1977B6D908
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 04:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391707AbfGRXGc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Jul 2019 19:06:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45338 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbfGRXGb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 19:06:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so13540880pgp.12;
-        Thu, 18 Jul 2019 16:06:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=asc29S1aXqINt/LkQnormGy5CNyyKODqHRTWf7EXfUM=;
-        b=jULWg4UBJdyE/6SoUXW3r7bIr6pogyKagkfrfGgyUl++ZGwGWFk9TdD/mh4YniaOBp
-         /xSs3GgGqf/NBGZLhCJN7KXf/koQBbP+dDca1bxw7op/lo4uaY7aAbGRVeo5eVPDQZMp
-         1XDMBcWrHrczUobl3qPADF85UgtSodJNeRWX8yEyT0L9VFR1KT5nAHiIndJJbbg09AN+
-         85ztsTLYXisx1Q4RdaGDjECprbmGtCBoknC4zrvUZIm1E81dxMAPteCYlfDBQ1cf0nme
-         kg/e9M0XbIeSiMld6SINBnSRxEvfOmoFjtpRK/gwGmsTLzQnWFQWu8tpXm0mJOkRHnF1
-         vubQ==
-X-Gm-Message-State: APjAAAVBtO3HzGbwTRbnUuKXDRlQxumqUJuh78P0nt2hdyU1mSkXSh4J
-        ktuqktstzNb9fqKN8Yq6iw8=
-X-Google-Smtp-Source: APXvYqxL+jUEhMBP1njatVJZMWX4Fy/hxMTF2axokayELle6LTw0e5ztOLtTNEzs+TprMI77+hJv2Q==
-X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr54823024pja.104.1563491190987;
-        Thu, 18 Jul 2019 16:06:30 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a25sm26509765pfn.1.2019.07.18.16.06.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 16:06:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 781B741464; Thu, 18 Jul 2019 23:06:19 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
-        Alexander.Levin@microsoft.com
-Cc:     stable@vger.kernel.org, amir73il@gmail.com, hch@infradead.org,
-        zlang@redhat.com, "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 9/9] xfs: abort unaligned nowait directio early
-Date:   Thu, 18 Jul 2019 23:06:17 +0000
-Message-Id: <20190718230617.7439-10-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190718230617.7439-1-mcgrof@kernel.org>
-References: <20190718230617.7439-1-mcgrof@kernel.org>
+        id S1726055AbfGSCYq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Jul 2019 22:24:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47944 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGSCYq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Jul 2019 22:24:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pD6WAPijEMJJx4TfSKuwSSTNjnIfbYYwvAbudp3cVxw=; b=2jWxASzuD/7gwyENW54yc7XFwC
+        /YhVXItCeaRa3MFWXYFGtF/b9rpL6FFb4y2XG54FchNlk6VCbD/NdruODhtdf5HUh71Ay+nHopK8O
+        dA6S02M4SxXgvkcjkYe032QnEhkQqYPSCBFqne+YRW9b9dYE1tFlV76XngmOI03QNPPmPukG0wPHd
+        B///iV6MAu+sN+AcztaB+FyxlzMppxgmGTM/hZVHjItZVSdM7LSExF+WBRFl/91aMBWAFGIv48ZeX
+        FURbxygy+kAV+hAk1ownBr1Q82WM/crUqCj/Qv/oWe3A2+g5W7buLQBpP1Ba+CTFKGJYlyKzmSHwN
+        RdwUKF4g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoIZX-0002Ej-Lc; Fri, 19 Jul 2019 02:24:35 +0000
+Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>
+References: <20190718125509.775525-1-arnd@arndb.de>
+ <20190718125703.GA28332@lst.de>
+ <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+ <20190718130835.GA28520@lst.de> <20190718142525.GE7116@magnolia>
+ <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d63adfdf-7ac2-bc42-38c6-db1404a87d47@infradead.org>
+Date:   Thu, 18 Jul 2019 19:24:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+On 7/18/19 7:19 PM, Masahiro Yamada wrote:
+> Hi.
+> 
+> On Thu, Jul 18, 2019 at 11:28 PM Darrick J. Wong
+> <darrick.wong@oracle.com> wrote:
+>>
+>> On Thu, Jul 18, 2019 at 03:08:35PM +0200, Christoph Hellwig wrote:
+>>> On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
+>>>> The inclusion comes from the recently added header check in commit
+>>>> c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
+>>>>
+>>>> This just tries to include every header by itself to see if there are build
+>>>> failures from missing indirect includes. We probably don't want to
+>>>> add an exception for iomap.h there.
+>>>
+>>> I very much disagree with that check.  We don't need to make every
+>>> header compilable with a setup where it should not be included.
+>>
+>> Seconded, unless there's some scenario where someone needs iomap when
+>> CONFIG_BLOCK=n (???)
+> 
+> I agree.
+> 
+> There is no situation that iomap.h is included when CONFIG_BLOCK=n.
+> So, it is pointless to surround offending code with #ifdef
+> just for the purpose of satisfying the header-test.
+> 
+> 
+> I started to think
+> compiling all headers is more painful than useful.
+> 
+> 
+> MW is closing, so I am thinking of disabling it for now
+> to take time to re-think.
+> 
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index bd7d650d4a99..cbb31d134f7e 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -111,6 +111,7 @@ config HEADER_TEST
+>  config KERNEL_HEADER_TEST
+>         bool "Compile test kernel headers"
+>         depends on HEADER_TEST
+> +       depends on BROKEN
+>         help
+>           Headers in include/ are used to build external moduls.
+>           Compile test them to ensure they are self-contained, i.e.
+> 
+> 
+> 
+> Maybe, we should compile-test headers
+> only when it is reasonable to do so.
 
-commit 1fdeaea4d92c69fb9f871a787af6ad00f32eeea7 upstream.
+Maybe.  But I would find it easier to use if it were a make target
+instead of a Kconfig symbol, so someone could do
+$ make compile_test_headers
 
-Dave Chinner noticed that xfs_file_dio_aio_write returns EAGAIN without
-dropping the IOLOCK when its deciding not to wait, which means that we
-leak the IOLOCK there.  Since we now make unaligned directio always
-wait, we have the opportunity to bail out before trying to take the
-lock, which should reduce the overhead of this never-gonna-work case
-considerably while also solving the dropped lock problem.
+for example.  Then it would be done only on demand (or command).
 
-Reported-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- fs/xfs/xfs_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 10f75965243c..259549698ba7 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -517,6 +517,9 @@ xfs_file_dio_aio_write(
- 	}
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		/* unaligned dio always waits, bail */
-+		if (unaligned_io)
-+			return -EAGAIN;
- 		if (!xfs_ilock_nowait(ip, iolock))
- 			return -EAGAIN;
- 	} else {
-@@ -536,9 +539,6 @@ xfs_file_dio_aio_write(
- 	 * xfs_file_aio_write_checks() for other reasons.
- 	 */
- 	if (unaligned_io) {
--		/* unaligned dio always waits, bail */
--		if (iocb->ki_flags & IOCB_NOWAIT)
--			return -EAGAIN;
- 		inode_dio_wait(inode);
- 	} else if (iolock == XFS_IOLOCK_EXCL) {
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
 -- 
-2.20.1
-
+~Randy
