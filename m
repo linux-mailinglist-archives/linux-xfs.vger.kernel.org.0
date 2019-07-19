@@ -2,57 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D8D66EB3C
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 21:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A71E56EC09
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 23:23:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733223AbfGSTpI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jul 2019 15:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733285AbfGSTpH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 19 Jul 2019 15:45:07 -0400
-Subject: Re: [GIT PULL] iomap: cleanups for 5.3 (part 2)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563565506;
-        bh=AjkeX1/9njlH2GZEKu5i9tUHylTBdJ3HoQAtY022+5I=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=oNvioO0AyHC5kfH0Rx8UoFpkg3m8AWmabEj7fsNBS4XTtiD7yycdc8EjQU1W4Agp9
-         B9+KfmnyoM1RBs5BZmU7oWmicoQrxZpzJ7+0CYrdlk1+vT/sh7/2/VYO/hSoIP+Rrb
-         Wn0GzEjCH070ys+CgsoRqO2MmE8jssOHBsCvx8mg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190719162221.GF7093@magnolia>
-References: <20190719162221.GF7093@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190719162221.GF7093@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/iomap-5.3-merge-4
-X-PR-Tracked-Commit-Id: 5d907307adc14cd5148b07629c2b4535acd06062
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 26473f83703e6bc56114ce4b045000de6efcfff7
-Message-Id: <156356550679.25668.5508035864440295283.pr-tracker-bot@kernel.org>
-Date:   Fri, 19 Jul 2019 19:45:06 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com
+        id S1730088AbfGSVXD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jul 2019 17:23:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32904 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfGSVXD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 17:23:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g2so14706642pfq.0;
+        Fri, 19 Jul 2019 14:23:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MjnV+fDBeK0NuiqNKqFZfMMCcNTnblIXO+Ee219jx0s=;
+        b=R7XCn1LOAB9vaX8LvCuqdCmmnxXsieMLYxCbIfNWJeCzsEYb/MH7ecbuIRoREj5R7O
+         jt1FHZYO3wxo0LQ6vAV5iCpx9CHz60bj00hL/Lrj/pzViiJEgZiB0ZWru2GpXglZsDiu
+         Tv1/0xXtTrWO2HkmYXohbSpJBUuavEU4XACO+g43YQLRDMVkUiXytGg6Wy7yp/VFm0VI
+         1TfXodMqjuv4jFFWbvC6xRa9EtM43m8oxBXL5k6Xi1SjJpZqeoqRP+N9z0Xxqhe1zCOv
+         NCyivHWauUddoRcUT7M30HMrqXnFI8J1YOw1pN2hivjGsa/7fhp9CL+gPmREZ7dYG8GW
+         Ueog==
+X-Gm-Message-State: APjAAAV0t5+fW+ew/EI90LiRzWB9TZ+yUUYDQFWDycrTYqm8CZiqmcwC
+        14DIyZTnW3Hf+1EHHMbFtgE=
+X-Google-Smtp-Source: APXvYqw34Y6eCQJXf+6gFAthU395tWEvHKzq8IlLG4ga3VbPSHw6Ut+zarL2mlZy0r1eU3no9cizug==
+X-Received: by 2002:a17:90a:d58c:: with SMTP id v12mr58969334pju.7.1563571382016;
+        Fri, 19 Jul 2019 14:23:02 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 196sm34764213pfy.167.2019.07.19.14.23.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 14:23:00 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 29B67402A1; Fri, 19 Jul 2019 21:23:00 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 21:23:00 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
+        Alexander.Levin@microsoft.com
+Cc:     stable@vger.kernel.org, amir73il@gmail.com, hch@infradead.org,
+        zlang@redhat.com, Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: don't trip over uninitialized buffer on extent read
+ of corrupted inode
+Message-ID: <20190719212300.GQ30113@42.do-not-panic.com>
+References: <20190718230617.7439-1-mcgrof>
+ <20190719193032.11096-1-mcgrof@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719193032.11096-1-mcgrof@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Fri, 19 Jul 2019 09:22:21 -0700:
+On Fri, Jul 19, 2019 at 07:30:32PM +0000, Luis Chamberlain wrote:
+> From: Brian Foster <bfoster@redhat.com>
+> [mcgrof: fixes kz#204223 ]
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-4
+Sorry, spoke too soon, although it helps... it actually still does not
+fix that exact issue. Fixing this will require a bit more work. You can
+ignore this patch for stable for now.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/26473f83703e6bc56114ce4b045000de6efcfff7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+  Luis
