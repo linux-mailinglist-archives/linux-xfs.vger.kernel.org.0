@@ -2,114 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCE6B6E741
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 16:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 023FB6E8A8
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 18:22:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbfGSOZb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jul 2019 10:25:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51200 "EHLO mx1.redhat.com"
+        id S1728352AbfGSQWW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jul 2019 12:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbfGSOZb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:25:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728051AbfGSQWW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:22:22 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A825730655E3;
-        Fri, 19 Jul 2019 14:25:30 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93BE81C94C;
-        Fri, 19 Jul 2019 14:25:29 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs\@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Hannes Reinecke <hare@suse.de>,
-        Ting Yao <d201577678@hust.edu.cn>
-Subject: Re: [PATCH RFC] fs: New zonefs file system
-References: <20190712030017.14321-1-damien.lemoal@wdc.com>
-        <x49zhlbe8li.fsf@segfault.boston.devel.redhat.com>
-        <BYAPR04MB5816B59932372E2D97330308E7C80@BYAPR04MB5816.namprd04.prod.outlook.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 19 Jul 2019 10:25:28 -0400
-In-Reply-To: <BYAPR04MB5816B59932372E2D97330308E7C80@BYAPR04MB5816.namprd04.prod.outlook.com>
-        (Damien Le Moal's message of "Thu, 18 Jul 2019 23:02:43 +0000")
-Message-ID: <x49h87iqexz.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9490A21872;
+        Fri, 19 Jul 2019 16:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563553341;
+        bh=ToqDnWrzKDf8scCUPMiKsBcInlWhLezxA4/NkXNmy6k=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pSwIfwW4L2MkuF9bTjuPLeJp21+1X1lYJC+rcDxzPI+Kl7EYPVdxjoweiKGglut88
+         xj6kksnmPTgsmGuOMlMV8pvCbPDHG23LAgCfrRVAAgm8qOdwpxAtN22uxL6DaCXoGA
+         9eHaj4KDy2pN1mtZMW+VulcK8aRKauP2ZYbuet2g=
+Date:   Fri, 19 Jul 2019 09:22:21 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
+Subject: [GIT PULL] iomap: cleanups for 5.3 (part 2)
+Message-ID: <20190719162221.GF7093@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 19 Jul 2019 14:25:30 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi, Damien,
+Hi Linus,
 
-Thanks for your well-considered response.
+As promised, here's the second part of the iomap merge for 5.3, in which
+we break up iomap.c into smaller files grouped by functional area so
+that it'll be easier in the long run to maintain cohesiveness of code
+units and to review incoming patches.  There are no functional changes
+and fs/iomap.c split cleanly.
 
-Damien Le Moal <Damien.LeMoal@wdc.com> writes:
+Note that this refactoring series has been lurking in for-next during
+the merge window, but I rebased the series a couple of days ago to pick
+up all the fs/iomap.c changes that came in earlier in the merge window
+from other trees, and now you don't have to pick up the pieces of a
+somewhat messy merge collision. :)
 
-> Jeff,
->
-> On 2019/07/18 23:11, Jeff Moyer wrote:
->> Hi, Damien,
->> 
->> Did you consider creating a shared library?  I bet that would also
->> ease application adoption for the use cases you're interested in, and
->> would have similar performance.
->> 
->> -Jeff
->
-> Yes, it would, but to a lesser extent since system calls would need to be
-> replaced with library calls. Earlier work on LevelDB by Ting used the library
-> approach with libzbc, not quite a "libzonefs" but close enough. Working with
-> LevelDB code gave me the idea for zonefs. Compared to a library, the added
-> benefits are that specific language bindings are not a problem and further
-> simplify the code changes needed to support zoned block devices. In the case of
-> LevelDB for instance, C++ is used and file accesses are using streams, which
-> makes using a library a little difficult, and necessitates more changes just for
-> the internal application API itself. The needed changes spread beyond the device
-> access API.
->
-> This is I think the main advantage of this simple in-kernel FS over a library:
-> the developer can focus on zone block device specific needs (write sequential
-> pattern and garbage collection) and forget about the device access parts as the
-> standard system calls API can be used.
+The branch merges cleanly against this morning's HEAD (3bfe1fc46794) and
+survived an overnight run of xfstests.  The merge was completely
+straightforward, so please let me know if you run into anything weird.
 
-OK, I can see how a file system eases adoption across multiple
-languages, and may, in some cases, be easier to adopt by applications.
-However, I'm not a fan of the file system interface for this usage.
-Once you present a file system, there are certain expectations from
-users, and this fs breaks most of them.
+The only weirdness I've seen so far is that the new kernel header
+compile test (CONFIG_KERNEL_HEADER_TEST) tries to test-compile iomap.h
+even when CONFIG_BLOCK=n and fails, but that combination wouldn't work
+even in regular kernel code because iomap is a support library for
+filesystems that use block devices.  Masahiro Yamada sent a patch
+earlier today to disable the header compile test for now while he
+reconsiders its strategy.
 
-I'll throw out another suggestion that may or may not work (I haven't
-given it much thought).  Would it be possible to create a device mapper
-target that would export each zone as a separate block device?  I
-understand that wouldn't help with the write pointer management, but it
-would allow you to create a single "file" for each zone.
+--D
 
-> Another approach I considered is using FUSE, but went for a regular (albeit
-> simple) in-kernel approach due to performance concerns. While any difference in
-> performance for SMR HDDs would probably not be noticeable, performance would
-> likely be lower for upcoming NVMe zonenamespace devices compared to the
-> in-kernel approach.
->
-> But granted, most of the arguments I can put forward for an in-kernel FS
-> solution vs a user shared library solution are mostly subjective. I think though
-> that having support directly provided by the kernel brings zoned block devices
-> into the "mainstream storage options" rather than having them perceived as
-> fringe solutions that need additional libraries to work correctly. Zoned block
-> devices are not going away and may in fact become more mainstream as
-> implementing higher capacities more and more depends on the sequential write
-> interface.
+The following changes since commit fec88ab0af9706b2201e5daf377c5031c62d11f7:
 
-A file system like this would further cement in my mind that zoned block
-devices are not maintstream storage options.  I guess this part is
-highly subjective.  :)
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-07-14 19:42:11 -0700)
 
-Cheers,
-Jeff
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-4
+
+for you to fetch changes up to 5d907307adc14cd5148b07629c2b4535acd06062:
+
+  iomap: move internal declarations into fs/iomap/ (2019-07-17 07:21:02 -0700)
+
+----------------------------------------------------------------
+Also new for 5.3:
+- Regroup the fs/iomap.c code by major functional area so that we can
+  start development for 5.4 from a more stable base.
+
+----------------------------------------------------------------
+Darrick J. Wong (8):
+      iomap: start moving code to fs/iomap/
+      iomap: move the swapfile code into a separate file
+      iomap: move the file mapping reporting code into a separate file
+      iomap: move the SEEK_HOLE code into a separate file
+      iomap: move the direct IO code into a separate file
+      iomap: move the buffered IO code into a separate file
+      iomap: move the main iteration code into a separate file
+      iomap: move internal declarations into fs/iomap/
+
+ MAINTAINERS            |    1 +
+ fs/Makefile            |    2 +-
+ fs/dax.c               |    1 -
+ fs/internal.h          |   10 -
+ fs/iomap.c             | 2205 ------------------------------------------------
+ fs/iomap/Makefile      |   15 +
+ fs/iomap/apply.c       |   74 ++
+ fs/iomap/buffered-io.c | 1073 +++++++++++++++++++++++
+ fs/iomap/direct-io.c   |  562 ++++++++++++
+ fs/iomap/fiemap.c      |  144 ++++
+ fs/iomap/seek.c        |  212 +++++
+ fs/iomap/swapfile.c    |  178 ++++
+ include/linux/iomap.h  |   17 +
+ 13 files changed, 2277 insertions(+), 2217 deletions(-)
+ delete mode 100644 fs/iomap.c
+ create mode 100644 fs/iomap/Makefile
+ create mode 100644 fs/iomap/apply.c
+ create mode 100644 fs/iomap/buffered-io.c
+ create mode 100644 fs/iomap/direct-io.c
+ create mode 100644 fs/iomap/fiemap.c
+ create mode 100644 fs/iomap/seek.c
+ create mode 100644 fs/iomap/swapfile.c
