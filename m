@@ -2,67 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A71E56EC09
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 23:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F09DC6EC11
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 23:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfGSVXD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jul 2019 17:23:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32904 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfGSVXD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 17:23:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so14706642pfq.0;
-        Fri, 19 Jul 2019 14:23:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MjnV+fDBeK0NuiqNKqFZfMMCcNTnblIXO+Ee219jx0s=;
-        b=R7XCn1LOAB9vaX8LvCuqdCmmnxXsieMLYxCbIfNWJeCzsEYb/MH7ecbuIRoREj5R7O
-         jt1FHZYO3wxo0LQ6vAV5iCpx9CHz60bj00hL/Lrj/pzViiJEgZiB0ZWru2GpXglZsDiu
-         Tv1/0xXtTrWO2HkmYXohbSpJBUuavEU4XACO+g43YQLRDMVkUiXytGg6Wy7yp/VFm0VI
-         1TfXodMqjuv4jFFWbvC6xRa9EtM43m8oxBXL5k6Xi1SjJpZqeoqRP+N9z0Xxqhe1zCOv
-         NCyivHWauUddoRcUT7M30HMrqXnFI8J1YOw1pN2hivjGsa/7fhp9CL+gPmREZ7dYG8GW
-         Ueog==
-X-Gm-Message-State: APjAAAV0t5+fW+ew/EI90LiRzWB9TZ+yUUYDQFWDycrTYqm8CZiqmcwC
-        14DIyZTnW3Hf+1EHHMbFtgE=
-X-Google-Smtp-Source: APXvYqw34Y6eCQJXf+6gFAthU395tWEvHKzq8IlLG4ga3VbPSHw6Ut+zarL2mlZy0r1eU3no9cizug==
-X-Received: by 2002:a17:90a:d58c:: with SMTP id v12mr58969334pju.7.1563571382016;
-        Fri, 19 Jul 2019 14:23:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 196sm34764213pfy.167.2019.07.19.14.23.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 14:23:00 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 29B67402A1; Fri, 19 Jul 2019 21:23:00 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 21:23:00 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
-        Alexander.Levin@microsoft.com
-Cc:     stable@vger.kernel.org, amir73il@gmail.com, hch@infradead.org,
-        zlang@redhat.com, Brian Foster <bfoster@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: Re: [PATCH] xfs: don't trip over uninitialized buffer on extent read
- of corrupted inode
-Message-ID: <20190719212300.GQ30113@42.do-not-panic.com>
-References: <20190718230617.7439-1-mcgrof>
- <20190719193032.11096-1-mcgrof@kernel.org>
+        id S1728674AbfGSV2t convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 19 Jul 2019 17:28:49 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:46876 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727603AbfGSV2t (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 17:28:49 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id BA6182892A
+        for <linux-xfs@vger.kernel.org>; Fri, 19 Jul 2019 21:28:48 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id AC333289BD; Fri, 19 Jul 2019 21:28:48 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 204223] [fstests generic/388 on xfs]: 4.19.58 xfs_nocrc /
+ xfs_reflink null pointer dereference at xfs_trans_brelse+0x21
+Date:   Fri, 19 Jul 2019 21:28:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mcgrof@kernel.org
+X-Bugzilla-Status: REOPENED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: mcgrof@kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status resolution
+Message-ID: <bug-204223-201763-sg1Gc6zQFK@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204223-201763@https.bugzilla.kernel.org/>
+References: <bug-204223-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719193032.11096-1-mcgrof@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 07:30:32PM +0000, Luis Chamberlain wrote:
-> From: Brian Foster <bfoster@redhat.com>
-> [mcgrof: fixes kz#204223 ]
+https://bugzilla.kernel.org/show_bug.cgi?id=204223
 
-Sorry, spoke too soon, although it helps... it actually still does not
-fix that exact issue. Fixing this will require a bit more work. You can
-ignore this patch for stable for now.
+Luis Chamberlain (mcgrof@kernel.org) changed:
 
-  Luis
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|RESOLVED                    |REOPENED
+         Resolution|CODE_FIX                    |---
+
+--- Comment #7 from Luis Chamberlain (mcgrof@kernel.org) ---
+Not fixed yet, it just takes longer with this commit to trigger.
+
+-- 
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.
