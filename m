@@ -2,66 +2,129 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFE286EAFE
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 21:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80AEB6EB1E
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jul 2019 21:31:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfGSTXO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jul 2019 15:23:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40352 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbfGSTXO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 15:23:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so14581489pfp.7;
-        Fri, 19 Jul 2019 12:23:14 -0700 (PDT)
+        id S1730341AbfGSTah (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jul 2019 15:30:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40993 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728502AbfGSTah (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jul 2019 15:30:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so4539704pgg.8;
+        Fri, 19 Jul 2019 12:30:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o5xCvSlnXlBxg+m0uaArpKDa+hwImALNS5XibVt3aNU=;
-        b=n/EcOcff15JbZzkCe7RV6+xrIaDmirK1MtBZ1xNzyViOTRd7WizzTaaHmy2w0vYWza
-         J1cjauc1mrtjVrAjcr7BizKox1WdiKxWALH4rmZDm8pVTjcJhQBvPdKb1AT4LpBJuWNb
-         Yueg05TX44C6uo/TL5ddF1jEfRzMS3+jNpt3JdgjrzveKyvytHwynFavAMV4HPBDqPW1
-         R+AZ3EkvbydwkWrAbwYDgatPzfTFC8Yv9fO4MR6mBpIqyKprCOPz2v610SwwhTH1pIUl
-         lweFh9vFpIK5kzSgfATPM+A166RpkbpP5NcX8A92lNLJS8Snpu+DAZ1jSZMZHdjJbpyV
-         gf+Q==
-X-Gm-Message-State: APjAAAWpm7K7vGxcQ6PBu+s15cbCPxbE+Lle+oK+LOxyk9A+ix16aHhA
-        w02ZqIldL7OQfGZOvRunk+s=
-X-Google-Smtp-Source: APXvYqwwS9v+M0BjUuFZ6AlES3mTtcXNhJb/6FWy3jTuB4wl+PXXyhMBzXCOSSRB/lgAZ85icuHJfQ==
-X-Received: by 2002:a63:f953:: with SMTP id q19mr55519303pgk.367.1563564193260;
-        Fri, 19 Jul 2019 12:23:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=w7yvD+lTz2Rik1M6UM23psyCzKUtq59fP+VK4gnGKZc=;
+        b=re1CQE68v6gVOQtijsROR6B9lXtU4K4btjVXVz4wXeix0nsP03pz4i2MWuIkyLGE3B
+         Iiy4VNg4UgtSgBp9GA6EXoGEiW8KsuPoXbaVyri2CS8L1b3Rs5sq+EbINtHg7yqLk3OH
+         01iz+TUOwXyhtzGa9N3uj/ZEDXwxQM6fh7dDuJZttOLYP8WvOAJu1RSSizrgxxqEab+h
+         QbQYEiaX2ZMVnjqtA63Pwy/37dQu39WJ4hrkTYnxLht/aifYQrxQ1luXGL3oaLYfC/B9
+         q8/aGkOumRJRy06W26AHzah/XZ+OLKzZw0nZTwDYwPXidMdwiBaWZwWAsDmZbfsDRJ7i
+         HPmQ==
+X-Gm-Message-State: APjAAAV2lnKvAW4/OZCFXRG7eMhoG98OIx3nBPGzuShKVEpbcbo2fmtF
+        afrUFld++QIiSZC+iU1j0qw=
+X-Google-Smtp-Source: APXvYqzFLxEYyoZk7LJgYCiJsT+xnKlgJn77SNJtRodirTX0SDAcyS4kNw+TCmmDIGUDib4xIRi9vw==
+X-Received: by 2002:a63:b46:: with SMTP id a6mr45640148pgl.235.1563564635966;
+        Fri, 19 Jul 2019 12:30:35 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 22sm36574639pfu.179.2019.07.19.12.23.11
+        by smtp.gmail.com with ESMTPSA id t9sm31950471pji.18.2019.07.19.12.30.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 12:23:12 -0700 (PDT)
+        Fri, 19 Jul 2019 12:30:34 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4B725402A1; Fri, 19 Jul 2019 19:23:11 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 19:23:11 +0000
+        id 13822402A1; Fri, 19 Jul 2019 19:30:34 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
         Alexander.Levin@microsoft.com
 Cc:     stable@vger.kernel.org, amir73il@gmail.com, hch@infradead.org,
-        zlang@redhat.com
-Subject: Re: [PATCH 0/9] xfs: stable fixes for v4.19.y - circa ~ v4.19.58
-Message-ID: <20190719192311.GP30113@42.do-not-panic.com>
-References: <20190718230617.7439-1-mcgrof@kernel.org>
+        zlang@redhat.com, Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH] xfs: don't trip over uninitialized buffer on extent read of corrupted inode
+Date:   Fri, 19 Jul 2019 19:30:32 +0000
+Message-Id: <20190719193032.11096-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190718230617.7439-1-mcgrof>
+References: <20190718230617.7439-1-mcgrof>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718230617.7439-1-mcgrof@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:06:08PM +0000, Luis Chamberlain wrote:
-> There is a stable bug tracking this, kz#204223 [1], and a respective bug
-> also present on upstream via kz#204049 [2] which Zorro reported. But,
-> again, nothing changes from the baseline.
+From: Brian Foster <bfoster@redhat.com>
 
-The crash is fixed by Brian's commit 6958d11f77d ("xfs: don't trip over
-uninitialized buffer on extent read of corrupted inode") merged on v5.1.
+commit 6958d11f77d45db80f7e22a21a74d4d5f44dc667 upstream.
 
-As such I'll extend this series to include one more patch.
+We've had rather rare reports of bmap btree block corruption where
+the bmap root block has a level count of zero. The root cause of the
+corruption is so far unknown. We do have verifier checks to detect
+this form of on-disk corruption, but this doesn't cover a memory
+corruption variant of the problem. The latter is a reasonable
+possibility because the root block is part of the inode fork and can
+reside in-core for some time before inode extents are read.
 
-  Luis
+If this occurs, it leads to a system crash such as the following:
+
+ BUG: unable to handle kernel paging request at ffffffff00000221
+ PF error: [normal kernel read fault]
+ ...
+ RIP: 0010:xfs_trans_brelse+0xf/0x200 [xfs]
+ ...
+ Call Trace:
+  xfs_iread_extents+0x379/0x540 [xfs]
+  xfs_file_iomap_begin_delay+0x11a/0xb40 [xfs]
+  ? xfs_attr_get+0xd1/0x120 [xfs]
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  xfs_file_iomap_begin+0x4c4/0x6d0 [xfs]
+  ? __vfs_getxattr+0x53/0x70
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  iomap_apply+0x63/0x130
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  iomap_file_buffered_write+0x62/0x90
+  ? iomap_write_begin.constprop.40+0x2d0/0x2d0
+  xfs_file_buffered_aio_write+0xe4/0x3b0 [xfs]
+  __vfs_write+0x150/0x1b0
+  vfs_write+0xba/0x1c0
+  ksys_pwrite64+0x64/0xa0
+  do_syscall_64+0x5a/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The crash occurs because xfs_iread_extents() attempts to release an
+uninitialized buffer pointer as the level == 0 value prevented the
+buffer from ever being allocated or read. Change the level > 0
+assert to an explicit error check in xfs_iread_extents() to avoid
+crashing the kernel in the event of localized, in-core inode
+corruption.
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+[mcgrof: fixes kz#204223 ]
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ fs/xfs/libxfs/xfs_bmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 3a496ffe6551..ab2465bc413a 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -1178,7 +1178,10 @@ xfs_iread_extents(
+ 	 * Root level must use BMAP_BROOT_PTR_ADDR macro to get ptr out.
+ 	 */
+ 	level = be16_to_cpu(block->bb_level);
+-	ASSERT(level > 0);
++	if (unlikely(level == 0)) {
++		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, mp);
++		return -EFSCORRUPTED;
++	}
+ 	pp = XFS_BMAP_BROOT_PTR_ADDR(mp, block, 1, ifp->if_broot_bytes);
+ 	bno = be64_to_cpu(*pp);
+ 
+-- 
+2.18.0
+
