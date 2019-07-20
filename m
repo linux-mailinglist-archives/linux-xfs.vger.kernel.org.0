@@ -2,93 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A409A6F02E
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Jul 2019 19:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A0266F0F2
+	for <lists+linux-xfs@lfdr.de>; Sun, 21 Jul 2019 00:49:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfGTRah (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Jul 2019 13:30:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44302 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfGTRag (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Jul 2019 13:30:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so35184591wrf.11;
-        Sat, 20 Jul 2019 10:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=fJgbCuAECmv3kfB4MA6EgJmQcyRpzLZ4WuJAsybRjN8=;
-        b=lfqRLGij66+60MA1k3iSArOGdlftIxVMkYCNSD6Tf9o+qfWgcYv9oqnMy7NFIXS6W/
-         uxeiqyZqFcZJD9JSxHt1ciJ3HODq1d2ondO7jsAVs/egRkxk7B8bd5wKzjI4ZJ5OiL1V
-         G8gsQgKqyKpBTSHAt5TePhfPZi+Y0Nvbyl6ReV+TrzQmqT8VZyqJndA/pjCdA32PTAtx
-         yFM59ewhYyZqNM1/hUkGFwahnnWUvlDn6/cjUBBfFeGCfzPMFuZO0hVPaI9pFjDSFU3l
-         O5abER266f855VAySy0xTTnuSr3zrao0ClFxX/NsoM/K3EC4QvN864avUuWx8o2exWyx
-         Ggtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=fJgbCuAECmv3kfB4MA6EgJmQcyRpzLZ4WuJAsybRjN8=;
-        b=V6LjHM9/90kzJ/DNELidRCTT0a1P1QNwEhqzyKKBigrTxGR9uKEXUKHpVJs27RzUml
-         M0A6USivEvj8IPi+dpyTdRTdrZSXmoR7mBRel8doZQT6q1IqB+IP+2/BBwq4kav8nIKr
-         LyAQ79bxrLQY+M3KFchKAfOrcjqKFYgt+LwgiveVTuDvURr0ifDLPTYZbQwn56qns7sS
-         eXUn24Dm0wKmbGttQzGDH8XyGs1saJJNc9H3Hg5K8wL8j3RsubkU4MO7hOkmebap7i3b
-         ajl0pAVozR8NxZ7M1W8HuE14j6MX1znId5nf7+JlMLsFusBPWzIKD1BXhqeHOVE3MYDx
-         nEOw==
-X-Gm-Message-State: APjAAAWl4O3UKMa/ufSlmYwNrbTX8ZaV/Ali43gfQOamcutk8GT+LFZO
-        mOTiUfHmhNAybir6kPvAjYM=
-X-Google-Smtp-Source: APXvYqwUxTYruLPCW55tBDAGwuiBWOVp31p2bzpwjwwxF9Jb0vJWD5gDw1GmdN3LKODR216InlwDpA==
-X-Received: by 2002:a5d:56c7:: with SMTP id m7mr26986126wrw.64.1563643834525;
-        Sat, 20 Jul 2019 10:30:34 -0700 (PDT)
-Received: from localhost ([129.205.112.209])
-        by smtp.gmail.com with ESMTPSA id d16sm26820447wrv.55.2019.07.20.10.30.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 20 Jul 2019 10:30:33 -0700 (PDT)
-Date:   Sat, 20 Jul 2019 18:29:15 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Documentation: filesystem: fix "Removed Sysctls" table
-Message-ID: <20190720172857.GA24988@localhost>
+        id S1725891AbfGTWtl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Sat, 20 Jul 2019 18:49:41 -0400
+Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:49624 "EHLO
+        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbfGTWtl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Jul 2019 18:49:41 -0400
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 00A0D28823
+        for <linux-xfs@vger.kernel.org>; Sat, 20 Jul 2019 22:49:40 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+        id DFA2D28837; Sat, 20 Jul 2019 22:49:39 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+        pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS autolearn=unavailable version=3.3.1
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 204223] [fstests generic/388 on xfs]: 4.19.58 xfs_nocrc /
+ xfs_reflink null pointer dereference at xfs_trans_brelse+0x21
+Date:   Sat, 20 Jul 2019 22:49:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mcgrof@kernel.org
+X-Bugzilla-Status: REOPENED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: mcgrof@kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204223-201763-ZOtqggK0xm@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204223-201763@https.bugzilla.kernel.org/>
+References: <bug-204223-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-the "Removed Sysctls" section is a table - bring it alive with ReST.
+https://bugzilla.kernel.org/show_bug.cgi?id=204223
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
- Documentation/admin-guide/xfs.rst | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+--- Comment #8 from Luis Chamberlain (mcgrof@kernel.org) ---
+These commits fix this crash:
 
-diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-index e76665a8f2f2..fb5b39f73059 100644
---- a/Documentation/admin-guide/xfs.rst
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -337,11 +337,12 @@ None at present.
- Removed Sysctls
- ===============
- 
-+=============================	=======
-   Name				Removed
--  ----				-------
-+=============================	=======
-   fs.xfs.xfsbufd_centisec	v4.0
-   fs.xfs.age_buffer_centisecs	v4.0
--
-+=============================	=======
- 
- Error handling
- ==============
+xfs: Move fs/xfs/xfs_attr.h to fs/xfs/libxfs/xfs_attr.h
+xfs: Add helper function xfs_attr_try_sf_addname
+xfs: Add attibute set and helper functions
+xfs: Add attibute remove and helper functions
+xfs: always rejoin held resources during defer roll
+
+I've left generic/388 running over time and it ran up to 247 times
+successfully, and failed but at least without a crash in the end.
+
+In particular the last commit has has some fixes to correct bhold callers to
+release held buffers correctly merged into the patch, which IMHO should have
+been split up into a separate patch.
+
+Trying to extract the exact minor fix is difficult due to the amount of churn
+from the prior patches. We'll have to try to do that work somehow or just
+consider merging all of these.
+
 -- 
-2.22.0
-
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.
