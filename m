@@ -2,81 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B756F42D
-	for <lists+linux-xfs@lfdr.de>; Sun, 21 Jul 2019 18:43:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9BD16F633
+	for <lists+linux-xfs@lfdr.de>; Sun, 21 Jul 2019 23:43:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfGUQns (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 21 Jul 2019 12:43:48 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43226 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfGUQns (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 21 Jul 2019 12:43:48 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so10996294pld.10;
-        Sun, 21 Jul 2019 09:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aQv+d6mvKk/q+K+x1AZ5av9JIxC1+jRJxjkGus2ZK4c=;
-        b=pvkN6z+i8nFOrrfRx+CbMtyItTXuqgUvG4gFnh9DQypH/d6OtwF1bLkYztX0+YIhYZ
-         L8rdtz2RDyVdR7XjZM7RYs7+mC/CV/hVXcOCzCj7KI9wIrULC3FT/qQqi4rffWH81yMj
-         /J/vcWD20pBf+z76itEEWALyc/EZ6PR/fbCl/6gdM1hG3/T9g0Hi4H0BdzMpJ+E7APbb
-         CGIHMiHdxBCeGtN0mpUxAR/2BdvrUjxU04qVEhvAB+Y73Riiza1uGelfWfnK9Zcmy0zm
-         NVaxFHoLkmathTlPUg/Wi7Ul22uQHR0pANjX0q6Ety2cTVN2sxsSVqidZSWf4di3fy7d
-         IKLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aQv+d6mvKk/q+K+x1AZ5av9JIxC1+jRJxjkGus2ZK4c=;
-        b=b+oPj76jM9JE/5Ge6UmcooQeS0Kcjv7G71abXxLaOSYTjHPg63scKsvP4vp3aRMOHn
-         F9LlRqUn2vLGxfGyKM0sF2dB8TQ3PBPDXx5Tm+6Bk14mBG+U3/T8Ju1AIn7i5Bf3bWhX
-         OntVb+CBHwIyQsg6qg+NkkX2kqjsHvBYWpimFqdzuTZMgI2u2uilrB5tqf3zxpyhULSa
-         2UKpvVRKC8gBF/Hz2AAejkdOnIThFoGNHWJrlo00subY8IH9YAI2SZvXkluFZE+xBPMB
-         cOpe/RF0LPtlN8fAlrZyK+VfV6qqhR+OiqrZKwVYS1qBzt1eKVwBzt7KmX2bu3yTTiri
-         TOag==
-X-Gm-Message-State: APjAAAUzvwvzNAztOhdQjv8ZQvzuiaksXhV+3RHqqKKTjn1Td0zgDtdD
-        q0FsM1EOKYU5j5iL9Ym8ugE=
-X-Google-Smtp-Source: APXvYqygMsz131j3S9kdBRU/DCtAJ9knJSEtob6O2EaUmoH1rljuJLkkQ0ovag9FqXiqWB7n7GsfyQ==
-X-Received: by 2002:a17:902:549:: with SMTP id 67mr70467321plf.86.1563727427870;
-        Sun, 21 Jul 2019 09:43:47 -0700 (PDT)
-Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id p7sm38818538pfp.131.2019.07.21.09.43.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 09:43:46 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 00:43:38 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v4 2/3] generic: copy_file_range bounds test
-Message-ID: <20190721164338.GJ7943@desktop>
-References: <20190715125516.7367-1-amir73il@gmail.com>
- <20190715125516.7367-3-amir73il@gmail.com>
+        id S1726571AbfGUVn0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 21 Jul 2019 17:43:26 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46730 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbfGUVnZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 21 Jul 2019 17:43:25 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DA6E814ADF1;
+        Mon, 22 Jul 2019 07:43:20 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hpJav-0008J8-8F; Mon, 22 Jul 2019 07:42:13 +1000
+Date:   Mon, 22 Jul 2019 07:42:13 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
+        Alexander.Levin@microsoft.com, stable@vger.kernel.org,
+        amir73il@gmail.com, hch@infradead.org, zlang@redhat.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: don't trip over uninitialized buffer on extent read
+ of corrupted inode
+Message-ID: <20190721214213.GO7689@dread.disaster.area>
+References: <20190718230617.7439-1-mcgrof>
+ <20190719193032.11096-1-mcgrof@kernel.org>
+ <20190719230729.GS19023@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190715125516.7367-3-amir73il@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190719230729.GS19023@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=-Irqs6BH2dvYNhbzDXcA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:55:15PM +0300, Amir Goldstein wrote:
-> Test that copy_file_range will return the correct errors for various
-> error conditions and boundary constraints.
+On Fri, Jul 19, 2019 at 11:07:29PM +0000, Luis Chamberlain wrote:
+> On Fri, Jul 19, 2019 at 07:30:32PM +0000, Luis Chamberlain wrote:
+> > [mcgrof: fixes kz#204223 ]
 > 
-> This is a regression test for kernel commit:
-> 
->   5dae222a5ff0 vfs: allow copy_file_range to copy across devices
+> This patch can be ingored for now for stable. It does not actually
+> fix the issue, just delays it a bit. Once I stress test over 1000
+> runs with some other fixes I have I'll send a new set of stable
+> fixes.
 
-This seems like refering to the wrong commit, I've changed it to
+generic/388 is one of the tests we expect to uncover interesting
+failures over time.  i.e. every time we fix a problem in these
+tests, it will expose another issue that we haven't been able to
+exercise until easier-to-hit failures have been fixed.
 
-96e6e8f4a68d ("vfs: add missing checks to copy_file_range")
+The best you can do right now is minimise the occurence of failures
+by backporting fixes - this test (like generic/475) will continue to
+uncover new shutdown and recovery issues as they are exposed by
+new fixes. Expecting it to pass 1000 times without failure on an
+older stable kernel is, IMO, a somewhat unrealistic expectation...
 
-Thanks,
-Eryu
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
