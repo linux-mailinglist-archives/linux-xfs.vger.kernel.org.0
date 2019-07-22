@@ -2,85 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3BD6F6B7
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2019 02:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810D16FCFE
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2019 11:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfGVAN0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 21 Jul 2019 20:13:26 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57411 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbfGVAN0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 21 Jul 2019 20:13:26 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 719A643C293;
-        Mon, 22 Jul 2019 10:13:23 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hpLvs-0000la-Jz; Mon, 22 Jul 2019 10:12:00 +1000
-Date:   Mon, 22 Jul 2019 10:12:00 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Hannes Reinecke <hare@suse.de>,
-        Ting Yao <d201577678@hust.edu.cn>
-Subject: Re: [PATCH RFC] fs: New zonefs file system
-Message-ID: <20190722001200.GQ7689@dread.disaster.area>
-References: <20190712030017.14321-1-damien.lemoal@wdc.com>
- <x49zhlbe8li.fsf@segfault.boston.devel.redhat.com>
- <BYAPR04MB5816B59932372E2D97330308E7C80@BYAPR04MB5816.namprd04.prod.outlook.com>
- <x49h87iqexz.fsf@segfault.boston.devel.redhat.com>
- <BYAPR04MB5816A2630B1EBC0696CBEC71E7CA0@BYAPR04MB5816.namprd04.prod.outlook.com>
+        id S1728290AbfGVJub (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jul 2019 05:50:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39724 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbfGVJub (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jul 2019 05:50:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HG9+HD8BoJ0/A6yxTNaU7c8B6tpTr5YDR7LElaVu3Bc=; b=Sjv+cJza7h7ZVvCgGriJ6L3wT
+        MM26/nfI3M7x85PK5ENZ0e0GZLMMZexxUsJbb+VAnLVuLsOOJhFEsKuS7uLpDhy2KPAquZwNKpz0c
+        ZHRqOPNSXZ7SVKNCBKnPAeVkX6SrE7rASAnzW6oezm58JJormD6l45FJ6R/UhkqoIwLt1GEHB+Tkp
+        Mq7HlzZUmU/f2LlgkVchtzT2p6GFd1oYf4xGxDFtKK1+msIbgGo9llpEBxN4ql+P+omc8UiBf3Oif
+        faVELLleNzvsf72BAPAZp8CiKRqJVxJFEeTDobX7kJQ6PTLXhPGmFiXI5umGJYutilnPL6zo6JsO6
+        0ET/St2pQ==;
+Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpUxe-0005Sq-ON; Mon, 22 Jul 2019 09:50:27 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: lift the xfs writepage code into iomap v3
+Date:   Mon, 22 Jul 2019 11:50:12 +0200
+Message-Id: <20190722095024.19075-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR04MB5816A2630B1EBC0696CBEC71E7CA0@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=b07j5cj7HEDGNWPDeo4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 01:07:25AM +0000, Damien Le Moal wrote:
-> On 2019/07/19 23:25, Jeff Moyer wrote:
-> > I'll throw out another suggestion that may or may not work (I haven't
-> > given it much thought).  Would it be possible to create a device mapper
-> > target that would export each zone as a separate block device?  I
-> > understand that wouldn't help with the write pointer management, but it
-> > would allow you to create a single "file" for each zone.
-> 
-> Well, I do not think you need a new device mapper for this. dm-linear supports
-> zoned block devices and will happily allow mapping a single zone and expose a
-> block device file for it. My problem with this approach is that SMR drives are
-> huge, and getting bigger. A 15 TB drive has 55380 zones of 256 MB. Upcoming 20
-> TB drives have more than 75000 zones. Using dm-linear or any per-zone device
-> mapper target would create a huge resources pressure as the amount of memory
-> alone that would be used per zone would be much higher than with a file system
-> and the setup would also take far longer to complete compared to zonefs mount.
+Hi all,
 
-Right, it's kinda insane to expect userspace to manage tens of
-thousands of "block devices" like this. You go run blkid on one of
-these devices, and what happens? Then there's stuff like udev
-overhead, grub os-probing that walks all block devices it can find,
-etc. Then consider putting hundreds of SMR drives into a machine
-that has multiple paths to each drive....
+this series cleans up the xfs writepage code and then lifts it to
+fs/iomap.c so that it could be use by other file system.  I've been
+wanting to this for a while so that I could eventually convert gfs2
+over to it, but I never got to it.  Now Damien has a new zonefs
+file system for semi-raw access to zoned block devices that would
+like to use the iomap code instead of reinventing it, so I finally
+had to do the work.
 
-As such, I just don't think this block device approach is feasible,
-especially as Managing tens of thousands of individual small data
-regions in a storage device is exactly what filesystems are for.
 
-Cheers,
+Changes since v2:
+ - rebased to v5.3-rc1
+ - folded in a few changes from the gfs2 enablement series
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Changes since v1:
+ - rebased to the latest xfs for-next tree
+ - keep the preallocated transactions for size updates
+ - rename list_pop to list_pop_entry and related cleanups
+ - better document the nofs context handling
+ - document that the iomap tracepoints are not a stable API
