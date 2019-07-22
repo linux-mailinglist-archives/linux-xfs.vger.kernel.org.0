@@ -2,97 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 062AA6FCEB
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2019 11:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6FDF70267
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2019 16:35:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfGVJvB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Jul 2019 05:51:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40642 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729418AbfGVJvA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jul 2019 05:51:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cABJAC81WTfvAsX4yATKnx6SK90w2XcHzkRpr1xGDvc=; b=i2kr/bAJkKVbh2A8CybECWcPA3
-        EmDsrp5UxkdNcrdWWAVnus10ZuPOcOtkDs/pqYJRXkHM9DnXbMe4PrdfTAZ48VilNv/kML4S01IRE
-        l8OQ1SfB3snqRTqUcDhpLz8tVE/MBFZxxaqX59FDC1+4+GWpjQYi4RRdp2kD8qMFSJ/6TQtABtEg+
-        7Omm7Ho5OySOtQwNRfeZN+EGIOerh+pWQ6UKcxUAbeCxGXBGy1qlCJlcSBTqqAtoNEOmXGPfTp5Ab
-        9mhYFXHpCe9+uT3NP3J8tAzl7XH3ywPeS+kSmwpcC+vp2o0PcsvY4x2S7wgPdZfH1/JcUXNTQ6FED
-        6xsPiVgw==;
-Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpUy9-0005ix-Hb; Mon, 22 Jul 2019 09:50:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] iomap: zero newly allocated mapped blocks
-Date:   Mon, 22 Jul 2019 11:50:24 +0200
-Message-Id: <20190722095024.19075-13-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722095024.19075-1-hch@lst.de>
-References: <20190722095024.19075-1-hch@lst.de>
+        id S1730568AbfGVOfc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jul 2019 10:35:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfGVOfc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:35:32 -0400
+Received: from localhost (unknown [167.220.2.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E211B218C9;
+        Mon, 22 Jul 2019 14:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563806131;
+        bh=sIeNn7wKci1PAu/7W4jXe03dA9c3fLzBr+9SQG3KNv4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SszaQ6es6SV7b154+jgxgtoaw91t3W436/hgWadma9VWeH4LrQFbh5yR2GY5yf9C/
+         ThipGd16EMzYf1vo+XbKB2dlz6jGfc2qLuivfeZNQmdwmD0WxL+y8sUPJYg4VC8cJp
+         BZ1rbmh+yAPVSa1lo0tLUeB7QDtVwXKjqPlPCvZ4=
+Date:   Mon, 22 Jul 2019 10:35:31 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
+        Alexander.Levin@microsoft.com, stable@vger.kernel.org,
+        amir73il@gmail.com, hch@infradead.org, zlang@redhat.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: don't trip over uninitialized buffer on extent read
+ of corrupted inode
+Message-ID: <20190722143531.GG1607@sasha-vm>
+References: <20190718230617.7439-1-mcgrof>
+ <20190719193032.11096-1-mcgrof@kernel.org>
+ <20190719212300.GQ30113@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190719212300.GQ30113@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-File systems like gfs2 don't support delayed allocations or unwritten
-extents and thus allocate normal mapped blocks to fill holes.  To
-cover the case of such file systems allocating new blocks to fill holes
-also zero out mapped blocks with the new flag.
+On Fri, Jul 19, 2019 at 09:23:00PM +0000, Luis Chamberlain wrote:
+>On Fri, Jul 19, 2019 at 07:30:32PM +0000, Luis Chamberlain wrote:
+>> From: Brian Foster <bfoster@redhat.com>
+>> [mcgrof: fixes kz#204223 ]
+>
+>Sorry, spoke too soon, although it helps... it actually still does not
+>fix that exact issue. Fixing this will require a bit more work. You can
+>ignore this patch for stable for now.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+What about the other 9 patch series?
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 91a9796f8a7c..ba0511131868 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -226,6 +226,14 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
- 	SetPageUptodate(page);
- }
- 
-+static inline bool iomap_block_needs_zeroing(struct inode *inode,
-+		struct iomap *iomap, loff_t pos)
-+{
-+	return iomap->type != IOMAP_MAPPED ||
-+		(iomap->flags & IOMAP_F_NEW) ||
-+		pos >= i_size_read(inode);
-+}
-+
- static loff_t
- iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		struct iomap *iomap)
-@@ -249,7 +257,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 	if (plen == 0)
- 		goto done;
- 
--	if (iomap->type != IOMAP_MAPPED || pos >= i_size_read(inode)) {
-+	if (iomap_block_needs_zeroing(inode, iomap, pos)) {
- 		zero_user(page, poff, plen);
- 		iomap_set_range_uptodate(page, poff, plen);
- 		goto done;
-@@ -563,7 +571,7 @@ iomap_read_page_sync(struct inode *inode, loff_t block_start, struct page *page,
- 	struct bio_vec bvec;
- 	struct bio bio;
- 
--	if (iomap->type != IOMAP_MAPPED || block_start >= i_size_read(inode)) {
-+	if (iomap_block_needs_zeroing(inode, iomap, block_start)) {
- 		zero_user_segments(page, poff, from, to, poff + plen);
- 		iomap_set_range_uptodate(page, poff, plen);
- 		return 0;
--- 
-2.20.1
-
+--
+Thanks,
+Sasha
