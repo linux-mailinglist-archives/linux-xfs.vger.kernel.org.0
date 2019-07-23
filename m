@@ -2,93 +2,172 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 383B071766
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2019 13:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA197718AF
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2019 14:52:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbfGWLsv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jul 2019 07:48:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35090 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfGWLsv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jul 2019 07:48:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y4so42863925wrm.2;
-        Tue, 23 Jul 2019 04:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=fJgbCuAECmv3kfB4MA6EgJmQcyRpzLZ4WuJAsybRjN8=;
-        b=IXZxYn9+ieSSYpeUvVY9HWV6aAp4pnGX23WWtA+twgbNwkKd0+xWFFIDsbwwF26qQX
-         zV/RzGFEvQm5/Gh+Owh4JG5WCZE1biu3oviwFD6eEN8jho2ZOR2eG/QN1NwuwL47Js5i
-         7snXOm/JLAphzo9tdC95e1KugwXNkGuoINV1IDTEVFTXCQSZUSOEtVbMvvXUEOEqnUlF
-         GNEGbzitBtfJLKHDtX6Kd4+6LnQ7qPjeUynQ9/GJS1eAzOrRXY6RRaZsZSoV/CYIZl32
-         +WNfe9hUGfa/rTllPuVMaBB6O6jRQsybv9arprjTRhA0+ZnqKg0DTqrTkjr6pNb/0wO2
-         S9sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=fJgbCuAECmv3kfB4MA6EgJmQcyRpzLZ4WuJAsybRjN8=;
-        b=uHI06XAAMyKYLrks7hpAkO1ERaYBGf0t2iiCc7iZGLKgB2FJm69L4rxOyGsN2PP7jy
-         nfm1N+Wc8z+xM16jpWZHZZ1noWeSS5AjeZf8eZWoaAQXdMmc+0sbIjXQtOvisvOqPopR
-         SYiyd6iFDNhuP+92zjaTEPDAHyzvTxBr2aZbJUj3JTsR7bo6w5sKUBudenNj3zPRQDUk
-         Ed6gjxxhau/5Yu4psU/bhT5fltP0olYTmlvMVZSeB7c8U5MnYANG1te2bASq+tX3T4Kg
-         XyheKOLreAkvY9GwWZ53ihw+r7FRvYzkCjJFcsXngyHlQJxan+Cabt6XitVquFNP4Nsn
-         Z23w==
-X-Gm-Message-State: APjAAAVaADg9Hpa99qoQWLsizXIUqMAX3hkfKEJpDnvTQ3gtVqZbbt2U
-        64U5v036UNzm415Ztcfj3fs=
-X-Google-Smtp-Source: APXvYqxGFcsX+jy3UaXiECbiKtL2HyzZ/SRO1lDL026dTTt95dLrxJ5olHBLNWL0nrgT+rNx43T3fw==
-X-Received: by 2002:a5d:6287:: with SMTP id k7mr31068920wru.108.1563882528872;
-        Tue, 23 Jul 2019 04:48:48 -0700 (PDT)
-Received: from localhost ([197.211.57.129])
-        by smtp.gmail.com with ESMTPSA id g11sm42585476wru.24.2019.07.23.04.48.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 04:48:47 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 12:48:13 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Documentation: filesystem: fix "Removed Sysctls" table
-Message-ID: <20190723114813.GA14870@localhost>
+        id S1732442AbfGWMwJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jul 2019 08:52:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50126 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732432AbfGWMwI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 08:52:08 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1471E3E2D7;
+        Tue, 23 Jul 2019 12:52:08 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA9BD5D9C5;
+        Tue, 23 Jul 2019 12:52:07 +0000 (UTC)
+Date:   Tue, 23 Jul 2019 08:52:05 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: allocate xattr buffer on demand
+Message-ID: <20190723125205.GA59587@bfoster>
+References: <20190722230518.19078-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190722230518.19078-1-david@fromorbit.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 23 Jul 2019 12:52:08 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-the "Removed Sysctls" section is a table - bring it alive with ReST.
+On Tue, Jul 23, 2019 at 09:05:18AM +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> When doing file lookups and checking for permissions, we end up in
+> xfs_get_acl() to see if there are any ACLs on the inode. This
+> requires and xattr lookup, and to do that we have to supply a buffer
+> large enough to hold an maximum sized xattr.
+> 
+> On workloads were we are accessing a wide range of cache cold files
+> under memory pressure (e.g. NFS fileservers) we end up spending a
+> lot of time allocating the buffer. The buffer is 64k in length, so
+> is a contiguous multi-page allocation, and if that then fails we
+> fall back to vmalloc(). Hence the allocation here is /expensive/
+> when we are looking up hundreds of thousands of files a second.
+> 
+> Initial numbers from a bpf trace show average time in xfs_get_acl()
+> is ~32us, with ~19us of that in the memory allocation. Note these
+> are average times, so there are going to be affected by the worst
+> case allocations more than the common fast case...
+> 
+> To avoid this, we could just do a "null"  lookup to see if the ACL
+> xattr exists and then only do the allocation if it exists. This,
+> however, optimises the path for the "no ACL present" case at the
+> expense of the "acl present" case. i.e. we can halve the time in
+> xfs_get_acl() for the no acl case (i.e down to ~10-15us), but that
+> then increases the ACL case by 30% (i.e. up to 40-45us).
+> 
+> To solve this and speed up both cases, drive the xattr buffer
+> allocation into the attribute code once we know what the actual
+> xattr length is. For the no-xattr case, we avoid the allocation
+> completely, speeding up that case. For the common ACL case, we'll
+> end up with a fast heap allocation (because it'll be smaller than a
+> page), and only for the rarer "we have a remote xattr" will we have
+> a multi-page allocation occur. Hence the common ACL case will be
+> much faster, too.
+> 
+> The down side of this is the buffer allocation is now a GFP_NOFS
+> allocation. This isn't a big deal for small allocations, though it
+> might cause large xattrs (which are out of line and doing
+> substantial GFP_NOFS allocations already) to have to do another
+> large allocation in this context. I think, however, this is rare
+> enough that it won't matter for the ACL path, and the common xattr
+> paths can still provide and external buffer...
+> 
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
- Documentation/admin-guide/xfs.rst | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Where's the NOFS allocation coming from?
 
-diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-index e76665a8f2f2..fb5b39f73059 100644
---- a/Documentation/admin-guide/xfs.rst
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -337,11 +337,12 @@ None at present.
- Removed Sysctls
- ===============
- 
-+=============================	=======
-   Name				Removed
--  ----				-------
-+=============================	=======
-   fs.xfs.xfsbufd_centisec	v4.0
-   fs.xfs.age_buffer_centisecs	v4.0
--
-+=============================	=======
- 
- Error handling
- ==============
--- 
-2.22.0
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_attr.c      | 23 ++++------
+>  fs/xfs/libxfs/xfs_attr.h      |  6 ++-
+>  fs/xfs/libxfs/xfs_attr_leaf.c | 85 +++++++++++++++++++++--------------
+>  fs/xfs/libxfs/xfs_da_btree.h  |  4 +-
+>  fs/xfs/xfs_acl.c              | 14 ++----
+>  fs/xfs/xfs_ioctl.c            |  2 +-
+>  fs/xfs/xfs_xattr.c            |  2 +-
+>  7 files changed, 72 insertions(+), 64 deletions(-)
+> 
+...
+> diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+> index cbda40d40326..cba1ea9d6d0a 100644
+> --- a/fs/xfs/xfs_acl.c
+> +++ b/fs/xfs/xfs_acl.c
+...
+> @@ -130,17 +130,9 @@ xfs_get_acl(struct inode *inode, int type)
+>  		BUG();
+>  	}
+>  
+> -	/*
+> -	 * If we have a cached ACLs value just return it, not need to
+> -	 * go out to the disk.
+> -	 */
+>  	len = XFS_ACL_MAX_SIZE(ip->i_mount);
+> -	xfs_acl = kmem_zalloc_large(len, KM_SLEEP);
+> -	if (!xfs_acl)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	error = xfs_attr_get(ip, ea_name, (unsigned char *)xfs_acl,
+> -							&len, ATTR_ROOT);
+> +	error = xfs_attr_get(ip, ea_name, (unsigned char **)&xfs_acl, &len,
+> +				ATTR_ALLOC|ATTR_ROOT);
 
+This looks mostly fine to me aside from an interface nit. I find it
+strange that we need to specify a max value in len for an xattr of
+unknown length. Even if we wanted to provide the caller the option to
+specify a max, I think we should be able to pass zero here and not fail
+with -ERANGE down in xfs_attr_copy_value(). Of course, we can and should
+still check the on-disk value length (against XFS_XATTR_SIZE_MAX for
+example) to protect against overtly large allocation attempts if on-disk
+data happens to bogus.
+
+Somewhat related on the interface topic... should we ever return an
+allocated buffer on error, or should the xattr layer unwind such
+operations before it returns? This patch handles the value buffer fine
+from a functional perspective, but the latter seems more consistent with
+our general design practice. A future ATTR_ALLOC caller might not know
+to free args.value unconditionally (and as a reviewer I probably
+wouldn't expect it).
+
+Brian
+
+>  	if (error) {
+>  		/*
+>  		 * If the attribute doesn't exist make sure we have a negative
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 6f7848cd5527..5f73feb40384 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -438,7 +438,7 @@ xfs_attrmulti_attr_get(
+>  	if (!kbuf)
+>  		return -ENOMEM;
+>  
+> -	error = xfs_attr_get(XFS_I(inode), name, kbuf, (int *)len, flags);
+> +	error = xfs_attr_get(XFS_I(inode), name, &kbuf, (int *)len, flags);
+>  	if (error)
+>  		goto out_kfree;
+>  
+> diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+> index 3123b5aaad2a..cb895b1df5e4 100644
+> --- a/fs/xfs/xfs_xattr.c
+> +++ b/fs/xfs/xfs_xattr.c
+> @@ -30,7 +30,7 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+>  		value = NULL;
+>  	}
+>  
+> -	error = xfs_attr_get(ip, (unsigned char *)name, value, &asize, xflags);
+> +	error = xfs_attr_get(ip, name, (unsigned char **)&value, &asize, xflags);
+>  	if (error)
+>  		return error;
+>  	return asize;
+> -- 
+> 2.22.0
+> 
