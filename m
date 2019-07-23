@@ -2,60 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B236B721EB
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 00:02:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24A6B7224D
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 00:22:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbfGWWCy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jul 2019 18:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbfGWWCy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:02:54 -0400
-Received: from localhost (unknown [131.107.174.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40472218F0;
-        Tue, 23 Jul 2019 22:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563919373;
-        bh=aSgrCrjwzNnT0DbMSQRs16oON8qpLxN6kkiR0/9LU2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1iQS/6FCyEigVK9Ixjd+4mlMlUJUyQpKzEtcskQds7qcPrlU7JUEwkzOE61LueF/m
-         RzDnV7AW2Hq1QB//l+vx6LdaKS/8mg9AXb8jtPllK55JQKa2oZOTnIQWCKMClwCpax
-         OHdFwpkzv62msVpyJNHGr6IVw0ktMTCPIqkJ/WO4=
-Date:   Tue, 23 Jul 2019 18:02:52 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
-        Alexander.Levin@microsoft.com, stable@vger.kernel.org,
-        amir73il@gmail.com, hch@infradead.org, zlang@redhat.com
-Subject: Re: [PATCH 0/9] xfs: stable fixes for v4.19.y - circa ~ v4.19.58
-Message-ID: <20190723220252.GI1607@sasha-vm>
-References: <20190718230617.7439-1-mcgrof@kernel.org>
- <20190719192311.GP30113@42.do-not-panic.com>
+        id S2387696AbfGWWWz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jul 2019 18:22:55 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58419 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727821AbfGWWWy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jul 2019 18:22:54 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B095A2AD85A;
+        Wed, 24 Jul 2019 08:22:49 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hq3AE-0003mj-Ey; Wed, 24 Jul 2019 08:21:42 +1000
+Date:   Wed, 24 Jul 2019 08:21:42 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "supporter:XFS FILESYSTEM" <linux-xfs@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] Documentation: filesystem: fix "Removed Sysctls" table
+Message-ID: <20190723222142.GS7689@dread.disaster.area>
+References: <20190723114813.GA14870@localhost>
+ <20190723074218.4532737f@lwn.net>
+ <20190723145201.GA20658@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719192311.GP30113@42.do-not-panic.com>
+In-Reply-To: <20190723145201.GA20658@localhost>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=pGLkceISAAAA:8 a=7-415B0cAAAA:8 a=rzqIo9VfzmB4bOlvi8MA:9
+        a=CjuIK1q_8ugA:10 a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 07:23:11PM +0000, Luis Chamberlain wrote:
->On Thu, Jul 18, 2019 at 11:06:08PM +0000, Luis Chamberlain wrote:
->> There is a stable bug tracking this, kz#204223 [1], and a respective bug
->> also present on upstream via kz#204049 [2] which Zorro reported. But,
->> again, nothing changes from the baseline.
->
->The crash is fixed by Brian's commit 6958d11f77d ("xfs: don't trip over
->uninitialized buffer on extent read of corrupted inode") merged on v5.1.
->
->As such I'll extend this series to include one more patch.
+On Tue, Jul 23, 2019 at 03:52:01PM +0100, Sheriff Esseson wrote:
+> On Tue, Jul 23, 2019 at 07:42:18AM -0600, Jonathan Corbet wrote:
+> > On Tue, 23 Jul 2019 12:48:13 +0100
+> > Sheriff Esseson <sheriffesseson@gmail.com> wrote:
+> > 
+> > > the "Removed Sysctls" section is a table - bring it alive with ReST.
+> > > 
+> > > Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+> > 
+> > So this appears to be identical to the patch you sent three days ago; is
+> > there a reason why you are sending it again now?
+> > 
+> > Thanks,
+> > 
+> > jon
+> 
+> Sorry, I was think the patch went unnoticed during the merge window - I could
+> not find a response.
 
-I've queued this series up, thanks!
+The correct thing to do in that case is to reply to the original
+patch and ask if it has been looked at. The usual way of doing this
+is quoting the commit message and replying with a "Ping?" comment
+to bump it back to the top of everyone's mail stacks.
 
---
-Thanks,
-Sasha
+But, again, 3 days is not a long time, people tend to be extremely
+busy and might take a few days to get to reviewing non-critical
+changes, and people may not even review patches during the merge
+window. I'd suggest waiting a week before pinging a patch you've
+sent if there's been no response....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
