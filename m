@@ -2,66 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB41671DEB
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2019 19:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B236B721EB
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 00:02:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388653AbfGWRlx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jul 2019 13:41:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46802 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388606AbfGWRlx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jul 2019 13:41:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+HMUQDK6wiIBWCIIF8WwUTw7ciIEQbt2CkPjlk5WDmc=; b=U4fjXLXfBXbuf3Q4CWPZR6vYE
-        QqRuLDZRGwa0a9qzfohdkJwKivdpYG0HGc8aSPwopfyEFr78dvV/njfN9RmMIY00Kk/rgjWbgFVX1
-        7W2vcm28P7VVrCatVkhHQIX1/xbKialK50N0hE3AQVYzqZYg2s466XbBI80aZYPHYke0gFRKJ3Woq
-        6d6iy/BdFXsMfGjl5+x4pn5PBp740xoTdcDRF0ehtgPbtDJ0rJiTqpM5vmzAlOCvDn0Q62MQ3blKc
-        uj8o6+Mz6fDlEQClVIvQ4qFWdMkjWhnBojcV1dDcrlUJYVwKIdWvBqY0BI1u96/xmsThPh/nuT50o
-        gCY31Jkhg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpynR-0006YA-0V; Tue, 23 Jul 2019 17:41:53 +0000
-Date:   Tue, 23 Jul 2019 10:41:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] xfs: Do not free xfs_extent_busy from inside a spinlock
-Message-ID: <20190723174152.GA19405@infradead.org>
-References: <20190723150017.31891-1-cmaiolino@redhat.com>
- <20190723151102.GA1561054@magnolia>
- <20190723153133.wqt3p3dqaghxbkpr@orion.maiolino.org>
- <20190723155135.GA16481@infradead.org>
- <c2f3542bd06860ecf33f1785b9c146a09a155bf7.camel@kernel.org>
- <20190723170843.GA1952@infradead.org>
- <70ea7252bc0cbfc99da7fde1ce58ddb92550885a.camel@kernel.org>
+        id S2392263AbfGWWCy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jul 2019 18:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731354AbfGWWCy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 18:02:54 -0400
+Received: from localhost (unknown [131.107.174.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40472218F0;
+        Tue, 23 Jul 2019 22:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563919373;
+        bh=aSgrCrjwzNnT0DbMSQRs16oON8qpLxN6kkiR0/9LU2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1iQS/6FCyEigVK9Ixjd+4mlMlUJUyQpKzEtcskQds7qcPrlU7JUEwkzOE61LueF/m
+         RzDnV7AW2Hq1QB//l+vx6LdaKS/8mg9AXb8jtPllK55JQKa2oZOTnIQWCKMClwCpax
+         OHdFwpkzv62msVpyJNHGr6IVw0ktMTCPIqkJ/WO4=
+Date:   Tue, 23 Jul 2019 18:02:52 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, gregkh@linuxfoundation.org,
+        Alexander.Levin@microsoft.com, stable@vger.kernel.org,
+        amir73il@gmail.com, hch@infradead.org, zlang@redhat.com
+Subject: Re: [PATCH 0/9] xfs: stable fixes for v4.19.y - circa ~ v4.19.58
+Message-ID: <20190723220252.GI1607@sasha-vm>
+References: <20190718230617.7439-1-mcgrof@kernel.org>
+ <20190719192311.GP30113@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <70ea7252bc0cbfc99da7fde1ce58ddb92550885a.camel@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190719192311.GP30113@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:38:08PM -0400, Jeff Layton wrote:
-> Ahh ok, I get it now. You're using it as a generic "free this, no matter
-> what it is" wrapper, and relying on the caller to ensure that it will
-> never try to free a vmalloc'ed addr from an atomic context.
-> 
-> I wonder how many other places are doing that? I count 858 call sites
-> for kvfree. If significant portion of those are doing this, then we may
-> have to re-think my patch. It seems like the right thing to do, but we
-> there may be more fallout than I expected.
+On Fri, Jul 19, 2019 at 07:23:11PM +0000, Luis Chamberlain wrote:
+>On Thu, Jul 18, 2019 at 11:06:08PM +0000, Luis Chamberlain wrote:
+>> There is a stable bug tracking this, kz#204223 [1], and a respective bug
+>> also present on upstream via kz#204049 [2] which Zorro reported. But,
+>> again, nothing changes from the baseline.
+>
+>The crash is fixed by Brian's commit 6958d11f77d ("xfs: don't trip over
+>uninitialized buffer on extent read of corrupted inode") merged on v5.1.
+>
+>As such I'll extend this series to include one more patch.
 
-For xfs we only have 4 direct callers of kmem_alloc_large, and 8 callers
-of kmem_zalloc_large, so it they aren't too many, even assuming that due
-to error handling we usually have a few more sites that free the
-buffers.
+I've queued this series up, thanks!
+
+--
+Thanks,
+Sasha
