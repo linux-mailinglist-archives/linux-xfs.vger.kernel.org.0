@@ -2,172 +2,219 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA197718AF
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2019 14:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D067718B0
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2019 14:52:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbfGWMwJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jul 2019 08:52:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50126 "EHLO mx1.redhat.com"
+        id S2390010AbfGWMwP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jul 2019 08:52:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56272 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732432AbfGWMwI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:52:08 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1732432AbfGWMwP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 23 Jul 2019 08:52:15 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1471E3E2D7;
-        Tue, 23 Jul 2019 12:52:08 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D16418553A;
+        Tue, 23 Jul 2019 12:52:14 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA9BD5D9C5;
-        Tue, 23 Jul 2019 12:52:07 +0000 (UTC)
-Date:   Tue, 23 Jul 2019 08:52:05 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AB5319C58;
+        Tue, 23 Jul 2019 12:52:14 +0000 (UTC)
+Date:   Tue, 23 Jul 2019 08:52:12 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: allocate xattr buffer on demand
-Message-ID: <20190723125205.GA59587@bfoster>
-References: <20190722230518.19078-1-david@fromorbit.com>
+Subject: Re: [PATCH] xfs: add kmem allocation trace points
+Message-ID: <20190723125212.GB59587@bfoster>
+References: <20190722233452.31183-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722230518.19078-1-david@fromorbit.com>
+In-Reply-To: <20190722233452.31183-1-david@fromorbit.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 23 Jul 2019 12:52:08 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 23 Jul 2019 12:52:14 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:05:18AM +1000, Dave Chinner wrote:
+On Tue, Jul 23, 2019 at 09:34:52AM +1000, Dave Chinner wrote:
 > From: Dave Chinner <dchinner@redhat.com>
 > 
-> When doing file lookups and checking for permissions, we end up in
-> xfs_get_acl() to see if there are any ACLs on the inode. This
-> requires and xattr lookup, and to do that we have to supply a buffer
-> large enough to hold an maximum sized xattr.
+> When trying to correlate XFS kernel allocations to memory reclaim
+> behaviour, it is useful to know what allocations XFS is actually
+> attempting. This information is not directly available from
+> tracepoints in the generic memory allocation and reclaim
+> tracepoints, so these new trace points provide a high level
+> indication of what the XFS memory demand actually is.
 > 
-> On workloads were we are accessing a wide range of cache cold files
-> under memory pressure (e.g. NFS fileservers) we end up spending a
-> lot of time allocating the buffer. The buffer is 64k in length, so
-> is a contiguous multi-page allocation, and if that then fails we
-> fall back to vmalloc(). Hence the allocation here is /expensive/
-> when we are looking up hundreds of thousands of files a second.
+> There is no per-filesystem context in this code, so we just trace
+> the type of allocation, the size and the iallocation constraints.
+> The kmem code alos doesn't include much of the common XFS headers,
+> so there are a few definitions that need to be added to the trace
+> headers and a couple of types that need to be made common to avoid
+> needing to include the whole world in the kmem code.
 > 
-> Initial numbers from a bpf trace show average time in xfs_get_acl()
-> is ~32us, with ~19us of that in the memory allocation. Note these
-> are average times, so there are going to be affected by the worst
-> case allocations more than the common fast case...
-> 
-> To avoid this, we could just do a "null"  lookup to see if the ACL
-> xattr exists and then only do the allocation if it exists. This,
-> however, optimises the path for the "no ACL present" case at the
-> expense of the "acl present" case. i.e. we can halve the time in
-> xfs_get_acl() for the no acl case (i.e down to ~10-15us), but that
-> then increases the ACL case by 30% (i.e. up to 40-45us).
-> 
-> To solve this and speed up both cases, drive the xattr buffer
-> allocation into the attribute code once we know what the actual
-> xattr length is. For the no-xattr case, we avoid the allocation
-> completely, speeding up that case. For the common ACL case, we'll
-> end up with a fast heap allocation (because it'll be smaller than a
-> page), and only for the rarer "we have a remote xattr" will we have
-> a multi-page allocation occur. Hence the common ACL case will be
-> much faster, too.
-> 
-> The down side of this is the buffer allocation is now a GFP_NOFS
-> allocation. This isn't a big deal for small allocations, though it
-> might cause large xattrs (which are out of line and doing
-> substantial GFP_NOFS allocations already) to have to do another
-> large allocation in this context. I think, however, this is rare
-> enough that it won't matter for the ACL path, and the common xattr
-> paths can still provide and external buffer...
-> 
-
-Where's the NOFS allocation coming from?
-
 > Signed-off-by: Dave Chinner <dchinner@redhat.com>
 > ---
->  fs/xfs/libxfs/xfs_attr.c      | 23 ++++------
->  fs/xfs/libxfs/xfs_attr.h      |  6 ++-
->  fs/xfs/libxfs/xfs_attr_leaf.c | 85 +++++++++++++++++++++--------------
->  fs/xfs/libxfs/xfs_da_btree.h  |  4 +-
->  fs/xfs/xfs_acl.c              | 14 ++----
->  fs/xfs/xfs_ioctl.c            |  2 +-
->  fs/xfs/xfs_xattr.c            |  2 +-
->  7 files changed, 72 insertions(+), 64 deletions(-)
+
+Seems fine:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/kmem.c             | 11 +++++++++--
+>  fs/xfs/libxfs/xfs_types.h |  8 ++++++++
+>  fs/xfs/xfs_mount.h        |  7 -------
+>  fs/xfs/xfs_trace.h        | 33 +++++++++++++++++++++++++++++++++
+>  4 files changed, 50 insertions(+), 9 deletions(-)
 > 
-...
-> diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
-> index cbda40d40326..cba1ea9d6d0a 100644
-> --- a/fs/xfs/xfs_acl.c
-> +++ b/fs/xfs/xfs_acl.c
-...
-> @@ -130,17 +130,9 @@ xfs_get_acl(struct inode *inode, int type)
->  		BUG();
->  	}
+> diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+> index 16bb9a328678..edcf393c8fd9 100644
+> --- a/fs/xfs/kmem.c
+> +++ b/fs/xfs/kmem.c
+> @@ -3,10 +3,10 @@
+>   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+>   */
+> -#include <linux/sched/mm.h>
+> +#include "xfs.h"
+>  #include <linux/backing-dev.h>
+> -#include "kmem.h"
+>  #include "xfs_message.h"
+> +#include "xfs_trace.h"
 >  
-> -	/*
-> -	 * If we have a cached ACLs value just return it, not need to
-> -	 * go out to the disk.
-> -	 */
->  	len = XFS_ACL_MAX_SIZE(ip->i_mount);
-> -	xfs_acl = kmem_zalloc_large(len, KM_SLEEP);
-> -	if (!xfs_acl)
-> -		return ERR_PTR(-ENOMEM);
+>  void *
+>  kmem_alloc(size_t size, xfs_km_flags_t flags)
+> @@ -15,6 +15,8 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
+>  	gfp_t	lflags = kmem_flags_convert(flags);
+>  	void	*ptr;
+>  
+> +	trace_kmem_alloc(size, flags, _RET_IP_);
+> +
+>  	do {
+>  		ptr = kmalloc(size, lflags);
+>  		if (ptr || (flags & (KM_MAYFAIL|KM_NOSLEEP)))
+> @@ -35,6 +37,8 @@ kmem_alloc_large(size_t size, xfs_km_flags_t flags)
+>  	void	*ptr;
+>  	gfp_t	lflags;
+>  
+> +	trace_kmem_alloc_large(size, flags, _RET_IP_);
+> +
+>  	ptr = kmem_alloc(size, flags | KM_MAYFAIL);
+>  	if (ptr)
+>  		return ptr;
+> @@ -65,6 +69,8 @@ kmem_realloc(const void *old, size_t newsize, xfs_km_flags_t flags)
+>  	gfp_t	lflags = kmem_flags_convert(flags);
+>  	void	*ptr;
+>  
+> +	trace_kmem_realloc(newsize, flags, _RET_IP_);
+> +
+>  	do {
+>  		ptr = krealloc(old, newsize, lflags);
+>  		if (ptr || (flags & (KM_MAYFAIL|KM_NOSLEEP)))
+> @@ -85,6 +91,7 @@ kmem_zone_alloc(kmem_zone_t *zone, xfs_km_flags_t flags)
+>  	gfp_t	lflags = kmem_flags_convert(flags);
+>  	void	*ptr;
+>  
+> +	trace_kmem_zone_alloc(0, flags, _RET_IP_);
+>  	do {
+>  		ptr = kmem_cache_alloc(zone, lflags);
+>  		if (ptr || (flags & (KM_MAYFAIL|KM_NOSLEEP)))
+> diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
+> index 802b34cd10fe..300b3e91ca3a 100644
+> --- a/fs/xfs/libxfs/xfs_types.h
+> +++ b/fs/xfs/libxfs/xfs_types.h
+> @@ -169,6 +169,14 @@ typedef struct xfs_bmbt_irec
+>  	xfs_exntst_t	br_state;	/* extent state */
+>  } xfs_bmbt_irec_t;
+>  
+> +/* per-AG block reservation types */
+> +enum xfs_ag_resv_type {
+> +	XFS_AG_RESV_NONE = 0,
+> +	XFS_AG_RESV_AGFL,
+> +	XFS_AG_RESV_METADATA,
+> +	XFS_AG_RESV_RMAPBT,
+> +};
+> +
+>  /*
+>   * Type verifier functions
+>   */
+> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> index 4adb6837439a..fdb60e09a9c5 100644
+> --- a/fs/xfs/xfs_mount.h
+> +++ b/fs/xfs/xfs_mount.h
+> @@ -327,13 +327,6 @@ xfs_daddr_to_agbno(struct xfs_mount *mp, xfs_daddr_t d)
+>  }
+>  
+>  /* per-AG block reservation data structures*/
+> -enum xfs_ag_resv_type {
+> -	XFS_AG_RESV_NONE = 0,
+> -	XFS_AG_RESV_AGFL,
+> -	XFS_AG_RESV_METADATA,
+> -	XFS_AG_RESV_RMAPBT,
+> -};
 > -
-> -	error = xfs_attr_get(ip, ea_name, (unsigned char *)xfs_acl,
-> -							&len, ATTR_ROOT);
-> +	error = xfs_attr_get(ip, ea_name, (unsigned char **)&xfs_acl, &len,
-> +				ATTR_ALLOC|ATTR_ROOT);
-
-This looks mostly fine to me aside from an interface nit. I find it
-strange that we need to specify a max value in len for an xattr of
-unknown length. Even if we wanted to provide the caller the option to
-specify a max, I think we should be able to pass zero here and not fail
-with -ERANGE down in xfs_attr_copy_value(). Of course, we can and should
-still check the on-disk value length (against XFS_XATTR_SIZE_MAX for
-example) to protect against overtly large allocation attempts if on-disk
-data happens to bogus.
-
-Somewhat related on the interface topic... should we ever return an
-allocated buffer on error, or should the xattr layer unwind such
-operations before it returns? This patch handles the value buffer fine
-from a functional perspective, but the latter seems more consistent with
-our general design practice. A future ATTR_ALLOC caller might not know
-to free args.value unconditionally (and as a reviewer I probably
-wouldn't expect it).
-
-Brian
-
->  	if (error) {
->  		/*
->  		 * If the attribute doesn't exist make sure we have a negative
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 6f7848cd5527..5f73feb40384 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -438,7 +438,7 @@ xfs_attrmulti_attr_get(
->  	if (!kbuf)
->  		return -ENOMEM;
+>  struct xfs_ag_resv {
+>  	/* number of blocks originally reserved here */
+>  	xfs_extlen_t			ar_orig_reserved;
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index 8094b1920eef..8bb8b4704a00 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -23,6 +23,7 @@ struct xlog;
+>  struct xlog_ticket;
+>  struct xlog_recover;
+>  struct xlog_recover_item;
+> +struct xlog_rec_header;
+>  struct xfs_buf_log_format;
+>  struct xfs_inode_log_format;
+>  struct xfs_bmbt_irec;
+> @@ -30,6 +31,10 @@ struct xfs_btree_cur;
+>  struct xfs_refcount_irec;
+>  struct xfs_fsmap;
+>  struct xfs_rmap_irec;
+> +struct xfs_icreate_log;
+> +struct xfs_owner_info;
+> +struct xfs_trans_res;
+> +struct xfs_inobt_rec_incore;
 >  
-> -	error = xfs_attr_get(XFS_I(inode), name, kbuf, (int *)len, flags);
-> +	error = xfs_attr_get(XFS_I(inode), name, &kbuf, (int *)len, flags);
->  	if (error)
->  		goto out_kfree;
+>  DECLARE_EVENT_CLASS(xfs_attr_list_class,
+>  	TP_PROTO(struct xfs_attr_list_context *ctx),
+> @@ -3575,6 +3580,34 @@ TRACE_EVENT(xfs_pwork_init,
+>  		  __entry->nr_threads, __entry->pid)
+>  )
 >  
-> diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-> index 3123b5aaad2a..cb895b1df5e4 100644
-> --- a/fs/xfs/xfs_xattr.c
-> +++ b/fs/xfs/xfs_xattr.c
-> @@ -30,7 +30,7 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
->  		value = NULL;
->  	}
+> +DECLARE_EVENT_CLASS(xfs_kmem_class,
+> +	TP_PROTO(ssize_t size, int flags, unsigned long caller_ip),
+> +	TP_ARGS(size, flags, caller_ip),
+> +	TP_STRUCT__entry(
+> +		__field(ssize_t, size)
+> +		__field(int, flags)
+> +		__field(unsigned long, caller_ip)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->size = size;
+> +		__entry->flags = flags;
+> +		__entry->caller_ip = caller_ip;
+> +	),
+> +	TP_printk("size %zd flags 0x%x caller %pS",
+> +		  __entry->size,
+> +		  __entry->flags,
+> +		  (char *)__entry->caller_ip)
+> +)
+> +
+> +#define DEFINE_KMEM_EVENT(name) \
+> +DEFINE_EVENT(xfs_kmem_class, name, \
+> +	TP_PROTO(ssize_t size, int flags, unsigned long caller_ip), \
+> +	TP_ARGS(size, flags, caller_ip))
+> +DEFINE_KMEM_EVENT(kmem_alloc);
+> +DEFINE_KMEM_EVENT(kmem_alloc_large);
+> +DEFINE_KMEM_EVENT(kmem_realloc);
+> +DEFINE_KMEM_EVENT(kmem_zone_alloc);
+> +
+>  #endif /* _TRACE_XFS_H */
 >  
-> -	error = xfs_attr_get(ip, (unsigned char *)name, value, &asize, xflags);
-> +	error = xfs_attr_get(ip, name, (unsigned char **)&value, &asize, xflags);
->  	if (error)
->  		return error;
->  	return asize;
+>  #undef TRACE_INCLUDE_PATH
 > -- 
 > 2.22.0
 > 
