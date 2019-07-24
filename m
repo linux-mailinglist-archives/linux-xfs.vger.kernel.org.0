@@ -2,111 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8155D7240B
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 03:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 118FE725B8
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 06:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfGXBwt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jul 2019 21:52:49 -0400
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:38457 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfGXBwt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jul 2019 21:52:49 -0400
-Received: by mail-pf1-f173.google.com with SMTP id y15so20056521pfn.5
-        for <linux-xfs@vger.kernel.org>; Tue, 23 Jul 2019 18:52:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zJ2ZrnENwVACXY1kQ8xq+AHslWptY93nAERKRz0kc84=;
-        b=m2KeQS69YLU0iYJAmu+i81BZFw9dJNmOJSZTfxCX2FAWM4muGgddEFxj/559UvbeIi
-         yPBNVOunn8HlrMI7mvRcEHHgxswdBE1e55ZdhJriserz7t1kk401EU9ta/xnxcLLATUW
-         1J7elH/gBWjfEs67qBs5Z63ltmf35wdt//dKfx+Bf4jh7/cgc/7GAV+UI1qEQEILHrT+
-         RbQnX04WjopE/4/VahO+H7bzlkhb00IrrLzd44a+H/DC+5lFBRsraO7CDc2leikcWzdQ
-         dndyPRC0VZFyPs3sfcToEbQuj/p02D1CDIc5hurOMW46MdegQd2B2bzyPJo261xMmulI
-         6NVA==
-X-Gm-Message-State: APjAAAUe8BTs/h+XQJSEjR2nwgGeeoCzFX01165Ont3b7wqsn0FZ748D
-        sgRwHmVc58ANeqdb13x+TA86Z9Co
-X-Google-Smtp-Source: APXvYqy95SBsI95UC3NczrvIc+CR96qKzoDimsjCsIBBUeK9KYkR9MBbdoy/lQoPN3QuUc/l9oUMSA==
-X-Received: by 2002:a63:1f03:: with SMTP id f3mr50915185pgf.249.1563933168194;
-        Tue, 23 Jul 2019 18:52:48 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w22sm47776301pfi.175.2019.07.23.18.52.47
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 18:52:47 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id AF76F402A1; Wed, 24 Jul 2019 01:52:46 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 01:52:46 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-xfs@vger.kernel.org
-Subject: fstests: cannot allocate memory - false negatives xfs/059
-Message-ID: <20190724015246.GR30113@42.do-not-panic.com>
+        id S1725861AbfGXEMx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jul 2019 00:12:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43696 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfGXEMw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 00:12:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O48k9w119358;
+        Wed, 24 Jul 2019 04:12:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=SPzlBQsvwc7iXg4LXX199Iy5pryJBxheRF3MW3DZM5Y=;
+ b=cqLQbJkgdcPVTLmh04HZaEUOJODfxnueRO/keO3jWdtUHREAYUbl28kM03lIcyRyX+br
+ 6DWMt13XHN2qomaKcWWnZGW8DEAtpkld64XJADWmyUi/szPbXDxrp3TcGQaK5lqt/9Mo
+ tGzaYjeNQClmd9ai8wSC1ZvIEDg4z325Lom7CkOuHdGpcC7oMIrSxnpQqJwohaJ6+Kuh
+ R4m49PMruO9uHu3sgzMALAnkcCSo0ym++yA02rt4+j18v+Kdbkc12ckBEZfswzdXvGCR
+ liLveSzbmICB8/y6ilt3sO/vQS+5AXEji9+SeQGjsDlCC1eaXRq33V+OF3aSK/D0Drqz 3Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2tx61btjs2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 04:12:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O47m8e108778;
+        Wed, 24 Jul 2019 04:12:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2tx60xn9ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 04:12:49 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O4CnP8013903;
+        Wed, 24 Jul 2019 04:12:49 GMT
+Received: from localhost (/50.206.22.50)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jul 2019 21:12:49 -0700
+Subject: [PATCH 0/3] fstests: various fixes
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     guaneryu@gmail.com, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Date:   Tue, 23 Jul 2019 21:12:48 -0700
+Message-ID: <156394156831.1850719.2997473679130010771.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=986
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907240045
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907240045
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-I'm seeing at least one test fail but in reality it doesn't
-seem like a real failure, only memory pressure for a small
-period of time, and the test actually passed. But it failed
-since there was a difference in output.
+Hi all,
 
-I see this has been discussed but the emails date back years ago
-and then refer to discussions using a URL which no longer exists.
-As such I cannot determine what the conclusion was.
+Fix the mixed buffered/directio filtering function to pick up the new
+locations of the iomap directio code, fix the bogus description in
+xfs/504, and reduce the time generic/561 waits for duperemove to finish.
 
-For example, the test below actually is fine, but just because it
-display two extra lines of "Cannot allocate memory" its reported as a
-failure.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-What was the agreement to deal with this? Was there any? If no
-agreement was reached, what about just excluding these lines from
-the output, or modifying the utilities to not display such messages
-unless a verbsose flag was passed.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-I tried looking for xfsrestore to see where this would be coming from
-and don't see that... so again.. still not sure what to do yet.
+--D
 
-Thoughts?
-
-SECTION       -- xfs_nocrc_512
-FSTYP         -- xfs (non-debug)
-PLATFORM      -- Linux/x86_64 oscheck-xfs-nocrc-512 4.19.58 #1 SMP Wed
-Jul 17 06:37:34 UTC 2019
-MKFS_OPTIONS  -- -f -f -m crc=0,reflink=0,rmapbt=0, -i sparse=0, -b
-size=512, /dev/loop5
-MOUNT_OPTIONS -- /dev/loop5 /media/scratch
-
-xfs/059 14s ... - output mismatch (see
-/var/lib/xfstests/results/oscheck-xfs-nocrc-512/4.19.58/xfs_nocrc_512/xfs/059.out.bad)
---- tests/xfs/059.out       2019-07-17 06:53:54.439742882 +0000
-+++
-/var/lib/xfstests/results/oscheck-xfs-nocrc-512/4.19.58/xfs_nocrc_512/xfs/059.out.bad
-2019-07-23 18:36:06.530062007 +0000
-@@ -29,6 +29,8 @@
-xfsrestore: using file dump (drive_simple) strategy
-xfsrestore: using file dump (drive_simple)
-strategy
-xfsrestore: using file dump (drive_simple)
-strategy
-+ Cannot allocate memory
-+ Cannot allocate memory
-xfsrestore: restore complete:
-SECS seconds elapsed
-xfsrestore: Restore Status:
-SUCCESS
-...
-(Run 'diff -u
-/var/lib/xfstests/tests/xfs/059.out
-/var/lib/xfstests/results/oscheck-xfs-nocrc-512/4.19.58/xfs_nocrc_512/xfs/059.out.bad'
-to see the entire
-diff)
-Ran: xfs/059
-Failures: xfs/059
-Failed 1 of 1 tests
-
-
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
