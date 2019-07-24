@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44E5873330
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 17:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 144C173332
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 17:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfGXP4R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jul 2019 11:56:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41012 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGXP4R (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 11:56:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OFnACV149988;
-        Wed, 24 Jul 2019 15:56:14 GMT
+        id S1727084AbfGXP4i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jul 2019 11:56:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52048 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfGXP4i (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 11:56:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OFn82C038980;
+        Wed, 24 Jul 2019 15:56:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=a8O9hlf+hW6/rtEFQ1VPhQMJaK6X/g/S1Gs6akuO1uo=;
- b=qG1/20/ymt5G8pI2MiK4sWR/rLw6M5f241f7ngC7cfbyY69VOsorSvrZn2TGK711Le4q
- BGbilud1F6C/iERS5erXlmRbQ4pY0YVSZwwJOK90gUMRiFntjQMBQsGAnhi165zSisfb
- 7ADk5BTj7vDN/EI6l4nPSHndxbprn+Y0VpaPCU6yuaNvITzQ7OKfyFUd5JokUDs+33+4
- kHgXIC7USOw3mReI3WIyxt7pZR9M8IxzDzxgkt501PnaWo31PrAo8cpfBinkUj33YtDy
- IApL2XZG7G9o1oMs0m/BgE3Wm/GuVWiCPcE/uA5KcCt7tBsMKZjStaJF9FcFmmwErYhh 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tx61bxdpr-1
+ bh=a/oqZzUmf/jcbt5gnbG5g+yEtlBLX2evki3ldhAK+24=;
+ b=X6znpryCmwpXxvrGWr1Pl7+dDuATf2FR1GY1gjswmqRuONbsaM3ogvr8XBIswPIkOh2U
+ eNiAnWq+/KRvRLHuJV7Wv4edogWOt/zzYYz1xQeOl2a2ftM3IKfEv2zHGIBQBVC4bl56
+ zdpG9nNzghxESAYlooBX3bORb3rbDJzisPTDE2UEwzQEmdwitWmVZXCh+SV+R2Y2jr7V
+ KdSz+QK+Q2i1jTypBX3HnAuJRCkCWuNLr5QqYjTZva7bw1234d8lleMn+lC7g1sYL3Jp
+ 0nhvMmoZlOsZz9l4e8Zu7qYoXh2+BC3du+WOhE44GXFIMzCjwlNTXgxTtyX3S8sox5YP gw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2tx61bxdy6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 15:56:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OFr4u7139037;
-        Wed, 24 Jul 2019 15:56:13 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tx60xt8tg-1
+        Wed, 24 Jul 2019 15:56:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OFr6AR053987;
+        Wed, 24 Jul 2019 15:56:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2tx60y614h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 15:56:13 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6OFuCMd003863;
-        Wed, 24 Jul 2019 15:56:12 GMT
+        Wed, 24 Jul 2019 15:56:34 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6OFuWeC017959;
+        Wed, 24 Jul 2019 15:56:32 GMT
 Received: from localhost (/50.206.22.50)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 08:56:12 -0700
-Date:   Wed, 24 Jul 2019 08:56:10 -0700
+        with ESMTP ; Wed, 24 Jul 2019 08:56:32 -0700
+Date:   Wed, 24 Jul 2019 08:56:31 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: [PATCH 5/3] various: disable quotas before running test
-Message-ID: <20190724155610.GF7084@magnolia>
+Subject: [PATCH 6/3] xfs/033: filter out root inode nlink repair
+Message-ID: <20190724155631.GG7084@magnolia>
 References: <156394156831.1850719.2997473679130010771.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -70,89 +70,79 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-For all the tests which require that quotas be disabled, remove the
-quota mount options before mounting the scratch filesystem.
+A couple of releases ago, xfs_repair was patched to set the root inode
+link count correctly when messing around with lost inodes.  However, the
+old xfs_repair remains in the golden output, so remove it and filter the
+line so that we don't cause 'new' regressions on old software.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/generic/384 |    4 ++--
- tests/xfs/030     |    2 ++
- tests/xfs/033     |    2 ++
- tests/xfs/065     |    2 ++
- 4 files changed, 8 insertions(+), 2 deletions(-)
+ tests/xfs/033             |   12 ++++++++++--
+ tests/xfs/033.out.crc     |    2 --
+ tests/xfs/033.out.default |    2 --
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/tests/generic/384 b/tests/generic/384
-index b7c940d7..33098a38 100755
---- a/tests/generic/384
-+++ b/tests/generic/384
-@@ -37,8 +37,8 @@ _require_quota
- _require_xfs_quota_foreign
- _require_xfs_io_command "chproj"
- 
--# we can't run with group quotas
--_exclude_scratch_mount_option "gquota" "grpquota"
-+# we can't run with group quotas (on v4 xfs); the mount options for group
-+# quotas will be filtered out by _qmount_option below.
- 
- dir=$SCRATCH_MNT/project
- 
-diff --git a/tests/xfs/030 b/tests/xfs/030
-index 5ed99628..10854c8a 100755
---- a/tests/xfs/030
-+++ b/tests/xfs/030
-@@ -28,6 +28,7 @@ trap "_cleanup; exit \$status" 0 1 2 3 15
- . ./common/rc
- . ./common/filter
- . ./common/repair
-+. ./common/quota
- 
- # nuke the superblock, AGI, AGF, AGFL; then try repair the damage
- #
-@@ -65,6 +66,7 @@ if [ $? -ne 0 ]		# probably don't have a big enough scratch
- then
- 	_notrun "SCRATCH_DEV too small, results would be non-deterministic"
- else
-+	_qmount_option noquota
- 	_scratch_mount
- 	src/feature -U $SCRATCH_DEV && \
- 		_notrun "UQuota are enabled, test needs controlled sb recovery"
 diff --git a/tests/xfs/033 b/tests/xfs/033
-index 5af0aefc..75b44f38 100755
+index 75b44f38..0ce67a9c 100755
 --- a/tests/xfs/033
 +++ b/tests/xfs/033
-@@ -28,6 +28,7 @@ trap "_cleanup; exit \$status" 0 1 2 3 15
- . ./common/rc
- . ./common/filter
- . ./common/repair
-+. ./common/quota
+@@ -91,9 +91,17 @@ src/feature -P $SCRATCH_DEV && \
+ 	_notrun "PQuota are enabled, test needs controlled sb recovery"
+ _scratch_unmount
  
- # nuke the root, rt bitmap, and rt summary inodes
- # 
-@@ -80,6 +81,7 @@ _link_out_file_named $seqfull.out "$FEATURES"
- 	sed -e 's/ //g' -e 's/^/export /'`
++# We fixed some bugs in xfs_repair that caused us to have to reset the inode
++# link counts on the root inode twice.  That wasn't related to what this test
++# is checking, so remove the nlink reset line from the golden output and filter
++# old xfsprogs to avoid introducing new regressions.
++filter_repair() {
++	sed -e '/resetting inode INO nlinks from 1 to 2/d'
++}
++
+ # rootino, rbmino, and rsumino are now set (lets blow em away!)
+-_check_root_inos 0
+-_check_root_inos -1 | _filter_bad_ids
++_check_root_inos 0 | filter_repair
++_check_root_inos -1 | filter_repair | _filter_bad_ids
  
- # check we won't get any quota inodes setup on mount
-+_qmount_option noquota
- _scratch_mount
- src/feature -U $SCRATCH_DEV && \
- 	_notrun "UQuota are enabled, test needs controlled sb recovery"
-diff --git a/tests/xfs/065 b/tests/xfs/065
-index f09bd947..b1533666 100755
---- a/tests/xfs/065
-+++ b/tests/xfs/065
-@@ -29,6 +29,7 @@ _cleanup()
- . ./common/rc
- . ./common/filter
- . ./common/dump
-+. ./common/quota
- 
- #
- # list recursively the directory
-@@ -57,6 +58,7 @@ _require_scratch
- # so don't run it
- #
- _scratch_mkfs_xfs >> $seqres.full
-+_qmount_option noquota
- _scratch_mount
- $here/src/feature -U $SCRATCH_DEV && \
- 	_notrun "UQuota enabled, test needs controlled xfsdump output"
+ # success, all done
+ status=0
+diff --git a/tests/xfs/033.out.crc b/tests/xfs/033.out.crc
+index 2ab4c432..594060f0 100644
+--- a/tests/xfs/033.out.crc
++++ b/tests/xfs/033.out.crc
+@@ -30,7 +30,6 @@ reinitializing root directory
+         - traversal finished ...
+         - moving disconnected inodes to lost+found ...
+ Phase 7 - verify and correct link counts...
+-resetting inode INO nlinks from 1 to 2
+ done
+ Corrupting rt bitmap inode - setting bits to 0
+ Wrote X.XXKb (value 0x0)
+@@ -125,7 +124,6 @@ reinitializing root directory
+         - traversal finished ...
+         - moving disconnected inodes to lost+found ...
+ Phase 7 - verify and correct link counts...
+-resetting inode INO nlinks from 1 to 2
+ done
+ Corrupting rt bitmap inode - setting bits to -1
+ Wrote X.XXKb (value 0xffffffff)
+diff --git a/tests/xfs/033.out.default b/tests/xfs/033.out.default
+index 68bc7810..be297e5a 100644
+--- a/tests/xfs/033.out.default
++++ b/tests/xfs/033.out.default
+@@ -29,7 +29,6 @@ reinitializing root directory
+         - traversal finished ...
+         - moving disconnected inodes to lost+found ...
+ Phase 7 - verify and correct link counts...
+-resetting inode INO nlinks from 1 to 2
+ done
+ Corrupting rt bitmap inode - setting bits to 0
+ Wrote X.XXKb (value 0x0)
+@@ -122,7 +121,6 @@ reinitializing root directory
+         - traversal finished ...
+         - moving disconnected inodes to lost+found ...
+ Phase 7 - verify and correct link counts...
+-resetting inode INO nlinks from 1 to 2
+ done
+ Corrupting rt bitmap inode - setting bits to -1
+ Wrote X.XXKb (value 0xffffffff)
