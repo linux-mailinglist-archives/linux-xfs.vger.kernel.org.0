@@ -2,930 +2,438 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44B7E725C1
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 06:13:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C56AA7270D
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 07:00:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725870AbfGXENr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jul 2019 00:13:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51540 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfGXENr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 00:13:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O48w12009193;
-        Wed, 24 Jul 2019 04:13:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=tsUwQXGZC8MoHJOWrMF6/e5RSpyTJ7wzaLVdCO4b5wM=;
- b=wBO10vN/gZojUOBipdMAtgVFzJgLtQi6dwPyj+zeNFYULNBSjCZrKZbE44MXtem+hKw5
- y3KXSnocFTUWhQs5lGSPKm8Aod+ALeXo+ZIYNs3FWOTNKhHXl5MkUv5fL47XHJLU62lM
- XBHPXCzrsMM3ajx7lhOA5F0wQz/6gYGHaWMU7AYkwKl6RKEQEUiu1CFtJUbs2gUpgTBp
- JQ0HdWr4GoiaNJ+xoMbX8FskX6CZbXghR9WDwKB3FaBSpMiPIZLoAQ57l3ZupT/vy6SX
- l78TyJSkRNgxXRFVT1IeV+NnyC1wSE2mKCJsA8GQTsBZtey2tcL7gVLohXI2zxr1QYVz Sg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2tx61btjrf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 04:13:41 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O4DLU0060077;
-        Wed, 24 Jul 2019 04:13:41 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2tx60x08wf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 04:13:41 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6O4Der9018715;
-        Wed, 24 Jul 2019 04:13:40 GMT
-Received: from localhost (/50.206.22.50)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 21:13:39 -0700
-Subject: [PATCH 4/4] xfs: test new v5 bulkstat commands
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     guaneryu@gmail.com, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 23 Jul 2019 21:13:38 -0700
-Message-ID: <156394161882.1850833.4351446431166375360.stgit@magnolia>
-In-Reply-To: <156394159426.1850833.16316913520596851191.stgit@magnolia>
-References: <156394159426.1850833.16316913520596851191.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1725861AbfGXFAZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jul 2019 01:00:25 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39246 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725813AbfGXFAY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 01:00:24 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E62881EDA46
+        for <linux-xfs@vger.kernel.org>; Wed, 24 Jul 2019 15:00:19 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hq9Mt-0006e8-Vd
+        for linux-xfs@vger.kernel.org; Wed, 24 Jul 2019 14:59:12 +1000
+Date:   Wed, 24 Jul 2019 14:59:11 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH V2] xfs: allocate xattr buffer on demand
+Message-ID: <20190724045911.GU7689@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240046
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240045
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10 a=20KFwNOVAAAA:8
+        a=T9KyYMUoXnrLVQhwsNsA:9 a=1ShXA2Qe-u6Mtc83:21 a=fgGT4jONAzWRaKSw:21
+        a=CjuIK1q_8ugA:10
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Check that the new v5 bulkstat commands do everything the old one do,
-and then make sure the new functionality actually works.
+From: Dave Chinner <dchinner@redhat.com>
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+When doing file lookups and checking for permissions, we end up in
+xfs_get_acl() to see if there are any ACLs on the inode. This
+requires and xattr lookup, and to do that we have to supply a buffer
+large enough to hold an maximum sized xattr.
+
+On workloads were we are accessing a wide range of cache cold files
+under memory pressure (e.g. NFS fileservers) we end up spending a
+lot of time allocating the buffer. The buffer is 64k in length, so
+is a contiguous multi-page allocation, and if that then fails we
+fall back to vmalloc(). Hence the allocation here is /expensive/
+when we are looking up hundreds of thousands of files a second.
+
+Initial numbers from a bpf trace show average time in xfs_get_acl()
+is ~32us, with ~19us of that in the memory allocation. Note these
+are average times, so there are going to be affected by the worst
+case allocations more than the common fast case...
+
+To avoid this, we could just do a "null"  lookup to see if the ACL
+xattr exists and then only do the allocation if it exists. This,
+however, optimises the path for the "no ACL present" case at the
+expense of the "acl present" case. i.e. we can halve the time in
+xfs_get_acl() for the no acl case (i.e down to ~10-15us), but that
+then increases the ACL case by 30% (i.e. up to 40-45us).
+
+To solve this and speed up both cases, drive the xattr buffer
+allocation into the attribute code once we know what the actual
+xattr length is. For the no-xattr case, we avoid the allocation
+completely, speeding up that case. For the common ACL case, we'll
+end up with a fast heap allocation (because it'll be smaller than a
+page), and only for the rarer "we have a remote xattr" will we have
+a multi-page allocation occur. Hence the common ACL case will be
+much faster, too.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- common/xfs                 |    6 +
- src/Makefile               |    2 
- src/bulkstat_null_ocount.c |   61 +++++++++
- tests/xfs/085              |    2 
- tests/xfs/086              |    2 
- tests/xfs/087              |    2 
- tests/xfs/088              |    2 
- tests/xfs/089              |    2 
- tests/xfs/091              |    2 
- tests/xfs/093              |    2 
- tests/xfs/097              |    2 
- tests/xfs/130              |    2 
- tests/xfs/235              |    2 
- tests/xfs/271              |    2 
- tests/xfs/744              |  212 +++++++++++++++++++++++++++++++
- tests/xfs/744.out          |  297 ++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/745              |   44 +++++++
- tests/xfs/745.out          |    2 
- tests/xfs/group            |    2 
- 19 files changed, 636 insertions(+), 12 deletions(-)
- create mode 100644 src/bulkstat_null_ocount.c
- create mode 100755 tests/xfs/744
- create mode 100644 tests/xfs/744.out
- create mode 100755 tests/xfs/745
- create mode 100644 tests/xfs/745.out
 
+V2:
+o removed stale GFP_NOFS stuff from commit message
+o changed xfs_attr_get() to only return allocated buffer for
+  ATTR_ALLOC on successful retrieval
+o documented xfs_attr_get() behaviour for ATTR_KERNOVAL, ATTR_ALLOC,
+  and when -ERANGE errors are returned.
 
-diff --git a/common/xfs b/common/xfs
-index 2b38e94b..1bce3c18 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -878,3 +878,9 @@ _force_xfsv4_mount_options()
- 	fi
- 	echo "MOUNT_OPTIONS = $MOUNT_OPTIONS" >>$seqres.full
+ fs/xfs/libxfs/xfs_attr.c      | 51 ++++++++++++++++++--------
+ fs/xfs/libxfs/xfs_attr.h      |  6 ++-
+ fs/xfs/libxfs/xfs_attr_leaf.c | 85 ++++++++++++++++++++++++++-----------------
+ fs/xfs/libxfs/xfs_da_btree.h  |  4 +-
+ fs/xfs/xfs_acl.c              | 16 ++------
+ fs/xfs/xfs_ioctl.c            |  2 +-
+ fs/xfs/xfs_xattr.c            |  2 +-
+ 7 files changed, 99 insertions(+), 67 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index d48fcf11cc35..875b35b373cb 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -115,12 +115,28 @@ xfs_attr_get_ilocked(
+ 		return xfs_attr_node_get(args);
  }
-+
-+# Find AG count of mounted filesystem
-+_xfs_mount_agcount()
-+{
-+	$XFS_INFO_PROG "$1" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g'
-+}
-diff --git a/src/Makefile b/src/Makefile
-index 9d3d2529..c4fcf370 100644
---- a/src/Makefile
-+++ b/src/Makefile
-@@ -28,7 +28,7 @@ LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
- 	attr-list-by-handle-cursor-test listxattr dio-interleaved t_dir_type \
- 	dio-invalidate-cache stat_test t_encrypted_d_revalidate \
- 	attr_replace_test swapon mkswap t_attr_corruption t_open_tmpfiles \
--	fscrypt-crypt-util
-+	fscrypt-crypt-util bulkstat_null_ocount
  
- SUBDIRS = log-writes perf
- 
-diff --git a/src/bulkstat_null_ocount.c b/src/bulkstat_null_ocount.c
-new file mode 100644
-index 00000000..b8f8fd39
---- /dev/null
-+++ b/src/bulkstat_null_ocount.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0+
+-/* Retrieve an extended attribute by name, and its value. */
 +/*
-+ * Copyright (C) 2019 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <darrick.wong@oracle.com>
++ * Retrieve an extended attribute by name, and its value if requested.
 + *
-+ * Ensure the kernel returns the new lastip even when ocount is null.
++ * If ATTR_KERNOVAL is set in @flags, then the caller does not want the value,
++ * just an indication whether the attribute exists and the size of the value if
++ * it exists. The size is returned in @valuelenp,
++ *
++ * If the attribute is found, but exceeds the size limit set by the caller in
++ * @valuelenp, return -ERANGE with the size of the attribute that was found in
++ * @valuelenp.
++ *
++ * If ATTR_ALLOC is set in @flags, allocate the buffer for the value after
++ * existence of the attribute has been determined. On success, return that
++ * buffer to the caller and leave them to free it. On failure, free any
++ * allocated buffer and ensure the buffer pointer returned to the caller is
++ * null.
 + */
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <xfs/xfs.h>
+ int
+ xfs_attr_get(
+ 	struct xfs_inode	*ip,
+ 	const unsigned char	*name,
+-	unsigned char		*value,
++	unsigned char		**value,
+ 	int			*valuelenp,
+ 	int			flags)
+ {
+@@ -128,6 +144,8 @@ xfs_attr_get(
+ 	uint			lock_mode;
+ 	int			error;
+ 
++	ASSERT((flags & (ATTR_ALLOC | ATTR_KERNOVAL)) || *value);
 +
-+static void die(const char *tag)
+ 	XFS_STATS_INC(ip->i_mount, xs_attr_get);
+ 
+ 	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+@@ -137,17 +155,29 @@ xfs_attr_get(
+ 	if (error)
+ 		return error;
+ 
+-	args.value = value;
+-	args.valuelen = *valuelenp;
+ 	/* Entirely possible to look up a name which doesn't exist */
+ 	args.op_flags = XFS_DA_OP_OKNOENT;
++	if (flags & ATTR_ALLOC)
++		args.op_flags |= XFS_DA_OP_ALLOCVAL;
++	else
++		args.value = *value;
++	args.valuelen = *valuelenp;
+ 
+ 	lock_mode = xfs_ilock_attr_map_shared(ip);
+ 	error = xfs_attr_get_ilocked(ip, &args);
+ 	xfs_iunlock(ip, lock_mode);
+ 
+ 	*valuelenp = args.valuelen;
+-	return error == -EEXIST ? 0 : error;
++	if (error == -EEXIST) {
++		*value = args.value;
++		return 0;
++	}
++
++	if (flags & ATTR_ALLOC) {
++		kmem_free(args.value);
++		*value = NULL;
++	}
++	return error;
+ }
+ 
+ /*
+@@ -789,9 +819,6 @@ xfs_attr_leaf_get(xfs_da_args_t *args)
+ 	}
+ 	error = xfs_attr3_leaf_getvalue(bp, args);
+ 	xfs_trans_brelse(args->trans, bp);
+-	if (!error && (args->rmtblkno > 0) && !(args->flags & ATTR_KERNOVAL)) {
+-		error = xfs_attr_rmtval_get(args);
+-	}
+ 	return error;
+ }
+ 
+@@ -1298,15 +1325,7 @@ xfs_attr_node_get(xfs_da_args_t *args)
+ 		blk = &state->path.blk[ state->path.active-1 ];
+ 		ASSERT(blk->bp != NULL);
+ 		ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+-
+-		/*
+-		 * Get the value, local or "remote"
+-		 */
+ 		retval = xfs_attr3_leaf_getvalue(blk->bp, args);
+-		if (!retval && (args->rmtblkno > 0)
+-		    && !(args->flags & ATTR_KERNOVAL)) {
+-			retval = xfs_attr_rmtval_get(args);
+-		}
+ 	}
+ 
+ 	/*
+diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+index ff28ebf3b635..94badfa1743e 100644
+--- a/fs/xfs/libxfs/xfs_attr.h
++++ b/fs/xfs/libxfs/xfs_attr.h
+@@ -37,6 +37,7 @@ struct xfs_attr_list_context;
+ #define ATTR_KERNOVAL	0x2000	/* [kernel] get attr size only, not value */
+ 
+ #define ATTR_INCOMPLETE	0x4000	/* [kernel] return INCOMPLETE attr keys */
++#define ATTR_ALLOC	0x8000	/* allocate xattr buffer on demand */
+ 
+ #define XFS_ATTR_FLAGS \
+ 	{ ATTR_DONTFOLLOW, 	"DONTFOLLOW" }, \
+@@ -47,7 +48,8 @@ struct xfs_attr_list_context;
+ 	{ ATTR_REPLACE,		"REPLACE" }, \
+ 	{ ATTR_KERNOTIME,	"KERNOTIME" }, \
+ 	{ ATTR_KERNOVAL,	"KERNOVAL" }, \
+-	{ ATTR_INCOMPLETE,	"INCOMPLETE" }
++	{ ATTR_INCOMPLETE,	"INCOMPLETE" }, \
++	{ ATTR_ALLOC,		"ALLOC" }
+ 
+ /*
+  * The maximum size (into the kernel or returned from the kernel) of an
+@@ -143,7 +145,7 @@ int xfs_attr_list_int(struct xfs_attr_list_context *);
+ int xfs_inode_hasattr(struct xfs_inode *ip);
+ int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+ int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+-		 unsigned char *value, int *valuelenp, int flags);
++		 unsigned char **value, int *valuelenp, int flags);
+ int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+ 		 unsigned char *value, int valuelen, int flags);
+ int xfs_attr_set_args(struct xfs_da_args *args);
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 70eb941d02e4..61717caf22db 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -393,6 +393,32 @@ xfs_attr_namesp_match(int arg_flags, int ondisk_flags)
+ 	return XFS_ATTR_NSP_ONDISK(ondisk_flags) == XFS_ATTR_NSP_ARGS_TO_ONDISK(arg_flags);
+ }
+ 
++static int
++xfs_attr_copy_value(
++	struct xfs_da_args	*args,
++	unsigned char		*value,
++	int			valuelen)
 +{
-+	perror(tag);
-+	exit(1);
-+}
++	if (args->valuelen < valuelen) {
++		args->valuelen = valuelen;
++		return -ERANGE;
++	}
 +
-+int main(int argc, char *argv[])
-+{
-+	struct xfs_bstat	bstat;
-+	__u64			last;
-+	struct xfs_fsop_bulkreq bulkreq = {
-+		.lastip		= &last,
-+		.icount		= 1,
-+		.ubuffer	= &bstat,
-+		.ocount		= NULL,
-+	};
-+	int ret;
-+	int fd;
++	if (args->op_flags & XFS_DA_OP_ALLOCVAL) {
++		args->value = kmem_alloc_large(valuelen, KM_SLEEP);
++		if (!args->value)
++			return -ENOMEM;
++	}
++	args->valuelen = valuelen;
 +
-+	fd = open(argv[1], O_RDONLY);
-+	if (fd < 0)
-+		die(argv[1]);
++	/* remote block xattr requires IO for copy-in */
++	if (args->rmtblkno)
++		return xfs_attr_rmtval_get(args);
 +
-+	last = 0;
-+	ret = ioctl(fd, XFS_IOC_FSINUMBERS, &bulkreq);
-+	if (ret)
-+		die("inumbers");
-+
-+	if (last == 0)
-+		printf("inumbers last = %llu\n", (unsigned long long)last);
-+
-+	last = 0;
-+	ret = ioctl(fd, XFS_IOC_FSBULKSTAT, &bulkreq);
-+	if (ret)
-+		die("bulkstat");
-+
-+	if (last == 0)
-+		printf("bulkstat last = %llu\n", (unsigned long long)last);
-+
-+	ret = close(fd);
-+	if (ret)
-+		die("close");
-+
++	memcpy(args->value, value, valuelen);
 +	return 0;
 +}
-diff --git a/tests/xfs/085 b/tests/xfs/085
-index 23095413..18ddeff8 100755
---- a/tests/xfs/085
-+++ b/tests/xfs/085
-@@ -63,7 +63,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
++
  
- echo "+ check fs"
-diff --git a/tests/xfs/086 b/tests/xfs/086
-index 8602a565..7429d39d 100755
---- a/tests/xfs/086
-+++ b/tests/xfs/086
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- test "${agcount}" -gt 1 || _notrun "Single-AG XFS not supported"
- umount "${SCRATCH_MNT}"
+ /*========================================================================
+  * External routines when attribute fork size < XFS_LITINO(mp).
+@@ -724,11 +750,13 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
+  */
+ /*ARGSUSED*/
+ int
+-xfs_attr_shortform_getvalue(xfs_da_args_t *args)
++xfs_attr_shortform_getvalue(
++	struct xfs_da_args	*args)
+ {
+-	xfs_attr_shortform_t *sf;
+-	xfs_attr_sf_entry_t *sfe;
+-	int i;
++	struct xfs_attr_shortform *sf;
++	struct xfs_attr_sf_entry *sfe;
++	int			error;
++	int			i;
  
-diff --git a/tests/xfs/087 b/tests/xfs/087
-index ede8e447..b3d3bca9 100755
---- a/tests/xfs/087
-+++ b/tests/xfs/087
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+ 	ASSERT(args->dp->i_afp->if_flags == XFS_IFINLINE);
+ 	sf = (xfs_attr_shortform_t *)args->dp->i_afp->if_u1.if_data;
+@@ -745,13 +773,10 @@ xfs_attr_shortform_getvalue(xfs_da_args_t *args)
+ 			args->valuelen = sfe->valuelen;
+ 			return -EEXIST;
+ 		}
+-		if (args->valuelen < sfe->valuelen) {
+-			args->valuelen = sfe->valuelen;
+-			return -ERANGE;
+-		}
+-		args->valuelen = sfe->valuelen;
+-		memcpy(args->value, &sfe->nameval[args->namelen],
+-						    args->valuelen);
++		error = xfs_attr_copy_value(args, &sfe->nameval[args->namelen],
++						sfe->valuelen);
++		if (error)
++			return error;
+ 		return -EEXIST;
+ 	}
+ 	return -ENOATTR;
+@@ -2378,31 +2403,23 @@ xfs_attr3_leaf_getvalue(
+ 			args->valuelen = valuelen;
+ 			return 0;
+ 		}
+-		if (args->valuelen < valuelen) {
+-			args->valuelen = valuelen;
+-			return -ERANGE;
+-		}
+-		args->valuelen = valuelen;
+-		memcpy(args->value, &name_loc->nameval[args->namelen], valuelen);
+-	} else {
+-		name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
+-		ASSERT(name_rmt->namelen == args->namelen);
+-		ASSERT(memcmp(args->name, name_rmt->name, args->namelen) == 0);
+-		args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
+-		args->rmtblkno = be32_to_cpu(name_rmt->valueblk);
+-		args->rmtblkcnt = xfs_attr3_rmt_blocks(args->dp->i_mount,
+-						       args->rmtvaluelen);
+-		if (args->flags & ATTR_KERNOVAL) {
+-			args->valuelen = args->rmtvaluelen;
+-			return 0;
+-		}
+-		if (args->valuelen < args->rmtvaluelen) {
+-			args->valuelen = args->rmtvaluelen;
+-			return -ERANGE;
+-		}
++		return xfs_attr_copy_value(args,
++					&name_loc->nameval[args->namelen],
++					valuelen);
++	}
++
++	name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
++	ASSERT(name_rmt->namelen == args->namelen);
++	ASSERT(memcmp(args->name, name_rmt->name, args->namelen) == 0);
++	args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
++	args->rmtblkno = be32_to_cpu(name_rmt->valueblk);
++	args->rmtblkcnt = xfs_attr3_rmt_blocks(args->dp->i_mount,
++					       args->rmtvaluelen);
++	if (args->flags & ATTR_KERNOVAL) {
+ 		args->valuelen = args->rmtvaluelen;
++		return 0;
+ 	}
+-	return 0;
++	return xfs_attr_copy_value(args, NULL, args->rmtvaluelen);
+ }
  
- echo "+ check fs"
-diff --git a/tests/xfs/088 b/tests/xfs/088
-index 6f36efab..74b45163 100755
---- a/tests/xfs/088
-+++ b/tests/xfs/088
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+ /*========================================================================
+diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+index 84dd865b6c3d..ae0bbd20d9ca 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.h
++++ b/fs/xfs/libxfs/xfs_da_btree.h
+@@ -81,13 +81,15 @@ typedef struct xfs_da_args {
+ #define XFS_DA_OP_ADDNAME	0x0004	/* this is an add operation */
+ #define XFS_DA_OP_OKNOENT	0x0008	/* lookup/add op, ENOENT ok, else die */
+ #define XFS_DA_OP_CILOOKUP	0x0010	/* lookup to return CI name if found */
++#define XFS_DA_OP_ALLOCVAL	0x0020	/* lookup to alloc buffer if found  */
  
- echo "+ check fs"
-diff --git a/tests/xfs/089 b/tests/xfs/089
-index 5c398299..bcbc6363 100755
---- a/tests/xfs/089
-+++ b/tests/xfs/089
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+ #define XFS_DA_OP_FLAGS \
+ 	{ XFS_DA_OP_JUSTCHECK,	"JUSTCHECK" }, \
+ 	{ XFS_DA_OP_RENAME,	"RENAME" }, \
+ 	{ XFS_DA_OP_ADDNAME,	"ADDNAME" }, \
+ 	{ XFS_DA_OP_OKNOENT,	"OKNOENT" }, \
+-	{ XFS_DA_OP_CILOOKUP,	"CILOOKUP" }
++	{ XFS_DA_OP_CILOOKUP,	"CILOOKUP" }, \
++	{ XFS_DA_OP_ALLOCVAL,	"ALLOCVAL" }
  
- echo "+ check fs"
-diff --git a/tests/xfs/091 b/tests/xfs/091
-index 5d6cd363..be56d8ae 100755
---- a/tests/xfs/091
-+++ b/tests/xfs/091
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+ /*
+  * Storage for holding state during Btree searches and split/join ops.
+diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+index cbda40d40326..78c5e590b771 100644
+--- a/fs/xfs/xfs_acl.c
++++ b/fs/xfs/xfs_acl.c
+@@ -112,7 +112,7 @@ xfs_get_acl(struct inode *inode, int type)
+ {
+ 	struct xfs_inode *ip = XFS_I(inode);
+ 	struct posix_acl *acl = NULL;
+-	struct xfs_acl *xfs_acl;
++	struct xfs_acl *xfs_acl = NULL;
+ 	unsigned char *ea_name;
+ 	int error;
+ 	int len;
+@@ -130,17 +130,9 @@ xfs_get_acl(struct inode *inode, int type)
+ 		BUG();
+ 	}
  
- echo "+ check fs"
-diff --git a/tests/xfs/093 b/tests/xfs/093
-index e09e8499..4c4fbdc4 100755
---- a/tests/xfs/093
-+++ b/tests/xfs/093
-@@ -64,7 +64,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+-	/*
+-	 * If we have a cached ACLs value just return it, not need to
+-	 * go out to the disk.
+-	 */
+ 	len = XFS_ACL_MAX_SIZE(ip->i_mount);
+-	xfs_acl = kmem_zalloc_large(len, KM_SLEEP);
+-	if (!xfs_acl)
+-		return ERR_PTR(-ENOMEM);
+-
+-	error = xfs_attr_get(ip, ea_name, (unsigned char *)xfs_acl,
+-							&len, ATTR_ROOT);
++	error = xfs_attr_get(ip, ea_name, (unsigned char **)&xfs_acl, &len,
++				ATTR_ALLOC|ATTR_ROOT);
+ 	if (error) {
+ 		/*
+ 		 * If the attribute doesn't exist make sure we have a negative
+@@ -151,8 +143,8 @@ xfs_get_acl(struct inode *inode, int type)
+ 	} else  {
+ 		acl = xfs_acl_from_disk(xfs_acl, len,
+ 					XFS_ACL_MAX_ENTRIES(ip->i_mount));
++		kmem_free(xfs_acl);
+ 	}
+-	kmem_free(xfs_acl);
+ 	return acl;
+ }
  
- echo "+ check fs"
-diff --git a/tests/xfs/097 b/tests/xfs/097
-index db355de6..68eae1d4 100755
---- a/tests/xfs/097
-+++ b/tests/xfs/097
-@@ -67,7 +67,7 @@ for x in `seq 2 64`; do
- 	touch "${TESTFILE}.${x}"
- done
- inode="$(stat -c '%i' "${TESTFILE}.1")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
- umount "${SCRATCH_MNT}"
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 6f7848cd5527..5f73feb40384 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -438,7 +438,7 @@ xfs_attrmulti_attr_get(
+ 	if (!kbuf)
+ 		return -ENOMEM;
  
- echo "+ check fs"
-diff --git a/tests/xfs/130 b/tests/xfs/130
-index 71c1181f..f15366a6 100755
---- a/tests/xfs/130
-+++ b/tests/xfs/130
-@@ -43,7 +43,7 @@ _scratch_mkfs_xfs > /dev/null
- echo "+ mount fs image"
- _scratch_mount
- blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
--agcount="$($XFS_INFO_PROG "${SCRATCH_MNT}" | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')"
-+agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
+-	error = xfs_attr_get(XFS_I(inode), name, kbuf, (int *)len, flags);
++	error = xfs_attr_get(XFS_I(inode), name, &kbuf, (int *)len, flags);
+ 	if (error)
+ 		goto out_kfree;
  
- echo "+ make some files"
- _pwrite_byte 0x62 0 $((blksz * 64)) "${SCRATCH_MNT}/file0" >> "$seqres.full"
-diff --git a/tests/xfs/235 b/tests/xfs/235
-index 669f58b0..64b0a0b5 100755
---- a/tests/xfs/235
-+++ b/tests/xfs/235
-@@ -41,7 +41,7 @@ _scratch_mkfs_xfs > /dev/null
- echo "+ mount fs image"
- _scratch_mount
- blksz=$(stat -f -c '%s' ${SCRATCH_MNT})
--agcount=$($XFS_INFO_PROG ${SCRATCH_MNT} | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')
-+agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 3123b5aaad2a..cb895b1df5e4 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -30,7 +30,7 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+ 		value = NULL;
+ 	}
  
- echo "+ make some files"
- _pwrite_byte 0x62 0 $((blksz * 64)) ${SCRATCH_MNT}/file0 >> $seqres.full
-diff --git a/tests/xfs/271 b/tests/xfs/271
-index db14bfec..38844246 100755
---- a/tests/xfs/271
-+++ b/tests/xfs/271
-@@ -37,7 +37,7 @@ echo "Format and mount"
- _scratch_mkfs > "$seqres.full" 2>&1
- _scratch_mount
- 
--agcount=$($XFS_INFO_PROG $SCRATCH_MNT | grep agcount= | sed -e 's/^.*agcount=\([0-9]*\),.*$/\1/g')
-+agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
- 
- echo "Get fsmap" | tee -a $seqres.full
- $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT > $TEST_DIR/fsmap
-diff --git a/tests/xfs/744 b/tests/xfs/744
-new file mode 100755
-index 00000000..ef605301
---- /dev/null
-+++ b/tests/xfs/744
-@@ -0,0 +1,212 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2014 Red Hat, Inc.  All Rights Reserved.
-+# Copyright (c) 2019 Oracle, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 744
-+#
-+# Use the xfs_io bulkstat utility to verify bulkstat finds all inodes in a
-+# filesystem.  Test under various inode counts, inobt record layouts and
-+# bulkstat batch sizes.  Test v1 and v5 ioctls explicitly, as well as the
-+# ioctl version autodetection code in libfrog.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+bstat_versions()
-+{
-+	echo "default"
-+	echo "v1 -v1"
-+	if [ -n "$has_v5" ]; then
-+		echo "v5 -v5"
-+	else
-+		echo "v5"
-+	fi
-+}
-+
-+# print the number of inodes counted by bulkstat
-+bstat_count()
-+{
-+	local batchsize="$1"
-+	local tag="$2"
-+
-+	bstat_versions | while read v_tag v_flag; do
-+		echo "$tag($v_tag): passing \"$v_flag\" to bulkstat" >> $seqres.full
-+		echo -n "bulkstat $tag($v_tag): "
-+		$XFS_IO_PROG -c "bulkstat -n $batchsize $vflag" $SCRATCH_MNT | grep ino | wc -l
-+	done
-+}
-+
-+# print the number of inodes counted by per-ag bulkstat
-+bstat_perag_count()
-+{
-+	local batchsize="$1"
-+	local tag="$2"
-+
-+	local agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
-+
-+	bstat_versions | while read v_tag v_flag; do
-+		echo -n "bulkstat $tag($v_tag): "
-+		seq 0 $((agcount - 1)) | while read ag; do
-+			$XFS_IO_PROG -c "bulkstat -a $ag -n $batchsize $v_flag" $SCRATCH_MNT
-+		done | grep ino | wc -l
-+	done
-+}
-+
-+# Sum the number of allocated inodes in each AG in a fs.
-+inumbers_ag()
-+{
-+	local agcount="$1"
-+	local batchsize="$2"
-+	local mount="$3"
-+	local v_flag="$4"
-+
-+	seq 0 $((agcount - 1)) | while read ag; do
-+		$XFS_IO_PROG -c "inumbers -a $ag -n $batchsize $v_flag" $mount
-+	done | grep alloccount | awk '{x += $3} END { print(x) }'
-+}
-+
-+# Sum the number of allocated inodes in the whole fs all at once.
-+inumbers_fs()
-+{
-+	local dir="$1"
-+	local v_flag="$2"
-+
-+	$XFS_IO_PROG -c "inumbers $v_flag" "$dir" | grep alloccount | \
-+		awk '{x += $3} END { print(x) }'
-+}
-+
-+# print the number of inodes counted by inumbers
-+inumbers_count()
-+{
-+	local expect="$1"
-+
-+	# There probably aren't more than 10 hidden inodes, right?
-+	local tolerance=10
-+
-+	# Force all background inode cleanup
-+	_scratch_cycle_mount
-+
-+	bstat_versions | while read v_tag v_flag; do
-+		echo -n "inumbers all($v_tag): "
-+		nr=$(inumbers_fs $SCRATCH_MNT $v_flag)
-+		_within_tolerance "inumbers" $nr $expect $tolerance -v
-+
-+		local agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
-+		for batchsize in 64 2 1; do
-+			echo -n "inumbers $batchsize($v_tag): "
-+			nr=$(inumbers_ag $agcount $batchsize $SCRATCH_MNT $v_flag)
-+			_within_tolerance "inumbers" $nr $expect $tolerance -v
-+		done
-+	done
-+}
-+
-+# compare the src/bstat output against the xfs_io bstat output
-+bstat_compare()
-+{
-+	bstat_versions | while read v_tag v_flag; do
-+		diff -u <(./src/bstat $SCRATCH_MNT | grep ino | awk '{print $2}') \
-+			<($XFS_IO_PROG -c "bulkstat $v_flag" $SCRATCH_MNT | grep ino | awk '{print $3}')
-+	done
-+}
-+
-+# print bulkstat counts using varied batch sizes
-+bstat_test()
-+{
-+	expect=`find $SCRATCH_MNT -print | wc -l`
-+	echo
-+	echo "expect $expect"
-+
-+	for sz in 4096 71 32 1; do
-+		bstat_count $sz "$sz all"
-+		bstat_perag_count $sz "$sz perag"
-+		bstat_compare
-+		inumbers_count $expect
-+	done
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+_require_scratch
-+_require_xfs_io_command bulkstat
-+_require_xfs_io_command bulkstat_single
-+_require_xfs_io_command inumbers
-+
-+# real QA test starts here
-+
-+_supported_fs xfs
-+_supported_os Linux
-+
-+rm -f $seqres.full
-+
-+DIRCOUNT=8
-+INOCOUNT=$((2048 / DIRCOUNT))
-+
-+_scratch_mkfs "-d agcount=$DIRCOUNT" >> $seqres.full 2>&1 || _fail "mkfs failed"
-+_scratch_mount
-+
-+# Figure out if we have v5 bulkstat/inumbers ioctls.
-+has_v5=
-+bs_root_out="$($XFS_IO_PROG -c 'bulkstat_single root' $SCRATCH_MNT 2>>$seqres.full)"
-+test -n "$bs_root_out" && has_v5=1
-+
-+echo "this will be 1 if we have v5 bulkstat: $has_v5" >> $seqres.full
-+
-+# If v5 bulkstat is present, query the root inode and compare it to the stat
-+# output of $SCRATCH_MNT to make sure it gave us the correct number
-+if [ -n "$has_v5" ]; then
-+	bs_root=$(echo "$bs_root_out" | grep ino | awk '{print $3}')
-+	stat_root=$(stat -c '%i' $SCRATCH_MNT)
-+	if [ "$stat_root" -ne "$bs_root" ]; then
-+		echo "stat says root is $stat_root but bulkstat says $bs_root"
-+	fi
-+fi
-+
-+# create a set of directories and fill each with a fixed number of files
-+for dir in $(seq 1 $DIRCOUNT); do
-+	mkdir -p $SCRATCH_MNT/$dir
-+	for i in $(seq 1 $INOCOUNT); do
-+		touch $SCRATCH_MNT/$dir/$i
-+	done
-+done
-+bstat_test
-+
-+# remove every other file from each dir
-+for dir in $(seq 1 $DIRCOUNT); do
-+	for i in $(seq 2 2 $INOCOUNT); do
-+		rm -f $SCRATCH_MNT/$dir/$i
-+	done
-+done
-+bstat_test
-+
-+# remove the entire second half of files
-+for dir in $(seq 1 $DIRCOUNT); do
-+	for i in $(seq $((INOCOUNT / 2)) $INOCOUNT); do
-+		rm -f $SCRATCH_MNT/$dir/$i
-+	done
-+done
-+bstat_test
-+
-+# remove all regular files
-+for dir in $(seq 1 $DIRCOUNT); do
-+	rm -f $SCRATCH_MNT/$dir/*
-+done
-+bstat_test
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/744.out b/tests/xfs/744.out
-new file mode 100644
-index 00000000..de89a8ff
---- /dev/null
-+++ b/tests/xfs/744.out
-@@ -0,0 +1,297 @@
-+QA output created by 744
-+
-+expect 2057
-+bulkstat 4096 all(default): 2057
-+bulkstat 4096 all(v1): 2057
-+bulkstat 4096 all(v5): 2057
-+bulkstat 4096 perag(default): 2057
-+bulkstat 4096 perag(v1): 2057
-+bulkstat 4096 perag(v5): 2057
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 71 all(default): 2057
-+bulkstat 71 all(v1): 2057
-+bulkstat 71 all(v5): 2057
-+bulkstat 71 perag(default): 2057
-+bulkstat 71 perag(v1): 2057
-+bulkstat 71 perag(v5): 2057
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 32 all(default): 2057
-+bulkstat 32 all(v1): 2057
-+bulkstat 32 all(v5): 2057
-+bulkstat 32 perag(default): 2057
-+bulkstat 32 perag(v1): 2057
-+bulkstat 32 perag(v5): 2057
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 1 all(default): 2057
-+bulkstat 1 all(v1): 2057
-+bulkstat 1 all(v5): 2057
-+bulkstat 1 perag(default): 2057
-+bulkstat 1 perag(v1): 2057
-+bulkstat 1 perag(v5): 2057
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+
-+expect 1033
-+bulkstat 4096 all(default): 1033
-+bulkstat 4096 all(v1): 1033
-+bulkstat 4096 all(v5): 1033
-+bulkstat 4096 perag(default): 1033
-+bulkstat 4096 perag(v1): 1033
-+bulkstat 4096 perag(v5): 1033
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 71 all(default): 1033
-+bulkstat 71 all(v1): 1033
-+bulkstat 71 all(v5): 1033
-+bulkstat 71 perag(default): 1033
-+bulkstat 71 perag(v1): 1033
-+bulkstat 71 perag(v5): 1033
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 32 all(default): 1033
-+bulkstat 32 all(v1): 1033
-+bulkstat 32 all(v5): 1033
-+bulkstat 32 perag(default): 1033
-+bulkstat 32 perag(v1): 1033
-+bulkstat 32 perag(v5): 1033
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 1 all(default): 1033
-+bulkstat 1 all(v1): 1033
-+bulkstat 1 all(v5): 1033
-+bulkstat 1 perag(default): 1033
-+bulkstat 1 perag(v1): 1033
-+bulkstat 1 perag(v5): 1033
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+
-+expect 521
-+bulkstat 4096 all(default): 521
-+bulkstat 4096 all(v1): 521
-+bulkstat 4096 all(v5): 521
-+bulkstat 4096 perag(default): 521
-+bulkstat 4096 perag(v1): 521
-+bulkstat 4096 perag(v5): 521
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 71 all(default): 521
-+bulkstat 71 all(v1): 521
-+bulkstat 71 all(v5): 521
-+bulkstat 71 perag(default): 521
-+bulkstat 71 perag(v1): 521
-+bulkstat 71 perag(v5): 521
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 32 all(default): 521
-+bulkstat 32 all(v1): 521
-+bulkstat 32 all(v5): 521
-+bulkstat 32 perag(default): 521
-+bulkstat 32 perag(v1): 521
-+bulkstat 32 perag(v5): 521
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 1 all(default): 521
-+bulkstat 1 all(v1): 521
-+bulkstat 1 all(v5): 521
-+bulkstat 1 perag(default): 521
-+bulkstat 1 perag(v1): 521
-+bulkstat 1 perag(v5): 521
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+
-+expect 9
-+bulkstat 4096 all(default): 9
-+bulkstat 4096 all(v1): 9
-+bulkstat 4096 all(v5): 9
-+bulkstat 4096 perag(default): 9
-+bulkstat 4096 perag(v1): 9
-+bulkstat 4096 perag(v5): 9
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 71 all(default): 9
-+bulkstat 71 all(v1): 9
-+bulkstat 71 all(v5): 9
-+bulkstat 71 perag(default): 9
-+bulkstat 71 perag(v1): 9
-+bulkstat 71 perag(v5): 9
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 32 all(default): 9
-+bulkstat 32 all(v1): 9
-+bulkstat 32 all(v5): 9
-+bulkstat 32 perag(default): 9
-+bulkstat 32 perag(v1): 9
-+bulkstat 32 perag(v5): 9
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-+bulkstat 1 all(default): 9
-+bulkstat 1 all(v1): 9
-+bulkstat 1 all(v5): 9
-+bulkstat 1 perag(default): 9
-+bulkstat 1 perag(v1): 9
-+bulkstat 1 perag(v5): 9
-+inumbers all(default): inumbers is in range
-+inumbers 64(default): inumbers is in range
-+inumbers 2(default): inumbers is in range
-+inumbers 1(default): inumbers is in range
-+inumbers all(v1): inumbers is in range
-+inumbers 64(v1): inumbers is in range
-+inumbers 2(v1): inumbers is in range
-+inumbers 1(v1): inumbers is in range
-+inumbers all(v5): inumbers is in range
-+inumbers 64(v5): inumbers is in range
-+inumbers 2(v5): inumbers is in range
-+inumbers 1(v5): inumbers is in range
-diff --git a/tests/xfs/745 b/tests/xfs/745
-new file mode 100755
-index 00000000..6931d46b
---- /dev/null
-+++ b/tests/xfs/745
-@@ -0,0 +1,44 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+# Copyright (c) 2019 Oracle, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 745
-+#
-+# Regression test for a long-standing bug in BULKSTAT and INUMBERS where
-+# the kernel fails to write thew new @lastip value back to userspace if
-+# @ocount is NULL.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+    cd /
-+    rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+_require_test_program "bulkstat_null_ocount"
-+
-+# real QA test starts here
-+
-+_supported_fs xfs
-+_supported_os Linux
-+
-+rm -f $seqres.full
-+
-+echo "Silence is golden."
-+src/bulkstat_null_ocount $TEST_DIR
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/745.out b/tests/xfs/745.out
-new file mode 100644
-index 00000000..ce947de2
---- /dev/null
-+++ b/tests/xfs/745.out
-@@ -0,0 +1,2 @@
-+QA output created by 745
-+Silence is golden.
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 270d82ff..ef0cf92c 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -506,3 +506,5 @@
- 506 auto quick health
- 507 clone
- 508 auto quick quota
-+744 auto ioctl quick
-+745 auto ioctl quick
-
+-	error = xfs_attr_get(ip, (unsigned char *)name, value, &asize, xflags);
++	error = xfs_attr_get(ip, name, (unsigned char **)&value, &asize, xflags);
+ 	if (error)
+ 		return error;
+ 	return asize;
