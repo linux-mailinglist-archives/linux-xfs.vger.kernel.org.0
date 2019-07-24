@@ -2,145 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83A4173EC5
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 22:27:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 596F9741EE
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 01:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389240AbfGXU1T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jul 2019 16:27:19 -0400
-Received: from sandeen.net ([63.231.237.45]:43890 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387897AbfGXU1S (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:27:18 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7EC3C78A9;
-        Wed, 24 Jul 2019 15:26:48 -0500 (CDT)
-Subject: Re: [PATCH] xfs: fix stack contents leakage in the v1
- bulkstat/inumbers ioctls
-From:   Eric Sandeen <sandeen@sandeen.net>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>
-References: <20190724153545.GC1561054@magnolia>
- <5158a525-6153-b27f-2d19-c6eb3fbf609e@sandeen.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <630545c3-711f-f5e5-e644-88a1ec777397@sandeen.net>
-Date:   Wed, 24 Jul 2019 15:27:16 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1729109AbfGXXW2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jul 2019 19:22:28 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53751 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726314AbfGXXW2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 19:22:28 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DA5732AD0F3;
+        Thu, 25 Jul 2019 09:22:25 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hqQZR-0006QK-Vs; Thu, 25 Jul 2019 09:21:17 +1000
+Date:   Thu, 25 Jul 2019 09:21:17 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCH 1/3] common: filter aiodio dmesg after fs/iomap.c to
+ fs/iomap/ move
+Message-ID: <20190724232117.GB7777@dread.disaster.area>
+References: <156394156831.1850719.2997473679130010771.stgit@magnolia>
+ <156394157450.1850719.464315342783936237.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <5158a525-6153-b27f-2d19-c6eb3fbf609e@sandeen.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156394157450.1850719.464315342783936237.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=sn25pJRDoJBzixySWP4A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/24/19 3:19 PM, Eric Sandeen wrote:
-> On 7/24/19 10:35 AM, Darrick J. Wong wrote:
->> From: Darrick J. Wong <darrick.wong@oracle.com>
->>
->> Explicitly initialize the onstack structures to zero so we don't leak
->> kernel memory into userspace when converting the in-core structure to
->> the v1 ioctl structure.
->>
->> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue, Jul 23, 2019 at 09:12:54PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
->> ---
->>  fs/xfs/xfs_ioctl.c |    4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
->> index f193f7b288ca..44e1a290f053 100644
->> --- a/fs/xfs/xfs_ioctl.c
->> +++ b/fs/xfs/xfs_ioctl.c
->> @@ -719,7 +719,7 @@ xfs_fsbulkstat_one_fmt(
->>  	struct xfs_ibulk		*breq,
->>  	const struct xfs_bulkstat	*bstat)
->>  {
->> -	struct xfs_bstat		bs1;
->> +	struct xfs_bstat		bs1 = { 0 };
->>  
->>  	xfs_bulkstat_to_bstat(breq->mp, &bs1, bstat);
+> Since the iomap code are moving to fs/iomap/ we have to add new entries
+> to the aiodio dmesg filter to reflect this.
 > 
-> Confused.  the first thing xfs_bulkstat_to_bstat does is...
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  common/filter |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> void
-> xfs_bulkstat_to_bstat(
->         struct xfs_mount                *mp,
->         struct xfs_bstat                *bs1,
->         const struct xfs_bulkstat       *bstat)
-> {
->         memset(bs1, 0, sizeof(struct xfs_bstat));
 > 
-> so what's leaking here?
-> 
->>  	if (copy_to_user(breq->ubuffer, &bs1, sizeof(bs1)))
->> @@ -732,7 +732,7 @@ xfs_fsinumbers_fmt(
->>  	struct xfs_ibulk		*breq,
->>  	const struct xfs_inumbers	*igrp)
->>  {
->> -	struct xfs_inogrp		ig1;
->> +	struct xfs_inogrp		ig1 = { 0 };
->>  
->>  	xfs_inumbers_to_inogrp(&ig1, igrp);
-> 
-> ... and this function initializes all elements of xfs_inogrp ig1 AFAICT.
-> 
-> Maybe I need more coffee?
+> diff --git a/common/filter b/common/filter
+> index ed082d24..26fc2132 100644
+> --- a/common/filter
+> +++ b/common/filter
+> @@ -555,6 +555,7 @@ _filter_aiodio_dmesg()
+>  	local warn7="WARNING:.*fs/iomap\.c:.*iomap_dio_actor.*"
+>  	local warn8="WARNING:.*fs/iomap\.c:.*iomap_dio_complete.*"
 
-or I need to read mail in order.  o_O  Ok, struct packing/ hole issues.
+There's two different warnings that need capturing here.
 
-But let's be consistent, do we zero it out in the conversion function or
-rely on the caller?  (I prefer the former, as is done in xfs_bulkstat_to_bstat,
-but we surely don't need to do both).
+>  	local warn9="WARNING:.*fs/direct-io\.c:.*dio_complete.*"
+> +	local warn10="WARNING:.*fs/iomap/direct-io\.c:.*iomap_dio_actor.*"
+>  	sed -e "s#$warn1#Intentional warnings in xfs_file_dio_aio_write#" \
+>  	    -e "s#$warn2#Intentional warnings in xfs_file_dio_aio_read#" \
+>  	    -e "s#$warn3#Intentional warnings in xfs_file_read_iter#" \
+> @@ -563,7 +564,8 @@ _filter_aiodio_dmesg()
+>  	    -e "s#$warn6#Intentional warnings in __xfs_get_blocks#" \
+>  	    -e "s#$warn7#Intentional warnings in iomap_dio_actor#" \
+>  	    -e "s#$warn8#Intentional warnings in iomap_dio_complete#" \
+> -	    -e "s#$warn9#Intentional warnings in dio_complete#"
+> +	    -e "s#$warn9#Intentional warnings in dio_complete#" \
+> +	    -e "s#$warn10#Intentional warnings in iomap_dio_actor#"
 
-Also, Fixes: tag please?
+Why not just change the regex in warn7/warn8 just to catch anything
+under fs/iomap rather than explictly specifying fs/iomap.c?
 
--Eric
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
