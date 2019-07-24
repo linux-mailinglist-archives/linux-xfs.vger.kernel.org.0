@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DACA725B9
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 06:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0258725BA
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jul 2019 06:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725855AbfGXEM7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jul 2019 00:12:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43780 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfGXEM7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 00:12:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O48wYT119451;
-        Wed, 24 Jul 2019 04:12:57 GMT
+        id S1725883AbfGXENG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jul 2019 00:13:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53140 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfGXENG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jul 2019 00:13:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O4948b121316;
+        Wed, 24 Jul 2019 04:13:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=p5N3jmsd1XBGf1W6rpxSCIADVFvWEV7FE4zThCBxGKo=;
- b=IOa3SOKcOtZ+vht05tZ64pf1S0ey0/zpYef0JnNUp9HRcB+my3CinrEJUAZWnHMDV81I
- 7RvcJ8eJ/tA8xwL2btIabGutNS0kZH1kISzq44FApMV3vBTPa2DKK8VGQPGtuqawnN+Y
- IQM8hn7aMLmsoNMGUQVYXd+GXKjLkgJZDG11K8jf/+jDn56YBAeBPJIkE9h74wTQRwqd
- Ni/NIfhXE3WDCdOcXt3krtBmam/mvwvocXWtaD6i9IwzWCKmALiPb+5Jxje05pb7g8Do
- bbYSgC9baW9rWjlPG5aG+WkvlcpdkTmnJ0ASkPKNcYfB7smXJPvZo4YOX6wQAyNR082T ww== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tx61btjsd-1
+ bh=OkIEDBKGJkwIgoSPBpimywKdfjEYgnI5gOpFNLXcNHw=;
+ b=phEKu4h/AyNmlQlO1qRa0E8kst3CRQRvZmC1EhSmpSiBqozfEjRzNlbANvq8dVghLg08
+ TcUwkHe54cIyoB5OBFo3+sDS5ZX1n6WB2scuFISfagGAro5Ac8rDckoGBugnT/8j+Xby
+ K9a2ReAJ78wgRrDGI4VKgojOmYwLt4y4Yq96OutMdW9OfVz854qynj7b5gJnt/uUxcNJ
+ AkYV2oxRTUOGmwe/5IyIYcxvmDZty6icouTQcpB/dkS4qOwNAvQ0AjPJ3wglt9odGswW
+ pHGRVWg4jvDBumrO8MTaaWrg3XXVRl8fEyQpnLHcY5KILxez3+7FXe3YFou08wD6rzfm zg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2tx61btjhw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 04:12:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O47l2x129559;
-        Wed, 24 Jul 2019 04:12:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tx60xg8hb-1
+        Wed, 24 Jul 2019 04:13:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O47kuA049634;
+        Wed, 24 Jul 2019 04:13:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2tx60x08jt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 04:12:56 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6O4CteP012802;
-        Wed, 24 Jul 2019 04:12:55 GMT
+        Wed, 24 Jul 2019 04:13:03 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O4D170027358;
+        Wed, 24 Jul 2019 04:13:02 GMT
 Received: from localhost (/50.206.22.50)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 21:12:55 -0700
-Subject: [PATCH 1/3] common: filter aiodio dmesg after fs/iomap.c to
- fs/iomap/ move
+        with ESMTP ; Tue, 23 Jul 2019 21:13:01 -0700
+Subject: [PATCH 2/3] xfs/504: fix bogus test description
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 23 Jul 2019 21:12:54 -0700
-Message-ID: <156394157450.1850719.464315342783936237.stgit@magnolia>
+Date:   Tue, 23 Jul 2019 21:13:00 -0700
+Message-ID: <156394158077.1850719.2222567081675874481.stgit@magnolia>
 In-Reply-To: <156394156831.1850719.2997473679130010771.stgit@magnolia>
 References: <156394156831.1850719.2997473679130010771.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,35 +70,31 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Since the iomap code are moving to fs/iomap/ we have to add new entries
-to the aiodio dmesg filter to reflect this.
+Fix the description of this test to reflect what it actually checks.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- common/filter |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tests/xfs/504 |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 
-diff --git a/common/filter b/common/filter
-index ed082d24..26fc2132 100644
---- a/common/filter
-+++ b/common/filter
-@@ -555,6 +555,7 @@ _filter_aiodio_dmesg()
- 	local warn7="WARNING:.*fs/iomap\.c:.*iomap_dio_actor.*"
- 	local warn8="WARNING:.*fs/iomap\.c:.*iomap_dio_complete.*"
- 	local warn9="WARNING:.*fs/direct-io\.c:.*dio_complete.*"
-+	local warn10="WARNING:.*fs/iomap/direct-io\.c:.*iomap_dio_actor.*"
- 	sed -e "s#$warn1#Intentional warnings in xfs_file_dio_aio_write#" \
- 	    -e "s#$warn2#Intentional warnings in xfs_file_dio_aio_read#" \
- 	    -e "s#$warn3#Intentional warnings in xfs_file_read_iter#" \
-@@ -563,7 +564,8 @@ _filter_aiodio_dmesg()
- 	    -e "s#$warn6#Intentional warnings in __xfs_get_blocks#" \
- 	    -e "s#$warn7#Intentional warnings in iomap_dio_actor#" \
- 	    -e "s#$warn8#Intentional warnings in iomap_dio_complete#" \
--	    -e "s#$warn9#Intentional warnings in dio_complete#"
-+	    -e "s#$warn9#Intentional warnings in dio_complete#" \
-+	    -e "s#$warn10#Intentional warnings in iomap_dio_actor#"
- }
- 
- # We generate assert related WARNINGs on purpose and make sure test doesn't fail
+diff --git a/tests/xfs/504 b/tests/xfs/504
+index cc6088d1..c6435117 100755
+--- a/tests/xfs/504
++++ b/tests/xfs/504
+@@ -4,10 +4,10 @@
+ #
+ # FS QA Test No. 504
+ #
+-# Create a directory with multiple filenames that all appear the same
+-# (in unicode, anyway) but point to different inodes.  In theory all
+-# Linux filesystems should allow this (filenames are a sequence of
+-# arbitrary bytes) even if the user implications are horrifying.
++# Create a filesystem label with emoji and confusing unicode characters
++# to make sure that these special things actually work on xfs.  In
++# theory it should allow this (labels are a sequence of arbitrary bytes)
++# even if the user implications are horrifying.
+ #
+ seq=`basename "$0"`
+ seqres="$RESULT_DIR/$seq"
 
