@@ -2,28 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37BED756AF
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 20:17:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD9F759EA
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 23:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfGYSRA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Jul 2019 14:17:00 -0400
-Received: from sandeen.net ([63.231.237.45]:34056 "EHLO sandeen.net"
+        id S1726723AbfGYV4p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Jul 2019 17:56:45 -0400
+Received: from sandeen.net ([63.231.237.45]:47080 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfGYSRA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Jul 2019 14:17:00 -0400
+        id S1726747AbfGYV4o (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 25 Jul 2019 17:56:44 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id A3C6F4A1378;
-        Thu, 25 Jul 2019 13:16:28 -0500 (CDT)
-Subject: Re: [PATCH v2] xfs: fix stack contents leakage in the v1 inumber
- ioctls
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20190725175346.GF1561054@magnolia>
+        by sandeen.net (Postfix) with ESMTPSA id 171192B08
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 16:56:13 -0500 (CDT)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs for-next updated to 3a3f5b14
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -67,58 +62,90 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <49a64f95-7bf1-7434-8fdb-a5463b995149@sandeen.net>
-Date:   Thu, 25 Jul 2019 13:16:58 -0500
+Message-ID: <087b7894-93a6-0af0-0278-0c6c45c9db8c@sandeen.net>
+Date:   Thu, 25 Jul 2019 16:56:42 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190725175346.GF1561054@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/25/19 12:53 PM, Darrick J. Wong wrote:
-> Explicitly initialize the onstack structures to zero so we don't leak
-> kernel memory into userspace when converting the in-core inumbers
-> structure to the v1 inogrp ioctl structure.  Add a comment about why we
-> have to use memset to ensure that the padding holes in the structures
-> are set to zero.
-> 
-> Fixes: 5f19c7fc6873351 ("xfs: introduce v5 inode group structure")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb
+Content-Type: multipart/mixed; boundary="WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: linux-xfs <linux-xfs@vger.kernel.org>
+Message-ID: <087b7894-93a6-0af0-0278-0c6c45c9db8c@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs for-next updated to 3a3f5b14
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+--WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> ---
-> v2: add comments, use memset this time
-> ---
->  fs/xfs/xfs_itable.c |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index 30fe17d25518..39374c680c49 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -283,6 +283,7 @@ xfs_bulkstat_to_bstat(
->  	struct xfs_bstat		*bs1,
->  	const struct xfs_bulkstat	*bstat)
->  {
-> +	/* memset is needed here because of padding holes in the structure. */
->  	memset(bs1, 0, sizeof(struct xfs_bstat));
->  	bs1->bs_ino = bstat->bs_ino;
->  	bs1->bs_mode = bstat->bs_mode;
-> @@ -399,6 +400,8 @@ xfs_inumbers_to_inogrp(
->  	struct xfs_inogrp		*ig1,
->  	const struct xfs_inumbers	*ig)
->  {
-> +	/* memset is needed here because of padding holes in the structure. */
-> +	memset(ig1, 0, sizeof(struct xfs_inogrp));
->  	ig1->xi_startino = ig->xi_startino;
->  	ig1->xi_alloccount = ig->xi_alloccount;
->  	ig1->xi_allocmask = ig->xi_allocmask;
-> 
+Hi folks,
+
+The for-next branch of the xfsprogs repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+
+has just been updated.
+
+This is just my gratuitous modifications of libxfs/trans.c to
+more closely resemble kernelspace code.
+
+The new head of the for-next branch is commit:
+
+3a3f5b14 libxfs: don't use enum for buffer flags
+
+New Commits:
+
+Eric Sandeen (4):
+      [e6afdab6] libxfs: reorder functions in libxfs/trans.c
+      [9c64b9b3] libxfs: cosmetic changes to libxfs/trans.c
+      [42b85f55] libxfs: trivial changes to libxfs/trans.c
+      [3a3f5b14] libxfs: don't use enum for buffer flags
+
+
+Code Diffstat:
+
+ include/xfs_trace.h |   2 +
+ include/xfs_trans.h |   6 +-
+ libxfs/libxfs_io.h  |  17 ++-
+ libxfs/trans.c      | 414 ++++++++++++++++++++++++++++++----------------=
+------
+ 4 files changed, 253 insertions(+), 186 deletions(-)
+
+
+--WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01--
+
+--WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl06JZoACgkQIK4WkuE9
+3uChIhAAntL4jdtuUXfFDuoZ2MeGCZAsbAxKZMCJtAR4ip/htS1kpfLv38LtDeN5
+vzyE+r8DKRPZrqPvTDRkIppEL0/Q72gmabr732qBUW81TiWaDyylbEqCEcaiG1e9
+j7LSjgWUXO7d7N3xG+mf6TwToBjq35coQuqIhnuDAkW78QRNY2wYhfsNf0iWho+i
+tVnT3sG3vOlStgv8RqEu8o7xCHZtn5MDD0gv73cDKnja8+UiEmL+nfAJbE6thBus
+v6Czz1L7VPq1hdG9/RofywHUok6QDKG9T6BA/oX9c1Rg7qdF2wLjxZ+TNZYj3bs1
+a2x3ERB+EKs9HQMqlEuiv0fVmvT2804eSdyI0C3PZpU5CdmlW2nkzsMHf/2V0VLu
+ApgFQr2yLtXW31XkrOsxbM9ZnmLj7c2ZELalMVkeTXk5pDEs6at8CVCYJL9sQVGx
+/7d7ay2lapmp0JxYfl0lJHi9TGSXkt5wzI3OHSr6vgaux4kp3c3wWLNDT2a4uv2m
+bMGywA/bH6EkaNqCwveRKj+oIczHKjy10q4OABVN0G7JuQQehq7FNQm/9mrYo3pL
+FeK9yzmbxYabAUgS89vGiUqcvT0KwI87N/xF5oVZUZnhlR0zWurL3h9qmxIeM/lr
+I27QLdEHzShQ+FT9uUXSG5VFMgyXPZ0k9KPsZ0DgMmlntM83AMQ=
+=E1St
+-----END PGP SIGNATURE-----
+
+--WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb--
