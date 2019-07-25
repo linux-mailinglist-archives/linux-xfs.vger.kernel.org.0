@@ -2,104 +2,178 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5824D7477E
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 08:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F80C74B2B
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 12:07:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfGYGwd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Jul 2019 02:52:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57604 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGYGwd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jul 2019 02:52:33 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P6mvGG052989
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 06:52:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=MlkH6yvDbS1orG8MQ2ge1OTun8rO5g5oLy4autI1920=;
- b=vyAdfBUtI7MFejUBaKNWsLZ1Q+Rs4osFHQHFCS9HpxKyhQAB4nLAvDFpoQqX4dahOFp8
- vY8mR9/XbFIVQGBDZOHgHvJ1199lkZINELjITeKWU3aKTj09+Nna9KC2/P5R3crGgM9S
- hXxSv+AvFCHJH3IkiKTYsG/E6GvyAg7dk7mgDicw26JBnzvjZsT7MGE6EE+qwybWWQ5D
- uFsflf+iRnmsuh4YugJygpajauelPEyQW2i8qIidWzTcepeaVJKs5qvYiDrqd2ggNssg
- OXpHlo5TU1aWP/JcewnrZT2PDYd0x1NC/MUVjYj+QNrP/dlEK8Ly3UIvKgFSR1Umk02u kQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tx61c1tq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 06:52:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P6mFuT112743
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 06:52:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tx60yq1s9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 06:52:31 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6P6qUPP014402
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 06:52:30 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 23:52:29 -0700
-Date:   Thu, 25 Jul 2019 09:52:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix stack contents leakage in the v1
- bulkstat/inumbers ioctls
-Message-ID: <20190725065216.GI3089@kadam>
-References: <20190724153545.GC1561054@magnolia>
+        id S1728051AbfGYKGh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Jul 2019 06:06:37 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61141 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfGYKGg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jul 2019 06:06:36 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x6PA6YdF088925
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 19:06:34 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp);
+ Thu, 25 Jul 2019 19:06:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav303.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x6PA6S9e088890
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO)
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 19:06:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+To:     linux-xfs@vger.kernel.org
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: xfs: garbage file data inclusion bug under memory pressure
+Message-ID: <f7c3d69e-bbd4-244c-41d7-b03c923c5344@i-love.sakura.ne.jp>
+Date:   Thu, 25 Jul 2019 19:06:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724153545.GC1561054@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907250081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907250081
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 08:35:45AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Explicitly initialize the onstack structures to zero so we don't leak
-> kernel memory into userspace when converting the in-core structure to
-> the v1 ioctl structure.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  fs/xfs/xfs_ioctl.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index f193f7b288ca..44e1a290f053 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -719,7 +719,7 @@ xfs_fsbulkstat_one_fmt(
->  	struct xfs_ibulk		*breq,
->  	const struct xfs_bulkstat	*bstat)
->  {
-> -	struct xfs_bstat		bs1;
-> +	struct xfs_bstat		bs1 = { 0 };
+Hello.
 
-This sort of initialization is potentially problematic because some
-versions of GCC will change it as a series of assignments (which doesn't
-clear the struct hole).  It's not clear to me the rules where GCC does
-this and also I wish there were an option to disable that feature.
+I noticed that a file includes data from deleted files when
 
-[ I am still out of office until the end of the month ]
+  XFS (sda1): writeback error on sector XXXXX
 
-regards,
-dan carpenter
+messages are printed (due to close to OOM).
 
+So far I confirmed that this bug exists at least from 4.18 till 5.3-rc1.
+I haven't tried 4.17 and earlier kernels. I haven't tried other filesystems.
+
+
+
+Steps to test:
+
+(1) Run the disk space filler (source code is shown below).
+
+  # ./fillspace > file &
+  # unlink file
+  # fg
+
+(2) Wait until the disk space filler completes.
+
+(3) Start the reproducer (source code is shown below).
+
+  # ./oom-torture
+
+(4) Stop the reproducer using Ctrl-C after "writeback error on sector"
+    message was printed.
+
+  [ 1410.792467] XFS (sda1): writeback error on sector 159883016
+  [ 1410.822127] XFS (sda1): writeback error on sector 187138128
+  [ 1410.951357] XFS (sda1): writeback error on sector 162195392
+  [ 1410.952527] XFS (sda1): writeback error on sector 95210384
+  [ 1410.953870] XFS (sda1): writeback error on sector 95539264
+
+(5) Examine files written by the reproducer for file data
+    written by the disk space filler.
+
+  # grep -F XXXXX /tmp/file.*
+  Binary file /tmp/file.10111 matches
+  Binary file /tmp/file.10122 matches
+  Binary file /tmp/file.10143 matches
+  Binary file /tmp/file.10162 matches
+  Binary file /tmp/file.10179 matches
+
+oom-torture.c
+----------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <poll.h>
+
+static char use_delay = 0;
+
+static void sigcld_handler(int unused)
+{
+	use_delay = 1;
+}
+
+int main(int argc, char *argv[])
+{
+	static char buffer[4096] = { };
+	char *buf = NULL;
+	unsigned long size;
+	int i;
+	signal(SIGCLD, sigcld_handler);
+	for (i = 0; i < 1024; i++) {
+		if (fork() == 0) {
+			int fd = open("/proc/self/oom_score_adj", O_WRONLY);
+			write(fd, "1000", 4);
+			close(fd);
+			sleep(1);
+			if (!i)
+				pause();
+			snprintf(buffer, sizeof(buffer), "/tmp/file.%u", getpid());
+			fd = open(buffer, O_WRONLY | O_CREAT | O_APPEND, 0600);
+			while (write(fd, buffer, sizeof(buffer)) == sizeof(buffer)) {
+				poll(NULL, 0, 10);
+				fsync(fd);
+			}
+			_exit(0);
+		}
+	}
+	for (size = 1048576; size < 512UL * (1 << 30); size <<= 1) {
+		char *cp = realloc(buf, size);
+		if (!cp) {
+			size >>= 1;
+			break;
+		}
+		buf = cp;
+	}
+	sleep(2);
+	/* Will cause OOM due to overcommit */
+	for (i = 0; i < size; i += 4096) {
+		buf[i] = 0;
+		if (use_delay) /* Give children a chance to write(). */
+			poll(NULL, 0, 10);
+	}
+	pause();
+	return 0;
+}
+----------------------------------------
+
+fillspace.c
+----------------------------------------
+#include <unistd.h>
+
+int main(int argc, char *argv[])
+{
+	static char buffer[1048576];
+	int i;
+	for (i = 0; i < sizeof(buffer); i++)
+		buffer[i] = 'X';
+	for (i = 0; i < sizeof(buffer); i+= 40)
+		buffer[i] = '\n';
+	while (write(1, buffer, sizeof(buffer)) > 0);
+	return 0;
+}
+----------------------------------------
+
+
+
+Environment:
+
+This is a plain system with no special configuration.
+
+  # cat /proc/partitions
+  major minor  #blocks  name
+
+     8        0  104857600 sda
+     8        1  104856576 sda1
