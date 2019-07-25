@@ -2,150 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD9F759EA
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jul 2019 23:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2374B75A64
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 Jul 2019 00:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfGYV4p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Jul 2019 17:56:45 -0400
-Received: from sandeen.net ([63.231.237.45]:47080 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfGYV4o (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Jul 2019 17:56:44 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 171192B08
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jul 2019 16:56:13 -0500 (CDT)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 3a3f5b14
-Openpgp: preference=signencrypt
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <087b7894-93a6-0af0-0278-0c6c45c9db8c@sandeen.net>
-Date:   Thu, 25 Jul 2019 16:56:42 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1726683AbfGYWIh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Jul 2019 18:08:37 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33007 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726635AbfGYWIh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jul 2019 18:08:37 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DCBD82AD871;
+        Fri, 26 Jul 2019 08:08:33 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hqltW-0006dB-Ey; Fri, 26 Jul 2019 08:07:26 +1000
+Date:   Fri, 26 Jul 2019 08:07:26 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: xfs: garbage file data inclusion bug under memory pressure
+Message-ID: <20190725220726.GW7689@dread.disaster.area>
+References: <f7c3d69e-bbd4-244c-41d7-b03c923c5344@i-love.sakura.ne.jp>
+ <20190725113231.GV7689@dread.disaster.area>
+ <804d24cb-5b7c-4620-5a5f-4ec039472086@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <804d24cb-5b7c-4620-5a5f-4ec039472086@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=2GznwsGOIACdh93bGC4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb
-Content-Type: multipart/mixed; boundary="WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01";
- protected-headers="v1"
-From: Eric Sandeen <sandeen@sandeen.net>
-To: linux-xfs <linux-xfs@vger.kernel.org>
-Message-ID: <087b7894-93a6-0af0-0278-0c6c45c9db8c@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 3a3f5b14
+On Thu, Jul 25, 2019 at 09:44:35PM +0900, Tetsuo Handa wrote:
+> On 2019/07/25 20:32, Dave Chinner wrote:
+> > You've had writeback errors. This is somewhat expected behaviour for
+> > most filesystems when there are write errors - space has been
+> > allocated, but whatever was to be written into that allocated space
+> > failed for some reason so it remains in an uninitialised state....
+> 
+> This is bad for security perspective. The data I found are e.g. random
+> source file, /var/log/secure , SQL database server's access log
+> containing secret values...
 
---WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+The results of a read after a write error are undefined. In this
+case, the test is doing enough IO to evict the cached pages that
+failed the write so the followup read is pulling them from disk, not
+from the page cache. i.e. if the test read back immediately after
+the failure, it would get whatever the write put into the page cache
+but writeback failed to write to disk....
 
-Hi folks,
+Perhaps we need the write retry mechanisms we use for metadata in
+the data IO path, too, so that a single writeback failure doesn't
+cause this sort of thing to occur.
 
-The for-next branch of the xfsprogs repository at:
+> > For XFS and sequential writes, the on-disk file size is not extended
+> > on an IO error, hence it should not expose stale data.  However,
+> > your test code is not checking for errors - that's a bug in your
+> > test code - and that's why writeback errors are resulting in stale
+> > data exposure.  i.e. by ignoring the fsync() error,
+> > the test continues writing at the next offset and the fsync() for
+> > that new data write exposes the region of stale data in the
+> > file where the previous data write failed by extending the on-disk
+> > EOF past it....
+> > 
+> > So in this case stale data exposure is a side effect of not
+> > handling writeback errors appropriately in the application.
+> 
+> But blaming users regarding not handling writeback errors is pointless
+> when thinking from security perspective.
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+I'm not blaming anyone. I'm just explaining how the problem was
+exposed and pointing out that the responsibility for writing data
+correctly falls on *both* the filesystem and userspace applications.
+i.e. when the kernel fails it is userspace's responsibility to clean
+up the mess to ensure the /application's data/ is correctly on
+stable storage and not corrupt, missing, stale, etc.
 
-has just been updated.
+So forget security - fsync is a data integrity operation. Not
+checking that that it failed is extremely poor behaviour from a data
+integrity point of view. Fix the data integrity problems in the
+application and the security issues that data integrity failures
+/may/ expose are very effectively mitigated.
 
-This is just my gratuitous modifications of libxfs/trans.c to
-more closely resemble kernelspace code.
+> A bad guy might be trying to
+> steal data from inaccessible files.
 
-The new head of the for-next branch is commit:
+Which won't happen if user-triggered OOM does not cause writeback
+failures. i.e. the bug we need to find and fix is whatever is
+causing writeback to error out under OOM conditions.
+Writeback is a key component of memory reclaim, and it it fails
+under memory pressure we have much bigger problems...
 
-3a3f5b14 libxfs: don't use enum for buffer flags
+> > But I have to ask: what is causing the IO to fail? OOM conditions
+> > should not cause writeback errors - XFS will retry memory
+> > allocations until they succeed, and the block layer is supposed to
+> > be resilient against memory shortages, too. Hence I'd be interested
+> > to know what is actually failing here...
+> 
+> Yeah. It is strange that this problem occurs when close-to-OOM.
+> But no failure messages at all (except OOM killer messages and writeback
+> error messages).
 
-New Commits:
+Perhaps using things like trace_kmalloc and friends to isolate the
+location of memory allocation failures would help....
 
-Eric Sandeen (4):
-      [e6afdab6] libxfs: reorder functions in libxfs/trans.c
-      [9c64b9b3] libxfs: cosmetic changes to libxfs/trans.c
-      [42b85f55] libxfs: trivial changes to libxfs/trans.c
-      [3a3f5b14] libxfs: don't use enum for buffer flags
+Cheers,
 
-
-Code Diffstat:
-
- include/xfs_trace.h |   2 +
- include/xfs_trans.h |   6 +-
- libxfs/libxfs_io.h  |  17 ++-
- libxfs/trans.c      | 414 ++++++++++++++++++++++++++++++----------------=
-------
- 4 files changed, 253 insertions(+), 186 deletions(-)
-
-
---WjxYvlLoVtI3OE3WUtMAOS1ThBXoRle01--
-
---WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl06JZoACgkQIK4WkuE9
-3uChIhAAntL4jdtuUXfFDuoZ2MeGCZAsbAxKZMCJtAR4ip/htS1kpfLv38LtDeN5
-vzyE+r8DKRPZrqPvTDRkIppEL0/Q72gmabr732qBUW81TiWaDyylbEqCEcaiG1e9
-j7LSjgWUXO7d7N3xG+mf6TwToBjq35coQuqIhnuDAkW78QRNY2wYhfsNf0iWho+i
-tVnT3sG3vOlStgv8RqEu8o7xCHZtn5MDD0gv73cDKnja8+UiEmL+nfAJbE6thBus
-v6Czz1L7VPq1hdG9/RofywHUok6QDKG9T6BA/oX9c1Rg7qdF2wLjxZ+TNZYj3bs1
-a2x3ERB+EKs9HQMqlEuiv0fVmvT2804eSdyI0C3PZpU5CdmlW2nkzsMHf/2V0VLu
-ApgFQr2yLtXW31XkrOsxbM9ZnmLj7c2ZELalMVkeTXk5pDEs6at8CVCYJL9sQVGx
-/7d7ay2lapmp0JxYfl0lJHi9TGSXkt5wzI3OHSr6vgaux4kp3c3wWLNDT2a4uv2m
-bMGywA/bH6EkaNqCwveRKj+oIczHKjy10q4OABVN0G7JuQQehq7FNQm/9mrYo3pL
-FeK9yzmbxYabAUgS89vGiUqcvT0KwI87N/xF5oVZUZnhlR0zWurL3h9qmxIeM/lr
-I27QLdEHzShQ+FT9uUXSG5VFMgyXPZ0k9KPsZ0DgMmlntM83AMQ=
-=E1St
------END PGP SIGNATURE-----
-
---WFGR4ke8nTZnWsGWkRWE9JuXoG5WXTAzb--
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
