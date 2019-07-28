@@ -2,54 +2,99 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 214AC77C19
-	for <lists+linux-xfs@lfdr.de>; Sat, 27 Jul 2019 23:39:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1B2377F34
+	for <lists+linux-xfs@lfdr.de>; Sun, 28 Jul 2019 13:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfG0VjW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 27 Jul 2019 17:39:22 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:35253 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbfG0VjW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 27 Jul 2019 17:39:22 -0400
-Received: from [192.168.1.19] (x590ebd28.dyn.telefonica.de [89.14.189.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B56D5201A3C24;
-        Sat, 27 Jul 2019 23:39:19 +0200 (CEST)
-Subject: Re: Unmountable XFS file system after runnig stress-ng
-To:     Rob Townley <Rob.Townley@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-References: <b92674c4-488e-15ec-2052-eb69e4f80b7e@molgen.mpg.de>
- <20190727002439.GS30113@42.do-not-panic.com>
- <CA+VdTb8ZPLi0Eiq9SEhem4aEjWJ3rCn+NQ_vZrpc9mXo_WuDDQ@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <adc3bb44-b9ea-adc7-9314-dd5c0828fb66@molgen.mpg.de>
-Date:   Sat, 27 Jul 2019 23:39:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725985AbfG1L0n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 28 Jul 2019 07:26:43 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36473 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfG1L0m (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Jul 2019 07:26:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so26423367plt.3;
+        Sun, 28 Jul 2019 04:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CZB4/FK4WfyrnKFww5i1Y+nehlTsKGO3LjLr9ce8ZB0=;
+        b=l0h6vYsyoHzRW8X3E65rDiGLkLgx4U6R4s7jrusW4md9tjNJh05XJrMfu24bS65h6T
+         +CYinYSB+W5vXYDP338AwJGZRzyTZb7VxNSRLBKUhOzbkgmAhxMw5CA1WHnc8KSLLzqX
+         Hg8lrVXN948nTZpxTxn7EfvmgA46afOlq52jxjROJ+li7CbF9sCU+zDj/VdEYl9FMExD
+         foPTpZed1Ts/e8B3gxlUynuj4bDTmeh0awshrloVywmVZ4idigxK11cy1w7jo1dnaX00
+         vv2OArEMy3lGU/DiKkUKHomfwFqCZfgCj8mKewua3Fgi1vz+kcMMDUzMJ6820GrQbjGn
+         9dUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CZB4/FK4WfyrnKFww5i1Y+nehlTsKGO3LjLr9ce8ZB0=;
+        b=jpzvYyXc888+OAPhPLu5T16/nY3MYTF/Q6+bOrVR4N1ImLbE7AK7rWczHQ5mkzlpJA
+         Kgz0yUkJhA61FTXu6uke8F3/gOlpZEmNP7nL5FUjpYW/fDw0KyJXCZ3p6DAmSgryOi+/
+         Z08dR1Gq8hUO0jvqaGO9wXotDK9/pzuMbhmMVc29U8KT35qZb0cO+6BbXwCbK/UkPJqh
+         HKaNY3AVKfz2uznjyLeiITcNCzpijq5oQsg01gZQppkhc5UtFNJmKdSLFwnyXKXbER2L
+         5ioUyiz0/I4ZJ43SEjPoAkzbE6Mfhvz0+tJC48mufX5QhFcwB5mSy5WeXGK3raj++fxW
+         Fcqg==
+X-Gm-Message-State: APjAAAWhUFIJuoJTI+i3OzD+eYcCdxUg6pnBIG6hdNFXeMhXUXQt/URv
+        AXzvRzf/jOegn+HjbyYRSnE=
+X-Google-Smtp-Source: APXvYqzDX+DH27w6zN0DMVBF9MAcvTUyQIiClJerlSBGB6EpxezH66u5tOQKRdVzyDz0eo9WDHxC0w==
+X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr94650579pls.307.1564313202060;
+        Sun, 28 Jul 2019 04:26:42 -0700 (PDT)
+Received: from localhost ([178.128.102.47])
+        by smtp.gmail.com with ESMTPSA id j16sm44755417pjz.31.2019.07.28.04.26.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 04:26:41 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 19:26:35 +0800
+From:   Eryu Guan <guaneryu@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 0/4] xfs: fixes and new tests for bulkstat v5
+Message-ID: <20190728112635.GN7943@desktop>
+References: <156394159426.1850833.16316913520596851191.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <CA+VdTb8ZPLi0Eiq9SEhem4aEjWJ3rCn+NQ_vZrpc9mXo_WuDDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156394159426.1850833.16316913520596851191.stgit@magnolia>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear Rob,
+Hi XFS folks,
 
-
-On 27.07.19 13:34, Rob Townley wrote:
-> Is there ECC RAM in this PC?
+On Tue, Jul 23, 2019 at 09:13:14PM -0700, Darrick J. Wong wrote:
+> Hi all,
 > 
-> “Corruption of in-memory data detected.  Shutting down filesystem“
+> Fix some problems introduced by the creation of the V5 bulkstat ioctl,
+> and then add some new tests to make sure the new libxfrog bulkstat
+> wrappers work fine with both the new v5 ioctl and emulating it with the
+> old v1 ioctl.
 
-Yes, there is ECC memory in that system.
+I may need some help on reviewing this patchset, especially the new
+bulkstat tests :) Thanks in advance!
 
+But I'd suggest split the last patch into two patches, one introduces &
+uses the new helper, the other one adds new tests. Also, it misses a new
+entry in .gitignore file.
 
-Kind regards,
+Thanks,
+Eryu
 
-Paul
+> 
+> If you're going to start using this mess, you probably ought to just
+> pull from my git trees, which are linked below.
+> 
+> This is an extraordinary way to destroy everything.  Enjoy!
+> Comments and questions are, as always, welcome.
+> 
+> --D
+> 
+> kernel git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bulkstat-v5
+> 
+> xfsprogs git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bulkstat-v5
+> 
+> fstests git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bulkstat-v5
