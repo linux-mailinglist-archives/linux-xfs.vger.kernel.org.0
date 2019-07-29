@@ -2,87 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 308EB782BF
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2019 02:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADF9D783A0
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2019 05:24:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfG2AOR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 28 Jul 2019 20:14:17 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:53596 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726247AbfG2AOR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Jul 2019 20:14:17 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4D89E43DFA5;
-        Mon, 29 Jul 2019 10:14:15 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hrtHo-0000Hv-BU; Mon, 29 Jul 2019 10:13:08 +1000
-Date:   Mon, 29 Jul 2019 10:13:08 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Murphy Zhou <jencce.kernel@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: xfs quota test xfs/050 fails with dax mount option and "-d
- su=2m,sw=1" mkfs option
-Message-ID: <20190729001308.GX7689@dread.disaster.area>
-References: <20190724094317.4yjm4smk2z47cwmv@XZHOUW.usersys.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724094317.4yjm4smk2z47cwmv@XZHOUW.usersys.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=btMhTgiUG6S1lTvPJdgA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        id S1726370AbfG2DYJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 28 Jul 2019 23:24:09 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36846 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfG2DYI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Jul 2019 23:24:08 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so26937168plt.3;
+        Sun, 28 Jul 2019 20:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=W41jAG4KiNjmizZVJeUZJe2SLzpaILG6fB/l012JzHM=;
+        b=jhGpf7aqJSRK5XqIo9OP8vYKCI/tp9FJFj8hOiATqvKLsEFAdLHpqA4uf1H84yOHpM
+         EKD/FcLj6fmnjKhXmmtKhygpizhBq2OBSDhMUBAXVoa4VTm+iLd0CvhZ6DPfok6K28V2
+         XP4CvBkOtyR8PQoNr1gmtPW1Wqt6nLeSyBsMIEg8L6nZPzP17c/4zB1s3EolaQNh2bNz
+         XFSWDVY/x68YPUbAHsPOOJ4ALL9d0qpE2Us4eEUaBwRXVahHv374ZD1AI338FQzoMkEK
+         VEKs8wt4RpnC4MW+wHHTow04LDf3JgbMwobyYF+T96vZgJHihhX77RdWNglT4s6CORFH
+         G9zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W41jAG4KiNjmizZVJeUZJe2SLzpaILG6fB/l012JzHM=;
+        b=kyhqo0nszuvoFXPNFif4eRB6TibRPX78STipnHQ6Pe7Iu5EN80gDtyMIOkBpc87sC6
+         3MzxQA6hsPqT9H79TqW6P5f/0ZgbaVFCh5rlWGj224FwIh1AeGNZjTU6jzEijyPbGz0J
+         4534XpkxleJ7mIWb6Znp5ptk2w0yXoZBKkjR79JJ6VzTECFczClLP35IE3EAJFqflbyg
+         TzkqVuhPRZiBUe5fwBbxtmH6C6OO7+ueDNQiZ3N6J+K7o68DF/4mCyW8UA1UVCiBAh/j
+         UnMmJ5EQjtP9zJzELMi69Sni5KdVVVluNyYTvVmwZWQFg0OCB5WSOIEtNyWYAB5113Fr
+         pgUA==
+X-Gm-Message-State: APjAAAWeQHSR4JiPSvyZH1qd6ko9Rtdp1m7iGA4NSDQRIf23h34YLvhT
+        ysqxOPCjLY6IE0shifstum4=
+X-Google-Smtp-Source: APXvYqyaD0/0WnHCMBEZbRL+veolIi46STfZZHwyJavWKFMbVB/zSJRZODMjhU1G+qfsjdclXwo/2Q==
+X-Received: by 2002:a17:902:6a85:: with SMTP id n5mr100688378plk.73.1564370648141;
+        Sun, 28 Jul 2019 20:24:08 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id t11sm67386761pgb.33.2019.07.28.20.24.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 20:24:07 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     darrick.wong@oracle.com, bfoster@redhat.com, sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: xfs: Fix possible null-pointer dereferences in xchk_da_btree_block_check_sibling()
+Date:   Mon, 29 Jul 2019 11:24:01 +0800
+Message-Id: <20190729032401.28081-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:43:17PM +0800, Murphy Zhou wrote:
-> Hi,
-> 
-> As subject.
-> 
-> -d su=2m,sw=1     && -o dax  fail
-> -d su=2m,sw=1     && NO dax  pass
-> no su mkfs option && -o dax  pass
-> no su mkfs option && NO dax  pass
-> 
-> On latest Linus tree. Reproduce every time.
-> 
-> Testing on older kernels are going on to see if it's a regression.
-> 
-> Is this failure expected ?
+In xchk_da_btree_block_check_sibling(), there is an if statement on 
+line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
+    if (ds->state->altpath.blk[level].bp)
 
-I'm not sure it's actually a failure at all. DAX does not do delayed
-allocation, so if the write is aligned to sunit and at EOF it will
-round the allocation up to a full stripe unit. IOWs, for this test
-once the file size gets beyond sunit on DAX, writes will allocate in
-sunit chunks.
+When ds->state->altpath.blk[level].bp is NULL, it is used on line 281: 
+    xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
+        struct xfs_buf_log_item	*bip = bp->b_log_item;
+        ASSERT(bp->b_transp == tp);
 
-And, well, xfs/050 has checks in it for extent size hints, and
-notruns if:
+Thus, possible null-pointer dereferences may occur.
 
-        [ $extsize -ge 512000 ] && \
-                _notrun "Extent size hint is too large ($extsize bytes)"
+To fix these bugs, ds->state->altpath.blk[level].bp is checked before
+being used.
 
-Because EDQUOT occurs when:
+These bugs are found by a static analysis tool STCheck written by us.
 
->     + URK 99: 2097152 is out of range! [3481600,4096000]
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ fs/xfs/scrub/dabtree.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-the file has less than 3.5MB or > 4MB allocated to it, and for a
-stripe unit of > 512k, EDQUOT will occur at  <3.5MB. That's what
-we are seeing here - a 2MB allocation at offset 2MB is > 4096000
-bytes, and so it gets EDQUOT at that point....
-
-IOWs, this looks like a test problem, not a code failure...
-
-Cheers,
-
-Dave.
+diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+index 94c4f1de1922..33ff90c0dd70 100644
+--- a/fs/xfs/scrub/dabtree.c
++++ b/fs/xfs/scrub/dabtree.c
+@@ -278,7 +278,9 @@ xchk_da_btree_block_check_sibling(
+ 	/* Compare upper level pointer to sibling pointer. */
+ 	if (ds->state->altpath.blk[level].blkno != sibling)
+ 		xchk_da_set_corrupt(ds, level);
+-	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
++	if (ds->state->altpath.blk[level].bp)
++		xfs_trans_brelse(ds->dargs.trans, 
++						ds->state->altpath.blk[level].bp);
+ out:
+ 	return error;
+ }
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.0
+
