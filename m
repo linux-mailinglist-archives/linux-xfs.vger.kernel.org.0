@@ -2,73 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3877782A9
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2019 02:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 308EB782BF
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2019 02:14:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfG2AIV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 28 Jul 2019 20:08:21 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41625 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfG2AIP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Jul 2019 20:08:15 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 2so39606028vso.8
-        for <linux-xfs@vger.kernel.org>; Sun, 28 Jul 2019 17:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=BrTkYGT/CoRQ7U7g4N9efxmX5N2ln4oVBYUSCIHtobA=;
-        b=Hrbix6Ncwndj0/ZhLdg0qekQEb+2Kgjc0SeRBr4FoeMFiX6XHGMMMukOQcIKSRIyn6
-         1FLJR6mLR/vulQ1VtBLTJl0Lda2nbHDXGla8f4MZapoFNxChdOqG0oC2RV/IR5Di4VyD
-         grjfPw7UAkWugiyvS9Gl1hDt40Nvloz7Q8hFS7wLEsjTOSX4W7lFPW9PhND4JzOEZ+VX
-         SBGYCM0giRSd8L6L/uLWJrYqn2I37qhpbbuqonQi3s5AF+bCkD88dzpmwDbsGmVCx0VK
-         YxQyZe0oSBHMaPJJxMQFY+Lj0j7LLb7a1Ztlp5dpJ58wOiotopzo5wS6I3+UonrsS7ek
-         PqTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=BrTkYGT/CoRQ7U7g4N9efxmX5N2ln4oVBYUSCIHtobA=;
-        b=tlaInAEUBqyUyv+0cpgkG3ckkRpiRXDrmoo1X0CjTQssT6LjhDVWlH3mekQo6i00iL
-         wn2YeG6LCX6iWTP0GXH5DQ9NP0Qeh1pT4o3ckYoy2wDMJxXc8Juoc8g/67yu3L158hSy
-         GaRrNJ/ITqNPjsRoBGcgrxZXKRVGLJnzoNy65WP4hatzSL7W3VPYRyFPfSRsh689JiaE
-         jHdTpfUZBtXAwrgB8inZS65C8o3xvf7LlKxZ0vBtdvofLcs6zCEGKN4Mx30dKuT++Vrn
-         QA+JtzDryLRis4r0a1udjhPNfLs6KSmJW9sbrAJldS3sCJPUtKfsyNA181NAoW5NKswi
-         PNcQ==
-X-Gm-Message-State: APjAAAXq0wrVq+3uR8/8FgW8obZ7Xejl+qHm/oAkXMwOMb3ytqQ1ZyaR
-        5LNxo5Pn/511ubIXQATgeUlWs85dUPQq0KvYRQ0=
-X-Google-Smtp-Source: APXvYqz5Tv/G3ojzOIebxdxZc+D3VZ7ztK4AVBhaXkUwSAzoovp0N7wtTAf+Vftj4yT+nLwP2EIhs0O9djQd9MpIws8=
-X-Received: by 2002:a67:eb19:: with SMTP id a25mr65238884vso.109.1564358894898;
- Sun, 28 Jul 2019 17:08:14 -0700 (PDT)
+        id S1726248AbfG2AOR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 28 Jul 2019 20:14:17 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:53596 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726247AbfG2AOR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Jul 2019 20:14:17 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4D89E43DFA5;
+        Mon, 29 Jul 2019 10:14:15 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hrtHo-0000Hv-BU; Mon, 29 Jul 2019 10:13:08 +1000
+Date:   Mon, 29 Jul 2019 10:13:08 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Murphy Zhou <jencce.kernel@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: xfs quota test xfs/050 fails with dax mount option and "-d
+ su=2m,sw=1" mkfs option
+Message-ID: <20190729001308.GX7689@dread.disaster.area>
+References: <20190724094317.4yjm4smk2z47cwmv@XZHOUW.usersys.redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a67:80c8:0:0:0:0:0 with HTTP; Sun, 28 Jul 2019 17:08:14
- -0700 (PDT)
-Reply-To: williamrobert416@gmail.com
-From:   "Mr. Robert William" <officialuse87@gmail.com>
-Date:   Mon, 29 Jul 2019 01:08:14 +0100
-Message-ID: <CAD00q0_sEF2SnzFkOGUBd7uFGZugFRAOygkgQE-c=-i01FWC-w@mail.gmail.com>
-Subject: Please listen
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724094317.4yjm4smk2z47cwmv@XZHOUW.usersys.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=btMhTgiUG6S1lTvPJdgA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 05:43:17PM +0800, Murphy Zhou wrote:
+> Hi,
+> 
+> As subject.
+> 
+> -d su=2m,sw=1     && -o dax  fail
+> -d su=2m,sw=1     && NO dax  pass
+> no su mkfs option && -o dax  pass
+> no su mkfs option && NO dax  pass
+> 
+> On latest Linus tree. Reproduce every time.
+> 
+> Testing on older kernels are going on to see if it's a regression.
+> 
+> Is this failure expected ?
+
+I'm not sure it's actually a failure at all. DAX does not do delayed
+allocation, so if the write is aligned to sunit and at EOF it will
+round the allocation up to a full stripe unit. IOWs, for this test
+once the file size gets beyond sunit on DAX, writes will allocate in
+sunit chunks.
+
+And, well, xfs/050 has checks in it for extent size hints, and
+notruns if:
+
+        [ $extsize -ge 512000 ] && \
+                _notrun "Extent size hint is too large ($extsize bytes)"
+
+Because EDQUOT occurs when:
+
+>     + URK 99: 2097152 is out of range! [3481600,4096000]
+
+the file has less than 3.5MB or > 4MB allocated to it, and for a
+stripe unit of > 512k, EDQUOT will occur at  <3.5MB. That's what
+we are seeing here - a 2MB allocation at offset 2MB is > 4096000
+bytes, and so it gets EDQUOT at that point....
+
+IOWs, this looks like a test problem, not a code failure...
+
+Cheers,
+
+Dave.
 -- 
-Hello,
-
-I am Eng. Robert William, a retired Marine Engineer residing in
-Trinidad & Tobago.
-Unfortunately i am admitted to the hospital for a cancer (Sickness)
-over a year now,my doctor reported that i have only few months to pass
-away. Please i need your consent to invest my money (USD$1.8 Million)
-in any business of your
-
-choice in your country before i die, i have no other relatives not
-even children because i lost my family in a fire disaster in 2005.
-Please i need your urgent and
-
-kind response to enable me send you more information on how to contact
-my bank as my next of kin to process the fund into your bank account.
-
-Mr Robert William
+Dave Chinner
+david@fromorbit.com
