@@ -2,86 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E7C7A8B3
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2019 14:37:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07F917AB38
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2019 16:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfG3Mhu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Jul 2019 08:37:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34186 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfG3Mhu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Jul 2019 08:37:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so65632780wrm.1
-        for <linux-xfs@vger.kernel.org>; Tue, 30 Jul 2019 05:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=quPTdbJSNqfTHVNDVTg9sWKMFlQafnU0Ap7bRA31guE=;
-        b=ghJLThm7WWrj5UDUxq0US6+Z7ohcjwIgWWJ9fsa2xR+STxBaIwCUC4P5zY2cPMtfbP
-         cjUd1qwPUvK5iMA76ORCnp9XmK3PtEI+p9HD6GTiJpS+LbY6CoglewxPAJejWxyQmWQl
-         CeYsMdbi/rrHCw8rGBB1ZNIUnHK1yFCNtm6nYzoQU0Ut8hwZrV4qoRRtmSIqsmoqWUfx
-         wKzmRdUioS9Bz/SSZkn8twdgvXo+yxUVnfq/UvjoLC+kA/xrTVZKWr+6YHVDl7gVwtg7
-         6SZ6UUP9lKFg9GekOReS+j/B3mFMLmD0lAee3JZhj+H0xofhLpR6KoZ8RvVspxG7byfx
-         PxPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=quPTdbJSNqfTHVNDVTg9sWKMFlQafnU0Ap7bRA31guE=;
-        b=X4s8Xwr0rWLg8SSgRlpzJXcnfPfIzeOcTQJQL1X7oVP7mdweTmd0EM82v0/TyqYmDb
-         WL+0LvWxN3q0kjbrWC1JctD+BuV/Jc0wq++jU8fUmxaI3Mdvmr0tQhBTrQaREd4rxNTz
-         5MBOfv5zrNSOeD3Bd/sBNt7L+Lmcx/ZH3s2meIExBl5yQ9hcEUTJ5ExR1fB3d5h1z7OI
-         4vydgCfKA0xoJPnWFzJ665NClqyKcTiFxbQDLgwatuYR1no7OIZULShz0jbgWfGqZes4
-         grhR05+OytVu4bhBKJJoO5zSo3WVyiFErjVuTRxCUHZnbpt+up8cf1pn2IXsKDDvy3bX
-         WUtg==
-X-Gm-Message-State: APjAAAVtqfDgT7KY0VGZgSLG8a8IUUME7BnWVinQ9Fw/ikW8PH5Nutze
-        4JlmXlX1XeUeDTLbhuMVjJDtUKpF
-X-Google-Smtp-Source: APXvYqzh/mWgYFKjkpAj/0Ce34CTq/O3Fys+6vCTsfZR9wBgtRYJJYPeuLDOAt1PChZd1dDNXVxgaQ==
-X-Received: by 2002:adf:e708:: with SMTP id c8mr26281479wrm.25.1564490268347;
-        Tue, 30 Jul 2019 05:37:48 -0700 (PDT)
-Received: from localhost ([197.211.57.129])
-        by smtp.gmail.com with ESMTPSA id p10sm2641774wmk.2.2019.07.30.05.37.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 05:37:47 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 13:36:48 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH] xfs: design: Fix typo
-Message-ID: <20190730123648.GA20126@localhost>
+        id S1729985AbfG3Ole (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Jul 2019 10:41:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35456 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729908AbfG3Old (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Jul 2019 10:41:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UEdMY9116600;
+        Tue, 30 Jul 2019 14:41:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=cuzaUqVFKfxxZPrtZonQ6fI4cI9Il+2XFjdS69q+tWY=;
+ b=ZF9cgKZTjiF4K1t1gX24TwYiZmDNrvK+GkJc4+W+KYmHsP+EkXGJ4XX6fILYt0hBJaBo
+ 460RLDUj5dikrtkDucOLKdo5apn3AsDDD3B9jgutESX5v9qOXUql0hR4vnYt97z4vZLY
+ SC2zn2CAAG8V+dTypLtL1yfs1/rSmRmtny9UmnRpUaKuUEN8OzFZMbRYo8m6x7i0//Xg
+ qrgxK+bnHs4WL+sLZbkX6g0r8tvL048H4Y+jtxmIjSlaLXtgOq6fpQKEYq3dbf3aywRx
+ 2befN7v5l/hi0NH1mc+wQ670USAh/fsUWnXO33VvxnTDs93+7eT6QEymymxENKOPsr4p +Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u0f8qxw1a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 14:41:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UEbv0B083346;
+        Tue, 30 Jul 2019 14:41:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u0bqu75nj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 14:41:24 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6UEfNOR030003;
+        Tue, 30 Jul 2019 14:41:23 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jul 2019 07:41:22 -0700
+Date:   Tue, 30 Jul 2019 07:41:22 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     bfoster@redhat.com, sandeen@sandeen.net, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fs: xfs: Fix possible null-pointer dereferences in
+ xchk_da_btree_block_check_sibling()
+Message-ID: <20190730144122.GP1561054@magnolia>
+References: <20190730023206.14587-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190730023206.14587-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300152
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Replace "possible" with "possibly" and improve the flow of the phrase.
+On Tue, Jul 30, 2019 at 10:32:06AM +0800, Jia-Ju Bai wrote:
+> In xchk_da_btree_block_check_sibling(), there is an if statement on
+> line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
+>     if (ds->state->altpath.blk[level].bp)
+> 
+> When ds->state->altpath.blk[level].bp is NULL, it is used on line 281:
+>     xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
+>         struct xfs_buf_log_item *bip = bp->b_log_item;
+>         ASSERT(bp->b_transp == tp);
+> 
+> Thus, possible null-pointer dereferences may occur.
+> 
+> To fix these bugs, ds->state->altpath.blk[level].bp is checked before
+> being used.
+> 
+> These bugs are found by a static analysis tool STCheck written by us.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
- design/XFS_Filesystem_Structure/overview.asciidoc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- mode change 100644 => 100755 design/XFS_Filesystem_Structure/overview.asciidoc
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-diff --git a/design/XFS_Filesystem_Structure/overview.asciidoc b/design/XFS_Filesystem_Structure/overview.asciidoc
-old mode 100644
-new mode 100755
-index d15b50a..7628a7d
---- a/design/XFS_Filesystem_Structure/overview.asciidoc
-+++ b/design/XFS_Filesystem_Structure/overview.asciidoc
-@@ -28,7 +28,7 @@ record.  Both forks associate a logical offset with an extent of physical
- blocks, which makes sparse files and directories possible.  Directory entries
- and extended attributes are contained inside a second-level data structure
- within the blocks that are mapped by the forks.  This structure consists of
--variable-length directory or attribute records and possible a second B+tree to
-+variable-length directory or attribute records and, possibly, a second B+tree to
- index these records.
- 
- XFS employs a journalling log in which metadata changes are collected so that
--- 
-2.22.0
+--D
 
+> ---
+> v2:
+> * Adjust the code and add an assignment. 
+>   Thank Darrick J. Wong for helpful advice. 
+> 
+> ---
+>  fs/xfs/scrub/dabtree.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+> index 94c4f1de1922..77ff9f97bcda 100644
+> --- a/fs/xfs/scrub/dabtree.c
+> +++ b/fs/xfs/scrub/dabtree.c
+> @@ -278,7 +278,11 @@ xchk_da_btree_block_check_sibling(
+>  	/* Compare upper level pointer to sibling pointer. */
+>  	if (ds->state->altpath.blk[level].blkno != sibling)
+>  		xchk_da_set_corrupt(ds, level);
+> -	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
+> +	if (ds->state->altpath.blk[level].bp) {
+> +		xfs_trans_brelse(ds->dargs.trans,
+> +				ds->state->altpath.blk[level].bp);
+> +		ds->state->altpath.blk[level].bp = NULL;
+> +	}
+>  out:
+>  	return error;
+>  }
+> -- 
+> 2.17.0
+> 
