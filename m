@@ -2,132 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B60879C1C
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2019 00:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A00F579D92
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2019 02:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbfG2WCE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 29 Jul 2019 18:02:04 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39484 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389134AbfG2V6J (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jul 2019 17:58:09 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2648C43E457;
-        Tue, 30 Jul 2019 07:58:04 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hsDdZ-0000xf-Cn; Tue, 30 Jul 2019 07:56:57 +1000
-Date:   Tue, 30 Jul 2019 07:56:57 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-xfs@vger.kernel.org
-Subject: Re: xfs: garbage file data inclusion bug under memory pressure
-Message-ID: <20190729215657.GI7777@dread.disaster.area>
-References: <804d24cb-5b7c-4620-5a5f-4ec039472086@i-love.sakura.ne.jp>
- <20190725220726.GW7689@dread.disaster.area>
- <201907290350.x6T3oBpj009459@www262.sakura.ne.jp>
- <20190729112335.GA23942@bfoster>
+        id S1730141AbfG3AtW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 29 Jul 2019 20:49:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33088 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbfG3AtW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jul 2019 20:49:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U0nJFk001818;
+        Tue, 30 Jul 2019 00:49:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=blr9tNeZN2ggMtRR68XRHu4jy3hwjeRuEEvIJpfh8tg=;
+ b=eate+SahHg3fL+DHyDc8ZDf1lD4zP0mptP7OmI+fCe7hCeNGlU4STcb5C7rNFxr+8MTr
+ +9EVHTnTGYFDLMMTRaozPAIsZouBaQwshCVAeocEFoOPHACX+K2pSmybpHeyfH6seCWR
+ fn/XAQW/Vpu7kky+959wLHiMNcO5D5kTVaG4bZjcQkauGYsWsuNP7I+sgB2wlVejA04v
+ nX06qNG7XwvMKngerHdjU27z6uWVjuOKiP4CIhXpVmiXenW9THoDLdonzBZWsNZvlIPU
+ +MWAtWZui5drd25RlfTE5BzdTP7unD4Sb2qFwwEGWBBTaXvDpsvl+kcHryFGNBuaXO6/ 4g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2u0f8qttju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 00:49:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U0leJu164672;
+        Tue, 30 Jul 2019 00:49:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2u0dxqm2wn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 00:49:19 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6U0nIZx026141;
+        Tue, 30 Jul 2019 00:49:18 GMT
+Received: from localhost (/10.159.132.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Jul 2019 17:49:17 -0700
+Date:   Mon, 29 Jul 2019 17:49:17 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eryu Guan <guaneryu@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 0/4] xfs: fixes and new tests for bulkstat v5
+Message-ID: <20190730004917.GB2345316@magnolia>
+References: <156394159426.1850833.16316913520596851191.stgit@magnolia>
+ <20190728112635.GN7943@desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729112335.GA23942@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=xrWgIKmipoXZo4eOuQAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190728112635.GN7943@desktop>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300005
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300006
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 07:23:35AM -0400, Brian Foster wrote:
-> On Mon, Jul 29, 2019 at 12:50:11PM +0900, Tetsuo Handa wrote:
-> > Dave Chinner wrote:
-> > > > > But I have to ask: what is causing the IO to fail? OOM conditions
-> > > > > should not cause writeback errors - XFS will retry memory
-> > > > > allocations until they succeed, and the block layer is supposed to
-> > > > > be resilient against memory shortages, too. Hence I'd be interested
-> > > > > to know what is actually failing here...
-> > > > 
-> > > > Yeah. It is strange that this problem occurs when close-to-OOM.
-> > > > But no failure messages at all (except OOM killer messages and writeback
-> > > > error messages).
-> > > 
-> > > Perhaps using things like trace_kmalloc and friends to isolate the
-> > > location of memory allocation failures would help....
-> > > 
-> > 
-> > I checked using below diff, and confirmed that XFS writeback failure is triggered by ENOMEM.
-> > 
-> > When fsync() is called, xfs_submit_ioend() is called. xfs_submit_ioend() invokes
-> > xfs_setfilesize_trans_alloc(), but xfs_trans_alloc() fails with -ENOMEM because
-> > xfs_log_reserve() from xfs_trans_reserve() fails with -ENOMEM because
-> > xlog_ticket_alloc() is using KM_SLEEP | KM_MAYFAIL which is mapped to
-> > GFP_NOFS|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP which will fail under close-to-OOM.
-> > 
-> > As a result, bio_endio() is immediately called due to -ENOMEM, and
-> > xfs_destroy_ioend() from xfs_end_bio() from bio_endio() is printing
-> > writeback error message due to -ENOMEM error.
-> > (By the way, why not to print error code when printing writeback error message?)
-> > 
-> > ----------------------------------------
+On Sun, Jul 28, 2019 at 07:26:35PM +0800, Eryu Guan wrote:
+> Hi XFS folks,
 > 
-> Ah, that makes sense. Thanks for tracking that down Tetsuo. For context,
-> it looks like that flag goes back to commit eb01c9cd87 ("[XFS] Remove
-> the xlog_ticket allocator") that replaces some old internal ticket
-> allocation mechanism (that I'm not familiar with) with a standard kmem
-> cache.
+> On Tue, Jul 23, 2019 at 09:13:14PM -0700, Darrick J. Wong wrote:
+> > Hi all,
+> > 
+> > Fix some problems introduced by the creation of the V5 bulkstat ioctl,
+> > and then add some new tests to make sure the new libxfrog bulkstat
+> > wrappers work fine with both the new v5 ioctl and emulating it with the
+> > old v1 ioctl.
 > 
-> ISTM we can just remove that KM_MAYFAIL from ticket allocation. We're
-> already in NOFS context in this particular caller (writeback), though
-> that's probably not the case for most other transaction allocations. If
-> we had a reason to get more elaborate, I suppose we could conditionalize
-> use of the KM_MAYFAIL flag and/or lift bits of ticket allocation to
-> earlier in xfs_trans_alloc(), but it's not clear to me that's necessary.
-> Dave?
+> I may need some help on reviewing this patchset, especially the new
+> bulkstat tests :) Thanks in advance!
 
-That's a long time ago, and it predates the pre-allocation of
-transactions for file size updates in IO submission. The log ticket
-rework is irrelevant - it was just an open-coded slab allocator - it
-was the fact it handled allocation failure that mattered. That was
-done at the time because we were slowly reducing the number of
-blocking allocations at the time - trying to reduce the reliance on
-looping until allocation succeeds - so MAYFAIL was used for quite a
-lot of new allocations at the time.
+Let me know if you have any questions. :)
 
-This is perfectly fine for transactions in syscall context - if we
-don't have memory available for the log ticket, we may as well give
-up now before we really start creating memory demand and getting
-into a state where we are half way through a transaction and
-completely out of memory and can't go forwards or backwards.
+> But I'd suggest split the last patch into two patches, one introduces &
+> uses the new helper, the other one adds new tests. Also, it misses a new
+> entry in .gitignore file.
 
-The trans alloc/trans reserve/log reserve code was somewhat
-different back then, as was the writeback code. I suspect it dates
-back to when we had trylock semantics in writeback and so memory
-allocation errors like this would have simply redirtied the page and
-it was tried again later. Hence, historically, I don't think this
-was an issue, either.
+Oops, will fix.
 
-Hence the code has morphed so much since then I don't think we can
-"blame" this commit for introducing this problem. I looks more like
-we have removed all the protection it had as we've simplified the
-writeback and transaction allocation/reservation code over time, and
-now it's exposed directly in writeback.
+--D
 
-----
-
-As for how to fix it, I'd just remove KM_MAYFAIL. We've just done a
-transaction allocation with just KM_SLEEP, so we may as well do the
-same for the log ticket....
-
-Cheers,
-
-Dave.
-
--- 
-Dave Chinner
-david@fromorbit.com
+> Thanks,
+> Eryu
+> 
+> > 
+> > If you're going to start using this mess, you probably ought to just
+> > pull from my git trees, which are linked below.
+> > 
+> > This is an extraordinary way to destroy everything.  Enjoy!
+> > Comments and questions are, as always, welcome.
+> > 
+> > --D
+> > 
+> > kernel git tree:
+> > https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bulkstat-v5
+> > 
+> > xfsprogs git tree:
+> > https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bulkstat-v5
+> > 
+> > fstests git tree:
+> > https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bulkstat-v5
