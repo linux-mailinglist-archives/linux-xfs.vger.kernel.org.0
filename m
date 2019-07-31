@@ -2,87 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34FF27CAE6
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 19:51:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C8E7CB48
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 19:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfGaRuw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 Jul 2019 13:50:52 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45618 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfGaRuw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 Jul 2019 13:50:52 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s22so49928006qkj.12;
-        Wed, 31 Jul 2019 10:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8H1qmZWnyPRY1VP8ewZtm5ftowSE/cfi+74EH6RJgIU=;
-        b=lWngceu52u6EsMIytANCj8jbbUIjRuFtqtH35VoHpcMzbcUQhwb2HrkU+q0Py520fw
-         +aoc6Hl03liHWCq4/TPU7obfd0ky5jqklVnQ3YKO+ysumg2xfTr8b8Qk9LsLrhTBxRVi
-         Xq8qF+8r6xB25OpFWkep5ToA9kmXNHIAVYJOj5giCO6iXz6MByx0K0FOgqvc7gE7lbrA
-         AmMw4sO+KQ0DeBBcCTqBVy9lyhNVkOsnPjxPMZ2NuQvJ9OBLdLtC+TqonTq7sVdG3oRE
-         ZJ/f8/2V36jG2uGESFH3VcNUJokeiZsFa8ZWgzcG4KhmTWRAVHbsSDKYa2K+T//pDUO6
-         isrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8H1qmZWnyPRY1VP8ewZtm5ftowSE/cfi+74EH6RJgIU=;
-        b=RIDo2Wze0bu/tnpLTiLTOJtwof/SZvyc73vUasPBsRJEJY+Px19KAeP5/xQcOnIEdT
-         QBVbK0zxfY7Zo4itc9Uy11IE3axCT9t5dzGsaEn+FzOYFEBHv7IWa2wQbtfyfrPmzPpN
-         LUo8c+fNpESgKb9hPlQffK8297MNUdclnnWMfGesVJ+ejb6/ZioKKAVE3s0NONYbf17K
-         th1LAZjzGKk8Fs/B8cp25AoAqe9S68dd35khEwI7ZeItAZkCJP5QbV7tK1yQ8A7Sqo/s
-         yR0TBSV1o7foywqcKLfrFYJe5rjpyxrJelOGi0ZkBcLBaL2DhXRVKK+if9TQEctG7h8C
-         LWJg==
-X-Gm-Message-State: APjAAAWwwxc/DNGRsRO4nijmyuXHH+VOWCxv35GZkZr4/pdc4JfFguWD
-        U/GJ5ur08/0xcPgCWN+V8wOvpHGE5FLRbyOM3Ps=
-X-Google-Smtp-Source: APXvYqx1vdp6YaEEtVMI7ZbVbZcRwnEweHxRBRbt4MX2JVrJxeici/yUQ1j9FXzOgHJZd/Br9Zv7MLoRACzXLUpuwEc=
-X-Received: by 2002:a37:a854:: with SMTP id r81mr82915593qke.378.1564595451187;
- Wed, 31 Jul 2019 10:50:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731171734.21601-1-willy@infradead.org>
-In-Reply-To: <20190731171734.21601-1-willy@infradead.org>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 31 Jul 2019 10:50:40 -0700
-Message-ID: <CAPhsuW66e=7g+rPhi3NU8jQRGqQEz0oQ5XJerg6ds=oxMz8U1g@mail.gmail.com>
-Subject: Re: [RFC 0/2] iomap & xfs support for large pages
-To:     Matthew Wilcox <willy@infradead.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Cc:     Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        id S1726350AbfGaR7U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 Jul 2019 13:59:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38364 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfGaR7T (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 Jul 2019 13:59:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SFbQnaoqsadI4zyK9FmZVb5jRGBvcMhtkf9xAvnYNi0=; b=aAVijrZ1LE/V5A1EQp4VZOkJM
+        ohKRVqFkOOvbCn7csYPUyuYkpmOfxJ3MV0Is8wwvxFqh7Fs0TkJT6uMH51byCzcUZSbXTgqabZKTJ
+        riUU+p7elN67dDAFSpeLVY6pOmWJbb2+bEKUbST3ls7qbj8AFNJ3xs5KYln9zmwP1pXyoghgZH+VK
+        7NMQXTsEQG0TlgK6aNSp0h7O3rO2anqBNE2bnMoPlrSy7/O+MdQLi/QhGoUbg7I62V7l8FUSETVKQ
+        WpFYlO/3KY/y4WTIAwbTRJXEaAAJoH/9iI0cKTeeV1+hUhy4WMpntPNj78/Z+xsf1gPn0M86snBjr
+        q4sn+qwDQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsssh-0006Re-8U; Wed, 31 Jul 2019 17:59:19 +0000
+Date:   Wed, 31 Jul 2019 10:59:19 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
         Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC 0/2] iomap & xfs support for large pages
+Message-ID: <20190731175919.GF4700@bombadil.infradead.org>
+References: <20190731171734.21601-1-willy@infradead.org>
+ <CAPhsuW66e=7g+rPhi3NU8jQRGqQEz0oQ5XJerg6ds=oxMz8U1g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPhsuW66e=7g+rPhi3NU8jQRGqQEz0oQ5XJerg6ds=oxMz8U1g@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:17 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Christoph sent me a patch a few months ago called "XFS THP wip".
-> I've redone it based on current linus tree, plus the page_size() /
-> compound_nr() / page_shift() patches currently found in -mm.  I fixed
-> the logic bugs that I noticed in his patch and may have introduced some
-> of my own.  I have only compile tested this code.
+On Wed, Jul 31, 2019 at 10:50:40AM -0700, Song Liu wrote:
+> On Wed, Jul 31, 2019 at 10:17 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> >
+> > Christoph sent me a patch a few months ago called "XFS THP wip".
+> > I've redone it based on current linus tree, plus the page_size() /
+> > compound_nr() / page_shift() patches currently found in -mm.  I fixed
+> > the logic bugs that I noticed in his patch and may have introduced some
+> > of my own.  I have only compile tested this code.
+> 
+> Would Bill's set work on XFS with this set?
 
-Would Bill's set work on XFS with this set?
+If there are no bugs in his code or mine ;-)
 
-Thanks,
-Song
+It'd also need to be wired up; something like this:
 
->
-> Matthew Wilcox (Oracle) (2):
->   iomap: Support large pages
->   xfs: Support large pages
->
->  fs/iomap/buffered-io.c | 82 ++++++++++++++++++++++++++----------------
->  fs/xfs/xfs_aops.c      | 37 +++++++++----------
->  include/linux/iomap.h  |  2 +-
->  3 files changed, 72 insertions(+), 49 deletions(-)
->
-> --
-> 2.20.1
->
++++ b/fs/xfs/xfs_file.c
+@@ -1131,6 +1131,8 @@ __xfs_filemap_fault(
+        } else {
+                if (write_fault)
+                        ret = iomap_page_mkwrite(vmf, &xfs_iomap_ops);
++               else if (pe_size)
++                       ret = filemap_huge_fault(vmf, pe_size);
+                else
+                        ret = filemap_fault(vmf);
+        }
+@@ -1156,9 +1158,6 @@ xfs_filemap_huge_fault(
+        struct vm_fault         *vmf,
+        enum page_entry_size    pe_size)
+ {
+-       if (!IS_DAX(file_inode(vmf->vma->vm_file)))
+-               return VM_FAULT_FALLBACK;
+-
+        /* DAX can shortcut the normal fault path on write faults! */
+        return __xfs_filemap_fault(vmf, pe_size,
+                        (vmf->flags & FAULT_FLAG_WRITE));
+
+(untested)
+
