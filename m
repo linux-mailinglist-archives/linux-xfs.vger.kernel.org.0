@@ -2,103 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13AD17B97B
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 08:09:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07A0B7BE17
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 12:12:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfGaGJI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 Jul 2019 02:09:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12322 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfGaGJH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 31 Jul 2019 02:09:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 23:09:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
-   d="scan'208";a="371975164"
-Received: from hzengerx-mobl.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.249.33.143])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2019 23:09:00 -0700
-Subject: Re: [PATCH v4 3/3] net/xdp: convert put_page() to put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20190730205705.9018-1-jhubbard@nvidia.com>
- <20190730205705.9018-4-jhubbard@nvidia.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Message-ID: <c1c7b6cd-8f08-0e3f-2f66-557228edabcf@intel.com>
-Date:   Wed, 31 Jul 2019 08:08:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727161AbfGaKMU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 Jul 2019 06:12:20 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36330 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfGaKMU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 Jul 2019 06:12:20 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so69605448oti.3
+        for <linux-xfs@vger.kernel.org>; Wed, 31 Jul 2019 03:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=nZhba4iF9aZSfpuLWM1CouoRK7ExCUrNe4K1Oj8Nx+0=;
+        b=NvJMpkeFRqNBFWIOJRAea2/qMBu0jOb3uQqUNgdb5UKy1dvvIDRUZfoT6RMomNAIRp
+         HrbCU41u+/4GjcSDDztXc7n6N2BPLHtF5/FQsm4UuLjotI+jGwkbSJyP0vB4sqaKoz2y
+         8fbeMXiMe1QYVYMUXGtrFOuekcvv7+JNccTarnrxQX4M7I1oNy9HXppc7ASR0DCuk/wy
+         SW46WYwXePZrnzJsVs8nPnOdaZYtrfG110iUxj017twSgV/M1EcEh1Bkb+31QjSbFOuT
+         03+9WZYIRXNQ6mCTBlHTB2GfVoPO+UaThutaq9gS9W5eG1q4R9XGPEBsOY5QFA4p00k7
+         G8ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=nZhba4iF9aZSfpuLWM1CouoRK7ExCUrNe4K1Oj8Nx+0=;
+        b=HUwaWaMwZbZFqEh3Who8Eml8qwqu+omlN+AS+eMCP7JZjIjX/UwBfQafqZCvts+q5I
+         Kg6FDrylJ0havgrKcUTsb2vEVrvGDQRIMODQ6iCGv0HxLR1zYFKI6tqgWiyYHsGib3mb
+         iWI3ytdnXEkpnq83AHRkuqSjWcJ5Y91NsD/VuodkHXW7ke9YU4ZYgbjYz1mYLvuwKkxs
+         u2Ik3JYhisfs6M/IBUyQCKMv8aGuAOYUZmjsgEvvl/BfQ9QdcRZYRHZzLjCdBV+N/FWX
+         X7pKMynvduffB+cTMFu1zp2BmzO+NoKSTdYExCXMIGpzFzlyY9lkMAGDO7mDee335H84
+         9YcA==
+X-Gm-Message-State: APjAAAVhKv9uaOF6CMmeRG2r/P6FYjyh84ZV43T5YefgDncLw51srQTU
+        zx9CIH/Xxs4lLcbvB70sSB++5SZvzWWFK1E5deE=
+X-Google-Smtp-Source: APXvYqx0U9jcMB6Phno8jNjN0CAQ0DcaEKEus/5Y64W1J2b6ETDqcyfjtXivN2GyMOs57VaVUJveLrxDvPesk1qCk4c=
+X-Received: by 2002:a05:6830:2010:: with SMTP id e16mr30320634otp.344.1564567939446;
+ Wed, 31 Jul 2019 03:12:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190730205705.9018-4-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a4a:e397:0:0:0:0:0 with HTTP; Wed, 31 Jul 2019 03:12:18
+ -0700 (PDT)
+Reply-To: lnrmsy3110@gmail.com
+From:   Goldey B McColbert <marc.colbert103@gmail.com>
+Date:   Wed, 31 Jul 2019 11:12:18 +0100
+Message-ID: <CAHZE3K9=XML_vELBpwDXZ3djkLhrvE_4y2U-aTODY_=cu4dt8Q@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019-07-30 22:57, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Björn Töpel <bjorn.topel@intel.com>
-> Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-
-> ---
->   net/xdp/xdp_umem.c | 9 +--------
->   1 file changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 83de74ca729a..17c4b3d3dc34 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
->   
->   static void xdp_umem_unpin_pages(struct xdp_umem *umem)
->   {
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < umem->npgs; i++) {
-> -		struct page *page = umem->pgs[i];
-> -
-> -		set_page_dirty_lock(page);
-> -		put_page(page);
-> -	}
-> +	put_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
->   
->   	kfree(umem->pgs);
->   	umem->pgs = NULL;
-> 
+Did you receive our previous email? Please respond accordingly.
+Thanks,
+Mr. Marc Colbert.,
+NY, USA.
+Ph #: +13476964461 / WhatsApp #: +1327 586 5302.
