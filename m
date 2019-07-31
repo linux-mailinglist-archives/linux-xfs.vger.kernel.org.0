@@ -2,78 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC0427C04C
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 13:43:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43EAF7C05D
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 13:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfGaLnk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 Jul 2019 07:43:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfGaLnk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:43:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5730A60CC;
-        Wed, 31 Jul 2019 11:43:40 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C712A60852;
-        Wed, 31 Jul 2019 11:43:39 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 07:43:38 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 2/4] xfs/122: mask wonky ioctls
-Message-ID: <20190731114337.GE34040@bfoster>
-References: <156394159426.1850833.16316913520596851191.stgit@magnolia>
- <156394160665.1850833.14349327556274532970.stgit@magnolia>
+        id S1726270AbfGaLtt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 Jul 2019 07:49:49 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:55517 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726232AbfGaLtt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 Jul 2019 07:49:49 -0400
+X-IronPort-AV: E=Sophos;i="5.64,330,1559491200"; 
+   d="scan'208";a="72591477"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 31 Jul 2019 19:49:45 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id B85DD4B4041E;
+        Wed, 31 Jul 2019 19:49:42 +0800 (CST)
+Received: from iridescent.g08.fujitsu.local (10.167.225.140) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 31 Jul 2019 19:49:49 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-xfs@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
+        <darrick.wong@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <rgoldwyn@suse.de>,
+        <gujx@cn.fujitsu.com>, <david@fromorbit.com>,
+        <qi.fuli@fujitsu.com>, <caoj.fnst@cn.fujitsu.com>,
+        <ruansy.fnst@cn.fujitsu.com>
+Subject: [RFC PATCH 0/7] xfs: add reflink & dedupe support for fsdax.
+Date:   Wed, 31 Jul 2019 19:49:28 +0800
+Message-ID: <20190731114935.11030-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.17.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156394160665.1850833.14349327556274532970.stgit@magnolia>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 31 Jul 2019 11:43:40 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.167.225.140]
+X-yoursite-MailScanner-ID: B85DD4B4041E.A6D27
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:13:26PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Don't check the structure size of the inogrp/bstat/fsop_bulkreq
-> structures because they're incorrectly padded.  When we remove the
-> old typdefs the old filter stops working.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
+This patchset aims to take care of this issue to make reflink and dedupe
+work correctly in XFS.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+It is based on Goldwyn's patchsets: "v4 Btrfs dax support" and "Btrfs
+iomap".  I picked up some patches related and made a few fix to make it
+basically works fine.
 
->  tests/xfs/122 |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> 
-> diff --git a/tests/xfs/122 b/tests/xfs/122
-> index 89a39a23..64b63cb1 100755
-> --- a/tests/xfs/122
-> +++ b/tests/xfs/122
-> @@ -148,12 +148,15 @@ xfs_growfs_data_t
->  xfs_growfs_rt_t
->  xfs_bstime_t
->  xfs_bstat_t
-> +struct xfs_bstat
->  xfs_fsop_bulkreq_t
-> +struct xfs_fsop_bulkreq
->  xfs_icsb_cnts_t
->  xfs_icdinode_t
->  xfs_ictimestamp_t
->  xfs_inobt_rec_incore_t
->  xfs_inogrp_t
-> +struct xfs_inogrp
->  xfs_fid2_t
->  xfs_fsop_handlereq_t
->  xfs_fsop_setdm_handlereq_t
-> 
+For dax framework: 
+  1. adapt to the latest change in iomap.
+
+For XFS:
+  1. report the source address and set IOMAP_COW type for those write
+     operations that need COW.
+  2. update extent list at the end.
+  3. add file contents comparison function based on dax framework.
+  4. use xfs_break_layouts() to support dax.
+
+
+Goldwyn Rodrigues (3):
+  dax: replace mmap entry in case of CoW
+  fs: dedup file range to use a compare function
+  dax: memcpy before zeroing range
+
+Shiyang Ruan (4):
+  dax: Introduce dax_copy_edges() for COW.
+  dax: copy data before write.
+  xfs: Add COW handle for fsdax.
+  xfs: Add dedupe support for fsdax.
+
+ fs/btrfs/ioctl.c      |  11 ++-
+ fs/dax.c              | 203 ++++++++++++++++++++++++++++++++++++++----
+ fs/iomap.c            |   9 +-
+ fs/ocfs2/file.c       |   2 +-
+ fs/read_write.c       |  11 +--
+ fs/xfs/xfs_iomap.c    |  42 +++++----
+ fs/xfs/xfs_reflink.c  |  84 +++++++++--------
+ include/linux/dax.h   |  15 ++--
+ include/linux/fs.h    |   8 +-
+ include/linux/iomap.h |   6 ++
+ 10 files changed, 294 insertions(+), 97 deletions(-)
+
+-- 
+2.17.0
+
+
+
