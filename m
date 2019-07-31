@@ -2,77 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 335127C2A9
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 15:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02C147C47C
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2019 16:13:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfGaNDE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 Jul 2019 09:03:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50333 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfGaNDE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 Jul 2019 09:03:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v15so60755734wml.0
-        for <linux-xfs@vger.kernel.org>; Wed, 31 Jul 2019 06:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=O/7Cls5+3fO2IIxRnoaCvkOP+9M/lD0rStFpSymMfhg=;
-        b=lKZiyCKgQIJ9rETAVvrD65UKvCsgE86blnAj5Q02ahUrlLExM8CXF1dk5G7NPlBL2q
-         OUExABEb9Ghe7bOMyVtZG8Sd3ZLtDvhJ4b1tLY4VBs+ENyFhdPGRQ2iluk+3y7oG1D2U
-         GSJAItOpTZOgiRIoyDuKUyr4OolWWilvd+Ed3q6pPLS6qpthKcC6E0dJ5Y4FI75AR+4b
-         e4ovAJgPnMe8t3MpC9YT2dCuJWSBuXe+9edT4cL6jYzmE3xaVFlbdi4zKkMAUp0iniWl
-         Y4zwDIslL5drf7ri57lnIdTllz+yt1NXkrLQ8GpKMAg1UJ0keBEki7k9mCy2WuZA9Ii4
-         476g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=O/7Cls5+3fO2IIxRnoaCvkOP+9M/lD0rStFpSymMfhg=;
-        b=uObXUKbt09l1uqwf0YM4SuLyXooh86fM7VAs4jaBc2N5zWHEgRHa0kt7S5tYnsL8tu
-         JnOEPNWBG2oPjbl8oyNDIQ9CCzFnHCUhIC3C+vFkKoCSyqODWIfhbjWvSNvTPXFcHlGu
-         3iv3O2JknI8ND7sV9AxK0Y2QmGZ6sFJq+/RelAXPK2zE0YYB9DljhxIPHCCjm+4QTH2F
-         CkABhWpyks1sadR2zCRIIn/r+wsSttNM8JkHnCNBkaBgUzvGzjLi7EnFyDZT5oUPU8SU
-         AYBJHFxoe9yJK8SMEvVgS1mnf1V7zgDBNQfjVozuMrvFIK3vZuxuZUn+AQlODtS0p3XC
-         47Ng==
-X-Gm-Message-State: APjAAAVNWJL/++aBhH9i3UTTx/eP7NLFg9Q3bJUBdunf5geh2zYkc66v
-        wWiP75zOwMJEPezOtQ0mcmJYh8taUYs42WVSFJc=
-X-Google-Smtp-Source: APXvYqwJMGdlStf3oZMeTz1KcW8DrnS7pr6ioZQQGEHgOdWrA1qkkElOFOMg3CrtUvrMZWHwbK2+V62Rxaa0o6YBjaI=
-X-Received: by 2002:a7b:c933:: with SMTP id h19mr114927539wml.52.1564578182403;
- Wed, 31 Jul 2019 06:03:02 -0700 (PDT)
+        id S1728493AbfGaONB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 Jul 2019 10:13:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38982 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfGaONB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:13:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DA78630833B0;
+        Wed, 31 Jul 2019 14:13:00 +0000 (UTC)
+Received: from pegasus.maiolino.com (unknown [10.40.205.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B64860852;
+        Wed, 31 Jul 2019 14:12:58 +0000 (UTC)
+From:   Carlos Maiolino <cmaiolino@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     hch@lst.de, adilger@dilger.ca, jaegeuk@kernel.org,
+        darrick.wong@oracle.com, miklos@szeredi.hu, rpeterso@redhat.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH 0/9 V4] New ->fiemap infrastructure and ->bmap removal
+Date:   Wed, 31 Jul 2019 16:12:36 +0200
+Message-Id: <20190731141245.7230-1-cmaiolino@redhat.com>
 MIME-Version: 1.0
-Reply-To: drharunab771@gmail.com
-Received: by 2002:adf:cd90:0:0:0:0:0 with HTTP; Wed, 31 Jul 2019 06:03:01
- -0700 (PDT)
-From:   DR HARUNA BELLO <drharunab771@gmail.com>
-Date:   Wed, 31 Jul 2019 06:03:01 -0700
-X-Google-Sender-Auth: vv8E7CN7fjHhdxVshXRfXJ_3DTc
-Message-ID: <CAFYS58cDaKXfY83hZvvOS-EGWEbNMGVGwoAQKaJLercZM+oXrg@mail.gmail.com>
-Subject: BUSINESS RELATIONSHIP WITH FULL TRUST
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 31 Jul 2019 14:13:01 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hi.
+
+This is the 4th version of the complete series with the goal to deprecate and
+eventually remove ->bmap() interface, in lieu of FIEMAP.
+
+Besides the rebase of the patchset against latest Linus's tree, the only changes
+in this patchset regarding to the previous version, are concentrated in patches
+4/9 and 8/9.
+
+In patch 4  (fibmap: Use bmap instead of ->bmap method in ioctl_fibmap), the
+difference compared with previous version, is a change in ioclt_fibmap() return
+value, I spotted while testing this new version with filesystems using data
+inlined in inodes. It now returns 0 in case of error instead an error value,
+otherwise it would be an user interface change.
+
+
+In patch 8 (Use FIEMAP for FIBMAP calls), there are minor changes regarding V3.
+It just contains a coding style fix pointed by Andreas in the previous version,
+but now, it also include changes to all filesystems which supports both FIEMAP
+and FIBMAP, and need some sort of special handling (like inlined data, reflinked
+inodes, etc).
+
+Again, Patch 9 is xfs-specific removal of ->bmap() interface, without any
+changes compared to the previous version.
+
+
+
+I do apologize for taking so long to rework this patchset, I've got busy with
+other stuff.
+
+Comments are appreciated, specially regarding if the error values returned by
+ioctl_fibmap() make sense.
+
+
+Cheers
+
+Carlos Maiolino (9):
+  fs: Enable bmap() function to properly return errors
+  cachefiles: drop direct usage of ->bmap method.
+  ecryptfs: drop direct calls to ->bmap
+  fibmap: Use bmap instead of ->bmap method in ioctl_fibmap
+  fs: Move start and length fiemap fields into fiemap_extent_info
+  iomap: Remove length and start fields from iomap_fiemap
+  fiemap: Use a callback to fill fiemap extents
+  Use FIEMAP for FIBMAP calls
+  xfs: Get rid of ->bmap
+
+ drivers/md/md-bitmap.c |  16 ++++--
+ fs/bad_inode.c         |   3 +-
+ fs/btrfs/inode.c       |   5 +-
+ fs/cachefiles/rdwr.c   |  27 ++++-----
+ fs/ecryptfs/mmap.c     |  16 ++----
+ fs/ext2/ext2.h         |   3 +-
+ fs/ext2/inode.c        |   6 +-
+ fs/ext4/ext4.h         |   3 +-
+ fs/ext4/extents.c      |  15 +++--
+ fs/f2fs/data.c         |  15 ++++-
+ fs/f2fs/f2fs.h         |   3 +-
+ fs/gfs2/inode.c        |   9 ++-
+ fs/hpfs/file.c         |   4 +-
+ fs/inode.c             | 105 +++++++++++++++++++++++++++++----
+ fs/ioctl.c             | 128 ++++++++++++++++++++++++++---------------
+ fs/iomap.c             |  40 ++-----------
+ fs/jbd2/journal.c      |  22 ++++---
+ fs/nilfs2/inode.c      |   5 +-
+ fs/nilfs2/nilfs.h      |   3 +-
+ fs/ocfs2/extent_map.c  |  13 ++++-
+ fs/ocfs2/extent_map.h  |   3 +-
+ fs/overlayfs/inode.c   |   5 +-
+ fs/xfs/xfs_aops.c      |  24 --------
+ fs/xfs/xfs_iops.c      |  19 +++---
+ fs/xfs/xfs_trace.h     |   1 -
+ include/linux/fs.h     |  33 +++++++----
+ include/linux/iomap.h  |   2 +-
+ mm/page_io.c           |  11 ++--
+ 28 files changed, 320 insertions(+), 219 deletions(-)
+
 -- 
-I am Dr Haruna Bello
+2.20.1
 
-I have a Geniue business transaction of 18.5 Million Us Dollars to do with
-You
-Hence You Co-operate with me I am assured you that within (7) seven
-banking working days, this said amount will enter your given Bank
-account with immediate alacrity. If you agree to my business proposal,
-further details of the transfer will be forwarded to you as soon as I
-receive your wiliness to join hand with me.
-Am awaiting your urgent response with this informations
-Name:...................
-Sex:...............
-Age:...................
-Occupation:........
-Address:...............
-Tel/ Fax:...............
-State:.............
-Country Of origin:..........
-
-Have a nice day!!
