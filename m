@@ -2,73 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B067D869
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 11:22:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A2CF7D8FC
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 12:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfHAJWo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Aug 2019 05:22:44 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:36584 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729449AbfHAJWo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 05:22:44 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0B0DB43DDF1;
-        Thu,  1 Aug 2019 19:22:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1ht7HB-0006Bx-HP; Thu, 01 Aug 2019 19:21:33 +1000
-Date:   Thu, 1 Aug 2019 19:21:33 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 11/24] xfs:: account for memory freed from metadata
- buffers
-Message-ID: <20190801092133.GK7777@dread.disaster.area>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-12-david@fromorbit.com>
- <20190801081603.GA10600@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801081603.GA10600@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=D-H-fAKCpb68onX5N_cA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        id S1726368AbfHAKFZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Aug 2019 06:05:25 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:49667 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfHAKFZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 06:05:25 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x71A57KC015926;
+        Thu, 1 Aug 2019 19:05:08 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
+ Thu, 01 Aug 2019 19:05:07 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
+Received: from ccsecurity.localdomain (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x71A4xbU015866
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 19:05:07 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     linux-xfs@vger.kernel.org
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH] xfs: show error code when printing writeback error messages.
+Date:   Thu,  1 Aug 2019 19:03:46 +0900
+Message-Id: <1564653826-8916-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:16:03AM -0700, Christoph Hellwig wrote:
-> > +
-> > +		/*
-> > +		 * Account for the buffer memory freed here so memory reclaim
-> > +		 * sees this and not just the xfs_buf slab entry being freed.
-> > +		 */
-> > +		if (current->reclaim_state)
-> > +			current->reclaim_state->reclaimed_pages += bp->b_page_count;
-> > +
-> 
-> I think this wants a mm-layer helper ala:
-> 
-> static inline void shrinker_mark_pages_reclaimed(unsigned long nr_pages)
-> {
-> 	if (current->reclaim_state)
-> 		current->reclaim_state->reclaimed_pages += nr_pages;
-> }
-> 
-> plus good documentation on when to use it.
+Even without backtraces, including error code should be helpful.
 
-Sure, but that's something for patch 6, not this one :)
+  [  630.162595][ T9218] XFS (sda1): writeback error -12 on sector 131495992
+  [  631.718685][ T9432] XFS (sda1): writeback error -12 on sector 131503928
+  [  632.015588][  T442] XFS (sda1): writeback error -12 on sector 157773936
 
-Cheers,
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ fs/xfs/xfs_aops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Dave.
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index f16d5f196c6b..d2c9076643cf 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -112,7 +112,7 @@ xfs_destroy_ioend(
+ 
+ 	if (unlikely(error && !quiet)) {
+ 		xfs_err_ratelimited(XFS_I(inode)->i_mount,
+-			"writeback error on sector %llu", start);
++			"writeback error %d on sector %llu", error, start);
+ 	}
+ }
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.16.5
+
