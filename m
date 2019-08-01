@@ -2,155 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1627DCA2
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 15:39:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03A617DD32
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 16:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfHANjt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Aug 2019 09:39:49 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33058 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbfHANjs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 09:39:48 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Dc2Zd029380;
-        Thu, 1 Aug 2019 06:39:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=daTicNml4+qNGGZTCJm9uI+41O81uJc/GgzwyZfREk4=;
- b=SiQKz7LyPRQkTpSG+3jWs4z0k32IFbSFdXI6yuyUrJFQn9OoJuFrZmR4f92v+i2v6hzZ
- AkB4NLgJZYNsNyJmPi6Jl1dnl9zBZ3qvwo8FjakNJFexGrxBNALYJcL4q9mZLzcPYjqx
- LclGL3lJiDlcGGD0Jg0hQkzNz6x3/6rZ4HQ= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u3n9xjgkj-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 01 Aug 2019 06:39:43 -0700
-Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 06:39:35 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 1 Aug 2019 06:39:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YPA+fWxxpT2YaKHqQH9miFAqTNA/8BkU2yBoSqjCwoLtlroNDPCdfCkXi3/U9ioeBaTy9DzqsBaA+2UYlRIbKQmUjTYlkqFSD8jYuDfhrkcRF6fI1uSKp5672kuuL11l7iNlIsGwOGCsiSZIlUSWEh5qZy7og4CgDKdHE6aWPUqUq6nSPP39LDJ/ocnenqOP/t91+lfMqRTeF2a/5jcOHmgiyp0+Q/HFv/Ani0b58bxa2k5gPjjh1/4iVgYR+Gc+qfHn9EkigxltWzrh5vQMhgWUUSR8+3WvCiK/S9CLz04tj9LFF0QgRh8PS7Rk7DqywcZ0Yj7L9lw+VW06cs/q5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=daTicNml4+qNGGZTCJm9uI+41O81uJc/GgzwyZfREk4=;
- b=L7Q414dJ1mL7rkfwFmBoSFx0VedMaTmKCvUsFCoiwxiaLfsgPG1I6hTPMMJmn/htd2Znd98CP7JsBgMjp4Svx8ceA26NxJj6Q2yY6UbdcPQ3yEdLwIs/5txaQokv8B8gcKzAhAiv3xQSnzQ17VSvBKCglpSrudtFj6Ee1UuRfwFidVcP6slPHudQihj6j6Mhg29Fy38TcftpunmporSaSZOvtUC1ctc6KxZ1mnogyFdHI82dvPo6e5ooaL4wHNiPwA2ZjNOE+BsBjQhhnfhhZaGDpMVa6BzdkjqaOFysLRfrC/nJ5VVyGRCOXEjm1bItMX/AfpjzgIhLglTc6XMQjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=daTicNml4+qNGGZTCJm9uI+41O81uJc/GgzwyZfREk4=;
- b=BOZy/LL80Krx4XZTE6qvqxeYv+lP18mPOhli3PUXIcD+Tw8+AFlz7iQfSASKegI6j7v0ITeO0++QLF3TOQeIqqUbgGIUMQ2EJZ2YlIHi0QY9zwClsUtG1bFq9aL2M5u6Z6kV3iBEVP3DoTZuDUs2BMKBNHIQ4W5OLeMNAx5264M=
-Received: from BN6PR15MB1282.namprd15.prod.outlook.com (10.172.208.142) by
- BN6PR15MB1444.namprd15.prod.outlook.com (10.172.151.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Thu, 1 Aug 2019 13:39:34 +0000
-Received: from BN6PR15MB1282.namprd15.prod.outlook.com
- ([fe80::c47a:8d15:afbc:debd]) by BN6PR15MB1282.namprd15.prod.outlook.com
- ([fe80::c47a:8d15:afbc:debd%10]) with mapi id 15.20.2136.010; Thu, 1 Aug 2019
- 13:39:34 +0000
-From:   Chris Mason <clm@fb.com>
-To:     Dave Chinner <david@fromorbit.com>
-CC:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 09/24] xfs: don't allow log IO to be throttled
-Thread-Topic: [PATCH 09/24] xfs: don't allow log IO to be throttled
-Thread-Index: AQHVSA9fnWuPStnf6EeOPJMMPtRTUqbmTPoA
-Date:   Thu, 1 Aug 2019 13:39:34 +0000
-Message-ID: <F1E7CC65-D2CB-4078-9AA3-9D172ECDE17B@fb.com>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-10-david@fromorbit.com>
-In-Reply-To: <20190801021752.4986-10-david@fromorbit.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: MailMate (1.12.5r5635)
-x-clientproxiedby: BN6PR03CA0055.namprd03.prod.outlook.com
- (2603:10b6:404:4c::17) To BN6PR15MB1282.namprd15.prod.outlook.com
- (2603:10b6:404:ed::14)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c091:480::bfbd]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54982839-4942-4c64-fc02-08d71685b05e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR15MB1444;
-x-ms-traffictypediagnostic: BN6PR15MB1444:
-x-microsoft-antispam-prvs: <BN6PR15MB1444A23509E44B67AB37CEA8D3DE0@BN6PR15MB1444.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01165471DB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(71200400001)(476003)(14454004)(53546011)(14444005)(36756003)(46003)(486006)(6436002)(76176011)(7736002)(6916009)(8676002)(186003)(478600001)(11346002)(8936002)(52116002)(229853002)(50226002)(81166006)(386003)(68736007)(6506007)(2906002)(102836004)(316002)(81156014)(2616005)(6486002)(446003)(33656002)(54906003)(5660300002)(305945005)(66946007)(6512007)(256004)(6116002)(64756008)(66476007)(66556008)(53936002)(6246003)(71190400001)(86362001)(99286004)(66446008)(25786009)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR15MB1444;H:BN6PR15MB1282.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jCPNsrsYj2CPdrlAHs0/1GprP43MiqLSQapmRtNZddNVOaSkj4QWt2JH1IlQzpNLvixoMhBf1HU5o+VP9eefatWphr6ZmctKgJKjQVe+5cL9shBt1XjeijE9Te6GLfxpiqcGNXluTOzWrjyHEjE7UnSEKlD0SkoI0k9I7L3cRF6fiuqVgDNKekRTn8VawI+O0Mc2iTpHXIAUETBNGRkXIaMUGVBTsAWZziRHSVR5rYK77cKhiZg9VfGccPEg5o2n5xcwVrVnWTkmFhFlW/FU1ppupmfMGKhWc5a7+4keADsNTLmobaFPlNYozfGP27nfrTOJwH0bvWgcciApEBk5GB7S4v2STnTygQQRrMGP6tjvvLqGI3B60+vf1Pb1wg7AhdFSTf98gDYDiAi55M2IpEGAaOEAqJr0Q+TzqafQMyQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1730800AbfHAOCH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Aug 2019 10:02:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33432 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730502AbfHAOCH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 10:02:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71DsR6i099838;
+        Thu, 1 Aug 2019 14:01:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=XlGn0cwJoXM/sV5dKAaqiZSVeBlO/QiXzSYnv+4yGAE=;
+ b=JTeOJ0KwjvDmq2VoTBsOyLU86sE0IWcv/oUG+qdS0r1vv0+LCxMq0eveIBAdFrSJYc3H
+ 2xJllbzLhp+XyxltaOOZjTDJv+JMKuJm5wmeWq8qH5IvicnA/B1NxGAQURGf5if2DtoE
+ sAA+5s7w5E9pGpndS6v2934Dso/bxOJ86ojamiCi6DLKyXlEgofBpjGOhNSeVT4wGfIA
+ 8D/qbN27Xxsazb7M5NfM+SLIxjjiZDTUNYAPMogjhnlVkZuQoxCUwhHmLse6hWCQ8qng
+ LiYbzO3cMYnK8F/VTc/4RCnkB1iVTTT05MghYil60CYxuOk33ydRXlFfLCLhByu4kuGD 2g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u0e1u496n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Aug 2019 14:01:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71DwES0163037;
+        Thu, 1 Aug 2019 14:01:49 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2u38fbqckv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Aug 2019 14:01:49 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x71E1mpJ007066;
+        Thu, 1 Aug 2019 14:01:48 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 01 Aug 2019 07:01:48 -0700
+Date:   Thu, 1 Aug 2019 07:01:46 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCH 5/5] xfs: test new v5 bulkstat commands
+Message-ID: <20190801140146.GC1561054@magnolia>
+References: <156462375516.2945299.16564635037236083118.stgit@magnolia>
+ <156462379043.2945299.17354996626313190310.stgit@magnolia>
+ <20190801104814.GC59093@bfoster>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54982839-4942-4c64-fc02-08d71685b05e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 13:39:34.4309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: clm@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR15MB1444
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=745 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010145
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801104814.GC59093@bfoster>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9335 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908010146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9335 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908010146
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 31 Jul 2019, at 22:17, Dave Chinner wrote:
+On Thu, Aug 01, 2019 at 06:48:15AM -0400, Brian Foster wrote:
+> On Wed, Jul 31, 2019 at 06:43:10PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Check that the new v5 bulkstat commands do everything the old one do,
+> > and then make sure the new functionality actually works.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  .gitignore                 |    1 
+> >  src/Makefile               |    2 
+> >  src/bulkstat_null_ocount.c |   61 +++++++++
+> >  tests/xfs/744              |  215 ++++++++++++++++++++++++++++++++
+> >  tests/xfs/744.out          |  297 ++++++++++++++++++++++++++++++++++++++++++++
+> >  tests/xfs/745              |   47 +++++++
+> >  tests/xfs/745.out          |    2 
+> >  tests/xfs/group            |    2 
+> >  8 files changed, 626 insertions(+), 1 deletion(-)
+> >  create mode 100644 src/bulkstat_null_ocount.c
+> >  create mode 100755 tests/xfs/744
+> >  create mode 100644 tests/xfs/744.out
+> >  create mode 100755 tests/xfs/745
+> >  create mode 100644 tests/xfs/745.out
+> > 
+> > 
+> ...
+> > diff --git a/tests/xfs/group b/tests/xfs/group
+> > index 270d82ff..ef0cf92c 100644
+> > --- a/tests/xfs/group
+> > +++ b/tests/xfs/group
+> > @@ -506,3 +506,5 @@
+> >  506 auto quick health
+> >  507 clone
+> >  508 auto quick quota
+> > +744 auto ioctl quick
+> > +745 auto ioctl quick
+> > 
+> 
+> One quick note that xfs/744 runs in ~68 seconds in my (low resource)
+> test VM. Not a problem in and of itself, but it seems slightly long for
+> the quick group. Can somebody remind me of the quick group criteria?
+> 
+> FWIW if I kick off a quick group run, the first 10-15 tests complete in
+> 10s or so or less with the exception of generic/013, which takes over a
+> minute. So perhaps anything under a minute or so is fine..? Either way,
+> that can be easily changed on merge if appropriate:
 
-> From: Dave Chinner <dchinner@redhat.com>
->
-> Running metadata intensive workloads, I've been seeing the AIL
-> pushing getting stuck on pinned buffers and triggering log forces.
-> The log force is taking a long time to run because the log IO is
-> getting throttled by wbt_wait() - the block layer writeback
-> throttle. It's being throttled because there is a huge amount of
-> metadata writeback going on which is filling the request queue.
->
-> IOWs, we have a priority inversion problem here.
->
-> Mark the log IO bios with REQ_IDLE so they don't get throttled
-> by the block layer writeback throttle. When we are forcing the CIL,
-> we are likely to need to to tens of log IOs, and they are issued as
-> fast as they can be build and IO completed. Hence REQ_IDLE is
-> appropriate - it's an indication that more IO will follow shortly.
->
-> And because we also set REQ_SYNC, the writeback throttle will no
-> treat log IO the same way it treats direct IO writes - it will not
-> throttle them at all. Hence we solve the priority inversion problem
-> caused by the writeback throttle being unable to distinguish between
-> high priority log IO and background metadata writeback.
->
-  [ cc Jens ]
+Hmm, yeah, that's probably too slow for quick...
 
-We spent a lot of time getting rid of these inversions in io.latency=20
-(and the new io.cost), where REQ_META just blows through the throttling=20
-and goes into back charging instead.
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-It feels awkward to have one set of prio inversion workarounds for io.*=20
-and another for wbt.  Jens, should we make an explicit one that doesn't=20
-rely on magic side effects, or just decide that metadata is meta enough=20
-to break all the rules?
+Thanks for the review!
 
--chris
+--D
