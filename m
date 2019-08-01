@@ -2,65 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA647D705
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 10:16:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B067D869
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Aug 2019 11:22:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfHAIQE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Aug 2019 04:16:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47814 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729426AbfHAIQE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 04:16:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K+R31uQAYJxVzLY0NV2lfQguJWjRp7kXscTfedazeQE=; b=C1DulZkKdXZyhRXjAkV96vjDd
-        k4fzHk6RD6Vq2mgb1I/HdfGKnnUP/1Bb20dVqsxjZpx2LkuN3GUqikSuzxznPdrdGUj3WzVGIn7wv
-        hVxKkmbIDTIZcD6IYvbOsOkS5uO9/xbJXAlLkJBQsJxEUkv4ZP2sYREiYdK27fuujk6b8cza33Hci
-        HJsVwY7lM87oOGPucyyFWLk0ZyO160eqTvURjI7PwB7fA1yJ/hvLVB1SAuS9PiGeGl5gpmOgDe7Xp
-        WHT8/6DDs7s1nY4aQ7Bvx1ORWYBl4/mU3ZdDFJesinhVaidQKyy1wMGkxbqR8Xg5CLbDSSF7lgyTo
-        a6yhXve7w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1ht6Fn-0006B9-Qg; Thu, 01 Aug 2019 08:16:03 +0000
-Date:   Thu, 1 Aug 2019 01:16:03 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
+        id S1726739AbfHAJWo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Aug 2019 05:22:44 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:36584 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729449AbfHAJWo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 05:22:44 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0B0DB43DDF1;
+        Thu,  1 Aug 2019 19:22:40 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1ht7HB-0006Bx-HP; Thu, 01 Aug 2019 19:21:33 +1000
+Date:   Thu, 1 Aug 2019 19:21:33 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@infradead.org>
 Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org
 Subject: Re: [PATCH 11/24] xfs:: account for memory freed from metadata
  buffers
-Message-ID: <20190801081603.GA10600@infradead.org>
+Message-ID: <20190801092133.GK7777@dread.disaster.area>
 References: <20190801021752.4986-1-david@fromorbit.com>
  <20190801021752.4986-12-david@fromorbit.com>
+ <20190801081603.GA10600@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801021752.4986-12-david@fromorbit.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190801081603.GA10600@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=D-H-fAKCpb68onX5N_cA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> +
-> +		/*
-> +		 * Account for the buffer memory freed here so memory reclaim
-> +		 * sees this and not just the xfs_buf slab entry being freed.
-> +		 */
-> +		if (current->reclaim_state)
-> +			current->reclaim_state->reclaimed_pages += bp->b_page_count;
-> +
+On Thu, Aug 01, 2019 at 01:16:03AM -0700, Christoph Hellwig wrote:
+> > +
+> > +		/*
+> > +		 * Account for the buffer memory freed here so memory reclaim
+> > +		 * sees this and not just the xfs_buf slab entry being freed.
+> > +		 */
+> > +		if (current->reclaim_state)
+> > +			current->reclaim_state->reclaimed_pages += bp->b_page_count;
+> > +
+> 
+> I think this wants a mm-layer helper ala:
+> 
+> static inline void shrinker_mark_pages_reclaimed(unsigned long nr_pages)
+> {
+> 	if (current->reclaim_state)
+> 		current->reclaim_state->reclaimed_pages += nr_pages;
+> }
+> 
+> plus good documentation on when to use it.
 
-I think this wants a mm-layer helper ala:
+Sure, but that's something for patch 6, not this one :)
 
-static inline void shrinker_mark_pages_reclaimed(unsigned long nr_pages)
-{
-	if (current->reclaim_state)
-		current->reclaim_state->reclaimed_pages += nr_pages;
-}
+Cheers,
 
-plus good documentation on when to use it.
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
