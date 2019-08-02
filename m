@@ -2,93 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C8867E743
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 02:47:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74CA67E7B7
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 04:05:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403867AbfHBArC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Aug 2019 20:47:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43540 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388445AbfHBArC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 20:47:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x720iwc0039038
-        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:47:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=B8ICzaZ0+RF0eI+XPHuTGoCyL5K/xdVZPJNgfdMqu60=;
- b=tdKFbBFTUfUcltEru5F8DtMajrvG55UA/TqNvKe1xl2euqUd8P+7mczPM8RQHucFAL5W
- pvqa/+n2OUnOwUtrMQRCv82JjE3+cosEMo9cVHbVRT8mvWc0qxY0Cm30VLgkWDTz8Vtl
- ZGWK/zeQi4x2GA2WrehgQNI50Y2/UHX9s9WrgA0VJnXV73g+3FHum5pAAIyHk0rSlIGr
- fHdUe/no/EiLcq/IBcgjmieQjyuiNcya0ZvsPBtM3EOpi8S33/V+SLy9n878WlMYLH7S
- dHNefbiX+5kfcXKykstVM2uHTLBriCK4gVXoTEyZ807+wNuor7iLTEo3BNo9yeWj6ejZ uA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u0e1u7398-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 02 Aug 2019 00:47:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x720hUfp140800
-        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:47:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2u49htsjt3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 02 Aug 2019 00:46:59 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x720kwWH001846
-        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:46:59 GMT
-Received: from localhost (/10.145.178.162)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 01 Aug 2019 17:46:58 -0700
-Date:   Thu, 1 Aug 2019 17:46:57 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-documentation: master updated to f7a3675
-Message-ID: <20190802004657.GF7138@magnolia>
+        id S1732468AbfHBCF2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Aug 2019 22:05:28 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:53734 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726796AbfHBCF2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 22:05:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TYR76HQ_1564710922;
+Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0TYR76HQ_1564710922)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 02 Aug 2019 09:55:22 +0800
+Date:   Fri, 2 Aug 2019 09:55:22 +0800
+From:   Eryu Guan <eguan@linux.alibaba.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>, guaneryu@gmail.com,
+        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 5/5] xfs: test new v5 bulkstat commands
+Message-ID: <20190802015454.GF52397@e18g06458.et15sqa>
+References: <156462375516.2945299.16564635037236083118.stgit@magnolia>
+ <156462379043.2945299.17354996626313190310.stgit@magnolia>
+ <20190801104814.GC59093@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908020003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908020003
+In-Reply-To: <20190801104814.GC59093@bfoster>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+On Thu, Aug 01, 2019 at 06:48:15AM -0400, Brian Foster wrote:
+> On Wed, Jul 31, 2019 at 06:43:10PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Check that the new v5 bulkstat commands do everything the old one do,
+> > and then make sure the new functionality actually works.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  .gitignore                 |    1 
+> >  src/Makefile               |    2 
+> >  src/bulkstat_null_ocount.c |   61 +++++++++
+> >  tests/xfs/744              |  215 ++++++++++++++++++++++++++++++++
+> >  tests/xfs/744.out          |  297 ++++++++++++++++++++++++++++++++++++++++++++
+> >  tests/xfs/745              |   47 +++++++
+> >  tests/xfs/745.out          |    2 
+> >  tests/xfs/group            |    2 
+> >  8 files changed, 626 insertions(+), 1 deletion(-)
+> >  create mode 100644 src/bulkstat_null_ocount.c
+> >  create mode 100755 tests/xfs/744
+> >  create mode 100644 tests/xfs/744.out
+> >  create mode 100755 tests/xfs/745
+> >  create mode 100644 tests/xfs/745.out
+> > 
+> > 
+> ...
+> > diff --git a/tests/xfs/group b/tests/xfs/group
+> > index 270d82ff..ef0cf92c 100644
+> > --- a/tests/xfs/group
+> > +++ b/tests/xfs/group
+> > @@ -506,3 +506,5 @@
+> >  506 auto quick health
+> >  507 clone
+> >  508 auto quick quota
+> > +744 auto ioctl quick
+> > +745 auto ioctl quick
+> > 
+> 
+> One quick note that xfs/744 runs in ~68 seconds in my (low resource)
+> test VM. Not a problem in and of itself, but it seems slightly long for
+> the quick group. Can somebody remind me of the quick group criteria?
 
-The master branch of the xfs-documentation repository at:
+A quick test is usually under 30s run-time.
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-documentation.git
+> 
+> FWIW if I kick off a quick group run, the first 10-15 tests complete in
+> 10s or so or less with the exception of generic/013, which takes over a
+> minute. So perhaps anything under a minute or so is fine..? Either way,
+> that can be easily changed on merge if appropriate:
 
-has just been updated.
+Yeah, I'll drop quick group if it's not really quick :)
 
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
+> 
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-The new head of the master branch is commit:
+Thanks for the review!
 
-f7a3675 xfs: design: Fix typo
-
-New Commits:
-
-Sheriff Esseson (1):
-      [f7a3675] xfs: design: Fix typo
-
-
-Code Diffstat:
-
- design/XFS_Filesystem_Structure/overview.asciidoc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- mode change 100644 => 100755 design/XFS_Filesystem_Structure/overview.asciidoc
+Eryu
