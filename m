@@ -2,125 +2,93 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2377A7E6F8
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 02:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8867E743
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 02:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732035AbfHBAAC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Aug 2019 20:00:02 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56173 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731376AbfHBAAC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 20:00:02 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7201F363416;
-        Fri,  2 Aug 2019 09:59:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1htKy9-0003Va-4v; Fri, 02 Aug 2019 09:58:49 +1000
-Date:   Fri, 2 Aug 2019 09:58:49 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chris Mason <clm@fb.com>
-Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 09/24] xfs: don't allow log IO to be throttled
-Message-ID: <20190801235849.GO7777@dread.disaster.area>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-10-david@fromorbit.com>
- <F1E7CC65-D2CB-4078-9AA3-9D172ECDE17B@fb.com>
+        id S2403867AbfHBArC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Aug 2019 20:47:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43540 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388445AbfHBArC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Aug 2019 20:47:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x720iwc0039038
+        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:47:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=B8ICzaZ0+RF0eI+XPHuTGoCyL5K/xdVZPJNgfdMqu60=;
+ b=tdKFbBFTUfUcltEru5F8DtMajrvG55UA/TqNvKe1xl2euqUd8P+7mczPM8RQHucFAL5W
+ pvqa/+n2OUnOwUtrMQRCv82JjE3+cosEMo9cVHbVRT8mvWc0qxY0Cm30VLgkWDTz8Vtl
+ ZGWK/zeQi4x2GA2WrehgQNI50Y2/UHX9s9WrgA0VJnXV73g+3FHum5pAAIyHk0rSlIGr
+ fHdUe/no/EiLcq/IBcgjmieQjyuiNcya0ZvsPBtM3EOpi8S33/V+SLy9n878WlMYLH7S
+ dHNefbiX+5kfcXKykstVM2uHTLBriCK4gVXoTEyZ807+wNuor7iLTEo3BNo9yeWj6ejZ uA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u0e1u7398-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Fri, 02 Aug 2019 00:47:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x720hUfp140800
+        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:47:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2u49htsjt3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Fri, 02 Aug 2019 00:46:59 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x720kwWH001846
+        for <linux-xfs@vger.kernel.org>; Fri, 2 Aug 2019 00:46:59 GMT
+Received: from localhost (/10.145.178.162)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 01 Aug 2019 17:46:58 -0700
+Date:   Thu, 1 Aug 2019 17:46:57 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-documentation: master updated to f7a3675
+Message-ID: <20190802004657.GF7138@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <F1E7CC65-D2CB-4078-9AA3-9D172ECDE17B@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=j1scD-lSN6Y4ri9hJcUA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908020003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908020003
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:39:34PM +0000, Chris Mason wrote:
-> On 31 Jul 2019, at 22:17, Dave Chinner wrote:
-> 
-> > From: Dave Chinner <dchinner@redhat.com>
-> >
-> > Running metadata intensive workloads, I've been seeing the AIL
-> > pushing getting stuck on pinned buffers and triggering log forces.
-> > The log force is taking a long time to run because the log IO is
-> > getting throttled by wbt_wait() - the block layer writeback
-> > throttle. It's being throttled because there is a huge amount of
-> > metadata writeback going on which is filling the request queue.
-> >
-> > IOWs, we have a priority inversion problem here.
-> >
-> > Mark the log IO bios with REQ_IDLE so they don't get throttled
-> > by the block layer writeback throttle. When we are forcing the CIL,
-> > we are likely to need to to tens of log IOs, and they are issued as
-> > fast as they can be build and IO completed. Hence REQ_IDLE is
-> > appropriate - it's an indication that more IO will follow shortly.
-> >
-> > And because we also set REQ_SYNC, the writeback throttle will no
-> > treat log IO the same way it treats direct IO writes - it will not
-> > throttle them at all. Hence we solve the priority inversion problem
-> > caused by the writeback throttle being unable to distinguish between
-> > high priority log IO and background metadata writeback.
-> >
->   [ cc Jens ]
-> 
-> We spent a lot of time getting rid of these inversions in io.latency 
-> (and the new io.cost), where REQ_META just blows through the throttling 
-> and goes into back charging instead.
+Hi folks,
 
-Which simply reinforces the fact that that request type based
-throttling is a fundamentally broken architecture.
+The master branch of the xfs-documentation repository at:
 
-> It feels awkward to have one set of prio inversion workarounds for io.* 
-> and another for wbt.  Jens, should we make an explicit one that doesn't 
-> rely on magic side effects, or just decide that metadata is meta enough 
-> to break all the rules?
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-documentation.git
 
-The problem isn't REQ_META blows throw the throttling, the problem
-is that different REQ_META IOs have different priority.
+has just been updated.
 
-IOWs, the problem here is that we are trying to infer priority from
-the request type rather than an actual priority assigned by the
-submitter. There is no way direct IO has higher priority in a
-filesystem than log IO tagged with REQ_META as direct IO can require
-log IO to make progress. Priority is a policy determined by the
-submitter, not the mechanism doing the throttling.
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
 
-Can we please move this all over to priorites based on
-bio->b_ioprio? And then document how the range of priorities are
-managed, such as:
+The new head of the master branch is commit:
 
-(99 = highest prio to 0 = lowest)
+f7a3675 xfs: design: Fix typo
 
-swap out
-swap in				>90
-User hard RT max		89
-User hard RT min		80
-filesystem max			79
-ionice max			60
-background data writeback	40
-ionice min			20
-filesystem min			10
-idle				0
+New Commits:
 
-So that we can appropriately prioritise different types of kernel
-internal IO w.r.t user controlled IO priorities? This way we can
-still tag the bios with the type of data they contain, but we
-no longer use that to determine whether to throttle that IO or not -
-throttling/scheduling should be done entirely on a priority basis.
+Sheriff Esseson (1):
+      [f7a3675] xfs: design: Fix typo
 
-Cheers,
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Code Diffstat:
+
+ design/XFS_Filesystem_Structure/overview.asciidoc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ mode change 100644 => 100755 design/XFS_Filesystem_Structure/overview.asciidoc
