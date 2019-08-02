@@ -2,63 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E6557EB76
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 06:26:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D12567EB84
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Aug 2019 06:37:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731588AbfHBE0O convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 2 Aug 2019 00:26:14 -0400
-Received: from mail.wl.linuxfoundation.org ([198.145.29.98]:43200 "EHLO
-        mail.wl.linuxfoundation.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731579AbfHBE0O (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Aug 2019 00:26:14 -0400
-Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
-        by mail.wl.linuxfoundation.org (Postfix) with ESMTP id D19E9287A5
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Aug 2019 04:26:13 +0000 (UTC)
-Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
-        id C61E7287CD; Fri,  2 Aug 2019 04:26:13 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
-        pdx-wl-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=2.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS autolearn=unavailable version=3.3.1
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 204129] [xfstests generic/127]: fsx find corruption on xfs
-Date:   Fri, 02 Aug 2019 04:26:11 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zlang@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204129-201763-Q5TSmKKdNJ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204129-201763@https.bugzilla.kernel.org/>
-References: <bug-204129-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1731735AbfHBEg5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Aug 2019 00:36:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728157AbfHBEg4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 2 Aug 2019 00:36:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56E85AD2B;
+        Fri,  2 Aug 2019 04:36:53 +0000 (UTC)
+Subject: Re: [PATCH 20/34] xen: convert put_page() to put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
+        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        rds-devel@oss.oracle.com,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802022005.5117-21-jhubbard@nvidia.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <4471e9dc-a315-42c1-0c3c-55ba4eeeb106@suse.com>
+Date:   Fri, 2 Aug 2019 06:36:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20190802022005.5117-21-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204129
+On 02.08.19 04:19, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: xen-devel@lists.xenproject.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>   drivers/xen/gntdev.c  | 5 +----
+>   drivers/xen/privcmd.c | 7 +------
+>   2 files changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+> index 4c339c7e66e5..2586b3df2bb6 100644
+> --- a/drivers/xen/gntdev.c
+> +++ b/drivers/xen/gntdev.c
+> @@ -864,10 +864,7 @@ static int gntdev_get_page(struct gntdev_copy_batch *batch, void __user *virt,
+>   
+>   static void gntdev_put_pages(struct gntdev_copy_batch *batch)
+>   {
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < batch->nr_pages; i++)
+> -		put_page(batch->pages[i]);
+> +	put_user_pages(batch->pages, batch->nr_pages);
+>   	batch->nr_pages = 0;
+>   }
+>   
+> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> index 2f5ce7230a43..29e461dbee2d 100644
+> --- a/drivers/xen/privcmd.c
+> +++ b/drivers/xen/privcmd.c
+> @@ -611,15 +611,10 @@ static int lock_pages(
+>   
+>   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+>   {
+> -	unsigned int i;
+> -
+>   	if (!pages)
+>   		return;
+>   
+> -	for (i = 0; i < nr_pages; i++) {
+> -		if (pages[i])
+> -			put_page(pages[i]);
+> -	}
+> +	put_user_pages(pages, nr_pages);
 
---- Comment #2 from Zorro Lang (zlang@redhat.com) ---
-generic/127 fails on latest xfs-linux(HEAD = xfs-5.3-fixes-1), same as above.
+You are not handling the case where pages[i] is NULL here. Or am I
+missing a pending patch to put_user_pages() here?
 
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+
+Juergen
