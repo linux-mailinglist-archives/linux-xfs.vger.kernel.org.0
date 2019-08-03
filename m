@@ -2,148 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D082A803D4
-	for <lists+linux-xfs@lfdr.de>; Sat,  3 Aug 2019 03:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D2F0803E1
+	for <lists+linux-xfs@lfdr.de>; Sat,  3 Aug 2019 03:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403951AbfHCBlm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Aug 2019 21:41:42 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14532 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387864AbfHCBll (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Aug 2019 21:41:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d44e6540001>; Fri, 02 Aug 2019 18:41:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 02 Aug 2019 18:41:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 02 Aug 2019 18:41:39 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 3 Aug
- 2019 01:41:38 +0000
-Subject: Re: [PATCH 31/34] nfs: convert put_page() to put_user_page*()
-To:     Calum Mackay <calum.mackay@oracle.com>, <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-32-jhubbard@nvidia.com>
- <1738cb1e-15d8-0bbe-5362-341664f6efc8@oracle.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <db136399-ed87-56ea-bd6e-e5d29b145eda@nvidia.com>
-Date:   Fri, 2 Aug 2019 18:41:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387864AbfHCBxZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Aug 2019 21:53:25 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34404 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387606AbfHCBxZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Aug 2019 21:53:25 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t8so56273470qkt.1
+        for <linux-xfs@vger.kernel.org>; Fri, 02 Aug 2019 18:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=1nRDQWcGKZ6UNcc5VMBTx5rRmeK37YySnprFdXg1Zyo=;
+        b=SKtKXjnAQpGWImqXqaKt0QNEdFrN3PyWoKvI1uWwgL7ZMMFyBMHDKbSAwn1SIKGJoa
+         Y/oySydLL0apwjKx59c1HoA3CSq6lkUC4zk3+YthKyBrHL/xAr0QO0/Y5wgd+Dn7ON3c
+         VBHDdToJ0hpZ4uuIFIwpxy2BsKybkczBlrW1+Q1h/NzMPAqG7Yc0pZWYEU527JrUWIS7
+         9rAh32y4NIG8wrtdhHtRA5E70LeT2qVii4v+NcO2w56ye1Z/6Fj6kHmI6fdpdwnJ9I6U
+         RngTBWbbANiQEObnfvvbh/v/gHi0P9DKAYt1Z1pZIWUST3tqK6/sZBS1xN6meCvXBTMS
+         zHGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1nRDQWcGKZ6UNcc5VMBTx5rRmeK37YySnprFdXg1Zyo=;
+        b=atiuAEH0/ey5s2hATPvpbhqJVQVFG7Xs+ssOS92ghmRi0sAR8pTUPFbrOnm05G6MW1
+         xcjTMj/uBAqxk2GDZfj6O5NDdWjPQQi+VQnBf5+qjAZ3L0xo3gBM7w2bCzaLuI6OJw6P
+         pT064zY3C/S1p4mnyn7YLN8q1s5GK50oo/oZV9hgw/QtazAm6aWvNzTAKwgyKA6f7Vmn
+         ggwYnxJHJR9qLpXfrsF+RIo6UF9vb/hreBGwKi9Ka1W0KPGldLG0D6sH0hnmK51RiVZ6
+         +vC31P7FPiLlkRRSi4uddfnQddDl3i+HhcfX1K0VJAMA9BngV+fmWoVKiOz1bU40mf69
+         aafQ==
+X-Gm-Message-State: APjAAAVXi9m867a67/iiRt2cO5YGPc3vickkqlIXgVRSbwpFVhZfMJf8
+        RPqyHpU0my5pbNRefL5y2rNEsIg=
+X-Google-Smtp-Source: APXvYqwrGQLxyVOL3/FrfLpmT3gSVXoS4MfJR3ViBd3rxFn8gb6wy8oYRZ0ma8ndaoHfSA/CPqtDHQ==
+X-Received: by 2002:a05:620a:11b2:: with SMTP id c18mr93537705qkk.174.1564797204235;
+        Fri, 02 Aug 2019 18:53:24 -0700 (PDT)
+Received: from lud1.home ([177.17.22.67])
+        by smtp.gmail.com with ESMTPSA id q73sm19458155qke.90.2019.08.02.18.53.22
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 02 Aug 2019 18:53:23 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 22:53:20 -0300
+From:   Luciano ES <lucmove@gmail.com>
+To:     XFS mailing list <linux-xfs@vger.kernel.org>
+Subject: Re: XFS file system corruption, refuses to mount
+Message-ID: <20190802225320.77b4b3c2@lud1.home>
+In-Reply-To: <20190803011106.GJ7138@magnolia>
+References: <20181211183203.7fdbca0f@lud1.home>
+        <20190803011106.GJ7138@magnolia>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1738cb1e-15d8-0bbe-5362-341664f6efc8@oracle.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564796500; bh=zc1wJBCk6oa4TZJ5kpnxYLs8I/mCQFC0KqXiV/MQqAc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OLRFKsHoXBw1TGfx4yjE0Mz6/NwSHjUP/99RYZUV8BmAJcU3vy970b00AWaqBbqwn
-         eDliId8mLescIf+v3MwQ2SrvN7VrnEwLTirEIw8jXzAjeXgqN3dtxI2Suyrp0L+f3G
-         YPfLBq5YLuEzykUeYyNQ/IXUTk0ew3pKoxF86cxfpvc0Iih+8axjrF9wmXCYOssEh/
-         dFyCupj1u3LqFaTu0iXYZzaL8I/Fkdd+Hdao45WQIFetVoCK43sV9CCZfHZ6uY+1an
-         0Rm4XSFjiP2H1hfdLpXkesSoEJK75cPPtD+8sANcEv6R5DjbxYeg7dbcB8wnnzerOG
-         BX10+9E+Fxe0Q==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/2/19 6:27 PM, Calum Mackay wrote:
-> On 02/08/2019 3:20 am, john.hubbard@gmail.com wrote:
-...=20
-> Since it's static, and only called twice, might it be better to change it=
-s two callers [nfs_direct_{read,write}_schedule_iovec()] to call put_user_p=
-ages() directly, and remove nfs_direct_release_pages() entirely?
->=20
-> thanks,
-> calum.
->=20
->=20
->> =C2=A0 =C2=A0 void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinf=
-o,
+On Fri, 2 Aug 2019 18:11:06 -0700, Darrick J. Wong wrote:
+
+> On Fri, Aug 02, 2019 at 09:53:56PM -0300, Luciano ES wrote:
+> > I've had this internal disk running for a long time. I had to 
+> > disconnect it from the SATA and power plugs for two days. 
+> > Now it won't mount. 
+> > 
+> > mount: wrong fs type, bad option, bad superblock
+> > on /dev/mapper/cab3, missing codepage or helper program, or other
+> > error In some cases useful info is found in syslog - try
+> >        dmesg | tail or so.
+> > 
+> > I get this in dmesg:
+> > 
+> > [   30.301450] XFS (dm-1): Mounting V5 Filesystem
+> > [   30.426206] XFS (dm-1): Corruption warning: Metadata has LSN
+> > (16:367696) ahead of current LSN (16:367520). Please unmount and run
+> > xfs_repair (>= v4.3) to resolve.  
+> 
+> Hm, I think this means the superblock LSN is behind the log LSN, which
+> could mean that... software is buggy?  The disk didn't flush its cache
+> before it was unplugged?  Something else?
+> 
+> What kernel & xfsprogs?
+
+Debian 4.9.0-3-amd64, xfsprogs 4.9.0.
+
+
+> And how did you disconnect it from the power plugs?
+
+I shut down the machine, opened the box's cover and disconnected the 
+data and power cables. I used them on the CD/DVD drive, which I never 
+use but this time I had to. The hard disk drive remained quiet in its 
+bay. Then I shut down the machine and reconnected the cables to the 
+hard disk and this problem came up. I also tried another cable and 
+another SATA port, to no avail.
+
+
+> > [   30.426209] XFS (dm-1): log mount/recovery failed: error -22
+> > [   30.426310] XFS (dm-1): log mount failed
+> > 
+> > Note that the entire disk is encrypted with cryptsetup/LUKS, 
+> > which is working fine. Wrong passwords fail. The right password 
+> > opens it. But then it refuses to mount.
+> > 
+> > This has been happening a lot to me with XFS file systems. 
+> > Why is this happening?
+> > 
+> > Is there something I can do to recover the data?  
+> 
+> Try xfs_repair -n to see what it would do if you ran repair?
+
+I tried and got this output:
+
+
+Phase 1 - find and verify superblock...
+bad primary superblock - bad magic number !!!
+
+attempting to find secondary superblock...
+
+
+and it's been printing an endless stream of dots for a very long 
+time. I'm about to go to bed and let this running overnight. 
+It looks like it has a long way to go.
+
+-- 
+Luciano ES
 >>
-=20
-Hi Calum,
-
-Absolutely! Is it OK to add your reviewed-by, with the following incrementa=
-l
-patch made to this one?
-
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index b00b89dda3c5..c0c1b9f2c069 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -276,11 +276,6 @@ ssize_t nfs_direct_IO(struct kiocb *iocb, struct iov_i=
-ter *iter)
-        return nfs_file_direct_write(iocb, iter);
- }
-=20
--static void nfs_direct_release_pages(struct page **pages, unsigned int npa=
-ges)
--{
--       put_user_pages(pages, npages);
--}
--
- void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinfo,
-                              struct nfs_direct_req *dreq)
- {
-@@ -510,7 +505,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nf=
-s_direct_req *dreq,
-                        pos +=3D req_len;
-                        dreq->bytes_left -=3D req_len;
-                }
--               nfs_direct_release_pages(pagevec, npages);
-+               put_user_pages(pagevec, npages);
-                kvfree(pagevec);
-                if (result < 0)
-                        break;
-@@ -933,7 +928,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct n=
-fs_direct_req *dreq,
-                        pos +=3D req_len;
-                        dreq->bytes_left -=3D req_len;
-                }
--               nfs_direct_release_pages(pagevec, npages);
-+               put_user_pages(pagevec, npages);
-                kvfree(pagevec);
-                if (result < 0)
-                        break;
-
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
