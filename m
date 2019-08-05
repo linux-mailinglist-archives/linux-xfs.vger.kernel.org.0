@@ -2,115 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEF5E8248D
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 20:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5E0824B9
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 20:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfHESDE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Aug 2019 14:03:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfHESDD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 5 Aug 2019 14:03:03 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 79A5930224AC;
-        Mon,  5 Aug 2019 18:03:03 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EF9065C1D4;
-        Mon,  5 Aug 2019 18:03:02 +0000 (UTC)
-Date:   Mon, 5 Aug 2019 14:03:01 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 15/24] xfs: eagerly free shadow buffers to reduce CIL
- footprint
-Message-ID: <20190805180300.GE14760@bfoster>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-16-david@fromorbit.com>
+        id S1728759AbfHESPb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Aug 2019 14:15:31 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56384 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfHESPa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 14:15:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75I4NHs119532;
+        Mon, 5 Aug 2019 18:15:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=WsdctHZW8T0F3ITXn+xjB7Ih4vj7K7b6ZR3bgMZ/3xQ=;
+ b=WhTJOonDb5aFGf9v/aFNn8Yai08ZN6hYnekguzfP//HnYdHqxFRcZ0+HOIylzkDYcz+O
+ 2ZN12CI2vIJsri9Po6SGvObWLKqQ/fHbzLzLc1dU0mMTlc+si9s/oQO66GDhBVKQ93EU
+ gKuv4zS1qofYSLHzNZ9BTj7wGEImpgkfjonb5ghOaKTGLu5h4r8+d8TzkQyY+fczcj86
+ KiA/3DmMuFCqipTARllcPuXJVvTQlhSpbCeDl9CBVkVo+yNPG5xSDGdxloo/d40Lp4sF
+ 3y8thGc2WZNcbpRdqmVskLXelFUo5EhzEDY+a5mBmkm838IbfA766sdmVcG2ZogEazRL RQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2u52wr0u5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 18:15:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75IA9EP139414;
+        Mon, 5 Aug 2019 18:15:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u51kmruce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 18:15:27 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x75IFPji020574;
+        Mon, 5 Aug 2019 18:15:26 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 11:15:25 -0700
+Date:   Mon, 5 Aug 2019 11:15:24 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Block device direct read EIO handling broken?
+Message-ID: <20190805181524.GE7129@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801021752.4986-16-david@fromorbit.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 05 Aug 2019 18:03:03 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908050188
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908050188
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:17:43PM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> The CIL can pin a lot of memory and effectively defines the lower
-> free memory boundary of operation for XFS. The way we hang onto
-> log item shadow buffers "just in case" effectively doubles the
-> memory footprint of the CIL for dubious reasons.
-> 
-> That is, we hang onto the old shadow buffer in case the next time
-> we log the item it will fit into the shadow buffer and we won't have
-> to allocate a new one. However, we only ever tend to grow dirty
-> objects in the CIL through relogging, so once we've allocated a
-> larger buffer the old buffer we set as a shadow buffer will never
-> get reused as the amount we log never decreases until the item is
-> clean. And then for buffer items we free the log item and the shadow
-> buffers, anyway. Inode items will hold onto their shadow buffer
-> until they are reclaimed - this could double the inode's memory
-> footprint for it's lifetime...
-> 
-> Hence we should just free the old log item buffer when we replace it
-> with a new shadow buffer rather than storing it for later use. It's
-> not useful, get rid of it as early as possible.
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_log_cil.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-> index fa5602d0fd7f..1863a9bdf4a9 100644
-> --- a/fs/xfs/xfs_log_cil.c
-> +++ b/fs/xfs/xfs_log_cil.c
-> @@ -238,9 +238,7 @@ xfs_cil_prepare_item(
->  	/*
->  	 * If there is no old LV, this is the first time we've seen the item in
->  	 * this CIL context and so we need to pin it. If we are replacing the
-> -	 * old_lv, then remove the space it accounts for and make it the shadow
-> -	 * buffer for later freeing. In both cases we are now switching to the
-> -	 * shadow buffer, so update the the pointer to it appropriately.
-> +	 * old_lv, then remove the space it accounts for and free it.
->  	 */
+Hi Damien,
 
-The comment above xlog_cil_alloc_shadow_bufs() needs a similar update
-around how we handle the old buffer when the shadow buffer is used.
+I noticed a regression in xfs/747 (an unreleased xfstest for the
+xfs_scrub media scanning feature) on 5.3-rc3.  I'll condense that down
+to a simpler reproducer:
 
->  	if (!old_lv) {
->  		if (lv->lv_item->li_ops->iop_pin)
-> @@ -251,7 +249,8 @@ xfs_cil_prepare_item(
->  
->  		*diff_len -= old_lv->lv_bytes;
->  		*diff_iovecs -= old_lv->lv_niovecs;
-> -		lv->lv_item->li_lv_shadow = old_lv;
-> +		kmem_free(old_lv);
-> +		lv->lv_item->li_lv_shadow = NULL;
->  	}
+# dmsetup table
+error-test: 0 209 linear 8:48 0
+error-test: 209 1 error 
+error-test: 210 6446894 linear 8:48 210
 
-So IIUC this is the case where we allocated a shadow buffer, the item
-was already pinned (so old_lv is still around) but we ended up using the
-shadow buffer for this relog. Instead of keeping the old buffer around
-as a new shadow, we toss it. That makes sense, but if the objective is
-to not leave dangling shadow buffers around as such, what about the case
-where we allocated a shadow buffer but didn't end up using it because
-old_lv was reusable? It looks like we still keep the shadow buffer
-around in that scenario with a similar lifetime as the swapout scenario
-this patch removes. Hm?
+Basically we have a ~3G /dev/sdd and we set up device mapper to fail IO
+for sector 209 and to pass the io to the scsi device everywhere else.
 
-Brian
+On 5.3-rc3, performing a directio pread of this range with a < 1M buffer
+(in other words, a request for fewer than MAX_BIO_PAGES bytes) yields
+EIO like you'd expect:
 
->  
->  	/* attach new log vector to log item */
-> -- 
-> 2.22.0
-> 
+# strace -e pread64 xfs_io -d -c 'pread -b 1024k 0k 1120k' /dev/mapper/error-test
+pread64(3, 0x7f880e1c7000, 1048576, 0)  = -1 EIO (Input/output error)
+pread: Input/output error
++++ exited with 0 +++
+
+But doing it with a larger buffer succeeds(!):
+
+# strace -e pread64 xfs_io -d -c 'pread -b 2048k 0k 1120k' /dev/mapper/error-test
+pread64(3, "XFSB\0\0\20\0\0\0\0\0\0\fL\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 1146880, 0) = 1146880
+read 1146880/1146880 bytes at offset 0
+1 MiB, 1 ops; 0.0009 sec (1.124 GiB/sec and 1052.6316 ops/sec)
++++ exited with 0 +++
+
+(Note that the part of the buffer corresponding to the dm-error area is
+uninitialized)
+
+On 5.3-rc2, both commands would fail with EIO like you'd expect.  The
+only change between rc2 and rc3 is commit 0eb6ddfb865c ("block: Fix
+__blkdev_direct_IO() for bio fragments").
+
+AFAICT we end up in __blkdev_direct_IO with a 1120K buffer, which gets
+split into two bios: one for the first BIO_MAX_PAGES worth of data (1MB)
+and a second one for the 96k after that.
+
+I think the problem is that every time we submit a bio, we increase ret
+by the size of that bio, but at the time we do that we have no idea if
+the bio is going to succeed or not.  At the end of the function we do:
+
+	if (!ret)
+		ret = blk_status_to_errno(dio->bio.bi_status);
+
+Which means that we only pick up the IO error if we haven't already set
+ret.  I suppose that was useful for being able to return a short read,
+but now that we always increment ret by the size of the bio, we act like
+the whole buffer was read.  I tried a -rc2 kernel and found that 40% of
+the time I'd get an EIO and the rest of the time I got a short read.
+
+Not sure where to go from here, but something's not right...
+
+--D
