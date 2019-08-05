@@ -2,277 +2,231 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4716081A0E
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 14:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 282F281FE6
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 17:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfHEMyn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Aug 2019 08:54:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46589 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfHEMyn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 08:54:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so84306267wru.13
-        for <linux-xfs@vger.kernel.org>; Mon, 05 Aug 2019 05:54:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=e57kIhw84UdoXYrNs7u6qZqeIpMAhlE8YhPfmUmLsAE=;
-        b=oNurrkFqKA0edZ5WD3ThCgsbLFD052t6T+PxDMWityMIzw7LNWCSQhQ8cE57akG7g9
-         g5+Q4N+ZJZ66U3hjGTzOwjFtntWMwG4ivhCDvt/6P4VQNtheD7hxT/NhMrSzqWHuVfwC
-         Cial+4VL9C/ub9apN7yLTZ1Hkdlit31YCNGKR60GJNlFqN4IGKBzVGtn3uKyjfq86feG
-         1/KoIO9gEC0wi5mRxwEE60rqOmEAuInRC8RKzOX8R8gD2JE1zp52IOGysK/0cABn3Zz+
-         vuk4AESmd0bthtNBLdCeZ6vu6fXljK8YaqKidX4+deaUTZlfE2QRT/bjjPlCKVulDxku
-         0Xnw==
-X-Gm-Message-State: APjAAAX8l5Pd1Di+6MS3TlQIe+j41DRAE8aqhYQEskhIiXa7/kxL9azR
-        oQVChvnnXJ6K/x3cnTbVgnqz7Q==
-X-Google-Smtp-Source: APXvYqxJ0l+JA20tKoRTqcrCJnHeomP3OrayErUylUXTe7Djga/6v18vIWth305fLVn9r2S+n7r7gA==
-X-Received: by 2002:adf:f1d1:: with SMTP id z17mr15911537wro.190.1565009680767;
-        Mon, 05 Aug 2019 05:54:40 -0700 (PDT)
-Received: from orion.maiolino.org (11.72.broadband12.iol.cz. [90.179.72.11])
-        by smtp.gmail.com with ESMTPSA id f1sm57936530wml.28.2019.08.05.05.54.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 05:54:40 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 14:54:38 +0200
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Damien.LeMoal@wdc.com,
-        Christoph Hellwig <hch@lst.de>, agruenba@redhat.com
-Subject: Re: [PATCH 3/5] xfs: remove the fork fields in the writepage_ctx and
- ioend
-Message-ID: <20190805125438.va6qirxxhmr2isa4@orion.maiolino.org>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Damien.LeMoal@wdc.com,
-        Christoph Hellwig <hch@lst.de>, agruenba@redhat.com
-References: <156444951713.2682520.8109813555788585092.stgit@magnolia>
- <156444954007.2682520.7677605159311778499.stgit@magnolia>
+        id S1729082AbfHEPNY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Aug 2019 11:13:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36364 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbfHEPNY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 11:13:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75F9MQq138000;
+        Mon, 5 Aug 2019 15:13:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=dw2AnVkSeqtXfAEn6fPeTen3NsinTcJtAjutNBxMQLI=;
+ b=Zh/zRLsJ8lW1xqiJQRwzvOm/LFke/qMeaz00eMmRMOGck9LxUlnYpBgsYOb7KmEHp6KS
+ 8BeGnoTMCSAOFWVWy5cZ4cUN9RtATbgFsxd78lIPynjpGdq1xFQElIgBxdo7n9F3osnC
+ Npzl+80FzRtK6nRcz970GUJpdZk9v5sTvuaSbVntBYh7GiRImz5+w0xd9kGZ54QJYj6x
+ aDOdBNkoA9sE2IGoOFGAoZwsgxV0Mk5R+zlsxqcJQ+Qutu0cCPttsSY9AKlzz4ScIpQV
+ lThJKQnEDE9vTu1+n6nB698vJHvw+1CRRfNPAXbXHSr9WlxBlZYisoDC73upDQpmk6eh qg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2u52wqyu21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 15:13:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x75F81vQ110796;
+        Mon, 5 Aug 2019 15:13:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2u50abv0xy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 05 Aug 2019 15:13:06 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x75FD0iw032601;
+        Mon, 5 Aug 2019 15:13:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Aug 2019 08:12:59 -0700
+Date:   Mon, 5 Aug 2019 08:12:58 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     linux-fsdevel@vger.kernel.org, hch@lst.de, adilger@dilger.ca,
+        jaegeuk@kernel.org, miklos@szeredi.hu, rpeterso@redhat.com,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/9] fibmap: Use bmap instead of ->bmap method in
+ ioctl_fibmap
+Message-ID: <20190805151258.GD7129@magnolia>
+References: <20190731141245.7230-1-cmaiolino@redhat.com>
+ <20190731141245.7230-5-cmaiolino@redhat.com>
+ <20190731231217.GV1561054@magnolia>
+ <20190802091937.kwutqtwt64q5hzkz@pegasus.maiolino.io>
+ <20190802151400.GG7138@magnolia>
+ <20190805102729.ooda6sg65j65ojd4@pegasus.maiolino.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156444954007.2682520.7677605159311778499.stgit@magnolia>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190805102729.ooda6sg65j65ojd4@pegasus.maiolino.io>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908050169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908050169
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:19:00PM -0700, Darrick J. Wong wrote:
-> From: Christoph Hellwig <hch@lst.de>
+On Mon, Aug 05, 2019 at 12:27:30PM +0200, Carlos Maiolino wrote:
+> On Fri, Aug 02, 2019 at 08:14:00AM -0700, Darrick J. Wong wrote:
+> > On Fri, Aug 02, 2019 at 11:19:39AM +0200, Carlos Maiolino wrote:
+> > > Hi Darrick.
+> > > 
+> > > > > +		return error;
+> > > > > +
+> > > > > +	block = ur_block;
+> > > > > +	error = bmap(inode, &block);
+> > > > > +
+> > > > > +	if (error)
+> > > > > +		ur_block = 0;
+> > > > > +	else
+> > > > > +		ur_block = block;
+> > > > 
+> > > > What happens if ur_block > INT_MAX?  Shouldn't we return zero (i.e.
+> > > > error) instead of truncating the value?  Maybe the code does this
+> > > > somewhere else?  Here seemed like the obvious place for an overflow
+> > > > check as we go from sector_t to int.
+> > > > 
+> > > 
+> > > The behavior should still be the same. It will get truncated, unfortunately. I
+> > > don't think we can actually change this behavior and return zero instead of
+> > > truncating it.
+> > 
+> > But that's even worse, because the programs that rely on FIBMAP will now
+> > receive *incorrect* results that may point at a different file and
+> > definitely do not point at the correct file block.
 > 
-> In preparation for moving the writeback code to iomap.c, replace the
-> XFS-specific COW fork concept with the iomap IOMAP_F_SHARED flag.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> How is this worse? This is exactly what happens today, on the original FIBMAP
+> implementation.
 
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+Ok, I wasn't being 110% careful with my words.  Delete "will now" from
+the sentence above.
 
-> ---
->  fs/xfs/xfs_aops.c |   42 ++++++++++++++++++++++--------------------
->  fs/xfs/xfs_aops.h |    2 +-
->  2 files changed, 23 insertions(+), 21 deletions(-)
-> 
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 12f42922251c..93f1bf315585 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -23,7 +23,6 @@
->   */
->  struct xfs_writepage_ctx {
->  	struct iomap		iomap;
-> -	int			fork;
->  	unsigned int		data_seq;
->  	unsigned int		cow_seq;
->  	struct xfs_ioend	*ioend;
-> @@ -269,7 +268,7 @@ xfs_end_ioend(
->  	 */
->  	error = blk_status_to_errno(ioend->io_bio->bi_status);
->  	if (unlikely(error)) {
-> -		if (ioend->io_fork == XFS_COW_FORK)
-> +		if (ioend->io_flags & IOMAP_F_SHARED)
->  			xfs_reflink_cancel_cow_range(ip, offset, size, true);
->  		goto done;
->  	}
-> @@ -277,7 +276,7 @@ xfs_end_ioend(
->  	/*
->  	 * Success: commit the COW or unwritten blocks if needed.
->  	 */
-> -	if (ioend->io_fork == XFS_COW_FORK)
-> +	if (ioend->io_flags & IOMAP_F_SHARED)
->  		error = xfs_reflink_end_cow(ip, offset, size);
->  	else if (ioend->io_type == IOMAP_UNWRITTEN)
->  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
-> @@ -301,7 +300,8 @@ xfs_ioend_can_merge(
->  {
->  	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
->  		return false;
-> -	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
-> +	if ((ioend->io_flags & IOMAP_F_SHARED) ^
-> +	    (next->io_flags & IOMAP_F_SHARED))
->  		return false;
->  	if ((ioend->io_type == IOMAP_UNWRITTEN) ^
->  	    (next->io_type == IOMAP_UNWRITTEN))
-> @@ -408,7 +408,7 @@ xfs_end_bio(
->  	struct xfs_mount	*mp = ip->i_mount;
->  	unsigned long		flags;
->  
-> -	if (ioend->io_fork == XFS_COW_FORK ||
-> +	if ((ioend->io_flags & IOMAP_F_SHARED) ||
->  	    ioend->io_type == IOMAP_UNWRITTEN ||
->  	    ioend->io_private) {
->  		spin_lock_irqsave(&ip->i_ioend_lock, flags);
-> @@ -439,7 +439,7 @@ xfs_imap_valid(
->  	 * covers the offset. Be careful to check this first because the caller
->  	 * can revalidate a COW mapping without updating the data seqno.
->  	 */
-> -	if (wpc->fork == XFS_COW_FORK)
-> +	if (wpc->iomap.flags & IOMAP_F_SHARED)
->  		return true;
->  
->  	/*
-> @@ -469,6 +469,7 @@ static int
->  xfs_convert_blocks(
->  	struct xfs_writepage_ctx *wpc,
->  	struct xfs_inode	*ip,
-> +	int			whichfork,
->  	loff_t			offset)
->  {
->  	int			error;
-> @@ -480,8 +481,8 @@ xfs_convert_blocks(
->  	 * delalloc extent if free space is sufficiently fragmented.
->  	 */
->  	do {
-> -		error = xfs_bmapi_convert_delalloc(ip, wpc->fork, offset,
-> -				&wpc->iomap, wpc->fork == XFS_COW_FORK ?
-> +		error = xfs_bmapi_convert_delalloc(ip, whichfork, offset,
-> +				&wpc->iomap, whichfork == XFS_COW_FORK ?
->  					&wpc->cow_seq : &wpc->data_seq);
->  		if (error)
->  			return error;
-> @@ -502,6 +503,7 @@ xfs_map_blocks(
->  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
->  	xfs_fileoff_t		end_fsb = XFS_B_TO_FSB(mp, offset + count);
->  	xfs_fileoff_t		cow_fsb = NULLFILEOFF;
-> +	int			whichfork = XFS_DATA_FORK;
->  	struct xfs_bmbt_irec	imap;
->  	struct xfs_iext_cursor	icur;
->  	int			retries = 0;
-> @@ -550,7 +552,7 @@ xfs_map_blocks(
->  		wpc->cow_seq = READ_ONCE(ip->i_cowfp->if_seq);
->  		xfs_iunlock(ip, XFS_ILOCK_SHARED);
->  
-> -		wpc->fork = XFS_COW_FORK;
-> +		whichfork = XFS_COW_FORK;
->  		goto allocate_blocks;
->  	}
->  
-> @@ -573,8 +575,6 @@ xfs_map_blocks(
->  	wpc->data_seq = READ_ONCE(ip->i_df.if_seq);
->  	xfs_iunlock(ip, XFS_ILOCK_SHARED);
->  
-> -	wpc->fork = XFS_DATA_FORK;
-> -
->  	/* landed in a hole or beyond EOF? */
->  	if (imap.br_startoff > offset_fsb) {
->  		imap.br_blockcount = imap.br_startoff - offset_fsb;
-> @@ -599,10 +599,10 @@ xfs_map_blocks(
->  		goto allocate_blocks;
->  
->  	xfs_bmbt_to_iomap(ip, &wpc->iomap, &imap, 0);
-> -	trace_xfs_map_blocks_found(ip, offset, count, wpc->fork, &imap);
-> +	trace_xfs_map_blocks_found(ip, offset, count, whichfork, &imap);
->  	return 0;
->  allocate_blocks:
-> -	error = xfs_convert_blocks(wpc, ip, offset);
-> +	error = xfs_convert_blocks(wpc, ip, whichfork, offset);
->  	if (error) {
->  		/*
->  		 * If we failed to find the extent in the COW fork we might have
-> @@ -611,7 +611,8 @@ xfs_map_blocks(
->  		 * the former case, but prevent additional retries to avoid
->  		 * looping forever for the latter case.
->  		 */
-> -		if (error == -EAGAIN && wpc->fork == XFS_COW_FORK && !retries++)
-> +		if (error == -EAGAIN && (wpc->iomap.flags & IOMAP_F_SHARED) &&
-> +		    !retries++)
->  			goto retry;
->  		ASSERT(error != -EAGAIN);
->  		return error;
-> @@ -622,7 +623,7 @@ xfs_map_blocks(
->  	 * original delalloc one.  Trim the return extent to the next COW
->  	 * boundary again to force a re-lookup.
->  	 */
-> -	if (wpc->fork != XFS_COW_FORK && cow_fsb != NULLFILEOFF) {
-> +	if (!(wpc->iomap.flags & IOMAP_F_SHARED) && cow_fsb != NULLFILEOFF) {
->  		loff_t		cow_offset = XFS_FSB_TO_B(mp, cow_fsb);
->  
->  		if (cow_offset < wpc->iomap.offset + wpc->iomap.length)
-> @@ -631,7 +632,7 @@ xfs_map_blocks(
->  
->  	ASSERT(wpc->iomap.offset <= offset);
->  	ASSERT(wpc->iomap.offset + wpc->iomap.length > offset);
-> -	trace_xfs_map_blocks_alloc(ip, offset, count, wpc->fork, &imap);
-> +	trace_xfs_map_blocks_alloc(ip, offset, count, whichfork, &imap);
->  	return 0;
->  }
->  
-> @@ -665,14 +666,14 @@ xfs_submit_ioend(
->  	nofs_flag = memalloc_nofs_save();
->  
->  	/* Convert CoW extents to regular */
-> -	if (!status && ioend->io_fork == XFS_COW_FORK) {
-> +	if (!status && (ioend->io_flags & IOMAP_F_SHARED)) {
->  		status = xfs_reflink_convert_cow(XFS_I(ioend->io_inode),
->  				ioend->io_offset, ioend->io_size);
->  	}
->  
->  	/* Reserve log space if we might write beyond the on-disk inode size. */
->  	if (!status &&
-> -	    (ioend->io_fork == XFS_COW_FORK ||
-> +	    ((ioend->io_flags & IOMAP_F_SHARED) ||
->  	     ioend->io_type != IOMAP_UNWRITTEN) &&
->  	    xfs_ioend_is_append(ioend) &&
->  	    !ioend->io_private)
-> @@ -719,8 +720,8 @@ xfs_alloc_ioend(
->  
->  	ioend = container_of(bio, struct xfs_ioend, io_inline_bio);
->  	INIT_LIST_HEAD(&ioend->io_list);
-> -	ioend->io_fork = wpc->fork;
->  	ioend->io_type = wpc->iomap.type;
-> +	ioend->io_flags = wpc->iomap.flags;
->  	ioend->io_inode = inode;
->  	ioend->io_size = 0;
->  	ioend->io_offset = offset;
-> @@ -774,7 +775,8 @@ xfs_add_to_ioend(
->  	bool			merged, same_page = false;
->  
->  	if (!wpc->ioend ||
-> -	    wpc->fork != wpc->ioend->io_fork ||
-> +	    (wpc->iomap.flags & IOMAP_F_SHARED) !=
-> +	    (wpc->ioend->io_flags & IOMAP_F_SHARED) ||
->  	    wpc->iomap.type != wpc->ioend->io_type ||
->  	    sector != bio_end_sector(wpc->ioend->io_bio) ||
->  	    offset != wpc->ioend->io_offset + wpc->ioend->io_size) {
-> diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-> index 6a45d675dcba..4a0226cdad4f 100644
-> --- a/fs/xfs/xfs_aops.h
-> +++ b/fs/xfs/xfs_aops.h
-> @@ -13,8 +13,8 @@ extern struct bio_set xfs_ioend_bioset;
->   */
->  struct xfs_ioend {
->  	struct list_head	io_list;	/* next ioend in chain */
-> -	int			io_fork;	/* inode fork written back */
->  	u16			io_type;
-> +	u16			io_flags;	/* IOMAP_F_* */
->  	struct inode		*io_inode;	/* file being written to */
->  	size_t			io_size;	/* size of the extent */
->  	xfs_off_t		io_offset;	/* offset in the file */
-> 
+> Maybe I am not seeing something or having a different thinking you have, but
+> this is the behavior we have now, without my patches. And we can't really change
+> it; the user view of this implementation.
+> That's why I didn't try to change the result, so the truncation still happens.
 
--- 
-Carlos
+I understand that we're not generally supposed to change existing
+userspace interfaces, but the fact remains that allowing truncated
+responses causes *filesystem corruption*.
+
+We know that the most well known FIBMAP callers are bootloaders, and we
+know what they do with the information they get -- they use it to record
+the block map of boot files.  So if the IPL/grub/whatever installer
+queries the boot file and the boot file is at block 12345678901 (a
+34-bit number), this interface truncates that to 3755744309 (a 32-bit
+number) and that's where the bootloader will think its boot files are.
+The installation succeeds, the user reboots and *kaboom* the system no
+longer boots because the contents of block 3755744309 is not a bootloader.
+
+Worse yet, grub1 used FIBMAP data to record the location of the grub
+environment file and installed itself between the MBR and the start of
+partition 1.  If the environment file is at offset 1234578901, grub will
+write status data to its environment file (which it thinks is at
+3755744309) and *KABOOM* we've just destroyed whatever was in that
+block.
+
+Far better for the bootloader installation script to hit an error and
+force the admin to deal with the situation than for the system to become
+unbootable.  That's *why* the (newer) iomap bmap implementation does not
+return truncated mappings, even though the classic implementation does.
+
+The classic code returning truncated results is a broken behavior.
+
+> > Note also that the iomap (and therefore xfs) implementation WARNs on
+> > integer overflow and returns 0 (error) to prevent an incorrect access.
+> 
+> It does not really prevent anything. It just issue a warning saying the result
+> will be truncated, in an attempt to notify the FIBMAP interface user that he/she
+> can't trust the result, but it does not prevent a truncated result to be
+
+I disagree; the iomap bmap implementation /does/ prevent truncated responses:
+
+: static loff_t
+: iomap_bmap_actor(struct inode *inode, loff_t pos, loff_t length,
+: void *data, struct iomap *iomap)
+: {
+: 	sector_t *bno = data, addr;
+: 
+: 	if (iomap->type == IOMAP_MAPPED) {
+: 		addr = (pos - iomap->offset + iomap->addr) >> inode->i_blkbits;
+: 		if (addr > INT_MAX)
+: 			WARN(1, "would truncate bmap result\n");
+
+Notice how we don't set *bno here?
+
+: 		else
+: 			*bno = addr;
+
+And only set it in the case that there isn't an integer overflow?
+
+: 	}
+: 	return 0;
+: }
+:
+: /* legacy ->bmap interface.  0 is the error return (!) */
+: sector_t
+: iomap_bmap(struct address_space *mapping, sector_t bno,
+: 		const struct iomap_ops *ops)
+: {
+: 	struct inode *inode = mapping->host;
+: 	loff_t pos = bno << inode->i_blkbits;
+: 	unsigned blocksize = i_blocksize(inode);
+: 
+: 	if (filemap_write_and_wait(mapping))
+: 		return 0;
+: 
+: 	bno = 0;
+
+We initialize bno to zero here...
+
+: 	iomap_apply(inode, pos, blocksize, 0, ops, &bno, iomap_bmap_actor);
+
+...then pass bno's address to the apply function to pass to
+iomap_bmap_actor, so either the _actor function set bno or in the case
+of overflow it left it set to zero.
+
+: 	return bno;
+: }
+
+> returned. And IIRC, iomap is the only interface now that cares about issuing a
+> warning.
+>
+> I think the *best* we could do here, is to make the new bmap() to issue the same
+> kind of WARN() iomap does, but we can't really change the end result.
+
+I'd rather we break legacy code than corrupt filesystems.
+
+--D
+
+> 
+> > 
+> > --D
+> > 
+> > > > --D
+> > > > 
+> > > > > +
+> > > > > +	error = put_user(ur_block, p);
+> > > > > +
+> > > > > +	return error;
+> > > > >  }
+> > > > >  
+> > > > >  /**
+> > > > > -- 
+> > > > > 2.20.1
+> > > > > 
+> > > 
+> > > -- 
+> > > Carlos
+> 
+> -- 
+> Carlos
