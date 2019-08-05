@@ -2,151 +2,127 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56EF3815A8
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 11:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B7181703
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Aug 2019 12:27:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfHEJkX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Aug 2019 05:40:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42179 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfHEJkX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 05:40:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x1so33793104wrr.9
-        for <linux-xfs@vger.kernel.org>; Mon, 05 Aug 2019 02:40:21 -0700 (PDT)
+        id S1727830AbfHEK1f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Aug 2019 06:27:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50687 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfHEK1f (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 06:27:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so74204928wml.0
+        for <linux-xfs@vger.kernel.org>; Mon, 05 Aug 2019 03:27:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=9n8TC1iXml/++w4AmWIXNjrxlyXyHgk1bMp3unb0bXc=;
-        b=kUTgcyJ36YoHm+cLjnbzH/JqexfjF2KuynokAafm+wpjRjCkIFKCdev9auvfgWwNg5
-         SSQZv3xhQ9eivUmsClQtqtiBN5ZiJw3fCWM5rWY4nrLPr4KT8cvICuSrc9xBawkTNmxu
-         kuf4TRYbcLyFaHGvA0lvOnvdIq7VOZzc1siYXWBcQDYAytXNDtvr27XjZ4vK97IHVnk3
-         UvKUQ3jIcsIkPlpi1AdGRUvYx0wzvzcjQOUedJrR6Aa82dJFfQt6hTw2OCKylXdKeqNd
-         Dshk5x+U2TRLvcuOIZN13DHu5OBo4Mku7BhlXAWrqGPtAiiLlc/zksOz/VYvK8eGlJ0d
-         5EIw==
-X-Gm-Message-State: APjAAAXrChHYp+ww+spM/VZ14i8vbrjMmmVDuHeQ3G5GCW3cd0XlRUFe
-        ovgb+3JWaqXAP3N/X7WconxY5Q==
-X-Google-Smtp-Source: APXvYqxBpvy02ufmtDCUsesCWncLQzj3mdvdDT4pdKH6hPhIxDjdRcpRcI6VOEqPaKfZegchYWT+zw==
-X-Received: by 2002:adf:edd1:: with SMTP id v17mr76724414wro.348.1564998021012;
-        Mon, 05 Aug 2019 02:40:21 -0700 (PDT)
+        bh=DgcovKuK5WhPn6hVzFZNbyXAianIZnw5XWtwj+mlfWk=;
+        b=twjKlWQtI0g3ZkFpLCrC8+6hHSBlWQa4c6zAGSoPvZUmXdH45fpovGSbQg2dD/p9KD
+         kiNoBQD1t1dyIif0oVR8fcKhQg6SO3RKC8DgS77D0+iGu2pUR/jZ3w+nppCTIJxV75nV
+         fSU6NnQsJpJSxjmnX7nMQyat7L0nufeI7wPbcBK83BGpFfhCffIOvJUFy5D0aosB16UX
+         DT/0QsCtEqjmUTqGeQhA6+Tb3DxswaLL7ttrV1hVawf/CHLmnQrP2c/WHxwzkTOlbgts
+         cfTWjo7g93QJymmFgkzD6thfxmbyu0AFuDXBCoExcuRiFQky0D9fJVE0PGN5V7QIlpPi
+         4pjw==
+X-Gm-Message-State: APjAAAW8BPf/WrOn0kZU2I6Ma5brX2yV1ZJ0KwpKjNbE6meGXmF0PHFN
+        xZkMGN/ht3hU3oyd7yFjh9Urbg==
+X-Google-Smtp-Source: APXvYqzfF6AQaF4c4hasKzPBhxJz92+5NrrN/wf7wERzHvxkWGAMbXPySxFIwOZ5TpnC1TmHgNzNzg==
+X-Received: by 2002:a7b:cb94:: with SMTP id m20mr17390752wmi.144.1565000852931;
+        Mon, 05 Aug 2019 03:27:32 -0700 (PDT)
 Received: from pegasus.maiolino.io (ip-89-103-126-188.net.upcbroadband.cz. [89.103.126.188])
-        by smtp.gmail.com with ESMTPSA id d16sm76768049wrv.55.2019.08.05.02.40.19
+        by smtp.gmail.com with ESMTPSA id n14sm160342770wra.75.2019.08.05.03.27.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 02:40:20 -0700 (PDT)
-Date:   Mon, 5 Aug 2019 11:40:18 +0200
+        Mon, 05 Aug 2019 03:27:32 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 12:27:30 +0200
 From:   Carlos Maiolino <cmaiolino@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-fsdevel@vger.kernel.org, hch@lst.de, adilger@dilger.ca,
         jaegeuk@kernel.org, miklos@szeredi.hu, rpeterso@redhat.com,
         linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/9] fs: Move start and length fiemap fields into
- fiemap_extent_info
-Message-ID: <20190805094017.3tcskxxpssjolfmg@pegasus.maiolino.io>
+Subject: Re: [PATCH 4/9] fibmap: Use bmap instead of ->bmap method in
+ ioctl_fibmap
+Message-ID: <20190805102729.ooda6sg65j65ojd4@pegasus.maiolino.io>
 Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-fsdevel@vger.kernel.org, hch@lst.de, adilger@dilger.ca,
         jaegeuk@kernel.org, miklos@szeredi.hu, rpeterso@redhat.com,
         linux-xfs@vger.kernel.org
 References: <20190731141245.7230-1-cmaiolino@redhat.com>
- <20190731141245.7230-6-cmaiolino@redhat.com>
- <20190731232837.GZ1561054@magnolia>
- <20190802095115.bjz6ejbouif3wkbt@pegasus.maiolino.io>
- <20190802151519.GH7138@magnolia>
+ <20190731141245.7230-5-cmaiolino@redhat.com>
+ <20190731231217.GV1561054@magnolia>
+ <20190802091937.kwutqtwt64q5hzkz@pegasus.maiolino.io>
+ <20190802151400.GG7138@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802151519.GH7138@magnolia>
+In-Reply-To: <20190802151400.GG7138@magnolia>
 User-Agent: NeoMutt/20180716
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 08:15:19AM -0700, Darrick J. Wong wrote:
-> On Fri, Aug 02, 2019 at 11:51:16AM +0200, Carlos Maiolino wrote:
-> > > >  
-> > > >  STATIC int
-> > > >  xfs_vn_fiemap(
-> > > > -	struct inode		*inode,
-> > > > -	struct fiemap_extent_info *fieinfo,
-> > > > -	u64			start,
-> > > > -	u64			length)
-> > > > +	struct inode		  *inode,
-> > > > +	struct fiemap_extent_info *fieinfo)
-> > > >  {
-> > > > -	int			error;
-> > > > +	u64	start = fieinfo->fi_start;
-> > > > +	u64	length = fieinfo->fi_len;
-> > > > +	int	error;
+On Fri, Aug 02, 2019 at 08:14:00AM -0700, Darrick J. Wong wrote:
+> On Fri, Aug 02, 2019 at 11:19:39AM +0200, Carlos Maiolino wrote:
+> > Hi Darrick.
+> > 
+> > > > +		return error;
+> > > > +
+> > > > +	block = ur_block;
+> > > > +	error = bmap(inode, &block);
+> > > > +
+> > > > +	if (error)
+> > > > +		ur_block = 0;
+> > > > +	else
+> > > > +		ur_block = block;
 > > > 
-> > > Would be nice if the variable name indentation was consistent here, but
-> > > otherwise the xfs part looks ok.
-> > 
-> > These fields are removed on the next patch, updating it is really required?
-> 
-> Yes, please.
-
-NP then
-
-> > > > +	u64		fi_start;
-> > > > +	u64		fi_len;
+> > > What happens if ur_block > INT_MAX?  Shouldn't we return zero (i.e.
+> > > error) instead of truncating the value?  Maybe the code does this
+> > > somewhere else?  Here seemed like the obvious place for an overflow
+> > > check as we go from sector_t to int.
 > > > 
-> > > Comments for these two new fields?
 > > 
-> > Sure, how about this:
-> > 
-> >        u64           fi_start;            /* Logical offset at which
-> >                                              start mapping */
-> >        u64           fi_len;              /* Logical length of mapping
-> >                                              the caller cares about */
-> > 
-> > 
-> > btw, Above indentation won't match final result
+> > The behavior should still be the same. It will get truncated, unfortunately. I
+> > don't think we can actually change this behavior and return zero instead of
+> > truncating it.
 > 
-> Looks good to me.
+> But that's even worse, because the programs that rely on FIBMAP will now
+> receive *incorrect* results that may point at a different file and
+> definitely do not point at the correct file block.
 
-Will update the fields, thanks for the review
+How is this worse? This is exactly what happens today, on the original FIBMAP
+implementation.
+
+Maybe I am not seeing something or having a different thinking you have, but
+this is the behavior we have now, without my patches. And we can't really change
+it; the user view of this implementation.
+That's why I didn't try to change the result, so the truncation still happens.
+> 
+> Note also that the iomap (and therefore xfs) implementation WARNs on
+> integer overflow and returns 0 (error) to prevent an incorrect access.
+
+It does not really prevent anything. It just issue a warning saying the result
+will be truncated, in an attempt to notify the FIBMAP interface user that he/she
+can't trust the result, but it does not prevent a truncated result to be
+returned. And IIRC, iomap is the only interface now that cares about issuing a
+warning.
+
+I think the *best* we could do here, is to make the new bmap() to issue the same
+kind of WARN() iomap does, but we can't really change the end result.
+
 
 > 
-> > 
-> > Christoph, may I keep your reviewed tag by updating the comments as above?
-> > Otherwise I'll just remove your tag
-> > 
-> > > 
+> --D
+> 
 > > > --D
 > > > 
-> > > > +	unsigned int	fi_extents_mapped;	/* Number of mapped extents */
-> > > > +	unsigned int	fi_extents_max;		/* Size of fiemap_extent array */
-> > > > +	struct		fiemap_extent __user *fi_extents_start;	/* Start of
-> > > > +								   fiemap_extent
-> > > > +								   array */
-> > > >  };
-> > > >  int fiemap_fill_next_extent(struct fiemap_extent_info *info, u64 logical,
-> > > >  			    u64 phys, u64 len, u32 flags);
-> > > > @@ -1841,8 +1844,7 @@ struct inode_operations {
-> > > >  	int (*setattr) (struct dentry *, struct iattr *);
-> > > >  	int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);
-> > > >  	ssize_t (*listxattr) (struct dentry *, char *, size_t);
-> > > > -	int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,
-> > > > -		      u64 len);
-> > > > +	int (*fiemap)(struct inode *, struct fiemap_extent_info *);
-> > > >  	int (*update_time)(struct inode *, struct timespec64 *, int);
-> > > >  	int (*atomic_open)(struct inode *, struct dentry *,
-> > > >  			   struct file *, unsigned open_flag,
-> > > > @@ -3199,11 +3201,10 @@ extern int vfs_readlink(struct dentry *, char __user *, int);
+> > > > +
+> > > > +	error = put_user(ur_block, p);
+> > > > +
+> > > > +	return error;
+> > > >  }
 > > > >  
-> > > >  extern int __generic_block_fiemap(struct inode *inode,
-> > > >  				  struct fiemap_extent_info *fieinfo,
-> > > > -				  loff_t start, loff_t len,
-> > > >  				  get_block_t *get_block);
-> > > >  extern int generic_block_fiemap(struct inode *inode,
-> > > > -				struct fiemap_extent_info *fieinfo, u64 start,
-> > > > -				u64 len, get_block_t *get_block);
-> > > > +				struct fiemap_extent_info *fieinfo,
-> > > > +				get_block_t *get_block);
-> > > >  
-> > > >  extern struct file_system_type *get_filesystem(struct file_system_type *fs);
-> > > >  extern void put_filesystem(struct file_system_type *fs);
+> > > >  /**
 > > > > -- 
 > > > > 2.20.1
 > > > > 
