@@ -2,171 +2,177 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BBCB8274C
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 00:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E80827D1
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 01:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfHEWFr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Aug 2019 18:05:47 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:38111 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfHEWFr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 18:05:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1565042746; x=1596578746;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=+QQj5AHS8MtCsHuZ1neGTnTBcyATll2y2SjS2ORs+pk=;
-  b=qtpplYL1QL3XSlM7WnG3jObKkQjAYKvioA/fWOejN904ViA3362/ErfP
-   chpyNyGp0OR/xotbY02GnE9+fRgLw3iu1Nt2XCGdy+v1AMDhcJKBT80ME
-   0SKd71ua4ItEIZVArc0qKWXVmkI8vApsNI7o/jOLOYTz3Hzg8lXzhgDqR
-   VbrK/h3HZUasU0j3WcPE9ixrOlTYoWcUnEtpfM0kOpV9scb/dqm/OMf5y
-   30ud/nRioYB35vmKGkDEudNMZACt+SDNVuiUvUwlvQIsxVS/cl7X98DZQ
-   DZJvTa49nBPEMyZws+x7YjXgYvqBLOrh/lzEGoPhZ8IztX1k/rAoavAcU
-   g==;
-IronPort-SDR: 5ot5zhRVy+hMfOuKh0apCb7vldmIkw0WZlSifplkF+R0ZKRGjva/QRfUEp/qIgmPIAwrIYQsiM
- usRvAOGyDYNLAi5wLvoQrsLIxgsly/Q3x8WC8zrILDrgaFcD4IAZA7qLW06Bvn7IPEaBFHhjHj
- qkh/301F+IkOIUMh7ZXDl0s1ZnNbucz/TWfEyAL0UUQWIVGd5fjrYvjZfsgC8U8Ho2jSG+jyTo
- HfEFCH8rzxsv0UVRHaXY3X60YgOLnnlmu6pmjhZS5hFbsJEGNYoxDafrUHBalWJnMo5ZIWRcPe
- 9pc=
-X-IronPort-AV: E=Sophos;i="5.64,350,1559491200"; 
-   d="scan'208";a="116036933"
-Received: from mail-cys01nam02lp2054.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.54])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2019 06:05:46 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NdJyVpbc2ixAsVRigoX6i9UN6ywmnReXpgQdi1SMPAnqllPKI6JBJJCI2eQpoMdldJPycQgkm/HT0WqsLstXpaIYYiVJt46JpT/+vJSlNk02By90ixhoAa8+eXaXTQIYpcNaGCINSIQAbg/BwkN86kPiW8uO39v8HxPRIq6+YbtpIZZueBP5dZg27Nh0XL1JmVtVtHDjvNAg6ra35EueBwBuzQ8N9PJkwU3VFYaOio44Ft5v6/+pGNWRrJGExGJBCYYsq0lBf+MFuAUcd4vKq9fO6z+eAGTUMA0rf5AokNu2QOSNT2j23OF2xGhSP9yZ95Jt1G9c+Q9rEUntylcChA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/gQ3r4V5TFugDTQThFClhHVupW3YK05U1XEgO3mrZc=;
- b=HmoDKaUlaeX+oPwKhXbEFOK89IXr7VcZItUFQIN+RUjTExXR1wqAZPBdcQwSlQXGto33DbP6RBrC9D2VGW8rDVQ8MXeW3zund3VtaMURbq5I7F8Sv0YgQDOr2scBQ7SFxaa3sPEm2yUX+YkH9NNJna2fIo/M8kHCFEJwoupWsVLbG1tx8OqeQ5QwTxAW01paDP3zyBOAUiVkYsf6Jo+Oq/bhPiOMDaYkdOb24vjCEd8ZFbkREGGodXzbTzqjpbk+k34Tw9+4P8i2TaQbxn0Z1GyDDGAfba+t5sgX02mbE8fvs3H98TBaKgykZ4fGOhrR0uJMZPx/0PocP3QdmycVxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/gQ3r4V5TFugDTQThFClhHVupW3YK05U1XEgO3mrZc=;
- b=0FDTjqjhjlWwDShX7oczbRG3iHu2eLbO7BJPXLKmVXJ+4TQbgT7PrOdD584bEXEDzTnyyaQmJl+YkkIjO5n+6S9StrudJF7WZ/tTz0OTbOQXqykTSl3r8TyXJ38ejZF3PbODU6iJKhbeIRZPtzRNVAJfwBXM01qZtBm0KdyGUS8=
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
- BYAPR04MB5672.namprd04.prod.outlook.com (20.179.57.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Mon, 5 Aug 2019 22:05:44 +0000
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::65a9:db0a:646d:eb1e]) by BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::65a9:db0a:646d:eb1e%6]) with mapi id 15.20.2136.018; Mon, 5 Aug 2019
- 22:05:44 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Block device direct read EIO handling broken?
-Thread-Topic: Block device direct read EIO handling broken?
-Thread-Index: AQHVS7nFgL74Ixb2GU6mfuU8L6+VdQ==
-Date:   Mon, 5 Aug 2019 22:05:44 +0000
-Message-ID: <BYAPR04MB5816C7D04915AF7B656F900BE7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
-References: <20190805181524.GE7129@magnolia>
- <66bd785d-7598-5cc2-5e98-447fd128c153@kernel.dk>
- <36973a52-e876-fc09-7a63-2fc16b855f8d@kernel.dk>
- <BYAPR04MB5816246256B1333C048EB0A1E7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <474c560f-5de0-6082-67ac-f7c640d9b346@kernel.dk>
- <BYAPR04MB5816C3B24310C1E18F9E024CE7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <f3f98663-8f92-c933-c7c0-8db6635e6112@kernel.dk>
- <BYAPR04MB581644536C6EAEA36E3B4912E7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Damien.LeMoal@wdc.com; 
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df86536c-10b4-4356-c61d-08d719f11039
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5672;
-x-ms-traffictypediagnostic: BYAPR04MB5672:
-x-microsoft-antispam-prvs: <BYAPR04MB56722036D2CF15BF2D6E6DD1E7DA0@BYAPR04MB5672.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(189003)(51444003)(68736007)(8936002)(102836004)(53546011)(76176011)(186003)(26005)(33656002)(6506007)(81166006)(81156014)(8676002)(486006)(446003)(7736002)(256004)(305945005)(6116002)(110136005)(99286004)(54906003)(476003)(7696005)(5660300002)(14454004)(3846002)(71200400001)(2906002)(71190400001)(52536014)(66476007)(66556008)(64756008)(66446008)(74316002)(76116006)(66946007)(316002)(25786009)(6246003)(478600001)(229853002)(4326008)(86362001)(66066001)(9686003)(6436002)(55016002)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5672;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cSL7FxL2hKKN3GiZ+rGzeq+ZC29PcKc/R1w3tnxKyotQNu0lw0VN1zRoYVlYHQ5LdeVTItdNjto5pQ0+u59xEB6vY+K7JoJ4f1ruJPNzfxGJ02UAyv+GRipaX1NdMzw6DiGicA9TWW70hb4tyIwa+I+tjwL6hSD866f2opKtUcQaLi98ev8emEAO7NQ92K8zOe4PIPvATHQ/9qbqTlf3BPOEOEgh2vZjdtzAqSr+rTRbkbjNVUw0M25UNc9FAHr/+rWIp/A9cvSw8nzu1Hb0EbF7wji8IFPQxvYiIGJJGZSSo/z/5T7wCq75+/QtH4uUD0FstHwxZphQRu4nuG9Vy8cKwwiXcbJsyHG0ljhg3NnupvuJbHqhS4E3ArN7wn3b6VbL3dnZN80MH11KHFnU5VTGnBcBg/iEbUxemxa3v2E=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730733AbfHEXK6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Aug 2019 19:10:58 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34154 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727928AbfHEXK6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Aug 2019 19:10:58 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 68C7E43B2AC;
+        Tue,  6 Aug 2019 09:10:52 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hum6r-0005DC-3s; Tue, 06 Aug 2019 09:09:45 +1000
+Date:   Tue, 6 Aug 2019 09:09:45 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chris Mason <clm@fb.com>
+Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 09/24] xfs: don't allow log IO to be throttled
+Message-ID: <20190805230945.GX7777@dread.disaster.area>
+References: <20190801021752.4986-1-david@fromorbit.com>
+ <20190801021752.4986-10-david@fromorbit.com>
+ <F1E7CC65-D2CB-4078-9AA3-9D172ECDE17B@fb.com>
+ <20190801235849.GO7777@dread.disaster.area>
+ <7093F5C3-53D2-4C49-9C0D-64B20C565D18@fb.com>
+ <20190802232814.GP7777@dread.disaster.area>
+ <C823BAA1-18D5-4C25-9506-59A740817E8C@fb.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df86536c-10b4-4356-c61d-08d719f11039
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 22:05:44.4939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5672
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C823BAA1-18D5-4C25-9506-59A740817E8C@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=7yUhBBlLHTuIPOx24mIA:9 a=GhxPB0XkBjz6INEC:21
+        a=iFLSscLS6nnWKZIu:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019/08/06 6:59, Damien Le Moal wrote:=0A=
-> On 2019/08/06 6:28, Jens Axboe wrote:=0A=
->> On 8/5/19 2:27 PM, Damien Le Moal wrote:=0A=
->>> On 2019/08/06 6:26, Jens Axboe wrote:=0A=
->>>>> In any case, looking again at this code, it looks like there is a=0A=
->>>>> problem with dio->size being incremented early, even for fragments=0A=
->>>>> that get BLK_QC_T_EAGAIN, because dio->size is being used in=0A=
->>>>> blkdev_bio_end_io(). So an incorrect size can be reported to user=0A=
->>>>> space in that case on completion (e.g. large asynchronous no-wait dio=
-=0A=
->>>>> that cannot be issued in one go).=0A=
->>>>>=0A=
->>>>> So maybe something like this ? (completely untested)=0A=
->>>>=0A=
->>>> I think that looks pretty good, I like not double accounting with=0A=
->>>> this_size and dio->size, and we retain the old style ordering for the=
-=0A=
->>>> ret value.=0A=
->>>=0A=
->>> Do you want a proper patch with real testing backup ? I can send that=
-=0A=
->>> later today.=0A=
->>=0A=
->> Yeah that'd be great, I like your approach better.=0A=
->>=0A=
-> =0A=
-> Looking again, I think this is not it yet: dio->size is being referenced =
-after=0A=
-> submit_bio(), so blkdev_bio_end_io() may see the old value if the bio com=
-pletes=0A=
-> before dio->size increment. So the use-after-free is still there. And sin=
-ce=0A=
-> blkdev_bio_end_io() processes completion to user space only when dio->ref=
-=0A=
-> becomes 0, adding an atomic_inc/dec(&dio->ref) over the loop would not he=
-lp and=0A=
-> does not cover the single BIO case. Any idea how to address this one ?=0A=
-> =0A=
-=0A=
-May be add a bio_get/put() over the 2 places that do submit_bio() would wor=
-k,=0A=
-for all cases (single/multi BIO, sync & async). E.g.:=0A=
-=0A=
-+                       bio_get(bio);=0A=
-                        qc =3D submit_bio(bio);=0A=
-                        if (qc =3D=3D BLK_QC_T_EAGAIN) {=0A=
-                                if (!dio->size)=0A=
-                                        ret =3D -EAGAIN;=0A=
-+                               bio_put(bio);=0A=
-                                goto error;=0A=
-                        }=0A=
-                        dio->size +=3D bio_size;=0A=
-+                       bio_put(bio);=0A=
-=0A=
-Thoughts ?=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On Mon, Aug 05, 2019 at 06:32:51PM +0000, Chris Mason wrote:
+> On 2 Aug 2019, at 19:28, Dave Chinner wrote:
+> 
+> > On Fri, Aug 02, 2019 at 02:11:53PM +0000, Chris Mason wrote:
+> >> On 1 Aug 2019, at 19:58, Dave Chinner wrote:
+> >> I can't really see bio->b_ioprio working without the rest of the IO
+> >> controller logic creating a sensible system,
+> >
+> > That's exactly the problem we need to solve. The current situation
+> > is ... untenable. Regardless of whether the io.latency controller
+> > works well, the fact is that the wbt subsystem is active on -all-
+> > configurations and the way it "prioritises" is completely broken.
+> 
+> Completely broken is probably a little strong.   Before wbt, it was 
+> impossible to do buffered IO without periodically saturating the drive 
+> in unexpected ways.  We've got a lot of data showing it helping, and 
+> it's pretty easy to setup a new A/B experiment to demonstrate it's 
+> usefulness in current kernels.  But that doesn't mean it's perfect.
+
+I'm not arguing that wbt is useless, I'm just saying that it's
+design w.r.t. IO prioritisation is fundamentally broken. Using
+request types to try to infer priority just doesn't work, as I've
+been trying to explain.
+
+> >> framework to define weights etc.  My question is if it's worth trying
+> >> inside of the wbt code, or if we should just let the metadata go
+> >> through.
+> >
+> > As I said, that doesn't  solve the problem. We /want/ critical
+> > journal IO to have higher priority that background metadata
+> > writeback. Just ignoring REQ_META doesn't help us there - it just
+> > moves the priority inversion to blocking on request queue tags.
+> 
+> Does XFS background metadata IO ever get waited on by critical journal 
+> threads?
+
+No. Background writeback (which, with this series, is the only way
+metadata gets written in XFS) is almost entirely non-blocking until
+IO submission occurs. It will force the log if pinned items are
+prevents the log tail from moving (hence blocking on log IO) but
+largely it doesn't block on anything except IO submission.
+
+The only thing that blocks on journal IO is CIL flushing and,
+subsequently, anything that is waiting on a journal flush to
+complete. CIL flushing happens in it's own workqueue, so it doesn't
+block anything directly. The only operations that wait for log IO
+require items to be stable in the journal (e.g. fsync()).
+
+Starting a transactional change may block on metadata writeback. If
+there isn't space in the log for the new transaction, it will kick
+and wait for background metadata writeback to make progress and push
+the tail of the log forwards.  And this may wait on journal IO if
+pinned items need to be flushed to the log before writeback can
+occur.
+
+This is the way we prevent transactions requiring journal IO to
+blocking on metadata writeback to make progress - we don't allow a
+transaction to start until it is guaranteed that it can complete
+without requiring journal IO to flush other metadata to the journal.
+That way there is always space available in the log for all pending
+journal IO to complete with a dependency no metadata writeback
+making progress.
+
+This "block on metadata writeback at transaction start" design means
+data writeback can block on metadata writeback because we do
+allocation transactions in the IO path. Which means data IO can
+block behind metadata IO, which can block behind log IO, and that
+largely defines the IO heirarchy in XFS.
+
+Hence the IO priority order is very clear in XFS - it was designed
+this way because you can't support things like guaranteed rate IO
+storage applications (one of the prime use cases XFS was originally
+designed for) without having a clear model for avoiding priority
+inversions between data, metadata and the journal.
+
+I'm not guessing about any of this - I know how all this is supposed
+to work because I spent years at SGI working with people far smarter
+than me supporting real-time IO applications working along with
+real-time IO schedulers in a real time kernel (i.e.  Irix). I don't
+make this stuff up for fun or to argue, I say stuff because I know
+how it's supposed to work.
+
+And, FWIW, Irix also had a block layer writeback throttling
+mechanism to prevent bulk data writeback from thrashing disks and
+starving higher priority IO. It was also fully IO priority aware -
+this stuff isn't rocket science, and Linux is not the first OS to
+ever implement this sort of functionality. Linux was not my first
+rodeo....
+
+> My understanding is that all of the filesystems do this from 
+> time to time.  Without a way to bump the priority of throttled 
+> background metadata IO, I can't see how to avoid prio inversions without 
+> running background metadata at the same prio as all of the critical 
+> journal IO.
+
+Perhaps you just haven't thought about it enough. :)
+
+> > Core infrastructure needs to work without cgroups being configured
+> > to confine everything in userspace to "safe" bounds, and right now
+> > just running things in the root cgroup doesn't appear to work very
+> > well at all.
+> 
+> I'm not disagreeing with this part, my real point is there isn't a 
+> single answer.  It's possible for swap to be critical to the running of 
+> the box in some workloads, and totally unimportant in others.
+
+Sure, but that only indicates that we need to be able to adjust the
+priority of IO within certain bounds.
+
+The problem is right now is that the default behaviour is pretty
+nasty and core functionality is non-functional. It doesn't matter if
+swap priority is adjustable or not, users should not have to tune
+the kernel to use an esoteric cgroup configuration in order for the
+kernel to function correctly out of the box.
+
+I'm not sure when we lost sight of the fact we need to make the
+default configurations work correctly first, and only then do we
+worry about how tunable somethign is when the default behaviour has
+been proven to be insufficient. Hiding bad behaviour behind custom
+cgroup configuration does nobody any favours.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
