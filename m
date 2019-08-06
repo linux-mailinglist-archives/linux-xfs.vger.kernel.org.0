@@ -2,224 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F10832BD
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 15:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 996BD83444
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 16:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfHFNel (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Aug 2019 09:34:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38829 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfHFNek (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 09:34:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so41540850pfn.5
-        for <linux-xfs@vger.kernel.org>; Tue, 06 Aug 2019 06:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GA14cAOgymb2WrZw9Vx3vMMFeO+xqgxHoN2nsx9JbXc=;
-        b=X1frDArgKqG5gMspvRs8WLKbrRrTjizXAmgYgoRhOB7ngmA3O/oymElj8H9imxXy43
-         1SwdsDSJxhjTa/vkhkSUVXQH+dwb3+RRGAuhC1j0roiKne244jOb/4lVD4WEFktc9igV
-         33CXwSpzcZXouUSvoa5D6EResQjU5Kwj2aO20oxpvdnfLtTCud5U+DdB7Tx0P2hRRgUB
-         xx+i5YP1D9UGP9YM/ce39+I5BLow2rxxWFkKQJIiFjIucWodWcBHO2VVvt9fQP6DZLYJ
-         ncNEAxa4QvTLw9K6GXExByrVTAVF+g3LtwzsNs+RzlYxJ0VSVt99Og3iIy94TNBw/GvH
-         ebaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GA14cAOgymb2WrZw9Vx3vMMFeO+xqgxHoN2nsx9JbXc=;
-        b=nl9dKUY4AMJn080mUhZoQALa2rd3TyKUIKbLPa4iCGmF5WAkQKDpguh7sU+fgSxlvX
-         y5dMkLJbOeR0648oGGO/Gtbdq1h6TOh9jlXo7oeG5XbI3FjFttXTetYRMDv/KPYrsbav
-         sabC7BJNuEaHGQosmf/T6R0BQEkKNj1bJYOXlwuqICZP3KPjFUtUTQLcGmami7xaAtEn
-         wzHvIhoDoG2psVxUUM5CBKhT9z0yhPdjgB5BDQDsVrK9ryEIcCJOgfWb8fSs7iSenWcG
-         9qGDke2Jiwwszrq9kYLyX/MEip4OaTO9ccPaqRGRwqUtWjvUonPan/tXGzXR3esIVY6Y
-         Ynsw==
-X-Gm-Message-State: APjAAAVcu43wffFIF4nFuD8MyIuhBkiBkVFXsteeFzrMIkCkHK3tIn7Z
-        dukNl37vg7/rFLVX1DRt6SCSzwPdQO4xZg==
-X-Google-Smtp-Source: APXvYqwPLtrUix2AS6JbSmkt+mMQvgCF1rivIFyHEnvHV2L5mjfMo5lLLrcB9cv6a5BYTmES6Q/rQQ==
-X-Received: by 2002:a17:90a:7787:: with SMTP id v7mr3279038pjk.143.1565098479161;
-        Tue, 06 Aug 2019 06:34:39 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:5cfb:b4eb:1062:5bea? ([2605:e000:100e:83a1:5cfb:b4eb:1062:5bea])
-        by smtp.gmail.com with ESMTPSA id g2sm143733333pfq.88.2019.08.06.06.34.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 06:34:38 -0700 (PDT)
-Subject: Re: Block device direct read EIO handling broken?
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>
-References: <20190805181524.GE7129@magnolia>
- <66bd785d-7598-5cc2-5e98-447fd128c153@kernel.dk>
- <36973a52-e876-fc09-7a63-2fc16b855f8d@kernel.dk>
- <BYAPR04MB5816246256B1333C048EB0A1E7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <474c560f-5de0-6082-67ac-f7c640d9b346@kernel.dk>
- <BYAPR04MB5816C3B24310C1E18F9E024CE7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <f3f98663-8f92-c933-c7c0-8db6635e6112@kernel.dk>
- <BYAPR04MB581644536C6EAEA36E3B4912E7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB5816C7D04915AF7B656F900BE7DA0@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB5816D1AB6B586FAD664F8D79E7D50@BYAPR04MB5816.namprd04.prod.outlook.com>
- <43435418-9d70-ec33-1f2d-c95fb986979c@kernel.dk>
- <BYAPR04MB5816811245DDC55429D6D146E7D50@BYAPR04MB5816.namprd04.prod.outlook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e8d0653b-fdc5-e04c-641e-24b5cf859f3f@kernel.dk>
-Date:   Tue, 6 Aug 2019 06:34:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731807AbfHFOsX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Aug 2019 10:48:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53330 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730289AbfHFOsX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 10:48:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76EjVm7030504;
+        Tue, 6 Aug 2019 14:48:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=wyNpU9d1Jq9VYKzI7mIJU4vjLwl+NJ2F9Pqgwn7ZZL4=;
+ b=0Vb4B+qe3IEiY3zgUeRDvej52vMsgkbtDlqzSg2wrT+rqNc8OXQ1shhpu3LcL6wuZ7yg
+ 9FU7b/0eBO6vD+GQz4gFDusqnmxarAEwttRSuIf0LxnQSs5CkQcd/bx8pToOx+is+/yP
+ ukgDFkNjttnkaa24z/6h0O9hqdvUAjG4SFKVOlPzS7L6nUhOhO5kr9J8Sz1HnG//QDoW
+ TZm7Nr2xDLyrvh+eh9vozou3qSlXoyylbFN2o/kRi0FdpXV1GsoKvPIzH1z4aHULxGqI
+ WLusdOBHPLszG2dYC+zDnNTDfFGfqfG0IcshdEh5bgjktc623tumfhiaGY6ji1Lvil4O tQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u527ppk9d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 14:48:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76EjAqL127917;
+        Tue, 6 Aug 2019 14:48:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u7666n5w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 14:48:08 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x76Em43q027066;
+        Tue, 6 Aug 2019 14:48:04 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 06 Aug 2019 07:48:03 -0700
+Date:   Tue, 6 Aug 2019 07:48:00 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        adilger@dilger.ca, jaegeuk@kernel.org, miklos@szeredi.hu,
+        rpeterso@redhat.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/9] fibmap: Use bmap instead of ->bmap method in
+ ioctl_fibmap
+Message-ID: <20190806144800.GN7138@magnolia>
+References: <20190731141245.7230-1-cmaiolino@redhat.com>
+ <20190731141245.7230-5-cmaiolino@redhat.com>
+ <20190731231217.GV1561054@magnolia>
+ <20190802091937.kwutqtwt64q5hzkz@pegasus.maiolino.io>
+ <20190802151400.GG7138@magnolia>
+ <20190805102729.ooda6sg65j65ojd4@pegasus.maiolino.io>
+ <20190805151258.GD7129@magnolia>
+ <20190806053840.GH13409@lst.de>
+ <20190806120723.eb72ykmukgjejiku@pegasus.maiolino.io>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB5816811245DDC55429D6D146E7D50@BYAPR04MB5816.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806120723.eb72ykmukgjejiku@pegasus.maiolino.io>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908060148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908060148
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/6/19 12:05 AM, Damien Le Moal wrote:
-> On 2019/08/06 13:09, Jens Axboe wrote:
->> On 8/5/19 5:05 PM, Damien Le Moal wrote:
->>> On 2019/08/06 7:05, Damien Le Moal wrote:
->>>> On 2019/08/06 6:59, Damien Le Moal wrote:
->>>>> On 2019/08/06 6:28, Jens Axboe wrote:
->>>>>> On 8/5/19 2:27 PM, Damien Le Moal wrote:
->>>>>>> On 2019/08/06 6:26, Jens Axboe wrote:
->>>>>>>>> In any case, looking again at this code, it looks like there is a
->>>>>>>>> problem with dio->size being incremented early, even for fragments
->>>>>>>>> that get BLK_QC_T_EAGAIN, because dio->size is being used in
->>>>>>>>> blkdev_bio_end_io(). So an incorrect size can be reported to user
->>>>>>>>> space in that case on completion (e.g. large asynchronous no-wait dio
->>>>>>>>> that cannot be issued in one go).
->>>>>>>>>
->>>>>>>>> So maybe something like this ? (completely untested)
->>>>>>>>
->>>>>>>> I think that looks pretty good, I like not double accounting with
->>>>>>>> this_size and dio->size, and we retain the old style ordering for the
->>>>>>>> ret value.
->>>>>>>
->>>>>>> Do you want a proper patch with real testing backup ? I can send that
->>>>>>> later today.
->>>>>>
->>>>>> Yeah that'd be great, I like your approach better.
->>>>>>
->>>>>
->>>>> Looking again, I think this is not it yet: dio->size is being referenced after
->>>>> submit_bio(), so blkdev_bio_end_io() may see the old value if the bio completes
->>>>> before dio->size increment. So the use-after-free is still there. And since
->>>>> blkdev_bio_end_io() processes completion to user space only when dio->ref
->>>>> becomes 0, adding an atomic_inc/dec(&dio->ref) over the loop would not help and
->>>>> does not cover the single BIO case. Any idea how to address this one ?
->>>>>
->>>>
->>>> May be add a bio_get/put() over the 2 places that do submit_bio() would work,
->>>> for all cases (single/multi BIO, sync & async). E.g.:
->>>>
->>>> +                       bio_get(bio);
->>>>                           qc = submit_bio(bio);
->>>>                           if (qc == BLK_QC_T_EAGAIN) {
->>>>                                   if (!dio->size)
->>>>                                           ret = -EAGAIN;
->>>> +                               bio_put(bio);
->>>>                                   goto error;
->>>>                           }
->>>>                           dio->size += bio_size;
->>>> +                       bio_put(bio);
->>>>
->>>> Thoughts ?
->>>>
->>>
->>> That does not work since the reference to dio->size in
->>> blkdev_bio_end_io() depends on atomic_dec_and_test(&dio->ref) which
->>> counts the BIO fragments for the dio (+1 for async multi-bio case). So
->>> completion of the last bio can still reference the old value of
->>> dio->size.
->>>
->>> Adding a bio_get/put() on dio->bio ensures that dio stays around, but
->>> does not prevent the use of the wrong dio->size. Adding an additional
->>> atomic_inc/dec(&dio->ref) would prevent that, but we would need to
->>> handle dio completion at the end of __blkdev_direct_IO() if all BIO
->>> fragments already completed at that point. That is a lot more plumbing
->>> needed, relying completely on dio->ref for all cases, thus removing
->>> the dio->multi_bio management.
->>>
->>> Something like this:
->>
->> Don't like this, as it adds unnecessary atomics for the sync case.
->> What's wrong with just adjusting dio->size if we get BLK_QC_T_EAGAIN?
->> It's safe to do so, since we're doing the final put later. We just can't
->> do it for the normal case of submit_bio() succeeding. Kill the new 'ret'
->> usage and return to what we had as well, it's more readable too imho.
->>
->> Totally untested...
->>
->> diff --git a/fs/block_dev.c b/fs/block_dev.c
->> index a6f7c892cb4a..131e2e0582a6 100644
->> --- a/fs/block_dev.c
->> +++ b/fs/block_dev.c
->> @@ -349,7 +349,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
->>   	loff_t pos = iocb->ki_pos;
->>   	blk_qc_t qc = BLK_QC_T_NONE;
->>   	gfp_t gfp;
->> -	ssize_t ret;
->> +	int ret;
->>   
->>   	if ((pos | iov_iter_alignment(iter)) &
->>   	    (bdev_logical_block_size(bdev) - 1))
->> @@ -386,8 +386,6 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
->>   
->>   	ret = 0;
->>   	for (;;) {
->> -		int err;
->> -
->>   		bio_set_dev(bio, bdev);
->>   		bio->bi_iter.bi_sector = pos >> 9;
->>   		bio->bi_write_hint = iocb->ki_hint;
->> @@ -395,10 +393,8 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
->>   		bio->bi_end_io = blkdev_bio_end_io;
->>   		bio->bi_ioprio = iocb->ki_ioprio;
->>   
->> -		err = bio_iov_iter_get_pages(bio, iter);
->> -		if (unlikely(err)) {
->> -			if (!ret)
->> -				ret = err;
->> +		ret = bio_iov_iter_get_pages(bio, iter);
->> +		if (unlikely(ret)) {
->>   			bio->bi_status = BLK_STS_IOERR;
->>   			bio_endio(bio);
->>   			break;
->> @@ -421,7 +417,6 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
->>   		if (nowait)
->>   			bio->bi_opf |= (REQ_NOWAIT | REQ_NOWAIT_INLINE);
->>   
->> -		dio->size += bio->bi_iter.bi_size;
->>   		pos += bio->bi_iter.bi_size;
->>   
->>   		nr_pages = iov_iter_npages(iter, BIO_MAX_PAGES);
->> @@ -433,13 +428,13 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
->>   				polled = true;
->>   			}
->>   
->> +			dio->size += bio->bi_iter.bi_size;
->>   			qc = submit_bio(bio);
->>   			if (qc == BLK_QC_T_EAGAIN) {
->> -				if (!ret)
->> -					ret = -EAGAIN;
->> +				dio->size -= bio->bi_iter.bi_size;
+On Tue, Aug 06, 2019 at 02:07:24PM +0200, Carlos Maiolino wrote:
+> On Tue, Aug 06, 2019 at 07:38:40AM +0200, Christoph Hellwig wrote:
+> > On Mon, Aug 05, 2019 at 08:12:58AM -0700, Darrick J. Wong wrote:
+> > > > returned. And IIRC, iomap is the only interface now that cares about issuing a
+> > > > warning.
+> > > >
+> > > > I think the *best* we could do here, is to make the new bmap() to issue the same
+> > > > kind of WARN() iomap does, but we can't really change the end result.
+> > > 
+> > > I'd rather we break legacy code than corrupt filesystems.
+> > 
 > 
-> ref after free of bio here. Easy to fix though. Also, with this, the
-> bio_endio() call within submit_bio() for the EAGAIN failure will see a
-> dio->size too large, including this failed bio. So this does not work.
+> Yes, I have the same feeling, but this patchset does not have the goal to fix
+> the broken api.
+> 
+> > This particular patch should keep existing behavior as is, as the intent
+> > is to not change functionality.  Throwing in another patch to have saner
+> > error behavior now that we have a saner in-kernel interface that cleary
+> > documents what it is breaking and why on the other hand sounds like a
+> > very good idea.
+> 
+> I totally agree here, and to be honest, I think such change should be in a
+> different patchset rather than a new patch in this series. I can do it for sure,
+> but this discussion IMHO should be done not only here in linux-fsdevel, but also
+> in linux-api, which well, I don't think cc'ing this whole patchset there will do
+> any good other than keep the change discussion more complicated than it should
+> be. I'd rather finish the design and implementation of this patchset, and I'll
+> follow-up it, once it's all set, with a new patch to change the truncation
+> behavior, it will make the discussion way easier than mixing up subjects. What
+> you guys think?
 
-There's no ref after free here - if BLK_QC_T_EAGAIN is being returned,
-the bio has not been freed. There's no calling bio_endio() for that
-case.
+I probably would've fixed the truncation behavior in the old code and
+based the fiemap-fibmap conversion on that so that anyone who wants to
+backport the behavior change to an old kernel has an easier time of it.
 
-For dio->size, it doesn't matter. If we get the error here, bio_endio()
-was never called. And if the submission is successful, we use dio->size
-for the success case.
+But afterwards probably works just as well since I don't feel like tying
+ourselves in more knots over an old interface. ;)
 
--- 
-Jens Axboe
+--D
 
+> Cheers
+> 
+> 
+> -- 
+> Carlos
