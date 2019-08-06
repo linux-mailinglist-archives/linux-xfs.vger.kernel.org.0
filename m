@@ -2,308 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1644282E4E
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 11:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8F282EA5
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Aug 2019 11:24:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732197AbfHFJEe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Aug 2019 05:04:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33264 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732142AbfHFJEd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 05:04:33 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so87200172wru.0;
-        Tue, 06 Aug 2019 02:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
-        b=P4lt3gZl5d4stVZdifTLoSbiUd94mDr/WkAcxspb6s898D/FUQg3E8jApiZiMaT+Fd
-         lUi73kVFVrX1qlU7JYjE2WSvxKEdiBwApQFvL30GCd2VkdoO2RfRRapfUWKvn0SUf28Y
-         osKmfcfx4RqWftYsFh42U9hCkYTcqL2KpxWJf1EP4TSmrvJ0rwt4R9IfHeTag0B3XBM2
-         Y9+86bpnoJJCNOue+pYAIqIJKQFDXi/iJVzpRYULAMRtIelDNcToeFiFhiedmGmxEiGA
-         D8eFl3jvMbShz87HhmR65J+xRZXSHe2uQPv6PaW1nM2/AM1MiFMeHl42n2ksyiUA4E5M
-         q5uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
-        b=pPgus9/Jz6CEJU/rZX93UAKc8mEYwwqPDzESznIQReq061eGbfx7WHMOfGjjwJg+jk
-         CeWXawa2SPVBfk4y2RB1JvEqdeZF3cw+81eL7pg6eEA4qnauSTsIUm8H3gaC6I0bTbo3
-         McR525DUZMFiPOSZm7reFDX37tknVGa6OPNYEcJdxfJFjGsNEbt1O+pBcdVVXKcAkp+B
-         NziXrCM9xuVacONRWDcjbXjDAbS6K9otA5MpYpAiBBh6s/NSQlqvw0AYkdDNLc1JS10+
-         +pr9TDOHy27MVMBUZk1sW8BwRkSUIfGjnBoPvQ6WZQ8tFlQf7P8gbzwhqeU7eaH6rxDv
-         fKvA==
-X-Gm-Message-State: APjAAAVpgxyhy9kQF28dKg1R+jgl5qWbTIWcFFhbTFZZ0ZZVzM9bWwXS
-        SxaRU+Vhx1irH1QLdMILzverCgv+
-X-Google-Smtp-Source: APXvYqyuuGYtf5nUzBrBw/k1Y88LZatbQ9O7NLyEKbBesu7E3A0jQur31fl20zr3GW9DLTKDibGeAA==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr3445196wrl.134.1565082269757;
-        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
-Received: from localhost ([197.211.57.137])
-        by smtp.gmail.com with ESMTPSA id c7sm79921956wro.70.2019.08.06.02.04.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 10:03:23 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "supporter:XFS FILESYSTEM" <linux-xfs@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Documentation: fs: Convert xfs-delayed-logging-design.txt to
- ReSt
-Message-ID: <20190806090323.GA16095@localhost>
+        id S1732367AbfHFJY3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Aug 2019 05:24:29 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:42515 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732361AbfHFJY2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 05:24:28 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 9A2862AD0FE;
+        Tue,  6 Aug 2019 19:24:25 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1huvgc-0000Si-KG; Tue, 06 Aug 2019 19:23:18 +1000
+Date:   Tue, 6 Aug 2019 19:23:18 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Kinky Nekoboi <kinky_nekoboi@nekoboi.moe>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: XFS segementation fault with new linux 4.19.63
+Message-ID: <20190806092318.GE7777@dread.disaster.area>
+References: <e0ca189e-2f96-6599-40ce-a4fc8866d8d1@nekoboi.moe>
+ <20190806070806.GA13112@infradead.org>
+ <cbe57554-ed5f-6163-d48c-9069aa2dcc7b@nekoboi.moe>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <cbe57554-ed5f-6163-d48c-9069aa2dcc7b@nekoboi.moe>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=JuDxSlhT3OO6blO4plAA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Convert xfs-delayed-logging-design.txt to ReST and fix broken references.
-The enumerations at "Lifecycle Changes" breaks because of lines begining with
-"<", treat as diagrams.
+On Tue, Aug 06, 2019 at 09:10:57AM +0200, Kinky Nekoboi wrote:
+> Addional info:
+> 
+> this only occurs if kernel is compiled with:
+> 
+> CONFIG_XFS_DEBUG=y
+> 
+> running 4.19.64 without xfs debugging works fine
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
- Documentation/filesystems/index.rst           |  1 +
- ...ign.txt => xfs-delayed-logging-design.rst} | 69 +++++++++++--------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 44 insertions(+), 28 deletions(-)
- rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (96%)
+I'm guessing 4.19 doesn't have commit c08768977b9a ("xfs: finobt AG
+reserves don't consider last AG can be a runt")....
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2de2fe2ab078..0b94ff710b67 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -32,3 +32,4 @@ filesystem implementations.
- 
-    journalling
-    fscrypt
-+   xfs-delayed-logging-design
-diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.rst
-similarity index 96%
-rename from Documentation/filesystems/xfs-delayed-logging-design.txt
-rename to Documentation/filesystems/xfs-delayed-logging-design.rst
-index 9a6dd289b17b..a85ca00d4221 100644
---- a/Documentation/filesystems/xfs-delayed-logging-design.txt
-+++ b/Documentation/filesystems/xfs-delayed-logging-design.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
- XFS Delayed Logging Design
----------------------------
-+==========================
- 
- Introduction to Re-logging in XFS
-----------------------------------
-+=================================
- 
- XFS logging is a combination of logical and physical logging. Some objects,
- such as inodes and dquots, are logged in logical format where the details
-@@ -27,14 +30,18 @@ written to disk after change D, we would see in the log the following series
- of transactions, their contents and the log sequence number (LSN) of the
- transaction:
- 
-+        ============           =========        ==============
- 	Transaction		Contents	LSN
-+        ============           =========        ==============
- 	   A			   A		   X
- 	   B			  A+B		  X+n
- 	   C			 A+B+C		 X+n+m
- 	   D			A+B+C+D		X+n+m+o
- 	    <object written to disk>
--	   E			   E		   Y (> X+n+m+o)
-+        ------------------------------------------------------
-+	   E			   E		Y (> X+n+m+o)
- 	   F			  E+F		  Y+p
-+        ============           =========        ==============
- 
- In other words, each time an object is relogged, the new transaction contains
- the aggregation of all the previous changes currently held only in the log.
-@@ -85,7 +92,7 @@ IO permanently. Hence the XFS journalling subsystem can be considered to be IO
- bound.
- 
- Delayed Logging: Concepts
---------------------------
-+=========================
- 
- The key thing to note about the asynchronous logging combined with the
- relogging technique XFS uses is that we can be relogging changed objects
-@@ -154,9 +161,10 @@ The fundamental requirements for delayed logging in XFS are simple:
- 	6. No performance regressions for synchronous transaction workloads.
- 
- Delayed Logging: Design
-------------------------
-+=======================
- 
- Storing Changes
-+---------------
- 
- The problem with accumulating changes at a logical level (i.e. just using the
- existing log item dirty region tracking) is that when it comes to writing the
-@@ -194,30 +202,30 @@ asynchronous transactions to the log. The differences between the existing
- formatting method and the delayed logging formatting can be seen in the
- diagram below.
- 
--Current format log vector:
-+Current format log vector::
- 
--Object    +---------------------------------------------+
--Vector 1      +----+
--Vector 2                    +----+
--Vector 3                                   +----------+
-+        Object    +---------------------------------------------+
-+        Vector 1      +----+
-+        Vector 2                    +----+
-+        Vector 3                                   +----------+
- 
--After formatting:
-+After formatting::
- 
--Log Buffer    +-V1-+-V2-+----V3----+
-+        Log Buffer    +-V1-+-V2-+----V3----+
- 
--Delayed logging vector:
-+Delayed logging vector::
- 
--Object    +---------------------------------------------+
--Vector 1      +----+
--Vector 2                    +----+
--Vector 3                                   +----------+
-+        Object    +---------------------------------------------+
-+        Vector 1      +----+
-+        Vector 2                    +----+
-+        Vector 3                                   +----------+
- 
--After formatting:
-+After formatting::
- 
--Memory Buffer +-V1-+-V2-+----V3----+
--Vector 1      +----+
--Vector 2           +----+
--Vector 3                +----------+
-+        Memory Buffer +-V1-+-V2-+----V3----+
-+        Vector 1      +----+
-+        Vector 2           +----+
-+        Vector 3                +----------+
- 
- The memory buffer and associated vector need to be passed as a single object,
- but still need to be associated with the parent object so if the object is
-@@ -242,6 +250,7 @@ relogged in memory.
- 
- 
- Tracking Changes
-+----------------
- 
- Now that we can record transactional changes in memory in a form that allows
- them to be used without limitations, we need to be able to track and accumulate
-@@ -278,6 +287,7 @@ done for convenience/sanity of the developers.
- 
- 
- Delayed Logging: Checkpoints
-+============================
- 
- When we have a log synchronisation event, commonly known as a "log force",
- all the items in the CIL must be written into the log via the log buffers.
-@@ -341,7 +351,7 @@ Hence log vectors need to be able to be chained together to allow them to be
- detached from the log items. That is, when the CIL is flushed the memory
- buffer and log vector attached to each log item needs to be attached to the
- checkpoint context so that the log item can be released. In diagrammatic form,
--the CIL would look like this before the flush:
-+the CIL would look like this before the flush::
- 
- 	CIL Head
- 	   |
-@@ -362,7 +372,7 @@ the CIL would look like this before the flush:
- 					-> vector array
- 
- And after the flush the CIL head is empty, and the checkpoint context log
--vector list would look like:
-+vector list would look like::
- 
- 	Checkpoint Context
- 	   |
-@@ -411,6 +421,7 @@ compare" situation that can be done after a working and reviewed implementation
- is in the dev tree....
- 
- Delayed Logging: Checkpoint Sequencing
-+======================================
- 
- One of the key aspects of the XFS transaction subsystem is that it tags
- committed transactions with the log sequence number of the transaction commit.
-@@ -474,6 +485,7 @@ force the log at the LSN of that transaction) and so the higher level code
- behaves the same regardless of whether delayed logging is being used or not.
- 
- Delayed Logging: Checkpoint Log Space Accounting
-+================================================
- 
- The big issue for a checkpoint transaction is the log space reservation for the
- transaction. We don't know how big a checkpoint transaction is going to be
-@@ -491,7 +503,7 @@ the size of the transaction and the number of regions being logged (the number
- of log vectors in the transaction).
- 
- An example of the differences would be logging directory changes versus logging
--inode changes. If you modify lots of inode cores (e.g. chmod -R g+w *), then
-+inode changes. If you modify lots of inode cores e.g. ``$ chmod -R g+w *``, then
- there are lots of transactions that only contain an inode core and an inode log
- format structure. That is, two vectors totaling roughly 150 bytes. If we modify
- 10,000 inodes, we have about 1.5MB of metadata to write in 20,000 vectors. Each
-@@ -565,6 +577,7 @@ which is once every 30s.
- 
- 
- Delayed Logging: Log Item Pinning
-+=================================
- 
- Currently log items are pinned during transaction commit while the items are
- still locked. This happens just after the items are formatted, though it could
-@@ -605,6 +618,7 @@ object, we have a race with CIL being flushed between the check and the pin
- lock to guarantee that we pin the items correctly.
- 
- Delayed Logging: Concurrent Scalability
-+=======================================
- 
- A fundamental requirement for the CIL is that accesses through transaction
- commits must scale to many concurrent commits. The current transaction commit
-@@ -683,8 +697,9 @@ woken by the wrong event.
- 
- 
- Lifecycle Changes
-+=================
- 
--The existing log item life cycle is as follows:
-+The existing log item life cycle is as follows::
- 
- 	1. Transaction allocate
- 	2. Transaction reserve
-@@ -729,7 +744,7 @@ at the same time. If the log item is in the AIL or between steps 6 and 7
- and steps 1-6 are re-entered, then the item is relogged. Only when steps 8-9
- are entered and completed is the object considered clean.
- 
--With delayed logging, there are new steps inserted into the life cycle:
-+With delayed logging, there are new steps inserted into the life cycle::
- 
- 	1. Transaction allocate
- 	2. Transaction reserve
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c49b48cfd69..acbce11c3d49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17664,7 +17664,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/ABI/testing/sysfs-fs-xfs
--F:	Documentation/filesystems/xfs-delayed-logging-design.txt
-+F:	Documentation/filesystems/xfs-delayed-logging-design.rst
- F:	Documentation/filesystems/xfs-self-describing-metadata.txt
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
+Cheers,
+
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
