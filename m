@@ -2,361 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76A24852B1
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 20:09:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7C0085459
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 22:13:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbfHGSJT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Aug 2019 14:09:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46020 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388029AbfHGSJT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:09:19 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42FE62F366C;
-        Wed,  7 Aug 2019 18:09:18 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2BD010016E8;
-        Wed,  7 Aug 2019 18:09:17 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 14:09:15 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 20/24] xfs: use AIL pushing for inode reclaim IO
-Message-ID: <20190807180915.GA20425@bfoster>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-21-david@fromorbit.com>
+        id S2389189AbfHGUND (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 7 Aug 2019 16:13:03 -0400
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:38080 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388370AbfHGUND (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 16:13:03 -0400
+Received: by mail-wr1-f54.google.com with SMTP id g17so92594932wrr.5
+        for <linux-xfs@vger.kernel.org>; Wed, 07 Aug 2019 13:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=0H3i0a540qNHoh2VRqtSQ8rS3ya1fl1yIT7Z8lDSw7U=;
+        b=FMALt4fzG0lOiBH7S7Psl1OW+k3mB9WAiLup1PeU8vYqZVwJ5z59QV0wJdge86UM3k
+         ba0zyFAN0X0lKdfMZqcG+lVwa5+09nfZ0tghwkRTUdBR6DcZ+faP0LtclYBu2sBO0LzF
+         13LlLi1osS4eGDiH5z6FisDx+zJm5M3Hwd+bTnQ5viDssVVBmwgU4tsBBOhq0qtdP5ya
+         fQ8zC2qwFLQI+/BPtPz7dwDwc6g6cpbdmf+C1M6R0HqPJ+YCsQ150I88staOXsuyXqey
+         bc+bMx4Ex6Mvew2cC0dNcg66MtAms7gAZkYurQnIAZuH7o2jDMsnffS9N1lUJ+Hr7OaY
+         2vBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=0H3i0a540qNHoh2VRqtSQ8rS3ya1fl1yIT7Z8lDSw7U=;
+        b=BxxQtF6QmkhQIUVpbEwUYNZO4gPa9MZBRKGuhQGOA/OScoaU9riJ4EkL+e58N3+DSG
+         Ty+JwLTr4vsqQX2buYlqUTKStYIZ/GUDnVk1aGH9OkoBG7qTzdfZRt82l7KlM3H8+FAD
+         P0jdw9BEEoboD1siPVPVoBHrAro7D2JM6+UJJq55HKqHaimnHecZHN2YVu6XvHVn4IpR
+         yDC2X9KJ8czWs6Ju7e/oJGBw9ySH6doNiuP7up/ygm13MAIwlF7xpbapXv/FsyYXZoyu
+         f/Qaf2Gao9Sastm4hqUnbKzJ/0Ax6EUNCWde+iOumlIP+/Bdj2QYpb+53tCr4YH4PDaU
+         eRvw==
+X-Gm-Message-State: APjAAAWwZ6jp51nJ4uxA2O5p5FXNlLSiAYLxkepCPrPDQzt4J3emEqri
+        umHTvTp0Nnmtzzj0DCjTjbmIwP/BMKRxi/xyk0M=
+X-Google-Smtp-Source: APXvYqwop64o8qhAeYKORfUbjKEUJ0eQC1ZZ5NQXO3momQ3TiQQhwAWfZ9p3KkUJUHyWZ2jf80XMpzdAKh+7KK8B10w=
+X-Received: by 2002:adf:de10:: with SMTP id b16mr12118153wrm.296.1565208781296;
+ Wed, 07 Aug 2019 13:13:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801021752.4986-21-david@fromorbit.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 07 Aug 2019 18:09:18 +0000 (UTC)
+Received: by 2002:adf:e446:0:0:0:0:0 with HTTP; Wed, 7 Aug 2019 13:13:00 -0700 (PDT)
+Reply-To: crhrpm@gmail.com
+From:   Richard Crump <rtye1135@gmail.com>
+Date:   Wed, 7 Aug 2019 21:13:00 +0100
+Message-ID: <CAKJTGXKq4rg2YKv4XcUmZo=V2+9SyLSuSdC32XUHOUPUord4mg@mail.gmail.com>
+Subject: ATTN: HOPE YOU ARE NOT DEAD
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:17:48PM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Inode reclaim currently issues it's own inode IO when it comes
-> across dirty inodes. This is used to throttle direct reclaim down to
-> the rate at which we can reclaim dirty inodes. Failure to throttle
-> in this manner results in the OOM killer being trivial to trigger
-> even when there is lots of free memory available.
-> 
-> However, having direct reclaimers issue IO causes an amount of
-> IO thrashing to occur. We can have up to the number of AGs in the
-> filesystem concurrently issuing IO, plus the AIL pushing thread as
-> well. This means we can many competing sources of IO and they all
-> end up thrashing and competing for the request slots in the block
-> device.
-> 
-> Similar to dirty page throttling and the BDI flusher thread, we can
-> use the AIL pushing thread the sole place we issue inode writeback
-> from and everything else waits for it to make progress. To do this,
-> reclaim will skip over dirty inodes, but in doing so will record the
-> lowest LSN of all the dirty inodes it skips. It will then push the
-> AIL to this LSN and wait for it to complete that work.
-> 
-> In doing so, we block direct reclaim on the IO of at least one IO,
-> thereby providing some level of throttling for when we encounter
-> dirty inodes. However we gain the ability to scan and reclaim
-> clean inodes in a non-blocking fashion. This allows us to
-> remove all the per-ag reclaim locking that avoids excessive direct
-> reclaim, as repeated concurrent direct reclaim will hit the same
-> dirty inodes on block waiting on the same IO to complete.
-> 
+Greetings,
 
-The last part of the above sentence sounds borked..
+Your Instant Payment.
 
-> Hence direct reclaim will be throttled directly by the rate at which
-> dirty inodes are cleaned by AIL pushing, rather than by delays
-> caused by competing IO submissions. This allows us to remove all the
-> locking that limits direct reclaim concurrency and greatly
-> simplifies the inode reclaim code now that it just skips dirty
-> inodes.
-> 
-> Note: this patch by itself isn't completely able to throttle direct
-> reclaim sufficiently to prevent OOM killer madness. We can't do that
-> until we change the way we index reclaimable inodes in the next
-> patch and can feed back state to the mm core sanely.  However, we
-> can't change the way we index reclaimable inodes until we have
-> IO-less non-blocking reclaim for both direct reclaim and kswapd
-> reclaim.  Catch-22...
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_icache.c    | 208 +++++++++++++++++------------------------
->  fs/xfs/xfs_mount.c     |   4 -
->  fs/xfs/xfs_mount.h     |   1 -
->  fs/xfs/xfs_trans_ail.c |   4 +-
->  4 files changed, 90 insertions(+), 127 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 0bd4420a7e16..4c4c5bc12147 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -22,6 +22,7 @@
->  #include "xfs_dquot_item.h"
->  #include "xfs_dquot.h"
->  #include "xfs_reflink.h"
-> +#include "xfs_log.h"
->  
->  #include <linux/iversion.h>
->  
-> @@ -967,28 +968,42 @@ xfs_inode_ag_iterator_tag(
->  }
->  
->  /*
-> - * Grab the inode for reclaim exclusively.
-> - * Return 0 if we grabbed it, non-zero otherwise.
-> + * Grab the inode for reclaim.
-> + *
-> + * Return false if we aren't going to reclaim it, true if it is a reclaim
-> + * candidate.
-> + *
-> + * If the inode is clean or unreclaimable, return NULLCOMMITLSN to tell the
-> + * caller it does not require flushing. Otherwise return the log item lsn of the
-> + * inode so the caller can determine it's inode flush target.  If we get the
-> + * clean/dirty state wrong then it will be sorted in xfs_reclaim_inode() once we
-> + * have locks held.
->   */
-> -STATIC int
-> +STATIC bool
->  xfs_reclaim_inode_grab(
->  	struct xfs_inode	*ip,
-> -	int			flags)
-> +	int			flags,
-> +	xfs_lsn_t		*lsn)
->  {
->  	ASSERT(rcu_read_lock_held());
-> +	*lsn = 0;
+First let me introduce myself, I am Mr.Richard Crump Head of Committee
+on Federal Reserve Bank Affairs (=E2=80=9CPaymentsCo=E2=80=9D) and the Clea=
+ring House
+Interbank Payments System (CHIPS). We have been authorized by the
+Federal Reserve System to transfer your unblocked and unpaid sum of
+$25million through the New York Clearing House; The Federal Reserve
+Bank's FedWire Payments System (FPS).
 
-The comment above says we return NULLCOMMITLSN. Given the rest of the
-code, I'm assuming we should just fix up the comment.
+The New York Clearing House operates Real-Time Payments (RTP) clearing
+and processing of electronic transactions in batches also settling $2
+trillion daily through the Clearing House Interbank Payments System
+(CHIPS). Basically, we want to notify you that your over-due sum of
+$25million that has been withheld by the U.S Treasury's Office of
+Foreign Assets Control (OFAC) is finally unblocked and approved for
+immediate wire transfer into your receiving bank account by The
+Federal Reserve System.
 
->  
->  	/* quick check for stale RCU freed inode */
->  	if (!ip->i_ino)
-> -		return 1;
-> +		return false;
->  
->  	/*
-> -	 * If we are asked for non-blocking operation, do unlocked checks to
-> -	 * see if the inode already is being flushed or in reclaim to avoid
-> -	 * lock traffic.
-> +	 * Do unlocked checks to see if the inode already is being flushed or in
-> +	 * reclaim to avoid lock traffic. If the inode is not clean, return the
-> +	 * it's position in the AIL for the caller to push to.
->  	 */
-> -	if ((flags & SYNC_TRYLOCK) &&
-> -	    __xfs_iflags_test(ip, XFS_IFLOCK | XFS_IRECLAIM))
-> -		return 1;
-> +	if (!xfs_inode_clean(ip)) {
-> +		*lsn = ip->i_itemp->ili_item.li_lsn;
-> +		return false;
-> +	}
-> +
-> +	if (__xfs_iflags_test(ip, XFS_IFLOCK | XFS_IRECLAIM))
-> +		return false;
->  
->  	/*
->  	 * The radix tree lock here protects a thread in xfs_iget from racing
-...
-> @@ -1050,92 +1065,67 @@ xfs_reclaim_inode_grab(
->   *	clean		=> reclaim
->   *	dirty, async	=> requeue
->   *	dirty, sync	=> flush, wait and reclaim
-> + *
-> + * Returns true if the inode was reclaimed, false otherwise.
->   */
-> -STATIC int
-> +STATIC bool
->  xfs_reclaim_inode(
->  	struct xfs_inode	*ip,
->  	struct xfs_perag	*pag,
-> -	int			sync_mode)
-> +	xfs_lsn_t		*lsn)
->  {
-> -	struct xfs_buf		*bp = NULL;
-> -	xfs_ino_t		ino = ip->i_ino; /* for radix_tree_delete */
-> -	int			error;
-> +	xfs_ino_t		ino;
-> +
-> +	*lsn = 0;
->  
-> -restart:
-> -	error = 0;
->  	/*
->  	 * Don't try to flush the inode if another inode in this cluster has
->  	 * already flushed it after we did the initial checks in
->  	 * xfs_reclaim_inode_grab().
->  	 */
-> -	if (sync_mode & SYNC_TRYLOCK) {
-> -		if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
-> -			goto out;
-> -		if (!xfs_iflock_nowait(ip))
-> -			goto out_unlock;
-> -	} else {
-> -		xfs_ilock(ip, XFS_ILOCK_EXCL);
-> -		if (!xfs_iflock_nowait(ip)) {
-> -			if (!(sync_mode & SYNC_WAIT))
-> -				goto out_unlock;
-> -			xfs_iflock(ip);
-> -		}
-> -	}
-> +	if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
-> +		goto out;
-> +	if (!xfs_iflock_nowait(ip))
-> +		goto out_unlock;
->  
+After we reviewed the issued payment mandate and the certified payment
+instrument released by OFAC containing your personal details, i
+noticed a different bank details in favor of your financial
+representative and partner, Mr Lewis Munroe. So we require your
+confirmation to proceed with the provided account before transfer of
+your funds is initiated via S.W.I.F.T MT2O2 COV in favor of your
+representative Mr Lewis Munroe.
 
-Do we even need the flush lock here any more if we're never going to
-flush from this context? The shutdown case just below notwithstanding
-(which I'm also wondering if we should just drop given we abort from
-xfs_iflush() on shutdown), the pin count is an atomic and the dirty
-state changes under ilock.
+Confirm details below:
 
-Maybe I'm missing something else, but the reason I ask is that the
-increased flush lock contention in codepaths that don't actually flush
-once it's acquired gives me a bit of concern that we could reduce
-effectiveness of the one task that actually does (xfsaild).
+Bank Name: U.S Bank Trust, N.A, MN;
+Swift Code: USBKUS4TCOR;
+Routing #: 121122676;
+Account Number: 153459581457;
+Account Beneficiary Name: ARCS REALTOR & PROPERTY LLC
 
-> +	/* If we are in shutdown, we don't care about blocking. */
->  	if (XFS_FORCED_SHUTDOWN(ip->i_mount)) {
->  		xfs_iunpin_wait(ip);
->  		/* xfs_iflush_abort() drops the flush lock */
->  		xfs_iflush_abort(ip, false);
->  		goto reclaim;
->  	}
-> -	if (xfs_ipincount(ip)) {
-> -		if (!(sync_mode & SYNC_WAIT))
-> -			goto out_ifunlock;
-> -		xfs_iunpin_wait(ip);
-> -	}
-> -	if (xfs_iflags_test(ip, XFS_ISTALE) || xfs_inode_clean(ip)) {
-> -		xfs_ifunlock(ip);
-> -		goto reclaim;
-> -	}
->  
->  	/*
-> -	 * Never flush out dirty data during non-blocking reclaim, as it would
-> -	 * just contend with AIL pushing trying to do the same job.
-> +	 * If it is pinned, we only want to flush this if there's nothing else
-> +	 * to be flushed as it requires a log force. Hence we essentially set
-> +	 * the LSN to flush the entire AIL which will end up triggering a log
-> +	 * force to unpin this inode, but that will only happen if there are not
-> +	 * other inodes in the scan that only need writeback.
->  	 */
-> -	if (!(sync_mode & SYNC_WAIT))
-> +	if (xfs_ipincount(ip)) {
-> +		*lsn = ip->i_itemp->ili_last_lsn;
+Upon your confirmation, we can completely transfer $25million to the
+U.S. Bank Trust, N.A account as above within the next 72-hours and
+copy of the MT202 COV Payment Slip will be sent by fax to the
+receiving beneficiary bank, Mr. Lewis Munroe and also a copy sent to
+you for funds clearance at the receiving bank.
 
-->ili_last_lsn comes from xfs_cil_ctx->sequence, which I don't think is
-actually a physical LSN suitable for AIL pushing. The lsn assigned to
-the item once it's physically logged and AIL inserted comes from
-ctx->start_lsn, which comes from the iclog header and so is a physical
-LSN.
+We hope this letter is understood, if not, kindly go over the content
+again before responding. Direct all responses to my return email
+regards to this matter, also provide your phone number for us to reach
+you directly.
 
-That said, this usage of ili_last_lsn seems to disappear by the end of
-the series...
+Thanks for your Co-Operation.
 
->  		goto out_ifunlock;
-> +	}
->  
-...
-> @@ -1205,39 +1189,28 @@ xfs_reclaim_inode(
->   * corrupted, we still want to try to reclaim all the inodes. If we don't,
->   * then a shut down during filesystem unmount reclaim walk leak all the
->   * unreclaimed inodes.
-> + *
-> + * Return the number of inodes freed.
->   */
->  STATIC int
->  xfs_reclaim_inodes_ag(
->  	struct xfs_mount	*mp,
->  	int			flags,
-> -	int			*nr_to_scan)
-> +	int			nr_to_scan)
->  {
->  	struct xfs_perag	*pag;
-> -	int			error = 0;
-> -	int			last_error = 0;
->  	xfs_agnumber_t		ag;
-> -	int			trylock = flags & SYNC_TRYLOCK;
-> -	int			skipped;
-> +	xfs_lsn_t		lsn, lowest_lsn = NULLCOMMITLSN;
-> +	long			freed = 0;
->  
-> -restart:
->  	ag = 0;
-> -	skipped = 0;
->  	while ((pag = xfs_perag_get_tag(mp, ag, XFS_ICI_RECLAIM_TAG))) {
->  		unsigned long	first_index = 0;
->  		int		done = 0;
->  		int		nr_found = 0;
->  
->  		ag = pag->pag_agno + 1;
-> -
-> -		if (trylock) {
-> -			if (!mutex_trylock(&pag->pag_ici_reclaim_lock)) {
-> -				skipped++;
-> -				xfs_perag_put(pag);
-> -				continue;
-> -			}
-> -			first_index = pag->pag_ici_reclaim_cursor;
-> -		} else
-> -			mutex_lock(&pag->pag_ici_reclaim_lock);
+Yours Faithfully
 
-I understand that the eliminated blocking drops a dependency on the
-perag reclaim exclusion as described by the commit log, but I'm not sure
-it's enough to justify removing it entirely. For one, the reclaim cursor
-management looks potentially racy. Also, doesn't this exclusion provide
-some balance for reclaim across AGs? E.g., if a bunch of reclaim threads
-come in at the same time, this allows them to walk across AGs instead of
-potentially stumbling over eachother in the batching/grabbing code.
-
-I see again that most of this code seems to ultimately go away, replaced
-by an LRU mechanism so we no longer operate on a per-ag basis. I can see
-how this becomes irrelevant with that mechanism, but I think it might
-make more sense to drop this locking along with the broader mechanism in
-the last patch or two of the series rather than doing it here. If
-nothing else, that eliminates the need for the reviewer to consider this
-transient "old mechanism + new locking" state as opposed to reasoning
-about the old mechanism vs. new mechanism and why the old locking simply
-no longer applies.
-
-> +		first_index = pag->pag_ici_reclaim_cursor;
->  
->  		do {
->  			struct xfs_inode *batch[XFS_LOOKUP_BATCH];
-...
-> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-> index 00d66175f41a..5802139f786b 100644
-> --- a/fs/xfs/xfs_trans_ail.c
-> +++ b/fs/xfs/xfs_trans_ail.c
-> @@ -676,8 +676,10 @@ xfs_ail_push_sync(
->  	spin_lock(&ailp->ail_lock);
->  	while ((lip = xfs_ail_min(ailp)) != NULL) {
->  		prepare_to_wait(&ailp->ail_push, &wait, TASK_UNINTERRUPTIBLE);
-> +	trace_printk("lip lsn 0x%llx thres 0x%llx targ 0x%llx",
-> +			lip->li_lsn, threshold_lsn, ailp->ail_target);
->  		if (XFS_FORCED_SHUTDOWN(ailp->ail_mount) ||
-> -		    XFS_LSN_CMP(threshold_lsn, lip->li_lsn) <= 0)
-> +		    XFS_LSN_CMP(threshold_lsn, lip->li_lsn) < 0)
->  			break;
-
-Stale/mislocated changes?
-
-Brian
-
->  		/* XXX: cmpxchg? */
->  		while (XFS_LSN_CMP(threshold_lsn, ailp->ail_target) > 0)
-> -- 
-> 2.22.0
-> 
+Mr.Richard Crump
+Head of Committee on Federal Reserve Bank Affairs (=E2=80=9CPaymentsCo=E2=
+=80=9D)
+Clearing House Interbank Payments System (CHIPS)
+The Clearing House Association L.L.C. New York
