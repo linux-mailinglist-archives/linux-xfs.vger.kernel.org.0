@@ -2,154 +2,156 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D10840EA
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 03:40:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A19F5841BD
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 03:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbfHGBkO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Aug 2019 21:40:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43248 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729144AbfHGBeJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 21:34:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so42499259pfg.10;
-        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=60C6UutqWDg70MnmR2wOYRHcozVv05mGJual4EWfkd0=;
-        b=a57ErTytVAxkauYkEPzZRHeGlc0u/A4U5ejAgWPi4ESjwpiFFk6hlPoBGFaPNr39C+
-         Kh0xSgXuJrsK4KZTKR2yEzoaLeUoioeGoUgaErqheNBeKc06PHRqwui84Q8EBbD2l+tL
-         nX9d4d0RSUpPYxjPCjQnBkDN0+Zv6eOTSEhKauRBsgQJexRHp+YFYc3bVaLsL+EpeITh
-         /oPeL3Ga9GujoFOOg6Eq3QUGMLurJ7MLYFEtSSTI2Z3ruqYxpiTRqopLyKlPWxV9WtYJ
-         j/nNcaVxSU6fzyomhmIYzgCq04OEkW1OTZBrVWiS6qgJ9uqJ806PfvtCbg/QGSrKMhpY
-         gQvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=60C6UutqWDg70MnmR2wOYRHcozVv05mGJual4EWfkd0=;
-        b=H+JehYMJzp2Qkflf6COAw+gFETGI+RpnOwpPq+huarvV0r2jet6wsZOW7KEQc30U1C
-         eBAUmcqi5VuxWzEOxjGOzPTVj7IljkqMCPz5r/G6FQM7v+/zdpbHNz++2G7u6gUHcWYX
-         cf2o3GUi6ymMptU/a6NtASbZbEkmI6pqVkl3feuwNYwnhlUoN4mnbZdD0Sig41cBEl2K
-         T8KizDyvQpQ8WDTXXklsZP0BeHQD1oXS4x8AgY1z6fWu/EN8ZbXlrUKiJhiz1pvPqQ+1
-         6IOAKfuNBQy2UiOzPWXEcYJ+lM5hWxsj2IRbqA3Pbiah3HMIxqfnfe1corgQd6rlsCyG
-         Waog==
-X-Gm-Message-State: APjAAAW/JQP9V2RHAcYyZ/ZJJMxRKQ9UOvmpgurfmy+h3+TEEAwNjp3v
-        iFmYaqVrKYWKKtpwgc2CSug=
-X-Google-Smtp-Source: APXvYqzZ9ri0aFEivC8E1vtnTLu0Xt+gGlbh6d5zu26K18i0vLRAS3fRLqoUWVmE7o4ev8ojfCHrHg==
-X-Received: by 2002:a17:90a:ad41:: with SMTP id w1mr5931335pjv.52.1565141648506;
-        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Ioan Nicu <ioan.nicu.ext@nokia.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Subject: [PATCH v3 15/41] rapidio: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:14 -0700
-Message-Id: <20190807013340.9706-16-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
-References: <20190807013340.9706-1-jhubbard@nvidia.com>
+        id S1727823AbfHGBo7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Aug 2019 21:44:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48316 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfHGBo7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Aug 2019 21:44:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x771iKsi087308;
+        Wed, 7 Aug 2019 01:44:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=ajai3h0q8HudVrXIim8+fTSGUHmLG+uDhEzS5DeX8+w=;
+ b=Wa9psrvWwH3x3a36TITwaM3EpitQeweOhrqGueKdrdtBK3CEBW7tRWUm81aywNWUkhB9
+ ZDr5wJF5Iq+YRj31LpXrG5xxDPFhmjHUOoIAxqyuu/L1mPT6IHppHyPkYuoP5QBtxUoP
+ 08WOUkNcRqF86T4LqBLnkKaDT7uUZkSHi7+uIpoPqxOfTTcQgKbh07Qz4zvtU/2xWXJR
+ zHUAi/a+dgjornFr0ItXjvaMJAvLDSeLcEjeXfMkMHEbWK/0RaZsgskdyMXWbVup9pXg
+ Gjs9MOrgium+iz394YB/ofLQCzry73Uu7AarnSg3YYygIO0L9VPpHw0SRvY5e+OteXaN HA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u51pu1fye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Aug 2019 01:44:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x771cJ3H036334;
+        Wed, 7 Aug 2019 01:44:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2u7577g5t9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Aug 2019 01:44:56 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x771itgf021531;
+        Wed, 7 Aug 2019 01:44:55 GMT
+Received: from localhost (/10.159.143.251)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 06 Aug 2019 18:44:55 -0700
+Date:   Tue, 6 Aug 2019 18:44:54 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eryu Guan <guaneryu@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] common: filter aiodio dmesg after fs/iomap.c to
+ fs/iomap/ move
+Message-ID: <20190807014454.GA7135@magnolia>
+References: <156394156831.1850719.2997473679130010771.stgit@magnolia>
+ <156394157450.1850719.464315342783936237.stgit@magnolia>
+ <20190725180330.GH1561054@magnolia>
+ <20190728113036.GO7943@desktop>
+ <20190730005506.GC2345316@magnolia>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730005506.GC2345316@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908070015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908070016
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+On Mon, Jul 29, 2019 at 05:55:06PM -0700, Darrick J. Wong wrote:
+> On Sun, Jul 28, 2019 at 07:30:36PM +0800, Eryu Guan wrote:
+> > On Thu, Jul 25, 2019 at 11:03:30AM -0700, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > Since the iomap code are moving to fs/iomap/ we have to add new entries
+> > > to the aiodio dmesg filter to reflect this.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > > v2: fix all the iomap regexes
+> > > ---
+> > >  common/filter |    9 +++++----
+> > >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/common/filter b/common/filter
+> > > index ed082d24..2e32ab10 100644
+> > > --- a/common/filter
+> > > +++ b/common/filter
+> > > @@ -550,10 +550,10 @@ _filter_aiodio_dmesg()
+> > >  	local warn2="WARNING:.*fs/xfs/xfs_file\.c:.*xfs_file_dio_aio_read.*"
+> > >  	local warn3="WARNING:.*fs/xfs/xfs_file\.c:.*xfs_file_read_iter.*"
+> > >  	local warn4="WARNING:.*fs/xfs/xfs_file\.c:.*xfs_file_aio_read.*"
+> > > -	local warn5="WARNING:.*fs/iomap\.c:.*iomap_dio_rw.*"
+> > > +	local warn5="WARNING:.*fs/iomap.*:.*iomap_dio_rw.*"
+> > >  	local warn6="WARNING:.*fs/xfs/xfs_aops\.c:.*__xfs_get_blocks.*"
+> > > -	local warn7="WARNING:.*fs/iomap\.c:.*iomap_dio_actor.*"
+> > > -	local warn8="WARNING:.*fs/iomap\.c:.*iomap_dio_complete.*"
+> > > +	local warn7="WARNING:.*fs/iomap.*:.*iomap_dio_actor.*"
+> > > +	local warn8="WARNING:.*fs/iomap.*:.*iomap_dio_complete.*"
+> > 
+> > I don't think we need new filters anymore, as commit 5a9d929d6e13
+> > ("iomap: report collisions between directio and buffered writes to
+> > userspace") replaced the WARN_ON with a pr_crit(). These filters are
+> > there only for old kernels.
+> 
+> Aaaaahh... but I /did/ write this patch because I kept hitting a WARNING
+> somewhere in the iomap directio code, and you know what?  It's one of the
+> warnings about a bogus iomap type in iomap_dio_actor.
+> 
+> I /think/ this is what happens when a buffered write sneaks in and
+> creates a delalloc reservation after the directio write has zapped the
+> page cache but before it actually starts iterating extents.
+> Consequently iomap_dio_actor sees the delalloc extent and WARNs.
+> 
+> Will have to recheck this, but maybe the kernel needs to deploy that
+> helper that 5a9d929d6e13 for that case.
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+Aha, I found it again.  The patch fixes failures in generic/446 when a
+directio write through iomap encounters a delalloc extent and triggers
+the WARN_ON_ONCE at the bottom of iomap_dio_actor:
 
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+WARNING: CPU: 2 PID: 1710922 at fs/iomap/direct-io.c:383 iomap_dio_actor+0x144/0x1a0
 
-Cc: Matt Porter <mporter@kernel.crashing.org>
-Cc: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Ioan Nicu <ioan.nicu.ext@nokia.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/rapidio/devices/rio_mport_cdev.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+This can happen if a buffered write and a directio write race to fill a
+hole and the buffered write manages to stuff a delalloc reservation into
+the data mapping after the dio write has cleared the page cache.
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 8155f59ece38..0e8ea0e5a89e 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -572,14 +572,12 @@ static void dma_req_free(struct kref *ref)
- 	struct mport_dma_req *req = container_of(ref, struct mport_dma_req,
- 			refcount);
- 	struct mport_cdev_priv *priv = req->priv;
--	unsigned int i;
- 
- 	dma_unmap_sg(req->dmach->device->dev,
- 		     req->sgt.sgl, req->sgt.nents, req->dir);
- 	sg_free_table(&req->sgt);
- 	if (req->page_list) {
--		for (i = 0; i < req->nr_pages; i++)
--			put_page(req->page_list[i]);
-+		put_user_pages(req->page_list, req->nr_pages);
- 		kfree(req->page_list);
- 	}
- 
-@@ -815,7 +813,7 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
- 	struct mport_dma_req *req;
- 	struct mport_dev *md = priv->md;
- 	struct dma_chan *chan;
--	int i, ret;
-+	int ret;
- 	int nents;
- 
- 	if (xfer->length == 0)
-@@ -946,8 +944,7 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
- 
- err_pg:
- 	if (!req->page_list) {
--		for (i = 0; i < nr_pages; i++)
--			put_page(page_list[i]);
-+		put_user_pages(page_list, nr_pages);
- 		kfree(page_list);
- 	}
- err_req:
--- 
-2.22.0
+We don't need the dio_warn_stale_pagecache() warning here because we
+fail the direct write and therefore do not write anything to disk.
 
+--D
+
+> 
+> --D
+> 
+> > Thanks,
+> > Eryu
+> > 
+> > >  	local warn9="WARNING:.*fs/direct-io\.c:.*dio_complete.*"
+> > >  	sed -e "s#$warn1#Intentional warnings in xfs_file_dio_aio_write#" \
+> > >  	    -e "s#$warn2#Intentional warnings in xfs_file_dio_aio_read#" \
+> > > @@ -563,7 +563,8 @@ _filter_aiodio_dmesg()
+> > >  	    -e "s#$warn6#Intentional warnings in __xfs_get_blocks#" \
+> > >  	    -e "s#$warn7#Intentional warnings in iomap_dio_actor#" \
+> > >  	    -e "s#$warn8#Intentional warnings in iomap_dio_complete#" \
+> > > -	    -e "s#$warn9#Intentional warnings in dio_complete#"
+> > > +	    -e "s#$warn9#Intentional warnings in dio_complete#" \
+> > > +	    -e "s#$warn10#Intentional warnings in iomap_dio_actor#"
+> > >  }
+> > >  
+> > >  # We generate assert related WARNINGs on purpose and make sure test doesn't fail
