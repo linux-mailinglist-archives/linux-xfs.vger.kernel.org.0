@@ -2,195 +2,230 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BD3E8482B
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 10:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85E2984887
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2019 11:19:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfHGIvZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Aug 2019 04:51:25 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:52855 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726747AbfHGIvY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 04:51:24 -0400
-Received: from [IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747] ([IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id vHfBhjvBuAffAvHfDh7OBy; Wed, 07 Aug 2019 10:51:20 +0200
-Subject: Re: [PATCH v3 10/41] media/ivtv: convert put_page() to
- put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20190807013340.9706-1-jhubbard@nvidia.com>
- <20190807013340.9706-11-jhubbard@nvidia.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6fd38719-b5d3-f981-732f-da904e029546@xs4all.nl>
-Date:   Wed, 7 Aug 2019 10:51:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726461AbfHGJTB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 7 Aug 2019 05:19:01 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60431 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbfHGJTA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 05:19:00 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 53437361708;
+        Wed,  7 Aug 2019 19:18:57 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hvI4r-00010s-VW; Wed, 07 Aug 2019 19:17:49 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hvI5y-0000ko-3N; Wed, 07 Aug 2019 19:18:58 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-mm@kvack.org
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH] [Regression, v5.0] mm: boosted kswapd reclaim b0rks system cache balance
+Date:   Wed,  7 Aug 2019 19:18:58 +1000
+Message-Id: <20190807091858.2857-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190807013340.9706-11-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMJxwy/aLQOuQbf06fYFW7+YfWl4BADGtFuQE6wXUrTjdGOxgky6uB//ESvSCh+yVYUjsu+P3ALVGvunyB2+4QNbiR9U1sMYhv33IEL6pdyKQiMVj8T1
- W1Qkt4/A8zg1aaKiXQLOb9cAEBeGuXUGjP0ApW7QHZ9+dJcj1rZJOG9kuRWyqdkLdl0Xfd+YU4Sk6qze6hklKEmlvnGPBahaqqNlqtFrPY2VYZgE8xlevbPK
- VYzwfyBnV0qB7sk2HJHbwtjw82ezllVmshbYtU2bjc7wM9hsKDG6EcPPmsd9lrPWAB9FBL1Y3g8hvBHaWnOx4q3kfDEr6Y3kC/4CbXRQ20FpJPAzV81+yAGi
- +cKudbAsX3yt4NQHLMq6NA6K0kBILjc1co+39hFkrrZIcUvJwiKdy8NMve+H6E2GJnEUUv4nGFbjKuVZLLH5y+b+1vAe1RnVhiytR5yxpsF6hz0tRaR6dO/m
- bKPKNqsFsYXDJ5W59C6b3zicjNWHQZiEn7R8u8OkVB9sGerU7xu4rh8uGzZcq6amwD2COMghZJgTrNiun/ifaDQhmzzN53FDOAKM+vszwSUJENplETndDo8y
- lmjjtBHkM72XNJj8RdBdJI0SZn59/rf//zMIHHt6NgU9mNPP3mXofWS+FI78JEBQKLhYLHJa0ha02bP8S2wsCqhiBYGCYfLM5YjnglwHdz5MRKNNPyE0/oCr
- dZ1pq2UTafijHXzLpcISRXLWw9AZnmu/wF9aLzcClow1YFgj8I4CVeEQWdBw+L0MQjl3rEanK6AEfKDCQJnJLHrgYCJZzK8lNhtogle+zBwwTVUbelovesg0
- 2Z/LL+E2WfZzXhib9FscV/8Rh9ToBgNbNMhdUU+hlXoQnZWmFz4spOz6uc44jjnJMhTqUTTg5hrVWn9mTUsqOLeTtpY8kW/K2cuWdgF0wrxh68Tha0mbWKIT
- h1eKpvM3yCzq6DBvt+4fyEiX9NjhFQCa7MNabjtWGhlXyk0ZjWF4ffIi9wV7oklEl1VYZUg79U6dELOAAE9vul6NRqDojlMJCqNaHjnuq3fjMxzEn5uV49mz
- FPD7znLfhbE8FWiYTDTLLH+F8vVBTzJTBgpIxygp14Fz2rP8/IvLLQTaYZiAs1yls952pasjas0Q53pSxIQVarur6cT2MqxBbc5Dkh7+Kfq7Y91uNNAg04iu
- d3+RJ+RCE2l1cbWqQWuXhu2j3C3rQr6dROpJhXRRXQP1J97AvtdCiS7dL9s6gULkooJ1lyTBk0aSFxIoqVYcIP0df/i5MmVLM4jFetRz5G+ThUJC0Gc1KTni
- J8I2ou/BC1bOXOJ9lSOzAqFgDoYHvEZlRb2SvXzzXkDYqMgFYolGY5VKp9uCTVWd2PQmaBlbu1lHchM+NnqdfZ7YxkxIhSoqPdSqtG27MX0XBSfBp4v/ADsP
- H7xofpTtcDVeVERyWqD+q5UMM2Wpkx8uIf59scuWLYExFj2E6FLh/6DxVIE2D4OhS9udVr+503DGAmvegA+vJlyXKbNabKFcW5bmXYY95PEPyy1wNsxvcmw6
- BPLri27Pq99nmIRm69PM0/43YEDR6U4lfeDpNuOtu7XhL7tzHXBogR/ytIhLuavtudk3kQ1Nk50AAQdwvvIdGe/4
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=FmdZ9Uzk2mMA:10 a=20KFwNOVAAAA:8 a=-uU6YO3a8EunHnCfzqEA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/7/19 3:33 AM, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Andy Walls <awalls@md.metrocast.net>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+When running a simple, steady state 4kB file creation test to
+simulate extracting tarballs larger than memory full of small files
+into the filesystem, I noticed that once memory fills up the cache
+balance goes to hell.
 
-Regards,
+The workload is creating one dirty cached inode for every dirty
+page, both of which should require a single IO each to clean and
+reclaim, and creation of inodes is throttled by the rate at which
+dirty writeback runs at (via balance dirty pages). Hence the ingest
+rate of new cached inodes and page cache pages is identical and
+steady. As a result, memory reclaim should quickly find a steady
+balance between page cache and inode caches.
 
-	Hans
+It doesn't.
 
-> ---
->  drivers/media/pci/ivtv/ivtv-udma.c | 14 ++++----------
->  drivers/media/pci/ivtv/ivtv-yuv.c  | 11 +++--------
->  2 files changed, 7 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/media/pci/ivtv/ivtv-udma.c b/drivers/media/pci/ivtv/ivtv-udma.c
-> index 5f8883031c9c..7c7f33c2412b 100644
-> --- a/drivers/media/pci/ivtv/ivtv-udma.c
-> +++ b/drivers/media/pci/ivtv/ivtv-udma.c
-> @@ -92,7 +92,7 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivtv_dest_addr,
->  {
->  	struct ivtv_dma_page_info user_dma;
->  	struct ivtv_user_dma *dma = &itv->udma;
-> -	int i, err;
-> +	int err;
->  
->  	IVTV_DEBUG_DMA("ivtv_udma_setup, dst: 0x%08x\n", (unsigned int)ivtv_dest_addr);
->  
-> @@ -119,8 +119,7 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivtv_dest_addr,
->  		IVTV_DEBUG_WARN("failed to map user pages, returned %d instead of %d\n",
->  			   err, user_dma.page_count);
->  		if (err >= 0) {
-> -			for (i = 0; i < err; i++)
-> -				put_page(dma->map[i]);
-> +			put_user_pages(dma->map, err);
->  			return -EINVAL;
->  		}
->  		return err;
-> @@ -130,9 +129,7 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivtv_dest_addr,
->  
->  	/* Fill SG List with new values */
->  	if (ivtv_udma_fill_sg_list(dma, &user_dma, 0) < 0) {
-> -		for (i = 0; i < dma->page_count; i++) {
-> -			put_page(dma->map[i]);
-> -		}
-> +		put_user_pages(dma->map, dma->page_count);
->  		dma->page_count = 0;
->  		return -ENOMEM;
->  	}
-> @@ -153,7 +150,6 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivtv_dest_addr,
->  void ivtv_udma_unmap(struct ivtv *itv)
->  {
->  	struct ivtv_user_dma *dma = &itv->udma;
-> -	int i;
->  
->  	IVTV_DEBUG_INFO("ivtv_unmap_user_dma\n");
->  
-> @@ -170,9 +166,7 @@ void ivtv_udma_unmap(struct ivtv *itv)
->  	ivtv_udma_sync_for_cpu(itv);
->  
->  	/* Release User Pages */
-> -	for (i = 0; i < dma->page_count; i++) {
-> -		put_page(dma->map[i]);
-> -	}
-> +	put_user_pages(dma->map, dma->page_count);
->  	dma->page_count = 0;
->  }
->  
-> diff --git a/drivers/media/pci/ivtv/ivtv-yuv.c b/drivers/media/pci/ivtv/ivtv-yuv.c
-> index cd2fe2d444c0..2c61a11d391d 100644
-> --- a/drivers/media/pci/ivtv/ivtv-yuv.c
-> +++ b/drivers/media/pci/ivtv/ivtv-yuv.c
-> @@ -30,7 +30,6 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struct ivtv_user_dma *dma,
->  	struct yuv_playback_info *yi = &itv->yuv_info;
->  	u8 frame = yi->draw_frame;
->  	struct yuv_frame_info *f = &yi->new_frame_info[frame];
-> -	int i;
->  	int y_pages, uv_pages;
->  	unsigned long y_buffer_offset, uv_buffer_offset;
->  	int y_decode_height, uv_decode_height, y_size;
-> @@ -81,8 +80,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struct ivtv_user_dma *dma,
->  				 uv_pages, uv_dma.page_count);
->  
->  			if (uv_pages >= 0) {
-> -				for (i = 0; i < uv_pages; i++)
-> -					put_page(dma->map[y_pages + i]);
-> +				put_user_pages(&dma->map[y_pages], uv_pages);
->  				rc = -EFAULT;
->  			} else {
->  				rc = uv_pages;
-> @@ -93,8 +91,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struct ivtv_user_dma *dma,
->  				 y_pages, y_dma.page_count);
->  		}
->  		if (y_pages >= 0) {
-> -			for (i = 0; i < y_pages; i++)
-> -				put_page(dma->map[i]);
-> +			put_user_pages(dma->map, y_pages);
->  			/*
->  			 * Inherit the -EFAULT from rc's
->  			 * initialization, but allow it to be
-> @@ -112,9 +109,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struct ivtv_user_dma *dma,
->  	/* Fill & map SG List */
->  	if (ivtv_udma_fill_sg_list (dma, &uv_dma, ivtv_udma_fill_sg_list (dma, &y_dma, 0)) < 0) {
->  		IVTV_DEBUG_WARN("could not allocate bounce buffers for highmem userspace buffers\n");
-> -		for (i = 0; i < dma->page_count; i++) {
-> -			put_page(dma->map[i]);
-> -		}
-> +		put_user_pages(dma->map, dma->page_count);
->  		dma->page_count = 0;
->  		return -ENOMEM;
->  	}
-> 
+The moment memory fills, the page cache is reclaimed at a much
+faster rate than the inode cache, and evidence suggests taht the
+inode cache shrinker is not being called when large batches of pages
+are being reclaimed. In roughly the same time period that it takes
+to fill memory with 50% pages and 50% slab caches, memory reclaim
+reduces the page cache down to just dirty pages and slab caches fill
+the entirity of memory.
+
+At the point where the page cache is reduced to just the dirty
+pages, there is a clear change in write IO patterns. Up to this
+point it has been running at a steady 1500 write IOPS for ~200MB/s
+of write throughtput (data, journal and metadata). Once the page
+cache is trimmed to just dirty pages, the write IOPS immediately
+start spiking to 5-10,000 IOPS and there is a noticable change in
+IO sizes and completion times. The SSD is fast enough to soak these
+up, so the measured performance is only slightly affected (numbers
+below). It results in > ~50% throughput slowdowns on a spinning
+disk with a NVRAM RAID cache in front of it, though. I didn't
+capture the numbers at the time, and it takes far to long for me to
+care to run it again and get them.
+
+SSD perf degradation as the LRU empties to just dirty pages:
+
+FSUse%        Count         Size    Files/sec     App Overhead
+......
+     0      4320000         4096      51349.6          1370049
+     0      4480000         4096      48492.9          1362823
+     0      4640000         4096      48473.8          1435623
+     0      4800000         4096      46846.6          1370959
+     0      4960000         4096      47086.6          1567401
+     0      5120000         4096      46288.8          1368056
+     0      5280000         4096      46003.2          1391604
+     0      5440000         4096      46033.4          1458440
+     0      5600000         4096      45035.1          1484132
+     0      5760000         4096      43757.6          1492594
+     0      5920000         4096      40739.4          1552104
+     0      6080000         4096      37309.4          1627355
+     0      6240000         4096      42003.3          1517357
+.....
+real    3m28.093s
+user    0m57.852s
+sys     14m28.193s
+
+Average rate: 51724.6+/-2.4e+04 files/sec.
+
+At first memory full point:
+
+MemFree:          432676 kB
+Active(file):      89820 kB
+Inactive(file):  7330892 kB
+Dirty:           1603576 kB
+Writeback:          2908 kB
+Slab:            6579384 kB
+SReclaimable:    3727612 kB
+SUnreclaim:      2851772 kB
+
+A few seconds later at about half the page cache reclaimed:
+
+MemFree:         1880588 kB
+Active(file):      89948 kB
+Inactive(file):  3021796 kB
+Dirty:           1097072 kB
+Writeback:          2600 kB
+Slab:            8900912 kB
+SReclaimable:    5060104 kB
+SUnreclaim:      3840808 kB
+
+And at about the 6080000 count point in the results above, right to
+the end of the test:
+
+MemFree:          574900 kB
+Active(file):      89856 kB
+Inactive(file):   483120 kB
+Dirty:            372436 kB
+Writeback:           324 kB
+KReclaimable:    6506496 kB
+Slab:           11898956 kB
+SReclaimable:    6506496 kB
+SUnreclaim:      5392460 kB
+
+
+So the LRU is largely full of dirty pages, and we're getting spikes
+of random writeback from memory reclaim so it's all going to shit.
+Behaviour never recovers, the page cache remains pinned at just dirty
+pages, and nothing I could tune would make any difference.
+vfs_cache_pressure makes no difference - I would it up so high it
+should trim the entire inode caches in a singel pass, yet it didn't
+do anything. It was clear from tracing and live telemetry that the
+shrinkers were pretty much not running except when there was
+absolutely no memory free at all, and then they did the minimum
+necessary to free memory to make progress.
+
+So I went looking at the code, trying to find places where pages got
+reclaimed and the shrinkers weren't called. There's only one -
+kswapd doing boosted reclaim as per commit 1c30844d2dfe ("mm: reclaim
+small amounts of memory when an external fragmentation event
+occurs"). I'm not even using THP or allocating huge pages, so this
+code should not be active or having any effect onmemory reclaim at
+all, yet the majority of reclaim is being done with "boost" and so
+it's not reclaiming slab caches at all. It will only free clean
+pages from the LRU.
+
+And so when we do run out memory, it switches to normal reclaim,
+which hits dirty pages on the LRU and does some shrinker work, too,
+but then appears to switch back to boosted reclaim one watermarks
+are reached.
+
+The patch below restores page cache vs inode cache balance for this
+steady state workload. It balances out at about 40% page cache, 60%
+slab cache, and sustained performance is 10-15% higher than without
+this patch because the IO patterns remain in control of dirty
+writeback and the filesystem, not kswapd.
+
+Performance with boosted reclaim also running shrinkers over the
+same steady state portion of the test as above.
+
+FSUse%        Count         Size    Files/sec     App Overhead
+......
+     0      4320000         4096      51341.9          1409983
+     0      4480000         4096      51157.5          1486421
+     0      4640000         4096      52041.5          1421837
+     0      4800000         4096      52124.2          1442169
+     0      4960000         4096      56266.6          1388865
+     0      5120000         4096      52892.2          1357650
+     0      5280000         4096      51879.5          1326590
+     0      5440000         4096      52178.7          1362889
+     0      5600000         4096      53863.0          1345956
+     0      5760000         4096      52538.7          1321422
+     0      5920000         4096      53144.5          1336966
+     0      6080000         4096      53647.7          1372146
+     0      6240000         4096      52434.7          1362534
+
+.....
+real    3m11.543s
+user    0m57.506s
+sys     14m20.913s
+
+Average rate: 57634.2+/-2.8e+04 files/sec.
+
+So it completed ~10% faster (both wall time and create rate) and had
+far better IO patterns so the differences would be even more
+pronounced on slow storage.
+
+This patch is not a fix, just a demonstration of the fact that the
+heuristics this "boosted reclaim for compaction" are based on are
+flawed, will have nasty side effects for users that don't use THP
+and so needs revisiting.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ mm/vmscan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 9034570febd9..702e6523f8ad 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2748,10 +2748,10 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 			shrink_node_memcg(pgdat, memcg, sc, &lru_pages);
+ 			node_lru_pages += lru_pages;
+ 
+-			if (sc->may_shrinkslab) {
++			//if (sc->may_shrinkslab) {
+ 				shrink_slab(sc->gfp_mask, pgdat->node_id,
+ 				    memcg, sc->priority);
+-			}
++			//}
+ 
+ 			/* Record the group's reclaim efficiency */
+ 			vmpressure(sc->gfp_mask, memcg, false,
+-- 
+2.23.0.rc1
 
