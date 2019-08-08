@@ -2,135 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 890A5864D6
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 16:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19E0F86562
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 17:14:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfHHOvs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Aug 2019 10:51:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58564 "EHLO mx1.redhat.com"
+        id S1732487AbfHHPN6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Aug 2019 11:13:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54620 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfHHOvs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:51:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1730678AbfHHPN6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:13:58 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D476781F31;
-        Thu,  8 Aug 2019 14:51:47 +0000 (UTC)
-Received: from redhat.com (ovpn-123-180.rdu2.redhat.com [10.10.123.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 68A0860BE1;
-        Thu,  8 Aug 2019 14:51:46 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 09:51:44 -0500
-From:   Bill O'Donnell <billodo@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, Zorro Lang <zlang@redhat.com>
-Subject: Re: [PATCH 3/3] xfs: don't crash on null attr fork xfs_bmapi_read
-Message-ID: <20190808145144.GA13024@redhat.com>
-References: <156527561023.1960675.17007470833732765300.stgit@magnolia>
- <156527562842.1960675.5982698585427580223.stgit@magnolia>
+        by mx1.redhat.com (Postfix) with ESMTPS id 606B93066FA7;
+        Thu,  8 Aug 2019 15:13:58 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 86F145D9E1;
+        Thu,  8 Aug 2019 15:13:51 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x78FDo4j019011;
+        Thu, 8 Aug 2019 11:13:50 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x78FDoGF019007;
+        Thu, 8 Aug 2019 11:13:50 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Thu, 8 Aug 2019 11:13:50 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
+In-Reply-To: <20190808135329.GG5482@bombadil.infradead.org>
+Message-ID: <alpine.LRH.2.02.1908081112580.18950@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com> <20190808135329.GG5482@bombadil.infradead.org>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156527562842.1960675.5982698585427580223.stgit@magnolia>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 08 Aug 2019 14:51:47 +0000 (UTC)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 08 Aug 2019 15:13:58 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:47:08AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Zorro Lang reported a crash in generic/475 if we try to inactivate a
-> corrupt inode with a NULL attr fork (stack trace shortened somewhat):
-> 
-> RIP: 0010:xfs_bmapi_read+0x311/0xb00 [xfs]
-> RSP: 0018:ffff888047f9ed68 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff888047f9f038 RCX: 1ffffffff5f99f51
-> RDX: 0000000000000002 RSI: 0000000000000008 RDI: 0000000000000012
-> RBP: ffff888002a41f00 R08: ffffed10005483f0 R09: ffffed10005483ef
-> R10: ffffed10005483ef R11: ffff888002a41f7f R12: 0000000000000004
-> R13: ffffe8fff53b5768 R14: 0000000000000005 R15: 0000000000000001
-> FS:  00007f11d44b5b80(0000) GS:ffff888114200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000ef6000 CR3: 000000002e176003 CR4: 00000000001606e0
-> Call Trace:
->  xfs_dabuf_map.constprop.18+0x696/0xe50 [xfs]
->  xfs_da_read_buf+0xf5/0x2c0 [xfs]
->  xfs_da3_node_read+0x1d/0x230 [xfs]
->  xfs_attr_inactive+0x3cc/0x5e0 [xfs]
->  xfs_inactive+0x4c8/0x5b0 [xfs]
->  xfs_fs_destroy_inode+0x31b/0x8e0 [xfs]
->  destroy_inode+0xbc/0x190
->  xfs_bulkstat_one_int+0xa8c/0x1200 [xfs]
->  xfs_bulkstat_one+0x16/0x20 [xfs]
->  xfs_bulkstat+0x6fa/0xf20 [xfs]
->  xfs_ioc_bulkstat+0x182/0x2b0 [xfs]
->  xfs_file_ioctl+0xee0/0x12a0 [xfs]
->  do_vfs_ioctl+0x193/0x1000
->  ksys_ioctl+0x60/0x90
->  __x64_sys_ioctl+0x6f/0xb0
->  do_syscall_64+0x9f/0x4d0
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7f11d39a3e5b
-> 
-> The "obvious" cause is that the attr ifork is null despite the inode
-> claiming an attr fork having at least one extent, but it's not so
-> obvious why we ended up with an inode in that state.
-> 
-> Reported-by: Zorro Lang <zlang@redhat.com>
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204031
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Makes sense, and alleviates the problem I occasionally see on g/475.
 
-Reviewed-by: Bill O'Donnell <billodo@redhat.com>
+On Thu, 8 Aug 2019, Matthew Wilcox wrote:
 
-> ---
->  fs/xfs/libxfs/xfs_bmap.c |   29 +++++++++++++++++++++--------
->  1 file changed, 21 insertions(+), 8 deletions(-)
+> On Thu, Aug 08, 2019 at 05:50:10AM -0400, Mikulas Patocka wrote:
+> > A deadlock with this stacktrace was observed.
+> > 
+> > The obvious problem here is that in the call chain 
+> > xfs_vm_direct_IO->__blockdev_direct_IO->do_blockdev_direct_IO->kmem_cache_alloc 
+> > we do a GFP_KERNEL allocation while we are in a filesystem driver and in a 
+> > block device driver.
 > 
-> 
-> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> index baf0b72c0a37..07aad70f3931 100644
-> --- a/fs/xfs/libxfs/xfs_bmap.c
-> +++ b/fs/xfs/libxfs/xfs_bmap.c
-> @@ -3835,15 +3835,28 @@ xfs_bmapi_read(
->  	XFS_STATS_INC(mp, xs_blk_mapr);
->  
->  	ifp = XFS_IFORK_PTR(ip, whichfork);
-> +	if (!ifp) {
-> +		/* No CoW fork?  Return a hole. */
-> +		if (whichfork == XFS_COW_FORK) {
-> +			mval->br_startoff = bno;
-> +			mval->br_startblock = HOLESTARTBLOCK;
-> +			mval->br_blockcount = len;
-> +			mval->br_state = XFS_EXT_NORM;
-> +			*nmap = 1;
-> +			return 0;
-> +		}
->  
-> -	/* No CoW fork?  Return a hole. */
-> -	if (whichfork == XFS_COW_FORK && !ifp) {
-> -		mval->br_startoff = bno;
-> -		mval->br_startblock = HOLESTARTBLOCK;
-> -		mval->br_blockcount = len;
-> -		mval->br_state = XFS_EXT_NORM;
-> -		*nmap = 1;
-> -		return 0;
-> +		/*
-> +		 * A missing attr ifork implies that the inode says we're in
-> +		 * extents or btree format but failed to pass the inode fork
-> +		 * verifier while trying to load it.  Treat that as a file
-> +		 * corruption too.
-> +		 */
-> +#ifdef DEBUG
-> +		xfs_alert(mp, "%s: inode %llu missing fork %d",
-> +				__func__, ip->i_ino, whichfork);
-> +#endif /* DEBUG */
-> +		return -EFSCORRUPTED;
->  	}
->  
->  	if (!(ifp->if_flags & XFS_IFEXTENTS)) {
-> 
+> But that's not the problem.  The problem is the loop driver calls into the
+> filesystem without calling memalloc_noio_save() / memalloc_noio_restore().
+> There are dozens of places in XFS which use GFP_KERNEL allocations and
+> all can trigger this same problem if called from the loop driver.
+
+OK. I'll send a new patch that sets PF_MEMALLOC_NOIO in the loop driver.
+
+Mikulas
