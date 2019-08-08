@@ -2,175 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCE78858D0
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 05:57:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE48B859EB
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 07:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfHHD5j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Aug 2019 23:57:39 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35840 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfHHD5i (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 23:57:38 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so42944569plt.3
-        for <linux-xfs@vger.kernel.org>; Wed, 07 Aug 2019 20:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z1ooqPdIRs/tsHBTeSSOXXoHWHM7YN+Y/PWuPzXUn1I=;
-        b=kL9tp1z4ziTZ3MztHpa9ewHWrHM+dBVOl3KrB0AkGu/XAlJLheJiq4Fli4VVLxB8Eo
-         1exXfhh2K29Il9zlWzY6nBn9Wkq7Z+8czqABytW9Nlepfdg9Y5Q9NYFPYGVSI8K0YUgc
-         gxRhxxA3ZSWOD8//3vll8HpGi4/lMoTrKAZ7gYEJ5H3wHy+3gvXrNozShnZ8Y5BG3ukk
-         tq15Afiyc2zCjuYbJFr7zImnqF3r2mPkVUwpRg2q6BcufjK30HoRLCGGRNYE90Mh1fTJ
-         i8J8Gm6nO4jq71+QvqxfVUkFvEZDVI3zS/H4epEmkxuWpbVYi9fUY4BbsdmLagTE82/D
-         tiuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z1ooqPdIRs/tsHBTeSSOXXoHWHM7YN+Y/PWuPzXUn1I=;
-        b=sjriV7CYOvTLY0MCsU5zRtBidk3O45vaSrXqAbWXGw1l4fs1XiQk/Z1iIPDpy86taU
-         Aeda379s+1s0NIcs0sl6VuXMHHGt4/dT8ERaLG8jLV1nihMPdFu4309lr1rLQs8kkOmV
-         QQOUUGSp7eMwI5PKOQ6vBbeLe3sD1rI7YeelPrQfkO/A27u3JgrLX/4Pamh14azqWlEn
-         q7NxHL0rNjRY/ZPgJCUvN/Xj58yHIlDO/8wqJgefah6IKN2ixZqv/V7lhlYJ+fmSuVPH
-         Rq3hV2bJ2Ia6S/ZaUxlXOtsvhTFFOLYzUwjWi3fjR4stPLz7QLDMR6b4Yxdz8hM54OxZ
-         mhBg==
-X-Gm-Message-State: APjAAAW0LQ4tRfN3hfiA2nZHgo2HmGWVSdiJl5x8DgoS5gQPZs6r4veQ
-        xkZ2TeTdnXk8CuspOEJ39Rg=
-X-Google-Smtp-Source: APXvYqyqYPSfvwTIahJZ9431LAnsS1BQFwpOBt8dwNVB59nwoNETcnwlesYUxFE1HCRAklRi1jpMgw==
-X-Received: by 2002:a17:902:86:: with SMTP id a6mr11570445pla.244.1565236657878;
-        Wed, 07 Aug 2019 20:57:37 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d12sm58350046pfn.11.2019.08.07.20.57.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 20:57:37 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 11:57:30 +0800
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-To:     Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Cc:     Murphy Zhou <jencce.kernel@gmail.com>, Petr Vorel <pvorel@suse.cz>,
-        chrubis@suse.cz, ltp@lists.linux.it, linux-xfs@vger.kernel.org
-Subject: Re: [LTP] [PATCH v7 3/3] syscalls/copy_file_range02: increase
- coverage and remove EXDEV test
-Message-ID: <20190808035730.3kzors4trok6amtr@XZHOUW.usersys.redhat.com>
-References: <20190730110555.GB7528@rei.lan>
- <1564569629-2358-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
- <1564569629-2358-3-git-send-email-xuyang2018.jy@cn.fujitsu.com>
- <20190805065832.ti6vpoviykfaxcj7@XZHOUW.usersys.redhat.com>
- <5D47D6B9.9090306@cn.fujitsu.com>
- <20190805102211.pvyufepn6xywi7vm@XZHOUW.usersys.redhat.com>
- <20190806162703.GA1333@dell5510>
- <20190807101742.mt6tgowsh4xw5hyt@XZHOUW.usersys.redhat.com>
- <5D4B92EF.4090800@cn.fujitsu.com>
+        id S1731017AbfHHFmq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Aug 2019 01:42:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:56463 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfHHFmp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 8 Aug 2019 01:42:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463y252c4Xz9sN1;
+        Thu,  8 Aug 2019 15:42:37 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?utf-8?B?SsOpcsO0?= =?utf-8?B?bWU=?= Glisse 
+        <jglisse@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3 38/41] powerpc: convert put_page() to put_user_page*()
+In-Reply-To: <20190807013340.9706-39-jhubbard@nvidia.com>
+References: <20190807013340.9706-1-jhubbard@nvidia.com> <20190807013340.9706-39-jhubbard@nvidia.com>
+Date:   Thu, 08 Aug 2019 15:42:34 +1000
+Message-ID: <87k1botdpx.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D4B92EF.4090800@cn.fujitsu.com>
+Content-Type: text/plain
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 11:11:43AM +0800, Yang Xu wrote:
-> on 2019/08/07 18:17, Murphy Zhou wrote:
-> 
-> > And I have a question about LTP itself.
-> >
-> > If we run the testcase directly like:
-> > 	 ./testcases/kernel/syscalls/copy_file_range/copy_file_range02
-> >
-> > to test all_filesystems, for every filesystem, we mkfs and mount it in
-> > .mntpoint, but we do not chdir to .mntpoint. So we are running tests in 
-> > the same tmpdir, fs type of which does not change while looping
-> > all_filesystems.  Only the .mntpoint in tmpdir has different fs type in
-> > each loop.
-> >
-> > Now we are using this to test cross-device copy in copy_file_range01.c,
-> > but in copy_file_range02.c, we are not using .mntpint at all, all the
-> > tests in the all_filesystems loop are running in the same tmpdir. In other
-> > words, we are NOT testing all filesystems.
-> >
-> > Is this expected?
->  I removed the mnted test for cross-device copy_file_range in copy_file_range02.c.
-> And I ignore the non-used mntpoint. IMO, we can directly use the FILE_MNTED to test EFBIG on all filesystems, 
+Hi John,
 
-If mntpoint is not used, it makes absolutely NO sense to test all_filesystems.
+john.hubbard@gmail.com writes:
+> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
+> index b056cae3388b..e126193ba295 100644
+> --- a/arch/powerpc/mm/book3s64/iommu_api.c
+> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
+> @@ -203,6 +202,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
+>  {
+>  	long i;
+>  	struct page *page = NULL;
+> +	bool dirty = false;
 
-Because in the all_filesystems loop, various supported filesystems are
-created and mounted in mntpoint.
+I don't think you need that initialisation do you?
 
-And the copy_file_range tests happens outside of mntpoint. It just repeats
-the same test several times in the same tmpdir, fs type of which depends
-on /tmp configuration.
-
-When the log prints "testing ext2", it's not the truth.
-
-EFBIG is another issue.
-
-Thanks,
-Murphy
-> 
-> as below:
-> diff --git a/testcases/kernel/syscalls/copy_file_range/copy_file_range02.c b/testcases/kernel/syscalls/copy_file_range/copy_file_range02.c
-> index 26bfa008a..67974ffa2 100644
-> --- a/testcases/kernel/syscalls/copy_file_range/copy_file_range02.c
-> +++ b/testcases/kernel/syscalls/copy_file_range/copy_file_range02.c
-> @@ -49,6 +49,7 @@ static int fd_blkdev;
->  static int fd_chrdev;
->  static int fd_fifo;
->  static int fd_copy;
-> +static int fd_mnted;
-> 
->  static int chattr_i_nsup;
->  static int swap_nsup;
-> 
-> @@ -73,7 +74,7 @@ static struct tcase {
->         {&fd_chrdev,    0,   EINVAL,     0,     CONTSIZE},
->         {&fd_fifo,      0,   EINVAL,     0,     CONTSIZE},
->         {&fd_copy,      0,   EOVERFLOW,  MAX_OFF, ULLONG_MAX},
-> -       {&fd_copy,      0,   EFBIG,      MAX_OFF, MIN_OFF},
-> +       {&fd_mnted,      0,   EFBIG,      MAX_OFF, MIN_OFF},
->  };
-> 
->  static int run_command(char *command, char *option, char *file)
-> @@ -117,7 +118,10 @@ static void verify_copy_file_range(unsigned int n)
->                         tst_res(TPASS | TTERRNO,
->                                         "copy_file_range failed as expected");
->                 } else {
-> -                       tst_res(TFAIL | TTERRNO,
-> +                       if (tc->exp_err == EFBIG && TST_ERR == EXDEV)
-> +                               tst_res(TCONF, "copy_file_range doesn't support cross-device,skip it");
-> +                       else
-> +                               tst_res(TFAIL | TTERRNO,
->                                 "copy_file_range failed unexpectedly; expected %s, but got",
->                                 tst_strerrno(tc->exp_err));
->                         return;
-> 
-> @@ -152,6 +156,8 @@ static void cleanup(void)
->                 SAFE_CLOSE(fd_dup);
->         if (fd_copy > 0)
->                 SAFE_CLOSE(fd_copy);
-> +       if (fd_mnted > 0)
-> +               SAFE_CLOSE(fd_mnted);
->         SAFE_UNLINK(FILE_FIFO);
+>  	if (!mem->hpas)
+>  		return;
+> @@ -215,10 +215,9 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
+>  		if (!page)
+>  			continue;
+>  
+> -		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
+> -			SetPageDirty(page);
+> +		dirty = mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY;
+> -		put_page(page);
+> +		put_user_pages_dirty_lock(&page, 1, dirty);
+>  		mem->hpas[i] = 0;
+>  	}
 >  }
-> 
-> @@ -194,6 +200,7 @@ static void setup(void)
-> 
->         fd_copy = SAFE_OPEN(FILE_COPY_PATH, O_RDWR | O_CREAT | O_TRUNC, 0664);
->         chattr_i_nsup = run_command("chattr", "+i", FILE_IMMUTABLE_PATH);
-> +       fd_mnted  = SAFE_OPEN(FILE_MNTED_PATH, O_RDWR | O_CREAT, 0664);
-> 
->         if (!tst_fs_has_free(".", sysconf(_SC_PAGESIZE) * 10, TST_BYTES)) {
->                 tst_res(TCONF, "Insufficient disk space to create swap file");
->                 swap_nsup = 3;
-> 
-> test12) succeed on extN, failed on both btrfs and xfs, we need to detect filesystem type to handle. Or, I think we 
-> can set a limit on filesize because this kind of user scene is a bit more than the first one , the EFBIG error can be 
-> received easily (Also, we don't need  mnt_device mntpoint all_filesystem if so).
-> What do you think about it?
-> 
-> > I commented out testcases in copy_file_range02.c other then #12, and add
-> > some nasty debug info:
-> 
-> 
-> 
+
+cheers
