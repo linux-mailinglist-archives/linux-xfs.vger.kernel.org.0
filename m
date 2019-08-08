@@ -2,83 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C1685741
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 02:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F15985802
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 04:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389185AbfHHAbe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Aug 2019 20:31:34 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33714 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389044AbfHHAbe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 20:31:34 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0D0FA43D7FF;
-        Thu,  8 Aug 2019 10:31:32 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hvWK1-0006q9-3L; Thu, 08 Aug 2019 10:30:25 +1000
-Date:   Thu, 8 Aug 2019 10:30:25 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] [Regression, v5.0] mm: boosted kswapd reclaim b0rks
- system cache balance
-Message-ID: <20190808003025.GU7777@dread.disaster.area>
-References: <20190807091858.2857-1-david@fromorbit.com>
- <20190807093056.GS11812@dhcp22.suse.cz>
- <20190807150316.GL2708@suse.de>
- <20190807220817.GN7777@dread.disaster.area>
- <20190807235534.GK2739@techsingularity.net>
+        id S1727884AbfHHCKw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 7 Aug 2019 22:10:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53764 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbfHHCKv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Aug 2019 22:10:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7828n9a075780;
+        Thu, 8 Aug 2019 02:10:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=TXriKJvJy2myVnw3c051jaeKryW3drWG0pSPjwioE5Q=;
+ b=ADL40WecBnB1Z3f42497pGyz1FyclGQ12j8lMNgbk8lS2dQH08wmqTtk61/uTFlpsPhw
+ zxrefhxHc33igYwECLs1R2GLPBjHP1B5tFfW2WTj/hrt6GUgi4z/JYrDBn7MrifRAIKT
+ mnsrLpoihyFchsX613OBx61Y5hgEZxSKCIRpdTOh/U9zhRNJmq41K9QgLqXt+9Ac2oLm
+ AjczwomaVHvfu9qBvXhwDvzDJQVUOLeQ/RPa5oCtTqZR55hnXUwmsUk1rdWDSb/MCSpg
+ px81wxj13WmfCMA5n+Wwlu2bZLks8SAk5tzLwlCMAbRQHdlShrUj/KGgx5RQB60/nqL+ eA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u51pu7q65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 02:10:49 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7828OEE109698;
+        Thu, 8 Aug 2019 02:10:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2u7578h0y7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 02:10:48 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x782Alj2012359;
+        Thu, 8 Aug 2019 02:10:47 GMT
+Received: from localhost (/10.159.246.211)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Aug 2019 19:10:47 -0700
+Date:   Wed, 7 Aug 2019 19:10:46 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     viro@zeniv.linux.org.uk, xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] vfs: fix page locking deadlocks when deduping files
+Message-ID: <20190808021046.GD7157@magnolia>
+References: <20190807145114.GP7138@magnolia>
+ <20190807223850.GQ7777@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807235534.GK2739@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=InmijoeHuMX5d2-jVp4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190807223850.GQ7777@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908080020
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080020
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 12:55:34AM +0100, Mel Gorman wrote:
-> On Thu, Aug 08, 2019 at 08:08:17AM +1000, Dave Chinner wrote:
-> > On Wed, Aug 07, 2019 at 04:03:16PM +0100, Mel Gorman wrote:
-> > > On Wed, Aug 07, 2019 at 11:30:56AM +0200, Michal Hocko wrote:
-> > > The boosting was not intended to target THP specifically -- it was meant
-> > > to help recover early from any fragmentation-related event for any user
-> > > that might need it. Hence, it's not tied to THP but even with THP
-> > > disabled, the boosting will still take effect.
-> > > 
-> > > One band-aid would be to disable watermark boosting entirely when THP is
-> > > disabled but that feels wrong. However, I would be interested in hearing
-> > > if sysctl vm.watermark_boost_factor=0 has the same effect as your patch.
-> > 
-> > <runs test>
-> > 
-> > Ok, it still runs it out of page cache, but it doesn't drive page
-> > cache reclaim as hard once there's none left. The IO patterns are
-> > less peaky, context switch rates are increased from ~3k/s to 15k/s
-> > but remain pretty steady.
-> > 
-> > Test ran 5s faster and  file rate improved by ~2%. So it's better
-> > once the page cache is largerly fully reclaimed, but it doesn't
-> > prevent the page cache from being reclaimed instead of inodes....
-> > 
+On Thu, Aug 08, 2019 at 08:38:50AM +1000, Dave Chinner wrote:
+> On Wed, Aug 07, 2019 at 07:51:14AM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > +/*
+> > + * Lock two pages, ensuring that we lock in offset order if the pages are from
+> > + * the same file.
+> > + */
+> > +static void vfs_lock_two_pages(struct page *page1, struct page *page2)
+> > +{
+> > +	if (page1 == page2) {
+> > +		lock_page(page1);
+> > +		return;
+> > +	}
+> > +
+> > +	if (page1->mapping == page2->mapping && page1->index > page2->index)
+> > +		swap(page1, page2);
 > 
-> Ok. Ideally you would also confirm the patch itself works as you want.
-> It *should* but an actual confirmation would be nice.
+> I would do this even if the pages are on different mappings. That
+> way we don't expose a landmine if some other code locks two pages
+> from the same mappings in a different order...
 
-Yup, I'll get to that later today.
+Sure.
 
-Cheers,
+> > +	lock_page(page1);
+> > +	lock_page(page2);
+> > +}
+> > +
+> >  /*
+> >   * Compare extents of two files to see if they are the same.
+> >   * Caller must have locked both inodes to prevent write races.
+> > @@ -1867,10 +1881,12 @@ static int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+> >  		dest_page = vfs_dedupe_get_page(dest, destoff);
+> >  		if (IS_ERR(dest_page)) {
+> >  			error = PTR_ERR(dest_page);
+> > -			unlock_page(src_page);
+> >  			put_page(src_page);
+> >  			goto out_error;
+> >  		}
+> > +
+> > +		vfs_lock_two_pages(src_page, dest_page);
+> > +
+> >  		src_addr = kmap_atomic(src_page);
+> >  		dest_addr = kmap_atomic(dest_page);
+> >  
+> > @@ -1882,7 +1898,8 @@ static int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+> >  
+> >  		kunmap_atomic(dest_addr);
+> >  		kunmap_atomic(src_addr);
+> > -		unlock_page(dest_page);
+> > +		if (dest_page != src_page)
+> > +			unlock_page(dest_page);
+> >  		unlock_page(src_page);
+> 
+> Would it make sense for symmetry to wrap these in
+> vfs_unlock_two_pages()?
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Sure.
+
+--D
+
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
