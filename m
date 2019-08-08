@@ -2,85 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE48B859EB
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 07:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5B0985A10
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2019 07:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbfHHFmq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Aug 2019 01:42:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:56463 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfHHFmp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 8 Aug 2019 01:42:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463y252c4Xz9sN1;
-        Thu,  8 Aug 2019 15:42:37 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?SsOpcsO0?= =?utf-8?B?bWU=?= Glisse 
-        <jglisse@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 38/41] powerpc: convert put_page() to put_user_page*()
-In-Reply-To: <20190807013340.9706-39-jhubbard@nvidia.com>
-References: <20190807013340.9706-1-jhubbard@nvidia.com> <20190807013340.9706-39-jhubbard@nvidia.com>
-Date:   Thu, 08 Aug 2019 15:42:34 +1000
-Message-ID: <87k1botdpx.fsf@concordia.ellerman.id.au>
+        id S1730598AbfHHFwg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Aug 2019 01:52:36 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48219 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725933AbfHHFwg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Aug 2019 01:52:36 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 26295362962;
+        Thu,  8 Aug 2019 15:52:32 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hvbKf-0000HC-Hf; Thu, 08 Aug 2019 15:51:25 +1000
+Date:   Thu, 8 Aug 2019 15:51:25 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] [Regression, v5.0] mm: boosted kswapd reclaim b0rks
+ system cache balance
+Message-ID: <20190808055125.GV7777@dread.disaster.area>
+References: <20190807091858.2857-1-david@fromorbit.com>
+ <20190807093056.GS11812@dhcp22.suse.cz>
+ <20190807150316.GL2708@suse.de>
+ <20190807220817.GN7777@dread.disaster.area>
+ <20190807235534.GK2739@techsingularity.net>
+ <20190808003025.GU7777@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808003025.GU7777@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=BNQjUj_GC9DrHHjaN18A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi John,
+On Thu, Aug 08, 2019 at 10:30:25AM +1000, Dave Chinner wrote:
+> On Thu, Aug 08, 2019 at 12:55:34AM +0100, Mel Gorman wrote:
+> > On Thu, Aug 08, 2019 at 08:08:17AM +1000, Dave Chinner wrote:
+> > > On Wed, Aug 07, 2019 at 04:03:16PM +0100, Mel Gorman wrote:
+> > > > On Wed, Aug 07, 2019 at 11:30:56AM +0200, Michal Hocko wrote:
+> > > > The boosting was not intended to target THP specifically -- it was meant
+> > > > to help recover early from any fragmentation-related event for any user
+> > > > that might need it. Hence, it's not tied to THP but even with THP
+> > > > disabled, the boosting will still take effect.
+> > > > 
+> > > > One band-aid would be to disable watermark boosting entirely when THP is
+> > > > disabled but that feels wrong. However, I would be interested in hearing
+> > > > if sysctl vm.watermark_boost_factor=0 has the same effect as your patch.
+> > > 
+> > > <runs test>
+> > > 
+> > > Ok, it still runs it out of page cache, but it doesn't drive page
+> > > cache reclaim as hard once there's none left. The IO patterns are
+> > > less peaky, context switch rates are increased from ~3k/s to 15k/s
+> > > but remain pretty steady.
+> > > 
+> > > Test ran 5s faster and  file rate improved by ~2%. So it's better
+> > > once the page cache is largerly fully reclaimed, but it doesn't
+> > > prevent the page cache from being reclaimed instead of inodes....
+> > > 
+> > 
+> > Ok. Ideally you would also confirm the patch itself works as you want.
+> > It *should* but an actual confirmation would be nice.
+> 
+> Yup, I'll get to that later today.
 
-john.hubbard@gmail.com writes:
-> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
-> index b056cae3388b..e126193ba295 100644
-> --- a/arch/powerpc/mm/book3s64/iommu_api.c
-> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
-> @@ -203,6 +202,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
->  {
->  	long i;
->  	struct page *page = NULL;
-> +	bool dirty = false;
+Looks good, does what it says on the tin.
 
-I don't think you need that initialisation do you?
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
->  	if (!mem->hpas)
->  		return;
-> @@ -215,10 +215,9 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
->  		if (!page)
->  			continue;
->  
-> -		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
-> -			SetPageDirty(page);
-> +		dirty = mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY;
-> -		put_page(page);
-> +		put_user_pages_dirty_lock(&page, 1, dirty);
->  		mem->hpas[i] = 0;
->  	}
->  }
-
-cheers
+-- 
+Dave Chinner
+david@fromorbit.com
