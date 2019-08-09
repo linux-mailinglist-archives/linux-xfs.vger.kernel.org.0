@@ -2,23 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1835D886BF
-	for <lists+linux-xfs@lfdr.de>; Sat, 10 Aug 2019 01:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 132EB886B4
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 Aug 2019 01:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfHIW6m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Aug 2019 18:58:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23335 "EHLO mga11.intel.com"
+        id S1729635AbfHIXA3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Aug 2019 19:00:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9691 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfHIW6m (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:42 -0400
+        id S1729112AbfHIW6o (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:40 -0700
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:43 -0700
 X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="375343471"
+   d="scan'208";a="199539184"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:39 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:43 -0700
 From:   ira.weiny@intel.com
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
@@ -32,10 +32,12 @@ Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-ext4@vger.kernel.org, linux-mm@kvack.org,
         Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002   ;-)
-Date:   Fri,  9 Aug 2019 15:58:14 -0700
-Message-Id: <20190809225833.6657-1-ira.weiny@intel.com>
+Subject: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user Layout lease
+Date:   Fri,  9 Aug 2019 15:58:16 -0700
+Message-Id: <20190809225833.6657-3-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
@@ -45,222 +47,105 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Pre-requisites
-==============
-	Based on mmotm tree.
+Add an exclusive lease flag which indicates that the layout mechanism
+can not be broken.
 
-Based on the feedback from LSFmm, the LWN article, the RFC series since
-then, and a ton of scenarios I've worked in my mind and/or tested...[1]
+Exclusive layout leases allow the file system to know that pages may be
+GUP pined and that attempts to change the layout, ie truncate, should be
+failed.
 
-Solution summary
-================
+A process which attempts to break it's own exclusive lease gets an
+EDEADLOCK return to help determine that this is likely a programming bug
+vs someone else holding a resource.
 
-The real issue is that there is no use case for a user to have RDMA pinn'ed
-memory which is then truncated.  So really any solution we present which:
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ fs/locks.c                       | 23 +++++++++++++++++++++--
+ include/linux/fs.h               |  1 +
+ include/uapi/asm-generic/fcntl.h |  2 ++
+ 3 files changed, 24 insertions(+), 2 deletions(-)
 
-A) Prevents file system corruption or data leaks
-...and...
-B) Informs the user that they did something wrong
-
-Should be an acceptable solution.
-
-Because this is slightly new behavior.  And because this is going to be
-specific to DAX (because of the lack of a page cache) we have made the user
-"opt in" to this behavior.
-
-The following patches implement the following solution.
-
-0) Registrations to Device DAX char devs are not affected
-
-1) The user has to opt in to allowing page pins on a file with an exclusive
-   layout lease.  Both exclusive and layout lease flags are user visible now.
-
-2) page pins will fail if the lease is not active when the file back page is
-   encountered.
-
-3) Any truncate or hole punch operation on a pinned DAX page will fail.
-
-4) The user has the option of holding the lease or releasing it.  If they
-   release it no other pin calls will work on the file.
-
-5) Closing the file is ok.
-
-6) Unmapping the file is ok
-
-7) Pins against the files are tracked back to an owning file or an owning mm
-   depending on the internal subsystem needs.  With RDMA there is an owning
-   file which is related to the pined file.
-
-8) Only RDMA is currently supported
-
-9) Truncation of pages which are not actively pinned nor covered by a lease
-   will succeed.
-
-
-Reporting of pinned files in procfs
-===================================
-
-A number of alternatives were explored for how to report the file pins within
-procfs.  The following incorporates ideas from Jan Kara, Jason Gunthorpe, Dave
-Chinner, Dan Williams and myself.
-
-A new entry is added to procfs
-
-/proc/<pid>/file_pins
-
-For processes which have pinned DAX file memory file_pins reference come in 2
-flavors.  Those which are attached to another open file descriptor (For example
-what is done in the RDMA subsytem) and those which are attached to a process
-mm.
-
-For those which are attached to another open file descriptor (such as RDMA)
-the file pin references go through the 'struct file' associated with that pin.
-In RDMA this is the RDMA context struct file.
-
-The resulting output from proc fs is something like.
-
-$ cat /proc/<pid>/file_pins
-3: /dev/infiniband/uverbs0
-	/mnt/pmem/foo
-
-Where '3' is the file descriptor (and file path) of the rdma context within the
-process.  The paths of the files pinned using that context are then listed.
-
-RDMA contexts may have multiple MR each of which may have multiple files pinned
-within them.  So an output like the following is possible.
-
-$ cat /proc/<pid>/file_pins
-4: /dev/infiniband/uverbs0
-	/mnt/pmem/foo
-	/mnt/pmem/bar
-	/mnt/pmem/another
-	/mnt/pmem/one
-
-The actual memory regions associated with the file pins are not reported.
-
-For processes which are pinning memory which is not associated with a specific
-file descriptor memory pins are reported directly as paths to the file.
-
-$ cat /proc/<pid>/file_pins
-/mnt/pmem/foo
-
-Putting the above together if a process was using RDMA and another subsystem
-the output could be something like:
-
-
-$ cat /proc/<pid>/file_pins
-4: /dev/infiniband/uverbs0
-	/mnt/pmem/foo
-	/mnt/pmem/bar
-	/mnt/pmem/another
-	/mnt/pmem/one
-/mnt/pmem/foo
-/mnt/pmem/another
-/mnt/pmem/mm_mapped_file
-
-
-[1] https://lkml.org/lkml/2019/6/5/1046
-
-
-Background
-==========
-
-It should be noted that one solution for this problem is to use RDMA's On
-Demand Paging (ODP).  There are 2 big reasons this may not work.
-
-	1) The hardware being used for RDMA may not support ODP
-	2) ODP may be detrimental to the over all network (cluster or cloud)
-	   performance
-
-Therefore, in order to support RDMA to File system pages without On Demand
-Paging (ODP) a number of things need to be done.
-
-1) "longterm" GUP users need to inform other subsystems that they have taken a
-   pin on a page which may remain pinned for a very "long time".  The
-   definition of long time is debatable but it has been established that RDMAs
-   use of pages for, minutes, hours, or even days after the pin is the extreme
-   case which makes this problem most severe.
-
-2) Any page which is "controlled" by a file system needs to have special
-   handling.  The details of the handling depends on if the page is page cache
-   fronted or not.
-
-   2a) A page cache fronted page which has been pinned by GUP long term can use a
-   bounce buffer to allow the file system to write back snap shots of the page.
-   This is handled by the FS recognizing the GUP long term pin and making a copy
-   of the page to be written back.
-	NOTE: this patch set does not address this path.
-
-   2b) A FS "controlled" page which is not page cache fronted is either easier
-   to deal with or harder depending on the operation the filesystem is trying
-   to do.
-
-	2ba) [Hard case] If the FS operation _is_ a truncate or hole punch the
-	FS can no longer use the pages in question until the pin has been
-	removed.  This patch set presents a solution to this by introducing
-	some reasonable restrictions on user space applications.
-
-	2bb) [Easy case] If the FS operation is _not_ a truncate or hole punch
-	then there is nothing which need be done.  Data is Read or Written
-	directly to the page.  This is an easy case which would currently work
-	if not for GUP long term pins being disabled.  Therefore this patch set
-	need not change access to the file data but does allow for GUP pins
-	after 2ba above is dealt with.
-
-
-This patch series and presents a solution for problem 2ba)
-
-Ira Weiny (19):
-  fs/locks: Export F_LAYOUT lease to user space
-  fs/locks: Add Exclusive flag to user Layout lease
-  mm/gup: Pass flags down to __gup_device_huge* calls
-  mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
-  fs/ext4: Teach ext4 to break layout leases
-  fs/ext4: Teach dax_layout_busy_page() to operate on a sub-range
-  fs/xfs: Teach xfs to use new dax_layout_busy_page()
-  fs/xfs: Fail truncate if page lease can't be broken
-  mm/gup: Introduce vaddr_pin structure
-  mm/gup: Pass a NULL vaddr_pin through GUP fast
-  mm/gup: Pass follow_page_context further down the call stack
-  mm/gup: Prep put_user_pages() to take an vaddr_pin struct
-  {mm,file}: Add file_pins objects
-  fs/locks: Associate file pins while performing GUP
-  mm/gup: Introduce vaddr_pin_pages()
-  RDMA/uverbs: Add back pointer to system file object
-  RDMA/umem: Convert to vaddr_[pin|unpin]* operations.
-  {mm,procfs}: Add display file_pins proc
-  mm/gup: Remove FOLL_LONGTERM DAX exclusion
-
- drivers/infiniband/core/umem.c        |  26 +-
- drivers/infiniband/core/umem_odp.c    |  16 +-
- drivers/infiniband/core/uverbs.h      |   1 +
- drivers/infiniband/core/uverbs_main.c |   1 +
- fs/Kconfig                            |   1 +
- fs/dax.c                              |  38 ++-
- fs/ext4/ext4.h                        |   2 +-
- fs/ext4/extents.c                     |   6 +-
- fs/ext4/inode.c                       |  26 +-
- fs/file_table.c                       |   4 +
- fs/locks.c                            | 291 +++++++++++++++++-
- fs/proc/base.c                        | 214 +++++++++++++
- fs/xfs/xfs_file.c                     |  21 +-
- fs/xfs/xfs_inode.h                    |   5 +-
- fs/xfs/xfs_ioctl.c                    |  15 +-
- fs/xfs/xfs_iops.c                     |  14 +-
- include/linux/dax.h                   |  12 +-
- include/linux/file.h                  |  49 +++
- include/linux/fs.h                    |   5 +-
- include/linux/huge_mm.h               |  17 --
- include/linux/mm.h                    |  69 +++--
- include/linux/mm_types.h              |   2 +
- include/rdma/ib_umem.h                |   2 +-
- include/uapi/asm-generic/fcntl.h      |   5 +
- kernel/fork.c                         |   3 +
- mm/gup.c                              | 418 ++++++++++++++++----------
- mm/huge_memory.c                      |  18 +-
- mm/internal.h                         |  28 ++
- 28 files changed, 1048 insertions(+), 261 deletions(-)
-
+diff --git a/fs/locks.c b/fs/locks.c
+index ad17c6ffca06..0c7359cdab92 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -626,6 +626,8 @@ static int lease_init(struct file *filp, long type, unsigned int flags,
+ 	fl->fl_flags = FL_LEASE;
+ 	if (flags & FL_LAYOUT)
+ 		fl->fl_flags |= FL_LAYOUT;
++	if (flags & FL_EXCLUSIVE)
++		fl->fl_flags |= FL_EXCLUSIVE;
+ 	fl->fl_start = 0;
+ 	fl->fl_end = OFFSET_MAX;
+ 	fl->fl_ops = NULL;
+@@ -1619,6 +1621,14 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, fl_list) {
+ 		if (!leases_conflict(fl, new_fl))
+ 			continue;
++		if (fl->fl_flags & FL_EXCLUSIVE) {
++			error = -ETXTBSY;
++			if (new_fl->fl_pid == fl->fl_pid) {
++				error = -EDEADLOCK;
++				goto out;
++			}
++			continue;
++		}
+ 		if (want_write) {
+ 			if (fl->fl_flags & FL_UNLOCK_PENDING)
+ 				continue;
+@@ -1634,6 +1644,13 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 			locks_delete_lock_ctx(fl, &dispose);
+ 	}
+ 
++	/* We differentiate between -EDEADLOCK and -ETXTBSY so the above loop
++	 * continues with -ETXTBSY looking for a potential deadlock instead.
++	 * If deadlock is not found go ahead and return -ETXTBSY.
++	 */
++	if (error == -ETXTBSY)
++		goto out;
++
+ 	if (list_empty(&ctx->flc_lease))
+ 		goto out;
+ 
+@@ -2044,9 +2061,11 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
+ 	 * to revoke the lease in break_layout()  And this is done by using
+ 	 * F_WRLCK in the break code.
+ 	 */
+-	if (arg == F_LAYOUT) {
++	if ((arg & F_LAYOUT) == F_LAYOUT) {
++		if ((arg & F_EXCLUSIVE) == F_EXCLUSIVE)
++			flags |= FL_EXCLUSIVE;
+ 		arg = F_RDLCK;
+-		flags = FL_LAYOUT;
++		flags |= FL_LAYOUT;
+ 	}
+ 
+ 	fl = lease_alloc(filp, arg, flags);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index dd60d5be9886..2e41ce547913 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1005,6 +1005,7 @@ static inline struct file *get_file(struct file *f)
+ #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
+ #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+ #define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
++#define FL_EXCLUSIVE	4096	/* Layout lease is exclusive */
+ 
+ #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
+ 
+diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+index baddd54f3031..88b175ceccbc 100644
+--- a/include/uapi/asm-generic/fcntl.h
++++ b/include/uapi/asm-generic/fcntl.h
+@@ -176,6 +176,8 @@ struct f_owner_ex {
+ 
+ #define F_LAYOUT	16      /* layout lease to allow longterm pins such as
+ 				   RDMA */
++#define F_EXCLUSIVE	32      /* layout lease is exclusive */
++				/* FIXME or shoudl this be F_EXLCK??? */
+ 
+ /* operations for bsd flock(), also used by the kernel implementation */
+ #define LOCK_SH		1	/* shared lock */
 -- 
 2.20.1
 
