@@ -2,97 +2,216 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B664D88560
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Aug 2019 23:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9C1E8864A
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 Aug 2019 00:58:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfHIV6q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Aug 2019 17:58:46 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43792 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726219AbfHIV6p (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Aug 2019 17:58:45 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 00E157E96C0;
-        Sat, 10 Aug 2019 07:58:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hwCtB-0000wW-Tv; Sat, 10 Aug 2019 07:57:33 +1000
-Date:   Sat, 10 Aug 2019 07:57:33 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
-        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
-Message-ID: <20190809215733.GZ7777@dread.disaster.area>
-References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
- <20190809013403.GY7777@dread.disaster.area>
- <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
+        id S1729234AbfHIW6n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Aug 2019 18:58:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7086 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbfHIW6n (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:42 -0700
+X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
+   d="scan'208";a="374631453"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:41 -0700
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user space
+Date:   Fri,  9 Aug 2019 15:58:15 -0700
+Message-Id: <20190809225833.6657-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=pai4EEcvdAjdbTSEN-UA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 07:30:00AM -0400, Mikulas Patocka wrote:
-> 
-> 
-> On Fri, 9 Aug 2019, Dave Chinner wrote:
-> 
-> > And, FWIW, there's an argument to be made here that the underlying
-> > bug is dm_bufio_shrink_scan() blocking kswapd by waiting on IO
-> > completions while holding a mutex that other IO-level reclaim
-> > contexts require to make progress.
-> > 
-> > Cheers,
-> > 
-> > Dave.
-> 
-> The IO-level reclaim contexts should use GFP_NOIO. If the dm-bufio 
-> shrinker is called with GFP_NOIO, it cannot be blocked by kswapd, because:
+From: Ira Weiny <ira.weiny@intel.com>
 
-No, you misunderstand. I'm talking about blocking kswapd being
-wrong.  i.e. Blocking kswapd in shrinkers causes problems
-because th ememory reclaim code does not expect kswapd to be
-arbitrarily delayed by waiting on IO. We've had this problem with
-the XFS inode cache shrinker for years, and there are many reports
-of extremely long reclaim latencies for both direct and kswapd
-reclaim that result from kswapd not making progress while waiting
-in shrinkers for IO to complete.
+In order to support an opt-in policy for users to allow long term pins
+of FS DAX pages we need to export the LAYOUT lease to user space.
 
-The work I'm currently doing to fix this XFS problem can be found
-here:
+This is the first of 2 new lease flags which must be used to allow a
+long term pin to be made on a file.
 
-https://lore.kernel.org/linux-fsdevel/20190801021752.4986-1-david@fromorbit.com/
+After the complete series:
 
+0) Registrations to Device DAX char devs are not affected
 
-i.e. the point I'm making is that waiting for IO in kswapd reclaim
-context is considered harmful - kswapd context shrinker reclaim
-should be as non-blocking as possible, and any back-off to wait for
-IO to complete should be done by the high level reclaim core once
-it's completed an entire reclaim scan cycle of everything....
+1) The user has to opt in to allowing page pins on a file with an exclusive
+   layout lease.  Both exclusive and layout lease flags are user visible now.
 
-What follows from that, and is pertinent for in this situation, is
-that if you don't block kswapd, then other reclaim contexts are not
-going to get stuck waiting for it regardless of the reclaim context
-they use.
+2) page pins will fail if the lease is not active when the file back page is
+   encountered.
 
-Cheers,
+3) Any truncate or hole punch operation on a pinned DAX page will fail.
 
-Dave.
+4) The user has the option of holding the lease or releasing it.  If they
+   release it no other pin calls will work on the file.
+
+5) Closing the file is ok.
+
+6) Unmapping the file is ok
+
+7) Pins against the files are tracked back to an owning file or an owning mm
+   depending on the internal subsystem needs.  With RDMA there is an owning
+   file which is related to the pined file.
+
+8) Only RDMA is currently supported
+
+9) Truncation of pages which are not actively pinned nor covered by a lease
+   will succeed.
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ fs/locks.c                       | 36 +++++++++++++++++++++++++++-----
+ include/linux/fs.h               |  2 +-
+ include/uapi/asm-generic/fcntl.h |  3 +++
+ 3 files changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/fs/locks.c b/fs/locks.c
+index 24d1db632f6c..ad17c6ffca06 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -191,6 +191,8 @@ static int target_leasetype(struct file_lock *fl)
+ 		return F_UNLCK;
+ 	if (fl->fl_flags & FL_DOWNGRADE_PENDING)
+ 		return F_RDLCK;
++	if (fl->fl_flags & FL_LAYOUT)
++		return F_LAYOUT;
+ 	return fl->fl_type;
+ }
+ 
+@@ -611,7 +613,8 @@ static const struct lock_manager_operations lease_manager_ops = {
+ /*
+  * Initialize a lease, use the default lock manager operations
+  */
+-static int lease_init(struct file *filp, long type, struct file_lock *fl)
++static int lease_init(struct file *filp, long type, unsigned int flags,
++		      struct file_lock *fl)
+ {
+ 	if (assign_type(fl, type) != 0)
+ 		return -EINVAL;
+@@ -621,6 +624,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
+ 
+ 	fl->fl_file = filp;
+ 	fl->fl_flags = FL_LEASE;
++	if (flags & FL_LAYOUT)
++		fl->fl_flags |= FL_LAYOUT;
+ 	fl->fl_start = 0;
+ 	fl->fl_end = OFFSET_MAX;
+ 	fl->fl_ops = NULL;
+@@ -629,7 +634,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
+ }
+ 
+ /* Allocate a file_lock initialised to this type of lease */
+-static struct file_lock *lease_alloc(struct file *filp, long type)
++static struct file_lock *lease_alloc(struct file *filp, long type,
++				     unsigned int flags)
+ {
+ 	struct file_lock *fl = locks_alloc_lock();
+ 	int error = -ENOMEM;
+@@ -637,7 +643,7 @@ static struct file_lock *lease_alloc(struct file *filp, long type)
+ 	if (fl == NULL)
+ 		return ERR_PTR(error);
+ 
+-	error = lease_init(filp, type, fl);
++	error = lease_init(filp, type, flags, fl);
+ 	if (error) {
+ 		locks_free_lock(fl);
+ 		return ERR_PTR(error);
+@@ -1583,7 +1589,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 	int want_write = (mode & O_ACCMODE) != O_RDONLY;
+ 	LIST_HEAD(dispose);
+ 
+-	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK);
++	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK, 0);
+ 	if (IS_ERR(new_fl))
+ 		return PTR_ERR(new_fl);
+ 	new_fl->fl_flags = type;
+@@ -1720,6 +1726,8 @@ EXPORT_SYMBOL(lease_get_mtime);
+  *
+  *	%F_UNLCK to indicate no lease is held.
+  *
++ *	%F_LAYOUT to indicate a layout lease is held.
++ *
+  *	(if a lease break is pending):
+  *
+  *	%F_RDLCK to indicate an exclusive lease needs to be
+@@ -2022,8 +2030,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
+ 	struct file_lock *fl;
+ 	struct fasync_struct *new;
+ 	int error;
++	unsigned int flags = 0;
++
++	/*
++	 * NOTE on F_LAYOUT lease
++	 *
++	 * LAYOUT lease types are taken on files which the user knows that
++	 * they will be pinning in memory for some indeterminate amount of
++	 * time.  Such as for use with RDMA.  While we don't know what user
++	 * space is going to do with the file we still use a F_RDLOCK level of
++	 * lease.  This ensures that there are no conflicts between
++	 * 2 users.  The conflict should only come from the File system wanting
++	 * to revoke the lease in break_layout()  And this is done by using
++	 * F_WRLCK in the break code.
++	 */
++	if (arg == F_LAYOUT) {
++		arg = F_RDLCK;
++		flags = FL_LAYOUT;
++	}
+ 
+-	fl = lease_alloc(filp, arg);
++	fl = lease_alloc(filp, arg, flags);
+ 	if (IS_ERR(fl))
+ 		return PTR_ERR(fl);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 046108cd4ed9..dd60d5be9886 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1004,7 +1004,7 @@ static inline struct file *get_file(struct file *f)
+ #define FL_DOWNGRADE_PENDING	256 /* Lease is being downgraded */
+ #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
+ #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+-#define FL_LAYOUT	2048	/* outstanding pNFS layout */
++#define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
+ 
+ #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
+ 
+diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+index 9dc0bf0c5a6e..baddd54f3031 100644
+--- a/include/uapi/asm-generic/fcntl.h
++++ b/include/uapi/asm-generic/fcntl.h
+@@ -174,6 +174,9 @@ struct f_owner_ex {
+ #define F_SHLCK		8	/* or 4 */
+ #endif
+ 
++#define F_LAYOUT	16      /* layout lease to allow longterm pins such as
++				   RDMA */
++
+ /* operations for bsd flock(), also used by the kernel implementation */
+ #define LOCK_SH		1	/* shared lock */
+ #define LOCK_EX		2	/* exclusive lock */
 -- 
-Dave Chinner
-david@fromorbit.com
+2.20.1
+
