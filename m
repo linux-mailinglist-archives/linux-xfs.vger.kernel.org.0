@@ -2,86 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE2D188527
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Aug 2019 23:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B664D88560
+	for <lists+linux-xfs@lfdr.de>; Fri,  9 Aug 2019 23:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfHIVlW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Aug 2019 17:41:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59950 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfHIVlV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Aug 2019 17:41:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79LYWfI092777
-        for <linux-xfs@vger.kernel.org>; Fri, 9 Aug 2019 21:41:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2019-08-05;
- bh=9l6tjZ6bT6pwoXjcvusR96zl0gYXoAEjT4t7e8VkoUo=;
- b=h0oetskKQtLgPCdMiRReO4teBBzwtDVMQvWk25Dsnp8BDqqqPkOaEdqqcfm7qXlWo0KV
- ypCjU1zmLpmp5NaLogiX1blx3cSUBsW2hlpCLmeUHVGKeu6ZlmX87sYLZpIOnuyQMkX2
- FrP3leCFmpV3WqdyYV412gyWhsI7EK4Vr05aazRORFm/bZRO4OwZsOkS+qlbUIgBna+M
- XH+9P1QA6HofHI4WJNAwX0JENQHIxNQ9OcOPw6ijtAg1KoLHIm4FYPJAd9RA/RsF5WyN
- W2u2o5VuOoEEr7AGk5SeIStE6WnUdf4o/HuocIEFsL8YdtP8ylEyNd8FiHUWb6+jpIG1 mA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2018-07-02;
- bh=9l6tjZ6bT6pwoXjcvusR96zl0gYXoAEjT4t7e8VkoUo=;
- b=dMMd0SVTHjQq/Ql10Rh2HOkmHjVfuLcqPpD+l0/sJlvL/MJ9IRcVycEOTjN0k1FRKLhf
- h5wvKk75ljyd6BydqRbEL9pEfd1RNb53wEnLrvpvWbP7ca/asgyB6kvcj+tXt2jgF+VV
- VbF913sh3ejGoYGoz4L3deC3fM++IfzdO3rxg7UFcMFztgN59qJpXIlI0x9NdFRAeKlg
- CBNPO3diTX/s8v5VRl2JFdwJW2YWcleA/d3wQk1kgW2X5L2/tduBcIKMh4/H7jer6rhG
- CHZk2L+Gl3w/MCLNiPDFe4SEG2+vS5W0Gu+V4vgWflM++kixtvStH0LfhLEF3s+hV5aF ig== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2u8hasj9gk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 09 Aug 2019 21:41:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79LcQrc110154
-        for <linux-xfs@vger.kernel.org>; Fri, 9 Aug 2019 21:39:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2u90t815dw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 09 Aug 2019 21:39:19 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x79LcY60002297
-        for <linux-xfs@vger.kernel.org>; Fri, 9 Aug 2019 21:38:34 GMT
-Received: from localhost.localdomain (/70.176.225.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 09 Aug 2019 14:38:34 -0700
-From:   Allison Collins <allison.henderson@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v1 0/1] Add delayed attributes test
-Date:   Fri,  9 Aug 2019 14:38:28 -0700
-Message-Id: <20190809213829.383-1-allison.henderson@oracle.com>
-X-Mailer: git-send-email 2.17.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9344 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=673
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908090208
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9344 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=735 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908090208
+        id S1726652AbfHIV6q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Aug 2019 17:58:46 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43792 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726219AbfHIV6p (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Aug 2019 17:58:45 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 00E157E96C0;
+        Sat, 10 Aug 2019 07:58:41 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hwCtB-0000wW-Tv; Sat, 10 Aug 2019 07:57:33 +1000
+Date:   Sat, 10 Aug 2019 07:57:33 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
+Message-ID: <20190809215733.GZ7777@dread.disaster.area>
+References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
+ <20190809013403.GY7777@dread.disaster.area>
+ <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=pai4EEcvdAjdbTSEN-UA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch adds a quick test to excersize the delayed attribute
-error inject and log replay.
+On Fri, Aug 09, 2019 at 07:30:00AM -0400, Mikulas Patocka wrote:
+> 
+> 
+> On Fri, 9 Aug 2019, Dave Chinner wrote:
+> 
+> > And, FWIW, there's an argument to be made here that the underlying
+> > bug is dm_bufio_shrink_scan() blocking kswapd by waiting on IO
+> > completions while holding a mutex that other IO-level reclaim
+> > contexts require to make progress.
+> > 
+> > Cheers,
+> > 
+> > Dave.
+> 
+> The IO-level reclaim contexts should use GFP_NOIO. If the dm-bufio 
+> shrinker is called with GFP_NOIO, it cannot be blocked by kswapd, because:
 
-Allison Collins (1):
-  xfstests: Add Delayed Attribute test
+No, you misunderstand. I'm talking about blocking kswapd being
+wrong.  i.e. Blocking kswapd in shrinkers causes problems
+because th ememory reclaim code does not expect kswapd to be
+arbitrarily delayed by waiting on IO. We've had this problem with
+the XFS inode cache shrinker for years, and there are many reports
+of extremely long reclaim latencies for both direct and kswapd
+reclaim that result from kswapd not making progress while waiting
+in shrinkers for IO to complete.
 
- tests/xfs/512     | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/512.out |  18 ++++++++++
- tests/xfs/group   |   1 +
- 3 files changed, 121 insertions(+)
- create mode 100644 tests/xfs/512
- create mode 100644 tests/xfs/512.out
+The work I'm currently doing to fix this XFS problem can be found
+here:
 
+https://lore.kernel.org/linux-fsdevel/20190801021752.4986-1-david@fromorbit.com/
+
+
+i.e. the point I'm making is that waiting for IO in kswapd reclaim
+context is considered harmful - kswapd context shrinker reclaim
+should be as non-blocking as possible, and any back-off to wait for
+IO to complete should be done by the high level reclaim core once
+it's completed an entire reclaim scan cycle of everything....
+
+What follows from that, and is pertinent for in this situation, is
+that if you don't block kswapd, then other reclaim contexts are not
+going to get stuck waiting for it regardless of the reclaim context
+they use.
+
+Cheers,
+
+Dave.
 -- 
-2.7.4
-
+Dave Chinner
+david@fromorbit.com
