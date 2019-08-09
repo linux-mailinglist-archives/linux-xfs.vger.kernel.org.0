@@ -2,215 +2,226 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C54987A43
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Aug 2019 14:36:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A79788360
+	for <lists+linux-xfs@lfdr.de>; Fri,  9 Aug 2019 21:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfHIMgf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Aug 2019 08:36:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54384 "EHLO mx1.redhat.com"
+        id S1726053AbfHITkI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Aug 2019 15:40:08 -0400
+Received: from sandeen.net ([63.231.237.45]:60604 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfHIMgf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:36:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725985AbfHITkH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 9 Aug 2019 15:40:07 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B4BDC6378;
-        Fri,  9 Aug 2019 12:36:34 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3676A194B9;
-        Fri,  9 Aug 2019 12:36:34 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 08:36:32 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 23/24] xfs: reclaim inodes from the LRU
-Message-ID: <20190809123632.GA29669@bfoster>
-References: <20190801021752.4986-1-david@fromorbit.com>
- <20190801021752.4986-24-david@fromorbit.com>
- <20190808163905.GC24551@bfoster>
- <20190809012022.GX7777@dread.disaster.area>
+        by sandeen.net (Postfix) with ESMTPSA id 8B9FD328A16
+        for <linux-xfs@vger.kernel.org>; Fri,  9 Aug 2019 14:40:06 -0500 (CDT)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs v5.2.0 released
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <e172f478-0923-b9cd-2032-70ffae337d15@sandeen.net>
+Date:   Fri, 9 Aug 2019 14:40:04 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809012022.GX7777@dread.disaster.area>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 09 Aug 2019 12:36:34 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="a4jNrQfPmXxLdvGXuoPbj6kMFY9CjRENj"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:20:22AM +1000, Dave Chinner wrote:
-> On Thu, Aug 08, 2019 at 12:39:05PM -0400, Brian Foster wrote:
-> > On Thu, Aug 01, 2019 at 12:17:51PM +1000, Dave Chinner wrote:
-> > > From: Dave Chinner <dchinner@redhat.com>
-> > > 
-> > > Replace the AG radix tree walking reclaim code with a list_lru
-> > > walker, giving us both node-aware and memcg-aware inode reclaim
-> > > at the XFS level. This requires adding an inode isolation function to
-> > > determine if the inode can be reclaim, and a list walker to
-> > > dispose of the inodes that were isolated.
-> > > 
-> > > We want the isolation function to be non-blocking. If we can't
-> > > grab an inode then we either skip it or rotate it. If it's clean
-> > > then we skip it, if it's dirty then we rotate to give it time to be
-> > 
-> > Do you mean we remove it if it's clean?
-> 
-> No, I mean if we can't grab it and it's clean, then we just skip it,
-> leaving it at the head of the LRU for the next scanner to
-> immediately try to reclaim it. If it's dirty, we rotate it so that
-> time passes before we try to reclaim it again in the hope that it is
-> already clean by the time we've scanned through the entire LRU...
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--a4jNrQfPmXxLdvGXuoPbj6kMFY9CjRENj
+Content-Type: multipart/mixed; boundary="zwQSGMd8rxxqtShwbeXRTFViFTLnK9jtA";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: linux-xfs <linux-xfs@vger.kernel.org>
+Message-ID: <e172f478-0923-b9cd-2032-70ffae337d15@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs v5.2.0 released
 
-Ah, Ok. That could probably be worded more explicitly. E.g.:
+--zwQSGMd8rxxqtShwbeXRTFViFTLnK9jtA
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-"If we can't grab an inode, we skip it if it is clean or rotate it if
-dirty. Dirty inode rotation gives the inode time to be cleaned before
-it's scanned again. ..."
+Hi folks,
 
-> > > +++ b/fs/xfs/xfs_super.c
-> > ...
-> > > @@ -1810,23 +1811,58 @@ xfs_fs_mount(
-...
-> > > +	long freed;
-> > >  
-> > > -	return list_lru_shrink_count(&XFS_M(sb)->m_inode_lru, sc);
-> > > +	INIT_LIST_HEAD(&ra.freeable);
-> > > +	ra.lowest_lsn = NULLCOMMITLSN;
-> > > +	ra.dirty_skipped = 0;
-> > > +
-> > > +	freed = list_lru_shrink_walk(&mp->m_inode_lru, sc,
-> > > +					xfs_inode_reclaim_isolate, &ra);
-> > 
-> > This is more related to the locking discussion on the earlier patch, but
-> > this looks like it has more similar serialization to the example patch I
-> > posted than the one without locking at all. IIUC, this walk has an
-> > internal lock per node lru that is held across the walk and passed into
-> > the callback. We never cycle it, so for any given node we only allow one
-> > reclaimer through here at a time.
-> 
-> That's not a guarantee that list_lru gives us. It could drop it's
-> internal lock at any time during that walk and we would be
-> blissfully unaware that it has done this. And at that point, the
-> reclaim context is completely unaware that other reclaim contexts
-> may be scanning the same LRU at the same time and are interleaving
-> with it.
-> 
+xfsprogs v5.2.0 has been released, and the xfsprogs repository at:
 
-What is not a guarantee? I'm not following your point here. I suppose it
-technically could drop the lock, but then it would have to restart the
-iteration and wouldn't exactly provide predictable batching capability
-to users.
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
 
-This internal lock protects the integrity of the list from external
-adds/removes, etc., but it's also passed into the callback so of course
-it can be cycled at any point. The callback just has to notify the
-caller to restart the walk. E.g., from __list_lru_walk_one():
+has just been updated.
 
-        /*
-         * The lru lock has been dropped, our list traversal is
-         * now invalid and so we have to restart from scratch.
-         */
+Tarballs are available at:
 
-> And, really, that does not matter one iota. If multiple scanners are
-> interleaving, the reclaim traversal order and the decisions made are
-> no different from what a single reclaimer does.  i.e. we just don't
-> have to care if reclaim contexts interleave or not, because they
-> will not repeat work that has already been done unnecessarily.
-> That's one of the reasons for moving to IO-less LRU ordered reclaim
-> - it removes all the gross hacks we've had to implement to guarantee
-> reclaim scanning progress in one nice neat package of generic
-> infrastructure.
-> 
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.2.0.tar=
+=2Egz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.2.0.tar=
+=2Exz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.2.0.tar=
+=2Esign
 
-Yes, exactly. The difference I'm pointing out is that with the earlier
-patch that drops locking from the perag based scan mechanism, the
-interleaving of multiple reclaim scanners over the same range is not
-exactly the same as a single reclaimer. That sort of behavior is the
-intent of the example patch I appended to change the locking instead of
-remove it.
 
-> > That seems to be Ok given we don't do much in the isolation handler, the
-> > lock isn't held across the dispose sequence and we're still batching in
-> > the shrinker core on top of that. We're still serialized over the lru
-> > fixups such that concurrent reclaimers aren't processing the same
-> > inodes, however.
-> 
-> The only thing that we may need here is need_resched() checks if it
-> turns out that holding a lock for 1024 items to be scanned proved to
-> be too long to hold on to a single CPU. If we do that we'd cycle the
-> LRU lock and return RETRY or RETRY_REMOVE, hence enabling reclaimers
-> more finer-grained interleaving....
-> 
+This is the most boring release ever(tm).  It contains only libxfs syncup=
+s,
+and some cosmetic changes unique to xfsprogs-specific libxfs/ files.
+Onward to 5.3!
 
-Sure, with the caveat that we restart the traversal..
+Thanks,
+-Eric
 
-> > BTW I got a lockdep splat[1] for some reason on a straight mount/unmount
-> > cycle with this patch.
-> ....
-> > [   39.030519]  lock_acquire+0x90/0x170
-> > [   39.031170]  ? xfs_ilock+0xd2/0x280 [xfs]
-> > [   39.031603]  down_write_nested+0x4f/0xb0
-> > [   39.032064]  ? xfs_ilock+0xd2/0x280 [xfs]
-> > [   39.032684]  ? xfs_dispose_inodes+0x124/0x320 [xfs]
-> > [   39.033575]  xfs_ilock+0xd2/0x280 [xfs]
-> > [   39.034058]  xfs_dispose_inodes+0x124/0x320 [xfs]
-> 
-> False positive, AFAICT. It's complaining about the final xfs_ilock()
-> call we do before freeing the inode because we have other inodes
-> locked. I don't think this can deadlock because the inodes under
-> reclaim should not be usable by anyone else at this point because
-> they have the I_RECLAIM flag set.
-> 
+The new head of the master branch is commit:
 
-Ok. The code looked sane to me at a glance, but lockdep tends to confuse
-the hell out of me.
+2976bfe xfsprogs: Release v5.2.0
 
-Brian
+New Commits since v5.1.0:
 
-> I did notice this - I added a XXX comment I added to the case being
-> complained about to note I needed to resolve this locking issue.
-> 
-> +        * Here we do an (almost) spurious inode lock in order to coordinate
-> +        * with inode cache radix tree lookups.  This is because the lookup
-> +        * can reference the inodes in the cache without taking references.
-> +        *
-> +        * We make that OK here by ensuring that we wait until the inode is
-> +        * unlocked after the lookup before we go ahead and free it. 
-> +        * unlocked after the lookup before we go ahead and free it. 
-> +        *
-> +        * XXX: need to check this is still true. Not sure it is.
->          */
-> 
-> I added that last line in this patch. In more detail....
-> 
-> The comment is suggesting that we need to take the ILOCK to
-> co-ordinate with RCU protected lookups in progress before we RCU
-> free the inode. That's waht RCU is supposed to do, so I'm not at all
-> sure what this is actually serialising against any more.
-> 
-> i.e. any racing radix tree lookup from this point in time is going
-> to see the XFS_IRECLAIM flag and ip->i_ino == 0 while under the
-> rcu_read_lock, and they will go try again after dropping all lock
-> context and waiting for a bit. The inode may remain visibile until
-> the next rcu grace period expires, but all lookups will abort long
-> before the get anywhere near the ILOCK. And once the RCU grace
-> period expires, lookups will be locked out by the rcu_read_lock(),
-> the raidx tree moves to a state where the removal of the inode is
-> guaranteed visibile to all CPUs, and then the object is freed.
-> 
-> So the ILOCK should have no part in lookup serialisation, and I need
-> to go look at the history of the code to determine where and why
-> this was added, and whether the condition it protects against is
-> still a valid concern or not....
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Brian Foster (3):
+      [580a438] xfs: don't account extra agfl blocks as available
+      [b8b9c3c] xfs: make tr_growdata a permanent transaction
+      [d85d342] xfs: assert that we don't enter agfl freeing with a non-p=
+ermanent transaction
+
+Darrick J. Wong (11):
+      [f866934] xfs: track metadata health status
+      [7b55f0f] xfs: replace the BAD_SUMMARY mount flag with the equivale=
+nt health code
+      [25b8487] xfs: clear BAD_SUMMARY if unmounting an unhealthy filesys=
+tem
+      [debdc16] xfs: add a new ioctl to describe allocation group geometr=
+y
+      [69423ea] xfs: report fs and rt health via geometry structure
+      [378d9e6] xfs: report AG health via AG geometry ioctl
+      [f394edc] xfs: report inode health via bulkstat
+      [f73690f] xfs: track delayed allocation reservations across the fil=
+esystem
+      [9833c1a] xfs: always rejoin held resources during defer roll
+      [e9caede] xfs: add online scrub for superblock counters
+      [247c499] xfs: don't reserve per-AG space for an internal log
+
+Dave Chinner (1):
+      [4ddaada] xfs: bump XFS_IOC_FSGEOMETRY to v5 structures
+
+Eric Sandeen (7):
+      [a37cde5] xfs: change some error-less functions to void types
+      [e20cbd1] xfsprogs: Release v5.2.0-rc0
+      [e6afdab] libxfs: reorder functions in libxfs/trans.c
+      [9c64b9b] libxfs: cosmetic changes to libxfs/trans.c
+      [42b85f5] libxfs: trivial changes to libxfs/trans.c
+      [3a3f5b1] libxfs: don't use enum for buffer flags
+      [2976bfe] xfsprogs: Release v5.2.0
+
+
+Code Diffstat:
+
+ VERSION                     |   2 +-
+ configure.ac                |   2 +-
+ db/info.c                   |  10 +-
+ debian/changelog            |   6 +
+ doc/CHANGES                 |   6 +
+ fsr/xfs_fsr.c               |   8 +-
+ include/xfs_mount.h         |   8 +
+ include/xfs_trace.h         |   5 +
+ include/xfs_trans.h         |   7 +-
+ libxfs/libxfs_api_defs.h    |   1 +
+ libxfs/libxfs_io.h          |  17 +-
+ libxfs/libxfs_priv.h        |   1 +
+ libxfs/trans.c              | 406 +++++++++++++++++++++++++++-----------=
+------
+ libxfs/util.c               |  21 ++-
+ libxfs/xfs_ag.c             |  54 ++++++
+ libxfs/xfs_ag.h             |   2 +
+ libxfs/xfs_alloc.c          |  13 +-
+ libxfs/xfs_attr.c           |  35 ++--
+ libxfs/xfs_attr.h           |   2 +-
+ libxfs/xfs_bmap.c           |  17 +-
+ libxfs/xfs_defer.c          |  14 +-
+ libxfs/xfs_dquot_buf.c      |   4 +-
+ libxfs/xfs_fs.h             | 139 +++++++++++----
+ libxfs/xfs_health.h         | 190 +++++++++++++++++++++
+ libxfs/xfs_ialloc_btree.c   |   9 +
+ libxfs/xfs_quota_defs.h     |   2 +-
+ libxfs/xfs_refcount_btree.c |   9 +
+ libxfs/xfs_rmap_btree.c     |   9 +
+ libxfs/xfs_sb.c             |  18 +-
+ libxfs/xfs_sb.h             |   2 +-
+ libxfs/xfs_trans_resv.c     |   6 +-
+ libxfs/xfs_types.c          |   2 +-
+ libxfs/xfs_types.h          |   2 +
+ mkfs/xfs_mkfs.c             |  11 +-
+ rtcp/xfs_rtcp.c             |   2 +-
+ 35 files changed, 766 insertions(+), 276 deletions(-)
+ create mode 100644 libxfs/xfs_health.h
+
+
+--zwQSGMd8rxxqtShwbeXRTFViFTLnK9jtA--
+
+--a4jNrQfPmXxLdvGXuoPbj6kMFY9CjRENj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl1NzBUACgkQIK4WkuE9
+3uB2Dg/+JPQYh31RMx927fpPAkcMEZFGQN8b2nMMVhvraiNvAlfeaRiQEmtmysdy
+KQDRDuejV6NXi1jbMpD1VuxShCmi/2gr0ZGVtAn8NqToCOx8fcjGNXEEMJcuBqjb
+nFOYfzdYs9DqE1TL9quny4eWlvtW+dOyRFtSYrUMlEqG5D/2ZJ6ZNdArk9JEQt5O
+2QMavBzysgKlwQK9mJRfaAOGzfH1/R6tZscZpNEBCj2MeLxvemgoxnWugku0s/58
++7Qo2noOFRABwBQQPTiLRnXu6Hrs4sSs92aBR2/J0uer4nEDrBxx1+iOy0p+174/
+K6ZcjXVfYNaXIQFulRxOpwl5KN3QJjzGD3ufKNAz3STDc+2N8H2UVfz1nbqTKwFV
+B5R5pbeOS0Xlpk9UDQCG3CnAdh6UodheEOozPCr8w/VWO6/txO4ZnauEACZ3SRws
+jSvyUiEk24bV+zGNpqcriSQgdZg6jKci4zP7qFNQ9gesXxEU1kluyAalgRkeSm6a
+WHCxUpIic1ZPR7wHm7WCw6UL9dAd5QQnYNMQaLH9pCiKPh+b9+myu/Qpvb+0Fm9Z
+17l+kNXd48BybugEBHjTlDqVw1qeybTQ4AlHNOtALQi/p3d9ti5QrgGRf4ad5kIZ
+D1lImq7Ovi2aaOR+bn38YS7S8dn1lQCnk7PC4WyPFpxj8zPVtv8=
+=/+NG
+-----END PGP SIGNATURE-----
+
+--a4jNrQfPmXxLdvGXuoPbj6kMFY9CjRENj--
