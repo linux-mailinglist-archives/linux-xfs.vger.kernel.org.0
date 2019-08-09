@@ -2,23 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9C1E8864A
-	for <lists+linux-xfs@lfdr.de>; Sat, 10 Aug 2019 00:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CF468864F
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 Aug 2019 00:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfHIW6n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Aug 2019 18:58:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7086 "EHLO mga02.intel.com"
+        id S1729764AbfHIW6s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Aug 2019 18:58:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25396 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbfHIW6n (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:43 -0400
+        id S1729588AbfHIW6r (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:42 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
 X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="374631453"
+   d="scan'208";a="204067068"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:41 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
 From:   ira.weiny@intel.com
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
@@ -32,9 +32,9 @@ Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-ext4@vger.kernel.org, linux-mm@kvack.org,
         Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user space
-Date:   Fri,  9 Aug 2019 15:58:15 -0700
-Message-Id: <20190809225833.6657-2-ira.weiny@intel.com>
+Subject: [RFC PATCH v2 04/19] mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
+Date:   Fri,  9 Aug 2019 15:58:18 -0700
+Message-Id: <20190809225833.6657-5-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
 References: <20190809225833.6657-1-ira.weiny@intel.com>
@@ -47,171 +47,177 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-In order to support an opt-in policy for users to allow long term pins
-of FS DAX pages we need to export the LAYOUT lease to user space.
+On FS DAX files users must inform the file system they intend to take
+long term GUP pins on the file pages.  Failure to do so should result in
+an error.
 
-This is the first of 2 new lease flags which must be used to allow a
-long term pin to be made on a file.
-
-After the complete series:
-
-0) Registrations to Device DAX char devs are not affected
-
-1) The user has to opt in to allowing page pins on a file with an exclusive
-   layout lease.  Both exclusive and layout lease flags are user visible now.
-
-2) page pins will fail if the lease is not active when the file back page is
-   encountered.
-
-3) Any truncate or hole punch operation on a pinned DAX page will fail.
-
-4) The user has the option of holding the lease or releasing it.  If they
-   release it no other pin calls will work on the file.
-
-5) Closing the file is ok.
-
-6) Unmapping the file is ok
-
-7) Pins against the files are tracked back to an owning file or an owning mm
-   depending on the internal subsystem needs.  With RDMA there is an owning
-   file which is related to the pined file.
-
-8) Only RDMA is currently supported
-
-9) Truncation of pages which are not actively pinned nor covered by a lease
-   will succeed.
+Ensure that a F_LAYOUT lease exists at the time the GUP call is made.
+If not return EPERM.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
 ---
- fs/locks.c                       | 36 +++++++++++++++++++++++++++-----
- include/linux/fs.h               |  2 +-
- include/uapi/asm-generic/fcntl.h |  3 +++
- 3 files changed, 35 insertions(+), 6 deletions(-)
+Changes from RFC v1:
+
+    The old version had remnants of when GUP was going to take the lease
+    for the user.  Remove this prototype code.
+    Fix issue in gup_device_huge which was setting page reference prior
+    to checking for Layout Lease
+    Re-base to 5.3+
+    Clean up htmldoc comments
+
+ fs/locks.c         | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mm.h |  2 ++
+ mm/gup.c           | 23 +++++++++++++++++++++++
+ mm/huge_memory.c   | 12 ++++++++++++
+ 4 files changed, 84 insertions(+)
 
 diff --git a/fs/locks.c b/fs/locks.c
-index 24d1db632f6c..ad17c6ffca06 100644
+index 0c7359cdab92..14892c84844b 100644
 --- a/fs/locks.c
 +++ b/fs/locks.c
-@@ -191,6 +191,8 @@ static int target_leasetype(struct file_lock *fl)
- 		return F_UNLCK;
- 	if (fl->fl_flags & FL_DOWNGRADE_PENDING)
- 		return F_RDLCK;
-+	if (fl->fl_flags & FL_LAYOUT)
-+		return F_LAYOUT;
- 	return fl->fl_type;
+@@ -2971,3 +2971,50 @@ static int __init filelock_init(void)
+ 	return 0;
  }
- 
-@@ -611,7 +613,8 @@ static const struct lock_manager_operations lease_manager_ops = {
- /*
-  * Initialize a lease, use the default lock manager operations
-  */
--static int lease_init(struct file *filp, long type, struct file_lock *fl)
-+static int lease_init(struct file *filp, long type, unsigned int flags,
-+		      struct file_lock *fl)
- {
- 	if (assign_type(fl, type) != 0)
- 		return -EINVAL;
-@@ -621,6 +624,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
- 
- 	fl->fl_file = filp;
- 	fl->fl_flags = FL_LEASE;
-+	if (flags & FL_LAYOUT)
-+		fl->fl_flags |= FL_LAYOUT;
- 	fl->fl_start = 0;
- 	fl->fl_end = OFFSET_MAX;
- 	fl->fl_ops = NULL;
-@@ -629,7 +634,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
- }
- 
- /* Allocate a file_lock initialised to this type of lease */
--static struct file_lock *lease_alloc(struct file *filp, long type)
-+static struct file_lock *lease_alloc(struct file *filp, long type,
-+				     unsigned int flags)
- {
- 	struct file_lock *fl = locks_alloc_lock();
- 	int error = -ENOMEM;
-@@ -637,7 +643,7 @@ static struct file_lock *lease_alloc(struct file *filp, long type)
- 	if (fl == NULL)
- 		return ERR_PTR(error);
- 
--	error = lease_init(filp, type, fl);
-+	error = lease_init(filp, type, flags, fl);
- 	if (error) {
- 		locks_free_lock(fl);
- 		return ERR_PTR(error);
-@@ -1583,7 +1589,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 	int want_write = (mode & O_ACCMODE) != O_RDONLY;
- 	LIST_HEAD(dispose);
- 
--	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK);
-+	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK, 0);
- 	if (IS_ERR(new_fl))
- 		return PTR_ERR(new_fl);
- 	new_fl->fl_flags = type;
-@@ -1720,6 +1726,8 @@ EXPORT_SYMBOL(lease_get_mtime);
-  *
-  *	%F_UNLCK to indicate no lease is held.
-  *
-+ *	%F_LAYOUT to indicate a layout lease is held.
+ core_initcall(filelock_init);
++
++/**
++ * mapping_inode_has_layout - ensure a file mapped page has a layout lease
++ * taken
++ * @page: page we are trying to GUP
 + *
-  *	(if a lease break is pending):
-  *
-  *	%F_RDLCK to indicate an exclusive lease needs to be
-@@ -2022,8 +2030,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
- 	struct file_lock *fl;
- 	struct fasync_struct *new;
- 	int error;
-+	unsigned int flags = 0;
++ * This should only be called on DAX pages.  DAX pages which are mapped through
++ * FS DAX do not use the page cache.  As a result they require the user to take
++ * a LAYOUT lease on them prior to be able to pin them for longterm use.
++ * This allows the user to opt-into the fact that truncation operations will
++ * fail for the duration of the pin.
++ *
++ * Return true if the page has a LAYOUT lease associated with it's file.
++ */
++bool mapping_inode_has_layout(struct page *page)
++{
++	bool ret = false;
++	struct inode *inode;
++	struct file_lock *fl;
 +
-+	/*
-+	 * NOTE on F_LAYOUT lease
-+	 *
-+	 * LAYOUT lease types are taken on files which the user knows that
-+	 * they will be pinning in memory for some indeterminate amount of
-+	 * time.  Such as for use with RDMA.  While we don't know what user
-+	 * space is going to do with the file we still use a F_RDLOCK level of
-+	 * lease.  This ensures that there are no conflicts between
-+	 * 2 users.  The conflict should only come from the File system wanting
-+	 * to revoke the lease in break_layout()  And this is done by using
-+	 * F_WRLCK in the break code.
-+	 */
-+	if (arg == F_LAYOUT) {
-+		arg = F_RDLCK;
-+		flags = FL_LAYOUT;
++	if (WARN_ON(PageAnon(page)) ||
++	    WARN_ON(!page) ||
++	    WARN_ON(!page->mapping) ||
++	    WARN_ON(!page->mapping->host))
++		return false;
++
++	inode = page->mapping->host;
++
++	smp_mb();
++	if (inode->i_flctx &&
++	    !list_empty_careful(&inode->i_flctx->flc_lease)) {
++		spin_lock(&inode->i_flctx->flc_lock);
++		ret = false;
++		list_for_each_entry(fl, &inode->i_flctx->flc_lease, fl_list) {
++			if (fl->fl_pid == current->tgid &&
++			    (fl->fl_flags & FL_LAYOUT) &&
++			    (fl->fl_flags & FL_EXCLUSIVE)) {
++				ret = true;
++				break;
++			}
++		}
++		spin_unlock(&inode->i_flctx->flc_lock);
 +	}
- 
--	fl = lease_alloc(filp, arg);
-+	fl = lease_alloc(filp, arg, flags);
- 	if (IS_ERR(fl))
- 		return PTR_ERR(fl);
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 046108cd4ed9..dd60d5be9886 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1004,7 +1004,7 @@ static inline struct file *get_file(struct file *f)
- #define FL_DOWNGRADE_PENDING	256 /* Lease is being downgraded */
- #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
- #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
--#define FL_LAYOUT	2048	/* outstanding pNFS layout */
-+#define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
- 
- #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
- 
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index 9dc0bf0c5a6e..baddd54f3031 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -174,6 +174,9 @@ struct f_owner_ex {
- #define F_SHLCK		8	/* or 4 */
- #endif
- 
-+#define F_LAYOUT	16      /* layout lease to allow longterm pins such as
-+				   RDMA */
 +
- /* operations for bsd flock(), also used by the kernel implementation */
- #define LOCK_SH		1	/* shared lock */
- #define LOCK_EX		2	/* exclusive lock */
++	return ret;
++}
++EXPORT_SYMBOL_GPL(mapping_inode_has_layout);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index ad6766a08f9b..04f22722b374 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1583,6 +1583,8 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
+ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+ 			struct task_struct *task, bool bypass_rlim);
+ 
++bool mapping_inode_has_layout(struct page *page);
++
+ /* Container for pinned pfns / pages */
+ struct frame_vector {
+ 	unsigned int nr_allocated;	/* Number of frames we have space for */
+diff --git a/mm/gup.c b/mm/gup.c
+index 80423779a50a..0b05e22ac05f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -221,6 +221,13 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 			page = pte_page(pte);
+ 		else
+ 			goto no_page;
++
++		if (unlikely(flags & FOLL_LONGTERM) &&
++		    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(page)) {
++			page = ERR_PTR(-EPERM);
++			goto out;
++		}
+ 	} else if (unlikely(!page)) {
+ 		if (flags & FOLL_DUMP) {
+ 			/* Avoid special (like zero) pages in core dumps */
+@@ -1847,6 +1854,14 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+ 
++		if (pte_devmap(pte) &&
++		    unlikely(flags & FOLL_LONGTERM) &&
++		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(head)) {
++			put_user_page(head);
++			goto pte_unmap;
++		}
++
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		(*nr)++;
+@@ -1895,6 +1910,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 			undo_dev_pagemap(nr, nr_start, pages);
+ 			return 0;
+ 		}
++
++		if (unlikely(flags & FOLL_LONGTERM) &&
++		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(page)) {
++			undo_dev_pagemap(nr, nr_start, pages);
++			return 0;
++		}
++
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		get_page(page);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1334ede667a8..bc1a07a55be1 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -953,6 +953,12 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
++
++	if (unlikely(flags & FOLL_LONGTERM) &&
++	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++	    !mapping_inode_has_layout(page))
++		return ERR_PTR(-EPERM);
++
+ 	get_page(page);
+ 
+ 	return page;
+@@ -1093,6 +1099,12 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
++
++	if (unlikely(flags & FOLL_LONGTERM) &&
++	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++	    !mapping_inode_has_layout(page))
++		return ERR_PTR(-EPERM);
++
+ 	get_page(page);
+ 
+ 	return page;
 -- 
 2.20.1
 
