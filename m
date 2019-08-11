@@ -2,143 +2,134 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D50894D2
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 01:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A95E894D9
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 01:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfHKXH0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 11 Aug 2019 19:07:26 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7185 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfHKXH0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 11 Aug 2019 19:07:26 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d509fb60000>; Sun, 11 Aug 2019 16:07:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 11 Aug 2019 16:07:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 11 Aug 2019 16:07:24 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 11 Aug
- 2019 23:07:23 +0000
-Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
-To:     <ira.weiny@intel.com>, Andrew Morton <akpm@linux-foundation.org>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>,
-        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-16-ira.weiny@intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <88d82639-c0b2-0b35-1919-999a8438031c@nvidia.com>
-Date:   Sun, 11 Aug 2019 16:07:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726014AbfHKXLI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 11 Aug 2019 19:11:08 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:37758 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725870AbfHKXLI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 11 Aug 2019 19:11:08 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7FDD243C890;
+        Mon, 12 Aug 2019 09:11:01 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hwwyJ-0002Nq-1n; Mon, 12 Aug 2019 09:09:55 +1000
+Date:   Mon, 12 Aug 2019 09:09:55 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] vfs: fix page locking deadlocks when deduping files
+Message-ID: <20190811230955.GG7777@dread.disaster.area>
+References: <156527561023.1960675.17007470833732765300.stgit@magnolia>
+ <156527561641.1960675.7113883901730327475.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20190809225833.6657-16-ira.weiny@intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565564854; bh=WyN+cqUy4NONmSoVEoC5zyApgJufQNRRkmxYAmxiNRk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GjochqX+orN7s3BQGomPrZQyWc/568hzhVWT8sDxI6ycL8n3NJRfjYVyxlilSkFJV
-         0v1gr7a1sg2wL7PQ7Q0Dcubx1ogIn8Ke72whU/7rqtGuRqPq7C+Ov/M2GpkOhsvG7D
-         prYV07lPVe1n7zXbUFOOqu0O+zmZFD4o9ZwEYryqx80zMRNZ+bq7HCwxmmVbIxjO2a
-         eyfVpsIxVN8KjqFFKHnKr50U23pYiJqe16sEcZFBVMMPBbuIaXUFHzc2oRYO+Hbvbq
-         BtKCArw8N2g27OxonpaIrJUWZPBJhIbV9JVwYzpariVg0rZ5RNb/Q9Z0jeOeGL3ylM
-         qgEDDHrL4QwYQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156527561641.1960675.7113883901730327475.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=AZKKZlFo_ee619_1cNMA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Thu, Aug 08, 2019 at 07:46:56AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> The addition of FOLL_LONGTERM has taken on additional meaning for CMA
-> pages.
+> When dedupe wants to use the page cache to compare parts of two files
+> for dedupe, we must be very careful to handle locking correctly.  The
+> current code doesn't do this.  It must lock and unlock the page only
+> once if the two pages are the same, since the overlapping range check
+> doesn't catch this when blocksize < pagesize.  If the pages are distinct
+> but from the same file, we must observe page locking order and lock them
+> in order of increasing offset to avoid clashing with writeback locking.
 > 
-> In addition subsystems such as RDMA require new information to be passed
-> to the GUP interface to track file owning information.  As such a simple
-> FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
-> 
-> Introduce a new GUP like call which takes the newly introduced vaddr_pin
-> information.  Failure to pass the vaddr_pin object back to a vaddr_put*
-> call will result in a failure if pins were created on files during the
-> pin operation.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-
-I'm creating a new call site conversion series, to replace the 
-"put_user_pages(): miscellaneous call sites" series. This uses
-vaddr_pin_pages*() where appropriate. So it's based on your series here.
-
-btw, while doing that, I noticed one more typo while re-reading some of the comments. 
-Thought you probably want to collect them all for the next spin. Below...
-
+> Fixes: 876bec6f9bbfcb3 ("vfs: refactor clone/dedupe_file_range common functions")
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
-> Changes from list:
-> 	Change to vaddr_put_pages_dirty_lock
-> 	Change to vaddr_unpin_pages_dirty_lock
+>  fs/read_write.c |   36 ++++++++++++++++++++++++++++--------
+>  1 file changed, 28 insertions(+), 8 deletions(-)
 > 
->  include/linux/mm.h |  5 ++++
->  mm/gup.c           | 59 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 64 insertions(+)
 > 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 657c947bda49..90c5802866df 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1603,6 +1603,11 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
->  int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
->  			struct task_struct *task, bool bypass_rlim);
->  
-> +long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
-> +		     unsigned int gup_flags, struct page **pages,
-> +		     struct vaddr_pin *vaddr_pin);
-> +void vaddr_unpin_pages_dirty_lock(struct page **pages, unsigned long nr_pages,
-> +				  struct vaddr_pin *vaddr_pin, bool make_dirty);
->  bool mapping_inode_has_layout(struct vaddr_pin *vaddr_pin, struct page *page);
->  
->  /* Container for pinned pfns / pages */
-> diff --git a/mm/gup.c b/mm/gup.c
-> index eeaa0ddd08a6..6d23f70d7847 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2536,3 +2536,62 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->  	return ret;
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 1f5088dec566..4dbdccffa59e 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1811,10 +1811,7 @@ static int generic_remap_check_len(struct inode *inode_in,
+>  	return (remap_flags & REMAP_FILE_DEDUP) ? -EBADE : -EINVAL;
 >  }
->  EXPORT_SYMBOL_GPL(get_user_pages_fast);
+>  
+> -/*
+> - * Read a page's worth of file data into the page cache.  Return the page
+> - * locked.
+> - */
+> +/* Read a page's worth of file data into the page cache. */
+>  static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
+>  {
+>  	struct page *page;
+> @@ -1826,10 +1823,32 @@ static struct page *vfs_dedupe_get_page(struct inode *inode, loff_t offset)
+>  		put_page(page);
+>  		return ERR_PTR(-EIO);
+>  	}
+> -	lock_page(page);
+>  	return page;
+>  }
+>  
+> +/*
+> + * Lock two pages, ensuring that we lock in offset order if the pages are from
+> + * the same file.
+> + */
+> +static void vfs_lock_two_pages(struct page *page1, struct page *page2)
+> +{
+> +	/* Always lock in order of increasing index. */
+> +	if (page1->index > page2->index)
+> +		swap(page1, page2);
 > +
-> +/**
-> + * vaddr_pin_pages pin pages by virtual address and return the pages to the
-> + * user.
-> + *
-> + * @addr, start address
-> + * @nr_pages, number of pages to pin
-> + * @gup_flags, flags to use for the pin
-> + * @pages, array of pages returned
-> + * @vaddr_pin, initalized meta information this pin is to be associated
+> +	lock_page(page1);
+> +	if (page1 != page2)
+> +		lock_page(page2);
+> +}
+> +
+> +/* Unlock two pages, being careful not to unlock the same page twice. */
+> +static void vfs_unlock_two_pages(struct page *page1, struct page *page2)
+> +{
+> +	unlock_page(page1);
+> +	if (page1 != page2)
+> +		unlock_page(page2);
+> +}
+> +
+>  /*
+>   * Compare extents of two files to see if they are the same.
+>   * Caller must have locked both inodes to prevent write races.
+> @@ -1867,10 +1886,12 @@ static int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+>  		dest_page = vfs_dedupe_get_page(dest, destoff);
+>  		if (IS_ERR(dest_page)) {
+>  			error = PTR_ERR(dest_page);
+> -			unlock_page(src_page);
+>  			put_page(src_page);
+>  			goto out_error;
+>  		}
+> +
+> +		vfs_lock_two_pages(src_page, dest_page);
+> +
 
-Typo:
-                  initialized
+Locking looks fine now, but....
 
+... don't we need to check for invalidation races on the source page
+here because the src inode is only locked shared and so can race with
+things like direct IO under shared inode locking doing invalidation?
 
-thanks,
+Cheers,
+
+Dave.
 -- 
-John Hubbard
-NVIDIA
+Dave Chinner
+david@fromorbit.com
