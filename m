@@ -2,108 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99F66894B7
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 00:54:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49D50894D2
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 01:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfHKWyT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 11 Aug 2019 18:54:19 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44968 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbfHKWyS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 11 Aug 2019 18:54:18 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6AE3D366F70;
-        Mon, 12 Aug 2019 08:54:15 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hwwi3-0002E1-PA; Mon, 12 Aug 2019 08:53:07 +1000
-Date:   Mon, 12 Aug 2019 08:53:07 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Thomas Deutschmann <whissi@gentoo.org>
-Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: xfsprogs-5.2.0 FTBFS: ../libxfs/.libs/libxfs.so: undefined
- reference to `xfs_ag_geom_health'
-Message-ID: <20190811225307.GF7777@dread.disaster.area>
-References: <c4b1b7db-bf73-9b96-b418-5a639e7decdc@gentoo.org>
+        id S1726155AbfHKXH0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 11 Aug 2019 19:07:26 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7185 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfHKXH0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 11 Aug 2019 19:07:26 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d509fb60000>; Sun, 11 Aug 2019 16:07:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 11 Aug 2019 16:07:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 11 Aug 2019 16:07:24 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 11 Aug
+ 2019 23:07:23 +0000
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+To:     <ira.weiny@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <88d82639-c0b2-0b35-1919-999a8438031c@nvidia.com>
+Date:   Sun, 11 Aug 2019 16:07:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4b1b7db-bf73-9b96-b418-5a639e7decdc@gentoo.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=pUOWRilGv8Zjswca7JQA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190809225833.6657-16-ira.weiny@intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565564854; bh=WyN+cqUy4NONmSoVEoC5zyApgJufQNRRkmxYAmxiNRk=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GjochqX+orN7s3BQGomPrZQyWc/568hzhVWT8sDxI6ycL8n3NJRfjYVyxlilSkFJV
+         0v1gr7a1sg2wL7PQ7Q0Dcubx1ogIn8Ke72whU/7rqtGuRqPq7C+Ov/M2GpkOhsvG7D
+         prYV07lPVe1n7zXbUFOOqu0O+zmZFD4o9ZwEYryqx80zMRNZ+bq7HCwxmmVbIxjO2a
+         eyfVpsIxVN8KjqFFKHnKr50U23pYiJqe16sEcZFBVMMPBbuIaXUFHzc2oRYO+Hbvbq
+         BtKCArw8N2g27OxonpaIrJUWZPBJhIbV9JVwYzpariVg0rZ5RNb/Q9Z0jeOeGL3ylM
+         qgEDDHrL4QwYQ==
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 03:06:13PM +0200, Thomas Deutschmann wrote:
-> Hi,
+On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> building xfsprogs-5.2.0 is failing with the following error:
+> The addition of FOLL_LONGTERM has taken on additional meaning for CMA
+> pages.
 > 
-> >     [CC]     xfs_copy.o
-> > x86_64-pc-linux-gnu-gcc -O2 -pipe -march=ivybridge -mtune=ivybridge -mno-xsaveopt -frecord-gcc-switches -D_FILE_OFFSET_BITS=64 -O2 -pipe -march=ivybridge -mtune=ivybridge -mno-xsaveopt -frecord-gcc-switches  -O2 -pipe -march=ivybridge -mtune=ivybridge -mno-xsaveopt -frecord-gcc-switches -DNDEBUG -DVERSION=\"5.2.0\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"xfsprogs\" -I../include -I../libxfs -DENABLE_GETTEXT -D_GNU_SOURCE -funsigned-char -fno-strict-aliasing -Wall -DHAVE_MNTENT -DHAVE_FSETXATTR -DENABLE_BLKID -DHAVE_GETFSMAP  -c xfs_copy.c
-> >     [LD]     xfs_copy
-> > /bin/bash ../libtool --quiet --tag=CC --mode=link x86_64-pc-linux-gnu-gcc -o xfs_copy -Wl,-O1 -Wl,--as-needed  -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed   xfs_copy.o   ../libxfs/libxfs.la ../libxlog/libxlog.la ../libfrog/libfrog.la -luuid -lpthread -lrt  
-> > /usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../x86_64-pc-linux-gnu/bin/ld: ../libxfs/.libs/libxfs.so: undefined reference to `xfs_ag_geom_health'
-> > collect2: error: ld returned 1 exit status
-> > gmake[2]: *** [../include/buildrules:65: xfs_copy] Error 1
-> > gmake[1]: *** [include/buildrules:36: copy] Error 2
-> > make: *** [Makefile:92: default] Error 2
+> In addition subsystems such as RDMA require new information to be passed
+> to the GUP interface to track file owning information.  As such a simple
+> FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
+> 
+> Introduce a new GUP like call which takes the newly introduced vaddr_pin
+> information.  Failure to pass the vaddr_pin object back to a vaddr_put*
+> call will result in a failure if pins were created on files during the
+> pin operation.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
 
-That's quite a set of custom compiler options you have there. It's
-complaining about a reference to a function that is dead code in
-the build that is called from other dead code in the build. i.e the
-linker or compiler has elided one part of the dead code, but not all
-of it. The build works if nothing is elided or all the dead code is
-elided, so that seems like a toolchain problem more that anything.
+I'm creating a new call site conversion series, to replace the 
+"put_user_pages(): miscellaneous call sites" series. This uses
+vaddr_pin_pages*() where appropriate. So it's based on your series here.
 
-FWIW, the default build w. gcc-8.3.0 on debian unstable is fine:
+btw, while doing that, I noticed one more typo while re-reading some of the comments. 
+Thought you probably want to collect them all for the next spin. Below...
 
-gcc -MM -g -O2 -D_FILE_OFFSET_BITS=64   -g -O2 -DDEBUG -DVERSION=\"5.2.0\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"xfsprogs\" -I../include -I../libxfs -DENABLE_GETTEXT -D_GNU_SOURCE -funsigned-char -fno-strict-aliasing -Wall -DHAVE_MNTENT -DHAVE_FSETXATTR -DENABLE_BLKID -DHAVE_GETFSMAP  xfs_copy.c > .dep
-rm -f .dep
-    [CC]     xfs_copy.o
-gcc -g -O2 -D_FILE_OFFSET_BITS=64   -g -O2 -DDEBUG -DVERSION=\"5.2.0\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"xfsprogs\" -I../include -I../libxfs -DENABLE_GETTEXT -D_GNU_SOURCE -funsigned-char -fno-strict-aliasing -Wall -DHAVE_MNTENT -DHAVE_FSETXATTR -DENABLE_BLKID -DHAVE_GETFSMAP  -c xfs_copy.c
-    [LD]     xfs_copy
-/bin/bash ../libtool --quiet --tag=CC --mode=link gcc -o xfs_copy   -static-libtool-libs  xfs_copy.o   ../libxfs/libxfs.la ../libxlog/libxlog.la ../libfrog/libfrog.la -luuid -lpthread -lrt
+> ---
+> Changes from list:
+> 	Change to vaddr_put_pages_dirty_lock
+> 	Change to vaddr_unpin_pages_dirty_lock
+> 
+>  include/linux/mm.h |  5 ++++
+>  mm/gup.c           | 59 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 64 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 657c947bda49..90c5802866df 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1603,6 +1603,11 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
+>  int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+>  			struct task_struct *task, bool bypass_rlim);
+>  
+> +long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
+> +		     unsigned int gup_flags, struct page **pages,
+> +		     struct vaddr_pin *vaddr_pin);
+> +void vaddr_unpin_pages_dirty_lock(struct page **pages, unsigned long nr_pages,
+> +				  struct vaddr_pin *vaddr_pin, bool make_dirty);
+>  bool mapping_inode_has_layout(struct vaddr_pin *vaddr_pin, struct page *page);
+>  
+>  /* Container for pinned pfns / pages */
+> diff --git a/mm/gup.c b/mm/gup.c
+> index eeaa0ddd08a6..6d23f70d7847 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2536,3 +2536,62 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(get_user_pages_fast);
+> +
+> +/**
+> + * vaddr_pin_pages pin pages by virtual address and return the pages to the
+> + * user.
+> + *
+> + * @addr, start address
+> + * @nr_pages, number of pages to pin
+> + * @gup_flags, flags to use for the pin
+> + * @pages, array of pages returned
+> + * @vaddr_pin, initalized meta information this pin is to be associated
 
-And it tells me that your whacky set of options to the
-linker pass (which repeats 3x "-Wl,-O1 -Wl,--as-needed  " instead of
-"-static-libtool-libs") is likely the problem.
+Typo:
+                  initialized
 
-Yup, that's the problem. If I run your linker command on my
-successful build to relink the xfs-copy binary:
 
-/bin/bash ../libtool --quiet --tag=CC --mode=link gcc -o xfs_copy -Wl,-O1 -Wl,--as-needed  -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed   xfs_copy.o   ../libxfs/libxfs.la ../libxlog/libxlog.la ../libfrog/libfrog.la -luuid -lpthread -lrt
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_new_probe_from_filename'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_alignment_offset'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_get_topology'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_do_fullprobe'
-/usr/bin/ld: ../libxfs/.libs/libxfs.so: undefined reference to `xfs_ag_geom_health'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_logical_sector_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_optimal_io_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_lookup_value'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_free_probe'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_physical_sector_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_enable_partitions'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_minimum_io_size'
-
-There's all sorts of problems with undefined references to code not
-used by xfs_copy. Ok, so the problem is at your end with custom
-build options, not a problem with the code or the default build.
-
-How did you configure this build? Can you run a clean build without
-configuring in any of the whacky compiler super-optimisations that
-you have and see if that builds cleanly?
-
-Cheers,
-
-Dave.
+thanks,
 -- 
-Dave Chinner
-david@fromorbit.com
+John Hubbard
+NVIDIA
