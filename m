@@ -2,69 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D2688A750
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 21:37:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8978A796
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 21:54:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfHLThW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 15:37:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40112 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfHLThW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 15:37:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJEQ8K100050
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:37:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=95ARRxMKkhJEZyxQqdXW4gjwQBWwRZkjcUTMYgMCZek=;
- b=QxAxw3IzMNfYjerYhNaaFLHHO3SS1vxmZinU3rAAmAOy6QLhHwW3Ry3gLb/8qgtkgea1
- 5u10ViUwlqVhOpvsnCQNnWZt8EtpUWlK17oHqaCe68J47wYDo9Kc+48du6d2Yl0sNXQl
- 8m1Di5kPy8+2BepEemanjerk2Y+1VQ28oNdU4OlECzQ4bSH3z60muZZrlInZpYpb8TQU
- KWjBMnRBNNIN3MrsRfeiCj4TXRpcFTrj5VpDlayg4L16CSYoIavw5qWCjVG2n0g9qVm7
- CVlU9FlEMGiI+Yl7ma1iMrRok3wK2UKxXOmP3lJ3AvxEuTTZTTIDSdyixeB3jcjPL4L9 QQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=95ARRxMKkhJEZyxQqdXW4gjwQBWwRZkjcUTMYgMCZek=;
- b=jHKgVaLtUu0/TVjR2BdKlVLmRTeGLj0sM1lyczGZwnSvowd+/74+I9y4876/s9+iaiHH
- V9iw8hlsFNRbZzRHDfdSaSJTntv5D8eSmAYuu36WzNOH+Tv/IvJ7cGpTiVsCk5kIEL0k
- u/rYquiUafJdOksspmDqAsM3FWY6PFoO+KM+au0YY9ULTjeL7o+TzzB8ctVi8TuMZi6w
- TgBEKwJFwk3ecEr/5szXJe0zpyaT5NQLRs2ztTFGnFmS01H3HTTpI3gyymt9GRRR5JdK
- cibLmOEjmRtxPZnT08JqTZSzk2ZSLj/5mRzQbcXZNBBFCGa5vpJ8I3jIZg8x8m8fZGM0 8A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u9nbt9sqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:37:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJDFue092658
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:37:20 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u9m0agu3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:37:20 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7CJbIJH002535
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:37:19 GMT
-Received: from [192.168.1.9] (/174.18.98.117)
+        id S1726932AbfHLTyS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 15:54:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44356 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfHLTyS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 15:54:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJE49e112999;
+        Mon, 12 Aug 2019 19:54:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=x9VVG3OfmyZl+7BqcbjzbTAQStEYODHPUGHYHkAMiuc=;
+ b=j5wQKYbU8MmHTkvTYMBYUB8SK1QbD5jNBSwUOM1YjWbf+zVjazvJdhTZjo+mgGlqYrd8
+ IxtRdB/v7YkXHOFMY+QCOOoUbAhoh+CMJL6SZ6R/UaaqcmPT65NCQVuVaSAbeDIoRsyZ
+ po8n9BjnBxWnDYcsJrKsF98DNftnZ53RLGSXjZPWHNZgweje/TI5biJ0lOVZ3TOH7jca
+ aEjuYddEQyk/TegjySFs0E8S492f0ibhv7Hqb66ODlI5QuCCE7qPmMxYFsqGpHqJxI7z
+ dhc9Qi1hNjHZXB60Oaoavd0CLNQxQnuQUJl6lhDBsbUcrG6lDKRCZhhggdfA99MwBpZD bg== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=x9VVG3OfmyZl+7BqcbjzbTAQStEYODHPUGHYHkAMiuc=;
+ b=AP7NXiFFQb/xOa3+Bc86EYXe6dWvIpYAnkoVrifMcWhsQQGTFZLHbhvFdcovOOW+eLNN
+ cnzgBbeiTayDSZPiqa7xmli1wXFODwMP2RwafCG2NqFdREDedKrezTGeqHPTR7eZK1wq
+ 5Q71e9tT3WmInfSrVNSkldUPF6bkc2ypXwMFZuQ0r44Y+xleZt0l6y8JwzIq1ZY5sXwJ
+ xqbO7fTiNhJFnYLgL6/S0qMNp7LKTeCGeLOA4YzBE4+dx2sSt6vF3gyQrxeX1V22q1/R
+ 9/Nca5fjbsFtBaVBH12cE5CSBQpOGp9NVq2sZ4ua+odlSzBPbzj1Z3bhnsNhViQkH33W Zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u9pjq9rrj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 19:54:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJCgtp138035;
+        Mon, 12 Aug 2019 19:54:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2u9k1vknx5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 19:54:13 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7CJsAZZ022631;
+        Mon, 12 Aug 2019 19:54:10 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 12:37:18 -0700
-Subject: Re: [PATCH v2 08/18] xfs: Factor out xfs_attr_leaf_addname helper
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <20190809213726.32336-1-allison.henderson@oracle.com>
- <20190809213726.32336-9-allison.henderson@oracle.com>
- <20190812160655.GW7138@magnolia>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <30244f2e-e05d-cefe-c41b-34b61ff4914b@oracle.com>
-Date:   Mon, 12 Aug 2019 12:37:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP ; Mon, 12 Aug 2019 12:54:10 -0700
+Date:   Mon, 12 Aug 2019 12:54:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] fs: xfs: Remove KM_NOSLEEP and KM_SLEEP.
+Message-ID: <20190812195409.GJ7138@magnolia>
+References: <62ec978e-c045-80ad-24a6-41da07d1b37d@i-love.sakura.ne.jp>
+ <1564658887-12654-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190801203945.GC7138@magnolia>
+ <6e50eef5-434e-a81e-9001-f3deabfa7cc9@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <20190812160655.GW7138@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e50eef5-434e-a81e-9001-f3deabfa7cc9@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
@@ -81,102 +80,23 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/12/19 9:06 AM, Darrick J. Wong wrote:
-> On Fri, Aug 09, 2019 at 02:37:16PM -0700, Allison Collins wrote:
->> Factor out new helper function xfs_attr_leaf_try_add.
->> Because new delayed attribute routines cannot roll
->> transactions, we carve off the parts of
->> xfs_attr_leaf_addname that we can use.  This will help
->> to reduce repetitive code later when we introduce
->> delayed attributes.
->>
->> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
->> ---
->>   fs/xfs/libxfs/xfs_attr.c | 43 +++++++++++++++++++++++++++++--------------
->>   1 file changed, 29 insertions(+), 14 deletions(-)
->>
->> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->> index f36c792..f9d5e28 100644
->> --- a/fs/xfs/libxfs/xfs_attr.c
->> +++ b/fs/xfs/libxfs/xfs_attr.c
->> @@ -635,19 +635,12 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
->>    * External routines when attribute list is one block
->>    *========================================================================*/
->>   
->> -/*
->> - * Add a name to the leaf attribute list structure
->> - *
->> - * This leaf block cannot have a "remote" value, we only call this routine
->> - * if bmap_one_block() says there is only one block (ie: no remote blks).
->> - */
->>   STATIC int
->> -xfs_attr_leaf_addname(
->> -	struct xfs_da_args	*args)
->> +xfs_attr_leaf_try_add(
->> +	struct xfs_da_args	*args,
->> +	struct xfs_buf		*bp)
->>   {
->> -	struct xfs_buf		*bp;
->> -	int			retval, error, forkoff;
->> -	struct xfs_inode	*dp = args->dp;
->> +	int			retval, error;
->>   
->>   	trace_xfs_attr_leaf_addname(args);
->>   
->> @@ -692,13 +685,35 @@ xfs_attr_leaf_addname(
->>   	retval = xfs_attr3_leaf_add(bp, args);
->>   	if (retval == -ENOSPC) {
->>   		/*
->> -		 * Promote the attribute list to the Btree format, then
->> -		 * Commit that transaction so that the node_addname() call
->> -		 * can manage its own transactions.
->> +		 * Promote the attribute list to the Btree format,
+On Mon, Aug 12, 2019 at 07:59:30PM +0900, Tetsuo Handa wrote:
+> On 2019/08/02 5:39, Darrick J. Wong wrote:
+> > On Thu, Aug 01, 2019 at 08:28:07PM +0900, Tetsuo Handa wrote:
+> >> Since no caller is using KM_NOSLEEP and no callee branches on KM_SLEEP,
+> >> we can remove KM_NOSLEEP and replace KM_SLEEP with 0.
+> >>
+> >> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> > 
+> > Ahh, right, KM_{NO,}SLEEP are mutually exclusive values encoded
+> > alongside a bit flag set (ala fallocate mode)....
+> > 
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > --D
 > 
-> Why does the sentence end with a comma?
-I think there came a point when they all started looking the same!  Lol, 
-will clean up.  :-)
+> Thank you. Please apply to xfs tree.
 
-> 
->>   		 */
->>   		error = xfs_attr3_leaf_to_node(args);
->>   		if (error)
->>   			return error;
->> +	}
->> +	return retval;
->> +}
->> +
->> +
->> +/*
->> + * Add a name to the leaf attribute list structure
->> + *
->> + * This leaf block cannot have a "remote" value, we only call this routine
->> + * if bmap_one_block() says there is only one block (ie: no remote blks).
->> + */
->> +STATIC int
->> +xfs_attr_leaf_addname(struct xfs_da_args	*args)
->> +{
->> +	int retval, error, forkoff;
-> 
-> Indentation problem here.
-Alrighty, will catch.  Thanks!
+Will do.
 
-Allison
-
-> 
-> --D
-> 
->> +	struct xfs_buf		*bp = NULL;
->> +	struct xfs_inode	*dp = args->dp;
->> +
->> +	retval = xfs_attr_leaf_try_add(args, bp);
->> +	if (retval == -ENOSPC) {
->> +		/*
->> +		 * Commit that transaction so that the node_addname() call
->> +		 * can manage its own transactions.
->> +		 */
->>   		error = xfs_defer_finish(&args->trans);
->>   		if (error)
->>   			return error;
->> -- 
->> 2.7.4
->>
+--D
