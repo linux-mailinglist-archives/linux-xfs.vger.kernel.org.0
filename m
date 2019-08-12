@@ -2,66 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00F0F8AA97
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 00:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F78F8AAA6
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 00:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfHLWjR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 18:39:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48772 "EHLO
+        id S1726924AbfHLWla (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 18:41:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51146 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbfHLWjR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 18:39:17 -0400
+        with ESMTP id S1726568AbfHLWla (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 18:41:30 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMYddw062135
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:17 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMYtCT062466
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:41:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
  cc : references : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=eQP4Xm4fCnXi8dDxFx0xHBzEJ9L3HPyYpQ+5ZCvLxf0=;
- b=lMHUeA4S6mxWjSTgGOox6xeLnb0L5n5RFmUgfKrTfUsVoZTkX9+fxmrTOgX/rVXYcTt9
- SHi235btBsW4lCWRKM2FNxJ7SeslIQdmZpmRbjYBocsBX/AjCLHquxSZ6wkMHVUzVG29
- EqZnRgZBx7xL2uBiKvO2Ai0FczQndOvgEAZ36QPnAAec3/lrEQr/ZlDWovsRwz9vb5gz
- LHaxunceKc226BjfEN/eqhVJ1lHeGuEgQ1DPvyNBaS5jpQExIPTSW+e8cciVgvJpPKTt
- ZX0pfZK/ooOSfjPw6B7gOAXC1uhdlbrtyQlJrkp01cG8NFmqlnwyCBFEHbWkjGKGhCnd bg== 
+ bh=vX6X3qLdgoDj4rneqXqwdjCJIj1AhScc9IhtNwcuesA=;
+ b=sVqS2MPafWUr+qLWgx4n21P4Oe7ooHy0s6p9cQTSseYCmuC3FYnoIR853qPEmNBf04DV
+ nLdD7VRZmaXjTFItZMUWRfQdq7cOD/wBujcCs/+lfE6hHtS5lOwaRWpodLH7ejBXUu22
+ esq595yhrDgFSZcTjvtsA7f2LY3CVoZfJxVUIxQPKY5SdV9Ns8vrokgyF8ddLFyMIGqz
+ tkd9q2Yp6xIoRUzr7VZwniIbm21qBzXYYYeU7wnPdGAPCnSC2iGzbHiVQ+NMtrGB97q9
+ 5iBLfYgVL8a9bniTpSrHspiXiQj5pgk8fauZnrIB3wGU7X5Bfhb895c88+t9BUfIjjsF IA== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
  cc : references : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=eQP4Xm4fCnXi8dDxFx0xHBzEJ9L3HPyYpQ+5ZCvLxf0=;
- b=tmXy8EbSZ9Ht9tY16jj3kf9Kq73pQye3x0PTmxNHThDTR90o5B8Jgp5s+2Qe8NSNM3fp
- KCifY40mT/a6DOyWXs68Cb70laGGWwy9bzg2mi/efhSZkTfjTwr5koGvhj2Lpy8HiD6x
- j+YiraF+D1YeylKMMH1oo/lwcylF1J7Yn7q3Ci/iOqa7J7QhSEHG+6pbPKkAGBmznxXC
- xO7W4ASNSKBZepZ7BIr7VK4x9CJCg16agSPqzIBydrbBnDPNH/GhSQ+ndTR5IL1alyZ3
- 0w7kHhURYdbcnXHspp/8gztljjeb0D+yTifIhOPK01+jvQkKcaX4Zy7uij5CCNQj3uc2 SQ== 
+ bh=vX6X3qLdgoDj4rneqXqwdjCJIj1AhScc9IhtNwcuesA=;
+ b=5VJR54wfOCbuQRHQiUDD4uHv546kW+0U5fLDcueUyVss+NJX52DxeA0rJmiJyeJwRaOo
+ QKviD5LiM+08AvTpL69TpLPo5+RpB1fBsqu9nv029NdFZxzmyaJ1e1y/V/oQJG+2SC2B
+ RZoZBVYnsD37iE0ESlOPe02tYXHSVPYvwjw93x+O9WhjfzTRxq8twyoDi+aEYh4WQsBO
+ gU5+Yuo23uGX4kGLRgP7LO1yUC+YC03BXqX8YPY53rmcNtxtuyH4bR7Er/qqTlPms6Vr
+ qB8CTYDfqNObpNgcNLVOHVhKLCp818H08EaK+rEkWCoyzcBA1H0r++TNy5lWoSX7MWvp Yg== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbtagpw-1
+        by userp2130.oracle.com with ESMTP id 2u9nbtagxk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:16 +0000
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:41:28 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMcdiw062288
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2u9k1vrfuy-1
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMcdC0062168
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2u9k1vrg2b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:16 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7CMdFla007855
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:16 GMT
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7CMdRJm022274
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 GMT
 Received: from [10.39.210.209] (/10.39.210.209)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 15:39:15 -0700
+        with ESMTP ; Mon, 12 Aug 2019 15:39:27 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
-Subject: Re: [PATCH v2 17/18] xfs: Enable delayed attributes
+Subject: Re: [PATCH v1 18/19] xfsprogs: Add delayed attributes error tag
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-References: <20190809213726.32336-1-allison.henderson@oracle.com>
- <20190809213726.32336-18-allison.henderson@oracle.com>
- <20190812164238.GD7138@magnolia>
-Message-ID: <e6b59ad8-8cd0-5347-cd03-b898552c624d@oracle.com>
-Date:   Mon, 12 Aug 2019 15:39:14 -0700
+References: <20190809213804.32628-1-allison.henderson@oracle.com>
+ <20190809213804.32628-19-allison.henderson@oracle.com>
+ <20190812164407.GE7138@magnolia>
+Message-ID: <d56cc76a-cd1a-8e57-5f2c-553d33551502@oracle.com>
+Date:   Mon, 12 Aug 2019 15:39:26 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812164238.GD7138@magnolia>
+In-Reply-To: <20190812164407.GE7138@magnolia>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,93 +81,65 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/12/19 9:42 AM, Darrick J. Wong wrote:
-> On Fri, Aug 09, 2019 at 02:37:25PM -0700, Allison Collins wrote:
->> Finally enable delayed attributes in xfs_attr_set and
->> xfs_attr_remove.  We only do this for v4 and up since we
->> cant add new log entries to old fs versions
+On 8/12/19 9:44 AM, Darrick J. Wong wrote:
+> On Fri, Aug 09, 2019 at 02:38:03PM -0700, Allison Collins wrote:
+>> Subject: [PATCH v1 18/19] xfsprogs: Add delayed attributes error tag
 > 
-> ...you can't add new log item types to *existing* fs versions, which
-> includes everything through present-day v5.
+> In the final version this ought to be "xfs_io:", not "xfsprogs:" since
+> the libxfs changes will invariably land through a separate
+> libxfs-apply'd patch.
 > 
-> This needs a separate feature bit somewhere to prevent existing xfs
-> drivers from crashing and burning on attri/attrd items.  Most of this
-> deferred attr code could exist independently from the parent pointer
-> feature, so I guess you could be the first person to use one of the log
-> incompat feature bits?  That would be one way to get wider testing of
-> deferred attrs while we work on parent pointers.
+> Looks ok otherwise,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> 
 
-Ok, that sounds good then, I will look into plumbing in a feature bit 
-for it.  Thx!
-
+Ok, will do.  Thanks!
 Allison
 
-> 
 > --D
 > 
+>> This patch adds an error tag that we can use to test
+>> delayed attribute recovery and replay
+>>
 >> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 >> ---
->>   fs/xfs/libxfs/xfs_attr.c | 26 ++++++++++++++++++++++++--
->>   1 file changed, 24 insertions(+), 2 deletions(-)
+>>   io/inject.c           | 1 +
+>>   libxfs/xfs_errortag.h | 4 +++-
+>>   2 files changed, 4 insertions(+), 1 deletion(-)
 >>
->> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->> index 9931e50..7023734 100644
->> --- a/fs/xfs/libxfs/xfs_attr.c
->> +++ b/fs/xfs/libxfs/xfs_attr.c
->> @@ -506,6 +506,7 @@ xfs_attr_set(
->>   	int			valuelen)
->>   {
->>   	struct xfs_mount	*mp = dp->i_mount;
->> +	struct xfs_sb		*sbp = &mp->m_sb;
->>   	struct xfs_da_args	args;
->>   	struct xfs_trans_res	tres;
->>   	int			rsvd = (name->type & ATTR_ROOT) != 0;
->> @@ -564,7 +565,20 @@ xfs_attr_set(
->>   		goto out_trans_cancel;
+>> diff --git a/io/inject.c b/io/inject.c
+>> index cabfc3e..05bd4db 100644
+>> --- a/io/inject.c
+>> +++ b/io/inject.c
+>> @@ -54,6 +54,7 @@ error_tag(char *name)
+>>   		{ XFS_ERRTAG_FORCE_SCRUB_REPAIR,	"force_repair" },
+>>   		{ XFS_ERRTAG_FORCE_SUMMARY_RECALC,	"bad_summary" },
+>>   		{ XFS_ERRTAG_IUNLINK_FALLBACK,		"iunlink_fallback" },
+>> +		{ XFS_ERRTAG_DELAYED_ATTR,		"delayed_attr" },
+>>   		{ XFS_ERRTAG_MAX,			NULL }
+>>   	};
+>>   	int	count;
+>> diff --git a/libxfs/xfs_errortag.h b/libxfs/xfs_errortag.h
+>> index 79e6c4f..85d5850 100644
+>> --- a/libxfs/xfs_errortag.h
+>> +++ b/libxfs/xfs_errortag.h
+>> @@ -55,7 +55,8 @@
+>>   #define XFS_ERRTAG_FORCE_SCRUB_REPAIR			32
+>>   #define XFS_ERRTAG_FORCE_SUMMARY_RECALC			33
+>>   #define XFS_ERRTAG_IUNLINK_FALLBACK			34
+>> -#define XFS_ERRTAG_MAX					35
+>> +#define XFS_ERRTAG_DELAYED_ATTR				35
+>> +#define XFS_ERRTAG_MAX					36
 >>   
->>   	xfs_trans_ijoin(args.trans, dp, 0);
->> -	error = xfs_attr_set_args(&args);
->> +	if (XFS_SB_VERSION_NUM(sbp) < XFS_SB_VERSION_4)
->> +		error = xfs_attr_set_args(&args);
->> +	else {
->> +		error = xfs_has_attr(&args);
->> +
->> +		if (error == -EEXIST && (name->type & ATTR_CREATE))
->> +			goto out_trans_cancel;
->> +
->> +		if (error == -ENOATTR && (name->type & ATTR_REPLACE))
->> +			goto out_trans_cancel;
->> +
->> +		error = xfs_attr_set_deferred(dp, args.trans, name, value,
->> +					      valuelen);
->> +	}
->>   	if (error)
->>   		goto out_trans_cancel;
->>   	if (!args.trans) {
->> @@ -649,6 +663,7 @@ xfs_attr_remove(
->>   	struct xfs_name		*name)
->>   {
->>   	struct xfs_mount	*mp = dp->i_mount;
->> +	struct xfs_sb		*sbp = &mp->m_sb;
->>   	struct xfs_da_args	args;
->>   	int			error;
+>>   /*
+>>    * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
+>> @@ -95,5 +96,6 @@
+>>   #define XFS_RANDOM_FORCE_SCRUB_REPAIR			1
+>>   #define XFS_RANDOM_FORCE_SUMMARY_RECALC			1
+>>   #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
+>> +#define XFS_RANDOM_DELAYED_ATTR				1
 >>   
->> @@ -690,7 +705,14 @@ xfs_attr_remove(
->>   	 */
->>   	xfs_trans_ijoin(args.trans, dp, 0);
->>   
->> -	error = xfs_attr_remove_args(&args);
->> +	error = xfs_has_attr(&args);
->> +	if (error == -ENOATTR)
->> +		goto out;
->> +
->> +	if (XFS_SB_VERSION_NUM(sbp) < XFS_SB_VERSION_4)
->> +		error = xfs_attr_remove_args(&args);
->> +	else
->> +		error = xfs_attr_remove_deferred(dp, args.trans, name);
->>   	if (error)
->>   		goto out;
->>   
+>>   #endif /* __XFS_ERRORTAG_H_ */
 >> -- 
 >> 2.7.4
 >>
