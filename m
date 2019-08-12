@@ -2,72 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E40D48A7A6
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 21:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EEB38A7A5
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 21:57:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfHLT5t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 15:57:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35864 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLT5t (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 15:57:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJE3Zv099911;
-        Mon, 12 Aug 2019 19:57:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=lWmlLtrurx18ZlQj3YD1B+kbSbv4Z8P6mnXsjJaaJjA=;
- b=DtxOq3jaMY3EQ5uWMTXe9uvxzcHqdn6jz8mmbGlOCq8PeeqNmXcvSozj59Lk4tngVUII
- nPghDPpEcQPbkLEmsX++wygEjsVMxqOeQjp5IMGp+5nXn97Pw4FQi4WWCijSaRKgesez
- lh4UdL4gMKqpn2Y+T5MHuFtGUZIJzthz/LafP9/0gK/T8D1EAGFKwFfQ2jJKlO67axU9
- MiqSrzikSMvWEKelDqEsJMSY6LvsIDWRFgYq5DfQGH95Vv545bhiKQH4TO4O21QgBIED
- mZ1d/bcK3N1H4KwJ6LHJt14iP9rhXsfvsdqM6cUh7aqqCquF2QUcNfa3Ix+uKoCk1sW1 fQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=lWmlLtrurx18ZlQj3YD1B+kbSbv4Z8P6mnXsjJaaJjA=;
- b=QBkbUDfNk1qGWgh75Aupst22dUw0sAGO6SloHrJpcLZcEr2J6kHzBA6AnBA1xsf2Mct3
- 7T+baiyODoteg3FtdCEjUjphsSxtIqSPhB0C2pVMRDM5WUQUSKibpvO79aJxrJ5aR01/
- HoGgoWy2n9ecFabwVhCNRYwELBvoWgxbRB5NPzS/N1AEGlY5TBRub3BjP+h8iXIY09RX
- V8V2ldQ4o0K4LyAgFCQhyEeX45QU5LgAzR4mgbvw7YhN0gIcqr3wHEcadxui5XNpk48c
- aZFqvMS8CiJ9t47zClrhBPeM3Vg1/rPX2VeMFturMvud8Z9WTE7B7ndVzGAlVefQRETG fw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u9nbt9vn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 19:57:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJDgkK163191;
-        Mon, 12 Aug 2019 19:55:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2u9nre7qvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 19:55:34 +0000
+        id S1726679AbfHLT5l (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 15:57:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:48084 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLT5l (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 15:57:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJE9K9126044
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:57:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=QjaWWznT7dTusSZ0bNHM0OxTAwvGolxxsm+BWp3y7F4=;
+ b=jigIwSsie2ljPa94K1FMltDsucvjzvQxgMXCgCVwTwGT7UZFlHPpmf+t7w17FXgy1qHS
+ npPJZK+FSIsJLk7Jh4gRZO/KTlu8lMhT0g+46waNBBsq5FyN29Voeq3f5uTuarOVvQOI
+ 3Nc3fGXT3epwthde/cNRSJ2JYTrF8/A/0+jcDUtpKRM+wgmcziBm/75vtS2S6+W7wGdw
+ UMwtkwMGm6O2iEUNsLjvql0GZ5oCV7CoedwHFmuLb9HztOWC0YLAPTUu+fW75AcZJO6l
+ bSMss/QR8aSfLqA6ZoqWRl5skpJnik888Ym2dd1TWoSmUpECPOUkehMnZEQVS1d7mHuB Dg== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=QjaWWznT7dTusSZ0bNHM0OxTAwvGolxxsm+BWp3y7F4=;
+ b=fqEGkSbI20Qwm1dIkf+GuegAulIrS3H6rcmMIiwRrghy8fQqzQBcBusx57vVL4oIEuwC
+ 3C42k8r0TC2ZQoe/GujU3pG1oY61zLk8Sr+tKhbBO/ZsJ32ptaSRgk4LkD21mW5mAD3b
+ kBeLiEIJE7dfUNbtxYd/NsvqKYZtmLu6GwaHzE8pMGA7UiC0JKMbnqHppY4+v3IjgROa
+ QegIqL/CyCt/OSnEuj0UNxvVDpPsLnMVoTN3s4qiI9eq0njkAeLV1UngUzA2DaongRNw
+ a8H5mA9/UPB9sJErMpiCCh8U75nMMv3hUxpLvH6C+2BYGRpL5gU7Z8SgcgBNJNqIkdeO bA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u9nvp1vcs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:57:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CJCch8137781
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:55:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2u9k1vkq92-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:55:38 +0000
 Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7CJtXlN011284;
-        Mon, 12 Aug 2019 19:55:33 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7CJtctx021221
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 19:55:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 12:55:33 -0700
-Date:   Mon, 12 Aug 2019 12:55:30 -0700
+        with ESMTP ; Mon, 12 Aug 2019 12:55:37 -0700
+Date:   Mon, 12 Aug 2019 12:55:37 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-xfs@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCH] fs: xfs: xfs_log: Don't use KM_MAYFAIL at
- xfs_log_reserve().
-Message-ID: <20190812195530.GK7138@magnolia>
-References: <20190729215657.GI7777@dread.disaster.area>
- <1564653995-9004-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190801185057.GT30113@42.do-not-panic.com>
- <20190801204614.GD7138@magnolia>
- <20190802222158.GU30113@42.do-not-panic.com>
- <126f1f28-de58-815c-bd37-424a06216884@i-love.sakura.ne.jp>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 8612de3f7ba6
+Message-ID: <20190812195537.GL7138@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <126f1f28-de58-815c-bd37-424a06216884@i-love.sakura.ne.jp>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
@@ -85,28 +72,37 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 07:57:27PM +0900, Tetsuo Handa wrote:
-> On 2019/08/03 7:21, Luis Chamberlain wrote:
-> >> I'm pretty sure this didn't solve the underlying stale data exposure
-> >> problem, which might be why you think this is "opaque".  It fixes a bug
-> >> that causes data writeback failure (which was the exposure vector this
-> >> time) but I think the ultimate fix for the exposure problem are the two
-> >> patches I linked to quite a ways back in this discussion....
-> >>
-> >> --D
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?id=bd012b434a56d9fac3cbc33062b8e2cd6e1ad0a0
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?id=adcf7c0c87191fd3616813c8ce9790f89a9a8eba
-> > 
-> > Got it, thanks! Even with this, I still think the current commit could
-> > say a bit a more about the effects of not having this patch applied.
-> > What are the effects of say having the above two patches applied but not
-> > the one being submitted now?
-> 
-> Is this patch going to be applied as-is? Or, someone have a plan to
-> rewrite the changelog?
+Hi folks,
 
-The first one, since the patch eliminates a vector to the writeback race
-problem but does not iself solve the race.
+The for-next branch of the xfs-linux repository at:
 
---D
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the for-next branch is commit:
+
+8612de3f7ba6 xfs: don't crash on null attr fork xfs_bmapi_read
+
+New Commits:
+
+Darrick J. Wong (2):
+      [858b44dc62a1] xfs: remove more ondisk directory corruption asserts
+      [8612de3f7ba6] xfs: don't crash on null attr fork xfs_bmapi_read
+
+Tetsuo Handa (1):
+      [294fc7a4c8ec] fs: xfs: xfs_log: Don't use KM_MAYFAIL at xfs_log_reserve().
+
+
+Code Diffstat:
+
+ fs/xfs/libxfs/xfs_bmap.c      | 29 +++++++++++++++++++++--------
+ fs/xfs/libxfs/xfs_da_btree.c  | 19 ++++++++++++-------
+ fs/xfs/libxfs/xfs_dir2_node.c |  3 ++-
+ fs/xfs/xfs_log.c              |  5 +----
+ 4 files changed, 36 insertions(+), 20 deletions(-)
