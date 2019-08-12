@@ -2,103 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B3098986C
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 10:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC7858989D
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 10:19:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfHLIFh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 04:05:37 -0400
-Received: from sonic302-7.consmr.mail.bf2.yahoo.com ([74.6.135.46]:34764 "EHLO
-        sonic302-7.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726405AbfHLIFh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 04:05:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1565597135; bh=D3c28B6DmA2afsO9xSh44chDuo+kI7YOy76zEFLbTMg=; h=Date:From:Reply-To:Subject:From:Subject; b=MUpDluS+HA6CUjFGoeE0m4cgPieRnyfM7TeKNSZBfQkV91rzvJoXk8ir3za8IsCdvDC3gPmYN/Ts+FEmgIvzhduGfnJqbZH2srAbyxVxRyJHB1fPliLRwtqYwVe70sXeBih16tpLG/YXhSjAl7RdnAok3Bmkdsl/LvOvsePsikVq5bbRxCU7Ir/Xe8t7+EOl9imrJZbGRRUEuoO0C/y6W10OsxmqdKzZ6UGLe4Z5WPgnroBCSjTEddQeKbyIt1rqLwnqRLU6YR0p64+k5dNAAnFlDPfV7h1ZPASr8Vwq5g0vTnnK4hPUKItYjDijYHzRE4iPXgiXoBAJNuBE4WfUng==
-X-YMail-OSG: QOjI90YVM1mI9o7_RLZLd0k.pVRPtLZS6DLW1cZsSTuLjxXONM1uoDoCjnRjtlg
- umkQoLz4oWwJmPHOZ9JTzVZop_zLDGzlMv.1_blyW50Cod0hZ2RTIqieGnWPRJmloZOgdwnFC0EM
- ff_9oNB60GQbSjimnf2nNstwwahDqjjkiPzamu8UaD3gVtVBOBEWkWKaMd8spO9QaoNjusNrrU3P
- E76ZjZmAlXMvpkhU3jwlYUAzV66MWMAD7WPDf2qrAUg_io2zgYne7kse_vM3PHGZhs18Jxo4r4Bj
- 42jCTkiCRWYvR7DwQPWjZ7d32jW3gZFglaUgXkpOGbzJdjepbVBb0nJfzOHGuvih_TQKqy2AQoY0
- gOBFb0zrmMSNcBo8m8mIvtMrHMAYk0ReD5qpDWTfP9g0rjA9lTah107cEDZ2D3BXC.s.4xp4DuUN
- K5UBnS9XSX0TTTtf.J1k6yf8e2vaHpuxPRw4sJl1mG_R6skF99hSRGBM5Pp1VeaSSltWZsWYxext
- Pdg.7ioVMIjvxmMYHqgmX12TaBI6wbiZZwqsILgUUA7r4g.RDTmMWiX8gHiF3uJo2ZBzHFhupkLu
- ImtkMzA8HJZ79v_eqOi0OAo35ALItOuJWxd4QHm4QSDpCkYPnAMiddAfVjpnObWJImeRcSIAGSis
- AtDfFYAFeGD3mCSNvX84l7H5F0vmDcrVdBXhv3WOwj4gOmFnGq3WhoSQiUVnygPtjmOsbwEi6IKR
- MCyaoC_K7Pu.I5RPe95MsS0yvR2m38YT.FzutfKFHpO2FwQ8JSbCwW1_irBA3ZZHOuDRsBi1D0fi
- 5V3E189KPOlWN4cf4bcEP2k9m1c2auiIolQUVpZu7gDLWLkvj1m6tc6q4ZfMaD3nubQh9sbuO45x
- 3sMapFrwNeKlv2FKG9ETsg_JoMqVsDCr.cMe6rhPwj2S5cn64SVzYxr1Z2F_EE9uX1C8.YzFwAgl
- 30A2BOOeudNz1QSoJw7ejB_X6YBuDpv2gX2WrZr9n06OFGwUHQhMriWPWFKxSZKMlImgkm6sNAl_
- hhddu8kKoK4YdF8Je5OGyd.ccVhieWBl_yXhAQgjj4wkp0vkzpcLfebno9BnCLihhxW3frQKT4xW
- nSrJSFZRfuKB5IBiDZMyn29kpZwjISbEE8IQLQXGdMm9nXAEedQG4.WEpXQb5Yu2i3lA29W4Jl9I
- rMuRrGEoS8im6.SHpeunVrkfyPF6qCyEXPwtGhme1SQosSg9XwRfWHsGMHLsZ0Q--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.bf2.yahoo.com with HTTP; Mon, 12 Aug 2019 08:05:35 +0000
-Date:   Mon, 12 Aug 2019 08:05:31 +0000 (UTC)
-From:   "Mrs.Agnes Hilary" <ttagn8@gdagm.online>
-Reply-To: mrsagneshilary@worker.com
-Message-ID: <1748026712.2976086.1565597131323@mail.yahoo.com>
-Subject: I Have Not Heard From You, Please Reply Me Back
+        id S1727094AbfHLITz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 04:19:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52902 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfHLITz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 04:19:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Pm16XNp3tdyYf3anO0W3YuwxKGiixpPX1HD1r7bgy4o=; b=chQ6XXDKGfeq5Lv+yRw7RV4xm
+        ukILzBRrVYE/8v7Jdau/R/Wo48S2OWvV9/uYC9pL5S8EV8WNqqCNjJbGslIrdDCcSA7XwCcCX7Q9Z
+        6NUEEiEfMV/B8TO1m+x5dStqFGQa/JDOLwIJ+dNuN0Ooc7AfbusDCqsTpEqbpsin6GdbKha60IFh0
+        udHDwzl5v75UEoyDATw8JqiPGZXLGEsgicWe1F0yX9I0ul4oHzowL06qdOdWbjb+ySVFgFCt00l3L
+        9kUgcqGgXbIJhsL+81lAanlx15WEancTd7H3NJYWEgF9K5gZlOiBh3tIeZ8a3ev9UgedZyQ0wrWdd
+        CNw2ksKkw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hx5YY-0006aS-Dc; Mon, 12 Aug 2019 08:19:54 +0000
+Date:   Mon, 12 Aug 2019 01:19:54 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Allison Collins <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] Delayed Attributes
+Message-ID: <20190812081954.GA9484@infradead.org>
+References: <20190809213726.32336-1-allison.henderson@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809213726.32336-1-allison.henderson@oracle.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-
-HELLO MY DEAR BELOVED.
-MY PRIVATE EMAIL ADDRESS: (mrsagneshilary@gmail.com )
-
-I AM MRS. AGNES HILARY FROM LONDON U.K, BORN IN THE STATE OF OHIO USA. I AM=
- LEGALLY MARRIED TO MR. HILARY FELIX, A BRITISH CITIZEN BORN AND BROUGHT UP=
- IN USA, I LIVE IN SWITZERLAND WITH MY HUSBAND FOR 32 YEARS BEFORE WE MOVE =
-DOWN TO U.K IN 1985 AFTER MY HUSBAND RETIREMENT IN 1984, I AM 75 YEARS OLD =
-BY THE GRACE OF GOD. I AM A GOD FEARING PERSON, AND I AM SUFFERING FROM LON=
-G TIME (ILLNESS) CANCER OF THE BREAST. THIS ILLNESS (SICKNESS) HAS TROUBLED=
- ME FOR A LONG TIME.
-
-ALL INDICATION FROM MY DOCTOR THAT MY CONDITION IS REALLY DETERIORATING AND=
- GETTING WORSE; AND IT IS QUITE OBVIOUS THAT I WOULDN=E2=80=99T LIVE MORE T=
-HAN THREE MONTHS, ACCORDING TO MY DOCTOR AND IN ALL INDICATION REGARDS TO M=
-EDICAL ANALYSIS. THIS IS BECAUSE THE CANCER DISEASE HAS GOTTEN TO A VERY BA=
-D STAGE THAT NO HOPE FOR ME TO BE A LIVING PERSON AGAIN. MY DEAR HUSBAND WA=
-S INVOLVED WITH THE JANUARY 2000 KENYA AIRWAYS PLANE CRASHED AS YOU CAN SEE=
- ON THE NEWS LINE WEB SITE. HTTP://NEWS.BBC.CO.UK/2/HI/AFRICA/6627485.STM )
-
-40 YEARS PERIOD OF MY MARRIAGE LIFE, STILL WE COULD NOT PRODUCE ANY CHILD, =
-MY LATE HUSBAND WAS VERY WEALTHY AND AFTER HIS DEATH, I INHERITED SOME PART=
- OF HIS BUSINESS AND MONEY IN THE BANK. THE DOCTOR HAS ADVISED ME THAT I MA=
-Y NOT LIVE FOR MORE THAN THREE MONTHS AND 2 WEEKS , TODAY I HAVE DECIDED TO=
- DONATE AND CONTRIBUTE TO THE LESS PRIVILEGES, CHARITY HOMES, AND ORPHANAGE=
- HOMES AND TO THOSE DISPLACED BY WARS GOING ON IN THE MIDDLE-EAST AND AROUN=
-D THE WORLD.
-
-I CHOOSE YOU AFTER VIEWING YOUR PROFILE AND I HAVE THE CONFIDENT IN YOU BEC=
-AUSE I HAVE PRAYED. I AM WILLING TO DONATE THE SUM OF GBP=C2=A312.5,MILLION=
- BRITISH POUND, TO THE LESS PRIVILEGED OF WHICH YOU WILL BE RESPONSIBLE IN =
-TAKING CARE OF THE DISBURSEMENT AND SHARING OF THIS MONEY TO ORGANIZATIONS =
-THAT I WILL APPOINT. MEANWHILE, YOU WILL ALSO GET 30% OF THE ABOVE AMOUNT W=
-HICH WILL BE; THREE MILLION SEVEN HUNDRED AND FIFTY THOUSAND GREAT BRITISH =
-POUNDS (GBP=C2=A33,750,000) WILL BE AS YOUR COMPENSATION FOR HELPING ME FUL=
-FILL THIS DESIRE OF DONATION.
-
-PLEASE I WANT YOU TO KNOW THAT THIS FUND IS STILL IN THE BANK WHERE MY LATE=
- HUSBAND DEPOSITED IT, I AM GOING TO ADVICE MY LAWYER TO CHANGE MY LAST WIL=
-L TO YOUR NAME AND FILE IN AN APPLICATION FOR THE TRANSFER OF THE MONEY IN =
-YOUR NAME. LASTLY, I HONESTLY PRAY THAT THIS MONEY WHEN TRANSFERRED TO YOUR=
- ACCOUNT WILL BE USED FOR THE SAID PURPOSE EVEN THOUGH I AM LATE THEN OR AL=
-IVE, BECAUSE I HAVE COME TO FIND OUT THAT WEALTH ACQUISITION IS NOT ALWAYS =
-THE FINAL THING IN LIFE OR DEATH IF YOU DO NOT HELP PEOPLE AS WELL WHEN THE=
-Y NEED IT. PLEASE BEAR IT IN MIND THAT ALL THE MONEY WILL RIGHTFULLY BELONG=
- TO YOUR NAME AS QUICKLY AS I GET YOUR REPLY, AND I MADE THE PROMISE TO GOD=
- THAT THE FUND WILL BE USED TO HELP THE NEEDY AND THE LESS PRIVILEGE, REPLY=
- ME THROUGH THIS EMAIL:
-MAY THE GRACE OF OUR LORD THE LOVE OF GOD AND THE FELLOWSHIP OF GOD BE WITH=
- YOU AND YOUR FAMILY, PLEASE FURTHER DISCUSSION, CONTACT ME WITH MY EMAIL A=
-DDRESS: ( mrsagneshilary@gmail.com )
-
-I AWAIT URGENT REPLY.
-
-REMAIN BLESSED
-MRS. AGNES HILARY.
+Btw, this seems like the right series to also look into our problem
+that large attributes are not updated transactionally.  We just do
+a synchronous write (xfs_bwrite) for them but don't include them
+in the transaction.  With the deferred operations and rolled
+transactions that should be fairly easy to fix.
