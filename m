@@ -2,132 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 047638A4F8
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 19:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78A7D8A505
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 19:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfHLR4R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 13:56:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33799 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfHLR4R (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 13:56:17 -0400
-Received: by mail-qt1-f194.google.com with SMTP id q4so6532707qtp.1
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
-        b=aT1+Cp+KGWQyozFDowVXklkNZVi/kM9KamsNgl23DUo+IJyNPad8EzXuoAG7s3f5bf
-         bOSW7DhNODTjMskeg1DRPDb4g7NB2wX2AWkHQuyR0cct0HrdnZzak9aU8g7CHTL0qHoO
-         IKZcX3vXDSq/u24mEPYpzVVHpbOB2TSRpMchVGlB+vxEwN6TXEtwOQ8uYyw5P8+cz9Hd
-         j1BzALymBU6a7rw2q7wWcxOSnVbjWppZ0IMW4+9rMtyvhB+q0F08Mu3PWUPEGDQxvNfD
-         RqDlAaDfsxyO370w/XugHLZnyfoDs8iN8igYYDuAHaeRZtKy3Zg+yOMKiyalzWN131uL
-         Eqkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
-        b=Q5Pr+uMlXnewzSLa+EqFdbZKY71Iwxdo5ULC775B6BR2PBUygjKVar8owHkGhYOjWT
-         JCeCIQ8n5+RT8foBstgCclbAoBBZ6vLNcMG+eo7mGNz38ZzuLxHh6zjPrDvF6LNBlR1h
-         JkLtSkYSIbwHBlyB/Mfa3bEaurw/Ft4JD6ULMCbz70ego8nugqhzikucCxDT1PalBnDw
-         ywiIpWUpQmNldKXPIiaCqAu2kwQTN1/WD674FuapvDUvcNlLsbMvgaM3uv+/m30LFjSu
-         KE9hHikkeHoD7/RIhPjBmK4/+TmGfuB382IU0kIOdeubE5jl5PPHz1R0OxVjDOyCpHCl
-         vSVQ==
-X-Gm-Message-State: APjAAAUdRhmmlUF6faiwebyC2pcGbfqg213haRpb68dW6WxFGAcE+63A
-        l3ii0RcQxXrm91DT8adjtSQaeO5Fa/8=
-X-Google-Smtp-Source: APXvYqx5MBD9MG64lV9iZUYWN/EeNo5U4lzvE+q4eQc5jVQAxZ4QmzhDKvfOk+m1tNY0/uiYKcLUcw==
-X-Received: by 2002:ac8:43c4:: with SMTP id w4mr15414493qtn.238.1565632576300;
-        Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id r15sm5883158qtp.94.2019.08.12.10.56.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 10:56:15 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hxEYJ-0004LN-Ev; Mon, 12 Aug 2019 14:56:15 -0300
-Date:   Mon, 12 Aug 2019 14:56:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
- file object
-Message-ID: <20190812175615.GI24457@ziepe.ca>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-17-ira.weiny@intel.com>
- <20190812130039.GD24457@ziepe.ca>
- <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+        id S1726819AbfHLR5P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 13:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfHLR5O (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:57:14 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E5320663;
+        Mon, 12 Aug 2019 17:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565632633;
+        bh=GiVAVhH+nPdk1UWotaUHBWK0S43N/8KUvkvXHy1BLYo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QSb8/eaChRb8WrbrxfPEIM9JPkLZHHaJH+FToyjTGG2VV2Sfj1FcgDlXL/v+VRrcX
+         69S0YkawGMSzkx+X8TedLqLx5nbIbk5uUj99QTZidI0n5WfisqA4Rf5ZHALWb1cwA9
+         Hv4G4p0dN2E+J2Ure2EPqrnQTxGU5Q1z54uolNpg=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-xfs@vger.kernel.org
+Cc:     fstests@vger.kernel.org, linux-fscrypt@vger.kernel.org
+Subject: [RFC PATCH 0/8] xfsprogs: support fscrypt API additions in xfs_io
+Date:   Mon, 12 Aug 2019 10:56:26 -0700
+Message-Id: <20190812175635.34186-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:28:27AM -0700, Ira Weiny wrote:
-> On Mon, Aug 12, 2019 at 10:00:40AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > In order for MRs to be tracked against the open verbs context the ufile
-> > > needs to have a pointer to hand to the GUP code.
-> > > 
-> > > No references need to be taken as this should be valid for the lifetime
-> > > of the context.
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > >  drivers/infiniband/core/uverbs.h      | 1 +
-> > >  drivers/infiniband/core/uverbs_main.c | 1 +
-> > >  2 files changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
-> > > index 1e5aeb39f774..e802ba8c67d6 100644
-> > > +++ b/drivers/infiniband/core/uverbs.h
-> > > @@ -163,6 +163,7 @@ struct ib_uverbs_file {
-> > >  	struct page *disassociate_page;
-> > >  
-> > >  	struct xarray		idr;
-> > > +	struct file             *sys_file; /* backpointer to system file object */
-> > >  };
-> > 
-> > The 'struct file' has a lifetime strictly shorter than the
-> > ib_uverbs_file, which is kref'd on its own lifetime. Having a back
-> > pointer like this is confouding as it will be invalid for some of the
-> > lifetime of the struct.
-> 
-> Ah...  ok.  I really thought it was the other way around.
-> 
-> __fput() should not call ib_uverbs_close() until the last reference on struct
-> file is released...  What holds references to struct ib_uverbs_file past that?
+Hello,
 
-Child fds hold onto the internal ib_uverbs_file until they are closed
+This patchset updates xfs_io to support the API additions from the
+kernel patchset "[PATCH v8 00/20] fscrypt: key management improvements"
+https://lkml.kernel.org/linux-fsdevel/20190805162521.90882-1-ebiggers@kernel.org/T/#u
 
-> Perhaps I need to add this (untested)?
-> 
-> diff --git a/drivers/infiniband/core/uverbs_main.c
-> b/drivers/infiniband/core/uverbs_main.c
-> index f628f9e4c09f..654e774d9cf2 100644
-> +++ b/drivers/infiniband/core/uverbs_main.c
-> @@ -1125,6 +1125,8 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
->         list_del_init(&file->list);
->         mutex_unlock(&file->device->lists_mutex);
->  
-> +       file->sys_file = NULL;
+Commands are added to wrap the new ioctls for managing filesystem
+encryption keys.  Also, the existing 'get_encpolicy' and 'set_encpolicy'
+commands are updated to support v2 encryption policies.
 
-Now this has unlocked updates to that data.. you'd need some lock and
-get not zero pattern
+The purpose of all this is to allow xfstests to test the new APIs.
 
-Jason
+Note: currently only ext4, f2fs, and ubifs support encryption.  But I
+was told previously that since the fscrypt API is generic and may be
+supported by XFS in the future, the command-line wrappers for the
+fscrypt ioctls should be in xfs_io rather than in fstests directly
+(https://marc.info/?l=fstests&m=147976255831951&w=2).
+
+We'll want to wait for the kernel patches to be mainlined before merging
+this, but I'm making it available now for any early feedback.
+
+This patchset applies to xfsprogs v5.2.0.  It can also be retrieved from tag
+"fscrypt-key-mgmt-improvements_2019-08-12" of
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfsprogs-dev.git
+
+Eric Biggers (8):
+  xfs_io/encrypt: remove unimplemented encryption modes
+  xfs_io/encrypt: update to UAPI definitions from Linux v5.4
+  xfs_io/encrypt: add new encryption modes
+  xfs_io/encrypt: extend 'get_encpolicy' to support v2 policies
+  xfs_io/encrypt: extend 'set_encpolicy' to support v2 policies
+  xfs_io/encrypt: add 'add_enckey' command
+  xfs_io/encrypt: add 'rm_enckey' command
+  xfs_io/encrypt: add 'enckey_status' command
+
+ io/encrypt.c      | 786 ++++++++++++++++++++++++++++++++++++++++------
+ man/man8/xfs_io.8 |  70 ++++-
+ 2 files changed, 750 insertions(+), 106 deletions(-)
+
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
