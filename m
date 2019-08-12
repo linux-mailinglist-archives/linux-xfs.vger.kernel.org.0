@@ -2,205 +2,554 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0624D8AA49
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 00:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 457728AA8E
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 00:38:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfHLWSQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 18:18:16 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:55180 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfHLWSP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:18:15 -0400
-Received: from [IPv6:2001:4dd6:f35f:0:149a:6c9b:d6bb:ae22] (2001-4dd6-f35f-0-149a-6c9b-d6bb-ae22.ipv6dyn.netcologne.de [IPv6:2001:4dd6:f35f:0:149a:6c9b:d6bb:ae22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: whissi)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id EBF693499D3
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:18:12 +0000 (UTC)
-Subject: Re: xfsprogs-5.2.0 FTBFS: ../libxfs/.libs/libxfs.so: undefined
- reference to `xfs_ag_geom_health'
-To:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-References: <c4b1b7db-bf73-9b96-b418-5a639e7decdc@gentoo.org>
- <20190811225307.GF7777@dread.disaster.area>
- <ebcf887f-81fc-9080-67c9-63946316f3e0@gentoo.org>
- <20190812002306.GH7777@dread.disaster.area>
- <df65ea4f-18af-4fab-e59d-29fa8440489c@gentoo.org>
- <20190812031123.GA6129@dread.disaster.area>
- <20190812043046.GB6129@dread.disaster.area>
- <09ad7dd5-c2cd-aaaa-82d5-0f3a18eb4062@gentoo.org>
- <20190812214449.GC6129@dread.disaster.area>
-From:   Thomas Deutschmann <whissi@gentoo.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=whissi@gentoo.org; prefer-encrypt=mutual; keydata=
- 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
-Organization: Gentoo Foundation, Inc
-Message-ID: <ddabd271-2820-85f3-4393-99deb5a0eaef@gentoo.org>
-Date:   Tue, 13 Aug 2019 00:18:04 +0200
+        id S1727210AbfHLWio (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 18:38:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48146 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfHLWin (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 18:38:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMYSsb062103
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:38:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=mq2onuFKsirJQBV8GhePeEO3TftiDp/ChMHCvFsliKw=;
+ b=rFjWitzM9KChtQr0gaTXYNbqwyZGRVmSYFskVBxRC+K2kPzVSouUyp7klsPQckx5xw8H
+ tqMpWl1dcclq8guSV/Bo2ArzIYeiIUqqg7ZQD3Ylv41M+z7/1X/AhXLnj5pZjq0EEL9t
+ M1WCVMhIBr+eeOn08qDa3cAjl5ktgkMfxxMETfBEihcYl5LlKLxzEfARYXasTMK4Ddog
+ KiCFqlE+m7aMxymLLa4c4f+m5mXTlv27QKU33ptapgJ83GFiZlEDv9VoltW2/qsHmHxt
+ /Qh7OSdmKtMvxb1FUvh/LxX0nbHUvFlZpfFKkmOJnjOyner28M4P/Y9+/xMlDnfN/rtw Cw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=mq2onuFKsirJQBV8GhePeEO3TftiDp/ChMHCvFsliKw=;
+ b=x7R9BN5uJeTx6tR56xOxdyBjdGVRAPo6g2IvsH6T1bDaLwB7gYnCwzy6BlcdxKSm3l2S
+ rpR0yDPw3VvOEaDRoj99PuScI8AuLCKBVXlfxPdbMbv3GRJN3gA+uO2Z1LAyq34CLLaK
+ 2N1bD/Jk2Ugxarzn53dsZfjkC9pP4zFJVqQ+vraT21eS1Pi8L+j3Cy2bdcAsI8/MLSUU
+ BbtV+Lwu/U7nYjHHfGMyIWSQH74q4sqdZr9tG+W6rs2Dd67WUPZ1edDQkfC0RYtPZJ1y
+ bHQeTKYbEUg5sPjNFlnb+H0z8Kre2KqEJdkq5nlXklco9XR+mqmp+g5t3aaayJP8Awek BQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u9nbtagm9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:38:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMcdBG062162
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:38:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2u9k1vrf9e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:38:39 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7CMcciG007495
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:38:38 GMT
+Received: from [10.39.210.209] (/10.39.210.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 12 Aug 2019 15:38:38 -0700
+From:   Allison Collins <allison.henderson@oracle.com>
+Subject: Re: [PATCH v2 05/18] xfs: Add xfs_has_attr and subroutines
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <20190809213726.32336-1-allison.henderson@oracle.com>
+ <20190809213726.32336-6-allison.henderson@oracle.com>
+ <20190812155635.GT7138@magnolia>
+ <a097adb0-4b6f-4ee7-9c94-5ef442cf734a@oracle.com>
+ <20190812200033.GN7138@magnolia>
+Message-ID: <5a7c4f82-4096-e0bc-0454-2c6040e984e0@oracle.com>
+Date:   Mon, 12 Aug 2019 15:38:36 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812214449.GC6129@dread.disaster.area>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="UTZSbqglDWAnfBPMK4K99WazVQh27ucyD"
+In-Reply-To: <20190812200033.GN7138@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908120220
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908120220
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UTZSbqglDWAnfBPMK4K99WazVQh27ucyD
-Content-Type: multipart/mixed; boundary="PnNaWkmD9W2sV5kMZ4wMbuu8puE7b6vj9";
- protected-headers="v1"
-From: Thomas Deutschmann <whissi@gentoo.org>
-To: "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Message-ID: <ddabd271-2820-85f3-4393-99deb5a0eaef@gentoo.org>
-Subject: Re: xfsprogs-5.2.0 FTBFS: ../libxfs/.libs/libxfs.so: undefined
- reference to `xfs_ag_geom_health'
-References: <c4b1b7db-bf73-9b96-b418-5a639e7decdc@gentoo.org>
- <20190811225307.GF7777@dread.disaster.area>
- <ebcf887f-81fc-9080-67c9-63946316f3e0@gentoo.org>
- <20190812002306.GH7777@dread.disaster.area>
- <df65ea4f-18af-4fab-e59d-29fa8440489c@gentoo.org>
- <20190812031123.GA6129@dread.disaster.area>
- <20190812043046.GB6129@dread.disaster.area>
- <09ad7dd5-c2cd-aaaa-82d5-0f3a18eb4062@gentoo.org>
- <20190812214449.GC6129@dread.disaster.area>
-In-Reply-To: <20190812214449.GC6129@dread.disaster.area>
+On 8/12/19 1:00 PM, Darrick J. Wong wrote:
+> On Mon, Aug 12, 2019 at 12:29:03PM -0700, Allison Collins wrote:
+>> On 8/12/19 8:56 AM, Darrick J. Wong wrote:
+>>> On Fri, Aug 09, 2019 at 02:37:13PM -0700, Allison Collins wrote:
+>>>> From: Allison Henderson <allison.henderson@oracle.com>
+>>>>
+>>>> This patch adds a new functions to check for the existence of
+>>>> an attribute.  Subroutines are also added to handle the cases
+>>>> of leaf blocks, nodes or shortform.  Common code that appears
+>>>> in existing attr add and remove functions have been factored
+>>>> out to help reduce the appearence of duplicated code.  We will
+>>>> need these routines later for delayed attributes since delayed
+>>>> operations cannot return error codes.
+>>>>
+>>>> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+>>>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+>>>> ---
+>>>>    fs/xfs/libxfs/xfs_attr.c      | 151 +++++++++++++++++++++++++++---------------
+>>>>    fs/xfs/libxfs/xfs_attr.h      |   1 +
+>>>>    fs/xfs/libxfs/xfs_attr_leaf.c |  82 +++++++++++++++--------
+>>>>    fs/xfs/libxfs/xfs_attr_leaf.h |   2 +
+>>>>    4 files changed, 158 insertions(+), 78 deletions(-)
+>>>>
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+>>>> index a2fba0c..72af8e2 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr.c
+>>>> +++ b/fs/xfs/libxfs/xfs_attr.c
+>>>> @@ -48,6 +48,7 @@ STATIC int xfs_attr_shortform_addname(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_leaf_get(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_leaf_addname(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_leaf_removename(xfs_da_args_t *args);
+>>>> +STATIC int xfs_leaf_has_attr(xfs_da_args_t *args, struct xfs_buf **bp);
+>>>
+>>> Trailing whitespace, and please use "struct xfs_da_args", not the
+>>> typedef...
+>> Ok, will that clean up.
+>>
+>>>
+>>>>    /*
+>>>>     * Internal routines when attribute list is more than one block.
+>>>> @@ -55,6 +56,8 @@ STATIC int xfs_attr_leaf_removename(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_node_get(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_node_addname(xfs_da_args_t *args);
+>>>>    STATIC int xfs_attr_node_removename(xfs_da_args_t *args);
+>>>> +STATIC int xfs_attr_node_hasname(xfs_da_args_t *args,
+>>>> +				 struct xfs_da_state **state);
+>>>>    STATIC int xfs_attr_fillstate(xfs_da_state_t *state);
+>>>>    STATIC int xfs_attr_refillstate(xfs_da_state_t *state);
+>>>> @@ -278,6 +281,32 @@ xfs_attr_set_args(
+>>>>    }
+>>>>    /*
+>>>> + * Return EEXIST if attr is found, or ENOATTR if not
+>>>> + */
+>>>> +int
+>>>> +xfs_has_attr(
+>>>> +	struct xfs_da_args      *args)
+>>>> +{
+>>>> +	struct xfs_inode        *dp = args->dp;
+>>>> +	struct xfs_buf		*bp;
+>>>> +	int                     error;
+>>>> +
+>>>> +	if (!xfs_inode_hasattr(dp)) {
+>>>> +		error = -ENOATTR;
+>>>> +	} else if (dp->i_d.di_aformat == XFS_DINODE_FMT_LOCAL) {
+>>>> +		ASSERT(dp->i_afp->if_flags & XFS_IFINLINE);
+>>>> +		error = xfs_shortform_has_attr(args, NULL, NULL);
+>>>> +	} else if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
+>>>> +		error = xfs_leaf_has_attr(args, &bp);
+>>>> +		xfs_trans_brelse(args->trans, bp);
+>>>> +	} else {
+>>>> +		error = xfs_attr_node_hasname(args, NULL);
+>>>> +	}
+>>>> +
+>>>> +	return error;
+>>>> +}
+>>>> +
+>>>> +/*
+>>>>     * Remove the attribute specified in @args.
+>>>>     */
+>>>>    int
+>>>> @@ -616,26 +645,17 @@ STATIC int
+>>>>    xfs_attr_leaf_addname(
+>>>>    	struct xfs_da_args	*args)
+>>>>    {
+>>>> -	struct xfs_inode	*dp;
+>>>>    	struct xfs_buf		*bp;
+>>>>    	int			retval, error, forkoff;
+>>>> +	struct xfs_inode	*dp = args->dp;
+>>>>    	trace_xfs_attr_leaf_addname(args);
+>>>>    	/*
+>>>> -	 * Read the (only) block in the attribute list in.
+>>>> -	 */
+>>>> -	dp = args->dp;
+>>>> -	args->blkno = 0;
+>>>> -	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
+>>>> -	if (error)
+>>>> -		return error;
+>>>> -
+>>>> -	/*
+>>>>    	 * Look up the given attribute in the leaf block.  Figure out if
+>>>>    	 * the given flags produce an error or call for an atomic rename.
+>>>>    	 */
+>>>> -	retval = xfs_attr3_leaf_lookup_int(bp, args);
+>>>> +	retval = xfs_leaf_has_attr(args, &bp);
+>>>>    	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+>>>>    		xfs_trans_brelse(args->trans, bp);
+>>>>    		return retval;
+>>>> @@ -787,6 +807,26 @@ xfs_attr_leaf_addname(
+>>>>    }
+>>>>    /*
+>>>> + * Return EEXIST if attr is found, or ENOATTR if not
+>>>> + */
+>>>> +STATIC int
+>>>> +xfs_leaf_has_attr(
+>>>> +	struct xfs_da_args      *args,
+>>>> +	struct xfs_buf		**bp)
+>>>> +{
+>>>> +	int                     error = 0;
+>>>> +
+>>>> +	args->blkno = 0;
+>>>> +	error = xfs_attr3_leaf_read(args->trans, args->dp,
+>>>> +			args->blkno, -1, bp);
+>>>
+>>> Can we please get rid of these -1 and -2 magic values that eventually
+>>> become the mappedbno argument to xfs_dabuf_map?
+>> Sure, maybe we can add some constants here.  I took a quick peek at
+>> xfs_dabuf_map.  Maybe we can add something like this:
+>>
+>> #define MBNO_NOMAP	-1
+>> #define MBNO_HOLE_OK	-2
+> 
+> #define XFS_DABUF_MAP_NOMAPPING	(-1)
+> #define XFS_DABUF_MAP_HOLE_OK	(-2)
+> 
+> Function flags should be named for the function that consumes them,
+> but otoh these values sink through multiple levels of call stack.
+> 
+> Macros should have parentheses around them to avoid unexpected fun with
+> the preprocessor, since:
+> 
+> printf("%d\n", XFS_DABUF_MAP_NOMAPPING XFS_DABUF_MAP_NOMAPPING);
+> 
+> Should produce a compile error, not a program that prints -2.
+> 
+> --D
 
---PnNaWkmD9W2sV5kMZ4wMbuu8puE7b6vj9
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Ok, sounds good.  I'll add another patch for this in v3
 
-On 2019-08-12 23:44, Dave Chinner wrote:
->> That's not the correct way to reproduce. It's really important to
->> _export_ the variable to trigger the problem and _this_ is a problem i=
-n
->> xfsprogs' build system.
-> Which means you are overriding the LDFLAGS set by configure when
-> you _run make_, not just telling configure to use those LDFLAGS.
->=20
-> That's why _make_ is getting screwed up - it is doing exactly what
-> you are telling it to do, and that is to overrides every occurrence
-> of LDFLAGS with your exported options rather than using the correct
-> set configure calculated and specified.
->=20
-> Exporting your CFLAGS and LDFLAGS is the wrong thing to doing
-> - they should only ever be passed to the configure invocation and
-> not remain to pollute the build environment after you've run
-> configure.
-
-I disagree with the conclusion. LDFLAGS in build environment shouldn't
-cause any problems, especially when you are using a build system:
-
-Normally, configure will get the value and the Makefiles will use the
-value _from_ configure... but using configure _and_ reading _and adding_
-values from environment _in addition_ seems to be wrong.
-
-So you either use a build system or you don't.
-
-
---=20
-Regards,
-Thomas Deutschmann / Gentoo Linux Developer
-C4DD 695F A713 8F24 2AA1 5638 5849 7EE5 1D5D 74A5
-
-
---PnNaWkmD9W2sV5kMZ4wMbuu8puE7b6vj9--
-
---UTZSbqglDWAnfBPMK4K99WazVQh27ucyD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGTBAEBCgB9FiEEExKRzo+LDXJgXHuURObr3Jv2BVkFAl1R5ZxfFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDEz
-MTI5MUNFOEY4QjBENzI2MDVDN0I5NDQ0RTZFQkRDOUJGNjA1NTkACgkQRObr3Jv2
-BVkfMQf/ZEYEMA5LNrFWEKVgQZranFfpot3FnxkghViJ4pafxFxtdWK5a/tcnlQZ
-YCSeuDsmvMphqi2BCFFUoPOCwGCSeIK6m6o+cjVGi9uoaOXmgNsaN1nEW2EeCvdh
-Ys0F9TOdSvWLpurdkosphVty3qmaaqRTI8CUJr/t/pQbp8xiUytrLPYs9HEUNk38
-d4CmeyO0WTZbGewEJGmk9u1p8ZtH/BHV6tk96WFgjrPDHr5krd6ZlxUdV20rjH+e
-SHKBTm7NrZoBuaO6jTz9yf5CuNN96A0nVJ92O5KaGKeDIgGXKf37cyz/nf6L/N5+
-9+i+3Bu6vqWDHigB4FQ4kmbgSJp6mw==
-=UsY9
------END PGP SIGNATURE-----
-
---UTZSbqglDWAnfBPMK4K99WazVQh27ucyD--
+Allison
+> 
+>>
+>>
+>>>
+>>>> +	if (error)
+>>>> +		return error;
+>>>> +
+>>>> +	error = xfs_attr3_leaf_lookup_int(*bp, args);
+>>>> +	return error;
+>>>
+>>> "return xfs_attr3_leaf_lookup_int..." ?
+>>>
+>>>> +}
+>>>> +
+>>>> +/*
+>>>>     * Remove a name from the leaf attribute list structure
+>>>>     *
+>>>>     * This leaf block cannot have a "remote" value, we only call this routine
+>>>> @@ -806,12 +846,8 @@ xfs_attr_leaf_removename(
+>>>>    	 * Remove the attribute.
+>>>>    	 */
+>>>>    	dp = args->dp;
+>>>> -	args->blkno = 0;
+>>>> -	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
+>>>> -	if (error)
+>>>> -		return error;
+>>>> -	error = xfs_attr3_leaf_lookup_int(bp, args);
+>>>> +	error = xfs_leaf_has_attr(args, &bp);
+>>>>    	if (error == -ENOATTR) {
+>>>>    		xfs_trans_brelse(args->trans, bp);
+>>>>    		return error;
+>>>> @@ -848,12 +884,7 @@ xfs_attr_leaf_get(xfs_da_args_t *args)
+>>>>    	trace_xfs_attr_leaf_get(args);
+>>>> -	args->blkno = 0;
+>>>> -	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
+>>>> -	if (error)
+>>>> -		return error;
+>>>> -
+>>>> -	error = xfs_attr3_leaf_lookup_int(bp, args);
+>>>> +	error = xfs_leaf_has_attr(args, &bp);
+>>>>    	if (error != -EEXIST)  {
+>>>>    		xfs_trans_brelse(args->trans, bp);
+>>>>    		return error;
+>>>> @@ -866,6 +897,43 @@ xfs_attr_leaf_get(xfs_da_args_t *args)
+>>>>    	return error;
+>>>>    }
+>>>> +/*
+>>>> + * Return EEXIST if attr is found, or ENOATTR if not
+>>>> + * statep: If not null is set to point at the found state.  Caller will
+>>>> + * 	   be responsible for freeing the state in this case.
+>>>> + */
+>>>> +STATIC int
+>>>> +xfs_attr_node_hasname(
+>>>> +	struct xfs_da_args	*args,
+>>>> +	struct xfs_da_state	**statep)
+>>>> +{
+>>>> +	struct xfs_da_state	*state;
+>>>> +	struct xfs_inode	*dp;
+>>>> +	int			retval, error;
+>>>> +
+>>>> +	/*
+>>>> +	 * Tie a string around our finger to remind us where we are.
+>>>> +	 */
+>>>> +	dp = args->dp;
+>>>> +	state = xfs_da_state_alloc();
+>>>> +	state->args = args;
+>>>> +	state->mp = dp->i_mount;
+>>>> +
+>>>> +	/*
+>>>> +	 * Search to see if name exists, and get back a pointer to it.
+>>>> +	 */
+>>>> +	error = xfs_da3_node_lookup_int(state, &retval);
+>>>> +	if (error == 0)
+>>>> +		error = retval;
+>>>> +
+>>>> +	if (statep != NULL)
+>>>> +		*statep = state;
+>>>> +	else
+>>>> +		xfs_da_state_free(state);
+>>>> +
+>>>> +	return error;
+>>>> +}
+>>>> +
+>>>>    /*========================================================================
+>>>>     * External routines when attribute list size > geo->blksize
+>>>>     *========================================================================*/
+>>>> @@ -898,17 +966,14 @@ xfs_attr_node_addname(
+>>>>    	dp = args->dp;
+>>>>    	mp = dp->i_mount;
+>>>>    restart:
+>>>> -	state = xfs_da_state_alloc();
+>>>> -	state->args = args;
+>>>> -	state->mp = mp;
+>>>> -
+>>>>    	/*
+>>>>    	 * Search to see if name already exists, and get back a pointer
+>>>>    	 * to where it should go.
+>>>>    	 */
+>>>> -	error = xfs_da3_node_lookup_int(state, &retval);
+>>>> -	if (error)
+>>>> +	error = xfs_attr_node_hasname(args, &state);
+>>>> +	if (error == -EEXIST)
+>>>>    		goto out;
+>>>> +
+>>>>    	blk = &state->path.blk[ state->path.active-1 ];
+>>>>    	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+>>>>    	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+>>>> @@ -1113,29 +1178,15 @@ xfs_attr_node_removename(
+>>>>    {
+>>>>    	struct xfs_da_state	*state;
+>>>>    	struct xfs_da_state_blk	*blk;
+>>>> -	struct xfs_inode	*dp;
+>>>>    	struct xfs_buf		*bp;
+>>>>    	int			retval, error, forkoff;
+>>>> +	struct xfs_inode	*dp = args->dp;
+>>>>    	trace_xfs_attr_node_removename(args);
+>>>> -	/*
+>>>> -	 * Tie a string around our finger to remind us where we are.
+>>>> -	 */
+>>>> -	dp = args->dp;
+>>>> -	state = xfs_da_state_alloc();
+>>>> -	state->args = args;
+>>>> -	state->mp = dp->i_mount;
+>>>> -
+>>>> -	/*
+>>>> -	 * Search to see if name exists, and get back a pointer to it.
+>>>> -	 */
+>>>> -	error = xfs_da3_node_lookup_int(state, &retval);
+>>>> -	if (error || (retval != -EEXIST)) {
+>>>> -		if (error == 0)
+>>>> -			error = retval;
+>>>> +	error = xfs_attr_node_hasname(args, &state);
+>>>> +	if (error != -EEXIST)
+>>>>    		goto out;
+>>>> -	}
+>>>>    	/*
+>>>>    	 * If there is an out-of-line value, de-allocate the blocks.
+>>>> @@ -1355,17 +1406,13 @@ xfs_attr_node_get(xfs_da_args_t *args)
+>>>>    	trace_xfs_attr_node_get(args);
+>>>> -	state = xfs_da_state_alloc();
+>>>> -	state->args = args;
+>>>> -	state->mp = args->dp->i_mount;
+>>>> -
+>>>>    	/*
+>>>>    	 * Search to see if name exists, and get back a pointer to it.
+>>>>    	 */
+>>>> -	error = xfs_da3_node_lookup_int(state, &retval);
+>>>> -	if (error) {
+>>>> +	error = xfs_attr_node_hasname(args, &state);
+>>>> +	if (error != -EEXIST) {
+>>>>    		retval = error;
+>>>> -	} else if (retval == -EEXIST) {
+>>>> +	} else {
+>>>>    		blk = &state->path.blk[ state->path.active-1 ];
+>>>>    		ASSERT(blk->bp != NULL);
+>>>>    		ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+>>>> index 0bade83..c082d34 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr.h
+>>>> +++ b/fs/xfs/libxfs/xfs_attr.h
+>>>> @@ -170,6 +170,7 @@ int xfs_attr_set(struct xfs_inode *dp, struct xfs_name *name,
+>>>>    		 unsigned char *value, int valuelen);
+>>>>    int xfs_attr_set_args(struct xfs_da_args *args);
+>>>>    int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name);
+>>>> +int xfs_has_attr(struct xfs_da_args *args);
+>>>>    int xfs_attr_remove_args(struct xfs_da_args *args);
+>>>>    int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
+>>>>    		  int flags, struct attrlist_cursor_kern *cursor);
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+>>>> index 70eb941..8d2e11f 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr_leaf.c
+>>>> +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+>>>> @@ -546,6 +546,53 @@ xfs_attr_shortform_create(xfs_da_args_t *args)
+>>>>    }
+>>>>    /*
+>>>> + * Return EEXIST if attr is found, or ENOATTR if not
+>>>> + * args:  args containing attribute name and namelen
+>>>> + * sfep:  If not null, pointer will be set to the last attr entry found
+>>>> + * basep: If not null, pointer is set to the byte offset of the entry in the
+>>>> + *	  list
+>>>> + */
+>>>> +int
+>>>> +xfs_shortform_has_attr(
+>>>> +	struct xfs_da_args	 *args,
+>>>> +	struct xfs_attr_sf_entry **sfep,
+>>>> +	int			 *basep)
+>>>> +{
+>>>> +	struct xfs_attr_shortform *sf;
+>>>> +	struct xfs_attr_sf_entry *sfe;
+>>>> +	int			base = sizeof(struct xfs_attr_sf_hdr);
+>>>> +	int			size = 0;
+>>>> +	int			end;
+>>>> +	int			i;
+>>>> +
+>>>> +	base = sizeof(struct xfs_attr_sf_hdr);
+>>>> +	sf = (struct xfs_attr_shortform *)args->dp->i_afp->if_u1.if_data;
+>>>> +	sfe = &sf->list[0];
+>>>> +	end = sf->hdr.count;
+>>>> +	for (i = 0; i < end; sfe = XFS_ATTR_SF_NEXTENTRY(sfe),
+>>>> +			base += size, i++) {
+>>>> +		size = XFS_ATTR_SF_ENTSIZE(sfe);
+>>>> +		if (sfe->namelen != args->namelen)
+>>>> +			continue;
+>>>> +		if (memcmp(sfe->nameval, args->name, args->namelen) != 0)
+>>>> +			continue;
+>>>> +		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+>>>> +			continue;
+>>>> +		break;
+>>>> +	}
+>>>> +
+>>>> +	if (sfep != NULL)
+>>>> +		*sfep = sfe;
+>>>> +
+>>>> +	if (basep != NULL)
+>>>> +		*basep = base;
+>>>> +
+>>>> +	if (i == end)
+>>>> +		return -ENOATTR;
+>>>> +	return -EEXIST;
+>>>> +}
+>>>> +
+>>>> +/*
+>>>>     * Add a name/value pair to the shortform attribute list.
+>>>>     * Overflow from the inode has already been checked for.
+>>>>     */
+>>>> @@ -554,7 +601,7 @@ xfs_attr_shortform_add(xfs_da_args_t *args, int forkoff)
+>>>>    {
+>>>>    	xfs_attr_shortform_t *sf;
+>>>>    	xfs_attr_sf_entry_t *sfe;
+>>>> -	int i, offset, size;
+>>>> +	int offset, size, error;
+>>>>    	xfs_mount_t *mp;
+>>>>    	xfs_inode_t *dp;
+>>>>    	struct xfs_ifork *ifp;
+>>>> @@ -568,18 +615,11 @@ xfs_attr_shortform_add(xfs_da_args_t *args, int forkoff)
+>>>>    	ifp = dp->i_afp;
+>>>>    	ASSERT(ifp->if_flags & XFS_IFINLINE);
+>>>>    	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
+>>>> -	sfe = &sf->list[0];
+>>>> -	for (i = 0; i < sf->hdr.count; sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+>>>> +	error = xfs_shortform_has_attr(args, &sfe, NULL);
+>>>>    #ifdef DEBUG
+>>>> -		if (sfe->namelen != args->namelen)
+>>>> -			continue;
+>>>> -		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+>>>> -			continue;
+>>>> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+>>>> -			continue;
+>>>> +	if (error == -EEXIST)
+>>>>    		ASSERT(0);
+>>>
+>>> ASSERT(error != -EEXIST); ?  Without the #ifdef DEBUG since ASSERT does
+>>> nothing if DEBUG isn't defined...
+>>>
+>>>>    #endif
+>>>> -	}
+>>>>    	offset = (char *)sfe - (char *)sf;
+>>>>    	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
+>>>> @@ -626,7 +666,7 @@ xfs_attr_shortform_remove(xfs_da_args_t *args)
+>>>>    {
+>>>>    	xfs_attr_shortform_t *sf;
+>>>>    	xfs_attr_sf_entry_t *sfe;
+>>>> -	int base, size=0, end, totsize, i;
+>>>> +	int base, size = 0, end, totsize, error;
+>>>>    	xfs_mount_t *mp;
+>>>>    	xfs_inode_t *dp;
+>>>
+>>> Please fix the typedef and indentation here while you're changing this
+>>> (and all the other attr) functions.
+>>>
+>>> Otherwise, I very much like this cleanup. :)
+>> Great!  I'll tidy these up then.  Thx for the review!
+>>
+>> Allison
+>>
+>>>
+>>> --D
+>>>
+>>>> @@ -634,23 +674,13 @@ xfs_attr_shortform_remove(xfs_da_args_t *args)
+>>>>    	dp = args->dp;
+>>>>    	mp = dp->i_mount;
+>>>> -	base = sizeof(xfs_attr_sf_hdr_t);
+>>>>    	sf = (xfs_attr_shortform_t *)dp->i_afp->if_u1.if_data;
+>>>> -	sfe = &sf->list[0];
+>>>>    	end = sf->hdr.count;
+>>>> -	for (i = 0; i < end; sfe = XFS_ATTR_SF_NEXTENTRY(sfe),
+>>>> -					base += size, i++) {
+>>>> -		size = XFS_ATTR_SF_ENTSIZE(sfe);
+>>>> -		if (sfe->namelen != args->namelen)
+>>>> -			continue;
+>>>> -		if (memcmp(sfe->nameval, args->name, args->namelen) != 0)
+>>>> -			continue;
+>>>> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+>>>> -			continue;
+>>>> -		break;
+>>>> -	}
+>>>> -	if (i == end)
+>>>> -		return -ENOATTR;
+>>>> +
+>>>> +	error = xfs_shortform_has_attr(args, &sfe, &base);
+>>>> +	if (error == -ENOATTR)
+>>>> +		return error;
+>>>> +	size = XFS_ATTR_SF_ENTSIZE(sfe);
+>>>>    	/*
+>>>>    	 * Fix up the attribute fork data, covering the hole
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
+>>>> index 7b74e18..be1f636 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr_leaf.h
+>>>> +++ b/fs/xfs/libxfs/xfs_attr_leaf.h
+>>>> @@ -39,6 +39,8 @@ int	xfs_attr_shortform_getvalue(struct xfs_da_args *args);
+>>>>    int	xfs_attr_shortform_to_leaf(struct xfs_da_args *args,
+>>>>    			struct xfs_buf **leaf_bp);
+>>>>    int	xfs_attr_shortform_remove(struct xfs_da_args *args);
+>>>> +int	xfs_shortform_has_attr(struct xfs_da_args *args,
+>>>> +			       struct xfs_attr_sf_entry **sfep, int *basep);
+>>>>    int	xfs_attr_shortform_allfit(struct xfs_buf *bp, struct xfs_inode *dp);
+>>>>    int	xfs_attr_shortform_bytesfit(struct xfs_inode *dp, int bytes);
+>>>>    xfs_failaddr_t xfs_attr_shortform_verify(struct xfs_inode *ip);
+>>>> -- 
+>>>> 2.7.4
+>>>>
