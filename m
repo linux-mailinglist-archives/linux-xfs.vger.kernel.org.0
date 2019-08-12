@@ -2,144 +2,428 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F78F8AAA6
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 00:41:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 677108AB3D
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 01:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfHLWla (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 18:41:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51146 "EHLO
+        id S1726453AbfHLXey (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 19:34:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50254 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfHLWla (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 18:41:30 -0400
+        with ESMTP id S1726358AbfHLXey (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 19:34:54 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMYtCT062466
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:41:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
- cc : references : message-id : date : mime-version : in-reply-to :
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CNXdFC104295
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 23:34:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vX6X3qLdgoDj4rneqXqwdjCJIj1AhScc9IhtNwcuesA=;
- b=sVqS2MPafWUr+qLWgx4n21P4Oe7ooHy0s6p9cQTSseYCmuC3FYnoIR853qPEmNBf04DV
- nLdD7VRZmaXjTFItZMUWRfQdq7cOD/wBujcCs/+lfE6hHtS5lOwaRWpodLH7ejBXUu22
- esq595yhrDgFSZcTjvtsA7f2LY3CVoZfJxVUIxQPKY5SdV9Ns8vrokgyF8ddLFyMIGqz
- tkd9q2Yp6xIoRUzr7VZwniIbm21qBzXYYYeU7wnPdGAPCnSC2iGzbHiVQ+NMtrGB97q9
- 5iBLfYgVL8a9bniTpSrHspiXiQj5pgk8fauZnrIB3wGU7X5Bfhb895c88+t9BUfIjjsF IA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
- cc : references : message-id : date : mime-version : in-reply-to :
+ bh=Cu/mUYV+6tZKLTGv64/iYC5Zcj7itajsjskVuNheDx0=;
+ b=QYoK7rRADzotYryX6v3Y3ThPgUtivRirnG5DIrP1FjMD6MAVZNohVoYPfyohdw0tzfbj
+ XcBXPDcisU7mpFymmPmfIzoSuxG3Z6v/u8/nQ9p/MUULNH2DWYKhbCgPYmNsxaM5oHOc
+ um0UFlxRnOwz3NRYLdU4WgJDa/KSjSSJPoejbNwUyF+EFTD2qYy7OzdeFfHFU+ByO4+J
+ Jf6RZU0NjOGl32JyoZBXNq8NW5r0CUloQikX99DS1AJ92+fnLk5ldHVHDY9Ydpdjqn9/
+ CRwUW+zWYQ4+khenAAN6VwTsDTpe+Yk6VQobHDht70beaIzwK0MY2QXQJo2w/410ZJht Tw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=vX6X3qLdgoDj4rneqXqwdjCJIj1AhScc9IhtNwcuesA=;
- b=5VJR54wfOCbuQRHQiUDD4uHv546kW+0U5fLDcueUyVss+NJX52DxeA0rJmiJyeJwRaOo
- QKviD5LiM+08AvTpL69TpLPo5+RpB1fBsqu9nv029NdFZxzmyaJ1e1y/V/oQJG+2SC2B
- RZoZBVYnsD37iE0ESlOPe02tYXHSVPYvwjw93x+O9WhjfzTRxq8twyoDi+aEYh4WQsBO
- gU5+Yuo23uGX4kGLRgP7LO1yUC+YC03BXqX8YPY53rmcNtxtuyH4bR7Er/qqTlPms6Vr
- qB8CTYDfqNObpNgcNLVOHVhKLCp818H08EaK+rEkWCoyzcBA1H0r++TNy5lWoSX7MWvp Yg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbtagxk-1
+ bh=Cu/mUYV+6tZKLTGv64/iYC5Zcj7itajsjskVuNheDx0=;
+ b=19UQxdkwfwnKDVK6ADRMNfAdmUlxGeKbvT5Odu5f/NpKo8y3MDZMkNrCQbt7UP2TnxlZ
+ 98uqZpc4V0kS+8AIY16cTJ7YqIXgxBx/qc3eU8fqkFG47xE1Q+giGhA8rgacAd+rWR9Q
+ /FvGdG9hSg0eOsOeezHd/mcp50mPHHXWHA0eLMn12bsp+7+oOT9DGa5BMC+Kimun8g+m
+ mdAyirhXiZtB1SIs/2QUpjQstRewwcWjMu+xpq/aQtlhEmm8lQbBcYi3GR13wEWb2tpR
+ xNDG2rLEucZMkFNSN+po2AzEQcG2lTRrkVS8Dqobs51j8CebNmewuvt4VT7EcOGIlFDC Og== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2u9nbtanjv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:41:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CMcdC0062168
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2u9k1vrg2b-1
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 23:34:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7CNXFFH189079
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 23:34:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u9n9hf4ra-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7CMdRJm022274
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 22:39:28 GMT
-Received: from [10.39.210.209] (/10.39.210.209)
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 23:34:52 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7CNYpV6022366
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 23:34:51 GMT
+Received: from [192.168.1.9] (/174.18.98.117)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 15:39:27 -0700
-From:   Allison Collins <allison.henderson@oracle.com>
-Subject: Re: [PATCH v1 18/19] xfsprogs: Add delayed attributes error tag
+        with ESMTP ; Mon, 12 Aug 2019 16:34:51 -0700
+Subject: Re: [PATCH v1 19/19] xfsprogs: Add log item printing for ATTRI and
+ ATTRD
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <20190809213804.32628-1-allison.henderson@oracle.com>
- <20190809213804.32628-19-allison.henderson@oracle.com>
- <20190812164407.GE7138@magnolia>
-Message-ID: <d56cc76a-cd1a-8e57-5f2c-553d33551502@oracle.com>
-Date:   Mon, 12 Aug 2019 15:39:26 -0700
+ <20190809213804.32628-20-allison.henderson@oracle.com>
+ <20190812164651.GF7138@magnolia>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <94109bb3-f46b-fea2-4d8a-50792c11f958@oracle.com>
+Date:   Mon, 12 Aug 2019 16:34:50 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190812164407.GE7138@magnolia>
+In-Reply-To: <20190812164651.GF7138@magnolia>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908120220
+ engine=8.0.1-1906280000 definitions=main-1908120231
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908120220
+ definitions=main-1908120232
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/12/19 9:44 AM, Darrick J. Wong wrote:
-> On Fri, Aug 09, 2019 at 02:38:03PM -0700, Allison Collins wrote:
->> Subject: [PATCH v1 18/19] xfsprogs: Add delayed attributes error tag
-> 
-> In the final version this ought to be "xfs_io:", not "xfsprogs:" since
-> the libxfs changes will invariably land through a separate
-> libxfs-apply'd patch.
-> 
-> Looks ok otherwise,
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-
-Ok, will do.  Thanks!
-Allison
-
-> --D
-> 
->> This patch adds an error tag that we can use to test
->> delayed attribute recovery and replay
+On 8/12/19 9:46 AM, Darrick J. Wong wrote:
+> On Fri, Aug 09, 2019 at 02:38:04PM -0700, Allison Collins wrote:
+>> From: Allison Henderson <allison.henderson@oracle.com>
 >>
+>> This patch implements a new set of log printing functions to
+>> print the ATTRI and ATTRD items and vectors in the log.  These
+>> will be used during log dump and log recover operations.
+>>
+>> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 >> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 >> ---
->>   io/inject.c           | 1 +
->>   libxfs/xfs_errortag.h | 4 +++-
->>   2 files changed, 4 insertions(+), 1 deletion(-)
+>>   logprint/log_misc.c      |  31 +++++++-
+>>   logprint/log_print_all.c |  12 +++
+>>   logprint/log_redo.c      | 189 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   logprint/logprint.h      |   7 ++
+>>   4 files changed, 238 insertions(+), 1 deletion(-)
 >>
->> diff --git a/io/inject.c b/io/inject.c
->> index cabfc3e..05bd4db 100644
->> --- a/io/inject.c
->> +++ b/io/inject.c
->> @@ -54,6 +54,7 @@ error_tag(char *name)
->>   		{ XFS_ERRTAG_FORCE_SCRUB_REPAIR,	"force_repair" },
->>   		{ XFS_ERRTAG_FORCE_SUMMARY_RECALC,	"bad_summary" },
->>   		{ XFS_ERRTAG_IUNLINK_FALLBACK,		"iunlink_fallback" },
->> +		{ XFS_ERRTAG_DELAYED_ATTR,		"delayed_attr" },
->>   		{ XFS_ERRTAG_MAX,			NULL }
->>   	};
->>   	int	count;
->> diff --git a/libxfs/xfs_errortag.h b/libxfs/xfs_errortag.h
->> index 79e6c4f..85d5850 100644
->> --- a/libxfs/xfs_errortag.h
->> +++ b/libxfs/xfs_errortag.h
->> @@ -55,7 +55,8 @@
->>   #define XFS_ERRTAG_FORCE_SCRUB_REPAIR			32
->>   #define XFS_ERRTAG_FORCE_SUMMARY_RECALC			33
->>   #define XFS_ERRTAG_IUNLINK_FALLBACK			34
->> -#define XFS_ERRTAG_MAX					35
->> +#define XFS_ERRTAG_DELAYED_ATTR				35
->> +#define XFS_ERRTAG_MAX					36
+>> diff --git a/logprint/log_misc.c b/logprint/log_misc.c
+>> index c325f04..7b2055d 100644
+>> --- a/logprint/log_misc.c
+>> +++ b/logprint/log_misc.c
+>> @@ -54,11 +54,29 @@ print_stars(void)
+>>   	   "***********************************\n");
+>>   }	/* print_stars */
 >>   
+>> +void
+>> +print_hex_dump(char *ptr, int len) {
+>> +	int i = 0;
+>> +
+>> +	for (i = 0; i < len; i++) {
+>> +		if (i % 16 == 0)
+>> +			printf("%08x ", i);
+>> +
+>> +		printf("%02x", ptr[i]);
+>> +
+>> +		if ((i+1)%16 == 0)
+>> +			printf("\n");
+>> +		else if ((i+1)%2 == 0)
+>> +			printf(" ");
+>> +	}
+>> +	printf("\n");
+>> +}
+> 
+> Maybe it's time to implement xfs_hex_dump?
+I think we have that through libxfs, but it prints it as an alert, and 
+this just needs to be printed as part of the log dump.
+
+Once we get to pptrs, we can use the attribute flags to decide when to 
+print it as a pptr record instead of this hex dump.  It would be nice to 
+have something to indicate when it's a string too, but with out using a 
+flag or something similar, I thought it was best not to make assumptions.
+
+Allison
+
+> 
+> --D
+> 
+>> +
 >>   /*
->>    * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
->> @@ -95,5 +96,6 @@
->>   #define XFS_RANDOM_FORCE_SCRUB_REPAIR			1
->>   #define XFS_RANDOM_FORCE_SUMMARY_RECALC			1
->>   #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
->> +#define XFS_RANDOM_DELAYED_ATTR				1
+>>    * Given a pointer to a data segment, print out the data as if it were
+>>    * a log operation header.
+>>    */
+>> -static void
+>> +void
+>>   xlog_print_op_header(xlog_op_header_t	*op_head,
+>>   		     int		i,
+>>   		     char		**ptr)
+>> @@ -949,6 +967,17 @@ xlog_print_record(
+>>   					be32_to_cpu(op_head->oh_len));
+>>   			break;
+>>   		    }
+>> +		    case XFS_LI_ATTRI: {
+>> +                        skip = xlog_print_trans_attri(&ptr,
+>> +                                        be32_to_cpu(op_head->oh_len),
+>> +                                        &i);
+>> +                        break;
+>> +                    }
+>> +                    case XFS_LI_ATTRD: {
+>> +                        skip = xlog_print_trans_attrd(&ptr,
+>> +                                        be32_to_cpu(op_head->oh_len));
+>> +                        break;
+>> +                    }
+>>   		    case XFS_LI_RUI: {
+>>   			skip = xlog_print_trans_rui(&ptr,
+>>   					be32_to_cpu(op_head->oh_len),
+>> diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
+>> index eafffe2..f794a68 100644
+>> --- a/logprint/log_print_all.c
+>> +++ b/logprint/log_print_all.c
+>> @@ -400,6 +400,12 @@ xlog_recover_print_logitem(
+>>   	case XFS_LI_EFI:
+>>   		xlog_recover_print_efi(item);
+>>   		break;
+>> +	case XFS_LI_ATTRD:
+>> +		xlog_recover_print_attrd(item);
+>> +		break;
+>> +	case XFS_LI_ATTRI:
+>> +		xlog_recover_print_attri(item);
+>> +		break;
+>>   	case XFS_LI_RUD:
+>>   		xlog_recover_print_rud(item);
+>>   		break;
+>> @@ -452,6 +458,12 @@ xlog_recover_print_item(
+>>   	case XFS_LI_EFI:
+>>   		printf("EFI");
+>>   		break;
+>> +	case XFS_LI_ATTRD:
+>> +		printf("ATTRD");
+>> +		break;
+>> +	case XFS_LI_ATTRI:
+>> +		printf("ATTRI");
+>> +		break;
+>>   	case XFS_LI_RUD:
+>>   		printf("RUD");
+>>   		break;
+>> diff --git a/logprint/log_redo.c b/logprint/log_redo.c
+>> index f1f690e..005fd84 100644
+>> --- a/logprint/log_redo.c
+>> +++ b/logprint/log_redo.c
+>> @@ -8,6 +8,7 @@
+>>   #include "libxlog.h"
 >>   
->>   #endif /* __XFS_ERRORTAG_H_ */
+>>   #include "logprint.h"
+>> +#include "xfs_attr_item.h"
+>>   
+>>   /* Extent Free Items */
+>>   
+>> @@ -653,3 +654,191 @@ xlog_recover_print_bud(
+>>   	f = item->ri_buf[0].i_addr;
+>>   	xlog_print_trans_bud(&f, sizeof(struct xfs_bud_log_format));
+>>   }
+>> +
+>> +/* Attr Items */
+>> +
+>> +static int
+>> +xfs_attri_copy_log_format(
+>> +	char				*buf,
+>> +	uint				len,
+>> +	struct xfs_attri_log_format	*dst_attri_fmt)
+>> +{
+>> +	uint dst_len = sizeof(struct xfs_attri_log_format);
+>> +
+>> +	if (len == dst_len) {
+>> +		memcpy((char *)dst_attri_fmt, buf, len);
+>> +		return 0;
+>> +	}
+>> +
+>> +	fprintf(stderr, _("%s: bad size of attri format: %u; expected %u\n"),
+>> +		progname, len, dst_len);
+>> +	return 1;
+>> +}
+>> +
+>> +int
+>> +xlog_print_trans_attri(
+>> +	char				**ptr,
+>> +	uint				src_len,
+>> +	int				*i)
+>> +{
+>> +	struct xfs_attri_log_format	*src_f = NULL;
+>> +	xlog_op_header_t		*head = NULL;
+>> +	uint				dst_len;
+>> +	int				error = 0;
+>> +
+>> +	dst_len = sizeof(struct xfs_attri_log_format);
+>> +	if (src_len != dst_len) {
+>> +		fprintf(stderr, _("%s: bad size of attri format: %u; expected %u\n"),
+>> +				progname, src_len, dst_len);
+>> +		return 1;
+>> +	}
+>> +
+>> +	/*
+>> +	 * memmove to ensure 8-byte alignment for the long longs in
+>> +	 * xfs_attri_log_format_t structure
+>> +	 */
+>> +	if ((src_f = (struct xfs_attri_log_format *)malloc(src_len)) == NULL) {
+>> +		fprintf(stderr, _("%s: xlog_print_trans_attri: malloc failed\n"),
+>> +				progname);
+>> +		exit(1);
+>> +	}
+>> +	memmove((char*)src_f, *ptr, src_len);
+>> +	*ptr += src_len;
+>> +
+>> +	printf(_("ATTRI:  #regs: %d	name_len: %d, value_len: %d  id: 0x%llx\n"),
+>> +		src_f->alfi_size, src_f->alfi_name_len, src_f->alfi_value_len,
+>> +				(unsigned long long)src_f->alfi_id);
+>> +
+>> +	if (src_f->alfi_name_len > 0) {
+>> +		printf(_("\n"));
+>> +		(*i)++;
+>> +		head = (xlog_op_header_t *)*ptr;
+>> +		xlog_print_op_header(head, *i, ptr);
+>> +		error = xlog_print_trans_attri_name(ptr, be32_to_cpu(head->oh_len));
+>> +		if (error)
+>> +			goto error;
+>> +	}
+>> +
+>> +	if (src_f->alfi_value_len > 0) {
+>> +		printf(_("\n"));
+>> +		(*i)++;
+>> +		head = (xlog_op_header_t *)*ptr;
+>> +		xlog_print_op_header(head, *i, ptr);
+>> +		error = xlog_print_trans_attri_value(ptr, be32_to_cpu(head->oh_len),
+>> +				src_f->alfi_value_len);
+>> +	}
+>> +error:
+>> +	free(src_f);
+>> +
+>> +	return error;
+>> +}	/* xlog_print_trans_attri */
+>> +
+>> +int
+>> +xlog_print_trans_attri_name(
+>> +	char				**ptr,
+>> +	uint				src_len)
+>> +{
+>> +
+>> +	printf(_("ATTRI:  name len:%u\n"), src_len);
+>> +	print_hex_dump(*ptr, src_len);
+>> +
+>> +	*ptr += src_len;
+>> +
+>> +	return 0;
+>> +}	/* xlog_print_trans_attri */
+>> +
+>> +int
+>> +xlog_print_trans_attri_value(
+>> +	char				**ptr,
+>> +	uint				src_len,
+>> +	int				value_len)
+>> +{
+>> +	printf(_("ATTRI:  value len:%u\n"), value_len);
+>> +	print_hex_dump(*ptr, value_len);
+>> +
+>> +	*ptr += src_len;
+>> +
+>> +	return 0;
+>> +}	/* xlog_print_trans_attri_value */
+>> +
+>> +void
+>> +xlog_recover_print_attri(
+>> +	xlog_recover_item_t	*item)
+>> +{
+>> +	struct xfs_attri_log_format	*f, *src_f = NULL;
+>> +	uint				src_len, dst_len;
+>> +
+>> +	int				region = 0;
+>> +
+>> +	src_f = (struct xfs_attri_log_format *)item->ri_buf[0].i_addr;
+>> +	src_len = item->ri_buf[region].i_len;
+>> +
+>> +	/*
+>> +	 * An xfs_attri_log_format structure contains a attribute name and
+>> +	 * variable length value  as the last field.
+>> +	 */
+>> +	dst_len = sizeof(struct xfs_attri_log_format);
+>> +
+>> +	if ((f = ((struct xfs_attri_log_format *)malloc(dst_len))) == NULL) {
+>> +		fprintf(stderr, _("%s: xlog_recover_print_attri: malloc failed\n"),
+>> +			progname);
+>> +		exit(1);
+>> +	}
+>> +	if (xfs_attri_copy_log_format((char*)src_f, src_len, f))
+>> +		goto out;
+>> +
+>> +	printf(_("ATTRI:  #regs: %d	name_len: %d, value_len: %d  id: 0x%llx\n"),
+>> +		f->alfi_size, f->alfi_name_len, f->alfi_value_len, (unsigned long long)f->alfi_id);
+>> +
+>> +	if (f->alfi_name_len > 0) {
+>> +		region++;
+>> +		printf(_("ATTRI:  name len:%u\n"), f->alfi_name_len);
+>> +		print_hex_dump((char *)item->ri_buf[region].i_addr,
+>> +			       f->alfi_name_len);
+>> +	}
+>> +
+>> +	if (f->alfi_value_len > 0) {
+>> +		region++;
+>> +		printf(_("ATTRI:  value len:%u\n"), f->alfi_value_len);
+>> +		print_hex_dump((char *)item->ri_buf[region].i_addr,
+>> +			       f->alfi_value_len);
+>> +	}
+>> +
+>> +out:
+>> +	free(f);
+>> +
+>> +}
+>> +
+>> +int
+>> +xlog_print_trans_attrd(char **ptr, uint len)
+>> +{
+>> +	struct xfs_attrd_log_format *f;
+>> +	struct xfs_attrd_log_format lbuf;
+>> +	uint core_size = sizeof(struct xfs_attrd_log_format);
+>> +
+>> +	memcpy(&lbuf, *ptr, MIN(core_size, len));
+>> +	f = &lbuf;
+>> +	*ptr += len;
+>> +	if (len >= core_size) {
+>> +		printf(_("ATTRD:  #regs: %d	id: 0x%llx\n"),
+>> +			f->alfd_size,
+>> +			(unsigned long long)f->alfd_alf_id);
+>> +		return 0;
+>> +	} else {
+>> +		printf(_("ATTRD: Not enough data to decode further\n"));
+>> +		return 1;
+>> +	}
+>> +}	/* xlog_print_trans_attrd */
+>> +
+>> +void
+>> +xlog_recover_print_attrd(
+>> +	xlog_recover_item_t		*item)
+>> +{
+>> +	struct xfs_attrd_log_format	*f;
+>> +
+>> +	f = (struct xfs_attrd_log_format *)item->ri_buf[0].i_addr;
+>> +
+>> +	printf(_("	ATTRD:  #regs: %d	id: 0x%llx\n"),
+>> +		f->alfd_size,
+>> +		(unsigned long long)f->alfd_alf_id);
+>> +}
+>> diff --git a/logprint/logprint.h b/logprint/logprint.h
+>> index 98ac0d4..b76c590 100644
+>> --- a/logprint/logprint.h
+>> +++ b/logprint/logprint.h
+>> @@ -28,6 +28,7 @@ extern void xfs_log_print_trans(struct xlog *, int);
+>>   extern void print_xlog_record_line(void);
+>>   extern void print_xlog_op_line(void);
+>>   extern void print_stars(void);
+>> +extern void print_hex_dump(char* ptr, int len);
+>>   
+>>   extern struct xfs_inode_log_format *
+>>   	xfs_inode_item_format_convert(char *, uint, struct xfs_inode_log_format *);
+>> @@ -52,4 +53,10 @@ extern void xlog_recover_print_bui(struct xlog_recover_item *item);
+>>   extern int xlog_print_trans_bud(char **ptr, uint len);
+>>   extern void xlog_recover_print_bud(struct xlog_recover_item *item);
+>>   
+>> +extern int xlog_print_trans_attri(char **ptr, uint src_len, int *i);
+>> +extern int xlog_print_trans_attri_name(char **ptr, uint src_len);
+>> +extern int xlog_print_trans_attri_value(char **ptr, uint src_len, int value_len);
+>> +extern void xlog_recover_print_attri(xlog_recover_item_t *item);
+>> +extern int xlog_print_trans_attrd(char **ptr, uint len);
+>> +extern void xlog_recover_print_attrd(xlog_recover_item_t *item);
+>>   #endif	/* LOGPRINT_H */
 >> -- 
 >> 2.7.4
 >>
