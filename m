@@ -2,138 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0758A993
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 23:46:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD2B8A991
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 23:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfHLVqB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 17:46:01 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40436 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726565AbfHLVqB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 17:46:01 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id AD2478201D8;
-        Tue, 13 Aug 2019 07:45:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hxI7V-0002XO-Ln; Tue, 13 Aug 2019 07:44:49 +1000
-Date:   Tue, 13 Aug 2019 07:44:49 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Thomas Deutschmann <whissi@gentoo.org>
-Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: xfsprogs-5.2.0 FTBFS: ../libxfs/.libs/libxfs.so: undefined
- reference to `xfs_ag_geom_health'
-Message-ID: <20190812214449.GC6129@dread.disaster.area>
-References: <c4b1b7db-bf73-9b96-b418-5a639e7decdc@gentoo.org>
- <20190811225307.GF7777@dread.disaster.area>
- <ebcf887f-81fc-9080-67c9-63946316f3e0@gentoo.org>
- <20190812002306.GH7777@dread.disaster.area>
- <df65ea4f-18af-4fab-e59d-29fa8440489c@gentoo.org>
- <20190812031123.GA6129@dread.disaster.area>
- <20190812043046.GB6129@dread.disaster.area>
- <09ad7dd5-c2cd-aaaa-82d5-0f3a18eb4062@gentoo.org>
+        id S1727194AbfHLVpL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 17:45:11 -0400
+Received: from ozlabs.org ([203.11.71.1]:32927 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbfHLVpL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:45:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466qBq6fRYz9sN1;
+        Tue, 13 Aug 2019 07:45:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565646308;
+        bh=rEe7J5LXPR3Bzx5yRrLWfT587t2d294CWMNiWIGXH0A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hYNXPKmHoA0dVaa5a2zcggsRlPooNpWuVEK5vTCJccMnl1wu2K04T2/zUfT+tqVkd
+         0YiY2IKacOyIKUGuW1l8+laWF7SD0LTw+WGF5LnbXPD7GMymcRHVOvT2x8a9jH9Fhk
+         clqCWUXVm6HtOVfLryD4mEo5va8Fwm9z0F4H7fjmmQGlncHUqLnCMlqcmw3HES1tdB
+         IIwjdbPV0NJyfAQ0XKLIaIwqYvlM0Kg+Bs1+U/HzeXH6oIQMBbJL8fPcGL83pxfY8D
+         Lx0k66Uo8lJUBCMN+6QK+5F2hV7eYt1ZUYClyJzZ7asCCdJ5UVcELF88A1w55C8eBt
+         aSu23QxK0rNcw==
+Date:   Tue, 13 Aug 2019 07:45:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: linux-next: Fixes tag needs some work in the xfs tree
+Message-ID: <20190813074506.3e2ee2c8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09ad7dd5-c2cd-aaaa-82d5-0f3a18eb4062@gentoo.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=V-kRrs4D59vrbCX-GH0A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; boundary="Sig_/qZu7HnNcDMRIIYz=EyaSqZg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:57:32PM +0200, Thomas Deutschmann wrote:
-> Hi,
-> 
-> On 2019-08-12 06:30, Dave Chinner wrote:
-> >>> In a clear environment, do:
-> >>>
-> >>>> tar -xaf xfsprogs-5.2.0.tar.xz
-> >>>> cd xfsprogs-5.2.0
-> >>>> export CFLAGS="-O2 -pipe -march=ivybridge -mtune=ivybridge -mno-xsaveopt"
-> >>>> export LDFLAGS="-Wl,-O1 -Wl,--as-needed"
-> >>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >> Don't do this.
-> >>
-> >> "--as-needed" is the default linker behaviour since gcc 4.x. You do
-> >> not need this. As for passing "-O1" to the linker, that's not going
-> >> to do anything measurable for you. Use --enable-lto to turn on link
-> >> time optimisations if they are supported by the compiler.
-> > 
-> > Ok, I could reproduce your link time failure for a while with
-> > --enable-lto, but I ran 'make distclean' and the problem went away
-> > completely. And I can build with your options successfully, too:
-> > 
-> > $ make realclean
-> > $ make configure
-> > <builds new configure script>
-> > $ LDFLAGS="-Wl,-O1 -Wl,--as-needed" ./configure
-> 
-> That's not the correct way to reproduce. It's really important to
-> _export_ the variable to trigger the problem and _this_ is a problem in
-> xfsprogs' build system.
+--Sig_/qZu7HnNcDMRIIYz=EyaSqZg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Which means you are overriding the LDFLAGS set by configure when
-you _run make_, not just telling configure to use those LDFLAGS.
+Hi all,
 
-That's why _make_ is getting screwed up - it is doing exactly what
-you are telling it to do, and that is to overrides every occurrence
-of LDFLAGS with your exported options rather than using the correct
-set configure calculated and specified.
+In commit
 
-Exporting your CFLAGS and LDFLAGS is the wrong thing to doing
-- they should only ever be passed to the configure invocation and
-not remain to pollute the build environment after you've run
-configure.
+  294fc7a4c8ec ("fs: xfs: xfs_log: Don't use KM_MAYFAIL at xfs_log_reserve(=
+).")
 
-> But keep in mind that 3x "-Wl,-O1 -Wl,--as-needed" don't cause a failure
-> without "--disable-static" for me... that's just the answer for your
-> question where this is coming from.
+Fixes tag
 
-As I've already explained, --disable-static should never have worked
-in the first place, because the internal XFS libraries are
-statically linked and need to be build statically, which
---disable-static turns off. 
+  Fixes: eb01c9cd87 ("[XFS] Remove the xlog_ticket allocator")
 
-Indeed:
+has these problem(s):
 
-$ git reset --hard v5.1.0; make realclean; make configure ; ./configure --disable-static ; make -j 32
-......
-    [LD]     xfs_estimate
-    [LD]     xfs_mdrestore
-    [LD]     xfs_rtcp
-    [LD]     libhandle.la
-    [LD]     libxcmd.la
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_new_probe_from_filename'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_alignment_offset'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_get_topology'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_do_fullprobe'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_logical_sector_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_optimal_io_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_lookup_value'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_free_probe'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_physical_sector_size'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_probe_enable_partitions'
-/usr/bin/ld: ../libfrog/.libs/libfrog.so: undefined reference to `blkid_topology_get_minimum_io_size'
-$
+  - SHA1 should be at least 12 digits long
+    This can be fixed for the future by setting core.abbrev to 12 (or
+    more) or (for git v2.11 or later) just making sure it is not set
+    (or set to "auto").
 
-Yup, --disable-static is broken in v5.1.0, too. I'm guessing it
-hasn't worked for a long time....
-
-So, please remove --disable-static from your build, and everything
-will be fine. I'll write up a patch to remove --disable-static from
-the configure script so this broken option can't be specified any
-more.
-
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/qZu7HnNcDMRIIYz=EyaSqZg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1R3eIACgkQAVBC80lX
+0GyQdggAiIZNkT1bXZlEiouHqcI/6K+Q5IiKQfem6//MqILuFjBaM62fwggQEtJ8
+fblLTbCyJUYMO1TBrSir0FDBUU5Gs+xGpMS+Xt+wnCZzBBru80135pr+gIL/izxt
+CtYYFR0fdUeG4soHg7gb0ZBSaYoSuMP12CD0IQjsQwQDaYL5aoWsFBBk1btUo89y
+aUuWAFyIWiYOdUow9vZ8jVrtW+K4YDE2ejP2QkGyE//nxES00E08AScWtWIgFwCA
+ZMWXRdgw9bd87XklAGOfyas86xVgVG6MJVrYiAdub+Xr0CJA7jUh8/vMH8TEWgrL
+xPmns2M3UtU5y4FeH14QOYVjNEs1cg==
+=VlG8
+-----END PGP SIGNATURE-----
+
+--Sig_/qZu7HnNcDMRIIYz=EyaSqZg--
