@@ -2,176 +2,168 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 054148A50C
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 19:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D4A08A53C
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 20:03:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfHLR5R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 13:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
+        id S1726334AbfHLSDk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 14:03:40 -0400
+Received: from mga11.intel.com ([192.55.52.93]:50215 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbfHLR5Q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:57:16 -0400
-Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDEC2173B;
-        Mon, 12 Aug 2019 17:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565632635;
-        bh=XDR5nEPqIxvlwTE29rWAMyZx2mM15AvRPof1zupibW4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CXvJske7w6ZGCxdAFUqW0Ga/+HEW85ti2wHxjSvfHNzeItCcTTbj/YcxX5621KHpO
-         t9oma6R1Gicqcfe8h6OrenNX3Lj5XJfsGHYYZ+dXFY6b+pnfMV2bETID07z+6A1aN1
-         9IPwSEF0qg7IwkB5Z12gE703EFb0kS1i8ePvyn88=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-xfs@vger.kernel.org
-Cc:     fstests@vger.kernel.org, linux-fscrypt@vger.kernel.org
-Subject: [RFC PATCH 8/8] xfs_io/encrypt: add 'enckey_status' command
-Date:   Mon, 12 Aug 2019 10:56:34 -0700
-Message-Id: <20190812175635.34186-9-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-In-Reply-To: <20190812175635.34186-1-ebiggers@kernel.org>
-References: <20190812175635.34186-1-ebiggers@kernel.org>
+        id S1726090AbfHLSDk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:03:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 10:36:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="194012289"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 10:36:26 -0700
+Date:   Mon, 12 Aug 2019 10:36:26 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user
+ space
+Message-ID: <20190812173626.GB19746@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-2-ira.weiny@intel.com>
+ <20190809235231.GC7777@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809235231.GC7777@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Sat, Aug 10, 2019 at 09:52:31AM +1000, Dave Chinner wrote:
+> On Fri, Aug 09, 2019 at 03:58:15PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > In order to support an opt-in policy for users to allow long term pins
+> > of FS DAX pages we need to export the LAYOUT lease to user space.
+> > 
+> > This is the first of 2 new lease flags which must be used to allow a
+> > long term pin to be made on a file.
+> > 
+> > After the complete series:
+> > 
+> > 0) Registrations to Device DAX char devs are not affected
+> > 
+> > 1) The user has to opt in to allowing page pins on a file with an exclusive
+> >    layout lease.  Both exclusive and layout lease flags are user visible now.
+> > 
+> > 2) page pins will fail if the lease is not active when the file back page is
+> >    encountered.
+> > 
+> > 3) Any truncate or hole punch operation on a pinned DAX page will fail.
+> > 
+> > 4) The user has the option of holding the lease or releasing it.  If they
+> >    release it no other pin calls will work on the file.
+> > 
+> > 5) Closing the file is ok.
+> > 
+> > 6) Unmapping the file is ok
+> > 
+> > 7) Pins against the files are tracked back to an owning file or an owning mm
+> >    depending on the internal subsystem needs.  With RDMA there is an owning
+> >    file which is related to the pined file.
+> > 
+> > 8) Only RDMA is currently supported
+> > 
+> > 9) Truncation of pages which are not actively pinned nor covered by a lease
+> >    will succeed.
+> 
+> This has nothing to do with layout leases or what they provide
+> access arbitration over. Layout leases have _nothing_ to do with
+> page pinning or RDMA - they arbitrate behaviour the file offset ->
+> physical block device mapping within the filesystem and the
+> behaviour that will occur when a specific lease is held.
+> 
+> The commit descripting needs to describe what F_LAYOUT actually
+> protects, when they'll get broken, etc, not how RDMA is going to use
+> it.
 
-Add an 'enckey_status' command to xfs_io, to provide a command-line
-interface to the FS_IOC_GET_ENCRYPTION_KEY_STATUS ioctl.
+Ok yes I've been lax in mixing the cover letter for the series and this first
+commit message.  My apologies.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- io/encrypt.c      | 71 +++++++++++++++++++++++++++++++++++++++++++++++
- man/man8/xfs_io.8 |  6 ++++
- 2 files changed, 77 insertions(+)
+> 
+> > @@ -2022,8 +2030,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
+> >  	struct file_lock *fl;
+> >  	struct fasync_struct *new;
+> >  	int error;
+> > +	unsigned int flags = 0;
+> > +
+> > +	/*
+> > +	 * NOTE on F_LAYOUT lease
+> > +	 *
+> > +	 * LAYOUT lease types are taken on files which the user knows that
+> > +	 * they will be pinning in memory for some indeterminate amount of
+> > +	 * time.
+> 
+> Indeed, layout leases have nothing to do with pinning of memory.
 
-diff --git a/io/encrypt.c b/io/encrypt.c
-index 213c9c53..19c74983 100644
---- a/io/encrypt.c
-+++ b/io/encrypt.c
-@@ -140,6 +140,7 @@ static cmdinfo_t get_encpolicy_cmd;
- static cmdinfo_t set_encpolicy_cmd;
- static cmdinfo_t add_enckey_cmd;
- static cmdinfo_t rm_enckey_cmd;
-+static cmdinfo_t enckey_status_cmd;
- 
- static void
- get_encpolicy_help(void)
-@@ -216,6 +217,19 @@ rm_enckey_help(void)
- "\n"));
- }
- 
-+static void
-+enckey_status_help(void)
-+{
-+	printf(_(
-+"\n"
-+" get the status of a filesystem encryption key\n"
-+"\n"
-+" Examples:\n"
-+" 'enckey_status 0000111122223333' - get status of v1 policy key\n"
-+" 'enckey_status 00001111222233334444555566667777' - get status of v2 policy key\n"
-+"\n"));
-+}
-+
- static const struct {
- 	__u8 mode;
- 	const char *name;
-@@ -757,6 +771,52 @@ rm_enckey_f(int argc, char **argv)
- 	return 0;
- }
- 
-+static int
-+enckey_status_f(int argc, char **argv)
-+{
-+	struct fscrypt_get_key_status_arg arg;
-+
-+	memset(&arg, 0, sizeof(arg));
-+
-+	if (str2keyspec(argv[1], -1, &arg.key_spec) < 0)
-+		return 0;
-+
-+	if (ioctl(file->fd, FS_IOC_GET_ENCRYPTION_KEY_STATUS, &arg) != 0) {
-+		fprintf(stderr, "Error getting encryption key status: %s\n",
-+			strerror(errno));
-+		exitcode = 1;
-+		return 0;
-+	}
-+
-+	switch (arg.status) {
-+	case FSCRYPT_KEY_STATUS_PRESENT:
-+		printf("Present");
-+		if (arg.user_count || arg.status_flags) {
-+			printf(" (user_count=%u", arg.user_count);
-+			if (arg.status_flags &
-+			    FSCRYPT_KEY_STATUS_FLAG_ADDED_BY_SELF)
-+				printf(", added_by_self");
-+			arg.status_flags &=
-+				~FSCRYPT_KEY_STATUS_FLAG_ADDED_BY_SELF;
-+			if (arg.status_flags)
-+				printf(", unknown_flags=0x%08x",
-+				       arg.status_flags);
-+			printf(")");
-+		}
-+		printf("\n");
-+		return 0;
-+	case FSCRYPT_KEY_STATUS_ABSENT:
-+		printf("Absent\n");
-+		return 0;
-+	case FSCRYPT_KEY_STATUS_INCOMPLETELY_REMOVED:
-+		printf("Incompletely removed\n");
-+		return 0;
-+	default:
-+		printf("Unknown status (%u)\n", arg.status);
-+		return 0;
-+	}
-+}
-+
- void
- encrypt_init(void)
- {
-@@ -800,8 +860,19 @@ encrypt_init(void)
- 		_("remove an encryption key from the filesystem");
- 	rm_enckey_cmd.help = rm_enckey_help;
- 
-+	enckey_status_cmd.name = "enckey_status";
-+	enckey_status_cmd.cfunc = enckey_status_f;
-+	enckey_status_cmd.args = _("keyspec");
-+	enckey_status_cmd.argmin = 1;
-+	enckey_status_cmd.argmax = 1;
-+	enckey_status_cmd.flags = CMD_NOMAP_OK | CMD_FOREIGN_OK;
-+	enckey_status_cmd.oneline =
-+		_("get the status of a filesystem encryption key");
-+	enckey_status_cmd.help = enckey_status_help;
-+
- 	add_command(&get_encpolicy_cmd);
- 	add_command(&set_encpolicy_cmd);
- 	add_command(&add_enckey_cmd);
- 	add_command(&rm_enckey_cmd);
-+	add_command(&enckey_status_cmd);
- }
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index a6894778..9af6e542 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -779,6 +779,12 @@ is a privileged operation.
- .RE
- .PD
- .TP
-+.BI "enckey_status " keyspec
-+On filesystems that support encryption, display the status of an encryption key.
-+.I keyspec
-+is a hex string specifying the key for which to display the status, as a
-+16-character "key descriptor" or a 32-character "key identifier".
-+.TP
- .BR lsattr " [ " \-R " | " \-D " | " \-a " | " \-v " ]"
- List extended inode flags on the currently open file. If the
- .B \-R
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+Yep, Fair enough.  I'll rework the comment.
 
+> That's something an application taht uses layout leases might do,
+> but it largely irrelevant to the functionality layout leases
+> provide. What needs to be done here is explain what the layout lease
+> API actually guarantees w.r.t. the physical file layout, not what
+> some application is going to do with a lease. e.g.
+> 
+> 	The layout lease F_RDLCK guarantees that the holder will be
+> 	notified that the physical file layout is about to be
+> 	changed, and that it needs to release any resources it has
+> 	over the range of this lease, drop the lease and then
+> 	request it again to wait for the kernel to finish whatever
+> 	it is doing on that range.
+> 
+> 	The layout lease F_RDLCK also allows the holder to modify
+> 	the physical layout of the file. If an operation from the
+> 	lease holder occurs that would modify the layout, that lease
+> 	holder does not get notification that a change will occur,
+> 	but it will block until all other F_RDLCK leases have been
+> 	released by their holders before going ahead.
+> 
+> 	If there is a F_WRLCK lease held on the file, then a F_RDLCK
+> 	holder will fail any operation that may modify the physical
+> 	layout of the file. F_WRLCK provides exclusive physical
+> 	modification access to the holder, guaranteeing nothing else
+> 	will change the layout of the file while it holds the lease.
+> 
+> 	The F_WRLCK holder can change the physical layout of the
+> 	file if it so desires, this will block while F_RDLCK holders
+> 	are notified and release their leases before the
+> 	modification will take place.
+> 
+> We need to define the semantics we expose to userspace first.....
+
+Agreed.  I believe I have implemented the semantics you describe above.  Do I
+have your permission to use your verbiage as part of reworking the comment and
+commit message?
+
+Thanks,
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
