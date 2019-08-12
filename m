@@ -2,62 +2,99 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E099889C1B
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 12:59:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A83489E45
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2019 14:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfHLK7h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Aug 2019 06:59:37 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64218 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbfHLK7h (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 06:59:37 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7CAxVls093718;
-        Mon, 12 Aug 2019 19:59:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
- Mon, 12 Aug 2019 19:59:31 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7CAxUUH093713
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 12 Aug 2019 19:59:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] fs: xfs: Remove KM_NOSLEEP and KM_SLEEP.
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-References: <62ec978e-c045-80ad-24a6-41da07d1b37d@i-love.sakura.ne.jp>
- <1564658887-12654-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190801203945.GC7138@magnolia>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <6e50eef5-434e-a81e-9001-f3deabfa7cc9@i-love.sakura.ne.jp>
-Date:   Mon, 12 Aug 2019 19:59:30 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728552AbfHLM2Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Aug 2019 08:28:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35798 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728475AbfHLM2Q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Aug 2019 08:28:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r21so76795068qke.2
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2019 05:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F3NVoBe9n1v2ZfRa55FdnUViyntY9dM8fBRiLu0L+fw=;
+        b=hj/Fuo5ytWHe0SJ+13jcDdQMsbU/i1ZIACgIViMzJiw64MJCvg0Xb2wHJG7iO+F4CY
+         aU/8Q4e5EoRTDQDpyyngxGAd8VRdCivVvM9K4kJH8VkohD0SyifJp3mGzN0GcVbvBsA6
+         4Y51i7Ejn6Y8PGCOwhEemjauQp1RbvuAk+XvQ3vNiR6Z8yE71AQmuSIriJA5+G1/cPmw
+         b9Fve7MbxQYSmPLxPc8WFWQFK9ggMft0bP6KTFKqQIAdoHpT+phxWGWiOfnw0VACG5Ib
+         rBDe3YqIH8M46+Mj9gTd05nIVBhQ30Y1/5SkXNdMnFNsQXrdNcqB8yDxa3rqTHlr6dLq
+         iK8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F3NVoBe9n1v2ZfRa55FdnUViyntY9dM8fBRiLu0L+fw=;
+        b=VWvX99lLHkgIh8W19IDLSuOC9RToohlOZdGmaKzN7tSNiVgaHOVaBfD1aXdGYWRT1x
+         E7TtAnHO0JNeOwsUfFq4keAeQEDvcQAPSdDCCNI2yihtKuBUP4S8EyEfqVNbjAq/wXTE
+         CgBE4IHe7z+g12aSZMliOcCFUv4rauAaP7HZwkb6c5zNWI0Adj4s0PbiHY5jPMaW75Gj
+         Eiva7lr/hjs8El7m+3gZ7QtCdystWEIy72MHPNiCJHzO4pgUt2Ijs0GzGLABhVI3esMF
+         BjpEK56ig67BzGadjlU0wzJ+zF8Vwp8VU4gckSrST2TOt3Rq5X2xooMI6FEkphXoJKPj
+         L+Vg==
+X-Gm-Message-State: APjAAAVffP/QA0J7YLxr99fw6wwceV0oKayZp5ar8I+4IrNTw8ZRMjIs
+        AzOGSnO2xP9tm7jo0BXn7uK0zA==
+X-Google-Smtp-Source: APXvYqwODBrrpXeLg1uZt60+w4xuw/RA5y0XlK9HIDJS76yjPxmVou6ZmWwl4OVp2Tm+2EwyPKY3dw==
+X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr29712440qkl.176.1565612895187;
+        Mon, 12 Aug 2019 05:28:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z2sm9588656qtq.7.2019.08.12.05.28.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 05:28:14 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hx9Qs-00079D-9F; Mon, 12 Aug 2019 09:28:14 -0300
+Date:   Mon, 12 Aug 2019 09:28:14 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+Message-ID: <20190812122814.GC24457@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190801203945.GC7138@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809225833.6657-16-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019/08/02 5:39, Darrick J. Wong wrote:
-> On Thu, Aug 01, 2019 at 08:28:07PM +0900, Tetsuo Handa wrote:
->> Since no caller is using KM_NOSLEEP and no callee branches on KM_SLEEP,
->> we can remove KM_NOSLEEP and replace KM_SLEEP with 0.
->>
->> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+On Fri, Aug 09, 2019 at 03:58:29PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Ahh, right, KM_{NO,}SLEEP are mutually exclusive values encoded
-> alongside a bit flag set (ala fallocate mode)....
+> The addition of FOLL_LONGTERM has taken on additional meaning for CMA
+> pages.
 > 
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> In addition subsystems such as RDMA require new information to be passed
+> to the GUP interface to track file owning information.  As such a simple
+> FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
 > 
-> --D
+> Introduce a new GUP like call which takes the newly introduced vaddr_pin
+> information.  Failure to pass the vaddr_pin object back to a vaddr_put*
+> call will result in a failure if pins were created on files during the
+> pin operation.
 
-Thank you. Please apply to xfs tree.
+Is this a 'vaddr' in the traditional sense, ie does it work with
+something returned by valloc?
+
+Maybe another name would be better?
+
+I also wish GUP like functions took in a 'void __user *' instead of
+the unsigned long to make this clear :\
+
+Jason
