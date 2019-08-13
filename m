@@ -2,84 +2,183 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F6A98AE9E
+	by mail.lfdr.de (Postfix) with ESMTP id C86C38AE9F
 	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 07:14:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbfHMFOZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Aug 2019 01:14:25 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33010 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725903AbfHMFOZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 01:14:25 -0400
+        id S1725903AbfHMFO0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Aug 2019 01:14:26 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34648 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbfHMFO0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 01:14:26 -0400
 Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0631043C386
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 05FD52AD503
         for <linux-xfs@vger.kernel.org>; Tue, 13 Aug 2019 15:14:22 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hxP7S-0005LI-Qo
+        id 1hxP7S-0005LK-Sb
         for linux-xfs@vger.kernel.org; Tue, 13 Aug 2019 15:13:14 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hxP8Z-0005aK-7A
+        id 1hxP8Z-0005aN-8e
         for linux-xfs@vger.kernel.org; Tue, 13 Aug 2019 15:14:23 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 0/2] xfsprogs: "Fix" --disable-static option
-Date:   Tue, 13 Aug 2019 15:14:18 +1000
-Message-Id: <20190813051421.21137-1-david@fromorbit.com>
+Subject: [PATCH 1/2] mkfs: use cvtnum from libfrog
+Date:   Tue, 13 Aug 2019 15:14:19 +1000
+Message-Id: <20190813051421.21137-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20190813051421.21137-1-david@fromorbit.com>
+References: <20190813051421.21137-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
         a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=FmdZ9Uzk2mMA:10 a=DIzZoBtUKWnMg8Znw28A:9
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=FmdZ9Uzk2mMA:10 a=20KFwNOVAAAA:8
+        a=zxXIHBNzVg3VyBJM4XUA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+From: Dave Chinner <dchinner@redhat.com>
 
-These patches fix the build failures that come from trying
-to prevent static xfsprogs libraries being built via the 
-'configure --disable-static' option.
+Move the checks for zero block/sector size to the libfrog code
+and return -1LL as an invalid value instead. Catch the invalid
+value in mkfs and error out there instead of inside cvtnum.
 
-The internal libraries are statically linked to the xfsprogs
-binaries, with external dependencies then dynamically linked. Not
-building the internal libraries statically results in linking them
-dynamically and so the pull in all their dependencies as well. for
-example, libfrog has the blkid topology code in it, so when linked
-as a shared library it always brings that dependency with it,
-regardless of whether the binary actually uses the topology code
-or not.
+Also rename the libfrog block/sector size variables so they don't
+shadow the mkfs global variables of the same name.
 
-Linking the libraries statically allows dead code elimination to
-remove the topology code if it is not used by the binary, hence
-eliminating the need to link that binary against libblkid. This
-makes the binaries smaller, they load faster, and we don't have to
-ship public libraries for all the internal xfsprogs code.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ libfrog/convert.c | 12 +++++---
+ mkfs/xfs_mkfs.c   | 71 ++++-------------------------------------------
+ 2 files changed, 14 insertions(+), 69 deletions(-)
 
-Hence we need to force the internal libraries to build a staticly
-linked archive even when a user says "--disable-static". We can do
-this by passing libtool the "-static" option on the link link for
-each of the internal libraries. Hence we always build static
-libraries for the internel libs as the build needs them to be
-static.
-
-Doing this, however, exposes the fact taht mkfs has it's own version
-of cvtnum and it links against libfrog which also has version of
-cvtnum. The linker previously resolved this automatically by using
-the local version, but with -static defined it errors out on
-multiply-defined symbol errors. SO the first patch fixes the cvtnum
-issue. Note i left xfs_estimate alone - it doesn't link against
-libfrog, so I didn't remove it's simple cvtnum copy as it's not
-necessary to fix the build issue and linking against libfrog might
-introduce other issues.
-
-Cheers,
-
-Dave.
-
+diff --git a/libfrog/convert.c b/libfrog/convert.c
+index 8d4d4077b331..b5f3fc1238dd 100644
+--- a/libfrog/convert.c
++++ b/libfrog/convert.c
+@@ -182,8 +182,8 @@ cvt_u16(
+ 
+ long long
+ cvtnum(
+-	size_t		blocksize,
+-	size_t		sectorsize,
++	size_t		blksize,
++	size_t		sectsize,
+ 	char		*s)
+ {
+ 	long long	i;
+@@ -202,9 +202,13 @@ cvtnum(
+ 	c = tolower(*sp);
+ 	switch (c) {
+ 	case 'b':
+-		return i * blocksize;
++		if (!blksize)
++			return -1LL;
++		return i * blksize;
+ 	case 's':
+-		return i * sectorsize;
++		if (!sectsize)
++			return -1LL;
++		return i * sectsize;
+ 	case 'k':
+ 		return KILOBYTES(i);
+ 	case 'm':
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 0adaa65d19f8..04063ca5b2c7 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -942,69 +942,6 @@ unknown(
+ 	usage();
+ }
+ 
+-long long
+-cvtnum(
+-	unsigned int	blksize,
+-	unsigned int	sectsize,
+-	const char	*s)
+-{
+-	long long	i;
+-	char		*sp;
+-	int		c;
+-
+-	i = strtoll(s, &sp, 0);
+-	if (i == 0 && sp == s)
+-		return -1LL;
+-	if (*sp == '\0')
+-		return i;
+-
+-	if (sp[1] != '\0')
+-		return -1LL;
+-
+-	if (*sp == 'b') {
+-		if (!blksize) {
+-			fprintf(stderr,
+-_("Blocksize must be provided prior to using 'b' suffix.\n"));
+-			usage();
+-		} else {
+-			return i * blksize;
+-		}
+-	}
+-	if (*sp == 's') {
+-		if (!sectsize) {
+-			fprintf(stderr,
+-_("Sectorsize must be specified prior to using 's' suffix.\n"));
+-			usage();
+-		} else {
+-			return i * sectsize;
+-		}
+-	}
+-
+-	c = tolower(*sp);
+-	switch (c) {
+-	case 'e':
+-		i *= 1024LL;
+-		/* fall through */
+-	case 'p':
+-		i *= 1024LL;
+-		/* fall through */
+-	case 't':
+-		i *= 1024LL;
+-		/* fall through */
+-	case 'g':
+-		i *= 1024LL;
+-		/* fall through */
+-	case 'm':
+-		i *= 1024LL;
+-		/* fall through */
+-	case 'k':
+-		return i * 1024LL;
+-	default:
+-		break;
+-	}
+-	return -1LL;
+-}
+-
+ static void
+ check_device_type(
+ 	const char	*name,
+@@ -1347,9 +1284,13 @@ getnum(
+ 	 * convert it ourselves to guarantee there is no trailing garbage in the
+ 	 * number.
+ 	 */
+-	if (sp->convert)
++	if (sp->convert) {
+ 		c = cvtnum(blocksize, sectorsize, str);
+-	else {
++		if (c == -1LL) {
++			illegal_option(str, opts, index,
++				_("Not a valid value or illegal suffix"));
++		}
++	} else {
+ 		char		*str_end;
+ 
+ 		c = strtoll(str, &str_end, 0);
+-- 
+2.23.0.rc1
 
