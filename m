@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C86C38AE9F
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 07:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39C58AE9D
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 07:14:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbfHMFO0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Aug 2019 01:14:26 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34648 "EHLO
+        id S1726000AbfHMFOZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Aug 2019 01:14:25 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34650 "EHLO
         mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbfHMFO0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 01:14:26 -0400
+        by vger.kernel.org with ESMTP id S1725820AbfHMFOZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 01:14:25 -0400
 Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 05FD52AD503
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0698B2AD512
         for <linux-xfs@vger.kernel.org>; Tue, 13 Aug 2019 15:14:22 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hxP7S-0005LK-Sb
+        id 1hxP7S-0005LM-TZ
         for linux-xfs@vger.kernel.org; Tue, 13 Aug 2019 15:13:14 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hxP8Z-0005aN-8e
+        id 1hxP8Z-0005aQ-AA
         for linux-xfs@vger.kernel.org; Tue, 13 Aug 2019 15:14:23 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/2] mkfs: use cvtnum from libfrog
-Date:   Tue, 13 Aug 2019 15:14:19 +1000
-Message-Id: <20190813051421.21137-2-david@fromorbit.com>
+Subject: [PATCH 2/2] xfsprogs: Fix --disable-static option build
+Date:   Tue, 13 Aug 2019 15:14:20 +1000
+Message-Id: <20190813051421.21137-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190813051421.21137-1-david@fromorbit.com>
 References: <20190813051421.21137-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
         a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=FmdZ9Uzk2mMA:10 a=20KFwNOVAAAA:8
-        a=zxXIHBNzVg3VyBJM4XUA:9
+        a=j0Ib_7eicaqp3KEL2dQA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,140 +45,84 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Move the checks for zero block/sector size to the libfrog code
-and return -1LL as an invalid value instead. Catch the invalid
-value in mkfs and error out there instead of inside cvtnum.
+Internal xfsprogs libraries are linked statically to binaries as
+they are not shipped libraries. Using --disable-static prevents the
+internal static libraries from being built and this breaks dead code
+elimination and results in linker failures from link dependencies
+introduced by dead code.
 
-Also rename the libfrog block/sector size variables so they don't
-shadow the mkfs global variables of the same name.
+We can't remove the --disable-static option that causes this as it
+is part of the libtool/autoconf generated infrastructure. We can,
+however, reliably detect whether static library building has been
+disabled after the libtool infrastructure has been configured.
+Therefore, add a check to determine the static build status and
+abort the configure script with an error if we have been configured
+not to build static libraries.
+
+This build command now succeeds:
+
+$ make realclean; make configure; ./configure --disable-static ; make
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- libfrog/convert.c | 12 +++++---
- mkfs/xfs_mkfs.c   | 71 ++++-------------------------------------------
- 2 files changed, 14 insertions(+), 69 deletions(-)
+ libfrog/Makefile | 2 ++
+ libxcmd/Makefile | 2 ++
+ libxfs/Makefile  | 2 ++
+ libxlog/Makefile | 2 ++
+ 4 files changed, 8 insertions(+)
 
-diff --git a/libfrog/convert.c b/libfrog/convert.c
-index 8d4d4077b331..b5f3fc1238dd 100644
---- a/libfrog/convert.c
-+++ b/libfrog/convert.c
-@@ -182,8 +182,8 @@ cvt_u16(
+diff --git a/libfrog/Makefile b/libfrog/Makefile
+index f5a0539b3f03..4d79983eb910 100644
+--- a/libfrog/Makefile
++++ b/libfrog/Makefile
+@@ -9,6 +9,8 @@ LTLIBRARY = libfrog.la
+ LT_CURRENT = 0
+ LT_REVISION = 0
+ LT_AGE = 0
++# we need a static build even if --disable-static is specified
++LTLDFLAGS += -static
  
- long long
- cvtnum(
--	size_t		blocksize,
--	size_t		sectorsize,
-+	size_t		blksize,
-+	size_t		sectsize,
- 	char		*s)
- {
- 	long long	i;
-@@ -202,9 +202,13 @@ cvtnum(
- 	c = tolower(*sp);
- 	switch (c) {
- 	case 'b':
--		return i * blocksize;
-+		if (!blksize)
-+			return -1LL;
-+		return i * blksize;
- 	case 's':
--		return i * sectorsize;
-+		if (!sectsize)
-+			return -1LL;
-+		return i * sectsize;
- 	case 'k':
- 		return KILOBYTES(i);
- 	case 'm':
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 0adaa65d19f8..04063ca5b2c7 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -942,69 +942,6 @@ unknown(
- 	usage();
- }
+ CFILES = \
+ avl64.c \
+diff --git a/libxcmd/Makefile b/libxcmd/Makefile
+index 914bec024c46..f9bc1c5c483a 100644
+--- a/libxcmd/Makefile
++++ b/libxcmd/Makefile
+@@ -9,6 +9,8 @@ LTLIBRARY = libxcmd.la
+ LT_CURRENT = 0
+ LT_REVISION = 0
+ LT_AGE = 0
++# we need a static build even if --disable-static is specified
++LTLDFLAGS += -static
  
--long long
--cvtnum(
--	unsigned int	blksize,
--	unsigned int	sectsize,
--	const char	*s)
--{
--	long long	i;
--	char		*sp;
--	int		c;
--
--	i = strtoll(s, &sp, 0);
--	if (i == 0 && sp == s)
--		return -1LL;
--	if (*sp == '\0')
--		return i;
--
--	if (sp[1] != '\0')
--		return -1LL;
--
--	if (*sp == 'b') {
--		if (!blksize) {
--			fprintf(stderr,
--_("Blocksize must be provided prior to using 'b' suffix.\n"));
--			usage();
--		} else {
--			return i * blksize;
--		}
--	}
--	if (*sp == 's') {
--		if (!sectsize) {
--			fprintf(stderr,
--_("Sectorsize must be specified prior to using 's' suffix.\n"));
--			usage();
--		} else {
--			return i * sectsize;
--		}
--	}
--
--	c = tolower(*sp);
--	switch (c) {
--	case 'e':
--		i *= 1024LL;
--		/* fall through */
--	case 'p':
--		i *= 1024LL;
--		/* fall through */
--	case 't':
--		i *= 1024LL;
--		/* fall through */
--	case 'g':
--		i *= 1024LL;
--		/* fall through */
--	case 'm':
--		i *= 1024LL;
--		/* fall through */
--	case 'k':
--		return i * 1024LL;
--	default:
--		break;
--	}
--	return -1LL;
--}
--
- static void
- check_device_type(
- 	const char	*name,
-@@ -1347,9 +1284,13 @@ getnum(
- 	 * convert it ourselves to guarantee there is no trailing garbage in the
- 	 * number.
- 	 */
--	if (sp->convert)
-+	if (sp->convert) {
- 		c = cvtnum(blocksize, sectorsize, str);
--	else {
-+		if (c == -1LL) {
-+			illegal_option(str, opts, index,
-+				_("Not a valid value or illegal suffix"));
-+		}
-+	} else {
- 		char		*str_end;
+ CFILES = command.c input.c help.c quit.c
  
- 		c = strtoll(str, &str_end, 0);
+diff --git a/libxfs/Makefile b/libxfs/Makefile
+index 8c681e0b9083..d1688dc3853a 100644
+--- a/libxfs/Makefile
++++ b/libxfs/Makefile
+@@ -9,6 +9,8 @@ LTLIBRARY = libxfs.la
+ LT_CURRENT = 0
+ LT_REVISION = 0
+ LT_AGE = 0
++# we need a static build even if --disable-static is specified
++LTLDFLAGS += -static
+ 
+ # headers to install in include/xfs
+ PKGHFILES = xfs_fs.h \
+diff --git a/libxlog/Makefile b/libxlog/Makefile
+index bdea6abacea4..b0f5ef154133 100644
+--- a/libxlog/Makefile
++++ b/libxlog/Makefile
+@@ -9,6 +9,8 @@ LTLIBRARY = libxlog.la
+ LT_CURRENT = 0
+ LT_REVISION = 0
+ LT_AGE = 0
++# we need a static build even if --disable-static is specified
++LTLDFLAGS += -static
+ 
+ CFILES = xfs_log_recover.c util.c
+ 
 -- 
 2.23.0.rc1
 
