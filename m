@@ -2,169 +2,154 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A15C8B7AB
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 13:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A89D48B7B3
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Aug 2019 13:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfHML5B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Aug 2019 07:57:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58836 "EHLO mx1.redhat.com"
+        id S1726650AbfHML5s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Aug 2019 07:57:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57544 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfHML5B (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:57:01 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1726600AbfHML5s (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:57:48 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DF70A2CE953;
-        Tue, 13 Aug 2019 11:57:00 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83DDC30001EE;
+        Tue, 13 Aug 2019 11:57:47 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74EEC34681;
-        Tue, 13 Aug 2019 11:57:00 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 07:56:58 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A3207EEA0;
+        Tue, 13 Aug 2019 11:57:47 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 07:57:45 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Nikolay Borisov <nborisov@suse.com>
 Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: Re: [PATCH 2/3] xfs: Rename __xfs_buf_submit to xfs_buf_submit
-Message-ID: <20190813115658.GB37069@bfoster>
+Subject: Re: [PATCH 3/3] xfs: Opencode and remove DEFINE_SINGLE_BUF_MAP
+Message-ID: <20190813115745.GC37069@bfoster>
 References: <20190813090306.31278-1-nborisov@suse.com>
- <20190813090306.31278-3-nborisov@suse.com>
+ <20190813090306.31278-4-nborisov@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813090306.31278-3-nborisov@suse.com>
+In-Reply-To: <20190813090306.31278-4-nborisov@suse.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 13 Aug 2019 11:57:00 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 13 Aug 2019 11:57:47 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:03:05PM +0300, Nikolay Borisov wrote:
-> Since xfs_buf_submit no longer has any callers just rename its __
-> prefixed counterpart.
+On Tue, Aug 13, 2019 at 12:03:06PM +0300, Nikolay Borisov wrote:
+> This macro encodes a trivial struct initializations, just open code it.
 > 
 > Signed-off-by: Nikolay Borisov <nborisov@suse.com>
 > ---
 
-Now we have a primary submission interface that allows combinations of
-XBF_ASYNC and waiting or not while the underlying mechanisms are not so
-flexible. It looks like the current factoring exists to support delwri
-queues where we never wait in buffer submission regardless of async
-state because we are batching the submission/wait across multiple
-buffers. But what happens if a caller passes an async buffer with wait
-== true? I/O completion only completes ->b_iowait if XBF_ASYNC is clear.
+Seems fine:
 
-I find this rather confusing because now a caller needs to know about
-implementation details to use the function properly. That's already true
-of __xfs_buf_submit(), but that's partly why it's named as an "internal"
-function. I think we ultimately need the interface flexibility so the
-delwri case can continue to work. One option could be to update
-xfs_buf_submit() such that we never wait on an XBF_ASYNC buffer and add
-an assert to flag wait == true as invalid, but TBH I'm not convinced
-this is any simpler than the current interface where most callers simply
-only need to care about the flag. Maybe others have thoughts...
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-Brian
+What might be more interesting is to audit the cases where nmap is
+always 1 and see if we can start eliminating some of this code where it
+isn't needed. For example, it looks xfs_buf_readahead_map() only ever
+uses nmap == 1. Can we pass a block/len directly there and push the
+map/nmap parameters further down the stack? FWIW, I also see several
+functions on a quick glance (xfs_dabuf_map(), xfs_buf_map_from_irec())
+that take map/nmaps params, assert that nmaps == 1 yet still have
+iteration code for nmap > 1 cases.
 
->  fs/xfs/xfs_buf.c         | 10 +++++-----
->  fs/xfs/xfs_buf.h         |  7 +------
->  fs/xfs/xfs_buf_item.c    |  2 +-
->  fs/xfs/xfs_log_recover.c |  2 +-
->  4 files changed, 8 insertions(+), 13 deletions(-)
+>  fs/xfs/xfs_buf.c   | 4 ++--
+>  fs/xfs/xfs_buf.h   | 9 +++------
+>  fs/xfs/xfs_trans.h | 6 ++++--
+>  3 files changed, 9 insertions(+), 10 deletions(-)
 > 
 > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index a75d05e49a98..99c66f80d7cc 100644
+> index 99c66f80d7cc..389c5b590f11 100644
 > --- a/fs/xfs/xfs_buf.c
 > +++ b/fs/xfs/xfs_buf.c
-> @@ -759,7 +759,7 @@ _xfs_buf_read(
->  	bp->b_flags &= ~(XBF_WRITE | XBF_ASYNC | XBF_READ_AHEAD);
->  	bp->b_flags |= flags & (XBF_READ | XBF_ASYNC | XBF_READ_AHEAD);
->  
-> -	return __xfs_buf_submit(bp, wait);
-> +	return xfs_buf_submit(bp, wait);
->  }
->  
->  /*
-> @@ -885,7 +885,7 @@ xfs_buf_read_uncached(
->  	bp->b_flags |= XBF_READ;
->  	bp->b_ops = ops;
->  
-> -	__xfs_buf_submit(bp, true);
-> +	xfs_buf_submit(bp, true);
->  	if (bp->b_error) {
->  		int	error = bp->b_error;
->  		xfs_buf_relse(bp);
-> @@ -1216,7 +1216,7 @@ xfs_bwrite(
->  	bp->b_flags &= ~(XBF_ASYNC | XBF_READ | _XBF_DELWRI_Q |
->  			 XBF_WRITE_FAIL | XBF_DONE);
->  
-> -	error = __xfs_buf_submit(bp, true);
-> +	error = xfs_buf_submit(bp, true);
->  	if (error)
->  		xfs_force_shutdown(bp->b_mount, SHUTDOWN_META_IO_ERROR);
->  	return error;
-> @@ -1427,7 +1427,7 @@ xfs_buf_iowait(
->   * holds an additional reference itself.
->   */
->  int
-> -__xfs_buf_submit(
-> +xfs_buf_submit(
->  	struct xfs_buf	*bp,
->  	bool		wait)
+> @@ -658,7 +658,7 @@ xfs_buf_incore(
 >  {
-> @@ -1929,7 +1929,7 @@ xfs_buf_delwri_submit_buffers(
->  			bp->b_flags |= XBF_ASYNC;
->  			list_del_init(&bp->b_list);
->  		}
-> -		__xfs_buf_submit(bp, false);
-> +		xfs_buf_submit(bp, false);
->  	}
->  	blk_finish_plug(&plug);
+>  	struct xfs_buf		*bp;
+>  	int			error;
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
 >  
+>  	error = xfs_buf_find(target, &map, 1, flags, NULL, &bp);
+>  	if (error)
+> @@ -905,7 +905,7 @@ xfs_buf_get_uncached(
+>  	unsigned long		page_count;
+>  	int			error, i;
+>  	struct xfs_buf		*bp;
+> -	DEFINE_SINGLE_BUF_MAP(map, XFS_BUF_DADDR_NULL, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = XFS_BUF_DADDR_NULL, .bm_len = numblks };
+>  
+>  	/* flags might contain irrelevant bits, pass only what we care about */
+>  	bp = _xfs_buf_alloc(target, &map, 1, flags & XBF_NO_IOACCT);
 > diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-> index c6e57a3f409e..ec7037284d62 100644
+> index ec7037284d62..548dfb0c6e27 100644
 > --- a/fs/xfs/xfs_buf.h
 > +++ b/fs/xfs/xfs_buf.h
-> @@ -262,12 +262,7 @@ extern void __xfs_buf_ioerror(struct xfs_buf *bp, int error,
->  #define xfs_buf_ioerror(bp, err) __xfs_buf_ioerror((bp), (err), __this_address)
->  extern void xfs_buf_ioerror_alert(struct xfs_buf *, const char *func);
+> @@ -104,9 +104,6 @@ struct xfs_buf_map {
+>  	int			bm_len;	/* size of I/O */
+>  };
 >  
-> -extern int __xfs_buf_submit(struct xfs_buf *bp, bool);
-> -static inline int xfs_buf_submit(struct xfs_buf *bp)
-> -{
-> -	bool wait = bp->b_flags & XBF_ASYNC ? false : true;
-> -	return __xfs_buf_submit(bp, wait);
-> -}
-> +extern int xfs_buf_submit(struct xfs_buf *bp, bool);
+> -#define DEFINE_SINGLE_BUF_MAP(map, blkno, numblk) \
+> -	struct xfs_buf_map (map) = { .bm_bn = (blkno), .bm_len = (numblk) };
+> -
+>  struct xfs_buf_ops {
+>  	char *name;
+>  	union {
+> @@ -209,7 +206,7 @@ xfs_buf_get(
+>  	xfs_daddr_t		blkno,
+>  	size_t			numblks)
+>  {
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
+>  	return xfs_buf_get_map(target, &map, 1, 0);
+>  }
 >  
->  void xfs_buf_zero(struct xfs_buf *bp, size_t boff, size_t bsize);
+> @@ -221,7 +218,7 @@ xfs_buf_read(
+>  	xfs_buf_flags_t		flags,
+>  	const struct xfs_buf_ops *ops)
+>  {
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
+>  	return xfs_buf_read_map(target, &map, 1, flags, ops);
+>  }
 >  
-> diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-> index fef08980dd21..93f38fdceb80 100644
-> --- a/fs/xfs/xfs_buf_item.c
-> +++ b/fs/xfs/xfs_buf_item.c
-> @@ -1123,7 +1123,7 @@ xfs_buf_iodone_callback_error(
->  			bp->b_first_retry_time = jiffies;
+> @@ -232,7 +229,7 @@ xfs_buf_readahead(
+>  	size_t			numblks,
+>  	const struct xfs_buf_ops *ops)
+>  {
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
+>  	return xfs_buf_readahead_map(target, &map, 1, ops);
+>  }
 >  
->  		xfs_buf_ioerror(bp, 0);
-> -		__xfs_buf_submit(bp, false);
-> +		xfs_buf_submit(bp, false);
->  		return true;
->  	}
+> diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+> index 64d7f171ebd3..8d6fce5c0320 100644
+> --- a/fs/xfs/xfs_trans.h
+> +++ b/fs/xfs/xfs_trans.h
+> @@ -182,7 +182,8 @@ xfs_trans_get_buf(
+>  	int			numblks,
+>  	uint			flags)
+>  {
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
+> +
+>  	return xfs_trans_get_buf_map(tp, target, &map, 1, flags);
+>  }
 >  
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index 64e315f80147..9b7822638f83 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -5610,7 +5610,7 @@ xlog_do_recover(
->  	bp->b_flags |= XBF_READ;
->  	bp->b_ops = &xfs_sb_buf_ops;
->  
-> -	error = __xfs_buf_submit(bp, true);
-> +	error = xfs_buf_submit(bp, true);
->  	if (error) {
->  		if (!XFS_FORCED_SHUTDOWN(mp)) {
->  			xfs_buf_ioerror_alert(bp, __func__);
+> @@ -205,7 +206,8 @@ xfs_trans_read_buf(
+>  	struct xfs_buf		**bpp,
+>  	const struct xfs_buf_ops *ops)
+>  {
+> -	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
+> +	struct xfs_buf_map map = { .bm_bn = blkno, .bm_len = numblks };
+> +
+>  	return xfs_trans_read_buf_map(mp, tp, target, &map, 1,
+>  				      flags, bpp, ops);
+>  }
 > -- 
 > 2.17.1
 > 
