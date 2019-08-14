@@ -2,51 +2,169 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9070B8C9AB
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 04:45:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DDCF8C9EE
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 05:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfHNCpD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Aug 2019 22:45:03 -0400
-Received: from [196.168.165.195] ([196.168.165.195]:59339 "EHLO
-        zulu.lacipres.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfHNCpC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 22:45:02 -0400
-X-Greylist: delayed 13522 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Aug 2019 22:45:02 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by zulu.lacipres.org (Postfix) with ESMTP id 70DBD9E093E;
-        Tue, 13 Aug 2019 19:32:01 +0000 (GMT)
-X-DKIM: OpenDKIM Filter v2.0.2 zulu.lacipres.org 70DBD9E093E
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lacipres.org;
-        s=selector; t=1565724721;
-        bh=+5+N5cEzuo3wlYC2tuXvlKCWmtiUzWA+oQ70lCzksPY=;
-        h=Date:From:Reply-To:Message-ID:Subject:MIME-Version:Content-Type:
-         Content-Transfer-Encoding:To;
-        b=PJep91irB2p33ddMI0D3lyjCst+kMBJIWlkpKUF4nNMmV14mjK9UT21Sdntq+tQfr
-         cmqPiOWL+Lyk/bJZNl7QUsT12/94IZ3MDbJo/0x6n2/ZcRJU5T7Q2Kii2MevzVCq4o
-         AdWIpAcSq5VEKS5b1E6NduHAN4QwGoXIynBTqSYQ=
-X-Virus-Scanned: amavisd-new at zulu.lacipres.org
-Received: from zulu.lacipres.org ([127.0.0.1])
-        by localhost (zulu.lacipres.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Si3gcO6LGoyj; Tue, 13 Aug 2019 19:32:00 +0000 (GMT)
-Received: from zulu.lacipres.org (zulu.lacipres.org [196.168.165.195])
-        by zulu.lacipres.org (Postfix) with ESMTP id 8979A9E0922;
-        Tue, 13 Aug 2019 19:31:57 +0000 (GMT)
-Date:   Tue, 13 Aug 2019 19:31:57 +0000 (GMT)
-From:   Justin Cari <bhoungbedji@lacipres.org>
-Reply-To: Justin Cari <justin.cari209@gmail.com>
-Message-ID: <1708346886.35400.1565724717548.JavaMail.root@lacipres.org>
-Subject: 
+        id S1726797AbfHNDoJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Aug 2019 23:44:09 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34054 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726692AbfHNDoJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Aug 2019 23:44:09 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8E9BF360F16;
+        Wed, 14 Aug 2019 13:44:04 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hxkBd-0007g5-2a; Wed, 14 Aug 2019 13:42:57 +1000
+Date:   Wed, 14 Aug 2019 13:42:57 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Thomas Deutschmann <whissi@gentoo.org>
+Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+Subject: Re: xfsprogs-5.2.0 FTBFS: ../libxfs/.libs/libxfs.so: undefined
+ reference to `xfs_ag_geom_health'
+Message-ID: <20190814034257.GH6129@dread.disaster.area>
+References: <ebcf887f-81fc-9080-67c9-63946316f3e0@gentoo.org>
+ <20190812002306.GH7777@dread.disaster.area>
+ <df65ea4f-18af-4fab-e59d-29fa8440489c@gentoo.org>
+ <20190812031123.GA6129@dread.disaster.area>
+ <20190812043046.GB6129@dread.disaster.area>
+ <09ad7dd5-c2cd-aaaa-82d5-0f3a18eb4062@gentoo.org>
+ <20190812214449.GC6129@dread.disaster.area>
+ <ddabd271-2820-85f3-4393-99deb5a0eaef@gentoo.org>
+ <20190813010447.GE6129@dread.disaster.area>
+ <93adbd5c-1231-a94e-f44c-33bd79e26cdf@gentoo.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 7.2.0_GA_2669 (zclient/7.2.0_GA_2669)
-To:     undisclosed-recipients:;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93adbd5c-1231-a94e-f44c-33bd79e26cdf@gentoo.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8 a=bMdfePIKT0tNV0WpRVYA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 03:52:31PM +0200, Thomas Deutschmann wrote:
+> On 2019-08-13 03:04, Dave Chinner wrote:
+> >> Normally, configure will get the value and the Makefiles will use the
+> >> value _from_ configure... but using configure _and_ reading _and adding_
+> >> values from environment _in addition_ seems to be wrong.
+> > 
+> > <sigh>
+> > 
+> > xfsprogs-2.7.18 (16 May 2006)
+> >         - Fixed a case where xfs_repair was reporting a valid used
+> >           block as a duplicate during phase 4.
+> >         - Fixed a case where xfs_repair could incorrectly flag extent
+> >           b+tree nodes as corrupt.
+> >         - Portability changes, get xfs_repair compiling on IRIX.
+> >         - Parent pointer updates in xfs_io checker command.
+> >         - Allow LDFLAGS to be overridden, for Gentoo punters.
+> > 	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > 
+> > Back in 2006 we added the ability for LDFLAGS to be overriden
+> > specifically because Gentoo users wanted it.
+> 
+> Well, you got us :-)
+> 
+> Sorry, I wasn't around 2006 and don't know all details. Looks
+> like commit https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git/commit/?id=4d32d744f07ce74abac7029c3ee7c6f5e4238d25 caused that
+> changelog entry.
 
+I was hoping you'd look at the change and then notice and
+understand that the override provided was for LDFLAGS passed by
+configure, not the make environment.
 
+And that, having looked at this hunk of the patch:
+
+-LDFLAGS = $(LLDFLAGS)
++LDFLAGS += $(LOADERFLAGS) $(LLDFLAGS)
+
+then, perhaps, you'd see the obvious bug introduced by that change
+that resulted in LDFLAGS no longer being initialised correctly and
+so could be accidentally initialised from the external
+environment....
+
+> Back to xfsprogs: When you pass your default CFLAGS/LDFLAGS
+> to configure and different to make, i.e.
+>
+> CFLAGS="-O2 -pipe -march=ivybridge -mtune=ivybridge -mno-xsaveopt -frecord-gcc-switches" \
+> LDFLAGS="-Wl,-O1 -Wl,--as-needed" \
+> ./configure
+> 
+> and 
+> 
+> CFLAGS="-O2 -pipe -march=native" \
+> LDFAGS="-Wl,-fno-lto" \
+> make V=1
+>
+> you will see
+> 
+> > /bin/bash ../libtool --quiet --tag=CC --mode=link gcc -o mkfs.xfs -Wl,-fno-lto  -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed   -Wl,-O1 -Wl,--as-needed -static-libtool-libs  proto.o xfs_mkfs.o   ../libxfs/libxfs.la ../libxcmd/libxcmd.la ../libfrog/libfrog.la -lrt -lpthread -lblkid -luuid
+
+I also note that you haven't observed that CFLAGS did not get
+overridden in this test, despite it being specified in the
+environment like LDFLAGS.
+
+So we correctly initialise CFLAGS so it can't be overriden from
+make, but we don't initialise LDFLAGS. Yeah, I noticed this a couple
+of days ago, and I've been waiting for you to send the "you forgot
+to initialise a varaible 13 years ago" patch after I pointed you
+right at it...
+
+Really, I should have just sent this patch when I wrote it couple of
+days ago, rather than thinking that with enough information you'd
+find it yourself and get credit and cudos for fixing it for us.
+
+Gesta non verba.
+
+-Dave.
 -- 
-Do you need an urgent loan if yes contact us immediately for more info
+Dave Chinner
+david@fromorbit.com
+
+xfsprogs: LDFLAGS comes from configure, not the make environment
+
+From: Dave Chinner <dchinner@redhat.com>
+
+When doing:
+
+$ LDFLAGS=foo make
+
+bad things happen because we don't initialise LDFLAGS to an empty
+string in include/builddefs.in and hence make takes wahtever is in
+the environment and runs with it. This causes problems even when the
+correct linker options are specified correctly through configure.
+
+We don't support overriding build flags (like CFLAGS) though the
+make environment, so it was an oversight 13 years ago to allow
+LDFLAGS to be overridden when adding support to custom LDFLAGS being
+passed from the the configure script. This ensures we only ever use
+linker flags from configure, not the make environment.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ include/builddefs.in | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/builddefs.in b/include/builddefs.in
+index c5b38b073e1f..e0f0ad94976e 100644
+--- a/include/builddefs.in
++++ b/include/builddefs.in
+@@ -16,6 +16,10 @@ LTLDFLAGS = @LDFLAGS@
+ CFLAGS = @CFLAGS@ -D_FILE_OFFSET_BITS=64
+ BUILD_CFLAGS = @BUILD_CFLAGS@ -D_FILE_OFFSET_BITS=64
+ 
++# make sure we don't pick up whacky LDFLAGS from the make environment and
++# only use what we calculate from the configured options above.
++LDFLAGS =
++
+ LIBRT = @librt@
+ LIBUUID = @libuuid@
+ LIBPTHREAD = @libpthread@
