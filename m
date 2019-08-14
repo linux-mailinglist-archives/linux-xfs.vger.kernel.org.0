@@ -2,116 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEF48D024
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 11:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D198C8D06F
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 12:15:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbfHNJ4A (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Aug 2019 05:56:00 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49931 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbfHNJ4A (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Aug 2019 05:56:00 -0400
+        id S1726265AbfHNKP3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Aug 2019 06:15:29 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60197 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbfHNKP3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Aug 2019 06:15:29 -0400
 Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 1E4712ADB91;
-        Wed, 14 Aug 2019 19:55:56 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BB7F443CA8A;
+        Wed, 14 Aug 2019 20:15:24 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1hxpzU-0001TQ-RR; Wed, 14 Aug 2019 19:54:48 +1000
-Date:   Wed, 14 Aug 2019 19:54:48 +1000
+        id 1hxqIL-0001dU-5v; Wed, 14 Aug 2019 20:14:17 +1000
+Date:   Wed, 14 Aug 2019 20:14:17 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3] vfs: fix page locking deadlocks when deduping files
-Message-ID: <20190814095448.GK6129@dread.disaster.area>
-References: <20190813151434.GQ7138@magnolia>
- <20190813154010.GD5307@bombadil.infradead.org>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Nikolay Borisov <nborisov@suse.com>, linux-xfs@vger.kernel.org,
+        darrick.wong@oracle.com
+Subject: Re: [PATCH 2/3] xfs: Rename __xfs_buf_submit to xfs_buf_submit
+Message-ID: <20190814101417.GL6129@dread.disaster.area>
+References: <20190813090306.31278-1-nborisov@suse.com>
+ <20190813090306.31278-3-nborisov@suse.com>
+ <20190813115658.GB37069@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813154010.GD5307@bombadil.infradead.org>
+In-Reply-To: <20190813115658.GB37069@bfoster>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
         a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=vmqrRjBPTwjFo0SR-QoA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        a=iox4zFpeAAAA:8 a=7-415B0cAAAA:8 a=z8SlKLqh1WW5fEYCtYUA:9
+        a=CjuIK1q_8ugA:10 a=WzC6qhA0u3u7Ye7llzcV:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:40:10AM -0700, Matthew Wilcox wrote:
-> On Tue, Aug 13, 2019 at 08:14:34AM -0700, Darrick J. Wong wrote:
-> > +		/*
-> > +		 * Now that we've locked both pages, make sure they still
-> > +		 * represent the data we're interested in.  If not, someone
-> > +		 * is invalidating pages on us and we lose.
-> > +		 */
-> > +		if (src_page->mapping != src->i_mapping ||
-> > +		    src_page->index != srcoff >> PAGE_SHIFT ||
-> > +		    dest_page->mapping != dest->i_mapping ||
-> > +		    dest_page->index != destoff >> PAGE_SHIFT) {
-> > +			same = false;
-> > +			goto unlock;
-> > +		}
+On Tue, Aug 13, 2019 at 07:56:58AM -0400, Brian Foster wrote:
+> On Tue, Aug 13, 2019 at 12:03:05PM +0300, Nikolay Borisov wrote:
+> > Since xfs_buf_submit no longer has any callers just rename its __
+> > prefixed counterpart.
+> > 
+> > Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+> > ---
 > 
-> It is my understanding that you don't need to check the ->index here.
-> If I'm wrong about that, I'd really appreciate being corrected, because
-> the page cache locking is subtle.
-
-Ah, when talking to Darrick about this, I didn't notice the code
-took references on the page, so it probably doesn't need the index
-check - the page can't be recycled out from under us here an
-inserted into a new mapping until we drop the reference.
-
-What I was mainly concerned about here is that we only have a shared
-inode lock on the src inode, so this code can be running
-concurrently with both invalidation and insertion into the mapping.
-e.g. direct write io does invalidation, buffered read does
-insertion. Hence we have to be really careful about the data in the
-source page being valid and stable while we run the comparison.
-
-And on further thought, I don't think shared locking is actually
-safe here. A shared lock doesn't stop new direct IO from being
-submitted, so inode_dio_wait() just drains IO at that point in time
-and but doesn't provide any guarantee that there isn't concurrent
-DIO running.
-
-Hence we could do the comparison here, see the data is the same,
-drop the page lock, a DIO write then invalidates the page and writes
-new data while we are comparing the rest of page(s) in the range. By
-the time we've checked the whole range, the data at the start is no
-longer the same, and the comparison is stale.
-
-And then we do the dedupe operation oblivious to the fact the data
-on disk doesn't actually match anymore, and we corrupt the data in
-the destination file as it gets linked to mismatched data in the
-source file....
-
-Darrick?
-
-> You call read_mapping_page() which returns the page with an elevated
-> refcount.  That means the page can't go back to the page allocator and
-> be allocated again.  It can, because it's unlocked, still be truncated,
-> so the check for ->mapping after locking it is needed.  But the check
-> for ->index being correct was done by find_get_entry().
+> Now we have a primary submission interface that allows combinations of
+> XBF_ASYNC and waiting or not while the underlying mechanisms are not so
+> flexible. It looks like the current factoring exists to support delwri
+> queues where we never wait in buffer submission regardless of async
+> state because we are batching the submission/wait across multiple
+> buffers. But what happens if a caller passes an async buffer with wait
+> == true? I/O completion only completes ->b_iowait if XBF_ASYNC is clear.
 > 
-> See pagecache_get_page() -- if we specify FGP_LOCK, then it will lock
-> the page, check the ->mapping but not check ->index.  OK, it does check
-> ->index, but in a VM_BUG_ON(), so it's not something that ought to be
-> able to be wrong.
+> I find this rather confusing because now a caller needs to know about
+> implementation details to use the function properly. That's already true
+> of __xfs_buf_submit(), but that's partly why it's named as an "internal"
+> function. I think we ultimately need the interface flexibility so the
+> delwri case can continue to work. One option could be to update
+> xfs_buf_submit() such that we never wait on an XBF_ASYNC buffer and add
+> an assert to flag wait == true as invalid, but TBH I'm not convinced
+> this is any simpler than the current interface where most callers simply
+> only need to care about the flag. Maybe others have thoughts...
 
-Yeah, we used to have to play tricks in the old XFS writeback
-clustering code to do our own non-blocking page cache lookups adn
-this was one of the things we needed to be careful about until
-the pagevec_lookup* interfaces came along and solved all the
-problems for us. Funny how the brain remembers old gotchas with
-also reminding you that the problems went away almost as long
-ago.....
+Yeah, we slpit the code u plike this intentionally to separate out
+the different ways of submitting IO so that we didn't end up using
+invalid methods, like ASYNC + wait, which would lead to hangs
+waiting for IO that has already completed.
 
+I much prefer the code as it stands now - it may be slightly more
+verbose, but it's simple to understand and hard to use
+incorrectly....
 
 Cheers,
 
