@@ -2,85 +2,123 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D198C8D06F
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 12:15:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A458D086
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Aug 2019 12:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfHNKP3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Aug 2019 06:15:29 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60197 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbfHNKP3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Aug 2019 06:15:29 -0400
-Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BB7F443CA8A;
-        Wed, 14 Aug 2019 20:15:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hxqIL-0001dU-5v; Wed, 14 Aug 2019 20:14:17 +1000
-Date:   Wed, 14 Aug 2019 20:14:17 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, linux-xfs@vger.kernel.org,
-        darrick.wong@oracle.com
-Subject: Re: [PATCH 2/3] xfs: Rename __xfs_buf_submit to xfs_buf_submit
-Message-ID: <20190814101417.GL6129@dread.disaster.area>
-References: <20190813090306.31278-1-nborisov@suse.com>
- <20190813090306.31278-3-nborisov@suse.com>
- <20190813115658.GB37069@bfoster>
+        id S1727445AbfHNKRS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Aug 2019 06:17:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48234 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726019AbfHNKRS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:17:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6A4C8AC8C;
+        Wed, 14 Aug 2019 10:17:15 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id B08BB1E4200; Wed, 14 Aug 2019 12:17:14 +0200 (CEST)
+Date:   Wed, 14 Aug 2019 12:17:14 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190814101714.GA26273@quack2.suse.cz>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813115658.GB37069@bfoster>
+In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=iox4zFpeAAAA:8 a=7-415B0cAAAA:8 a=z8SlKLqh1WW5fEYCtYUA:9
-        a=CjuIK1q_8ugA:10 a=WzC6qhA0u3u7Ye7llzcV:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:56:58AM -0400, Brian Foster wrote:
-> On Tue, Aug 13, 2019 at 12:03:05PM +0300, Nikolay Borisov wrote:
-> > Since xfs_buf_submit no longer has any callers just rename its __
-> > prefixed counterpart.
-> > 
-> > Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> > ---
+Hello!
+
+On Fri 09-08-19 15:58:14, ira.weiny@intel.com wrote:
+> Pre-requisites
+> ==============
+> 	Based on mmotm tree.
 > 
-> Now we have a primary submission interface that allows combinations of
-> XBF_ASYNC and waiting or not while the underlying mechanisms are not so
-> flexible. It looks like the current factoring exists to support delwri
-> queues where we never wait in buffer submission regardless of async
-> state because we are batching the submission/wait across multiple
-> buffers. But what happens if a caller passes an async buffer with wait
-> == true? I/O completion only completes ->b_iowait if XBF_ASYNC is clear.
+> Based on the feedback from LSFmm, the LWN article, the RFC series since
+> then, and a ton of scenarios I've worked in my mind and/or tested...[1]
 > 
-> I find this rather confusing because now a caller needs to know about
-> implementation details to use the function properly. That's already true
-> of __xfs_buf_submit(), but that's partly why it's named as an "internal"
-> function. I think we ultimately need the interface flexibility so the
-> delwri case can continue to work. One option could be to update
-> xfs_buf_submit() such that we never wait on an XBF_ASYNC buffer and add
-> an assert to flag wait == true as invalid, but TBH I'm not convinced
-> this is any simpler than the current interface where most callers simply
-> only need to care about the flag. Maybe others have thoughts...
+> Solution summary
+> ================
+> 
+> The real issue is that there is no use case for a user to have RDMA pinn'ed
+> memory which is then truncated.  So really any solution we present which:
+> 
+> A) Prevents file system corruption or data leaks
+> ...and...
+> B) Informs the user that they did something wrong
+> 
+> Should be an acceptable solution.
+> 
+> Because this is slightly new behavior.  And because this is going to be
+> specific to DAX (because of the lack of a page cache) we have made the user
+> "opt in" to this behavior.
+> 
+> The following patches implement the following solution.
+> 
+> 0) Registrations to Device DAX char devs are not affected
+> 
+> 1) The user has to opt in to allowing page pins on a file with an exclusive
+>    layout lease.  Both exclusive and layout lease flags are user visible now.
+> 
+> 2) page pins will fail if the lease is not active when the file back page is
+>    encountered.
+> 
+> 3) Any truncate or hole punch operation on a pinned DAX page will fail.
 
-Yeah, we slpit the code u plike this intentionally to separate out
-the different ways of submitting IO so that we didn't end up using
-invalid methods, like ASYNC + wait, which would lead to hangs
-waiting for IO that has already completed.
+So I didn't fully grok the patch set yet but by "pinned DAX page" do you
+mean a page which has corresponding file_pin covering it? Or do you mean a
+page which has pincount increased? If the first then I'd rephrase this to
+be less ambiguous, if the second then I think it is wrong. 
 
-I much prefer the code as it stands now - it may be slightly more
-verbose, but it's simple to understand and hard to use
-incorrectly....
+> 4) The user has the option of holding the lease or releasing it.  If they
+>    release it no other pin calls will work on the file.
 
-Cheers,
+Last time we spoke the plan was that the lease is kept while the pages are
+pinned (and an attempt to release the lease would block until the pages are
+unpinned). That also makes it clear that the *lease* is what is making
+truncate and hole punch fail with ETXTBUSY and the file_pin structure is
+just an implementation detail how the existence is efficiently tracked (and
+what keeps the backing file for the pages open so that the lease does not
+get auto-destroyed). Why did you change this?
 
-Dave.
+> 5) Closing the file is ok.
+> 
+> 6) Unmapping the file is ok
+> 
+> 7) Pins against the files are tracked back to an owning file or an owning mm
+>    depending on the internal subsystem needs.  With RDMA there is an owning
+>    file which is related to the pined file.
+> 
+> 8) Only RDMA is currently supported
+
+If you currently only need "owning file" variant in your patch set, then
+I'd just implement that and leave "owning mm" variant for later if it
+proves to be necessary. The things are complex enough as is...
+
+> 9) Truncation of pages which are not actively pinned nor covered by a lease
+>    will succeed.
+
+Otherwise I like the design.
+
+								Honza
+
 -- 
-Dave Chinner
-david@fromorbit.com
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
