@@ -2,104 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F34A18E4F7
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 08:43:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1D438E545
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 09:13:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbfHOGnl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Aug 2019 02:43:41 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33776 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfHOGnl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Aug 2019 02:43:41 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v38so1419531qtb.0;
-        Wed, 14 Aug 2019 23:43:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=moCscXF3FHERLCOXUMQFLafbhkiilN7j/QojfjTcev0=;
-        b=Mpg/nw09+iiBoGaVQHuX/TH+bsh9jMNc3TrlZtAK/A3ldZkMlxFOfcZ7MuF9EHfqsn
-         ybtKSCxvGQaghw1Za4GFMSVIwvTFBeC7fkWExage8MdbEQMaoJBfGWC9xcluMSomJo4a
-         hNFgmq3VIWTu7RDPJD4ZUF6TzjMEZ7PsKR7GeEi1GU0RX7AGOH9Uk3gMlM7J783oHqAn
-         EJruYEn6D6IlQVSoaOmwYwmdeawzq5igRyDbuDfXiC5p0ZbLKFqoep3+5FSdSNBf0YZk
-         2x4S4vmDtrlSA7yZvyXDFazIxWkpPdfwNFiQuZWUVcfSUnQrA7JCmBjMkWy9rvotQpL0
-         /tuA==
-X-Gm-Message-State: APjAAAX2wWCRBrOJ5zvKWTnxOC9Q+xAAABg7xL1yqpEXgcWLjnWo2rfi
-        nU+Bbywk+UKB5B95rAl8Ppl/PG6dRSRY1QTLtNHwXq63wlQ=
-X-Google-Smtp-Source: APXvYqyxkg6GiBut6x07Qhx3vf49GcGn8k9G4seM+8Ayfv3Fo29FzJIUow0/Va2HT9tK164KhkeoqRKDVSGuM24oHVs=
-X-Received: by 2002:ac8:239d:: with SMTP id q29mr2675174qtq.304.1565851419870;
- Wed, 14 Aug 2019 23:43:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190814204259.120942-1-arnd@arndb.de> <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area>
-In-Reply-To: <20190814213753.GP6129@dread.disaster.area>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 15 Aug 2019 08:43:24 +0200
-Message-ID: <CAK8P3a0CAAtxXcfYt8NwmNSmF5tWhSSihLBkOtuQ62onjst4sA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+        id S1730196AbfHOHNU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Aug 2019 03:13:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55388 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730150AbfHOHNU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Aug 2019 03:13:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s7gG3ZpsP4dO4NIGyfUN06iVGjBc+Ro9bg5y7V77wj4=; b=bA/mBW0cQr4A50cImC/3Q+U2S
+        VG37f095zb/3WNwVJ+lWlK1NjVZKkGcMbrYVmF9pDdFawt7e7INbevb5+hup1I/1j9iwVl5IKW7Aq
+        PC/l5VNH+x6tKOmzwr3nM1zRRzbESH8AZ1qEVuntIzcJUFjw5sdvWNT1JWrXpunLoM6JdtSdK/kjm
+        ZKBz4knotnxkL4+42LlVXhCa85Y12sNJzwWXgjGAs82IeSODBIdCj0Vyb73REbDxwMmvBFtC1YgU8
+        06OJWtg22qj/Y2eRG8teJ6xg5Je81X9M0YucDePBgJ3dUbk5Rog6QWVnRfedimU9jA6L8xTuGaLFO
+        Oyb/4RvYA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hy9wg-00038j-LP; Thu, 15 Aug 2019 07:13:14 +0000
+Date:   Thu, 15 Aug 2019 00:13:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
+        linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
         Allison Collins <allison.henderson@oracle.com>,
         Nick Bowler <nbowler@draconx.ca>,
         Eric Sandeen <sandeen@sandeen.net>,
         Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
+Message-ID: <20190815071314.GA6960@infradead.org>
+References: <20190814204259.120942-1-arnd@arndb.de>
+ <20190814204259.120942-2-arnd@arndb.de>
+ <20190814213753.GP6129@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190814213753.GP6129@dread.disaster.area>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:39 PM Dave Chinner <david@fromorbit.com> wrote:
-> >       case XFS_IOC_BULKSTAT:
-> >       case XFS_IOC_INUMBERS:
-> > -             return xfs_file_ioctl(filp, cmd, p);
-> > +             return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
->
+On Thu, Aug 15, 2019 at 07:37:53AM +1000, Dave Chinner wrote:
+> > @@ -576,7 +576,7 @@ xfs_file_compat_ioctl(
+> >  	case XFS_IOC_SCRUB_METADATA:
+> >  	case XFS_IOC_BULKSTAT:
+> >  	case XFS_IOC_INUMBERS:
+> > -		return xfs_file_ioctl(filp, cmd, p);
+> > +		return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
+> 
 > I don't really like having to sprinkle special casts through the
 > code because of this.
->
-> Perhaps do something like:
->
-> static inline unsigned long compat_ptr_mask(unsigned long p)
-> {
->         return (unsigned long)compat_ptr(p);
-> }
->
-> and then up front you can do:
->
->         void    __user *arg;
->
->         p = compat_ptr_mask(p);
->         arg = (void __user *)p;
->
->
-> and then the rest of the code remains unchanged by now uses p
-> correctly instead of having to change all the code to cast arg back
-> to an unsigned long...
->
 
-In part 1 of the series, I define this function as a global:
-
-long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-        if (!file->f_op->unlocked_ioctl)
-                return -ENOIOCTLCMD;
-
-        return file->f_op->unlocked_ioctl(file, cmd, (unsigned
-long)compat_ptr(arg));
-}
-
-How about using that to replace the individual casts:
-
--       return xfs_file_ioctl(filp, cmd, (unsigned long)arg);
-+      return compat_ptr_ioctl(filp, cmd, arg);
-
-It adds another indirection, but it avoids all the casts and
-uses existing mechanism.
-
-     Arnd
+True.  But the proper fix is to not do the indirection through
+xfs_file_ioctl but instead to call xfs_ioc_scrub_metadata,
+xfs_ioc_bulkstat, etc directly which all take a void __user
+arguments already.
