@@ -2,77 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 120558ED9D
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 16:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 239538EF2F
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 17:18:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732431AbfHOOED (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Aug 2019 10:04:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44516 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731963AbfHOOED (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Aug 2019 10:04:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FgGZiYXjX5p6iXeIo9sIPhrcGThmyFQ9KdVBSYt6xy4=; b=t+CAzhjHmlbWiEABajJnEJ9Xw
-        ewduxXdizGkzLNO2QGuZ4NEejL81zqQflcITrJFxxCx/CEqDqEjX8xq9LSVcd87H78Sgv+SCjE/wA
-        hGgYGs/ivclk3xfyTHAa9wDyqehoV3pxfX2XLnJqDHqbP11y+jxNqZdlAVxuMluoVXzbPvJLDq3yu
-        QqENAoxcIgBrZWQSGsqW4uy/z7/NNwp60s6VsBBSKmwYc1XG8Q5qbxqFkINYoGaCA7fzFeTDZrAFp
-        mgd2ZwQv7VsHPlxBSN8j0hp2ffLRA6ZU+WQnV1OVuTvqZ6uPf8xK6rSuF5Mv/aP7H36iZGO7Jlee5
-        9dUqfe5tA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hyGM7-0002vt-TH; Thu, 15 Aug 2019 14:03:55 +0000
-Date:   Thu, 15 Aug 2019 07:03:55 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Nick Bowler <nbowler@draconx.ca>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v5 01/18] xfs: compat_ioctl: use compat_ptr()
-Message-ID: <20190815140355.GA11012@infradead.org>
-References: <20190814204259.120942-1-arnd@arndb.de>
- <20190814204259.120942-2-arnd@arndb.de>
- <20190814213753.GP6129@dread.disaster.area>
- <20190815071314.GA6960@infradead.org>
- <CAK8P3a2Hjfd49XY18cDr04ZpvC5ZBGudzxqpCesbSsDf1ydmSA@mail.gmail.com>
- <20190815080211.GA17055@infradead.org>
- <20190815102649.GA10821@infradead.org>
- <20190815121511.GR6129@dread.disaster.area>
+        id S1728547AbfHOPS6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Aug 2019 11:18:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56664 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfHOPS5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Aug 2019 11:18:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FF3hKY122480;
+        Thu, 15 Aug 2019 15:18:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=hBAcvX5pitZ+QGnSbXqP0cqnomkXnH3PCZds5cnt114=;
+ b=n0JtHJ2c9U6Dc+uQODHePsU7g6v3BTjOjfguoS88cgYVe0r4t83Czh6dimslNNTUELoQ
+ Oun+qQl4TWxU8LIJxzjYk+MykRPAkuwH1EcxYn9D8Xuv5C4RzEvdLlBToBvjs/9iUdha
+ EbGmqzsfSLu9P79q3lY5I3JN1hk7ppnrA2E/vLVtUi1oXNabx8zLUAUTlRcsxPfcoYzD
+ VYkao47tn+2bs0uPw1bBu0SQDFBuXY4pB91Kv4eG8LJ07kTa/WN0op40Ya92ha5faVK7
+ 7Vxftr8Aolocao5PgCQJLK5NIlDGPew8P141JthqF4mxBOmlurI0OjGrue/QaNjh6ZmB 7A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2u9pjqu6b9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 15:18:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7FFI51J096817;
+        Thu, 15 Aug 2019 15:18:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ucgf144db-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Aug 2019 15:18:55 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7FFIshK014480;
+        Thu, 15 Aug 2019 15:18:54 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 15 Aug 2019 08:18:54 -0700
+Subject: [PATCH 0/3] fstests: various fixes
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     guaneryu@gmail.com, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Date:   Thu, 15 Aug 2019 08:18:53 -0700
+Message-ID: <156588233330.24775.15183725500886844319.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190815121511.GR6129@dread.disaster.area>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=796
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908150152
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9350 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=864 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908150151
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:15:12PM +1000, Dave Chinner wrote:
-> > http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table
-> 
-> Lots to like in that handful of patches. :)
-> 
-> It can easily go before or after Arnd's patch, and the merge
-> conflict either way would be minor, so I'm not really fussed either
-> way this gets sorted out...
+Hi all,
 
-The other thing we could do is to just pick the two important ones:
+Fix broken cleanup in some tests.
 
-http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-ioctl-table-5.3
+Fix the mixed buffered/directio filtering function to pick up the new
+locations of the iomap directio code, fix generic/081's broken lvm
+cleanup, and reduce the time generic/561 waits for duperemove to finish.
 
-and throw that into Arnds series, or even 5.3, and then defer the
-table thing until later.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
