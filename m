@@ -2,61 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C741C8F65B
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 23:26:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E89298F675
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2019 23:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbfHOV0E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Aug 2019 17:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbfHOV0E (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 15 Aug 2019 17:26:04 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95348205F4;
-        Thu, 15 Aug 2019 21:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565904363;
-        bh=5Ugqec8YhmCnrPP32IJ/uvLwQWW92jUjH6BSVw/2Cgk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vgofVdxYzsfoQkF8U6ffc2JgVmgrzu1zI+UgfLegltxwbMKjtbCQK6ZUAW3SBNTzO
-         K8//ihIQdaYsxDFhpb8cIGKfdJfZ/EyrSoi3bT7tR0SXLQufSLefkVbCN2U4pkRo6Q
-         PwzLBT5iSvICmjCoo7a0i+OOHz0YYqXbh4v2pmC0=
-Date:   Thu, 15 Aug 2019 14:26:03 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
+        id S1730302AbfHOVd5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Aug 2019 17:33:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37040 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731089AbfHOVd5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Aug 2019 17:33:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t14so3500893lji.4
+        for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2019 14:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BNmCV0iorJaJ/4B9x9ItjW/vosEJYPNXmEbrNDaYkR4=;
+        b=L+KglY9k08E6DLTAvhzP71uPOvFH0ftX6F+VX6R+6Jsi2p0IcQc8kW9P6CTAdz+ndG
+         2kHE25Y449pIcxNGVW2Op3sdiMJJ9RxY3h2rJ0z0jJaXhD3+gB6DpMdtXJ9CF9GYMiqO
+         DsQMqEq1Yqt+5nFrJdaikQRam9z2lK0MBPn2M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BNmCV0iorJaJ/4B9x9ItjW/vosEJYPNXmEbrNDaYkR4=;
+        b=QhOUZQP/zm0JSjYUQbk55KJX6Z8YjDhnDDNr/KgRbZSNFedP17gHCDinQZtg9bNPvv
+         3TyI2jaM0yEMJCBOpaSy0Mn9mdzXi+ioB8tikhINN9V2gvzmaB+u+Z+GNAEmvqwmr/B+
+         rjHSZm2tkxS85rvmunI+D/9izaKHvQN9TRYofhhSs4flYz5jzc3eBu1bKckYorbzxAb8
+         1rmm7pt+YBr3zBmEPU8R77r7lOgkwQ5P2iq0F064mIFa7ktVs9J68rklPVbT4lcYnnVh
+         5oQ6CLaun5mxbUCxCuky8t+ywOIWJk1XJxHKf/UfRkuc1r7tpI8Clj16q8ipCH0bJR5o
+         1Z6A==
+X-Gm-Message-State: APjAAAVfntvL670tcrFWqfPHTBMD6ansZm7+NFxw3Zl7SILFiKgIb7yo
+        9UXbMhUsOySUyeb3qAJxIFxQyn05x88=
+X-Google-Smtp-Source: APXvYqwwVXdjZ93bdA2bF5K5fdUg+zNYFGgToJ/Vr0vQM5m+1LPY3DQ6u1wuX33/MexKBai4IzcPJw==
+X-Received: by 2002:a2e:7001:: with SMTP id l1mr3801095ljc.48.1565904834557;
+        Thu, 15 Aug 2019 14:33:54 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id o9sm657748ljc.51.2019.08.15.14.33.53
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 14:33:53 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id f9so3447586ljc.13
+        for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2019 14:33:53 -0700 (PDT)
+X-Received: by 2002:a2e:9702:: with SMTP id r2mr2870914lji.84.1565904833142;
+ Thu, 15 Aug 2019 14:33:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190815171347.GD15186@magnolia> <CAHk-=wiHuHLK49LKQhtERXaq0OYUnug4DJZFLPq9RHEG2Cm+bQ@mail.gmail.com>
+ <20190815200534.GF15186@magnolia>
+In-Reply-To: <20190815200534.GF15186@magnolia>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 15 Aug 2019 14:33:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgJm9OEfJ1gL66jzXsavhXxJCmu9g9jWCCeQPcsFVSO7g@mail.gmail.com>
+Message-ID: <CAHk-=wgJm9OEfJ1gL66jzXsavhXxJCmu9g9jWCCeQPcsFVSO7g@mail.gmail.com>
+Subject: Re: [GIT PULL] xfs: fixes for 5.3-rc5
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     hch@infradead.org, tytso@mit.edu, viro@zeniv.linux.org.uk,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        fstests <fstests@vger.kernel.org>
-Subject: Re: [PATCH RFC 3/2] fstests: check that we can't write to swap
- files
-Message-Id: <20190815142603.de9f1c0d9fcc017f3237708d@linux-foundation.org>
-In-Reply-To: <20190815163434.GA15186@magnolia>
-References: <156588514105.111054.13645634739408399209.stgit@magnolia>
-        <20190815163434.GA15186@magnolia>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, 15 Aug 2019 09:34:34 -0700 "Darrick J. Wong" <darrick.wong@oracle.com> wrote:
+On Thu, Aug 15, 2019 at 1:05 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> FWIW I've wondered off and on if the VFS syscalls should be generating
+> some kind of audit trail when something returns an error message to
+> userspace?
 
-> While active, the media backing a swap file is leased to the kernel.
-> Userspace has no business writing to it.  Make sure we can't do this.
+I don't think it makes sense for any random errors. ENOENT / EPERM /
+EACCES / EISDIR etc are generally part of normal operation and
+expected.
 
-I don't think this tests the case where a file was already open for
-writing and someone does swapon(that file)?
+Things like actual filesystem corruption is different, but we haven't
+really had good patterns for it. And I'd hate to add something like a
+test for -EFSCORRUPTED when it's so rare. It makes more sense to do
+any special handling when that is actually detected (when you might
+want to do other things too, like make the filesystem be read-only or
+whatever)
 
-And then does swapoff(that file), when writes should start working again?
-
-Ditto all the above, with s/open/mmap/.
-
-
-Do we handle (and test!) the case where there's unwritten dirty
-pagecache at the time of swapon()?  Ditto pte-dirty MAP_SHARED pages?
+             Linus
