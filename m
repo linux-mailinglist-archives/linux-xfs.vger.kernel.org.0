@@ -2,136 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F49596AAE
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Aug 2019 22:33:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BD7E96ADD
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Aug 2019 22:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfHTUcg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 20 Aug 2019 16:32:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47154 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730515AbfHTUcg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Aug 2019 16:32:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7KKSxph151519;
-        Tue, 20 Aug 2019 20:32:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=MLs7H2u33k8VmQo9Y5sKrHWtGbqSBXkQPe/govj4MiM=;
- b=nTDjNckDBv9tYLji02wFHvYIDNHOtbb+EoS/eDRXHhbbVgiHNVZNGTR0cPeBsVU/57jN
- URIEPY3XROekePxgxSL0mC43s5hzN39oi5Ne/RbEKrenYB4C1+IsjOeg20ks/z1vmLJo
- cmytokB9mfNaap+seVIM4Tt7OgPzSkzBDEy+O1bihTWHvggIiQ/Rqaq6IcsWLrLXdcXb
- Pa/6SIGEBuaHaIZufKsgt6HCVNPrr/rErNyHujrfodU7F9vIaWWRTlkeGWJsFS38lht6
- Y8bwxgpSSFpvlymddoGunGMTkb3bEGpwuP1MpnErhVNKMw1ZzTQ4FMZxDTIf2yr2a0yJ qA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ue90th64e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 20:32:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7KKTLtc191234;
-        Tue, 20 Aug 2019 20:32:33 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2ugj7p4t8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 20:32:32 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7KKWVgZ028840;
-        Tue, 20 Aug 2019 20:32:31 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Aug 2019 13:32:31 -0700
-Subject: [PATCH 12/12] xfs_repair: reduce the amount of "clearing reflink
- flag" messages
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 20 Aug 2019 13:32:29 -0700
-Message-ID: <156633314915.1215978.1191691824699956900.stgit@magnolia>
-In-Reply-To: <156633307176.1215978.17394956977918540525.stgit@magnolia>
-References: <156633307176.1215978.17394956977918540525.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1730704AbfHTUrb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 20 Aug 2019 16:47:31 -0400
+Received: from sandeen.net ([63.231.237.45]:57038 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729833AbfHTUrb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 20 Aug 2019 16:47:31 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 0E4C2182EC
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Aug 2019 15:47:29 -0500 (CDT)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [PATCH] xfsprogs: fix geometry calls on older kernels for 5.2.1
+Openpgp: preference=signencrypt
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <7d83cd0d-8a15-201e-9ebf-e1f859270b92@sandeen.net>
+Date:   Tue, 20 Aug 2019 15:47:29 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908200183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908200183
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+I didn't think 5.2.0 through; the udpate of the geometry ioctl means
+that the tools won't work on older kernels that don't support the
+v5 ioctls, since I failed to merge Darrick's wrappers.
 
-Clearing the reflink flag on files that don't share blocks is an
-optimization, not a repair, so it's not critical to log a message every
-single time we clear a flag.  Only log one message that we're clearing
-these flags unless verbose mode is enabled.
+As a very quick one-off I'd like to merge this to just revert every
+geometry call back to the original ioctl, so it keeps working on
+older kernels and I'll release 5.2.1.  This hack can go away when
+Darrick's wrappers get merged.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
- repair/rmap.c |   34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
 
+I'm a little concerned that 3rd party existing code which worked fine
+before will now get the new XFS_IOC_FSGEOMETRY definition if they get
+rebuilt, and suddenly stop working on older kernels. Am I overreacting
+or misunderstanding our compatibility goals?
 
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 47828a06..24251e9f 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -1170,6 +1170,36 @@ record_inode_reflink_flag(
- 		(unsigned long long)lino, (unsigned long long)irec->ino_was_rl);
- }
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index f1158a79..253b706c 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -720,7 +720,10 @@ struct xfs_scrub_metadata {
+ #define XFS_IOC_ATTRMULTI_BY_HANDLE  _IOW ('X', 123, struct xfs_fsop_attrmulti_handlereq)
+ #define XFS_IOC_FSGEOMETRY_V4	     _IOR ('X', 124, struct xfs_fsop_geom_v4)
+ #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
+-#define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
++/* For backwards compatibility in 5.2.1, just for now */
++/* #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom_v5) */
++#define XFS_IOC_FSGEOMETRY XFS_IOC_FSGEOMETRY_V4
++
+ /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
  
-+/*
-+ * Inform the user that we're clearing the reflink flag on an inode that
-+ * doesn't actually share any blocks.  This is an optimization (the kernel
-+ * skips refcount checks for non-reflink files) and not a corruption repair,
-+ * so we don't need to log every time we clear a flag unless verbose mode is
-+ * enabled.
-+ */
-+static void
-+warn_clearing_reflink(
-+	xfs_ino_t		ino)
-+{
-+	static bool		warned = false;
-+	static pthread_mutex_t	lock = PTHREAD_MUTEX_INITIALIZER;
-+
-+	if (verbose) {
-+		do_warn( _("clearing reflink flag on inode %"PRIu64"\n"), ino);
-+		return;
-+	}
-+
-+	if (warned)
-+		return;
-+
-+	pthread_mutex_lock(&lock);
-+	if (!warned) {
-+		do_warn( _("clearing reflink flag on inodes when possible\n"));
-+		warned = true;
-+	}
-+	pthread_mutex_unlock(&lock);
-+}
-+
- /*
-  * Fix an inode's reflink flag.
-  */
-@@ -1188,9 +1218,7 @@ fix_inode_reflink_flag(
- _("setting reflink flag on inode %"PRIu64"\n"),
- 			XFS_AGINO_TO_INO(mp, agno, agino));
- 	else if (!no_modify) /* && !set */
--		do_warn(
--_("clearing reflink flag on inode %"PRIu64"\n"),
--			XFS_AGINO_TO_INO(mp, agno, agino));
-+		warn_clearing_reflink(XFS_AGINO_TO_INO(mp, agno, agino));
- 	if (no_modify)
- 		return 0;
- 
+ /* reflink ioctls; these MUST match the btrfs ioctl definitions */
 
