@@ -2,99 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F8296E58
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2019 02:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C44B96E5E
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2019 02:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfHUA1w (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 20 Aug 2019 20:27:52 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40315 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbfHUA1v (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Aug 2019 20:27:51 -0400
-Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 58B4343E0D7;
-        Wed, 21 Aug 2019 10:27:50 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i0ESZ-0001vi-DY; Wed, 21 Aug 2019 10:26:43 +1000
-Date:   Wed, 21 Aug 2019 10:26:43 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "hch@lst.de" <hch@lst.de>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>
-Subject: Re: 5.3-rc1 regression with XFS log recovery
-Message-ID: <20190821002643.GK1119@dread.disaster.area>
-References: <e49a6a3a244db055995769eb844c281f93e50ab9.camel@intel.com>
- <20190818071128.GA17286@lst.de>
- <20190818074140.GA18648@lst.de>
- <20190818173426.GA32311@lst.de>
+        id S1726558AbfHUAat (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 20 Aug 2019 20:30:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56756 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfHUAas (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Aug 2019 20:30:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oeVOANfId+UFajzaQ2gzW3c9xEV2b0FiX63evlEKZv0=; b=Huw1B8AMREhrx9XNmoNt4deM9
+        XSwL/uolvP12oF8bakTOb7gFvccAgSYatlSvv+RwOvuBI9BK82q1JqugmsueqUJgDGNHLUBBc4DCm
+        sD3r5M8F6HJoy0IXcPqibA1BqVjt4yjo1S6wUcbb/zFH87Nyk+JwaiDp52ecZDxywdLagHBjD2JaT
+        OC6kJF8BHpxkJJOgIInWAPbzOUoPkTHbJUFKR7UjSKlhvoGTygIQr+ld7CoqaF4P5y1JaxTw7sRcA
+        LVKoZsjeg24PM2/zpg7HAOCev4FNVrKKIlJo48lA2VKZV1aNJASlHIaQsoaHn2HP23USgRMtBCwmD
+        zOdQErHLg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0EWQ-0003HO-6R; Wed, 21 Aug 2019 00:30:42 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>, hch@lst.de,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v2 0/5] iomap & xfs support for large pages
+Date:   Tue, 20 Aug 2019 17:30:34 -0700
+Message-Id: <20190821003039.12555-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818173426.GA32311@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=rg55TvFzVAOYHM5hWT0A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 07:34:26PM +0200, hch@lst.de wrote:
-> On Sun, Aug 18, 2019 at 09:41:40AM +0200, hch@lst.de wrote:
-> > On Sun, Aug 18, 2019 at 09:11:28AM +0200, hch@lst.de wrote:
-> > > > The kernel log shows the following when the mount fails:
-> > > 
-> > > Is it always that same message?  I'll see if I can reproduce it,
-> > > but I won't have that much memory to spare to create fake pmem,
-> > > hope this also works with a single device and/or less memory..
-> > 
-> > I've reproduced a similar ASSERT with a small pmem device, so I hope
-> > I can debug the issue locally now.
-> 
-> So I can also reproduce the same issue with the ramdisk driver, but not
-> with any other 4k sector size device (nvmet, scsi target, scsi_debug,
-> loop).  Which made me wonder if there is some issue about the memory
-> passed in, and indeed just switching to plain vmalloc vs the XFS
-> kmem_alloc_large wrapper that either uses kmalloc or vmalloc fixes
-> the issue for me.  I don't really understand why yet, maybe I need to
-> dig out alignment testing patches.
-> 
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index 13d1d3e95b88..918ad3b884a7 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -125,7 +125,7 @@ xlog_alloc_buffer(
->  	if (nbblks > 1 && log->l_sectBBsize > 1)
->  		nbblks += log->l_sectBBsize;
->  	nbblks = round_up(nbblks, log->l_sectBBsize);
-> -	return kmem_alloc_large(BBTOB(nbblks), KM_MAYFAIL);
-> +	return vmalloc(BBTOB(nbblks));
->  }
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-After thinking on this for a bit, I suspect the better thing to do
-here is add a KM_ALIGNED flag to the allocation, so if the internal
-kmem_alloc() returns an unaligned pointer we free it and fall
-through to vmalloc() to get a properly aligned pointer....
+In order to support large pages in the page cache, filesystems have
+to understand that they're being passed a large page and read or write
+the entire large page, rather than just the first page.  This pair of
+patches adds that support to XFS.
 
-That way none of the other interfaces have to change, and we can
-then use kmem_alloc_large() everywhere we allocate buffers for IO.
-And we don't need new infrastructure just to support these debug
-configurations, either.
+Still untested beyond compilation.
 
-Actually, kmem_alloc_io() might be a better idea - keep the aligned
-flag internal to the kmem code. Seems like a pretty simple solution
-to the entire problem we have here...
+v2:
+ - Added a few helpers per Dave Chinner's suggestions
+ - Use GFP_ZERO instead of individually zeroing each field of iop
+ - Rewrite iomap_set_range_uptodate() to use bitmap functions instead
+   of individual bit operations
+ - Drop support for large pages being used for files with inline data
+   (it didn't work anyway, because kmap_atomic() is only going to map
+   the first page of a compound page)
+ - Pass a struct page to xfs_finish_page_writeback instead of the bvec
 
-Cheers,
+Matthew Wilcox (Oracle) (5):
+  fs: Introduce i_blocks_per_page
+  mm: Add file_offset_of_ helpers
+  iomap: Support large pages
+  xfs: Support large pages
+  xfs: Pass a page to xfs_finish_page_writeback
 
-Dave.
+ fs/iomap/buffered-io.c  | 121 ++++++++++++++++++++++++++--------------
+ fs/jfs/jfs_metapage.c   |   2 +-
+ fs/xfs/xfs_aops.c       |  37 ++++++------
+ include/linux/iomap.h   |   2 +-
+ include/linux/mm.h      |   2 +
+ include/linux/pagemap.h |  38 ++++++++++++-
+ 6 files changed, 135 insertions(+), 67 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.23.0.rc1
