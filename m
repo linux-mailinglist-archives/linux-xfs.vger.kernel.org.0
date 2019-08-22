@@ -2,97 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 880D499321
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Aug 2019 14:20:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D5F993DE
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Aug 2019 14:34:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfHVMTG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Aug 2019 08:19:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33234 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727874AbfHVMTG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:19:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39D9CAFBE;
-        Thu, 22 Aug 2019 12:19:05 +0000 (UTC)
-Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, penguin-kernel@I-love.SAKURA.ne.jp
-References: <20190821083820.11725-1-david@fromorbit.com>
- <20190821083820.11725-3-david@fromorbit.com>
- <20190821232440.GB24904@infradead.org>
- <20190822003131.GR1119@dread.disaster.area>
- <20190822075948.GA31346@infradead.org>
- <20190822085130.GI2349@hirez.programming.kicks-ass.net>
- <20190822091057.GK2386@hirez.programming.kicks-ass.net>
- <20190822101441.GY1119@dread.disaster.area>
- <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
- <20190822120725.GA1119@dread.disaster.area>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <ad8037c8-d1af-fb4f-1226-af585df492d3@suse.cz>
-Date:   Thu, 22 Aug 2019 14:19:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387678AbfHVMeT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Aug 2019 08:34:19 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43301 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388655AbfHVMeM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 08:34:12 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c19so4390203lfm.10
+        for <linux-xfs@vger.kernel.org>; Thu, 22 Aug 2019 05:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=qQwouDogyXJvS+YAsG7u3jI4chdOO2iCwbnUv4qV7/t3H0mpAnkar5BQ6W4yzvm3w4
+         MFy7lbM3I35ux+N13OWQLqMSp+JYBfamJOBS4Rv9YtwGFbdx/1nZ3P/IH2tA3AOy5PjU
+         kwMZko6qlgHP0UHJGHFvzgceOWtw4tjNefrQZ96MP6AChhfKt94B36gjTZhv6W5d2u3q
+         XLX/JEQ53zQai3qewoG2X6xDeNJ4HOzQU6TV4Cb4zGt4uQQf5AD05mnaufLgjsYbqLh0
+         X5GVMmJW05ufNL+28p6nLz0lCjVsZITmyIS1mIvW9/VAX3eTcLMat0TkK0bawj8l1wal
+         unaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=cAPp3F7ziY99wp5ZTBL5MxkPE45/KUELiso0fpf7BVuDG+ahAv8BjiSYYzqMvdevMC
+         o5Df/Ib4RNO7hQPCl0kCxSwE99YE4OEf5dFIiXA/JCXB7yzWx4BBYPlm9KveGGagDXs+
+         37CCT853Ycy+cx8rXI1REEjineSCOKk2m4Xaq4YaKQ32iUERDfdZg3F5xNJJ/FJ+OUbb
+         k5yBQQgdS7I2SAGuRZQKPuWsABlHoY2cAPl7Rb8PrO5XNk15LoCKAoCO3Hv+AOUJLk11
+         ZsPCGY+QEGpUt+Pqp+8jJmzdc6ZD9ofrPYYN219LiS8CT5vmySYIxZ2Ei0WnMixvmRAr
+         hl5A==
+X-Gm-Message-State: APjAAAX5bSk9oXwHXfKyzsYU/WMlf9x+Mm7WUYMrBrWlwx0348z/QedO
+        Za1+gLVt8l3Nvc96DhdEvaSwelKQl6BgILKgP6E=
+X-Google-Smtp-Source: APXvYqyvt2RXzV9cZsTsiBwjcFFEoyd1HLlAwIQQPxXOemblWJ85A0QXgz94gt7tcllsT417ikCMvXpOU1ZxhrqMZqI=
+X-Received: by 2002:ac2:42c3:: with SMTP id n3mr13722899lfl.117.1566477250738;
+ Thu, 22 Aug 2019 05:34:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190822120725.GA1119@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:ab3:6a0f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:34:10
+ -0700 (PDT)
+Reply-To: eku.lawfirm@gmail.com
+From:   "Law firm(Eku and Associates)" <ezeobodo1@gmail.com>
+Date:   Thu, 22 Aug 2019 12:34:10 +0000
+Message-ID: <CAN-_bTZ04fanuBw0m=mWQFHTKscwdYgns3LR19ZdaFDanOVNGQ@mail.gmail.com>
+Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 8/22/19 2:07 PM, Dave Chinner wrote:
-> On Thu, Aug 22, 2019 at 01:14:30PM +0200, Vlastimil Babka wrote:
-> 
-> No, the problem is this (using kmalloc as a general term for
-> allocation, whether it be kmalloc, kmem_cache_alloc, alloc_page, etc)
-> 
->    some random kernel code
->     kmalloc(GFP_KERNEL)
->      reclaim
->      PF_MEMALLOC
->      shrink_slab
->       xfs_inode_shrink
->        XFS_ILOCK
->         xfs_buf_allocate_memory()
->          kmalloc(GFP_KERNEL)
-> 
-> And so locks on inodes in reclaim are seen below reclaim. Then
-> somewhere else we have:
-> 
->    some high level read-only xfs code like readdir
->     XFS_ILOCK
->      xfs_buf_allocate_memory()
->       kmalloc(GFP_KERNEL)
->        reclaim
-> 
-> And this one throws false positive lockdep warnings because we
-> called into reclaim with XFS_ILOCK held and GFP_KERNEL alloc
+--=20
+Dear,
+With due respect this is not spam or Scam mail, because I have
+contacted you before and there was no response from you,I apologise if
+the contents of this mail are contrary to your moral ethics, which I
+feel may be of great disturbance to your person, but please treat this
+with absolute confidentiality, believing that this email reaches you
+in good faith. My contacting you is not a mistake or a coincidence
+because God can use any person known or unknown to accomplish great
+things.
+I am a lawyer and I have an investment business proposal to offer you.
+It is not official but should be considered as legal and confidential
+business. I have a customer's deposit of $US25 million dollars ready
+to be moved for investment if you can partner with us. We are ready to
+offer you 10% of this total amount as your compensation for supporting
+the transaction to completion. If you are interested to help me please
+reply me with your full details as stated below:
+(1) Your full names:
+(2) Your address:
+(3) Your occupation:
+(4) Your mobile telephone number:
+(5) Your nationality:
+(6) Your present location:
+(7) Your age:
+So that I will provide you more details on what to do and what is
+required for successful completion.
+Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
+MENTIONED DETAILS
 
-OK, and what exactly makes this positive a false one? Why can't it continue like
-the first example where reclaim leads to another XFS_ILOCK, thus deadlock?
-
-> context. So the only solution we had at the tiem to shut it up was:
-> 
->    some high level read-only xfs code like readdir
->     XFS_ILOCK
->      xfs_buf_allocate_memory()
->       kmalloc(GFP_NOFS)
-> 
-> So that lockdep sees it's not going to recurse into reclaim and
-> doesn't throw a warning...
-
-AFAICS that GFP_NOFS would fix not only a warning but also a real deadlock
-(depending on the answer to my previous question).
-
-> Cheers,
-> 
-> Dave.
-> 
-
+Sinc=C3=A8rement v=C3=B4tre,
+Avocat Etienne Eku Esq.(Lawfirm)
+Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
+=E2=80=99ouest.
+Skype:westafricalawfirm
