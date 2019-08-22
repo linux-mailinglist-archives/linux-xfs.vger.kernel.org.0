@@ -2,232 +2,203 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A850994B4
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Aug 2019 15:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F7339954E
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Aug 2019 15:42:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbfHVNSU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Aug 2019 09:18:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22494 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727685AbfHVNSU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 09:18:20 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MDHn07110476
-        for <linux-xfs@vger.kernel.org>; Thu, 22 Aug 2019 09:18:19 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhuess4ha-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Thu, 22 Aug 2019 09:18:18 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Thu, 22 Aug 2019 14:18:16 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 22 Aug 2019 14:18:13 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MDICVb29753762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 13:18:12 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61D0B4C05E;
-        Thu, 22 Aug 2019 13:18:12 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F06034C040;
-        Thu, 22 Aug 2019 13:18:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.46.110])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 22 Aug 2019 13:18:10 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
+        id S1730309AbfHVNkU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Aug 2019 09:40:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52998 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387603AbfHVNkU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:40:20 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82A1A18C8910;
+        Thu, 22 Aug 2019 13:40:19 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2DE685C21A;
+        Thu, 22 Aug 2019 13:40:19 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 09:40:17 -0400
+From:   Brian Foster <bfoster@redhat.com>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
-        hch@infradead.org
-Subject: Re: [RFC] xfs: Flush iclog containing XLOG_COMMIT_TRANS before waiting for log space
-Date:   Thu, 22 Aug 2019 18:49:53 +0530
-Organization: IBM
-In-Reply-To: <3307362.yyVt9CMRau@localhost.localdomain>
-References: <20190821110448.30161-1-chandanrlinux@gmail.com> <20190821221834.GQ1119@dread.disaster.area> <3307362.yyVt9CMRau@localhost.localdomain>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
+Message-ID: <20190822134017.GA24151@bfoster>
+References: <20190821083820.11725-1-david@fromorbit.com>
+ <20190821083820.11725-3-david@fromorbit.com>
+ <20190821133533.GB19646@bfoster>
+ <20190821211452.GN1119@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 19082213-0016-0000-0000-000002A1825B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082213-0017-0000-0000-00003301BBB9
-Message-Id: <1824045.6BC4pIzlid@localhost.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=5 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220142
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821211452.GN1119@dread.disaster.area>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 22 Aug 2019 13:40:19 +0000 (UTC)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thursday, August 22, 2019 6:10 PM Chandan Rajendra wrote:
-> On Thursday, August 22, 2019 3:48 AM Dave Chinner wrote:
-> > On Wed, Aug 21, 2019 at 04:34:48PM +0530, Chandan Rajendra wrote:
-> > > The following call trace is seen when executing generic/530 on a ppc64le
-> > > machine,
+On Thu, Aug 22, 2019 at 07:14:52AM +1000, Dave Chinner wrote:
+> On Wed, Aug 21, 2019 at 09:35:33AM -0400, Brian Foster wrote:
+> > On Wed, Aug 21, 2019 at 06:38:19PM +1000, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
 > > > 
-> > > INFO: task mount:7722 blocked for more than 122 seconds.
-> > >       Not tainted 5.3.0-rc1-next-20190723-00001-g1867922e5cbf-dirty #6
-> > 
-> > can you reproduce this on 5.3-rc5? There were bugs in log recovery
-> > IO in -rc1 that could result in things going wrong...
-> 
-> Yes, I was able to recreate this bug on v5.3-rc5.
-> 
-> > 
-> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > > mount           D 8448  7722   7490 0x00040008
-> > > Call Trace:
-> > > [c000000629343210] [0000000000000001] 0x1 (unreliable)
-> > > [c0000006293433f0] [c000000000021acc] __switch_to+0x2ac/0x490
-> > > [c000000629343450] [c000000000fbbbf4] __schedule+0x394/0xb50
-> > > [c000000629343510] [c000000000fbc3f4] schedule+0x44/0xf0
-> > > [c000000629343540] [c0000000007623b4] xlog_grant_head_wait+0x84/0x420
-> > > [c0000006293435b0] [c000000000762828] xlog_grant_head_check+0xd8/0x1e0
-> > > [c000000629343600] [c000000000762f6c] xfs_log_reserve+0x26c/0x310
-> > > [c000000629343690] [c00000000075defc] xfs_trans_reserve+0x28c/0x3e0
-> > > [c0000006293436e0] [c0000000007606ac] xfs_trans_alloc+0xfc/0x2f0
-> > > [c000000629343780] [c000000000749ca8] xfs_inactive_ifree+0x248/0x2a0
-> > > [c000000629343810] [c000000000749e58] xfs_inactive+0x158/0x300
-> > > [c000000629343850] [c000000000758554] xfs_fs_destroy_inode+0x104/0x3f0
-> > > [c000000629343890] [c00000000046850c] destroy_inode+0x6c/0xc0
-> > > [c0000006293438c0] [c00000000074c748] xfs_irele+0x168/0x1d0
-> > > [c000000629343900] [c000000000778c78] xlog_recover_process_one_iunlink+0x118/0x1e0
-> > > [c000000629343960] [c000000000778e10] xlog_recover_process_iunlinks+0xd0/0x130
-> > > [c0000006293439b0] [c000000000782408] xlog_recover_finish+0x58/0x130
-> > > [c000000629343a20] [c000000000763818] xfs_log_mount_finish+0xa8/0x1d0
-> > > [c000000629343a60] [c000000000750908] xfs_mountfs+0x6e8/0x9e0
-> > > [c000000629343b20] [c00000000075a210] xfs_fs_fill_super+0x5a0/0x7c0
-> > > [c000000629343bc0] [c00000000043e7fc] mount_bdev+0x25c/0x2a0
-> > > [c000000629343c60] [c000000000757c48] xfs_fs_mount+0x28/0x40
-> > > [c000000629343c80] [c0000000004956cc] legacy_get_tree+0x4c/0xb0
-> > > [c000000629343cb0] [c00000000043d690] vfs_get_tree+0x50/0x160
-> > > [c000000629343d30] [c0000000004775d4] do_mount+0xa14/0xc20
-> > > [c000000629343db0] [c000000000477d48] ksys_mount+0xc8/0x180
-> > > [c000000629343e00] [c000000000477e20] sys_mount+0x20/0x30
-> > > [c000000629343e20] [c00000000000b864] system_call+0x5c/0x70
+> > > Memory we use to submit for IO needs strict alignment to the
+> > > underlying driver contraints. Worst case, this is 512 bytes. Given
+> > > that all allocations for IO are always a power of 2 multiple of 512
+> > > bytes, the kernel heap provides natural alignment for objects of
+> > > these sizes and that suffices.
 > > > 
-> > > i.e. the mount task gets hung indefinitely due to the following sequence
-> > > of events,
+> > > Until, of course, memory debugging of some kind is turned on (e.g.
+> > > red zones, poisoning, KASAN) and then the alignment of the heap
+> > > objects is thrown out the window. Then we get weird IO errors and
+> > > data corruption problems because drivers don't validate alignment
+> > > and do the wrong thing when passed unaligned memory buffers in bios.
 > > > 
-> > > 1. Test creates lots of unlinked temp files and then shutsdown the
-> > >    filesystem.
-> > > 2. During mount, a transaction started in the context of processing
-> > >    unlinked inode list causes several iclogs to be filled up. All but
-> > >    the last one is submitted for I/O.
-> > > 3. After writing XLOG_COMMIT_TRANS record into the iclog, we will have
-> > >    18532 bytes of free space in the last iclog of the transaction which is
-> > >    greater than 2*sizeof(xlog_op_header_t). Hence
-> > >    xlog_state_get_iclog_space() does not switch over to using a newer iclog.
-> > > 4. Meanwhile, the endio code processing iclogs of the transaction do not
-> > >    insert items into the AIL since the iclog containing XLOG_COMMIT_TRANS
-> > >    hasn't been submitted for I/O yet. Hence a major part of the on-disk
-> > >    log cannot be freed yet.
+> > > TO fix this, introduce kmem_alloc_io(), which will guaranteeat least
 > > 
-> > So all those items are still pinned in memory.
+> > s/TO/To/
 > > 
-> > > 5. A new request for log space (via xfs_log_reserve()) will now wait
-> > >    indefinitely for on-disk log space to be freed.
-> > 
-> > Because nothing has issued a xfs_log_force() for write the iclog to
-> > disk, unpin the objects that it pins in memory, and allow the tail
-> > to be moved forwards.
-> > 
-> > The xfsaild normally takes care of thisi - it gets pushed byt the
-> > log reserve when there's not enough space to in the log for the
-> > transaction before transaction reserve goes to sleep in
-> > xlog_grant_head_wait(). The AIL pushing code is then responsible for
-> > making sure log space is eventually freed. It will issue log forces
-> > if it isn't making progress and so this problem shouldn't occur.
-> > 
-> > So, why has it occurred?
-> > 
-> > The xfsaild kthread should be running at this point, so if it was
-> > pushed it should be trying to empty the journal to move the tail
-> > forward. Why hasn't it issue a log force?
-> > 
-> > 
-> > > To fix this issue, before waiting for log space to be freed, this commit
-> > > now submits xlog->l_iclog for write I/O if iclog->ic_state is
-> > > XLOG_STATE_ACTIVE and iclog has metadata written into it. This causes
-> > > AIL list to be populated and a later call to xlog_grant_push_ail() will
-> > > free up the on-disk log space.
-> > 
-> > hmmm.
-> > 
-> > > Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+> > > 512 byte alignment of buffers for IO, even if memory debugging
+> > > options are turned on. It is assumed that the minimum allocation
+> > > size will be 512 bytes, and that sizes will be power of 2 mulitples
+> > > of 512 bytes.
+> > > 
+> > > Use this everywhere we allocate buffers for IO.
+> > > 
+> > > This no longer fails with log recovery errors when KASAN is enabled
+> > > due to the brd driver not handling unaligned memory buffers:
+> > > 
+> > > # mkfs.xfs -f /dev/ram0 ; mount /dev/ram0 /mnt/test
+> > > 
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
 > > > ---
-> > >  fs/xfs/xfs_log.c | 21 +++++++++++++++++++++
-> > >  1 file changed, 21 insertions(+)
+> > >  fs/xfs/kmem.c            | 61 +++++++++++++++++++++++++++++-----------
+> > >  fs/xfs/kmem.h            |  1 +
+> > >  fs/xfs/xfs_buf.c         |  4 +--
+> > >  fs/xfs/xfs_log.c         |  2 +-
+> > >  fs/xfs/xfs_log_recover.c |  2 +-
+> > >  fs/xfs/xfs_trace.h       |  1 +
+> > >  6 files changed, 50 insertions(+), 21 deletions(-)
 > > > 
-> > > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> > > index 00e9f5c388d3..dc785a6b9f47 100644
-> > > --- a/fs/xfs/xfs_log.c
-> > > +++ b/fs/xfs/xfs_log.c
-> > > @@ -236,11 +236,32 @@ xlog_grant_head_wait(
-> > >  	int			need_bytes) __releases(&head->lock)
-> > >  					    __acquires(&head->lock)
-> > >  {
-> > > +	struct xlog_in_core	*iclog;
-> > > +
-> > >  	list_add_tail(&tic->t_queue, &head->waiters);
+> > > diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+> > > index edcf393c8fd9..ec693c0fdcff 100644
+> > > --- a/fs/xfs/kmem.c
+> > > +++ b/fs/xfs/kmem.c
+> > ...
+> > > @@ -62,6 +56,39 @@ kmem_alloc_large(size_t size, xfs_km_flags_t flags)
+> > >  	return ptr;
+> > >  }
 > > >  
-> > >  	do {
-> > >  		if (XLOG_FORCED_SHUTDOWN(log))
-> > >  			goto shutdown;
+> > > +/*
+> > > + * Same as kmem_alloc_large, except we guarantee a 512 byte aligned buffer is
+> > > + * returned. vmalloc always returns an aligned region.
+> > > + */
+> > > +void *
+> > > +kmem_alloc_io(size_t size, xfs_km_flags_t flags)
+> > > +{
+> > > +	void	*ptr;
 > > > +
-> > > +		if (xfs_ail_min(log->l_ailp) == NULL) {
+> > > +	trace_kmem_alloc_io(size, flags, _RET_IP_);
+> > > +
+> > > +	ptr = kmem_alloc(size, flags | KM_MAYFAIL);
+> > > +	if (ptr) {
+> > > +		if (!((long)ptr & 511))
+> > > +			return ptr;
+> > > +		kfree(ptr);
+> > > +	}
+> > > +	return __kmem_vmalloc(size, flags);
+> > > +}
 > > 
-> > This is indicative of the situation. If the AIL is empty, and the
-> > log does not have room for an entire transaction reservation, then
-> > we need to be issuing synchronous transactions in recovery until
-> > such time the AIL pushing can actually function correctly to
-> > guarantee forwards progress for async transaction processing.
+> > Even though it is unfortunate, this seems like a quite reasonable and
+> > isolated temporary solution to the problem to me. The one concern I have
+> > is if/how much this could affect performance under certain
+> > circumstances.
 > 
-> Yes, In the case of this bug, the AIL list was empty.
+> Can't measure a difference on 4k block size filesystems. It's only
+> used for log recovery and then for allocation AGF/AGI buffers on
+> 512 byte sector devices. Anything using 4k sectors only hits it
+> during mount. So for default configs with memory posioning/KASAN
+> enabled, the massive overhead of poisoning/tracking makes this
+> disappear in the noise.
 > 
-> > 
-> > sync transactions call xfs_log_force(XFS_LOG_SYNC) immediately after
-> > writing the commit record, so this whole problem goes away.
-> > 
-> > perhaps in __xfs_trans_commit() we need somethign like this:
-> > 
-> >  	/*
-> >  	 * If the transaction needs to be synchronous, then force the
-> >  	 * log out now and wait for it.
-> > +	 *
-> > +	 * If we are in recovery and the AIL is empty, the log may only
-> > +	 * have enough room for a single transaction and the AIL
-> > +	 * cannot push the tail forwards. Hence while the AIL is
-> > +	 * empty and we are in recovery, do synchronous transactions
-> > +	 * to ensure the commit hits the journal and move into the
-> > +	 * AIL. Once there are items in the AIL, it can move the
-> > +	 * tail of the log forwards itself.
-> >  	 */
-> > -	if (sync) {
-> > +	if (sync || 
-> > +	    ((mp->m_flags & XFS_MOUNT_RECOVERY) && !xfs_ail_min(mp->m_ail)) {
-> >  		error = xfs_log_force_lsn(mp, commit_lsn, XFS_LOG_SYNC, NULL);
-> >  		XFS_STATS_INC(mp, xs_trans_sync);
-> > 
-> > The other option is that this can be put into the
-> > xfs_trans_reserve() code to set the XFS_TRANS_SYNC flag to trigger
-> > the log force in __xfs_trans_commit().
+> For 1k block size filesystems, it gets hit much harder, but
+> there's no noticable increase in runtime of xfstests vs 4k block
+> size with KASAN enabled. The big increase in overhead comes from
+> enabling KASAN (takes 3x longer than without), not doing one extra
+> allocation/free pair.
+> 
+> > I realize that these callsites are isolated in the common
+> > scenario. Less common scenarios like sub-page block sizes (whether due
+> > to explicit mkfs time format or default configurations on larger page
+> > size systems) can fall into this path much more frequently, however.
+> 
+> *nod*
+> 
+> > Since this implies some kind of vm debug option is enabled, performance
+> > itself isn't critical when this solution is active. But how bad is it in
+> > those cases where we might depend on this more heavily? Have you
+> > confirmed that the end configuration is still "usable," at least?
+> 
+> No noticable difference, most definitely still usable. 
+> 
 
-Most likely, you meant (xlog->l_flags & XLOG_RECOVERY_NEEDED) instead of
-(mp->m_flags & XFS_MOUNT_RECOVERY) in the above snippet.
+Ok, thanks.
 
--- 
-chandan
+> > I ask because the repeated alloc/free behavior can easily be avoided via
+> > something like an mp flag (which may require a tweak to the
+> 
+> What's an "mp flag"?
+> 
 
+A bool or something similar added to xfs_mount to control further slab
+allocation attempts for I/O allocations for this mount. I was just
+throwing this out there if the performance hit happened to be bad (on
+top of whatever vm debug option is enabled) in those configurations
+where slab based buffer allocations are more common. If the performance
+hit is negligible in practice, then I'm not worried about it.
 
+> > kmem_alloc_io() interface) to skip further kmem_alloc() calls from this
+> > path once we see one unaligned allocation. That assumes this behavior is
+> > tied to functionality that isn't dynamically configured at runtime, of
+> > course.
+> 
+> vmalloc() has a _lot_ more overhead than kmalloc (especially when
+> vmalloc has to do multiple allocations itself to set up page table
+> entries) so there is still an overall gain to be had by trying
+> kmalloc even if 50% of allocations are unaligned.
+> 
 
+I had the impression that this unaligned allocation behavior is tied to
+enablement of debug options that otherwise aren't enabled/disabled
+dynamically. Hence, the unaligned allocation behavior is persistent for
+a particular mount and repeated attempts are pointless once we see at
+least one such result. Is that not the case?
+
+Again, I don't think performance is a huge deal so long as testing shows
+that an fs is still usable with XFS running this kind of allocation
+pattern. In thinking further about it, aren't we essentially bypassing
+these tools for associated allocations if they don't offer similar
+functionality for vmalloc allocations? It might be worth 1.) noting that
+as a consequence of this change in the commit log and 2.) having a
+oneshot warning somewhere when we initially hit this problem so somebody
+actually using one of these tools realizes that enabling it actually
+changes allocation behavior. For example:
+
+XFS ...: WARNING: Unaligned I/O memory allocation. VM debug enabled?
+Disabling slab allocations for I/O.
+
+... or alternatively just add a WARN_ON_ONCE() or something with a
+similar comment in the code.
+
+Brian
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
