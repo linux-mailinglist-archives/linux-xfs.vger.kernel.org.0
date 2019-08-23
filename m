@@ -2,135 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3F9E9A47A
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2019 03:00:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A7449A4B2
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2019 03:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732542AbfHWBA3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Aug 2019 21:00:29 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:42419 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731564AbfHWBA3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 21:00:29 -0400
-Received: from dread.disaster.area (pa49-181-142-13.pa.nsw.optusnet.com.au [49.181.142.13])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B22C8362588;
-        Fri, 23 Aug 2019 11:00:22 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i0xv8-0007PG-K9; Fri, 23 Aug 2019 10:59:14 +1000
-Date:   Fri, 23 Aug 2019 10:59:14 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190823005914.GF1119@dread.disaster.area>
-References: <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+        id S1729205AbfHWBI6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Aug 2019 21:08:58 -0400
+Received: from icp-osb-irony-out2.external.iinet.net.au ([203.59.1.155]:5547
+        "EHLO icp-osb-irony-out2.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732613AbfHWBI6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 21:08:58 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A3AwAROl9d/3Wz0XYNWB4BBgcGgWe?=
+ =?us-ascii?q?DBYEuhCCPVgEBBoERihGRIwkBAQEBAQEBAQEnEAEBhDoDAoMEOBMCCQEBAQQ?=
+ =?us-ascii?q?BAgEBBgMBhVhChVknBFIoDQImAkkWgzaBdqtQc38zGoQaAQsBhhmBDCiBY4o?=
+ =?us-ascii?q?keIEHgREzgx2CYQEDhGqCWASMPYJXhTJdQpV3CYIfhmmNbwyCJYcwhAYDimC?=
+ =?us-ascii?q?VQ5I+gXlNLgqDJwkWim47hUxligYrgiUBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2A3AwAROl9d/3Wz0XYNWB4BBgcGgWeDBYEuhCCPVgEBB?=
+ =?us-ascii?q?oERihGRIwkBAQEBAQEBAQEnEAEBhDoDAoMEOBMCCQEBAQQBAgEBBgMBhVhCh?=
+ =?us-ascii?q?VknBFIoDQImAkkWgzaBdqtQc38zGoQaAQsBhhmBDCiBY4okeIEHgREzgx2CY?=
+ =?us-ascii?q?QEDhGqCWASMPYJXhTJdQpV3CYIfhmmNbwyCJYcwhAYDimCVQ5I+gXlNLgqDJ?=
+ =?us-ascii?q?wkWim47hUxligYrgiUBAQ?=
+X-IronPort-AV: E=Sophos;i="5.64,419,1559491200"; 
+   d="scan'208";a="231796596"
+Received: from unknown (HELO [192.168.1.222]) ([118.209.179.117])
+  by icp-osb-irony-out2.iinet.net.au with ESMTP; 23 Aug 2019 08:59:17 +0800
+Subject: [PATCH v2 00/15] xfs: mount API patch series
+From:   Ian Kent <raven@themaw.net>
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Eric Sandeen <sandeen@sandeen.net>
+Date:   Fri, 23 Aug 2019 08:59:16 +0800
+Message-ID: <156652158924.2607.14608448087216437699.stgit@fedora-28>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=pdRIKMFd4+xhzJrg6WzXNA==:117 a=pdRIKMFd4+xhzJrg6WzXNA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=lzGJWfNdbh4cDx3VhMgA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
-> On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
-> > On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
-> > > On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
-> > > > On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
-> > > > 
-> > > > > So that leaves just the normal close() syscall exit case, where the
-> > > > > application has full control of the order in which resources are
-> > > > > released. We've already established that we can block in this
-> > > > > context.  Blocking in an interruptible state will allow fatal signal
-> > > > > delivery to wake us, and then we fall into the
-> > > > > fatal_signal_pending() case if we get a SIGKILL while blocking.
-> > > > 
-> > > > The major problem with RDMA is that it doesn't always wait on close() for the
-> > > > MR holding the page pins to be destoyed. This is done to avoid a
-> > > > deadlock of the form:
-> > > > 
-> > > >    uverbs_destroy_ufile_hw()
-> > > >       mutex_lock()
-> > > >        [..]
-> > > >         mmput()
-> > > >          exit_mmap()
-> > > >           remove_vma()
-> > > >            fput();
-> > > >             file_operations->release()
-> > > 
-> > > I think this is wrong, and I'm pretty sure it's an example of why
-> > > the final __fput() call is moved out of line.
-> > 
-> > Yes, I think so too, all I can say is this *used* to happen, as we
-> > have special code avoiding it, which is the code that is messing up
-> > Ira's lifetime model.
-> > 
-> > Ira, you could try unraveling the special locking, that solves your
-> > lifetime issues?
-> 
-> Yes I will try to prove this out...  But I'm still not sure this fully solves
-> the problem.
-> 
-> This only ensures that the process which has the RDMA context (RDMA FD) is safe
-> with regard to hanging the close for the "data file FD" (the file which has
-> pinned pages) in that _same_ process.  But what about the scenario.
-> 
-> Process A has the RDMA context FD and data file FD (with lease) open.
-> 
-> Process A uses SCM_RIGHTS to pass the RDMA context FD to Process B.
+This patch series adds support to xfs for the new kernel mount API
+as described in the LWN article at https://lwn.net/Articles/780267/.
 
-Passing the RDMA context dependent on a file layout lease to another
-process that doesn't have a file layout lease or a reference to the
-original lease should be considered a violation of the layout lease.
-Process B does not have an active layout lease, and so by the rules
-of layout leases, it is not allowed to pin the layout of the file.
+In the article there's a lengthy description of the reasons for
+adopting the API and problems expected to be resolved by using it.
 
-> Process A attempts to exit (hangs because data file FD is pinned).
-> 
-> Admin kills process A.  kill works because we have allowed for it...
-> 
-> Process B _still_ has the RDMA context FD open _and_ therefore still holds the
-> file pins.
-> 
-> Truncation still fails.
-> 
-> Admin does not know which process is holding the pin.
-> 
-> What am I missing?
+The series has been applied to the repository located at
+git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git, and built, and
+the xfstests suite run against it.
 
-Application does not hold the correct file layout lease references.
-Passing the fd via SCM_RIGHTS to a process without a layout lease
-is equivalent to not using layout leases in the first place.
+I didn't see any failures that look like they are related to mounting.
 
-Cheers,
+Changes from the initial posting of the series:
+- changed .name to uppercase in fs_parameter_description to ensure
+  consistent error log messages between the vfs parser and the xfs
+  parameter parser.
+- clearify comment above xfs_parse_param() about when possibly
+  allocated mp->m_logname or mp->m_rtname are freed.
+- factor out xfs_remount_rw() and xfs_remount_ro() from  xfs_remount().
+- changed xfs_mount_alloc() to not set super block in xfs_mount so it
+  can be re-used when switching to the mount-api.
+- fixed don't check for NULL when calling kfree() in xfs_fc_free().
+- refactored xfs_parseargs() in an attempt to highlight the code
+  that actually changes in converting to use the new mount api.
+- dropped xfs-mount-api-rename-xfs_fill_super.patch, it didn't seem
+  necessary.
+- move comment about remount difficulties above xfs_reconfigure()
+  and increase line length to try and make the comment managable.
+- add patch vfs-Create-fs_context-aware-mount_bdev-replacement.patch
+  that adds the vfs_get_block_super() needed by the series.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+The patch "vfs: Create fs_context-aware mount_bdev() replacement" is
+currently included in linux-next so there will be conflicts if this
+series is merged in the next merge window so please be aware of it.
+
+---
+
+David Howells (1):
+      vfs: Create fs_context-aware mount_bdev() replacement
+
+Ian Kent (14):
+      xfs: mount-api - add fs parameter description
+      xfs: mount-api - refactor suffix_kstrtoint()
+      xfs: mount-api - refactor xfs_parseags()
+      xfs: mount-api - make xfs_parse_param() take context .parse_param() args
+      xfs: mount-api - move xfs_parseargs() validation to a helper
+      xfs: mount-api - refactor xfs_fs_fill_super()
+      xfs: mount-api - add xfs_get_tree()
+      xfs: mount-api - add xfs_remount_rw() helper
+      xfs: mount-api - add xfs_remount_ro() helper
+      xfs: mount api - add xfs_reconfigure()
+      xfs: mount-api - add xfs_fc_free()
+      xfs: mount-api - dont set sb in xfs_mount_alloc()
+      xfs: mount-api - switch to new mount-api
+      xfs: mount-api - remove legacy mount functions
+
+
+ fs/fs_context.c            |    2 
+ fs/super.c                 |  111 +++++
+ fs/xfs/xfs_super.c         |  949 ++++++++++++++++++++++++--------------------
+ include/linux/fs_context.h |    9 
+ 4 files changed, 631 insertions(+), 440 deletions(-)
+
+--
+Ian
