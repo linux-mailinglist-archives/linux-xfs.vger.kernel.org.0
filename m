@@ -2,39 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A7449A4B2
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2019 03:08:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87F779A4B0
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2019 03:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfHWBI6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Aug 2019 21:08:58 -0400
-Received: from icp-osb-irony-out2.external.iinet.net.au ([203.59.1.155]:5547
+        id S1731961AbfHWBIx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Aug 2019 21:08:53 -0400
+Received: from icp-osb-irony-out2.external.iinet.net.au ([203.59.1.155]:5532
         "EHLO icp-osb-irony-out2.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732613AbfHWBI6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 21:08:58 -0400
+        by vger.kernel.org with ESMTP id S1732613AbfHWBIw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Aug 2019 21:08:52 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A3AwAROl9d/3Wz0XYNWB4BBgcGgWe?=
- =?us-ascii?q?DBYEuhCCPVgEBBoERihGRIwkBAQEBAQEBAQEnEAEBhDoDAoMEOBMCCQEBAQQ?=
- =?us-ascii?q?BAgEBBgMBhVhChVknBFIoDQImAkkWgzaBdqtQc38zGoQaAQsBhhmBDCiBY4o?=
- =?us-ascii?q?keIEHgREzgx2CYQEDhGqCWASMPYJXhTJdQpV3CYIfhmmNbwyCJYcwhAYDimC?=
- =?us-ascii?q?VQ5I+gXlNLgqDJwkWim47hUxligYrgiUBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2A3AwAROl9d/3Wz0XYNWB4BBgcGgWeDBYEuhCCPVgEBB?=
- =?us-ascii?q?oERihGRIwkBAQEBAQEBAQEnEAEBhDoDAoMEOBMCCQEBAQQBAgEBBgMBhVhCh?=
- =?us-ascii?q?VknBFIoDQImAkkWgzaBdqtQc38zGoQaAQsBhhmBDCiBY4okeIEHgREzgx2CY?=
- =?us-ascii?q?QEDhGqCWASMPYJXhTJdQpV3CYIfhmmNbwyCJYcwhAYDimCVQ5I+gXlNLgqDJ?=
- =?us-ascii?q?wkWim47hUxligYrgiUBAQ?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BwAAAROl9d/3Wz0XYNWBwBAQEEAQE?=
+ =?us-ascii?q?HBAEBgVYEAQELAYQyhCCPVgEBBoERJYlskSMJAQEBAQEBAQEBNwEBhDoDAgK?=
+ =?us-ascii?q?DAjcGDgIJAQEBBAECAQEGAwGFWIYZAgEDIwRSEBgIBQImAgJHEAYThRmrUHN?=
+ =?us-ascii?q?/MxqKQIEMKAGBYookeIEHgREzgx2EDYNCglgEjBmCe4YPQpV3CYIflFgMjVs?=
+ =?us-ascii?q?DimAtp1OBek0uCjuCbIJOF44vZYoEglIBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2BwAAAROl9d/3Wz0XYNWBwBAQEEAQEHBAEBgVYEAQELA?=
+ =?us-ascii?q?YQyhCCPVgEBBoERJYlskSMJAQEBAQEBAQEBNwEBhDoDAgKDAjcGDgIJAQEBB?=
+ =?us-ascii?q?AECAQEGAwGFWIYZAgEDIwRSEBgIBQImAgJHEAYThRmrUHN/MxqKQIEMKAGBY?=
+ =?us-ascii?q?ookeIEHgREzgx2EDYNCglgEjBmCe4YPQpV3CYIflFgMjVsDimAtp1OBek0uC?=
+ =?us-ascii?q?juCbIJOF44vZYoEglIBAQ?=
 X-IronPort-AV: E=Sophos;i="5.64,419,1559491200"; 
-   d="scan'208";a="231796596"
+   d="scan'208";a="231796620"
 Received: from unknown (HELO [192.168.1.222]) ([118.209.179.117])
-  by icp-osb-irony-out2.iinet.net.au with ESMTP; 23 Aug 2019 08:59:17 +0800
-Subject: [PATCH v2 00/15] xfs: mount API patch series
+  by icp-osb-irony-out2.iinet.net.au with ESMTP; 23 Aug 2019 08:59:22 +0800
+Subject: [PATCH v2 01/15] vfs: Create fs_context-aware mount_bdev()
+ replacement
 From:   Ian Kent <raven@themaw.net>
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 Cc:     Dave Chinner <dchinner@redhat.com>,
         David Howells <dhowells@redhat.com>,
         Al Viro <viro@ZenIV.linux.org.uk>,
         Eric Sandeen <sandeen@sandeen.net>
-Date:   Fri, 23 Aug 2019 08:59:16 +0800
-Message-ID: <156652158924.2607.14608448087216437699.stgit@fedora-28>
+Date:   Fri, 23 Aug 2019 08:59:22 +0800
+Message-ID: <156652196268.2607.8413035597991478567.stgit@fedora-28>
+In-Reply-To: <156652158924.2607.14608448087216437699.stgit@fedora-28>
+References: <156652158924.2607.14608448087216437699.stgit@fedora-28>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -44,68 +47,205 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch series adds support to xfs for the new kernel mount API
-as described in the LWN article at https://lwn.net/Articles/780267/.
+From: David Howells <dhowells@redhat.com>
 
-In the article there's a lengthy description of the reasons for
-adopting the API and problems expected to be resolved by using it.
+Create a function, vfs_get_block_super(), that is fs_context-aware and a
+replacement for mount_bdev().  It caches the block device pointer and file
+open mode in the fs_context struct so that this information can be passed
+into sget_fc()'s test and set functions.
 
-The series has been applied to the repository located at
-git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git, and built, and
-the xfstests suite run against it.
-
-I didn't see any failures that look like they are related to mounting.
-
-Changes from the initial posting of the series:
-- changed .name to uppercase in fs_parameter_description to ensure
-  consistent error log messages between the vfs parser and the xfs
-  parameter parser.
-- clearify comment above xfs_parse_param() about when possibly
-  allocated mp->m_logname or mp->m_rtname are freed.
-- factor out xfs_remount_rw() and xfs_remount_ro() from  xfs_remount().
-- changed xfs_mount_alloc() to not set super block in xfs_mount so it
-  can be re-used when switching to the mount-api.
-- fixed don't check for NULL when calling kfree() in xfs_fc_free().
-- refactored xfs_parseargs() in an attempt to highlight the code
-  that actually changes in converting to use the new mount api.
-- dropped xfs-mount-api-rename-xfs_fill_super.patch, it didn't seem
-  necessary.
-- move comment about remount difficulties above xfs_reconfigure()
-  and increase line length to try and make the comment managable.
-- add patch vfs-Create-fs_context-aware-mount_bdev-replacement.patch
-  that adds the vfs_get_block_super() needed by the series.
-
-The patch "vfs: Create fs_context-aware mount_bdev() replacement" is
-currently included in linux-next so there will be conflicts if this
-series is merged in the next merge window so please be aware of it.
-
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: linux-block@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
+ fs/fs_context.c            |    2 +
+ fs/super.c                 |  111 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs_context.h |    9 ++++
+ 3 files changed, 121 insertions(+), 1 deletion(-)
 
-David Howells (1):
-      vfs: Create fs_context-aware mount_bdev() replacement
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 103643c68e3f..270ecae32216 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -501,6 +501,8 @@ void put_fs_context(struct fs_context *fc)
+ 
+ 	if (fc->need_free && fc->ops && fc->ops->free)
+ 		fc->ops->free(fc);
++	if (fc->dev_destructor)
++		fc->dev_destructor(fc);
+ 
+ 	security_free_mnt_opts(&fc->security);
+ 	put_net(fc->net_ns);
+diff --git a/fs/super.c b/fs/super.c
+index 113c58f19425..95cf8a2d5b25 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1215,6 +1215,110 @@ int get_tree_single(struct fs_context *fc,
+ EXPORT_SYMBOL(get_tree_single);
+ 
+ #ifdef CONFIG_BLOCK
++static void fc_bdev_destructor(struct fs_context *fc)
++{
++	if (fc->bdev) {
++		blkdev_put(fc->bdev, fc->bdev_mode);
++		fc->bdev = NULL;
++	}
++}
++
++static int set_bdev_super_fc(struct super_block *s, struct fs_context *fc)
++{
++	s->s_mode = fc->bdev_mode;
++	s->s_bdev = fc->bdev;
++	s->s_dev = s->s_bdev->bd_dev;
++	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
++	fc->bdev = NULL;
++	return 0;
++}
++
++static int test_bdev_super_fc(struct super_block *s, struct fs_context *fc)
++{
++	return s->s_bdev == fc->bdev;
++}
++
++/**
++ * vfs_get_block_super - Get a superblock based on a single block device
++ * @fc: The filesystem context holding the parameters
++ * @keying: How to distinguish superblocks
++ * @fill_super: Helper to initialise a new superblock
++ */
++int vfs_get_block_super(struct fs_context *fc,
++			int (*fill_super)(struct super_block *,
++					  struct fs_context *))
++{
++	struct block_device *bdev;
++	struct super_block *s;
++	int error = 0;
++
++	fc->bdev_mode = FMODE_READ | FMODE_EXCL;
++	if (!(fc->sb_flags & SB_RDONLY))
++		fc->bdev_mode |= FMODE_WRITE;
++
++	if (!fc->source)
++		return invalf(fc, "No source specified");
++
++	bdev = blkdev_get_by_path(fc->source, fc->bdev_mode, fc->fs_type);
++	if (IS_ERR(bdev)) {
++		errorf(fc, "%s: Can't open blockdev", fc->source);
++		return PTR_ERR(bdev);
++	}
++
++	fc->dev_destructor = fc_bdev_destructor;
++	fc->bdev = bdev;
++
++	/* Once the superblock is inserted into the list by sget_fc(), s_umount
++	 * will protect the lockfs code from trying to start a snapshot while
++	 * we are mounting
++	 */
++	mutex_lock(&bdev->bd_fsfreeze_mutex);
++	if (bdev->bd_fsfreeze_count > 0) {
++		mutex_unlock(&bdev->bd_fsfreeze_mutex);
++		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
++		return -EBUSY;
++	}
++
++	fc->sb_flags |= SB_NOSEC;
++	s = sget_fc(fc, test_bdev_super_fc, set_bdev_super_fc);
++	mutex_unlock(&bdev->bd_fsfreeze_mutex);
++	if (IS_ERR(s))
++		return PTR_ERR(s);
++
++	if (s->s_root) {
++		/* Don't summarily change the RO/RW state. */
++		if ((fc->sb_flags ^ s->s_flags) & SB_RDONLY) {
++			warnf(fc, "%pg: Can't mount, would change RO state", bdev);
++			error = -EBUSY;
++			goto error_sb;
++		}
++
++		/* Leave fc->bdev to fc_bdev_destructor() to clean up to avoid
++		 * locking conflicts.
++		 */
++	} else {
++		snprintf(s->s_id, sizeof(s->s_id), "%pg", bdev);
++		sb_set_blocksize(s, block_size(bdev));
++		error = fill_super(s, fc);
++		if (error)
++			goto error_sb;
++
++		s->s_flags |= SB_ACTIVE;
++		bdev->bd_super = s;
++	}
++
++	BUG_ON(fc->root);
++	fc->root = dget(s->s_root);
++	return 0;
++
++error_sb:
++	deactivate_locked_super(s);
++	/* Leave fc->bdev to fc_bdev_destructor() to clean up */
++	return error;
++}
++EXPORT_SYMBOL(vfs_get_block_super);
++
++
+ static int set_bdev_super(struct super_block *s, void *data)
+ {
+ 	s->s_bdev = data;
+@@ -1414,8 +1518,13 @@ int vfs_get_tree(struct fs_context *fc)
+ 	 * on the superblock.
+ 	 */
+ 	error = fc->ops->get_tree(fc);
+-	if (error < 0)
++	if (error < 0) {
++		if (fc->dev_destructor) {
++			fc->dev_destructor(fc);
++			fc->dev_destructor = NULL;
++		}
+ 		return error;
++	}
+ 
+ 	if (!fc->root) {
+ 		pr_err("Filesystem %s get_tree() didn't set fc->root\n",
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index 7c6fe3d47fa6..ed5b4349671e 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -88,6 +88,9 @@ struct fs_context {
+ 	struct mutex		uapi_mutex;	/* Userspace access mutex */
+ 	struct file_system_type	*fs_type;
+ 	void			*fs_private;	/* The filesystem's context */
++	union {
++		struct block_device *bdev;	/* The backing blockdev (if applicable) */
++	};
+ 	struct dentry		*root;		/* The root and superblock */
+ 	struct user_namespace	*user_ns;	/* The user namespace for this mount */
+ 	struct net		*net_ns;	/* The network namespace for this mount */
+@@ -97,6 +100,7 @@ struct fs_context {
+ 	const char		*subtype;	/* The subtype to set on the superblock */
+ 	void			*security;	/* Linux S&M options */
+ 	void			*s_fs_info;	/* Proposed s_fs_info */
++	fmode_t			bdev_mode;	/* File open mode for bdev */
+ 	unsigned int		sb_flags;	/* Proposed superblock flags (SB_*) */
+ 	unsigned int		sb_flags_mask;	/* Superblock flags that were changed */
+ 	unsigned int		s_iflags;	/* OR'd with sb->s_iflags */
+@@ -105,6 +109,7 @@ struct fs_context {
+ 	enum fs_context_phase	phase:8;	/* The phase the context is in */
+ 	bool			need_free:1;	/* Need to call ops->free() */
+ 	bool			global:1;	/* Goes into &init_user_ns */
++	void (*dev_destructor)(struct fs_context *fc); /* For block or mtd */
+ };
+ 
+ struct fs_context_operations {
+@@ -154,6 +159,10 @@ extern int get_tree_single(struct fs_context *fc,
+ 			 int (*fill_super)(struct super_block *sb,
+ 					   struct fs_context *fc));
+ 
++extern int vfs_get_block_super(struct fs_context *fc,
++			       int (*fill_super)(struct super_block *sb,
++						 struct fs_context *fc));
++
+ extern const struct file_operations fscontext_fops;
+ 
+ /*
 
-Ian Kent (14):
-      xfs: mount-api - add fs parameter description
-      xfs: mount-api - refactor suffix_kstrtoint()
-      xfs: mount-api - refactor xfs_parseags()
-      xfs: mount-api - make xfs_parse_param() take context .parse_param() args
-      xfs: mount-api - move xfs_parseargs() validation to a helper
-      xfs: mount-api - refactor xfs_fs_fill_super()
-      xfs: mount-api - add xfs_get_tree()
-      xfs: mount-api - add xfs_remount_rw() helper
-      xfs: mount-api - add xfs_remount_ro() helper
-      xfs: mount api - add xfs_reconfigure()
-      xfs: mount-api - add xfs_fc_free()
-      xfs: mount-api - dont set sb in xfs_mount_alloc()
-      xfs: mount-api - switch to new mount-api
-      xfs: mount-api - remove legacy mount functions
-
-
- fs/fs_context.c            |    2 
- fs/super.c                 |  111 +++++
- fs/xfs/xfs_super.c         |  949 ++++++++++++++++++++++++--------------------
- include/linux/fs_context.h |    9 
- 4 files changed, 631 insertions(+), 440 deletions(-)
-
---
-Ian
