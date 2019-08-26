@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 197679D84F
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:31:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F8079D875
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:33:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfHZVbI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Aug 2019 17:31:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52752 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728673AbfHZVbI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:31:08 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLQjXC003298;
-        Mon, 26 Aug 2019 21:31:05 GMT
+        id S1728708AbfHZVdL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Aug 2019 17:33:11 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36988 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfHZVdL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:33:11 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLDmlB000904;
+        Mon, 26 Aug 2019 21:33:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=fNSAPzY8W1yyqujPnOtiqKr14rhvXtgnEmnhOiH7COQ=;
- b=liXP1aw9gd2d6rkKb7slPHYTn5wQRU7SisOmsg1JRhgYe6uE2DnWDQUNLzKsUXkrsw5B
- PWfL6DplSX4CXXsBYaStghkwVFFUPxmqAjTkZedtrSVRAV5sMlZGfia5fUe7MyCujYwO
- ELtNuDhJVxs0ruW3e7ZJDwJRQMDkBZlMJ2wDiKbS6M1Gk7YZ9ZdA5PEuv5gEWafIoknx
- fBZ9HqDR0ngOdVF2A2DbrZJx1HMV7sqWOGuthrwO4Gw5meZTXIwp9KdCyJ4TZZRWZJm8
- tFQT3CCJKRCPfQhwsmqz4YFHhstNWyXKbOn6sKXRm8told0KIAZD3rrtRwXgO+eT5LG9 ew== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2umqbe80jw-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=xPMoN+ucKwebLiojth5UT154j/N56bXH0auyPyup7po=;
+ b=Azgw02AJhbnqQGQvgvQnZxbFdw98NQb64lX711xTKzGrDQNzaWU1c3+r/t20FVXysMo4
+ u0QBPY2Jk9Xzn+VmnNgc9IySg4hkXEF3ryOBUPAUqFxYMGViAFR3lmiLhVKvsK2hfA54
+ Ss60PKu8+phXMDYTRX9Hb02h0Rxhq6jPngZ8/3Bcx5uKYouZI1PaZ3wsAX8c6tKKKP8U
+ ZHZc2WpRKsxuyCoJSJ60AOE9xadYO77kKo7YMTVhFmSq81FmNZfm+TPeLyie5p0qYOlZ
+ TX1CqjPqnE22KyOLuVYTlj17Z+lou6BOvqUNy9ERWhmnmco0EOnBlIgEwmk/JsYFAwpg 4A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2umpxx05u8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:31:05 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLIuw1185187;
-        Mon, 26 Aug 2019 21:31:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2umj2xvyce-1
+        Mon, 26 Aug 2019 21:33:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLITlv025207;
+        Mon, 26 Aug 2019 21:31:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2umj1tk8sy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:31:04 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QLV3Wg029837;
-        Mon, 26 Aug 2019 21:31:03 GMT
+        Mon, 26 Aug 2019 21:31:08 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QLV7cS007696;
+        Mon, 26 Aug 2019 21:31:07 GMT
 Received: from localhost (/10.159.144.227)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Aug 2019 14:31:03 -0700
-Subject: [PATCH 11/11] xfs_scrub: simulate errors in the read-verify phase
+        with ESMTP ; Mon, 26 Aug 2019 14:31:07 -0700
+Subject: [PATCH 00/11] xfs_scrub: fix IO error reporting
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Aug 2019 14:31:02 -0700
-Message-ID: <156685506243.2841898.2647440855248405584.stgit@magnolia>
-In-Reply-To: <156685499099.2841898.18430382226915450537.stgit@magnolia>
-References: <156685499099.2841898.18430382226915450537.stgit@magnolia>
+Date:   Mon, 26 Aug 2019 14:31:06 -0700
+Message-ID: <156685506615.2843133.16536353613627426823.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -68,114 +66,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Add a debugging hook so that we can simulate disk errors during the
-media scan to test that the code works.
+The scrub media error reporting could use some improvements -- first,
+scrub can calculate the exact offset of media errors in file mappings,
+so we should report more precise offsets.  Second, we only need to scan
+the rmap once after assembling the io error bitmap to look for destroyed
+metadata (instead of once per error!).  Third, we can filter out
+unwritten and attr/cow fork extents from what we report since sector
+remapping takes care of unwritten/cow extents and attr media errors
+should be detected by phase 3.  Finally, we introduce a new category of
+errors that are unfixable by scrub, and assign to this class all the
+media errors since there's nothing XFS can do.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- scrub/disk.c      |   67 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- scrub/xfs_scrub.c |    2 ++
- 2 files changed, 69 insertions(+)
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-diff --git a/scrub/disk.c b/scrub/disk.c
-index e34a8217..2178c528 100644
---- a/scrub/disk.c
-+++ b/scrub/disk.c
-@@ -276,6 +276,59 @@ disk_close(
- #define LBASIZE(d)		(1ULL << (d)->d_lbalog)
- #define BTOLBA(d, bytes)	(((uint64_t)(bytes) + LBASIZE(d) - 1) >> (d)->d_lbalog)
- 
-+/* Simulate disk errors. */
-+static int
-+disk_simulate_read_error(
-+	struct disk		*disk,
-+	uint64_t		start,
-+	uint64_t		*length)
-+{
-+	static int64_t		interval;
-+	uint64_t		start_interval;
-+
-+	/* Simulated disk errors are disabled. */
-+	if (interval < 0)
-+		return 0;
-+
-+	/* Figure out the disk read error interval. */
-+	if (interval == 0) {
-+		char		*p;
-+
-+		/* Pretend there's bad media every so often, in bytes. */
-+		p = getenv("XFS_SCRUB_DISK_ERROR_INTERVAL");
-+		if (p == NULL) {
-+			interval = -1;
-+			return 0;
-+		}
-+		interval = strtoull(p, NULL, 10);
-+		interval &= ~((1U << disk->d_lbalog) - 1);
-+	}
-+
-+	/*
-+	 * We simulate disk errors by pretending that there are media errors at
-+	 * predetermined intervals across the disk.  If a read verify request
-+	 * crosses one of those intervals we shorten it so that the next read
-+	 * will start on an interval threshold.  If the read verify request
-+	 * starts on an interval threshold, we send back EIO as if it had
-+	 * failed.
-+	 */
-+	if ((start % interval) == 0) {
-+		dbg_printf("fd %d: simulating disk error at %"PRIu64".\n",
-+				disk->d_fd, start);
-+		return EIO;
-+	}
-+
-+	start_interval = start / interval;
-+	if (start_interval != (start + *length) / interval) {
-+		*length = ((start_interval + 1) * interval) - start;
-+		dbg_printf(
-+"fd %d: simulating short read at %"PRIu64" to length %"PRIu64".\n",
-+				disk->d_fd, start, *length);
-+	}
-+
-+	return 0;
-+}
-+
- /* Read-verify an extent of a disk device. */
- ssize_t
- disk_read_verify(
-@@ -284,6 +337,20 @@ disk_read_verify(
- 	uint64_t		start,
- 	uint64_t		length)
- {
-+	if (debug) {
-+		int		ret;
-+
-+		ret = disk_simulate_read_error(disk, start, &length);
-+		if (ret) {
-+			errno = ret;
-+			return -1;
-+		}
-+
-+		/* Don't actually issue the IO */
-+		if (getenv("XFS_SCRUB_DISK_VERIFY_SKIP"))
-+			return length;
-+	}
-+
- 	/* Convert to logical block size. */
- 	if (disk->d_flags & DISK_FLAG_SCSI_VERIFY)
- 		return disk_scsi_verify(disk, BTOLBAT(disk, start),
-diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
-index 71fc274f..d068634b 100644
---- a/scrub/xfs_scrub.c
-+++ b/scrub/xfs_scrub.c
-@@ -111,6 +111,8 @@
-  * XFS_SCRUB_NO_SCSI_VERIFY	-- disable SCSI VERIFY (if present)
-  * XFS_SCRUB_PHASE		-- run only this scrub phase
-  * XFS_SCRUB_THREADS		-- start exactly this number of threads
-+ * XFS_SCRUB_DISK_ERROR_INTERVAL-- simulate a disk error every this many bytes
-+ * XFS_SCRUB_DISK_VERIFY_SKIP	-- pretend disk verify read calls succeeded
-  *
-  * Available even in non-debug mode:
-  * SERVICE_MODE			-- compress all error codes to 1 for LSB
+--D
 
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-media-error-reporting
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=scrub-media-error-reporting
