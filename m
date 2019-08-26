@@ -2,138 +2,291 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D7F9D879
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:33:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E72C59D89D
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:41:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfHZVdc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Aug 2019 17:33:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55202 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbfHZVdc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:33:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLR5BG003477;
-        Mon, 26 Aug 2019 21:33:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Sh6JPQbdTA8RXDd2/t01YIXfT+PkKXYLpcc12issULQ=;
- b=WhCcQ/lKtokHj5aYeDvkU7u/WTh1c47VFqjifkVsqt2ihy6Ms7jb01gPcz7B2X1jy2r4
- lL8zKQrRKuK6s1vhZyrphiuLls02BBxAQmprOyZ1T8jdAJL+d7iR3cx1iE1juLCU4ErN
- O6pwj8lHPfRrhRKgbBtskPjdKc/M2gZa00XinH1o5A8Hv5xv/WP5EuLdcdu7QGV+prkt
- S0JyLJIvvY2hqeCLw4DMevgN9ujkGx2MNZIwdFVDdfu1GSh1EB5AEDKATaGW5Fiq38Vj
- E6C+X0LvfElSFjfWB5d+9jW7P6CcgOaam/eTQllr7uT+aVJm9jpNCuzxpPwOR9Q+6IJg 3w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2umqbe80wn-1
+        id S1727064AbfHZVlb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Aug 2019 17:41:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfHZVlb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:41:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLcSQq180871;
+        Mon, 26 Aug 2019 21:41:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=+dzOlZa1uPwrnj5K6x/VRdjIYcZNXqD1Z2TK6DpJPRU=;
+ b=iQK69TWBwW/9aMS3dXwnWjO+EBC+4O/B4+6G3IdhJ4gJ4cv2fMHeauHkJjCnIU5YZxyx
+ 1R22lwnOyBXYl09hbmj6LAmDz7Ebea82QrKZtzG/Rc+YUpWiK4s5sUFpI4LznuUdOSFX
+ 9pe3PloDKrSNuDPUpBvchlBtk2uyw5qCRwq8gZKx+bPrIYAeqf7so2nSzVWf9W9dlN8Q
+ VtAmHrJth2b2EWT2kt/KBUsPlcGK9MIprKc3mbNyNPGROTRqh0uoTbcEhRbJoPwptJsk
+ 6nW8U2QsDU41K2AKqTA/32b1D4MNXzTFuQRt0YuxgAOeNoKNWT+M1wI9hRspO5QhpQw8 Bg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2umq5t83mt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:33:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLXUnu021076;
-        Mon, 26 Aug 2019 21:33:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2umj2xw140-1
+        Mon, 26 Aug 2019 21:41:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLcQ6f015999;
+        Mon, 26 Aug 2019 21:41:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2umhu7x8fa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:33:29 +0000
+        Mon, 26 Aug 2019 21:41:19 +0000
 Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7QLXBPs006594;
-        Mon, 26 Aug 2019 21:33:11 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QLfJ8x014480;
+        Mon, 26 Aug 2019 21:41:19 GMT
 Received: from localhost (/10.159.144.227)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Aug 2019 14:33:10 -0700
-Subject: [PATCH 3/3] xfs_scrub: relabel verified data block counts in output
+        with ESMTP ; Mon, 26 Aug 2019 14:41:18 -0700
+Date:   Mon, 26 Aug 2019 14:41:17 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Aug 2019 14:33:09 -0700
-Message-ID: <156685518994.2843597.12295070894043864755.stgit@magnolia>
-In-Reply-To: <156685517121.2843597.6446249713201700075.stgit@magnolia>
-References: <156685517121.2843597.6446249713201700075.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+To:     xfs <linux-xfs@vger.kernel.org>
+Cc:     Brian Foster <bfoster@redhat.com>
+Subject: Re: [PATCH v2] xfs: bmap scrub should only scrub records once
+Message-ID: <20190826214117.GV1037350@magnolia>
+References: <20190826162222.GN1037350@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826162222.GN1037350@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908260199
+ engine=8.0.1-1906280000 definitions=main-1908260200
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908260198
+ definitions=main-1908260200
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Meh, at this point I might as well just send these four fixes (and four
+more cleanups) that I found as proper series.
 
-Relabel the count of verified data blocks to make it more obvious that
-we were only looking for file data.
+--D
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- scrub/phase7.c    |   13 ++++++++-----
- scrub/xfs_scrub.c |    2 ++
- 2 files changed, 10 insertions(+), 5 deletions(-)
-
-
-diff --git a/scrub/phase7.c b/scrub/phase7.c
-index 065a19dc..a7a1bdf5 100644
---- a/scrub/phase7.c
-+++ b/scrub/phase7.c
-@@ -116,6 +116,7 @@ xfs_scan_summary(
- 	unsigned long long	f_free;
- 	bool			moveon;
- 	bool			complain;
-+	bool			scrub_all = scrub_data > 1;
- 	int			ip;
- 	int			error;
- 
-@@ -244,14 +245,15 @@ _("%.*f%s inodes counted; %.*f%s inodes checked.\n"),
- 	}
- 
- 	/*
--	 * Complain if the checked block counts are off, which
-+	 * Complain if the data file verification block counts are off, which
- 	 * implies an incomplete check.
- 	 */
--	if (ctx->bytes_checked &&
-+	if (scrub_data &&
- 	    (verbose ||
- 	     !within_range(ctx, used_data + used_rt,
- 			ctx->bytes_checked, absdiff, 1, 10,
--			_("verified blocks")))) {
-+			scrub_all ? _("verified blocks") :
-+				    _("verified file data blocks")))) {
- 		double		b1, b2;
- 		char		*b1u, *b2u;
- 
-@@ -262,8 +264,9 @@ _("%.*f%s inodes counted; %.*f%s inodes checked.\n"),
- 
- 		b1 = auto_space_units(used_data + used_rt, &b1u);
- 		b2 = auto_space_units(ctx->bytes_checked, &b2u);
--		fprintf(stdout,
--_("%.1f%s data counted; %.1f%s data verified.\n"),
-+		fprintf(stdout, scrub_all ?
-+_("%.1f%s data counted; %.1f%s disk media verified.\n") :
-+_("%.1f%s data counted; %.1f%s file data media verified.\n"),
- 				b1, b1u, b2, b2u);
- 		fflush(stdout);
- 	}
-diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
-index c4138807..3e7c1c64 100644
---- a/scrub/xfs_scrub.c
-+++ b/scrub/xfs_scrub.c
-@@ -432,6 +432,8 @@ run_scrub_phases(
- 		/* Turn on certain phases if user said to. */
- 		if (sp->fn == DATASCAN_DUMMY_FN && scrub_data) {
- 			sp->fn = xfs_scan_blocks;
-+			if (scrub_data > 1)
-+				sp->descr = _("Verify disk integrity.");
- 		} else if (sp->fn == REPAIR_DUMMY_FN &&
- 			   ctx->mode == SCRUB_MODE_REPAIR) {
- 			sp->descr = _("Repair filesystem.");
-
+On Mon, Aug 26, 2019 at 09:22:22AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The inode block mapping scrub function does more work for btree format
+> extent maps than is absolutely necessary -- first it will walk the bmbt
+> and check all the entries, and then it will load the incore tree and
+> check every entry in that tree, possibly for a second time.
+> 
+> Simplify the code and decrease check runtime by separating the two
+> responsibilities.  The bmbt walk will make sure the incore extent
+> mappings are loaded, check the shape of the bmap btree (via xchk_btree)
+> and check that every bmbt record has a corresponding incore extent map;
+> and the incore extent map walk takes all the responsibility for checking
+> the mapping records and cross referencing them with other AG metadata.
+> 
+> This enables us to clean up some messy parameter handling and reduce
+> redundant code.  Rename a few functions to make the split of
+> responsibilities clearer.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+> v2: always load the extent cache and separate the bmbt/iext walk code
+> ---
+>  fs/xfs/scrub/bmap.c |   76 ++++++++++++++++++++++++++++++---------------------
+>  1 file changed, 45 insertions(+), 31 deletions(-)
+> 
+> diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+> index 1bd29fdc2ab5..f6ed6eb133a6 100644
+> --- a/fs/xfs/scrub/bmap.c
+> +++ b/fs/xfs/scrub/bmap.c
+> @@ -75,6 +75,7 @@ struct xchk_bmap_info {
+>  	xfs_fileoff_t		lastoff;
+>  	bool			is_rt;
+>  	bool			is_shared;
+> +	bool			was_loaded;
+>  	int			whichfork;
+>  };
+>  
+> @@ -213,25 +214,20 @@ xchk_bmap_xref_rmap(
+>  
+>  /* Cross-reference a single rtdev extent record. */
+>  STATIC void
+> -xchk_bmap_rt_extent_xref(
+> -	struct xchk_bmap_info	*info,
+> +xchk_bmap_rt_iextent_xref(
+>  	struct xfs_inode	*ip,
+> -	struct xfs_btree_cur	*cur,
+> +	struct xchk_bmap_info	*info,
+>  	struct xfs_bmbt_irec	*irec)
+>  {
+> -	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+> -		return;
+> -
+>  	xchk_xref_is_used_rt_space(info->sc, irec->br_startblock,
+>  			irec->br_blockcount);
+>  }
+>  
+>  /* Cross-reference a single datadev extent record. */
+>  STATIC void
+> -xchk_bmap_extent_xref(
+> -	struct xchk_bmap_info	*info,
+> +xchk_bmap_iextent_xref(
+>  	struct xfs_inode	*ip,
+> -	struct xfs_btree_cur	*cur,
+> +	struct xchk_bmap_info	*info,
+>  	struct xfs_bmbt_irec	*irec)
+>  {
+>  	struct xfs_mount	*mp = info->sc->mp;
+> @@ -240,9 +236,6 @@ xchk_bmap_extent_xref(
+>  	xfs_extlen_t		len;
+>  	int			error;
+>  
+> -	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+> -		return;
+> -
+>  	agno = XFS_FSB_TO_AGNO(mp, irec->br_startblock);
+>  	agbno = XFS_FSB_TO_AGBNO(mp, irec->br_startblock);
+>  	len = irec->br_blockcount;
+> @@ -300,20 +293,15 @@ xchk_bmap_dirattr_extent(
+>  
+>  /* Scrub a single extent record. */
+>  STATIC int
+> -xchk_bmap_extent(
+> +xchk_bmap_iextent(
+>  	struct xfs_inode	*ip,
+> -	struct xfs_btree_cur	*cur,
+>  	struct xchk_bmap_info	*info,
+>  	struct xfs_bmbt_irec	*irec)
+>  {
+>  	struct xfs_mount	*mp = info->sc->mp;
+> -	struct xfs_buf		*bp = NULL;
+>  	xfs_filblks_t		end;
+>  	int			error = 0;
+>  
+> -	if (cur)
+> -		xfs_btree_get_block(cur, 0, &bp);
+> -
+>  	/*
+>  	 * Check for out-of-order extents.  This record could have come
+>  	 * from the incore list, for which there is no ordering check.
+> @@ -364,10 +352,13 @@ xchk_bmap_extent(
+>  		xchk_fblock_set_corrupt(info->sc, info->whichfork,
+>  				irec->br_startoff);
+>  
+> +	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+> +		return 0;
+> +
+>  	if (info->is_rt)
+> -		xchk_bmap_rt_extent_xref(info, ip, cur, irec);
+> +		xchk_bmap_rt_iextent_xref(ip, info, irec);
+>  	else
+> -		xchk_bmap_extent_xref(info, ip, cur, irec);
+> +		xchk_bmap_iextent_xref(ip, info, irec);
+>  
+>  	info->lastoff = irec->br_startoff + irec->br_blockcount;
+>  	return error;
+> @@ -380,10 +371,13 @@ xchk_bmapbt_rec(
+>  	union xfs_btree_rec	*rec)
+>  {
+>  	struct xfs_bmbt_irec	irec;
+> +	struct xfs_bmbt_irec	iext_irec;
+> +	struct xfs_iext_cursor	icur;
+>  	struct xchk_bmap_info	*info = bs->private;
+>  	struct xfs_inode	*ip = bs->cur->bc_private.b.ip;
+>  	struct xfs_buf		*bp = NULL;
+>  	struct xfs_btree_block	*block;
+> +	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, info->whichfork);
+>  	uint64_t		owner;
+>  	int			i;
+>  
+> @@ -402,9 +396,25 @@ xchk_bmapbt_rec(
+>  		}
+>  	}
+>  
+> -	/* Set up the in-core record and scrub it. */
+> +	/*
+> +	 * Check that the incore extent tree contains an extent that matches
+> +	 * this one exactly.  We validate those cached bmaps later, so we don't
+> +	 * need to check them here.  If the extent tree was freshly loaded by
+> +	 * the scrubber then we skip the check entirely.
+> +	 */
+> +	if (info->was_loaded)
+> +		return 0;
+> +
+>  	xfs_bmbt_disk_get_all(&rec->bmbt, &irec);
+> -	return xchk_bmap_extent(ip, bs->cur, info, &irec);
+> +	if (!xfs_iext_lookup_extent(ip, ifp, irec.br_startoff, &icur,
+> +				&iext_irec) ||
+> +	    irec.br_startoff != iext_irec.br_startoff ||
+> +	    irec.br_startblock != iext_irec.br_startblock ||
+> +	    irec.br_blockcount != iext_irec.br_blockcount ||
+> +	    irec.br_state != iext_irec.br_state)
+> +		xchk_fblock_set_corrupt(bs->sc, info->whichfork,
+> +				irec.br_startoff);
+> +	return 0;
+>  }
+>  
+>  /* Scan the btree records. */
+> @@ -415,15 +425,26 @@ xchk_bmap_btree(
+>  	struct xchk_bmap_info	*info)
+>  {
+>  	struct xfs_owner_info	oinfo;
+> +	struct xfs_ifork	*ifp = XFS_IFORK_PTR(sc->ip, whichfork);
+>  	struct xfs_mount	*mp = sc->mp;
+>  	struct xfs_inode	*ip = sc->ip;
+>  	struct xfs_btree_cur	*cur;
+>  	int			error;
+>  
+> +	/* Load the incore bmap cache if it's not loaded. */
+> +	info->was_loaded = ifp->if_flags & XFS_IFEXTENTS;
+> +	if (!info->was_loaded) {
+> +		error = xfs_iread_extents(sc->tp, ip, whichfork);
+> +		if (!xchk_fblock_process_error(sc, whichfork, 0, &error))
+> +			goto out;
+> +	}
+> +
+> +	/* Check the btree structure. */
+>  	cur = xfs_bmbt_init_cursor(mp, sc->tp, ip, whichfork);
+>  	xfs_rmap_ino_bmbt_owner(&oinfo, ip->i_ino, whichfork);
+>  	error = xchk_btree(sc, cur, xchk_bmapbt_rec, &oinfo, info);
+>  	xfs_btree_del_cursor(cur, error);
+> +out:
+>  	return error;
+>  }
+>  
+> @@ -671,13 +692,6 @@ xchk_bmap(
+>  	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+>  		goto out;
+>  
+> -	/* Now try to scrub the in-memory extent list. */
+> -        if (!(ifp->if_flags & XFS_IFEXTENTS)) {
+> -		error = xfs_iread_extents(sc->tp, ip, whichfork);
+> -		if (!xchk_fblock_process_error(sc, whichfork, 0, &error))
+> -			goto out;
+> -	}
+> -
+>  	/* Find the offset of the last extent in the mapping. */
+>  	error = xfs_bmap_last_offset(ip, &endoff, whichfork);
+>  	if (!xchk_fblock_process_error(sc, whichfork, 0, &error))
+> @@ -689,7 +703,7 @@ xchk_bmap(
+>  	for_each_xfs_iext(ifp, &icur, &irec) {
+>  		if (xchk_should_terminate(sc, &error) ||
+>  		    (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
+> -			break;
+> +			goto out;
+>  		if (isnullstartblock(irec.br_startblock))
+>  			continue;
+>  		if (irec.br_startoff >= endoff) {
+> @@ -697,7 +711,7 @@ xchk_bmap(
+>  					irec.br_startoff);
+>  			goto out;
+>  		}
+> -		error = xchk_bmap_extent(ip, NULL, &info, &irec);
+> +		error = xchk_bmap_iextent(ip, &info, &irec);
+>  		if (error)
+>  			goto out;
+>  	}
