@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E059C9D81B
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74C659D804
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:20:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfHZVWY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Aug 2019 17:22:24 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52582 "EHLO
+        id S1727013AbfHZVUc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Aug 2019 17:20:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50564 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfHZVWY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:22:24 -0400
+        with ESMTP id S1726760AbfHZVUc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:20:32 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLDlcL000826;
-        Mon, 26 Aug 2019 21:22:22 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLDoet000962;
+        Mon, 26 Aug 2019 21:20:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=ELGTRdv/oXlsUQFTpsULsZTgj/Hd54yR9T9eO6VwEJM=;
- b=UkpT3Rkk6F30OEn9V9gOHSM4Ka8LY62igRzE1ZYtMHRFJpmmLbAOiyfpHamp9NjRWqXK
- /MDmN0Ux1sM9CspNou+4xJkTYVaClDh8WurNtPgV9iluvnLBOFgSEXx96sozez3q/fu+
- F/DWxxwY1TdXnFtE2YdPq6xOebbfMSbO0SDeHvRSAIkdQoAojDlas8cZqzYdCL5MEakC
- VebVYcNQlY5EcJn57wf7/mPuJuh65BqLOAMML+WFJcCc5TJDApBY9Loxy8DzK/y4y4Ta
- qmmbOZ435K2gLjSYGkunsNlsE3CtaV91lNFaUG2m0r3BF9Ic0QMScq2rqyTPXcQ/mSmu qQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2umpxx04bf-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=5oBLrOEt5jXcY0nCyJyga8B2f/bJ7AE+/7qzdxxKDRg=;
+ b=Wcbe0OLstHuBcSB6B/QgPgxv4d8LV8dhTYkl4BmMLROyVfFjkBj1s6UADo0oHrxoARUT
+ 9FBxgw4OZvOL37sNIjZPTbaY0ih5jB6h4aBANnLg3U5Kj7N8BrCmqR+d7r2NqzOeqt+L
+ 0bndCTbfxod1Da+CdEounQNY4epq+tv6vGBtqgBQEuymcSmtVC56U1P2EC2P1uDPHZpv
+ QDanTjfRPjNNWG377hbRQyAbhcaooI9HU4hcTbjjmltfrojlisT3+WpLPK7IhIZCDZlF
+ YpRA9NVtLpRqzHJczV2G2fiRpInexdVPjtVgCK+/1xNLCulj2T4ZuEMfo4D+9xiEQMmx 4g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2umpxx044r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:22:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLItQW185018;
-        Mon, 26 Aug 2019 21:20:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2umj2xvqbb-1
+        Mon, 26 Aug 2019 21:20:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLIdZU169637;
+        Mon, 26 Aug 2019 21:20:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2umhu7wsb4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:20:22 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7QLKLdH029803;
-        Mon, 26 Aug 2019 21:20:21 GMT
+        Mon, 26 Aug 2019 21:20:28 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QLKRFm023268;
+        Mon, 26 Aug 2019 21:20:28 GMT
 Received: from localhost (/10.159.144.227)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Aug 2019 14:20:21 -0700
-Subject: [PATCH 0/4] xfs_spaceman: use runtime support library
+        with ESMTP ; Mon, 26 Aug 2019 14:20:27 -0700
+Subject: [PATCH 1/4] xfs_spaceman: remove typedef usage
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Aug 2019 14:20:20 -0700
-Message-ID: <156685442011.2839773.2684103942714886186.stgit@magnolia>
+Date:   Mon, 26 Aug 2019 14:20:26 -0700
+Message-ID: <156685442641.2839773.8716818263249998332.stgit@magnolia>
+In-Reply-To: <156685442011.2839773.2684103942714886186.stgit@magnolia>
+References: <156685442011.2839773.2684103942714886186.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,22 +68,107 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Convert xfs_spaceman to use the XFS online runtime support library.  The
-first two patches clean up a few things.  Patches 3 converts spaceman to
-use struct xfs_fd, and patch 4 establishishes libfrog unit conversion
-helpers to replace open-coded conversion code.
+Kill off the struct typedefs inside spaceman.
 
-This series comes after the xfsprogs 5.3 fixes series.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ spaceman/file.c   |   10 +++++-----
+ spaceman/freesp.c |    8 ++++----
+ spaceman/space.h  |    8 ++++----
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
+diff --git a/spaceman/file.c b/spaceman/file.c
+index ef627fdb..1264bdae 100644
+--- a/spaceman/file.c
++++ b/spaceman/file.c
+@@ -16,13 +16,13 @@
+ 
+ static cmdinfo_t print_cmd;
+ 
+-fileio_t	*filetable;
++struct fileio	*filetable;
+ int		filecount;
+-fileio_t	*file;
++struct fileio	*file;
+ 
+ static void
+ print_fileio(
+-	fileio_t	*file,
++	struct fileio	*file,
+ 	int		index,
+ 	int		braces)
+ {
+@@ -98,8 +98,8 @@ addfile(
+ 	}
+ 
+ 	/* Extend the table of currently open files */
+-	filetable = (fileio_t *)realloc(filetable,	/* growing */
+-					++filecount * sizeof(fileio_t));
++	filetable = (struct fileio *)realloc(filetable,	/* growing */
++					++filecount * sizeof(struct fileio));
+ 	if (!filetable) {
+ 		perror("realloc");
+ 		filecount = 0;
+diff --git a/spaceman/freesp.c b/spaceman/freesp.c
+index 11d0aafb..4a7dcb9c 100644
+--- a/spaceman/freesp.c
++++ b/spaceman/freesp.c
+@@ -14,17 +14,17 @@
+ #include "space.h"
+ #include "input.h"
+ 
+-typedef struct histent
++struct histent
+ {
+ 	long long	low;
+ 	long long	high;
+ 	long long	count;
+ 	long long	blocks;
+-} histent_t;
++};
+ 
+ static int		agcount;
+ static xfs_agnumber_t	*aglist;
+-static histent_t	*hist;
++static struct histent	*hist;
+ static int		dumpflag;
+ static long long	equalsize;
+ static long long	multsize;
+@@ -82,7 +82,7 @@ hcmp(
+ 	const void	*a,
+ 	const void	*b)
+ {
+-	return ((histent_t *)a)->low - ((histent_t *)b)->low;
++	return ((struct histent *)a)->low - ((struct histent *)b)->low;
+ }
+ 
+ static void
+diff --git a/spaceman/space.h b/spaceman/space.h
+index b246f602..8b224aca 100644
+--- a/spaceman/space.h
++++ b/spaceman/space.h
+@@ -6,16 +6,16 @@
+ #ifndef XFS_SPACEMAN_SPACE_H_
+ #define XFS_SPACEMAN_SPACE_H_
+ 
+-typedef struct fileio {
++struct fileio {
+ 	struct xfs_fsop_geom geom;		/* XFS filesystem geometry */
+ 	struct fs_path	fs_path;	/* XFS path information */
+ 	char		*name;		/* file name at time of open */
+ 	int		fd;		/* open file descriptor */
+-} fileio_t;
++};
+ 
+-extern fileio_t		*filetable;	/* open file table */
++extern struct fileio	*filetable;	/* open file table */
+ extern int		filecount;	/* number of open files */
+-extern fileio_t		*file;		/* active file in file table */
++extern struct fileio	*file;		/* active file in file table */
+ 
+ extern int	openfile(char *, struct xfs_fsop_geom *, struct fs_path *);
+ extern int	addfile(char *, int , struct xfs_fsop_geom *, struct fs_path *);
 
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=spaceman-xfrog-conversion
