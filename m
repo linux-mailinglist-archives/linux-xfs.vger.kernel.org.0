@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF95F9D892
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3D7F9D879
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Aug 2019 23:33:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfHZVdy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Aug 2019 17:33:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53500 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729070AbfHZVdy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:33:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLFSOK162375;
-        Mon, 26 Aug 2019 21:33:52 GMT
+        id S1728626AbfHZVdc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Aug 2019 17:33:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55202 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfHZVdc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Aug 2019 17:33:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLR5BG003477;
+        Mon, 26 Aug 2019 21:33:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=BLnszXZM7VfACBK42QYeIvqHDUg7ebvqdyzb/tdvRuY=;
- b=hQSA8obINcxLE9xG3ee33XQ+n3LfjAr7gbtun7SMotcC6ifReWLa5uBkF02mo2qLIYti
- cfsVEKadHtVNhicw2YmXJZ7+EK6WPF6y4XRXDPstB0JHV90vVRqTmbwOmDDJnBnVL9Fd
- s+dUT9o61jbvp4mrAH+h3p93vhC7hQytUHoZBNmYc8W8arQ75ZNV/oUiCkTo7vpnjtqw
- ful7y13qRYS3dtB8IhyjSE8mcg2lQpPTJV8jCfeCjmzZZsglqHb/tbcdFlYP0gmRx0Ji
- lEuSU5TaQzLd8XnlEE46qzCtE3NUqbMtfFZEXuor9+GP7eouFD98egzbiUUGScsLsS+m rQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2umq5t82pf-1
+ bh=Sh6JPQbdTA8RXDd2/t01YIXfT+PkKXYLpcc12issULQ=;
+ b=WhCcQ/lKtokHj5aYeDvkU7u/WTh1c47VFqjifkVsqt2ihy6Ms7jb01gPcz7B2X1jy2r4
+ lL8zKQrRKuK6s1vhZyrphiuLls02BBxAQmprOyZ1T8jdAJL+d7iR3cx1iE1juLCU4ErN
+ O6pwj8lHPfRrhRKgbBtskPjdKc/M2gZa00XinH1o5A8Hv5xv/WP5EuLdcdu7QGV+prkt
+ S0JyLJIvvY2hqeCLw4DMevgN9ujkGx2MNZIwdFVDdfu1GSh1EB5AEDKATaGW5Fiq38Vj
+ E6C+X0LvfElSFjfWB5d+9jW7P6CcgOaam/eTQllr7uT+aVJm9jpNCuzxpPwOR9Q+6IJg 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2umqbe80wn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:33:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLXYBb006233;
-        Mon, 26 Aug 2019 21:33:51 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2umhu7x36k-1
+        Mon, 26 Aug 2019 21:33:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7QLXUnu021076;
+        Mon, 26 Aug 2019 21:33:30 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2umj2xw140-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 21:33:51 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7QLX4jZ009802;
-        Mon, 26 Aug 2019 21:33:04 GMT
+        Mon, 26 Aug 2019 21:33:29 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7QLXBPs006594;
+        Mon, 26 Aug 2019 21:33:11 GMT
 Received: from localhost (/10.159.144.227)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Aug 2019 14:33:04 -0700
-Subject: [PATCH 2/3] xfs_scrub: perform media scans of entire devices
+        with ESMTP ; Mon, 26 Aug 2019 14:33:10 -0700
+Subject: [PATCH 3/3] xfs_scrub: relabel verified data block counts in output
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Aug 2019 14:33:03 -0700
-Message-ID: <156685518377.2843597.16568040160941740216.stgit@magnolia>
+Date:   Mon, 26 Aug 2019 14:33:09 -0700
+Message-ID: <156685518994.2843597.12295070894043864755.stgit@magnolia>
 In-Reply-To: <156685517121.2843597.6446249713201700075.stgit@magnolia>
 References: <156685517121.2843597.6446249713201700075.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +53,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1908260199
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1908260198
@@ -70,181 +70,70 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add a new feature to xfs_scrub where specifying multiple -x will cause
-it to perform a media scan of the entire disk, not just the file data
-areas.
+Relabel the count of verified data blocks to make it more obvious that
+we were only looking for file data.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- man/man8/xfs_scrub.8 |    3 +++
- scrub/phase6.c       |   60 ++++++++++++++++++++++++++++++++++++++++++++++----
- scrub/phase7.c       |    5 ++++
- scrub/xfs_scrub.c    |    4 ++-
- scrub/xfs_scrub.h    |    1 +
- 5 files changed, 66 insertions(+), 7 deletions(-)
+ scrub/phase7.c    |   13 ++++++++-----
+ scrub/xfs_scrub.c |    2 ++
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
 
-diff --git a/man/man8/xfs_scrub.8 b/man/man8/xfs_scrub.8
-index 18948a4e..872a088c 100644
---- a/man/man8/xfs_scrub.8
-+++ b/man/man8/xfs_scrub.8
-@@ -97,6 +97,9 @@ Prints the version number and exits.
- .TP
- .B \-x
- Read all file data extents to look for disk errors.
-+If this option is given more than once, scrub all disk contents.
-+If this option is given more than twice, report errors even if they have not
-+yet caused data loss.
- .B xfs_scrub
- will issue O_DIRECT reads to the block device directly.
- If the block device is a SCSI disk, it will instead issue READ VERIFY commands
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 1e55fad8..e6e9f954 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -167,7 +167,9 @@ report_data_loss(
- 	int				ret;
- 
- 	/* Only report errors for real extents. */
--	if (bmap->bm_flags & (BMV_OF_PREALLOC | BMV_OF_DELALLOC))
-+	if (scrub_data < 3 && (bmap->bm_flags & BMV_OF_PREALLOC))
-+		return true;
-+	if (bmap->bm_flags & BMV_OF_DELALLOC)
- 		return true;
- 
- 	if (fsx->fsx_xflags & FS_XFLAG_REALTIME)
-@@ -355,7 +357,7 @@ ioerr_fsmap_report(
- 	uint64_t		err_off;
- 
- 	/* Don't care about unwritten extents. */
--	if (map->fmr_flags & FMR_OF_PREALLOC)
-+	if (scrub_data < 3 && (map->fmr_flags & FMR_OF_PREALLOC))
- 		return true;
- 
- 	if (err_physical > map->fmr_physical)
-@@ -602,6 +604,49 @@ clean_pool(
- 	return ret;
- }
- 
-+/* Schedule an entire disk for read verification. */
-+static int
-+verify_entire_disk(
-+	struct read_verify_pool		*rvp,
-+	struct disk			*disk,
-+	struct media_verify_state	*vs)
-+{
-+	return read_verify_schedule_io(rvp, 0, disk->d_size, vs);
-+}
-+
-+/* Scan every part of every disk. */
-+static bool
-+verify_all_disks(
-+	struct scrub_ctx		*ctx,
-+	struct media_verify_state	*vs)
-+{
-+	int				ret;
-+
-+	ret = verify_entire_disk(vs->rvp_data, ctx->datadev, vs);
-+	if (ret) {
-+		str_liberror(ctx, ret, _("scheduling datadev verify"));
-+		return false;
-+	}
-+
-+	if (ctx->logdev) {
-+		ret = verify_entire_disk(vs->rvp_log, ctx->logdev, vs);
-+		if (ret) {
-+			str_liberror(ctx, ret, _("scheduling logdev verify"));
-+			return false;
-+		}
-+	}
-+
-+	if (ctx->rtdev) {
-+		ret = verify_entire_disk(vs->rvp_realtime, ctx->rtdev, vs);
-+		if (ret) {
-+			str_liberror(ctx, ret, _("scheduling rtdev verify"));
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- /*
-  * Read verify all the file data blocks in a filesystem.  Since XFS doesn't
-  * do data checksums, we trust that the underlying storage will pass back
-@@ -657,7 +702,11 @@ xfs_scan_blocks(
- 			goto out_logpool;
- 		}
- 	}
--	moveon = xfs_scan_all_spacemaps(ctx, xfs_check_rmap, &vs);
-+
-+	if (scrub_data > 1)
-+		moveon = verify_all_disks(ctx, &vs);
-+	else
-+		moveon = xfs_scan_all_spacemaps(ctx, xfs_check_rmap, &vs);
- 	if (!moveon)
- 		goto out_rtpool;
- 
-@@ -729,8 +778,9 @@ xfs_estimate_verify_work(
- 	if (!moveon)
- 		return moveon;
- 
--	*items = xfrog_fsb_to_b(&ctx->mnt,
--			(d_blocks - d_bfree) + (r_blocks - r_bfree));
-+	*items = xfrog_fsb_to_b(&ctx->mnt, d_blocks + r_blocks);
-+	if (scrub_data == 1)
-+		*items -= xfrog_fsb_to_b(&ctx->mnt, d_bfree + r_bfree);
- 	*nr_threads = disk_heads(ctx->datadev);
- 	*rshift = 20;
- 	return moveon;
 diff --git a/scrub/phase7.c b/scrub/phase7.c
-index cf88e30f..065a19dc 100644
+index 065a19dc..a7a1bdf5 100644
 --- a/scrub/phase7.c
 +++ b/scrub/phase7.c
-@@ -255,6 +255,11 @@ _("%.*f%s inodes counted; %.*f%s inodes checked.\n"),
+@@ -116,6 +116,7 @@ xfs_scan_summary(
+ 	unsigned long long	f_free;
+ 	bool			moveon;
+ 	bool			complain;
++	bool			scrub_all = scrub_data > 1;
+ 	int			ip;
+ 	int			error;
+ 
+@@ -244,14 +245,15 @@ _("%.*f%s inodes counted; %.*f%s inodes checked.\n"),
+ 	}
+ 
+ 	/*
+-	 * Complain if the checked block counts are off, which
++	 * Complain if the data file verification block counts are off, which
+ 	 * implies an incomplete check.
+ 	 */
+-	if (ctx->bytes_checked &&
++	if (scrub_data &&
+ 	    (verbose ||
+ 	     !within_range(ctx, used_data + used_rt,
+ 			ctx->bytes_checked, absdiff, 1, 10,
+-			_("verified blocks")))) {
++			scrub_all ? _("verified blocks") :
++				    _("verified file data blocks")))) {
  		double		b1, b2;
  		char		*b1u, *b2u;
  
-+		if (scrub_data > 1) {
-+			used_data = xfrog_fsb_to_b(&ctx->mnt, d_blocks);
-+			used_rt = xfrog_fsb_to_b(&ctx->mnt, r_blocks);
-+		}
-+
+@@ -262,8 +264,9 @@ _("%.*f%s inodes counted; %.*f%s inodes checked.\n"),
+ 
  		b1 = auto_space_units(used_data + used_rt, &b1u);
  		b2 = auto_space_units(ctx->bytes_checked, &b2u);
- 		fprintf(stdout,
+-		fprintf(stdout,
+-_("%.1f%s data counted; %.1f%s data verified.\n"),
++		fprintf(stdout, scrub_all ?
++_("%.1f%s data counted; %.1f%s disk media verified.\n") :
++_("%.1f%s data counted; %.1f%s file data media verified.\n"),
+ 				b1, b1u, b2, b2u);
+ 		fflush(stdout);
+ 	}
 diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
-index 7749637e..c4138807 100644
+index c4138807..3e7c1c64 100644
 --- a/scrub/xfs_scrub.c
 +++ b/scrub/xfs_scrub.c
-@@ -139,7 +139,7 @@ unsigned int			force_nr_threads;
- bool				verbose;
- 
- /* Should we scrub the data blocks? */
--static bool			scrub_data;
-+int				scrub_data;
- 
- /* Size of a memory page. */
- long				page_size;
-@@ -666,7 +666,7 @@ main(
- 			fflush(stdout);
- 			return SCRUB_RET_SUCCESS;
- 		case 'x':
--			scrub_data = true;
-+			scrub_data++;
- 			break;
- 		case '?':
- 			/* fall through */
-diff --git a/scrub/xfs_scrub.h b/scrub/xfs_scrub.h
-index 6984d24c..9317fd3b 100644
---- a/scrub/xfs_scrub.h
-+++ b/scrub/xfs_scrub.h
-@@ -21,6 +21,7 @@ extern bool			want_fstrim;
- extern bool			stderr_isatty;
- extern bool			stdout_isatty;
- extern bool			is_service;
-+extern int			scrub_data;
- 
- enum scrub_mode {
- 	SCRUB_MODE_DRY_RUN,
+@@ -432,6 +432,8 @@ run_scrub_phases(
+ 		/* Turn on certain phases if user said to. */
+ 		if (sp->fn == DATASCAN_DUMMY_FN && scrub_data) {
+ 			sp->fn = xfs_scan_blocks;
++			if (scrub_data > 1)
++				sp->descr = _("Verify disk integrity.");
+ 		} else if (sp->fn == REPAIR_DUMMY_FN &&
+ 			   ctx->mode == SCRUB_MODE_REPAIR) {
+ 			sp->descr = _("Repair filesystem.");
 
