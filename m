@@ -2,66 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B0F9A17A1
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 13:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D334A18BA
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 13:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfH2LCA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 29 Aug 2019 07:02:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41330 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfH2LCA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 07:02:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oIWQn6hP09YNbOE/DfP9oYO6VgW2UZb9gb5LXZPoCSQ=; b=IL6cIuhwKVgBsXe6ZLNlDFFXw
-        LL/dIzHiovDRo8n5HwxzE3cCLd6wj9GAsBHDPJ5N6EN3SQSez+pQj1XvpEkXfQPAQf94kqp8Chgir
-        xqMWMehgegCVN2YmNExO5A9yek79BNFmAmWupz9cwwN45hVC5vJ8vMnmEo+kVv/1L7tsuWgiQzl+7
-        SXus1HokdDNarHJJvcmHmnHbeERjiaSFoXpJIt4kFfGkGwoex++VgcyIhwbOzcOB5Trx6piK25n1/
-        I6+JcEHzXhwIBnANCt/xrk2fH0JYUXTdk7BK/Jps+NMH4ooWuStkM0PKHMZR9oQOiEiRl7s5JPkkh
-        OSJuddYOw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3IBk-0004E1-Bb; Thu, 29 Aug 2019 11:02:00 +0000
-Date:   Thu, 29 Aug 2019 04:02:00 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] xfs: allocate xattr buffer on demand
-Message-ID: <20190829110200.GA16151@infradead.org>
-References: <20190828042350.6062-1-david@fromorbit.com>
- <20190828042350.6062-4-david@fromorbit.com>
- <20190829075559.GC18966@infradead.org>
- <20190829104516.GU1119@dread.disaster.area>
+        id S1727072AbfH2LfM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 29 Aug 2019 07:35:12 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50664 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727087AbfH2LfM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 07:35:12 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9FBAF43E631
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Aug 2019 21:35:09 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i3Ihn-0003V9-Re
+        for linux-xfs@vger.kernel.org; Thu, 29 Aug 2019 21:35:07 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i3Ihn-0007AI-NZ
+        for linux-xfs@vger.kernel.org; Thu, 29 Aug 2019 21:35:07 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/3 v3] xfs: allocate xattr buffer on demand
+Date:   Thu, 29 Aug 2019 21:35:00 +1000
+Message-Id: <20190829113505.27223-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829104516.GU1119@dread.disaster.area>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=FmdZ9Uzk2mMA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=zlCzXOuynseuPHxUj78A:9 a=6RyHdP9wf0s6W1bbVaoE2bQoMl4=:19
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 08:45:16PM +1000, Dave Chinner wrote:
-> > Given that all three callers pass ATTR_ALLOC, do we even need a flag
-> 
-> Only one caller passes ATTR_ALLOC - the ACL code. The other two
-> have their own buffers that are supplied....
+Updated series to address Christophs revierw comments. V2 can be
+found here:
 
-Oops, I misread the patch as all three callers changed, but not
-actually to pass the flag but just for the different buffer passing.
+https://lore.kernel.org/linux-xfs/20190828042350.6062-1-david@fromorbit.com/T/#t
 
-That being said - xfs_attrmulti_attr_get can trivially use this
-scheme.  And for the VFS call it would also make sense, but it
-would be a huge change, so maybe some other time.
+v3:
+- fixed typoes and stray mods in patch 1
+- split patch two into an indent removal patch and a consolidation
+  patch.
+- split patch three in a consolidation pathc and a patch to add
+  allocation on demand.
+- various other minor cleanups.
 
-> Can't overwrite args->valuelen until we've done the ERANGE check.
-> Sure, I could put it in a local variable, but that doesn't reduce
-> the amount of code, or make it obvious that we intentionally return
-> the attribute size when the supplied buffer it too small...
 
-Ok.
