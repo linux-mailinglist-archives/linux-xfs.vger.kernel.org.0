@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFC9A1378
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 10:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22CD5A1386
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 10:23:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfH2ISX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 29 Aug 2019 04:18:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57998 "EHLO
+        id S1725853AbfH2IXL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 29 Aug 2019 04:23:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58092 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2ISX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 04:18:23 -0400
+        with ESMTP id S1725782AbfH2IXL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 04:23:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yxk7Hm7VBdGk33Z2KfWWbKixCb3a+8Q/S5p20+k3o+k=; b=rtEMctuXMwGPxK5fNSb82l5W1
-        NCpr1JtRi80xKGJvqfx98DfLNxQVDiaFQX01vZdKqnFC99K0Qo9gkeat065ctIR/sARWXgApZu/XA
-        uJorRlQmSzq1+94QGsD3ELuwUzCyeaUX2pmyDNi/tb7stB3LHoR59tvFNp1z27VmfrQr9qegTJTCb
-        q01wF53mm7TVf0G/GQn9aX/vnT+8/UkkqRz/pEXrNU8eLgFwBHmi9lpaE20viqYsNU7sOzcFOPqnJ
-        JklQvLA26IYEc9WYrEUyWTXJYZQX/igD8UMMaGlDHRRikzXBk5RYb6CpCs7Gsn7diB66eFXS3GZL1
-        znIfVnmJA==;
+         bh=6iPGb6bmBZZvZ+Y3mL8uXnkLjCWSRnxTff6ZfXZCRaM=; b=txM9dwCm60DmKlPSdMFoxfW0y
+        s3FVLk6wIgmPJuUjZm30FUCH/rLA/digCNPUyadKuTFmfgv5Pkqbd7L4L569JkGRwb1skayGFjc+1
+        ezhvtZHY7rZpvFP+Gv9i02NakPGEaBsMuLaEo3usvtlSbcW5xbsiXTATXWz79ViV2wrbOKaZTpTX8
+        PfTTBZUiI7wA+w1zpuws2c36r8+0Acf6gwu7dr4WPHFNB/Omk0sbNWvu0EZ0gq19JKoGEBUL3rOMn
+        E/ouXoGvvuyWmYWX1c4R3m/mLhqtjcND+tiY6hlkLgcmjqKr2lSSjfRPQV/AJSQfzNZOQELOl23h3
+        FnBs5riQA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3FdO-0003Ug-Qj; Thu, 29 Aug 2019 08:18:22 +0000
-Date:   Thu, 29 Aug 2019 01:18:22 -0700
+        id 1i3Fi2-0004of-EM; Thu, 29 Aug 2019 08:23:10 +0000
+Date:   Thu, 29 Aug 2019 01:23:10 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 4/5] xfs: speed up directory bestfree block scanning
-Message-ID: <20190829081822.GD18195@infradead.org>
+Subject: Re: [PATCH 5/5] xfs: reverse search directory freespace indexes
+Message-ID: <20190829082310.GA13557@infradead.org>
 References: <20190829063042.22902-1-david@fromorbit.com>
- <20190829063042.22902-5-david@fromorbit.com>
+ <20190829063042.22902-6-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829063042.22902-5-david@fromorbit.com>
+In-Reply-To: <20190829063042.22902-6-david@fromorbit.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
@@ -44,44 +44,30 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 04:30:41PM +1000, Dave Chinner wrote:
-> +		bests = dp->d_ops->free_bests_p(free);
-> +		dp->d_ops->free_hdr_from_disk(&freehdr, free);
->  		if (findex >= 0) {
->  			/* caller already found the freespace for us. */
-> -			bests = dp->d_ops->free_bests_p(free);
-> -			dp->d_ops->free_hdr_from_disk(&freehdr, free);
-> -
+On Thu, Aug 29, 2019 at 04:30:42PM +1000, Dave Chinner wrote:
+> 		create time(sec) / rate (files/s)
+>  File count     vanilla             Prev commit		Patched
+>   10k	      0.41 / 24.3k	   0.42 / 23.8k       0.41 / 24.3k
+>   20k	      0.74 / 27.0k	   0.76 / 26.3k       0.75 / 26.7k
+>  100k	      3.81 / 26.4k	   3.47 / 28.8k       3.27 / 30.6k
+>  200k	      8.58 / 23.3k	   7.19 / 27.8k       6.71 / 29.8k
+>    1M	     85.69 / 11.7k	  48.53 / 20.6k      37.67 / 26.5k
+>    2M	    280.31 /  7.1k	 130.14 / 15.3k      79.55 / 25.2k
+>   10M	   3913.26 /  2.5k                          552.89 / 18.1k
 
-I don't see any way how this is needed or helpful with this patch,
-we are just going to ovewrite bests and freehdr before even looking
-at them if the branch is not taken.
+Impressive!
 
->  			ASSERT(findex < freehdr.nvalid);
->  			ASSERT(be16_to_cpu(bests[findex]) != NULLDATAOFF);
->  			ASSERT(be16_to_cpu(bests[findex]) >= length);
->  			dbno = freehdr.firstdb + findex;
-> -			goto out;
-> +			goto found_block;
+> Signed-Off-By: Dave Chinner <dchinner@redhat.com>
 
-The label rename while more descriptive also seems entirely unrelated.
+FYI, the Off here should be all lower case.  Patch 2 actually has the
+same issue, but I only noticed it here.
 
-> +		findex = 0;
-> +		free = fbp->b_addr;
->  		bests = dp->d_ops->free_bests_p(free);
->  		dp->d_ops->free_hdr_from_disk(&freehdr, free);
-> +
-> +		/* Scan the free entry array for a large enough free space. */
-> +		do {
-> +			if (be16_to_cpu(bests[findex]) != NULLDATAOFF &&
-> +			    be16_to_cpu(bests[findex]) >= length) {
-> +				dbno = freehdr.firstdb + findex;
-> +				goto found_block;
->  			}
-> +		} while (++findex < freehdr.nvalid);
+> @@ -1781,6 +1782,9 @@ xfs_dir2_node_find_freeblk(
+>  		 */
+>  		ifbno = fblk->blkno;
+>  		fbno = ifbno;
+> +		xfs_trans_brelse(tp, fbp);
+> +		fbp = NULL;
+> +		fblk->bp = NULL;
 
-Nit: wou;dn't this be better written as a for loop also taking the
-initialization of findex into the loop?
-
-Otherwise this looks good.  I always like it when a speedup removes
-code..
+Hmm.  Doesn't this actually belong into the previous patch?
