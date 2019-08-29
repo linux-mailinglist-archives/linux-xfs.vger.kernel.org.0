@@ -2,14 +2,14 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5932A1379
+	by mail.lfdr.de (Postfix) with ESMTP id EE948A137A
 	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 10:18:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfH2ISX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726451AbfH2ISX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Thu, 29 Aug 2019 04:18:23 -0400
 Received: from bombadil.infradead.org ([198.137.202.133]:57998 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfH2ISX (ORCPT
+        with ESMTP id S1726223AbfH2ISX (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 04:18:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
@@ -17,27 +17,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4MBfoyEf5FiltY31KbIOO4m5UsITO5O8zWV/xSKseAY=; b=mmcmqPJwy15Bm0o3n3W7ebNuD
-        T1dEke+ES8h/tvq7+9i6QPLzRCq8RMH+F5gZTdLlsE8M09QRizqT2xrZeesxihjoLThPVdy/VArhN
-        /ZvCNj6qTXVErjQXIGnFAqJWOWpVD12Z5945RZB0N6OVMtyclE+pxl39cHwfBLEwJGO6dt32UPXwt
-        QKnxU4W9S40g5GkbohEjtrcDBPFWn/ANrUK+AlC4biSt9gitexOEWgGnAroGyAOMvdogX5wnp9ns0
-        Ypti0WOROslRVnkS0UO6GQxxeifWqi5fWEduvFPGjrL+EUptsMxJMIBw91L5M2iMzXV2CmZHSguQo
-        tjkQeNduQ==;
+         bh=yqrFSC0/x9vna/JkOIDK7czIidtu4Yi44zGEqNoa7Kw=; b=PfKSAla8qcIW1e7a4fSdDhYe0
+        iZYCt1M857UOUgdmzopxuLryWl3U7wZFgdM5omHaFherwRmjDJaOlFSKQ6RoLq0vMLMcDLi0blqAO
+        okDGMcufUP+bq9meukkxWVF2rQNI4ErCQRRf4im31AZGmL1TSdkKKaCACsqX1MS6hVpUlCAklv8m6
+        xiwIc4ZCRBtktZwMgMegQOe4ldGQ7Nw//+HXTvadb41xKN1xpzlNMhNjHkbGkQuf2CgZMAg5Z1nSd
+        hel5MKqZ5BfuNSVw7JETeu5CIHBSiBZvC4ij+T6erQqq8FvTl/UniKz3YG37ORg4acR4y30EjNPfv
+        IO/paSZfQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i3FQv-0007yR-8Z; Thu, 29 Aug 2019 08:05:29 +0000
-Date:   Thu, 29 Aug 2019 01:05:29 -0700
+        id 1i3FVV-00018O-N4; Thu, 29 Aug 2019 08:10:13 +0000
+Date:   Thu, 29 Aug 2019 01:10:13 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/5] xfs: factor data block addition from
+Subject: Re: [PATCH 3/5] xfs: factor free block index lookup from
  xfs_dir2_node_addname_int()
-Message-ID: <20190829080529.GB18195@infradead.org>
+Message-ID: <20190829081013.GC18195@infradead.org>
 References: <20190829063042.22902-1-david@fromorbit.com>
- <20190829063042.22902-3-david@fromorbit.com>
+ <20190829063042.22902-4-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829063042.22902-3-david@fromorbit.com>
+In-Reply-To: <20190829063042.22902-4-david@fromorbit.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
@@ -45,15 +45,20 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 04:30:39PM +1000, Dave Chinner wrote:
-> +			XFS_ERROR_REPORT("xfs_dir2_node_addname_int",
-> +					 XFS_ERRLEVEL_LOW, mp);
+On Thu, Aug 29, 2019 at 04:30:40PM +1000, Dave Chinner wrote:
+> +	/*
+> +	 * Now we know if we must allocate blocks, so if we are checking whether
+> +	 * we can insert without allocation then we can return now.
+> +	 */
+> +	if (args->op_flags & XFS_DA_OP_JUSTCHECK) {
+> +		if (dbno != -1)
+> +			return 0;
+> +		return -ENOSPC;
+> +	}
 
-The function name here is incorret now.  I'd say just use __func__
-to avoid that for the future.
+Nit: I'd invert the check to rturn -ENOSPC in the branch if dbno is
+-1 to make the flow a littler easier.
 
-Otherwise some of the code flow in the caller looks very ugly just with
-this patch, but given that it is all sorted out by the end of the series
-I don't really see an issue.
+Otherwise this looks great and makes the code much easier to read:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
