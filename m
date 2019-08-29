@@ -2,193 +2,157 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C98A18BB
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 13:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7355BA1955
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Aug 2019 13:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbfH2LfN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 29 Aug 2019 07:35:13 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50626 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727034AbfH2LfM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 07:35:12 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9FB8443E624
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Aug 2019 21:35:09 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i3Ihn-0003VH-Vk
-        for linux-xfs@vger.kernel.org; Thu, 29 Aug 2019 21:35:07 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i3Ihn-0007AU-UW
-        for linux-xfs@vger.kernel.org; Thu, 29 Aug 2019 21:35:07 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/5] xfs: consolidate attribute value copying
-Date:   Thu, 29 Aug 2019 21:35:04 +1000
-Message-Id: <20190829113505.27223-5-david@fromorbit.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190829113505.27223-1-david@fromorbit.com>
-References: <20190829113505.27223-1-david@fromorbit.com>
+        id S1727072AbfH2Ltm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 29 Aug 2019 07:49:42 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44999 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfH2Ltl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Aug 2019 07:49:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id j4so6197035iog.11;
+        Thu, 29 Aug 2019 04:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ebi6DvryipDbJMt7Vs5Y6UzNPCCfjozPAm+m3gRZ1cY=;
+        b=HnQVcABTef4wmDs+EEBqAROiuUJ/fDy5haGSBWNMqg0NyQEcuu3kMeOtyJK3LLYX87
+         97PGFzvGKf5em+PrI8Q4mUkHKPD3A6Wps0Wb6HJM5OpKbp8tlsekl5obLa6vti/pUQv8
+         k4rwFFOJcg5+v/GQUbRaOXaQcTwfidXLu8zkeLfERuauyWsazilRoiBkD1RrercIaaU+
+         IsgvbSbifqYV70hFWGZP7QXrGk3GBSTON+oM6ft4TQM63fOm7IYqOL6X3iSGQ9oCHdE7
+         JAuoLdWYFiS4VQgFsP2lDQbZza3261q60moRPMIsTdBCAW6LRqrvYOB0mC683lLWiiNu
+         ZTWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ebi6DvryipDbJMt7Vs5Y6UzNPCCfjozPAm+m3gRZ1cY=;
+        b=uV1coI3ZnELNVqwW6qLAov4HxfoN8rWneufAyDsFxJxvcORFnxnE7L8EfGrCkomT8l
+         egmsuIUukfI6icdvo3gDEwHjw7wkTOm3N8isxz3hjhMrETIDOzfdYqJM/BJkqg5lTHAA
+         T/R9Nsz2JboeXElMctj/xcph/UA5XUaRS8c4WjwTdK1FZalRVQCVvrxqeddopjX7JVzs
+         NSLnFPZUytZzZvWJBPAFboRcA5/+vyGIN8aXHojXmfOmbWfbFvEjJQoSf58hKDcdlGDO
+         3Kh6i2lQ+FaqRpNeWXEgKQEBKl2kdIjNSbXSlUzTBWWQoq1zmPexZBGGjXOBwS0zoVQv
+         DTpw==
+X-Gm-Message-State: APjAAAVExV0hzGS50yxOeAGlV3398O11bvN89A+C7dh4KIAs5sCdUoDS
+        RXXLQ+f+C7ymXBXg619+ek0e9zk7Kjl1G1DnXmw=
+X-Google-Smtp-Source: APXvYqwENsRASBmSEOl6YE44hcCuRaYScqwow/qESu/tkVMsG2dt16pzNKaq9E5EKUIWbFl1OAlxQl2yEGWsVIScfz8=
+X-Received: by 2002:a6b:7002:: with SMTP id l2mr2304538ioc.300.1567079380885;
+ Thu, 29 Aug 2019 04:49:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=FmdZ9Uzk2mMA:10 a=20KFwNOVAAAA:8
-        a=_pADRp5l9RgIM4VkoZcA:9 a=s_YcYuMkCaGCMyYs:21 a=ARZvsKPoKUE3U-gS:21
+References: <20181202180832.GR8125@magnolia> <20181202181045.GS8125@magnolia>
+ <CAHpGcM+WQYFHOOC8SzKq+=DuHVZ4fw4RHLTMUDN-o6GX3YtGvQ@mail.gmail.com>
+ <20190828142332.GT1037422@magnolia> <CAHpGcMLGWVssWAC1PqBJevr1+1rE_hj4QN27D26j7-Fp_Kzpsg@mail.gmail.com>
+ <20190829031216.GW1037422@magnolia>
+In-Reply-To: <20190829031216.GW1037422@magnolia>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Thu, 29 Aug 2019 13:49:29 +0200
+Message-ID: <CAHpGcM+Aq+BxD0_TPx9sqTCt8N6X3Q+UO6CkyfV3NZMaN8AU8w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] iomap: partially revert 4721a601099 (simulated
+ directio short read on EFAULT)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>, jencce.kernel@gmail.com,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Zorro Lang <zlang@redhat.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        cluster-devel <cluster-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi Darrick,
 
-The same code is used to copy do the attribute copying in three
-different places. Consolidate them into a single function in
-preparation from on-demand buffer allocation.
+Am Do., 29. Aug. 2019 um 05:12 Uhr schrieb Darrick J. Wong
+<darrick.wong@oracle.com>:
+> Hm, so I made an xfstest out of the program you sent me, and indeed
+> reverting that chunk makes the failure go away, but that got me
+> wondering -- that iomap kludge was a workaround for the splice code
+> telling iomap to try to stuff XXXX bytes into a pipe that only has X
+> bytes of free buffer space.  We fixed splice_direct_to_actor to clamp
+> the length parameter to the available pipe space, but we never did the
+> same to do_splice:
+>
+>         /* Don't try to read more the pipe has space for. */
+>         read_len = min_t(size_t, len,
+>                          (pipe->buffers - pipe->nrbufs) << PAGE_SHIFT);
+>         ret = do_splice_to(in, &pos, pipe, read_len, flags);
+>
+> Applying similar logic to the two (opipe != NULL) cases of do_splice()
+> seem to make the EAGAIN problem go away too.  So why don't we teach
+> do_splice to only ask for as many bytes as the pipe has space here too?
+>
+> Does the following patch fix it for you?
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_attr_leaf.c | 88 +++++++++++++++++++----------------
- 1 file changed, 49 insertions(+), 39 deletions(-)
+Yes, that works, thank you.
 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 8085c4f0e5a0..f6a595e76343 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -393,6 +393,44 @@ xfs_attr_namesp_match(int arg_flags, int ondisk_flags)
- 	return XFS_ATTR_NSP_ONDISK(ondisk_flags) == XFS_ATTR_NSP_ARGS_TO_ONDISK(arg_flags);
- }
- 
-+static int
-+xfs_attr_copy_value(
-+	struct xfs_da_args	*args,
-+	unsigned char		*value,
-+	int			valuelen)
-+{
-+	/*
-+	 * No copy if all we have to do is get the length
-+	 */
-+	if (args->flags & ATTR_KERNOVAL) {
-+		args->valuelen = valuelen;
-+		return 0;
-+	}
-+
-+	/*
-+	 * No copy if the length of the existing buffer is too small
-+	 */
-+	if (args->valuelen < valuelen) {
-+		args->valuelen = valuelen;
-+		return -ERANGE;
-+	}
-+	args->valuelen = valuelen;
-+
-+	/* remote block xattr requires IO for copy-in */
-+	if (args->rmtblkno)
-+		return xfs_attr_rmtval_get(args);
-+
-+	/*
-+	 * This is to prevent a GCC warning because the remote xattr case
-+	 * doesn't have a value to pass in. In that case, we never reach here,
-+	 * but GCC can't work that out and so throws a "passing NULL to
-+	 * memcpy" warning.
-+	 */
-+	if (!value)
-+		return -EINVAL;
-+	memcpy(args->value, value, valuelen);
-+	return 0;
-+}
- 
- /*========================================================================
-  * External routines when attribute fork size < XFS_LITINO(mp).
-@@ -727,11 +765,12 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
-  * exist or we can't retrieve the value.
-  */
- int
--xfs_attr_shortform_getvalue(xfs_da_args_t *args)
-+xfs_attr_shortform_getvalue(
-+	struct xfs_da_args	*args)
- {
--	xfs_attr_shortform_t *sf;
--	xfs_attr_sf_entry_t *sfe;
--	int i;
-+	struct xfs_attr_shortform *sf;
-+	struct xfs_attr_sf_entry *sfe;
-+	int			i;
- 
- 	ASSERT(args->dp->i_afp->if_flags == XFS_IFINLINE);
- 	sf = (xfs_attr_shortform_t *)args->dp->i_afp->if_u1.if_data;
-@@ -744,18 +783,8 @@ xfs_attr_shortform_getvalue(xfs_da_args_t *args)
- 			continue;
- 		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
- 			continue;
--		if (args->flags & ATTR_KERNOVAL) {
--			args->valuelen = sfe->valuelen;
--			return 0;
--		}
--		if (args->valuelen < sfe->valuelen) {
--			args->valuelen = sfe->valuelen;
--			return -ERANGE;
--		}
--		args->valuelen = sfe->valuelen;
--		memcpy(args->value, &sfe->nameval[args->namelen],
--						    args->valuelen);
--		return 0;
-+		return xfs_attr_copy_value(args, &sfe->nameval[args->namelen],
-+						sfe->valuelen);
- 	}
- 	return -ENOATTR;
- }
-@@ -2368,7 +2397,6 @@ xfs_attr3_leaf_getvalue(
- 	struct xfs_attr_leaf_entry *entry;
- 	struct xfs_attr_leaf_name_local *name_loc;
- 	struct xfs_attr_leaf_name_remote *name_rmt;
--	int			valuelen;
- 
- 	leaf = bp->b_addr;
- 	xfs_attr3_leaf_hdr_from_disk(args->geo, &ichdr, leaf);
-@@ -2380,18 +2408,9 @@ xfs_attr3_leaf_getvalue(
- 		name_loc = xfs_attr3_leaf_name_local(leaf, args->index);
- 		ASSERT(name_loc->namelen == args->namelen);
- 		ASSERT(memcmp(args->name, name_loc->nameval, args->namelen) == 0);
--		valuelen = be16_to_cpu(name_loc->valuelen);
--		if (args->flags & ATTR_KERNOVAL) {
--			args->valuelen = valuelen;
--			return 0;
--		}
--		if (args->valuelen < valuelen) {
--			args->valuelen = valuelen;
--			return -ERANGE;
--		}
--		args->valuelen = valuelen;
--		memcpy(args->value, &name_loc->nameval[args->namelen], valuelen);
--		return 0;
-+		return xfs_attr_copy_value(args,
-+					&name_loc->nameval[args->namelen],
-+					be16_to_cpu(name_loc->valuelen));
- 	}
- 
- 	name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
-@@ -2401,16 +2420,7 @@ xfs_attr3_leaf_getvalue(
- 	args->rmtblkno = be32_to_cpu(name_rmt->valueblk);
- 	args->rmtblkcnt = xfs_attr3_rmt_blocks(args->dp->i_mount,
- 					       args->rmtvaluelen);
--	if (args->flags & ATTR_KERNOVAL) {
--		args->valuelen = args->rmtvaluelen;
--		return 0;
--	}
--	if (args->valuelen < args->rmtvaluelen) {
--		args->valuelen = args->rmtvaluelen;
--		return -ERANGE;
--	}
--	args->valuelen = args->rmtvaluelen;
--	return xfs_attr_rmtval_get(args);
-+	return xfs_attr_copy_value(args, NULL, args->rmtvaluelen);
- }
- 
- /*========================================================================
--- 
-2.23.0.rc1
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> Subject: [PATCH] splice: only read in as much information as there is pipe buffer space
+>
+> Andreas Gruenbacher reports that on the two filesystems that support
+> iomap directio, it's possible for splice() to return -EAGAIN (instead of
+> a short splice) if the pipe being written to has less space available in
+> its pipe buffers than the length supplied by the calling process.
+>
+> Months ago we fixed splice_direct_to_actor to clamp the length of the
+> read request to the size of the splice pipe.  Do the same to do_splice.
 
+Can you add a reference to that commit here (17614445576b6)?
+
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/splice.c |   12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/splice.c b/fs/splice.c
+> index 98412721f056..50335515d7c1 100644
+> --- a/fs/splice.c
+> +++ b/fs/splice.c
+> @@ -1101,6 +1101,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+>         struct pipe_inode_info *ipipe;
+>         struct pipe_inode_info *opipe;
+>         loff_t offset;
+> +       unsigned int pipe_pages;
+>         long ret;
+>
+>         ipipe = get_pipe_info(in);
+> @@ -1123,6 +1124,10 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+>                 if ((in->f_flags | out->f_flags) & O_NONBLOCK)
+>                         flags |= SPLICE_F_NONBLOCK;
+>
+> +               /* Don't try to read more the pipe has space for. */
+> +               pipe_pages = opipe->buffers - opipe->nrbufs;
+> +               len = min_t(size_t, len, pipe_pages << PAGE_SHIFT);
+
+This should probably be min(len, (size_t)pipe_pages << PAGE_SHIFT).
+Same for the second min_t here and the one added by commit
+17614445576b6.
+
+> +
+>                 return splice_pipe_to_pipe(ipipe, opipe, len, flags);
+>         }
+>
+> @@ -1180,8 +1185,13 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+>
+>                 pipe_lock(opipe);
+>                 ret = wait_for_space(opipe, flags);
+> -               if (!ret)
+> +               if (!ret) {
+> +                       /* Don't try to read more the pipe has space for. */
+> +                       pipe_pages = opipe->buffers - opipe->nrbufs;
+> +                       len = min_t(size_t, len, pipe_pages << PAGE_SHIFT);
+> +
+>                         ret = do_splice_to(in, &offset, opipe, len, flags);
+> +               }
+>                 pipe_unlock(opipe);
+>                 if (ret > 0)
+>                         wakeup_pipe_readers(opipe);
+
+Thanks,
+Andreas
