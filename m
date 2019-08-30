@@ -2,61 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 320FCA2F0C
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Aug 2019 07:38:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF72A2F11
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Aug 2019 07:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfH3FiR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Aug 2019 01:38:17 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42657 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725901AbfH3FiR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Aug 2019 01:38:17 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BBF5D43F020;
-        Fri, 30 Aug 2019 15:38:14 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i3Zbw-0003q3-Ri; Fri, 30 Aug 2019 15:38:12 +1000
-Date:   Fri, 30 Aug 2019 15:38:12 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/12] libxfs-diff: try harder to find the kernel
- equivalent libxfs files
-Message-ID: <20190830053812.GC1119@dread.disaster.area>
-References: <156633307176.1215978.17394956977918540525.stgit@magnolia>
- <156633307795.1215978.8644291951311062567.stgit@magnolia>
+        id S1728036AbfH3Fjt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Aug 2019 01:39:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45718 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbfH3Fjt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Aug 2019 01:39:49 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U5dEHZ189185;
+        Fri, 30 Aug 2019 05:39:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Qq6jwZ95/VCzbf8MTVTBoT6xqQG43KMlrdM3Ju4DRCk=;
+ b=XI5qcx7SPwl5Ogx+0wRdDZAGLwwN3bPXIDsFYxFWA3FqV1sUtTanp2i4xeXitINKZ3NB
+ h4CcLK1NaW2jGasUfTLwDBmGjbPSXQhrHmbfCx2UMrUMrrwtTbcQWxL9LkUkQWOcBTtG
+ XtaVC/81SnGHayiuAElfjHCeyBvFxOoW0iqSK/IVl5u5nCbdB0m9rIs7AOl8M4emSP/W
+ Gu8H9/tYhtCKLdJucHDSqCr4JH0610mopRwJMRFmzEsAGY41rWHwDCYrqS/l5jS5Qd5c
+ pBf/lWZx7PoWSIrY0Mn3w/1qe1IqQtThay8SGu6fbiU2VLrC+Pyywoko4GWsbNjbKYhQ pA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2upwufg00x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 05:39:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7U5cAqw141957;
+        Fri, 30 Aug 2019 05:39:47 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2unvu11qmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 05:39:47 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7U5dkal012253;
+        Fri, 30 Aug 2019 05:39:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Aug 2019 22:39:46 -0700
+Date:   Thu, 29 Aug 2019 22:39:45 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Initialize label array properly
+Message-ID: <20190830053945.GX5354@magnolia>
+References: <20190830053707.GA69101@LGEARND20B15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156633307795.1215978.8644291951311062567.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=5cjVQfj7CoZ46ncDPooA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190830053707.GA69101@LGEARND20B15>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908300059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9364 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908300059
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 01:31:17PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, Aug 30, 2019 at 02:37:07PM +0900, Austin Kim wrote:
+> In case kernel stack variable is not initialized properly,
+> there is a risk of kernel information disclosure.
 > 
-> Now that we're syncing userspace libxfs/ files with kernel fs/xfs/
-> files, teach the diff tool to try fs/xfs/xfs_foo.c if
-> fs/xfs/libxfs/xfs_foo.c doesn't exist.
+> So, initialize 'char label[]' array with null characters.
 
-I'd prefer we have a strategy that moves fs/xfs files to
-fs/xfs/libxfs once they are synced instead of breaking the "files
-in libxfs/ are the same in both user and kernel space" rule we set
-for libxfs...
+Got a testcase for this?  At least a couple other filesystems implement
+this ioctl too, which means they all should be checked/tested on a
+regular basis.
 
-Cheers,
+--D
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> ---
+>  fs/xfs/xfs_ioctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 9ea5166..09b3bee 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -2037,7 +2037,7 @@ xfs_ioc_setlabel(
+>  	char			__user *newlabel)
+>  {
+>  	struct xfs_sb		*sbp = &mp->m_sb;
+> -	char			label[XFSLABEL_MAX + 1];
+> +	char			label[XFSLABEL_MAX + 1] = {0};
+>  	size_t			len;
+>  	int			error;
+>  
+> -- 
+> 2.6.2
+> 
