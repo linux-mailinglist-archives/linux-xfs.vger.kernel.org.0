@@ -2,377 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30BE1A5F8F
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Sep 2019 05:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00695A5F9B
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Sep 2019 05:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbfICDMl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 2 Sep 2019 23:12:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50430 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfICDMl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 2 Sep 2019 23:12:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C5A081F0F;
-        Tue,  3 Sep 2019 03:12:40 +0000 (UTC)
-Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C01075D9CC;
-        Tue,  3 Sep 2019 03:12:39 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 11:19:38 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     andreas.gruenbacher@gmail.com, xfs <linux-xfs@vger.kernel.org>,
-        viro@zeniv.linux.org.uk,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>
-Subject: Re: [RFC PATCH] generic: test splice() with pipes
-Message-ID: <20190903031937.GS7239@dhcp-12-102.nay.redhat.com>
-References: <20190829161155.GA5360@magnolia>
- <20190830004407.GA5340@magnolia>
- <20190902022052.GR7239@dhcp-12-102.nay.redhat.com>
- <20190902165607.GA725229@magnolia>
+        id S1726179AbfICDWT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 2 Sep 2019 23:22:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40198 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfICDWS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 2 Sep 2019 23:22:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x833JrPJ122483;
+        Tue, 3 Sep 2019 03:22:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=erS/NKUJ7Yr9GBjKp2Aafi1uP5dr9tVHe2u/yDWAdfk=;
+ b=EyNtt8lo/rmaMxxmzbEvVnLvb6H48kzAq7tvTRS3oy2fYOZ3cNSjTLY21u6jdcoRgn6x
+ FBo6VNjTn70Mo/0nCYOR2yxSq7+IpFp0BtnWZDjpFjl6CiMax+vIoHZP99fRoNtovBCP
+ QInsPIYpn0D44s/kuxfpqgHPCNTqAkep7Bpgg5NXfe7eKjE26MOvAonvoia1fsWzB/b6
+ YXE2u7aLKyYZdaDaNfn3LCYvknQHd7v3zc0iH9jAE205dbS39lR3EYkwFfJpVXD0PWIl
+ NdUVwfR51Ah3oH9bIybVY9uxZWv74io3X/GN1u8LGiDBM0O6ImvpXYk00vKD6YPD4c9S Dw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2usg5vg0cd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 03:22:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8337vSR109783;
+        Tue, 3 Sep 2019 03:22:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2us4wd4rtx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 03:22:13 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x833MCEv000514;
+        Tue, 3 Sep 2019 03:22:12 GMT
+Received: from localhost (/10.159.255.57)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Sep 2019 20:22:12 -0700
+Date:   Mon, 2 Sep 2019 20:22:13 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 06/12] man: document the new allocation group geometry
+ ioctl
+Message-ID: <20190903032213.GF568270@magnolia>
+References: <156633307176.1215978.17394956977918540525.stgit@magnolia>
+ <156633310832.1215978.10494838202211430225.stgit@magnolia>
+ <20190830055347.GH1119@dread.disaster.area>
+ <20190830204849.GH5354@magnolia>
+ <20190902223657.GT1119@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190902165607.GA725229@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 03 Sep 2019 03:12:40 +0000 (UTC)
+In-Reply-To: <20190902223657.GT1119@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=896
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909030034
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030035
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 09:56:07AM -0700, Darrick J. Wong wrote:
-> On Mon, Sep 02, 2019 at 10:20:52AM +0800, Zorro Lang wrote:
-> > On Thu, Aug 29, 2019 at 05:44:07PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue, Sep 04, 2019 at 08:36:57AM +1000, Dave Chinner wrote:
+> On Fri, Aug 30, 2019 at 01:48:49PM -0700, Darrick J. Wong wrote:
+> > On Fri, Aug 30, 2019 at 03:53:47PM +1000, Dave Chinner wrote:
+> > > On Tue, Aug 20, 2019 at 01:31:48PM -0700, Darrick J. Wong wrote:
+> > > > +	uint64_t  ag_reserved[12];
 > > > 
-> > > Andreas Grünbacher reports that on the two filesystems that support
-> > > iomap directio, it's possible for splice() to return -EAGAIN (instead of
-> > > a short splice) if the pipe being written to has less space available in
-> > > its pipe buffers than the length supplied by the calling process.
-> > > 
-> > > This is a regression test to check for correct operation.
-> > > 
-> > > XXX Andreas: Since you wrote the C reproducer, can you send me the
-> > > proper copyright and author attribution statement for the C program?
-> > > 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
+> > > Where's the flags field for feature versioning? Please don't tell me
+> > > we merged an ioctl structure without a flags or version field in
+> > > it...
 > > 
-> > Hi Darrick,
-> > 
-> > I tried to add a splice_f operation into xfs_io long time ago:
-> > https://marc.info/?l=linux-xfs&m=155828702128047&w=2
-> > 
-> > For we can easily write more splice related test case later, I'd like to have
-> > a xfs_io to help that (if it can). Would you like to help to review that patch,
-> > if it can match your requirement to write this case? Or it can be improved to
-> > cover more testing conditions? I'm really appreciate that:)
+> > Yes, we did, though the "reserved fields are always zeroed" enables us
+> > to retroactively define this to v0 of the structure.
 > 
-> Yeah, I'll try to have a look this week.
+> OK, but this is an input/output structure, not an output-only
+> structure, so the flags field needs to cover what features the
+> caller might be expecting the kernel to return, too.,,
 
-Thanks so much, I wrote this patch with 'fsstress supports splice' together,
-when we found a XFS regression bug by splice operation. But this xfs_io command
-doesn't have a specified usage to reproduce a bug. So if it can be improved to
-be used to cover the case which you just wrote (about splice), that might be
-better I think.
+What do you think of the v2 "xfs: define a flags field for the AG
+geometry ioctl structure" patch, then?
 
-Thanks,
-Zorro
+--D
 
-> 
-> (FWIW I think Eric is backed up with dozens of xfsprogs patches...)
-> 
-> --D
-> 
-> > Thanks,
-> > Zorro
-> > 
-> > >  .gitignore            |    1 
-> > >  src/Makefile          |    2 -
-> > >  src/splice-test.c     |  173 +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/generic/720     |   41 ++++++++++++
-> > >  tests/generic/720.out |    7 ++
-> > >  tests/generic/group   |    1 
-> > >  6 files changed, 224 insertions(+), 1 deletion(-)
-> > >  create mode 100644 src/splice-test.c
-> > >  create mode 100755 tests/generic/720
-> > >  create mode 100644 tests/generic/720.out
+> > > > +};
+> > > > +.fi
+> > > > +.in
+> > > > +.TP
+> > > > +.I ag_number
+> > > > +The number of allocation group that the caller wishes to learn about.
 > > > 
-> > > diff --git a/.gitignore b/.gitignore
-> > > index c8c815f9..26d4da11 100644
-> > > --- a/.gitignore
-> > > +++ b/.gitignore
-> > > @@ -112,6 +112,7 @@
-> > >  /src/runas
-> > >  /src/seek_copy_test
-> > >  /src/seek_sanity_test
-> > > +/src/splice-test
-> > >  /src/stale_handle
-> > >  /src/stat_test
-> > >  /src/swapon
-> > > diff --git a/src/Makefile b/src/Makefile
-> > > index c4fcf370..2920dfb1 100644
-> > > --- a/src/Makefile
-> > > +++ b/src/Makefile
-> > > @@ -28,7 +28,7 @@ LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
-> > >  	attr-list-by-handle-cursor-test listxattr dio-interleaved t_dir_type \
-> > >  	dio-invalidate-cache stat_test t_encrypted_d_revalidate \
-> > >  	attr_replace_test swapon mkswap t_attr_corruption t_open_tmpfiles \
-> > > -	fscrypt-crypt-util bulkstat_null_ocount
-> > > +	fscrypt-crypt-util bulkstat_null_ocount splice-test
-> > >  
-> > >  SUBDIRS = log-writes perf
-> > >  
-> > > diff --git a/src/splice-test.c b/src/splice-test.c
-> > > new file mode 100644
-> > > index 00000000..d3c12075
-> > > --- /dev/null
-> > > +++ b/src/splice-test.c
-> > > @@ -0,0 +1,173 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Copyright (C) 2019 ?????????????????????????????
-> > > + * Author: 
-> > > + *
-> > > + * Make sure that reading and writing to a pipe via splice.
-> > > + */
-> > > +#include <sys/types.h>
-> > > +#include <sys/stat.h>
-> > > +#include <sys/wait.h>
-> > > +#include <unistd.h>
-> > > +#include <fcntl.h>
-> > > +#include <err.h>
-> > > +
-> > > +#include <stdlib.h>
-> > > +#include <stdio.h>
-> > > +#include <stdbool.h>
-> > > +#include <string.h>
-> > > +#include <errno.h>
-> > > +
-> > > +#define SECTOR_SIZE 512
-> > > +#define BUFFER_SIZE (150 * SECTOR_SIZE)
-> > > +
-> > > +void read_from_pipe(int fd, const char *filename, size_t size)
-> > > +{
-> > > +	char buffer[SECTOR_SIZE];
-> > > +	size_t sz;
-> > > +	ssize_t ret;
-> > > +
-> > > +	while (size) {
-> > > +		sz = size;
-> > > +		if (sz > sizeof buffer)
-> > > +			sz = sizeof buffer;
-> > > +		ret = read(fd, buffer, sz);
-> > > +		if (ret < 0)
-> > > +			err(1, "read: %s", filename);
-> > > +		if (ret == 0) {
-> > > +			fprintf(stderr, "read: %s: unexpected EOF\n", filename);
-> > > +			exit(1);
-> > > +		}
-> > > +		size -= sz;
-> > > +	}
-> > > +}
-> > > +
-> > > +void do_splice1(int fd, const char *filename, size_t size)
-> > > +{
-> > > +	bool retried = false;
-> > > +	int pipefd[2];
-> > > +
-> > > +	if (pipe(pipefd) == -1)
-> > > +		err(1, "pipe");
-> > > +	while (size) {
-> > > +		ssize_t spliced;
-> > > +
-> > > +		spliced = splice(fd, NULL, pipefd[1], NULL, size, SPLICE_F_MOVE);
-> > > +		if (spliced == -1) {
-> > > +			if (errno == EAGAIN && !retried) {
-> > > +				retried = true;
-> > > +				fprintf(stderr, "retrying splice\n");
-> > > +				sleep(1);
-> > > +				continue;
-> > > +			}
-> > > +			err(1, "splice");
-> > > +		}
-> > > +		read_from_pipe(pipefd[0], filename, spliced);
-> > > +		size -= spliced;
-> > > +	}
-> > > +	close(pipefd[0]);
-> > > +	close(pipefd[1]);
-> > > +}
-> > > +
-> > > +void do_splice2(int fd, const char *filename, size_t size)
-> > > +{
-> > > +	bool retried = false;
-> > > +	int pipefd[2];
-> > > +	int pid;
-> > > +
-> > > +	if (pipe(pipefd) == -1)
-> > > +		err(1, "pipe");
-> > > +
-> > > +	pid = fork();
-> > > +	if (pid == 0) {
-> > > +		close(pipefd[1]);
-> > > +		read_from_pipe(pipefd[0], filename, size);
-> > > +		exit(0);
-> > > +	} else {
-> > > +		close(pipefd[0]);
-> > > +		while (size) {
-> > > +			ssize_t spliced;
-> > > +
-> > > +			spliced = splice(fd, NULL, pipefd[1], NULL, size, SPLICE_F_MOVE);
-> > > +			if (spliced == -1) {
-> > > +				if (errno == EAGAIN && !retried) {
-> > > +					retried = true;
-> > > +					fprintf(stderr, "retrying splice\n");
-> > > +					sleep(1);
-> > > +					continue;
-> > > +				}
-> > > +				err(1, "splice");
-> > > +			}
-> > > +			size -= spliced;
-> > > +		}
-> > > +		close(pipefd[1]);
-> > > +		waitpid(pid, NULL, 0);
-> > > +	}
-> > > +}
-> > > +
-> > > +void usage(const char *argv0)
-> > > +{
-> > > +	fprintf(stderr, "USAGE: %s [-rd] {filename}\n", basename(argv0));
-> > > +	exit(2);
-> > > +}
-> > > +
-> > > +int main(int argc, char *argv[])
-> > > +{
-> > > +	void (*do_splice)(int fd, const char *filename, size_t size);
-> > > +	const char *filename;
-> > > +	char *buffer;
-> > > +	int opt, open_flags, fd;
-> > > +	ssize_t ret;
-> > > +
-> > > +	do_splice = do_splice1;
-> > > +	open_flags = O_CREAT | O_TRUNC | O_RDWR | O_DIRECT;
-> > > +
-> > > +	while ((opt = getopt(argc, argv, "rd")) != -1) {
-> > > +		switch(opt) {
-> > > +		case 'r':
-> > > +			do_splice = do_splice2;
-> > > +			break;
-> > > +		case 'd':
-> > > +			open_flags &= ~O_DIRECT;
-> > > +			break;
-> > > +		default:  /* '?' */
-> > > +			usage(argv[0]);
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (optind >= argc)
-> > > +		usage(argv[0]);
-> > > +	filename = argv[optind];
-> > > +
-> > > +	printf("%s reader %s O_DIRECT\n",
-> > > +		   do_splice == do_splice1 ? "sequential" : "concurrent",
-> > > +		   (open_flags & O_DIRECT) ? "with" : "without");
-> > > +
-> > > +	buffer = aligned_alloc(SECTOR_SIZE, BUFFER_SIZE);
-> > > +	if (buffer == NULL)
-> > > +		err(1, "aligned_alloc");
-> > > +
-> > > +	fd = open(filename, open_flags, 0666);
-> > > +	if (fd == -1)
-> > > +		err(1, "open: %s", filename);
-> > > +
-> > > +	memset(buffer, 'x', BUFFER_SIZE);
-> > > +	ret = write(fd, buffer, BUFFER_SIZE);
-> > > +	if (ret < 0)
-> > > +		err(1, "write: %s", filename);
-> > > +	if (ret != BUFFER_SIZE) {
-> > > +		fprintf(stderr, "%s: short write\n", filename);
-> > > +		exit(1);
-> > > +	}
-> > > +
-> > > +	ret = lseek(fd, 0, SEEK_SET);
-> > > +	if (ret != 0)
-> > > +		err(1, "lseek: %s", filename);
-> > > +
-> > > +	do_splice(fd, filename, BUFFER_SIZE);
-> > > +
-> > > +	if (unlink(filename) == -1)
-> > > +		err(1, "unlink: %s", filename);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > diff --git a/tests/generic/720 b/tests/generic/720
-> > > new file mode 100755
-> > > index 00000000..b7f09c40
-> > > --- /dev/null
-> > > +++ b/tests/generic/720
-> > > @@ -0,0 +1,41 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > > +# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test No. 720
-> > > +#
-> > > +# Test using splice() to read from pipes.
-> > > +
-> > > +seq=`basename $0`
-> > > +seqres=$RESULT_DIR/$seq
-> > > +echo "QA output created by $seq"
-> > > +
-> > > +here=`pwd`
-> > > +tmp=/tmp/$$
-> > > +status=1    # failure is the default!
-> > > +trap "_cleanup; exit \$status" 0 1 2 3 15
-> > > +
-> > > +_cleanup()
-> > > +{
-> > > +	cd /
-> > > +	rm -f $TEST_DIR/a
-> > > +}
-> > > +
-> > > +# get standard environment, filters and checks
-> > > +. ./common/rc
-> > > +
-> > > +# real QA test starts here
-> > > +_supported_os Linux
-> > > +_supported_fs generic
-> > > +_require_test
-> > > +
-> > > +rm -f $seqres.full
-> > > +
-> > > +src/splice-test -r $TEST_DIR/a
-> > > +src/splice-test -rd $TEST_DIR/a
-> > > +src/splice-test $TEST_DIR/a
-> > > +src/splice-test -d $TEST_DIR/a
-> > > +
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/720.out b/tests/generic/720.out
-> > > new file mode 100644
-> > > index 00000000..b0fc9935
-> > > --- /dev/null
-> > > +++ b/tests/generic/720.out
-> > > @@ -0,0 +1,7 @@
-> > > +QA output created by 720
-> > > +concurrent reader with O_DIRECT
-> > > +concurrent reader with O_DIRECT
-> > > +concurrent reader without O_DIRECT
-> > > +concurrent reader without O_DIRECT
-> > > +sequential reader with O_DIRECT
-> > > +sequential reader without O_DIRECT
-> > > diff --git a/tests/generic/group b/tests/generic/group
-> > > index cd418106..f75d4e60 100644
-> > > --- a/tests/generic/group
-> > > +++ b/tests/generic/group
-> > > @@ -569,3 +569,4 @@
-> > >  564 auto quick copy_range
-> > >  565 auto quick copy_range
-> > >  719 auto quick quota metadata
-> > > +720 auto quick rw pipe splice
+> > > "the index of"....
+> > > 
+> > > "The number of" is easily confused with a quantity....
+> > > 
+> > > Is this an input or an output?
+> > 
+> > Purely an input.
+> > 
+> > "The caller must set this field to the index of the allocation group
+> > that the caller wishes to learn about." ?
+> 
+> *nod*.
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
