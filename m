@@ -2,150 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E59DA794F
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 05:30:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AD22A797F
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfIDDaX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 3 Sep 2019 23:30:23 -0400
-Received: from m13-11.163.com ([220.181.13.11]:53964 "EHLO m13-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbfIDDaX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 3 Sep 2019 23:30:23 -0400
-X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Sep 2019 23:30:20 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=MqgB5
-        FtmZrOhyE2OHWC5rM6kWB7se2rtPjPYsmTL2Dg=; b=iyiwG2RrpTMAXcPJqvLUR
-        7jMRYzeHdzBQIlFjmTxOdo/kL/nrqF31XGErjYh/vJJkgSmPzwhNeQKbdCDPfih9
-        BLnfs0RpbAu0PDMpc+WzFQ9RifvyLDe+pdA4H2yMAHkDkEjje/XM6onejmALW41x
-        iVD+bwPp5XgzJmCIwxPwuk=
-Received: from yin-jianhong$163.com ( [119.254.120.66] ) by
- ajax-webmail-wmsvr11 (Coremail) ; Wed, 4 Sep 2019 11:30:15 +0800 (CST)
-X-Originating-IP: [119.254.120.66]
-Date:   Wed, 4 Sep 2019 11:30:15 +0800 (CST)
-From:   =?GBK?B?0vy9o7rn?= <yin-jianhong@163.com>
-To:     "Zorro Lang" <zlang@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re:Re: [PATCH] xfsprogs: io/copy_range: cover corner case (fd_in ==
- fd_out)
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
- Copyright (c) 2002-2019 www.mailtech.cn 163com
-In-Reply-To: <20190904020357.GW7239@dhcp-12-102.nay.redhat.com>
-References: <20190903105632.11667-1-yin-jianhong@163.com>
- <20190903115943.GU7239@dhcp-12-102.nay.redhat.com>
- <20190903131928.GV7239@dhcp-12-102.nay.redhat.com>
- <7689497e.d24e.16cf7f750d6.Coremail.yin-jianhong@163.com>
- <20190904020357.GW7239@dhcp-12-102.nay.redhat.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        id S1725963AbfIDEBD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:01:03 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38257 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725947AbfIDEBC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:01:02 -0400
+Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 49D45360E83;
+        Wed,  4 Sep 2019 14:01:00 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i5MTc-0007Hw-8F; Wed, 04 Sep 2019 14:01:00 +1000
+Date:   Wed, 4 Sep 2019 14:01:00 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v3] xfs: define a flags field for the AG geometry ioctl
+ structure
+Message-ID: <20190904040100.GA1119@dread.disaster.area>
+References: <20190903230537.GI5340@magnolia>
 MIME-Version: 1.0
-Message-ID: <10d63ab.4152.16cfa52a523.Coremail.yin-jianhong@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: C8GowACXTdHIL29d8yKtAA--.25624W
-X-CM-SenderInfo: p1lqgyxldqx0lqj6il2tof0z/1tbiMA0mBFWBpYtLjAACsg
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903230537.GI5340@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=sg_cNFlFF0uKCH_A41YA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-CgpBdCAyMDE5LTA5LTA0IDEwOjAzOjU3LCAiWm9ycm8gTGFuZyIgPHpsYW5nQHJlZGhhdC5jb20+
-IHdyb3RlOgo+T24gV2VkLCBTZXAgMDQsIDIwMTkgYXQgMTI6MzE6MTZBTSArMDgwMCwg0vy9o7rn
-IHdyb3RlOgo+PiBXZSBuZWVkIGNvdmVyIHRoZSBzY2VuYXJpbyB0aGF0IGZkX2luID09IGZkX291
-dAo+PiBub3QganVzdCBzYW1lIHBhdGguCj4KPlBsZWFzZSByZXBseSB0byBtYWlsIGxpc3QsIG5v
-dCAnbWUnIG9ubHksIHRvIGdldCBtb3JlIHJldmlldzopCj4KPlRoZSBwYXRjaCB3aGljaCB5b3Un
-cmUgdHJ5aW5nIHRvIGNvdmVyIGlzIGNvbW1pdCA5YWI3MGNhNjUzIGFzIGJlbG93WzFdLgo+RnJv
-bSB0aGUgY29kZSwgSSByZWFsbHkgZG91YnQgaWYgeW91IG5lZWQgc2FtZSBgc3RydWN0IGZpbGVg
-LCBsb29rcyBsaWtlCj55b3UgbmVlZCBzYW1lIGBzdHJ1Y3QgaW5vZGVgLgo+Cj5IYXZlIHlvdSB0
-cmllZCB0byB0ZXN0IG9uIHNhbWUgaW5vZGUgYnV0IG5vdCBzYW1lICdmZCc/IEknbSBub3QgYSBD
-SUZTCj5leHBlcnQsIGNhbiBDSUZTIGhhdmUgc2FtZSBmaWxlIHdpdGggZGlmZmVyZW50IGlub2Rl
-PwoKVGhhbmtzIFpvcnJvLCB5b3UgYXJlIHJpZ2h0LiBzYW1lIGZkIGlzIG5vdCBuZWNlc3Nhcnk7
-Cgpkcm9wIHRoaXMgcGF0Y2guCgo+Cj5UaGFua3MsCj5ab3Jybwo+Cj5bMV0KPmNvbW1pdCA5YWI3
-MGNhNjUzMzA3NzcxNTg5ZTE0MTQxMDJjNTUyZDhkYmRiYmVmCj5BdXRob3I6IEtvdnR1bmVua28g
-T2xla3NhbmRyIDxhbGV4YW5kZXIxOTg5NjFAZ21haWwuY29tPgo+RGF0ZTogICBUdWUgTWF5IDE0
-IDA1OjUyOjM0IDIwMTkgKzAwMDAKPgo+ICAgIEZpeGVkIGh0dHBzOi8vYnVnemlsbGEua2VybmVs
-Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjAyOTM1IGFsbG93IHdyaXRlIG9uIHRoZSBzYW1lIGZpbGUK
-PiAgICAKPiAgICBDb3B5Y2h1bmsgYWxsb3dzIHNvdXJjZSBhbmQgdGFyZ2V0IHRvIGJlIG9uIHRo
-ZSBzYW1lIGZpbGUuCj4gICAgRm9yIGRldGFpbHMgb24gcmVzdHJpY3Rpb25zIHNlZSBNUy1TTUIy
-IDMuMy41LjE1LjYKPiAgICAKPiAgICBTaWduZWQtb2ZmLWJ5OiBLb3Z0dW5lbmtvIE9sZWtzYW5k
-ciA8YWxleGFuZGVyMTk4OTYxQGdtYWlsLmNvbT4KPiAgICBTaWduZWQtb2ZmLWJ5OiBTdGV2ZSBG
-cmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+Cj4KPmRpZmYgLS1naXQgYS9mcy9jaWZzL2Np
-ZnNmcy5jIGIvZnMvY2lmcy9jaWZzZnMuYwo+aW5kZXggYjFhNWZjZmEzY2UxLi5kMGNiMDQyNzMy
-Y2IgMTAwNjQ0Cj4tLS0gYS9mcy9jaWZzL2NpZnNmcy5jCj4rKysgYi9mcy9jaWZzL2NpZnNmcy5j
-Cj5AQCAtMTA3MCwxMSArMTA3MCw2IEBAIHNzaXplX3QgY2lmc19maWxlX2NvcHljaHVua19yYW5n
-ZSh1bnNpZ25lZCBpbnQgeGlkLAo+IAo+ICAgICAgICBjaWZzX2RiZyhGWUksICJjb3B5Y2h1bmsg
-cmFuZ2VcbiIpOwo+IAo+LSAgICAgICBpZiAoc3JjX2lub2RlID09IHRhcmdldF9pbm9kZSkgewo+
-LSAgICAgICAgICAgICAgIHJjID0gLUVJTlZBTDsKPi0gICAgICAgICAgICAgICBnb3RvIG91dDsK
-Pi0gICAgICAgfQo+LQo+ICAgICAgICBpZiAoIXNyY19maWxlLT5wcml2YXRlX2RhdGEgfHwgIWRz
-dF9maWxlLT5wcml2YXRlX2RhdGEpIHsKPiAgICAgICAgICAgICAgICByYyA9IC1FQkFERjsKPiAg
-ICAgICAgICAgICAgICBjaWZzX2RiZyhWRlMsICJtaXNzaW5nIGNpZnNGaWxlSW5mbyBvbiBjb3B5
-IHJhbmdlIHNyYyBmaWxlXG4iKTsKPgo+PiAKPj4gI0RpZCB5b3UgcmVhZCB0aGUgc3VtbWFyeSBh
-bmQgY29tbWl0IGxvZz8KPj4gCj4+IAo+PiB8IHwKPj4g0vy9o7rnCj4+IHwKPj4gfAo+PiDTys/k
-o7p5aW4tamlhbmhvbmdAMTYzLmNvbQo+PiB8Cj4+IAo+PiDHqcP708kgzfjS19PKz+S088qmILao
-1sYKPj4gCj4+IE9uIDA5LzAzLzIwMTkgMjE6MTksIFpvcnJvIExhbmcgd3JvdGU6Cj4+IE9uIFR1
-ZSwgU2VwIDAzLCAyMDE5IGF0IDA3OjU5OjQzUE0gKzA4MDAsIFpvcnJvIExhbmcgd3JvdGU6Cj4+
-ID4gT24gVHVlLCBTZXAgMDMsIDIwMTkgYXQgMDY6NTY6MzJQTSArMDgwMCwgSmlhbmhvbmcuWWlu
-IHdyb3RlOgo+PiA+ID4gUmVsYXRlZCBidWc6Cj4+ID4gPiAgIGNvcHlfZmlsZV9yYW5nZSByZXR1
-cm4gIkludmFsaWQgYXJndW1lbnQiIHdoZW4gY29weSBpbiB0aGUgc2FtZSBmaWxlCj4+ID4gPiAg
-IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjAyOTM1Cj4+ID4g
-Pgo+PiA+ID4gaWYgYXJndW1lbnQgb2Ygb3B0aW9uIC1mIGlzICItIiwgdXNlIGN1cnJlbnQgZmls
-ZS0+ZmQgYXMgZmRfaW4KPj4gPiA+Cj4+ID4gPiBVc2FnZToKPj4gPiA+ICAgeGZzX2lvIC1jICdj
-b3B5X3JhbmdlIC1mIC0nIHNvbWVfZmlsZQo+PiA+ID4KPj4gPiA+IFNpZ25lZC1vZmYtYnk6IEpp
-YW5ob25nIFlpbiA8eWluLWppYW5ob25nQDE2My5jb20+Cj4+ID4gPiAtLS0KPj4gPgo+PiA+IEhp
-LAo+PiA+Cj4+ID4gQWN0dWFsbHksIEknbSB0aGlua2luZyBhYm91dCBpZiB5b3UgbmVlZCBzYW1l
-ICdmZCcgb3Igc2FtZSBmaWxlIHBhdGg/Cj4+ID4gSWYgeW91IGp1c3QgbmVlZCBzYW1lIGZpbGUg
-cGF0aCwgSSB0aGluawo+PiA+Cj4+ID4gICAjIHhmc19pbyAtYyAiY29weV9yYW5nZSB0ZXN0Zmls
-ZSIgdGVzdGZpbGUKPj4gPgo+PiA+IGFscmVhZHkgY2FuIGhlbHAgdGhhdC4gVGhlIG9ubHkgb25l
-IHByb2JsZW0gc3RvcCB5b3UgZG9pbmcgdGhhdCBpcwo+PiA+ICJjb3B5X2RzdF90cnVuY2F0ZSgp
-Ii4KPj4gPgo+PiA+IElmIGFsbCBhYm92ZSBJIHN1cHBvc2UgaXMgcmlnaHQsIHdlIGNhbiB0dXJu
-IHRvIHRhbGsgYWJvdXQgaWYgdGhhdAo+PiA+IGNvcHlfZHN0X3RydW5jYXRlKCkgaXMgbmVjZXNz
-YXJ5LCBvciBob3cgY2FuIHdlIHNraXAgaXQuCj4+IAo+PiBJIGp1c3QgY2hlY2tlZCwgdGhlIGNv
-cHlfZHN0X3RydW5jYXRlKCkgaXMgb25seSBjYWxsZWQgd2hlbjoKPj4gCj4+ICBpZiAoc3JjID09
-IDAgJiYgZHN0ID09IDAgJiYgbGVuID09IDApIHsKPj4gCj4+IFNvIGlmIHlvdSBjYW4gZ2l2ZSB5
-b3VyIHJlcHJvZHVjZXIgYSAibGVuZ3RoIihvciBvZmZzZXQpLCBsaWtlczoKPj4gCj4+ICAjIHhm
-c19pbyAtYyAiY29weV9yYW5nZSAtbCA2NGsgdGVzdGZpbGUiIHRlc3RmaWxlCj4+IAo+PiBZb3Ug
-Y2FuIGF2b2lkIHRoZSBjb3B5X2RzdF90cnVuY2F0ZSgpIHRvby4KPj4gCj4+IElzIHRoYXQgaGVs
-cGZ1bD8KPj4gCj4+IFRoYW5rcywKPj4gWm9ycm8KPj4gCj4+ID4KPj4gPiBUaGFua3MsCj4+ID4g
-Wm9ycm8KPj4gPgo+PiA+ID4gIGlvL2NvcHlfZmlsZV9yYW5nZS5jIHwgMjcgKysrKysrKysrKysr
-KysrKysrLS0tLS0tLS0tCj4+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyks
-IDkgZGVsZXRpb25zKC0pCj4+ID4gPgo+PiA+ID4gZGlmZiAtLWdpdCBhL2lvL2NvcHlfZmlsZV9y
-YW5nZS5jIGIvaW8vY29weV9maWxlX3JhbmdlLmMKPj4gPiA+IGluZGV4IGI3YjlmZDg4Li4yZGRl
-OGEzMSAxMDA2NDQKPj4gPiA+IC0tLSBhL2lvL2NvcHlfZmlsZV9yYW5nZS5jCj4+ID4gPiArKysg
-Yi9pby9jb3B5X2ZpbGVfcmFuZ2UuYwo+PiA+ID4gQEAgLTI4LDYgKzI4LDcgQEAgY29weV9yYW5n
-ZV9oZWxwKHZvaWQpCj4+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdCBwb3NpdGlv
-biAwXG5cCj4+ID4gPiAgICdjb3B5X3JhbmdlIC1mIDInIC0gY29waWVzIGFsbCBieXRlcyBmcm9t
-IG9wZW4gZmlsZSAyIGludG8gdGhlIGN1cnJlbnQgb3BlbiBmaWxlXG5cCj4+ID4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBhdCBwb3NpdGlvbiAwXG5cCj4+ID4gPiArICdjb3B5X3Jhbmdl
-IC1mIC0nIC0gY29waWVzIGFsbCBieXRlcyBmcm9tIGN1cnJlbnQgb3BlbiBmaWxlIGFwcGVuZCB0
-aGUgY3VycmVudCBvcGVuIGZpbGVcblwKPj4gPiA+ICAiKSk7Cj4+ID4gPiAgfQo+PiA+ID4gIAo+
-PiA+ID4gQEAgLTExNCwxMSArMTE1LDE1IEBAIGNvcHlfcmFuZ2VfZihpbnQgYXJnYywgY2hhciAq
-KmFyZ3YpCj4+ID4gPiAgICAgICAgICAgICAgICAgfQo+PiA+ID4gICAgICAgICAgICAgICAgIGJy
-ZWFrOwo+PiA+ID4gICAgICAgICAgICBjYXNlICdmJzoKPj4gPiA+IC0gICAgICAgICAgICAgICBz
-cmNfZmlsZV9uciA9IGF0b2koYXJndlsxXSk7Cj4+ID4gPiAtICAgICAgICAgICAgICAgaWYgKHNy
-Y19maWxlX25yIDwgMCB8fCBzcmNfZmlsZV9uciA+PSBmaWxlY291bnQpIHsKPj4gPiA+IC0gICAg
-ICAgICAgICAgICAgICAgIHByaW50ZihfKCJmaWxlIHZhbHVlICVkIGlzIG91dCBvZiByYW5nZSAo
-MC0lZClcbiIpLAo+PiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICBzcmNfZmlsZV9uciwg
-ZmlsZWNvdW50IC0gMSk7Cj4+ID4gPiAtICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4g
-PiA+ICsgICAgICAgICAgICAgICBpZiAoc3RyY21wKGFyZ3ZbMV0sICItIikpCj4+ID4gPiArICAg
-ICAgICAgICAgICAgICAgICBzcmNfZmlsZV9uciA9IChmaWxlIC0gJmZpbGV0YWJsZVswXSkgLyBz
-aXplb2YoZmlsZWlvX3QpOwo+PiA+ID4gKyAgICAgICAgICAgICAgIGVsc2Ugewo+PiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgc3JjX2ZpbGVfbnIgPSBhdG9pKGFyZ3ZbMV0pOwo+PiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgaWYgKHNyY19maWxlX25yIDwgMCB8fCBzcmNfZmlsZV9uciA+PSBm
-aWxlY291bnQpIHsKPj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgcHJpbnRmKF8oImZp
-bGUgdmFsdWUgJWQgaXMgb3V0IG9mIHJhbmdlICgwLSVkKVxuIiksCj4+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3JjX2ZpbGVfbnIsIGZpbGVjb3VudCAtIDEpOwo+PiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgIH0KPj4gPiA+ICAgICAgICAgICAgICAgICB9Cj4+ID4gPiAgICAgICAgICAgICAgICAg
-LyogRXhwZWN0IG5vIHNyY19wYXRoIGFyZyAqLwo+PiA+ID4gICAgICAgICAgICAgICAgIHNyY19w
-YXRoX2FyZyA9IDA7Cj4+ID4gPiBAQCAtMTQ3LDEwICsxNTIsMTQgQEAgY29weV9yYW5nZV9mKGlu
-dCBhcmdjLCBjaGFyICoqYXJndikKPj4gPiA+ICAgICAgICAgICAgfQo+PiA+ID4gICAgICAgICAg
-ICBsZW4gPSBzejsKPj4gPiA+ICAKPj4gPiA+IC0gICAgICAgICAgcmV0ID0gY29weV9kc3RfdHJ1
-bmNhdGUoKTsKPj4gPiA+IC0gICAgICAgICAgaWYgKHJldCA8IDApIHsKPj4gPiA+IC0gICAgICAg
-ICAgICAgICByZXQgPSAxOwo+PiA+ID4gLSAgICAgICAgICAgICAgIGdvdG8gb3V0Owo+PiA+ID4g
-KyAgICAgICAgICBpZiAoZmQgIT0gZmlsZS0+ZmQpIHsKPj4gPiA+ICsgICAgICAgICAgICAgICBy
-ZXQgPSBjb3B5X2RzdF90cnVuY2F0ZSgpOwo+PiA+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQg
-PCAwKSB7Cj4+ID4gPiArICAgICAgICAgICAgICAgICAgICByZXQgPSAxOwo+PiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgZ290byBvdXQ7Cj4+ID4gPiArICAgICAgICAgICAgICAgfQo+PiA+ID4g
-KyAgICAgICAgICB9IGVsc2Ugewo+PiA+ID4gKyAgICAgICAgICAgICAgIGRzdCA9IHN6Owo+PiA+
-ID4gICAgICAgICAgICB9Cj4+ID4gPiAgICAgICB9Cj4+ID4gPiAgCj4+ID4gPiAtLQo+PiA+ID4g
-Mi4xNy4yCj4+ID4gPgo=
+On Tue, Sep 03, 2019 at 04:05:37PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Define a flags field for the AG geometry ioctl structure.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+> v3: define ag_flags as an in/out field and check required zeroness
+> ---
+>  fs/xfs/libxfs/xfs_fs.h |    2 +-
+>  fs/xfs/xfs_ioctl.c     |    4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+> index 52d03a3a02a4..39dd2b908106 100644
+> --- a/fs/xfs/libxfs/xfs_fs.h
+> +++ b/fs/xfs/libxfs/xfs_fs.h
+> @@ -287,7 +287,7 @@ struct xfs_ag_geometry {
+>  	uint32_t	ag_ifree;	/* o: inodes free */
+>  	uint32_t	ag_sick;	/* o: sick things in ag */
+>  	uint32_t	ag_checked;	/* o: checked metadata in ag */
+> -	uint32_t	ag_reserved32;	/* o: zero */
+> +	uint32_t	ag_flags;	/* i/o: flags for this ag */
+>  	uint64_t	ag_reserved[12];/* o: zero */
+>  };
+>  #define XFS_AG_GEOM_SICK_SB	(1 << 0)  /* superblock */
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 9a6823e29661..c93501f42675 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1038,6 +1038,10 @@ xfs_ioc_ag_geometry(
+>  
+>  	if (copy_from_user(&ageo, arg, sizeof(ageo)))
+>  		return -EFAULT;
+> +	if (ageo.ag_flags)
+> +		return -EINVAL;
+> +	if (memchr_inv(&ageo.ag_reserved, 0, sizeof(ageo.ag_reserved)))
+> +		return -EINVAL;
+
+Looks good. All that should be zero until we start using them. :)
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
