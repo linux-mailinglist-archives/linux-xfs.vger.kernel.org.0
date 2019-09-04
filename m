@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 257FDA79F7
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:36:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A350A7A04
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:37:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfIDEgg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:36:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46088 "EHLO
+        id S1725877AbfIDEhj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:37:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47458 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfIDEgg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:36:36 -0400
+        with ESMTP id S1725947AbfIDEhj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:37:39 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844ZCe3038363;
-        Wed, 4 Sep 2019 04:35:50 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844bR1A040003;
+        Wed, 4 Sep 2019 04:37:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=ukcardIwQXoqp8PMWawh/6kz72tXf3tUxR6gBKDBfw4=;
- b=fvK9ajtoXGQmGSLzXd6/3gF/NNQ21Cr7ZTV8sWr0q2ughPPrQTtn+gCZSECMPvOgKYGX
- 8uMJyMnMfxjpyPxrN3OmKmDG1KxqhmabPA9ramFWDP3Os7i7rxrCwdotMHI5DnFXlXWh
- F1bBWzrE/oGbYpI8Ae1fuvw7eWmzLtLtLdWdaAOq6WOaHivH9SG1okORFLHixlGl93vU
- cjzT9hHQuZ8P55uwA5Gf+uPZf7AVRVG/iWjTfcbNF81ls/HtFpLqD+Sp6wjYA6XrgcbJ
- VhwpFUNMT2cygy+VsBGPTZDO5+hXatFWemHyY6J4dNlKSWgU9TtrCC+36cIfkOzv1D/1 Vw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ut6cdr01f-1
+ bh=+y+DGSW4kCFx66MAl8YycVqLkWyTSnxa1Lp3u+JYZt4=;
+ b=QFTlFAxBN5t1SyDsa13nWuciB21dDqC7Y6cREHKy2E4f3V5FDywg873DxpAKgWivo1Hs
+ itmL7qNv65E7diUERfccc+QpsRuHn82SesjWRCsbuWBj0ZvLsADBPBUk+jhYwDaz7xTj
+ KWwowbdyPSNMVvNSuLgDuaOtaopawRtmOo4l/E0tPIwuLoMMcGezzCPfykhYtJPtrsLZ
+ zUTn66pMhbEwZf3BB6GSTtYQD3BIxFGUEyQvJxMCoxccdwy4y4f9SytWZJiXktTmGRvX
+ j0dVCUP//HT3s0NJ92KJ5ZhS2a5F3ZguCkfxhGVELPwR9u5mxnm88gzdtZgrzheujPlo AA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ut6dd0010-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:35:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844XFJB027388;
-        Wed, 4 Sep 2019 04:35:19 GMT
+        Wed, 04 Sep 2019 04:37:37 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844XkCC163044;
+        Wed, 4 Sep 2019 04:35:37 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2ut1hmtu62-1
+        by userp3030.oracle.com with ESMTP id 2usu52bfu5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:35:19 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x844ZI1s029941;
-        Wed, 4 Sep 2019 04:35:18 GMT
+        Wed, 04 Sep 2019 04:35:37 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x844ZZfk030104;
+        Wed, 4 Sep 2019 04:35:35 GMT
 Received: from localhost (/10.159.228.126)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 21:35:17 -0700
-Subject: [PATCH 5/8] libfrog: create online fs geometry converters
+        with ESMTP ; Tue, 03 Sep 2019 21:35:35 -0700
+Subject: [PATCH 7/8] libfrog: create xfd_open function
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org,
-        Allison Collins <allison.henderson@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>
-Date:   Tue, 03 Sep 2019 21:35:16 -0700
-Message-ID: <156757171642.1836891.5012962551379818316.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Tue, 03 Sep 2019 21:35:29 -0700
+Message-ID: <156757172971.1836891.18331324988390655813.stgit@magnolia>
 In-Reply-To: <156757168368.1836891.15043200811666785244.stgit@magnolia>
 References: <156757168368.1836891.15043200811666785244.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -72,209 +70,185 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Create helper functions to perform unit conversions against a runtime
-filesystem, then remove the open-coded versions in scrub.
+Create a helper to open a file and initialize the xfd structure.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- include/fsgeom.h   |   57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- libfrog/fsgeom.c   |    1 +
- scrub/fscounters.c |    4 ++--
- scrub/inodes.c     |    4 ++--
- scrub/phase3.c     |    6 +++--
- scrub/phase5.c     |    4 ++--
- scrub/phase6.c     |    3 ++-
- scrub/phase7.c     |    6 +++--
- 8 files changed, 72 insertions(+), 13 deletions(-)
+ fsr/xfs_fsr.c    |   26 ++++++--------------------
+ include/fsgeom.h |    1 +
+ libfrog/fsgeom.c |   22 ++++++++++++++++++++++
+ quota/quot.c     |    7 ++++---
+ scrub/phase1.c   |   25 ++++++++-----------------
+ 5 files changed, 41 insertions(+), 40 deletions(-)
 
 
+diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+index f7e7474d..64892dd5 100644
+--- a/fsr/xfs_fsr.c
++++ b/fsr/xfs_fsr.c
+@@ -593,18 +593,10 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
+ 		return -1;
+ 	}
+ 
+-	if ((fsxfd.fd = open(mntdir, O_RDONLY)) < 0) {
+-		fsrprintf(_("unable to open: %s: %s\n"),
+-		          mntdir, strerror( errno ));
+-		free(fshandlep);
+-		return -1;
+-	}
+-
+-	ret = xfd_prepare_geometry(&fsxfd);
++	ret = xfd_open(&fsxfd, mntdir, O_RDONLY);
+ 	if (ret) {
+-		fsrprintf(_("Skipping %s: could not get XFS geometry\n"),
+-			  mntdir);
+-		xfd_close(&fsxfd);
++		fsrprintf(_("unable to open XFS file: %s: %s\n"),
++		          mntdir, strerror(ret));
+ 		free(fshandlep);
+ 		return -1;
+ 	}
+@@ -726,16 +718,10 @@ fsrfile(
+ 	 * Need to open something on the same filesystem as the
+ 	 * file.  Open the parent.
+ 	 */
+-	fsxfd.fd = open(getparent(fname), O_RDONLY);
+-	if (fsxfd.fd < 0) {
+-		fsrprintf(_("unable to open sys handle for %s: %s\n"),
+-			fname, strerror(errno));
+-		goto out;
+-	}
+-
+-	error = xfd_prepare_geometry(&fsxfd);
++	error = xfd_open(&fsxfd, getparent(fname), O_RDONLY);
+ 	if (error) {
+-		fsrprintf(_("Unable to get geom on fs for: %s\n"), fname);
++		fsrprintf(_("unable to open sys handle for XFS file %s: %s\n"),
++			fname, strerror(error));
+ 		goto out;
+ 	}
+ 
 diff --git a/include/fsgeom.h b/include/fsgeom.h
-index 7837c700..771732f2 100644
+index 771732f2..1c397cb6 100644
 --- a/include/fsgeom.h
 +++ b/include/fsgeom.h
-@@ -32,6 +32,9 @@ struct xfs_fd {
+@@ -42,6 +42,7 @@ struct xfs_fd {
+ #define XFS_FD_INIT_EMPTY	XFS_FD_INIT(-1)
  
- 	/* log2 of sb_inopblock */
- 	unsigned int		inopblog;
-+
-+	/* bits for agino in inum */
-+	unsigned int		aginolog;
- };
- 
- /* Static initializers */
-@@ -41,4 +44,58 @@ struct xfs_fd {
  int xfd_prepare_geometry(struct xfs_fd *xfd);
++int xfd_open(struct xfs_fd *xfd, const char *pathname, int flags);
  int xfd_close(struct xfs_fd *xfd);
  
-+/* Convert AG number and AG inode number into fs inode number. */
-+static inline uint64_t
-+cvt_agino_to_ino(
-+	const struct xfs_fd	*xfd,
-+	uint32_t		agno,
-+	uint32_t		agino)
-+{
-+	return ((uint64_t)agno << xfd->aginolog) + agino;
-+}
-+
-+/* Convert fs inode number into AG number. */
-+static inline uint32_t
-+cvt_ino_to_agno(
-+	const struct xfs_fd	*xfd,
-+	uint64_t		ino)
-+{
-+	return ino >> xfd->aginolog;
-+}
-+
-+/* Convert fs inode number into AG inode number. */
-+static inline uint32_t
-+cvt_ino_to_agino(
-+	const struct xfs_fd	*xfd,
-+	uint64_t		ino)
-+{
-+	return ino & ((1ULL << xfd->aginolog) - 1);
-+}
-+
-+/*
-+ * Convert a linear fs block offset number into bytes.  This is the runtime
-+ * equivalent of XFS_FSB_TO_B, which means that it is /not/ for segmented fsbno
-+ * format (= agno | agbno) that we use internally for the data device.
-+ */
-+static inline uint64_t
-+cvt_off_fsb_to_b(
-+	const struct xfs_fd	*xfd,
-+	uint64_t		fsb)
-+{
-+	return fsb << xfd->blocklog;
-+}
-+
-+/*
-+ * Convert bytes into a (rounded down) linear fs block offset number.  This is
-+ * the runtime equivalent of XFS_B_TO_FSBT.  It does not produce segmented
-+ * fsbno numbers (= agno | agbno).
-+ */
-+static inline uint64_t
-+cvt_b_to_off_fsbt(
-+	const struct xfs_fd	*xfd,
-+	uint64_t		bytes)
-+{
-+	return bytes >> xfd->blocklog;
-+}
-+
- #endif /* _LIBFROG_FSGEOM_H_ */
+ /* Convert AG number and AG inode number into fs inode number. */
 diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
-index b7e2b2f8..39604556 100644
+index 39604556..9a428bf6 100644
 --- a/libfrog/fsgeom.c
 +++ b/libfrog/fsgeom.c
-@@ -112,6 +112,7 @@ xfd_prepare_geometry(
- 	xfd->blocklog = highbit32(xfd->fsgeom.blocksize);
- 	xfd->inodelog = highbit32(xfd->fsgeom.inodesize);
- 	xfd->inopblog = xfd->blocklog - xfd->inodelog;
-+	xfd->aginolog = xfd->agblklog + xfd->inopblog;
+@@ -116,6 +116,28 @@ xfd_prepare_geometry(
  	return 0;
  }
  
-diff --git a/scrub/fscounters.c b/scrub/fscounters.c
-index ac898764..ea6af156 100644
---- a/scrub/fscounters.c
-+++ b/scrub/fscounters.c
-@@ -91,8 +91,8 @@ xfs_count_ag_inodes(
- 				minor(ctx->fsinfo.fs_datadev),
- 				agno);
++/* Open a file on an XFS filesystem.  Returns zero or a positive error code. */
++int
++xfd_open(
++	struct xfs_fd		*xfd,
++	const char		*pathname,
++	int			flags)
++{
++	int			ret;
++
++	xfd->fd = open(pathname, flags);
++	if (xfd->fd < 0)
++		return errno;
++
++	ret = xfd_prepare_geometry(xfd);
++	if (ret) {
++		xfd_close(xfd);
++		return ret;
++	}
++
++	return 0;
++}
++
+ /*
+  * Release any resources associated with this xfs_fd structure.  Returns zero
+  * or a positive error code.
+diff --git a/quota/quot.c b/quota/quot.c
+index 6fb6f833..b718b09d 100644
+--- a/quota/quot.c
++++ b/quota/quot.c
+@@ -132,7 +132,7 @@ quot_bulkstat_mount(
+ 	struct xfs_bstat	*buf;
+ 	uint64_t		last = 0;
+ 	uint32_t		count;
+-	int			i, sts;
++	int			i, sts, ret;
+ 	du_t			**dp;
  
--	ag_ino = (__u64)agno << (ctx->mnt.inopblog + ctx->mnt.agblklog);
--	next_ag_ino = (__u64)(agno + 1) << (ctx->mnt.inopblog + ctx->mnt.agblklog);
-+	ag_ino = cvt_agino_to_ino(&ctx->mnt, agno, 0);
-+	next_ag_ino = cvt_agino_to_ino(&ctx->mnt, agno + 1, 0);
+ 	/*
+@@ -147,8 +147,9 @@ quot_bulkstat_mount(
+ 			*dp = NULL;
+ 	ndu[0] = ndu[1] = ndu[2] = 0;
  
- 	moveon = xfs_count_inodes_range(ctx, descr, ag_ino, next_ag_ino - 1,
- 			&ci->counters[agno]);
-diff --git a/scrub/inodes.c b/scrub/inodes.c
-index 873ad425..700e5200 100644
---- a/scrub/inodes.c
-+++ b/scrub/inodes.c
-@@ -228,8 +228,8 @@ xfs_scan_ag_inodes(
- 				minor(ctx->fsinfo.fs_datadev),
- 				agno);
- 
--	ag_ino = (__u64)agno << (ctx->mnt.inopblog + ctx->mnt.agblklog);
--	next_ag_ino = (__u64)(agno + 1) << (ctx->mnt.inopblog + ctx->mnt.agblklog);
-+	ag_ino = cvt_agino_to_ino(&ctx->mnt, agno, 0);
-+	next_ag_ino = cvt_agino_to_ino(&ctx->mnt, agno + 1, 0);
- 
- 	moveon = xfs_iterate_inodes_range(ctx, descr, ctx->fshandle, ag_ino,
- 			next_ag_ino - 1, si->fn, si->arg);
-diff --git a/scrub/phase3.c b/scrub/phase3.c
-index 579e08c3..8c02f1cb 100644
---- a/scrub/phase3.c
-+++ b/scrub/phase3.c
-@@ -52,8 +52,8 @@ xfs_scrub_inode_vfs_error(
- 	xfs_agino_t		agino;
- 	int			old_errno = errno;
- 
--	agno = bstat->bs_ino / (1ULL << (ctx->mnt.inopblog + ctx->mnt.agblklog));
--	agino = bstat->bs_ino % (1ULL << (ctx->mnt.inopblog + ctx->mnt.agblklog));
-+	agno = cvt_ino_to_agno(&ctx->mnt, bstat->bs_ino);
-+	agino = cvt_ino_to_agino(&ctx->mnt, bstat->bs_ino);
- 	snprintf(descr, DESCR_BUFSZ, _("inode %"PRIu64" (%u/%u)"),
- 			(uint64_t)bstat->bs_ino, agno, agino);
- 	errno = old_errno;
-@@ -77,7 +77,7 @@ xfs_scrub_inode(
- 	int			error;
- 
- 	xfs_action_list_init(&alist);
--	agno = bstat->bs_ino / (1ULL << (ctx->mnt.inopblog + ctx->mnt.agblklog));
-+	agno = cvt_ino_to_agno(&ctx->mnt, bstat->bs_ino);
- 	background_sleep();
- 
- 	/* Try to open the inode to pin it. */
-diff --git a/scrub/phase5.c b/scrub/phase5.c
-index 36ec27b3..f3ee22e6 100644
---- a/scrub/phase5.c
-+++ b/scrub/phase5.c
-@@ -239,8 +239,8 @@ xfs_scrub_connections(
- 	int			fd = -1;
- 	int			error;
- 
--	agno = bstat->bs_ino / (1ULL << (ctx->mnt.inopblog + ctx->mnt.agblklog));
--	agino = bstat->bs_ino % (1ULL << (ctx->mnt.inopblog + ctx->mnt.agblklog));
-+	agno = cvt_ino_to_agno(&ctx->mnt, bstat->bs_ino);
-+	agino = cvt_ino_to_agino(&ctx->mnt, bstat->bs_ino);
- 	snprintf(descr, DESCR_BUFSZ, _("inode %"PRIu64" (%u/%u)"),
- 			(uint64_t)bstat->bs_ino, agno, agino);
- 	background_sleep();
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 48971270..5628b926 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -547,7 +547,8 @@ xfs_estimate_verify_work(
- 	if (!moveon)
- 		return moveon;
- 
--	*items = ((d_blocks - d_bfree) + (r_blocks - r_bfree)) << ctx->mnt.blocklog;
-+	*items = cvt_off_fsb_to_b(&ctx->mnt,
-+			(d_blocks - d_bfree) + (r_blocks - r_bfree));
- 	*nr_threads = disk_heads(ctx->datadev);
- 	*rshift = 20;
- 	return moveon;
-diff --git a/scrub/phase7.c b/scrub/phase7.c
-index 41a77356..8a028e19 100644
---- a/scrub/phase7.c
-+++ b/scrub/phase7.c
-@@ -148,11 +148,11 @@ xfs_scan_summary(
- 	 * filesystem treats them as "free", but since we scanned
- 	 * them, we'll consider them used.
+-	fsxfd.fd = open(fsdir, O_RDONLY);
+-	if (fsxfd.fd < 0) {
++	ret = xfd_open(&fsxfd, fsdir, O_RDONLY);
++	if (ret) {
++		errno = ret;
+ 		perror(fsdir);
+ 		return;
+ 	}
+diff --git a/scrub/phase1.c b/scrub/phase1.c
+index 6879cc33..81b0990d 100644
+--- a/scrub/phase1.c
++++ b/scrub/phase1.c
+@@ -84,13 +84,17 @@ xfs_setup_fs(
+ 	 * CAP_SYS_ADMIN, which we probably need to do anything fancy
+ 	 * with the (XFS driver) kernel.
  	 */
--	d_bfree -= totalcount.agbytes >> ctx->mnt.blocklog;
-+	d_bfree -= cvt_b_to_off_fsbt(&ctx->mnt, totalcount.agbytes);
+-	ctx->mnt.fd = open(ctx->mntpoint, O_RDONLY | O_NOATIME | O_DIRECTORY);
+-	if (ctx->mnt.fd < 0) {
+-		if (errno == EPERM)
++	error = xfd_open(&ctx->mnt, ctx->mntpoint,
++			O_RDONLY | O_NOATIME | O_DIRECTORY);
++	if (error) {
++		if (error == EPERM)
+ 			str_info(ctx, ctx->mntpoint,
+ _("Must be root to run scrub."));
++		else if (error == ENOTTY)
++			str_error(ctx, ctx->mntpoint,
++_("Not an XFS filesystem."));
+ 		else
+-			str_errno(ctx, ctx->mntpoint);
++			str_liberror(ctx, error, ctx->mntpoint);
+ 		return false;
+ 	}
  
- 	/* Report on what we found. */
--	used_data = (d_blocks - d_bfree) << ctx->mnt.blocklog;
--	used_rt = (r_blocks - r_bfree) << ctx->mnt.blocklog;
-+	used_data = cvt_off_fsb_to_b(&ctx->mnt, d_blocks - d_bfree);
-+	used_rt = cvt_off_fsb_to_b(&ctx->mnt, r_blocks - r_bfree);
- 	used_files = f_files - f_free;
- 	stat_data = totalcount.dbytes;
- 	stat_rt = totalcount.rbytes;
+@@ -110,12 +114,6 @@ _("Must be root to run scrub."));
+ 		return false;
+ 	}
+ 
+-	if (!platform_test_xfs_fd(ctx->mnt.fd)) {
+-		str_info(ctx, ctx->mntpoint,
+-_("Does not appear to be an XFS filesystem!"));
+-		return false;
+-	}
+-
+ 	/*
+ 	 * Flush everything out to disk before we start checking.
+ 	 * This seems to reduce the incidence of stale file handle
+@@ -127,13 +125,6 @@ _("Does not appear to be an XFS filesystem!"));
+ 		return false;
+ 	}
+ 
+-	/* Retrieve XFS geometry. */
+-	error = xfd_prepare_geometry(&ctx->mnt);
+-	if (error) {
+-		str_liberror(ctx, error, _("Retrieving XFS geometry"));
+-		return false;
+-	}
+-
+ 	if (!xfs_action_lists_alloc(ctx->mnt.fsgeom.agcount,
+ 				&ctx->action_lists)) {
+ 		str_error(ctx, ctx->mntpoint, _("Not enough memory."));
 
