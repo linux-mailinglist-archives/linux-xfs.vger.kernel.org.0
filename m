@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2F06A7A03
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B112A7A0B
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:38:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbfIDEhh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:37:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58832 "EHLO
+        id S1728222AbfIDEhv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:37:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59094 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfIDEhh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:37:37 -0400
+        with ESMTP id S1725947AbfIDEhv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:37:51 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844b4IJ040918;
-        Wed, 4 Sep 2019 04:37:30 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844am5a040715;
+        Wed, 4 Sep 2019 04:37:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=naKZTg7i9AuCCzSSAZXnH3OTQlA8RJPx2xYVrMYGFhU=;
- b=qiwRhMonFsuNpb1E4UaIcfczFjdNPsw/vfCifWelLLiV161aqmErMsTfEpSHdNuQ4WBo
- EYVm+jFEJZ4sJSjS9ccdweOmOZBaptL+W4qnoApC+qv39FVONxZiGhGSHVOhtYp4qhYb
- W8jOqkLtI/hoV2Q20UIzXiH+XFL0KYBz3dV+WnFaeMBlFILTsu5sKB5ebrTtzHMR3A8S
- VzqlOoqKQNmYq1789lkN62pWo5G5umQ/gDAc4naVAY3xYGoXVcdFKq4u1YwYFFyoNsp7
- XCVU6jNR1kloMr+kpzCliYtPNyQvSAoiwPObNziVNh9h9K3KHh8t/hqpiKPYr2wM6ALE OQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2ut6d1r09h-1
+ bh=coUo8uX6myA1hiLCtCsVIwjVSy8cp0L9pS2vjytEPJM=;
+ b=cYovUOQHKYyfXWFHafrTEYx1gzbci2n2pSnxa7gzaCtjjUvJ/ZRR3Mpy2w0O/nwedAXe
+ 9l7YLhMXtwtIPJw/LNqnL9DTpZNpBoxtGQv+P1GR2wjgr6LZpmj63ll82lqDOZh5wQr0
+ uUbAoCcdHfJe8JxM+hbGIbNwyRt+dW7fDZFoUkVlu0lFeydK9AtmwhVD4bPaymdFVe70
+ Z5HzNchoNFlxv4+pC5dqxpeq3mDL1gtF9EzfLRN/1uWPUurvZaW1zme3H2ck68q2O6c3
+ i6dc1L7gYbrS/at0nuoNtOvES9BdBB+1IvwB5SqaoxjVQ1WGFo9OecdbPyUWbaP37Uip RQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2ut6d1r0ap-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844WtGx022791;
-        Wed, 4 Sep 2019 04:37:29 GMT
+        Wed, 04 Sep 2019 04:37:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844XFQT027462;
+        Wed, 4 Sep 2019 04:37:39 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2usu51c50n-1
+        by userp3020.oracle.com with ESMTP id 2ut1hmtvud-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:29 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844bT85016277;
-        Wed, 4 Sep 2019 04:37:29 GMT
+        Wed, 04 Sep 2019 04:37:39 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844bcXG016383;
+        Wed, 4 Sep 2019 04:37:38 GMT
 Received: from localhost (/10.159.228.126)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 21:37:28 -0700
-Subject: [PATCH 04/10] man: document the new health reporting fields in
- various ioctls
+        with ESMTP ; Tue, 03 Sep 2019 21:37:38 -0700
+Subject: [PATCH 05/10] xfs_db: remove db/convert.h
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Tue, 03 Sep 2019 21:37:27 -0700
-Message-ID: <156757184781.1838441.4746750117807426676.stgit@magnolia>
+Date:   Tue, 03 Sep 2019 21:37:34 -0700
+Message-ID: <156757185424.1838441.6515170778646159040.stgit@magnolia>
 In-Reply-To: <156757182283.1838441.193482978701233436.stgit@magnolia>
 References: <156757182283.1838441.193482978701233436.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +53,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909040047
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909040047
@@ -71,226 +70,88 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Update the manpages to conver the new health reporting fields in the
-fs geometry, ag geometry, and bulkstat ioctls.
+db/convert.h conflicts with include/convert.h and since the former only
+has one declaration in it anyway, just get rid of it.  We'll need this
+in the next patch to avoid an ugly include mess.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- man/man2/ioctl_xfs_ag_geometry.2   |   48 +++++++++++++++++++++++++++++++
- man/man2/ioctl_xfs_fsbulkstat.2    |   52 +++++++++++++++++++++++++++++++++
- man/man2/ioctl_xfs_fsop_geometry.2 |   56 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 154 insertions(+), 2 deletions(-)
+ db/Makefile  |    4 ++--
+ db/command.c |    1 -
+ db/command.h |    1 +
+ db/convert.c |    1 -
+ db/convert.h |    7 -------
+ 5 files changed, 3 insertions(+), 11 deletions(-)
+ delete mode 100644 db/convert.h
 
 
-diff --git a/man/man2/ioctl_xfs_ag_geometry.2 b/man/man2/ioctl_xfs_ag_geometry.2
-index ddd54265..80ebcb76 100644
---- a/man/man2/ioctl_xfs_ag_geometry.2
-+++ b/man/man2/ioctl_xfs_ag_geometry.2
-@@ -57,6 +57,54 @@ Currently no flags are defined, so this field must be zero.
- .TP
- .IR ag_reserved
- All reserved fields will be set to zero on return.
-+.PP
-+The fields
-+.IR ag_sick " and " ag_checked
-+indicate the relative health of various allocation group metadata:
-+.IP \[bu] 2
-+If a given sick flag is set in
-+.IR ag_sick ,
-+then that piece of metadata has been observed to be damaged.
-+The same bit will be set in
-+.IR ag_checked .
-+.IP \[bu]
-+If a given sick flag is set in
-+.I ag_checked
-+and is not set in
-+.IR ag_sick ,
-+then that piece of metadata has been checked and is not faulty.
-+.IP \[bu]
-+If a given sick flag is not set in
-+.IR ag_checked ,
-+then no conclusion can be made.
-+.PP
-+The following flags apply to these fields:
-+.RS 0.4i
-+.TP
-+.B XFS_AG_GEOM_SICK_SB
-+Allocation group superblock.
-+.TP
-+.B XFS_AG_GEOM_SICK_AGF
-+Free space header.
-+.TP
-+.B XFS_AG_GEOM_SICK_AGFL
-+Free space reserve list.
-+.TP
-+.B XFS_AG_GEOM_SICK_AGI
-+Inode header.
-+.TP
-+.BR XFS_AG_GEOM_SICK_BNOBT " or " XFS_AG_GEOM_SICK_CNTBT
-+Free space btrees.
-+.TP
-+.BR XFS_AG_GEOM_SICK_INOBT " or " XFS_AG_GEOM_SICK_FINOBT
-+Inode btrees.
-+.TP
-+.B XFS_AG_GEOM_SICK_RMAPBT
-+Reverse mapping btree.
-+.TP
-+.B XFS_AG_GEOM_SICK_REFCNTBT
-+Reference count btree.
-+.RE
- .SH RETURN VALUE
- On error, \-1 is returned, and
- .I errno
-diff --git a/man/man2/ioctl_xfs_fsbulkstat.2 b/man/man2/ioctl_xfs_fsbulkstat.2
-index a8b22dc4..3e13cfa8 100644
---- a/man/man2/ioctl_xfs_fsbulkstat.2
-+++ b/man/man2/ioctl_xfs_fsbulkstat.2
-@@ -94,7 +94,9 @@ struct xfs_bstat {
- 	__u16             bs_projid_lo;
- 	__u16             bs_forkoff;
- 	__u16             bs_projid_hi;
--	unsigned char     bs_pad[6];
-+	uint16_t          bs_sick;
-+	uint16_t          bs_checked;
-+	unsigned char     bs_pad[2];
- 	__u32             bs_cowextsize;
- 	__u32             bs_dmevmask;
- 	__u16             bs_dmstate;
-@@ -184,6 +186,54 @@ is unused on Linux.
- .I bs_aextents
- is the number of storage mappings associated with this file's extended
- attributes.
-+.PP
-+The fields
-+.IR bs_sick " and " bs_checked
-+indicate the relative health of various allocation group metadata:
-+.IP \[bu] 2
-+If a given sick flag is set in
-+.IR bs_sick ,
-+then that piece of metadata has been observed to be damaged.
-+The same bit should be set in
-+.IR bs_checked .
-+.IP \[bu]
-+If a given sick flag is set in
-+.I bs_checked
-+but is not set in
-+.IR bs_sick ,
-+then that piece of metadata has been checked and is not faulty.
-+.IP \[bu]
-+If a given sick flag is not set in
-+.IR bs_checked ,
-+then no conclusion can be made.
-+.PP
-+The following flags apply to these fields:
-+.RS 0.4i
-+.TP
-+.B XFS_BS_SICK_INODE
-+The inode's record itself.
-+.TP
-+.B XFS_BS_SICK_BMBTD
-+File data extent mappings.
-+.TP
-+.B XFS_BS_SICK_BMBTA
-+Extended attribute extent mappings.
-+.TP
-+.B XFS_BS_SICK_BMBTC
-+Copy on Write staging extent mappings.
-+.TP
-+.B XFS_BS_SICK_DIR
-+Directory information.
-+.TP
-+.B XFS_BS_SICK_XATTR
-+Extended attribute data.
-+.TP
-+.B XFS_BS_SICK_SYMLINK
-+Symbolic link target.
-+.TP
-+.B XFS_BS_SICK_PARENT
-+Parent pointers.
-+.RE
- .SH RETURN VALUE
- On error, \-1 is returned, and
- .I errno
-diff --git a/man/man2/ioctl_xfs_fsop_geometry.2 b/man/man2/ioctl_xfs_fsop_geometry.2
-index 365bda8b..a35bbaeb 100644
---- a/man/man2/ioctl_xfs_fsop_geometry.2
-+++ b/man/man2/ioctl_xfs_fsop_geometry.2
-@@ -47,7 +47,9 @@ struct xfs_fsop_geom {
- 	__u32         logsunit;
- 	/* struct xfs_fsop_geom_v4 stops here. */
+diff --git a/db/Makefile b/db/Makefile
+index 8fecfc1c..0941b32e 100644
+--- a/db/Makefile
++++ b/db/Makefile
+@@ -8,13 +8,13 @@ include $(TOPDIR)/include/builddefs
+ LTCOMMAND = xfs_db
  
--	__u64         reserved[18];
-+	__u32         sick;
-+	__u32         checked;
-+	__u64         reserved[17];
- };
- .fi
- .in
-@@ -130,6 +132,13 @@ This field is meaningful only if the flag
- .B  XFS_FSOP_GEOM_FLAGS_LOGV2
- is set.
- .PP
-+The fields
-+.IR sick " and " checked
-+indicate the relative health of various whole-filesystem metadata.
-+Please see the section
-+.B XFS METADATA HEALTH REPORTING
-+for more details.
-+.PP
- .I reserved
- is set to zero.
- .SH FILESYSTEM FEATURE FLAGS
-@@ -203,6 +212,51 @@ Filesystem stores reverse mappings of blocks to owners.
- .B XFS_FSOP_GEOM_FLAGS_REFLINK
- Filesystem supports sharing blocks between files.
- .RE
-+.SH XFS METADATA HEALTH REPORTING
-+.PP
-+The online filesystem checking utility scans metadata and records what it
-+finds in the kernel incore state.
-+The following scheme is used for userspace to read the incore health status
-+of the filesystem:
-+
-+.IP \[bu] 2
-+If a given sick flag is set in
-+.IR sick ,
-+then that piece of metadata has been observed to be damaged.
-+The same bit should be set in
-+.IR checked .
-+.IP \[bu]
-+If a given sick flag is set in
-+.I checked
-+but is not set in
-+.IR sick ,
-+then that piece of metadata has been checked and is not faulty.
-+.IP \[bu]
-+If a given sick flag is not set in
-+.IR checked ,
-+then no conclusion can be made.
-+.PP
-+The following flags apply to these fields:
-+.RS 0.4i
-+.TP
-+.B XFS_FSOP_GEOM_SICK_COUNTERS
-+Inode and space summary counters.
-+.TP
-+.B XFS_FSOP_GEOM_SICK_UQUOTA
-+User quota information.
-+.TP
-+.B XFS_FSOP_GEOM_SICK_GQUOTA
-+Group quota information.
-+.TP
-+.B XFS_FSOP_GEOM_SICK_PQUOTA
-+Project quota information.
-+.TP
-+.B XFS_FSOP_GEOM_SICK_RT_BITMAP
-+Free space bitmap for the realtime device.
-+.TP
-+.B XFS_FSOP_GEOM_SICK_RT_SUMMARY
-+Free space summary for the realtime device.
-+.RE
+ HFILES = addr.h agf.h agfl.h agi.h attr.h attrshort.h bit.h block.h bmap.h \
+-	btblock.h bmroot.h check.h command.h convert.h crc.h debug.h \
++	btblock.h bmroot.h check.h command.h crc.h debug.h \
+ 	dir2.h dir2sf.h dquot.h echo.h faddr.h field.h \
+ 	flist.h fprint.h frag.h freesp.h hash.h help.h init.h inode.h input.h \
+ 	io.h logformat.h malloc.h metadump.h output.h print.h quit.h sb.h \
+ 	sig.h strvec.h text.h type.h write.h attrset.h symlink.h fsmap.h \
+ 	fuzz.h
+-CFILES = $(HFILES:.h=.c) btdump.c info.c
++CFILES = $(HFILES:.h=.c) btdump.c convert.c info.c
+ LSRCFILES = xfs_admin.sh xfs_ncheck.sh xfs_metadump.sh
  
- .SH RETURN VALUE
- On error, \-1 is returned, and
+ LLDLIBS	= $(LIBXFS) $(LIBXLOG) $(LIBFROG) $(LIBUUID) $(LIBRT) $(LIBPTHREAD)
+diff --git a/db/command.c b/db/command.c
+index c7c52342..89a78f03 100644
+--- a/db/command.c
++++ b/db/command.c
+@@ -11,7 +11,6 @@
+ #include "bmap.h"
+ #include "check.h"
+ #include "command.h"
+-#include "convert.h"
+ #include "debug.h"
+ #include "type.h"
+ #include "echo.h"
+diff --git a/db/command.h b/db/command.h
+index eacfd465..2f9a7e16 100644
+--- a/db/command.h
++++ b/db/command.h
+@@ -28,5 +28,6 @@ extern int		command(int argc, char **argv);
+ extern const cmdinfo_t	*find_command(const char *cmd);
+ extern void		init_commands(void);
+ 
++extern void		convert_init(void);
+ extern void		btdump_init(void);
+ extern void		info_init(void);
+diff --git a/db/convert.c b/db/convert.c
+index 01a08823..e1466057 100644
+--- a/db/convert.c
++++ b/db/convert.c
+@@ -6,7 +6,6 @@
+ 
+ #include "libxfs.h"
+ #include "command.h"
+-#include "convert.h"
+ #include "output.h"
+ #include "init.h"
+ 
+diff --git a/db/convert.h b/db/convert.h
+deleted file mode 100644
+index 3660cabe..00000000
+--- a/db/convert.h
++++ /dev/null
+@@ -1,7 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+- * All Rights Reserved.
+- */
+-
+-extern void	convert_init(void);
 
