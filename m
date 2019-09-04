@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D3BA7A0C
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8CF1A7A0F
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:38:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfIDEiH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:38:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59460 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfIDEiH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:38:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844ax00040821;
-        Wed, 4 Sep 2019 04:37:56 GMT
+        id S1728236AbfIDEis (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:38:48 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54358 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfIDEis (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:38:48 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844c2Ix028006;
+        Wed, 4 Sep 2019 04:38:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=SJYNeUerDO1JT9amnIqjS70n4e68gut9on6cEzpLmcM=;
- b=PS6IlbmZJkOS/ZxQx21BWAUT3slhmgDpJgJ7isDjtJ0Ttj11DTXvTyev4dX6UsVxljvP
- vsnvle+kqdNS/M+GxOwtnecczNmfO/CWEOD1kzJyYbgZ0CQtENvSIRdEnWoWFtzNPUWp
- Ezp/jNIObV6W6ToxiBmbVfkkUb2dtzC/f0kHd1pgseoii3AiHciVTjHNG9+1aoqR2HlF
- AVHWEnf87Ze56lPgDqtY2Rt8eeJmvjQSeagYHWSMRfhaEhcYwozoRHwUGHYEl9X+xKbv
- Uj3RInB1kxi3YIrMqCDFQOF4QFehE5v6NdcQEFsrkLQfUWNu5oXbFL4Npk/jgwe51kG9 Mg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2ut6d1r0cr-1
+ bh=mwFPWkXQR69JJHJqfi5e1TTravkNncs8shgdGadv2oA=;
+ b=GxvQV2fTJtvlsmSL6Sd9blKRmqmkDr0jUgoZK9mxcjoI4tZbilVEXjgKQZLkKcXnVPeu
+ WdvqcaDt+cijCkmr72TGPOTiH6DPZmv8SDK6JvmeGuai6u2fTVPjXGoZ3TkkGGoqXYZJ
+ 1012OGLWogOO6cw4X3IJBPoPvNfnNukGf2Ce4YWkDx5mvxxL+XlYgBa6vPVPNL0pmmpJ
+ mhjdqRQl6SDCZ76hm+sOiKctkKi4qlTJ9dg96RH9xea77dmIwFuYJs9NzPMBk9xBcAoc
+ JSnjNFUzQdBSoRI8H4/hD1exZZCSpTxn6e+wHjyIosUHn0in23v1Qr1oROv7IyuLe0Qw SA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2ut6ds0042-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844Wndq022697;
-        Wed, 4 Sep 2019 04:37:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2usu51c5a8-1
+        Wed, 04 Sep 2019 04:38:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844cZm8176160;
+        Wed, 4 Sep 2019 04:38:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2usu52bke5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:55 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844bsPe024325;
-        Wed, 4 Sep 2019 04:37:54 GMT
+        Wed, 04 Sep 2019 04:38:39 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844c7GC016603;
+        Wed, 4 Sep 2019 04:38:07 GMT
 Received: from localhost (/10.159.228.126)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 21:37:54 -0700
-Subject: [PATCH 07/10] xfs_db: use precomputed inode geometry values
+        with ESMTP ; Tue, 03 Sep 2019 21:38:06 -0700
+Subject: [PATCH 09/10] xfs_repair: reduce the amount of "clearing reflink
+ flag" messages
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Tue, 03 Sep 2019 21:37:53 -0700
-Message-ID: <156757187309.1838441.9204486319983263288.stgit@magnolia>
+Date:   Tue, 03 Sep 2019 21:38:05 -0700
+Message-ID: <156757188583.1838441.18008361702211038370.stgit@magnolia>
 In-Reply-To: <156757182283.1838441.193482978701233436.stgit@magnolia>
 References: <156757182283.1838441.193482978701233436.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -56,7 +57,7 @@ X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=6
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909040047
+ engine=8.0.1-1906280000 definitions=main-1909040048
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
@@ -70,51 +71,68 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Use the precomputed inode geometry values instead of open-coding them.
+Clearing the reflink flag on files that don't share blocks is an
+optimization, not a repair, so it's not critical to log a message every
+single time we clear a flag.  Only log one message that we're clearing
+these flags unless verbose mode is enabled.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- db/inode.c      |    8 +++-----
- repair/dinode.c |    2 +-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ repair/rmap.c |   34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
 
-diff --git a/db/inode.c b/db/inode.c
-index 73dd118d..d8d69ffb 100644
---- a/db/inode.c
-+++ b/db/inode.c
-@@ -657,16 +657,14 @@ set_cur_inode(
- 	    igeo->inoalign_mask) {
- 		xfs_agblock_t	chunk_agbno;
- 		xfs_agblock_t	offset_agbno;
--		int		blks_per_cluster;
+diff --git a/repair/rmap.c b/repair/rmap.c
+index 5dd6557a..b907383e 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -1170,6 +1170,36 @@ record_inode_reflink_flag(
+ 		(unsigned long long)lino, (unsigned long long)irec->ino_was_rl);
+ }
  
--		blks_per_cluster = igeo->inode_cluster_size >>
--							mp->m_sb.sb_blocklog;
- 		offset_agbno = agbno & igeo->inoalign_mask;
- 		chunk_agbno = agbno - offset_agbno;
- 		cluster_agbno = chunk_agbno +
--			((offset_agbno / blks_per_cluster) * blks_per_cluster);
-+			((offset_agbno / M_IGEO(mp)->blocks_per_cluster) *
-+			 M_IGEO(mp)->blocks_per_cluster);
- 		offset += ((agbno - cluster_agbno) * mp->m_sb.sb_inopblock);
--		numblks = XFS_FSB_TO_BB(mp, blks_per_cluster);
-+		numblks = XFS_FSB_TO_BB(mp, M_IGEO(mp)->blocks_per_cluster);
- 	} else
- 		cluster_agbno = agbno;
++/*
++ * Inform the user that we're clearing the reflink flag on an inode that
++ * doesn't actually share any blocks.  This is an optimization (the kernel
++ * skips refcount checks for non-reflink files) and not a corruption repair,
++ * so we don't need to log every time we clear a flag unless verbose mode is
++ * enabled.
++ */
++static void
++warn_clearing_reflink(
++	xfs_ino_t		ino)
++{
++	static bool		warned = false;
++	static pthread_mutex_t	lock = PTHREAD_MUTEX_INITIALIZER;
++
++	if (verbose) {
++		do_warn(_("clearing reflink flag on inode %"PRIu64"\n"), ino);
++		return;
++	}
++
++	if (warned)
++		return;
++
++	pthread_mutex_lock(&lock);
++	if (!warned) {
++		do_warn(_("clearing reflink flag on inodes when possible\n"));
++		warned = true;
++	}
++	pthread_mutex_unlock(&lock);
++}
++
+ /*
+  * Fix an inode's reflink flag.
+  */
+@@ -1188,9 +1218,7 @@ fix_inode_reflink_flag(
+ _("setting reflink flag on inode %"PRIu64"\n"),
+ 			XFS_AGINO_TO_INO(mp, agno, agino));
+ 	else if (!no_modify) /* && !set */
+-		do_warn(
+-_("clearing reflink flag on inode %"PRIu64"\n"),
+-			XFS_AGINO_TO_INO(mp, agno, agino));
++		warn_clearing_reflink(XFS_AGINO_TO_INO(mp, agno, agino));
+ 	if (no_modify)
+ 		return 0;
  
-diff --git a/repair/dinode.c b/repair/dinode.c
-index 56992dd2..f5e88cc3 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -768,7 +768,7 @@ get_agino_buf(
- 	 * we must find the buffer for its cluster, add the appropriate
- 	 * offset, and return that.
- 	 */
--	cluster_size = max(igeo->inode_cluster_size, mp->m_sb.sb_blocksize);
-+	cluster_size = igeo->inode_cluster_size;
- 	ino_per_cluster = cluster_size / mp->m_sb.sb_inodesize;
- 	cluster_agino = agino & ~(ino_per_cluster - 1);
- 	cluster_blks = XFS_FSB_TO_DADDR(mp, max(1,
 
