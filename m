@@ -2,177 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF96A78AD
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 04:19:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F37FEA7963
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 05:40:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfIDCTY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 3 Sep 2019 22:19:24 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:13806 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfIDCTX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Sep 2019 22:19:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567563563; x=1599099563;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=BqEv8f2V8Lz2K3IJzXdOwPgAEB7b8KAUi447UvFCvHQ=;
-  b=dOtuoFE7Yf2tdv66GeYCQrhCeAORwC1D+A075shHtGK8gHw8luv3Vdgw
-   ouCMtmWXgMG/4ezuNKU45+gdHEDCR8ciP2eVZqOc7FGkER/XubNGQYHYd
-   RizERgjzGpeZ5emFXC9S69ruHWrySOdvhzBlR9AMh9hBBLreCxkDTwbSW
-   486kpejVkXOLo1mb2ol2b1R6qgwUaUo4AoZzTA3GWxothC6HLapFgTKHy
-   yGuKMgZNIt/w9IMTiIhp7V5pbBhLNMhiTdVM6+VHq2kdtXQtW5WdoXrfU
-   YJqIeTUVY/ifRcYTaMHMUo5lByXUpwHSUJ/76wThqtAPIsJgkmlfxkvUd
-   g==;
-IronPort-SDR: EIFj/xIrJPpsTHk2ovT75YJxyabClG4HLS8gA2uDrNPc2kx94NnByq8NVM13srTp9E9mmuKBvq
- /65QTyGHf9jJwsxWr7SDcnRl7mTv706rcyZsdiqZEiS732UVPBKQGZM2FSfWaqFl3kpkZSFd4i
- ME5boj4Ogm3OP2ji+xgq8SNWDanv/CqWEhpb4+DwU+Piv8I6SAC60ix6LNdskiFJX6tb2Y5lVK
- WFbGxKViaCPYfgoIAH7d0kSb2rzkfBRoMJzYB9YyTi4DWgHpfpcjici+6yZloxYcKoMOmrH8r+
- qF0=
-X-IronPort-AV: E=Sophos;i="5.64,465,1559491200"; 
-   d="scan'208";a="224071156"
-Received: from mail-co1nam03lp2059.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.59])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Sep 2019 10:19:20 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aBwowodQucs5td0G69XEVDxTdUX0zX1UkjT3UAxorouC+Xm7CV+hY4ThmYa9tjxtV/ELREKTa0hfZXls7VK7WL52XChbu8c+v3+2kKCYmFKnSwrYdqDGa0Q+vr4lNHg0LA9Fu8ae+kLjMB4wWy4jez36ZWn5sAAAIFU5/+nyDCkH8i38iRfX1j8J/ZRrC059edNKhot3Tj5aEB/FPdbdzcRCAWBBgLbznIEr6eD4kgZbcx7BPGS6PErlt87MlZAnDCkpWMxmJoYP33Y0b4dCLYUeNHGwNOEpKwCg9hBXJlruX79IaJe7t3oC/az4YsJGTar8VG6vjv7okBGVqNGyMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iaYiQrD3hYXUQDoMDU5Qo8LFBTiWFzwLt84BvUQ0xvI=;
- b=HifkxSzb3OY8rETcWo5NLK3lSEoLV4BbMZUuRLJPLzW7A34Ca3i7Zm8R+bEZtFr4wSI7/d3cJnyQWn2Un+fY5/r/aKKtgdmR7KTZ/5AXmTW+QlIiCFjs/pZ+iL6HEgCFjZfuG019y+2Q2ruXC3pYZCuIcejWGRY45zGimBYAOa/+4MvPmXMOIp3obU6bWGUmZb5mD2YaCKrbDF6ZB/JGjZQd8ffS/9PQkeDya1ERj00zZ4GZSIi9dSGOhhLXATMB22xAHxsJzSNFiAz9285O7rM4QjFz0Lt9xL82t7UA4acs8FvquA9u0thpiGrFvprtcbf8hKc61A8F/uE7rqcA/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iaYiQrD3hYXUQDoMDU5Qo8LFBTiWFzwLt84BvUQ0xvI=;
- b=yppxy9Y+oIeGe43ElSWCwGgxyxRYnw9jpqmj03o4tcIlD3NrJgTFnphlEOAu2YVp+0j4Y/9vpGV0G0Uy7J/SvTTdkfj/pek4XjzbxUaE0JFN0nbAQ+eyywKW+PFxUhcbHfOCLsDM4usGi8bYaAHaLHCjncogfMb0fLwmsraGNmA=
-Received: from BN8PR04MB5812.namprd04.prod.outlook.com (20.179.75.75) by
- BN8PR04MB6065.namprd04.prod.outlook.com (20.178.215.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Wed, 4 Sep 2019 02:19:20 +0000
-Received: from BN8PR04MB5812.namprd04.prod.outlook.com
- ([fe80::59e:5431:4290:9bcf]) by BN8PR04MB5812.namprd04.prod.outlook.com
- ([fe80::59e:5431:4290:9bcf%5]) with mapi id 15.20.2220.021; Wed, 4 Sep 2019
- 02:19:20 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "agruenba@redhat.com" <agruenba@redhat.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.de>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: iomap_dio_rw ->end_io improvements
-Thread-Topic: iomap_dio_rw ->end_io improvements
-Thread-Index: AQHVYlgHvMsTW5bPtkGqhSJnJscvNA==
-Date:   Wed, 4 Sep 2019 02:19:19 +0000
-Message-ID: <BN8PR04MB5812B14013BB4CB892F33B20E7B80@BN8PR04MB5812.namprd04.prod.outlook.com>
-References: <20190903130327.6023-1-hch@lst.de>
- <20190903221621.GH568270@magnolia>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Damien.LeMoal@wdc.com; 
-x-originating-ip: [199.255.47.9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6fb9816c-6996-4b7b-ddcc-08d730de4b4e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN8PR04MB6065;
-x-ms-traffictypediagnostic: BN8PR04MB6065:
-x-microsoft-antispam-prvs: <BN8PR04MB60653E698D81B73D060EF3C3E7B80@BN8PR04MB6065.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(346002)(136003)(376002)(396003)(53754006)(189003)(199004)(4326008)(486006)(446003)(54906003)(110136005)(55016002)(316002)(25786009)(6246003)(9686003)(256004)(26005)(6436002)(102836004)(53546011)(6506007)(476003)(76176011)(14454004)(7696005)(99286004)(71200400001)(71190400001)(478600001)(66446008)(8936002)(66946007)(5660300002)(76116006)(64756008)(66556008)(66476007)(91956017)(52536014)(6116002)(3846002)(81166006)(229853002)(305945005)(7736002)(81156014)(8676002)(2906002)(186003)(66066001)(74316002)(33656002)(2501003)(53936002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR04MB6065;H:BN8PR04MB5812.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rjC34b9d/OpnVodrxfrQjNPPPmxYpm/gNH19t6jgETOMrayBAq/nu3y+so+RGoQTJc88RgZlwI6dgCLs9pkLcKgKKa1isNi6BbFjLal1p1oW8o+6JMwNQJ8IEzuhonYDl476rx4yrHkxPP8EQ8lcAx67Iff8D+wCsoU3dM6Uh9/Y/IxwwYfv/YJ72dVwuJ6oUgT6Sv3Qc1VD865doPY+tmBWnGdB/Q88ZlJZvR3EM57c4tVjG99Y2XS1MD8ACVsMU0U39+z6gzGbaMa1GR40kLLQLr2jrmrDZlu7ruIjW665oITGFVzdP/9ACzHfmNsDuNvIGIY3q8MnD4hIy53RlpJLzWXw3MGA8DYIWQTQLSY+vjDoelmrwh+dLF4j6fLP7EHmECX4SkdWQ94Y2il8vCp08AuLoPt1cdQ/0zR2Y+M=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728113AbfIDDj6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 3 Sep 2019 23:39:58 -0400
+Received: from m13-11.163.com ([220.181.13.11]:57098 "EHLO m13-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727722AbfIDDj6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 3 Sep 2019 23:39:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=XfDaL
+        fQ/9Xz3JC2Wwn0kvs3GX/v4d6KqTEa6TbrD8rg=; b=EpmuMXQAvIHA10Qs9K3Yo
+        KODa1sPrN+EKrEJFRqQ5Z610UhjcEhXjkp4Nx8H9TFXFrPsgXr9k7o72QIsa41V2
+        kzRHEttYd4v51Su6jY0lE2kZ0PgjAxFzGUeybWjafWvvoaaRmsPE0A7eigT6F3SE
+        78mbXk/INaJWTA3G6W5GjQ=
+Received: from yin-jianhong$163.com ( [119.254.120.66] ) by
+ ajax-webmail-wmsvr11 (Coremail) ; Wed, 4 Sep 2019 11:24:13 +0800 (CST)
+X-Originating-IP: [119.254.120.66]
+Date:   Wed, 4 Sep 2019 11:24:13 +0800 (CST)
+From:   =?GBK?B?0vy9o7rn?= <yin-jianhong@163.com>
+To:     "Eric Sandeen" <sandeen@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        lsahlber@redhat.com, alexander198961@gmail.com,
+        fengxiaoli0714@gmail.com, dchinner@redhat.com
+Subject: Re:Re: [PATCH v2] xfsprogs: io/copy_range: cover corner case (fd_in
+ == fd_out)
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
+ Copyright (c) 2002-2019 www.mailtech.cn 163com
+In-Reply-To: <c2a1d20c-d6e9-1358-a189-a05a822cb22e@redhat.com>
+References: <20190903111903.12231-1-yin-jianhong@163.com>
+ <c2a1d20c-d6e9-1358-a189-a05a822cb22e@redhat.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fb9816c-6996-4b7b-ddcc-08d730de4b4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 02:19:19.8958
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 30VTstTfHiSk4xrztY7B+G/86LTlguJ5Sb68eM6tIjYItP+uK5i3lNK6QudNQ2A15PrbNRg1eUI+vVxtW9FxkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR04MB6065
+Message-ID: <104d5a49.403d.16cfa4d1c09.Coremail.yin-jianhong@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: C8GowABH_tFdLm9dSiGtAA--.45229W
+X-CM-SenderInfo: p1lqgyxldqx0lqj6il2tof0z/1tbiMA0mBFWBpYtLjAAAsi
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2019/09/04 7:16, Darrick J. Wong wrote:=0A=
-> On Tue, Sep 03, 2019 at 03:03:25PM +0200, Christoph Hellwig wrote:=0A=
->> Hi all,=0A=
->>=0A=
->> this series contains two updates to the end_io handling for the iomap=0A=
->> direct I/O code.  The first patch is from Matthew and passes the size an=
-d=0A=
->> error separately, and has been taken from his series to convert ext4 to=
-=0A=
->> use iomap for direct I/O.  The second one moves the end_io handler into =
-a=0A=
->> separate ops structure.  This should help with Goldwyns series to use th=
-e=0A=
->> iomap code in btrfs, but as-is already ensures that we don't store a=0A=
->> function pointer in a mutable data structure.=0A=
-> =0A=
-> The biggest problem with merging these patches (and while we're at it,=0A=
-> Goldwyn's patch adding a srcmap parameter to ->iomap_begin) for 5.4 is=0A=
-> that they'll break whatever Andreas and Damien have been preparing for=0A=
-> gfs2 and zonefs (respectively) based off the iomap-writeback work branch=
-=0A=
-> that I created off of 5.3-rc2 a month ago.=0A=
-> =0A=
-> Digging through the gfs2 and zonefs code, it doesn't look like it would=
-=0A=
-> be difficult to adapt them to the changes, but forcing a rebase at this=
-=0A=
-> point would (a) poke holes in the idea of creating stable work branches=
-=0A=
-> and (b) shoot holes in all the regression testing they've done so far.=0A=
-> I do not have the hardware to test either in detail.=0A=
-=0A=
-For zonefs, the changes are not that big (thanks for sending them :)) and=
-=0A=
-testing does not take long given the lower amount of functionalities compar=
-ed to=0A=
-a regular FS. So regression testing with changes to iomap will not be a hug=
-e=0A=
-problem for me. I can do it if needed.=0A=
-=0A=
-> So the question is: Are all three (xfs/gfs2/zonefs?) downstream users of=
-=0A=
-> iomap ok with a rebase a week and a half before the 5.4 merge window=0A=
-> opens?  I'm still inclined to push all these patches (iomap cow and the=
-=0A=
-> directio improvements) into a work branch for 5.5, but if someone wants=
-=0A=
-> this for 5.4 badly enough to persuade everyone else to start their=0A=
-> testing again, then I could see trying to make this happen (no later=0A=
-> than 5pm Pacific on Thursday).  Bear in mind I'm on vacation starting=0A=
-> Friday and going until the 15th...=0A=
-=0A=
-No strong opinion either way. I will adjust to what you decide.=0A=
-=0A=
-> =0A=
-> Once iomap accumulates more users (ext4, btrfs) then this sort of thing=
-=0A=
-> will never scale and will likely never happen again.=0A=
-> =0A=
-> Thoughts?  Flames? :)=0A=
-> =0A=
-> --D=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+CkF0IDIwMTktMDktMDQgMDE6NTQ6MjEsICJFcmljIFNhbmRlZW4iIDxzYW5kZWVuQHJlZGhhdC5j
+b20+IHdyb3RlOgo+T24gOS8zLzE5IDY6MTkgQU0sIEppYW5ob25nLllpbiB3cm90ZToKPj4gUmVs
+YXRlZCBidWc6Cj4+ICAgY29weV9maWxlX3JhbmdlIHJldHVybiAiSW52YWxpZCBhcmd1bWVudCIg
+d2hlbiBjb3B5IGluIHRoZSBzYW1lIGZpbGUKPj4gICBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5v
+cmcvc2hvd19idWcuY2dpP2lkPTIwMjkzNQo+Cj50aGF0J3MgYSBDSUZTIGJ1ZyB0aG91Z2gsIG5v
+dCByZWxhdGVkIHRvIGhvdyB4ZnNfaW8gb3BlcmF0ZXMsIGNvcnJlY3Q/CgpIaSBFcmljCgp0aGF0
+J3MgcmlnaHQsIEkgdGhvdWdodCB0aGF0IHRoZSBjb25kaXRpb24gdG8gcmVwcm9kdWNlIHRoZSBi
+dWcgbXVzdCBiZSBmZF9pbiA9PSBmZF9vdXQuCmJ1dCBub3cgSSBrbm93IHRoYXQncyBub3QgY29y
+cmVjdC4gIHNyY19maWxlID09IGRzdF9maWxlIGlzIGVub3VnaC4KCgpidXQgdGhlcmUncyBhIGxp
+dHRsZSBwcm9ibGVtLCBpZiBleGVjIGZvbGxvdyBjb21tYW5kICwgd2lsbCB0cnVuY2F0ZSBzcmNf
+ZmlsZQogICAjIHhmc19pbyAtYyAiY29weV9yYW5nZSB0ZXN0ZmlsZSIgdGVzdGZpbGUKaXQncyBu
+b3QgZXhwZWN0ZWQsIHdpbGwgc2VuZCBuZXcgcGF0Y2ggdG8gZml4IGl0LiBpZiB5b3UgYWdyZWUK
+CkppYW5ob25nCgo+Cj5XaGF0IGlzIHRoZSBmYWlsaW5nIHhmc19pbyBjYXNlPyAgQmVjYXVzZSB0
+aGlzIHNlZW1zIHRvIHdvcmsgZmluZSBoZXJlOgo+Cj4jIGZhbGxvY2F0ZSAtbCAxMjhtIHRlc3Rm
+aWxlCj4jIHN0cmFjZSAtZW9wZW4sY29weV9maWxlX3JhbmdlIHhmc19pbyAtYyAiY29weV9yYW5n
+ZSAtcyAxbSAtZCA4bSAtbCAybSB0ZXN0ZmlsZSIgdGVzdGZpbGUKPi4uLgo+b3BlbigidGVzdGZp
+bGUiLCBPX1JEV1IpICAgICAgICAgICAgICAgID0gMwo+Li4uCj5vcGVuKCJ0ZXN0ZmlsZSIsIE9f
+UkRPTkxZKSAgICAgICAgICAgICAgPSA0Cj5jb3B5X2ZpbGVfcmFuZ2UoNCwgWzEwNDg1NzZdLCAz
+LCBbODM4ODYwOF0sIDIwOTcxNTIsIDApID0gMjA5NzE1Mgo+KysrIGV4aXRlZCB3aXRoIDAgKysr
+Cj4KPnRoaXMgd29ya3MgdG9vOgo+Cj4jIHN0cmFjZSAtZW9wZW4sY29weV9maWxlX3JhbmdlIHhm
+c19pbyAtYyAiY29weV9yYW5nZSB0ZXN0ZmlsZSIgdGVzdGZpbGUKPi4uLgo+b3BlbigidGVzdGZp
+bGUiLCBPX1JEV1IpICAgICAgICAgICAgICAgID0gMwo+Li4uCj5vcGVuKCJ0ZXN0ZmlsZSIsIE9f
+UkRPTkxZKSAgICAgICAgICAgICAgPSA0Cj5jb3B5X2ZpbGVfcmFuZ2UoNCwgWzBdLCAzLCBbMF0s
+IDEzNDIxNzcyOCwgMCkgPSAwCj4rKysgZXhpdGVkIHdpdGggMCArKysKPgo+c28gY2FuIHlvdSBo
+ZWxwIG1lIHVuZGVyc3RhbmQgd2hhdCBidWcgeW91J3JlIGZpeGluZz8KPgo+LUVyaWMKPgo+PiBp
+ZiBhcmd1bWVudCBvZiBvcHRpb24gLWYgaXMgIi0iLCB1c2UgY3VycmVudCBmaWxlLT5mZCBhcyBm
+ZF9pbgo+PiAKPj4gVXNhZ2U6Cj4+ICAgeGZzX2lvIC1jICdjb3B5X3JhbmdlIC1mIC0nIHNvbWVf
+ZmlsZQo+PiAKPj4gU2lnbmVkLW9mZi1ieTogSmlhbmhvbmcgWWluIDx5aW4tamlhbmhvbmdAMTYz
+LmNvbT4KPj4gLS0tCj4+ICBpby9jb3B5X2ZpbGVfcmFuZ2UuYyB8IDI3ICsrKysrKysrKysrKysr
+KysrKy0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyksIDkgZGVs
+ZXRpb25zKC0pCj4+IAo+PiBkaWZmIC0tZ2l0IGEvaW8vY29weV9maWxlX3JhbmdlLmMgYi9pby9j
+b3B5X2ZpbGVfcmFuZ2UuYwo+PiBpbmRleCBiN2I5ZmQ4OC4uMmRkZThhMzEgMTAwNjQ0Cj4+IC0t
+LSBhL2lvL2NvcHlfZmlsZV9yYW5nZS5jCj4+ICsrKyBiL2lvL2NvcHlfZmlsZV9yYW5nZS5jCj4+
+IEBAIC0yOCw2ICsyOCw3IEBAIGNvcHlfcmFuZ2VfaGVscCh2b2lkKQo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBhdCBwb3NpdGlvbiAwXG5cCj4+ICAgJ2NvcHlfcmFuZ2UgLWYgMicgLSBj
+b3BpZXMgYWxsIGJ5dGVzIGZyb20gb3BlbiBmaWxlIDIgaW50byB0aGUgY3VycmVudCBvcGVuIGZp
+bGVcblwKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgYXQgcG9zaXRpb24gMFxuXAo+PiAr
+ICdjb3B5X3JhbmdlIC1mIC0nIC0gY29waWVzIGFsbCBieXRlcyBmcm9tIGN1cnJlbnQgb3BlbiBm
+aWxlIGFwcGVuZCB0aGUgY3VycmVudCBvcGVuIGZpbGVcblwKPj4gICIpKTsKPj4gIH0KPj4gIAo+
+PiBAQCAtMTE0LDExICsxMTUsMTUgQEAgY29weV9yYW5nZV9mKGludCBhcmdjLCBjaGFyICoqYXJn
+dikKPj4gIAkJCX0KPj4gIAkJCWJyZWFrOwo+PiAgCQljYXNlICdmJzoKPj4gLQkJCXNyY19maWxl
+X25yID0gYXRvaShhcmd2WzFdKTsKPj4gLQkJCWlmIChzcmNfZmlsZV9uciA8IDAgfHwgc3JjX2Zp
+bGVfbnIgPj0gZmlsZWNvdW50KSB7Cj4+IC0JCQkJcHJpbnRmKF8oImZpbGUgdmFsdWUgJWQgaXMg
+b3V0IG9mIHJhbmdlICgwLSVkKVxuIiksCj4+IC0JCQkJCXNyY19maWxlX25yLCBmaWxlY291bnQg
+LSAxKTsKPj4gLQkJCQlyZXR1cm4gMDsKPj4gKwkJCWlmIChzdHJjbXAoYXJndlsxXSwgIi0iKSA9
+PSAwKQo+PiArCQkJCXNyY19maWxlX25yID0gKGZpbGUgLSAmZmlsZXRhYmxlWzBdKSAvIHNpemVv
+ZihmaWxlaW9fdCk7Cj4+ICsJCQllbHNlIHsKPj4gKwkJCQlzcmNfZmlsZV9uciA9IGF0b2koYXJn
+dlsxXSk7Cj4+ICsJCQkJaWYgKHNyY19maWxlX25yIDwgMCB8fCBzcmNfZmlsZV9uciA+PSBmaWxl
+Y291bnQpIHsKPj4gKwkJCQkJcHJpbnRmKF8oImZpbGUgdmFsdWUgJWQgaXMgb3V0IG9mIHJhbmdl
+ICgwLSVkKVxuIiksCj4+ICsJCQkJCQlzcmNfZmlsZV9uciwgZmlsZWNvdW50IC0gMSk7Cj4+ICsJ
+CQkJCXJldHVybiAwOwo+PiArCQkJCX0KPj4gIAkJCX0KPj4gIAkJCS8qIEV4cGVjdCBubyBzcmNf
+cGF0aCBhcmcgKi8KPj4gIAkJCXNyY19wYXRoX2FyZyA9IDA7Cj4+IEBAIC0xNDcsMTAgKzE1Miwx
+NCBAQCBjb3B5X3JhbmdlX2YoaW50IGFyZ2MsIGNoYXIgKiphcmd2KQo+PiAgCQl9Cj4+ICAJCWxl
+biA9IHN6Owo+PiAgCj4+IC0JCXJldCA9IGNvcHlfZHN0X3RydW5jYXRlKCk7Cj4+IC0JCWlmIChy
+ZXQgPCAwKSB7Cj4+IC0JCQlyZXQgPSAxOwo+PiAtCQkJZ290byBvdXQ7Cj4+ICsJCWlmIChmZCAh
+PSBmaWxlLT5mZCkgewo+PiArCQkJcmV0ID0gY29weV9kc3RfdHJ1bmNhdGUoKTsKPj4gKwkJCWlm
+IChyZXQgPCAwKSB7Cj4+ICsJCQkJcmV0ID0gMTsKPj4gKwkJCQlnb3RvIG91dDsKPj4gKwkJCX0K
+Pj4gKwkJfSBlbHNlIHsKPj4gKwkJCWRzdCA9IHN6Owo+PiAgCQl9Cj4+ICAJfQo+PiAgCj4+IAo=
+
