@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A91A79F9
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84D70A79FD
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfIDEhH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:37:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58112 "EHLO
+        id S1727994AbfIDEhZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:37:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58454 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfIDEhH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:37:07 -0400
+        with ESMTP id S1725908AbfIDEhZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:37:25 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844b1nI040854;
-        Wed, 4 Sep 2019 04:37:05 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844aYU3040540;
+        Wed, 4 Sep 2019 04:37:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=+NruSBKd8sU2SE9QjE6AHon4OJKZ8xc9XQrmf4s5e/g=;
- b=YD2qkEy7z4A24emQuKTIo3BsWffY/eOu2ZpIHAvi3nkI7soFQrcT2Pon91CYNxnXWzp1
- JAH/sjJk7OUW9NCp5kNEMQO0D+T/YrkSOohg2RpYhAGzErya/9GxlNCFuIvH6HhY+xx/
- e8S7EPxdGd0L9hElKZUjNPAFbIy/c7PzwODXRccewUkdSTrfdnTFMOuECAlmbJXimn78
- 6igvR/QaBdIZxkA+5Q7alTRM65eb/BarzSqlui17/86zshgSN6sqJVg2b9EIKMJWLoDE
- eIw5hc3qu8YtG1rtsOvbBwAW4BMX5WFjzb76UgFvWzgcQwLfk/D7EDhYWBftiFmSZ+fW /A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ut6d1r02h-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=ZLj2L1NzQibXuvDAwxj0Er0j9S0C8V3zyLNdHHJ/664=;
+ b=ALlnQeNihlsp/nX0pFtD3GDZasZ4IZKJj5CqDaU4Drx44ro1zy3HPxpY6xrX138yU4Xe
+ HtUxxpBJ+Jgp5A7WD2ApWEUUV8OHyNnDkXep1D6rTM7KiJQG1Y+AI38BH2gcEXO1ZyYT
+ AwYBAiAcnuQt1EyonT0fnwyOPCCskOQ83xf8+6pUEaeqehSjtMzDel3klzF1zRGxleXB
+ fIO/b37ztB44/2hjKHHvYWSAOKKUC1UJaEoRVihFxXWpvqOfvDaBQMS7S98XJ1U1LXc8
+ ozzcUWC1vU12qYg3yR2xMpUgI1pWhe4Zb0eCVeMJfDmMGbFS5ceSAy1biWwa/DaN+lJ7 5w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2ut6d1r05p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844XGZo027533;
-        Wed, 4 Sep 2019 04:37:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2ut1hmtvf2-1
+        Wed, 04 Sep 2019 04:37:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844XEor055516;
+        Wed, 4 Sep 2019 04:37:11 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2us5phmt3q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 04:37:04 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x844b4rN030965;
-        Wed, 4 Sep 2019 04:37:04 GMT
+        Wed, 04 Sep 2019 04:37:11 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844bACZ023997;
+        Wed, 4 Sep 2019 04:37:10 GMT
 Received: from localhost (/10.159.228.126)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 21:37:03 -0700
-Subject: [PATCH v2 00/10] xfsprogs-5.3: various fixes
+        with ESMTP ; Tue, 03 Sep 2019 21:37:10 -0700
+Subject: [PATCH 01/10] man: document the new v5 fs geometry ioctl structures
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 03 Sep 2019 21:37:02 -0700
-Message-ID: <156757182283.1838441.193482978701233436.stgit@magnolia>
+Date:   Tue, 03 Sep 2019 21:37:09 -0700
+Message-ID: <156757182904.1838441.1851639472366955352.stgit@magnolia>
+In-Reply-To: <156757182283.1838441.193482978701233436.stgit@magnolia>
+References: <156757182283.1838441.193482978701233436.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,42 +68,47 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Fix various problems in xfsprogs:
+Amend the fs geometry ioctl documentation to cover the new v5 structure.
 
-Patch 1 fixes libxfs-diff to handle files that are in libxfs/ in xfsprogs
-but still in fs/xfs/ in the kernel.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ man/man2/ioctl_xfs_fsop_geometry.2 |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Patch 2 moves the topology function declarations into a separate header
-file since they're no longer libxcmd functionality.
 
-Patch 3 teaches the xfs geometry wrapper function to try the v4 ioctl
-calls if the v5 one fails.
+diff --git a/man/man2/ioctl_xfs_fsop_geometry.2 b/man/man2/ioctl_xfs_fsop_geometry.2
+index 68e3387d..365bda8b 100644
+--- a/man/man2/ioctl_xfs_fsop_geometry.2
++++ b/man/man2/ioctl_xfs_fsop_geometry.2
+@@ -12,6 +12,8 @@ ioctl_xfs_fsop_geometry \- report XFS filesystem layout and features
+ .PP
+ .BI "int ioctl(int " fd ", XFS_IOC_FSOP_GEOMETRY, struct xfs_fsop_geom*" arg );
+ .br
++.BI "int ioctl(int " fd ", XFS_IOC_FSOP_GEOMETRY_V4, struct xfs_fsop_geom_v4 *" arg );
++.br
+ .BI "int ioctl(int " fd ", XFS_IOC_FSOP_GEOMETRY_V1, struct xfs_fsop_geom_v1 *" arg );
+ .SH DESCRIPTION
+ Report the details of an XFS filesystem layout, features, and other descriptive items.
+@@ -43,6 +45,9 @@ struct xfs_fsop_geom {
+ 	/* struct xfs_fsop_geom_v1 stops here. */
+ 
+ 	__u32         logsunit;
++	/* struct xfs_fsop_geom_v4 stops here. */
++
++	__u64         reserved[18];
+ };
+ .fi
+ .in
+@@ -124,6 +129,9 @@ underlying log device, in filesystem blocks.
+ This field is meaningful only if the flag
+ .B  XFS_FSOP_GEOM_FLAGS_LOGV2
+ is set.
++.PP
++.I reserved
++is set to zero.
+ .SH FILESYSTEM FEATURE FLAGS
+ Filesystem features are reported to userspace as a combination the following
+ flags:
 
-Patches 4-7 document the ioctls introduced in 5.2.
-
-Patch 8 removes the nearly empty "convert.h" file from db/ to eliminate
-the possibility of confusion with include/convert.h.
-
-Patch 9 adds a new "btheight" command to xfs_db so that we can calculate
-the size of each level of a theoretical btree.
-
-Patches 10-11 refactor db and repair to use inode geometry values instead
-of recalculating them.
-
-Patch 12 quiets down repair with regards to clearing reflink flags.
-
-Patch 13 fixes repair rmap rebuilding transactions when the primary sb
-has to be restored from a backup.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=xfsprogs-5.3-fixes
