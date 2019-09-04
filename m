@@ -2,88 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD22A797F
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A20B8A79AC
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfIDEBD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:01:03 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38257 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725947AbfIDEBC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:01:02 -0400
+        id S1725840AbfIDEY5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 00:24:57 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41383 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725864AbfIDEY5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:24:57 -0400
 Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 49D45360E83;
-        Wed,  4 Sep 2019 14:01:00 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id CE59443E1FB
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Sep 2019 14:24:53 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92)
         (envelope-from <david@fromorbit.com>)
-        id 1i5MTc-0007Hw-8F; Wed, 04 Sep 2019 14:01:00 +1000
-Date:   Wed, 4 Sep 2019 14:01:00 +1000
+        id 1i5Mqi-0007OI-S2
+        for linux-xfs@vger.kernel.org; Wed, 04 Sep 2019 14:24:52 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i5Mqi-0002UF-O2
+        for linux-xfs@vger.kernel.org; Wed, 04 Sep 2019 14:24:52 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v3] xfs: define a flags field for the AG geometry ioctl
- structure
-Message-ID: <20190904040100.GA1119@dread.disaster.area>
-References: <20190903230537.GI5340@magnolia>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/7] xfs: log race fixes and cleanups
+Date:   Wed,  4 Sep 2019 14:24:44 +1000
+Message-Id: <20190904042451.9314-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903230537.GI5340@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
         a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=sg_cNFlFF0uKCH_A41YA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=J70Eh1EUuV4A:10 a=8ivwr5y6RWh_1Ttar00A:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:05:37PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Define a flags field for the AG geometry ioctl structure.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
-> v3: define ag_flags as an in/out field and check required zeroness
-> ---
->  fs/xfs/libxfs/xfs_fs.h |    2 +-
->  fs/xfs/xfs_ioctl.c     |    4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-> index 52d03a3a02a4..39dd2b908106 100644
-> --- a/fs/xfs/libxfs/xfs_fs.h
-> +++ b/fs/xfs/libxfs/xfs_fs.h
-> @@ -287,7 +287,7 @@ struct xfs_ag_geometry {
->  	uint32_t	ag_ifree;	/* o: inodes free */
->  	uint32_t	ag_sick;	/* o: sick things in ag */
->  	uint32_t	ag_checked;	/* o: checked metadata in ag */
-> -	uint32_t	ag_reserved32;	/* o: zero */
-> +	uint32_t	ag_flags;	/* i/o: flags for this ag */
->  	uint64_t	ag_reserved[12];/* o: zero */
->  };
->  #define XFS_AG_GEOM_SICK_SB	(1 << 0)  /* superblock */
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 9a6823e29661..c93501f42675 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1038,6 +1038,10 @@ xfs_ioc_ag_geometry(
->  
->  	if (copy_from_user(&ageo, arg, sizeof(ageo)))
->  		return -EFAULT;
-> +	if (ageo.ag_flags)
-> +		return -EINVAL;
-> +	if (memchr_inv(&ageo.ag_reserved, 0, sizeof(ageo.ag_reserved)))
-> +		return -EINVAL;
+HI folks,
 
-Looks good. All that should be zero until we start using them. :)
+This series of patches contain fixes for the generic/530 hangs that
+Chandan and Jan reported recently. The first patch in the series is
+the main fix for this, though in theory the last patch in the series
+is necessary to totally close the problem off.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+The second patch is an outstanding fix for a log flush wakeup race
+in the xlog_state_do_callback() code from Rik van Riel. Given that
+the next 5 patches in the series clean up iand address the tail
+pushing race in xlog_state_do_callback(), it makes sense to get this
+into the kernel at the same time.
 
--- 
-Dave Chinner
-david@fromorbit.com
+Patches 3-6 factor several independent chunks out of
+xlog_state_do_callback, greatly simplifying that function and
+breaking the iclog IO completion processing down into discrete
+chunks of separate functionality. This makes the code much easier
+to read, follow and understand.
+
+An the last patch kicks the AIL if necessary when the log tail is
+moved to avod the situation where the AIL pushing has stalled
+because the previous last_sync_lsn is further into the log than the
+push target reaches.
+
+Comments welcome.
+
+-Dave.
+
