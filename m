@@ -2,64 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41EE4A7A8F
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 07:06:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86BFAA7A9E
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 07:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725267AbfIDFG2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 01:06:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41388 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfIDFG2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 01:06:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8zBiEjRQ/qm8RPivRRpE2uecnkHuPremrH3SM4ygQfA=; b=JG5v0fxyjHRAghsibb85OSwDi
-        D5KUJcIc6tu2/vh3EmnUZuwSlFU2ifKvTwRvKeQPD5oFwM5el+IKdBlInABFR/nTxT7aJy3OdtTsO
-        2xex60s0OQrok4eyxzRgbArtwY0OxKtImW9SertKke/PPJdYXNPo/w+u0w3TaRtuRahiIt2exjRzp
-        2yKQt8Fvm4/oZfE0OzwfNSMxIucClyCHKNfU/5dXmoRh2p1IDg/HS9Qx9bh/5DywySHFglNNXxrGV
-        coqym1rQpj3WgaJ+HUZReCjSVsA33/hSdO2A1za8/Q1mNdGO9DLtatbZXSoCzRbjF3FXubNTJ6gXP
-        0n1RcMKyA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5NUx-0001yH-PB; Wed, 04 Sep 2019 05:06:27 +0000
-Date:   Tue, 3 Sep 2019 22:06:27 -0700
-From:   Christoph Hellwig <hch@infradead.org>
+        id S1726240AbfIDFMd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 01:12:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:35889 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfIDFMd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:12:33 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E869E68AEF; Wed,  4 Sep 2019 07:12:29 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 07:12:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [ANNOUNCE] xfs-linux: for-next updated to 1baa2800e62d
-Message-ID: <20190904050627.GA2569@infradead.org>
-References: <20190831193917.GA568270@magnolia>
- <20190901073311.GA13954@infradead.org>
- <20190903234023.GJ568270@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, agruenba@redhat.com,
+        Damien.LeMoal@wdc.com, Goldwyn Rodrigues <rgoldwyn@suse.de>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Subject: Re: iomap_dio_rw ->end_io improvements
+Message-ID: <20190904051229.GA9970@lst.de>
+References: <20190903130327.6023-1-hch@lst.de> <20190903221621.GH568270@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903234023.GJ568270@magnolia>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190903221621.GH568270@magnolia>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:40:24PM -0700, Darrick J. Wong wrote:
-> /me shrugs -- it's been broken for years, apparently, and we've been
-> arguing with almost no action for months.  Developers who are building
-> things off of 5.3 should probably just add the patch (or turn off slub
-> debugging)....
+On Tue, Sep 03, 2019 at 03:16:21PM -0700, Darrick J. Wong wrote:
+> The biggest problem with merging these patches (and while we're at it,
+> Goldwyn's patch adding a srcmap parameter to ->iomap_begin) for 5.4 is
+> that they'll break whatever Andreas and Damien have been preparing for
+> gfs2 and zonefs (respectively) based off the iomap-writeback work branch
+> that I created off of 5.3-rc2 a month ago.
 
-Well, this is a new breakage with the same old root cause.  The root
-cause is that slub with debugging enabled gives us unaligned memory.
-
-But with my log recovery changes we may now use slub for allocations
-larger than a single page (before we only used it for smaller than
-page sizes allocations in the buffer cache), and that newly trips
-up in the pmem driver (and a few others).
-
-> 
-> --D
----end quoted text---
+Does Andreas have changes pending that actually pass an end_io call
+back to gfs2?  So far it just passed NULL so nothing should change.
+If my memory serves me correctly zonefs uses ->end_io, but then again
+Damien is asking you to queue it up with the iomap tree, so doing
+that trivial rebase shouldn't be an issue.
