@@ -2,209 +2,404 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5498BA7A71
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 06:52:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1860A7A90
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Sep 2019 07:06:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbfIDEwp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Sep 2019 00:52:45 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46174 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725267AbfIDEwp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 00:52:45 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 6BB8243C349;
-        Wed,  4 Sep 2019 14:52:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i5NHc-0007dn-3j; Wed, 04 Sep 2019 14:52:40 +1000
-Date:   Wed, 4 Sep 2019 14:52:40 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfs_spaceman: report health problems
-Message-ID: <20190904045240.GB1119@dread.disaster.area>
-References: <156685444816.2839912.12432359726352663923.stgit@magnolia>
- <156685445446.2839912.426160608673674011.stgit@magnolia>
+        id S1726004AbfIDFGb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Sep 2019 01:06:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50362 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfIDFGb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Sep 2019 01:06:31 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8454SjE048468;
+        Wed, 4 Sep 2019 05:06:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=aRDS4SZ+404kV20030w00v1zSrfX+pLYLZk8CwWK+hw=;
+ b=gEA3cEDn4aHv8Io4r9GXYilZGlxvBt4u/hRqAke5ECjxozNafgu+HwwnXovbm9jvt+M1
+ GoFhT+I0MxjUWO11HkqW6+AQvtQYPFpSxlUGZng0Q8Rjed6CT1HMiuvLfGugWyWw1BZ1
+ Srv8YyMVAxudCGbPRdQcrHxnvMe3WAJO3BRrEA+1MmA8ibgFj2v8MDlHlZ8YDlBpzlyY
+ IbcghH80N5+lsxYj8rBdsf7DiaRTIA9SyZP0ZAwOvsCb/Av+r0vtH7qcAVlbFNYyHiwQ
+ 6XqCZEGs8CDtRYsteaP+rv0xkejXn867vumNdYzfZ5x36VwXVf3KAPISmCZNeVVflaAL eg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2ut6q60191-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 05:06:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x844WmNX022648;
+        Wed, 4 Sep 2019 04:35:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2usu51c3xp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 04:35:58 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x844Zvll023262;
+        Wed, 4 Sep 2019 04:35:58 GMT
+Received: from localhost (/10.159.228.126)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Sep 2019 21:35:57 -0700
+Subject: [PATCH 02/12] libfrog: move avl64.h to libfrog/
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sandeen@sandeen.net, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Tue, 03 Sep 2019 21:35:56 -0700
+Message-ID: <156757175652.1838135.13049266190478520193.stgit@magnolia>
+In-Reply-To: <156757174409.1838135.8885359673458816401.stgit@magnolia>
+References: <156757174409.1838135.8885359673458816401.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156685445446.2839912.426160608673674011.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=6ubdwSXrq3sfk1yoSWkA:9
-        a=BcixQfwgRtQvA_on:21 a=OZdkxzaGSyvG7xHw:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909040047
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909040053
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 02:20:54PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Use the fs and ag geometry ioctls to report health problems to users.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  include/xfrog.h         |    2 
->  libfrog/fsgeom.c        |   11 +
->  man/man8/xfs_spaceman.8 |   28 +++
->  spaceman/Makefile       |    2 
->  spaceman/health.c       |  432 +++++++++++++++++++++++++++++++++++++++++++++++
->  spaceman/init.c         |    1 
->  spaceman/space.h        |    1 
->  7 files changed, 476 insertions(+), 1 deletion(-)
->  create mode 100644 spaceman/health.c
-> 
-> 
-> diff --git a/include/xfrog.h b/include/xfrog.h
-> index 5748e967..3a43a403 100644
-> --- a/include/xfrog.h
-> +++ b/include/xfrog.h
-> @@ -177,4 +177,6 @@ struct xfs_inogrp;
->  int xfrog_inumbers(struct xfs_fd *xfd, uint64_t *lastino, uint32_t icount,
->  		struct xfs_inogrp *ubuffer, uint32_t *ocount);
->  
-> +int xfrog_ag_geometry(int fd, unsigned int agno, struct xfs_ag_geometry *ageo);
-> +
->  #endif	/* __XFROG_H__ */
-> diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
-> index 17479e4a..cddb5a39 100644
-> --- a/libfrog/fsgeom.c
-> +++ b/libfrog/fsgeom.c
-> @@ -131,3 +131,14 @@ xfrog_close(
->  	xfd->fd = -1;
->  	return ret;
->  }
-> +
-> +/* Try to obtain an AG's geometry. */
-> +int
-> +xfrog_ag_geometry(
-> +	int			fd,
-> +	unsigned int		agno,
-> +	struct xfs_ag_geometry	*ageo)
-> +{
-> +	ageo->ag_number = agno;
-> +	return ioctl(fd, XFS_IOC_AG_GEOMETRY, ageo);
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Does it need this first:
+Move this header to libfrog since the code is there already.
 
-	memset(ageo, 0, sizeof(*ageo));
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ include/avl64.h     |  127 ---------------------------------------------------
+ libfrog/Makefile    |    1 
+ libfrog/avl64.h     |  127 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ repair/incore_ext.c |    2 -
+ repair/xfs_repair.c |    2 -
+ scrub/phase1.c      |    2 -
+ 6 files changed, 131 insertions(+), 130 deletions(-)
+ delete mode 100644 include/avl64.h
+ create mode 100644 libfrog/avl64.h
 
-Because I don't think the callers zero it....
 
-> +static const struct flag_map inode_flags[] = {
-> +	{
-> +		.mask = XFS_BS_SICK_INODE,
-> +		.descr = "inode core",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_BMBTD,
-> +		.descr = "data fork",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_BMBTA,
-> +		.descr = "extended attribute fork",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_BMBTC,
-> +		.descr = "copy on write fork",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_DIR,
-> +		.descr = "directory",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_XATTR,
-> +		.descr = "extended attributes",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_SYMLINK,
-> +		.descr = "symbolic link target",
-> +	},
-> +	{
-> +		.mask = XFS_BS_SICK_PARENT,
-> +		.descr = "parent pointers",
+diff --git a/include/avl64.h b/include/avl64.h
+deleted file mode 100644
+index 4042f6c3..00000000
+--- a/include/avl64.h
++++ /dev/null
+@@ -1,127 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
+- * All Rights Reserved.
+- */
+-#ifndef __XR_AVL64_H__
+-#define __XR_AVL64_H__
+-
+-#include <sys/types.h>
+-
+-typedef struct	avl64node {
+-	struct	avl64node	*avl_forw;	/* pointer to right child  (> parent) */
+-	struct	avl64node *avl_back;	/* pointer to left child  (< parent) */
+-	struct	avl64node *avl_parent;	/* parent pointer */
+-	struct	avl64node *avl_nextino;	/* next in-order; NULL terminated list*/
+-	char		 avl_balance;	/* tree balance */
+-} avl64node_t;
+-
+-/*
+- * avl-tree operations
+- */
+-typedef struct avl64ops {
+-	uint64_t	(*avl_start)(avl64node_t *);
+-	uint64_t	(*avl_end)(avl64node_t *);
+-} avl64ops_t;
+-
+-/*
+- * avoid complaints about multiple def's since these are only used by
+- * the avl code internally
+- */
+-#ifndef AVL_START
+-#define	AVL_START(tree, n)	(*(tree)->avl_ops->avl_start)(n)
+-#define	AVL_END(tree, n)	(*(tree)->avl_ops->avl_end)(n)
+-#endif
+-
+-/*
+- * tree descriptor:
+- *	root points to the root of the tree.
+- *	firstino points to the first in the ordered list.
+- */
+-typedef struct avl64tree_desc {
+-	avl64node_t	*avl_root;
+-	avl64node_t	*avl_firstino;
+-	avl64ops_t	*avl_ops;
+-} avl64tree_desc_t;
+-
+-/* possible values for avl_balance */
+-
+-#define AVL_BACK	1
+-#define AVL_BALANCE	0
+-#define AVL_FORW	2
+-
+-/*
+- * 'Exported' avl tree routines
+- */
+-avl64node_t
+-*avl64_insert(
+-	avl64tree_desc_t *tree,
+-	avl64node_t *newnode);
+-
+-void
+-avl64_delete(
+-	avl64tree_desc_t *tree,
+-	avl64node_t *np);
+-
+-void
+-avl64_insert_immediate(
+-	avl64tree_desc_t *tree,
+-	avl64node_t *afterp,
+-	avl64node_t *newnode);
+-
+-avl64node_t *
+-avl64_firstino(avl64node_t *root);
+-
+-avl64node_t *
+-avl64_lastino(avl64node_t *root);
+-
+-void
+-avl64_init_tree(
+-	avl64tree_desc_t  *tree,
+-	avl64ops_t *ops);
+-
+-avl64node_t *
+-avl64_findrange(
+-	avl64tree_desc_t *tree,
+-	uint64_t value);
+-
+-avl64node_t *
+-avl64_find(
+-	avl64tree_desc_t *tree,
+-	uint64_t value);
+-
+-avl64node_t *
+-avl64_findanyrange(
+-	avl64tree_desc_t *tree,
+-	uint64_t	start,
+-	uint64_t	end,
+-	int     checklen);
+-
+-
+-avl64node_t *
+-avl64_findadjacent(
+-	avl64tree_desc_t *tree,
+-	uint64_t	value,
+-	int		dir);
+-
+-void
+-avl64_findranges(
+-	avl64tree_desc_t *tree,
+-	uint64_t	start,
+-	uint64_t	end,
+-	avl64node_t	        **startp,
+-	avl64node_t		**endp);
+-
+-/*
+- * avoid complaints about multiple def's since these are only used by
+- * the avl code internally
+- */
+-#ifndef AVL_PRECEED
+-#define AVL_PRECEED	0x1
+-#define AVL_SUCCEED	0x2
+-
+-#define AVL_INCLUDE_ZEROLEN	0x0000
+-#define AVL_EXCLUDE_ZEROLEN	0x0001
+-#endif
+-
+-#endif /* __XR_AVL64_H__ */
+diff --git a/libfrog/Makefile b/libfrog/Makefile
+index 37976029..e766adba 100644
+--- a/libfrog/Makefile
++++ b/libfrog/Makefile
+@@ -28,6 +28,7 @@ util.c \
+ workqueue.c
+ 
+ HFILES = \
++avl64.h \
+ bulkstat.h \
+ crc32defs.h \
+ crc32table.h \
+diff --git a/libfrog/avl64.h b/libfrog/avl64.h
+new file mode 100644
+index 00000000..283fc91c
+--- /dev/null
++++ b/libfrog/avl64.h
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
++ * All Rights Reserved.
++ */
++#ifndef __LIBFROG_AVL64_H__
++#define __LIBFROG_AVL64_H__
++
++#include <sys/types.h>
++
++typedef struct	avl64node {
++	struct	avl64node	*avl_forw;	/* pointer to right child  (> parent) */
++	struct	avl64node *avl_back;	/* pointer to left child  (< parent) */
++	struct	avl64node *avl_parent;	/* parent pointer */
++	struct	avl64node *avl_nextino;	/* next in-order; NULL terminated list*/
++	char		 avl_balance;	/* tree balance */
++} avl64node_t;
++
++/*
++ * avl-tree operations
++ */
++typedef struct avl64ops {
++	uint64_t	(*avl_start)(avl64node_t *);
++	uint64_t	(*avl_end)(avl64node_t *);
++} avl64ops_t;
++
++/*
++ * avoid complaints about multiple def's since these are only used by
++ * the avl code internally
++ */
++#ifndef AVL_START
++#define	AVL_START(tree, n)	(*(tree)->avl_ops->avl_start)(n)
++#define	AVL_END(tree, n)	(*(tree)->avl_ops->avl_end)(n)
++#endif
++
++/*
++ * tree descriptor:
++ *	root points to the root of the tree.
++ *	firstino points to the first in the ordered list.
++ */
++typedef struct avl64tree_desc {
++	avl64node_t	*avl_root;
++	avl64node_t	*avl_firstino;
++	avl64ops_t	*avl_ops;
++} avl64tree_desc_t;
++
++/* possible values for avl_balance */
++
++#define AVL_BACK	1
++#define AVL_BALANCE	0
++#define AVL_FORW	2
++
++/*
++ * 'Exported' avl tree routines
++ */
++avl64node_t
++*avl64_insert(
++	avl64tree_desc_t *tree,
++	avl64node_t *newnode);
++
++void
++avl64_delete(
++	avl64tree_desc_t *tree,
++	avl64node_t *np);
++
++void
++avl64_insert_immediate(
++	avl64tree_desc_t *tree,
++	avl64node_t *afterp,
++	avl64node_t *newnode);
++
++avl64node_t *
++avl64_firstino(avl64node_t *root);
++
++avl64node_t *
++avl64_lastino(avl64node_t *root);
++
++void
++avl64_init_tree(
++	avl64tree_desc_t  *tree,
++	avl64ops_t *ops);
++
++avl64node_t *
++avl64_findrange(
++	avl64tree_desc_t *tree,
++	uint64_t value);
++
++avl64node_t *
++avl64_find(
++	avl64tree_desc_t *tree,
++	uint64_t value);
++
++avl64node_t *
++avl64_findanyrange(
++	avl64tree_desc_t *tree,
++	uint64_t	start,
++	uint64_t	end,
++	int     checklen);
++
++
++avl64node_t *
++avl64_findadjacent(
++	avl64tree_desc_t *tree,
++	uint64_t	value,
++	int		dir);
++
++void
++avl64_findranges(
++	avl64tree_desc_t *tree,
++	uint64_t	start,
++	uint64_t	end,
++	avl64node_t	        **startp,
++	avl64node_t		**endp);
++
++/*
++ * avoid complaints about multiple def's since these are only used by
++ * the avl code internally
++ */
++#ifndef AVL_PRECEED
++#define AVL_PRECEED	0x1
++#define AVL_SUCCEED	0x2
++
++#define AVL_INCLUDE_ZEROLEN	0x0000
++#define AVL_EXCLUDE_ZEROLEN	0x0001
++#endif
++
++#endif /* __LIBFROG_AVL64_H__ */
+diff --git a/repair/incore_ext.c b/repair/incore_ext.c
+index e7ef9eb2..7292f5dc 100644
+--- a/repair/incore_ext.c
++++ b/repair/incore_ext.c
+@@ -12,7 +12,7 @@
+ #include "agheader.h"
+ #include "protos.h"
+ #include "err_protos.h"
+-#include "avl64.h"
++#include "libfrog/avl64.h"
+ #include "threads.h"
+ 
+ /*
+diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+index e414c4fb..d7e70dd0 100644
+--- a/repair/xfs_repair.c
++++ b/repair/xfs_repair.c
+@@ -9,7 +9,7 @@
+ #include <sys/resource.h>
+ #include "xfs_multidisk.h"
+ #include "avl.h"
+-#include "avl64.h"
++#include "libfrog/avl64.h"
+ #include "globals.h"
+ #include "versions.h"
+ #include "agheader.h"
+diff --git a/scrub/phase1.c b/scrub/phase1.c
+index 81b0990d..6d1cbe25 100644
+--- a/scrub/phase1.c
++++ b/scrub/phase1.c
+@@ -19,7 +19,7 @@
+ #include "path.h"
+ #include "handle.h"
+ #include "bitops.h"
+-#include "avl64.h"
++#include "libfrog/avl64.h"
+ #include "list.h"
+ #include "xfs_scrub.h"
+ #include "common.h"
 
-This needs a "has_parent_pointers" feature check function,
-doesn't it? Or is this already a valid status for directory inodes?
-
-> +static int
-> +report_bulkstat_health(
-> +	xfs_agnumber_t		agno)
-> +{
-> +	struct xfs_bstat	bstat[128];
-> +	char			descr[256];
-> +	uint64_t		startino = 0;
-> +	uint64_t		lastino = -1ULL;
-> +	uint32_t		ocount;
-> +	uint32_t		i;
-> +	int			error;
-> +
-> +	if (agno != NULLAGNUMBER) {
-> +		startino = xfrog_agino_to_ino(&file->xfd, agno, 0);
-> +		lastino = xfrog_agino_to_ino(&file->xfd, agno + 1, 0) - 1;
-> +	}
-> +
-> +	while ((error = xfrog_bulkstat(&file->xfd, &startino, 128, bstat,
-
-Nit: use a define for the number of inodes to bulkstat.
-
-> +health_f(
-> +	int			argc,
-> +	char			**argv)
-> +{
-> +	unsigned long long	x;
-> +	xfs_agnumber_t		agno;
-> +	bool			default_report = true;
-> +	int			c;
-> +	int			ret;
-> +
-> +	reported = 0;
-> +
-> +	if (file->xfd.fsgeom.version != XFS_FSOP_GEOM_VERSION_V5) {
-> +		perror("health");
-> +		return 1;
-> +	}
-> +
-> +	while ((c = getopt(argc, argv, "a:cfi:q")) != EOF) {
-> +		switch (c) {
-> +		case 'a':
-> +			default_report = false;
-> +			errno = 0;
-> +			x = strtoll(optarg, NULL, 10);
-> +			if (!errno && x >= NULLAGNUMBER)
-> +				errno = ERANGE;
-> +			if (errno) {
-> +				perror("ag health");
-> +				return 1;
-> +			}
-> +			agno = x;
-> +			ret = report_ag_sick(agno);
-> +			if (!ret && comprehensive)
-> +				ret = report_bulkstat_health(agno);
-> +			if (ret)
-> +				return 1;
-> +			break;
-> +		case 'c':
-> +			comprehensive = true;
-> +			break;
-
-There's a command line ordering problem here - - "-a" and "-f" 
-check the comprehensive flag and do additional stuff based on it.
-
-So I think the -a and -f processing need to be done outside
-the args processing loop, or we need two loops to extract the
--c first...
-
-Otherwise looks OK.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
