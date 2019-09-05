@@ -2,51 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7366FAAE46
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BA96AAE64
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391171AbfIEWTJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 18:19:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58914 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391119AbfIEWTJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8Cd049693
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:08 GMT
+        id S2391117AbfIEWTj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 18:19:39 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33726 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389194AbfIEWTj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:39 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8ir078144
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=W0Rpav6y4yCAYNHpiuMqANcngv6yK3uru8QBwssvXGc=;
- b=DF6vWxUTzKlbjx8Wk/Mdy6fPaORj2IjCc2PCFVZaTv0ERoMxnlj/u27TgL3HEYI5JYPE
- D77geW5zFr/uG5dN50J05/GlOHNRQRsptZ0Lk7eCWMz+Nuj35th0xftOVi1WDSuNgai8
- skpD97aFxxvXez5/8WBinvKLjLs3VsF/AT8F04NY6WOr7zp22EmkgNwHp5sq37a67dpk
- oyeDvaFXq4YdKS+Ln7FelDFKCqOzzN2nrQVW6S/w+Bz7iDhQXj4toi+GiNx78Wkr0dgE
- ZtJ9cowxueutklZfLM/zJqqgAS/zHv57zyDTzHHxh4Ktz41HVfyPexLBaFkO9b2DfIvk UQ== 
+ date : message-id; s=corp-2019-08-05;
+ bh=rw7gWQpe06C4B7rq4x1/4VGonu/psfhUgXB4cOvKgjU=;
+ b=fMVRtaJ9dyMwkF38IpPabrqG2Q8AjRvcPtiDLu1odLX6bYW/J70u2M0BisvQnVzAbxq1
+ +wpYPg4S66/JRMFgy/zY8xrbp5AgDRDW3i4L4d9hV7Q9XwC/7TRFhsU8w8jhoK22/VZb
+ JhmRlDu8uupL7vrtj29Ia7qRyiio8DBuXg2XnBaRTMjH5yDTtYgNo6XZB/PWc4SPj0eu
+ BHthRTCCrouuaMrtVsfY1wsknAWxCGt20J3mInt2ynROCYu15l1eOC308CCjsdl2mDIA
+ /qtUbE1TTzykKIMD3yAF8fDf7nuIk7l8ezfzx7avAOobf4wZ4smrB6FeytpGH9rglDr7 nA== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2uuarc81yg-1
+        by userp2120.oracle.com with ESMTP id 2uuaqj02qe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:08 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:37 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIOhf101602
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:18:49 GMT
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIO2Y101652
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:36 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uu1b946k5-1
+        by aserp3030.oracle.com with ESMTP id 2uu1b9474n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:18:49 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MInkU001642
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:18:49 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:36 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MJ0RE001664
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:00 GMT
 Received: from localhost.localdomain (/67.1.183.122)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 15:18:48 -0700
+        with ESMTP ; Thu, 05 Sep 2019 15:19:00 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v3 16/19] xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+Subject: [PATCH v2 00/21] Delayed Attributes
 Date:   Thu,  5 Sep 2019 15:18:34 -0700
-Message-Id: <20190905221837.17388-17-allison.henderson@oracle.com>
+Message-Id: <20190905221855.17555-1-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905221837.17388-1-allison.henderson@oracle.com>
-References: <20190905221837.17388-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
@@ -63,145 +61,75 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Allison Henderson <allison.henderson@oracle.com>
+This set applies the corresponding changes for delayed attributes to xfsprogs.  
+The goal of the set is to provide basic utilities to replay and print the new
+attribute log entries.
 
-These routines set up set and start a new deferred attribute
-operation.  These functions are meant to be called by other
-code needing to initiate a deferred attribute operation.
-New helper function xfs_attr_item_init also added
+The first 19 patches synchronize libxfs with changes seen the kernel space
+patches. The last two  patches add routines for journal replay and also a
+cli option to enable the delayed attributes feature bit. I will pick up the
+reviews from the kernel side series and mirror them here.  
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Signed-off-by: Allison Collins <allison.henderson@oracle.com>
----
- fs/xfs/libxfs/xfs_attr.c | 85 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_attr.h |  5 +++
- 2 files changed, 90 insertions(+)
+Thanks all!
+Allison
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 7680789..f502396 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -25,6 +25,7 @@
- #include "xfs_trans_space.h"
- #include "xfs_trace.h"
- #include "xfs_attr_item.h"
-+#include "xfs_attr.h"
- 
- /*
-  * xfs_attr.c
-@@ -622,6 +623,70 @@ xfs_attr_set(
- 	goto out_unlock;
- }
- 
-+STATIC int
-+xfs_attr_item_init(
-+	struct xfs_inode	*dp,		/* inode for attr operation */
-+	struct xfs_trans	*tp,		/* transaction for attr op */
-+	struct xfs_name		*name,		/* attr name, len and flags */
-+	const unsigned char	*value,		/* attr value */
-+	unsigned int		valuelen,	/* attr value len */
-+	int			op_flags,	/* op flag (set or remove) */
-+	struct xfs_attr_item	**attr)		/* new xfs_attr_item */
-+{
-+
-+	struct xfs_attr_item	*new;
-+	char			*name_value;
-+
-+	/*
-+	 * All set operations must have a name but not necessarily a value.
-+	 */
-+	if (!name->len) {
-+		ASSERT(0);
-+		return -EINVAL;
-+	}
-+
-+	new = kmem_alloc_large(XFS_ATTR_ITEM_SIZEOF(name->len, valuelen),
-+			 KM_NOFS);
-+	name_value = ((char *)new) + sizeof(struct xfs_attr_item);
-+	memset(new, 0, XFS_ATTR_ITEM_SIZEOF(name->len, valuelen));
-+	new->xattri_ip = dp;
-+	new->xattri_op_flags = op_flags;
-+	new->xattri_name_len = name->len;
-+	new->xattri_value_len = valuelen;
-+	new->xattri_flags = name->type;
-+	memcpy(&name_value[0], name->name, name->len);
-+	new->xattri_name = name_value;
-+	new->xattri_value = name_value + name->len;
-+
-+	if (valuelen > 0)
-+		memcpy(&name_value[name->len], value, valuelen);
-+
-+	*attr = new;
-+	return 0;
-+}
-+
-+/* Sets an attribute for an inode as a deferred operation */
-+int
-+xfs_attr_set_deferred(
-+	struct xfs_inode	*dp,
-+	struct xfs_trans	*tp,
-+	struct xfs_name		*name,
-+	const unsigned char	*value,
-+	unsigned int		valuelen)
-+{
-+	struct xfs_attr_item	*new;
-+	int			error = 0;
-+
-+	error = xfs_attr_item_init(dp, tp, name, value, valuelen,
-+				 XFS_ATTR_OP_FLAGS_SET, &new);
-+	if (error)
-+		return error;
-+
-+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
-+
-+	return 0;
-+}
-+
- /*
-  * Generic handler routine to remove a name from an attribute list.
-  * Transitions attribute list from Btree to shortform as necessary.
-@@ -703,6 +768,26 @@ xfs_attr_remove(
- 	return error;
- }
- 
-+/* Removes an attribute for an inode as a deferred operation */
-+int
-+xfs_attr_remove_deferred(
-+	struct xfs_inode        *dp,
-+	struct xfs_trans	*tp,
-+	struct xfs_name		*name)
-+{
-+
-+	struct xfs_attr_item *new;
-+
-+	int error  = xfs_attr_item_init(dp, tp, name, NULL, 0,
-+				  XFS_ATTR_OP_FLAGS_REMOVE, &new);
-+	if (error)
-+		return error;
-+
-+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
-+
-+	return 0;
-+}
-+
- /*========================================================================
-  * External routines when attribute list is inside the inode
-  *========================================================================*/
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index 1e0c25e..0dfec5c 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -190,5 +190,10 @@ bool xfs_attr_namecheck(const void *name, size_t length);
- int xfs_attr_args_init(struct xfs_da_args *args, struct xfs_inode *dp,
- 		       struct xfs_name *name);
- int xfs_attr_calc_size(struct xfs_da_args *args, int *local);
-+int xfs_attr_set_deferred(struct xfs_inode *dp, struct xfs_trans *tp,
-+			  struct xfs_name *name, const unsigned char *value,
-+			  unsigned int valuelen);
-+int xfs_attr_remove_deferred(struct xfs_inode *dp, struct xfs_trans *tp,
-+			    struct xfs_name *name);
- 
- #endif	/* __XFS_ATTR_H__ */
+Allison Collins (20):
+  xfsprogs: Replace attribute parameters with struct xfs_name
+  xfsprogs: Embed struct xfs_name in xfs_da_args
+  xfsprogs: Add xfs_dabuf defines
+  xfsprogs: Add xfs_has_attr and subroutines
+  xfsprogs: Factor out new helper functions xfs_attr_rmtval_set
+  xfsprogs: Factor up trans handling in xfs_attr3_leaf_flipflags
+  xfsprogs: Factor out xfs_attr_leaf_addname helper
+  xfsprogs: Factor up commit from xfs_attr_try_sf_addname
+  xfsprogs: Factor up trans roll from xfs_attr3_leaf_setflag
+  xfsprogs: Add xfs_attr3_leaf helper functions
+  xfsprogs: Factor out xfs_attr_rmtval_invalidate
+  xfsprogs: Factor up trans roll in xfs_attr3_leaf_clearflag
+  xfsprogs: Add delay context to xfs_da_args
+  xfsprogs: Add delayed attribute routines
+  xfsprogs: Set up infastructure for deferred attribute operations
+  xfsprogs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  xfsprogs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
+  xfsprogs: Enable delayed attributes
+  xfs_io: Add delayed attributes error tag
+  xfsprogs: Add delayed attribute flag to cmd
+
+Allison Henderson (1):
+  xfsprogs: Add log item printing for ATTRI and ATTRD
+
+ db/attrset.c             |   14 +-
+ io/inject.c              |    1 +
+ libxfs/defer_item.c      |  175 +++++++-
+ libxfs/libxfs_priv.h     |   15 +-
+ libxfs/xfs_attr.c        | 1068 ++++++++++++++++++++++++++++++++++++++++------
+ libxfs/xfs_attr.h        |   53 ++-
+ libxfs/xfs_attr_leaf.c   |  284 ++++++++----
+ libxfs/xfs_attr_leaf.h   |    7 +
+ libxfs/xfs_attr_remote.c |  103 +++--
+ libxfs/xfs_attr_remote.h |    4 +-
+ libxfs/xfs_da_btree.c    |    8 +-
+ libxfs/xfs_da_btree.h    |   27 +-
+ libxfs/xfs_defer.c       |    1 +
+ libxfs/xfs_defer.h       |    3 +
+ libxfs/xfs_dir2.c        |   22 +-
+ libxfs/xfs_dir2_block.c  |    6 +-
+ libxfs/xfs_dir2_leaf.c   |    6 +-
+ libxfs/xfs_dir2_node.c   |    8 +-
+ libxfs/xfs_dir2_sf.c     |   30 +-
+ libxfs/xfs_errortag.h    |    4 +-
+ libxfs/xfs_format.h      |   11 +-
+ libxfs/xfs_fs.h          |    1 +
+ libxfs/xfs_log_format.h  |   44 +-
+ libxfs/xfs_sb.c          |    2 +
+ libxfs/xfs_types.h       |    1 +
+ logprint/log_misc.c      |   31 +-
+ logprint/log_print_all.c |   12 +
+ logprint/log_redo.c      |  197 +++++++++
+ logprint/logprint.h      |    9 +
+ mkfs/xfs_mkfs.c          |   24 +-
+ 30 files changed, 1854 insertions(+), 317 deletions(-)
+
 -- 
 2.7.4
 
