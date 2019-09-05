@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C7F1AAE59
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A53EAAAE6E
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391120AbfIEWTQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 18:19:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33298 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391175AbfIEWTM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:12 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ7sW078079
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:11 GMT
+        id S1732903AbfIEWTn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 18:19:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59672 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389656AbfIEWTj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8eb049712
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=JgeD706XlKfcYp3CXrJKux6J/UfjZb6X5EsWv93MEso=;
- b=Y+clV//puOCsH1+ohhWcepEkQndZ71a6JvNH2oVeGj12O36toxuJ4w//WZmGIoaa52/S
- gxoaJRsk0M5sLV64cYFzeaUF0VTewltIBU4tZXDfAO0PgSD+TYXxkJGFBfT9k7A7QPz9
- O10DaMzXgLjKfWrWLGAbSDqGZHId+r30ikmSoxMaI/DnFQXGdywBKQpmRzSsYQ1lIWqj
- 96Af0FguIDU/5VUe2dKP2MBj2orwcH3yxl2CrsnJW86SzUsj89ys/BdB54+gx9IdQeo5
- c9C0l0FEA0actDSiFcy5LkmrB9/9mZje7J8mRJttm3BxMveZxn7lvhP/X1PoY+KFCmTg cA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2uuaqj02nr-1
+ bh=0jGmMJ67WnfaUbGT5pOYRYccHOLFGcq7/IMDlRBA7sc=;
+ b=pGSTQkcwdh1xrVnRc/K5kS8AS6hGUFfDScMvcuLBtSXCcfa5iDPh6DGWyFzy4nKnulBx
+ LK9w0UD7ZpUjokE6t4wVHi45+xkyVIDdOnRfCf04pHF+BK8/oN9ok4Ri7dQO7sSzvtzG
+ WkjCwNWQftKOKadNGeH6XSPuuwtU8bMwv7MvcIDovbebz/AR0qv0Y6rZ+ePhZpK1Glza
+ PmqknxmnGKj3u4ya5PjyvNbQh+SS6OROb+CMEIaOhEvq4XWpd1v38QYUYgom2fyn60ec
+ ZX29VlhsUJvH6QbaO0Agt5sv+Emg9O1+7HLZ/+RqhSZA3SgfuHAYmKiyCG1aaKs6vKLB DA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2uuarc822p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ5iw076683
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2utvr4a0yx-1
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIetH123397
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2uthq27vag-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:07 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:37 +0000
 Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x85MJ3se032558
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x85MJ3hf011677
         for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:03 GMT
 Received: from localhost.localdomain (/67.1.183.122)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 15:19:02 -0700
+        with ESMTP ; Thu, 05 Sep 2019 15:19:03 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 10/21] xfsprogs: Add xfs_attr3_leaf helper functions
-Date:   Thu,  5 Sep 2019 15:18:44 -0700
-Message-Id: <20190905221855.17555-11-allison.henderson@oracle.com>
+Subject: [PATCH v2 11/21] xfsprogs: Factor out xfs_attr_rmtval_invalidate
+Date:   Thu,  5 Sep 2019 15:18:45 -0700
+Message-Id: <20190905221855.17555-12-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190905221855.17555-1-allison.henderson@oracle.com>
 References: <20190905221855.17555-1-allison.henderson@oracle.com>
@@ -63,132 +63,85 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-And new helper functions xfs_attr3_leaf_flag_is_set and
-xfs_attr3_leaf_flagsflipped.  These routines check to see
-if xfs_attr3_leaf_setflag or xfs_attr3_leaf_flipflags have
-already been run.  We will need this later for delayed
-attributes since routines may be recalled several times
-when -EAGAIN is returned.
+Because new delayed attribute routines cannot roll
+transactions, we carve off the parts of
+xfs_attr_rmtval_remove that we can use.  This will help to
+reduce repetitive code later when we introduce delayed
+attributes.
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- libxfs/xfs_attr_leaf.c | 84 ++++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_attr_leaf.h |  2 ++
- 2 files changed, 86 insertions(+)
+ libxfs/xfs_attr_remote.c | 29 +++++++++++++++++++++--------
+ libxfs/xfs_attr_remote.h |  1 +
+ 2 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
-index 5131355..b540ba9 100644
---- a/libxfs/xfs_attr_leaf.c
-+++ b/libxfs/xfs_attr_leaf.c
-@@ -2731,6 +2731,36 @@ xfs_attr3_leaf_clearflag(
+diff --git a/libxfs/xfs_attr_remote.c b/libxfs/xfs_attr_remote.c
+index eccf548..2853f2f 100644
+--- a/libxfs/xfs_attr_remote.c
++++ b/libxfs/xfs_attr_remote.c
+@@ -585,21 +585,14 @@ xfs_attr_rmtval_set_value(
+ 	return 0;
  }
  
- /*
-+ * Check if the INCOMPLETE flag on an entry in a leaf block is set.
-+ */
-+int
-+xfs_attr3_leaf_flag_is_set(
-+	struct xfs_da_args		*args,
-+	bool				*isset)
-+{
-+	struct xfs_attr_leafblock	*leaf;
-+	struct xfs_attr_leaf_entry	*entry;
-+	struct xfs_buf			*bp;
-+	struct xfs_inode		*dp = args->dp;
-+	int				error = 0;
-+
-+	trace_xfs_attr_leaf_setflag(args);
-+
-+	/*
-+	 * Set up the operation.
-+	 */
-+	error = xfs_attr3_leaf_read(args->trans, dp, args->blkno, -1, &bp);
-+	if (error)
-+		return error;
-+
-+	leaf = bp->b_addr;
-+	entry = &xfs_attr3_leaf_entryp(leaf)[args->index];
-+
-+	*isset = ((entry->flags & XFS_ATTR_INCOMPLETE) != 0);
-+	return 0;
-+}
-+
-+/*
-  * Set the INCOMPLETE flag on an entry in a leaf block.
-  */
+-/*
+- * Remove the value associated with an attribute by deleting the
+- * out-of-line buffer that it is stored on.
+- */
  int
-@@ -2892,3 +2922,57 @@ xfs_attr3_leaf_flipflags(
+-xfs_attr_rmtval_remove(
++xfs_attr_rmtval_invalidate(
+ 	struct xfs_da_args	*args)
+ {
+ 	struct xfs_mount	*mp = args->dp->i_mount;
+ 	xfs_dablk_t		lblkno;
+ 	int			blkcnt;
+ 	int			error;
+-	int			done;
+-
+-	trace_xfs_attr_rmtval_remove(args);
  
- 	return error;
- }
-+
-+/*
-+ * On a leaf entry, check to see if the INCOMPLETE flag is cleared
-+ * in args->blkno/index and set in args->blkno2/index2.
-+ * Note that they could be in different blocks, or in the same block.
-+ *
-+ * isflipped is set to true if flags are flipped or false otherwise
-+ */
-+int
-+xfs_attr3_leaf_flagsflipped(
-+	struct xfs_da_args		*args,
-+	bool				*isflipped)
-+{
-+	struct xfs_attr_leafblock	*leaf1;
-+	struct xfs_attr_leafblock	*leaf2;
-+	struct xfs_attr_leaf_entry	*entry1;
-+	struct xfs_attr_leaf_entry	*entry2;
-+	struct xfs_buf			*bp1;
-+	struct xfs_buf			*bp2;
-+	struct xfs_inode		*dp = args->dp;
-+	int				error = 0;
-+
-+	trace_xfs_attr_leaf_flipflags(args);
-+
-+	/*
-+	 * Read the block containing the "old" attr
-+	 */
-+	error = xfs_attr3_leaf_read(args->trans, dp, args->blkno, -1, &bp1);
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * Read the block containing the "new" attr, if it is different
-+	 */
-+	if (args->blkno2 != args->blkno) {
-+		error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno2,
-+					   -1, &bp2);
-+		if (error)
-+			return error;
-+	} else {
-+		bp2 = bp1;
-+	}
-+
-+	leaf1 = bp1->b_addr;
-+	entry1 = &xfs_attr3_leaf_entryp(leaf1)[args->index];
-+
-+	leaf2 = bp2->b_addr;
-+	entry2 = &xfs_attr3_leaf_entryp(leaf2)[args->index2];
-+
-+	*isflipped = (((entry1->flags & XFS_ATTR_INCOMPLETE) == 0) &&
-+		      (entry2->flags & XFS_ATTR_INCOMPLETE));
-+
+ 	/*
+ 	 * Roll through the "value", invalidating the attribute value's blocks.
+@@ -641,7 +634,27 @@ xfs_attr_rmtval_remove(
+ 		lblkno += map.br_blockcount;
+ 		blkcnt -= map.br_blockcount;
+ 	}
 +	return 0;
 +}
-diff --git a/libxfs/xfs_attr_leaf.h b/libxfs/xfs_attr_leaf.h
-index 58e9327..d82229b 100644
---- a/libxfs/xfs_attr_leaf.h
-+++ b/libxfs/xfs_attr_leaf.h
-@@ -57,7 +57,9 @@ int	xfs_attr3_leaf_to_shortform(struct xfs_buf *bp,
- 				   struct xfs_da_args *args, int forkoff);
- int	xfs_attr3_leaf_clearflag(struct xfs_da_args *args);
- int	xfs_attr3_leaf_setflag(struct xfs_da_args *args);
-+int	xfs_attr3_leaf_flag_is_set(struct xfs_da_args *args, bool *isset);
- int	xfs_attr3_leaf_flipflags(struct xfs_da_args *args);
-+int	xfs_attr3_leaf_flagsflipped(struct xfs_da_args *args, bool *isflipped);
  
- /*
-  * Routines used for growing the Btree.
++/*
++ * Remove the value associated with an attribute by deleting the
++ * out-of-line buffer that it is stored on.
++ */
++int
++xfs_attr_rmtval_remove(
++	struct xfs_da_args      *args)
++{
++	xfs_dablk_t		lblkno;
++	int			blkcnt;
++	int			error = 0;
++	int			done = 0;
++
++	trace_xfs_attr_rmtval_remove(args);
++
++	error = xfs_attr_rmtval_invalidate(args);
++	if (error)
++		return error;
+ 	/*
+ 	 * Keep de-allocating extents until the remote-value region is gone.
+ 	 */
+diff --git a/libxfs/xfs_attr_remote.h b/libxfs/xfs_attr_remote.h
+index cd7670d..b6fd35a 100644
+--- a/libxfs/xfs_attr_remote.h
++++ b/libxfs/xfs_attr_remote.h
+@@ -11,6 +11,7 @@ int xfs_attr3_rmt_blocks(struct xfs_mount *mp, int attrlen);
+ int xfs_attr_rmtval_get(struct xfs_da_args *args);
+ int xfs_attr_rmtval_set(struct xfs_da_args *args);
+ int xfs_attr_rmtval_remove(struct xfs_da_args *args);
++int xfs_attr_rmtval_invalidate(struct xfs_da_args *args);
+ int xfs_attr_rmtval_set_value(struct xfs_da_args *args);
+ int xfs_attr_rmt_find_hole(struct xfs_da_args *args);
+ #endif /* __XFS_ATTR_REMOTE_H__ */
 -- 
 2.7.4
 
