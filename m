@@ -2,106 +2,158 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F0E4AAE45
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F25EAAE4A
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391112AbfIEWR7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 18:17:59 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35566 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388847AbfIEWR6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:17:58 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6B2113623B7;
-        Fri,  6 Sep 2019 08:17:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i604h-0002iC-DP; Fri, 06 Sep 2019 08:17:55 +1000
-Date:   Fri, 6 Sep 2019 08:17:55 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/8] xfs: factor callbacks out of xlog_state_do_callback()
-Message-ID: <20190905221755.GI1119@dread.disaster.area>
-References: <20190905084717.30308-1-david@fromorbit.com>
- <20190905084717.30308-6-david@fromorbit.com>
- <20190905153907.GF2229799@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905153907.GF2229799@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=olxPpyrDeu9dZ1i6yc4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        id S2391122AbfIEWTK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 18:19:10 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33102 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391113AbfIEWTJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8IA078153
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2019-08-05;
+ bh=XzVMWnYNQmhWvrYQZ3vnl0FjAQGMSlNv9H/Umm8qADs=;
+ b=ZDDBeGQAXVbAsSjJvulEtoLtgKp16mE/nEiCANe49NP2gWltDhyrid7D7AlLFD2N/js7
+ NV1ibUe/iwCPZ7Pnmz89efw4FQ3EzQfcHcvWlnT+EGYNdBcu0TPTb0WuEU2/ClgJsxm7
+ TZR6QkmC5LraYdPSzeOdEkx9bKCl7nRzIZLh7ATZrjhcsF2koSAFUnhxbmno155vrcMy
+ GBf6p4u7adwDwaia5fvYgOZjLcwv/ly74rh9JXG70wSNBew8U9EBhQwOAPRiGmQH5zJ8
+ zL2wHJDupa3s37klGGBDBZAxU+/D6JuRVgLm/E7Y5SbK3UML2jYljFfSLOQbPUnjVc4h tw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2uuaqj02mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MINCg101595
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uu1b946s3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:02 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MIh3L001598
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:18:44 GMT
+Received: from localhost.localdomain (/67.1.183.122)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 15:18:43 -0700
+From:   Allison Collins <allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v3 00/19] Delayed Attributes
+Date:   Thu,  5 Sep 2019 15:18:18 -0700
+Message-Id: <20190905221837.17388-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909050207
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909050207
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 08:39:07AM -0700, Darrick J. Wong wrote:
-> On Thu, Sep 05, 2019 at 06:47:14PM +1000, Dave Chinner wrote:
-> > @@ -2795,31 +2831,13 @@ xlog_state_do_callback(
-> >  			} else
-> >  				ioerrors++;
-> >  
-> > -			spin_unlock(&log->l_icloglock);
-> > -
-> >  			/*
-> > -			 * Keep processing entries in the callback list until
-> > -			 * we come around and it is empty.  We need to
-> > -			 * atomically see that the list is empty and change the
-> > -			 * state to DIRTY so that we don't miss any more
-> > -			 * callbacks being added.
-> > +			 * Running callbacks will drop the icloglock which means
-> > +			 * we'll have to run at least one more complete loop.
-> >  			 */
-> > -			spin_lock(&iclog->ic_callback_lock);
-> > -			while (!list_empty(&iclog->ic_callbacks)) {
-> > -				LIST_HEAD(tmp);
-> > +			cycled_icloglock = true;
-> > +			xlog_state_do_iclog_callbacks(log, iclog, aborted);
-> >  
-> > -				list_splice_init(&iclog->ic_callbacks, &tmp);
-> > -
-> > -				spin_unlock(&iclog->ic_callback_lock);
-> > -				xlog_cil_process_committed(&tmp, aborted);
-> > -				spin_lock(&iclog->ic_callback_lock);
-> > -			}
-> > -
-> > -			loopdidcallbacks++;
-> > -			funcdidcallbacks++;
-> > -
-> > -			spin_lock(&log->l_icloglock);
-> > -			spin_unlock(&iclog->ic_callback_lock);
-> >  			if (!(iclog->ic_state & XLOG_STATE_IOERROR))
-> >  				iclog->ic_state = XLOG_STATE_DIRTY;
-> >  
-> > @@ -2835,6 +2853,8 @@ xlog_state_do_callback(
-> >  			iclog = iclog->ic_next;
-> >  		} while (first_iclog != iclog);
-> >  
-> > +		funcdidcallbacks += cycled_icloglock;
-> 
-> funcdidcallbacks is effectively a yes/no state flag, so maybe it should
-> be turned into a boolean and this statement becomes:
-> 
-> 	funcdidcallbacks |= cycled_icloglock;
+Hi all,
 
-Fixed. I renamed it to did_callbacks at the same time, just to be a
-little less eye-bleedy...
+This set is a subset of a larger series for parent pointers. 
+Delayed attributes allow attribute operations (set and remove) to be 
+logged and committed in the same way that other delayed operations do.
+This will help break up more complex operations when we later introduce
+parent pointers which can be used in a number of optimizations.  Since
+delayed attributes can be implemented as a stand alone feature, I've
+decided to subdivide the set to help make it more manageable.  Delayed
+attributes may also provide the infastructure to later break up large
+attributes into smaller transactions instead of one large bwrite.
 
-> Though I guess we're not at huge risk of integer overflow and it
-> controls whether or not we run a debugging check so maybe we don't care?
+Changes since v2:
+Mostly review updates collected since v2.  Patch 17 is new and adds a
+new feature bit that is enabled through mkfs.xfs -n delattr.  Attr
+renames have been simplified into separate remove and set opertaions
+which removes the need for the INCOMPLETE state used in non delayed
+operations
 
-All that really matters is we don't need a branch to calculate it :P
+I've also made the corresponding updates to the user space side, and
+xfstests as well.
 
-Cheers,
+Question, comment and feedback appreciated! 
 
-Dave.
+Thanks all!
+Allison
+
+Allison Collins (15):
+  xfs: Replace attribute parameters with struct xfs_name
+  xfs: Embed struct xfs_name in xfs_da_args
+  xfs: Add xfs_dabuf defines
+  xfs: Factor out new helper functions xfs_attr_rmtval_set
+  xfs: Factor up trans handling in xfs_attr3_leaf_flipflags
+  xfs: Factor out xfs_attr_leaf_addname helper
+  xfs: Factor up commit from xfs_attr_try_sf_addname
+  xfs: Factor up trans roll from xfs_attr3_leaf_setflag
+  xfs: Add xfs_attr3_leaf helper functions
+  xfs: Factor out xfs_attr_rmtval_invalidate
+  xfs: Factor up trans roll in xfs_attr3_leaf_clearflag
+  xfs: Add delay context to xfs_da_args
+  xfs: Add delayed attribute routines
+  xfs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
+  xfs: Enable delayed attributes
+
+Allison Henderson (4):
+  xfs: Add xfs_has_attr and subroutines
+  xfs: Set up infastructure for deferred attribute operations
+  xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  xfs_io: Add delayed attributes error tag
+
+ fs/xfs/Makefile                 |    2 +-
+ fs/xfs/libxfs/xfs_attr.c        | 1068 ++++++++++++++++++++++++++++++++++-----
+ fs/xfs/libxfs/xfs_attr.h        |   53 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c   |  277 ++++++----
+ fs/xfs/libxfs/xfs_attr_leaf.h   |    7 +
+ fs/xfs/libxfs/xfs_attr_remote.c |  103 +++-
+ fs/xfs/libxfs/xfs_attr_remote.h |    4 +-
+ fs/xfs/libxfs/xfs_da_btree.c    |    8 +-
+ fs/xfs/libxfs/xfs_da_btree.h    |   27 +-
+ fs/xfs/libxfs/xfs_defer.c       |    1 +
+ fs/xfs/libxfs/xfs_defer.h       |    3 +
+ fs/xfs/libxfs/xfs_dir2.c        |   22 +-
+ fs/xfs/libxfs/xfs_dir2_block.c  |    6 +-
+ fs/xfs/libxfs/xfs_dir2_leaf.c   |    6 +-
+ fs/xfs/libxfs/xfs_dir2_node.c   |    8 +-
+ fs/xfs/libxfs/xfs_dir2_sf.c     |   30 +-
+ fs/xfs/libxfs/xfs_errortag.h    |    4 +-
+ fs/xfs/libxfs/xfs_format.h      |   11 +-
+ fs/xfs/libxfs/xfs_fs.h          |    1 +
+ fs/xfs/libxfs/xfs_log_format.h  |   44 +-
+ fs/xfs/libxfs/xfs_sb.c          |    2 +
+ fs/xfs/libxfs/xfs_types.h       |    1 +
+ fs/xfs/scrub/attr.c             |   12 +-
+ fs/xfs/scrub/common.c           |    2 +
+ fs/xfs/xfs_acl.c                |   29 +-
+ fs/xfs/xfs_attr_item.c          |  764 ++++++++++++++++++++++++++++
+ fs/xfs/xfs_attr_item.h          |   88 ++++
+ fs/xfs/xfs_attr_list.c          |    1 +
+ fs/xfs/xfs_error.c              |    3 +
+ fs/xfs/xfs_ioctl.c              |   30 +-
+ fs/xfs/xfs_ioctl32.c            |    2 +
+ fs/xfs/xfs_iops.c               |   14 +-
+ fs/xfs/xfs_log.c                |    4 +
+ fs/xfs/xfs_log_recover.c        |  173 +++++++
+ fs/xfs/xfs_ondisk.h             |    2 +
+ fs/xfs/xfs_super.c              |    4 +
+ fs/xfs/xfs_trace.h              |   20 +-
+ fs/xfs/xfs_trans.h              |    1 -
+ fs/xfs/xfs_xattr.c              |   31 +-
+ 39 files changed, 2509 insertions(+), 359 deletions(-)
+ create mode 100644 fs/xfs/xfs_attr_item.c
+ create mode 100644 fs/xfs/xfs_attr_item.h
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.7.4
+
