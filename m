@@ -2,57 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F25EAAE4A
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4123AAE5F
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391122AbfIEWTK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 18:19:10 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33102 "EHLO
+        id S2391182AbfIEWTT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 18:19:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33098 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391113AbfIEWTJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:09 -0400
+        with ESMTP id S2391116AbfIEWTK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:10 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8IA078153
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8il078144
         for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2019-08-05;
- bh=XzVMWnYNQmhWvrYQZ3vnl0FjAQGMSlNv9H/Umm8qADs=;
- b=ZDDBeGQAXVbAsSjJvulEtoLtgKp16mE/nEiCANe49NP2gWltDhyrid7D7AlLFD2N/js7
- NV1ibUe/iwCPZ7Pnmz89efw4FQ3EzQfcHcvWlnT+EGYNdBcu0TPTb0WuEU2/ClgJsxm7
- TZR6QkmC5LraYdPSzeOdEkx9bKCl7nRzIZLh7ATZrjhcsF2koSAFUnhxbmno155vrcMy
- GBf6p4u7adwDwaia5fvYgOZjLcwv/ly74rh9JXG70wSNBew8U9EBhQwOAPRiGmQH5zJ8
- zL2wHJDupa3s37klGGBDBZAxU+/D6JuRVgLm/E7Y5SbK3UML2jYljFfSLOQbPUnjVc4h tw== 
+ date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=l/u1MMDWBzRtygzmC+38HX5JV8o13IdEp5duevBRbcQ=;
+ b=aEQ9DYRfUQFOGMAW5TJrKE4IOrcfo7to01ADCGdVXw3e83bN6XyFZV9zKsmM+4ljRpyY
+ 1M2kWaw2kuHsFREOfWvv2ReCnsgrHhjK9GKTWFQBfaXlcYxbYdERyAHvt/FRiAOTe59B
+ ktyaMYPONI0wU0OnKtHrluxjpkoC72IpXA1mr2Dv0X8/rHULKfhQeLksaqsfZPeRTIXh
+ mAxPkN5U3+nLUd/iICHslUqLjsNkbq/9zAOzqRXFHHIn9//SzUmTcWwq9Q88cnrQYKQ8
+ 2Q0nZ7f/X6np0yfDMcFQMZusv2gEPciwcgpAx6MRt/ayj9qw/V15+pWDCBVnGApPbgQe CQ== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2uuaqj02mf-1
+        by userp2120.oracle.com with ESMTP id 2uuaqj02kt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:08 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MINCg101595
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uu1b946s3-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIOhe101602
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:18:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uu1b946hs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:02 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:18:45 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MIh3L001598
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MIiDJ008662
         for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:18:44 GMT
 Received: from localhost.localdomain (/67.1.183.122)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Thu, 05 Sep 2019 15:18:43 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v3 00/19] Delayed Attributes
-Date:   Thu,  5 Sep 2019 15:18:18 -0700
-Message-Id: <20190905221837.17388-1-allison.henderson@oracle.com>
+Subject: [PATCH v3 01/19] xfs: Replace attribute parameters with struct xfs_name
+Date:   Thu,  5 Sep 2019 15:18:19 -0700
+Message-Id: <20190905221837.17388-2-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190905221837.17388-1-allison.henderson@oracle.com>
+References: <20190905221837.17388-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909050207
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909050207
@@ -61,99 +63,433 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+This patch replaces the attribute name, length and flags parameters with a
+single struct xfs_name parameter.  This helps to clean up the numbers of
+parameters being passed around and pre-simplifies the code some.
 
-This set is a subset of a larger series for parent pointers. 
-Delayed attributes allow attribute operations (set and remove) to be 
-logged and committed in the same way that other delayed operations do.
-This will help break up more complex operations when we later introduce
-parent pointers which can be used in a number of optimizations.  Since
-delayed attributes can be implemented as a stand alone feature, I've
-decided to subdivide the set to help make it more manageable.  Delayed
-attributes may also provide the infastructure to later break up large
-attributes into smaller transactions instead of one large bwrite.
+Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+---
+ fs/xfs/libxfs/xfs_attr.c | 46 +++++++++++++++++++---------------------------
+ fs/xfs/libxfs/xfs_attr.h | 12 +++++-------
+ fs/xfs/xfs_acl.c         | 27 +++++++++++++--------------
+ fs/xfs/xfs_ioctl.c       | 28 ++++++++++++++++++----------
+ fs/xfs/xfs_iops.c        | 12 ++++++++----
+ fs/xfs/xfs_xattr.c       | 30 +++++++++++++++++-------------
+ 6 files changed, 80 insertions(+), 75 deletions(-)
 
-Changes since v2:
-Mostly review updates collected since v2.  Patch 17 is new and adds a
-new feature bit that is enabled through mkfs.xfs -n delattr.  Attr
-renames have been simplified into separate remove and set opertaions
-which removes the need for the INCOMPLETE state used in non delayed
-operations
-
-I've also made the corresponding updates to the user space side, and
-xfstests as well.
-
-Question, comment and feedback appreciated! 
-
-Thanks all!
-Allison
-
-Allison Collins (15):
-  xfs: Replace attribute parameters with struct xfs_name
-  xfs: Embed struct xfs_name in xfs_da_args
-  xfs: Add xfs_dabuf defines
-  xfs: Factor out new helper functions xfs_attr_rmtval_set
-  xfs: Factor up trans handling in xfs_attr3_leaf_flipflags
-  xfs: Factor out xfs_attr_leaf_addname helper
-  xfs: Factor up commit from xfs_attr_try_sf_addname
-  xfs: Factor up trans roll from xfs_attr3_leaf_setflag
-  xfs: Add xfs_attr3_leaf helper functions
-  xfs: Factor out xfs_attr_rmtval_invalidate
-  xfs: Factor up trans roll in xfs_attr3_leaf_clearflag
-  xfs: Add delay context to xfs_da_args
-  xfs: Add delayed attribute routines
-  xfs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
-  xfs: Enable delayed attributes
-
-Allison Henderson (4):
-  xfs: Add xfs_has_attr and subroutines
-  xfs: Set up infastructure for deferred attribute operations
-  xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
-  xfs_io: Add delayed attributes error tag
-
- fs/xfs/Makefile                 |    2 +-
- fs/xfs/libxfs/xfs_attr.c        | 1068 ++++++++++++++++++++++++++++++++++-----
- fs/xfs/libxfs/xfs_attr.h        |   53 +-
- fs/xfs/libxfs/xfs_attr_leaf.c   |  277 ++++++----
- fs/xfs/libxfs/xfs_attr_leaf.h   |    7 +
- fs/xfs/libxfs/xfs_attr_remote.c |  103 +++-
- fs/xfs/libxfs/xfs_attr_remote.h |    4 +-
- fs/xfs/libxfs/xfs_da_btree.c    |    8 +-
- fs/xfs/libxfs/xfs_da_btree.h    |   27 +-
- fs/xfs/libxfs/xfs_defer.c       |    1 +
- fs/xfs/libxfs/xfs_defer.h       |    3 +
- fs/xfs/libxfs/xfs_dir2.c        |   22 +-
- fs/xfs/libxfs/xfs_dir2_block.c  |    6 +-
- fs/xfs/libxfs/xfs_dir2_leaf.c   |    6 +-
- fs/xfs/libxfs/xfs_dir2_node.c   |    8 +-
- fs/xfs/libxfs/xfs_dir2_sf.c     |   30 +-
- fs/xfs/libxfs/xfs_errortag.h    |    4 +-
- fs/xfs/libxfs/xfs_format.h      |   11 +-
- fs/xfs/libxfs/xfs_fs.h          |    1 +
- fs/xfs/libxfs/xfs_log_format.h  |   44 +-
- fs/xfs/libxfs/xfs_sb.c          |    2 +
- fs/xfs/libxfs/xfs_types.h       |    1 +
- fs/xfs/scrub/attr.c             |   12 +-
- fs/xfs/scrub/common.c           |    2 +
- fs/xfs/xfs_acl.c                |   29 +-
- fs/xfs/xfs_attr_item.c          |  764 ++++++++++++++++++++++++++++
- fs/xfs/xfs_attr_item.h          |   88 ++++
- fs/xfs/xfs_attr_list.c          |    1 +
- fs/xfs/xfs_error.c              |    3 +
- fs/xfs/xfs_ioctl.c              |   30 +-
- fs/xfs/xfs_ioctl32.c            |    2 +
- fs/xfs/xfs_iops.c               |   14 +-
- fs/xfs/xfs_log.c                |    4 +
- fs/xfs/xfs_log_recover.c        |  173 +++++++
- fs/xfs/xfs_ondisk.h             |    2 +
- fs/xfs/xfs_super.c              |    4 +
- fs/xfs/xfs_trace.h              |   20 +-
- fs/xfs/xfs_trans.h              |    1 -
- fs/xfs/xfs_xattr.c              |   31 +-
- 39 files changed, 2509 insertions(+), 359 deletions(-)
- create mode 100644 fs/xfs/xfs_attr_item.c
- create mode 100644 fs/xfs/xfs_attr_item.h
-
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 7589cb7..d0308d6 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -61,9 +61,7 @@ STATIC int
+ xfs_attr_args_init(
+ 	struct xfs_da_args	*args,
+ 	struct xfs_inode	*dp,
+-	const unsigned char	*name,
+-	size_t			namelen,
+-	int			flags)
++	struct xfs_name		*name)
+ {
+ 
+ 	if (!name)
+@@ -73,9 +71,9 @@ xfs_attr_args_init(
+ 	args->geo = dp->i_mount->m_attr_geo;
+ 	args->whichfork = XFS_ATTR_FORK;
+ 	args->dp = dp;
+-	args->flags = flags;
+-	args->name = name;
+-	args->namelen = namelen;
++	args->flags = name->type;
++	args->name = name->name;
++	args->namelen = name->len;
+ 	if (args->namelen >= MAXNAMELEN)
+ 		return -EFAULT;		/* match IRIX behaviour */
+ 
+@@ -139,30 +137,28 @@ xfs_attr_get_ilocked(
+ int
+ xfs_attr_get(
+ 	struct xfs_inode	*ip,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
+ 	unsigned char		**value,
+-	int			*valuelenp,
+-	int			flags)
++	int			*valuelenp)
+ {
+ 	struct xfs_da_args	args;
+ 	uint			lock_mode;
+ 	int			error;
+ 
+-	ASSERT((flags & (ATTR_ALLOC | ATTR_KERNOVAL)) || *value);
++	ASSERT((name->type & (ATTR_ALLOC | ATTR_KERNOVAL)) || *value);
+ 
+ 	XFS_STATS_INC(ip->i_mount, xs_attr_get);
+ 
+ 	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, ip, name, namelen, flags);
++	error = xfs_attr_args_init(&args, ip, name);
+ 	if (error)
+ 		return error;
+ 
+ 	/* Entirely possible to look up a name which doesn't exist */
+ 	args.op_flags = XFS_DA_OP_OKNOENT;
+-	if (flags & ATTR_ALLOC)
++	if (name->type & ATTR_ALLOC)
+ 		args.op_flags |= XFS_DA_OP_ALLOCVAL;
+ 	else
+ 		args.value = *value;
+@@ -175,7 +171,7 @@ xfs_attr_get(
+ 
+ 	/* on error, we have to clean up allocated value buffers */
+ 	if (error) {
+-		if (flags & ATTR_ALLOC) {
++		if (name->type & ATTR_ALLOC) {
+ 			kmem_free(args.value);
+ 			*value = NULL;
+ 		}
+@@ -339,16 +335,14 @@ xfs_attr_remove_args(
+ int
+ xfs_attr_set(
+ 	struct xfs_inode	*dp,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
+ 	unsigned char		*value,
+-	int			valuelen,
+-	int			flags)
++	int			valuelen)
+ {
+ 	struct xfs_mount	*mp = dp->i_mount;
+ 	struct xfs_da_args	args;
+ 	struct xfs_trans_res	tres;
+-	int			rsvd = (flags & ATTR_ROOT) != 0;
++	int			rsvd = (name->type & ATTR_ROOT) != 0;
+ 	int			error, local;
+ 
+ 	XFS_STATS_INC(mp, xs_attr_set);
+@@ -356,7 +350,7 @@ xfs_attr_set(
+ 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
++	error = xfs_attr_args_init(&args, dp, name);
+ 	if (error)
+ 		return error;
+ 
+@@ -419,7 +413,7 @@ xfs_attr_set(
+ 	if (mp->m_flags & XFS_MOUNT_WSYNC)
+ 		xfs_trans_set_sync(args.trans);
+ 
+-	if ((flags & ATTR_KERNOTIME) == 0)
++	if ((name->type & ATTR_KERNOTIME) == 0)
+ 		xfs_trans_ichgtime(args.trans, dp, XFS_ICHGTIME_CHG);
+ 
+ 	/*
+@@ -444,9 +438,7 @@ xfs_attr_set(
+ int
+ xfs_attr_remove(
+ 	struct xfs_inode	*dp,
+-	const unsigned char	*name,
+-	size_t			namelen,
+-	int			flags)
++	struct xfs_name		*name)
+ {
+ 	struct xfs_mount	*mp = dp->i_mount;
+ 	struct xfs_da_args	args;
+@@ -457,7 +449,7 @@ xfs_attr_remove(
+ 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
++	error = xfs_attr_args_init(&args, dp, name);
+ 	if (error)
+ 		return error;
+ 
+@@ -478,7 +470,7 @@ xfs_attr_remove(
+ 	 */
+ 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_attrrm,
+ 			XFS_ATTRRM_SPACE_RES(mp), 0,
+-			(flags & ATTR_ROOT) ? XFS_TRANS_RESERVE : 0,
++			(name->type & ATTR_ROOT) ? XFS_TRANS_RESERVE : 0,
+ 			&args.trans);
+ 	if (error)
+ 		return error;
+@@ -501,7 +493,7 @@ xfs_attr_remove(
+ 	if (mp->m_flags & XFS_MOUNT_WSYNC)
+ 		xfs_trans_set_sync(args.trans);
+ 
+-	if ((flags & ATTR_KERNOTIME) == 0)
++	if ((name->type & ATTR_KERNOTIME) == 0)
+ 		xfs_trans_ichgtime(args.trans, dp, XFS_ICHGTIME_CHG);
+ 
+ 	/*
+diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+index 106a2f2..cedb4e2 100644
+--- a/fs/xfs/libxfs/xfs_attr.h
++++ b/fs/xfs/libxfs/xfs_attr.h
+@@ -144,14 +144,12 @@ int xfs_attr_list_int_ilocked(struct xfs_attr_list_context *);
+ int xfs_attr_list_int(struct xfs_attr_list_context *);
+ int xfs_inode_hasattr(struct xfs_inode *ip);
+ int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+-int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+-		 size_t namelen, unsigned char **value, int *valuelenp,
+-		 int flags);
+-int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+-		 size_t namelen, unsigned char *value, int valuelen, int flags);
++int xfs_attr_get(struct xfs_inode *ip, struct xfs_name *name,
++		 unsigned char **value, int *valuelenp);
++int xfs_attr_set(struct xfs_inode *dp, struct xfs_name *name,
++		 unsigned char *value, int valuelen);
+ int xfs_attr_set_args(struct xfs_da_args *args);
+-int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
+-		    size_t namelen, int flags);
++int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name);
+ int xfs_attr_remove_args(struct xfs_da_args *args);
+ int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
+ 		  int flags, struct attrlist_cursor_kern *cursor);
+diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+index 12be708..f8fb6e10 100644
+--- a/fs/xfs/xfs_acl.c
++++ b/fs/xfs/xfs_acl.c
+@@ -113,7 +113,7 @@ xfs_get_acl(struct inode *inode, int type)
+ 	struct xfs_inode *ip = XFS_I(inode);
+ 	struct posix_acl *acl = NULL;
+ 	struct xfs_acl *xfs_acl = NULL;
+-	unsigned char *ea_name;
++	struct xfs_name name;
+ 	int error;
+ 	int len;
+ 
+@@ -121,10 +121,10 @@ xfs_get_acl(struct inode *inode, int type)
+ 
+ 	switch (type) {
+ 	case ACL_TYPE_ACCESS:
+-		ea_name = SGI_ACL_FILE;
++		name.name = SGI_ACL_FILE;
+ 		break;
+ 	case ACL_TYPE_DEFAULT:
+-		ea_name = SGI_ACL_DEFAULT;
++		name.name = SGI_ACL_DEFAULT;
+ 		break;
+ 	default:
+ 		BUG();
+@@ -135,9 +135,9 @@ xfs_get_acl(struct inode *inode, int type)
+ 	 * go out to the disk.
+ 	 */
+ 	len = XFS_ACL_MAX_SIZE(ip->i_mount);
+-	error = xfs_attr_get(ip, ea_name, strlen(ea_name), 
+-				(unsigned char **)&xfs_acl, &len,
+-				ATTR_ALLOC | ATTR_ROOT);
++	name.len = strlen(name.name);
++	name.type = ATTR_ALLOC | ATTR_ROOT;
++	error = xfs_attr_get(ip, &name, (unsigned char **)&xfs_acl, &len);
+ 	if (error) {
+ 		/*
+ 		 * If the attribute doesn't exist make sure we have a negative
+@@ -157,17 +157,17 @@ int
+ __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ {
+ 	struct xfs_inode *ip = XFS_I(inode);
+-	unsigned char *ea_name;
++	struct xfs_name name;
+ 	int error;
+ 
+ 	switch (type) {
+ 	case ACL_TYPE_ACCESS:
+-		ea_name = SGI_ACL_FILE;
++		name.name = SGI_ACL_FILE;
+ 		break;
+ 	case ACL_TYPE_DEFAULT:
+ 		if (!S_ISDIR(inode->i_mode))
+ 			return acl ? -EACCES : 0;
+-		ea_name = SGI_ACL_DEFAULT;
++		name.name = SGI_ACL_DEFAULT;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -187,17 +187,16 @@ __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ 		len -= sizeof(struct xfs_acl_entry) *
+ 			 (XFS_ACL_MAX_ENTRIES(ip->i_mount) - acl->a_count);
+ 
+-		error = xfs_attr_set(ip, ea_name, strlen(ea_name),
+-				     (unsigned char *)xfs_acl, len, ATTR_ROOT);
++		name.len = strlen(name.name);
++		name.type = ATTR_ROOT;
++		error = xfs_attr_set(ip, &name, (unsigned char *)xfs_acl, len);
+ 
+ 		kmem_free(xfs_acl);
+ 	} else {
+ 		/*
+ 		 * A NULL ACL argument means we want to remove the ACL.
+ 		 */
+-		error = xfs_attr_remove(ip, ea_name,
+-					strlen(ea_name),
+-					ATTR_ROOT);
++		error = xfs_attr_remove(ip, &name);
+ 
+ 		/*
+ 		 * If the attribute didn't exist to start with that's fine.
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d440426..626420d 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -431,7 +431,11 @@ xfs_attrmulti_attr_get(
+ {
+ 	unsigned char		*kbuf;
+ 	int			error = -EFAULT;
+-	size_t			namelen;
++	struct xfs_name		xname = {
++		.name		= name,
++		.len		= strlen(name),
++		.type		= flags,
++	};
+ 
+ 	if (*len > XFS_XATTR_SIZE_MAX)
+ 		return -EINVAL;
+@@ -439,9 +443,7 @@ xfs_attrmulti_attr_get(
+ 	if (!kbuf)
+ 		return -ENOMEM;
+ 
+-	namelen = strlen(name);
+-	error = xfs_attr_get(XFS_I(inode), name, namelen, &kbuf, (int *)len,
+-			     flags);
++	error = xfs_attr_get(XFS_I(inode), &xname, &kbuf, (int *)len);
+ 	if (error)
+ 		goto out_kfree;
+ 
+@@ -463,7 +465,7 @@ xfs_attrmulti_attr_set(
+ {
+ 	unsigned char		*kbuf;
+ 	int			error;
+-	size_t			namelen;
++	struct xfs_name		xname;
+ 
+ 	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+ 		return -EPERM;
+@@ -474,8 +476,10 @@ xfs_attrmulti_attr_set(
+ 	if (IS_ERR(kbuf))
+ 		return PTR_ERR(kbuf);
+ 
+-	namelen = strlen(name);
+-	error = xfs_attr_set(XFS_I(inode), name, namelen, kbuf, len, flags);
++	xname.name = name;
++	xname.len = strlen(name);
++	xname.type = flags;
++	error = xfs_attr_set(XFS_I(inode), &xname, kbuf, len);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, flags);
+ 	kfree(kbuf);
+@@ -489,12 +493,16 @@ xfs_attrmulti_attr_remove(
+ 	uint32_t		flags)
+ {
+ 	int			error;
+-	size_t			namelen;
++	struct xfs_name		xname = {
++		.name		= name,
++		.len		= strlen(name),
++		.type		= flags,
++	};
+ 
+ 	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+ 		return -EPERM;
+-	namelen = strlen(name);
+-	error = xfs_attr_remove(XFS_I(inode), name, namelen, flags);
++
++	error = xfs_attr_remove(XFS_I(inode), &xname);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, flags);
+ 	return error;
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 92de0a7..469e8e2 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -49,10 +49,14 @@ xfs_initxattrs(
+ 	int			error = 0;
+ 
+ 	for (xattr = xattr_array; xattr->name != NULL; xattr++) {
+-		error = xfs_attr_set(ip, xattr->name,
+-				     strlen(xattr->name),
+-				     xattr->value, xattr->value_len,
+-				     ATTR_SECURE);
++		struct xfs_name	name = {
++			.name	= xattr->name,
++			.len	= strlen(xattr->name),
++			.type	= ATTR_SECURE,
++		};
++
++		error = xfs_attr_set(ip, &name,
++				     xattr->value, xattr->value_len);
+ 		if (error < 0)
+ 			break;
+ 	}
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 59ffe6c..6309da4 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -20,19 +20,21 @@ static int
+ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+ 		struct inode *inode, const char *name, void *value, size_t size)
+ {
+-	int xflags = handler->flags;
+ 	struct xfs_inode *ip = XFS_I(inode);
+ 	int error, asize = size;
+-	size_t namelen = strlen(name);
++	struct xfs_name xname = {
++		.name	= name,
++		.len	= strlen(name),
++		.type	= handler->flags
++	};
+ 
+ 	/* Convert Linux syscall to XFS internal ATTR flags */
+ 	if (!size) {
+-		xflags |= ATTR_KERNOVAL;
++		xname.type |= ATTR_KERNOVAL;
+ 		value = NULL;
+ 	}
+ 
+-	error = xfs_attr_get(ip, name, namelen, (unsigned char **)&value,
+-			     &asize, xflags);
++	error = xfs_attr_get(ip, &xname, (unsigned char **)&value, &asize);
+ 	if (error)
+ 		return error;
+ 	return asize;
+@@ -65,23 +67,25 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
+ 		struct inode *inode, const char *name, const void *value,
+ 		size_t size, int flags)
+ {
+-	int			xflags = handler->flags;
+ 	struct xfs_inode	*ip = XFS_I(inode);
+ 	int			error;
+-	size_t			namelen = strlen(name);
++	struct xfs_name		xname = {
++		.name		= name,
++		.len		= strlen(name),
++		.type		= handler->flags,
++	};
+ 
+ 	/* Convert Linux syscall to XFS internal ATTR flags */
+ 	if (flags & XATTR_CREATE)
+-		xflags |= ATTR_CREATE;
++		xname.type |= ATTR_CREATE;
+ 	if (flags & XATTR_REPLACE)
+-		xflags |= ATTR_REPLACE;
++		xname.type |= ATTR_REPLACE;
+ 
+ 	if (!value)
+-		return xfs_attr_remove(ip, name,
+-				       namelen, xflags);
+-	error = xfs_attr_set(ip, name, namelen, (void *)value, size, xflags);
++		return xfs_attr_remove(ip, &xname);
++	error = xfs_attr_set(ip, &xname, (void *)value, size);
+ 	if (!error)
+-		xfs_forget_acl(inode, name, xflags);
++		xfs_forget_acl(inode, name, xname.type);
+ 
+ 	return error;
+ }
 -- 
 2.7.4
 
