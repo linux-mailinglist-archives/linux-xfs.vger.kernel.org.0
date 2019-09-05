@@ -2,60 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F095AAE4D
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C3FAAE63
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 00:19:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391140AbfIEWTL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 18:19:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39030 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391144AbfIEWTK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ8e1084677
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:09 GMT
+        id S2389194AbfIEWTj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 18:19:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59670 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389589AbfIEWTj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 18:19:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MJ9b1049766
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=8w26he1AYNfrvoebUZOnkR1VPvR77qjmmBrxXOaS8Os=;
- b=TmoMkh9RXWEAGEx35f7cp0nI6vQfYmP9DJSpbXZqXxRkb7S4XF8veIJ+bfW/Ux9Efh+V
- 801hqQyLnQ+2iN45z/uxWDFyGS1MMwqK0BwnIlV7Ns45TB6oHB/VEG/Efd/XPTsoxLKv
- kksyiN3dYg24g3R4zz94c8UClX4Gew2aLBtRjPQxxm5S4OV0WRxDoFvccDF0cOQ4aXQD
- hoPF9pr5Toh4iSU4X/3z70EhCCS8RxB3BEWG/IgiX/obgwUG9s+wpIO/MKYRaMN9hQMs
- L20LTNDws5PnkTUVC28qHC2/R9HODB1Gf6kHIRMERv0awGO0c0TorBr5Gzv7AKfttBe/ 6g== 
+ date : message-id; s=corp-2019-08-05;
+ bh=kead5fque0m3AhUA4EPaT4XC3CXD3YzHCsxvOu4MUIk=;
+ b=FLUMPB+RQEhxPbzwgHhPmR0XJYXcM2Bs15N0GmDikgMaQ7gNDGkLhjyBGqD4htrlBWks
+ wW/ubGyD+0AiSD8CbyL0H0PDgP9M1Ml2izXMz3d7yWeMr2joqcTtTpYJw3ZQlEmmVQwW
+ iAu9v4YccBGQz0O3bvpphSpLHoUGDn0EJU3tF8npDNRmIMlQseyvcJjfZE9U7+mdI4Ny
+ yNloDX4waev6sjdIxftbsZgbkX613uabiB7ordFHyV2yLDIerC3FCl4M87cQuh2MRx26
+ Nko1pokdnYrIURDiFvSWV/hTdgQCfEXQTDB22EubOkwE3cHjfWJTAE51Z9Vv/gHFxiRr Hw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2uuaqxr2e7-1
+        by aserp2120.oracle.com with ESMTP id 2uuarc822r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:08 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:38 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIOk4101693
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2uu1b946v3-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MIPP9101774
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:37 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uu1b9475e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:06 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x85MJ68r032591
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:06 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Sep 2019 22:19:37 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85MJLDH009028
+        for <linux-xfs@vger.kernel.org>; Thu, 5 Sep 2019 22:19:21 GMT
 Received: from localhost.localdomain (/67.1.183.122)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 15:19:06 -0700
+        with ESMTP ; Thu, 05 Sep 2019 15:19:21 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 21/21] xfsprogs: Add delayed attribute flag to cmd
-Date:   Thu,  5 Sep 2019 15:18:55 -0700
-Message-Id: <20190905221855.17555-22-allison.henderson@oracle.com>
+Subject: [PATCH v2 0/1] Add delayed attributes test 
+Date:   Thu,  5 Sep 2019 15:19:16 -0700
+Message-Id: <20190905221917.17733-1-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905221855.17555-1-allison.henderson@oracle.com>
-References: <20190905221855.17555-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=887
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909050207
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=967 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909050207
 Sender: linux-xfs-owner@vger.kernel.org
@@ -63,97 +61,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-mkfs: enable feature bit in mkfs via the '-n delattr' parameter.
+This patch adds a quick test to excersize the delayed attribute
+error inject and log replay.  Since v2, the test case has been
+expanded to test attributes of incrementing sizes up to 64k.
+It has also been updated to use the new mkfs.xfs -n delattr cli
+option added in the new xfsprogs set.
 
-Signed-off-by: Allison Collins <allison.henderson@oracle.com>
----
- mkfs/xfs_mkfs.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+Allison Collins (1):
+  xfstests: Add Delayed Attribute test
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 0bdf6ec..1f1ffda 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -92,6 +92,7 @@ enum {
- 	N_SIZE = 0,
- 	N_VERSION,
- 	N_FTYPE,
-+	N_DELATTR,
- 	N_MAX_OPTS,
- };
- 
-@@ -538,6 +539,7 @@ static struct opt_params nopts = {
- 		[N_SIZE] = "size",
- 		[N_VERSION] = "version",
- 		[N_FTYPE] = "ftype",
-+		[N_DELATTR] = "delattr",
- 	},
- 	.subopt_params = {
- 		{ .index = N_SIZE,
-@@ -560,6 +562,12 @@ static struct opt_params nopts = {
- 		  .maxval = 1,
- 		  .defaultval = 1,
- 		},
-+		{ .index = N_DELATTR,
-+		  .conflicts = { { NULL, LAST_CONFLICT } },
-+		  .minval = 0,
-+		  .maxval = 1,
-+		  .defaultval = 1,
-+		},
- 	},
- };
- 
-@@ -733,6 +741,7 @@ struct sb_feat_args {
- 	bool	reflink;		/* XFS_SB_FEAT_RO_COMPAT_REFLINK */
- 	bool	nodalign;
- 	bool	nortalign;
-+	bool	delattr;		/* XFS_SB_FEAT_INCOMPAT_LOG_DELATTR */
- };
- 
- struct cli_params {
-@@ -864,7 +873,7 @@ usage( void )
- /* log subvol */	[-l agnum=n,internal,size=num,logdev=xxx,version=n\n\
- 			    sunit=value|su=num,sectsize=num,lazy-count=0|1]\n\
- /* label */		[-L label (maximum 12 characters)]\n\
--/* naming */		[-n size=num,version=2|ci,ftype=0|1]\n\
-+/* naming */		[-n size=num,version=2|ci,ftype=0|1,delattr=0|1]\n\
- /* no-op info only */	[-N]\n\
- /* prototype file */	[-p fname]\n\
- /* quiet */		[-q]\n\
-@@ -1609,6 +1618,9 @@ naming_opts_parser(
- 	case N_FTYPE:
- 		cli->sb_feat.dirftype = getnum(value, opts, subopt);
- 		break;
-+	case N_DELATTR:
-+		cli->sb_feat.delattr = getnum(value, &nopts, N_DELATTR);
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -2012,6 +2024,14 @@ _("reflink not supported without CRC support\n"));
- 		cli->sb_feat.reflink = false;
- 	}
- 
-+	if ((cli->sb_feat.delattr) &&
-+	    cli->sb_feat.dir_version == 4) {
-+		fprintf(stderr,
-+_("delayed attributes not supported on v4 filesystems\n"));
-+		usage();
-+		cli->sb_feat.delattr = false;
-+	}
-+
- 	if ((cli->fsx.fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
- 	    !cli->sb_feat.reflink) {
- 		fprintf(stderr,
-@@ -2974,6 +2994,8 @@ sb_set_features(
- 		sbp->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_RMAPBT;
- 	if (fp->reflink)
- 		sbp->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_REFLINK;
-+	if (fp->delattr)
-+		sbp->sb_features_log_incompat |= XFS_SB_FEAT_INCOMPAT_LOG_DELATTR;
- 
- 	/*
- 	 * Sparse inode chunk support has two main inode alignment requirements.
+ common/rc         |   3 ++
+ common/xfs        |   7 +++
+ tests/xfs/512     | 101 +++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/512.out | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/group   |   1 +
+ 5 files changed, 243 insertions(+)
+ create mode 100755 tests/xfs/512
+ create mode 100644 tests/xfs/512.out
+
 -- 
 2.7.4
 
