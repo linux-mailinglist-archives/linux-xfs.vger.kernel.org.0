@@ -2,66 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44449AB0FB
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C853FAB0FA
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392132AbfIFDea (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 23:34:30 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33304 "EHLO
+        id S2392131AbfIFDeZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 23:34:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33212 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392128AbfIFDea (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:34:30 -0400
+        with ESMTP id S2392128AbfIFDeZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:34:25 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863XvJm105018;
-        Fri, 6 Sep 2019 03:34:19 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863Xwqt105049;
+        Fri, 6 Sep 2019 03:34:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=/jdZlyEQ50y2ae2IghUP3PSW9UoCx3jwJH+IxpSHBGI=;
- b=dnXA19EFac15FHRqZjLuajDUhhmXhAwZyo+KtCYY2FAhI2V16BHp/GOTQQWAlpICU/uL
- jKiddyfH2hCdM18mST0UGKhQFJnMmzu49OTkFyAvCZczu7R+U1pvYTM1QCdPO7z0pf/C
- GL0qioPWSn9RGCilt8SoDRFXB2Atm9F1jxDngpPv06JK8KIiwe2e7LV8zqltlsbfBEij
- Pj5kevCfeg5xOlMkekV5BtX/vJwoa3aEzn3JbjR8B/RagTbFNmLbwZWPc11g+3o4l/s2
- 1J2tyrsI4fY3qYW32/GePN7xgOWyt4Ke3bUM9tcKEzxWW4syQGNcrybgRRpJZAx5JXvr rw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2uuf5f82ug-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=JP07mUbIBg+kf5Gh9ThkUHBUX5i/dtky0BZN9uZCWTY=;
+ b=OwRD7pQgfVlQ6ekcg5k5kMoppUpIbdDhq4fUTapOtPZUPJGFw/JOe9aR0TQhnKUfqCsO
+ ZFrNUuDZS62cSfUKDy0d3P1Duv8Ato4wprUdXPv6jOSDTTwZoAzbLHqMXu+voQaTn4XG
+ wknVfYg2htKimNIbWz8oIhcD5x/fCNOR98jFhieVHpvOXq+enkgOdImn/0QDVnltqcYL
+ iTW0y7yF3g8MGF0yImlyDSRTal//P16Cv3lVjEp1a7tUmMo91z576Rn0zWlXj+by8+/J
+ xcQqr5G3ArHRqnP6tqYqN9z20xaOG5H1OBrPtbw/HDYcBdKsB6g0LfcF12wbCiT9NWjF jQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2uuf5f82um-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:34:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863XTDB188675;
-        Fri, 6 Sep 2019 03:34:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2utpmc73xx-1
+        Fri, 06 Sep 2019 03:34:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863Xbmo069167;
+        Fri, 6 Sep 2019 03:34:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2utvr4jsq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:34:18 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x863YHw5003626;
-        Fri, 6 Sep 2019 03:34:17 GMT
+        Fri, 06 Sep 2019 03:34:22 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x863YLLb017808;
+        Fri, 6 Sep 2019 03:34:21 GMT
 Received: from localhost (/10.159.148.70)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 20:34:17 -0700
-Subject: [PATCH 3/3] xfs_scrub: remove unnecessary wakeup wait in
- scan_fs_tree
+        with ESMTP ; Thu, 05 Sep 2019 20:34:21 -0700
+Subject: [PATCH 0/4] xfsprogs: help mkfs shed its AG initialization code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Thu, 05 Sep 2019 20:34:16 -0700
-Message-ID: <156774085609.2643257.18220893434559330906.stgit@magnolia>
-In-Reply-To: <156774083707.2643257.15738851266613887341.stgit@magnolia>
-References: <156774083707.2643257.15738851266613887341.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Thu, 05 Sep 2019 20:34:20 -0700
+Message-ID: <156774086083.2643362.4042713521116931635.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=749
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909060039
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=811 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909060039
 Sender: linux-xfs-owner@vger.kernel.org
@@ -69,32 +66,31 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-We don't need to wait on the condition variable if directory tree
-scanning has already finished by the time we've finished queueing all
-the directory work items.  This is easy to trigger when the workqueue is
-single-threaded, but in theory it could happen any time.
+In this series, we start by adapting the libxfs AG construction code to
+be aware that an internal log can be placed with an AG that is being
+initialized.  This is necessary to refactor mkfs to use the AG
+construction set instead of its own open-coded initialization work.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
----
- scrub/vfs.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+In userspace, the next thing we have to do is to fix the uncached buffer
+code so that libxfs_putbuf won't try to suck them into the buffer cache;
+and then fix delwri_{queue,submit} so that IO errors are returned by the
+submit function.
 
+The final patch in the xfsprogs series replaces all of mkfs' AG
+initialization functions with a single call to the functions in libxfs.
 
-diff --git a/scrub/vfs.c b/scrub/vfs.c
-index f8bc98c0..1a1482dd 100644
---- a/scrub/vfs.c
-+++ b/scrub/vfs.c
-@@ -246,7 +246,8 @@ scan_fs_tree(
- 	 * about to tear everything down.
- 	 */
- 	pthread_mutex_lock(&sft.lock);
--	pthread_cond_wait(&sft.wakeup, &sft.lock);
-+	if (sft.nr_dirs)
-+		pthread_cond_wait(&sft.wakeup, &sft.lock);
- 	assert(sft.nr_dirs == 0);
- 	pthread_mutex_unlock(&sft.lock);
- 
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=mkfs-refactor
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=mkfs-refactor
