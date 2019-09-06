@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A42AB156
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16A85AB158
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391382AbfIFDml (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 23:42:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56304 "EHLO
+        id S2392173AbfIFDm4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 23:42:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56506 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388694AbfIFDmk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:42:40 -0400
+        with ESMTP id S2388391AbfIFDm4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:42:56 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863dGK6113013;
-        Fri, 6 Sep 2019 03:42:38 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863dOw6113238;
+        Fri, 6 Sep 2019 03:42:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=BGmj4AtUJ0jzLM6iFOk1pgMmhdaWI+TirKHCdPqApSs=;
- b=NvyLO4UpY4jAn/0tD2ISBDGc3U7sH+VQGMqVhPhDj+NyTiBvEv1psCLtzPa24rijQQxN
- zqMHJUDifiZafvkYrnFZlIwzOKh2ktxEX5Glv6UXRTJ2NUWo8p7J3GcsMCM+2vJdR5hc
- psmuDcNLHIljs4SgZS5Oay1chRj6lm6osZiFGicUi2pwWgz+giE7Ugl86Mtn4feluYl/
- p3H9pFFnVEw+sEOJfIY7LdBeVmZMmN2jK0Q3bxZP42lRlSrnSIkvcVJo4AYgASci++sH
- cBmT+EibxtlnsfFoOHKp1ymu0b/R3WQnemYbhMqLX1Pp9ovVUwnHuxehXaiMWT2z69k7 9A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2uufr080f3-1
+ bh=35gJ2Tb1GdYdrveOj12JGNNNvPcnqcj0HfJ4ULQx7OI=;
+ b=ZhPDCa1L6qUUAAbw49kDKZbmxddIS5tMUJKZAVuTqZ7xxAx0WzDbyy70sSHdtmbZFCH5
+ RQbGmznx7Uc1u9BZSrDKsQy0NFOOUdE0IAH8hgdU75XGr1sK8ya2HI+cRj9Ey5T6mKPa
+ ohdzu0bjyBni22eUwXuwinqSkOUV3Ab44hpuYzqKc/YYLUSAi8glG0EynlFCrb8Y1JIr
+ 8TMSG3XidDF2nZry60fOUvIZ1hwsleVJS2CvcLb37NZPPw6qxzkQkleboDvxwS98J4oO
+ 5ET696JraUFny9EOiS9AHMp3XHadY5CWrs6Xs32cYnZ7XTL9lF5iC8D9RC8jAVTTHMZW lA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2uufr080fr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:42:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863coPk001981;
-        Fri, 6 Sep 2019 03:42:38 GMT
+        Fri, 06 Sep 2019 03:42:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863cPqC077923;
+        Fri, 6 Sep 2019 03:42:53 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2utpmc78st-1
+        by userp3020.oracle.com with ESMTP id 2utvr4k4ax-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:42:37 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x863gbZL024027;
-        Fri, 6 Sep 2019 03:42:37 GMT
+        Fri, 06 Sep 2019 03:42:53 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x863gq5S024214;
+        Fri, 6 Sep 2019 03:42:52 GMT
 Received: from localhost (/10.159.148.70)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 20:42:36 -0700
-Subject: [PATCH 16/18] xfs_scrub: remove moveon from phase 1 functions
+        with ESMTP ; Thu, 05 Sep 2019 20:42:43 -0700
+Subject: [PATCH 17/18] xfs_scrub: remove XFS_ITERATE_INODES_ABORT from inode
+ iterator
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 05 Sep 2019 20:42:36 -0700
-Message-ID: <156774135641.2646807.12096715600961505146.stgit@magnolia>
+Date:   Thu, 05 Sep 2019 20:42:42 -0700
+Message-ID: <156774136265.2646807.13769674642327793140.stgit@magnolia>
 In-Reply-To: <156774125578.2646807.1183436616735969617.stgit@magnolia>
 References: <156774125578.2646807.1183436616735969617.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,209 +71,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace the moveon returns in the phase 1 code with a direct integer
-error return.
+Remove the _ABORT code since nobody uses it and we're slowly moving to
+ECANCELED anyway.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/phase1.c    |   49 ++++++++++++++++++++++++++++---------------------
- scrub/xfs_scrub.c |    5 +++--
- scrub/xfs_scrub.h |    2 +-
- 3 files changed, 32 insertions(+), 24 deletions(-)
+ scrub/inodes.c |    2 +-
+ scrub/inodes.h |    8 +++++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 
-diff --git a/scrub/phase1.c b/scrub/phase1.c
-index 8a68a2bf..dd6301a2 100644
---- a/scrub/phase1.c
-+++ b/scrub/phase1.c
-@@ -44,8 +44,8 @@ xfs_shutdown_fs(
- }
+diff --git a/scrub/inodes.c b/scrub/inodes.c
+index fea36773..ee4a52e3 100644
+--- a/scrub/inodes.c
++++ b/scrub/inodes.c
+@@ -180,7 +180,7 @@ scan_ag_inodes(
+ _("Changed too many times during scan; giving up."));
+ 				break;
+ 			}
+-			case XFS_ITERATE_INODES_ABORT:
++			case ECANCELED:
+ 				error = 0;
+ 				/* fall thru */
+ 			default:
+diff --git a/scrub/inodes.h b/scrub/inodes.h
+index 5bedd55b..e3662c09 100644
+--- a/scrub/inodes.h
++++ b/scrub/inodes.h
+@@ -6,10 +6,16 @@
+ #ifndef XFS_SCRUB_INODES_H_
+ #define XFS_SCRUB_INODES_H_
  
- /* Clean up the XFS-specific state data. */
--bool
--xfs_cleanup_fs(
-+int
-+scrub_cleanup(
- 	struct scrub_ctx	*ctx)
- {
- 	int			error;
-@@ -65,15 +65,15 @@ xfs_cleanup_fs(
- 		str_liberror(ctx, error, _("closing mountpoint fd"));
- 	fs_table_destroy();
++/*
++ * Return codes for the inode iterator function are 0 to continue iterating,
++ * and non-zero to stop iterating.  Any non-zero value will be passed up to the
++ * iteration caller.  The special value ECANCELED can be used to stop
++ * iteration, because the inode iteration function never generates that error
++ * code on its own.
++ */
+ typedef int (*scrub_inode_iter_fn)(struct scrub_ctx *ctx,
+ 		struct xfs_handle *handle, struct xfs_bulkstat *bs, void *arg);
  
--	return true;
-+	return error;
- }
+-#define XFS_ITERATE_INODES_ABORT	(-1)
+ int scrub_scan_all_inodes(struct scrub_ctx *ctx, scrub_inode_iter_fn fn,
+ 		void *arg);
  
- /*
-  * Bind to the mountpoint, read the XFS geometry, bind to the block devices.
-- * Anything we've already built will be cleaned up by xfs_cleanup_fs.
-+ * Anything we've already built will be cleaned up by scrub_cleanup.
-  */
--bool
--xfs_setup_fs(
-+int
-+phase1_func(
- 	struct scrub_ctx		*ctx)
- {
- 	int				error;
-@@ -95,23 +95,23 @@ _("Must be root to run scrub."));
- _("Not an XFS filesystem."));
- 		else
- 			str_liberror(ctx, error, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 
- 	error = fstat(ctx->mnt.fd, &ctx->mnt_sb);
- 	if (error) {
- 		str_errno(ctx, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 	error = fstatvfs(ctx->mnt.fd, &ctx->mnt_sv);
- 	if (error) {
- 		str_errno(ctx, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 	error = fstatfs(ctx->mnt.fd, &ctx->mnt_sf);
- 	if (error) {
- 		str_errno(ctx, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 
- 	/*
-@@ -122,21 +122,21 @@ _("Not an XFS filesystem."));
- 	error = syncfs(ctx->mnt.fd);
- 	if (error) {
- 		str_errno(ctx, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 
- 	error = action_lists_alloc(ctx->mnt.fsgeom.agcount,
- 			&ctx->action_lists);
- 	if (error) {
- 		str_liberror(ctx, error, ctx->mntpoint);
--		return false;
-+		return error;
- 	}
- 
- 	error = path_to_fshandle(ctx->mntpoint, &ctx->fshandle,
- 			&ctx->fshandle_len);
- 	if (error) {
- 		str_errno(ctx, _("getting fshandle"));
--		return false;
-+		return error;
- 	}
- 
- 	/* Do we have kernel-assisted metadata scrubbing? */
-@@ -146,33 +146,33 @@ _("Not an XFS filesystem."));
- 	    !xfs_can_scrub_parent(ctx)) {
- 		str_info(ctx, ctx->mntpoint,
- _("Kernel metadata scrubbing facility is not available."));
--		return false;
-+		return ECANCELED;
- 	}
- 
- 	/* Do we need kernel-assisted metadata repair? */
- 	if (ctx->mode != SCRUB_MODE_DRY_RUN && !xfs_can_repair(ctx)) {
- 		str_info(ctx, ctx->mntpoint,
- _("Kernel metadata repair facility is not available.  Use -n to scrub."));
--		return false;
-+		return ECANCELED;
- 	}
- 
- 	/* Did we find the log and rt devices, if they're present? */
- 	if (ctx->mnt.fsgeom.logstart == 0 && ctx->fsinfo.fs_log == NULL) {
- 		str_info(ctx, ctx->mntpoint,
- _("Unable to find log device path."));
--		return false;
-+		return ECANCELED;
- 	}
- 	if (ctx->mnt.fsgeom.rtblocks && ctx->fsinfo.fs_rt == NULL) {
- 		str_info(ctx, ctx->mntpoint,
- _("Unable to find realtime device path."));
--		return false;
-+		return ECANCELED;
- 	}
- 
- 	/* Open the raw devices. */
- 	ctx->datadev = disk_open(ctx->fsinfo.fs_name);
- 	if (error) {
- 		str_errno(ctx, ctx->fsinfo.fs_name);
--		return false;
-+		return error;
- 	}
- 
- 	ctx->nr_io_threads = disk_heads(ctx->datadev);
-@@ -186,14 +186,14 @@ _("Unable to find realtime device path."));
- 		ctx->logdev = disk_open(ctx->fsinfo.fs_log);
- 		if (error) {
- 			str_errno(ctx, ctx->fsinfo.fs_name);
--			return false;
-+			return error;
- 		}
- 	}
- 	if (ctx->fsinfo.fs_rt) {
- 		ctx->rtdev = disk_open(ctx->fsinfo.fs_rt);
- 		if (error) {
- 			str_errno(ctx, ctx->fsinfo.fs_name);
--			return false;
-+			return error;
- 		}
- 	}
- 
-@@ -204,5 +204,12 @@ _("Unable to find realtime device path."));
- 	 */
- 	log_info(ctx, _("Invoking online scrub."), ctx);
- 	ctx->scrub_setup_succeeded = true;
--	return true;
-+	return 0;
-+}
-+
-+bool
-+xfs_setup_fs(
-+	struct scrub_ctx		*ctx)
-+{
-+	return phase1_func(ctx) == 0;
- }
-diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
-index 97482c8c..d454cdfc 100644
---- a/scrub/xfs_scrub.c
-+++ b/scrub/xfs_scrub.c
-@@ -600,6 +600,7 @@ main(
- 	int			c;
- 	int			fd;
- 	int			ret = SCRUB_RET_SUCCESS;
-+	int			error;
- 
- 	fprintf(stdout, "EXPERIMENTAL xfs_scrub program in use! Use at your own risk!\n");
- 
-@@ -774,8 +775,8 @@ main(
- 		str_error(&ctx, ctx.mntpoint, _("Injecting error."));
- 
- 	/* Clean up scan data. */
--	moveon = xfs_cleanup_fs(&ctx);
--	if (!moveon && ctx.runtime_errors == 0)
-+	error = scrub_cleanup(&ctx);
-+	if (error && ctx.runtime_errors == 0)
- 		ctx.runtime_errors++;
- 
- out:
-diff --git a/scrub/xfs_scrub.h b/scrub/xfs_scrub.h
-index f997136b..c6fc204d 100644
---- a/scrub/xfs_scrub.h
-+++ b/scrub/xfs_scrub.h
-@@ -88,7 +88,7 @@ struct scrub_ctx {
- 
- /* Phase helper functions */
- void xfs_shutdown_fs(struct scrub_ctx *ctx);
--bool xfs_cleanup_fs(struct scrub_ctx *ctx);
-+int scrub_cleanup(struct scrub_ctx *ctx);
- bool xfs_setup_fs(struct scrub_ctx *ctx);
- bool xfs_scan_metadata(struct scrub_ctx *ctx);
- bool xfs_scan_inodes(struct scrub_ctx *ctx);
 
