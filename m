@@ -2,50 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78121AB12B
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C841AB12C
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbfIFDjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 23:39:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45220 "EHLO
+        id S2392158AbfIFDjG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 23:39:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45374 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731760AbfIFDi7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:38:59 -0400
+        with ESMTP id S2392154AbfIFDjF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:39:05 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863YFw0074394;
-        Fri, 6 Sep 2019 03:38:58 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863d4vc077747;
+        Fri, 6 Sep 2019 03:39:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=xPMoN+ucKwebLiojth5UT154j/N56bXH0auyPyup7po=;
- b=OJBEnS0FSN6QuJbZ6y9VdPcK6H/Pfv8QkKjbF3Vr32iqmaMeWs040b6mOSgxt1KHiOID
- eehG16BGFkahc24pzg5GH56gVuzBFmmxn/MjQ4cUA1IXqu8DTOyod3/JEqMcqil3ZUGN
- yPIP7/5nvwOYq2EXxpc7X/kVwfmX5ypj5hhHbpUTpP2GF0uuyQiqQ/V/oVe54er+/gJa
- 6x6kE6FkK7QSu1eeytv8z2X01Vqc/RSBpTSa8vOeQ6LrjkcQI2ZyPWsttvVNq7lohwkV
- OI/7a4WBM1dsGL9SaFdrL2Jptsy4oFsA4qfC9cRsSy/WvSwDAGSM/sepjpU0L043rNLJ kA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2uuf51g3dw-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Njd0ftoNv38gIoKmW2LyCLGzULIXQsrB+GmMX/fTR1U=;
+ b=Fb0LTGNXOQ6OfMPa1xtKfUwOrIUthU4m+l8gRN1nvEix9TkzB53Dd7EzeAq/yJzYg/xQ
+ v4MVpP3JA/lYd1wDgJ0KhI/bjjMEcZbBBoGUUcJ7YtfP7xBnGOt00vzlhW60twCYy4w1
+ 19dquceTFz8Iu4fJH1LGlISQ2JUMNNf9lV+UGOociRg1EYRMNlp6E7SCwwgss0zUql/K
+ X6veqczo1nHn9kghXCyb73U9ETvB7Bv7JDQfBOGXDRzeoew6D5LaEx2JH4V+zPfzzF/q
+ 2qxqkjiid/UQmJJSCwWFidtJmDA4bMz4QAc09vakWqOS1x2LOYsfpkVtRVg0UxqBcrcX Sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2uuf51g3ec-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:38:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863co5S001987;
-        Fri, 6 Sep 2019 03:38:57 GMT
+        Fri, 06 Sep 2019 03:39:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863cTTq096009;
+        Fri, 6 Sep 2019 03:39:02 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2utpmc76pk-1
+        by aserp3030.oracle.com with ESMTP id 2uu1b99t2t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:38:57 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x863cuQ9020709;
-        Fri, 6 Sep 2019 03:38:56 GMT
+        Fri, 06 Sep 2019 03:39:02 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x863d2Ll020779;
+        Fri, 6 Sep 2019 03:39:02 GMT
 Received: from localhost (/10.159.148.70)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 20:38:56 -0700
-Subject: [PATCH 00/11] xfs_scrub: fix IO error reporting
+        with ESMTP ; Thu, 05 Sep 2019 20:39:02 -0700
+Subject: [PATCH 01/11] xfs_scrub: separate media error reporting for
+ attribute forks
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 05 Sep 2019 20:38:55 -0700
-Message-ID: <156774113533.2645432.14942831726168941966.stgit@magnolia>
+Date:   Thu, 05 Sep 2019 20:39:01 -0700
+Message-ID: <156774114171.2645432.6574806722604616019.stgit@magnolia>
+In-Reply-To: <156774113533.2645432.14942831726168941966.stgit@magnolia>
+References: <156774113533.2645432.14942831726168941966.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -60,35 +63,96 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909060039
+ definitions=main-1909060040
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The scrub media error reporting could use some improvements -- first,
-scrub can calculate the exact offset of media errors in file mappings,
-so we should report more precise offsets.  Second, we only need to scan
-the rmap once after assembling the io error bitmap to look for destroyed
-metadata (instead of once per error!).  Third, we can filter out
-unwritten and attr/cow fork extents from what we report since sector
-remapping takes care of unwritten/cow extents and attr media errors
-should be detected by phase 3.  Finally, we introduce a new category of
-errors that are unfixable by scrub, and assign to this class all the
-media errors since there's nothing XFS can do.
+Use different functions to warn about media errors that were detected
+underlying xattr data because logical offsets for attribute fork extents
+have no meaning to users.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ scrub/phase6.c |   45 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/scrub/phase6.c b/scrub/phase6.c
+index 4554af9a..1edd98af 100644
+--- a/scrub/phase6.c
++++ b/scrub/phase6.c
+@@ -113,7 +113,7 @@ xfs_decode_special_owner(
+ 
+ /* Report if this extent overlaps a bad region. */
+ static bool
+-xfs_report_verify_inode_bmap(
++report_data_loss(
+ 	struct scrub_ctx		*ctx,
+ 	const char			*descr,
+ 	int				fd,
+@@ -142,6 +142,40 @@ _("offset %llu failed read verification."), bmap->bm_offset);
+ 	return true;
+ }
+ 
++/* Report if the extended attribute data overlaps a bad region. */
++static bool
++report_attr_loss(
++	struct scrub_ctx		*ctx,
++	const char			*descr,
++	int				fd,
++	int				whichfork,
++	struct fsxattr			*fsx,
++	struct xfs_bmap			*bmap,
++	void				*arg)
++{
++	struct media_verify_state	*vs = arg;
++	struct bitmap			*bmp = vs->d_bad;
++
++	/* Complain about attr fork extents that don't look right. */
++	if (bmap->bm_flags & (BMV_OF_PREALLOC | BMV_OF_DELALLOC)) {
++		str_info(ctx, descr,
++_("found unexpected unwritten/delalloc attr fork extent."));
++		return true;
++	}
++
++	if (fsx->fsx_xflags & FS_XFLAG_REALTIME) {
++		str_info(ctx, descr,
++_("found unexpected realtime attr fork extent."));
++		return true;
++	}
++
++	if (bitmap_test(bmp, bmap->bm_physical, bmap->bm_length))
++		str_error(ctx, descr,
++_("media error in extended attribute data."));
++
++	return true;
++}
++
+ /* Iterate the extent mappings of a file to report errors. */
+ static bool
+ xfs_report_verify_fd(
+@@ -155,16 +189,13 @@ xfs_report_verify_fd(
+ 
+ 	/* data fork */
+ 	moveon = xfs_iterate_filemaps(ctx, descr, fd, XFS_DATA_FORK, &key,
+-			xfs_report_verify_inode_bmap, arg);
++			report_data_loss, arg);
+ 	if (!moveon)
+ 		return false;
+ 
+ 	/* attr fork */
+-	moveon = xfs_iterate_filemaps(ctx, descr, fd, XFS_ATTR_FORK, &key,
+-			xfs_report_verify_inode_bmap, arg);
+-	if (!moveon)
+-		return false;
+-	return true;
++	return xfs_iterate_filemaps(ctx, descr, fd, XFS_ATTR_FORK, &key,
++			report_attr_loss, arg);
+ }
+ 
+ /* Report read verify errors in unlinked (but still open) files. */
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-media-error-reporting
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=scrub-media-error-reporting
