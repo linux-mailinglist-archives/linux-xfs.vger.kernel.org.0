@@ -2,179 +2,166 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1716AAF87
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 02:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1C8AAFB0
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 02:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388995AbfIFAGA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 20:06:00 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38172 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731943AbfIFAGA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 20:06:00 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9CA4243DC1B
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Sep 2019 10:05:56 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i61lD-0003Zh-NW
-        for linux-xfs@vger.kernel.org; Fri, 06 Sep 2019 10:05:55 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i61lD-0001mm-LL
-        for linux-xfs@vger.kernel.org; Fri, 06 Sep 2019 10:05:55 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 8/8] xfs: push the grant head when the log head moves forward
-Date:   Fri,  6 Sep 2019 10:05:53 +1000
-Message-Id: <20190906000553.6740-9-david@fromorbit.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190906000553.6740-1-david@fromorbit.com>
+        id S2389563AbfIFAMp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 20:12:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47354 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389391AbfIFAMp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 20:12:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8609IsY127689;
+        Fri, 6 Sep 2019 00:12:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=RaWutCGuvEsb/cGB2u4Huwvw8b9lk7OJdCQ71s2Hmi0=;
+ b=XfKs5DhRZBN45xx2vG94EAoqGYd/f50NXiQAH/Ws9CCGiYAKQQh7ABe5IRN43lHWTnz0
+ K137aVkp5jnm5u10bsTG9UvMScuRUjRDAbaDMZhRBXGDyrAexnynsNXla/qIBARRlaGm
+ HjSauR2RyD2UTJ+ofToRqK2LBQAtokF+mFRTumrJnYlgdOxPcztFYhApke9s5kIgdm0I
+ y0TlzJCcXi+RPaoSGpv/uJGZHoFWyWj/uvengEPQDZlRhnqlqMt1cGsOUxXfZ7BQdpzs
+ Ehtu/+5tEh4Eoquz51IJAlIJGfxc5KEQ5fQQ2gTak1oUho8lSIJ5mUbQDknMyV+4zbl4 ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2uucg2r15k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 00:12:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8608QeB124013;
+        Fri, 6 Sep 2019 00:12:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uu1b96c9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Sep 2019 00:12:42 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x860Cf8w024364;
+        Fri, 6 Sep 2019 00:12:41 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 17:12:41 -0700
+Date:   Thu, 5 Sep 2019 17:12:40 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/8] xfs: push the AIL in xlog_grant_head_wake
+Message-ID: <20190906001240.GL2229799@magnolia>
 References: <20190906000553.6740-1-david@fromorbit.com>
+ <20190906000553.6740-2-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=J70Eh1EUuV4A:10 a=20KFwNOVAAAA:8
-        a=yPCof4ZbAAAA:8 a=7Q2-SO56R8pWWUt_uDsA:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906000553.6740-2-david@fromorbit.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909060000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909060000
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Fri, Sep 06, 2019 at 10:05:46AM +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> In the situation where the log is full and the CIL has not recently
+> flushed, the AIL push threshold is throttled back to the where the
+> last write of the head of the log was completed. This is stored in
+> log->l_last_sync_lsn. Hence if the CIL holds > 25% of the log space
+> pinned by flushes and/or aggregation in progress, we can get the
+> situation where the head of the log lags a long way behind the
+> reservation grant head.
+> 
+> When this happens, the AIL push target is trimmed back from where
+> the reservation grant head wants to push the log tail to, back to
+> where the head of the log currently is. This means the push target
+> doesn't reach far enough into the log to actually move the tail
+> before the transaction reservation goes to sleep.
+> 
+> When the CIL push completes, it moves the log head forward such that
+> the AIL push target can now be moved, but that has no mechanism for
+> puhsing the log tail. Further, if the next tail movement of the log
+> is not large enough wake the waiter (i.e. still not enough space for
+> it to have a reservation granted), we don't wake anything up, and
+> hence we do not update the AIL push target to take into account the
+> head of the log moving and allowing the push target to be moved
+> forwards.
+> 
+> To avoid this particular condition, if we fail to wake the first
+> waiter on the grant head because we don't have enough space,
+> push on the AIL again. This will pick up any movement of the log
+> head and allow the push target to move forward due to completion of
+> CIL pushing.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_log.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index b159a9e9fef0..c2862b1a2780 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -214,15 +214,42 @@ xlog_grant_head_wake(
+>  {
+>  	struct xlog_ticket	*tic;
+>  	int			need_bytes;
+> +	bool			woken_task = false;
+>  
+>  	list_for_each_entry(tic, &head->waiters, t_queue) {
+> +
+> +		/*
+> +		 * The is a chance that the size of the CIL checkpoints in
 
-When the log fills up, we can get into the state where the
-outstanding items in the CIL being committed and aggregated are
-larger than the range that the reservation grant head tail pushing
-will attempt to clean. This can result in the tail pushing range
-being trimmed back to the the log head (l_last_sync_lsn) and so
-may not actually move the push target at all.
+"There is a chance..."
 
-When the iclogs associated with the CIL commit finally land, the
-log head moves forward, and this removes the restriction on the AIL
-push target. However, if we already have transactions sleeping on
-the grant head, and there's nothing in the AIL still to flush from
-the current push target, then nothing will move the tail of the log
-and trigger a log reservation wakeup.
-
-Hence the there is nothing that will trigger xlog_grant_push_ail()
-to recalculate the AIL push target and start pushing on the AIL
-again to write back the metadata objects that pin the tail of the
-log and hence free up space and allow the transaction reservations
-to be woken and make progress.
-
-Hence we need to push on the grant head when we move the log head
-forward, as this may be the only trigger we have that can move the
-AIL push target forwards in this situation.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Other than that,
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_log.c | 72 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 47 insertions(+), 25 deletions(-)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index a24692bc3fa2..605fadcbad16 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2654,6 +2654,46 @@ xlog_get_lowest_lsn(
- 	return lowest_lsn;
- }
- 
-+/*
-+ * Completion of a iclog IO does not imply that a transaction has completed, as
-+ * transactions can be large enough to span many iclogs. We cannot change the
-+ * tail of the log half way through a transaction as this may be the only
-+ * transaction in the log and moving the tail to point to the middle of it
-+ * will prevent recovery from finding the start of the transaction. Hence we
-+ * should only update the last_sync_lsn if this iclog contains transaction
-+ * completion callbacks on it.
-+ *
-+ * We have to do this before we drop the icloglock to ensure we are the only one
-+ * that can update it.
-+ *
-+ * If we are moving the last_sync_lsn forwards, we also need to ensure we kick
-+ * the reservation grant head pushing. This is due to the fact that the push
-+ * target is bound by the current last_sync_lsn value. Hence if we have a large
-+ * amount of log space bound up in this committing transaction then the
-+ * last_sync_lsn value may be the limiting factor preventing tail pushing from
-+ * freeing space in the log. Hence once we've updated the last_sync_lsn we
-+ * should push the AIL to ensure the push target (and hence the grant head) is
-+ * no longer bound by the old log head location and can move forwards and make
-+ * progress again.
-+ */
-+static void
-+xlog_state_set_callback(
-+	struct xlog		*log,
-+	struct xlog_in_core	*iclog,
-+	xfs_lsn_t		header_lsn)
-+{
-+	iclog->ic_state = XLOG_STATE_CALLBACK;
-+
-+	ASSERT(XFS_LSN_CMP(atomic64_read(&log->l_last_sync_lsn),
-+			   header_lsn) <= 0);
-+
-+	if (list_empty_careful(&iclog->ic_callbacks))
-+		return;
-+
-+	atomic64_set(&log->l_last_sync_lsn, header_lsn);
-+	xlog_grant_push_ail(log, 0);
-+}
-+
- /*
-  * Return true if we need to stop processing, false to continue to the next
-  * iclog. The caller will need to run callbacks if the iclog is returned in the
-@@ -2667,6 +2707,7 @@ xlog_state_iodone_process_iclog(
- 	bool			*ioerror)
- {
- 	xfs_lsn_t		lowest_lsn;
-+	xfs_lsn_t		header_lsn;
- 
- 	/* Skip all iclogs in the ACTIVE & DIRTY states */
- 	if (iclog->ic_state & (XLOG_STATE_ACTIVE | XLOG_STATE_DIRTY))
-@@ -2706,34 +2747,15 @@ xlog_state_iodone_process_iclog(
- 	 * callbacks) see the above if.
- 	 *
- 	 * We will do one more check here to see if we have chased our tail
--	 * around.
-+	 * around. If this is not the lowest lsn iclog, then we will leave it
-+	 * for another completion to process.
- 	 */
-+	header_lsn = be64_to_cpu(iclog->ic_header.h_lsn);
- 	lowest_lsn = xlog_get_lowest_lsn(log);
--	if (lowest_lsn &&
--	    XFS_LSN_CMP(lowest_lsn, be64_to_cpu(iclog->ic_header.h_lsn)) < 0)
--		return false; /* Leave this iclog for another thread */
--
--	iclog->ic_state = XLOG_STATE_CALLBACK;
--
--	/*
--	 * Completion of a iclog IO does not imply that a transaction has
--	 * completed, as transactions can be large enough to span many iclogs.
--	 * We cannot change the tail of the log half way through a transaction
--	 * as this may be the only transaction in the log and moving th etail to
--	 * point to the middle of it will prevent recovery from finding the
--	 * start of the transaction.  Hence we should only update the
--	 * last_sync_lsn if this iclog contains transaction completion callbacks
--	 * on it.
--	 *
--	 * We have to do this before we drop the icloglock to ensure we are the
--	 * only one that can update it.
--	 */
--	ASSERT(XFS_LSN_CMP(atomic64_read(&log->l_last_sync_lsn),
--			be64_to_cpu(iclog->ic_header.h_lsn)) <= 0);
--	if (!list_empty_careful(&iclog->ic_callbacks))
--		atomic64_set(&log->l_last_sync_lsn,
--			be64_to_cpu(iclog->ic_header.h_lsn));
-+	if (lowest_lsn && XFS_LSN_CMP(lowest_lsn, header_lsn) < 0)
-+		return false;
- 
-+	xlog_state_set_callback(log, iclog, header_lsn);
- 	return false;
- 
- }
--- 
-2.23.0.rc1
+--D
 
+> +		 * progress at the last AIL push target calculation resulted in
+> +		 * limiting the target to the log head (l_last_sync_lsn) at the
+> +		 * time. This may not reflect where the log head is now as the
+> +		 * CIL checkpoints may have completed.
+> +		 *
+> +		 * Hence when we are woken here, it may be that the head of the
+> +		 * log that has moved rather than the tail. As the tail didn't
+> +		 * move, there still won't be space available for the
+> +		 * reservation we require.  However, if the AIL has already
+> +		 * pushed to the target defined by the old log head location, we
+> +		 * will hang here waiting for something else to update the AIL
+> +		 * push target.
+> +		 *
+> +		 * Therefore, if there isn't space to wake the first waiter on
+> +		 * the grant head, we need to push the AIL again to ensure the
+> +		 * target reflects both the current log tail and log head
+> +		 * position before we wait for the tail to move again.
+> +		 */
+> +
+>  		need_bytes = xlog_ticket_reservation(log, head, tic);
+> -		if (*free_bytes < need_bytes)
+> +		if (*free_bytes < need_bytes) {
+> +			if (!woken_task)
+> +				xlog_grant_push_ail(log, need_bytes);
+>  			return false;
+> +		}
+>  
+>  		*free_bytes -= need_bytes;
+>  		trace_xfs_log_grant_wake_up(log, tic);
+>  		wake_up_process(tic->t_task);
+> +		woken_task = true;
+>  	}
+>  
+>  	return true;
+> -- 
+> 2.23.0.rc1
+> 
