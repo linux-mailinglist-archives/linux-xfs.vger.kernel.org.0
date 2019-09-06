@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D23AB103
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44449AB0FB
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Sep 2019 05:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfIFDes (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Sep 2019 23:34:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48344 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404422AbfIFDer (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:34:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863YROH110101;
-        Fri, 6 Sep 2019 03:34:36 GMT
+        id S2392132AbfIFDea (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Sep 2019 23:34:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33304 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392128AbfIFDea (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Sep 2019 23:34:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863XvJm105018;
+        Fri, 6 Sep 2019 03:34:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=PLGCz0g+q3R0fzk//ee5GCzfpWRIQI0a75gt/FydX4k=;
- b=HOvBb8BsPoAMRHkof3LSp2sHPQRwzFkLkG5YXfMfeumUdnvx4icuIA9XF6IVQrrS9o7t
- p37uPAQZL7rivNDgBhtjgO3uZ+UtxeaehnraX3vi+d5rhXAl11p5me+raaURNFgsLy9Q
- FZYalIt4HH9lNGho/REICehZ9y6n0QI33a5uqJ3H17pUYItGlfYJmSAp7YedlbTxbpTL
- Y7r1vkWf/Mk18cnHaHuBuXVLinNkBB26k923eYNMsPdwGVv+XbrnWJkDgldTlhgXej5L
- RdEhU0V4DR1JSBQjWveYuK/yjaRxx/P2XNHpopivYIQ4zBxEUoBhT89UQradB8X+s60l GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2uuf4n0350-1
+ bh=/jdZlyEQ50y2ae2IghUP3PSW9UoCx3jwJH+IxpSHBGI=;
+ b=dnXA19EFac15FHRqZjLuajDUhhmXhAwZyo+KtCYY2FAhI2V16BHp/GOTQQWAlpICU/uL
+ jKiddyfH2hCdM18mST0UGKhQFJnMmzu49OTkFyAvCZczu7R+U1pvYTM1QCdPO7z0pf/C
+ GL0qioPWSn9RGCilt8SoDRFXB2Atm9F1jxDngpPv06JK8KIiwe2e7LV8zqltlsbfBEij
+ Pj5kevCfeg5xOlMkekV5BtX/vJwoa3aEzn3JbjR8B/RagTbFNmLbwZWPc11g+3o4l/s2
+ 1J2tyrsI4fY3qYW32/GePN7xgOWyt4Ke3bUM9tcKEzxWW4syQGNcrybgRRpJZAx5JXvr rw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uuf5f82ug-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:34:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863YVx3103620;
-        Fri, 6 Sep 2019 03:34:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2uud7p2pmv-1
+        Fri, 06 Sep 2019 03:34:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x863XTDB188675;
+        Fri, 6 Sep 2019 03:34:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2utpmc73xx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Sep 2019 03:34:31 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x863YA1U018732;
-        Fri, 6 Sep 2019 03:34:10 GMT
+        Fri, 06 Sep 2019 03:34:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x863YHw5003626;
+        Fri, 6 Sep 2019 03:34:17 GMT
 Received: from localhost (/10.159.148.70)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 20:34:10 -0700
-Subject: [PATCH 2/3] xfs_scrub: fix nr_dirs accounting problems
+        with ESMTP ; Thu, 05 Sep 2019 20:34:17 -0700
+Subject: [PATCH 3/3] xfs_scrub: remove unnecessary wakeup wait in
+ scan_fs_tree
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Thu, 05 Sep 2019 20:34:09 -0700
-Message-ID: <156774084974.2643257.15403943146639779829.stgit@magnolia>
+Date:   Thu, 05 Sep 2019 20:34:16 -0700
+Message-ID: <156774085609.2643257.18220893434559330906.stgit@magnolia>
 In-Reply-To: <156774083707.2643257.15738851266613887341.stgit@magnolia>
 References: <156774083707.2643257.15738851266613887341.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1909060039
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
  definitions=main-1909060039
@@ -70,87 +71,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we're scanning the directory tree, we bump nr_dirs every time we
-think we're going to queue a new directory to process, and we decrement
-it every time we're finished doing something with a directory
-(successful or not).  We forgot to undo a counter increment when
-workqueue_add fails, so refactor the code into helpers and call them
-as necessary for correct operation.
+We don't need to wait on the condition variable if directory tree
+scanning has already finished by the time we've finished queueing all
+the directory work items.  This is easy to trigger when the workqueue is
+single-threaded, but in theory it could happen any time.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- scrub/vfs.c |   42 +++++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+ scrub/vfs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
 diff --git a/scrub/vfs.c b/scrub/vfs.c
-index add4e815..f8bc98c0 100644
+index f8bc98c0..1a1482dd 100644
 --- a/scrub/vfs.c
 +++ b/scrub/vfs.c
-@@ -45,6 +45,32 @@ struct scan_fs_tree_dir {
+@@ -246,7 +246,8 @@ scan_fs_tree(
+ 	 * about to tear everything down.
+ 	 */
+ 	pthread_mutex_lock(&sft.lock);
+-	pthread_cond_wait(&sft.wakeup, &sft.lock);
++	if (sft.nr_dirs)
++		pthread_cond_wait(&sft.wakeup, &sft.lock);
+ 	assert(sft.nr_dirs == 0);
+ 	pthread_mutex_unlock(&sft.lock);
  
- static void scan_fs_dir(struct workqueue *wq, xfs_agnumber_t agno, void *arg);
- 
-+/* Increment the number of directories that are queued for processing. */
-+static void
-+inc_nr_dirs(
-+	struct scan_fs_tree	*sft)
-+{
-+	pthread_mutex_lock(&sft->lock);
-+	sft->nr_dirs++;
-+	pthread_mutex_unlock(&sft->lock);
-+}
-+
-+/*
-+ * Decrement the number of directories that are queued for processing and if
-+ * we ran out of dirs to process, wake up anyone who was waiting for processing
-+ * to finish.
-+ */
-+static void
-+dec_nr_dirs(
-+	struct scan_fs_tree	*sft)
-+{
-+	pthread_mutex_lock(&sft->lock);
-+	sft->nr_dirs--;
-+	if (sft->nr_dirs == 0)
-+		pthread_cond_signal(&sft->wakeup);
-+	pthread_mutex_unlock(&sft->lock);
-+}
-+
- /* Queue a directory for scanning. */
- static bool
- queue_subdir(
-@@ -72,15 +98,10 @@ queue_subdir(
- 	new_sftd->sft = sft;
- 	new_sftd->rootdir = is_rootdir;
- 
--	pthread_mutex_lock(&sft->lock);
--	sft->nr_dirs++;
--	pthread_mutex_unlock(&sft->lock);
-+	inc_nr_dirs(sft);
- 	error = workqueue_add(wq, scan_fs_dir, 0, new_sftd);
- 	if (error) {
--		/*
--		 * XXX: need to decrement nr_dirs here; will do that in the
--		 * next patch.
--		 */
-+		dec_nr_dirs(sft);
- 		str_info(ctx, ctx->mntpoint,
- _("Could not queue subdirectory scan work."));
- 		goto out_path;
-@@ -180,12 +201,7 @@ scan_fs_dir(
- 		str_errno(ctx, sftd->path);
- 
- out:
--	pthread_mutex_lock(&sft->lock);
--	sft->nr_dirs--;
--	if (sft->nr_dirs == 0)
--		pthread_cond_signal(&sft->wakeup);
--	pthread_mutex_unlock(&sft->lock);
--
-+	dec_nr_dirs(sft);
- 	free(sftd->path);
- 	free(sftd);
- }
 
