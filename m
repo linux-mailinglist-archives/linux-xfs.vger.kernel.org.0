@@ -2,171 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04398AD1A8
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Sep 2019 03:52:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1472AD20C
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Sep 2019 04:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbfIIBwG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 8 Sep 2019 21:52:06 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58640 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732468AbfIIBwG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 Sep 2019 21:52:06 -0400
-Received: from dread.disaster.area (pa49-181-255-194.pa.nsw.optusnet.com.au [49.181.255.194])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7D53843E663
-        for <linux-xfs@vger.kernel.org>; Mon,  9 Sep 2019 11:52:02 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i78qX-0006U1-Dr
-        for linux-xfs@vger.kernel.org; Mon, 09 Sep 2019 11:52:01 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1i78qX-0005Fx-Bv
-        for linux-xfs@vger.kernel.org; Mon, 09 Sep 2019 11:52:01 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/2] xfs: hard limit the background CIL push
-Date:   Mon,  9 Sep 2019 11:51:59 +1000
-Message-Id: <20190909015159.19662-3-david@fromorbit.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190909015159.19662-1-david@fromorbit.com>
-References: <20190909015159.19662-1-david@fromorbit.com>
+        id S1733062AbfIICvk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 8 Sep 2019 22:51:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39641 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732560AbfIICvk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 Sep 2019 22:51:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q12so12802549wmj.4
+        for <linux-xfs@vger.kernel.org>; Sun, 08 Sep 2019 19:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=VvwvLon+ch5HaaTxFTFHscpy4QLwbgEfFU2zw1+f2g8=;
+        b=NJWVzFNMzXI3g97RbX4jfDqv4Uw10u7GMYUDBEOZCmtIa17nRjuTHgNoP1OQnlmVtc
+         EBKSNFxMKwdlws7b+XKFNhwEdf0Ve734I7YTE5pooL+GStI5mC90Wrref0KbMoQSl8X8
+         2r8Ff+o+9BU6VitBmu24iLb2k8YDQTx6L+1FRgGcF82S2V9TDUNgsFBv717ooP/cOT4p
+         JXoE9LvFcejJgL2JcWbbeYhisY7FFF6JJoa8QezbNJNhWBX/pqO43kZmsstlED8JEaep
+         XQZVLAGaG8Sf9qODAFjMBKbcV6Hri3LrhOAkqxJVWiBQBMzSX8k0nevNOYrUfCoZYAcI
+         mzQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=VvwvLon+ch5HaaTxFTFHscpy4QLwbgEfFU2zw1+f2g8=;
+        b=NIl/Bllr2sYrHjxXJq5D1VFaw1pZ9pb9bo7cXXUU+YhgWp6kNjjdt7xAIz6z0vsOlW
+         UsYinWTdRCc0SMCo9LgRPGdz7QmqY8aVfex37p/3Ma8lwju9is4C6NGPKBRYhheej+UV
+         JibkEd6rf//iVeiAn1Uay1ez40eDpBCU0+x2SDcdyIxGpiVPfG8N8OTBO4OYQosqssNn
+         g4yg7FkgctUGzrMH73XLXbk0MWiE9GOx67Y5HLDgO/1EZIurtrM6/WnzMK0rL99iW2d/
+         3x08ycWCm6LR5zAXoaBlecTTNRNAhRYSMms6VxmVknuqm5WvOfG+NWej5cw79pzOre6n
+         kfEQ==
+X-Gm-Message-State: APjAAAVEUpWoVwRcANX48ZJBCqgkUeQWtLd/4GxoVqDgH/S9rpMZCeeQ
+        qfhh9M5kSfYEQwIp8Sg7qcCVv8Bj60jcgMmPTqc=
+X-Google-Smtp-Source: APXvYqzAZLwdi+QJpVBsdRvUQK3PlA58w4+oAvTXtY8m8JTsCaXxFBOkPSXbekmHD2yVBqIk8yOtckCvl8z58griaN8=
+X-Received: by 2002:a7b:cd12:: with SMTP id f18mr17417496wmj.111.1567997498355;
+ Sun, 08 Sep 2019 19:51:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=YO9NNpcXwc8z/SaoS+iAiA==:117 a=YO9NNpcXwc8z/SaoS+iAiA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=J70Eh1EUuV4A:10 a=20KFwNOVAAAA:8
-        a=7NImt4-Big5x6S5Ir18A:9 a=lt5VDFRdMeuBuxlj:21 a=FXaL1Tw64glX10lm:21
+Received: by 2002:a5d:678e:0:0:0:0:0 with HTTP; Sun, 8 Sep 2019 19:51:36 -0700 (PDT)
+Reply-To: a.angelng@yahoo.com
+From:   Angel NG <angelngx3@gmail.com>
+Date:   Mon, 9 Sep 2019 03:51:36 +0100
+Message-ID: <CA+2x4mo7_72Mt1JMM2RoWHRTJC-6Yo+hpWvaRtbY2sGy2YG9vA@mail.gmail.com>
+Subject: Investment funds
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Sir,
 
-In certain situations the background CIL push can be indefinitely
-delayed. While we have workarounds from the obvious cases now, it
-doesn't solve the underlying issue. This issue is that there is no
-upper limit on the CIL where we will either force or wait for
-a background push to start, hence allowing the CIL to grow without
-bound until it consumes all log space.
+I am Mr. Angel Ng in Libya. I am interested in a joint partnership
+venture with you or your company for a long time and i have One
+Hundred And Fifty Million US Dollars ready for that.
 
-To fix this, add a new wait queue to the CIL which allows background
-pushes to wait for the CIL context to be switched out. This happens
-when the push starts, so it will allow us to block incoming
-transaction commit completion until the push has started. This will
-only affect processes that are running modifications, and only when
-the CIL threshold has been significantly overrun.
+Area of Investment interest are REAL ESTATE, AGRICULTURE, OIL SECTOR &
+CONSTRUCTION, MINES AND ENERGY, ENTERTAINMENT, PHARMACEUTICAL, TOURISM
+ETC.Source of funds: PROCEEDS FROM OIL & GAS e.t.c
 
-This has no apparent impact on performance, and doesn't even trigger
-until over 45 million inodes had been created in a 16-way fsmark
-test on a 2GB log. That was limiting at 64MB of log space used, so
-the active CIL size is only about 3% of the total log in that case.
-The concurrent removal of those files did not trigger the background
-sleep at all.
+If proposal is acceptable, we can set up a live meeting, a.angelngm2@yahoo.com
+I will await your message.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log_cil.c  | 30 +++++++++++++++++++++++++-----
- fs/xfs/xfs_log_priv.h |  1 +
- 2 files changed, 26 insertions(+), 5 deletions(-)
-
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index ef652abd112c..eec9b32f5e08 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -670,6 +670,11 @@ xlog_cil_push(
- 	push_seq = cil->xc_push_seq;
- 	ASSERT(push_seq <= ctx->sequence);
- 
-+	/*
-+	 * Wake up any background push waiters now this context is being pushed.
-+	 */
-+	wake_up_all(&ctx->push_wait);
-+
- 	/*
- 	 * Check if we've anything to push. If there is nothing, then we don't
- 	 * move on to a new sequence number and so we have to be able to push
-@@ -746,6 +751,7 @@ xlog_cil_push(
- 	 */
- 	INIT_LIST_HEAD(&new_ctx->committing);
- 	INIT_LIST_HEAD(&new_ctx->busy_extents);
-+	init_waitqueue_head(&new_ctx->push_wait);
- 	new_ctx->sequence = ctx->sequence + 1;
- 	new_ctx->cil = cil;
- 	cil->xc_ctx = new_ctx;
-@@ -898,7 +904,7 @@ xlog_cil_push_work(
-  * checkpoint), but commit latency and memory usage limit this to a smaller
-  * size.
-  */
--static void
-+static bool
- xlog_cil_push_background(
- 	struct xlog	*log)
- {
-@@ -915,14 +921,28 @@ xlog_cil_push_background(
- 	 * space available yet.
- 	 */
- 	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log))
--		return;
-+		return false;
- 
- 	spin_lock(&cil->xc_push_lock);
- 	if (cil->xc_push_seq < cil->xc_current_sequence) {
- 		cil->xc_push_seq = cil->xc_current_sequence;
- 		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
- 	}
-+
-+	/*
-+	 * If we are well over the space limit, throttle the work that is being
-+	 * done until the push work on this context has begun. This will prevent
-+	 * the CIL from violating maximum transaction size limits if the CIL
-+	 * push is delayed for some reason.
-+	 */
-+	if (cil->xc_ctx->space_used > XLOG_CIL_SPACE_LIMIT(log) * 2) {
-+		up_read(&cil->xc_ctx_lock);
-+		trace_printk("CIL space used %d", cil->xc_ctx->space_used);
-+		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-+		return true;
-+	}
- 	spin_unlock(&cil->xc_push_lock);
-+	return false;
- 
- }
- 
-@@ -1038,9 +1058,8 @@ xfs_log_commit_cil(
- 		if (lip->li_ops->iop_committing)
- 			lip->li_ops->iop_committing(lip, xc_commit_lsn);
- 	}
--	xlog_cil_push_background(log);
--
--	up_read(&cil->xc_ctx_lock);
-+	if (!xlog_cil_push_background(log))
-+		up_read(&cil->xc_ctx_lock);
- }
- 
- /*
-@@ -1199,6 +1218,7 @@ xlog_cil_init(
- 
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents);
-+	init_waitqueue_head(&ctx->push_wait);
- 	ctx->sequence = 1;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 187a43ffeaf7..466259fd1e4a 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -247,6 +247,7 @@ struct xfs_cil_ctx {
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
-+	wait_queue_head_t	push_wait;	/* background push throttle */
- 	struct work_struct	discard_endio_work;
- };
- 
--- 
-2.23.0.rc1
-
+Regards
+Angel Ng
+Email: a.angelngm2@yahoo.com
