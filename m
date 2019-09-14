@@ -2,228 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5673EB24A6
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2019 19:36:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13064B2925
+	for <lists+linux-xfs@lfdr.de>; Sat, 14 Sep 2019 02:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfIMRg2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Sep 2019 13:36:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbfIMRg1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 13 Sep 2019 13:36:27 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 242B518C4273;
-        Fri, 13 Sep 2019 17:36:27 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AB915C207;
-        Fri, 13 Sep 2019 17:36:26 +0000 (UTC)
-Date:   Fri, 13 Sep 2019 13:36:24 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     kaixuxia <xiakaixu1987@gmail.com>
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Eryu Guan <guaneryu@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>, newtongao@tencent.com,
-        jasperwang@tencent.com
-Subject: Re: [PATCH 2/2] xfs: test the deadlock between the AGI and AGF with
- RENAME_WHITEOUT
-Message-ID: <20190913173624.GD28512@bfoster>
-References: <58163375-dcd9-b954-c8d2-89fef20b8246@gmail.com>
+        id S2390769AbfINAmk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Sep 2019 20:42:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53618 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388296AbfINAmj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Sep 2019 20:42:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8E0cc4v109001;
+        Sat, 14 Sep 2019 00:42:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ references : message-id : date : mime-version : in-reply-to : content-type
+ : content-transfer-encoding; s=corp-2019-08-05;
+ bh=MKvhh2dMQo17C4zP8JejHtFY8fVz0F7EkVCfipCt5TM=;
+ b=ljhakvNbgjxtoUDoMpO2YE3y+Hf1xCLm2+BgkwFGiQddGjP3N0aAaf18vKW76KJEtR7g
+ nBrNQ4lxZAiS3heZGr+kpkDDmeVNt1kEZfiqh2J0uIyiBj65NrVg2FzOIKRcK/83WcTL
+ rzROfG+VymhAOzUqa8PdPiFvUGGMXwtZm3ZGHDixTRrVplF35Fe2KyQSQnxb947yu5SS
+ 333eVpq0UO9kwn1FJoYF6Uhb6Ngn9ai7XR5dQ77euDygd4jMuBWu4hFLKdUScefJ/hp0
+ rlV2fKJSOThvnPtFQpRmkTNtbdMc8Blt2JxGDcYNFr67LVWxVbnPpwNzsvwpjX5AUVpL mQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2uytd3qgpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Sep 2019 00:42:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8E0cOCJ174473;
+        Sat, 14 Sep 2019 00:42:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2v0nb1114q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Sep 2019 00:42:09 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8E0g7M9025684;
+        Sat, 14 Sep 2019 00:42:07 GMT
+Received: from [192.168.1.9] (/67.1.21.243)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Sep 2019 17:42:07 -0700
+From:   Allison Collins <allison.henderson@oracle.com>
+Subject: Re: [PATCH 01/19] iomap: better document the IOMAP_F_* flags
+To:     Christoph Hellwig <hch@lst.de>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190909182722.16783-1-hch@lst.de>
+ <20190909182722.16783-2-hch@lst.de>
+Message-ID: <3a7fd51f-65a4-0a5e-40d9-fc59e8f90342@oracle.com>
+Date:   Fri, 13 Sep 2019 17:42:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58163375-dcd9-b954-c8d2-89fef20b8246@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 13 Sep 2019 17:36:27 +0000 (UTC)
+In-Reply-To: <20190909182722.16783-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909140004
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9379 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909140004
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 09:17:08PM +0800, kaixuxia wrote:
-> There is ABBA deadlock bug between the AGI and AGF when performing
-> rename() with RENAME_WHITEOUT flag, and add this testcase to make
-> sure the rename() call works well.
+Looks good to me, I think the new comments are a lot more helpful
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+
+On 9/9/19 11:27 AM, Christoph Hellwig wrote:
+> The documentation for IOMAP_F_* is a bit disorganized, and doesn't
+> mention the fact that most flags are set by the file system and consumed
+> by the iomap core, while IOMAP_F_SIZE_CHANGED is set by the core and
+> consumed by the file system.
 > 
-> Signed-off-by: kaixuxia <kaixuxia@tencent.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  tests/xfs/512     | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/512.out |  2 ++
->  tests/xfs/group   |  1 +
->  3 files changed, 102 insertions(+)
->  create mode 100755 tests/xfs/512
->  create mode 100644 tests/xfs/512.out
+>   include/linux/iomap.h | 31 +++++++++++++++++++++++--------
+>   1 file changed, 23 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tests/xfs/512 b/tests/xfs/512
-> new file mode 100755
-> index 0000000..754f102
-> --- /dev/null
-> +++ b/tests/xfs/512
-> @@ -0,0 +1,99 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2019 Tencent.  All Rights Reserved.
-> +#
-> +# FS QA Test 512
-> +#
-> +# Test the ABBA deadlock case between the AGI and AGF When performing
-> +# rename operation with RENAME_WHITEOUT flag.
-> +#
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -f $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +. ./common/filter
-> +. ./common/renameat2
-> +
-> +rm -f $seqres.full
-> +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_scratch_nocheck
-
-Why _nocheck? AFAICT the filesystem shouldn't end up intentionally
-corrupted.
-
-> +_requires_renameat2 whiteout
-> +
-> +prepare_file()
-> +{
-> +	# create many small files for the rename with RENAME_WHITEOUT
-> +	i=0
-> +	while [ $i -le $files ]; do
-> +		file=$SCRATCH_MNT/f$i
-> +		echo > $file >/dev/null 2>&1
-> +		let i=$i+1
-> +	done
-
-Something like the following is a bit more simple, IMO:
-
-	for i in $(seq 1 $files); do
-		touch $SCRATCH_MNT/f.$i
-	done
-
-The same goes for the other while loops below that increment up to
-$files.
-
-> +}
-> +
-> +rename_whiteout()
-> +{
-> +	# create the rename targetdir
-> +	renamedir=$SCRATCH_MNT/renamedir
-> +	mkdir $renamedir
-> +
-> +	# a long filename could increase the possibility that target_dp
-> +	# allocate new blocks(acquire the AGF lock) to store the filename
-> +	longnamepre=FFFsafdsagafsadfagasdjfalskdgakdlsglkasdg
-> +
-
-The max filename length is 256 bytes. You could do something like the
-following to increase name length (leaving room for the file index and
-terminating NULL) if it helps the test:
-
-	prefix=`for i in $(seq 0 245); do echo -n a; done`
-
-> +	# now try to do rename with RENAME_WHITEOUT flag
-> +	i=0
-> +	while [ $i -le $files ]; do
-> +		src/renameat2 -w $SCRATCH_MNT/f$i $renamedir/$longnamepre$i >/dev/null 2>&1
-> +		let i=$i+1
-> +	done
-> +}
-> +
-> +create_file()
-> +{
-> +	# create the targetdir
-> +	createdir=$SCRATCH_MNT/createdir
-> +	mkdir $createdir
-> +
-> +	# try to create file at the same time to hit the deadlock
-> +	i=0
-> +	while [ $i -le $files ]; do
-> +		file=$createdir/f$i
-> +		echo > $file >/dev/null 2>&1
-> +		let i=$i+1
-> +	done
-> +}
-
-You could generalize this function to take a target directory parameter
-and just call it twice (once to prepare and again for the create
-workload).
-
-> +
-> +_scratch_mkfs_xfs -bsize=1024 -dagcount=1 >> $seqres.full 2>&1 ||
-> +	_fail "mkfs failed"
-
-Why -bsize=1k? Does that make the reproducer more effective?
-
-> +_scratch_mount
-> +
-> +files=250000
-> +
-
-Have you tested effectiveness of reproducing the issue with smaller file
-counts? A brief comment here to document where the value comes from
-might be useful. Somewhat related, how long does this test take on fixed
-kernels?
-
-> +prepare_file
-> +rename_whiteout &
-> +create_file &
-> +
-> +wait
-> +echo Silence is golden
-> +
-> +# Failure comes in the form of a deadlock.
-> +
-
-I wonder if this should be in the dangerous group as well. I go back and
-forth on that though because I tend to filter out dangerous tests and
-the test won't be so risky once the fix proliferates. Perhaps that's
-just a matter of removing it from the dangerous group after a long
-enough period of time.
-
-Brian
-
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/512.out b/tests/xfs/512.out
-> new file mode 100644
-> index 0000000..0aabdef
-> --- /dev/null
-> +++ b/tests/xfs/512.out
-> @@ -0,0 +1,2 @@
-> +QA output created by 512
-> +Silence is golden
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index a7ad300..ed250d6 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -509,3 +509,4 @@
->  509 auto ioctl
->  510 auto ioctl quick
->  511 auto quick quota
-> +512 auto rename
-> -- 
-> 1.8.3.1
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index e79af6b28410..8adcc8dd4498 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -30,21 +30,36 @@ struct vm_fault;
+>   #define IOMAP_INLINE	0x05	/* data inline in the inode */
+>   
+>   /*
+> - * Flags for all iomap mappings:
+> + * Flags reported by the file system from iomap_begin:
+> + *
+> + * IOMAP_F_NEW indicates that the blocks have been newly allocated and need
+> + * zeroing for areas that no data is copied to.
+>    *
+>    * IOMAP_F_DIRTY indicates the inode has uncommitted metadata needed to access
+>    * written data and requires fdatasync to commit them to persistent storage.
+> + *
+> + * IOMAP_F_SHARED indicates that the blocks are shared, and will need to be
+> + * unshared as part a write.
+> + *
+> + * IOMAP_F_MERGED indicates that the iomap contains the merge of multiple block
+> + * mappings.
+> + *
+> + * IOMAP_F_BUFFER_HEAD indicates that the file system requires the use of
+> + * buffer heads for this mapping.
+>    */
+> -#define IOMAP_F_NEW		0x01	/* blocks have been newly allocated */
+> -#define IOMAP_F_DIRTY		0x02	/* uncommitted metadata */
+> -#define IOMAP_F_BUFFER_HEAD	0x04	/* file system requires buffer heads */
+> -#define IOMAP_F_SIZE_CHANGED	0x08	/* file size has changed */
+> +#define IOMAP_F_NEW		0x01
+> +#define IOMAP_F_DIRTY		0x02
+> +#define IOMAP_F_SHARED		0x04
+> +#define IOMAP_F_MERGED		0x08
+> +#define IOMAP_F_BUFFER_HEAD	0x10
+>   
+>   /*
+> - * Flags that only need to be reported for IOMAP_REPORT requests:
+> + * Flags set by the core iomap code during operations:
+> + *
+> + * IOMAP_F_SIZE_CHANGED indicates to the iomap_end method that the file size
+> + * has changed as the result of this write operation.
+>    */
+> -#define IOMAP_F_MERGED		0x10	/* contains multiple blocks/extents */
+> -#define IOMAP_F_SHARED		0x20	/* block shared with another file */
+> +#define IOMAP_F_SIZE_CHANGED	0x100
+>   
+>   /*
+>    * Flags from 0x1000 up are for file system specific usage:
 > 
-> -- 
-> kaixuxia
