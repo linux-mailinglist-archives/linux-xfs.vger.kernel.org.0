@@ -2,621 +2,508 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03D1EB6ACA
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2019 20:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2610DB6AD1
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2019 20:49:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfIRSq4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Sep 2019 14:46:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38728 "EHLO
+        id S1728468AbfIRStg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Sep 2019 14:49:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41560 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfIRSqz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Sep 2019 14:46:55 -0400
+        with ESMTP id S1726527AbfIRStg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Sep 2019 14:49:36 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIiScx155679;
-        Wed, 18 Sep 2019 18:46:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=b+BJIVsmRY5W3CA+V9JAsKvrWq8hoUU029pTxqcaBT0=;
- b=VAZyectgbqPsOJDKLAjkm1W9Ox3AW7T/xBTaRIBPj4LQIivuDPw+X37Ld/h+zoFVkM1r
- jzmsAuWMMDrJL+dbg5OzsIm8ZA1URPuWnyP/c6uxT411gtDdRDZieMwi30xCUp74LEVC
- c1wEttjVvuKSfS+hzY3M7+00N+LK4WMMts/5qN3dzLsCXwYn5IqD/iym9LaqblLM79rr
- bmk2v4qshDUUFSReoczmaBwP3GgQpZWFanlXlID27XTa82OyhGM58/fXsIewhQXDL8on
- A9MnEnr0g1h7PCYNNLNAXoxqv+doGDo2+VBtlt8aPqhLfsrVveY8ZZv6e/wAyX9Xhp4s RA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v385dwu7n-1
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIn0pf159337;
+        Wed, 18 Sep 2019 18:49:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=K9HerKx2SPj4SmSGS+LI3sXGskQtnvRH3qOPJeNfPHE=;
+ b=oMFtxR+1FV2wcxCBV2/hNLZLnA/Sd/fFTgZ7Pt+Nu5aNwm8TZWeuQeCfynNPP6Rd0SqD
+ ubO6dKc5iVKVmDXGwqk5o5H38BcNXuq7UURZG1Z70Klx7ltbE1ageH9KPBcJlCKFUkY2
+ eRwO2MH6+/1Y8v41G3qwN0WdOIIwV+ZVoWZEOuKd3akFcNAqCyx5xf9kVYNcqHOHG9Gz
+ ncn4K/VqNSw1KSjJQhrMwMndPrVfsPGIvcn5QY9PoQNKl49rhhEwLRdAdbGQ/Sv2uRY0
+ y6I+RJ3v+Pcu0saute6cdBvnLTNCjp/pqyicqAp5u7fU/TqT8jPVfF0sQB0ZexoyJFaC 7g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v385dwuq8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:46:41 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIdEt4067771;
-        Wed, 18 Sep 2019 18:46:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2v37ma46gx-1
+        Wed, 18 Sep 2019 18:49:15 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIn3lV101337;
+        Wed, 18 Sep 2019 18:49:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2v37mnj3n8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:46:40 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IIkduG021762;
-        Wed, 18 Sep 2019 18:46:39 GMT
-Received: from localhost (/67.169.218.210)
+        Wed, 18 Sep 2019 18:49:05 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8IImTwx010642;
+        Wed, 18 Sep 2019 18:48:29 GMT
+Received: from [192.168.1.9] (/67.1.21.243)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 11:46:39 -0700
-Date:   Wed, 18 Sep 2019 11:46:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+        with ESMTP ; Wed, 18 Sep 2019 11:48:29 -0700
+Subject: Re: [PATCH v3 01/19] xfs: Replace attribute parameters with struct
+ xfs_name
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] xfs: introduce allocation cursor data structure
-Message-ID: <20190918184638.GQ2229799@magnolia>
-References: <20190916121635.43148-1-bfoster@redhat.com>
- <20190916121635.43148-3-bfoster@redhat.com>
+References: <20190905221837.17388-1-allison.henderson@oracle.com>
+ <20190905221837.17388-2-allison.henderson@oracle.com>
+ <20190918164301.GE29377@bfoster>
+ <47bc4644-ef6e-39be-c70f-7f7cb44523bd@oracle.com>
+ <20190918181457.GH29377@bfoster>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <a6a55021-efd0-3b21-dd6e-4e30800854c5@oracle.com>
+Date:   Wed, 18 Sep 2019 11:48:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916121635.43148-3-bfoster@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190918181457.GH29377@bfoster>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180163
+ engine=8.0.1-1908290000 definitions=main-1909180164
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909180164
+ definitions=main-1909180165
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 08:16:26AM -0400, Brian Foster wrote:
-> Introduce a new allocation cursor data structure to encapsulate the
-> various states and structures used to perform an extent allocation.
-> This structure will eventually be used to track overall allocation
-> state across different search algorithms on both free space btrees.
+On 9/18/19 11:14 AM, Brian Foster wrote:
+> On Wed, Sep 18, 2019 at 11:09:48AM -0700, Allison Collins wrote:
+>>
+>>
+>> On 9/18/19 9:43 AM, Brian Foster wrote:
+>>> On Thu, Sep 05, 2019 at 03:18:19PM -0700, Allison Collins wrote:
+>>>> This patch replaces the attribute name, length and flags parameters with a
+>>>> single struct xfs_name parameter.  This helps to clean up the numbers of
+>>>> parameters being passed around and pre-simplifies the code some.
+>>>>
+>>>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+>>>> ---
+>>>>    fs/xfs/libxfs/xfs_attr.c | 46 +++++++++++++++++++---------------------------
+>>>>    fs/xfs/libxfs/xfs_attr.h | 12 +++++-------
+>>>>    fs/xfs/xfs_acl.c         | 27 +++++++++++++--------------
+>>>>    fs/xfs/xfs_ioctl.c       | 28 ++++++++++++++++++----------
+>>>>    fs/xfs/xfs_iops.c        | 12 ++++++++----
+>>>>    fs/xfs/xfs_xattr.c       | 30 +++++++++++++++++-------------
+>>>>    6 files changed, 80 insertions(+), 75 deletions(-)
+>>>>
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+>>>> index 7589cb7..d0308d6 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr.c
+>>>> +++ b/fs/xfs/libxfs/xfs_attr.c
+>>> ...
+>>>> @@ -139,30 +137,28 @@ xfs_attr_get_ilocked(
+>>>>    int
+>>>>    xfs_attr_get(
+>>>>    	struct xfs_inode	*ip,
+>>>> -	const unsigned char	*name,
+>>>> -	size_t			namelen,
+>>>> +	struct xfs_name		*name,
+>>>>    	unsigned char		**value,
+>>>> -	int			*valuelenp,
+>>>> -	int			flags)
+>>>> +	int			*valuelenp)
+>>>>    {
+>>>>    	struct xfs_da_args	args;
+>>>>    	uint			lock_mode;
+>>>>    	int			error;
+>>>> -	ASSERT((flags & (ATTR_ALLOC | ATTR_KERNOVAL)) || *value);
+>>>> +	ASSERT((name->type & (ATTR_ALLOC | ATTR_KERNOVAL)) || *value);
+>>>
+>>> While this looks like a nice cleanup, I'm not a huge fan of burying the
+>>> attr flags in the xfs_name like this. To me they are distinct parameters
+>>> and the interface isn't as clear for new callers. Other than that the
+>>> patch looks good.
+>>>
+>>> BTW after looking at the next patch, a reasonable compromise might be to
+>>> leave the flags param for the top level xfs_attr_*() functions and then
+>>> bury the value in args->name.type for the rest of the lower level code
+>>> to use. Just a thought..
+>>>
+>>> Brian
+>>
+>> Yes, this was a sort of cleanup suggested in the last review.  While it is
+>> nice to have less parameters, I ended up having mixed feels about using type
+>> for flags.  Mostly just because a name of "type" generally implies that the
+>> field should be handled like an enumeration, and a "flag" implies that is
+>> should be handled like a bitmask.  So I found myself doing a lot of double
+>> takes just in looking at it.  I am fine with moving flags back out, but I
+>> would like folks to weigh in so that we have a consensus on what people are
+>> comfortable with.
+>>
 > 
-> To start, include the three btree cursors (one for the cntbt and two
-> for the bnobt left/right search) used by the near mode allocation
-> algorithm and refactor the cursor setup and teardown code into
-> helpers. This slightly changes cursor memory allocation patterns,
-> but otherwise makes no functional changes to the allocation
-> algorithm.
+> Sure..
 > 
-> Signed-off-by: Brian Foster <bfoster@redhat.com>
-
-Looks good to me; thanks for breaking this up a little more. :)
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> ---
->  fs/xfs/libxfs/xfs_alloc.c | 318 +++++++++++++++++++-------------------
->  1 file changed, 163 insertions(+), 155 deletions(-)
+>> I'm not sure I like the idea of putting "value" in "type" though. Generally
+>> a "value" implies a sort of payload with a length (of which we have).  But
+>> but I think separating value and valuelen would look all sorts of weird.  I
+>> think either value should stay outside with valuelen, or we should probably
+>> bite the bullet and introduce a new struct for the purpose.  Thoughts?
+>>
 > 
-> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-> index 512a45888e06..d159377ed603 100644
-> --- a/fs/xfs/libxfs/xfs_alloc.c
-> +++ b/fs/xfs/libxfs/xfs_alloc.c
-> @@ -710,8 +710,71 @@ xfs_alloc_update_counters(
->  }
->  
->  /*
-> - * Allocation group level functions.
-> + * Block allocation algorithm and data structures.
->   */
-> +struct xfs_alloc_cur {
-> +	struct xfs_btree_cur		*cnt;	/* btree cursors */
-> +	struct xfs_btree_cur		*bnolt;
-> +	struct xfs_btree_cur		*bnogt;
-> +};
-> +
-> +/*
-> + * Set up cursors, etc. in the extent allocation cursor. This function can be
-> + * called multiple times to reset an initialized structure without having to
-> + * reallocate cursors.
-> + */
-> +static int
-> +xfs_alloc_cur_setup(
-> +	struct xfs_alloc_arg	*args,
-> +	struct xfs_alloc_cur	*acur)
-> +{
-> +	int			error;
-> +	int			i;
-> +
-> +	ASSERT(args->alignment == 1 || args->type != XFS_ALLOCTYPE_THIS_BNO);
-> +
-> +	/*
-> +	 * Perform an initial cntbt lookup to check for availability of maxlen
-> +	 * extents. If this fails, we'll return -ENOSPC to signal the caller to
-> +	 * attempt a small allocation.
-> +	 */
-> +	if (!acur->cnt)
-> +		acur->cnt = xfs_allocbt_init_cursor(args->mp, args->tp,
-> +					args->agbp, args->agno, XFS_BTNUM_CNT);
-> +	error = xfs_alloc_lookup_ge(acur->cnt, 0, args->maxlen, &i);
-> +	if (error)
-> +		return error;
-> +
-> +	/*
-> +	 * Allocate the bnobt left and right search cursors.
-> +	 */
-> +	if (!acur->bnolt)
-> +		acur->bnolt = xfs_allocbt_init_cursor(args->mp, args->tp,
-> +					args->agbp, args->agno, XFS_BTNUM_BNO);
-> +	if (!acur->bnogt)
-> +		acur->bnogt = xfs_allocbt_init_cursor(args->mp, args->tp,
-> +					args->agbp, args->agno, XFS_BTNUM_BNO);
-> +	return i == 1 ? 0 : -ENOSPC;
-> +}
-> +
-> +static void
-> +xfs_alloc_cur_close(
-> +	struct xfs_alloc_cur	*acur,
-> +	bool			error)
-> +{
-> +	int			cur_error = XFS_BTREE_NOERROR;
-> +
-> +	if (error)
-> +		cur_error = XFS_BTREE_ERROR;
-> +
-> +	if (acur->cnt)
-> +		xfs_btree_del_cursor(acur->cnt, cur_error);
-> +	if (acur->bnolt)
-> +		xfs_btree_del_cursor(acur->bnolt, cur_error);
-> +	if (acur->bnogt)
-> +		xfs_btree_del_cursor(acur->bnogt, cur_error);
-> +	acur->cnt = acur->bnolt = acur->bnogt = NULL;
-> +}
->  
->  /*
->   * Deal with the case where only small freespaces remain. Either return the
-> @@ -1008,8 +1071,8 @@ xfs_alloc_ag_vextent_exact(
->  STATIC int
->  xfs_alloc_find_best_extent(
->  	struct xfs_alloc_arg	*args,	/* allocation argument structure */
-> -	struct xfs_btree_cur	**gcur,	/* good cursor */
-> -	struct xfs_btree_cur	**scur,	/* searching cursor */
-> +	struct xfs_btree_cur	*gcur,	/* good cursor */
-> +	struct xfs_btree_cur	*scur,	/* searching cursor */
->  	xfs_agblock_t		gdiff,	/* difference for search comparison */
->  	xfs_agblock_t		*sbno,	/* extent found by search */
->  	xfs_extlen_t		*slen,	/* extent length */
-> @@ -1031,7 +1094,7 @@ xfs_alloc_find_best_extent(
->  	 * Look until we find a better one, run out of space or run off the end.
->  	 */
->  	do {
-> -		error = xfs_alloc_get_rec(*scur, sbno, slen, &i);
-> +		error = xfs_alloc_get_rec(scur, sbno, slen, &i);
->  		if (error)
->  			goto error0;
->  		XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> @@ -1074,21 +1137,19 @@ xfs_alloc_find_best_extent(
->  		}
->  
->  		if (!dir)
-> -			error = xfs_btree_increment(*scur, 0, &i);
-> +			error = xfs_btree_increment(scur, 0, &i);
->  		else
-> -			error = xfs_btree_decrement(*scur, 0, &i);
-> +			error = xfs_btree_decrement(scur, 0, &i);
->  		if (error)
->  			goto error0;
->  	} while (i);
->  
->  out_use_good:
-> -	xfs_btree_del_cursor(*scur, XFS_BTREE_NOERROR);
-> -	*scur = NULL;
-> +	scur->bc_private.a.priv.abt.active = false;
->  	return 0;
->  
->  out_use_search:
-> -	xfs_btree_del_cursor(*gcur, XFS_BTREE_NOERROR);
-> -	*gcur = NULL;
-> +	gcur->bc_private.a.priv.abt.active = false;
->  	return 0;
->  
->  error0:
-> @@ -1102,13 +1163,12 @@ xfs_alloc_find_best_extent(
->   * and of the form k * prod + mod unless there's nothing that large.
->   * Return the starting a.g. block, or NULLAGBLOCK if we can't do it.
->   */
-> -STATIC int				/* error */
-> +STATIC int
->  xfs_alloc_ag_vextent_near(
-> -	xfs_alloc_arg_t	*args)		/* allocation argument structure */
-> +	struct xfs_alloc_arg	*args)
->  {
-> -	xfs_btree_cur_t	*bno_cur_gt;	/* cursor for bno btree, right side */
-> -	xfs_btree_cur_t	*bno_cur_lt;	/* cursor for bno btree, left side */
-> -	xfs_btree_cur_t	*cnt_cur;	/* cursor for count btree */
-> +	struct xfs_alloc_cur	acur = {0,};
-> +	struct xfs_btree_cur	*bno_cur;
->  	xfs_agblock_t	gtbno;		/* start bno of right side entry */
->  	xfs_agblock_t	gtbnoa;		/* aligned ... */
->  	xfs_extlen_t	gtdiff;		/* difference to right side entry */
-> @@ -1148,38 +1208,29 @@ xfs_alloc_ag_vextent_near(
->  		args->agbno = args->max_agbno;
->  
->  restart:
-> -	bno_cur_lt = NULL;
-> -	bno_cur_gt = NULL;
->  	ltlen = 0;
->  	gtlena = 0;
->  	ltlena = 0;
->  	busy = false;
->  
->  	/*
-> -	 * Get a cursor for the by-size btree.
-> +	 * Set up cursors and see if there are any free extents as big as
-> +	 * maxlen. If not, pick the last entry in the tree unless the tree is
-> +	 * empty.
->  	 */
-> -	cnt_cur = xfs_allocbt_init_cursor(args->mp, args->tp, args->agbp,
-> -		args->agno, XFS_BTNUM_CNT);
-> -
-> -	/*
-> -	 * See if there are any free extents as big as maxlen.
-> -	 */
-> -	if ((error = xfs_alloc_lookup_ge(cnt_cur, 0, args->maxlen, &i)))
-> -		goto error0;
-> -	/*
-> -	 * If none, then pick up the last entry in the tree unless the
-> -	 * tree is empty.
-> -	 */
-> -	if (!i) {
-> -		if ((error = xfs_alloc_ag_vextent_small(args, cnt_cur, &ltbno,
-> -				&ltlen, &i)))
-> -			goto error0;
-> +	error = xfs_alloc_cur_setup(args, &acur);
-> +	if (error == -ENOSPC) {
-> +		error = xfs_alloc_ag_vextent_small(args, acur.cnt, &ltbno,
-> +				&ltlen, &i);
-> +		if (error)
-> +			goto out;
->  		if (i == 0 || ltlen == 0) {
-> -			xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
->  			trace_xfs_alloc_near_noentry(args);
-> -			return 0;
-> +			goto out;
->  		}
->  		ASSERT(i == 1);
-> +	} else if (error) {
-> +		goto out;
->  	}
->  	args->wasfromfl = 0;
->  
-> @@ -1193,7 +1244,7 @@ xfs_alloc_ag_vextent_near(
->  	 * This is written as a while loop so we can break out of it,
->  	 * but we never loop back to the top.
->  	 */
-> -	while (xfs_btree_islastblock(cnt_cur, 0)) {
-> +	while (xfs_btree_islastblock(acur.cnt, 0)) {
->  		xfs_extlen_t	bdiff;
->  		int		besti=0;
->  		xfs_extlen_t	blen=0;
-> @@ -1210,32 +1261,35 @@ xfs_alloc_ag_vextent_near(
->  		 * and skip all those smaller than minlen.
->  		 */
->  		if (ltlen || args->alignment > 1) {
-> -			cnt_cur->bc_ptrs[0] = 1;
-> +			acur.cnt->bc_ptrs[0] = 1;
->  			do {
-> -				if ((error = xfs_alloc_get_rec(cnt_cur, &ltbno,
-> -						&ltlen, &i)))
-> -					goto error0;
-> -				XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> +				error = xfs_alloc_get_rec(acur.cnt, &ltbno,
-> +						&ltlen, &i);
-> +				if (error)
-> +					goto out;
-> +				XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
->  				if (ltlen >= args->minlen)
->  					break;
-> -				if ((error = xfs_btree_increment(cnt_cur, 0, &i)))
-> -					goto error0;
-> +				error = xfs_btree_increment(acur.cnt, 0, &i);
-> +				if (error)
-> +					goto out;
->  			} while (i);
->  			ASSERT(ltlen >= args->minlen);
->  			if (!i)
->  				break;
->  		}
-> -		i = cnt_cur->bc_ptrs[0];
-> +		i = acur.cnt->bc_ptrs[0];
->  		for (j = 1, blen = 0, bdiff = 0;
->  		     !error && j && (blen < args->maxlen || bdiff > 0);
-> -		     error = xfs_btree_increment(cnt_cur, 0, &j)) {
-> +		     error = xfs_btree_increment(acur.cnt, 0, &j)) {
->  			/*
->  			 * For each entry, decide if it's better than
->  			 * the previous best entry.
->  			 */
-> -			if ((error = xfs_alloc_get_rec(cnt_cur, &ltbno, &ltlen, &i)))
-> -				goto error0;
-> -			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> +			error = xfs_alloc_get_rec(acur.cnt, &ltbno, &ltlen, &i);
-> +			if (error)
-> +				goto out;
-> +			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
->  			busy = xfs_alloc_compute_aligned(args, ltbno, ltlen,
->  					&ltbnoa, &ltlena, &busy_gen);
->  			if (ltlena < args->minlen)
-> @@ -1255,7 +1309,7 @@ xfs_alloc_ag_vextent_near(
->  				bdiff = ltdiff;
->  				bnew = ltnew;
->  				blen = args->len;
-> -				besti = cnt_cur->bc_ptrs[0];
-> +				besti = acur.cnt->bc_ptrs[0];
->  			}
->  		}
->  		/*
-> @@ -1267,10 +1321,11 @@ xfs_alloc_ag_vextent_near(
->  		/*
->  		 * Point at the best entry, and retrieve it again.
->  		 */
-> -		cnt_cur->bc_ptrs[0] = besti;
-> -		if ((error = xfs_alloc_get_rec(cnt_cur, &ltbno, &ltlen, &i)))
-> -			goto error0;
-> -		XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> +		acur.cnt->bc_ptrs[0] = besti;
-> +		error = xfs_alloc_get_rec(acur.cnt, &ltbno, &ltlen, &i);
-> +		if (error)
-> +			goto out;
-> +		XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
->  		ASSERT(ltbno + ltlen <= be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_length));
->  		args->len = blen;
->  
-> @@ -1280,23 +1335,14 @@ xfs_alloc_ag_vextent_near(
->  		args->agbno = bnew;
->  		ASSERT(bnew >= ltbno);
->  		ASSERT(bnew + blen <= ltbno + ltlen);
-> -		/*
-> -		 * Set up a cursor for the by-bno tree.
-> -		 */
-> -		bno_cur_lt = xfs_allocbt_init_cursor(args->mp, args->tp,
-> -			args->agbp, args->agno, XFS_BTNUM_BNO);
-> -		/*
-> -		 * Fix up the btree entries.
-> -		 */
-> -		if ((error = xfs_alloc_fixup_trees(cnt_cur, bno_cur_lt, ltbno,
-> -				ltlen, bnew, blen, XFSA_FIXUP_CNT_OK)))
-> -			goto error0;
-> -		xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
-> -		xfs_btree_del_cursor(bno_cur_lt, XFS_BTREE_NOERROR);
-> -
-> +		error = xfs_alloc_fixup_trees(acur.cnt, acur.bnolt, ltbno,
-> +					ltlen, bnew, blen, XFSA_FIXUP_CNT_OK);
-> +		if (error)
-> +			goto out;
->  		trace_xfs_alloc_near_first(args);
-> -		return 0;
-> +		goto out;
->  	}
-> +
->  	/*
->  	 * Second algorithm.
->  	 * Search in the by-bno tree to the left and to the right
-> @@ -1309,86 +1355,57 @@ xfs_alloc_ag_vextent_near(
->  	 * level algorithm that picks allocation groups for allocations
->  	 * is not supposed to do this.
->  	 */
-> -	/*
-> -	 * Allocate and initialize the cursor for the leftward search.
-> -	 */
-> -	bno_cur_lt = xfs_allocbt_init_cursor(args->mp, args->tp, args->agbp,
-> -		args->agno, XFS_BTNUM_BNO);
-> -	/*
-> -	 * Lookup <= bno to find the leftward search's starting point.
-> -	 */
-> -	if ((error = xfs_alloc_lookup_le(bno_cur_lt, args->agbno, args->maxlen, &i)))
-> -		goto error0;
-> -	if (!i) {
-> -		/*
-> -		 * Didn't find anything; use this cursor for the rightward
-> -		 * search.
-> -		 */
-> -		bno_cur_gt = bno_cur_lt;
-> -		bno_cur_lt = NULL;
-> -	}
-> -	/*
-> -	 * Found something.  Duplicate the cursor for the rightward search.
-> -	 */
-> -	else if ((error = xfs_btree_dup_cursor(bno_cur_lt, &bno_cur_gt)))
-> -		goto error0;
-> -	/*
-> -	 * Increment the cursor, so we will point at the entry just right
-> -	 * of the leftward entry if any, or to the leftmost entry.
-> -	 */
-> -	if ((error = xfs_btree_increment(bno_cur_gt, 0, &i)))
-> -		goto error0;
-> -	if (!i) {
-> -		/*
-> -		 * It failed, there are no rightward entries.
-> -		 */
-> -		xfs_btree_del_cursor(bno_cur_gt, XFS_BTREE_NOERROR);
-> -		bno_cur_gt = NULL;
-> -	}
-> +	error = xfs_alloc_lookup_le(acur.bnolt, args->agbno, 0, &i);
-> +	if (error)
-> +		goto out;
-> +	error = xfs_alloc_lookup_ge(acur.bnogt, args->agbno, 0, &i);
-> +	if (error)
-> +		goto out;
-> +
->  	/*
->  	 * Loop going left with the leftward cursor, right with the
->  	 * rightward cursor, until either both directions give up or
->  	 * we find an entry at least as big as minlen.
->  	 */
->  	do {
-> -		if (bno_cur_lt) {
-> -			if ((error = xfs_alloc_get_rec(bno_cur_lt, &ltbno, &ltlen, &i)))
-> -				goto error0;
-> -			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> +		if (xfs_alloc_cur_active(acur.bnolt)) {
-> +			error = xfs_alloc_get_rec(acur.bnolt, &ltbno, &ltlen, &i);
-> +			if (error)
-> +				goto out;
-> +			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
->  			busy |= xfs_alloc_compute_aligned(args, ltbno, ltlen,
->  					&ltbnoa, &ltlena, &busy_gen);
->  			if (ltlena >= args->minlen && ltbnoa >= args->min_agbno)
->  				break;
-> -			if ((error = xfs_btree_decrement(bno_cur_lt, 0, &i)))
-> -				goto error0;
-> -			if (!i || ltbnoa < args->min_agbno) {
-> -				xfs_btree_del_cursor(bno_cur_lt,
-> -						     XFS_BTREE_NOERROR);
-> -				bno_cur_lt = NULL;
-> -			}
-> +			error = xfs_btree_decrement(acur.bnolt, 0, &i);
-> +			if (error)
-> +				goto out;
-> +			if (!i || ltbnoa < args->min_agbno)
-> +				acur.bnolt->bc_private.a.priv.abt.active = false;
->  		}
-> -		if (bno_cur_gt) {
-> -			if ((error = xfs_alloc_get_rec(bno_cur_gt, &gtbno, &gtlen, &i)))
-> -				goto error0;
-> -			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, error0);
-> +		if (xfs_alloc_cur_active(acur.bnogt)) {
-> +			error = xfs_alloc_get_rec(acur.bnogt, &gtbno, &gtlen, &i);
-> +			if (error)
-> +				goto out;
-> +			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
->  			busy |= xfs_alloc_compute_aligned(args, gtbno, gtlen,
->  					&gtbnoa, &gtlena, &busy_gen);
->  			if (gtlena >= args->minlen && gtbnoa <= args->max_agbno)
->  				break;
-> -			if ((error = xfs_btree_increment(bno_cur_gt, 0, &i)))
-> -				goto error0;
-> -			if (!i || gtbnoa > args->max_agbno) {
-> -				xfs_btree_del_cursor(bno_cur_gt,
-> -						     XFS_BTREE_NOERROR);
-> -				bno_cur_gt = NULL;
-> -			}
-> +			error = xfs_btree_increment(acur.bnogt, 0, &i);
-> +			if (error)
-> +				goto out;
-> +			if (!i || gtbnoa > args->max_agbno)
-> +				acur.bnogt->bc_private.a.priv.abt.active = false;
->  		}
-> -	} while (bno_cur_lt || bno_cur_gt);
-> +	} while (xfs_alloc_cur_active(acur.bnolt) ||
-> +		 xfs_alloc_cur_active(acur.bnogt));
->  
->  	/*
->  	 * Got both cursors still active, need to find better entry.
->  	 */
-> -	if (bno_cur_lt && bno_cur_gt) {
-> +	if (xfs_alloc_cur_active(acur.bnolt) &&
-> +	    xfs_alloc_cur_active(acur.bnogt)) {
->  		if (ltlena >= args->minlen) {
->  			/*
->  			 * Left side is good, look for a right side entry.
-> @@ -1400,7 +1417,7 @@ xfs_alloc_ag_vextent_near(
->  				ltlena, &ltnew);
->  
->  			error = xfs_alloc_find_best_extent(args,
-> -						&bno_cur_lt, &bno_cur_gt,
-> +						acur.bnolt, acur.bnogt,
->  						ltdiff, &gtbno, &gtlen,
->  						&gtbnoa, &gtlena,
->  						0 /* search right */);
-> @@ -1417,22 +1434,21 @@ xfs_alloc_ag_vextent_near(
->  				gtlena, &gtnew);
->  
->  			error = xfs_alloc_find_best_extent(args,
-> -						&bno_cur_gt, &bno_cur_lt,
-> +						acur.bnogt, acur.bnolt,
->  						gtdiff, &ltbno, &ltlen,
->  						&ltbnoa, &ltlena,
->  						1 /* search left */);
->  		}
->  
->  		if (error)
-> -			goto error0;
-> +			goto out;
->  	}
->  
->  	/*
->  	 * If we couldn't get anything, give up.
->  	 */
-> -	if (bno_cur_lt == NULL && bno_cur_gt == NULL) {
-> -		xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
-> -
-> +	if (!xfs_alloc_cur_active(acur.bnolt) &&
-> +	    !xfs_alloc_cur_active(acur.bnogt)) {
->  		if (busy) {
->  			trace_xfs_alloc_near_busy(args);
->  			xfs_extent_busy_flush(args->mp, args->pag, busy_gen);
-> @@ -1440,7 +1456,7 @@ xfs_alloc_ag_vextent_near(
->  		}
->  		trace_xfs_alloc_size_neither(args);
->  		args->agbno = NULLAGBLOCK;
-> -		return 0;
-> +		goto out;
->  	}
->  
->  	/*
-> @@ -1449,16 +1465,17 @@ xfs_alloc_ag_vextent_near(
->  	 * useful variables to the "left" set so we only have one
->  	 * copy of this code.
->  	 */
-> -	if (bno_cur_gt) {
-> -		bno_cur_lt = bno_cur_gt;
-> -		bno_cur_gt = NULL;
-> +	if (xfs_alloc_cur_active(acur.bnogt)) {
-> +		bno_cur = acur.bnogt;
->  		ltbno = gtbno;
->  		ltbnoa = gtbnoa;
->  		ltlen = gtlen;
->  		ltlena = gtlena;
->  		j = 1;
-> -	} else
-> +	} else {
-> +		bno_cur = acur.bnolt;
->  		j = 0;
-> +	}
->  
->  	/*
->  	 * Fix up the length and compute the useful address.
-> @@ -1474,27 +1491,18 @@ xfs_alloc_ag_vextent_near(
->  	ASSERT(ltnew >= args->min_agbno && ltnew <= args->max_agbno);
->  	args->agbno = ltnew;
->  
-> -	if ((error = xfs_alloc_fixup_trees(cnt_cur, bno_cur_lt, ltbno, ltlen,
-> -			ltnew, rlen, XFSA_FIXUP_BNO_OK)))
-> -		goto error0;
-> +	error = xfs_alloc_fixup_trees(acur.cnt, bno_cur, ltbno, ltlen, ltnew,
-> +				      rlen, XFSA_FIXUP_BNO_OK);
-> +	if (error)
-> +		goto out;
->  
->  	if (j)
->  		trace_xfs_alloc_near_greater(args);
->  	else
->  		trace_xfs_alloc_near_lesser(args);
->  
-> -	xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
-> -	xfs_btree_del_cursor(bno_cur_lt, XFS_BTREE_NOERROR);
-> -	return 0;
-> -
-> - error0:
-> -	trace_xfs_alloc_near_error(args);
-> -	if (cnt_cur != NULL)
-> -		xfs_btree_del_cursor(cnt_cur, XFS_BTREE_ERROR);
-> -	if (bno_cur_lt != NULL)
-> -		xfs_btree_del_cursor(bno_cur_lt, XFS_BTREE_ERROR);
-> -	if (bno_cur_gt != NULL)
-> -		xfs_btree_del_cursor(bno_cur_gt, XFS_BTREE_ERROR);
-> +out:
-> +	xfs_alloc_cur_close(&acur, error);
->  	return error;
->  }
->  
-> -- 
-> 2.20.1
+> Note that I was referring to the flags value in a general sense, not the
+> actual attr value. I.e., leave the xfs_attr_() flags param, then store
+> flags in args->name.type if you really wanted to save the extra field
+> from args and remove the rest of the flags passing beneath the top level
+> functions.
 > 
+> Brian
+
+Oh, I see, I misunderstood what you meant.  That makes more sense :-) 
+Sure that seems like a reasonable compromise.  Lets see if we can get a 
+consensus from folks though, because little stuff like this tends to 
+pepper small changes up through the set, and it would be nice to get 
+everyone settled on the same page.  :-)
+
+Allison
+
+> 
+>> Allison
+>>
+>>>
+>>>>    	XFS_STATS_INC(ip->i_mount, xs_attr_get);
+>>>>    	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+>>>>    		return -EIO;
+>>>> -	error = xfs_attr_args_init(&args, ip, name, namelen, flags);
+>>>> +	error = xfs_attr_args_init(&args, ip, name);
+>>>>    	if (error)
+>>>>    		return error;
+>>>>    	/* Entirely possible to look up a name which doesn't exist */
+>>>>    	args.op_flags = XFS_DA_OP_OKNOENT;
+>>>> -	if (flags & ATTR_ALLOC)
+>>>> +	if (name->type & ATTR_ALLOC)
+>>>>    		args.op_flags |= XFS_DA_OP_ALLOCVAL;
+>>>>    	else
+>>>>    		args.value = *value;
+>>>> @@ -175,7 +171,7 @@ xfs_attr_get(
+>>>>    	/* on error, we have to clean up allocated value buffers */
+>>>>    	if (error) {
+>>>> -		if (flags & ATTR_ALLOC) {
+>>>> +		if (name->type & ATTR_ALLOC) {
+>>>>    			kmem_free(args.value);
+>>>>    			*value = NULL;
+>>>>    		}
+>>>> @@ -339,16 +335,14 @@ xfs_attr_remove_args(
+>>>>    int
+>>>>    xfs_attr_set(
+>>>>    	struct xfs_inode	*dp,
+>>>> -	const unsigned char	*name,
+>>>> -	size_t			namelen,
+>>>> +	struct xfs_name		*name,
+>>>>    	unsigned char		*value,
+>>>> -	int			valuelen,
+>>>> -	int			flags)
+>>>> +	int			valuelen)
+>>>>    {
+>>>>    	struct xfs_mount	*mp = dp->i_mount;
+>>>>    	struct xfs_da_args	args;
+>>>>    	struct xfs_trans_res	tres;
+>>>> -	int			rsvd = (flags & ATTR_ROOT) != 0;
+>>>> +	int			rsvd = (name->type & ATTR_ROOT) != 0;
+>>>>    	int			error, local;
+>>>>    	XFS_STATS_INC(mp, xs_attr_set);
+>>>> @@ -356,7 +350,7 @@ xfs_attr_set(
+>>>>    	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+>>>>    		return -EIO;
+>>>> -	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+>>>> +	error = xfs_attr_args_init(&args, dp, name);
+>>>>    	if (error)
+>>>>    		return error;
+>>>> @@ -419,7 +413,7 @@ xfs_attr_set(
+>>>>    	if (mp->m_flags & XFS_MOUNT_WSYNC)
+>>>>    		xfs_trans_set_sync(args.trans);
+>>>> -	if ((flags & ATTR_KERNOTIME) == 0)
+>>>> +	if ((name->type & ATTR_KERNOTIME) == 0)
+>>>>    		xfs_trans_ichgtime(args.trans, dp, XFS_ICHGTIME_CHG);
+>>>>    	/*
+>>>> @@ -444,9 +438,7 @@ xfs_attr_set(
+>>>>    int
+>>>>    xfs_attr_remove(
+>>>>    	struct xfs_inode	*dp,
+>>>> -	const unsigned char	*name,
+>>>> -	size_t			namelen,
+>>>> -	int			flags)
+>>>> +	struct xfs_name		*name)
+>>>>    {
+>>>>    	struct xfs_mount	*mp = dp->i_mount;
+>>>>    	struct xfs_da_args	args;
+>>>> @@ -457,7 +449,7 @@ xfs_attr_remove(
+>>>>    	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+>>>>    		return -EIO;
+>>>> -	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+>>>> +	error = xfs_attr_args_init(&args, dp, name);
+>>>>    	if (error)
+>>>>    		return error;
+>>>> @@ -478,7 +470,7 @@ xfs_attr_remove(
+>>>>    	 */
+>>>>    	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_attrrm,
+>>>>    			XFS_ATTRRM_SPACE_RES(mp), 0,
+>>>> -			(flags & ATTR_ROOT) ? XFS_TRANS_RESERVE : 0,
+>>>> +			(name->type & ATTR_ROOT) ? XFS_TRANS_RESERVE : 0,
+>>>>    			&args.trans);
+>>>>    	if (error)
+>>>>    		return error;
+>>>> @@ -501,7 +493,7 @@ xfs_attr_remove(
+>>>>    	if (mp->m_flags & XFS_MOUNT_WSYNC)
+>>>>    		xfs_trans_set_sync(args.trans);
+>>>> -	if ((flags & ATTR_KERNOTIME) == 0)
+>>>> +	if ((name->type & ATTR_KERNOTIME) == 0)
+>>>>    		xfs_trans_ichgtime(args.trans, dp, XFS_ICHGTIME_CHG);
+>>>>    	/*
+>>>> diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+>>>> index 106a2f2..cedb4e2 100644
+>>>> --- a/fs/xfs/libxfs/xfs_attr.h
+>>>> +++ b/fs/xfs/libxfs/xfs_attr.h
+>>>> @@ -144,14 +144,12 @@ int xfs_attr_list_int_ilocked(struct xfs_attr_list_context *);
+>>>>    int xfs_attr_list_int(struct xfs_attr_list_context *);
+>>>>    int xfs_inode_hasattr(struct xfs_inode *ip);
+>>>>    int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+>>>> -int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+>>>> -		 size_t namelen, unsigned char **value, int *valuelenp,
+>>>> -		 int flags);
+>>>> -int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+>>>> -		 size_t namelen, unsigned char *value, int valuelen, int flags);
+>>>> +int xfs_attr_get(struct xfs_inode *ip, struct xfs_name *name,
+>>>> +		 unsigned char **value, int *valuelenp);
+>>>> +int xfs_attr_set(struct xfs_inode *dp, struct xfs_name *name,
+>>>> +		 unsigned char *value, int valuelen);
+>>>>    int xfs_attr_set_args(struct xfs_da_args *args);
+>>>> -int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
+>>>> -		    size_t namelen, int flags);
+>>>> +int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name);
+>>>>    int xfs_attr_remove_args(struct xfs_da_args *args);
+>>>>    int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
+>>>>    		  int flags, struct attrlist_cursor_kern *cursor);
+>>>> diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+>>>> index 12be708..f8fb6e10 100644
+>>>> --- a/fs/xfs/xfs_acl.c
+>>>> +++ b/fs/xfs/xfs_acl.c
+>>>> @@ -113,7 +113,7 @@ xfs_get_acl(struct inode *inode, int type)
+>>>>    	struct xfs_inode *ip = XFS_I(inode);
+>>>>    	struct posix_acl *acl = NULL;
+>>>>    	struct xfs_acl *xfs_acl = NULL;
+>>>> -	unsigned char *ea_name;
+>>>> +	struct xfs_name name;
+>>>>    	int error;
+>>>>    	int len;
+>>>> @@ -121,10 +121,10 @@ xfs_get_acl(struct inode *inode, int type)
+>>>>    	switch (type) {
+>>>>    	case ACL_TYPE_ACCESS:
+>>>> -		ea_name = SGI_ACL_FILE;
+>>>> +		name.name = SGI_ACL_FILE;
+>>>>    		break;
+>>>>    	case ACL_TYPE_DEFAULT:
+>>>> -		ea_name = SGI_ACL_DEFAULT;
+>>>> +		name.name = SGI_ACL_DEFAULT;
+>>>>    		break;
+>>>>    	default:
+>>>>    		BUG();
+>>>> @@ -135,9 +135,9 @@ xfs_get_acl(struct inode *inode, int type)
+>>>>    	 * go out to the disk.
+>>>>    	 */
+>>>>    	len = XFS_ACL_MAX_SIZE(ip->i_mount);
+>>>> -	error = xfs_attr_get(ip, ea_name, strlen(ea_name),
+>>>> -				(unsigned char **)&xfs_acl, &len,
+>>>> -				ATTR_ALLOC | ATTR_ROOT);
+>>>> +	name.len = strlen(name.name);
+>>>> +	name.type = ATTR_ALLOC | ATTR_ROOT;
+>>>> +	error = xfs_attr_get(ip, &name, (unsigned char **)&xfs_acl, &len);
+>>>>    	if (error) {
+>>>>    		/*
+>>>>    		 * If the attribute doesn't exist make sure we have a negative
+>>>> @@ -157,17 +157,17 @@ int
+>>>>    __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+>>>>    {
+>>>>    	struct xfs_inode *ip = XFS_I(inode);
+>>>> -	unsigned char *ea_name;
+>>>> +	struct xfs_name name;
+>>>>    	int error;
+>>>>    	switch (type) {
+>>>>    	case ACL_TYPE_ACCESS:
+>>>> -		ea_name = SGI_ACL_FILE;
+>>>> +		name.name = SGI_ACL_FILE;
+>>>>    		break;
+>>>>    	case ACL_TYPE_DEFAULT:
+>>>>    		if (!S_ISDIR(inode->i_mode))
+>>>>    			return acl ? -EACCES : 0;
+>>>> -		ea_name = SGI_ACL_DEFAULT;
+>>>> +		name.name = SGI_ACL_DEFAULT;
+>>>>    		break;
+>>>>    	default:
+>>>>    		return -EINVAL;
+>>>> @@ -187,17 +187,16 @@ __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+>>>>    		len -= sizeof(struct xfs_acl_entry) *
+>>>>    			 (XFS_ACL_MAX_ENTRIES(ip->i_mount) - acl->a_count);
+>>>> -		error = xfs_attr_set(ip, ea_name, strlen(ea_name),
+>>>> -				     (unsigned char *)xfs_acl, len, ATTR_ROOT);
+>>>> +		name.len = strlen(name.name);
+>>>> +		name.type = ATTR_ROOT;
+>>>> +		error = xfs_attr_set(ip, &name, (unsigned char *)xfs_acl, len);
+>>>>    		kmem_free(xfs_acl);
+>>>>    	} else {
+>>>>    		/*
+>>>>    		 * A NULL ACL argument means we want to remove the ACL.
+>>>>    		 */
+>>>> -		error = xfs_attr_remove(ip, ea_name,
+>>>> -					strlen(ea_name),
+>>>> -					ATTR_ROOT);
+>>>> +		error = xfs_attr_remove(ip, &name);
+>>>>    		/*
+>>>>    		 * If the attribute didn't exist to start with that's fine.
+>>>> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+>>>> index d440426..626420d 100644
+>>>> --- a/fs/xfs/xfs_ioctl.c
+>>>> +++ b/fs/xfs/xfs_ioctl.c
+>>>> @@ -431,7 +431,11 @@ xfs_attrmulti_attr_get(
+>>>>    {
+>>>>    	unsigned char		*kbuf;
+>>>>    	int			error = -EFAULT;
+>>>> -	size_t			namelen;
+>>>> +	struct xfs_name		xname = {
+>>>> +		.name		= name,
+>>>> +		.len		= strlen(name),
+>>>> +		.type		= flags,
+>>>> +	};
+>>>>    	if (*len > XFS_XATTR_SIZE_MAX)
+>>>>    		return -EINVAL;
+>>>> @@ -439,9 +443,7 @@ xfs_attrmulti_attr_get(
+>>>>    	if (!kbuf)
+>>>>    		return -ENOMEM;
+>>>> -	namelen = strlen(name);
+>>>> -	error = xfs_attr_get(XFS_I(inode), name, namelen, &kbuf, (int *)len,
+>>>> -			     flags);
+>>>> +	error = xfs_attr_get(XFS_I(inode), &xname, &kbuf, (int *)len);
+>>>>    	if (error)
+>>>>    		goto out_kfree;
+>>>> @@ -463,7 +465,7 @@ xfs_attrmulti_attr_set(
+>>>>    {
+>>>>    	unsigned char		*kbuf;
+>>>>    	int			error;
+>>>> -	size_t			namelen;
+>>>> +	struct xfs_name		xname;
+>>>>    	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+>>>>    		return -EPERM;
+>>>> @@ -474,8 +476,10 @@ xfs_attrmulti_attr_set(
+>>>>    	if (IS_ERR(kbuf))
+>>>>    		return PTR_ERR(kbuf);
+>>>> -	namelen = strlen(name);
+>>>> -	error = xfs_attr_set(XFS_I(inode), name, namelen, kbuf, len, flags);
+>>>> +	xname.name = name;
+>>>> +	xname.len = strlen(name);
+>>>> +	xname.type = flags;
+>>>> +	error = xfs_attr_set(XFS_I(inode), &xname, kbuf, len);
+>>>>    	if (!error)
+>>>>    		xfs_forget_acl(inode, name, flags);
+>>>>    	kfree(kbuf);
+>>>> @@ -489,12 +493,16 @@ xfs_attrmulti_attr_remove(
+>>>>    	uint32_t		flags)
+>>>>    {
+>>>>    	int			error;
+>>>> -	size_t			namelen;
+>>>> +	struct xfs_name		xname = {
+>>>> +		.name		= name,
+>>>> +		.len		= strlen(name),
+>>>> +		.type		= flags,
+>>>> +	};
+>>>>    	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+>>>>    		return -EPERM;
+>>>> -	namelen = strlen(name);
+>>>> -	error = xfs_attr_remove(XFS_I(inode), name, namelen, flags);
+>>>> +
+>>>> +	error = xfs_attr_remove(XFS_I(inode), &xname);
+>>>>    	if (!error)
+>>>>    		xfs_forget_acl(inode, name, flags);
+>>>>    	return error;
+>>>> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+>>>> index 92de0a7..469e8e2 100644
+>>>> --- a/fs/xfs/xfs_iops.c
+>>>> +++ b/fs/xfs/xfs_iops.c
+>>>> @@ -49,10 +49,14 @@ xfs_initxattrs(
+>>>>    	int			error = 0;
+>>>>    	for (xattr = xattr_array; xattr->name != NULL; xattr++) {
+>>>> -		error = xfs_attr_set(ip, xattr->name,
+>>>> -				     strlen(xattr->name),
+>>>> -				     xattr->value, xattr->value_len,
+>>>> -				     ATTR_SECURE);
+>>>> +		struct xfs_name	name = {
+>>>> +			.name	= xattr->name,
+>>>> +			.len	= strlen(xattr->name),
+>>>> +			.type	= ATTR_SECURE,
+>>>> +		};
+>>>> +
+>>>> +		error = xfs_attr_set(ip, &name,
+>>>> +				     xattr->value, xattr->value_len);
+>>>>    		if (error < 0)
+>>>>    			break;
+>>>>    	}
+>>>> diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+>>>> index 59ffe6c..6309da4 100644
+>>>> --- a/fs/xfs/xfs_xattr.c
+>>>> +++ b/fs/xfs/xfs_xattr.c
+>>>> @@ -20,19 +20,21 @@ static int
+>>>>    xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+>>>>    		struct inode *inode, const char *name, void *value, size_t size)
+>>>>    {
+>>>> -	int xflags = handler->flags;
+>>>>    	struct xfs_inode *ip = XFS_I(inode);
+>>>>    	int error, asize = size;
+>>>> -	size_t namelen = strlen(name);
+>>>> +	struct xfs_name xname = {
+>>>> +		.name	= name,
+>>>> +		.len	= strlen(name),
+>>>> +		.type	= handler->flags
+>>>> +	};
+>>>>    	/* Convert Linux syscall to XFS internal ATTR flags */
+>>>>    	if (!size) {
+>>>> -		xflags |= ATTR_KERNOVAL;
+>>>> +		xname.type |= ATTR_KERNOVAL;
+>>>>    		value = NULL;
+>>>>    	}
+>>>> -	error = xfs_attr_get(ip, name, namelen, (unsigned char **)&value,
+>>>> -			     &asize, xflags);
+>>>> +	error = xfs_attr_get(ip, &xname, (unsigned char **)&value, &asize);
+>>>>    	if (error)
+>>>>    		return error;
+>>>>    	return asize;
+>>>> @@ -65,23 +67,25 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
+>>>>    		struct inode *inode, const char *name, const void *value,
+>>>>    		size_t size, int flags)
+>>>>    {
+>>>> -	int			xflags = handler->flags;
+>>>>    	struct xfs_inode	*ip = XFS_I(inode);
+>>>>    	int			error;
+>>>> -	size_t			namelen = strlen(name);
+>>>> +	struct xfs_name		xname = {
+>>>> +		.name		= name,
+>>>> +		.len		= strlen(name),
+>>>> +		.type		= handler->flags,
+>>>> +	};
+>>>>    	/* Convert Linux syscall to XFS internal ATTR flags */
+>>>>    	if (flags & XATTR_CREATE)
+>>>> -		xflags |= ATTR_CREATE;
+>>>> +		xname.type |= ATTR_CREATE;
+>>>>    	if (flags & XATTR_REPLACE)
+>>>> -		xflags |= ATTR_REPLACE;
+>>>> +		xname.type |= ATTR_REPLACE;
+>>>>    	if (!value)
+>>>> -		return xfs_attr_remove(ip, name,
+>>>> -				       namelen, xflags);
+>>>> -	error = xfs_attr_set(ip, name, namelen, (void *)value, size, xflags);
+>>>> +		return xfs_attr_remove(ip, &xname);
+>>>> +	error = xfs_attr_set(ip, &xname, (void *)value, size);
+>>>>    	if (!error)
+>>>> -		xfs_forget_acl(inode, name, xflags);
+>>>> +		xfs_forget_acl(inode, name, xname.type);
+>>>>    	return error;
+>>>>    }
+>>>> -- 
+>>>> 2.7.4
+>>>>
