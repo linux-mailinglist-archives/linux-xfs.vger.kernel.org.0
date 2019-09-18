@@ -2,66 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6836BB6AD0
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2019 20:49:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7630DB6B37
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2019 20:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfIRStX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Sep 2019 14:49:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49744 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfIRStX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Sep 2019 14:49:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IImtFF106320;
-        Wed, 18 Sep 2019 18:49:07 GMT
+        id S1726527AbfIRS43 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Sep 2019 14:56:29 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47808 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfIRS43 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Sep 2019 14:56:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIn1qK159349;
+        Wed, 18 Sep 2019 18:56:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=mlrHzcwfA1t/WonUFOigq7mULVYoLyp8jZGlQcFzXA0=;
- b=buBDIa/EK8vydxODJEIxaMu5QEiqrR8lNeGwenl4ogOKITCLuics1YWGpeXak4X3cNot
- E/5JFohVsFg1Op1G70k3DzXzP3dRqTajhRt7q+kxbEPPYyPGy9cRcjF+1F72zMesEsHl
- T6HiXAk2sDzL2uxDS1fbISmMDZBjcmp6ldrXK+5d3LN4dbP7g8wzAgzpTTchfv+a0p88
- lfOhI8LLA9W9DPduQf3ZNoBpGZaEqmZBwDJTmRQTV3+SFwilKdLIa9yDk0t0V8JXPgWb
- ndqyC3ABWWymbOl8V5xZdpTTAm85H+xWUTmrALokg3HvC2dfP/PXWNkC41QkSW0y4pWP UA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v385e5utd-1
+ bh=j341HoRFg9GeVV9iFZ9IOJMkTBr2UF+MgowEm5X6xnM=;
+ b=AYBJvMP6fqjB1hqR/dgmK+8wmyo6zo39bqwUQdxMeEyQn7RwABgxYhk6Zsq7vfU2qAXA
+ LiVa0ypEK0bFnH+CC1q47GppWW4HCdpKXbrMIgpVcpSZORixQk+KDD9zfhDW7SWr5Ur1
+ UHbLoaRcP288rtNAHGRRFdPBpx6yk7QNeite5swP7Fj4JMWR6P8fTAX8opKPLLrZaPeA
+ TiTGYeKNMb7ysqdHBgoKoZLaV1C5k5T0NRJpXwFxwvcUHXq2T5amyYEnQNjVInQ7P81d
+ JPhPB+3oooHVvEuQQIrnXWjPVnn/bb+ZtiZtiMF32v/DhY5jtXTzAMdvRyIli6iLH4Q9 0Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v385dwvs3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:49:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIn2Rc101099;
-        Wed, 18 Sep 2019 18:49:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2v37mnj3pr-1
+        Wed, 18 Sep 2019 18:56:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IIrbKb046176;
+        Wed, 18 Sep 2019 18:56:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2v37mb2q28-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:49:03 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8IImXaF003800;
-        Wed, 18 Sep 2019 18:48:33 GMT
+        Wed, 18 Sep 2019 18:56:18 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IIuHBl005707;
+        Wed, 18 Sep 2019 18:56:17 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 11:48:33 -0700
-Date:   Wed, 18 Sep 2019 11:48:32 -0700
+        with ESMTP ; Wed, 18 Sep 2019 11:56:17 -0700
+Date:   Wed, 18 Sep 2019 11:56:16 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 03/11] xfs: track allocation busy state in allocation
- cursor
-Message-ID: <20190918184832.GR2229799@magnolia>
+Subject: Re: [PATCH v4 04/11] xfs: track best extent from cntbt lastblock
+ scan in alloc cursor
+Message-ID: <20190918185616.GS2229799@magnolia>
 References: <20190916121635.43148-1-bfoster@redhat.com>
- <20190916121635.43148-4-bfoster@redhat.com>
+ <20190916121635.43148-5-bfoster@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916121635.43148-4-bfoster@redhat.com>
+In-Reply-To: <20190916121635.43148-5-bfoster@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180164
+ engine=8.0.1-1908290000 definitions=main-1909180165
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1909180165
@@ -70,111 +70,143 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 08:16:27AM -0400, Brian Foster wrote:
-> Extend the allocation cursor to track extent busy state for an
-> allocation attempt. No functional changes.
+On Mon, Sep 16, 2019 at 08:16:28AM -0400, Brian Foster wrote:
+> If the size lookup lands in the last block of the by-size btree, the
+> near mode algorithm scans the entire block for the extent with best
+> available locality. In preparation for similar best available
+> extent tracking across both btrees, extend the allocation cursor
+> with best extent data and lift the associated state from the cntbt
+> last block scan code. No functional changes.
 > 
 > Signed-off-by: Brian Foster <bfoster@redhat.com>
 > ---
->  fs/xfs/libxfs/xfs_alloc.c | 25 ++++++++++++++-----------
->  1 file changed, 14 insertions(+), 11 deletions(-)
+>  fs/xfs/libxfs/xfs_alloc.c | 63 ++++++++++++++++++++-------------------
+>  1 file changed, 33 insertions(+), 30 deletions(-)
 > 
 > diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-> index d159377ed603..5c34d4c41761 100644
+> index 5c34d4c41761..ee46989ab723 100644
 > --- a/fs/xfs/libxfs/xfs_alloc.c
 > +++ b/fs/xfs/libxfs/xfs_alloc.c
-> @@ -716,6 +716,8 @@ struct xfs_alloc_cur {
+> @@ -716,6 +716,11 @@ struct xfs_alloc_cur {
 >  	struct xfs_btree_cur		*cnt;	/* btree cursors */
 >  	struct xfs_btree_cur		*bnolt;
 >  	struct xfs_btree_cur		*bnogt;
-> +	unsigned			busy_gen;/* busy state */
-
-Nit: unsigned int here?
-
-'unsigned' without the 'int' looks a little funny to me, but eh
-whatever, I guess we do that in the iomap code so:
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> +	bool				busy;
+> +	xfs_agblock_t			rec_bno;/* extent startblock */
+> +	xfs_extlen_t			rec_len;/* extent length */
+> +	xfs_agblock_t			bno;	/* alloc bno */
+> +	xfs_extlen_t			len;	/* alloc len */
+> +	xfs_extlen_t			diff;	/* diff from search bno */
+>  	unsigned			busy_gen;/* busy state */
+>  	bool				busy;
 >  };
->  
->  /*
-> @@ -733,6 +735,9 @@ xfs_alloc_cur_setup(
+> @@ -735,6 +740,11 @@ xfs_alloc_cur_setup(
 >  
 >  	ASSERT(args->alignment == 1 || args->type != XFS_ALLOCTYPE_THIS_BNO);
 >  
-> +	acur->busy = false;
-> +	acur->busy_gen = 0;
-> +
->  	/*
->  	 * Perform an initial cntbt lookup to check for availability of maxlen
->  	 * extents. If this fails, we'll return -ENOSPC to signal the caller to
-> @@ -1185,8 +1190,6 @@ xfs_alloc_ag_vextent_near(
->  	xfs_extlen_t	ltlena;		/* aligned ... */
->  	xfs_agblock_t	ltnew;		/* useful start bno of left side */
->  	xfs_extlen_t	rlen;		/* length of returned extent */
-> -	bool		busy;
-> -	unsigned	busy_gen;
->  #ifdef DEBUG
->  	/*
->  	 * Randomly don't execute the first algorithm.
-> @@ -1211,7 +1214,6 @@ xfs_alloc_ag_vextent_near(
->  	ltlen = 0;
->  	gtlena = 0;
->  	ltlena = 0;
-> -	busy = false;
+> +	acur->rec_bno = 0;
+> +	acur->rec_len = 0;
+> +	acur->bno = 0;
+> +	acur->len = 0;
+> +	acur->diff = -1;
+
+xfs_extlen_t is a uint32_t; is this going to cause comparison problems?
+
+Also ... assuming that acur->diff is the successor to the bdiff variable
+below, shouldn't it be initialized to zero like bdiff was?
+
+--D
+
+>  	acur->busy = false;
+>  	acur->busy_gen = 0;
 >  
->  	/*
->  	 * Set up cursors and see if there are any free extents as big as
-> @@ -1290,8 +1292,8 @@ xfs_alloc_ag_vextent_near(
->  			if (error)
->  				goto out;
->  			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
-> -			busy = xfs_alloc_compute_aligned(args, ltbno, ltlen,
-> -					&ltbnoa, &ltlena, &busy_gen);
-> +			acur.busy = xfs_alloc_compute_aligned(args, ltbno, ltlen,
-> +					&ltbnoa, &ltlena, &acur.busy_gen);
->  			if (ltlena < args->minlen)
->  				continue;
->  			if (ltbnoa < args->min_agbno || ltbnoa > args->max_agbno)
-> @@ -1373,8 +1375,8 @@ xfs_alloc_ag_vextent_near(
->  			if (error)
->  				goto out;
->  			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
-> -			busy |= xfs_alloc_compute_aligned(args, ltbno, ltlen,
-> -					&ltbnoa, &ltlena, &busy_gen);
-> +			acur.busy |= xfs_alloc_compute_aligned(args, ltbno,
-> +					ltlen, &ltbnoa, &ltlena, &acur.busy_gen);
->  			if (ltlena >= args->minlen && ltbnoa >= args->min_agbno)
->  				break;
->  			error = xfs_btree_decrement(acur.bnolt, 0, &i);
-> @@ -1388,8 +1390,8 @@ xfs_alloc_ag_vextent_near(
->  			if (error)
->  				goto out;
->  			XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
-> -			busy |= xfs_alloc_compute_aligned(args, gtbno, gtlen,
-> -					&gtbnoa, &gtlena, &busy_gen);
-> +			acur.busy |= xfs_alloc_compute_aligned(args, gtbno,
-> +					gtlen, &gtbnoa, &gtlena, &acur.busy_gen);
->  			if (gtlena >= args->minlen && gtbnoa <= args->max_agbno)
->  				break;
->  			error = xfs_btree_increment(acur.bnogt, 0, &i);
-> @@ -1449,9 +1451,10 @@ xfs_alloc_ag_vextent_near(
+> @@ -1247,10 +1257,7 @@ xfs_alloc_ag_vextent_near(
+>  	 * but we never loop back to the top.
 >  	 */
->  	if (!xfs_alloc_cur_active(acur.bnolt) &&
->  	    !xfs_alloc_cur_active(acur.bnogt)) {
-> -		if (busy) {
-> +		if (acur.busy) {
->  			trace_xfs_alloc_near_busy(args);
-> -			xfs_extent_busy_flush(args->mp, args->pag, busy_gen);
-> +			xfs_extent_busy_flush(args->mp, args->pag,
-> +					      acur.busy_gen);
->  			goto restart;
+>  	while (xfs_btree_islastblock(acur.cnt, 0)) {
+> -		xfs_extlen_t	bdiff;
+> -		int		besti=0;
+> -		xfs_extlen_t	blen=0;
+> -		xfs_agblock_t	bnew=0;
+> +		xfs_extlen_t	diff;
+>  
+>  #ifdef DEBUG
+>  		if (dofirst)
+> @@ -1281,8 +1288,8 @@ xfs_alloc_ag_vextent_near(
+>  				break;
 >  		}
->  		trace_xfs_alloc_size_neither(args);
+>  		i = acur.cnt->bc_ptrs[0];
+> -		for (j = 1, blen = 0, bdiff = 0;
+> -		     !error && j && (blen < args->maxlen || bdiff > 0);
+> +		for (j = 1;
+> +		     !error && j && (acur.len < args->maxlen || acur.diff > 0);
+>  		     error = xfs_btree_increment(acur.cnt, 0, &j)) {
+>  			/*
+>  			 * For each entry, decide if it's better than
+> @@ -1301,44 +1308,40 @@ xfs_alloc_ag_vextent_near(
+>  			args->len = XFS_EXTLEN_MIN(ltlena, args->maxlen);
+>  			xfs_alloc_fix_len(args);
+>  			ASSERT(args->len >= args->minlen);
+> -			if (args->len < blen)
+> +			if (args->len < acur.len)
+>  				continue;
+> -			ltdiff = xfs_alloc_compute_diff(args->agbno, args->len,
+> +			diff = xfs_alloc_compute_diff(args->agbno, args->len,
+>  				args->alignment, args->datatype, ltbnoa,
+>  				ltlena, &ltnew);
+>  			if (ltnew != NULLAGBLOCK &&
+> -			    (args->len > blen || ltdiff < bdiff)) {
+> -				bdiff = ltdiff;
+> -				bnew = ltnew;
+> -				blen = args->len;
+> -				besti = acur.cnt->bc_ptrs[0];
+> +			    (args->len > acur.len || diff < acur.diff)) {
+> +				acur.rec_bno = ltbno;
+> +				acur.rec_len = ltlen;
+> +				acur.diff = diff;
+> +				acur.bno = ltnew;
+> +				acur.len = args->len;
+>  			}
+>  		}
+>  		/*
+>  		 * It didn't work.  We COULD be in a case where
+>  		 * there's a good record somewhere, so try again.
+>  		 */
+> -		if (blen == 0)
+> +		if (acur.len == 0)
+>  			break;
+> -		/*
+> -		 * Point at the best entry, and retrieve it again.
+> -		 */
+> -		acur.cnt->bc_ptrs[0] = besti;
+> -		error = xfs_alloc_get_rec(acur.cnt, &ltbno, &ltlen, &i);
+> -		if (error)
+> -			goto out;
+> -		XFS_WANT_CORRUPTED_GOTO(args->mp, i == 1, out);
+> -		ASSERT(ltbno + ltlen <= be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_length));
+> -		args->len = blen;
+>  
+>  		/*
+> -		 * We are allocating starting at bnew for blen blocks.
+> +		 * Allocate at the bno/len tracked in the cursor.
+>  		 */
+> -		args->agbno = bnew;
+> -		ASSERT(bnew >= ltbno);
+> -		ASSERT(bnew + blen <= ltbno + ltlen);
+> -		error = xfs_alloc_fixup_trees(acur.cnt, acur.bnolt, ltbno,
+> -					ltlen, bnew, blen, XFSA_FIXUP_CNT_OK);
+> +		args->agbno = acur.bno;
+> +		args->len = acur.len;
+> +		ASSERT(acur.bno >= acur.rec_bno);
+> +		ASSERT(acur.bno + acur.len <= acur.rec_bno + acur.rec_len);
+> +		ASSERT(acur.rec_bno + acur.rec_len <=
+> +		       be32_to_cpu(XFS_BUF_TO_AGF(args->agbp)->agf_length));
+> +
+> +		error = xfs_alloc_fixup_trees(acur.cnt, acur.bnolt,
+> +				acur.rec_bno, acur.rec_len, acur.bno, acur.len,
+> +				0);
+>  		if (error)
+>  			goto out;
+>  		trace_xfs_alloc_near_first(args);
 > -- 
 > 2.20.1
 > 
