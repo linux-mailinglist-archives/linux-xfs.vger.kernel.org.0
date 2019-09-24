@@ -2,40 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1CA7BC8D2
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 15:23:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A1C9BC8D4
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 15:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505049AbfIXNXA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Sep 2019 09:23:00 -0400
-Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:6001
+        id S2505052AbfIXNXB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Sep 2019 09:23:01 -0400
+Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:6015
         "EHLO icp-osb-irony-out7.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2505015AbfIXNW7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Sep 2019 09:22:59 -0400
+        by vger.kernel.org with ESMTP id S2505048AbfIXNXB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Sep 2019 09:23:01 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AxAAA1GIpd/9+j0HYNWBwBAQEEAQE?=
- =?us-ascii?q?MBAEBgVUFAQELAYQ5hCKPWQEBAQEBAQaBEYoahR+EaoUkgXsJAQEBAQEBAQE?=
- =?us-ascii?q?BNwEBhDoDAgKDRDYHDgIMAQEBBAEBAQEBBQMBhViGGQIBAyMEUhAYDQImAgJ?=
- =?us-ascii?q?HEAYThRmtE3N/MxqKNIEMKAGBYoo+eIEHgREzgx2HT4JYBIxxgmWGLEKWSII?=
- =?us-ascii?q?slSUMjgcDiw8thAakfQiCAU0uCoMnUIF+F44vZo0lAQE?=
-X-IPAS-Result: =?us-ascii?q?A2AxAAA1GIpd/9+j0HYNWBwBAQEEAQEMBAEBgVUFAQELA?=
- =?us-ascii?q?YQ5hCKPWQEBAQEBAQaBEYoahR+EaoUkgXsJAQEBAQEBAQEBNwEBhDoDAgKDR?=
- =?us-ascii?q?DYHDgIMAQEBBAEBAQEBBQMBhViGGQIBAyMEUhAYDQImAgJHEAYThRmtE3N/M?=
- =?us-ascii?q?xqKNIEMKAGBYoo+eIEHgREzgx2HT4JYBIxxgmWGLEKWSIIslSUMjgcDiw8th?=
- =?us-ascii?q?AakfQiCAU0uCoMnUIF+F44vZo0lAQE?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AiAAA1GIpd/9+j0HYNWBwBAQEEAQE?=
+ =?us-ascii?q?MBAEBgVQGAQELAYQ5hCKPWQEBAQEBAQaBEYoahR+KDoF7CQEBAQEBAQEBATc?=
+ =?us-ascii?q?BAYQ6AwICg0Q1CA4CDAEBAQQBAQEBAQUDAYVYhhkCAQMjBFIQGA0CJgICRxA?=
+ =?us-ascii?q?GE4UZrRNzfzMaijSBDCgBgWKKPniBB4ERM4Mdh0+CWASPVoVNX0KWSIIslSU?=
+ =?us-ascii?q?MjgcDiw8thAakeAGCDU0uCoMnUIF+F44vZopTK4InAQE?=
+X-IPAS-Result: =?us-ascii?q?A2AiAAA1GIpd/9+j0HYNWBwBAQEEAQEMBAEBgVQGAQELA?=
+ =?us-ascii?q?YQ5hCKPWQEBAQEBAQaBEYoahR+KDoF7CQEBAQEBAQEBATcBAYQ6AwICg0Q1C?=
+ =?us-ascii?q?A4CDAEBAQQBAQEBAQUDAYVYhhkCAQMjBFIQGA0CJgICRxAGE4UZrRNzfzMai?=
+ =?us-ascii?q?jSBDCgBgWKKPniBB4ERM4Mdh0+CWASPVoVNX0KWSIIslSUMjgcDiw8thAake?=
+ =?us-ascii?q?AGCDU0uCoMnUIF+F44vZopTK4InAQE?=
 X-IronPort-AV: E=Sophos;i="5.64,544,1559491200"; 
-   d="scan'208";a="205615172"
+   d="scan'208";a="205615178"
 Received: from unknown (HELO [192.168.1.222]) ([118.208.163.223])
-  by icp-osb-irony-out7.iinet.net.au with ESMTP; 24 Sep 2019 21:22:43 +0800
-Subject: [REPOST PATCH v3 08/16] xfs: mount-api - refactor
- xfs_fs_fill_super()
+  by icp-osb-irony-out7.iinet.net.au with ESMTP; 24 Sep 2019 21:22:49 +0800
+Subject: [REPOST PATCH v3 09/16] xfs: mount-api - add xfs_get_tree()
 From:   Ian Kent <raven@themaw.net>
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 Cc:     David Howells <dhowells@redhat.com>,
         Dave Chinner <dchinner@redhat.com>,
         Al Viro <viro@ZenIV.linux.org.uk>,
         Eric Sandeen <sandeen@sandeen.net>
-Date:   Tue, 24 Sep 2019 21:22:43 +0800
-Message-ID: <156933136376.20933.15291550203661966809.stgit@fedora-28>
+Date:   Tue, 24 Sep 2019 21:22:49 +0800
+Message-ID: <156933136908.20933.15050470634891698659.stgit@fedora-28>
 In-Reply-To: <156933112949.20933.12761540130806431294.stgit@fedora-28>
 References: <156933112949.20933.12761540130806431294.stgit@fedora-28>
 User-Agent: StGit/unknown-version
@@ -47,97 +46,45 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Much of the code in xfs_fs_fill_super() will be used by the fill super
-function of the new mount-api.
-
-So refactor the common code into a helper in an attempt to show what's
-actually changed.
+Add the fs_context_operations method .get_tree that validates
+mount options and fills the super block as previously done
+by the file_system_type .mount method.
 
 Signed-off-by: Ian Kent <raven@themaw.net>
 ---
- fs/xfs/xfs_super.c |   64 +++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 41 insertions(+), 23 deletions(-)
+ fs/xfs/xfs_super.c |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index cfda58dd3822..ea3640ffd8f5 100644
+index ea3640ffd8f5..6f9fe92b4e21 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -1720,27 +1720,14 @@ xfs_mount_alloc(
- 
- 
- STATIC int
--xfs_fs_fill_super(
--	struct super_block	*sb,
--	void			*data,
-+__xfs_fs_fill_super(
-+	struct xfs_mount	*mp,
- 	int			silent)
- {
-+	struct super_block	*sb = mp->m_super;
- 	struct inode		*root;
--	struct xfs_mount	*mp = NULL;
--	int			flags = 0, error = -ENOMEM;
--
--	/*
--	 * allocate mp and do all low-level struct initializations before we
--	 * attach it to the super
--	 */
--	mp = xfs_mount_alloc(sb);
--	if (!mp)
--		goto out;
--	sb->s_fs_info = mp;
--
--	error = xfs_parseargs(mp, (char *)data);
--	if (error)
--		goto out_free_fsname;
-+	int			flags = 0;
-+	int			error;
- 
- 	sb_min_blocksize(sb, BBSIZE);
- 	sb->s_xattr = xfs_xattr_handlers;
-@@ -1767,7 +1754,7 @@ xfs_fs_fill_super(
- 
- 	error = xfs_open_devices(mp);
- 	if (error)
--		goto out_free_fsname;
-+		goto out;
- 
- 	error = xfs_init_mount_workqueues(mp);
- 	if (error)
-@@ -1902,10 +1889,6 @@ xfs_fs_fill_super(
- 	xfs_destroy_mount_workqueues(mp);
-  out_close_devices:
- 	xfs_close_devices(mp);
-- out_free_fsname:
--	sb->s_fs_info = NULL;
--	xfs_free_fsname(mp);
--	kfree(mp);
-  out:
+@@ -1933,6 +1933,51 @@ xfs_fs_fill_super(
  	return error;
- 
-@@ -1915,6 +1898,41 @@ xfs_fs_fill_super(
- 	goto out_free_sb;
  }
  
 +STATIC int
-+xfs_fs_fill_super(
++xfs_fill_super(
 +	struct super_block	*sb,
-+	void			*data,
-+	int			silent)
++	struct fs_context	*fc)
 +{
-+	struct xfs_mount	*mp = NULL;
++	struct xfs_fs_context	*ctx = fc->fs_private;
++	struct xfs_mount	*mp = sb->s_fs_info;
++	int			silent = fc->sb_flags & SB_SILENT;
 +	int			error = -ENOMEM;
 +
-+	/*
-+	 * allocate mp and do all low-level struct initializations before we
-+	 * attach it to the super
-+	 */
-+	mp = xfs_mount_alloc(sb);
-+	if (!mp)
-+		return -ENOMEM;
-+	sb->s_fs_info = mp;
++	mp->m_super = sb;
 +
-+	error = xfs_parseargs(mp, (char *)data);
++	/*
++	 * set up the mount name first so all the errors will refer to the
++	 * correct device.
++	 */
++	mp->m_fsname = kstrndup(sb->s_id, MAXNAMELEN, GFP_KERNEL);
++	if (!mp->m_fsname)
++		return -ENOMEM;
++	mp->m_fsname_len = strlen(mp->m_fsname) + 1;
++
++	error = xfs_validate_params(mp, ctx, false);
 +	if (error)
 +		goto out_free_fsname;
 +
@@ -150,11 +97,30 @@ index cfda58dd3822..ea3640ffd8f5 100644
 + out_free_fsname:
 +	sb->s_fs_info = NULL;
 +	xfs_free_fsname(mp);
-+	kfree(mp);
++
 +	return error;
++}
++
++STATIC int
++xfs_get_tree(
++	struct fs_context	*fc)
++{
++	return vfs_get_block_super(fc, xfs_fill_super);
 +}
 +
  STATIC void
  xfs_fs_put_super(
  	struct super_block	*sb)
+@@ -2003,6 +2048,11 @@ static const struct super_operations xfs_super_operations = {
+ 	.free_cached_objects	= xfs_fs_free_cached_objects,
+ };
+ 
++static const struct fs_context_operations xfs_context_ops = {
++	.parse_param = xfs_parse_param,
++	.get_tree    = xfs_get_tree,
++};
++
+ static struct file_system_type xfs_fs_type = {
+ 	.owner			= THIS_MODULE,
+ 	.name			= "xfs",
 
