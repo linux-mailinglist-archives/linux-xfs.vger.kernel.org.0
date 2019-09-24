@@ -2,109 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC90BD075
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 19:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 308AEBD3E7
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 22:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407038AbfIXRSu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Sep 2019 13:18:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50248 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407033AbfIXRSu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Sep 2019 13:18:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OGx6oN062810
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Sep 2019 17:18:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=7UJIIe+WSBQqCxzRzbFtF3VptlmnAQD7wAiNrB+0m0o=;
- b=kos3bBCGidJcedM23huReq78bIK/byhfNoJTv65RouYZWeBbN1AEH9h4jzgQT1X+h1Fv
- 0OgIVk/X50k9ed90R9AlFYJCiyuTHlY9x/bTsTM8TsR2a7FjJiDiM15U+zgUlB4ettnA
- tSAwhya7+GpS+7cQk4jyrNoHo/Id8e2tSdlwSqjK+/TbQF6+6YpTYGGzfUAQXrFRhpn4
- HPf4yzFeIN8ec7rX1TVvwUDKv7gzIYwF4TNeNtTXyeYM2lBu5J1hGOPETad7jzVtVvK4
- bKYqB4883Xdc7NwfLup4yZUN6yd+pD8ZziOLDJ1e4lOpcn4JUmzw7QidyvRekfFzlPLz jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2v5b9tqmpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Sep 2019 17:18:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OGwnD3146221
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Sep 2019 17:18:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v6yvp6rxa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Sep 2019 17:18:48 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8OHIlKY007720
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Sep 2019 17:18:47 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Sep 2019 10:18:47 -0700
-Date:   Tue, 24 Sep 2019 10:18:46 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to 88d32d3983e7
-Message-ID: <20190924171846.GA2229799@magnolia>
+        id S2633454AbfIXU5X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Sep 2019 16:57:23 -0400
+Received: from gentwo.org ([3.19.106.255]:49446 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727890AbfIXU5X (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 24 Sep 2019 16:57:23 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 513AF3E9FB; Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 4FE343E9E5;
+        Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
+From:   cl@linux.com
+X-X-Sender: cl@www.lameter.com
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+cc:     dsterba@suse.cz, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+In-Reply-To: <20190923175146.GT2229799@magnolia>
+Message-ID: <alpine.DEB.2.21.1909242045250.17661@www.lameter.com>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz> <20190923171710.GN2751@twin.jikos.cz> <20190923175146.GT2229799@magnolia>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909240150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909240150
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+On Mon, 23 Sep 2019, Darrick J. Wong wrote:
 
-The for-next branch of the xfs-linux repository at:
+> On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
+> > On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
+> > > So if anyone thinks this is a good idea, please express it (preferably
+> > > in a formal way such as Acked-by), otherwise it seems the patch will be
+> > > dropped (due to a private NACK, apparently).
+>
+> Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
+> privilege of gutting a patch via private NAK without any of that open
+> development discussion incovenience. <grumble>
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
-
-has just been updated.
-
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.  I figure I might as well push along the bug fixes and
-trivial cleanups that have come in.
-
-The new head of the for-next branch is commit:
-
-88d32d3983e7 xfs: avoid unused to_mp() function warning
-
-New Commits:
-
-Aliasgar Surti (1):
-      [583e4eff98fa] xfs: removed unneeded variable
-
-Austin Kim (1):
-      [88d32d3983e7] xfs: avoid unused to_mp() function warning
-
-Brian Foster (1):
-      [e20e174ca1bd] xfs: convert inode to extent format after extent merge due to shift
-
-Darrick J. Wong (1):
-      [ce840429260a] xfs: revert 1baa2800e62d ("xfs: remove the unused XFS_ALLOC_USERDATA flag")
-
-Eric Sandeen (1):
-      [6f4ff81a4602] xfs: log proper length of superblock
+There was a public discussion about this issue and from what I can tell
+the outcome was that the allocator already provides what you want. Which
+was a mechanism to misalign objects and detect these issues. This
+mechanism has been in use for over a decade.
 
 
-Code Diffstat:
-
- fs/xfs/libxfs/xfs_alloc.h |  7 ++++---
- fs/xfs/libxfs/xfs_bmap.c  | 13 +++++++++++--
- fs/xfs/libxfs/xfs_sb.c    |  2 +-
- fs/xfs/scrub/alloc.c      |  3 +--
- fs/xfs/xfs_sysfs.c        | 13 -------------
- 5 files changed, 17 insertions(+), 21 deletions(-)
