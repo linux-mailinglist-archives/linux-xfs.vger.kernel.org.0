@@ -2,64 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 308AEBD3E7
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 22:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C92E5BD3CA
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2019 22:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633454AbfIXU5X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Sep 2019 16:57:23 -0400
-Received: from gentwo.org ([3.19.106.255]:49446 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbfIXU5X (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:57:23 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 513AF3E9FB; Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 4FE343E9E5;
-        Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 20:47:52 +0000 (UTC)
-From:   cl@linux.com
-X-X-Sender: cl@www.lameter.com
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-cc:     dsterba@suse.cz, Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-In-Reply-To: <20190923175146.GT2229799@magnolia>
-Message-ID: <alpine.DEB.2.21.1909242045250.17661@www.lameter.com>
-References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz> <20190923171710.GN2751@twin.jikos.cz> <20190923175146.GT2229799@magnolia>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1731267AbfIXUuc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Sep 2019 16:50:32 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46206 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726528AbfIXUuc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Sep 2019 16:50:32 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DDD20361CFE;
+        Wed, 25 Sep 2019 06:50:30 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iCrlV-0005Dl-A1; Wed, 25 Sep 2019 06:50:29 +1000
+Date:   Wed, 25 Sep 2019 06:50:29 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Carlos Maiolino <cmaiolino@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
+Subject: Re: [PATCH 2/2] xfs: Limit total allocation request to maximum
+ possible
+Message-ID: <20190924205029.GF16973@dread.disaster.area>
+References: <20190918082453.25266-1-cmaiolino@redhat.com>
+ <20190918082453.25266-3-cmaiolino@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918082453.25266-3-cmaiolino@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=Cqzt7GXRoRXrTWOJTgAA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, 23 Sep 2019, Darrick J. Wong wrote:
+On Wed, Sep 18, 2019 at 10:24:53AM +0200, Carlos Maiolino wrote:
+> The original allocation request may have a total value way beyond
+> possible limits.
+> 
+> Trim it down to the maximum possible if needed
+> 
+> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 07aad70f3931..3aa0bf5cc7e3 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -3477,6 +3477,11 @@ xfs_bmap_btalloc(
+>  			error = xfs_bmap_btalloc_filestreams(ap, &args, &blen);
+>  		else
+>  			error = xfs_bmap_btalloc_nullfb(ap, &args, &blen);
+> +
+> +		/* We can never have total larger than blen, so trim it now */
 
-> On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
-> > On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
-> > > So if anyone thinks this is a good idea, please express it (preferably
-> > > in a formal way such as Acked-by), otherwise it seems the patch will be
-> > > dropped (due to a private NACK, apparently).
->
-> Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
-> privilege of gutting a patch via private NAK without any of that open
-> development discussion incovenience. <grumble>
+Yes we can. blen is typically the largest contiguous extent in the
+filesystem or AG in question. It is not typically the total free
+space in the AG, which only occurs when the AG is empty. i.e. in
+normal situations, we can allocate both blen and the rest of the
+metadata from the same AG as there is more than one free extent in
+the AG.
 
-There was a public discussion about this issue and from what I can tell
-the outcome was that the allocator already provides what you want. Which
-was a mechanism to misalign objects and detect these issues. This
-mechanism has been in use for over a decade.
+I think that for the purposes of a single > AG size allocation, the
+total needs to be clamped to the free space in the AG that is
+selected, not the length of the allocation we are trying....
 
+Cheers,
 
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
