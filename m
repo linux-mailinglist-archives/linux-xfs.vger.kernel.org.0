@@ -2,65 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46D60BE76C
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EA54BE761
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:34:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfIYVet (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:34:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37606 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727512AbfIYVet (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:34:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYW1b058043;
-        Wed, 25 Sep 2019 21:34:42 GMT
+        id S1727453AbfIYVei (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:34:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58782 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbfIYVei (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:34:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYa4i054991;
+        Wed, 25 Sep 2019 21:34:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=644Kk538U0mbrNn/NLXdmPbgup4TC8eba8m9M9rR6x4=;
- b=HsNWPysMs3otmkLjsI8DXLeBA/MJ7s8fqpe6Jb2cy/8amG4uMnjym5XYaFvwLfD7/6uK
- 1fgdLa4Az7gqh5LIQJAWTRZHueQV8qy/pfGCD07Y28HL5h3T79DQRcshfpsmpXM3OQR8
- QoQYK76YdtUDgSYlja0dCdyt0jdWhl1O+8myU5dwpCkrz1rH0DUJ2NLNkw51lYfBBr6O
- 3U5dyniuYZUd7TyXIV4N4EuYIXkFdnqaXu/xzQPYN5sUQ+5wpuCefiTsC3z2+pEDOcmU
- vRaS0Fzqsha8m9OhNFQcjgya4kxvaDusrzrF5LrW6SuAttIPBRpvUWvfdBRjq5enX46L ng== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2v5b9tyh1b-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=C6p1fSJZi6SNjHkFQPtqCuHY8mweUIo2ZZQdXB/fFmo=;
+ b=cs73JThDq6rUyLkQDwpddCFusjls9X9tJOW1xVj9wsX71SbVfZVhxIJwtnF/PE13UBRO
+ v/Tpn28a1pUgJmvHTUlar3k07Lyca0xMxisyU+pWq2glc69GeEen/YR1op35jruMZyIa
+ uN2tH4h5D1r1x3HkRKYoehrmz6kGzY4pyCSRjStA/Slt1AkhBYRKAdhDkAKMLLMRfhFS
+ liyOp/A1x1DQThVayJggKI0kyssIu2YgXwGRMOdAdFdPm+19clfyFwqjsRUhq98lu/cH
+ sJCbR2EBMcPbixMRqD1yDo4PQD3zIeXOYa8Tf4PhDDXsO6AXOqZQa9SfukdJ8v4m1lKJ ew== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2v5cgr7eu9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:34:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYQZw097675;
-        Wed, 25 Sep 2019 21:34:42 GMT
+        Wed, 25 Sep 2019 21:34:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYSEH078797;
+        Wed, 25 Sep 2019 21:34:35 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v82qakqwx-1
+        by aserp3030.oracle.com with ESMTP id 2v82tkredc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:34:34 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLXM2Q014403;
-        Wed, 25 Sep 2019 21:33:22 GMT
+        Wed, 25 Sep 2019 21:34:30 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLXOPU014443;
+        Wed, 25 Sep 2019 21:33:24 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:33:21 -0700
-Subject: [PATCH 4/4] xfs_scrub: batch inumbers calls during fscounters
- calculation
+        with ESMTP ; Wed, 25 Sep 2019 14:33:24 -0700
+Subject: [PATCH 00/13] libfrog/xfs_scrub: fix error handling
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Wed, 25 Sep 2019 14:33:20 -0700
-Message-ID: <156944720050.297551.11989510278130886367.stgit@magnolia>
-In-Reply-To: <156944717403.297551.9871784842549394192.stgit@magnolia>
-References: <156944717403.297551.9871784842549394192.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Wed, 25 Sep 2019 14:33:23 -0700
+Message-ID: <156944720314.297677.12837037497727069563.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=940
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1909250174
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1909250174
@@ -69,42 +66,25 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Improve the efficiency of the phase 7 inode counts by batching requests,
-now that we have per-AG inumbers wrappers.
+The new code introduced by xfs_scrub do not deal with error returns in a
+consistent fashion.  Some places we return -1 and set errno, some places
+just do whatever libc does, others return positive error codes, and the
+worst offenders do a combination of that.  Worse yet, sometimes we also
+fail to check for error returns at all.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
----
- scrub/fscounters.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+This series replaces all that with a single error handling strategy --
+return positive error codes and always check the return codes from other
+library functions.
 
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-diff --git a/scrub/fscounters.c b/scrub/fscounters.c
-index a2cf8171..ad467e0c 100644
---- a/scrub/fscounters.c
-+++ b/scrub/fscounters.c
-@@ -43,9 +43,10 @@ xfs_count_inodes_ag(
- {
- 	struct xfs_inumbers_req	*ireq;
- 	uint64_t		nr = 0;
-+	unsigned int		i;
- 	int			error;
- 
--	ireq = xfrog_inumbers_alloc_req(1, 0);
-+	ireq = xfrog_inumbers_alloc_req(64, 0);
- 	if (!ireq) {
- 		str_info(ctx, descr, _("Insufficient memory; giving up."));
- 		return false;
-@@ -55,7 +56,8 @@ xfs_count_inodes_ag(
- 	while (!(error = xfrog_inumbers(&ctx->mnt, ireq))) {
- 		if (ireq->hdr.ocount == 0)
- 			break;
--		nr += ireq->inumbers[0].xi_alloccount;
-+		for (i = 0; i < ireq->hdr.ocount; i++)
-+			nr += ireq->inumbers[i].xi_alloccount;
- 	}
- 
- 	free(ireq);
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=libfrog-error-handling
