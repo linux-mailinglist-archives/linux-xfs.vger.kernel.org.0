@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C83BE75C
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F39A8BE760
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:34:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfIYVed (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:34:33 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43068 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbfIYVed (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:34:33 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYO9g009867;
-        Wed, 25 Sep 2019 21:34:31 GMT
+        id S1727485AbfIYVei (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:34:38 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37294 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbfIYVeh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:34:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYNU4057952;
+        Wed, 25 Sep 2019 21:34:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vTkD6KUcn379TJhBo2oB/mdzlgqlW1twLv63kEVw69Y=;
- b=caj1MZNRz+NPUKsfQeHcmlEhgORGhjc6K7PCOwPhiEWpYQ01riZuQmrL18VtuZlfSQxk
- cotA7wpDuSgwI3uzz/R5h3U6EpjGNZrQ6sgs6HrrV8bFZZCc7pXUXM6cP64/L2pA9n8T
- Gpc1okn3hO8td/CPiI4wY67OZZLhNtQ0bhAhDGl8z7QxyXlynwRVZYaVZdgXfXgA++yJ
- IfmCoPKXNL0Vxuh0jErym4VVrOmxxqhRSbqb8VE6ZqKaI/4C3h64/QycY4reGXf0psOS
- d7Zj7NyYb57LRnk80g11xj3p8DvFQ06AZgOTWOetEe/Y/FHA96EFtzhRKzjvq4EcUjlT 3w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2v5btq7hmj-1
+ bh=57v6OlE4fKldtseXRurmX6ES/7SqMpzP00s49qCPjm8=;
+ b=hSapVm0ujcXkOWRbP6dqSJPF9AxjTtEEZbiZXbznhoLoVXBxxRvy3EdZ/2OEAp0JZra8
+ AOQCAgQ4LYwk2uJZ/End5lqz9E7IZOaTVYSTIJIz0rU4lE4YVfziYJTf4mUoATRuiThb
+ wFuUljZ5KDtxmH2bT3+2buEWTFpyTJR3XRJOVYR7AO0pGvJqXCcy+aT5sTbBI+K5pMNF
+ R+Hu1Y7LJ1EkVDCG3P6Oc9UcLmdTOdevYIPsWWd+Etihivci/wKd31+W8ktHGaBXNbvA
+ ICSAvrOtf4Wj8e3bzqvTXuVieC10nkYu4APGlU0FaamXVKEq2/R0DjFcdXLtAg5ltNwR Ng== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v5b9tygyf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:34:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYSaq078796;
-        Wed, 25 Sep 2019 21:34:30 GMT
+        Wed, 25 Sep 2019 21:34:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYRj1011395;
+        Wed, 25 Sep 2019 21:34:35 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2v82tkreuu-1
+        by userp3030.oracle.com with ESMTP id 2v829w4xcn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:34:28 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLY7Bf019805;
-        Wed, 25 Sep 2019 21:34:07 GMT
+        Wed, 25 Sep 2019 21:34:34 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLYDln019833;
+        Wed, 25 Sep 2019 21:34:13 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:34:07 -0700
-Subject: [PATCH 07/13] libfrog: fix bitmap error communication problems
+        with ESMTP ; Wed, 25 Sep 2019 14:34:13 -0700
+Subject: [PATCH 08/13] libfrog: fix missing error checking in bitmap code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:34:05 -0700
-Message-ID: <156944724578.297677.11793519151262574472.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:34:11 -0700
+Message-ID: <156944725182.297677.5778254084930145538.stgit@magnolia>
 In-Reply-To: <156944720314.297677.12837037497727069563.stgit@magnolia>
 References: <156944720314.297677.12837037497727069563.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,149 +70,50 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Convert all the libfrog code and callers away from the libc-style
-indirect errno returns to directly returning error codes to callers.
+Check library calls for error codes being returned.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libfrog/bitmap.c |   13 +++++++------
- libfrog/bitmap.h |    2 +-
- repair/rmap.c    |    4 ++--
- scrub/phase6.c   |   20 +++++++++++---------
- 4 files changed, 21 insertions(+), 18 deletions(-)
+ libfrog/bitmap.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 
 diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
-index 4dafc4c9..be95965f 100644
+index be95965f..a75d085a 100644
 --- a/libfrog/bitmap.c
 +++ b/libfrog/bitmap.c
-@@ -23,7 +23,8 @@
-  */
- 
- #define avl_for_each_range_safe(pos, n, l, first, last) \
--	for (pos = (first), n = pos->avl_nextino, l = (last)->avl_nextino; pos != (l); \
-+	for (pos = (first), n = pos->avl_nextino, l = (last)->avl_nextino; \
-+			pos != (l); \
- 			pos = n, n = pos ? pos->avl_nextino : NULL)
- 
- #define avl_for_each_safe(tree, pos, n) \
-@@ -67,18 +68,18 @@ static struct avl64ops bitmap_ops = {
- 
- /* Initialize a bitmap. */
- int
--bitmap_init(
-+bitmap_alloc(
+@@ -72,21 +72,30 @@ bitmap_alloc(
  	struct bitmap		**bmapp)
  {
  	struct bitmap		*bmap;
++	int			ret;
  
  	bmap = calloc(1, sizeof(struct bitmap));
  	if (!bmap)
--		return -ENOMEM;
-+		return errno;
+ 		return errno;
  	bmap->bt_tree = malloc(sizeof(struct avl64tree_desc));
  	if (!bmap->bt_tree) {
- 		free(bmap);
--		return -ENOMEM;
-+		return errno;
+-		free(bmap);
+-		return errno;
++		ret = errno;
++		goto out;
  	}
  
- 	pthread_mutex_init(&bmap->bt_lock, NULL);
-@@ -139,12 +140,12 @@ __bitmap_insert(
- 
- 	ext = bitmap_node_init(start, length);
- 	if (!ext)
--		return -ENOMEM;
-+		return errno;
- 
- 	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
- 	if (node == NULL) {
- 		free(ext);
--		return -EEXIST;
-+		return EEXIST;
- 	}
+-	pthread_mutex_init(&bmap->bt_lock, NULL);
++	ret = pthread_mutex_init(&bmap->bt_lock, NULL);
++	if (ret)
++		goto out_tree;
++
+ 	avl64_init_tree(bmap->bt_tree, &bitmap_ops);
+ 	*bmapp = bmap;
  
  	return 0;
-diff --git a/libfrog/bitmap.h b/libfrog/bitmap.h
-index 40119b9c..759386a8 100644
---- a/libfrog/bitmap.h
-+++ b/libfrog/bitmap.h
-@@ -11,7 +11,7 @@ struct bitmap {
- 	struct avl64tree_desc	*bt_tree;
- };
++out_tree:
++	free(bmap->bt_tree);
++out:
++	free(bmap);
++	return ret;
+ }
  
--int bitmap_init(struct bitmap **bmap);
-+int bitmap_alloc(struct bitmap **bmap);
- void bitmap_free(struct bitmap **bmap);
- int bitmap_set(struct bitmap *bmap, uint64_t start, uint64_t length);
- int bitmap_iterate(struct bitmap *bmap, int (*fn)(uint64_t, uint64_t, void *),
-diff --git a/repair/rmap.c b/repair/rmap.c
-index b907383e..c6ed25a9 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -490,13 +490,13 @@ rmap_store_ag_btree_rec(
- 	error = init_slab_cursor(ag_rmap->ar_raw_rmaps, rmap_compare, &rm_cur);
- 	if (error)
- 		goto err;
--	error = -bitmap_init(&own_ag_bitmap);
-+	error = bitmap_alloc(&own_ag_bitmap);
- 	if (error)
- 		goto err_slab;
- 	while ((rm_rec = pop_slab_cursor(rm_cur)) != NULL) {
- 		if (rm_rec->rm_owner != XFS_RMAP_OWN_AG)
- 			continue;
--		error = -bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
-+		error = bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
- 					rm_rec->rm_blockcount);
- 		if (error) {
- 			/*
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index aff04e76..d9285fee 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -341,6 +341,7 @@ xfs_check_rmap_ioerr(
- 	struct media_verify_state	*vs = arg;
- 	struct bitmap			*tree;
- 	dev_t				dev;
-+	int				ret;
- 
- 	dev = xfs_disk_to_dev(ctx, disk);
- 
-@@ -355,9 +356,9 @@ xfs_check_rmap_ioerr(
- 	else
- 		tree = NULL;
- 	if (tree) {
--		errno = -bitmap_set(tree, start, length);
--		if (errno)
--			str_errno(ctx, ctx->mntpoint);
-+		ret = bitmap_set(tree, start, length);
-+		if (ret)
-+			str_liberror(ctx, ret, _("setting bad block bitmap"));
- 	}
- 
- 	snprintf(descr, DESCR_BUFSZ, _("dev %d:%d ioerr @ %"PRIu64":%"PRIu64" "),
-@@ -454,16 +455,17 @@ xfs_scan_blocks(
- {
- 	struct media_verify_state	vs = { NULL };
- 	bool				moveon = false;
-+	int				ret;
- 
--	errno = -bitmap_init(&vs.d_bad);
--	if (errno) {
--		str_errno(ctx, ctx->mntpoint);
-+	ret = bitmap_alloc(&vs.d_bad);
-+	if (ret) {
-+		str_liberror(ctx, ret, _("creating datadev badblock bitmap"));
- 		goto out;
- 	}
- 
--	errno = -bitmap_init(&vs.r_bad);
--	if (errno) {
--		str_errno(ctx, ctx->mntpoint);
-+	ret = bitmap_alloc(&vs.r_bad);
-+	if (ret) {
-+		str_liberror(ctx, ret, _("creating realtime badblock bitmap"));
- 		goto out_dbad;
- 	}
- 
+ /* Free a bitmap. */
 
