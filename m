@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07FD0BE774
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECB78BE794
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:37:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfIYVf1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:35:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38202 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfIYVf1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:35:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYPx8057960;
-        Wed, 25 Sep 2019 21:35:25 GMT
+        id S1727285AbfIYVhc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:37:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46056 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbfIYVhc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:37:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYa4D010285;
+        Wed, 25 Sep 2019 21:37:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=LdmAp4vvHI/BKFIy2XI79DB9cFAsXq+OkI7afpctqVg=;
- b=S9IeDk0j3LYSn3fcz4Zh5bZGEIMF96QIfOaqpL/xAm7/Nmjd5mQ6bhFMbUgVh7wrDx9X
- +ng2iIo/R3Vx1m8wA3jDtcAS/HHfCbCxfkmFxq7d+ozBT108a6WzZAvHLzae/kocew/1
- 4X1fX1PQG58ZVBc1m45I6Mbi9ToRC1yPI8up8YiHFPs/fsreqp45CWl43BruIo4LA9q+
- /bXYrBPArxtMqq3aYOtluUg4uOq48+vH/kVUy/bHHwhVMNyExEYOOinF2C9eUEaIMK29
- qG9dzVWauYGMDnT5Hg7CGR+X4jVQn0F5/gJD+jEu4rHc/besCP1HsasUruR2fu+MU+n/ ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2v5b9tyh48-1
+ bh=R70hgIyKXJJpl4QuH/sILArckwUjy35P4RsDGzar/2c=;
+ b=TAW6NUObj03KJ7BrHmaxnziAHs1RduKsK4KBxrhBaHBKNNifEMASe1SSyJ7830CeraGf
+ SLwD+rhekf9X1F5BS6bin9Rx4m1oBfKS+d+RReqRr8BOkz8jRU2/upZX/McbdoHLu8yy
+ rH2wpW3ibKEGjXrTAa2JRTBpAIjtGmX2M9wvWlGAR4uXWVVkgXBY4QkWHy6CatCXJgLn
+ VDi6+CWBov19lwC9C6wvV7dEw6cA0Lu2I9IR9wWas28h8A2lqo9zrsb0PfoxaSu0o5AR
+ I/0J1s1kXmEWEPFRtNfex4TAfj+FQMZ2giK7u3O5oUqWBbs3f8+BTsDq3K0uhj8GTXgO Wg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v5btq7j0f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:35:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYUMx097902;
-        Wed, 25 Sep 2019 21:35:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v82qakt7s-1
+        Wed, 25 Sep 2019 21:37:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYQxi078638;
+        Wed, 25 Sep 2019 21:35:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2v82tkrgum-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:35:24 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLZNXS015371;
-        Wed, 25 Sep 2019 21:35:23 GMT
+        Wed, 25 Sep 2019 21:35:29 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLZTp7020486;
+        Wed, 25 Sep 2019 21:35:29 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:35:23 -0700
-Subject: [PATCH 04/11] xfs_scrub: fix queue-and-stash of non-contiguous
- verify requests
+        with ESMTP ; Wed, 25 Sep 2019 14:35:28 -0700
+Subject: [PATCH 05/11] xfs_scrub: only call read_verify_force_io once per
+ pool
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:35:21 -0700
-Message-ID: <156944732174.298887.12947727388057082476.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:35:27 -0700
+Message-ID: <156944732781.298887.18114787426116814408.stgit@magnolia>
 In-Reply-To: <156944728875.298887.8311229116097714980.stgit@magnolia>
 References: <156944728875.298887.8311229116097714980.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,40 +71,100 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-read_verify_schedule_io is supposed to have the ability to decide that a
-retained aggregate extent verification request is not sufficiently
-contiguous with the request that is being scheduled, and therefore it
-needs to queue the retained request and use the new request to start
-building a new aggregate request.
-
-Unfortunately, it stupidly returns after queueing the IO, so we lose the
-incoming request.  Fix the code so we only do that if there's a run time
-error.
+There's no reason we need to call read_verify_force_io every AG; we can
+just let the request aggregation code do its thing and push when we're
+totally done browsing the fsmap information.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/read_verify.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ scrub/phase6.c      |   16 +++++-----------
+ scrub/read_verify.c |   26 +++++++++++++++++---------
+ 2 files changed, 22 insertions(+), 20 deletions(-)
 
 
+diff --git a/scrub/phase6.c b/scrub/phase6.c
+index f6274a49..8063d6ce 100644
+--- a/scrub/phase6.c
++++ b/scrub/phase6.c
+@@ -411,7 +411,7 @@ xfs_check_rmap(
+ 	 */
+ 	if (map->fmr_flags & (FMR_OF_PREALLOC | FMR_OF_ATTR_FORK |
+ 			      FMR_OF_EXTENT_MAP | FMR_OF_SPECIAL_OWNER))
+-		goto out;
++		return true;
+ 
+ 	/* XXX: Filter out directory data blocks. */
+ 
+@@ -423,16 +423,6 @@ xfs_check_rmap(
+ 		return false;
+ 	}
+ 
+-out:
+-	/* Is this the last extent?  Fire off the read. */
+-	if (map->fmr_flags & FMR_OF_LAST) {
+-		ret = read_verify_force_io(rvp);
+-		if (ret) {
+-			str_liberror(ctx, ret, descr);
+-			return false;
+-		}
+-	}
+-
+ 	return true;
+ }
+ 
+@@ -448,6 +438,10 @@ clean_pool(
+ 	if (!rvp)
+ 		return 0;
+ 
++	ret = read_verify_force_io(rvp);
++	if (ret)
++		return ret;
++
+ 	ret = read_verify_pool_flush(rvp);
+ 	if (ret)
+ 		goto out_destroy;
 diff --git a/scrub/read_verify.c b/scrub/read_verify.c
-index 8f80dcaf..980b92b8 100644
+index 980b92b8..73d30817 100644
 --- a/scrub/read_verify.c
 +++ b/scrub/read_verify.c
-@@ -265,8 +265,13 @@ read_verify_schedule_io(
- 		rv->io_length = max(req_end, rv_end) - rv->io_start;
- 	} else  {
- 		/* Otherwise, issue the stashed IO (if there is one) */
--		if (rv->io_length > 0)
--			return read_verify_queue(rvp, rv);
-+		if (rv->io_length > 0) {
-+			int	res;
-+
-+			res = read_verify_queue(rvp, rv);
-+			if (res)
-+				return res;
-+		}
+@@ -282,22 +282,30 @@ read_verify_schedule_io(
+ 	return 0;
+ }
  
- 		/* Stash the new IO. */
- 		rv->io_start = start;
++/* Force any per-thread stashed IOs into the verifier. */
++static int
++force_one_io(
++	struct ptvar		*ptv,
++	void			*data,
++	void			*foreach_arg)
++{
++	struct read_verify_pool	*rvp = foreach_arg;
++	struct read_verify	*rv = data;
++
++	if (rv->io_length == 0)
++		return 0;
++
++	return read_verify_queue(rvp, rv);
++}
++
+ /* Force any stashed IOs into the verifier. */
+ int
+ read_verify_force_io(
+ 	struct read_verify_pool		*rvp)
+ {
+-	struct read_verify		*rv;
+-	int				ret;
+-
+ 	assert(rvp->readbuf);
+-	rv = ptvar_get(rvp->rvstate, &ret);
+-	if (ret)
+-		return ret;
+-	if (rv->io_length == 0)
+-		return 0;
+ 
+-	return read_verify_queue(rvp, rv);
++	return ptvar_foreach(rvp->rvstate, force_one_io, rvp);
+ }
+ 
+ /* How many bytes has this process verified? */
 
