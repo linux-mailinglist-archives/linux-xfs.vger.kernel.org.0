@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8B7BE72F
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:31:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDF3DBE748
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:33:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfIYVbi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:31:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40136 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfIYVbi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:31:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLT2aZ005746;
-        Wed, 25 Sep 2019 21:31:27 GMT
+        id S1727075AbfIYVdh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:33:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57696 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfIYVdh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:33:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTOHM050827;
+        Wed, 25 Sep 2019 21:33:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=akSy6j6WMSmpaMRGS3oKuZrIfAORRpheKg0Cr5+txmw=;
- b=euSLoeGgygil4t7L4zuM0FFyeFFmzX6UbrBqbmsSr9PoMPk7VJ+aR9xnSgwNdJUoQm4Y
- C3kr2iQFdyGPLHYX68HnWK3z1geacJAm77p+s79PLcx5r5BxyRFJSahSYXu8Qlp/B9/f
- +jo+YgFYSO57BQXqm44iejq3nY5mTiNaZHlrtiPxXgzjjSECAHoZApkm4nhUzItblpbU
- EbHL1W/BImmNRUuaBFq2tFno5UJWPiIM6IBS6fMpJwvtu/NMHMqkrM7xmvUtTzU75fK8
- NFAXsiHhwdXIMKHBiAizfSMa2etiZKgW4egrAqQCq1srar/KFGGzMeKG/BjkCKmQ918M qg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2v5btq7hat-1
+ bh=C7Yn5LhFV50oLNuGhuHbeZasL838OVzWKm4729WiPKk=;
+ b=BzukGVddC3oLEPpjZn5bBxlF+ccjfNGXV12Ms75o9luxJrOOxVbSWZeOtqj5mVOMMRv7
+ 2K+25+IgmA/QK7TMJx8vBSNm9oAuxfFc4aTwxlcuZb9ANuNiSNL/qCF5hXYh2bwRVZfi
+ sRNzvI3esI9uUDLHUxVyid/KJJvYnTTFEksGjAGGffdwzkru04Z/0RIX5bTi8IrGcIQo
+ VLJC6iEbQFldy8vam9mU0DrLx9Tfz5RN+JMPinYjkIchzABrO7Ck6bWZL8QJsx576c0b
+ EAVOumKMV1YP8A3D9sv1hEZKffjeMIVXgh8FLJaRKgw8vKKt5C+/XtBXVpVvqIvQtBkT UQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2v5cgr7erb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:31:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTFbF085339;
-        Wed, 25 Sep 2019 21:31:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v82qakmcm-1
+        Wed, 25 Sep 2019 21:33:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTEa8011682;
+        Wed, 25 Sep 2019 21:31:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2v7vnyuhp0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:31:26 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLVPLL013237;
-        Wed, 25 Sep 2019 21:31:25 GMT
+        Wed, 25 Sep 2019 21:31:33 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLVWQL013490;
+        Wed, 25 Sep 2019 21:31:32 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:31:25 -0700
-Subject: [PATCH 3/5] libfrog: add online scrub/repair for superblock counters
+        with ESMTP ; Wed, 25 Sep 2019 14:31:32 -0700
+Subject: [PATCH 4/5] xfs_scrub: separate internal metadata scrub functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Wed, 25 Sep 2019 14:31:23 -0700
-Message-ID: <156944708372.296129.3605667306853139478.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Wed, 25 Sep 2019 14:31:29 -0700
+Message-ID: <156944708984.296129.4265304780428958376.stgit@magnolia>
 In-Reply-To: <156944706528.296129.7604742756772046951.stgit@magnolia>
 References: <156944706528.296129.7604742756772046951.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,65 +70,173 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Wire up the new superblock summary counter ioctls.
+Refactor xfs_scrub_metadata into two functions -- one to make a single
+call xfs_check_metadata, and the second retains the loop logic.  The
+name is a little easy to confuse with other functions, so rename it to
+reflect what it actually does: scrub all internal metadata of a given
+class (AG header, AG metadata, FS metadata).  No functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- libfrog/scrub.c |    6 ++++++
- libfrog/scrub.h |    7 +++++++
- scrub/scrub.c   |    2 ++
- 3 files changed, 15 insertions(+)
+ scrub/scrub.c |  101 +++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 52 insertions(+), 49 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 12c0926f..e9671da2 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -129,6 +129,12 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.descr	= "project quotas",
- 		.type	= XFROG_SCRUB_TYPE_FS,
- 	},
-+	[XFS_SCRUB_TYPE_FSCOUNTERS] = {
-+		.name	= "fscounters",
-+		.descr	= "filesystem summary counters",
-+		.type	= XFROG_SCRUB_TYPE_FS,
-+		.flags	= XFROG_SCRUB_DESCR_SUMMARY,
-+	},
- };
- 
- int
-diff --git a/libfrog/scrub.h b/libfrog/scrub.h
-index 6fda8975..e43d8c24 100644
---- a/libfrog/scrub.h
-+++ b/libfrog/scrub.h
-@@ -20,8 +20,15 @@ struct xfrog_scrub_descr {
- 	const char		*name;
- 	const char		*descr;
- 	enum xfrog_scrub_type	type;
-+	unsigned int		flags;
- };
- 
-+/*
-+ * The type of metadata checked by this scrubber is a summary of other types
-+ * of metadata.  This scrubber should be run after all the others.
-+ */
-+#define XFROG_SCRUB_DESCR_SUMMARY	(1 << 0)
-+
- extern const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR];
- 
- int xfrog_scrub_metadata(struct xfs_fd *xfd, struct xfs_scrub_metadata *meta);
 diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 153d29d5..083ed9a1 100644
+index 083ed9a1..2557da2a 100644
 --- a/scrub/scrub.c
 +++ b/scrub/scrub.c
-@@ -293,6 +293,8 @@ xfs_scrub_metadata(
+@@ -276,47 +276,68 @@ xfs_scrub_save_repair(
+ 	return true;
+ }
+ 
+-/* Scrub metadata, saving corruption reports for later. */
++/* Scrub a single XFS_SCRUB_TYPE_*, saving corruption reports for later. */
++static int
++xfs_scrub_meta_type(
++	struct scrub_ctx		*ctx,
++	unsigned int			type,
++	xfs_agnumber_t			agno,
++	struct xfs_action_list		*alist)
++{
++	struct xfs_scrub_metadata	meta = {
++		.sm_type		= type,
++		.sm_agno		= agno,
++	};
++	enum check_outcome		fix;
++
++	background_sleep();
++
++	/* Check the item. */
++	fix = xfs_check_metadata(ctx, &meta, false);
++	progress_add(1);
++
++	switch (fix) {
++	case CHECK_ABORT:
++		return ECANCELED;
++	case CHECK_REPAIR:
++		if (!xfs_scrub_save_repair(ctx, alist, &meta))
++			return ENOMEM;
++		/* fall through */
++	case CHECK_DONE:
++		return 0;
++	default:
++		/* CHECK_RETRY should never happen. */
++		abort();
++	}
++}
++
++/*
++ * Scrub all metadata types that are assigned to the given XFROG_SCRUB_TYPE_*,
++ * saving corruption reports for later.  This should not be used for
++ * XFROG_SCRUB_TYPE_INODE or for checking summary metadata.
++ */
+ static bool
+-xfs_scrub_metadata(
++xfs_scrub_all_types(
+ 	struct scrub_ctx		*ctx,
+ 	enum xfrog_scrub_type		scrub_type,
+ 	xfs_agnumber_t			agno,
+ 	struct xfs_action_list		*alist)
+ {
+-	struct xfs_scrub_metadata	meta = {0};
+ 	const struct xfrog_scrub_descr	*sc;
+-	enum check_outcome		fix;
+-	int				type;
++	unsigned int			type;
+ 
+ 	sc = xfrog_scrubbers;
  	for (type = 0; type < XFS_SCRUB_TYPE_NR; type++, sc++) {
++		int			ret;
++
  		if (sc->type != scrub_type)
  			continue;
-+		if (sc->flags & XFROG_SCRUB_DESCR_SUMMARY)
-+			continue;
+ 		if (sc->flags & XFROG_SCRUB_DESCR_SUMMARY)
+ 			continue;
  
- 		meta.sm_type = type;
- 		meta.sm_flags = 0;
+-		meta.sm_type = type;
+-		meta.sm_flags = 0;
+-		meta.sm_agno = agno;
+-		background_sleep();
+-
+-		/* Check the item. */
+-		fix = xfs_check_metadata(ctx, &meta, false);
+-		progress_add(1);
+-		switch (fix) {
+-		case CHECK_ABORT:
++		ret = xfs_scrub_meta_type(ctx, type, agno, alist);
++		if (ret)
+ 			return false;
+-		case CHECK_REPAIR:
+-			if (!xfs_scrub_save_repair(ctx, alist, &meta))
+-				return false;
+-			/* fall through */
+-		case CHECK_DONE:
+-			continue;
+-		case CHECK_RETRY:
+-			abort();
+-			break;
+-		}
+ 	}
+ 
+ 	return true;
+@@ -332,28 +353,10 @@ xfs_scrub_primary_super(
+ 	struct scrub_ctx		*ctx,
+ 	struct xfs_action_list		*alist)
+ {
+-	struct xfs_scrub_metadata	meta = {
+-		.sm_type = XFS_SCRUB_TYPE_SB,
+-	};
+-	enum check_outcome		fix;
++	int				ret;
+ 
+-	/* Check the item. */
+-	fix = xfs_check_metadata(ctx, &meta, false);
+-	switch (fix) {
+-	case CHECK_ABORT:
+-		return false;
+-	case CHECK_REPAIR:
+-		if (!xfs_scrub_save_repair(ctx, alist, &meta))
+-			return false;
+-		/* fall through */
+-	case CHECK_DONE:
+-		return true;
+-	case CHECK_RETRY:
+-		abort();
+-		break;
+-	}
+-
+-	return true;
++	ret = xfs_scrub_meta_type(ctx, XFS_SCRUB_TYPE_SB, 0, alist);
++	return ret == 0;
+ }
+ 
+ /* Scrub each AG's header blocks. */
+@@ -363,7 +366,7 @@ xfs_scrub_ag_headers(
+ 	xfs_agnumber_t			agno,
+ 	struct xfs_action_list		*alist)
+ {
+-	return xfs_scrub_metadata(ctx, XFROG_SCRUB_TYPE_AGHEADER, agno, alist);
++	return xfs_scrub_all_types(ctx, XFROG_SCRUB_TYPE_AGHEADER, agno, alist);
+ }
+ 
+ /* Scrub each AG's metadata btrees. */
+@@ -373,7 +376,7 @@ xfs_scrub_ag_metadata(
+ 	xfs_agnumber_t			agno,
+ 	struct xfs_action_list		*alist)
+ {
+-	return xfs_scrub_metadata(ctx, XFROG_SCRUB_TYPE_PERAG, agno, alist);
++	return xfs_scrub_all_types(ctx, XFROG_SCRUB_TYPE_PERAG, agno, alist);
+ }
+ 
+ /* Scrub whole-FS metadata btrees. */
+@@ -382,7 +385,7 @@ xfs_scrub_fs_metadata(
+ 	struct scrub_ctx		*ctx,
+ 	struct xfs_action_list		*alist)
+ {
+-	return xfs_scrub_metadata(ctx, XFROG_SCRUB_TYPE_FS, 0, alist);
++	return xfs_scrub_all_types(ctx, XFROG_SCRUB_TYPE_FS, 0, alist);
+ }
+ 
+ /* How many items do we have to check? */
 
