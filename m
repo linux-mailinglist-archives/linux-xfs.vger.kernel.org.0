@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11B82BE732
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:32:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6C1DBE755
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:34:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfIYVcB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:32:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34520 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfIYVcB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:32:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTGJI053904;
-        Wed, 25 Sep 2019 21:31:49 GMT
+        id S1727183AbfIYVeL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:34:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58158 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfIYVeL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:34:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLT2qT050618;
+        Wed, 25 Sep 2019 21:33:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=WTbMx+eRU6QuTAz7KcUnm200Qz1lUGOx1zaw8N6fE9E=;
- b=sCx3SSXy1CchS7DaPsfZ9qz+vnYqwGJAuPipvmG4hcCaunEwqTiFPytOLbJ7rKe9jfoV
- qibvyadZguL4D7HN4hib5bLU2mB9LzaYytBh8x17Jd4E4GI0rT2NNATJQDQltxOGZ4JO
- AJQ3mkm+/7tz9J5KayxGSw+QwwQbOcS1mIHlJJNrs4P95cu7MZ59Fo8VWboKQi2JtAKH
- dswiDvw5tm5KyK6RtCo1M59Bj+9WjLBiSaSCEcGyPW8ZPlUEaKkN0jGyozXp8UiQWvhn
- +zJVEAUYnAN1GnJ5DwtBmuT8OraOjhRohky46wA8fIbaT4nLoB5zZ82Bi8GteuY9HayA 2g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v5b9tygna-1
+ bh=PLGCz0g+q3R0fzk//ee5GCzfpWRIQI0a75gt/FydX4k=;
+ b=esqDddYYXcH4m6sNLfbFBl78gs3iVqTLHLDEXxJRpPHjN/fN334+MNrLXnZzmOGqA3Gk
+ BSyueY0sFx7o9O3KYXX0UUZuLpLz/xC1iAef7b6DVmm2vwZa/us0/k8NOa7aypQoeg5G
+ WWijU/VPFcBxra6tDmDF/DMn4YMrhfQfayoQltNICmw4+5/f9JCihNQDAXqBBzUavTfh
+ XUU8w/xTL4MrUNrvlFVFbM/L43shCPvAHON/onLEGUmzTowaQnaiH/om8z0ogXANFAQq
+ UgRyS6HXa6KaOBMY+DSkgnhoV1scGTEC2uhkMYmqlaR7NhZpsBx66bV1TqD85jADbM3L /Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2v5cgr7erq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:31:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTMG4066758;
-        Wed, 25 Sep 2019 21:31:48 GMT
+        Wed, 25 Sep 2019 21:33:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLTEuu085297;
+        Wed, 25 Sep 2019 21:31:54 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2v82tkrbvu-1
+        by userp3020.oracle.com with ESMTP id 2v82qakn84-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:31:48 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLVloQ012837;
-        Wed, 25 Sep 2019 21:31:47 GMT
+        Wed, 25 Sep 2019 21:31:53 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLVrN6012891;
+        Wed, 25 Sep 2019 21:31:53 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:31:47 -0700
-Subject: [PATCH 1/3] xfs_scrub: refactor queueing of subdir scan work item
+        with ESMTP ; Wed, 25 Sep 2019 14:31:53 -0700
+Subject: [PATCH 2/3] xfs_scrub: fix nr_dirs accounting problems
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Date:   Wed, 25 Sep 2019 14:31:45 -0700
-Message-ID: <156944710567.296293.3810160283688715808.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:31:51 -0700
+Message-ID: <156944711179.296293.18264050783564894159.stgit@magnolia>
 In-Reply-To: <156944709972.296293.5229534796146134040.stgit@magnolia>
 References: <156944709972.296293.5229534796146134040.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,180 +70,87 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace the open-coded process of queueing a subdirectory for scanning
-with a single helper function.
+When we're scanning the directory tree, we bump nr_dirs every time we
+think we're going to queue a new directory to process, and we decrement
+it every time we're finished doing something with a directory
+(successful or not).  We forgot to undo a counter increment when
+workqueue_add fails, so refactor the code into helpers and call them
+as necessary for correct operation.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- scrub/vfs.c |  109 ++++++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 67 insertions(+), 42 deletions(-)
+ scrub/vfs.c |   42 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 29 insertions(+), 13 deletions(-)
 
 
 diff --git a/scrub/vfs.c b/scrub/vfs.c
-index b5d54837..add4e815 100644
+index add4e815..f8bc98c0 100644
 --- a/scrub/vfs.c
 +++ b/scrub/vfs.c
-@@ -43,6 +43,57 @@ struct scan_fs_tree_dir {
- 	bool			rootdir;
- };
+@@ -45,6 +45,32 @@ struct scan_fs_tree_dir {
  
-+static void scan_fs_dir(struct workqueue *wq, xfs_agnumber_t agno, void *arg);
-+
-+/* Queue a directory for scanning. */
-+static bool
-+queue_subdir(
-+	struct scrub_ctx	*ctx,
-+	struct scan_fs_tree	*sft,
-+	struct workqueue	*wq,
-+	const char		*path,
-+	bool			is_rootdir)
+ static void scan_fs_dir(struct workqueue *wq, xfs_agnumber_t agno, void *arg);
+ 
++/* Increment the number of directories that are queued for processing. */
++static void
++inc_nr_dirs(
++	struct scan_fs_tree	*sft)
 +{
-+	struct scan_fs_tree_dir	*new_sftd;
-+	int			error;
-+
-+	new_sftd = malloc(sizeof(struct scan_fs_tree_dir));
-+	if (!new_sftd) {
-+		str_errno(ctx, _("creating directory scan context"));
-+		return false;
-+	}
-+
-+	new_sftd->path = strdup(path);
-+	if (!new_sftd->path) {
-+		str_errno(ctx, _("creating directory scan path"));
-+		goto out_sftd;
-+	}
-+
-+	new_sftd->sft = sft;
-+	new_sftd->rootdir = is_rootdir;
-+
 +	pthread_mutex_lock(&sft->lock);
 +	sft->nr_dirs++;
 +	pthread_mutex_unlock(&sft->lock);
-+	error = workqueue_add(wq, scan_fs_dir, 0, new_sftd);
-+	if (error) {
-+		/*
-+		 * XXX: need to decrement nr_dirs here; will do that in the
-+		 * next patch.
-+		 */
-+		str_info(ctx, ctx->mntpoint,
-+_("Could not queue subdirectory scan work."));
-+		goto out_path;
-+	}
-+
-+	return true;
-+out_path:
-+	free(new_sftd->path);
-+out_sftd:
-+	free(new_sftd);
-+	return false;
 +}
 +
- /* Scan a directory sub tree. */
- static void
- scan_fs_dir(
-@@ -56,7 +107,6 @@ scan_fs_dir(
- 	DIR			*dir;
- 	struct dirent		*dirent;
- 	char			newpath[PATH_MAX];
--	struct scan_fs_tree_dir	*new_sftd;
- 	struct stat		sb;
- 	int			dir_fd;
- 	int			error;
-@@ -117,25 +167,10 @@ scan_fs_dir(
- 		/* If directory, call ourselves recursively. */
- 		if (S_ISDIR(sb.st_mode) && strcmp(".", dirent->d_name) &&
- 		    strcmp("..", dirent->d_name)) {
--			new_sftd = malloc(sizeof(struct scan_fs_tree_dir));
--			if (!new_sftd) {
--				str_errno(ctx, newpath);
--				sft->moveon = false;
--				break;
--			}
--			new_sftd->path = strdup(newpath);
--			new_sftd->sft = sft;
--			new_sftd->rootdir = false;
--			pthread_mutex_lock(&sft->lock);
--			sft->nr_dirs++;
--			pthread_mutex_unlock(&sft->lock);
--			error = workqueue_add(wq, scan_fs_dir, 0, new_sftd);
--			if (error) {
--				str_info(ctx, ctx->mntpoint,
--_("Could not queue subdirectory scan work."));
--				sft->moveon = false;
-+			sft->moveon = queue_subdir(ctx, sft, wq, newpath,
-+					false);
-+			if (!sft->moveon)
- 				break;
--			}
- 		}
- 	}
- 
-@@ -165,11 +200,10 @@ scan_fs_tree(
- {
- 	struct workqueue	wq;
- 	struct scan_fs_tree	sft;
--	struct scan_fs_tree_dir	*sftd;
- 	int			ret;
- 
- 	sft.moveon = true;
--	sft.nr_dirs = 1;
-+	sft.nr_dirs = 0;
- 	sft.root_sb = ctx->mnt_sb;
- 	sft.dir_fn = dir_fn;
- 	sft.dirent_fn = dirent_fn;
-@@ -177,41 +211,32 @@ scan_fs_tree(
- 	pthread_mutex_init(&sft.lock, NULL);
- 	pthread_cond_init(&sft.wakeup, NULL);
- 
--	sftd = malloc(sizeof(struct scan_fs_tree_dir));
--	if (!sftd) {
--		str_errno(ctx, ctx->mntpoint);
--		return false;
--	}
--	sftd->path = strdup(ctx->mntpoint);
--	sftd->sft = &sft;
--	sftd->rootdir = true;
--
- 	ret = workqueue_create(&wq, (struct xfs_mount *)ctx,
- 			scrub_nproc_workqueue(ctx));
- 	if (ret) {
- 		str_info(ctx, ctx->mntpoint, _("Could not create workqueue."));
--		goto out_free;
-+		return false;
- 	}
--	ret = workqueue_add(&wq, scan_fs_dir, 0, sftd);
--	if (ret) {
--		str_info(ctx, ctx->mntpoint,
--_("Could not queue directory scan work."));
++/*
++ * Decrement the number of directories that are queued for processing and if
++ * we ran out of dirs to process, wake up anyone who was waiting for processing
++ * to finish.
++ */
++static void
++dec_nr_dirs(
++	struct scan_fs_tree	*sft)
++{
++	pthread_mutex_lock(&sft->lock);
++	sft->nr_dirs--;
++	if (sft->nr_dirs == 0)
++		pthread_cond_signal(&sft->wakeup);
++	pthread_mutex_unlock(&sft->lock);
++}
 +
-+	sft.moveon = queue_subdir(ctx, &sft, &wq, ctx->mntpoint, true);
-+	if (!sft.moveon)
- 		goto out_wq;
--	}
+ /* Queue a directory for scanning. */
+ static bool
+ queue_subdir(
+@@ -72,15 +98,10 @@ queue_subdir(
+ 	new_sftd->sft = sft;
+ 	new_sftd->rootdir = is_rootdir;
  
-+	/*
-+	 * Wait for the wakeup to trigger, which should only happen when the
-+	 * last worker thread decrements nr_dirs to zero.  Once the worker
-+	 * triggers the wakeup and unlocks the sft lock, it's no longer safe
-+	 * for any worker thread to access sft, as we now own the lock and are
-+	 * about to tear everything down.
-+	 */
- 	pthread_mutex_lock(&sft.lock);
- 	pthread_cond_wait(&sft.wakeup, &sft.lock);
- 	assert(sft.nr_dirs == 0);
- 	pthread_mutex_unlock(&sft.lock);
--	workqueue_destroy(&wq);
+-	pthread_mutex_lock(&sft->lock);
+-	sft->nr_dirs++;
+-	pthread_mutex_unlock(&sft->lock);
++	inc_nr_dirs(sft);
+ 	error = workqueue_add(wq, scan_fs_dir, 0, new_sftd);
+ 	if (error) {
+-		/*
+-		 * XXX: need to decrement nr_dirs here; will do that in the
+-		 * next patch.
+-		 */
++		dec_nr_dirs(sft);
+ 		str_info(ctx, ctx->mntpoint,
+ _("Could not queue subdirectory scan work."));
+ 		goto out_path;
+@@ -180,12 +201,7 @@ scan_fs_dir(
+ 		str_errno(ctx, sftd->path);
  
--	return sft.moveon;
- out_wq:
- 	workqueue_destroy(&wq);
--out_free:
--	free(sftd->path);
--	free(sftd);
--	return false;
-+	return sft.moveon;
+ out:
+-	pthread_mutex_lock(&sft->lock);
+-	sft->nr_dirs--;
+-	if (sft->nr_dirs == 0)
+-		pthread_cond_signal(&sft->wakeup);
+-	pthread_mutex_unlock(&sft->lock);
+-
++	dec_nr_dirs(sft);
+ 	free(sftd->path);
+ 	free(sftd);
  }
- 
- #ifndef FITRIM
 
