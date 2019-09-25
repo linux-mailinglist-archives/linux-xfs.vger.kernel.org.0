@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0561FBE7A5
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C12BE78C
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:37:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfIYViz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:38:55 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47250 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbfIYViz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:38:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYQcD009886;
-        Wed, 25 Sep 2019 21:38:53 GMT
+        id S1727868AbfIYVhB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:37:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:32988 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfIYVhB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:37:01 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYc3h055018;
+        Wed, 25 Sep 2019 21:36:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=4h3OQuBn8pRUP0g/Wi+oBN7oH8p3EQKoSQamm3fBr9w=;
- b=YX5ohGbu1bmUqBmZXTW8YSiCdWw7C4yP1uhmvzVgJnJM2LkoEEfSaz2HM/laDNZHKkTq
- 2DQM0aP5JetLOrG1XNeZla83nXVe9mzKUfyKH8Rv9FgZ/dahrRtbsdZQaK9V0EUi/yAw
- Jbkz4hM4CE5GEfRQDOcoQZa958RKRp9Xznt0vzOhKWHJSV0vOD/3tcviTJG2M0QWklxd
- /ecqz+HnXaZeSoIaplh5RZmJ+XHPJXgfz/WhyDcwHVgUSMHZszHHskEmUmqIE6I0X97Z
- KUa7dqYEwkPEaIB0sszQXf3EhwWmcfBGFFnc8hvKBverKPZLz3kj8mF+DTxI3MKUVyQ2 gQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2v5btq7j3t-1
+ bh=wzEqYcM9uFZaX8olf5yaSwN0FKy3KOJJZG54g/+fHfA=;
+ b=gP9Fvdm+nCQx8anOcKK5QwmlkFBbetsavBotV9tLMj9yauWrKzT7ylkntsn+I591G33n
+ HKdLe5psuIROmkHWaknnUHZDVNm061lSs9sY49OXHh+zaBYo7c1GNCBzCp4knkUiWdpt
+ ehkcBS8wnNlkcrd9HIJkE1RQkXPhYD3wBrClmQLbPBoWy2EsheE+WQQ3CuIvfK9p/c6d
+ /fEdoIqV9+qQC12N9DfXqLDawVLGiGosINXPq2d89GxIv3Xiz36J0ByVLxkmX+j5wAtI
+ SeH4WHgbShiXQ0WREpeYPH+uNtEwAszVgMY4ghzqxGqlj75mNLtLWeddNEHdlRS3qYuG pA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v5cgr7f4u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:38:53 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYPgE078623;
-        Wed, 25 Sep 2019 21:36:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2v82tkrk65-1
+        Wed, 25 Sep 2019 21:36:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYRsr011398;
+        Wed, 25 Sep 2019 21:36:58 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2v829w52nw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:36:52 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLapir015693;
-        Wed, 25 Sep 2019 21:36:51 GMT
+        Wed, 25 Sep 2019 21:36:58 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLavnT016460;
+        Wed, 25 Sep 2019 21:36:57 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:36:51 -0700
-Subject: [PATCH 07/11] xfs_scrub: request fewer bmaps when we can
+        with ESMTP ; Wed, 25 Sep 2019 14:36:57 -0700
+Subject: [PATCH 08/11] xfs_scrub: fix media verification thread pool size
+ calculations
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:36:50 -0700
-Message-ID: <156944741018.300131.13838435268141846825.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:36:56 -0700
+Message-ID: <156944741622.300131.15141442959494340981.stgit@magnolia>
 In-Reply-To: <156944736739.300131.5717633994765951730.stgit@magnolia>
 References: <156944736739.300131.5717633994765951730.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1909250174
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1909250174
@@ -70,34 +71,54 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-In xfs_iterate_filemaps, we query the number of bmaps for a given file
-that we're going to iterate, so feed that information to bmap so that
-the kernel won't waste time allocating in-kernel memory unnecessarily.
+The read verifier pool deals with two different thread counts -- there's
+the submitter thread count that enables us to perform per-thread verify
+request aggregation, and then there's the io thread pool count which is
+the maximum number of IO requests we want to send to the disk at any
+given time.
+
+The io thread pool count should be derived from disk_heads() but instead
+we bungle it by measuring and modifying(!) the nproc global variable.
+Fix the derivation to use global variables correctly.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/filemap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scrub/read_verify.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 
-diff --git a/scrub/filemap.c b/scrub/filemap.c
-index bdc6d8f9..aaaa0521 100644
---- a/scrub/filemap.c
-+++ b/scrub/filemap.c
-@@ -71,7 +71,6 @@ xfs_iterate_filemaps(
- 		map->bmv_length = ULLONG_MAX;
- 	else
- 		map->bmv_length = BTOBB(key->bm_length);
--	map->bmv_count = BMAP_NR;
- 	map->bmv_iflags = BMV_IF_NO_DMAPI_READ | BMV_IF_PREALLOC |
- 			  BMV_IF_NO_HOLES;
- 	switch (whichfork) {
-@@ -96,6 +95,7 @@ xfs_iterate_filemaps(
- 		moveon = false;
- 		goto out;
- 	}
-+	map->bmv_count = min(fsx.fsx_nextents + 2, BMAP_NR);
+diff --git a/scrub/read_verify.c b/scrub/read_verify.c
+index 3dac10ce..834571a7 100644
+--- a/scrub/read_verify.c
++++ b/scrub/read_verify.c
+@@ -75,6 +75,7 @@ read_verify_pool_alloc(
+ 	struct read_verify_pool		**prvp)
+ {
+ 	struct read_verify_pool		*rvp;
++	unsigned int			verifier_threads = disk_heads(disk);
+ 	int				ret;
  
- 	while ((error = ioctl(fd, XFS_IOC_GETBMAPX, map)) == 0) {
- 		for (i = 0, p = &map[i + 1]; i < map->bmv_entries; i++, p++) {
+ 	/*
+@@ -94,7 +95,7 @@ read_verify_pool_alloc(
+ 			RVP_IO_MAX_SIZE);
+ 	if (ret)
+ 		goto out_free;
+-	ret = ptcounter_alloc(nproc, &rvp->verified_bytes);
++	ret = ptcounter_alloc(verifier_threads, &rvp->verified_bytes);
+ 	if (ret)
+ 		goto out_buf;
+ 	rvp->miniosz = miniosz;
+@@ -106,11 +107,8 @@ read_verify_pool_alloc(
+ 			&rvp->rvstate);
+ 	if (ret)
+ 		goto out_counter;
+-	/* Run in the main thread if we only want one thread. */
+-	if (nproc == 1)
+-		nproc = 0;
+ 	ret = workqueue_create(&rvp->wq, (struct xfs_mount *)rvp,
+-			disk_heads(disk));
++			verifier_threads == 1 ? 0 : verifier_threads);
+ 	if (ret)
+ 		goto out_rvstate;
+ 	*prvp = rvp;
 
