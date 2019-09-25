@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A45FFBE7B2
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E358ABE7AB
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfIYVjd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:39:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42370 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbfIYVjd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:39:33 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdP8H061402;
-        Wed, 25 Sep 2019 21:39:31 GMT
+        id S1728667AbfIYVj1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:39:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47922 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfIYVj1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:39:27 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdPit013249;
+        Wed, 25 Sep 2019 21:39:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=9n7aAyJxr2uuek0BB0yzrnnsApretCn81GOGkvhZ96s=;
- b=ldGnyLd9e25XkZBlWbFq3+2Lrx2zWCOQUk2efgm1ZOESzwAruxaaMTXGTBj899+W+lJV
- JieS2bVoTiQxWgjNSREAUJmfjdIc6/iIjhOElz9BCyEqJt3/VG7s6fXVjTicWCYNmIRr
- 27A7uU1Sdsa8zxzNuDtZDXRbSMn05fJ4ssD+MUcuBCcgHHLQCBnzng4g48UeArf3aFD/
- 5c9iI7lv9XyThjgTYI8yWuDwzqZ3JQXI+m2S0J0MBUP+AVp8m1pAB8RwHTBF3AYxYkYE
- sdKyx9pNqVtE7//iEKmffPmSOLP3NkdZefyK2jo7/yA9vL/060gVYiuYHtOdpA8c6J/F 4w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v5b9tyhk9-1
+ bh=nRnwG5U/yj0CH9oqmR92YrbN7u01zu31QvkgIhf904s=;
+ b=ARoyBKlp7wj8r6Jzs2vnS3bxMxukXOxL3U62t7D+4GC+hbZ3NeT9YaZVYnPZmgDxQ6jf
+ 5D8I/R+y6+GdNR9lQOWIMZp+VMvs9tZ+dRVjdzgUiJa3EqfGDczpqUvSbwhQufAhAfDY
+ jO/CmCOj/IwJsCDLth0b0x1ERu3GTEFJUJTB1ozrH415JeFalHHNWZhSqaxCw9pEaxNa
+ ZNFxJ6GwO/90Gj9dx3SIaGh8szVK42Pooff2DMJ2gUajfBkYPrfkVVtY+azToYznQLuM
+ QHxFigLdDIf0pdsp1T2knyjxLKBCDWCsIJLTXZieP6RvwgBIMaJbKXgudPILDid4iD8k Eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v5btq7j50-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:39:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdMsv088291;
-        Wed, 25 Sep 2019 21:39:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2v82tkrne2-1
+        Wed, 25 Sep 2019 21:39:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdHuu021222;
+        Wed, 25 Sep 2019 21:39:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2v829w54mr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:39:26 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLcCK9016614;
-        Wed, 25 Sep 2019 21:38:12 GMT
+        Wed, 25 Sep 2019 21:39:16 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLcIZ8017322;
+        Wed, 25 Sep 2019 21:38:18 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:38:12 -0700
-Subject: [PATCH 01/18] xfs_scrub: remove moveon from filemap iteration
+        with ESMTP ; Wed, 25 Sep 2019 14:38:18 -0700
+Subject: [PATCH 02/18] xfs_scrub: remove moveon from the fscounters functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:38:11 -0700
-Message-ID: <156944749101.301514.18189560901670495472.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:38:17 -0700
+Message-ID: <156944749712.301514.7316631922258071675.stgit@magnolia>
 In-Reply-To: <156944748487.301514.14685083474028866113.stgit@magnolia>
 References: <156944748487.301514.14685083474028866113.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,327 +70,307 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Remove the moveon and descr clutter from filemap iteration in favor of
-returning errors directly and passing error domain descriptions around
-through the existing void *arg.
+Replace the moveon returns in the fscounters functions with direct error
+returns.  Drop the xfs_ prefixes while we're at it.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/filemap.c |   70 ++++++++++++++++-----------------------------
- scrub/filemap.h |   12 +++-----
- scrub/phase6.c  |   86 ++++++++++++++++++++++++++++++-------------------------
- 3 files changed, 77 insertions(+), 91 deletions(-)
+ scrub/fscounters.c |  129 ++++++++++++++++++++--------------------------------
+ scrub/fscounters.h |    4 +-
+ scrub/phase6.c     |   12 +++--
+ scrub/phase7.c     |   15 ++++--
+ 4 files changed, 68 insertions(+), 92 deletions(-)
 
 
-diff --git a/scrub/filemap.c b/scrub/filemap.c
-index aaaa0521..9d157bab 100644
---- a/scrub/filemap.c
-+++ b/scrub/filemap.c
-@@ -23,47 +23,31 @@
+diff --git a/scrub/fscounters.c b/scrub/fscounters.c
+index 98aa3826..2581947f 100644
+--- a/scrub/fscounters.c
++++ b/scrub/fscounters.c
+@@ -25,8 +25,8 @@
+ /* Count the number of inodes in the filesystem. */
  
- #define BMAP_NR		2048
+ /* INUMBERS wrapper routines. */
+-struct xfs_count_inodes {
+-	bool			moveon;
++struct count_inodes {
++	int			error;
+ 	uint64_t		counters[0];
+ };
  
--/* Iterate all the extent block mappings between the key and fork end. */
--bool
--xfs_iterate_filemaps(
-+/*
-+ * Iterate all the extent block mappings between the key and fork end.
-+ * Returns 0 or a positive error number.
-+ */
-+int
-+scrub_iterate_filemaps(
- 	struct scrub_ctx	*ctx,
+@@ -34,13 +34,14 @@ struct xfs_count_inodes {
+  * Count the number of inodes.  Use INUMBERS to figure out how many inodes
+  * exist in the filesystem, assuming we've already scrubbed that.
+  */
+-static bool
+-xfs_count_inodes_ag(
+-	struct scrub_ctx	*ctx,
 -	const char		*descr,
- 	int			fd,
- 	int			whichfork,
--	struct xfs_bmap		*key,
--	xfs_bmap_iter_fn	fn,
-+	struct file_bmap	*key,
-+	scrub_bmap_iter_fn	fn,
- 	void			*arg)
+-	uint32_t		agno,
+-	uint64_t		*count)
++static void
++count_ag_inodes(
++	struct workqueue	*wq,
++	xfs_agnumber_t		agno,
++	void			*arg)
  {
- 	struct fsxattr		fsx;
- 	struct getbmapx		*map;
- 	struct getbmapx		*p;
--	struct xfs_bmap		bmap;
--	char			bmap_descr[DESCR_BUFSZ];
--	bool			moveon = true;
-+	struct file_bmap	bmap;
- 	xfs_off_t		new_off;
- 	int			getxattr_type;
- 	int			i;
--	int			error;
--
--	switch (whichfork) {
--	case XFS_ATTR_FORK:
--		snprintf(bmap_descr, DESCR_BUFSZ, _("%s attr"), descr);
--		break;
--	case XFS_COW_FORK:
--		snprintf(bmap_descr, DESCR_BUFSZ, _("%s CoW"), descr);
--		break;
--	case XFS_DATA_FORK:
--		snprintf(bmap_descr, DESCR_BUFSZ, _("%s data"), descr);
--		break;
--	default:
--		abort();
--	}
-+	int			ret;
++	struct count_inodes	*ci = arg;
++	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+ 	struct xfs_inumbers_req	*ireq;
+ 	uint64_t		nr = 0;
+ 	unsigned int		i;
+@@ -48,107 +49,78 @@ xfs_count_inodes_ag(
  
- 	map = calloc(BMAP_NR, sizeof(struct getbmapx));
--	if (!map) {
--		str_errno(ctx, bmap_descr);
+ 	ireq = xfrog_inumbers_alloc_req(64, 0);
+ 	if (!ireq) {
+-		str_info(ctx, descr, _("Insufficient memory; giving up."));
+-		return false;
++		ci->error = errno;
++		return;
+ 	}
+ 	xfrog_inumbers_set_ag(ireq, agno);
+ 
+-	while (!(error = xfrog_inumbers(&ctx->mnt, ireq))) {
++	while (!ci->error && (error = xfrog_inumbers(&ctx->mnt, ireq)) == 0) {
+ 		if (ireq->hdr.ocount == 0)
+ 			break;
+ 		for (i = 0; i < ireq->hdr.ocount; i++)
+ 			nr += ireq->inumbers[i].xi_alloccount;
+ 	}
++	if (error)
++		ci->error = error;
+ 
+ 	free(ireq);
+ 
+-	if (error) {
+-		str_liberror(ctx, error, descr);
 -		return false;
 -	}
-+	if (!map)
+-
+-	*count = nr;
+-	return true;
+-}
+-
+-/* Scan all the inodes in an AG. */
+-static void
+-xfs_count_ag_inodes(
+-	struct workqueue	*wq,
+-	xfs_agnumber_t		agno,
+-	void			*arg)
+-{
+-	struct xfs_count_inodes	*ci = arg;
+-	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+-	char			descr[DESCR_BUFSZ];
+-	bool			moveon;
+-
+-	snprintf(descr, DESCR_BUFSZ, _("dev %d:%d AG %u inodes"),
+-				major(ctx->fsinfo.fs_datadev),
+-				minor(ctx->fsinfo.fs_datadev),
+-				agno);
+-
+-	moveon = xfs_count_inodes_ag(ctx, descr, agno, &ci->counters[agno]);
+-	if (!moveon)
+-		ci->moveon = false;
++	ci->counters[agno] = nr;
+ }
+ 
+-/* Count all the inodes in a filesystem. */
+-bool
+-xfs_count_all_inodes(
++/*
++ * Count all the inodes in a filesystem.  Returns 0 or a positive error number.
++ */
++int
++scrub_count_all_inodes(
+ 	struct scrub_ctx	*ctx,
+ 	uint64_t		*count)
+ {
+-	struct xfs_count_inodes	*ci;
++	struct count_inodes	*ci;
+ 	xfs_agnumber_t		agno;
+ 	struct workqueue	wq;
+-	bool			moveon = true;
+-	int			ret;
++	int			ret, ret2;
+ 
+-	ci = calloc(1, sizeof(struct xfs_count_inodes) +
++	ci = calloc(1, sizeof(struct count_inodes) +
+ 			(ctx->mnt.fsgeom.agcount * sizeof(uint64_t)));
+ 	if (!ci)
+-		return false;
+-	ci->moveon = true;
 +		return errno;
  
- 	map->bmv_offset = BTOBB(key->bm_offset);
- 	map->bmv_block = BTOBB(key->bm_physical);
-@@ -89,28 +73,25 @@ xfs_iterate_filemaps(
- 		abort();
- 	}
- 
--	error = ioctl(fd, getxattr_type, &fsx);
--	if (error < 0) {
--		str_errno(ctx, bmap_descr);
+ 	ret = workqueue_create(&wq, (struct xfs_mount *)ctx,
+ 			scrub_nproc_workqueue(ctx));
+-	if (ret) {
 -		moveon = false;
-+	ret = ioctl(fd, getxattr_type, &fsx);
-+	if (ret < 0) {
-+		ret = errno;
- 		goto out;
- 	}
+-		str_liberror(ctx, ret, _("creating icount workqueue"));
++	if (ret)
+ 		goto out_free;
+-	}
+-	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++) {
+-		ret = workqueue_add(&wq, xfs_count_ag_inodes, agno, ci);
+-		if (ret) {
+-			moveon = false;
+-			str_liberror(ctx, ret, _("queueing icount work"));
 +
- 	map->bmv_count = min(fsx.fsx_nextents + 2, BMAP_NR);
- 
--	while ((error = ioctl(fd, XFS_IOC_GETBMAPX, map)) == 0) {
-+	while ((ret = ioctl(fd, XFS_IOC_GETBMAPX, map)) == 0) {
- 		for (i = 0, p = &map[i + 1]; i < map->bmv_entries; i++, p++) {
- 			bmap.bm_offset = BBTOB(p->bmv_offset);
- 			bmap.bm_physical = BBTOB(p->bmv_block);
- 			bmap.bm_length = BBTOB(p->bmv_length);
- 			bmap.bm_flags = p->bmv_oflags;
--			moveon = fn(ctx, bmap_descr, fd, whichfork, &fsx,
--					&bmap, arg);
--			if (!moveon)
-+			ret = fn(ctx, fd, whichfork, &fsx, &bmap, arg);
-+			if (ret)
- 				goto out;
--			if (xfs_scrub_excessive_errors(ctx)) {
--				moveon = false;
-+			if (xfs_scrub_excessive_errors(ctx))
- 				goto out;
--			}
- 		}
- 
- 		if (map->bmv_entries == 0)
-@@ -123,17 +104,16 @@ xfs_iterate_filemaps(
- 		map->bmv_length -= new_off - map->bmv_offset;
- 		map->bmv_offset = new_off;
++	for (agno = 0; agno < ctx->mnt.fsgeom.agcount && !ci->error; agno++) {
++		ret = workqueue_add(&wq, count_ag_inodes, agno, ci);
++		if (ret)
+ 			break;
+-		}
  	}
-+	if (ret < 0)
-+		ret = errno;
  
- 	/*
- 	 * Pre-reflink filesystems don't know about CoW forks, so don't
- 	 * be too surprised if it fails.
- 	 */
--	if (whichfork == XFS_COW_FORK && error && errno == EINVAL)
--		error = 0;
--
--	if (error)
--		str_errno(ctx, bmap_descr);
-+	if (whichfork == XFS_COW_FORK && ret == EINVAL)
-+		ret = 0;
- out:
- 	free(map);
+-	ret = workqueue_terminate(&wq);
+-	if (ret) {
+-		moveon = false;
+-		str_liberror(ctx, ret, _("finishing icount work"));
+-	}
++	ret2 = workqueue_terminate(&wq);
++	if (!ret && ret2)
++		ret = ret2;
+ 	workqueue_destroy(&wq);
+ 
+-	if (!moveon)
++	if (ci->error) {
++		ret = ci->error;
+ 		goto out_free;
++	}
+ 
+ 	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++)
+ 		*count += ci->counters[agno];
+-	moveon = ci->moveon;
+ 
+ out_free:
+ 	free(ci);
 -	return moveon;
 +	return ret;
  }
-diff --git a/scrub/filemap.h b/scrub/filemap.h
-index cb331729..c2fd9cb0 100644
---- a/scrub/filemap.h
-+++ b/scrub/filemap.h
-@@ -7,19 +7,17 @@
- #define XFS_SCRUB_FILEMAP_H_
  
- /* inode fork block mapping */
--struct xfs_bmap {
-+struct file_bmap {
- 	uint64_t	bm_offset;	/* file offset of segment in bytes */
- 	uint64_t	bm_physical;	/* physical starting byte  */
- 	uint64_t	bm_length;	/* length of segment, bytes */
- 	uint32_t	bm_flags;	/* output flags */
- };
- 
--typedef bool (*xfs_bmap_iter_fn)(struct scrub_ctx *ctx, const char *descr,
--		int fd, int whichfork, struct fsxattr *fsx,
--		struct xfs_bmap *bmap, void *arg);
-+typedef int (*scrub_bmap_iter_fn)(struct scrub_ctx *ctx, int fd, int whichfork,
-+		struct fsxattr *fsx, struct file_bmap *bmap, void *arg);
- 
--bool xfs_iterate_filemaps(struct scrub_ctx *ctx, const char *descr, int fd,
--		int whichfork, struct xfs_bmap *key, xfs_bmap_iter_fn fn,
--		void *arg);
-+int scrub_iterate_filemaps(struct scrub_ctx *ctx, int fd, int whichfork,
-+		struct file_bmap *key, scrub_bmap_iter_fn fn, void *arg);
- 
- #endif /* XFS_SCRUB_FILEMAP_H_ */
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 7bfb856a..3c9eec09 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -112,9 +112,10 @@ xfs_decode_special_owner(
- /* Routines to translate bad physical extents into file paths and offsets. */
- 
- struct badfile_report {
--	struct scrub_ctx	*ctx;
--	const char		*descr;
--	struct xfs_bmap		*bmap;
-+	struct scrub_ctx		*ctx;
-+	const char			*descr;
-+	struct media_verify_state	*vs;
-+	struct file_bmap		*bmap;
- };
- 
- /* Report on bad extents found during a media scan. */
-@@ -147,77 +148,68 @@ _("media error at data offset %llu length %llu."),
- }
- 
- /* Report if this extent overlaps a bad region. */
--static bool
-+static int
- report_data_loss(
+-/* Estimate the number of blocks and inodes in the filesystem. */
+-bool
+-xfs_scan_estimate_blocks(
++/*
++ * Estimate the number of blocks and inodes in the filesystem.  Returns 0
++ * or a positive error number.
++ */
++int
++scrub_scan_estimate_blocks(
  	struct scrub_ctx		*ctx,
--	const char			*descr,
- 	int				fd,
- 	int				whichfork,
- 	struct fsxattr			*fsx,
--	struct xfs_bmap			*bmap,
-+	struct file_bmap		*bmap,
- 	void				*arg)
- {
--	struct badfile_report		br = {
--		.ctx			= ctx,
--		.descr			= descr,
--		.bmap			= bmap,
--	};
--	struct media_verify_state	*vs = arg;
-+	struct badfile_report		*br = arg;
-+	struct media_verify_state	*vs = br->vs;
- 	struct bitmap			*bmp;
--	int				ret;
-+
-+	br->bmap = bmap;
+ 	unsigned long long		*d_blocks,
+ 	unsigned long long		*d_bfree,
+@@ -164,17 +136,13 @@ xfs_scan_estimate_blocks(
  
- 	/* Only report errors for real extents. */
- 	if (scrub_data < 3 && (bmap->bm_flags & BMV_OF_PREALLOC))
--		return true;
-+		return 0;
- 	if (bmap->bm_flags & BMV_OF_DELALLOC)
--		return true;
-+		return 0;
- 
- 	if (fsx->fsx_xflags & FS_XFLAG_REALTIME)
- 		bmp = vs->r_bad;
- 	else
- 		bmp = vs->d_bad;
- 
--	ret = bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
--			report_badfile, &br);
--	if (ret) {
--		str_liberror(ctx, ret, descr);
+ 	/* Grab the fstatvfs counters, since it has to report accurately. */
+ 	error = fstatvfs(ctx->mnt.fd, &sfs);
+-	if (error) {
+-		str_errno(ctx, ctx->mntpoint);
 -		return false;
 -	}
--	return true;
-+	return bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
-+			report_badfile, br);
- }
++	if (error)
++		return errno;
  
- /* Report if the extended attribute data overlaps a bad region. */
--static bool
-+static int
- report_attr_loss(
- 	struct scrub_ctx		*ctx,
--	const char			*descr,
- 	int				fd,
- 	int				whichfork,
- 	struct fsxattr			*fsx,
--	struct xfs_bmap			*bmap,
-+	struct file_bmap		*bmap,
- 	void				*arg)
- {
--	struct media_verify_state	*vs = arg;
-+	struct badfile_report		*br = arg;
-+	struct media_verify_state	*vs = br->vs;
- 	struct bitmap			*bmp = vs->d_bad;
+ 	/* Fetch the filesystem counters. */
+ 	error = ioctl(ctx->mnt.fd, XFS_IOC_FSCOUNTS, &fc);
+-	if (error) {
+-		str_errno(ctx, ctx->mntpoint);
+-		return false;
+-	}
++	if (error)
++		return errno;
  
- 	/* Complain about attr fork extents that don't look right. */
- 	if (bmap->bm_flags & (BMV_OF_PREALLOC | BMV_OF_DELALLOC)) {
--		str_info(ctx, descr,
-+		str_info(ctx, br->descr,
- _("found unexpected unwritten/delalloc attr fork extent."));
--		return true;
-+		return 0;
- 	}
+ 	/*
+ 	 * XFS reserves some blocks to prevent hard ENOSPC, so add those
+@@ -182,7 +150,8 @@ xfs_scan_estimate_blocks(
+ 	 */
+ 	error = ioctl(ctx->mnt.fd, XFS_IOC_GET_RESBLKS, &rb);
+ 	if (error)
+-		str_errno(ctx, ctx->mntpoint);
++		return errno;
++
+ 	sfs.f_bfree += rb.resblks_avail;
  
- 	if (fsx->fsx_xflags & FS_XFLAG_REALTIME) {
--		str_info(ctx, descr,
-+		str_info(ctx, br->descr,
- _("found unexpected realtime attr fork extent."));
--		return true;
-+		return 0;
- 	}
- 
- 	if (bitmap_test(bmp, bmap->bm_physical, bmap->bm_length))
--		str_error(ctx, descr,
-+		str_error(ctx, br->descr,
- _("media error in extended attribute data."));
+ 	*d_blocks = sfs.f_blocks;
+@@ -194,5 +163,5 @@ xfs_scan_estimate_blocks(
+ 	*f_files = sfs.f_files;
+ 	*f_free = sfs.f_ffree;
  
 -	return true;
 +	return 0;
  }
+diff --git a/scrub/fscounters.h b/scrub/fscounters.h
+index e3a79740..1fae58a6 100644
+--- a/scrub/fscounters.h
++++ b/scrub/fscounters.h
+@@ -6,10 +6,10 @@
+ #ifndef XFS_SCRUB_FSCOUNTERS_H_
+ #define XFS_SCRUB_FSCOUNTERS_H_
  
- /* Iterate the extent mappings of a file to report errors. */
-@@ -228,18 +220,34 @@ xfs_report_verify_fd(
- 	int				fd,
- 	void				*arg)
- {
--	struct xfs_bmap			key = {0};
--	bool				moveon;
-+	struct badfile_report		br = {
-+		.ctx			= ctx,
-+		.vs			= arg,
-+	};
-+	struct file_bmap		key = {0};
-+	char				bmap_descr[DESCR_BUFSZ];
-+	int				ret;
-+
-+	br.descr = bmap_descr;
+-bool xfs_scan_estimate_blocks(struct scrub_ctx *ctx,
++int scrub_scan_estimate_blocks(struct scrub_ctx *ctx,
+ 		unsigned long long *d_blocks, unsigned long long *d_bfree,
+ 		unsigned long long *r_blocks, unsigned long long *r_bfree,
+ 		unsigned long long *f_files, unsigned long long *f_free);
+-bool xfs_count_all_inodes(struct scrub_ctx *ctx, uint64_t *count);
++int scrub_count_all_inodes(struct scrub_ctx *ctx, uint64_t *count);
  
- 	/* data fork */
--	moveon = xfs_iterate_filemaps(ctx, descr, fd, XFS_DATA_FORK, &key,
--			report_data_loss, arg);
+ #endif /* XFS_SCRUB_FSCOUNTERS_H_ */
+diff --git a/scrub/phase6.c b/scrub/phase6.c
+index 3c9eec09..7607001a 100644
+--- a/scrub/phase6.c
++++ b/scrub/phase6.c
+@@ -779,17 +779,19 @@ xfs_estimate_verify_work(
+ 	unsigned long long	r_bfree;
+ 	unsigned long long	f_files;
+ 	unsigned long long	f_free;
+-	bool			moveon;
++	int			ret;
+ 
+-	moveon = xfs_scan_estimate_blocks(ctx, &d_blocks, &d_bfree,
++	ret = scrub_scan_estimate_blocks(ctx, &d_blocks, &d_bfree,
+ 				&r_blocks, &r_bfree, &f_files, &f_free);
 -	if (!moveon)
-+	snprintf(bmap_descr, DESCR_BUFSZ, _("%s data"), descr);
-+	ret = scrub_iterate_filemaps(ctx, fd, XFS_DATA_FORK, &key,
-+			report_data_loss, &br);
+-		return moveon;
 +	if (ret) {
-+		str_liberror(ctx, ret, bmap_descr);
- 		return false;
-+	}
- 
- 	/* attr fork */
--	return xfs_iterate_filemaps(ctx, descr, fd, XFS_ATTR_FORK, &key,
--			report_attr_loss, arg);
-+	snprintf(bmap_descr, DESCR_BUFSZ, _("%s attr"), descr);
-+	ret = scrub_iterate_filemaps(ctx, fd, XFS_ATTR_FORK, &key,
-+			report_attr_loss, &br);
-+	if (ret) {
-+		str_liberror(ctx, ret, bmap_descr);
++		str_liberror(ctx, ret, _("estimating verify work"));
 +		return false;
 +	}
+ 
+ 	*items = cvt_off_fsb_to_b(&ctx->mnt, d_blocks + r_blocks);
+ 	if (scrub_data == 1)
+ 		*items -= cvt_off_fsb_to_b(&ctx->mnt, d_bfree + r_bfree);
+ 	*nr_threads = disk_heads(ctx->datadev);
+ 	*rshift = 20;
+-	return moveon;
 +	return true;
  }
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 2622bc45..64e52359 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -156,14 +156,19 @@ xfs_scan_summary(
+ 	ptvar_free(ptvar);
  
- /* Report read verify errors in unlinked (but still open) files. */
+ 	/* Scan the whole fs. */
+-	moveon = xfs_count_all_inodes(ctx, &counted_inodes);
+-	if (!moveon)
++	error = scrub_count_all_inodes(ctx, &counted_inodes);
++	if (error) {
++		str_liberror(ctx, error, _("counting inodes"));
++		moveon = false;
+ 		goto out;
++	}
+ 
+-	moveon = xfs_scan_estimate_blocks(ctx, &d_blocks, &d_bfree, &r_blocks,
++	error = scrub_scan_estimate_blocks(ctx, &d_blocks, &d_bfree, &r_blocks,
+ 			&r_bfree, &f_files, &f_free);
+-	if (!moveon)
+-		return moveon;
++	if (error) {
++		str_liberror(ctx, error, _("estimating verify work"));
++		return false;
++	}
+ 
+ 	/*
+ 	 * If we counted blocks with fsmap, then dblocks includes
 
