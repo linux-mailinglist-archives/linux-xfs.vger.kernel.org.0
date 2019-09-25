@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3702BE7A4
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA6E6BE788
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfIYVib (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:38:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41104 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfIYVib (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:38:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYc7t058172;
-        Wed, 25 Sep 2019 21:38:28 GMT
+        id S1727855AbfIYVgh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:36:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45202 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfIYVgh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:36:37 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYO9t009867;
+        Wed, 25 Sep 2019 21:36:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=QYa0J/56ik0cVNr/8sYuAIpx/THjsj3tnlpDeE/UnGA=;
- b=j9lYwo8n8Ld5YUt/jwkTqUUR8ZUlQom635SIRSYYbnjwGsATfzC/Qc6Ie3cAu/HCms3V
- Tb3d8OrQWBg72mDHS4dK2Yr7LpGh/y5Y+pVJPHlMJvo7pnU2Ey0RP0YSl2E8TzsrIpDJ
- 4hL8rgF6VGdXBZmVSivyLNTl/mx8B3CWVSn+iAZ8CO7i2q4NIgSaAd9Q6lK0k3u/CM5E
- QxY3DKDopkIh6hrZZFGwRj/wtpPZ5TN7ESXhyqMIbju/KycWdmp1pYzMSQC69KDw0SjQ
- fSZtFFKeCGhx04a8UbU6Nx02tmQJCtxxXZ/5P/U7rN3njK6W7sMBp309c4MCIFzwxjpj KA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v5b9tyhe3-1
+ bh=rzTlZzfpq3322fRMTaFPFb0G9ApAMzqkOoXZnyxTmds=;
+ b=J+JTKJOlFctKcvL6BhwMu37liZltQn4gcM0CtMLRjfbPW5iJQyu/ChjVOtdq9cA+3b+/
+ 9s+vMzGopRgdb6GCUFPcFABwKHLtQa5Mbhx/Bl8fcrS6V6DHNTrdi8MXvCyMCx8dFJ/P
+ SmtxaVAdtzAVUcKQ5ibJXpY42zfI6szmtdC9fx/NAqTV5eTx0h9e0GBXtBgCWhjJi2b1
+ daXGYEiHXIIooTwTEoWH7fheHiY46oOwuyQjCbmG+4cIhEaRKjhFRhHMLsBLLzM40HjD
+ QZheflQFVLzNQEXuaVEGZYc7gwDVfvDNmDuZUiCYFWNitDNXo53sUfA00CdJduuS4ZSB 8A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v5btq7hw7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:38:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYQJu023792;
-        Wed, 25 Sep 2019 21:36:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2v7vnyus8u-1
+        Wed, 25 Sep 2019 21:36:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYTEN078949;
+        Wed, 25 Sep 2019 21:36:34 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2v82tkrjpk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:36:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLaRUK020995;
-        Wed, 25 Sep 2019 21:36:27 GMT
+        Wed, 25 Sep 2019 21:36:34 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLaX6G015516;
+        Wed, 25 Sep 2019 21:36:33 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:36:27 -0700
-Subject: [PATCH 03/11] xfs_scrub: better reporting of metadata media errors
+        with ESMTP ; Wed, 25 Sep 2019 14:36:33 -0700
+Subject: [PATCH 04/11] xfs_scrub: improve reporting of file metadata media
+ errors
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:36:26 -0700
-Message-ID: <156944738604.300131.8278382614496808681.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:36:32 -0700
+Message-ID: <156944739208.300131.5955900694911585741.stgit@magnolia>
 In-Reply-To: <156944736739.300131.5717633994765951730.stgit@magnolia>
 References: <156944736739.300131.5717633994765951730.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,47 +71,34 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we report bad metadata, we inexplicably report the physical address
-in units of sectors, whereas for file data we report file offsets in
-units of bytes.  Fix the metadata reporting units to match the file data
-units (i.e. bytes) and skip the printf for all other cases.
+Report media errors that map to data and attr fork extent maps.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/phase6.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ scrub/phase6.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 
 diff --git a/scrub/phase6.c b/scrub/phase6.c
-index a16ad114..310ab36c 100644
+index 310ab36c..1013ba6d 100644
 --- a/scrub/phase6.c
 +++ b/scrub/phase6.c
-@@ -368,7 +368,7 @@ xfs_check_rmap_error_report(
- 	void			*arg)
- {
- 	const char		*type;
--	char			buf[32];
-+	char			buf[DESCR_BUFSZ];
- 	uint64_t		err_physical = *(uint64_t *)arg;
- 	uint64_t		err_off;
- 
-@@ -377,14 +377,12 @@ xfs_check_rmap_error_report(
- 	else
- 		err_off = 0;
- 
--	snprintf(buf, 32, _("disk offset %"PRIu64),
--			(uint64_t)BTOBB(map->fmr_physical + err_off));
--
-+	/* Report special owners */
- 	if (map->fmr_flags & FMR_OF_SPECIAL_OWNER) {
-+		snprintf(buf, DESCR_BUFSZ, _("disk offset %"PRIu64),
-+				(uint64_t)map->fmr_physical + err_off);
- 		type = xfs_decode_special_owner(map->fmr_owner);
--		str_error(ctx, buf,
--_("%s failed read verification."),
--				type);
-+		str_error(ctx, buf, _("media error in %s."), type);
+@@ -385,6 +385,17 @@ xfs_check_rmap_error_report(
+ 		str_error(ctx, buf, _("media error in %s."), type);
  	}
  
++	/* Report extent maps */
++	if (map->fmr_flags & FMR_OF_EXTENT_MAP) {
++		bool		attr = (map->fmr_flags & FMR_OF_ATTR_FORK);
++
++		scrub_render_ino_suffix(ctx, buf, DESCR_BUFSZ,
++				map->fmr_owner, 0, " %s",
++				attr ? _("extended attribute") :
++				       _("file data"));
++		str_error(ctx, buf, _("media error in extent map"));
++	}
++
  	/*
+ 	 * XXX: If we had a getparent() call we could report IO errors
+ 	 * efficiently.  Until then, we'll have to scan the dir tree
 
