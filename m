@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F97DBE7AC
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:39:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF018BE7A9
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbfIYVj2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:39:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35510 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbfIYVj2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:39:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdQbM058345;
-        Wed, 25 Sep 2019 21:39:26 GMT
+        id S1728652AbfIYVjT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:39:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41812 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfIYVjT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:39:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLYWA9058025;
+        Wed, 25 Sep 2019 21:39:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=/fvVQgpt/NtgOpS8gMHg2nCSHecs1ugrd7ZaqpnFscY=;
- b=GV8bBqsXMFFhk7QkAv7Sg5Hyix4uifW9hwo/fW4hVDXEhdG4LQiMbaZ4pUzdEykJ/tNV
- 3OsgdZOsKrTG9xKZublB8LGH2xYkSDJ2+Veu4GSif1LdPRwl69agaMIjqoCosnZd62Ih
- Pl5p3eFq/ApzqkXX6sf3+r3hnVBhIi7UDbpmH53SXGdwmqYdySi5y+MVfDarcwAd7g0h
- dVIxp3s5e6KDjF4TlQ2DhzLZxHxUp/TBZwqy3xq5sO5GhYnnQWgwvdwpd//7uVdycYdu
- EMk/N0yqgseVF4Ds9U0VCp/aayLR5GbK9W+Ci8ZLJTbDZB13n4AIDE4CNHFumbNTyYy6 +A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2v5cgr7fcd-1
+ bh=/SbA14fj1BNWf2eu6wlANDb94IiAMpTt067UXWmn8wA=;
+ b=Fvcg/Z9cwyK/XeuWNOUuplAUb4ZrBSDaX5HE9+x7on9y00RVZ2dtOf+hk+UbfbbChW6n
+ 3ysT4JS+I660hnq76CakBU9Q3UYjuzDqxWemM99khM9LYBwvuUje90D8C6qRvCrpYChR
+ 2g9uS8A8K00x4DGIvGMQyaNJwQQrd4CJrCdqv0x/nImanvnTC4mRUuZLVwEKrKmPB9H9
+ yft2XeO+o1BqQHssXuVlA3E4eOWX26nVoxuboQ2dUPfz+aNKX3epMAvoaMTyDGXTQd3i
+ 19waeZ/QeYrezgXnKjtN2BRUoPS4wCHyuv5vqyJEw6q/zpb/tZ/TeDBzBVLzKQirLaGL lw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v5b9tyhf2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:39:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdJP0107680;
-        Wed, 25 Sep 2019 21:39:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2v82qakycp-1
+        Wed, 25 Sep 2019 21:39:17 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdGUS021086;
+        Wed, 25 Sep 2019 21:39:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2v829w54tw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:39:21 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLcVg1016658;
-        Wed, 25 Sep 2019 21:38:31 GMT
+        Wed, 25 Sep 2019 21:39:16 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLcb6L017394;
+        Wed, 25 Sep 2019 21:38:37 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:38:30 -0700
-Subject: [PATCH 04/18] xfs_scrub: remove moveon from vfs directory tree
- iteration
+        with ESMTP ; Wed, 25 Sep 2019 14:38:36 -0700
+Subject: [PATCH 05/18] xfs_scrub: remove moveon from spacemap
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:38:29 -0700
-Message-ID: <156944750944.301514.5858412897281643737.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:38:35 -0700
+Message-ID: <156944751553.301514.1909374067983376994.stgit@magnolia>
 In-Reply-To: <156944748487.301514.14685083474028866113.stgit@magnolia>
 References: <156944748487.301514.14685083474028866113.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -63,7 +62,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909250175
+ definitions=main-1909250174
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,256 +70,499 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace the moveon returns in the vfs directory tree walking functions
-with a direct integer error return.
+Replace the moveon returns in the space map iteration code with a direct
+integer return.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/phase6.c |   28 +++++++++++++++++-----------
- scrub/vfs.c    |   52 ++++++++++++++++++++++++++++++----------------------
- scrub/vfs.h    |    6 +++---
- 3 files changed, 50 insertions(+), 36 deletions(-)
+ scrub/phase6.c   |   35 ++++++-------
+ scrub/phase7.c   |   21 ++++----
+ scrub/spacemap.c |  145 +++++++++++++++++++++++++++++-------------------------
+ scrub/spacemap.h |    8 +--
+ 4 files changed, 107 insertions(+), 102 deletions(-)
 
 
 diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 55b5a611..dd6e29af 100644
+index dd6e29af..49650a21 100644
 --- a/scrub/phase6.c
 +++ b/scrub/phase6.c
-@@ -294,21 +294,24 @@ _("Disappeared during read error reporting."));
- }
- 
- /* Scan a directory for matches in the read verify error list. */
--static bool
-+static int
- xfs_report_verify_dir(
- 	struct scrub_ctx	*ctx,
- 	const char		*path,
- 	int			dir_fd,
- 	void			*arg)
- {
--	return xfs_report_verify_fd(ctx, path, dir_fd, arg);
-+	bool			moveon;
-+
-+	moveon = xfs_report_verify_fd(ctx, path, dir_fd, arg);
-+	return moveon ? 0 : -1;
- }
- 
- /*
-  * Scan the inode associated with a directory entry for matches with
-  * the read verify error list.
-  */
--static bool
-+static int
- xfs_report_verify_dirent(
- 	struct scrub_ctx	*ctx,
- 	const char		*path,
-@@ -323,11 +326,11 @@ xfs_report_verify_dirent(
- 
- 	/* Ignore things we can't open. */
- 	if (!S_ISREG(sb->st_mode) && !S_ISDIR(sb->st_mode))
--		return true;
-+		return 0;
- 
- 	/* Ignore . and .. */
- 	if (!strcmp(".", dirent->d_name) || !strcmp("..", dirent->d_name))
--		return true;
-+		return 0;
- 
- 	/*
- 	 * If we were given a dirent, open the associated file under
-@@ -336,8 +339,12 @@ xfs_report_verify_dirent(
- 	 */
- 	fd = openat(dir_fd, dirent->d_name,
- 			O_RDONLY | O_NOATIME | O_NOFOLLOW | O_NOCTTY);
--	if (fd < 0)
--		return true;
-+	if (fd < 0) {
-+		if (errno == ENOENT)
-+			return 0;
-+		str_errno(ctx, path);
-+		return errno;
-+	}
- 
- 	/* Go find the badness. */
- 	moveon = xfs_report_verify_fd(ctx, path, fd, arg);
-@@ -348,7 +355,7 @@ xfs_report_verify_dirent(
- 	error = close(fd);
- 	if (error)
- 		str_errno(ctx, path);
--	return moveon;
-+	return moveon ? 0 : -1;
+@@ -359,10 +359,9 @@ xfs_report_verify_dirent(
  }
  
  /* Report an IO error resulting from read-verify based off getfsmap. */
-@@ -508,7 +515,6 @@ xfs_report_verify_errors(
- 	struct scrub_ctx		*ctx,
- 	struct media_verify_state	*vs)
- {
--	bool				moveon;
- 	int				ret;
- 
- 	ret = walk_ioerrs(ctx, ctx->datadev, vs);
-@@ -524,9 +530,9 @@ xfs_report_verify_errors(
- 	}
- 
- 	/* Scan the directory tree to get file paths. */
--	moveon = scan_fs_tree(ctx, xfs_report_verify_dir,
-+	ret = scan_fs_tree(ctx, xfs_report_verify_dir,
- 			xfs_report_verify_dirent, vs);
--	if (!moveon)
-+	if (ret)
- 		return false;
- 
- 	/* Scan for unlinked files. */
-diff --git a/scrub/vfs.c b/scrub/vfs.c
-index d7c40239..c807c9b9 100644
---- a/scrub/vfs.c
-+++ b/scrub/vfs.c
-@@ -30,7 +30,7 @@ struct scan_fs_tree {
- 	pthread_mutex_t		lock;
- 	pthread_cond_t		wakeup;
- 	struct stat		root_sb;
--	bool			moveon;
-+	bool			aborted;
- 	scan_fs_tree_dir_fn	dir_fn;
- 	scan_fs_tree_dirent_fn	dirent_fn;
- 	void			*arg;
-@@ -138,8 +138,9 @@ scan_fs_dir(
- 	}
- 
- 	/* Caller-specific directory checks. */
--	if (!sft->dir_fn(ctx, sftd->path, dir_fd, sft->arg)) {
--		sft->moveon = false;
-+	error = sft->dir_fn(ctx, sftd->path, dir_fd, sft->arg);
-+	if (error) {
-+		sft->aborted = true;
- 		error = close(dir_fd);
- 		if (error)
- 			str_errno(ctx, sftd->path);
-@@ -150,11 +151,14 @@ scan_fs_dir(
- 	dir = fdopendir(dir_fd);
- 	if (!dir) {
- 		str_errno(ctx, sftd->path);
-+		sft->aborted = true;
- 		close(dir_fd);
- 		goto out;
- 	}
- 	rewinddir(dir);
--	for (dirent = readdir(dir); dirent != NULL; dirent = readdir(dir)) {
-+	for (dirent = readdir(dir);
-+	     !sft->aborted && dirent != NULL;
-+	     dirent = readdir(dir)) {
- 		snprintf(newpath, PATH_MAX, "%s/%s", sftd->path,
- 				dirent->d_name);
- 
-@@ -171,14 +175,15 @@ scan_fs_dir(
- 			continue;
- 
- 		/* Caller-specific directory entry function. */
--		if (!sft->dirent_fn(ctx, newpath, dir_fd, dirent, &sb,
--				sft->arg)) {
--			sft->moveon = false;
-+		error = sft->dirent_fn(ctx, newpath, dir_fd, dirent, &sb,
-+				sft->arg);
-+		if (error) {
-+			sft->aborted = true;
- 			break;
- 		}
- 
- 		if (xfs_scrub_excessive_errors(ctx)) {
--			sft->moveon = false;
-+			sft->aborted = true;
- 			break;
- 		}
- 
-@@ -189,7 +194,7 @@ scan_fs_dir(
- 			if (error) {
- 				str_liberror(ctx, error,
- _("queueing subdirectory scan"));
--				sft->moveon = false;
-+				sft->aborted = true;
- 				break;
- 			}
- 		}
-@@ -206,8 +211,11 @@ _("queueing subdirectory scan"));
- 	free(sftd);
- }
- 
--/* Scan the entire filesystem. */
--bool
-+/*
-+ * Scan the entire filesystem.  This function returns 0 on success; if there
-+ * are errors, this function will log them and returns nonzero.
-+ */
-+int
- scan_fs_tree(
+-static bool
++static int
+ ioerr_fsmap_report(
  	struct scrub_ctx	*ctx,
- 	scan_fs_tree_dir_fn	dir_fn,
-@@ -215,20 +223,18 @@ scan_fs_tree(
+-	const char		*descr,
+ 	struct fsmap		*map,
  	void			*arg)
  {
- 	struct workqueue	wq;
--	struct scan_fs_tree	sft;
--	bool			moveon = false;
-+	struct scan_fs_tree	sft = {
-+		.root_sb	= ctx->mnt_sb,
-+		.dir_fn		= dir_fn,
-+		.dirent_fn	= dirent_fn,
-+		.arg		= arg,
-+	};
- 	int			ret;
+@@ -373,7 +372,7 @@ ioerr_fsmap_report(
  
--	sft.moveon = true;
--	sft.nr_dirs = 0;
--	sft.root_sb = ctx->mnt_sb;
--	sft.dir_fn = dir_fn;
--	sft.dirent_fn = dirent_fn;
--	sft.arg = arg;
- 	ret = pthread_mutex_init(&sft.lock, NULL);
+ 	/* Don't care about unwritten extents. */
+ 	if (scrub_data < 3 && (map->fmr_flags & FMR_OF_PREALLOC))
+-		return true;
++		return 0;
+ 
+ 	if (err_physical > map->fmr_physical)
+ 		err_off = err_physical - map->fmr_physical;
+@@ -405,7 +404,7 @@ ioerr_fsmap_report(
+ 	 * to find the bad file's pathname.
+ 	 */
+ 
+-	return true;
++	return 0;
+ }
+ 
+ static struct bitmap *
+@@ -466,15 +465,10 @@ walk_ioerr(
+ {
+ 	struct walk_ioerr	*wioerr = arg;
+ 	struct fsmap		keys[2];
+-	char			descr[DESCR_BUFSZ];
+ 	dev_t			dev;
+ 
+ 	dev = xfs_disk_to_dev(wioerr->ctx, wioerr->disk);
+ 
+-	snprintf(descr, DESCR_BUFSZ,
+-_("dev %d:%d ioerr @ %"PRIu64":%"PRIu64" "),
+-			major(dev), minor(dev), start, length);
+-
+ 	/* Go figure out which blocks are bad from the fsmap. */
+ 	memset(keys, 0, sizeof(struct fsmap) * 2);
+ 	keys->fmr_device = dev;
+@@ -484,9 +478,8 @@ _("dev %d:%d ioerr @ %"PRIu64":%"PRIu64" "),
+ 	(keys + 1)->fmr_owner = ULLONG_MAX;
+ 	(keys + 1)->fmr_offset = ULLONG_MAX;
+ 	(keys + 1)->fmr_flags = UINT_MAX;
+-	xfs_iterate_fsmap(wioerr->ctx, descr, keys, ioerr_fsmap_report,
++	return scrub_iterate_fsmap(wioerr->ctx, keys, ioerr_fsmap_report,
+ 			&start);
+-	return 0;
+ }
+ 
+ static int
+@@ -541,10 +534,9 @@ xfs_report_verify_errors(
+ }
+ 
+ /* Schedule a read-verify of a (data block) extent. */
+-static bool
+-xfs_check_rmap(
++static int
++check_rmap(
+ 	struct scrub_ctx		*ctx,
+-	const char			*descr,
+ 	struct fsmap			*map,
+ 	void				*arg)
+ {
+@@ -574,7 +566,7 @@ xfs_check_rmap(
+ 	 */
+ 	if (map->fmr_flags & (FMR_OF_PREALLOC | FMR_OF_ATTR_FORK |
+ 			      FMR_OF_EXTENT_MAP | FMR_OF_SPECIAL_OWNER))
+-		return true;
++		return 0;
+ 
+ 	/* XXX: Filter out directory data blocks. */
+ 
+@@ -582,11 +574,11 @@ xfs_check_rmap(
+ 	ret = read_verify_schedule_io(rvp, map->fmr_physical, map->fmr_length,
+ 			vs);
  	if (ret) {
- 		str_liberror(ctx, ret, _("creating directory scan lock"));
+-		str_liberror(ctx, ret, descr);
+-		return false;
++		str_liberror(ctx, ret, _("scheduling media verify command"));
++		return ret;
+ 	}
+ 
+-	return true;
++	return 0;
+ }
+ 
+ /* Wait for read/verify actions to finish, then return # bytes checked. */
+@@ -720,8 +712,11 @@ xfs_scan_blocks(
+ 
+ 	if (scrub_data > 1)
+ 		moveon = verify_all_disks(ctx, &vs);
+-	else
+-		moveon = xfs_scan_all_spacemaps(ctx, xfs_check_rmap, &vs);
++	else {
++		ret = scrub_scan_all_spacemaps(ctx, check_rmap, &vs);
++		if (ret)
++			moveon = false;
++	}
+ 	if (!moveon)
+ 		goto out_rtpool;
+ 
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 64e52359..4314904f 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -27,10 +27,9 @@ struct summary_counts {
+ };
+ 
+ /* Record block usage. */
+-static bool
+-xfs_record_block_summary(
++static int
++count_block_summary(
+ 	struct scrub_ctx	*ctx,
+-	const char		*descr,
+ 	struct fsmap		*fsmap,
+ 	void			*arg)
+ {
+@@ -41,13 +40,13 @@ xfs_record_block_summary(
+ 	counts = ptvar_get((struct ptvar *)arg, &ret);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("retrieving summary counts"));
 -		return false;
 +		return ret;
  	}
- 	ret = pthread_cond_init(&sft.wakeup, NULL);
- 	if (ret) {
-@@ -268,14 +274,16 @@ scan_fs_tree(
- 		goto out_wq;
+ 	if (fsmap->fmr_device == ctx->fsinfo.fs_logdev)
+-		return true;
++		return 0;
+ 	if ((fsmap->fmr_flags & FMR_OF_SPECIAL_OWNER) &&
+ 	    fsmap->fmr_owner == XFS_FMR_OWN_FREE)
+-		return true;
++		return 0;
+ 
+ 	len = fsmap->fmr_length;
+ 
+@@ -62,14 +61,14 @@ xfs_record_block_summary(
+ 	} else {
+ 		/* Count datadev extents. */
+ 		if (counts->next_phys >= fsmap->fmr_physical + len)
+-			return true;
++			return 0;
+ 		else if (counts->next_phys > fsmap->fmr_physical)
+ 			len = counts->next_phys - fsmap->fmr_physical;
+ 		counts->dbytes += len;
+ 		counts->next_phys = fsmap->fmr_physical + fsmap->fmr_length;
  	}
  
--	moveon = sft.moveon;
-+	if (!ret && sft.aborted)
-+		ret = -1;
-+
- out_wq:
- 	workqueue_destroy(&wq);
- out_cond:
- 	pthread_cond_destroy(&sft.wakeup);
- out_mutex:
- 	pthread_mutex_destroy(&sft.lock);
--	return moveon;
-+	return ret;
+-	return true;
++	return 0;
  }
  
- #ifndef FITRIM
-diff --git a/scrub/vfs.h b/scrub/vfs.h
-index caef8969..7c518b28 100644
---- a/scrub/vfs.h
-+++ b/scrub/vfs.h
+ /* Add all the summaries in the per-thread counter */
+@@ -145,9 +144,11 @@ xfs_scan_summary(
+ 	}
+ 
+ 	/* Use fsmap to count blocks. */
+-	moveon = xfs_scan_all_spacemaps(ctx, xfs_record_block_summary, ptvar);
+-	if (!moveon)
++	error = scrub_scan_all_spacemaps(ctx, count_block_summary, ptvar);
++	if (error) {
++		moveon = false;
+ 		goto out_free;
++	}
+ 	error = ptvar_foreach(ptvar, xfs_add_summaries, &totalcount);
+ 	if (error) {
+ 		str_liberror(ctx, error, _("counting blocks"));
+diff --git a/scrub/spacemap.c b/scrub/spacemap.c
+index 91e8badb..e56f090d 100644
+--- a/scrub/spacemap.c
++++ b/scrub/spacemap.c
+@@ -31,26 +31,25 @@
+ 
+ #define FSMAP_NR	65536
+ 
+-/* Iterate all the fs block mappings between the two keys. */
+-bool
+-xfs_iterate_fsmap(
++/*
++ * Iterate all the fs block mappings between the two keys.  Returns 0 or a
++ * positive error number.
++ */
++int
++scrub_iterate_fsmap(
+ 	struct scrub_ctx	*ctx,
+-	const char		*descr,
+ 	struct fsmap		*keys,
+-	xfs_fsmap_iter_fn	fn,
++	scrub_fsmap_iter_fn	fn,
+ 	void			*arg)
+ {
+ 	struct fsmap_head	*head;
+ 	struct fsmap		*p;
+-	bool			moveon = true;
+ 	int			i;
+ 	int			error;
+ 
+ 	head = malloc(fsmap_sizeof(FSMAP_NR));
+-	if (!head) {
+-		str_errno(ctx, descr);
+-		return false;
+-	}
++	if (!head)
++		return errno;
+ 
+ 	memset(head, 0, sizeof(*head));
+ 	memcpy(head->fmh_keys, keys, sizeof(struct fsmap) * 2);
+@@ -60,13 +59,11 @@ xfs_iterate_fsmap(
+ 		for (i = 0, p = head->fmh_recs;
+ 		     i < head->fmh_entries;
+ 		     i++, p++) {
+-			moveon = fn(ctx, descr, p, arg);
+-			if (!moveon)
++			error = fn(ctx, p, arg);
++			if (error)
+ 				goto out;
+-			if (xfs_scrub_excessive_errors(ctx)) {
+-				moveon = false;
++			if (xfs_scrub_excessive_errors(ctx))
+ 				goto out;
+-			}
+ 		}
+ 
+ 		if (head->fmh_entries == 0)
+@@ -76,45 +73,36 @@ xfs_iterate_fsmap(
+ 			break;
+ 		fsmap_advance(head);
+ 	}
+-
+-	if (error) {
+-		str_errno(ctx, descr);
+-		moveon = false;
+-	}
++	if (error)
++		error = errno;
+ out:
+ 	free(head);
+-	return moveon;
++	return error;
+ }
+ 
+ /* GETFSMAP wrappers routines. */
+-struct xfs_scan_blocks {
+-	xfs_fsmap_iter_fn	fn;
++struct scan_blocks {
++	scrub_fsmap_iter_fn	fn;
+ 	void			*arg;
+-	bool			moveon;
++	bool			aborted;
+ };
+ 
+ /* Iterate all the reverse mappings of an AG. */
+ static void
+-xfs_scan_ag_blocks(
++scan_ag_rmaps(
+ 	struct workqueue	*wq,
+ 	xfs_agnumber_t		agno,
+ 	void			*arg)
+ {
+ 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+-	struct xfs_scan_blocks	*sbx = arg;
+-	char			descr[DESCR_BUFSZ];
++	struct scan_blocks	*sbx = arg;
+ 	struct fsmap		keys[2];
+ 	off64_t			bperag;
+-	bool			moveon;
++	int			ret;
+ 
+ 	bperag = (off64_t)ctx->mnt.fsgeom.agblocks *
+ 		 (off64_t)ctx->mnt.fsgeom.blocksize;
+ 
+-	snprintf(descr, DESCR_BUFSZ, _("dev %d:%d AG %u fsmap"),
+-				major(ctx->fsinfo.fs_datadev),
+-				minor(ctx->fsinfo.fs_datadev),
+-				agno);
+-
+ 	memset(keys, 0, sizeof(struct fsmap) * 2);
+ 	keys->fmr_device = ctx->fsinfo.fs_datadev;
+ 	keys->fmr_physical = agno * bperag;
+@@ -124,25 +112,32 @@ xfs_scan_ag_blocks(
+ 	(keys + 1)->fmr_offset = ULLONG_MAX;
+ 	(keys + 1)->fmr_flags = UINT_MAX;
+ 
+-	moveon = xfs_iterate_fsmap(ctx, descr, keys, sbx->fn, sbx->arg);
+-	if (!moveon)
+-		sbx->moveon = false;
++	if (sbx->aborted)
++		return;
++
++	ret = scrub_iterate_fsmap(ctx, keys, sbx->fn, sbx->arg);
++	if (ret) {
++		char		descr[DESCR_BUFSZ];
++
++		snprintf(descr, DESCR_BUFSZ, _("dev %d:%d AG %u fsmap"),
++					major(ctx->fsinfo.fs_datadev),
++					minor(ctx->fsinfo.fs_datadev),
++					agno);
++		str_liberror(ctx, ret, descr);
++		sbx->aborted = true;
++	}
+ }
+ 
+ /* Iterate all the reverse mappings of a standalone device. */
+ static void
+-xfs_scan_dev_blocks(
++scan_dev_rmaps(
+ 	struct scrub_ctx	*ctx,
+ 	int			idx,
+ 	dev_t			dev,
+-	struct xfs_scan_blocks	*sbx)
++	struct scan_blocks	*sbx)
+ {
+ 	struct fsmap		keys[2];
+-	char			descr[DESCR_BUFSZ];
+-	bool			moveon;
+-
+-	snprintf(descr, DESCR_BUFSZ, _("dev %d:%d fsmap"),
+-			major(dev), minor(dev));
++	int			ret;
+ 
+ 	memset(keys, 0, sizeof(struct fsmap) * 2);
+ 	keys->fmr_device = dev;
+@@ -152,79 +147,90 @@ xfs_scan_dev_blocks(
+ 	(keys + 1)->fmr_offset = ULLONG_MAX;
+ 	(keys + 1)->fmr_flags = UINT_MAX;
+ 
+-	moveon = xfs_iterate_fsmap(ctx, descr, keys, sbx->fn, sbx->arg);
+-	if (!moveon)
+-		sbx->moveon = false;
++	if (sbx->aborted)
++		return;
++
++	ret = scrub_iterate_fsmap(ctx, keys, sbx->fn, sbx->arg);
++	if (ret) {
++		char		descr[DESCR_BUFSZ];
++
++		snprintf(descr, DESCR_BUFSZ, _("dev %d:%d fsmap"),
++				major(dev), minor(dev));
++		str_liberror(ctx, ret, descr);
++		sbx->aborted = true;
++	}
+ }
+ 
+ /* Iterate all the reverse mappings of the realtime device. */
+ static void
+-xfs_scan_rt_blocks(
++scan_rt_rmaps(
+ 	struct workqueue	*wq,
+ 	xfs_agnumber_t		agno,
+ 	void			*arg)
+ {
+ 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+ 
+-	xfs_scan_dev_blocks(ctx, agno, ctx->fsinfo.fs_rtdev, arg);
++	scan_dev_rmaps(ctx, agno, ctx->fsinfo.fs_rtdev, arg);
+ }
+ 
+ /* Iterate all the reverse mappings of the log device. */
+ static void
+-xfs_scan_log_blocks(
++scan_log_rmaps(
+ 	struct workqueue	*wq,
+ 	xfs_agnumber_t		agno,
+ 	void			*arg)
+ {
+ 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+ 
+-	xfs_scan_dev_blocks(ctx, agno, ctx->fsinfo.fs_logdev, arg);
++	scan_dev_rmaps(ctx, agno, ctx->fsinfo.fs_logdev, arg);
+ }
+ 
+-/* Scan all the blocks in a filesystem. */
+-bool
+-xfs_scan_all_spacemaps(
++/*
++ * Scan all the blocks in a filesystem.  If errors occur, this function will
++ * log them and return nonzero.
++ */
++int
++scrub_scan_all_spacemaps(
+ 	struct scrub_ctx	*ctx,
+-	xfs_fsmap_iter_fn	fn,
++	scrub_fsmap_iter_fn	fn,
+ 	void			*arg)
+ {
+ 	struct workqueue	wq;
+-	struct xfs_scan_blocks	sbx;
++	struct scan_blocks	sbx = {
++		.fn		= fn,
++		.arg		= arg,
++	};
+ 	xfs_agnumber_t		agno;
+ 	int			ret;
+ 
+-	sbx.moveon = true;
+-	sbx.fn = fn;
+-	sbx.arg = arg;
+-
+ 	ret = workqueue_create(&wq, (struct xfs_mount *)ctx,
+ 			scrub_nproc_workqueue(ctx));
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("creating fsmap workqueue"));
+-		return false;
++		return ret;
+ 	}
+ 	if (ctx->fsinfo.fs_rt) {
+-		ret = workqueue_add(&wq, xfs_scan_rt_blocks,
++		ret = workqueue_add(&wq, scan_rt_rmaps,
+ 				ctx->mnt.fsgeom.agcount + 1, &sbx);
+ 		if (ret) {
+-			sbx.moveon = false;
++			sbx.aborted = true;
+ 			str_liberror(ctx, ret, _("queueing rtdev fsmap work"));
+ 			goto out;
+ 		}
+ 	}
+ 	if (ctx->fsinfo.fs_log) {
+-		ret = workqueue_add(&wq, xfs_scan_log_blocks,
++		ret = workqueue_add(&wq, scan_log_rmaps,
+ 				ctx->mnt.fsgeom.agcount + 2, &sbx);
+ 		if (ret) {
+-			sbx.moveon = false;
++			sbx.aborted = true;
+ 			str_liberror(ctx, ret, _("queueing logdev fsmap work"));
+ 			goto out;
+ 		}
+ 	}
+ 	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++) {
+-		ret = workqueue_add(&wq, xfs_scan_ag_blocks, agno, &sbx);
++		ret = workqueue_add(&wq, scan_ag_rmaps, agno, &sbx);
+ 		if (ret) {
+-			sbx.moveon = false;
++			sbx.aborted = true;
+ 			str_liberror(ctx, ret, _("queueing per-AG fsmap work"));
+ 			break;
+ 		}
+@@ -232,10 +238,13 @@ xfs_scan_all_spacemaps(
+ out:
+ 	ret = workqueue_terminate(&wq);
+ 	if (ret) {
+-		sbx.moveon = false;
++		sbx.aborted = true;
+ 		str_liberror(ctx, ret, _("finishing fsmap work"));
+ 	}
+ 	workqueue_destroy(&wq);
+ 
+-	return sbx.moveon;
++	if (!ret && sbx.aborted)
++		ret = -1;
++
++	return ret;
+ }
+diff --git a/scrub/spacemap.h b/scrub/spacemap.h
+index 8f2f0a01..1291cf3c 100644
+--- a/scrub/spacemap.h
++++ b/scrub/spacemap.h
 @@ -6,12 +6,12 @@
- #ifndef XFS_SCRUB_VFS_H_
- #define XFS_SCRUB_VFS_H_
+ #ifndef XFS_SCRUB_SPACEMAP_H_
+ #define XFS_SCRUB_SPACEMAP_H_
  
--typedef bool (*scan_fs_tree_dir_fn)(struct scrub_ctx *, const char *,
-+typedef int (*scan_fs_tree_dir_fn)(struct scrub_ctx *, const char *,
- 		int, void *);
--typedef bool (*scan_fs_tree_dirent_fn)(struct scrub_ctx *, const char *,
-+typedef int (*scan_fs_tree_dirent_fn)(struct scrub_ctx *, const char *,
- 		int, struct dirent *, struct stat *, void *);
+-typedef bool (*xfs_fsmap_iter_fn)(struct scrub_ctx *ctx, const char *descr,
++typedef int (*scrub_fsmap_iter_fn)(struct scrub_ctx *ctx,
+ 		struct fsmap *fsr, void *arg);
  
--bool scan_fs_tree(struct scrub_ctx *ctx, scan_fs_tree_dir_fn dir_fn,
-+int scan_fs_tree(struct scrub_ctx *ctx, scan_fs_tree_dir_fn dir_fn,
- 		scan_fs_tree_dirent_fn dirent_fn, void *arg);
+-bool xfs_iterate_fsmap(struct scrub_ctx *ctx, const char *descr,
+-		struct fsmap *keys, xfs_fsmap_iter_fn fn, void *arg);
+-bool xfs_scan_all_spacemaps(struct scrub_ctx *ctx, xfs_fsmap_iter_fn fn,
++int scrub_iterate_fsmap(struct scrub_ctx *ctx, struct fsmap *keys,
++		scrub_fsmap_iter_fn fn, void *arg);
++int scrub_scan_all_spacemaps(struct scrub_ctx *ctx, scrub_fsmap_iter_fn fn,
+ 		void *arg);
  
- void fstrim(struct scrub_ctx *ctx);
+ #endif /* XFS_SCRUB_SPACEMAP_H_ */
 
