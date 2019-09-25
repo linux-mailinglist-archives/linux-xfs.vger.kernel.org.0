@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B845BE7C5
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:40:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E406BE7C1
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Sep 2019 23:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725837AbfIYVki (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Sep 2019 17:40:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43426 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728732AbfIYVki (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:40:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdQIP061490;
-        Wed, 25 Sep 2019 21:40:35 GMT
+        id S1728730AbfIYVkS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Sep 2019 17:40:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:48978 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfIYVkS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Sep 2019 17:40:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdOJ5013229;
+        Wed, 25 Sep 2019 21:40:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Cc5znIrxvF9nLIQ7RE9n5lplDgbplDA/XOkxBfCU+rc=;
- b=GtVW1yEA+H4tIqN6/HH+JHhOhEC2vR8uh9toOwjNs5gltsi2puW4ETTZw4hvZHE33B/4
- Qn5M1j44eOM5vZKiJribHkBzsVGmrp7s1CcQJq8Rcy0s50dPykANtW0kGRxGKM6/6QeA
- wq+ggYwGjUkj32A60JS6dndQywiCzWa8YT3whnxiRpdza6F+RB3Gq7/XStmIpROa40it
- KBkvZqoy6LgWTKPt8i9JfhEa7303v1mcTHpcZlcY3vr8gnX/S1P6PNno/MQtjcMiiiPC
- ixmE9IeZF8amC41WnruvLH5bgI3eTt4D5/brfW+zyS8IqxbHjvPYypiL68Ko1PaV+23F SQ== 
+ bh=3KKIBlOJweEOUGhw1GkyivuD1QGzH1LAgCAd2ORx/G4=;
+ b=PChQ5lbuJ+XE/iyPEpcvKHu3oGNWOauDrfV6xDcsrpAT4kN8kZgTnvDzFBJzDXUHlSwc
+ z4NTr3Ohi8tysHJwhIpcRArDtPdX3V7167VqZp6hhL3ctayEZKckdYhba8mfUBF8MjSL
+ pm59/NLAM4ENzHWhNzXIT5uO3HxxUPjwC63ImhnpaZo33W6dBtsi/6y1OXq5R2NqSfoR
+ yHHWlfQWcKfeW24VQVX9iav9h7eZyGb01OgzEKC/HOkdEfFDMwwpzYPXZzI7lKRKGXb4
+ QLkyMS9Sv1QyUBDCUlgD5Pe/PNQReazUQzx6ZS7fYK3dDlJ2o3eSs+otkz0UW3h6ksHq Qw== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v5b9tyhqp-1
+        by aserp2120.oracle.com with ESMTP id 2v5btq7jcw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:40:35 +0000
+        Wed, 25 Sep 2019 21:40:17 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdNlR033582;
-        Wed, 25 Sep 2019 21:40:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2v7vnyuvgv-1
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PLdOdc033675;
+        Wed, 25 Sep 2019 21:40:16 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2v7vnyux7m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 21:40:34 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PLd7SA017586;
-        Wed, 25 Sep 2019 21:39:07 GMT
+        Wed, 25 Sep 2019 21:40:16 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PLeFs3017718;
+        Wed, 25 Sep 2019 21:40:15 GMT
 Received: from localhost (/10.145.178.55)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Sep 2019 14:39:07 -0700
-Subject: [PATCH 10/18] xfs_scrub: remove moveon from phase 7 functions
+        with ESMTP ; Wed, 25 Sep 2019 14:40:15 -0700
+Subject: [PATCH 2/7] libfrog: convert bitmap.c to negative error codes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 25 Sep 2019 14:39:06 -0700
-Message-ID: <156944754618.301514.16246827692063674825.stgit@magnolia>
-In-Reply-To: <156944748487.301514.14685083474028866113.stgit@magnolia>
-References: <156944748487.301514.14685083474028866113.stgit@magnolia>
+Date:   Wed, 25 Sep 2019 14:40:14 -0700
+Message-ID: <156944761397.302827.17622064656927525540.stgit@magnolia>
+In-Reply-To: <156944760161.302827.4342305147521200999.stgit@magnolia>
+References: <156944760161.302827.4342305147521200999.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -70,124 +70,184 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace the moveon returns in the phase 7 code with a direct integer
-error return.
+Convert libfrog functions to return negative error codes like libxfs
+does.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/phase7.c |   40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ libfrog/bitmap.c |   29 ++++++++++++++++-------------
+ repair/rmap.c    |    4 ++--
+ scrub/phase6.c   |   12 ++++++------
+ 3 files changed, 24 insertions(+), 21 deletions(-)
 
 
-diff --git a/scrub/phase7.c b/scrub/phase7.c
-index 452d56ad..ff51c634 100644
---- a/scrub/phase7.c
-+++ b/scrub/phase7.c
-@@ -73,7 +73,7 @@ count_block_summary(
+diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
+index 5daa1081..3b4c603c 100644
+--- a/libfrog/bitmap.c
++++ b/libfrog/bitmap.c
+@@ -76,14 +76,14 @@ bitmap_alloc(
  
- /* Add all the summaries in the per-thread counter */
- static int
--xfs_add_summaries(
-+add_summaries(
- 	struct ptvar		*ptv,
- 	void			*data,
- 	void			*arg)
-@@ -93,8 +93,8 @@ xfs_add_summaries(
-  * filesystem we'll be content if the summary counts are within 10% of
-  * what we observed.
-  */
+ 	bmap = calloc(1, sizeof(struct bitmap));
+ 	if (!bmap)
+-		return errno;
++		return -errno;
+ 	bmap->bt_tree = malloc(sizeof(struct avl64tree_desc));
+ 	if (!bmap->bt_tree) {
+-		ret = errno;
++		ret = -errno;
+ 		goto out;
+ 	}
+ 
+-	ret = pthread_mutex_init(&bmap->bt_lock, NULL);
++	ret = -pthread_mutex_init(&bmap->bt_lock, NULL);
+ 	if (ret)
+ 		goto out_tree;
+ 
+@@ -149,12 +149,12 @@ __bitmap_insert(
+ 
+ 	ext = bitmap_node_init(start, length);
+ 	if (!ext)
+-		return errno;
++		return -errno;
+ 
+ 	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
+ 	if (node == NULL) {
+ 		free(ext);
+-		return EEXIST;
++		return -EEXIST;
+ 	}
+ 
+ 	return 0;
+@@ -235,7 +235,7 @@ bitmap_set(
+ 
+ #if 0	/* Unused, provided for completeness. */
+ /* Clear a region of bits. */
 -bool
--xfs_scan_summary(
 +int
-+phase7_func(
- 	struct scrub_ctx	*ctx)
- {
- 	struct summary_counts	totalcount = {0};
-@@ -113,7 +113,6 @@ xfs_scan_summary(
- 	unsigned long long	r_bfree;
- 	unsigned long long	f_files;
- 	unsigned long long	f_free;
--	bool			moveon;
- 	bool			complain;
- 	bool			scrub_all = scrub_data > 1;
- 	int			ip;
-@@ -123,33 +122,31 @@ xfs_scan_summary(
- 	action_list_init(&alist);
- 	error = xfs_scrub_fs_summary(ctx, &alist);
- 	if (error)
--		return false;
-+		return error;
- 	error = action_list_process(ctx, ctx->mnt.fd, &alist,
- 			ALP_COMPLAIN_IF_UNFIXED | ALP_NOPROGRESS);
- 	if (error)
--		return false;
-+		return error;
- 
- 	/* Flush everything out to disk before we start counting. */
- 	error = syncfs(ctx->mnt.fd);
- 	if (error) {
- 		str_errno(ctx, ctx->mntpoint);
--		return false;
-+		return error;
+ bitmap_clear(
+ 	struct bitmap		*bmap,
+ 	uint64_t		start,
+@@ -259,7 +259,7 @@ bitmap_clear(
+ 	/* Nothing, we're done. */
+ 	if (firstn == NULL && lastn == NULL) {
+ 		pthread_mutex_unlock(&bmap->bt_lock);
+-		return true;
++		return 0;
  	}
  
- 	error = ptvar_alloc(scrub_nproc(ctx), sizeof(struct summary_counts),
- 			&ptvar);
- 	if (error) {
- 		str_liberror(ctx, error, _("setting up block counter"));
--		return false;
-+		return error;
+ 	assert(firstn != NULL && lastn != NULL);
+@@ -297,20 +297,23 @@ bitmap_clear(
+ 					new_start;
+ 
+ 			ext = bitmap_node_init(new_start, new_length);
+-			if (!ext)
+-				return false;
++			if (!ext) {
++				ret = -errno;
++				goto out;
++			}
+ 
+ 			node = avl64_insert(bmap->bt_tree, &ext->btn_node);
+ 			if (node == NULL) {
+-				errno = EEXIST;
+-				return false;
++				ret = -EEXIST;
++				goto out;
+ 			}
+ 			break;
+ 		}
  	}
  
- 	/* Use fsmap to count blocks. */
- 	error = scrub_scan_all_spacemaps(ctx, count_block_summary, ptvar);
--	if (error) {
--		moveon = false;
-+	if (error)
- 		goto out_free;
--	}
--	error = ptvar_foreach(ptvar, xfs_add_summaries, &totalcount);
-+	error = ptvar_foreach(ptvar, add_summaries, &totalcount);
- 	if (error) {
- 		str_liberror(ctx, error, _("counting blocks"));
- 		goto out_free;
-@@ -160,15 +157,14 @@ xfs_scan_summary(
- 	error = scrub_count_all_inodes(ctx, &counted_inodes);
- 	if (error) {
- 		str_liberror(ctx, error, _("counting inodes"));
--		moveon = false;
--		goto out;
-+		return error;
- 	}
- 
- 	error = scrub_scan_estimate_blocks(ctx, &d_blocks, &d_bfree, &r_blocks,
- 			&r_bfree, &f_files, &f_free);
- 	if (error) {
- 		str_liberror(ctx, error, _("estimating verify work"));
--		return false;
-+		return error;
- 	}
- 
- 	/*
-@@ -277,11 +273,15 @@ _("%.1f%s data counted; %.1f%s file data media verified.\n"),
- 		fflush(stdout);
- 	}
- 
--	moveon = true;
--
--out:
--	return moveon;
-+	return 0;
- out_free:
- 	ptvar_free(ptvar);
--	return moveon;
-+	return error;
-+}
-+
-+bool
-+xfs_scan_summary(
-+	struct scrub_ctx	*ctx)
-+{
-+	return phase7_func(ctx) == 0;
++out:
+ 	pthread_mutex_unlock(&bmap->bt_lock);
+-	return true;
++	return ret;
  }
+ #endif
+ 
+@@ -323,7 +326,7 @@ bitmap_iterate(
+ {
+ 	struct avl64node	*node;
+ 	struct bitmap_node	*ext;
+-	int			ret;
++	int			ret = 0;
+ 
+ 	pthread_mutex_lock(&bmap->bt_lock);
+ 	avl_for_each(bmap->bt_tree, node) {
+diff --git a/repair/rmap.c b/repair/rmap.c
+index c6ed25a9..c4c99131 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -490,13 +490,13 @@ rmap_store_ag_btree_rec(
+ 	error = init_slab_cursor(ag_rmap->ar_raw_rmaps, rmap_compare, &rm_cur);
+ 	if (error)
+ 		goto err;
+-	error = bitmap_alloc(&own_ag_bitmap);
++	error = -bitmap_alloc(&own_ag_bitmap);
+ 	if (error)
+ 		goto err_slab;
+ 	while ((rm_rec = pop_slab_cursor(rm_cur)) != NULL) {
+ 		if (rm_rec->rm_owner != XFS_RMAP_OWN_AG)
+ 			continue;
+-		error = bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
++		error = -bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
+ 					rm_rec->rm_blockcount);
+ 		if (error) {
+ 			/*
+diff --git a/scrub/phase6.c b/scrub/phase6.c
+index f0977d6a..bbe0d7d4 100644
+--- a/scrub/phase6.c
++++ b/scrub/phase6.c
+@@ -174,7 +174,7 @@ report_data_loss(
+ 	else
+ 		bmp = vs->d_bad;
+ 
+-	return bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
++	return -bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
+ 			report_badfile, br);
+ }
+ 
+@@ -444,7 +444,7 @@ remember_ioerr(
+ 	if (!tree)
+ 		return;
+ 
+-	ret = bitmap_set(tree, start, length);
++	ret = -bitmap_set(tree, start, length);
+ 	if (ret)
+ 		str_liberror(ctx, ret, _("setting bad block bitmap"));
+ }
+@@ -476,7 +476,7 @@ walk_ioerr(
+ 	(keys + 1)->fmr_owner = ULLONG_MAX;
+ 	(keys + 1)->fmr_offset = ULLONG_MAX;
+ 	(keys + 1)->fmr_flags = UINT_MAX;
+-	return scrub_iterate_fsmap(wioerr->ctx, keys, ioerr_fsmap_report,
++	return -scrub_iterate_fsmap(wioerr->ctx, keys, ioerr_fsmap_report,
+ 			&start);
+ }
+ 
+@@ -498,7 +498,7 @@ walk_ioerrs(
+ 	tree = bitmap_for_disk(ctx, disk, vs);
+ 	if (!tree)
+ 		return 0;
+-	return bitmap_iterate(tree, walk_ioerr, &wioerr);
++	return -bitmap_iterate(tree, walk_ioerr, &wioerr);
+ }
+ 
+ /* Given bad extent lists for the data & rtdev, find bad files. */
+@@ -666,13 +666,13 @@ phase6_func(
+ 	struct media_verify_state	vs = { NULL };
+ 	int				ret, ret2, ret3;
+ 
+-	ret = bitmap_alloc(&vs.d_bad);
++	ret = -bitmap_alloc(&vs.d_bad);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("creating datadev badblock bitmap"));
+ 		return ret;
+ 	}
+ 
+-	ret = bitmap_alloc(&vs.r_bad);
++	ret = -bitmap_alloc(&vs.r_bad);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("creating realtime badblock bitmap"));
+ 		goto out_dbad;
 
