@@ -2,83 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAE11C0E1E
-	for <lists+linux-xfs@lfdr.de>; Sat, 28 Sep 2019 00:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B2ACC0ED6
+	for <lists+linux-xfs@lfdr.de>; Sat, 28 Sep 2019 02:03:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfI0WsB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Sep 2019 18:48:01 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57644 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbfI0WsB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Sep 2019 18:48:01 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D46223634FB;
-        Sat, 28 Sep 2019 08:47:58 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iDz1q-0007kY-69; Sat, 28 Sep 2019 08:47:58 +1000
-Date:   Sat, 28 Sep 2019 08:47:58 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs: Lower CIL flush limit for large logs
-Message-ID: <20190927224758.GN16973@dread.disaster.area>
-References: <20190909015159.19662-1-david@fromorbit.com>
- <20190909015159.19662-2-david@fromorbit.com>
- <20190916163325.GZ2229799@magnolia>
- <20190924222901.GI16973@dread.disaster.area>
- <20190925120859.GC21991@bfoster>
+        id S1726408AbfI1ADp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Sep 2019 20:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfI1ADo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 27 Sep 2019 20:03:44 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCE2820863;
+        Sat, 28 Sep 2019 00:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569629024;
+        bh=ouFyCW1cXTmjYXrd9V3FJQVsuAeg1eDZQLymht2ZyRo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FzmiubM/NEyE9SDJaDVG6hBXVI7n3ZODX7OikGxP3a9Qx13RveV8mcEbQWu6pJ2/G
+         sY8Fqf3K8s/ZRfABDBcZj8YhF+y8wlPC9Awy8X5jmCKG410qZZZKaC2ChH8QqvcP+2
+         GFJGYfTcKXSDHuGLxLmd248x5YPnlHkWMEn16Zy0=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-xfs@vger.kernel.org
+Cc:     fstests@vger.kernel.org, linux-fscrypt@vger.kernel.org
+Subject: [PATCH v3 0/9] xfsprogs: support fscrypt API additions in xfs_io
+Date:   Fri, 27 Sep 2019 17:02:34 -0700
+Message-Id: <20190928000243.77634-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925120859.GC21991@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=Lf9q5KbF3B9v1kTeIqMA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 08:08:59AM -0400, Brian Foster wrote:
-> On Wed, Sep 25, 2019 at 08:29:01AM +1000, Dave Chinner wrote:
-> > That's in commit 80168676ebfe ("xfs: force background CIL push under
-> > sustained load") which went into 2.6.38 or so. The cause of the
-> > problem in that case was concurrent transaction commit load causing
-> > lock contention and preventing a background push from getting the
-> > context lock to do the actual push.
-> > 
-> 
-> More related to the next patch, but what prevents a similar but
-> generally unbound concurrent workload from exceeding the new hard limit
-> once transactions start to block post commit?
+Hello,
 
-The new code, like the original code, is not actually a "hard" limit.
-It's essentially just throttles ongoing work until the CIL push
-starts. In this case, it forces the current process to give up the
-CPU immediately once over the CIL high limit, which allows the
-workqueue to run the push work straight away.
+This patchset updates xfs_io to support the new fscrypt ioctls that were
+merged for 5.4 (https://git.kernel.org/torvalds/c/734d1ed83e1f9b7b).
 
-I thought about making it a "hard limit" by blocking before the CIL
-insert, but that's no guarantee that by the time we get woken and
-add the new commit to the CIL that this new context has not already
-gone over the hard limit. i.e. we block the unbound concurrency
-before commit, then let it all go in a thundering herd on the new
-context and immeidately punch that way over the hard threshold
-again. To avoid this, we'd probably need a CIL ticket and grant
-mechanism to make CIL insertion FIFO and wakeups limited by
-remaining space in the CIL. I'm not sure we actually need such a
-complex solution, especially considering the potential serialisation
-problems it introduces in what is a highly concurrent fast path...
+New commands are added to wrap the new ioctls to manage filesystem
+encryption keys: 'add_enckey', 'rm_enckey', and 'enckey_status'.  Also,
+the existing 'get_encpolicy' and 'set_encpolicy' commands are updated to
+support getting/setting v2 encryption policies.
 
-Cheers,
+The purpose of all this is to allow xfstests to test these new APIs.
 
-Dave.
+Note: currently only ext4, f2fs, and ubifs support encryption.  But I
+was told previously that since the fscrypt API is generic and may be
+supported by XFS in the future, the command-line wrappers for the
+fscrypt ioctls should be in xfs_io rather than in xfstests directly
+(https://marc.info/?l=fstests&m=147976255831951&w=2).
+
+This patchset applies to the latest "for-next" branch of xfsprogs
+(commit ac8b6c380865).  It can also be retrieved from tag
+"fscrypt-key-mgmt-improvements_2019-09-27" of
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfsprogs-dev.git
+
+Changes v2 => v3:
+- Generate the encryption modes for 'help set_encpolicy'.
+- Mention '-a' in all relevant places in the help for rm_enckey.
+- Mark strings for translation.
+
+No changes v1 => v2.
+
+Eric Biggers (9):
+  xfs_io/encrypt: remove unimplemented encryption modes
+  xfs_io/encrypt: update to UAPI definitions from Linux v5.4
+  xfs_io/encrypt: generate encryption modes for 'help set_encpolicy'
+  xfs_io/encrypt: add new encryption modes
+  xfs_io/encrypt: extend 'get_encpolicy' to support v2 policies
+  xfs_io/encrypt: extend 'set_encpolicy' to support v2 policies
+  xfs_io/encrypt: add 'add_enckey' command
+  xfs_io/encrypt: add 'rm_enckey' command
+  xfs_io/encrypt: add 'enckey_status' command
+
+ io/encrypt.c      | 816 ++++++++++++++++++++++++++++++++++++++++------
+ man/man8/xfs_io.8 |  70 +++-
+ 2 files changed, 771 insertions(+), 115 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.23.0.444.g18eeb5a265-goog
+
