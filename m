@@ -2,91 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AF37C1462
-	for <lists+linux-xfs@lfdr.de>; Sun, 29 Sep 2019 13:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1096C1B39
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 08:03:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfI2Lw7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Sun, 29 Sep 2019 07:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbfI2Lw7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 29 Sep 2019 07:52:59 -0400
-From:   bugzilla-daemon@bugzilla.kernel.org
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
+        id S1726121AbfI3GDu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 02:03:50 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:35690 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729640AbfI3GDu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 02:03:50 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F21F443D870
+        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2019 16:03:46 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iEomg-00053l-3J
+        for linux-xfs@vger.kernel.org; Mon, 30 Sep 2019 16:03:46 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1iEomf-0003pl-Vc
+        for linux-xfs@vger.kernel.org; Mon, 30 Sep 2019 16:03:46 +1000
+From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [Bug 202349] Extreme desktop freezes during sustained write
- operations with XFS
-Date:   Sun, 29 Sep 2019 11:52:58 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: hector@marcansoft.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-202349-201763-yVi42Mp68S@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-202349-201763@https.bugzilla.kernel.org/>
-References: <bug-202349-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Subject: [PATCH v2 0/2] xfs: limit CIL push sizes
+Date:   Mon, 30 Sep 2019 16:03:42 +1000
+Message-Id: <20190930060344.14561-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=J70Eh1EUuV4A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=yaflm1dJKSMLNCn4xi0A:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=202349
+HI Folks,
 
-Hector Martin (hector@marcansoft.com) changed:
+Version 2 of the CIL push size limiting patches. The main changes in
+this version are updates to comments describing behaviour, making it
+clear this isn't a hard limit but a method of providing schedule
+points that will allow the CIL push to proceed rather than being
+held off indefinitely by ongoing work.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |hector@marcansoft.com
+The original patchset was here:
 
---- Comment #13 from Hector Martin (hector@marcansoft.com) ---
-I'm the author of the mentioned tweet.
+https://lore.kernel.org/linux-xfs/20190909015159.19662-1-david@fromorbit.com/
 
-What I was seeing was that on a system with loads of free RAM, XFS reclaiming
-inodes would randomly block on IO.
+Cheers,
 
-This is completely unexpected. I do expect that a system under memory and IO
-pressure ("used" memory, not just "available" memory used for clean caches)
-will block on IO during allocations that trigger writeback. I do *not* expect
-that on a system with tons of clean data to evict, but that is what I saw with
-XFS.
+Dave.
 
-I had a process writing real-time data to disk (on a moderately busy system
-with gigabytes of free RAM), and even though disk bandwidth was plenty to keep
-up with the data, I was seeing buffer underruns due to big random latency
-spikes. After I introduced a process in the pipeline doing up to several
-gigabytes of RAM buffering to even out the spikes, I was *still* getting the
-buffer input stuttering for several seconds, breaking the real-time capture.
-That's where I realized that a kernel pipe buffer allocation was somehow
-blocking on XFS doing IO.
 
-I would echo 3 > /proc/sys/vm/drop_caches, and latencies would become normal. I
-would then watch RAM used for caches slowly creep up, and when it hit 95% or
-so, latency would randomly shoot through the roof again. This is obviously
-broken behavior. Allocating from RAM used for caches should **never** block on
-IO. The system should never slow down because extra RAM is being used for
-caches. That is just insane. The whole point of using RAM for caches is to
-utilize otherwise wasted RAM. If this is causing allocations to block on IO
-when freeing said RAM, randomly causing huge latency spikes for everything,
-then that is broken.
-
-I've since switched to ext4 on the same disks and haven't had a problem ever
-since.
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
