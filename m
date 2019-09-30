@@ -2,24 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8B6C271A
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F25D1C26D7
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbfI3UqU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 16:46:20 -0400
-Received: from sandeen.net ([63.231.237.45]:60024 "EHLO sandeen.net"
+        id S1731449AbfI3UlU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 16:41:20 -0400
+Received: from sandeen.net ([63.231.237.45]:59744 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731128AbfI3UqU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:46:20 -0400
+        id S1730178AbfI3UlU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:41:20 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id DEA9E11652;
-        Mon, 30 Sep 2019 14:29:14 -0500 (CDT)
-Subject: Re: [PATCH v3 0/9] xfsprogs: support fscrypt API additions in xfs_io
-To:     Eric Biggers <ebiggers@kernel.org>, linux-xfs@vger.kernel.org
-Cc:     fstests@vger.kernel.org, linux-fscrypt@vger.kernel.org
-References: <20190928000243.77634-1-ebiggers@kernel.org>
+        by sandeen.net (Postfix) with ESMTPSA id 7FF1611661;
+        Mon, 30 Sep 2019 15:02:12 -0500 (CDT)
+Subject: Re: [PATCH 1/4] xfs_io: add a bulkstat command
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <156944717403.297551.9871784842549394192.stgit@magnolia>
+ <156944718001.297551.8841062987630720604.stgit@magnolia>
+ <fd86aa65-2473-d316-80d9-944100519f77@sandeen.net>
+ <20190927041852.GP9916@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -64,53 +67,47 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <70b5c936-7dfc-9296-63f2-47d31b32815e@sandeen.net>
-Date:   Mon, 30 Sep 2019 14:29:28 -0500
+Message-ID: <3cdfef3d-724b-e786-131b-98454b600881@sandeen.net>
+Date:   Mon, 30 Sep 2019 15:02:27 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190928000243.77634-1-ebiggers@kernel.org>
+In-Reply-To: <20190927041852.GP9916@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On 9/26/19 11:18 PM, Darrick J. Wong wrote:
+>>> +
+>>> +	inumbers_cmd.args =
+>>> +		_("[-a agno] [-d] [-e endino] [-n batchsize] [-s startino]");
+>> <missing the -v option>
+>>
+>>> +	inumbers_cmd.oneline = _("Query inode groups in a filesystem");
+>> I'm confused, why aren't all these ^^^ just in the structure definitions?
+> All of these ... what?  I'm confused, sorry.
+> 
+
+I'm wondering why these 2 fields get set up in bulkstat_init(), vs at
+cmdinfo_t structure definition time, i.e.
+
+static cmdinfo_t        inumbers_cmd = {
+        .name = "inumbers",
+        .cfunc = inumbers_f,
+        .argmin = 0,
+        .argmax = -1,
+        .flags = CMD_NOMAP_OK | CMD_FLAG_ONESHOT,
+        .args =
+_("[-a agno] [-d] [-e endino] [-n batchsize] [-s startino] [-v version]");
+        .oneline = _("Query inode groups in a filesystem");
+        .help = inumbers_help,
+};
+
+like ~every other command does?
 
 
-On 9/27/19 7:02 PM, Eric Biggers wrote:
-> Hello,
-> 
-> This patchset updates xfs_io to support the new fscrypt ioctls that were
-> merged for 5.4 (https://git.kernel.org/torvalds/c/734d1ed83e1f9b7b).
-> 
-> New commands are added to wrap the new ioctls to manage filesystem
-> encryption keys: 'add_enckey', 'rm_enckey', and 'enckey_status'.  Also,
-> the existing 'get_encpolicy' and 'set_encpolicy' commands are updated to
-> support getting/setting v2 encryption policies.
-> 
-> The purpose of all this is to allow xfstests to test these new APIs.
-> 
-> Note: currently only ext4, f2fs, and ubifs support encryption.  But I
-> was told previously that since the fscrypt API is generic and may be
-> supported by XFS in the future, the command-line wrappers for the
-> fscrypt ioctls should be in xfs_io rather than in xfstests directly
-> (https://marc.info/?l=fstests&m=147976255831951&w=2).
-> 
-> This patchset applies to the latest "for-next" branch of xfsprogs
-> (commit ac8b6c380865).  It can also be retrieved from tag
-> "fscrypt-key-mgmt-improvements_2019-09-27" of
-> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfsprogs-dev.git
-> 
-> Changes v2 => v3:
-> - Generate the encryption modes for 'help set_encpolicy'.
-> - Mention '-a' in all relevant places in the help for rm_enckey.
-> - Mark strings for translation.
-
-Thanks for the updates.
-
-For the whole series,
-
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+-Eric
