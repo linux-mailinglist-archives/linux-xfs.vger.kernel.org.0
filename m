@@ -2,27 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F25D1C26D7
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE5EC26D9
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbfI3UlU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 16:41:20 -0400
-Received: from sandeen.net ([63.231.237.45]:59744 "EHLO sandeen.net"
+        id S1730178AbfI3UlV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 16:41:21 -0400
+Received: from sandeen.net ([63.231.237.45]:59746 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbfI3UlU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:41:20 -0400
+        id S1731063AbfI3UlV (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:41:21 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7FF1611661;
-        Mon, 30 Sep 2019 15:02:12 -0500 (CDT)
-Subject: Re: [PATCH 1/4] xfs_io: add a bulkstat command
+        by sandeen.net (Postfix) with ESMTPSA id EC49E11662;
+        Mon, 30 Sep 2019 15:32:15 -0500 (CDT)
+Subject: Re: [PATCH 01/13] libfrog: fix workqueue error communication problems
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-References: <156944717403.297551.9871784842549394192.stgit@magnolia>
- <156944718001.297551.8841062987630720604.stgit@magnolia>
- <fd86aa65-2473-d316-80d9-944100519f77@sandeen.net>
- <20190927041852.GP9916@magnolia>
+References: <156944720314.297677.12837037497727069563.stgit@magnolia>
+ <156944720949.297677.6259044122864374968.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -67,47 +65,29 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <3cdfef3d-724b-e786-131b-98454b600881@sandeen.net>
-Date:   Mon, 30 Sep 2019 15:02:27 -0500
+Message-ID: <db6a79f9-0ea8-ae0a-b582-9829aa4ded32@sandeen.net>
+Date:   Mon, 30 Sep 2019 15:32:30 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190927041852.GP9916@magnolia>
+In-Reply-To: <156944720949.297677.6259044122864374968.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 9/26/19 11:18 PM, Darrick J. Wong wrote:
->>> +
->>> +	inumbers_cmd.args =
->>> +		_("[-a agno] [-d] [-e endino] [-n batchsize] [-s startino]");
->> <missing the -v option>
->>
->>> +	inumbers_cmd.oneline = _("Query inode groups in a filesystem");
->> I'm confused, why aren't all these ^^^ just in the structure definitions?
-> All of these ... what?  I'm confused, sorry.
+On 9/25/19 4:33 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
+> Convert all the workqueue functions to return positive error codes so
+> that we can move away from the libc-style indirect errno handling and
+> towards passing error codes directly back to callers.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-I'm wondering why these 2 fields get set up in bulkstat_init(), vs at
-cmdinfo_t structure definition time, i.e.
+With a fixed changelog,
 
-static cmdinfo_t        inumbers_cmd = {
-        .name = "inumbers",
-        .cfunc = inumbers_f,
-        .argmin = 0,
-        .argmax = -1,
-        .flags = CMD_NOMAP_OK | CMD_FLAG_ONESHOT,
-        .args =
-_("[-a agno] [-d] [-e endino] [-n batchsize] [-s startino] [-v version]");
-        .oneline = _("Query inode groups in a filesystem");
-        .help = inumbers_help,
-};
-
-like ~every other command does?
-
-
--Eric
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
