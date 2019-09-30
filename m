@@ -2,331 +2,162 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C6C9C292E
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 23:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E517C29AB
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2019 00:37:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfI3Vxm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 17:53:42 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54136 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726784AbfI3Vxm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 17:53:42 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9DC4843E507;
-        Tue,  1 Oct 2019 07:53:38 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iF3bs-00054v-O7; Tue, 01 Oct 2019 07:53:36 +1000
-Date:   Tue, 1 Oct 2019 07:53:36 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
+        id S1726350AbfI3Whb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 18:37:31 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42686 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfI3Whb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 18:37:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UJP1Fc192722;
+        Mon, 30 Sep 2019 19:29:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=BHJgBKgVpZWCZGX9bkFoXCvZVZeS7ev0gkIEMqPjB0A=;
+ b=EpugJORadXplnLZ4vEEvf9ND2eUzUTgRzdJYEnAWUZ7nQQ2bxMZ3l2TaVc+v+FUZiPz5
+ AC+Y2jvGVLwt8UsFqj+7mcIGPbMcwcJVJawZlybX05LVvM9FEiieET22UP5YSGR/t0oT
+ q1lcWYuTmoJ7wdP1DQsvrhGEYGamK2UkQYMOxvUHMhGMaGriTg6c6KPKlV7Wa/BvNYtE
+ xPRu5uZg/ArODQcivVFgF3Y7kML6sSEZnlzFHdVvzXPOKChJi9oWjgsGXHdygvEyzcXx
+ tnP00W7yeaBbH2tp3RNqWYWUtHwexBA4/izEeZEHzSDt6rR2sAl45tyWi7M3oKzoW+TM eA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2va05rhc0a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 19:29:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UJTQeQ065701;
+        Mon, 30 Sep 2019 19:29:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vbmpwve1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 19:29:29 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8UJT14a001518;
+        Mon, 30 Sep 2019 19:29:01 GMT
+Received: from localhost (/67.161.8.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Sep 2019 12:29:01 -0700
+Date:   Mon, 30 Sep 2019 12:29:00 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: Throttle commits on delayed background CIL push
-Message-ID: <20190930215336.GR16973@dread.disaster.area>
-References: <20190930060344.14561-1-david@fromorbit.com>
- <20190930060344.14561-3-david@fromorbit.com>
- <20190930170358.GD57295@bfoster>
+Subject: Re: [PATCH 01/13] libfrog: fix workqueue error communication problems
+Message-ID: <20190930192900.GB66746@magnolia>
+References: <156944720314.297677.12837037497727069563.stgit@magnolia>
+ <156944720949.297677.6259044122864374968.stgit@magnolia>
+ <ffc61c3e-af9e-6203-c062-e00fbee0b141@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930170358.GD57295@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=m1S6xmcsovPORud5T34A:9
-        a=XO2GlyMPIpsmX4uH:21 a=BZRvIHGQFGncD-0l:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <ffc61c3e-af9e-6203-c062-e00fbee0b141@sandeen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909300172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909300172
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 01:03:58PM -0400, Brian Foster wrote:
-> On Mon, Sep 30, 2019 at 04:03:44PM +1000, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
+On Mon, Sep 30, 2019 at 02:23:40PM -0500, Eric Sandeen wrote:
+> On 9/25/19 4:33 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > In certain situations the background CIL push can be indefinitely
-> > delayed. While we have workarounds from the obvious cases now, it
-> > doesn't solve the underlying issue. This issue is that there is no
-> > upper limit on the CIL where we will either force or wait for
-> > a background push to start, hence allowing the CIL to grow without
-> > bound until it consumes all log space.
-> > 
-> > To fix this, add a new wait queue to the CIL which allows background
-> > pushes to wait for the CIL context to be switched out. This happens
-> > when the push starts, so it will allow us to block incoming
-> > transaction commit completion until the push has started. This will
-> > only affect processes that are running modifications, and only when
-> > the CIL threshold has been significantly overrun.
-> > 
-> > This has no apparent impact on performance, and doesn't even trigger
-> > until over 45 million inodes had been created in a 16-way fsmark
-> > test on a 2GB log. That was limiting at 64MB of log space used, so
-> > the active CIL size is only about 3% of the total log in that case.
-> > The concurrent removal of those files did not trigger the background
-> > sleep at all.
-> > 
+> > Convert all the workqueue functions to return positive error codes so
+> > that we can move away from the libc-style indirect errno handling and
+> > towards passing error codes directly back to callers.
 > 
-> Have you done similar testing for small/minimum sized logs?
+> This all looks fine, but it doesn't really do what the commit log says,
+> right?
 
-Yes. I've had the tracepoint active during xfstests runs on test
-filesystems using default log sizes on 5-15GB filesystems. The only
-test in all of xfstests that has triggered it is generic/017, and it
-only triggered once.
+Urrrk... yes.  Clearly I stamped out the changelogs with a machine. :/
 
-e.g.
+I /think/ most of the patches in that series actually have a return
+conversion and a callsite conversion, but this one clearly is just...
 
-# trace-cmd start -e xfs_log_cil_wait
-<run xfstests>
-# trace-cmd show
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 1/1   #P:4
-#
-#                              _-----=> irqs-off
-#                             / _----=> need-resched
-#                            | / _---=> hardirq/softirq
-#                            || / _--=> preempt-depth
-#                            ||| /     delay
-#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-#              | |       |   ||||       |         |
-          xfs_io-2158  [001] ...1   309.285959: xfs_log_cil_wait: dev 8:96 t_ocnt 1 t_cnt 1 t_curr_res 67956 t_unit_res 67956 t_flags XLOG_TIC_INITED reserveq empty writeq empty grant_reserve_cycle 75 grant_reserve_bytes 12878480 grant_write_cycle 75 grant_write_bytes 12878480 curr_cycle 75 curr_block 10448 tail_cycle 75 tail_block 3560
-#
+"Convert workqueue functions to return errno errors from the C library,
+then convert the callers to use str_liberror to report the runtime
+error."
 
-And the timestamp matched the time that generic/017 was running.
+> The one spot where error return is changed, it was already
+> positive; the rest is swapping str_liberror for str_info which is
+> just cosmetic, right?
 
-> Also, if this is so limited in occurrence, had you given any thought to
-> something even more simple like flushing the CIL push workqueue when
-> over the throttle threshold?
+<shrug> Mostly cosmetic.  Before you'd get:
 
-Yes, I've tried that - flush_workqueue() blocks /everything/ until
-all the queued work is complete. That means it waits for the CIL to
-flush to disk and write a commit record, and every modification in
-the filesystem is stopped dead in it's tracks until the CIL push is
-complete.
+INFO: Could not create workqueue
 
-The problem is that flushing workqueues is a synchronous operation,
-and it can't wait for partial work completion. We only need to wait
-for the CIL context to be swapped out - this is done by the push
-code before it starts all the expensive iclog formating and waiting
-for iclog space...
+Now you get:
 
-> That would wait longer to fill the iclogs,
-> but would eliminate the need for another waitqueue that's apparently
-> only used for throttling. It may also facilitate reuse of
-> xlog_cil_push_now() in the >= XLOG_CIL_SPACE_BLOCKING_LIMIT() case
-> (actually, I think this could facilitate the elimination of
-> xlog_cil_push_background() entirely).
+ERROR: creating icount workqueue: Not enough frobs.
 
-xlog_cil_push_now() uses flush_work() to push any pending work
-before it queues up the CIL flush that the caller is about to wait
-for.  i.e. the callers of xlog_cil_push_now() must ensure that all
-CIL contexts are flushed for the purposes of a log force as they are
-going to wait for all pending CIL flushes to complete. If we've
-already pushed the CIL to the sequence that we are asking to push
-to, we still have to wait for that previous push to be
-done. This is what the flush_work() call in xlog_cil_push_now()
-acheives.
+(and it actually records it as a runtime error :P)
 
-> That aside...
+--D
+
+> -Eric
 > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  fs/xfs/xfs_log_cil.c  | 37 +++++++++++++++++++++++++++++++++----
-> >  fs/xfs/xfs_log_priv.h | 24 ++++++++++++++++++++++++
-> >  fs/xfs/xfs_trace.h    |  1 +
-> >  3 files changed, 58 insertions(+), 4 deletions(-)
+> >  libfrog/workqueue.c |    4 ++--
+> >  scrub/fscounters.c  |    5 ++---
+> >  scrub/inodes.c      |    5 ++---
+> >  scrub/phase2.c      |    8 +++-----
+> >  scrub/phase4.c      |    6 +++---
+> >  scrub/read_verify.c |    3 +--
+> >  scrub/spacemap.c    |   11 ++++-------
+> >  scrub/vfs.c         |    3 +--
+> >  8 files changed, 18 insertions(+), 27 deletions(-)
 > > 
-> > diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-> > index ef652abd112c..4a09d50e1368 100644
-> > --- a/fs/xfs/xfs_log_cil.c
-> > +++ b/fs/xfs/xfs_log_cil.c
-> > @@ -670,6 +670,11 @@ xlog_cil_push(
-> >  	push_seq = cil->xc_push_seq;
-> >  	ASSERT(push_seq <= ctx->sequence);
-> >  
-> > +	/*
-> > +	 * Wake up any background push waiters now this context is being pushed.
-> > +	 */
-> > +	wake_up_all(&ctx->push_wait);
-> > +
-> >  	/*
-> >  	 * Check if we've anything to push. If there is nothing, then we don't
-> >  	 * move on to a new sequence number and so we have to be able to push
-> > @@ -746,6 +751,7 @@ xlog_cil_push(
-> >  	 */
-> >  	INIT_LIST_HEAD(&new_ctx->committing);
-> >  	INIT_LIST_HEAD(&new_ctx->busy_extents);
-> > +	init_waitqueue_head(&new_ctx->push_wait);
-> >  	new_ctx->sequence = ctx->sequence + 1;
-> >  	new_ctx->cil = cil;
-> >  	cil->xc_ctx = new_ctx;
-> > @@ -900,7 +906,7 @@ xlog_cil_push_work(
-> >   */
-> >  static void
-> >  xlog_cil_push_background(
-> > -	struct xlog	*log)
-> > +	struct xlog	*log) __releases(cil->xc_ctx_lock)
-> >  {
-> >  	struct xfs_cil	*cil = log->l_cilp;
-> >  
-> > @@ -914,14 +920,36 @@ xlog_cil_push_background(
-> >  	 * don't do a background push if we haven't used up all the
-> >  	 * space available yet.
-> >  	 */
-> > -	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log))
-> > +	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log)) {
-> > +		up_read(&cil->xc_ctx_lock);
-> >  		return;
-> > +	}
-> >  
-> >  	spin_lock(&cil->xc_push_lock);
-> >  	if (cil->xc_push_seq < cil->xc_current_sequence) {
-> >  		cil->xc_push_seq = cil->xc_current_sequence;
-> >  		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
+> > 
+> > diff --git a/libfrog/workqueue.c b/libfrog/workqueue.c
+> > index 73114773..a806da3e 100644
+> > --- a/libfrog/workqueue.c
+> > +++ b/libfrog/workqueue.c
+> > @@ -106,8 +106,8 @@ workqueue_add(
 > >  	}
-> > +
-> > +	/*
-> > +	 * Drop the context lock now, we can't hold that if we need to sleep
-> > +	 * because we are over the blocking threshold. The push_lock is still
-> > +	 * held, so blocking threshold sleep/wakeup is still correctly
-> > +	 * serialised here.
-> > +	 */
-> > +	up_read(&cil->xc_ctx_lock);
-> > +
-> > +	/*
-> > +	 * If we are well over the space limit, throttle the work that is being
-> > +	 * done until the push work on this context has begun.
-> > +	 */
-> > +	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
-> 
-> Can we use consistent logic with the rest of the function? I.e.
-> 
-> 	up_read(..);
-> 	if (space_used < XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
-> 		spin_unlock(..);
-> 		return;
-> 	}
-
-I did it this way because code inside the if() statement is
-typically pushed out of line by the compiler if it finished with a
-return statement (i.e. the compiler makes an "unlikely" static
-prediction). Hence it's best to put the slow path code inside thei
-if(), not the fast path code.
-
-I can change it, but then we're into ugly likely()/unlikely() macro
-territory and I much prefer to structure the code so things like
-that are completely unnecessary.
-
-> 
-> 	...
-> 	xlog_wait(...);
-> 
-> > +		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
-> > +		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
-> > +		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-> > +		return;
-> > +	}
-> > +
-> 
-> Also, I find it slightly annoying that even with all of this locking
-> quirkiness we still manage to read ->space_used unprotected (now twice).
-> IMO, the simple thing would be to let xlog_cil_insert_items() return the
-> size immediately after the current transaction inserts and pass that
-> into this function as a parameter.
-
-Yes, I noticed this and thought about it a bit, but it doesn't
-really matter if the read is racy. It never really has mattered
-because it's not a hard limit where accuracy is vitally important
-for correct functioning. Locking and/or atomics are really only
-necessary if we care about exact accuracy, but we care only about
-avoiding fast path locking overhead as much as possible here.
-
-I'll deal with that in a separate patchset when I have some spare
-time.
-
-> > + * To prevent the CIL from overflowing upper commit size bounds, we introduce a
-> > + * new threshold at which we block committing transactions until the background
-> > + * CIL commit commences and switches to a new context. While this is not a hard
-> > + * limit, it forces the process committing a transaction to the CIL to block and
-> > + * yeild the CPU, giving the CIL push work a chance to be scheduled and start
-> > + * work. This prevents a process running lots of transactions from overfilling
-> > + * the CIL because it is not yielding the CPU. We set the blocking limit at
-> > + * twice the background push space threshold so we keep in line with the AIL
-> > + * push thresholds.
-> > + *
-> > + * Note: this is not a -hard- limit as blocking is applied after the transaction
-> > + * is inserted into the CIL and the push has been triggered. It is largely a
-> > + * throttling mechanism that allows the CIL push to be scheduled and run. A hard
-> > + * limit will be difficult to implement without introducing global serialisation
-> > + * in the CIL commit fast path, and it's not at all clear that we actually need
-> > + * such hard limits given the ~7 years we've run without a hard limit before
-> > + * finding the first situation where a checkpoint size overflow actually
-> > + * occurred. Hence the simple throttle, and an ASSERT check to tell us that
-> > + * we've overrun the max size.
-> >   */
-> 
-> I appreciate the extra documentation here, but I think most of the
-> second paragraph is better commit log description material than
-> something worth lengthening this already huge comment for. I'd suggest
-> something like the following, but feel free to rework of course:
-
-Darrick asked for me include some of the information I had in the
-commit description directly in the comment, so I did exaclty what he
-asked....
-
->  *
->  * Since the CIL push threshold only triggers a background push, a
->  * second threshold triggers transaction commit blocking until the
->  * background push initiates and switches the CIL context. The blocking
->  * threshold is set to twice the background push threshold to keep in
->  * line with AIL push thresholds. Note that this is not a CIL context
->  * size limit. This is a throttle threshold to slow the growth of the
->  * context and yield the CPU for a background push under overload
->  * conditions.
-
-Sure, but that doesn't tell us *why* it is implemented as a throttle
-threshold instead of a hard limit. This text tells us what the code
-does, not why it was implemented that way. I'll let darrick decide
-on this.
-
-Cheers,
-
-Dave.
-
-
->  */
-> 
-> Brian
-> 
-> >  #define XLOG_CIL_SPACE_LIMIT(log)	\
-> >  	min_t(int, (log)->l_logsize >> 3, BBTOB(XLOG_TOTAL_REC_SHIFT(log)) << 4)
 > >  
-> > +#define XLOG_CIL_BLOCKING_SPACE_LIMIT(log)	\
-> > +	(XLOG_CIL_SPACE_LIMIT(log) * 2)
-> > +
-> >  /*
-> >   * ticket grant locks, queues and accounting have their own cachlines
-> >   * as these are quite hot and can be operated on concurrently.
-> > diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> > index eaae275ed430..e7087ede2662 100644
-> > --- a/fs/xfs/xfs_trace.h
-> > +++ b/fs/xfs/xfs_trace.h
-> > @@ -1011,6 +1011,7 @@ DEFINE_LOGGRANT_EVENT(xfs_log_regrant_reserve_sub);
-> >  DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_enter);
-> >  DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_exit);
-> >  DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_sub);
-> > +DEFINE_LOGGRANT_EVENT(xfs_log_cil_wait);
+> >  	wi = malloc(sizeof(struct workqueue_item));
+> > -	if (wi == NULL)
+> > -		return ENOMEM;
+> > +	if (!wi)
+> > +		return errno;
 > >  
-> >  DECLARE_EVENT_CLASS(xfs_log_item_class,
-> >  	TP_PROTO(struct xfs_log_item *lip),
-> > -- 
-> > 2.23.0.rc1
-> > 
+> >  	wi->function = func;
+> >  	wi->index = index;
+> > diff --git a/scrub/fscounters.c b/scrub/fscounters.c
+> > index ad467e0c..669c5ab0 100644
+> > --- a/scrub/fscounters.c
+> > +++ b/scrub/fscounters.c
+> > @@ -115,15 +115,14 @@ xfs_count_all_inodes(
+> >  			scrub_nproc_workqueue(ctx));
+> >  	if (ret) {
+> >  		moveon = false;
+> > -		str_info(ctx, ctx->mntpoint, _("Could not create workqueue."));
+> > +		str_liberror(ctx, ret, _("creating icount workqueue"));
+> >  		goto out_free;
+> >  	}
+> >  	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++) {
+> >  		ret = workqueue_add(&wq, xfs_count_ag_inodes, agno, ci);
+> >  		if (ret) {
+> >  			moveon = false;
+> > -			str_info(ctx, ctx->mntpoint,
+> > -_("Could not queue AG %u icount work."), agno);
+> > +			str_liberror(ctx, ret, _("queueing icount work"));
+> >  			break;
+> >  		}
+> >  	}
+> ...
 > 
-
--- 
-Dave Chinner
-david@fromorbit.com
+> 
