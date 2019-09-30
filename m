@@ -2,51 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A38EC1F71
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 12:43:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DEEFC1FC3
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 13:07:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbfI3Knt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 06:43:49 -0400
-Received: from mx3.s12.coopenet.com.ar ([138.122.158.136]:41056 "EHLO
-        mail.s12.coopenet.com.ar" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730762AbfI3Kns (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 06:43:48 -0400
-X-Greylist: delayed 3496 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 06:43:48 EDT
-Received: from webmail.s12.coopenet.com.ar (localhost [127.0.0.1])
-        (authenticated bits=0)
-        by mail.s12.coopenet.com.ar (8.14.7/8.14.7) with ESMTP id x8U9ZYv7022034
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 30 Sep 2019 05:35:34 -0400
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.s12.coopenet.com.ar x8U9ZYv7022034
+        id S1730380AbfI3LHf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 07:07:35 -0400
+Received: from verein.lst.de ([213.95.11.211]:36428 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbfI3LHf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:07:35 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B590F68B20; Mon, 30 Sep 2019 13:07:31 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 13:07:31 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 06/19] iomap: use write_begin to read pages to unshare
+Message-ID: <20190930110731.GA6987@lst.de>
+References: <20190909182722.16783-1-hch@lst.de> <20190909182722.16783-7-hch@lst.de> <20190916183428.GK2229799@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 30 Sep 2019 02:35:34 -0700
-From:   Matteo Lundberg <lundberg009@icloud.com>
-To:     undisclosed-recipients:;
-Subject: Business Transaction
-Reply-To: lundbergm44@gmail.com
-User-Agent: Roundcube Webmail/1.4-rc1
-Message-ID: <7e18c0684f21781e025abfead7b242ba@icloud.com>
-X-Sender: lundberg009@icloud.com
-X-chacabuco-MailScanner-Information: Please contact the ISP for more information
-X-chacabuco-MailScanner-ID: x8U9ZYv7022034
-X-chacabuco-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-chacabuco-MailScanner-From: lundberg009@icloud.com
-X-Spam-Status: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916183428.GK2229799@magnolia>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 11:34:28AM -0700, Darrick J. Wong wrote:
+> > -		if ((from <= poff || from >= poff + plen) &&
+> > +		if (!(flags & IOMAP_WRITE_F_UNSHARE) &&
+> 
+> Mmm, archeology of code that I wrote originally and have forgotten
+> already... :)
+> 
+> I think the purpose of F_UNSHARE is to mimic the behavior of the code
+> that's being removed, and the old behavior is that if a user asks to
+> unshare a page backed by shared extents we'll read in all the blocks
+> backing the page, even if that means reading in blocks that weren't part
+> of the original unshare request, right?
 
-
--- 
-Dear Friend,
-
-I am Matteo Lundberg, I have an urgent business transaction to discuss 
-with you. Please contact me if you are interested.
-
-Regards,
-Matteo Lundberg
+No.  The flag causes the code to always read the page, even if the iomap
+range covers the whole block.  For normal writes that means we don't to
+read the block in at all, but for unshare we absolutely must do so.
