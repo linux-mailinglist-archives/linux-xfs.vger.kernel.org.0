@@ -2,27 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2766C2742
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27989C2743
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfI3UvU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726425AbfI3UvU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 30 Sep 2019 16:51:20 -0400
-Received: from sandeen.net ([63.231.237.45]:60302 "EHLO sandeen.net"
+Received: from sandeen.net ([63.231.237.45]:60304 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfI3UvU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S1729172AbfI3UvU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Mon, 30 Sep 2019 16:51:20 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 9B1B211653;
-        Mon, 30 Sep 2019 14:35:38 -0500 (CDT)
-Subject: Re: [PATCH 01/13] libfrog: fix workqueue error communication problems
+        by sandeen.net (Postfix) with ESMTPSA id 98C7E1165E;
+        Mon, 30 Sep 2019 15:15:44 -0500 (CDT)
+Subject: Re: [PATCH v2 1/4] xfs_io: add a bulkstat command
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-References: <156944720314.297677.12837037497727069563.stgit@magnolia>
- <156944720949.297677.6259044122864374968.stgit@magnolia>
- <ffc61c3e-af9e-6203-c062-e00fbee0b141@sandeen.net>
- <20190930192900.GB66746@magnolia>
+References: <156944717403.297551.9871784842549394192.stgit@magnolia>
+ <156944718001.297551.8841062987630720604.stgit@magnolia>
+ <20190927201531.GS9916@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -67,12 +66,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <47047434-bc98-e3eb-d053-777476ca10a2@sandeen.net>
-Date:   Mon, 30 Sep 2019 14:35:52 -0500
+Message-ID: <ba5a6f34-6e27-385e-adbe-edd432d28ad0@sandeen.net>
+Date:   Mon, 30 Sep 2019 15:15:58 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190930192900.GB66746@magnolia>
+In-Reply-To: <20190927201531.GS9916@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,41 +80,13 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 9/30/19 2:29 PM, Darrick J. Wong wrote:
-> On Mon, Sep 30, 2019 at 02:23:40PM -0500, Eric Sandeen wrote:
->> On 9/25/19 4:33 PM, Darrick J. Wong wrote:
->>> From: Darrick J. Wong <darrick.wong@oracle.com>
->>>
->>> Convert all the workqueue functions to return positive error codes so
->>> that we can move away from the libc-style indirect errno handling and
->>> towards passing error codes directly back to callers.
->>
->> This all looks fine, but it doesn't really do what the commit log says,
->> right?
+On 9/27/19 3:15 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Urrrk... yes.  Clearly I stamped out the changelogs with a machine. :/
+> Add a bulkstat command to xfs_io so that we can test our new xfrog code.
 > 
-> I /think/ most of the patches in that series actually have a return
-> conversion and a callsite conversion, but this one clearly is just...
-> 
-> "Convert workqueue functions to return errno errors from the C library,
-> then convert the callers to use str_liberror to report the runtime
-> error."
-> 
->> The one spot where error return is changed, it was already
->> positive; the rest is swapping str_liberror for str_info which is
->> just cosmetic, right?
-> 
-> <shrug> Mostly cosmetic.  Before you'd get:
-> 
-> INFO: Could not create workqueue
-> 
-> Now you get:
-> 
-> ERROR: creating icount workqueue: Not enough frobs.
-> 
-> (and it actually records it as a runtime error :P)
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Yup, ok - I'll just edit the changelog for you.
+Thanks for all the fixes and sorry for my dumb confusion about _("")
 
--Eric
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
