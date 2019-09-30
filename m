@@ -2,26 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C8B8C26D8
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:41:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E8B6C271A
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 22:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfI3UlV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 16:41:21 -0400
-Received: from sandeen.net ([63.231.237.45]:59750 "EHLO sandeen.net"
+        id S1731293AbfI3UqU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 16:46:20 -0400
+Received: from sandeen.net ([63.231.237.45]:60024 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731178AbfI3UlU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:41:20 -0400
+        id S1731128AbfI3UqU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:46:20 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6CD631164F;
-        Mon, 30 Sep 2019 14:23:26 -0500 (CDT)
+        by sandeen.net (Postfix) with ESMTPSA id DEA9E11652;
+        Mon, 30 Sep 2019 14:29:14 -0500 (CDT)
+Subject: Re: [PATCH v3 0/9] xfsprogs: support fscrypt API additions in xfs_io
+To:     Eric Biggers <ebiggers@kernel.org>, linux-xfs@vger.kernel.org
+Cc:     fstests@vger.kernel.org, linux-fscrypt@vger.kernel.org
+References: <20190928000243.77634-1-ebiggers@kernel.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH 01/13] libfrog: fix workqueue error communication problems
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <156944720314.297677.12837037497727069563.stgit@magnolia>
- <156944720949.297677.6259044122864374968.stgit@magnolia>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -65,12 +64,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <ffc61c3e-af9e-6203-c062-e00fbee0b141@sandeen.net>
-Date:   Mon, 30 Sep 2019 14:23:40 -0500
+Message-ID: <70b5c936-7dfc-9296-63f2-47d31b32815e@sandeen.net>
+Date:   Mon, 30 Sep 2019 14:29:28 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <156944720949.297677.6259044122864374968.stgit@magnolia>
+In-Reply-To: <20190928000243.77634-1-ebiggers@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,70 +78,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 9/25/19 4:33 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+
+
+On 9/27/19 7:02 PM, Eric Biggers wrote:
+> Hello,
 > 
-> Convert all the workqueue functions to return positive error codes so
-> that we can move away from the libc-style indirect errno handling and
-> towards passing error codes directly back to callers.
-
-This all looks fine, but it doesn't really do what the commit log says,
-right?  The one spot where error return is changed, it was already
-positive; the rest is swapping str_liberror for str_info which is
-just cosmetic, right?
-
--Eric
-
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  libfrog/workqueue.c |    4 ++--
->  scrub/fscounters.c  |    5 ++---
->  scrub/inodes.c      |    5 ++---
->  scrub/phase2.c      |    8 +++-----
->  scrub/phase4.c      |    6 +++---
->  scrub/read_verify.c |    3 +--
->  scrub/spacemap.c    |   11 ++++-------
->  scrub/vfs.c         |    3 +--
->  8 files changed, 18 insertions(+), 27 deletions(-)
+> This patchset updates xfs_io to support the new fscrypt ioctls that were
+> merged for 5.4 (https://git.kernel.org/torvalds/c/734d1ed83e1f9b7b).
 > 
+> New commands are added to wrap the new ioctls to manage filesystem
+> encryption keys: 'add_enckey', 'rm_enckey', and 'enckey_status'.  Also,
+> the existing 'get_encpolicy' and 'set_encpolicy' commands are updated to
+> support getting/setting v2 encryption policies.
 > 
-> diff --git a/libfrog/workqueue.c b/libfrog/workqueue.c
-> index 73114773..a806da3e 100644
-> --- a/libfrog/workqueue.c
-> +++ b/libfrog/workqueue.c
-> @@ -106,8 +106,8 @@ workqueue_add(
->  	}
->  
->  	wi = malloc(sizeof(struct workqueue_item));
-> -	if (wi == NULL)
-> -		return ENOMEM;
-> +	if (!wi)
-> +		return errno;
->  
->  	wi->function = func;
->  	wi->index = index;
-> diff --git a/scrub/fscounters.c b/scrub/fscounters.c
-> index ad467e0c..669c5ab0 100644
-> --- a/scrub/fscounters.c
-> +++ b/scrub/fscounters.c
-> @@ -115,15 +115,14 @@ xfs_count_all_inodes(
->  			scrub_nproc_workqueue(ctx));
->  	if (ret) {
->  		moveon = false;
-> -		str_info(ctx, ctx->mntpoint, _("Could not create workqueue."));
-> +		str_liberror(ctx, ret, _("creating icount workqueue"));
->  		goto out_free;
->  	}
->  	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++) {
->  		ret = workqueue_add(&wq, xfs_count_ag_inodes, agno, ci);
->  		if (ret) {
->  			moveon = false;
-> -			str_info(ctx, ctx->mntpoint,
-> -_("Could not queue AG %u icount work."), agno);
-> +			str_liberror(ctx, ret, _("queueing icount work"));
->  			break;
->  		}
->  	}
-...
+> The purpose of all this is to allow xfstests to test these new APIs.
+> 
+> Note: currently only ext4, f2fs, and ubifs support encryption.  But I
+> was told previously that since the fscrypt API is generic and may be
+> supported by XFS in the future, the command-line wrappers for the
+> fscrypt ioctls should be in xfs_io rather than in xfstests directly
+> (https://marc.info/?l=fstests&m=147976255831951&w=2).
+> 
+> This patchset applies to the latest "for-next" branch of xfsprogs
+> (commit ac8b6c380865).  It can also be retrieved from tag
+> "fscrypt-key-mgmt-improvements_2019-09-27" of
+> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfsprogs-dev.git
+> 
+> Changes v2 => v3:
+> - Generate the encryption modes for 'help set_encpolicy'.
+> - Mention '-a' in all relevant places in the help for rm_enckey.
+> - Mark strings for translation.
 
+Thanks for the updates.
 
+For the whole series,
+
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
