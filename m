@@ -2,86 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E92C1D73
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 10:54:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17B8DC1D8E
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2019 10:58:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfI3IyM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Sep 2019 04:54:12 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48079 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbfI3IyM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 04:54:12 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A189536291A;
-        Mon, 30 Sep 2019 18:54:06 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iErRW-0007JB-D1; Mon, 30 Sep 2019 18:54:06 +1000
-Date:   Mon, 30 Sep 2019 18:54:06 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: xfs_inode not reclaimed/memory leak on 5.2.16
-Message-ID: <20190930085406.GP16973@dread.disaster.area>
-References: <87pnji8cpw.fsf@mid.deneb.enyo.de>
+        id S1729979AbfI3I6q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Sep 2019 04:58:46 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44271 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729968AbfI3I6q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Sep 2019 04:58:46 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r16so7847749edq.11
+        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2019 01:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gqKjyX4LwM9Uvab7S1WrGqbh1CgsiXr6uHjg/da/CbE=;
+        b=KOzAoRc7kBqVHFDbULkWFODJNLBPO3gRhJJSYxycUzoPHs2idGNnXHKYYEECyxLiil
+         7upcH42uOssCjLRqrG1JtUjZ3P8OAQyKHMoZCGvKr/jIiSBAt5kjNgPRggs28LZsIs1s
+         h5sQwf7h7kN6lFcAx//jzzplQThZDvdW1ifBp7XG214G6HDoph9PbLF8KDK3nTsnERQ9
+         vy0mqa9E8EF6Drt2wcdaxVqqcLBsLrurhtt3ZW60XDBSW0L8GhhdFTXzdfa+omfm9DAt
+         25i522+RdKqMgRWabGGJ5Fbpfv6o4nfDZdcB0KC0cQfoNvoPTryzN4FGR1Ax+T105x2M
+         gO+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gqKjyX4LwM9Uvab7S1WrGqbh1CgsiXr6uHjg/da/CbE=;
+        b=F211hvTKJrANeDMU1vb/BH+Rm8JDrprDEYzQZti1mYXhVUPpGhdNXPZmp8VwmHXuQZ
+         AZYg+oN0PiGDh354g2KvrcYrqy+x1Kjbu27bRGJTsf9PfrNcCz2IbP4kdGfaTTD3RvWA
+         HHtl8EWoUnhA7iOTFDj6GZHQRT4fogTHMSTcfHJoYYR5VNyAOpDaaTzOR4sMPW07zEVB
+         8ExXGKr/FY00ZfP4Au/VzdzuhyMhZnfwDSXlz0rKHbbYDQl07Ye9gz6P2fmiLv+U1mtk
+         VdI41ATaURNGKY/xDm7RcZ5R5RUeR5xTUua+fP/GSgIz7e8lJWGk/KbOo4siE4OzTjNd
+         JMUw==
+X-Gm-Message-State: APjAAAUMBqHAfdDODWmnl8UGJ1jJLjB6C5QTMdqE6z8O8qIdUlLU8rop
+        DO2qmCxP4ZBAvcOURv6fa6TRU8HkypDvOhvd6qY=
+X-Google-Smtp-Source: APXvYqzNfFkmfTSU5BlS/oWRvX6hfmR/nSsJe5vAbxkGOw4tAENS9mWc761AWnU54wNlJfSrFFXYFYJAmK2TdDS/Dsw=
+X-Received: by 2002:a50:fa98:: with SMTP id w24mr18569233edr.47.1569833924553;
+ Mon, 30 Sep 2019 01:58:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pnji8cpw.fsf@mid.deneb.enyo.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=p-vD6gt0l82YhtYKeuUA:9 a=QEXdDO2ut3YA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Received: by 2002:a17:906:31cf:0:0:0:0 with HTTP; Mon, 30 Sep 2019 01:58:43
+ -0700 (PDT)
+Reply-To: zhenfa1433@gmail.com
+From:   Izadin Aris <info17alpha@gmail.com>
+Date:   Mon, 30 Sep 2019 09:58:43 +0100
+Message-ID: <CAEet+mDHJCrtJZ3QGTXOr1KkWE1FKk0U_s6=mUijdRL3ANa_qw@mail.gmail.com>
+Subject: ABOUT OUR BUSINESS NEGOTIATIONS
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 09:28:27AM +0200, Florian Weimer wrote:
-> Simply running “du -hc” on a large directory tree causes du to be
-> killed because of kernel paging request failure in the XFS code.
-
-dmesg output? if the system was still running, then you might be
-able to pull the trace from syslog. But we can't do much without
-knowing what the actual failure was....
-
-FWIW, one of my regular test workloads is iterating a directory tree
-with 50 million inodes in several different ways to stress reclaim
-algorithms in ways that users do. I haven't seen issues with that
-test for a while, so it's not an obvious problem whatever you came
-across.
-
-> I ran slabtop, and it showed tons of xfs_inode objects.
-
-Sure, because your workload is iterating inodes.
-
-> The system was rather unhappy after that, so I wasn't able to capture
-> much more information.
-> 
-> Is this a known issue on Linux 5.2?
-
-Not that I know of.
-
-> I don't see it with kernel
-> 5.0.20.  Those are plain upstream kernels built for x86-64, with no
-> unusual config options (that I know of).
-
-We've had quite a few memory reclaim regressions in recent times
-that have displayed similar symptoms - XFS is often just the
-messenger because the inode cache is generating the memory pressure.
-e.g. the shrinker infrastructure was broken in 4.16 and then broken
-differently in 4.17 to try to fix it, and we didn't hear about them
-until about 4.18/4.19 when users started to trip over them. I fixed
-those problems in 5.0, but there's every chance that there have been
-new regressions since then.
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Hello.
+
+WE WANT TO INVEST WITH YOU,
+
+We are personal fund managers and we seek individual and businesses in
+your country who are willing to manage funds that we will invest with
+them. The fund manager (i.e you) can choose to invest the fund in any
+business and country he likes and make an agreed single digit annual
+return to the investor.
+Also he gets an agreed % of the capital invested for his efforts
+We have an array of clients with varied backgrounds who seek to make
+invest discretely in countries other than their's but have no
+guaranteed/reliable access/individuals to those business climes.
+
+If you have credible projects in need of funding of over a million but
+below a billion or existing businesses requiring expansion,
+researches, novelle business ideas etc we would be delighted to work
+with you
+
+Sincerely,
+
+Izadin Aris
+Managing Agent.
