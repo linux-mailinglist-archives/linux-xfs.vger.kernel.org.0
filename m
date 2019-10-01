@@ -2,118 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEB79C2E27
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2019 09:47:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C4BC2FA6
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2019 11:07:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733040AbfJAHQo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Oct 2019 03:16:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45618 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733005AbfJAHQo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Oct 2019 03:16:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1irl0AgCvFo2qfN/O5DEHH2lBXUVCJy0lnRalJzwcEY=; b=JuaLtyJTWnlE+5SsMKEwf/ZW/k
-        gNnm47jobHglkzd+OIkflDzqCbBEuSd0GrQD1Oq3Gj5FWOxtUrmu0OY2mcIFMzep+f71bjR1Nw+pM
-        4ltrjT051Poxrs7oEOjQrxdjCGot0UUzipO5spFLn0eaIZ5e5cYNtOwpMtLJzSs5yBZ4FKUB6Al3K
-        tNd0OHfsftJpPspQgUXl+KU9WxyawJHL8QdhpG9ePNO12uta2Kr1I1UKETVfVs8/eM1hM0kdaMIbv
-        2Wr/4nOw6PPMaS+ql7cZ5fqNO2WbsFLZTi5LjW5yAa1MZgVjImF4t2Oc4SsEaO8MQ3Wlz/PtsLHrv
-        D17u8Vkw==;
-Received: from [2001:4bb8:18c:4d4a:b9e5:f9f0:a515:3f0a] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFCOo-0001VS-7i; Tue, 01 Oct 2019 07:16:42 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>
-Subject: [PATCH 11/11] iomap: move struct iomap_page out of iomap.h
-Date:   Tue,  1 Oct 2019 09:11:52 +0200
-Message-Id: <20191001071152.24403-12-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001071152.24403-1-hch@lst.de>
-References: <20191001071152.24403-1-hch@lst.de>
+        id S1729642AbfJAJHf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Oct 2019 05:07:35 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35264 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbfJAJHe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Oct 2019 05:07:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m15so20696269qtq.2
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Oct 2019 02:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ErYmeJ+5zfmjFax1g96nTEATrR4hqaLa0Ef98Om6IKI=;
+        b=M2FguACldpYjrvMAzXKL65uirMUhkderNWruU8eox6SXlEhayO4xIWXl0s1yEhqfqo
+         ztCoNx7mT8rYAon7SEJ7gp85nr2rxUDb3IJqZX9iLwWAtgzmBGK+shaXsXfyPZ/C2e4G
+         any1BJrIdfu7QJaR6exb/6fY3f/xmfTdzOS9z8TViGk68PR7d4dQJSZY1T4Wlt9wxmpD
+         ypNGRsVtQA2XqibpzPODnV/t/W6fY/qizz6oey9dv/dRPteIm73xXhMA13PUFgJVpu/p
+         yO0fgqXgl/T44LCIZhowx9xkETQGnaArVINYx0R2AqIxcNUglSb0XdDMcLid9yrQIcWa
+         aO5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ErYmeJ+5zfmjFax1g96nTEATrR4hqaLa0Ef98Om6IKI=;
+        b=ZUNAOb0DUOx/WEjddzkS+msyWGve5tusAWlkkZ2fPiuSBqQpW2Wt2Wl/8kjIExID6Z
+         VpNkwACxOmgsBO717NTMTD2zg9m/nHl3lAi7JL9yCHE8HeOZucRNyOsmNHJk/suviZnI
+         5kS5SpZl0qSC8J4qUxwNZgjQ77hXetg5raos4EhRMLWdvZvUoYhLIcoElHd/KwHemJol
+         HqVCOmM9blGLDzIf+k/kxQe1IrDbUZoVUnPrcA1pBstfL16ZBhv5XSsFsqFNhPK6syax
+         2GPsOXu4PH89o4mQJiofJ3agGBsZJlX4q9BzZa7vpcJ0+4cv31DGgHPeAxGoCJBl5inY
+         Fg7g==
+X-Gm-Message-State: APjAAAXHysUULr/VIR8VyWG0NGcjMuWDx3OAp5Mgir9mceP0V5EBVKyK
+        Vd4Z8ZrqWNANP3YH36KgriddTOzdYzw5qG8We8Y=
+X-Google-Smtp-Source: APXvYqzChaj7twegv5+1uSHEbuxYJTa9FjSeKo3DEdPEjbHCsCg8HL0FE9eKEm1434U4tmbn3e8kxWd2XznLRB9mUXk=
+X-Received: by 2002:aed:21a3:: with SMTP id l32mr29687029qtc.339.1569920854159;
+ Tue, 01 Oct 2019 02:07:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:ac8:19a7:0:0:0:0:0 with HTTP; Tue, 1 Oct 2019 02:07:33 -0700 (PDT)
+Reply-To: yarazahid@gmail.com
+From:   Yaha Zahid <hajihasannalbolkiahfoundation@gmail.com>
+Date:   Tue, 1 Oct 2019 11:07:33 +0200
+Message-ID: <CAGTohSZtuoMXnobOU31+grgrj7tBEg7GhwNoP3Ytqk4K9M+Jkg@mail.gmail.com>
+Subject: From: Yara Zahid
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that all the writepage code is in the iomap code there is no
-need to keep this structure public.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/iomap/buffered-io.c | 17 +++++++++++++++++
- include/linux/iomap.h  | 17 -----------------
- 2 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index dcf95e8b31fe..da1dea16ebe8 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -23,6 +23,23 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/iomap.h>
- 
-+/*
-+ * Structure allocated for each page when block size < PAGE_SIZE to track
-+ * sub-page uptodate status and I/O completions.
-+ */
-+struct iomap_page {
-+	atomic_t		read_count;
-+	atomic_t		write_count;
-+	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-+};
-+
-+static inline struct iomap_page *to_iomap_page(struct page *page)
-+{
-+	if (page_has_private(page))
-+		return (struct iomap_page *)page_private(page);
-+	return NULL;
-+}
-+
- static struct bio_set iomap_ioend_bioset;
- 
- static struct iomap_page *
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index e79af6b28410..5d736d3caf08 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -134,23 +134,6 @@ loff_t iomap_apply(struct inode *inode, loff_t pos, loff_t length,
- 		unsigned flags, const struct iomap_ops *ops, void *data,
- 		iomap_actor_t actor);
- 
--/*
-- * Structure allocate for each page when block size < PAGE_SIZE to track
-- * sub-page uptodate status and I/O completions.
-- */
--struct iomap_page {
--	atomic_t		read_count;
--	atomic_t		write_count;
--	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
--};
--
--static inline struct iomap_page *to_iomap_page(struct page *page)
--{
--	if (page_has_private(page))
--		return (struct iomap_page *)page_private(page);
--	return NULL;
--}
--
- ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
- 		const struct iomap_ops *ops);
- int iomap_readpage(struct page *page, const struct iomap_ops *ops);
 -- 
-2.20.1
+Good Day To You,
 
+Please i need your kind Assistance. I will be very glad if you can
+assist me to receive this sum of ( $22. Million US dollars.) into your
+bank account for the benefit of our both families, reply me if you are
+ready to receive this fund.
+
+Mr.Yara zahid.
