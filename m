@@ -2,75 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1491DCE4EE
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Oct 2019 16:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6C1CE751
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Oct 2019 17:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfJGORX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Oct 2019 10:17:23 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:44299 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGORX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Oct 2019 10:17:23 -0400
-Received: by mail-vk1-f194.google.com with SMTP id j21so2980398vki.11
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Oct 2019 07:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=7vCc9Ay5pqsOdUNtiySfNZ5e1KHxaBNzvfbE+6CEpMU=;
-        b=raaxVf+LyS8TSMqo7VAmqrGIyCuXd5rMCUtWT9NWD5D1hMoq5k/LWG1OdN6/M8UhNT
-         AdwAP6dF5CAKitbC1wb6Ifn0g54mMvqAxAeGjvSRT9Z0Xv3jFo+BLwmCgLMfid5kOTCz
-         MEv94C422/uW6Mk/qB6uZtensnX1S0ZatJUlZg+ZDFDfwa5OG/89rBAlj2N6NHOrUPdL
-         QBemciQlTmhm95sQa6uBoRY3pqQ0Fdnzpkc9dgESC9jFv43nGam2K3pLB9Y/45UHSJoW
-         V7T74saHXEQMe1qSX5GENldf+1dEgKcR9Mo/tqolFFiDEYqlWTIKUTWo+kB94t4hXFxR
-         eRKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=7vCc9Ay5pqsOdUNtiySfNZ5e1KHxaBNzvfbE+6CEpMU=;
-        b=DgvL1s9UtU+y3ZdFj9nwpc8ECxm3Z6tsLsgfLI08LFN0KaJz0tfw4YBT3vrKp41e1y
-         yOgQH/MTbcfi/P58u3F9IGdq1TWtp79J4++V4K3n4aDCJYWDffGHeCpVzr92Y5wZZevw
-         2FyRyTInCXEsVoxm+0RiBSTpmD+5HLj+Boq2VyfCHuVdHnf1QSjYNpfLZDZC71cgplFr
-         GTiZNHm9ZKU6w4Q9ZNLIZ96mMF4xkqfuqrEd/wYxjpR1Hch5gbaHpErAAXvRIR3ms3Gi
-         gF+etGrbMAFW6m7198/8MeBrSfsYI8jk2jPyrfpZxtRIcC8kW3ogtUtZvlV0WMdcBOaV
-         h81A==
-X-Gm-Message-State: APjAAAV3KAd7VUqxfgNO9V9UC/twa29gR4ZtZwbNc/bpV/bMvdi5SZUn
-        jMYoR0kao5ckeX0qJKTnsKs7lUiXplrcfjVo/Cg=
-X-Google-Smtp-Source: APXvYqwc+xBYfh8jGpN5G8QhNA91EB9/jdiNItPJ1zTD4t5n+TWpjuQZq/SAbaHr5L/csrYC4MOy8Zow9gNhsFvAPBE=
-X-Received: by 2002:ac5:c4d1:: with SMTP id a17mr14320545vkl.57.1570457841489;
- Mon, 07 Oct 2019 07:17:21 -0700 (PDT)
+        id S1727745AbfJGPYY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Oct 2019 11:24:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47622 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGPYY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Oct 2019 11:24:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97FO48h154592;
+        Mon, 7 Oct 2019 15:24:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=+ws5Izj8hyAfCOW5xTuTHXPZXfrQQB1vmYoFwB5WMj8=;
+ b=M2EbXHqUEkl9jgn3JwAPS1SD7e/XilSJr7Nw44zgVKVV5qkVDRfB2FFMhWfNWMms12dQ
+ alb54vyWE/cT9Sq/dcwHxXlC86yZpf9GP9dqr/NtW/tIiBJFjBrBnY1vIXF+ycztFnM2
+ ZSKoXPudZ6F7YAk4HdJUzQKcgQGBAgOFM8NQO4DeOH0sYLXNAXuys72/FGOR+az9+kNK
+ C1u2FBc80uJ1DnNc8FLhxaCjXUtNdoOkXlWm7kgu4eMc1Pj/w0VkxXcygWWYzVNnlQoW
+ J+S6HG1xeipsV+EqF0mXSV3zSyaT/nIaBsLUMDBNT3PK0Ox7A8yzn7eVSwRFzZbszBZA Fw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vektr7a84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 15:24:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97FNvJj021334;
+        Mon, 7 Oct 2019 15:24:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vg20402ku-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Oct 2019 15:24:02 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x97FNgPF020858;
+        Mon, 7 Oct 2019 15:23:42 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 07 Oct 2019 08:23:41 -0700
+Date:   Mon, 7 Oct 2019 08:23:36 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] iomap: add tracing for the readpage / readpages
+Message-ID: <20191007152336.GS13108@magnolia>
+References: <20191006154608.24738-1-hch@lst.de>
+ <20191006154608.24738-2-hch@lst.de>
+ <20191006224324.GR13108@magnolia>
+ <20191007054838.GA15655@lst.de>
+ <20191007061705.GA20377@lst.de>
 MIME-Version: 1.0
-Received: by 2002:a9f:315e:0:0:0:0:0 with HTTP; Mon, 7 Oct 2019 07:17:21 -0700 (PDT)
-Reply-To: mrs.sandraguessan101@protonmail.com
-From:   "Mrs. Guessan Sandra" <guessannsandra001@gmail.com>
-Date:   Mon, 7 Oct 2019 07:17:21 -0700
-Message-ID: <CAG7PuOQR+YBhO3F_-427f4-=GadX_Tc8X4xy4NhcErGL1rkruA@mail.gmail.com>
-Subject: Greetings From Mrs. Sandra Guessan,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007061705.GA20377@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910070152
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910070151
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From Mrs. Sandra Guessan,
-I am touched by God to hand you over this money considering my last
-wish, and you should also know that my contact to you is by special
-grace of God, please understand that you are not helping me rather you
-are working for God the creator of heaven and earth. And again widow
-suffering from long time illness. i am currently admitted in a privet
-hospital in the country, I have some funds I inherited from my late
-loving husband Mr. Guessan Martin, the sum of ($8,500,000.00 USD)
-which he deposited in BANK Here and I need a very honest and God
-fearing Christian that can use this funds for God's work. I want you
-and the church to always pray for me because the lord is my shepherd.
-My happiness is that I lived a life of a worthy Christian and whoever
-that wants to serve the Lord must serve him in spirit and Truth.
-Please if you would be able to use these funds for the Lord's work
-kindly reply me Don=E2=80=99t forget to always pray for me because all my h=
-ope
-to survive is in God the creator who holds death and life.
-Hoping to receive your reply.
-Mrs. Sandra Guessan.
+On Mon, Oct 07, 2019 at 08:17:05AM +0200, Christoph Hellwig wrote:
+> On Mon, Oct 07, 2019 at 07:48:38AM +0200, Christoph Hellwig wrote:
+> > On Sun, Oct 06, 2019 at 03:43:24PM -0700, Darrick J. Wong wrote:
+> > > > +iomap-y				+= trace.o \
+> > > 
+> > > I think this patch is missing fs/iomap/trace.c ?
+> > 
+> > It does.  The file is in my tree, but I never did a git-add for it..
+> 
+> A branch with the file is here:
+> 
+>    git://git.infradead.org/users/hch/xfs.git iomap-writepage.7
+> 
+> Gitweb:
+> 
+>     http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/iomap-writepage.7
+> 
+> I'll wait a bit until I resend to see if people find other issues.
+
+I didn't see any, at least not in a quick overnight fstests run.
+
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
