@@ -2,130 +2,185 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC704D01C7
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2019 21:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC3CD0341
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 00:11:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbfJHT4B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Oct 2019 15:56:01 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41467 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730413AbfJHT4B (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Oct 2019 15:56:01 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f20so16823865edv.8
-        for <linux-xfs@vger.kernel.org>; Tue, 08 Oct 2019 12:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=Nw5QEdlo56HHv75ebufO1xE7OJYJGB/ks38I0F1Wb/fItBckqxVn9kspxoClVya7wo
-         272z5Yh/4F8BtTKugP+e/QS6gWm38z8BJkZSaN+qYEH3sdeZGa9QqhucIAe9zx4PPnPn
-         y1DxXl17QxBf1CSj4hZZMjoBetSMmj5aPJh42P0JoBXnheMxn2RdAhW8w19Fk4I5or3r
-         gQczG2fNQIz9QLpNhMzwYIBqmIjg/UmlFm1ziM9Y6jaR5SZ3MRjBbzi8dHSqZA0n6eIM
-         3igJQVyq8L7LWvPKj8cC97Px/0H+YS85c5Fb1dKkomRtc2onmQV/LYXToN8oiHlARdlq
-         O6UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
-        b=mWhqq43dDhzTi1Kk3mFNcE//d8QvzhIAzKpULumbMOmiZLifrC8JSUSULiY9SCFy+u
-         00rJVJwLE0XAA7VFrVgXDpERQowI15vrGUqXunNDcpeOiZKp+nJuwbX/ljtXTLYo/UiM
-         rMtfCz7JiJQEkYkbUSU2R6xs4PDm8OhHehrpkf1xMJT9gduaA+L3wwOZwfzzUmGx0zPg
-         WEslamq7oodCVcj59no2s6tsh+hZWvkdrWNFiN20y4n9VrWBjDftYbABCtk5b5Mw3tE4
-         ZZPfmPlY5H/wdNlPIQCwiFFTKijzLVWV4DkLaF4u+/voV0YQYCAHTn9sFi2j/C945hVE
-         IenQ==
-X-Gm-Message-State: APjAAAWoGXpd30XYSD3PoRr29j7Zyv5i2+WuRlPfVXnbIz1a3TdZ7Dv9
-        dR013tA/EyPXaCmZLOsgLajV1Dnr+zlX/YYiybU=
-X-Google-Smtp-Source: APXvYqxwhCQ6zX6FhBdDog9G6PjHU5EwA3aadyf9i1uNik0q+vAIX6gV5dEnTsOUpcZrOljfzY8n5NHRT3gpNN7Yyes=
-X-Received: by 2002:a05:6402:32f:: with SMTP id q15mr35783586edw.143.1570564559602;
- Tue, 08 Oct 2019 12:55:59 -0700 (PDT)
+        id S1725879AbfJHWLp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Oct 2019 18:11:45 -0400
+Received: from mga18.intel.com ([134.134.136.126]:8819 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfJHWLp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 8 Oct 2019 18:11:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 15:11:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
+   d="scan'208";a="368557465"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 08 Oct 2019 15:11:43 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iHxhn-0000x2-6M; Wed, 09 Oct 2019 06:11:43 +0800
+Date:   Wed, 9 Oct 2019 06:10:48 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bill O'Donnell <billodo@redhat.com>
+Cc:     kbuild-all@01.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [xfs-linux:xfs-5.4-fixes 4/7] fs/xfs/xfs_buf.c:354:29: sparse:
+ sparse: invalid assignment: |=
+Message-ID: <201910090646.aXXtk3B2%lkp@intel.com>
 MIME-Version: 1.0
-Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:59
- -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   MONEY GRAM <currency1000000@gmail.com>
-Date:   Tue, 8 Oct 2019 20:55:59 +0100
-Message-ID: <CAPqfnSEr44Oq+keY6aSvGnDk5Eta-VLMOqEX1RgMPE_LUdd7+g@mail.gmail.com>
-Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
-M.T.C.N:78393135
+tree:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git xfs-5.4-fixes
+head:   6350744c66a41ac4d044bd083852a5cc20bd5b93
+commit: b4d5a0a3dc269e8127f89060cb690a19221fd433 [4/7] xfs: assure zeroed memory buffers for certain kmem allocations
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-42-g38eda53-dirty
+        git checkout b4d5a0a3dc269e8127f89060cb690a19221fd433
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Attn: Beneficiary,
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-This is to inform you that the America Embassy office was instructed
-to transfer your fund $980,000.00 U.S Dollars compensating all the
-SCAM VICTIMS and your email was found as one of the VICTIMS. by
-America security leading team and America representative officers so
-between today the 8th of October till 1ST Of December 2019 you will
-be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
-that we have already sent the $6,000 dollars this morning to avoid
-cancellation of your payment, remain the total sum of $980,000.00.
 
-You have only six hours to call this office upon the receipt of this
-email the maximum amount you will be receiving per a day starting from
-today's $6,000 and the Money Transfer Control Number of today is
-below.
+sparse warnings: (new ones prefixed by >>)
 
-NOTE; The sent $6,000 is on hold because of the instruction from IMF
-office, they asked us to place it on hold by requesting the (Clean
-Bill Record Certificate) which will cost you $25 in order to fulfill
-all the necessary obligation to avoid any hitches while sending you
-the payment through MONEY GRAM money transfer, the necessary
-obligation I mean here is to obtain the (Clean Bill Record
-Certificate)
+>> fs/xfs/xfs_buf.c:354:29: sparse: sparse: invalid assignment: |=
+>> fs/xfs/xfs_buf.c:354:29: sparse:    left side has type unsigned int
+>> fs/xfs/xfs_buf.c:354:29: sparse:    right side has type restricted xfs_km_flags_t
+>> fs/xfs/xfs_buf.c:367:44: sparse: sparse: restricted xfs_km_flags_t degrades to integer
+>> fs/xfs/xfs_buf.c:367:52: sparse: sparse: incorrect type in argument 3 (different base types) @@    expected restricted xfs_km_flags_t [usertype] flags @@    got  [usertype] flags @@
+>> fs/xfs/xfs_buf.c:367:52: sparse:    expected restricted xfs_km_flags_t [usertype] flags
+>> fs/xfs/xfs_buf.c:367:52: sparse:    got unsigned int
 
-Below is the information of today track it in our
+vim +354 fs/xfs/xfs_buf.c
 
-websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
-to see is available to pick up by the receiver, but if we didn't here
-from you soon we'll pickup it up from line for security reason to
-avoid hackers stealing the money online.
+   333	
+   334	/*
+   335	 * Allocates all the pages for buffer in question and builds it's page list.
+   336	 */
+   337	STATIC int
+   338	xfs_buf_allocate_memory(
+   339		xfs_buf_t		*bp,
+   340		uint			flags)
+   341	{
+   342		size_t			size;
+   343		size_t			nbytes, offset;
+   344		gfp_t			gfp_mask = xb_to_gfp(flags);
+   345		unsigned short		page_count, i;
+   346		xfs_off_t		start, end;
+   347		int			error;
+   348		uint			kmflag_mask = 0;
+   349	
+   350		/*
+   351		 * assure zeroed buffer for non-read cases.
+   352		 */
+   353		if (!(flags & XBF_READ)) {
+ > 354			kmflag_mask |= KM_ZERO;
+   355			gfp_mask |= __GFP_ZERO;
+   356		}
+   357	
+   358		/*
+   359		 * for buffers that are contained within a single page, just allocate
+   360		 * the memory from the heap - there's no need for the complexity of
+   361		 * page arrays to keep allocation down to order 0.
+   362		 */
+   363		size = BBTOB(bp->b_length);
+   364		if (size < PAGE_SIZE) {
+   365			int align_mask = xfs_buftarg_dma_alignment(bp->b_target);
+   366			bp->b_addr = kmem_alloc_io(size, align_mask,
+ > 367						   KM_NOFS | kmflag_mask);
+   368			if (!bp->b_addr) {
+   369				/* low memory - use alloc_page loop instead */
+   370				goto use_alloc_page;
+   371			}
+   372	
+   373			if (((unsigned long)(bp->b_addr + size - 1) & PAGE_MASK) !=
+   374			    ((unsigned long)bp->b_addr & PAGE_MASK)) {
+   375				/* b_addr spans two pages - use alloc_page instead */
+   376				kmem_free(bp->b_addr);
+   377				bp->b_addr = NULL;
+   378				goto use_alloc_page;
+   379			}
+   380			bp->b_offset = offset_in_page(bp->b_addr);
+   381			bp->b_pages = bp->b_page_array;
+   382			bp->b_pages[0] = kmem_to_page(bp->b_addr);
+   383			bp->b_page_count = 1;
+   384			bp->b_flags |= _XBF_KMEM;
+   385			return 0;
+   386		}
+   387	
+   388	use_alloc_page:
+   389		start = BBTOB(bp->b_maps[0].bm_bn) >> PAGE_SHIFT;
+   390		end = (BBTOB(bp->b_maps[0].bm_bn + bp->b_length) + PAGE_SIZE - 1)
+   391									>> PAGE_SHIFT;
+   392		page_count = end - start;
+   393		error = _xfs_buf_get_pages(bp, page_count);
+   394		if (unlikely(error))
+   395			return error;
+   396	
+   397		offset = bp->b_offset;
+   398		bp->b_flags |= _XBF_PAGES;
+   399	
+   400		for (i = 0; i < bp->b_page_count; i++) {
+   401			struct page	*page;
+   402			uint		retries = 0;
+   403	retry:
+   404			page = alloc_page(gfp_mask);
+   405			if (unlikely(page == NULL)) {
+   406				if (flags & XBF_READ_AHEAD) {
+   407					bp->b_page_count = i;
+   408					error = -ENOMEM;
+   409					goto out_free_pages;
+   410				}
+   411	
+   412				/*
+   413				 * This could deadlock.
+   414				 *
+   415				 * But until all the XFS lowlevel code is revamped to
+   416				 * handle buffer allocation failures we can't do much.
+   417				 */
+   418				if (!(++retries % 100))
+   419					xfs_err(NULL,
+   420			"%s(%u) possible memory allocation deadlock in %s (mode:0x%x)",
+   421						current->comm, current->pid,
+   422						__func__, gfp_mask);
+   423	
+   424				XFS_STATS_INC(bp->b_mount, xb_page_retries);
+   425				congestion_wait(BLK_RW_ASYNC, HZ/50);
+   426				goto retry;
+   427			}
+   428	
+   429			XFS_STATS_INC(bp->b_mount, xb_page_found);
+   430	
+   431			nbytes = min_t(size_t, size, PAGE_SIZE - offset);
+   432			size -= nbytes;
+   433			bp->b_pages[i] = page;
+   434			offset = 0;
+   435		}
+   436		return 0;
+   437	
+   438	out_free_pages:
+   439		for (i = 0; i < bp->b_page_count; i++)
+   440			__free_page(bp->b_pages[i]);
+   441		bp->b_flags &= ~_XBF_PAGES;
+   442		return error;
+   443	}
+   444	
 
-Money Transfer Control Number M.T.C.N)::78393135
-SENDERS FIRST NAME: John
-SENDERS LAST NAME: Chun
-SENDERS COUNTRY...BENIN REPUBLIC
-TEXT QUESTION: A
-ANSWER: B
-AMOUNT: $6,000
-
-We need the below details from you, to enable us place the payment to
-your name and transfer the fund to you.
-
-(Full Receivers name)...................
-(You're Country)................................
-(Address)......................................
-(Phone NuMBER-...............................
-(You're Age)............................
-(OCCUPATION)..REAL ESTATE..................
-(A Copy of Your ID CARD).SEE ATTACHMENTS.............
-
-HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
-AND THAT IS ALL YOU HAVE TO DO ASAP.
-
-The payment will be sending to below information, such as:
-
-Receiver.............. ALAN UDE
-Country................Benin Republic
-Amount: ....................$25
-Question: .....................A
-Answer:................... B
-Sender...............Name:
-MTCN :..............
-
-According to the instruction and order we received from IMF the their
-requested $25 must be made directly to the above info's.
-
-Furthermore you are advised to call us as the instruction was passed
-that within 6hours without hearing from you, Count your payment
-canceled. Number to call is below listed manager director office of
-release order:
-DR.ALAN UDE
-Director MONEY GRAM-Benin
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
