@@ -2,289 +2,343 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BBEECFD95
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2019 17:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C6ACFDA8
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2019 17:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfJHP1M (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Oct 2019 11:27:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39436 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfJHP1L (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Oct 2019 11:27:11 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FG8iR088596;
-        Tue, 8 Oct 2019 15:27:06 GMT
+        id S1728200AbfJHPaF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Oct 2019 11:30:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52170 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfJHPaE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Oct 2019 11:30:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FSugE141369;
+        Tue, 8 Oct 2019 15:29:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=qPhEjMun6Mmy7Yn588iLmVFZAuHiqy/oJlM5wUwY23M=;
- b=JkM6zjbgNgWYByPI5Q04AcH2PTtLZlZgumNppG580yG/W23Is4dPUiSdnQPW14kT3qeM
- BJRvWauBpaeGJJc4p2eqCnTAEQmXSyswD48SmNqlR4n22IVczmp2sulpFnNn0m+XmXRV
- sD/t+zLGkfnrPgDbN4CfNl27HfEHDGxGL0sW/QoJn+OwS4kJhoxckQ2twwMVv2ZTUex/
- GUNO3iwx0BidD9kbcuEnfRXtP+KpwhqfXapDmoUCgofcfELvXe9ey6HdmpQ41jgtc/G0
- WNh8GdVvcyN0H+gpcUfvEiVP3F9cLO38EQb9en8Qa0CKWIyd/ymZbg8fGsLCHvlTYUea 6Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vek4qe1pc-1
+ bh=Q5nz16JND+vLq217iJkuJP06Xl0/0MYQ4geI7Q7v+ls=;
+ b=eLN6H9d3fJTGnXGVpL1hMFSbJOwCOPPMksrgtzmtobAPWNZmB9AeaRmoBOpVZCqE4g1D
+ CmoGuQtQVHcUsOb7WsRSVN3BhWeDr7dvOlG1ac5g9a53KiXPcBpmSWqGxqwjQxDRjDBU
+ lYLhUvmSnutWMmj/QoL8vChZ7OCfP1H1mBIWJzPXgy/CxZffsOH3eavRK/U+1FI7jd3/
+ xLrCIaG/SouHEU28nylmxAYps0n2+22delyBvg9gfBXJs5O1APuzmUv+5GdY7jEbwv7E
+ HR/xqWWQPI75kZEda1SjKyQHxQ3iXicsSW249AvxPxS93POsWjTdDfcGDHmtZx+qs7tw aw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vejkue4jr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 15:27:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FEtiP184138;
-        Tue, 8 Oct 2019 15:27:05 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vgeuy4tw2-1
+        Tue, 08 Oct 2019 15:29:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x98FTfK4179101;
+        Tue, 8 Oct 2019 15:29:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2vg206j6wp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Oct 2019 15:27:05 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x98FR4uR021102;
-        Tue, 8 Oct 2019 15:27:04 GMT
+        Tue, 08 Oct 2019 15:29:55 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x98FSgLJ018843;
+        Tue, 8 Oct 2019 15:28:42 GMT
 Received: from localhost (/10.159.136.81)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Oct 2019 08:27:03 -0700
-Date:   Tue, 8 Oct 2019 08:27:02 -0700
+        with ESMTP ; Tue, 08 Oct 2019 08:28:42 -0700
+Date:   Tue, 8 Oct 2019 08:28:41 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Goldwyn Rodrigues <rgoldwyn@suse.com>, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 15/20] xfs: split out a new set of read-only iomap ops
-Message-ID: <20191008152702.GA13108@magnolia>
+Subject: Re: [PATCH 17/20] xfs: split the iomap ops for buffered vs direct
+ writes
+Message-ID: <20191008152841.GB13108@magnolia>
 References: <20191008071527.29304-1-hch@lst.de>
- <20191008071527.29304-16-hch@lst.de>
+ <20191008071527.29304-18-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008071527.29304-16-hch@lst.de>
+In-Reply-To: <20191008071527.29304-18-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910080135
+ engine=8.0.1-1908290000 definitions=main-1910080136
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9404 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910080135
+ definitions=main-1910080136
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 09:15:22AM +0200, Christoph Hellwig wrote:
-> Start untangling xfs_file_iomap_begin by splitting out the read-only
-> case into its own set of iomap_ops with a very simply iomap_begin
-> helper.
+On Tue, Oct 08, 2019 at 09:15:24AM +0200, Christoph Hellwig wrote:
+> Instead of lots of magic conditionals in the main write_begin
+> handler this make the intent very clear.  Thing will become even
+> better once we support delayed allocations for extent size hints
+> and realtime allocations.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks the same as last time...
+Looks the same as last time...right?
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/xfs_aops.c  |  9 ++++---
->  fs/xfs/xfs_file.c  |  8 +++---
->  fs/xfs/xfs_iomap.c | 61 ++++++++++++++++++++++++++++++++++------------
->  fs/xfs/xfs_iomap.h |  1 +
->  fs/xfs/xfs_iops.c  |  2 +-
->  5 files changed, 58 insertions(+), 23 deletions(-)
+>  fs/xfs/xfs_bmap_util.c |  3 ++-
+>  fs/xfs/xfs_file.c      | 16 ++++++-----
+>  fs/xfs/xfs_iomap.c     | 61 +++++++++++++++---------------------------
+>  fs/xfs/xfs_iomap.h     |  3 ++-
+>  fs/xfs/xfs_iops.c      |  4 +--
+>  fs/xfs/xfs_reflink.c   |  5 ++--
+>  6 files changed, 40 insertions(+), 52 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 807af5c3c347..f708a2831d2f 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -635,7 +635,7 @@ xfs_vm_bmap(
->  	 */
->  	if (xfs_is_cow_inode(ip) || XFS_IS_REALTIME_INODE(ip))
+> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+> index 0910cb75b65d..a6831b7bdc18 100644
+> --- a/fs/xfs/xfs_bmap_util.c
+> +++ b/fs/xfs/xfs_bmap_util.c
+> @@ -1111,7 +1111,8 @@ xfs_free_file_space(
 >  		return 0;
-> -	return iomap_bmap(mapping, block, &xfs_iomap_ops);
-> +	return iomap_bmap(mapping, block, &xfs_read_iomap_ops);
->  }
+>  	if (offset + len > XFS_ISIZE(ip))
+>  		len = XFS_ISIZE(ip) - offset;
+> -	error = iomap_zero_range(VFS_I(ip), offset, len, NULL, &xfs_iomap_ops);
+> +	error = iomap_zero_range(VFS_I(ip), offset, len, NULL,
+> +			&xfs_buffered_write_iomap_ops);
+>  	if (error)
+>  		return error;
 >  
->  STATIC int
-> @@ -643,7 +643,7 @@ xfs_vm_readpage(
->  	struct file		*unused,
->  	struct page		*page)
->  {
-> -	return iomap_readpage(page, &xfs_iomap_ops);
-> +	return iomap_readpage(page, &xfs_read_iomap_ops);
->  }
->  
->  STATIC int
-> @@ -653,7 +653,7 @@ xfs_vm_readpages(
->  	struct list_head	*pages,
->  	unsigned		nr_pages)
->  {
-> -	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
-> +	return iomap_readpages(mapping, pages, nr_pages, &xfs_read_iomap_ops);
->  }
->  
->  static int
-> @@ -663,7 +663,8 @@ xfs_iomap_swapfile_activate(
->  	sector_t			*span)
->  {
->  	sis->bdev = xfs_find_bdev_for_inode(file_inode(swap_file));
-> -	return iomap_swapfile_activate(sis, swap_file, span, &xfs_iomap_ops);
-> +	return iomap_swapfile_activate(sis, swap_file, span,
-> +			&xfs_read_iomap_ops);
->  }
->  
->  const struct address_space_operations xfs_address_space_operations = {
 > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 1ffb179f35d2..f9814306ed8e 100644
+> index f9814306ed8e..71ffab53a0fc 100644
 > --- a/fs/xfs/xfs_file.c
 > +++ b/fs/xfs/xfs_file.c
-> @@ -188,7 +188,7 @@ xfs_file_dio_aio_read(
->  	file_accessed(iocb->ki_filp);
->  
->  	xfs_ilock(ip, XFS_IOLOCK_SHARED);
-> -	ret = iomap_dio_rw(iocb, to, &xfs_iomap_ops, NULL);
-> +	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL);
->  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
->  
->  	return ret;
-> @@ -215,7 +215,7 @@ xfs_file_dax_read(
->  		xfs_ilock(ip, XFS_IOLOCK_SHARED);
+> @@ -351,7 +351,7 @@ xfs_file_aio_write_checks(
+>  	
+>  		trace_xfs_zero_eof(ip, isize, iocb->ki_pos - isize);
+>  		error = iomap_zero_range(inode, isize, iocb->ki_pos - isize,
+> -				NULL, &xfs_iomap_ops);
+> +				NULL, &xfs_buffered_write_iomap_ops);
+>  		if (error)
+>  			return error;
+>  	} else
+> @@ -547,7 +547,8 @@ xfs_file_dio_aio_write(
 >  	}
 >  
-> -	ret = dax_iomap_rw(iocb, to, &xfs_iomap_ops);
-> +	ret = dax_iomap_rw(iocb, to, &xfs_read_iomap_ops);
->  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
+>  	trace_xfs_file_direct_write(ip, count, iocb->ki_pos);
+> -	ret = iomap_dio_rw(iocb, from, &xfs_iomap_ops, &xfs_dio_write_ops);
+> +	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
+> +			   &xfs_dio_write_ops);
 >  
->  	file_accessed(iocb->ki_filp);
-> @@ -1156,7 +1156,9 @@ __xfs_filemap_fault(
->  	if (IS_DAX(inode)) {
->  		pfn_t pfn;
+>  	/*
+>  	 * If unaligned, this is the only IO in-flight. If it has not yet
+> @@ -594,7 +595,7 @@ xfs_file_dax_write(
+>  	count = iov_iter_count(from);
 >  
-> -		ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &xfs_iomap_ops);
-> +		ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL,
-> +				(write_fault && !vmf->cow_page) ?
-> +				 &xfs_iomap_ops : &xfs_read_iomap_ops);
+>  	trace_xfs_file_dax_write(ip, count, pos);
+> -	ret = dax_iomap_rw(iocb, from, &xfs_iomap_ops);
+> +	ret = dax_iomap_rw(iocb, from, &xfs_direct_write_iomap_ops);
+>  	if (ret > 0 && iocb->ki_pos > i_size_read(inode)) {
+>  		i_size_write(inode, iocb->ki_pos);
+>  		error = xfs_setfilesize(ip, pos, ret);
+> @@ -641,7 +642,8 @@ xfs_file_buffered_aio_write(
+>  	current->backing_dev_info = inode_to_bdi(inode);
+>  
+>  	trace_xfs_file_buffered_write(ip, iov_iter_count(from), iocb->ki_pos);
+> -	ret = iomap_file_buffered_write(iocb, from, &xfs_iomap_ops);
+> +	ret = iomap_file_buffered_write(iocb, from,
+> +			&xfs_buffered_write_iomap_ops);
+>  	if (likely(ret >= 0))
+>  		iocb->ki_pos += ret;
+>  
+> @@ -1158,12 +1160,14 @@ __xfs_filemap_fault(
+>  
+>  		ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL,
+>  				(write_fault && !vmf->cow_page) ?
+> -				 &xfs_iomap_ops : &xfs_read_iomap_ops);
+> +				 &xfs_direct_write_iomap_ops :
+> +				 &xfs_read_iomap_ops);
 >  		if (ret & VM_FAULT_NEEDDSYNC)
 >  			ret = dax_finish_sync_fault(vmf, pe_size, pfn);
 >  	} else {
+>  		if (write_fault)
+> -			ret = iomap_page_mkwrite(vmf, &xfs_iomap_ops);
+> +			ret = iomap_page_mkwrite(vmf,
+> +					&xfs_buffered_write_iomap_ops);
+>  		else
+>  			ret = filemap_fault(vmf);
+>  	}
 > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> index a9f9e8c9034a..0cfd973fd192 100644
+> index a6a03b65c4e7..5a7499f88673 100644
 > --- a/fs/xfs/xfs_iomap.c
 > +++ b/fs/xfs/xfs_iomap.c
-> @@ -950,11 +950,13 @@ xfs_file_iomap_begin(
->  	u16			iomap_flags = 0;
->  	unsigned		lockmode;
+> @@ -719,16 +719,7 @@ xfs_ilock_for_iomap(
+>  }
 >  
-> +	ASSERT(flags & (IOMAP_WRITE | IOMAP_ZERO));
-> +
+>  static int
+> -xfs_file_iomap_begin_delay(
+> -	struct inode		*inode,
+> -	loff_t			offset,
+> -	loff_t			count,
+> -	unsigned		flags,
+> -	struct iomap		*iomap,
+> -	struct iomap		*srcmap);
+> -
+> -static int
+> -xfs_file_iomap_begin(
+> +xfs_direct_write_iomap_begin(
+>  	struct inode		*inode,
+>  	loff_t			offset,
+>  	loff_t			length,
+> @@ -751,13 +742,6 @@ xfs_file_iomap_begin(
 >  	if (XFS_FORCED_SHUTDOWN(mp))
 >  		return -EIO;
 >  
-> -	if ((flags & (IOMAP_WRITE | IOMAP_ZERO)) && !(flags & IOMAP_DIRECT) &&
-> -			!IS_DAX(inode) && !xfs_get_extsz_hint(ip)) {
-> +	if (!(flags & IOMAP_DIRECT) && !IS_DAX(inode) &&
-> +	    !xfs_get_extsz_hint(ip)) {
->  		/* Reserve delalloc blocks for regular writeback. */
->  		return xfs_file_iomap_begin_delay(inode, offset, length, flags,
->  				iomap, srcmap);
-> @@ -975,17 +977,6 @@ xfs_file_iomap_begin(
->  	if (error)
->  		goto out_unlock;
->  
-> -	if (flags & IOMAP_REPORT) {
-> -		/* Trim the mapping to the nearest shared extent boundary. */
-> -		error = xfs_reflink_trim_around_shared(ip, &imap, &shared);
-> -		if (error)
-> -			goto out_unlock;
+> -	if (!(flags & IOMAP_DIRECT) && !IS_DAX(inode) &&
+> -	    !xfs_get_extsz_hint(ip)) {
+> -		/* Reserve delalloc blocks for regular writeback. */
+> -		return xfs_file_iomap_begin_delay(inode, offset, length, flags,
+> -				iomap, srcmap);
 > -	}
 > -
-> -	/* Non-modifying mapping requested, so we are done */
-> -	if (!(flags & (IOMAP_WRITE | IOMAP_ZERO)))
-> -		goto out_found;
-> -
 >  	/*
->  	 * Break shared extents if necessary. Checks for non-blocking IO have
->  	 * been done up front, so we don't need to do them here.
-> @@ -1046,8 +1037,6 @@ xfs_file_iomap_begin(
->  	trace_xfs_iomap_alloc(ip, offset, length, XFS_DATA_FORK, &imap);
+>  	 * Lock the inode in the manner required for the specified operation and
+>  	 * check for as many conditions that would result in blocking as
+> @@ -857,8 +841,12 @@ xfs_file_iomap_begin(
+>  	return error;
+>  }
 >  
->  out_finish:
-> -	if (shared)
-> -		iomap_flags |= IOMAP_F_SHARED;
->  	return xfs_bmbt_to_iomap(ip, iomap, &imap, iomap_flags);
->  
->  out_found:
-> @@ -1150,6 +1139,48 @@ const struct iomap_ops xfs_iomap_ops = {
->  	.iomap_end		= xfs_file_iomap_end,
->  };
->  
-> +static int
-> +xfs_read_iomap_begin(
-> +	struct inode		*inode,
-> +	loff_t			offset,
-> +	loff_t			length,
-> +	unsigned		flags,
-> +	struct iomap		*iomap,
-> +	struct iomap		*srcmap)
-> +{
-> +	struct xfs_inode	*ip = XFS_I(inode);
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	struct xfs_bmbt_irec	imap;
-> +	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
-> +	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, length);
-> +	int			nimaps = 1, error = 0;
-> +	bool			shared = false;
-> +	unsigned		lockmode;
-> +
-> +	ASSERT(!(flags & (IOMAP_WRITE | IOMAP_ZERO)));
-> +
-> +	if (XFS_FORCED_SHUTDOWN(mp))
-> +		return -EIO;
-> +
-> +	error = xfs_ilock_for_iomap(ip, flags, &lockmode);
-> +	if (error)
-> +		return error;
-> +	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb, &imap,
-> +			       &nimaps, 0);
-> +	if (!error && (flags & IOMAP_REPORT))
-> +		error = xfs_reflink_trim_around_shared(ip, &imap, &shared);
-> +	xfs_iunlock(ip, lockmode);
-> +
-> +	if (error)
-> +		return error;
-> +	trace_xfs_iomap_found(ip, offset, length, XFS_DATA_FORK, &imap);
-> +	return xfs_bmbt_to_iomap(ip, iomap, &imap, shared ? IOMAP_F_SHARED : 0);
-> +}
-> +
-> +const struct iomap_ops xfs_read_iomap_ops = {
-> +	.iomap_begin		= xfs_read_iomap_begin,
+> +const struct iomap_ops xfs_direct_write_iomap_ops = {
+> +	.iomap_begin		= xfs_direct_write_iomap_begin,
 > +};
 > +
 >  static int
->  xfs_seek_iomap_begin(
+> -xfs_file_iomap_begin_delay(
+> +xfs_buffered_write_iomap_begin(
 >  	struct inode		*inode,
-> diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
-> index 71d0ae460c44..61b1fc3e5143 100644
-> --- a/fs/xfs/xfs_iomap.h
-> +++ b/fs/xfs/xfs_iomap.h
-> @@ -40,6 +40,7 @@ xfs_aligned_fsb_count(
+>  	loff_t			offset,
+>  	loff_t			count,
+> @@ -877,8 +865,12 @@ xfs_file_iomap_begin_delay(
+>  	int			whichfork = XFS_DATA_FORK;
+>  	int			error = 0;
+>  
+> +	/* we can't use delayed allocations when using extent size hints */
+> +	if (xfs_get_extsz_hint(ip))
+> +		return xfs_direct_write_iomap_begin(inode, offset, count,
+> +				flags, iomap, srcmap);
+> +
+>  	ASSERT(!XFS_IS_REALTIME_INODE(ip));
+> -	ASSERT(!xfs_get_extsz_hint(ip));
+>  
+>  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+>  
+> @@ -1070,18 +1062,23 @@ xfs_file_iomap_begin_delay(
 >  }
 >  
->  extern const struct iomap_ops xfs_iomap_ops;
-> +extern const struct iomap_ops xfs_read_iomap_ops;
+>  static int
+> -xfs_file_iomap_end_delalloc(
+> -	struct xfs_inode	*ip,
+> +xfs_buffered_write_iomap_end(
+> +	struct inode		*inode,
+>  	loff_t			offset,
+>  	loff_t			length,
+>  	ssize_t			written,
+> +	unsigned		flags,
+>  	struct iomap		*iomap)
+>  {
+> +	struct xfs_inode	*ip = XFS_I(inode);
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  	xfs_fileoff_t		start_fsb;
+>  	xfs_fileoff_t		end_fsb;
+>  	int			error = 0;
+>  
+> +	if (iomap->type != IOMAP_DELALLOC)
+> +		return 0;
+> +
+>  	/*
+>  	 * Behave as if the write failed if drop writes is enabled. Set the NEW
+>  	 * flag to force delalloc cleanup.
+> @@ -1126,25 +1123,9 @@ xfs_file_iomap_end_delalloc(
+>  	return 0;
+>  }
+>  
+> -static int
+> -xfs_file_iomap_end(
+> -	struct inode		*inode,
+> -	loff_t			offset,
+> -	loff_t			length,
+> -	ssize_t			written,
+> -	unsigned		flags,
+> -	struct iomap		*iomap)
+> -{
+> -	if ((flags & (IOMAP_WRITE | IOMAP_ZERO)) &&
+> -	    iomap->type == IOMAP_DELALLOC)
+> -		return xfs_file_iomap_end_delalloc(XFS_I(inode), offset,
+> -				length, written, iomap);
+> -	return 0;
+> -}
+> -
+> -const struct iomap_ops xfs_iomap_ops = {
+> -	.iomap_begin		= xfs_file_iomap_begin,
+> -	.iomap_end		= xfs_file_iomap_end,
+> +const struct iomap_ops xfs_buffered_write_iomap_ops = {
+> +	.iomap_begin		= xfs_buffered_write_iomap_begin,
+> +	.iomap_end		= xfs_buffered_write_iomap_end,
+>  };
+>  
+>  static int
+> diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
+> index 61b1fc3e5143..7aed28275089 100644
+> --- a/fs/xfs/xfs_iomap.h
+> +++ b/fs/xfs/xfs_iomap.h
+> @@ -39,7 +39,8 @@ xfs_aligned_fsb_count(
+>  	return count_fsb;
+>  }
+>  
+> -extern const struct iomap_ops xfs_iomap_ops;
+> +extern const struct iomap_ops xfs_buffered_write_iomap_ops;
+> +extern const struct iomap_ops xfs_direct_write_iomap_ops;
+>  extern const struct iomap_ops xfs_read_iomap_ops;
 >  extern const struct iomap_ops xfs_seek_iomap_ops;
 >  extern const struct iomap_ops xfs_xattr_iomap_ops;
->  
 > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index fe285d123d69..9c448a54a951 100644
+> index 9c448a54a951..329a34af8e79 100644
 > --- a/fs/xfs/xfs_iops.c
 > +++ b/fs/xfs/xfs_iops.c
-> @@ -1114,7 +1114,7 @@ xfs_vn_fiemap(
->  				&xfs_xattr_iomap_ops);
+> @@ -883,10 +883,10 @@ xfs_setattr_size(
+>  	if (newsize > oldsize) {
+>  		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
+>  		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
+> -				&did_zeroing, &xfs_iomap_ops);
+> +				&did_zeroing, &xfs_buffered_write_iomap_ops);
 >  	} else {
->  		error = iomap_fiemap(inode, fieinfo, start, length,
+>  		error = iomap_truncate_page(inode, newsize, &did_zeroing,
 > -				&xfs_iomap_ops);
-> +				&xfs_read_iomap_ops);
+> +				&xfs_buffered_write_iomap_ops);
 >  	}
->  	xfs_iunlock(XFS_I(inode), XFS_IOLOCK_SHARED);
 >  
+>  	if (error)
+> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> index 19a6e4644123..1e18b4024b82 100644
+> --- a/fs/xfs/xfs_reflink.c
+> +++ b/fs/xfs/xfs_reflink.c
+> @@ -1270,7 +1270,7 @@ xfs_reflink_zero_posteof(
+>  
+>  	trace_xfs_zero_eof(ip, isize, pos - isize);
+>  	return iomap_zero_range(VFS_I(ip), isize, pos - isize, NULL,
+> -			&xfs_iomap_ops);
+> +			&xfs_buffered_write_iomap_ops);
+>  }
+>  
+>  /*
+> @@ -1527,7 +1527,8 @@ xfs_reflink_unshare(
+>  
+>  	inode_dio_wait(inode);
+>  
+> -	error = iomap_file_unshare(inode, offset, len, &xfs_iomap_ops);
+> +	error = iomap_file_unshare(inode, offset, len,
+> +			&xfs_buffered_write_iomap_ops);
+>  	if (error)
+>  		goto out;
+>  	error = filemap_write_and_wait(inode->i_mapping);
 > -- 
 > 2.20.1
 > 
