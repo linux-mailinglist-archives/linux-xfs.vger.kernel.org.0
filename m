@@ -2,25 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB101D1B33
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 23:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB223D1B3E
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 23:54:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbfJIVte (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Oct 2019 17:49:34 -0400
-Received: from sandeen.net ([63.231.237.45]:36998 "EHLO sandeen.net"
+        id S1730490AbfJIVyl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Oct 2019 17:54:41 -0400
+Received: from sandeen.net ([63.231.237.45]:37264 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfJIVtd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:49:33 -0400
+        id S1727046AbfJIVyk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:54:40 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 1B0E1D5E;
-        Wed,  9 Oct 2019 16:49:04 -0500 (CDT)
-Subject: Re: [PATCH 11/13] xfs_scrub: check progress bar timedwait failures
+        by sandeen.net (Postfix) with ESMTPSA id F2666D5E;
+        Wed,  9 Oct 2019 16:54:10 -0500 (CDT)
+Subject: Re: [PATCH 12/13] xfs_scrub: move all the queue_subdir error
+ reporting to callers
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156944720314.297677.12837037497727069563.stgit@magnolia>
- <156944727002.297677.2767314073387682430.stgit@magnolia>
+ <156944727937.297677.492739673247248919.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +66,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <42a6b464-0e0b-a6e5-b254-908737026ad7@sandeen.net>
-Date:   Wed, 9 Oct 2019 16:49:31 -0500
+Message-ID: <d09a1f7e-f4d6-a921-5064-2d0d4b17da62@sandeen.net>
+Date:   Wed, 9 Oct 2019 16:54:38 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <156944727002.297677.2767314073387682430.stgit@magnolia>
+In-Reply-To: <156944727937.297677.492739673247248919.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,30 +83,11 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 9/25/19 4:34 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Check for failures in the timedwait for progressbar reporting.
+> Change queue_subdir to return a positive error code to callers and move
+> the error reporting to the callers.  This continues the process of
+> changing internal functions to return error codes.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
-> ---
->  scrub/progress.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> 
-> diff --git a/scrub/progress.c b/scrub/progress.c
-> index 5fda4ccb..e93b607f 100644
-> --- a/scrub/progress.c
-> +++ b/scrub/progress.c
-> @@ -130,7 +130,9 @@ progress_report_thread(void *arg)
->  			abstime.tv_sec++;
->  			abstime.tv_nsec -= NSEC_PER_SEC;
->  		}
-> -		pthread_cond_timedwait(&pt.wakeup, &pt.lock, &abstime);
-> +		ret = pthread_cond_timedwait(&pt.wakeup, &pt.lock, &abstime);
-> +		if (ret && ret != ETIMEDOUT)
-> +			break;
->  		if (pt.terminate)
->  			break;
->  		ret = ptcounter_value(pt.ptc, &progress_val);
-> 
