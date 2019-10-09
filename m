@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C76D1AE1
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 23:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D352DD1AF3
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 23:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbfJIV1v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Oct 2019 17:27:51 -0400
-Received: from sandeen.net ([63.231.237.45]:35890 "EHLO sandeen.net"
+        id S1730815AbfJIVaN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Oct 2019 17:30:13 -0400
+Received: from sandeen.net ([63.231.237.45]:36046 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfJIV1v (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 9 Oct 2019 17:27:51 -0400
+        id S1729908AbfJIVaM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 9 Oct 2019 17:30:12 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 52D59D5E;
-        Wed,  9 Oct 2019 16:27:22 -0500 (CDT)
-Subject: Re: [PATCH 07/13] libfrog: fix bitmap error communication problems
+        by sandeen.net (Postfix) with ESMTPSA id 69606D5E;
+        Wed,  9 Oct 2019 16:29:43 -0500 (CDT)
+Subject: Re: [PATCH 08/13] libfrog: fix missing error checking in bitmap code
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156944720314.297677.12837037497727069563.stgit@magnolia>
- <156944724578.297677.11793519151262574472.stgit@magnolia>
+ <156944725182.297677.5778254084930145538.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <7204abb4-354f-ce39-7442-cc764161fb23@sandeen.net>
-Date:   Wed, 9 Oct 2019 16:27:49 -0500
+Message-ID: <3b5804c5-0bdf-4353-6baa-5f42c7ccbba5@sandeen.net>
+Date:   Wed, 9 Oct 2019 16:30:11 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <156944724578.297677.11793519151262574472.stgit@magnolia>
+In-Reply-To: <156944725182.297677.5778254084930145538.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,49 +82,12 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 9/25/19 4:34 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Convert all the libfrog code and callers away from the libc-style
-> indirect errno returns to directly returning error codes to callers.
+> Check library calls for error codes being returned.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  libfrog/bitmap.c |   13 +++++++------
->  libfrog/bitmap.h |    2 +-
->  repair/rmap.c    |    4 ++--
->  scrub/phase6.c   |   20 +++++++++++---------
->  4 files changed, 21 insertions(+), 18 deletions(-)
+>  libfrog/bitmap.c |   15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> 
-> diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
-> index 4dafc4c9..be95965f 100644
-> --- a/libfrog/bitmap.c
-> +++ b/libfrog/bitmap.c
-> @@ -23,7 +23,8 @@
->   */
->  
->  #define avl_for_each_range_safe(pos, n, l, first, last) \
-> -	for (pos = (first), n = pos->avl_nextino, l = (last)->avl_nextino; pos != (l); \
-> +	for (pos = (first), n = pos->avl_nextino, l = (last)->avl_nextino; \
-> +			pos != (l); \
->  			pos = n, n = pos ? pos->avl_nextino : NULL)
-
-unrelated cosmetic change? *shrug* ok may as well :)
-
->  
->  #define avl_for_each_safe(tree, pos, n) \
-> @@ -67,18 +68,18 @@ static struct avl64ops bitmap_ops = {
->  
->  /* Initialize a bitmap. */
->  int
-> -bitmap_init(
-> +bitmap_alloc(
->  	struct bitmap		**bmapp)
->  {
->  	struct bitmap		*bmap;
->  
->  	bmap = calloc(1, sizeof(struct bitmap));
->  	if (!bmap)
-
-sooooo (!bmap) /could/ be success if sizeof(struct bitmap) is zero, but I think
-it's safe to ignore that case :)
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
