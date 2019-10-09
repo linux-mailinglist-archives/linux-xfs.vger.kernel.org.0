@@ -2,91 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91211D1933
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 21:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B4D9D19B1
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 22:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbfJITsL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Oct 2019 15:48:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48788 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731173AbfJITsK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Oct 2019 15:48:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99JhuLT151185;
-        Wed, 9 Oct 2019 19:47:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=aRGFY/1sepvMtKTWM0pjHGpLksGX8MVCsubt8jGp6pA=;
- b=DmjwhE2rRpXKIX4R0WcXjS2yklIYjYfq2+OKcMx3cDp8tVH/osos3pB4r5Xsgbzdoq/4
- o+4aQm3xLoZfvDHMmm+ePGsRpYzxybeokxD52YgabESyGGldu35lfR0Wpsk+X8USLLK1
- hNECP92a+A/VuYXPDg3WZW/Zx/69d9iY5CU8VzPWDcl7ILyOje7D4+xvI1PBXPzx5g23
- 5PQ6pU8YRjaUUcSK/V1dsWULhutKR/Zrv84p4PIhe6ISoLxH36HfoBkgLo+Vg2RtN1RV
- g6SlCk4ol6RbYfX2PPvGTid9wsjf3LhzProzmYkAM+4Sb3wZG6FLICUjZxbrO8+qJhsp Ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vek4qpwpe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 19:47:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x99JTFnB098327;
-        Wed, 9 Oct 2019 19:47:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2vh5cbd6vq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Oct 2019 19:47:52 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x99JlnNO004930;
-        Wed, 9 Oct 2019 19:47:49 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 12:47:49 -0700
-Date:   Wed, 9 Oct 2019 12:47:47 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Ian Kent <raven@themaw.net>, linux-xfs <linux-xfs@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        David Howells <dhowells@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v5 08/17] xfs: mount-api - move xfs_parseargs()
- validation to a helper
-Message-ID: <20191009194747.GH13108@magnolia>
-References: <157062043952.32346.977737248061083292.stgit@fedora-28>
- <157062065250.32346.13350789812067183237.stgit@fedora-28>
- <20191009150206.GF10349@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009150206.GF10349@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910090155
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910090156
+        id S1728804AbfJIUlc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Oct 2019 16:41:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46526 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730955AbfJIUlc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 9 Oct 2019 16:41:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 759F7AF6B;
+        Wed,  9 Oct 2019 20:41:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1CB231E422A; Wed,  9 Oct 2019 22:41:30 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     <linux-fsdevel@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, darrick.wong@oracle.com,
+        <linux-xfs@vger.kernel.org>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/2] iomap: Waiting for IO in iomap_dio_rw()
+Date:   Wed,  9 Oct 2019 22:41:24 +0200
+Message-Id: <20191009202736.19227-1-jack@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 08:02:06AM -0700, Christoph Hellwig wrote:
-> On Wed, Oct 09, 2019 at 07:30:52PM +0800, Ian Kent wrote:
-> > +#ifndef CONFIG_XFS_QUOTA
-> > +	if (XFS_IS_QUOTA_RUNNING(mp)) {
-> > +		xfs_warn(mp, "quota support not available in this kernel.");
-> > +		return -EINVAL;
-> > +	}
-> > +#endif
-> 
-> this can use IS_ENABLED.
+Hello,
 
-I didn't think that macro needed a CONFIG_XFS_QUOTA check...?
+when doing the ext4 conversion of direct IO code to iomap, we found it very
+difficult to handle inode extension with what iomap code currently provides.
+Ext4 wants to do inode extension as sync IO (so that the whole duration of
+IO is protected by inode->i_rwsem), also we need to truncate blocks beyond
+end of file in case of error or short write. Now in ->end_io handler we don't
+have the information how long originally the write was (to judge whether we
+may have allocated more blocks than we actually used) and in ->write_iter
+we don't know whether / how much of the IO actually succeeded in case of AIO.
 
---D
+Thinking about it for some time I think iomap code makes it unnecessarily
+complex for the filesystem in case it decides it doesn't want to perform AIO
+and wants to fall back to good old synchronous IO. In such case it is much
+easier for the filesystem if it just gets normal error return from
+iomap_dio_rw() and not just -EIOCBQUEUED.
+
+The first patch in the series adds argument to iomap_dio_rw() to wait for IO
+completion (internally iomap_dio_rw() already supports this!) and the second
+patch converts XFS waiting for unaligned DIO write to this new API.
+
+What do people think?
+
+								Honza 
