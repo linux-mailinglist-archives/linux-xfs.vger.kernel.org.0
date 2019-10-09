@@ -2,185 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DC3CD0341
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 00:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF460D04BE
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 02:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbfJHWLp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Oct 2019 18:11:45 -0400
-Received: from mga18.intel.com ([134.134.136.126]:8819 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfJHWLp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 8 Oct 2019 18:11:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Oct 2019 15:11:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,272,1566889200"; 
-   d="scan'208";a="368557465"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 08 Oct 2019 15:11:43 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iHxhn-0000x2-6M; Wed, 09 Oct 2019 06:11:43 +0800
-Date:   Wed, 9 Oct 2019 06:10:48 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bill O'Donnell <billodo@redhat.com>
-Cc:     kbuild-all@01.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [xfs-linux:xfs-5.4-fixes 4/7] fs/xfs/xfs_buf.c:354:29: sparse:
- sparse: invalid assignment: |=
-Message-ID: <201910090646.aXXtk3B2%lkp@intel.com>
+        id S1729567AbfJIAYI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Oct 2019 20:24:08 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46791 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbfJIAYI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Oct 2019 20:24:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id c6so942879ioo.13
+        for <linux-xfs@vger.kernel.org>; Tue, 08 Oct 2019 17:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=fIMArit464YCcTFaDzrK1gqcHAnr7KGXglvdfdOEYKU=;
+        b=Itm8jwmhbF5Fbuv+eelMno6mbAKtb6tmfYkdJEPU0HJ4ndwvBHSoLtog1OiNikjG9M
+         1vCSnnaojjXgQ6Y3u9byfCnMyjE7DA+rS+HJZSXZHktaxzD7i6zI3KMhuJJOW8vp0QBs
+         l6Z5SxDKwds7tHQodtLVcsJzkiC1hXaVOidediacU2lOR0bl6Jn7FfgClv/Q4Kir4VAk
+         pj3T43jZW0cy5MCj3yh7TjxhjMwvrWHQleJUxRsa/UO6Nc/74Wl+VIsxzSwAB4KlRppZ
+         bndejFvjU2ttJBuwxQLiCAeo6aocb+Ypadom9Ux5giavu59WGOtD+Umf2/+zyzwWodSD
+         7THw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=fIMArit464YCcTFaDzrK1gqcHAnr7KGXglvdfdOEYKU=;
+        b=Hck8fzRHkjRt2/Oxv9iDNOYgP33P6RQbwhjjazZYmf8e7i265jaNHUGp3qdWlHFwkd
+         2q6K9SkFagpcXOmbx8TLZb6KETEvjgaqUwOpGf6Iz26DT3uxxmjxY5afjXP4nFX7eSPB
+         AMP8xyxGso+B6+A/rmm69L9d/Y8fLE+YU89vWuiUj9wfe2Rbzk3P9RtFyppiPvl0tor6
+         orE10Qf5wcbZK45B0cNrJqcgPzxiOQEkVlXaWmZ0/fYgWagAUGHn+iv8pxL2HT6wmdm4
+         sIQyxzTL7UrtlOFxCgSgUjoSCsMG1igM9T8aRcx6J0sw/4uWyeFLD8vETpvx12oDy+EA
+         RO0Q==
+X-Gm-Message-State: APjAAAXmv3Pyyu+47VJXthcDOp+bikyWCsn+P+S+BtjP7INJwC70VrHC
+        XQahR6n0rng87X1PzfnF6Rg6XtQunwirgB7WVPg=
+X-Google-Smtp-Source: APXvYqzWJDDdigVRNA4X7Dy24PMnHDGAy4nNp4wcZrFhMOZv4nnT4Tld+i7SoIX7XJR8lwJIr031YIh1L0aR2Up0MQ4=
+X-Received: by 2002:a92:c142:: with SMTP id b2mr531465ilh.118.1570580645856;
+ Tue, 08 Oct 2019 17:24:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Received: by 2002:a5d:9a89:0:0:0:0:0 with HTTP; Tue, 8 Oct 2019 17:24:05 -0700 (PDT)
+Reply-To: mrswilliamslis@emailn.de
+From:   "Lisa Williams Mrs." <williamslisa20000@gmail.com>
+Date:   Wed, 9 Oct 2019 01:24:05 +0100
+Message-ID: <CAKCWvY21zpy33y3T-iYY9qb4y1JmuQDD0US05LaWknVKz_t-nw@mail.gmail.com>
+Subject: STRICTLY CONFIDENTIAL
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git xfs-5.4-fixes
-head:   6350744c66a41ac4d044bd083852a5cc20bd5b93
-commit: b4d5a0a3dc269e8127f89060cb690a19221fd433 [4/7] xfs: assure zeroed memory buffers for certain kmem allocations
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-42-g38eda53-dirty
-        git checkout b4d5a0a3dc269e8127f89060cb690a19221fd433
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Dear Beloved Brother /Sister
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Good Day
+
+I am Mrs. Lisa Williams very sick and admitted in the hospital bed
+permanently without no movement as I need to go in for surgical
+operation and I suffered  partial stroke that affected my tongue and
+my speech as well. Please can you help me to receive the sum of $4.5
+Million Dollars [Four Million, Five Hundred Thousand United State
+Dollars Only] for investment in your country. Having viewed and study
+your statue on-line which motivated me that you can be trusted with
+this project. The money is in over sea bank .Kindly help me for this
+project before I die.
+
+I want my part to go to charities  through you for the good work of
+the Lord, and to help the motherless, less privileged Orphans and
+widows? Please can you invest part of the money for me in real estate
+in your Country too. I will give you all the details as soon as I hear
+from you.
+
+Please reply with out delay. God bless you and your family.
 
 
-sparse warnings: (new ones prefixed by >>)
 
->> fs/xfs/xfs_buf.c:354:29: sparse: sparse: invalid assignment: |=
->> fs/xfs/xfs_buf.c:354:29: sparse:    left side has type unsigned int
->> fs/xfs/xfs_buf.c:354:29: sparse:    right side has type restricted xfs_km_flags_t
->> fs/xfs/xfs_buf.c:367:44: sparse: sparse: restricted xfs_km_flags_t degrades to integer
->> fs/xfs/xfs_buf.c:367:52: sparse: sparse: incorrect type in argument 3 (different base types) @@    expected restricted xfs_km_flags_t [usertype] flags @@    got  [usertype] flags @@
->> fs/xfs/xfs_buf.c:367:52: sparse:    expected restricted xfs_km_flags_t [usertype] flags
->> fs/xfs/xfs_buf.c:367:52: sparse:    got unsigned int
-
-vim +354 fs/xfs/xfs_buf.c
-
-   333	
-   334	/*
-   335	 * Allocates all the pages for buffer in question and builds it's page list.
-   336	 */
-   337	STATIC int
-   338	xfs_buf_allocate_memory(
-   339		xfs_buf_t		*bp,
-   340		uint			flags)
-   341	{
-   342		size_t			size;
-   343		size_t			nbytes, offset;
-   344		gfp_t			gfp_mask = xb_to_gfp(flags);
-   345		unsigned short		page_count, i;
-   346		xfs_off_t		start, end;
-   347		int			error;
-   348		uint			kmflag_mask = 0;
-   349	
-   350		/*
-   351		 * assure zeroed buffer for non-read cases.
-   352		 */
-   353		if (!(flags & XBF_READ)) {
- > 354			kmflag_mask |= KM_ZERO;
-   355			gfp_mask |= __GFP_ZERO;
-   356		}
-   357	
-   358		/*
-   359		 * for buffers that are contained within a single page, just allocate
-   360		 * the memory from the heap - there's no need for the complexity of
-   361		 * page arrays to keep allocation down to order 0.
-   362		 */
-   363		size = BBTOB(bp->b_length);
-   364		if (size < PAGE_SIZE) {
-   365			int align_mask = xfs_buftarg_dma_alignment(bp->b_target);
-   366			bp->b_addr = kmem_alloc_io(size, align_mask,
- > 367						   KM_NOFS | kmflag_mask);
-   368			if (!bp->b_addr) {
-   369				/* low memory - use alloc_page loop instead */
-   370				goto use_alloc_page;
-   371			}
-   372	
-   373			if (((unsigned long)(bp->b_addr + size - 1) & PAGE_MASK) !=
-   374			    ((unsigned long)bp->b_addr & PAGE_MASK)) {
-   375				/* b_addr spans two pages - use alloc_page instead */
-   376				kmem_free(bp->b_addr);
-   377				bp->b_addr = NULL;
-   378				goto use_alloc_page;
-   379			}
-   380			bp->b_offset = offset_in_page(bp->b_addr);
-   381			bp->b_pages = bp->b_page_array;
-   382			bp->b_pages[0] = kmem_to_page(bp->b_addr);
-   383			bp->b_page_count = 1;
-   384			bp->b_flags |= _XBF_KMEM;
-   385			return 0;
-   386		}
-   387	
-   388	use_alloc_page:
-   389		start = BBTOB(bp->b_maps[0].bm_bn) >> PAGE_SHIFT;
-   390		end = (BBTOB(bp->b_maps[0].bm_bn + bp->b_length) + PAGE_SIZE - 1)
-   391									>> PAGE_SHIFT;
-   392		page_count = end - start;
-   393		error = _xfs_buf_get_pages(bp, page_count);
-   394		if (unlikely(error))
-   395			return error;
-   396	
-   397		offset = bp->b_offset;
-   398		bp->b_flags |= _XBF_PAGES;
-   399	
-   400		for (i = 0; i < bp->b_page_count; i++) {
-   401			struct page	*page;
-   402			uint		retries = 0;
-   403	retry:
-   404			page = alloc_page(gfp_mask);
-   405			if (unlikely(page == NULL)) {
-   406				if (flags & XBF_READ_AHEAD) {
-   407					bp->b_page_count = i;
-   408					error = -ENOMEM;
-   409					goto out_free_pages;
-   410				}
-   411	
-   412				/*
-   413				 * This could deadlock.
-   414				 *
-   415				 * But until all the XFS lowlevel code is revamped to
-   416				 * handle buffer allocation failures we can't do much.
-   417				 */
-   418				if (!(++retries % 100))
-   419					xfs_err(NULL,
-   420			"%s(%u) possible memory allocation deadlock in %s (mode:0x%x)",
-   421						current->comm, current->pid,
-   422						__func__, gfp_mask);
-   423	
-   424				XFS_STATS_INC(bp->b_mount, xb_page_retries);
-   425				congestion_wait(BLK_RW_ASYNC, HZ/50);
-   426				goto retry;
-   427			}
-   428	
-   429			XFS_STATS_INC(bp->b_mount, xb_page_found);
-   430	
-   431			nbytes = min_t(size_t, size, PAGE_SIZE - offset);
-   432			size -= nbytes;
-   433			bp->b_pages[i] = page;
-   434			offset = 0;
-   435		}
-   436		return 0;
-   437	
-   438	out_free_pages:
-   439		for (i = 0; i < bp->b_page_count; i++)
-   440			__free_page(bp->b_pages[i]);
-   441		bp->b_flags &= ~_XBF_PAGES;
-   442		return error;
-   443	}
-   444	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Mrs. Lisa Williams
