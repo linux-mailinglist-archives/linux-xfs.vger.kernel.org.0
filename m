@@ -2,43 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B67D07C0
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 09:03:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58185D07C8
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Oct 2019 09:06:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbfJIHDy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Oct 2019 03:03:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48916 "EHLO
+        id S1725776AbfJIHGN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Oct 2019 03:06:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48954 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJIHDy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Oct 2019 03:03:54 -0400
+        with ESMTP id S1725440AbfJIHGN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Oct 2019 03:06:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rwfL8oNHkRnTGyY2lKOFYK8nXi0lp9j+ggd3u7/w19Y=; b=KlGt3Z/lYhiAQFywHhMrCseGO
-        rbUUIQEoTHn/zIujobsJ75c4a+yRAIjgAyirVquxIzga5aMrgUj+DcsPyTGJcB1bh+gItDUAn2b1m
-        Icqo7Te6VC2FN9JYjGy8Z+Rs3qiBPkEraHFL75SfB42zp3Xssn/9xRGYylTffD/0Vj7OGqqPG6TJE
-        p/XzBLCsBTNSoA4Y+HqG4LFbR7jN6owYa8g86OtBlp41CvR67j4csKHAJVEacThy94h34LTcNMYWD
-        0kNvVy8evkX4X/0f5hmcM4qhAbSCxMvmPTXVIVWLoxXQnRM7fgq6DQzIxFi1AklBScnP12hnrqC13
-        0sWo/0oNg==;
+         bh=kVJObDfrF6kRhduS+37+i6aFLzdYt/OzvgIxW6PJnaM=; b=GYyS4384pMTEsrb4s7yuvfxwD
+        gbAvH66nSViD6yRbC/cvvOaLBq3hnij0MUWq+sSMkdZ711DlKIb7RaPQd/PZt6u0m8WKpyqJRKaIZ
+        WTqXN86Do7M6Mc0sAAYY7w428IXZ9eO2r/f91dnVOA1xTKP/7VM/tReeu0VoQiYg3LHYWjt43P+2Y
+        NvSff1goFcTl7f4Ydzn/vRPapm3NiJTF8A9lLkxwsvnddQq0lSVxb2W+aC1+dWw++MCoptNYsdgN5
+        klmexEyUDnEOOfcAnqmBNuydNyQjdKKaj50VeRbnVJ33uZ423TWmZoNcixnsMC/D8T2sUmEqsffiE
+        T89MnTjSg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iI60n-0006u3-Lu; Wed, 09 Oct 2019 07:03:53 +0000
-Date:   Wed, 9 Oct 2019 00:03:53 -0700
+        id 1iI632-0008O9-Lt; Wed, 09 Oct 2019 07:06:12 +0000
+Date:   Wed, 9 Oct 2019 00:06:12 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 4/4] populate: punch files after writing to fragment free
- space properly
-Message-ID: <20191009070353.GB24658@infradead.org>
-References: <157049658503.2397321.13914737091290093511.stgit@magnolia>
- <157049660991.2397321.6295105033631507023.stgit@magnolia>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V2 00/26] mm, xfs: non-blocking inode reclaim
+Message-ID: <20191009070612.GA26579@infradead.org>
+References: <20191009032124.10541-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <157049660991.2397321.6295105033631507023.stgit@magnolia>
+In-Reply-To: <20191009032124.10541-1-david@fromorbit.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
@@ -46,23 +44,9 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 06:03:29PM -0700, Darrick J. Wong wrote:
-> To fix this, we need to force the filesystem to allocate all blocks
-> before freeing any blocks.  Split the creation of swiss-cheese files
-> into two parts: (a) writing data to the file to force allocation, and
-> (b) punching the holes to fragment free space.  It's a little hokey for
-> helpers to be modifying variables in the caller's scope, but there's not
-> really a better way to do that in bash.
+On Wed, Oct 09, 2019 at 02:20:58PM +1100, Dave Chinner wrote:
+> Hi folks,
+> 
+> This is the second version of the RFC I originally posted here:
 
-Why can't we just split the operations into creating a large contigous
-file and then fragment them?
-
-
-create_large_file foo
-create_large_file bar
-create_large_file baz
-
-fragment_large_file foo
-fragment_large_file bar
-fragment_large_file baz
-
+Do you happen to have a git tree to pull from as well?
