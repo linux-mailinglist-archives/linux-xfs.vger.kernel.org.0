@@ -2,78 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2385CD417E
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2019 15:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89848D427E
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2019 16:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfJKNjk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 11 Oct 2019 09:39:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42786 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfJKNjk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 11 Oct 2019 09:39:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fdMe6cL6Uk37LOFczS5vgqxs2TCG8T5VUGagwWOW2o0=; b=F4yA5MdUoG1tVIls/gBlimaPMp
-        WtDnwEIL7aV4Nd12pNip8rGAfAJDN1beLlinen3KE/SkqeiCNceOUaJ5I3ztinH0qKzMxxqxjhG+t
-        bba+/drYqY64YMPAutj20ik4URd3F5/bAMH9J29hbjYPUD7PB0RgexHUvxZdiqOLwYMvp82lz4GHq
-        VMlU3CDcsJM6Gemsn0ySieH+pcnQLVr6XOVUZtM1n7Bdg6I0XXFwZjhB8/NMmLVD27mr3yCCyvElj
-        OQPzT55mPghtUoLWJCR8IrsjIY/fp8xzGEsYnjdQkGfIPINLgF4w8d7do7AcQcBgDk85zAsbJxxxa
-        VzbsrJQA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIv8i-00089i-Q5; Fri, 11 Oct 2019 13:39:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 919BA301224;
-        Fri, 11 Oct 2019 15:38:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 402A22023D649; Fri, 11 Oct 2019 15:39:26 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 15:39:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 25/26] xfs: rework unreferenced inode lookups
-Message-ID: <20191011133926.GY2328@hirez.programming.kicks-ass.net>
-References: <20191009032124.10541-1-david@fromorbit.com>
- <20191009032124.10541-26-david@fromorbit.com>
- <20191011125522.GA13167@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191011125522.GA13167@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728033AbfJKOOh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 11 Oct 2019 10:14:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53718 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728190AbfJKOOh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:14:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 822ABAAF1;
+        Fri, 11 Oct 2019 14:14:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9881B1E3C04; Fri, 11 Oct 2019 16:14:33 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     <linux-fsdevel@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, <linux-xfs@vger.kernel.org>,
+        darrick.wong@oracle.com, Dave Chinner <david@fromorbit.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/2 v2] iomap: Waiting for IO in iomap_dio_rw()
+Date:   Fri, 11 Oct 2019 16:14:30 +0200
+Message-Id: <20191011125520.11697-1-jack@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 05:55:22AM -0700, Christoph Hellwig wrote:
-> On Wed, Oct 09, 2019 at 02:21:23PM +1100, Dave Chinner wrote:
+Hello,
 
-> > @@ -131,6 +132,7 @@ xfs_inode_free(
-> >  	 * free state. The ip->i_flags_lock provides the barrier against lookup
-> >  	 * races.
-> >  	 */
-> > +	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> 
-> This introduceѕ a non-owner unlock of an exclusively held rwsem.  As-is
-> this will make lockdep very unhappy.  We have a non-owner unlock version
-> of up_read, but not of up_write currently.  I'm also not sure if those
-> are allowed from RCU callback, which IIRC can run from softirq context.
-> 
-> That being said this scheme of only unlocking the inode in the rcu free
-> callback makes totaly sense to me, so I wish we can accomodate it
-> somehow.
+here is new version of the series with small changes people suggested:
 
-I'm thinking that, barring the little issue of not actually having the
-function, up_write_non_owner() should work from RCU callback context.
-That is, I don't see rwsem_wake() do anything not allowed there.
+Changes since v1:
+* The new function argument of iomap_dio_rw() does not get overridden by
+ is_sync_kiocb() the caller is responsible for this.
+
+---
+Original motivation:
+
+when doing the ext4 conversion of direct IO code to iomap, we found it very
+difficult to handle inode extension with what iomap code currently provides.
+Ext4 wants to do inode extension as sync IO (so that the whole duration of
+IO is protected by inode->i_rwsem), also we need to truncate blocks beyond
+end of file in case of error or short write. Now in ->end_io handler we don't
+have the information how long originally the write was (to judge whether we
+may have allocated more blocks than we actually used) and in ->write_iter
+we don't know whether / how much of the IO actually succeeded in case of AIO.
+
+Thinking about it for some time I think iomap code makes it unnecessarily
+complex for the filesystem in case it decides it doesn't want to perform AIO
+and wants to fall back to good old synchronous IO. In such case it is much
+easier for the filesystem if it just gets normal error return from
+iomap_dio_rw() and not just -EIOCBQUEUED.
+
+The first patch in the series adds argument to iomap_dio_rw() to wait for IO
+completion (internally iomap_dio_rw() already supports this!) and the second
+patch converts XFS waiting for unaligned DIO write to this new API.
+
+What do people think?
+
+								Honza 
+Previous versions:
+Link: http://lore.kernel.org/r/20191009202736.19227-1-jack@suse.cz
