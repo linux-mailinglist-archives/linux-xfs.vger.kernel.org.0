@@ -2,79 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0162D7A2E
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Oct 2019 17:44:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 861B3D7A86
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Oct 2019 17:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387730AbfJOPoa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Oct 2019 11:44:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48182 "EHLO
+        id S1732173AbfJOPwZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Oct 2019 11:52:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59326 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387650AbfJOPoa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Oct 2019 11:44:30 -0400
+        with ESMTP id S1728624AbfJOPwZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Oct 2019 11:52:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Mr41y1LsPmV/Aa5P6Nreo6G927X7sBwSFPq0Rl3lz2Y=; b=UQ7AFX3Fwrd+C2k1E/INz+eeqC
-        SevBl7fm5BPPKcpB9SjOtbKHDvCx4AYAu2DiRSMZN686KpRcUbbqKaGNWag8cP/55+ZY6wFLOAYSv
-        xsR0xy+2SKDs3lerkhEwIsMXy3CcV19q5I7FqKraykzYyO7wVycSFvpgvFpsaNDFUQ10CKsZ2v/Dj
-        yoNWg5475HBB83MN0id0CaJOmX1xsaYwrD8p0wOaXduQt21b8jPL5A1lw24paa1gjtwLbXmiVL4Az
-        MLMhndsLa/KqEPqIYA/uQmUw9ACwWSNBv4e6cEpYWOxuEOLYdwZ9EgcQwjjvpa6KRMgR9ZKV9skjj
-        /4UKFxWg==;
-Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKOzq-00080n-8K; Tue, 15 Oct 2019 15:44:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] iomap: cleanup iomap_ioend_compare
-Date:   Tue, 15 Oct 2019 17:43:45 +0200
-Message-Id: <20191015154345.13052-13-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191015154345.13052-1-hch@lst.de>
-References: <20191015154345.13052-1-hch@lst.de>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wGs4rPfPy9vZBUIIyWospwNFjdTYCGPuvjv05Sr6wcs=; b=mI1Hg2GGevOaJcrCtNQ5hSJQM
+        u5448CKfxFVyOczflX9z07FwUZNalkHG5GLxN9hTF1AFswRx1SOOJC0RUS+SknltZWeOCiCkaGG31
+        HgBDnH0By9XsD5IZLGx7uNehkFAVo0Dg0mlpy11oQC11ZjKdplFjXAAfH7mwvnupUbmXKqi+3XVRb
+        6vUbwphgCbPEW+UFc5EptbJeaOT9CSPe5Li5FCT5z6WQztBAR0yvhCbK5v1eCT885ajS2FFzCL9x/
+        BDrZed28Z/+D7m83fLHmjiLH2ew2gviDPSy4oUU8Z4Ne4xyC/VT2cwzeUET0G7BOx7zTaQgxhMwxJ
+        Jm5FqLs0w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKP7Y-0004ZN-QE; Tue, 15 Oct 2019 15:52:24 +0000
+Date:   Tue, 15 Oct 2019 08:52:24 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: iomap: use SECTOR_SIZE instead of 512 in iomap_page definition
+Message-ID: <20191015155224.GA16024@infradead.org>
+References: <123556d7-968c-70a6-1049-38b2f279f5a1@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <123556d7-968c-70a6-1049-38b2f279f5a1@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move the initialization of ia and ib to the declaration line and remove
-a superflous else.
+On Tue, Oct 15, 2019 at 10:39:36AM -0500, Eric Sandeen wrote:
+> iomap_page_create() initializes the uptodate bitmap using the SECTOR_SIZE
+> macro, so use that in the definition as well, for consistency and safety.
+> 
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> ---
+> 
+> Last time there was a concern about pulling in blkdev.h just for this,
+> but that's already been done now, so try again.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index c57acc3d3120..0c7f185c8c52 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1226,13 +1226,12 @@ EXPORT_SYMBOL_GPL(iomap_ioend_try_merge);
- static int
- iomap_ioend_compare(void *priv, struct list_head *a, struct list_head *b)
- {
--	struct iomap_ioend *ia, *ib;
-+	struct iomap_ioend *ia = container_of(a, struct iomap_ioend, io_list);
-+	struct iomap_ioend *ib = container_of(b, struct iomap_ioend, io_list);
- 
--	ia = container_of(a, struct iomap_ioend, io_list);
--	ib = container_of(b, struct iomap_ioend, io_list);
- 	if (ia->io_offset < ib->io_offset)
- 		return -1;
--	else if (ia->io_offset > ib->io_offset)
-+	if (ia->io_offset > ib->io_offset)
- 		return 1;
- 	return 0;
- }
--- 
-2.20.1
-
+Note that the iomap writepage series, which is hopefully about to be
+merged moves this declaration around.
