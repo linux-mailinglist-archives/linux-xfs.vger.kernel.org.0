@@ -2,32 +2,31 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BCBBD84EA
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Oct 2019 02:41:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63016D84EC
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Oct 2019 02:41:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbfJPAl0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Oct 2019 20:41:26 -0400
-Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:40358
+        id S2390291AbfJPAl2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Oct 2019 20:41:28 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:40390
         "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390284AbfJPAlY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Oct 2019 20:41:24 -0400
+        by vger.kernel.org with ESMTP id S2388246AbfJPAl1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Oct 2019 20:41:27 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2DmAQDRZqZd/0e30XYNWRwBAQEBAQc?=
- =?us-ascii?q?BAREBBAQBAYF7hDyEJY8zAQEBAQEBBoERih2FIAGEa4cjCQEBAQEBAQEBATc?=
- =?us-ascii?q?BAYQ7AwICgxI4EwIMAQEBBAEBAQEBBQMBhViGGgIBAyMEUhAYDQImAgJHEAY?=
- =?us-ascii?q?ThXWuB3V/MxqKKYEMKIFlikF4gQeBRIMdhA0cgymCXgSPNjeGPkOWXYIslTY?=
- =?us-ascii?q?MjhYDix0tijSfHIF6TS4KgydQkEZnjn0BglMBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2DmAQDRZqZd/0e30XYNWRwBAQEBAQcBAREBBAQBAYF7h?=
- =?us-ascii?q?DyEJY8zAQEBAQEBBoERih2FIAGEa4cjCQEBAQEBAQEBATcBAYQ7AwICgxI4E?=
- =?us-ascii?q?wIMAQEBBAEBAQEBBQMBhViGGgIBAyMEUhAYDQImAgJHEAYThXWuB3V/MxqKK?=
- =?us-ascii?q?YEMKIFlikF4gQeBRIMdhA0cgymCXgSPNjeGPkOWXYIslTYMjhYDix0tijSfH?=
- =?us-ascii?q?IF6TS4KgydQkEZnjn0BglMBAQ?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CfAADRZqZd/0e30XYNWRsBAQEBAQE?=
+ =?us-ascii?q?BBQEBAREBAQMDAQEBgXuEPIQljzMBAQEBAQEGgRGKHYUgAYwOCQEBAQEBAQE?=
+ =?us-ascii?q?BATcBAYQ7AwICgxI4EwIMAQEBBAEBAQEBBQMBhViGGgIBAyMEUhAYDQImAgJ?=
+ =?us-ascii?q?HEAYThXWuB3V/MxqKKYEMKIFlikF4gQeBRIMdh1KCXgSMfQqCLzeGPkNxlWy?=
+ =?us-ascii?q?CLJU2DIIui2gDEIsNLY9Dmg2Bek0uCoMnUJBGZ5FRAQE?=
+X-IPAS-Result: =?us-ascii?q?A2CfAADRZqZd/0e30XYNWRsBAQEBAQEBBQEBAREBAQMDA?=
+ =?us-ascii?q?QEBgXuEPIQljzMBAQEBAQEGgRGKHYUgAYwOCQEBAQEBAQEBATcBAYQ7AwICg?=
+ =?us-ascii?q?xI4EwIMAQEBBAEBAQEBBQMBhViGGgIBAyMEUhAYDQImAgJHEAYThXWuB3V/M?=
+ =?us-ascii?q?xqKKYEMKIFlikF4gQeBRIMdh1KCXgSMfQqCLzeGPkNxlWyCLJU2DIIui2gDE?=
+ =?us-ascii?q?IsNLY9Dmg2Bek0uCoMnUJBGZ5FRAQE?=
 X-IronPort-AV: E=Sophos;i="5.67,301,1566835200"; 
-   d="scan'208";a="247444163"
+   d="scan'208";a="247444178"
 Received: from unknown (HELO [192.168.1.222]) ([118.209.183.71])
-  by icp-osb-irony-out1.iinet.net.au with ESMTP; 16 Oct 2019 08:41:08 +0800
-Subject: [PATCH v6 05/12] xfs: dont use XFS_IS_QUOTA_RUNNING() for option
- check
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 16 Oct 2019 08:41:17 +0800
+Subject: [PATCH v6 06/12] xfs: add xfs_remount_rw() helper
 From:   Ian Kent <raven@themaw.net>
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 Cc:     Brian Foster <bfoster@redhat.com>,
@@ -35,8 +34,8 @@ Cc:     Brian Foster <bfoster@redhat.com>,
         David Howells <dhowells@redhat.com>,
         Dave Chinner <dchinner@redhat.com>,
         Al Viro <viro@ZenIV.linux.org.uk>
-Date:   Wed, 16 Oct 2019 08:41:08 +0800
-Message-ID: <157118646832.9678.14900204464012668551.stgit@fedora-28>
+Date:   Wed, 16 Oct 2019 08:41:13 +0800
+Message-ID: <157118647366.9678.14061368527967040009.stgit@fedora-28>
 In-Reply-To: <157118625324.9678.16275725173770634823.stgit@fedora-28>
 References: <157118625324.9678.16275725173770634823.stgit@fedora-28>
 User-Agent: StGit/unknown-version
@@ -48,28 +47,147 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When CONFIG_XFS_QUOTA is not defined any quota option is invalid.
-
-Using the macro XFS_IS_QUOTA_RUNNING() as a check if any quota option
-has been given is a little misleading so use a simple m_qflags != 0
-check to make the intended use more explicit.
+Factor the remount read write code into a helper to simplify the
+subsequent change from the super block method .remount_fs to the
+mount-api fs_context_operations method .reconfigure.
 
 Signed-off-by: Ian Kent <raven@themaw.net>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_super.c |  115 +++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 64 insertions(+), 51 deletions(-)
 
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 5876c2b551b5..f8770206b66e 100644
+index f8770206b66e..cdc19c2af50f 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -349,7 +349,7 @@ xfs_parseargs(
+@@ -1213,6 +1213,68 @@ xfs_test_remount_options(
+ 	return error;
+ }
+ 
++static int
++xfs_remount_rw(
++	struct xfs_mount	*mp)
++{
++	xfs_sb_t		*sbp = &mp->m_sb;
++	int error;
++
++	if (mp->m_flags & XFS_MOUNT_NORECOVERY) {
++		xfs_warn(mp,
++			"ro->rw transition prohibited on norecovery mount");
++		return -EINVAL;
++	}
++
++	if (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
++	    xfs_sb_has_ro_compat_feature(sbp, XFS_SB_FEAT_RO_COMPAT_UNKNOWN)) {
++		xfs_warn(mp,
++	"ro->rw transition prohibited on unknown (0x%x) ro-compat filesystem",
++			(sbp->sb_features_ro_compat &
++				XFS_SB_FEAT_RO_COMPAT_UNKNOWN));
++		return -EINVAL;
++	}
++
++	mp->m_flags &= ~XFS_MOUNT_RDONLY;
++
++	/*
++	 * If this is the first remount to writeable state we
++	 * might have some superblock changes to update.
++	 */
++	if (mp->m_update_sb) {
++		error = xfs_sync_sb(mp, false);
++		if (error) {
++			xfs_warn(mp, "failed to write sb changes");
++			return error;
++		}
++		mp->m_update_sb = false;
++	}
++
++	/*
++	 * Fill out the reserve pool if it is empty. Use the stashed
++	 * value if it is non-zero, otherwise go with the default.
++	 */
++	xfs_restore_resvblks(mp);
++	xfs_log_work_queue(mp);
++
++	/* Recover any CoW blocks that never got remapped. */
++	error = xfs_reflink_recover_cow(mp);
++	if (error) {
++		xfs_err(mp,
++			"Error %d recovering leftover CoW allocations.", error);
++			xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
++		return error;
++	}
++	xfs_start_block_reaping(mp);
++
++	/* Create the per-AG metadata reservation pool .*/
++	error = xfs_fs_reserve_ag_blocks(mp);
++	if (error && error != -ENOSPC)
++		return error;
++
++	return 0;
++}
++
+ STATIC int
+ xfs_fs_remount(
+ 	struct super_block	*sb,
+@@ -1276,57 +1338,8 @@ xfs_fs_remount(
+ 
+ 	/* ro -> rw */
+ 	if ((mp->m_flags & XFS_MOUNT_RDONLY) && !(*flags & SB_RDONLY)) {
+-		if (mp->m_flags & XFS_MOUNT_NORECOVERY) {
+-			xfs_warn(mp,
+-		"ro->rw transition prohibited on norecovery mount");
+-			return -EINVAL;
+-		}
+-
+-		if (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
+-		    xfs_sb_has_ro_compat_feature(sbp,
+-					XFS_SB_FEAT_RO_COMPAT_UNKNOWN)) {
+-			xfs_warn(mp,
+-"ro->rw transition prohibited on unknown (0x%x) ro-compat filesystem",
+-				(sbp->sb_features_ro_compat &
+-					XFS_SB_FEAT_RO_COMPAT_UNKNOWN));
+-			return -EINVAL;
+-		}
+-
+-		mp->m_flags &= ~XFS_MOUNT_RDONLY;
+-
+-		/*
+-		 * If this is the first remount to writeable state we
+-		 * might have some superblock changes to update.
+-		 */
+-		if (mp->m_update_sb) {
+-			error = xfs_sync_sb(mp, false);
+-			if (error) {
+-				xfs_warn(mp, "failed to write sb changes");
+-				return error;
+-			}
+-			mp->m_update_sb = false;
+-		}
+-
+-		/*
+-		 * Fill out the reserve pool if it is empty. Use the stashed
+-		 * value if it is non-zero, otherwise go with the default.
+-		 */
+-		xfs_restore_resvblks(mp);
+-		xfs_log_work_queue(mp);
+-
+-		/* Recover any CoW blocks that never got remapped. */
+-		error = xfs_reflink_recover_cow(mp);
+-		if (error) {
+-			xfs_err(mp,
+-	"Error %d recovering leftover CoW allocations.", error);
+-			xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+-			return error;
+-		}
+-		xfs_start_block_reaping(mp);
+-
+-		/* Create the per-AG metadata reservation pool .*/
+-		error = xfs_fs_reserve_ag_blocks(mp);
+-		if (error && error != -ENOSPC)
++		error = xfs_remount_rw(mp);
++		if (error)
+ 			return error;
  	}
  
- #ifndef CONFIG_XFS_QUOTA
--	if (XFS_IS_QUOTA_RUNNING(mp)) {
-+	if (mp->m_qflags != 0) {
- 		xfs_warn(mp, "quota support not available in this kernel.");
- 		return -EINVAL;
- 	}
 
