@@ -2,61 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B64F4DD6A7
-	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2019 06:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08DD4DD72B
+	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2019 09:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfJSEtL convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Sat, 19 Oct 2019 00:49:11 -0400
-Received: from montes.getmail.no ([84.210.184.12]:50928 "EHLO
-        montes.get.c.bitbit.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726004AbfJSEtK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 19 Oct 2019 00:49:10 -0400
-X-Greylist: delayed 479 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Oct 2019 00:49:10 EDT
-Received: from ryder.getmail.no (unknown [10.7.88.25])
-        by montes.get.c.bitbit.net (Postfix) with ESMTP id BCC1B8781
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Oct 2019 06:41:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by ryder.getmail.no (Postfix) with ESMTP id F00F862DA7;
-        Sat, 19 Oct 2019 06:41:05 +0200 (CEST)
-Received: from ryder.getmail.no ([127.0.0.1])
-        by localhost (ryder.get.c.bitbit.net [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id krr7UPkfdWWk; Sat, 19 Oct 2019 06:41:05 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by ryder.getmail.no (Postfix) with ESMTP id 7CD4662D91;
-        Sat, 19 Oct 2019 06:41:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at ryder.getmail.no
-Received: from ryder.getmail.no ([127.0.0.1])
-        by localhost (ryder.get.c.bitbit.net [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id oE2mma12EzeK; Sat, 19 Oct 2019 06:41:05 +0200 (CEST)
-Received: from post.exigo.no (unknown [188.113.73.50])
-        by ryder.getmail.no (Postfix) with ESMTP id 3DEA162D8B;
-        Sat, 19 Oct 2019 06:41:05 +0200 (CEST)
-Received: from [10.42.128.220] (unknown [78.250.213.56])
-        by post.exigo.no (Postfix) with ESMTPA id 78B55343D95;
-        Sat, 19 Oct 2019 08:44:23 +0200 (CEST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1725995AbfJSHnT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 19 Oct 2019 03:43:19 -0400
+Received: from www17.your-server.de ([213.133.104.17]:60082 "EHLO
+        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfJSHnS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 19 Oct 2019 03:43:18 -0400
+X-Greylist: delayed 1353 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Oct 2019 03:43:17 EDT
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iLj2Y-0001pf-Kr; Sat, 19 Oct 2019 09:20:42 +0200
+Received: from [2a02:908:4c22:ec00:8ad5:993:4cda:a89f] (helo=localhost.localdomain)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iLj2Y-0000W2-Ey; Sat, 19 Oct 2019 09:20:42 +0200
+From:   Thomas Meyer <thomas@m3y3r.de>
+To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc:     Thomas Meyer <thomas@m3y3r.de>
+Subject: [PATCH 1/2] lib/bsearch.c: introduce bsearch_idx
+Date:   Sat, 19 Oct 2019 09:20:32 +0200
+Message-Id: <20191019072033.17744-1-thomas@m3y3r.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: my subject
-To:     Recipients <post@orklahallen.no>
-From:   "Mr.Kenneth Gram" <post@orklahallen.no>
-Date:   Sat, 19 Oct 2019 06:40:33 +0200
-Reply-To: dmrkennethg8@gmail.com
-Message-Id: <20191019044105.3DEA162D8B@ryder.getmail.no>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: thomas@m3y3r.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25606/Fri Oct 18 10:58:40 2019)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Top of the day to you. You Just Won For Your your Self, £750.000.00 Pounds In the Swiss Lotto Saterlite with the Following Drawer Numbers and Lucky Numbers 7, 22, 25, 29, 31, 40 with Serial 6, and consequently won the lottery in the "A" Category. You have therefore been approved for a lump sum pay out of  £750,000 Pounds. Here is the Drawer Number (1979-12)  please contact our Payer
+many existing bsearch implementations don't want to have the pointer to the
+found element, but the index position, or if the searched element doesn't
+exist, the index position the search element would be placed in the array.
 
-Mr. David Barnet Bradley
+Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
+---
+ include/linux/bsearch.h |  7 +++++
+ lib/bsearch.c           | 62 +++++++++++++++++++++++++++++++++--------
+ 2 files changed, 58 insertions(+), 11 deletions(-)
 
-ownbradley@ymail.com
+diff --git a/include/linux/bsearch.h b/include/linux/bsearch.h
+index 62b1eb3488584..0c40c8b39b881 100644
+--- a/include/linux/bsearch.h
++++ b/include/linux/bsearch.h
+@@ -7,4 +7,11 @@
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+ 	      int (*cmp)(const void *key, const void *elt));
+ 
++struct bsearch_result { size_t idx; bool found; };
++
++struct bsearch_result bsearch_idx(const void *key, const void *base,
++		      size_t num,
++		      size_t size,
++		      int (*cmp)(const void *key, const void *elt));
++
+ #endif /* _LINUX_BSEARCH_H */
+diff --git a/lib/bsearch.c b/lib/bsearch.c
+index 8baa839681628..5c46d0ec1e473 100644
+--- a/lib/bsearch.c
++++ b/lib/bsearch.c
+@@ -10,8 +10,8 @@
+ #include <linux/bsearch.h>
+ #include <linux/kprobes.h>
+ 
+-/*
+- * bsearch - binary search an array of elements
++/**
++ * bsearch() - binary search an array of elements
+  * @key: pointer to item being searched for
+  * @base: pointer to first element to search
+  * @num: number of elements
+@@ -27,28 +27,68 @@
+  * could compare the string with the struct's name field.  However, if
+  * the key and elements in the array are of the same type, you can use
+  * the same comparison function for both sort() and bsearch().
++ *
++ * Return: Either a pointer to the search element or NULL if not found.
+  */
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+ 	      int (*cmp)(const void *key, const void *elt))
+ {
+-	const char *pivot;
++	struct bsearch_result idx = bsearch_idx(key, base, num, size, cmp);
++
++	if (idx.found == true)
++		return (void *)base + idx.idx * size;
++
++	return NULL;
++}
++EXPORT_SYMBOL(bsearch);
++NOKPROBE_SYMBOL(bsearch);
++
++/**
++ * bsearch_idx() - binary search an array of elements
++ * @key: pointer to item being searched for
++ * @base: pointer to first element to search
++ * @num: number of elements
++ * @size: size of each element
++ * @cmp: pointer to comparison function
++ *
++ * This function does a binary search on the given array.  The
++ * contents of the array should already be in ascending sorted order
++ * under the provided comparison function.
++ *
++ * Returns an index position and a bool if an exact match was found
++ * if an exact match was found the idx is the index in the base array.
++ * if no exact match was found the idx will point the the next higher index
++ * entry in the base array. this can also be base[num], i.e. after the actual
++ * allocated array.
++ */
++struct bsearch_result bsearch_idx(const void *key, const void *base,
++				  size_t num,
++				  size_t size,
++				  int (*cmp)(const void *key, const void *elt))
++{
++	struct bsearch_result res = { .found = false };
+ 	int result;
++	size_t base_idx = 0;
++	size_t pivot_idx;
+ 
+ 	while (num > 0) {
+-		pivot = base + (num >> 1) * size;
+-		result = cmp(key, pivot);
++		pivot_idx = base_idx + (num >> 1);
++		result = cmp(key, base + pivot_idx * size);
+ 
+-		if (result == 0)
+-			return (void *)pivot;
++		if (result == 0) {
++			res.idx = pivot_idx;
++			res.found = true;
++			return res;
++		}
+ 
+ 		if (result > 0) {
+-			base = pivot + size;
++			base_idx = pivot_idx + 1;
+ 			num--;
+ 		}
+ 		num >>= 1;
+ 	}
+ 
+-	return NULL;
++	res.idx = base_idx;
++	return res;
+ }
+-EXPORT_SYMBOL(bsearch);
+-NOKPROBE_SYMBOL(bsearch);
++EXPORT_SYMBOL(bsearch_idx);
+-- 
+2.21.0
 
-Tel: +44-745-124-7342
-
-Thank you
-
-Mr Kenneth Gram
