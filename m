@@ -2,23 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3406DDF46
-	for <lists+linux-xfs@lfdr.de>; Sun, 20 Oct 2019 17:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B8FDDF5A
+	for <lists+linux-xfs@lfdr.de>; Sun, 20 Oct 2019 18:00:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfJTP7y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 20 Oct 2019 11:59:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54570 "EHLO mga02.intel.com"
+        id S1726623AbfJTP75 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 20 Oct 2019 11:59:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25202 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfJTP7y (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 20 Oct 2019 11:59:54 -0400
+        id S1726383AbfJTP75 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 20 Oct 2019 11:59:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:53 -0700
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:56 -0700
 X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="398438094"
+   d="scan'208";a="222236155"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:53 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:56 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -30,10 +30,12 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 0/5] Enable per-file/directory DAX operations
-Date:   Sun, 20 Oct 2019 08:59:30 -0700
-Message-Id: <20191020155935.12297-1-ira.weiny@intel.com>
+Subject: [PATCH 2/5] fs/xfs: Isolate the physical DAX flag from effective
+Date:   Sun, 20 Oct 2019 08:59:32 -0700
+Message-Id: <20191020155935.12297-3-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191020155935.12297-1-ira.weiny@intel.com>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
@@ -43,56 +45,38 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
-consumption due to their inability to detect whether the kernel will
-instantiate page cache for a file, and cases where a global dax enable via a
-mount option is too coarse.
+xfs_ioctl_setattr_dax_invalidate() currently checks if the DAX flag is
+changing as a quick check.
 
-The following patch series enables selecting the use of DAX on individual files
-and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
-scheme the dax mount option can be omitted to allow the per-file property to
-take effect.
+But the implementation mixes the physical (XFS_DIFLAG2_DAX) and
+effective (S_DAX) DAX flags.
 
-The insight at LSF/MM was to separate the per-mount or per-file "physical"
-capability switch from an "effective" attribute for the file.
+Remove the use of the effective flag when determining if a change of the
+physical flag is required.
 
-At LSF/MM we discussed the difficulties of switching the mode of a file with
-active mappings / page cache. Rather than solve those races the decision was to
-just limit mode flips to 0-length files.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ fs/xfs/xfs_ioctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Finally, the physical DAX flag inheritance is maintained from previous work on 
-XFS but should be added for other file systems for consistence.
-
-
-[1] https://lwn.net/Articles/787973/
-[2] https://lwn.net/Articles/787233/
-
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-
-Ira Weiny (5):
-  fs/stat: Define DAX statx attribute
-  fs/xfs: Isolate the physical DAX flag from effective
-  fs/xfs: Separate functionality of xfs_inode_supports_dax()
-  fs/xfs: Clean up DAX support check
-  fs/xfs: Allow toggle of physical DAX flag
-
- fs/stat.c                 |  3 +++
- fs/xfs/xfs_ioctl.c        | 32 ++++++++++++++------------------
- fs/xfs/xfs_iops.c         | 36 ++++++++++++++++++++++++++++++------
- fs/xfs/xfs_iops.h         |  2 ++
- include/uapi/linux/stat.h |  1 +
- 5 files changed, 50 insertions(+), 24 deletions(-)
-
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d58f0d6a699e..0ea326290cca 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1319,9 +1319,11 @@ xfs_ioctl_setattr_dax_invalidate(
+ 	}
+ 
+ 	/* If the DAX state is not changing, we have nothing to do here. */
+-	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
++	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
++	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+ 		return 0;
+-	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
++	if (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
++	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+ 		return 0;
+ 
+ 	if (S_ISDIR(inode->i_mode))
 -- 
 2.20.1
 
