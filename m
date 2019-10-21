@@ -2,26 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D7EDF3A4
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2019 18:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB98DF3A7
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2019 18:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfJUQxU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Oct 2019 12:53:20 -0400
-Received: from sandeen.net ([63.231.237.45]:42214 "EHLO sandeen.net"
+        id S1726819AbfJUQyv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Oct 2019 12:54:51 -0400
+Received: from sandeen.net ([63.231.237.45]:42312 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfJUQxU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:53:20 -0400
+        id S1726672AbfJUQyv (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:54:51 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 8D58EEC3;
-        Mon, 21 Oct 2019 11:52:34 -0500 (CDT)
-Subject: Re: [PATCH 04/11] xfs_scrub: improve reporting of file metadata media
- errors
+        by sandeen.net (Postfix) with ESMTPSA id CC350EC3;
+        Mon, 21 Oct 2019 11:54:04 -0500 (CDT)
+Subject: Re: [PATCH 05/11] xfs_scrub: don't report media errors on unwritten
+ extents
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <156944736739.300131.5717633994765951730.stgit@magnolia>
- <156944739208.300131.5955900694911585741.stgit@magnolia>
+ <156944739811.300131.17079426522479861861.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -65,15 +65,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <ee46dce3-e295-3e17-9ada-e64aef0a94b9@sandeen.net>
-Date:   Mon, 21 Oct 2019 11:53:19 -0500
+Message-ID: <f8383f2b-a398-4038-5c41-17ba5312299f@sandeen.net>
+Date:   Mon, 21 Oct 2019 11:54:49 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <156944739208.300131.5955900694911585741.stgit@magnolia>
+In-Reply-To: <156944739811.300131.17079426522479861861.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,40 +82,31 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 9/25/19 4:36 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Report media errors that map to data and attr fork extent maps.
-
-Ok so I think the last patch removed reporting on files but this adds it
-back...
+> Don't report media errors for unwritten extents since no data has been
+> lost.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
-
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  scrub/phase6.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  scrub/phase6.c |    4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > 
 > diff --git a/scrub/phase6.c b/scrub/phase6.c
-> index 310ab36c..1013ba6d 100644
+> index 1013ba6d..ec821373 100644
 > --- a/scrub/phase6.c
 > +++ b/scrub/phase6.c
-> @@ -385,6 +385,17 @@ xfs_check_rmap_error_report(
->  		str_error(ctx, buf, _("media error in %s."), type);
->  	}
+> @@ -372,6 +372,10 @@ xfs_check_rmap_error_report(
+>  	uint64_t		err_physical = *(uint64_t *)arg;
+>  	uint64_t		err_off;
 >  
-> +	/* Report extent maps */
-> +	if (map->fmr_flags & FMR_OF_EXTENT_MAP) {
-> +		bool		attr = (map->fmr_flags & FMR_OF_ATTR_FORK);
+> +	/* Don't care about unwritten extents. */
+> +	if (map->fmr_flags & FMR_OF_PREALLOC)
+> +		return true;
 > +
-> +		scrub_render_ino_suffix(ctx, buf, DESCR_BUFSZ,
-> +				map->fmr_owner, 0, " %s",
-> +				attr ? _("extended attribute") :
-> +				       _("file data"));
-> +		str_error(ctx, buf, _("media error in extent map"));
-> +	}
-> +
->  	/*
->  	 * XXX: If we had a getparent() call we could report IO errors
->  	 * efficiently.  Until then, we'll have to scan the dir tree
+>  	if (err_physical > map->fmr_physical)
+>  		err_off = err_physical - map->fmr_physical;
+>  	else
 > 
