@@ -2,42 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF61BDE947
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2019 12:20:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15179DEBBD
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2019 14:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfJUKUh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Oct 2019 06:20:37 -0400
-Received: from [139.59.62.52] ([139.59.62.52]:34636 "EHLO mail.gatefjohn.tk"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727831AbfJUKUg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:20:36 -0400
-Received: by mail.gatefjohn.tk (Postfix, from userid 48)
-        id 44B7F383029; Sun, 20 Oct 2019 20:05:00 +0000 (UTC)
+        id S1727303AbfJUMN1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Oct 2019 08:13:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26528 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727050AbfJUMN1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Oct 2019 08:13:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571660006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/E2x9XADXGQf3FQTli67dtlrNlPIjd+cEkwW5kPL7mc=;
+        b=D7oX80lJOx/kbc1QB3yMK0rsSkfctnQJkgoB1B25zL5rGT4srm6Ia2V8dSw5XQ4R+hepue
+        Nj/ZNVfRt9PUTWcnZB7He1X5afnHaYIhuXqmyNXCBOKHLuA8xBPg9IMbKSa0Xca7fMI1UR
+        02Lnr4cNJbeH84SNgHnXd9gfWoP7IZM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-u8Y7pcu4OlKJ2uN0ij-frA-1; Mon, 21 Oct 2019 08:13:24 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B46D65E9
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Oct 2019 12:13:23 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DCF65D9E2
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Oct 2019 12:13:23 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: Purchase Order
-X-PHP-Originating-Script: 0:ygehagea.php
-From:   Daniel Murray <sinara-group@bk.ru>
-Reply-To: sinara-group@list.ru
+Subject: [PATCH v2 0/2] xfs: rely on minleft instead of total for bmbt res
+Date:   Mon, 21 Oct 2019 08:13:20 -0400
+Message-Id: <20191021121322.25659-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Message-Id: <20191020221327.44B7F383029@mail.gatefjohn.tk>
-Date:   Sun, 20 Oct 2019 20:05:00 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: u8Y7pcu4OlKJ2uN0ij-frA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,friend,
+This is a v2 that is a combination of two series. Patch 1 is Carlos' and
+Dave's patch [1] (that replaces my original patch 1) with an additional
+modification based on discussion with Dave [2] in the original v1 post
+of this series. Patch 2 is a repost from my previous v1 [3].
 
-This is Daniel Murray and i am purchasing manager from Sinara Group Co.,LTD in Russia.
-We are glad to know about your company from the web and we are interested in your products.
-Could you kindly send us your Latest catalog and price list for our trial order.
+Note that this combination of changes is currently untested AFAIA. I'm
+planning to run through some tests today and will report back on any
+issues...
 
-Thanks and Best Regards,
+Brian
 
-Daniel Murray
-Purchasing Manager
-Sinara Group Co.,LTD
+v2:
+- Added xfs_bmap_btalloc() changes to patch 1.
 
+[1] https://lore.kernel.org/linux-xfs/20190918082453.25266-2-cmaiolino@redh=
+at.com/
+[2] https://lore.kernel.org/linux-xfs/20190914220035.GY16973@dread.disaster=
+.area/
+[3] https://lore.kernel.org/linux-xfs/20190912143223.24194-3-bfoster@redhat=
+.com/
+
+Brian Foster (1):
+  xfs: don't set bmapi total block req where minleft is sufficient
+
+Dave Chinner (1):
+  xfs: cap longest free extent to maximum allocatable
+
+ fs/xfs/libxfs/xfs_alloc.c |  3 ++-
+ fs/xfs/libxfs/xfs_bmap.c  | 19 +++++++++----------
+ fs/xfs/xfs_bmap_util.c    |  4 ++--
+ fs/xfs/xfs_dquot.c        |  4 ++--
+ fs/xfs/xfs_iomap.c        |  4 ++--
+ fs/xfs/xfs_reflink.c      |  4 ++--
+ fs/xfs/xfs_rtalloc.c      |  3 +--
+ 7 files changed, 20 insertions(+), 21 deletions(-)
+
+--=20
+2.20.1
 
