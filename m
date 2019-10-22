@@ -2,50 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D672AE0BE8
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA89E0BEA
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:51:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbfJVSvm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 22 Oct 2019 14:51:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49010 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbfJVSvm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:51:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiI8V109530;
-        Tue, 22 Oct 2019 18:51:40 GMT
+        id S1732615AbfJVSvt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Oct 2019 14:51:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54868 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbfJVSvt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:51:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiMQw091050;
+        Tue, 22 Oct 2019 18:51:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=TDZvekBhWq8KygHAsyc1q2dy/2q4Nz20twHTfEIfMMU=;
- b=WHu44gjm6z/EZ5NhSTrJbu0KL8UYO44ZMX6Dm6WLaKWUuu8HWhIo2UdhNi0QlR/2ZJsy
- Bjd8R4PEfU+Kh4oRdb1DKk68QVGebckIydu11Qx4KvyCfMklHtu5Bemqev+DR9UroWBA
- VhwtHXUjfJyAC1cVZBk/oGPo8mX/EHXHIbBGU2CJBUG2LBzKPLYsvOPSW6IZ4HeVYqz9
- Er2byb3BMR8YayswW8rX9ybT1GZAQd9GtpPTNgkZUPF5Ljbl3XXghkVXI94EY9kJAD/a
- rD9UmKpsceExua+vYDpWzoK2jPpMMVsHYfxWiGRR8ZjVA5JWBSkcwseTxC125FffkBb9 Tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2vqswtgvcu-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=txw/lTZxhNUJ4nOFdM0aYvY5gZvbN6/MxkRXENKKUpI=;
+ b=I/B3FJj4xvqH9eXHQzP7JPmOxiUlSTLXV3ttH5M0W70CqzUfWi8hxBHYhYrIc/KVgs2+
+ S+gfAilzWNNV6VNTJMU137AMOKyn66aDYCvR1c3MZzUDfWXjb548wQRorymLu2vB/HFF
+ cTEICvh+pa3ri/ARmSwYh05Hnx6+P3P0O+MuLC0TyrBuCnR48JRjOcGgTI+rSR7ivCeT
+ /idZEC6LHzPDLfpMdOvc37+QS82fqbEULJNB7GVXakv6QRGmQqf360jTbyNneX3lFrKD
+ lTImCLkUsAggqGm2fJZgCikFCmKYvmWIzVe7xoAOh1V3dRuA98j/aS23i8DwUGHXFu/Q 7g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vqteprrp7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:51:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhOXt125275;
-        Tue, 22 Oct 2019 18:49:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vsx239svh-1
+        Tue, 22 Oct 2019 18:51:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhokd148357;
+        Tue, 22 Oct 2019 18:49:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vsp400y3g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:49:39 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MInbNo030645;
-        Tue, 22 Oct 2019 18:49:38 GMT
+        Tue, 22 Oct 2019 18:49:45 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MIniOL031020;
+        Tue, 22 Oct 2019 18:49:44 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 11:49:37 -0700
-Subject: [PATCH 0/3] xfs_scrub: deferred labelling to save time
+        with ESMTP ; Tue, 22 Oct 2019 11:49:43 -0700
+Subject: [PATCH 1/3] xfs_scrub: bump work_threads to include the controller
+ thread
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 22 Oct 2019 11:49:36 -0700
-Message-ID: <157177017664.1460581.13561167273786314634.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>
+Date:   Tue, 22 Oct 2019 11:49:42 -0700
+Message-ID: <157177018286.1460581.16476228375864117661.stgit@magnolia>
+In-Reply-To: <157177017664.1460581.13561167273786314634.stgit@magnolia>
+References: <157177017664.1460581.13561167273786314634.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,21 +69,37 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-I noticed from profiling xfs_scrub that the program spent a significant
-amount of time in phase 3 rendering descriptive strings in case we found
-an error and needed to report where we found them.  Most of the time
-there aren't going to be errors, so we can reduce the runtime by 7-10%
-by only rendering those strings when we need to report an error.
+Bump @work_threads in the scrub phase setup function because we will
+soon want the main thread (i.e. the one that coordinates workers) to be
+factored into per-thread data structures.  We'll need this in an
+upcoming patch to render error string prefixes to preallocated
+per-thread buffers.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+---
+ scrub/xfs_scrub.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
+index 963d0d70..fe76d075 100644
+--- a/scrub/xfs_scrub.c
++++ b/scrub/xfs_scrub.c
+@@ -458,6 +458,13 @@ run_scrub_phases(
+ 					&work_threads, &rshift);
+ 			if (!moveon)
+ 				break;
++
++			/*
++			 * The thread that starts the worker threads is also
++			 * allowed to contribute to the progress counters and
++			 * whatever other per-thread data we need to allocate.
++			 */
++			work_threads++;
+ 			moveon = progress_init_phase(ctx, progress_fp, phase,
+ 					max_work, rshift, work_threads);
+ 		} else {
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-deferred-descriptions
