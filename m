@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34BCFE0BBB
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92C0AE0BBD
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbfJVSru (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 22 Oct 2019 14:47:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47880 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731007AbfJVSru (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:47:50 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiA7e089122;
-        Tue, 22 Oct 2019 18:47:38 GMT
+        id S1732758AbfJVSr6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Oct 2019 14:47:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44894 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732753AbfJVSr6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:47:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiS79109626;
+        Tue, 22 Oct 2019 18:47:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=GtgFqJzdnU9vhBUZWBkj/2E00CDwW8EvRNGQIYw/h0k=;
- b=fH9umGscKIKdmAssHO0cxA1BJ3QxrL2cM605fBptzmc9Ac7mcVsdNVq/qIVTpHxV8aNg
- hXXJTPH5LhwjKhA0gJ/5pmLuChcZZzu0g1iwORAFGpzT2VpTqGQW6CJweo/w2WSQ71l2
- LV6/QbTS6wcQavQA4TcqUhbvlnCl/ZkbQ/5CfLuhc1TP/Ua+p5p3JAncqgA21BdCnY19
- KmSgc2bRdx4iC4KqTv87V5dxRNVnY7ov3XAz/2wE8+JDYc/1s1oaqrm4gdMMqFED8/jG
- eCGbMxGIamMBphXb/9Va4KhRyvJc8iNfq16X0Z48w/oH0QhnCzbg+rhM9sjUf2kqZePg hA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vqu4qrjxh-1
+ bh=o1raVtSENsaxaBjVeSWHBYWNG+Dfa9OjT9HpODH2P+0=;
+ b=q9DMfCgTfCxJCbJ7YjGNtivGUz9KQyxdXuLnkAZznQEtofQewd2mCHk1Rhdbwct+INFB
+ JYnVB8qlJ6MYlKhPF8uRVs9cHhXWph6x4d7g+Xwfd9Zeqw3gS9y3jaBICsb39WgNw5ZF
+ P/FYqd4JncDPDVybgYdsaljqvHkb42W9ljejx0bJwhnKWs2lAEFMNG0IPLHsL/S5iCJ9
+ DitAkDwJ3E9u7NO6GocFxKDplzcwFPy8s/LMdIxKB7iYuOPjiBX8tsxeXXqucVBfeKfq
+ 20Hyt/h6osHZuXTfCp3NF/WVXdpwzowmgk0BB9bbav9cc/dQrPcrewIRr2OHCYs+s2sJ QQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vqswtgurm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:47:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiL0D070448;
-        Tue, 22 Oct 2019 18:47:37 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vsx2rkef0-1
+        Tue, 22 Oct 2019 18:47:45 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhPvl125303;
+        Tue, 22 Oct 2019 18:47:44 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vsx239pq0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:47:37 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9MIlbJE025092;
-        Tue, 22 Oct 2019 18:47:37 GMT
+        Tue, 22 Oct 2019 18:47:44 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MIlh8d029498;
+        Tue, 22 Oct 2019 18:47:43 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 11:47:36 -0700
-Subject: [PATCH 5/9] xfs_scrub: improve reporting of file metadata media
- errors
+        with ESMTP ; Tue, 22 Oct 2019 11:47:43 -0700
+Subject: [PATCH 6/9] xfs_scrub: don't report media errors on unwritten
+ extents
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>
-Date:   Tue, 22 Oct 2019 11:47:35 -0700
-Message-ID: <157177005577.1459098.10061603172997741735.stgit@magnolia>
+Date:   Tue, 22 Oct 2019 11:47:42 -0700
+Message-ID: <157177006198.1459098.9779762719548833617.stgit@magnolia>
 In-Reply-To: <157177002473.1459098.11320398367215468164.stgit@magnolia>
 References: <157177002473.1459098.11320398367215468164.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,35 +71,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Report media errors that map to data and attr fork extent maps.
+Don't report media errors for unwritten extents since no data has been
+lost.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 ---
- scrub/phase6.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ scrub/phase6.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 
 diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 1c4a2107..3125bfd5 100644
+index 3125bfd5..71a1922d 100644
 --- a/scrub/phase6.c
 +++ b/scrub/phase6.c
-@@ -385,6 +385,17 @@ xfs_check_rmap_error_report(
- 		str_error(ctx, buf, _("media error in %s."), type);
- 	}
+@@ -372,6 +372,10 @@ xfs_check_rmap_error_report(
+ 	uint64_t		err_physical = *(uint64_t *)arg;
+ 	uint64_t		err_off;
  
-+	/* Report extent maps */
-+	if (map->fmr_flags & FMR_OF_EXTENT_MAP) {
-+		bool		attr = (map->fmr_flags & FMR_OF_ATTR_FORK);
++	/* Don't care about unwritten extents. */
++	if (map->fmr_flags & FMR_OF_PREALLOC)
++		return true;
 +
-+		scrub_render_ino_descr(ctx, buf, DESCR_BUFSZ,
-+				map->fmr_owner, 0, " %s",
-+				attr ? _("extended attribute") :
-+				       _("file data"));
-+		str_error(ctx, buf, _("media error in extent map"));
-+	}
-+
- 	/*
- 	 * XXX: If we had a getparent() call we could report IO errors
- 	 * efficiently.  Until then, we'll have to scan the dir tree
+ 	if (err_physical > map->fmr_physical)
+ 		err_off = err_physical - map->fmr_physical;
+ 	else
 
