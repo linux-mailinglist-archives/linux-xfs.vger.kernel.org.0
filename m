@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EE7AE0BE9
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A69AE0BEB
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:51:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbfJVSvn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 22 Oct 2019 14:51:43 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49024 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732753AbfJVSvm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:51:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiBuA109495;
-        Tue, 22 Oct 2019 18:51:40 GMT
+        id S1727851AbfJVSvu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Oct 2019 14:51:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54870 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732322AbfJVSvu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:51:50 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiCn3091007;
+        Tue, 22 Oct 2019 18:51:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=wGk1uuz53PvTssMtIoWjWxnH/EsVPw56B54Bgsq/xTQ=;
- b=kt+9Bejj3+pHGmkFGJL081p+LLNO9CVEkK7l3Lus1DfcZyf6GtleQcDEgZJB2w4oSo57
- DMy32UvpalGUC7Y/csMnsAHQU5H+d6QWG066871b0NvcPey8n56/wmV2WpZTLcDujwUY
- oYpgyzlaNw/dwlgA9na7Vp/16zDKd40QPXPU9XjqSdVmPpc3Pdnpjk6kho5Nq8ScxkQW
- 7uT59QDn+K99GnZU4FUccr/b/rO2WDrKg15A+MAm7uo1HatvrkE+xIm2FMnhnQgaB4bk
- 8sKc0gz79aWSORPvbHtElyhVQS7Dyr7SNcLhqwa/UXbluel+cMTZTAXJas+Y1fpqataQ lw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2vqswtgvd1-1
+ bh=+qPCMXKvRR4d9I25TLvQlYr3BIJfs9X3AJpFlvl+TgE=;
+ b=krQcQRfanz+ILeuxrjtVkh1Melgfq+pbARi8boEAcOynexSzt3X2uGNrKDmN5XJLc6S6
+ Mf3FYS5q791vo9Sto6L5nxqm4OzYRSoOju0tCMgfmO2qPItxqDNkOwleztfTfsEYJsci
+ f8OAu0kg9u6CpIBk65Ap1ITC2hQEdJA8wVhLB/JggMyZ+qTQ4ZkyqVX82LlF6ehcMD59
+ JNRzv6H+Huz07nVlh98f+wjeigASZqoUNg5Uv6ZSzQkM+vRXBhNJYe4FOOhrMxhOHIc9
+ 2qr0OXtWx+ERYoL0vtZzYZvAd1KRuMkJHrDjg+HR9gTGtYmJ8M4cScT6l94/e2wApazP Vw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vqteprrpc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:51:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhOml125188;
-        Tue, 22 Oct 2019 18:51:39 GMT
+        Tue, 22 Oct 2019 18:51:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhlGI148081;
+        Tue, 22 Oct 2019 18:51:47 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vsx239xeu-1
+        by userp3020.oracle.com with ESMTP id 2vsp4016r0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:51:39 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9MIpdml005010;
-        Tue, 22 Oct 2019 18:51:39 GMT
+        Tue, 22 Oct 2019 18:51:46 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9MIpjs0005065;
+        Tue, 22 Oct 2019 18:51:45 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 11:51:38 -0700
-Subject: [PATCH 11/18] xfs_scrub: remove moveon from phase 6 functions
+        with ESMTP ; Tue, 22 Oct 2019 11:51:45 -0700
+Subject: [PATCH 12/18] xfs_scrub: remove moveon from phase 5 functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 22 Oct 2019 11:51:37 -0700
-Message-ID: <157177029785.1461658.16369630986861245070.stgit@magnolia>
+Date:   Tue, 22 Oct 2019 11:51:44 -0700
+Message-ID: <157177030411.1461658.6044923482666014455.stgit@magnolia>
 In-Reply-To: <157177022106.1461658.18024534947316119946.stgit@magnolia>
 References: <157177022106.1461658.18024534947316119946.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,420 +70,417 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace the moveon returns in the phase 6 code with a direct integer
+Replace the moveon returns in the phase 5 code with a direct integer
 error return.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- scrub/phase6.c |  169 +++++++++++++++++++++++++++++---------------------------
- 1 file changed, 89 insertions(+), 80 deletions(-)
+ scrub/phase5.c |  184 ++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 97 insertions(+), 87 deletions(-)
 
 
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 805c93eb..2aa3fd10 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -45,7 +45,7 @@ struct media_verify_state {
- 
- /* Find the fd for a given device identifier. */
- static struct read_verify_pool *
--xfs_dev_to_pool(
-+dev_to_pool(
- 	struct scrub_ctx		*ctx,
- 	struct media_verify_state	*vs,
- 	dev_t				dev)
-@@ -61,7 +61,7 @@ xfs_dev_to_pool(
- 
- /* Find the device major/minor for a given file descriptor. */
- static dev_t
--xfs_disk_to_dev(
-+disk_to_dev(
- 	struct scrub_ctx	*ctx,
- 	struct disk		*disk)
- {
-@@ -81,7 +81,7 @@ bitmap_for_disk(
- 	struct disk			*disk,
- 	struct media_verify_state	*vs)
- {
--	dev_t				dev = xfs_disk_to_dev(ctx, disk);
-+	dev_t				dev = disk_to_dev(ctx, disk);
- 
- 	if (dev == ctx->fsinfo.fs_datadev)
- 		return vs->d_bad;
-@@ -116,7 +116,7 @@ static const struct owner_decode special_owners[] = {
- 
- /* Decode a special owner. */
- static const char *
--xfs_decode_special_owner(
-+decode_special_owner(
- 	uint64_t			owner)
- {
- 	const struct owner_decode	*od = special_owners;
-@@ -234,8 +234,8 @@ _("media error in extended attribute data."));
- }
- 
- /* Iterate the extent mappings of a file to report errors. */
+diff --git a/scrub/phase5.c b/scrub/phase5.c
+index c2cccd76..2641a7fb 100644
+--- a/scrub/phase5.c
++++ b/scrub/phase5.c
+@@ -31,9 +31,11 @@
+  * terminal control characters and escape sequences, since that could be used
+  * to do something naughty to the user's computer and/or break scripts.  XFS
+  * doesn't consider any byte sequence invalid, so don't flag these as errors.
++ *
++ * Returns 0 for success or -1 for error.  This function logs errors.
+  */
 -static bool
--xfs_report_verify_fd(
+-xfs_scrub_check_name(
 +static int
-+report_fd_loss(
- 	struct scrub_ctx		*ctx,
- 	const char			*descr,
- 	int				fd,
-@@ -254,7 +254,7 @@ xfs_report_verify_fd(
- 			report_data_loss, &br);
- 	if (ret) {
- 		str_liberror(ctx, ret, descr);
--		return false;
-+		return ret;
++simple_check_name(
+ 	struct scrub_ctx	*ctx,
+ 	struct descr		*dsc,
+ 	const char		*namedescr,
+@@ -46,7 +48,7 @@ xfs_scrub_check_name(
+ 	/* Complain about zero length names. */
+ 	if (*name == '\0' && should_warn_about_name(ctx)) {
+ 		str_warn(ctx, descr_render(dsc), _("Zero length name found."));
+-		return true;
++		return 0;
  	}
  
- 	/* attr fork */
-@@ -262,23 +262,23 @@ xfs_report_verify_fd(
- 			report_attr_loss, &br);
- 	if (ret) {
- 		str_liberror(ctx, ret, descr);
--		return false;
-+		return ret;
+ 	/* control characters */
+@@ -61,7 +63,7 @@ xfs_scrub_check_name(
+ 		errname = string_escape(name);
+ 		if (!errname) {
+ 			str_errno(ctx, descr_render(dsc));
+-			return false;
++			return -1;
+ 		}
+ 		str_info(ctx, descr_render(dsc),
+ _("Control character found in %s name \"%s\"."),
+@@ -69,15 +71,15 @@ _("Control character found in %s name \"%s\"."),
+ 		free(errname);
  	}
+ 
 -	return true;
-+
 +	return 0;
  }
  
- /* Report read verify errors in unlinked (but still open) files. */
- static int
--xfs_report_verify_inode(
-+report_inode_loss(
- 	struct scrub_ctx		*ctx,
- 	struct xfs_handle		*handle,
- 	struct xfs_bulkstat		*bstat,
- 	void				*arg)
- {
- 	char				descr[DESCR_BUFSZ];
--	bool				moveon;
- 	int				fd;
--	int				error;
-+	int				error, err2;
+ /*
+  * Iterate a directory looking for filenames with problematic
+  * characters.
+  */
+-static bool
+-xfs_scrub_scan_dirents(
++static int
++check_dirent_names(
+ 	struct scrub_ctx	*ctx,
+ 	struct descr		*dsc,
+ 	int			*fd,
+@@ -86,45 +88,45 @@ xfs_scrub_scan_dirents(
+ 	struct unicrash		*uc = NULL;
+ 	DIR			*dir;
+ 	struct dirent		*dentry;
+-	bool			moveon = true;
+ 	int			ret;
  
- 	/* Ignore linked files and things we can't open. */
- 	if (bstat->bs_nlink != 0)
-@@ -302,26 +302,24 @@ _("Disappeared during read error reporting."));
+ 	dir = fdopendir(*fd);
+ 	if (!dir) {
+ 		str_errno(ctx, descr_render(dsc));
+-		moveon = false;
+-		goto out;
++		return errno;
+ 	}
+ 	*fd = -1; /* closedir will close *fd for us */
+ 
+ 	ret = unicrash_dir_init(&uc, ctx, bstat);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, descr_render(dsc));
+-		moveon = false;
+ 		goto out_unicrash;
  	}
  
- 	/* Go find the badness. */
--	moveon = xfs_report_verify_fd(ctx, descr, fd, arg);
--	error = close(fd);
--	if (error)
-+	error = report_fd_loss(ctx, descr, fd, arg);
-+
-+	err2 = close(fd);
-+	if (err2)
- 		str_errno(ctx, descr);
++	errno = 0;
+ 	dentry = readdir(dir);
+ 	while (dentry) {
+-		if (uc) {
++		if (uc)
+ 			ret = unicrash_check_dir_name(uc, dsc, dentry);
+-			if (ret) {
+-				str_liberror(ctx, ret, descr_render(dsc));
+-				moveon = false;
+-			}
+-		} else
+-			moveon = xfs_scrub_check_name(ctx, dsc,
+-					_("directory"), dentry->d_name);
+-		if (!moveon)
++		else
++			ret = simple_check_name(ctx, dsc, _("directory"),
++					dentry->d_name);
++		if (ret) {
++			str_liberror(ctx, ret, descr_render(dsc));
+ 			break;
++		}
++		errno = 0;
+ 		dentry = readdir(dir);
+ 	}
++	if (errno) {
++		ret = errno;
++		str_liberror(ctx, ret, descr_render(dsc));
++	}
+ 	unicrash_free(uc);
  
--	return moveon ? 0 : XFS_ITERATE_INODES_ABORT;
-+	return error;
+ out_unicrash:
+ 	closedir(dir);
+-out:
+-	return moveon;
++	return ret;
  }
  
- /* Scan a directory for matches in the read verify error list. */
- static int
--xfs_report_verify_dir(
-+report_dir_loss(
- 	struct scrub_ctx	*ctx,
- 	const char		*path,
- 	int			dir_fd,
- 	void			*arg)
- {
--	bool			moveon;
--
--	moveon = xfs_report_verify_fd(ctx, path, dir_fd, arg);
--	return moveon ? 0 : -1;
-+	return report_fd_loss(ctx, path, dir_fd, arg);
+ #ifdef HAVE_LIBATTR
+@@ -145,8 +147,8 @@ static const struct attrns_decode attr_ns[] = {
+  * Check all the xattr names in a particular namespace of a file handle
+  * for Unicode normalization problems or collisions.
+  */
+-static bool
+-xfs_scrub_scan_fhandle_namespace_xattrs(
++static int
++check_xattr_ns_names(
+ 	struct scrub_ctx		*ctx,
+ 	struct descr			*dsc,
+ 	struct xfs_handle		*handle,
+@@ -159,14 +161,13 @@ xfs_scrub_scan_fhandle_namespace_xattrs(
+ 	struct attrlist			*attrlist = (struct attrlist *)attrbuf;
+ 	struct attrlist_ent		*ent;
+ 	struct unicrash			*uc = NULL;
+-	bool				moveon = true;
+ 	int				i;
+ 	int				error;
+ 
+ 	error = unicrash_xattr_init(&uc, ctx, bstat);
+ 	if (error) {
+ 		str_liberror(ctx, error, descr_render(dsc));
+-		return false;
++		return error;
+ 	}
+ 
+ 	memset(attrbuf, 0, XFS_XATTR_LIST_MAX);
+@@ -180,20 +181,17 @@ xfs_scrub_scan_fhandle_namespace_xattrs(
+ 			ent = ATTR_ENTRY(attrlist, i);
+ 			snprintf(keybuf, XATTR_NAME_MAX, "%s.%s", attr_ns->name,
+ 					ent->a_name);
+-			if (uc) {
++			if (uc)
+ 				error = unicrash_check_xattr_name(uc, dsc,
+ 						keybuf);
+-				if (error) {
+-					str_liberror(ctx, error,
+-							descr_render(dsc));
+-					moveon = false;
+-				}
+-			} else
+-				moveon = xfs_scrub_check_name(ctx, dsc,
++			else
++				error = simple_check_name(ctx, dsc,
+ 						_("extended attribute"),
+ 						keybuf);
+-			if (!moveon)
++			if (error) {
++				str_liberror(ctx, error, descr_render(dsc));
+ 				goto out;
++			}
+ 		}
+ 
+ 		if (!attrlist->al_more)
+@@ -201,37 +199,40 @@ xfs_scrub_scan_fhandle_namespace_xattrs(
+ 		error = attr_list_by_handle(handle, sizeof(*handle), attrbuf,
+ 				XFS_XATTR_LIST_MAX, attr_ns->flags, &cur);
+ 	}
+-	if (error && errno != ESTALE)
+-		str_errno(ctx, descr_render(dsc));
++	if (error) {
++		if (errno == ESTALE)
++			errno = 0;
++		if (errno)
++			str_errno(ctx, descr_render(dsc));
++	}
+ out:
+ 	unicrash_free(uc);
+-	return moveon;
++	return error;
  }
  
  /*
-@@ -329,7 +327,7 @@ xfs_report_verify_dir(
-  * the read verify error list.
+  * Check all the xattr names in all the xattr namespaces for problematic
+  * characters.
+  */
+-static bool
+-xfs_scrub_scan_fhandle_xattrs(
++static int
++check_xattr_names(
+ 	struct scrub_ctx		*ctx,
+ 	struct descr			*dsc,
+ 	struct xfs_handle		*handle,
+ 	struct xfs_bulkstat		*bstat)
+ {
+ 	const struct attrns_decode	*ns;
+-	bool				moveon = true;
++	int				ret;
+ 
+ 	for (ns = attr_ns; ns->name; ns++) {
+-		moveon = xfs_scrub_scan_fhandle_namespace_xattrs(ctx, dsc,
+-				handle, bstat, ns);
+-		if (!moveon)
++		ret = check_xattr_ns_names(ctx, dsc, handle, bstat, ns);
++		if (ret)
+ 			break;
+ 	}
+-	return moveon;
++	return ret;
+ }
+ #else
+-# define xfs_scrub_scan_fhandle_xattrs(c, d, h, b)	(true)
++# define check_xattr_names(c, d, h, b)	(0)
+ #endif /* HAVE_LIBATTR */
+ 
+ static int
+@@ -255,26 +256,25 @@ render_ino_from_handle(
+  * Check for potential Unicode collisions in names.
   */
  static int
--xfs_report_verify_dirent(
-+report_dirent_loss(
+-xfs_scrub_connections(
++check_inode_names(
  	struct scrub_ctx	*ctx,
- 	const char		*path,
- 	int			dir_fd,
-@@ -337,9 +335,8 @@ xfs_report_verify_dirent(
- 	struct stat		*sb,
+ 	struct xfs_handle	*handle,
+ 	struct xfs_bulkstat	*bstat,
  	void			*arg)
  {
--	bool			moveon;
- 	int			fd;
+-	bool			*pmoveon = arg;
+ 	DEFINE_DESCR(dsc, ctx, render_ino_from_handle);
+-	bool			moveon = true;
++	bool			*aborted = arg;
+ 	int			fd = -1;
 -	int			error;
-+	int			error, err2;
++	int			error = 0;
++	int			err2;
  
- 	/* Ignore things we can't open. */
- 	if (!S_ISREG(sb->st_mode) && !S_ISDIR(sb->st_mode))
-@@ -364,15 +361,15 @@ xfs_report_verify_dirent(
+ 	descr_set(&dsc, bstat);
+ 	background_sleep();
+ 
+ 	/* Warn about naming problems in xattrs. */
+ 	if (bstat->bs_xflags & FS_XFLAG_HASATTR) {
+-		moveon = xfs_scrub_scan_fhandle_xattrs(ctx, &dsc, handle,
+-				bstat);
+-		if (!moveon)
++		error = check_xattr_names(ctx, &dsc, handle, bstat);
++		if (error)
+ 			goto out;
  	}
  
- 	/* Go find the badness. */
--	moveon = xfs_report_verify_fd(ctx, path, fd, arg);
--	if (moveon)
--		goto out;
-+	error = report_fd_loss(ctx, path, fd, arg);
+@@ -282,7 +282,8 @@ xfs_scrub_connections(
+ 	if (S_ISDIR(bstat->bs_mode)) {
+ 		fd = scrub_open_handle(handle);
+ 		if (fd < 0) {
+-			if (errno == ESTALE)
++			error = errno;
++			if (error == ESTALE)
+ 				return ESTALE;
+ 			str_errno(ctx, descr_render(&dsc));
+ 			goto out;
+@@ -291,21 +292,27 @@ xfs_scrub_connections(
  
--out:
--	error = close(fd);
--	if (error)
-+	err2 = close(fd);
-+	if (err2)
- 		str_errno(ctx, path);
--	return moveon ? 0 : -1;
-+	if (!error && err2)
-+		error = err2;
+ 	/* Warn about naming problems in the directory entries. */
+ 	if (fd >= 0 && S_ISDIR(bstat->bs_mode)) {
+-		moveon = xfs_scrub_scan_dirents(ctx, &dsc, &fd, bstat);
+-		if (!moveon)
++		error = check_dirent_names(ctx, &dsc, &fd, bstat);
++		if (error)
+ 			goto out;
+ 	}
+ 
+ out:
+ 	progress_add(1);
+ 	if (fd >= 0) {
+-		error = close(fd);
+-		if (error)
++		err2 = close(fd);
++		if (err2)
+ 			str_errno(ctx, descr_render(&dsc));
++		if (!error && err2)
++			error = err2;
+ 	}
+-	if (!moveon)
+-		*pmoveon = false;
+-	return *pmoveon ? 0 : XFS_ITERATE_INODES_ABORT;
++
++	if (error)
++		*aborted = true;
++	if (!error && *aborted)
++		error = ECANCELED;
 +
 +	return error;
  }
  
- /* Use a fsmap to report metadata lost to a media error. */
-@@ -400,7 +397,7 @@ report_ioerr_fsmap(
- 	if (map->fmr_flags & FMR_OF_SPECIAL_OWNER) {
- 		snprintf(buf, DESCR_BUFSZ, _("disk offset %"PRIu64),
- 				(uint64_t)map->fmr_physical + err_off);
--		type = xfs_decode_special_owner(map->fmr_owner);
-+		type = decode_special_owner(map->fmr_owner);
- 		str_corrupt(ctx, buf, _("media error in %s."), type);
+ #ifndef FS_IOC_GETFSLABEL
+@@ -327,20 +334,19 @@ scrub_render_mountpoint(
+  * Check the filesystem label for Unicode normalization problems or misleading
+  * sequences.
+  */
+-static bool
+-xfs_scrub_fs_label(
++static int
++check_fs_label(
+ 	struct scrub_ctx		*ctx)
+ {
+ 	DEFINE_DESCR(dsc, ctx, scrub_render_mountpoint);
+ 	char				label[FSLABEL_MAX];
+ 	struct unicrash			*uc = NULL;
+-	bool				moveon = true;
+ 	int				error;
+ 
+ 	error = unicrash_fs_label_init(&uc, ctx);
+ 	if (error) {
+ 		str_liberror(ctx, error, descr_render(&dsc));
+-		return false;
++		return error;
  	}
  
-@@ -438,7 +435,7 @@ report_ioerr(
- 	struct disk_ioerr_report	*dioerr = arg;
- 	dev_t				dev;
+ 	descr_set(&dsc, NULL);
+@@ -349,7 +355,7 @@ xfs_scrub_fs_label(
+ 	error = ioctl(ctx->mnt.fd, FS_IOC_GETFSLABEL, &label);
+ 	if (error) {
+ 		if (errno != EOPNOTSUPP && errno != ENOTTY) {
+-			moveon = false;
++			error = errno;
+ 			perror(ctx->mntpoint);
+ 		}
+ 		goto out;
+@@ -360,45 +366,49 @@ xfs_scrub_fs_label(
+ 		goto out;
  
--	dev = xfs_disk_to_dev(dioerr->ctx, dioerr->disk);
-+	dev = disk_to_dev(dioerr->ctx, dioerr->disk);
- 
- 	/* Go figure out which blocks are bad from the fsmap. */
- 	memset(keys, 0, sizeof(struct fsmap) * 2);
-@@ -475,7 +472,7 @@ report_disk_ioerrs(
+ 	/* Otherwise check for weirdness. */
+-	if (uc) {
++	if (uc)
+ 		error = unicrash_check_fs_label(uc, &dsc, label);
+-		if (error) {
+-			str_liberror(ctx, error, descr_render(&dsc));
+-			moveon = false;
+-		}
+-	} else
+-		moveon = xfs_scrub_check_name(ctx, &dsc, _("filesystem label"),
++	else
++		error = simple_check_name(ctx, &dsc, _("filesystem label"),
+ 				label);
+-	if (!moveon)
+-		goto out;
++	if (error)
++		str_liberror(ctx, error, descr_render(&dsc));
+ out:
+ 	unicrash_free(uc);
+-	return moveon;
++	return error;
  }
  
- /* Given bad extent lists for the data & rtdev, find bad files. */
--static bool
-+static int
- report_all_media_errors(
- 	struct scrub_ctx		*ctx,
- 	struct media_verify_state	*vs)
-@@ -485,24 +482,22 @@ report_all_media_errors(
- 	ret = report_disk_ioerrs(ctx, ctx->datadev, vs);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("walking datadev io errors"));
--		return false;
-+		return ret;
+ /* Check directory connectivity. */
+-bool
+-xfs_scan_connections(
++int
++phase5_func(
+ 	struct scrub_ctx	*ctx)
+ {
+-	bool			moveon = true;
++	bool			aborted = false;
+ 	int			ret;
+ 
+ 	if (ctx->corruptions_found || ctx->unfixable_errors) {
+ 		str_info(ctx, ctx->mntpoint,
+ _("Filesystem has errors, skipping connectivity checks."));
+-		return true;
++		return 0;
  	}
  
- 	ret = report_disk_ioerrs(ctx, ctx->rtdev, vs);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("walking rtdev io errors"));
--		return false;
-+		return ret;
- 	}
- 
- 	/* Scan the directory tree to get file paths. */
--	ret = scan_fs_tree(ctx, xfs_report_verify_dir,
--			xfs_report_verify_dirent, vs);
-+	ret = scan_fs_tree(ctx, report_dir_loss, report_dirent_loss, vs);
+-	ret = xfs_scrub_fs_label(ctx);
++	ret = check_fs_label(ctx);
  	if (ret)
 -		return false;
 +		return ret;
  
- 	/* Scan for unlinked files. */
--	ret = scrub_scan_all_inodes(ctx, xfs_report_verify_inode, vs);
--	return ret == 0;
-+	return scrub_scan_all_inodes(ctx, report_inode_loss, vs);
- }
- 
- /* Schedule a read-verify of a (data block) extent. */
-@@ -516,7 +511,7 @@ check_rmap(
- 	struct read_verify_pool		*rvp;
- 	int				ret;
- 
--	rvp = xfs_dev_to_pool(ctx, vs, map->fmr_device);
-+	rvp = dev_to_pool(ctx, vs, map->fmr_device);
- 
- 	dbg_printf("rmap dev %d:%d phys %"PRIu64" owner %"PRId64
- 			" offset %"PRIu64" len %"PRIu64" flags 0x%x\n",
-@@ -619,7 +614,7 @@ verify_entire_disk(
- }
- 
- /* Scan every part of every disk. */
--static bool
-+static int
- verify_all_disks(
- 	struct scrub_ctx		*ctx,
- 	struct media_verify_state	*vs)
-@@ -629,14 +624,14 @@ verify_all_disks(
- 	ret = verify_entire_disk(vs->rvp_data, ctx->datadev, vs);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("scheduling datadev verify"));
+-	ret = scrub_scan_all_inodes(ctx, xfs_scrub_connections, &moveon);
++	ret = scrub_scan_all_inodes(ctx, check_inode_names, &aborted);
+ 	if (ret)
 -		return false;
-+		return ret;
- 	}
- 
- 	if (ctx->logdev) {
- 		ret = verify_entire_disk(vs->rvp_log, ctx->logdev, vs);
- 		if (ret) {
- 			str_liberror(ctx, ret, _("scheduling logdev verify"));
--			return false;
-+			return ret;
- 		}
- 	}
- 
-@@ -644,11 +639,11 @@ verify_all_disks(
- 		ret = verify_entire_disk(vs->rvp_realtime, ctx->rtdev, vs);
- 		if (ret) {
- 			str_liberror(ctx, ret, _("scheduling rtdev verify"));
--			return false;
-+			return ret;
- 		}
- 	}
- 
--	return true;
-+	return 0;
- }
- 
- /*
-@@ -659,18 +654,17 @@ verify_all_disks(
-  * scan the extent maps of the entire fs tree to figure (and the unlinked
-  * inodes) out which files are now broken.
-  */
--bool
--xfs_scan_blocks(
-+int
-+phase6_func(
- 	struct scrub_ctx		*ctx)
- {
- 	struct media_verify_state	vs = { NULL };
--	bool				moveon = false;
--	int				ret;
-+	int				ret, ret2, ret3;
- 
- 	ret = bitmap_alloc(&vs.d_bad);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("creating datadev badblock bitmap"));
--		goto out;
-+		return ret;
- 	}
- 
- 	ret = bitmap_alloc(&vs.r_bad);
-@@ -708,40 +702,39 @@ xfs_scan_blocks(
- 	}
- 
- 	if (scrub_data > 1)
--		moveon = verify_all_disks(ctx, &vs);
--	else {
-+		ret = verify_all_disks(ctx, &vs);
-+	else
- 		ret = scrub_scan_all_spacemaps(ctx, check_rmap, &vs);
--		if (ret)
--			moveon = false;
--	}
 -	if (!moveon)
-+	if (ret)
- 		goto out_rtpool;
- 
- 	ret = clean_pool(vs.rvp_data, &ctx->bytes_checked);
--	if (ret) {
-+	if (ret)
- 		str_liberror(ctx, ret, _("flushing datadev verify pool"));
--		moveon = false;
--	}
- 
--	ret = clean_pool(vs.rvp_log, &ctx->bytes_checked);
--	if (ret) {
--		str_liberror(ctx, ret, _("flushing logdev verify pool"));
--		moveon = false;
--	}
-+	ret2 = clean_pool(vs.rvp_log, &ctx->bytes_checked);
-+	if (ret2)
-+		str_liberror(ctx, ret2, _("flushing logdev verify pool"));
- 
--	ret = clean_pool(vs.rvp_realtime, &ctx->bytes_checked);
--	if (ret) {
--		str_liberror(ctx, ret, _("flushing rtdev verify pool"));
--		moveon = false;
--	}
-+	ret3 = clean_pool(vs.rvp_realtime, &ctx->bytes_checked);
-+	if (ret3)
-+		str_liberror(ctx, ret3, _("flushing rtdev verify pool"));
-+
-+	/*
-+	 * If the verify flush didn't work or we found no bad blocks, we're
-+	 * done!  No errors detected.
-+	 */
-+	if (ret || ret2 || ret3)
-+		goto out_rbad;
-+	if (bitmap_empty(vs.d_bad) && bitmap_empty(vs.r_bad))
-+		goto out_rbad;
- 
- 	/* Scan the whole dir tree to see what matches the bad extents. */
--	if (moveon && (!bitmap_empty(vs.d_bad) || !bitmap_empty(vs.r_bad)))
--		moveon = report_all_media_errors(ctx, &vs);
-+	ret = report_all_media_errors(ctx, &vs);
- 
- 	bitmap_free(&vs.r_bad);
- 	bitmap_free(&vs.d_bad);
--	return moveon;
-+	return ret;
- 
- out_rtpool:
- 	if (vs.rvp_realtime) {
-@@ -760,13 +753,19 @@ xfs_scan_blocks(
- 	bitmap_free(&vs.r_bad);
- out_dbad:
- 	bitmap_free(&vs.d_bad);
--out:
--	return moveon;
-+	return ret;
- }
- 
--/* Estimate how much work we're going to do. */
- bool
--xfs_estimate_verify_work(
-+xfs_scan_blocks(
-+	struct scrub_ctx		*ctx)
-+{
-+	return phase6_func(ctx) == 0;
-+}
-+
-+/* Estimate how much work we're going to do. */
-+int
-+phase6_estimate(
- 	struct scrub_ctx	*ctx,
- 	uint64_t		*items,
- 	unsigned int		*nr_threads,
-@@ -784,7 +783,7 @@ xfs_estimate_verify_work(
- 				&r_blocks, &r_bfree, &f_files, &f_free);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("estimating verify work"));
 -		return false;
 +		return ret;
- 	}
- 
- 	*items = cvt_off_fsb_to_b(&ctx->mnt, d_blocks + r_blocks);
-@@ -792,5 +791,15 @@ xfs_estimate_verify_work(
- 		*items -= cvt_off_fsb_to_b(&ctx->mnt, d_bfree + r_bfree);
- 	*nr_threads = disk_heads(ctx->datadev);
- 	*rshift = 20;
++	if (aborted)
++		return ECANCELED;
++
+ 	xfs_scrub_report_preen_triggers(ctx);
 -	return true;
 +	return 0;
 +}
 +
 +bool
-+xfs_estimate_verify_work(
-+	struct scrub_ctx	*ctx,
-+	uint64_t		*items,
-+	unsigned int		*nr_threads,
-+	int			*rshift)
++xfs_scan_connections(
++	struct scrub_ctx	*ctx)
 +{
-+	return phase6_estimate(ctx, items, nr_threads, rshift) == 0;
++	return phase5_func(ctx) == 0;
  }
 
