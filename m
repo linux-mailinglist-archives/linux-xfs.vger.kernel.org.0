@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D611E0BFB
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:52:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E531E0BFD
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 20:52:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387913AbfJVSws (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 22 Oct 2019 14:52:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50302 "EHLO
+        id S2387981AbfJVSwx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Oct 2019 14:52:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50426 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387746AbfJVSws (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:52:48 -0400
+        with ESMTP id S2387791AbfJVSwx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 14:52:53 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiW1Y109673;
-        Tue, 22 Oct 2019 18:52:43 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIiBNX109498;
+        Tue, 22 Oct 2019 18:52:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=kK3KlIzG6XhcEjzJoBm9bvC3Tl9hB5zzV79vdZNHE+Y=;
- b=n+cW0oAioQn4GdUihRyjxBu36G9gMOTf3zC+frgeOhwrO6P+yuqI2bZXktq5yPVwlb7O
- Fzvi39QsvDZgFi/hTUvgB6Hv3GWc2c9K7xgKwAhkwD3UR6xuMso4OOeqzptX6G6AWPJY
- +Ymv7iNrybFuCU1GtnTWF7Xr+Li9u2pzA9Dxze7omPJv0E8SklX14jTI9YYGWGeQxg5F
- 0y8/8AuNxQnCh+in9DpwGoFsL19AeYHQaJekLumjI3e0PjAVctS/yte3mAC2Ozwa1Vka
- Wi1f2wDh+G6fRT9xnmP4roearTjBASdokcnDFEJce8dYaPNrDFlYg7xEmO/t13OOyWgk +g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vqswtgvm5-1
+ bh=rOg4YgTJ9LByqmjIArFhd5qm5Y82faDbI7MA5URoFDs=;
+ b=AyQTR9WYy4laPsxCTUs1El85Q1CBEvLf87wObQ3A+cZO30vryWoXMt5M7rJy5Boax9G3
+ cKjzHaWrTwehf5I8Dr3f9mNv+/aCvs3krAigoJ/mFL+IX90yKRyxPqfnv4OAfcu8kKyv
+ KzwsOZztyzqA+/7Mw1/MN8h9TfzhkEzD3X2LPibAA2Y1+I0rZe2NgjYZIS6WIY4gs+Hm
+ yle8ppS+koLpRV1Tl4KB3eBERQCMaZJSG/1fNh7YD9GN/jJ1NnacydylEDOS7jCfM/vR
+ XVkIbA++ntBTbsmM548RDLtHuZlHwNRFZajm6IfcPN1VWfGDButkeje0VUpCGu1oWQEO AQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vqswtgvmr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:52:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhn8n148246;
-        Tue, 22 Oct 2019 18:52:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2vsp4019ms-1
+        Tue, 22 Oct 2019 18:52:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MIhNqL125160;
+        Tue, 22 Oct 2019 18:52:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vsx23a0rc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 18:52:42 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9MIqd8o028788;
-        Tue, 22 Oct 2019 18:52:40 GMT
+        Tue, 22 Oct 2019 18:52:47 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MIqkTT000710;
+        Tue, 22 Oct 2019 18:52:46 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 11:52:39 -0700
-Subject: [PATCH 2/7] libfrog: convert bitmap.c to negative error codes
+        with ESMTP ; Tue, 22 Oct 2019 11:52:46 -0700
+Subject: [PATCH 3/7] libfrog: convert fsgeom.c functions to negative error
+ codes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Date:   Tue, 22 Oct 2019 11:52:38 -0700
-Message-ID: <157177035867.1462916.1273692110117857304.stgit@magnolia>
+Date:   Tue, 22 Oct 2019 11:52:44 -0700
+Message-ID: <157177036487.1462916.10945521391603714187.stgit@magnolia>
 In-Reply-To: <157177034582.1462916.12588287391821422188.stgit@magnolia>
 References: <157177034582.1462916.12588287391821422188.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -76,170 +77,346 @@ does.
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- libfrog/bitmap.c |   27 +++++++++++++++------------
- repair/rmap.c    |    4 ++--
- scrub/phase6.c   |   12 ++++++------
- 3 files changed, 23 insertions(+), 20 deletions(-)
+ fsr/xfs_fsr.c       |    4 ++--
+ growfs/xfs_growfs.c |    4 ++--
+ io/bmap.c           |    2 +-
+ io/bulkstat.c       |    6 +++---
+ io/fsmap.c          |    4 ++--
+ io/open.c           |    2 +-
+ io/stat.c           |    2 +-
+ libfrog/bulkstat.c  |    2 +-
+ libfrog/fsgeom.c    |   18 +++++++++---------
+ quota/free.c        |    2 +-
+ quota/quot.c        |    2 +-
+ repair/xfs_repair.c |    2 +-
+ rtcp/xfs_rtcp.c     |    2 +-
+ scrub/phase1.c      |    4 ++--
+ spaceman/file.c     |    2 +-
+ spaceman/health.c   |    2 +-
+ 16 files changed, 30 insertions(+), 30 deletions(-)
 
 
-diff --git a/libfrog/bitmap.c b/libfrog/bitmap.c
-index c928d26f..5af5ab8d 100644
---- a/libfrog/bitmap.c
-+++ b/libfrog/bitmap.c
-@@ -76,14 +76,14 @@ bitmap_alloc(
- 
- 	bmap = calloc(1, sizeof(struct bitmap));
- 	if (!bmap)
--		return errno;
-+		return -errno;
- 	bmap->bt_tree = malloc(sizeof(struct avl64tree_desc));
- 	if (!bmap->bt_tree) {
--		ret = errno;
-+		ret = -errno;
- 		goto out;
+diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+index af5d6169..3e9ba27c 100644
+--- a/fsr/xfs_fsr.c
++++ b/fsr/xfs_fsr.c
+@@ -602,7 +602,7 @@ fsrfs(char *mntdir, xfs_ino_t startino, int targetrange)
+ 		return -1;
  	}
  
--	ret = pthread_mutex_init(&bmap->bt_lock, NULL);
-+	ret = -pthread_mutex_init(&bmap->bt_lock, NULL);
- 	if (ret)
- 		goto out_tree;
- 
-@@ -149,12 +149,12 @@ __bitmap_insert(
- 
- 	ext = bitmap_node_init(start, length);
- 	if (!ext)
--		return errno;
-+		return -errno;
- 
- 	node = avl64_insert(bmap->bt_tree, &ext->btn_node);
- 	if (node == NULL) {
- 		free(ext);
--		return EEXIST;
-+		return -EEXIST;
+-	ret = xfd_open(&fsxfd, mntdir, O_RDONLY);
++	ret = -xfd_open(&fsxfd, mntdir, O_RDONLY);
+ 	if (ret) {
+ 		fsrprintf(_("unable to open XFS file: %s: %s\n"),
+ 		          mntdir, strerror(ret));
+@@ -748,7 +748,7 @@ fsrfile(
+ 	 * Need to open something on the same filesystem as the
+ 	 * file.  Open the parent.
+ 	 */
+-	error = xfd_open(&fsxfd, getparent(fname), O_RDONLY);
++	error = -xfd_open(&fsxfd, getparent(fname), O_RDONLY);
+ 	if (error) {
+ 		fsrprintf(_("unable to open sys handle for XFS file %s: %s\n"),
+ 			fname, strerror(error));
+diff --git a/growfs/xfs_growfs.c b/growfs/xfs_growfs.c
+index eab15984..d1908046 100644
+--- a/growfs/xfs_growfs.c
++++ b/growfs/xfs_growfs.c
+@@ -166,7 +166,7 @@ main(int argc, char **argv)
  	}
  
- 	return 0;
-@@ -235,7 +235,7 @@ bitmap_set(
- 
- #if 0	/* Unused, provided for completeness. */
- /* Clear a region of bits. */
--bool
-+int
- bitmap_clear(
- 	struct bitmap		*bmap,
- 	uint64_t		start,
-@@ -259,7 +259,7 @@ bitmap_clear(
- 	/* Nothing, we're done. */
- 	if (firstn == NULL && lastn == NULL) {
- 		pthread_mutex_unlock(&bmap->bt_lock);
--		return true;
-+		return 0;
- 	}
- 
- 	assert(firstn != NULL && lastn != NULL);
-@@ -297,20 +297,23 @@ bitmap_clear(
- 					new_start;
- 
- 			ext = bitmap_node_init(new_start, new_length);
--			if (!ext)
--				return false;
-+			if (!ext) {
-+				ret = -errno;
-+				goto out;
-+			}
- 
- 			node = avl64_insert(bmap->bt_tree, &ext->btn_node);
- 			if (node == NULL) {
--				errno = EEXIST;
--				return false;
-+				ret = -EEXIST;
-+				goto out;
- 			}
- 			break;
+ 	/* get the current filesystem size & geometry */
+-	ret = xfrog_geometry(ffd, &geo);
++	ret = -xfrog_geometry(ffd, &geo);
+ 	if (ret) {
+ 		fprintf(stderr,
+ 	_("%s: cannot determine geometry of filesystem mounted at %s: %s\n"),
+@@ -352,7 +352,7 @@ main(int argc, char **argv)
  		}
  	}
  
-+out:
- 	pthread_mutex_unlock(&bmap->bt_lock);
--	return true;
-+	return ret;
- }
- #endif
+-	ret = xfrog_geometry(ffd, &ngeo);
++	ret = -xfrog_geometry(ffd, &ngeo);
+ 	if (ret) {
+ 		fprintf(stderr, _("%s: XFS_IOC_FSGEOMETRY xfsctl failed: %s\n"),
+ 			progname, strerror(ret));
+diff --git a/io/bmap.c b/io/bmap.c
+index cf4ea12b..f838840e 100644
+--- a/io/bmap.c
++++ b/io/bmap.c
+@@ -106,7 +106,7 @@ bmap_f(
+ 		bmv_iflags &= ~(BMV_IF_PREALLOC|BMV_IF_NO_DMAPI_READ);
  
-diff --git a/repair/rmap.c b/repair/rmap.c
-index c6ed25a9..c4c99131 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -490,13 +490,13 @@ rmap_store_ag_btree_rec(
- 	error = init_slab_cursor(ag_rmap->ar_raw_rmaps, rmap_compare, &rm_cur);
- 	if (error)
- 		goto err;
--	error = bitmap_alloc(&own_ag_bitmap);
-+	error = -bitmap_alloc(&own_ag_bitmap);
- 	if (error)
- 		goto err_slab;
- 	while ((rm_rec = pop_slab_cursor(rm_cur)) != NULL) {
- 		if (rm_rec->rm_owner != XFS_RMAP_OWN_AG)
- 			continue;
--		error = bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
-+		error = -bitmap_set(own_ag_bitmap, rm_rec->rm_startblock,
- 					rm_rec->rm_blockcount);
- 		if (error) {
- 			/*
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 6dbadcee..6e959069 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -195,7 +195,7 @@ report_data_loss(
- 	else
- 		bmp = vs->d_bad;
- 
--	return bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
-+	return -bitmap_iterate_range(bmp, bmap->bm_physical, bmap->bm_length,
- 			report_badfile, br);
- }
- 
-@@ -446,7 +446,7 @@ report_ioerr(
- 	(keys + 1)->fmr_owner = ULLONG_MAX;
- 	(keys + 1)->fmr_offset = ULLONG_MAX;
- 	(keys + 1)->fmr_flags = UINT_MAX;
--	return scrub_iterate_fsmap(dioerr->ctx, keys, report_ioerr_fsmap,
-+	return -scrub_iterate_fsmap(dioerr->ctx, keys, report_ioerr_fsmap,
- 			&start);
- }
- 
-@@ -468,7 +468,7 @@ report_disk_ioerrs(
- 	tree = bitmap_for_disk(ctx, disk, vs);
- 	if (!tree)
+ 	if (vflag) {
+-		c = xfrog_geometry(file->fd, &fsgeo);
++		c = -xfrog_geometry(file->fd, &fsgeo);
+ 		if (c) {
+ 			fprintf(stderr,
+ 				_("%s: can't get geometry [\"%s\"]: %s\n"),
+diff --git a/io/bulkstat.c b/io/bulkstat.c
+index 9641370b..b081567f 100644
+--- a/io/bulkstat.c
++++ b/io/bulkstat.c
+@@ -163,7 +163,7 @@ bulkstat_f(
  		return 0;
--	return bitmap_iterate(tree, report_ioerr, &dioerr);
-+	return -bitmap_iterate(tree, report_ioerr, &dioerr);
- }
- 
- /* Given bad extent lists for the data & rtdev, find bad files. */
-@@ -598,7 +598,7 @@ remember_ioerr(
- 		return;
  	}
  
--	ret = bitmap_set(tree, start, length);
-+	ret = -bitmap_set(tree, start, length);
+-	ret = xfd_prepare_geometry(&xfd);
++	ret = -xfd_prepare_geometry(&xfd);
+ 	if (ret) {
+ 		xfrog_perror(ret, "xfd_prepare_geometry");
+ 		exitcode = 1;
+@@ -271,7 +271,7 @@ bulkstat_single_f(
+ 		}
+ 	}
+ 
+-	ret = xfd_prepare_geometry(&xfd);
++	ret = -xfd_prepare_geometry(&xfd);
+ 	if (ret) {
+ 		xfrog_perror(ret, "xfd_prepare_geometry");
+ 		exitcode = 1;
+@@ -419,7 +419,7 @@ inumbers_f(
+ 		return 0;
+ 	}
+ 
+-	ret = xfd_prepare_geometry(&xfd);
++	ret = -xfd_prepare_geometry(&xfd);
+ 	if (ret) {
+ 		xfrog_perror(ret, "xfd_prepare_geometry");
+ 		exitcode = 1;
+diff --git a/io/fsmap.c b/io/fsmap.c
+index 12ec1e44..feacb264 100644
+--- a/io/fsmap.c
++++ b/io/fsmap.c
+@@ -448,11 +448,11 @@ fsmap_f(
+ 	}
+ 
+ 	if (vflag) {
+-		c = xfrog_geometry(file->fd, &fsgeo);
++		c = -xfrog_geometry(file->fd, &fsgeo);
+ 		if (c) {
+ 			fprintf(stderr,
+ 				_("%s: can't get geometry [\"%s\"]: %s\n"),
+-				progname, file->name, strerror(errno));
++				progname, file->name, strerror(c));
+ 			exitcode = 1;
+ 			return 0;
+ 		}
+diff --git a/io/open.c b/io/open.c
+index a5192e87..464bcad9 100644
+--- a/io/open.c
++++ b/io/open.c
+@@ -124,7 +124,7 @@ openfile(
+ 	} else {
+ 		int	ret;
+ 
+-		ret = xfrog_geometry(fd, geom);
++		ret = -xfrog_geometry(fd, geom);
+ 		if (ret) {
+ 			xfrog_perror(ret, "XFS_IOC_FSGEOMETRY");
+ 			close(fd);
+diff --git a/io/stat.c b/io/stat.c
+index db335780..d125a0f7 100644
+--- a/io/stat.c
++++ b/io/stat.c
+@@ -197,7 +197,7 @@ statfs_f(
+ 	}
+ 	if (file->flags & IO_FOREIGN)
+ 		return 0;
+-	ret = xfrog_geometry(file->fd, &fsgeo);
++	ret = -xfrog_geometry(file->fd, &fsgeo);
+ 	if (ret) {
+ 		xfrog_perror(ret, "XFS_IOC_FSGEOMETRY");
+ 	} else {
+diff --git a/libfrog/bulkstat.c b/libfrog/bulkstat.c
+index 538b5197..38d634f7 100644
+--- a/libfrog/bulkstat.c
++++ b/libfrog/bulkstat.c
+@@ -39,7 +39,7 @@ xfrog_bulkstat_prep_v1_emulation(
+ 	if (xfd->fsgeom.blocksize > 0)
+ 		return 0;
+ 
+-	return xfd_prepare_geometry(xfd);
++	return -xfd_prepare_geometry(xfd);
+ }
+ 
+ /* Bulkstat a single inode using v5 ioctl. */
+diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
+index 3ea91e3f..19a4911f 100644
+--- a/libfrog/fsgeom.c
++++ b/libfrog/fsgeom.c
+@@ -69,7 +69,7 @@ xfs_report_geom(
+ 			(unsigned long long)geo->rtextents);
+ }
+ 
+-/* Try to obtain the xfs geometry.  On error returns a positive error code. */
++/* Try to obtain the xfs geometry.  On error returns a negative error code. */
+ int
+ xfrog_geometry(
+ 	int			fd,
+@@ -91,12 +91,12 @@ xfrog_geometry(
+ 	if (!ret)
+ 		return 0;
+ 
+-	return errno;
++	return -errno;
+ }
+ 
+ /*
+  * Prepare xfs_fd structure for future ioctl operations by computing the xfs
+- * geometry for @xfd->fd.  Returns zero or a positive error code.
++ * geometry for @xfd->fd.  Returns zero or a negative error code.
+  */
+ int
+ xfd_prepare_geometry(
+@@ -117,7 +117,7 @@ xfd_prepare_geometry(
+ 	return 0;
+ }
+ 
+-/* Open a file on an XFS filesystem.  Returns zero or a positive error code. */
++/* Open a file on an XFS filesystem.  Returns zero or a negative error code. */
+ int
+ xfd_open(
+ 	struct xfs_fd		*xfd,
+@@ -128,7 +128,7 @@ xfd_open(
+ 
+ 	xfd->fd = open(pathname, flags);
+ 	if (xfd->fd < 0)
+-		return errno;
++		return -errno;
+ 
+ 	ret = xfd_prepare_geometry(xfd);
+ 	if (ret) {
+@@ -141,7 +141,7 @@ xfd_open(
+ 
+ /*
+  * Release any resources associated with this xfs_fd structure.  Returns zero
+- * or a positive error code.
++ * or a negative error code.
+  */
+ int
+ xfd_close(
+@@ -155,12 +155,12 @@ xfd_close(
+ 	ret = close(xfd->fd);
+ 	xfd->fd = -1;
+ 	if (ret < 0)
+-		return errno;
++		return -errno;
+ 
+ 	return 0;
+ }
+ 
+-/* Try to obtain an AG's geometry.  Returns zero or a positive error code. */
++/* Try to obtain an AG's geometry.  Returns zero or a negative error code. */
+ int
+ xfrog_ag_geometry(
+ 	int			fd,
+@@ -172,6 +172,6 @@ xfrog_ag_geometry(
+ 	ageo->ag_number = agno;
+ 	ret = ioctl(fd, XFS_IOC_AG_GEOMETRY, ageo);
  	if (ret)
- 		str_liberror(ctx, ret, _("setting bad block bitmap"));
+-		return errno;
++		return -errno;
+ 	return 0;
  }
-@@ -661,13 +661,13 @@ phase6_func(
- 	struct media_verify_state	vs = { NULL };
- 	int				ret, ret2, ret3;
- 
--	ret = bitmap_alloc(&vs.d_bad);
-+	ret = -bitmap_alloc(&vs.d_bad);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("creating datadev badblock bitmap"));
- 		return ret;
+diff --git a/quota/free.c b/quota/free.c
+index 45ce2ceb..ea9c112f 100644
+--- a/quota/free.c
++++ b/quota/free.c
+@@ -69,7 +69,7 @@ mount_free_space_data(
  	}
  
--	ret = bitmap_alloc(&vs.r_bad);
-+	ret = -bitmap_alloc(&vs.r_bad);
+ 	if (!(mount->fs_flags & FS_FOREIGN)) {
+-		ret = xfrog_geometry(fd, &fsgeo);
++		ret = -xfrog_geometry(fd, &fsgeo);
+ 		if (ret) {
+ 			xfrog_perror(ret, "XFS_IOC_FSGEOMETRY");
+ 			close(fd);
+diff --git a/quota/quot.c b/quota/quot.c
+index 0f69fabd..df3825f2 100644
+--- a/quota/quot.c
++++ b/quota/quot.c
+@@ -146,7 +146,7 @@ quot_bulkstat_mount(
+ 			*dp = NULL;
+ 	ndu[0] = ndu[1] = ndu[2] = 0;
+ 
+-	ret = xfd_open(&fsxfd, fsdir, O_RDONLY);
++	ret = -xfd_open(&fsxfd, fsdir, O_RDONLY);
  	if (ret) {
- 		str_liberror(ctx, ret, _("creating realtime badblock bitmap"));
- 		goto out_dbad;
+ 		xfrog_perror(ret, fsdir);
+ 		return;
+diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+index 3338a7b8..9295673d 100644
+--- a/repair/xfs_repair.c
++++ b/repair/xfs_repair.c
+@@ -642,7 +642,7 @@ check_fs_vs_host_sectsize(
+ 
+ 	fd = libxfs_device_to_fd(x.ddev);
+ 
+-	ret = xfrog_geometry(fd, &geom);
++	ret = -xfrog_geometry(fd, &geom);
+ 	if (ret) {
+ 		do_log(_("Cannot get host filesystem geometry.\n"
+ 	"Repair may fail if there is a sector size mismatch between\n"
+diff --git a/rtcp/xfs_rtcp.c b/rtcp/xfs_rtcp.c
+index a5737699..7c4197b1 100644
+--- a/rtcp/xfs_rtcp.c
++++ b/rtcp/xfs_rtcp.c
+@@ -378,7 +378,7 @@ xfsrtextsize( char *path)
+ 			progname, path, strerror(errno));
+ 		return -1;
+ 	}
+-	rval = xfrog_geometry(fd, &geo);
++	rval = -xfrog_geometry(fd, &geo);
+ 	close(fd);
+ 	if (rval)
+ 		return -1;
+diff --git a/scrub/phase1.c b/scrub/phase1.c
+index e0382b04..6125d324 100644
+--- a/scrub/phase1.c
++++ b/scrub/phase1.c
+@@ -60,7 +60,7 @@ scrub_cleanup(
+ 	if (ctx->datadev)
+ 		disk_close(ctx->datadev);
+ 	fshandle_destroy();
+-	error = xfd_close(&ctx->mnt);
++	error = -xfd_close(&ctx->mnt);
+ 	if (error)
+ 		str_liberror(ctx, error, _("closing mountpoint fd"));
+ 	fs_table_destroy();
+@@ -84,7 +84,7 @@ phase1_func(
+ 	 * CAP_SYS_ADMIN, which we probably need to do anything fancy
+ 	 * with the (XFS driver) kernel.
+ 	 */
+-	error = xfd_open(&ctx->mnt, ctx->mntpoint,
++	error = -xfd_open(&ctx->mnt, ctx->mntpoint,
+ 			O_RDONLY | O_NOATIME | O_DIRECTORY);
+ 	if (error) {
+ 		if (error == EPERM)
+diff --git a/spaceman/file.c b/spaceman/file.c
+index b7794328..eec7ee9f 100644
+--- a/spaceman/file.c
++++ b/spaceman/file.c
+@@ -52,7 +52,7 @@ openfile(
+ 	struct fs_path	*fsp;
+ 	int		ret;
+ 
+-	ret = xfd_open(xfd, path, O_RDONLY);
++	ret = -xfd_open(xfd, path, O_RDONLY);
+ 	if (ret) {
+ 		if (ret == ENOTTY)
+ 			fprintf(stderr,
+diff --git a/spaceman/health.c b/spaceman/health.c
+index a0079bd7..c6d936fb 100644
+--- a/spaceman/health.c
++++ b/spaceman/health.c
+@@ -192,7 +192,7 @@ report_ag_sick(
+ 	char			descr[256];
+ 	int			ret;
+ 
+-	ret = xfrog_ag_geometry(file->xfd.fd, agno, &ageo);
++	ret = -xfrog_ag_geometry(file->xfd.fd, agno, &ageo);
+ 	if (ret) {
+ 		xfrog_perror(ret, "ag_geometry");
+ 		return 1;
 
