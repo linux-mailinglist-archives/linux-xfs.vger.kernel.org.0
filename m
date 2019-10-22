@@ -2,213 +2,172 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B98DFA45
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 03:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102FFDFDD1
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Oct 2019 08:50:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfJVBt6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Oct 2019 21:49:58 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50056 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJVBt5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Oct 2019 21:49:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M1mwiT008620;
-        Tue, 22 Oct 2019 01:49:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Lu7IP0aBz5Y0A/T22tizyr9lzpobsdI9Tm4MJfMX8Mk=;
- b=QeE+Kxhq5KdDsZRN21fdvqGLlZDPT9ZUCPHGsgRCzdKk30ZgOzTGw//wU31XAhtlmkiw
- +9zJwNvRXh2HOv8sMR/ror4SH0UaEwY7H0zcmdW1Gr1dUljIGpNOt95AZ4RX0ZQohxc7
- T+dqiOg09lXkKKxlmvUHCLh36wP6PPhAdNfIA2vWzxd07VCur2ZmYqfFhE6au6KsaUAn
- sLNeNxa9dSUp0X21vn417CGFhl9fxVtMPpY2T0yUtWKDHLd/EWm+jVfct57tXDFCPef4
- JUX4fvX+WRCSZqJJ8IDr60M+gBhZZBHgyf1hsACiZdBHyUWN/k9XCEOYWotNKr0+bJAa zA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vqu4qk64t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 01:49:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M1lsQg066501;
-        Tue, 22 Oct 2019 01:49:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vsakceb9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 01:49:54 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9M1ns47026596;
-        Tue, 22 Oct 2019 01:49:54 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 21 Oct 2019 18:49:53 -0700
-Subject: [PATCH 2/2] xfs: make sure the kernel and repair tools catch bad
- names
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     guaneryu@gmail.com, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 21 Oct 2019 18:49:52 -0700
-Message-ID: <157170899277.1172383.10473571682266133494.stgit@magnolia>
-In-Reply-To: <157170897992.1172383.2128928990011336996.stgit@magnolia>
-References: <157170897992.1172383.2128928990011336996.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S2387666AbfJVGuI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Oct 2019 02:50:08 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41130 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387479AbfJVGuI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Oct 2019 02:50:08 -0400
+Received: by mail-il1-f194.google.com with SMTP id z10so14398190ilo.8
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Oct 2019 23:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=zadara-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CEv0yTOwFGrPiriK/M5cmJqWn7l6X2rOVm+lLaVX1T4=;
+        b=QX7jqcvNadZL836OalpFEyNSoIWZnsxJNGX7/0z3Vwg0bZl8VYT3Au21R+oBMse4vF
+         m/llx2SC+HCXWNOzpApXWSIlWGaNsMWbEhjTPFFsMHjJRXGo0prrAdjwQ5YTbvYxeJUX
+         mlFb2nb3o92BbX1dsh+Rq9a8/dJnapBlsJC7WOQxp49AUqTQqi7xAE53EdpBSnDvJV4r
+         JrOlPnt7esjdEM+oQe+ycUduUaJY0IXaZkd+kB8H+dk9lWJ+kAD9drVdUY3aN/bmxRr6
+         EbYt3Y4j19xUJdLUYZdAcqPY+gaeY2/wTrD+S+Bq6F9gDNbWvacgbMu8XPgArcNHDvqG
+         PaZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CEv0yTOwFGrPiriK/M5cmJqWn7l6X2rOVm+lLaVX1T4=;
+        b=J2/94aexKzX6SCCxDXvxxOft91xkGuaUh6NFh4ykdt7QoHgO29XMDcmM1EK1Wczc5T
+         doU+xrtRnjl+d5xXL4/uO+43S9hOL2nViAQsZ7/K392/UNP00tO/wUmE+azsDKhqo//w
+         cyBkzWHeWCIBNZ+xgaCxSDaiPPxdaqBOvr/v8N2Waj/eRlQY61aJJbnSeRG7xegUkj5B
+         JnY/nQwtqFPxyykw2CE5Ema0AA+HG635f1ME2PsSk/F7f/Q4yVxBuAleYuxGDiFpaN0l
+         L08u3OKvCbDxPLBG/7Nmk6AYIIY2GOHQX/ssGgfg3zSjEVeAJ10k5EeOZxZocwe/rxeB
+         tJ4g==
+X-Gm-Message-State: APjAAAV4HsnKSCCZ9mvn0Y69x5WIp/TdOcHRfBIsOOBha7aJxW5w8ijI
+        IdTezwJsWKOuPy24ZI31IMmrJrKEdQKhcfKRmGm4zaXS
+X-Google-Smtp-Source: APXvYqw4n3P0EVIQGcMcHUbbsvdLrCCq7/kEbOY2Gq1kv+ZV35p44bWX+YPRoo5GfOSFl7OzyN6+ZXQAa6EedkKkwo0=
+X-Received: by 2002:a92:c849:: with SMTP id b9mr27199926ilq.68.1571727006854;
+ Mon, 21 Oct 2019 23:50:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910220015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910220016
+References: <CC133B1B9D9B46AFAB2D35A366BF7DC4@alyakaslap> <20191021124714.GA26105@bfoster>
+In-Reply-To: <20191021124714.GA26105@bfoster>
+From:   Alex Lyakas <alex@zadara.com>
+Date:   Tue, 22 Oct 2019 09:49:56 +0300
+Message-ID: <CAOcd+r1cwsoGD5=VtJjRwmh5Sp9MVmSv9xRq8S9STs=cUyMH+Q@mail.gmail.com>
+Subject: Re: xfs_buftarg_isolate(): "Correctly invert xfs_buftarg LRU
+ isolation logic"
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     vbendel@redhat.com, linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi Brian,
 
-Make sure we actually catch bad names in the kernel.
+Thank you for your response.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- tests/xfs/749     |  103 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/749.out |    4 ++
- tests/xfs/group   |    1 +
- 3 files changed, 108 insertions(+)
- create mode 100755 tests/xfs/749
- create mode 100644 tests/xfs/749.out
+On Mon, Oct 21, 2019 at 3:47 PM Brian Foster <bfoster@redhat.com> wrote:
+>
+> On Sun, Oct 20, 2019 at 05:54:03PM +0300, Alex Lyakas wrote:
+> > Hello Vratislav, Brian,
+> >
+> > This is with regards to commit "xfs: Correctly invert xfs_buftarg LRU
+> > isolation logic" [1].
+> >
+> > I am hitting this issue in kernel 4.14. However, after some debugging, I do
+> > not fully agree with the commit message, describing the effect of this
+> > defect.
+> >
+> > In case b_lru_ref > 1, then indeed this xfs_buf will be taken off the LRU
+> > list, and immediately added back to it, with b_lru_ref being lesser by 1
+> > now.
+> >
+> > In case b_lru_ref==1, then this xfs_buf will be similarly isolated (due to a
+> > bug), and xfs_buf_rele() will be called on it. But now its b_lru_ref==0. In
+> > this case, xfs_buf_rele() will free the buffer, rather than re-adding it
+> > back to the LRU. This is a problem, because we intended for this buffer to
+> > have another trip on the LRU. Only when b_lru_ref==0 upon entry to
+> > xfs_buftarg_isolate(), we want to free the buffer. So we are freeing the
+> > buffer one trip too early in this case.
+> >
+> > In case b_lru_ref==0 (somehow), then due to a bug, this xfs_buf will not be
+> > removed off the LRU. It will remain sitting in the LRU with b_lru_ref==0. On
+> > next shrinker call, this xfs_buff will also remain on the LRU, due to the
+> > same bug. So this xfs_buf will be freed only on unmount or if
+> > xfs_buf_stale() is called on it.
+> >
+> > Do you agree with the above?
+> >
+>
+> I'm not really sure how you're inferring what cases free the buffer vs.
+> what don't based on ->b_lru_ref. A buffer is freed when its reference
+> count (->b_hold) drops to zero unless ->b_lru_ref is non-zero, at which
+> point the buffer goes on the LRU and the LRU itself takes a ->b_hold
+> reference to keep the buffer from being freed. This reference is not
+> associated with how many cycles through the LRU a buffer is allowed
+> before it is dropped from the LRU, which is what ->b_lru_ref tracks.
+>
+> Since the LRU holds a (single) reference to the buffer just like any
+> other user of the buffer, it doesn't make any direct decision on when to
+> free a buffer or not. In other words, the bug fixed by this patch is
+> related to when we decide to drop the buffer from the LRU based on the
+> LRU ref count. If the LRU ->b_hold reference happens to be the last on
+> the buffer when it is dropped from the LRU, then the buffer is freed.
+
+I apologize for the confusion. By "freed" I really meant "taken off
+the LRU". I am aware of the fact that b_hold is controlling whether
+the buffer will be freed or not.
+
+What I meant is that the commit description does not address the issue
+accurately. From the description one can understand that the only
+problem is the additional trip through the LRU.
+But in fact, due to this issue, buffers will spend one cycle less in
+the LRU than intended. If we initialize b_lru_ref to X, we intend the
+buffer to survive X shrinker calls, and on the X+1'th call to be taken
+off the LRU (and maybe freed). But with this issue, the buffer will be
+taken off the LRU and immediately re-added back. But this will happen
+X-1 times, because on the X'th time the b_lru_ref will be 0, and the
+buffer will not be readded to the LRU. So the buffer will survive X-1
+shrinker calls and not X as intended.
+
+Furthermore, if somehow we end up with the buffer sitting on the LRU
+and having b_lru_ref==0, this buffer will never be taken off the LRU,
+due to the bug. I am not sure this can happen, because by default
+b_lru_ref is set to 1.
 
 
-diff --git a/tests/xfs/749 b/tests/xfs/749
-new file mode 100755
-index 00000000..de219979
---- /dev/null
-+++ b/tests/xfs/749
-@@ -0,0 +1,103 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 749
-+#
-+# See if we catch corrupt directory names or attr names with nulls or slashes
-+# in them.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	umount $mntpt > /dev/null 2>&1
-+	test -n "$loopdev" && _destroy_loop_device $loopdev > /dev/null 2>&1
-+	rm -r -f $imgfile $mntpt $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_supported_os Linux
-+_require_test
-+
-+rm -f $seqres.full
-+
-+imgfile=$TEST_DIR/img-$seq
-+mntpt=$TEST_DIR/mount-$seq
-+testdir=$mntpt/testdir
-+testfile=$mntpt/testfile
-+nullstr="too_many_beans"
-+slashstr="are_bad_for_you"
-+
-+# Format image file
-+truncate -s 40m $imgfile
-+loopdev=$(_create_loop_device $imgfile)
-+$MKFS_XFS_PROG $loopdev >> $seqres.full
-+
-+# Mount image file
-+mkdir -p $mntpt
-+mount $loopdev $mntpt
-+
-+# Create directory entries
-+mkdir -p $testdir
-+touch $testdir/$nullstr
-+touch $testdir/$slashstr
-+
-+# Create attrs
-+touch $testfile
-+$ATTR_PROG -s $nullstr -V heh $testfile >> $seqres.full
-+$ATTR_PROG -s $slashstr -V heh $testfile >> $seqres.full
-+
-+# Corrupt the entries
-+umount $mntpt
-+_destroy_loop_device $loopdev
-+cp $imgfile $imgfile.old
-+sed -b \
-+	-e "s/$nullstr/too_many\x00beans/g" \
-+	-e "s/$slashstr/are_bad\/for_you/g" \
-+	-i $imgfile
-+test "$(md5sum < $imgfile)" != "$(md5sum < $imgfile.old)" ||
-+	_fail "sed failed to change the image file?"
-+rm -f $imgfile.old
-+loopdev=$(_create_loop_device $imgfile)
-+mount $loopdev $mntpt
-+
-+# Try to access the corrupt metadata
-+ls $testdir >> $seqres.full 2> $tmp.err
-+attr -l $testfile >> $seqres.full 2>> $tmp.err
-+cat $tmp.err | _filter_test_dir
-+
-+# Does scrub complain about this?
-+if _supports_xfs_scrub $mntpt $loopdev; then
-+	$XFS_SCRUB_PROG -n $mntpt >> $seqres.full 2>&1
-+	res=$?
-+	test $((res & 1)) -eq 0 && \
-+		echo "scrub failed to report corruption ($res)"
-+fi
-+
-+# Does repair complain about this?
-+umount $mntpt
-+$XFS_REPAIR_PROG -n $loopdev >> $seqres.full 2>&1
-+res=$?
-+test $res -eq 1 || \
-+	echo "repair failed to report corruption ($res)"
-+
-+_destroy_loop_device $loopdev
-+loopdev=
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/749.out b/tests/xfs/749.out
-new file mode 100644
-index 00000000..db704c87
---- /dev/null
-+++ b/tests/xfs/749.out
-@@ -0,0 +1,4 @@
-+QA output created by 749
-+ls: cannot access 'TEST_DIR/mount-749/testdir': Structure needs cleaning
-+attr_list: Structure needs cleaning
-+Could not list "(null)" for TEST_DIR/mount-749/testfile
-diff --git a/tests/xfs/group b/tests/xfs/group
-index f4ebcd8c..9600cb4e 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -507,3 +507,4 @@
- 509 auto ioctl
- 510 auto ioctl quick
- 511 auto quick quota
-+749 auto quick fuzzers
+>
+> > If so, I think this fix should be backported to stable kernels.
+> >
+>
+> Seems reasonable to me. Feel free to post a patch. :)
+Will do.
 
+Thanks,
+Alex.
+
+
+>
+> Brian
+>
+> > Thanks,
+> > Alex.
+> >
+> > [1]
+> > commit 19957a181608d25c8f4136652d0ea00b3738972d
+> > Author: Vratislav Bendel <vbendel@redhat.com>
+> > Date:   Tue Mar 6 17:07:44 2018 -0800
+> >
+> >    xfs: Correctly invert xfs_buftarg LRU isolation logic
+> >
+> >    Due to an inverted logic mistake in xfs_buftarg_isolate()
+> >    the xfs_buffers with zero b_lru_ref will take another trip
+> >    around LRU, while isolating buffers with non-zero b_lru_ref.
+> >
+> >    Additionally those isolated buffers end up right back on the LRU
+> >    once they are released, because b_lru_ref remains elevated.
+> >
+> >    Fix that circuitous route by leaving them on the LRU
+> >    as originally intended.
+> >
+> >    Signed-off-by: Vratislav Bendel <vbendel@redhat.com>
+> >    Reviewed-by: Brian Foster <bfoster@redhat.com>
+> >    Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >    Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> >    Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> >
+>
