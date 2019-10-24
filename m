@@ -2,32 +2,31 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E95E2B6C
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2019 09:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C45AE2B6D
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2019 09:51:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408740AbfJXHvD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Oct 2019 03:51:03 -0400
+        id S2408741AbfJXHvJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Oct 2019 03:51:09 -0400
 Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:26989
         "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407212AbfJXHvD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Oct 2019 03:51:03 -0400
+        by vger.kernel.org with ESMTP id S2407212AbfJXHvJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Oct 2019 03:51:09 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CoAADRVrFd/0e30XYNWBwBAQEBAQc?=
- =?us-ascii?q?BAREBBAQBAYFqBAEBCwEBhDqEKI9JBoERiiKFIAGEa4cjCQEBAQEBAQEBATc?=
- =?us-ascii?q?BAYQ7AwICg1k3Bg4CDAEBAQQBAQEBAQUDAYVYgRoBAQQHAYUBAgEDIwRSEBg?=
- =?us-ascii?q?NAiYCAkcQBhOFdbF0dX8zGoowgQ4oAYFkikJ4gQeBRIMdhCqDK4JeBI89N4Z?=
- =?us-ascii?q?AQ5Zsgi6VRQyOHwOLJC2KOJ8wgXtNLgqDJ1CRfWeHPYMZgn6CWgEB?=
-X-IPAS-Result: =?us-ascii?q?A2CoAADRVrFd/0e30XYNWBwBAQEBAQcBAREBBAQBAYFqB?=
- =?us-ascii?q?AEBCwEBhDqEKI9JBoERiiKFIAGEa4cjCQEBAQEBAQEBATcBAYQ7AwICg1k3B?=
- =?us-ascii?q?g4CDAEBAQQBAQEBAQUDAYVYgRoBAQQHAYUBAgEDIwRSEBgNAiYCAkcQBhOFd?=
- =?us-ascii?q?bF0dX8zGoowgQ4oAYFkikJ4gQeBRIMdhCqDK4JeBI89N4ZAQ5Zsgi6VRQyOH?=
- =?us-ascii?q?wOLJC2KOJ8wgXtNLgqDJ1CRfWeHPYMZgn6CWgEB?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BRAADRVrFd/0e30XYNWBwBAQEBAQc?=
+ =?us-ascii?q?BAREBBAQBAYFpBQEBCwEBhDqEKI9JBoERiiKFIAGKE4F7CQEBAQEBAQEBATc?=
+ =?us-ascii?q?BAYQ7AwICg1k2Bw4CDAEBAQQBAQEBAQUDAYVYgRoBAQQHAYUBAgEDIwRSEBg?=
+ =?us-ascii?q?NAiYCAkcQBhOFdbF0dX8zGoowgQ4oAYFkikJ4gQeBETODHYdVgl4Ejz03hkB?=
+ =?us-ascii?q?DlmyCLpVFDI4fA4skLalZDYF9TS4KgydQkX1nhz2DGYVYAQE?=
+X-IPAS-Result: =?us-ascii?q?A2BRAADRVrFd/0e30XYNWBwBAQEBAQcBAREBBAQBAYFpB?=
+ =?us-ascii?q?QEBCwEBhDqEKI9JBoERiiKFIAGKE4F7CQEBAQEBAQEBATcBAYQ7AwICg1k2B?=
+ =?us-ascii?q?w4CDAEBAQQBAQEBAQUDAYVYgRoBAQQHAYUBAgEDIwRSEBgNAiYCAkcQBhOFd?=
+ =?us-ascii?q?bF0dX8zGoowgQ4oAYFkikJ4gQeBETODHYdVgl4Ejz03hkBDlmyCLpVFDI4fA?=
+ =?us-ascii?q?4skLalZDYF9TS4KgydQkX1nhz2DGYVYAQE?=
 X-IronPort-AV: E=Sophos;i="5.68,224,1569254400"; 
-   d="scan'208";a="250043860"
+   d="scan'208";a="250043890"
 Received: from unknown (HELO [192.168.1.222]) ([118.209.183.71])
-  by icp-osb-irony-out1.iinet.net.au with ESMTP; 24 Oct 2019 15:51:01 +0800
-Subject: [PATCH v7 05/17] xfs: dont use XFS_IS_QUOTA_RUNNING() for option
- check
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 24 Oct 2019 15:51:06 +0800
+Subject: [PATCH v7 06/17] xfs: use kmem functions for struct xfs_mount
 From:   Ian Kent <raven@themaw.net>
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 Cc:     Christoph Hellwig <hch@infradead.org>,
@@ -37,8 +36,8 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         David Howells <dhowells@redhat.com>,
         Dave Chinner <dchinner@redhat.com>,
         Al Viro <viro@ZenIV.linux.org.uk>
-Date:   Thu, 24 Oct 2019 15:51:01 +0800
-Message-ID: <157190346159.27074.3152127833811363522.stgit@fedora-28>
+Date:   Thu, 24 Oct 2019 15:51:06 +0800
+Message-ID: <157190346680.27074.12024650426066059590.stgit@fedora-28>
 In-Reply-To: <157190333868.27074.13987695222060552856.stgit@fedora-28>
 References: <157190333868.27074.13987695222060552856.stgit@fedora-28>
 User-Agent: StGit/unknown-version
@@ -50,33 +49,44 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When CONFIG_XFS_QUOTA is not defined any quota option is invalid.
-
-Using the macro XFS_IS_QUOTA_RUNNING() as a check if any quota option
-has been given is a little misleading so use a simple m_qflags != 0
-check to make the intended use more explicit.
-
-Also change to use the IS_ENABLED() macro for the kernel config check.
+The remount function uses the kmem functions for allocating and freeing
+struct xfs_mount, for consistency use the kmem functions everwhere for
+struct xfs_mount.
 
 Signed-off-by: Ian Kent <raven@themaw.net>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_super.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_super.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 5876c2b551b5..a0805b74256c 100644
+index a0805b74256c..896609827e3c 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -348,8 +348,8 @@ xfs_parseargs(
- 		return -EINVAL;
- 	}
+@@ -1535,7 +1535,7 @@ xfs_mount_alloc(
+ {
+ 	struct xfs_mount	*mp;
  
--#ifndef CONFIG_XFS_QUOTA
--	if (XFS_IS_QUOTA_RUNNING(mp)) {
-+#if !IS_ENABLED(CONFIG_XFS_QUOTA)
-+	if (mp->m_qflags != 0) {
- 		xfs_warn(mp, "quota support not available in this kernel.");
- 		return -EINVAL;
- 	}
+-	mp = kzalloc(sizeof(struct xfs_mount), GFP_KERNEL);
++	mp = kmem_alloc(sizeof(struct xfs_mount), KM_ZERO);
+ 	if (!mp)
+ 		return NULL;
+ 
+@@ -1749,7 +1749,7 @@ xfs_fs_fill_super(
+  out_free_names:
+ 	sb->s_fs_info = NULL;
+ 	xfs_free_names(mp);
+-	kfree(mp);
++	kmem_free(mp);
+  out:
+ 	return error;
+ 
+@@ -1781,7 +1781,7 @@ xfs_fs_put_super(
+ 
+ 	sb->s_fs_info = NULL;
+ 	xfs_free_names(mp);
+-	kfree(mp);
++	kmem_free(mp);
+ }
+ 
+ STATIC struct dentry *
 
