@@ -2,165 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D24CEE7703
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Oct 2019 17:50:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C53CE773E
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Oct 2019 18:05:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfJ1QuZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 28 Oct 2019 12:50:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58130 "EHLO
+        id S1730490AbfJ1RFb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 28 Oct 2019 13:05:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47198 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfJ1QuZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Oct 2019 12:50:25 -0400
+        with ESMTP id S1726851AbfJ1RFb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Oct 2019 13:05:31 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SGnAT3061576;
-        Mon, 28 Oct 2019 16:50:18 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SH51Jg078878;
+        Mon, 28 Oct 2019 17:05:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=WpTDUesl4bWS36mjQriY78Jxv2yo6AUIHJKlLsugrlQ=;
- b=POCAV+PfKYz1JbxEO0n3VBUm3Q/WRlKwsLewQY9Z9MsvvTY/CGS1ivfq3NL2rSY5ClUo
- px+urlB0p8PvyXszcx+cGqaBtUOwJAViCS91qSRSRuwHy4+WGxAqrR5fcJTr6nvQ0wce
- 16SUAxdxsIWS6KnsgmXuFYAgfp8X6aBlgCwTNXIUodUl0NO2wr2smU00+YtDOFwVhqBt
- ooeVkh4IYPoKwCxxFta0tVXfctgvbXYzhBfqsSufTbq3LvroXKLNGfLDqWPUsUyjQz+W
- JyNkPqK+IGPCgyeJSOlFFzhde94o9KkE4WX2G7jUM/Ua1tg6E5NHgPnk8H+SHQ4Ulw71 WA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vve3q396u-1
+ bh=4e6DKbZ1fUtLiFSUZQWd/g4TvekPpmQUltzzExpgHDs=;
+ b=JvtyY0q4eIwTaHX5Lf+MSNI96ktpcgMqT10WwdhHjeiW4yBvovnfdACO43e1HuS72/Qu
+ 2LSXwoTmmhC/Iu9MyMgICG84xnMq3F+/Qt5b9/UYOFfv5Zcj2pg3fjtKaG8w4NMc6UhD
+ bm6rbOd949AYDSpNaO3gjdzpG6QZoBaQn1AluIawecb63EBvGZ4R7e1Pxb5kTYjjA9iG
+ 3nxOrgbY9Mnlr1ORsp1SFjJsLvBHTvB15zNHGomtkKAg2SrKBmy23tWBRtKsegA+xPg7
+ WBIDfYNEZVAd5gtzL8xPPWDCpMGD3jTYK5xnItdTwxB2r2Rn9kKDB6O5qdKcPEkDzogc OQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vve3q3cuq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 16:50:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SGnB4r190712;
-        Mon, 28 Oct 2019 16:50:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vw09g2hnd-1
+        Mon, 28 Oct 2019 17:05:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SGwRWv045420;
+        Mon, 28 Oct 2019 17:05:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vwakybr2j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 16:50:17 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9SGoGjt000870;
-        Mon, 28 Oct 2019 16:50:16 GMT
+        Mon, 28 Oct 2019 17:05:24 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9SH5NfQ025194;
+        Mon, 28 Oct 2019 17:05:23 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 09:50:15 -0700
-Date:   Mon, 28 Oct 2019 09:50:15 -0700
+        with ESMTP ; Mon, 28 Oct 2019 10:05:22 -0700
+Date:   Mon, 28 Oct 2019 10:05:21 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, Ian Kent <raven@themaw.net>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 02/12] xfs: remove the dsunit and dswidth variables in
- xfs_parseargs
-Message-ID: <20191028165015.GL15222@magnolia>
+Cc:     linux-xfs@vger.kernel.org, Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH 04/12] xfs: don't use a different allocsice for -o wsync
+ mounts
+Message-ID: <20191028170521.GM15222@magnolia>
 References: <20191027145547.25157-1-hch@lst.de>
- <20191027145547.25157-3-hch@lst.de>
+ <20191027145547.25157-5-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191027145547.25157-3-hch@lst.de>
+In-Reply-To: <20191027145547.25157-5-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280163
+ engine=8.0.1-1908290000 definitions=main-1910280164
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280163
+ definitions=main-1910280165
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 03:55:37PM +0100, Christoph Hellwig wrote:
-> There is no real need for the local variables here - either they
-> are applied to the mount structure, or if the noalign mount option
-> is set the mount will fail entirely if either is set.  Removing
-> them helps cleaning up the mount API conversion.
+On Sun, Oct 27, 2019 at 03:55:39PM +0100, Christoph Hellwig wrote:
+> The -o wsync allocsize overwrite overwrite was part of a special hack
+> for NFSv2 servers in IRIX and has no real purpose in modern Linux, so
+> remove it.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
-Looks ok,
+/me not being around to absorb any of the context of how the 15/16
+shift values were arrived at notwithstanding,
+
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/xfs_super.c | 27 ++++++++-------------------
->  1 file changed, 8 insertions(+), 19 deletions(-)
+>  fs/xfs/xfs_mount.c | 9 ++-------
+>  fs/xfs/xfs_mount.h | 7 -------
+>  2 files changed, 2 insertions(+), 14 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 589c080cabfe..4089de3daded 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -159,8 +159,6 @@ xfs_parseargs(
->  	const struct super_block *sb = mp->m_super;
->  	char			*p;
->  	substring_t		args[MAX_OPT_ARGS];
-> -	int			dsunit = 0;
-> -	int			dswidth = 0;
->  	int			iosize = 0;
->  	uint8_t			iosizelog = 0;
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index ba5b6f3b2b88..b423033e14f4 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -438,13 +438,8 @@ xfs_set_rw_sizes(xfs_mount_t *mp)
+>  	int		readio_log, writeio_log;
 >  
-> @@ -252,11 +250,11 @@ xfs_parseargs(
->  			mp->m_flags |= XFS_MOUNT_SWALLOC;
->  			break;
->  		case Opt_sunit:
-> -			if (match_int(args, &dsunit))
-> +			if (match_int(args, &mp->m_dalign))
->  				return -EINVAL;
->  			break;
->  		case Opt_swidth:
-> -			if (match_int(args, &dswidth))
-> +			if (match_int(args, &mp->m_swidth))
->  				return -EINVAL;
->  			break;
->  		case Opt_inode32:
-> @@ -350,7 +348,8 @@ xfs_parseargs(
->  		return -EINVAL;
->  	}
+>  	if (!(mp->m_flags & XFS_MOUNT_DFLT_IOSIZE)) {
+> -		if (mp->m_flags & XFS_MOUNT_WSYNC) {
+> -			readio_log = XFS_WSYNC_READIO_LOG;
+> -			writeio_log = XFS_WSYNC_WRITEIO_LOG;
+> -		} else {
+> -			readio_log = XFS_READIO_LOG_LARGE;
+> -			writeio_log = XFS_WRITEIO_LOG_LARGE;
+> -		}
+> +		readio_log = XFS_READIO_LOG_LARGE;
+> +		writeio_log = XFS_WRITEIO_LOG_LARGE;
+>  	} else {
+>  		readio_log = mp->m_readio_log;
+>  		writeio_log = mp->m_writeio_log;
+> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> index f69e370db341..dc81e5c264ce 100644
+> --- a/fs/xfs/xfs_mount.h
+> +++ b/fs/xfs/xfs_mount.h
+> @@ -260,13 +260,6 @@ typedef struct xfs_mount {
+>  #define XFS_MAX_IO_LOG		30	/* 1G */
+>  #define XFS_MIN_IO_LOG		PAGE_SHIFT
 >  
-> -	if ((mp->m_flags & XFS_MOUNT_NOALIGN) && (dsunit || dswidth)) {
-> +	if ((mp->m_flags & XFS_MOUNT_NOALIGN) &&
-> +	    (mp->m_dalign || mp->m_swidth)) {
->  		xfs_warn(mp,
->  	"sunit and swidth options incompatible with the noalign option");
->  		return -EINVAL;
-> @@ -363,30 +362,20 @@ xfs_parseargs(
->  	}
->  #endif
->  
-> -	if ((dsunit && !dswidth) || (!dsunit && dswidth)) {
-> +	if ((mp->m_dalign && !mp->m_swidth) ||
-> +	    (!mp->m_dalign && mp->m_swidth)) {
->  		xfs_warn(mp, "sunit and swidth must be specified together");
->  		return -EINVAL;
->  	}
->  
-> -	if (dsunit && (dswidth % dsunit != 0)) {
-> +	if (mp->m_dalign && (mp->m_swidth % mp->m_dalign != 0)) {
->  		xfs_warn(mp,
->  	"stripe width (%d) must be a multiple of the stripe unit (%d)",
-> -			dswidth, dsunit);
-> +			mp->m_swidth, mp->m_dalign);
->  		return -EINVAL;
->  	}
->  
->  done:
-> -	if (dsunit && !(mp->m_flags & XFS_MOUNT_NOALIGN)) {
-> -		/*
-> -		 * At this point the superblock has not been read
-> -		 * in, therefore we do not know the block size.
-> -		 * Before the mount call ends we will convert
-> -		 * these to FSBs.
-> -		 */
-> -		mp->m_dalign = dsunit;
-> -		mp->m_swidth = dswidth;
-> -	}
+> -/*
+> - * Synchronous read and write sizes.  This should be
+> - * better for NFSv2 wsync filesystems.
+> - */
+> -#define	XFS_WSYNC_READIO_LOG	15	/* 32k */
+> -#define	XFS_WSYNC_WRITEIO_LOG	14	/* 16k */
 > -
->  	if (mp->m_logbufs != -1 &&
->  	    mp->m_logbufs != 0 &&
->  	    (mp->m_logbufs < XLOG_MIN_ICLOGS ||
+>  #define XFS_LAST_UNMOUNT_WAS_CLEAN(mp)	\
+>  				((mp)->m_flags & XFS_MOUNT_WAS_CLEAN)
+>  #define XFS_FORCED_SHUTDOWN(mp)	((mp)->m_flags & XFS_MOUNT_FS_SHUTDOWN)
 > -- 
 > 2.20.1
 > 
