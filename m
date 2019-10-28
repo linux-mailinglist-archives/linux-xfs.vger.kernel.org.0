@@ -2,139 +2,176 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62121E7770
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Oct 2019 18:14:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48229E783E
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Oct 2019 19:18:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfJ1ROf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 28 Oct 2019 13:14:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56186 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730665AbfJ1ROf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Oct 2019 13:14:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SHA5Np076942;
-        Mon, 28 Oct 2019 17:14:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=vmQkBgUPJ+sygKYJPxE0/XanA66JMvZNv4eMzMb3raY=;
- b=ngAkQQMhQ5PYnYFzk22kJdKY/YVFFCjKC63yQgzc8+5OkgNrN7D3r2tUfEvsxhKOs1Vr
- XXLaQGTjRY2hQYrl0SV33umVDmN5hEjoJ5HY+r5VKPPiikjDOnzMR8J2A1GNHmn8qjsf
- BR7trC8cM4ZWEj9cZjmMKODEDBbJSN5Hs9kZojxEMLhBbbjOvYz9iQTIlHZJLm9C0vBZ
- ol1/+tosOzPPL3NGsO2q6drY1I13OfDW5BmJePfoStHn/XkWDsvMINrVb+VWKXVmGalR
- FbKvDRu5gDhxLZhoua9cIzJu8rJszrvwftgmE/7JmVuLHyyeRD783dvtebGCMYswsexY WA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vvumf8b52-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 17:14:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9SHBoY4164531;
-        Mon, 28 Oct 2019 17:14:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vvyks8nef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 17:14:28 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9SHERgd000728;
-        Mon, 28 Oct 2019 17:14:27 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 28 Oct 2019 10:14:27 -0700
-Date:   Mon, 28 Oct 2019 10:14:26 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH 12/12] xfs: merge xfs_showargs into xfs_fs_show_options
-Message-ID: <20191028171426.GU15222@magnolia>
-References: <20191027145547.25157-1-hch@lst.de>
- <20191027145547.25157-13-hch@lst.de>
+        id S1733170AbfJ1SSU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 28 Oct 2019 14:18:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27195 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730690AbfJ1SSU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Oct 2019 14:18:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572286698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9RHisSs84v8zR0Xr4TnlpboEg/mihm2sAKX/R9YyRw4=;
+        b=XvfROCx52/H/ml4ptwWWcYZ/IoZ7s0MfmgOnGthuzGywGGcmUNyh1CmRBKM/XMFy3QM+w4
+        vCXFvldTpe7w/RyTXLMXg3sVWP6VBCdr9OdgI5aTHpfLVaQySM32AM2qd/VUjCuTIrmgD4
+        D+ya/1GLQrNfEkSedYxuwYHnZ1suNOo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-7GRbqkmMOKOU5BE96Az4_w-1; Mon, 28 Oct 2019 14:18:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E396C180496F;
+        Mon, 28 Oct 2019 18:18:15 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E46C60850;
+        Mon, 28 Oct 2019 18:18:15 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 14:18:13 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/4] xfs: check attribute leaf block structure
+Message-ID: <20191028181813.GB26529@bfoster>
+References: <157198048552.2873445.18067788660614948888.stgit@magnolia>
+ <157198049357.2873445.8604948103647704008.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <157198049357.2873445.8604948103647704008.stgit@magnolia>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 7GRbqkmMOKOU5BE96Az4_w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191027145547.25157-13-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910280166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910280166
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 03:55:47PM +0100, Christoph Hellwig wrote:
-> No need for a trivial wrapper.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
+On Thu, Oct 24, 2019 at 10:14:53PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+>=20
+> Add missing structure checks in the attribute leaf verifier.
+>=20
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > ---
->  fs/xfs/xfs_super.c | 20 +++++++-------------
->  1 file changed, 7 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 0e8942bbf840..bcb1575a5652 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -406,10 +406,10 @@ struct proc_xfs_info {
->  	char		*str;
->  };
->  
-> -STATIC void
-> -xfs_showargs(
-> -	struct xfs_mount	*mp,
-> -	struct seq_file		*m)
-> +static int
-> +xfs_fs_show_options(
-> +	struct seq_file		*m,
-> +	struct dentry		*root)
->  {
->  	static struct proc_xfs_info xfs_info_set[] = {
->  		/* the few simple ones we can get from the mount struct */
-> @@ -427,6 +427,7 @@ xfs_showargs(
->  		{ XFS_MOUNT_DAX,		",dax" },
->  		{ 0, NULL }
->  	};
-> +	struct xfs_mount	*mp = XFS_M(root->d_sb);
->  	struct proc_xfs_info	*xfs_infop;
->  
->  	for (xfs_infop = xfs_info_set; xfs_infop->flag; xfs_infop++) {
-> @@ -478,6 +479,8 @@ xfs_showargs(
->  
->  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
->  		seq_puts(m, ",noquota");
+>  fs/xfs/libxfs/xfs_attr_leaf.c |   63 +++++++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 61 insertions(+), 2 deletions(-)
+>=20
+>=20
+> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.=
+c
+> index ec7921e07f69..8dea3a273029 100644
+> --- a/fs/xfs/libxfs/xfs_attr_leaf.c
+> +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+> @@ -232,6 +232,57 @@ xfs_attr3_leaf_hdr_to_disk(
+>  =09}
+>  }
+> =20
+> +static xfs_failaddr_t
+> +xfs_attr3_leaf_verify_entry(
+> +=09struct xfs_mount=09=09=09*mp,
+> +=09char=09=09=09=09=09*buf_end,
+> +=09struct xfs_attr_leafblock=09=09*leaf,
+> +=09struct xfs_attr3_icleaf_hdr=09=09*leafhdr,
+> +=09struct xfs_attr_leaf_entry=09=09*ent,
+> +=09int=09=09=09=09=09idx,
+> +=09__u32=09=09=09=09=09*last_hashval)
+> +{
+> +=09struct xfs_attr_leaf_name_local=09=09*lentry;
+> +=09struct xfs_attr_leaf_name_remote=09*rentry;
+> +=09char=09=09=09=09=09*name_end;
+> +=09unsigned int=09=09=09=09nameidx;
+> +=09unsigned int=09=09=09=09namesize;
+> +=09__u32=09=09=09=09=09hashval;
 > +
-> +	return 0;
->  }
->  
->  static uint64_t
-> @@ -1378,15 +1381,6 @@ xfs_fs_unfreeze(
->  	return 0;
->  }
->  
-> -STATIC int
-> -xfs_fs_show_options(
-> -	struct seq_file		*m,
-> -	struct dentry		*root)
-> -{
-> -	xfs_showargs(XFS_M(root->d_sb), m);
-> -	return 0;
-> -}
-> -
->  /*
->   * This function fills in xfs_mount_t fields based on mount args.
->   * Note: the superblock _has_ now been read in.
-> -- 
-> 2.20.1
-> 
+> +=09/* hash order check */
+> +=09hashval =3D be32_to_cpu(ent->hashval);
+> +=09if (hashval < *last_hashval)
+> +=09=09return __this_address;
+> +=09*last_hashval =3D hashval;
+> +
+> +=09nameidx =3D be16_to_cpu(ent->nameidx);
+> +=09if (nameidx < leafhdr->firstused || nameidx >=3D mp->m_attr_geo->blks=
+ize)
+> +=09=09return __this_address;
+> +
+> +=09/* Check the name information. */
+> +=09if (ent->flags & XFS_ATTR_LOCAL) {
+> +=09=09lentry =3D xfs_attr3_leaf_name_local(leaf, idx);
+> +=09=09namesize =3D xfs_attr_leaf_entsize_local(lentry->namelen,
+> +=09=09=09=09be16_to_cpu(lentry->valuelen));
+> +=09=09name_end =3D (char *)lentry + namesize;
+> +=09=09if (lentry->namelen =3D=3D 0)
+> +=09=09=09return __this_address;
+
+I think this reads a little better if we check the lentry value before
+we use it (same deal with rentry in the branch below).
+
+Also, why the =3D=3D 0 checks specifically? Or IOW, might there also be a
+sane max value to check some of these fields against?
+
+> +=09} else {
+> +=09=09rentry =3D xfs_attr3_leaf_name_remote(leaf, idx);
+> +=09=09namesize =3D xfs_attr_leaf_entsize_remote(rentry->namelen);
+> +=09=09name_end =3D (char *)rentry + namesize;
+> +=09=09if (rentry->namelen =3D=3D 0)
+> +=09=09=09return __this_address;
+> +=09=09if (rentry->valueblk =3D=3D 0)
+> +=09=09=09return __this_address;
+
+Hmm.. ISTR that it's currently possible to have ->valueblk =3D=3D 0 on an
+incomplete remote attr after a crash. That's not ideal and hopefully
+fixed up after the xattr intent stuff lands, but in the meantime I
+thought we had code sprinkled around somewhere to fix that up after the
+fact. Would this turn that scenario into a metadata I/O error?
+
+Brian
+
+> +=09}
+> +
+> +=09if (name_end > buf_end)
+> +=09=09return __this_address;
+> +
+> +=09return NULL;
+> +}
+> +
+>  static xfs_failaddr_t
+>  xfs_attr3_leaf_verify(
+>  =09struct xfs_buf=09=09=09*bp)
+> @@ -240,7 +291,10 @@ xfs_attr3_leaf_verify(
+>  =09struct xfs_mount=09=09*mp =3D bp->b_mount;
+>  =09struct xfs_attr_leafblock=09*leaf =3D bp->b_addr;
+>  =09struct xfs_attr_leaf_entry=09*entries;
+> +=09struct xfs_attr_leaf_entry=09*ent;
+> +=09char=09=09=09=09*buf_end;
+>  =09uint32_t=09=09=09end;=09/* must be 32bit - see below */
+> +=09__u32=09=09=09=09last_hashval =3D 0;
+>  =09int=09=09=09=09i;
+>  =09xfs_failaddr_t=09=09=09fa;
+> =20
+> @@ -273,8 +327,13 @@ xfs_attr3_leaf_verify(
+>  =09    (char *)bp->b_addr + ichdr.firstused)
+>  =09=09return __this_address;
+> =20
+> -=09/* XXX: need to range check rest of attr header values */
+> -=09/* XXX: hash order check? */
+> +=09buf_end =3D (char *)bp->b_addr + mp->m_attr_geo->blksize;
+> +=09for (i =3D 0, ent =3D entries; i < ichdr.count; ent++, i++) {
+> +=09=09fa =3D xfs_attr3_leaf_verify_entry(mp, buf_end, leaf, &ichdr,
+> +=09=09=09=09ent, i, &last_hashval);
+> +=09=09if (fa)
+> +=09=09=09return fa;
+> +=09}
+> =20
+>  =09/*
+>  =09 * Quickly check the freemap information.  Attribute data has to be
+>=20
+
