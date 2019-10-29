@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13172E9399
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Oct 2019 00:30:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C866AE93B3
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Oct 2019 00:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfJ2Xat (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Oct 2019 19:30:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42034 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfJ2Xas (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Oct 2019 19:30:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TNSl1i038196
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:47 GMT
+        id S1726028AbfJ2Xcz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Oct 2019 19:32:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50508 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfJ2Xcy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Oct 2019 19:32:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TNSjrx010477
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:32:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=iT+Ux4xo7gCN6qrq1i+LgRK64M7EqLWtNIb0cmQyZGE=;
- b=f7w1s0mlk3TEfLfcfZA8pqbuHQC3h0nilV/BALiqHcydJQRJAd/qW1vIH/zzJhCSnFR8
- cJGHGMc6XTuGWZlLM5kt8QWmoCVvekmg2D5i+rF6R5XM+eqmDBpq+PjpJ2+US9upNg1T
- Rv6wMAWWdIguuulT7tTTeqZVCU5xOmEZgzPSRZOiQbCs81hFUfZS49Dq8d84UZQvI0hZ
- 7hUGexJTyEzYGBTbYCRaTjqS1Of9C5T9t4c6rRjv3Un/lH5rSeYoQp1dedJFYw3U5F66
- 8tZd/7y3nSDvAYLepsS136sLnULr2+fMRNPScwITRUq1tNMTUZy0v2mTw/TZHaMk4tYe Wg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vxwhfgb30-1
+ bh=zcpUAYKGm1MyZlO/X1kyakV+CJLmLoSHKGWQnSn8wdg=;
+ b=h9PPwMSbMIsEQeaMBm7uAjGTsWeo9b3csjaB0TZfAOZTQDxqtex5WZDkazRtjZ2ovwHm
+ grT4PPa0gGDahnkgXezTgO0ZB77VWqDofcI77/V2wurGTlZa1w910JglEDUWoEKlKgRp
+ ccpLAdX9aFOKS1s/8qxfHmNGuaV0FeS9lSedxNM675QXbAitzAh1CSLVvM6SEfxzfUvd
+ ukOuEV/o4h1r3Rd7/LESmAM/B5XHYYzRVVqleOSP7Spp5DYvE55C+zzmvXoRE+qP4Vim
+ fKjlneiQJfg+cu2sxblDyoko/mFyA4D5GcDjplyxqehkcDQxVuy6pX/6NI4Tqa1TfgYq Dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vxwhfgb2q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TNRkj7183342
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:46 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:32:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TNSES8039069
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:52 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vxwj8498s-1
+        by aserp3030.oracle.com with ESMTP id 2vxwj8v030-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:46 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9TNUjr6024013
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:45 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:52 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9TNUpup024039
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Oct 2019 23:30:51 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 16:30:45 -0700
-Subject: [PATCH 2/3] xfs: only invalidate blocks if we're going to free them
+        with ESMTP ; Tue, 29 Oct 2019 16:30:51 -0700
+Subject: [PATCH 3/3] xfs: use deferred frees to reap old btree blocks
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 29 Oct 2019 16:30:44 -0700
-Message-ID: <157239184470.1266870.6468390413869211476.stgit@magnolia>
+Date:   Tue, 29 Oct 2019 16:30:50 -0700
+Message-ID: <157239185082.1266870.16094965166871219902.stgit@magnolia>
 In-Reply-To: <157239183075.1266870.1797402857427212175.stgit@magnolia>
 References: <157239183075.1266870.1797402857427212175.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,129 +70,100 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we're discarding old btree blocks after a repair, only invalidate
-the buffers for the ones that we're freeing -- if the metadata was
-crosslinked with another data structure, we don't want to touch it.
+Use deferred frees (EFIs) to reap the blocks of a btree that we just
+replaced.  This helps us to shrink the window in which those old blocks
+could be lost due to a system crash, though we try to flush the EFIs
+every few hundred blocks so that we don't also overflow the transaction
+reservations during and after we commit the new btree.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/scrub/repair.c |   74 ++++++++++++++++++++++---------------------------
- fs/xfs/scrub/repair.h |    1 -
- 2 files changed, 33 insertions(+), 42 deletions(-)
+ fs/xfs/scrub/repair.c |   29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index 3a58788e0bd8..62a9b77eba3d 100644
+index 62a9b77eba3d..477df76174b9 100644
 --- a/fs/xfs/scrub/repair.c
 +++ b/fs/xfs/scrub/repair.c
-@@ -423,44 +423,6 @@ xrep_init_btblock(
-  * buffers associated with @bitmap.
-  */
+@@ -24,6 +24,7 @@
+ #include "xfs_extent_busy.h"
+ #include "xfs_ag_resv.h"
+ #include "xfs_quota.h"
++#include "xfs_bmap.h"
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/trace.h"
+@@ -510,13 +511,15 @@ xrep_reap_block(
+ 	struct xfs_scrub		*sc,
+ 	xfs_fsblock_t			fsbno,
+ 	const struct xfs_owner_info	*oinfo,
+-	enum xfs_ag_resv_type		resv)
++	enum xfs_ag_resv_type		resv,
++	unsigned int			*deferred)
+ {
+ 	struct xfs_btree_cur		*cur;
+ 	struct xfs_buf			*agf_bp = NULL;
+ 	xfs_agnumber_t			agno;
+ 	xfs_agblock_t			agbno;
+ 	bool				has_other_rmap;
++	bool				need_roll = true;
+ 	int				error;
  
--/*
-- * Invalidate buffers for per-AG btree blocks we're dumping.  This function
-- * is not intended for use with file data repairs; we have bunmapi for that.
-- */
--int
--xrep_invalidate_blocks(
--	struct xfs_scrub	*sc,
--	struct xfs_bitmap	*bitmap)
--{
--	struct xfs_bitmap_range	*bmr;
--	struct xfs_bitmap_range	*n;
--	struct xfs_buf		*bp;
--	xfs_fsblock_t		fsbno;
--
--	/*
--	 * For each block in each extent, see if there's an incore buffer for
--	 * exactly that block; if so, invalidate it.  The buffer cache only
--	 * lets us look for one buffer at a time, so we have to look one block
--	 * at a time.  Avoid invalidating AG headers and post-EOFS blocks
--	 * because we never own those; and if we can't TRYLOCK the buffer we
--	 * assume it's owned by someone else.
--	 */
--	for_each_xfs_bitmap_block(fsbno, bmr, n, bitmap) {
--		/* Skip AG headers and post-EOFS blocks */
--		if (!xfs_verify_fsbno(sc->mp, fsbno))
--			continue;
--		bp = xfs_buf_incore(sc->mp->m_ddev_targp,
--				XFS_FSB_TO_DADDR(sc->mp, fsbno),
--				XFS_FSB_TO_BB(sc->mp, 1), XBF_TRYLOCK);
--		if (bp) {
--			xfs_trans_bjoin(sc->tp, bp);
--			xfs_trans_binval(sc->tp, bp);
--		}
--	}
--
--	return 0;
--}
--
- /* Ensure the freelist is the correct size. */
- int
- xrep_fix_freelist(
-@@ -515,6 +477,33 @@ xrep_put_freelist(
- 	return 0;
- }
- 
-+/* Try to invalidate the incore buffer for a block that we're about to free. */
-+STATIC void
-+xrep_reap_invalidate_block(
-+	struct xfs_scrub	*sc,
-+	xfs_fsblock_t		fsbno)
-+{
-+	struct xfs_buf		*bp;
-+
-+	/*
-+	 * If there's an incore buffer for exactly this block, invalidate it.
-+	 * Avoid invalidating AG headers and post-EOFS blocks because we never
-+	 * own those; and if we can't TRYLOCK the buffer we assume it's owned
-+	 * by someone else.
-+	 */
-+	if (!xfs_verify_fsbno(sc->mp, fsbno))
-+		return;
-+
-+	bp = xfs_buf_incore(sc->mp->m_ddev_targp,
-+			XFS_FSB_TO_DADDR(sc->mp, fsbno),
-+			XFS_FSB_TO_BB(sc->mp, 1), XBF_TRYLOCK);
-+	if (!bp)
-+		return;
-+
-+	xfs_trans_bjoin(sc->tp, bp);
-+	xfs_trans_binval(sc->tp, bp);
-+}
-+
- /* Dispose of a single block. */
- STATIC int
- xrep_reap_block(
-@@ -568,12 +557,15 @@ xrep_reap_block(
- 	 * blow on writeout, the filesystem will shut down, and the admin gets
- 	 * to run xfs_repair.
- 	 */
--	if (has_other_rmap)
-+	if (has_other_rmap) {
- 		error = xfs_rmap_free(sc->tp, agf_bp, agno, agbno, 1, oinfo);
--	else if (resv == XFS_AG_RESV_AGFL)
-+	} else if (resv == XFS_AG_RESV_AGFL) {
-+		xrep_reap_invalidate_block(sc, fsbno);
+ 	agno = XFS_FSB_TO_AGNO(sc->mp, fsbno);
+@@ -563,14 +566,24 @@ xrep_reap_block(
+ 		xrep_reap_invalidate_block(sc, fsbno);
  		error = xrep_put_freelist(sc, agbno);
--	else
-+	} else {
-+		xrep_reap_invalidate_block(sc, fsbno);
- 		error = xfs_free_extent(sc->tp, fsbno, 1, oinfo, resv);
-+	}
+ 	} else {
++		/*
++		 * Use deferred frees to get rid of the old btree blocks to try
++		 * to minimize the window in which we could crash and lose the
++		 * old blocks.  However, we still need to roll the transaction
++		 * every 100 or so EFIs so that we don't exceed the log
++		 * reservation.
++		 */
+ 		xrep_reap_invalidate_block(sc, fsbno);
+-		error = xfs_free_extent(sc->tp, fsbno, 1, oinfo, resv);
++		__xfs_bmap_add_free(sc->tp, fsbno, 1, oinfo, false);
++		(*deferred)++;
++		need_roll = *deferred > 100;
+ 	}
  	if (agf_bp != sc->sa.agf_bp)
  		xfs_trans_brelse(sc->tp, agf_bp);
- 	if (error)
-diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
-index 60c61d7052a8..eab41928990f 100644
---- a/fs/xfs/scrub/repair.h
-+++ b/fs/xfs/scrub/repair.h
-@@ -31,7 +31,6 @@ int xrep_init_btblock(struct xfs_scrub *sc, xfs_fsblock_t fsb,
- struct xfs_bitmap;
+-	if (error)
++	if (error || !need_roll)
+ 		return error;
  
- int xrep_fix_freelist(struct xfs_scrub *sc, bool can_shrink);
--int xrep_invalidate_blocks(struct xfs_scrub *sc, struct xfs_bitmap *btlist);
- int xrep_reap_extents(struct xfs_scrub *sc, struct xfs_bitmap *exlist,
- 		const struct xfs_owner_info *oinfo, enum xfs_ag_resv_type type);
++	*deferred = 0;
+ 	if (sc->ip)
+ 		return xfs_trans_roll_inode(&sc->tp, sc->ip);
+ 	return xrep_roll_ag_trans(sc);
+@@ -592,6 +605,7 @@ xrep_reap_extents(
+ 	struct xfs_bitmap_range		*bmr;
+ 	struct xfs_bitmap_range		*n;
+ 	xfs_fsblock_t			fsbno;
++	unsigned int			deferred = 0;
+ 	int				error = 0;
  
+ 	ASSERT(xfs_sb_version_hasrmapbt(&sc->mp->m_sb));
+@@ -603,12 +617,17 @@ xrep_reap_extents(
+ 				XFS_FSB_TO_AGNO(sc->mp, fsbno),
+ 				XFS_FSB_TO_AGBNO(sc->mp, fsbno), 1);
+ 
+-		error = xrep_reap_block(sc, fsbno, oinfo, type);
++		error = xrep_reap_block(sc, fsbno, oinfo, type, &deferred);
+ 		if (error)
+ 			break;
+ 	}
+ 
+-	return error;
++	if (error || deferred == 0)
++		return error;
++
++	if (sc->ip)
++		return xfs_trans_roll_inode(&sc->tp, sc->ip);
++	return xrep_roll_ag_trans(sc);
+ }
+ 
+ /*
 
