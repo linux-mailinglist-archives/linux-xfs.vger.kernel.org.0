@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE2AEA2F0
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Oct 2019 19:04:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26EDAEA2F1
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Oct 2019 19:04:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfJ3SEn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Oct 2019 14:04:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38376 "EHLO
+        id S1727749AbfJ3SEs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Oct 2019 14:04:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38382 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJ3SEn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Oct 2019 14:04:43 -0400
+        with ESMTP id S1727715AbfJ3SEs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Oct 2019 14:04:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b5K8Q42Cd17bPxIdnMyp19GHexclgFFQnCwKVGOG6ss=; b=d1O3BXuokWVkGcAQFRRvzz6ks
-        VFO23N/bKJYltwlGbhWfHYJJDNetKEsm7PnO6qVFvGq1yKSrF1RZI+gpYqoOaXeZbBbxjxpKf+TzU
-        xRGHnJHu1NIkGeNrX85DnysMtS8CnFhwMaywzeTKWTmappqESreTaTNB2F/Ov9yRdV8UvfNEFBqIK
-        EseihsWuwJyxF4SU5d9BssU/RljrOOJ7GUxrRnK2Opc8xWv0/T5Ci1la3eA+otBUojbIpGSrKpuxT
-        0GrJ6d/03SRbNNcvFzKed11LOZmIJ9vbzttjxqNKrT/3GyrJGtd6HlYu7kOr8wltYJ8QwaMbk8beU
-        Br7TQ49dQ==;
+         bh=FohHpKpqyfXLH3FJL0PWqHmxjHd4ZLD21AlgpJ8k98c=; b=km3xVQurXiFTeH6wEsl5INYHw
+        GT2rx4oedl0sGQB+gU5ftoAjzmYBuciHtG49zV4BMOxKL+2luAT4RdQXNQSgQBYZpJGcRwVCNAOU8
+        z+jLvEsvZ4GJdkqqCAOmDEKnbtDSjoxynRgZHjcUEky0dD3/IxWfW0YPfJOVExfPVZs3SVm9MjvBn
+        ZJsvYFnCpQQ5Kjs4n8EAZIhNUn+frMstCIRt/xjUBE7fsiQCMknmtxRyaHKsIx9+uIsQmmb5BvKLB
+        QkT9d+wjcaKxWBclMNUKKokR8t6WXphmGgSJ/LhHvq9cFXS6UhRPTd8/Jbf9KpmH/btvkyDgFSpOK
+        mxTz61YWQ==;
 Received: from [199.255.44.128] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPsKp-0005ev-4W
-        for linux-xfs@vger.kernel.org; Wed, 30 Oct 2019 18:04:43 +0000
+        id 1iPsKu-0005fF-Es
+        for linux-xfs@vger.kernel.org; Wed, 30 Oct 2019 18:04:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 3/9] xfs: remove the extsize argument to xfs_eof_alignment
-Date:   Wed, 30 Oct 2019 11:04:13 -0700
-Message-Id: <20191030180419.13045-4-hch@lst.de>
+Subject: [PATCH 4/9] xfs: slightly tweak an assert in xfs_fs_map_blocks
+Date:   Wed, 30 Oct 2019 11:04:14 -0700
+Message-Id: <20191030180419.13045-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030180419.13045-1-hch@lst.de>
 References: <20191030180419.13045-1-hch@lst.de>
@@ -43,79 +43,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-And move the code dependent on it to the one caller that cares
-instead.
+We should never see delalloc blocks for a pNFS layout, write or not.
+Adjust the assert to check for that.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_iomap.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ fs/xfs/xfs_pnfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 02526cffc5a3..c21c4f7a7389 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -118,8 +118,7 @@ xfs_iomap_end_fsb(
+diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
+index c637f0192976..3634ffff3b07 100644
+--- a/fs/xfs/xfs_pnfs.c
++++ b/fs/xfs/xfs_pnfs.c
+@@ -148,11 +148,11 @@ xfs_fs_map_blocks(
+ 	if (error)
+ 		goto out_unlock;
  
- static xfs_extlen_t
- xfs_eof_alignment(
--	struct xfs_inode	*ip,
--	xfs_extlen_t		extsize)
-+	struct xfs_inode	*ip)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
- 	xfs_extlen_t		align = 0;
-@@ -142,17 +141,6 @@ xfs_eof_alignment(
- 			align = 0;
- 	}
- 
--	/*
--	 * Always round up the allocation request to an extent boundary
--	 * (when file on a real-time subvolume or has di_extsize hint).
--	 */
--	if (extsize) {
--		if (align)
--			align = roundup_64(align, extsize);
--		else
--			align = extsize;
--	}
--
- 	return align;
- }
- 
-@@ -167,12 +155,22 @@ xfs_iomap_eof_align_last_fsb(
- {
- 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
- 	xfs_extlen_t		extsz = xfs_get_extsz_hint(ip);
--	xfs_extlen_t		align = xfs_eof_alignment(ip, extsz);
-+	xfs_extlen_t		align = xfs_eof_alignment(ip);
- 	struct xfs_bmbt_irec	irec;
- 	struct xfs_iext_cursor	icur;
- 
- 	ASSERT(ifp->if_flags & XFS_IFEXTENTS);
- 
-+	/*
-+	 * Always round up the allocation request to the extent hint boundary.
-+	 */
-+	if (extsz) {
-+		if (align)
-+			align = roundup_64(align, extsz);
-+		else
-+			align = extsz;
-+	}
++	ASSERT(!nimaps || imap.br_startblock != DELAYSTARTBLOCK);
 +
- 	if (align) {
- 		xfs_fileoff_t	aligned_end_fsb = roundup_64(end_fsb, align);
+ 	if (write) {
+ 		enum xfs_prealloc_flags	flags = 0;
  
-@@ -992,7 +990,7 @@ xfs_buffered_write_iomap_begin(
- 			p_end_fsb = XFS_B_TO_FSBT(mp, end_offset) +
- 					prealloc_blocks;
- 
--			align = xfs_eof_alignment(ip, 0);
-+			align = xfs_eof_alignment(ip);
- 			if (align)
- 				p_end_fsb = roundup_64(p_end_fsb, align);
- 
+-		ASSERT(imap.br_startblock != DELAYSTARTBLOCK);
+-
+ 		if (!nimaps || imap.br_startblock == HOLESTARTBLOCK) {
+ 			/*
+ 			 * xfs_iomap_write_direct() expects to take ownership of
 -- 
 2.20.1
 
