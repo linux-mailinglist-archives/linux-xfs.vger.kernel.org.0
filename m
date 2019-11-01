@@ -2,32 +2,31 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EB9BEBEB1
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 08:51:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79468EBEB3
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 08:51:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfKAHva (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Nov 2019 03:51:30 -0400
-Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:9098
+        id S1729965AbfKAHvf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 Nov 2019 03:51:35 -0400
+Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:9129
         "EHLO icp-osb-irony-out7.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbfKAHva (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Nov 2019 03:51:30 -0400
+        by vger.kernel.org with ESMTP id S1729856AbfKAHvf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Nov 2019 03:51:35 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2APAACY47td/xK90HYNVxsBAQEBAQE?=
- =?us-ascii?q?BBQEBAREBAQMDAQEBgWsEAQEBCwGEPIQoj1oBAQEBAQEGgRGKCIUwAYoVgXs?=
- =?us-ascii?q?JAQEBAQEBAQEBNwEBhDsDAgKEHjYHDgIMAQEBBAEBAQEBBQMBhViGKgIBAyM?=
- =?us-ascii?q?EUhAYDQImAgJHEAYThXWwXnV/MxqKN4EOKAGBZIpEeIEHgREzgx2HVYJeBI0?=
- =?us-ascii?q?TL4IAN4VgYUOWdYIulVAMgjCLeAMQix4tqWgGggRNLgqDJ1CRfWeMLyuCEgE?=
- =?us-ascii?q?B?=
-X-IPAS-Result: =?us-ascii?q?A2APAACY47td/xK90HYNVxsBAQEBAQEBBQEBAREBAQMDA?=
- =?us-ascii?q?QEBgWsEAQEBCwGEPIQoj1oBAQEBAQEGgRGKCIUwAYoVgXsJAQEBAQEBAQEBN?=
- =?us-ascii?q?wEBhDsDAgKEHjYHDgIMAQEBBAEBAQEBBQMBhViGKgIBAyMEUhAYDQImAgJHE?=
- =?us-ascii?q?AYThXWwXnV/MxqKN4EOKAGBZIpEeIEHgREzgx2HVYJeBI0TL4IAN4VgYUOWd?=
- =?us-ascii?q?YIulVAMgjCLeAMQix4tqWgGggRNLgqDJ1CRfWeMLyuCEgEB?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AUAACY47td/xK90HYNVxwBAQEBAQc?=
+ =?us-ascii?q?BAREBBAQBAYFpBwEBCwGBboJOhCiII4c3AQEBAQEBBoERigiFMAGKFYF7CQE?=
+ =?us-ascii?q?BAQEBAQEBATcBAYQ7AwIChB40CQ4CDAEBAQQBAQEBAQUDAYVYhioCAQMjBFI?=
+ =?us-ascii?q?QGA0CJgICRxAGE4V1sF51fzMaijeBDigBgWSKRHiBB4ERM4Mdh1WCXgSPQje?=
+ =?us-ascii?q?GQUOWdYIulVAMjigDiy4tqWGCEU0uCoMnUIM2F44wZ45sAQE?=
+X-IPAS-Result: =?us-ascii?q?A2AUAACY47td/xK90HYNVxwBAQEBAQcBAREBBAQBAYFpB?=
+ =?us-ascii?q?wEBCwGBboJOhCiII4c3AQEBAQEBBoERigiFMAGKFYF7CQEBAQEBAQEBATcBA?=
+ =?us-ascii?q?YQ7AwIChB40CQ4CDAEBAQQBAQEBAQUDAYVYhioCAQMjBFIQGA0CJgICRxAGE?=
+ =?us-ascii?q?4V1sF51fzMaijeBDigBgWSKRHiBB4ERM4Mdh1WCXgSPQjeGQUOWdYIulVAMj?=
+ =?us-ascii?q?igDiy4tqWGCEU0uCoMnUIM2F44wZ45sAQE?=
 X-IronPort-AV: E=Sophos;i="5.68,254,1569254400"; 
-   d="scan'208";a="215830081"
+   d="scan'208";a="215830091"
 Received: from unknown (HELO [192.168.1.222]) ([118.208.189.18])
-  by icp-osb-irony-out7.iinet.net.au with ESMTP; 01 Nov 2019 15:51:00 +0800
-Subject: [PATCH v8 11/16] xfs: move xfs_parseargs() validation to a helper
+  by icp-osb-irony-out7.iinet.net.au with ESMTP; 01 Nov 2019 15:51:06 +0800
+Subject: [PATCH v8 12/16] xfs: dont set sb in xfs_mount_alloc()
 From:   Ian Kent <raven@themaw.net>
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 Cc:     Christoph Hellwig <hch@infradead.org>,
@@ -37,8 +36,8 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         David Howells <dhowells@redhat.com>,
         Dave Chinner <dchinner@redhat.com>,
         Al Viro <viro@ZenIV.linux.org.uk>
-Date:   Fri, 01 Nov 2019 15:51:00 +0800
-Message-ID: <157259466083.28278.9850069574379459064.stgit@fedora-28>
+Date:   Fri, 01 Nov 2019 15:51:06 +0800
+Message-ID: <157259466607.28278.4456308072088112584.stgit@fedora-28>
 In-Reply-To: <157259452909.28278.1001302742832626046.stgit@fedora-28>
 References: <157259452909.28278.1001302742832626046.stgit@fedora-28>
 User-Agent: StGit/unknown-version
@@ -50,142 +49,48 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move the validation code of xfs_parseargs() into a helper for later
-use within the mount context methods.
+When changing to use the new mount api the super block won't be
+available when the xfs_mount struct is allocated so move setting the
+super block in xfs_mount to xfs_fs_fill_super().
 
 Signed-off-by: Ian Kent <raven@themaw.net>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_super.c |  109 ++++++++++++++++++++++++++++------------------------
- 1 file changed, 58 insertions(+), 51 deletions(-)
+ fs/xfs/xfs_super.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 391c07ca6a32..4b570ba3456a 100644
+index 4b570ba3456a..62dfc678c415 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -308,59 +308,10 @@ xfs_fc_parse_param(
- 	return 0;
+@@ -1560,8 +1560,7 @@ xfs_destroy_percpu_counters(
  }
  
--/*
-- * This function fills in xfs_mount_t fields based on mount args.
-- * Note: the superblock has _not_ yet been read in.
-- *
-- * Note that this function leaks the various device name allocations on
-- * failure.  The caller takes care of them.
-- *
-- * *sb is const because this is also used to test options on the remount
-- * path, and we don't want this to have any side effects at remount time.
-- * Today this function does not change *sb, but just to future-proof...
-- */
- static int
--xfs_parseargs(
--	struct xfs_mount	*mp,
--	char			*options)
-+xfs_fc_validate_params(
-+	struct xfs_mount	*mp)
+ static struct xfs_mount *
+-xfs_mount_alloc(
+-	struct super_block	*sb)
++xfs_mount_alloc(void)
  {
--	const struct super_block *sb = mp->m_super;
--	char			*p;
--	substring_t		args[MAX_OPT_ARGS];
--
--	/*
--	 * Copy binary VFS mount flags we are interested in.
--	 */
--	if (sb_rdonly(sb))
--		mp->m_flags |= XFS_MOUNT_RDONLY;
--	if (sb->s_flags & SB_DIRSYNC)
--		mp->m_flags |= XFS_MOUNT_DIRSYNC;
--	if (sb->s_flags & SB_SYNCHRONOUS)
--		mp->m_flags |= XFS_MOUNT_WSYNC;
--
--	/*
--	 * These can be overridden by the mount option parsing.
--	 */
--	mp->m_logbufs = -1;
--	mp->m_logbsize = -1;
--	mp->m_allocsize_log = 16; /* 64k */
--
--	if (!options)
--		return 0;
--
--	while ((p = strsep(&options, ",")) != NULL) {
--		int		token;
--		int		ret;
--
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		ret = xfs_fc_parse_param(token, p, args, mp);
--		if (ret)
--			return ret;
--	}
--
- 	/*
- 	 * no recovery flag requires a read-only mount
- 	 */
-@@ -425,6 +376,62 @@ xfs_parseargs(
- 	return 0;
- }
+ 	struct xfs_mount	*mp;
  
-+/*
-+ * This function fills in xfs_mount_t fields based on mount args.
-+ * Note: the superblock has _not_ yet been read in.
-+ *
-+ * Note that this function leaks the various device name allocations on
-+ * failure.  The caller takes care of them.
-+ *
-+ * *sb is const because this is also used to test options on the remount
-+ * path, and we don't want this to have any side effects at remount time.
-+ * Today this function does not change *sb, but just to future-proof...
-+ */
-+static int
-+xfs_parseargs(
-+	struct xfs_mount	*mp,
-+	char			*options)
-+{
-+	const struct super_block *sb = mp->m_super;
-+	char			*p;
-+	substring_t		args[MAX_OPT_ARGS];
-+
-+	/*
-+	 * Copy binary VFS mount flags we are interested in.
-+	 */
-+	if (sb_rdonly(sb))
-+		mp->m_flags |= XFS_MOUNT_RDONLY;
-+	if (sb->s_flags & SB_DIRSYNC)
-+		mp->m_flags |= XFS_MOUNT_DIRSYNC;
-+	if (sb->s_flags & SB_SYNCHRONOUS)
-+		mp->m_flags |= XFS_MOUNT_WSYNC;
-+
-+	/*
-+	 * These can be overridden by the mount option parsing.
-+	 */
-+	mp->m_logbufs = -1;
-+	mp->m_logbsize = -1;
-+	mp->m_allocsize_log = 16; /* 64k */
-+
-+	if (!options)
-+		return 0;
-+
-+	while ((p = strsep(&options, ",")) != NULL) {
-+		int		token;
-+		int		ret;
-+
-+		if (!*p)
-+			continue;
-+
-+		token = match_token(p, tokens, args);
-+		ret = xfs_fc_parse_param(token, p, args, mp);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return xfs_fc_validate_params(mp);
-+}
-+
- struct proc_xfs_info {
- 	uint64_t	flag;
- 	char		*str;
+@@ -1569,7 +1568,6 @@ xfs_mount_alloc(
+ 	if (!mp)
+ 		return NULL;
+ 
+-	mp->m_super = sb;
+ 	spin_lock_init(&mp->m_sb_lock);
+ 	spin_lock_init(&mp->m_agirotor_lock);
+ 	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_ATOMIC);
+@@ -1605,9 +1603,10 @@ xfs_fs_fill_super(
+ 	 * allocate mp and do all low-level struct initializations before we
+ 	 * attach it to the super
+ 	 */
+-	mp = xfs_mount_alloc(sb);
++	mp = xfs_mount_alloc();
+ 	if (!mp)
+ 		goto out;
++	mp->m_super = sb;
+ 	sb->s_fs_info = mp;
+ 
+ 	error = xfs_parseargs(mp, (char *)data);
 
