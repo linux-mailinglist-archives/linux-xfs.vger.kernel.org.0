@@ -2,26 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E0A1ECA2F
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 22:15:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7909ECA32
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 22:21:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfKAVPt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Nov 2019 17:15:49 -0400
-Received: from sandeen.net ([63.231.237.45]:44270 "EHLO sandeen.net"
+        id S1726023AbfKAVVI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 Nov 2019 17:21:08 -0400
+Received: from sandeen.net ([63.231.237.45]:44530 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfKAVPs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:15:48 -0400
+        id S1725989AbfKAVVI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:21:08 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id A42FD544;
-        Fri,  1 Nov 2019 16:14:46 -0500 (CDT)
-Subject: Re: [PATCH 4/7] xfs_scrub: explicitly track corruptions, not just
- errors
+        by sandeen.net (Postfix) with ESMTPSA id B29B217DCC;
+        Fri,  1 Nov 2019 16:20:05 -0500 (CDT)
+Subject: Re: [PATCH 5/7] xfs_scrub: promote some of the str_info to str_error
+ calls
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <157177012894.1460394.4672572733673534420.stgit@magnolia>
- <157177015466.1460394.15245131277018622381.stgit@magnolia>
+ <157177016089.1460394.14422501768544972131.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <c27dc1b0-406a-6d45-9a00-21ae860502de@sandeen.net>
-Date:   Fri, 1 Nov 2019 16:15:46 -0500
+Message-ID: <bab75e7f-699e-f6b8-82c5-477021455f45@sandeen.net>
+Date:   Fri, 1 Nov 2019 16:21:05 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <157177015466.1460394.15245131277018622381.stgit@magnolia>
+In-Reply-To: <157177016089.1460394.14422501768544972131.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,14 +82,9 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 10/22/19 1:49 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Rename the @errors_found variable to @corruptions_found to make it
-> more explicit that we're tracking fs corruption issues.  Add a new
-> str_corrupt() function to handle communications that fall under this new
-> corruption classification.  str_error() now exists to log runtime errors
-> that do not have an associated errno code.
+> Now that str_error is only for runtime errors, we can promote a few of
+> the str_info calls that report runtime errors to str_error.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-Seems ok.
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
