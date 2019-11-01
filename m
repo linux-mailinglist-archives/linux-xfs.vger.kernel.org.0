@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A06EC99E
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 21:29:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0775DEC9A4
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 Nov 2019 21:31:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfKAU3t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Nov 2019 16:29:49 -0400
-Received: from sandeen.net ([63.231.237.45]:41956 "EHLO sandeen.net"
+        id S1727641AbfKAUba (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 Nov 2019 16:31:30 -0400
+Received: from sandeen.net ([63.231.237.45]:42076 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfKAU3t (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:29:49 -0400
+        id S1727595AbfKAUb3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:31:29 -0400
 Received: from Liberator-6.local (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 4E747544;
-        Fri,  1 Nov 2019 15:28:47 -0500 (CDT)
-Subject: Re: [PATCH 7/9] xfs_scrub: reduce fsmap activity for media errors
+        by sandeen.net (Postfix) with ESMTPSA id F2272544;
+        Fri,  1 Nov 2019 15:30:27 -0500 (CDT)
+Subject: Re: [PATCH 8/9] xfs_scrub: request fewer bmaps when we can
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <157177002473.1459098.11320398367215468164.stgit@magnolia>
- <157177006826.1459098.5710881975327343302.stgit@magnolia>
+ <157177007451.1459098.7077839567802348147.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -64,12 +64,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <6e15665f-2906-1d66-2562-c0995316fc81@sandeen.net>
-Date:   Fri, 1 Nov 2019 15:29:47 -0500
+Message-ID: <bf3a4a47-29b6-76e6-c5ea-79ea873aeece@sandeen.net>
+Date:   Fri, 1 Nov 2019 15:31:28 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <157177006826.1459098.5710881975327343302.stgit@magnolia>
+In-Reply-To: <157177007451.1459098.7077839567802348147.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,10 +81,9 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 10/22/19 1:47 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Right now we rather foolishly query the fsmap data for every single
-> media error that we find.  This is a silly waste of time since we
-> have yet to combine adjacent bad blocks into bad extents, so move the
-> rmap query until after we've constructed the bad block bitmap data.
+> In xfs_iterate_filemaps, we query the number of bmaps for a given file
+> that we're going to iterate, so feed that information to bmap so that
+> the kernel won't waste time allocating in-kernel memory unnecessarily.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
