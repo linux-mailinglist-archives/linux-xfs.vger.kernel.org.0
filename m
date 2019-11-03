@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDF86ED61B
-	for <lists+linux-xfs@lfdr.de>; Sun,  3 Nov 2019 23:24:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9509EED61F
+	for <lists+linux-xfs@lfdr.de>; Sun,  3 Nov 2019 23:24:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfKCWY2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 3 Nov 2019 17:24:28 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39412 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfKCWY2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 3 Nov 2019 17:24:28 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MOND7086445
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:27 GMT
+        id S1727811AbfKCWYe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 3 Nov 2019 17:24:34 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:43986 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfKCWYe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 3 Nov 2019 17:24:34 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MOFLY061247
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=EHObrz54/e6bgOd7Kx7phjbPJ1RCHAsujaxROxmfdyY=;
- b=WdoqeyXQGqf+USU+NzJCU/WtEmB+i5sxdi0B21r0QAcT4mTFPgzZH/gJ2kU4yKnBWsBj
- e/B6IocT84QlVwhG8j7pZnIwTJTKI4ppIpqtpOUVgyo9O75d0ge/murkhNPAXnzVhybd
- LPFH+Pta/LqRERLW567SF9Ppa/fRBYPAmmlRvCdTJPqz7g1NnVW2hKheL2Wvt0Qb+aCa
- 0Ak4z2626i/InwjdwMtyE8Jr6ZVJb4nF7uusuWxdtrdfVTV6fvRBPpQS7qTPccCQ6jNu
- Ken3xoncBFVruKSijd1rmf0uSoOrhyKkxYn9enp6a2SrLGfrCYWy2OnZjsnpLQd3Qt8Z 7w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w117tm5yr-1
+ bh=+51urQGa7OGrC+gua2ZKIzWk3a0hOdqL8JP+WiR+zzo=;
+ b=jp1WrYYf+o4bAS3uf60KUzBT7PTEGxlMlOEkTCQgqYiGVLgisb1m/h3IsIw/pBm5wJMR
+ VOv0QhY9K5B9RyaF8oX3sqL341wfJdah1yQgaWkdHE5YnNAgoQ7YoGY/37+5hToTzdtx
+ 8zp3I2byqsRJJZ8W9wWJjvZwL3OvOPeFZCol+UU9i4bYalFUSRb1NRQC8Sg14BvF5s5v
+ wZUutMMGnlbKIHmqfBo2iY57hd2UWopjy5CFFmAESo61/iyBo/c/iO9EWwGuraCbiiWM
+ 7PWDCz4FCuc0KuUmn1I5Q03Yf1jl3e3Ud8KgP5TP7ug+U9ayfDzHJG9qroeUSzweKH0O Kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w12eqv04y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MNG90072633
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w1k8tmspm-1
+        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MOOgo026519
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w1kxk9rjc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:26 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA3MOPnw017874
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:25 GMT
+        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:32 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA3MOVJ7032076
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:31 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 03 Nov 2019 14:24:25 -0800
-Subject: [PATCH 3/6] xfs: make the assertion message functions take a mount
- parameter
+        with ESMTP ; Sun, 03 Nov 2019 14:24:31 -0800
+Subject: [PATCH 4/6] xfs: add a XFS_CORRUPT_ON macro
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 03 Nov 2019 14:24:23 -0800
-Message-ID: <157281986300.4151907.2698280321479729910.stgit@magnolia>
+Date:   Sun, 03 Nov 2019 14:24:30 -0800
+Message-ID: <157281987010.4151907.6435110079992395504.stgit@magnolia>
 In-Reply-To: <157281984457.4151907.11281776450827989936.stgit@magnolia>
 References: <157281984457.4151907.11281776450827989936.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -55,7 +54,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=984
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1911030234
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
@@ -71,83 +70,48 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Make the assfail and asswarn functions take a struct xfs_mount so that
-we can start tying debugging and corruption messages to a particular
-mount.
+Add a new macro, XFS_CORRUPT_ON, which we will use to integrate some
+corruption reporting when the corruption test expression is true.  This
+will be used in the next patch to remove the ugly XFS_WANT_CORRUPT*
+macros.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_linux.h   |    6 +++---
- fs/xfs/xfs_message.c |    8 ++++----
- fs/xfs/xfs_message.h |    4 ++--
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ fs/xfs/xfs_linux.h |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 
 diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
-index ca15105681ca..2271db4e8d66 100644
+index 2271db4e8d66..9265ba9fd028 100644
 --- a/fs/xfs/xfs_linux.h
 +++ b/fs/xfs/xfs_linux.h
-@@ -223,18 +223,18 @@ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
- 		char *data, unsigned int op);
- 
- #define ASSERT_ALWAYS(expr)	\
--	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-+	(likely(expr) ? (void)0 : assfail(NULL, #expr, __FILE__, __LINE__))
- 
- #ifdef DEBUG
+@@ -229,6 +229,10 @@ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
  #define ASSERT(expr)	\
--	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-+	(likely(expr) ? (void)0 : assfail(NULL, #expr, __FILE__, __LINE__))
+ 	(likely(expr) ? (void)0 : assfail(NULL, #expr, __FILE__, __LINE__))
  
++#define XFS_CORRUPT_ON(mp, expr)	\
++	(unlikely(expr) ? assfail((mp), #expr, __FILE__, __LINE__), \
++			  true : false)
++
  #else	/* !DEBUG */
  
  #ifdef XFS_WARN
- 
+@@ -236,9 +240,16 @@ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
  #define ASSERT(expr)	\
--	(likely(expr) ? (void)0 : asswarn(#expr, __FILE__, __LINE__))
-+	(likely(expr) ? (void)0 : asswarn(NULL, #expr, __FILE__, __LINE__))
+ 	(likely(expr) ? (void)0 : asswarn(NULL, #expr, __FILE__, __LINE__))
  
++#define XFS_CORRUPT_ON(mp, expr)	\
++	(unlikely(expr) ? asswarn((mp), #expr, __FILE__, __LINE__), \
++			  true : false)
++
  #else	/* !DEBUG && !XFS_WARN */
  
-diff --git a/fs/xfs/xfs_message.c b/fs/xfs/xfs_message.c
-index c57e8ad39712..333bc2e14f3f 100644
---- a/fs/xfs/xfs_message.c
-+++ b/fs/xfs/xfs_message.c
-@@ -86,17 +86,17 @@ xfs_alert_tag(
- }
+-#define ASSERT(expr)	((void)0)
++#define ASSERT(expr)		((void)0)
++#define XFS_CORRUPT_ON(mp, expr)	\
++	(unlikely(expr) ? XFS_ERROR_REPORT(#expr, XFS_ERRLEVEL_LOW, (mp)), \
++			  true : false)
  
- void
--asswarn(char *expr, char *file, int line)
-+asswarn(struct xfs_mount *mp, char *expr, char *file, int line)
- {
--	xfs_warn(NULL, "Assertion failed: %s, file: %s, line: %d",
-+	xfs_warn(mp, "Assertion failed: %s, file: %s, line: %d",
- 		expr, file, line);
- 	WARN_ON(1);
- }
- 
- void
--assfail(char *expr, char *file, int line)
-+assfail(struct xfs_mount *mp, char *expr, char *file, int line)
- {
--	xfs_emerg(NULL, "Assertion failed: %s, file: %s, line: %d",
-+	xfs_emerg(mp, "Assertion failed: %s, file: %s, line: %d",
- 		expr, file, line);
- 	if (xfs_globals.bug_on_assert)
- 		BUG();
-diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
-index 7f040b04b739..28bd6c0777ab 100644
---- a/fs/xfs/xfs_message.h
-+++ b/fs/xfs/xfs_message.h
-@@ -57,8 +57,8 @@ do {									\
- #define xfs_debug_ratelimited(dev, fmt, ...)				\
- 	xfs_printk_ratelimited(xfs_debug, dev, fmt, ##__VA_ARGS__)
- 
--extern void assfail(char *expr, char *f, int l);
--extern void asswarn(char *expr, char *f, int l);
-+extern void assfail(struct xfs_mount *mp, char *expr, char *f, int l);
-+extern void asswarn(struct xfs_mount *mp, char *expr, char *f, int l);
- 
- extern void xfs_hex_dump(const void *p, int length);
- 
+ #endif /* XFS_WARN */
+ #endif /* DEBUG */
 
