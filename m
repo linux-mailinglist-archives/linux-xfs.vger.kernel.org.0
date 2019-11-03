@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 880B2ED61D
-	for <lists+linux-xfs@lfdr.de>; Sun,  3 Nov 2019 23:24:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20ED2ED618
+	for <lists+linux-xfs@lfdr.de>; Sun,  3 Nov 2019 23:24:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfKCWYa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 3 Nov 2019 17:24:30 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39430 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfKCWYa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 3 Nov 2019 17:24:30 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MOSpX086713
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:28 GMT
+        id S1727784AbfKCWYB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 3 Nov 2019 17:24:01 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38810 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbfKCWYB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 3 Nov 2019 17:24:01 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MM2YQ071408
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:23:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=vPf4pMDgowIi3LRC22oAtYnUVI0ncvt5Fs4X277GySI=;
- b=ZfSsmfYKJhM8cfJ7mzGRbx/3lg/J9K2skWNSPzcpKEuKK7B6l7SDHaOqy/+qsgoKDaz2
- uffG3V75HC2PJ2gdo7/lc4ANdpwBkLkeuh81vAiKzxfa3IDAAdl57R6ou87XUYquSBUO
- NWizsqFRcZbd3JBXEtgYpHJbPyCTMGAJnLg96fZs+60QG3WocaieAB8H4XhH+maW60N3
- Q79p/gKcvfZ7lGqFIYoDr30evV5qzMosb+CeEwVTdkYz2D3Bl1EuhkaDSZS0t3w98rZ8
- DrITSsxJk1UM6q5we/Z7bUIyL8tc9fUEOftSZUT9BKjqWUH/Vymx9n52234f+GmciX8L tw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w117tm5yt-1
+ bh=u0eN7S/LjkZEZdrD/PSJa2hcn95eA4vwzb01lheFnDs=;
+ b=bhPeloPi/nx638pquFX1vCfjreXgUM6d+Zm/Le7PaWmCDbBlp3SOg0BeQBLJDaJ7mcAb
+ ITMoIWWkBeGpJ+6MAS4DI+vOiOqBgy1VFjpsL0c0LmIIaQwCNnrxiF8MUZEd01rL/wLO
+ 378Qnqv/9+7stF1RXQ0WY1bXD7DB+sGuIrIFpJvlnF4OiXzdfp9xqbJgP80uI3LMWuee
+ 6EY6O2WXOxNavtVFHjPK0AaAM61Nuy5atL8ATL8Beubgno8gQEPyhtFXnDYfsBO1nZ6Y
+ 6O+sg0ATkxsi1UUrTJ938DTamOsmCRYB1P9up1WBEdq2YRxrOOQNK7vHRh3hxk+45J+p HA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w11rpm470-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:28 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MORe5026812
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:24:28 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2w1kxk9r8a-1
+        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:23:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA3MNJsC072696
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:23:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2w1k8tmsdu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:24:27 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA3MNpOf005096
-        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:23:51 GMT
+        for <linux-xfs@vger.kernel.org>; Sun, 03 Nov 2019 22:23:58 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA3MNvU8016239
+        for <linux-xfs@vger.kernel.org>; Sun, 3 Nov 2019 22:23:57 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 03 Nov 2019 14:23:51 -0800
-Subject: [PATCH 1/3] xfs: relax shortform directory size checks
+        with ESMTP ; Sun, 03 Nov 2019 14:23:57 -0800
+Subject: [PATCH 2/3] xfs: constify the buffer pointer arguments to error
+ functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 03 Nov 2019 14:23:49 -0800
-Message-ID: <157281982989.4150947.13552708841526849932.stgit@magnolia>
+Date:   Sun, 03 Nov 2019 14:23:55 -0800
+Message-ID: <157281983593.4150947.13692433066759624464.stgit@magnolia>
 In-Reply-To: <157281982341.4150947.10288936972373805803.stgit@magnolia>
 References: <157281982341.4150947.10288936972373805803.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,15 +55,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=314
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1911030234
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=392 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911030234
+ definitions=main-1911030233
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,100 +71,98 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Each of the four functions that operate on shortform directories checks
-that the directory's di_size is at least as large as the shortform
-directory header.  This is now checked by the inode fork verifiers
-(di_size is used to allocate if_bytes, and if_bytes is checked against
-the header structure size) so we can turn these checks into ASSERTions.
+Some of the xfs error message functions take a pointer to a buffer that
+will be dumped to the system log.  The logging functions don't change
+the contents, so constify all the parameters.  This enables the next
+patch to ensure that we log bad metadata when we encounter it.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_dir2_block.c |    8 +-------
- fs/xfs/libxfs/xfs_dir2_sf.c    |   32 ++++----------------------------
- 2 files changed, 5 insertions(+), 35 deletions(-)
+ fs/xfs/xfs_error.c   |    6 +++---
+ fs/xfs/xfs_error.h   |    6 +++---
+ fs/xfs/xfs_message.c |    2 +-
+ fs/xfs/xfs_message.h |    2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
-index 49e4bc39e7bb..e1afa35141c5 100644
---- a/fs/xfs/libxfs/xfs_dir2_block.c
-+++ b/fs/xfs/libxfs/xfs_dir2_block.c
-@@ -1073,13 +1073,7 @@ xfs_dir2_sf_to_block(
- 	mp = dp->i_mount;
- 	ifp = XFS_IFORK_PTR(dp, XFS_DATA_FORK);
- 	ASSERT(ifp->if_flags & XFS_IFINLINE);
--	/*
--	 * Bomb out if the shortform directory is way too short.
--	 */
--	if (dp->i_d.di_size < offsetof(xfs_dir2_sf_hdr_t, parent)) {
--		ASSERT(XFS_FORCED_SHUTDOWN(mp));
--		return -EIO;
--	}
-+	ASSERT(dp->i_d.di_size >= offsetof(struct xfs_dir2_sf_hdr, parent));
+diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
+index 849fd4476950..0b156cc88108 100644
+--- a/fs/xfs/xfs_error.c
++++ b/fs/xfs/xfs_error.c
+@@ -329,7 +329,7 @@ xfs_corruption_error(
+ 	const char		*tag,
+ 	int			level,
+ 	struct xfs_mount	*mp,
+-	void			*buf,
++	const void		*buf,
+ 	size_t			bufsize,
+ 	const char		*filename,
+ 	int			linenum,
+@@ -350,7 +350,7 @@ xfs_buf_verifier_error(
+ 	struct xfs_buf		*bp,
+ 	int			error,
+ 	const char		*name,
+-	void			*buf,
++	const void		*buf,
+ 	size_t			bufsz,
+ 	xfs_failaddr_t		failaddr)
+ {
+@@ -402,7 +402,7 @@ xfs_inode_verifier_error(
+ 	struct xfs_inode	*ip,
+ 	int			error,
+ 	const char		*name,
+-	void			*buf,
++	const void		*buf,
+ 	size_t			bufsz,
+ 	xfs_failaddr_t		failaddr)
+ {
+diff --git a/fs/xfs/xfs_error.h b/fs/xfs/xfs_error.h
+index 602aa7d62b66..e6a22cfb542f 100644
+--- a/fs/xfs/xfs_error.h
++++ b/fs/xfs/xfs_error.h
+@@ -12,16 +12,16 @@ extern void xfs_error_report(const char *tag, int level, struct xfs_mount *mp,
+ 			const char *filename, int linenum,
+ 			xfs_failaddr_t failaddr);
+ extern void xfs_corruption_error(const char *tag, int level,
+-			struct xfs_mount *mp, void *buf, size_t bufsize,
++			struct xfs_mount *mp, const void *buf, size_t bufsize,
+ 			const char *filename, int linenum,
+ 			xfs_failaddr_t failaddr);
+ extern void xfs_buf_verifier_error(struct xfs_buf *bp, int error,
+-			const char *name, void *buf, size_t bufsz,
++			const char *name, const void *buf, size_t bufsz,
+ 			xfs_failaddr_t failaddr);
+ extern void xfs_verifier_error(struct xfs_buf *bp, int error,
+ 			xfs_failaddr_t failaddr);
+ extern void xfs_inode_verifier_error(struct xfs_inode *ip, int error,
+-			const char *name, void *buf, size_t bufsz,
++			const char *name, const void *buf, size_t bufsz,
+ 			xfs_failaddr_t failaddr);
  
- 	oldsfp = (xfs_dir2_sf_hdr_t *)ifp->if_u1.if_data;
+ #define	XFS_ERROR_REPORT(e, lvl, mp)	\
+diff --git a/fs/xfs/xfs_message.c b/fs/xfs/xfs_message.c
+index 9804efe525a9..c57e8ad39712 100644
+--- a/fs/xfs/xfs_message.c
++++ b/fs/xfs/xfs_message.c
+@@ -105,7 +105,7 @@ assfail(char *expr, char *file, int line)
+ }
  
-diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
-index ae16ca7c422a..d6b164a2fe57 100644
---- a/fs/xfs/libxfs/xfs_dir2_sf.c
-+++ b/fs/xfs/libxfs/xfs_dir2_sf.c
-@@ -277,13 +277,7 @@ xfs_dir2_sf_addname(
- 	ASSERT(xfs_dir2_sf_lookup(args) == -ENOENT);
- 	dp = args->dp;
- 	ASSERT(dp->i_df.if_flags & XFS_IFINLINE);
--	/*
--	 * Make sure the shortform value has some of its header.
--	 */
--	if (dp->i_d.di_size < offsetof(xfs_dir2_sf_hdr_t, parent)) {
--		ASSERT(XFS_FORCED_SHUTDOWN(dp->i_mount));
--		return -EIO;
--	}
-+	ASSERT(dp->i_d.di_size >= offsetof(struct xfs_dir2_sf_hdr, parent));
- 	ASSERT(dp->i_df.if_bytes == dp->i_d.di_size);
- 	ASSERT(dp->i_df.if_u1.if_data != NULL);
- 	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
-@@ -793,13 +787,7 @@ xfs_dir2_sf_lookup(
- 	dp = args->dp;
+ void
+-xfs_hex_dump(void *p, int length)
++xfs_hex_dump(const void *p, int length)
+ {
+ 	print_hex_dump(KERN_ALERT, "", DUMP_PREFIX_OFFSET, 16, 1, p, length, 1);
+ }
+diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
+index 34447dca97d1..7f040b04b739 100644
+--- a/fs/xfs/xfs_message.h
++++ b/fs/xfs/xfs_message.h
+@@ -60,6 +60,6 @@ do {									\
+ extern void assfail(char *expr, char *f, int l);
+ extern void asswarn(char *expr, char *f, int l);
  
- 	ASSERT(dp->i_df.if_flags & XFS_IFINLINE);
--	/*
--	 * Bail out if the directory is way too short.
--	 */
--	if (dp->i_d.di_size < offsetof(xfs_dir2_sf_hdr_t, parent)) {
--		ASSERT(XFS_FORCED_SHUTDOWN(dp->i_mount));
--		return -EIO;
--	}
-+	ASSERT(dp->i_d.di_size >= offsetof(struct xfs_dir2_sf_hdr, parent));
- 	ASSERT(dp->i_df.if_bytes == dp->i_d.di_size);
- 	ASSERT(dp->i_df.if_u1.if_data != NULL);
- 	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
-@@ -879,13 +867,7 @@ xfs_dir2_sf_removename(
+-extern void xfs_hex_dump(void *p, int length);
++extern void xfs_hex_dump(const void *p, int length);
  
- 	ASSERT(dp->i_df.if_flags & XFS_IFINLINE);
- 	oldsize = (int)dp->i_d.di_size;
--	/*
--	 * Bail out if the directory is way too short.
--	 */
--	if (oldsize < offsetof(xfs_dir2_sf_hdr_t, parent)) {
--		ASSERT(XFS_FORCED_SHUTDOWN(dp->i_mount));
--		return -EIO;
--	}
-+	ASSERT(oldsize >= offsetof(struct xfs_dir2_sf_hdr, parent));
- 	ASSERT(dp->i_df.if_bytes == oldsize);
- 	ASSERT(dp->i_df.if_u1.if_data != NULL);
- 	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
-@@ -963,13 +945,7 @@ xfs_dir2_sf_replace(
- 	dp = args->dp;
- 
- 	ASSERT(dp->i_df.if_flags & XFS_IFINLINE);
--	/*
--	 * Bail out if the shortform directory is way too small.
--	 */
--	if (dp->i_d.di_size < offsetof(xfs_dir2_sf_hdr_t, parent)) {
--		ASSERT(XFS_FORCED_SHUTDOWN(dp->i_mount));
--		return -EIO;
--	}
-+	ASSERT(dp->i_d.di_size >= offsetof(struct xfs_dir2_sf_hdr, parent));
- 	ASSERT(dp->i_df.if_bytes == dp->i_d.di_size);
- 	ASSERT(dp->i_df.if_u1.if_data != NULL);
- 	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
+ #endif	/* __XFS_MESSAGE_H */
 
