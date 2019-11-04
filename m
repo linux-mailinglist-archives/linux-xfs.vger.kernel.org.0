@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45309EE969
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 Nov 2019 21:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A53EEE974
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 Nov 2019 21:27:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfKDUYR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 Nov 2019 15:24:17 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:34848 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbfKDUYQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Nov 2019 15:24:16 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4KNogI127260;
-        Mon, 4 Nov 2019 20:24:12 GMT
+        id S1728322AbfKDU13 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 Nov 2019 15:27:29 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60194 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728965AbfKDU13 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Nov 2019 15:27:29 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4KO4kO116898;
+        Mon, 4 Nov 2019 20:27:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=i/5KtP+PmvL3nA2yBV8APuwjn5olNZUe2wTWuUYzd2s=;
- b=Z2v7KngIIUsmS3r94Cr4fbXFS4zAUju7p+nDX9Hnkbo7DFUylt2FsarOOG2tlElZWnQ7
- /Lb8Nl8MiTJXpuDThLUYlYFe0sOj6FAOVtJNZ52Ha1kInxpDLgVdSt+H9dVgis1MNWqc
- qQjEWBFHSvoE1leV9qOwb9Dz0BdN9hPS3ewHNAMkdciL+rh1C8woGHrv/4ocTQPNgNmV
- fefybdeONWRj7iniZ9CNfphOTaFWV7W0lXA5XMPdNManinitkJVyCH28ojTR7d5/x+BG
- Uxu9ML+9Z0t0rJ9dIm5JMkIu42hRjIaJwW+m9ihk0I9igzO8IuCs3bO2k/dRca8jNkGy nw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w117tswy0-1
+ bh=EApgceJE9E1EOBJ9zxmrhjrQ+b9fyEyhwAq4rVh0me4=;
+ b=bnM7EADwEuPp+uIbvgFh6R6uTa8wTHOzWWGJegGbAAfxhXS7Kp3puBfyNWzmXS0/tdD5
+ 0dUf+34XrDFyhzucnaG/02OUkrZtPOUVISLL2M7lMDzw+SArmXuYAlXHJBpqugVYXxLG
+ oQyHEwHKYMonOchfviHwaxblhzbxYV0QQVR+n4yyIGtryhphrdT41DaaCnfgZ06fB7od
+ NvSVYt2CBOd/6M9eqahBOL5i79PewiTE7Prlh59daOttolLbmXoMspnggNPSBbKu+TGy
+ 5oSC2fF9zknS3uJJdNIykx6uk6IYftTlWqQsOGJCTeda2J325knbt4uC+qrJ2yhcx/Qn Ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2w11rpsw79-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 20:24:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4KOCW6055722;
-        Mon, 4 Nov 2019 20:24:12 GMT
+        Mon, 04 Nov 2019 20:27:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4KODha129538;
+        Mon, 4 Nov 2019 20:25:25 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w1k8vev9c-1
+        by userp3020.oracle.com with ESMTP id 2w1kxdwpwt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 20:24:11 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4KN8bQ002015;
-        Mon, 4 Nov 2019 20:23:08 GMT
+        Mon, 04 Nov 2019 20:25:24 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4KPOcQ003353;
+        Mon, 4 Nov 2019 20:25:24 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 12:23:08 -0800
-Date:   Mon, 4 Nov 2019 12:23:07 -0800
+        with ESMTP ; Mon, 04 Nov 2019 12:25:23 -0800
+Date:   Mon, 4 Nov 2019 12:25:23 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 17/34] xfs: move the max dir2 free bests count to struct
- xfs_da_geometry
-Message-ID: <20191104202307.GR4153244@magnolia>
+Subject: Re: [PATCH 14/34] xfs: make the xfs_dir3_icfree_hdr available to
+ xfs_dir2_node_addname_int
+Message-ID: <20191104202523.GS4153244@magnolia>
 References: <20191101220719.29100-1-hch@lst.de>
- <20191101220719.29100-18-hch@lst.de>
+ <20191101220719.29100-15-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101220719.29100-18-hch@lst.de>
+In-Reply-To: <20191101220719.29100-15-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
@@ -70,204 +70,164 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:07:02PM -0700, Christoph Hellwig wrote:
-> Move the max free bests count towards our structure for dir/attr
-> geometry parameters.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Fri, Nov 01, 2019 at 03:06:59PM -0700, Christoph Hellwig wrote:
+> Return the xfs_dir3_icfree_hdr used by the helpers called from
+> xfs_dir2_node_addname_int to the main function to prepare for the
+> next round of changes.
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+How does this help?  Is this purely to reduce stack usage?  Or will we
+use this later to skip some xfs_dir2_free_hdr_from_disk calls?
 
 --D
 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/libxfs/xfs_da_btree.h  |  1 +
->  fs/xfs/libxfs/xfs_da_format.c | 29 ++++-------------------------
->  fs/xfs/libxfs/xfs_dir2.c      |  2 ++
->  fs/xfs/libxfs/xfs_dir2.h      |  1 -
->  fs/xfs/libxfs/xfs_dir2_node.c | 12 +++++-------
->  5 files changed, 12 insertions(+), 33 deletions(-)
+>  fs/xfs/libxfs/xfs_dir2_node.c | 42 +++++++++++++++++------------------
+>  1 file changed, 20 insertions(+), 22 deletions(-)
 > 
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-> index 3d0b1e97bf43..e3f4329ab882 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.h
-> +++ b/fs/xfs/libxfs/xfs_da_btree.h
-> @@ -30,6 +30,7 @@ struct xfs_da_geometry {
->  	unsigned int	leaf_max_ents;	/* # of entries in dir2 leaf */
->  	xfs_dablk_t	leafblk;	/* blockno of leaf data v2 */
->  	int		free_hdr_size;	/* dir2 free header size */
-> +	unsigned int	free_max_bests;	/* # of bests entries in dir2 free */
->  	xfs_dablk_t	freeblk;	/* blockno of free data v2 */
->  };
->  
-> diff --git a/fs/xfs/libxfs/xfs_da_format.c b/fs/xfs/libxfs/xfs_da_format.c
-> index 1fc8982c830f..d2d3144c1598 100644
-> --- a/fs/xfs/libxfs/xfs_da_format.c
-> +++ b/fs/xfs/libxfs/xfs_da_format.c
-> @@ -400,17 +400,6 @@ xfs_dir3_data_unused_p(struct xfs_dir2_data_hdr *hdr)
->  		((char *)hdr + sizeof(struct xfs_dir3_data_hdr));
->  }
->  
-> -
-> -/*
-> - * Directory free space block operations
-> - */
-> -static int
-> -xfs_dir2_free_max_bests(struct xfs_da_geometry *geo)
-> -{
-> -	return (geo->blksize - sizeof(struct xfs_dir2_free_hdr)) /
-> -		sizeof(xfs_dir2_data_off_t);
-> -}
-> -
->  /*
->   * Convert data space db to the corresponding free db.
->   */
-> @@ -418,7 +407,7 @@ static xfs_dir2_db_t
->  xfs_dir2_db_to_fdb(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  {
->  	return xfs_dir2_byte_to_db(geo, XFS_DIR2_FREE_OFFSET) +
-> -			(db / xfs_dir2_free_max_bests(geo));
-> +			(db / geo->free_max_bests);
->  }
->  
->  /*
-> @@ -427,14 +416,7 @@ xfs_dir2_db_to_fdb(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  static int
->  xfs_dir2_db_to_fdindex(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  {
-> -	return db % xfs_dir2_free_max_bests(geo);
-> -}
-> -
-> -static int
-> -xfs_dir3_free_max_bests(struct xfs_da_geometry *geo)
-> -{
-> -	return (geo->blksize - sizeof(struct xfs_dir3_free_hdr)) /
-> -		sizeof(xfs_dir2_data_off_t);
-> +	return db % geo->free_max_bests;
->  }
->  
->  /*
-> @@ -444,7 +426,7 @@ static xfs_dir2_db_t
->  xfs_dir3_db_to_fdb(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  {
->  	return xfs_dir2_byte_to_db(geo, XFS_DIR2_FREE_OFFSET) +
-> -			(db / xfs_dir3_free_max_bests(geo));
-> +			(db / geo->free_max_bests);
->  }
->  
->  /*
-> @@ -453,7 +435,7 @@ xfs_dir3_db_to_fdb(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  static int
->  xfs_dir3_db_to_fdindex(struct xfs_da_geometry *geo, xfs_dir2_db_t db)
->  {
-> -	return db % xfs_dir3_free_max_bests(geo);
-> +	return db % geo->free_max_bests;
->  }
->  
->  static const struct xfs_dir_ops xfs_dir2_ops = {
-> @@ -486,7 +468,6 @@ static const struct xfs_dir_ops xfs_dir2_ops = {
->  	.data_entry_p = xfs_dir2_data_entry_p,
->  	.data_unused_p = xfs_dir2_data_unused_p,
->  
-> -	.free_max_bests = xfs_dir2_free_max_bests,
->  	.db_to_fdb = xfs_dir2_db_to_fdb,
->  	.db_to_fdindex = xfs_dir2_db_to_fdindex,
->  };
-> @@ -521,7 +502,6 @@ static const struct xfs_dir_ops xfs_dir2_ftype_ops = {
->  	.data_entry_p = xfs_dir2_data_entry_p,
->  	.data_unused_p = xfs_dir2_data_unused_p,
->  
-> -	.free_max_bests = xfs_dir2_free_max_bests,
->  	.db_to_fdb = xfs_dir2_db_to_fdb,
->  	.db_to_fdindex = xfs_dir2_db_to_fdindex,
->  };
-> @@ -556,7 +536,6 @@ static const struct xfs_dir_ops xfs_dir3_ops = {
->  	.data_entry_p = xfs_dir3_data_entry_p,
->  	.data_unused_p = xfs_dir3_data_unused_p,
->  
-> -	.free_max_bests = xfs_dir3_free_max_bests,
->  	.db_to_fdb = xfs_dir3_db_to_fdb,
->  	.db_to_fdindex = xfs_dir3_db_to_fdindex,
->  };
-> diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
-> index 13ac228bfc86..6c46893af17e 100644
-> --- a/fs/xfs/libxfs/xfs_dir2.c
-> +++ b/fs/xfs/libxfs/xfs_dir2.c
-> @@ -133,6 +133,8 @@ xfs_da_mount(
->  	}
->  	dageo->leaf_max_ents = (dageo->blksize - dageo->leaf_hdr_size) /
->  			sizeof(struct xfs_dir2_leaf_entry);
-> +	dageo->free_max_bests = (dageo->blksize - dageo->free_hdr_size) /
-> +			sizeof(xfs_dir2_data_off_t);
->  
->  	/*
->  	 * Now we've set up the block conversion variables, we can calculate the
-> diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
-> index d87cd71e3cf1..e3c1385d1522 100644
-> --- a/fs/xfs/libxfs/xfs_dir2.h
-> +++ b/fs/xfs/libxfs/xfs_dir2.h
-> @@ -72,7 +72,6 @@ struct xfs_dir_ops {
->  	struct xfs_dir2_data_unused *
->  		(*data_unused_p)(struct xfs_dir2_data_hdr *hdr);
->  
-> -	int	(*free_max_bests)(struct xfs_da_geometry *geo);
->  	xfs_dir2_db_t (*db_to_fdb)(struct xfs_da_geometry *geo,
->  				   xfs_dir2_db_t db);
->  	int	(*db_to_fdindex)(struct xfs_da_geometry *geo,
 > diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-> index 7047d1e066f9..0fcd7351038e 100644
+> index 26032eba1e32..d400243c9556 100644
 > --- a/fs/xfs/libxfs/xfs_dir2_node.c
 > +++ b/fs/xfs/libxfs/xfs_dir2_node.c
-> @@ -160,10 +160,9 @@ xfs_dir3_free_header_check(
->  	struct xfs_buf		*bp)
+> @@ -1660,14 +1660,13 @@ xfs_dir2_node_add_datablk(
+>  	xfs_dir2_db_t		*dbno,
+>  	struct xfs_buf		**dbpp,
+>  	struct xfs_buf		**fbpp,
+> +	struct xfs_dir3_icfree_hdr *hdr,
+>  	int			*findex)
 >  {
+>  	struct xfs_inode	*dp = args->dp;
+>  	struct xfs_trans	*tp = args->trans;
 >  	struct xfs_mount	*mp = dp->i_mount;
-> +	int			maxbests = mp->m_dir_geo->free_max_bests;
->  	unsigned int		firstdb;
-> -	int			maxbests;
+> -	struct xfs_dir3_icfree_hdr freehdr;
+>  	struct xfs_dir2_data_free *bf;
+> -	struct xfs_dir2_data_hdr *hdr;
+>  	struct xfs_dir2_free	*free = NULL;
+>  	xfs_dir2_db_t		fbno;
+>  	struct xfs_buf		*fbp;
+> @@ -1730,25 +1729,25 @@ xfs_dir2_node_add_datablk(
+>  			return error;
+>  		free = fbp->b_addr;
+>  		bests = dp->d_ops->free_bests_p(free);
+> -		xfs_dir2_free_hdr_from_disk(mp, &freehdr, free);
+> +		xfs_dir2_free_hdr_from_disk(mp, hdr, free);
 >  
-> -	maxbests = dp->d_ops->free_max_bests(mp->m_dir_geo);
->  	firstdb = (xfs_dir2_da_to_db(mp->m_dir_geo, fbno) -
->  		   xfs_dir2_byte_to_db(mp->m_dir_geo, XFS_DIR2_FREE_OFFSET)) *
->  			maxbests;
-> @@ -558,8 +557,7 @@ xfs_dir2_free_hdr_check(
->  
->  	xfs_dir2_free_hdr_from_disk(dp->i_mount, &hdr, bp->b_addr);
->  
-> -	ASSERT((hdr.firstdb %
-> -		dp->d_ops->free_max_bests(dp->i_mount->m_dir_geo)) == 0);
-> +	ASSERT((hdr.firstdb % dp->i_mount->m_dir_geo->free_max_bests) == 0);
->  	ASSERT(hdr.firstdb <= db);
->  	ASSERT(db < hdr.firstdb + hdr.nvalid);
->  }
-> @@ -1334,7 +1332,7 @@ xfs_dir2_leafn_remove(
->  		struct xfs_dir3_icfree_hdr freehdr;
->  
->  		xfs_dir2_free_hdr_from_disk(dp->i_mount, &freehdr, free);
-> -		ASSERT(freehdr.firstdb == dp->d_ops->free_max_bests(args->geo) *
-> +		ASSERT(freehdr.firstdb == args->geo->free_max_bests *
->  			(fdb - xfs_dir2_byte_to_db(args->geo,
->  						   XFS_DIR2_FREE_OFFSET)));
->  	}
-> @@ -1727,7 +1725,7 @@ xfs_dir2_node_add_datablk(
 >  		/* Remember the first slot as our empty slot. */
->  		hdr->firstdb = (fbno - xfs_dir2_byte_to_db(args->geo,
+> -		freehdr.firstdb = (fbno - xfs_dir2_byte_to_db(args->geo,
+> +		hdr->firstdb = (fbno - xfs_dir2_byte_to_db(args->geo,
 >  							XFS_DIR2_FREE_OFFSET)) *
-> -				dp->d_ops->free_max_bests(args->geo);
-> +				args->geo->free_max_bests;
+>  				dp->d_ops->free_max_bests(args->geo);
 >  	} else {
->  		xfs_dir2_free_hdr_from_disk(mp, hdr, fbp->b_addr);
+>  		free = fbp->b_addr;
+>  		bests = dp->d_ops->free_bests_p(free);
+> -		xfs_dir2_free_hdr_from_disk(mp, &freehdr, free);
+> +		xfs_dir2_free_hdr_from_disk(mp, hdr, free);
 >  	}
-> @@ -1737,7 +1735,7 @@ xfs_dir2_node_add_datablk(
+>  
+>  	/* Set the freespace block index from the data block number. */
+>  	*findex = dp->d_ops->db_to_fdindex(args->geo, *dbno);
 >  
 >  	/* Extend the freespace table if the new data block is off the end. */
->  	if (*findex >= hdr->nvalid) {
-> -		ASSERT(*findex < dp->d_ops->free_max_bests(args->geo));
-> +		ASSERT(*findex < args->geo->free_max_bests);
->  		hdr->nvalid = *findex + 1;
->  		hdr->bests[*findex] = cpu_to_be16(NULLDATAOFF);
+> -	if (*findex >= freehdr.nvalid) {
+> +	if (*findex >= hdr->nvalid) {
+>  		ASSERT(*findex < dp->d_ops->free_max_bests(args->geo));
+> -		freehdr.nvalid = *findex + 1;
+> +		hdr->nvalid = *findex + 1;
+>  		bests[*findex] = cpu_to_be16(NULLDATAOFF);
 >  	}
+>  
+> @@ -1757,14 +1756,13 @@ xfs_dir2_node_add_datablk(
+>  	 * true) then update the header.
+>  	 */
+>  	if (bests[*findex] == cpu_to_be16(NULLDATAOFF)) {
+> -		freehdr.nused++;
+> -		xfs_dir2_free_hdr_to_disk(mp, fbp->b_addr, &freehdr);
+> +		hdr->nused++;
+> +		xfs_dir2_free_hdr_to_disk(mp, fbp->b_addr, hdr);
+>  		xfs_dir2_free_log_header(args, fbp);
+>  	}
+>  
+>  	/* Update the freespace value for the new block in the table. */
+> -	hdr = dbp->b_addr;
+> -	bf = dp->d_ops->data_bestfree_p(hdr);
+> +	bf = dp->d_ops->data_bestfree_p(dbp->b_addr);
+>  	bests[*findex] = bf[0].length;
+>  
+>  	*dbpp = dbp;
+> @@ -1778,10 +1776,10 @@ xfs_dir2_node_find_freeblk(
+>  	struct xfs_da_state_blk	*fblk,
+>  	xfs_dir2_db_t		*dbnop,
+>  	struct xfs_buf		**fbpp,
+> +	struct xfs_dir3_icfree_hdr *hdr,
+>  	int			*findexp,
+>  	int			length)
+>  {
+> -	struct xfs_dir3_icfree_hdr freehdr;
+>  	struct xfs_dir2_free	*free = NULL;
+>  	struct xfs_inode	*dp = args->dp;
+>  	struct xfs_trans	*tp = args->trans;
+> @@ -1808,13 +1806,12 @@ xfs_dir2_node_find_freeblk(
+>  		if (findex >= 0) {
+>  			/* caller already found the freespace for us. */
+>  			bests = dp->d_ops->free_bests_p(free);
+> -			xfs_dir2_free_hdr_from_disk(dp->i_mount, &freehdr,
+> -						    free);
+> +			xfs_dir2_free_hdr_from_disk(dp->i_mount, hdr, free);
+>  
+> -			ASSERT(findex < freehdr.nvalid);
+> +			ASSERT(findex < hdr->nvalid);
+>  			ASSERT(be16_to_cpu(bests[findex]) != NULLDATAOFF);
+>  			ASSERT(be16_to_cpu(bests[findex]) >= length);
+> -			dbno = freehdr.firstdb + findex;
+> +			dbno = hdr->firstdb + findex;
+>  			goto found_block;
+>  		}
+>  
+> @@ -1858,13 +1855,13 @@ xfs_dir2_node_find_freeblk(
+>  
+>  		free = fbp->b_addr;
+>  		bests = dp->d_ops->free_bests_p(free);
+> -		xfs_dir2_free_hdr_from_disk(dp->i_mount, &freehdr, free);
+> +		xfs_dir2_free_hdr_from_disk(dp->i_mount, hdr, free);
+>  
+>  		/* Scan the free entry array for a large enough free space. */
+> -		for (findex = freehdr.nvalid - 1; findex >= 0; findex--) {
+> +		for (findex = hdr->nvalid - 1; findex >= 0; findex--) {
+>  			if (be16_to_cpu(bests[findex]) != NULLDATAOFF &&
+>  			    be16_to_cpu(bests[findex]) >= length) {
+> -				dbno = freehdr.firstdb + findex;
+> +				dbno = hdr->firstdb + findex;
+>  				goto found_block;
+>  			}
+>  		}
+> @@ -1898,6 +1895,7 @@ xfs_dir2_node_addname_int(
+>  	struct xfs_dir2_free	*free = NULL;	/* freespace block structure */
+>  	struct xfs_trans	*tp = args->trans;
+>  	struct xfs_inode	*dp = args->dp;
+> +	struct xfs_dir3_icfree_hdr freehdr;
+>  	struct xfs_buf		*dbp;		/* data block buffer */
+>  	struct xfs_buf		*fbp;		/* freespace buffer */
+>  	xfs_dir2_data_aoff_t	aoff;
+> @@ -1912,8 +1910,8 @@ xfs_dir2_node_addname_int(
+>  	__be16			*bests;
+>  
+>  	length = dp->d_ops->data_entsize(args->namelen);
+> -	error = xfs_dir2_node_find_freeblk(args, fblk, &dbno, &fbp, &findex,
+> -					   length);
+> +	error = xfs_dir2_node_find_freeblk(args, fblk, &dbno, &fbp, &freehdr,
+> +					   &findex, length);
+>  	if (error)
+>  		return error;
+>  
+> @@ -1935,7 +1933,7 @@ xfs_dir2_node_addname_int(
+>  		/* we're going to have to log the free block index later */
+>  		logfree = 1;
+>  		error = xfs_dir2_node_add_datablk(args, fblk, &dbno, &dbp, &fbp,
+> -						  &findex);
+> +						  &freehdr, &findex);
+>  	} else {
+>  		/* Read the data block in. */
+>  		error = xfs_dir3_data_read(tp, dp,
 > -- 
 > 2.20.1
 > 
