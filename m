@@ -2,106 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF45EFCCA
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Nov 2019 12:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31DEAEFEC6
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Nov 2019 14:38:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfKEL7F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 5 Nov 2019 06:59:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22507 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730886AbfKEL7E (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Nov 2019 06:59:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572955144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sL0EEP6zndFleaAgcDlToetdj74SGlXaGytgC7nFRE8=;
-        b=dIy0hwtMIF/ddEzz6zbYdz83uaWcq8eGgxy9GOpfpNe2A+WNUfz127dEUjYCB5pHHdUh8N
-        CsLECPrLN9rrAruQYstDUmJIeMPdMmapfsY2fvQi9TegKYnncsOZH+te8ZxMqyTOGfaye6
-        dbeZBQXnW430D0iPbSEq6LcpgM16mQM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-Eiop_Ah4NAuA17QCkyB9Xg-1; Tue, 05 Nov 2019 06:59:02 -0500
-Received: by mail-wr1-f69.google.com with SMTP id e3so9747158wrs.17
-        for <linux-xfs@vger.kernel.org>; Tue, 05 Nov 2019 03:59:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=1oQURsesYZMemoPz9mlqvqCXYV+AtXZZDuw375Hicjo=;
-        b=CrQAOmUT/Q9dCb0YCmPvNOvOihXTGP6dn/4EbOeqyLpLFvMnRMX8mpIVRPXeBtdPp8
-         zpgeoNATV15f8sa1xug7dr4kTaGL18vupb5jvUfK+WHXhlXxomDluAB+MkGiEV48WB1T
-         D2YV6U7GWnZvF/VvpygsgZZHMsLU2WbdkAuCQNvYRVTeRVVDafAM+P42NwmW9nJGS7X/
-         Nk0ApoeXeHmgnSbXBD/4HR7MZjAMZ159fH3zjd0m9jQWboQ6/bT+G/e1ieQW5ICdmZwI
-         Y1k3Ucwf2G2T1jb1bHjBM0y8F+Mhv/GLIg8PiPcON/KLXKiB0eG6JmG0dc176wVNUOvu
-         ocqw==
-X-Gm-Message-State: APjAAAX63Xk/lP4XHjWZDDsjr7/s6U/1ve3L+FfS0YFXCrdNP7aKM6Mz
-        ndHNIwfxjGE1IKIc5SDZ8gJqFiiavb6vNRzdMFfSnXTJP6/2ff25qDt5KZOmeHZ0zouEE2cMGvZ
-        pkwEoaIa4bECg4OU1Pi+u
-X-Received: by 2002:adf:fc86:: with SMTP id g6mr24359319wrr.74.1572955140914;
-        Tue, 05 Nov 2019 03:59:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwbsXWLypx+PGp4M3Mg/h9whTxcnfvYIA7FL5DfWE0LMpRVF98otKObN/PsigMWmaMIDnEKHg==
-X-Received: by 2002:adf:fc86:: with SMTP id g6mr24359309wrr.74.1572955140764;
-        Tue, 05 Nov 2019 03:59:00 -0800 (PST)
-Received: from orion (ip-89-103-126-188.net.upcbroadband.cz. [89.103.126.188])
-        by smtp.gmail.com with ESMTPSA id s13sm19193840wmc.28.2019.11.05.03.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 03:58:59 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:58:57 +0100
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     Sitsofe Wheeler <sitsofe@gmail.com>, linux-xfs@vger.kernel.org
-Subject: Re: Tasks blocking forever with XFS stack traces
-Message-ID: <20191105115857.5acumcghqzanwh2i@orion>
-Mail-Followup-To: Sitsofe Wheeler <sitsofe@gmail.com>,
-        linux-xfs@vger.kernel.org
-References: <CALjAwxiuTYAVvGGUXLx6Bo-zNuW5+WXL=A8DqR5oD6D5tsKwng@mail.gmail.com>
- <20191105085446.abx27ahchg2k7d2w@orion>
- <CALjAwxiNExFd_eeMAFNLrMU8EKn0FNWrRrgeMWj-CCT4s7DRjA@mail.gmail.com>
- <20191105103652.n5zwf6ty3wvhti5f@orion>
+        id S2389059AbfKENiR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 5 Nov 2019 08:38:17 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46074 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387880AbfKENiQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Nov 2019 08:38:16 -0500
+Received: from callcc.thunk.org (ip-12-2-52-196.nyc.us.northamericancoax.com [196.52.2.12])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xA5DbnOx019876
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 5 Nov 2019 08:37:50 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EF97E420311; Tue,  5 Nov 2019 08:37:46 -0500 (EST)
+Date:   Tue, 5 Nov 2019 08:37:46 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/1] errno.h: Provide EFSBADCRC for everybody
+Message-ID: <20191105133746.GJ28764@mit.edu>
+References: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
-In-Reply-To: <20191105103652.n5zwf6ty3wvhti5f@orion>
-X-MC-Unique: Eiop_Ah4NAuA17QCkyB9Xg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Just to make clear my previous point:
+On Mon, Nov 04, 2019 at 09:46:14PM -0500, Valdis Kletnieks wrote:
+> Four filesystems have their own defines for this. Move it
+> into errno.h so it's defined in just one place.
+> 
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 
+Acked-by: Theodore Ts'o <tytso@mit.edu>
 
-> > > What's your filesystem configuration? (xfs_info <mount point>)
-> >=20
-> > meta-data=3D/dev/md126             isize=3D512    agcount=3D32, agsize=
-=3D43954432 blks
-> >          =3D                       sectsz=3D4096  attr=3D2, projid32bit=
-=3D1
-> >          =3D                       crc=3D1        finobt=3D1 spinodes=
-=3D0 rmapbt=3D0
-> >          =3D                       reflink=3D0
-> > data     =3D                       bsize=3D4096   blocks=3D1406538240, =
-imaxpct=3D5
-> >          =3D                       sunit=3D128    swidth=3D768 blks
->=20
-> > naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0 ftype=3D=
-1
-> > log      =3Dinternal               bsize=3D4096   blocks=3D521728, vers=
-ion=3D2
-> >          =3D                       sectsz=3D4096  sunit=3D1 blks, lazy-=
-count=3D1
-> =09=09=09=09=09=09^^^^^^  This should have been
-> =09=09=09=09=09=09=09configured to 8 blocks, not 1
->=20
-
-8 blocks here considering you've used default configuration, i.e. XFS defau=
-lts
-log stripe unit to 32KiB when the device strip is larger than 256KiB.
-
---=20
-Carlos
-
+					- Ted
