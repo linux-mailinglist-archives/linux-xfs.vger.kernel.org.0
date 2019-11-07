@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A09F25C3
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 04:03:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 096A5F25C9
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 04:04:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfKGDDv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Nov 2019 22:03:51 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:45852 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732304AbfKGDDv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 22:03:51 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA72x43S049374
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:03:49 GMT
+        id S1733064AbfKGDEZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Nov 2019 22:04:25 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57242 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733062AbfKGDEZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 22:04:25 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA734I8n027730
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:04:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=SK/5Wwdir6K7kPAxJyjbOfh3g5ki/5gPiJiLZKo4kPU=;
- b=dgi7XH0yg/Q2tXafToTubu5PeKA7gcJMlFstf7EMGI3cMM9ROJ6HyiV8VbHYBg7t/HBH
- pwR1CLUen/JAMVVZgzW3MPfklTCzKL3BTuzGfD3d2JXtemJHGfvfy9pROoWdUlB/8Pys
- fEN73iJlVdjaLhdwBfsTK5kEufRiuzQaEOBwxve9gJLrGtO5cPFkf9VI+XMYdrAUNjhx
- 9giQS3UnTU++W5toYBoWKznGcDXy5C+9tL0q/Bvu/s4fPqs4wQupsBFquGY+ucgfv+GP
- tKuGNvfjIx6JTFcYtPVzdZ+zL+Qx8TV+9yDd3QR/jlzov7t6/6HW5lWQU/9mAO4r5QHs tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w41w130h6-1
+ bh=dq8J/y4pi5aeN1OlyvkHcf6JymFWnvul5NhV9tMNvbE=;
+ b=LmBixDKCzbSCZBT7xeLPgJYR+aKmSbIzHro5jyd8wPgqBMwDl2aNMHRrjrmGQJqz3j+m
+ p74dgqFnLf+TEy1rkS3uhOc7dz5MyBCUAX/HiLiowKP7NmYGC3/ZNqXYGHO+lMM1VPMT
+ EbIrKrrzsJzKW04n2duXQ0k3xbbx46ZvFeou9IC2ONA48aVI6bVlh3P17JeVyrxVSbf/
+ b2yeS8a87SEA9C0MeIpLNMbau7Me1iq5kaUNdX1Z0F4VVzQ+roicmbF3ej1aPldSijdT
+ +W3zHstXtaUo7XhgncA/N6awjDtyjUfxVk/S9H/zQCWYdwu/6p27ts3eBO8P+eGdYFqC 6g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w41w0u0t4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:03:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA733jat180799
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:03:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2w41wds6jh-1
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:04:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA734Hvh118823
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:04:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2w41wg14cf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:03:47 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA733Hi7029147
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:03:17 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:04:22 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA733N2G018076
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:03:23 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 19:03:17 -0800
-Subject: [PATCH 02/10] xfs: report ag header corruption errors to the health
+        with ESMTP ; Wed, 06 Nov 2019 19:03:23 -0800
+Subject: [PATCH 03/10] xfs: report block map corruption errors to the health
  tracking system
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 06 Nov 2019 19:03:16 -0800
-Message-ID: <157309579646.46704.15079864547473525944.stgit@magnolia>
+Date:   Wed, 06 Nov 2019 19:03:22 -0800
+Message-ID: <157309580260.46704.9182824465849098495.stgit@magnolia>
 In-Reply-To: <157309578380.46704.8292405543138526332.stgit@magnolia>
 References: <157309578380.46704.8292405543138526332.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -63,7 +63,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070031
+ definitions=main-1911070032
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,250 +71,311 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Whenever we encounter a corrupt AG header, we should report that to the
-health monitoring system for later reporting.
+Whenever we encounter a corrupt block mapping, we should report that to
+the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c    |    6 ++++++
- fs/xfs/libxfs/xfs_health.h   |   14 +++++++++++---
- fs/xfs/libxfs/xfs_ialloc.c   |    3 +++
- fs/xfs/libxfs/xfs_refcount.c |    1 +
- fs/xfs/libxfs/xfs_rmap.c     |    1 +
- fs/xfs/libxfs/xfs_sb.c       |    2 ++
- fs/xfs/xfs_health.c          |   17 +++++++++++++++++
- fs/xfs/xfs_inode.c           |    9 +++++++++
- 8 files changed, 50 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c   |   32 ++++++++++++++++++++++++++++----
+ fs/xfs/libxfs/xfs_health.h |    1 +
+ fs/xfs/xfs_health.c        |   26 ++++++++++++++++++++++++++
+ fs/xfs/xfs_iomap.c         |   15 +++++++++++----
+ 4 files changed, 66 insertions(+), 8 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 4ba5557f4ae0..fda1185aa63c 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -26,6 +26,7 @@
- #include "xfs_log.h"
- #include "xfs_ag_resv.h"
- #include "xfs_bmap.h"
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index e5b82429691c..8e19d17f72a5 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -35,7 +35,7 @@
+ #include "xfs_refcount.h"
+ #include "xfs_icache.h"
+ #include "xfs_iomap.h"
+-
 +#include "xfs_health.h"
  
- extern kmem_zone_t	*xfs_bmap_free_item_zone;
+ kmem_zone_t		*xfs_bmap_free_item_zone;
  
-@@ -694,6 +695,8 @@ xfs_alloc_read_agfl(
- 			mp, tp, mp->m_ddev_targp,
- 			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
- 			XFS_FSS_TO_BB(mp, 1), 0, &bp, &xfs_agfl_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGFL);
- 	if (error)
- 		return error;
- 	xfs_buf_set_ref(bp, XFS_AGFL_REF);
-@@ -717,6 +720,7 @@ xfs_alloc_update_counters(
- 	if (unlikely(be32_to_cpu(agf->agf_freeblks) >
- 		     be32_to_cpu(agf->agf_length))) {
- 		xfs_buf_corruption_error(agbp);
-+		xfs_ag_mark_sick(pag, XFS_SICK_AG_AGF);
- 		return -EFSCORRUPTED;
+@@ -732,6 +732,7 @@ xfs_bmap_extents_to_btree(
+ 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, 1L);
+ 	abp = xfs_btree_get_bufl(mp, tp, args.fsbno);
+ 	if (XFS_IS_CORRUPT(mp, !abp)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		error = -EFSCORRUPTED;
+ 		goto out_unreserve_dquot;
  	}
+@@ -1021,6 +1022,7 @@ xfs_bmap_add_attrfork_local(
  
-@@ -2934,6 +2938,8 @@ xfs_read_agf(
- 			mp, tp, mp->m_ddev_targp,
- 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
- 			XFS_FSS_TO_BB(mp, 1), flags, bpp, &xfs_agf_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGF);
- 	if (error)
- 		return error;
- 	if (!*bpp)
-diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index 96919a257870..ce8954a10c66 100644
---- a/fs/xfs/libxfs/xfs_health.h
-+++ b/fs/xfs/libxfs/xfs_health.h
-@@ -26,9 +26,11 @@
-  * and the "sick" field tells us if that piece was found to need repairs.
-  * Therefore we can conclude that for a given sick flag value:
-  *
-- *  - checked && sick  => metadata needs repair
-- *  - checked && !sick => metadata is ok
-- *  - !checked         => has not been examined since mount
-+ *  - checked && sick   => metadata needs repair
-+ *  - checked && !sick  => metadata is ok
-+ *  - !checked && sick  => errors have been observed during normal operation,
-+ *                         but the metadata has not been checked thoroughly
-+ *  - !checked && !sick => has not been examined since mount
-  */
- 
- struct xfs_mount;
-@@ -121,6 +123,8 @@ void xfs_rt_mark_healthy(struct xfs_mount *mp, unsigned int mask);
- void xfs_rt_measure_sickness(struct xfs_mount *mp, unsigned int *sick,
- 		unsigned int *checked);
- 
-+void xfs_agno_mark_sick(struct xfs_mount *mp, xfs_agnumber_t agno,
-+		unsigned int mask);
- void xfs_ag_mark_sick(struct xfs_perag *pag, unsigned int mask);
- void xfs_ag_mark_checked(struct xfs_perag *pag, unsigned int mask);
- void xfs_ag_mark_healthy(struct xfs_perag *pag, unsigned int mask);
-@@ -201,4 +205,8 @@ void xfs_fsop_geom_health(struct xfs_mount *mp, struct xfs_fsop_geom *geo);
- void xfs_ag_geom_health(struct xfs_perag *pag, struct xfs_ag_geometry *ageo);
- void xfs_bulkstat_health(struct xfs_inode *ip, struct xfs_bulkstat *bs);
- 
-+#define xfs_metadata_is_sick(error) \
-+	(unlikely((error) == -EFSCORRUPTED || (error) == -EIO || \
-+		  (error) == -EFSBADCRC))
-+
- #endif	/* __XFS_HEALTH_H__ */
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index cc29b61b35d7..cc552ac6721e 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -27,6 +27,7 @@
- #include "xfs_trace.h"
- #include "xfs_log.h"
- #include "xfs_rmap.h"
-+#include "xfs_health.h"
- 
- /*
-  * Lookup a record by ino in the btree given by cur.
-@@ -2635,6 +2636,8 @@ xfs_read_agi(
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
- 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
- 			XFS_FSS_TO_BB(mp, 1), 0, bpp, &xfs_agi_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
- 	if (error)
- 		return error;
- 	if (tp)
-diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
-index 2bcebd482488..a0068bc2738e 100644
---- a/fs/xfs/libxfs/xfs_refcount.c
-+++ b/fs/xfs/libxfs/xfs_refcount.c
-@@ -1178,6 +1178,7 @@ xfs_refcount_finish_one(
- 		if (error)
- 			return error;
- 		if (XFS_IS_CORRUPT(tp->t_mountp, !agbp)) {
-+			xfs_agno_mark_sick(tp->t_mountp, agno, XFS_SICK_AG_AGF);
- 			return -EFSCORRUPTED;
- 		}
- 
-diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
-index 869ac664f8fb..c12ec321040d 100644
---- a/fs/xfs/libxfs/xfs_rmap.c
-+++ b/fs/xfs/libxfs/xfs_rmap.c
-@@ -2395,6 +2395,7 @@ xfs_rmap_finish_one(
- 		if (error)
- 			return error;
- 		if (XFS_IS_CORRUPT(tp->t_mountp, !agbp)) {
-+			xfs_agno_mark_sick(tp->t_mountp, agno, XFS_SICK_AG_AGF);
- 			return -EFSCORRUPTED;
- 		}
- 
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index 0ac69751fe85..4a923545465d 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1169,6 +1169,8 @@ xfs_sb_read_secondary(
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
- 			XFS_AG_DADDR(mp, agno, XFS_SB_BLOCK(mp)),
- 			XFS_FSS_TO_BB(mp, 1), 0, &bp, &xfs_sb_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_SB);
- 	if (error)
- 		return error;
- 	xfs_buf_set_ref(bp, XFS_SSB_REF);
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 860dc70c99e7..36c32b108b39 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -200,6 +200,23 @@ xfs_rt_measure_sickness(
- 	spin_unlock(&mp->m_sb_lock);
+ 	/* should only be called for types that support local format data */
+ 	ASSERT(0);
++	xfs_bmap_mark_sick(ip, XFS_ATTR_FORK);
+ 	return -EFSCORRUPTED;
  }
  
-+/* Mark unhealthy per-ag metadata given a raw AG number. */
-+void
-+xfs_agno_mark_sick(
-+	struct xfs_mount	*mp,
-+	xfs_agnumber_t		agno,
-+	unsigned int		mask)
-+{
-+	struct xfs_perag	*pag = xfs_perag_get(mp, agno);
-+
-+	/* per-ag structure not set up yet? */
-+	if (!pag)
-+		return;
-+
-+	xfs_ag_mark_sick(pag, mask);
-+	xfs_perag_put(pag);
-+}
-+
- /* Mark unhealthy per-ag metadata. */
- void
- xfs_ag_mark_sick(
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index a92d4521748d..d02246e2fb21 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -35,6 +35,7 @@
- #include "xfs_log.h"
- #include "xfs_bmap_btree.h"
- #include "xfs_reflink.h"
-+#include "xfs_health.h"
- 
- kmem_zone_t *xfs_inode_zone;
- 
-@@ -787,6 +788,8 @@ xfs_ialloc(
- 	 */
- 	if ((pip && ino == pip->i_ino) || !xfs_verify_dir_ino(mp, ino)) {
- 		xfs_alert(mp, "Allocated a known in-use inode 0x%llx!", ino);
-+		xfs_agno_mark_sick(mp, XFS_INO_TO_AGNO(mp, ino),
-+				XFS_SICK_AG_INOBT);
+@@ -1090,6 +1092,7 @@ xfs_bmap_add_attrfork(
+ 	if (XFS_IFORK_Q(ip))
+ 		goto trans_cancel;
+ 	if (XFS_IS_CORRUPT(mp, ip->i_d.di_anextents != 0)) {
++		xfs_bmap_mark_sick(ip, XFS_ATTR_FORK);
+ 		error = -EFSCORRUPTED;
+ 		goto trans_cancel;
+ 	}
+@@ -1192,6 +1195,7 @@ xfs_iread_bmbt_block(
+ 				(unsigned long long)ip->i_ino);
+ 		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, block,
+ 				sizeof(*block), __this_address);
++		xfs_bmap_mark_sick(ip, whichfork);
  		return -EFSCORRUPTED;
  	}
  
-@@ -2138,6 +2141,7 @@ xfs_iunlink_update_bucket(
- 	 */
- 	if (old_value == new_agino) {
- 		xfs_buf_corruption_error(agibp);
-+		xfs_agno_mark_sick(tp->t_mountp, agno, XFS_SICK_AG_AGI);
- 		return -EFSCORRUPTED;
- 	}
+@@ -1207,6 +1211,7 @@ xfs_iread_bmbt_block(
+ 			xfs_inode_verifier_error(ip, -EFSCORRUPTED,
+ 					"xfs_iread_extents(2)", frp,
+ 					sizeof(*frp), fa);
++			xfs_bmap_mark_sick(ip, whichfork);
+ 			return -EFSCORRUPTED;
+ 		}
+ 		xfs_iext_insert(ip, &ir->icur, &new,
+@@ -1238,6 +1243,7 @@ xfs_iread_extents(
  
-@@ -2204,6 +2208,7 @@ xfs_iunlink_update_inode(
- 	if (!xfs_verify_agino_or_null(mp, agno, old_value)) {
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
- 				sizeof(*dip), __this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 	if (XFS_IS_CORRUPT(mp, XFS_IFORK_FORMAT(ip, whichfork) !=
+ 			       XFS_DINODE_FMT_BTREE)) {
++		xfs_bmap_mark_sick(ip, whichfork);
  		error = -EFSCORRUPTED;
  		goto out;
  	}
-@@ -2218,6 +2223,7 @@ xfs_iunlink_update_inode(
- 		if (next_agino != NULLAGINO) {
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-+			xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 			error = -EFSCORRUPTED;
- 		}
+@@ -1253,6 +1259,7 @@ xfs_iread_extents(
+ 
+ 	if (XFS_IS_CORRUPT(mp,
+ 			   ir.loaded != XFS_IFORK_NEXTENTS(ip, whichfork))) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		error = -EFSCORRUPTED;
  		goto out;
-@@ -2272,6 +2278,7 @@ xfs_iunlink(
- 	if (next_agino == agino ||
- 	    !xfs_verify_agino_or_null(mp, agno, next_agino)) {
- 		xfs_buf_corruption_error(agibp);
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
+ 	}
+@@ -1261,6 +1268,8 @@ xfs_iread_extents(
+ 	ifp->if_flags |= XFS_IFEXTENTS;
+ 	return 0;
+ out:
++	if (xfs_metadata_is_sick(error))
++		xfs_bmap_mark_sick(ip, whichfork);
+ 	xfs_iext_destroy(ifp);
+ 	return error;
+ }
+@@ -1344,6 +1353,7 @@ xfs_bmap_last_before(
+ 		break;
+ 	default:
+ 		ASSERT(0);
++		xfs_bmap_mark_sick(ip, whichfork);
  		return -EFSCORRUPTED;
  	}
  
-@@ -2409,6 +2416,7 @@ xfs_iunlink_map_prev(
- 			XFS_CORRUPTION_ERROR(__func__,
- 					XFS_ERRLEVEL_LOW, mp,
- 					*dipp, sizeof(**dipp));
-+			xfs_ag_mark_sick(pag, XFS_SICK_AG_AGI);
- 			error = -EFSCORRUPTED;
+@@ -1445,6 +1455,7 @@ xfs_bmap_last_offset(
+ 
+ 	if (XFS_IS_CORRUPT(ip->i_mount,
+ 	    !XFS_IFORK_MAPS_BLOCKS(ip, whichfork))) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -3907,6 +3918,7 @@ xfs_bmapi_read(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -3937,6 +3949,7 @@ xfs_bmapi_read(
+ 		xfs_alert(mp, "%s: inode %llu missing fork %d",
+ 				__func__, ip->i_ino, whichfork);
+ #endif /* DEBUG */
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -4416,6 +4429,7 @@ xfs_bmapi_write(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -4623,9 +4637,11 @@ xfs_bmapi_convert_delalloc(
+ 	error = -ENOSPC;
+ 	if (WARN_ON_ONCE(bma.blkno == NULLFSBLOCK))
+ 		goto out_finish;
+-	error = -EFSCORRUPTED;
+-	if (WARN_ON_ONCE(!xfs_valid_startblock(ip, bma.got.br_startblock)))
++	if (WARN_ON_ONCE(!xfs_valid_startblock(ip, bma.got.br_startblock))) {
++		xfs_bmap_mark_sick(ip, whichfork);
++		error = -EFSCORRUPTED;
+ 		goto out_finish;
++	}
+ 
+ 	XFS_STATS_ADD(mp, xs_xstrat_bytes, XFS_FSB_TO_B(mp, bma.length));
+ 	XFS_STATS_INC(mp, xs_xstrat_quick);
+@@ -4683,6 +4699,7 @@ xfs_bmapi_remap(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -5322,6 +5339,7 @@ __xfs_bunmapi(
+ 	ASSERT(whichfork != XFS_COW_FORK);
+ 	ifp = XFS_IFORK_PTR(ip, whichfork);
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork))) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 	if (XFS_FORCED_SHUTDOWN(mp))
+@@ -5818,6 +5836,7 @@ xfs_bmap_collapse_extents(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -5935,6 +5954,7 @@ xfs_bmap_insert_extents(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -6041,6 +6061,7 @@ xfs_bmap_split_extent_at(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, whichfork)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -6256,8 +6277,10 @@ xfs_bmap_finish_one(
+ 			XFS_FSB_TO_AGBNO(tp->t_mountp, startblock),
+ 			ip->i_ino, whichfork, startoff, *blockcount, state);
+ 
+-	if (WARN_ON_ONCE(whichfork != XFS_DATA_FORK))
++	if (WARN_ON_ONCE(whichfork != XFS_DATA_FORK)) {
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		return -EFSCORRUPTED;
++	}
+ 
+ 	if (XFS_TEST_ERROR(false, tp->t_mountp,
+ 			XFS_ERRTAG_BMAP_FINISH_ONE))
+@@ -6275,6 +6298,7 @@ xfs_bmap_finish_one(
+ 		break;
+ 	default:
+ 		ASSERT(0);
++		xfs_bmap_mark_sick(ip, whichfork);
+ 		error = -EFSCORRUPTED;
+ 	}
+ 
+diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+index ce8954a10c66..25b61180b562 100644
+--- a/fs/xfs/libxfs/xfs_health.h
++++ b/fs/xfs/libxfs/xfs_health.h
+@@ -138,6 +138,7 @@ void xfs_inode_measure_sickness(struct xfs_inode *ip, unsigned int *sick,
+ 		unsigned int *checked);
+ 
+ void xfs_health_unmount(struct xfs_mount *mp);
++void xfs_bmap_mark_sick(struct xfs_inode *ip, int whichfork);
+ 
+ /* Now some helpers. */
+ 
+diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+index 36c32b108b39..5e5de5338476 100644
+--- a/fs/xfs/xfs_health.c
++++ b/fs/xfs/xfs_health.c
+@@ -452,3 +452,29 @@ xfs_bulkstat_health(
+ 			bs->bs_sick |= m->ioctl_mask;
+ 	}
+ }
++
++/* Mark a block mapping sick. */
++void
++xfs_bmap_mark_sick(
++	struct xfs_inode	*ip,
++	int			whichfork)
++{
++	unsigned int		mask;
++
++	switch (whichfork) {
++	case XFS_DATA_FORK:
++		mask = XFS_SICK_INO_BMBTD;
++		break;
++	case XFS_ATTR_FORK:
++		mask = XFS_SICK_INO_BMBTA;
++		break;
++	case XFS_COW_FORK:
++		mask = XFS_SICK_INO_BMBTC;
++		break;
++	default:
++		ASSERT(0);
++		return;
++	}
++
++	xfs_inode_mark_sick(ip, mask);
++}
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index be9e614133e4..0552e7be7e28 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -27,7 +27,7 @@
+ #include "xfs_dquot_item.h"
+ #include "xfs_dquot.h"
+ #include "xfs_reflink.h"
+-
++#include "xfs_health.h"
+ 
+ #define XFS_ALLOC_ALIGN(mp, off) \
+ 	(((off) >> mp->m_allocsize_log) << mp->m_allocsize_log)
+@@ -59,8 +59,10 @@ xfs_bmbt_to_iomap(
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+ 
+-	if (unlikely(!xfs_valid_startblock(ip, imap->br_startblock)))
++	if (unlikely(!xfs_valid_startblock(ip, imap->br_startblock))) {
++		xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+ 		return xfs_alert_fsblock_zero(ip, imap);
++	}
+ 
+ 	if (imap->br_startblock == HOLESTARTBLOCK) {
+ 		iomap->addr = IOMAP_NULL_ADDR;
+@@ -277,8 +279,10 @@ xfs_iomap_write_direct(
+ 		goto out_unlock;
+ 	}
+ 
+-	if (unlikely(!xfs_valid_startblock(ip, imap->br_startblock)))
++	if (unlikely(!xfs_valid_startblock(ip, imap->br_startblock))) {
++		xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+ 		error = xfs_alert_fsblock_zero(ip, imap);
++	}
+ 
+ out_unlock:
+ 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+@@ -588,8 +592,10 @@ xfs_iomap_write_unwritten(
+ 		if (error)
  			return error;
- 		}
-@@ -2455,6 +2463,7 @@ xfs_iunlink_remove(
- 	if (!xfs_verify_agino(mp, agno, head_agino)) {
- 		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
- 				agi, sizeof(*agi));
-+		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
- 		return -EFSCORRUPTED;
- 	}
  
+-		if (unlikely(!xfs_valid_startblock(ip, imap.br_startblock)))
++		if (unlikely(!xfs_valid_startblock(ip, imap.br_startblock))) {
++			xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+ 			return xfs_alert_fsblock_zero(ip, &imap);
++		}
+ 
+ 		if ((numblks_fsb = imap.br_blockcount) == 0) {
+ 			/*
+@@ -848,6 +854,7 @@ xfs_buffered_write_iomap_begin(
+ 
+ 	if (XFS_IS_CORRUPT(mp, !XFS_IFORK_MAPS_BLOCKS(ip, XFS_DATA_FORK)) ||
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
++		xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+ 		error = -EFSCORRUPTED;
+ 		goto out_unlock;
+ 	}
 
