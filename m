@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C87F3F2426
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDC07F242A
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfKGB24 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Nov 2019 20:28:56 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51322 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfKGB24 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:28:56 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SsQo154880
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:54 GMT
+        id S1728091AbfKGB25 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Nov 2019 20:28:57 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37360 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728041AbfKGB25 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:28:57 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SsS0180102
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=20RZrFwnoI8xCsxWTmr4ji5+yDXqvQwsnQIbuiQu7m4=;
- b=BFTCHQuhG9NeLiNlLFb650LNPTPDVzK4B3GNk9YvM9Didw6427sYJonHon8vtVFySnNm
- 8ZdeOG6r5h1FKAlTbVv24CyiYTFB3DUnh1wV3QDaPqalZaysMg1jVIz9vIX5YclxmISr
- 88ZzajKv3tunamJkDKmyAh+VEieTeDJOYnmgYBZrFjRxXM0VX3Dqze9j1sZAPCmtpc+s
- OHGefqwurrZdNHiShw7ehReN/EDn+wIfqjwiQ56RW/Zbev1AAnBy4DAO1UssmpfUtHLD
- QlhuUqcRJHAtFANI9DTQXl8zCS6/5Wr4sUCkMgc6rHIyC96sx5XcdAJynTFhFGrMbI44 IA== 
+ bh=C1DwzdyIGaOPcyDE840rB3lDqY9YSaetsMYt3XJo0+k=;
+ b=qL8YdhY4tVfqXGyxXOETwb3JsIe5LyLMO37UPFFF1XhzDrWBPSsmZoXSnFIH+HpqBnbC
+ iTlGwq4hHifGrkKuDF8nFsoF/Lze+INJM0yaJw2yuPZWgyp7WZTemcRvAZ7kvYgNmrQl
+ ZJZqJsMZdn/elbdUpBANA64j9OSRJxUjzHaSWcckUMPn/MHe5wLOiA7HAE1swmXmi5/0
+ wuvwFHLQdvujddaHSm71Mab3HBew5xu9Q1rAqOiuQEr2bqRqdPITyCVGMhh6zMLkZP3W
+ 3lv6uI+54nU6bK/ESG92VxdWJfyi+HxOMzwFlDgtLpZ5GYdvXDKQPyMgEFHseSSM/00T yg== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w41w0tq52-1
+        by userp2130.oracle.com with ESMTP id 2w41w12pu8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:54 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:55 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SqKX174279
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2w41w8eun6-1
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SqgE174232
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2w41w8euna-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:52 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:53 +0000
 Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA71SmOh011258
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:48 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA71SnCM031932
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:49 GMT
 Received: from localhost.localdomain (/67.1.205.161)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Wed, 06 Nov 2019 17:28:48 -0800
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v4 14/17] xfs: Add delay context to xfs_da_args
-Date:   Wed,  6 Nov 2019 18:27:58 -0700
-Message-Id: <20191107012801.22863-15-allison.henderson@oracle.com>
+Subject: [PATCH v4 15/17] xfs: Check for -ENOATTR or -EEXIST
+Date:   Wed,  6 Nov 2019 18:27:59 -0700
+Message-Id: <20191107012801.22863-16-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191107012801.22863-1-allison.henderson@oracle.com>
 References: <20191107012801.22863-1-allison.henderson@oracle.com>
@@ -63,164 +63,57 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch adds a new struct xfs_delay_context, which we
-will use to keep track of the current state of a delayed
-attribute operation.
-
-The new enum is used to track various operations that
-are in progress so that we know not to repeat them, and
-resume where we left off before EAGAIN was returned to
-cycle out the transaction.  Other members take the place
-of local variables that need to retain their values
-across multiple function recalls.
+Delayed operations cannot return error codes.  So we must check for
+these conditions first before starting set or remove operations
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/libxfs/xfs_da_btree.h | 28 ++++++++++++++++++++++++++++
- fs/xfs/scrub/common.c        |  2 ++
- fs/xfs/xfs_acl.c             |  2 ++
- fs/xfs/xfs_attr_list.c       |  1 +
- fs/xfs/xfs_ioctl.c           |  2 ++
- fs/xfs/xfs_ioctl32.c         |  2 ++
- fs/xfs/xfs_iops.c            |  2 ++
- fs/xfs/xfs_xattr.c           |  1 +
- 8 files changed, 40 insertions(+)
+ fs/xfs/libxfs/xfs_attr.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-index bed4f40..ef23ed8 100644
---- a/fs/xfs/libxfs/xfs_da_btree.h
-+++ b/fs/xfs/libxfs/xfs_da_btree.h
-@@ -42,6 +42,33 @@ enum xfs_dacmp {
- 	XFS_CMP_CASE		/* names are same but differ in case */
- };
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 5dcb19f..626d4a98 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -458,6 +458,27 @@ xfs_attr_set(
+ 		goto out_trans_cancel;
  
-+enum xfs_attr_state {
-+	XFS_DC_INIT		= 1, /* Init delay info */
-+	XFS_DC_SF_TO_LEAF	= 2, /* Converted short form to leaf */
-+	XFS_DC_FOUND_LBLK	= 3, /* We found leaf blk for attr */
-+	XFS_DC_LEAF_TO_NODE	= 4, /* Converted leaf to node */
-+	XFS_DC_FOUND_NBLK	= 5, /* We found node blk for attr */
-+	XFS_DC_ALLOC_LEAF	= 6, /* We are allocating leaf blocks */
-+	XFS_DC_ALLOC_NODE	= 7, /* We are allocating node blocks */
-+	XFS_DC_RM_INVALIDATE	= 8, /* We are invalidating blocks */
-+	XFS_DC_RM_SHRINK	= 9, /* We are shrinking the tree */
-+	XFS_DC_RM_NODE_BLKS	= 10,/* We are removing node blocks */
-+};
+ 	xfs_trans_ijoin(args.trans, dp, 0);
 +
-+/*
-+ * Context used for keeping track of delayed attribute operations
-+ */
-+struct xfs_delay_context {
-+	enum xfs_attr_state	dc_state;
-+	struct xfs_buf		*leaf_bp;
-+	struct xfs_bmbt_irec	map;
-+	xfs_dablk_t		lblkno;
-+	xfs_fileoff_t		lfileoff;
-+	int			blkcnt;
-+	struct xfs_da_state	*da_state;
-+	struct xfs_da_state_blk *blk;
-+};
++	error = xfs_has_attr(&args);
++	if (error == -EEXIST) {
++		if (name->type & ATTR_CREATE)
++			goto out_trans_cancel;
++		else
++			name->type |= ATTR_REPLACE;
++	}
 +
- /*
-  * Structure to ease passing around component names.
-  */
-@@ -69,6 +96,7 @@ typedef struct xfs_da_args {
- 	int		rmtvaluelen2;	/* remote attr value length in bytes */
- 	int		op_flags;	/* operation flags */
- 	enum xfs_dacmp	cmpresult;	/* name compare result for lookups */
-+	struct xfs_delay_context  dc;	/* context used for delay attr ops */
- } xfs_da_args_t;
++	if (error == -ENOATTR && (name->type & ATTR_REPLACE))
++		goto out_trans_cancel;
++
++	if (name->type & ATTR_REPLACE) {
++		name->type &= ~ATTR_REPLACE;
++		error = xfs_attr_remove_args(&args);
++		if (error)
++			goto out_trans_cancel;
++
++		name->type |= ATTR_CREATE;
++	}
++
+ 	error = xfs_attr_set_args(&args);
+ 	if (error)
+ 		goto out_trans_cancel;
+@@ -543,6 +564,10 @@ xfs_attr_remove(
+ 	 */
+ 	xfs_trans_ijoin(args.trans, dp, 0);
  
- /*
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 1887605..9a649d1 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -24,6 +24,8 @@
- #include "xfs_rmap_btree.h"
- #include "xfs_log.h"
- #include "xfs_trans_priv.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_reflink.h"
- #include "scrub/scrub.h"
-diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
-index e868755..1336477 100644
---- a/fs/xfs/xfs_acl.c
-+++ b/fs/xfs/xfs_acl.c
-@@ -10,6 +10,8 @@
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
- #include "xfs_inode.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_trace.h"
- #include <linux/posix_acl_xattr.h>
-diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
-index fab416c..e395864 100644
---- a/fs/xfs/xfs_attr_list.c
-+++ b/fs/xfs/xfs_attr_list.c
-@@ -12,6 +12,7 @@
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
- #include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_inode.h"
- #include "xfs_trans.h"
- #include "xfs_bmap.h"
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index ae0ed88..23b0ca6 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -15,6 +15,8 @@
- #include "xfs_iwalk.h"
- #include "xfs_itable.h"
- #include "xfs_error.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_bmap.h"
- #include "xfs_bmap_util.h"
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index 3c0d518..e3278ac 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -17,6 +17,8 @@
- #include "xfs_itable.h"
- #include "xfs_fsops.h"
- #include "xfs_rtalloc.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_ioctl.h"
- #include "xfs_ioctl32.h"
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index aef346e..68b9cd0 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -13,6 +13,8 @@
- #include "xfs_inode.h"
- #include "xfs_acl.h"
- #include "xfs_quota.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_trans.h"
- #include "xfs_trace.h"
-diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-index 6c5321d..0f0ebab 100644
---- a/fs/xfs/xfs_xattr.c
-+++ b/fs/xfs/xfs_xattr.c
-@@ -10,6 +10,7 @@
- #include "xfs_log_format.h"
- #include "xfs_da_format.h"
- #include "xfs_inode.h"
-+#include "xfs_da_btree.h"
- #include "xfs_attr.h"
- 
- #include <linux/posix_acl_xattr.h>
++	error = xfs_has_attr(&args);
++	if (error == -ENOATTR)
++		goto out;
++
+ 	error = xfs_attr_remove_args(&args);
+ 	if (error)
+ 		goto out;
 -- 
 2.7.4
 
