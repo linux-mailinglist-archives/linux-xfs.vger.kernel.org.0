@@ -2,844 +2,645 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 570D6F2424
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:28:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BCA7F2430
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:29:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfKGB2x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Nov 2019 20:28:53 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51170 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbfKGB2x (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:28:53 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71OXVT151994
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:48 GMT
+        id S1732582AbfKGB3F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Nov 2019 20:29:05 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37510 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732423AbfKGB3F (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:29:05 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SrXj180055
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:29:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=DSrzCY+MCh75tH6Eus0XA1usg1Wm8qohHNoG+1WOMNM=;
- b=CXto0B3vroJkfKcAHD+uqHGCgafeo0VcOyqE6VUECilRB1nQiT9tKNwjH86rZ2CuhRxo
- IfKsIo1tRdFAcCKdRtmDhyhZNZ4I1oKcqV6rpZzzswLHUMxmtMiiJPJ0Ol8i3I5uy4GK
- htxRATBVHy8Fo85kkbBjIZ/wPwcV7b3t0T60Q/EElAFbU8CaCGuBeICRw9X6c3v9Ugx9
- U2nrqhlHz1raXUiRwWIgQHA0bfuMM7bOBGqE8zCClrwdd4r/Oj9pDDQtURMbyK04Yemg
- LlTLRgZ6WhwsnkdHWR4By4LFPahb1X7GIeR8vNlllHYImcUbGBOejaa+5xojkvykegqU Xg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2w41w0tq4c-1
+ bh=HlG0o69SY9zxsJBU72c+/MKYjwHKrJf5nts55XVCK8A=;
+ b=q42F/NFQzHAz1AIkUBGdI5bEzHoCBqLHj3D42OVh95OKUispnWo175V9fxuuzEu4mRBX
+ Pn1gkwciwl64SqhQfwXWRTSxcrV6gw3SbqajMIYvfmTSL21oI2Dyne4PQAE0hGKIkRp2
+ NrD5mHTPWcrIfA8Faphr4bH+wpBrMd473pJWLMizM70S/eMH4F4D/3d5E02wDO806soz
+ 2F2dWYXwaqO1hGlD3ABgFJED7a1P0hMX54EB7DHm62SUP0SHf1NBq0YgnqkPDFE7LFoF
+ INPica0ouAPVGMo5oEXPT5D/RrggnEeEO7C/j77lQgG9V9SmSrwp4K7xh5i6ktltFGAh Gg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2w41w12pv4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71Sk0l088146
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2w41wfe83a-1
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:29:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71Sxen008400
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:29:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w41wdmsw4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:47 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:29:00 +0000
 Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA71SjVw031903
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA71Sknu015678
         for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:46 GMT
 Received: from localhost.localdomain (/67.1.205.161)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Wed, 06 Nov 2019 17:28:45 -0800
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v4 03/17] xfs: Embed struct xfs_name in xfs_da_args
-Date:   Wed,  6 Nov 2019 18:27:47 -0700
-Message-Id: <20191107012801.22863-4-allison.henderson@oracle.com>
+Subject: [PATCH v4 04/17] xfs: Add xfs_dabuf defines
+Date:   Wed,  6 Nov 2019 18:27:48 -0700
+Message-Id: <20191107012801.22863-5-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191107012801.22863-1-allison.henderson@oracle.com>
 References: <20191107012801.22863-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1910280000 definitions=main-1911070014
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070013
+ definitions=main-1911070014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch embeds an xfs_name in xfs_da_args, replacing the name,
-namelen, and flags members.  This helps to clean up the xfs_da_args
-structure and make it more uniform with the new xfs_name parameter
-being passed around.
+This patch adds two new defines XFS_DABUF_MAP_NOMAPPING and
+XFS_DABUF_MAP_HOLE_OK.  This helps to clean up hard numbers and
+makes the code easier to read
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_attr.c        |  36 +++++++-------
- fs/xfs/libxfs/xfs_attr_leaf.c   | 106 +++++++++++++++++++++-------------------
- fs/xfs/libxfs/xfs_attr_remote.c |   2 +-
- fs/xfs/libxfs/xfs_da_btree.c    |   5 +-
- fs/xfs/libxfs/xfs_da_btree.h    |   4 +-
- fs/xfs/libxfs/xfs_dir2.c        |  18 +++----
- fs/xfs/libxfs/xfs_dir2_block.c  |   6 +--
- fs/xfs/libxfs/xfs_dir2_leaf.c   |   6 +--
- fs/xfs/libxfs/xfs_dir2_node.c   |   8 +--
- fs/xfs/libxfs/xfs_dir2_sf.c     |  30 ++++++------
- fs/xfs/scrub/attr.c             |  12 ++---
- fs/xfs/xfs_trace.h              |  20 ++++----
- 12 files changed, 128 insertions(+), 125 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c       | 14 +++++++-----
+ fs/xfs/libxfs/xfs_attr_leaf.c  | 23 +++++++++++--------
+ fs/xfs/libxfs/xfs_attr_leaf.h  |  3 +++
+ fs/xfs/libxfs/xfs_da_btree.c   | 50 ++++++++++++++++++++++++++++--------------
+ fs/xfs/libxfs/xfs_dir2_block.c |  6 +++--
+ fs/xfs/libxfs/xfs_dir2_data.c  |  3 ++-
+ fs/xfs/libxfs/xfs_dir2_leaf.c  |  9 +++++---
+ fs/xfs/libxfs/xfs_dir2_node.c  | 10 +++++----
+ fs/xfs/scrub/dabtree.c         |  6 ++---
+ fs/xfs/scrub/dir.c             |  4 +++-
+ fs/xfs/xfs_attr_inactive.c     |  6 +++--
+ fs/xfs/xfs_attr_list.c         | 16 +++++++++-----
+ 12 files changed, 97 insertions(+), 53 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 5a9624a..b77b985 100644
+index b77b985..5cb83a8 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -72,13 +72,12 @@ xfs_attr_args_init(
- 	args->geo = dp->i_mount->m_attr_geo;
- 	args->whichfork = XFS_ATTR_FORK;
- 	args->dp = dp;
--	args->flags = flags;
--	args->name = name->name;
--	args->namelen = name->len;
--	if (args->namelen >= MAXNAMELEN)
-+	name->type = flags;
-+	memcpy(&args->name, name, sizeof(struct xfs_name));
-+	if (args->name.len >= MAXNAMELEN)
- 		return -EFAULT;		/* match IRIX behaviour */
- 
--	args->hashval = xfs_da_hashname(args->name, args->namelen);
-+	args->hashval = xfs_da_hashname(args->name.name, args->name.len);
- 	return 0;
- }
- 
-@@ -236,7 +235,7 @@ xfs_attr_try_sf_addname(
- 	 * Commit the shortform mods, and we're done.
- 	 * NOTE: this is also the error path (EEXIST, etc).
+@@ -591,7 +591,8 @@ xfs_attr_leaf_addname(
  	 */
--	if (!error && (args->flags & ATTR_KERNOTIME) == 0)
-+	if (!error && (args->name.type & ATTR_KERNOTIME) == 0)
- 		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
- 
- 	if (mp->m_flags & XFS_MOUNT_WSYNC)
-@@ -357,6 +356,9 @@ xfs_attr_set(
+ 	dp = args->dp;
+ 	args->blkno = 0;
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
  	if (error)
  		return error;
  
-+	/* Use name now stored in args */
-+	name = &args.name;
-+
- 	args.value = value;
- 	args.valuelen = valuelen;
- 	args.op_flags = XFS_DA_OP_ADDNAME | XFS_DA_OP_OKNOENT;
-@@ -372,7 +374,7 @@ xfs_attr_set(
- 	 */
- 	if (XFS_IFORK_Q(dp) == 0) {
- 		int sf_size = sizeof(xfs_attr_sf_hdr_t) +
--			XFS_ATTR_SF_ENTSIZE_BYNAME(args.namelen, valuelen);
-+			XFS_ATTR_SF_ENTSIZE_BYNAME(args.name.len, valuelen);
- 
- 		error = xfs_bmap_add_attrfork(dp, sf_size, rsvd);
- 		if (error)
-@@ -532,10 +534,10 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
- 	trace_xfs_attr_sf_addname(args);
- 
- 	retval = xfs_attr_shortform_lookup(args);
--	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
-+	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
- 		return retval;
- 	} else if (retval == -EEXIST) {
--		if (args->flags & ATTR_CREATE)
-+		if (args->name.type & ATTR_CREATE)
- 			return retval;
- 		retval = xfs_attr_shortform_remove(args);
- 		if (retval)
-@@ -545,15 +547,15 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
- 		 * that the leaf format add routine won't trip over the attr
- 		 * not being around.
+@@ -717,7 +718,7 @@ xfs_attr_leaf_addname(
+ 		 * remove the "old" attr from that block (neat, huh!)
  		 */
--		args->flags &= ~ATTR_REPLACE;
-+		args->name.type &= ~ATTR_REPLACE;
- 	}
+ 		error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
+-					   -1, &bp);
++					   XFS_DABUF_MAP_NOMAPPING, &bp);
+ 		if (error)
+ 			return error;
  
--	if (args->namelen >= XFS_ATTR_SF_ENTSIZE_MAX ||
-+	if (args->name.len >= XFS_ATTR_SF_ENTSIZE_MAX ||
- 	    args->valuelen >= XFS_ATTR_SF_ENTSIZE_MAX)
- 		return -ENOSPC;
- 
- 	newsize = XFS_ATTR_SF_TOTSIZE(args->dp);
--	newsize += XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
-+	newsize += XFS_ATTR_SF_ENTSIZE_BYNAME(args->name.len, args->valuelen);
- 
- 	forkoff = xfs_attr_shortform_bytesfit(args->dp, newsize);
- 	if (!forkoff)
-@@ -598,11 +600,11 @@ xfs_attr_leaf_addname(
- 	 * the given flags produce an error or call for an atomic rename.
+@@ -771,7 +772,8 @@ xfs_attr_leaf_removename(
  	 */
- 	retval = xfs_attr3_leaf_lookup_int(bp, args);
--	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
-+	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
- 		xfs_trans_brelse(args->trans, bp);
- 		return retval;
- 	} else if (retval == -EEXIST) {
--		if (args->flags & ATTR_CREATE) {	/* pure create op */
-+		if (args->name.type & ATTR_CREATE) {	/* pure create op */
- 			xfs_trans_brelse(args->trans, bp);
- 			return retval;
- 		}
-@@ -872,10 +874,10 @@ xfs_attr_node_addname(
- 		goto out;
- 	blk = &state->path.blk[ state->path.active-1 ];
- 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
--	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
-+	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
- 		goto out;
- 	} else if (retval == -EEXIST) {
--		if (args->flags & ATTR_CREATE)
-+		if (args->name.type & ATTR_CREATE)
+ 	dp = args->dp;
+ 	args->blkno = 0;
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 	if (error)
+ 		return error;
+ 
+@@ -815,7 +817,8 @@ xfs_attr_leaf_get(xfs_da_args_t *args)
+ 	trace_xfs_attr_leaf_get(args);
+ 
+ 	args->blkno = 0;
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 	if (error)
+ 		return error;
+ 
+@@ -1175,7 +1178,8 @@ xfs_attr_node_removename(
+ 		ASSERT(state->path.blk[0].bp);
+ 		state->path.blk[0].bp = NULL;
+ 
+-		error = xfs_attr3_leaf_read(args->trans, args->dp, 0, -1, &bp);
++		error = xfs_attr3_leaf_read(args->trans, args->dp, 0,
++					    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 		if (error)
  			goto out;
  
- 		trace_xfs_attr_node_replace(args);
-@@ -1007,7 +1009,7 @@ xfs_attr_node_addname(
- 		 * The INCOMPLETE flag means that we will find the "old"
- 		 * attr, not the "new" one.
- 		 */
--		args->flags |= XFS_ATTR_INCOMPLETE;
-+		args->name.type |= XFS_ATTR_INCOMPLETE;
- 		state = xfs_da_state_alloc();
- 		state->args = args;
- 		state->mp = mp;
 diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 56e62b3..cf5de30 100644
+index cf5de30..93c3496 100644
 --- a/fs/xfs/libxfs/xfs_attr_leaf.c
 +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -465,7 +465,7 @@ xfs_attr_copy_value(
+@@ -1160,11 +1160,13 @@ xfs_attr3_leaf_to_node(
+ 	error = xfs_da_grow_inode(args, &blkno);
+ 	if (error)
+ 		goto out;
+-	error = xfs_attr3_leaf_read(args->trans, dp, 0, -1, &bp1);
++	error = xfs_attr3_leaf_read(args->trans, dp, 0, XFS_DABUF_MAP_NOMAPPING,
++				    &bp1);
+ 	if (error)
+ 		goto out;
+ 
+-	error = xfs_da_get_buf(args->trans, dp, blkno, -1, &bp2, XFS_ATTR_FORK);
++	error = xfs_da_get_buf(args->trans, dp, blkno, XFS_DABUF_MAP_NOMAPPING,
++			       &bp2, XFS_ATTR_FORK);
+ 	if (error)
+ 		goto out;
+ 
+@@ -1226,8 +1228,8 @@ xfs_attr3_leaf_create(
+ 
+ 	trace_xfs_attr_leaf_create(args);
+ 
+-	error = xfs_da_get_buf(args->trans, args->dp, blkno, -1, &bp,
+-					    XFS_ATTR_FORK);
++	error = xfs_da_get_buf(args->trans, args->dp, blkno,
++			       XFS_DABUF_MAP_NOMAPPING, &bp, XFS_ATTR_FORK);
+ 	if (error)
+ 		return error;
+ 	bp->b_ops = &xfs_attr3_leaf_buf_ops;
+@@ -1997,7 +1999,7 @@ xfs_attr3_leaf_toosmall(
+ 		if (blkno == 0)
+ 			continue;
+ 		error = xfs_attr3_leaf_read(state->args->trans, state->args->dp,
+-					blkno, -1, &bp);
++					blkno, XFS_DABUF_MAP_NOMAPPING, &bp);
+ 		if (error)
+ 			return error;
+ 
+@@ -2730,7 +2732,8 @@ xfs_attr3_leaf_clearflag(
  	/*
- 	 * No copy if all we have to do is get the length
+ 	 * Set up the operation.
  	 */
--	if (args->flags & ATTR_KERNOVAL) {
-+	if (args->name.type & ATTR_KERNOVAL) {
- 		args->valuelen = valuelen;
- 		return 0;
- 	}
-@@ -680,27 +680,27 @@ xfs_attr_shortform_add(xfs_da_args_t *args, int forkoff)
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count; sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
- #ifdef DEBUG
--		if (sfe->namelen != args->namelen)
-+		if (sfe->namelen != args->name.len)
- 			continue;
--		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
-+		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
- 			continue;
--		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
-+		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
- 			continue;
- 		ASSERT(0);
- #endif
- 	}
- 
- 	offset = (char *)sfe - (char *)sf;
--	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
-+	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->name.len, args->valuelen);
- 	xfs_idata_realloc(dp, size, XFS_ATTR_FORK);
- 	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
- 	sfe = (xfs_attr_sf_entry_t *)((char *)sf + offset);
- 
--	sfe->namelen = args->namelen;
-+	sfe->namelen = args->name.len;
- 	sfe->valuelen = args->valuelen;
--	sfe->flags = XFS_ATTR_NSP_ARGS_TO_ONDISK(args->flags);
--	memcpy(sfe->nameval, args->name, args->namelen);
--	memcpy(&sfe->nameval[args->namelen], args->value, args->valuelen);
-+	sfe->flags = XFS_ATTR_NSP_ARGS_TO_ONDISK(args->name.type);
-+	memcpy(sfe->nameval, args->name.name, args->name.len);
-+	memcpy(&sfe->nameval[args->name.len], args->value, args->valuelen);
- 	sf->hdr.count++;
- 	be16_add_cpu(&sf->hdr.totsize, size);
- 	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
-@@ -750,11 +750,11 @@ xfs_attr_shortform_remove(xfs_da_args_t *args)
- 	for (i = 0; i < end; sfe = XFS_ATTR_SF_NEXTENTRY(sfe),
- 					base += size, i++) {
- 		size = XFS_ATTR_SF_ENTSIZE(sfe);
--		if (sfe->namelen != args->namelen)
-+		if (sfe->namelen != args->name.len)
- 			continue;
--		if (memcmp(sfe->nameval, args->name, args->namelen) != 0)
-+		if (memcmp(sfe->nameval, args->name.name, args->name.len) != 0)
- 			continue;
--		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
-+		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
- 			continue;
- 		break;
- 	}
-@@ -817,11 +817,11 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count;
- 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
--		if (sfe->namelen != args->namelen)
-+		if (sfe->namelen != args->name.len)
- 			continue;
--		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
-+		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
- 			continue;
--		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
-+		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
- 			continue;
- 		return -EEXIST;
- 	}
-@@ -848,13 +848,13 @@ xfs_attr_shortform_getvalue(
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count;
- 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
--		if (sfe->namelen != args->namelen)
-+		if (sfe->namelen != args->name.len)
- 			continue;
--		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
-+		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
- 			continue;
--		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
-+		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
- 			continue;
--		return xfs_attr_copy_value(args, &sfe->nameval[args->namelen],
-+		return xfs_attr_copy_value(args, &sfe->nameval[args->name.len],
- 						sfe->valuelen);
- 	}
- 	return -ENOATTR;
-@@ -913,13 +913,13 @@ xfs_attr_shortform_to_leaf(
- 
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count; i++) {
--		nargs.name = sfe->nameval;
--		nargs.namelen = sfe->namelen;
--		nargs.value = &sfe->nameval[nargs.namelen];
-+		nargs.name.name = sfe->nameval;
-+		nargs.name.len = sfe->namelen;
-+		nargs.value = &sfe->nameval[nargs.name.len];
- 		nargs.valuelen = sfe->valuelen;
- 		nargs.hashval = xfs_da_hashname(sfe->nameval,
- 						sfe->namelen);
--		nargs.flags = XFS_ATTR_NSP_ONDISK_TO_ARGS(sfe->flags);
-+		nargs.name.type = XFS_ATTR_NSP_ONDISK_TO_ARGS(sfe->flags);
- 		error = xfs_attr3_leaf_lookup_int(bp, &nargs); /* set a->index */
- 		ASSERT(error == -ENOATTR);
- 		error = xfs_attr3_leaf_add(bp, &nargs);
-@@ -1120,12 +1120,12 @@ xfs_attr3_leaf_to_shortform(
- 			continue;
- 		ASSERT(entry->flags & XFS_ATTR_LOCAL);
- 		name_loc = xfs_attr3_leaf_name_local(leaf, i);
--		nargs.name = name_loc->nameval;
--		nargs.namelen = name_loc->namelen;
--		nargs.value = &name_loc->nameval[nargs.namelen];
-+		nargs.name.name = name_loc->nameval;
-+		nargs.name.len = name_loc->namelen;
-+		nargs.value = &name_loc->nameval[nargs.name.len];
- 		nargs.valuelen = be16_to_cpu(name_loc->valuelen);
- 		nargs.hashval = be32_to_cpu(entry->hashval);
--		nargs.flags = XFS_ATTR_NSP_ONDISK_TO_ARGS(entry->flags);
-+		nargs.name.type = XFS_ATTR_NSP_ONDISK_TO_ARGS(entry->flags);
- 		xfs_attr_shortform_add(&nargs, forkoff);
- 	}
- 	error = 0;
-@@ -1453,7 +1453,7 @@ xfs_attr3_leaf_add_work(
- 				     ichdr->freemap[mapindex].size);
- 	entry->hashval = cpu_to_be32(args->hashval);
- 	entry->flags = tmp ? XFS_ATTR_LOCAL : 0;
--	entry->flags |= XFS_ATTR_NSP_ARGS_TO_ONDISK(args->flags);
-+	entry->flags |= XFS_ATTR_NSP_ARGS_TO_ONDISK(args->name.type);
- 	if (args->op_flags & XFS_DA_OP_RENAME) {
- 		entry->flags |= XFS_ATTR_INCOMPLETE;
- 		if ((args->blkno2 == args->blkno) &&
-@@ -1477,15 +1477,16 @@ xfs_attr3_leaf_add_work(
- 	 */
- 	if (entry->flags & XFS_ATTR_LOCAL) {
- 		name_loc = xfs_attr3_leaf_name_local(leaf, args->index);
--		name_loc->namelen = args->namelen;
-+		name_loc->namelen = args->name.len;
- 		name_loc->valuelen = cpu_to_be16(args->valuelen);
--		memcpy((char *)name_loc->nameval, args->name, args->namelen);
--		memcpy((char *)&name_loc->nameval[args->namelen], args->value,
-+		memcpy((char *)name_loc->nameval, args->name.name,
-+		       args->name.len);
-+		memcpy((char *)&name_loc->nameval[args->name.len], args->value,
- 				   be16_to_cpu(name_loc->valuelen));
- 	} else {
- 		name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
--		name_rmt->namelen = args->namelen;
--		memcpy((char *)name_rmt->name, args->name, args->namelen);
-+		name_rmt->namelen = args->name.len;
-+		memcpy((char *)name_rmt->name, args->name.name, args->name.len);
- 		entry->flags |= XFS_ATTR_INCOMPLETE;
- 		/* just in case */
- 		name_rmt->valuelen = 0;
-@@ -2398,29 +2399,31 @@ xfs_attr3_leaf_lookup_int(
- 		 * If we are looking for INCOMPLETE entries, show only those.
- 		 * If we are looking for complete entries, show only those.
- 		 */
--		if ((args->flags & XFS_ATTR_INCOMPLETE) !=
-+		if ((args->name.type & XFS_ATTR_INCOMPLETE) !=
- 		    (entry->flags & XFS_ATTR_INCOMPLETE)) {
- 			continue;
- 		}
- 		if (entry->flags & XFS_ATTR_LOCAL) {
- 			name_loc = xfs_attr3_leaf_name_local(leaf, probe);
--			if (name_loc->namelen != args->namelen)
-+			if (name_loc->namelen != args->name.len)
- 				continue;
--			if (memcmp(args->name, name_loc->nameval,
--							args->namelen) != 0)
-+			if (memcmp(args->name.name, name_loc->nameval,
-+							args->name.len) != 0)
- 				continue;
--			if (!xfs_attr_namesp_match(args->flags, entry->flags))
-+			if (!xfs_attr_namesp_match(args->name.type,
-+						   entry->flags))
- 				continue;
- 			args->index = probe;
- 			return -EEXIST;
- 		} else {
- 			name_rmt = xfs_attr3_leaf_name_remote(leaf, probe);
--			if (name_rmt->namelen != args->namelen)
-+			if (name_rmt->namelen != args->name.len)
- 				continue;
--			if (memcmp(args->name, name_rmt->name,
--							args->namelen) != 0)
-+			if (memcmp(args->name.name, name_rmt->name,
-+							args->name.len) != 0)
- 				continue;
--			if (!xfs_attr_namesp_match(args->flags, entry->flags))
-+			if (!xfs_attr_namesp_match(args->name.type,
-+						   entry->flags))
- 				continue;
- 			args->index = probe;
- 			args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
-@@ -2462,16 +2465,17 @@ xfs_attr3_leaf_getvalue(
- 	entry = &xfs_attr3_leaf_entryp(leaf)[args->index];
- 	if (entry->flags & XFS_ATTR_LOCAL) {
- 		name_loc = xfs_attr3_leaf_name_local(leaf, args->index);
--		ASSERT(name_loc->namelen == args->namelen);
--		ASSERT(memcmp(args->name, name_loc->nameval, args->namelen) == 0);
-+		ASSERT(name_loc->namelen == args->name.len);
-+		ASSERT(memcmp(args->name.name, name_loc->nameval,
-+			      args->name.len) == 0);
- 		return xfs_attr_copy_value(args,
--					&name_loc->nameval[args->namelen],
-+					&name_loc->nameval[args->name.len],
- 					be16_to_cpu(name_loc->valuelen));
- 	}
- 
- 	name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
--	ASSERT(name_rmt->namelen == args->namelen);
--	ASSERT(memcmp(args->name, name_rmt->name, args->namelen) == 0);
-+	ASSERT(name_rmt->namelen == args->name.len);
-+	ASSERT(memcmp(args->name.name, name_rmt->name, args->name.len) == 0);
- 	args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
- 	args->rmtblkno = be32_to_cpu(name_rmt->valueblk);
- 	args->rmtblkcnt = xfs_attr3_rmt_blocks(args->dp->i_mount,
-@@ -2687,7 +2691,7 @@ xfs_attr_leaf_newentsize(
- {
- 	int			size;
- 
--	size = xfs_attr_leaf_entsize_local(args->namelen, args->valuelen);
-+	size = xfs_attr_leaf_entsize_local(args->name.len, args->valuelen);
- 	if (size < xfs_attr_leaf_entsize_local_max(args->geo->blksize)) {
- 		if (local)
- 			*local = 1;
-@@ -2695,7 +2699,7 @@ xfs_attr_leaf_newentsize(
- 	}
- 	if (local)
- 		*local = 0;
--	return xfs_attr_leaf_entsize_remote(args->namelen);
-+	return xfs_attr_leaf_entsize_remote(args->name.len);
- }
- 
- 
-@@ -2749,8 +2753,8 @@ xfs_attr3_leaf_clearflag(
- 		name = (char *)name_rmt->name;
- 	}
- 	ASSERT(be32_to_cpu(entry->hashval) == args->hashval);
--	ASSERT(namelen == args->namelen);
--	ASSERT(memcmp(name, args->name, namelen) == 0);
-+	ASSERT(namelen == args->name.len);
-+	ASSERT(memcmp(name, args->name.name, namelen) == 0);
- #endif /* DEBUG */
- 
- 	entry->flags &= ~XFS_ATTR_INCOMPLETE;
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index 3e39b7d..db9247a 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -379,7 +379,7 @@ xfs_attr_rmtval_get(
- 
- 	trace_xfs_attr_rmtval_get(args);
- 
--	ASSERT(!(args->flags & ATTR_KERNOVAL));
-+	ASSERT(!(args->name.type & ATTR_KERNOVAL));
- 	ASSERT(args->rmtvaluelen == args->valuelen);
- 
- 	valuelen = args->rmtvaluelen;
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index 4fd1223..129ec09 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -2040,8 +2040,9 @@ xfs_da_compname(
- 	const unsigned char *name,
- 	int		len)
- {
--	return (args->namelen == len && memcmp(args->name, name, len) == 0) ?
--					XFS_CMP_EXACT : XFS_CMP_DIFFERENT;
-+	return (args->name.len == len &&
-+		memcmp(args->name.name, name, len) == 0) ? XFS_CMP_EXACT :
-+		XFS_CMP_DIFFERENT;
- }
- 
- static xfs_dahash_t
-diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-index ae0bbd2..bed4f40 100644
---- a/fs/xfs/libxfs/xfs_da_btree.h
-+++ b/fs/xfs/libxfs/xfs_da_btree.h
-@@ -47,12 +47,10 @@ enum xfs_dacmp {
-  */
- typedef struct xfs_da_args {
- 	struct xfs_da_geometry *geo;	/* da block geometry */
--	const uint8_t		*name;		/* string (maybe not NULL terminated) */
--	int		namelen;	/* length of string (maybe no NULL) */
-+	struct xfs_name	name;		/* name, length and argument  flags*/
- 	uint8_t		filetype;	/* filetype of inode for directories */
- 	uint8_t		*value;		/* set of bytes (maybe contain NULLs) */
- 	int		valuelen;	/* length of value */
--	int		flags;		/* argument flags (eg: ATTR_NOCREATE) */
- 	xfs_dahash_t	hashval;	/* hash value of name */
- 	xfs_ino_t	inumber;	/* input/output inode number */
- 	struct xfs_inode *dp;		/* directory inode to manipulate */
-diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
-index 867c5de..6e8e906 100644
---- a/fs/xfs/libxfs/xfs_dir2.c
-+++ b/fs/xfs/libxfs/xfs_dir2.c
-@@ -74,14 +74,14 @@ xfs_ascii_ci_compname(
- 	enum xfs_dacmp	result;
- 	int		i;
- 
--	if (args->namelen != len)
-+	if (args->name.len != len)
- 		return XFS_CMP_DIFFERENT;
- 
- 	result = XFS_CMP_EXACT;
- 	for (i = 0; i < len; i++) {
--		if (args->name[i] == name[i])
-+		if (args->name.name[i] == name[i])
- 			continue;
--		if (tolower(args->name[i]) != tolower(name[i]))
-+		if (tolower(args->name.name[i]) != tolower(name[i]))
- 			return XFS_CMP_DIFFERENT;
- 		result = XFS_CMP_CASE;
- 	}
-@@ -259,8 +259,7 @@ xfs_dir_createname(
- 		return -ENOMEM;
- 
- 	args->geo = dp->i_mount->m_dir_geo;
--	args->name = name->name;
--	args->namelen = name->len;
-+	memcpy(&args->name, name, sizeof(struct xfs_name));
- 	args->filetype = name->type;
- 	args->hashval = dp->i_mount->m_dirnameops->hashname(name);
- 	args->inumber = inum;
-@@ -355,8 +354,7 @@ xfs_dir_lookup(
- 	 */
- 	args = kmem_zalloc(sizeof(*args), KM_NOFS);
- 	args->geo = dp->i_mount->m_dir_geo;
--	args->name = name->name;
--	args->namelen = name->len;
-+	memcpy(&args->name, name, sizeof(struct xfs_name));
- 	args->filetype = name->type;
- 	args->hashval = dp->i_mount->m_dirnameops->hashname(name);
- 	args->dp = dp;
-@@ -427,8 +425,7 @@ xfs_dir_removename(
- 		return -ENOMEM;
- 
- 	args->geo = dp->i_mount->m_dir_geo;
--	args->name = name->name;
--	args->namelen = name->len;
-+	memcpy(&args->name, name, sizeof(struct xfs_name));
- 	args->filetype = name->type;
- 	args->hashval = dp->i_mount->m_dirnameops->hashname(name);
- 	args->inumber = ino;
-@@ -488,8 +485,7 @@ xfs_dir_replace(
- 		return -ENOMEM;
- 
- 	args->geo = dp->i_mount->m_dir_geo;
--	args->name = name->name;
--	args->namelen = name->len;
-+	memcpy(&args->name, name, sizeof(struct xfs_name));
- 	args->filetype = name->type;
- 	args->hashval = dp->i_mount->m_dirnameops->hashname(name);
- 	args->inumber = inum;
-diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
-index 49e4bc3..8dedc30 100644
---- a/fs/xfs/libxfs/xfs_dir2_block.c
-+++ b/fs/xfs/libxfs/xfs_dir2_block.c
-@@ -355,7 +355,7 @@ xfs_dir2_block_addname(
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
  	if (error)
  		return error;
  
--	len = dp->d_ops->data_entsize(args->namelen);
-+	len = dp->d_ops->data_entsize(args->name.len);
- 
+@@ -2797,7 +2800,8 @@ xfs_attr3_leaf_setflag(
  	/*
- 	 * Set up pointers to parts of the block.
-@@ -539,8 +539,8 @@ xfs_dir2_block_addname(
- 	 * Create the new data entry.
+ 	 * Set up the operation.
  	 */
- 	dep->inumber = cpu_to_be64(args->inumber);
--	dep->namelen = args->namelen;
--	memcpy(dep->name, args->name, args->namelen);
-+	dep->namelen = args->name.len;
-+	memcpy(dep->name, args->name.name, args->name.len);
- 	dp->d_ops->data_put_ftype(dep, args->filetype);
- 	tagp = dp->d_ops->data_entry_tag_p(dep);
- 	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 	if (error)
+ 		return error;
+ 
+@@ -2859,7 +2863,8 @@ xfs_attr3_leaf_flipflags(
+ 	/*
+ 	 * Read the block containing the "old" attr
+ 	 */
+-	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno, -1, &bp1);
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
++				    XFS_DABUF_MAP_NOMAPPING, &bp1);
+ 	if (error)
+ 		return error;
+ 
+@@ -2868,7 +2873,7 @@ xfs_attr3_leaf_flipflags(
+ 	 */
+ 	if (args->blkno2 != args->blkno) {
+ 		error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno2,
+-					   -1, &bp2);
++					    XFS_DABUF_MAP_NOMAPPING, &bp2);
+ 		if (error)
+ 			return error;
+ 	} else {
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
+index bb08800..017480e 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.h
++++ b/fs/xfs/libxfs/xfs_attr_leaf.h
+@@ -16,6 +16,9 @@ struct xfs_da_state_blk;
+ struct xfs_inode;
+ struct xfs_trans;
+ 
++#define XFS_DABUF_MAP_NOMAPPING	(-1) /* Caller doesn't have a mapping. */
++#define XFS_DABUF_MAP_HOLE_OK	(-2) /* don't complain if we land in a hole. */
++
+ /*
+  * Used to keep a list of "remote value" extents when unlinking an inode.
+  */
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 129ec09..ba49ffc 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -343,7 +343,8 @@ xfs_da3_node_create(
+ 	trace_xfs_da_node_create(args);
+ 	ASSERT(level <= XFS_DA_NODE_MAXDEPTH);
+ 
+-	error = xfs_da_get_buf(tp, dp, blkno, -1, &bp, whichfork);
++	error = xfs_da_get_buf(tp, dp, blkno, XFS_DABUF_MAP_NOMAPPING, &bp,
++			       whichfork);
+ 	if (error)
+ 		return error;
+ 	bp->b_ops = &xfs_da3_node_buf_ops;
+@@ -568,7 +569,8 @@ xfs_da3_root_split(
+ 
+ 	dp = args->dp;
+ 	tp = args->trans;
+-	error = xfs_da_get_buf(tp, dp, blkno, -1, &bp, args->whichfork);
++	error = xfs_da_get_buf(tp, dp, blkno, XFS_DABUF_MAP_NOMAPPING, &bp,
++			       args->whichfork);
+ 	if (error)
+ 		return error;
+ 	node = bp->b_addr;
+@@ -1109,8 +1111,9 @@ xfs_da3_root_join(
+ 	btree = dp->d_ops->node_tree_p(oldroot);
+ 	child = be32_to_cpu(btree[0].before);
+ 	ASSERT(child != 0);
+-	error = xfs_da3_node_read(args->trans, dp, child, -1, &bp,
+-					     args->whichfork);
++	error = xfs_da3_node_read(args->trans, dp, child,
++				  XFS_DABUF_MAP_NOMAPPING, &bp,
++				  args->whichfork);
+ 	if (error)
+ 		return error;
+ 	xfs_da_blkinfo_onlychild_validate(bp->b_addr, oldroothdr.level);
+@@ -1225,7 +1228,8 @@ xfs_da3_node_toosmall(
+ 		if (blkno == 0)
+ 			continue;
+ 		error = xfs_da3_node_read(state->args->trans, dp,
+-					blkno, -1, &bp, state->args->whichfork);
++					blkno, XFS_DABUF_MAP_NOMAPPING, &bp,
++					state->args->whichfork);
+ 		if (error)
+ 			return error;
+ 
+@@ -1517,7 +1521,8 @@ xfs_da3_node_lookup_int(
+ 		 */
+ 		blk->blkno = blkno;
+ 		error = xfs_da3_node_read(args->trans, args->dp, blkno,
+-					-1, &blk->bp, args->whichfork);
++					XFS_DABUF_MAP_NOMAPPING, &blk->bp,
++					args->whichfork);
+ 		if (error) {
+ 			blk->blkno = 0;
+ 			state->path.active--;
+@@ -1746,7 +1751,8 @@ xfs_da3_blk_link(
+ 		if (old_info->back) {
+ 			error = xfs_da3_node_read(args->trans, dp,
+ 						be32_to_cpu(old_info->back),
+-						-1, &bp, args->whichfork);
++						XFS_DABUF_MAP_NOMAPPING, &bp,
++						args->whichfork);
+ 			if (error)
+ 				return error;
+ 			ASSERT(bp != NULL);
+@@ -1767,7 +1773,8 @@ xfs_da3_blk_link(
+ 		if (old_info->forw) {
+ 			error = xfs_da3_node_read(args->trans, dp,
+ 						be32_to_cpu(old_info->forw),
+-						-1, &bp, args->whichfork);
++						XFS_DABUF_MAP_NOMAPPING, &bp,
++						args->whichfork);
+ 			if (error)
+ 				return error;
+ 			ASSERT(bp != NULL);
+@@ -1826,7 +1833,8 @@ xfs_da3_blk_unlink(
+ 		if (drop_info->back) {
+ 			error = xfs_da3_node_read(args->trans, args->dp,
+ 						be32_to_cpu(drop_info->back),
+-						-1, &bp, args->whichfork);
++						XFS_DABUF_MAP_NOMAPPING, &bp,
++						args->whichfork);
+ 			if (error)
+ 				return error;
+ 			ASSERT(bp != NULL);
+@@ -1843,7 +1851,8 @@ xfs_da3_blk_unlink(
+ 		if (drop_info->forw) {
+ 			error = xfs_da3_node_read(args->trans, args->dp,
+ 						be32_to_cpu(drop_info->forw),
+-						-1, &bp, args->whichfork);
++						XFS_DABUF_MAP_NOMAPPING, &bp,
++						args->whichfork);
+ 			if (error)
+ 				return error;
+ 			ASSERT(bp != NULL);
+@@ -1929,7 +1938,8 @@ xfs_da3_path_shift(
+ 		/*
+ 		 * Read the next child block into a local buffer.
+ 		 */
+-		error = xfs_da3_node_read(args->trans, dp, blkno, -1, &bp,
++		error = xfs_da3_node_read(args->trans, dp, blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &bp,
+ 					  args->whichfork);
+ 		if (error)
+ 			return error;
+@@ -2223,7 +2233,8 @@ xfs_da3_swap_lastblock(
+ 	 * Read the last block in the btree space.
+ 	 */
+ 	last_blkno = (xfs_dablk_t)lastoff - args->geo->fsbcount;
+-	error = xfs_da3_node_read(tp, dp, last_blkno, -1, &last_buf, w);
++	error = xfs_da3_node_read(tp, dp, last_blkno, XFS_DABUF_MAP_NOMAPPING,
++				  &last_buf, w);
+ 	if (error)
+ 		return error;
+ 	/*
+@@ -2259,7 +2270,8 @@ xfs_da3_swap_lastblock(
+ 	 * If the moved block has a left sibling, fix up the pointers.
+ 	 */
+ 	if ((sib_blkno = be32_to_cpu(dead_info->back))) {
+-		error = xfs_da3_node_read(tp, dp, sib_blkno, -1, &sib_buf, w);
++		error = xfs_da3_node_read(tp, dp, sib_blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &sib_buf, w);
+ 		if (error)
+ 			goto done;
+ 		sib_info = sib_buf->b_addr;
+@@ -2281,7 +2293,8 @@ xfs_da3_swap_lastblock(
+ 	 * If the moved block has a right sibling, fix up the pointers.
+ 	 */
+ 	if ((sib_blkno = be32_to_cpu(dead_info->forw))) {
+-		error = xfs_da3_node_read(tp, dp, sib_blkno, -1, &sib_buf, w);
++		error = xfs_da3_node_read(tp, dp, sib_blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &sib_buf, w);
+ 		if (error)
+ 			goto done;
+ 		sib_info = sib_buf->b_addr;
+@@ -2305,7 +2318,8 @@ xfs_da3_swap_lastblock(
+ 	 * Walk down the tree looking for the parent of the moved block.
+ 	 */
+ 	for (;;) {
+-		error = xfs_da3_node_read(tp, dp, par_blkno, -1, &par_buf, w);
++		error = xfs_da3_node_read(tp, dp, par_blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &par_buf, w);
+ 		if (error)
+ 			goto done;
+ 		par_node = par_buf->b_addr;
+@@ -2356,7 +2370,8 @@ xfs_da3_swap_lastblock(
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+-		error = xfs_da3_node_read(tp, dp, par_blkno, -1, &par_buf, w);
++		error = xfs_da3_node_read(tp, dp, par_blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &par_buf, w);
+ 		if (error)
+ 			goto done;
+ 		par_node = par_buf->b_addr;
+@@ -2534,7 +2549,8 @@ xfs_dabuf_map(
+ 	 * Caller doesn't have a mapping.  -2 means don't complain
+ 	 * if we land in a hole.
+ 	 */
+-	if (mappedbno == -1 || mappedbno == -2) {
++	if (mappedbno == XFS_DABUF_MAP_NOMAPPING ||
++	    mappedbno == XFS_DABUF_MAP_HOLE_OK) {
+ 		/*
+ 		 * Optimize the one-block case.
+ 		 */
+diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
+index 8dedc30..6bc7651 100644
+--- a/fs/xfs/libxfs/xfs_dir2_block.c
++++ b/fs/xfs/libxfs/xfs_dir2_block.c
+@@ -20,6 +20,7 @@
+ #include "xfs_error.h"
+ #include "xfs_trace.h"
+ #include "xfs_log.h"
++#include "xfs_attr_leaf.h"
+ 
+ /*
+  * Local function prototypes.
+@@ -123,8 +124,9 @@ xfs_dir3_block_read(
+ 	struct xfs_mount	*mp = dp->i_mount;
+ 	int			err;
+ 
+-	err = xfs_da_read_buf(tp, dp, mp->m_dir_geo->datablk, -1, bpp,
+-				XFS_DATA_FORK, &xfs_dir3_block_buf_ops);
++	err = xfs_da_read_buf(tp, dp, mp->m_dir_geo->datablk,
++			      XFS_DABUF_MAP_NOMAPPING, bpp, XFS_DATA_FORK,
++			      &xfs_dir3_block_buf_ops);
+ 	if (!err && tp && *bpp)
+ 		xfs_trans_buf_set_type(tp, *bpp, XFS_BLFT_DIR_BLOCK_BUF);
+ 	return err;
+diff --git a/fs/xfs/libxfs/xfs_dir2_data.c b/fs/xfs/libxfs/xfs_dir2_data.c
+index 2c79be4..a4188de 100644
+--- a/fs/xfs/libxfs/xfs_dir2_data.c
++++ b/fs/xfs/libxfs/xfs_dir2_data.c
+@@ -17,6 +17,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_log.h"
++#include "xfs_attr_leaf.h"
+ 
+ static xfs_failaddr_t xfs_dir2_data_freefind_verify(
+ 		struct xfs_dir2_data_hdr *hdr, struct xfs_dir2_data_free *bf,
+@@ -653,7 +654,7 @@ xfs_dir3_data_init(
+ 	 * Get the buffer set up for the block.
+ 	 */
+ 	error = xfs_da_get_buf(tp, dp, xfs_dir2_db_to_da(args->geo, blkno),
+-			       -1, &bp, XFS_DATA_FORK);
++			       XFS_DABUF_MAP_NOMAPPING, &bp, XFS_DATA_FORK);
+ 	if (error)
+ 		return error;
+ 	bp->b_ops = &xfs_dir3_data_buf_ops;
 diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
-index a53e458..b7046e2 100644
+index b7046e2..a2cba6bd 100644
 --- a/fs/xfs/libxfs/xfs_dir2_leaf.c
 +++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
-@@ -610,7 +610,7 @@ xfs_dir2_leaf_addname(
- 	ents = dp->d_ops->leaf_ents_p(leaf);
- 	dp->d_ops->leaf_hdr_from_disk(&leafhdr, leaf);
- 	bestsp = xfs_dir2_leaf_bests_p(ltp);
--	length = dp->d_ops->data_entsize(args->namelen);
-+	length = dp->d_ops->data_entsize(args->name.len);
+@@ -19,6 +19,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
++#include "xfs_attr_leaf.h"
  
- 	/*
- 	 * See if there are any entries with the same hash value
-@@ -813,8 +813,8 @@ xfs_dir2_leaf_addname(
- 	 */
- 	dep = (xfs_dir2_data_entry_t *)dup;
- 	dep->inumber = cpu_to_be64(args->inumber);
--	dep->namelen = args->namelen;
--	memcpy(dep->name, args->name, dep->namelen);
-+	dep->namelen = args->name.len;
-+	memcpy(dep->name, args->name.name, dep->namelen);
- 	dp->d_ops->data_put_ftype(dep, args->filetype);
- 	tagp = dp->d_ops->data_entry_tag_p(dep);
- 	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
+ /*
+  * Local function declarations.
+@@ -311,7 +312,7 @@ xfs_dir3_leaf_get_buf(
+ 	       bno < xfs_dir2_byte_to_db(args->geo, XFS_DIR2_FREE_OFFSET));
+ 
+ 	error = xfs_da_get_buf(tp, dp, xfs_dir2_db_to_da(args->geo, bno),
+-			       -1, &bp, XFS_DATA_FORK);
++			       XFS_DABUF_MAP_NOMAPPING, &bp, XFS_DATA_FORK);
+ 	if (error)
+ 		return error;
+ 
+@@ -594,7 +595,8 @@ xfs_dir2_leaf_addname(
+ 
+ 	trace_xfs_dir2_leaf_addname(args);
+ 
+-	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk, -1, &lbp);
++	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk,
++				   XFS_DABUF_MAP_NOMAPPING, &lbp);
+ 	if (error)
+ 		return error;
+ 
+@@ -1189,7 +1191,8 @@ xfs_dir2_leaf_lookup_int(
+ 	tp = args->trans;
+ 	mp = dp->i_mount;
+ 
+-	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk, -1, &lbp);
++	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk,
++				   XFS_DABUF_MAP_NOMAPPING, &lbp);
+ 	if (error)
+ 		return error;
+ 
 diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-index 705c4f5..8bbd742 100644
+index 8bbd742..0a803e4 100644
 --- a/fs/xfs/libxfs/xfs_dir2_node.c
 +++ b/fs/xfs/libxfs/xfs_dir2_node.c
-@@ -604,7 +604,7 @@ xfs_dir2_leafn_lookup_for_addname(
- 		ASSERT(free->hdr.magic == cpu_to_be32(XFS_DIR2_FREE_MAGIC) ||
- 		       free->hdr.magic == cpu_to_be32(XFS_DIR3_FREE_MAGIC));
- 	}
--	length = dp->d_ops->data_entsize(args->namelen);
-+	length = dp->d_ops->data_entsize(args->name.len);
- 	/*
- 	 * Loop over leaf entries with the right hash value.
- 	 */
-@@ -1869,7 +1869,7 @@ xfs_dir2_node_addname_int(
- 	__be16			*tagp;		/* data entry tag pointer */
- 	__be16			*bests;
+@@ -20,6 +20,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_log.h"
++#include "xfs_attr_leaf.h"
  
--	length = dp->d_ops->data_entsize(args->namelen);
-+	length = dp->d_ops->data_entsize(args->name.len);
- 	error = xfs_dir2_node_find_freeblk(args, fblk, &dbno, &fbp, &findex,
- 					   length);
+ /*
+  * Function declarations.
+@@ -227,7 +228,7 @@ xfs_dir2_free_read(
+ 	xfs_dablk_t		fbno,
+ 	struct xfs_buf		**bpp)
+ {
+-	return __xfs_dir3_free_read(tp, dp, fbno, -1, bpp);
++	return __xfs_dir3_free_read(tp, dp, fbno, XFS_DABUF_MAP_NOMAPPING, bpp);
+ }
+ 
+ static int
+@@ -237,7 +238,7 @@ xfs_dir2_free_try_read(
+ 	xfs_dablk_t		fbno,
+ 	struct xfs_buf		**bpp)
+ {
+-	return __xfs_dir3_free_read(tp, dp, fbno, -2, bpp);
++	return __xfs_dir3_free_read(tp, dp, fbno, XFS_DABUF_MAP_HOLE_OK, bpp);
+ }
+ 
+ static int
+@@ -254,7 +255,7 @@ xfs_dir3_free_get_buf(
+ 	struct xfs_dir3_icfree_hdr hdr;
+ 
+ 	error = xfs_da_get_buf(tp, dp, xfs_dir2_db_to_da(args->geo, fbno),
+-				   -1, &bp, XFS_DATA_FORK);
++				   XFS_DABUF_MAP_NOMAPPING, &bp, XFS_DATA_FORK);
  	if (error)
-@@ -1924,8 +1924,8 @@ xfs_dir2_node_addname_int(
- 	/* Fill in the new entry and log it. */
- 	dep = (xfs_dir2_data_entry_t *)dup;
- 	dep->inumber = cpu_to_be64(args->inumber);
--	dep->namelen = args->namelen;
--	memcpy(dep->name, args->name, dep->namelen);
-+	dep->namelen = args->name.len;
-+	memcpy(dep->name, args->name.name, dep->namelen);
- 	dp->d_ops->data_put_ftype(dep, args->filetype);
- 	tagp = dp->d_ops->data_entry_tag_p(dep);
- 	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
-diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
-index ae16ca7..7659cc2 100644
---- a/fs/xfs/libxfs/xfs_dir2_sf.c
-+++ b/fs/xfs/libxfs/xfs_dir2_sf.c
-@@ -291,7 +291,7 @@ xfs_dir2_sf_addname(
- 	/*
- 	 * Compute entry (and change in) size.
- 	 */
--	incr_isize = dp->d_ops->sf_entsize(sfp, args->namelen);
-+	incr_isize = dp->d_ops->sf_entsize(sfp, args->name.len);
- 	objchange = 0;
+ 		return error;
  
- 	/*
-@@ -375,7 +375,7 @@ xfs_dir2_sf_addname_easy(
- 	/*
- 	 * Grow the in-inode space.
- 	 */
--	xfs_idata_realloc(dp, dp->d_ops->sf_entsize(sfp, args->namelen),
-+	xfs_idata_realloc(dp, dp->d_ops->sf_entsize(sfp, args->name.len),
- 			  XFS_DATA_FORK);
- 	/*
- 	 * Need to set up again due to realloc of the inode data.
-@@ -385,9 +385,9 @@ xfs_dir2_sf_addname_easy(
- 	/*
- 	 * Fill in the new entry.
- 	 */
--	sfep->namelen = args->namelen;
-+	sfep->namelen = args->name.len;
- 	xfs_dir2_sf_put_offset(sfep, offset);
--	memcpy(sfep->name, args->name, sfep->namelen);
-+	memcpy(sfep->name, args->name.name, sfep->namelen);
- 	dp->d_ops->sf_put_ino(sfp, sfep, args->inumber);
- 	dp->d_ops->sf_put_ftype(sfep, args->filetype);
+@@ -1495,7 +1496,8 @@ xfs_dir2_leafn_toosmall(
+ 		 * Read the sibling leaf block.
+ 		 */
+ 		error = xfs_dir3_leafn_read(state->args->trans, dp,
+-					    blkno, -1, &bp);
++					    blkno, XFS_DABUF_MAP_NOMAPPING,
++					    &bp);
+ 		if (error)
+ 			return error;
  
-@@ -446,7 +446,7 @@ xfs_dir2_sf_addname_hard(
- 	 */
- 	for (offset = dp->d_ops->data_first_offset,
- 	      oldsfep = xfs_dir2_sf_firstentry(oldsfp),
--	      add_datasize = dp->d_ops->data_entsize(args->namelen),
-+	      add_datasize = dp->d_ops->data_entsize(args->name.len),
- 	      eof = (char *)oldsfep == &buf[old_isize];
- 	     !eof;
- 	     offset = new_offset + dp->d_ops->data_entsize(oldsfep->namelen),
-@@ -476,9 +476,9 @@ xfs_dir2_sf_addname_hard(
- 	/*
- 	 * Fill in the new entry, and update the header counts.
- 	 */
--	sfep->namelen = args->namelen;
-+	sfep->namelen = args->name.len;
- 	xfs_dir2_sf_put_offset(sfep, offset);
--	memcpy(sfep->name, args->name, sfep->namelen);
-+	memcpy(sfep->name, args->name.name, sfep->namelen);
- 	dp->d_ops->sf_put_ino(sfp, sfep, args->inumber);
- 	dp->d_ops->sf_put_ftype(sfep, args->filetype);
- 	sfp->count++;
-@@ -522,7 +522,7 @@ xfs_dir2_sf_addname_pick(
- 	dp = args->dp;
+diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+index 77ff9f9..353455c 100644
+--- a/fs/xfs/scrub/dabtree.c
++++ b/fs/xfs/scrub/dabtree.c
+@@ -355,9 +355,9 @@ xchk_da_btree_block(
+ 		goto out_nobuf;
  
- 	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
--	size = dp->d_ops->data_entsize(args->namelen);
-+	size = dp->d_ops->data_entsize(args->name.len);
- 	offset = dp->d_ops->data_first_offset;
- 	sfep = xfs_dir2_sf_firstentry(sfp);
- 	holefit = 0;
-@@ -807,7 +807,7 @@ xfs_dir2_sf_lookup(
- 	/*
- 	 * Special case for .
- 	 */
--	if (args->namelen == 1 && args->name[0] == '.') {
-+	if (args->name.len == 1 && args->name.name[0] == '.') {
- 		args->inumber = dp->i_ino;
- 		args->cmpresult = XFS_CMP_EXACT;
- 		args->filetype = XFS_DIR3_FT_DIR;
-@@ -816,8 +816,8 @@ xfs_dir2_sf_lookup(
- 	/*
- 	 * Special case for ..
- 	 */
--	if (args->namelen == 2 &&
--	    args->name[0] == '.' && args->name[1] == '.') {
-+	if (args->name.len == 2 &&
-+	    args->name.name[0] == '.' && args->name.name[1] == '.') {
- 		args->inumber = dp->d_ops->sf_get_parent_ino(sfp);
- 		args->cmpresult = XFS_CMP_EXACT;
- 		args->filetype = XFS_DIR3_FT_DIR;
-@@ -912,7 +912,7 @@ xfs_dir2_sf_removename(
- 	 * Calculate sizes.
- 	 */
- 	byteoff = (int)((char *)sfep - (char *)sfp);
--	entsize = dp->d_ops->sf_entsize(sfp, args->namelen);
-+	entsize = dp->d_ops->sf_entsize(sfp, args->name.len);
- 	newsize = oldsize - entsize;
- 	/*
- 	 * Copy the part if any after the removed entry, sliding it down.
-@@ -1002,12 +1002,12 @@ xfs_dir2_sf_replace(
- 	} else
- 		i8elevated = 0;
+ 	/* Read the buffer. */
+-	error = xfs_da_read_buf(dargs->trans, dargs->dp, blk->blkno, -2,
+-			&blk->bp, dargs->whichfork,
+-			&xchk_da_btree_buf_ops);
++	error = xfs_da_read_buf(dargs->trans, dargs->dp, blk->blkno,
++				XFS_DABUF_MAP_HOLE_OK, &blk->bp,
++				dargs->whichfork, &xchk_da_btree_buf_ops);
+ 	if (!xchk_da_process_error(ds, level, &error))
+ 		goto out_nobuf;
+ 	if (blk->bp)
+diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
+index 1e2e117..eb0fa0f 100644
+--- a/fs/xfs/scrub/dir.c
++++ b/fs/xfs/scrub/dir.c
+@@ -18,6 +18,7 @@
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/dabtree.h"
++#include "xfs_attr_leaf.h"
  
--	ASSERT(args->namelen != 1 || args->name[0] != '.');
-+	ASSERT(args->name.len != 1 || args->name.name[0] != '.');
- 	/*
- 	 * Replace ..'s entry.
+ /* Set us up to scrub directories. */
+ int
+@@ -492,7 +493,8 @@ xchk_directory_leaf1_bestfree(
+ 	int				error;
+ 
+ 	/* Read the free space block. */
+-	error = xfs_dir3_leaf_read(sc->tp, sc->ip, lblk, -1, &bp);
++	error = xfs_dir3_leaf_read(sc->tp, sc->ip, lblk,
++				   XFS_DABUF_MAP_NOMAPPING, &bp);
+ 	if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, lblk, &error))
+ 		goto out;
+ 	xchk_buffer_recheck(sc, bp);
+diff --git a/fs/xfs/xfs_attr_inactive.c b/fs/xfs/xfs_attr_inactive.c
+index f83f11d..9c22915 100644
+--- a/fs/xfs/xfs_attr_inactive.c
++++ b/fs/xfs/xfs_attr_inactive.c
+@@ -235,7 +235,8 @@ xfs_attr3_node_inactive(
+ 		 * traversal of the tree so we may deal with many blocks
+ 		 * before we come back to this one.
+ 		 */
+-		error = xfs_da3_node_read(*trans, dp, child_fsb, -1, &child_bp,
++		error = xfs_da3_node_read(*trans, dp, child_fsb,
++					  XFS_DABUF_MAP_NOMAPPING, &child_bp,
+ 					  XFS_ATTR_FORK);
+ 		if (error)
+ 			return error;
+@@ -321,7 +322,8 @@ xfs_attr3_root_inactive(
+ 	 * the extents in reverse order the extent containing
+ 	 * block 0 must still be there.
  	 */
--	if (args->namelen == 2 &&
--	    args->name[0] == '.' && args->name[1] == '.') {
-+	if (args->name.len == 2 &&
-+	    args->name.name[0] == '.' && args->name.name[1] == '.') {
- 		ino = dp->d_ops->sf_get_parent_ino(sfp);
- 		ASSERT(args->inumber != ino);
- 		dp->d_ops->sf_put_parent_ino(sfp, args->inumber);
-diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 0edc7f8..42f7c07 100644
---- a/fs/xfs/scrub/attr.c
-+++ b/fs/xfs/scrub/attr.c
-@@ -147,17 +147,17 @@ xchk_xattr_listent(
- 		return;
+-	error = xfs_da3_node_read(*trans, dp, 0, -1, &bp, XFS_ATTR_FORK);
++	error = xfs_da3_node_read(*trans, dp, 0, XFS_DABUF_MAP_NOMAPPING, &bp,
++				  XFS_ATTR_FORK);
+ 	if (error)
+ 		return error;
+ 	blkno = bp->b_bn;
+diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+index c02f22d..fab416c 100644
+--- a/fs/xfs/xfs_attr_list.c
++++ b/fs/xfs/xfs_attr_list.c
+@@ -224,8 +224,9 @@ xfs_attr_node_list_lookup(
+ 	ASSERT(*pbp == NULL);
+ 	cursor->blkno = 0;
+ 	for (;;) {
+-		error = xfs_da3_node_read(tp, dp, cursor->blkno, -1, &bp,
+-				XFS_ATTR_FORK);
++		error = xfs_da3_node_read(tp, dp, cursor->blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &bp,
++					  XFS_ATTR_FORK);
+ 		if (error)
+ 			return error;
+ 		node = bp->b_addr;
+@@ -309,8 +310,9 @@ xfs_attr_node_list(
+ 	 */
+ 	bp = NULL;
+ 	if (cursor->blkno > 0) {
+-		error = xfs_da3_node_read(context->tp, dp, cursor->blkno, -1,
+-					      &bp, XFS_ATTR_FORK);
++		error = xfs_da3_node_read(context->tp, dp, cursor->blkno,
++					  XFS_DABUF_MAP_NOMAPPING, &bp,
++					  XFS_ATTR_FORK);
+ 		if ((error != 0) && (error != -EFSCORRUPTED))
+ 			return error;
+ 		if (bp) {
+@@ -377,7 +379,8 @@ xfs_attr_node_list(
+ 			break;
+ 		cursor->blkno = leafhdr.forw;
+ 		xfs_trans_brelse(context->tp, bp);
+-		error = xfs_attr3_leaf_read(context->tp, dp, cursor->blkno, -1, &bp);
++		error = xfs_attr3_leaf_read(context->tp, dp, cursor->blkno,
++					    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 		if (error)
+ 			return error;
  	}
+@@ -497,7 +500,8 @@ xfs_attr_leaf_list(xfs_attr_list_context_t *context)
+ 	trace_xfs_attr_leaf_list(context);
  
--	args.flags = ATTR_KERNOTIME;
-+	args.name.type = ATTR_KERNOTIME;
- 	if (flags & XFS_ATTR_ROOT)
--		args.flags |= ATTR_ROOT;
-+		args.name.type |= ATTR_ROOT;
- 	else if (flags & XFS_ATTR_SECURE)
--		args.flags |= ATTR_SECURE;
-+		args.name.type |= ATTR_SECURE;
- 	args.geo = context->dp->i_mount->m_attr_geo;
- 	args.whichfork = XFS_ATTR_FORK;
- 	args.dp = context->dp;
--	args.name = name;
--	args.namelen = namelen;
--	args.hashval = xfs_da_hashname(args.name, args.namelen);
-+	args.name.name = name;
-+	args.name.len = namelen;
-+	args.hashval = xfs_da_hashname(args.name.name, args.name.len);
- 	args.trans = context->tp;
- 	args.value = xchk_xattr_valuebuf(sx->sc);
- 	args.valuelen = valuelen;
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index c13bb36..cee7536 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1633,7 +1633,7 @@ DECLARE_EVENT_CLASS(xfs_da_class,
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_ino_t, ino)
--		__dynamic_array(char, name, args->namelen)
-+		__dynamic_array(char, name, args->name.len)
- 		__field(int, namelen)
- 		__field(xfs_dahash_t, hashval)
- 		__field(xfs_ino_t, inumber)
-@@ -1642,9 +1642,10 @@ DECLARE_EVENT_CLASS(xfs_da_class,
- 	TP_fast_assign(
- 		__entry->dev = VFS_I(args->dp)->i_sb->s_dev;
- 		__entry->ino = args->dp->i_ino;
--		if (args->namelen)
--			memcpy(__get_str(name), args->name, args->namelen);
--		__entry->namelen = args->namelen;
-+		if (args->name.len)
-+			memcpy(__get_str(name), args->name.name,
-+			       args->name.len);
-+		__entry->namelen = args->name.len;
- 		__entry->hashval = args->hashval;
- 		__entry->inumber = args->inumber;
- 		__entry->op_flags = args->op_flags;
-@@ -1697,7 +1698,7 @@ DECLARE_EVENT_CLASS(xfs_attr_class,
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_ino_t, ino)
--		__dynamic_array(char, name, args->namelen)
-+		__dynamic_array(char, name, args->name.len)
- 		__field(int, namelen)
- 		__field(int, valuelen)
- 		__field(xfs_dahash_t, hashval)
-@@ -1707,12 +1708,13 @@ DECLARE_EVENT_CLASS(xfs_attr_class,
- 	TP_fast_assign(
- 		__entry->dev = VFS_I(args->dp)->i_sb->s_dev;
- 		__entry->ino = args->dp->i_ino;
--		if (args->namelen)
--			memcpy(__get_str(name), args->name, args->namelen);
--		__entry->namelen = args->namelen;
-+		if (args->name.len)
-+			memcpy(__get_str(name), args->name.name,
-+			       args->name.len);
-+		__entry->namelen = args->name.len;
- 		__entry->valuelen = args->valuelen;
- 		__entry->hashval = args->hashval;
--		__entry->flags = args->flags;
-+		__entry->flags = args->name.type;
- 		__entry->op_flags = args->op_flags;
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx name %.*s namelen %d valuelen %d "
+ 	context->cursor->blkno = 0;
+-	error = xfs_attr3_leaf_read(context->tp, context->dp, 0, -1, &bp);
++	error = xfs_attr3_leaf_read(context->tp, context->dp, 0,
++				    XFS_DABUF_MAP_NOMAPPING, &bp);
+ 	if (error)
+ 		return error;
+ 
 -- 
 2.7.4
 
