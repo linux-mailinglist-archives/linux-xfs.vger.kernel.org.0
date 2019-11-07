@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A43F8F25B7
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 04:02:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCCD7F25BA
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 04:02:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733006AbfKGDC3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Nov 2019 22:02:29 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:55430 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfKGDC3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 22:02:29 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA72x4eU023946
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:28 GMT
+        id S1733053AbfKGDCl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Nov 2019 22:02:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56968 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfKGDCl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 22:02:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA72x3XF039028
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=jy13RaK9zThgwILsHIzQ5kCFjEJ3ovE+CH7o5aVKStc=;
- b=Yi79auVLAJ1MqTI/8E50iGanXf/ZLcV5cY043SA2uWYtJzOcobWZjedRa9R/UghFVNv/
- B2xOu1xV8VUhYuUGuNxdekTw3BS1iNS4AMLkFnQ1tKd6Qv95n5mssyfRAMsSHGD9IL7L
- snFZL8JiK2oer/3n4agui5okDuAuM/1tOwaOLQkMMp1cSe+DdUodIqUJCsAqUR4Yi0ra
- kq4wbhceEYeswcjjradp5EBB+UyKlPfijuemXPqiCLNYbHo/u1STAVfL79fLcNOiL8nX
- JnLu7CPJX2upO9ZeZczcMSj9rOTUGaDjIi5Dgt24+WCmnQVIqDytsxBjTJyuWnoRruma dw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2w41w0u0jq-1
+ bh=7Bm+ZrwttBlUQJuAWe8NjpIDdwfIy+u5byxSlw0N/l4=;
+ b=XLWf9H4OuOpTzfudIUI67SlMVkyxYDm95p85J5vG/cY17lKeH2ImGVb6TFFqpo6iNFxh
+ sMSkkgQwanPH3XYQHpMDUT8gvoHJiAr8npOhGnflH/adYXpSicPc89G1N1AFT5/1snU4
+ ecM+Xc4NnAIV6GB2Z687DZBNEme90/MGABJDZWSRSKjyDlGkJrTjX7deVhTz99SQB+lv
+ BkhIgc1OAuIvwxuPgA5ckXc/iFbqjSKZf02PhW1oymvJ/HpaPd/JFuMH/eA5+O29VOTD
+ Mla11Xiq9WL3sfQAmYJFRrc2OFbY2ybL772csktWn4HKUcenaEN0JkHF2iNzFNYyCN2t gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w41w0u0h3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:02:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA72wh0s106480
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2w41wg134b-1
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:02:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA72wiwP151838
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2w41w8kq0y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:02:27 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA732Q1a028972
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:26 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 03:02:39 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA732bls003295
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 03:02:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 19:02:26 -0800
-Subject: [PATCH 1/6] xfs: annotate functions that trip static checker
- locking checks
+        with ESMTP ; Wed, 06 Nov 2019 19:02:37 -0800
+Subject: [PATCH 2/6] xfs: fix missing header includes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 06 Nov 2019 19:02:25 -0800
-Message-ID: <157309574505.46520.7461860244690955225.stgit@magnolia>
+Date:   Wed, 06 Nov 2019 19:02:31 -0800
+Message-ID: <157309575167.46520.15760576794168756429.stgit@magnolia>
 In-Reply-To: <157309573874.46520.18107298984141751739.stgit@magnolia>
 References: <157309573874.46520.18107298984141751739.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,42 +70,160 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add some lock annotations to helper functions that seem to have
-unbalanced locking that confuses the static analyzers.
+Some of the xfs source files are missing header includes, so add them
+back.  Sparse complains about non-static functions that don't have a
+forward declaration anywhere.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_log.c      |    1 +
- fs/xfs/xfs_log_priv.h |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_ag_resv.c     |    2 ++
+ fs/xfs/libxfs/xfs_attr_remote.c |    1 +
+ fs/xfs/libxfs/xfs_bit.c         |    1 +
+ fs/xfs/libxfs/xfs_sb.c          |    1 +
+ fs/xfs/scrub/health.c           |    1 +
+ fs/xfs/scrub/scrub.c            |    1 +
+ fs/xfs/xfs_acl.c                |    3 ++-
+ fs/xfs/xfs_discard.c            |    1 +
+ fs/xfs/xfs_ioctl.c              |    1 +
+ fs/xfs/xfs_symlink.c            |    1 +
+ fs/xfs/xfs_xattr.c              |    1 +
+ 11 files changed, 13 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index d7d3bfd6a920..1b4e37bbce53 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2808,6 +2808,7 @@ xlog_state_do_iclog_callbacks(
- 	struct xlog		*log,
- 	struct xlog_in_core	*iclog,
- 	bool			aborted)
-+	__releases(&log->l_icloglock) __acquires(&log->l_icloglock)
- {
- 	spin_unlock(&log->l_icloglock);
- 	spin_lock(&iclog->ic_callback_lock);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 4f19375f6592..78fef8fc18b3 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -537,7 +537,10 @@ xlog_cil_force(struct xlog *log)
-  * by a spinlock. This matches the semantics of all the wait queues used in the
-  * log code.
-  */
--static inline void xlog_wait(wait_queue_head_t *wq, spinlock_t *lock)
-+static inline void
-+xlog_wait(
-+	struct wait_queue_head	*wq,
-+	struct spinlock		*lock) __releases(lock)
- {
- 	DECLARE_WAITQUEUE(wait, current);
+diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
+index 87a9747f1d36..fdfe6dc0d307 100644
+--- a/fs/xfs/libxfs/xfs_ag_resv.c
++++ b/fs/xfs/libxfs/xfs_ag_resv.c
+@@ -19,6 +19,8 @@
+ #include "xfs_btree.h"
+ #include "xfs_refcount_btree.h"
+ #include "xfs_ialloc_btree.h"
++#include "xfs_sb.h"
++#include "xfs_ag_resv.h"
  
+ /*
+  * Per-AG Block Reservations
+diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+index 3e39b7d40f25..a6ef5df42669 100644
+--- a/fs/xfs/libxfs/xfs_attr_remote.c
++++ b/fs/xfs/libxfs/xfs_attr_remote.c
+@@ -19,6 +19,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_bmap.h"
+ #include "xfs_attr.h"
++#include "xfs_attr_remote.h"
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+ 
+diff --git a/fs/xfs/libxfs/xfs_bit.c b/fs/xfs/libxfs/xfs_bit.c
+index 7071ff98fdbc..40ce5f3094d1 100644
+--- a/fs/xfs/libxfs/xfs_bit.c
++++ b/fs/xfs/libxfs/xfs_bit.c
+@@ -5,6 +5,7 @@
+  */
+ #include "xfs.h"
+ #include "xfs_log_format.h"
++#include "xfs_bit.h"
+ 
+ /*
+  * XFS bit manipulation routines, used in non-realtime code.
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index ac6cdca63e15..0ac69751fe85 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -10,6 +10,7 @@
+ #include "xfs_log_format.h"
+ #include "xfs_trans_resv.h"
+ #include "xfs_bit.h"
++#include "xfs_sb.h"
+ #include "xfs_mount.h"
+ #include "xfs_ialloc.h"
+ #include "xfs_alloc.h"
+diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
+index b2f602811e9d..83d27cdf579b 100644
+--- a/fs/xfs/scrub/health.c
++++ b/fs/xfs/scrub/health.c
+@@ -11,6 +11,7 @@
+ #include "xfs_sb.h"
+ #include "xfs_health.h"
+ #include "scrub/scrub.h"
++#include "scrub/health.h"
+ 
+ /*
+  * Scrub and In-Core Filesystem Health Assessments
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 15c8c5f3f688..f1775bb19313 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -16,6 +16,7 @@
+ #include "xfs_qm.h"
+ #include "xfs_errortag.h"
+ #include "xfs_error.h"
++#include "xfs_scrub.h"
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/trace.h"
+diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+index 3f2292c7835c..91693fce34a8 100644
+--- a/fs/xfs/xfs_acl.c
++++ b/fs/xfs/xfs_acl.c
+@@ -13,8 +13,9 @@
+ #include "xfs_attr.h"
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+-#include <linux/posix_acl_xattr.h>
++#include "xfs_acl.h"
+ 
++#include <linux/posix_acl_xattr.h>
+ 
+ /*
+  * Locking scheme:
+diff --git a/fs/xfs/xfs_discard.c b/fs/xfs/xfs_discard.c
+index 8ec7aab89044..50966a9912cd 100644
+--- a/fs/xfs/xfs_discard.c
++++ b/fs/xfs/xfs_discard.c
+@@ -13,6 +13,7 @@
+ #include "xfs_btree.h"
+ #include "xfs_alloc_btree.h"
+ #include "xfs_alloc.h"
++#include "xfs_discard.h"
+ #include "xfs_error.h"
+ #include "xfs_extent_busy.h"
+ #include "xfs_trace.h"
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 800f07044636..364961c23cd0 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -34,6 +34,7 @@
+ #include "xfs_ag.h"
+ #include "xfs_health.h"
+ #include "xfs_reflink.h"
++#include "xfs_ioctl.h"
+ 
+ #include <linux/mount.h>
+ #include <linux/namei.h>
+diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+index ed66fd2de327..a25502bc2071 100644
+--- a/fs/xfs/xfs_symlink.c
++++ b/fs/xfs/xfs_symlink.c
+@@ -17,6 +17,7 @@
+ #include "xfs_bmap.h"
+ #include "xfs_bmap_btree.h"
+ #include "xfs_quota.h"
++#include "xfs_symlink.h"
+ #include "xfs_trans_space.h"
+ #include "xfs_trace.h"
+ #include "xfs_trans.h"
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index cb895b1df5e4..383f0203d103 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -11,6 +11,7 @@
+ #include "xfs_da_format.h"
+ #include "xfs_inode.h"
+ #include "xfs_attr.h"
++#include "xfs_acl.h"
+ 
+ #include <linux/posix_acl_xattr.h>
+ #include <linux/xattr.h>
 
