@@ -2,117 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A91F8F371F
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 19:25:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231AFF3981
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 21:29:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfKGSZn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Nov 2019 13:25:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44230 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfKGSZn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 13:25:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GgPJFolWXIlk/WUno4JgpKnCGQ0QA9YGgqRtPimNVuo=; b=WvDtbGPh17crqk2N2fLnaHfRd
-        d2EJepNBAszo2hLMznAOr2ZGoLYQLGchTMd8fWoFVgN9aXVU+y+E4Z1FJdTdtuagR7of1OHLuMuj/
-        ej7MEQbKowCNEsCUBLEjjoLln638WjtAukd/N7t0hJHvICrOy0J3su+8NLAv4+epv0I9z9RZHmtS0
-        aF81HMj7licvwoK8Wf3YrhCfK1Jjh+vrN4jTkqxtpP8eBRBD8pV3sUSIzUnjWdweFWVckZzbuvOon
-        S9N1YVmZbk938/R7jaGm/rgBdyZWRou0hjjuuwtyrwDCh72onK1HiK9DW/aMUwfCGMgKOPXWmC4JX
-        z5Ypv61fg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSmTW-0004RW-S9; Thu, 07 Nov 2019 18:25:42 +0000
-Date:   Thu, 7 Nov 2019 10:25:42 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Subject: Re: [PATCH 3/4] xfs: convert open coded corruption check to use
- XFS_IS_CORRUPT
-Message-ID: <20191107182542.GC2682@infradead.org>
-References: <157309570855.45542.14663613458519550414.stgit@magnolia>
- <157309572922.45542.2780240623887540291.stgit@magnolia>
+        id S1725844AbfKGU3o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Nov 2019 15:29:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34929 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725823AbfKGU3o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 15:29:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573158582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dBLDnViySKdLik0O4Q6w1Nfndk1AGn/fm7boLOIDXmo=;
+        b=iSFS97m5n8Oj7ESebui7vYoSgQjqBjhpXnyY+tt4tFc3z2VDPl3DeHUKodwyZUlo8lKSwg
+        q2HXVvWhE9lyhsvCS4mcshLHo6E0J+31sdPZgMNjERfZs4JmHHPhRbRusmiqWVG/OI+2yL
+        fGtTSzS4DbOjB6L1LMAiGgAjpmRbVL0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-gDbhqPWXNeC802pzl7_M2w-1; Thu, 07 Nov 2019 15:29:41 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F8B58017E0;
+        Thu,  7 Nov 2019 20:29:40 +0000 (UTC)
+Received: from redhat.com (ovpn-123-234.rdu2.redhat.com [10.10.123.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C9D345C578;
+        Thu,  7 Nov 2019 20:29:36 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 14:29:35 -0600
+From:   Bill O'Donnell <billodo@redhat.com>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH] xfs_io: fix memory leak in add_enckey
+Message-ID: <20191107202935.GA609511@redhat.com>
+References: <4eb1073f-91fb-a4bc-aae8-d54dc5a6b8aa@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157309572922.45542.2780240623887540291.stgit@magnolia>
+In-Reply-To: <4eb1073f-91fb-a4bc-aae8-d54dc5a6b8aa@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: gDbhqPWXNeC802pzl7_M2w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
->  	bp = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno);
-> -	if (!bp) {
-> -		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, tp->t_mountp);
-> +	if (XFS_IS_CORRUPT(tp->t_mountp, !bp)) {
->  		return -EFSCORRUPTED;
->  	}
+On Thu, Nov 07, 2019 at 10:50:59AM -0600, Eric Sandeen wrote:
+> Invalid arguments to add_enckey will leak the "arg" allocation,
+> so fix that.
+>=20
+> Fixes: ba71de04 ("xfs_io/encrypt: add 'add_enckey' command")
+> Fixes-coverity-id: 1454644
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 
-We can kill the braces here now.  Same for various other spots later
-down.
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 
-> +	if (XFS_IS_CORRUPT(mp,
-> +			   ir.loaded != XFS_IFORK_NEXTENTS(ip, whichfork))) {
+> ---
+>=20
+> diff --git a/io/encrypt.c b/io/encrypt.c
+> index 17d61cfb..c6a4e190 100644
+> --- a/io/encrypt.c
+> +++ b/io/encrypt.c
+> @@ -696,6 +696,7 @@ add_enckey_f(int argc, char **argv)
+>  =09=09=09=09goto out;
+>  =09=09=09break;
+>  =09=09default:
+> +=09=09=09free(arg);
+>  =09=09=09return command_usage(&add_enckey_cmd);
+>  =09=09}
+>  =09}
+>=20
 
-Somewhat strange indentation here.
-
->  	ASSERT(map && *map);
-> @@ -2566,14 +2551,16 @@ xfs_dabuf_map(
->  		nirecs = 1;
->  	}
->  
-> -	if (!xfs_da_map_covers_blocks(nirecs, irecs, bno, nfsb)) {
-> -		/* Caller ok with no mapping. */
-> -		if (mappedbno == -2) {
-> -			error = -1;
-> -			goto out;
-> -		}
-> +	covers_blocks = xfs_da_map_covers_blocks(nirecs, irecs, bno, nfsb);
-> +
-> +	/* Caller ok with no mapping. */
-> +	if (mappedbno == -2 && !covers_blocks) {
-> +		error = -1;
-> +		goto out;
-> +	}
->  
-> -		/* Caller expected a mapping, so abort. */
-> +	/* Caller expected a mapping, so abort. */
-> +	if (XFS_IS_CORRUPT(mp, !covers_blocks)) {
-
-Why the restructure here?
-
-This could have just become:
-
-		if (!XFS_IS_CORRUPT(mp != -2)) {
-			error = -1;
-			goto out;
-		}
-
-not that I really like the current structure, but that change seems bit
-out of place in these semi-mechanical fixups, and once we touch the
-structure of this function and its callers there is so much more to
-fix..
-
-> index 7b845c052fb4..e1b9de6c7437 100644
-> --- a/fs/xfs/libxfs/xfs_inode_fork.h
-> +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> @@ -87,6 +87,10 @@ struct xfs_ifork {
->  #define XFS_IFORK_MAXEXT(ip, w) \
->  	(XFS_IFORK_SIZE(ip, w) / sizeof(xfs_bmbt_rec_t))
->  
-> +#define XFS_IFORK_MAPS_BLOCKS(ip, w) \
-> +		(XFS_IFORK_FORMAT((ip), (w)) == XFS_DINODE_FMT_EXTENTS || \
-> +		 XFS_IFORK_FORMAT((ip), (w)) == XFS_DINODE_FMT_BTREE)
-
-Why the double indentation?  Also maybe XFS_IFORK_FORMAT_MAPS_BLOCKS
-is a better name?  Or maybe even turn it into an inline function with
-a less shouting name?  Also the addition of this helper is probably
-worth being split into a separate patch.
-
-> +		    head_block >= tail_block || head_cycle != (tail_cycle + 1)))
-
-no need for the inner most braces here if you touch the line anyway.
