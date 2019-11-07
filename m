@@ -2,142 +2,330 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB26F2422
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:28:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF378F2432
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Nov 2019 02:29:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfKGB2t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Nov 2019 20:28:49 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51160 "EHLO
+        id S1732423AbfKGB3F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Nov 2019 20:29:05 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:51644 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbfKGB2t (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:28:49 -0500
+        with ESMTP id S1728680AbfKGB3F (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Nov 2019 20:29:05 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71On2c152322
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:47 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71T20l155110
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:29:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2019-08-05;
- bh=xmU58VReh/66PSSRHRdzcgzw7P+FhPbD8rL3cx5mKKU=;
- b=nEj2rANNp4xFmaUfaAH1CEhsJbgFZUTmY6S+xxdg9xFCPhODqnagrjzOlgo6KmjLggoN
- H+qg0ab6CvfAfqDOReFU7tujyct+vRlvEVLUmWqR7lTOC8LnMKKhOERc1XqMST50nqDC
- DS+NE8r9fmYNSs0vBAwdRXarnjQYexae6sdnrTjrr8r0avfO9QhGBlJGv70doHtUO4+t
- NKp2tMHpH2sItn34wCeJxzwUKgPUvLxfOuxy2lCtVTinslGDKm64z71/hl59PJZ/znJU
- IW5VD3C1eCHSRejtipMrbm33lYN9A4txa/y88d/2dqQ7l++cURhiBk3Y6QFUPRjYNmxx /Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2w41w0tq4a-1
+ date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=ljQiaOPoeVKzOLGyQMJy9beXzbyv6TFhWQ5KUh9Xp8A=;
+ b=Tms79+Wu+111Reob7bgEPNGJ8nPYYvL7qOuCV3nLVgXi7+FkmZyZ8t3BQtPJevdptCc8
+ qskDYCnu3OHlhHfHrCnTTcm+VhHG37JCeoXcNvqNoQqtOyM9Q2kkLgCnjZczPjfU6eOh
+ Zap9F+xUFd/qcCZJvrJZsuvJo6InrubZKlqpIc8XinB91/JbZn6Dqs/77GBj+XCyaRkY
+ uUm6+DUsRI3pbo5Sxadmpq1zSqRqq2bz1GpUyYC+3wBXN3Y15/UDnUgeCdqGAkk8XBLA
+ uC4E4NINldHZsUXWbv8EhcyYufSYRCZ/VJIg6gq5Gn3aer0HcEza1BMulSpoysFkvUdI cg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w41w0tq71-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:47 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71SjP5088036
-        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2w41wfe833-1
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:29:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71Sxii008272
+        for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:29:03 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2w41wdmsvm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:28:46 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 07 Nov 2019 01:29:01 +0000
 Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA71Sj4I031896
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA71Sjfv011236
         for <linux-xfs@vger.kernel.org>; Thu, 7 Nov 2019 01:28:45 GMT
 Received: from localhost.localdomain (/67.1.205.161)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 17:28:44 -0800
+        with ESMTP ; Wed, 06 Nov 2019 17:28:45 -0800
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v4 00/17] xfs: Delay Ready Attributes
-Date:   Wed,  6 Nov 2019 18:27:44 -0700
-Message-Id: <20191107012801.22863-1-allison.henderson@oracle.com>
+Subject: [PATCH v4 01/17] xfs: Remove all strlen in all xfs_attr_* functions for attr names.
+Date:   Wed,  6 Nov 2019 18:27:45 -0700
+Message-Id: <20191107012801.22863-2-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191107012801.22863-1-allison.henderson@oracle.com>
+References: <20191107012801.22863-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1910280000 definitions=main-1911070014
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070013
+ definitions=main-1911070014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Allison Henderson <allison.henderson@oracle.com>
 
-This set is a subset of a larger series for delayed attributes. Which
-is a subset of an even larger series, parent pointers. Delayed attributes
-allow attribute operations (set and remove) to be logged and committed in
-the same way that other delayed operations do. This allows more complex 
-operations (like parent pointers) to be broken up into multiple smaller 
-transactions. To do this, the existing attr operations must be modified to
-operate as either a delayed operation or a inline operation since older
-filesystems will not be able to use the new log entries. This means that 
-they cannot roll, commit, or finish transactions. Instead, they return 
-EAGAIN an allow the calling function to handle the transaction. In this
-series, we focus on only the clean up and refactoring needed to accomplish
-this. We will introduce delayed attrs and parent pointers in a later set.
+This helps to pre-simplify the extra handling of the null terminator in
+delayed operations which use memcpy rather than strlen.  Later
+when we introduce parent pointers, attribute names will become binary,
+so strlen will not work at all.  Removing uses of strlen now will
+help reduce complexities later
 
-Changes since v3:
-Mostly review updates collected since v3.  Patches 15, 16, and 17 are new
-and apply most of the new code flow changes.  No new function is added at
-this time. 
+Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+---
+ fs/xfs/libxfs/xfs_attr.c | 12 ++++++++----
+ fs/xfs/libxfs/xfs_attr.h |  8 +++++---
+ fs/xfs/xfs_acl.c         | 11 +++++++----
+ fs/xfs/xfs_ioctl.c       | 13 ++++++++++---
+ fs/xfs/xfs_iops.c        |  6 ++++--
+ fs/xfs/xfs_xattr.c       | 11 +++++++----
+ 6 files changed, 41 insertions(+), 20 deletions(-)
 
-I've also made the corresponding updates to the user space side, and
-xfstests as well.
-
-Question, comment and feedback appreciated! 
-
-Thanks all!
-Allison
-
-Allison Collins (15):
-  xfs: Replace attribute parameters with struct xfs_name
-  xfs: Embed struct xfs_name in xfs_da_args
-  xfs: Add xfs_dabuf defines
-  xfs: Factor out new helper functions xfs_attr_rmtval_set
-  xfs: Factor up trans handling in xfs_attr3_leaf_flipflags
-  xfs: Factor out xfs_attr_leaf_addname helper
-  xfs: Factor up commit from xfs_attr_try_sf_addname
-  xfs: Factor up trans roll from xfs_attr3_leaf_setflag
-  xfs: Add xfs_attr3_leaf helper functions
-  xfs: Factor out xfs_attr_rmtval_invalidate
-  xfs: Factor up trans roll in xfs_attr3_leaf_clearflag
-  xfs: Add delay context to xfs_da_args
-  xfs: Check for -ENOATTR or -EEXIST
-  xfs: Add delay ready attr remove routines
-  xfs: Add delay ready attr set routines
-
-Allison Henderson (2):
-  xfs: Remove all strlen in all xfs_attr_* functions for attr names.
-  xfs: Add xfs_has_attr and subroutines
-
- fs/xfs/libxfs/xfs_attr.c        | 771 +++++++++++++++++++++++++---------------
- fs/xfs/libxfs/xfs_attr.h        |   9 +-
- fs/xfs/libxfs/xfs_attr_leaf.c   | 329 +++++++++++------
- fs/xfs/libxfs/xfs_attr_leaf.h   |   7 +
- fs/xfs/libxfs/xfs_attr_remote.c | 103 ++++--
- fs/xfs/libxfs/xfs_attr_remote.h |   4 +-
- fs/xfs/libxfs/xfs_da_btree.c    |  55 ++-
- fs/xfs/libxfs/xfs_da_btree.h    |  32 +-
- fs/xfs/libxfs/xfs_dir2.c        |  18 +-
- fs/xfs/libxfs/xfs_dir2_block.c  |  12 +-
- fs/xfs/libxfs/xfs_dir2_data.c   |   3 +-
- fs/xfs/libxfs/xfs_dir2_leaf.c   |  15 +-
- fs/xfs/libxfs/xfs_dir2_node.c   |  18 +-
- fs/xfs/libxfs/xfs_dir2_sf.c     |  30 +-
- fs/xfs/scrub/attr.c             |  12 +-
- fs/xfs/scrub/common.c           |   2 +
- fs/xfs/scrub/dabtree.c          |   6 +-
- fs/xfs/scrub/dir.c              |   4 +-
- fs/xfs/xfs_acl.c                |  26 +-
- fs/xfs/xfs_attr_inactive.c      |   6 +-
- fs/xfs/xfs_attr_list.c          |  17 +-
- fs/xfs/xfs_ioctl.c              |  20 +-
- fs/xfs/xfs_ioctl32.c            |   2 +
- fs/xfs/xfs_iops.c               |  11 +-
- fs/xfs/xfs_trace.h              |  20 +-
- fs/xfs/xfs_xattr.c              |  23 +-
- 26 files changed, 1016 insertions(+), 539 deletions(-)
-
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 510ca69..7589cb7 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -62,6 +62,7 @@ xfs_attr_args_init(
+ 	struct xfs_da_args	*args,
+ 	struct xfs_inode	*dp,
+ 	const unsigned char	*name,
++	size_t			namelen,
+ 	int			flags)
+ {
+ 
+@@ -74,7 +75,7 @@ xfs_attr_args_init(
+ 	args->dp = dp;
+ 	args->flags = flags;
+ 	args->name = name;
+-	args->namelen = strlen((const char *)name);
++	args->namelen = namelen;
+ 	if (args->namelen >= MAXNAMELEN)
+ 		return -EFAULT;		/* match IRIX behaviour */
+ 
+@@ -139,6 +140,7 @@ int
+ xfs_attr_get(
+ 	struct xfs_inode	*ip,
+ 	const unsigned char	*name,
++	size_t			namelen,
+ 	unsigned char		**value,
+ 	int			*valuelenp,
+ 	int			flags)
+@@ -154,7 +156,7 @@ xfs_attr_get(
+ 	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, ip, name, flags);
++	error = xfs_attr_args_init(&args, ip, name, namelen, flags);
+ 	if (error)
+ 		return error;
+ 
+@@ -338,6 +340,7 @@ int
+ xfs_attr_set(
+ 	struct xfs_inode	*dp,
+ 	const unsigned char	*name,
++	size_t			namelen,
+ 	unsigned char		*value,
+ 	int			valuelen,
+ 	int			flags)
+@@ -353,7 +356,7 @@ xfs_attr_set(
+ 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, dp, name, flags);
++	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+ 	if (error)
+ 		return error;
+ 
+@@ -442,6 +445,7 @@ int
+ xfs_attr_remove(
+ 	struct xfs_inode	*dp,
+ 	const unsigned char	*name,
++	size_t			namelen,
+ 	int			flags)
+ {
+ 	struct xfs_mount	*mp = dp->i_mount;
+@@ -453,7 +457,7 @@ xfs_attr_remove(
+ 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+ 		return -EIO;
+ 
+-	error = xfs_attr_args_init(&args, dp, name, flags);
++	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+index 94badfa..106a2f2 100644
+--- a/fs/xfs/libxfs/xfs_attr.h
++++ b/fs/xfs/libxfs/xfs_attr.h
+@@ -145,11 +145,13 @@ int xfs_attr_list_int(struct xfs_attr_list_context *);
+ int xfs_inode_hasattr(struct xfs_inode *ip);
+ int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
+ int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+-		 unsigned char **value, int *valuelenp, int flags);
++		 size_t namelen, unsigned char **value, int *valuelenp,
++		 int flags);
+ int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+-		 unsigned char *value, int valuelen, int flags);
++		 size_t namelen, unsigned char *value, int valuelen, int flags);
+ int xfs_attr_set_args(struct xfs_da_args *args);
+-int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
++int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
++		    size_t namelen, int flags);
+ int xfs_attr_remove_args(struct xfs_da_args *args);
+ int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
+ 		  int flags, struct attrlist_cursor_kern *cursor);
+diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
+index 96d7071..12be708 100644
+--- a/fs/xfs/xfs_acl.c
++++ b/fs/xfs/xfs_acl.c
+@@ -135,7 +135,8 @@ xfs_get_acl(struct inode *inode, int type)
+ 	 * go out to the disk.
+ 	 */
+ 	len = XFS_ACL_MAX_SIZE(ip->i_mount);
+-	error = xfs_attr_get(ip, ea_name, (unsigned char **)&xfs_acl, &len,
++	error = xfs_attr_get(ip, ea_name, strlen(ea_name), 
++				(unsigned char **)&xfs_acl, &len,
+ 				ATTR_ALLOC | ATTR_ROOT);
+ 	if (error) {
+ 		/*
+@@ -186,15 +187,17 @@ __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ 		len -= sizeof(struct xfs_acl_entry) *
+ 			 (XFS_ACL_MAX_ENTRIES(ip->i_mount) - acl->a_count);
+ 
+-		error = xfs_attr_set(ip, ea_name, (unsigned char *)xfs_acl,
+-				len, ATTR_ROOT);
++		error = xfs_attr_set(ip, ea_name, strlen(ea_name),
++				     (unsigned char *)xfs_acl, len, ATTR_ROOT);
+ 
+ 		kmem_free(xfs_acl);
+ 	} else {
+ 		/*
+ 		 * A NULL ACL argument means we want to remove the ACL.
+ 		 */
+-		error = xfs_attr_remove(ip, ea_name, ATTR_ROOT);
++		error = xfs_attr_remove(ip, ea_name,
++					strlen(ea_name),
++					ATTR_ROOT);
+ 
+ 		/*
+ 		 * If the attribute didn't exist to start with that's fine.
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 800f070..269c321 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -432,6 +432,7 @@ xfs_attrmulti_attr_get(
+ {
+ 	unsigned char		*kbuf;
+ 	int			error = -EFAULT;
++	size_t			namelen;
+ 
+ 	if (*len > XFS_XATTR_SIZE_MAX)
+ 		return -EINVAL;
+@@ -439,7 +440,9 @@ xfs_attrmulti_attr_get(
+ 	if (!kbuf)
+ 		return -ENOMEM;
+ 
+-	error = xfs_attr_get(XFS_I(inode), name, &kbuf, (int *)len, flags);
++	namelen = strlen(name);
++	error = xfs_attr_get(XFS_I(inode), name, namelen, &kbuf, (int *)len,
++			     flags);
+ 	if (error)
+ 		goto out_kfree;
+ 
+@@ -461,6 +464,7 @@ xfs_attrmulti_attr_set(
+ {
+ 	unsigned char		*kbuf;
+ 	int			error;
++	size_t			namelen;
+ 
+ 	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+ 		return -EPERM;
+@@ -471,7 +475,8 @@ xfs_attrmulti_attr_set(
+ 	if (IS_ERR(kbuf))
+ 		return PTR_ERR(kbuf);
+ 
+-	error = xfs_attr_set(XFS_I(inode), name, kbuf, len, flags);
++	namelen = strlen(name);
++	error = xfs_attr_set(XFS_I(inode), name, namelen, kbuf, len, flags);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, flags);
+ 	kfree(kbuf);
+@@ -485,10 +490,12 @@ xfs_attrmulti_attr_remove(
+ 	uint32_t		flags)
+ {
+ 	int			error;
++	size_t			namelen;
+ 
+ 	if (IS_IMMUTABLE(inode) || IS_APPEND(inode))
+ 		return -EPERM;
+-	error = xfs_attr_remove(XFS_I(inode), name, flags);
++	namelen = strlen(name);
++	error = xfs_attr_remove(XFS_I(inode), name, namelen, flags);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, flags);
+ 	return error;
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 18e45e3..7f47f87 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -49,8 +49,10 @@ xfs_initxattrs(
+ 	int			error = 0;
+ 
+ 	for (xattr = xattr_array; xattr->name != NULL; xattr++) {
+-		error = xfs_attr_set(ip, xattr->name, xattr->value,
+-				      xattr->value_len, ATTR_SECURE);
++		error = xfs_attr_set(ip, xattr->name,
++				     strlen(xattr->name),
++				     xattr->value, xattr->value_len,
++				     ATTR_SECURE);
+ 		if (error < 0)
+ 			break;
+ 	}
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index cb895b1..59ffe6c 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -23,6 +23,7 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+ 	int xflags = handler->flags;
+ 	struct xfs_inode *ip = XFS_I(inode);
+ 	int error, asize = size;
++	size_t namelen = strlen(name);
+ 
+ 	/* Convert Linux syscall to XFS internal ATTR flags */
+ 	if (!size) {
+@@ -30,7 +31,8 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
+ 		value = NULL;
+ 	}
+ 
+-	error = xfs_attr_get(ip, name, (unsigned char **)&value, &asize, xflags);
++	error = xfs_attr_get(ip, name, namelen, (unsigned char **)&value,
++			     &asize, xflags);
+ 	if (error)
+ 		return error;
+ 	return asize;
+@@ -66,6 +68,7 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
+ 	int			xflags = handler->flags;
+ 	struct xfs_inode	*ip = XFS_I(inode);
+ 	int			error;
++	size_t			namelen = strlen(name);
+ 
+ 	/* Convert Linux syscall to XFS internal ATTR flags */
+ 	if (flags & XATTR_CREATE)
+@@ -74,9 +77,9 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
+ 		xflags |= ATTR_REPLACE;
+ 
+ 	if (!value)
+-		return xfs_attr_remove(ip, (unsigned char *)name, xflags);
+-	error = xfs_attr_set(ip, (unsigned char *)name,
+-				(void *)value, size, xflags);
++		return xfs_attr_remove(ip, name,
++				       namelen, xflags);
++	error = xfs_attr_set(ip, name, namelen, (void *)value, size, xflags);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, xflags);
+ 
 -- 
 2.7.4
 
