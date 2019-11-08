@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62334F3D1E
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 01:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 080CDF3D24
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 01:59:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfKHA5z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Nov 2019 19:57:55 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35510 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfKHA5z (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 19:57:55 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80sMvm170081;
-        Fri, 8 Nov 2019 00:57:51 GMT
+        id S1726504AbfKHA7T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Nov 2019 19:59:19 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:52608 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfKHA7T (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 19:59:19 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80wsCa160909;
+        Fri, 8 Nov 2019 00:59:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=WIq0UN3tnap2glNUQu860XpHEFjUq3+d8zgX9K6pE1k=;
- b=Gf1ey5Sa9w+fzTEX+zASI70w2v0jX+9hOfNy24mzjh0fy8wxs5ExxSq8JJQ/UjGBhw00
- bxa186708olHcl7d3rn4Ve69NXFWSyoiO6XZMh0kT9cqJJXcCaJRYGteIJkXdwqTnhIY
- OPVePXEdvVGcyd6RVIDI1CIfgnKjbFqZLlo5HXuBfGl7V7U9DVRd/5d1Lg8sDo1SnjIj
- LwjYuU4dW2ZmQWHttUHN5keEXsTm9v61LAY7JdSiZCtrrnYyeIKOHfI7j2hwoIwM+bqq
- m+tc57zNibdtsQ7K8SKaPlZSJe/xhGdXaivLddAqz/uQXur0yIepgq4MSvGtr5M4dQVo Pg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w41w11xdt-1
+ bh=jED3BrQtOsFVFBtTnzJK/Wt+UV2+NMg67JhmRygy6S0=;
+ b=H2hzIHUf8jvlP4GClnBzG/+u+pLyGK38Rc2YwqOsSTHJcdzXHYT5R8RPL50i781H0ZDL
+ R7sOMivU+183JVJsUFKFJlSk595rNfbxVuiFL7RpqRXlR8kVmJDS1/YSbddwe4ABFQv8
+ 8keqSRLjWOVpCu/HXn33U7apjczem6PoZShfRFQBSHTQqcwM8dMsYrm3bGJQs1/9SxNR
+ mznSvh6Kcu7+0VKKtPm+VWZ9CihAewkHcTwNEHgxwXydTY9h1xZgfnVxZiAwpdi6mwXy
+ IJkJPxtHv2bCrb92GM5w+jNltiszRmEi892k6o5pGtMo3ogpL/i0k2G1OYoS0pOJYWz3 5A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2w41w11yqg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 00:57:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80rsHn163431;
-        Fri, 8 Nov 2019 00:57:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2w41wjn21s-1
+        Fri, 08 Nov 2019 00:59:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80s4Lf035496;
+        Fri, 8 Nov 2019 00:59:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w41wb7rb4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 00:57:50 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA80vnYe003330;
-        Fri, 8 Nov 2019 00:57:49 GMT
+        Fri, 08 Nov 2019 00:59:16 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA80xF3T021092;
+        Fri, 8 Nov 2019 00:59:15 GMT
 Received: from localhost (/10.145.179.16)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 16:57:49 -0800
-Date:   Thu, 7 Nov 2019 16:57:49 -0800
+        with ESMTP ; Thu, 07 Nov 2019 16:59:15 -0800
+Date:   Thu, 7 Nov 2019 16:59:15 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 32/46] xfs: cleanup xchk_directory_data_bestfree
-Message-ID: <20191108005749.GC6219@magnolia>
+Subject: Re: [PATCH 33/46] xfs: cleanup xfs_dir2_block_to_sf
+Message-ID: <20191108005915.GD6219@magnolia>
 References: <20191107182410.12660-1-hch@lst.de>
- <20191107182410.12660-33-hch@lst.de>
+ <20191107182410.12660-34-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107182410.12660-33-hch@lst.de>
+In-Reply-To: <20191107182410.12660-34-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
@@ -63,120 +63,155 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911080006
+ definitions=main-1911080007
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 07:23:56PM +0100, Christoph Hellwig wrote:
+On Thu, Nov 07, 2019 at 07:23:57PM +0100, Christoph Hellwig wrote:
 > Use an offset as the main means for iteration, and only do pointer
 > arithmetics to find the data/unused entries.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks ok,
+Looks fairly straightforward...
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/scrub/dir.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
+>  fs/xfs/libxfs/xfs_dir2_sf.c | 68 ++++++++++++++-----------------------
+>  1 file changed, 25 insertions(+), 43 deletions(-)
 > 
-> diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-> index 501d60c9b09a..4cef21b9d336 100644
-> --- a/fs/xfs/scrub/dir.c
-> +++ b/fs/xfs/scrub/dir.c
-> @@ -327,14 +327,13 @@ xchk_directory_data_bestfree(
->  	struct xfs_dir2_data_free	*bf;
->  	struct xfs_mount		*mp = sc->mp;
->  	const struct xfs_dir_ops	*d_ops;
-> -	char				*ptr;
-> -	char				*endptr;
->  	u16				tag;
->  	unsigned int			nr_bestfrees = 0;
->  	unsigned int			nr_frees = 0;
->  	unsigned int			smallest_bestfree;
->  	int				newlen;
-> -	int				offset;
-> +	unsigned int			offset;
-> +	unsigned int			end;
->  	int				error;
+> diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
+> index 39a537c61b04..a1aed589dc8c 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_sf.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_sf.c
+> @@ -255,64 +255,48 @@ xfs_dir2_block_sfsize(
+>   */
+>  int						/* error */
+>  xfs_dir2_block_to_sf(
+> -	xfs_da_args_t		*args,		/* operation arguments */
+> +	struct xfs_da_args	*args,		/* operation arguments */
+>  	struct xfs_buf		*bp,
+>  	int			size,		/* shortform directory size */
+> -	xfs_dir2_sf_hdr_t	*sfhp)		/* shortform directory hdr */
+> +	struct xfs_dir2_sf_hdr	*sfhp)		/* shortform directory hdr */
+>  {
+> -	xfs_dir2_data_hdr_t	*hdr;		/* block header */
+> -	xfs_dir2_data_entry_t	*dep;		/* data entry pointer */
+> -	xfs_inode_t		*dp;		/* incore directory inode */
+> -	xfs_dir2_data_unused_t	*dup;		/* unused data pointer */
+> -	char			*endptr;	/* end of data entries */
+> +	struct xfs_inode	*dp = args->dp;
+> +	struct xfs_mount	*mp = dp->i_mount;
+>  	int			error;		/* error return value */
+>  	int			logflags;	/* inode logging flags */
+> -	xfs_mount_t		*mp;		/* filesystem mount point */
+> -	char			*ptr;		/* current data pointer */
+> -	xfs_dir2_sf_entry_t	*sfep;		/* shortform entry */
+> -	xfs_dir2_sf_hdr_t	*sfp;		/* shortform directory header */
+> -	xfs_dir2_sf_hdr_t	*dst;		/* temporary data buffer */
+> +	struct xfs_dir2_sf_entry *sfep;		/* shortform entry */
+> +	struct xfs_dir2_sf_hdr	*sfp;		/* shortform directory header */
+> +	unsigned int		offset = dp->d_ops->data_entry_offset;
+> +	unsigned int		end;
 >  
->  	d_ops = sc->ip->d_ops;
-> @@ -368,13 +367,13 @@ xchk_directory_data_bestfree(
->  			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
->  			goto out_buf;
->  		}
-> -		dup = (struct xfs_dir2_data_unused *)(bp->b_addr + offset);
-> +		dup = bp->b_addr + offset;
->  		tag = be16_to_cpu(*xfs_dir2_data_unused_tag_p(dup));
+>  	trace_xfs_dir2_block_to_sf(args);
 >  
->  		/* bestfree doesn't match the entry it points at? */
->  		if (dup->freetag != cpu_to_be16(XFS_DIR2_DATA_FREE_TAG) ||
->  		    be16_to_cpu(dup->length) != be16_to_cpu(dfp->length) ||
-> -		    tag != ((char *)dup - (char *)bp->b_addr)) {
-> +		    tag != offset) {
->  			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
->  			goto out_buf;
->  		}
-> @@ -390,30 +389,30 @@ xchk_directory_data_bestfree(
->  	}
+> -	dp = args->dp;
+> -	mp = dp->i_mount;
+> -
+>  	/*
+> -	 * allocate a temporary destination buffer the size of the inode
+> -	 * to format the data into. Once we have formatted the data, we
+> -	 * can free the block and copy the formatted data into the inode literal
+> -	 * area.
+> +	 * Allocate a temporary destination buffer the size of the inode to
+> +	 * format the data into.  Once we have formatted the data, we can free
+> +	 * the block and copy the formatted data into the inode literal area.
+>  	 */
+> -	dst = kmem_alloc(mp->m_sb.sb_inodesize, 0);
+> -	hdr = bp->b_addr;
+> -
+> -	/*
+> -	 * Copy the header into the newly allocate local space.
+> -	 */
+> -	sfp = (xfs_dir2_sf_hdr_t *)dst;
+> +	sfp = kmem_alloc(mp->m_sb.sb_inodesize, 0);
+>  	memcpy(sfp, sfhp, xfs_dir2_sf_hdr_size(sfhp->i8count));
 >  
->  	/* Make sure the bestfrees are actually the best free spaces. */
-> -	ptr = (char *)d_ops->data_entry_p(bp->b_addr);
-> -	endptr = xfs_dir3_data_endp(mp->m_dir_geo, bp->b_addr);
-> +	offset = d_ops->data_entry_offset;
-> +	end = xfs_dir3_data_endp(mp->m_dir_geo, bp->b_addr) - bp->b_addr;
->  
->  	/* Iterate the entries, stopping when we hit or go past the end. */
+>  	/*
+> -	 * Set up to loop over the block's entries.
+> +	 * Loop over the active and unused entries.  Stop when we reach the
+> +	 * leaf/tail portion of the block.
+>  	 */
+> -	ptr = (char *)dp->d_ops->data_entry_p(hdr);
+> -	endptr = xfs_dir3_data_endp(args->geo, hdr);
+> +	end = xfs_dir3_data_endp(args->geo, bp->b_addr) - bp->b_addr;
+>  	sfep = xfs_dir2_sf_firstentry(sfp);
+> -	/*
+> -	 * Loop over the active and unused entries.
+> -	 * Stop when we reach the leaf/tail portion of the block.
+> -	 */
 > -	while (ptr < endptr) {
-> -		dup = (struct xfs_dir2_data_unused *)ptr;
 > +	while (offset < end) {
-> +		dup = bp->b_addr + offset;
+> +		struct xfs_dir2_data_unused	*dup = bp->b_addr + offset;
+> +		struct xfs_dir2_data_entry	*dep = bp->b_addr + offset;
 > +
->  		/* Skip real entries */
->  		if (dup->freetag != cpu_to_be16(XFS_DIR2_DATA_FREE_TAG)) {
-> -			struct xfs_dir2_data_entry	*dep;
-> +			struct xfs_dir2_data_entry *dep = bp->b_addr + offset;
->  
-> -			dep = (struct xfs_dir2_data_entry *)ptr;
->  			newlen = d_ops->data_entsize(dep->namelen);
->  			if (newlen <= 0) {
->  				xchk_fblock_set_corrupt(sc, XFS_DATA_FORK,
->  						lblk);
->  				goto out_buf;
->  			}
-> -			ptr += newlen;
-> +			offset += newlen;
+>  		/*
+>  		 * If it's unused, just skip over it.
+>  		 */
+> -		dup = (xfs_dir2_data_unused_t *)ptr;
+>  		if (be16_to_cpu(dup->freetag) == XFS_DIR2_DATA_FREE_TAG) {
+> -			ptr += be16_to_cpu(dup->length);
+> +			offset += be16_to_cpu(dup->length);
 >  			continue;
 >  		}
+> -		dep = (xfs_dir2_data_entry_t *)ptr;
+> +
+>  		/*
+>  		 * Skip .
+>  		 */
+> @@ -330,9 +314,7 @@ xfs_dir2_block_to_sf(
+>  		 */
+>  		else {
+>  			sfep->namelen = dep->namelen;
+> -			xfs_dir2_sf_put_offset(sfep,
+> -				(xfs_dir2_data_aoff_t)
+> -				((char *)dep - (char *)hdr));
+> +			xfs_dir2_sf_put_offset(sfep, offset);
+>  			memcpy(sfep->name, dep->name, dep->namelen);
+>  			xfs_dir2_sf_put_ino(mp, sfp, sfep,
+>  					      be64_to_cpu(dep->inumber));
+> @@ -341,7 +323,7 @@ xfs_dir2_block_to_sf(
 >  
->  		/* Spot check this free entry */
->  		tag = be16_to_cpu(*xfs_dir2_data_unused_tag_p(dup));
-> -		if (tag != ((char *)dup - (char *)bp->b_addr)) {
-> +		if (tag != offset) {
->  			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
->  			goto out_buf;
+>  			sfep = xfs_dir2_sf_nextentry(mp, sfp, sfep);
 >  		}
-> @@ -432,13 +431,13 @@ xchk_directory_data_bestfree(
->  			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
->  			goto out_buf;
->  		}
-> -		ptr += newlen;
-> -		if (ptr <= endptr)
-> +		offset += newlen;
-> +		if (offset <= end)
->  			nr_frees++;
+> -		ptr += dp->d_ops->data_entsize(dep->namelen);
+> +		offset += dp->d_ops->data_entsize(dep->namelen);
 >  	}
+>  	ASSERT((char *)sfep - (char *)sfp == size);
 >  
->  	/* We're required to fill all the space. */
-> -	if (ptr != endptr)
-> +	if (offset != end)
->  		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
+> @@ -360,7 +342,7 @@ xfs_dir2_block_to_sf(
+>  	 * Convert the inode to local format and copy the data in.
+>  	 */
+>  	ASSERT(dp->i_df.if_bytes == 0);
+> -	xfs_init_local_fork(dp, XFS_DATA_FORK, dst, size);
+> +	xfs_init_local_fork(dp, XFS_DATA_FORK, sfp, size);
+>  	dp->i_d.di_format = XFS_DINODE_FMT_LOCAL;
+>  	dp->i_d.di_size = size;
 >  
->  	/* Did we see at least as many free slots as there are bestfrees? */
+> @@ -368,7 +350,7 @@ xfs_dir2_block_to_sf(
+>  	xfs_dir2_sf_check(args);
+>  out:
+>  	xfs_trans_log_inode(args->trans, dp, logflags);
+> -	kmem_free(dst);
+> +	kmem_free(sfp);
+>  	return error;
+>  }
+>  
 > -- 
 > 2.20.1
 > 
