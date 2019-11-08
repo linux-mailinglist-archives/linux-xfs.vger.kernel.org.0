@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D72EDF40D8
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 08:05:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7827BF40E4
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 08:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfKHHFC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 Nov 2019 02:05:02 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:39804 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfKHHFC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 Nov 2019 02:05:02 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA873bFP042277
-        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:05:00 GMT
+        id S1726149AbfKHHHI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 Nov 2019 02:07:08 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41790 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfKHHHI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 Nov 2019 02:07:08 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA873oqh055317
+        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:07:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=qkZxUvmJTSQOWwOcGDYYyAG9EYHlM9KDVYdZjO/V3hg=;
- b=ADKu9aiwsBz6MNZtdLHHfQcF9s8+Dz9fPX4ViMZw3OJIqUxEpCXtWLfxSeccq4N7mFdj
- rRiRL1sY87uBbjqgLqeY18Hlm96y2326byu3nZ+6z9ionDMqW21sDYPNZSpRSJDVldXl
- ptGXU78p+gnsOhuJ9Rbdq314BI+2RRzEaJhhm1geMMHaXgV9Y2a/gFQdClvMjwmK3iuc
- SrU3iJfylGkNAZyZTRHRJJfhUh3+e2XQQNpSPxsTlc0ACJqea5jZR38oWpkxU1i8dI0l
- AJe3e/hK0LNL4ABbUIp5tlxSDOwZ8U3mAyu62GZSrWVTR7lGAvR0bmOLRjsCfPOww63J dg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w41w13cb8-1
+ bh=t92JkwexzfJ6CeuUhAi5Dobv7Q6G4f2Xouhgn7uUu88=;
+ b=JOpesC0DwhKuJ5JKN8laMHOGASchbAjlxCjfLojYPHzE+6VrbH4z1MhA4koycg4LHdwv
+ 50eBdeYxQ8E9dkMdEu22AyZL7FRd2GHKOOo7rcwOodh3sicBalahba1Z7grCb3jeCRVL
+ YdL95XRms1Kf34Vk4G/saSfqJhnUoDVQCvWq695D26cMIXkhyVjjosM4rHCKQKA0iSJ2
+ NAnxZwZwhQXZpouonhyciJXy3B0+XFrRAWJw8wZvJ1/GiAD9xgwGJUqHvSoCBvxbNleK
+ /2U3FwzdqrYblpbBgKh5cxgPEyw/tVcWL5wf+n2TkZ00p0n3JbIcRTgPxnIsMPkOMc0o IQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w41w13bt7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 08 Nov 2019 07:05:00 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA873u13182888
-        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:04:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2w41wh0h4x-1
+        for <linux-xfs@vger.kernel.org>; Fri, 08 Nov 2019 07:07:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA873Xpw061282
+        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:05:06 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2w41wbxemu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 08 Nov 2019 07:04:59 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA874xV2018097
-        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:04:59 GMT
+        for <linux-xfs@vger.kernel.org>; Fri, 08 Nov 2019 07:05:06 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA87555j020013
+        for <linux-xfs@vger.kernel.org>; Fri, 8 Nov 2019 07:05:05 GMT
 Received: from localhost (/10.159.155.116)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Nov 2019 07:04:59 +0000
-Subject: [PATCH 2/3] xfs: clean up weird while loop in
- xfs_alloc_ag_vextent_near
+        with ESMTP ; Thu, 07 Nov 2019 23:05:05 -0800
+Subject: [PATCH 3/3] xfs: actually check xfs_btree_check_block return in
+ xfs_btree_islastblock
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 07 Nov 2019 23:04:58 -0800
-Message-ID: <157319669798.834585.10287243947050889974.stgit@magnolia>
+Date:   Thu, 07 Nov 2019 23:05:04 -0800
+Message-ID: <157319670439.834585.6578359830660435523.stgit@magnolia>
 In-Reply-To: <157319668531.834585.6920821852974178.stgit@magnolia>
 References: <157319668531.834585.6920821852974178.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1910280000 definitions=main-1911080069
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
  definitions=main-1911080069
@@ -71,167 +71,99 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Refactor the weird while loop out of existence.
+Coverity points out that xfs_btree_islastblock calls
+xfs_btree_check_block, but doesn't act on an error return.  This
+predicate has no answer if the btree is corrupt, so tweak the helper to
+be able to return errors, and then modify the one call site.
 
+Coverity-id: 114069
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c |  119 +++++++++++++++++++++++++--------------------
- 1 file changed, 66 insertions(+), 53 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c |    7 ++++++-
+ fs/xfs/libxfs/xfs_btree.c |   19 ++++++++++++-------
+ fs/xfs/libxfs/xfs_btree.h |    7 ++++---
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 60ca09bedc23..3a724d80783a 100644
+index 3a724d80783a..65d870189548 100644
 --- a/fs/xfs/libxfs/xfs_alloc.c
 +++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1486,6 +1486,65 @@ xfs_alloc_ag_vextent_locality(
- 	return 0;
- }
- 
-+/* Check the last block of the cnt btree for allocations. */
-+static int
-+xfs_alloc_ag_vextent_lastblock(
-+	struct xfs_alloc_arg	*args,
-+	struct xfs_alloc_cur	*acur,
-+	xfs_agblock_t		*bno,
-+	xfs_extlen_t		*len,
-+	bool			*allocated)
-+{
-+	int			error;
-+	int			i;
-+
-+#ifdef DEBUG
-+	/* Randomly don't execute the first algorithm. */
-+	if (prandom_u32() & 1)
-+		return 0;
-+#endif
-+
-+	/*
-+	 * Start from the entry that lookup found, sequence through all larger
-+	 * free blocks.  If we're actually pointing at a record smaller than
-+	 * maxlen, go to the start of this block, and skip all those smaller
-+	 * than minlen.
-+	 */
-+	if (len || args->alignment > 1) {
-+		acur->cnt->bc_ptrs[0] = 1;
-+		do {
-+			error = xfs_alloc_get_rec(acur->cnt, bno, len, &i);
-+			if (error)
-+				return error;
-+			if (XFS_IS_CORRUPT(args->mp, i != 1))
-+				return -EFSCORRUPTED;
-+			if (*len >= args->minlen)
-+				break;
-+			error = xfs_btree_increment(acur->cnt, 0, &i);
-+			if (error)
-+				return error;
-+		} while (i);
-+		ASSERT(*len >= args->minlen);
-+		if (!i)
-+			return 0;
-+	}
-+
-+	error = xfs_alloc_walk_iter(args, acur, acur->cnt, true, false, -1, &i);
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * It didn't work.  We COULD be in a case where there's a good record
-+	 * somewhere, so try again.
-+	 */
-+	if (acur->len == 0)
-+		return 0;
-+
-+	trace_xfs_alloc_near_first(args);
-+	*allocated = true;
-+	return 0;
-+}
-+
- /*
-  * Allocate a variable extent near bno in the allocation group agno.
-  * Extent's length (returned in len) will be between minlen and maxlen,
-@@ -1501,14 +1560,6 @@ xfs_alloc_ag_vextent_near(
+@@ -1560,6 +1560,7 @@ xfs_alloc_ag_vextent_near(
  	int			i;		/* result code, temporary */
  	xfs_agblock_t		bno;
  	xfs_extlen_t		len;
--#ifdef DEBUG
--	/*
--	 * Randomly don't execute the first algorithm.
--	 */
--	int		dofirst;	/* set to do first algorithm */
--
--	dofirst = prandom_u32() & 1;
--#endif
++	bool			is_last;
  
  	/* handle uninitialized agbno range so caller doesn't have to */
  	if (!args->min_agbno && !args->max_agbno)
-@@ -1551,54 +1602,16 @@ xfs_alloc_ag_vextent_near(
- 	 * near the right edge of the tree.  If it's in the last btree leaf
+@@ -1603,7 +1604,11 @@ xfs_alloc_ag_vextent_near(
  	 * block, then we just examine all the entries in that block
  	 * that are big enough, and pick the best one.
--	 * This is written as a while loop so we can break out of it,
--	 * but we never loop back to the top.
  	 */
--	while (xfs_btree_islastblock(acur.cnt, 0)) {
--#ifdef DEBUG
--		if (dofirst)
--			break;
--#endif
--		/*
--		 * Start from the entry that lookup found, sequence through
--		 * all larger free blocks.  If we're actually pointing at a
--		 * record smaller than maxlen, go to the start of this block,
--		 * and skip all those smaller than minlen.
--		 */
--		if (len || args->alignment > 1) {
--			acur.cnt->bc_ptrs[0] = 1;
--			do {
--				error = xfs_alloc_get_rec(acur.cnt, &bno, &len,
--						&i);
--				if (error)
--					goto out;
--				if (XFS_IS_CORRUPT(args->mp, i != 1))
--					goto out;
--				if (len >= args->minlen)
--					break;
--				error = xfs_btree_increment(acur.cnt, 0, &i);
--				if (error)
--					goto out;
--			} while (i);
--			ASSERT(len >= args->minlen);
--			if (!i)
--				break;
--		}
-+	if (xfs_btree_islastblock(acur.cnt, 0)) {
-+		bool		allocated = false;
+-	if (xfs_btree_islastblock(acur.cnt, 0)) {
++	error = xfs_btree_islastblock(acur.cnt, 0, &is_last);
++	if (error)
++		goto out;
++
++	if (is_last) {
+ 		bool		allocated = false;
  
--		error = xfs_alloc_walk_iter(args, &acur, acur.cnt, true, false,
--					    -1, &i);
-+		error = xfs_alloc_ag_vextent_lastblock(args, &acur, &bno, &len,
-+				&allocated);
- 		if (error)
- 			goto out;
--
--		/*
--		 * It didn't work.  We COULD be in a case where
--		 * there's a good record somewhere, so try again.
--		 */
--		if (acur.len == 0)
--			break;
--
--		trace_xfs_alloc_near_first(args);
--		goto alloc;
-+		if (allocated)
-+			goto alloc_finish;
- 	}
+ 		error = xfs_alloc_ag_vextent_lastblock(args, &acur, &bno, &len,
+diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
+index 8ad153bc4dea..37b4fa93085c 100644
+--- a/fs/xfs/libxfs/xfs_btree.c
++++ b/fs/xfs/libxfs/xfs_btree.c
+@@ -719,20 +719,25 @@ xfs_btree_get_bufs(
+ /*
+  * Check for the cursor referring to the last block at the given level.
+  */
+-int					/* 1=is last block, 0=not last block */
++int
+ xfs_btree_islastblock(
+-	xfs_btree_cur_t		*cur,	/* btree cursor */
+-	int			level)	/* level to check */
++	xfs_btree_cur_t		*cur,
++	int			level,
++	bool			*last)
+ {
+ 	struct xfs_btree_block	*block;	/* generic btree block pointer */
+-	xfs_buf_t		*bp;	/* buffer containing block */
++	struct xfs_buf		*bp;	/* buffer containing block */
++	int			error;
  
- 	/*
-@@ -1624,7 +1637,7 @@ xfs_alloc_ag_vextent_near(
- 		goto out;
- 	}
+ 	block = xfs_btree_get_block(cur, level, &bp);
+-	xfs_btree_check_block(cur, block, level, bp);
++	error = xfs_btree_check_block(cur, block, level, bp);
++	if (error)
++		return error;
+ 	if (cur->bc_flags & XFS_BTREE_LONG_PTRS)
+-		return block->bb_u.l.bb_rightsib == cpu_to_be64(NULLFSBLOCK);
++		*last = block->bb_u.l.bb_rightsib == cpu_to_be64(NULLFSBLOCK);
+ 	else
+-		return block->bb_u.s.bb_rightsib == cpu_to_be32(NULLAGBLOCK);
++		*last = block->bb_u.s.bb_rightsib == cpu_to_be32(NULLAGBLOCK);
++	return 0;
+ }
  
--alloc:
-+alloc_finish:
- 	/* fix up btrees on a successful allocation */
- 	error = xfs_alloc_cur_finish(args, &acur);
+ /*
+diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+index 6670120cd690..c63da9dd05cc 100644
+--- a/fs/xfs/libxfs/xfs_btree.h
++++ b/fs/xfs/libxfs/xfs_btree.h
+@@ -320,10 +320,11 @@ xfs_btree_get_bufs(
+ /*
+  * Check for the cursor referring to the last block at the given level.
+  */
+-int					/* 1=is last block, 0=not last block */
++int
+ xfs_btree_islastblock(
+-	xfs_btree_cur_t		*cur,	/* btree cursor */
+-	int			level);	/* level to check */
++	xfs_btree_cur_t		*cur,
++	int			level,
++	bool			*last);
  
+ /*
+  * Compute first and last byte offsets for the fields given.
 
