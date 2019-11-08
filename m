@@ -2,57 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F139F3D15
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 01:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C535F3D12
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 Nov 2019 01:51:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfKHAw3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Nov 2019 19:52:29 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36498 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfKHAw3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 19:52:29 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80cwCL172943;
-        Fri, 8 Nov 2019 00:52:24 GMT
+        id S1726281AbfKHAva (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Nov 2019 19:51:30 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44318 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfKHAva (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Nov 2019 19:51:30 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80dApf146712;
+        Fri, 8 Nov 2019 00:51:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=RZhO1BikmX3Av9PXC5s8GAwnBEsB4DF2G7eZ9WZ67ds=;
- b=dqU4SgGGfnxgqVCvquZaNP0jWB447lw1Vn1TuK83S9HZ3IQrwtDsg6bJgwKH80tAHw+F
- +AqEG1ih6DWotZG2GeM68TMNuRv1bjS9mXH0WFjiH050nraRke27iK/a5HvZTcvtzr1i
- cEsoCm4rR1uo+yoHZM54ji2EZlr4/LCnAsphhKm+hBphwpl33a3oN2sfb5P33S5qIQxp
- uebEElkR3JmnDRfJ2BPSmxYrGjdMBpdi4yh8ITi6FQxVy1qibc3qew1v3IFbJ2nbYnBC
- RIM0eO/WazU9LeLC1umTtd3x3Uqk64oKyPIyF2fxskvTMluQRpSEnFJ1fG49YHejCxaT 7w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w41w19y33-1
+ bh=S4/ZdkC8r52KZ25OxyJy9VvMef4C5jh7ofLVQ7LCPuA=;
+ b=YURl78KabiFFyGge3cCPwGbdRPyjvKKBFUMOKO0owAwPnkFfhC2MplVGZFBv6mzboufI
+ VaEAmGCHRSGy5xHotcjhSTtU7YfiFBwIUnfCjq0JfHPS5af0MyrSgI3ski+JHahI4JNZ
+ fxeCRFA1mQBZb/f13TIXemm6N7PrUATiMLd1fcotoFhAVMKBZge/Sc/k6oq9wGWWyauF
+ qCTSwD/hVNRMHnbjYSLYCShYbMeFonjImNxm1L6ZV+IVxZoTp0qtKXUVauAMNT8NZGz5
+ zqxownhJHbi6GsViYvPHKOwh7gRDggaCTGJIJFkinkVIQmop4Octb1BhcilYaVsyiQVj wQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w41w11xr8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 00:52:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80dDoD135044;
-        Fri, 8 Nov 2019 00:50:24 GMT
+        Fri, 08 Nov 2019 00:51:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA80dTTv130386;
+        Fri, 8 Nov 2019 00:51:26 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w41wga0t2-1
+        by userp3020.oracle.com with ESMTP id 2w41wjmpfb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Nov 2019 00:50:23 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA80oNLG016346;
-        Fri, 8 Nov 2019 00:50:23 GMT
+        Fri, 08 Nov 2019 00:51:25 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA80pPqA016884;
+        Fri, 8 Nov 2019 00:51:25 GMT
 Received: from localhost (/10.145.179.16)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 16:50:23 -0800
-Date:   Thu, 7 Nov 2019 16:50:23 -0800
+        with ESMTP ; Thu, 07 Nov 2019 16:51:24 -0800
+Date:   Thu, 7 Nov 2019 16:51:24 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 26/46] xfs: remove the data_dotdot_offset field in struct
- xfs_dir_ops
-Message-ID: <20191108005023.GY6219@magnolia>
+Subject: Re: [PATCH 28/46] xfs: remove the ->data_unused_p method
+Message-ID: <20191108005124.GZ6219@magnolia>
 References: <20191107182410.12660-1-hch@lst.de>
- <20191107182410.12660-27-hch@lst.de>
+ <20191107182410.12660-29-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191107182410.12660-27-hch@lst.de>
+In-Reply-To: <20191107182410.12660-29-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
@@ -70,11 +69,15 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 07:23:50PM +0100, Christoph Hellwig wrote:
-> The data_dotdot_offset value is always equal to data_entry_offset plus
-> the fixed size of the "." entry.  Right now calculating that fixed size
-> requires an indirect call, but by the end of this series it will be
-> an inline function that can be constant folded.
+On Thu, Nov 07, 2019 at 07:23:52PM +0100, Christoph Hellwig wrote:
+> Replace the two users of the ->data_unused_p dir ops method with a
+> direct calculation using ->data_entry_offset, and clean them up a bit.
+> xfs_dir2_sf_to_block already had an offset variable containing the
+> value of ->data_entry_offset, which we are now reusing to make it
+> clear that the initial freespace entry is at the same place that
+> we later fill in the 1 entry, and in xfs_dir3_data_init the function
+> is cleaned up a bit to keep the initialization of fields of a given
+> structure close to each other, and to avoid a local variable.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
@@ -84,68 +87,162 @@ Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 --D
 
 > ---
->  fs/xfs/libxfs/xfs_da_format.c | 6 ------
->  fs/xfs/libxfs/xfs_dir2.h      | 1 -
->  fs/xfs/xfs_dir2_readdir.c     | 3 ++-
->  3 files changed, 2 insertions(+), 8 deletions(-)
+>  fs/xfs/libxfs/xfs_da_format.c  | 17 ---------------
+>  fs/xfs/libxfs/xfs_dir2.h       |  2 --
+>  fs/xfs/libxfs/xfs_dir2_block.c |  2 +-
+>  fs/xfs/libxfs/xfs_dir2_data.c  | 40 +++++++++++++++-------------------
+>  4 files changed, 19 insertions(+), 42 deletions(-)
 > 
 > diff --git a/fs/xfs/libxfs/xfs_da_format.c b/fs/xfs/libxfs/xfs_da_format.c
-> index 54754eef2437..7b783b11790d 100644
+> index 711faff4aea2..347092ec28ab 100644
 > --- a/fs/xfs/libxfs/xfs_da_format.c
 > +++ b/fs/xfs/libxfs/xfs_da_format.c
-> @@ -204,8 +204,6 @@ static const struct xfs_dir_ops xfs_dir2_ops = {
->  	.data_entry_tag_p = xfs_dir2_data_entry_tag_p,
->  	.data_bestfree_p = xfs_dir2_data_bestfree_p,
+> @@ -130,13 +130,6 @@ xfs_dir2_data_entry_p(struct xfs_dir2_data_hdr *hdr)
+>  		((char *)hdr + sizeof(struct xfs_dir2_data_hdr));
+>  }
 >  
-> -	.data_dotdot_offset = sizeof(struct xfs_dir2_data_hdr) +
-> -				XFS_DIR2_DATA_ENTSIZE(1),
->  	.data_first_offset =  sizeof(struct xfs_dir2_data_hdr) +
->  				XFS_DIR2_DATA_ENTSIZE(1) +
->  				XFS_DIR2_DATA_ENTSIZE(2),
-> @@ -224,8 +222,6 @@ static const struct xfs_dir_ops xfs_dir2_ftype_ops = {
->  	.data_entry_tag_p = xfs_dir3_data_entry_tag_p,
->  	.data_bestfree_p = xfs_dir2_data_bestfree_p,
+> -static struct xfs_dir2_data_unused *
+> -xfs_dir2_data_unused_p(struct xfs_dir2_data_hdr *hdr)
+> -{
+> -	return (struct xfs_dir2_data_unused *)
+> -		((char *)hdr + sizeof(struct xfs_dir2_data_hdr));
+> -}
+> -
+>  static struct xfs_dir2_data_entry *
+>  xfs_dir3_data_entry_p(struct xfs_dir2_data_hdr *hdr)
+>  {
+> @@ -144,13 +137,6 @@ xfs_dir3_data_entry_p(struct xfs_dir2_data_hdr *hdr)
+>  		((char *)hdr + sizeof(struct xfs_dir3_data_hdr));
+>  }
 >  
-> -	.data_dotdot_offset = sizeof(struct xfs_dir2_data_hdr) +
-> -				XFS_DIR3_DATA_ENTSIZE(1),
->  	.data_first_offset =  sizeof(struct xfs_dir2_data_hdr) +
->  				XFS_DIR3_DATA_ENTSIZE(1) +
->  				XFS_DIR3_DATA_ENTSIZE(2),
-> @@ -244,8 +240,6 @@ static const struct xfs_dir_ops xfs_dir3_ops = {
->  	.data_entry_tag_p = xfs_dir3_data_entry_tag_p,
->  	.data_bestfree_p = xfs_dir3_data_bestfree_p,
+> -static struct xfs_dir2_data_unused *
+> -xfs_dir3_data_unused_p(struct xfs_dir2_data_hdr *hdr)
+> -{
+> -	return (struct xfs_dir2_data_unused *)
+> -		((char *)hdr + sizeof(struct xfs_dir3_data_hdr));
+> -}
+> -
+>  static const struct xfs_dir_ops xfs_dir2_ops = {
+>  	.data_entsize = xfs_dir2_data_entsize,
+>  	.data_get_ftype = xfs_dir2_data_get_ftype,
+> @@ -164,7 +150,6 @@ static const struct xfs_dir_ops xfs_dir2_ops = {
+>  	.data_entry_offset = sizeof(struct xfs_dir2_data_hdr),
 >  
-> -	.data_dotdot_offset = sizeof(struct xfs_dir3_data_hdr) +
-> -				XFS_DIR3_DATA_ENTSIZE(1),
->  	.data_first_offset =  sizeof(struct xfs_dir3_data_hdr) +
->  				XFS_DIR3_DATA_ENTSIZE(1) +
->  				XFS_DIR3_DATA_ENTSIZE(2),
+>  	.data_entry_p = xfs_dir2_data_entry_p,
+> -	.data_unused_p = xfs_dir2_data_unused_p,
+>  };
+>  
+>  static const struct xfs_dir_ops xfs_dir2_ftype_ops = {
+> @@ -180,7 +165,6 @@ static const struct xfs_dir_ops xfs_dir2_ftype_ops = {
+>  	.data_entry_offset = sizeof(struct xfs_dir2_data_hdr),
+>  
+>  	.data_entry_p = xfs_dir2_data_entry_p,
+> -	.data_unused_p = xfs_dir2_data_unused_p,
+>  };
+>  
+>  static const struct xfs_dir_ops xfs_dir3_ops = {
+> @@ -196,7 +180,6 @@ static const struct xfs_dir_ops xfs_dir3_ops = {
+>  	.data_entry_offset = sizeof(struct xfs_dir3_data_hdr),
+>  
+>  	.data_entry_p = xfs_dir3_data_entry_p,
+> -	.data_unused_p = xfs_dir3_data_unused_p,
+>  };
+>  
+>  /*
 > diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
-> index 94e8c40a7d19..8b937993263d 100644
+> index 8bfcf4c1b9c4..75aec05aae10 100644
 > --- a/fs/xfs/libxfs/xfs_dir2.h
 > +++ b/fs/xfs/libxfs/xfs_dir2.h
-> @@ -40,7 +40,6 @@ struct xfs_dir_ops {
->  	struct xfs_dir2_data_free *
->  		(*data_bestfree_p)(struct xfs_dir2_data_hdr *hdr);
+> @@ -45,8 +45,6 @@ struct xfs_dir_ops {
 >  
-> -	xfs_dir2_data_aoff_t data_dotdot_offset;
->  	xfs_dir2_data_aoff_t data_first_offset;
->  	size_t	data_entry_offset;
+>  	struct xfs_dir2_data_entry *
+>  		(*data_entry_p)(struct xfs_dir2_data_hdr *hdr);
+> -	struct xfs_dir2_data_unused *
+> -		(*data_unused_p)(struct xfs_dir2_data_hdr *hdr);
+>  };
 >  
-> diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
-> index 39985ca6ae2d..187bb51875c2 100644
-> --- a/fs/xfs/xfs_dir2_readdir.c
-> +++ b/fs/xfs/xfs_dir2_readdir.c
-> @@ -77,7 +77,8 @@ xfs_dir2_sf_getdents(
->  	dot_offset = xfs_dir2_db_off_to_dataptr(geo, geo->datablk,
->  			dp->d_ops->data_entry_offset);
->  	dotdot_offset = xfs_dir2_db_off_to_dataptr(geo, geo->datablk,
-> -						dp->d_ops->data_dotdot_offset);
-> +			dp->d_ops->data_entry_offset +
-> +			dp->d_ops->data_entsize(sizeof(".") - 1));
->  
+>  extern const struct xfs_dir_ops *
+> diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
+> index e7719356829d..9061f378d52a 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_block.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_block.c
+> @@ -1112,7 +1112,7 @@ xfs_dir2_sf_to_block(
+>  	 * The whole thing is initialized to free by the init routine.
+>  	 * Say we're using the leaf and tail area.
+>  	 */
+> -	dup = dp->d_ops->data_unused_p(hdr);
+> +	dup = bp->b_addr + offset;
+>  	needlog = needscan = 0;
+>  	error = xfs_dir2_data_use_free(args, bp, dup, args->geo->blksize - i,
+>  			i, &needlog, &needscan);
+> diff --git a/fs/xfs/libxfs/xfs_dir2_data.c b/fs/xfs/libxfs/xfs_dir2_data.c
+> index 2c79be4c3153..3ecec8e1c5f6 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_data.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_data.c
+> @@ -631,24 +631,20 @@ xfs_dir2_data_freescan(
+>   */
+>  int						/* error */
+>  xfs_dir3_data_init(
+> -	xfs_da_args_t		*args,		/* directory operation args */
+> -	xfs_dir2_db_t		blkno,		/* logical dir block number */
+> -	struct xfs_buf		**bpp)		/* output block buffer */
+> +	struct xfs_da_args		*args,	/* directory operation args */
+> +	xfs_dir2_db_t			blkno,	/* logical dir block number */
+> +	struct xfs_buf			**bpp)	/* output block buffer */
+>  {
+> -	struct xfs_buf		*bp;		/* block buffer */
+> -	xfs_dir2_data_hdr_t	*hdr;		/* data block header */
+> -	xfs_inode_t		*dp;		/* incore directory inode */
+> -	xfs_dir2_data_unused_t	*dup;		/* unused entry pointer */
+> -	struct xfs_dir2_data_free *bf;
+> -	int			error;		/* error return value */
+> -	int			i;		/* bestfree index */
+> -	xfs_mount_t		*mp;		/* filesystem mount point */
+> -	xfs_trans_t		*tp;		/* transaction pointer */
+> -	int                     t;              /* temp */
+> -
+> -	dp = args->dp;
+> -	mp = dp->i_mount;
+> -	tp = args->trans;
+> +	struct xfs_trans		*tp = args->trans;
+> +	struct xfs_inode		*dp = args->dp;
+> +	struct xfs_mount		*mp = dp->i_mount;
+> +	struct xfs_buf			*bp;
+> +	struct xfs_dir2_data_hdr	*hdr;
+> +	struct xfs_dir2_data_unused	*dup;
+> +	struct xfs_dir2_data_free 	*bf;
+> +	int				error;
+> +	int				i;
+> +
 >  	/*
->  	 * Put . entry unless we're starting past it.
+>  	 * Get the buffer set up for the block.
+>  	 */
+> @@ -677,6 +673,8 @@ xfs_dir3_data_init(
+>  
+>  	bf = dp->d_ops->data_bestfree_p(hdr);
+>  	bf[0].offset = cpu_to_be16(dp->d_ops->data_entry_offset);
+> +	bf[0].length =
+> +		cpu_to_be16(args->geo->blksize - dp->d_ops->data_entry_offset);
+>  	for (i = 1; i < XFS_DIR2_DATA_FD_COUNT; i++) {
+>  		bf[i].length = 0;
+>  		bf[i].offset = 0;
+> @@ -685,13 +683,11 @@ xfs_dir3_data_init(
+>  	/*
+>  	 * Set up an unused entry for the block's body.
+>  	 */
+> -	dup = dp->d_ops->data_unused_p(hdr);
+> +	dup = bp->b_addr + dp->d_ops->data_entry_offset;
+>  	dup->freetag = cpu_to_be16(XFS_DIR2_DATA_FREE_TAG);
+> -
+> -	t = args->geo->blksize - (uint)dp->d_ops->data_entry_offset;
+> -	bf[0].length = cpu_to_be16(t);
+> -	dup->length = cpu_to_be16(t);
+> +	dup->length = bf[0].length;
+>  	*xfs_dir2_data_unused_tag_p(dup) = cpu_to_be16((char *)dup - (char *)hdr);
+> +
+>  	/*
+>  	 * Log it and return it.
+>  	 */
 > -- 
 > 2.20.1
 > 
