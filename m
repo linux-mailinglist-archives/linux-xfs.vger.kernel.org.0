@@ -2,58 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08B03F6FED
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Nov 2019 09:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BB4F744C
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Nov 2019 13:45:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfKKIvR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Nov 2019 03:51:17 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50230 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfKKIvR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Nov 2019 03:51:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VCR1mCMnaXvQGzJGpUGF1xEMGrT5ZqirfI9SfNdoVrI=; b=ZaxYo4nnn46T84fyE0LUpGEAL
-        uzN/DasYYMbEXC38wWDTcqqhB239fO3gKxe8RSufc5BqAstf3B0dg0IWhWObqEZ99DSPeGRU2yPnP
-        UcQ63KPqibSxKvuQ3gQsdKEmPO+Bj2WcHWSkW2db0oabvd3hHlL4K/+6S3/Jpn7/H6zV1RdEcMBm+
-        /melAWY7/vJdHzxGbcWTDPe7eIxgJSfN2CUcPmh0rXN7lEC/JA9yK5nEXzl61oZblmkms61bJRRbU
-        kDRVb43JO0uxOkRgbng1LqGRuSPWkYylL1zG9HrEkWs/dNUeM9CuJ3hpHGzgHHA0gaSSCFOKFu8wG
-        BH5+Ke1xA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iU5Pp-0004uv-2l; Mon, 11 Nov 2019 08:51:17 +0000
-Date:   Mon, 11 Nov 2019 00:51:17 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.org
-Subject: Re: [PATCH 2/3] xfs: kill the XFS_WANT_CORRUPT_* macros
-Message-ID: <20191111085117.GA5729@infradead.org>
-References: <157343507145.1945685.2940312466469213044.stgit@magnolia>
- <157343508488.1945685.9867882880040545380.stgit@magnolia>
+        id S1726897AbfKKMpR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Nov 2019 07:45:17 -0500
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:45388 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfKKMpQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Nov 2019 07:45:16 -0500
+Received: by mail-lj1-f175.google.com with SMTP id n21so13616121ljg.12
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Nov 2019 04:45:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=L+yqXY49T3abjqncQIxRdR3s8VDBK1aAB7dFV2MOmaM=;
+        b=XlZ4JmjTFDBA3jcxYg+7Tz1NTuNnR3naCXRwCnH2+bYQTlDIzsgNsQ6FHi4Q2wc3GF
+         EE7pZ+ziQ3H/Zr3wtK/O1MQzv+RG7IqafRbIUEuQAK1bzFTLYBdm/ylxsdJb44PLYpQK
+         Vq0/S7WaOvpaoh7cncSLkK4wl+bxELfwqNXUWZ8BMwADZRIi22oeQJm9ubwvWknyVejb
+         IjR4tQgYqSsMqvFFQcvcjlE10ZCAtV7rO465+xkFJ487KpdgQAq0fUQYKfliPVd6bCNe
+         PH0mB+cQplUgdnA5l5nIDS42PEYSp5+LiayMfAGY56ZMWSeww2aDVfQxuTJVcrjFG78M
+         6qdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=L+yqXY49T3abjqncQIxRdR3s8VDBK1aAB7dFV2MOmaM=;
+        b=Q2ItMlCO2eEIPLP4m5UYVFl7hFpCtJhYZ9f29qpcKW1L4CYEXWv0j5XBBn7ahLsiV1
+         e5YvvQ0rHF6c3Nzzc9/sT+9azF88GJpI9TTiZvJ0lKhI5Is5toqTnXeOMDzkZjP/s/rf
+         gNzO1pCHwDcEs7gPfNz3sYLvIqvtks/m5quzW+vW7ORhSh8UFQzWGogds2sfS9l6JtqZ
+         wbN++fw+1WlhGYOHibQgiRACLiTScn6Giv4qMJZEMRsPFWUoi8fugBtPgytwZ236LsMs
+         k9cNe62ZxPytRE/Kne8SQZXuSrJivVIRjJPdiTzlh8noLIxS8lrmJ1BO3NGk9RV6MeC1
+         VqaA==
+X-Gm-Message-State: APjAAAVr+l6zHA8FsEgMODYJUBiBq/1n15K1luHjz0FMzBUIB1HzgdWa
+        CNKtj09qDqdk2rIr2LSbg7V4gq6VKm5dLHtUFuc=
+X-Google-Smtp-Source: APXvYqzuI06TcXPmUCylYYeAX5BAyQEzxiIv9rV2LfWEeIjsGhR+RxCpwKkGV3X11GiDL2HeU9rWXs+KurkQWqJKG0o=
+X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr15871001ljm.38.1573476314621;
+ Mon, 11 Nov 2019 04:45:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157343508488.1945685.9867882880040545380.stgit@magnolia>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:a2e:8756:0:0:0:0:0 with HTTP; Mon, 11 Nov 2019 04:45:14
+ -0800 (PST)
+Reply-To: apolinaileen93@gmail.com
+From:   "Mrs. Aileen Billanes" <yusibeasl01@gmail.com>
+Date:   Mon, 11 Nov 2019 12:45:14 +0000
+Message-ID: <CAFH5WH2psS=60odjSqLhh-+YTeoTexg2QECSPE4upP38ikQBnA@mail.gmail.com>
+Subject: From:Mrs.Aileen Billanes
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-I have to say I really hate the macro that includes the actual
-if statement. 
+From:Mrs.Aileen Billianes
+Address: Madalag, Aklan, Philippines
 
-On Sun, Nov 10, 2019 at 05:18:05PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> The XFS_WANT_CORRUPT_* macros conceal subtle side effects such as the
-> creation of local variables and redirections of the code flow.  This is
-> pretty ugly, so replace them with explicit if_xfs_meta_bad() tests that
-> remove both of those ugly points.  First we use Cocinelle to expand the
-> macros into an if test and braces with the following coccinelle script:
+Hello
 
-Also all this seems to be out of date.
+I am Mrs. Aileen Billanes the wife of Mr. Eleaza Billanes from
+Philippine.It=E2=80=99s my pleasure writing you this letter. To make it sho=
+rt, my
+late husband Mr.Billanes was a leader of bayan Muna Party List Group and a
+secretary general of the Samahan ng mga Magsasaka sa Timog Kutabato and one
+of the founders of the south Cotabato people=E2=80=99s alliance for Nationa=
+lism and
+democracy (socpand) here in Philippine.He was attacked and assassinated in
+Osmena street on the 09 / 03 / 2009. Ever since then, my children and I
+have been facing massive challenges from the family of my late husband over
+his wealth. The pressure given to us by them has made us explore our chance
+that is why I have decided to contact you.
+
+Since the death of my late husband, the Philippine state government has
+blocked me and my late husband accounts Through the help of my late husband
+family.Also my late husband brothers succeeded in Collecting have all our
+properties from me that is under my control and they are Still looking for
+more.Therefore I am Contacting you to help me secure the sum Which I
+Explain to you above,for the future of my kids.Since my late husband family
+made it impossible for me to move out of my late husband in Philippine
+house,I do believe you are a honest person For this reason, I asking for
+your help as we urgently intend to leave Philippine.My late husband have a
+total sum of ($8.5USD Eight Million Five Hundred Thousand Us
+Dollars).Deposited in a Bank in Asia for the future of my kids.
+
+I hope that you can be trusted, that you will not sit on this money when
+you claim it I will give you the contact of the Bank for you to contact
+them and give them your Bank details for the immediate transfer of the
+money into your account I have made up my mind to give you 30% of the total
+money for your help, after you have secured the money form the bank for me
+and my kids future.Thanks for your comprehension and willingness to assist
+Contact me for more details with my private email address
+
+Best regards
+Mrs. Aileen Billanes
