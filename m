@@ -2,97 +2,179 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1BB4F744C
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Nov 2019 13:45:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 611BAF74AA
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Nov 2019 14:22:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfKKMpR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Nov 2019 07:45:17 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:45388 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfKKMpQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Nov 2019 07:45:16 -0500
-Received: by mail-lj1-f175.google.com with SMTP id n21so13616121ljg.12
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Nov 2019 04:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=L+yqXY49T3abjqncQIxRdR3s8VDBK1aAB7dFV2MOmaM=;
-        b=XlZ4JmjTFDBA3jcxYg+7Tz1NTuNnR3naCXRwCnH2+bYQTlDIzsgNsQ6FHi4Q2wc3GF
-         EE7pZ+ziQ3H/Zr3wtK/O1MQzv+RG7IqafRbIUEuQAK1bzFTLYBdm/ylxsdJb44PLYpQK
-         Vq0/S7WaOvpaoh7cncSLkK4wl+bxELfwqNXUWZ8BMwADZRIi22oeQJm9ubwvWknyVejb
-         IjR4tQgYqSsMqvFFQcvcjlE10ZCAtV7rO465+xkFJ487KpdgQAq0fUQYKfliPVd6bCNe
-         PH0mB+cQplUgdnA5l5nIDS42PEYSp5+LiayMfAGY56ZMWSeww2aDVfQxuTJVcrjFG78M
-         6qdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=L+yqXY49T3abjqncQIxRdR3s8VDBK1aAB7dFV2MOmaM=;
-        b=Q2ItMlCO2eEIPLP4m5UYVFl7hFpCtJhYZ9f29qpcKW1L4CYEXWv0j5XBBn7ahLsiV1
-         e5YvvQ0rHF6c3Nzzc9/sT+9azF88GJpI9TTiZvJ0lKhI5Is5toqTnXeOMDzkZjP/s/rf
-         gNzO1pCHwDcEs7gPfNz3sYLvIqvtks/m5quzW+vW7ORhSh8UFQzWGogds2sfS9l6JtqZ
-         wbN++fw+1WlhGYOHibQgiRACLiTScn6Giv4qMJZEMRsPFWUoi8fugBtPgytwZ236LsMs
-         k9cNe62ZxPytRE/Kne8SQZXuSrJivVIRjJPdiTzlh8noLIxS8lrmJ1BO3NGk9RV6MeC1
-         VqaA==
-X-Gm-Message-State: APjAAAVr+l6zHA8FsEgMODYJUBiBq/1n15K1luHjz0FMzBUIB1HzgdWa
-        CNKtj09qDqdk2rIr2LSbg7V4gq6VKm5dLHtUFuc=
-X-Google-Smtp-Source: APXvYqzuI06TcXPmUCylYYeAX5BAyQEzxiIv9rV2LfWEeIjsGhR+RxCpwKkGV3X11GiDL2HeU9rWXs+KurkQWqJKG0o=
-X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr15871001ljm.38.1573476314621;
- Mon, 11 Nov 2019 04:45:14 -0800 (PST)
+        id S1726853AbfKKNWp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Nov 2019 08:22:45 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20249 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726843AbfKKNWp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Nov 2019 08:22:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573478563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rujun5HjmVJkx6dE55WtQPIYlHeqCVYzXmgVY7+ewdw=;
+        b=K/GqHMOUtnm+FOPL3nVdiSCABthrMMgCtN3Nnw2h19YiVQUjrgeBUNfQxpmKp+p0MPfu1H
+        yXwJzGkb/1JWXKsPI5YyXP/+z3tUzcuuiNB+85HrjwOXhdHgm6bwLK2fPTeyuWMH07IO4R
+        gYcGpOksCNJUafdm8+CJaUJJ5U2drq4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44-CTKFXUfSOaK8uVzS1TztwQ-1; Mon, 11 Nov 2019 08:22:40 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E887100550E;
+        Mon, 11 Nov 2019 13:22:39 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C12660143;
+        Mon, 11 Nov 2019 13:22:38 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 08:22:36 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     kaixuxia <xiakaixu1987@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
+        newtongao@tencent.com, jasperwang@tencent.com
+Subject: Re: [PATCH v3] xfs: Fix deadlock between AGI and AGF when target_ip
+ exists in xfs_rename()
+Message-ID: <20191111132236.GA46312@bfoster>
+References: <1573128491-14996-1-git-send-email-kaixuxia@tencent.com>
 MIME-Version: 1.0
-Received: by 2002:a2e:8756:0:0:0:0:0 with HTTP; Mon, 11 Nov 2019 04:45:14
- -0800 (PST)
-Reply-To: apolinaileen93@gmail.com
-From:   "Mrs. Aileen Billanes" <yusibeasl01@gmail.com>
-Date:   Mon, 11 Nov 2019 12:45:14 +0000
-Message-ID: <CAFH5WH2psS=60odjSqLhh-+YTeoTexg2QECSPE4upP38ikQBnA@mail.gmail.com>
-Subject: From:Mrs.Aileen Billanes
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573128491-14996-1-git-send-email-kaixuxia@tencent.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: CTKFXUfSOaK8uVzS1TztwQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From:Mrs.Aileen Billianes
-Address: Madalag, Aklan, Philippines
+On Thu, Nov 07, 2019 at 08:08:11PM +0800, kaixuxia wrote:
+> When target_ip exists in xfs_rename(), the xfs_dir_replace() call may
+> need to hold the AGF lock to allocate more blocks, and then invoking
+> the xfs_droplink() call to hold AGI lock to drop target_ip onto the
+> unlinked list, so we get the lock order AGF->AGI. This would break the
+> ordering constraint on AGI and AGF locking - inode allocation locks
+> the AGI, then can allocate a new extent for new inodes, locking the
+> AGF after the AGI.
+>=20
+> In this patch we check whether the replace operation need more
+> blocks firstly. If so, acquire the agi lock firstly to preserve
+> locking order(AGI/AGF). Actually, the locking order problem only
+> occurs when we are locking the AGI/AGF of the same AG. For multiple
+> AGs the AGI lock will be released after the transaction committed.
+>=20
+> Signed-off-by: kaixuxia <kaixuxia@tencent.com>
+> ---
+> Changes in v3:
+>  -Invoke xfs_dir2_sf_replace_needblock() call in xfs_inode.c
+>   directly.
+>  -Fix the typo.
+>=20
+>  fs/xfs/libxfs/xfs_dir2.h    |  2 ++
+>  fs/xfs/libxfs/xfs_dir2_sf.c | 21 +++++++++++++++++++++
+>  fs/xfs/xfs_inode.c          | 15 +++++++++++++++
+>  3 files changed, 38 insertions(+)
+>=20
+> diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+> index f542447..d4a2b09 100644
+> --- a/fs/xfs/libxfs/xfs_dir2.h
+> +++ b/fs/xfs/libxfs/xfs_dir2.h
+> @@ -124,6 +124,8 @@ extern int xfs_dir_lookup(struct xfs_trans *tp, struc=
+t xfs_inode *dp,
+>  extern int xfs_dir_removename(struct xfs_trans *tp, struct xfs_inode *dp=
+,
+>  =09=09=09=09struct xfs_name *name, xfs_ino_t ino,
+>  =09=09=09=09xfs_extlen_t tot);
+> +extern bool xfs_dir2_sf_replace_needblock(struct xfs_inode *dp,
+> +=09=09=09=09struct xfs_inode *src_ip);
+>  extern int xfs_dir_replace(struct xfs_trans *tp, struct xfs_inode *dp,
+>  =09=09=09=09struct xfs_name *name, xfs_ino_t inum,
+>  =09=09=09=09xfs_extlen_t tot);
+> diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
+> index 85f14fc..7098cdd 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_sf.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_sf.c
+> @@ -945,6 +945,27 @@ static int xfs_dir2_sf_addname_pick(xfs_da_args_t *a=
+rgs, int objchange,
+>  }
+> =20
+>  /*
+> + * Check whether the sf dir replace operation need more blocks.
+> + */
+> +bool
+> +xfs_dir2_sf_replace_needblock(
+> +=09struct xfs_inode=09*dp,
+> +=09struct xfs_inode=09*src_ip)
+> +{
+> +=09int=09=09=09newsize;
+> +=09xfs_dir2_sf_hdr_t=09*sfp;
 
-Hello
+We shouldn't introduce new typedef usages. Please use struct
+xfs_dir2_sf_hdr here and throughout the patch.
 
-I am Mrs. Aileen Billanes the wife of Mr. Eleaza Billanes from
-Philippine.It=E2=80=99s my pleasure writing you this letter. To make it sho=
-rt, my
-late husband Mr.Billanes was a leader of bayan Muna Party List Group and a
-secretary general of the Samahan ng mga Magsasaka sa Timog Kutabato and one
-of the founders of the south Cotabato people=E2=80=99s alliance for Nationa=
-lism and
-democracy (socpand) here in Philippine.He was attacked and assassinated in
-Osmena street on the 09 / 03 / 2009. Ever since then, my children and I
-have been facing massive challenges from the family of my late husband over
-his wealth. The pressure given to us by them has made us explore our chance
-that is why I have decided to contact you.
+> +
+> +=09if (dp->i_d.di_format !=3D XFS_DINODE_FMT_LOCAL)
+> +=09=09return false;
+> +
+> +=09sfp =3D (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
+> +=09newsize =3D dp->i_df.if_bytes + (sfp->count + 1) * XFS_INO64_DIFF;
+> +
+> +=09return src_ip->i_ino > XFS_DIR2_MAX_SHORT_INUM &&
+> +=09       sfp->i8count =3D=3D 0 && newsize > XFS_IFORK_DSIZE(dp);
+> +}
+> +
 
-Since the death of my late husband, the Philippine state government has
-blocked me and my late husband accounts Through the help of my late husband
-family.Also my late husband brothers succeeded in Collecting have all our
-properties from me that is under my control and they are Still looking for
-more.Therefore I am Contacting you to help me secure the sum Which I
-Explain to you above,for the future of my kids.Since my late husband family
-made it impossible for me to move out of my late husband in Philippine
-house,I do believe you are a honest person For this reason, I asking for
-your help as we urgently intend to leave Philippine.My late husband have a
-total sum of ($8.5USD Eight Million Five Hundred Thousand Us
-Dollars).Deposited in a Bank in Asia for the future of my kids.
+The whole point of this function is to reduce code duplication. There
+should be two callers, one down in the dir code that does the format
+conversion and the new caller in the higher level code to grab the AGI.
 
-I hope that you can be trusted, that you will not sit on this money when
-you claim it I will give you the contact of the Bank for you to contact
-them and give them your Bank details for the immediate transfer of the
-money into your account I have made up my mind to give you 30% of the total
-money for your help, after you have secured the money form the bank for me
-and my kids future.Thanks for your comprehension and willingness to assist
-Contact me for more details with my private email address
+Brian
 
-Best regards
-Mrs. Aileen Billanes
+> +/*
+>   * Replace the inode number of an entry in a shortform directory.
+>   */
+>  int=09=09=09=09=09=09/* error */
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 18f4b26..cb0b93b 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -3196,6 +3196,7 @@ struct xfs_iunlink {
+>  =09struct xfs_trans=09*tp;
+>  =09struct xfs_inode=09*wip =3D NULL;=09=09/* whiteout inode */
+>  =09struct xfs_inode=09*inodes[__XFS_SORT_INODES];
+> +=09struct xfs_buf=09=09*agibp;
+>  =09int=09=09=09num_inodes =3D __XFS_SORT_INODES;
+>  =09bool=09=09=09new_parent =3D (src_dp !=3D target_dp);
+>  =09bool=09=09=09src_is_directory =3D S_ISDIR(VFS_I(src_ip)->i_mode);
+> @@ -3361,6 +3362,20 @@ struct xfs_iunlink {
+>  =09=09 * In case there is already an entry with the same
+>  =09=09 * name at the destination directory, remove it first.
+>  =09=09 */
+> +
+> +=09=09/*
+> +=09=09 * Check whether the replace operation need more blocks.
+> +=09=09 * If so, acquire the agi lock firstly to preserve locking
+> +=09=09 * order (AGI/AGF). Only convert the shortform directory to
+> +=09=09 * block form maybe need more blocks.
+> +=09=09 */
+> +=09=09if (xfs_dir2_sf_replace_needblock(target_dp, src_ip)) {
+> +=09=09=09error =3D xfs_read_agi(mp, tp,
+> +=09=09=09=09XFS_INO_TO_AGNO(mp, target_ip->i_ino), &agibp);
+> +=09=09=09if (error)
+> +=09=09=09=09goto out_trans_cancel;
+> +=09=09}
+> +
+>  =09=09error =3D xfs_dir_replace(tp, target_dp, target_name,
+>  =09=09=09=09=09src_ip->i_ino, spaceres);
+>  =09=09if (error)
+> --=20
+> 1.8.3.1
+>=20
+
