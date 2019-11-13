@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6032FB5F5
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2019 18:08:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F90FB5EC
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2019 18:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfKMRIZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 13 Nov 2019 12:08:25 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33376 "EHLO
+        id S1727528AbfKMRGu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 13 Nov 2019 12:06:50 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59652 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfKMRIZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 13 Nov 2019 12:08:25 -0500
+        with ESMTP id S1726973AbfKMRGu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 13 Nov 2019 12:06:50 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADGxHKU018156;
-        Wed, 13 Nov 2019 17:08:21 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADGxLud018188;
+        Wed, 13 Nov 2019 17:06:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=HDgJzb5KuS/Yb6QTKQsNnIwxFXBPTHhfuGgmD2iScuw=;
- b=GPZlsNNtD1AxtqKiMoa/j/E7JgxaabF3MDLpsKyE0PCb0cWmOA0v2netIV2X42129cXw
- +ovvU0TDOYrb+B6XfgYNAUg+nye/Kz8S/fjn7f80zFXFW196LSS8cxZvZy9vKtv56tDO
- aJICmt/tLjet/r7vrOIfvJl2zgcZMTLchIpKJFsGCAzKOiwSqXjlLjYpEXyLcr9onJd1
- aYESKkt/RkkLz8jDIh69F8YBn0mCoAVP+ty70jQKYxtmD2dAIWlGudRrO0AXcgZjbEez
- qWbwpvXiPrGL36oyvra/vxCXFasobHP9D63Xnxbsm627g0dc2nMoN0IMBKhNE1IhEnhA FA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w5p3qwtyx-1
+ bh=PRHChTIeNADtopZmumY3qPvenQHJrXcEtahIo9C6uwg=;
+ b=aVcmoSr7MUnaKH9kObEvYlLNFMn2nrPpWCulAfh5jP0oYMFu7SxGwnDYRME9p2ChlaII
+ CFDahkjV2li0TPcpMOzYf2c0EOUf2TK9Q2IAZnGk71T4h7j5aNRCWu+lXFy8KiqhdV5a
+ ooXEdORKYDBVkI0RSHcSqRO9ID1RyjnMifESEkza8I2sQUOZrNoOTr5Hq+E+YJq5auk9
+ Z1RdM1Ur4wgzvg0nQaodDjot1oLkuuajVVbCvz/mAjMA88sbop0YfF1EOCUgpuiJVkMO
+ SJcvBg3ld/76BHj11oozB3AKGs9zOSQijzOFM54yrGLHqbT6r7sjjH+ncaLGyD5aVaYf Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w5p3qwtkn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 17:08:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADGxcTc070379;
-        Wed, 13 Nov 2019 17:06:21 GMT
+        Wed, 13 Nov 2019 17:06:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADGxZ6q104100;
+        Wed, 13 Nov 2019 17:06:45 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w8g17ucr9-1
+        by aserp3030.oracle.com with ESMTP id 2w7vppkvp3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 17:06:21 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xADH6KCC005127;
-        Wed, 13 Nov 2019 17:06:20 GMT
+        Wed, 13 Nov 2019 17:06:45 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xADH6jLT005369;
+        Wed, 13 Nov 2019 17:06:45 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 Nov 2019 09:06:19 -0800
-Date:   Wed, 13 Nov 2019 09:06:18 -0800
+        with ESMTP ; Wed, 13 Nov 2019 09:06:45 -0800
+Date:   Wed, 13 Nov 2019 09:06:44 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Carlos Maiolino <cmaiolino@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/11] xfs: Remove slab init wrappers
-Message-ID: <20191113170618.GX6219@magnolia>
+Subject: Re: [PATCH 02/11] xfs: Remove kmem_zone_destroy() wrapper
+Message-ID: <20191113170643.GY6219@magnolia>
 References: <20191113142335.1045631-1-cmaiolino@redhat.com>
- <20191113142335.1045631-2-cmaiolino@redhat.com>
+ <20191113142335.1045631-3-cmaiolino@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113142335.1045631-2-cmaiolino@redhat.com>
+In-Reply-To: <20191113142335.1045631-3-cmaiolino@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
@@ -69,11 +69,8 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 03:23:25PM +0100, Carlos Maiolino wrote:
-> Remove kmem_zone_init() and kmem_zone_init_flags() together with their
-> specific KM_* to SLAB_* flag wrappers.
-> 
-> Use kmem_cache_create() directly.
+On Wed, Nov 13, 2019 at 03:23:26PM +0100, Carlos Maiolino wrote:
+> Use kmem_cache_destroy directly
 > 
 > Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 
@@ -83,251 +80,170 @@ Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 --D
 
 > ---
->  fs/xfs/kmem.h      | 18 ---------
->  fs/xfs/xfs_buf.c   |  5 ++-
->  fs/xfs/xfs_dquot.c | 10 +++--
->  fs/xfs/xfs_super.c | 99 +++++++++++++++++++++++++++-------------------
->  4 files changed, 68 insertions(+), 64 deletions(-)
+>  fs/xfs/kmem.h      |  6 ----
+>  fs/xfs/xfs_buf.c   |  2 +-
+>  fs/xfs/xfs_dquot.c |  6 ++--
+>  fs/xfs/xfs_super.c | 70 +++++++++++++++++++++++-----------------------
+>  4 files changed, 39 insertions(+), 45 deletions(-)
 > 
 > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> index 8170d95cf930..15c5800128b3 100644
+> index 15c5800128b3..70ed74c7f37e 100644
 > --- a/fs/xfs/kmem.h
 > +++ b/fs/xfs/kmem.h
-> @@ -78,27 +78,9 @@ kmem_zalloc_large(size_t size, xfs_km_flags_t flags)
->   * Zone interfaces
->   */
+> @@ -87,12 +87,6 @@ kmem_zone_free(kmem_zone_t *zone, void *ptr)
+>  	kmem_cache_free(zone, ptr);
+>  }
 >  
-> -#define KM_ZONE_HWALIGN	SLAB_HWCACHE_ALIGN
-> -#define KM_ZONE_RECLAIM	SLAB_RECLAIM_ACCOUNT
-> -#define KM_ZONE_SPREAD	SLAB_MEM_SPREAD
-> -#define KM_ZONE_ACCOUNT	SLAB_ACCOUNT
-> -
->  #define kmem_zone	kmem_cache
->  #define kmem_zone_t	struct kmem_cache
->  
-> -static inline kmem_zone_t *
-> -kmem_zone_init(int size, char *zone_name)
+> -static inline void
+> -kmem_zone_destroy(kmem_zone_t *zone)
 > -{
-> -	return kmem_cache_create(zone_name, size, 0, 0, NULL);
+> -	kmem_cache_destroy(zone);
 > -}
 > -
-> -static inline kmem_zone_t *
-> -kmem_zone_init_flags(int size, char *zone_name, slab_flags_t flags,
-> -		     void (*construct)(void *))
-> -{
-> -	return kmem_cache_create(zone_name, size, 0, flags, construct);
-> -}
-> -
->  static inline void
->  kmem_zone_free(kmem_zone_t *zone, void *ptr)
->  {
+>  extern void *kmem_zone_alloc(kmem_zone_t *, xfs_km_flags_t);
+>  
+>  static inline void *
 > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index 2ed3c65c602f..3741f5b369de 100644
+> index 3741f5b369de..ccccfb792ff8 100644
 > --- a/fs/xfs/xfs_buf.c
 > +++ b/fs/xfs/xfs_buf.c
-> @@ -2060,8 +2060,9 @@ xfs_buf_delwri_pushbuf(
->  int __init
->  xfs_buf_init(void)
+> @@ -2075,7 +2075,7 @@ xfs_buf_init(void)
+>  void
+>  xfs_buf_terminate(void)
 >  {
-> -	xfs_buf_zone = kmem_zone_init_flags(sizeof(xfs_buf_t), "xfs_buf",
-> -						KM_ZONE_HWALIGN, NULL);
-> +	xfs_buf_zone = kmem_cache_create("xfs_buf",
-> +					 sizeof(struct xfs_buf), 0,
-> +					 SLAB_HWCACHE_ALIGN, NULL);
->  	if (!xfs_buf_zone)
->  		goto out;
+> -	kmem_zone_destroy(xfs_buf_zone);
+> +	kmem_cache_destroy(xfs_buf_zone);
+>  }
 >  
+>  void xfs_buf_set_ref(struct xfs_buf *bp, int lru_ref)
 > diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index bcd4247b5014..90dd1623de5a 100644
+> index 90dd1623de5a..4f969d94fb74 100644
 > --- a/fs/xfs/xfs_dquot.c
 > +++ b/fs/xfs/xfs_dquot.c
-> @@ -1211,13 +1211,15 @@ xfs_dqlock2(
->  int __init
->  xfs_qm_init(void)
+> @@ -1226,7 +1226,7 @@ xfs_qm_init(void)
+>  	return 0;
+>  
+>  out_free_dqzone:
+> -	kmem_zone_destroy(xfs_qm_dqzone);
+> +	kmem_cache_destroy(xfs_qm_dqzone);
+>  out:
+>  	return -ENOMEM;
+>  }
+> @@ -1234,8 +1234,8 @@ xfs_qm_init(void)
+>  void
+>  xfs_qm_exit(void)
 >  {
-> -	xfs_qm_dqzone =
-> -		kmem_zone_init(sizeof(struct xfs_dquot), "xfs_dquot");
-> +	xfs_qm_dqzone = kmem_cache_create("xfs_dquot",
-> +					  sizeof(struct xfs_dquot),
-> +					  0, 0, NULL);
->  	if (!xfs_qm_dqzone)
->  		goto out;
+> -	kmem_zone_destroy(xfs_qm_dqtrxzone);
+> -	kmem_zone_destroy(xfs_qm_dqzone);
+> +	kmem_cache_destroy(xfs_qm_dqtrxzone);
+> +	kmem_cache_destroy(xfs_qm_dqzone);
+>  }
 >  
-> -	xfs_qm_dqtrxzone =
-> -		kmem_zone_init(sizeof(struct xfs_dquot_acct), "xfs_dqtrx");
-> +	xfs_qm_dqtrxzone = kmem_cache_create("xfs_dqtrx",
-> +					     sizeof(struct xfs_dquot_acct),
-> +					     0, 0, NULL);
->  	if (!xfs_qm_dqtrxzone)
->  		goto out_free_dqzone;
->  
+>  /*
 > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 7f1fc76376f5..d3c3f7b5bdcf 100644
+> index d3c3f7b5bdcf..d9ae27ddf253 100644
 > --- a/fs/xfs/xfs_super.c
 > +++ b/fs/xfs/xfs_super.c
-> @@ -1797,32 +1797,39 @@ MODULE_ALIAS_FS("xfs");
->  STATIC int __init
->  xfs_init_zones(void)
->  {
-> -	xfs_log_ticket_zone = kmem_zone_init(sizeof(xlog_ticket_t),
-> -						"xfs_log_ticket");
-> +	xfs_log_ticket_zone = kmem_cache_create("xfs_log_ticket",
-> +						sizeof(struct xlog_ticket),
-> +						0, 0, NULL);
->  	if (!xfs_log_ticket_zone)
->  		goto out;
+> @@ -1921,39 +1921,39 @@ xfs_init_zones(void)
+>  	return 0;
 >  
-> -	xfs_bmap_free_item_zone = kmem_zone_init(
-> -			sizeof(struct xfs_extent_free_item),
-> -			"xfs_bmap_free_item");
-> +	xfs_bmap_free_item_zone = kmem_cache_create("xfs_bmap_free_item",
-> +					sizeof(struct xfs_extent_free_item),
-> +					0, 0, NULL);
->  	if (!xfs_bmap_free_item_zone)
->  		goto out_destroy_log_ticket_zone;
->  
-> -	xfs_btree_cur_zone = kmem_zone_init(sizeof(xfs_btree_cur_t),
-> -						"xfs_btree_cur");
-> +	xfs_btree_cur_zone = kmem_cache_create("xfs_btree_cur",
-> +					       sizeof(struct xfs_btree_cur),
-> +					       0, 0, NULL);
->  	if (!xfs_btree_cur_zone)
->  		goto out_destroy_bmap_free_item_zone;
->  
-> -	xfs_da_state_zone = kmem_zone_init(sizeof(xfs_da_state_t),
-> -						"xfs_da_state");
-> +	xfs_da_state_zone = kmem_cache_create("xfs_da_state",
-> +					      sizeof(struct xfs_da_state),
-> +					      0, 0, NULL);
->  	if (!xfs_da_state_zone)
->  		goto out_destroy_btree_cur_zone;
->  
-> -	xfs_ifork_zone = kmem_zone_init(sizeof(struct xfs_ifork), "xfs_ifork");
-> +	xfs_ifork_zone = kmem_cache_create("xfs_ifork",
-> +					   sizeof(struct xfs_ifork),
-> +					   0, 0, NULL);
->  	if (!xfs_ifork_zone)
->  		goto out_destroy_da_state_zone;
->  
-> -	xfs_trans_zone = kmem_zone_init(sizeof(xfs_trans_t), "xfs_trans");
-> +	xfs_trans_zone = kmem_cache_create("xf_trans",
-> +					   sizeof(struct xfs_trans),
-> +					   0, 0, NULL);
->  	if (!xfs_trans_zone)
->  		goto out_destroy_ifork_zone;
->  
-> @@ -1832,70 +1839,82 @@ xfs_init_zones(void)
->  	 * size possible under XFS.  This wastes a little bit of memory,
->  	 * but it is much faster.
+>   out_destroy_bud_zone:
+> -	kmem_zone_destroy(xfs_bud_zone);
+> +	kmem_cache_destroy(xfs_bud_zone);
+>   out_destroy_cui_zone:
+> -	kmem_zone_destroy(xfs_cui_zone);
+> +	kmem_cache_destroy(xfs_cui_zone);
+>   out_destroy_cud_zone:
+> -	kmem_zone_destroy(xfs_cud_zone);
+> +	kmem_cache_destroy(xfs_cud_zone);
+>   out_destroy_rui_zone:
+> -	kmem_zone_destroy(xfs_rui_zone);
+> +	kmem_cache_destroy(xfs_rui_zone);
+>   out_destroy_rud_zone:
+> -	kmem_zone_destroy(xfs_rud_zone);
+> +	kmem_cache_destroy(xfs_rud_zone);
+>   out_destroy_icreate_zone:
+> -	kmem_zone_destroy(xfs_icreate_zone);
+> +	kmem_cache_destroy(xfs_icreate_zone);
+>   out_destroy_ili_zone:
+> -	kmem_zone_destroy(xfs_ili_zone);
+> +	kmem_cache_destroy(xfs_ili_zone);
+>   out_destroy_inode_zone:
+> -	kmem_zone_destroy(xfs_inode_zone);
+> +	kmem_cache_destroy(xfs_inode_zone);
+>   out_destroy_efi_zone:
+> -	kmem_zone_destroy(xfs_efi_zone);
+> +	kmem_cache_destroy(xfs_efi_zone);
+>   out_destroy_efd_zone:
+> -	kmem_zone_destroy(xfs_efd_zone);
+> +	kmem_cache_destroy(xfs_efd_zone);
+>   out_destroy_buf_item_zone:
+> -	kmem_zone_destroy(xfs_buf_item_zone);
+> +	kmem_cache_destroy(xfs_buf_item_zone);
+>   out_destroy_trans_zone:
+> -	kmem_zone_destroy(xfs_trans_zone);
+> +	kmem_cache_destroy(xfs_trans_zone);
+>   out_destroy_ifork_zone:
+> -	kmem_zone_destroy(xfs_ifork_zone);
+> +	kmem_cache_destroy(xfs_ifork_zone);
+>   out_destroy_da_state_zone:
+> -	kmem_zone_destroy(xfs_da_state_zone);
+> +	kmem_cache_destroy(xfs_da_state_zone);
+>   out_destroy_btree_cur_zone:
+> -	kmem_zone_destroy(xfs_btree_cur_zone);
+> +	kmem_cache_destroy(xfs_btree_cur_zone);
+>   out_destroy_bmap_free_item_zone:
+> -	kmem_zone_destroy(xfs_bmap_free_item_zone);
+> +	kmem_cache_destroy(xfs_bmap_free_item_zone);
+>   out_destroy_log_ticket_zone:
+> -	kmem_zone_destroy(xfs_log_ticket_zone);
+> +	kmem_cache_destroy(xfs_log_ticket_zone);
+>   out:
+>  	return -ENOMEM;
+>  }
+> @@ -1966,24 +1966,24 @@ xfs_destroy_zones(void)
+>  	 * destroy caches.
 >  	 */
-> -	xfs_buf_item_zone = kmem_zone_init(sizeof(struct xfs_buf_log_item),
-> -					   "xfs_buf_item");
-> +	xfs_buf_item_zone = kmem_cache_create("xfs_buf_item",
-> +					      sizeof(struct xfs_buf_log_item),
-> +					      0, 0, NULL);
->  	if (!xfs_buf_item_zone)
->  		goto out_destroy_trans_zone;
+>  	rcu_barrier();
+> -	kmem_zone_destroy(xfs_bui_zone);
+> -	kmem_zone_destroy(xfs_bud_zone);
+> -	kmem_zone_destroy(xfs_cui_zone);
+> -	kmem_zone_destroy(xfs_cud_zone);
+> -	kmem_zone_destroy(xfs_rui_zone);
+> -	kmem_zone_destroy(xfs_rud_zone);
+> -	kmem_zone_destroy(xfs_icreate_zone);
+> -	kmem_zone_destroy(xfs_ili_zone);
+> -	kmem_zone_destroy(xfs_inode_zone);
+> -	kmem_zone_destroy(xfs_efi_zone);
+> -	kmem_zone_destroy(xfs_efd_zone);
+> -	kmem_zone_destroy(xfs_buf_item_zone);
+> -	kmem_zone_destroy(xfs_trans_zone);
+> -	kmem_zone_destroy(xfs_ifork_zone);
+> -	kmem_zone_destroy(xfs_da_state_zone);
+> -	kmem_zone_destroy(xfs_btree_cur_zone);
+> -	kmem_zone_destroy(xfs_bmap_free_item_zone);
+> -	kmem_zone_destroy(xfs_log_ticket_zone);
+> +	kmem_cache_destroy(xfs_bui_zone);
+> +	kmem_cache_destroy(xfs_bud_zone);
+> +	kmem_cache_destroy(xfs_cui_zone);
+> +	kmem_cache_destroy(xfs_cud_zone);
+> +	kmem_cache_destroy(xfs_rui_zone);
+> +	kmem_cache_destroy(xfs_rud_zone);
+> +	kmem_cache_destroy(xfs_icreate_zone);
+> +	kmem_cache_destroy(xfs_ili_zone);
+> +	kmem_cache_destroy(xfs_inode_zone);
+> +	kmem_cache_destroy(xfs_efi_zone);
+> +	kmem_cache_destroy(xfs_efd_zone);
+> +	kmem_cache_destroy(xfs_buf_item_zone);
+> +	kmem_cache_destroy(xfs_trans_zone);
+> +	kmem_cache_destroy(xfs_ifork_zone);
+> +	kmem_cache_destroy(xfs_da_state_zone);
+> +	kmem_cache_destroy(xfs_btree_cur_zone);
+> +	kmem_cache_destroy(xfs_bmap_free_item_zone);
+> +	kmem_cache_destroy(xfs_log_ticket_zone);
+>  }
 >  
-> -	xfs_efd_zone = kmem_zone_init((sizeof(xfs_efd_log_item_t) +
-> -			((XFS_EFD_MAX_FAST_EXTENTS - 1) *
-> -				 sizeof(xfs_extent_t))), "xfs_efd_item");
-> +	xfs_efd_zone = kmem_cache_create("xfs_efd_item",
-> +					(sizeof(struct xfs_efd_log_item) +
-> +					(XFS_EFD_MAX_FAST_EXTENTS - 1) *
-> +					sizeof(struct xfs_extent)),
-> +					0, 0, NULL);
->  	if (!xfs_efd_zone)
->  		goto out_destroy_buf_item_zone;
->  
-> -	xfs_efi_zone = kmem_zone_init((sizeof(xfs_efi_log_item_t) +
-> -			((XFS_EFI_MAX_FAST_EXTENTS - 1) *
-> -				sizeof(xfs_extent_t))), "xfs_efi_item");
-> +	xfs_efi_zone = kmem_cache_create("xfs_efi_item",
-> +					 (sizeof(struct xfs_efi_log_item) +
-> +					 (XFS_EFI_MAX_FAST_EXTENTS - 1) *
-> +					 sizeof(struct xfs_extent)),
-> +					 0, 0, NULL);
->  	if (!xfs_efi_zone)
->  		goto out_destroy_efd_zone;
->  
-> -	xfs_inode_zone =
-> -		kmem_zone_init_flags(sizeof(xfs_inode_t), "xfs_inode",
-> -			KM_ZONE_HWALIGN | KM_ZONE_RECLAIM | KM_ZONE_SPREAD |
-> -			KM_ZONE_ACCOUNT, xfs_fs_inode_init_once);
-> +	xfs_inode_zone = kmem_cache_create("xfs_inode",
-> +					   sizeof(struct xfs_inode), 0,
-> +					   (SLAB_HWCACHE_ALIGN |
-> +					    SLAB_RECLAIM_ACCOUNT |
-> +					    SLAB_MEM_SPREAD | SLAB_ACCOUNT),
-> +					   xfs_fs_inode_init_once);
->  	if (!xfs_inode_zone)
->  		goto out_destroy_efi_zone;
->  
-> -	xfs_ili_zone =
-> -		kmem_zone_init_flags(sizeof(xfs_inode_log_item_t), "xfs_ili",
-> -					KM_ZONE_SPREAD, NULL);
-> +	xfs_ili_zone = kmem_cache_create("xfs_ili",
-> +					 sizeof(struct xfs_inode_log_item), 0,
-> +					 SLAB_MEM_SPREAD, NULL);
->  	if (!xfs_ili_zone)
->  		goto out_destroy_inode_zone;
-> -	xfs_icreate_zone = kmem_zone_init(sizeof(struct xfs_icreate_item),
-> -					"xfs_icr");
-> +
-> +	xfs_icreate_zone = kmem_cache_create("xfs_icr",
-> +					     sizeof(struct xfs_icreate_item),
-> +					     0, 0, NULL);
->  	if (!xfs_icreate_zone)
->  		goto out_destroy_ili_zone;
->  
-> -	xfs_rud_zone = kmem_zone_init(sizeof(struct xfs_rud_log_item),
-> -			"xfs_rud_item");
-> +	xfs_rud_zone = kmem_cache_create("xfs_rud_item",
-> +					 sizeof(struct xfs_rud_log_item),
-> +					 0, 0, NULL);
->  	if (!xfs_rud_zone)
->  		goto out_destroy_icreate_zone;
->  
-> -	xfs_rui_zone = kmem_zone_init(
-> +	xfs_rui_zone = kmem_cache_create("xfs_rui_item",
->  			xfs_rui_log_item_sizeof(XFS_RUI_MAX_FAST_EXTENTS),
-> -			"xfs_rui_item");
-> +			0, 0, NULL);
->  	if (!xfs_rui_zone)
->  		goto out_destroy_rud_zone;
->  
-> -	xfs_cud_zone = kmem_zone_init(sizeof(struct xfs_cud_log_item),
-> -			"xfs_cud_item");
-> +	xfs_cud_zone = kmem_cache_create("xfs_cud_item",
-> +					 sizeof(struct xfs_cud_log_item),
-> +					 0, 0, NULL);
->  	if (!xfs_cud_zone)
->  		goto out_destroy_rui_zone;
->  
-> -	xfs_cui_zone = kmem_zone_init(
-> +	xfs_cui_zone = kmem_cache_create("xfs_cui_item",
->  			xfs_cui_log_item_sizeof(XFS_CUI_MAX_FAST_EXTENTS),
-> -			"xfs_cui_item");
-> +			0, 0, NULL);
->  	if (!xfs_cui_zone)
->  		goto out_destroy_cud_zone;
->  
-> -	xfs_bud_zone = kmem_zone_init(sizeof(struct xfs_bud_log_item),
-> -			"xfs_bud_item");
-> +	xfs_bud_zone = kmem_cache_create("xfs_bud_item",
-> +					 sizeof(struct xfs_bud_log_item),
-> +					 0, 0, NULL);
->  	if (!xfs_bud_zone)
->  		goto out_destroy_cui_zone;
->  
-> -	xfs_bui_zone = kmem_zone_init(
-> +	xfs_bui_zone = kmem_cache_create("xfs_bui_item",
->  			xfs_bui_log_item_sizeof(XFS_BUI_MAX_FAST_EXTENTS),
-> -			"xfs_bui_item");
-> +			0, 0, NULL);
->  	if (!xfs_bui_zone)
->  		goto out_destroy_bud_zone;
->  
+>  STATIC int __init
 > -- 
 > 2.23.0
 > 
