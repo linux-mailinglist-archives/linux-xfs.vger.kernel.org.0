@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DE68FCD58
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:23:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 737A6FCD3C
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:20:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfKNSWI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Nov 2019 13:22:08 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48340 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfKNSWI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:22:08 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIJxMj073034
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:22:07 GMT
+        id S1727900AbfKNSUP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Nov 2019 13:20:15 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbfKNSUP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:20:15 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIK09M092809
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=hoHewMf0nOFNBp8vRwVN6pJQdQl/SYIbCNsOtLuOY+E=;
- b=Qmvydj87OG/yNvuKhTSIiqUDTg+vk1zyi8M+XZ2TNIqnzSYQx2f9/m+QwYotTl2qKWgd
- rC5qblBvf9T+MTjQ+6Ojop8p2j7YDL878wyDrTJCbaGpaLjm/+zEt/1GDeD04noHtoQW
- 459ostOQKyF3jaonHGI6Idhgne/KR0m1bPHxqzJPMzXR3gue7CtqU+bGt9KsAWrL1A0Y
- ujlH5syZrRwU4bPM4ZmH6le+/vv++My11kL/NlxBI2ihYp36weK5rX/ivnjDJSycX62g
- o8whN+vMN5tQnkAsR0N4aI0oSmSkWQL3Tqu3O9vLYRpF2SykBZZdXtLRiGAlA61Azai7 Rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2w5p3r4wkx-1
+ bh=y+vkyj6pruFWvmhwGVAxuxmvRm1Z5v8pWrgN/9gnBGw=;
+ b=lYebvHhbdSNchxQp2F9K3SNHIs1RGxMJbZs4wt9RFBb1AS0IM/3gyQ1kOO3qYOjGdYhm
+ wtAYOMnjX7kwZaCk3xDDbJ5E/SKOo2M0FDwRkemmsaU0jbr2SfgvdObtsalGQ6IP2il9
+ MrfoBDD1pI7vAw4naWxvbxNQ72zAqvU+Xy+HNG4GJpA/lLHoSjLtF7VKDAcyOC9Wx6wc
+ uTGAWtrQ5wj41dak5Q8GzmKI0M4t4EmzxneCLWR9DOUihyz/hmbKbldd1HktVzQ9hPLc
+ gDgYq3ipOrQ6BjiE+SSVHxan3slpIRkfl5Jbn9Ff1S9cOkm7KcnyLSl0vIFnRaieyERL XA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w5ndqn0xa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:22:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEI43QX027111
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEI41v9106882
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2w8v365mgf-1
+        by userp3030.oracle.com with ESMTP id 2w8g19tnx7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAEIK6Ke023402
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAEIKCO1023455
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Nov 2019 10:20:05 -0800
-Subject: [PATCH 8/9] xfs: report quota block corruption errors to the health
- system
+        with ESMTP ; Thu, 14 Nov 2019 10:20:11 -0800
+Subject: [PATCH 9/9] xfs: report realtime metadata corruption errors to the
+ health system
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 14 Nov 2019 10:20:05 -0800
-Message-ID: <157375560509.3692735.4663382867926594973.stgit@magnolia>
+Date:   Thu, 14 Nov 2019 10:20:11 -0800
+Message-ID: <157375561114.3692735.2022049508424797963.stgit@magnolia>
 In-Reply-To: <157375555426.3692735.1357467392517392169.stgit@magnolia>
 References: <157375555426.3692735.1357467392517392169.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,129 +71,76 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Whenever we encounter corrupt quota blocks, we should report that to the
-health monitoring system for later reporting.
+Whenever we encounter corrupt realtime metadat blocks, we should report
+that to the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_health.h |    1 +
- fs/xfs/xfs_dquot.c         |    6 ++++++
- fs/xfs/xfs_health.c        |   15 +++++++++++++++
- fs/xfs/xfs_qm.c            |    9 +++++++--
- 4 files changed, 29 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_rtbitmap.c |    9 ++++++++-
+ fs/xfs/xfs_rtalloc.c         |    6 +++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index d9404cd3d09b..69e7d97ed480 100644
---- a/fs/xfs/libxfs/xfs_health.h
-+++ b/fs/xfs/libxfs/xfs_health.h
-@@ -144,6 +144,7 @@ void xfs_bmap_mark_sick(struct xfs_inode *ip, int whichfork);
- void xfs_btree_mark_sick(struct xfs_btree_cur *cur);
- void xfs_dirattr_mark_sick(struct xfs_inode *ip, int whichfork);
- void xfs_da_mark_sick(struct xfs_da_args *args);
-+void xfs_quota_mark_sick(struct xfs_mount *mp, uint dq_flags);
- 
- /* Now some helpers. */
- 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 1d97e897ebde..35f1d794f952 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -23,6 +23,7 @@
- #include "xfs_trace.h"
- #include "xfs_log.h"
- #include "xfs_bmap_btree.h"
-+#include "xfs_health.h"
- 
- /*
-  * Lock order:
-@@ -419,6 +420,8 @@ xfs_dquot_disk_read(
- 	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
- 			mp->m_quotainfo->qi_dqchunklen, 0, &bp,
- 			&xfs_dquot_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_quota_mark_sick(mp, dqp->dq_flags);
- 	if (error) {
- 		ASSERT(bp == NULL);
- 		return error;
-@@ -1107,6 +1110,8 @@ xfs_qm_dqflush(
- 	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
- 				   mp->m_quotainfo->qi_dqchunklen, 0, &bp,
- 				   &xfs_dquot_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_quota_mark_sick(mp, dqp->dq_flags);
- 	if (error)
- 		goto out_unlock;
- 
-@@ -1126,6 +1131,7 @@ xfs_qm_dqflush(
- 		xfs_buf_relse(bp);
- 		xfs_dqfunlock(dqp);
- 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
-+		xfs_quota_mark_sick(mp, dqp->dq_flags);
- 		return -EFSCORRUPTED;
- 	}
- 
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index c1b6e8fb72ec..2d3da765722e 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -17,6 +17,7 @@
- #include "xfs_btree.h"
- #include "xfs_da_format.h"
- #include "xfs_da_btree.h"
-+#include "xfs_quota_defs.h"
- 
- /*
-  * Warn about metadata corruption that we detected but haven't fixed, and
-@@ -556,3 +557,17 @@ xfs_da_mark_sick(
- {
- 	xfs_dirattr_mark_sick(args->dp, args->whichfork);
- }
-+
-+/* Record observations of quota corruption with the health tracking system. */
-+void
-+xfs_quota_mark_sick(
-+	struct xfs_mount	*mp,
-+	uint			dq_flags)
-+{
-+	if (dq_flags & XFS_DQ_USER)
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_UQUOTA);
-+	if (dq_flags & XFS_DQ_GROUP)
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_GQUOTA);
-+	if (dq_flags & XFS_DQ_PROJ)
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_PQUOTA);
-+}
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 0b0909657bad..ed6cc943db92 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -23,6 +23,7 @@
- #include "xfs_trace.h"
- #include "xfs_icache.h"
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index f42c74cb8be5..88a87526280e 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -16,6 +16,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_rtalloc.h"
  #include "xfs_error.h"
 +#include "xfs_health.h"
  
  /*
-  * The global quota manager. There is only one of these for the entire
-@@ -756,14 +757,18 @@ xfs_qm_qino_alloc(
- 			     (mp->m_sb.sb_gquotino != NULLFSINO)) {
- 			ino = mp->m_sb.sb_gquotino;
- 			if (XFS_IS_CORRUPT(mp,
--					   mp->m_sb.sb_pquotino != NULLFSINO))
-+					   mp->m_sb.sb_pquotino != NULLFSINO)) {
-+				xfs_quota_mark_sick(mp, XFS_DQ_PROJ);
- 				return -EFSCORRUPTED;
-+			}
- 		} else if ((flags & XFS_QMOPT_GQUOTA) &&
- 			     (mp->m_sb.sb_pquotino != NULLFSINO)) {
- 			ino = mp->m_sb.sb_pquotino;
- 			if (XFS_IS_CORRUPT(mp,
--					   mp->m_sb.sb_gquotino != NULLFSINO))
-+					   mp->m_sb.sb_gquotino != NULLFSINO)) {
-+				xfs_quota_mark_sick(mp, XFS_DQ_GROUP);
- 				return -EFSCORRUPTED;
-+			}
- 		}
- 		if (ino != NULLFSINO) {
- 			error = xfs_iget(mp, NULL, ino, 0, 0, ip);
+  * Realtime allocator bitmap functions shared with userspace.
+@@ -70,13 +71,19 @@ xfs_rtbuf_get(
+ 	if (error)
+ 		return error;
+ 
+-	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_real_extent(&map)))
++	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_real_extent(&map))) {
++		xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
++					     XFS_SICK_RT_BITMAP);
+ 		return -EFSCORRUPTED;
++	}
+ 
+ 	ASSERT(map.br_startblock != NULLFSBLOCK);
+ 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
+ 				   XFS_FSB_TO_DADDR(mp, map.br_startblock),
+ 				   mp->m_bsize, 0, &bp, &xfs_rtbuf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
++					     XFS_SICK_RT_BITMAP);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index d42b5a2047e0..4ec0fead3177 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -18,7 +18,7 @@
+ #include "xfs_trans_space.h"
+ #include "xfs_icache.h"
+ #include "xfs_rtalloc.h"
+-
++#include "xfs_health.h"
+ 
+ /*
+  * Read and return the summary information for a given extent size,
+@@ -1235,11 +1235,15 @@ xfs_rtmount_inodes(
+ 
+ 	sbp = &mp->m_sb;
+ 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
++	if (xfs_metadata_is_sick(error))
++		xfs_rt_mark_sick(mp, XFS_SICK_RT_BITMAP);
+ 	if (error)
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+ 
+ 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
++	if (xfs_metadata_is_sick(error))
++		xfs_rt_mark_sick(mp, XFS_SICK_RT_SUMMARY);
+ 	if (error) {
+ 		xfs_irele(mp->m_rbmip);
+ 		return error;
 
