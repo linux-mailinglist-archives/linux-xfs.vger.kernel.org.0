@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A58FCD36
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:20:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DE68FCD58
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:23:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfKNSUC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Nov 2019 13:20:02 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46188 "EHLO
+        id S1726528AbfKNSWI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Nov 2019 13:22:08 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48340 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbfKNSUC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:20:02 -0500
+        with ESMTP id S1726717AbfKNSWI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:22:08 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIK0cF073060
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:01 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIJxMj073034
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:22:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=IdNxkamMSPl0Tw6FdCaYPHZ/RJFnxXg7Ke2tsJGjI3A=;
- b=AerbAIp2e3EXyS9Jj3y7m0yv5VKR99AFp61IO1u6EbfQWCOlYk2HbMrEZ9Tde8/r7faM
- N9hfWbVZxqEkZhJCU8/gJXuayA92hnwggiRKXiEG/Paj1RyJ4qZ1ndQF6l3FW4RVqa3+
- QJM2IpPLlOkwBouOkbv84aJazQzv5VeGuQjzKiKfQmI/5vRayqzSRUGGah5UjuDfviZa
- DJ3hyttM33s82uEUwAbJBgQ1CyKbv/O1P+oGvSrMRk9L41HbUoRnIJLEds6iiWT/VbcI
- 3HhJhFVzp5ann+zG5M+kCoXJESrY56ZmwUdM9iHO3KznDDrKdNucvrlL5g61pPqZpfgf 4A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w5p3r4wcv-1
+ bh=hoHewMf0nOFNBp8vRwVN6pJQdQl/SYIbCNsOtLuOY+E=;
+ b=Qmvydj87OG/yNvuKhTSIiqUDTg+vk1zyi8M+XZ2TNIqnzSYQx2f9/m+QwYotTl2qKWgd
+ rC5qblBvf9T+MTjQ+6Ojop8p2j7YDL878wyDrTJCbaGpaLjm/+zEt/1GDeD04noHtoQW
+ 459ostOQKyF3jaonHGI6Idhgne/KR0m1bPHxqzJPMzXR3gue7CtqU+bGt9KsAWrL1A0Y
+ ujlH5syZrRwU4bPM4ZmH6le+/vv++My11kL/NlxBI2ihYp36weK5rX/ivnjDJSycX62g
+ o8whN+vMN5tQnkAsR0N4aI0oSmSkWQL3Tqu3O9vLYRpF2SykBZZdXtLRiGAlA61Azai7 Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w5p3r4wkx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEI44SL106969
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w8g19tn5b-1
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:22:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEI43QX027111
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2w8v365mgf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:00 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAEIK01f031548
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:00 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAEIK6Ke023402
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:06 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Nov 2019 10:19:59 -0800
-Subject: [PATCH 7/9] xfs: report inode corruption errors to the health system
+        with ESMTP ; Thu, 14 Nov 2019 10:20:05 -0800
+Subject: [PATCH 8/9] xfs: report quota block corruption errors to the health
+ system
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 14 Nov 2019 10:19:59 -0800
-Message-ID: <157375559910.3692735.16877132028535941668.stgit@magnolia>
+Date:   Thu, 14 Nov 2019 10:20:05 -0800
+Message-ID: <157375560509.3692735.4663382867926594973.stgit@magnolia>
 In-Reply-To: <157375555426.3692735.1357467392517392169.stgit@magnolia>
 References: <157375555426.3692735.1357467392517392169.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1910280000 definitions=main-1911140155
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
  definitions=main-1911140156
@@ -70,170 +71,129 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Whenever we encounter corrupt inode records, we should report that to
-the health monitoring system for later reporting.
+Whenever we encounter corrupt quota blocks, we should report that to the
+health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_inode_buf.c  |    5 +++++
- fs/xfs/libxfs/xfs_inode_fork.c |    8 ++++++++
- fs/xfs/xfs_icache.c            |    4 ++++
- fs/xfs/xfs_inode.c             |    2 ++
- 4 files changed, 19 insertions(+)
+ fs/xfs/libxfs/xfs_health.h |    1 +
+ fs/xfs/xfs_dquot.c         |    6 ++++++
+ fs/xfs/xfs_health.c        |   15 +++++++++++++++
+ fs/xfs/xfs_qm.c            |    9 +++++++--
+ 4 files changed, 29 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 8afacfe4be0a..10dab755abe0 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -17,6 +17,7 @@
- #include "xfs_trans.h"
- #include "xfs_ialloc.h"
- #include "xfs_dir2.h"
-+#include "xfs_health.h"
+diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+index d9404cd3d09b..69e7d97ed480 100644
+--- a/fs/xfs/libxfs/xfs_health.h
++++ b/fs/xfs/libxfs/xfs_health.h
+@@ -144,6 +144,7 @@ void xfs_bmap_mark_sick(struct xfs_inode *ip, int whichfork);
+ void xfs_btree_mark_sick(struct xfs_btree_cur *cur);
+ void xfs_dirattr_mark_sick(struct xfs_inode *ip, int whichfork);
+ void xfs_da_mark_sick(struct xfs_da_args *args);
++void xfs_quota_mark_sick(struct xfs_mount *mp, uint dq_flags);
  
- #include <linux/iversion.h>
+ /* Now some helpers. */
  
-@@ -182,6 +183,9 @@ xfs_imap_to_bp(
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp, imap->im_blkno,
- 				   (int)imap->im_len, buf_flags, &bp,
- 				   &xfs_inode_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_agno_mark_sick(mp, xfs_daddr_to_agno(mp, imap->im_blkno),
-+				XFS_SICK_AG_INOBT);
- 	if (error) {
- 		if (error == -EAGAIN) {
- 			ASSERT(buf_flags & XBF_TRYLOCK);
-@@ -648,6 +652,7 @@ xfs_iread(
- 	if (fa) {
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED, "dinode", dip,
- 				sizeof(*dip), fa);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		error = -EFSCORRUPTED;
- 		goto out_brelse;
- 	}
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 15d6f947620f..6698161b581b 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 1d97e897ebde..35f1d794f952 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
 @@ -23,6 +23,7 @@
- #include "xfs_da_btree.h"
- #include "xfs_dir2_priv.h"
- #include "xfs_attr_leaf.h"
+ #include "xfs_trace.h"
+ #include "xfs_log.h"
+ #include "xfs_bmap_btree.h"
 +#include "xfs_health.h"
  
- kmem_zone_t *xfs_ifork_zone;
- 
-@@ -77,6 +78,7 @@ xfs_iformat_fork(
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-+			xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 			return -EFSCORRUPTED;
- 		}
- 		break;
-@@ -84,6 +86,7 @@ xfs_iformat_fork(
- 	default:
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
- 				sizeof(*dip), __this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
- 	}
+ /*
+  * Lock order:
+@@ -419,6 +420,8 @@ xfs_dquot_disk_read(
+ 	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
+ 			mp->m_quotainfo->qi_dqchunklen, 0, &bp,
+ 			&xfs_dquot_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_quota_mark_sick(mp, dqp->dq_flags);
+ 	if (error) {
+ 		ASSERT(bp == NULL);
+ 		return error;
+@@ -1107,6 +1110,8 @@ xfs_qm_dqflush(
+ 	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
+ 				   mp->m_quotainfo->qi_dqchunklen, 0, &bp,
+ 				   &xfs_dquot_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_quota_mark_sick(mp, dqp->dq_flags);
  	if (error)
-@@ -116,6 +119,7 @@ xfs_iformat_fork(
- 	default:
- 		xfs_inode_verifier_error(ip, error, __func__, dip,
- 				sizeof(*dip), __this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		error = -EFSCORRUPTED;
- 		break;
- 	}
-@@ -189,6 +193,7 @@ xfs_iformat_local(
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED,
- 				"xfs_iformat_local", dip, sizeof(*dip),
- 				__this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 		goto out_unlock;
+ 
+@@ -1126,6 +1131,7 @@ xfs_qm_dqflush(
+ 		xfs_buf_relse(bp);
+ 		xfs_dqfunlock(dqp);
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
++		xfs_quota_mark_sick(mp, dqp->dq_flags);
  		return -EFSCORRUPTED;
  	}
  
-@@ -226,6 +231,7 @@ xfs_iformat_extents(
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED,
- 				"xfs_iformat_extents(1)", dip, sizeof(*dip),
- 				__this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
- 	}
+diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+index c1b6e8fb72ec..2d3da765722e 100644
+--- a/fs/xfs/xfs_health.c
++++ b/fs/xfs/xfs_health.c
+@@ -17,6 +17,7 @@
+ #include "xfs_btree.h"
+ #include "xfs_da_format.h"
+ #include "xfs_da_btree.h"
++#include "xfs_quota_defs.h"
  
-@@ -245,6 +251,7 @@ xfs_iformat_extents(
- 				xfs_inode_verifier_error(ip, -EFSCORRUPTED,
- 						"xfs_iformat_extents(2)",
- 						dp, sizeof(*dp), fa);
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 				return -EFSCORRUPTED;
- 			}
- 
-@@ -304,6 +311,7 @@ xfs_iformat_btree(
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED,
- 				"xfs_iformat_btree", dfp, size,
- 				__this_address);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
- 	}
- 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index ec302b7e48f3..3e6c27d69132 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -22,6 +22,7 @@
- #include "xfs_dquot_item.h"
- #include "xfs_dquot.h"
- #include "xfs_reflink.h"
+ /*
+  * Warn about metadata corruption that we detected but haven't fixed, and
+@@ -556,3 +557,17 @@ xfs_da_mark_sick(
+ {
+ 	xfs_dirattr_mark_sick(args->dp, args->whichfork);
+ }
++
++/* Record observations of quota corruption with the health tracking system. */
++void
++xfs_quota_mark_sick(
++	struct xfs_mount	*mp,
++	uint			dq_flags)
++{
++	if (dq_flags & XFS_DQ_USER)
++		xfs_fs_mark_sick(mp, XFS_SICK_FS_UQUOTA);
++	if (dq_flags & XFS_DQ_GROUP)
++		xfs_fs_mark_sick(mp, XFS_SICK_FS_GQUOTA);
++	if (dq_flags & XFS_DQ_PROJ)
++		xfs_fs_mark_sick(mp, XFS_SICK_FS_PQUOTA);
++}
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 0b0909657bad..ed6cc943db92 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -23,6 +23,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_icache.h"
+ #include "xfs_error.h"
 +#include "xfs_health.h"
  
- #include <linux/iversion.h>
- 
-@@ -321,6 +322,7 @@ xfs_iget_check_free_state(
- 			xfs_warn(ip->i_mount,
- "Corruption detected! Free inode 0x%llx not marked free! (mode 0x%x)",
- 				ip->i_ino, VFS_I(ip)->i_mode);
-+			xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 			return -EFSCORRUPTED;
+ /*
+  * The global quota manager. There is only one of these for the entire
+@@ -756,14 +757,18 @@ xfs_qm_qino_alloc(
+ 			     (mp->m_sb.sb_gquotino != NULLFSINO)) {
+ 			ino = mp->m_sb.sb_gquotino;
+ 			if (XFS_IS_CORRUPT(mp,
+-					   mp->m_sb.sb_pquotino != NULLFSINO))
++					   mp->m_sb.sb_pquotino != NULLFSINO)) {
++				xfs_quota_mark_sick(mp, XFS_DQ_PROJ);
+ 				return -EFSCORRUPTED;
++			}
+ 		} else if ((flags & XFS_QMOPT_GQUOTA) &&
+ 			     (mp->m_sb.sb_pquotino != NULLFSINO)) {
+ 			ino = mp->m_sb.sb_pquotino;
+ 			if (XFS_IS_CORRUPT(mp,
+-					   mp->m_sb.sb_gquotino != NULLFSINO))
++					   mp->m_sb.sb_gquotino != NULLFSINO)) {
++				xfs_quota_mark_sick(mp, XFS_DQ_GROUP);
+ 				return -EFSCORRUPTED;
++			}
  		}
- 
-@@ -328,6 +330,7 @@ xfs_iget_check_free_state(
- 			xfs_warn(ip->i_mount,
- "Corruption detected! Free inode 0x%llx has blocks allocated!",
- 				ip->i_ino);
-+			xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 			return -EFSCORRUPTED;
- 		}
- 		return 0;
-@@ -511,6 +514,7 @@ xfs_iget_cache_miss(
- 		goto out_destroy;
- 
- 	if (!xfs_inode_verify_forks(ip)) {
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		error = -EFSCORRUPTED;
- 		goto out_destroy;
- 	}
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index a2812cea748d..e49712f073ff 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -3653,6 +3653,7 @@ xfs_iflush_cluster(
- 	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 
- 	/* abort the corrupt inode, as it was not attached to the buffer */
-+	xfs_inode_mark_sick(cip, XFS_SICK_INO_CORE);
- 	xfs_iflush_abort(cip, false);
- 	kmem_free(cilist);
- 	xfs_perag_put(pag);
-@@ -3950,6 +3951,7 @@ xfs_iflush_int(
- 	return 0;
- 
- corrupt_out:
-+	xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 	return -EFSCORRUPTED;
- }
- 
+ 		if (ino != NULLFSINO) {
+ 			error = xfs_iget(mp, NULL, ino, 0, 0, ip);
 
