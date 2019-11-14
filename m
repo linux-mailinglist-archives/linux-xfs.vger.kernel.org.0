@@ -2,65 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 737A6FCD3C
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:20:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEF19FCD78
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2019 19:26:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfKNSUP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Nov 2019 13:20:15 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:33768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfKNSUP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:20:15 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIK09M092809
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=y+vkyj6pruFWvmhwGVAxuxmvRm1Z5v8pWrgN/9gnBGw=;
- b=lYebvHhbdSNchxQp2F9K3SNHIs1RGxMJbZs4wt9RFBb1AS0IM/3gyQ1kOO3qYOjGdYhm
- wtAYOMnjX7kwZaCk3xDDbJ5E/SKOo2M0FDwRkemmsaU0jbr2SfgvdObtsalGQ6IP2il9
- MrfoBDD1pI7vAw4naWxvbxNQ72zAqvU+Xy+HNG4GJpA/lLHoSjLtF7VKDAcyOC9Wx6wc
- uTGAWtrQ5wj41dak5Q8GzmKI0M4t4EmzxneCLWR9DOUihyz/hmbKbldd1HktVzQ9hPLc
- gDgYq3ipOrQ6BjiE+SSVHxan3slpIRkfl5Jbn9Ff1S9cOkm7KcnyLSl0vIFnRaieyERL XA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2w5ndqn0xa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEI41v9106882
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w8g19tnx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAEIKCO1023455
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2019 18:20:12 GMT
+        id S1726717AbfKNS05 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Nov 2019 13:26:57 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52974 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfKNS04 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Nov 2019 13:26:56 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEIQQkJ106899;
+        Thu, 14 Nov 2019 18:26:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=oQ9gYe5VszgNlNXKXRLGnc56kD6r36ezTW5KJ334AWM=;
+ b=XGhK4zrMKmimor0dUfaOGf1grNwVFmV9+2rxNuK1oytJ03o7pFYk0rd+edFdds1WVmJe
+ oY/D1HHd/3r6itB+T6bzYoyDKKvJztP9BTnovKlLEfuOLg3YOWkZ8IA4yfKsO634SxtN
+ 34UzkV/oC3MWWu6bu+snefMBo4dG8eVDZZcSdz3qln38XK+3ii6Vgj6w4mZbVDIKa+Qb
+ gbHgq5JvCRmdJ+ExGe3Twj0mIUzPXRBKMsSZ4S+YilPdOgPXz+nD7MVxWOHVewV/35ah
+ BlRryiIKtg4eToCoZnRyD72aeNurVywbitzrI4gYj4oMoZFf7HM92YQQCYTz5m1sS3Y2 cQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2w5mvu52p4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 18:26:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEINeTh171979;
+        Thu, 14 Nov 2019 18:26:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2w8nga5t84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 18:26:51 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAEIQmaU012432;
+        Thu, 14 Nov 2019 18:26:50 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Nov 2019 10:20:11 -0800
-Subject: [PATCH 9/9] xfs: report realtime metadata corruption errors to the
- health system
+        with ESMTP ; Thu, 14 Nov 2019 10:26:48 -0800
+Date:   Thu, 14 Nov 2019 10:26:47 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 14 Nov 2019 10:20:11 -0800
-Message-ID: <157375561114.3692735.2022049508424797963.stgit@magnolia>
-In-Reply-To: <157375555426.3692735.1357467392517392169.stgit@magnolia>
-References: <157375555426.3692735.1357467392517392169.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+To:     Frank Sorenson <sorenson@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, sandeen@sandeen.net
+Subject: Re: [PATCH] xfs_restore: Return error if error occurs restoring
+ extent
+Message-ID: <20191114182647.GJ6219@magnolia>
+References: <20191114074538.1220512-1-sorenson@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114074538.1220512-1-sorenson@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911140155
+ engine=8.0.1-1910280000 definitions=main-1911140156
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
  definitions=main-1911140156
@@ -69,78 +69,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Nov 14, 2019 at 01:45:38AM -0600, Frank Sorenson wrote:
+> If an error occurs during write while restoring an extent,
+> no error is currently propagated back to the caller, so
+> xfsrestore can return SUCCESS on a failed restore.
+> 
+> Make restore_extent return an error code indicating the
+> restore was incomplete.
+> 
+> Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+> ---
+>  restore/content.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/restore/content.c b/restore/content.c
+> index 6b22965..c267234 100644
+> --- a/restore/content.c
+> +++ b/restore/content.c
+> @@ -8446,6 +8446,7 @@ restore_extent(filehdr_t *fhdrp,
+>  	off64_t new_off;
+>  	struct dioattr da;
+>  	bool_t isrealtime = BOOL_FALSE;
+> +	rv_t rv = RV_OK;
+>  
+>  	*bytesreadp = 0;
+>  
+> @@ -8496,7 +8497,6 @@ restore_extent(filehdr_t *fhdrp,
+>  		req_bufsz = (size_t)min((off64_t)INTGENMAX, sz);
+>  		bufp = (*dop->do_read)(drivep, req_bufsz, &sup_bufsz, &rval);
+>  		if (rval) {
+> -			rv_t rv;
+>  			char *reasonstr;
+>  			switch(rval) {
+>  			case DRIVE_ERROR_EOF:
+> @@ -8665,12 +8665,13 @@ restore_extent(filehdr_t *fhdrp,
+>  			fd = -1;
+>  			assert(ntowrite <= (size_t)INTGENMAX);
+>  			nwritten = (int)ntowrite;
+> +			rv = RV_INCOMPLETE;
 
-Whenever we encounter corrupt realtime metadat blocks, we should report
-that to the health monitoring system for later reporting.
+							I think this is
+							reasonable but
+							it's very hard
+							to understand
+							what this
+							function does
+							when so much of
+							the loop body is
+							all jammed
+							against the
+							right margin.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_rtbitmap.c |    9 ++++++++-
- fs/xfs/xfs_rtalloc.c         |    6 +++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+							Reviewed-by:
+							Darrick J. Wong
+							<darrick.wong@oracle.com>
 
+							--D
 
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index f42c74cb8be5..88a87526280e 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -16,6 +16,7 @@
- #include "xfs_trans.h"
- #include "xfs_rtalloc.h"
- #include "xfs_error.h"
-+#include "xfs_health.h"
- 
- /*
-  * Realtime allocator bitmap functions shared with userspace.
-@@ -70,13 +71,19 @@ xfs_rtbuf_get(
- 	if (error)
- 		return error;
- 
--	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_real_extent(&map)))
-+	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_real_extent(&map))) {
-+		xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
-+					     XFS_SICK_RT_BITMAP);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	ASSERT(map.br_startblock != NULLFSBLOCK);
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
- 				   XFS_FSB_TO_DADDR(mp, map.br_startblock),
- 				   mp->m_bsize, 0, &bp, &xfs_rtbuf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
-+					     XFS_SICK_RT_BITMAP);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index d42b5a2047e0..4ec0fead3177 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -18,7 +18,7 @@
- #include "xfs_trans_space.h"
- #include "xfs_icache.h"
- #include "xfs_rtalloc.h"
--
-+#include "xfs_health.h"
- 
- /*
-  * Read and return the summary information for a given extent size,
-@@ -1235,11 +1235,15 @@ xfs_rtmount_inodes(
- 
- 	sbp = &mp->m_sb;
- 	error = xfs_iget(mp, NULL, sbp->sb_rbmino, 0, 0, &mp->m_rbmip);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_rt_mark_sick(mp, XFS_SICK_RT_BITMAP);
- 	if (error)
- 		return error;
- 	ASSERT(mp->m_rbmip != NULL);
- 
- 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_rt_mark_sick(mp, XFS_SICK_RT_SUMMARY);
- 	if (error) {
- 		xfs_irele(mp->m_rbmip);
- 		return error;
-
+>  		}
+>  		sz -= (off64_t)sup_bufsz;
+>  		off += (off64_t)nwritten;
+>  	}
+>  
+> -	return RV_OK;
+> +	return rv;
+>  }
+>  
+>  static char *extattrbufp = 0; /* ptr to start of all the extattr buffers */
+> -- 
+> 2.20.1
+> 
