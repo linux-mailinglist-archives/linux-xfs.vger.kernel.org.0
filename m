@@ -2,123 +2,194 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBD4D10499F
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Nov 2019 05:12:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E7381049B5
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Nov 2019 05:50:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfKUEMl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Nov 2019 23:12:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42960 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725819AbfKUEMl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Nov 2019 23:12:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574309559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CZUIqBMR6wLsrB1pzvMspDtsS2uxJ9Z3B895d3xxyhE=;
-        b=A0awJzPuCi29v5Gk4mNRffgYUpux1f9ynGRO6No2m8fKzxAlOkTBadHFsQa4QjUwPe2hLt
-        P/OcHGqT6ysCynV2VQZteh3+iP4qFh7yLbkpXkIO8DT/nMoGiM0y20x7g2UqGZe/CXPecF
-        69qpyagtonT2qCo/BjymdXLKqsr99mc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-GjDFkWbaOa24NTmzCEj4lg-1; Wed, 20 Nov 2019 23:12:36 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD8ED107ACC4;
-        Thu, 21 Nov 2019 04:12:34 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 131516CE4D;
-        Thu, 21 Nov 2019 04:12:22 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 12:12:18 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191121041218.GK24548@ming.t460p>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
+        id S1726290AbfKUEuS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Nov 2019 23:50:18 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58842 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKUEuS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Nov 2019 23:50:18 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAL4nBXd057636;
+        Thu, 21 Nov 2019 04:50:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Ta0Nq0pN2zZqmU6v7PM9FqeW2TzicUpEfn1UmH8ir0E=;
+ b=kc9/VfK88tJgnrCqS3QNViNGD0nec+t/uZlLvXUS2pVNq4aSVYTP2CNeoGi8z2/XJvdp
+ EriuVOrBulAU7Og5X9AJgWe4JmkmdKHjFwOuQczOEm31WRRrHUrxmOKD4gbpWGu6RGiZ
+ iFoD2xruMT6hQBfhYOWb9oKURRPGtHLR1rmJPXAQIt0AYOq5r4hv5pV/HcAj1mz3Lv8k
+ Yiq+mjaLw2IZX5fETBsp3ca/4pomMFptHC6elI3WVLxvaycKhoW+lcxeoNEyJ5tDd95z
+ cSWyePTAQeW7w7dzVopPTW03DHdA6JtXw5eTOGNc4R4TGmK3VtLRlBNA77i4bpZsmDmh xA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wa92q1m7d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 04:50:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAL4hnxF136757;
+        Thu, 21 Nov 2019 04:50:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wd46xm8pu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 04:50:07 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAL4o5dg028806;
+        Thu, 21 Nov 2019 04:50:06 GMT
+Received: from localhost (/10.159.246.236)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 Nov 2019 20:50:04 -0800
+Date:   Wed, 20 Nov 2019 20:50:03 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, zhangshaokun@hisilicon.com
+Subject: Re: [PATCH] xfs: gut error handling in
+ xfs_trans_unreserve_and_mod_sb()
+Message-ID: <20191121045003.GX6235@magnolia>
+References: <20191121004437.9633-1-david@fromorbit.com>
+ <20191121023836.GV6219@magnolia>
+ <20191121040023.GD4614@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20191120220313.GC18056@pauld.bos.csb>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: GjDFkWbaOa24NTmzCEj4lg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191121040023.GD4614@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911210042
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911210043
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 05:03:13PM -0500, Phil Auld wrote:
-> Hi Peter,
->=20
-> On Wed, Nov 20, 2019 at 08:16:36PM +0100 Peter Zijlstra wrote:
-> > On Tue, Nov 19, 2019 at 07:40:54AM +1100, Dave Chinner wrote:
-> > > On Mon, Nov 18, 2019 at 10:21:21AM +0100, Peter Zijlstra wrote:
-> >=20
-> > > > We typically only fall back to the active balancer when there is
-> > > > (persistent) imbalance and we fail to migrate anything else (of
-> > > > substance).
-> > > >=20
-> > > > The tuning mentioned has the effect of less frequent scheduling, IO=
-W,
-> > > > leaving (short) tasks on the runqueue longer. This obviously means =
-the
-> > > > load-balancer will have a bigger chance of seeing them.
-> > > >=20
-> > > > Now; it's been a while since I looked at the workqueue code but one
-> > > > possible explanation would be if the kworker that picks up the work=
- item
-> > > > is pinned. That would make it runnable but not migratable, the exac=
-t
-> > > > situation in which we'll end up shooting the current task with acti=
-ve
-> > > > balance.
-> > >=20
-> > > Yes, that's precisely the problem - work is queued, by default, on a
-> > > specific CPU and it will wait for a kworker that is pinned to that
-> >=20
-> > I'm thinking the problem is that it doesn't wait. If it went and waited
-> > for it, active balance wouldn't be needed, that only works on active
-> > tasks.
->=20
-> Since this is AIO I wonder if it should queue_work on a nearby cpu by=20
-> default instead of unbound. =20
+On Thu, Nov 21, 2019 at 03:00:23PM +1100, Dave Chinner wrote:
+> On Wed, Nov 20, 2019 at 06:38:36PM -0800, Darrick J. Wong wrote:
+> > On Thu, Nov 21, 2019 at 11:44:37AM +1100, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > > 
+> > > Shaokun Zhang reported that XFs was using substantial CPU time in
+> > > percpu_count_sum() when running a single threaded benchmark on
+> > > a high CPU count (128p) machine from xfs_mod_ifree(). The issue
+> > > is that the filesystem is empty when the benchmark runs, so inode
+> > > allocation is running with a very low inode free count.
+> > > 
+> > > With the percpu counter batching, this means comparisons when the
+> > > counter is less that 128 * 256 = 32768 use the slow path of adding
+> > > up all the counters across the CPUs, and this is expensive on high
+> > > CPU count machines.
+> > > 
+> > > The summing in xfs_mod_ifree() is only used to fire an assert if an
+> > > underrun occurs. The error is ignored by the higher level code.
+> > > Hence this is really just debug code. Hence we don't need to run it
+> > > on production kernels, nor do we need such debug checks to return
+> > > error values just to trigger an assert.
+> > > 
+> > > Further, the error handling in xfs_trans_unreserve_and_mod_sb() is
+> > > largely incorrect - Rolling back the changes in the transaction if
+> > > only one counter underruns makes all the other counters
+> > > incorrect.
+> > 
+> > Separate change, separate patch...
+> 
+> Yeah, i can split it up, just wanted to see what people thought
+> about the approach...
 
-When the current CPU isn't busy enough, there is still cost for completing
-request remotely.
+<nod>
 
-Or could we change queue_work() in the following way?
+> > >  	if (idelta) {
+> > > -		error = xfs_mod_icount(mp, idelta);
+> > > -		if (error)
+> > > -			goto out_undo_fdblocks;
+> > > +		percpu_counter_add_batch(&mp->m_icount, idelta,
+> > > +					 XFS_ICOUNT_BATCH);
+> > > +		if (idelta < 0)
+> > > +			ASSERT(__percpu_counter_compare(&mp->m_icount, 0,
+> > > +							XFS_ICOUNT_BATCH) >= 0);
+> > >  	}
+> > >  
+> > >  	if (ifreedelta) {
+> > > -		error = xfs_mod_ifree(mp, ifreedelta);
+> > > -		if (error)
+> > > -			goto out_undo_icount;
+> > > +		percpu_counter_add(&mp->m_ifree, ifreedelta);
+> > > +		if (ifreedelta < 0)
+> > > +			ASSERT(percpu_counter_compare(&mp->m_ifree, 0) >= 0);
+> > 
+> > Since the whole thing is a debug statement, why not shove everything
+> > into a single assert?
+> > 
+> > ASSERT(ifreedelta >= 0 || percpu_computer_compare() >= 0); ?
+> 
+> I could, but it still needs to be split over two lines and I find
+> unnecessarily complex ASSERT checks hinder understanding. I can look
+> at what I wrote at a glance and immediately understand that the
+> assert is conditional on the counter being negative, but the single
+> line compound assert form requires me to stop, read and think about
+> the logic before I can identify that the ifreedelta check is just a
+> conditional that reduces the failure scope rather than is a failure
+> condition itself.
+> 
+> I like simple logic with conditional behaviour being obvious via
+> pattern matching - it makes my brain hurt less because I'm really
+> good at visual pattern matching and I'm really bad at reading
+> and writing code.....
 
- * We try to queue the work to the CPU on which it was submitted, but if th=
-e
- * CPU dies or is saturated enough it can be processed by another CPU.
+Fair enough.  I'm not a paragon of correctness wrt. boolean logic either.
+I'm ok if you leave it as is.
 
-Can we decide in a simple or efficient way if the current CPU is saturated
-enough?
+> > > -out_undo_frextents:
+> > > -	if (rtxdelta)
+> > > -		xfs_sb_mod64(&mp->m_sb.sb_frextents, -rtxdelta);
+> > > -out_undo_ifree:
+> > > +	xfs_sb_mod64(&mp->m_sb.sb_frextents, rtxdelta);
+> > 
+> > As for these bits... why even bother with a three line helper?  I think
+> > this is clearer about what's going on:
+> > 
+> > 	mp->m_sb.sb_frextents += rtxdelta;
+> > 	mp->m_sb.sb_dblocks += tp->t_dblocks_delta;
+> > 	...
+> > 	ASSERT(!rtxdelta || mp->m_sb.sb_frextents >= 0);
+> > 	ASSERT(!tp->t_dblocks_delta || mp->m_sb.sb.dblocks >= 0);
+> 
+> That required writing more code and adding more logic I'd have to
+> think about to write, and then think about again every time I read
+> it.
 
-Thanks,
-Ming
+OTOH it's an opportunity to make the asserts more useful, because right
+now they just say:
 
+XFS (sda): Assertion failed: counter >= 0, file: xfs_trans.c, line XXX
+
+*Which* counter just tripped the assert?  At least it could say:
+
+XFS (sda): Assertion failed: mp->m_sb.sb_dblocks >= 0, file: xfs_trans.c, line XXX
+
+> > I also wonder if we should be shutting down the fs here if the counts
+> > go negative, but <shrug> that would be yet a different patch. :)
+> 
+> I also thought about that, but all this accounting should have
+> already been bounds checked. i.e. We should never get an error here,
+> and I don't think I've *ever* seen an assert in this code fire.
+> Hence I just went for the dead simple nuke-it-from-orbit patch...
+
+<nod> I have, but only after seriously fubaring some code. :)
+
+--D
+
+> Cheers,
+> 
+> Dave.
+> 
+> -- 
+> Dave Chinner
+> david@fromorbit.com
