@@ -2,43 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E499810772E
+	by mail.lfdr.de (Postfix) with ESMTP id 4724610772C
 	for <lists+linux-xfs@lfdr.de>; Fri, 22 Nov 2019 19:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKVSTa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726736AbfKVSTa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Fri, 22 Nov 2019 13:19:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58019 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726638AbfKVSTa (ORCPT
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33211 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726686AbfKVSTa (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Nov 2019 13:19:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574446768;
+        s=mimecast20190719; t=1574446769;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=kx1K0I2yCWEDzAdcDeV8+4w+xvVEI4oDO3dMwgG3tW4=;
-        b=EqoQRIL86SUFNyfb8AacRWEKicS/24J6UwVlhN+JMhSGQ3VKw5a94Tnt3zhVU8r+B9ZpFM
-        sE0knXNheau1jc4qSqYTU3eeiaSxH0/Cv66+hplPbRqFcGmbN1+E2QLOWqkngmv6f1Vnoh
-        MU/d+eIWWBEPQIJ7YZvLUt8j7x0LWQA=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+2h2JFdEc5Klx3rTMC6gNfmR9l30SdPNXNLzO2kZMBo=;
+        b=NpZXPvDcL0fpkT4m0QJGjCs+lX1QPh00qcZZqu85KN5d4n/2hka8e+mUJntDUoRATpEOsy
+        +NSV5PjkjPEG0zO3ialBKFrSADFJ12umfSo4lTFkSNBGwQSYAVECK0k+zqWURiluTOPy5x
+        7DvE+p4VuuESqeBN5HMD8uWOIIGTwIs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-HQWnXiRvOGaT9CIr-nZYHg-1; Fri, 22 Nov 2019 13:19:27 -0500
+ us-mta-78-PBXv8VZiMZqxXM1oF3DkfQ-1; Fri, 22 Nov 2019 13:19:27 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78CA7107ACC9
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E439C801E58
         for <linux-xfs@vger.kernel.org>; Fri, 22 Nov 2019 18:19:26 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F8209F47
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CE9D9F47
         for <linux-xfs@vger.kernel.org>; Fri, 22 Nov 2019 18:19:26 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [RFC v2 PATCH 0/3] xfs: automatic relogging experiment
-Date:   Fri, 22 Nov 2019 13:19:24 -0500
-Message-Id: <20191122181927.32870-1-bfoster@redhat.com>
+Subject: [RFC v2 PATCH 1/3] xfs: set t_task at wait time instead of alloc time
+Date:   Fri, 22 Nov 2019 13:19:25 -0500
+Message-Id: <20191122181927.32870-2-bfoster@redhat.com>
+In-Reply-To: <20191122181927.32870-1-bfoster@redhat.com>
+References: <20191122181927.32870-1-bfoster@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: HQWnXiRvOGaT9CIr-nZYHg-1
+X-MC-Unique: PBXv8VZiMZqxXM1oF3DkfQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -47,86 +50,38 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+The xlog_ticket structure contains a task reference to support task
+scheduling associated with log reservation acquisition. This
+reference is assigned at ticket allocation time, but otherwise there
+is no reason log space cannot be reserved for a ticket from a
+context different from the allocating context. Move the task
+assignment to the log reservation blocking code where it is used.
 
-Here's a second pass at the automatic relogging experiment. The first
-pass tagged the log item for relog and stole reservation from unrelated
-transactions to opportunistically relog items, all within the log
-subsystem. The primary feedback to that approach was to consider a
-transaction function callback and concerns about reservation stealing.
-This version somewhat accommodates those concerns, but still leaves some
-open questions around broader usage.
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+---
+ fs/xfs/xfs_log.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In short, this version introduces a separate workqueue context for
-committing and rolling transactions for relogged items and a hook to
-trigger a relog based on the item being committed to the AIL. The relog
-state (including log reservation for the relog) is tracked via the log
-item. Only the log ticket from the caller transaction is regranted and
-tracked to avoid processing open transactions through separate contexts.
-This is essentially an open-coded transaction roll without the need for
-a duplicate transaction.
-
-While this seems to work reasonably well for the simple case of
-quotaoff, there are still some open issues to resolve around formalizing
-such a mechanism for broader use. Firstly, the quotaoff patch just ties
-into the existing ->iop_committed() callback since that is currently
-unused, but the queue relog call could just as easily be made directly
-from the AIL commit code. IOW, the whole callback thing seems kind of
-like a solution looking for a problem in this context. With external
-tracking of relogged items, all we really need here fundamentally is a
-notification that the CIL context has committed.
-
-Another caveat is that this approach seems much more cumbersome and
-inefficient with respect to batching relogs of unrelated items. Rather
-than collect all unrelated items in a single transaction, we'd have a
-separate tracking structure, log ticket (which regrants the caller's
-entire reservation) and independent roll/regrant for each potential set
-of items. I can see value in the simplicity and flexibility of use in
-terms of being able to potentially register an already constructed
-transaction for automatic relogging, but I question whether that suits
-our use case(s).
-
-All in all, I think this is still pretty raw and needs some more thought
-on the design (or perhaps requirements) front. I could see this going
-anywhere from something more low level like the previous version where
-we could have a relogged items list (RIL) associated with the CIL and
-require initial transactions donate real relog reservation to something
-more like this approach where we have some separate context
-queueing/rolling relog transactions based on log subsystem events. I
-suspect there are capability considerations for either end of that
-spectrum. For example, it might be harder to auto relog anything but
-intents with the RIL approach where there is no transaction to own item
-locks, etc., but do we currently have a use case to relog anything
-besides QUOTAOFF and EFIs? If not, I lean more toward the more simple,
-low level approach (at least for now), but I could be convinced
-otherwise.
-
-Thoughts on any of this appreciated.
-
-Brian
-
-rfcv2:
-- Different approach based on workqueue and transaction rolling.
-rfc: https://lore.kernel.org/linux-xfs/20191024172850.7698-1-bfoster@redhat=
-.com/
-
-Brian Foster (3):
-  xfs: set t_task at wait time instead of alloc time
-  xfs: prototype automatic intent relogging mechanism
-  xfs: automatically relog quotaoff start intent
-
- fs/xfs/Makefile                |   1 +
- fs/xfs/libxfs/xfs_trans_resv.c |   3 +-
- fs/xfs/xfs_dquot_item.c        |  13 ++++
- fs/xfs/xfs_log.c               |  11 ++-
- fs/xfs/xfs_log_priv.h          |   1 +
- fs/xfs/xfs_qm_syscalls.c       |   9 ++-
- fs/xfs/xfs_trans.c             |   2 +-
- fs/xfs/xfs_trans.h             |  13 ++++
- fs/xfs/xfs_trans_relog.c       | 130 +++++++++++++++++++++++++++++++++
- 9 files changed, 179 insertions(+), 4 deletions(-)
- create mode 100644 fs/xfs/xfs_trans_relog.c
-
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 6a147c63a8a6..0c0c035c5be0 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -262,6 +262,7 @@ xlog_grant_head_wait(
+ =09int=09=09=09need_bytes) __releases(&head->lock)
+ =09=09=09=09=09    __acquires(&head->lock)
+ {
++=09tic->t_task =3D current;
+ =09list_add_tail(&tic->t_queue, &head->waiters);
+=20
+ =09do {
+@@ -3599,7 +3600,6 @@ xlog_ticket_alloc(
+ =09unit_res =3D xfs_log_calc_unit_res(log->l_mp, unit_bytes);
+=20
+ =09atomic_set(&tic->t_ref, 1);
+-=09tic->t_task=09=09=3D current;
+ =09INIT_LIST_HEAD(&tic->t_queue);
+ =09tic->t_unit_res=09=09=3D unit_res;
+ =09tic->t_curr_res=09=09=3D unit_res;
 --=20
 2.20.1
 
