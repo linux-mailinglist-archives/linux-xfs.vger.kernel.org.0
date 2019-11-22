@@ -2,78 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC1810754E
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Nov 2019 17:01:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 301ED107572
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Nov 2019 17:09:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKVQBV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 Nov 2019 11:01:21 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37606 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfKVQBV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Nov 2019 11:01:21 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w47so4251469qtk.4;
-        Fri, 22 Nov 2019 08:01:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
-        b=VBSZIm/NitEgFgAiYMVXY43lq5XjFUUTjaYCUvPZMFM3pP+4Wn/Ra81LvNCG2B/dqJ
-         O6+C4i5V5lsX27m/EGX/IIARNSgTmUZiXI5PQoF97enNrvv6/mJebzS5Yj5OAR21DDoX
-         s4zlKfGVcczc06smz2ulDrS/Zl297SC6dcC64rH1OZ+gai2JvhSrKRBitBBnrTvQMaQg
-         H+pzisp2xLarzHpVCLA2fOqxxjrKKkgP66m1mHkoy0m5a431z/fWNSOG/vzQ15Hs2ESN
-         fXgp914i6/lDpaaL4j27zwbYHltwdJIRFp1dKQkcR6jleKZgd7L9hxRDjngn325S4xzk
-         woCQ==
+        id S1726721AbfKVQJU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 Nov 2019 11:09:20 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27547 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726546AbfKVQJU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Nov 2019 11:09:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574438959;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jy620vCimj+8qUOQT+zyt69C4IgT/k6hKZHQqbWRbYk=;
+        b=cYD6BkmHDmaPsDPtVQr3cW8Nww7HpVQM+VKVG/fL++edtVFIpxmqMCMV/xoBAfU+OC+Lzg
+        4cYWf8XrIVbNXqxeUJj4AYYmS1+FmdYHrAdfrH2fZRnMO4Ohhd0ObIfGApX4yqGhtsEc6W
+        0WvsvmMKbf/UWtdqLyjt/mKKu8j8gMI=
+Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
+ [209.85.221.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-qQz3ArojPQaCNLPHXONKzQ-1; Fri, 22 Nov 2019 11:09:15 -0500
+Received: by mail-vk1-f198.google.com with SMTP id f73so3086376vka.4
+        for <linux-xfs@vger.kernel.org>; Fri, 22 Nov 2019 08:09:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
-        b=mRzhnBuqbjcrG48mEUpz1t54cXbTGjjIFQsr9kYhRRHL99DUNvn67LNFWNvKwayxav
-         +U1eXMv3C9Kh4g4hDiMB1ZrveUf9lf/oQb1alZbE4AEJTF4WcNnQ/KqkK01GVL05GgRG
-         Jj4Br20wVbYM2LgiOd4GevD8xXexUY+nll3LPBmBx3ImxBr5Qr4lD1WNWo8Tes/4EOos
-         CBWhdQ1oDQm+SMFH7wDBF/ukBf2+9MBShwRwiZflzsw12ihRK7j5TOn0/0IsxMEim/0k
-         9pKuhHUVotOxWm1Sfkrtxw9ZCSC5b5SB3em8ZGacPkYNyaENvvc+gVlxMXPV7pGKXKFB
-         2vrQ==
-X-Gm-Message-State: APjAAAWwlBR/BYOStCtQ8RZuUENEeFZo14gbLanQSE3ZU7LbaF2RO03V
-        91zEx5pBQZsUzj1TaUPlMWNQJt2AgTJA4w==
-X-Google-Smtp-Source: APXvYqxWtITWMvEHpWI203D+raKApDrbUfvSAVn8EvwssACZseFHVbt5V5RSqvf9csq4q2LiWohHOQ==
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr4959630qtj.80.1574438477243;
-        Fri, 22 Nov 2019 08:01:17 -0800 (PST)
-Received: from [192.168.1.164] (pool-108-20-37-130.bstnma.fios.verizon.net. [108.20.37.130])
-        by smtp.gmail.com with ESMTPSA id m27sm2196315qta.21.2019.11.22.08.01.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Nov 2019 08:01:15 -0800 (PST)
-From:   Ric Wheeler <ricwheeler@gmail.com>
-Subject: USENIX Vault - open source storage call for talks - CFP deadline
- extended
-To:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Cc:     Vault '20 Program Co-Chairs <vault20chairs@usenix.org>
-Message-ID: <727e2a7a-eab7-9ba7-e1b8-d75eb853245a@gmail.com>
-Date:   Fri, 22 Nov 2019 11:01:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jy620vCimj+8qUOQT+zyt69C4IgT/k6hKZHQqbWRbYk=;
+        b=fN0M2u2IY846+8Cp0faLAj6KTS6HAOspR2iDBZCKgHIVGAzVCxgqW0owh1I6ZL7V2l
+         bIjHgpjXEY81VVmqpCjJ6S/w1a9xgxyuzWXVajVprGtKtU7M28soOLZpjgURriHwFvdw
+         giydbmqxirDiyGCbZkzb43dvr0/Vai0LPPyEnu/C5r/9RAMrpeA90CJZVZ4QtlPayP8u
+         dBvcSdgHs+2evTXSBhIjqInBXxt0lGY/O8rOk081xC9t1SMt8ILsRNYxRiVPYnGf3CCy
+         Mt3RB7nXNOddZ6HTITSi2nzZQcBhE2HrjSSOn385tKRmaABoBNdBBf8QV6VXrfDuW6/c
+         0l7Q==
+X-Gm-Message-State: APjAAAVp7YzaKAV1tbhGEAG9JtfI82VugE8zFEQacOV7hnCuuXWm50IM
+        SfP1GYqndU+njo2nuWgn8hqvIaZWmG1ytxV/J5bIC9/aqyXaZ7WPL0Y+XbyU5g15JpaUu1zy2um
+        WWXJSGA777sVMIevFzShqilMT9nn2nubLBR7M
+X-Received: by 2002:ab0:2ead:: with SMTP id y13mr9886755uay.84.1574438954919;
+        Fri, 22 Nov 2019 08:09:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz7n2fHeegELZm5I9lrVDOlK/sQ3/zAZM1bvCneWABCrIT5otoBUQeDDHR0CIUBkk45aWy+8AKDsA5X0vVFzZk=
+X-Received: by 2002:ab0:2ead:: with SMTP id y13mr9886728uay.84.1574438954534;
+ Fri, 22 Nov 2019 08:09:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191121214445.282160-1-preichl@redhat.com> <20191121214445.282160-2-preichl@redhat.com>
+ <20191121231838.GH4614@dread.disaster.area>
+In-Reply-To: <20191121231838.GH4614@dread.disaster.area>
+From:   Pavel Reichl <preichl@redhat.com>
+Date:   Fri, 22 Nov 2019 17:09:03 +0100
+Message-ID: <CAJc7PzVR0fjmWRZEazx42UpSDMiPjoSre4S0SLPxJjD3zJ2spQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mkfs: Break block discard into chunks of 2 GB
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+X-MC-Unique: qQz3ArojPQaCNLPHXONKzQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+On Fri, Nov 22, 2019 at 12:18 AM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Thu, Nov 21, 2019 at 10:44:44PM +0100, Pavel Reichl wrote:
+> > Signed-off-by: Pavel Reichl <preichl@redhat.com>
+> > ---
+>
+> This is mixing an explanation about why the change is being made
+> and what was considered when making decisions about the change.
 
-We decided to push the CFP deadline for USENIX Vault back until Dec 3rd given 
-the holiday and some slowness we had in opening the CFP site. We already have a 
-good set of submissions, so please do submit any talk ideas as soon as possible.
+Thanks, I'll try to improve that.
+>
+> e.g. my first questions on looking at the patch were:
+>
+>         - why do we need to break up the discards into 2GB chunks?
+>         - why 2GB?
+>         - why not use libblkid to query the maximum discard size
+>           and use that as the step size instead?
 
-See here for more information on how to submit your talk proposals:
-
-https://www.usenix.org/conference/vault20
-
-Hope to see you all there!
+This is new for me, please let me learn more about that.
 
 
+>         - is there any performance impact from breaking up large
+>           discards that might be optimised by the kernel into many
+>           overlapping async operations into small, synchronous
+>           discards?
+
+Honestly, I don't have an answer for that ATM - it's quite possible.
+It certainly needs more investigating. On the other hand - current
+lack of feedback causes user discomfort. So I'd like to know your
+opinion - should the change proposed by this patch be default
+behaviour (as it may be more user friendly) and should we add an
+option that would 'revert' to current behaviour (that would be for
+informed user).
+
+>
+> i.e. the reviewer can read what the patch does, but that deosn't
+> explain why the patch does this. Hence it's a good idea to explain
+> the problem being solved or the feature requirements that have lead
+> to the changes in the patch....
+>
+> Cheers,
+>
+> Dave.
+> --
+> Dave Chinner
+> david@fromorbit.com
+>
 
