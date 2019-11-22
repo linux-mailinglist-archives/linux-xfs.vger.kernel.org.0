@@ -2,127 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A57E5107548
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Nov 2019 16:59:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC1810754E
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Nov 2019 17:01:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKVP7j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 Nov 2019 10:59:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726546AbfKVP7j (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Nov 2019 10:59:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574438377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6cUATCgjNTWy1j7e+6YZBa6wvUrnAr97KTnCKueSilI=;
-        b=aF2xnekH8zMtnwiVNbYS6ZZiOUREZLUyyV7RSkDL4gF40mTkc/19kOBLgpybaTE/uY05ct
-        JrUrWRq8Nl46Y4db1X/yMiRXRRLCFqxACmEDK2qdAjbV65OKBYefUTzwOMvcwkVcVr7dqB
-        ddJjw2uT/iSkUvn1MDM2goKHzMg7EPY=
-Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
- [209.85.217.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-46-Oq1P3gUcNtKdUc-DW7lLBA-1; Fri, 22 Nov 2019 10:59:33 -0500
-Received: by mail-vs1-f70.google.com with SMTP id b3so1318650vse.18
-        for <linux-xfs@vger.kernel.org>; Fri, 22 Nov 2019 07:59:33 -0800 (PST)
+        id S1726952AbfKVQBV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 Nov 2019 11:01:21 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37606 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfKVQBV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Nov 2019 11:01:21 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so4251469qtk.4;
+        Fri, 22 Nov 2019 08:01:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
+        b=VBSZIm/NitEgFgAiYMVXY43lq5XjFUUTjaYCUvPZMFM3pP+4Wn/Ra81LvNCG2B/dqJ
+         O6+C4i5V5lsX27m/EGX/IIARNSgTmUZiXI5PQoF97enNrvv6/mJebzS5Yj5OAR21DDoX
+         s4zlKfGVcczc06smz2ulDrS/Zl297SC6dcC64rH1OZ+gai2JvhSrKRBitBBnrTvQMaQg
+         H+pzisp2xLarzHpVCLA2fOqxxjrKKkgP66m1mHkoy0m5a431z/fWNSOG/vzQ15Hs2ESN
+         fXgp914i6/lDpaaL4j27zwbYHltwdJIRFp1dKQkcR6jleKZgd7L9hxRDjngn325S4xzk
+         woCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/doIP1hCYUWfxP+YrWmD205G4WoDMxLizUbI1o+JIUQ=;
-        b=on5/TxV7jL5kUPbmqlqeUm7ggVKQA+TSUkUonBVR6tX7HrGHqILJ+etfacBQUiXsES
-         +8l0b8Bhw37OPszFEcmEBhXYZZrOFRZ2zyDo9Qvrah4JBqIwSWEG0qifn36V1LPxmOoi
-         HqGrt+YNNxT+w7n1hJGiy9HjV23NggeOk2Ih9eNnn4QCSWzBce+nvotHn7FmTCyutsqO
-         k+KVDaIFP6OFoXID/KV78YP/hHy4TKo6HWDwqduXiWZXZsk4W5+SyOF3rVV34MOgEj8Z
-         JOP+Z+kvUXPJ1+7nPzAaGsLVM+RwJ1sSnqvzQl9AB6jI3Dxw5kH5mR8VeSkebYNMKSvI
-         DJSg==
-X-Gm-Message-State: APjAAAXdyvc0VryWmYTCLaxbC+o/XMz4QsGk2x85DwjG2FtVuK/vg8et
-        sET9otdKg2LY8w0jZOVZSz1S4ykgyAqfcGh5QY5BJfJc9TrCIVFkAxbFNpLIJGbuxAyHfBd2E38
-        PITWNtuzPsH0UtVoh0xdBViopu7q3wF/dtmUn
-X-Received: by 2002:a67:ce12:: with SMTP id s18mr10139947vsl.77.1574438372860;
-        Fri, 22 Nov 2019 07:59:32 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyHo6asaDD4WjzaFs6ogFj882BbtTDr64mK9n8Si3S53UzyrUQmoiTh7oZMNOdQ2HAtDl+5y/VkuYpzE4wOgqk=
-X-Received: by 2002:a67:ce12:: with SMTP id s18mr10139926vsl.77.1574438372432;
- Fri, 22 Nov 2019 07:59:32 -0800 (PST)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=CdX7ZQEUe/cRH9WC2wubBDri/lMHrSGbYedbb2yw4Hc=;
+        b=mRzhnBuqbjcrG48mEUpz1t54cXbTGjjIFQsr9kYhRRHL99DUNvn67LNFWNvKwayxav
+         +U1eXMv3C9Kh4g4hDiMB1ZrveUf9lf/oQb1alZbE4AEJTF4WcNnQ/KqkK01GVL05GgRG
+         Jj4Br20wVbYM2LgiOd4GevD8xXexUY+nll3LPBmBx3ImxBr5Qr4lD1WNWo8Tes/4EOos
+         CBWhdQ1oDQm+SMFH7wDBF/ukBf2+9MBShwRwiZflzsw12ihRK7j5TOn0/0IsxMEim/0k
+         9pKuhHUVotOxWm1Sfkrtxw9ZCSC5b5SB3em8ZGacPkYNyaENvvc+gVlxMXPV7pGKXKFB
+         2vrQ==
+X-Gm-Message-State: APjAAAWwlBR/BYOStCtQ8RZuUENEeFZo14gbLanQSE3ZU7LbaF2RO03V
+        91zEx5pBQZsUzj1TaUPlMWNQJt2AgTJA4w==
+X-Google-Smtp-Source: APXvYqxWtITWMvEHpWI203D+raKApDrbUfvSAVn8EvwssACZseFHVbt5V5RSqvf9csq4q2LiWohHOQ==
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr4959630qtj.80.1574438477243;
+        Fri, 22 Nov 2019 08:01:17 -0800 (PST)
+Received: from [192.168.1.164] (pool-108-20-37-130.bstnma.fios.verizon.net. [108.20.37.130])
+        by smtp.gmail.com with ESMTPSA id m27sm2196315qta.21.2019.11.22.08.01.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Nov 2019 08:01:15 -0800 (PST)
+From:   Ric Wheeler <ricwheeler@gmail.com>
+Subject: USENIX Vault - open source storage call for talks - CFP deadline
+ extended
+To:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org
+Cc:     Vault '20 Program Co-Chairs <vault20chairs@usenix.org>
+Message-ID: <727e2a7a-eab7-9ba7-e1b8-d75eb853245a@gmail.com>
+Date:   Fri, 22 Nov 2019 11:01:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20191121214445.282160-1-preichl@redhat.com> <20191121214445.282160-2-preichl@redhat.com>
- <20191121231838.GH4614@dread.disaster.area> <20191122153807.GD6219@magnolia>
-In-Reply-To: <20191122153807.GD6219@magnolia>
-From:   Pavel Reichl <preichl@redhat.com>
-Date:   Fri, 22 Nov 2019 16:59:21 +0100
-Message-ID: <CAJc7PzX0sra12ikpVAY4LE-zRxamJK+JiNxj69MS+MOTmP730g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mkfs: Break block discard into chunks of 2 GB
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-X-MC-Unique: Oq1P3gUcNtKdUc-DW7lLBA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 4:38 PM Darrick J. Wong <darrick.wong@oracle.com> w=
-rote:
->
-> On Fri, Nov 22, 2019 at 10:18:38AM +1100, Dave Chinner wrote:
-> > On Thu, Nov 21, 2019 at 10:44:44PM +0100, Pavel Reichl wrote:
-> > > Signed-off-by: Pavel Reichl <preichl@redhat.com>
-> > > ---
-> >
-> > This is mixing an explanation about why the change is being made
-> > and what was considered when making decisions about the change.
-> >
-> > e.g. my first questions on looking at the patch were:
-> >
-> >       - why do we need to break up the discards into 2GB chunks?
-> >       - why 2GB?
->
-> Yeah, I'm wondering that too.
+Hi all,
 
-OK, thank you both for the question - simple answer is that I took
-what is used in e2fsprogs as default and I expected a discussion about
-proper value during review process :-)
->
-> >       - why not use libblkid to query the maximum discard size
-> >         and use that as the step size instead?
->
-> FWIW my SATA SSDs the discard-max is 2G whereas on the NVME it's 2T.  I
-> guess firmwares have gotten 1000x better in the past few years, possibly
-> because of the hundred or so 10x programmers that they've all been hiring=
-.
->
-> >       - is there any performance impact from breaking up large
-> >         discards that might be optimised by the kernel into many
-> >         overlapping async operations into small, synchronous
-> >         discards?
->
-> Also:
-> What is the end goal that you have in mind?  Is the progress reporting
-> the ultimate goal?  Or is it to break up the BLKDISCARD calls so that
-> someone can ^C a mkfs operation and not have it just sit there
-> continuing to run?
+We decided to push the CFP deadline for USENIX Vault back until Dec 3rd given 
+the holiday and some slowness we had in opening the CFP site. We already have a 
+good set of submissions, so please do submit any talk ideas as soon as possible.
 
-The goal is mainly the progress reporting but the possibility to do ^C
-is also convenient. It seems that some users are not happy about the
-BLKDISCARD taking too long and at the same time not being informed
-about that - so they think that the command actually hung.
+See here for more information on how to submit your talk proposals:
 
->
-> --D
->
-> > i.e. the reviewer can read what the patch does, but that deosn't
-> > explain why the patch does this. Hence it's a good idea to explain
-> > the problem being solved or the feature requirements that have lead
-> > to the changes in the patch....
-> >
-> > Cheers,
-> >
-> > Dave.
-> > --
-> > Dave Chinner
-> > david@fromorbit.com
->
+https://www.usenix.org/conference/vault20
+
+Hope to see you all there!
+
+
 
