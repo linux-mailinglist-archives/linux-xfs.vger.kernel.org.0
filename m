@@ -2,81 +2,132 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB1C6107F16
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Nov 2019 16:42:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34618107F19
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Nov 2019 16:44:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKWPmK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 Nov 2019 10:42:10 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42732 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfKWPmJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 Nov 2019 10:42:09 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n5so10760595ljc.9
-        for <linux-xfs@vger.kernel.org>; Sat, 23 Nov 2019 07:42:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=TU3NnQ6hAj0eoHxyoAeE4VhTp6C5XFq2veFOoh51U8A=;
-        b=Q0SX4trQ77TzOju7aoTbD4ZM4BrFQx5CwyVg5jOwIbLuYRrOqFnYx7RV1LhcOiPjPe
-         Sa4MLzORCXS/4KGbAdn/jRWlLoFzAMYL0JP9l5cR8xjT6iJ4xjnzH88A9jemL5Z3lIUh
-         nFXvKbaELRbVVnc8oHns/QoHpa8KKr/5ar3Rn38MWrvTxImyqOoM5/u1bomEqqAhnybj
-         h/x319htRKt6SEFr3pfkn2DMBDQ32EJIw2Fi3mpAf+HhRz28xmKF1s8+8fdbW52fRKUw
-         uhFVKDegZrbGhLNFG75/S4y7003Xz123je47aIkbR2yif5Vj8XVsYgW2e7pM4wt2M6zF
-         UWHw==
+        id S1726735AbfKWPop (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 Nov 2019 10:44:45 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23646 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726487AbfKWPop (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 Nov 2019 10:44:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574523882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PPFAghcYbna2bMfM2yGUunf+0djP+EOJOuzlM9T+GLw=;
+        b=cWHRM3DVuU2vwdLg1Jb9mEMlCQnNnt32+ET9NPqPuo7KTNaWYeXQqGbMiYNa9sGY+AmgE6
+        QGRj+tcrOJ/4Pi6+RE1D8+X148LYofjsRTXnX1UKhSoNJ2XgNPKDl5xjJwe79p/S/24FM+
+        xq0tYIZlUitIr8TnnHq2kB9185iYnP8=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213-4VblXYz4PP6rySlL67gPoA-1; Sat, 23 Nov 2019 10:44:41 -0500
+Received: by mail-ot1-f72.google.com with SMTP id w9so5536648otj.22
+        for <linux-xfs@vger.kernel.org>; Sat, 23 Nov 2019 07:44:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=TU3NnQ6hAj0eoHxyoAeE4VhTp6C5XFq2veFOoh51U8A=;
-        b=a+DOldupWipzgFUKy5hVKlmYEou4yQAeegcEmclvNz4AFb5akvwqeSaFzUfA5UR5ww
-         VvPtp4ucMS4PtIuXDBWhn5Dwco+7/6abLT6vVzfEAI+f8DDpyA9OlDLYbxfntDVOp+QR
-         g1ze0wryDy8vhXhXeV7xFbdozb94HtN9gFRDNU/AChAVHI4xP5Qme+Q1TW+ImaDcJvGl
-         5VmMF+6zm7P/oPcjE3IV9zEBOMdRiEomN8Bm3TWIdb7XASPmaawg5kTM0pf0aogwF25m
-         4Kw4QtajmtpkNjQ9ALZcsOQESM59guIQMqGB5kq7xwHBatVP+PCkmdArbd/xwMnH/ZY2
-         aP0w==
-X-Gm-Message-State: APjAAAXhY9BV/+vovgm1HCZtT6b6QHCkZep2qAWd55qTC/EGmxQE41Q3
-        Lx/7c/wJxUtgeBY0R8gIzi9XxjaUSrDPT9izXzM=
-X-Google-Smtp-Source: APXvYqysq3AA6Gpzv2nD25u2rBW9TnMxno6gfw6HZ1UGgGQ4V6Bfmghr3nuCr4l0Jv8p/W9MxzLfy7C2ob3Z7iTiGlA=
-X-Received: by 2002:a2e:93d5:: with SMTP id p21mr3667092ljh.50.1574523727659;
- Sat, 23 Nov 2019 07:42:07 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Eaya7lya9rjpvjEVudL4FxcKqZPc2xj7JrOzsCyBZ0=;
+        b=CL8+7mRXUJUB/CyZrF0+NGgFo0ocbMD9zBxLRu5IPF/HrUfwASROh/afOXj0KgRqhk
+         hc+VfHJx2EiI/5efRi9oGnNGGZ15pk0gjKXpo4QqPHfTEeoyoBKSLUuEB/7x/+qvZZkL
+         RLtIJWLK7Z/MuXNQ+tIvZd18xz6t0Y0nkc6rYbjQrTdga4ujqa7hSB3lkQDD9W5kSnO0
+         Nq5MvuJH556sTFOqMKsxCie1LET07VyUlDRA0g6XMsNlFebhxq/Ofk4Jz/6NCYo4fszl
+         PXstZbLttIdfPqmcRvUlKhi4E4RBy+CyRiKNlib4NWjAfWaEUmd/iFvL/TU11XkTWZIJ
+         DB0A==
+X-Gm-Message-State: APjAAAUTBXaNWHe3v1vmXd+jqAyvq/oTsd+PWxEXVU7LRoLPrUA4r3hC
+        7hTa00sajAnDDVJ6izFsolUM+riez4yY8XFVZ8ZPvzbcUFCzlqjtyLWOniGgEcB9+HDFUFAZNlu
+        zmjSjO9iAXvBDwv9Ae1G4gzoVpYePF2xAJ/uz
+X-Received: by 2002:a9d:7384:: with SMTP id j4mr4567073otk.94.1574523880487;
+        Sat, 23 Nov 2019 07:44:40 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw/VY6IWgFUf68k0qtHLKcYy5of13ZDjXR2prYxQde8XDzGv2N8PBkIHZNBQzLktCn+0y7ZwjndQ2X6EuJRGpU=
+X-Received: by 2002:a9d:7384:: with SMTP id j4mr4567058otk.94.1574523880049;
+ Sat, 23 Nov 2019 07:44:40 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:ab3:14f:0:0:0:0:0 with HTTP; Sat, 23 Nov 2019 07:42:06 -0800 (PST)
-Reply-To: michealsmaith47@gmail.com
-From:   Mr Micheal Smaith <memoletterofficials@gmail.com>
-Date:   Sat, 23 Nov 2019 16:42:06 +0100
-Message-ID: <CAAsTLcBTnWS1+1cMG0qtyGoyvmH=HQOzafkczkHwL_0Q0vwedA@mail.gmail.com>
-Subject: Agreed To Compensate You With Euro 950,000.00 To Each..
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+References: <20191122213122.13327-1-jpittman@redhat.com> <CAJc7PzWPv5UHMWb+twW6g8tWLCFX_6aRTaH6F3bXLsRmZxaZvQ@mail.gmail.com>
+In-Reply-To: <CAJc7PzWPv5UHMWb+twW6g8tWLCFX_6aRTaH6F3bXLsRmZxaZvQ@mail.gmail.com>
+From:   John Pittman <jpittman@redhat.com>
+Date:   Sat, 23 Nov 2019 10:44:29 -0500
+Message-ID: <CA+RJvhy6Dmr=fgCDhub3hcOr1m3gvanXshXCE4HPQzjS7eLF=Q@mail.gmail.com>
+Subject: Re: [PATCH] xfsprogs: add missing carriage returns in libxfs/rdwr.c
+To:     Pavel Reichl <preichl@redhat.com>
+Cc:     Eric Sandeen <esandeen@redhat.com>, linux-xfs@vger.kernel.org
+X-MC-Unique: 4VblXYz4PP6rySlL67gPoA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Attention.
+You're exactly right Pavel; thanks for the clarification. Sending v2 now.
 
-The U N secretary-General In Affiliation with (IMF) has concluded their meeting
+On Sat, Nov 23, 2019 at 2:08 AM Pavel Reichl <preichl@redhat.com> wrote:
+>
+> On Fri, Nov 22, 2019 at 10:31 PM John Pittman <jpittman@redhat.com> wrote=
+:
+> >
+> > In libxfs/rdwr.c, there are several fprintf() calls that are
+> > missing trailing carriage returns. This translates to the
+> > following CLI prompt being on the same line as the message.
+> > Add missing carriage returns, alleviating the issue.
+> >
+> > Fixes: 0a7942b38215 ("libxfs: don't discard dirty buffers")
+> > Signed-off-by: John Pittman <jpittman@redhat.com>
+> > ---
+> >  libxfs/rdwr.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
+> > index 7080cd9c..3f69192d 100644
+> > --- a/libxfs/rdwr.c
+> > +++ b/libxfs/rdwr.c
+> > @@ -651,7 +651,7 @@ __libxfs_getbufr(int blen)
+> >         pthread_mutex_unlock(&xfs_buf_freelist.cm_mutex);
+> >         bp->b_ops =3D NULL;
+> >         if (bp->b_flags & LIBXFS_B_DIRTY)
+> > -               fprintf(stderr, "found dirty buffer (bulk) on free list=
+!");
+> > +               fprintf(stderr, "found dirty buffer (bulk) on free list=
+!\n");
+> >
+> >         return bp;
+> >  }
+> > @@ -1224,7 +1224,7 @@ libxfs_brelse(
+> >                 return;
+> >         if (bp->b_flags & LIBXFS_B_DIRTY)
+> >                 fprintf(stderr,
+> > -                       "releasing dirty buffer to free list!");
+> > +                       "releasing dirty buffer to free list!\n");
+> >
+> >         pthread_mutex_lock(&xfs_buf_freelist.cm_mutex);
+> >         list_add(&bp->b_node.cn_mru, &xfs_buf_freelist.cm_list);
+> > @@ -1245,7 +1245,7 @@ libxfs_bulkrelse(
+> >         list_for_each_entry(bp, list, b_node.cn_mru) {
+> >                 if (bp->b_flags & LIBXFS_B_DIRTY)
+> >                         fprintf(stderr,
+> > -                               "releasing dirty buffer (bulk) to free =
+list!");
+> > +                               "releasing dirty buffer (bulk) to free =
+list!\n");
+> >                 count++;
+> >         }
+> >
+> > --
+> > 2.17.2
+> >
+>
+> Hello John,
+>
+> it seems to me that you are confusing carriage return (CR, \r) and
+> line feed (LF, \n) in the commit description. Could you check that
+> out, please? Otherwise it looks good to me.
+>
+> Thanks.
+>
+> Pave Reichl
+>
 
-few days ago and agreed to compensate you with Euro 950,000.00 to each person
-
-that lost money during international transaction from differences countries as
-
-Globe Foundation Welfare Support, includes people that have had an unfinished
-
-international transaction etc, and this name with email contact was found in
-
-the list of those who are to benefit from these compensation exercise and that
-
-is why we are contacted you. For more details and Claim, Contact Mr
-Micheal Smaith
-
-on ( michealsmaith47@gmail.com ) with your Information's as follows
-
-Name.....Country.....Address.....Telephone.
-
-Thank you for your patience,
-
-Yours in Service,
-
-M. Smith
-IMF/WORLD BANK
