@@ -2,126 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A54109A86
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2019 09:50:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F337109AEA
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2019 10:16:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfKZIuc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Nov 2019 03:50:32 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34207 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfKZIuc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Nov 2019 03:50:32 -0500
-Received: by mail-il1-f193.google.com with SMTP id p6so16942135ilp.1
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2019 00:50:32 -0800 (PST)
+        id S1727454AbfKZJQF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Nov 2019 04:16:05 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34794 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfKZJQF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Nov 2019 04:16:05 -0500
+Received: by mail-yw1-f65.google.com with SMTP id l14so3803056ywh.1
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2019 01:16:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zadara-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1w3U1XXG2p0rGFUUPBS9srOeCf2FjzmkoyYTuaUmY5k=;
-        b=mBeuwaDrliDGRcV38uyFnxDuZTy1r8LB3yuQsvm4VZch7u0uhnhPUXFojDIUps0ek3
-         zRBzjEUQKA2c1eGuz5Fr0pE6hzkrKZ7yQXMe3gY74ZbxFfGupeib8FH394Mmx4Vd9YYt
-         vU7IrLXPMPiAwDYyNl/daAZX60Y8DDjNcMYqjtAMWjvoGuC8S+vAAYCSNrexdd7RV1f7
-         ksckaFUIdmDoXJ3B+MyhvktQeID5sTxEEQxOywSYox0E0xjYXioN3sbD4RLrAHPUwD34
-         4DNPE/ek7hS88G+O21usivkoXkGwbQIdtqi0S8saFl2g9PbYs2bNXT9mSBWnC1ybfoRj
-         NPMg==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=QvqtBdepvKxlGMLIn/VBcky+P3g2BSNJy+2CH2jg3EM=;
+        b=ffY1uxC29ckkfyJYqAhiEc15iDDE2dPCq6H8Edth5IBWxVQyUAxbfm8si2bz5h0heP
+         BDtfaelYGBALlVgTOIX26GuThnWmnycgFA5iX8JWxLY6UibSUodSYC0CN4H9jbwYELKs
+         n5VZskNGczVHm8NL375JdXAv6HH7ZKw9sy3N1mY/DzDBMq4bHzIlJahzcexPUesZ8Emy
+         W1ku669tqIYDwj42TwmgdqSmc048bTPNMFE+57N614MmoWdYzVpO8pw7sjKpPYt/nVly
+         6zlB8txROY3dwR2raV1eKHmwEw0QyLE/ZUnGBq9wSjHXcu/l0faWZDb8CI/W5Oob+jY2
+         4quA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1w3U1XXG2p0rGFUUPBS9srOeCf2FjzmkoyYTuaUmY5k=;
-        b=qvOJ/tLepuZSL1a+RDg/lPpntBFsri3Ws+6VybpKaUk31biNzBXb+PF5+2lergQLJ9
-         gf8kuInE0oNfaJxvJCmHfmMeReuz1FCSQluMCOLTPXRzEXd9sQq19yPKUPf+ocZhH44u
-         nG6xAMSChFwxnkvzgESD4k81A9nbim7a/kCL5eAICK7nKu3p8iLFHAfcJFiT8ZeGBGyj
-         s2X0+Ip2jsH4ccYWErMlrkBUPdIwZ5o5i2W2sSp5VBUvxUZwJX2yDrCZKr4jn60N27Sc
-         X/F840hZD+9AQKYcbRXMKwpe6u89W+F0Fx95YOFJ+fIvtFMPq+HIrcTXUotO9cC7PjI0
-         U5YQ==
-X-Gm-Message-State: APjAAAWxsPPk1xWBDQJtJKSfPbvb0YXHNpruJHriQS061ebHduXSQlvU
-        MPEJeNf+c+Nbsm7aZ5do6kBitTyoEc34wHy9gcZ3mA==
-X-Google-Smtp-Source: APXvYqxza5SjUtk5ykJVNpTrYSGcS6eeNj5AeDGkU0uGyxjCYVTZi0dNDZOf00TlxftOqI7MIOBCgYGxFw+kfq5uClc=
-X-Received: by 2002:a92:5b86:: with SMTP id c6mr36338199ilg.135.1574758231676;
- Tue, 26 Nov 2019 00:50:31 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=QvqtBdepvKxlGMLIn/VBcky+P3g2BSNJy+2CH2jg3EM=;
+        b=FLXt52AfOFX6lRyYUa2KwPkvHZo/HbRrfurXpEcqw1B1wdmS3ZNPmG/KCAIg0BLokc
+         VVy7qgjqsukdLoYN7Qzcm4JycovROZ0dd7YTNI9N1KXbcYpkTBksKxrferQk7qUlEHUp
+         lBBAM/ayDMe4ON+665w4/W8zBpEpTWa+XiwR4iNxByV9d8SkMce0szagPfL9wzUtYRuI
+         2vlJmSNX8xGLqN88tMkLhHwjziDuxwuy8JUFl+CcFqCJTD9kvvsLnGS2u6nXsMwrwNCU
+         yh28mTEJ6yZS9hByKehgRzxCp6joqMAP9h9nHBTR0IqRet0eOYTsALKa1fvAl01bzUOm
+         YyNw==
+X-Gm-Message-State: APjAAAWkYPH1JCfaIWIS6+dRKmwwJde4Zn1JRbR61zwUwBo99AfcNsc9
+        jHdnl5u9gSvFx3V8Vovz0PeNVtsCkmV2Ob4W8RM=
+X-Google-Smtp-Source: APXvYqzY2XfBE8z1wvfD4aQsJu9mI/W8d/5/a39ajKfVB5z0k0Y8NYy+NXgt7ECoGBeNzIuyx25bbWlaA+pKCYKxD60=
+X-Received: by 2002:a0d:ed47:: with SMTP id w68mr25020806ywe.391.1574759764075;
+ Tue, 26 Nov 2019 01:16:04 -0800 (PST)
 MIME-Version: 1.0
-References: <1574359699-10191-1-git-send-email-alex@zadara.com>
- <20191122154314.GA31076@bfoster> <CAOcd+r3_gKYBv4vtM7nfPEPvkVp-FgHKvgQQx-_zMDt+QZ9z+g@mail.gmail.com>
- <20191124164012.GL6219@magnolia> <c807e9fb-3ad9-7110-fd5d-29b07a3d1c66@sandeen.net>
- <20191125130752.GB44777@bfoster>
-In-Reply-To: <20191125130752.GB44777@bfoster>
-From:   Alex Lyakas <alex@zadara.com>
-Date:   Tue, 26 Nov 2019 10:50:20 +0200
-Message-ID: <CAOcd+r34Y5ysbPdBpzT--iPRjCAHE4TXPCP7B+yQFET7cuW-8g@mail.gmail.com>
-Subject: Re: [RFC-PATCH] xfs: do not update sunit/swidth in the superblock to
- match those provided during mount
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Eric Sandeen <sandeen@sandeen.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Received: by 2002:a25:ccc1:0:0:0:0:0 with HTTP; Tue, 26 Nov 2019 01:16:03
+ -0800 (PST)
+Reply-To: dc0130129@gmail.com
+From:   Jefferson Goldmann <princefamous1@gmail.com>
+Date:   Tue, 26 Nov 2019 10:16:03 +0100
+Message-ID: <CAP9xJMCnOVyfZUPVAud45iKxw-nT7h2of__j2CDf4top7m7wOw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 3:07 PM Brian Foster <bfoster@redhat.com> wrote:
->
-> On Sun, Nov 24, 2019 at 11:38:53AM -0600, Eric Sandeen wrote:
-> > On 11/24/19 10:40 AM, Darrick J. Wong wrote:
-> > > On Sun, Nov 24, 2019 at 11:13:09AM +0200, Alex Lyakas wrote:
-> >
-> > ...
-> >
-> > >>>> With the suggested patch, xfs repair is working properly also when mount-provided sunit/swidth are different.
-> > >>>>
-> > >>>> However, I am not sure whether this is the proper approach.
-> > >>>> Otherwise, should we not allow specifying different sunit/swidth
-> > >>>> during mount?
-> > >
-> > > I propose a (somewhat) different solution to this problem:
-> > >
-> > > Port to libxfs the code that determines where mkfs/repair expect the
-> > > root inode.  Whenever we want to update the geometry information in the
-> > > superblock from mount options, we can test the new ones to see if that
-> > > would cause sb_rootino to change.  If there's no change, we update
-> > > everything like we do now.  If it would change, either we run with those
-> > > parameters incore only (which I think is possible for su/sw?) or refuse
-> > > them (because corruption is bad).
-> > >
-> > > This way we don't lose the su/sw updating behavior we have now, and we
-> > > also gain the ability to shut down an entire class of accidental sb
-> > > geometry corruptions.
-> >
->
-> Indeed, I was thinking about something similar with regard to
-> validation. ISTM that we either need some form of runtime validation...
->
-> > I also wonder if we should be putting so much weight on the root inode
-> > location in repair, or if we could get away with other consistency checks
-> > to be sure it's legit, since we've always been able to move the
-> > "expected" Location.
-> >
->
-> ... or to fix xfs_repair. ;) Fixing the latter seems ideal to me, but
-> I'm not sure how involved that is compared to a runtime fix. Clearly the
-> existing repair check is not a sufficient corruption check on its own.
-> Perhaps we could validate the inode pointed to by the superblock in
-> general and if that survives, verify it looks like a root directory..?
-> The unexpected location thing could still be a (i.e. bad alignment)
-> warning, but that's probably a separate topic.
->
-> I'm not opposed to changing runtime behavior even with a repair fix,
-> fwiw. I wonder if conditionally updating the superblock is the right
-> behavior as it might be either too subtle for users or too disruptive if
-> some appliance out there happens to use a mount cycle to update su/sw.
-> Failing the mount seems preferable, but raises similar questions wrt to
-> changing behavior. Yes, it is corruption otherwise, but unless I'm
-> missing something it seems like a pretty rare corner case (e.g. how many
-> people change alignment like this? of those that do, how many ever run
-> xfs_repair?).
+--=20
+Dear Sir,
 
->To me, the ideal behavior is for mount options to always
-> dictate runtime behavior and for a separate admin tool or script to make
-> persistent changes (with associated validation) to the superblock.
-This sounds inline with the proposed patch.
+My name is Jefferson Goldmann. I am a UN military doctor (Soldier) and
+presently serving in Afghanistan. I have gone through your profile, I
+am aware of your experience as a successful entrepreneur. I got
+$3,000,000USD (Three Million United State Dollar) saved in a
+registered security company.
 
->
-> Brian
->
+My team and I over here invaded a terrorist camp in Afghanistan some
+time ago and we came across the sum of $12,000,000USD (Twelve Million
+United State Dollar) spendable cash. We spitted it among ourselves and
+I lodged my share $3,000,000USD (Three Million United State Dollar) in
+a security company.
+
+I received a mail from the security company last week that there will
+be liquidating there are assets, if I can reach a beneficiary that I
+trust ASAP and so my beneficiary can receive the consignment box on my
+behalf. We can invest this Spendable cash in a profitable business in
+your country and I will also reward you with 20% of my $3,000,000USD
+(Three Million United State Dollar) for your paying for the
+transportation of the consignment box to your country, this is the
+reason why I=E2=80=99m contacting you.
+
+Kindly get in touch with me on my private email: Jeffersongoldmann@gmail.co=
+m
+
+N.B
+
+This information should be kept confidential
+
+Yours faithfully,
+Jefferson Goldmann.
