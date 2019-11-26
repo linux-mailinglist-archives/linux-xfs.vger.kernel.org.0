@@ -2,135 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 888CA109B48
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2019 10:33:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CDA109C05
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2019 11:11:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKZJdw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Nov 2019 04:33:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35202 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727275AbfKZJdw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Nov 2019 04:33:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574760831;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2nSmjaiCeK0tPIUCWmMnr9+cGi/m2g3mz3niRE935j0=;
-        b=Wv9tAt/2B2j+ugZlfo7qN/6ehHV9DVTqHw1qky801+9voFvLAqHYvUer2F+Ympa/YTir6N
-        yWdEC6IhzdpsdWc5Hj9z1j5MKNmUzV/04BvmTd4ZJLlHqcu9pJ9WfRSoccmn2e6cqB6jlW
-        PZQ3lrWfZgbzC3mcUCTqjss2i2KlnXg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-dU80S2_5PgyU2TNYcU4Ilw-1; Tue, 26 Nov 2019 04:33:48 -0500
-Received: by mail-wr1-f69.google.com with SMTP id q13so108966wrx.16
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2019 01:33:48 -0800 (PST)
+        id S1727692AbfKZKLu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Nov 2019 05:11:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50788 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfKZKLu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Nov 2019 05:11:50 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l17so2557664wmh.0
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2019 02:11:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=45duptz+1X0ZcGBvMV2KIRWTiY96osScYYxSMhBe6e0=;
+        b=i9/wLv3MMGl4ulx9Gj7Fg9lS6m5qvm44sOsW1boMIYj/rM/KzvRYUc2ssxWa5gmDoS
+         CzZ4EKGWcSR6xBr9uhNtjeUGuPKNxHYFVHdlSF2UDNnfF9iHqSY4HDr0EA9aONW0BNtB
+         LEnUjhgzbXzMibwS5iqQrWZaI9zGtO+RnmcRfB09m+leL2+nkxjeH+5TNBxaoGiVNmrB
+         T6vxMkNmv/j5OCaD0NNOdcH/vGlK/a7vD4WLiELcyBjNQqy6Igjk/7toPL6cEoa83y0E
+         qXBWITEhLJBodOiMn4CeVFUoWYnmy6MLNe4S2Md7p93uK24S1IZ8+RwB0u6EE3tBEQVi
+         sAeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=D6zb3L7kfsY10hYEodHHwYnmsqmtJJOrV6yY9VQVz30=;
-        b=INKE7lWbCX9RhBFN0oZNBMBS+1HeUkZu90l043hLN9/wCtxDnAdmb56r7WRU8bn24F
-         9dAtvhET1SSHLf4Lbyrvy2/oZCkTrSBXMqmMxhkTCWgORorwpvt2+iLOLMiCtgZfdns/
-         tnO4b6Gj42vaOw6op1buHNyncxfzX2WP7gXcYdl3SB1xy3oAkKGDP3v11XqQp+VPJ7cJ
-         N83Q5saeEe6bwfJvyE2BAmXL3QjrW1LjoxVvedP7czexawoF/ZH03prbPB7s9ruOChZU
-         UYL5DiGJf/VlcQPuzJeqjalhdFSzzdgrOrTQ2RjxYB2rQhWu03jjxCe8RwW3ySqP3wRx
-         M5UQ==
-X-Gm-Message-State: APjAAAW8kQ5FEJrFMqBA09BuAMvmCV2ze8OqZF3MuwfBa1f96L1xlrMz
-        XH63tT2U0WQhkLqJ3QPwyEIzMDpBxHqy4C/rcFx4ohYOoI0UjSmEo/DBRcCBWgCVk2dAhBj/WOt
-        XnQse+yJLp75FCMoCZIbN
-X-Received: by 2002:adf:e301:: with SMTP id b1mr35538641wrj.280.1574760827270;
-        Tue, 26 Nov 2019 01:33:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxpSjd7YlMWEjGQCDnnNG+7uNpySYIgPwzGN6aS5A9Iqx8pKH5o7kqixdMtDi5sZaYz0ZZGwA==
-X-Received: by 2002:adf:e301:: with SMTP id b1mr35538628wrj.280.1574760827081;
-        Tue, 26 Nov 2019 01:33:47 -0800 (PST)
-Received: from orion (ip-89-103-126-188.net.upcbroadband.cz. [89.103.126.188])
-        by smtp.gmail.com with ESMTPSA id x10sm14047170wrp.58.2019.11.26.01.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 01:33:46 -0800 (PST)
-Date:   Tue, 26 Nov 2019 10:33:44 +0100
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     John Pittman <jpittman@redhat.com>
-Cc:     esandeen@redhat.com, preichl@redhat.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3] xfsprogs: add missing line feeds in libxfs/rdwr.c
-Message-ID: <20191126093344.l43sriu2jm7gvqsq@orion>
-Mail-Followup-To: John Pittman <jpittman@redhat.com>, esandeen@redhat.com,
-        preichl@redhat.com, linux-xfs@vger.kernel.org
-References: <20191123155508.15769-1-jpittman@redhat.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=45duptz+1X0ZcGBvMV2KIRWTiY96osScYYxSMhBe6e0=;
+        b=LG7oZuZ0kMwnB5pgvodk0rLYB/exTxfbRRLIhGRVKBTo480k9Tc2jij0W8q6e9vme8
+         V+tPcsQJeRpDgs5UO9/7mQWssmbL2gscFiE3I+PtfrlINE7NfmKjDQwl/MaXH62g8K9x
+         I7uOqeA2lJFZ/t2xb70sAmS3GP2VYm0uAFBKBPtUDT3VfaRpTbxOcrgh3mZg7VsvdAq4
+         vsM9EjhCgHMYRmGnekhaUzblaojuBoTA73hgC30Lpl8/JFDVrbQrAeoDX8wy+QnsJQHD
+         L1jj6PraFaR3eV48Sv6585ZR0fsNjDClbeVAA+4Zv/973A3jpF05oHsnot3bll5VVHl2
+         wjnA==
+X-Gm-Message-State: APjAAAW56nbBkqmEa2zTmQZ2YUNWM81TKhJK+SRW2A+0Qr0965EETMYn
+        Av/6sCeQNra1YC3b2VfG28e2K6/PQgEuu950rhA=
+X-Google-Smtp-Source: APXvYqyyTIdNttICKOS6HcTbvQI4CDQKbXvZfHEC3fZcoIxHmHmZJfFLaTU8fZE5knh3cbBhlkCvmKKcPKpJGHpM6fM=
+X-Received: by 2002:a05:600c:506:: with SMTP id i6mr3509793wmc.153.1574763107358;
+ Tue, 26 Nov 2019 02:11:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191123155508.15769-1-jpittman@redhat.com>
-X-MC-Unique: dU80S2_5PgyU2TNYcU4Ilw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
+Received: by 2002:adf:dd05:0:0:0:0:0 with HTTP; Tue, 26 Nov 2019 02:11:46
+ -0800 (PST)
+Reply-To: dc0130129@gmail.com
+From:   Jefferson Goldmann <malbertofalla@gmail.com>
+Date:   Tue, 26 Nov 2019 11:11:46 +0100
+Message-ID: <CABWY0+V+OQNr+V4wRwYGecgOrTeMECpXmbZ2CEhRABuq__ON=A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 10:55:08AM -0500, John Pittman wrote:
-> In libxfs/rdwr.c, there are several fprintf() calls that are
-> missing trailing line feeds. This translates to the following
-> CLI prompt being on the same line as the message. Add missing
-> line feeds, alleviating the issue.
->=20
-> Fixes: 0a7942b38215 ("libxfs: don't discard dirty buffers")
-> Signed-off-by: John Pittman <jpittman@redhat.com>
-
-Despite my Reviewed-by previously, next patches, please don't forget to als=
-o
-provide the changelog for your Vx patches.
-
-> ---
-
-^ Changelogs should go below this line, so they are not propagated to the g=
-it
-tree, but it's really helpful to understand why you needed to send new vers=
-ions.
-
-Cheers.
-
->  libxfs/rdwr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-> index 7080cd9c..3f69192d 100644
-> --- a/libxfs/rdwr.c
-> +++ b/libxfs/rdwr.c
-> @@ -651,7 +651,7 @@ __libxfs_getbufr(int blen)
->  =09pthread_mutex_unlock(&xfs_buf_freelist.cm_mutex);
->  =09bp->b_ops =3D NULL;
->  =09if (bp->b_flags & LIBXFS_B_DIRTY)
-> -=09=09fprintf(stderr, "found dirty buffer (bulk) on free list!");
-> +=09=09fprintf(stderr, "found dirty buffer (bulk) on free list!\n");
-> =20
->  =09return bp;
->  }
-> @@ -1224,7 +1224,7 @@ libxfs_brelse(
->  =09=09return;
->  =09if (bp->b_flags & LIBXFS_B_DIRTY)
->  =09=09fprintf(stderr,
-> -=09=09=09"releasing dirty buffer to free list!");
-> +=09=09=09"releasing dirty buffer to free list!\n");
-> =20
->  =09pthread_mutex_lock(&xfs_buf_freelist.cm_mutex);
->  =09list_add(&bp->b_node.cn_mru, &xfs_buf_freelist.cm_list);
-> @@ -1245,7 +1245,7 @@ libxfs_bulkrelse(
->  =09list_for_each_entry(bp, list, b_node.cn_mru) {
->  =09=09if (bp->b_flags & LIBXFS_B_DIRTY)
->  =09=09=09fprintf(stderr,
-> -=09=09=09=09"releasing dirty buffer (bulk) to free list!");
-> +=09=09=09=09"releasing dirty buffer (bulk) to free list!\n");
->  =09=09count++;
->  =09}
-> =20
-> --=20
-> 2.17.2
->=20
-
 --=20
-Carlos
+Dear Sir,
 
+My name is Jefferson Goldmann. I am a UN military doctor (Soldier) and
+presently serving in Afghanistan. I have gone through your profile, I
+am aware of your experience as a successful entrepreneur. I got
+$3,000,000USD (Three Million United State Dollar) saved in a
+registered security company.
+
+My team and I over here invaded a terrorist camp in Afghanistan some
+time ago and we came across the sum of $12,000,000USD (Twelve Million
+United State Dollar) spendable cash. We spitted it among ourselves and
+I lodged my share $3,000,000USD (Three Million United State Dollar) in
+a security company.
+
+I received a mail from the security company last week that there will
+be liquidating there are assets, if I can reach a beneficiary that I
+trust ASAP and so my beneficiary can receive the consignment box on my
+behalf. We can invest this Spendable cash in a profitable business in
+your country and I will also reward you with 20% of my $3,000,000USD
+(Three Million United State Dollar) for you paying for the
+transportation of the consignment box to your country, this is the
+reason why I=E2=80=99m contacting you.
+
+Kindly get in touch with me on my private email: Jeffersongoldmann@gmail.co=
+m
+
+N.B
+
+This information should be kept confidential
+
+Yours faithfully,
+Jefferson Goldmann.
