@@ -2,87 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BDBC210A951
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Nov 2019 05:16:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2054710AF41
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Nov 2019 13:06:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfK0EQH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Nov 2019 23:16:07 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:37794 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfK0EQH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Nov 2019 23:16:07 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAR44a78091595;
-        Wed, 27 Nov 2019 04:16:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=pPvfybOe71hsOYKViqA12mPSC1vD4lD86Yi3OoKDTs4=;
- b=mrCf/uNUJl0vGze1d2cZWHhSN0N+749zzBbJzsqfgp8nmrtC+w+Zzklk3w673Vji0745
- RoQmz4onrMAqszhaYlyc5QLj579Bf98SjozS5pWFjSHTgaxzXmx1Yw2AfCEhDa+ZSxTN
- zVZpOjXGDSaoXnZqPSmGcJrDLgD7dVxXcwg9YuLmAWvkL4G5DBRrK+Tc3d5+ZjQEh5Gf
- EJx497Ta5EuaTsq3IBlNrVxjThJxfcEAYEmoNy/KvSBgyzXyh+R9z0ywS/iyJho4CGH6
- p8upzkD1hiuDX2zOpuXjBKSEaWdVxALnTBnmsXquvb7A8mLy0e8L/eTDukDf2gbKyDID AA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wevqqav0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 04:16:05 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAR448Li120333;
-        Wed, 27 Nov 2019 04:16:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2wgwuttk6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 04:16:04 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAR4G3sG027418;
-        Wed, 27 Nov 2019 04:16:03 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 Nov 2019 20:16:03 -0800
-Date:   Tue, 26 Nov 2019 20:16:02 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eryu Guan <guaneryu@gmail.com>
-Cc:     fstests <fstests@vger.kernel.org>, xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] generic/558: require scratch device
-Message-ID: <20191127041602.GI6212@magnolia>
+        id S1726514AbfK0MGn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 27 Nov 2019 07:06:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47482 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726320AbfK0MGn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:06:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7D3FEAE7F;
+        Wed, 27 Nov 2019 12:06:41 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2D58D1E0AFA; Wed, 27 Nov 2019 13:06:41 +0100 (CET)
+Date:   Wed, 27 Nov 2019 13:06:41 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>, fstests <fstests@vger.kernel.org>,
+        xfs <linux-xfs@vger.kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] generic/050: fix xfsquota configuration failures
+Message-ID: <20191127120641.GC20979@quack2.suse.cz>
+References: <20191127041538.GH6212@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9453 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911270032
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9453 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911270032
+In-Reply-To: <20191127041538.GH6212@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue 26-11-19 20:15:38, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The new 'xfsquota' configuration for generic/050 doesn't filter out
+> SCRATCH_MNT properly and seems to be missing an error message in the
+> golden output.  Fix both of these problems.
+> 
+> Fixes: e088479871 ("generic/050: Handle xfs quota special case with different output")
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-This test formats the scratch device, so require it.
+Umm, I can see how I messed up the SCRATCH_MNT filtering and didn't notice
+- thanks for fixing that. But the error message should not be there. The
+previous mount completely failed so we end up touching file on the parent
+filesystem which succeeds (well, unless the parent filesystem is read-only
+as well). So to avoid this obscure behavior, we should add something like
+(untested):
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- tests/generic/558 |    1 +
- 1 file changed, 1 insertion(+)
+diff --git a/tests/generic/050 b/tests/generic/050
+index cf2b93814267..593e2e69bf9a 100755
+--- a/tests/generic/050
++++ b/tests/generic/050
+@@ -59,8 +59,10 @@ blockdev --setro $SCRATCH_DEV
+ #
+ echo "mounting read-only block device:"
+ _try_scratch_mount 2>&1 | _filter_ro_mount
+-echo "touching file on read-only filesystem (should fail)"
+-touch $SCRATCH_MNT/foo 2>&1 | _filter_scratch
++if [ "${PIPESTATUS[0]}" -eq 0 ]; then
++       echo "touching file on read-only filesystem (should fail)"
++       touch $SCRATCH_MNT/foo 2>&1 | _filter_scratch
++fi
 
-diff --git a/tests/generic/558 b/tests/generic/558
-index c05aa961..28f4c0e1 100755
---- a/tests/generic/558
-+++ b/tests/generic/558
-@@ -45,6 +45,7 @@ create_file()
- _supported_fs generic
- _supported_os Linux
- _require_inode_limits
-+_require_scratch
- 
- rm -f $seqres.full
- echo "Silence is golden"
+and update xfsquota output accordingly...
+
+								Honza
+> @@ -1,8 +1,9 @@
+>  QA output created by 050
+>  setting device read-only
+>  mounting read-only block device:
+> -mount: /mnt-scratch: permission denied
+> +mount: SCRATCH_MNT: permission denied
+>  touching file on read-only filesystem (should fail)
+> +touch: cannot touch 'SCRATCH_MNT/foo': Read-only file system
+>  unmounting read-only filesystem
+>  umount: SCRATCH_DEV: not mounted
+>  setting device read-write
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
