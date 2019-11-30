@@ -2,67 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30C6B10DDCA
-	for <lists+linux-xfs@lfdr.de>; Sat, 30 Nov 2019 14:30:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6CE10DEE0
+	for <lists+linux-xfs@lfdr.de>; Sat, 30 Nov 2019 20:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfK3Nar (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 30 Nov 2019 08:30:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33102 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfK3Nar (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 30 Nov 2019 08:30:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id x21so21278631oic.0
-        for <linux-xfs@vger.kernel.org>; Sat, 30 Nov 2019 05:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=+YZ+ecXLOAHIvSAqVvhGDIVNzEfZJC4cieO5xgrURJ8=;
-        b=YsgeYocBbsy9jnmLvbcr0QZHRKuE6VqSIT/IdO/RNCpkJcvqojUgmIe9uHw0RK46TS
-         y/bT/EpkUmELgUJ+jcvIu0BYtxcNWqLL/Ya4t51MKqlAtAaEDInEJL3AIEE6y9wteCIT
-         K30B1dsri0RY7Ut9qgxgNKNc/I7tOIX8QXu+AQPhlMsbPhRQqMQPwJJR8nF5qKjpVDSe
-         +hkyFp7f6ErBR/3hvUkWDjeC505MbYGqbTQ1ZOiSlA1QAz0xeJNcH9v0G9WsIagy9pWX
-         KQx9OAmoyuOq76qJpyHkooJeVATvehj2rnK9dm4lPhPvTTox3XUJrl8yRzKmv45WeuYy
-         PZxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=+YZ+ecXLOAHIvSAqVvhGDIVNzEfZJC4cieO5xgrURJ8=;
-        b=WtTcsl4sDI6+AAaOIn1gx/PmWbAO82NymGKzQmF2/9tF0YApMSDWVAGFeiuJDSdOX5
-         RGw2yeWGTecEFuq3yH3HP/DvReNA2nwNrnLjBN4mSpeZUuuP8uvbrvG+mPFK7avpohrC
-         sz/GAp5+nwpLjBd5D/UJur0znTqqCvkTO6lUFChPBLelx/CB30sOvfy9HY9w1eQMFoLn
-         GqU8BRn6xjiF9jVfHi8mCK6tTmoB2bBhOc741AFmJVZzhSdzrDqPIXmsNQN4QA6U5ISY
-         AcmmBJJqdzKBFtGvm+7ueLkcnxOlkxCLP21P3meYgfNg9uP/M149z74t0vAY93aKcDlE
-         J6xA==
-X-Gm-Message-State: APjAAAV0VY48BxQ0mA8gdvk4f18Ur2YJJqnOxcDLc6k5c474jQn1tAWo
-        jenkQQmOGX+L52WCmDfsx61HChRCDV/Jyxr2bh8=
-X-Google-Smtp-Source: APXvYqylR4sMQzN9cnLH+Em36bRK8mzB0RzH1XvukyyBjqfMEwoAKF1DHZnMp9P622pdIq6N1y5oiwzvlFhCVT+jOxg=
-X-Received: by 2002:a05:6808:5d9:: with SMTP id d25mr16640180oij.54.1575120646434;
- Sat, 30 Nov 2019 05:30:46 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:ac9:5710:0:0:0:0:0 with HTTP; Sat, 30 Nov 2019 05:30:45
- -0800 (PST)
-Reply-To: kuymetaloids@gmail.com
-From:   Paul Kuy <normper1974@gmail.com>
-Date:   Sat, 30 Nov 2019 05:30:45 -0800
-Message-ID: <CAMgT96A_5zRBO_Te8R8CQ903JnaTFy3Sou-i8JysEfdrysy6kw@mail.gmail.com>
-Subject: let us work together
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1727027AbfK3TkD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 30 Nov 2019 14:40:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbfK3TkD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 30 Nov 2019 14:40:03 -0500
+Subject: Re: [GIT PULL] iomap: new code for 5.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575142803;
+        bh=RkiMjudXwV4F9qFajC2mPQLgq7PsOmLsVNlxCJ+H2KU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Do3brzd7q+WuN/096bEpjf7rV6pYWfWfU2qPrSwQdMyB2z3OQo3GZ1DHVTiohL6Gh
+         14CUpP3OqckCV6hP0zj/ivqZxIpFPgx6Bd66K8jrpJT+uNcCK4ohjIfq6rnuEhAZEJ
+         bV2cirq+V2TxXQWcoi8gn4GtLrFg4SjcZRPTOytc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191125190907.GN6219@magnolia>
+References: <20191125190907.GN6219@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191125190907.GN6219@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/iomap-5.5-merge-11
+X-PR-Tracked-Commit-Id: 419e9c38aa075ed0cd3c13d47e15954b686bcdb6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3b266a52d8d6e02ea6c1bb52c96342128e624554
+Message-Id: <157514280298.12928.5427720879261656936.pr-tracker-bot@kernel.org>
+Date:   Sat, 30 Nov 2019 19:40:02 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-150 Cheapside,
-EC2V 6ET,
+The pull request you sent on Mon, 25 Nov 2019 11:09:07 -0800:
 
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.5-merge-11
 
-Greetings, I write to seek your co-operation/partnership to the
-transfer of money in your offshore account. The total amount of money
-to transfer is Twenty Five Million Dollars (USD 25,000,000.00).I have
-reposed my confidence in you and hope that you will not jeopardize
-this opportunity. I wait for your immediate reply.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3b266a52d8d6e02ea6c1bb52c96342128e624554
 
-Both will share the money equal after claim, I dont want Greed
-Paul Kuy  (Dr.)
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
