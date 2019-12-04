@@ -2,39 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A031136D6
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2019 21:58:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD661113750
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2019 22:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfLDU6X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Dec 2019 15:58:23 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40972 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727889AbfLDU6X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Dec 2019 15:58:23 -0500
-Received: from dread.disaster.area (pa49-179-150-192.pa.nsw.optusnet.com.au [49.179.150.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 01E4A7E9D8D;
-        Thu,  5 Dec 2019 07:58:20 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1icbj2-0005xm-1b; Thu, 05 Dec 2019 07:58:20 +1100
-Date:   Thu, 5 Dec 2019 07:58:20 +1100
-From:   Dave Chinner <david@fromorbit.com>
+        id S1728011AbfLDV5U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Dec 2019 16:57:20 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46752 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDV5T (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Dec 2019 16:57:19 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4LsMbh056715;
+        Wed, 4 Dec 2019 21:57:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=+p0QtgOU3PGQGqiTDp9VWVkmF3teT4O9Gq4nncbCvPA=;
+ b=Oij7wXFvTpypy22mi+rPscEBX3WErolSPCU5WvTR2sD9t7SLE/1jAe6tX1+CMzVR8iKY
+ Mitv7DeviqL3ZuyWbdCcgbmX1ncN0n740rhq2OLQo8dsFiCHIbaSJRbnOB0W/P0IPcRD
+ 6gkYp/90wolGZJaMB3+MfK8EzhPAo4dlxHyNbR2dNuf1jrWCTRXekV+YMyXu0AAv3rrH
+ AV+ffxjSOz05AZ7ZC8PNnInS3a/+l72ZVqZBl+OkY1IdYyQSRVEIdlMnF40ogCx1AWP8
+ 2lIFCxSRBxDGsShzO9utQkfbswaJZTGimKr8is1MXd2JjAjg2c0IFt6YP9d0vBqWH0zO 4Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wkfuuhd9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 21:57:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB4LsLs2184382;
+        Wed, 4 Dec 2019 21:57:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wnvr0vkkm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Dec 2019 21:57:12 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB4Lv8AB003863;
+        Wed, 4 Dec 2019 21:57:08 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Dec 2019 21:57:08 +0000
+Date:   Wed, 4 Dec 2019 13:57:06 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org, jstancek@redhat.com
 Subject: Re: [PATCH] xfs: fix sub-page uptodate handling
-Message-ID: <20191204205820.GN2695@dread.disaster.area>
+Message-ID: <20191204215706.GT7335@magnolia>
 References: <20191204172804.6589-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20191204172804.6589-1-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ZXpxJgW8/q3NVgupyyvOCQ==:117 a=ZXpxJgW8/q3NVgupyyvOCQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=-8oLzmg_bMdD26dgm7MA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912040181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9461 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912040181
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -48,10 +76,84 @@ On Wed, Dec 04, 2019 at 06:28:04PM +0100, Christoph Hellwig wrote:
 > Reported-by: Jan Stancek <jstancek@redhat.com>
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks sane, similar fix to previous completion issues like this.
+Looks good to me,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+--D
 
--- 
-Dave Chinner
-david@fromorbit.com
+> ---
+>  fs/iomap/buffered-io.c | 35 +++++++++++++++++++++++++----------
+>  1 file changed, 25 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 512856a88106..340c15400423 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -28,6 +28,7 @@
+>  struct iomap_page {
+>  	atomic_t		read_count;
+>  	atomic_t		write_count;
+> +	spinlock_t		uptodate_lock;
+>  	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
+>  };
+>  
+> @@ -51,6 +52,7 @@ iomap_page_create(struct inode *inode, struct page *page)
+>  	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
+>  	atomic_set(&iop->read_count, 0);
+>  	atomic_set(&iop->write_count, 0);
+> +	spin_lock_init(&iop->uptodate_lock);
+>  	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+>  
+>  	/*
+> @@ -139,25 +141,38 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
+>  }
+>  
+>  static void
+> -iomap_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+> +iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+>  {
+>  	struct iomap_page *iop = to_iomap_page(page);
+>  	struct inode *inode = page->mapping->host;
+>  	unsigned first = off >> inode->i_blkbits;
+>  	unsigned last = (off + len - 1) >> inode->i_blkbits;
+> -	unsigned int i;
+>  	bool uptodate = true;
+> +	unsigned long flags;
+> +	unsigned int i;
+>  
+> -	if (iop) {
+> -		for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
+> -			if (i >= first && i <= last)
+> -				set_bit(i, iop->uptodate);
+> -			else if (!test_bit(i, iop->uptodate))
+> -				uptodate = false;
+> -		}
+> +	spin_lock_irqsave(&iop->uptodate_lock, flags);
+> +	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
+> +		if (i >= first && i <= last)
+> +			set_bit(i, iop->uptodate);
+> +		else if (!test_bit(i, iop->uptodate))
+> +			uptodate = false;
+>  	}
+>  
+> -	if (uptodate && !PageError(page))
+> +	if (uptodate)
+> +		SetPageUptodate(page);
+> +	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+> +}
+> +
+> +static void
+> +iomap_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+> +{
+> +	if (PageError(page))
+> +		return;
+> +
+> +	if (page_has_private(page))
+> +		iomap_iop_set_range_uptodate(page, off, len);
+> +	else
+>  		SetPageUptodate(page);
+>  }
+>  
+> -- 
+> 2.20.1
+> 
