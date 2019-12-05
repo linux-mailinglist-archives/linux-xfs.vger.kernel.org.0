@@ -2,141 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C40E611463F
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Dec 2019 18:50:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 059EA114792
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Dec 2019 20:23:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfLERul (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Dec 2019 12:50:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48496 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730093AbfLERul (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Dec 2019 12:50:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575568239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XkDUkMCcxV+21HfHnZ8OhGe3WUt7hxvp+J03sU78Sc=;
-        b=JP2zLJ1dLn3ceUpcDlXKK28uuASOKn5DZe/dA2edcQvC+eCwfQX4E2mKjjxGnC1pULVNDl
-        8+oAxvWXQzHfujcZfh8w3Bcq6jdE0zeX1wfBcYTUFwVp7f2Z1Z1dTD2SHvnX1iXobgJr7c
-        UJp4Xh+ZtYLrqzXwZRY+sCWNnGqv56U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-BzFF3ub2NveWqcUlKBTTLA-1; Thu, 05 Dec 2019 12:50:38 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84662800D41
-        for <linux-xfs@vger.kernel.org>; Thu,  5 Dec 2019 17:50:37 +0000 (UTC)
-Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43FF410013D9
-        for <linux-xfs@vger.kernel.org>; Thu,  5 Dec 2019 17:50:37 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [RFC v4 2/2] xfs: automatically relog the quotaoff start intent
-Date:   Thu,  5 Dec 2019 12:50:37 -0500
-Message-Id: <20191205175037.52529-3-bfoster@redhat.com>
-In-Reply-To: <20191205175037.52529-1-bfoster@redhat.com>
-References: <20191205175037.52529-1-bfoster@redhat.com>
+        id S1729594AbfLETXl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Dec 2019 14:23:41 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43298 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfLETXk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Dec 2019 14:23:40 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b1so2033483pgq.10
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Dec 2019 11:23:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=osandov-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zdC5gAzCSfOtyHzf99Ulg/6lFps+h4gMB5ow8dqQ7KU=;
+        b=XYRLUYihNPnHatI1VVXIXk1o0F9cTvWSzte3Xd7sKrB9J3ii7QaM6zZUmqPVr3C86s
+         bNdm1UXdPz4Z7PV3/+wpyaJUgSegej18VAwJ+oIwnMnJqCL1fYHWwAe8ZNFKLR3z1dTv
+         xiAKetwl7snMncZnMbYdh7VStpmhCFUGQoBBJ94sbIXxrwkefUQzyXUXg8QX0OMyv3Zi
+         YjOuGJUj5z/6EWKVA2TBanYDfY7MROc0sRBAzLJWLpOcs0n70Z9Kc4HyEklAQ/e5hx7G
+         lSjzJDGmxHk2EGc59b7af1lllA8NaVV1qeyfRk21UFl66MrVWyxuWyIHYkRmMrID1Fae
+         BJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zdC5gAzCSfOtyHzf99Ulg/6lFps+h4gMB5ow8dqQ7KU=;
+        b=dYM6jAu79LrPxFFFD/FVYhhfv9nv8lVjJMNFYdc8TpcBgFNS3m/BfCDHDxBptOyJoU
+         3+rLvv8raJr9Ae+X50jbh6DMbgUmypW95E4Ux1xyTdkmpzvoutFztCKlRlNi9uk/HkAn
+         Azzz6XE5jwMbN6rMl7mf1aLdM9GYPrcy7MfGAZnctyWlBTi5Y93uuRp1ZUUemXD35TFX
+         /iWRXd9GTGT6uUaKbpfVKPGX0B/YC7DoRv+BFjm/reTfJCedbUVW0I90qBll1hukaEGW
+         9wb3hFFbWQ9YmD8v74ixWFWDU7koK+BRUBNzm6TMl+/PahLCHhZmdqdUFLgNR+yYBYUM
+         OLyg==
+X-Gm-Message-State: APjAAAU4U4u2e7OxKa7NLs2np0PYmM7DfVBk6FO5sA7vu8KOkV8GvSBO
+        1HxxvOa1goYv8pP7t55dD9UZzg==
+X-Google-Smtp-Source: APXvYqxtjnJVgtxn/D3I0cEW74V7zRpo3M3cE/NQLR4KEfZLaVh3oZkyxDHrNS7nLYSQKRFwLIqlAw==
+X-Received: by 2002:aa7:9306:: with SMTP id 6mr10394274pfj.159.1575573818638;
+        Thu, 05 Dec 2019 11:23:38 -0800 (PST)
+Received: from vader ([2620:10d:c090:200::3:cb2])
+        by smtp.gmail.com with ESMTPSA id a2sm14160047pfg.90.2019.12.05.11.23.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 11:23:38 -0800 (PST)
+Date:   Thu, 5 Dec 2019 11:23:37 -0800
+From:   Omar Sandoval <osandov@osandov.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH] xfs: fix log reservation overflows when allocating large
+ rt extents
+Message-ID: <20191205192337.GC18377@vader>
+References: <20191204163809.GP7335@magnolia>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: BzFF3ub2NveWqcUlKBTTLA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204163809.GP7335@magnolia>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The quotaoff operation has a rare but longstanding deadlock vector
-in terms of how the operation is logged. A quotaoff start intent is
-logged (synchronously) at the onset to ensure recovery can continue
-with the operation before in-core changes are made. This quotaoff
-intent pins the log tail while the quotaoff sequence scans and
-purges dquots from all in-core inodes. While this operation
-generally doesn't generate much log traffic on its own, it can be
-time consuming. If unrelated filesystem activity consumes remaining
-log space before quotaoff is able to allocate the quotaoff end
-intent, the filesystem locks up indefinitely.
+On Wed, Dec 04, 2019 at 08:38:09AM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Omar Sandoval reported that a 4G fallocate on the realtime device causes
+> filesystem shutdowns due to a log reservation overflow that happens when
+> we log the rtbitmap updates.  Factor rtbitmap/rtsummary updates into the
+> the tr_write and tr_itruncate log reservation calculation.
+> 
+> "The following reproducer results in a transaction log overrun warning
+> for me:
+> 
+>     mkfs.xfs -f -r rtdev=/dev/vdc -d rtinherit=1 -m reflink=0 /dev/vdb
+>     mount -o rtdev=/dev/vdc /dev/vdb /mnt
+>     fallocate -l 4G /mnt/foo
+> 
+> Reported-by: Omar Sandoval <osandov@osandov.com>
 
-quotaoff cannot allocate the end intent before the scan because the
-latter can result in transaction allocation itself in certain
-indirect cases (releasing an inode, for example). Further, rolling
-the original transaction is difficult because the scanning work
-occurs multiple layers down where caller context is lost and not
-much information is available to determine how often to roll the
-transaction.
+This one works, as well. Thanks!
 
-To address this problem, enable automatic relogging of the quotaoff
-start intent. Trigger a relog whenever AIL pushing finds the item at
-the tail of the log. When complete, wait for relogging to complete
-as the end intent expects to be able to permanently remove the start
-intent from the log subsystem. This ensures that the log tail is
-kept moving during a particularly long quotaoff operation and avoids
-deadlock via unrelated fs activity.
+Reported-and-tested-by: Omar Sandoval <osandov@fb.com>
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_dquot_item.c  | 7 +++++++
- fs/xfs/xfs_qm_syscalls.c | 9 +++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-index d60647d7197b..ea5123678466 100644
---- a/fs/xfs/xfs_dquot_item.c
-+++ b/fs/xfs/xfs_dquot_item.c
-@@ -297,6 +297,13 @@ xfs_qm_qoff_logitem_push(
- =09struct xfs_log_item=09*lip,
- =09struct list_head=09*buffer_list)
- {
-+=09struct xfs_log_item=09*mlip =3D xfs_ail_min(lip->li_ailp);
-+
-+=09if (test_bit(XFS_LI_RELOG, &lip->li_flags) &&
-+=09    !test_bit(XFS_LI_RELOGGED, &lip->li_flags) &&
-+=09    !XFS_LSN_CMP(lip->li_lsn, mlip->li_lsn))
-+=09=09return XFS_ITEM_RELOG;
-+
- =09return XFS_ITEM_LOCKED;
- }
-=20
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 1ea82764bf89..b68a08e87c30 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -18,6 +18,7 @@
- #include "xfs_quota.h"
- #include "xfs_qm.h"
- #include "xfs_icache.h"
-+#include "xfs_trans_priv.h"
-=20
- STATIC int
- xfs_qm_log_quotaoff(
-@@ -37,6 +38,7 @@ xfs_qm_log_quotaoff(
-=20
- =09qoffi =3D xfs_trans_get_qoff_item(tp, NULL, flags & XFS_ALL_QUOTA_ACCT)=
-;
- =09xfs_trans_log_quotaoff_item(tp, qoffi);
-+=09xfs_trans_enable_relog(&qoffi->qql_item);
-=20
- =09spin_lock(&mp->m_sb_lock);
- =09mp->m_sb.sb_qflags =3D (mp->m_qflags & ~(flags)) & XFS_MOUNT_QUOTA_ALL;
-@@ -69,6 +71,13 @@ xfs_qm_log_quotaoff_end(
- =09int=09=09=09error;
- =09struct xfs_qoff_logitem=09*qoffi;
-=20
-+=09/*
-+=09 * startqoff must be in the AIL and not the CIL when the end intent
-+=09 * commits to ensure it is not readded to the AIL out of order. Wait on
-+=09 * relog activity to drain to isolate startqoff to the AIL.
-+=09 */
-+=09xfs_trans_disable_relog(&startqoff->qql_item, true);
-+
- =09error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_equotaoff, 0, 0, 0, &tp=
-);
- =09if (error)
- =09=09return error;
---=20
-2.20.1
-
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/libxfs/xfs_trans_resv.c |   96 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 77 insertions(+), 19 deletions(-)
