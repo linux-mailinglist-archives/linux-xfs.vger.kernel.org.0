@@ -2,97 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4042A1145A2
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Dec 2019 18:17:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1E611463E
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Dec 2019 18:50:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfLERR5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Dec 2019 12:17:57 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:55168 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbfLERR5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Dec 2019 12:17:57 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB5HDvms194549
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Dec 2019 17:17:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=6TvbV4TzBfDwbDMnOhYYiQ6uVDDJwQt29kMtHfriq9Q=;
- b=KboZhs9YqIh3irCg7XRthFAWoLco8mlLzszt61Ju2VGLkojc03f3UwJ45jL2nii7yUfR
- yR5fX3AQl9+Ac12tnZHUasjQ02JJWmRGZsbiOk00KtaNKFSsBHc3mOTtWCLEjOT9Evh7
- 2jaUlNalK0aI0ZAz12cdV5/WzYfo05FqoKt+pKvv4JZ3czJxgg2FX6FW4LAlk12T+WH+
- 1jV95qjUGUfe22Kquy0Qrx4IJVIG8xzBB/7afHtKsRNysewYrxDPGlWRPDlAKQTgo1sN
- 6wlxZWs5tycPVuEYV58JM/nsLTuzg8Qps93QUNVXC8xQalWrkbHXepnhrTTcoYZO9prw LA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wkfuupry1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Dec 2019 17:17:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB5HDknB046535
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Dec 2019 17:15:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wpp74fj7x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 Dec 2019 17:15:54 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB5HFrms023574
-        for <linux-xfs@vger.kernel.org>; Thu, 5 Dec 2019 17:15:53 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Dec 2019 09:15:53 -0800
-Date:   Thu, 5 Dec 2019 09:15:52 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to 798a9cada469
-Message-ID: <20191205171552.GD13260@magnolia>
+        id S1730205AbfLERuk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Dec 2019 12:50:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39097 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729396AbfLERuk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Dec 2019 12:50:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575568239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HLNM7FhxFeR3AAR16zURlPkn52LfIqXBEqugNI9aYeg=;
+        b=dDmU7upnqIUCGEaPrRntmCTwNqUm5s9s0brAgfW8g+7FyAjj+OUoixJLAqFc/SKayOR+qi
+        SXgYUnCdPkIuXC9gna4QEwPwlFP/DzulncEe7Ufdl92iVaXIWt0PzPLlgKTDTYvBIkiLGV
+        A1um165fTMQxbycJjG7GraQZGYxaclM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-XD3TUMdKNWyjuJkW-VSPLQ-1; Thu, 05 Dec 2019 12:50:37 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DBAA107ACE8
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Dec 2019 17:50:36 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D07410013D9
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Dec 2019 17:50:36 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [RFC v4 0/2] xfs: automatic relogging experiment
+Date:   Thu,  5 Dec 2019 12:50:35 -0500
+Message-Id: <20191205175037.52529-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912050145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9462 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912050145
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: XD3TUMdKNWyjuJkW-VSPLQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+Hi all,
 
-The for-next branch of the xfs-linux repository at:
+Here's a v4 RFC for automatic relogging and probably the closest one IMO
+to a non-RFC worthy implementation. There's still a few kinks, but this
+might be the right combination of simplicity, effectiveness and
+flexibility for future enhancement. Patch 1 adds the mechanism and patch
+2 uses it for the quotaoff start intent. See the commit logs for further
+details.=20
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+Thoughts, reviews, flames appreciated.
 
-has just been updated.
+Brian
 
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
+rfcv4:
+- AIL based approach.
+rfcv3: https://lore.kernel.org/linux-xfs/20191125185523.47556-1-bfoster@red=
+hat.com/
+- CIL based approach.
+rfcv2: https://lore.kernel.org/linux-xfs/20191122181927.32870-1-bfoster@red=
+hat.com/
+- Different approach based on workqueue and transaction rolling.
+rfc: https://lore.kernel.org/linux-xfs/20191024172850.7698-1-bfoster@redhat=
+.com/
 
-The new head of the for-next branch is commit:
+Brian Foster (2):
+  xfs: automatic log item relog mechanism
+  xfs: automatically relog the quotaoff start intent
 
-798a9cada469 xfs: fix mount failure crash on invalid iclog memory access
+ fs/xfs/xfs_dquot_item.c  |  7 +++++
+ fs/xfs/xfs_qm_syscalls.c |  9 +++++++
+ fs/xfs/xfs_trace.h       |  1 +
+ fs/xfs/xfs_trans.c       | 30 +++++++++++++++++++++
+ fs/xfs/xfs_trans.h       |  7 ++++-
+ fs/xfs/xfs_trans_ail.c   | 56 ++++++++++++++++++++++++++++++++++++++--
+ fs/xfs/xfs_trans_priv.h  |  5 ++++
+ 7 files changed, 112 insertions(+), 3 deletions(-)
 
-New Commits:
+--=20
+2.20.1
 
-Brian Foster (1):
-      [798a9cada469] xfs: fix mount failure crash on invalid iclog memory access
-
-Omar Sandoval (2):
-      [0c4da70c83d4] xfs: fix realtime file data space leak
-      [69ffe5960df1] xfs: don't check for AG deadlock for realtime files in bunmapi
-
-
-Code Diffstat:
-
- fs/xfs/libxfs/xfs_bmap.c | 27 +++++++++++++++------------
- fs/xfs/xfs_log.c         |  2 ++
- 2 files changed, 17 insertions(+), 12 deletions(-)
