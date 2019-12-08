@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE45D1162E7
-	for <lists+linux-xfs@lfdr.de>; Sun,  8 Dec 2019 16:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 561F411631E
+	for <lists+linux-xfs@lfdr.de>; Sun,  8 Dec 2019 18:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfLHPoA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 8 Dec 2019 10:44:00 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37971 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfLHPn7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 Dec 2019 10:43:59 -0500
-Received: by mail-pj1-f66.google.com with SMTP id l4so4749583pjt.5;
-        Sun, 08 Dec 2019 07:43:59 -0800 (PST)
+        id S1726483AbfLHREh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 8 Dec 2019 12:04:37 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46268 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfLHREh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 Dec 2019 12:04:37 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so5820197pgb.13;
+        Sun, 08 Dec 2019 09:04:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1ZP1cV3txDUP/apjZ4IZ8RoJyVPo9yJFc21qQU7sGQs=;
-        b=J1d4wwoixZcqpZOnz4Zam1Pzy8UfEBQIBiCBIbWoyG+AppL0cVAWQIBtkkzdJA0d5J
-         p3DqGumb8kpBnifR1571AzKGaljundYEMcaSsuSi2WaUW3HsWsbMSeETAVjdt/vZK42S
-         0QxlNQMUX0aSes8HFm4WcUrNE+TtTk/kOy0qhIQ58UeGQqUmcFkV8rJn0jq+Fadj1wid
-         XWxO0RkOt9aIckY2h4OpeTsOZXdpkg4li9WwHHtKkAh1SiZe8f4A9IwKF08dVDEtaxCK
-         RpLM0Vujna9ZKarjjlcAGlOX4iBjHMV/uGzFZlNZPK+TUWjVv3Y/C7lXYCytpkPQMVos
-         WI3Q==
+        bh=UlHR1cLkK+qvjBqY37LG2uLeLSuSj/jaGCEhl3kRhik=;
+        b=ZGMTc30lCMQ9AQbkxneaYpU7Hmk4337+12ePFITP4H5flaIs/3opgBWdM+MvyrCoQb
+         kVg4qNpkVmxTRY2QH7uM9LtlKan9y10z8sPMBa5Sff2E/C4sSA6bMSJUCD4GNUKAL6S+
+         /YpHL5Smm1vwvOdmCNNClZPEc5M42FPbrZG/N1N/JxJPtN+k5OUefyV6lGx7qeuvcT2d
+         d24Ci+7YmcSYCc3gbbG1DhjW2+Om8swCOxePJqhre5/WLnMWWnugXTHUvFcZezY9gPf+
+         WTFth3mZEyBbwHETGRxB8n8zWmvqaWM3mQWw9A3Wv6/r3QlTpNZl77rGZGDkHQ2vTq6Z
+         ROXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ZP1cV3txDUP/apjZ4IZ8RoJyVPo9yJFc21qQU7sGQs=;
-        b=sSiWAVh+Z++AcJZCgXeAUy0GWnoSTBh3y3KxalaDZ+o4tjNkkUP2CGtpjm9egQR7LZ
-         SlR1fT1bR0lVeze0GRcoIzTKqH3Qkh2MaTkcwhR557RrDBQphQ8a5ZmGt08VRK+i41y5
-         iiPuOlU710H2+BlpcyjXhZrdMEHNaCLK02iyEj9vX2OJeKgAAUP0YpzkyDV/XTlKAeNk
-         j01NQ2WTb1CcbzpZhp78gZlMAw8bHLnOhqylWQEZDk6w6AP1FF7d1cmOYYvy8JYVkk1Q
-         DOgVn8yNFO1l81EdzXY1Ym4zK50eDItsMlSG8BWFzZRONioW6aMIRM1tq1443ndksvBY
-         kJmw==
-X-Gm-Message-State: APjAAAVJvWykbjdp86WFVq9S1DV4FxgvcZGSohJVCRw2X73i075zn64k
-        PdShhpJCvY6KUwHUsOrsidY=
-X-Google-Smtp-Source: APXvYqyjVFpph7/24EuaCkLtlSkCRXfV12RopfUIZwS2NC7cgP+3sapHWD+hq/qUV4UzYntz/oF2Dw==
-X-Received: by 2002:a17:902:6a8a:: with SMTP id n10mr25391320plk.146.1575819838806;
-        Sun, 08 Dec 2019 07:43:58 -0800 (PST)
+        bh=UlHR1cLkK+qvjBqY37LG2uLeLSuSj/jaGCEhl3kRhik=;
+        b=TXwZBtkD5z+xm1FIfxUySoHPXV7tzeOZPDn8qs5Ig3Aze45JmKcrWOC2Dvvi2wDGyY
+         dzKhHqYVrkEobSgDd63uhsdT4Ye2jRoMaOoblB2zqQp1dtulpceVmCSnATD/Fa9OHSh+
+         YtanVXA8Ptg5RSvn3idyBUQ+t8OAZoiy2f9a7D7EUE1RmZ0/y/swREOtpJW1RBeloket
+         OzQ51QHQE8m9WSuRESgXdOSkdAkhhAXXJmUXXw3TSYI1KLSOEJF6yrSWrOSzNWxOSba3
+         2HOs0ok2V8I8y+HYsBmcudbvCL55iNPaqxK/yoHv4mzAiYUTZp34HzbNaRkeah3IBNrx
+         Dkbw==
+X-Gm-Message-State: APjAAAUQTKcNpVJGUGde9eAm3a38GRrJnGeFgSpqYBYmWTJpq2lia07A
+        yG5THBOx9VXNA/03x+yTZMbl77PM
+X-Google-Smtp-Source: APXvYqwKqAMxazO/icHYT2tnWovIIFgxV1LG0F4m7gjg0Z2grDwWIKWwnvrUxkT+lEX1qQnQB2/3fg==
+X-Received: by 2002:a62:ed16:: with SMTP id u22mr25849758pfh.28.1575824675799;
+        Sun, 08 Dec 2019 09:04:35 -0800 (PST)
 Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id g10sm21828933pgh.35.2019.12.08.07.43.57
+        by smtp.gmail.com with ESMTPSA id 9sm24829312pfx.177.2019.12.08.09.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Dec 2019 07:43:58 -0800 (PST)
-Date:   Sun, 8 Dec 2019 23:43:53 +0800
+        Sun, 08 Dec 2019 09:04:35 -0800 (PST)
+Date:   Mon, 9 Dec 2019 01:04:30 +0800
 From:   Eryu Guan <guaneryu@gmail.com>
 To:     Omar Sandoval <osandov@osandov.com>
 Cc:     fstests@vger.kernel.org, kernel-team@fb.com,
         linux-xfs@vger.kernel.org
 Subject: Re: [PATCH v3] generic: test truncating mixed written/unwritten XFS
  realtime extent
-Message-ID: <20191208154350.GL8664@desktop>
+Message-ID: <20191208170430.GN8664@desktop>
 References: <110dbf3ff8c8004e4eecef2cc2e84dfe2d3ddd9f.1575416911.git.osandov@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -156,18 +156,8 @@ On Tue, Dec 03, 2019 at 03:51:52PM -0800, Omar Sandoval wrote:
 > +	extra_options="$extra_options -bsize=$bs"
 > +	extra_options="$extra_options -r extsize=$((bs * rextsize))"
 > +	extra_options="$extra_options -d agsize=$(((maxextlen + 1) * bs / 2)),rtinherit=1"
-
-reflink is enabled by default since xfsprogs v5.1.0, and this causes
-_scratch_mkfs to fail as "reflink not supported with realtime devices",
-so I added a check here
-
-	if _scratch_mkfs_xfs_supported -m reflink=0 >/dev/null 2>&1; then
-		extra_options="$extra_options -m reflink=0"
-	fi
-
-Thanks,
-Eryu
-
+> +fi
+> +_scratch_mkfs $extra_options >>$seqres.full 2>&1
 > +_scratch_mount
 > +_require_fs_space "$SCRATCH_MNT" $((filesz / 1024))
 > +
@@ -224,6 +214,13 @@ Eryu
 >  587 auto quick rw prealloc
 >  588 auto quick log clone
 > +589 auto prealloc preallocrw dangerous
+
+Also, I noticed that the fixes are already in latest upstream kernel, so
+I removed dangerous group as well.
+
+Thanks,
+Eryu
+
 > -- 
 > 2.24.0
 > 
