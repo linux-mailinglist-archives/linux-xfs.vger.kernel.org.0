@@ -2,57 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 218AF119917
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Dec 2019 22:46:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0756211A3FC
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2019 06:41:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfLJVmn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Dec 2019 16:42:43 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50636 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727528AbfLJVmm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Dec 2019 16:42:42 -0500
-Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B877A3A2AEE;
-        Wed, 11 Dec 2019 08:42:37 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ienHB-0005YB-5U; Wed, 11 Dec 2019 08:42:37 +1100
-Date:   Wed, 11 Dec 2019 08:42:37 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pavel Reichl <preichl@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4] mkfs: Break block discard into chunks of 2 GB
-Message-ID: <20191210214237.GC19256@dread.disaster.area>
-References: <20191210114807.161927-1-preichl@redhat.com>
+        id S1726368AbfLKFln (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Dec 2019 00:41:43 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:40226 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfLKFlm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 00:41:42 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB5dW7N050110;
+        Wed, 11 Dec 2019 05:41:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=+fXfrXH0hYJPF/ShhkWHNS8Izk9UBD75zgcIU72zAS8=;
+ b=H4H7bDtnB1oRf+9OTnwAY4HWml1WjegYRd0OJrDKUcZzCIGPiI12WwkMCJirxJcuhZy3
+ B/zCT7q3t7Umd+hpZIxKnmVIxW84gQd3sZ1jRu1gkdeo84RIKV/gufd7pteNLM4JAhPr
+ kVRIrN+3TDY0uNF+BnXytuGBJibgTPBTdGogGkgR7fCQk2FQugE6azsBBjJU0IzN99rW
+ 9zjGV9k96AiMVZVjcj1hAQZ6bm9IU3nUW5eG8UQUvL2JznKfLKz/SRwBfPjGq5QnRSZ8
+ zaUz0dLS9VJMGJvILUMwpXuNqgQMTpGJpyC3shlt74MZyRT7cBv7Rl8n/mBAdMd424J6 yA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wrw4n7713-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 05:41:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB5ddY4013898;
+        Wed, 11 Dec 2019 05:39:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wtk2gx29r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 05:39:39 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBB5cRx0007114;
+        Wed, 11 Dec 2019 05:38:27 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Dec 2019 21:38:26 -0800
+Subject: [PATCH 0/2] xfs: test xfs_scrub media scan
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     guaneryu@gmail.com, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Date:   Tue, 10 Dec 2019 21:38:25 -0800
+Message-ID: <157604270553.578515.11375769780919670829.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210114807.161927-1-preichl@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=2JpbOsn2kNieY1kDmUgA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912110049
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912110049
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:48:07PM +0100, Pavel Reichl wrote:
-> Some users are not happy about the BLKDISCARD taking too long and at the same
-> time not being informed about that - so they think that the command actually
-> hung.
-> 
-> This commit changes code so that progress reporting is possible and also typing
-> the ^C will cancel the ongoing BLKDISCARD.
-> 
-> Signed-off-by: Pavel Reichl <preichl@redhat.com>
+Hi all,
 
-Looks fine to me.
+Simple tests of the xfs_scrub media verifier that uses dm-error to
+simulate disk errors and ensure that the reporting is accurate.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-media-error-reporting
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=scrub-media-error-reporting
