@@ -2,502 +2,510 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83BEC11A3F9
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2019 06:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2131E11A48A
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2019 07:34:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfLKFjm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Dec 2019 00:39:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33592 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfLKFjm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 00:39:42 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB5dcMO032068;
-        Wed, 11 Dec 2019 05:39:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=GwQ54tRNVBQdjZTtjaiC6frvVQdPpXWln4/AheHh0bE=;
- b=rnASfjdwmiEMYjvr4CaymhyfbLHzoIAVGRGfYwIAUOkUUFKpG09xLMsAPIk49O8OvPXW
- xQr6awZV3r8DlG85zsNfybTrEWKpbvZPuGZ0/fgmenUTfRtuHUnEmQqaBdfb4VyLaTH2
- c3RjiFZefEboN796FiameTwftMb+6mqCOX9VmWzhrhPFQYmGXME/OKGhzLpnBZmJZ/bJ
- 67oLszA90dE0KqOFyPdobwF7mN4Hi3Bxo5nffNiU2LYWhmy0accOB5FVPw/N6c24HhC4
- dYS8WQK82UrWW/vBylyLTO+Gbvp5N2wDn5znm9VOY692ol3LhqNRQPWglA2fPtpDT3vf oQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wr4qrj8g1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 05:39:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB5cvxi026326;
-        Wed, 11 Dec 2019 05:39:37 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wte9bcspx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 05:39:37 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBB5dbed007858;
-        Wed, 11 Dec 2019 05:39:37 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Dec 2019 21:38:39 -0800
-Subject: [PATCH 2/2] xfs: test xfs_scrub phase 6 media error reporting
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     guaneryu@gmail.com, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 10 Dec 2019 21:38:38 -0800
-Message-ID: <157604271809.578515.1806500868635425865.stgit@magnolia>
-In-Reply-To: <157604270553.578515.11375769780919670829.stgit@magnolia>
-References: <157604270553.578515.11375769780919670829.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1726151AbfLKGeN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Dec 2019 01:34:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55605 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726208AbfLKGeN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 01:34:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576046050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8hC+lyVgBAgdiR8u700LnYAPf7oRSuJv3NC/hcWMAT0=;
+        b=BIP4Z/AYfk28KrOWSuy6cbWBGIMrvpJj221vPo/W5B5Z8banOeJd1YfqUGSvXw32d2QY2a
+        uMxbio8zn1SGxcPQ6/mmgX/FrGX8RnpVFWXR+xEGUxyzKJUvP5sfLZ0i+5CmbmirtaEYUp
+        nkBHgAvtlSW64ukasay7lhtbuyZYZYc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-isZuIVk6OjuYN_QRN2YnjA-1; Wed, 11 Dec 2019 01:34:07 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67C7E1800D45;
+        Wed, 11 Dec 2019 06:34:06 +0000 (UTC)
+Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93BB919C69;
+        Wed, 11 Dec 2019 06:34:05 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 14:42:16 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfstests: xfs mount option sanity test
+Message-ID: <20191211064216.GA14328@dhcp-12-102.nay.redhat.com>
+Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+References: <20191030103410.2239-1-zlang@redhat.com>
+ <20191030163922.GB15224@magnolia>
+ <20191030232453.GD3802@dhcp-12-102.nay.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912110049
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912110049
+In-Reply-To: <20191030232453.GD3802@dhcp-12-102.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: isZuIVk6OjuYN_QRN2YnjA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Oct 31, 2019 at 07:24:53AM +0800, Zorro Lang wrote:
+> On Wed, Oct 30, 2019 at 09:39:22AM -0700, Darrick J. Wong wrote:
+> > On Wed, Oct 30, 2019 at 06:34:10PM +0800, Zorro Lang wrote:
+> > > XFS is changing to suit the new mount API, so add this case to make
+> > > sure the changing won't bring in regression issue on xfs mount option
+> > > parse phase, and won't change some default behaviors either.
+> > >=20
+> > > Signed-off-by: Zorro Lang <zlang@redhat.com>
+> > > ---
+> > >=20
+> > > Hi,
+> > >=20
+> > > V2 did below changes:
+> > > 1) Fix wrong output messages in _do_test function
+> >=20
+> > Hmm, I still see this on 5.4-rc4:
+> >=20
+> > +[FAILED]: mount /dev/loop0 /mnt/148.mnt -o logbsize=3D16384
+> > +ERROR: expect there's logbsize=3D16k in , but found
+>                                              ^^^
+>                                              not
+>=20
+> > +[FAILED]: mount /dev/loop0 /mnt/148.mnt -o logbsize=3D16k
+> > +ERROR: expect there's logbsize=3D16k in , but found
+>                                              ^^^
+>                                              not
+>=20
+> Sorry for this typo, I'll fix it.
+>=20
+> >=20
+> > Oh, right, you're stripping out MKFS_OPTIONS and formatting a loop
+> > device, which on my system means you get rmapbt=3D1 by default and
+> > whatnot.
+>=20
+> Hmm...  why rmapbt=3D1 cause logbsize=3D16k can't be displayed in /proc/m=
+ounts?
+>=20
+> Actually set MKFS_OPTIONS=3D"" is not helpful for this case, due to I run
+> "$MKFS_XFS_PROG -f $* $LOOP_DEV" directly. I strip out MKFS_OPTIONS,
+> because I use SCRACH_DEV at first :)
+>=20
+> >=20
+> > I think the larger problem here might be that now we have to figure out
+> > the special-casing of some of these options.
+>=20
+> Maybe we should avoid the testing about those behaviors can't be sure, if=
+ we
+> can't make it have a fixed output.
 
-Add new helpers to dmerror to provide for marking selected ranges
-totally bad -- both reads and writes will fail.  Create a new test for
-xfs_scrub to check that it reports media errors correctly.
+It's been long time passed. I still don't have a proper way to reproduce an=
+d
+avoid this failure you hit. Does anyone has a better idea for this case?
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- common/dmerror    |  107 +++++++++++++++++++++++++++++++++++++++++-
- tests/xfs/747     |  136 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/747.out |   12 +++++
- tests/xfs/748     |  102 ++++++++++++++++++++++++++++++++++++++++
- tests/xfs/748.out |    5 ++
- tests/xfs/group   |    2 +
- 6 files changed, 363 insertions(+), 1 deletion(-)
- create mode 100755 tests/xfs/747
- create mode 100644 tests/xfs/747.out
- create mode 100755 tests/xfs/748
- create mode 100644 tests/xfs/748.out
+Thanks,
+Zorro
 
-
-diff --git a/common/dmerror b/common/dmerror
-index ca1c7335..ee3051f1 100644
---- a/common/dmerror
-+++ b/common/dmerror
-@@ -62,7 +62,7 @@ _dmerror_load_error_table()
- 	$DMSETUP_PROG suspend $suspend_opt error-test
- 	[ $? -ne 0 ] && _fail  "dmsetup suspend failed"
- 
--	$DMSETUP_PROG load error-test --table "$DMERROR_TABLE"
-+	echo "$DMERROR_TABLE" | $DMSETUP_PROG load error-test
- 	load_res=$?
- 
- 	$DMSETUP_PROG resume error-test
-@@ -94,3 +94,108 @@ _dmerror_load_working_table()
- 	[ $load_res -ne 0 ] && _fail "dmsetup failed to load error table"
- 	[ $resume_res -ne 0 ] && _fail  "dmsetup resume failed"
- }
-+
-+# Given a list of (start, length) tuples on stdin, combine adjacent tuples into
-+# larger ones and write the new list to stdout.
-+__dmerror_combine_extents()
-+{
-+	awk 'BEGIN{start = 0; len = 0;}{
-+if (start + len == $1) {
-+	len += $2;
-+} else {
-+	if (len > 0)
-+		printf("%d %d\n", start, len);
-+	start = $1;
-+	len = $2;
-+}
-+} END {
-+	if (len > 0)
-+		printf("%d %d\n", start, len);
-+}'
-+}
-+
-+# Given a block device, the name of a preferred dm target, the name of an
-+# implied dm target, and a list of (start, len) tuples on stdin, create a new
-+# dm table which maps each of the tuples to the preferred target and all other
-+# areas to the implied dm target.
-+__dmerror_recreate_map()
-+{
-+	local device="$1"
-+	local preferred_tgt="$2"
-+	local implied_tgt="$3"
-+	local size=$(blockdev --getsz "$device")
-+
-+	awk -v device="$device" -v size=$size -v implied_tgt="$implied_tgt" \
-+		-v preferred_tgt="$preferred_tgt" 'BEGIN{implied_start = 0;}{
-+	extent_start = $1;
-+	extent_len = $2;
-+
-+	if (extent_start > size) {
-+		extent_start = size;
-+		extent_len = 0;
-+	} else if (extent_start + extent_len > size) {
-+		extent_len = size - extent_start;
-+	}
-+
-+	if (implied_start < extent_start)
-+		printf("%d %d %s %s %d\n", implied_start,
-+				extent_start - implied_start, implied_tgt,
-+				device, implied_start);
-+	printf("%d %d %s %s %d\n", extent_start, extent_len, preferred_tgt,
-+			device, extent_start);
-+	implied_start = extent_start + extent_len;
-+}END{
-+	if (implied_start < size)
-+		printf("%d %d %s %s %d\n", implied_start, size - implied_start,
-+				implied_tgt, device, implied_start);
-+}'
-+}
-+
-+# Update the dm error table so that the range (start, len) maps to the
-+# preferred dm target, overriding anything that maps to the implied dm target.
-+# This assumes that the only desired targets for this dm device are the
-+# preferred and and implied targets.  The optional fifth argument can be used
-+# to change the underlying device.
-+__dmerror_change()
-+{
-+	local start="$1"
-+	local len="$2"
-+	local preferred_tgt="$3"
-+	local implied_tgt="$4"
-+	local dm_backing_dev="$5"
-+	test -z "$dm_backing_dev" && dm_backing_dev="$SCRATCH_DEV"
-+
-+	DMERROR_TABLE="$( (echo "$DMERROR_TABLE"; echo "$start $len $preferred_tgt") | \
-+		awk -v type="$preferred_tgt" '{if ($3 == type) print $0;}' | \
-+		sort -g | \
-+		__dmerror_combine_extents | \
-+		__dmerror_recreate_map "$dm_backing_dev" "$preferred_tgt" \
-+				"$implied_tgt" )"
-+}
-+
-+# Reset the dm error table to everything ok.  The dm device itself must be
-+# remapped by calling _dmerror_load_error_table.
-+_dmerror_reset_table()
-+{
-+	DMERROR_TABLE="$DMLINEAR_TABLE"
-+}
-+
-+# Update the dm error table so that IOs to the given range will return EIO.
-+# The dm device itself must be remapped by calling _dmerror_load_error_table.
-+_dmerror_mark_range_bad()
-+{
-+	local start="$1"
-+	local len="$2"
-+
-+	__dmerror_change "$start" "$len" error linear
-+}
-+
-+# Update the dm error table so that IOs to the given range will succeed.
-+# The dm device itself must be remapped by calling _dmerror_load_error_table.
-+_dmerror_mark_range_good()
-+{
-+	local start="$1"
-+	local len="$2"
-+
-+	__dmerror_change "$start" "$len" linear error
-+}
-diff --git a/tests/xfs/747 b/tests/xfs/747
-new file mode 100755
-index 00000000..f5894411
---- /dev/null
-+++ b/tests/xfs/747
-@@ -0,0 +1,136 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 747
-+#
-+# Check xfs_scrub's media scan can actually return diagnostic information for
-+# media errors in file data extents.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.error
-+	_dmerror_cleanup
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/fuzzy
-+. ./common/filter
-+. ./common/dmerror
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_supported_os Linux
-+_require_dm_target error
-+_require_scratch_xfs_crc
-+_require_scrub
-+
-+rm -f $seqres.full
-+
-+filter_scrub_errors() {
-+	_filter_scratch | sed -e "s/offset $((blksz * 2)) /offset 2FSB /g" \
-+		-e "s/length $blksz.*/length 1FSB./g"
-+}
-+
-+_scratch_mkfs > $tmp.mkfs
-+_dmerror_init
-+_dmerror_mount >> $seqres.full 2>&1
-+
-+_supports_xfs_scrub $SCRATCH_MNT $SCRATCH_DEV || _notrun "Scrub not supported"
-+
-+victim=$SCRATCH_MNT/a
-+$XFS_IO_PROG -f -c "pwrite -S 0x58 0 1m" -c "fsync" $victim >> $seqres.full
-+bmap_str="$($XFS_IO_PROG -c "bmap -elpv" $victim | grep "^[[:space:]]*0:")"
-+echo "$bmap_str" >> $seqres.full
-+
-+phys="$(echo "$bmap_str" | awk '{print $3}')"
-+len="$(echo "$bmap_str" | awk '{print $6}')"
-+blksz=$(_get_file_block_size $SCRATCH_MNT)
-+sectors_per_block=$((blksz / 512))
-+
-+# Did we get at least 4 fs blocks worth of extent?
-+min_len_sectors=$(( 4 * sectors_per_block ))
-+test "$len" -lt $min_len_sectors && \
-+	_fail "could not format a long enough extent on an empty fs??"
-+
-+phys_start=$(echo "$phys" | sed -e 's/\.\..*//g')
-+
-+
-+echo ":$phys:$len:$blksz:$phys_start" >> $seqres.full
-+echo "victim file:" >> $seqres.full
-+od -tx1 -Ad -c $victim >> $seqres.full
-+
-+# Reset the dmerror table so that all IO will pass through.
-+_dmerror_reset_table
-+
-+cat >> $seqres.full << ENDL
-+dmerror before:
-+$DMERROR_TABLE
-+<end table>
-+ENDL
-+
-+# Now mark /only/ the middle of the extent bad.
-+_dmerror_mark_range_bad $(( phys_start + (2 * sectors_per_block) + 1 )) 1
-+
-+cat >> $seqres.full << ENDL
-+dmerror after marking bad:
-+$DMERROR_TABLE
-+<end table>
-+ENDL
-+
-+_dmerror_load_error_table
-+
-+# See if the media scan picks it up.
-+echo "Scrub for injected media error (single threaded)"
-+
-+# Once in single-threaded mode
-+_scratch_scrub -b -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# Once in parallel mode
-+echo "Scrub for injected media error (multi threaded)"
-+_scratch_scrub -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# Remount to flush the page cache and reread to see the IO error
-+_dmerror_unmount
-+_dmerror_mount
-+echo "victim file:" >> $seqres.full
-+od -tx1 -Ad -c $victim >> $seqres.full 2> $tmp.error
-+cat $tmp.error | _filter_scratch
-+
-+# Scrub again to re-confirm the media error across a remount
-+echo "Scrub for injected media error (after remount)"
-+_scratch_scrub -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# Now mark the bad range good.
-+_dmerror_mark_range_good $(( phys_start + (2 * sectors_per_block) + 1 )) 1
-+_dmerror_load_error_table
-+
-+cat >> $seqres.full << ENDL
-+dmerror after marking good:
-+$DMERROR_TABLE
-+<end table>
-+ENDL
-+
-+echo "Scrub after removing injected media error"
-+
-+# Scrub one last time to make sure the error's gone.
-+_scratch_scrub -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/747.out b/tests/xfs/747.out
-new file mode 100644
-index 00000000..f85f1753
---- /dev/null
-+++ b/tests/xfs/747.out
-@@ -0,0 +1,12 @@
-+QA output created by 747
-+Scrub for injected media error (single threaded)
-+Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
-+SCRATCH_MNT: unfixable errors found: 1
-+Scrub for injected media error (multi threaded)
-+Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
-+SCRATCH_MNT: unfixable errors found: 1
-+od: SCRATCH_MNT/a: read error: Input/output error
-+Scrub for injected media error (after remount)
-+Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
-+SCRATCH_MNT: unfixable errors found: 1
-+Scrub after removing injected media error
-diff --git a/tests/xfs/748 b/tests/xfs/748
-new file mode 100755
-index 00000000..130cc6f2
---- /dev/null
-+++ b/tests/xfs/748
-@@ -0,0 +1,102 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-newer
-+# Copyright (c) 2019, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 748
-+#
-+# Check xfs_scrub's media scan can actually return diagnostic information for
-+# media errors in filesystem metadata.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.error $tmp.fsmap
-+	_dmerror_cleanup
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/fuzzy
-+. ./common/filter
-+. ./common/dmerror
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_supported_os Linux
-+_require_dm_target error
-+_require_xfs_scratch_rmapbt
-+_require_scrub
-+
-+rm -f $seqres.full
-+
-+filter_scrub_errors() {
-+	_filter_scratch | sed -e "s/disk offset [0-9]*: /disk offset NNN: /g" \
-+		-e "/errors found:/d" -e 's/phase6.c line [0-9]*/!/g' \
-+		-e "/corruptions found:/d" | uniq
-+}
-+
-+_scratch_mkfs > $tmp.mkfs
-+_dmerror_init
-+_dmerror_mount >> $seqres.full 2>&1
-+
-+_supports_xfs_scrub $SCRATCH_MNT $SCRATCH_DEV || _notrun "Scrub not supported"
-+
-+# Create a bunch of metadata so that we can mark them bad in the next step.
-+victim=$SCRATCH_MNT/a
-+$FSSTRESS_PROG -z -n 200 -p 10 \
-+	       -f creat=10 \
-+	       -f resvsp=1 \
-+	       -f truncate=1 \
-+	       -f punch=1 \
-+	       -f chown=5 \
-+	       -f mkdir=5 \
-+	       -f mknod=1 \
-+	       -d $victim >> $seqres.full 2>&1
-+
-+# Mark all the metadata bad
-+_dmerror_reset_table
-+$XFS_IO_PROG -c "fsmap -n100 -vvv" $victim | grep inodes > $tmp.fsmap
-+while read a b c crap; do
-+	phys="$(echo $c | sed -e 's/^.\([0-9]*\)\.\.\([0-9]*\).*$/\1:\2/g')"
-+	target_begin="$(echo "$phys" | cut -d ':' -f 1)"
-+	target_end="$(echo "$phys" | cut -d ':' -f 2)"
-+
-+	_dmerror_mark_range_bad $target_begin $((target_end - target_begin))
-+done < $tmp.fsmap
-+cat $tmp.fsmap >> $seqres.full
-+
-+cat >> $seqres.full << ENDL
-+dmerror after marking bad:
-+$DMERROR_TABLE
-+<end table>
-+ENDL
-+
-+_dmerror_load_error_table
-+
-+# See if the media scan picks it up.
-+echo "Scrub for injected media error"
-+
-+XFS_SCRUB_PHASE=6 _scratch_scrub -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# Make the disk work again
-+_dmerror_load_working_table
-+
-+echo "Scrub after removing injected media error"
-+
-+# Scrub one last time to make sure the error's gone.
-+XFS_SCRUB_PHASE=6 _scratch_scrub -x >> $seqres.full 2> $tmp.error
-+cat $tmp.error | filter_scrub_errors
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/748.out b/tests/xfs/748.out
-new file mode 100644
-index 00000000..49dc2d7a
---- /dev/null
-+++ b/tests/xfs/748.out
-@@ -0,0 +1,5 @@
-+QA output created by 748
-+Scrub for injected media error
-+Corruption: disk offset NNN: media error in inodes. (!)
-+SCRATCH_MNT: Unmount and run xfs_repair.
-+Scrub after removing injected media error
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 18a593d9..3a58864b 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -509,3 +509,5 @@
- 510 auto ioctl quick
- 511 auto quick quota
- 741 auto quick rw
-+747 auto quick scrub
-+748 auto quick scrub
+>=20
+> Thanks,
+> Zorro
+>=20
+> >=20
+> > --D
+> >=20
+> > > 2) Remove logbufs=3DN and logbsize=3DN default display test. Lastest =
+upstream
+> > >    kernel displays these options in /proc/mounts by default, but old =
+kernel
+> > >    doesn't show them except user indicate these options when mount xf=
+s.
+> > >    Refer to https://marc.info/?l=3Dfstests&m=3D157199699615477&w=3D2
+> > >=20
+> > > Thanks,
+> > > Zorro
+> > >=20
+> > >  tests/xfs/148     | 320 ++++++++++++++++++++++++++++++++++++++++++++=
+++
+> > >  tests/xfs/148.out |   6 +
+> > >  tests/xfs/group   |   1 +
+> > >  3 files changed, 327 insertions(+)
+> > >  create mode 100755 tests/xfs/148
+> > >  create mode 100644 tests/xfs/148.out
+> > >=20
+> > > diff --git a/tests/xfs/148 b/tests/xfs/148
+> > > new file mode 100755
+> > > index 00000000..a662f6f7
+> > > --- /dev/null
+> > > +++ b/tests/xfs/148
+> > > @@ -0,0 +1,320 @@
+> > > +#! /bin/bash
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +# Copyright (c) 2019 Red Hat, Inc. All Rights Reserved.
+> > > +#
+> > > +# FS QA Test 148
+> > > +#
+> > > +# XFS mount options sanity check, refer to 'man 5 xfs'.
+> > > +#
+> > > +seq=3D`basename $0`
+> > > +seqres=3D$RESULT_DIR/$seq
+> > > +echo "QA output created by $seq"
+> > > +
+> > > +here=3D`pwd`
+> > > +tmp=3D/tmp/$$
+> > > +status=3D1=09# failure is the default!
+> > > +trap "_cleanup; exit \$status" 0 1 2 3 15
+> > > +
+> > > +_cleanup()
+> > > +{
+> > > +=09cd /
+> > > +=09rm -f $tmp.*
+> > > +=09$UMOUNT_PROG $LOOP_MNT 2>/dev/null
+> > > +=09if [ -n "$LOOP_DEV" ];then
+> > > +=09=09_destroy_loop_device $LOOP_DEV 2>/dev/null
+> > > +=09fi
+> > > +=09if [ -n "$LOOP_SPARE_DEV" ];then
+> > > +=09=09_destroy_loop_device $LOOP_SPARE_DEV 2>/dev/null
+> > > +=09fi
+> > > +=09rm -f $LOOP_IMG
+> > > +=09rm -f $LOOP_SPARE_IMG
+> > > +=09rmdir $LOOP_MNT
+> > > +}
+> > > +
+> > > +# get standard environment, filters and checks
+> > > +. ./common/rc
+> > > +. ./common/filter
+> > > +
+> > > +# remove previous $seqres.full before test
+> > > +rm -f $seqres.full
+> > > +
+> > > +# real QA test starts here
+> > > +_supported_fs xfs
+> > > +_supported_os Linux
+> > > +_require_test
+> > > +_require_loop
+> > > +_require_xfs_io_command "falloc"
+> > > +
+> > > +LOOP_IMG=3D$TEST_DIR/$seq.dev
+> > > +LOOP_SPARE_IMG=3D$TEST_DIR/$seq.logdev
+> > > +LOOP_MNT=3D$TEST_DIR/$seq.mnt
+> > > +
+> > > +echo "** create loop device"
+> > > +$XFS_IO_PROG -f -c "falloc 0 1g" $LOOP_IMG
+> > > +LOOP_DEV=3D`_create_loop_device $LOOP_IMG`
+> > > +
+> > > +echo "** create loop log device"
+> > > +$XFS_IO_PROG -f -c "falloc 0 512m" $LOOP_SPARE_IMG
+> > > +LOOP_SPARE_DEV=3D`_create_loop_device $LOOP_SPARE_IMG`
+> > > +
+> > > +echo "** create loop mount point"
+> > > +rmdir $LOOP_MNT 2>/dev/null
+> > > +mkdir -p $LOOP_MNT || _fail "cannot create loopback mount point"
+> > > +
+> > > +# avoid the effection from MKFS_OPTIONS
+> > > +MKFS_OPTIONS=3D""
+> > > +do_mkfs()
+> > > +{
+> > > +=09$MKFS_XFS_PROG -f $* $LOOP_DEV | _filter_mkfs >$seqres.full 2>$tm=
+p.mkfs
+> > > +=09if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+> > > +=09=09_fail "Fails on _mkfs_dev $* $LOOP_DEV"
+> > > +=09fi
+> > > +=09. $tmp.mkfs
+> > > +}
+> > > +
+> > > +is_dev_mounted()
+> > > +{
+> > > +=09findmnt --source $LOOP_DEV >/dev/null
+> > > +=09return $?
+> > > +}
+> > > +
+> > > +get_mount_info()
+> > > +{
+> > > +=09findmnt --source $LOOP_DEV -o OPTIONS -n
+> > > +}
+> > > +
+> > > +force_unmount()
+> > > +{
+> > > +=09$UMOUNT_PROG $LOOP_MNT >/dev/null 2>&1
+> > > +}
+> > > +
+> > > +# _do_test <mount options> <should be mounted?> [<key string> <key s=
+hould be found?>]
+> > > +_do_test()
+> > > +{
+> > > +=09local opts=3D"$1"
+> > > +=09local mounted=3D"$2"=09# pass or fail
+> > > +=09local key=3D"$3"
+> > > +=09local found=3D"$4"=09# true or false
+> > > +=09local rc
+> > > +=09local info
+> > > +
+> > > +=09# mount test
+> > > +=09_mount $LOOP_DEV $LOOP_MNT $opts 2>/dev/null
+> > > +=09rc=3D$?
+> > > +=09if [ $rc -eq 0 ];then
+> > > +=09=09if [ "${mounted}" =3D "fail" ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: expect ${mounted}, but pass"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09=09is_dev_mounted
+> > > +=09=09if [ $? -ne 0 ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: fs not mounted even mount return 0"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09else
+> > > +=09=09if [ "${mount_ret}" =3D "pass" ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: expect ${mounted}, but fail"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09=09is_dev_mounted
+> > > +=09=09if [ $? -eq 0 ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: fs is mounted even mount return non-zero"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09fi
+> > > +
+> > > +=09# Skip below checking if "$key" argument isn't specified
+> > > +=09if [ -z "$key" ];then
+> > > +=09=09return 0
+> > > +=09fi
+> > > +=09# Check the mount options after fs mounted.
+> > > +=09info=3D`get_mount_info`
+> > > +=09echo $info | grep -q "${key}"
+> > > +=09rc=3D$?
+> > > +=09if [ $rc -eq 0 ];then
+> > > +=09=09if [ "$found" !=3D "true" ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: expect there's not $key in $info, but not foun=
+d"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09else
+> > > +=09=09if [ "$found" !=3D "false" ];then
+> > > +=09=09=09echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
+> > > +=09=09=09echo "ERROR: expect there's $key in $info, but found"
+> > > +=09=09=09return 1
+> > > +=09=09fi
+> > > +=09fi
+> > > +
+> > > +=09return 0
+> > > +}
+> > > +
+> > > +do_test()
+> > > +{
+> > > +=09# force unmount before testing
+> > > +=09force_unmount
+> > > +=09_do_test "$@"
+> > > +=09# force unmount after testing
+> > > +=09force_unmount
+> > > +}
+> > > +
+> > > +echo "** start xfs mount testing ..."
+> > > +# Test allocsize=3Dsize
+> > > +# Valid values for this option are page size (typically 4KiB) throug=
+h to 1GiB
+> > > +do_mkfs
+> > > +if [ $dbsize -ge 1024 ];then
+> > > +=09blsize=3D"$((dbsize / 1024))k"
+> > > +fi
+> > > +do_test "" pass "allocsize" "false"
+> > > +do_test "-o allocsize=3D$blsize" pass "allocsize=3D$blsize" "true"
+> > > +do_test "-o allocsize=3D1048576k" pass "allocsize=3D1048576k" "true"
+> > > +do_test "-o allocsize=3D$((dbsize / 2))" fail
+> > > +do_test "-o allocsize=3D2g" fail
+> > > +
+> > > +# Test attr2
+> > > +do_mkfs -m crc=3D1
+> > > +do_test "" pass "attr2" "true"
+> > > +do_test "-o attr2" pass "attr2" "true"
+> > > +do_test "-o noattr2" fail
+> > > +do_mkfs -m crc=3D0
+> > > +do_test "" pass "attr2" "true"
+> > > +do_test "-o attr2" pass "attr2" "true"
+> > > +do_test "-o noattr2" pass "attr2" "false"
+> > > +
+> > > +# Test discard
+> > > +do_mkfs
+> > > +do_test "" pass "discard" "false"
+> > > +do_test "-o discard" pass "discard" "true"
+> > > +do_test "-o nodiscard" pass "discard" "false"
+> > > +
+> > > +# Test grpid|bsdgroups|nogrpid|sysvgroups
+> > > +do_test "" pass "grpid" "false"
+> > > +do_test "-o grpid" pass "grpid" "true"
+> > > +do_test "-o bsdgroups" pass "grpid" "true"
+> > > +do_test "-o nogrpid" pass "grpid" "false"
+> > > +do_test "-o sysvgroups" pass "grpid" "false"
+> > > +
+> > > +# Test filestreams
+> > > +do_test "" pass "filestreams" "false"
+> > > +do_test "-o filestreams" pass "filestreams" "true"
+> > > +
+> > > +# Test ikeep
+> > > +do_test "" pass "ikeep" "false"
+> > > +do_test "-o ikeep" pass "ikeep" "true"
+> > > +do_test "-o noikeep" pass "ikeep" "false"
+> > > +
+> > > +# Test inode32|inode64
+> > > +do_test "" pass "inode64" "true"
+> > > +do_test "-o inode32" pass "inode32" "true"
+> > > +do_test "-o inode64" pass "inode64" "true"
+> > > +
+> > > +# Test largeio
+> > > +do_test "" pass "largeio" "false"
+> > > +do_test "-o largeio" pass "largeio" "true"
+> > > +do_test "-o nolargeio" pass "largeio" "false"
+> > > +
+> > > +# Test logbufs=3Dvalue. Valid numbers range from 2=E2=80=938 inclusi=
+ve.
+> > > +# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buff=
+er_size)
+> > > +# prints "logbufs=3DN" in /proc/mounts, but old kernel not. So the d=
+efault
+> > > +# 'display' about logbufs can't be expected, disable this test.
+> > > +#do_test "" pass "logbufs" "false"
+> > > +do_test "-o logbufs=3D8" pass "logbufs=3D8" "true"
+> > > +do_test "-o logbufs=3D2" pass "logbufs=3D2" "true"
+> > > +do_test "-o logbufs=3D1" fail
+> > > +do_test "-o logbufs=3D9" fail
+> > > +do_test "-o logbufs=3D99999999999999" fail
+> > > +
+> > > +# Test logbsize=3Dvalue.
+> > > +do_mkfs -m crc=3D1 -l version=3D2
+> > > +# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buff=
+er_size)
+> > > +# prints "logbsize=3DN" in /proc/mounts, but old kernel not. So the =
+default
+> > > +# 'display' about logbsize can't be expected, disable this test.
+> > > +#do_test "" pass "logbsize" "false"
+> > > +do_test "-o logbsize=3D16384" pass "logbsize=3D16k" "true"
+> > > +do_test "-o logbsize=3D16k" pass "logbsize=3D16k" "true"
+> > > +do_test "-o logbsize=3D32k" pass "logbsize=3D32k" "true"
+> > > +do_test "-o logbsize=3D64k" pass "logbsize=3D64k" "true"
+> > > +do_test "-o logbsize=3D128k" pass "logbsize=3D128k" "true"
+> > > +do_test "-o logbsize=3D256k" pass "logbsize=3D256k" "true"
+> > > +do_test "-o logbsize=3D8k" fail
+> > > +do_test "-o logbsize=3D512k" fail
+> > > +do_mkfs -m crc=3D0 -l version=3D1
+> > > +# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buff=
+er_size)
+> > > +# prints "logbsize=3DN" in /proc/mounts, but old kernel not. So the =
+default
+> > > +# 'display' about logbsize can't be expected, disable this test.
+> > > +#do_test "" pass "logbsize" "false"
+> > > +do_test "-o logbsize=3D16384" pass "logbsize=3D16k" "true"
+> > > +do_test "-o logbsize=3D16k" pass "logbsize=3D16k" "true"
+> > > +do_test "-o logbsize=3D32k" pass "logbsize=3D32k" "true"
+> > > +do_test "-o logbsize=3D64k" fail
+> > > +
+> > > +# Test logdev
+> > > +do_mkfs
+> > > +do_test "" pass "logdev" "false"
+> > > +do_test "-o logdev=3D$LOOP_SPARE_DEV" fail
+> > > +do_mkfs -l logdev=3D$LOOP_SPARE_DEV
+> > > +do_test "-o logdev=3D$LOOP_SPARE_DEV" pass "logdev=3D$LOOP_SPARE_DEV=
+" "true"
+> > > +do_test "" fail
+> > > +
+> > > +# Test noalign
+> > > +do_mkfs
+> > > +do_test "" pass "noalign" "false"
+> > > +do_test "-o noalign" pass "noalign" "true"
+> > > +
+> > > +# Test norecovery
+> > > +do_test "" pass "norecovery" "false"
+> > > +do_test "-o norecovery,ro" pass "norecovery" "true"
+> > > +do_test "-o norecovery" fail
+> > > +
+> > > +# Test nouuid
+> > > +do_test "" pass "nouuid" "false"
+> > > +do_test "-o nouuid" pass "nouuid" "true"
+> > > +
+> > > +# Test noquota
+> > > +do_test "" pass "noquota" "true"
+> > > +do_test "-o noquota" pass "noquota" "true"
+> > > +
+> > > +# Test uquota/usrquota/quota/uqnoenforce/qnoenforce
+> > > +do_test "" pass "usrquota" "false"
+> > > +do_test "-o uquota" pass "usrquota" "true"
+> > > +do_test "-o usrquota" pass "usrquota" "true"
+> > > +do_test "-o quota" pass "usrquota" "true"
+> > > +do_test "-o uqnoenforce" pass "usrquota" "true"
+> > > +do_test "-o qnoenforce" pass "usrquota" "true"
+> > > +
+> > > +# Test gquota/grpquota/gqnoenforce
+> > > +do_test "" pass "grpquota" "false"
+> > > +do_test "-o gquota" pass "grpquota" "true"
+> > > +do_test "-o grpquota" pass "grpquota" "true"
+> > > +do_test "-o gqnoenforce" pass "gqnoenforce" "true"
+> > > +
+> > > +# Test pquota/prjquota/pqnoenforce
+> > > +do_test "" pass "prjquota" "false"
+> > > +do_test "-o pquota" pass "prjquota" "true"
+> > > +do_test "-o prjquota" pass "prjquota" "true"
+> > > +do_test "-o pqnoenforce" pass "pqnoenforce" "true"
+> > > +
+> > > +# Test sunit=3Dvalue and swidth=3Dvalue
+> > > +do_mkfs -d sunit=3D128,swidth=3D128
+> > > +do_test "-o sunit=3D8,swidth=3D8" pass "sunit=3D8,swidth=3D8" "true"
+> > > +do_test "-o sunit=3D8,swidth=3D64" pass "sunit=3D8,swidth=3D64" "tru=
+e"
+> > > +do_test "-o sunit=3D128,swidth=3D128" pass "sunit=3D128,swidth=3D128=
+" "true"
+> > > +do_test "-o sunit=3D256,swidth=3D256" pass "sunit=3D256,swidth=3D256=
+" "true"
+> > > +do_test "-o sunit=3D2,swidth=3D2" fail
+> > > +
+> > > +# Test swalloc
+> > > +do_mkfs
+> > > +do_test "" pass "swalloc" "false"
+> > > +do_test "-o swalloc" pass "swalloc" "true"
+> > > +
+> > > +# Test wsync
+> > > +do_test "" pass "wsync" "false"
+> > > +do_test "-o wsync" pass "wsync" "true"
+> > > +
+> > > +echo "** end of testing"
+> > > +# success, all done
+> > > +status=3D0
+> > > +exit
+> > > diff --git a/tests/xfs/148.out b/tests/xfs/148.out
+> > > new file mode 100644
+> > > index 00000000..a71d9231
+> > > --- /dev/null
+> > > +++ b/tests/xfs/148.out
+> > > @@ -0,0 +1,6 @@
+> > > +QA output created by 148
+> > > +** create loop device
+> > > +** create loop log device
+> > > +** create loop mount point
+> > > +** start xfs mount testing ...
+> > > +** end of testing
+> > > diff --git a/tests/xfs/group b/tests/xfs/group
+> > > index f4ebcd8c..019aebad 100644
+> > > --- a/tests/xfs/group
+> > > +++ b/tests/xfs/group
+> > > @@ -145,6 +145,7 @@
+> > >  145 dmapi
+> > >  146 dmapi
+> > >  147 dmapi
+> > > +148 auto quick mount
+> > >  150 dmapi
+> > >  151 dmapi
+> > >  152 dmapi
+> > > --=20
+> > > 2.20.1
+> > >=20
+>=20
 
