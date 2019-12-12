@@ -2,132 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5120E11C00C
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2019 23:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4BF111C4D1
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 05:19:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfLKWqX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Dec 2019 17:46:23 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46912 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726411AbfLKWqX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 17:46:23 -0500
-Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2394B82045C;
-        Thu, 12 Dec 2019 09:46:18 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ifAkL-0005w2-3b; Thu, 12 Dec 2019 09:46:17 +1100
-Date:   Thu, 12 Dec 2019 09:46:17 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Message-ID: <20191211224617.GE19256@dread.disaster.area>
-References: <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
- <20191211173829.GB21797@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211173829.GB21797@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=DKMTVZrBpn61F86xKIIA:9 a=7pSkhifIAIoKH1Ap:21
-        a=Iepqc9itoRpRa7oB:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-        a=1c-WWmYQErFem0j6iXEC:22
+        id S1727734AbfLLER3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Dec 2019 23:17:29 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49918 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbfLLER3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 23:17:29 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4FVuA145703
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:17:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2019-08-05;
+ bh=ChJ6YY3TXTEokDCaLGneNsgDznxtZmoyWlxi2StjB9A=;
+ b=HRNumdeJI6/BvgkFmIY8RpLJuy7S/wgpi3yx49ZkNs/rHv1VmcslUPoECc6cKw6cI0nr
+ YYgdc5UEKEZaxxHUt+GOjFB5w3HX9solYYmVcLDAj0VcrRevtezP/CPaXcMXWHcFWQCR
+ K9pd/+gFc29SUQCDU1wxbrpoR6mywUjvm7nTDWDJsSB+q0yqQzbtQCBNxTnm2TUpZN5d
+ fp8ZjxzofsvhlBE6yBmoIRc55tGSpbhcD+YpBLdIJeAJxJCHBmSpP2W147Jl+wEMgH1A
+ YRFCwALPnj1zZP0lb6HIdtAgx1K4m9KrroP/JI6kmZNp1ooN/7pCLBz2OqVSa4Q9JnBK uA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wrw4ndbhx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:17:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4E404127161
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:15:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2wu2fvekmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:15:27 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBC4FQ4P017121
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:15:26 GMT
+Received: from localhost.localdomain (/67.1.205.161)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Dec 2019 20:15:26 -0800
+From:   Allison Collins <allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v5 00/14] xfs: Delay Ready Attributes
+Date:   Wed, 11 Dec 2019 21:14:59 -0700
+Message-Id: <20191212041513.13855-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120022
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:08:29PM +0530, Srikar Dronamraju wrote:
-> A running task can wake-up a per CPU bound kthread on the same CPU.
-> If the current running task doesn't yield the CPU before the next load
-> balance operation, the scheduler would detect load imbalance and try to
-> balance the load. However this load balance would fail as the waiting
-> task is CPU bound, while the running task cannot be moved by the regular
-> load balancer. Finally the active load balancer would kick in and move
-> the task to a different CPU/Core. Moving the task to a different
-> CPU/core can lead to loss in cache affinity leading to poor performance.
-> 
-> This is more prone to happen if the current running task is CPU
-> intensive and the sched_wake_up_granularity is set to larger value.
-> When the sched_wake_up_granularity was relatively small, it was observed
-> that the bound thread would complete before the load balancer would have
-> chosen to move the cache hot task to a different CPU.
-> 
-> To deal with this situation, the current running task would yield to a
-> per CPU bound kthread, provided kthread is not CPU intensive.
+Hi all,
 
-So a question for you here: when does the workqueue worker pre-empt
-the currently running task? Is it immediately? Or when a time-slice
-of the currently running task runs out?
+This set is a subset of a larger series for delayed attributes. Which
+is a subset of an even larger series, parent pointers. Delayed attributes
+allow attribute operations (set and remove) to be logged and committed in
+the same way that other delayed operations do. This allows more complex 
+operations (like parent pointers) to be broken up into multiple smaller 
+transactions. To do this, the existing attr operations must be modified to
+operate as either a delayed operation or a inline operation since older
+filesystems will not be able to use the new log entries. This means that 
+they cannot roll, commit, or finish transactions. Instead, they return 
+EAGAIN an allow the calling function to handle the transaction. In this
+series, we focus on only the clean up and refactoring needed to accomplish
+this. We will introduce delayed attrs and parent pointers in a later set.
 
-We don't want queued work immediately pre-empting the task that
-queued the work - the queued work is *deferred* work that should be
-run _soon_ but we want the currently running task to finish what it
-is doing first if possible. i.e. these are not synchronous wakeups,
-and so we shouldn't schedule kworker threads as though they are sync
-wakeups. That will affect batch processing effciency and reduce
-throughput because it will greatly increase the number of
-unnecessary context switches during IO completion processing....
+Changes since v4:
+Mostly review updates and nits collected since v4.  I've added an
+xfs_name_init to patch 2 to consolidate some of the initialization. The state
+machine is introduced in patch 13 and then expanded as needed 14.  I've also
+adjusted some of the conditional logic in the delay ready routines such that
+we avoid nested gotos.
 
-> /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
-> 
-> (With sched_wake_up_granularity set to 15ms)
-> 
-> Performance counter stats for 'system wide' (5 runs):
-> event					    v5.4 				v5.4 + patch(v3)
-> probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                     4  ( +- 20.48% )
-> sched:sched_waking                     441,535  ( +-  0.17% )               914,630  ( +-  0.18% )
-> sched:sched_wakeup                     441,533  ( +-  0.17% )               914,630  ( +-  0.18% )
-> sched:sched_wakeup_new                   2,436  ( +-  8.08% )                   545  ( +-  4.02% )
-> sched:sched_switch                     797,007  ( +-  0.26% )             1,490,261  ( +-  0.10% )
-> sched:sched_migrate_task                20,998  ( +-  1.04% )                 2,492  ( +- 11.56% )
+I've also made the corresponding updates to the user space side, and
+xfstests as well.
 
-As we see here. We've doubled the number of context switches
-(increased by 700,000) just to avoid 17,000 incorrect load balancer
-task migrations.
+Questions, comment and feedback appreciated! 
 
-That seems like we now make 700,000 incorrect decisions instead of
-just 20,000. The difference is that the consequence of making these
-many incorrect pre-emption decisions is vastly less than the
-consequence of making the wrong migration decision.
+Thanks all!
+Allison
 
-It seems to me that we should be checking this is_per_cpu_kthread()
-state for tasks queued on the runqueue during active load balancing,
-rather than at wakeup time.  i.e. in these cases we don't migrate
-the running task, we just let it run out it's timeslice out and the
-local per-cpu kthreads then run appropriately.
+Allison Collins (12):
+  xfs: Replace attribute parameters with struct xfs_name
+  xfs: Embed struct xfs_name in xfs_da_args
+  xfs: Factor out new helper functions xfs_attr_rmtval_set
+  xfs: Factor up trans handling in xfs_attr3_leaf_flipflags
+  xfs: Factor out xfs_attr_leaf_addname helper
+  xfs: Factor up xfs_attr_try_sf_addname
+  xfs: Factor up trans roll from xfs_attr3_leaf_setflag
+  xfs: Factor out xfs_attr_rmtval_invalidate
+  xfs: Factor up trans roll in xfs_attr3_leaf_clearflag
+  xfs: Check for -ENOATTR or -EEXIST
+  xfs: Add delay ready attr remove routines
+  xfs: Add delay ready attr set routines
 
-AFAICT this would have the same effect of avoiding unnecessary task
-migrations in this workload, but without causing a global change to
-the way workqueue kworkers are scheduled that has the potential to
-cause regressions in other workqueue intensive workloads....
+Allison Henderson (2):
+  xfs: Remove all strlen in all xfs_attr_* functions for attr names.
+  xfs: Add xfs_has_attr and subroutines
 
-Cheers,
+ fs/xfs/libxfs/xfs_attr.c        | 802 ++++++++++++++++++++++++++++------------
+ fs/xfs/libxfs/xfs_attr.h        |   9 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c   | 219 ++++++-----
+ fs/xfs/libxfs/xfs_attr_leaf.h   |   3 +
+ fs/xfs/libxfs/xfs_attr_remote.c | 103 ++++--
+ fs/xfs/libxfs/xfs_attr_remote.h |   4 +-
+ fs/xfs/libxfs/xfs_da_btree.c    |   6 +-
+ fs/xfs/libxfs/xfs_da_btree.h    |  33 +-
+ fs/xfs/libxfs/xfs_dir2.c        |  18 +-
+ fs/xfs/libxfs/xfs_dir2_block.c  |   6 +-
+ fs/xfs/libxfs/xfs_dir2_leaf.c   |   6 +-
+ fs/xfs/libxfs/xfs_dir2_node.c   |   8 +-
+ fs/xfs/libxfs/xfs_dir2_sf.c     |  30 +-
+ fs/xfs/libxfs/xfs_types.c       |  10 +
+ fs/xfs/libxfs/xfs_types.h       |   1 +
+ fs/xfs/scrub/attr.c             |  12 +-
+ fs/xfs/scrub/common.c           |   2 +
+ fs/xfs/xfs_acl.c                |  26 +-
+ fs/xfs/xfs_attr_list.c          |   1 +
+ fs/xfs/xfs_ioctl.c              |  18 +-
+ fs/xfs/xfs_ioctl32.c            |   2 +
+ fs/xfs/xfs_iops.c               |   8 +-
+ fs/xfs/xfs_trace.h              |  20 +-
+ fs/xfs/xfs_xattr.c              |  21 +-
+ 24 files changed, 918 insertions(+), 450 deletions(-)
 
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+2.7.4
+
