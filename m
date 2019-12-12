@@ -2,133 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31C5411D4C9
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 19:01:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CD6211D5E7
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 19:38:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfLLSBt convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 12 Dec 2019 13:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730148AbfLLSBt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:01:49 -0500
-From:   bugzilla-daemon@bugzilla.kernel.org
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 205833] fsfreeze blocks close(fd) on xfs sometimes
-Date:   Thu, 12 Dec 2019 18:01:48 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: bfoster@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-205833-201763-fYBg0CAq2E@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-205833-201763@https.bugzilla.kernel.org/>
-References: <bug-205833-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S1730444AbfLLSiU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Dec 2019 13:38:20 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:21723 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730427AbfLLSiU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Dec 2019 13:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1576175900; x=1607711900;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Yzq8zYld7NGqoSLiavkVyh+2krjFk621+a8Vx86muSs=;
+  b=lk6Af0r5QHNPnZywdik5aVsJ5U402Z60vT/4ZDvMsnSsw3CvOLpHJxzu
+   K686/z07AH7xvJamJH/zlRFF/rJIcHVEaNKO3MTSAtrSvIFzRyVaxO/xe
+   TC+8iqYnkYeE6oyOBHsxe+EhpHTpueBXrCvznyNI87D7+ykSa7iKVeAks
+   OhbLb5jcnBS5Du2OplJevFlD3s9iOTmnBRUX0pd6yjv4Zs61S4c3nLnAA
+   YtDur1Fcq+91GOvm2Dcfoq82cRvteyC/KAkxiysXvI5/++Hkn27/FyypA
+   ZrcjXDcUdS36aO6BEhMcmzMgjuor58GsDzpTWKz4XJjcoFWJyEURq61uz
+   A==;
+IronPort-SDR: b1+aXZ0u+ZtqMHzrn0UtVKKE4WBEFJIXMOpotz+lXEQ7bCS7aiUDbf+4AUTGd0lk6fouvBgVbS
+ XR7rrxL4yNF9ORM5H6hFSgywrfJ1zQnhVOIuj70h90ahXa4ZWWNdxlfilSW/MZv7bhgfesA7Ls
+ pWi1Pf6Nk700v3vcP1eY5ogedFtyhhCWIVsep9+sSJy+6qw/xcnzEE+QI8tNSbpya5U4hceeeZ
+ RqnL0WxQOr+/KxNXJs6HUkSmxSlPAdh8sYmaDPEzXmF/760+XWkEZFARbqiHquJ/6BsJBMpjUx
+ sGw=
+X-IronPort-AV: E=Sophos;i="5.69,306,1571673600"; 
+   d="scan'208";a="129654454"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2019 02:38:19 +0800
+IronPort-SDR: h7N+v+recdJeZQ+8I9uh2pthv01QyUGCqOzB+zAKHySt+TYWGYTCZjttLbnxnoNF5Y+TRBUAvS
+ NIplnhOhg/77XBSKxkLZcmPkG39x8uUCSEYs1Z5d9DcVvuvoCrtTgntEdyWVZ3qZvTMvPehNEr
+ Qdydgebxd2jt1VCmudxkulkKK0up/evQt8QAZSABo8K153IfqgSh1+/7qXr7/EYS2sCHR0+3s7
+ h9YwuiiQFxZH8i6h8BN56U8M25Sco4oUOoKutKHqcUSwQd4o9wCmlbLYMBj9/z/hSRaZfvFJf6
+ Z+nnqP4Gfus4rQdDptKnYKjx
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:32:52 -0800
+IronPort-SDR: TPgPTPQlHtvgIqj7eK2+O+Gg7txK7Lf/sg7RxKrMHrZnCyjUL7PaTX1kLoGO2r1Jv9yXoOoYIw
+ 53KvuTynalDHC4MQPD5z75DqS42pwnELCFtSTSVdf/P1awUo+DD9ZJu+dRYckR2oW0dAYWWt3n
+ 0inWPL5vYCtjpSsTl1cuNlY0UEGzL5L2MiUmhH8CJg7z+SXOB1cYcHReT3Ew0utcM8wsMKdTzl
+ UOnCm0V712HkojiW0BUmeEvqIMHn+NGB2lNDfRFrePjpFJFNbrARDxwiTcI3jJwueYYQIO+vVR
+ ef8=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 12 Dec 2019 10:38:17 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 0/2] New zonefs file system
+Date:   Fri, 13 Dec 2019 03:38:14 +0900
+Message-Id: <20191212183816.102402-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205833
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
---- Comment #1 from bfoster@redhat.com ---
-On Wed, Dec 11, 2019 at 02:03:52PM +0000, bugzilla-daemon@bugzilla.kernel.org
-wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=205833
-> 
->             Bug ID: 205833
->            Summary: fsfreeze blocks close(fd) on xfs sometimes
->            Product: File System
->            Version: 2.5
->     Kernel Version: 4.15.0-55-generic #60-Ubuntu
->           Hardware: Intel
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: normal
->           Priority: P1
->          Component: XFS
->           Assignee: filesystem_xfs@kernel-bugs.kernel.org
->           Reporter: kernel.org@estada.ch
->         Regression: No
-> 
-> Dear all
-> 
-> I noticed the bug while setting up a backup with fsfreeze and restic.
-> 
-> How I reproduce it:
-> 
->     1. Write multiple MB to a file (eg. 100MB) while after one or two MB
->     freeze
-> the filesystem from the sidecar pod
->     2. From the sidecar pod, issue multiple `strace tail
->     /generated/data/0.txt`
->     3. After a couple of tries strace shows that the `read(...)` works but
-> `close(...)` hangs
->     4. From now on all `read(...)` operations are blocked until the freeze is
-> lifted
-> 
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-I'm not familiar with your user environment, but it sounds like the use
-case is essentially to read a file concurrently being written to and
-freeze the fs. From there, you're expecting the readers to exit but
-instead observe them blocked on close().
+zonefs IO management implementation uses the new iomap generic code.
 
-The ceaveat to note here is that close() is not necessarily a read-only
-operation from the perspective of XFS internals. A close() (or
-->release() from the fs perspective) can do things like truncate
-post-eof block allocation, which requires a transaction and thus blocks
-on a frozen fs. To confirm, could you post a stack trace of one of your
-blocked reader tasks (i.e. 'cat /proc/<pid>/stack')?
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
 
-I'm not necessarily sure blocking here is a bug if that is the
-situation. We most likely wouldn't want to skip post-eof truncation on a
-file simply because the fs was frozen. That said, I thought Dave had
-proposed patches at one point to mitigate free space fragmentation side
-effects of post-eof truncation, and one such patch was to skip the
-truncation on read-only fds. I'll have to dig around or perhaps Dave can
-chime in, but I'm curious if that would also help with this use case..
-
-Brian
-
-> System: Ubuntu 18.04.3 LTS
-> CPU: Intel(R) Xeon(R) CPU X5650  @ 2.67GHz
-> Storage: /dev/mapper/mpathXX on /var/lib/kubelet/plugins/hpe.com/... type xfs
-> (rw,noatime,attr2,inode64,noquota)
-> 
-> I used this tool to generate the file. The number of concurrent files does
-> not
-> appear to matter that much. I was able to trigger the bug, tested with 2, 4
-> and
-> 32 parallel files:
-> https://gitlab.com/dns2utf8/multi_file_writer
-> 
-> Cheers,
-> Stefan
-> 
-> PS: I opened a bug at the tool vendor too:
-> https://github.com/vmware-tanzu/velero/issues/2113
-> 
-> -- 
-> You are receiving this mail because:
-> You are watching the assignee of the bug.
->
+ Documentation/filesystems/zonefs.txt |  150 ++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1158 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1503 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
 
 -- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+2.23.0
+
