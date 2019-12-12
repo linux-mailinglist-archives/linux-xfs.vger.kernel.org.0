@@ -2,55 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B422C11D4C8
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 19:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C5411D4C9
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 19:01:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfLLSBs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Dec 2019 13:01:48 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34285 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730034AbfLLSBs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Dec 2019 13:01:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576173708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dAtIMPnXPAmRN5c8ogP3gmaxPCv12KR71V4MrWXrjjc=;
-        b=RmX8wXFHHwiG9VvReMNQlSO6b+cIUrYavDZZtEY/IMn/POEtXD3rSoRuJmBCHX5pPqcqNQ
-        s3yxK/yfcxQwwkw/4cpZC4HQ3MZ4L1EVv+MVdNMBQ9nMMBn7QIt7FPddW68UtJ6BaDUHBN
-        polne0solAEszqDznEZsTuf8qMf02l0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-lH63_70AN9KRDe8S9pwZWQ-1; Thu, 12 Dec 2019 13:01:44 -0500
-X-MC-Unique: lH63_70AN9KRDe8S9pwZWQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E5A4800D4E;
-        Thu, 12 Dec 2019 18:01:43 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 365A8601B6;
-        Thu, 12 Dec 2019 18:01:43 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 13:01:42 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     bugzilla-daemon@bugzilla.kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [Bug 205833] New: fsfreeze blocks close(fd) on xfs sometimes
-Message-ID: <20191212180142.GA37977@bfoster>
-References: <bug-205833-201763@https.bugzilla.kernel.org/>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        id S1730082AbfLLSBt convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 12 Dec 2019 13:01:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730148AbfLLSBt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:01:49 -0500
+From:   bugzilla-daemon@bugzilla.kernel.org
+Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 205833] fsfreeze blocks close(fd) on xfs sometimes
+Date:   Thu, 12 Dec 2019 18:01:48 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: bfoster@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-205833-201763-fYBg0CAq2E@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-205833-201763@https.bugzilla.kernel.org/>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <bug-205833-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:03:52PM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=205833
+
+--- Comment #1 from bfoster@redhat.com ---
+On Wed, Dec 11, 2019 at 02:03:52PM +0000, bugzilla-daemon@bugzilla.kernel.org
+wrote:
 > https://bugzilla.kernel.org/show_bug.cgi?id=205833
 > 
 >             Bug ID: 205833
@@ -75,9 +73,11 @@ On Wed, Dec 11, 2019 at 02:03:52PM +0000, bugzilla-daemon@bugzilla.kernel.org wr
 > 
 > How I reproduce it:
 > 
->     1. Write multiple MB to a file (eg. 100MB) while after one or two MB freeze
+>     1. Write multiple MB to a file (eg. 100MB) while after one or two MB
+>     freeze
 > the filesystem from the sidecar pod
->     2. From the sidecar pod, issue multiple `strace tail /generated/data/0.txt`
+>     2. From the sidecar pod, issue multiple `strace tail
+>     /generated/data/0.txt`
 >     3. After a couple of tries strace shows that the `read(...)` works but
 > `close(...)` hangs
 >     4. From now on all `read(...)` operations are blocked until the freeze is
@@ -111,8 +111,10 @@ Brian
 > Storage: /dev/mapper/mpathXX on /var/lib/kubelet/plugins/hpe.com/... type xfs
 > (rw,noatime,attr2,inode64,noquota)
 > 
-> I used this tool to generate the file. The number of concurrent files does not
-> appear to matter that much. I was able to trigger the bug, tested with 2, 4 and
+> I used this tool to generate the file. The number of concurrent files does
+> not
+> appear to matter that much. I was able to trigger the bug, tested with 2, 4
+> and
 > 32 parallel files:
 > https://gitlab.com/dns2utf8/multi_file_writer
 > 
@@ -125,5 +127,8 @@ Brian
 > -- 
 > You are receiving this mail because:
 > You are watching the assignee of the bug.
-> 
+>
 
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
