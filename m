@@ -2,54 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D383911C4DD
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 05:19:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEEC111C4DF
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Dec 2019 05:19:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfLLESN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1727891AbfLLESN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 11 Dec 2019 23:18:13 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47928 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbfLLESM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 23:18:12 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4EIUR130875
+Received: from userp2130.oracle.com ([156.151.31.86]:50596 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727862AbfLLESN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Dec 2019 23:18:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4EIig144622
         for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=m1qZS+WB0VO5PM09x2nn4eyrjOsMD02g//a61auKeUc=;
- b=WpJ6fH5xaKXR1zAlTuEco/AyAg17wuAIEHTNYpcZ4NbYxjY/ojWyRqioMGVBCB3SawIg
- Hl90Ki3RkR3vZ4kvgrZSQasREWRacdk1i8E8+n8zDl2P/jRMFWqeQvF8gwU7MOjAo31n
- pfML4hBYiUSob//jQAKDclGSESz9xZZP4jySyWwdQG9P/0c6wg0CCUhFoZjFZLZrsadp
- BTrvp7ZaGYUmnwhPo9eTKfhm0ODivur59WB2rPBn8Q0DT0pAndxXKuWJdmR7BSVxd6/o
- NDtQnkJDcMGd8WWrhR0txB7NicccTqVvGIw4N0MdIBvblYn/AWlOZZiTOo0OJxanWuS6 Ug== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wr41qggxk-1
+ bh=qeEzDfW4D7O7QOEy33kmQ5MUyiTdr38GWNqHGV/E6pA=;
+ b=ah86Aufgp80dLdBh25/ygTD5zh6HZ56yKBDL4WTfOfYT4oqISwiS46a/SD62H6MiAjB1
+ yHr3Cx1jImEiFShW7jjXzCjZBlx0x6rjezU+odtF2fR6F5U7zo2L7WfVIoq6jxTxVdCF
+ OWIzV0ejUqUgErHsNv0OIC1YsVOYnVaODPcH+5a0OfUJekxnvUewO1uEUJo73whbcdfw
+ vsvIVzc2bZ0/uQImgXJ8UNQds0gJC3UAHm4artLsjSttG1OV84e4ywWIhqt8EHm4UXO8
+ kDTjkOgmdekBoMJ9F43a2YbtPkssiJoXFgT8in/s9TC3ZfQI+PFz9b7sWVgHA37HBoGt Vg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wrw4ndbkv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4E5sc127265
-        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2wu2fvep6y-1
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC4E7ud128127
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2wu5cs3h3e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:10 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBC4I9KC018545
-        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:09 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBC4I9fn026322
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Dec 2019 04:18:10 GMT
 Received: from localhost.localdomain (/67.1.205.161)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Wed, 11 Dec 2019 20:18:09 -0800
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v5 08/14] xfsprogs: Factor up xfs_attr_try_sf_addname
-Date:   Wed, 11 Dec 2019 21:17:57 -0700
-Message-Id: <20191212041803.14018-9-allison.henderson@oracle.com>
+Subject: [PATCH v5 09/14] xfsprogs: Factor up trans roll from xfs_attr3_leaf_setflag
+Date:   Wed, 11 Dec 2019 21:17:58 -0700
+Message-Id: <20191212041803.14018-10-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191212041803.14018-1-allison.henderson@oracle.com>
 References: <20191212041803.14018-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=938
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-1912120022
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
@@ -63,96 +63,49 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-New delayed attribute routines cannot handle transactions. We
-can factor up the commit, but there is little left in this
-function other than some error handling and an ichgtime. So
-hoist all of xfs_attr_try_sf_addname up at this time.  We will
-remove all the commits in this set.
+New delayed allocation routines cannot be handling
+transactions so factor them up into the calling functions
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- libxfs/xfs_attr.c | 54 ++++++++++++++++++++++--------------------------------
- 1 file changed, 22 insertions(+), 32 deletions(-)
+ libxfs/xfs_attr.c      | 5 +++++
+ libxfs/xfs_attr_leaf.c | 5 +----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index eb078e8..4327ef1 100644
+index 4327ef1..442f549 100644
 --- a/libxfs/xfs_attr.c
 +++ b/libxfs/xfs_attr.c
-@@ -220,34 +220,6 @@ xfs_attr_calc_size(
- 	return nblks;
+@@ -1205,6 +1205,11 @@ xfs_attr_node_removename(
+ 		error = xfs_attr3_leaf_setflag(args);
+ 		if (error)
+ 			goto out;
++
++		error = xfs_trans_roll_inode(&args->trans, args->dp);
++		if (error)
++			goto out;
++
+ 		error = xfs_attr_rmtval_remove(args);
+ 		if (error)
+ 			goto out;
+diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
+index 19566da..67a1349 100644
+--- a/libxfs/xfs_attr_leaf.c
++++ b/libxfs/xfs_attr_leaf.c
+@@ -2780,10 +2780,7 @@ xfs_attr3_leaf_setflag(
+ 			 XFS_DA_LOGRANGE(leaf, name_rmt, sizeof(*name_rmt)));
+ 	}
+ 
+-	/*
+-	 * Commit the flag value change and start the next trans in series.
+-	 */
+-	return xfs_trans_roll_inode(&args->trans, args->dp);
++	return error;
  }
  
--STATIC int
--xfs_attr_try_sf_addname(
--	struct xfs_inode	*dp,
--	struct xfs_da_args	*args)
--{
--
--	struct xfs_mount	*mp = dp->i_mount;
--	int			error, error2;
--
--	error = xfs_attr_shortform_addname(args);
--	if (error == -ENOSPC)
--		return error;
--
--	/*
--	 * Commit the shortform mods, and we're done.
--	 * NOTE: this is also the error path (EEXIST, etc).
--	 */
--	if (!error && (args->name.type & ATTR_KERNOTIME) == 0)
--		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
--
--	if (mp->m_flags & XFS_MOUNT_WSYNC)
--		xfs_trans_set_sync(args->trans);
--
--	error2 = xfs_trans_commit(args->trans);
--	args->trans = NULL;
--	return error ? error : error2;
--}
--
  /*
-  * Set the attribute specified in @args.
-  */
-@@ -257,7 +229,7 @@ xfs_attr_set_args(
- {
- 	struct xfs_inode	*dp = args->dp;
- 	struct xfs_buf          *leaf_bp = NULL;
--	int			error;
-+	int			error, error2 = 0;;
- 
- 	/*
- 	 * If the attribute list is non-existent or a shortform list,
-@@ -276,9 +248,27 @@ xfs_attr_set_args(
- 		/*
- 		 * Try to add the attr to the attribute list in the inode.
- 		 */
--		error = xfs_attr_try_sf_addname(dp, args);
--		if (error != -ENOSPC)
--			return error;
-+
-+		error = xfs_attr_shortform_addname(args);
-+
-+		/* Should only be 0, -EEXIST or ENOSPC */
-+		if (error != -ENOSPC) {
-+			/*
-+			 * Commit the shortform mods, and we're done.
-+			 * NOTE: this is also the error path (EEXIST, etc).
-+			 */
-+			if (!error && (args->name.type & ATTR_KERNOTIME) == 0)
-+				xfs_trans_ichgtime(args->trans, dp,
-+						   XFS_ICHGTIME_CHG);
-+
-+			if (dp->i_mount->m_flags & XFS_MOUNT_WSYNC)
-+				xfs_trans_set_sync(args->trans);
-+
-+			error2 = xfs_trans_commit(args->trans);
-+			args->trans = NULL;
-+			return error ? error : error2;
-+		}
-+
- 
- 		/*
- 		 * It won't fit in the shortform, transform to a leaf block.
 -- 
 2.7.4
 
