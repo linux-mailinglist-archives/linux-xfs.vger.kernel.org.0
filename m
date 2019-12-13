@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03B5911E904
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2019 18:13:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CB811E902
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2019 18:13:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfLMRNE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Dec 2019 12:13:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50541 "EHLO
+        id S1728497AbfLMRND (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Dec 2019 12:13:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21973 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728453AbfLMRNE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Dec 2019 12:13:04 -0500
+        with ESMTP id S1728453AbfLMRND (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Dec 2019 12:13:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576257183;
+        s=mimecast20190719; t=1576257181;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hwlou5WbSD8CQGyyzmWQEiuYNVpACM6xlEvpdfqwxFM=;
-        b=HnYygAADagU9we0nvY/Y5PUuDgCJ9G1B5KOQD3+gDUFKkjRRLwAcraUbpMwyHy7ZhHSS3p
-        hdWq0Tq+7QJJ2kWfiWDnYRWqIbU78URemf5OQX7aScX2ACg/VA4sZeq6HyxhfL8cXhGQja
-        KL5oBZXpclB0txMrkoa0QQLMMynuHA4=
+        bh=wzvEQw/+O+ETUDcGPqQq1dwpqJK9rd7JfL9EeC3OR3s=;
+        b=heunZ1ije6wMmoo+hFs6N6vPORXHHr7H5K+8hiibG4aE3b7f9pT/CFj1LBO5X0lztdTaPa
+        +CVTn2OVImXiPw9WO+fBzdmTr8yg9r+GXAefVkPlWdkt7UNtrHJcFqx5xlfeU0ZhEoLmdL
+        PstlJpAzb8XxTS1y5OUSmOqKqnpP+RE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-ixrY5woQN3Gi-JdI9VC8HA-1; Fri, 13 Dec 2019 12:12:59 -0500
-X-MC-Unique: ixrY5woQN3Gi-JdI9VC8HA-1
+ us-mta-362-5-Kgi_c4PaO0TnrcQsHS7w-1; Fri, 13 Dec 2019 12:13:00 -0500
+X-MC-Unique: 5-Kgi_c4PaO0TnrcQsHS7w-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBEA11005512
-        for <linux-xfs@vger.kernel.org>; Fri, 13 Dec 2019 17:12:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D4F5911AC
+        for <linux-xfs@vger.kernel.org>; Fri, 13 Dec 2019 17:12:59 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B8E219C4F
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFAB319C4F
         for <linux-xfs@vger.kernel.org>; Fri, 13 Dec 2019 17:12:58 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/3] xfs: open code insert range extent split helper
-Date:   Fri, 13 Dec 2019 12:12:56 -0500
-Message-Id: <20191213171258.36934-2-bfoster@redhat.com>
+Subject: [PATCH 2/3] xfs: rework insert range into an atomic operation
+Date:   Fri, 13 Dec 2019 12:12:57 -0500
+Message-Id: <20191213171258.36934-3-bfoster@redhat.com>
 In-Reply-To: <20191213171258.36934-1-bfoster@redhat.com>
 References: <20191213171258.36934-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,111 +48,90 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The insert range operation currently splits the extent at the target
-offset in a separate transaction and lock cycle from the one that
-shifts extents. In preparation for reworking insert range into an
-atomic operation, lift the code into the caller so it can be easily
-condensed to a single rolling transaction and lock cycle and
-eliminate the helper. No functional changes.
+The insert range operation uses a unique transaction and ilock cycle
+for the extent split and each extent shift iteration of the overall
+operation. While this works, it is risks racing with other
+operations in subtle ways such as COW writeback modifying an extent
+tree in the middle of a shift operation.
+
+To avoid this problem, make insert range atomic with respect to
+ilock. Hold the ilock across the entire operation, replace the
+individual transactions with a single rolling transaction sequence
+and relog the inode to keep it moving in the log. This guarantees
+that nothing else can change the extent mapping of an inode while
+an insert range operation is in progress.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c | 32 ++------------------------------
- fs/xfs/libxfs/xfs_bmap.h |  3 ++-
- fs/xfs/xfs_bmap_util.c   | 14 +++++++++++++-
- 3 files changed, 17 insertions(+), 32 deletions(-)
+ fs/xfs/xfs_bmap_util.c | 32 +++++++++++++-------------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index a9ad1f991ba3..2bba0f983e4f 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6021,8 +6021,8 @@ xfs_bmap_insert_extents(
-  * @split_fsb is a block where the extents is split.  If split_fsb lies =
-in a
-  * hole or the first block of extents, just return 0.
-  */
--STATIC int
--xfs_bmap_split_extent_at(
-+int
-+xfs_bmap_split_extent(
- 	struct xfs_trans	*tp,
- 	struct xfs_inode	*ip,
- 	xfs_fileoff_t		split_fsb)
-@@ -6138,34 +6138,6 @@ xfs_bmap_split_extent_at(
- 	return error;
- }
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 829ab1a804c9..555c8b49a223 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -1134,47 +1134,41 @@ xfs_insert_file_space(
+ 	if (error)
+ 		return error;
 =20
--int
--xfs_bmap_split_extent(
--	struct xfs_inode        *ip,
--	xfs_fileoff_t           split_fsb)
--{
--	struct xfs_mount        *mp =3D ip->i_mount;
--	struct xfs_trans        *tp;
--	int                     error;
--
--	error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_write,
--			XFS_DIOSTRAT_SPACE_RES(mp, 0), 0, 0, &tp);
+-	/*
+-	 * The extent shifting code works on extent granularity. So, if stop_fs=
+b
+-	 * is not the starting block of extent, we need to split the extent at
+-	 * stop_fsb.
+-	 */
+ 	error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_write,
+ 			XFS_DIOSTRAT_SPACE_RES(mp, 0), 0, 0, &tp);
+ 	if (error)
+ 		return error;
+=20
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, ip, 0);
+=20
++	/*
++	 * The extent shifting code works on extent granularity. So, if stop_fs=
+b
++	 * is not the starting block of extent, we need to split the extent at
++	 * stop_fsb.
++	 */
+ 	error =3D xfs_bmap_split_extent(tp, ip, stop_fsb);
+ 	if (error)
+ 		goto out_trans_cancel;
+=20
+-	error =3D xfs_trans_commit(tp);
 -	if (error)
 -		return error;
 -
--	xfs_ilock(ip, XFS_ILOCK_EXCL);
--	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+-	while (!error && !done) {
+-		error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_write, 0, 0, 0,
+-					&tp);
++	do {
++		error =3D xfs_trans_roll_inode(&tp, ip);
+ 		if (error)
+-			break;
++			goto out_trans_cancel;
+=20
+-		xfs_ilock(ip, XFS_ILOCK_EXCL);
+-		xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 		error =3D xfs_bmap_insert_extents(tp, ip, &next_fsb, shift_fsb,
+ 				&done, stop_fsb);
+ 		if (error)
+ 			goto out_trans_cancel;
++	} while (!done);
+=20
+-		error =3D xfs_trans_commit(tp);
+-	}
 -
--	error =3D xfs_bmap_split_extent_at(tp, ip, split_fsb);
--	if (error)
--		goto out;
--
--	return xfs_trans_commit(tp);
--
--out:
--	xfs_trans_cancel(tp);
--	return error;
--}
--
- /* Deferred mapping is only for real extents in the data fork. */
- static bool
- xfs_bmap_is_update_needed(
-diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-index 14d25e0b7d9c..f3259ad5c22c 100644
---- a/fs/xfs/libxfs/xfs_bmap.h
-+++ b/fs/xfs/libxfs/xfs_bmap.h
-@@ -222,7 +222,8 @@ int	xfs_bmap_can_insert_extents(struct xfs_inode *ip,=
- xfs_fileoff_t off,
- int	xfs_bmap_insert_extents(struct xfs_trans *tp, struct xfs_inode *ip,
- 		xfs_fileoff_t *next_fsb, xfs_fileoff_t offset_shift_fsb,
- 		bool *done, xfs_fileoff_t stop_fsb);
--int	xfs_bmap_split_extent(struct xfs_inode *ip, xfs_fileoff_t split_offs=
-et);
-+int	xfs_bmap_split_extent(struct xfs_trans *tp, struct xfs_inode *ip,
-+		xfs_fileoff_t split_offset);
- int	xfs_bmapi_reserve_delalloc(struct xfs_inode *ip, int whichfork,
- 		xfs_fileoff_t off, xfs_filblks_t len, xfs_filblks_t prealloc,
- 		struct xfs_bmbt_irec *got, struct xfs_iext_cursor *cur,
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 2efd78a9719e..829ab1a804c9 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1139,7 +1139,19 @@ xfs_insert_file_space(
- 	 * is not the starting block of extent, we need to split the extent at
- 	 * stop_fsb.
- 	 */
--	error =3D xfs_bmap_split_extent(ip, stop_fsb);
-+	error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_write,
-+			XFS_DIOSTRAT_SPACE_RES(mp, 0), 0, 0, &tp);
-+	if (error)
-+		return error;
-+
-+	xfs_ilock(ip, XFS_ILOCK_EXCL);
-+	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
-+
-+	error =3D xfs_bmap_split_extent(tp, ip, stop_fsb);
-+	if (error)
-+		goto out_trans_cancel;
-+
 +	error =3D xfs_trans_commit(tp);
- 	if (error)
- 		return error;
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
+=20
+ out_trans_cancel:
+ 	xfs_trans_cancel(tp);
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
+ }
 =20
 --=20
 2.20.1
