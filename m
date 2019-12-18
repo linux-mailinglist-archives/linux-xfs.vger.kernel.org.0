@@ -2,23 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA2E125742
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 23:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A0D125743
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 23:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLRWx7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Dec 2019 17:53:59 -0500
-Received: from sandeen.net ([63.231.237.45]:49210 "EHLO sandeen.net"
+        id S1726512AbfLRWyr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Dec 2019 17:54:47 -0500
+Received: from sandeen.net ([63.231.237.45]:49276 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfLRWx7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:53:59 -0500
+        id S1726463AbfLRWyr (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:54:47 -0500
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 1FB8BF8BEA
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Dec 2019 16:53:44 -0600 (CST)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
+        by sandeen.net (Postfix) with ESMTPSA id 67CACF8AF6
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Dec 2019 16:54:32 -0600 (CST)
+Subject: [PATCH 1/3] xfsprogs: include headers to fix sparse warnings about
+ statics
 From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: [PATCH 0/3] xfsprogs: trivial sparse tidyups
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+References: <291387f3-1517-14c0-f64a-a98164131f89@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
  nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
@@ -61,20 +63,111 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <291387f3-1517-14c0-f64a-a98164131f89@sandeen.net>
-Date:   Wed, 18 Dec 2019 16:53:57 -0600
+Message-ID: <a67fa479-1749-9485-2fd8-c2a12acea909@sandeen.net>
+Date:   Wed, 18 Dec 2019 16:54:46 -0600
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
+In-Reply-To: <291387f3-1517-14c0-f64a-a98164131f89@sandeen.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-None of these fix bugs, just keep sparse happier so more important
-warnings won't get swamped out.
+From: Eric Sandeen <sandeen@redhat.com>
 
--Eric
+Addresses many "foo was not declared. Should it be static?"
+warnings from sparse.
+
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
+
+diff --git a/libfrog/linux.c b/libfrog/linux.c
+index 79bd79eb..d7264108 100644
+--- a/libfrog/linux.c
++++ b/libfrog/linux.c
+@@ -9,6 +9,7 @@
+ #include <sys/ioctl.h>
+ #include <sys/sysinfo.h>
+ 
++#include "libfrog/platform.h"
+ #include "libxfs_priv.h"
+ #include "xfs_fs.h"
+ #include "init.h"
+diff --git a/libxfs/util.c b/libxfs/util.c
+index 885dd42b..cd303341 100644
+--- a/libxfs/util.c
++++ b/libxfs/util.c
+@@ -28,6 +28,7 @@
+ #include "xfs_da_format.h"
+ #include "xfs_da_btree.h"
+ #include "xfs_dir2_priv.h"
++#include "xfs_health.h"
+ 
+ /*
+  * Calculate the worst case log unit reservation for a given superblock
+diff --git a/libxfs/xfs_ag_resv.c b/libxfs/xfs_ag_resv.c
+index 1328e5de..1fe13bf4 100644
+--- a/libxfs/xfs_ag_resv.c
++++ b/libxfs/xfs_ag_resv.c
+@@ -15,6 +15,8 @@
+ #include "xfs_btree.h"
+ #include "xfs_refcount_btree.h"
+ #include "xfs_ialloc_btree.h"
++#include "xfs_sb.h"
++#include "xfs_ag_resv.h"
+ 
+ /*
+  * Per-AG Block Reservations
+diff --git a/libxfs/xfs_attr_remote.c b/libxfs/xfs_attr_remote.c
+index 7234f86c..1ce6359a 100644
+--- a/libxfs/xfs_attr_remote.c
++++ b/libxfs/xfs_attr_remote.c
+@@ -18,6 +18,7 @@
+ #include "xfs_inode.h"
+ #include "xfs_trans.h"
+ #include "xfs_bmap.h"
++#include "xfs_attr_remote.h"
+ #include "xfs_trace.h"
+ 
+ #define ATTR_RMTVALUE_MAPSIZE	1	/* # of map entries at once */
+diff --git a/libxfs/xfs_bit.c b/libxfs/xfs_bit.c
+index 6a76a5ad..3f97fa3e 100644
+--- a/libxfs/xfs_bit.c
++++ b/libxfs/xfs_bit.c
+@@ -5,6 +5,7 @@
+  */
+ #include "libxfs_priv.h"
+ #include "xfs_log_format.h"
++#include "xfs_bit.h"
+ 
+ /*
+  * XFS bit manipulation routines, used in non-realtime code.
+diff --git a/libxfs/xfs_dir2_data.c b/libxfs/xfs_dir2_data.c
+index 68da426e..044f1272 100644
+--- a/libxfs/xfs_dir2_data.c
++++ b/libxfs/xfs_dir2_data.c
+@@ -13,6 +13,7 @@
+ #include "xfs_mount.h"
+ #include "xfs_inode.h"
+ #include "xfs_dir2.h"
++#include "xfs_dir2_priv.h"
+ #include "xfs_trans.h"
+ 
+ static xfs_failaddr_t xfs_dir2_data_freefind_verify(
+diff --git a/libxfs/xfs_sb.c b/libxfs/xfs_sb.c
+index 583d29aa..4f750d19 100644
+--- a/libxfs/xfs_sb.c
++++ b/libxfs/xfs_sb.c
+@@ -10,6 +10,7 @@
+ #include "xfs_log_format.h"
+ #include "xfs_trans_resv.h"
+ #include "xfs_bit.h"
++#include "xfs_sb.h"
+ #include "xfs_mount.h"
+ #include "xfs_ialloc.h"
+ #include "xfs_alloc.h"
+
