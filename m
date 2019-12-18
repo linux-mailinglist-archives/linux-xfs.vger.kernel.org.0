@@ -2,94 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F15124B25
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 16:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82476124E01
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 17:40:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfLRPOG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Dec 2019 10:14:06 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46735 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfLRPOF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Dec 2019 10:14:05 -0500
-Received: by mail-io1-f67.google.com with SMTP id t26so2303752ioi.13
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Dec 2019 07:14:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
-         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
-         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
-         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
-         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
-         23sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=erClxlRX2pxDxjoh79vmTOFVmiPeiIsG6yjJi7POxQp7zgeu/2LWP6X1AqypJ4oNhM
-         YQzZW0tmkxE58nGqsPQEznDSutmqd+Hgn9bJmfftT685sTYvB0zxcd/iIf8adMyWP/7Y
-         BFEfVmH8XGx49rjcbH9PWVp0sZRRNOBryNCGGxd18yyUixP2YFBFn4O7KaqFbkJHOOP7
-         wBbVZP63nxKKprXwnRnWAaZQoJZdM7FDcajUxg7wzC40MXjcZN75dnLsXlihK7mKHJsV
-         cLVACN7O4/KKXlCbw3rLmKDNxbCdiiTIv9hUFrxiWn6QG7jynYNk1wVqCYp0b5Gnan6H
-         s2Bg==
-X-Gm-Message-State: APjAAAXWMXlIFECCn6ynxfkDT67RjyvdczypuX6auTB3UPDm6x3U8dmj
-        MjxJ8T4ZiMM/0Vh9KglaJBqL8fyaTE5JNxFfJ4fCgUk=
-X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
-X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
- Wed, 18 Dec 2019 07:14:03 -0800 (PST)
+        id S1727217AbfLRQkJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Dec 2019 11:40:09 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:40215 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbfLRQkJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Dec 2019 11:40:09 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MRTIx-1iMu9G3WSb-00NRZ9; Wed, 18 Dec 2019 17:39:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] xfs: rename compat_time_t to old_time32_t
+Date:   Wed, 18 Dec 2019 17:39:28 +0100
+Message-Id: <20191218163954.296726-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
- -0800 (PST)
-Reply-To: dhl.expresscourier102156@outlook.fr
-From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
-Date:   Wed, 18 Dec 2019 16:14:03 +0100
-Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
-        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:E9mF7OYDn9JyQwrHLT+pY4Y1q8BDrhiycRQ3Ygb25o5lMFAbgML
+ r8VIN8pCIoF2EG1eS0sqGdFs16ROCCbwJCM4eSC/EYLBG0P6ZOPrM+WDns2LZkHEOt6dKVZ
+ KigR86K6jd1IXB9Is8ld5PoRU9RZXPkHIF0Ikm07i5N+v7aolUwAq5o8tcWHEe2Aa88Ttmy
+ llvpZ3Q1tHfVjtUL7sAfw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7cATP4CSdSk=:f9D6xz2FFGd7zqBrEqzNNr
+ 25DzUk6VbJWMouHADDk631BIoq1VL5PSh7hi6MN7wfep+gWhhjEucBFmXuR2bO/5OCMvY4mta
+ vqgKF5AmsMkxvawUCqaQx9jqlJYt+V0c40DieoYHeHf9vAficZdjykAMQi1lEz7IsTNnfqKFC
+ /TMI42qGT8keVFBCOH12cYI6rMio/a0LVhxBntLzfQbCqgPdqzc2+v0ZyE/PZ7kHc204eXCmH
+ bVIMh9B04C8NF1hVACl+DoJt9N2f0tWqd7CqzDkzS+BMWZVzCzr09i4m55OonYvDPGoegMKBm
+ ZS7rWzAqtE1AITyw5o6qk/cphSQaBc/7tQzq7UnsXkgCCo9kZsno4XJdeh5+hnkIlX2Ob4wJX
+ RajGiL1S3Kv35a3gUDWFM8zdebH4mahgIsiZGUIkOKeiBHfbiL1G9VyGq0QSTbRnSHM5x+SQi
+ mHVSlXEaCQ39FQVNDnBpUJRRlssjqUHB9ShEY3V8+j19mYM0hnRGqAShlC+fo3QJXfDe4CGlM
+ TfhaUyhamZXOXWxHWrFajja0AaRBC3L0vLcbJE4hS5kn1BGLng2eLIdq3gLwR457YQKuZh04O
+ D7x6Wbf7HocsfpQu2rOdNz9uV3KHehT/U7FnUHY7FcNNXKARfZgRf8GOHj/zc6teMnBwp1k9o
+ Ngk6ivNWG315zPJL7eah7wniA6dIDSAQXeXMgf6p5/QOWfpB5l+vV6k/lp8gpQ6mLSXyIKiAS
+ B0NPEgoYzzGoK1y+rI4p/pShuZcq0fMxeraEw/VyuYarTKmEP3YlNUnzzkYY2A37KPWbwOTBW
+ v4KERGsd9uBcow2SO2fhq7ww64iL5AdyKwz7i1X0lQhBkxO8+1QRZjn7l5nQyxZFmQpH3fTxd
+ fVGYeDs4N4d/GOxBRhYQ==
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Attn Dear.
+The compat_time_t type has been removed everywhere else,
+as most users rely on old_time32_t for both native and
+compat mode handling of 32-bit time_t.
 
-Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
-ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
-=9900, as
-approved this morning, Date, 18/12/2019. Through the Intruction from
-INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
+Remove the last one in xfs.
 
-REGISTRATION NO :EG58945
-PARCEL NUMBER: 140479
-Delivery Schuleded now,
-Finally all we required from you is your ATM Card Proccessing Delivery
-fees $19.00 only which you must send to this DHL service to enable us
-dispatch the parcel to your destination today.
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/xfs/xfs_ioctl32.c | 2 +-
+ fs/xfs/xfs_ioctl32.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Here is our receiving payment details.
-You are advised to send it Via Money Gram Service.
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index c4c4f09113d3..a49bd80b2c3b 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -107,7 +107,7 @@ xfs_ioctl32_bstime_copyin(
+ 	xfs_bstime_t		*bstime,
+ 	compat_xfs_bstime_t	__user *bstime32)
+ {
+-	compat_time_t		sec32;	/* tv_sec differs on 64 vs. 32 */
++	old_time32_t		sec32;	/* tv_sec differs on 64 vs. 32 */
+ 
+ 	if (get_user(sec32,		&bstime32->tv_sec)	||
+ 	    get_user(bstime->tv_nsec,	&bstime32->tv_nsec))
+diff --git a/fs/xfs/xfs_ioctl32.h b/fs/xfs/xfs_ioctl32.h
+index 8c7743cd490e..053de7d894cd 100644
+--- a/fs/xfs/xfs_ioctl32.h
++++ b/fs/xfs/xfs_ioctl32.h
+@@ -32,7 +32,7 @@
+ #endif
+ 
+ typedef struct compat_xfs_bstime {
+-	compat_time_t	tv_sec;		/* seconds		*/
++	old_time32_t	tv_sec;		/* seconds		*/
+ 	__s32		tv_nsec;	/* and nanoseconds	*/
+ } compat_xfs_bstime_t;
+ 
+-- 
+2.20.0
 
-Receiver's Name--------Alan Ude
-Country-------Benin Republic.
-City/ Address--------Cotonou
-Test Question--------In God
-Answer-------We Trust
-Amount------------$US19.00 only
-Mtcn-------------
-Sender's Name-------
-
-Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
-Is Due for delivery to your address today upon confirmation of
-required fee from you asap.
-
-Call us on this phone number for any inquiry. +229 62819378
-Awaiting your urgent response.
-
-MS. MARYANNA B. THOMASON, Shipment director, DHL Express
-Courier Company-Benin
