@@ -2,21 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0C661256A1
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 23:24:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BA2E125742
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 23:54:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfLRWYu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Dec 2019 17:24:50 -0500
-Received: from sandeen.net ([63.231.237.45]:47844 "EHLO sandeen.net"
+        id S1726510AbfLRWx7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Dec 2019 17:53:59 -0500
+Received: from sandeen.net ([63.231.237.45]:49210 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfLRWYt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:24:49 -0500
+        id S1726387AbfLRWx7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:53:59 -0500
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id BE6025A0A3
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Dec 2019 16:24:34 -0600 (CST)
+        by sandeen.net (Postfix) with ESMTPSA id 1FB8BF8BEA
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Dec 2019 16:53:44 -0600 (CST)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [PATCH 0/3] xfsprogs: trivial sparse tidyups
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
  nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
@@ -59,10 +61,8 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs: remove shadow variable in xfs_btree_lshift
-Message-ID: <f0d8bd58-a46b-bf06-5439-696a2f152344@sandeen.net>
-Date:   Wed, 18 Dec 2019 16:24:48 -0600
+Message-ID: <291387f3-1517-14c0-f64a-a98164131f89@sandeen.net>
+Date:   Wed, 18 Dec 2019 16:53:57 -0600
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
@@ -74,28 +74,7 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+None of these fix bugs, just keep sparse happier so more important
+warnings won't get swamped out.
 
-Sparse warns about a shadow variable in this function after the
-Fixed: commit added another int i; with larger scope.  It's safe
-to remove the one with the smaller scope to fix this shadow,
-although the shadow itself is harmless.
-
-Fixes: 2c813ad66a72 ("xfs: support btrees with overlapping intervals for keys")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
-
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index e2cc98931552..b22c7e928eb1 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -2389,8 +2389,6 @@ xfs_btree_lshift(
- 	XFS_BTREE_STATS_ADD(cur, moves, rrecs - 1);
- 	if (level > 0) {
- 		/* It's a nonleaf. operate on keys and ptrs */
--		int			i;		/* loop index */
--
- 		for (i = 0; i < rrecs; i++) {
- 			error = xfs_btree_debug_check_ptr(cur, rpp, i + 1, level);
- 			if (error)
-
+-Eric
