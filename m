@@ -2,87 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B829A125202
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 20:39:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D85C81251F9
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Dec 2019 20:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfLRTjd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Dec 2019 14:39:33 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40656 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727512AbfLRTjd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Dec 2019 14:39:33 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJdTRc125408;
-        Wed, 18 Dec 2019 19:39:29 GMT
+        id S1726831AbfLRThi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Dec 2019 14:37:38 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43988 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfLRThh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Dec 2019 14:37:37 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJYMvj123943;
+        Wed, 18 Dec 2019 19:37:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=5hlIIKB0GkXz9CRjeLsn/suwnXxiNCKHgv3NeSOISQk=;
- b=lyaFnjTP+oxeO6csnjhJEIL3E+XXiSEmM30qMI8Og9D5XyaRWKNzbI818s8DKzL4kwL7
- iDapBIUUxxuBWJJOESMEJsLKB3l1XgBoc9UWnhoucBJCxfcxCjsdx25n2saRiplxL2Mt
- azkIIxrLuXKhjOExQ8TK6v/jHzhfg+EQRb2WMQY/pLWUmkB0mBvlgBwYHi6IL79MiPQO
- 4Ap/kKGiSok4ROhFHx2jsqLVevenENq6FrpB+QGTdTsdDG+KlCbKv53y4EBKVkxeADky
- gcXSBvh1bQQnIkrMUH+DhSWp/n8OVt/Qf1J5aYg1qsvQui8E17xpJ+RTXxyAmXHu1uvd aQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2wvrcrfp63-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Y7RoBBuqJXNEP9mfRb3cMndebaBPiHIi5lUwrppstOY=;
+ b=oI1SSY9k7WbOOuG6ilptfX8PrS96IA2igGXyewr5IVuASQtzjiIKPhKljWp6z+sqB1f6
+ rqtZDc0BPuSYGDsIRrH6HUpGPEthQyWuGtuV08LBLy0J/bLJOK0JvM4vyI/1DpLNiOKe
+ UJgBOdsNtPjSck3nfuJcoiMvaGMaIgtDQYvkbD3oLhDj28ne66UGjuzv1Q+UmujcGkMg
+ OGqIqQmHTor4meikJZDDFUv7/zlzT741V48AL5q01ZzGzMeZ/Rnj4P+Bsan9TaetAM/Z
+ X63Wl8/85Shzqaf4Ne9nRr6mprrbymb4sMDn19CAb+S70gtIG9ga/2Y1WWUCHuVrUn6G fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2wvqpqfrws-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 19:39:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJXJmt143683;
-        Wed, 18 Dec 2019 19:37:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2wyp4y23a8-1
+        Wed, 18 Dec 2019 19:37:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIJYHY4190377;
+        Wed, 18 Dec 2019 19:37:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wyk3bp6wh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 19:37:24 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBIJbNf8016981;
-        Wed, 18 Dec 2019 19:37:23 GMT
+        Wed, 18 Dec 2019 19:37:31 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBIJbU6O027541;
+        Wed, 18 Dec 2019 19:37:30 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Dec 2019 11:37:23 -0800
-Subject: [PATCH v5 0/3] xfs: don't commit sunit/swidth updates to disk if
- that would cause repair failures
+        with ESMTP ; Wed, 18 Dec 2019 11:37:30 -0800
+Subject: [PATCH 1/3] xfs: refactor agfl length computation function
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com, david@fromorbit.com,
         alex@zadara.com
-Date:   Wed, 18 Dec 2019 11:37:22 -0800
-Message-ID: <157669784202.117895.9984764081860081830.stgit@magnolia>
+Date:   Wed, 18 Dec 2019 11:37:28 -0800
+Message-ID: <157669784878.117895.2399564206474502745.stgit@magnolia>
+In-Reply-To: <157669784202.117895.9984764081860081830.stgit@magnolia>
+References: <157669784202.117895.9984764081860081830.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-1912180152
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912180153
+ definitions=main-1912180152
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Alex Lyakas discovered that it's possible to mount a filesystem with
-sunit/swidth options that will cause a subsequent xfs_repair run to fail
-to find the root directory.  This series adds some code to strengthen
-the kernel's mount option checking to avoid updating the superblock if
-this happens.
+Refactor xfs_alloc_min_freelist to accept a NULL @pag argument, in which
+case it returns the largest possible minimum length.  This will be used
+in an upcoming patch to compute the length of the AGFL at mkfs time.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/libxfs/xfs_alloc.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index c284e10af491..fc93fd88ec89 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2248,24 +2248,32 @@ xfs_alloc_longest_free_extent(
+ 	return pag->pagf_flcount > 0 || pag->pagf_longest > 0;
+ }
+ 
++/*
++ * Compute the minimum length of the AGFL in the given AG.  If @pag is NULL,
++ * return the largest possible minimum length.
++ */
+ unsigned int
+ xfs_alloc_min_freelist(
+ 	struct xfs_mount	*mp,
+ 	struct xfs_perag	*pag)
+ {
++	/* AG btrees have at least 1 level. */
++	static const uint8_t	fake_levels[XFS_BTNUM_AGF] = {1, 1, 1};
++	const uint8_t		*levels = pag ? pag->pagf_levels : fake_levels;
+ 	unsigned int		min_free;
+ 
++	ASSERT(mp->m_ag_maxlevels > 0);
++
+ 	/* space needed by-bno freespace btree */
+-	min_free = min_t(unsigned int, pag->pagf_levels[XFS_BTNUM_BNOi] + 1,
++	min_free = min_t(unsigned int, levels[XFS_BTNUM_BNOi] + 1,
+ 				       mp->m_ag_maxlevels);
+ 	/* space needed by-size freespace btree */
+-	min_free += min_t(unsigned int, pag->pagf_levels[XFS_BTNUM_CNTi] + 1,
++	min_free += min_t(unsigned int, levels[XFS_BTNUM_CNTi] + 1,
+ 				       mp->m_ag_maxlevels);
+ 	/* space needed reverse mapping used space btree */
+ 	if (xfs_sb_version_hasrmapbt(&mp->m_sb))
+-		min_free += min_t(unsigned int,
+-				  pag->pagf_levels[XFS_BTNUM_RMAPi] + 1,
+-				  mp->m_rmap_maxlevels);
++		min_free += min_t(unsigned int, levels[XFS_BTNUM_RMAPi] + 1,
++						mp->m_rmap_maxlevels);
+ 
+ 	return min_free;
+ }
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=sunit-updates
