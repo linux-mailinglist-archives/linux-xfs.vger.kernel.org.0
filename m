@@ -2,62 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 636B8127616
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Dec 2019 08:03:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FDB8127853
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Dec 2019 10:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbfLTHDS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 20 Dec 2019 02:03:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfLTHDS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:03:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4D3B0AD85;
-        Fri, 20 Dec 2019 07:03:16 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-References: <20191220065528.317947-1-damien.lemoal@wdc.com>
- <20191220065528.317947-3-damien.lemoal@wdc.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <d79a0fd3-a7c9-e4d6-48f6-b0eca2712498@suse.de>
-Date:   Fri, 20 Dec 2019 08:03:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1727202AbfLTJhP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 20 Dec 2019 04:37:15 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7723 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727269AbfLTJhO (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:37:14 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7471C67DC73F0406B35C;
+        Fri, 20 Dec 2019 17:37:11 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 20 Dec 2019 17:37:02 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <darrick.wong@oracle.com>, <linux-xfs@vger.kernel.org>,
+        <bfoster@redhat.com>, <dchinner@redhat.com>, <preichl@redhat.com>,
+        <sandeen@sandeen.net>, <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH next] xfs: Make the symbol 'xfs_rtalloc_log_count' static
+Date:   Fri, 20 Dec 2019 17:51:57 +0800
+Message-ID: <20191220095157.42619-1-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191220065528.317947-3-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 12/20/19 7:55 AM, Damien Le Moal wrote:
-> Add the new file Documentation/filesystems/zonefs.txt to document zonefs
-> principles and user-space tool usage.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->   Documentation/filesystems/zonefs.txt | 215 +++++++++++++++++++++++++++
->   MAINTAINERS                          |   1 +
->   2 files changed, 216 insertions(+)
->   create mode 100644 Documentation/filesystems/zonefs.txt
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+Fix the following sparse warning:
 
-Cheers,
+fs/xfs/libxfs/xfs_trans_resv.c:206:1: warning: symbol 'xfs_rtalloc_log_count' was not declared. Should it be static?
 
-Hannes
+Fixes: b1de6fc7520f ("xfs: fix log reservation overflows when allocating large rt extents")
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+---
+ fs/xfs/libxfs/xfs_trans_resv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+index 824073a839ac..7a9c04920505 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.c
++++ b/fs/xfs/libxfs/xfs_trans_resv.c
+@@ -202,7 +202,7 @@ xfs_calc_inode_chunk_res(
+  * blocks as needed to mark inuse MAXEXTLEN blocks' worth of realtime extents,
+  * as well as the realtime summary block.
+  */
+-unsigned int
++static unsigned int
+ xfs_rtalloc_log_count(
+ 	struct xfs_mount	*mp,
+ 	unsigned int		num_ops)
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.17.1
+
