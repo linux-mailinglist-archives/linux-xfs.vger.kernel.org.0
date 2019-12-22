@@ -2,67 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41376128FA3
-	for <lists+linux-xfs@lfdr.de>; Sun, 22 Dec 2019 19:58:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BCD7128FAA
+	for <lists+linux-xfs@lfdr.de>; Sun, 22 Dec 2019 20:10:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbfLVS6j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 22 Dec 2019 13:58:39 -0500
-Received: from mail.qboosh.pl ([217.73.31.61]:56669 "EHLO mail.qboosh.pl"
+        id S1726674AbfLVTKD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 22 Dec 2019 14:10:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfLVS6j (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 22 Dec 2019 13:58:39 -0500
-X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Sun, 22 Dec 2019 13:58:38 EST
-Received: from stranger.qboosh.pl (159-205-225-178.adsl.inetia.pl [159.205.225.178])
-        by mail.qboosh.pl (Postfix) with ESMTPSA id C6C7B1A26DA9
-        for <linux-xfs@vger.kernel.org>; Sun, 22 Dec 2019 19:52:42 +0100 (CET)
-Received: from stranger.qboosh.pl (localhost [127.0.0.1])
-        by stranger.qboosh.pl (8.15.2/8.15.2) with ESMTP id xBMIrVhq021982
-        for <linux-xfs@vger.kernel.org>; Sun, 22 Dec 2019 19:53:31 +0100
-Received: (from qboosh@localhost)
-        by stranger.qboosh.pl (8.15.2/8.15.2/Submit) id xBMIrVGq021979
-        for linux-xfs@vger.kernel.org; Sun, 22 Dec 2019 19:53:31 +0100
-Date:   Sun, 22 Dec 2019 19:53:31 +0100
-From:   Jakub Bogusz <qboosh@pld-linux.org>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH] Polish translation update for xfsprogs 5.4.0
-Message-ID: <20191222185331.GA19278@stranger.qboosh.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1726557AbfLVTKD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 22 Dec 2019 14:10:03 -0500
+Subject: Re: [GIT PULL] xfs: fixes for 5.5-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577041803;
+        bh=CCLPMaCkI2p2cTu6Tk8zuYnLnqVdnOGsLQ4omFiZ/jU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=MeOZiH+Z0UnDU5Nl2QbpGYm3YJKUJdUAV32hMzPmdcsMEzzrnLg4p9hGZtR+/BC9/
+         wXEqt1RZMVQ6VTj8ra1H3VFnLtz40olB0+R2gT+ISiIUg5yEhasXg0LrocgyBqfMV6
+         pymPpWZkpJMvJypB/XZ6pDmkpESDIaC1NUKJLgf8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191222163218.GR7489@magnolia>
+References: <20191222163218.GR7489@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191222163218.GR7489@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/xfs-5.5-fixes-2
+X-PR-Tracked-Commit-Id: 5084bf6b2006fcd46f1e44e3c51b687507b362e2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c60174717544aa8959683d7e19d568309c3a0c65
+Message-Id: <157704180292.1067.15216175845431149488.pr-tracker-bot@kernel.org>
+Date:   Sun, 22 Dec 2019 19:10:02 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello,
+The pull request you sent on Sun, 22 Dec 2019 08:32:18 -0800:
 
-I prepared an update of Polish translation of xfsprogs 5.4.0.
-As previously, because of size (whole file is ~540kB, diff is ~944kB),
-I'm sending just commit header to the list and whole file is available
-to download at:
-http://qboosh.pl/pl.po/xfsprogs-5.4.0.pl.po
-(sha256: cb3d01253b723c6ddcf045e7b1ea2e4154ca79404e438042d75eb359f97e539d)
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.5-fixes-2
 
-Whole diff is available at:
-http://qboosh.pl/pl.po/0001-po-pl.po-update-Polish-translation-for-5.4.0.patch
-(sha256: 42c32a1837c74ccc2474b4a2c19b3d5bac9e9e6ceb9f69a02f9eebe763fcd57e)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c60174717544aa8959683d7e19d568309c3a0c65
 
-Commit header:
-
-From 932f1a691eca53131f515285205d018f5931f5b8 Mon Sep 17 00:00:00 2001
-From: Jakub Bogusz <qboosh@pld-linux.org>
-Date: Sun, 22 Dec 2019 19:44:48 +0100
-Subject: [PATCH] po/pl.po: update Polish translation for 5.4.0
-
-Polish translation update for xfsprogs 5.4.0
-
-Signed-off-by: Jakub Bogusz <qboosh@pld-linux.org>
-
----
- po/pl.po | 21417 ++++++++++++++++++++++++++++-------------------------
-  1 file changed, 11319 insertions(+), 10098 deletions(-)
-
+Thank you!
 
 -- 
-Jakub Bogusz    http://qboosh.pl/
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
