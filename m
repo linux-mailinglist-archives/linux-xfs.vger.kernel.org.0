@@ -2,108 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A860E129F49
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Dec 2019 09:45:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E37129F94
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Dec 2019 10:04:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfLXIpS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Dec 2019 03:45:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36342 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfLXIpS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Dec 2019 03:45:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SBlyM3tWHI25Sz7v/cjt5Ay7mLJRoQCMkKNrRJl+b8I=; b=dqFhzp7SHFCKCb3kOeXdh4oGw
-        OUvtYdUbJsWaVqkNeoxgXdMCNwBVAn59DF/2pPw5frxhBkta1Bht5bV66K0c7X7w65CXu3ei+Yeo/
-        ytoGFG/rBZMG7MeirUKJAdJZm1jg+oFlbepQ86HUmelYYXnTbvUoQjJXyFaQtI/EvEeriKE4wyGsf
-        vOgj3KprqUyCBr9AGL2FZI2vXWqn94s/DgK9pbggcsQsws3GMdD1OKZyThMJJpxu96uPsLqK3ev0Y
-        q9ur/AMFMkrE/mRdCEzucCshDuIdfqFPLW6brLVJJ3XCPBq4KnLlNXMSBfCoe1lJYZ9Xn8OK2EUIN
-        mBQEY87dw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ijfoY-00041S-H6; Tue, 24 Dec 2019 08:45:14 +0000
-Date:   Tue, 24 Dec 2019 00:45:14 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, y2038@lists.linaro.org,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: disallow broken ioctls without
- compat-32-bit-time
-Message-ID: <20191224084514.GC1739@infradead.org>
-References: <20191218163954.296726-1-arnd@arndb.de>
- <20191218163954.296726-2-arnd@arndb.de>
+        id S1726234AbfLXJEp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Dec 2019 04:04:45 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40149 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfLXJEj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Dec 2019 04:04:39 -0500
+Received: by mail-qv1-f68.google.com with SMTP id dp13so7274490qvb.7
+        for <linux-xfs@vger.kernel.org>; Tue, 24 Dec 2019 01:04:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=T+/t7noVmCnipzpx0EipiuoSs8D3VSnUxNHRKwid9CC0wiDbW+X/7ifkYeunyqedwQ
+         BGdMrKiSqKnqF0r8Ye2KwFtk0h3GLL39TxNb3CHAu3bXzv5AN/Kgu5ag8P+iBs/MQlQV
+         uiWtOeIaQkWcLsKNf6KZJnk5gu30Oe2Wb5W5ckfQ5559XhNTvEvyadD8dkI5XOU8pCG3
+         aEK2B3iE+wm7bJkjfR7s8BrUNiVlj+YT1q1jfY76M++ddXl3Ujhw972TMvRh6ukNAwlj
+         XJqSDAmeFoGE6A8arcoUtdb2DZEBYbduX+OXcqMJa9a6fPb761KxhkI0pSMZmZbjw+/9
+         dW5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=GKqE5Xvdt1aqcxn9AKCT/MOMp8QdZ9LhdOS3VMK+5mGy9gAU8fi1ve8U66EEhx/B2S
+         00luvlDTKDPj2NPdM2+j6hYEkBKatSJIhw9AwzWwMq2U6OVtpSxL5D3DK4c/9QN1NeGM
+         +1rosfUAkznDW95IZ5QWf9owtqANuQVAGAVx0MHfwuYHcxn81Ikt6xksVPeZTrmzQF2w
+         GSvVIAgPFs75ZvHBwoXZyJkIZhneuTD7Lhms1y8LZAQTwEhnn3yDz/A/rz1tik1jJJgs
+         2NSCo1kGjPTNvlwlbSZKjGP7ySK/pIsdl3mT9uXXUvrh6rD6Ewbb/IIiscawg/xmseZC
+         fQRQ==
+X-Gm-Message-State: APjAAAXfwpRkYD8BnZ4/CtgFqJTHjXQC/tUBda+9DpgmEdrLmZMHAhvh
+        CtQpD1uT59dCl9Ogy85t41S+m3RVhAjU++KoizU=
+X-Google-Smtp-Source: APXvYqxVGVmKHh36H3FtCwgzZ5FU95JoblzpuCw5SoZ9RS/aHnMUAQsP+TIBYVHkaxqYCJ5qeKl56QyyoiPTbeZ5we0=
+X-Received: by 2002:a0c:fac7:: with SMTP id p7mr27888544qvo.46.1577178276846;
+ Tue, 24 Dec 2019 01:04:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218163954.296726-2-arnd@arndb.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:ad4:530a:0:0:0:0:0 with HTTP; Tue, 24 Dec 2019 01:04:36
+ -0800 (PST)
+Reply-To: bethnatividad9@gmail.com
+From:   Beth Nat <anthonymoore105@gmail.com>
+Date:   Tue, 24 Dec 2019 09:04:36 +0000
+Message-ID: <CAKqrdYCodJzPTTHz6kph8Sgthe6xHddAUidHBCggQaKHYA7ZUw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 05:39:29PM +0100, Arnd Bergmann wrote:
-> +/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
-> +static bool xfs_have_compat_bstat_time32(unsigned int cmd)
-> +{
-> +	if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
-> +		return true;
-> +
-> +	if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
-> +		return true;
-> +
-> +	if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
-> +	    cmd == XFS_IOC_FSBULKSTAT ||
-> +	    cmd == XFS_IOC_SWAPEXT)
-> +		return false;
-> +
-> +	return true;
-
-I think the check for the individual command belongs into the callers,
-which laves us with:
-
-static inline bool have_time32(void)
-{
-	return IS_ENABLED(CONFIG_COMPAT_32BIT_TIME) ||
-		(IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall());
-}
-
-and that looks like it should be in a generic helper somewhere.
-
-
->  STATIC int
->  xfs_ioc_fsbulkstat(
->  	xfs_mount_t		*mp,
-> @@ -637,6 +655,9 @@ xfs_ioc_fsbulkstat(
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	if (!xfs_have_compat_bstat_time32(cmd))
-> +		return -EINVAL;
-
-Here we can simply check for cmd != XFS_IOC_FSINUMBERS before the call.
-
->  	if (XFS_FORCED_SHUTDOWN(mp))
->  		return -EIO;
->  
-> @@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
->  	struct fd	f, tmp;
->  	int		error = 0;
->  
-> +	if (!xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
-> +		error = -EINVAL;
-> +		goto out;
-> +	}
-
-And for this one we just have one cmd anyway.  But I actually still
-disagree with the old_time check for this one entirely, as voiced on
-one of the last iterations.  For swapext the time stamp really is
-only used as a generation counter, so overflows are entirely harmless.
+How are you today my dear? i saw your profile and it interests me, i
+am a Military nurse from USA. Can we be friend? I want to know more
+about you.
