@@ -2,58 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E37129F94
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Dec 2019 10:04:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A97412A063
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Dec 2019 12:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfLXJEp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Dec 2019 04:04:45 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40149 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfLXJEj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Dec 2019 04:04:39 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dp13so7274490qvb.7
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Dec 2019 01:04:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
-        b=T+/t7noVmCnipzpx0EipiuoSs8D3VSnUxNHRKwid9CC0wiDbW+X/7ifkYeunyqedwQ
-         BGdMrKiSqKnqF0r8Ye2KwFtk0h3GLL39TxNb3CHAu3bXzv5AN/Kgu5ag8P+iBs/MQlQV
-         uiWtOeIaQkWcLsKNf6KZJnk5gu30Oe2Wb5W5ckfQ5559XhNTvEvyadD8dkI5XOU8pCG3
-         aEK2B3iE+wm7bJkjfR7s8BrUNiVlj+YT1q1jfY76M++ddXl3Ujhw972TMvRh6ukNAwlj
-         XJqSDAmeFoGE6A8arcoUtdb2DZEBYbduX+OXcqMJa9a6fPb761KxhkI0pSMZmZbjw+/9
-         dW5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
-        b=GKqE5Xvdt1aqcxn9AKCT/MOMp8QdZ9LhdOS3VMK+5mGy9gAU8fi1ve8U66EEhx/B2S
-         00luvlDTKDPj2NPdM2+j6hYEkBKatSJIhw9AwzWwMq2U6OVtpSxL5D3DK4c/9QN1NeGM
-         +1rosfUAkznDW95IZ5QWf9owtqANuQVAGAVx0MHfwuYHcxn81Ikt6xksVPeZTrmzQF2w
-         GSvVIAgPFs75ZvHBwoXZyJkIZhneuTD7Lhms1y8LZAQTwEhnn3yDz/A/rz1tik1jJJgs
-         2NSCo1kGjPTNvlwlbSZKjGP7ySK/pIsdl3mT9uXXUvrh6rD6Ewbb/IIiscawg/xmseZC
-         fQRQ==
-X-Gm-Message-State: APjAAAXfwpRkYD8BnZ4/CtgFqJTHjXQC/tUBda+9DpgmEdrLmZMHAhvh
-        CtQpD1uT59dCl9Ogy85t41S+m3RVhAjU++KoizU=
-X-Google-Smtp-Source: APXvYqxVGVmKHh36H3FtCwgzZ5FU95JoblzpuCw5SoZ9RS/aHnMUAQsP+TIBYVHkaxqYCJ5qeKl56QyyoiPTbeZ5we0=
-X-Received: by 2002:a0c:fac7:: with SMTP id p7mr27888544qvo.46.1577178276846;
- Tue, 24 Dec 2019 01:04:36 -0800 (PST)
+        id S1726104AbfLXLSl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Dec 2019 06:18:41 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfLXLSl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Dec 2019 06:18:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1gVMLey5yTdzamj9m0K0blHwy7BBN52QFlQ3m03LwRI=; b=JJ5eMCCJUFlOzchyIy+iWaOaS
+        JuFt4BTouneSBlpyeVlA0bjBjIkmVzGCJh8PgjbU1yHTW2OTIfnmIJfkDzywuPwNusAgvtWMKz1HD
+        ZA/wQfaxeguL0Xo14wCca8aOrrXrdK8WvcGvk2LupXfKDbh7kDua8zTw+2Myc2v2/5Ns7SiH5aQUn
+        gc1eW1//GZRYMy2zNDUcnwz3BzfP21rQ/UQSa7FQfUT1grsE65ZXFUOu6C/C2/c3aBzYKMNoY+KU4
+        USZ+K30jl36/HRrD/V3GnfN3iBB5iwJKVhw/3QVidFXeuW5IY2VaLWDbuizlX+rC+eTIWDPCtm1xt
+        +mFgjSoTA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ijiD2-0006S8-W4; Tue, 24 Dec 2019 11:18:40 +0000
+Date:   Tue, 24 Dec 2019 03:18:40 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs: open code insert range extent split helper
+Message-ID: <20191224111840.GA24663@infradead.org>
+References: <20191213171258.36934-1-bfoster@redhat.com>
+ <20191213171258.36934-2-bfoster@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:ad4:530a:0:0:0:0:0 with HTTP; Tue, 24 Dec 2019 01:04:36
- -0800 (PST)
-Reply-To: bethnatividad9@gmail.com
-From:   Beth Nat <anthonymoore105@gmail.com>
-Date:   Tue, 24 Dec 2019 09:04:36 +0000
-Message-ID: <CAKqrdYCodJzPTTHz6kph8Sgthe6xHddAUidHBCggQaKHYA7ZUw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213171258.36934-2-bfoster@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-How are you today my dear? i saw your profile and it interests me, i
-am a Military nurse from USA. Can we be friend? I want to know more
-about you.
+On Fri, Dec 13, 2019 at 12:12:56PM -0500, Brian Foster wrote:
+> The insert range operation currently splits the extent at the target
+> offset in a separate transaction and lock cycle from the one that
+> shifts extents. In preparation for reworking insert range into an
+> atomic operation, lift the code into the caller so it can be easily
+> condensed to a single rolling transaction and lock cycle and
+> eliminate the helper. No functional changes.
+
+The helper already is rather questionable as-is, so even without looking
+at the following patches:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
