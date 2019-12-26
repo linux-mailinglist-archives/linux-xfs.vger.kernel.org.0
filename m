@@ -2,129 +2,129 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC36912AC74
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Dec 2019 14:48:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B45C812AD96
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 Dec 2019 18:04:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfLZNsJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Dec 2019 08:48:09 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8197 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbfLZNsJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:48:09 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E60EB48045FF6C5EA907;
-        Thu, 26 Dec 2019 21:48:06 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 21:47:56 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <darrick.wong@oracle.com>, <bfoster@redhat.com>,
-        <dchinner@redhat.com>, <sandeen@sandeen.net>,
-        <cmaiolino@redhat.com>, <hch@lst.de>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>, <houtao1@huawei.com>
-Subject: [PATCH 2/2] xfs: fix stale data exposure problem when punch hole, collapse range or zero range across a delalloc extent
-Date:   Thu, 26 Dec 2019 21:47:21 +0800
-Message-ID: <20191226134721.43797-3-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191226134721.43797-1-yukuai3@huawei.com>
-References: <20191226134721.43797-1-yukuai3@huawei.com>
+        id S1726480AbfLZREO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 Dec 2019 12:04:14 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53302 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfLZREO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Dec 2019 12:04:14 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBQGtCKc165063;
+        Thu, 26 Dec 2019 17:04:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=+tNhCcpFJQcXUFsLsDI54spIz0K3CoXlohkqyxGD2x0=;
+ b=PHs6WhgaEszmR0UdC2WqSG/ewchHD9JZa5K4OZXbX4MWEK/5/ra+15HJv1GxX4t7PSXF
+ sLkO1X+NC7sPFUIZ8Mr2DXuvrT/6Nd6JQ7IcbTzwm4J9RP2yFoHmU98vdEbPmxZJ0LBJ
+ ymv+6Fk9hz7lHmnbLiQ7XKmkiK6KzEVn0htb5QVeENMQAdmPZovjRuN1N+6i/loolfsH
+ n8yNITFpRa6c2NHfddq/NrHmmSfvQM0n8BnMD2GeoEpipI57JSlJijzOl6vJVG+dn1zT
+ gpiCVEQNj8aKyvTwj4UNGztru8WwD+DyKWTmOUL8FqRJ7sd0bj0wXQn4oRMzVYq58QGQ TA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2x1bbq2qxf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Dec 2019 17:04:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBQH3tQp041092;
+        Thu, 26 Dec 2019 17:04:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2x4wj2pqs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Dec 2019 17:04:02 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBQH414m024763;
+        Thu, 26 Dec 2019 17:04:01 GMT
+Received: from [192.168.1.223] (/67.1.3.112)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Dec 2019 09:04:01 -0800
+Subject: Re: [PATCH v5 07/14] xfs: Factor out xfs_attr_leaf_addname helper
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+References: <20191212041513.13855-1-allison.henderson@oracle.com>
+ <20191212041513.13855-8-allison.henderson@oracle.com>
+ <20191224122254.GE18379@infradead.org>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <32f47226-d8b7-6f9e-2244-8237a8b1db6e@oracle.com>
+Date:   Thu, 26 Dec 2019 10:04:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191224122254.GE18379@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9482 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912260155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9482 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912260154
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-In xfs_file_fallocate, when punch hole, zero range or collapse range is
-performed, xfs_fulsh_unmap_range() need to be called first. However,
-xfs_map_blocks will convert the whole extent to real, even if there are
-some blocks not related. Furthermore, the unrelated blocks will hold stale
-data since xfs_fulsh_unmap_range didn't flush the correspond dirty pages
-to disk.
+On 12/24/19 5:22 AM, Christoph Hellwig wrote:
+> On Wed, Dec 11, 2019 at 09:15:06PM -0700, Allison Collins wrote:
+>> Factor out new helper function xfs_attr_leaf_try_add.
+>> Because new delayed attribute routines cannot roll
+>> transactions, we carve off the parts of
+>> xfs_attr_leaf_addname that we can use.  This will help
+>> to reduce repetitive code later when we introduce
+>> delayed attributes.
+> 
+> I have a hard time relating the subject to what is happening here,
+> maybe because the patch does too many things at once.  One thing
+> is plitting a xfs_attr_leaf_try_add from xfs_attr_leaf_addname, which
+> seems pretty sensible, but then it also moves code from
+> xfs_attr_node_addname into the only caller.  That probably should be
+> a separate patch with a proper description.
+> 
+Sure, maybe it might help to look at it this way though: the goal of all 
+this refactoring is to get all the transactions up into the 
+xfs_attr_*_args routines.  Once we have them pretty much corralled, we 
+replace them with a sort of state machine like mechanic.  This produces 
+the "return EAGAIN for new a transaction" behavior that we need for the 
+.finish_item callback.
 
-In this case, if user shutdown file system through xfsioctl with cmd
-'XFS_IOC_GOINGDOWN' and arg 'XFS_FSOP_GOING_FLAGS_LOGFLUSH'. All the
-completed transactions will be flushed to disk, while dirty pages will
-never be flushed to disk. And after remount, the file will hold stale
-data.
+In this case, xfs_attr_leaf_addname is a subroutine with a transaction 
+in the middle.  So we split it into two functions.  Kind of like a top 
+half and bottom half, and then the transaction moves up.  While I can 
+separate the split and the move into separate patches, it didnt really 
+feel to me like the transaction or the node logic really fit with either 
+of the helpers.  They are supposed to be about leaves, not nodes.  It's 
+not a big deal I suppose to split up the patches, but I thought doing so 
+creates a sort of transient patch with functions that have logic not 
+particularly appropriate for their scope.  Thoughts?
 
-Fix the problem by spliting delalloc extent before xfs_flush_unmap_range
-is called.
+Also, perhaps I need to remove the line in the commit header about 
+reducing repetitive code.  It might be misleading you (apologies).  This 
+is left over from an earlier version of the series where I tried to 
+avoid "monster function" by having two code paths: one for inline attrs 
+and a separate one for delayed attrs.  It generated a lot of repetitive 
+code with subtle differences though, and i think folks preferred the 
+code paths to stay merged.  The goal being to first establish what 
+"monster function" even looks like, and then simplify it into new 
+helpers from there.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- fs/xfs/xfs_file.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+This is admittedly a very difficult series to review.  People need to 
+understand patches 1 - 12 to really understand what 13 and 14 are doing. 
+  But really, 13 and 14 are kind of driving the rest of the series. 
+Like literally an entire patch fell out of the last set because of some 
+changes we made in the end of the series.  I know 13 and 14 are the 
+hardest to look at, but they very much dictate what the lower patches 
+end up doing.  So I encourage people to try and focus attention there 
+before loosing to much sanity on scaffolding.  Certainty it all needs to 
+get reviewed of course, but it may help to make more efficient use of 
+peoples review time.  :-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index c93250108952..5398102feec9 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -786,6 +786,50 @@ xfs_break_layouts(
- 
- 	return error;
- }
-+int
-+try_split_da_extent(
-+	struct xfs_inode	*ip,
-+	loff_t			offset,
-+	loff_t			len)
-+{
-+	struct xfs_mount	*mp = ip->i_mount;
-+	xfs_fileoff_t		start = XFS_B_TO_FSBT(mp, offset);
-+	xfs_fileoff_t		end = XFS_B_TO_FSBT(mp, offset + len - 1);
-+	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
-+	struct xfs_iext_cursor	cur;
-+	struct xfs_bmbt_irec	imap;
-+	int error;
-+
-+	/*
-+	 * if start belong to a delalloc extent and it's not the first block,
-+	 * split the extent at start.
-+	 */
-+	if (xfs_iext_lookup_extent(ip, ifp, start, &cur, &imap) &&
-+	    imap.br_startblock != HOLESTARTBLOCK &&
-+	    isnullstartblock(imap.br_startblock) &&
-+	    start > imap.br_startoff) {
-+		error = xfs_bmap_split_da_extent(ip, start);
-+		if (error)
-+			return error;
-+		ip->i_d.di_nextents--;
-+	}
-+
-+	/*
-+	 * if end + 1 belong to a delalloc extent and it's not the first block,
-+	 * split the extent at end + 1.
-+	 */
-+	if (xfs_iext_lookup_extent(ip, ifp, end + 1, &cur, &imap) &&
-+	    imap.br_startblock != HOLESTARTBLOCK &&
-+	    isnullstartblock(imap.br_startblock) &&
-+	    end + 1 > imap.br_startoff) {
-+		error = xfs_bmap_split_da_extent(ip, end + 1);
-+		if (error)
-+			return error;
-+		ip->i_d.di_nextents--;
-+	}
-+
-+	return 0;
-+}
- 
- #define	XFS_FALLOC_FL_SUPPORTED						\
- 		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
-@@ -842,6 +886,9 @@ xfs_file_fallocate(
- 	 */
- 	if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE |
- 		    FALLOC_FL_COLLAPSE_RANGE)) {
-+		error = try_split_da_extent(ip, offset, len);
-+		if (error)
-+			goto out_unlock;
- 		error = xfs_flush_unmap_range(ip, offset, len);
- 		if (error)
- 			goto out_unlock;
--- 
-2.17.2
-
+Hope that helps!  Thanks for looking at it!
+Allison
