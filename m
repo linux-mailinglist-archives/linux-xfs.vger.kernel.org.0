@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FD8F12DD40
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:23:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 243E012DD3E
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:23:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgAABXi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:23:38 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:56270 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgAABXi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:23:38 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011Naed099300;
-        Wed, 1 Jan 2020 01:23:36 GMT
+        id S1727171AbgAABXb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:23:31 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:60708 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgAABXb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:23:31 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011FsnS113342;
+        Wed, 1 Jan 2020 01:23:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=d6YyR+3/SyAQbnIVj5SflHJt9L+mbL1eEhcpgPYOIr8=;
- b=fpOeRus5WejAsCxnKJo1YLdy/+TWcjG3Xqontm8rdnHqztxQbyEun9N4Iak3ZDyoMYCf
- QwNzB2fk01D0Nz1OhwIBPQIfLXt0XLXXnMmaCqL6StjeKcOdmmInawIJZF7dHU3oNGKe
- NaOKiBfnPJuavpIhnvYo7jpndR5Q4tojOQky1GKGLNQmlLOv775BaTytGardaqtVrZ66
- LDtX666d/g24W5jOmp59WKaTlwwfwjnTHq73hNu04v8z2U7HRlWev8HbmpM+lxqnc9EQ
- pq2gBCHAjyT56x2zTk8k45GYkXtMvyxgRWKmKKK3/q3zGgevw4NJRsXK+/dNAMwEMGAN RQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwt4-1
+ bh=Go8/TBV2ER2b0ITDFnR9fE7TWZNyr3kqwZAIema6ORg=;
+ b=NhAOPSlnNYw/vBRUJCkX7AsGtW/XCipMd3L/Hvo64PFamIi6UzcgLBIC1R7Q4OGqK/Vw
+ djUZL87NeWnrMQ/ylTSPzRQYvPgYbXD0P2CvjuQIux1k4rIGFcKYHz1LP20UkmueGGdS
+ +IA0Tx70HsmUD/Xb+kCJLuWkycN/fh5URMi8wY5iJMyHbDH0DSn71kJUDyZ3LZh4jkyj
+ 5YkOGU5N+5kKaCuhvY1tGnjF+ByX1CEOhzCCoZqqK1hcNmfv1MC849JG/S1lGDqlBhvh
+ LFARPhnT++clCFhXcM/Yohsn+wEOYoJepAOwkIIAirZD48iG27+B3mIZ1qeCMp8Vd7EH KQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2tw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jan 2020 01:23:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011NYQk030298;
-        Wed, 1 Jan 2020 01:23:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2x8gueg9n4-1
+        Wed, 01 Jan 2020 01:23:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011NSai012926;
+        Wed, 1 Jan 2020 01:23:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2x8bsrg89t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jan 2020 01:23:34 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011N45u017118;
-        Wed, 1 Jan 2020 01:23:04 GMT
+        Wed, 01 Jan 2020 01:23:27 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011NAIW004246;
+        Wed, 1 Jan 2020 01:23:10 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:23:04 -0800
-Subject: [PATCH 3/4] debian: permit compat level 9 dh builds
+        with ESMTP ; Tue, 31 Dec 2019 17:23:10 -0800
+Subject: [PATCH 4/4] xfs_scrub_all: failure reporting for the xfs_scrub_all
+ job
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:23:01 -0800
-Message-ID: <157784178177.1372453.9672761082907118417.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:23:07 -0800
+Message-ID: <157784178791.1372453.1791394612520677285.stgit@magnolia>
 In-Reply-To: <157784176039.1372453.10128269126585047352.stgit@magnolia>
 References: <157784176039.1372453.10128269126585047352.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=9 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010011
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=9 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010010
@@ -70,64 +71,85 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Retain compatibility with existing dh level 9 build systems.
+Create a failure reporting service for when xfs_scrub_all fails.  This
+is probably a debug-only patch.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- debian/rules |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ scrub/Makefile                      |    3 ++-
+ scrub/xfs_scrub_all_fail            |   24 ++++++++++++++++++++++++
+ scrub/xfs_scrub_all_fail.service.in |   11 +++++++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100755 scrub/xfs_scrub_all_fail
+ create mode 100644 scrub/xfs_scrub_all_fail.service.in
 
 
-diff --git a/debian/rules b/debian/rules
-index a79db896..1dd1f524 100755
---- a/debian/rules
-+++ b/debian/rules
-@@ -1,5 +1,7 @@
- #!/usr/bin/make -f
- 
-+.PHONY: dpkg_config
-+
- export DH_VERBOSE=1
- 
- ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-@@ -7,6 +9,9 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-     PMAKEFLAGS += -j$(NUMJOBS)
+diff --git a/scrub/Makefile b/scrub/Makefile
+index 47c887eb..50d16121 100644
+--- a/scrub/Makefile
++++ b/scrub/Makefile
+@@ -18,7 +18,7 @@ XFS_SCRUB_ALL_PROG = xfs_scrub_all
+ XFS_SCRUB_ARGS = -b -n
+ ifeq ($(HAVE_SYSTEMD),yes)
+ INSTALL_SCRUB += install-systemd
+-SYSTEMD_SERVICES = xfs_scrub@.service xfs_scrub_all.service xfs_scrub_all.timer xfs_scrub_fail@.service
++SYSTEMD_SERVICES = xfs_scrub@.service xfs_scrub_all.service xfs_scrub_all.timer xfs_scrub_fail@.service xfs_scrub_all_fail.service
+ OPTIONAL_TARGETS += $(SYSTEMD_SERVICES)
  endif
+ ifeq ($(HAVE_CROND),yes)
+@@ -133,6 +133,7 @@ install-systemd: default $(SYSTEMD_SERVICES)
+ 	$(INSTALL) -m 644 $(SYSTEMD_SERVICES) $(SYSTEMD_SYSTEM_UNIT_DIR)
+ 	$(INSTALL) -m 755 -d $(PKG_LIB_DIR)/$(PKG_NAME)
+ 	$(INSTALL) -m 755 xfs_scrub_fail $(PKG_LIB_DIR)/$(PKG_NAME)
++	$(INSTALL) -m 755 xfs_scrub_all_fail $(PKG_LIB_DIR)/$(PKG_NAME)
  
-+DH_VERSION := $(shell dpkg-query -W -f '$${Version}' debhelper)
-+USE_DH9 ?= $(shell if dpkg --compare-versions $(DH_VERSION) lt 11 ; then echo yes ; fi)
+ install-crond: default $(CRONTABS)
+ 	$(INSTALL) -m 755 -d $(CROND_DIR)
+diff --git a/scrub/xfs_scrub_all_fail b/scrub/xfs_scrub_all_fail
+new file mode 100755
+index 00000000..8391abc8
+--- /dev/null
++++ b/scrub/xfs_scrub_all_fail
+@@ -0,0 +1,24 @@
++#!/bin/bash
 +
- package = xfsprogs
- develop = xfslibs-dev
- bootpkg = xfsprogs-udeb
-@@ -33,11 +38,18 @@ checkdir = test -f debian/rules
- build: build-arch build-indep
- build-arch: built
- build-indep: built
--built: dibuild config
-+built: dpkg_config dibuild config
- 	@echo "== dpkg-buildpackage: build" 1>&2
- 	$(MAKE) $(PMAKEFLAGS) default
- 	touch built
- 
-+dpkg_config:
-+ifeq ($(USE_DH9),yes)
-+	mv debian/compat debian/compat.save
-+	echo 9 > debian/compat
-+endif
-+	@true
++# Email logs of failed xfs_scrub_all unit runs
 +
- config: .census
- .census:
- 	@echo "== dpkg-buildpackage: configure" 1>&2
-@@ -93,7 +105,9 @@ binary-arch: checkroot built
- 	dh_compress
- 	dh_fixperms
- 	dh_makeshlibs
-+ifneq ($(USE_DH9),yes)
- 	dh_installsystemd -p xfsprogs --no-enable --no-start --no-restart-after-upgrade --no-stop-on-upgrade
-+endif
- 	dh_installdeb
- 	dh_shlibdeps
- 	dh_gencontrol
++mailer=/usr/sbin/sendmail
++recipient="$1"
++test -z "${recipient}" && exit 0
++hostname="$(hostname -f 2>/dev/null)"
++test -z "${hostname}" && hostname="${HOSTNAME}"
++if [ ! -x "${mailer}" ]; then
++	echo "${mailer}: Mailer program not found."
++	exit 1
++fi
++
++(cat << ENDL
++To: $1
++From: <xfs_scrub_all@${hostname}>
++Subject: xfs_scrub_all failure on ${mntpoint}
++
++So sorry, the automatic xfs_scrub_all on ${hostname} failed.
++
++A log of what happened follows:
++ENDL
++systemctl status --full --lines 4294967295 "xfs_scrub_all") | "${mailer}" -t -i
+diff --git a/scrub/xfs_scrub_all_fail.service.in b/scrub/xfs_scrub_all_fail.service.in
+new file mode 100644
+index 00000000..2d85db28
+--- /dev/null
++++ b/scrub/xfs_scrub_all_fail.service.in
+@@ -0,0 +1,11 @@
++[Unit]
++Description=Online XFS Metadata Check for All Filesystems Failure Reporting for %I
++Documentation=man:xfs_scrub_all(8)
++
++[Service]
++Type=oneshot
++Environment=EMAIL_ADDR=root
++ExecStart=@pkg_lib_dir@/@pkg_name@/xfs_scrub_all_fail "${EMAIL_ADDR}"
++User=mail
++Group=mail
++SupplementaryGroups=systemd-journal
 
