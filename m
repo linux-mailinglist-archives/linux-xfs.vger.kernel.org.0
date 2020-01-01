@@ -2,65 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9069912DD0E
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:16:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C82BB12DD1D
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgAABQW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:16:22 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:55724 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbgAABQV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:16:21 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011EDLL092038
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:16:20 GMT
+        id S1727152AbgAABSZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:18:25 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58122 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbgAABSZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:18:25 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011E5MH112524
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=fsvNwXbgl0n6L7xEJxyU9swko7HWJK9BeYW35loWRSY=;
- b=nh1H5OakAb4dwq4ZdnOUT0E7KaFX3QHkRoCWNDju4lRsNoJFarT0LXoJOa+1MH3GUhnd
- kGalHds9D8ZPTp/BS6c+Ai61T2mndyPUmgc9h/H0n+nI/2bme7A08gE11lP7YJvEYRDh
- LFP33uX6IQkUDwibWsjBIWPWqC9436Wk1eDq8y5hUcPwGQvo/FMUoAJA50GDMbYJsqEm
- 539/vIYJH1xt5uhXzJ1do1Yv70gWDR1eU93rh/9g5xsZMOw6d2/Cm96Q8wkoT9+6KKpX
- 4ptKw0e4jm0cEB/zAZMzPC2wYiOBIQrz/qbp8xgg2uESpBGuB3WjGhnlWsdhqXy7999U Gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pjy2n-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=4yESEsEGWbqNzZOdiAwLQY38+CQl/21ovsPRPwZVo4g=;
+ b=eUZ8LQWVq6GWVtOx3yhWM7N12AKMPHq7CfqmZHuoC6Xj0RW7caclbwy6JDfI+8GcYI/l
+ 2X7rGQegVYbXeLIgXDIYVOrsdeY2PxuzDl6TgY8I/WMCax55ONPSai/VYWFMN2PheNs2
+ xtMcC70dcObPnUGtFWechW74r7fkoNiB+PIX3jXyNBM7lAD4mdBsXwOLXJVPMCZgvHMm
+ eY2xuWJjhFmzHRdfUbzfatKufGsSsKYJDMxAiC0/stFLnkCDIc2rwJ733IADjiKRrljm
+ 9XLtPUTkeJQuZkous8DyfWqhTbeIxNl7WTcB3DTkJmit5lQsMF8cvj5ijUo+f5UPZU58 bA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2py-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:16:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vtp190311
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:16:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2x8bsrg4g7-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118x80012461
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:16:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2x8guefc6g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:16:19 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011GIbk013831
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:16:18 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:16:22 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011GM9l030270
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:16:22 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:16:17 -0800
-Subject: [PATCH 13/13] xfs: enable metadata inode directory feature
+        with ESMTP ; Tue, 31 Dec 2019 17:16:22 -0800
+Subject: [PATCH v11 00/21] xfs: realtime reverse-mapping support
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:16:15 -0800
-Message-ID: <157784137546.1366873.4622083935796459102.stgit@magnolia>
-In-Reply-To: <157784129036.1366873.17175097590750371047.stgit@magnolia>
-References: <157784129036.1366873.17175097590750371047.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:16:19 -0800
+Message-ID: <157784137939.1368137.1149711841610071256.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=917
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010009
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=980 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010010
 Sender: linux-xfs-owner@vger.kernel.org
@@ -68,28 +66,44 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Enable the metadata inode directory feature.
+This is the latest revision of a patchset that adds to XFS kernel
+support for reverse mapping for the realtime device.  This time around
+I've fixed some of the bitrot that I've noticed over the past few
+months, and most notably have converted rtrmapbt to use the metadata
+inode directory feature instead of burning more space in the superblock.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+At the beginning of the set are patches to implement storing B+tree
+leaves in an inode root, since the realtime rmapbt is rooted in an
+inode, unlike the regular rmapbt which is rooted in an AG block.
+Prior to this, the only btree that could be rooted in the inode fork
+was the block mapping btree; if all the extent records fit in the
+inode, format would be switched from 'btree' to 'extents'.
 
+The next few patches widen the reverse mapping routines to fit the
+64-bit numbers required to store information about the realtime
+device and establish a new b+tree type (rtrmapbt) for the realtime
+variant of the rmapbt.  After that are a few patches to handle rooting
+the rtrmapbt in a specific inode that's referenced by the superblock.
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 8352bc921a9e..b610338de5b0 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -488,7 +488,8 @@ xfs_sb_has_ro_compat_feature(
- 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
- 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
- 		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
--		 XFS_SB_FEAT_INCOMPAT_BIGTIME)
-+		 XFS_SB_FEAT_INCOMPAT_BIGTIME | \
-+		 XFS_SB_FEAT_INCOMPAT_METADIR)
- 
- #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
- static inline bool
+Finally, there are patches to implement GETFSMAP with the rtrmapbt and
+scrub functionality for the rtrmapbt and rtbitmap; and then wire up the
+online scrub functionality.
 
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-rmap
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-rmap
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-rmap
