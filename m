@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3120C12DD24
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 100B512DD1C
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:18:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgAABTQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:19:16 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57220 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgAABTQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:19:16 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011FGTn092607
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:19:16 GMT
+        id S1727156AbgAABSM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:18:12 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:53522 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbgAABSM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:18:12 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011EsqT094499
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=UO5dT9r1OCRjZlVMouStNV6ie5xGG7H/6kxp25yggMM=;
- b=PnuA3vvb9L/BmQfy4nKPHvFZb4rxkzoLOc8KZgJNc9tJZkjdyDpKdvEmk5mBGsBxmZmJ
- eqVlknaYICQhgsMz63bLulmySy29xSiJk28gdqRdNGY7/difV4o1CTeWNLafZK9QbG+9
- LZTqFP1UjCONDiUbA0Z/ioQM9o03o5qP0B/N3QuY20Jobj7ziY4GgVCU/WNVSFvw31/+
- /cPe7ynnamWEDPglPFewfgPRhfF7cPOKYR24XF/5YFIDeaAy7A4YktL7asgHifHtNVdV
- Zfg+8Ab1BM67AdoiH9ARfgdY237YTsic5dGr/J86QjCOun/pbNsQjM5xOBkvjx+k78Ba sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pjy5h-1
+ bh=jiSye68SX84mgstKFzXGthMgYsaGOOp6cCx5lvwr0os=;
+ b=TsxUa/PO2gIi/ahXSSrIRsOsyzgJ+h+VmkYhoaKNX+X7hTfgUMhDsyZ/6MMhDw1Nq2qI
+ 1ksqidUnem7YyHYxY1wztIRQhXtzgTvql8UUhnZu6O6sYidSyQ1ujXHSr8gI04V3+GlA
+ FLPO1z+8o2dYxsTylP1u9UYOxkHAJrTAKNsfgr9UVWqrZ0ym+20nNHEAAtUbBHQ/4B1x
+ HfiXuD+4v0Bs07hcBkP9zYsysO2dUD/YNz2xrQVo3cyXY7bsRLchZFVXMZMyEgavneA6
+ CHzwZ40VC2qVkcRmAGPzH84bOWiaeN+AllLWkt1nuD1cqxSiuKIDnhZe6i0hTK9biesp vw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwnp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:19:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011JEgN024739
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:19:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2x8guefs80-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011I9dT056970
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2x7medfgnt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:19:15 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011I2nl030970
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:02 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:09 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011I8C2002385
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:08 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:18:02 -0800
-Subject: [PATCH 16/21] xfs: enable realtime rmap btree
+        with ESMTP ; Tue, 31 Dec 2019 17:18:08 -0800
+Subject: [PATCH 17/21] xfs: wire up getfsmap to the realtime reverse mapping
+ btree
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:17:59 -0800
-Message-ID: <157784147991.1368137.12895991241254873414.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:18:06 -0800
+Message-ID: <157784148602.1368137.3512787997585276398.stgit@magnolia>
 In-Reply-To: <157784137939.1368137.1149711841610071256.stgit@magnolia>
 References: <157784137939.1368137.1149711841610071256.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,14 +54,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=857
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010010
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=921 adultscore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010010
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,27 +71,103 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
+Connect the getfsmap ioctl to the realtime rmapbt.
+
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_super.c |    6 ------
- 1 file changed, 6 deletions(-)
+ fs/xfs/xfs_fsmap.c |   66 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 3ebd66347df0..638b458d2db8 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1653,12 +1653,6 @@ xfs_fc_fill_super(
- 		}
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index 918456ca29e1..b4d23f023520 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -24,6 +24,7 @@
+ #include "xfs_refcount_btree.h"
+ #include "xfs_alloc_btree.h"
+ #include "xfs_rtalloc.h"
++#include "xfs_rtrmap_btree.h"
+ 
+ /* Convert an xfs_fsmap to an fsmap. */
+ void
+@@ -547,7 +548,65 @@ xfs_getfsmap_rtdev_rtbitmap(
+ 	return __xfs_getfsmap_rtdev(tp, keys, xfs_getfsmap_rtdev_rtbitmap_query,
+ 			info);
+ }
+-#endif /* CONFIG_XFS_RT */
++
++/* Transform a absolute-startblock rmap (rtdev, logdev) into a fsmap */
++STATIC int
++xfs_getfsmap_rtdev_helper(
++	struct xfs_btree_cur		*cur,
++	struct xfs_rmap_irec		*rec,
++	void				*priv)
++{
++	struct xfs_mount		*mp = cur->bc_mp;
++	struct xfs_getfsmap_info	*info = priv;
++	xfs_daddr_t			rec_daddr;
++
++	rec_daddr = XFS_FSB_TO_BB(mp, rec->rm_startblock);
++
++	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr);
++}
++
++/* Actually query the rtrmap btree. */
++STATIC int
++xfs_getfsmap_rtdev_rmapbt_query(
++	struct xfs_trans		*tp,
++	struct xfs_getfsmap_info	*info)
++{
++	struct xfs_mount		*mp = tp->t_mountp;
++	struct xfs_btree_cur		*bt_cur;
++	int				error;
++
++	/* Query the rtrmapbt */
++	xfs_ilock(mp->m_rrmapip, XFS_ILOCK_SHARED);
++	bt_cur = xfs_rtrmapbt_init_cursor(mp, tp, mp->m_rrmapip);
++	error = xfs_rmap_query_range(bt_cur, &info->low, &info->high,
++			xfs_getfsmap_rtdev_helper, info);
++	if (error)
++		goto err;
++
++	/* Report any gaps at the end of the rtrmapbt */
++	info->last = true;
++	error = xfs_getfsmap_rtdev_helper(bt_cur, &info->high, info);
++	if (error)
++		goto err;
++
++err:
++	xfs_btree_del_cursor(bt_cur, error);
++	xfs_iunlock(mp->m_rrmapip, XFS_ILOCK_SHARED);
++	return error;
++}
++
++/* Execute a getfsmap query against the realtime device rmapbt. */
++STATIC int
++xfs_getfsmap_rtdev_rmapbt(
++	struct xfs_trans		*tp,
++	struct xfs_fsmap		*keys,
++	struct xfs_getfsmap_info	*info)
++{
++	info->missing_owner = XFS_FMR_OWN_FREE;
++	return __xfs_getfsmap_rtdev(tp, keys, xfs_getfsmap_rtdev_rmapbt_query,
++			info);
++}
++#endif
+ 
+ /* Execute a getfsmap query against the regular data device. */
+ STATIC int
+@@ -851,7 +910,10 @@ xfs_getfsmap(
+ #ifdef CONFIG_XFS_RT
+ 	if (mp->m_rtdev_targp) {
+ 		handlers[2].dev = new_encode_dev(mp->m_rtdev_targp->bt_dev);
+-		handlers[2].fn = xfs_getfsmap_rtdev_rtbitmap;
++		if (use_rmap)
++			handlers[2].fn = xfs_getfsmap_rtdev_rmapbt;
++		else
++			handlers[2].fn = xfs_getfsmap_rtdev_rtbitmap;
  	}
+ #endif /* CONFIG_XFS_RT */
  
--	if (xfs_sb_version_hasrmapbt(&mp->m_sb) && mp->m_sb.sb_rblocks) {
--		xfs_alert(mp,
--	"reverse mapping btree not compatible with realtime device!");
--		error = -EINVAL;
--		goto out_filestream_unmount;
--	}
- 
- 	if (xfs_sb_version_hasinobtcounts(&mp->m_sb))
- 		xfs_warn(mp,
 
