@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 100B512DD1C
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:18:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A0A12DD25
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:19:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgAABSM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:18:12 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:53522 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbgAABSM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:18:12 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011EsqT094499
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:10 GMT
+        id S1727187AbgAABTU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:19:20 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58618 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727134AbgAABTU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:19:20 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011ESvQ112747
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:19:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=jiSye68SX84mgstKFzXGthMgYsaGOOp6cCx5lvwr0os=;
- b=TsxUa/PO2gIi/ahXSSrIRsOsyzgJ+h+VmkYhoaKNX+X7hTfgUMhDsyZ/6MMhDw1Nq2qI
- 1ksqidUnem7YyHYxY1wztIRQhXtzgTvql8UUhnZu6O6sYidSyQ1ujXHSr8gI04V3+GlA
- FLPO1z+8o2dYxsTylP1u9UYOxkHAJrTAKNsfgr9UVWqrZ0ym+20nNHEAAtUbBHQ/4B1x
- HfiXuD+4v0Bs07hcBkP9zYsysO2dUD/YNz2xrQVo3cyXY7bsRLchZFVXMZMyEgavneA6
- CHzwZ40VC2qVkcRmAGPzH84bOWiaeN+AllLWkt1nuD1cqxSiuKIDnhZe6i0hTK9biesp vw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwnp-1
+ bh=uoUD+XI4nf6Mj16hs2+X8HW4S8b936dNsCjvxs/O2VE=;
+ b=DeRlezz1JruadQaiPujatsiJPVI8phh2dyLKjFfM3QUuUY7DvmnyvUGtNOYA3cP9nCFs
+ JqnI8wEUJQMDvM+Qn8mEFzq7NfYGZyYV0GcuPR9q0+GF3sRiD4CENp3+UGfg3v8ZkPOQ
+ n/T8zTZrKsgLmDjcOAk9/lrp5za6hlNhxGM4R2n/UsShgsnqrGdobPeT7iZa/MO15K65
+ +SVS4m2sv37tcE7EqWmkTbUwt0yYg8EKP67kGshAZeAXUEuI+asoOjcu1DCb11ekh7Cm
+ 9joG4QhVaty439/sK6d4jJXvqKuEHoSM+my0YZj19PUxJsN02HJ7XqeWWYMIOWqlkjP0 lQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2qn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011I9dT056970
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2x7medfgnt-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:19:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011JF5u024814
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:19:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2x8guefs97-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:09 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011I8C2002385
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:08 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:19:16 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011IEi8014739
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:15 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:18:08 -0800
-Subject: [PATCH 17/21] xfs: wire up getfsmap to the realtime reverse mapping
- btree
+        with ESMTP ; Tue, 31 Dec 2019 17:18:14 -0800
+Subject: [PATCH 18/21] xfs: scrub the realtime rmapbt
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:18:06 -0800
-Message-ID: <157784148602.1368137.3512787997585276398.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:18:12 -0800
+Message-ID: <157784149208.1368137.2698019392269392960.stgit@magnolia>
 In-Reply-To: <157784137939.1368137.1149711841610071256.stgit@magnolia>
 References: <157784137939.1368137.1149711841610071256.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +53,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010010
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010010
@@ -71,103 +70,324 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Connect the getfsmap ioctl to the realtime rmapbt.
+Check the realtime reverse mapping btree against the rtbitmap, and
+modify the rtbitmap scrub to check against the rtrmapbt.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_fsmap.c |   66 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 2 deletions(-)
+ fs/xfs/Makefile            |    5 ++
+ fs/xfs/libxfs/xfs_fs.h     |    4 +-
+ fs/xfs/libxfs/xfs_health.h |    4 +-
+ fs/xfs/scrub/bmap.c        |    1 
+ fs/xfs/scrub/common.h      |    6 ++
+ fs/xfs/scrub/health.c      |    1 
+ fs/xfs/scrub/rtrmap.c      |  109 ++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/scrub.c       |    7 +++
+ fs/xfs/scrub/scrub.h       |    6 ++
+ fs/xfs/scrub/trace.h       |    4 +-
+ fs/xfs/xfs_health.c        |    1 
+ 11 files changed, 144 insertions(+), 4 deletions(-)
+ create mode 100644 fs/xfs/scrub/rtrmap.c
 
 
-diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
-index 918456ca29e1..b4d23f023520 100644
---- a/fs/xfs/xfs_fsmap.c
-+++ b/fs/xfs/xfs_fsmap.c
-@@ -24,6 +24,7 @@
- #include "xfs_refcount_btree.h"
- #include "xfs_alloc_btree.h"
- #include "xfs_rtalloc.h"
-+#include "xfs_rtrmap_btree.h"
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index 7c3e61cfc7e2..38919c6f1bc5 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -155,7 +155,10 @@ xfs-y				+= $(addprefix scrub/, \
+ 				   symlink.o \
+ 				   )
  
- /* Convert an xfs_fsmap to an fsmap. */
- void
-@@ -547,7 +548,65 @@ xfs_getfsmap_rtdev_rtbitmap(
- 	return __xfs_getfsmap_rtdev(tp, keys, xfs_getfsmap_rtdev_rtbitmap_query,
- 			info);
+-xfs-$(CONFIG_XFS_RT)		+= scrub/rtbitmap.o
++xfs-$(CONFIG_XFS_RT)		+= $(addprefix scrub/, \
++				   rtbitmap.o \
++				   rtrmap.o \
++				   )
+ xfs-$(CONFIG_XFS_QUOTA)		+= scrub/quota.o
+ 
+ # online repair
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 86fd287017ca..558a396c74b3 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -210,6 +210,7 @@ struct xfs_fsop_geom {
+ #define XFS_FSOP_GEOM_SICK_PQUOTA	(1 << 3)  /* project quota */
+ #define XFS_FSOP_GEOM_SICK_RT_BITMAP	(1 << 4)  /* realtime bitmap */
+ #define XFS_FSOP_GEOM_SICK_RT_SUMMARY	(1 << 5)  /* realtime summary */
++#define XFS_FSOP_GEOM_SICK_RT_RMAPBT	(1 << 6)  /* realtime rmapbt */
+ 
+ /* Output for XFS_FS_COUNTS */
+ typedef struct xfs_fsop_counts {
+@@ -684,9 +685,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_PQUOTA	23	/* project quotas */
+ #define XFS_SCRUB_TYPE_FSCOUNTERS 24	/* fs summary counters */
+ #define XFS_SCRUB_TYPE_HEALTHY	25	/* everything checked out ok */
++#define XFS_SCRUB_TYPE_RTRMAPBT	26	/* realtime reverse mapping btree */
+ 
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	26
++#define XFS_SCRUB_TYPE_NR	27
+ 
+ /* i: Repair this metadata. */
+ #define XFS_SCRUB_IFLAG_REPAIR		(1 << 0)
+diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+index d9bd8996afbe..e41f60005424 100644
+--- a/fs/xfs/libxfs/xfs_health.h
++++ b/fs/xfs/libxfs/xfs_health.h
+@@ -62,6 +62,7 @@ struct xfs_da_args;
+ /* Observable health issues for realtime volume metadata. */
+ #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
+ #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
++#define XFS_SICK_RT_RMAPBT	(1 << 2)  /* realtime rmapbt */
+ 
+ /* Observable health issues for AG metadata. */
+ #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
+@@ -95,7 +96,8 @@ struct xfs_da_args;
+ 				 XFS_SICK_FS_PQUOTA)
+ 
+ #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
+-				 XFS_SICK_RT_SUMMARY)
++				 XFS_SICK_RT_SUMMARY | \
++				 XFS_SICK_RT_RMAPBT)
+ 
+ #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
+ 				 XFS_SICK_AG_AGF | \
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index d8214f156f03..8bb81caf0c6b 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -689,6 +689,7 @@ xchk_bmap(
+ 	case XFS_DINODE_FMT_UUID:
+ 	case XFS_DINODE_FMT_DEV:
+ 	case XFS_DINODE_FMT_LOCAL:
++	case XFS_DINODE_FMT_RMAP:
+ 		/* No mappings to check. */
+ 		goto out;
+ 	case XFS_DINODE_FMT_EXTENTS:
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index 93b52869daae..6e0ae69fc109 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -97,12 +97,18 @@ int xchk_setup_parent(struct xfs_scrub *sc,
+ 			   struct xfs_inode *ip);
+ #ifdef CONFIG_XFS_RT
+ int xchk_setup_rt(struct xfs_scrub *sc, struct xfs_inode *ip);
++int xchk_setup_rtrmapbt(struct xfs_scrub *sc, struct xfs_inode *ip);
+ #else
+ static inline int
+ xchk_setup_rt(struct xfs_scrub *sc, struct xfs_inode *ip)
+ {
+ 	return -ENOENT;
  }
--#endif /* CONFIG_XFS_RT */
-+
-+/* Transform a absolute-startblock rmap (rtdev, logdev) into a fsmap */
-+STATIC int
-+xfs_getfsmap_rtdev_helper(
-+	struct xfs_btree_cur		*cur,
-+	struct xfs_rmap_irec		*rec,
-+	void				*priv)
++static inline int
++xchk_setup_rtrmapbt(struct xfs_scrub *sc, struct xfs_inode *ip)
 +{
-+	struct xfs_mount		*mp = cur->bc_mp;
-+	struct xfs_getfsmap_info	*info = priv;
-+	xfs_daddr_t			rec_daddr;
++	return -ENOENT;
++}
+ #endif
+ #ifdef CONFIG_XFS_QUOTA
+ int xchk_setup_quota(struct xfs_scrub *sc, struct xfs_inode *ip);
+diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
+index a8d562753334..b7075edfebb7 100644
+--- a/fs/xfs/scrub/health.c
++++ b/fs/xfs/scrub/health.c
+@@ -106,6 +106,7 @@ static const struct xchk_health_map type_to_health_flag[XFS_SCRUB_TYPE_NR] = {
+ 	[XFS_SCRUB_TYPE_GQUOTA]		= { XHG_FS,  XFS_SICK_FS_GQUOTA },
+ 	[XFS_SCRUB_TYPE_PQUOTA]		= { XHG_FS,  XFS_SICK_FS_PQUOTA },
+ 	[XFS_SCRUB_TYPE_FSCOUNTERS]	= { XHG_FS,  XFS_SICK_FS_COUNTERS },
++	[XFS_SCRUB_TYPE_RTRMAPBT]	= { XHG_RT,  XFS_SICK_RT_RMAPBT },
+ };
+ 
+ /* Return the health status mask for this scrub type. */
+diff --git a/fs/xfs/scrub/rtrmap.c b/fs/xfs/scrub/rtrmap.c
+new file mode 100644
+index 000000000000..9b5d55734a41
+--- /dev/null
++++ b/fs/xfs/scrub/rtrmap.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2019 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <darrick.wong@oracle.com>
++ */
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_defer.h"
++#include "xfs_btree.h"
++#include "xfs_bit.h"
++#include "xfs_log_format.h"
++#include "xfs_trans.h"
++#include "xfs_sb.h"
++#include "xfs_rmap.h"
++#include "xfs_rmap_btree.h"
++#include "xfs_rtrmap_btree.h"
++#include "xfs_inode.h"
++#include "xfs_rtalloc.h"
++#include "scrub/xfs_scrub.h"
++#include "scrub/scrub.h"
++#include "scrub/common.h"
++#include "scrub/btree.h"
++#include "scrub/trace.h"
 +
-+	rec_daddr = XFS_FSB_TO_BB(mp, rec->rm_startblock);
++/* Set us up with the realtime metadata and AG headers locked. */
++int
++xchk_setup_rtrmapbt(
++	struct xfs_scrub	*sc,
++	struct xfs_inode	*ip)
++{
++	struct xfs_mount	*mp = sc->mp;
++	int			lockmode;
++	int			error = 0;
 +
-+	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr);
++	if (sc->sm->sm_agno || sc->sm->sm_ino || sc->sm->sm_gen)
++		return -EINVAL;
++
++	error = xchk_setup_fs(sc, ip);
++	if (error)
++		return error;
++
++	lockmode = XFS_ILOCK_EXCL;
++	xfs_ilock(mp->m_rrmapip, lockmode);
++	xfs_trans_ijoin(sc->tp, mp->m_rrmapip, lockmode);
++
++	lockmode = XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP;
++	xfs_ilock(mp->m_rbmip, lockmode);
++	xfs_trans_ijoin(sc->tp, mp->m_rbmip, lockmode);
++
++	return 0;
 +}
 +
-+/* Actually query the rtrmap btree. */
++/* Realtime reverse mapping. */
++
++/* Scrub a realtime rmapbt record. */
 +STATIC int
-+xfs_getfsmap_rtdev_rmapbt_query(
-+	struct xfs_trans		*tp,
-+	struct xfs_getfsmap_info	*info)
++xchk_rtrmapbt_helper(
++	struct xchk_btree	*bs,
++	union xfs_btree_rec	*rec)
 +{
-+	struct xfs_mount		*mp = tp->t_mountp;
-+	struct xfs_btree_cur		*bt_cur;
-+	int				error;
++	struct xfs_mount	*mp = bs->cur->bc_mp;
++	struct xfs_rmap_irec	irec;
++	bool			non_inode;
++	bool			is_bmbt;
++	bool			is_attr;
++	int			error;
 +
-+	/* Query the rtrmapbt */
-+	xfs_ilock(mp->m_rrmapip, XFS_ILOCK_SHARED);
-+	bt_cur = xfs_rtrmapbt_init_cursor(mp, tp, mp->m_rrmapip);
-+	error = xfs_rmap_query_range(bt_cur, &info->low, &info->high,
-+			xfs_getfsmap_rtdev_helper, info);
-+	if (error)
-+		goto err;
++	error = xfs_rmap_btrec_to_irec(bs->cur, rec, &irec);
++	if (!xchk_btree_process_error(bs->sc, bs->cur, 0, &error))
++		goto out;
 +
-+	/* Report any gaps at the end of the rtrmapbt */
-+	info->last = true;
-+	error = xfs_getfsmap_rtdev_helper(bt_cur, &info->high, info);
-+	if (error)
-+		goto err;
++	if (irec.rm_startblock + irec.rm_blockcount <= irec.rm_startblock ||
++	    (!xfs_verify_rtbno(mp, irec.rm_startblock) ||
++	     !xfs_verify_rtbno(mp, irec.rm_startblock +
++				irec.rm_blockcount - 1)))
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
 +
-+err:
-+	xfs_btree_del_cursor(bt_cur, error);
-+	xfs_iunlock(mp->m_rrmapip, XFS_ILOCK_SHARED);
++	non_inode = XFS_RMAP_NON_INODE_OWNER(irec.rm_owner);
++	is_bmbt = irec.rm_flags & XFS_RMAP_BMBT_BLOCK;
++	is_attr = irec.rm_flags & XFS_RMAP_ATTR_FORK;
++
++	if (is_bmbt || non_inode || is_attr)
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++
++out:
 +	return error;
 +}
 +
-+/* Execute a getfsmap query against the realtime device rmapbt. */
-+STATIC int
-+xfs_getfsmap_rtdev_rmapbt(
-+	struct xfs_trans		*tp,
-+	struct xfs_fsmap		*keys,
-+	struct xfs_getfsmap_info	*info)
++/* Scrub the realtime rmap btree. */
++int
++xchk_rtrmapbt(
++	struct xfs_scrub	*sc)
 +{
-+	info->missing_owner = XFS_FMR_OWN_FREE;
-+	return __xfs_getfsmap_rtdev(tp, keys, xfs_getfsmap_rtdev_rmapbt_query,
-+			info);
++	struct xfs_owner_info	oinfo;
++	struct xfs_mount	*mp = sc->mp;
++	struct xfs_btree_cur	*cur;
++	int			error;
++
++	cur = xfs_rtrmapbt_init_cursor(mp, sc->tp, mp->m_rrmapip);
++	xfs_rmap_ino_bmbt_owner(&oinfo, mp->m_rrmapip->i_ino, XFS_DATA_FORK);
++	error = xchk_btree(sc, cur, xchk_rtrmapbt_helper, &oinfo, NULL);
++	xfs_btree_del_cursor(cur, error);
++
++	return error;
 +}
-+#endif
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 54a524d19948..1b54c2b70369 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -357,6 +357,13 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
+ 		.scrub	= xchk_health_record,
+ 		.repair = xrep_notsupported,
+ 	},
++	[XFS_SCRUB_TYPE_RTRMAPBT] = {	/* realtime rmapbt */
++		.type	= ST_FS,
++		.setup	= xchk_setup_rtrmapbt,
++		.scrub	= xchk_rtrmapbt,
++		.has	= xfs_sb_version_hasrtrmapbt,
++		.repair	= xrep_notsupported,
++	},
+ };
  
- /* Execute a getfsmap query against the regular data device. */
- STATIC int
-@@ -851,7 +910,10 @@ xfs_getfsmap(
+ /* This isn't a stable feature, warn once per day. */
+diff --git a/fs/xfs/scrub/scrub.h b/fs/xfs/scrub/scrub.h
+index f96fd11eceb1..fb5f0f371cd8 100644
+--- a/fs/xfs/scrub/scrub.h
++++ b/fs/xfs/scrub/scrub.h
+@@ -116,6 +116,7 @@ int xchk_parent(struct xfs_scrub *sc);
  #ifdef CONFIG_XFS_RT
- 	if (mp->m_rtdev_targp) {
- 		handlers[2].dev = new_encode_dev(mp->m_rtdev_targp->bt_dev);
--		handlers[2].fn = xfs_getfsmap_rtdev_rtbitmap;
-+		if (use_rmap)
-+			handlers[2].fn = xfs_getfsmap_rtdev_rmapbt;
-+		else
-+			handlers[2].fn = xfs_getfsmap_rtdev_rtbitmap;
- 	}
- #endif /* CONFIG_XFS_RT */
+ int xchk_rtbitmap(struct xfs_scrub *sc);
+ int xchk_rtsummary(struct xfs_scrub *sc);
++int xchk_rtrmapbt(struct xfs_scrub *sc);
+ #else
+ static inline int
+ xchk_rtbitmap(struct xfs_scrub *sc)
+@@ -127,6 +128,11 @@ xchk_rtsummary(struct xfs_scrub *sc)
+ {
+ 	return -ENOENT;
+ }
++static inline int
++xchk_rtrmapbt(struct xfs_scrub *sc)
++{
++	return -ENOENT;
++}
+ #endif
+ #ifdef CONFIG_XFS_QUOTA
+ int xchk_quota(struct xfs_scrub *sc);
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 927c9645cb06..1a7de36aaf8b 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -51,6 +51,7 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_UQUOTA);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_GQUOTA);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_PQUOTA);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_FSCOUNTERS);
++TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_RTRMAPBT);
+ 
+ #define XFS_SCRUB_TYPE_STRINGS \
+ 	{ XFS_SCRUB_TYPE_PROBE,		"probe" }, \
+@@ -78,7 +79,8 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_FSCOUNTERS);
+ 	{ XFS_SCRUB_TYPE_GQUOTA,	"grpquota" }, \
+ 	{ XFS_SCRUB_TYPE_PQUOTA,	"prjquota" }, \
+ 	{ XFS_SCRUB_TYPE_FSCOUNTERS,	"fscounters" }, \
+-	{ XFS_SCRUB_TYPE_HEALTHY,	"healthy" }
++	{ XFS_SCRUB_TYPE_HEALTHY,	"healthy" }, \
++	{ XFS_SCRUB_TYPE_RTRMAPBT,	"rtrmapbt" }
+ 
+ DECLARE_EVENT_CLASS(xchk_class,
+ 	TP_PROTO(struct xfs_inode *ip, struct xfs_scrub_metadata *sm,
+diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+index dc886c14800e..e328b048edb0 100644
+--- a/fs/xfs/xfs_health.c
++++ b/fs/xfs/xfs_health.c
+@@ -357,6 +357,7 @@ static const struct ioctl_sick_map fs_map[] = {
+ static const struct ioctl_sick_map rt_map[] = {
+ 	{ XFS_SICK_RT_BITMAP,	XFS_FSOP_GEOM_SICK_RT_BITMAP },
+ 	{ XFS_SICK_RT_SUMMARY,	XFS_FSOP_GEOM_SICK_RT_SUMMARY },
++	{ XFS_SICK_RT_RMAPBT,	XFS_FSOP_GEOM_SICK_RT_RMAPBT },
+ 	{ 0, 0 },
+ };
  
 
