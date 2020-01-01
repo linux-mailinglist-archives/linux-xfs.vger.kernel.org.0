@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFDB712DCAD
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E32812DCC6
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:09:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgAABHB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:07:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:51836 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbgAABHA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:07:00 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00116xtg108571
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:59 GMT
+        id S1727168AbgAABJK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:09:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48742 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbgAABJK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:09:10 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001198Cj091316
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:09:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Cz862Zfb8fPjgskiwJvGFjmgXqFrsYsFd+k5FFT95Js=;
- b=YIfloep7mayWoUo4BpQU04V3+/4s3tArczwRVKIHv4l2ptDnjEQoUWGF/cULi18QTqSk
- JRl3GTMVecBCj/hsUymLa00uReR3+5XcQ5R8PtYa7ahwbWLmAn+FSzV/238kfIy19e4m
- rY0EGQB5uOekFQkCgi9ZYAfYKlNgqQOYtVaekb9LNcNupz0W7vLyD/RW2i0ezV5KpjG1
- DCrAV17VhtvoTs6pBWIpHBVahM+RnVsHqzW0KzYFh4ogGywKqFz9OlMJ6JsRVtkUp9mC
- j8AldoVDjDH/g7+f8nL4hmDmI73ABhGOgnjGTixxSXvESXT+SXfDn2vPd2F9QOE7ehGB 7g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2x5xftk2ax-1
+ bh=oJjBzELjruZx+FKsvSEFwR369Qz0YSXuX9Cpc+Wcs4E=;
+ b=g67j3ckceM/JrIYzmxOSHGZwmudPNtWR5org4RdCUYrl8gunsLSUtLRWM7CWtYF95Mqk
+ qIqCEuJWIAV6DkCLcfpt6Rq5Ep/+Era5yypTPjyxCm4qbmndu7nK3W23PeDLQsoHJC1a
+ cmfR8K4jdq2MZizplZ8kO3AoqDffpzuq8KAVFyU+ji+2WPOWRQaonLjAhXxcLsyz9LDR
+ SGaytlFyEPvXksG8EmlVVLlPUm5l5gi5uLObHiq1fwQpRka+SipCUeFRBlRTzJi3kWUa
+ w8nJmelFSUOGg3RgKukNsDEQGgQSZxrvnvEIfesOBCiAVlWkjGt1JfHscHuy/TzI1Md9 mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwct-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115Fmj006734
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2x8guee2pg-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:09:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115Maa039570
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:07:07 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2x7medfab9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:58 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00116wBT026798
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:58 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:07:07 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 001176xV030729
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:07:06 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:06:58 -0800
-Subject: [PATCH 09/11] xfs: use bool for done in xfs_inode_ag_walk
+        with ESMTP ; Tue, 31 Dec 2019 17:07:06 -0800
+Subject: [PATCH 10/11] xfs: move xfs_inode_ag_iterator to be closer to the
+ perag walking code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:06:56 -0800
-Message-ID: <157784081608.1360343.8892190103324406330.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:07:02 -0800
+Message-ID: <157784082215.1360343.9575394838862742771.stgit@magnolia>
 In-Reply-To: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 References: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -62,7 +63,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001010008
+ definitions=main-2001010009
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,39 +71,127 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This is a boolean variable, so use the bool type.
+Move the xfs_inode_ag_iterator function to be nearer xfs_inode_ag_walk
+so that we don't have to scroll back and forth to figure out how the
+incore inode walking function works.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_icache.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_icache.c |   88 ++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 48 insertions(+), 40 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index fbe0d8fb59c1..c3964af55979 100644
+index c3964af55979..d74f426a0293 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -799,11 +799,11 @@ xfs_inode_ag_walk(
- 	uint32_t		first_index;
- 	int			last_error = 0;
- 	int			skipped;
--	int			done;
-+	bool			done;
- 	int			nr_found;
+@@ -787,6 +787,10 @@ xfs_inode_ag_walk_grab(
+ 	return false;
+ }
  
- restart:
--	done = 0;
-+	done = false;
- 	skipped = 0;
- 	first_index = 0;
- 	nr_found = 0;
-@@ -855,7 +855,7 @@ xfs_inode_ag_walk(
- 				continue;
- 			first_index = XFS_INO_TO_AGINO(mp, ip->i_ino + 1);
- 			if (first_index < XFS_INO_TO_AGINO(mp, ip->i_ino))
--				done = 1;
-+				done = true;
- 		}
++/*
++ * For a given per-AG structure @pag, @grab, @execute, and @rele all incore
++ * inodes with the given radix tree @tag.
++ */
+ STATIC int
+ xfs_inode_ag_walk(
+ 	struct xfs_mount	*mp,
+@@ -892,6 +896,50 @@ xfs_inode_ag_walk(
+ 	return last_error;
+ }
  
- 		/* unlock now we've grabbed the inodes. */
++/* Fetch the next (possibly tagged) per-AG structure. */
++static inline struct xfs_perag *
++xfs_ici_walk_get_perag(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno,
++	int			tag)
++{
++	if (tag == XFS_ICI_NO_TAG)
++		return xfs_perag_get(mp, agno);
++	return xfs_perag_get_tag(mp, agno, tag);
++}
++
++/*
++ * Call the @execute function on all incore inodes matching the radix tree
++ * @tag.
++ */
++int
++xfs_inode_ag_iterator(
++	struct xfs_mount	*mp,
++	int			iter_flags,
++	int			(*execute)(struct xfs_inode *ip, void *args),
++	void			*args,
++	int			tag)
++{
++	struct xfs_perag	*pag;
++	int			error = 0;
++	int			last_error = 0;
++	xfs_agnumber_t		ag;
++
++	ag = 0;
++	while ((pag = xfs_ici_walk_get_perag(mp, ag, tag))) {
++		ag = pag->pag_agno + 1;
++		error = xfs_inode_ag_walk(mp, pag, execute, args, tag,
++				iter_flags);
++		xfs_perag_put(pag);
++		if (error) {
++			last_error = error;
++			if (error == -EFSCORRUPTED)
++				break;
++		}
++	}
++	return last_error;
++}
++
+ /*
+  * Background scanning to trim post-EOF preallocated space. This is queued
+  * based on the 'speculative_prealloc_lifetime' tunable (5m by default).
+@@ -945,46 +993,6 @@ xfs_cowblocks_worker(
+ 	xfs_queue_cowblocks(mp);
+ }
+ 
+-/* Fetch the next (possibly tagged) per-AG structure. */
+-static inline struct xfs_perag *
+-xfs_ici_walk_get_perag(
+-	struct xfs_mount	*mp,
+-	xfs_agnumber_t		agno,
+-	int			tag)
+-{
+-	if (tag == XFS_ICI_NO_TAG)
+-		return xfs_perag_get(mp, agno);
+-	return xfs_perag_get_tag(mp, agno, tag);
+-}
+-
+-int
+-xfs_inode_ag_iterator(
+-	struct xfs_mount	*mp,
+-	int			iter_flags,
+-	int			(*execute)(struct xfs_inode *ip, void *args),
+-	void			*args,
+-	int			tag)
+-{
+-	struct xfs_perag	*pag;
+-	int			error = 0;
+-	int			last_error = 0;
+-	xfs_agnumber_t		ag;
+-
+-	ag = 0;
+-	while ((pag = xfs_ici_walk_get_perag(mp, ag, tag))) {
+-		ag = pag->pag_agno + 1;
+-		error = xfs_inode_ag_walk(mp, pag, execute, args, tag,
+-				iter_flags);
+-		xfs_perag_put(pag);
+-		if (error) {
+-			last_error = error;
+-			if (error == -EFSCORRUPTED)
+-				break;
+-		}
+-	}
+-	return last_error;
+-}
+-
+ /*
+  * Grab the inode for reclaim exclusively.
+  * Return 0 if we grabbed it, non-zero otherwise.
 
