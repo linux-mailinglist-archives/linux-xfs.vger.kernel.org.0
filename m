@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6489C12DCA0
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:05:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2BAD12DCB0
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:07:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgAABF0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:05:26 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50950 "EHLO
+        id S1727133AbgAABHT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:07:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:51994 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbgAABF0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:05:26 -0500
+        with ESMTP id S1727122AbgAABHS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:07:18 -0500
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00114QSp107073
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:24 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115IBw107534
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:07:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=2QGR2JStHlqrufttZD96KpY7gO1llIDGvUXGKhjKxuk=;
- b=SnrnRagKEIjuXPGehq/tIcR8vXpTl+yOsezFSNsQ9ZOItqz+IidmWqLGfoMRwUeteBcm
- bxP9Dx2DoagDnjUUnVZx5j+0Owlx5HZgDEweETNTi7/sZx7nEcI6oZBQ7MHgDUbwM9WI
- K44dt0JON+7qAM7h8sW1PrmTvyDXThs4MinYC8a6I3ip1qPOuRxAahkvV1R9E0xQ1tMa
- wzrpeqzMQ+XOQMD3ViBcXKwGJ//m2VMzaXfKbsnb0VLBDS3ikqyAGiq6ZlDClVU/Ax0U
- rXRwHFkMK6b8L2IJYR2kzPbRlHctE1KjE/TK0yy7OZd77jpOU/rUCx6+kN+1t88z4Q12 Tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2x5xftk29s-1
+ bh=pO1JNr9SvzewIA9eXuwGIZH71fC2yC/pXddcyudiDls=;
+ b=kN4otolW8/EMAyhAe4yrsNhNPoo1RImZlYSoeNDuMVfBF0voOg+uF7bss3GUfDZJbgob
+ 4BDLYXneHQcvOjvNSvmWa9Lj3/XhWC+U0S3jgfd4+N47RjWSVevzliaNrun/lzVzIe6v
+ 8C0vGf6Jys/az+3QTohyI4unne9ukZA64y4F0S+JBxP8vBxGDZnc1PxUJ8l6w8gd3twz
+ zPSWnVSXLgd4BBwxzzdlEybj/6ArdyV/WRNxylgy7y4dfbJFFCiXyrw9hIi7KV9q0qlK
+ 7JxUt2m9Fqd0LIJH6Qv8iqX3268icB90f1QcvImNYFpAiknF94zCEHZqx1XJyBJCtwMk 2w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2b9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115KQU039454
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2x7medf8s4-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:07:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115FAM165836
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2x8gj91346-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:22 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00114mjp004079
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:04:49 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:15 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00114uDE025938
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:04:56 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:04:47 -0800
-Subject: [PATCH 01/10] xfs: separate the marking of sick and checked metadata
+        with ESMTP ; Tue, 31 Dec 2019 17:04:56 -0800
+Subject: [PATCH 02/10] xfs: report ag header corruption errors to the health
+ tracking system
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:04:45 -0800
-Message-ID: <157784068593.1360095.11901677612992424954.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:04:52 -0800
+Message-ID: <157784069209.1360095.11446811087494881964.stgit@magnolia>
 In-Reply-To: <157784067947.1360095.12276226432994685051.stgit@magnolia>
 References: <157784067947.1360095.12276226432994685051.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010008
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010008
@@ -70,215 +71,223 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Split the setting of the sick and checked masks into separate functions
-as part of preparing to add the ability for regular runtime fs code
-(i.e. not scrub) to mark metadata structures sick when corruptions are
-found.  Improve the documentation of libxfs' requirements for helper
-behavior.
+Whenever we encounter a corrupt AG header, we should report that to the
+health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_health.h |   16 +++++++++++++-
- fs/xfs/scrub/health.c      |   20 +++++++++++-------
- fs/xfs/xfs_health.c        |   49 ++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_mount.c         |    5 ++++
- 4 files changed, 80 insertions(+), 10 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c  |    6 ++++++
+ fs/xfs/libxfs/xfs_health.h |   13 ++++++++++---
+ fs/xfs/libxfs/xfs_ialloc.c |    3 +++
+ fs/xfs/libxfs/xfs_sb.c     |    2 ++
+ fs/xfs/xfs_health.c        |   17 +++++++++++++++++
+ fs/xfs/xfs_inode.c         |    9 +++++++++
+ 6 files changed, 47 insertions(+), 3 deletions(-)
 
 
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index fc93fd88ec89..63d3fc97719c 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -26,6 +26,7 @@
+ #include "xfs_log.h"
+ #include "xfs_ag_resv.h"
+ #include "xfs_bmap.h"
++#include "xfs_health.h"
+ 
+ extern kmem_zone_t	*xfs_bmap_free_item_zone;
+ 
+@@ -699,6 +700,8 @@ xfs_alloc_read_agfl(
+ 			mp, tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &bp, &xfs_agfl_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGFL);
+ 	if (error)
+ 		return error;
+ 	xfs_buf_set_ref(bp, XFS_AGFL_REF);
+@@ -722,6 +725,7 @@ xfs_alloc_update_counters(
+ 	if (unlikely(be32_to_cpu(agf->agf_freeblks) >
+ 		     be32_to_cpu(agf->agf_length))) {
+ 		xfs_buf_corruption_error(agbp);
++		xfs_ag_mark_sick(pag, XFS_SICK_AG_AGF);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -2960,6 +2964,8 @@ xfs_read_agf(
+ 			mp, tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), flags, bpp, &xfs_agf_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGF);
+ 	if (error)
+ 		return error;
+ 	if (!*bpp)
 diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index 272005ac8c88..96919a257870 100644
+index 96919a257870..c34c393d5aa7 100644
 --- a/fs/xfs/libxfs/xfs_health.h
 +++ b/fs/xfs/libxfs/xfs_health.h
-@@ -97,24 +97,38 @@ struct xfs_fsop_geom;
- 				 XFS_SICK_INO_SYMLINK | \
- 				 XFS_SICK_INO_PARENT)
+@@ -26,9 +26,11 @@
+  * and the "sick" field tells us if that piece was found to need repairs.
+  * Therefore we can conclude that for a given sick flag value:
+  *
+- *  - checked && sick  => metadata needs repair
+- *  - checked && !sick => metadata is ok
+- *  - !checked         => has not been examined since mount
++ *  - checked && sick   => metadata needs repair
++ *  - checked && !sick  => metadata is ok
++ *  - !checked && sick  => errors have been observed during normal operation,
++ *                         but the metadata has not been checked thoroughly
++ *  - !checked && !sick => has not been examined since mount
+  */
  
--/* These functions must be provided by the xfs implementation. */
-+/*
-+ * These functions must be provided by the xfs implementation.  Function
-+ * behavior with respect to the first argument should be as follows:
-+ *
-+ * xfs_*_mark_sick:    set the sick flags and do not set checked flags.
-+ * xfs_*_mark_checked: set the checked flags.
-+ * xfs_*_mark_healthy: clear the sick flags and set the checked flags.
-+ *
-+ * xfs_*_measure_sickness: return the sick and check status in the provided
-+ * out parameters.
-+ */
- 
- void xfs_fs_mark_sick(struct xfs_mount *mp, unsigned int mask);
-+void xfs_fs_mark_checked(struct xfs_mount *mp, unsigned int mask);
- void xfs_fs_mark_healthy(struct xfs_mount *mp, unsigned int mask);
- void xfs_fs_measure_sickness(struct xfs_mount *mp, unsigned int *sick,
- 		unsigned int *checked);
- 
- void xfs_rt_mark_sick(struct xfs_mount *mp, unsigned int mask);
-+void xfs_rt_mark_checked(struct xfs_mount *mp, unsigned int mask);
- void xfs_rt_mark_healthy(struct xfs_mount *mp, unsigned int mask);
+ struct xfs_mount;
+@@ -121,6 +123,8 @@ void xfs_rt_mark_healthy(struct xfs_mount *mp, unsigned int mask);
  void xfs_rt_measure_sickness(struct xfs_mount *mp, unsigned int *sick,
  		unsigned int *checked);
  
++void xfs_agno_mark_sick(struct xfs_mount *mp, xfs_agnumber_t agno,
++		unsigned int mask);
  void xfs_ag_mark_sick(struct xfs_perag *pag, unsigned int mask);
-+void xfs_ag_mark_checked(struct xfs_perag *pag, unsigned int mask);
+ void xfs_ag_mark_checked(struct xfs_perag *pag, unsigned int mask);
  void xfs_ag_mark_healthy(struct xfs_perag *pag, unsigned int mask);
- void xfs_ag_measure_sickness(struct xfs_perag *pag, unsigned int *sick,
- 		unsigned int *checked);
+@@ -201,4 +205,7 @@ void xfs_fsop_geom_health(struct xfs_mount *mp, struct xfs_fsop_geom *geo);
+ void xfs_ag_geom_health(struct xfs_perag *pag, struct xfs_ag_geometry *ageo);
+ void xfs_bulkstat_health(struct xfs_inode *ip, struct xfs_bulkstat *bs);
  
- void xfs_inode_mark_sick(struct xfs_inode *ip, unsigned int mask);
-+void xfs_inode_mark_checked(struct xfs_inode *ip, unsigned int mask);
- void xfs_inode_mark_healthy(struct xfs_inode *ip, unsigned int mask);
- void xfs_inode_measure_sickness(struct xfs_inode *ip, unsigned int *sick,
- 		unsigned int *checked);
-diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
-index 8cff49b3ef60..4d1bea2fc36d 100644
---- a/fs/xfs/scrub/health.c
-+++ b/fs/xfs/scrub/health.c
-@@ -137,30 +137,34 @@ xchk_update_health(
- 	switch (type_to_health_flag[sc->sm->sm_type].group) {
- 	case XHG_AG:
- 		pag = xfs_perag_get(sc->mp, sc->sm->sm_agno);
--		if (bad)
-+		if (bad) {
- 			xfs_ag_mark_sick(pag, sc->sick_mask);
--		else
-+			xfs_ag_mark_checked(pag, sc->sick_mask);
-+		} else
- 			xfs_ag_mark_healthy(pag, sc->sick_mask);
- 		xfs_perag_put(pag);
- 		break;
- 	case XHG_INO:
- 		if (!sc->ip)
- 			return;
--		if (bad)
-+		if (bad) {
- 			xfs_inode_mark_sick(sc->ip, sc->sick_mask);
--		else
-+			xfs_inode_mark_checked(sc->ip, sc->sick_mask);
-+		} else
- 			xfs_inode_mark_healthy(sc->ip, sc->sick_mask);
- 		break;
- 	case XHG_FS:
--		if (bad)
-+		if (bad) {
- 			xfs_fs_mark_sick(sc->mp, sc->sick_mask);
--		else
-+			xfs_fs_mark_checked(sc->mp, sc->sick_mask);
-+		} else
- 			xfs_fs_mark_healthy(sc->mp, sc->sick_mask);
- 		break;
- 	case XHG_RT:
--		if (bad)
-+		if (bad) {
- 			xfs_rt_mark_sick(sc->mp, sc->sick_mask);
--		else
-+			xfs_rt_mark_checked(sc->mp, sc->sick_mask);
-+		} else
- 			xfs_rt_mark_healthy(sc->mp, sc->sick_mask);
- 		break;
- 	default:
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 8e0cb05a7142..860dc70c99e7 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -100,6 +100,18 @@ xfs_fs_mark_sick(
- 
- 	spin_lock(&mp->m_sb_lock);
- 	mp->m_fs_sick |= mask;
-+	spin_unlock(&mp->m_sb_lock);
-+}
++#define xfs_metadata_is_sick(error) \
++	(unlikely((error) == -EFSCORRUPTED || (error) == -EFSBADCRC))
 +
-+/* Mark per-fs metadata as having been checked. */
-+void
-+xfs_fs_mark_checked(
-+	struct xfs_mount	*mp,
-+	unsigned int		mask)
-+{
-+	ASSERT(!(mask & ~XFS_SICK_FS_PRIMARY));
-+
-+	spin_lock(&mp->m_sb_lock);
- 	mp->m_fs_checked |= mask;
- 	spin_unlock(&mp->m_sb_lock);
- }
-@@ -143,6 +155,19 @@ xfs_rt_mark_sick(
- 
- 	spin_lock(&mp->m_sb_lock);
- 	mp->m_rt_sick |= mask;
-+	spin_unlock(&mp->m_sb_lock);
-+}
-+
-+/* Mark realtime metadata as having been checked. */
-+void
-+xfs_rt_mark_checked(
-+	struct xfs_mount	*mp,
-+	unsigned int		mask)
-+{
-+	ASSERT(!(mask & ~XFS_SICK_RT_PRIMARY));
-+	trace_xfs_rt_mark_sick(mp, mask);
-+
-+	spin_lock(&mp->m_sb_lock);
- 	mp->m_rt_checked |= mask;
- 	spin_unlock(&mp->m_sb_lock);
- }
-@@ -186,6 +211,18 @@ xfs_ag_mark_sick(
- 
- 	spin_lock(&pag->pag_state_lock);
- 	pag->pag_sick |= mask;
-+	spin_unlock(&pag->pag_state_lock);
-+}
-+
-+/* Mark per-ag metadata as having been checked. */
-+void
-+xfs_ag_mark_checked(
-+	struct xfs_perag	*pag,
-+	unsigned int		mask)
-+{
-+	ASSERT(!(mask & ~XFS_SICK_AG_PRIMARY));
-+
-+	spin_lock(&pag->pag_state_lock);
- 	pag->pag_checked |= mask;
- 	spin_unlock(&pag->pag_state_lock);
- }
-@@ -229,6 +266,18 @@ xfs_inode_mark_sick(
- 
- 	spin_lock(&ip->i_flags_lock);
- 	ip->i_sick |= mask;
-+	spin_unlock(&ip->i_flags_lock);
-+}
-+
-+/* Mark inode metadata as having been checked. */
-+void
-+xfs_inode_mark_checked(
-+	struct xfs_inode	*ip,
-+	unsigned int		mask)
-+{
-+	ASSERT(!(mask & ~XFS_SICK_INO_PRIMARY));
-+
-+	spin_lock(&ip->i_flags_lock);
- 	ip->i_checked |= mask;
- 	spin_unlock(&ip->i_flags_lock);
- }
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index ad57b4403587..8c068d5e54cb 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -608,8 +608,10 @@ xfs_check_summary_counts(
- 	if (XFS_LAST_UNMOUNT_WAS_CLEAN(mp) &&
- 	    (mp->m_sb.sb_fdblocks > mp->m_sb.sb_dblocks ||
- 	     !xfs_verify_icount(mp, mp->m_sb.sb_icount) ||
--	     mp->m_sb.sb_ifree > mp->m_sb.sb_icount))
-+	     mp->m_sb.sb_ifree > mp->m_sb.sb_icount)) {
- 		xfs_fs_mark_sick(mp, XFS_SICK_FS_COUNTERS);
-+		xfs_fs_mark_checked(mp, XFS_SICK_FS_COUNTERS);
-+	}
- 
- 	/*
- 	 * We can safely re-initialise incore superblock counters from the
-@@ -1386,6 +1388,7 @@ xfs_force_summary_recalc(
- 		return;
- 
- 	xfs_fs_mark_sick(mp, XFS_SICK_FS_COUNTERS);
-+	xfs_fs_mark_checked(mp, XFS_SICK_FS_COUNTERS);
- }
+ #endif	/* __XFS_HEALTH_H__ */
+diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+index 67ad8ff95178..ce52fd9332e5 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.c
++++ b/fs/xfs/libxfs/xfs_ialloc.c
+@@ -27,6 +27,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_log.h"
+ #include "xfs_rmap.h"
++#include "xfs_health.h"
  
  /*
+  * Lookup a record by ino in the btree given by cur.
+@@ -2643,6 +2644,8 @@ xfs_read_agi(
+ 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), 0, bpp, &xfs_agi_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
+ 	if (error)
+ 		return error;
+ 	if (tp)
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 0ac69751fe85..4a923545465d 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -1169,6 +1169,8 @@ xfs_sb_read_secondary(
+ 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, agno, XFS_SB_BLOCK(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &bp, &xfs_sb_buf_ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_SB);
+ 	if (error)
+ 		return error;
+ 	xfs_buf_set_ref(bp, XFS_SSB_REF);
+diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+index 860dc70c99e7..36c32b108b39 100644
+--- a/fs/xfs/xfs_health.c
++++ b/fs/xfs/xfs_health.c
+@@ -200,6 +200,23 @@ xfs_rt_measure_sickness(
+ 	spin_unlock(&mp->m_sb_lock);
+ }
+ 
++/* Mark unhealthy per-ag metadata given a raw AG number. */
++void
++xfs_agno_mark_sick(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno,
++	unsigned int		mask)
++{
++	struct xfs_perag	*pag = xfs_perag_get(mp, agno);
++
++	/* per-ag structure not set up yet? */
++	if (!pag)
++		return;
++
++	xfs_ag_mark_sick(pag, mask);
++	xfs_perag_put(pag);
++}
++
+ /* Mark unhealthy per-ag metadata. */
+ void
+ xfs_ag_mark_sick(
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 8a424fac2d27..906b0e2f68e2 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -35,6 +35,7 @@
+ #include "xfs_log.h"
+ #include "xfs_bmap_btree.h"
+ #include "xfs_reflink.h"
++#include "xfs_health.h"
+ 
+ kmem_zone_t *xfs_inode_zone;
+ 
+@@ -781,6 +782,8 @@ xfs_ialloc(
+ 	 */
+ 	if ((pip && ino == pip->i_ino) || !xfs_verify_dir_ino(mp, ino)) {
+ 		xfs_alert(mp, "Allocated a known in-use inode 0x%llx!", ino);
++		xfs_agno_mark_sick(mp, XFS_INO_TO_AGNO(mp, ino),
++				XFS_SICK_AG_INOBT);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -2111,6 +2114,7 @@ xfs_iunlink_update_bucket(
+ 	 */
+ 	if (old_value == new_agino) {
+ 		xfs_buf_corruption_error(agibp);
++		xfs_agno_mark_sick(tp->t_mountp, agno, XFS_SICK_AG_AGI);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -2177,6 +2181,7 @@ xfs_iunlink_update_inode(
+ 	if (!xfs_verify_agino_or_null(mp, agno, old_value)) {
+ 		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
+ 				sizeof(*dip), __this_address);
++		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 		error = -EFSCORRUPTED;
+ 		goto out;
+ 	}
+@@ -2191,6 +2196,7 @@ xfs_iunlink_update_inode(
+ 		if (next_agino != NULLAGINO) {
+ 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+ 					dip, sizeof(*dip), __this_address);
++			xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 			error = -EFSCORRUPTED;
+ 		}
+ 		goto out;
+@@ -2245,6 +2251,7 @@ xfs_iunlink(
+ 	if (next_agino == agino ||
+ 	    !xfs_verify_agino_or_null(mp, agno, next_agino)) {
+ 		xfs_buf_corruption_error(agibp);
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -2382,6 +2389,7 @@ xfs_iunlink_map_prev(
+ 			XFS_CORRUPTION_ERROR(__func__,
+ 					XFS_ERRLEVEL_LOW, mp,
+ 					*dipp, sizeof(**dipp));
++			xfs_ag_mark_sick(pag, XFS_SICK_AG_AGI);
+ 			error = -EFSCORRUPTED;
+ 			return error;
+ 		}
+@@ -2428,6 +2436,7 @@ xfs_iunlink_remove(
+ 	if (!xfs_verify_agino(mp, agno, head_agino)) {
+ 		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
+ 				agi, sizeof(*agi));
++		xfs_agno_mark_sick(mp, agno, XFS_SICK_AG_AGI);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
 
