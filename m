@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A0712DC98
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:05:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FD5012DC9E
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:05:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgAABFP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:05:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46552 "EHLO
+        id S1727139AbgAABFV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:05:21 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46632 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgAABFP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:05:15 -0500
+        with ESMTP id S1727144AbgAABFU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:05:20 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115Dh9089295
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:13 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115JgQ089325
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=z3HAABx9b4qmUp7bMcy99VqtFhoA+VhkyhiDgBmLRlI=;
- b=qIUijBaEcbuDo4uzMJjkE3z4EyBdaZS+PgFuc0YvAg2tGPpHVN2L/K+M4j/nQe4ZTEhH
- 4YB/6BTM3gaEKOnSqCi0j7t2h6WzzoRAeGu4hv4Yclkhtmr0zWo4mEkKDaA3ZQraN31p
- h7k8LTxoC6MZb9qRjshJFAEjfjQ7b8+ieWIoJuwUY6ybHj7t22Q/aySGDhbK+J1bmLSm
- it0Ix3bjecCgKx/L7MuT9uVGxh+VckNMvkL2U/EUk4QaI2skwZluUaEK3x+PBd7QZvNe
- JpS6BzqqczarxroURvC7Ub946WM2V/KmMcCRaPIPXiE8bdD9eD818014yvm1H+eYkp9p aQ== 
+ bh=V9YMukvvnT7Wg3oj0hDG8+2Pq1VzzoXCjVo2zvaG1HE=;
+ b=hDa4QMVRiX+V7cqcS9cbK86Gb1ITSwVFyEtzstoE9QYDjGcUu5fx/yYowzyShz9lLclX
+ q39KlYh27WSrDp6WiWb1E/a5PX24qhDNGjBtqf3IfwnHrQDli4gTwcqdiaY/J846EAL+
+ 9WnwkrsT3TBXPe2d44oJR2nTShzU077JX9D8Tqc1v0/DWrKMQKVhIR2XsnipptN9K6eF
+ Rj6KGiCbNDOWK0FmT/qwICvHeM8D8q1aTY1QZm3rklqsjUG21yt0ZdotcB+k5OlihrG5
+ zMUREdlpiR9DJTP3EX1VaHNyxUolQY4ALSqBT5IwK5tSQWDRQkPfz/BS45nXXsf1b974 QQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjw7s-1
+        by userp2120.oracle.com with ESMTP id 2x5ypqjw85-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:13 +0000
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:19 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001159fD183675
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2x8bsrfvuu-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011594o183756
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2x8bsrfvxe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:13 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00115BBj004221
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:11 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:19 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00115INF026133
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:18 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:05:11 -0800
-Subject: [PATCH 04/10] xfs: report btree block corruption errors to the
+        with ESMTP ; Tue, 31 Dec 2019 17:05:17 -0800
+Subject: [PATCH 05/10] xfs: report dir/attr block corruption errors to the
  health system
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:05:07 -0800
-Message-ID: <157784070772.1360095.589735529579778288.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:05:15 -0800
+Message-ID: <157784071558.1360095.5833103652518516086.stgit@magnolia>
 In-Reply-To: <157784067947.1360095.12276226432994685051.stgit@magnolia>
 References: <157784067947.1360095.12276226432994685051.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -71,367 +71,589 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Whenever we encounter corrupt btree blocks, we should report that to the
-health monitoring system for later reporting.
+Whenever we encounter corrupt directory or extended attribute blocks, we
+should report that to the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c    |    1 +
- fs/xfs/libxfs/xfs_bmap.c     |    6 ++++++
- fs/xfs/libxfs/xfs_btree.c    |   16 +++++++++++++++-
- fs/xfs/libxfs/xfs_health.h   |    2 ++
- fs/xfs/libxfs/xfs_ialloc.c   |    1 +
- fs/xfs/libxfs/xfs_refcount.c |    6 +++++-
- fs/xfs/libxfs/xfs_rmap.c     |   14 +++++++++++---
- fs/xfs/libxfs/xfs_rmap.h     |    2 +-
- fs/xfs/scrub/rmap.c          |    2 +-
- fs/xfs/xfs_health.c          |   39 +++++++++++++++++++++++++++++++++++++++
- 10 files changed, 82 insertions(+), 7 deletions(-)
+ fs/xfs/libxfs/xfs_attr_leaf.c   |    5 ++++-
+ fs/xfs/libxfs/xfs_attr_remote.c |   27 ++++++++++++++++-----------
+ fs/xfs/libxfs/xfs_da_btree.c    |   35 ++++++++++++++++++++++++++++++-----
+ fs/xfs/libxfs/xfs_dir2.c        |    5 ++++-
+ fs/xfs/libxfs/xfs_dir2_data.c   |    2 ++
+ fs/xfs/libxfs/xfs_dir2_leaf.c   |    3 +++
+ fs/xfs/libxfs/xfs_dir2_node.c   |    7 +++++++
+ fs/xfs/libxfs/xfs_health.h      |    3 +++
+ fs/xfs/xfs_attr_inactive.c      |    4 ++++
+ fs/xfs/xfs_attr_list.c          |    7 ++++++-
+ fs/xfs/xfs_health.c             |   39 +++++++++++++++++++++++++++++++++++++++
+ 11 files changed, 118 insertions(+), 19 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 63d3fc97719c..5097c188d1ba 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -261,6 +261,7 @@ xfs_alloc_get_rec(
- 		cur->bc_btnum == XFS_BTNUM_BNO ? "Block" : "Size", agno);
- 	xfs_warn(mp,
- 		"start block 0x%x block count 0x%x", *bno, *len);
-+	xfs_btree_mark_sick(cur);
- 	return -EFSCORRUPTED;
- }
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 7d14589ba8d1..322454aedabd 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -27,7 +27,7 @@
+ #include "xfs_buf_item.h"
+ #include "xfs_dir2.h"
+ #include "xfs_log.h"
+-
++#include "xfs_health.h"
  
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index fffe2d90c643..7e9fd56b0edb 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -369,6 +369,8 @@ xfs_bmap_check_leaf_extents(
- 			error = xfs_btree_read_bufl(mp, NULL, bno, &bp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
-+			if (xfs_metadata_is_sick(error))
-+				xfs_btree_mark_sick(cur);
- 			if (error)
- 				goto error_norelse;
- 		}
-@@ -455,6 +457,8 @@ xfs_bmap_check_leaf_extents(
- 			error = xfs_btree_read_bufl(mp, NULL, bno, &bp,
- 						XFS_BMAP_BTREE_REF,
- 						&xfs_bmbt_buf_ops);
-+			if (xfs_metadata_is_sick(error))
-+				xfs_btree_mark_sick(cur);
- 			if (error)
- 				goto error_norelse;
- 		}
-@@ -619,6 +623,8 @@ xfs_bmap_btree_to_extents(
- #endif
- 	error = xfs_btree_read_bufl(mp, tp, cbno, &cbp, XFS_BMAP_BTREE_REF,
- 				&xfs_bmbt_buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_btree_mark_sick(cur);
- 	if (error)
- 		return error;
- 	cblock = XFS_BUF_TO_BLOCK(cbp);
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 7e5d9668c8d9..064670b85562 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -20,6 +20,7 @@
+ /*
+  * xfs_attr_leaf.c
+@@ -2357,6 +2357,7 @@ xfs_attr3_leaf_lookup_int(
+ 	entries = xfs_attr3_leaf_entryp(leaf);
+ 	if (ichdr.count >= args->geo->blksize / 8) {
+ 		xfs_buf_corruption_error(bp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -2376,10 +2377,12 @@ xfs_attr3_leaf_lookup_int(
+ 	}
+ 	if (!(probe >= 0 && (!ichdr.count || probe < ichdr.count))) {
+ 		xfs_buf_corruption_error(bp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 	if (!(span <= 4 || be32_to_cpu(entry->hashval) == hashval)) {
+ 		xfs_buf_corruption_error(bp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+index a6ef5df42669..ef34d90501a7 100644
+--- a/fs/xfs/libxfs/xfs_attr_remote.c
++++ b/fs/xfs/libxfs/xfs_attr_remote.c
+@@ -22,6 +22,7 @@
+ #include "xfs_attr_remote.h"
  #include "xfs_trace.h"
- #include "xfs_alloc.h"
+ #include "xfs_error.h"
++#include "xfs_health.h"
+ 
+ #define ATTR_RMTVALUE_MAPSIZE	1	/* # of map entries at once */
+ 
+@@ -261,17 +262,18 @@ xfs_attr3_rmt_hdr_set(
+  */
+ STATIC int
+ xfs_attr_rmtval_copyout(
+-	struct xfs_mount *mp,
+-	struct xfs_buf	*bp,
+-	xfs_ino_t	ino,
+-	int		*offset,
+-	int		*valuelen,
+-	uint8_t		**dst)
++	struct xfs_mount	*mp,
++	struct xfs_buf		*bp,
++	struct xfs_inode	*dp,
++	int			*offset,
++	int			*valuelen,
++	uint8_t			**dst)
+ {
+-	char		*src = bp->b_addr;
+-	xfs_daddr_t	bno = bp->b_bn;
+-	int		len = BBTOB(bp->b_length);
+-	int		blksize = mp->m_attr_geo->blksize;
++	char			*src = bp->b_addr;
++	xfs_ino_t		ino = dp->i_ino;
++	xfs_daddr_t		bno = bp->b_bn;
++	int			len = BBTOB(bp->b_length);
++	int			blksize = mp->m_attr_geo->blksize;
+ 
+ 	ASSERT(len >= blksize);
+ 
+@@ -287,6 +289,7 @@ xfs_attr_rmtval_copyout(
+ 				xfs_alert(mp,
+ "remote attribute header mismatch bno/off/len/owner (0x%llx/0x%x/Ox%x/0x%llx)",
+ 					bno, *offset, byte_cnt, ino);
++				xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 				return -EFSCORRUPTED;
+ 			}
+ 			hdr_size = sizeof(struct xfs_attr3_rmt_hdr);
+@@ -405,10 +408,12 @@ xfs_attr_rmtval_get(
+ 						   mp->m_ddev_targp,
+ 						   dblkno, dblkcnt, 0, &bp,
+ 						   &xfs_attr3_rmt_buf_ops);
++			if (xfs_metadata_is_sick(error))
++				xfs_da_mark_sick(args);
+ 			if (error)
+ 				return error;
+ 
+-			error = xfs_attr_rmtval_copyout(mp, bp, args->dp->i_ino,
++			error = xfs_attr_rmtval_copyout(mp, bp, args->dp,
+ 							&offset, &valuelen,
+ 							&dst);
+ 			xfs_trans_brelse(args->trans, bp);
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 8c3eafe280ed..90854f161c08 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -22,6 +22,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_buf_item.h"
  #include "xfs_log.h"
 +#include "xfs_health.h"
  
  /*
-  * Cursor allocation zone.
-@@ -109,6 +110,7 @@ xfs_btree_check_lblock(
- 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BTREE_CHECK_LBLOCK)) {
- 		if (bp)
- 			trace_xfs_btree_corrupt(bp, _RET_IP_);
-+		xfs_btree_mark_sick(cur);
+  * xfs_da_btree.c
+@@ -334,6 +335,8 @@ const struct xfs_buf_ops xfs_da3_node_buf_ops = {
+ static int
+ xfs_da3_node_set_type(
+ 	struct xfs_trans	*tp,
++	struct xfs_inode	*dp,
++	int			whichfork,
+ 	struct xfs_buf		*bp)
+ {
+ 	struct xfs_da_blkinfo	*info = bp->b_addr;
+@@ -355,6 +358,7 @@ xfs_da3_node_set_type(
+ 		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, tp->t_mountp,
+ 				info, sizeof(*info));
+ 		xfs_trans_brelse(tp, bp);
++		xfs_dirattr_mark_sick(dp, whichfork);
  		return -EFSCORRUPTED;
  	}
- 	return 0;
-@@ -172,6 +174,7 @@ xfs_btree_check_sblock(
- 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BTREE_CHECK_SBLOCK)) {
- 		if (bp)
- 			trace_xfs_btree_corrupt(bp, _RET_IP_);
-+		xfs_btree_mark_sick(cur);
- 		return -EFSCORRUPTED;
- 	}
- 	return 0;
-@@ -247,6 +250,7 @@ xfs_btree_check_ptr(
- 				level, index);
- 	}
- 
-+	xfs_btree_mark_sick(cur);
- 	return -EFSCORRUPTED;
  }
- 
-@@ -428,6 +432,8 @@ xfs_btree_dup_cursor(
- 						   XFS_BUF_ADDR(bp), mp->m_bsize,
- 						   0, &bp,
- 						   cur->bc_ops->buf_ops);
-+			if (xfs_metadata_is_sick(error))
-+				xfs_btree_mark_sick(new);
- 			if (error) {
- 				xfs_btree_del_cursor(new, error);
- 				*ncur = NULL;
-@@ -1318,6 +1324,8 @@ xfs_btree_read_buf_block(
- 	error = xfs_trans_read_buf(mp, cur->bc_tp, mp->m_ddev_targp, d,
- 				   mp->m_bsize, flags, bpp,
- 				   cur->bc_ops->buf_ops);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_btree_mark_sick(cur);
- 	if (error)
+@@ -373,7 +377,7 @@ xfs_da3_node_read(
+ 			&xfs_da3_node_buf_ops);
+ 	if (error || !*bpp || !tp)
  		return error;
- 
-@@ -1628,6 +1636,7 @@ xfs_btree_increment(
- 		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE)
- 			goto out0;
- 		ASSERT(0);
-+		xfs_btree_mark_sick(cur);
- 		error = -EFSCORRUPTED;
- 		goto error0;
- 	}
-@@ -1721,6 +1730,7 @@ xfs_btree_decrement(
- 		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE)
- 			goto out0;
- 		ASSERT(0);
-+		xfs_btree_mark_sick(cur);
- 		error = -EFSCORRUPTED;
- 		goto error0;
- 	}
-@@ -1813,6 +1823,7 @@ xfs_btree_lookup_get_block(
- 	*blkp = NULL;
- 	xfs_buf_corruption_error(bp);
- 	xfs_trans_brelse(cur->bc_tp, bp);
-+	xfs_btree_mark_sick(cur);
- 	return -EFSCORRUPTED;
+-	return xfs_da3_node_set_type(tp, *bpp);
++	return xfs_da3_node_set_type(tp, dp, whichfork, *bpp);
  }
  
-@@ -1859,8 +1870,10 @@ xfs_btree_lookup(
- 	XFS_BTREE_STATS_INC(cur, lookup);
+ int
+@@ -400,7 +404,7 @@ xfs_da3_node_read_mapped(
  
- 	/* No such thing as a zero-level tree. */
--	if (XFS_IS_CORRUPT(cur->bc_mp, cur->bc_nlevels == 0))
-+	if (XFS_IS_CORRUPT(cur->bc_mp, cur->bc_nlevels == 0)) {
-+		xfs_btree_mark_sick(cur);
+ 	if (!tp)
+ 		return 0;
+-	return xfs_da3_node_set_type(tp, *bpp);
++	return xfs_da3_node_set_type(tp, dp, whichfork, *bpp);
+ }
+ 
+ /*========================================================================
+@@ -591,6 +595,7 @@ xfs_da3_split(
+ 	if (node->hdr.info.forw) {
+ 		if (be32_to_cpu(node->hdr.info.forw) != addblk->blkno) {
+ 			xfs_buf_corruption_error(oldblk->bp);
++			xfs_da_mark_sick(state->args);
+ 			error = -EFSCORRUPTED;
+ 			goto out;
+ 		}
+@@ -604,6 +609,7 @@ xfs_da3_split(
+ 	if (node->hdr.info.back) {
+ 		if (be32_to_cpu(node->hdr.info.back) != addblk->blkno) {
+ 			xfs_buf_corruption_error(oldblk->bp);
++			xfs_da_mark_sick(state->args);
+ 			error = -EFSCORRUPTED;
+ 			goto out;
+ 		}
+@@ -1625,6 +1631,7 @@ xfs_da3_node_lookup_int(
+ 
+ 		if (magic != XFS_DA_NODE_MAGIC && magic != XFS_DA3_NODE_MAGIC) {
+ 			xfs_buf_corruption_error(blk->bp);
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
+ 		}
+ 
+@@ -1640,6 +1647,7 @@ xfs_da3_node_lookup_int(
+ 		/* Tree taller than we can handle; bail out! */
+ 		if (nodehdr.level >= XFS_DA_NODE_MAXDEPTH) {
+ 			xfs_buf_corruption_error(blk->bp);
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
+ 		}
+ 
+@@ -1648,6 +1656,7 @@ xfs_da3_node_lookup_int(
+ 			expected_level = nodehdr.level - 1;
+ 		else if (expected_level != nodehdr.level) {
+ 			xfs_buf_corruption_error(blk->bp);
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
+ 		} else
+ 			expected_level--;
+@@ -1699,12 +1708,16 @@ xfs_da3_node_lookup_int(
+ 		}
+ 
+ 		/* We can't point back to the root. */
+-		if (XFS_IS_CORRUPT(dp->i_mount, blkno == args->geo->leafblk))
++		if (XFS_IS_CORRUPT(dp->i_mount, blkno == args->geo->leafblk)) {
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
++		}
+ 	}
+ 
+-	if (XFS_IS_CORRUPT(dp->i_mount, expected_level != 0))
++	if (XFS_IS_CORRUPT(dp->i_mount, expected_level != 0)) {
++		xfs_da_mark_sick(args);
  		return -EFSCORRUPTED;
 +	}
  
- 	block = NULL;
- 	keyno = 0;
-@@ -1903,6 +1916,7 @@ xfs_btree_lookup(
- 							XFS_ERRLEVEL_LOW,
- 							cur->bc_mp, block,
- 							sizeof(*block));
-+					xfs_btree_mark_sick(cur);
- 					return -EFSCORRUPTED;
- 				}
+ 	/*
+ 	 * A leaf block that ends in the hashval that we are interested in
+@@ -1722,6 +1735,7 @@ xfs_da3_node_lookup_int(
+ 			args->blkno = blk->blkno;
+ 		} else {
+ 			ASSERT(0);
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
+ 		}
+ 		if (((retval == -ENOENT) || (retval == -ENOATTR)) &&
+@@ -2286,8 +2300,10 @@ xfs_da3_swap_lastblock(
+ 	error = xfs_bmap_last_before(tp, dp, &lastoff, w);
+ 	if (error)
+ 		return error;
+-	if (XFS_IS_CORRUPT(mp, lastoff == 0))
++	if (XFS_IS_CORRUPT(mp, lastoff == 0)) {
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
++	}
+ 	/*
+ 	 * Read the last block in the btree space.
+ 	 */
+@@ -2336,6 +2352,7 @@ xfs_da3_swap_lastblock(
+ 		if (XFS_IS_CORRUPT(mp,
+ 				   be32_to_cpu(sib_info->forw) != last_blkno ||
+ 				   sib_info->magic != dead_info->magic)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2356,6 +2373,7 @@ xfs_da3_swap_lastblock(
+ 		if (XFS_IS_CORRUPT(mp,
+ 				   be32_to_cpu(sib_info->back) != last_blkno ||
+ 				   sib_info->magic != dead_info->magic)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2378,6 +2396,7 @@ xfs_da3_swap_lastblock(
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &par_hdr, par_node);
+ 		if (XFS_IS_CORRUPT(mp,
+ 				   level >= 0 && level != par_hdr.level + 1)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2389,6 +2408,7 @@ xfs_da3_swap_lastblock(
+ 		     entno++)
+ 			continue;
+ 		if (XFS_IS_CORRUPT(mp, entno == par_hdr.count)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2414,6 +2434,7 @@ xfs_da3_swap_lastblock(
+ 		xfs_trans_brelse(tp, par_buf);
+ 		par_buf = NULL;
+ 		if (XFS_IS_CORRUPT(mp, par_blkno == 0)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2423,6 +2444,7 @@ xfs_da3_swap_lastblock(
+ 		par_node = par_buf->b_addr;
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &par_hdr, par_node);
+ 		if (XFS_IS_CORRUPT(mp, par_hdr.level != level)) {
++			xfs_da_mark_sick(args);
+ 			error = -EFSCORRUPTED;
+ 			goto done;
+ 		}
+@@ -2549,6 +2571,7 @@ xfs_dabuf_map(
+ invalid_mapping:
+ 	/* Caller ok with no mapping. */
+ 	if (XFS_IS_CORRUPT(mp, !(flags & XFS_DABUF_MAP_HOLE_OK))) {
++		xfs_dirattr_mark_sick(dp, whichfork);
+ 		error = -EFSCORRUPTED;
+ 		if (xfs_error_level >= XFS_ERRLEVEL_LOW) {
+ 			xfs_alert(mp, "%s: bno %u inode %llu",
+@@ -2634,6 +2657,8 @@ xfs_da_read_buf(
+ 
+ 	error = xfs_trans_read_buf_map(mp, tp, mp->m_ddev_targp, mapp, nmap, 0,
+ 			&bp, ops);
++	if (xfs_metadata_is_sick(error))
++		xfs_dirattr_mark_sick(dp, whichfork);
+ 	if (error)
+ 		goto out_free;
+ 
+diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
+index dd6fcaaea318..e18f248a08a9 100644
+--- a/fs/xfs/libxfs/xfs_dir2.c
++++ b/fs/xfs/libxfs/xfs_dir2.c
+@@ -18,6 +18,7 @@
+ #include "xfs_errortag.h"
+ #include "xfs_error.h"
+ #include "xfs_trace.h"
++#include "xfs_health.h"
+ 
+ struct xfs_name xfs_name_dotdot = { (unsigned char *)"..", 2, XFS_DIR3_FT_DIR };
+ 
+@@ -608,8 +609,10 @@ xfs_dir2_isblock(
+ 	rval = XFS_FSB_TO_B(args->dp->i_mount, last) == args->geo->blksize;
+ 	if (XFS_IS_CORRUPT(args->dp->i_mount,
+ 			   rval != 0 &&
+-			   args->dp->i_d.di_size != args->geo->blksize))
++			   args->dp->i_d.di_size != args->geo->blksize)) {
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
++	}
+ 	*vp = rval;
+ 	return 0;
+ }
+diff --git a/fs/xfs/libxfs/xfs_dir2_data.c b/fs/xfs/libxfs/xfs_dir2_data.c
+index b9eba8213180..f167aff266fb 100644
+--- a/fs/xfs/libxfs/xfs_dir2_data.c
++++ b/fs/xfs/libxfs/xfs_dir2_data.c
+@@ -18,6 +18,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_log.h"
++#include "xfs_health.h"
+ 
+ static xfs_failaddr_t xfs_dir2_data_freefind_verify(
+ 		struct xfs_dir2_data_hdr *hdr, struct xfs_dir2_data_free *bf,
+@@ -1170,6 +1171,7 @@ xfs_dir2_data_use_free(
+ corrupt:
+ 	xfs_corruption_error(__func__, XFS_ERRLEVEL_LOW, args->dp->i_mount,
+ 			hdr, sizeof(*hdr), __FILE__, __LINE__, fa);
++	xfs_da_mark_sick(args);
+ 	return -EFSCORRUPTED;
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
+index a131b520aac7..9c2443152fa0 100644
+--- a/fs/xfs/libxfs/xfs_dir2_leaf.c
++++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
+@@ -19,6 +19,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
++#include "xfs_health.h"
+ 
+ /*
+  * Local function declarations.
+@@ -1384,8 +1385,10 @@ xfs_dir2_leaf_removename(
+ 	bestsp = xfs_dir2_leaf_bests_p(ltp);
+ 	if (be16_to_cpu(bestsp[db]) != oldbest) {
+ 		xfs_buf_corruption_error(lbp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
++
+ 	/*
+ 	 * Mark the former data entry unused.
+ 	 */
+diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+index a0cc5e240306..692db3ed64b2 100644
+--- a/fs/xfs/libxfs/xfs_dir2_node.c
++++ b/fs/xfs/libxfs/xfs_dir2_node.c
+@@ -20,6 +20,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_log.h"
++#include "xfs_health.h"
+ 
+ /*
+  * Function declarations.
+@@ -228,6 +229,7 @@ __xfs_dir3_free_read(
+ 	if (fa) {
+ 		xfs_verifier_error(*bpp, -EFSCORRUPTED, fa);
+ 		xfs_trans_brelse(tp, *bpp);
++		xfs_dirattr_mark_sick(dp, XFS_DATA_FORK);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -440,6 +442,7 @@ xfs_dir2_leaf_to_node(
+ 	if (be32_to_cpu(ltp->bestcount) >
+ 				(uint)dp->i_d.di_size / args->geo->blksize) {
+ 		xfs_buf_corruption_error(lbp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -514,6 +517,7 @@ xfs_dir2_leafn_add(
+ 	 */
+ 	if (index < 0) {
+ 		xfs_buf_corruption_error(bp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -733,6 +737,7 @@ xfs_dir2_leafn_lookup_for_addname(
+ 					   cpu_to_be16(NULLDATAOFF))) {
+ 				if (curfdb != newfdb)
+ 					xfs_trans_brelse(tp, curbp);
++				xfs_da_mark_sick(args);
+ 				return -EFSCORRUPTED;
+ 			}
+ 			curfdb = newfdb;
+@@ -801,6 +806,7 @@ xfs_dir2_leafn_lookup_for_entry(
+ 	xfs_dir3_leaf_check(dp, bp);
+ 	if (leafhdr.count <= 0) {
+ 		xfs_buf_corruption_error(bp);
++		xfs_da_mark_sick(args);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -1736,6 +1742,7 @@ xfs_dir2_node_add_datablk(
+ 			} else {
+ 				xfs_alert(mp, " ... fblk is NULL");
+ 			}
++			xfs_da_mark_sick(args);
+ 			return -EFSCORRUPTED;
+ 		}
  
 diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index e0ad4eb03446..8e3247a192c1 100644
+index 8e3247a192c1..b7ffcabf5d81 100644
 --- a/fs/xfs/libxfs/xfs_health.h
 +++ b/fs/xfs/libxfs/xfs_health.h
-@@ -37,6 +37,7 @@ struct xfs_mount;
- struct xfs_perag;
+@@ -38,6 +38,7 @@ struct xfs_perag;
  struct xfs_inode;
  struct xfs_fsop_geom;
-+struct xfs_btree_cur;
+ struct xfs_btree_cur;
++struct xfs_da_args;
  
  /* Observable health issues for metadata spanning the entire filesystem. */
  #define XFS_SICK_FS_COUNTERS	(1 << 0)  /* summary counters */
-@@ -139,6 +140,7 @@ void xfs_inode_measure_sickness(struct xfs_inode *ip, unsigned int *sick,
- 
+@@ -141,6 +142,8 @@ void xfs_inode_measure_sickness(struct xfs_inode *ip, unsigned int *sick,
  void xfs_health_unmount(struct xfs_mount *mp);
  void xfs_bmap_mark_sick(struct xfs_inode *ip, int whichfork);
-+void xfs_btree_mark_sick(struct xfs_btree_cur *cur);
+ void xfs_btree_mark_sick(struct xfs_btree_cur *cur);
++void xfs_dirattr_mark_sick(struct xfs_inode *ip, int whichfork);
++void xfs_da_mark_sick(struct xfs_da_args *args);
  
  /* Now some helpers. */
  
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index ce52fd9332e5..a185f2f5b7ff 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -151,6 +151,7 @@ xfs_inobt_get_rec(
- "start inode 0x%x, count 0x%x, free 0x%x freemask 0x%llx, holemask 0x%x",
- 		irec->ir_startino, irec->ir_count, irec->ir_freecount,
- 		irec->ir_free, irec->ir_holemask);
-+	xfs_btree_mark_sick(cur);
- 	return -EFSCORRUPTED;
- }
- 
-diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
-index d7d702ee4d1a..4ed0a24f6afb 100644
---- a/fs/xfs/libxfs/xfs_refcount.c
-+++ b/fs/xfs/libxfs/xfs_refcount.c
-@@ -22,6 +22,7 @@
- #include "xfs_bit.h"
- #include "xfs_refcount.h"
- #include "xfs_rmap.h"
-+#include "xfs_health.h"
- 
- /* Allowable refcount adjustment amounts. */
- enum xfs_refc_adjust_op {
-@@ -153,6 +154,7 @@ xfs_refcount_get_rec(
- 	xfs_warn(mp,
- 		"Start block 0x%x, block count 0x%x, references 0x%x",
- 		irec->rc_startblock, irec->rc_blockcount, irec->rc_refcount);
-+	xfs_btree_mark_sick(cur);
- 	return -EFSCORRUPTED;
- }
- 
-@@ -1669,8 +1671,10 @@ xfs_refcount_recover_extent(
- 	struct xfs_refcount_recovery	*rr;
- 
- 	if (XFS_IS_CORRUPT(cur->bc_mp,
--			   be32_to_cpu(rec->refc.rc_refcount) != 1))
-+			   be32_to_cpu(rec->refc.rc_refcount) != 1)) {
-+		xfs_btree_mark_sick(cur);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	rr = kmem_alloc(sizeof(struct xfs_refcount_recovery), 0);
- 	xfs_refcount_btrec_to_irec(rec, &rr->rr_rrec);
-diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
-index ff9412f113c4..29fb516743ee 100644
---- a/fs/xfs/libxfs/xfs_rmap.c
-+++ b/fs/xfs/libxfs/xfs_rmap.c
-@@ -21,6 +21,7 @@
- #include "xfs_errortag.h"
+diff --git a/fs/xfs/xfs_attr_inactive.c b/fs/xfs/xfs_attr_inactive.c
+index 5ff49523d8ea..0926c18c3e52 100644
+--- a/fs/xfs/xfs_attr_inactive.c
++++ b/fs/xfs/xfs_attr_inactive.c
+@@ -23,6 +23,7 @@
+ #include "xfs_quota.h"
+ #include "xfs_dir2.h"
  #include "xfs_error.h"
- #include "xfs_inode.h"
 +#include "xfs_health.h"
  
  /*
-  * Lookup the first record less than or equal to [bno, len, owner, offset]
-@@ -177,14 +178,20 @@ xfs_rmap_delete(
- /* Convert an internal btree record to an rmap record. */
- int
- xfs_rmap_btrec_to_irec(
-+	struct xfs_btree_cur	*cur,
- 	union xfs_btree_rec	*rec,
- 	struct xfs_rmap_irec	*irec)
- {
-+	int			error;
-+
- 	irec->rm_startblock = be32_to_cpu(rec->rmap.rm_startblock);
- 	irec->rm_blockcount = be32_to_cpu(rec->rmap.rm_blockcount);
- 	irec->rm_owner = be64_to_cpu(rec->rmap.rm_owner);
--	return xfs_rmap_irec_offset_unpack(be64_to_cpu(rec->rmap.rm_offset),
-+	error = xfs_rmap_irec_offset_unpack(be64_to_cpu(rec->rmap.rm_offset),
- 			irec);
-+	if (xfs_metadata_is_sick(error))
-+		xfs_btree_mark_sick(cur);
-+	return error;
- }
+  * Look at all the extents for this logical region,
+@@ -210,6 +211,7 @@ xfs_attr3_node_inactive(
+ 	if (level > XFS_DA_NODE_MAXDEPTH) {
+ 		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
+ 		xfs_buf_corruption_error(bp);
++		xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 		return -EFSCORRUPTED;
+ 	}
  
- /*
-@@ -205,7 +212,7 @@ xfs_rmap_get_rec(
- 	if (error || !*stat)
- 		return error;
+@@ -257,6 +259,7 @@ xfs_attr3_node_inactive(
+ 			error = xfs_attr3_leaf_inactive(trans, dp, child_bp);
+ 			break;
+ 		default:
++			xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 			xfs_buf_corruption_error(child_bp);
+ 			xfs_trans_brelse(*trans, child_bp);
+ 			error = -EFSCORRUPTED;
+@@ -350,6 +353,7 @@ xfs_attr3_root_inactive(
+ 		error = xfs_attr3_leaf_inactive(trans, dp, bp);
+ 		break;
+ 	default:
++		xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 		error = -EFSCORRUPTED;
+ 		xfs_buf_corruption_error(bp);
+ 		xfs_trans_brelse(*trans, bp);
+diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+index d37743bdf274..c2e79b537de8 100644
+--- a/fs/xfs/xfs_attr_list.c
++++ b/fs/xfs/xfs_attr_list.c
+@@ -21,6 +21,7 @@
+ #include "xfs_error.h"
+ #include "xfs_trace.h"
+ #include "xfs_dir2.h"
++#include "xfs_health.h"
  
--	if (xfs_rmap_btrec_to_irec(rec, irec))
-+	if (xfs_rmap_btrec_to_irec(cur, rec, irec))
- 		goto out_bad_rec;
+ STATIC int
+ xfs_attr_shortform_compare(const void *a, const void *b)
+@@ -131,6 +132,7 @@ xfs_attr_shortform_list(
+ 					     context->dp->i_mount, sfe,
+ 					     sizeof(*sfe));
+ 			kmem_free(sbuf);
++			xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 			return -EFSCORRUPTED;
+ 		}
  
- 	if (irec->rm_blockcount == 0)
-@@ -241,6 +248,7 @@ xfs_rmap_get_rec(
- 		"Owner 0x%llx, flags 0x%x, start block 0x%x block count 0x%x",
- 		irec->rm_owner, irec->rm_flags, irec->rm_startblock,
- 		irec->rm_blockcount);
-+	xfs_btree_mark_sick(cur);
+@@ -268,8 +270,10 @@ xfs_attr_node_list_lookup(
+ 			return 0;
+ 
+ 		/* We can't point back to the root. */
+-		if (XFS_IS_CORRUPT(mp, cursor->blkno == 0))
++		if (XFS_IS_CORRUPT(mp, cursor->blkno == 0)) {
++			xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
+ 			return -EFSCORRUPTED;
++		}
+ 	}
+ 
+ 	if (expected_level != 0)
+@@ -281,6 +285,7 @@ xfs_attr_node_list_lookup(
+ out_corruptbuf:
+ 	xfs_buf_corruption_error(bp);
+ 	xfs_trans_brelse(tp, bp);
++	xfs_dirattr_mark_sick(dp, XFS_ATTR_FORK);
  	return -EFSCORRUPTED;
  }
- 
-@@ -2284,7 +2292,7 @@ xfs_rmap_query_range_helper(
- 	struct xfs_rmap_irec			irec;
- 	int					error;
- 
--	error = xfs_rmap_btrec_to_irec(rec, &irec);
-+	error = xfs_rmap_btrec_to_irec(cur, rec, &irec);
- 	if (error)
- 		return error;
- 	return query->fn(cur, &irec, query->priv);
-diff --git a/fs/xfs/libxfs/xfs_rmap.h b/fs/xfs/libxfs/xfs_rmap.h
-index abe633403fd1..e756989d0da5 100644
---- a/fs/xfs/libxfs/xfs_rmap.h
-+++ b/fs/xfs/libxfs/xfs_rmap.h
-@@ -190,7 +190,7 @@ int xfs_rmap_lookup_le_range(struct xfs_btree_cur *cur, xfs_agblock_t bno,
- int xfs_rmap_compare(const struct xfs_rmap_irec *a,
- 		const struct xfs_rmap_irec *b);
- union xfs_btree_rec;
--int xfs_rmap_btrec_to_irec(union xfs_btree_rec *rec,
-+int xfs_rmap_btrec_to_irec(struct xfs_btree_cur *cur, union xfs_btree_rec *rec,
- 		struct xfs_rmap_irec *irec);
- int xfs_rmap_has_record(struct xfs_btree_cur *cur, xfs_agblock_t bno,
- 		xfs_extlen_t len, bool *exists);
-diff --git a/fs/xfs/scrub/rmap.c b/fs/xfs/scrub/rmap.c
-index 8d4cefd761c1..eb92ccb67a98 100644
---- a/fs/xfs/scrub/rmap.c
-+++ b/fs/xfs/scrub/rmap.c
-@@ -99,7 +99,7 @@ xchk_rmapbt_rec(
- 	bool			is_attr;
- 	int			error;
- 
--	error = xfs_rmap_btrec_to_irec(rec, &irec);
-+	error = xfs_rmap_btrec_to_irec(bs->cur, rec, &irec);
- 	if (!xchk_btree_process_error(bs->sc, bs->cur, 0, &error))
- 		goto out;
  
 diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 5e5de5338476..1f09027c55ad 100644
+index 1f09027c55ad..c1b6e8fb72ec 100644
 --- a/fs/xfs/xfs_health.c
 +++ b/fs/xfs/xfs_health.c
-@@ -14,6 +14,7 @@
- #include "xfs_inode.h"
+@@ -15,6 +15,8 @@
  #include "xfs_trace.h"
  #include "xfs_health.h"
-+#include "xfs_btree.h"
+ #include "xfs_btree.h"
++#include "xfs_da_format.h"
++#include "xfs_da_btree.h"
  
  /*
   * Warn about metadata corruption that we detected but haven't fixed, and
-@@ -478,3 +479,41 @@ xfs_bmap_mark_sick(
+@@ -517,3 +519,40 @@ xfs_btree_mark_sick(
  
- 	xfs_inode_mark_sick(ip, mask);
+ 	xfs_agno_mark_sick(cur->bc_mp, cur->bc_private.a.agno, mask);
  }
 +
-+/* Record observations of btree corruption with the health tracking system. */
++/*
++ * Record observations of dir/attr btree corruption with the health tracking
++ * system.
++ */
 +void
-+xfs_btree_mark_sick(
-+	struct xfs_btree_cur		*cur)
++xfs_dirattr_mark_sick(
++	struct xfs_inode	*ip,
++	int			whichfork)
 +{
-+	unsigned int			mask;
++	unsigned int		mask;
 +
-+	switch (cur->bc_btnum) {
-+	case XFS_BTNUM_BMAP:
-+		xfs_bmap_mark_sick(cur->bc_private.b.ip,
-+				   cur->bc_private.b.whichfork);
-+		return;
-+	case XFS_BTNUM_BNO:
-+		mask = XFS_SICK_AG_BNOBT;
++	switch (whichfork) {
++	case XFS_DATA_FORK:
++		mask = XFS_SICK_INO_DIR;
 +		break;
-+	case XFS_BTNUM_CNT:
-+		mask = XFS_SICK_AG_CNTBT;
-+		break;
-+	case XFS_BTNUM_INO:
-+		mask = XFS_SICK_AG_INOBT;
-+		break;
-+	case XFS_BTNUM_FINO:
-+		mask = XFS_SICK_AG_FINOBT;
-+		break;
-+	case XFS_BTNUM_RMAP:
-+		mask = XFS_SICK_AG_RMAPBT;
-+		break;
-+	case XFS_BTNUM_REFC:
-+		mask = XFS_SICK_AG_REFCNTBT;
++	case XFS_ATTR_FORK:
++		mask = XFS_SICK_INO_XATTR;
 +		break;
 +	default:
 +		ASSERT(0);
 +		return;
 +	}
 +
-+	xfs_agno_mark_sick(cur->bc_mp, cur->bc_private.a.agno, mask);
++	xfs_inode_mark_sick(ip, mask);
++}
++
++/*
++ * Record observations of dir/attr btree corruption with the health tracking
++ * system.
++ */
++void
++xfs_da_mark_sick(
++	struct xfs_da_args	*args)
++{
++	xfs_dirattr_mark_sick(args->dp, args->whichfork);
 +}
 
