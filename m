@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A50E12DCE7
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:12:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 366D912DCD6
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:10:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgAABMj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:12:39 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:50610 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgAABMj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:12:39 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011BxHn093074
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:12:38 GMT
+        id S1727168AbgAABKp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:10:45 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53896 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgAABKp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:10:45 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118x9N109469
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=xbAqdd82pvNghYrKIrCDsBSMUUM9XkHqr6W/jY8MLH4=;
- b=FNFKrCebR5HLiFDGuW7uoypaOg5XBRh8HVbuUsLhe4Z4JD6VplVoy0Oh2J+TTXdLrYuC
- ssBdl4i84J7CCHcuiHIA2NkZl1+ams1fHZhPUquhh28fq8zisOr9hgTLKx1L9o6PFilJ
- mfk0KIeZsBbvdJvkFBjIUSyr/BV6YK51gIqJpS7ltUPV3l7fdElT+31rSd5PjyCTdbI2
- uvDtgWxlLXSbOnnSNyRbjWNXEs29Gh27CL6kJEIx8suCHKNAU4MDwglhszl2U3sZunvX
- Sv4JzN93yZ3wPSpiCwlg3n+0QBte3UzE9IGTH58m6DPOahJglba0ZsYR7Ar8633apqa5 xw== 
+ bh=QvGgXjkq3RhrXEfQ3ML5CTZ0DRVMlZB/f0oTmIKG89s=;
+ b=rtWd82iKz+b1DGEKTQ2QLnz593xwxZF08P1CnHrcaWznefbD2kUiV+CdA8P0MkJzGsEE
+ MRRE8HHQ3YJkW+406pX1nPxTJvA/OC8Q2Rk8dhGhrzGlF8W8nOdkRh5AzAHShqlP97gL
+ GK0AJq4EY2HKive/0eoyNEY6WSB5THPB7HB3tgcyjtF/BAVefzdTcXdAd3Dfkyca0Moc
+ MghvRNsvvGnzrLv5kkkXnLB4sI/tc4JJTdo6h9tTYA3fgwf5jVVpmxRnrEZDNTuG6Mfc
+ 9u0AcsE6DnMQHai0ti8OJ7NBlBg8Gx3yVY3d7xtiNnC8lXzcKpRIvQWtkmbdHvwkxWBq mg== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwg2-1
+        by userp2130.oracle.com with ESMTP id 2x5xftk2eq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:12:38 +0000
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:10:44 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vQD190292
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2x8bsrg0nb-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118v8s190299
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2x8bsrg0qa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:10:38 +0000
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:10:43 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011AbrT028407
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:37 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011AhgN032074
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:43 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:10:36 -0800
-Subject: [PATCH 4/5] xfs: implement live quotacheck as part of quota repair
+        with ESMTP ; Tue, 31 Dec 2019 17:10:43 -0800
+Subject: [PATCH 5/5] xfs: repair summary counters
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:10:34 -0800
-Message-ID: <157784103458.1364003.10041166419649712004.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:10:40 -0800
+Message-ID: <157784104083.1364003.7208596988159890329.stgit@magnolia>
 In-Reply-To: <157784100871.1364003.10658176827446969836.stgit@magnolia>
 References: <157784100871.1364003.10658176827446969836.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,415 +70,226 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Use the fs freezing mechanism we developed for the rmapbt repair to
-freeze the fs, this time to scan the fs for a live quotacheck.  We add a
-new dqget variant to use the existing scrub transaction to allocate an
-on-disk dquot block if it is missing.
+Use the same summary counter calculation infrastructure to generate new
+values for the in-core summary counters.   The difference between the
+scrubber and the repairer is that the repairer will freeze the fs during
+setup, which means that the values should match exactly.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/scrub/quota.c        |   22 ++++++-
- fs/xfs/scrub/quota_repair.c |  139 +++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_qm.c             |   94 ++++++++++++++++++-----------
- fs/xfs/xfs_qm.h             |    3 +
- 4 files changed, 221 insertions(+), 37 deletions(-)
+ fs/xfs/Makefile                  |    1 +
+ fs/xfs/scrub/fscounters.c        |   23 +++++++++++++-
+ fs/xfs/scrub/fscounters_repair.c |   63 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.h            |    2 +
+ fs/xfs/scrub/scrub.c             |    2 +
+ fs/xfs/scrub/trace.h             |   18 ++++++++---
+ 6 files changed, 103 insertions(+), 6 deletions(-)
+ create mode 100644 fs/xfs/scrub/fscounters_repair.c
 
 
-diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
-index bab55b6cd723..64e24fe5dcb2 100644
---- a/fs/xfs/scrub/quota.c
-+++ b/fs/xfs/scrub/quota.c
-@@ -16,6 +16,7 @@
- #include "xfs_qm.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
-+#include "scrub/repair.h"
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index 6f56ebcadeb6..37339d4d6b5b 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -165,6 +165,7 @@ xfs-y				+= $(addprefix scrub/, \
+ 				   bitmap.o \
+ 				   blob.o \
+ 				   bmap_repair.o \
++				   fscounters_repair.o \
+ 				   ialloc_repair.o \
+ 				   inode_repair.o \
+ 				   refcount_repair.o \
+diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+index 7251c66a82c9..52c72a31e440 100644
+--- a/fs/xfs/scrub/fscounters.c
++++ b/fs/xfs/scrub/fscounters.c
+@@ -40,6 +40,10 @@
+  * structures as quickly as it can.  We snapshot the percpu counters before and
+  * after this operation and use the difference in counter values to guess at
+  * our tolerance for mismatch between expected and actual counter values.
++ *
++ * NOTE: If the calling application has permitted us to repair the counters,
++ * we /must/ prevent all other filesystem activity by freezing it.  Since we've
++ * frozen the filesystem, we can require an exact match.
+  */
  
- /* Convert a scrub type code to a DQ flag, or return 0 if error. */
- uint
-@@ -53,12 +54,31 @@ xchk_setup_quota(
- 	mutex_lock(&sc->mp->m_quotainfo->qi_quotaofflock);
- 	if (!xfs_this_quota_on(sc->mp, dqtype))
- 		return -ENOENT;
-+
-+	/*
-+	 * Freeze out anything that can alter an inode because we reconstruct
-+	 * the quota counts by iterating all the inodes in the system.
-+	 */
-+	if ((sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR) &&
-+	    ((sc->flags & XCHK_TRY_HARDER) || XFS_QM_NEED_QUOTACHECK(sc->mp))) {
+ /*
+@@ -141,8 +145,19 @@ xchk_setup_fscounters(
+ 	 * Pause background reclaim while we're scrubbing to reduce the
+ 	 * likelihood of background perturbations to the counters throwing off
+ 	 * our calculations.
++	 *
++	 * If we're repairing, we need to prevent any other thread from
++	 * changing the global fs summary counters while we're repairing them.
++	 * This requires the fs to be frozen, which will disable background
++	 * reclaim and purge all inactive inodes.
+ 	 */
+-	xchk_stop_reaping(sc);
++	if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR) {
 +		error = xchk_fs_freeze(sc);
 +		if (error)
 +			return error;
++	} else {
++		xchk_stop_reaping(sc);
 +	}
-+
- 	error = xchk_setup_fs(sc, ip);
- 	if (error)
- 		return error;
- 	sc->ip = xfs_quota_inode(sc->mp, dqtype);
--	xfs_ilock(sc->ip, XFS_ILOCK_EXCL);
- 	sc->ilock_flags = XFS_ILOCK_EXCL;
-+	/*
-+	 * Pretend to be an ILOCK parent to shut up lockdep if we're going to
-+	 * do a full inode scan of the fs.  Quota inodes do not count towards
-+	 * quota accounting, so we shouldn't deadlock on ourselves.
-+	 */
-+	if (sc->flags & XCHK_FS_FROZEN)
-+		sc->ilock_flags |= XFS_ILOCK_PARENT;
-+	xfs_ilock(sc->ip, sc->ilock_flags);
- 	return 0;
- }
  
-diff --git a/fs/xfs/scrub/quota_repair.c b/fs/xfs/scrub/quota_repair.c
-index 5f76c4f4db1a..61d7e43ba56b 100644
---- a/fs/xfs/scrub/quota_repair.c
-+++ b/fs/xfs/scrub/quota_repair.c
-@@ -23,6 +23,11 @@
- #include "xfs_qm.h"
- #include "xfs_dquot.h"
- #include "xfs_dquot_item.h"
-+#include "xfs_trans_space.h"
-+#include "xfs_error.h"
-+#include "xfs_errortag.h"
-+#include "xfs_health.h"
-+#include "xfs_iwalk.h"
- #include "scrub/xfs_scrub.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
-@@ -37,6 +42,11 @@
-  * verifiers complain about, cap any counters or limits that make no sense,
-  * and schedule a quotacheck if we had to fix anything.  We also repair any
-  * data fork extent records that don't apply to metadata files.
+ 	return xchk_trans_alloc(sc, 0);
+ }
+@@ -255,6 +270,8 @@ xchk_fscount_aggregate_agcounts(
+  * Otherwise, we /might/ have a problem.  If the change in the summations is
+  * more than we want to tolerate, the filesystem is probably busy and we should
+  * just send back INCOMPLETE and see if userspace will try again.
 + *
-+ * Online quotacheck is fairly straightforward.  We engage a repair freeze,
-+ * zero all the dquots, and scan every inode in the system to recalculate the
-+ * appropriate quota charges.  Finally, we log all the dquots to disk and
-+ * set the _CHKD flags.
++ * If we're repairing then we require an exact match.
   */
+ static inline bool
+ xchk_fscount_within_range(
+@@ -277,6 +294,10 @@ xchk_fscount_within_range(
+ 	if (curr_value == expected)
+ 		return true;
  
- struct xrep_quota_info {
-@@ -312,6 +322,116 @@ xrep_quota_data_fork(
- 	return error;
- }
- 
-+/* Online Quotacheck */
++	/* We require exact matches when repair is running. */
++	if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR)
++		return false;
 +
+ 	min_value = min(old_value, curr_value);
+ 	max_value = max(old_value, curr_value);
+ 
+diff --git a/fs/xfs/scrub/fscounters_repair.c b/fs/xfs/scrub/fscounters_repair.c
+new file mode 100644
+index 000000000000..c3d2214133ff
+--- /dev/null
++++ b/fs/xfs/scrub/fscounters_repair.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Zero a dquot prior to regenerating the counts.  We skip flushing the dirty
-+ * dquots to disk because we've already cleared the CHKD flags in the ondisk
-+ * superblock so if we crash we'll just rerun quotacheck.
++ * Copyright (C) 2019 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <darrick.wong@oracle.com>
 + */
-+static int
-+xrep_quotacheck_zero_dquot(
-+	struct xfs_dquot	*dq,
-+	uint			dqtype,
-+	void			*priv)
-+{
-+	dq->q_res_bcount -= be64_to_cpu(dq->q_core.d_bcount);
-+	dq->q_core.d_bcount = 0;
-+	dq->q_res_icount -= be64_to_cpu(dq->q_core.d_icount);
-+	dq->q_core.d_icount = 0;
-+	dq->q_res_rtbcount -= be64_to_cpu(dq->q_core.d_rtbcount);
-+	dq->q_core.d_rtbcount = 0;
-+	dq->dq_flags |= XFS_DQ_DIRTY;
-+	return 0;
-+}
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_defer.h"
++#include "xfs_btree.h"
++#include "xfs_bit.h"
++#include "xfs_log_format.h"
++#include "xfs_trans.h"
++#include "xfs_sb.h"
++#include "xfs_inode.h"
++#include "xfs_alloc.h"
++#include "xfs_ialloc.h"
++#include "xfs_rmap.h"
++#include "xfs_health.h"
++#include "scrub/xfs_scrub.h"
++#include "scrub/scrub.h"
++#include "scrub/common.h"
++#include "scrub/trace.h"
++#include "scrub/repair.h"
 +
-+/* Execute an online quotacheck. */
-+STATIC int
-+xrep_quotacheck(
-+	struct xfs_scrub	*sc)
-+{
-+	LIST_HEAD		(buffer_list);
-+	struct xfs_mount	*mp = sc->mp;
-+	uint			qflag = 0;
-+	int			error;
-+
-+	/*
-+	 * We can rebuild all the quota information, so we need to be able to
-+	 * update both the health status and the CHKD flags.
-+	 */
-+	if (XFS_IS_UQUOTA_ON(mp)) {
-+		sc->sick_mask |= XFS_SICK_FS_UQUOTA;
-+		qflag |= XFS_UQUOTA_CHKD;
-+	}
-+	if (XFS_IS_GQUOTA_ON(mp)) {
-+		sc->sick_mask |= XFS_SICK_FS_GQUOTA;
-+		qflag |= XFS_GQUOTA_CHKD;
-+	}
-+	if (XFS_IS_PQUOTA_ON(mp)) {
-+		sc->sick_mask |= XFS_SICK_FS_PQUOTA;
-+		qflag |= XFS_PQUOTA_CHKD;
-+	}
-+
-+	/* Clear the CHKD flags. */
-+	spin_lock(&sc->mp->m_sb_lock);
-+	sc->mp->m_qflags &= ~qflag;
-+	sc->mp->m_sb.sb_qflags &= ~qflag;
-+	spin_unlock(&sc->mp->m_sb_lock);
-+	xfs_log_sb(sc->tp);
-+
-+	/*
-+	 * Commit the transaction so that we can allocate new quota ip
-+	 * mappings if we have to.  If we crash after this point, the sb
-+	 * still has the CHKD flags cleared, so mount quotacheck will fix
-+	 * all of this up.
-+	 */
-+	error = xfs_trans_commit(sc->tp);
-+	sc->tp = NULL;
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * Zero all the dquots, and remember that we rebuild all three quota
-+	 * types.  We hold the quotaoff lock, so these won't change.
-+	 */
-+	if (XFS_IS_UQUOTA_ON(mp)) {
-+		error = xfs_qm_dqiterate(mp, XFS_DQ_USER,
-+				xrep_quotacheck_zero_dquot, NULL);
-+		if (error)
-+			goto out;
-+	}
-+	if (XFS_IS_GQUOTA_ON(mp)) {
-+		error = xfs_qm_dqiterate(mp, XFS_DQ_GROUP,
-+				xrep_quotacheck_zero_dquot, NULL);
-+		if (error)
-+			goto out;
-+	}
-+	if (XFS_IS_PQUOTA_ON(mp)) {
-+		error = xfs_qm_dqiterate(mp, XFS_DQ_PROJ,
-+				xrep_quotacheck_zero_dquot, NULL);
-+		if (error)
-+			goto out;
-+	}
-+
-+	/* Walk the inodes and reset the dquots. */
-+	error = xfs_qm_quotacheck_walk_and_flush(mp, true, &buffer_list);
-+	if (error)
-+		goto out;
-+
-+	/* Set quotachecked flag. */
-+	error = xchk_trans_alloc(sc, 0);
-+	if (error)
-+		goto out;
-+
-+	spin_lock(&sc->mp->m_sb_lock);
-+	sc->mp->m_qflags |= qflag;
-+	sc->mp->m_sb.sb_qflags |= qflag;
-+	spin_unlock(&sc->mp->m_sb_lock);
-+	xfs_log_sb(sc->tp);
-+out:
-+	return error;
-+}
-+
- /*
-  * Go fix anything in the quota items that we could have been mad about.  Now
-  * that we've checked the quota inode data fork we have to drop ILOCK_EXCL to
-@@ -332,8 +452,10 @@ xrep_quota_problems(
- 		return error;
- 
- 	/* Make a quotacheck happen. */
--	if (rqi.need_quotacheck)
-+	if (rqi.need_quotacheck ||
-+	    XFS_TEST_ERROR(false, sc->mp, XFS_ERRTAG_FORCE_SCRUB_REPAIR))
- 		xrep_force_quotacheck(sc, dqtype);
-+
- 	return 0;
- }
- 
-@@ -343,6 +465,7 @@ xrep_quota(
- 	struct xfs_scrub	*sc)
- {
- 	uint			dqtype;
-+	uint			flag;
- 	int			error;
- 
- 	dqtype = xchk_quota_to_dqtype(sc);
-@@ -358,6 +481,20 @@ xrep_quota(
- 
- 	/* Fix anything the dquot verifiers complain about. */
- 	error = xrep_quota_problems(sc, dqtype);
-+	if (error)
-+		goto out;
-+
-+	/* Do we need a quotacheck?  Did we need one? */
-+	flag = xfs_quota_chkd_flag(dqtype);
-+	if (!(flag & sc->mp->m_qflags)) {
-+		/* We need to freeze the fs before we can scan inodes. */
-+		if (!(sc->flags & XCHK_FS_FROZEN)) {
-+			error = -EDEADLOCK;
-+			goto out;
-+		}
-+
-+		error = xrep_quotacheck(sc);
-+	}
- out:
- 	return error;
- }
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index fc3898f5e27d..0ce334c51d73 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1140,11 +1140,12 @@ xfs_qm_dqusage_adjust(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
- 	xfs_ino_t		ino,
--	void			*data)
-+	void			*need_ilocks)
- {
- 	struct xfs_inode	*ip;
- 	xfs_qcnt_t		nblks;
- 	xfs_filblks_t		rtblks = 0;	/* total rt blks */
-+	uint			ilock_flags = 0;
- 	int			error;
- 
- 	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
-@@ -1156,16 +1157,19 @@ xfs_qm_dqusage_adjust(
- 	if (xfs_is_quota_inode(&mp->m_sb, ino))
- 		return 0;
- 
--	/*
--	 * We don't _need_ to take the ilock EXCL here because quotacheck runs
--	 * at mount time and therefore nobody will be racing chown/chproj.
--	 */
-+	/* Grab inode and lock it if needed. */
- 	error = xfs_iget(mp, tp, ino, XFS_IGET_DONTCACHE, 0, &ip);
- 	if (error == -EINVAL || error == -ENOENT)
- 		return 0;
- 	if (error)
- 		return error;
- 
-+	if (need_ilocks) {
-+		ilock_flags = XFS_IOLOCK_SHARED | XFS_MMAPLOCK_SHARED;
-+		xfs_ilock(ip, ilock_flags);
-+		ilock_flags |= xfs_ilock_data_map_shared(ip);
-+	}
-+
- 	ASSERT(ip->i_delayed_blks == 0);
- 
- 	if (XFS_IS_REALTIME_INODE(ip)) {
-@@ -1216,6 +1220,8 @@ xfs_qm_dqusage_adjust(
- 	}
- 
- error0:
-+	if (ilock_flags)
-+		xfs_iunlock(ip, ilock_flags);
- 	xfs_irele(ip);
- 	return error;
- }
-@@ -1272,17 +1278,61 @@ xfs_qm_flush_one(
- 	return error;
- }
- 
 +/*
-+ * Walk the inodes and adjust quota usage.  Caller must have previously
-+ * zeroed all dquots.
++ * FS Summary Counters
++ * ===================
++ *
++ * We correct errors in the filesystem summary counters by setting them to the
++ * values computed during the obligatory scrub phase.  However, we must be
++ * careful not to allow any other thread to change the counters while we're
++ * computing and setting new values.  To achieve this, we freeze the
++ * filesystem for the whole operation if the REPAIR flag is set.  The checking
++ * function is stricter when we've frozen the fs.
++ */
++
++/*
++ * Reset the superblock counters.  Caller is responsible for freezing the
++ * filesystem during the calculation and reset phases.
 + */
 +int
-+xfs_qm_quotacheck_walk_and_flush(
-+	struct xfs_mount	*mp,
-+	bool			need_ilocks,
-+	struct list_head	*buffer_list)
++xrep_fscounters(
++	struct xfs_scrub	*sc)
 +{
-+	int			error, error2;
-+
-+	error = xfs_iwalk_threaded(mp, 0, 0, xfs_qm_dqusage_adjust, 0,
-+			!need_ilocks, NULL);
-+	if (error)
-+		return error;
++	struct xfs_mount	*mp = sc->mp;
++	struct xchk_fscounters	*fsc = sc->buf;
 +
 +	/*
-+	 * We've made all the changes that we need to make incore.  Flush them
-+	 * down to disk buffers if everything was updated successfully.
++	 * Reinitialize the in-core counters from what we computed.  We froze
++	 * the filesystem, so there shouldn't be anyone else trying to modify
++	 * these counters.
 +	 */
-+	if (XFS_IS_UQUOTA_ON(mp)) {
-+		error = xfs_qm_dquot_walk(mp, XFS_DQ_USER, xfs_qm_flush_one,
-+					  buffer_list);
-+	}
-+	if (XFS_IS_GQUOTA_ON(mp)) {
-+		error2 = xfs_qm_dquot_walk(mp, XFS_DQ_GROUP, xfs_qm_flush_one,
-+					   buffer_list);
-+		if (!error)
-+			error = error2;
-+	}
-+	if (XFS_IS_PQUOTA_ON(mp)) {
-+		error2 = xfs_qm_dquot_walk(mp, XFS_DQ_PROJ, xfs_qm_flush_one,
-+					   buffer_list);
-+		if (!error)
-+			error = error2;
-+	}
++	ASSERT(sc->flags & XCHK_FS_FROZEN);
++	percpu_counter_set(&mp->m_icount, fsc->icount);
++	percpu_counter_set(&mp->m_ifree, fsc->ifree);
++	percpu_counter_set(&mp->m_fdblocks, fsc->fdblocks);
 +
-+	error2 = xfs_buf_delwri_submit(buffer_list);
-+	if (!error)
-+		error = error2;
-+	return error;
++	return 0;
 +}
-+
- /*
-  * Walk thru all the filesystem inodes and construct a consistent view
-  * of the disk quota world. If the quotacheck fails, disable quotas.
-  */
- STATIC int
- xfs_qm_quotacheck(
--	xfs_mount_t	*mp)
-+	struct xfs_mount	*mp)
- {
--	int			error, error2;
--	uint			flags;
-+	int			error;
- 	LIST_HEAD		(buffer_list);
-+	uint			flags;
- 	struct xfs_inode	*uip = mp->m_quotainfo->qi_uquotaip;
- 	struct xfs_inode	*gip = mp->m_quotainfo->qi_gquotaip;
- 	struct xfs_inode	*pip = mp->m_quotainfo->qi_pquotaip;
-@@ -1323,36 +1373,10 @@ xfs_qm_quotacheck(
- 		flags |= XFS_PQUOTA_CHKD;
- 	}
+diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
+index 4bfa2d0b0f37..3e65eb8dba24 100644
+--- a/fs/xfs/scrub/repair.h
++++ b/fs/xfs/scrub/repair.h
+@@ -85,6 +85,7 @@ int xrep_quota(struct xfs_scrub *sc);
+ #else
+ # define xrep_quota			xrep_notsupported
+ #endif /* CONFIG_XFS_QUOTA */
++int xrep_fscounters(struct xfs_scrub *sc);
  
--	error = xfs_iwalk_threaded(mp, 0, 0, xfs_qm_dqusage_adjust, 0, true,
--			NULL);
-+	error = xfs_qm_quotacheck_walk_and_flush(mp, false, &buffer_list);
- 	if (error)
- 		goto error_return;
+ struct xrep_newbt_resv {
+ 	/* Link to list of extents that we've reserved. */
+@@ -200,6 +201,7 @@ xrep_rmapbt_setup(
+ #define xrep_symlink			xrep_notsupported
+ #define xrep_xattr			xrep_notsupported
+ #define xrep_quota			xrep_notsupported
++#define xrep_fscounters			xrep_notsupported
  
--	/*
--	 * We've made all the changes that we need to make incore.  Flush them
--	 * down to disk buffers if everything was updated successfully.
--	 */
--	if (XFS_IS_UQUOTA_ON(mp)) {
--		error = xfs_qm_dquot_walk(mp, XFS_DQ_USER, xfs_qm_flush_one,
--					  &buffer_list);
--	}
--	if (XFS_IS_GQUOTA_ON(mp)) {
--		error2 = xfs_qm_dquot_walk(mp, XFS_DQ_GROUP, xfs_qm_flush_one,
--					   &buffer_list);
--		if (!error)
--			error = error2;
--	}
--	if (XFS_IS_PQUOTA_ON(mp)) {
--		error2 = xfs_qm_dquot_walk(mp, XFS_DQ_PROJ, xfs_qm_flush_one,
--					   &buffer_list);
--		if (!error)
--			error = error2;
--	}
--
--	error2 = xfs_buf_delwri_submit(&buffer_list);
--	if (!error)
--		error = error2;
--
- 	/*
- 	 * We can get this error if we couldn't do a dquot allocation inside
- 	 * xfs_qm_dqusage_adjust (via bulkstat). We don't care about the
-diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-index 7823af39008b..a3d9932f2e65 100644
---- a/fs/xfs/xfs_qm.h
-+++ b/fs/xfs/xfs_qm.h
-@@ -179,4 +179,7 @@ xfs_get_defquota(struct xfs_dquot *dqp, struct xfs_quotainfo *qi)
- 	return defq;
- }
+ #endif /* CONFIG_XFS_ONLINE_REPAIR */
  
-+int xfs_qm_quotacheck_walk_and_flush(struct xfs_mount *mp, bool need_ilocks,
-+		struct list_head *buffer_list);
-+
- #endif /* __XFS_QM_H__ */
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 84a25647ac43..9a7a040ab2c0 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -348,7 +348,7 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
+ 		.type	= ST_FS,
+ 		.setup	= xchk_setup_fscounters,
+ 		.scrub	= xchk_fscounters,
+-		.repair	= xrep_notsupported,
++		.repair	= xrep_fscounters,
+ 	},
+ 	[XFS_SCRUB_TYPE_HEALTHY] = {	/* fs healthy; clean all reminders */
+ 		.type	= ST_FS,
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 4e145055e37e..927c9645cb06 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -949,16 +949,26 @@ TRACE_EVENT(xrep_calc_ag_resblks_btsize,
+ 		  __entry->refcbt_sz)
+ )
+ TRACE_EVENT(xrep_reset_counters,
+-	TP_PROTO(struct xfs_mount *mp),
+-	TP_ARGS(mp),
++	TP_PROTO(struct xfs_mount *mp, int64_t icount_adj, int64_t ifree_adj,
++		 int64_t fdblocks_adj),
++	TP_ARGS(mp, icount_adj, ifree_adj, fdblocks_adj),
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
++		__field(int64_t, icount_adj)
++		__field(int64_t, ifree_adj)
++		__field(int64_t, fdblocks_adj)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->dev = mp->m_super->s_dev;
++		__entry->icount_adj = icount_adj;
++		__entry->ifree_adj = ifree_adj;
++		__entry->fdblocks_adj = fdblocks_adj;
+ 	),
+-	TP_printk("dev %d:%d",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev))
++	TP_printk("dev %d:%d icount %lld ifree %lld fdblocks %lld",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->icount_adj,
++		  __entry->ifree_adj,
++		  __entry->fdblocks_adj)
+ )
+ 
+ DECLARE_EVENT_CLASS(xrep_newbt_extent_class,
 
