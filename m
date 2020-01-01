@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC71312DCEF
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:13:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F120612DCDA
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:11:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgAABNP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:13:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:50928 "EHLO
+        id S1727152AbgAABLV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:11:21 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49844 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgAABNP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:13:15 -0500
+        with ESMTP id S1727132AbgAABLV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:11:21 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001198Cm091316
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:13 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011BJhH092847
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=qKpirDn198TfkQXozVJ4gDXZk9lICDC8e8Jw5EF5l0E=;
- b=pMcir+KYwXxDpko74BLfZ5KGrDPOZyVPauXADcaCK2+zAyckEdF0gC6KZr+EovNTPZln
- lSfc7IxE/NVHU4J/kvGeI2xfRWk7ZUR1DPi94smDqPeSrBgMoLUtO+UUrjQOTMAt7AlV
- QsMFgJ7cRBFeHkMzux5lWSk50XsYnfKo0XNLExxi9R8fsTefWHfKRFI70c2KU1jr/pcu
- cdlmhQEFAavRsBWE3qKW2dw/pfdAbB4rxbfAVsERN2LQSKhreMLsIAzjto+LsTw1f1wI
- L+Y668qn8eEmm3zHSdN+BMQcm/+t2vvnjuPs9x2AwcQnHPycc+Xvz+3lLHHY0sohgMHK 3A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwgt-1
+ bh=9T/JfTkOY32oiB+laAV6aPy1lNZdF2smDWi12ApUl/8=;
+ b=fWy/wKQ1Zd/8klokktUDtGPF/ukhmHQqVen7BLtgWuQIAgQ+VNBF0+ToXcF952jJ3eEl
+ 2ycMhdsBKO+lg1DW8syzCstU7oE14xRPfyqadsLRziHTkECmL7X2gwm7WpwWLBQMB1O6
+ gutBCyXj9HlnjNIMvxqgYOwJvh7XC3HI09SMKE8Gs1KrZ+iDtORHOIreemXAwQ6pujqy
+ uO2WumY0r5+ArQanrUyz7f2N++1kLYmkPsQCwh9uJnjc5wl+DhMmJu9WPg7tTSfCvL8M
+ EZtVmxCL0dtV9nfozBWBMJ+qOzhKxUPnAryLhrb+klB+EnzdREkoTmoHZF4tWWmYQ4FL ZQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwes-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vEI190284
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2x8bsrg117-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118u9r045259
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2x7medfceg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:13 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011BBxO032229
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:12 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:18 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011BHEF011829
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:17 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:11:11 -0800
-Subject: [PATCH 01/14] xfs: explicitly define inode timestamp range
+        with ESMTP ; Tue, 31 Dec 2019 17:11:17 -0800
+Subject: [PATCH 02/14] xfs: preserve default grace interval during quotacheck
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:11:07 -0800
-Message-ID: <157784106702.1364230.14985571182679451055.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:11:15 -0800
+Message-ID: <157784107520.1364230.49128863919644273.stgit@magnolia>
 In-Reply-To: <157784106066.1364230.569420432829402226.stgit@magnolia>
 References: <157784106066.1364230.569420432829402226.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,84 +70,57 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
+When quotacheck runs, it zeroes all the timer fields in every dquot.
+Unfortunately, it also does this to the root dquot, which erases any
+preconfigured grace interval that the administrator may have set.  Worse
+yet, the incore copies of those variables remain set.  This cache
+coherence problem manifests itself as the grace interval mysteriously
+being reset back to the defaults at the /next/ mount.
+
+Fix it by resetting the root disk dquot's timer fields to the incore
+values.
+
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_format.h |   19 +++++++++++++++++++
- fs/xfs/xfs_ondisk.h        |    8 ++++++++
- fs/xfs/xfs_super.c         |    4 ++--
- 3 files changed, 29 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_qm.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 9ff373962d10..82b15832ba32 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -841,11 +841,30 @@ typedef struct xfs_agfl {
- 	    ASSERT(xfs_daddr_to_agno(mp, d) == \
- 		   xfs_daddr_to_agno(mp, (d) + (len) - 1)))
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 0ce334c51d73..d4a9765c9502 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -842,6 +842,23 @@ xfs_qm_qino_alloc(
+ 	return error;
+ }
  
-+/*
-+ * XFS Timestamps
-+ * ==============
-+ *
-+ * Inode timestamps consist of signed 32-bit counters for seconds and
-+ * nanoseconds; time zero is the Unix epoch, Jan  1 00:00:00 UTC 1970.
-+ */
- typedef struct xfs_timestamp {
- 	__be32		t_sec;		/* timestamp seconds */
- 	__be32		t_nsec;		/* timestamp nanoseconds */
- } xfs_timestamp_t;
++/* Save the grace period intervals when zeroing dquots for quotacheck. */
++static inline void
++xfs_qm_reset_dqintervals(
++	struct xfs_mount	*mp,
++	struct xfs_disk_dquot	*ddq)
++{
++	struct xfs_quotainfo	*qinf = mp->m_quotainfo;
++
++	if (qinf->qi_btimelimit != XFS_QM_BTIMELIMIT)
++		ddq->d_btimer = cpu_to_be32(qinf->qi_btimelimit);
++
++	if (qinf->qi_itimelimit != XFS_QM_ITIMELIMIT)
++		ddq->d_itimer = cpu_to_be32(qinf->qi_itimelimit);
++
++	if (qinf->qi_rtbtimelimit != XFS_QM_RTBTIMELIMIT)
++		ddq->d_rtbtimer = cpu_to_be32(qinf->qi_rtbtimelimit);
++}
  
-+/*
-+ * Smallest possible timestamp with traditional timestamps, which is
-+ * Dec 13 20:45:52 UTC 1901.
-+ */
-+#define XFS_INO_TIME_MIN	((int64_t)S32_MIN)
-+
-+/*
-+ * Largest possible timestamp with traditional timestamps, which is
-+ * Jan 19 03:14:07 UTC 2038.
-+ */
-+#define XFS_INO_TIME_MAX	((int64_t)S32_MAX)
-+
- /*
-  * On-disk inode structure.
-  *
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index fa0ec2fae14a..f67f3645efcd 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -15,9 +15,17 @@
- 		"XFS: offsetof(" #structname ", " #member ") is wrong, " \
- 		"expected " #off)
+ STATIC void
+ xfs_qm_reset_dqcounts(
+@@ -895,6 +912,8 @@ xfs_qm_reset_dqcounts(
+ 		ddq->d_bwarns = 0;
+ 		ddq->d_iwarns = 0;
+ 		ddq->d_rtbwarns = 0;
++		if (!ddq->d_id)
++			xfs_qm_reset_dqintervals(mp, ddq);
  
-+#define XFS_CHECK_VALUE(value, expected) \
-+	BUILD_BUG_ON_MSG((value) != (expected), \
-+		"XFS: value of " #value " is wrong, expected " #expected)
-+
- static inline void __init
- xfs_check_ondisk_structs(void)
- {
-+	/* make sure timestamp limits are correct */
-+	XFS_CHECK_VALUE(XFS_INO_TIME_MIN, 			-2147483648LL);
-+	XFS_CHECK_VALUE(XFS_INO_TIME_MAX,			2147483647LL);
-+
- 	/* ag/file structures */
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_acl,			4);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_acl_entry,		12);
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index f687181a2720..3bddf13cd8ea 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1582,8 +1582,8 @@ xfs_fc_fill_super(
- 	sb->s_maxbytes = xfs_max_file_offset(sb->s_blocksize_bits);
- 	sb->s_max_links = XFS_MAXLINK;
- 	sb->s_time_gran = 1;
--	sb->s_time_min = S32_MIN;
--	sb->s_time_max = S32_MAX;
-+	sb->s_time_min = XFS_INO_TIME_MIN;
-+	sb->s_time_max = XFS_INO_TIME_MAX;
- 	sb->s_iflags |= SB_I_CGROUPWB;
- 
- 	set_posix_acl_flag(sb);
+ 		if (xfs_sb_version_hascrc(&mp->m_sb)) {
+ 			xfs_update_cksum((char *)&dqb[j],
 
