@@ -2,53 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D119112DD38
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:22:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C09C012DD28
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgAABWp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:22:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58956 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgAABWp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:22:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011Ea0G092104;
-        Wed, 1 Jan 2020 01:22:43 GMT
+        id S1727149AbgAABUu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:20:50 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59286 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgAABUu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:20:50 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011Evr5112837;
+        Wed, 1 Jan 2020 01:20:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=b35kgt6wQpK9za9PMfb5yi8/cB3QnCSDQtuqOg/FeEQ=;
- b=Qch15rhWAZHQLM2Gs2hiBuw0gvvKfkH8XoBnJaTdokdlSGD4ZGm+15WoGkIY5Y4rxJbF
- MkEVfhC5ptnfQ/fMbMR7XviGjCCrEleOc4+VsjVz6km/69qL6HB+ExaT8LBWVXRYWcXN
- qLzLdnbuFNf7pNsrsJg3H0P9YbkVNjkbnAg8TXO/2yXwdjXs1TI+QqXajaYN/x1ocuQJ
- wJiNe9xojAB9Ok39cM+iS1Rgvx3mhXuEPsNXZKZcvCxKwzsF8YEdrJFyQmto5t29aleS
- Otfimujfh81o5WcJltJkUoENivFLHIIbX8MFMgojKW2Ue/Z7zZkkzW7b+Z/2+54NZmQS IA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pjy83-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=c0YpydhkmIdsI31MISNjSIFQZuzhdS2DJtU2j4d/dD8=;
+ b=qMQymcshbW/F0PDNgdprSHmmBU4zXiTpVhVrK9ThySnOdDB0u5/GerXoFF7DN5b66/Y8
+ 4pgHUTYduNMVCeQc4yvWQE6zI/ysZpaNvo3rlrzZEo3NEYTQRzqskHH4uR3cjbY6h+nI
+ QR3gr7RcMwFN+PFtctB73iNwMYmHXvnUtX+a+eyFdo3LsV68HU7kqVnQ34a3OGU4W2wv
+ SSr9QXPejoUNyJ+gZXrwEKMnWGq9GFhvIJaZvauPK9jYEU5izng10iZ08aoXgWscQttm
+ mcx5k96I2EinwpXdl32vJo110xfbbaqKJrpVi+2YQxZ94B2Cy2zVw4PE/JN+LEAsJv8U 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2rw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jan 2020 01:22:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011JFTY024846;
-        Wed, 1 Jan 2020 01:20:42 GMT
+        Wed, 01 Jan 2020 01:20:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011IHl5057103;
+        Wed, 1 Jan 2020 01:20:46 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2x8gueg53k-1
+        by aserp3030.oracle.com with ESMTP id 2x7medfhxx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jan 2020 01:20:42 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011KfPe015699;
-        Wed, 1 Jan 2020 01:20:41 GMT
+        Wed, 01 Jan 2020 01:20:46 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011Ki0l015707;
+        Wed, 1 Jan 2020 01:20:45 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:20:40 -0800
-Subject: [PATCH 1/1] xfs_repair: fix totally broken unit conversion in
- directory invalidation
+        with ESMTP ; Tue, 31 Dec 2019 17:20:44 -0800
+Subject: [PATCH v2 0/6] xfs_repair: do not trash valid root dirs
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:20:36 -0800
-Message-ID: <157784163634.1371001.9270275500137619667.stgit@magnolia>
-In-Reply-To: <157784163017.1371001.12249848065995361338.stgit@magnolia>
-References: <157784163017.1371001.12249848065995361338.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, alex@zadara.com
+Date:   Tue, 31 Dec 2019 17:20:42 -0800
+Message-ID: <157784164200.1371066.15490825981810186191.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -69,56 +66,33 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Your humble author forgot that xfs_dablk_t has the same units as
-xfs_fileoff_t, and totally screwed up the directory buffer invalidation
-loop in dir_binval.  Not only is there an off-by-one error in the loop
-conditional, but the unit conversions are wrong.
+Alex Lyakas observed that xfs_repair can accidentally trash the root
+directory on a filesystem.  Specifically, if one formats a V4 filesystem
+without sparse inodes but with sunit/swidth set and then mounts that
+filesystem with a different sunit/swidth, the kernel will update the
+values in the superblock.  This causes xfs_repair's sb_rootino
+estimation to differ from the actual root directory, and it discards the
+actual root directory even though there's nothing wrong with it.
 
-Fix all this stupidity by adding a for loop macro to take care of these
-details for us so that everyone can iterate all logical directory blocks
-(xfs_dir2_db_t) that start within a given bmbt record.
+Therefore, hoist the logic that computes the root inode location into
+libxfs so that the kernel will avoid the sb update if the proposed
+sunit/swidth changes would alter the sb_rootino estimation; and then
+teach xfs_repair to retain the root directory even if the estimation
+doesn't add up, as long as sb_rootino points to a directory whose '..'
+entry points to itself.
 
-The pre-5.5 xfs_da_get_buf implementation mostly hides the off-by-one
-error because dir_binval turns on "don't complain if no mapping" mode,
-but on dirblocksize > fsblocksize filesystems the incorrect units can
-cause us to miss invalidating some blocks, which can lead to other
-buffer cache errors later.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Fixes: f9c559f4e4fb4 ("xfs_repair: invalidate dirty dir buffers when we zap a  directory")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- repair/phase6.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
+--D
 
-diff --git a/repair/phase6.c b/repair/phase6.c
-index 91d208a6..a11712a2 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -1276,7 +1276,7 @@ dir_binval(
- 	struct xfs_ifork	*ifp;
- 	struct xfs_da_geometry	*geo;
- 	struct xfs_buf		*bp;
--	xfs_dablk_t		dabno, end_dabno;
-+	xfs_dablk_t		dabno;
- 	int			error = 0;
- 
- 	if (ip->i_d.di_format != XFS_DINODE_FMT_EXTENTS &&
-@@ -1286,11 +1286,9 @@ dir_binval(
- 	geo = tp->t_mountp->m_dir_geo;
- 	ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
- 	for_each_xfs_iext(ifp, &icur, &rec) {
--		dabno = xfs_dir2_db_to_da(geo, rec.br_startoff +
--				geo->fsbcount - 1);
--		end_dabno = xfs_dir2_db_to_da(geo, rec.br_startoff +
--				rec.br_blockcount);
--		for (; dabno <= end_dabno; dabno += geo->fsbcount) {
-+		for (dabno = roundup(rec.br_startoff, geo->fsbcount);
-+		     dabno < rec.br_startoff + rec.br_blockcount;
-+		     dabno += geo->fsbcount) {
- 			bp = NULL;
- 			error = -libxfs_da_get_buf(tp, ip, dabno, -2, &bp,
- 					whichfork);
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-find-rootdir
 
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-find-rootdir
