@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69EAC12DCB7
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:08:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E63D12DCAC
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:06:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgAABIm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:08:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48444 "EHLO
+        id S1727159AbgAABGu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:06:50 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:47468 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgAABIm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:08:42 -0500
+        with ESMTP id S1727139AbgAABGt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:06:49 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00116qSc090373
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:41 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00116m7r090364
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=cPQPSHQOHBJvCtOBK78r5lnRknOrDs3rYgPHIUM3Q80=;
- b=baBKVG3fcWW5UymsCTl0Tu0wF0LVq94vKqIFH6U5Oz4z4iz0Vz3iIzyJHI/gbl5AiTLz
- dtCk/10KYPJY+B+w5zL/c4E99QVT9sQ+XmWutz7sGJXg0A9dJ8lKpKIIzWP1LrwG5cnM
- UaE50pl6mrnPihLoO69UQMrvocZG/P4PMQs87Ys0SZXJDu/5VW5RmtcL8rbE4BA0Kt9b
- bFc02V0ZT+4UEKCyQIMJuWq7hp1kPLpeH8HuTxMhIbR+DP4wwbUqqrsxhw00+vj5taOl
- nc4ZmicWONOPz3cn4PK7zQrLPBdOmshcIR6g2WBl6twwKGniGzF3+Utz3anLUJxTcGB+ sA== 
+ bh=p2qCCtbR2bpLHiviiQqAD1CLaKOBJJ/77nKFsV/zvrs=;
+ b=hrXq5HC13DafXgI1eqN1EZ8cKx5cCnj3pCw1AoFJSpMXVG2BSpptkT1DytNeYWrdU4D3
+ WjJj7SZlBN2O+B3BorBznMw8sJnA1AQzLm7l6WXh+7S5E3cLzn72mt04NrFt+etPdeST
+ t8DpNPrkZ1Y8zhuEuHdqAADbALHjhSnf2dmL/o1hPVoJQyWa3Tgdrp5vS4F8WYiAtBLo
+ p2CthavjECO97wKu4R6m2lxRn6VGz90kcghSBB5w5MDDqFdDgiSKukRDPIxdtfsAbplW
+ emo/O81J03ekWUNJGSMgSMuACUil4IfDt8zXbjhwox7MF2kykSqW1SpTXai4Q9Re9v1I EQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwbn-1
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwa9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:08:41 +0000
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:48 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115AoI183798
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2x8bsrfx53-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001159Qg183719
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2x8bsrfx7g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:40 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00116ew2030514
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:40 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:47 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00116kIL010248
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:46 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:06:39 -0800
-Subject: [PATCH 06/11] xfs: remove __xfs_icache_free_eofblocks
+        with ESMTP ; Tue, 31 Dec 2019 17:06:45 -0800
+Subject: [PATCH 07/11] xfs: refactor eofb matching into a single helper
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:06:37 -0800
-Message-ID: <157784079699.1360343.13196634819336820293.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:06:43 -0800
+Message-ID: <157784080384.1360343.10280402715883473936.stgit@magnolia>
 In-Reply-To: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 References: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +54,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=904
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010008
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=964 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=917 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010008
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,49 +70,109 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This is now a pointless wrapper, so kill it.
+Refactor the two eofb-matching logics into a single helper so that we
+don't repeat ourselves.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_icache.c |   14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_icache.c |   59 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 31 insertions(+), 28 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 3c872d3ac94d..4060f43a2ca3 100644
+index 4060f43a2ca3..efac12e2ac18 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1477,22 +1477,12 @@ xfs_inode_free_eofblocks(
- 	return ret;
+@@ -1422,6 +1422,33 @@ xfs_inode_match_id_union(
+ 	return 0;
  }
  
--static int
--__xfs_icache_free_eofblocks(
--	struct xfs_mount	*mp,
--	struct xfs_eofblocks	*eofb,
--	int			(*execute)(struct xfs_inode *ip, void *args),
--	int			tag)
--{
--	return xfs_inode_ag_iterator(mp, 0, execute, eofb, tag);
--}
++/*
++ * Is this inode @ip eligible for eof/cow block reclamation, given some
++ * filtering parameters @eofb?  The inode is eligible if @eofb is null or
++ * if the predicate functions match.
++ */
++static bool
++xfs_inode_matches_eofb(
++	struct xfs_inode	*ip,
++	struct xfs_eofblocks	*eofb)
++{
++	int			match;
++
++	if (!eofb)
++		return true;
++
++	if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
++		match = xfs_inode_match_id_union(ip, eofb);
++	else
++		match = xfs_inode_match_id(ip, eofb);
++	if (match)
++		return true;
++
++	/* skip the inode if the file size is too small */
++	return !(eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
++		 XFS_ISIZE(ip) < eofb->eof_min_file_size);
++}
++
+ STATIC int
+ xfs_inode_free_eofblocks(
+ 	struct xfs_inode	*ip,
+@@ -1429,7 +1456,6 @@ xfs_inode_free_eofblocks(
+ {
+ 	struct xfs_eofblocks	*eofb = args;
+ 	bool			wait;
+-	int			match;
+ 	int			ret = 0;
+ 
+ 	wait = (eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC));
+@@ -1448,19 +1474,8 @@ xfs_inode_free_eofblocks(
+ 	if (!wait && mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_DIRTY))
+ 		return 0;
+ 
+-	if (eofb) {
+-		if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
+-			match = xfs_inode_match_id_union(ip, eofb);
+-		else
+-			match = xfs_inode_match_id(ip, eofb);
+-		if (!match)
+-			return 0;
 -
- int
- xfs_icache_free_eofblocks(
- 	struct xfs_mount	*mp,
- 	struct xfs_eofblocks	*eofb)
- {
--	return __xfs_icache_free_eofblocks(mp, eofb, xfs_inode_free_eofblocks,
-+	return xfs_inode_ag_iterator(mp, 0, xfs_inode_free_eofblocks, eofb,
- 			XFS_ICI_EOFBLOCKS_TAG);
- }
+-		/* skip the inode if the file size is too small */
+-		if (eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
+-		    XFS_ISIZE(ip) < eofb->eof_min_file_size)
+-			return 0;
+-	}
++	if (!xfs_inode_matches_eofb(ip, eofb))
++		return 0;
  
-@@ -1754,7 +1744,7 @@ xfs_icache_free_cowblocks(
- 	struct xfs_mount	*mp,
- 	struct xfs_eofblocks	*eofb)
+ 	/*
+ 	 * If the caller is waiting, return -EAGAIN to keep the background
+@@ -1702,25 +1717,13 @@ xfs_inode_free_cowblocks(
+ 	void			*args)
  {
--	return __xfs_icache_free_eofblocks(mp, eofb, xfs_inode_free_cowblocks,
-+	return xfs_inode_ag_iterator(mp, 0, xfs_inode_free_cowblocks, eofb,
- 			XFS_ICI_COWBLOCKS_TAG);
- }
+ 	struct xfs_eofblocks	*eofb = args;
+-	int			match;
+ 	int			ret = 0;
  
+ 	if (!xfs_prep_free_cowblocks(ip))
+ 		return 0;
+ 
+-	if (eofb) {
+-		if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
+-			match = xfs_inode_match_id_union(ip, eofb);
+-		else
+-			match = xfs_inode_match_id(ip, eofb);
+-		if (!match)
+-			return 0;
+-
+-		/* skip the inode if the file size is too small */
+-		if (eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
+-		    XFS_ISIZE(ip) < eofb->eof_min_file_size)
+-			return 0;
+-	}
++	if (!xfs_inode_matches_eofb(ip, eofb))
++		return 0;
+ 
+ 	/* Free the CoW blocks */
+ 	xfs_ilock(ip, XFS_IOLOCK_EXCL);
 
