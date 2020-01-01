@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 343F412DCBA
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:09:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24D6812DCBD
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:09:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgAABJB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:09:01 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48602 "EHLO
+        id S1727152AbgAABJC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:09:02 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48614 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbgAABJB (ORCPT
+        with ESMTP id S1727144AbgAABJB (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:09:01 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118xL7091232
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118x46091245
         for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=7TaSHvryPFwHNpM2TihZjMjAPgqHT09j0ZWFU9tuKF8=;
- b=Etf6hVmbFOU3T1OYHzQL+xrB9O9oYAlbYSCyohhrFiivEu38DJsvOEh6vQ8dmHIo4/QO
- U91Y+qQpX8y4R1W8/mdaS/XinFXegajnEgy4/6DSy5jC+GxQpSyhAIcCd0za+GEWsZOz
- ijd46aPyd9OrVRR/J2GQNGuPEKvpgN2E7Nt0SdHtnusNYeeETMXy+DQeooAFqXme8OB3
- f2t1N/DxwgFZxK9x8RiAy0GcEZWHGr/ZyDIBoi5kK7Z4Ae2UTgLpP2j2iSh2CY7iGiUk
- 9Lr6TKkUVOue8Gj4cYXx9CorGC80w12+lBTsuTeHgg2eBUj6aOdVAjHvkfB1t6PXQ2BJ 0Q== 
+ bh=Kvdm9DMPbKzcKvnysSUMGB9l7wwhqfyMHNalF/nklEs=;
+ b=NFRC7Fg2fED+hpyaErGc5xdwvm6RTca5/RNesbQ8us+/sXkQ4q20fixQu89Zv13n5Ejd
+ UYVDBB7kuaTiKqDxEJc8H0KWe+aZxFkOGLwRXDdrTfJqdZt3g3Mat/ZD6XZoo+iaM0Ei
+ 3SrlCyzbtAZF6EspN6USMu1F4OmdziDGa1rxtGbhkDSai/TdRyi6Bcm29SoIZMFtV8gA
+ RtVSAm3gucO0lyOYavL+X7lPkzE1Mm0lad042O7DF4hdtwvS3eABzTBhwG2MJu8sEdM2
+ L0Lv5uxaMNZm8yJ8+crm9ERWFA3SdR2CtLkuOa6xC947DdL4RtS0BWKYdKTuDJ62cZkR tw== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwby-1
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwbs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:08:59 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vcA190345
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118v1m190248
         for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2x8bsrfy7v-1
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2x8bsrfy8q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:08:57 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00118nnl010860
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:49 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:08:56 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00118tPl031345
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:55 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:08:48 -0800
-Subject: [PATCH 01/10] xfs: decide if inode needs inactivation
+        with ESMTP ; Tue, 31 Dec 2019 17:08:54 -0800
+Subject: [PATCH 02/10] xfs: track unlinked inactive inode fs summary counters
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:08:46 -0800
-Message-ID: <157784092655.1362752.15438079465056974707.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:08:52 -0800
+Message-ID: <157784093263.1362752.14373360314662413051.stgit@magnolia>
 In-Reply-To: <157784092020.1362752.15046503361741521784.stgit@magnolia>
 References: <157784092020.1362752.15046503361741521784.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,99 +70,179 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add a predicate function to decide if an inode needs (deferred)
-inactivation.  Any file that has been unlinked or has speculative
-preallocations either for post-EOF writes or for CoW qualifies.
-This function will also be used by the upcoming deferred inactivation
-patch.
+Set up counters to track the number of inodes and blocks that will be
+freed from inactivating unlinked inodes.  We'll use this in the deferred
+inactivation patch to hide the effects of deferred processing.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_inode.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_inode.h |    1 +
- 2 files changed, 60 insertions(+)
+ fs/xfs/xfs_inode.c |   54 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_mount.h |    7 +++++++
+ fs/xfs/xfs_super.c |   31 +++++++++++++++++++++++++++++-
+ 3 files changed, 91 insertions(+), 1 deletion(-)
 
 
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 1187ff7035d9..097a89826ba7 100644
+index 097a89826ba7..2fe8f030ebb8 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -1806,6 +1806,65 @@ xfs_inactive_ifree(
+@@ -1806,6 +1806,60 @@ xfs_inactive_ifree(
  	return 0;
  }
  
 +/*
-+ * Returns true if we need to update the on-disk metadata before we can free
-+ * the memory used by this inode.  Updates include freeing post-eof
-+ * preallocations; freeing COW staging extents; and marking the inode free in
-+ * the inobt if it is on the unlinked list.
++ * Play some accounting tricks with deferred inactivation of unlinked inodes so
++ * that it looks like the inode got freed immediately.  The superblock
++ * maintains counts of the number of inodes, data blocks, and rt blocks that
++ * would be freed if we were to force inode inactivation.  These counts are
++ * added to the statfs free counters outside of the regular fdblocks/ifree
++ * counters.  If userspace actually demands those "free" resources we'll force
++ * an inactivation scan to free things for real.
++ *
++ * Note that we can safely skip the block accounting trickery for complicated
++ * situations (inode with blocks on both devices, inode block counts that seem
++ * wrong) since the worst that happens is that statfs resource usage decreases
++ * more slowly.
++ *
++ * Positive @direction means we're setting up the accounting trick and
++ * negative undoes it.
 + */
-+bool
-+xfs_inode_needs_inactivation(
-+	struct xfs_inode	*ip)
++static inline void
++xfs_inode_iadjust(
++	struct xfs_inode	*ip,
++	int			direction)
 +{
 +	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_ifork	*cow_ifp = XFS_IFORK_PTR(ip, XFS_COW_FORK);
++	xfs_filblks_t		iblocks;
++	int64_t			inodes = 0;
++	int64_t			dblocks = 0;
++	int64_t			rblocks = 0;
 +
-+	/*
-+	 * If the inode is already free, then there can be nothing
-+	 * to clean up here.
-+	 */
-+	if (VFS_I(ip)->i_mode == 0)
-+		return false;
++	ASSERT(direction != 0);
 +
-+	/* If this is a read-only mount, don't do this (would generate I/O) */
-+	if (mp->m_flags & XFS_MOUNT_RDONLY)
-+		return false;
++	if (VFS_I(ip)->i_nlink == 0) {
++		inodes = 1;
 +
-+	/* Try to clean out the cow blocks if there are any. */
-+	if (cow_ifp && cow_ifp->if_bytes > 0)
-+		return true;
-+
-+	if (VFS_I(ip)->i_nlink != 0) {
-+		int	error;
-+		bool	has;
-+
-+		/*
-+		 * force is true because we are evicting an inode from the
-+		 * cache. Post-eof blocks must be freed, lest we end up with
-+		 * broken free space accounting.
-+		 *
-+		 * Note: don't bother with iolock here since lockdep complains
-+		 * about acquiring it in reclaim context. We have the only
-+		 * reference to the inode at this point anyways.
-+		 *
-+		 * If the predicate errors out, send the inode through
-+		 * inactivation anyway, because that's what we did before.
-+		 * The inactivation worker will ignore an inode that doesn't
-+		 * actually need it.
-+		 */
-+		if (!xfs_can_free_eofblocks(ip, true))
-+			return false;
-+		error = xfs_has_eofblocks(ip, &has);
-+		return error != 0 || has;
++		iblocks = max_t(int64_t, 0, ip->i_d.di_nblocks +
++					    ip->i_delayed_blks);
++		if (!XFS_IS_REALTIME_INODE(ip))
++			dblocks = iblocks;
++		else if (!XFS_IFORK_Q(ip) ||
++			 XFS_IFORK_FORMAT(ip, XFS_ATTR_FORK) ==
++					XFS_DINODE_FMT_LOCAL)
++			rblocks = iblocks;
 +	}
 +
-+	/*
-+	 * Link count dropped to zero, which means we have to mark the inode
-+	 * free on disk and remove it from the AGI unlinked list.
-+	 */
-+	return true;
++	if (direction < 0) {
++		inodes = -inodes;
++		dblocks = -dblocks;
++		rblocks = -rblocks;
++	}
++
++	percpu_counter_add(&mp->m_iinactive, inodes);
++	percpu_counter_add(&mp->m_dinactive, dblocks);
++	percpu_counter_add(&mp->m_rinactive, rblocks);
 +}
 +
  /*
-  * xfs_inactive
-  *
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 377e02cd3c0a..0a46548e51a8 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -498,6 +498,7 @@ extern struct kmem_zone	*xfs_inode_zone;
+  * Returns true if we need to update the on-disk metadata before we can free
+  * the memory used by this inode.  Updates include freeing post-eof
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 296223c2b782..d203c922dc51 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -85,6 +85,13 @@ typedef struct xfs_mount {
+ 	 */
+ 	struct percpu_counter	m_delalloc_blks;
  
- bool xfs_inode_verify_forks(struct xfs_inode *ip);
- int xfs_has_eofblocks(struct xfs_inode *ip, bool *has);
-+bool xfs_inode_needs_inactivation(struct xfs_inode *ip);
++	/* Count of inodes waiting for inactivation. */
++	struct percpu_counter	m_iinactive;
++	/* Count of data device blocks waiting for inactivation. */
++	struct percpu_counter	m_dinactive;
++	/* Coult of realtime device blocks waiting for inactivation. */
++	struct percpu_counter	m_rinactive;
++
+ 	struct xfs_buf		*m_sb_bp;	/* buffer for superblock */
+ 	char			*m_rtname;	/* realtime device name */
+ 	char			*m_logname;	/* external log device name */
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 03d95bf0952c..ed10ba2cd087 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -784,6 +784,8 @@ xfs_fs_statfs(
+ 	uint64_t		icount;
+ 	uint64_t		ifree;
+ 	uint64_t		fdblocks;
++	uint64_t		iinactive;
++	uint64_t		binactive;
+ 	xfs_extlen_t		lsize;
+ 	int64_t			ffree;
  
- int xfs_iunlink_init(struct xfs_perag *pag);
- void xfs_iunlink_destroy(struct xfs_perag *pag);
+@@ -797,6 +799,7 @@ xfs_fs_statfs(
+ 	icount = percpu_counter_sum(&mp->m_icount);
+ 	ifree = percpu_counter_sum(&mp->m_ifree);
+ 	fdblocks = percpu_counter_sum(&mp->m_fdblocks);
++	iinactive = percpu_counter_sum(&mp->m_iinactive);
+ 
+ 	spin_lock(&mp->m_sb_lock);
+ 	statp->f_bsize = sbp->sb_blocksize;
+@@ -820,7 +823,7 @@ xfs_fs_statfs(
+ 					sbp->sb_icount);
+ 
+ 	/* make sure statp->f_ffree does not underflow */
+-	ffree = statp->f_files - (icount - ifree);
++	ffree = statp->f_files - (icount - ifree) + iinactive;
+ 	statp->f_ffree = max_t(int64_t, ffree, 0);
+ 
+ 
+@@ -834,7 +837,12 @@ xfs_fs_statfs(
+ 		statp->f_blocks = sbp->sb_rblocks;
+ 		statp->f_bavail = statp->f_bfree =
+ 			sbp->sb_frextents * sbp->sb_rextsize;
++		binactive = percpu_counter_sum(&mp->m_rinactive);
++	} else {
++		binactive = percpu_counter_sum(&mp->m_dinactive);
+ 	}
++	statp->f_bavail += binactive;
++	statp->f_bfree += binactive;
+ 
+ 	return 0;
+ }
+@@ -1024,8 +1032,26 @@ xfs_init_percpu_counters(
+ 	if (error)
+ 		goto free_fdblocks;
+ 
++	error = percpu_counter_init(&mp->m_iinactive, 0, GFP_KERNEL);
++	if (error)
++		goto free_delalloc;
++
++	error = percpu_counter_init(&mp->m_dinactive, 0, GFP_KERNEL);
++	if (error)
++		goto free_iinactive;
++
++	error = percpu_counter_init(&mp->m_rinactive, 0, GFP_KERNEL);
++	if (error)
++		goto free_dinactive;
++
+ 	return 0;
+ 
++free_dinactive:
++	percpu_counter_destroy(&mp->m_dinactive);
++free_iinactive:
++	percpu_counter_destroy(&mp->m_iinactive);
++free_delalloc:
++	percpu_counter_destroy(&mp->m_delalloc_blks);
+ free_fdblocks:
+ 	percpu_counter_destroy(&mp->m_fdblocks);
+ free_ifree:
+@@ -1054,6 +1080,9 @@ xfs_destroy_percpu_counters(
+ 	ASSERT(XFS_FORCED_SHUTDOWN(mp) ||
+ 	       percpu_counter_sum(&mp->m_delalloc_blks) == 0);
+ 	percpu_counter_destroy(&mp->m_delalloc_blks);
++	percpu_counter_destroy(&mp->m_iinactive);
++	percpu_counter_destroy(&mp->m_dinactive);
++	percpu_counter_destroy(&mp->m_rinactive);
+ }
+ 
+ static void
 
