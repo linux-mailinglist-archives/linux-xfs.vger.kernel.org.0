@@ -2,66 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D9512DD1F
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:18:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6914D12DD27
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:20:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgAABSi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:18:38 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56910 "EHLO
+        id S1727145AbgAABUg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:20:36 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57842 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbgAABSi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:18:38 -0500
+        with ESMTP id S1727132AbgAABUg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:20:36 -0500
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011EWU9092092
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:36 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011ECPx092033;
+        Wed, 1 Jan 2020 01:20:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=mxTZb9O9gox2iUj6KTFO8IDZXoLRh6IkV5OYfd/IrMQ=;
- b=k+rchHD0T/Z0Ew6ydWvaO4DT5vMoWKtNMzGP7QnwT4Pu+y3C7Qs/j6oR3CeDCHV+7B1y
- Pe3p7mS4Vk9JaU4vcf7w65k351MfTplyYSKDSXWvURnGwPbsV1n/PKzCJr15+CnqNAED
- LASs40zqoRoNwxhBVzf4XmIaZ8vhpX9U3wgxpopFyIzKg+kEiRjWfug2c/ZQWtcbT6n2
- MyU8TD3eXBUCQV47gU19C82WngJiXUZyretAsH1RGEIfjbYRzrTslbSLlzE28Y2ZmEq5
- cqJH9fEw19MnGXJLtaxgiSPV9DRmmI0RGS8MRI5wnlcqj2bmwy2Tmz4SUcbRR08UOIfv kA== 
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=RiP+WfHd8sVccsfpz/VwQ9gQ5eOenwxv0cr8ydAw1yM=;
+ b=i2RlB2QJLKhzJm1n4n2k2hxaNkWTznoWplLtz0vwUOF5/w8VkrrN9JJ0obXSTXRpXL2O
+ 5nYCHZSelqwqETmO+W66OvUkWjsVmKZxisAVwXeUxZumIpULDLsLHyKq5L0afEDFylng
+ 0vNtRjFzZM1WloYGYSOFRQpTMwtsXno7WbPW6Z2OdHuK4CUI5vBqSqm0Zc94vEvc2em/
+ 2JiHrEQ14Z8D++84tAFHw7v+7DjTvvgYW0y+/udmVHamIj7jSKX6q9pkB4ZEkaGDsQrl
+ 8WSNzDBljlJvgejceDmraINemidgBvh7HAcVcQwkngTZap9NKXlZhmdrMeAHn+00Bwwx Kw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pjy4r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:36 +0000
+        by aserp2120.oracle.com with ESMTP id 2x5y0pjy6h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Jan 2020 01:20:34 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011I80J056895
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2x7medfgsb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:18:36 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011IXav014860
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:18:34 GMT
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0011I7Uf056870;
+        Wed, 1 Jan 2020 01:20:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2x7medfhuc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Jan 2020 01:20:33 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011KXgw030742;
+        Wed, 1 Jan 2020 01:20:33 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:18:32 -0800
-Subject: [PATCH 21/21] xfs: report realtime rmap btree corruption errors to
- the health system
+        with ESMTP ; Tue, 31 Dec 2019 17:20:32 -0800
+Subject: [PATCH 0/1] xfsprogs: random fixes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
+To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:18:30 -0800
-Message-ID: <157784151051.1368137.9892653832705151596.stgit@magnolia>
-In-Reply-To: <157784137939.1368137.1149711841610071256.stgit@magnolia>
-References: <157784137939.1368137.1149711841610071256.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:20:30 -0800
+Message-ID: <157784163017.1371001.12249848065995361338.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=735
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010010
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=795 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010010
 Sender: linux-xfs-owner@vger.kernel.org
@@ -69,62 +66,20 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Whenever we encounter corrupt realtime rmap btree blocks, we should
-report that to the health monitoring system for later reporting.
+Random fixes.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_inode_fork.c |    7 ++++++-
- fs/xfs/xfs_health.c            |    3 +++
- fs/xfs/xfs_rtalloc.c           |    1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 758bf44693ba..93e80435c113 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -78,8 +78,13 @@ xfs_iformat_fork(
- 			error = xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
- 			break;
- 		case XFS_DINODE_FMT_RMAP:
--			if (!xfs_sb_version_hasrtrmapbt(&ip->i_mount->m_sb))
-+			if (!xfs_sb_version_hasrtrmapbt(&ip->i_mount->m_sb)) {
-+				xfs_inode_verifier_error(ip, -EFSCORRUPTED,
-+						__func__, dip, sizeof(*dip),
-+						__this_address);
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 				return -EFSCORRUPTED;
-+			}
- 			error = xfs_iformat_rmap(ip, dip);
- 			break;
- 		default:
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index e328b048edb0..fc0cea221985 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -505,6 +505,9 @@ xfs_btree_mark_sick(
- 		xfs_bmap_mark_sick(cur->bc_private.b.ip,
- 				   cur->bc_private.b.whichfork);
- 		return;
-+	case XFS_BTNUM_RTRMAP:
-+		xfs_rt_mark_sick(cur->bc_mp, XFS_SICK_RT_RMAPBT);
-+		return;
- 	case XFS_BTNUM_BNO:
- 		mask = XFS_SICK_AG_BNOBT;
- 		break;
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 765f648ffe2b..ccbaebafba9b 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1326,6 +1326,7 @@ xfs_rtmount_inodes(
- 		if (XFS_IS_CORRUPT(mp,
- 				   mp->m_rrmapip->i_d.di_format !=
- 				   XFS_DINODE_FMT_RMAP)) {
-+			xfs_rt_mark_sick(mp, XFS_SICK_RT_RMAPBT);
- 			error = -EFSCORRUPTED;
- 			goto out_rrmap;
- 		}
+--D
 
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
