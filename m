@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E63D12DCAC
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:06:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00A0C12DCB8
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:08:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgAABGu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:06:50 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:47468 "EHLO
+        id S1727133AbgAABIz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:08:55 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48526 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbgAABGt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:06:49 -0500
+        with ESMTP id S1727132AbgAABIz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:08:55 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00116m7r090364
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:48 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115Ldn089332
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:08:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=p2qCCtbR2bpLHiviiQqAD1CLaKOBJJ/77nKFsV/zvrs=;
- b=hrXq5HC13DafXgI1eqN1EZ8cKx5cCnj3pCw1AoFJSpMXVG2BSpptkT1DytNeYWrdU4D3
- WjJj7SZlBN2O+B3BorBznMw8sJnA1AQzLm7l6WXh+7S5E3cLzn72mt04NrFt+etPdeST
- t8DpNPrkZ1Y8zhuEuHdqAADbALHjhSnf2dmL/o1hPVoJQyWa3Tgdrp5vS4F8WYiAtBLo
- p2CthavjECO97wKu4R6m2lxRn6VGz90kcghSBB5w5MDDqFdDgiSKukRDPIxdtfsAbplW
- emo/O81J03ekWUNJGSMgSMuACUil4IfDt8zXbjhwox7MF2kykSqW1SpTXai4Q9Re9v1I EQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjwa9-1
+ bh=sSO5AEcURlVdZIx2p89uVJB3CheRVEKywuaHPh29zB8=;
+ b=n3XIM8X+xz44uz+84OU9lfO6wkq8YOIQ9NXgxguIpmwUVUE3bV9oElesjj1b3MHzYqhD
+ cNobY93R3+ligfbQrcxu91/OQ5d7MykldiFdMnGF+ywb4gq9olAyESSlMENebTgv1zL3
+ CZKx4PQl6GAWXre1BdXPNMGV74ufp47vbptg3Wea4WpWCOXPM+rsAobdjoeX9+959UJz
+ GU3Vm8MbSHTN8BZRqMJ7vexnulYTlHyFkZOFkX38dlfdaduUZnulL/7z4c6uMSn023By
+ FoJS38gmZRfTKuaOZy33a22lt2v1qvFca2peOaJ1TzwmA0+WO0Jg5mTIalP4N0Yu4pUR Tg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2x5ypqjwbp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001159Qg183719
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2x8bsrfx7g-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:08:53 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115E42165819
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:53 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2x8gj914m1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:47 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00116kIL010248
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:46 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:53 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00116qZ8004998
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:52 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:06:45 -0800
-Subject: [PATCH 07/11] xfs: refactor eofb matching into a single helper
+        with ESMTP ; Tue, 31 Dec 2019 17:06:52 -0800
+Subject: [PATCH 08/11] xfs: fix inode ag walk predicate function return
+ values
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:06:43 -0800
-Message-ID: <157784080384.1360343.10280402715883473936.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:06:49 -0800
+Message-ID: <157784080993.1360343.7574164715616516765.stgit@magnolia>
 In-Reply-To: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 References: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,14 +54,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010008
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=917 adultscore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010008
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,109 +71,133 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Refactor the two eofb-matching logics into a single helper so that we
-don't repeat ourselves.
+There are a number of predicate functions that help the incore inode
+walking code decide if we really want to apply the iteration function to
+the inode.  These are boolean decisions, so change the return types to
+boolean to match.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_icache.c |   59 +++++++++++++++++++++++++++------------------------
- 1 file changed, 31 insertions(+), 28 deletions(-)
+ fs/xfs/xfs_icache.c |   39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 4060f43a2ca3..efac12e2ac18 100644
+index efac12e2ac18..fbe0d8fb59c1 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1422,6 +1422,33 @@ xfs_inode_match_id_union(
- 	return 0;
+@@ -737,7 +737,12 @@ xfs_icache_inode_is_allocated(
+  */
+ #define XFS_LOOKUP_BATCH	32
+ 
+-STATIC int
++/*
++ * Decide if the given @ip is eligible to be a part of the inode walk, and
++ * grab it if so.  Returns true if it's ready to go or false if we should just
++ * ignore it.
++ */
++STATIC bool
+ xfs_inode_ag_walk_grab(
+ 	struct xfs_inode	*ip,
+ 	int			flags)
+@@ -768,18 +773,18 @@ xfs_inode_ag_walk_grab(
+ 
+ 	/* nothing to sync during shutdown */
+ 	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+-		return -EFSCORRUPTED;
++		return false;
+ 
+ 	/* If we can't grab the inode, it must on it's way to reclaim. */
+ 	if (!igrab(inode))
+-		return -ENOENT;
++		return false;
+ 
+ 	/* inode is valid */
+-	return 0;
++	return true;
+ 
+ out_unlock_noent:
+ 	spin_unlock(&ip->i_flags_lock);
+-	return -ENOENT;
++	return false;
  }
  
-+/*
-+ * Is this inode @ip eligible for eof/cow block reclamation, given some
-+ * filtering parameters @eofb?  The inode is eligible if @eofb is null or
-+ * if the predicate functions match.
-+ */
-+static bool
-+xfs_inode_matches_eofb(
-+	struct xfs_inode	*ip,
-+	struct xfs_eofblocks	*eofb)
-+{
-+	int			match;
-+
-+	if (!eofb)
-+		return true;
-+
-+	if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
-+		match = xfs_inode_match_id_union(ip, eofb);
-+	else
-+		match = xfs_inode_match_id(ip, eofb);
-+	if (match)
-+		return true;
-+
-+	/* skip the inode if the file size is too small */
-+	return !(eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
-+		 XFS_ISIZE(ip) < eofb->eof_min_file_size);
-+}
-+
  STATIC int
- xfs_inode_free_eofblocks(
+@@ -831,7 +836,7 @@ xfs_inode_ag_walk(
+ 		for (i = 0; i < nr_found; i++) {
+ 			struct xfs_inode *ip = batch[i];
+ 
+-			if (done || xfs_inode_ag_walk_grab(ip, iter_flags))
++			if (done || !xfs_inode_ag_walk_grab(ip, iter_flags))
+ 				batch[i] = NULL;
+ 
+ 			/*
+@@ -1378,48 +1383,48 @@ xfs_reclaim_inodes_count(
+ 	return reclaimable;
+ }
+ 
+-STATIC int
++STATIC bool
+ xfs_inode_match_id(
  	struct xfs_inode	*ip,
-@@ -1429,7 +1456,6 @@ xfs_inode_free_eofblocks(
+ 	struct xfs_eofblocks	*eofb)
  {
- 	struct xfs_eofblocks	*eofb = args;
- 	bool			wait;
--	int			match;
- 	int			ret = 0;
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_UID) &&
+ 	    !uid_eq(VFS_I(ip)->i_uid, eofb->eof_uid))
+-		return 0;
++		return false;
  
- 	wait = (eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC));
-@@ -1448,19 +1474,8 @@ xfs_inode_free_eofblocks(
- 	if (!wait && mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_GID) &&
+ 	    !gid_eq(VFS_I(ip)->i_gid, eofb->eof_gid))
+-		return 0;
++		return false;
  
--	if (eofb) {
--		if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
--			match = xfs_inode_match_id_union(ip, eofb);
--		else
--			match = xfs_inode_match_id(ip, eofb);
--		if (!match)
--			return 0;
--
--		/* skip the inode if the file size is too small */
--		if (eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
--		    XFS_ISIZE(ip) < eofb->eof_min_file_size)
--			return 0;
--	}
-+	if (!xfs_inode_matches_eofb(ip, eofb))
-+		return 0;
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_PRID) &&
+ 	    ip->i_d.di_projid != eofb->eof_prid)
+-		return 0;
++		return false;
  
- 	/*
- 	 * If the caller is waiting, return -EAGAIN to keep the background
-@@ -1702,25 +1717,13 @@ xfs_inode_free_cowblocks(
- 	void			*args)
+-	return 1;
++	return true;
+ }
+ 
+ /*
+  * A union-based inode filtering algorithm. Process the inode if any of the
+  * criteria match. This is for global/internal scans only.
+  */
+-STATIC int
++STATIC bool
+ xfs_inode_match_id_union(
+ 	struct xfs_inode	*ip,
+ 	struct xfs_eofblocks	*eofb)
  {
- 	struct xfs_eofblocks	*eofb = args;
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_UID) &&
+ 	    uid_eq(VFS_I(ip)->i_uid, eofb->eof_uid))
+-		return 1;
++		return true;
+ 
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_GID) &&
+ 	    gid_eq(VFS_I(ip)->i_gid, eofb->eof_gid))
+-		return 1;
++		return true;
+ 
+ 	if ((eofb->eof_flags & XFS_EOF_FLAGS_PRID) &&
+ 	    ip->i_d.di_projid == eofb->eof_prid)
+-		return 1;
++		return true;
+ 
+-	return 0;
++	return false;
+ }
+ 
+ /*
+@@ -1432,7 +1437,7 @@ xfs_inode_matches_eofb(
+ 	struct xfs_inode	*ip,
+ 	struct xfs_eofblocks	*eofb)
+ {
 -	int			match;
- 	int			ret = 0;
++	bool			match;
  
- 	if (!xfs_prep_free_cowblocks(ip))
- 		return 0;
- 
--	if (eofb) {
--		if (eofb->eof_flags & XFS_EOF_FLAGS_UNION)
--			match = xfs_inode_match_id_union(ip, eofb);
--		else
--			match = xfs_inode_match_id(ip, eofb);
--		if (!match)
--			return 0;
--
--		/* skip the inode if the file size is too small */
--		if (eofb->eof_flags & XFS_EOF_FLAGS_MINFILESIZE &&
--		    XFS_ISIZE(ip) < eofb->eof_min_file_size)
--			return 0;
--	}
-+	if (!xfs_inode_matches_eofb(ip, eofb))
-+		return 0;
- 
- 	/* Free the CoW blocks */
- 	xfs_ilock(ip, XFS_IOLOCK_EXCL);
+ 	if (!eofb)
+ 		return true;
 
