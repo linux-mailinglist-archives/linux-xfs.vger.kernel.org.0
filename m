@@ -2,63 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D36DF12DCA8
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:06:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9398212DCA9
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:06:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgAABGA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:06:00 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:47050 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgAABGA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:06:00 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115SKC089380
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:59 GMT
+        id S1727158AbgAABGI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:06:08 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:50272 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbgAABGH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:06:07 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115ICE086744
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=yUzmpvI+5aj8wohbD+dXqUFD5JUWHGDREeypIORMzGo=;
- b=HDb+ifcX3UP/Injmha8XzVDVN9GB2hTpLVxYw8RmSOcPHgfPxenTG9sHQzpIwgDzlJwB
- hfOJ0FF+TzqEX4TGejoo0ky8ZohLegmlmsWv9YDm+pgJDOW4KSHUGzSy9gDnNk1QlKTB
- 5hIAV2ocnEOw+8pX6CPXVpwQJxG++6bnN8EorEoUfRR3FmBDk5ts0sh6I7oz2iHA3K5W
- +PHx/1Yry+H7ubud2I1Z2rtHQPdUhVnY275Sa9eTJGmTXrSh2xes3AsBBinhhfIm3Ara
- FT0I2i6OhZ4EdXOSPsEthYliLDPY/VbZPvUf75SLNhHHoRXdYwN+I3T1Dzp66j1Tvo75 jA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2x5ypqjw9n-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=L84VjV1mU9JJllrWdLZVup/vYjz69W3OTIged1IyOwI=;
+ b=e8Wv/mZdNkoDHIvPt8A5eUZvgjToMbTFBq6qLRrX9ythQwNUVNEpg3ZEgG+nns4bC5h4
+ 9mGHiYLLUr5yz+77FJvlb6ilsC3phy9kSaTC+JKazzqhb2Ve0AZpAwfJgivoQKo6B8lz
+ pm/A6SseIpKhdYJmv6a+qMvjh/U2TJibnMZZDxCQMpug0tsambu2TyzsB0mzHF6CHlRX
+ gqy7ZHpCPnyVp1qNSz2ig9UcOjpGiTj1LB8U58zy1/Tyd7qhUR7aFBrCn9qFbUwLQvQ6
+ 0jzyBKU2AOQ4pxR71d5tMpxMIKm3b4bAT7Ppoqm5qT4FH4kzMP+usy8k2f6UOFYpcLXo sA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2x5y0pjxqk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115EeW006702
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2x8guedxv5-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00115LiD039523
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2x7medf9pe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:05:58 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00115vr6030276
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:05:57 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:06:06 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 001165tr004703
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:06:05 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:05:57 -0800
-Subject: [PATCH v2 00/11] xfs: refactor incore inode walking
+        with ESMTP ; Tue, 31 Dec 2019 17:06:05 -0800
+Subject: [PATCH 01/11] xfs: move eofblocks conversion function to xfs_ioctl.c
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:05:54 -0800
-Message-ID: <157784075463.1360343.1278255546758019580.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:06:01 -0800
+Message-ID: <157784076130.1360343.8944098247511283520.stgit@magnolia>
+In-Reply-To: <157784075463.1360343.1278255546758019580.stgit@magnolia>
+References: <157784075463.1360343.1278255546758019580.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=917
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=984
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010008
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=980 adultscore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010008
 Sender: linux-xfs-owner@vger.kernel.org
@@ -66,23 +68,108 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This series prepares the incore inode walking code used by the
-eofblocks/cowblocks scanner to handle deferred inode inactivation.
-First we clean up the eofblocks/cowblocks incore inode walking code to
-get rid of some of the warts left by reflink development.  Next, we
-rip out the many trivial wrapper functions that don't add much value.
-Finally, we refactor the various helpers and predicate functions to
-reduce open-coded logic.
+Move xfs_fs_eofblocks_from_user into the only file that actually uses
+it, so that we don't have this function cluttering up the header file.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_icache.h |   35 -----------------------------------
+ fs/xfs/xfs_ioctl.c  |   35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 35 deletions(-)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index 48f1fd2bb6ad..c13bc8a3e02f 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -81,41 +81,6 @@ int xfs_inode_ag_iterator_tag(struct xfs_mount *mp,
+ 	int (*execute)(struct xfs_inode *ip, int flags, void *args),
+ 	int flags, void *args, int tag);
+ 
+-static inline int
+-xfs_fs_eofblocks_from_user(
+-	struct xfs_fs_eofblocks		*src,
+-	struct xfs_eofblocks		*dst)
+-{
+-	if (src->eof_version != XFS_EOFBLOCKS_VERSION)
+-		return -EINVAL;
+-
+-	if (src->eof_flags & ~XFS_EOF_FLAGS_VALID)
+-		return -EINVAL;
+-
+-	if (memchr_inv(&src->pad32, 0, sizeof(src->pad32)) ||
+-	    memchr_inv(src->pad64, 0, sizeof(src->pad64)))
+-		return -EINVAL;
+-
+-	dst->eof_flags = src->eof_flags;
+-	dst->eof_prid = src->eof_prid;
+-	dst->eof_min_file_size = src->eof_min_file_size;
+-
+-	dst->eof_uid = INVALID_UID;
+-	if (src->eof_flags & XFS_EOF_FLAGS_UID) {
+-		dst->eof_uid = make_kuid(current_user_ns(), src->eof_uid);
+-		if (!uid_valid(dst->eof_uid))
+-			return -EINVAL;
+-	}
+-
+-	dst->eof_gid = INVALID_GID;
+-	if (src->eof_flags & XFS_EOF_FLAGS_GID) {
+-		dst->eof_gid = make_kgid(current_user_ns(), src->eof_gid);
+-		if (!gid_valid(dst->eof_gid))
+-			return -EINVAL;
+-	}
+-	return 0;
+-}
+-
+ int xfs_icache_inode_is_allocated(struct xfs_mount *mp, struct xfs_trans *tp,
+ 				  xfs_ino_t ino, bool *inuse);
+ 
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 7b35d62ede9f..1f1c40b20fa6 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1969,6 +1969,41 @@ xfs_ioc_setlabel(
+ 	return error;
+ }
+ 
++static inline int
++xfs_fs_eofblocks_from_user(
++	struct xfs_fs_eofblocks		*src,
++	struct xfs_eofblocks		*dst)
++{
++	if (src->eof_version != XFS_EOFBLOCKS_VERSION)
++		return -EINVAL;
++
++	if (src->eof_flags & ~XFS_EOF_FLAGS_VALID)
++		return -EINVAL;
++
++	if (memchr_inv(&src->pad32, 0, sizeof(src->pad32)) ||
++	    memchr_inv(src->pad64, 0, sizeof(src->pad64)))
++		return -EINVAL;
++
++	dst->eof_flags = src->eof_flags;
++	dst->eof_prid = src->eof_prid;
++	dst->eof_min_file_size = src->eof_min_file_size;
++
++	dst->eof_uid = INVALID_UID;
++	if (src->eof_flags & XFS_EOF_FLAGS_UID) {
++		dst->eof_uid = make_kuid(current_user_ns(), src->eof_uid);
++		if (!uid_valid(dst->eof_uid))
++			return -EINVAL;
++	}
++
++	dst->eof_gid = INVALID_GID;
++	if (src->eof_flags & XFS_EOF_FLAGS_GID) {
++		dst->eof_gid = make_kgid(current_user_ns(), src->eof_gid);
++		if (!gid_valid(dst->eof_gid))
++			return -EINVAL;
++	}
++	return 0;
++}
++
+ /*
+  * Note: some of the ioctl's return positive numbers as a
+  * byte count indicating success, such as readlink_by_handle.
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=incore-inode-walk
