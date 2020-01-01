@@ -2,65 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BB9E12DCEC
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:13:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DDC612DCD9
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbgAABNC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:13:02 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53908 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgAABNC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:13:02 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00119dfN089262
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:01 GMT
+        id S1727175AbgAABLG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:11:06 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54088 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgAABLG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:11:06 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001190Yn109475
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=n9IpLt5zXDlwnfJDoC4nmHLUZPpiWzCA0DjLSeT7GLU=;
- b=ZexC4Nskz/XgYBMDBA1fLlOJ9xig/A51b1sdpCTHgtClVGJPad8tFUPRMj746MbMX/ll
- vvWbTfPCGOMVU6HQJ3DAQ/t4mTrF/03Pa/1ZHrTNfNsocc9/Lf7jxIkHNz0TS42kpadU
- FrOqB68sogUOAQYSMq2EHkCvdnE12Qltr4qjs+ruktqz30hJdL4lTYavRjaJ8Hj/dJRR
- iFL9TzpTLLYQyXpdMYBwuVkvulXmqsmzjibPbJl4QTm6MLyz3r+UnjNiMz40Vx7uYe0Q
- LRw3f+IAyNTPXHHiVzOYATeZHgOAZe4i0zhDSWtRsUPwxNWaXduyrChTh3Fdj82N7ETk Wg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pjxxq-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=rmxjCn4aWcWGtaCYpaKshNFvuHV0WPfwjOpZ8iDpxVI=;
+ b=KAR2ztwgpQI82fh8OL5/4aRF+HNCnxm5g6CzNskUzh7cW3sJURTOb6foBaQkhf4cBM9w
+ HDs3a91XseBbRSaMncn8ZgzvNZ+EaWAeo0LUbpRDskBXscFLHTwqSJ/e9Xz6j99EBvGw
+ WEIgsf4ToD+zxkbjropcQA92nXy07F5t/CPZAkXdU2kk7VwEbOMZjL/tnwpkCnNAlabw
+ vYLTus28LWSzMcNSJRMM4OJGmeWsu8qU6VadNU+Xn9pJ+5bQij3bmjDAEJkRN6BuqoNx
+ pNYxgrBSnrYAyiwQfE5HOTh971r2cwKqtAbQZR+en1FwWSpYTP2SzFKAy6dEgqDZys10 yA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2x5xftk2f5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vDR172083
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2x8gj91726-1
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118unI190218
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2x8bsrg0x5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:00 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011AxoT028439
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:10:59 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:11:03 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0011B3M6032212
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:11:03 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:10:59 -0800
-Subject: [PATCH 2/2] xfs: enable new inode btree counters feature
+        with ESMTP ; Tue, 31 Dec 2019 17:11:03 -0800
+Subject: [PATCH 00/14] xfs: widen timestamps to deal with y2038
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:10:56 -0800
-Message-ID: <157784105688.1364145.358582066477392631.stgit@magnolia>
-In-Reply-To: <157784104452.1364145.1438137657472587585.stgit@magnolia>
-References: <157784104452.1364145.1438137657472587585.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:11:01 -0800
+Message-ID: <157784106066.1364230.569420432829402226.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=793
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=777
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001010009
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=851 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=840 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001010009
 Sender: linux-xfs-owner@vger.kernel.org
@@ -68,28 +66,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Enable the new inode btree counters feature.
+This series performs some refactoring of our timestamp and inode
+encoding functions, then retrofits the timestamp union to handle
+timestamps as a 64-bit nanosecond counter.  Next, it refactors the quota
+grace period expiration timer code a bit before implementing bit
+shifting to widen the effective counter size to 34 bits.  This enables
+correct time handling on XFS through the year 2486.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index b778bf095a83..9ff373962d10 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -453,7 +453,8 @@ xfs_sb_has_compat_feature(
- #define XFS_SB_FEAT_RO_COMPAT_ALL \
- 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
- 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
--		 XFS_SB_FEAT_RO_COMPAT_REFLINK)
-+		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
-+		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
- #define XFS_SB_FEAT_RO_COMPAT_UNKNOWN	~XFS_SB_FEAT_RO_COMPAT_ALL
- static inline bool
- xfs_sb_has_ro_compat_feature(
+--D
 
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bigtime
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bigtime
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bigtime
