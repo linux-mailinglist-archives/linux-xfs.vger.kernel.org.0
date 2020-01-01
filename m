@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F5EE12DCEE
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:13:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BE3012DCF0
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jan 2020 02:13:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgAABNN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 Dec 2019 20:13:13 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:55278 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgAABNM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:13:12 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00119bYO109853
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:11 GMT
+        id S1727201AbgAABNS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 31 Dec 2019 20:13:18 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:54014 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727134AbgAABNS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 Dec 2019 20:13:18 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 001190sH089149
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=V43QYPyE03/CyYt5Lr01Tp8tKN2Q/JdfqtplP1bvVMA=;
- b=ngDKpRdqiT0PTc7+bj+/DdgBYW7uXL2rk2Cqu+1wXcNQFaMDZtY53AjbAHZ45Im5lyHF
- RCsqfPJTM/cbJOOzLTUY7G3QMm4i00JtrN3ZtX3IrDAdCUh3CURPbflSCfKMHrUCYN7m
- ODNVigK5hC3h3FlBZ/37ZS+JlNN3/o9+NgW8NZZvPoqMr4GSxi/eQM3SILj0xpY3TvGp
- mejtH0n1tH+awcoxkd2rd4vKymgLO3J/UhsD/gIeZq/tB8gdISMsJYPr1Ljiw+qnrmf5
- aFNe80ILq+D7pRbYu6hBvNbAd+XA2RcKeKMv9e0XPdxDmFVnjBCnL1oxK39sQAGrsPTp nQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2x5xftk2hv-1
+ bh=mblJ1NHEc364GnYhXVldGqBf0qiniXp/tkC0lDekd0Y=;
+ b=QufAnKi+kjVkQmxQ35s1Ty5vCFmhxc8NoNVQIJ5dEvG7n7tBtdieUrLNVJh/UvvtfzOo
+ m9a116R3Cv9qLOeur+oQOkEKuf6OihS7kFYP3W47iOPR2M3Zz9NNC9uYBbdNtRCq6QcU
+ RWyL0i3ZFRZkC7ZRZG7TBkAh/RM7m3cl82FdlgwhRG19ynJoecdvMhjvdLnh942dOmLW
+ yvU6LHoDJZ5owYwKrWg/ynuXa4+/eiE7TMfhHFtdELFninBoFJ3gw5VDpIPlOT4E1UvM
+ VFD7zjJYmzWzd2K+J4v/wS4nLxN0cU5DYu7B2FqSeTlW+DFJFYrvlLLChlJ6Br6K0Wxp Ow== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2x5y0pjxy3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118vPh190257
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:10 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00118xfA012445
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:16 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2x8bsrg2as-1
+        by aserp3020.oracle.com with ESMTP id 2x8guef3h7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:10 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011D92r007128
-        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:09 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jan 2020 01:13:16 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0011DGD9007228
+        for <linux-xfs@vger.kernel.org>; Wed, 1 Jan 2020 01:13:16 GMT
 Received: from localhost (/10.159.150.156)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Dec 2019 17:13:09 -0800
-Subject: [PATCH 05/21] xfs: implement atime updates in xfs_trans_ichgtime
+        with ESMTP ; Tue, 31 Dec 2019 17:13:15 -0800
+Subject: [PATCH 06/21] xfs: use xfs_trans_ichgtime to set times when
+ allocating inode
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 31 Dec 2019 17:13:06 -0800
-Message-ID: <157784118675.1365473.17513961152989004879.stgit@magnolia>
+Date:   Tue, 31 Dec 2019 17:13:13 -0800
+Message-ID: <157784119340.1365473.1547830478581821122.stgit@magnolia>
 In-Reply-To: <157784115560.1365473.15056496428451670757.stgit@magnolia>
 References: <157784115560.1365473.15056496428451670757.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,40 +71,52 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Enable xfs_trans_ichgtime to change the inode access time so that we can
-use this function to set inode times when allocating inodes instead of
-open-coding it.
+Use xfs_trans_ichgtime to set the inode times when allocating an inode,
+instead of open-coding them here.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_shared.h      |    1 +
- fs/xfs/libxfs/xfs_trans_inode.c |    2 ++
- 2 files changed, 3 insertions(+)
+ fs/xfs/xfs_inode.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index c45acbd3add9..41022c55289d 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -121,6 +121,7 @@ void	xfs_log_get_max_trans_res(struct xfs_mount *mp,
- #define	XFS_ICHGTIME_MOD	0x1	/* data fork modification timestamp */
- #define	XFS_ICHGTIME_CHG	0x2	/* inode field change timestamp */
- #define	XFS_ICHGTIME_CREATE	0x4	/* inode create timestamp */
-+#define	XFS_ICHGTIME_ACCESS	0x8	/* last access timestamp */
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index c1952d08fe2c..f71ddcccd390 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -661,8 +661,8 @@ xfs_ialloc(
+ 	struct inode			*inode;
+ 	xfs_ino_t			ino;
+ 	uint				flags;
++	int				times;
+ 	int				error;
+-	struct timespec64		tv;
  
+ 	/*
+ 	 * Call the space management code to pick
+@@ -739,11 +739,7 @@ xfs_ialloc(
+ 	ip->i_d.di_nextents = 0;
+ 	ASSERT(ip->i_d.di_nblocks == 0);
  
- /*
-diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 2b8ccb5b975d..1efad6eb29cf 100644
---- a/fs/xfs/libxfs/xfs_trans_inode.c
-+++ b/fs/xfs/libxfs/xfs_trans_inode.c
-@@ -66,6 +66,8 @@ xfs_trans_ichgtime(
- 		inode->i_mtime = tv;
- 	if (flags & XFS_ICHGTIME_CHG)
- 		inode->i_ctime = tv;
-+	if (flags & XFS_ICHGTIME_ACCESS)
-+		inode->i_atime = tv;
- 	if (flags & XFS_ICHGTIME_CREATE)
- 		ip->i_d.di_crtime = tv;
- }
+-	tv = current_time(inode);
+-	inode->i_mtime = tv;
+-	inode->i_atime = tv;
+-	inode->i_ctime = tv;
+-
++	times = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG | XFS_ICHGTIME_ACCESS;
+ 	ip->i_d.di_extsize = 0;
+ 	ip->i_d.di_dmevmask = 0;
+ 	ip->i_d.di_dmstate = 0;
+@@ -755,9 +751,10 @@ xfs_ialloc(
+ 		if (xfs_sb_version_hasbigtime(&ip->i_mount->m_sb))
+ 			ip->i_d.di_flags2 |= XFS_DIFLAG2_BIGTIME;
+ 		ip->i_d.di_cowextsize = 0;
+-		ip->i_d.di_crtime = tv;
++		times |= XFS_ICHGTIME_CREATE;
+ 	}
+ 
++	xfs_trans_ichgtime(tp, ip, times);
+ 
+ 	flags = XFS_ILOG_CORE;
+ 	switch (args->mode & S_IFMT) {
 
