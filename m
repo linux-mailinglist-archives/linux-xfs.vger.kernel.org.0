@@ -2,61 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0379412F6C9
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 Jan 2020 11:38:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64EFC12F979
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 Jan 2020 16:05:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgACKiS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 Jan 2020 05:38:18 -0500
-Received: from sonic309-20.consmr.mail.ne1.yahoo.com ([66.163.184.146]:35260
-        "EHLO sonic309-20.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbgACKiS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Jan 2020 05:38:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1578047897; bh=BwDPrsA2+wE7onqC1JBBbTtzaCQs5syyrmDpzadvHSI=; h=Date:From:Reply-To:Subject:References:From:Subject; b=MmHTJJrC29MaptlkFNWzfL+Z78+RIB+J7Ksd/hLtZ8Wxt4W+c4unEZ9gs+eetjAuLf8qLwpeK2Be9sp8ewyQgmbYHNNs+3vfpyfbAp105hmEQ3CK4rTvu+Au5yrqjzq6UHh10FDhLCV2IAigUaCKgBZlxOGScXaLwsd88W8X/bwjapg5wKz/epMq23k8tYUD9CNRO8GR4iT2hLpLrlZ2hkyCmwvvt59dlODGyJDcp1LsiX4gW3z9VdkZN86pcqlxhumMtWKMktT2Nk5H0etm5uGP8SGvGxs0AcVpuB9WZi1G5OSpUf/wBkW9YmR8RGZnKwbcmg2V4MHs3vgBkTvHKQ==
-X-YMail-OSG: zegebhoVM1nHXoFrF_n3.eoBKLJmwSuvgr9uOdjWxxuyGWU8FpzEUAFZgah8zoF
- ERbkvljwb16.FCJJkg73nq_TpldpUmcJCvdAJSl9.V0YhDCpTMsKr3fZ4AuVKh5NuKeQ3NIo37Go
- qxOndK5XPUD_VitG9O6RAUMSS_iiK42pVEbx0bMnVP9Z7uXY4PeHVosZi.iQA5.SszU3AMqgdoII
- T8HPlup6byklstSOUhjoMRIATvfEI2BAV4Dc0MWjOrVsLA0C_M905uQZe38i44ZR.8HiQjIOj1lr
- q5wBiWmblZEpgcwVttEDa4h7phyfFxPLYCeVxBjwsxUnYsL16MTDfuYbz5tCuKBGsdeKq1vVXUjb
- 2xqRYH4E5GfD8qsfoAATTB0oRNVOBkOg43LFTqHHojc3CCRC2D8tz1llWfRTX_X9KhXhWSQR2E1J
- NhH7l13u.fZHJEfaZZjIDSP_TTW6N9Fh2blEZp4KLuGWIUaj_Dq0DVhqpy22iAq9I0IS2NWjG4HQ
- mHXeq40StHJ16dbTUDKreLByoW_gLeRmsVO2agN3Q6gc0SHtdb4sKm_g8MrdAi1VR_MBT5CiNVKI
- BLnuMp2JsIu1wexdh3QT8symyNzRSb9Yvh0sWB_EmiP7yEZ6_ztkkziWYo0w0cdEjrKZwpn72FTB
- aPV1DpRLioTeD2kGKwXkYjpxd6bhF.jcy48ZuGPHbjlo1bukjd0ZgBw7rHLdbhUIkydFMEVuSy.0
- mtz1GVovUiYnihUK7QAwF8Uat5tRrt25Poc4t5ieTbi2mKlqyPlTRhAwS1qu8MK_TEHJdgv8LlSs
- vUCytUgZjMdH_yGTuRDnZVuJ1_u44kUEgvC47CZF.UEkkPwx3CsgK4nDTF3xU6L3BhMCB5f_U36T
- qcoA7MCG0hmCxKqcBY2Lvg1da0uEig0rFqg2nF0LGMsu2TYUuAVOOkx5NTRcUduW9npSCSXyWU.n
- 8jn3XREmJaqCJtEZtQ3RYj0FqWmnfHEElKUmdK_6oGs21ZN7wFwekL2q.Dq5MaUn6lJ4gY1H985W
- EboMxvCH2kz9X4yjNXHIqIOZVdF1U.wRelx.nWOJOSKiSigoS2QjR2HhUUGT7CATUN.5go6fMTew
- O2633d10hkyC7xtXsSeh5bk2WGzxXojfyOgU2A8eMyjT2pBU1X6s7UCoKXxR2_ZXRnJM7V4kEpne
- A0x2vm9j_dF_8zoFZvyqGdGH4_U_bg26Olu2EAq7d.qaWo.ZZ_Td13O_Z0HsynnXpN0IKRfvo8Mc
- wDGEKZTp85r4EeFtLVAq0gjWirYTszL6oXp2twfVOuYq7h4NxMS29wPoGGIaRH9cUiGz8KnoG7c4
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 3 Jan 2020 10:38:17 +0000
-Date:   Fri, 3 Jan 2020 10:38:16 +0000 (UTC)
-From:   Lisa Williams <wlisa2633@gmail.com>
-Reply-To: lisa.wilams@yahoo.com
-Message-ID: <1632349926.6233681.1578047896191@mail.yahoo.com>
-Subject: Hi Dear
+        id S1727686AbgACPF1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 Jan 2020 10:05:27 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37745 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACPF1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Jan 2020 10:05:27 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so30110526wru.4;
+        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=X5+ayP/0hzBeWDiiokaoXUV3s80MSoMhBga4b9S7sks=;
+        b=OphOn0vxqlZHvxhxkC7gFavcg8KUzD6thbTzOhjFjaBwVoRmNB8VfO1KaKsg0+uWh+
+         eCTB8bn6Y+npzS6wYCGaH7avGMzRL6Z8oSNpa8+37wBkL1Ki8L6Vri+iwi2WOyo/akMv
+         yoxr9xRKDbeTnRvAXnejWI8qMajzpZnBwCZqk2qdxB1uIBuBf446N7e3ndG0BiWbekMj
+         GOp75VenYqte4WaHktOF38ySpwt8xWbaZ8butvV6BZisrj68WoDAzp1mwphj+rwUgwmi
+         iwm1zXUKYlE6W9BLg4YYhHGRFbC7RBy6r91fLogs9yP7sPwUf6ll13c9R+G8KyDZwhbt
+         2DpA==
+X-Gm-Message-State: APjAAAUi358JJHZqDOJgLAkj6I8kY6Zn6/RWpVESWfpzWgI70nlVDxkn
+        dWVyKre7jEh1W/kBJjBv5aM=
+X-Google-Smtp-Source: APXvYqygr/6TniLTdugF+WqW3lwlKrSR9oQWEVDaSy91cNcI3WRlF+4XJBcs5clvoogcu5G/pibIzg==
+X-Received: by 2002:adf:9144:: with SMTP id j62mr84290643wrj.168.1578063925002;
+        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
+Received: from Johanness-MBP.fritz.box (ppp-46-244-218-95.dynamic.mnet-online.de. [46.244.218.95])
+        by smtp.gmail.com with ESMTPSA id e8sm60583844wrt.7.2020.01.03.07.05.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 07:05:24 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] zonefs: Add documentation
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+References: <20200103023445.1352524-1-damien.lemoal@wdc.com>
+ <20200103023445.1352524-3-damien.lemoal@wdc.com>
+From:   Johannes Thumshirn <jth@kernel.org>
+Message-ID: <e9df8ffe-96b2-f9c6-7f42-30f3b33097fb@kernel.org>
+Date:   Fri, 3 Jan 2020 16:05:23 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200103023445.1352524-3-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-References: <1632349926.6233681.1578047896191.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.14873 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:71.0) Gecko/20100101 Firefox/71.0
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 
+Am 03.01.20 um 03:34 schrieb Damien Le Moal:
+[...]
+> +
+> +Overview
+> +========
+> +
+> +zonefs is a very simple file system exposing each zone of a zoned block device
+> +as a file. Unlike a regular file system with zoned block device support (e.g.
+> +f2fs), zonefs does not hide the sequential write constraint of zoned block
+> +devices to the user. Files representing sequential write zones of the device
+> +must be written sequentially starting from the end of the file (append only
+> +writes).
+> +
+> +As such, zonefs is in essence closer to a raw block device access interface
+> +than to a full featured POSIX file system. The goal of zonefs is to simplify
+> +the implementation of zoned block device support in applications by replacing
+> +raw block device file accesses with a richer file API, avoiding relying on
+> +direct block device file ioctls which may be more obscure to developers. One
+> +example of this approach is the implementation of LSM (log-structured merge)
+> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices
+> +by allowing SSTables to be stored in a zone file similarly to a regular file
+> +system rather than as a range of sectors of the entire disk. The introduction
+> +of the higher level construct "one file is one zone" can help reducing the
+> +amount of changes needed in the application as well as introducing support for
+> +different application programming languages.
 
-Hi Dear,
+Maybe add a small subsection on what zoned block devices are? Given that
+we had at least one person looking at this series while it was on the
+list, who didn't really know what zoned block devices are and what the
+constraints of them are.
 
- How are you doing hope you are fine and OK?
+[...]
+> +Zone files
+> +----------
+> +
+> +Zone files are named using the number of the zone they represent within the set
+> +of zones of a particular type. That is, both the "cnv" and "seq" directories
+> +contain files named "0", "1", "2", ... The file numbers also represent
+> +increasing zone start sector on the device.
+> +
+> +All read and write operations to zone files are not allowed beyond the file
+> +maximum size, that is, beyond the zone size. Any access exceeding the zone
+> +size is failed with the -EFBIG error.
+> +
+> +Creating, deleting, renaming or modifying any attribute of files and
+> +sub-directories is not allowed.
 
-I was just going through the Internet search when I found your email address, I want to make a new and special friend, so I decided to contact you to see how we can make it work out if we can. Please I wish you will have the desire with me so that we can get to know each other better and see what happens in future.
+Nit: Above you explicitly say it's failed with -EFBIG, maybe document
+the error here as well?
 
-My name is Lisa Williams, I am an American, but presently I live in the UK, I will be glad to see your reply for us to know each other better to exchange pictures and details about us.
+Other than that,
+Reviewed-by: Johannes Thumshirn <jth@kernel.org>
 
-Yours
-Lisa.
