@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E99B132C0D
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jan 2020 17:57:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 667D3132C13
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jan 2020 17:57:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgAGQyu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jan 2020 11:54:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52202 "EHLO
+        id S1728680AbgAGQyw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jan 2020 11:54:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52224 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgAGQyt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 11:54:49 -0500
+        with ESMTP id S1728478AbgAGQyw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 11:54:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kUPZOML+uLnYPgpjQGR/7/Zmj/V06a0odfpumk93+aY=; b=B0Go5j7njJv3ksxpg0Jy7rSa3E
-        VtQPuhAtrbGYErIjWI9UN7o68zkImHVZjTKOsn8Hw30aTPR/jhfkbw97eOVr6kKkMmSNB0APDkKFe
-        1ueR11dI+gMSUqtzZKkSeG9R85Ib4nS6I+PQyotwJMKjH6+4PPVVeKIT5uXfLdihehYGBM5cHD7UY
-        uuJexy+oOXHVSZBKYw7Kr5XcV/XCPsOwvGFwn1p6cU3rh+0gsFBd+RWGJ9ZFl5KIsxbMBMugFbhO+
-        4plz9NTM9l4ZDCC4qNR5SH+QYXY80a+YZLiy6yQGmrtu8QtsactsX9ZtA+i3rlQOZlS6z7OfVD1XV
-        c8+517Ng==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
+        Reply-To:Cc:Content-Type:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XpoEisxqNSAGBrb+u1AqyRI5z7tK8Mb8j9qM37grzvg=; b=WWExcu9xJr2Is39KQzdu5FN8/
+        +mTGHnHpfGieo0ICZZLnD96qMz+QmY++Y4maBcbJ8DKpPc/+Idbw8GnQWA9rwVVC0CuMZbJVldBPV
+        kE78vRkKtYhnHGlojgfnD0cbZrSf0+IpzjJAtnCcQ9PyAATd1I2AI/XFxbjadHchU5MTirQ3c+uHX
+        Dbn0uZIZjZvtsnDOmLO9waKmhBt9xtncnLJEOIsx3fhCKPmdqgpOC110N8l+gY+1oqcb2UsjifRQM
+        /dMqjd5ky3Ij9WEQz1s7K+qUM92rXaQpEXXlH1Nil2oejWrXiYVCvmvwmKqxlpV56OJNlEwMm2BTf
+        T0OrP/DoQ==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ios80-0002Pn-TW; Tue, 07 Jan 2020 16:54:49 +0000
+        id 1ios83-0002QR-4M
+        for linux-xfs@vger.kernel.org; Tue, 07 Jan 2020 16:54:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 2/4] xfs: reject invalid flags combinations in XFS_IOC_ATTRMULTI_BY_HANDLE
-Date:   Tue,  7 Jan 2020 17:54:40 +0100
-Message-Id: <20200107165442.262020-3-hch@lst.de>
+Subject: [PATCH 3/4] xfs: also remove cached ACLs when removing the underlying attr
+Date:   Tue,  7 Jan 2020 17:54:41 +0100
+Message-Id: <20200107165442.262020-4-hch@lst.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107165442.262020-1-hch@lst.de>
 References: <20200107165442.262020-1-hch@lst.de>
@@ -43,50 +43,35 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-While the flags field in the ABI and the on-disk format allows for
-multiple namespace flags, that is a logically invalid combination that
-scrub complains about.  Reject it at the ioctl level, as all other
-interface already get this right at higher levels.
+We should not just invalidate the ACL when setting the underlying
+attribute, but also when removing it.  The ioctl interface gets that
+right, but the normal xattr inteface skipped the xfs_forget_acl due
+to an early return.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_ioctl.c   | 5 +++++
- fs/xfs/xfs_ioctl32.c | 5 +++++
- 2 files changed, 10 insertions(+)
+ fs/xfs/xfs_xattr.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index edfbdb8f85e2..17b4a981be4d 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -462,6 +462,11 @@ xfs_attrmulti_by_handle(
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 383f0203d103..2288f20ae282 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -74,10 +74,11 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
+ 	if (flags & XATTR_REPLACE)
+ 		xflags |= ATTR_REPLACE;
  
- 	error = 0;
- 	for (i = 0; i < am_hreq.opcount; i++) {
-+		if ((ops[i].am_flags & ATTR_ROOT) &&
-+		    (ops[i].am_flags & ATTR_SECURE)) {
-+			ops[i].am_error = -EINVAL;
-+			continue;
-+		}
- 		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
+-	if (!value)
+-		return xfs_attr_remove(ip, (unsigned char *)name, xflags);
+-	error = xfs_attr_set(ip, (unsigned char *)name,
++	if (value)
++		error = xfs_attr_set(ip, (unsigned char *)name,
+ 				(void *)value, size, xflags);
++	else
++		error = xfs_attr_remove(ip, (unsigned char *)name, xflags);
+ 	if (!error)
+ 		xfs_forget_acl(inode, name, xflags);
  
- 		ops[i].am_error = strncpy_from_user((char *)attr_name,
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index bd9d9ebf85d8..565c6404ee94 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -450,6 +450,11 @@ xfs_compat_attrmulti_by_handle(
- 
- 	error = 0;
- 	for (i = 0; i < am_hreq.opcount; i++) {
-+		if ((ops[i].am_flags & ATTR_ROOT) &&
-+		    (ops[i].am_flags & ATTR_SECURE)) {
-+			ops[i].am_error = -EINVAL;
-+			continue;
-+		}
- 		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
- 
- 		ops[i].am_error = strncpy_from_user((char *)attr_name,
 -- 
 2.24.1
 
