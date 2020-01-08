@@ -2,65 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 539FF133A15
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jan 2020 05:19:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DB2B133A19
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jan 2020 05:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgAHETT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jan 2020 23:19:19 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:50444 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbgAHETT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 23:19:19 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JIQM035703
-        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:19:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=b+hHdlvhyfFtyLSSjdIcs8RmhGzTxv1vNNBnfBW7JGA=;
- b=QseZexldx1S1AIA0X/YQw+JeTTPBUFpZCLyS5qadVnhR4riS4Jl+Tr//olLR310giu78
- w7A+nKWt8b2Wt3hb+qbVnRWhYxfzPQeoGb4SAQttg9XVejtTpX6yAOFp+kzH15mvndVk
- vUQnjKARFRJmi+8cC1mXEkqjiblTqlA11sEXExTslHyZCxJLX85F/niHQm+lMFHYtzJ/
- lYXxkuO6bSPIOKatPWI83U76N88+2q2pQf3gwe+tH9RapXsxGvU29qttSYs4dWfzh/bV
- 6StnZ3zdEbAt2ytVRZ5Gkgctjbi1jM7Hy6tiEubyzsZP3B501v//5Cj01qFFjQeYGQ/k cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xakbqscg5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 08 Jan 2020 04:19:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JHMo075736
-        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:19:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xcjvep2kn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 08 Jan 2020 04:19:17 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0084IR5b012053
-        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:18:28 GMT
+        id S1726333AbgAHEU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jan 2020 23:20:29 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:50044 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgAHEU3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 23:20:29 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JFK4026692;
+        Wed, 8 Jan 2020 04:20:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=7Oo1sicqsTtTOwQ93/Y/BfeHOPw9SprrwK1buo8ZKZM=;
+ b=TiCzU6h1YYillqWrCbL8JBo09h3beBT1VRIhbUPSRK0hD9X1Kd3PDiyhoJZqZw7MgPuP
+ OPN8pTHKudfK4sr8ws3nIP0ccIU7Di/pN6Qbt7Gq7tEnTsrxq1wAR5cuqrdHWA1m975Y
+ EBSzQBHl+Ze5h5X5t61wp61tQLxd705mdPJ0wX7BBfZwg3hnJBpLS71qjXJzo0ENlOCC
+ rH1G/iaG+Ob7on1IGqrOvnV5Z7Qv4bGsbE+nlC6dHZA1gIx2Z+bTTTtTDFcmtrBp9/Al
+ MbjdOPozi/cBKBSslwtIZAYhBj67L/5DbTY47v7dFYeeXTraD3FApERYD65sBlOdFjA6 kA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnq1eqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 04:20:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JI3R136053;
+        Wed, 8 Jan 2020 04:20:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xcpanywya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 04:20:09 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0084K5jv008866;
+        Wed, 8 Jan 2020 04:20:06 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 20:18:27 -0800
-Subject: [PATCH 3/3] xfs: make struct xfs_buf_log_format have a consistent
- size
+        with ESMTP ; Tue, 07 Jan 2020 20:20:05 -0800
+Date:   Tue, 7 Jan 2020 20:20:00 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 07 Jan 2020 20:18:25 -0800
-Message-ID: <157845710512.84011.14528616369807048509.stgit@magnolia>
-In-Reply-To: <157845708352.84011.17764262087965041304.stgit@magnolia>
-References: <157845708352.84011.17764262087965041304.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Jan Kara <jack@suse.cz>, mbobrowski@mbobrowski.org,
+        riteshh@linux.ibm.com
+Subject: [ANNOUNCE] xfs-linux: iomap-5.6-merge updated to 62e298db3fc3
+Message-ID: <20200108042000.GA5552@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=975
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001080037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001080037
@@ -69,51 +70,36 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi folks,
 
-Increase XFS_BLF_DATAMAP_SIZE by 1 to fill in the implied padding at the
-end of struct xfs_buf_log_format.  This makes the size consistent so
-that we can check it in xfs_ondisk.h, and will be needed once we start
-logging attribute values.
+The iomap-5.6-merge branch of the xfs-linux repository at:
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_log_format.h |    9 +++++----
- fs/xfs/xfs_ondisk.h            |    1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the iomap-5.6-merge branch is commit:
+
+62e298db3fc3 fs: Fix page_mkwrite off-by-one errors
+
+New Commits:
+
+Andreas Gruenbacher (1):
+      [62e298db3fc3] fs: Fix page_mkwrite off-by-one errors
 
 
-diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
-index 8ef31d71a9c7..5d8eb8978c33 100644
---- a/fs/xfs/libxfs/xfs_log_format.h
-+++ b/fs/xfs/libxfs/xfs_log_format.h
-@@ -462,11 +462,12 @@ static inline uint xfs_log_dinode_size(int version)
- #define	XFS_BLF_GDQUOT_BUF	(1<<4)
- 
- /*
-- * This is the structure used to lay out a buf log item in the
-- * log.  The data map describes which 128 byte chunks of the buffer
-- * have been logged.
-+ * This is the structure used to lay out a buf log item in the log.  The data
-+ * map describes which 128 byte chunks of the buffer have been logged.  Note
-+ * that XFS_BLF_DATAMAP_SIZE is an odd number so that the structure size will
-+ * be consistent between 32-bit and 64-bit platforms.
-  */
--#define XFS_BLF_DATAMAP_SIZE	((XFS_MAX_BLOCKSIZE / XFS_BLF_CHUNK) / NBWORD)
-+#define XFS_BLF_DATAMAP_SIZE	(1 + ((XFS_MAX_BLOCKSIZE / XFS_BLF_CHUNK) / NBWORD))
- 
- typedef struct xfs_buf_log_format {
- 	unsigned short	blf_type;	/* buf log item type indicator */
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index b6701b4f59a9..5f04d8a5ab2a 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -111,6 +111,7 @@ xfs_check_ondisk_structs(void)
- 	XFS_CHECK_STRUCT_SIZE(xfs_dir2_sf_hdr_t,		10);
- 
- 	/* log structures */
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_buf_log_format,	88);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_dq_logformat,		24);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	28);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	32);
+Code Diffstat:
 
+ fs/btrfs/inode.c        | 15 ++++-----------
+ fs/buffer.c             | 16 +++-------------
+ fs/ceph/addr.c          |  2 +-
+ fs/ext4/inode.c         | 15 ++++-----------
+ fs/iomap/buffered-io.c  | 18 +++++-------------
+ fs/ubifs/file.c         |  3 +--
+ include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
+ 7 files changed, 46 insertions(+), 51 deletions(-)
