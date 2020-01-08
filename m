@@ -2,54 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DB2B133A19
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jan 2020 05:20:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5A8133A2B
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jan 2020 05:23:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgAHEU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jan 2020 23:20:29 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50044 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgAHEU3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 23:20:29 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JFK4026692;
-        Wed, 8 Jan 2020 04:20:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=7Oo1sicqsTtTOwQ93/Y/BfeHOPw9SprrwK1buo8ZKZM=;
- b=TiCzU6h1YYillqWrCbL8JBo09h3beBT1VRIhbUPSRK0hD9X1Kd3PDiyhoJZqZw7MgPuP
- OPN8pTHKudfK4sr8ws3nIP0ccIU7Di/pN6Qbt7Gq7tEnTsrxq1wAR5cuqrdHWA1m975Y
- EBSzQBHl+Ze5h5X5t61wp61tQLxd705mdPJ0wX7BBfZwg3hnJBpLS71qjXJzo0ENlOCC
- rH1G/iaG+Ob7on1IGqrOvnV5Z7Qv4bGsbE+nlC6dHZA1gIx2Z+bTTTtTDFcmtrBp9/Al
- MbjdOPozi/cBKBSslwtIZAYhBj67L/5DbTY47v7dFYeeXTraD3FApERYD65sBlOdFjA6 kA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xajnq1eqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jan 2020 04:20:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JI3R136053;
-        Wed, 8 Jan 2020 04:20:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xcpanywya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jan 2020 04:20:09 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0084K5jv008866;
-        Wed, 8 Jan 2020 04:20:06 GMT
+        id S1726252AbgAHEXK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jan 2020 23:23:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:53548 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgAHEXK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jan 2020 23:23:10 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JL7i035747
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:23:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=0oz9By7nK7Gu/oQrqLjXsTZHbIbznmUlti1VPPJ7zVA=;
+ b=PjnEQeuUAl6luH4cn5ZCTAMT0peIt1Fw0y0YhvQ56e9PV1NV1cEnGhj46LZx5CluxAYd
+ Hrchybgh3RLCthtNVhpM0YUx9/i3zqDb77ECOT046w/ciHEM4yy2GNrI5jQJYLcNrPPO
+ JD1vN3mkWgdOJwSrGQbuwMZD0rAzU1UH8JAQF3rweRpmWdsigkmmVMqFLmzFI26WDk8B
+ lmZdwWpavIHOLR2hpkLAS+ccbJkDTcZ219hEGf3fhV0V57XAI72Wz+ptRCAx29NBzrlM
+ 6ol142dNicKRkx6TYKjnAiPdm2tK6WuLHvmVhRuxNbzYwGzzOpm9v854zNFmfNaNLmaa jQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xakbqscwm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Jan 2020 04:23:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0084JHtH075716
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:21:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xcjvep60g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Jan 2020 04:21:08 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0084L7XJ004489
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Jan 2020 04:21:07 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 20:20:05 -0800
-Date:   Tue, 7 Jan 2020 20:20:00 -0800
+        with ESMTP ; Tue, 07 Jan 2020 20:21:07 -0800
+Date:   Tue, 7 Jan 2020 20:21:05 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Jan Kara <jack@suse.cz>, mbobrowski@mbobrowski.org,
-        riteshh@linux.ibm.com
-Subject: [ANNOUNCE] xfs-linux: iomap-5.6-merge updated to 62e298db3fc3
-Message-ID: <20200108042000.GA5552@magnolia>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 5a57c05b56b6
+Message-ID: <20200108042105.GB5552@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -72,7 +66,7 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi folks,
 
-The iomap-5.6-merge branch of the xfs-linux repository at:
+The for-next branch of the xfs-linux repository at:
 
 	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
@@ -81,25 +75,30 @@ has just been updated.
 Patches often get missed, so please check if your outstanding patches
 were in this update. If they have not been in this update, please
 resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
+the next update.  Christoph's attr stuff is still going through
+xfstests.
 
-The new head of the iomap-5.6-merge branch is commit:
+The new head of the for-next branch is commit:
 
-62e298db3fc3 fs: Fix page_mkwrite off-by-one errors
+5a57c05b56b6 xfs: remove shadow variable in xfs_btree_lshift
 
 New Commits:
 
-Andreas Gruenbacher (1):
-      [62e298db3fc3] fs: Fix page_mkwrite off-by-one errors
+Arnd Bergmann (2):
+      [3b62f000c86a] xfs: rename compat_time_t to old_time32_t
+      [b8a0880a37e2] xfs: quota: move to time64_t interfaces
+
+Eric Sandeen (1):
+      [5a57c05b56b6] xfs: remove shadow variable in xfs_btree_lshift
 
 
 Code Diffstat:
 
- fs/btrfs/inode.c        | 15 ++++-----------
- fs/buffer.c             | 16 +++-------------
- fs/ceph/addr.c          |  2 +-
- fs/ext4/inode.c         | 15 ++++-----------
- fs/iomap/buffered-io.c  | 18 +++++-------------
- fs/ubifs/file.c         |  3 +--
- include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
- 7 files changed, 46 insertions(+), 51 deletions(-)
+ fs/xfs/libxfs/xfs_btree.c | 2 --
+ fs/xfs/xfs_dquot.c        | 6 +++---
+ fs/xfs/xfs_ioctl32.c      | 2 +-
+ fs/xfs/xfs_ioctl32.h      | 2 +-
+ fs/xfs/xfs_qm.h           | 6 +++---
+ fs/xfs/xfs_quotaops.c     | 6 +++---
+ fs/xfs/xfs_trans_dquot.c  | 8 +++++---
+ 7 files changed, 16 insertions(+), 16 deletions(-)
