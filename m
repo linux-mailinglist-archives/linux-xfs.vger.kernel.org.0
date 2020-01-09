@@ -2,166 +2,261 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 054EF136062
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 Jan 2020 19:45:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A17721360A3
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 Jan 2020 20:00:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbgAISpS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 9 Jan 2020 13:45:18 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:51934 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732175AbgAISpS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 9 Jan 2020 13:45:18 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009IdKTi130855
-        for <linux-xfs@vger.kernel.org>; Thu, 9 Jan 2020 18:45:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=ADbr7usmYBVb1W/tfPYDWl7EVfvfQl2Y0ZVSFyiLiA8=;
- b=pwLoXO+PVq1fi9QztE1WBXPaUD9tJUqkU7EAWr+0dRls894sYDTqS/tPailHfuu2REdC
- ZEKHYZVD6chB9gL2rP7GZswRZaWxRRRSZZa4Dxpgc1ivYzymfaMpgolBpTKy3+WYMz95
- ZfjBnmX2u1CuDAKEVqriOgchgGE1DTaskAWaxZ072BO3i7x919AmZmoazH8b0L8434qr
- l3/UXHETESW4OVjljgqNkF6iAB7qoO8IAbaDCbTEgoKEQekubpuGtqCp8w1i6GhhGKY6
- Vd02wFaqRv8fDgHi98Dh2izcfaiE+z/+Z+6pSWh+ktEH0R6dpydU9OZMWecQfK5QlK3n 9w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xajnqcrwb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 09 Jan 2020 18:45:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009Id2Rh186340
-        for <linux-xfs@vger.kernel.org>; Thu, 9 Jan 2020 18:45:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xdsa4uxr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 09 Jan 2020 18:45:15 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 009IjFCN031138
-        for <linux-xfs@vger.kernel.org>; Thu, 9 Jan 2020 18:45:15 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jan 2020 10:45:15 -0800
-Subject: [PATCH 5/5] xfs: make struct xfs_buf_log_format have a consistent
- size
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 09 Jan 2020 10:45:14 -0800
-Message-ID: <157859551417.164065.16772455171549647070.stgit@magnolia>
-In-Reply-To: <157859548029.164065.5207227581806532577.stgit@magnolia>
-References: <157859548029.164065.5207227581806532577.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1730045AbgAITAX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 9 Jan 2020 14:00:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729054AbgAITAX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 9 Jan 2020 14:00:23 -0500
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8F92072E;
+        Thu,  9 Jan 2020 19:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578596422;
+        bh=ABEInQXnrGi3551d9EXZq7PXfllrEYuVLiNZgSA51qk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RRkpt3dpDuZ6vtPTS5HaX0dzZCGNYGS830S2UG1PCjLiOdMYE8vnYJYy03jhUezoV
+         HF/HeL8cE8pbWU301Sj/r0Nmv3jU0k+XhTUV6ludur+QJ6E/MfIOSxE3Un672mLtV7
+         r3GiKbubvrwW0rlll8GW83HC/GqH9lcm6L3DsXzo=
+Received: by mail-ua1-f50.google.com with SMTP id u17so2915514uap.9;
+        Thu, 09 Jan 2020 11:00:22 -0800 (PST)
+X-Gm-Message-State: APjAAAVDowFuVKCFnG9pDHG3FyXXxU86SytgP8fcuRmhmtVD/4cytf05
+        TECpiX98278IdGvMxokcT07C2YOOyr8B5Hfo18g=
+X-Google-Smtp-Source: APXvYqzA63UKx++yHXJJjx5UNUtZH87N1vbY0bj8PijlIJBaqM0WrmatzmAWdf9gXnP8r3CtIaiWV4/qSGcn2Uvl4YA=
+X-Received: by 2002:a9f:3e84:: with SMTP id x4mr7957435uai.83.1578596421105;
+ Thu, 09 Jan 2020 11:00:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=861
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001090154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=917 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001090154
+References: <20191216182656.15624-1-fdmanana@kernel.org> <20191216182656.15624-2-fdmanana@kernel.org>
+ <CAL3q7H5+CMRkJ9yAa2AeB0aKtA=b_yW2g9JSQwCOhOtLNrH1iQ@mail.gmail.com>
+ <20200107175739.GC472651@magnolia> <CAL3q7H5TuaLDW3aXSa68pxvLu4s1Gg38RRSRyA430LxK302k3A@mail.gmail.com>
+ <20200108161536.GC5552@magnolia>
+In-Reply-To: <20200108161536.GC5552@magnolia>
+From:   Filipe Manana <fdmanana@kernel.org>
+Date:   Thu, 9 Jan 2020 19:00:09 +0000
+X-Gmail-Original-Message-ID: <CAL3q7H7jOD6eEurdEb-VHn3_xcZVnYEJxnaomgUHtFcH5XowHw@mail.gmail.com>
+Message-ID: <CAL3q7H7jOD6eEurdEb-VHn3_xcZVnYEJxnaomgUHtFcH5XowHw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] fs: allow deduplication of eof block into the end of
+ the destination file
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        xfs <linux-xfs@vger.kernel.org>,
+        Filipe Manana <fdmanana@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Jan 8, 2020 at 4:15 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> On Wed, Jan 08, 2020 at 11:36:04AM +0000, Filipe Manana wrote:
+> > On Tue, Jan 7, 2020 at 5:57 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > >
+> > > On Tue, Jan 07, 2020 at 04:23:15PM +0000, Filipe Manana wrote:
+> > > > On Mon, Dec 16, 2019 at 6:28 PM <fdmanana@kernel.org> wrote:
+> > > > >
+> > > > > From: Filipe Manana <fdmanana@suse.com>
+> > > > >
+> > > > > We always round down, to a multiple of the filesystem's block size, the
+> > > > > length to deduplicate at generic_remap_check_len().  However this is only
+> > > > > needed if an attempt to deduplicate the last block into the middle of the
+> > > > > destination file is requested, since that leads into a corruption if the
+> > > > > length of the source file is not block size aligned.  When an attempt to
+> > > > > deduplicate the last block into the end of the destination file is
+> > > > > requested, we should allow it because it is safe to do it - there's no
+> > > > > stale data exposure and we are prepared to compare the data ranges for
+> > > > > a length not aligned to the block (or page) size - in fact we even do
+> > > > > the data compare before adjusting the deduplication length.
+> > > > >
+> > > > > After btrfs was updated to use the generic helpers from VFS (by commit
+> > > > > 34a28e3d77535e ("Btrfs: use generic_remap_file_range_prep() for cloning
+> > > > > and deduplication")) we started to have user reports of deduplication
+> > > > > not reflinking the last block anymore, and whence users getting lower
+> > > > > deduplication scores.  The main use case is deduplication of entire
+> > > > > files that have a size not aligned to the block size of the filesystem.
+> > > > >
+> > > > > We already allow cloning the last block to the end (and beyond) of the
+> > > > > destination file, so allow for deduplication as well.
+> > > > >
+> > > > > Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
+> > > > > Signed-off-by: Filipe Manana <fdmanana@suse.com>
+> > > >
+> > > > Darrick, Al, any feedback?
+> > >
+> > > Is there a fstest to check for correct operation of dedupe at or beyond
+> > > source and destfile EOF?  Particularly if one range is /not/ at EOF?
+> >
+> > Such as what generic/158 does already?
+>
+> Urk, heh. :)
+>
+> > > And that an mmap read of the EOF block will see zeroes past EOF before
+> > > and after the dedupe operation?
+> >
+> > Can you elaborate a bit more? Why an mmap read and not a buffered or a
+> > direct IO read before and after deduplication?
+> > Is there anything special for the mmap reads on xfs, is that your
+> > concern? Or is the idea to deduplicate while the file is mmap'ed?
+>
+> I cite mmap reads past EOF specifically because unlike buffered/direct
+> reads where the VFS will stop reading exactly at EOF, a memory mapping
+> maps in an entire memory page, and the fs is supposed to ensure that the
+> bytes past EOF are zeroed.
 
-Increase XFS_BLF_DATAMAP_SIZE by 1 to fill in the implied padding at the
-end of struct xfs_buf_log_format.  This makes the size consistent so
-that we can check it in xfs_ondisk.h, and will be needed once we start
-logging attribute values.
+Ok, on btrfs we zero out the rest of the page both in for all reads.
 
-On amd64 we get the following pahole:
+So, it's not problem:
 
-struct xfs_buf_log_format {
-        short unsigned int         blf_type;       /*     0     2 */
-        short unsigned int         blf_size;       /*     2     2 */
-        short unsigned int         blf_flags;      /*     4     2 */
-        short unsigned int         blf_len;        /*     6     2 */
-        long long int              blf_blkno;      /*     8     8 */
-        unsigned int               blf_map_size;   /*    16     4 */
-        unsigned int               blf_data_map[16]; /*    20    64 */
-        /* --- cacheline 1 boundary (64 bytes) was 20 bytes ago --- */
+$ file_size=$((64 * 1024 + 500))
+$ xfs_io -f -c "pwrite -S 0xba 0 $file_size" foo
+$ xfs_io -f -c "pwrite -S 0xba 0 $file_size" bar
+$ sync
 
-        /* size: 88, cachelines: 2, members: 7 */
-        /* padding: 4 */
-        /* last cacheline: 24 bytes */
-};
+$ xfs_io -c "mmap 0 68K" -c "mread -v 0 68K" -c "dedupe bar 0 0
+$file_size" -c "mread -v 0 68K" foo
 
-But on i386 we get the following:
+Both mreads returns exactly the same, eof is still the same and all
+bytes after it have a value of 0.
 
-struct xfs_buf_log_format {
-        short unsigned int         blf_type;       /*     0     2 */
-        short unsigned int         blf_size;       /*     2     2 */
-        short unsigned int         blf_flags;      /*     4     2 */
-        short unsigned int         blf_len;        /*     6     2 */
-        long long int              blf_blkno;      /*     8     8 */
-        unsigned int               blf_map_size;   /*    16     4 */
-        unsigned int               blf_data_map[16]; /*    20    64 */
-        /* --- cacheline 1 boundary (64 bytes) was 20 bytes ago --- */
+This is the same as it is for cloning.
 
-        /* size: 84, cachelines: 2, members: 7 */
-        /* last cacheline: 20 bytes */
-};
+>
+> Hm now that I look at g/158 it doesn't actually verify mmap reads.  I
+> looked around and can't really see anything that checks mmap reads
+> before and after a dedupe operation at EOF.
+>
+> > > If I fallocate a 16k file, write 'X' into the first 5000 bytes,
+> > > write 'X' into the first 66,440 bytes (60k + 5000) of a second file, and
+> > > then try to dedupe (first file, 0-8k) with (second file, 60k-68k),
+> > > should that work?
+> >
+> > You haven't mentioned the size of the second file, nor if the first
+> > file has a size of 16K which I assume (instead of fallocate with the
+> > keep size flag).
+>
+> Er, sorry, yes.  The first file is 16,384 bytes long; the second file is
+> 66,440 bytes.
+>
+> > Anyway, I assume you actually meant to dedupe the range 0 - 5000 from
+> > the first file into the range 60k - 60k + 5000 of the second file, and
+> > that the second file has a size of 60k + 5000.
+>
+> Nope, I meant to say to dedupe the range (offset: 0, length: 8192) from
+> the first file into the second file (offset: 61440, length: 8192).  The
+> source range is entirely below EOF, and the dest range ends right at
+> EOF in the second file.
 
-Notice how the amd64 compiler inserts 4 bytes of padding to the end of
-the structure to ensure 8-byte alignment.  Prior to "xfs: fix memory
-corruption during remote attr value buffer invalidation" we would try to
-write to blf_data_map[17], which is harmless on amd64 but really bad on
-i386.
+The dedupe operations fails with -EINVAL, both before and after this patch,
+since the whenever one of ranges crosses eof, we must fail dedupe with -EINVAL.
+This happens at generic_remap_checks(), which called before
+generic_remap_check_len().
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_log_format.h |   19 ++++++++++++++-----
- fs/xfs/xfs_ondisk.h            |    1 +
- 2 files changed, 15 insertions(+), 5 deletions(-)
+This is no different from the other existing tests in fstests, which
+cover this case already.
 
+>
+> > If so, that fails with -EINVAL because the source range is not block
+> > size aligned, and we already have generic fstests that test attempt to
+> > duplication and clone non-aligned ranges that don't end at eof.
+> > This patch doesn't change that behaviour, it only aims to allow
+> > deduplication of the eof block of the source file into the eof of the
+> > destination file.
+> >
+> >
+> > >
+> > > I'm convinced that we could support dedupe to EOF when the ranges of the
+> > > two files both end at the respective file's EOF, but it's the weirder
+> > > corner cases that I worry about...
+> >
+> > Well, we used to do that in btrfs before migrating to the generic code.
+> > Since I discovered the corruption due to deduplication of the eof
+> > block into the middle of a file in 2018's summer, the btrfs fix
+> > allowed deduplication of the eof block only if the destination end
+> > offset matched the eof of the destination file:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=de02b9f6bb65a6a1848f346f7a3617b7a9b930c0
+> >
+> > Since then no issues were found nor users reported any problems so far.
+>
+> <nod> I'm ok with that one scenario, it's the "one range ends at eof,
+> the other doesn't" case that I'm picking on. :)
+>
+> (Another way to shut me up would be to run generic/52[12] with
+> TIME_FACTOR=1000 (i.e. 1 billion fsx ops) and see what comes exploding
+> out. :))
 
-diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
-index 8ef31d71a9c7..9bac0d2e56dc 100644
---- a/fs/xfs/libxfs/xfs_log_format.h
-+++ b/fs/xfs/libxfs/xfs_log_format.h
-@@ -462,11 +462,20 @@ static inline uint xfs_log_dinode_size(int version)
- #define	XFS_BLF_GDQUOT_BUF	(1<<4)
- 
- /*
-- * This is the structure used to lay out a buf log item in the
-- * log.  The data map describes which 128 byte chunks of the buffer
-- * have been logged.
-- */
--#define XFS_BLF_DATAMAP_SIZE	((XFS_MAX_BLOCKSIZE / XFS_BLF_CHUNK) / NBWORD)
-+ * This is the structure used to lay out a buf log item in the log.  The data
-+ * map describes which 128 byte chunks of the buffer have been logged.
-+ *
-+ * The placement of blf_map_size causes blf_data_map to start at an odd
-+ * multiple of sizeof(unsigned int) offset within the struct.  Because the data
-+ * bitmap size will always be an even number, the end of the data_map (and
-+ * therefore the structure) will also be at an odd multiple of sizeof(unsigned
-+ * int).  Some 64-bit compilers will insert padding at the end of the struct to
-+ * ensure 64-bit alignment of blf_blkno, but 32-bit ones will not.  Therefore,
-+ * XFS_BLF_DATAMAP_SIZE must be an odd number to make the padding explicit and
-+ * keep the structure size consistent between 32-bit and 64-bit platforms.
-+ */
-+#define __XFS_BLF_DATAMAP_SIZE	((XFS_MAX_BLOCKSIZE / XFS_BLF_CHUNK) / NBWORD)
-+#define XFS_BLF_DATAMAP_SIZE	(__XFS_BLF_DATAMAP_SIZE + 1)
- 
- typedef struct xfs_buf_log_format {
- 	unsigned short	blf_type;	/* buf log item type indicator */
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index b6701b4f59a9..5f04d8a5ab2a 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -111,6 +111,7 @@ xfs_check_ondisk_structs(void)
- 	XFS_CHECK_STRUCT_SIZE(xfs_dir2_sf_hdr_t,		10);
- 
- 	/* log structures */
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_buf_log_format,	88);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_dq_logformat,		24);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_32,	28);
- 	XFS_CHECK_STRUCT_SIZE(struct xfs_efd_log_format_64,	32);
+Well, it will take nearly 2 weeks to get those tests to complete with
+1 billion ops, taking into
+account each takes around 500 seconds to run here (on xfs) with 1
+million operations...
 
+>
+> > Any other specific test you would like to see?
+>
+> No, just that.  And mmap reads. :)
+
+Given that we allow cloning of eof into eof already (and that doesn't
+cause any known problems),
+I don't see why you are so concerned with allowing dedupe to behave the same.
+
+The only thing I can see it could be a problem would be comparing the
+contents of the last page beyond the eof position,
+but as stated on the changelog, it's not a problem since we call
+vfs_dedupe_file_range_compare() before we
+round down the length at generic_remap_check_len() - the data compare
+function already has the correct behaviour.
+
+Thanks.
+
+>
+> --D
+>
+> > Thanks.
+> >
+> > >
+> > > --D
+> > >
+> > > > Thanks.
+> > > >
+> > > > > ---
+> > > > >  fs/read_write.c | 10 ++++------
+> > > > >  1 file changed, 4 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/fs/read_write.c b/fs/read_write.c
+> > > > > index 5bbf587f5bc1..7458fccc59e1 100644
+> > > > > --- a/fs/read_write.c
+> > > > > +++ b/fs/read_write.c
+> > > > > @@ -1777,10 +1777,9 @@ static int remap_verify_area(struct file *file, loff_t pos, loff_t len,
+> > > > >   * else.  Assume that the offsets have already been checked for block
+> > > > >   * alignment.
+> > > > >   *
+> > > > > - * For deduplication we always scale down to the previous block because we
+> > > > > - * can't meaningfully compare post-EOF contents.
+> > > > > - *
+> > > > > - * For clone we only link a partial EOF block above the destination file's EOF.
+> > > > > + * For clone we only link a partial EOF block above or at the destination file's
+> > > > > + * EOF.  For deduplication we accept a partial EOF block only if it ends at the
+> > > > > + * destination file's EOF (can not link it into the middle of a file).
+> > > > >   *
+> > > > >   * Shorten the request if possible.
+> > > > >   */
+> > > > > @@ -1796,8 +1795,7 @@ static int generic_remap_check_len(struct inode *inode_in,
+> > > > >         if ((*len & blkmask) == 0)
+> > > > >                 return 0;
+> > > > >
+> > > > > -       if ((remap_flags & REMAP_FILE_DEDUP) ||
+> > > > > -           pos_out + *len < i_size_read(inode_out))
+> > > > > +       if (pos_out + *len < i_size_read(inode_out))
+> > > > >                 new_len &= ~blkmask;
+> > > > >
+> > > > >         if (new_len == *len)
+> > > > > --
+> > > > > 2.11.0
+> > > > >
