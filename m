@@ -2,119 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5662F139E79
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jan 2020 01:44:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5590A139E8C
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jan 2020 01:46:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgANAop (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Jan 2020 19:44:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:46968 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgANAop (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jan 2020 19:44:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E0h6wG068689;
-        Tue, 14 Jan 2020 00:44:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=qfiwmvZis5rahPycwN3N+z2/QBvh132fnBqzs01z4Ck=;
- b=MOaCUgpbm6Z7Rns5bgCd1fsaY+03Jo3QKWpDbPaWLtnn1/xf2XArP3OHXjKufSEDfdo9
- iEyf8nimrIdrMtnn4VrOBMO0mrLH1E7JMXDarpJB633TjTVsMw5bBuRqRcYdSX6xp7tI
- VUC+yROvtpGZN947QOvxNd6MKWwSvtEihYpnbq5SC95TohUycJA+yEngOgtEKOql0tN1
- 4FnjSvuYUOAypm0EHn2sMJAM+fMOqojLZ4A0y0txUgGB65ALeSwDhdHxDsviWzqnp5dS
- o9XfuBXrjbRvcQfFAsi6HO7qHJaMs8IjV3eKmiDCb0Hv8q5W0+RLqJTwhbkJtm2Euji/ yA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xf73tjg2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 00:44:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E0iJNs116524;
-        Tue, 14 Jan 2020 00:44:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xh30xbh1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 00:44:29 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E0h9ua006567;
-        Tue, 14 Jan 2020 00:43:09 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 16:43:08 -0800
-Date:   Mon, 13 Jan 2020 16:43:07 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/5] xfs: refactor remote attr value buffer invalidation
-Message-ID: <20200114004307.GQ8247@magnolia>
-References: <157859548029.164065.5207227581806532577.stgit@magnolia>
- <157859548668.164065.18078635787497973193.stgit@magnolia>
- <20200110115540.GC19577@infradead.org>
+        id S1729254AbgANAqL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Jan 2020 19:46:11 -0500
+Received: from mga01.intel.com ([192.55.52.88]:44320 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgANAqL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:46:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 16:46:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
+   d="scan'208";a="247869908"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Jan 2020 16:46:10 -0800
+Date:   Mon, 13 Jan 2020 16:46:10 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
+Message-ID: <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-10-ira.weiny@intel.com>
+ <20200113222212.GO8247@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110115540.GC19577@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=750
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=801 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140004
+In-Reply-To: <20200113222212.GO8247@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 03:55:40AM -0800, Christoph Hellwig wrote:
-> > +	struct xfs_mount	*mp = ip->i_mount;
-> > +	struct xfs_buf		*bp;
-> > +	xfs_daddr_t		dblkno;
-> > +	int			dblkcnt;
-> > +
-> > +	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-> > +
-> > +	dblkno = XFS_FSB_TO_DADDR(mp, map->br_startblock),
-> > +	dblkcnt = XFS_FSB_TO_BB(mp, map->br_blockcount);
-> > +
-> > +	/*
-> > +	 * If the "remote" value is in the cache, remove it.
-> > +	 */
-> > +	bp = xfs_buf_incore(mp->m_ddev_targp, dblkno, dblkcnt, XBF_TRYLOCK);
-> 
-> Do we really need the dblkno and dblkcnt local variables here?
+On Mon, Jan 13, 2020 at 02:22:12PM -0800, Darrick J. Wong wrote:
+> On Fri, Jan 10, 2020 at 11:29:39AM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
 
-Eh, not really.
+[snip]
 
-> > @@ -592,18 +614,8 @@ xfs_attr_rmtval_remove(
-> >  		ASSERT((map.br_startblock != DELAYSTARTBLOCK) &&
-> >  		       (map.br_startblock != HOLESTARTBLOCK));
 > >  
-> > -		dblkno = XFS_FSB_TO_DADDR(mp, map.br_startblock),
-> > -		dblkcnt = XFS_FSB_TO_BB(mp, map.br_blockcount);
-> > -
-> > -		/*
-> > -		 * If the "remote" value is in the cache, remove it.
-> > -		 */
-> > -		bp = xfs_buf_incore(mp->m_ddev_targp, dblkno, dblkcnt, XBF_TRYLOCK);
-> > -		if (bp) {
-> > -			xfs_buf_stale(bp);
-> > -			xfs_buf_relse(bp);
-> > -			bp = NULL;
-> > -		}
-> > +		if (map.br_startblock != HOLESTARTBLOCK)
-> > +			xfs_attr_rmtval_stale(args->dp, &map);
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index bc3654fe3b5d..1ab0906c6c7f 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
+> >  		goto out_unlock;
+> >  	}
+> >  
+> > +	/*
+> > +	 * If there is a mapping in place we must remain in our current mode.
+> > +	 */
+> > +	if (atomic64_read(&inode->i_mapped)) {
 > 
-> I don't think we need the HOLESTARTBLOCK check here, given that we have
-> the asserts above.  I also think the assert should move into
-> xfs_attr_rmtval_stale and be split into two asserts, one each for the
-> invalid values.
+> Urk, should we really be messing around with the address space
+> internals?
 
-<nod> I'll upgrade them to proper fs corruption messages while I'm at
-it.
+I contemplated a function call instead of checking i_mapped directly?  Is that
+what you mean?
 
---D
+
+> 
+> > +		error = -EBUSY;
+> > +		goto out_unlock;
+> > +	}
+> > +
+> >  	error = filemap_write_and_wait(inode->i_mapping);
+> >  	if (error)
+> >  		goto out_unlock;
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 631f11d6246e..6e7dc626b657 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -740,6 +740,7 @@ struct inode {
+> >  #endif
+> >  
+> >  	void			*i_private; /* fs or device private pointer */
+> > +	atomic64_t               i_mapped;
+> 
+> I would have expected to find this in struct address_space since the
+> mapping count is a function of the address space, right?
+
+I suppose but the only external call (above) would be passing an inode.  So to
+me it seemed better here.
+
+Ira
+
+> 
+> --D
+> 
