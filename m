@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F073813A102
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jan 2020 07:34:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EEC713A0FA
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jan 2020 07:32:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANGeC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 Jan 2020 01:34:02 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38280 "EHLO
+        id S1727556AbgANGcI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Jan 2020 01:32:08 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:36526 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgANGeC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jan 2020 01:34:02 -0500
+        with ESMTP id S1726169AbgANGcI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jan 2020 01:32:08 -0500
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6XdEc170783;
-        Tue, 14 Jan 2020 06:33:55 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6CqHe155463;
+        Tue, 14 Jan 2020 06:31:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=k9B1QmUDoYWo6SDL+gs3SMjhcGc51z4ptVAODp6aLhg=;
- b=isqpCLPSHfnNiuSE5k3dDUc96D+wlCJod83GbbH97ehB9YV72grpj3rLjvLUDNZ3/u5X
- cW/30uVOpki5ljHvUuhuQY/GCytludzmu9eyUQItn61tXEUmp3VvEDK0iFbX8CfSbzL+
- pMwp6boEcIf/Bgi633MkrvHTeze0G9RhhoCX4YqTEqsMlDnTU3R/6s3U+6PasXcoUWHV
- WAX4KeT5Sj5F1W4H+dF2z5QwRM0VmRxSsv2dkha4x9NL/ojMXeGN+mgrhwWiVXb47rf6
- qcz28vh47l3RjIvJCaSlzcAJLprp3n4+4erYvUTeVLR8B9zIIGydzlTm9LOb2dMOVC8a ug== 
+ bh=zgc2pmfxRT3EDN1Y50rmDRgfceKI6bfxOw9qzDTB/CY=;
+ b=axgqzBCLw02LlfdNs38rjXp3cAV2Ir1NMBf0tY4Av0GSXEuYG+BsqmtimFY/ysJfBOiE
+ ybpgW8jZSWN1aJuzQ2ewyNeF+ljRnCO8oYdnpoolUFXxQt2hVOWghgETr+I2503qX7+3
+ U/f6phBZojJwnISz58DcAso1SEoAvOYP1u7MXhLyWaZeCl8lK+VA44JiSxVL+a/2UqHi
+ yhoq2GVdD7g4BpW5jwFh7RhqsfYnxo1Gs6smyplFIrx2Uct6Kls9xzFTWXdTgK2Ow/lA
+ IkpkuYcPYMzYJW0nSS3C//V/v2hOWLI2Dot+D6lNrbV92/5ZbeZAVJmJcOU783kWfxRc yA== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xf74s3ur8-1
+        by userp2130.oracle.com with ESMTP id 2xf74s3ufy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 06:33:55 +0000
+        Tue, 14 Jan 2020 06:31:59 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6Uxxx016988;
-        Tue, 14 Jan 2020 06:31:54 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xh8erg0vk-1
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6UxAF016974;
+        Tue, 14 Jan 2020 06:31:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xh8erg0xj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 06:31:54 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E6VpQ7032063;
-        Tue, 14 Jan 2020 06:31:51 GMT
+        Tue, 14 Jan 2020 06:31:58 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00E6VvcD001456;
+        Tue, 14 Jan 2020 06:31:57 GMT
 Received: from localhost (/10.159.236.239)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 22:31:51 -0800
-Subject: [PATCH 3/6] xfs: clean up xfs_buf_item_get_format return value
+        with ESMTP ; Mon, 13 Jan 2020 22:31:57 -0800
+Subject: [PATCH 4/6] xfs: complain if anyone tries to create a too-large
+ buffer log item
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org,
         Christoph Hellwig <hch@lst.de>
-Date:   Mon, 13 Jan 2020 22:31:50 -0800
-Message-ID: <157898351013.1566005.10997259699613299740.stgit@magnolia>
+Date:   Mon, 13 Jan 2020 22:31:57 -0800
+Message-ID: <157898351709.1566005.2980159067952563739.stgit@magnolia>
 In-Reply-To: <157898348940.1566005.3231891474158666998.stgit@magnolia>
 References: <157898348940.1566005.3231891474158666998.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -63,7 +64,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140056
+ definitions=main-2001140055
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,67 +72,45 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The only thing that can cause a nonzero return from
-xfs_buf_item_get_format is if the kmem_alloc fails, which it can't.
-Get rid of all the unnecessary error handling.
+Complain if someone calls xfs_buf_item_init on a buffer that is larger
+than the dirty bitmap can handle, or tries to log a region that's past
+the end of the dirty bitmap.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf_item.c |   16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ fs/xfs/xfs_buf_item.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 
 diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 3984779e5911..9737f177a49b 100644
+index 9737f177a49b..be691d1d9fad 100644
 --- a/fs/xfs/xfs_buf_item.c
 +++ b/fs/xfs/xfs_buf_item.c
-@@ -688,7 +688,7 @@ static const struct xfs_item_ops xfs_buf_item_ops = {
- 	.iop_push	= xfs_buf_item_push,
- };
+@@ -763,6 +763,15 @@ xfs_buf_item_init(
+ 				      XFS_BLF_CHUNK);
+ 		map_size = DIV_ROUND_UP(chunks, NBWORD);
  
--STATIC int
-+STATIC void
- xfs_buf_item_get_format(
- 	struct xfs_buf_log_item	*bip,
- 	int			count)
-@@ -698,14 +698,11 @@ xfs_buf_item_get_format(
++		if (map_size > XFS_BLF_DATAMAP_SIZE) {
++			kmem_cache_free(xfs_buf_item_zone, bip);
++			xfs_err(mp,
++	"buffer item dirty bitmap (%u uints) too small to reflect %u bytes!",
++					map_size,
++					BBTOB(bp->b_maps[i].bm_len));
++			return -EFSCORRUPTED;
++		}
++
+ 		bip->bli_formats[i].blf_type = XFS_LI_BUF;
+ 		bip->bli_formats[i].blf_blkno = bp->b_maps[i].bm_bn;
+ 		bip->bli_formats[i].blf_len = bp->b_maps[i].bm_len;
+@@ -795,6 +804,9 @@ xfs_buf_item_log_segment(
+ 	uint		end_bit;
+ 	uint		mask;
  
- 	if (count == 1) {
- 		bip->bli_formats = &bip->__bli_format;
--		return 0;
-+		return;
- 	}
- 
- 	bip->bli_formats = kmem_zalloc(count * sizeof(struct xfs_buf_log_format),
- 				0);
--	if (!bip->bli_formats)
--		return -ENOMEM;
--	return 0;
- }
- 
- STATIC void
-@@ -731,7 +728,6 @@ xfs_buf_item_init(
- 	struct xfs_buf_log_item	*bip = bp->b_log_item;
- 	int			chunks;
- 	int			map_size;
--	int			error;
- 	int			i;
- 
++	ASSERT(first < XFS_BLF_DATAMAP_SIZE * XFS_BLF_CHUNK * NBWORD);
++	ASSERT(last < XFS_BLF_DATAMAP_SIZE * XFS_BLF_CHUNK * NBWORD);
++
  	/*
-@@ -760,13 +756,7 @@ xfs_buf_item_init(
- 	 * Discontiguous buffer support follows the layout of the underlying
- 	 * buffer. This makes the implementation as simple as possible.
+ 	 * Convert byte offsets to bit numbers.
  	 */
--	error = xfs_buf_item_get_format(bip, bp->b_map_count);
--	ASSERT(error == 0);
--	if (error) {	/* to stop gcc throwing set-but-unused warnings */
--		kmem_cache_free(xfs_buf_item_zone, bip);
--		return error;
--	}
--
-+	xfs_buf_item_get_format(bip, bp->b_map_count);
- 
- 	for (i = 0; i < bip->bli_format_count; i++) {
- 		chunks = DIV_ROUND_UP(BBTOB(bp->b_maps[i].bm_len),
 
