@@ -2,103 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B56E13CB65
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 18:53:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0677213CBB7
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 19:10:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgAORxR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jan 2020 12:53:17 -0500
-Received: from mga14.intel.com ([192.55.52.115]:43844 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgAORxQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:53:16 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 09:53:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="256860679"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2020 09:53:16 -0800
-Date:   Wed, 15 Jan 2020 09:53:15 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
-Message-ID: <20200115175315.GC23311@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-10-ira.weiny@intel.com>
- <06258747f6824a35adfaa999ab4c2261@AcuMS.aculab.com>
+        id S1728928AbgAOSKo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jan 2020 13:10:44 -0500
+Received: from mr014msb.fastweb.it ([85.18.95.103]:60427 "EHLO
+        mr014msb.fastweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgAOSKo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jan 2020 13:10:44 -0500
+Received-SPF: pass (mr014msb.fastweb.it: domain assyoma.it designates
+ 93.63.55.57 as permitted sender) identity=mailfrom;
+ receiver=mr014msb.fastweb.it; client-ip=93.63.55.57;
+ envelope-from=g.danti@assyoma.it; helo=ceres.assyoma.it;
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedrtdefgddutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfetuffvhgfguedpucfqfgfvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefvufggtgfgfffhohgjfhfkgigfsehtjehjtddtredvnecuhfhrohhmpefiihhonhgrthgrnhcuffgrnhhtihcuoehgrdgurghnthhisegrshhshihomhgrrdhitheqnecuffhomhgrihhnpegrshhshihomhgrrdhithenucfkphepleefrdeifedrheehrdehjeenucfrrghrrghmpehhvghloheptggvrhgvshdrrghsshihohhmrgdrihhtpdhinhgvthepleefrdeifedrheehrdehjedpmhgrihhlfhhrohhmpeeoghdruggrnhhtihesrghsshihohhmrgdrihhtqedprhgtphhtthhopeeouggrrhhrihgtkhdrfihonhhgsehorhgrtghlvgdrtghomhequcfqtfevrffvpehrfhgtkedvvdenuggrrhhrihgtkhdrfihonhhgsehorhgrtghlvgdrtghomhdprhgtphhtthhopeeolhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghequcfqtfevrffvpehrfhgtkedvvdenlhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from ceres.assyoma.it (93.63.55.57) by mr014msb.fastweb.it (5.8.208)
+        id 5E19B471004F8843; Wed, 15 Jan 2020 18:45:09 +0100
+Received: by ceres.assyoma.it (Postfix, from userid 48)
+        id 1C48E2664CD; Wed, 15 Jan 2020 18:45:09 +0100 (CET)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: XFS reflink vs ThinLVM
+X-PHP-Originating-Script: 0:rcube.php
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06258747f6824a35adfaa999ab4c2261@AcuMS.aculab.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 15 Jan 2020 18:45:09 +0100
+From:   Gionatan Danti <g.danti@assyoma.it>
+Cc:     linux-xfs@vger.kernel.org, g.danti@assyoma.it
+Organization: Assyoma s.r.l.
+In-Reply-To: <20200115163948.GF8257@magnolia>
+References: <20200113111025.liaargk3sf4wbngr@orion>
+ <703a6c17-cc02-2c2c-31ce-6cd12a888743@assyoma.it>
+ <20200113114356.midcgudwxpze3xfw@orion>
+ <627cb07f-9433-ddfd-37d7-27efedd89727@assyoma.it>
+ <39b50e2c-cb78-3bcd-0130-defa9c573b71@assyoma.it>
+ <20200113165341.GE8247@magnolia>
+ <f61995d7-9775-0035-8700-2b92c63bd23f@assyoma.it>
+ <20200113180914.GI8247@magnolia>
+ <8e96231f-8fc6-b178-9e83-84cbb9af6d2e@assyoma.it>
+ <9d8e8614-9ae1-30ee-f2b4-1e45b90b27f8@assyoma.it>
+ <20200115163948.GF8257@magnolia>
+Message-ID: <761fcf8f9d68ee221a35d15c1a7120c5@assyoma.it>
+X-Sender: g.danti@assyoma.it
+User-Agent: Roundcube Webmail/1.0.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 10:21:45AM +0000, David Laight wrote:
-> From ira.weiny@intel.com
-> > Sent: 10 January 2020 19:30
-> > 
-> > Page faults need to ensure the inode mode is correct and consistent with
-> > the vmf information at the time of the fault.  There is no easy way to
-> > ensure the vmf information is correct if a mode change is in progress.
-> > Furthermore, there is no good use case to require a mode change while
-> > the file is mmap'ed.
-> > 
-> > Track mmap's of the file and fail the mode change if the file is
-> > mmap'ed.
-> 
-> This seems wrong to me.
-> I presume the 'mode changes' are from things like 'chmod -w ...'.
+Il 15-01-2020 17:39 Darrick J. Wong ha scritto:
+> extszinherit > 0 disables delayed allocation, which means that (in your
+> case above) if you wrote 1G to a file (using the pagecache) you'd get
+> 8192x 128K calls to the allocator instead of making a single 1G
+> allocation during writeback.
 
-No...  Sorry...  "mode" was a _very_ bad name.  In this context "mode" was the
-"DAX mode" not the file mode.
+Thanks for the valuable information, I did not know that specific 
+interaction between extsize and delalloc.
 
-> mmap() should be no different to open().
-> Only the permissions set when the file is opened count.
-> 
-> Next you'll be stopping unlink() when a file is open :-)
+> If you have a lot of memory (or a high vmm
+> dirty ratio) then you want delalloc over extsize.  Most of the time you
+> want delalloc, frankly.
 
-hehehe   :-D  no ... sorry that was not the meaning.
+Let me briefly describe the expected workload: thinly provisioned 
+virtual image storage. The problem with "plain" sparse file (ie: without 
+extsize hint) is that, after some time, the underlying vdisk file will 
+be very fragmented: consecutive physical blocks will be assigned to very 
+different logical blocks, leading to sub-par performance when reading 
+back the whole file (eg: for backup purpose).
 
-To be clear what this is preventing is a change from non-DAX to DAX or vice
-versa while a file is mmap'ed.
+I can easily simulate a worst-case scenario with fio, issuing random 
+write to a pre-created sparse file. While the random writes complete 
+very fast (because they are more-or-less sequentially written inside the 
+sparse file), reading back that file will have very low performance: 10 
+MB/s vs 600+ MB/s for a preallocated file.
 
-I'm looking at a better name for this.  For this commit message is this more
-clear?
+Using a 128k extsize brings sequential read to ~100 MB/s (which is 
+reasonable on that old hardware), and a 16M extsize is in the range of 
+500+ MB/s.
 
-<commit>
-fs: Prevent DAX change if file is mmap'ed
-  
-Page faults need to ensure the inode DAX configuration is correct and 
-consistent with the vmf information at the time of the fault.  There is
-no easy way to ensure the vmf information is correct if a DAX change is
-in progress.  Furthermore, there is no good use case to require changing
-DAX configs while the file is mmap'ed.
+Given that use case, do you suggest sticking with delalloc or setting an 
+appropriate extsize?
 
-Track mmap's of the file and fail the DAX change if the file is mmap'ed.
-</commit>
+Thanks.
 
-Sorry for the confusion,
-Ira
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
