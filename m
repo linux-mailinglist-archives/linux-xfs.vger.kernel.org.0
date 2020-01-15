@@ -2,243 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7E8513CA44
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 18:04:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F14DC13CA82
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 18:12:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAOREs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jan 2020 12:04:48 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46658 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbgAOREs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jan 2020 12:04:48 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FGhOAw012327;
-        Wed, 15 Jan 2020 17:04:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=16ucMzSCkirqk334GdhKB86M4CnqPEYUJL0SbF9A520=;
- b=c1MQ87Yy0SUsGYuoDwcQaSreHD+UwrMzZ1CckPISkLV7J70RShCvZyVwsqitY/RV69s2
- 2fRoTsu7bYPpVme+PFmYL5pOiN55nqnbJ6zJz/H4Lh9l2F6UvKJnsGAnTXsrlPNl8maD
- kcHoA7k+v/O/qxvT7L7liU68+OL5y62cnLon0WwR13Zpm9nKU6yHKxeSJegHcLI+S9xB
- nEXVJIA/VzkdGYaYBCkd/ePjM4SfifOsMg7p4iKlPZyudx8ausyoxveOHINv2K494RUr
- XU6MKCaSfhxa7cGpZthzK1xk748T29l+kXBA0nm+aNbAEgfJgWQVaUOUafyPCds9GXkU yw== 
+        id S1729110AbgAORMJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jan 2020 12:12:09 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49220 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAORMJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jan 2020 12:12:09 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FH9YWk059762;
+        Wed, 15 Jan 2020 17:11:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yodk3FXBxJ+C4bpH8jgyDdNJeLK8BCw4+p/mjjrGu6I=;
+ b=jGRi57OMh1x0TFj3rivWK8oMNmRGnEM26tBEOTsVXZ0KoEYnD+vD+kUfJC7N9Q9hKrY9
+ FyQSIcaoLmNanRUrwVSx2oCpicHju3dtqFcYg3frf2nv4KVRTXvQ/FD1BMqP4X+kOAk9
+ 73YoDwwSBCteTcyAYNDjU9jCtrJcmTyz2ycimS7vyFrFZ0ZgPzL03cuxP7VTI/bVwJEy
+ FU7LlGBPdez1oPasB/r2kFvgADnC1bUJzk8eMXP/Mx7PPLFr/w7+naEL+Q0YlIbPgGYl
+ 7dJyRU6jwabybhhkxT+Dl5umB4dU2h3iI3tAm15nW9CAU1KXQJdf2jVWJk8Dy8rjqGxq iA== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73yne5v-1
+        by userp2130.oracle.com with ESMTP id 2xf74sdfnf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 17:04:40 +0000
+        Wed, 15 Jan 2020 17:11:02 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FGiXws183122;
-        Wed, 15 Jan 2020 17:04:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2xj1apwss6-1
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FH9Xdk073935;
+        Wed, 15 Jan 2020 17:11:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2xj1apxkdc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 17:04:39 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FH4dRf024282;
-        Wed, 15 Jan 2020 17:04:39 GMT
+        Wed, 15 Jan 2020 17:11:00 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FHAopO016173;
+        Wed, 15 Jan 2020 17:10:50 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 09:04:39 -0800
-Subject: [PATCH 9/9] xfs: make xfs_btree_get_buf functions return an error
- code
+        with ESMTP ; Wed, 15 Jan 2020 09:10:50 -0800
+Date:   Wed, 15 Jan 2020 09:10:47 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Date:   Wed, 15 Jan 2020 09:04:38 -0800
-Message-ID: <157910787821.2028217.9307411154179566922.stgit@magnolia>
-In-Reply-To: <157910781961.2028217.1250106765923436515.stgit@magnolia>
-References: <157910781961.2028217.1250106765923436515.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, YueHaibing <yuehaibing@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH v4] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20200115171047.GA8247@magnolia>
+References: <20200108131528.4279-1-agruenba@redhat.com>
+ <20200108165710.GA18523@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108165710.GA18523@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150129
+ engine=8.0.1-1911140001 definitions=main-2001150130
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150129
+ definitions=main-2001150130
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Jan 08, 2020 at 08:57:10AM -0800, Christoph Hellwig wrote:
+> I don't want to be the party pooper, but shouldn't this be a series
+> with one patch to add the helper, and then once for each fs / piece
+> of common code switched over?
 
-Convert both xfs_btree_get_buf() functions to return numeric error codes
-like most everywhere else in xfs.
+The current patch in the iomap branch contains the chunks that add the
+helper function, fix iomap, and whatever chunks for other filesystems
+that don't cause /any/ merge complaints in for-next.  That means btrfs,
+ceph, ext4, and ubifs will get fixed this time around.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_alloc.c |   13 ++++++-------
- fs/xfs/libxfs/xfs_bmap.c  |   10 +++++-----
- fs/xfs/libxfs/xfs_btree.c |   36 ++++++++++++++----------------------
- fs/xfs/libxfs/xfs_btree.h |   16 +++++-----------
- 4 files changed, 30 insertions(+), 45 deletions(-)
+Seeing as it's been floating around in for-next for a week now I'd
+rather not rebase the branch just to rip out the four parts that haven't
+given me any headaches so that they can be applied separately. :)
 
+The acks from the other fs maintainers were very helpful, but at the
+same time, I don't want to become a shadow vfs maintainer.
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 53410819691b..542f6ad7e5b4 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1070,11 +1070,10 @@ xfs_alloc_ag_vextent_small(
- 	if (args->datatype & XFS_ALLOC_USERDATA) {
- 		struct xfs_buf	*bp;
- 
--		bp = xfs_btree_get_bufs(args->mp, args->tp, args->agno, fbno);
--		if (XFS_IS_CORRUPT(args->mp, !bp)) {
--			error = -EFSCORRUPTED;
-+		error = xfs_btree_get_bufs(args->mp, args->tp, args->agno,
-+				fbno, &bp);
-+		if (error)
- 			goto error;
--		}
- 		xfs_trans_binval(args->tp, bp);
- 	}
- 	*fbnop = args->agbno = fbno;
-@@ -2347,9 +2346,9 @@ xfs_free_agfl_block(
- 	if (error)
- 		return error;
- 
--	bp = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno);
--	if (XFS_IS_CORRUPT(tp->t_mountp, !bp))
--		return -EFSCORRUPTED;
-+	error = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno, &bp);
-+	if (error)
-+		return error;
- 	xfs_trans_binval(tp, bp);
- 
- 	return 0;
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 4c2e046fbfad..4544732d09a5 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -730,11 +730,9 @@ xfs_bmap_extents_to_btree(
- 	cur->bc_private.b.allocated++;
- 	ip->i_d.di_nblocks++;
- 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, 1L);
--	abp = xfs_btree_get_bufl(mp, tp, args.fsbno);
--	if (XFS_IS_CORRUPT(mp, !abp)) {
--		error = -EFSCORRUPTED;
-+	error = xfs_btree_get_bufl(mp, tp, args.fsbno, &abp);
-+	if (error)
- 		goto out_unreserve_dquot;
--	}
- 
- 	/*
- 	 * Fill in the child block.
-@@ -878,7 +876,9 @@ xfs_bmap_local_to_extents(
- 	ASSERT(args.fsbno != NULLFSBLOCK);
- 	ASSERT(args.len == 1);
- 	tp->t_firstblock = args.fsbno;
--	bp = xfs_btree_get_bufl(args.mp, tp, args.fsbno);
-+	error = xfs_btree_get_bufl(args.mp, tp, args.fsbno, &bp);
-+	if (error)
-+		goto done;
- 
- 	/*
- 	 * Initialize the block, copy the data and log the remote buffer.
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 2d53e5fdff70..0a7e2265dec1 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -682,46 +682,38 @@ xfs_btree_get_block(
-  * Get a buffer for the block, return it with no data read.
-  * Long-form addressing.
-  */
--xfs_buf_t *				/* buffer for fsbno */
-+int
- xfs_btree_get_bufl(
--	xfs_mount_t	*mp,		/* file system mount point */
--	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_fsblock_t	fsbno)		/* file system block number */
-+	struct xfs_mount	*mp,
-+	struct xfs_trans	*tp,
-+	xfs_fsblock_t		fsbno,
-+	struct xfs_buf		**bpp)
- {
--	struct xfs_buf		*bp;
- 	xfs_daddr_t		d;		/* real disk block address */
--	int			error;
- 
- 	ASSERT(fsbno != NULLFSBLOCK);
- 	d = XFS_FSB_TO_DADDR(mp, fsbno);
--	error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, &bp);
--	if (error)
--		return NULL;
--	return bp;
-+	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, bpp);
- }
- 
- /*
-  * Get a buffer for the block, return it with no data read.
-  * Short-form addressing.
-  */
--xfs_buf_t *				/* buffer for agno/agbno */
-+int
- xfs_btree_get_bufs(
--	xfs_mount_t	*mp,		/* file system mount point */
--	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_agnumber_t	agno,		/* allocation group number */
--	xfs_agblock_t	agbno)		/* allocation group block number */
-+	struct xfs_mount	*mp,
-+	struct xfs_trans	*tp,
-+	xfs_agnumber_t		agno,
-+	xfs_agblock_t		agbno,
-+	struct xfs_buf		**bpp)
- {
--	struct xfs_buf		*bp;
--	xfs_daddr_t		d;		/* real disk block address */
--	int			error;
-+	xfs_daddr_t		d;
- 
- 	ASSERT(agno != NULLAGNUMBER);
- 	ASSERT(agbno != NULLAGBLOCK);
- 	d = XFS_AGB_TO_DADDR(mp, agno, agbno);
--	error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, &bp);
--	if (error)
--		return NULL;
--	return bp;
-+	return xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, bpp);
- }
- 
- /*
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index fb9b2121c628..97c2b5e75210 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -300,22 +300,16 @@ xfs_btree_dup_cursor(
-  * Get a buffer for the block, return it with no data read.
-  * Long-form addressing.
-  */
--struct xfs_buf *				/* buffer for fsbno */
--xfs_btree_get_bufl(
--	struct xfs_mount	*mp,	/* file system mount point */
--	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_fsblock_t		fsbno);	/* file system block number */
-+int xfs_btree_get_bufl(struct xfs_mount *mp, struct xfs_trans *tp,
-+		xfs_fsblock_t fsbno, struct xfs_buf **bpp);
- 
- /*
-  * Get a buffer for the block, return it with no data read.
-  * Short-form addressing.
-  */
--struct xfs_buf *				/* buffer for agno/agbno */
--xfs_btree_get_bufs(
--	struct xfs_mount	*mp,	/* file system mount point */
--	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_agnumber_t		agno,	/* allocation group number */
--	xfs_agblock_t		agbno);	/* allocation group block number */
-+int xfs_btree_get_bufs(struct xfs_mount *mp, struct xfs_trans *tp,
-+		xfs_agnumber_t agno, xfs_agblock_t agbno,
-+		struct xfs_buf **bpp);
- 
- /*
-  * Compute first and last byte offsets for the fields given.
+Therefore, whatever's in this v4 patch that isn't in [1] will have to be
+sent separately.
 
+[1] https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git/commit/?h=iomap-5.6-merge&id=62e298db3fc3ebf41d996f3c86b44cbbdd3286bc
+
+> On Wed, Jan 08, 2020 at 02:15:28PM +0100, Andreas Gruenbacher wrote:
+> > Hi Darrick,
+> > 
+> > here's an updated version with the latest feedback incorporated.  Hope
+> > you find that useful.
+> > 
+> > As far as the f2fs merge conflict goes, I've been told by Linus not to
+> > resolve those kinds of conflicts but to point them out when sending the
+> > merge request.  So this shouldn't be a big deal.
+> 
+> Also this isn't really the proper way to write a commit message.  This
+> text would go into the cover letter if it was a series..
+
+<urk> Yeah.
+
+--D
