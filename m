@@ -2,119 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4856B13BE9F
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 12:37:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2BEC13BF22
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2020 13:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgAOLhU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jan 2020 06:37:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39188 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbgAOLhT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:37:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay1.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 10DC6AEEE;
-        Wed, 15 Jan 2020 11:37:16 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5B5171E0D08; Wed, 15 Jan 2020 12:37:15 +0100 (CET)
-Date:   Wed, 15 Jan 2020 12:37:15 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200115113715.GB2595@quack2.suse.cz>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-2-ira.weiny@intel.com>
+        id S1730126AbgAOMEG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jan 2020 07:04:06 -0500
+Received: from mr012msb.fastweb.it ([85.18.95.109]:46000 "EHLO
+        mr012msb.fastweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOMEG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jan 2020 07:04:06 -0500
+Received-SPF: pass (mr012msb.fastweb.it: domain assyoma.it designates
+ 93.63.55.57 as permitted sender) identity=mailfrom;
+ receiver=mr012msb.fastweb.it; client-ip=93.63.55.57;
+ envelope-from=g.danti@assyoma.it; helo=ceres.assyoma.it;
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedrtdefgdeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhtefuvfghgfeupdcuqfgfvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffhvfhfohfkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefiihhonhgrthgrnhcuffgrnhhtihcuoehgrdgurghnthhisegrshhshihomhgrrdhitheqnecuffhomhgrihhnpegrshhshihomhgrrdhithenucfkphepleefrdeifedrheehrdehjeenucfrrghrrghmpehhvghloheptggvrhgvshdrrghsshihohhmrgdrihhtpdhinhgvthepleefrdeifedrheehrdehjedpmhgrihhlfhhrohhmpeeoghdruggrnhhtihesrghsshihohhmrgdrihhtqecuuefqffgjpeekuefkvffokffogfdprhgtphhtthhopeeouggrrhhrihgtkhdrfihonhhgsehorhgrtghlvgdrtghomhequcfqtfevrffvpehrfhgtkedvvdenuggrrhhrihgtkhdrfihonhhgsehorhgrtghlvgdrtghomhdprhgtphhtthhopeeolhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghequcfqtfevrffvpehrfhgtkedvvdenlhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from ceres.assyoma.it (93.63.55.57) by mr012msb.fastweb.it (5.8.208)
+        id 5E19B4C2004A415E; Wed, 15 Jan 2020 12:37:52 +0100
+Received: from gdanti-lenovo.assyoma.it (unknown [172.31.255.5])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ceres.assyoma.it (Postfix) with ESMTPSA id 79D8126646E;
+        Wed, 15 Jan 2020 12:37:52 +0100 (CET)
+Subject: Re: XFS reflink vs ThinLVM
+From:   Gionatan Danti <g.danti@assyoma.it>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <fe697fb6-cef6-2e06-de77-3530700852da@assyoma.it>
+ <20200113111025.liaargk3sf4wbngr@orion>
+ <703a6c17-cc02-2c2c-31ce-6cd12a888743@assyoma.it>
+ <20200113114356.midcgudwxpze3xfw@orion>
+ <627cb07f-9433-ddfd-37d7-27efedd89727@assyoma.it>
+ <39b50e2c-cb78-3bcd-0130-defa9c573b71@assyoma.it>
+ <20200113165341.GE8247@magnolia>
+ <f61995d7-9775-0035-8700-2b92c63bd23f@assyoma.it>
+ <20200113180914.GI8247@magnolia>
+ <8e96231f-8fc6-b178-9e83-84cbb9af6d2e@assyoma.it>
+Organization: Assyoma s.r.l.
+Message-ID: <9d8e8614-9ae1-30ee-f2b4-1e45b90b27f8@assyoma.it>
+Date:   Wed, 15 Jan 2020 12:37:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110192942.25021-2-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8e96231f-8fc6-b178-9e83-84cbb9af6d2e@assyoma.it>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On 14/01/20 09:45, Gionatan Danti wrote:
+> On 13/01/20 19:09, Darrick J. Wong wrote:
+>> xfs_io -c 'bmap -c -e -l -p -v <whatever>' test.img
 > 
-> In order for users to determine if a file is currently operating in DAX
-> mode (effective DAX).  Define a statx attribute value and set that
-> attribute if the effective DAX flag is set.
-> 
-> To go along with this we propose the following addition to the statx man
-> page:
-> 
-> STATX_ATTR_DAX
-> 
-> 	DAX (cpu direct access) is a file mode that attempts to minimize
-> 	software cache effects for both I/O and memory mappings of this
-> 	file.  It requires a capable device, a compatible filesystem
-> 	block size, and filesystem opt-in. It generally assumes all
-> 	accesses are via cpu load / store instructions which can
-> 	minimize overhead for small accesses, but adversely affect cpu
-> 	utilization for large transfers. File I/O is done directly
-> 	to/from user-space buffers. While the DAX property tends to
-> 	result in data being transferred synchronously it does not give
-> 	the guarantees of synchronous I/O that data and necessary
-> 	metadata are transferred. Memory mapped I/O may be performed
-> 	with direct mappings that bypass system memory buffering. Again
-> 	while memory-mapped I/O tends to result in data being
-> 	transferred synchronously it does not guarantee synchronous
-> 	metadata updates. A dax file may optionally support being mapped
-> 	with the MAP_SYNC flag which does allow cpu store operations to
-> 	be considered synchronous modulo cpu cache effects.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Ok, good to know. Thanks.
 
-This looks good to me. You can add:
+Hi all, I have an additional question about extszinherit/extsize.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+If I understand it correctly, by default it is 0: any non-EOF writes on 
+a sparse file will allocate how much space it needs. If these writes are 
+random and small enough (ie: 4k random writes), a subsequent sequential 
+read of the same file will have much lower performance (because 
+sequential IO are transformed in random accesses by the logical/physical 
+block remapping).
 
-								Honza
+Setting a 128K extszinherit (for the entire filesystem) or extsize (for 
+a file/dir) will markedly improve the situation, as much bigger 
+contiguous LBA regions can be read for each IO (note: I know SSD and 
+NVME disks are much less impacted by fragmentation, but I am mainly 
+speaking about HDD here).
 
-> ---
->  fs/stat.c                 | 3 +++
->  include/uapi/linux/stat.h | 1 +
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 030008796479..894699c74dde 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
->  	if (IS_AUTOMOUNT(inode))
->  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
->  
-> +	if (IS_DAX(inode))
-> +		stat->attributes |= STATX_ATTR_DAX;
-> +
->  	if (inode->i_op->getattr)
->  		return inode->i_op->getattr(path, stat, request_mask,
->  					    query_flags);
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index ad80a5c885d5..e5f9d5517f6b 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -169,6 +169,7 @@ struct statx {
->  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
->  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
->  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
-> +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
->  
->  
->  #endif /* _UAPI_LINUX_STAT_H */
-> -- 
-> 2.21.0
-> 
+So, my question: there is anything wrong and/or I should be aware when 
+using a 128K extsize, so setting it the same as cowextsize? The only 
+possible drawback I can think is a coarse granularity when allocating 
+from the sparse file (ie: a 4k write will allocate the full 128k extent).
+
+Am I missing something?
+Thanks.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
