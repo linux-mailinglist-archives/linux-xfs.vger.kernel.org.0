@@ -2,90 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9963313FCD1
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jan 2020 00:16:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C78EF140008
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jan 2020 00:47:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389740AbgAPXQM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jan 2020 18:16:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38338 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389031AbgAPXQM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 18:16:12 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GNCdEv103301;
-        Thu, 16 Jan 2020 23:16:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=8FSRmGRWsfvT5yENbg0G6JvBkTqttQUQhw/r9pg0uYI=;
- b=cnAy3ckNTjejp2tDT59KfD6LYfXIh4ch1ylY16vuVeTQ7Tt0q3GgEKfMedWqd1xMZPBG
- zwfrCkbV9bhPZa0GNxg9ytVm1Rrqp1H3zggKTvXrBrUz3C9psKF4LqO8Ag/Noqeyy5Fg
- havmtEC7Y+UZRIvtQLx6rpYvZo3uWviUu27HRww0DdLU6CPUs/9Iq0WQ7MmPCzp+iOTK
- +jYNlnD38bqBZpqxznabXA6wx94+q/onbnT/8DjKnFCtp8OHPdw0BUIbGEu1qu0ZJqZZ
- eIrl14f3Lx2kwDfq2NFaBx77qdGhftU+dcCQrLwS3TwZK8S+DvW1yg9oD9+xW1GqqVRU Bw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xf74snks8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 23:16:05 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GNFGek086488;
-        Thu, 16 Jan 2020 23:16:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xj61ndaqb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 23:16:04 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00GNG4C5019015;
-        Thu, 16 Jan 2020 23:16:04 GMT
-Received: from localhost (/10.145.179.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 15:16:03 -0800
-Date:   Thu, 16 Jan 2020 15:16:01 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs: force writes to delalloc regions to unwritten
-Message-ID: <20200116231601.GM8247@magnolia>
-References: <157915534429.2406747.2688273938645013888.stgit@magnolia>
- <157915535059.2406747.264640456606868955.stgit@magnolia>
- <20200116164741.GA4593@infradead.org>
+        id S1729875AbgAPXr0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jan 2020 18:47:26 -0500
+Received: from mta00.svc.cra.dublin.eircom.net ([159.134.118.55]:34171 "HELO
+        mta00.svc.cra.dublin.eircom.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S2389814AbgAPXUx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 18:20:53 -0500
+Received: (qmail 22873 messnum 22028485 invoked from network[213.94.190.11/avas00.vendorsvc.cra.dublin.eircom.net]); 16 Jan 2020 23:14:11 -0000
+Received: from avas00.vendorsvc.cra.dublin.eircom.net (HELO avas00) (213.94.190.11)
+  by mta00.svc.cra.dublin.eircom.net (qp 22873) with SMTP; 16 Jan 2020 23:14:11 -0000
+Received: from vzmbx18.eircom.net ([86.43.60.98])
+        by Cloudmark Gateway with SMTP
+        id sEL5iX64cUAb3sEL5iZEkO; Thu, 16 Jan 2020 23:14:11 +0000
+X-Spam-Flag: NO
+X-CNFS-Analysis: v=2.2 cv=H4ir+6Qi c=1 sm=1 tr=0
+ a=e7gqILOnBbllteVy7xBg4A==:117 a=9cW_t1CCXrUA:10 a=FKkrIqjQGGEA:10
+ a=8i8RMFKtq2cA:10 a=XsXwtkfZSxcA:10 a=IkcTkHD0fZMA:10 a=x7bEGLp0ZPQA:10
+ a=jYuv2X4WTcgA:10 a=yK9avllEDk4A:10 a=ZZnuYtJkoWoA:10 a=69EAbJreAAAA:8
+ a=UHyu-6M-BO49YC01wccA:9 a=8Gc3MwsdzOF-Amre:21 a=AcopzYpsRIVq3XtL:21
+ a=QEXdDO2ut3YA:10 a=HWS5tXWuunIA:10 a=G_vNCzyu_JUA:10 a=i0FYOed3za4A:10
+Date:   Thu, 16 Jan 2020 23:14:11 +0000 (GMT)
+From:   Mr Ahmed <r6p2yv45@eircom.net>
+Reply-To: ahmedoue@hotmail.com
+Message-ID: <1504057617.127841.1579216451268.JavaMail.zimbra@eircom.net>
+Subject: HELLO DEAR
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116164741.GA4593@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160185
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [196.52.38.33]
+X-Mailer: Zimbra 8.6.0_GA_1242 (zclient/8.6.0_GA_1242)
+Thread-Topic: HELLO DEAR
+Thread-Index: RGbgLJRo0KQHwADZ0yxuL63QsuDr8A==
+X-CMAE-Envelope: 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
+ uM2RzCAYj26Czw==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 08:47:41AM -0800, Christoph Hellwig wrote:
-> On Wed, Jan 15, 2020 at 10:15:50PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > When writing to a delalloc region in the data fork, commit the new
-> > allocations (of the da reservation) as unwritten so that the mappings
-> > are only marked written once writeback completes successfully.  This
-> > fixes the problem of stale data exposure if the system goes down during
-> > targeted writeback of a specific region of a file, as tested by
-> > generic/042.
-> 
-> I think this is the only safe way to deal with buffered I/O into
-> holes, so:
+Dear Friend,
 
-Ditto.  Thanks for reviewing things!
+I need your urgent assistance in transferring the sum of $11.3million immediately to your private account.By indicating your interest send your reply to my private email (ahmedoue@hotmail.com) then I will send you the full details on how the business will be executed.
 
---D
-
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Best Regards,
+Ahmed Ouedraogo.
