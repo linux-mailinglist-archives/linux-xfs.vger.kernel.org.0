@@ -2,66 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7993613D42D
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 07:16:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 839E013D430
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 07:18:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgAPGQJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jan 2020 01:16:09 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:49850 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbgAPGQJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 01:16:09 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6Ddif045078;
-        Thu, 16 Jan 2020 06:16:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=m4QWMoh14oXI74hf5mHUM2zvTGz8GEhDwIkIdCqe1T8=;
- b=Oxwm38TS6r4tD8CerSDXKETSLO8OoeMxVvzFQxgtPgF7kk42jrJ2+89OgezGH/9qUiSZ
- cfriGZMO7iDKSlM1UTCD6c5fGjjzMDAbMlLxFJJf1nOJRfGnQN5WmdLkv/t12Tnirhvr
- k8HC45+FDbAQ/40DIgmt1XaNUxk5XT8Bo2HSl8JUsqu3n8mdFoyFyFhhIfzOGQzAmHGq
- Yc7eHZmePwMeBY4qi1W1VV0qPGkNxa//f8u8TDLkve7Q0IHqW7T6DQxKslPtd411+HyB
- Hm4iUzQTrfPAL/zA5BUBmze5gVKO/W7Zmn279MXaeTbEyoxFcQo1uhiIIWF2dzLfE5+m Lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74sgep0-1
+        id S1726832AbgAPGSU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jan 2020 01:18:20 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44390 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgAPGSU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 01:18:20 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6Df5J006639;
+        Thu, 16 Jan 2020 06:18:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=thM1DU+ci72geM1S8as2qtc2X97JclnuS2KhKwDxVtM=;
+ b=gbaHBSoUq9DJ0mkHpuVLRvItOlqO/0ixqhK7g0BIV5DtMWrLd0FBvD2AWyggbML1zx/s
+ 0/z5qydhFCw1y5nBlNLXx/5zy9ofMSb0MC5MVSvRHK0/34x9CtJTmbUwxyxuxqqG2+Fo
+ JeAEKnd/nTvY5uGY5vYQNRI6yP9Dl42jo4X4Owgl+x5+G1LjsRjAlRet8eCkRUH4ubrC
+ guvKTJrwjYBSGn2Jj7Jz8fUNWFCAPFiIPj1a3Z5JZlyUHxM4M+RwuSpQ94fe6iXJvfH2
+ coalhiFLT9w8AjtlIeSDWK6+xN4+Eg2DOnnBGPbZRXISjcL/tcocRw4O9eTHHolbpaC8 3g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73u0d6f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 06:16:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6EdYS123967;
-        Thu, 16 Jan 2020 06:16:01 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xj1athcjv-1
+        Thu, 16 Jan 2020 06:18:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6DdfK038228;
+        Thu, 16 Jan 2020 06:18:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xhy22qh0u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 06:16:00 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G6FxQV015623;
-        Thu, 16 Jan 2020 06:15:59 GMT
+        Thu, 16 Jan 2020 06:18:07 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G6I62l027636;
+        Thu, 16 Jan 2020 06:18:06 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 22:15:59 -0800
-Subject: [PATCH 2/2] xfs: relax unwritten writeback overhead under some
- circumstances
+        with ESMTP ; Wed, 15 Jan 2020 22:18:06 -0800
+Date:   Wed, 15 Jan 2020 22:18:04 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Date:   Wed, 15 Jan 2020 22:15:58 -0800
-Message-ID: <157915535801.2406747.10502356876965505327.stgit@magnolia>
-In-Reply-To: <157915534429.2406747.2688273938645013888.stgit@magnolia>
-References: <157915534429.2406747.2688273938645013888.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
+Message-ID: <20200116061804.GI8257@magnolia>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-2-ira.weiny@intel.com>
+ <20200115113715.GB2595@quack2.suse.cz>
+ <20200115173834.GD8247@magnolia>
+ <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
+ <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
+ <20200116053935.GB8235@magnolia>
+ <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=910
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001160052
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=969 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001160052
 Sender: linux-xfs-owner@vger.kernel.org
@@ -69,160 +84,33 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Jan 15, 2020 at 10:05:00PM -0800, Dan Williams wrote:
+> On Wed, Jan 15, 2020 at 9:39 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> [..]
+> > >         attempts to minimize software cache effects for both I/O and
+> > >         memory mappings of this file.  It requires a file system which
+> > >         has been configured to support DAX.
+> > >
+> > >         DAX generally assumes all accesses are via cpu load / store
+> > >         instructions which can minimize overhead for small accesses, but
+> > >         may adversely affect cpu utilization for large transfers.
+> > >
+> > >         File I/O is done directly to/from user-space buffers and memory
+> > >         mapped I/O may be performed with direct memory mappings that
+> > >         bypass kernel page cache.
+> > >
+> > >         While the DAX property tends to result in data being transferred
+> > >         synchronously, it does not give the same guarantees of
+> > >         synchronous I/O where data and the necessary metadata are
+> > >         transferred together.
+> >
+> > (I'm frankly not sure that synchronous I/O actually guarantees that the
+> > metadata has hit stable storage...)
+> 
+> Oh? That text was motivated by the open(2) man page description of O_SYNC.
 
-In the previous patch, we solved a stale disk contents exposure problem
-by forcing the delalloc write path to create unwritten extents, write
-the data, and convert the extents to written after writeback completes.
+Eh, that's just me being cynical about software.  Yes, the O_SYNC docs
+say that data+metadata are supposed to happen; that's good enough for
+another section in the man pages. :)
 
-This is a pretty huge hammer to use, so we'll relax the delalloc write
-strategy to go straight to written extents (as we once did) if someone
-tells us to write the entire file to disk.  This reopens the exposure
-window slightly, but we'll only be affected if writeback completes out
-of order and the system crashes during writeback.
-
-Because once again we can map written extents past EOF, we also
-enlarge the writepages window downward if the window is beyond the
-on-disk size and there are written extents after the EOF block.  This
-ensures that speculative post-EOF preallocations are not left uncovered.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_bmap.c |    8 ++++---
- fs/xfs/libxfs/xfs_bmap.h |    3 ++-
- fs/xfs/xfs_aops.c        |   52 +++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 58 insertions(+), 5 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 220ea1dc67ab..65b2bd12720e 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4545,7 +4545,8 @@ xfs_bmapi_convert_delalloc(
- 	int			whichfork,
- 	xfs_off_t		offset,
- 	struct iomap		*iomap,
--	unsigned int		*seq)
-+	unsigned int		*seq,
-+	bool			full_writeback)
- {
- 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
- 	struct xfs_mount	*mp = ip->i_mount;
-@@ -4610,11 +4611,12 @@ xfs_bmapi_convert_delalloc(
- 	 *
- 	 * New data fork extents must be mapped in as unwritten and converted
- 	 * to real extents after the write succeeds to avoid exposing stale
--	 * disk contents if we crash.
-+	 * disk contents if we crash.  We relax this requirement if we've been
-+	 * told to flush all data to disk.
- 	 */
- 	if (whichfork == XFS_COW_FORK)
- 		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
--	else
-+	else if (!full_writeback)
- 		bma.flags = XFS_BMAPI_PREALLOC;
- 
- 	if (!xfs_iext_peek_prev_extent(ifp, &bma.icur, &bma.prev))
-diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-index 14d25e0b7d9c..9d0b0ed83c9f 100644
---- a/fs/xfs/libxfs/xfs_bmap.h
-+++ b/fs/xfs/libxfs/xfs_bmap.h
-@@ -228,7 +228,8 @@ int	xfs_bmapi_reserve_delalloc(struct xfs_inode *ip, int whichfork,
- 		struct xfs_bmbt_irec *got, struct xfs_iext_cursor *cur,
- 		int eof);
- int	xfs_bmapi_convert_delalloc(struct xfs_inode *ip, int whichfork,
--		xfs_off_t offset, struct iomap *iomap, unsigned int *seq);
-+		xfs_off_t offset, struct iomap *iomap, unsigned int *seq,
-+		bool full_writeback);
- int	xfs_bmap_add_extent_unwritten_real(struct xfs_trans *tp,
- 		struct xfs_inode *ip, int whichfork,
- 		struct xfs_iext_cursor *icur, struct xfs_btree_cur **curp,
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 3a688eb5c5ae..45174dfa0b7d 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -18,10 +18,13 @@
- #include "xfs_bmap_util.h"
- #include "xfs_reflink.h"
- 
-+#define XFS_WRITEPAGE_FULL_RANGE	(1 << 0)
-+
- struct xfs_writepage_ctx {
- 	struct iomap_writepage_ctx ctx;
- 	unsigned int		data_seq;
- 	unsigned int		cow_seq;
-+	unsigned int		flags;
- };
- 
- static inline struct xfs_writepage_ctx *
-@@ -327,7 +330,8 @@ xfs_convert_blocks(
- 	 */
- 	do {
- 		error = xfs_bmapi_convert_delalloc(ip, whichfork, offset,
--				&wpc->iomap, seq);
-+				&wpc->iomap, seq,
-+				XFS_WPC(wpc)->flags & XFS_WRITEPAGE_FULL_RANGE);
- 		if (error)
- 			return error;
- 	} while (wpc->iomap.offset + wpc->iomap.length <= offset);
-@@ -567,6 +571,48 @@ xfs_vm_writepage(
- 	return iomap_writepage(page, wbc, &wpc.ctx, &xfs_writeback_ops);
- }
- 
-+/*
-+ * If we've been told to write a range of the file that is beyond the on-disk
-+ * file size and there's a written extent beyond the EOF block, we conclude
-+ * that we previously wrote a speculative post-EOF preallocation to disk (as
-+ * written extents) and later extended the incore file size.
-+ *
-+ * To prevent exposure of the contents of those speculative preallocations
-+ * after a crash, extend the writeback range all the way down to the old file
-+ * size to make sure that those pages get flushed.
-+ */
-+static void
-+xfs_vm_adjust_posteof_writepages(
-+	struct xfs_inode		*ip,
-+	struct writeback_control	*wbc)
-+{
-+	struct xfs_iext_cursor		icur;
-+	struct xfs_bmbt_irec		irec;
-+
-+	xfs_ilock(ip, XFS_ILOCK_SHARED);
-+	if (ip->i_d.di_size >= wbc->range_start)
-+		goto out;
-+
-+	/* We're done if we can't find a real extent past EOF. */
-+	if (!xfs_iext_lookup_extent(ip, XFS_IFORK_PTR(ip, XFS_DATA_FORK),
-+			XFS_B_TO_FSB(ip->i_mount, ip->i_d.di_size), &icur,
-+			&irec))
-+		goto out;
-+	if (irec.br_startblock == HOLESTARTBLOCK)
-+		goto out;
-+
-+	wbc->range_start = ip->i_d.di_size;
-+
-+	/* Adjust the number of pages to write, if needed. */
-+	if (wbc->nr_to_write == LONG_MAX)
-+		goto out;
-+
-+	wbc->nr_to_write += (wbc->range_start >> PAGE_SHIFT) -
-+			    (ip->i_d.di_size >> PAGE_SHIFT);
-+out:
-+	xfs_iunlock(ip, XFS_ILOCK_SHARED);
-+}
-+
- STATIC int
- xfs_vm_writepages(
- 	struct address_space	*mapping,
-@@ -574,6 +620,10 @@ xfs_vm_writepages(
- {
- 	struct xfs_writepage_ctx wpc = { };
- 
-+	xfs_vm_adjust_posteof_writepages(XFS_I(mapping->host), wbc);
-+	if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
-+		wpc.flags |= XFS_WRITEPAGE_FULL_RANGE;
-+
- 	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
- 	return iomap_writepages(mapping, wbc, &wpc.ctx, &xfs_writeback_ops);
- }
-
+--D
