@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F47313D372
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:11:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B909A13D385
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:13:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAPFLm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jan 2020 00:11:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:47794 "EHLO
+        id S1727003AbgAPFNr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jan 2020 00:13:47 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49414 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgAPFLm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:11:42 -0500
+        with ESMTP id S1726984AbgAPFNr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:13:47 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59A3G170199;
-        Thu, 16 Jan 2020 05:11:39 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5DAV1173172;
+        Thu, 16 Jan 2020 05:13:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=kcNU8w5IkR57m7sytjdxTjauP66DhWVeXLbvEV1iWQo=;
- b=NKVIqWghyS/27skzL7m/RtyqtojAUgBxkl401jGIV0h8oFIBPu0H/KZak1N4UUzcj5PQ
- cjrS6II3lywg+NkPxhmkJYPDgemKs0dna+AP3VcJKXVx6/SqSkY+HXX7pUC+X3T3CmvA
- 4OQgQgi5KYlkeKrDuMdMr1K053muts6crYe0uTRnXFkiDHqDOtPElVblXf++rHGl4oJ2
- 90+kdVEl56Zh44WGMUDXA3aMhlSPBznCHNaqNRcfeHzXt5OvHsYrLYJrLgw6ZeZiSGQs
- 9Qa6oi6WAzpIh7vsUFN3N606tcUYg5UjkdOkJ1OavLdjUgb8Fxx5YVeEPOV7r89xdcp/ Zg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73yr7af-1
+ bh=sBxCc7zlXvHTS4R6nVhRZR8sYDfaNlzvU6VqknYBivw=;
+ b=Gs/KMN7YbMWCnTXdegCx+NNzE/8IPsM0gKDfGk4hEt3plscsYUUSV3JosEqN/Bj9LjLA
+ 70MRtWsF5fAk/O99m0/lytHmOkkiyIj3Lq4+vrpqizZqdzWiGWuaiopA+DLOeNeFc4Ro
+ dP4AB2jJ6ZAW16w6KfUKER4iw/qOPY8V2kCOf7aot5I1pOuxPnQlrgfEjd/Icrihw+HT
+ KyPvNtB41zBxjteaGlIJJzy8hhV0e5IwK9OD+javFrCbhb5VTuOcOiG5Az1md4rz0Ai7
+ xxz6DsuPIerWyGAGqqI40Tn4/FH5TCEefwi6/HvA6yqcPJruU6lVudCrk2eTBoQRgDWy tw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xf73yr7fx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:11:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G58Mub185637;
-        Thu, 16 Jan 2020 05:11:38 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2xj1at7ryc-1
+        Thu, 16 Jan 2020 05:13:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59DQg085357;
+        Thu, 16 Jan 2020 05:11:44 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xj1psd1mv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:11:38 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G5Bbju001043;
-        Thu, 16 Jan 2020 05:11:37 GMT
+        Thu, 16 Jan 2020 05:11:44 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G5Bisl024449;
+        Thu, 16 Jan 2020 05:11:44 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 21:11:37 -0800
-Subject: [PATCH 1/2] xfs: refactor calls to xfs_admin
+        with ESMTP ; Wed, 15 Jan 2020 21:11:43 -0800
+Subject: [PATCH 2/2] xfs: test setting labels with xfs_admin
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Wed, 15 Jan 2020 21:11:36 -0800
-Message-ID: <157915149642.2375135.15091840835027007949.stgit@magnolia>
+Date:   Wed, 15 Jan 2020 21:11:42 -0800
+Message-ID: <157915150275.2375135.12157351351400702116.stgit@magnolia>
 In-Reply-To: <157915149017.2375135.14166864164575311878.stgit@magnolia>
 References: <157915149017.2375135.14166864164575311878.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -62,7 +62,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160042
+ definitions=main-2001160043
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,59 +70,183 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Create a helper to run xfs_admin on the scratch device, then refactor
-all tests to use it.
+Test setting filesystem labels with xfs_admin.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- common/config |    1 +
- common/xfs    |    8 ++++++++
- tests/xfs/287 |    2 +-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ tests/xfs/912     |  103 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/912.out |   43 ++++++++++++++++++++++
+ tests/xfs/group   |    1 +
+ 3 files changed, 147 insertions(+)
+ create mode 100755 tests/xfs/912
+ create mode 100644 tests/xfs/912.out
 
 
-diff --git a/common/config b/common/config
-index 9a9c7760..1116cb99 100644
---- a/common/config
-+++ b/common/config
-@@ -154,6 +154,7 @@ MKSWAP_PROG="$MKSWAP_PROG -f"
- export XFS_LOGPRINT_PROG="$(type -P xfs_logprint)"
- export XFS_REPAIR_PROG="$(type -P xfs_repair)"
- export XFS_DB_PROG="$(type -P xfs_db)"
-+export XFS_ADMIN_PROG="$(type -P xfs_admin)"
- export XFS_GROWFS_PROG=$(type -P xfs_growfs)
- export XFS_SPACEMAN_PROG="$(type -P xfs_spaceman)"
- export XFS_SCRUB_PROG="$(type -P xfs_scrub)"
-diff --git a/common/xfs b/common/xfs
-index 706ddf85..d9a9784f 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -218,6 +218,14 @@ _scratch_xfs_db()
- 	$XFS_DB_PROG "$@" $(_scratch_xfs_db_options)
- }
- 
-+_scratch_xfs_admin()
+diff --git a/tests/xfs/912 b/tests/xfs/912
+new file mode 100755
+index 00000000..1eef36cd
+--- /dev/null
++++ b/tests/xfs/912
+@@ -0,0 +1,103 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
++#
++# FS QA Test No. 912
++#
++# Check that xfs_admin can set and clear filesystem labels offline and online.
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1    # failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
 +{
-+	local options=("$SCRATCH_DEV")
-+	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
-+		options+=("$SCRATCH_LOGDEV")
-+	$XFS_ADMIN_PROG "$@" "${options[@]}"
++	cd /
 +}
 +
- _scratch_xfs_logprint()
- {
- 	SCRATCH_OPTIONS=""
-diff --git a/tests/xfs/287 b/tests/xfs/287
-index 8dc754a5..f77ed2f1 100755
---- a/tests/xfs/287
-+++ b/tests/xfs/287
-@@ -70,7 +70,7 @@ $XFS_IO_PROG -r -c "lsproj" $dir/32bit
- _scratch_unmount
- 
- # Now, enable projid32bit support by xfs_admin
--xfs_admin -p $SCRATCH_DEV >> $seqres.full 2>&1 || _fail "xfs_admin failed"
-+_scratch_xfs_admin -p >> $seqres.full 2>&1 || _fail "xfs_admin failed"
- 
- # Now mount the fs, 32bit project quotas shall be supported, now
- _qmount_option "pquota"
++# get standard environment, filters and checks
++. ./common/rc
++
++# real QA test starts here
++_supported_fs xfs
++_supported_os Linux
++_require_scratch
++_require_xfs_db_command label
++_require_xfs_io_command label
++grep -q "xfs_io" "$(which xfs_admin)" || \
++	_notrun "xfs_admin does not support online label setting of any kind"
++
++rm -f $seqres.full
++
++echo
++echo "Format with label"
++_scratch_mkfs -L "label0" > $seqres.full
++
++echo "Read label offline"
++_scratch_xfs_admin -l
++
++echo "Read label online"
++_scratch_mount
++_scratch_xfs_admin -l
++
++echo
++echo "Set label offline"
++_scratch_unmount
++_scratch_xfs_admin -L "label1"
++
++echo "Read label offline"
++_scratch_xfs_admin -l
++
++echo "Read label online"
++_scratch_mount
++_scratch_xfs_admin -l
++
++echo
++echo "Set label online"
++_scratch_xfs_admin -L "label2"
++
++echo "Read label online"
++_scratch_xfs_admin -l
++
++echo "Read label offline"
++_scratch_unmount
++_scratch_xfs_admin -l
++
++echo
++echo "Clear label online"
++_scratch_mount
++_scratch_xfs_admin -L "--"
++
++echo "Read label online"
++_scratch_xfs_admin -l
++
++echo "Read label offline"
++_scratch_unmount
++_scratch_xfs_admin -l
++
++echo
++echo "Set label offline"
++_scratch_xfs_admin -L "label3"
++
++echo "Read label offline"
++_scratch_xfs_admin -l
++
++echo
++echo "Clear label offline"
++_scratch_xfs_admin -L "--"
++
++echo "Read label offline"
++_scratch_xfs_admin -l
++
++echo "Read label online"
++_scratch_mount
++_scratch_xfs_admin -l
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/912.out b/tests/xfs/912.out
+new file mode 100644
+index 00000000..186d827f
+--- /dev/null
++++ b/tests/xfs/912.out
+@@ -0,0 +1,43 @@
++QA output created by 912
++
++Format with label
++Read label offline
++label = "label0"
++Read label online
++label = "label0"
++
++Set label offline
++writing all SBs
++new label = "label1"
++Read label offline
++label = "label1"
++Read label online
++label = "label1"
++
++Set label online
++label = "label2"
++Read label online
++label = "label2"
++Read label offline
++label = "label2"
++
++Clear label online
++label = ""
++Read label online
++label = ""
++Read label offline
++label = ""
++
++Set label offline
++writing all SBs
++new label = "label3"
++Read label offline
++label = "label3"
++
++Clear label offline
++writing all SBs
++new label = ""
++Read label offline
++label = ""
++Read label online
++label = ""
+diff --git a/tests/xfs/group b/tests/xfs/group
+index a6c9ef08..cc1d122a 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -511,3 +511,4 @@
+ 511 auto quick quota
+ 747 auto quick scrub
+ 748 auto quick scrub
++912 auto quick label
 
