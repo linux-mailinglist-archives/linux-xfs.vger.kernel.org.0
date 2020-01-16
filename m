@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A4013D380
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:13:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5399813D36C
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:11:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgAPFNF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jan 2020 00:13:05 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48824 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgAPFNF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:13:05 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G58N30169843;
-        Thu, 16 Jan 2020 05:13:03 GMT
+        id S1726812AbgAPFLM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jan 2020 00:11:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45188 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgAPFLM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:11:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G58W5P154302;
+        Thu, 16 Jan 2020 05:11:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=+WmB4UFMFOUh2LovplU5sy9FMiyIRQjaFmm991JqX3A=;
- b=mG/+dHvlpg5nJtGa0wgkC2YzI1gtSwutff1KpGFfRPIdo8rJoYMmaNqSoebmkG+/XQMj
- EkfJFiM92oOux9GtyUG8hZcHEEJLkv8npLASokPUK5dZ8linamVephiJMMg+BP7uPN4l
- D6KcCRpaKhsikPsoMdpKpXOXRYBICPrbK2jkhMGTWfGjnjr7pRQOJkjsGlsB0hvour3D
- 7guRtwYO1np809Gcy7liN6rbsDg/UfLzkT3xDvCZnlu+0x5cFOd8MELrBnkNzPoQ774p
- z/dto9giz3LQ6kM7JVMqCaT1oN5FnOkByWLJPe4dxXgoXIcd+PoI6P12+TP8EZ+YqReb HA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xf73yr7eq-1
+ bh=RLvGIBPKpdmH/89mG00PtIWT7eDarZM2ZQVsoBf85E8=;
+ b=nZsnw3EUnQ/RugmRXB7Wxc5i1bjMxxCFyLMRIClIEscmUAgBH+rdXyt8+pNcRw/4b0/q
+ J7Dzf1+UrFIQih519wXg672LhxqjUuW90hEUtDXV2BDTPXuiVgmUcqNszlOtZ92HXd58
+ H89D5DdtwLDdbYT9teLXZVG0VyXjKOS1E0z5ohZ7YBVPl+iyBEhLRKswHmCRQ+Lw7Fml
+ PIpWF1UNt58sGJUlMhP1z2M7ueA2vw+mlvr5rqv8cnEqJUrSIZgqlAs16/thtnFIqwIH
+ QqKMyxkxSRUZ1KCDFuOB0NOCIkFdNzZIiApvq/7UYUP1BAggi4Ux4Wn0Xih1zSp7uatc Bw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73u04pm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:13:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59Em8085423;
-        Thu, 16 Jan 2020 05:11:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xj1psd0x5-1
+        Thu, 16 Jan 2020 05:11:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59O9e097276;
+        Thu, 16 Jan 2020 05:11:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xhy22mrge-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:11:02 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G5B1CD023964;
-        Thu, 16 Jan 2020 05:11:02 GMT
+        Thu, 16 Jan 2020 05:11:08 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G5B8WW000732;
+        Thu, 16 Jan 2020 05:11:08 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 21:11:01 -0800
-Subject: [PATCH 4/7] xfs/279: skip test if we can't allocate scsi_debug
- device
+        with ESMTP ; Wed, 15 Jan 2020 21:11:07 -0800
+Subject: [PATCH 5/7] rc: fix _get_max_lfs_filesize on 32-bit platforms
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Wed, 15 Jan 2020 21:11:00 -0800
-Message-ID: <157915146054.2374854.14308605711454193767.stgit@magnolia>
+Date:   Wed, 15 Jan 2020 21:11:07 -0800
+Message-ID: <157915146694.2374854.4708773619544238610.stgit@magnolia>
 In-Reply-To: <157915143549.2374854.7759901526137960493.stgit@magnolia>
 References: <157915143549.2374854.7759901526137960493.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -55,13 +54,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=863
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001160042
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=909 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001160042
 Sender: linux-xfs-owner@vger.kernel.org
@@ -71,45 +70,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Due to the unique structure of xfs/279 running _get_scsi_debug_dev from
-a backtick from inside subshell, the "could not get scsi_debug device"
-checks do not actually stop the test when modprobe scsi_debug fails.
-
-Therefore, check the value of SCSI_DEBUG_DEV from the subshell and
-_notrun the test if we couldn't get memory.
+The 32-bit calculation of the maximum filesize is incorrect.  Replace it
+with the formula that the kernel has used since commit 0cc3b0ec23ce
+("Clarify (and fix) MAX_LFS_FILESIZE macros").  This fixes a regression
+in generic/351 on 32-bit kernels.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/xfs/279 |    3 +++
- 1 file changed, 3 insertions(+)
+ common/rc |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/279 b/tests/xfs/279
-index 7ab8bdd5..0ddc6a00 100755
---- a/tests/xfs/279
-+++ b/tests/xfs/279
-@@ -65,6 +65,7 @@ _check_mkfs()
- echo "==================="
- echo "4k physical 512b logical aligned"
- SCSI_DEBUG_DEV=`_get_scsi_debug_dev 4096 512 0 128`
-+test -b "$SCSI_DEBUG_DEV" || _notrun "Could not get scsi_debug device"
- # sector size should default to 4k
- _check_mkfs $SCSI_DEBUG_DEV
- # blocksize smaller than physical sectorsize should revert to logical sectorsize
-@@ -77,6 +78,7 @@ _put_scsi_debug_dev
- echo "==================="
- echo "4k physical 512b logical unaligned"
- SCSI_DEBUG_DEV=`_get_scsi_debug_dev 4096 512 1 128`
-+test -b "$SCSI_DEBUG_DEV" || _notrun "Could not get scsi_debug device"
- # should fail on misalignment
- _check_mkfs $SCSI_DEBUG_DEV
- # should fall back to logical sector size with force
-@@ -93,6 +95,7 @@ _put_scsi_debug_dev
- echo "==================="
- echo "hard 4k physical / 4k logical"
- SCSI_DEBUG_DEV=`_get_scsi_debug_dev 4096 4096 0 128`
-+test -b "$SCSI_DEBUG_DEV" || _notrun "Could not get scsi_debug device"
- # block size smaller than sector size should fail 
- _check_mkfs -b size=2048 $SCSI_DEBUG_DEV
- # sector size smaller than physical sector size should fail
+diff --git a/common/rc b/common/rc
+index eeac1355..cf6bc9d5 100644
+--- a/common/rc
++++ b/common/rc
+@@ -3999,7 +3999,9 @@ _get_max_lfs_filesize()
+ {
+ 	case "$(getconf LONG_BIT)" in
+ 	"32")
+-		echo $(( ($(getconf PAGE_SIZE) << ($(getconf LONG_BIT) - 1) ) - 1))
++		local ulong_max=$(getconf ULONG_MAX)
++		local page_size=$(getconf PAGE_SIZE)
++		echo $(( ulong_max * page_size ))
+ 		;;
+ 	"64")
+ 		echo 9223372036854775807
 
