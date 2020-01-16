@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB84B13D382
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:13:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC25C13D36F
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jan 2020 06:11:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgAPFNS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jan 2020 00:13:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:49042 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgAPFNS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:13:18 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5DGwD173217;
-        Thu, 16 Jan 2020 05:13:16 GMT
+        id S1725768AbgAPFL0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jan 2020 00:11:26 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52500 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbgAPFLZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jan 2020 00:11:25 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59DDh193165;
+        Thu, 16 Jan 2020 05:11:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=yOZnlwLQ+XwcbxlaSPkShBDrXRd3qOTQ05ftAdkM+0w=;
- b=g1P+AzQ8OaB4MmoC+pRkXX8Sh6EUsyIbyJ1wmNFZMhJh9iPMu3PprAIxVEOvQsOiCCu2
- WAEb5zjIiDDUN574fM3qJa9gJBcfyNKYEC4tyF/okISsFJykb89tcN6trkla6EGSTLsy
- NvOhfDJwyYCosRTdPtkHn4e7woFKkzHedV+XrwI3RyQJmk1nBuNzpBgNPJaS1CxWHbuI
- LMlUpgTUuDJ68xGLTFBt25jxGkwxBjfDbCqTAp76jEKgomQuYv+52asMoJZXZW0kmiPl
- YoA3KgbLPF1aDRWKcw8M7kspmNmjbB3aisWZugma8EZNXoO/NY///AWhbkRxF4fHUVWu Rw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xf73yr7fc-1
+ bh=A18qrB6XgGzak+9jhg/cWndz4SCdqDc5oK4aQN4JJV4=;
+ b=THqqVBe9uANwE5kkeZp/UGcHANzDOuA6/Z1bYP5TUEzAfQIDmzCiO9eEJTyt96Qyji2m
+ fmo0aQ2AB6LkL3vzKdZOp93rv6WhACsCyJNN1dhdd29U0oZnPoAd4VJ+JYp92QKBBupF
+ S8a1bLzZTwNs4aAoK3jBwLTITDX95MqG3mNoWndcD9Iol7EEPY1RzukiLV1XUw4923aS
+ aeaur3t1K4usYeCAM6eQQokIDLcOHZBHIpn1a00v3b0SUf79RhDWXd8EhHXxvvoH9su6
+ 81GBgHxQH3pOOe9gI+Y9TeuNrhcpcoZwmZgB36QOI2re80pW8d1fTYyyBb/aJ3ne3b+r KQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xf74sg6sw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:13:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G59MGX097041;
-        Thu, 16 Jan 2020 05:11:15 GMT
+        Thu, 16 Jan 2020 05:11:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G58Mr0185569;
+        Thu, 16 Jan 2020 05:11:23 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xhy22mrku-1
+        by aserp3020.oracle.com with ESMTP id 2xj1at7q3d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:11:15 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G5BEfw000776;
-        Thu, 16 Jan 2020 05:11:14 GMT
+        Thu, 16 Jan 2020 05:11:22 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G5BLVv000928;
+        Thu, 16 Jan 2020 05:11:21 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 21:11:14 -0800
-Subject: [PATCH 6/7] generic/108: skip test if we can't initialize scsi_debug
+        with ESMTP ; Wed, 15 Jan 2020 21:11:20 -0800
+Subject: [PATCH 7/7] xfs/020: call _notrun if we can't create a 60t sparse
+ image
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Wed, 15 Jan 2020 21:11:13 -0800
-Message-ID: <157915147326.2374854.964133120890777930.stgit@magnolia>
+Date:   Wed, 15 Jan 2020 21:11:19 -0800
+Message-ID: <157915147960.2374854.2067220014390694914.stgit@magnolia>
 In-Reply-To: <157915143549.2374854.7759901526137960493.stgit@magnolia>
 References: <157915143549.2374854.7759901526137960493.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,15 +55,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=787
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001160042
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=847 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160043
+ definitions=main-2001160042
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,29 +71,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Correct the logic in this test that detects failed scsi_debug
-initializations.  Downgrade the reaction to _notrun since the filesystem
-under test did not fail, just our mockup disk.
+If we can't create the 60T sparse image for testing repair on a large fs
+(such as when running on 32-bit), don't bother running the rest of the
+test.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/generic/108 |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tests/xfs/020 |    2 ++
+ 1 file changed, 2 insertions(+)
 
 
-diff --git a/tests/generic/108 b/tests/generic/108
-index 9b4fe60f..ab6101f2 100755
---- a/tests/generic/108
-+++ b/tests/generic/108
-@@ -49,9 +49,7 @@ rm -f $seqres.full
+diff --git a/tests/xfs/020 b/tests/xfs/020
+index 61da4101..e39c3482 100755
+--- a/tests/xfs/020
++++ b/tests/xfs/020
+@@ -42,6 +42,8 @@ echo "Silence is golden"
  
- # _get_scsi_debug_dev returns a scsi debug device with 128M in size by default
- SCSI_DEBUG_DEV=`_get_scsi_debug_dev 512 512 0 300`
--if [ "$SCSI_DEBUG_DEV" == "/dev/" ]; then
--	_fail "Failed to initialize scsi debug device"
--fi
-+test -b "$SCSI_DEBUG_DEV" || _notrun "Failed to initialize scsi debug device"
- echo "SCSI debug device $SCSI_DEBUG_DEV" >>$seqres.full
+ fsfile=$TEST_DIR/fsfile.$seq
+ rm -f $fsfile
++truncate -s 60t $fsfile || _notrun "Cannot create 60T sparse file for test."
++rm -f $fsfile
  
- # create striped volume with 4MB stripe size
+ $MKFS_PROG -t xfs -d size=60t,file,name=$fsfile >/dev/null
+ $XFS_REPAIR_PROG -f -o ag_stride=32 -t 1 $fsfile >/dev/null 2>&1
 
