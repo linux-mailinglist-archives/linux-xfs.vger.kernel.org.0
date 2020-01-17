@@ -2,64 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1ACA1403DD
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jan 2020 07:17:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 223251403E5
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jan 2020 07:23:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgAQGRC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Jan 2020 01:17:02 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:56638 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAQGRC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jan 2020 01:17:02 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H68VoP186719;
-        Fri, 17 Jan 2020 06:16:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=4TOKhipqmrCsgvCLGU5jhoCV7/t8LwEnDe/T9FY/bdY=;
- b=ciYbDhSNXaZI4kmd62VzISKNQqEwMNgub4uKinaEjmjtRlDpo9+DIIw3ookHr+Z/ZFDT
- bJh/+MdDIQ8dQ/BwKZN3Sc95pAlELceNMdmlmJsXkuapi9UyL9wDzSowuBcDBSk+AZpw
- JG0XiRBy9vo+oNriDRkeAotnRGLknYa8tHs1GsR6tiLSTg8rqyfKzt9r7LTZUEFTc3Q/
- eOzSP+DegprTi7M/UgRvu6zm+zrJ26XYM0K7Ts5rikFxt/A1P1INIOhZAYwwJy2Q2Liy
- /VmoOi2NBUf9KnbhUjac6iD8YZQyMQWwX8emFG4dAWPPafsyKhW2HtBUr5euAKvua2yr /Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74spsg2-1
+        id S1726827AbgAQGXp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Jan 2020 01:23:45 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:53514 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAQGXo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jan 2020 01:23:44 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H68KuA166669;
+        Fri, 17 Jan 2020 06:23:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=iS7iQAY7oAOVojpt8hwChsh02RhXjnwHGf64l1hZpP0=;
+ b=MgKy5G0y9boYEdyAv0XOYvXpIVBNc5ZKdggHNiFZbgfQ5KtWvwQOYRjhEZZyqU9I9XLs
+ 6pSxwMq0TqYMXI4vX/wS68/wVs2golNcOPGRE4P3Qkj3/gUGRYxcoA7bbWh9SoK7oTJX
+ BpaV9HXDmSVDRRcVZsCHAJmEs79HLS5g6bbQgbRCF9S0+Ks5GZE2NxQ63WK/Jp41q4Hu
+ DUNaQ1/yM041X9yitj67h3GgqIDbnMEtRHMehwv2csOs7nqv8s1KhXdq2BKT/xIyCvMm
+ WJvGmUxitH8UQgEWPa/G8iMVO+mv0DGGT6GkYhRPHwpe5/BCgbuNsQ5iJAopf3qJuMNX 1w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xf73yxu5s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 06:16:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H69HnS076237;
-        Fri, 17 Jan 2020 06:16:51 GMT
+        Fri, 17 Jan 2020 06:23:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H68uiA162010;
+        Fri, 17 Jan 2020 06:23:36 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xk2309qtt-1
+        by aserp3030.oracle.com with ESMTP id 2xk24eejex-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 06:16:51 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00H6Gn32031289;
-        Fri, 17 Jan 2020 06:16:49 GMT
+        Fri, 17 Jan 2020 06:23:36 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00H6NXdf002341;
+        Fri, 17 Jan 2020 06:23:34 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 22:16:49 -0800
-Date:   Thu, 16 Jan 2020 22:16:47 -0800
+        with ESMTP ; Thu, 16 Jan 2020 22:23:33 -0800
+Subject: [PATCH v2 00/11] xfs: make buffer functions return error codes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linux-xfs@vger.kernel.org, hch@lst.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] xfs: remove unused variable 'done'
-Message-ID: <20200117061647.GR8247@magnolia>
-References: <20200117015011.50412-1-yuehaibing@huawei.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
+Date:   Thu, 16 Jan 2020 22:23:31 -0800
+Message-ID: <157924221149.3029431.1461924548648810370.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117015011.50412-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001170048
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001170048
@@ -68,39 +66,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 09:50:11AM +0800, YueHaibing wrote:
-> fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
-> fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variable]
-> 
-> commit 4bbb04abb4ee ("xfs: truncate should remove
-> all blocks, not just to the end of the page cache")
-> left behind this, so remove it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Hi all,
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Let's fix all the xfs read/get buffer functions to return the usual
+integer error codes and pass the buffer pointer as a out-argument.  This
+makes it so that we can return useful error output instead of making
+callers infer ENOMEM or EAGAIN or whatever other reality they crave from
+the NULL pointer that they get when things don't go perfectly.
+
+FWIW, all XBF_TRYLOCK callers must now trigger retries if they receive
+EAGAIN.  This may lead to a slight behavioral change in that TRYLOCK
+callers will no longer retry for things like ENOMEM, though I didn't see
+any obvious changes in user-visible behavior when running fstests.
+
+This time around I dug further into the TRYLOCK callers, though I haven't
+yet rearranged the io error reporting while I determine whether there's
+enough of a pattern to refactor.
+
+This has been lightly tested with fstests.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
-
-> ---
->  fs/xfs/xfs_inode.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 1309f25..1979a00 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -1520,7 +1520,6 @@ xfs_itruncate_extents_flags(
->  	xfs_fileoff_t		first_unmap_block;
->  	xfs_filblks_t		unmap_len;
->  	int			error = 0;
-> -	int			done = 0;
->  
->  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
->  	ASSERT(!atomic_read(&VFS_I(ip)->i_count) ||
-> -- 
-> 2.7.4
-> 
-> 
