@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 907F2141A2B
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jan 2020 23:48:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B9F141A24
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jan 2020 23:46:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgARWsT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 18 Jan 2020 17:48:19 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51918 "EHLO
+        id S1727070AbgARWqT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Jan 2020 17:46:19 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:50304 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgARWsT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Jan 2020 17:48:19 -0500
+        with ESMTP id S1726997AbgARWqT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Jan 2020 17:46:19 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00IMcuBI072129
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:48:17 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00IMcuBG072129
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=IN7rGyvK4+5g9KG9S8KAOc5+nBnGikA/igjkRXSxqmo=;
- b=DG6UzNT1qgPxH8qORp72lyxy/biFui+46ejAIfW4NgLbDbNZzhRzwq3Q65cAkQl75OWx
- Yss8yWXFmcuXZdXu79TOEP9upggaPEeysOR5e1A1N/sd00ebVM7q37Xiq86YcVoi8otT
- EhRn88heRE9J0V5PI3yV1HhMuHedAZ3DBroGT1LrVJRAhiCLoerR2SH2XQb46v8pWF+i
- qCq3G3/i5dHlO+q5eFQ/uTDKVWAoVzt20Scn7STuiMZBg5yZihVfz/X+ai5ImVFlo+B6
- RvNtab3SmzSGOtXR6Z0oJhajei2IGGsNxRIHcVuu90Hum9+Wf7ikDx+1jIS78S9CO3gA yA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xktnqsw0g-1
+ bh=gZSgDoYuJKZsLcwZR9yzb7UEG+II0BdHAG7xFiy98lo=;
+ b=kQHf6vBERDdQVrYn/I2pePXkZ+7hA0muBidz/yIa++nXXVcC/AgL6Ba4vTKROiyDHH0j
+ bo9UKGGFs50q4Lh9hL1XA2r1PjkHNuxADxxjKDPzjJqZ7DivsYgtOgRet+8NdmIRChlU
+ 0kBrV/qr2tucjqLQFoeQbUs55PLY1iQqWL8xWxHXNB8VHnJfqTnMyeFdwBxyFqBgs4CP
+ jPAp448QATS2upu80m4D5UnPs+3ZPOZA8CjhJhd0ojL/F1yveD4cQdDa6Ve7Ju1JSJZF
+ WMYBp6IYbvTafuIJ5AYy0sYtXdSUEmr/TEGIcnH34fWweGpuBqDRNEScgBjcadDD6iJl AA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xktnqsvtw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:48:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00IMcss6162083
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2xksc4a7m3-1
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00IMcqrr125836
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xkr2danqb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:16 +0000
 Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00IMkGRd023089
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00IMkGYW029005
         for <linux-xfs@vger.kernel.org>; Sat, 18 Jan 2020 22:46:16 GMT
 Received: from localhost.localdomain (/67.1.3.112)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 18 Jan 2020 14:46:15 -0800
+        with ESMTP ; Sat, 18 Jan 2020 14:46:16 -0800
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v6 12/17] xfsprogs: Check for -ENOATTR or -EEXIST
-Date:   Sat, 18 Jan 2020 15:45:53 -0700
-Message-Id: <20200118224558.19382-13-allison.henderson@oracle.com>
+Subject: [PATCH v6 13/17] xfsprogs: Add helper function xfs_attr_init_unmapstate
+Date:   Sat, 18 Jan 2020 15:45:54 -0700
+Message-Id: <20200118224558.19382-14-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200118224558.19382-1-allison.henderson@oracle.com>
 References: <20200118224558.19382-1-allison.henderson@oracle.com>
@@ -63,44 +63,78 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Delayed operations cannot return error codes.  So we must check for
-these conditions first before starting set or remove operations
+This patch helps to pre-simplify xfs_attr_node_removename by modularizing
+the code around the transactions into helper functions.  This will make
+the function easier to follow when we introduce delayed attributes.
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- libxfs/xfs_attr.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ libxfs/xfs_attr.c | 45 +++++++++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 14 deletions(-)
 
 diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index b681f54..042eee2 100644
+index 042eee2..440af79 100644
 --- a/libxfs/xfs_attr.c
 +++ b/libxfs/xfs_attr.c
-@@ -456,6 +456,14 @@ xfs_attr_set(
- 		goto out_trans_cancel;
+@@ -1201,6 +1201,36 @@ out:
+ }
  
- 	xfs_trans_ijoin(args.trans, dp, 0);
+ /*
++ * Set up the state for unmap and set the incomplete flag
++ */
++STATIC int
++xfs_attr_init_unmapstate(
++	struct xfs_da_args	*args,
++	struct xfs_da_state	*state)
++{
++	int error;
 +
-+	error = xfs_has_attr(&args);
-+	if (error == -EEXIST && (name->type & ATTR_CREATE))
-+		goto out_trans_cancel;
++	/*
++	 * Fill in disk block numbers in the state structure
++	 * so that we can get the buffers back after we commit
++	 * several transactions in the following calls.
++	 */
++	error = xfs_attr_fillstate(state);
++	if (error)
++		return error;
 +
-+	if (error == -ENOATTR && (name->type & ATTR_REPLACE))
-+		goto out_trans_cancel;
++	/*
++	 * Mark the attribute as INCOMPLETE
++	 */
++	error = xfs_attr3_leaf_setflag(args);
++	if (error)
++		return error;
 +
- 	error = xfs_attr_set_args(&args);
- 	if (error)
- 		goto out_trans_cancel;
-@@ -544,6 +552,10 @@ xfs_attr_remove(
- 	 */
- 	xfs_trans_ijoin(args.trans, dp, 0);
++	return 0;
++}
++
++
++/*
+  * Remove a name from a B-tree attribute list.
+  *
+  * This will involve walking down the Btree, and may involve joining
+@@ -1232,20 +1262,7 @@ xfs_attr_node_removename(
+ 	ASSERT(blk->bp != NULL);
+ 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+ 	if (args->rmtblkno > 0) {
+-		/*
+-		 * Fill in disk block numbers in the state structure
+-		 * so that we can get the buffers back after we commit
+-		 * several transactions in the following calls.
+-		 */
+-		error = xfs_attr_fillstate(state);
+-		if (error)
+-			goto out;
+-
+-		/*
+-		 * Mark the attribute as INCOMPLETE, then bunmapi() the
+-		 * remote value.
+-		 */
+-		error = xfs_attr3_leaf_setflag(args);
++		error = xfs_attr_init_unmapstate(args, state);
+ 		if (error)
+ 			goto out;
  
-+	error = xfs_has_attr(&args);
-+	if (error != -EEXIST)
-+		goto out;
-+
- 	error = xfs_attr_remove_args(&args);
- 	if (error)
- 		goto out;
 -- 
 2.7.4
 
