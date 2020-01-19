@@ -2,110 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B24141CFE
-	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 09:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C98B2141D04
+	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 09:45:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgASIfU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 19 Jan 2020 03:35:20 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42157 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgASIfU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jan 2020 03:35:20 -0500
-Received: by mail-il1-f196.google.com with SMTP id t2so24834591ilq.9;
-        Sun, 19 Jan 2020 00:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WnvCnon0B2vZEtChKK2eAEB4AoqKysFBIa8g4lTbzqs=;
-        b=MICKMx0JRRKjGltjB7+mwIArqOPNrBi52HqBHbIC/HB4t4TdIOP/SYLkIFtT0HLvVG
-         tSDbPRAdaXSTlVN12U/SJSdlA7hKR8rI8PVJrfn7JvU3xZi2O/SjgHo4sP7bZ+nVfoKO
-         1pJ9NDQ7VCfATu4UcxLAGkBuY8maIv9yjW6OVwQ9lphaVD+BJ88DFDwmQf7nUMMiiepY
-         bY8A1caHiEY6dAQNvSCOO++S/Ov/t9InaB+zvkyWPKZMj87SqgBYptJ3ODw8rwnvTGAB
-         FF7gMujX0GT5MTdulwXvZje0OFRsJU3p+Bzoct9gGiOBvDTSFWCFomcGYXHUAfGZl+7E
-         HMsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WnvCnon0B2vZEtChKK2eAEB4AoqKysFBIa8g4lTbzqs=;
-        b=RaypSBwqKgbmyqYynmK6YegKi4/ZToOmfdEIBA7h9t2POjUkwsJRl3gYJYY9jcNwad
-         SBapuuHuLijhQGqoFbcqzZ5Rup8TgldwN+vOpFgV+ltArFOFB7wGdgRtyyzwpU2L873n
-         Nr0E1UFESNXLSoSmcLVQ2Y4WCcZlp7UYkMMp6Q0lO5R3DrF1rLWZySD2isKreTwyAg2T
-         k7cAGPFUf4XHgMtlpgM7RGBBfn3aCeuUyJZwQCOA15Gp/d7DOfsMLMKxKJ6SFw/Mn3gV
-         6sM9X7bacgof1w0LTXK72cbjERB2jKpFGoeVBxmxUCUkAmXgzx0n6Gq09qQ6llHBy2+t
-         0dRw==
-X-Gm-Message-State: APjAAAWEX8hSvBhnFIrU7xCHNpe4xKWTwTHLSW6+1HAcPoekkPXXGLJ9
-        3W9KOjvJhlwyHipWLFon3auxbHvUiBuTwcDlyx4=
-X-Google-Smtp-Source: APXvYqwZr4ZjR8ayJHlIXAe9Mu2fL/t/GmQP+UeWRJOzS1BF1xB3ciC2rHWyCUrxr286ENDotvVDU1t2Jngvyqsb2EQ=
-X-Received: by 2002:a92:88d0:: with SMTP id m77mr6344819ilh.9.1579422919785;
- Sun, 19 Jan 2020 00:35:19 -0800 (PST)
+        id S1726538AbgASIpo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 19 Jan 2020 03:45:44 -0500
+Received: from mr013msb.fastweb.it ([85.18.95.104]:60373 "EHLO
+        mr013msb.fastweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgASIpo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jan 2020 03:45:44 -0500
+Received-SPF: pass (mr013msb.fastweb.it: domain assyoma.it designates
+ 93.63.55.57 as permitted sender) identity=mailfrom;
+ receiver=mr013msb.fastweb.it; client-ip=93.63.55.57;
+ envelope-from=g.danti@assyoma.it; helo=ceres.assyoma.it;
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedruddvgddvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhtefuvfghgfeupdcuqfgfvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepvffugggtgfffhfhojghfkfigfgesthejjhdttdervdenucfhrhhomhepifhiohhnrghtrghnucffrghnthhiuceoghdruggrnhhtihesrghsshihohhmrgdrihhtqeenucffohhmrghinheprghsshihohhmrgdrihhtnecukfhppeelfedrieefrdehhedrheejnecurfgrrhgrmhephhgvlhhopegtvghrvghsrdgrshhshihomhgrrdhithdpihhnvghtpeelfedrieefrdehhedrheejpdhmrghilhhfrhhomhepoehgrdgurghnthhisegrshhshihomhgrrdhitheqpdhrtghpthhtohepoegurghrrhhitghkrdifohhnghesohhrrggtlhgvrdgtohhmqecuqfftvefrvfeprhhftgekvddvnegurghrrhhitghkrdifohhnghesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepoehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqecuqfftvefrvfeprhhftgekvddvnehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from ceres.assyoma.it (93.63.55.57) by mr013msb.fastweb.it (5.8.208)
+        id 5E19B49F009205B2; Sun, 19 Jan 2020 09:45:34 +0100
+Received: by ceres.assyoma.it (Postfix, from userid 48)
+        id 0E7C8268237; Sun, 19 Jan 2020 09:45:34 +0100 (CET)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: XFS reflink vs ThinLVM
+X-PHP-Originating-Script: 0:rcube.php
 MIME-Version: 1.0
-References: <20190829131034.10563-1-jack@suse.cz> <CAOQ4uxiDqtpsH_Ot5N+Avq0h5MBXsXwgDdNbdRC0QDZ-e+zefg@mail.gmail.com>
-In-Reply-To: <CAOQ4uxiDqtpsH_Ot5N+Avq0h5MBXsXwgDdNbdRC0QDZ-e+zefg@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 19 Jan 2020 10:35:08 +0200
-Message-ID: <CAOQ4uxgP_32c6QLh2cZXXs7yJ6e8MRR=yfEBjpv02FeC_HpKhg@mail.gmail.com>
-Subject: Re: [PATCH 0/3 v2] xfs: Fix races between readahead and hole punching
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Dave Chinner <dchinner@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 19 Jan 2020 09:45:34 +0100
+From:   Gionatan Danti <g.danti@assyoma.it>
+Cc:     linux-xfs@vger.kernel.org, g.danti@assyoma.it
+Organization: Assyoma s.r.l.
+In-Reply-To: <20200118230631.GX8247@magnolia>
+References: <20200113165341.GE8247@magnolia>
+ <f61995d7-9775-0035-8700-2b92c63bd23f@assyoma.it>
+ <20200113180914.GI8247@magnolia>
+ <8e96231f-8fc6-b178-9e83-84cbb9af6d2e@assyoma.it>
+ <9d8e8614-9ae1-30ee-f2b4-1e45b90b27f8@assyoma.it>
+ <20200115163948.GF8257@magnolia>
+ <761fcf8f9d68ee221a35d15c1a7120c5@assyoma.it>
+ <e3dd598260d9f92c3b2c91cb81540e37@assyoma.it>
+ <20200117234219.GM8257@magnolia>
+ <cc3d0819966d2d3f5b8512ed0f6b1de1@assyoma.it>
+ <20200118230631.GX8247@magnolia>
+Message-ID: <9ca7a7f18ef7fe2e7c32ea6a6cd4ef35@assyoma.it>
+X-Sender: g.danti@assyoma.it
+User-Agent: Roundcube Webmail/1.0.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:50 PM Amir Goldstein <amir73il@gmail.com> wrote:
->
-> On Thu, Aug 29, 2019 at 4:10 PM Jan Kara <jack@suse.cz> wrote:
-> >
-> > Hello,
-> >
-> > this is a patch series that addresses a possible race between readahead and
-> > hole punching Amir has discovered [1]. The first patch makes madvise(2) to
-> > handle readahead requests through fadvise infrastructure, the third patch
-> > then adds necessary locking to XFS to protect against the race. Note that
-> > other filesystems need similar protections but e.g. in case of ext4 it isn't
-> > so simple without seriously regressing mixed rw workload performance so
-> > I'm pushing just xfs fix at this moment which is simple.
-> >
->
-> Jan,
->
-> Could you give a quick status update about the state of this issue for
-> ext4 and other fs. I remember some solutions were discussed.
-> Perhaps this could be a good topic for a cross track session in LSF/MM?
-> Aren't the challenges posed by this race also relevant for RWF_UNCACHED?
->
+Il 19-01-2020 00:06 Darrick J. Wong ha scritto:
+> 4GB / 1M extents == 4096, which is probably the fs blocksize :)
 
-Maybe a silly question:
+Yes, it did the same observation: due to random allocation, the 
+underlying vdisk had block-sized extents.
 
-Can someone please explain to me why we even bother truncating pages on
-punch hole?
-Wouldn't it solve the race if instead we zeroed those pages and marked them
-readonly?
+> I wonder, do you get different results if you set an extent size hint
+> on the dir before running fio?
 
-The comment above trunacte_pagecache_range() says:
- * This function should typically be called before the filesystem
- * releases resources associated with the freed range (eg. deallocates
- * blocks). This way, pagecache will always stay logically coherent
- * with on-disk format, and the filesystem would not have to deal with
- * situations such as writepage being called for a page that has already
- * had its underlying blocks deallocated.
+Yes: setting extsize at 128K strongly reduces the amount of allocated 
+extents (eg: 4M / 128K = 32K extents). A similar results can be obtained 
+tapping in cowextsize, by cp --reflink the original file. Any subsequent 
+4K write inside the guest will cause a 128K CoW allocation (with default 
+setting) on the backing file.
 
-So in order to prevent writepage from being called on a punched hole,
-we need to make sure that page write fault will be called, which is the same
-state as if an exiting hole has been read into page cache but not written yet.
-Right? Wrong?
+However, while *much* better, it is my understanding that XFS reflink is 
+a variable-length process: as any extents had to be scanned/reflinked, 
+the reflink time is not constant. Meanwhile it is impossible to 
+read/write from the reflinked file. Am I right?
 
-What am I missing here?
+On the other side thinlvm snapshots, operating on block level, are a 
+(more-or-less) constant-time operation, causing much less disruption in 
+the normal IO flow of the guest volumes.
 
-Thanks,
-Amir.
+I don't absolutely want to lessen reflink usefulnes; rather, it is an 
+extremely useful feature which can be put to very good use.
+
+> I forgot(?) to mention that if you're mostly dealing with sparse VM
+> images then you might as well set a extent size hint and forego delayed
+> allocation because it won't help you much.
+
+This was my conclusion as well.
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
