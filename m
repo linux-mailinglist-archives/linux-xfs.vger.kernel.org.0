@@ -2,62 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B2C141F5F
-	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 19:44:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3321714200D
+	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 21:49:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgASSoV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 19 Jan 2020 13:44:21 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44875 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgASSoU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jan 2020 13:44:20 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 62so7994712pfu.11
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jan 2020 10:44:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=MveYcniUJUB532f0dlOoihdmkjAHV60cDj8LBHI8M4h+3H+egt8ZCsWSnQoG7CEhld
-         h286H+k74rDzfRQOoY/f9M81WRQr88YRuubiH3HanhIDyXki4cyulA7bNdgdh/npcklQ
-         CvJo43u8PBPBkMgEH5HatRsI+u5tlB3wEJ1Th3FBUvpApZQxsvg7pL4HfvgLhjM/SAbt
-         Wln7BJPpvNYZtoiRQX3zkLZKrm4kgBMldFao5RktgQ8gLQFv0TsxI7xopop5Q61lnjsD
-         O+Nqof9tzp5qXVHsDImBQ0OOhN8D0ZvK4JC9Zw+KV08LpajVcASte5dFUKOIeqnCFHwC
-         Gp1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=UKSVN5/JG1bPnYEcUv2z38b/k1A48pur22jJcbKl52GsJiCVbM4KfgqRaaCc1mC86c
-         GEx08o6GSZdNnU1ptq/MK5Q8QS7m+whnm2/7SAEju9djumAzQwPvn3mklw1hxKhdoTYz
-         hh3UwnmnGw8jzX6zVIs0qM7hDCxdMwXp6r34qBCzL+ZtvPI15qTBtn29R1MvvDEKZaY9
-         FVkyRGe/OunPXNQF4z6nxh+BacCtj56RAO/rZCqlj6lKxSCJ+p4SkzQYR8GTomYSdY4M
-         e/k2mrUzLdDUcjsRFZevcEy56f6C11rzarwTElVAs7LVYutx9lpZsDymvu4GKgy1tphA
-         w5GA==
-X-Gm-Message-State: APjAAAU2bnauLdbWN3W1u00r7XF6fbo0YWL9Mor79Jyx/Z3t+aXs0a48
-        eN++CZTTo94QGNRi1F8st8bhledoJzCK43IENSbRVQDKol8DIA==
-X-Google-Smtp-Source: APXvYqzrfoOpFYdPx6ke6uIX585SnMDBN6pXKvD7iN8x9MT//+KimK2aFC33ps3ZC6gjq3Pi1pIlacgfKiFCQZrpYZA=
-X-Received: by 2002:a92:d1c1:: with SMTP id u1mr7477573ilg.66.1579459459106;
- Sun, 19 Jan 2020 10:44:19 -0800 (PST)
+        id S1728792AbgASUtb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 19 Jan 2020 15:49:31 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42146 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728721AbgASUtb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jan 2020 15:49:31 -0500
+Received: from dread.disaster.area (pa49-181-172-170.pa.nsw.optusnet.com.au [49.181.172.170])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 40C0D7EB5F2;
+        Mon, 20 Jan 2020 07:49:27 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1itHVd-0007GU-B4; Mon, 20 Jan 2020 07:49:25 +1100
+Date:   Mon, 20 Jan 2020 07:49:25 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
+Subject: Re: [PATCH 1/2] xfs: force writes to delalloc regions to unwritten
+Message-ID: <20200119204925.GC9407@dread.disaster.area>
+References: <157915534429.2406747.2688273938645013888.stgit@magnolia>
+ <157915535059.2406747.264640456606868955.stgit@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a02:95c8:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 10:44:18
- -0800 (PST)
-Reply-To: favordens@email.com
-From:   Favor Desmond <contecindy5@gmail.com>
-Date:   Sun, 19 Jan 2020 18:44:18 +0000
-Message-ID: <CAOfCPNxgSoAU_ns0j9jYL-ArKfcD=i8NkJvHsR4-OGvFBVDMZg@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157915535059.2406747.264640456606868955.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=IIEU8dkfCNxGYurWsojP/w==:117 a=IIEU8dkfCNxGYurWsojP/w==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=zaeWMwQE6Whg1QJTH98A:9
+        a=fA_ONMZ9WOeYEU84:21 a=2Mi-Ex1vVm9ECiPF:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear
-Greetings to you,I am Favor Desmond from Ivory coast currently living
-in  Togo Republic,I would like to know you more, so that i can tell
-you little amount myself and my photo, email address is
-favordens@email.com
-Thanks
-Favor
+On Wed, Jan 15, 2020 at 10:15:50PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> When writing to a delalloc region in the data fork, commit the new
+> allocations (of the da reservation) as unwritten so that the mappings
+> are only marked written once writeback completes successfully.  This
+> fixes the problem of stale data exposure if the system goes down during
+> targeted writeback of a specific region of a file, as tested by
+> generic/042.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c |   28 +++++++++++++++++-----------
+>  1 file changed, 17 insertions(+), 11 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 4544732d09a5..220ea1dc67ab 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -4190,17 +4190,7 @@ xfs_bmapi_allocate(
+>  	bma->got.br_blockcount = bma->length;
+>  	bma->got.br_state = XFS_EXT_NORM;
+>  
+> -	/*
+> -	 * In the data fork, a wasdelay extent has been initialized, so
+> -	 * shouldn't be flagged as unwritten.
+> -	 *
+> -	 * For the cow fork, however, we convert delalloc reservations
+> -	 * (extents allocated for speculative preallocation) to
+> -	 * allocated unwritten extents, and only convert the unwritten
+> -	 * extents to real extents when we're about to write the data.
+> -	 */
+> -	if ((!bma->wasdel || (bma->flags & XFS_BMAPI_COWFORK)) &&
+> -	    (bma->flags & XFS_BMAPI_PREALLOC))
+> +	if (bma->flags & XFS_BMAPI_PREALLOC)
+>  		bma->got.br_state = XFS_EXT_UNWRITTEN;
+>  
+>  	if (bma->wasdel)
+> @@ -4608,8 +4598,24 @@ xfs_bmapi_convert_delalloc(
+>  	bma.offset = bma.got.br_startoff;
+>  	bma.length = max_t(xfs_filblks_t, bma.got.br_blockcount, MAXEXTLEN);
+>  	bma.minleft = xfs_bmapi_minleft(tp, ip, whichfork);
+> +
+> +	/*
+> +	 * When we're converting the delalloc reservations backing dirty pages
+> +	 * in the page cache, we must be careful about how we create the new
+> +	 * extents:
+> +	 *
+> +	 * New CoW fork extents are created unwritten, turned into real extents
+> +	 * when we're about to write the data to disk, and mapped into the data
+> +	 * fork after the write finishes.  End of story.
+> +	 *
+> +	 * New data fork extents must be mapped in as unwritten and converted
+> +	 * to real extents after the write succeeds to avoid exposing stale
+> +	 * disk contents if we crash.
+> +	 */
+>  	if (whichfork == XFS_COW_FORK)
+>  		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
+> +	else
+> +		bma.flags = XFS_BMAPI_PREALLOC;
+
+	bma.flags = XFS_BMAPI_PREALLOC;
+	if (whichfork == XFS_COW_FORK)
+		bma.flags |= XFS_BMAPI_COWFORK;
+
+However, I'm still not convinced that this is the right/best
+solution to the problem. It is the easiest, yes, but the down side
+on fast/high iops storage and/or under low memory conditions has
+potential to be extremely significant.
+
+I suspect that heavy users of buffered O_DSYNC writes into sparse
+files are going to notice this the most - there are databases out
+there that work this way. And I suspect that most of the workloads
+that use buffered O_DSYNC IO heavily won't see this change for years
+as enterprise upgrade cycles are notoriously slow.
+
+IOWs, all I see this change doing is kicking the can down the road
+and guaranteeing that we'll still have to solve this stale data
+exposure problem more efficiently in the future. And instead of
+doing it now when we have the time and freedom to do the work, it
+will have to be done urgently under high priority escalation
+pressures...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
