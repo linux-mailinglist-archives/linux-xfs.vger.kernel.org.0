@@ -2,103 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DB0141D83
-	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 12:21:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2B2C141F5F
+	for <lists+linux-xfs@lfdr.de>; Sun, 19 Jan 2020 19:44:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgASLVi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 19 Jan 2020 06:21:38 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9665 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgASLVi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 19 Jan 2020 06:21:38 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0ABED6294A04E21031CF;
-        Sun, 19 Jan 2020 19:21:36 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
- 19:21:26 +0800
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200118230826.GA5583@bombadil.infradead.org>
- <f5328338-1a2d-38b4-283f-3fb97ad37133@huawei.com>
- <20200119014213.GA16943@bombadil.infradead.org>
- <64d617cc-e7fe-6848-03bb-aab3498c9a07@huawei.com>
- <20200119061402.GA7301@bombadil.infradead.org>
- <fafa0550-184c-e59c-9b79-bd5d716a20cc@huawei.com>
- <20200119075828.GA4147@bombadil.infradead.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <16241bd6-e3f9-5272-92aa-b31cc0a2b2fa@huawei.com>
-Date:   Sun, 19 Jan 2020 19:21:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728799AbgASSoV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 19 Jan 2020 13:44:21 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44875 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgASSoU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jan 2020 13:44:20 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 62so7994712pfu.11
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jan 2020 10:44:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=MveYcniUJUB532f0dlOoihdmkjAHV60cDj8LBHI8M4h+3H+egt8ZCsWSnQoG7CEhld
+         h286H+k74rDzfRQOoY/f9M81WRQr88YRuubiH3HanhIDyXki4cyulA7bNdgdh/npcklQ
+         CvJo43u8PBPBkMgEH5HatRsI+u5tlB3wEJ1Th3FBUvpApZQxsvg7pL4HfvgLhjM/SAbt
+         Wln7BJPpvNYZtoiRQX3zkLZKrm4kgBMldFao5RktgQ8gLQFv0TsxI7xopop5Q61lnjsD
+         O+Nqof9tzp5qXVHsDImBQ0OOhN8D0ZvK4JC9Zw+KV08LpajVcASte5dFUKOIeqnCFHwC
+         Gp1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=UKSVN5/JG1bPnYEcUv2z38b/k1A48pur22jJcbKl52GsJiCVbM4KfgqRaaCc1mC86c
+         GEx08o6GSZdNnU1ptq/MK5Q8QS7m+whnm2/7SAEju9djumAzQwPvn3mklw1hxKhdoTYz
+         hh3UwnmnGw8jzX6zVIs0qM7hDCxdMwXp6r34qBCzL+ZtvPI15qTBtn29R1MvvDEKZaY9
+         FVkyRGe/OunPXNQF4z6nxh+BacCtj56RAO/rZCqlj6lKxSCJ+p4SkzQYR8GTomYSdY4M
+         e/k2mrUzLdDUcjsRFZevcEy56f6C11rzarwTElVAs7LVYutx9lpZsDymvu4GKgy1tphA
+         w5GA==
+X-Gm-Message-State: APjAAAU2bnauLdbWN3W1u00r7XF6fbo0YWL9Mor79Jyx/Z3t+aXs0a48
+        eN++CZTTo94QGNRi1F8st8bhledoJzCK43IENSbRVQDKol8DIA==
+X-Google-Smtp-Source: APXvYqzrfoOpFYdPx6ke6uIX585SnMDBN6pXKvD7iN8x9MT//+KimK2aFC33ps3ZC6gjq3Pi1pIlacgfKiFCQZrpYZA=
+X-Received: by 2002:a92:d1c1:: with SMTP id u1mr7477573ilg.66.1579459459106;
+ Sun, 19 Jan 2020 10:44:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200119075828.GA4147@bombadil.infradead.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Received: by 2002:a02:95c8:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 10:44:18
+ -0800 (PST)
+Reply-To: favordens@email.com
+From:   Favor Desmond <contecindy5@gmail.com>
+Date:   Sun, 19 Jan 2020 18:44:18 +0000
+Message-ID: <CAOfCPNxgSoAU_ns0j9jYL-ArKfcD=i8NkJvHsR4-OGvFBVDMZg@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2020/1/19 15:58, Matthew Wilcox wrote:
-> On Sun, Jan 19, 2020 at 02:55:14PM +0800, yukuai (C) wrote:
->> On 2020/1/19 14:14, Matthew Wilcox wrote:
->>> I don't understand your reasoning here.  If another process wants to
->>> access a page of the file which isn't currently in cache, it would have
->>> to first read the page in from storage.  If it's under readahead, it
->>> has to wait for the read to finish.  Why is the second case worse than
->>> the second?  It seems better to me.
->>
->> Thanks for your response! My worries is that, for example:
->>
->> We read page 0, and trigger readahead to read n pages(0 - n-1). While in
->> another thread, we read page n-1.
->>
->> In the current implementation, if readahead is in the process of reading
->> page 0 - n-2,  later operation doesn't need to wait the former one to
->> finish. However, later operation will have to wait if we add all pages
->> to page cache first. And that is why I said it might cause problem for
->> performance overhead.
-> 
-> OK, but let's put some numbers on that.  Imagine that we're using high
-> performance spinning rust so we have an access latency of 5ms (200
-> IOPS), we're accessing 20 consecutive pages which happen to have their
-> data contiguous on disk.  Our CPU is running at 2GHz and takes about
-> 100,000 cycles to submit an I/O, plus 1,000 cycles to add an extra page
-> to the I/O.
-> 
-> Current implementation: Allocate 20 pages, place 19 of them in the cache,
-> fail to place the last one in the cache.  The later thread actually gets
-> to jump the queue and submit its bio first.  Its latency will be 100,000
-> cycles (20us) plus the 5ms access time.  But it only has 20,000 cycles
-> (4us) to hit this race, or it will end up behaving the same way as below.
-> 
-> New implementation: Allocate 20 pages, place them all in the cache,
-> then takes 120,000 cycles to build & submit the I/O, and wait 5ms for
-> the I/O to complete.
-> 
-> But look how much more likely it is that it'll hit during the window
-> where we're waiting for the I/O to complete -- 5ms is 1250 times longer
-> than 4us.
-> 
-> If it _does_ get the latency benefit of jumping the queue, the readahead
-> will create one or two I/Os.  If it hit page 18 instead of page 19, we'd
-> end up doing three I/Os; the first for page 18, then one for pages 0-17,
-> and one for page 19.  And that means the disk is going to be busy for
-> 15ms, delaying the next I/O for up to 10ms.  It's actually beneficial in
-> the long term for the second thread to wait for the readahead to finish.
-> 
-
-Thank you very much for your detailed explanation, I was too blind for
-my sided view. And I do agree that your patch series is a better
-solution for the problem.
-
-Yu Kuai
-
+Hello Dear
+Greetings to you,I am Favor Desmond from Ivory coast currently living
+in  Togo Republic,I would like to know you more, so that i can tell
+you little amount myself and my photo, email address is
+favordens@email.com
+Thanks
+Favor
