@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F435143446
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:57:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 385E414344F
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:59:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgATW5J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 17:57:09 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:52162 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATW5J (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:57:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMtaBl054348;
-        Mon, 20 Jan 2020 22:57:04 GMT
+        id S1726951AbgATW7X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jan 2020 17:59:23 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37918 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgATW7X (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:59:23 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMulnm077338;
+        Mon, 20 Jan 2020 22:57:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=FgVYbh5UgxCv8zai45MYb/bEsXfxSqMjX6SHURWTRzM=;
- b=o24g7yhHLHgWl1kDeT3tPGqUPvEMx7oiskTOq2pu+m4Yz3d3063tqp6NswgHE7jltp3T
- GI8us3rPR3cm6Oofw0bvM5NO8KMaq8jhuLJguerpTkg6hHCfNfoWj+hFUSTx4cfeRDwo
- tOgEZMKU3zyUTUePcWCDuQQLEf0Rs2zR8aQJmGi332ns3pm2LtiQ9mCOsYfb0oeG8scp
- ywGZChTSdSiG0i2XOtFjXLrvHeVUWLEXT8E4D1WHwHU5dn7YbnPhpkL6VzcaE6jeuNm3
- sUarUg5+Bdeou390Iub4B5OmALfMqJ3VTRgeDs13tSs04dtWRdi73enX4eU6yZ/GpsH6 JQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xktnr1jpw-1
+ bh=z0gVKdr7lcMhYLe0ch/spfb+NOGry8a935zYrezuCQ0=;
+ b=b7RXwNqetTvIAuCsSIjaadlerrYNCg7/3OQ7+//po6sSEBGznE6ITkU4zrRlRWHYdAqx
+ jYWWF9BMUVYg6KM7Gk8bL3F5m+P741ZYT5CSoo8sW5iMzKASwGQCtVCkfoecGYT2pPnD
+ 9O+/XUJfTsvz1Q1cIKuLbWBtJ9hSeMOJdh8VY7Bd+vklJqWoO23Z3eWoZ3bhoKPzBQHi
+ WDm+BqgSDUmL+up3OJ8zgV/sBK/HTK2w0ncDBuev7DleLEIn9zfjw2VaKWevZicgF2ji
+ ujdWed3mGgKJGOwaSDXZ1p2iO60fEXzLo/mkRmikI+5Al6KnMdpySvDtfMd3uYf7u4vy HA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xkseu9u42-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMn49D037099;
-        Mon, 20 Jan 2020 22:57:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xmc5mc550-1
+        Mon, 20 Jan 2020 22:57:10 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMnBtE169354;
+        Mon, 20 Jan 2020 22:57:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xmbj4m439-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:03 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00KMv2iK012258;
-        Mon, 20 Jan 2020 22:57:03 GMT
+        Mon, 20 Jan 2020 22:57:09 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00KMv9kj014488;
+        Mon, 20 Jan 2020 22:57:09 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jan 2020 14:57:02 -0800
-Subject: [PATCH 05/13] xfs: make xfs_buf_read_map return an error code
+        with ESMTP ; Mon, 20 Jan 2020 14:57:09 -0800
+Subject: [PATCH 06/13] xfs: make xfs_buf_get_map return an error code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Date:   Mon, 20 Jan 2020 14:57:01 -0800
-Message-ID: <157956102137.1166689.2159908930036102057.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
+        Christoph Hellwig <hch@lst.de>
+Date:   Mon, 20 Jan 2020 14:57:07 -0800
+Message-ID: <157956102788.1166689.16675641705986843081.stgit@magnolia>
 In-Reply-To: <157956098906.1166689.13651975861399490259.stgit@magnolia>
 References: <157956098906.1166689.13651975861399490259.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001200192
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001200192
@@ -70,171 +71,189 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Convert xfs_buf_read_map() to return numeric error codes like most
+Convert xfs_buf_get_map() to return numeric error codes like most
 everywhere else in xfs.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_alloc.c |    7 +++----
- fs/xfs/xfs_buf.c          |   18 ++++++++++++------
- fs/xfs/xfs_buf.h          |   21 ++++++---------------
- fs/xfs/xfs_trans_buf.c    |    9 +++------
- 4 files changed, 24 insertions(+), 31 deletions(-)
+ fs/xfs/xfs_buf.c       |   46 +++++++++++++++++-----------------------------
+ fs/xfs/xfs_buf.h       |   14 +++-----------
+ fs/xfs/xfs_trans_buf.c |   14 +++++++++-----
+ 3 files changed, 29 insertions(+), 45 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index fc93fd88ec89..df25024275a1 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2956,14 +2956,13 @@ xfs_read_agf(
- 	trace_xfs_read_agf(mp, agno);
- 
- 	ASSERT(agno != NULLAGNUMBER);
--	error = xfs_trans_read_buf(
--			mp, tp, mp->m_ddev_targp,
-+	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
- 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
- 			XFS_FSS_TO_BB(mp, 1), flags, bpp, &xfs_agf_buf_ops);
-+	if (error == -EAGAIN)
-+		return 0;
- 	if (error)
- 		return error;
--	if (!*bpp)
--		return 0;
- 
- 	ASSERT(!(*bpp)->b_error);
- 	xfs_buf_set_ref(*bpp, XFS_AGF_REF);
 diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 09b8f00d4182..460821844ee5 100644
+index 460821844ee5..306394300863 100644
 --- a/fs/xfs/xfs_buf.c
 +++ b/fs/xfs/xfs_buf.c
-@@ -809,21 +809,23 @@ xfs_buf_reverify(
- 	return bp->b_error;
- }
- 
--xfs_buf_t *
+@@ -685,53 +685,39 @@ xfs_buf_incore(
+  * cache hits, as metadata intensive workloads will see 3 orders of magnitude
+  * more hits than misses.
+  */
+-struct xfs_buf *
 +int
- xfs_buf_read_map(
+ xfs_buf_get_map(
  	struct xfs_buftarg	*target,
  	struct xfs_buf_map	*map,
  	int			nmaps,
- 	xfs_buf_flags_t		flags,
-+	struct xfs_buf		**bpp,
- 	const struct xfs_buf_ops *ops)
+-	xfs_buf_flags_t		flags)
++	xfs_buf_flags_t		flags,
++	struct xfs_buf		**bpp)
  {
  	struct xfs_buf		*bp;
+ 	struct xfs_buf		*new_bp;
+ 	int			error = 0;
  
- 	flags |= XBF_READ;
 +	*bpp = NULL;
- 
- 	bp = xfs_buf_get_map(target, map, nmaps, flags);
- 	if (!bp)
+ 	error = xfs_buf_find(target, map, nmaps, flags, NULL, &bp);
+-
+-	switch (error) {
+-	case 0:
+-		/* cache hit */
++	if (!error)
+ 		goto found;
+-	case -EAGAIN:
+-		/* cache hit, trylock failure, caller handles failure */
+-		ASSERT(flags & XBF_TRYLOCK);
 -		return NULL;
-+		return -ENOMEM;
+-	case -ENOENT:
+-		/* cache miss, go for insert */
+-		break;
+-	case -EFSCORRUPTED:
+-	default:
+-		/*
+-		 * None of the higher layers understand failure types
+-		 * yet, so return NULL to signal a fatal lookup error.
+-		 */
+-		return NULL;
+-	}
++	if (error != -ENOENT)
++		return error;
  
- 	trace_xfs_buf_read(bp, flags, _RET_IP_);
+ 	error = _xfs_buf_alloc(target, map, nmaps, flags, &new_bp);
+ 	if (error)
+-		return NULL;
++		return error;
  
-@@ -831,7 +833,8 @@ xfs_buf_read_map(
- 		XFS_STATS_INC(target->bt_mount, xb_get_read);
- 		bp->b_ops = ops;
- 		_xfs_buf_read(bp, flags);
--		return bp;
-+		*bpp = bp;
-+		return 0;
+ 	error = xfs_buf_allocate_memory(new_bp, flags);
+ 	if (error) {
+ 		xfs_buf_free(new_bp);
+-		return NULL;
++		return error;
  	}
  
- 	xfs_buf_reverify(bp, ops);
-@@ -842,13 +845,14 @@ xfs_buf_read_map(
- 		 * drop the buffer
- 		 */
- 		xfs_buf_relse(bp);
+ 	error = xfs_buf_find(target, map, nmaps, flags, new_bp, &bp);
+ 	if (error) {
+ 		xfs_buf_free(new_bp);
 -		return NULL;
-+		return 0;
++		return error;
  	}
  
- 	/* We do not want read in the flags */
- 	bp->b_flags &= ~XBF_READ;
- 	ASSERT(bp->b_ops != NULL || ops == NULL);
+ 	if (bp != new_bp)
+@@ -744,7 +730,7 @@ xfs_buf_get_map(
+ 			xfs_warn(target->bt_mount,
+ 				"%s: failed to map pagesn", __func__);
+ 			xfs_buf_relse(bp);
+-			return NULL;
++			return error;
+ 		}
+ 	}
+ 
+@@ -757,7 +743,8 @@ xfs_buf_get_map(
+ 
+ 	XFS_STATS_INC(target->bt_mount, xb_get);
+ 	trace_xfs_buf_get(bp, flags, _RET_IP_);
 -	return bp;
 +	*bpp = bp;
 +	return 0;
  }
  
- /*
-@@ -862,11 +866,13 @@ xfs_buf_readahead_map(
- 	int			nmaps,
+ STATIC int
+@@ -819,13 +806,14 @@ xfs_buf_read_map(
  	const struct xfs_buf_ops *ops)
  {
-+	struct xfs_buf		*bp;
-+
- 	if (bdi_read_congested(target->bt_bdev->bd_bdi))
- 		return;
+ 	struct xfs_buf		*bp;
++	int			error;
  
- 	xfs_buf_read_map(target, map, nmaps,
--		     XBF_TRYLOCK|XBF_ASYNC|XBF_READ_AHEAD, ops);
-+		     XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops);
- }
+ 	flags |= XBF_READ;
+ 	*bpp = NULL;
  
- /*
+-	bp = xfs_buf_get_map(target, map, nmaps, flags);
+-	if (!bp)
+-		return -ENOMEM;
++	error = xfs_buf_get_map(target, map, nmaps, flags, &bp);
++	if (error)
++		return error;
+ 
+ 	trace_xfs_buf_read(bp, flags, _RET_IP_);
+ 
 diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index eace3e285157..14209db07684 100644
+index 14209db07684..d1908a5038a2 100644
 --- a/fs/xfs/xfs_buf.h
 +++ b/fs/xfs/xfs_buf.h
-@@ -195,13 +195,11 @@ struct xfs_buf *xfs_buf_incore(struct xfs_buftarg *target,
- struct xfs_buf *xfs_buf_get_map(struct xfs_buftarg *target,
- 			       struct xfs_buf_map *map, int nmaps,
- 			       xfs_buf_flags_t flags);
--struct xfs_buf *xfs_buf_read_map(struct xfs_buftarg *target,
--			       struct xfs_buf_map *map, int nmaps,
--			       xfs_buf_flags_t flags,
--			       const struct xfs_buf_ops *ops);
--void xfs_buf_readahead_map(struct xfs_buftarg *target,
--			       struct xfs_buf_map *map, int nmaps,
--			       const struct xfs_buf_ops *ops);
-+int xfs_buf_read_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
-+		int nmaps, xfs_buf_flags_t flags, struct xfs_buf **bpp,
-+		const struct xfs_buf_ops *ops);
-+void xfs_buf_readahead_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
-+		int nmaps, const struct xfs_buf_ops *ops);
+@@ -192,9 +192,8 @@ struct xfs_buf *xfs_buf_incore(struct xfs_buftarg *target,
+ 			   xfs_daddr_t blkno, size_t numblks,
+ 			   xfs_buf_flags_t flags);
  
- static inline int
- xfs_buf_get(
-@@ -231,16 +229,9 @@ xfs_buf_read(
- 	struct xfs_buf		**bpp,
- 	const struct xfs_buf_ops *ops)
+-struct xfs_buf *xfs_buf_get_map(struct xfs_buftarg *target,
+-			       struct xfs_buf_map *map, int nmaps,
+-			       xfs_buf_flags_t flags);
++int xfs_buf_get_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
++		int nmaps, xfs_buf_flags_t flags, struct xfs_buf **bpp);
+ int xfs_buf_read_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
+ 		int nmaps, xfs_buf_flags_t flags, struct xfs_buf **bpp,
+ 		const struct xfs_buf_ops *ops);
+@@ -208,16 +207,9 @@ xfs_buf_get(
+ 	size_t			numblks,
+ 	struct xfs_buf		**bpp)
  {
 -	struct xfs_buf		*bp;
  	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
  
 -	*bpp = NULL;
--	bp = xfs_buf_read_map(target, &map, 1, flags, ops);
+-	bp = xfs_buf_get_map(target, &map, 1, 0);
 -	if (!bp)
 -		return -ENOMEM;
 -
 -	*bpp = bp;
 -	return 0;
-+	return xfs_buf_read_map(target, &map, 1, flags, bpp, ops);
++	return xfs_buf_get_map(target, &map, 1, 0, bpp);
  }
  
- static inline void
+ static inline int
 diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
-index b5b3a78ef31c..a2af6dec310d 100644
+index a2af6dec310d..bf61e61b38c7 100644
 --- a/fs/xfs/xfs_trans_buf.c
 +++ b/fs/xfs/xfs_trans_buf.c
-@@ -298,12 +298,9 @@ xfs_trans_read_buf_map(
- 		return 0;
- 	}
+@@ -122,9 +122,14 @@ xfs_trans_get_buf_map(
+ {
+ 	xfs_buf_t		*bp;
+ 	struct xfs_buf_log_item	*bip;
++	int			error;
  
--	bp = xfs_buf_read_map(target, map, nmaps, flags, ops);
--	if (!bp) {
--		if (!(flags & XBF_TRYLOCK))
--			return -ENOMEM;
--		return tp ? 0 : -EAGAIN;
--	}
-+	error = xfs_buf_read_map(target, map, nmaps, flags, &bp, ops);
-+	if (error)
-+		return error;
+-	if (!tp)
+-		return xfs_buf_get_map(target, map, nmaps, flags);
++	if (!tp) {
++		error = xfs_buf_get_map(target, map, nmaps, flags, &bp);
++		if (error)
++			return NULL;
++		return bp;
++	}
  
  	/*
- 	 * If we've had a read error, then the contents of the buffer are
+ 	 * If we find the buffer in the cache with this transaction
+@@ -149,10 +154,9 @@ xfs_trans_get_buf_map(
+ 		return bp;
+ 	}
+ 
+-	bp = xfs_buf_get_map(target, map, nmaps, flags);
+-	if (bp == NULL) {
++	error = xfs_buf_get_map(target, map, nmaps, flags, &bp);
++	if (error)
+ 		return NULL;
+-	}
+ 
+ 	ASSERT(!bp->b_error);
+ 
 
