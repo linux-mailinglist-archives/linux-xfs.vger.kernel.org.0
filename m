@@ -2,105 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08520143066
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 18:04:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D833E14325C
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 20:32:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgATREM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 12:04:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58862 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATREM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:04:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 594B1ABED;
-        Mon, 20 Jan 2020 17:04:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2A2191E0D08; Mon, 20 Jan 2020 17:58:30 +0100 (CET)
-Date:   Mon, 20 Jan 2020 17:58:30 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kent Overstreet <kent.overstreet@gmail.com>
-Subject: Re: [PATCH 0/3 v2] xfs: Fix races between readahead and hole punching
-Message-ID: <20200120165830.GB28285@quack2.suse.cz>
-References: <20190829131034.10563-1-jack@suse.cz>
- <CAOQ4uxiDqtpsH_Ot5N+Avq0h5MBXsXwgDdNbdRC0QDZ-e+zefg@mail.gmail.com>
- <20200120120333.GG19861@quack2.suse.cz>
- <CAOQ4uxhhsxaO61HwMvRGP=5duFsY6Nvv+vCutVZXWXWA2pu2KA@mail.gmail.com>
+        id S1728708AbgATTcq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jan 2020 14:32:46 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34097 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgATTco (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 14:32:44 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so204923lfc.1
+        for <linux-xfs@vger.kernel.org>; Mon, 20 Jan 2020 11:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=I1roYPqxBJzWtUK/EbeI6Kt4sZi+JdSJm6qJbGHrPRZYvHUSh5jIrCeNC6L/G/f0o1
+         SOUBr7y32ZptFoyqXLV46mqkCVXIPksz6dHNenBfKH5ZmZaxgtbXfnD4DPiQngFU9XCO
+         yyR3xavKr41v/xLWwuSw91WJb2uX+wjZFxyyrAuDZ+hvXvCheAMdiLqD+HrlaysRfXCL
+         GNNQRcxyOsqzXo4wRH2J/upuPpeDO5ZRhzNY4HfuYgHfElCshp5fZYHSWkrBX0jAzQvX
+         wM9NfRj8QHz6JxUFOI+rZ3wcUi7Ikp+pHr28kaxr4n7py/KC1H5pYclpR4JTvoTIZ7Jv
+         h8rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=J8rwDb/Jm8Cw7kVK3UgPzOg2AfPoZUscoVyMl56nsv1rMR8ODm118358Cf7yZ/orcB
+         kdhyEwNDVVPHBbWj87o9wEfKXd20CLN3vfKuWDjpIyojK6qh+6gMJQcvSEoN5jtY9IZ6
+         Da/ZahcP9KHcoFf4DH949F+k8zzvnVYhBmB6lp3Rgz62m6f7peinNQMLw+ii0rrCknEz
+         p3fugqUIuMluXcEoiBF8pXjSnWexVU6ybo87uPawyPCiP/XtWkdhmxPEz2e0YVG7IYwn
+         7BhPZf3gAWdJPizTWJQcNrT+Zoye2YlsFHS1BUEgLjrdckJMvbtt2swnxjuV1ZUTTwss
+         3HIQ==
+X-Gm-Message-State: APjAAAWaMy3AT79pCtyVufyOvSaMYLNT5FSy7lcX7zcIjTcYUdw4CD9A
+        mi3TSHYtB3M4KMiX2odPEGd042MOMKB75TVD46iQ8yT4tVo=
+X-Google-Smtp-Source: APXvYqwKjCT5QnfvXWtJkO29cRmoOGR1uhIhw9Ol6eYz9VuYzVaqX/o8Ejt2WLDxZ+bl2CebXLO8AWZ4Emn93SBTQws=
+X-Received: by 2002:a17:906:1fcd:: with SMTP id e13mr898516ejt.333.1579548761316;
+ Mon, 20 Jan 2020 11:32:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhhsxaO61HwMvRGP=5duFsY6Nvv+vCutVZXWXWA2pu2KA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:32:40
+ -0800 (PST)
+Reply-To: mcclainejohn.13@gmail.com
+From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
+Date:   Mon, 20 Jan 2020 20:32:40 +0100
+Message-ID: <CAOE+jABpcHQWZWhtskhDFbtTqfBe7h065WE2kC1G+jQD+tQiTA@mail.gmail.com>
+Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
+ valued the sum of $12.8Million United States Dollars
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon 20-01-20 15:54:28, Amir Goldstein wrote:
-> On Mon, Jan 20, 2020 at 2:03 PM Jan Kara <jack@suse.cz> wrote:
-> > On Fri 17-01-20 12:50:58, Amir Goldstein wrote:
-> > > On Thu, Aug 29, 2019 at 4:10 PM Jan Kara <jack@suse.cz> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > this is a patch series that addresses a possible race between readahead and
-> > > > hole punching Amir has discovered [1]. The first patch makes madvise(2) to
-> > > > handle readahead requests through fadvise infrastructure, the third patch
-> > > > then adds necessary locking to XFS to protect against the race. Note that
-> > > > other filesystems need similar protections but e.g. in case of ext4 it isn't
-> > > > so simple without seriously regressing mixed rw workload performance so
-> > > > I'm pushing just xfs fix at this moment which is simple.
-> > > >
-> > >
-> > > Could you give a quick status update about the state of this issue for
-> > > ext4 and other fs. I remember some solutions were discussed.
-> >
-> > Shortly: I didn't get to this. I'm sorry :-|. I'll bump up a priority but I
-> > can't promise anything at the moment.
-> >
-> > > Perhaps this could be a good topic for a cross track session in LSF/MM?
-> >
-> > Maybe although this is one of the cases where it's easy to chat about
-> > possible solutions but somewhat tedious to write one so I'm not sure how
-> > productive that would be. BTW my discussion with Kent [1] is in fact very
-> > related to this problem (the interval lock he has is to stop exactly races
-> > like this).
-> >
-> 
-> Well, I was mostly interested to know if there is an agreement on the way to
-> solve the problem. If we need to discuss it to reach consensus than it might
-> be a good topic for LSF/MM. If you already know what needs to be done,
-> there is no need for a discussion.
+Attn: Dear Beneficiary,
 
-So I have an idea how it could be solved: Change calling convention for
-->readpage() so that it gets called without page locked and take
-i_mmap_sem there (and in ->readpages()) to protect from the race. But
-I wanted to present it in the form of patches as the devil here is in the
-details and it may prove to be too ugly to be bearable.
+I wish to inform you that the diplomatic agent conveying your ATM CARD
+valued the sum of $12.8Million United States Dollars has misplaced
+your address and he is currently stranded at (George Bush
+International Airport) Houston Texas USA now
+We required you to reconfirm the following information's below to him
+so that he can deliver your Payment CARD to you today or tomorrow
+morning as information provided with open communications via email and
+telephone for security reasons.
+HERE IS THE DETAILS  HE NEED FROM YOU URGENT
+YOUR FULL NAME:========
+ADDRESS:========
+MOBILE NO:========
+NAME OF YOUR NEAREST AIRPORT:========
+A COPY OF YOUR IDENTIFICATION :========
 
-If I won't get to writing the patches, you're right it may be sensible to
-present the idea to people at LSF/MM what they think about it.
+Note; do contact the diplomatic agent immediately through the
+information's listed below
+Contact Person: Diplomatic Agent, Mr. Mcclaine John
+EMAIL: mcclainejohn.13@gmail.com
+Tel:(223) 777-7518
 
-> > > Aren't the challenges posed by this race also relevant for RWF_UNCACHED?
-> >
-> > Do you have anything particular in mind? I don't see how RWF_UNCACHED would
-> > make this any better or worse than DIO / readahead...
-> >
-> 
-> Not better nor worse. I meant that RFW_UNCACHED is another case that
-> would suffer the same races.
+Contact the diplomatic agent immediately
+because he is waiting to hear from you today with the needed information's.
 
-Yes, that's right.
+NOTE: The Diplomatic agent does not know that the content of the
+consignment box is $12.800,000,00 Million United States Dollars and on
+no circumstances should you let him know the content. The consignment
+was moved from here as family treasures, so never allow him to open
+the box. Please I have paid delivery fees for you but the only money
+you must send to Mcclaine John is your ATM CARD delivery fee $25.00
+only. text Him as you contact Him Immediately
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks,
+with Regards.
+Prof, William Roberts
+Director DHL COURIER SERVICES-Benin
