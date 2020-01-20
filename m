@@ -2,94 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D833E14325C
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 20:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75CF01433D1
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgATTcq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 14:32:46 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34097 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgATTco (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 14:32:44 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so204923lfc.1
-        for <linux-xfs@vger.kernel.org>; Mon, 20 Jan 2020 11:32:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
-        b=I1roYPqxBJzWtUK/EbeI6Kt4sZi+JdSJm6qJbGHrPRZYvHUSh5jIrCeNC6L/G/f0o1
-         SOUBr7y32ZptFoyqXLV46mqkCVXIPksz6dHNenBfKH5ZmZaxgtbXfnD4DPiQngFU9XCO
-         yyR3xavKr41v/xLWwuSw91WJb2uX+wjZFxyyrAuDZ+hvXvCheAMdiLqD+HrlaysRfXCL
-         GNNQRcxyOsqzXo4wRH2J/upuPpeDO5ZRhzNY4HfuYgHfElCshp5fZYHSWkrBX0jAzQvX
-         wM9NfRj8QHz6JxUFOI+rZ3wcUi7Ikp+pHr28kaxr4n7py/KC1H5pYclpR4JTvoTIZ7Jv
-         h8rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
-        b=J8rwDb/Jm8Cw7kVK3UgPzOg2AfPoZUscoVyMl56nsv1rMR8ODm118358Cf7yZ/orcB
-         kdhyEwNDVVPHBbWj87o9wEfKXd20CLN3vfKuWDjpIyojK6qh+6gMJQcvSEoN5jtY9IZ6
-         Da/ZahcP9KHcoFf4DH949F+k8zzvnVYhBmB6lp3Rgz62m6f7peinNQMLw+ii0rrCknEz
-         p3fugqUIuMluXcEoiBF8pXjSnWexVU6ybo87uPawyPCiP/XtWkdhmxPEz2e0YVG7IYwn
-         7BhPZf3gAWdJPizTWJQcNrT+Zoye2YlsFHS1BUEgLjrdckJMvbtt2swnxjuV1ZUTTwss
-         3HIQ==
-X-Gm-Message-State: APjAAAWaMy3AT79pCtyVufyOvSaMYLNT5FSy7lcX7zcIjTcYUdw4CD9A
-        mi3TSHYtB3M4KMiX2odPEGd042MOMKB75TVD46iQ8yT4tVo=
-X-Google-Smtp-Source: APXvYqwKjCT5QnfvXWtJkO29cRmoOGR1uhIhw9Ol6eYz9VuYzVaqX/o8Ejt2WLDxZ+bl2CebXLO8AWZ4Emn93SBTQws=
-X-Received: by 2002:a17:906:1fcd:: with SMTP id e13mr898516ejt.333.1579548761316;
- Mon, 20 Jan 2020 11:32:41 -0800 (PST)
+        id S1726874AbgATWU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jan 2020 17:20:29 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48246 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATWU3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:20:29 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMJV5A014603;
+        Mon, 20 Jan 2020 22:20:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=n77ylg2HD8+ealTxGTUP5+FdhOYqmbywMSO1xugQ7Bc=;
+ b=OdmRT1Cg3dmT7d7btBynrR3fIxw5WcuGXEpo11a7pRv9CLGHhNA+ceGohdU4VeX9867I
+ w0KtTe+50EeI4XuW/2krR+ziQV5bQtFmkby985KWF3kHaSf/Qk2GExG1IeK46C0jZ5y9
+ nPvrj5CI0VeAFOldXp7DOpHXZjiXa3dUX3pXSdI06gdyLNAkABDxmX5TZWdXEJkj72hB
+ qpIpkIRa6d0oMUcuDGEBTxvGwFsBgD9LWGKyORdounOjT4/FFQhUg59miD4aLLkHOt1d
+ ApK6uWH9OLIjD4Cb5W47LCc6//LnK9A1zODp4mDZrR2GqbMkizCaS2c0ExY8ty+yaiaz eA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xksyq1k7t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 22:20:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMJJA3186414;
+        Mon, 20 Jan 2020 22:20:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xmc5mantr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 22:20:06 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00KMJxru010201;
+        Mon, 20 Jan 2020 22:19:59 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 14:19:59 -0800
+Date:   Mon, 20 Jan 2020 14:19:58 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 01/11] xfs: make xfs_buf_alloc return an error code
+Message-ID: <20200120221958.GY8247@magnolia>
+References: <157924221149.3029431.1461924548648810370.stgit@magnolia>
+ <157924221800.3029431.576491686056157423.stgit@magnolia>
+ <20200119214903.GD9407@dread.disaster.area>
 MIME-Version: 1.0
-Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:32:40
- -0800 (PST)
-Reply-To: mcclainejohn.13@gmail.com
-From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
-Date:   Mon, 20 Jan 2020 20:32:40 +0100
-Message-ID: <CAOE+jABpcHQWZWhtskhDFbtTqfBe7h065WE2kC1G+jQD+tQiTA@mail.gmail.com>
-Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
- valued the sum of $12.8Million United States Dollars
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119214903.GD9407@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=934
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001200187
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=982 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001200187
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Attn: Dear Beneficiary,
+On Mon, Jan 20, 2020 at 08:49:03AM +1100, Dave Chinner wrote:
+> On Thu, Jan 16, 2020 at 10:23:38PM -0800, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Convert _xfs_buf_alloc() to return numeric error codes like most
+> > everywhere else in xfs.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> ....
+> > @@ -715,8 +718,8 @@ xfs_buf_get_map(
+> >  		return NULL;
+> >  	}
+> >  
+> > -	new_bp = _xfs_buf_alloc(target, map, nmaps, flags);
+> > -	if (unlikely(!new_bp))
+> > +	error = _xfs_buf_alloc(target, map, nmaps, flags, &new_bp);
+> > +	if (unlikely(error))
+> >  		return NULL;
+> 
+> You can kill the unlikely() while you are at it. They are largely
+> unnecessary as the compiler already considers branches with returns
+> in them as unlikely and we don't need "unlikely" as code
+> documentation for error conditions like this...
+> 
+> >  	error = xfs_buf_allocate_memory(new_bp, flags);
+> > @@ -917,8 +920,8 @@ xfs_buf_get_uncached(
+> >  	DEFINE_SINGLE_BUF_MAP(map, XFS_BUF_DADDR_NULL, numblks);
+> >  
+> >  	/* flags might contain irrelevant bits, pass only what we care about */
+> > -	bp = _xfs_buf_alloc(target, &map, 1, flags & XBF_NO_IOACCT);
+> > -	if (unlikely(bp == NULL))
+> > +	error = _xfs_buf_alloc(target, &map, 1, flags & XBF_NO_IOACCT, &bp);
+> > +	if (unlikely(error))
+> >  		goto fail;
+> 
+> here too.
 
-I wish to inform you that the diplomatic agent conveying your ATM CARD
-valued the sum of $12.8Million United States Dollars has misplaced
-your address and he is currently stranded at (George Bush
-International Airport) Houston Texas USA now
-We required you to reconfirm the following information's below to him
-so that he can deliver your Payment CARD to you today or tomorrow
-morning as information provided with open communications via email and
-telephone for security reasons.
-HERE IS THE DETAILS  HE NEED FROM YOU URGENT
-YOUR FULL NAME:========
-ADDRESS:========
-MOBILE NO:========
-NAME OF YOUR NEAREST AIRPORT:========
-A COPY OF YOUR IDENTIFICATION :========
+Will fix.
 
-Note; do contact the diplomatic agent immediately through the
-information's listed below
-Contact Person: Diplomatic Agent, Mr. Mcclaine John
-EMAIL: mcclainejohn.13@gmail.com
-Tel:(223) 777-7518
+--D
 
-Contact the diplomatic agent immediately
-because he is waiting to hear from you today with the needed information's.
-
-NOTE: The Diplomatic agent does not know that the content of the
-consignment box is $12.800,000,00 Million United States Dollars and on
-no circumstances should you let him know the content. The consignment
-was moved from here as family treasures, so never allow him to open
-the box. Please I have paid delivery fees for you but the only money
-you must send to Mcclaine John is your ATM CARD delivery fee $25.00
-only. text Him as you contact Him Immediately
-
-Thanks,
-with Regards.
-Prof, William Roberts
-Director DHL COURIER SERVICES-Benin
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
