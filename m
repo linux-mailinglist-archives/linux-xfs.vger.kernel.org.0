@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E9A143450
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:59:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69214143449
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:57:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgATW7j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 17:59:39 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38162 "EHLO
+        id S1726816AbgATW5n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jan 2020 17:57:43 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:36632 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATW7j (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:59:39 -0500
+        with ESMTP id S1726607AbgATW5m (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:57:42 -0500
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMvTGI078572;
-        Mon, 20 Jan 2020 22:57:30 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMvbNF078659;
+        Mon, 20 Jan 2020 22:57:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=qSyzxi6AVDyLLOY+c2+Slva7dv5Yt8+1LfJSZGQgVeg=;
- b=Fk6Rie0Wk7VNjBn91T7QRjnDEX0UwpzBT12caSHte6j3muY67Zada4oHuCtMs4dWPKls
- ABM9mZDJjanVr7DQSd64jmmxAgSPvnQglMo0Zrq+rUFTmQKuo9Vg16C1ZGgDrpGuIdma
- +TuDhDXeKWZO6Ust8oWPgDsFcc9UUO154vdN5UqRe1kjJnpsVnGHZ0//PuKXpW3zh3Sx
- BNaXXae9hGmOBONR4Bbc+b+Sam/aZfALD5a6tqVdEbO1iJQKepmDAivxsHirLWyQPeoT
- 01PaGg3+6WFqJ/bpeMRd2c6BXNpg21IhrxJN3zrrGfQCCqB1j/hpbrOfCZdPDwesOLVT +w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xkseu9u5a-1
+ bh=JBdUbakoPzdSrOgwKZEA1NZbleglUnWTva91wcBfoiA=;
+ b=KvpMEBYI/rD3LshMGg1KUCNSmMYBpoTMWEHzb6UubLlcyiShWfNKJc94ASDLeyykg2CV
+ jvcjxri2pXgksMIK56kiUP0dIysMSa/asHtXq1VyeCoo7x/FSr4CZfBE10OVU2PFw/le
+ HcxuF+7mlY7O68BSaBztSeQuGjRrcdFHzqI/pKEVlZOJYS+nZHF0rcW+iAbTlwuv6Ucz
+ cZ6BF5ciS+c+AD0dxUqemrD6W+RbACoW3foJ/SVhW7W7/kpFhVdSNEI4dj2YbexSo45i
+ mFybkazrRK+7LVUEIKmYCcMhKHOK/Zp95tqlD2tD6fPTzycFxJX+MIDGfgRewXo0C3En mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xkseu9u5q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMnBJQ169330;
-        Mon, 20 Jan 2020 22:57:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xmbj4m6kj-1
+        Mon, 20 Jan 2020 22:57:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMnFoi060897;
+        Mon, 20 Jan 2020 22:57:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xmc656pqm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:29 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00KMvShF011868;
-        Mon, 20 Jan 2020 22:57:28 GMT
+        Mon, 20 Jan 2020 22:57:36 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00KMvZcf010416;
+        Mon, 20 Jan 2020 22:57:35 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jan 2020 14:57:28 -0800
-Subject: [PATCH 09/13] xfs: remove the xfs_btree_get_buf[ls] functions
+        with ESMTP ; Mon, 20 Jan 2020 14:57:34 -0800
+Subject: [PATCH 10/13] xfs: make xfs_*read_agf return EAGAIN to
+ ALLOC_FLAG_TRYLOCK callers
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
-        Christoph Hellwig <hch@lst.de>
-Date:   Mon, 20 Jan 2020 14:57:27 -0800
-Message-ID: <157956104723.1166689.18009447992234814306.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
+Date:   Mon, 20 Jan 2020 14:57:33 -0800
+Message-ID: <157956105367.1166689.17817109090624053279.stgit@magnolia>
 In-Reply-To: <157956098906.1166689.13651975861399490259.stgit@magnolia>
 References: <157956098906.1166689.13651975861399490259.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001200192
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001200192
@@ -71,174 +71,141 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Remove the xfs_btree_get_bufs and xfs_btree_get_bufl functions, since
-they're pretty trivial oneliners.
+Refactor xfs_read_agf and xfs_alloc_read_agf to return EAGAIN if the
+caller passed TRYLOCK and we weren't able to get the lock; and change
+the callers to recognize this.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_alloc.c |   16 +++++++++-------
- fs/xfs/libxfs/xfs_bmap.c  |   14 +++++++++-----
- fs/xfs/libxfs/xfs_btree.c |   46 ---------------------------------------------
- fs/xfs/libxfs/xfs_btree.h |   21 ---------------------
- 4 files changed, 18 insertions(+), 79 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c |   34 +++++++++++++++-------------------
+ fs/xfs/libxfs/xfs_bmap.c  |   11 ++++++-----
+ fs/xfs/xfs_filestream.c   |   11 ++++++-----
+ 3 files changed, 27 insertions(+), 29 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index df25024275a1..7be6c8fbfcf9 100644
+index 7be6c8fbfcf9..ed0172850400 100644
 --- a/fs/xfs/libxfs/xfs_alloc.c
 +++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1070,11 +1070,11 @@ xfs_alloc_ag_vextent_small(
- 	if (args->datatype & XFS_ALLOC_USERDATA) {
- 		struct xfs_buf	*bp;
+@@ -2502,12 +2502,11 @@ xfs_alloc_fix_freelist(
  
--		bp = xfs_btree_get_bufs(args->mp, args->tp, args->agno, fbno);
--		if (XFS_IS_CORRUPT(args->mp, !bp)) {
--			error = -EFSCORRUPTED;
-+		error = xfs_trans_get_buf(args->tp, args->mp->m_ddev_targp,
-+				XFS_AGB_TO_DADDR(args->mp, args->agno, fbno),
-+				args->mp->m_bsize, 0, &bp);
-+		if (error)
- 			goto error;
--		}
- 		xfs_trans_binval(args->tp, bp);
+ 	if (!pag->pagf_init) {
+ 		error = xfs_alloc_read_agf(mp, tp, args->agno, flags, &agbp);
+-		if (error)
++		if (error) {
++			/* Couldn't lock the AGF so skip this AG. */
++			if (error == -EAGAIN)
++				error = 0;
+ 			goto out_no_agbp;
+-		if (!pag->pagf_init) {
+-			ASSERT(flags & XFS_ALLOC_FLAG_TRYLOCK);
+-			ASSERT(!(flags & XFS_ALLOC_FLAG_FREEING));
+-			goto out_agbp_relse;
+ 		}
  	}
- 	*fbnop = args->agbno = fbno;
-@@ -2347,9 +2347,11 @@ xfs_free_agfl_block(
+ 
+@@ -2533,11 +2532,10 @@ xfs_alloc_fix_freelist(
+ 	 */
+ 	if (!agbp) {
+ 		error = xfs_alloc_read_agf(mp, tp, args->agno, flags, &agbp);
+-		if (error)
+-			goto out_no_agbp;
+-		if (!agbp) {
+-			ASSERT(flags & XFS_ALLOC_FLAG_TRYLOCK);
+-			ASSERT(!(flags & XFS_ALLOC_FLAG_FREEING));
++		if (error) {
++			/* Couldn't lock the AGF so skip this AG. */
++			if (error == -EAGAIN)
++				error = 0;
+ 			goto out_no_agbp;
+ 		}
+ 	}
+@@ -2768,11 +2766,10 @@ xfs_alloc_pagf_init(
+ 	xfs_buf_t		*bp;
+ 	int			error;
+ 
+-	if ((error = xfs_alloc_read_agf(mp, tp, agno, flags, &bp)))
+-		return error;
+-	if (bp)
++	error = xfs_alloc_read_agf(mp, tp, agno, flags, &bp);
++	if (!error)
+ 		xfs_trans_brelse(tp, bp);
+-	return 0;
++	return error;
+ }
+ 
+ /*
+@@ -2961,8 +2958,6 @@ xfs_read_agf(
+ 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), flags, bpp, &xfs_agf_buf_ops);
+-	if (error == -EAGAIN)
+-		return 0;
  	if (error)
  		return error;
  
--	bp = xfs_btree_get_bufs(tp->t_mountp, tp, agno, agbno);
--	if (XFS_IS_CORRUPT(tp->t_mountp, !bp))
--		return -EFSCORRUPTED;
-+	error = xfs_trans_get_buf(tp, tp->t_mountp->m_ddev_targp,
-+			XFS_AGB_TO_DADDR(tp->t_mountp, agno, agbno),
-+			tp->t_mountp->m_bsize, 0, &bp);
-+	if (error)
-+		return error;
- 	xfs_trans_binval(tp, bp);
+@@ -2992,10 +2987,11 @@ xfs_alloc_read_agf(
+ 	error = xfs_read_agf(mp, tp, agno,
+ 			(flags & XFS_ALLOC_FLAG_TRYLOCK) ? XBF_TRYLOCK : 0,
+ 			bpp);
+-	if (error)
++	if (error) {
++		/* We don't support trylock when freeing. */
++		ASSERT(error != -EAGAIN || !(flags & XFS_ALLOC_FLAG_FREEING));
+ 		return error;
+-	if (!*bpp)
+-		return 0;
++	}
+ 	ASSERT(!(*bpp)->b_error);
  
- 	return 0;
+ 	agf = XFS_BUF_TO_AGF(*bpp);
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 4c2e046fbfad..cfcef076c72f 100644
+index cfcef076c72f..9a6d7a84689a 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -730,11 +730,11 @@ xfs_bmap_extents_to_btree(
- 	cur->bc_private.b.allocated++;
- 	ip->i_d.di_nblocks++;
- 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, 1L);
--	abp = xfs_btree_get_bufl(mp, tp, args.fsbno);
--	if (XFS_IS_CORRUPT(mp, !abp)) {
--		error = -EFSCORRUPTED;
-+	error = xfs_trans_get_buf(tp, mp->m_ddev_targp,
-+			XFS_FSB_TO_DADDR(mp, args.fsbno),
-+			mp->m_bsize, 0, &abp);
-+	if (error)
- 		goto out_unreserve_dquot;
--	}
+@@ -3311,11 +3311,12 @@ xfs_bmap_longest_free_extent(
+ 	pag = xfs_perag_get(mp, ag);
+ 	if (!pag->pagf_init) {
+ 		error = xfs_alloc_pagf_init(mp, tp, ag, XFS_ALLOC_FLAG_TRYLOCK);
+-		if (error)
+-			goto out;
+-
+-		if (!pag->pagf_init) {
+-			*notinit = 1;
++		if (error) {
++			/* Couldn't lock the AGF, so skip this AG. */
++			if (error == -EAGAIN) {
++				*notinit = 1;
++				error = 0;
++			}
+ 			goto out;
+ 		}
+ 	}
+diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
+index 5f12b5d8527a..3ccdab463359 100644
+--- a/fs/xfs/xfs_filestream.c
++++ b/fs/xfs/xfs_filestream.c
+@@ -159,16 +159,17 @@ xfs_filestream_pick_ag(
  
- 	/*
- 	 * Fill in the child block.
-@@ -878,7 +878,11 @@ xfs_bmap_local_to_extents(
- 	ASSERT(args.fsbno != NULLFSBLOCK);
- 	ASSERT(args.len == 1);
- 	tp->t_firstblock = args.fsbno;
--	bp = xfs_btree_get_bufl(args.mp, tp, args.fsbno);
-+	error = xfs_trans_get_buf(tp, args.mp->m_ddev_targp,
-+			XFS_FSB_TO_DADDR(args.mp, args.fsbno),
-+			args.mp->m_bsize, 0, &bp);
-+	if (error)
-+		goto done;
+ 		if (!pag->pagf_init) {
+ 			err = xfs_alloc_pagf_init(mp, NULL, ag, trylock);
+-			if (err && !trylock) {
++			if (err == -EAGAIN) {
++				/* Couldn't lock the AGF, skip this AG. */
++				xfs_perag_put(pag);
++				continue;
++			}
++			if (err) {
+ 				xfs_perag_put(pag);
+ 				return err;
+ 			}
+ 		}
  
- 	/*
- 	 * Initialize the block, copy the data and log the remote buffer.
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 2d53e5fdff70..fd300dc93ca4 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -678,52 +678,6 @@ xfs_btree_get_block(
- 	return XFS_BUF_TO_BLOCK(*bpp);
- }
- 
--/*
-- * Get a buffer for the block, return it with no data read.
-- * Long-form addressing.
-- */
--xfs_buf_t *				/* buffer for fsbno */
--xfs_btree_get_bufl(
--	xfs_mount_t	*mp,		/* file system mount point */
--	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_fsblock_t	fsbno)		/* file system block number */
--{
--	struct xfs_buf		*bp;
--	xfs_daddr_t		d;		/* real disk block address */
--	int			error;
+-		/* Might fail sometimes during the 1st pass with trylock set. */
+-		if (!pag->pagf_init)
+-			goto next_ag;
 -
--	ASSERT(fsbno != NULLFSBLOCK);
--	d = XFS_FSB_TO_DADDR(mp, fsbno);
--	error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, &bp);
--	if (error)
--		return NULL;
--	return bp;
--}
--
--/*
-- * Get a buffer for the block, return it with no data read.
-- * Short-form addressing.
-- */
--xfs_buf_t *				/* buffer for agno/agbno */
--xfs_btree_get_bufs(
--	xfs_mount_t	*mp,		/* file system mount point */
--	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_agnumber_t	agno,		/* allocation group number */
--	xfs_agblock_t	agbno)		/* allocation group block number */
--{
--	struct xfs_buf		*bp;
--	xfs_daddr_t		d;		/* real disk block address */
--	int			error;
--
--	ASSERT(agno != NULLAGNUMBER);
--	ASSERT(agbno != NULLAGBLOCK);
--	d = XFS_AGB_TO_DADDR(mp, agno, agbno);
--	error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0, &bp);
--	if (error)
--		return NULL;
--	return bp;
--}
--
- /*
-  * Change the cursor to point to the first record at the given level.
-  * Other levels are unaffected.
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index fb9b2121c628..3eff7c321d43 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -296,27 +296,6 @@ xfs_btree_dup_cursor(
- 	xfs_btree_cur_t		*cur,	/* input cursor */
- 	xfs_btree_cur_t		**ncur);/* output cursor */
- 
--/*
-- * Get a buffer for the block, return it with no data read.
-- * Long-form addressing.
-- */
--struct xfs_buf *				/* buffer for fsbno */
--xfs_btree_get_bufl(
--	struct xfs_mount	*mp,	/* file system mount point */
--	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_fsblock_t		fsbno);	/* file system block number */
--
--/*
-- * Get a buffer for the block, return it with no data read.
-- * Short-form addressing.
-- */
--struct xfs_buf *				/* buffer for agno/agbno */
--xfs_btree_get_bufs(
--	struct xfs_mount	*mp,	/* file system mount point */
--	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_agnumber_t		agno,	/* allocation group number */
--	xfs_agblock_t		agbno);	/* allocation group block number */
--
- /*
-  * Compute first and last byte offsets for the fields given.
-  * Interprets the offsets table, which contains struct field offsets.
+ 		/* Keep track of the AG with the most free blocks. */
+ 		if (pag->pagf_freeblks > maxfree) {
+ 			maxfree = pag->pagf_freeblks;
 
