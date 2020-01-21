@@ -2,224 +2,132 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1C7614344B
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jan 2020 23:58:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 395191434F7
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 Jan 2020 01:56:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgATW6B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 17:58:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36888 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATW6B (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 17:58:01 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMvWhm078641;
-        Mon, 20 Jan 2020 22:57:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=GAhYExrrCh9UBYewsS9Stsc2KfwOJ27VqmX3xdEpv1g=;
- b=Wicrj5oOdY5NLKLEpezN8UPGlF+7ebOeLC8lgSEwSdO2nvSZY+2Jv1FJMaAFYST0aTW8
- px26oLeuuTfolRnYfWp83Iv9sWPZ41MNbpd8T2rvGIpaCxS1Ok61JMQswnJ93YbzDiHP
- j7tee1uzSjLUBC2o0t2hRY2pugZ2ckgh4z9tjObG7MTer8VyeCJ0E4LmIBCbbXtlc80J
- B9JvMLceiCdkIq12vKOkjBB6cnyTmyKRyyJz2rPkTTabBy90Y8zvfE+umVyCcgaeXho5
- fSzRxWQFp/0aacSO4As3GOW+P9LFknwjWs8pwcOsbc/4IRnY22Aa467kViIkbcOF07LE zg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xkseu9u6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KMn3i7037008;
-        Mon, 20 Jan 2020 22:57:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xmc5mc654-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 22:57:54 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00KMvs1R012488;
-        Mon, 20 Jan 2020 22:57:54 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jan 2020 14:57:53 -0800
-Subject: [PATCH 13/13] xfs: fix xfs_buf_ioerror_alert location reporting
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Date:   Mon, 20 Jan 2020 14:57:52 -0800
-Message-ID: <157956107260.1166689.424050523367883640.stgit@magnolia>
-In-Reply-To: <157956098906.1166689.13651975861399490259.stgit@magnolia>
-References: <157956098906.1166689.13651975861399490259.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1728853AbgAUA4f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jan 2020 19:56:35 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38220 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgAUA4f (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 19:56:35 -0500
+Received: by mail-il1-f196.google.com with SMTP id f5so996284ilq.5;
+        Mon, 20 Jan 2020 16:56:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DSU92DS/yk36ylsfrVTivyXxIB5DGgZzKoQw5FMazZY=;
+        b=lq3pSIbPrnnnlke+/4iOv3idDrtKaxngImB5W4zXOYg1EKO6Pp/w7whzo54rLNLeXD
+         +upd7lCyLeHSvzSyTGOEZ71HRLKodR6Vq6Y+YZDRrqxQY6FpB2JSqglWu3jYaue8ENEF
+         KVlRJxNOLvZvEVdMFQyQsqQsNkHhSowq+YUp9GmtW99GGM6pTonzZVhMoIzr0+I9PgT1
+         LHLkw3uXhT5pCCltzzyFk9YEGZuHNt0PgobNHpEXDqdkB9j9GIx1MFBmPfzi7lEZusgc
+         trp5oxFAdOiZz4/VNfWdeu6+/xXPge3HxZ120zDU1x/Tc0n5mhiGTxLpvL7KElejcARN
+         q7Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DSU92DS/yk36ylsfrVTivyXxIB5DGgZzKoQw5FMazZY=;
+        b=K/+h40DHTBmtVNg5FwebVBscKsXm8M3odUGi2HZUge8mxVsP6UmMaYiqC6Y9xVARgB
+         uoHpmO4FV2GjYGlZTgT+LUmEHWxYT9nlIjTDrv24MFOB7sMwzjCXLLHLLeFWRVjuRy5Q
+         NSJi6L/i9ljgF9D3epIScf8BZIe5s/dzKMeueLK4PlXO+8BH+i+ylkgqq2hJfaJ3F4yb
+         2JrNIqvzBFYKW8UeHj7btk3HWTx1mgVTXDqEkE29kZLBinY8waNc2Cqi7REgD4fZ+m8M
+         PjrLMAqMRmyTbULOHi6u8CLOEAHIm3UmuJk0Kqo6S1M6z1YYiGzyrN38QtxoP4FR5X0M
+         9wGw==
+X-Gm-Message-State: APjAAAXoen+CAgju1+EWWCUjRxJXEJllfVj3oBumGzTNoxRFtRmHq0xA
+        C0mY9fSE7tUor13fS9OP5Zk7wKedRyK93wbcn1A=
+X-Google-Smtp-Source: APXvYqw9x3JAIzpZdG5I877D51seRujGg/PdSB1zVxtbiLT765Kfy8muncBvKsCU7feAIIHxlvYj1DUTZ+EL8c5IAF4=
+X-Received: by 2002:a92:d642:: with SMTP id x2mr1533285ilp.169.1579568194666;
+ Mon, 20 Jan 2020 16:56:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001200192
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001200192
+References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+ <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
+ <20191001181659.GA5500@iweiny-DESK2.sc.intel.com> <2b42cf4ae669cedd061c937103674babad758712.camel@kernel.org>
+ <20191002192711.GA21386@fieldses.org> <df9022f0f5d18d71f37ed494a05eaa4509cf0a68.camel@kernel.org>
+ <20191003153743.GA24657@fieldses.org>
+In-Reply-To: <20191003153743.GA24657@fieldses.org>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 20 Jan 2020 18:56:24 -0600
+Message-ID: <CAH2r5msqzPnL=-Vm5F_MCc64pfCdMg0UXw8qkmp6zK1cph-_ZQ@mail.gmail.com>
+Subject: Re: Lease semantic proposal
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Jeff Layton <jlayton@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-nvdimm@lists.01.org,
+        linux-mm <linux-mm@kvack.org>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Two common complaints about the current lease API is that for some of the
+common protocols like SMB3 there is the need to be able to pass in
+the lease request on open itself, and also to
+upgrade and downgrade leases (in SMB3 lease keys can be
+passed over the wire) and of course it would be helpful if
+information about whether a lease was aquired were returned on open
+(and create) to minimize syscalls.
 
-Instead of passing __func__ to the error reporting function, let's use
-the return address builtins so that the messages actually tell you which
-higher level function called the buffer functions.  This was previously
-true for the xfs_buf_read callers, but not for the xfs_trans_read_buf
-callers.
+On Thu, Oct 3, 2019 at 11:00 AM J. Bruce Fields <bfields@fieldses.org> wrot=
+e:
+>
+> On Wed, Oct 02, 2019 at 04:35:55PM -0400, Jeff Layton wrote:
+> > On Wed, 2019-10-02 at 15:27 -0400, J. Bruce Fields wrote:
+> > > On Wed, Oct 02, 2019 at 08:28:40AM -0400, Jeff Layton wrote:
+> > > > For the byte ranges, the catch there is that extending the userland
+> > > > interface for that later will be difficult.
+> > >
+> > > Why would it be difficult?
+> >
+> > Legacy userland code that wanted to use byte range enabled layouts woul=
+d
+> > have to be rebuilt to take advantage of them. If we require a range fro=
+m
+> > the get-go, then they will get the benefit of them once they're
+> > available.
+>
+> I can't see writing byte-range code for a kernel that doesn't support
+> that yet.  How would I test it?
+>
+> > > > What I'd probably suggest
+> > > > (and what would jive with the way pNFS works) would be to go ahead =
+and
+> > > > add an offset and length to the arguments and result (maybe also
+> > > > whence?).
+> > >
+> > > Why not add new commands with range arguments later if it turns out t=
+o
+> > > be necessary?
+> >
+> > We could do that. It'd be a little ugly, IMO, simply because then we'd
+> > end up with two interfaces that do almost the exact same thing.
+> >
+> > Should byte-range layouts at that point conflict with non-byte range
+> > layouts, or should they be in different "spaces" (a'la POSIX and flock
+> > locks)? When it's all one interface, those sorts of questions sort of
+> > answer themselves. When they aren't we'll have to document them clearly
+> > and I think the result will be more confusing for userland programmers.
+> I was hoping they'd be in the same space, with the old interface just
+> defined to deal in locks with range [0,=E2=88=9E).
+>
+> I'm just worried about getting the interface wrong if it's specified
+> without being implemented.  Maybe this is straightforward enough that
+> there's not a risk, I don't know.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_buf.c         |   12 +++++++-----
- fs/xfs/xfs_buf.h         |    7 ++++---
- fs/xfs/xfs_buf_item.c    |    2 +-
- fs/xfs/xfs_log_recover.c |    4 ++--
- fs/xfs/xfs_trans_buf.c   |    5 +++--
- 5 files changed, 17 insertions(+), 13 deletions(-)
+Yes
 
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index c0b4d516fa2c..122e9b3d0cba 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -803,7 +803,8 @@ xfs_buf_read_map(
- 	int			nmaps,
- 	xfs_buf_flags_t		flags,
- 	struct xfs_buf		**bpp,
--	const struct xfs_buf_ops *ops)
-+	const struct xfs_buf_ops *ops,
-+	xfs_failaddr_t		fa)
- {
- 	struct xfs_buf		*bp;
- 	int			error;
-@@ -854,7 +855,7 @@ xfs_buf_read_map(
- 		error = bp->b_error;
- 
- 		if (!XFS_FORCED_SHUTDOWN(target->bt_mount))
--			xfs_buf_ioerror_alert(bp, __func__);
-+			xfs_buf_ioerror_alert(bp, fa);
- 
- 		bp->b_flags &= ~XBF_DONE;
- 		xfs_buf_stale(bp);
-@@ -887,7 +888,8 @@ xfs_buf_readahead_map(
- 		return;
- 
- 	xfs_buf_read_map(target, map, nmaps,
--		     XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops);
-+		     XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops,
-+		     __this_address);
- }
- 
- /*
-@@ -1236,10 +1238,10 @@ __xfs_buf_ioerror(
- void
- xfs_buf_ioerror_alert(
- 	struct xfs_buf		*bp,
--	const char		*func)
-+	xfs_failaddr_t		func)
- {
- 	xfs_alert(bp->b_mount,
--"metadata I/O error in \"%s\" at daddr 0x%llx len %d error %d",
-+"metadata I/O error in \"%pS\" at daddr 0x%llx len %d error %d",
- 			func, (uint64_t)XFS_BUF_ADDR(bp), bp->b_length,
- 			-bp->b_error);
- }
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index d1908a5038a2..567ec2c24244 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -196,7 +196,7 @@ int xfs_buf_get_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
- 		int nmaps, xfs_buf_flags_t flags, struct xfs_buf **bpp);
- int xfs_buf_read_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
- 		int nmaps, xfs_buf_flags_t flags, struct xfs_buf **bpp,
--		const struct xfs_buf_ops *ops);
-+		const struct xfs_buf_ops *ops, xfs_failaddr_t fa);
- void xfs_buf_readahead_map(struct xfs_buftarg *target, struct xfs_buf_map *map,
- 		int nmaps, const struct xfs_buf_ops *ops);
- 
-@@ -223,7 +223,8 @@ xfs_buf_read(
- {
- 	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
- 
--	return xfs_buf_read_map(target, &map, 1, flags, bpp, ops);
-+	return xfs_buf_read_map(target, &map, 1, flags, bpp, ops,
-+			__builtin_return_address(0));
- }
- 
- static inline void
-@@ -260,7 +261,7 @@ extern void xfs_buf_ioend(struct xfs_buf *bp);
- extern void __xfs_buf_ioerror(struct xfs_buf *bp, int error,
- 		xfs_failaddr_t failaddr);
- #define xfs_buf_ioerror(bp, err) __xfs_buf_ioerror((bp), (err), __this_address)
--extern void xfs_buf_ioerror_alert(struct xfs_buf *, const char *func);
-+extern void xfs_buf_ioerror_alert(struct xfs_buf *bp, xfs_failaddr_t fa);
- 
- extern int __xfs_buf_submit(struct xfs_buf *bp, bool);
- static inline int xfs_buf_submit(struct xfs_buf *bp)
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 5be8973a452c..663810e6cd59 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -1113,7 +1113,7 @@ xfs_buf_iodone_callback_error(
- 	if (bp->b_target != lasttarg ||
- 	    time_after(jiffies, (lasttime + 5*HZ))) {
- 		lasttime = jiffies;
--		xfs_buf_ioerror_alert(bp, __func__);
-+		xfs_buf_ioerror_alert(bp, __this_address);
- 	}
- 	lasttarg = bp->b_target;
- 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index ac79537d3275..25cfc85dbaa7 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -294,7 +294,7 @@ xlog_recover_iodone(
- 		 * this during recovery. One strike!
- 		 */
- 		if (!XFS_FORCED_SHUTDOWN(bp->b_mount)) {
--			xfs_buf_ioerror_alert(bp, __func__);
-+			xfs_buf_ioerror_alert(bp, __this_address);
- 			xfs_force_shutdown(bp->b_mount, SHUTDOWN_META_IO_ERROR);
- 		}
- 	}
-@@ -5627,7 +5627,7 @@ xlog_do_recover(
- 	error = xfs_buf_submit(bp);
- 	if (error) {
- 		if (!XFS_FORCED_SHUTDOWN(mp)) {
--			xfs_buf_ioerror_alert(bp, __func__);
-+			xfs_buf_ioerror_alert(bp, __this_address);
- 			ASSERT(0);
- 		}
- 		xfs_buf_relse(bp);
-diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
-index 449be0f8c10f..2ffa401ebcc6 100644
---- a/fs/xfs/xfs_trans_buf.c
-+++ b/fs/xfs/xfs_trans_buf.c
-@@ -280,7 +280,7 @@ xfs_trans_read_buf_map(
- 		ASSERT(bp->b_ops != NULL);
- 		error = xfs_buf_reverify(bp, ops);
- 		if (error) {
--			xfs_buf_ioerror_alert(bp, __func__);
-+			xfs_buf_ioerror_alert(bp, __return_address);
- 
- 			if (tp->t_flags & XFS_TRANS_DIRTY)
- 				xfs_force_shutdown(tp->t_mountp,
-@@ -302,7 +302,8 @@ xfs_trans_read_buf_map(
- 		return 0;
- 	}
- 
--	error = xfs_buf_read_map(target, map, nmaps, flags, &bp, ops);
-+	error = xfs_buf_read_map(target, map, nmaps, flags, &bp, ops,
-+			__return_address);
- 	switch (error) {
- 	case 0:
- 		break;
+--=20
+Thanks,
 
+Steve
