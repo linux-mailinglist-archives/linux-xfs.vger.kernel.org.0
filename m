@@ -2,132 +2,152 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 395191434F7
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 Jan 2020 01:56:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF89A14375B
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 Jan 2020 07:59:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAUA4f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jan 2020 19:56:35 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38220 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgAUA4f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jan 2020 19:56:35 -0500
-Received: by mail-il1-f196.google.com with SMTP id f5so996284ilq.5;
-        Mon, 20 Jan 2020 16:56:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DSU92DS/yk36ylsfrVTivyXxIB5DGgZzKoQw5FMazZY=;
-        b=lq3pSIbPrnnnlke+/4iOv3idDrtKaxngImB5W4zXOYg1EKO6Pp/w7whzo54rLNLeXD
-         +upd7lCyLeHSvzSyTGOEZ71HRLKodR6Vq6Y+YZDRrqxQY6FpB2JSqglWu3jYaue8ENEF
-         KVlRJxNOLvZvEVdMFQyQsqQsNkHhSowq+YUp9GmtW99GGM6pTonzZVhMoIzr0+I9PgT1
-         LHLkw3uXhT5pCCltzzyFk9YEGZuHNt0PgobNHpEXDqdkB9j9GIx1MFBmPfzi7lEZusgc
-         trp5oxFAdOiZz4/VNfWdeu6+/xXPge3HxZ120zDU1x/Tc0n5mhiGTxLpvL7KElejcARN
-         q7Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DSU92DS/yk36ylsfrVTivyXxIB5DGgZzKoQw5FMazZY=;
-        b=K/+h40DHTBmtVNg5FwebVBscKsXm8M3odUGi2HZUge8mxVsP6UmMaYiqC6Y9xVARgB
-         uoHpmO4FV2GjYGlZTgT+LUmEHWxYT9nlIjTDrv24MFOB7sMwzjCXLLHLLeFWRVjuRy5Q
-         NSJi6L/i9ljgF9D3epIScf8BZIe5s/dzKMeueLK4PlXO+8BH+i+ylkgqq2hJfaJ3F4yb
-         2JrNIqvzBFYKW8UeHj7btk3HWTx1mgVTXDqEkE29kZLBinY8waNc2Cqi7REgD4fZ+m8M
-         PjrLMAqMRmyTbULOHi6u8CLOEAHIm3UmuJk0Kqo6S1M6z1YYiGzyrN38QtxoP4FR5X0M
-         9wGw==
-X-Gm-Message-State: APjAAAXoen+CAgju1+EWWCUjRxJXEJllfVj3oBumGzTNoxRFtRmHq0xA
-        C0mY9fSE7tUor13fS9OP5Zk7wKedRyK93wbcn1A=
-X-Google-Smtp-Source: APXvYqw9x3JAIzpZdG5I877D51seRujGg/PdSB1zVxtbiLT765Kfy8muncBvKsCU7feAIIHxlvYj1DUTZ+EL8c5IAF4=
-X-Received: by 2002:a92:d642:: with SMTP id x2mr1533285ilp.169.1579568194666;
- Mon, 20 Jan 2020 16:56:34 -0800 (PST)
+        id S1725789AbgAUG6v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 Jan 2020 01:58:51 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:58166 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgAUG6u (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Jan 2020 01:58:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1579589929; x=1611125929;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=C9Oazg/Dlz/0TV2QFeIaW8exkStFXLR+uu/hhmATpTk=;
+  b=fXpXGrsiP4+zOU12NPKjZOU5scRV925XdhXVJscb+PXTy3CJG6N9jU+I
+   daosbK4qQXBrc1IQx777feSkIVGBkVA4I4Shp1NyDWX0Jc7xe+F8eig4B
+   QSj9mstysrU/PaVSJGTvQa3UHPFDXMUKXlaPpw86a1ey8ull5aaZZG66T
+   50zjv7fg2POXfucpwuc+Vy+uKTXegtiEgQoEYyuCPW3x4Npfu5C85/iah
+   cN8bWdKbQhIgRWgE3DcE2hJJ5u26TJAKbG3v4PT/8QF5r5wkUBK1jDsCn
+   s33RWd2eeYbcHJtqWGqifp431qQVyK+xeROb1wt6nk6QWSMYj+gZAqQa2
+   g==;
+IronPort-SDR: E6SXDf3VxRNPjNIFHKHBah9JfopvyAWyBVbpebjvNOO2mtY+UmHOxSDSKzAsCktaXl/jVQdNp+
+ qWn6vAU3IcLNqFEVXOhi4zbumpNbeAz2T81oh/L8QGJOBurXm3XoLZxmSbDr0EnkNVBH0BvPIQ
+ s6REWbcSHfxto6p8P8tt6t+T3n6c340mo+ukolI9zmfQxu0J9J1HpsZC3OpQVls97c33zsPSEO
+ CyHoqWHU7PdsmpnsYku7Lt9rP/AmJ7hlVegg9DdOIw6/xve8qsDgvco5g7+ls4542E0uBM9qtm
+ AzU=
+X-IronPort-AV: E=Sophos;i="5.70,345,1574092800"; 
+   d="scan'208";a="128665445"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Jan 2020 14:58:49 +0800
+IronPort-SDR: CVT1MsF6VBbZWyPQHM39feSivsC7f+i40AtvCEHhLBryWvW7Wwh44H2hiscZcUEdR9S0jF8/WJ
+ vWMmHNWLKd0C1VSRw3NynhhKub9nKfS2wDguJ2Cw+9DvHrhnMhY+LYX7nrWdk0ewkSmjVXBxm9
+ Xe4KXXhzb8/8dg1/t5oMmAZS/jQoJ5zqKpOjbeEsFSmophfLkf9vzUAI1LJSDsuvjbbOLljVG2
+ uyBCVtVX5nf9OBbffKGKUDDDEPrRms5/pNiH1cZjve0zE1s2oRR22ra1n6v+yJEErGDwelYXyw
+ GTjl7Ckp60UGL4McqUgprEsu
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 22:52:15 -0800
+IronPort-SDR: gFCd7JZ1NWxCFZYAwKSqwLTIlQyQjolRxw9FmgVuGRZMuj4VnFhO8XtP1uDo704FKYML6B+9RJ
+ oeDhjJ55ssVljy+zbMbaMfZVCHAB89TaoIpUwhOyl3W8++zX7omebz5r7P3Uw6OLLFwOqSFT2U
+ oWaTStWGiekgJsjj5nFdcdXy3POLgvzrEqB0BFCu4ez5aBCJ5RSupqygYiOY1u17F5vnJSxQAM
+ 1515LAAMnu5tD3PlWST3nDhi5LK9utN2ZSasJ+ry1AjqglzC4IwaHIhT42mHad8AFOQUNA4kiU
+ YfQ=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 20 Jan 2020 22:58:48 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v8 0/2] New zonefs file system
+Date:   Tue, 21 Jan 2020 15:58:44 +0900
+Message-Id: <20200121065846.216538-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
- <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
- <20191001181659.GA5500@iweiny-DESK2.sc.intel.com> <2b42cf4ae669cedd061c937103674babad758712.camel@kernel.org>
- <20191002192711.GA21386@fieldses.org> <df9022f0f5d18d71f37ed494a05eaa4509cf0a68.camel@kernel.org>
- <20191003153743.GA24657@fieldses.org>
-In-Reply-To: <20191003153743.GA24657@fieldses.org>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 20 Jan 2020 18:56:24 -0600
-Message-ID: <CAH2r5msqzPnL=-Vm5F_MCc64pfCdMg0UXw8qkmp6zK1cph-_ZQ@mail.gmail.com>
-Subject: Re: Lease semantic proposal
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Jeff Layton <jlayton@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-nvdimm@lists.01.org,
-        linux-mm <linux-mm@kvack.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Two common complaints about the current lease API is that for some of the
-common protocols like SMB3 there is the need to be able to pass in
-the lease request on open itself, and also to
-upgrade and downgrade leases (in SMB3 lease keys can be
-passed over the wire) and of course it would be helpful if
-information about whether a lease was aquired were returned on open
-(and create) to minimize syscalls.
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-On Thu, Oct 3, 2019 at 11:00 AM J. Bruce Fields <bfields@fieldses.org> wrot=
-e:
->
-> On Wed, Oct 02, 2019 at 04:35:55PM -0400, Jeff Layton wrote:
-> > On Wed, 2019-10-02 at 15:27 -0400, J. Bruce Fields wrote:
-> > > On Wed, Oct 02, 2019 at 08:28:40AM -0400, Jeff Layton wrote:
-> > > > For the byte ranges, the catch there is that extending the userland
-> > > > interface for that later will be difficult.
-> > >
-> > > Why would it be difficult?
-> >
-> > Legacy userland code that wanted to use byte range enabled layouts woul=
-d
-> > have to be rebuilt to take advantage of them. If we require a range fro=
-m
-> > the get-go, then they will get the benefit of them once they're
-> > available.
->
-> I can't see writing byte-range code for a kernel that doesn't support
-> that yet.  How would I test it?
->
-> > > > What I'd probably suggest
-> > > > (and what would jive with the way pNFS works) would be to go ahead =
-and
-> > > > add an offset and length to the arguments and result (maybe also
-> > > > whence?).
-> > >
-> > > Why not add new commands with range arguments later if it turns out t=
-o
-> > > be necessary?
-> >
-> > We could do that. It'd be a little ugly, IMO, simply because then we'd
-> > end up with two interfaces that do almost the exact same thing.
-> >
-> > Should byte-range layouts at that point conflict with non-byte range
-> > layouts, or should they be in different "spaces" (a'la POSIX and flock
-> > locks)? When it's all one interface, those sorts of questions sort of
-> > answer themselves. When they aren't we'll have to document them clearly
-> > and I think the result will be more confusing for userland programmers.
-> I was hoping they'd be in the same space, with the old interface just
-> defined to deal in locks with range [0,=E2=88=9E).
->
-> I'm just worried about getting the interface wrong if it's specified
-> without being implemented.  Maybe this is straightforward enough that
-> there's not a risk, I don't know.
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Yes
+zonefs IO management implementation uses the new iomap generic code.
 
+Changes from v7:
+* Fixed static checker warnings:
+  - Set-but-not-used variable in zonefs_file_buffered_write()
+  - Use S_ISDIR() in zonefs_inode_setattr()
 
---=20
-Thanks,
+Changes from v6:
+* Fixed documentation as suggested by Randy.
 
-Steve
+Changes from v5:
+* Added simple description of zoned block devices to the documentation,
+  as suggested by Johannes.
+* Added a 64-char max label field to the super block to allow label
+  based identification of volumes using libblkid (checked with a patch
+  to libblkid).
+
+Changes from v4:
+* Use octal values for file and directory permissions
+* Set initial directory permissions to 0555 (no write permission)
+* Prevent setting write permissions for directories
+
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
+
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
+
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  241 ++++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1178 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  175 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1620 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.24.1
+
