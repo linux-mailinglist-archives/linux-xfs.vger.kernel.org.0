@@ -2,389 +2,378 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8B16145A6A
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Jan 2020 17:58:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2838E145A7E
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Jan 2020 18:02:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgAVQ6R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Jan 2020 11:58:17 -0500
-Received: from sandeen.net ([63.231.237.45]:43390 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgAVQ6Q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:58:16 -0500
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 12CBD2541
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Jan 2020 10:58:16 -0600 (CST)
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 251257e6
-Message-ID: <9c82742a-fab2-78ba-f9bd-eb82f08353bf@sandeen.net>
-Date:   Wed, 22 Jan 2020 10:58:14 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        id S1726118AbgAVRCa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Jan 2020 12:02:30 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35368 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgAVRCa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Jan 2020 12:02:30 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00MGwjlt078568;
+        Wed, 22 Jan 2020 17:02:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=xGK6xRJsl2hVUKmpcAHvdK3/hsRDoCNSkD/n5h2SX5o=;
+ b=R56y/A7h7AqYEWjhtp72XHt1f1cenD6ow3Cz7i4jV7Z+mS+L0F8bqtVdX0X6lrG1p3Ci
+ jK/iKWWLf/KTFcSPMZB5Ko8+CM4Y0SZNZPlr7vuTbC/jmNgB4uu9PoZSpFqffOu6I4LJ
+ OjHAXpN41nIq7x0BP5nTZbK2FJHiY/gpD/XbhoYHC8gtTeP3cxdlS/6V9lDZj53LDMc9
+ tMHshrDFZP7z9XduKJwcutnMuCzPJF0ZUUoeaioc9WVmEY4k82sm2BDCKI6M7JXGd1DS
+ 8hQWCWXTWIg2b03Xh6SJM89T9UbkR0sIE/9fvpDJVnnGLVZWuPNiMFyKi1XiC5u4OSgf 3A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xktnrcxt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 17:02:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00MGwAPj009014;
+        Wed, 22 Jan 2020 17:02:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xpq7jnexy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 17:02:23 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00MH2MYk000588;
+        Wed, 22 Jan 2020 17:02:22 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jan 2020 09:02:22 -0800
+Date:   Wed, 22 Jan 2020 09:02:21 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 1/2] xfsprogs: alphabetize libxfs_api_defs.h
+Message-ID: <20200122170221.GS8247@magnolia>
+References: <e0f6e0e5-d5e0-1829-f08c-0ec6e6095fb0@redhat.com>
+ <5660a718-54b8-2139-8bcf-ae362d09ee5e@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="cAJB5kt0MHq9FONKb7r1cS0t71VMVPeMz"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5660a718-54b8-2139-8bcf-ae362d09ee5e@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001220147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9508 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001220147
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---cAJB5kt0MHq9FONKb7r1cS0t71VMVPeMz
-Content-Type: multipart/mixed; boundary="0q8jCVyWpxsNJ5hVxQzQqcW8QZsVS0BoT"
+On Wed, Jan 22, 2020 at 10:41:05AM -0600, Eric Sandeen wrote:
+> Rather than randomly choosing locations for new #defines in the
+> future, alphabetize the file now for consistency.
 
---0q8jCVyWpxsNJ5hVxQzQqcW8QZsVS0BoT
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+LOLWUT, sanity??
 
-Hi folks,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-The for-next branch of the xfsprogs repository at:
+--D
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-
-has just been updated and tagged with v5.5.0-rc0
-
-This is just the libxfs sync from kernelspace, with one extra
-supporting patch for repair/
-
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
-
-Onward.
-
-The new head of the for-next branch is commit:
-
-251257e6 (HEAD -> for-next, tag: v5.5.0-rc0, origin/libxfs-5.5-sync, orig=
-in/for-next) xfsprogs: Release v5.5.0-rc0
-
-New Commits:
-
-Arnd Bergmann (1):
-      [07c94b26] xfs: avoid time_t in user api
-
-Brian Foster (14):
-      [7777d8c6] xfs: track active state of allocation btree cursors
-      [2950989c] xfs: introduce allocation cursor data structure
-      [e055d59e] xfs: track allocation busy state in allocation cursor
-      [19fe42e3] xfs: track best extent from cntbt lastblock scan in allo=
-c cursor
-      [04ea0ac1] xfs: refactor cntbt lastblock scan best extent logic int=
-o helper
-      [3ca39168] xfs: reuse best extent tracking logic for bnobt scan
-      [46f7e323] xfs: refactor allocation tree fixup code
-      [4f2eee5a] xfs: refactor and reuse best extent scanning logic
-      [d0ebd9ee] xfs: refactor near mode alloc bnobt scan into separate f=
-unction
-      [dacde37d] xfs: factor out tree fixup logic into helper
-      [4d66edb1] xfs: optimize near mode bnobt scans with concurrent cntb=
-t lookups
-      [06c4d767] xfs: don't set bmapi total block req where minleft is
-      [496c8518] xfs: fix attr leaf header freemap.size underflow
-      [e4d719e1] xfs: stabilize insert range start boundary to avoid COW =
-writeback race
-
-Carlos Maiolino (1):
-      [cef0cc3b] xfs: Remove kmem_zone_free() wrapper
-
-Chen Wandun (1):
-      [44478d27] xfs: Make the symbol 'xfs_rtalloc_log_count' static
-
-Christoph Hellwig (59):
-      [75f533e6] xfs: use a struct iomap in xfs_writepage_ctx
-      [2ac7663a] xfs: refactor xfs_bmapi_allocate
-      [c3a24cde] xfs: move extent zeroing to xfs_bmapi_allocate
-      [a85522b6] xfs: cleanup use of the XFS_ALLOC_ flags
-      [bd045c51] xfs: move incore structures out of xfs_da_format.h
-      [9ee31f90] xfs: use unsigned int for all size values in struct xfs_=
-da_geometry
-      [08c16786] xfs: devirtualize ->node_hdr_from_disk
-      [b81278fa] xfs: devirtualize ->node_hdr_to_disk
-      [8faa51a8] xfs: add a btree entries pointer to struct xfs_da3_icnod=
-e_hdr
-      [52be9b6a] xfs: move the node header size to struct xfs_da_geometry=
-
-      [9db68faf] xfs: devirtualize ->leaf_hdr_from_disk
-      [7adfbcf6] xfs: devirtualize ->leaf_hdr_to_disk
-      [a2279497] xfs: add an entries pointer to struct xfs_dir3_icleaf_hd=
-r
-      [99e7b975] xfs: move the dir2 leaf header size to struct xfs_da_geo=
-metry
-      [d106a3e0] xfs: move the max dir2 leaf entries count to struct xfs_=
-da_geometry
-      [61e2142e] xfs: devirtualize ->free_hdr_from_disk
-      [515b68f6] xfs: devirtualize ->free_hdr_to_disk
-      [583be22f] xfs: make the xfs_dir3_icfree_hdr available to xfs_dir2_=
-node_addname_int
-      [cb5d1930] xfs: add a bests pointer to struct xfs_dir3_icfree_hdr
-      [6006410b] xfs: move the dir2 free header size to struct xfs_da_geo=
-metry
-      [ae3cd5b1] xfs: move the max dir2 free bests count to struct xfs_da=
-_geometry
-      [63c36cc9] xfs: devirtualize ->db_to_fdb and ->db_to_fdindex
-      [8a7190bd] xfs: devirtualize ->sf_get_parent_ino and ->sf_put_paren=
-t_ino
-      [660836c9] xfs: devirtualize ->sf_entsize and ->sf_nextentry
-      [e96bd2d3] xfs: devirtualize ->sf_get_ino and ->sf_put_ino
-      [d49d4ff5] xfs: devirtualize ->sf_get_ftype and ->sf_put_ftype
-      [7f351bbd] xfs: remove the unused ->data_first_entry_p method
-      [5e9bc7ee] xfs: remove the data_dot_offset field in struct xfs_dir_=
-ops
-      [0e6944c5] xfs: remove the data_dotdot_offset field in struct xfs_d=
-ir_ops
-      [26df2433] xfs: remove the ->data_dot_entry_p and ->data_dotdot_ent=
-ry_p methods
-      [9c036d76] xfs: remove the ->data_unused_p method
-      [08246d63] xfs: cleanup xfs_dir2_block_to_sf
-      [5a73a1c9] xfs: cleanup xfs_dir2_data_freescan_int
-      [014ee9ec] xfs: cleanup __xfs_dir3_data_check
-      [e51152ca] xfs: remove the now unused ->data_entry_p method
-      [9ad7a752] xfs: replace xfs_dir3_data_endp with xfs_dir3_data_end_o=
-ffset
-      [271a654f] xfs: devirtualize ->data_entsize
-      [823711f2] xfs: devirtualize ->data_entry_tag_p
-      [58a1d356] xfs: move the dir2 data block fixed offsets to struct xf=
-s_da_geometry
-      [e778c95d] xfs: cleanup xfs_dir2_data_entsize
-      [04f6f354] xfs: devirtualize ->data_bestfree_p
-      [28e6e614] xfs: devirtualize ->data_get_ftype and ->data_put_ftype
-      [6908be48] xfs: remove the now unused dir ops infrastructure
-      [d85595d0] xfs: merge xfs_dir2_data_freescan and xfs_dir2_data_free=
-scan_int
-      [7bba6d84] xfs: always pass a valid hdr to xfs_dir3_leaf_check_int
-      [e169cc9b] xfs: devirtualize ->m_dirnameops
-      [cb49e9a4] xfs: use a struct timespec64 for the in-core crtime
-      [e6bd76f0] xfs: merge the projid fields in struct xfs_icdinode
-      [7773baf3] xfs: don't reset the "inode core" in xfs_iread
-      [59ab3748] xfs: simplify mappedbno handling in xfs_da_{get,read}_bu=
-f
-      [571973e8] xfs: refactor xfs_dabuf_map
-      [48d1399b] xfs: improve the xfs_dabuf_map calling conventions
-      [c6c4bbf3] xfs: remove the mappedbno argument to xfs_da_reada_buf
-      [edf3b3a8] xfs: remove the mappedbno argument to xfs_attr3_leaf_rea=
-d
-      [0939d90b] xfs: remove the mappedbno argument to xfs_dir3_leaf_read=
-
-      [5fcb9cbc] xfs: remove the mappedbno argument to xfs_dir3_leafn_rea=
-d
-      [02cc4995] xfs: split xfs_da3_node_read
-      [5f356ae6] xfs: remove the mappedbno argument to xfs_da_read_buf
-      [c1d19744] xfs: remove the mappedbno argument to xfs_da_get_buf
-
-Darrick J. Wong (18):
-      [1520370f] xfs: check attribute leaf block structure
-      [43074fba] xfs: namecheck attribute names before listing them
-      [88afc9cc] xfs: replace -EIO with -EFSCORRUPTED for corrupt metadat=
-a
-      [9a7ae5a1] xfs: refactor xfs_iread_extents to use xfs_btree_visit_b=
-locks
-      [d11b23b6] xfs: relax shortform directory size checks
-      [a0264b73] xfs: always log corruption errors
-      [3af5535c] xfs: decrease indenting problems in xfs_dabuf_map
-      [43be641e] xfs: fix missing header includes
-      [530bc0fc] xfs: null out bma->prev if no previous extent
-      [0bb673ce] xfs: clean up weird while loop in xfs_alloc_ag_vextent_n=
-ear
-      [23b2b324] xfs: refactor "does this fork map blocks" predicate
-      [85b0f9e0] xfs: actually check xfs_btree_check_block return in xfs_=
-btree_islastblock
-      [fbb4fa7f] xfs: kill the XFS_WANT_CORRUPT_* macros
-      [bc73da84] xfs: convert open coded corruption check to use XFS_IS_C=
-ORRUPT
-      [e1cb35b5] xfs: fix log reservation overflows when allocating large=
- rt extents
-      [846e459c] libxfs: resync with the userspace libxfs
-      [b75bb1bd] xfs: refactor agfl length computation function
-      [1b0819ed] xfs: don't commit sunit/swidth updates to disk if that w=
-ould cause repair failures
-
-Dave Chinner (2):
-      [b6d2b93c] xfs: fix inode fork extent count overflow
-      [14058d94] xfs: cap longest free extent to maximum allocatable
-
-Eric Sandeen (4):
-      [e655785b] xfs_repair: stop using ->data_entry_p()
-      [19879397] xfs: remove unused typedef definitions
-      [5e852425] xfs: remove unused structure members & simple typedefs
-      [251257e6] xfsprogs: Release v5.5.0-rc0
-
-Joe Perches (1):
-      [9bef1574] xfs: Correct comment tyops -> typos
-
-Omar Sandoval (2):
-      [f8446e51] xfs: fix realtime file data space leak
-      [0b89c0a7] xfs: don't check for AG deadlock for realtime files in b=
-unmapi
-
-Pavel Reichl (2):
-      [527e257f] xfs: remove the xfs_disk_dquot_t and xfs_dquot_t
-      [84b9a2ca] xfs: remove the xfs_qoff_logitem_t typedef
-
-YueHaibing (1):
-      [d0704aa2] xfs: remove duplicated include from xfs_dir2_data.c
-
-kaixuxia (1):
-      [e9861d1b] xfs: Fix deadlock between AGI and AGF when target_ip exi=
-sts in xfs_rename()
-
-
-Code Diffstat:
-
- VERSION                    |    4 +-
- configure.ac               |    2 +-
- db/bmap.c                  |    4 +-
- db/btdump.c                |   18 +-
- db/check.c                 |   42 +-
- db/dir2.c                  |   18 +-
- db/dir2sf.c                |    8 +-
- db/dquot.c                 |    2 +-
- db/field.c                 |    2 +-
- db/inode.c                 |    4 +-
- db/metadump.c              |   43 +-
- db/sb.c                    |    2 +-
- debian/changelog           |    6 +
- doc/CHANGES                |    3 +
- include/kmem.h             |    2 +-
- include/libxfs.h           |   10 +-
- include/libxlog.h          |    8 +-
- include/platform_defs.h.in |    1 +
- include/xfs_inode.h        |   22 -
- include/xfs_log_recover.h  |    4 +-
- include/xfs_mount.h        |    1 -
- include/xfs_trace.h        |    8 +-
- libxfs/Makefile            |    1 -
- libxfs/libxfs_api_defs.h   |   22 +-
- libxfs/libxfs_priv.h       |   38 +-
- libxfs/rdwr.c              |    6 +-
- libxfs/trans.c             |    6 +-
- libxfs/util.c              |   19 +-
- libxfs/xfs_ag_resv.c       |    2 +
- libxfs/xfs_alloc.c         | 1254 ++++++++++++++++++++++++++------------=
-------
- libxfs/xfs_alloc.h         |   16 +-
- libxfs/xfs_alloc_btree.c   |    1 +
- libxfs/xfs_attr.c          |   24 +-
- libxfs/xfs_attr_leaf.c     |  134 +++--
- libxfs/xfs_attr_leaf.h     |   30 +-
- libxfs/xfs_attr_remote.c   |    2 +
- libxfs/xfs_bit.c           |    1 +
- libxfs/xfs_bmap.c          |  725 ++++++++++++++-----------
- libxfs/xfs_bmap.h          |    3 +-
- libxfs/xfs_btree.c         |   97 ++--
- libxfs/xfs_btree.h         |   37 +-
- libxfs/xfs_da_btree.c      |  668 +++++++++++------------
- libxfs/xfs_da_btree.h      |   73 ++-
- libxfs/xfs_da_format.c     |  888 -------------------------------
- libxfs/xfs_da_format.h     |   59 +--
- libxfs/xfs_dir2.c          |   93 ++--
- libxfs/xfs_dir2.h          |   90 +---
- libxfs/xfs_dir2_block.c    |  131 +++--
- libxfs/xfs_dir2_data.c     |  282 +++++-----
- libxfs/xfs_dir2_leaf.c     |  307 ++++++-----
- libxfs/xfs_dir2_node.c     |  431 ++++++++-------
- libxfs/xfs_dir2_priv.h     |  103 +++-
- libxfs/xfs_dir2_sf.c       |  424 +++++++++------
- libxfs/xfs_dquot_buf.c     |    8 +-
- libxfs/xfs_format.h        |   14 +-
- libxfs/xfs_fs.h            |    4 +-
- libxfs/xfs_ialloc.c        |  181 +++++--
- libxfs/xfs_ialloc.h        |    1 +
- libxfs/xfs_iext_tree.c     |    2 +-
- libxfs/xfs_inode_buf.c     |   21 +-
- libxfs/xfs_inode_buf.h     |    5 +-
- libxfs/xfs_inode_fork.c    |   22 +-
- libxfs/xfs_inode_fork.h    |   18 +-
- libxfs/xfs_log_format.h    |    4 +-
- libxfs/xfs_refcount.c      |  174 ++++--
- libxfs/xfs_rmap.c          |  377 +++++++++----
- libxfs/xfs_rtbitmap.c      |    3 +-
- libxfs/xfs_sb.c            |    1 +
- libxfs/xfs_trans_inode.c   |    8 +-
- libxfs/xfs_trans_resv.c    |  102 +++-
- libxfs/xfs_types.h         |    2 -
- libxlog/xfs_log_recover.c  |   12 +-
- logprint/log_misc.c        |   20 +-
- logprint/log_print_all.c   |   10 +-
- logprint/log_print_trans.c |    8 +-
- repair/da_util.c           |   50 +-
- repair/dir2.c              |   67 ++-
- repair/phase2.c            |    2 +-
- repair/phase6.c            |   84 ++-
- 79 files changed, 3805 insertions(+), 3576 deletions(-)
- delete mode 100644 libxfs/xfs_da_format.c
-
-
---0q8jCVyWpxsNJ5hVxQzQqcW8QZsVS0BoT--
-
---cAJB5kt0MHq9FONKb7r1cS0t71VMVPeMz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl4ofycACgkQIK4WkuE9
-3uAAHA//Un8w2oQ3y2xI6q62iztKqmPCb/5R3z9LckFdfBg4iEiAA4duAL5tIgtc
-V92xUPygUfarxG0PWKsRljZNIwqnu7/HD6JFi9KfnyQi0k17yMaIL6/Z2q/52onn
-ZTYBLY1HhxMxDOYDPZ4TA1xl+v00VibzALZ7XyWUFR3Be/yBVODphNKI+T2iU+wR
-7qsn7WPCu5v+D81emGDiLhksdNKMBoRyi/e/ykPE5k2Tuxh31TZuIg87rMleaD6G
-5yGoiasok1r6FHO/rX8eWwuyvOd0COGyqpbURlSbUTvzCloyEyT4Zf71AJyfpiQv
-CKk3a4XO4tQbvA7ElubfSYpdWQVwaw29oed57ucQ4XodCFUBAlKQs0LbVp7Jy/Ir
-Q+jDRAMbSEjRraXCw3eHL7M2an+hp0gDRIAfua3Tla0T+wXTHCAsZtH6Ld94I5Wh
-kHGq3ZXGjRpFIL3iidjQq0IFWoABuOFsh05tpJ08dUdX/YhdsmSbCflhmc5nnMko
-CwS27/24/gOzS0VDCvx2oVT4Au2Ef+6OMTEMVNdD1cTkJ9VNUrHUzoLdpU6r4woQ
-XTefXm+4jD5JPmLqm6/2EJcIWH89CL5Ivwzb8W9jrnH9/L2WLZedqAu/AbTjXd0U
-x+FjWl9qjTyKMowmVP4D7dnLr72geY7llBpTtYFEfkx+5Rf22BM=
-=TAEO
------END PGP SIGNATURE-----
-
---cAJB5kt0MHq9FONKb7r1cS0t71VMVPeMz--
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> ---
+> 
+> diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+> index eed63ace..33e52926 100644
+> --- a/libxfs/libxfs_api_defs.h
+> +++ b/libxfs/libxfs_api_defs.h
+> @@ -13,164 +13,167 @@
+>   * it can be included in both the internal and external libxfs header files
+>   * without introducing any depenencies between the two.
+>   */
+> -#define xfs_highbit32			libxfs_highbit32
+> -#define xfs_highbit64			libxfs_highbit64
+> -
+> -#define xfs_trans_alloc			libxfs_trans_alloc
+> -#define xfs_trans_alloc_empty		libxfs_trans_alloc_empty
+> -#define xfs_trans_add_item		libxfs_trans_add_item
+> -#define xfs_trans_bhold			libxfs_trans_bhold
+> -#define xfs_trans_bhold_release		libxfs_trans_bhold_release
+> -#define xfs_trans_binval		libxfs_trans_binval
+> -#define xfs_trans_bjoin			libxfs_trans_bjoin
+> -#define xfs_trans_brelse		libxfs_trans_brelse
+> -#define xfs_trans_commit		libxfs_trans_commit
+> -#define xfs_trans_cancel		libxfs_trans_cancel
+> -#define xfs_trans_del_item		libxfs_trans_del_item
+> -#define xfs_trans_get_buf		libxfs_trans_get_buf
+> -#define xfs_trans_getsb			libxfs_trans_getsb
+> -#define xfs_trans_ichgtime		libxfs_trans_ichgtime
+> -#define xfs_trans_ijoin			libxfs_trans_ijoin
+> -#define xfs_trans_init			libxfs_trans_init
+> -#define xfs_trans_inode_alloc_buf	libxfs_trans_inode_alloc_buf
+> -#define xfs_trans_dirty_buf		libxfs_trans_dirty_buf
+> -#define xfs_trans_log_buf		libxfs_trans_log_buf
+> -#define xfs_trans_ordered_buf		libxfs_trans_ordered_buf
+> -#define xfs_trans_log_inode		libxfs_trans_log_inode
+> -#define xfs_trans_roll_inode		libxfs_trans_roll_inode
+> -#define xfs_trans_mod_sb		libxfs_trans_mod_sb
+> -#define xfs_trans_read_buf		libxfs_trans_read_buf
+> -#define xfs_trans_read_buf_map		libxfs_trans_read_buf_map
+> -#define xfs_trans_roll			libxfs_trans_roll
+> -#define xfs_trans_get_buf_map		libxfs_trans_get_buf_map
+> -#define xfs_trans_resv_calc		libxfs_trans_resv_calc
+> -#define xfs_log_get_max_trans_res	libxfs_log_get_max_trans_res
+> -#define xfs_attr_get			libxfs_attr_get
+> -#define xfs_attr_set			libxfs_attr_set
+> -#define xfs_attr_remove			libxfs_attr_remove
+> -#define xfs_attr_leaf_newentsize	libxfs_attr_leaf_newentsize
+> +#define LIBXFS_ATTR_CREATE		ATTR_CREATE
+> +#define LIBXFS_ATTR_REPLACE		ATTR_REPLACE
+> +#define LIBXFS_ATTR_ROOT		ATTR_ROOT
+> +#define LIBXFS_ATTR_SECURE		ATTR_SECURE
+>  
+> +#define xfs_agfl_size			libxfs_agfl_size
+>  #define xfs_agfl_walk			libxfs_agfl_walk
+> +
+> +#define xfs_ag_init_headers		libxfs_ag_init_headers
+> +
+> +#define xfs_alloc_ag_max_usable		libxfs_alloc_ag_max_usable
+> +#define xfs_allocbt_maxrecs		libxfs_allocbt_maxrecs
+>  #define xfs_alloc_fix_freelist		libxfs_alloc_fix_freelist
+>  #define xfs_alloc_min_freelist		libxfs_alloc_min_freelist
+>  #define xfs_alloc_read_agf		libxfs_alloc_read_agf
+> -#define xfs_bmap_last_offset		libxfs_bmap_last_offset
+> -#define xfs_iext_lookup_extent		libxfs_iext_lookup_extent
+> -#define xfs_bmapi_write			libxfs_bmapi_write
+> -#define xfs_bmapi_read			libxfs_bmapi_read
+> -#define xfs_bunmapi			libxfs_bunmapi
+> -#define xfs_rtfree_extent		libxfs_rtfree_extent
+> -#define xfs_verify_rtbno		libxfs_verify_rtbno
+> -#define xfs_verify_ino			libxfs_verify_ino
+> -#define xfs_zero_extent			libxfs_zero_extent
+>  
+> -#define xfs_defer_finish		libxfs_defer_finish
+> -#define xfs_defer_cancel		libxfs_defer_cancel
+> +#define xfs_attr_get			libxfs_attr_get
+> +#define xfs_attr_leaf_newentsize	libxfs_attr_leaf_newentsize
+> +#define xfs_attr_namecheck		libxfs_attr_namecheck
+> +#define xfs_attr_remove			libxfs_attr_remove
+> +#define xfs_attr_set			libxfs_attr_set
+>  
+> +#define xfs_bmapi_read			libxfs_bmapi_read
+> +#define xfs_bmapi_write			libxfs_bmapi_write
+> +#define xfs_bmap_last_offset		libxfs_bmap_last_offset
+> +#define xfs_bmbt_maxrecs		libxfs_bmbt_maxrecs
+> +#define xfs_bmdr_maxrecs		libxfs_bmdr_maxrecs
+> +
+> +#define xfs_btree_del_cursor		libxfs_btree_del_cursor
+> +#define xfs_btree_init_block		libxfs_btree_init_block
+> +#define xfs_buf_delwri_submit		libxfs_buf_delwri_submit
+> +#define xfs_bunmapi			libxfs_bunmapi
+> +#define xfs_calc_dquots_per_chunk	libxfs_calc_dquots_per_chunk
+> +#define xfs_da3_node_hdr_from_disk	libxfs_da3_node_hdr_from_disk
+> +#define xfs_da_get_buf			libxfs_da_get_buf
+>  #define xfs_da_hashname			libxfs_da_hashname
+> -#define xfs_da_shrink_inode		libxfs_da_shrink_inode
+>  #define xfs_da_read_buf			libxfs_da_read_buf
+> -#define xfs_da3_node_hdr_from_disk	libxfs_da3_node_hdr_from_disk
+> -#define xfs_dir_createname		libxfs_dir_createname
+> -#define xfs_dir_init			libxfs_dir_init
+> -#define xfs_dir_lookup			libxfs_dir_lookup
+> -#define xfs_dir_replace			libxfs_dir_replace
+> +#define xfs_da_shrink_inode		libxfs_da_shrink_inode
+> +#define xfs_default_ifork_ops		libxfs_default_ifork_ops
+> +#define xfs_defer_cancel		libxfs_defer_cancel
+> +#define xfs_defer_finish		libxfs_defer_finish
+> +#define xfs_dinode_calc_crc		libxfs_dinode_calc_crc
+> +#define xfs_dinode_good_version		libxfs_dinode_good_version
+> +#define xfs_dinode_verify		libxfs_dinode_verify
+> +
+>  #define xfs_dir2_data_bestfree_p	libxfs_dir2_data_bestfree_p
+> -#define xfs_dir2_data_get_ftype		libxfs_dir2_data_get_ftype
+> -#define xfs_dir2_data_put_ftype		libxfs_dir2_data_put_ftype
+> -#define xfs_dir2_leaf_hdr_from_disk	libxfs_dir2_leaf_hdr_from_disk
+> -#define xfs_dir2_free_hdr_from_disk	libxfs_dir2_free_hdr_from_disk
+> -#define xfs_dir2_isblock		libxfs_dir2_isblock
+> -#define xfs_dir2_isleaf			libxfs_dir2_isleaf
+> +#define xfs_dir2_data_entry_tag_p	libxfs_dir2_data_entry_tag_p
+> +#define xfs_dir2_data_entsize		libxfs_dir2_data_entsize
+>  #define xfs_dir2_data_freescan		libxfs_dir2_data_freescan
+> +#define xfs_dir2_data_get_ftype		libxfs_dir2_data_get_ftype
+>  #define xfs_dir2_data_log_entry		libxfs_dir2_data_log_entry
+>  #define xfs_dir2_data_log_header	libxfs_dir2_data_log_header
+>  #define xfs_dir2_data_make_free		libxfs_dir2_data_make_free
+> +#define xfs_dir2_data_put_ftype		libxfs_dir2_data_put_ftype
+>  #define xfs_dir2_data_use_free		libxfs_dir2_data_use_free
+> -#define xfs_dir2_data_entsize		libxfs_dir2_data_entsize
+> -#define xfs_dir2_data_entry_tag_p	libxfs_dir2_data_entry_tag_p
+> +#define xfs_dir2_free_hdr_from_disk	libxfs_dir2_free_hdr_from_disk
+>  #define xfs_dir2_hashname		libxfs_dir2_hashname
+> -#define xfs_dir2_shrink_inode		libxfs_dir2_shrink_inode
+> -#define xfs_dir2_sf_get_parent_ino	libxfs_dir2_sf_get_parent_ino
+> -#define xfs_dir2_sf_put_parent_ino	libxfs_dir2_sf_put_parent_ino
+> +#define xfs_dir2_isblock		libxfs_dir2_isblock
+> +#define xfs_dir2_isleaf			libxfs_dir2_isleaf
+> +#define xfs_dir2_leaf_hdr_from_disk	libxfs_dir2_leaf_hdr_from_disk
+> +#define xfs_dir2_namecheck		libxfs_dir2_namecheck
+>  #define xfs_dir2_sf_entsize		libxfs_dir2_sf_entsize
+> -#define xfs_dir2_sf_nextentry		libxfs_dir2_sf_nextentry
+>  #define xfs_dir2_sf_get_ftype		libxfs_dir2_sf_get_ftype
+> -#define xfs_dir2_sf_put_ftype		libxfs_dir2_sf_put_ftype
+>  #define xfs_dir2_sf_get_ino		libxfs_dir2_sf_get_ino
+> +#define xfs_dir2_sf_get_parent_ino	libxfs_dir2_sf_get_parent_ino
+> +#define xfs_dir2_sf_nextentry		libxfs_dir2_sf_nextentry
+> +#define xfs_dir2_sf_put_ftype		libxfs_dir2_sf_put_ftype
+>  #define xfs_dir2_sf_put_ino		libxfs_dir2_sf_put_ino
+> -#define xfs_dir2_namecheck		libxfs_dir2_namecheck
+> -#define xfs_da_get_buf			libxfs_da_get_buf
+> -
+> -#define xfs_inode_from_disk		libxfs_inode_from_disk
+> -#define xfs_inode_to_disk		libxfs_inode_to_disk
+> -#define xfs_dinode_calc_crc		libxfs_dinode_calc_crc
+> -#define xfs_idata_realloc		libxfs_idata_realloc
+> -#define xfs_idestroy_fork		libxfs_idestroy_fork
+> -#define xfs_inode_validate_extsize	libxfs_inode_validate_extsize
+> -#define xfs_inode_validate_cowextsize	libxfs_inode_validate_cowextsize
+> -
+> -#define xfs_rmap_alloc			libxfs_rmap_alloc
+> -#define xfs_rmap_query_range		libxfs_rmap_query_range
+> -#define xfs_rmap_lookup_le		libxfs_rmap_lookup_le
+> -#define xfs_rmap_get_rec		libxfs_rmap_get_rec
+> -#define xfs_rmap_irec_offset_pack	libxfs_rmap_irec_offset_pack
+> -#define xfs_rmap_irec_offset_unpack	libxfs_rmap_irec_offset_unpack
+> -#define xfs_rmapbt_init_cursor		libxfs_rmapbt_init_cursor
+> -#define xfs_btree_del_cursor		libxfs_btree_del_cursor
+> -#define xfs_mode_to_ftype		libxfs_mode_to_ftype
+> +#define xfs_dir2_sf_put_parent_ino	libxfs_dir2_sf_put_parent_ino
+> +#define xfs_dir2_shrink_inode		libxfs_dir2_shrink_inode
+>  
+> -#define xfs_log_sb			libxfs_log_sb
+> -#define xfs_sb_from_disk		libxfs_sb_from_disk
+> -#define xfs_sb_quota_from_disk		libxfs_sb_quota_from_disk
+> -#define xfs_sb_to_disk			libxfs_sb_to_disk
+> +#define xfs_dir_createname		libxfs_dir_createname
+> +#define xfs_dir_init			libxfs_dir_init
+> +#define xfs_dir_ino_validate		libxfs_dir_ino_validate
+> +#define xfs_dir_lookup			libxfs_dir_lookup
+> +#define xfs_dir_replace			libxfs_dir_replace
+>  
+> -#define xfs_calc_dquots_per_chunk	libxfs_calc_dquots_per_chunk
+> -#define xfs_dquot_verify		libxfs_dquot_verify
+>  #define xfs_dqblk_repair		libxfs_dqblk_repair
+> +#define xfs_dquot_verify		libxfs_dquot_verify
+>  
+> -#define xfs_symlink_blocks		libxfs_symlink_blocks
+> -#define xfs_symlink_hdr_ok		libxfs_symlink_hdr_ok
+> -
+> -#define xfs_verify_cksum		libxfs_verify_cksum
+> -#define xfs_dinode_verify		libxfs_dinode_verify
+> -
+> -#define xfs_alloc_ag_max_usable		libxfs_alloc_ag_max_usable
+> -#define xfs_allocbt_maxrecs		libxfs_allocbt_maxrecs
+> -#define xfs_bmbt_maxrecs		libxfs_bmbt_maxrecs
+> -#define xfs_bmdr_maxrecs		libxfs_bmdr_maxrecs
+> -#define xfs_btree_init_block		libxfs_btree_init_block
+> -#define xfs_dir_ino_validate		libxfs_dir_ino_validate
+> +#define xfs_free_extent			libxfs_free_extent
+> +#define xfs_fs_geometry			libxfs_fs_geometry
+> +#define xfs_highbit32			libxfs_highbit32
+> +#define xfs_highbit64			libxfs_highbit64
+> +#define xfs_idata_realloc		libxfs_idata_realloc
+> +#define xfs_idestroy_fork		libxfs_idestroy_fork
+> +#define xfs_iext_lookup_extent		libxfs_iext_lookup_extent
+>  #define xfs_initialize_perag_data	libxfs_initialize_perag_data
+> +#define xfs_init_local_fork		libxfs_init_local_fork
+> +
+>  #define xfs_inobt_maxrecs		libxfs_inobt_maxrecs
+> -#define xfs_rmapbt_maxrecs		libxfs_rmapbt_maxrecs
+> -#define xfs_refcountbt_maxrecs		libxfs_refcountbt_maxrecs
+> +#define xfs_inode_from_disk		libxfs_inode_from_disk
+> +#define xfs_inode_to_disk		libxfs_inode_to_disk
+> +#define xfs_inode_validate_cowextsize	libxfs_inode_validate_cowextsize
+> +#define xfs_inode_validate_extsize	libxfs_inode_validate_extsize
+> +
+>  #define xfs_iread_extents		libxfs_iread_extents
+>  #define xfs_log_calc_minimum_size	libxfs_log_calc_minimum_size
+> +#define xfs_log_get_max_trans_res	libxfs_log_get_max_trans_res
+> +#define xfs_log_sb			libxfs_log_sb
+> +#define xfs_mode_to_ftype		libxfs_mode_to_ftype
+>  #define xfs_perag_get			libxfs_perag_get
+>  #define xfs_perag_put			libxfs_perag_put
+>  #define xfs_prealloc_blocks		libxfs_prealloc_blocks
+> -#define xfs_dinode_good_version		libxfs_dinode_good_version
+> -#define xfs_free_extent			libxfs_free_extent
+>  
+> +#define xfs_refc_block			libxfs_refc_block
+>  #define xfs_refcountbt_init_cursor	libxfs_refcountbt_init_cursor
+> -#define xfs_refcount_lookup_le		libxfs_refcount_lookup_le
+> +#define xfs_refcountbt_maxrecs		libxfs_refcountbt_maxrecs
+>  #define xfs_refcount_get_rec		libxfs_refcount_get_rec
+> -#define xfs_rmap_lookup_le_range	libxfs_rmap_lookup_le_range
+> -#define xfs_agfl_size			libxfs_agfl_size
+> -#define xfs_refc_block			libxfs_refc_block
+> +#define xfs_refcount_lookup_le		libxfs_refcount_lookup_le
+> +
+> +#define xfs_rmap_alloc			libxfs_rmap_alloc
+> +#define xfs_rmapbt_init_cursor		libxfs_rmapbt_init_cursor
+> +#define xfs_rmapbt_maxrecs		libxfs_rmapbt_maxrecs
+>  #define xfs_rmap_compare		libxfs_rmap_compare
+> -#define xfs_default_ifork_ops		libxfs_default_ifork_ops
+> -#define xfs_fs_geometry			libxfs_fs_geometry
+> -#define xfs_init_local_fork		libxfs_init_local_fork
+> -#define xfs_attr_namecheck		libxfs_attr_namecheck
+> +#define xfs_rmap_get_rec		libxfs_rmap_get_rec
+> +#define xfs_rmap_irec_offset_pack	libxfs_rmap_irec_offset_pack
+> +#define xfs_rmap_irec_offset_unpack	libxfs_rmap_irec_offset_unpack
+> +#define xfs_rmap_lookup_le		libxfs_rmap_lookup_le
+> +#define xfs_rmap_lookup_le_range	libxfs_rmap_lookup_le_range
+> +#define xfs_rmap_query_range		libxfs_rmap_query_range
+>  
+> -#define LIBXFS_ATTR_ROOT		ATTR_ROOT
+> -#define LIBXFS_ATTR_SECURE		ATTR_SECURE
+> -#define LIBXFS_ATTR_CREATE		ATTR_CREATE
+> -#define LIBXFS_ATTR_REPLACE		ATTR_REPLACE
+> +#define xfs_rtfree_extent		libxfs_rtfree_extent
+> +#define xfs_sb_from_disk		libxfs_sb_from_disk
+> +#define xfs_sb_quota_from_disk		libxfs_sb_quota_from_disk
+> +#define xfs_sb_to_disk			libxfs_sb_to_disk
+> +#define xfs_symlink_blocks		libxfs_symlink_blocks
+> +#define xfs_symlink_hdr_ok		libxfs_symlink_hdr_ok
+>  
+> -#define xfs_ag_init_headers		libxfs_ag_init_headers
+> -#define xfs_buf_delwri_submit		libxfs_buf_delwri_submit
+> +#define xfs_trans_add_item		libxfs_trans_add_item
+> +#define xfs_trans_alloc_empty		libxfs_trans_alloc_empty
+> +#define xfs_trans_alloc			libxfs_trans_alloc
+> +#define xfs_trans_bhold			libxfs_trans_bhold
+> +#define xfs_trans_bhold_release		libxfs_trans_bhold_release
+> +#define xfs_trans_binval		libxfs_trans_binval
+> +#define xfs_trans_bjoin			libxfs_trans_bjoin
+> +#define xfs_trans_brelse		libxfs_trans_brelse
+> +#define xfs_trans_cancel		libxfs_trans_cancel
+> +#define xfs_trans_commit		libxfs_trans_commit
+> +#define xfs_trans_del_item		libxfs_trans_del_item
+> +#define xfs_trans_dirty_buf		libxfs_trans_dirty_buf
+> +#define xfs_trans_get_buf		libxfs_trans_get_buf
+> +#define xfs_trans_get_buf_map		libxfs_trans_get_buf_map
+> +#define xfs_trans_getsb			libxfs_trans_getsb
+> +#define xfs_trans_ichgtime		libxfs_trans_ichgtime
+> +#define xfs_trans_ijoin			libxfs_trans_ijoin
+> +#define xfs_trans_init			libxfs_trans_init
+> +#define xfs_trans_inode_alloc_buf	libxfs_trans_inode_alloc_buf
+> +#define xfs_trans_log_buf		libxfs_trans_log_buf
+> +#define xfs_trans_log_inode		libxfs_trans_log_inode
+> +#define xfs_trans_mod_sb		libxfs_trans_mod_sb
+> +#define xfs_trans_ordered_buf		libxfs_trans_ordered_buf
+> +#define xfs_trans_read_buf		libxfs_trans_read_buf
+> +#define xfs_trans_read_buf_map		libxfs_trans_read_buf_map
+> +#define xfs_trans_resv_calc		libxfs_trans_resv_calc
+> +#define xfs_trans_roll_inode		libxfs_trans_roll_inode
+> +#define xfs_trans_roll			libxfs_trans_roll
+> +
+> +#define xfs_verify_cksum		libxfs_verify_cksum
+> +#define xfs_verify_ino			libxfs_verify_ino
+> +#define xfs_verify_rtbno		libxfs_verify_rtbno
+> +#define xfs_zero_extent			libxfs_zero_extent
+>  
+>  #endif /* __LIBXFS_API_DEFS_H__ */
+> 
