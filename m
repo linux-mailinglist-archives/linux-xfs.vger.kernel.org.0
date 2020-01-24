@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA411147563
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jan 2020 01:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 753D3147554
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jan 2020 01:17:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgAXASo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 23 Jan 2020 19:18:44 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34340 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbgAXASo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Jan 2020 19:18:44 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O08r6p182936;
-        Fri, 24 Jan 2020 00:18:42 GMT
+        id S1729274AbgAXAQv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 Jan 2020 19:16:51 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33826 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgAXAQv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Jan 2020 19:16:51 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O08kNg024609;
+        Fri, 24 Jan 2020 00:16:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=l6YttYBI5+Vagm6LiwE+vW/MFl/6//TJhcXrZU9Q204=;
- b=ffDgloUW53vgV7yF639ku9qFgLrvc+bRJTPRBLCMTgjOCFRzTA/PbF095seSsQDw3cw0
- PhSHBxRIx21LFH4nbh1Oy4B63N46ITrzxInt0kY+iRYJ4z3xhrSND8xAFpdaee3oQjzN
- HPmwOV2OPFuOEzjeIPvHCir8CWEvU3eeoV0+3SDqu/XnS5RypcjaCzeJeuLsabmPGr4k
- em/ESwP3VraepDa5DhVPObwJwiS79T2zSMszFRR2A7OQAj6qBDHgv+Eb+cHzH/rEM7ns
- SCu8olu34SSdLSv2geTYSqNXgScJ0xwaGanXHFn6IehXRE2Z69GtkdzRXdVJIHmNVZzz Rw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xksyqns9p-1
+ bh=p5WWCQS9/YJVevyQmkRpMF99yu8gjZyqdYBNJMzya7o=;
+ b=I20c5MouIybbeifocL7FesRhtMR68ic3nHSwN4OeOM5P42My321aFWC7twmttNGL6hlm
+ bei5Rp38t3LcDnq9SQschDeMT6+wr3PGPMe7w/CxJxC2l0Ia+q9Wd/oCoHw8FM9aTNV5
+ 9Y+WNoEkKFuJutlbTg48f3W6XDz0Ofj3ek2Uv/b7V+povMzsGv5x5oP+pBvv/Nz6lhcO
+ qNSYXe7CtrpCvC6DOxKSn7AgEwhCg26WOpWyWay//xu8W80hk/0FGdH6KZLePBlek2Dw
+ Ww1GiGVvrDOABeg3My95z2ZMkeyqAajSOLxC49B48ZYzTCZtMnzcWjW05BmknM+tf6/K 7Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xkseuwvtd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 00:18:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O0DWQA037212;
-        Fri, 24 Jan 2020 00:16:41 GMT
+        Fri, 24 Jan 2020 00:16:49 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O0E65X111077;
+        Fri, 24 Jan 2020 00:16:48 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xqmuxkgwq-1
+        by aserp3020.oracle.com with ESMTP id 2xqmwb1b0r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 00:16:41 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00O0GeMB030363;
-        Fri, 24 Jan 2020 00:16:40 GMT
+        Fri, 24 Jan 2020 00:16:48 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00O0GlEj030419;
+        Fri, 24 Jan 2020 00:16:47 GMT
 Received: from localhost (/10.145.179.16)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 16:16:40 -0800
-Subject: [PATCH 1/8] man: list xfs_io lsattr inode flag letters
+        with ESMTP ; Thu, 23 Jan 2020 16:16:46 -0800
+Subject: [PATCH 2/8] man: document the xfs_db btheight command
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 23 Jan 2020 16:16:38 -0800
-Message-ID: <157982499817.2765410.16336840066253160007.stgit@magnolia>
+Date:   Thu, 23 Jan 2020 16:16:44 -0800
+Message-ID: <157982500443.2765410.17401149852075835578.stgit@magnolia>
 In-Reply-To: <157982499185.2765410.18206322669640988643.stgit@magnolia>
 References: <157982499185.2765410.18206322669640988643.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -70,122 +70,62 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The section of the xfs_io manpage for the 'chattr' command says to refer
-to xfsctl(3) for information on the flags.  The inode flag information
-was moved to ioctl_xfs_fssetxattr(2) ages ago, and it never actually
-mapped the inode flag letters to inode flag bits, so fix the link and
-add such a mapping to the xfs_io manpage.
+Document the btheight command in xfs_db.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- man/man8/xfs_io.8 |   89 +++++++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 83 insertions(+), 6 deletions(-)
+ man/man8/xfs_db.8 |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index c69b295d..f5431a8c 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -794,18 +794,95 @@ for all directory entries below the currently open file
- can be used to restrict the output to directories only).
- This is a depth first descent, it does not follow symlinks and
- it also does not cross mount points.
+diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
+index a1ee3514..53e34983 100644
+--- a/man/man8/xfs_db.8
++++ b/man/man8/xfs_db.8
+@@ -346,6 +346,45 @@ If the cursor points at an inode, dump the extended attribute block mapping btre
+ Dump all keys and pointers in intermediate btree nodes, and all records in leaf btree nodes.
+ .RE
+ .TP
++.BI "btheight [\-b " blksz "] [\-n " recs "] [\-w " max "|\-w " min "] btree types..."
++For a given number of btree records and a btree type, report the number of
++records and blocks for each level of the btree, and the total number of blocks.
++The btree type must be given after the options.
 +
-+The current inode flag letters are documented below.
-+Please refer to the
-+.BR ioctl_xfs_fsgetxattr "(2)"
-+documentation for more details about what they mean.
++A raw btree geometry can be provided in the format
++"record_bytes:key_bytes:ptr_bytes:header_type", where header_type is one of
++"short", "long", "shortcrc", or "longcrc".
 +
-+.PD 0
-+.RS
-+.TP 0.5i
-+.B r
-+realtime file (XFS_XFLAG_REALTIME)
++The supported btree types are:
++.IR bnobt ,
++.IR cntbt ,
++.IR inobt ,
++.IR finobt ,
++.IR bmapbt ,
++.IR refcountbt ,
++and
++.IR rmapbt .
 +
++Options are as follows:
++.RS 1.0i
++.TP 0.4i
++.B \-b
++is used to override the btree block size.
++The default is the filesystem block size.
 +.TP
-+.B p
-+prealloc (XFS_XFLAG_PREALLOC)
-+
++.B \-n
++is used to specify the number of records to store.
++This argument is required.
 +.TP
-+.B i
-+immutable (XFS_XFLAG_IMMUTABLE)
-+
++.B \-w max
++shows only the best case scenario, which is when the btree blocks are
++maximally loaded.
 +.TP
-+.B a
-+append only (XFS_XFLAG_APPEND)
-+
-+.TP
-+.B s
-+synchronous file writes (XFS_XFLAG_SYNC)
-+
-+.TP
-+.B A
-+noatime (XFS_XFLAG_NOATIME)
-+
-+.TP
-+.B d
-+nodump (XFS_XFLAG_NODUMP)
-+
-+.TP
-+.B t
-+inherit realtime flag (XFS_XFLAG_RTINHERIT)"
-+
-+.TP
-+.B P
-+inherit project id (XFS_XFLAG_PROJINHERIT)
-+
-+.TP
-+.B n
-+no symlink creation (XFS_XFLAG_NOSYMLINKS)
-+
-+.TP
-+.B e
-+extent size hint (XFS_XFLAG_EXTSIZE)
-+
-+.TP
-+.B E
-+inherit extent size hint (XFS_XFLAG_EXTSZINHERIT)
-+
-+.TP
-+.B f
-+nodefrag (XFS_XFLAG_NODEFRAG)
-+
-+.TP
-+.B S
-+filestream allocator (XFS_XFLAG_FILESTREAM)
-+
-+.TP
-+.B x
-+direct access persistent memory (XFS_XFLAG_DAX)
-+
-+.TP
-+.B C
-+copy on write extent hint (XFS_XFLAG_COWEXTSIZE)
-+
-+.TP
-+.B X
-+has extended attributes (XFS_XFLAG_HASATTR)
++.B \-w min
++shows only the worst case scenario, which is when the btree blocks are
++half full.
 +.RE
-+
- .TP
- .BR chattr " [ " \-R " | " \-D " ] [ " + / \-riasAdtPneEfSxC " ]"
- Change extended inode flags on the currently open file. The
- .B \-R
- and
- .B \-D
--options have the same meaning as above. The mapping between each
--letter and the inode flags (refer to
--.BR xfsctl (3)
--for the full list) is available via the
--.B help
--command.
-+options have the same meaning as above.
-+
-+See the
-+.B lsattr
-+command above for the list of inode flag letters.
-+
- .TP
- .BI "flink " path
- Link the currently open file descriptor into the filesystem namespace.
++.TP
+ .B check
+ See the
+ .B blockget
 
