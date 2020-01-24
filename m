@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 753D3147554
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jan 2020 01:17:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E923147564
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jan 2020 01:18:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAXAQv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 23 Jan 2020 19:16:51 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:33826 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgAXAQv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Jan 2020 19:16:51 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O08kNg024609;
-        Fri, 24 Jan 2020 00:16:49 GMT
+        id S1729335AbgAXAS5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 Jan 2020 19:18:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34518 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgAXAS5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Jan 2020 19:18:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O09q26183453;
+        Fri, 24 Jan 2020 00:18:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=p5WWCQS9/YJVevyQmkRpMF99yu8gjZyqdYBNJMzya7o=;
- b=I20c5MouIybbeifocL7FesRhtMR68ic3nHSwN4OeOM5P42My321aFWC7twmttNGL6hlm
- bei5Rp38t3LcDnq9SQschDeMT6+wr3PGPMe7w/CxJxC2l0Ia+q9Wd/oCoHw8FM9aTNV5
- 9Y+WNoEkKFuJutlbTg48f3W6XDz0Ofj3ek2Uv/b7V+povMzsGv5x5oP+pBvv/Nz6lhcO
- qNSYXe7CtrpCvC6DOxKSn7AgEwhCg26WOpWyWay//xu8W80hk/0FGdH6KZLePBlek2Dw
- Ww1GiGVvrDOABeg3My95z2ZMkeyqAajSOLxC49B48ZYzTCZtMnzcWjW05BmknM+tf6/K 7Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xkseuwvtd-1
+ bh=LA921WI6yfojEG96jHlZJ9/YUVJQ88zMY3s/z0maJyQ=;
+ b=D3fyeujkVhvRjjD8mQ1UTFCnhQB4XachxlqXfi1iYBIh6mrPNT116Mvj/S+iaKiIKE6C
+ tYBti3/N3RWnqT58V2zTbkrJONbfcYSPAFU58Sl2ShKU2N6FRJ2EXZEk0ADAMR5UObl+
+ pyeozQwICK9Ms3GJGtn5kfXwwLMiI52CxADDVgvVslde02Dv+TVoNISbHYegxD39hxMK
+ 2mTBXpT6kLRNWKZcdXiJ4RTDRkoXea0gb+0mrH+z6mHl2omL//wtSpKYUi9nIhQqtb/X
+ oWTbZ74+lLwv6m+HziWcCSwdbC2kycWxFLyAxJLw2b8rXQsq2kqKgJGhkNUmdhJGm3Pp Lg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xksyqnsax-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 00:16:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O0E65X111077;
-        Fri, 24 Jan 2020 00:16:48 GMT
+        Fri, 24 Jan 2020 00:18:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00O0EZkq156418;
+        Fri, 24 Jan 2020 00:16:54 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xqmwb1b0r-1
+        by userp3020.oracle.com with ESMTP id 2xqnrs0akb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 00:16:48 +0000
+        Fri, 24 Jan 2020 00:16:53 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00O0GlEj030419;
-        Fri, 24 Jan 2020 00:16:47 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00O0GrMD030562;
+        Fri, 24 Jan 2020 00:16:53 GMT
 Received: from localhost (/10.145.179.16)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jan 2020 16:16:46 -0800
-Subject: [PATCH 2/8] man: document the xfs_db btheight command
+        with ESMTP ; Thu, 23 Jan 2020 16:16:52 -0800
+Subject: [PATCH 3/8] man: reformat xfs_quota commands in the manpage for
+ testing
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 23 Jan 2020 16:16:44 -0800
-Message-ID: <157982500443.2765410.17401149852075835578.stgit@magnolia>
+Date:   Thu, 23 Jan 2020 16:16:50 -0800
+Message-ID: <157982501072.2765410.10319214860660759283.stgit@magnolia>
 In-Reply-To: <157982499185.2765410.18206322669640988643.stgit@magnolia>
 References: <157982499185.2765410.18206322669640988643.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,13 +54,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001240000
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9509 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001240000
@@ -70,62 +71,68 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Document the btheight command in xfs_db.
+Reformat the xfs_quota commands listed in the xfs_quota.8 manpage so
+that we can implement a fstest that checks that each command actually
+has a section in the manpage.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- man/man8/xfs_db.8 |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ man/man8/xfs_quota.8 |   15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index a1ee3514..53e34983 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -346,6 +346,45 @@ If the cursor points at an inode, dump the extended attribute block mapping btre
- Dump all keys and pointers in intermediate btree nodes, and all records in leaf btree nodes.
- .RE
- .TP
-+.BI "btheight [\-b " blksz "] [\-n " recs "] [\-w " max "|\-w " min "] btree types..."
-+For a given number of btree records and a btree type, report the number of
-+records and blocks for each level of the btree, and the total number of blocks.
-+The btree type must be given after the options.
-+
-+A raw btree geometry can be provided in the format
-+"record_bytes:key_bytes:ptr_bytes:header_type", where header_type is one of
-+"short", "long", "shortcrc", or "longcrc".
-+
-+The supported btree types are:
-+.IR bnobt ,
-+.IR cntbt ,
-+.IR inobt ,
-+.IR finobt ,
-+.IR bmapbt ,
-+.IR refcountbt ,
-+and
-+.IR rmapbt .
-+
-+Options are as follows:
-+.RS 1.0i
-+.TP 0.4i
-+.B \-b
-+is used to override the btree block size.
-+The default is the filesystem block size.
-+.TP
-+.B \-n
-+is used to specify the number of records to store.
-+This argument is required.
-+.TP
-+.B \-w max
-+shows only the best case scenario, which is when the btree blocks are
-+maximally loaded.
-+.TP
-+.B \-w min
-+shows only the worst case scenario, which is when the btree blocks are
-+half full.
-+.RE
-+.TP
- .B check
- See the
- .B blockget
+diff --git a/man/man8/xfs_quota.8 b/man/man8/xfs_quota.8
+index d9c5f649..e6fe7cd1 100644
+--- a/man/man8/xfs_quota.8
++++ b/man/man8/xfs_quota.8
+@@ -228,8 +228,7 @@ option sends the output to
+ .I file
+ instead of stdout.
+ .HP
+-.B
+-free
++.B free
+ [
+ .B \-bir
+ ] [
+@@ -398,8 +397,7 @@ option reports information without the header line. The
+ .B \-t
+ option performs a terse report.
+ .HP
+-.B
+-state
++.B state
+ [
+ .B \-gpu
+ ] [
+@@ -420,8 +418,7 @@ instead of stdout. The
+ .B \-a
+ option reports state on all filesystems and not just the current path.
+ .HP
+-.B
+-limit
++.B limit
+ [
+ .BR \-g " | " \-p " | " \-u
+ ]
+@@ -519,8 +516,7 @@ identified by the current path.
+ Quota must not be enabled on the filesystem, else this operation will
+ report an error.
+ .HP
+-.B
+-dump
++.B dump
+ [
+ .BR \-g " | " \-p " | " \-u
+ ] [
+@@ -547,8 +543,7 @@ The file must be in the format produced by the
+ .B dump
+ command.
+ .HP
+-.B
+-quot
++.B quot
+ [
+ .BR \-g " | " \-p " | " \-u
+ ] [
 
