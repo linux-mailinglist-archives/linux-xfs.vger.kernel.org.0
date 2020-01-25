@@ -2,158 +2,75 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 689521496AB
-	for <lists+linux-xfs@lfdr.de>; Sat, 25 Jan 2020 17:41:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FF081496AD
+	for <lists+linux-xfs@lfdr.de>; Sat, 25 Jan 2020 17:43:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgAYQlw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 25 Jan 2020 11:41:52 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38558 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAYQlw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Jan 2020 11:41:52 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00PGXxJh120585
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 16:41:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=gc9cnrEdqrNeD5tnuriYwBFCG0iSo6laTSWuewEKXDM=;
- b=oDvme29QTopDCFUS+86ULnC9PFvw5jysuGaZ0wbSIikc+lN49tRRlhQ9GvuEUllchoDo
- AfAdxK8Acs3oVqwVXpCtx2ScEELxBUykwVrGUtJrh38aYTgw9jxe7LdArWg6nq0ELwXH
- 5qLpnqDz9A3FTYU8mHHukEKVEbe35U3p/Hz6T4DDafcEQux7E65zBLiTrIz3uuWM+I8w
- P6Y4/r8bmI1A4DApRkWGMUhEzZrXGx/Fu+xuNYNwy7zHtPhezuoz4mdvCDSxo3HO9+oX
- ep7TjALGue0hKJnAik+Z6yi9zKCM5FpuQdIHS9aJgZOANggHZX7czCZM2JtlqJmPng/S iA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xrdmq1d2u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 16:41:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00PGWLFd009632
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 16:41:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xrdh4b4b4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 16:41:49 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00PGfmg1027246
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 16:41:49 GMT
-Received: from [192.168.1.223] (/67.1.3.112)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 25 Jan 2020 08:41:47 -0800
-Subject: Re: [PATCH v6 11/16] xfs: Check for -ENOATTR or -EEXIST
-From:   Allison Collins <allison.henderson@oracle.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <20200118225035.19503-1-allison.henderson@oracle.com>
- <20200118225035.19503-12-allison.henderson@oracle.com>
- <20200121231530.GK8247@magnolia>
- <68dcf7a7-9e10-2d64-9c5c-d520d2372c2b@oracle.com>
-Message-ID: <26a49cf4-52df-55bd-67bb-9c0c981a860d@oracle.com>
-Date:   Sat, 25 Jan 2020 09:41:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726260AbgAYQnl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 25 Jan 2020 11:43:41 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40482 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAYQnl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Jan 2020 11:43:41 -0500
+Received: by mail-ed1-f66.google.com with SMTP id p3so4462151edx.7
+        for <linux-xfs@vger.kernel.org>; Sat, 25 Jan 2020 08:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=a+sdo6ELOhIZYcrImvpVtDRuVapcqOlgGXqjkc0MLHw=;
+        b=S8jdZe0Lm1PVMF4+xqlO7FOGOe+zq91SHTLCswO09ZCa6glzZS19IZ3S/3teHvdkyb
+         KM2Gbjwr00w4oiw/j9/8/8nbbzg0gsptzzf32HVy/kTD/kJxIrh9uf2fLE/JL8ep0ZJ7
+         97F7zK9osrKwkRQomSZXFD1+J3rcUdCa6AlvA47PSM/d0lvNEqCH/IMpGPmAxtIPH9gs
+         OmV7R36cMtDkARjGLdTifg66PX0ZTJuaSSKVDH9GmNg0IYvCwFjJqO+wUCKTZf3OPCuf
+         BUbAMdWetn9mT3DliUJC4lrgbHEIPlwON09A/kMJ25AwicsL8ISEL9vHYy+6Vu/kLl4b
+         Y+SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=a+sdo6ELOhIZYcrImvpVtDRuVapcqOlgGXqjkc0MLHw=;
+        b=DGTvrJHPnGx+AxHxteNgNDV2Qz4SHCvtLqyT5igHbapPx4siZCzGPKuefyY0k7ws3+
+         cv/qo81KPgXkNrAnhdjYMMLwUtID9xL+Dj3Hyr7Vvt+03lVMrBAraUv8cJ7hvhdSKcnI
+         HwDvyWpeqol9/6y9QHasCg4ybO34cv8+ObG6mHBlWp9WacghKF6xL4xzFBDv2uPJB6Kd
+         bLOUHrpTGDYZlSdbuVt39KYE7wKfE/zMPUcehFssN9vXMFzcpCRAFjHP5C/UpJjdln6w
+         beq9oouDpetE6PNe0LjQHbINi/PFiLt24neMUsylEg4UBO8vCFlHGGn6Qf0Q6yMl/Wc1
+         RhSQ==
+X-Gm-Message-State: APjAAAVSyRwYNIUEATnuvg2F63qbQ11MIs6Y5HYTmS0sScT8YmYPsDfQ
+        MgsThLC9sIFAVg6WehPaYJ/UbhzP+e94rdSWQxE=
+X-Google-Smtp-Source: APXvYqzovCnWCKN0tyV4LyPwfgSF2aS8St9OpsUkzTcPIJ6nLF1yF+IFLxM1qA/MKGEbnAR6p/cThBnU7O5xZa3tKFM=
+X-Received: by 2002:a05:6402:947:: with SMTP id h7mr7420937edz.218.1579970620064;
+ Sat, 25 Jan 2020 08:43:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <68dcf7a7-9e10-2d64-9c5c-d520d2372c2b@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9511 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001250139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9511 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001250139
+Received: by 2002:a50:a864:0:0:0:0:0 with HTTP; Sat, 25 Jan 2020 08:43:39
+ -0800 (PST)
+Reply-To: hgary316@gmail.com
+From:   Gary Hamilton <dezolvier@gmail.com>
+Date:   Sat, 25 Jan 2020 17:43:39 +0100
+Message-ID: <CAG6kkujZt3up0Mt0L9hoOPyNvt9yLL6W6zQqXQz2tFobz=7zAw@mail.gmail.com>
+Subject: I'm waiting for your reply
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 1/21/20 9:29 PM, Allison Collins wrote:
-> 
-> 
-> On 1/21/20 4:15 PM, Darrick J. Wong wrote:
->> On Sat, Jan 18, 2020 at 03:50:30PM -0700, Allison Collins wrote:
->>> Delayed operations cannot return error codes.  So we must check for
->>> these conditions first before starting set or remove operations
->>
->> Answering my own question from earlier -- I see here you actually /are/
->> checking the attr existence w.r.t. ATTR_{CREATE,REPLACE} right after we
->> allocate a transaction and ILOCK the inode, so
->>
->> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Alrighty, thank you!
-> 
->>
->> Though I am wondering if you could discard the predicates from the
->> second patch in favor of doing a normal lookup of the attr with a zero
->> valuelen to determine if there's already an attribute?
-> I think I likely answered this in the response to that patch.  Because 
-> it's used as part of the remove procedures, we still need it.  We could 
-> make a simpler version just for this application I suppose, but it seems 
-> like it'd just be extra code since we still need the former.
-> 
-> Thank you for the reviews!
-> Allison
-> 
->>
->> --D
->>
->>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
->>> ---
->>>   fs/xfs/libxfs/xfs_attr.c | 12 ++++++++++++
->>>   1 file changed, 12 insertions(+)
->>>
->>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->>> index a2673fe..e9d22c1 100644
->>> --- a/fs/xfs/libxfs/xfs_attr.c
->>> +++ b/fs/xfs/libxfs/xfs_attr.c
->>> @@ -457,6 +457,14 @@ xfs_attr_set(
->>>           goto out_trans_cancel;
->>>       xfs_trans_ijoin(args.trans, dp, 0);
->>> +
->>> +    error = xfs_has_attr(&args);
->>> +    if (error == -EEXIST && (name->type & ATTR_CREATE))
->>> +        goto out_trans_cancel;
->>> +
->>> +    if (error == -ENOATTR && (name->type & ATTR_REPLACE))
->>> +        goto out_trans_cancel;
->>> +
->>>       error = xfs_attr_set_args(&args);
-So I was thinking of adding this one to a smaller 3 patch series I 
-mentioned earlier.  I was also thinking of adding in some asserts here:
+-- 
 
-ASSERT(error != -EEXIST)
-ASSERT(error != -ENOATTR)
+Good day to you,
+My name is Dr. Gary E. Hamilton, a United State lawyer. I have
+previously sent you a message regarding a transaction worth
+($20,000,000.00 USD (Twenty Million USD Dollars) left by my late
+client before his tragic death.
+I am contacting you once again because after going through your
+profile, I strongly believe that you will be in a better position to
+execute this business transaction with me.
+Please if you are interested, I wish to point out that after the
+transaction I want 10% of this money to be donated among charity
+organizations while the remaining 90% will be shared equal by the both
+of us.
+This transaction is 100% risk free; please respond to me as soon as
+possible for more detailed information. Here is my email:
+hgary316@gmail.com
 
-Just to make sure the changes are enforcing the behavioral changes that 
-we want.  I thought this might be a good stabilizer to the rest of the 
-delayed attr series.  Because chasing this bug back up through the log 
-replay is a much bigger PITA than catching it here.  Thoughts?
-
->>>       if (error)
->>>           goto out_trans_cancel;
->>> @@ -545,6 +553,10 @@ xfs_attr_remove(
->>>        */
->>>       xfs_trans_ijoin(args.trans, dp, 0);
->>> +    error = xfs_has_attr(&args);
->>> +    if (error != -EEXIST)
->>> +        goto out;
->>> +
-Here too:
-ASSERT(error != -EEXIST)
-
-Let me know what folks think.  Thanks!
-
-Allison
-
->>>       error = xfs_attr_remove_args(&args);
->>>       if (error)
->>>           goto out;
->>> -- 
->>> 2.7.4
->>>
+Yours Faithfully,
+Dr. Gary E. Hamilton
