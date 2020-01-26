@@ -2,65 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7121614983A
-	for <lists+linux-xfs@lfdr.de>; Sun, 26 Jan 2020 00:23:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AB4814987C
+	for <lists+linux-xfs@lfdr.de>; Sun, 26 Jan 2020 03:46:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgAYXXB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 25 Jan 2020 18:23:01 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47340 "EHLO
+        id S1728984AbgAZCno (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 25 Jan 2020 21:43:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53550 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgAYXXB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Jan 2020 18:23:01 -0500
+        with ESMTP id S1728842AbgAZCno (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Jan 2020 21:43:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LKebuwzsGJzhRojV/yLLfuJjyqdhEqnFW5xUrIQmIoo=; b=tyO9oQ0q+VAac+8Qxew7ttGs4
-        BAkDKYNBP8jXlPe4E68tPn9Gr0TQZpCf4VCZEh22fiWqsQf8qN9XCgyYM5G41eBdHTeV0svEuZHuh
-        I/N2Ntb27VSoeLZnbBrWrm5dolGI63LU3ep8hg2RB1XZkSf+H4RuzfIwlzipV0rYfh28qbOKd8dah
-        nBV8cxnx5d4LQLjE4b9YNw/UKW0AKKeLRXEVjCqBbnZCNuXn/3IhgbTdj/WdlYQpDygxtKAJdG1Xu
-        w8vyYVHnMgyAUrP4ZQFHD/mojmq5pQAluzmIy3z5cmRHtDn/njbyZoFw2m+yPlHXOVxU0QTYZFF0P
-        dboQIh1SA==;
+         bh=HzA6qPuHVZSRpJbgDK1bsoFMNcaYWWkVypEX7PpBi8E=; b=NLd9tUYuUhutKsvbPHhvTCrgT
+        3O6POkEoIBSj3vA3W7wGhO31nV/AcYmzkKV/+44nMUOzlFmp32f8V59R3gPFTJjAtQu1FGQrc7cyV
+        uK1a6xogGSbaXfrNyfS2ZCTJTiEaA1weBuSn3L5UJDRVd4BDBhg7Hf8TF2S3C2m/417PdmU+Pemav
+        99kXJfN/0Q7Lnu8s6AQl97mJsFyezpg3mIaifMJsrKWNG2RWCQkde7A3qpBNWJn7+4Ir7r7D9p3hB
+        fU1yyxd9a1T8lWYappNNBVxsga20j0hvYOAC/EbBYxIQb9ICKH3J1v4Vs5B0QeNmoSPeuuBqOeCcw
+        Vt4dna5zQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivUlX-00087x-4M; Sat, 25 Jan 2020 23:22:59 +0000
-Date:   Sat, 25 Jan 2020 15:22:59 -0800
+        id 1ivXtn-0005Fn-B4; Sun, 26 Jan 2020 02:43:43 +0000
+Date:   Sat, 25 Jan 2020 18:43:43 -0800
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/29] xfs: merge xfs_attr_remove into xfs_attr_set
-Message-ID: <20200125232259.GA30917@infradead.org>
-References: <20200114081051.297488-1-hch@lst.de>
- <20200114081051.297488-3-hch@lst.de>
- <20200121172853.GC8247@magnolia>
- <52723c8f-1634-424c-e1b6-d3195304fc15@oracle.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
+Subject: Re: [PATCH 10/12] xfs: make xfs_*read_agf return EAGAIN to
+ ALLOC_FLAG_TRYLOCK callers
+Message-ID: <20200126024343.GA20075@infradead.org>
+References: <157984313582.3139258.1136501362141645797.stgit@magnolia>
+ <157984320125.3139258.966527323692871610.stgit@magnolia>
+ <20200124231207.GD20014@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <52723c8f-1634-424c-e1b6-d3195304fc15@oracle.com>
+In-Reply-To: <20200124231207.GD20014@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:17:15PM -0700, Allison Collins wrote:
-
-[full quote deleted, please follow proper mail netiquette]
-
-> > (The first thing my brain thought was, "ENOATTR on a set operation
-> > suggests to me that something's seriously broken in the attr code; why
-> > would you mask it?")
-> > 
-> > --D
+On Fri, Jan 24, 2020 at 03:12:07PM -0800, Christoph Hellwig wrote:
+> > +	/* We don't support trylock when freeing. */
+> > +	ASSERT((flags & (XFS_ALLOC_FLAG_FREEING | XFS_ALLOC_FLAG_TRYLOCK)) !=
+> > +			(XFS_ALLOC_FLAG_FREEING | XFS_ALLOC_FLAG_TRYLOCK));
 > 
-> Would either of you mind if I were to pick up this patch and make a mini set
-> that resolves some of the overlap between our sets?  I'll fix the nits here.
-> Let me know, thanks!
+> Does this assert really work?  Shouldn't it be
+> 
+> 	ASSERT(!(flags & XFS_ALLOC_FLAG_FREEING) ||
+> 	       !(flags & XFS_ALLOC_FLAG_TRYLOCK));
 
-I'd rather resend the whole thing - it fixes various issues with the
-attr flags handling and removes lots of codes.  I'll try to do so today,
-but Darrick can decide if he just wants to pick parts if that makes life
-easier.
+Actually, I'll take that back - your version is doing the right thing.
+It just isn't quite as obvious to read.
