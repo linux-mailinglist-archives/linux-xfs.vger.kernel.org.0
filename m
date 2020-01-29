@@ -2,74 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D6114D022
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jan 2020 19:09:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2972E14D030
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jan 2020 19:15:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgA2SJz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 Jan 2020 13:09:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58176 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgA2SJz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Jan 2020 13:09:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6xVGstCJbgz4ufIPRfcSM0+t1XnXH+CYkzZQGoAlCtw=; b=o6GNKbB3Y5s8jszOIdxzJcDsM
-        RTSPf4yTZvzIjO/2GGJ1uIyUGqG2Zck13Z4GTJ2Ds5BHMmzhUQevbXC8u+izLcq5B7bd31naXpxnQ
-        /EfZWsKYu9jzoQgcgA6AOQ7wK51BNDQuLDk/Ry+9ux/OBh490VsO6i6wE9UCHcz7UyAds7pz9zOOY
-        P4G6nqOENzXYfK3oKr61U/21oCfUljT+dZYMmJtiX5lCK0YWIsgk8cbfOUOb2myHOKqjlVBHFrgm2
-        4ewqwRInuc/HT7fQGQphNRh5z57lW1ixub2QP4gaPBuy7bilpSsaEknjEHPDmS/zMx72vGMcRHwzi
-        +KENBtuqw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwrmk-0005iO-UN; Wed, 29 Jan 2020 18:09:54 +0000
-Date:   Wed, 29 Jan 2020 10:09:54 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 1/2] xfs: don't take addresses of packed xfs_agfl_t member
-Message-ID: <20200129180954.GC14855@infradead.org>
+        id S1727274AbgA2SPe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Jan 2020 13:15:34 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59418 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726245AbgA2SPe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Jan 2020 13:15:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580321733;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=UMTUmRu0fezX68FPicvQTrahA86feUPVW1ptQwpGnKw=;
+        b=Zr+fhkkr8+IxtbcokPc0vIBgtGdzEPkDMAgIkZkL0lffKEoUoAYwD/VWiYJkplOTSCeTn7
+        5OiX7Dgfx+phs0GAlp4i87Q1ydE2IRa+UfPnm4tsOiBFsCVEQ/a43i0GWvISKmAEnvT/RD
+        a1XlK77CfqKzM+dB9bnGoqTuHBvhlEI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-2C2hwrLxPmWncaTVQUH4bg-1; Wed, 29 Jan 2020 13:15:30 -0500
+X-MC-Unique: 2C2hwrLxPmWncaTVQUH4bg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88BD58017CC
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jan 2020 18:15:29 +0000 (UTC)
+Received: from [127.0.0.1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 408595DA7B
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jan 2020 18:15:29 +0000 (UTC)
+Subject: [PATCH 2/2 V2] xfs: don't take addresses of packed xfs_rmap_key
+ member
+From:   Eric Sandeen <sandeen@redhat.com>
+To:     linux-xfs <linux-xfs@vger.kernel.org>
 References: <65e48930-96ae-7307-ba65-6b7528bb2fb5@redhat.com>
- <09382ee9-8539-2f1d-bd4d-7256daf38a40@redhat.com>
+ <89743aba-ca7f-340c-c813-b8d73cb25cd7@redhat.com>
+Autocrypt: addr=sandeen@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b44b9c6e-4c40-2670-8c38-874a79e0d066@redhat.com>
+Date:   Wed, 29 Jan 2020 12:15:06 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09382ee9-8539-2f1d-bd4d-7256daf38a40@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <89743aba-ca7f-340c-c813-b8d73cb25cd7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:43:13AM -0600, Eric Sandeen wrote:
-> gcc now warns about taking an address of a packed structure member.
-> 
-> Work around this by using offsetof() instead.
-> 
-> Thanks to bfoster for the suggestion and djwong for reiterating it.
-> 
-> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-> ---
-> 
-> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-> index 1b7dcbae051c..7bfc8e2437e9 100644
-> --- a/fs/xfs/libxfs/xfs_format.h
-> +++ b/fs/xfs/libxfs/xfs_format.h
-> @@ -787,7 +787,8 @@ typedef struct xfs_agi {
->  
->  #define XFS_BUF_TO_AGFL_BNO(mp, bp) \
->  	(xfs_sb_version_hascrc(&((mp)->m_sb)) ? \
-> -		&(XFS_BUF_TO_AGFL(bp)->agfl_bno[0]) : \
-> +		(__be32 *)((char *)(bp)->b_addr + \
-> +			offsetof(struct xfs_agfl, agfl_bno)) : \
->  		(__be32 *)(bp)->b_addr)
+gcc now warns about taking an address of a packed structure member.
 
-Yikes.  If we want to go down this route this really needs to become
-an inline function (and fiven that it touches buffer is has no business
-in xfs_format.h).
+This happens here because of how be32_add_cpu() works; just open-code
+the modification using a temporary variable instead.
 
-But I absolutely do not see the point.  If agfl_bno was unalgined
-so is adding the offsetoff.  The warnings makes no sense, and there is
-a good reason the kernel build turned it off.
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
+
+V2: fix key-> vs rec-> derp derp thinko
+
+diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
+index fc78efa52c94..9e5ac773fc9e 100644
+--- a/fs/xfs/libxfs/xfs_rmap_btree.c
++++ b/fs/xfs/libxfs/xfs_rmap_btree.c
+@@ -182,12 +182,14 @@ xfs_rmapbt_init_high_key_from_rec(
+ 	union xfs_btree_rec	*rec)
+ {
+ 	uint64_t		off;
++	xfs_agblock_t		start;
+ 	int			adj;
+ 
+ 	adj = be32_to_cpu(rec->rmap.rm_blockcount) - 1;
+ 
+ 	key->rmap.rm_startblock = rec->rmap.rm_startblock;
+-	be32_add_cpu(&key->rmap.rm_startblock, adj);
++	start = be32_to_cpu(key->rmap.rm_startblock) - adj;
++	key->rmap.rm_startblock = cpu_to_be32(start);
+ 	key->rmap.rm_owner = rec->rmap.rm_owner;
+ 	key->rmap.rm_offset = rec->rmap.rm_offset;
+ 	if (XFS_RMAP_NON_INODE_OWNER(be64_to_cpu(rec->rmap.rm_owner)) ||
+
