@@ -2,456 +2,547 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A6FD514C574
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jan 2020 05:57:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 220A614C5AA
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jan 2020 06:23:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgA2E5f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jan 2020 23:57:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726518AbgA2E5f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jan 2020 23:57:35 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T4s1lf004901;
-        Tue, 28 Jan 2020 23:57:30 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xsqa52k0x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 23:57:30 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00T4tPmg008678;
-        Tue, 28 Jan 2020 23:57:29 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xsqa52k0p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 23:57:29 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00T4o90V015008;
-        Wed, 29 Jan 2020 04:57:29 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 2xrda6pv9p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 04:57:28 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00T4vSnX51053034
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jan 2020 04:57:28 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B2ED2805E;
-        Wed, 29 Jan 2020 04:57:28 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 204B92805C;
-        Wed, 29 Jan 2020 04:57:26 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.75.4])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jan 2020 04:57:25 +0000 (GMT)
-From:   Chandan Rajendra <chandanrlinux@gmail.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Chandan Rajendra <chandanrlinux@gmail.com>, david@fromorbit.com,
-        chandan@linux.ibm.com, darrick.wong@oracle.com
-Subject: [PATCH V3 2/2] xfs: Fix log reservation calculation for xattr insert operation
-Date:   Wed, 29 Jan 2020 10:30:00 +0530
-Message-Id: <20200129050000.10439-2-chandanrlinux@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200129050000.10439-1-chandanrlinux@gmail.com>
-References: <20200129050000.10439-1-chandanrlinux@gmail.com>
+        id S1726047AbgA2FXA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Jan 2020 00:23:00 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25958 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbgA2FXA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Jan 2020 00:23:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580275378;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kAjbDxnzucMcvA9VZ3bYq3h3DQ9xy65rTq+waNA10z4=;
+        b=PyYhgjsyZrfEm+Tq4HO3WZAkzre+N6tRsvbY24x9W/q2VHNnvJM/YRFtlGFjtsANqqDDth
+        /APjkuea16ouirvndlqKrmRpsY4m+9qkTT/lG4IDIA5GyLxkIy0UX4HJnLyYzX/0l5oTB5
+        U1kJZHAjlJfY03CYTafQo7xJu5MVTgI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-41-4HZmMwbHPbubi9Ih6173WQ-1; Wed, 29 Jan 2020 00:22:53 -0500
+X-MC-Unique: 4HZmMwbHPbubi9Ih6173WQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25A13800D41;
+        Wed, 29 Jan 2020 05:22:52 +0000 (UTC)
+Received: from bogon.redhat.com (ovpn-12-55.pek2.redhat.com [10.72.12.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F8D75D9C5;
+        Wed, 29 Jan 2020 05:22:50 +0000 (UTC)
+From:   Zorro Lang <zlang@redhat.com>
+To:     fstests@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH v4] xfstests: xfs mount option sanity test
+Date:   Wed, 29 Jan 2020 13:22:47 +0800
+Message-Id: <20200129052247.9911-1-zlang@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_09:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=4 priorityscore=1501 impostorscore=0 adultscore=0
- clxscore=1034 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290038
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Log space reservation for xattr insert operation can be divided into two
-parts,
-1. Mount time
-   - Inode
-   - Superblock for accounting space allocations
-   - AGF for accounting space used be count, block number, rmapbt and refcnt
-     btrees.
+XFS is changing to suit the new mount API, so add this case to make
+sure the changing won't bring in regression issue on xfs mount option
+parse phase, and won't change some default behaviors either.
 
-2. The remaining log space can only be calculated at run time because,
-   - A local xattr can be large enough to cause a double split of the dabtree.
-   - The value of the xattr can be large enough to be stored in remote
-     blocks. The contents of the remote blocks are not logged.
-
-   The log space reservation could be,
-   - 2 * XFS_DA_NODE_MAXDEPTH number of blocks. Additional XFS_DA_NODE_MAXDEPTH
-     number of blocks are required if xattr is large enough to cause another
-     split of the dabtree path from root to leaf block.
-   - BMBT blocks for storing (2 * XFS_DA_NODE_MAXDEPTH) record
-     entries. Additional XFS_DA_NODE_MAXDEPTH number of blocks are required in
-     case of a double split of the dabtree path from root to leaf blocks.
-   - Space for logging blocks of count, block number, rmap and refcnt btrees.
-
-Presently, mount time log reservation includes block count required for a
-single split of the dabtree. The dabtree block count is also taken into
-account by xfs_attr_calc_size().
-
-Also, AGF log space reservation isn't accounted for. Hence log reservation
-calculation for xattr insert operation gives an incorrect value.
-
-Apart from the above, xfs_log_calc_max_attrsetm_res() passes byte count as
-an argument to XFS_NEXTENTADD_SPACE_RES() instead of block count.
-
-To fix these issues, this commit refactors xfs_attr_calc_size() to calculate,
-1. The number of dabtree blocks that need to be logged.
-2. The number of remote blocks that need to be allocated.
-3. The number of dabtree blocks that need to be allocated.
-4. The number of bmbt blocks that need to be allocated.
-5. The total number of blocks that need to be allocated.
-
-xfs_attr_set() uses this information to compute number of bytes that needs to
-be reserved in the log.
-
-This commit also modifies xfs_log_calc_max_attrsetm_res() to invoke
-xfs_attr_calc_size() to obtain the number of blocks to be logged which it uses
-to figure out the total number of bytes to be logged.
-
-Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+Signed-off-by: Zorro Lang <zlang@redhat.com>
 ---
-Changelog:
-V1 -> V2:
-1. Use convenience variables to reduce indentation of code.
 
-V2 -> V3:
-1. Introduce 'struct xfs_attr_set_resv' to be used an as out parameter
-   holding xattr reservation values.
-2. Calculate number of bmbt blocks and total allocation blocks within
-   xfs_attr_calc_size().
-   
- libxfs/xfs_attr.c       | 93 +++++++++++++++++++++++------------------
- libxfs/xfs_attr.h       | 20 ++++++++-
- libxfs/xfs_log_rlimit.c | 14 +++----
- libxfs/xfs_trans_resv.c | 52 +++++++++++------------
- libxfs/xfs_trans_resv.h |  2 +
- 5 files changed, 107 insertions(+), 74 deletions(-)
+Hi,
 
-diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index 2a0050f4..60e1ac2e 100644
---- a/libxfs/xfs_attr.c
-+++ b/libxfs/xfs_attr.c
-@@ -182,43 +182,6 @@ xfs_attr_get(
- 	return 0;
- }
- 
--/*
-- * Calculate how many blocks we need for the new attribute,
-- */
--STATIC int
--xfs_attr_calc_size(
--	struct xfs_da_args	*args,
--	int			*local)
--{
--	struct xfs_mount	*mp = args->dp->i_mount;
--	int			size;
--	int			nblks;
--
--	/*
--	 * Determine space new attribute will use, and if it would be
--	 * "local" or "remote" (note: local != inline).
--	 */
--	size = xfs_attr_leaf_newentsize(mp, args->namelen, args->valuelen,
--					local);
--	nblks = XFS_DAENTER_SPACE_RES(mp, XFS_ATTR_FORK);
--	if (*local) {
--		if (size > (args->geo->blksize / 2)) {
--			/* Double split possible */
--			nblks *= 2;
--		}
--	} else {
--		/*
--		 * Out of line attribute, cannot double split, but
--		 * make room for the attribute value itself.
--		 */
--		uint	dblocks = xfs_attr3_rmt_blocks(mp, args->valuelen);
--		nblks += dblocks;
--		nblks += XFS_NEXTENTADD_SPACE_RES(mp, dblocks, XFS_ATTR_FORK);
--	}
--
--	return nblks;
--}
--
- STATIC int
- xfs_attr_try_sf_addname(
- 	struct xfs_inode	*dp,
-@@ -247,6 +210,53 @@ xfs_attr_try_sf_addname(
- 	return error ? error : error2;
- }
- 
-+/*
-+ * Calculate how many blocks we need for the new attribute,
-+ */
-+void
-+xfs_attr_calc_size(
-+	struct xfs_mount		*mp,
-+	struct xfs_attr_set_resv	*resv,
-+	int				namelen,
-+	int				valuelen,
-+	int				*local)
+As Darrick's suggestion, V4 changed the LOOP_IMG creation code to make a =
+32G
+sparse file results in an fs with a larger log area, to avoid some unexpe=
+cted
+test errors.
+
+Thanks,
+Zorro
+
+ tests/xfs/512     | 335 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/512.out | 100 ++++++++++++++
+ tests/xfs/group   |   1 +
+ 3 files changed, 436 insertions(+)
+ create mode 100755 tests/xfs/512
+ create mode 100644 tests/xfs/512.out
+
+diff --git a/tests/xfs/512 b/tests/xfs/512
+new file mode 100755
+index 00000000..9b9ce1dc
+--- /dev/null
++++ b/tests/xfs/512
+@@ -0,0 +1,335 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2019 Red Hat, Inc. All Rights Reserved.
++#
++# FS QA Test No. 512
++#
++# XFS mount options sanity check, refer to 'man 5 xfs'.
++#
++seq=3D`basename $0`
++seqres=3D$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=3D`pwd`
++tmp=3D/tmp/$$
++status=3D1	# failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
 +{
-+	unsigned int		blksize;
-+	int			size;
-+
-+	blksize = mp->m_dir_geo->blksize;
-+
-+	/*
-+	 * Determine space new attribute will use, and if it would be
-+	 * "local" or "remote" (note: local != inline).
-+	 */
-+	size = xfs_attr_leaf_newentsize(mp, namelen, valuelen, local);
-+
-+	resv->total_dablks = XFS_DAENTER_BLOCKS(mp, XFS_ATTR_FORK);
-+	resv->log_dablks = 2 * resv->total_dablks;
-+
-+	if (*local) {
-+		if (size > (blksize / 2)) {
-+			/* Double split possible */
-+			resv->log_dablks += resv->total_dablks;
-+			resv->total_dablks *= 2;
-+		}
-+	} else {
-+		/*
-+		 * Out of line attribute, cannot double split, but
-+		 * make room for the attribute value itself.
-+		 */
-+		resv->rmt_blks = xfs_attr3_rmt_blocks(mp, valuelen);
-+	}
-+
-+	resv->bmbt_blks = XFS_NEXTENTADD_SPACE_RES(mp,
-+					resv->total_dablks + resv->rmt_blks,
-+					XFS_ATTR_FORK);
-+
-+	resv->alloc_blks = resv->total_dablks + resv->rmt_blks +
-+		resv->bmbt_blks;
++	cd /
++	rm -f $tmp.*
++	$UMOUNT_PROG $LOOP_MNT 2>/dev/null
++	if [ -n "$LOOP_DEV" ];then
++		_destroy_loop_device $LOOP_DEV 2>/dev/null
++	fi
++	if [ -n "$LOOP_SPARE_DEV" ];then
++		_destroy_loop_device $LOOP_SPARE_DEV 2>/dev/null
++	fi
++	rm -f $LOOP_IMG
++	rm -f $LOOP_SPARE_IMG
++	rmdir $LOOP_MNT
 +}
 +
- /*
-  * Set the attribute specified in @args.
-  */
-@@ -343,6 +353,7 @@ xfs_attr_set(
- 	int			flags)
- {
- 	struct xfs_mount	*mp = dp->i_mount;
-+	struct xfs_attr_set_resv resv = { 0 };
- 	struct xfs_da_args	args;
- 	struct xfs_trans_res	tres;
- 	int			rsvd = (flags & ATTR_ROOT) != 0;
-@@ -360,7 +371,10 @@ xfs_attr_set(
- 	args.value = value;
- 	args.valuelen = valuelen;
- 	args.op_flags = XFS_DA_OP_ADDNAME | XFS_DA_OP_OKNOENT;
--	args.total = xfs_attr_calc_size(&args, &local);
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
 +
-+	xfs_attr_calc_size(mp, &resv, args.namelen, args.valuelen, &local);
++# remove previous $seqres.full before test
++rm -f $seqres.full
 +
-+	args.total = resv.alloc_blks;
- 
- 	error = xfs_qm_dqattach(dp);
- 	if (error)
-@@ -379,8 +393,7 @@ xfs_attr_set(
- 			return error;
- 	}
- 
--	tres.tr_logres = M_RES(mp)->tr_attrsetm.tr_logres +
--			 M_RES(mp)->tr_attrsetrt.tr_logres * args.total;
-+	tres.tr_logres = xfs_calc_attr_res(mp, &resv);
- 	tres.tr_logcount = XFS_ATTRSET_LOG_COUNT;
- 	tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
- 
-diff --git a/libxfs/xfs_attr.h b/libxfs/xfs_attr.h
-index 94badfa1..0b42faf7 100644
---- a/libxfs/xfs_attr.h
-+++ b/libxfs/xfs_attr.h
-@@ -131,6 +131,22 @@ typedef struct xfs_attr_list_context {
- 	int				index;		/* index into output buffer */
- } xfs_attr_list_context_t;
- 
-+struct xfs_attr_set_resv {
-+	/* Number of blocks in the da btree that we might need to log. */
-+	unsigned int		log_dablks;
++# real QA test starts here
++_supported_fs xfs
++_supported_os Linux
++_require_test
++_require_loop
++_require_xfs_io_command "falloc"
 +
-+	/* Number of unlogged blocks needed to store the remote attr value. */
-+	unsigned int		rmt_blks;
++LOOP_IMG=3D$TEST_DIR/$seq.dev
++LOOP_SPARE_IMG=3D$TEST_DIR/$seq.logdev
++LOOP_MNT=3D$TEST_DIR/$seq.mnt
 +
-+	/* Number of blocks to allocate for the da btree. */
-+	unsigned int		total_dablks;
++echo "** create loop device"
++$XFS_IO_PROG -f -c "truncate 32g" $LOOP_IMG
++LOOP_DEV=3D`_create_loop_device $LOOP_IMG`
 +
-+	/* Blocks we might need to create all the new attr fork mappings. */
-+	unsigned int		bmbt_blks;
++echo "** create loop log device"
++$XFS_IO_PROG -f -c "truncate 1g" $LOOP_SPARE_IMG
++LOOP_SPARE_DEV=3D`_create_loop_device $LOOP_SPARE_IMG`
 +
-+	/* Total number of blocks we might have to allocate. */
-+	unsigned int		alloc_blks;
-+};
- 
- /*========================================================================
-  * Function prototypes for the kernel.
-@@ -154,5 +170,7 @@ int xfs_attr_remove_args(struct xfs_da_args *args);
- int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
- 		  int flags, struct attrlist_cursor_kern *cursor);
- bool xfs_attr_namecheck(const void *name, size_t length);
--
-+void xfs_attr_calc_size(struct xfs_mount *mp,
-+			struct xfs_attr_set_resv *resv,
-+			int namelen, int valuelen, int *local);
- #endif	/* __XFS_ATTR_H__ */
-diff --git a/libxfs/xfs_log_rlimit.c b/libxfs/xfs_log_rlimit.c
-index c8398b7d..81188ea0 100644
---- a/libxfs/xfs_log_rlimit.c
-+++ b/libxfs/xfs_log_rlimit.c
-@@ -10,6 +10,7 @@
- #include "xfs_log_format.h"
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
-+#include "xfs_attr.h"
- #include "xfs_da_format.h"
- #include "xfs_trans_space.h"
- #include "xfs_da_btree.h"
-@@ -23,17 +24,16 @@ STATIC int
- xfs_log_calc_max_attrsetm_res(
- 	struct xfs_mount	*mp)
- {
--	int			size;
--	int			nblks;
-+	struct xfs_attr_set_resv resv = { 0 };
-+	int		size;
-+	int		local;
- 
- 	size = xfs_attr_leaf_entsize_local_max(mp->m_attr_geo->blksize) -
- 	       MAXNAMELEN - 1;
--	nblks = XFS_DAENTER_SPACE_RES(mp, XFS_ATTR_FORK);
--	nblks += XFS_B_TO_FSB(mp, size);
--	nblks += XFS_NEXTENTADD_SPACE_RES(mp, size, XFS_ATTR_FORK);
-+	xfs_attr_calc_size(mp, &resv, size, 0, &local);
-+	ASSERT(local == 1);
- 
--	return  M_RES(mp)->tr_attrsetm.tr_logres +
--		M_RES(mp)->tr_attrsetrt.tr_logres * nblks;
-+	return xfs_calc_attr_res(mp, &resv);
- }
- 
- /*
-diff --git a/libxfs/xfs_trans_resv.c b/libxfs/xfs_trans_resv.c
-index 270e92a3..925691fe 100644
---- a/libxfs/xfs_trans_resv.c
-+++ b/libxfs/xfs_trans_resv.c
-@@ -17,6 +17,7 @@
- #include "xfs_trans.h"
- #include "xfs_trans_space.h"
- #include "xfs_quota_defs.h"
-+#include "xfs_attr.h"
- 
- #define _ALLOC	true
- #define _FREE	false
-@@ -641,12 +642,10 @@ xfs_calc_attrinval_reservation(
-  * Setting an attribute at mount time.
-  *	the inode getting the attribute
-  *	the superblock for allocations
-- *	the agfs extents are allocated from
-- *	the attribute btree * max depth
-- *	the inode allocation btree
-+ *	the agf extents are allocated from
-  * Since attribute transaction space is dependent on the size of the attribute,
-  * the calculation is done partially at mount time and partially at runtime(see
-- * below).
-+ * xfs_attr_calc_size()).
-  */
- STATIC uint
- xfs_calc_attrsetm_reservation(
-@@ -654,27 +653,7 @@ xfs_calc_attrsetm_reservation(
- {
- 	return XFS_DQUOT_LOGRES(mp) +
- 		xfs_calc_inode_res(mp, 1) +
--		xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
--		xfs_calc_buf_res(XFS_DA_NODE_MAXDEPTH, XFS_FSB_TO_B(mp, 1));
--}
--
--/*
-- * Setting an attribute at runtime, transaction space unit per block.
-- * 	the superblock for allocations: sector size
-- *	the inode bmap btree could join or split: max depth * block size
-- * Since the runtime attribute transaction space is dependent on the total
-- * blocks needed for the 1st bmap, here we calculate out the space unit for
-- * one block so that the caller could figure out the total space according
-- * to the attibute extent length in blocks by:
-- *	ext * M_RES(mp)->tr_attrsetrt.tr_logres
-- */
--STATIC uint
--xfs_calc_attrsetrt_reservation(
--	struct xfs_mount	*mp)
--{
--	return xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
--		xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_ATTR_FORK),
--				 XFS_FSB_TO_B(mp, 1));
-+		xfs_calc_buf_res(2, mp->m_sb.sb_sectsize);
- }
- 
- /*
-@@ -772,6 +751,27 @@ xfs_calc_sb_reservation(
- 	return xfs_calc_buf_res(1, mp->m_sb.sb_sectsize);
- }
- 
-+uint
-+xfs_calc_attr_res(
-+	struct xfs_mount		*mp,
-+	struct xfs_attr_set_resv	*resv)
++echo "** create loop mount point"
++rmdir $LOOP_MNT 2>/dev/null
++mkdir -p $LOOP_MNT || _fail "cannot create loopback mount point"
++
++filter_loop()
 +{
-+	unsigned int		space_blks;
-+	unsigned int		attr_res;
-+
-+	space_blks = xfs_allocfree_log_count(mp,
-+			resv->total_dablks + resv->bmbt_blks);
-+
-+	attr_res = M_RES(mp)->tr_attrsetm.tr_logres +
-+		xfs_calc_buf_res(resv->log_dablks,
-+				mp->m_attr_geo->blksize) +
-+		xfs_calc_buf_res(resv->bmbt_blks,
-+				mp->m_sb.sb_blocksize) +
-+		xfs_calc_buf_res(space_blks, mp->m_sb.sb_blocksize);
-+
-+	return attr_res;
++	sed -e "s,\B$LOOP_MNT,LOOP_MNT,g" \
++	    -e "s,\B$LOOP_DEV,LOOP_DEV,g" \
++	    -e "s,\B$LOOP_SPARE_DEV,LOOP_SPARE_DEV,g"
 +}
 +
- void
- xfs_trans_resv_calc(
- 	struct xfs_mount	*mp,
-@@ -882,7 +882,7 @@ xfs_trans_resv_calc(
- 	resp->tr_ichange.tr_logres = xfs_calc_ichange_reservation(mp);
- 	resp->tr_fsyncts.tr_logres = xfs_calc_swrite_reservation(mp);
- 	resp->tr_writeid.tr_logres = xfs_calc_writeid_reservation(mp);
--	resp->tr_attrsetrt.tr_logres = xfs_calc_attrsetrt_reservation(mp);
-+	resp->tr_attrsetrt.tr_logres = 0;
- 	resp->tr_clearagi.tr_logres = xfs_calc_clear_agi_bucket_reservation(mp);
- 	resp->tr_growrtzero.tr_logres = xfs_calc_growrtzero_reservation(mp);
- 	resp->tr_growrtfree.tr_logres = xfs_calc_growrtfree_reservation(mp);
-diff --git a/libxfs/xfs_trans_resv.h b/libxfs/xfs_trans_resv.h
-index 7241ab28..3a6a0bf2 100644
---- a/libxfs/xfs_trans_resv.h
-+++ b/libxfs/xfs_trans_resv.h
-@@ -7,6 +7,7 @@
- #define	__XFS_TRANS_RESV_H__
- 
- struct xfs_mount;
-+struct xfs_attr_set_resv;
- 
- /*
-  * structure for maintaining pre-calculated transaction reservations.
-@@ -91,6 +92,7 @@ struct xfs_trans_resv {
- #define	XFS_ATTRSET_LOG_COUNT		3
- #define	XFS_ATTRRM_LOG_COUNT		3
- 
-+uint xfs_calc_attr_res(struct xfs_mount *mp, struct xfs_attr_set_resv *resv);
- void xfs_trans_resv_calc(struct xfs_mount *mp, struct xfs_trans_resv *resp);
- uint xfs_allocfree_log_count(struct xfs_mount *mp, uint num_ops);
- 
--- 
-2.19.1
++# avoid the effection from MKFS_OPTIONS
++MKFS_OPTIONS=3D""
++do_mkfs()
++{
++	echo "FORMAT: $@" | filter_loop | tee -a $seqres.full
++	$MKFS_XFS_PROG -f $* $LOOP_DEV | _filter_mkfs >>$seqres.full 2>$tmp.mkf=
+s
++	if [ "${PIPESTATUS[0]}" -ne 0 ]; then
++		_fail "Fails on _mkfs_dev $* $LOOP_DEV"
++	fi
++	. $tmp.mkfs
++}
++
++is_dev_mounted()
++{
++	findmnt --source $LOOP_DEV >/dev/null
++	return $?
++}
++
++get_mount_info()
++{
++	findmnt --source $LOOP_DEV -o OPTIONS -n
++}
++
++force_unmount()
++{
++	$UMOUNT_PROG $LOOP_MNT >/dev/null 2>&1
++}
++
++# _do_test <mount options> <should be mounted?> [<key string> <key shoul=
+d be found?>]
++_do_test()
++{
++	local opts=3D"$1"
++	local mounted=3D"$2"	# pass or fail
++	local key=3D"$3"
++	local found=3D"$4"	# true or false
++	local rc
++	local info
++
++	# mount test
++	_mount $LOOP_DEV $LOOP_MNT $opts 2>>$seqres.full
++	rc=3D$?
++	if [ $rc -eq 0 ];then
++		if [ "${mounted}" =3D "fail" ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: expect mount to fail, but it succeeded"
++			return 1
++		fi
++		is_dev_mounted
++		if [ $? -ne 0 ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: fs not mounted even mount return 0"
++			return 1
++		fi
++	else
++		if [ "${mounted}" =3D "pass" ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: expect mount to succeed, but it failed"
++			return 1
++		fi
++		is_dev_mounted
++		if [ $? -eq 0 ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: fs is mounted even mount return non-zero"
++			return 1
++		fi
++	fi
++
++	# Skip below checking if "$key" argument isn't specified
++	if [ -z "$key" ];then
++		return 0
++	fi
++	# Check the mount options after fs mounted.
++	info=3D`get_mount_info`
++	echo ${info} | grep -q "${key}"
++	rc=3D$?
++	if [ $rc -eq 0 ];then
++		if [ "$found" !=3D "true" ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: expected to find \"$key\" in mount info \"$info\""
++			return 1
++		fi
++	else
++		if [ "$found" !=3D "false" ];then
++			echo "[FAILED]: mount $LOOP_DEV $LOOP_MNT $opts"
++			echo "ERROR: did not expect to find \"$key\" in \"$info\""
++			return 1
++		fi
++	fi
++
++	return 0
++}
++
++do_test()
++{
++	# Print each argument, include nil ones
++	echo -n "TEST:" | tee -a $seqres.full
++	for i in "$@";do
++		echo -n " \"$i\"" | filter_loop | tee -a $seqres.full
++	done
++	echo | tee -a $seqres.full
++
++	# force unmount before testing
++	force_unmount
++	_do_test "$@"
++	# force unmount after testing
++	force_unmount
++}
++
++echo "** start xfs mount testing ..."
++# Test allocsize=3Dsize
++# Valid values for this option are page size (typically 4KiB) through to=
+ 1GiB
++do_mkfs
++if [ $dbsize -ge 1024 ];then
++	blsize=3D"$((dbsize / 1024))k"
++fi
++do_test "" pass "allocsize" "false"
++do_test "-o allocsize=3D$blsize" pass "allocsize=3D$blsize" "true"
++do_test "-o allocsize=3D1048576k" pass "allocsize=3D1048576k" "true"
++do_test "-o allocsize=3D$((dbsize / 2))" fail
++do_test "-o allocsize=3D2g" fail
++
++# Test attr2
++do_mkfs -m crc=3D1
++do_test "" pass "attr2" "true"
++do_test "-o attr2" pass "attr2" "true"
++do_test "-o noattr2" fail
++do_mkfs -m crc=3D0
++do_test "" pass "attr2" "true"
++do_test "-o attr2" pass "attr2" "true"
++do_test "-o noattr2" pass "attr2" "false"
++
++# Test discard
++do_mkfs
++do_test "" pass "discard" "false"
++do_test "-o discard" pass "discard" "true"
++do_test "-o nodiscard" pass "discard" "false"
++
++# Test grpid|bsdgroups|nogrpid|sysvgroups
++do_test "" pass "grpid" "false"
++do_test "-o grpid" pass "grpid" "true"
++do_test "-o bsdgroups" pass "grpid" "true"
++do_test "-o nogrpid" pass "grpid" "false"
++do_test "-o sysvgroups" pass "grpid" "false"
++
++# Test filestreams
++do_test "" pass "filestreams" "false"
++do_test "-o filestreams" pass "filestreams" "true"
++
++# Test ikeep
++do_test "" pass "ikeep" "false"
++do_test "-o ikeep" pass "ikeep" "true"
++do_test "-o noikeep" pass "ikeep" "false"
++
++# Test inode32|inode64
++do_test "" pass "inode64" "true"
++do_test "-o inode32" pass "inode32" "true"
++do_test "-o inode64" pass "inode64" "true"
++
++# Test largeio
++do_test "" pass "largeio" "false"
++do_test "-o largeio" pass "largeio" "true"
++do_test "-o nolargeio" pass "largeio" "false"
++
++# Test logbufs=3Dvalue. Valid numbers range from 2=E2=80=938 inclusive.
++# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buffer_s=
+ize)
++# prints "logbufs=3DN" in /proc/mounts, but old kernel not. So the defau=
+lt
++# 'display' about logbufs can't be expected, disable this test.
++#do_test "" pass "logbufs" "false"
++do_test "-o logbufs=3D8" pass "logbufs=3D8" "true"
++do_test "-o logbufs=3D2" pass "logbufs=3D2" "true"
++do_test "-o logbufs=3D1" fail
++do_test "-o logbufs=3D9" fail
++do_test "-o logbufs=3D99999999999999" fail
++
++# Test logbsize=3Dvalue.
++do_mkfs -m crc=3D1 -l version=3D2
++# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buffer_s=
+ize)
++# prints "logbsize=3DN" in /proc/mounts, but old kernel not. So the defa=
+ult
++# 'display' about logbsize can't be expected, disable this test.
++#do_test "" pass "logbsize" "false"
++do_test "-o logbsize=3D16384" pass "logbsize=3D16k" "true"
++do_test "-o logbsize=3D16k" pass "logbsize=3D16k" "true"
++do_test "-o logbsize=3D32k" pass "logbsize=3D32k" "true"
++do_test "-o logbsize=3D64k" pass "logbsize=3D64k" "true"
++do_test "-o logbsize=3D128k" pass "logbsize=3D128k" "true"
++do_test "-o logbsize=3D256k" pass "logbsize=3D256k" "true"
++do_test "-o logbsize=3D8k" fail
++do_test "-o logbsize=3D512k" fail
++do_mkfs -m crc=3D0 -l version=3D1
++# New kernel (refer to 4f62282a3696 xfs: cleanup xlog_get_iclog_buffer_s=
+ize)
++# prints "logbsize=3DN" in /proc/mounts, but old kernel not. So the defa=
+ult
++# 'display' about logbsize can't be expected, disable this test.
++#do_test "" pass "logbsize" "false"
++do_test "-o logbsize=3D16384" pass "logbsize=3D16k" "true"
++do_test "-o logbsize=3D16k" pass "logbsize=3D16k" "true"
++do_test "-o logbsize=3D32k" pass "logbsize=3D32k" "true"
++do_test "-o logbsize=3D64k" fail
++
++# Test logdev
++do_mkfs
++do_test "" pass "logdev" "false"
++do_test "-o logdev=3D$LOOP_SPARE_DEV" fail
++do_mkfs -l logdev=3D$LOOP_SPARE_DEV
++do_test "-o logdev=3D$LOOP_SPARE_DEV" pass "logdev=3D$LOOP_SPARE_DEV" "t=
+rue"
++do_test "" fail
++
++# Test noalign
++do_mkfs
++do_test "" pass "noalign" "false"
++do_test "-o noalign" pass "noalign" "true"
++
++# Test norecovery
++do_test "" pass "norecovery" "false"
++do_test "-o norecovery,ro" pass "norecovery" "true"
++do_test "-o norecovery" fail
++
++# Test nouuid
++do_test "" pass "nouuid" "false"
++do_test "-o nouuid" pass "nouuid" "true"
++
++# Test noquota
++do_test "" pass "noquota" "true"
++do_test "-o noquota" pass "noquota" "true"
++
++# Test uquota/usrquota/quota/uqnoenforce/qnoenforce
++do_test "" pass "usrquota" "false"
++do_test "-o uquota" pass "usrquota" "true"
++do_test "-o usrquota" pass "usrquota" "true"
++do_test "-o quota" pass "usrquota" "true"
++do_test "-o uqnoenforce" pass "usrquota" "true"
++do_test "-o qnoenforce" pass "usrquota" "true"
++
++# Test gquota/grpquota/gqnoenforce
++do_test "" pass "grpquota" "false"
++do_test "-o gquota" pass "grpquota" "true"
++do_test "-o grpquota" pass "grpquota" "true"
++do_test "-o gqnoenforce" pass "gqnoenforce" "true"
++
++# Test pquota/prjquota/pqnoenforce
++do_test "" pass "prjquota" "false"
++do_test "-o pquota" pass "prjquota" "true"
++do_test "-o prjquota" pass "prjquota" "true"
++do_test "-o pqnoenforce" pass "pqnoenforce" "true"
++
++# Test sunit=3Dvalue and swidth=3Dvalue
++do_mkfs -d sunit=3D128,swidth=3D128
++do_test "-o sunit=3D8,swidth=3D8" pass "sunit=3D8,swidth=3D8" "true"
++do_test "-o sunit=3D8,swidth=3D64" pass "sunit=3D8,swidth=3D64" "true"
++do_test "-o sunit=3D128,swidth=3D128" pass "sunit=3D128,swidth=3D128" "t=
+rue"
++do_test "-o sunit=3D256,swidth=3D256" pass "sunit=3D256,swidth=3D256" "t=
+rue"
++do_test "-o sunit=3D2,swidth=3D2" fail
++
++# Test swalloc
++do_mkfs
++do_test "" pass "swalloc" "false"
++do_test "-o swalloc" pass "swalloc" "true"
++
++# Test wsync
++do_test "" pass "wsync" "false"
++do_test "-o wsync" pass "wsync" "true"
++
++echo "** end of testing"
++# success, all done
++status=3D0
++exit
+diff --git a/tests/xfs/512.out b/tests/xfs/512.out
+new file mode 100644
+index 00000000..d583b5da
+--- /dev/null
++++ b/tests/xfs/512.out
+@@ -0,0 +1,100 @@
++QA output created by 512
++** create loop device
++** create loop log device
++** create loop mount point
++** start xfs mount testing ...
++FORMAT:=20
++TEST: "" "pass" "allocsize" "false"
++TEST: "-o allocsize=3D4k" "pass" "allocsize=3D4k" "true"
++TEST: "-o allocsize=3D1048576k" "pass" "allocsize=3D1048576k" "true"
++TEST: "-o allocsize=3D2048" "fail"
++TEST: "-o allocsize=3D2g" "fail"
++FORMAT: -m crc=3D1
++TEST: "" "pass" "attr2" "true"
++TEST: "-o attr2" "pass" "attr2" "true"
++TEST: "-o noattr2" "fail"
++FORMAT: -m crc=3D0
++TEST: "" "pass" "attr2" "true"
++TEST: "-o attr2" "pass" "attr2" "true"
++TEST: "-o noattr2" "pass" "attr2" "false"
++FORMAT:=20
++TEST: "" "pass" "discard" "false"
++TEST: "-o discard" "pass" "discard" "true"
++TEST: "-o nodiscard" "pass" "discard" "false"
++TEST: "" "pass" "grpid" "false"
++TEST: "-o grpid" "pass" "grpid" "true"
++TEST: "-o bsdgroups" "pass" "grpid" "true"
++TEST: "-o nogrpid" "pass" "grpid" "false"
++TEST: "-o sysvgroups" "pass" "grpid" "false"
++TEST: "" "pass" "filestreams" "false"
++TEST: "-o filestreams" "pass" "filestreams" "true"
++TEST: "" "pass" "ikeep" "false"
++TEST: "-o ikeep" "pass" "ikeep" "true"
++TEST: "-o noikeep" "pass" "ikeep" "false"
++TEST: "" "pass" "inode64" "true"
++TEST: "-o inode32" "pass" "inode32" "true"
++TEST: "-o inode64" "pass" "inode64" "true"
++TEST: "" "pass" "largeio" "false"
++TEST: "-o largeio" "pass" "largeio" "true"
++TEST: "-o nolargeio" "pass" "largeio" "false"
++TEST: "-o logbufs=3D8" "pass" "logbufs=3D8" "true"
++TEST: "-o logbufs=3D2" "pass" "logbufs=3D2" "true"
++TEST: "-o logbufs=3D1" "fail"
++TEST: "-o logbufs=3D9" "fail"
++TEST: "-o logbufs=3D99999999999999" "fail"
++FORMAT: -m crc=3D1 -l version=3D2
++TEST: "-o logbsize=3D16384" "pass" "logbsize=3D16k" "true"
++TEST: "-o logbsize=3D16k" "pass" "logbsize=3D16k" "true"
++TEST: "-o logbsize=3D32k" "pass" "logbsize=3D32k" "true"
++TEST: "-o logbsize=3D64k" "pass" "logbsize=3D64k" "true"
++TEST: "-o logbsize=3D128k" "pass" "logbsize=3D128k" "true"
++TEST: "-o logbsize=3D256k" "pass" "logbsize=3D256k" "true"
++TEST: "-o logbsize=3D8k" "fail"
++TEST: "-o logbsize=3D512k" "fail"
++FORMAT: -m crc=3D0 -l version=3D1
++TEST: "-o logbsize=3D16384" "pass" "logbsize=3D16k" "true"
++TEST: "-o logbsize=3D16k" "pass" "logbsize=3D16k" "true"
++TEST: "-o logbsize=3D32k" "pass" "logbsize=3D32k" "true"
++TEST: "-o logbsize=3D64k" "fail"
++FORMAT:=20
++TEST: "" "pass" "logdev" "false"
++TEST: "-o logdev=3DLOOP_SPARE_DEV" "fail"
++FORMAT: -l logdev=3DLOOP_SPARE_DEV
++TEST: "-o logdev=3DLOOP_SPARE_DEV" "pass" "logdev=3DLOOP_SPARE_DEV" "tru=
+e"
++TEST: "" "fail"
++FORMAT:=20
++TEST: "" "pass" "noalign" "false"
++TEST: "-o noalign" "pass" "noalign" "true"
++TEST: "" "pass" "norecovery" "false"
++TEST: "-o norecovery,ro" "pass" "norecovery" "true"
++TEST: "-o norecovery" "fail"
++TEST: "" "pass" "nouuid" "false"
++TEST: "-o nouuid" "pass" "nouuid" "true"
++TEST: "" "pass" "noquota" "true"
++TEST: "-o noquota" "pass" "noquota" "true"
++TEST: "" "pass" "usrquota" "false"
++TEST: "-o uquota" "pass" "usrquota" "true"
++TEST: "-o usrquota" "pass" "usrquota" "true"
++TEST: "-o quota" "pass" "usrquota" "true"
++TEST: "-o uqnoenforce" "pass" "usrquota" "true"
++TEST: "-o qnoenforce" "pass" "usrquota" "true"
++TEST: "" "pass" "grpquota" "false"
++TEST: "-o gquota" "pass" "grpquota" "true"
++TEST: "-o grpquota" "pass" "grpquota" "true"
++TEST: "-o gqnoenforce" "pass" "gqnoenforce" "true"
++TEST: "" "pass" "prjquota" "false"
++TEST: "-o pquota" "pass" "prjquota" "true"
++TEST: "-o prjquota" "pass" "prjquota" "true"
++TEST: "-o pqnoenforce" "pass" "pqnoenforce" "true"
++FORMAT: -d sunit=3D128,swidth=3D128
++TEST: "-o sunit=3D8,swidth=3D8" "pass" "sunit=3D8,swidth=3D8" "true"
++TEST: "-o sunit=3D8,swidth=3D64" "pass" "sunit=3D8,swidth=3D64" "true"
++TEST: "-o sunit=3D128,swidth=3D128" "pass" "sunit=3D128,swidth=3D128" "t=
+rue"
++TEST: "-o sunit=3D256,swidth=3D256" "pass" "sunit=3D256,swidth=3D256" "t=
+rue"
++TEST: "-o sunit=3D2,swidth=3D2" "fail"
++FORMAT:=20
++TEST: "" "pass" "swalloc" "false"
++TEST: "-o swalloc" "pass" "swalloc" "true"
++TEST: "" "pass" "wsync" "false"
++TEST: "-o wsync" "pass" "wsync" "true"
++** end of testing
+diff --git a/tests/xfs/group b/tests/xfs/group
+index c7253cf1..a6b09a8d 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -509,3 +509,4 @@
+ 509 auto ioctl
+ 510 auto ioctl quick
+ 511 auto quick quota
++512 auto quick mount
+--=20
+2.20.1
 
