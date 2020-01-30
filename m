@@ -2,91 +2,230 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B94E114E2A6
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 19:54:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45FA414E1E2
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 19:48:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgA3SkR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 30 Jan 2020 13:40:17 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57562 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbgA3SkO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Jan 2020 13:40:14 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UIDJCt094526;
-        Thu, 30 Jan 2020 18:40:12 GMT
+        id S1731548AbgA3SsY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 30 Jan 2020 13:48:24 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:37186 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731542AbgA3SsX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Jan 2020 13:48:23 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UImIi7131603;
+        Thu, 30 Jan 2020 18:48:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2019-08-05;
- bh=lTHOu5vEZqviy/uZf+mEf6YR+JKvLgqdr4rZBOFV/AU=;
- b=Rev1/DnyizFPqxjflBgzbvXJ104D0InDcURF7gGApVKYNidcFq6m3R+HgzkeHMhcAd4M
- 5f/ufl60u+0ez7AFEWx7WvJW0I5H6OJ2LocUVv5i/oYFJORObNd88suXdqVg3vNle7pk
- KjW09nbVUxy4O7BCaTM11sZNUA/ZxoL7lw+56EeVf2JhiWefOnE0rQOkGQPs0h7gfdkq
- RoOU46DbLwd8FUbPPkG03EKMyTENO8NKqbukZescIU/Dc1oMzpAB52m7v7tWGQffu5Iz
- g6fq/UPfMxOMHUyks8ZYZTZ8qZGhu5W9MDMjXfBuVmqiEjRRYKY+M2jVoMn9vFE3GYkl WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xrdmqx32q-1
+ bh=fM0n7eMRf6Wk1Gks8eQ8wmvT3srsep5naVKxATvxCOs=;
+ b=ro/17GJ0gR+jhDj2wePi1gWaSIx388XXdVPKoX6w15zpRbWW5qNgMQVKkKFv49u4j3oo
+ 3019YG8UmaGaAtGAcBI70L0tR2QiHOufyc3r/e4dWqwPgyU7GQQYBM/GR6suW+oBKrEY
+ E0e10w4o4atdI0RHbQNtf1GQZXhG9DPVGn+T6lS29oJ6fZrgKDq6CXHe5rf9dGL+MaiG
+ 7XjFR0/VD065yhYZA6YjeeFwZSp5SjEsRWfPCYtkP9rl0/Qeysj9mCYxqSabXWaS4XE9
+ SG/41jXargtZYqiY16Qs9M8dcClFcj+XwUd9lkqq6k5zAHQC33lHFudzLyKVuEbLC5Nv BA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xrearnwu3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 18:40:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UIES6o012881;
-        Thu, 30 Jan 2020 18:40:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2xuherfdtu-1
+        Thu, 30 Jan 2020 18:48:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UIiG8s195368;
+        Thu, 30 Jan 2020 18:46:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xuc30mwau-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 18:40:09 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00UIe8jA007805;
-        Thu, 30 Jan 2020 18:40:08 GMT
+        Thu, 30 Jan 2020 18:46:11 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00UIk7Y4030994;
+        Thu, 30 Jan 2020 18:46:08 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jan 2020 18:40:08 +0000
-Date:   Thu, 30 Jan 2020 10:40:07 -0800
+        with ESMTP ; Thu, 30 Jan 2020 10:46:07 -0800
+Date:   Thu, 30 Jan 2020 10:46:06 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 10/8] libxfs: remove duplicate attr function declarations
-Message-ID: <20200130184007.GB3447196@magnolia>
+To:     sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2 11/8] xfs_repair: don't corrupt a attr fork da3 node when
+ clearing forw/back
+Message-ID: <20200130184606.GC3447196@magnolia>
 References: <157982499185.2765410.18206322669640988643.stgit@magnolia>
- <20200130181330.GY3447196@magnolia>
- <55cb3628-9211-6ddb-6edf-24fffc684108@sandeen.net>
+ <20200130181512.GZ3447196@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55cb3628-9211-6ddb-6edf-24fffc684108@sandeen.net>
+In-Reply-To: <20200130181512.GZ3447196@magnolia>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001300127
+ engine=8.0.1-1911140001 definitions=main-2001300128
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001300127
+ definitions=main-2001300129
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:28:43PM -0600, Eric Sandeen wrote:
-> On 1/30/20 12:13 PM, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Remove these function declarations since they're in libxfs/xfs_attr.h
-> > and are therefore redundant.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Is it worth keeping this exporting hack around to make static checkers
-> happy if it's just one more thing to keep up to date in userspace?
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Probably?  It depends on how much you like culling known false positives
-when you run smatch/sparse against xfsprogs.
+In process_longform_attr, we enforce that the root block of the
+attribute index must have both forw or back pointers set to zero.
+Unfortunately, the code that nulls out the pointers is not aware that
+the root block could be in da3 node format.
 
-(I for one don't mind not having to remember that stuff...)
+This leads to corruption of da3 root node blocks because the functions
+that convert attr3 leaf headers to and from the ondisk structures
+perform some interpretation of firstused on what they think is an attr1
+leaf block.
 
---D
+Found by using xfs/402 to fuzz hdr.info.hdr.forw.
 
-> -Eric
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: split the da node code into a separate function since that code path
+exits out the bottom of the case statement.
+---
+ repair/attr_repair.c |   98 +++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 68 insertions(+), 30 deletions(-)
+
+diff --git a/repair/attr_repair.c b/repair/attr_repair.c
+index 9a44f610..8b66a06d 100644
+--- a/repair/attr_repair.c
++++ b/repair/attr_repair.c
+@@ -952,6 +952,52 @@ _("wrong FS UUID, inode %" PRIu64 " attr block %" PRIu64 "\n"),
+ 	return 0;
+ }
+ 
++static int
++process_longform_da_root(
++	struct xfs_mount	*mp,
++	xfs_ino_t		ino,
++	struct xfs_dinode	*dip,
++	struct blkmap		*blkmap,
++	int			*repair,
++	struct xfs_buf		*bp)
++{
++	struct xfs_da3_icnode_hdr	da3_hdr;
++	int			repairlinks = 0;
++	int			error;
++
++	xfs_da3_node_hdr_from_disk(mp, &da3_hdr, bp->b_addr);
++	/*
++	 * check sibling pointers in leaf block or root block 0 before
++	 * we have to release the btree block
++	 */
++	if (da3_hdr.forw != 0 || da3_hdr.back != 0)  {
++		if (!no_modify)  {
++			do_warn(
++_("clearing forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"),
++				ino);
++
++			repairlinks = 1;
++			da3_hdr.forw = 0;
++			da3_hdr.back = 0;
++			xfs_da3_node_hdr_to_disk(mp, bp->b_addr, &da3_hdr);
++		} else  {
++			do_warn(
++_("would clear forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"), ino);
++		}
++	}
++
++	/* must do this now, to release block 0 before the traversal */
++	if ((*repair || repairlinks) && !no_modify) {
++		*repair = 1;
++		libxfs_writebuf(bp, 0);
++	} else
++		libxfs_putbuf(bp);
++	error = process_node_attr(mp, ino, dip, blkmap); /* + repair */
++	if (error)
++		*repair = 0;
++	return error;
++}
++
+ /*
+  * Start processing for a leaf or fuller btree.
+  * A leaf directory is one where the attribute fork is too big for
+@@ -975,7 +1021,6 @@ process_longform_attr(
+ 	xfs_dahash_t	next_hashval;
+ 	int		repairlinks = 0;
+ 	struct xfs_attr3_icleaf_hdr leafhdr;
+-	int		error;
+ 
+ 	*repair = 0;
+ 
+@@ -1019,25 +1064,6 @@ process_longform_attr(
+ 	leaf = bp->b_addr;
+ 	xfs_attr3_leaf_hdr_from_disk(mp->m_attr_geo, &leafhdr, leaf);
+ 
+-	/* check sibling pointers in leaf block or root block 0 before
+-	* we have to release the btree block
+-	*/
+-	if (leafhdr.forw != 0 || leafhdr.back != 0)  {
+-		if (!no_modify)  {
+-			do_warn(
+-	_("clearing forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"),
+-				ino);
+-			repairlinks = 1;
+-			leafhdr.forw = 0;
+-			leafhdr.back = 0;
+-			xfs_attr3_leaf_hdr_to_disk(mp->m_attr_geo,
+-						   leaf, &leafhdr);
+-		} else  {
+-			do_warn(
+-	_("would clear forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"), ino);
+-		}
+-	}
+-
+ 	/*
+ 	 * use magic number to tell us what type of attribute this is.
+ 	 * it's possible to have a node or leaf attribute in either an
+@@ -1046,6 +1072,26 @@ process_longform_attr(
+ 	switch (leafhdr.magic) {
+ 	case XFS_ATTR_LEAF_MAGIC:	/* leaf-form attribute */
+ 	case XFS_ATTR3_LEAF_MAGIC:
++		/*
++		 * check sibling pointers in leaf block or root block 0 before
++		 * we have to release the btree block
++		 */
++		if (leafhdr.forw != 0 || leafhdr.back != 0)  {
++			if (!no_modify)  {
++				do_warn(
++	_("clearing forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"),
++					ino);
++				repairlinks = 1;
++				leafhdr.forw = 0;
++				leafhdr.back = 0;
++				xfs_attr3_leaf_hdr_to_disk(mp->m_attr_geo,
++						leaf, &leafhdr);
++			} else  {
++				do_warn(
++	_("would clear forw/back pointers in block 0 for attributes in inode %" PRIu64 "\n"), ino);
++			}
++		}
++
+ 		if (process_leaf_attr_block(mp, leaf, 0, ino, blkmap,
+ 				0, &next_hashval, repair)) {
+ 			*repair = 0;
+@@ -1058,16 +1104,8 @@ process_longform_attr(
+ 
+ 	case XFS_DA_NODE_MAGIC:		/* btree-form attribute */
+ 	case XFS_DA3_NODE_MAGIC:
+-		/* must do this now, to release block 0 before the traversal */
+-		if ((*repair || repairlinks) && !no_modify) {
+-			*repair = 1;
+-			libxfs_writebuf(bp, 0);
+-		} else
+-			libxfs_putbuf(bp);
+-		error = process_node_attr(mp, ino, dip, blkmap); /* + repair */
+-		if (error)
+-			*repair = 0;
+-		return error;
++		return process_longform_da_root(mp, ino, dip, blkmap, repair,
++				bp);
+ 	default:
+ 		do_warn(
+ 	_("bad attribute leaf magic # %#x for dir ino %" PRIu64 "\n"),
