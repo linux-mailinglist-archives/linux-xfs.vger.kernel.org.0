@@ -2,110 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9629714E1EC
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 19:48:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 705FC14E317
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 20:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbgA3Ssp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 30 Jan 2020 13:48:45 -0500
-Received: from sandeen.net ([63.231.237.45]:57460 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731605AbgA3Ssn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:43 -0500
-Received: from Liberator.local (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 8760D5EDB3;
-        Thu, 30 Jan 2020 12:48:42 -0600 (CST)
-Subject: Re: [PATCH 10/8] libxfs: remove duplicate attr function declarations
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <157982499185.2765410.18206322669640988643.stgit@magnolia>
- <20200130181330.GY3447196@magnolia>
- <55cb3628-9211-6ddb-6edf-24fffc684108@sandeen.net>
- <20200130184007.GB3447196@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <e910d8f5-1b3b-7090-b613-47ac7cf1cb92@sandeen.net>
-Date:   Thu, 30 Jan 2020 12:48:41 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        id S1727515AbgA3TXl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 30 Jan 2020 14:23:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33213 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbgA3TXl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Jan 2020 14:23:41 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay11so1724289plb.0
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Jan 2020 11:23:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=STfgILZYJSeHL29PKr26PXRGNaaOXbLTCRy3jhx8noU=;
+        b=jqYeVsahhF99yBrSGAvuHdMSc2W97p/s3hZt9gt9YFSuOjK3g3byaqJC2nQE+QDIfI
+         Z8NqxNikaMbSwQW2aQmx4Z02ThbSexr8D1XYxdrnXThBpe0rcHGSppH4YG+Li4+wqP63
+         2itQvwz4W2zBZh2IImAm5jdwB75aiWKl25l50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=STfgILZYJSeHL29PKr26PXRGNaaOXbLTCRy3jhx8noU=;
+        b=apt7YcYgdYNO6D3iFAvepzTP0dEBbdf/GewXYoh2+WUH4P64ppmNYTjyPxfB5FpFww
+         VgDTf5mWW2EbhYogPuavfQ8oMNXLfea1caYdbqe+aytswGSS9p0XwEZsOfFtUkqi0GJJ
+         YIis/kHiHYHFixv8NWy3xKO34sCXXB9O2WQBVvrYbfWkyIDw1BRVZsumsy+zpYlM5VZJ
+         lv3vo5qbvhCzLRTBCWeE2pnEt1ZlEb9r8c28YD5yzEGg0xChLzswvZBQrnJGFytOTgwt
+         GPBpYgo66f2KM5/52FiURutUPCdCm5uo96w9pizWwSA+N2NNFHflqWhCwS1Tw9aIiNQc
+         zKNA==
+X-Gm-Message-State: APjAAAU9OyHQZMQPBPdFaBhaVjVEQ4C1yoZG5Tv+bZ2RSdfsDKYsKgoe
+        VGsTP5mX7DUALUrg/t3YqbSq8w==
+X-Google-Smtp-Source: APXvYqw7tzrE450ZfccVZjN7IiTuW4qM2cwf555Gxth2MtTA6Fx8D7q2y+CnyzGujglJaRni3OFJmQ==
+X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr7802031pjk.134.1580412220763;
+        Thu, 30 Jan 2020 11:23:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b185sm7608776pfa.102.2020.01.30.11.23.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 11:23:39 -0800 (PST)
+Date:   Thu, 30 Jan 2020 11:23:38 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
+ as usercopy caches
+Message-ID: <202001300945.7D465B5F5@keescook>
+References: <201911121313.1097D6EE@keescook>
+ <201911141327.4DE6510@keescook>
+ <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
+ <202001271519.AA6ADEACF0@keescook>
+ <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+ <202001281457.FA11CC313A@keescook>
+ <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
+ <6844ea47-8e0e-4fb7-d86f-68046995a749@de.ibm.com>
+ <20200129170939.GA4277@infradead.org>
+ <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200130184007.GB3447196@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 1/30/20 12:40 PM, Darrick J. Wong wrote:
-> On Thu, Jan 30, 2020 at 12:28:43PM -0600, Eric Sandeen wrote:
->> On 1/30/20 12:13 PM, Darrick J. Wong wrote:
->>> From: Darrick J. Wong <darrick.wong@oracle.com>
->>>
->>> Remove these function declarations since they're in libxfs/xfs_attr.h
->>> and are therefore redundant.
->>>
->>> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
->>
->> Is it worth keeping this exporting hack around to make static checkers
->> happy if it's just one more thing to keep up to date in userspace?
+On Wed, Jan 29, 2020 at 06:19:56PM +0100, Christian Borntraeger wrote:
+> On 29.01.20 18:09, Christoph Hellwig wrote:
+> > On Wed, Jan 29, 2020 at 06:07:14PM +0100, Christian Borntraeger wrote:
+> >>> DMA can be done to NORMAL memory as well.
+> >>
+> >> Exactly. 
+> >> I think iucv uses GFP_DMA because z/VM needs those buffers to reside below 2GB (which is ZONA_DMA for s390).
+> > 
+> > The normal way to allocate memory with addressing limits would be to
+> > use dma_alloc_coherent and friends.  Any chance to switch iucv over to
+> > that?  Or is there no device associated with it?
 > 
-> Probably?  It depends on how much you like culling known false positives
-> when you run smatch/sparse against xfsprogs.
+> There is not necessarily a device for that. It is a hypervisor interface (an
+> instruction that is interpreted by z/VM). We do have the netiucv driver that
+> creates a virtual nic, but there is also AF_IUCV which works without a device.
 > 
-> (I for one don't mind not having to remember that stuff...)
+> But back to the original question: If we mark kmalloc caches as usercopy caches,
+> we should do the same for DMA kmalloc caches. As outlined by Christoph, this has
+> nothing to do with device DMA.
 
-Ok.  I'm wondering how you guys happened to notice the dups.
+Hm, looks like it's allocated from the low 16MB. Seems like poor naming!
+:) There seems to be a LOT of stuff using GFP_DMA, and it seems unlikely
+those are all expecting low addresses?
 
-Seems like
+Since this has only been a problem on s390, should just s390 gain the
+weakening of the usercopy restriction?  Something like:
 
-bool xfs_verify_rtbno(struct xfs_mount *mp, xfs_rtblock_t rtbno);
 
-can be removed as well, FWIW.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 1907cb2903c7..c5bbc141f20b 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1303,7 +1303,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
+ 				kmalloc_info[i].name[KMALLOC_DMA],
+ 				kmalloc_info[i].size,
+-				SLAB_CACHE_DMA | flags, 0, 0);
++				SLAB_CACHE_DMA | flags, 0,
++				IS_ENABLED(CONFIG_S390) ?
++					kmalloc_info[i].size : 0);
+ 		}
+ 	}
+ #endif
 
--Eric
+
+
+-- 
+Kees Cook
