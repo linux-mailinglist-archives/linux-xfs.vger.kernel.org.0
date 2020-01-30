@@ -2,80 +2,84 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E28CB14DC36
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 14:43:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F4614DCA3
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Jan 2020 15:15:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgA3Nnc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 30 Jan 2020 08:43:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33495 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727298AbgA3Nnb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Jan 2020 08:43:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580391810;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zrhEjh7Usx2Sur3j32z7XTjjURhy9DMxcxHibtbO6OQ=;
-        b=QiyQsE3io8XeXp0IvdVgw1nXx6RRxxNOcofgaA43ZYJGbQHzQjCksOn5BtcUnyafPR13GR
-        EJUis4jqVd1YhVwjvXA2RG4OgVON3N0PJxyFNfjhMKNPJGLbvJh1Wjsit6mFwUAwipYfcB
-        CvxleAEE2zmRW8Hy/oWalx9axuu2FZw=
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
- [209.85.221.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-JXccWQALMly3vHQPfOZGxg-1; Thu, 30 Jan 2020 08:43:28 -0500
-X-MC-Unique: JXccWQALMly3vHQPfOZGxg-1
-Received: by mail-vk1-f198.google.com with SMTP id e25so1285033vkm.2
-        for <linux-xfs@vger.kernel.org>; Thu, 30 Jan 2020 05:43:28 -0800 (PST)
+        id S1726980AbgA3OPA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 30 Jan 2020 09:15:00 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35223 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3OO7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Jan 2020 09:14:59 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so3646006oie.2
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Jan 2020 06:14:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=UhxiFFr+TFg/ZQtqziepEYohJb8mfHfQylXehSdifpY=;
+        b=o4MiI8c4SO/rD7/317l+BMahv562bKmsCJfUdYi3QLaQgXCAioiP9kMxKJEsXJU8ql
+         E7oLBX85Cfll3fiLz+pamvyuQMvq4AIjpc1zFfohTOAQz/Mxe/aD1mcuoFKxCnb3jsiW
+         Z97RTsKhXxpW/IqNkPGOC0IP+PvMClvkVtP9Dh7yp+rogJy14gT9qMNFcCJshnMm3bj+
+         5N0cjMiqGuObhdtsyuLjtj+iUJvUgC6c6AEpcOYuUBmlBNZ5YIj5uiDYUs6d9d+qpGkn
+         87oledKQbqPoZhfb95tfRewK5oR0xxr5PJBqSCs//twNx6cCA7Rurfeid9WsJFfmXbAD
+         YwMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zrhEjh7Usx2Sur3j32z7XTjjURhy9DMxcxHibtbO6OQ=;
-        b=qtIb6vdOZH6pluBb25WtQ960Tvh7pHN6G6c48RxUq5pVJQOXtuQLyLufyeQL0ReyO/
-         ZSzP+dltdrmkYsJ0QnlvnlRu8jamUrkSZuvBWX5pBZgpYTN+5gTVr+E3bqHUc2dUNXQT
-         umAwS1Vh9MIHmP5ILxkftvnYKKwoTxP4B+0ZEhG9+4hhKwiOYXk5mSUIAJb90+6zN8QX
-         vYzWu5LSjSpp6/66K7JUpyrtnMhoOh8Oyx4if1qejFZRhu7WnDzNAhV9wF2yMIg00Cd/
-         h0zxmlhPpTybKFsdNqNs6pIcyU1bJID/aChFp4qMSv7EM6UCYynaV6+iA+OX/+a09yeg
-         B+0g==
-X-Gm-Message-State: APjAAAXIm9okmLQ36lvmUHi/pP6AH+6DCwOCMOrenwMpRDP+TkxhxDf9
-        +PhaGpRGBx8rzzxgYrQIJe/HjEgEg0lixxoyxETHcPEM1fz2hsjPBnmwVEtQ0oKmVwfhQZlcyWB
-        6D9lr9aEMlCUmRiEkHwqameRdj4tz+/KBZJVz
-X-Received: by 2002:a67:e954:: with SMTP id p20mr3255615vso.3.1580391808403;
-        Thu, 30 Jan 2020 05:43:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyUvp8qGHSdwE17B6N0E2EBVEHb/BfrvWV/BM1U4VLJQSfVnZvgmFJmCP9Hi2g1hj7H6eXeWDLGDVVizz46UV4=
-X-Received: by 2002:a67:e954:: with SMTP id p20mr3255597vso.3.1580391808188;
- Thu, 30 Jan 2020 05:43:28 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=UhxiFFr+TFg/ZQtqziepEYohJb8mfHfQylXehSdifpY=;
+        b=GeWTAFu0/kFqHivLQr1zBVSddYotSueP8VcQE4So8LU81KBGRh3oSnQnUi9kYc8R4/
+         iDwj/cl9y7cPBMvuuu/XpEXmTkigTohL841ZopxsHF99AlEDD5o9eDZpULWxv3V7JabL
+         S5AtOvdec9bp/UybWVhcm/FCYPgVRCtqltRX7xQcjbmzhqBFdWrp/rsa9mOpxylD140K
+         /Wh3svjfTCiqoHxnT3fNgARCmT01q5kJl1XM8cip63g5+DourxW7It2OGm0eITe89b16
+         g/wZq+Wok3wf3M6BleEchfq8gsoGp9A31Zvf6N/Ei2JVmsgWqbiT9Ds012WWbnXlXokn
+         13Zw==
+X-Gm-Message-State: APjAAAX/DEbWvfJ22+i3xDF38HUp8CmL1SK4s4IEgOCuuQ1HaaQ+nOUt
+        xwyXidBTfXl506BiYyaaZJcWppIalA6MKpWbeHA=
+X-Google-Smtp-Source: APXvYqzHeANnPMyhSEDylvoyCaQgSaQfX+jJpI4A1QVxQY1kTfIW14hbMxRQxyXAlA47fRNVvNsvtnif+8uvf2KZ58s=
+X-Received: by 2002:a05:6808:aba:: with SMTP id r26mr2892354oij.4.1580393698821;
+ Thu, 30 Jan 2020 06:14:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20200128145528.2093039-1-preichl@redhat.com> <20200128145528.2093039-5-preichl@redhat.com>
- <20200130074503.GB26672@infradead.org> <CAJc7PzUmpRP0-MG49kO5XqZKfM-o4SpYtUKpXC3LC_3Yi2htZg@mail.gmail.com>
- <20200130133135.GA21809@infradead.org>
-In-Reply-To: <20200130133135.GA21809@infradead.org>
-From:   Pavel Reichl <preichl@redhat.com>
-Date:   Thu, 30 Jan 2020 14:43:17 +0100
-Message-ID: <CAJc7PzX=fdF5x7M6hbbN7jquta7TG8SZswJORVUJv4=-VQMXcg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] xfs: replace mr*() functions with native rwsem calls
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
+Received: by 2002:a9d:6b0a:0:0:0:0:0 with HTTP; Thu, 30 Jan 2020 06:14:58
+ -0800 (PST)
+Reply-To: lussiemarthen011@gmail.com
+From:   "Mr.Tom Patrick" <ej7260423@gmail.com>
+Date:   Thu, 30 Jan 2020 06:14:58 -0800
+Message-ID: <CAAh0zBhZASiwz2J8_Ft71tutJ41P7_HLZ4LEZW2t+RYLK9iFmQ@mail.gmail.com>
+Subject: Dear Consignment Owner,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-OK, thank you for your opinion. :-)
+Dear Consignment Owner,
 
-On Thu, Jan 30, 2020 at 2:31 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Jan 30, 2020 at 09:57:02AM +0100, Pavel Reichl wrote:
-> > the changes are divided into three patches so the changes are really
-> > obvious and each patch does just one thing...it was actually an extra
-> > effort to separate the changes but if there's an agreement that it
-> > does not add any value then I can squash them into one - no problem
-> > ;-)
->
-> Well, they make the change a lot less obvious.  After we have some form
-> of patch 1, mrlocks are just a pointless wrapper.  Removing it in one
-> go is completely obvious - splitting it in 3 patches with weird
-> inbetween states is everything but.
->
+we wish to inform you that the diplomatic Agent has been departed with
+your US$4.5 million shipping box. The agent told me that he lost your
+address and is currently stranded at George Bush Houston
+Intercontinental Airport, address 2800 N Terminal Rd, Houston, TX
+77032, USA. Please reconfirm your information below so that he can
+deliver your package to your residential home without any further
+delay.
 
+NAME: ========
+ADDRESS: ======
+MOBILE NO .: ======
+NEXT AIRPORT NAME: ======
+IDENTIFICATION COPY: =======
+
+Please contact your diplomatic agent through this email address below;
+His name is Mr.Lussie Marthen and his EMAIL:
+(lussiemarthen011@gmail.com) He is waiting for your message today with
+the information. NOTE: The diplomatic agent is currently at the
+airport with your USD 4.5 million. So please do act very quickly
+because the diplomat has other parcels to be delivered to Mexico after
+completing your delivery today.
+
+Thank you very much.
+
+Best Regards
+Mr.Mike John
+Director Of Courier Delivery Company
