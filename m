@@ -2,182 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A15814F603
-	for <lists+linux-xfs@lfdr.de>; Sat,  1 Feb 2020 04:22:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC78D14F84C
+	for <lists+linux-xfs@lfdr.de>; Sat,  1 Feb 2020 16:13:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBADWr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 31 Jan 2020 22:22:47 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51736 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgBADWr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 31 Jan 2020 22:22:47 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0113DCso049408;
-        Sat, 1 Feb 2020 03:22:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=kNjiR+/svteuV6LLaPuXGoy57CwZtVF1XBdaBK6QUNQ=;
- b=gC8pGKvbSw56X0gnkZXAOa7/xjShPeID2KmKg7gDDdzFbbVRROKmxa/A4QcaBRxMy9YC
- oMvf0eVC9BeT9FJHIsefMwXAfGMQxZTrXul26PiP1AM5HgYwsUL9tVJNBwnR43kAbfZR
- aP+o2LIQ0cRvOnn97OAKJo0VCHmhwki9MGcocFNa7y0wsF9FWiwNRvYue94AAvppVCCo
- yrETtbxagrrS610O/qrDEpqqfIDcEOI7HSbYQj6r3xCf8o4G350UyRwNTlilNW2EMrPT
- dXAa52OzY3DBNI2FHZe3idW3aiEHQ/XIuJUYrHUBzqvhl+J0+Hp6GFmkDVDQlMdR3J8a Bw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xrearxb9r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 03:22:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0113Dfxp076674;
-        Sat, 1 Feb 2020 03:20:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xvxffhcpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 03:20:40 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0113Kc9W017179;
-        Sat, 1 Feb 2020 03:20:39 GMT
-Received: from [192.168.1.223] (/67.1.3.112)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 01 Feb 2020 03:20:38 +0000
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC] FS Maintainers Don't Scale
-To:     Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     lsf-pc@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>, Eryu Guan <guaneryu@gmail.com>,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20200131052520.GC6869@magnolia>
- <CAOQ4uxh=4DrH_dL3TULcFa+pGk0YhS=TobuGk_+Z0oRWvw63rg@mail.gmail.com>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <8983ceaa-1fda-f9cc-73c9-8764d010d3e2@oracle.com>
-Date:   Fri, 31 Jan 2020 20:20:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726837AbgBAPMn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 1 Feb 2020 10:12:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51822 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgBAPMm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 1 Feb 2020 10:12:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dB7ywmsatelLVL7Psw2UVkpn4TS1ismlyPRVqvsNN4I=; b=RnoVi6fUM/M58i6TYhoTLY0TL
+        V7I9zpJWwCzNP2scBs5DKrt7H9v8YkzB+zy/W4DudHEy5O3nZ2nS+CmMmx7gYjNpb//bY/tIKKSyZ
+        BoIYl7MaogIfsM0Y9tjCirctp4DMLxm6KpweOFcDQtxE+etr4078ycEjYIbRbs9F7wyfbU5GGbVy3
+        fnFz1u13IqALNOQOFhi0zXFNp8K2To+TxPFBQ7dryOGOMrqog5fJewQfdZiz2SpgzlRxhq5dAlgjj
+        JO1o3SZNAvTMRVCpWVcSJwTwalk4DOgKQ0oSw60THP3NVyDBfjsNRTxzLp1iNTUgC+HvKJkv6LBzz
+        TzfPOsY9g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixuRu-0006HE-1K; Sat, 01 Feb 2020 15:12:42 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com
+Subject: [PATCH v4 00/12] Change readahead API
+Date:   Sat,  1 Feb 2020 07:12:28 -0800
+Message-Id: <20200201151240.24082-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxh=4DrH_dL3TULcFa+pGk0YhS=TobuGk_+Z0oRWvw63rg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002010019
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002010019
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
+I would particularly value feedback on this from the gfs2 and ocfs2
+maintainers.  They have non-trivial changes, and a review on patch 5
+would be greatly appreciated.
 
-On 1/31/20 12:30 AM, Amir Goldstein wrote:
-> On Fri, Jan 31, 2020 at 7:25 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->>
->> Hi everyone,
->>
->> I would like to discuss how to improve the process of shepherding code
->> into the kernel to make it more enjoyable for maintainers, reviewers,
->> and code authors.  Here is a brief summary of how we got here:
->>
->> Years ago, XFS had one maintainer tending to all four key git repos
->> (kernel, userspace, documentation, testing).  Like most subsystems, the
->> maintainer did a lot of review and porting code between the kernel and
->> userspace, though with help from others.
->>
->> It turns out that this didn't scale very well, so we split the
->> responsibilities into three maintainers.  Like most subsystems, the
->> maintainers still did a lot of review and porting work, though with help
->> from others.
->>
->> It turns out that this system doesn't scale very well either.  Even with
->> three maintainers sharing access to the git trees and working together
->> to get reviews done, mailing list traffic has been trending upwards for
->> years, and we still can't keep up.  I fear that many maintainers are
->> burning out.  For XFS, the biggest pain point (AFAICT) is not assembly and
->> testing of the git trees, but keeping up with the mail and the reviews.
->>
->> So what do we do about this?  I think we (the XFS project, anyway)
->> should increase the amount of organizing in our review process.  For
->> large patchsets, I would like to improve informal communication about
->> who the author might like to have conduct a review, who might be
->> interested in conducting a review, estimates of how much time a reviewer
->> has to spend on a patchset, and of course, feedback about how it went.
->> This of course is to lay the groundwork for making a case to our bosses
->> for growing our community, allocating time for reviews and for growing
->> our skills as reviewers.
->>
-> 
-> Interesting.
-> 
-> Eryu usually posts a weekly status of xfstests review queue, often with
-> a call for reviewers, sometimes with specific patch series mentioned.
-> That helps me as a developer to monitor the status of my own work
-> and it helps me as a reviewer to put the efforts where the maintainer
-> needs me the most.
-> 
-> For xfs kernel patches, I can represent the voice of "new blood".
-> Getting new people to join the review effort is quite a hard barrier.
-> I have taken a few stabs at doing review for xfs patch series over the
-> year, but it mostly ends up feeling like it helped me (get to know xfs code
-> better) more than it helped the maintainer, because the chances of a
-> new reviewer to catch meaningful bugs are very low and if another reviewer
-> is going to go over the same patch series, the chances of new reviewer to
-> catch bugs that novice reviewer will not catch are extremely low.
-That sounds like a familiar experience.  Lots of times I'll start a 
-review, but then someone else will finish it before I do, and catch more 
-things along the way.  So I sort of feel like if it's not something I 
-can get through quickly, then it's not a very good distribution of work 
-effort and I should shift to something else. Most of the time, I'll 
-study it until I feel like I understand what the person is trying to do, 
-and I might catch stuff that appears like it may not align with that 
-pursuit, but I don't necessarily feel I can deem it void of all 
-unforeseen bugs.
+This series adds a readahead address_space operation to eventually
+replace the readpages operation.  The key difference is that
+pages are added to the page cache as they are allocated (and
+then looked up by the filesystem) instead of passing them on a
+list to the readpages operation and having the filesystem add
+them to the page cache.  It's a net reduction in code for each
+implementation, more efficient than walking a list, and solves
+the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-> 
-> However, there are quite a few cleanup and refactoring patch series,
-> especially on the xfs list, where a review from an "outsider" could still
-> be of value to the xfs community. OTOH, for xfs maintainer, those are
-> the easy patches to review, so is there a gain in offloading those reviews?
-> 
-> Bottom line - a report of the subsystem review queue status, call for
-> reviewers and highlighting specific areas in need of review is a good idea.
-> Developers responding to that report publicly with availability for review,
-> intention and expected time frame for taking on a review would be helpful
-> for both maintainers and potential reviewers.
-I definitely think that would help delegate review efforts a little 
-more.  That way it's clear what people are working on, and what still 
-needs attention.
+v4:
+ - Rebase on current Linus (a62aa6f7f50a ("Merge tag 'gfs2-for-5.6'"))
+ - Add comment to __do_page_cache_readahead() acknowledging we don't
+   care _that_ much about setting PageReadahead.
+ - Fix the return value check of add_to_page_cache_lru().
+ - Add a missing call to put_page() in __do_page_cache_readahead() if
+   we fail to insert the page.
+ - Improve the documentation of ->readahead (including indentation
+   problem identified by Randy).
+ - Fix off by one error in read_pages() (Dave Chinner).
+ - Fix nr_pages manipulation in btrfs (Dave Chinner).
+ - Remove bogus refcount fix in erofs (Gao Xiang, Dave Chinner).
+ - Update ext4 patch for Merkle tree readahead.
+ - Update f2fs patch for Merkle tree readahead.
+ - Reinstate next_page label in f2fs_readpages() now it's used by the
+   compression code.
+ - Reinstate call to fuse_wait_on_page_writeback (Miklos Szeredi).
+ - Remove a double-unlock in the error path in fuse.
+ - Remove an odd fly-speck in fuse_readpages().
+ - Make nr_pages loop in fuse_readpages less convoluted (Dave Chinner).
 
-Allison
-> 
-> Thanks,
-> Amir.
-> 
->> ---
->>
->> I want to spend the time between right now and whenever this discussion
->> happens to make a list of everything that works and that could be made
->> better about our development process.
->>
->> I want to spend five minutes at the start of the discussion to
->> acknowledge everyone's feelings around that list that we will have
->> compiled.
->>
->> Then I want to spend the rest of the session breaking up the problems
->> into small enough pieces to solve, discussing solutions to those
->> problems, and (ideally) pushing towards a consensus on what series of
->> small adjustments we can make to arrive at something that works better
->> for everyone.
->>
->> --D
->> _______________________________________________
->> Lsf-pc mailing list
->> Lsf-pc@lists.linux-foundation.org
->> https://urldefense.proofpoint.com/v2/url?u=https-3A__lists.linuxfoundation.org_mailman_listinfo_lsf-2Dpc&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=LHZQ8fHvy6wDKXGTWcm97burZH5sQKHRDMaY1UthQxc&m=Ql7vKruZTArpiIL8k0b6mdoZIYyOEUFrtFysmO8BZl4&s=Se3_uV_gEF1-YsGVAlu6NVh1KqcEzWExsEy5PCH4BAM&e=
+Matthew Wilcox (Oracle) (12):
+  mm: Fix the return type of __do_page_cache_readahead
+  readahead: Ignore return value of ->readpages
+  readahead: Put pages in cache earlier
+  mm: Add readahead address space operation
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  f2fs: Convert from readpages to readahead
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
+
+ Documentation/filesystems/locking.rst |  7 ++-
+ Documentation/filesystems/vfs.rst     | 14 +++++
+ drivers/staging/exfat/exfat_super.c   |  9 +--
+ fs/block_dev.c                        |  9 +--
+ fs/btrfs/extent_io.c                  | 19 +++---
+ fs/btrfs/extent_io.h                  |  2 +-
+ fs/btrfs/inode.c                      | 18 +++---
+ fs/erofs/data.c                       | 33 ++++------
+ fs/erofs/zdata.c                      | 21 +++----
+ fs/ext2/inode.c                       | 12 ++--
+ fs/ext4/ext4.h                        |  5 +-
+ fs/ext4/inode.c                       | 24 ++++----
+ fs/ext4/readpage.c                    | 20 +++---
+ fs/ext4/verity.c                      | 16 +++--
+ fs/f2fs/data.c                        | 35 +++++------
+ fs/f2fs/f2fs.h                        |  5 +-
+ fs/f2fs/verity.c                      | 16 +++--
+ fs/fat/inode.c                        |  8 +--
+ fs/fuse/file.c                        | 37 +++++------
+ fs/gfs2/aops.c                        | 20 +++---
+ fs/hpfs/file.c                        |  8 +--
+ fs/iomap/buffered-io.c                | 74 +++++-----------------
+ fs/iomap/trace.h                      |  2 +-
+ fs/isofs/inode.c                      |  9 +--
+ fs/jfs/inode.c                        |  8 +--
+ fs/mpage.c                            | 38 ++++--------
+ fs/nilfs2/inode.c                     | 13 ++--
+ fs/ocfs2/aops.c                       | 32 +++++-----
+ fs/omfs/file.c                        |  8 +--
+ fs/qnx6/inode.c                       |  8 +--
+ fs/reiserfs/inode.c                   | 10 +--
+ fs/udf/inode.c                        |  8 +--
+ fs/xfs/xfs_aops.c                     | 10 +--
+ include/linux/fs.h                    |  2 +
+ include/linux/iomap.h                 |  2 +-
+ include/linux/mpage.h                 |  2 +-
+ include/linux/pagemap.h               | 12 ++++
+ include/trace/events/erofs.h          |  6 +-
+ include/trace/events/f2fs.h           |  6 +-
+ mm/internal.h                         |  2 +-
+ mm/migrate.c                          |  2 +-
+ mm/readahead.c                        | 89 ++++++++++++++++++---------
+ 42 files changed, 332 insertions(+), 349 deletions(-)
+
+-- 
+2.24.1
+
