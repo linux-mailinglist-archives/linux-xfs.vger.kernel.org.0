@@ -2,71 +2,123 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9780A153174
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 14:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44485153215
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 14:44:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgBENKN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Feb 2020 08:10:13 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41842 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgBENKN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Feb 2020 08:10:13 -0500
-Received: by mail-io1-f66.google.com with SMTP id m25so2029364ioo.8
-        for <linux-xfs@vger.kernel.org>; Wed, 05 Feb 2020 05:10:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=MCQhCATr8LWdvM8G749y/dE75RiaQ8MOEEE1eT3ryGeXJ9SyuL6HeD3UcisZrAtoBp
-         5b/unr9dczZXNaYLkMjpJNrxFEvYAUS915W5SyYqhhgzY3HppjI8JWXMqI6Q+whryqXt
-         MH59m7fPX6u3uFbatLps9kgdNAD7mhxKDLJZ6uN3GGva++aQX4wg7p4SQ4z57ZI+yCpr
-         sbuZucWLlyoJSBhAPSFxw1HfujPYg6+9Yz4j8OSsmG932qStYyI6vCDw+6ZUNW1nss7c
-         XD2yMzN892t8nFVYVN+LjENL8iLBw6cbeJ13TSdhJxZz+0lMHRfk/GpdliWlxj8a69d3
-         hx6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=iMRX0bL1PYdS7ABvD3Ed4ETHaVur4k3XzjXBesFrMAcq+73vFKH3uMFOUPJd8IcqMN
-         beOD34/BvKkx843brAib3VVkivOH0wYWnEdaAbOplNkXAz2lIpqwv5vOBuXujWNgwlaJ
-         Di7VNshBOWWYAne+c/0bsi6nzA3nxoMhTUKV2QooS1fGgz/uw1l/CF2wy2H0F/QOXYKh
-         18F4x15mABZazMcQYqACGfcsrR+th0CkSbKbdnkZ5yAXrHDntFCZzCPlD3Epa/B+UUXg
-         SthTv7RlNfgfUsIW0GZhH0Z4HQhtkBM80d13ogEZFhLsUpwHhUdluLeHd6PHLCk0CNFT
-         4MJw==
-X-Gm-Message-State: APjAAAUJeIv+JtRwupOlk0YLTl4oxdJtmHG2o7rHG6gE3II5JWGV6sEW
-        r9UAKb1OfaYQwJ6VwMGLJ+eRjDfJZJ1Cx6DhTDQ=
-X-Google-Smtp-Source: APXvYqztBYlQ8znjC+xbpdkO5X9ynseo1v86M5EAxr4evxsPZG0XNeKgWf1U2y9mbtCuUBkvbawnZNUwaAHjRdlgTiY=
-X-Received: by 2002:a5e:8402:: with SMTP id h2mr26869175ioj.30.1580908212801;
- Wed, 05 Feb 2020 05:10:12 -0800 (PST)
+        id S1726575AbgBENoA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Feb 2020 08:44:00 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726308AbgBENoA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Feb 2020 08:44:00 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 015DbZej063756
+        for <linux-xfs@vger.kernel.org>; Wed, 5 Feb 2020 08:43:59 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xyhmb94xg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Wed, 05 Feb 2020 08:43:59 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Wed, 5 Feb 2020 13:43:57 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 5 Feb 2020 13:43:55 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 015Dhs3d44892308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Feb 2020 13:43:54 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 094FE5204E;
+        Wed,  5 Feb 2020 13:43:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.63.110])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2B7F852050;
+        Wed,  5 Feb 2020 13:43:52 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org,
+        Allison Collins <allison.henderson@oracle.com>
+Subject: Re: [PATCH 01/30] xfs: reject invalid flags combinations in XFS_IOC_ATTRLIST_BY_HANDLE
+Date:   Wed, 05 Feb 2020 19:16:38 +0530
+Organization: IBM
+In-Reply-To: <20200129170310.51370-2-hch@lst.de>
+References: <20200129170310.51370-1-hch@lst.de> <20200129170310.51370-2-hch@lst.de>
 MIME-Version: 1.0
-Received: by 2002:a92:8f4b:0:0:0:0:0 with HTTP; Wed, 5 Feb 2020 05:10:12 -0800 (PST)
-Reply-To: auch197722@gmail.com
-From:   "Mr. Theophilus Odadudu" <siramsarmull@gmail.com>
-Date:   Wed, 5 Feb 2020 08:10:12 -0500
-Message-ID: <CAB==GxyVdQ5D70CGzvhW7_J5MrxYsG0gs3bntRWjtckOg3iXeA@mail.gmail.com>
-Subject: LETTER OF INQUIRY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20020513-0020-0000-0000-000003A73945
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020513-0021-0000-0000-000021FF03FD
+Message-Id: <4885448.553QpmS9R8@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_04:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=797 mlxscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=1
+ lowpriorityscore=0 malwarescore=0 spamscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002050109
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Good Day,
+On Wednesday, January 29, 2020 10:32 PM Christoph Hellwig wrote: 
 
-I work as a clerk in a Bank here in Nigeria, I have a very
-confidential Business Proposition for you. There is a said amount of
-money floating in the bank unclaimed, belonging to the bank Foreign
-customer who die with his family in the Ethiopian Airline crash of
-March 11, 2019.
+> While the flags field in the ABI and the on-disk format allows for
+> multiple namespace flags, that is a logically invalid combination and
+> listing multiple namespace flags will return no results as no attr
+> can have both set.  Reject this case early with -EINVAL.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_ioctl.c   | 2 ++
+>  fs/xfs/xfs_ioctl32.c | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index d42de92cb283..d974bf099d45 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -317,6 +317,8 @@ xfs_attrlist_by_handle(
+>  	 */
+>  	if (al_hreq.flags & ~(ATTR_ROOT | ATTR_SECURE))
+>  		return -EINVAL;
 
-I seek your good collaboration to move the fund for our benefit. we
-have agreed that 40% be yours once you help claim.
+The above statement makes sure that al_hreq.flags has only ATTR_ROOT
+and/or ATTR_SECURE flags set ...
 
-Do get back to with 1) Your Full Name: (2) Residential Address: (3)
-Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
-funds.
+> +	if (al_hreq.flags == (ATTR_ROOT | ATTR_SECURE))
+> +		return -EINVAL;
+>
+... Hence if the execution control arrives here, we can be sure that the
+presence of no other bits need to be checked.
 
-Regards
-Theophilus Odadudu
+Therefore the code is logically correct.
+
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+
+>  	dentry = xfs_handlereq_to_dentry(parfilp, &al_hreq.hreq);
+>  	if (IS_ERR(dentry))
+> diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+> index 769581a79c58..9705172e5410 100644
+> --- a/fs/xfs/xfs_ioctl32.c
+> +++ b/fs/xfs/xfs_ioctl32.c
+> @@ -375,6 +375,8 @@ xfs_compat_attrlist_by_handle(
+>  	 */
+>  	if (al_hreq.flags & ~(ATTR_ROOT | ATTR_SECURE))
+>  		return -EINVAL;
+> +	if (al_hreq.flags == (ATTR_ROOT | ATTR_SECURE))
+> +		return -EINVAL;
+> 
+>  	dentry = xfs_compat_handlereq_to_dentry(parfilp, &al_hreq.hreq);
+>  	if (IS_ERR(dentry))
+> 
+
+-- 
+chandan
+
+
+
