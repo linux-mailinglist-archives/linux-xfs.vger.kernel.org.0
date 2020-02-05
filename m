@@ -2,63 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89F961523B5
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 01:02:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12CBE1523AD
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 01:01:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgBEAC5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 4 Feb 2020 19:02:57 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:59194 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbgBEAC4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Feb 2020 19:02:56 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NwkDt076156;
-        Wed, 5 Feb 2020 00:02:55 GMT
+        id S1727673AbgBEABx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 4 Feb 2020 19:01:53 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42398 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbgBEABw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Feb 2020 19:01:52 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NwqQP086013;
+        Wed, 5 Feb 2020 00:01:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=O9NAVTLZyeGw94sBQ+36kMKwtkaZa5tXINTXL0gfOE0=;
- b=jPfLqAxf8zru+HoFkh+oTKAPf2W0oDMSaLWz+5a0yer4HEdtTaDziO+hh4qjO0NKYnql
- 2bFRPi75+UhM9sTzotxBm7nYPBUGG4p6803sJQP6pS9WYFDlZyU7NJ0sgxs/ESQQcBIf
- 5U6z9xNIiE7cZlyE6qPxzVaY6WlOJbQyV0SEjsRVFBkOeQewGFci3OCVIH7fu5bW8lSl
- 1asqWtQBlHuGSURoPsWipXjmSDPPea7w40ZdI4DHrJ+HKz4OYuNo+4T+ijw7BeiYFgcK
- DM+MLYDQXiMl0ckA4PbP1Alr7gPLKVoVMs9WqpeItqQaHbZQYK9DmS8Da0MwZRPmclG3 DQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xyhkfg8et-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=yoHjzEoLeU4OqrWJ4cCJO0a5dvQ9kLQmXeRaDfXK/vo=;
+ b=YNchd+7ui8SReqXT0AuG+GrzwXkdzfufU5luZy5uCG6scDHrzWQBopEoa3DMylsIeGs/
+ bpLdo2SsZ9dDgjPTpZv+tJuL++P3qMzU5RRg6OXFf9bIQfUSRsMhx1vA6MabwI3cz3ww
+ cTre5PoHeZD5zCtrvG2+NnJi/uzGhYINe/XWRb5ljq1fDQ4/M0LxJFj2jEdxg0aoir+F
+ nMPTWx68eKatRlYbUE21UsAhVxCcYnMAtnMhLNV1AgwOkO1kJmTv6cQNER34h/KyX+k7
+ 60+2FlYEBBu+rX1L0/FxtHowRf1QGbd6a3PTM7IKkaCdtKia1fxM0hv5WneTa08CQ1OR Sw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xyhkf88a1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 00:02:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NwHov071720;
-        Wed, 5 Feb 2020 00:02:54 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2xyhmev4da-1
+        Wed, 05 Feb 2020 00:01:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014NwrJ1059200;
+        Wed, 5 Feb 2020 00:01:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xyhmq3gmu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 00:02:54 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01501h4b021673;
-        Wed, 5 Feb 2020 00:01:43 GMT
+        Wed, 05 Feb 2020 00:01:50 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01501nwr022436;
+        Wed, 5 Feb 2020 00:01:49 GMT
 Received: from localhost (/10.159.250.52)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 16:01:43 -0800
-Subject: [PATCH 0/5] fstests: random fixes
+        with ESMTP ; Tue, 04 Feb 2020 16:01:49 -0800
+Subject: [PATCH 1/5] xfs/449: filter out "Discarding..." from output
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     guaneryu@gmail.com, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 04 Feb 2020 16:01:42 -0800
-Message-ID: <158086090225.1989378.6869317139530865842.stgit@magnolia>
+Date:   Tue, 04 Feb 2020 16:01:48 -0800
+Message-ID: <158086090849.1989378.625300470019425718.stgit@magnolia>
+In-Reply-To: <158086090225.1989378.6869317139530865842.stgit@magnolia>
+References: <158086090225.1989378.6869317139530865842.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=653
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-2001150001 definitions=main-2002040164
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=725 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-2001150001
  definitions=main-2002040164
 Sender: linux-xfs-owner@vger.kernel.org
@@ -66,22 +68,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Here are numerous small fixes for regressions that I found while running
-fstests.  There's a few leftovers from the last random fixes series, and
-a few more fixes for 32-bit and others.
+xfsprogs 5.4 prints "Discarding..." if the disk supports the trim
+command.  Filter this out of the output because xfs_info and friends
+won't print that out.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ tests/xfs/449 |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/tests/xfs/449 b/tests/xfs/449
+index 7aae1545..83c3c493 100755
+--- a/tests/xfs/449
++++ b/tests/xfs/449
+@@ -39,7 +39,7 @@ _require_scratch_nocheck
+ _require_xfs_spaceman_command "info"
+ _require_command "$XFS_GROWFS_PROG" xfs_growfs
+ 
+-_scratch_mkfs > $tmp.mkfs
++_scratch_mkfs | sed -e '/Discarding/d' > $tmp.mkfs
+ echo MKFS >> $seqres.full
+ cat $tmp.mkfs >> $seqres.full
+ 
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
