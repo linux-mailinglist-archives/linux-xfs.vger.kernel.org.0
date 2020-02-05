@@ -2,57 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FAFF152448
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 01:49:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C39152440
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 01:47:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbgBEAta (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 4 Feb 2020 19:49:30 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47152 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgBEAta (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Feb 2020 19:49:30 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0150mAr7129622;
-        Wed, 5 Feb 2020 00:49:27 GMT
+        id S1727722AbgBEArg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 4 Feb 2020 19:47:36 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34490 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbgBEArg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 4 Feb 2020 19:47:36 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0150dbuE103535;
+        Wed, 5 Feb 2020 00:47:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=/UCGI5boFXiKeRq60MxlceY6XCNMwqfhGgl7nxmFRz0=;
- b=LacLZ7kDhq1Zhqyx4HC5t3RW2F/rVYZ6QXf4IJIPhaZqUrCU5dk4Pv0vy8lJDx3x+MB0
- o/y3nluLqMrjKuQ2/9Q7I9EqHi1OCp/oT+GtAjkHL/WXeVKDBl1HsvvlOJ9vh94puiiW
- bAimPvG0iaXPz9h5kZNL63C+CJv8ZxHLuSg9Qt/J+53jpTjJfpA294kQ2ahP6AKFiNPB
- yt5jTbhwecP1ieVO+m8kwBGSjGDawDkCcm6CpgzwxzVKmjPWXfr7fI/eI2kwg5wOGde/
- B2GM3FJuU6FHqrHuQTM8IPg7Nc2FrYXgXY4WZJRtX5Nbr3chyPo+eDWo0DmqVj37QU6s 6Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xykbp00r2-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Li+0K8zAtQHoScML9ahAOXh5GfRyB+l2w9oYG51u/Ac=;
+ b=ptcQLk05PPWq4Ai1xM5eKiu8amiBIcTaV2wyVx+OUeiz/+fHc/4+Th7QhlNKJ2pCWmJC
+ 846WN3zBbjxbqCdvUXgp363tXaU1BnGvwcFUGvvgNfrdnnaOgpoONHpGd15/Q/yfsYJz
+ hDcTPOjDsIyzw4FcZCXGGgUPDnWL2ra/sTH/CSP9MT+Z4PZdOzgRillWixd6QadUlKuW
+ rtVjoMNnQhBfUfdYcsXt2Q55G00SE3qW0Cj6NQGf+9Nf//YeyjpDMYQI5NKLjvHrKIj+
+ TT8I52UmH0ZGa/5kys+dy8Zn+kuMVXWsheHZxeOCSctdffzCMw1SgP0S4hOys5REc1BD jA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xykbp00nk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 00:49:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0150cvKO165952;
-        Wed, 5 Feb 2020 00:47:26 GMT
+        Wed, 05 Feb 2020 00:47:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0150djPj125282;
+        Wed, 5 Feb 2020 00:47:33 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xykbqgdvq-1
+        by userp3020.oracle.com with ESMTP id 2xykc1gfsw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 00:47:26 +0000
+        Wed, 05 Feb 2020 00:47:33 +0000
 Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0150lQcc011273;
-        Wed, 5 Feb 2020 00:47:26 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0150lWvH011341;
+        Wed, 5 Feb 2020 00:47:32 GMT
 Received: from localhost (/10.159.250.52)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Feb 2020 16:47:25 -0800
-Subject: [PATCH 0/4] libxfs: actually check that writes succeeded
+        with ESMTP ; Tue, 04 Feb 2020 16:47:32 -0800
+Subject: [PATCH 1/4] libxfs: libxfs_buf_delwri_submit should write buffers
+ immediately
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 04 Feb 2020 16:47:25 -0800
-Message-ID: <158086364511.2079905.3531505051831183875.stgit@magnolia>
+Date:   Tue, 04 Feb 2020 16:47:31 -0800
+Message-ID: <158086365123.2079905.12151913907904621987.stgit@magnolia>
+In-Reply-To: <158086364511.2079905.3531505051831183875.stgit@magnolia>
+References: <158086364511.2079905.3531505051831183875.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=962
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2002050001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
@@ -60,42 +63,79 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=150
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002050003
+ definitions=main-2002050001
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-A code audit demonstrated that many xfsprogs utilities do not check that
-the buffers they write actually make it to disk.  While the userspace
-buffer cache has a means to check that a buffer was written (which is to
-reread the buffer after the write), most utilities mark a buffer dirty
-and release it to the MRU and do not re-check the buffer.
+The whole point of libxfs_buf_delwri_submit is to submit a bunch of
+buffers for write and wait for the response.  Unfortunately, while it
+does mark the buffers dirty, it doesn't actually flush them and lets the
+cache mru flusher do it.  This is inconsistent with the kernel API,
+which actually writes the buffers and returns any IO errors.
 
-Worse yet, the MRU will retain the buffers for all failed writes until
-the buffer cache is torn down, but it in turn has no way to communicate
-that writes were lost due to IO errors.  libxfs will flush the device
-when it is unmounted, but as there is no return value, we again fail to
-notice that writes have been lost.  Most likely this leads to a corrupt
-filesystem, which makes it all the more surprising that xfs_repair can
-lose writes yet still return 0!
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ libxfs/rdwr.c   |    3 ++-
+ mkfs/xfs_mkfs.c |   16 ++++++++++------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-Fix all this by making delwri_submit a synchronous write operation like
-its kernel counterpart; teaching the buffer cache to mark the buftarg
-when it knows it's losing writes; teaching the device flush functions to
-return error codes; and adding a new "flush filesystem" API that user
-programs can call to check for lost writes or IO errors.  Then teach all
-the userspace programs to flush the fs at exit and report errors.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
+index 0d9d7202..2e9f66cc 100644
+--- a/libxfs/rdwr.c
++++ b/libxfs/rdwr.c
+@@ -1491,9 +1491,10 @@ xfs_buf_delwri_submit(
+ 
+ 	list_for_each_entry_safe(bp, n, buffer_list, b_list) {
+ 		list_del_init(&bp->b_list);
+-		error2 = libxfs_writebuf(bp, 0);
++		error2 = libxfs_writebufr(bp);
+ 		if (!error)
+ 			error = error2;
++		libxfs_putbuf(bp);
+ 	}
+ 
+ 	return error;
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 5a042917..1f5d2105 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -3685,6 +3685,7 @@ main(
+ 	};
+ 
+ 	struct list_head	buffer_list;
++	int			error;
+ 
+ 	platform_uuid_generate(&cli.uuid);
+ 	progname = basename(argv[0]);
+@@ -3885,16 +3886,19 @@ main(
+ 		if (agno % 16)
+ 			continue;
+ 
+-		if (libxfs_buf_delwri_submit(&buffer_list)) {
+-			fprintf(stderr, _("%s: writing AG headers failed\n"),
+-					progname);
++		error = -libxfs_buf_delwri_submit(&buffer_list);
++		if (error) {
++			fprintf(stderr,
++	_("%s: writing AG headers failed, err=%d\n"),
++					progname, error);
+ 			exit(1);
+ 		}
+ 	}
+ 
+-	if (libxfs_buf_delwri_submit(&buffer_list)) {
+-		fprintf(stderr, _("%s: writing AG headers failed\n"),
+-				progname);
++	error = -libxfs_buf_delwri_submit(&buffer_list);
++	if (error) {
++		fprintf(stderr, _("%s: writing AG headers failed, err=%d\n"),
++				progname, error);
+ 		exit(1);
+ 	}
+ 
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=buffer-write-fixes
