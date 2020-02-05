@@ -2,80 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42768153B4C
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Feb 2020 23:48:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D4FB153B9C
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Feb 2020 00:06:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgBEWs0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Feb 2020 17:48:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34144 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727604AbgBEWsZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Feb 2020 17:48:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580942904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wR5HRYcM5uIHBhBeX4VTBixBrxH10MbVv1tab5F2B7Y=;
-        b=MNjlhtt/alMa2Mu3QkQR02vVR2uYPqIBcRpKslVHNEkCPQHlPFEhQLBDg8wH+WqNh5qvqA
-        LRAte+Y6rZhz/rwpfC2I671snqvOW8wK7VQdtPh1rr/QOoNbhFk++bHIHtx+IVxgdrJC0F
-        1fNdNseeh3ejkSSR3alqMoM4gbnHl74=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-wdQJQxF3NOyPxJUEGsh1cQ-1; Wed, 05 Feb 2020 17:48:22 -0500
-X-MC-Unique: wdQJQxF3NOyPxJUEGsh1cQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64592190D341;
-        Wed,  5 Feb 2020 22:48:21 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 498075DA7C;
-        Wed,  5 Feb 2020 22:48:21 +0000 (UTC)
-Received: by segfault.boston.devel.redhat.com (Postfix, from userid 3734)
-        id 4F927208D0E6; Wed,  5 Feb 2020 17:48:20 -0500 (EST)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>
-Subject: [PATCH 3/3] xfs/300: modify test to work on any fs block size
-Date:   Wed,  5 Feb 2020 17:48:18 -0500
-Message-Id: <20200205224818.18707-4-jmoyer@redhat.com>
-In-Reply-To: <20200205224818.18707-1-jmoyer@redhat.com>
+        id S1727770AbgBEXGb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Feb 2020 18:06:31 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:48826 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727237AbgBEXGb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Feb 2020 18:06:31 -0500
+Received: from dread.disaster.area (pa49-181-161-120.pa.nsw.optusnet.com.au [49.181.161.120])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 14B6F8204F1;
+        Thu,  6 Feb 2020 10:06:27 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1izTkY-0006PA-46; Thu, 06 Feb 2020 10:06:26 +1100
+Date:   Thu, 6 Feb 2020 10:06:26 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCH 0/3] fstests: fixes for 64k pages and dax
+Message-ID: <20200205230626.GO20628@dread.disaster.area>
 References: <20200205224818.18707-1-jmoyer@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205224818.18707-1-jmoyer@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=SkgQWeG3jiSQFIjTo4+liA==:117 a=SkgQWeG3jiSQFIjTo4+liA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=Hdpg4Cy1Pty9vVzyJowA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The test currently assumes a file system block size of 4k.  It will
-work just fine on any user-specified block size, though.
+[cc fstests@vger.kernel.org]
 
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
----
- tests/xfs/300 | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Wed, Feb 05, 2020 at 05:48:15PM -0500, Jeff Moyer wrote:
+> This set of patches fixes a few false positives I encountered when
+> testing DAX on ppc64le (which has a 64k page size).
+> 
+> Patch 1 is actually not specific to non-4k page sizes.  Right now we
+> only test for dax incompatibility in the dm flakey target.  This means
+> that tests that use dm-thin or the snapshot target will still try to
+> run.  Moving the check to _require_dm_target fixes that problem.
+> 
+> Patches 2 and 3 get rid of hard coded block/page sizes in the tests.
+> They run just fine on 64k pages and 64k block sizes.
+> 
+> Even after these patches, there are many more tests that fail in the
+> following configuration:
+> 
+> MKFS_OPTIONS="-b size=65536 -m reflink=0" MOUNT_OPTIONS="-o dax"
+> 
+> One class of failures is tests that create a really small file system
+> size.  Some of those tests seem to require the very small size, but
+> others seem like they could live with a slightly bigger size that
+> would then fit the log (the typical failure is a mkfs failure due to
+> not enough blocks for the log).  For the former case, I'm tempted to
+> send patches to _notrun those tests, and for the latter, I'd like to
+> bump the file system sizes up.  300MB seems to be large enough to
+> accommodate the log.  Would folks be opposed to those approaches?
+> 
+> Another class of failure is tests that either hard-code a block size
+> to trigger a specific error case, or that test a multitude of block
+> sizes.  I'd like to send a patch to _notrun those tests if there is
+> a user-specified block size.  That will require parsing the MKFS_OPTIONS
+> based on the fs type, of course.  Is that something that seems
+> reasonable?
+> 
+> I will follow up with a series of patches to implement those changes
+> if there is consensus on the approach.  These first three seemed
+> straight-forward to me, so that's where I'm starting.
+> 
+> Thanks!
+> Jeff
+> 
+> [PATCH 1/3] dax/dm: disable testing on devices that don't support dax
+> [PATCH 2/3] t_mmap_collision: fix hard-coded page size
+> [PATCH 3/3] xfs/300: modify test to work on any fs block size
 
-diff --git a/tests/xfs/300 b/tests/xfs/300
-index 28608b81..4f1c927a 100755
---- a/tests/xfs/300
-+++ b/tests/xfs/300
-@@ -50,8 +50,9 @@ $XFS_IO_PROG -f -c "pwrite -S 0x63 0 4096" $SCRATCH_MNT=
-/attrvals >> $seqres.full
- cat $SCRATCH_MNT/attrvals | attr -s name $SCRATCH_MNT/$seq.test >> $seqr=
-es.full 2>&1
-=20
- # Fragment the file by writing backwards
-+bs=3D$(_get_file_block_size $SCRATCH_MNT)
- for I in `seq 6 -1 0`; do
--	dd if=3D/dev/zero of=3D$SCRATCH_MNT/$seq.test seek=3D$I bs=3D4k \
-+	dd if=3D/dev/zero of=3D$SCRATCH_MNT/$seq.test seek=3D$I bs=3D${bs} \
- 	   oflag=3Ddirect count=3D1 conv=3Dnotrunc >> $seqres.full 2>&1
- done
-=20
---=20
-2.19.1
+Hi Jeff,
 
+You probably should be sending fstests patches to
+fstests@vger.kernel.org, otherwise they probably won't get noticed
+by the fstests maintainer...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
