@@ -2,71 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3856C15600D
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Feb 2020 21:44:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 315161560FE
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Feb 2020 23:03:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgBGUoO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Feb 2020 15:44:14 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46976 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbgBGUoL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Feb 2020 15:44:11 -0500
-Received: by mail-yw1-f67.google.com with SMTP id z141so239381ywd.13
-        for <linux-xfs@vger.kernel.org>; Fri, 07 Feb 2020 12:44:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=WJgFJ9PR0yBQ+ciD08Pby60OVZzn3dTgtieZ17slfRQssKmPnwQmAwZPgDIpR6heck
-         dDY9m0nAiR73dL1CtCDLlqWI9lV6barO9i6phYUUcmMyI9lhyUunotwwGjtLNjZZXHps
-         B+ZJy7kS8IDHqb+LatDXLkBcGkPTiMku+kX9Fb92ZmFsnK1n3liOHkc4TmrSz2VBzqpm
-         gOXxQUuwBna/l8aq9nu864h1RGE/T5vMQdJwoV4IagKfmqrsTX7n4WpDLnLJobosvK0X
-         9Z7fBUirFx02ZREq+PBFhuGxFcksAi/eOnsjoHpvtfcuXe3k+tw0qtyYWnKvHtkX+Drl
-         CMWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=CGpL4axi8dl6+Xl+DjySWtfKQOrmQ7mZtxZUZcORsHfOAbaHmJkvnGh3bsc3fxabMI
-         HhS+SvjCvK7XugQcpR32ilj32L3w/wegCym+om5XjnhYDZZlP0oFs4Fel4qa+ds1NmtA
-         SsYoW+Jc4un6ZcnDWq16DbPAgQfDDd1jt78hRuyvhPGM41ewl6/JAky5pIcHNWzvlZky
-         hHpsqe8ZpZuRi7kY29L40by1E+Ir5MGqQT4tza1rKddG5oq4ymc1LPibWrQDk4Pqaq71
-         BCOUMkl+2t4z03XGP2p9+RzTYt9Lcq/fXKNthutf9w30P95V0AXgtyXBU8EWEcQZkdkH
-         yeuA==
-X-Gm-Message-State: APjAAAWxRpqMdXshBDkCxm//CRc2DHDGVwTlIJj5vB2nwvRo6foTzfFc
-        6J+AuQzsbMfMYzmbcF7yuA80td2A3WMOqZCCzUvHm//ITQhSaA==
-X-Google-Smtp-Source: APXvYqxZ0BHxezvYatUCwR5ujJY2IO6fZCUlpHww8WEnDHAAAY+0VvtiMdEe6JnWZWwDRH8AP8uVvx3q0Y+IviYPdhQ=
-X-Received: by 2002:a9d:7305:: with SMTP id e5mr948882otk.64.1581108248790;
- Fri, 07 Feb 2020 12:44:08 -0800 (PST)
+        id S1727502AbgBGWDe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Feb 2020 17:03:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47050 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbgBGWDe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Feb 2020 17:03:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2d5zVWoSIkJq53OLV//DrgsyCvw29Qs+2sFuqf28g1Q=; b=sD7ir1TiIMPuJqDgcwhL0G6Qq5
+        pkb7NmTPq+WYeXxcgvxtboQn27bmhab+P/SV9ONVh6hpktv490rtGG4N/VPmuzZOo6zbpWgEYO7A2
+        y9bGRwUAfL4/TZAoDXuzQwVtFXkne5ezH84W1m1DPDXYiO66PV2AnZmUM0yV1rdtFs/lNG4dCXqoI
+        fx2VIVmV9oo+jMA5Z68biCDXGhzIvY28gqzUT5lWG/qSLdiSHM+f3Mk8jrK93PCvcimLrwUIUa2P9
+        oUX4qa+TlxUgOC7uerScMQOWACMQpG+kUqef2/xnxFsIjudztjAaKoiDaQCqnxAomxfkxYu1sWUcB
+        q8H1Aseg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j0Bin-0001oZ-Iq; Fri, 07 Feb 2020 22:03:33 +0000
+Date:   Fri, 7 Feb 2020 14:03:33 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        xfs <linux-xfs@vger.kernel.org>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Eryu Guan <guaneryu@gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC] FS Maintainers Don't Scale
+Message-ID: <20200207220333.GI8731@bombadil.infradead.org>
+References: <20200131052520.GC6869@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a4a:d508:0:0:0:0:0 with HTTP; Fri, 7 Feb 2020 12:44:08 -0800 (PST)
-Reply-To: auch197722@gmail.com
-From:   "Mr. Theophilus Odadudu" <cristinamedina0010@gmail.com>
-Date:   Fri, 7 Feb 2020 15:44:08 -0500
-Message-ID: <CAPNvSTj-8q7w5QPmnH26+_3xCKjEWyE+9xcb8QyQs9Xie+iYgg@mail.gmail.com>
-Subject: LETTER OF INQUIRY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131052520.GC6869@magnolia>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Good Day,
+On Thu, Jan 30, 2020 at 09:25:20PM -0800, Darrick J. Wong wrote:
+> It turns out that this system doesn't scale very well either.  Even with
+> three maintainers sharing access to the git trees and working together
+> to get reviews done, mailing list traffic has been trending upwards for
+> years, and we still can't keep up.  I fear that many maintainers are
+> burning out.  For XFS, the biggest pain point (AFAICT) is not assembly and
+> testing of the git trees, but keeping up with the mail and the reviews.
 
-I work as a clerk in a Bank here in Nigeria, I have a very
-confidential Business Proposition for you. There is a said amount of
-money floating in the bank unclaimed, belonging to the bank Foreign
-customer who die with his family in the Ethiopian Airline crash of
-March 11, 2019.
+I think the LSFMMBPF conference is part of the problem.  With the best of
+intentions, we have set up a system which serves to keep all but the most
+dedicated from having a voice at the premier conference for filesystems,
+memory management, storage (and now networking).  It wasn't intended to
+be that way, but that's what has happened, and it isn't serving us well
+as a result.
 
-I seek your good collaboration to move the fund for our benefit. we
-have agreed that 40% be yours once you help claim.
+Three anecdotes.  First, look at Jason's mail from earlier today:
+https://lore.kernel.org/linux-mm/20200207194620.GG8731@bombadil.infradead.org/T/#t
 
-Do get back to with 1) Your Full Name: (2) Residential Address: (3)
-Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
-funds.
+There are 11 people on that list, plus Jason, plus three more than I
+recommended.  That's 15, just for that one topic.  I think maybe half
+of those people will get an invite anyway, but adding on an extra 5-10
+people for (what I think is) a critically important topic at the very
+nexus of storage, filesystems, memory management, networking and graphics
+is almost certainly out of bounds for the scale of the current conference.
 
-Regards
-Theophilus Odadudu
+Second, I've had Outreachy students who have made meaningful contributions
+to the kernel.  Part of their bursary is a travel grant to go to a
+conference and they were excited to come to LSFMM.  I've had to tell
+them "this conference is invite-only for the top maintainers; you can't
+come".  They ended up going to an Open Source Summit conference instead.
+By excluding the people who are starting out, we are failing to grow
+our community.  I don't think it would have hurt for them to be in the
+room; they were unlikely to speak, and perhaps they would have gone on
+to make larger contributions.
+
+Third, I hear from people who work on a specific filesystem "Of the
+twenty or so slots for the FS part of the conference, there are about
+half a dozen generic filesystem people who'll get an invite, then maybe
+six filesystems who'll get two slots each, but what we really want to
+do is get everybody working on this filesystem in a room and go over
+our particular problem areas".
+
+This kills me because LSFMM has been such a critically important part of
+Linux development for over a decade, but I think at this point it is at
+least not serving us the way we want it to, and may even be doing more
+harm than good.  I think it needs to change, and more people need to
+be welcomed to the conference.  Maybe it needs to not be invite-only.
+Maybe it can stay invite-only, but be twice as large.  Maybe everybody
+who's coming needs to front $100 to put towards the costs of a larger
+meeting space with more rooms.
+
+Not achievable for this year, I'm sure, but if we start talking now
+maybe we can have a better conference in 2021.
