@@ -2,160 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E4915863C
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2020 00:40:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9BFC158762
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2020 02:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgBJXkF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Feb 2020 18:40:05 -0500
-Received: from sandeen.net ([63.231.237.45]:41316 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727452AbgBJXkF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:40:05 -0500
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 8FBBB2542;
-        Mon, 10 Feb 2020 17:40:01 -0600 (CST)
-Subject: Re: [PATCH 1/1] xfs: fallback to readonly during recovery
-To:     Aaron Sierra <asierra@xes-inc.com>
-Cc:     Vincent Fazio <vfazio@xes-inc.com>, linux-xfs@vger.kernel.org
-References: <20200210211037.1930-1-vfazio@xes-inc.com>
- <99259ceb-2d0d-1054-4335-017f1854ba14@sandeen.net>
- <829353330.403167.1581373892759.JavaMail.zimbra@xes-inc.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <400031d2-dbcb-a0de-338d-9a11f97c795c@sandeen.net>
-Date:   Mon, 10 Feb 2020 17:40:03 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        id S1728006AbgBKBEC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Feb 2020 20:04:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgBKBEA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Feb 2020 20:04:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=g3I96AED9xpuGVWKIIlCSpxOQGT6kirVfcGE/lGEHHY=; b=IXp8ySq9j05vmGKD4e3tUEEGfd
+        hOOyiHFx8qObGT74MoBcbdPXktSRwwJozKH2633qw95TupzWzEwuw1RJ+zmC1prIg4EQiX6bkcTS/
+        0aEQnOicMRpSjIA7dWMiAfE/9Cf++1qsl2uYViTvYIU9O27fy+VPmGQaU+EVbrXiIS/Ve7Cz47wmm
+        QwBj1rPdBjR5+Q91XSAGgtCeOxAmZq1V5TIWdDqAdbUwe1ENxNkasVWcWE/bLyd5sZX47hK5A5qP4
+        3u2UGE1vs769eDMQYnouLR87lD0ngEJvRttC6ZyZmpI+LPbwedvBRKxNUYNCE7pOiiMAsD7nQkHUb
+        vwpQTIXg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1Jxu-0001ne-9M; Tue, 11 Feb 2020 01:03:50 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v5 00/13] Change readahead API
+Date:   Mon, 10 Feb 2020 17:03:35 -0800
+Message-Id: <20200211010348.6872-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <829353330.403167.1581373892759.JavaMail.zimbra@xes-inc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2/10/20 4:31 PM, Aaron Sierra wrote:
->> From: "Eric Sandeen" <sandeen@sandeen.net>
->> Sent: Monday, February 10, 2020 3:43:50 PM
-> 
->> On 2/10/20 3:10 PM, Vincent Fazio wrote:
->>> Previously, XFS would fail to mount if there was an error during log
->>> recovery. This can occur as a result of inevitable I/O errors when
->>> trying to apply the log on read-only ATA devices since the ATA layer
->>> does not support reporting a device as read-only.
->>>
->>> Now, if there's an error during log recovery, fall back to norecovery
->>> mode and mark the filesystem as read-only in the XFS and VFS layers.
->>>
->>> This roughly approximates the 'errors=remount-ro' mount option in ext4
->>> but is implicit and the scope only covers errors during log recovery.
->>> Since XFS is the default filesystem for some distributions, this change
->>> allows users to continue to use XFS on these read-only ATA devices.
->>
->> What is the workload or scenario where you need this behavior?
->>
->> I'm not a big fan of ~silently mounting a filesystem with latent errors,
->> tbh, but maybe you can explain a bit more about the problem you're solving
->> here?
-> 
-> Hi Eric,
-> 
-> We use SSDs from multiple vendors that can be configured at power-on (via
-> GPIO) to be read-write or write-protected. When write-protected we get I/O
-> errors for any writes that reach the device. We believe that behavior is
-> correct.
-> 
-> We have found that XFS fails during log recovery even when the log is clean
-> (apparently due to metadata writes immediately before actual recovery).
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-There should be no log recovery if it's clean ...
+This series adds a readahead address_space operation to eventually
+replace the readpages operation.  The key difference is that
+pages are added to the page cache as they are allocated (and
+then looked up by the filesystem) instead of passing them on a
+list to the readpages operation and having the filesystem add
+them to the page cache.  It's a net reduction in code for each
+implementation, more efficient than walking a list, and solves
+the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-And I don't see that here - a clean log on a readonly device simply mounts
-RO for me by default, with no muss, no fuss.
+v5 switches to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
 
-# mkfs.xfs -f fsfile
-...
-# losetup /dev/loop0 fsfile
-# mount /dev/loop0 mnt
-# touch mnt/blah
-# umount mnt
-# blockdev --setro /dev/loop0
-# dd if=/dev/zero of=/dev/loop0 bs=4k count=1
-dd: error writing ‘/dev/loop0’: Operation not permitted
-# mount /dev/loop0 mnt
-mount: /dev/loop0 is write-protected, mounting read-only
-# dmesg
-[  419.941649] /dev/loop0: Can't open blockdev
-[  419.947106] XFS (loop0): Mounting V5 Filesystem
-[  419.952895] XFS (loop0): Ending clean mount
-# uname -r
-5.5.0
+This version deletes a lot more lines than previous versions of the patch
+-- we're net -97 lines instead of -17 with v4.  It'll be even more when
+we can finish the conversion and remove all the ->readpages support code,
+including read_cache_pages().
 
-> Vincent and I believe that mounting read-only without recovery should be
-> fine even when the log is not clean, since the filesystem will be consistent,
-> even if out-of-date.
+Also new in v5 is patch 5 which adds page_cache_readahead_limit() and
+converts ext4 and f2fs to use it for their Merkel trees.
 
-I think that you may be making too many assumptions here, i.e. that "log
-recovery failure leaves the filesystem in a consistent state" - and that
-may not be true in all cases.
+Matthew Wilcox (Oracle) (13):
+  mm: Fix the return type of __do_page_cache_readahead
+  mm: Ignore return value of ->readpages
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Add page_cache_readahead_limit
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  f2fs: Convert from readpages to readahead
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
 
-IOWS, transitioning to a new RO state for your particular case may be safe,
-but I'm not sure that's universally true for all log replay failures.
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  13 +++
+ drivers/staging/exfat/exfat_super.c   |   7 +-
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  48 +++------
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 ++-
+ fs/erofs/data.c                       |  39 +++----
+ fs/erofs/zdata.c                      |  29 ++----
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   3 +-
+ fs/ext4/inode.c                       |  23 ++---
+ fs/ext4/readpage.c                    |  22 ++--
+ fs/ext4/verity.c                      |  35 +------
+ fs/f2fs/data.c                        |  50 ++++-----
+ fs/f2fs/f2fs.h                        |   5 +-
+ fs/f2fs/verity.c                      |  35 +------
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  46 ++++-----
+ fs/gfs2/aops.c                        |  23 ++---
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                | 103 ++++++-------------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 +++----
+ fs/nilfs2/inode.c                     |  15 +--
+ fs/ocfs2/aops.c                       |  34 +++---
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +--
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               |  84 +++++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/internal.h                         |   2 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 143 ++++++++++++++++----------
+ 43 files changed, 422 insertions(+), 519 deletions(-)
 
-> Our customers' use often requires nonvolatile memory to be write-protected
-> or not based on the device being installed in a development or deployed
-> system. It is ideal for them to be able to mount their filesystems read-
-> write when possible and read-only when not without having to alter mount
-> options.
+-- 
+2.25.0
 
-From my example above, I'd like to understand more why/how you have a
-clean log that fails to mount by default on a readonly block device...
-in my testing, no writes get sent to the device when mounting a clean
-log.
-
--Eric
