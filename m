@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EA4F15B6DE
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Feb 2020 02:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E904215B6E6
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Feb 2020 02:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgBMBuE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Feb 2020 20:50:04 -0500
-Received: from sandeen.net ([63.231.237.45]:56642 "EHLO sandeen.net"
+        id S1729348AbgBMBwc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Feb 2020 20:52:32 -0500
+Received: from sandeen.net ([63.231.237.45]:56776 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgBMBuE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:50:04 -0500
+        id S1729333AbgBMBwc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 12 Feb 2020 20:52:32 -0500
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 8A1D122C5;
-        Wed, 12 Feb 2020 19:49:57 -0600 (CST)
-Subject: Re: [PATCH 01/14] xfs: explicitly define inode timestamp range
+        by sandeen.net (Postfix) with ESMTPSA id 674CB22C5;
+        Wed, 12 Feb 2020 19:52:25 -0600 (CST)
+Subject: Re: [PATCH 03/14] xfs: refactor quota exceeded test
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <157784106066.1364230.569420432829402226.stgit@magnolia>
- <157784106702.1364230.14985571182679451055.stgit@magnolia>
- <639ba6e0-71b3-1d81-820e-ad49a56a032c@sandeen.net>
- <20200213012607.GW6870@magnolia>
+ <157784108138.1364230.6221331077843589601.stgit@magnolia>
+ <b979d33d-361b-88cd-699c-7e5f1c621698@sandeen.net>
+ <20200213014121.GX6870@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -66,51 +66,65 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <7ae0af7b-bc7f-95ac-582c-1f5b2c11487f@sandeen.net>
-Date:   Wed, 12 Feb 2020 19:50:02 -0600
+Message-ID: <d7682836-77ae-bd1d-14ff-4365fbb022da@sandeen.net>
+Date:   Wed, 12 Feb 2020 19:52:30 -0600
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200213012607.GW6870@magnolia>
+In-Reply-To: <20200213014121.GX6870@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2/12/20 7:26 PM, Darrick J. Wong wrote:
-> On Wed, Feb 12, 2020 at 05:00:59PM -0600, Eric Sandeen wrote:
+On 2/12/20 7:41 PM, Darrick J. Wong wrote:
+> On Wed, Feb 12, 2020 at 05:51:18PM -0600, Eric Sandeen wrote:
 >> On 12/31/19 7:11 PM, Darrick J. Wong wrote:
 >>> From: Darrick J. Wong <darrick.wong@oracle.com>
 >>>
->>> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+>>> Refactor the open-coded test for whether or not we're over quota.
+>>
+>> Ooh, nice.  This was horrible.
+
 ...
 
->>>  static inline void __init
->>>  xfs_check_ondisk_structs(void)
+>>> +}
+>>> +
+>>>  /*
+>>>   * Check the limits and timers of a dquot and start or reset timers
+>>>   * if necessary.
+>>> @@ -117,6 +128,8 @@ xfs_qm_adjust_dqtimers(
+>>>  	struct xfs_mount	*mp,
+>>>  	struct xfs_disk_dquot	*d)
 >>>  {
->>> +	/* make sure timestamp limits are correct */
->>> +	XFS_CHECK_VALUE(XFS_INO_TIME_MIN, 			-2147483648LL);
->>> +	XFS_CHECK_VALUE(XFS_INO_TIME_MAX,			2147483647LL);
+>>> +	bool			over;
+>>> +
+>>>  	ASSERT(d->d_id);
+>>>  
+>>>  #ifdef DEBUG
+>>> @@ -131,71 +144,47 @@ xfs_qm_adjust_dqtimers(
+>>>  		       be64_to_cpu(d->d_rtb_hardlimit));
+>>>  #endif
+>>>  
+>>> +	over = xfs_quota_exceeded(&d->d_bcount, &d->d_blk_softlimit,
+>>> +			&d->d_blk_hardlimit);
+>>>  	if (!d->d_btimer) {
+>>> -		if ((d->d_blk_softlimit && (be64_to_cpu(d->d_bcount) > be64_to_cpu(d->d_blk_softlimit))) ||
+>>> -		    (d->d_blk_hardlimit && (be64_to_cpu(d->d_bcount) > be64_to_cpu(d->d_blk_hardlimit)))) {
+>>> +		if (over) {
 >>
->> IMHO this really shouldn't be in a function with this name, as it's not checking
->> an ondisk struct.  And I'm not really sure what it's protecting against?
->> Basically you put an integer in one #define and check it in another?
+>> I wonder why we check the hard limit.  Isn't exceeding the soft limit
+>> enough to start the timer?  Unrelated to the refactoring tho.
 > 
-> Admittedly /this/ part isn't so crucial, because S32_MAX is never going
-> to be redefined.  However, I added this for completeness; notice that
-> the patch that widens xfs_timestamp_t adds similar checks for the new
-> minimum and maximum timestamp, whose values are not so straightforward.
-> 
-> Also, I get that this isn't directly checking an ondisk structure, but
-> given that we use these constants, there ought to be a check against
-> incorrect computation *somewhere*.  The BUILD_BUG_ON macros don't
-> produce any real code (and this function is called at __init time) so
-> what's the harm?
+> Suppose there's only a hard limit set?
 
-OCD?  Maybe just make a xfs_check_time_vals() to go with
-xfs_check_ondisk_structs() or something.
+then you get EDQUOT straightaway and timers don't matter?
+
+I guess if you set a soft limit after you go over a hard-limit-only and ...
+meh, ain't broke don't fix?
 
 -Eric
+
