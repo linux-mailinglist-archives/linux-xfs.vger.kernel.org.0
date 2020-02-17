@@ -2,49 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E63161ADD
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 19:51:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 878F0161CF3
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 22:48:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgBQSsn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Feb 2020 13:48:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50272 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbgBQSsl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 13:48:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CZVbSaaYtwj3qyeImu1P+lH7PMVYW2dlgJQfIOhuLwI=; b=InMWRejZjziZ327gXZfH6Mbvr/
-        C/eVJoLnvVckDeDyzrV7y7TgMN7L2n+c2kuawbG4CvlvTAyha1SY+K1dMvV+M/KVndPm9QVAOhiYo
-        8o2+LVPKCXFmpk2cJIMtPz+PQe7MPFwlTqgCeHeus+DzjLHeMVZ2Zdtsj+MACIwCrSrxvG8dTTtZW
-        IsGstqnGLWUQSUdZyALt6muTXBeoQ265Lj7NA7RwwyS1WYlqOrdhFvczcsXEHghUSOEddnFA/bh3o
-        rlYzYW3LI/v4mBl1+4g7qezJwwaoolJXkQhuMF6EOe7aVsuIM/2l1RZhxe9liukxnsF/LosclOFnG
-        HdvYL2KA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3lRh-0006jH-1W; Mon, 17 Feb 2020 18:48:41 +0000
-Date:   Mon, 17 Feb 2020 10:48:40 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 00/19] Change readahead API
-Message-ID: <20200217184840.GL7778@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
+        id S1729761AbgBQVsi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Feb 2020 16:48:38 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:32985 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728935AbgBQVsh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 16:48:37 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 51F2B7E8B3C;
+        Tue, 18 Feb 2020 08:48:34 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3oFk-0003FU-6n; Tue, 18 Feb 2020 08:48:32 +1100
+Date:   Tue, 18 Feb 2020 08:48:32 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Rajendra <chandanrlinux@gmail.com>
+Subject: Re: [PATCH 01/31] xfs: reject invalid flags combinations in
+ XFS_IOC_ATTRLIST_BY_HANDLE
+Message-ID: <20200217214832.GF10776@dread.disaster.area>
+References: <20200217125957.263434-1-hch@lst.de>
+ <20200217125957.263434-2-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-1-willy@infradead.org>
+In-Reply-To: <20200217125957.263434-2-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=PdgxoRXK51NFJEpSu0oA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:41AM -0800, Matthew Wilcox wrote:
-> This series adds a readahead address_space operation to eventually
+On Mon, Feb 17, 2020 at 01:59:27PM +0100, Christoph Hellwig wrote:
+> While the flags field in the ABI and the on-disk format allows for
+> multiple namespace flags, that is a logically invalid combination and
+> listing multiple namespace flags will return no results as no attr
+> can have both set.  Reject this case early with -EINVAL.
 
-*sigh*.  Clearly I forgot to rm -rf an earlier version.  Please disregard
-any patches labelled n/16.  I can send a v7 if this is too much hassle.
+Had a bit of a hard time deciphering this. Perhaps:
+
+While the flags field in the ABI and the on-disk format allows for
+multiple namespace flags, an attribute can only exist in a single
+namespace at a time. Hence asking to list attributes that exist
+in multiple namespaces simultaneously is a logically invalid
+request and will return no results. Reject this case early with
+-EINVAL.
+
+Other than that, the code is good.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
