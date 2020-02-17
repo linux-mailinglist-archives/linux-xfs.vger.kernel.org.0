@@ -2,48 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5F0161399
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 14:34:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 421C11613A1
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 14:35:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgBQNeL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Feb 2020 08:34:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46146 "EHLO
+        id S1726403AbgBQNfW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Feb 2020 08:35:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48120 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgBQNeK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 08:34:10 -0500
+        with ESMTP id S1726397AbgBQNfW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 08:35:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=chTRfyq4lXCwztlCJDXbnVDlLxrvJ8A8j5yTEvkIiKg=; b=ejnz4qE/G88L6kGeoFaPQ1J+WD
-        or0AIA6S0la40pT9l7k1Smb/mZ2f1FfjjVd1SDgSQCviUzBWGX9o6fznpuTn6AKg5mmXCJrg//Lu0
-        kgy9aTUUs1xnIkoaN2Srdh9m5xqVFNHLL8YtkqJCsQ+0tEaA5SAKoZh+4lJWVsS/ziVm8inOX9WMm
-        tURhlEhbsJuVU8g5rj4TJWszEdmFp3xtxx9l4u00CLsapmqlfgPKcdkl9SSjiki6kutyGUYh+mha3
-        t4oUwj1MNRpiINLSXtGnkNilyCb8CC63+LRRRgHWhvsXiXz4du9OKmhsoj/nt0kKaLhfS65O1896y
-        O0FKBS6g==;
+        bh=BaLm7hKpcAEbJyNKLllCxD5ZCfXZWEqQp6p/nRbOEsk=; b=pGrKpnTRQSWYcF2zKOsXqUA45J
+        5vMVX+mejf8Bw5pPV2UoSgGxKoMdmU5bHF2zmbodhiiXdVvcXA4mUo8e5Kb0CpDdXqcjiDGI8RNL1
+        XMxpmA2PS8DAHglV4OpDXdo39+YEM46qC9UrDq/Z+wSErpnNIcvVMrjxwK/uIQotjcjG71+Wmr99S
+        pmX+KPdERcnMPdrHxLrfh/yHWOh/i0tHjrXB5s1AIZw1hB5dXMMYLUz4RpBc6lbyX5KgTGfApudbZ
+        MXbgNLAJC43q5tS7srglGZGXDNK0R2GicGDrtzbxEe0xB6W1PvtHWIs2k4HuhMSyGueGi4OGokbTh
+        MJeWBiVA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3gXK-0000Yp-NL; Mon, 17 Feb 2020 13:34:10 +0000
-Date:   Mon, 17 Feb 2020 05:34:10 -0800
+        id 1j3gYT-00027B-Ur; Mon, 17 Feb 2020 13:35:21 +0000
+Date:   Mon, 17 Feb 2020 05:35:21 -0800
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Pavel Reichl <preichl@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] xfs: xfs_isilocked() can only check a single lock
- type
-Message-ID: <20200217133410.GC31012@infradead.org>
+Subject: Re: [PATCH v5 1/4] xfs: Refactor xfs_isilocked()
+Message-ID: <20200217133521.GD31012@infradead.org>
 References: <20200214185942.1147742-1-preichl@redhat.com>
- <20200214185942.1147742-3-preichl@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214185942.1147742-3-preichl@redhat.com>
+In-Reply-To: <20200214185942.1147742-1-preichl@redhat.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Looks good,
+On Fri, Feb 14, 2020 at 07:59:39PM +0100, Pavel Reichl wrote:
+> Refactor xfs_isilocked() to use newly introduced __xfs_rwsem_islocked().
+> __xfs_rwsem_islocked() is a helper function which encapsulates checking
+> state of rw_semaphores hold by inode.
+> 
+> Signed-off-by: Pavel Reichl <preichl@redhat.com>
+> Suggested-by: Dave Chinner <dchinner@redhat.com>
+> Suggested-by: Eric Sandeen <sandeen@redhat.com>
+> ---
+>  fs/xfs/xfs_inode.c | 54 ++++++++++++++++++++++++++++++++--------------
+>  fs/xfs/xfs_inode.h |  2 +-
+>  2 files changed, 39 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index c5077e6326c7..3d28c4790231 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -345,32 +345,54 @@ xfs_ilock_demote(
+>  }
+>  
+>  #if defined(DEBUG) || defined(XFS_WARN)
+> -int
+> +static inline bool
+> +__xfs_rwsem_islocked(
+> +	struct rw_semaphore	*rwsem,
+> +	bool			shared,
+> +	bool			excl)
+> +{
+> +	bool locked = false;
+> +
+> +	if (!rwsem_is_locked(rwsem))
+> +		return false;
+> +
+> +	if (!debug_locks)
+> +		return true;
+> +
+> +	if (shared)
+> +		locked = lockdep_is_held_type(rwsem, 0);
+> +
+> +	if (excl)
+> +		locked |= lockdep_is_held_type(rwsem, 1);
+> +
+> +	return locked;
 
-although as a standalone fix this should really be first in the series.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This could use some comments explaining the logic, especially why we
+need the shared and excl flags, which seems very confusing given that
+a lock can be held either shared or exclusive, but not neither and not
+both.
