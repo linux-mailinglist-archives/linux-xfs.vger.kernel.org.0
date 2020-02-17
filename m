@@ -2,224 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DE19161961
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 19:06:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 116C5161ACE
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Feb 2020 19:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgBQSG1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Feb 2020 13:06:27 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35033 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726707AbgBQSG1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 13:06:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581962785;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+RM+DH0ErVj/CBf+LH+Vn1Q/4RW34TjpSYC3jJHH6uc=;
-        b=byMOABP8ow474/e7vwR7Ituf+Kq4wgHExe+YIM6eW9CXlApYDeZINUUwgYrI2yaGA+pIkY
-        u+R/xZgB3D5I4aBH23DqoXDxdTNhL4DAAJrzdnxGc9eMoQ5uPfYVCGDt5Wl6TjG94zkSaM
-        BKCBmbp//VhgxzSKnJTFE4qXvFEkvUE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-89-a92lH5D_OISSINlMMe8Dxg-1; Mon, 17 Feb 2020 13:06:21 -0500
-X-MC-Unique: a92lH5D_OISSINlMMe8Dxg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CFBD1083E80;
-        Mon, 17 Feb 2020 18:06:20 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 895DB8579D;
-        Mon, 17 Feb 2020 18:06:19 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 13:06:17 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: test setting labels with xfs_admin
-Message-ID: <20200217180617.GD6633@bfoster>
-References: <157915149017.2375135.14166864164575311878.stgit@magnolia>
- <157915150275.2375135.12157351351400702116.stgit@magnolia>
+        id S1729594AbgBQSsK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Feb 2020 13:48:10 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48148 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729896AbgBQSqW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 13:46:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=T1hWdYf0rB2BfBCCA/ycayjeULcD1RhEgE660nEF24U=; b=sDP0FQJf/K4vAFf0xbBt1NG5yU
+        BQo1zx2sDVZ4f5cBkmFWO1G5RYV/E561hS2Td5IkHpV55ScSQW46Pj3wPG/gZaXv5iWHZLxlFtSnT
+        BjLdIL++tZJlAw+Xzc28cr0VXtl8dDkruXjAEG9us+5NgJF/WpeRWy/LlJXX4j3I+4+SEJhRWETgz
+        Pc3A3JXDX5ggpPhYiDZYGDq58my+Q7ybdYT8YK8UL/adpWVgbm5fu+cJicN73uRbmjyuszU+cwKHN
+        CfFecxgyQQHpcERi6MFkYvGkiqN5jvoxW64RDHCkUV7Phh5O9263P2GEglbrJexeT6DAt54eb4wHq
+        2EZUCDbw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3lPL-00058b-99; Mon, 17 Feb 2020 18:46:15 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v6 00/19] Change readahead API
+Date:   Mon, 17 Feb 2020 10:45:41 -0800
+Message-Id: <20200217184613.19668-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157915150275.2375135.12157351351400702116.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:11:42PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Test setting filesystem labels with xfs_admin.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  tests/xfs/912     |  103 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/912.out |   43 ++++++++++++++++++++++
->  tests/xfs/group   |    1 +
->  3 files changed, 147 insertions(+)
->  create mode 100755 tests/xfs/912
->  create mode 100644 tests/xfs/912.out
-> 
-> 
-> diff --git a/tests/xfs/912 b/tests/xfs/912
-> new file mode 100755
-> index 00000000..1eef36cd
-> --- /dev/null
-> +++ b/tests/xfs/912
-> @@ -0,0 +1,103 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
-> +#
-> +# FS QA Test No. 912
-> +#
-> +# Check that xfs_admin can set and clear filesystem labels offline and online.
-> +
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1    # failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_scratch
-> +_require_xfs_db_command label
-> +_require_xfs_io_command label
-> +grep -q "xfs_io" "$(which xfs_admin)" || \
-> +	_notrun "xfs_admin does not support online label setting of any kind"
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-So we assume xfs_admin functionality by looking at the script..? This
-seems like it should have its own _require_* helper or some such with a
-more explicit implementation. (This also ignores the XFS_ADMIN_PROG env
-var added by the previous patch as well, fwiw).
+This series adds a readahead address_space operation to eventually
+replace the readpages operation.  The key difference is that
+pages are added to the page cache as they are allocated (and
+then looked up by the filesystem) instead of passing them on a
+list to the readpages operation and having the filesystem add
+them to the page cache.  It's a net reduction in code for each
+implementation, more efficient than walking a list, and solves
+the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-> +
-> +rm -f $seqres.full
-> +
-> +echo
-> +echo "Format with label"
-> +_scratch_mkfs -L "label0" > $seqres.full
-> +
-> +echo "Read label offline"
-> +_scratch_xfs_admin -l
-> +
-> +echo "Read label online"
-> +_scratch_mount
-> +_scratch_xfs_admin -l
-> +
-> +echo
-> +echo "Set label offline"
-> +_scratch_unmount
-> +_scratch_xfs_admin -L "label1"
-> +
-> +echo "Read label offline"
-> +_scratch_xfs_admin -l
-> +
-> +echo "Read label online"
-> +_scratch_mount
-> +_scratch_xfs_admin -l
-...
-> +echo
-> +echo "Set label offline"
-> +_scratch_xfs_admin -L "label3"
-> +
-> +echo "Read label offline"
-> +_scratch_xfs_admin -l
-> +
+The only unconverted filesystems are those which use fscache.
+Their conversion is pending Dave Howells' rewrite which will make the
+conversion substantially easier.
 
-Any reason for the duplicate "set label offline" test? Otherwise LGTM.
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
 
-Brian
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
 
-> +echo
-> +echo "Clear label offline"
-> +_scratch_xfs_admin -L "--"
-> +
-> +echo "Read label offline"
-> +_scratch_xfs_admin -l
-> +
-> +echo "Read label online"
-> +_scratch_mount
-> +_scratch_xfs_admin -l
-> +
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/912.out b/tests/xfs/912.out
-> new file mode 100644
-> index 00000000..186d827f
-> --- /dev/null
-> +++ b/tests/xfs/912.out
-> @@ -0,0 +1,43 @@
-> +QA output created by 912
-> +
-> +Format with label
-> +Read label offline
-> +label = "label0"
-> +Read label online
-> +label = "label0"
-> +
-> +Set label offline
-> +writing all SBs
-> +new label = "label1"
-> +Read label offline
-> +label = "label1"
-> +Read label online
-> +label = "label1"
-> +
-> +Set label online
-> +label = "label2"
-> +Read label online
-> +label = "label2"
-> +Read label offline
-> +label = "label2"
-> +
-> +Clear label online
-> +label = ""
-> +Read label online
-> +label = ""
-> +Read label offline
-> +label = ""
-> +
-> +Set label offline
-> +writing all SBs
-> +new label = "label3"
-> +Read label offline
-> +label = "label3"
-> +
-> +Clear label offline
-> +writing all SBs
-> +new label = ""
-> +Read label offline
-> +label = ""
-> +Read label online
-> +label = ""
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index a6c9ef08..cc1d122a 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -511,3 +511,4 @@
->  511 auto quick quota
->  747 auto quick scrub
->  748 auto quick scrub
-> +912 auto quick label
-> 
+Matthew Wilcox (Oracle) (19):
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Use readahead_control to pass arguments
+  mm: Rearrange readahead loop
+  mm: Remove 'page_offset' from readahead loop
+  mm: rename readahead loop variable to 'i'
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Add page_cache_readahead_limit
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  f2fs: Convert from readpages to readahead
+  fuse: Convert from readpages to readahead
+  iomap: Restructure iomap_readpages_actor
+  iomap: Convert from readpages to readahead
+  mm: Use memalloc_nofs_save in readahead path
+
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  13 ++
+ drivers/staging/exfat/exfat_super.c   |   7 +-
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  46 ++-----
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +--
+ fs/erofs/data.c                       |  39 ++----
+ fs/erofs/zdata.c                      |  29 ++--
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   3 +-
+ fs/ext4/inode.c                       |  23 ++--
+ fs/ext4/readpage.c                    |  22 ++-
+ fs/ext4/verity.c                      |  35 +----
+ fs/f2fs/data.c                        |  50 +++----
+ fs/f2fs/f2fs.h                        |   5 +-
+ fs/f2fs/verity.c                      |  35 +----
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  46 +++----
+ fs/gfs2/aops.c                        |  23 ++--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                | 118 +++++++----------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 ++----
+ fs/nilfs2/inode.c                     |  15 +--
+ fs/ocfs2/aops.c                       |  34 ++---
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               |  90 +++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/internal.h                         |   8 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 184 +++++++++++++++++---------
+ 43 files changed, 474 insertions(+), 533 deletions(-)
+
+
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+-- 
+2.25.0
 
