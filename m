@@ -2,65 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0318161FEA
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Feb 2020 05:49:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4E7D161FD8
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Feb 2020 05:39:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgBREs7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Feb 2020 23:48:59 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45268 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726296AbgBREs6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 23:48:58 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A78797EA005;
-        Tue, 18 Feb 2020 15:48:55 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j3uoY-0005i5-Lq; Tue, 18 Feb 2020 15:48:54 +1100
-Date:   Tue, 18 Feb 2020 15:48:54 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 02/19] mm: Ignore return value of ->readpages
-Message-ID: <20200218044854.GG10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-3-willy@infradead.org>
+        id S1726267AbgBREjZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Feb 2020 23:39:25 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30810 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgBREjZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Feb 2020 23:39:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582000764;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+fty7zVYrz/BkkQhX/l5UJqwhY7OxI3ialsYngVbkhI=;
+        b=A23b9Dej+mUhhZDeGFYaUBYC+qC6YFzlyWyPRjzWOdeMZDhE4UA7z8YxP+mix15oTrWCFf
+        wExQu6YlcewSQg6yvG9cPKOJB86JmVFSUnYJVWi36noEZatoMmtr7p1fKwrXR+ld7YhNC5
+        1xCzx4R6Qcv/pYTiUuLguezDXgVPTrI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-11-2z-JYhRIMW68DSY71yteRw-1; Mon, 17 Feb 2020 23:39:20 -0500
+X-MC-Unique: 2z-JYhRIMW68DSY71yteRw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 210B2107ACC4
+        for <linux-xfs@vger.kernel.org>; Tue, 18 Feb 2020 04:39:19 +0000 (UTC)
+Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D416385;
+        Tue, 18 Feb 2020 04:39:15 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 12:49:34 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 0/4] xfs: enable per-type quota timers and warn limits
+Message-ID: <20200218044934.GA14282@dhcp-12-102.nay.redhat.com>
+Mail-Followup-To: Eric Sandeen <sandeen@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+References: <333ea747-8b45-52ae-006e-a1804e14de32@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-3-willy@infradead.org>
+In-Reply-To: <333ea747-8b45-52ae-006e-a1804e14de32@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=x_zGJsPA0gc82MDK-9gA:9
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:43AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Sat, Feb 08, 2020 at 03:09:19PM -0600, Eric Sandeen wrote:
+> Quota timers are currently a mess.  Right now, at mount time,
+> we pick up the first enabled type and use that for the single
+> timer in mp->m_quotainfo.
 > 
-> We used to assign the return value to a variable, which we then ignored.
-> Remove the pretence of caring.
+> Interestingly, if we set a timer on a different type, /that/
+> gets set into mp->m_quotainfo where it stays in effect until
+> the next mount, when we pick the first enabled type again.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  mm/readahead.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+> We actually write the timer values to each type of quota inode,
+> but only one is ever in force, according to the interesting behavior
+> described above.
+> 
+> This series allows quota timers & warn limits to be independently
+> set and enforced for each quota type.
+> 
+> All the action is in the last patch, the first 3 are cleanups to
+> help.
 
-Simple enough.
+This patchset looks good, but the testing for xfs quota timers looks
+not so well. Please check the emails(test case) I sent to fstests@:
+  [PATCH 1/2] generic: per-type quota timers set/get test
+  [PATCH 2/2] generic: test per-type quota softlimit enforcement timeout
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+Why xfs has such different test results? Please feel free to tell me,
+if the case is wrong.
+
+Thanks,
+Zorro
+
+> 
+> -Eric
+> 
+
