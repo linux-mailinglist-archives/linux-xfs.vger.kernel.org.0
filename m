@@ -2,162 +2,171 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9FB165FC8
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 15:36:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91E301660B5
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 16:14:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgBTOgY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Feb 2020 09:36:24 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2562 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgBTOgX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 09:36:23 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4e99460000>; Thu, 20 Feb 2020 06:35:50 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 06:36:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 06:36:23 -0800
-Received: from [10.2.165.18] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 14:36:22 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v7 04/24] mm: Move readahead nr_pages check into
- read_pages
-Date:   Thu, 20 Feb 2020 09:36:19 -0500
-X-Mailer: MailMate (1.13.1r5678)
-Message-ID: <DD2E8059-DA56-468F-9185-6C0082266067@nvidia.com>
-In-Reply-To: <20200219210103.32400-5-willy@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-5-willy@infradead.org>
+        id S1728264AbgBTPOk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Feb 2020 10:14:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10318 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728443AbgBTPOk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 10:14:40 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KF98NP066741
+        for <linux-xfs@vger.kernel.org>; Thu, 20 Feb 2020 10:14:39 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubvamhe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Thu, 20 Feb 2020 10:14:38 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Thu, 20 Feb 2020 15:14:36 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Feb 2020 15:14:35 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01KFEYap53805128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 15:14:34 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C1B711C07B;
+        Thu, 20 Feb 2020 15:14:34 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6242611C058;
+        Thu, 20 Feb 2020 15:14:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.61.89])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Feb 2020 15:14:33 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs: ensure that the inode uid/gid match values match the icdinode ones
+Date:   Wed, 19 Feb 2020 20:17:59 +0530
+Organization: IBM
+In-Reply-To: <20200218210020.40846-2-hch@lst.de>
+References: <20200218210020.40846-1-hch@lst.de> <20200218210020.40846-2-hch@lst.de>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582209350; bh=SnJgwePGNz1KwP9XyCGDsyTNIXJm80RakRuVGnRNh2k=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=FDT0nYs8cnBGBsD6LKu9r++ThtzZy580JjSbKP96scj+mumshmfRQ2FjF9WE2bWgG
-         ZZd9Fkvay66NTmXX6GgKLwclVAHoCvF5uyeVrtd+8sdUsLUkbjdjbG8TvhaCarpiIx
-         JlVLlpbLLJJjFXv6LO/jrVsBsRX6mKL01/zN9gcaxnklD5XBnv+o9jI5hIeKrWeIFv
-         QY0c6t8P3/c4rXn9W5moLgbjwvi63enWEhSpHRtmkPjazAasGSOg2mg9+nm8O5ImLC
-         OSi8yuXPNFPHWC7TOSxXEFi3U+IFL3YDIgGIX1mnREWvHTr/ZC/ZmoovE5FHlDuD+z
-         N1sfrm/KY8NyA==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20022015-0020-0000-0000-000003ABF918
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022015-0021-0000-0000-00002203FF53
+Message-Id: <17408386.h8XSfVsPT9@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=626 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200113
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
---=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On 19 Feb 2020, at 16:00, Matthew Wilcox wrote:
-
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Wednesday, February 19, 2020 2:30 AM Christoph Hellwig wrote: 
+> Instead of only synchronizing the uid/gid values in xfs_setup_inode,
+> ensure that they always match to prepare for removing the icdinode
+> fields.
 >
-> Simplify the callers by moving the check for nr_pages and the BUG_ON
-> into read_pages().
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+The changes indeed keep the uid and gid values the same across icdinode and
+vfs inode.
+
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  mm/readahead.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 61b15b6b9e72..9fcd4e32b62d 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -119,6 +119,9 @@ static void read_pages(struct address_space *mappin=
-g, struct file *filp,
->  	struct blk_plug plug;
->  	unsigned page_idx;
->
-> +	if (!nr_pages)
-> +		return;
-> +
->  	blk_start_plug(&plug);
->
->  	if (mapping->a_ops->readpages) {
-> @@ -138,6 +141,8 @@ static void read_pages(struct address_space *mappin=
-g, struct file *filp,
->
->  out:
->  	blk_finish_plug(&plug);
-> +
-> +	BUG_ON(!list_empty(pages));
+>  fs/xfs/libxfs/xfs_inode_buf.c | 2 ++
+>  fs/xfs/xfs_icache.c           | 4 ++++
+>  fs/xfs/xfs_inode.c            | 8 ++++++--
+>  fs/xfs/xfs_iops.c             | 3 ---
+>  4 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+> index 8afacfe4be0a..cc4efd34843a 100644
+> --- a/fs/xfs/libxfs/xfs_inode_buf.c
+> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+> @@ -223,7 +223,9 @@ xfs_inode_from_disk(
+> 
+>  	to->di_format = from->di_format;
+>  	to->di_uid = be32_to_cpu(from->di_uid);
+> +	inode->i_uid = xfs_uid_to_kuid(to->di_uid);
+>  	to->di_gid = be32_to_cpu(from->di_gid);
+> +	inode->i_gid = xfs_gid_to_kgid(to->di_gid);
+>  	to->di_flushiter = be16_to_cpu(from->di_flushiter);
+> 
+>  	/*
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 8dc2e5414276..a7be7a9e5c1a 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -289,6 +289,8 @@ xfs_reinit_inode(
+>  	uint64_t	version = inode_peek_iversion(inode);
+>  	umode_t		mode = inode->i_mode;
+>  	dev_t		dev = inode->i_rdev;
+> +	kuid_t		uid = inode->i_uid;
+> +	kgid_t		gid = inode->i_gid;
+> 
+>  	error = inode_init_always(mp->m_super, inode);
+> 
+> @@ -297,6 +299,8 @@ xfs_reinit_inode(
+>  	inode_set_iversion_queried(inode, version);
+>  	inode->i_mode = mode;
+>  	inode->i_rdev = dev;
+> +	inode->i_uid = uid;
+> +	inode->i_gid = gid;
+>  	return error;
 >  }
->
->  /*
-> @@ -180,8 +185,7 @@ void __do_page_cache_readahead(struct address_space=
- *mapping,
->  			 * contiguous pages before continuing with the next
->  			 * batch.
->  			 */
-> -			if (nr_pages)
-> -				read_pages(mapping, filp, &page_pool, nr_pages,
-> +			read_pages(mapping, filp, &page_pool, nr_pages,
->  						gfp_mask);
->  			nr_pages =3D 0;
->  			continue;
-> @@ -202,9 +206,7 @@ void __do_page_cache_readahead(struct address_space=
- *mapping,
->  	 * uptodate then the caller will launch readpage again, and
->  	 * will then handle the error.
->  	 */
-> -	if (nr_pages)
-> -		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
-> -	BUG_ON(!list_empty(&page_pool));
-> +	read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
->  }
->
->  /*
-> -- =
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index c5077e6326c7..938b0943bd95 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -812,15 +812,19 @@ xfs_ialloc(
+> 
+>  	inode->i_mode = mode;
+>  	set_nlink(inode, nlink);
+> -	ip->i_d.di_uid = xfs_kuid_to_uid(current_fsuid());
+> -	ip->i_d.di_gid = xfs_kgid_to_gid(current_fsgid());
+> +	inode->i_uid = current_fsuid();
+> +	ip->i_d.di_uid = xfs_kuid_to_uid(inode->i_uid);
+>  	inode->i_rdev = rdev;
+>  	ip->i_d.di_projid = prid;
+> 
+>  	if (pip && XFS_INHERIT_GID(pip)) {
+> +		inode->i_gid = VFS_I(pip)->i_gid;
+>  		ip->i_d.di_gid = pip->i_d.di_gid;
+>  		if ((VFS_I(pip)->i_mode & S_ISGID) && S_ISDIR(mode))
+>  			inode->i_mode |= S_ISGID;
+> +	} else {
+> +		inode->i_gid = current_fsgid();
+> +		ip->i_d.di_gid = xfs_kgid_to_gid(inode->i_gid);
+>  	}
+> 
+>  	/*
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..b818b261918f 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1304,9 +1304,6 @@ xfs_setup_inode(
+>  	/* make the inode look hashed for the writeback code */
+>  	inode_fake_hash(inode);
+> 
+> -	inode->i_uid    = xfs_uid_to_kuid(ip->i_d.di_uid);
+> -	inode->i_gid    = xfs_gid_to_kgid(ip->i_d.di_gid);
+> -
+>  	i_size_write(inode, ip->i_d.di_size);
+>  	xfs_diflags_to_iflags(inode, ip);
+> 
+> 
 
-> 2.25.0
 
-Looks good to me. Thanks.
-
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+-- 
+chandan
 
 
---
-Best Regards,
-Yan Zi
 
---=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5OmWMPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKYawQAJnDCzvIOBkSaYYorEht2VZXHuWxGxkTwhkM
-TvpQUkB3Cff2onVNqU2DPF0usuD2Nr1qda6WHnPwGeTbxCokAwTsFkkn8JhJkqVf
-2/xydKKHCGEdaL5n8d86v6J0kQx6Do1jBCqLOIx0rGVuCL0apnya4jKfrNO4OCAb
-T4pwf6/Qm2E2bBj3ISvybn/TYKq9WPpAu/ryMLNPidYqMqJiX4iqJ/RnBZ7srPcH
-TutPMCYvOJ4oUtbTzYq6AHiFfANTGKnBBeiH3v9QdJAla6/7FeiL9G6fEwMK0C3g
-FnzbqkYnPf+nR7a6Yg5ZejT33u9g7CP18xykij7jYUxPe7G1P2gVFflDIzkDie0+
-LgYPICjmeYOKQxi2nrax2NpS+PqKq2mcGoZANosRwWvdlS0N/pUfOVZiCk2E8q7V
-UIi0c16u5lhuGpTCd2Y0rDxpItZ/eh912iqaxkjhKqlgxNdO1n78/2tiAXf/JqD9
-xt1LEjKMkDUxiqvvCvJNXONKWSyATDPWlwXZSdjMi0jjsdusO+74WDheJm9Y0ylN
-o8+lS74JyYFdmRRMlyfPDeNDdIjLJf5FL1Ke+8vR85rwt0yBRY7CGj37O6LlCHMM
-eo4carZ4q5rC3EnAG0+Lf3uYaQXCbr0R1vvZkqnLJZfJuhFdMjI0l7fb/02PBG3L
-f+4j17Gl
-=Jsz+
------END PGP SIGNATURE-----
-
---=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=--
