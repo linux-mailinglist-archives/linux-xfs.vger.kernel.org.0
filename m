@@ -2,102 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2956416511B
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2020 22:04:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D041A165184
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2020 22:21:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgBSVCs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 Feb 2020 16:02:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35924 "EHLO
+        id S1726703AbgBSVV2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Feb 2020 16:21:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43372 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbgBSVBG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 16:01:06 -0500
+        with ESMTP id S1726645AbgBSVV2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 16:21:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=xVXe2mHxuFlpJauTFAREACgBtskK8JQqv16NulPdwMo=; b=F3kXDDpZ016zj77nzf3xs9HNhB
-        c39hgvEiXMXpDmXJJghRyVbQMd9bQMtSAzeQLHly/ybPqD2ydVSEI4rkiaB9n4MrV5lJMO5TAOHpT
-        LsA4+sqAh3sjH6idXLPtUndMdxvuT67kL2DMo4IotYTvlEvyNqU15dBP/gmtAHMJiYi1zlhefB+pQ
-        okljimRMCao3QCzBUAxBJQKIRfcethiQohvU/9XCsH/VS+Vpp+HAgX2+R1ONMyFmghwTrN6Tmau8B
-        beKkIxg+LolJhz+78XZwS7VZsuxlQ7gLLHa+AyMl78a/LXsGBf7EVWA8feUeASUtSsf4m1jAST6h0
-        JPdvTb6Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4WSv-0008Ve-Kf; Wed, 19 Feb 2020 21:01:05 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v7 24/24] mm: Use memalloc_nofs_save in readahead path
-Date:   Wed, 19 Feb 2020 13:01:03 -0800
-Message-Id: <20200219210103.32400-25-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200219210103.32400-1-willy@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JnqM+ZPE7uR/lo/BO9czkfVkyqqTIxUDl4AMPftO+wM=; b=HjLqiStvJghxbJ+D0wc/HQwd9d
+        eEUF7MXqDwEggJIqWSQXnpEgl//DkWEmO7SdiIF1McECFzAWEAHnCmpvXXHzvJFbx3/WndxtgnZ5h
+        1DXkXXPWzSDLYef4IX8WS6ie8jWFqyEjUHPgJYCDvTNwEkow004wG8cB2lB5ycs18biP2QsZo4goY
+        trDAmpR2E7xW1s3V3nVzMONQzLb40ku/HwznWAhLMMxFHDNQXa07EWYIZQF8DLS6+JggPZUXx6j9q
+        LbvDZt1KG/RAvZ1O/NIK62IOwQf5Ly91jwLr8aaMImZgXksfGvJg6sjizw/KUcPzupN8++xGdi0jf
+        FehDa/Yw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4Wme-0000DM-6Z; Wed, 19 Feb 2020 21:21:28 +0000
+Date:   Wed, 19 Feb 2020 13:21:28 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: fix iclog release error check race with shutdown
+Message-ID: <20200219212128.GA634@infradead.org>
+References: <20200218175425.20598-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218175425.20598-1-bfoster@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Tue, Feb 18, 2020 at 12:54:25PM -0500, Brian Foster wrote:
+> Prior to commit df732b29c8 ("xfs: call xlog_state_release_iclog with
+> l_icloglock held"), xlog_state_release_iclog() always performed a
+> locked check of the iclog error state before proceeding into the
+> sync state processing code. As of this commit, part of
+> xlog_state_release_iclog() was open-coded into
+> xfs_log_release_iclog() and as a result the locked error state check
+> was lost.
+> 
+> The lockless check still exists, but this doesn't account for the
+> possibility of a race with a shutdown being performed by another
+> task causing the iclog state to change while the original task waits
+> on ->l_icloglock. This has reproduced very rarely via generic/475
+> and manifests as an assert failure in __xlog_state_release_iclog()
+> due to an unexpected iclog state.
+> 
+> Restore the locked error state check in xlog_state_release_iclog()
+> to ensure that an iclog state update via shutdown doesn't race with
+> the iclog release state processing code.
 
-Ensure that memory allocations in the readahead path do not attempt to
-reclaim file-backed pages, which could lead to a deadlock.  It is
-possible, though unlikely this is the root cause of a problem observed
-by Cong Wang.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-Suggested-by: Michal Hocko <mhocko@suse.com>
----
- mm/readahead.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/mm/readahead.c b/mm/readahead.c
-index bbe7208fcc2d..9fb5f77dcf69 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -22,6 +22,7 @@
- #include <linux/mm_inline.h>
- #include <linux/blk-cgroup.h>
- #include <linux/fadvise.h>
-+#include <linux/sched/mm.h>
- 
- #include "internal.h"
- 
-@@ -186,6 +187,18 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	};
- 	unsigned long i;
- 
-+	/*
-+	 * Partway through the readahead operation, we will have added
-+	 * locked pages to the page cache, but will not yet have submitted
-+	 * them for I/O.  Adding another page may need to allocate memory,
-+	 * which can trigger memory reclaim.  Telling the VM we're in
-+	 * the middle of a filesystem operation will cause it to not
-+	 * touch file-backed pages, preventing a deadlock.  Most (all?)
-+	 * filesystems already specify __GFP_NOFS in their mapping's
-+	 * gfp_mask, but let's be explicit here.
-+	 */
-+	unsigned int nofs = memalloc_nofs_save();
-+
- 	/*
- 	 * Preallocate as many pages as we will need.
- 	 */
-@@ -230,6 +243,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	 * will then handle the error.
- 	 */
- 	read_pages(&rac, &page_pool);
-+	memalloc_nofs_restore(nofs);
- }
- EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
- 
--- 
-2.25.0
-
+Btw, from code inspection I think we also need the same check after
+taking the lock in xlog_state_release_iclog.
