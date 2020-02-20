@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96E2C165490
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 02:43:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C78E1654A5
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 02:45:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgBTBns (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 Feb 2020 20:43:48 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:49506 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgBTBns (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 20:43:48 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K1cFj5039791;
-        Thu, 20 Feb 2020 01:43:45 GMT
+        id S1727224AbgBTBpx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Feb 2020 20:45:53 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36454 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgBTBpx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 20:45:53 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K1hdxV064550;
+        Thu, 20 Feb 2020 01:45:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=0l3bU7FdAb0o7V2b+zL+9XrihyZdMccUtI8HuecDlQs=;
- b=a5ddXQRxYN9D2xv9X3hwy2wAZlBvRodRBIocab3EGGB3pr4aTgxbccKmWy17IGsucukI
- MnEnu5ChEcsS4q+ccHaSUc1fJAULIv9Hcz139F0Yj4S0vB0lZmno4s9iIdpEGl+3dvrO
- Hx1Zey4A6q1dMMR4c1doqUOVLrokpo4DFatAJOMpOd2s0JUXURGZk8bbmBUjGwpkMqtd
- iaWPMlhAk4/C9wTYmKlqd22MBPgmklJqQMR3RoekiY14QQ0XFpblIXLHX2gt5lUxXK6U
- 5PVbJQ7oHYsEV3pAiz8oSj/CijR7Bbt1zdWl3WbC4/VakPpEMuQC9+4RNcqdnT/R7ilX jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y8ud16scc-1
+ bh=UVz2XuvqfkprsYTuxQrX9ud6p+JZbjoMdREPrzLF5pA=;
+ b=LMfx/iTSeOFkEceB8XzhZn4pouqIv15TmBQLYKS/k/JZ2zdjtuVcCjNVBOb+q9pXaSq+
+ 1vGzF1m7/z7i5Im5PchXHF/oK0t2uJt/8aDiWw3wtBov7sJovx679eC3NAcUQlOEBDFv
+ F5LXmDJoHa4np3SUeCl8hKNMMc53bbJjjkvpgb3SuzquUu7UX9vyksjPW3Rp03POk9+4
+ Z1IuQsq1k4NWfRma2/heCxKM56lqiBCWa+pFXwzZn5LnsjiUYlGYpuvUDK935cStvF4t
+ jKtpUbZQ6J8O7tXl7mFRij7tAhIdfuHCrYfKaOokYdFYEB+ha/AWcUTbajZ9NsvytCsQ rg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udket7j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 01:43:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K1he0B114472;
-        Thu, 20 Feb 2020 01:43:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y8ud2g3wv-1
+        Thu, 20 Feb 2020 01:45:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K1gELJ094360;
+        Thu, 20 Feb 2020 01:43:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2y8udbmh32-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 01:43:45 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01K1hirt028138;
-        Thu, 20 Feb 2020 01:43:44 GMT
+        Thu, 20 Feb 2020 01:43:51 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01K1ho5T002412;
+        Thu, 20 Feb 2020 01:43:50 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Feb 2020 17:43:44 -0800
-Subject: [PATCH 11/18] libxlog: use uncached buffers instead of open-coding
- them
+        with ESMTP ; Wed, 19 Feb 2020 17:43:50 -0800
+Subject: [PATCH 12/18] libxfs: use uncached buffers for initial mkfs writes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 19 Feb 2020 17:43:43 -0800
-Message-ID: <158216302373.602314.13809511355239867956.stgit@magnolia>
+Date:   Wed, 19 Feb 2020 17:43:49 -0800
+Message-ID: <158216302984.602314.15196666031325406487.stgit@magnolia>
 In-Reply-To: <158216295405.602314.2094526611933874427.stgit@magnolia>
 References: <158216295405.602314.2094526611933874427.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=25
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=2 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200010
+ definitions=main-2002200011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=2
+ spamscore=0 priorityscore=1501 adultscore=8 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200011
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,170 +70,130 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Use the new uncached buffer functions to manage buffers instead of
-open-coding the logic.
+Teach mkfs to use uncached buffers to write the start and end of the
+data device, the initial superblock, and the end of the realtime device
+instead of open-coding uncached buffers.  This means we can get rid of
+libxfs_purgebuf since we handle the state from the start now.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- include/libxlog.h         |    1 -
- libxlog/xfs_log_recover.c |   35 ++++++++++++++---------------------
- logprint/log_print_all.c  |    2 +-
- 3 files changed, 15 insertions(+), 23 deletions(-)
+ libxfs/libxfs_io.h |    1 -
+ libxfs/rdwr.c      |   12 ------------
+ mkfs/xfs_mkfs.c    |   34 +++++++++++++++++++++++-----------
+ 3 files changed, 23 insertions(+), 24 deletions(-)
 
 
-diff --git a/include/libxlog.h b/include/libxlog.h
-index 4b785507..5e94fa1e 100644
---- a/include/libxlog.h
-+++ b/include/libxlog.h
-@@ -75,7 +75,6 @@ extern libxfs_init_t	x;
- extern int xlog_is_dirty(struct xfs_mount *, struct xlog *, libxfs_init_t *,
- 			 int);
- extern struct xfs_buf *xlog_get_bp(struct xlog *, int);
--extern void	xlog_put_bp(struct xfs_buf *);
- extern int	xlog_bread(struct xlog *log, xfs_daddr_t blk_no, int nbblks,
- 				xfs_buf_t *bp, char **offset);
- extern int	xlog_bread_noalign(struct xlog *log, xfs_daddr_t blk_no,
-diff --git a/libxlog/xfs_log_recover.c b/libxlog/xfs_log_recover.c
-index 9324a213..e7e57bd2 100644
---- a/libxlog/xfs_log_recover.c
-+++ b/libxlog/xfs_log_recover.c
-@@ -67,14 +67,7 @@ xlog_get_bp(
- 		nbblks += log->l_sectBBsize;
- 	nbblks = round_up(nbblks, log->l_sectBBsize);
+diff --git a/libxfs/libxfs_io.h b/libxfs/libxfs_io.h
+index 546b7710..6598dba7 100644
+--- a/libxfs/libxfs_io.h
++++ b/libxfs/libxfs_io.h
+@@ -213,7 +213,6 @@ struct xfs_buf *libxfs_getsb(struct xfs_mount *);
+ extern void	libxfs_bcache_purge(void);
+ extern void	libxfs_bcache_free(void);
+ extern void	libxfs_bcache_flush(void);
+-extern void	libxfs_purgebuf(xfs_buf_t *);
+ extern int	libxfs_bcache_overflowed(void);
  
--	return libxfs_getbufr(log->l_dev, (xfs_daddr_t)-1, nbblks);
+ /* Buffer (Raw) Interfaces */
+diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
+index ada20dd9..20a8b0ce 100644
+--- a/libxfs/rdwr.c
++++ b/libxfs/rdwr.c
+@@ -869,18 +869,6 @@ libxfs_buf_relse(
+ 		libxfs_putbufr(bp);
+ }
+ 
+-void
+-libxfs_purgebuf(xfs_buf_t *bp)
+-{
+-	struct xfs_bufkey key = {NULL};
+-
+-	key.buftarg = bp->b_target;
+-	key.blkno = bp->b_bn;
+-	key.bblen = bp->b_length;
+-
+-	cache_node_purge(libxfs_bcache, &key, (struct cache_node *)bp);
 -}
 -
--void
--xlog_put_bp(
--	xfs_buf_t	*bp)
--{
--	libxfs_putbufr(bp);
-+	return libxfs_buf_get_uncached(log->l_dev, nbblks, 0);
+ static struct cache_node *
+ libxfs_balloc(cache_key_t key)
+ {
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 9ca4cb1a..f58f235d 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -3396,6 +3396,21 @@ finish_superblock_setup(
+ 
  }
  
++/* Prepare an uncached buffer, ready to write something out. */
++static inline struct xfs_buf *
++get_write_buf(
++	struct xfs_buftarg	*btp,
++	xfs_daddr_t		daddr,
++	int			bblen)
++{
++	struct xfs_buf		*bp;
++
++	bp = libxfs_buf_get_uncached(btp, bblen, 0);
++	bp->b_bn = daddr;
++	bp->b_maps[0].bm_bn = daddr;
++	return bp;
++}
++
  /*
-@@ -274,7 +267,7 @@ xlog_find_verify_cycle(
- 	*new_blk = -1;
+  * Sanitise the data and log devices and prepare them so libxfs can mount the
+  * device successfully. Also check we can access the rt device if configured.
+@@ -3444,11 +3459,10 @@ prepare_devices(
+ 	 * the end of the device.  (MD sb is ~64k from the end, take out a wider
+ 	 * swath to be sure)
+ 	 */
+-	buf = libxfs_buf_get(mp->m_ddev_targp, (xi->dsize - whack_blks),
+-			    whack_blks);
++	buf = get_write_buf(mp->m_ddev_targp, (xi->dsize - whack_blks),
++			whack_blks);
+ 	memset(buf->b_addr, 0, WHACK_SIZE);
+ 	libxfs_writebuf(buf, LIBXFS_WRITEBUF_FAIL_EXIT);
+-	libxfs_purgebuf(buf);
  
- out:
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 	return error;
+ 	/*
+ 	 * Now zero out the beginning of the device, to obliterate any old
+@@ -3456,18 +3470,17 @@ prepare_devices(
+ 	 * swap (somewhere around the page size), jfs (32k),
+ 	 * ext[2,3] and reiserfs (64k) - and hopefully all else.
+ 	 */
+-	buf = libxfs_buf_get(mp->m_ddev_targp, 0, whack_blks);
++	buf = get_write_buf(mp->m_ddev_targp, 0, whack_blks);
+ 	memset(buf->b_addr, 0, WHACK_SIZE);
+ 	libxfs_writebuf(buf, LIBXFS_WRITEBUF_FAIL_EXIT);
+-	libxfs_purgebuf(buf);
+ 
+ 	/* OK, now write the superblock... */
+-	buf = libxfs_buf_get(mp->m_ddev_targp, XFS_SB_DADDR, XFS_FSS_TO_BB(mp, 1));
++	buf = get_write_buf(mp->m_ddev_targp, XFS_SB_DADDR,
++			XFS_FSS_TO_BB(mp, 1));
+ 	buf->b_ops = &xfs_sb_buf_ops;
+ 	memset(buf->b_addr, 0, cfg->sectorsize);
+ 	libxfs_sb_to_disk(buf->b_addr, sbp);
+ 	libxfs_writebuf(buf, LIBXFS_WRITEBUF_FAIL_EXIT);
+-	libxfs_purgebuf(buf);
+ 
+ 	/* ...and zero the log.... */
+ 	lsunit = sbp->sb_logsunit;
+@@ -3482,12 +3495,11 @@ prepare_devices(
+ 
+ 	/* finally, check we can write the last block in the realtime area */
+ 	if (mp->m_rtdev_targp->dev && cfg->rtblocks > 0) {
+-		buf = libxfs_buf_get(mp->m_rtdev_targp,
+-				    XFS_FSB_TO_BB(mp, cfg->rtblocks - 1LL),
+-				    BTOBB(cfg->blocksize));
++		buf = get_write_buf(mp->m_rtdev_targp,
++				XFS_FSB_TO_BB(mp, cfg->rtblocks - 1LL),
++				BTOBB(cfg->blocksize));
+ 		memset(buf->b_addr, 0, cfg->blocksize);
+ 		libxfs_writebuf(buf, LIBXFS_WRITEBUF_FAIL_EXIT);
+-		libxfs_purgebuf(buf);
+ 	}
+ 
  }
- 
-@@ -383,7 +376,7 @@ xlog_find_verify_log_record(
- 		*last_blk = i;
- 
- out:
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 	return error;
- }
- 
-@@ -634,7 +627,7 @@ xlog_find_head(
- 			goto bp_err;
- 	}
- 
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 	if (head_blk == log_bbnum)
- 		*return_head_blk = 0;
- 	else
-@@ -648,7 +641,7 @@ xlog_find_head(
- 	return 0;
- 
-  bp_err:
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 
- 	if (error)
- 		xfs_warn(log->l_mp, "failed to find log head");
-@@ -745,7 +738,7 @@ xlog_find_tail(
- 	}
- 	if (!found) {
- 		xfs_warn(log->l_mp, "%s: couldn't find sync record", __func__);
--		xlog_put_bp(bp);
-+		libxfs_buf_relse(bp);
- 		ASSERT(0);
- 		return XFS_ERROR(EIO);
- 	}
-@@ -858,7 +851,7 @@ xlog_find_tail(
- 		error = xlog_clear_stale_blocks(log, tail_lsn);
- 
- done:
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 
- 	if (error)
- 		xfs_warn(log->l_mp, "failed to locate log tail");
-@@ -906,7 +899,7 @@ xlog_find_zeroed(
- 	first_cycle = xlog_get_cycle(offset);
- 	if (first_cycle == 0) {		/* completely zeroed log */
- 		*blk_no = 0;
--		xlog_put_bp(bp);
-+		libxfs_buf_relse(bp);
- 		return -1;
- 	}
- 
-@@ -917,7 +910,7 @@ xlog_find_zeroed(
- 
- 	last_cycle = xlog_get_cycle(offset);
- 	if (last_cycle != 0) {		/* log completely written to */
--		xlog_put_bp(bp);
-+		libxfs_buf_relse(bp);
- 		return 0;
- 	} else if (first_cycle != 1) {
- 		/*
-@@ -974,7 +967,7 @@ xlog_find_zeroed(
- 
- 	*blk_no = last_blk;
- bp_err:
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 	if (error)
- 		return error;
- 	return -1;
-@@ -1457,7 +1450,7 @@ xlog_do_recovery_pass(
- 			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
- 			if (h_size % XLOG_HEADER_CYCLE_SIZE)
- 				hblks++;
--			xlog_put_bp(hbp);
-+			libxfs_buf_relse(hbp);
- 			hbp = xlog_get_bp(log, hblks);
- 		} else {
- 			hblks = 1;
-@@ -1473,7 +1466,7 @@ xlog_do_recovery_pass(
- 		return ENOMEM;
- 	dbp = xlog_get_bp(log, BTOBB(h_size));
- 	if (!dbp) {
--		xlog_put_bp(hbp);
-+		libxfs_buf_relse(hbp);
- 		return ENOMEM;
- 	}
- 
-@@ -1657,8 +1650,8 @@ xlog_do_recovery_pass(
- 	}
- 
-  bread_err2:
--	xlog_put_bp(dbp);
-+	libxfs_buf_relse(dbp);
-  bread_err1:
--	xlog_put_bp(hbp);
-+	libxfs_buf_relse(hbp);
- 	return error;
- }
-diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-index d3d4c07b..32d13719 100644
---- a/logprint/log_print_all.c
-+++ b/logprint/log_print_all.c
-@@ -39,7 +39,7 @@ xlog_print_find_oldest(
- 		error = xlog_find_cycle_start(log, bp, first_blk,
- 					      last_blk, last_half_cycle);
- 
--	xlog_put_bp(bp);
-+	libxfs_buf_relse(bp);
- 	return error;
- }
- 
 
