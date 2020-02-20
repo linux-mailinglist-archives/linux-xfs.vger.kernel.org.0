@@ -2,62 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D733E166086
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 16:10:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49AD2166137
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 16:44:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgBTPKt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Feb 2020 10:10:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47078 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbgBTPKs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 10:10:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=G2o7/2wQz4I2bSTa23Jz+2T7ehA7+Qh/DABLcJ7++Gg=; b=rNJKV58kH2Hi3xhQxkLMMzx8lV
-        RipoN223ZmXSatYqltHsRF6idpZbBmyf0GL9X+CH+Ks6Wc6k43+EjLitqhF4xF2b133YQH9ZG5EHi
-        9S2PEh7TBE1weivsELdxeyxuCZbNPOZ2MqqDqE2ZOhY+EIiIxbWx+hcdKp9lxQ0cgIgNcZkczih6K
-        9FdryOmrnuCo9AOOf+joSEfiifv0Cop4iRUq+zKJAofsbwZLBBoyX6i8M/2kx+6/2vGI/vLfIxQw1
-        2Ucmc3/Mow9vozyw390izexHNWNfoWyIucqRv+4NiQ+0nLq6AIcDZr0SBA/Y13JQUbUW+KN6Xz/8C
-        FKW5FgEA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4nTU-00007F-C8; Thu, 20 Feb 2020 15:10:48 +0000
-Date:   Thu, 20 Feb 2020 07:10:48 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 10/24] mm: Add readahead address space operation
-Message-ID: <20200220151048.GW24185@bombadil.infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-11-willy@infradead.org>
- <5D7CE6BD-FABD-4901-AEF0-E0F10FC00EB1@nvidia.com>
+        id S1728414AbgBTPoS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Feb 2020 10:44:18 -0500
+Received: from mailomta27-sa.btinternet.com ([213.120.69.33]:39286 "EHLO
+        sa-prd-fep-040.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728305AbgBTPoS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 10:44:18 -0500
+Received: from sa-prd-rgout-005.btmx-prd.synchronoss.net ([10.2.38.8])
+          by sa-prd-fep-048.btinternet.com with ESMTP
+          id <20200220153238.PCVA30845.sa-prd-fep-048.btinternet.com@sa-prd-rgout-005.btmx-prd.synchronoss.net>;
+          Thu, 20 Feb 2020 15:32:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=btinternet.com; s=btmx201904; t=1582212758; 
+        bh=2aKfWh99zS2Dr4/mFKzGYgDwM9TMA4q53PVsadWqABs=;
+        h=From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version;
+        b=eCECAG+xCaP/AGwhtZGywB5yOBDFZAW2TH12dLY8xhi0bUR961le7sc3LF5httCoCZbOltZlkq0Q54WIu+NE+fr5xsQOIqFpO48r78W3BP2fwG11vPL112mYxGSXPmqW6al43GUutccd6HXfgFgRVwQ/F9nLHnqgLnAReNVr253zwyal8HZjsuTLw7dbe8q5AapIdtZM/ZwR6bQnvtswWrahrQuYYsyPU7ARpcxh7/ia5PkrleXRqttu5bvb9UH4U0jxAqABKZB0kyiHcg6OqqWvz9zKg5gasFhUeGKnhsUYjYU+ggMD+ZvY32WFHnrFd5ZZrGrk0J9pIdfsVUo2Zg==
+Authentication-Results: btinternet.com;
+    auth=pass (PLAIN) smtp.auth=richard_c_haines@btinternet.com
+X-Originating-IP: [86.134.4.49]
+X-OWM-Source-IP: 86.134.4.49 (GB)
+X-OWM-Env-Sender: richard_c_haines@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgdejlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptfhitghhrghrugcujfgrihhnvghsuceorhhitghhrghruggptggphhgrihhnvghssegsthhinhhtvghrnhgvthdrtghomheqnecukfhppeekiedrudefgedrgedrgeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpihhnvghtpeekiedrudefgedrgedrgeelpdhmrghilhhfrhhomhepoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqedprhgtphhtthhopeeouggrrhhrihgtkhdrfihonhhgsehorhgrtghlvgdrtghomheqpdhrtghpthhtohepoehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeophgruhhlsehprghulhdqmhhoohhrvgdrtghomheqpdhrtghpthhtohepoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqecuqfftvefrvfeprhhftgekvddvnehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmpdhrtghpthhtohepoehsughssehthigthhhordhnshgrrdhgohhv
+        qedprhgtphhtthhopeeoshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from localhost.localdomain (86.134.4.49) by sa-prd-rgout-005.btmx-prd.synchronoss.net (5.8.340) (authenticated as richard_c_haines@btinternet.com)
+        id 5E3A290C026B4432; Thu, 20 Feb 2020 15:32:38 +0000
+From:   Richard Haines <richard_c_haines@btinternet.com>
+To:     darrick.wong@oracle.com, sds@tycho.nsa.gov, paul@paul-moore.com
+Cc:     linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+        Richard Haines <richard_c_haines@btinternet.com>
+Subject: [PATCH 0/1] selinux: Add xfs quota command types
+Date:   Thu, 20 Feb 2020 15:32:33 +0000
+Message-Id: <20200220153234.152426-1-richard_c_haines@btinternet.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D7CE6BD-FABD-4901-AEF0-E0F10FC00EB1@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:00:30AM -0500, Zi Yan wrote:
-> > +/* The index of the first page in this readahead block */
-> > +static inline unsigned int readahead_index(struct readahead_control *rac)
-> > +{
-> > +	return rac->_index;
-> > +}
-> 
-> rac->_index is pgoff_t, so readahead_index() should return the same type, right?
-> BTW, pgoff_t is unsigned long.
+Added these quota command types for SELinux checks on XFS quotas. I picked
+those I thought useful. The selinux-testsuite will have tests for these
+permission checks on XFS.
 
-Oh my goodness!  Thank you for spotting that.  Fortunately, it's only
-currently used by tracepoints, so it wasn't causing any trouble, but
-that's a nasty landmine to leave lying around.  Fixed:
+One point to note: XFS does not call dquot_quota_on() to trigger
+security_quota_on(), therefore the 'file quotaon' permission is not tested
+for SELinux
 
-static inline pgoff_t readahead_index(struct readahead_control *rac)
+Richard Haines (1):
+  selinux: Add xfs quota command types
+
+ security/selinux/hooks.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+-- 
+2.24.1
 
