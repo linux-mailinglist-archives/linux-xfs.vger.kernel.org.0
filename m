@@ -2,454 +2,287 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5423C1660BB
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 16:16:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF10116604A
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 16:01:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgBTPQA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Feb 2020 10:16:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728338AbgBTPQA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 10:16:00 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KFF5og087146
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Feb 2020 10:15:58 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubtmnqj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Thu, 20 Feb 2020 10:15:57 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Thu, 20 Feb 2020 15:15:56 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Feb 2020 15:15:53 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01KFDekn40763856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 15:13:40 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6574C11C04C;
-        Thu, 20 Feb 2020 15:14:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44FEE11C06C;
-        Thu, 20 Feb 2020 15:14:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.61.89])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Feb 2020 15:14:35 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: remove the icdinode di_uid/di_gid members
-Date:   Wed, 19 Feb 2020 21:55:23 +0530
-Organization: IBM
-In-Reply-To: <20200218210020.40846-3-hch@lst.de>
-References: <20200218210020.40846-1-hch@lst.de> <20200218210020.40846-3-hch@lst.de>
+        id S1728162AbgBTPAe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Feb 2020 10:00:34 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3956 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBTPAe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 10:00:34 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4e9ef00000>; Thu, 20 Feb 2020 07:00:00 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 07:00:33 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 07:00:33 -0800
+Received: from [10.2.165.18] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 15:00:32 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v7 10/24] mm: Add readahead address space operation
+Date:   Thu, 20 Feb 2020 10:00:30 -0500
+X-Mailer: MailMate (1.13.1r5678)
+Message-ID: <5D7CE6BD-FABD-4901-AEF0-E0F10FC00EB1@nvidia.com>
+In-Reply-To: <20200219210103.32400-11-willy@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-11-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 20022015-4275-0000-0000-000003A3D570
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022015-4276-0000-0000-000038B7E27C
-Message-Id: <1956555.uNXsGdn92h@localhost.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=1 spamscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002200113
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_D3452F35-D86E-413E-A05C-9E5444344EF4_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582210800; bh=1ntWOoaWtNpHqLxJK1XQ1SdhWsITIFuo6dr1tEBt2WE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=YtTAS8bnX87BGK5w3lMdP9+458E9VtjDQ0fiiXkrkqS0mYcPltP6gqMHw4D0ZSzBM
+         E1YhnSrzQvcKkF3Zto6UlqoOsOgpKE/NbXYGkimuFhR34xFm94uVexe3iOFwhSk6h2
+         12/zcf497+YJzmP9TNrW43CQItw//lHNZ7BpxCqTnuYhxrdsvNbZfdHqeChfGPhfwR
+         yyZBZ/QVbd2bSgyWP3NHl0VKcXZyFYJudagruOezn6PPp2ctR1x5hwjmiuRzW+Gg9w
+         AJCl22QILCyz5lXp0TqvGllCCAiAw9ghV96heGAaDRve6pJTfWWtAC+iiu25BQOY4f
+         N5DMQB97caaDA==
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wednesday, February 19, 2020 2:30 AM Christoph Hellwig wrote: 
-> Use the Linux inode i_uid/i_gid members everywhere and just convert
-> from/to the scalar value when reading or writing the on-disk inode.
+--=_MailMate_D3452F35-D86E-413E-A05C-9E5444344EF4_=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On 19 Feb 2020, at 16:00, Matthew Wilcox wrote:
+
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 >
-
-The conversion b/w kuid and on-disk uid is correct.
-
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> This replaces ->readpages with a saner interface:
+>  - Return void instead of an ignored error code.
+>  - Page cache is already populated with locked pages when ->readahead
+>    is called.
+>  - New arguments can be passed to the implementation without changing
+>    all the filesystems that use a common helper function like
+>    mpage_readahead().
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  fs/xfs/libxfs/xfs_inode_buf.c | 10 ++++-----
->  fs/xfs/libxfs/xfs_inode_buf.h |  2 --
->  fs/xfs/xfs_dquot.c            |  4 ++--
->  fs/xfs/xfs_inode.c            | 14 ++++--------
->  fs/xfs/xfs_inode_item.c       |  4 ++--
->  fs/xfs/xfs_ioctl.c            |  6 +++---
->  fs/xfs/xfs_iops.c             |  6 +-----
->  fs/xfs/xfs_itable.c           |  4 ++--
->  fs/xfs/xfs_qm.c               | 40 ++++++++++++++++++++++-------------
->  fs/xfs/xfs_quota.h            |  4 ++--
->  fs/xfs/xfs_symlink.c          |  4 +---
->  11 files changed, 46 insertions(+), 52 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> index cc4efd34843a..bc72b575ceed 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> @@ -222,10 +222,8 @@ xfs_inode_from_disk(
->  	}
-> 
->  	to->di_format = from->di_format;
-> -	to->di_uid = be32_to_cpu(from->di_uid);
-> -	inode->i_uid = xfs_uid_to_kuid(to->di_uid);
-> -	to->di_gid = be32_to_cpu(from->di_gid);
-> -	inode->i_gid = xfs_gid_to_kgid(to->di_gid);
-> +	inode->i_uid = xfs_uid_to_kuid(be32_to_cpu(from->di_uid));
-> +	inode->i_gid = xfs_gid_to_kgid(be32_to_cpu(from->di_gid));
->  	to->di_flushiter = be16_to_cpu(from->di_flushiter);
-> 
->  	/*
-> @@ -278,8 +276,8 @@ xfs_inode_to_disk(
-> 
->  	to->di_version = from->di_version;
->  	to->di_format = from->di_format;
-> -	to->di_uid = cpu_to_be32(from->di_uid);
-> -	to->di_gid = cpu_to_be32(from->di_gid);
-> +	to->di_uid = cpu_to_be32(xfs_kuid_to_uid(inode->i_uid));
-> +	to->di_gid = cpu_to_be32(xfs_kgid_to_gid(inode->i_gid));
->  	to->di_projid_lo = cpu_to_be16(from->di_projid & 0xffff);
->  	to->di_projid_hi = cpu_to_be16(from->di_projid >> 16);
-> 
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-> index fd94b1078722..2683e1e2c4a6 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.h
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.h
-> @@ -19,8 +19,6 @@ struct xfs_icdinode {
->  	int8_t		di_version;	/* inode version */
->  	int8_t		di_format;	/* format of di_c data */
->  	uint16_t	di_flushiter;	/* incremented on flush */
-> -	uint32_t	di_uid;		/* owner's user id */
-> -	uint32_t	di_gid;		/* owner's group id */
->  	uint32_t	di_projid;	/* owner's project id */
->  	xfs_fsize_t	di_size;	/* number of bytes in file */
->  	xfs_rfsblock_t	di_nblocks;	/* # of direct & btree blocks used */
-> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index d223e1ae90a6..3579de9306c1 100644
-> --- a/fs/xfs/xfs_dquot.c
-> +++ b/fs/xfs/xfs_dquot.c
-> @@ -829,9 +829,9 @@ xfs_qm_id_for_quotatype(
->  {
->  	switch (type) {
->  	case XFS_DQ_USER:
-> -		return ip->i_d.di_uid;
-> +		return xfs_kuid_to_uid(VFS_I(ip)->i_uid);
->  	case XFS_DQ_GROUP:
-> -		return ip->i_d.di_gid;
-> +		return xfs_kgid_to_gid(VFS_I(ip)->i_gid);
->  	case XFS_DQ_PROJ:
->  		return ip->i_d.di_projid;
->  	}
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 938b0943bd95..3324e1696354 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -813,18 +813,15 @@ xfs_ialloc(
->  	inode->i_mode = mode;
->  	set_nlink(inode, nlink);
->  	inode->i_uid = current_fsuid();
-> -	ip->i_d.di_uid = xfs_kuid_to_uid(inode->i_uid);
->  	inode->i_rdev = rdev;
->  	ip->i_d.di_projid = prid;
-> 
->  	if (pip && XFS_INHERIT_GID(pip)) {
->  		inode->i_gid = VFS_I(pip)->i_gid;
-> -		ip->i_d.di_gid = pip->i_d.di_gid;
->  		if ((VFS_I(pip)->i_mode & S_ISGID) && S_ISDIR(mode))
->  			inode->i_mode |= S_ISGID;
->  	} else {
->  		inode->i_gid = current_fsgid();
-> -		ip->i_d.di_gid = xfs_kgid_to_gid(inode->i_gid);
->  	}
-> 
->  	/*
-> @@ -832,9 +829,8 @@ xfs_ialloc(
->  	 * ID or one of the supplementary group IDs, the S_ISGID bit is cleared
->  	 * (and only if the irix_sgid_inherit compatibility variable is set).
->  	 */
-> -	if ((irix_sgid_inherit) &&
-> -	    (inode->i_mode & S_ISGID) &&
-> -	    (!in_group_p(xfs_gid_to_kgid(ip->i_d.di_gid))))
-> +	if (irix_sgid_inherit &&
-> +	    (inode->i_mode & S_ISGID) && !in_group_p(inode->i_gid))
->  		inode->i_mode &= ~S_ISGID;
-> 
->  	ip->i_d.di_size = 0;
-> @@ -1162,8 +1158,7 @@ xfs_create(
->  	/*
->  	 * Make sure that we have allocated dquot(s) on disk.
->  	 */
-> -	error = xfs_qm_vop_dqalloc(dp, xfs_kuid_to_uid(current_fsuid()),
-> -					xfs_kgid_to_gid(current_fsgid()), prid,
-> +	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
->  					XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
->  					&udqp, &gdqp, &pdqp);
->  	if (error)
-> @@ -1313,8 +1308,7 @@ xfs_create_tmpfile(
->  	/*
->  	 * Make sure that we have allocated dquot(s) on disk.
->  	 */
-> -	error = xfs_qm_vop_dqalloc(dp, xfs_kuid_to_uid(current_fsuid()),
-> -				xfs_kgid_to_gid(current_fsgid()), prid,
-> +	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
->  				XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
->  				&udqp, &gdqp, &pdqp);
->  	if (error)
-> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-> index 8bd5d0de6321..83d7914556ef 100644
-> --- a/fs/xfs/xfs_inode_item.c
-> +++ b/fs/xfs/xfs_inode_item.c
-> @@ -308,8 +308,8 @@ xfs_inode_to_log_dinode(
-> 
->  	to->di_version = from->di_version;
->  	to->di_format = from->di_format;
-> -	to->di_uid = from->di_uid;
-> -	to->di_gid = from->di_gid;
-> +	to->di_uid = xfs_kuid_to_uid(inode->i_uid);
-> +	to->di_gid = xfs_kgid_to_gid(inode->i_gid);
->  	to->di_projid_lo = from->di_projid & 0xffff;
->  	to->di_projid_hi = from->di_projid >> 16;
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index d42de92cb283..0f85bedc5977 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1434,9 +1434,9 @@ xfs_ioctl_setattr(
->  	 * because the i_*dquot fields will get updated anyway.
->  	 */
->  	if (XFS_IS_QUOTA_ON(mp)) {
-> -		code = xfs_qm_vop_dqalloc(ip, ip->i_d.di_uid,
-> -					 ip->i_d.di_gid, fa->fsx_projid,
-> -					 XFS_QMOPT_PQUOTA, &udqp, NULL, &pdqp);
-> +		code = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
-> +				VFS_I(ip)->i_gid, fa->fsx_projid,
-> +				XFS_QMOPT_PQUOTA, &udqp, NULL, &pdqp);
->  		if (code)
->  			return code;
->  	}
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index b818b261918f..a5b7c3100a2f 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -692,9 +692,7 @@ xfs_setattr_nonsize(
->  		 */
->  		ASSERT(udqp == NULL);
->  		ASSERT(gdqp == NULL);
-> -		error = xfs_qm_vop_dqalloc(ip, xfs_kuid_to_uid(uid),
-> -					   xfs_kgid_to_gid(gid),
-> -					   ip->i_d.di_projid,
-> +		error = xfs_qm_vop_dqalloc(ip, uid, gid, ip->i_d.di_projid,
->  					   qflags, &udqp, &gdqp, NULL);
->  		if (error)
->  			return error;
-> @@ -763,7 +761,6 @@ xfs_setattr_nonsize(
->  				olddquot1 = xfs_qm_vop_chown(tp, ip,
->  							&ip->i_udquot, udqp);
->  			}
-> -			ip->i_d.di_uid = xfs_kuid_to_uid(uid);
->  			inode->i_uid = uid;
->  		}
->  		if (!gid_eq(igid, gid)) {
-> @@ -775,7 +772,6 @@ xfs_setattr_nonsize(
->  				olddquot2 = xfs_qm_vop_chown(tp, ip,
->  							&ip->i_gdquot, gdqp);
->  			}
-> -			ip->i_d.di_gid = xfs_kgid_to_gid(gid);
->  			inode->i_gid = gid;
->  		}
->  	}
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index 4b31c29b7e6b..497db4160283 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -86,8 +86,8 @@ xfs_bulkstat_one_int(
->  	 */
->  	buf->bs_projectid = ip->i_d.di_projid;
->  	buf->bs_ino = ino;
-> -	buf->bs_uid = dic->di_uid;
-> -	buf->bs_gid = dic->di_gid;
-> +	buf->bs_uid = xfs_kuid_to_uid(inode->i_uid);
-> +	buf->bs_gid = xfs_kgid_to_gid(inode->i_gid);
->  	buf->bs_size = dic->di_size;
-> 
->  	buf->bs_nlink = inode->i_nlink;
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 0b0909657bad..54dda7d982c9 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -326,16 +326,18 @@ xfs_qm_dqattach_locked(
->  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-> 
->  	if (XFS_IS_UQUOTA_ON(mp) && !ip->i_udquot) {
-> -		error = xfs_qm_dqattach_one(ip, ip->i_d.di_uid, XFS_DQ_USER,
-> -				doalloc, &ip->i_udquot);
-> +		error = xfs_qm_dqattach_one(ip,
-> +				xfs_kuid_to_uid(VFS_I(ip)->i_uid),
-> +				XFS_DQ_USER, doalloc, &ip->i_udquot);
->  		if (error)
->  			goto done;
->  		ASSERT(ip->i_udquot);
->  	}
-> 
->  	if (XFS_IS_GQUOTA_ON(mp) && !ip->i_gdquot) {
-> -		error = xfs_qm_dqattach_one(ip, ip->i_d.di_gid, XFS_DQ_GROUP,
-> -				doalloc, &ip->i_gdquot);
-> +		error = xfs_qm_dqattach_one(ip,
-> +				xfs_kgid_to_gid(VFS_I(ip)->i_gid),
-> +				XFS_DQ_GROUP, doalloc, &ip->i_gdquot);
->  		if (error)
->  			goto done;
->  		ASSERT(ip->i_gdquot);
-> @@ -1613,8 +1615,8 @@ xfs_qm_dqfree_one(
->  int
->  xfs_qm_vop_dqalloc(
->  	struct xfs_inode	*ip,
-> -	xfs_dqid_t		uid,
-> -	xfs_dqid_t		gid,
-> +	kuid_t			uid,
-> +	kgid_t			gid,
->  	prid_t			prid,
->  	uint			flags,
->  	struct xfs_dquot	**O_udqpp,
-> @@ -1622,6 +1624,7 @@ xfs_qm_vop_dqalloc(
->  	struct xfs_dquot	**O_pdqpp)
->  {
->  	struct xfs_mount	*mp = ip->i_mount;
-> +	struct inode		*inode = VFS_I(ip);
->  	struct xfs_dquot	*uq = NULL;
->  	struct xfs_dquot	*gq = NULL;
->  	struct xfs_dquot	*pq = NULL;
-> @@ -1635,7 +1638,7 @@ xfs_qm_vop_dqalloc(
->  	xfs_ilock(ip, lockflags);
-> 
->  	if ((flags & XFS_QMOPT_INHERIT) && XFS_INHERIT_GID(ip))
-> -		gid = ip->i_d.di_gid;
-> +		gid = inode->i_gid;
-> 
->  	/*
->  	 * Attach the dquot(s) to this inode, doing a dquot allocation
-> @@ -1650,7 +1653,7 @@ xfs_qm_vop_dqalloc(
->  	}
-> 
->  	if ((flags & XFS_QMOPT_UQUOTA) && XFS_IS_UQUOTA_ON(mp)) {
-> -		if (ip->i_d.di_uid != uid) {
-> +		if (!uid_eq(inode->i_uid, uid)) {
->  			/*
->  			 * What we need is the dquot that has this uid, and
->  			 * if we send the inode to dqget, the uid of the inode
-> @@ -1661,7 +1664,8 @@ xfs_qm_vop_dqalloc(
->  			 * holding ilock.
->  			 */
->  			xfs_iunlock(ip, lockflags);
-> -			error = xfs_qm_dqget(mp, uid, XFS_DQ_USER, true, &uq);
-> +			error = xfs_qm_dqget(mp, xfs_kuid_to_uid(uid),
-> +					XFS_DQ_USER, true, &uq);
->  			if (error) {
->  				ASSERT(error != -ENOENT);
->  				return error;
-> @@ -1682,9 +1686,10 @@ xfs_qm_vop_dqalloc(
->  		}
->  	}
->  	if ((flags & XFS_QMOPT_GQUOTA) && XFS_IS_GQUOTA_ON(mp)) {
-> -		if (ip->i_d.di_gid != gid) {
-> +		if (!gid_eq(inode->i_gid, gid)) {
->  			xfs_iunlock(ip, lockflags);
-> -			error = xfs_qm_dqget(mp, gid, XFS_DQ_GROUP, true, &gq);
-> +			error = xfs_qm_dqget(mp, xfs_kgid_to_gid(gid),
-> +					XFS_DQ_GROUP, true, &gq);
->  			if (error) {
->  				ASSERT(error != -ENOENT);
->  				goto error_rele;
-> @@ -1810,7 +1815,8 @@ xfs_qm_vop_chown_reserve(
->  			XFS_QMOPT_RES_RTBLKS : XFS_QMOPT_RES_REGBLKS;
-> 
->  	if (XFS_IS_UQUOTA_ON(mp) && udqp &&
-> -	    ip->i_d.di_uid != be32_to_cpu(udqp->q_core.d_id)) {
-> +	    xfs_kuid_to_uid(VFS_I(ip)->i_uid) !=
-> +			be32_to_cpu(udqp->q_core.d_id)) {
->  		udq_delblks = udqp;
->  		/*
->  		 * If there are delayed allocation blocks, then we have to
-> @@ -1823,7 +1829,8 @@ xfs_qm_vop_chown_reserve(
->  		}
->  	}
->  	if (XFS_IS_GQUOTA_ON(ip->i_mount) && gdqp &&
-> -	    ip->i_d.di_gid != be32_to_cpu(gdqp->q_core.d_id)) {
-> +	    xfs_kgid_to_gid(VFS_I(ip)->i_gid) !=
-> +			be32_to_cpu(gdqp->q_core.d_id)) {
->  		gdq_delblks = gdqp;
->  		if (delblks) {
->  			ASSERT(ip->i_gdquot);
-> @@ -1920,14 +1927,17 @@ xfs_qm_vop_create_dqattach(
-> 
->  	if (udqp && XFS_IS_UQUOTA_ON(mp)) {
->  		ASSERT(ip->i_udquot == NULL);
-> -		ASSERT(ip->i_d.di_uid == be32_to_cpu(udqp->q_core.d_id));
-> +		ASSERT(xfs_kuid_to_uid(VFS_I(ip)->i_uid) ==
-> +			be32_to_cpu(udqp->q_core.d_id));
-> 
->  		ip->i_udquot = xfs_qm_dqhold(udqp);
->  		xfs_trans_mod_dquot(tp, udqp, XFS_TRANS_DQ_ICOUNT, 1);
->  	}
->  	if (gdqp && XFS_IS_GQUOTA_ON(mp)) {
->  		ASSERT(ip->i_gdquot == NULL);
-> -		ASSERT(ip->i_d.di_gid == be32_to_cpu(gdqp->q_core.d_id));
-> +		ASSERT(xfs_kgid_to_gid(VFS_I(ip)->i_gid) ==
-> +			be32_to_cpu(gdqp->q_core.d_id));
+>  Documentation/filesystems/locking.rst |  6 +++++-
+>  Documentation/filesystems/vfs.rst     | 15 +++++++++++++++
+>  include/linux/fs.h                    |  2 ++
+>  include/linux/pagemap.h               | 18 ++++++++++++++++++
+>  mm/readahead.c                        | 12 ++++++++++--
+>  5 files changed, 50 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/file=
+systems/locking.rst
+> index 5057e4d9dcd1..0af2e0e11461 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -239,6 +239,7 @@ prototypes::
+>  	int (*readpage)(struct file *, struct page *);
+>  	int (*writepages)(struct address_space *, struct writeback_control *)=
+;
+>  	int (*set_page_dirty)(struct page *page);
+> +	void (*readahead)(struct readahead_control *);
+>  	int (*readpages)(struct file *filp, struct address_space *mapping,
+>  			struct list_head *pages, unsigned nr_pages);
+>  	int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -271,7 +272,8 @@ writepage:		yes, unlocks (see below)
+>  readpage:		yes, unlocks
+>  writepages:
+>  set_page_dirty		no
+> -readpages:
+> +readahead:		yes, unlocks
+> +readpages:		no
+>  write_begin:		locks the page		 exclusive
+>  write_end:		yes, unlocks		 exclusive
+>  bmap:
+> @@ -295,6 +297,8 @@ the request handler (/dev/loop).
+>  ->readpage() unlocks the page, either synchronously or via I/O
+>  completion.
+>
+> +->readahead() unlocks the pages that I/O is attempted on like ->readpa=
+ge().
 > +
->  		ip->i_gdquot = xfs_qm_dqhold(gdqp);
->  		xfs_trans_mod_dquot(tp, gdqp, XFS_TRANS_DQ_ICOUNT, 1);
->  	}
-> diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-> index efe42ae7a2f3..aa8fc1f55fbd 100644
-> --- a/fs/xfs/xfs_quota.h
-> +++ b/fs/xfs/xfs_quota.h
-> @@ -86,7 +86,7 @@ extern int xfs_trans_reserve_quota_bydquots(struct xfs_trans *,
->  		struct xfs_mount *, struct xfs_dquot *,
->  		struct xfs_dquot *, struct xfs_dquot *, int64_t, long, uint);
-> 
-> -extern int xfs_qm_vop_dqalloc(struct xfs_inode *, xfs_dqid_t, xfs_dqid_t,
-> +extern int xfs_qm_vop_dqalloc(struct xfs_inode *, kuid_t, kgid_t,
->  		prid_t, uint, struct xfs_dquot **, struct xfs_dquot **,
->  		struct xfs_dquot **);
->  extern void xfs_qm_vop_create_dqattach(struct xfs_trans *, struct xfs_inode *,
-> @@ -109,7 +109,7 @@ extern void xfs_qm_unmount_quotas(struct xfs_mount *);
-> 
->  #else
->  static inline int
-> -xfs_qm_vop_dqalloc(struct xfs_inode *ip, xfs_dqid_t uid, xfs_dqid_t gid,
-> +xfs_qm_vop_dqalloc(struct xfs_inode *ip, kuid_t kuid, kgid_t kgid,
->  		prid_t prid, uint flags, struct xfs_dquot **udqp,
->  		struct xfs_dquot **gdqp, struct xfs_dquot **pdqp)
->  {
-> diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-> index d762d42ed0ff..ea42e25ec1bf 100644
-> --- a/fs/xfs/xfs_symlink.c
-> +++ b/fs/xfs/xfs_symlink.c
-> @@ -182,9 +182,7 @@ xfs_symlink(
->  	/*
->  	 * Make sure that we have allocated dquot(s) on disk.
+>  ->readpages() populates the pagecache with the passed pages and starts=
+
+>  I/O against them.  They come unlocked upon I/O completion.
+>
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesyst=
+ems/vfs.rst
+> index 7d4d09dd5e6d..ed17771c212b 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -706,6 +706,7 @@ cache in your filesystem.  The following members ar=
+e defined:
+>  		int (*readpage)(struct file *, struct page *);
+>  		int (*writepages)(struct address_space *, struct writeback_control *=
+);
+>  		int (*set_page_dirty)(struct page *page);
+> +		void (*readahead)(struct readahead_control *);
+>  		int (*readpages)(struct file *filp, struct address_space *mapping,
+>  				 struct list_head *pages, unsigned nr_pages);
+>  		int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -781,12 +782,26 @@ cache in your filesystem.  The following members =
+are defined:
+>  	If defined, it should set the PageDirty flag, and the
+>  	PAGECACHE_TAG_DIRTY tag in the radix tree.
+>
+> +``readahead``
+> +	Called by the VM to read pages associated with the address_space
+> +	object.  The pages are consecutive in the page cache and are
+> +	locked.  The implementation should decrement the page refcount
+> +	after starting I/O on each page.  Usually the page will be
+> +	unlocked by the I/O completion handler.  If the filesystem decides
+> +	to stop attempting I/O before reaching the end of the readahead
+> +	window, it can simply return.  The caller will decrement the page
+> +	refcount and unlock the remaining pages for you.  Set PageUptodate
+> +	if the I/O completes successfully.  Setting PageError on any page
+> +	will be ignored; simply unlock the page if an I/O error occurs.
+> +
+>  ``readpages``
+>  	called by the VM to read pages associated with the address_space
+>  	object.  This is essentially just a vector version of readpage.
+>  	Instead of just one page, several pages are requested.
+>  	readpages is only used for read-ahead, so read errors are
+>  	ignored.  If anything goes wrong, feel free to give up.
+> +	This interface is deprecated and will be removed by the end of
+> +	2020; implement readahead instead.
+>
+>  ``write_begin``
+>  	Called by the generic buffered write code to ask the filesystem
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 3cd4fe6b845e..d4e2d2964346 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -292,6 +292,7 @@ enum positive_aop_returns {
+>  struct page;
+>  struct address_space;
+>  struct writeback_control;
+> +struct readahead_control;
+>
+>  /*
+>   * Write life time hint values.
+> @@ -375,6 +376,7 @@ struct address_space_operations {
 >  	 */
-> -	error = xfs_qm_vop_dqalloc(dp,
-> -			xfs_kuid_to_uid(current_fsuid()),
-> -			xfs_kgid_to_gid(current_fsgid()), prid,
-> +	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
->  			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
->  			&udqp, &gdqp, &pdqp);
->  	if (error)
-> 
+>  	int (*readpages)(struct file *filp, struct address_space *mapping,
+>  			struct list_head *pages, unsigned nr_pages);
+> +	void (*readahead)(struct readahead_control *);
+>
+>  	int (*write_begin)(struct file *, struct address_space *mapping,
+>  				loff_t pos, unsigned len, unsigned flags,
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 4989d330fada..b3008605fd1b 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -669,6 +669,24 @@ static inline struct page *readahead_page(struct r=
+eadahead_control *rac)
+>  	return page;
+>  }
+>
+> +/* The byte offset into the file of this readahead block */
+> +static inline loff_t readahead_pos(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_index * PAGE_SIZE;
+> +}
+> +
+> +/* The number of bytes in this readahead block */
+> +static inline loff_t readahead_length(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_nr_pages * PAGE_SIZE;
+> +}
+> +
+> +/* The index of the first page in this readahead block */
+> +static inline unsigned int readahead_index(struct readahead_control *r=
+ac)
+> +{
+> +	return rac->_index;
+> +}
+
+rac->_index is pgoff_t, so readahead_index() should return the same type,=
+ right?
+BTW, pgoff_t is unsigned long.
+
+> +
+>  /* The number of pages in this readahead block */
+>  static inline unsigned int readahead_count(struct readahead_control *r=
+ac)
+>  {
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index aaa209559ba2..07cdfbf00f4b 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -124,7 +124,14 @@ static void read_pages(struct readahead_control *r=
+ac, struct list_head *pages)
+>
+>  	blk_start_plug(&plug);
+>
+> -	if (aops->readpages) {
+> +	if (aops->readahead) {
+> +		aops->readahead(rac);
+> +		/* Clean up the remaining pages */
+> +		while ((page =3D readahead_page(rac))) {
+> +			unlock_page(page);
+> +			put_page(page);
+> +		}
+> +	} else if (aops->readpages) {
+>  		aops->readpages(rac->file, rac->mapping, pages,
+>  				readahead_count(rac));
+>  		/* Clean up the remaining pages */
+> @@ -234,7 +241,8 @@ void force_page_cache_readahead(struct address_spac=
+e *mapping,
+>  	struct file_ra_state *ra =3D &filp->f_ra;
+>  	unsigned long max_pages;
+>
+> -	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages)=
+)
+> +	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages =
+&&
+> +			!mapping->a_ops->readahead))
+>  		return;
+>
+>  	/*
+> -- =
+
+> 2.25.0
 
 
--- 
-chandan
+--
+Best Regards,
+Yan Zi
 
+--=_MailMate_D3452F35-D86E-413E-A05C-9E5444344EF4_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5Onw4PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKP0AQAJ8rKk4f4gJQCLy1BEarhc0jqEJxv+LP4T93
+thazkNgMM87L6fUgs2i0V2lUTkOQ9kN56mQH0wNc47I0tWm/5vVCPnDyS8MUFBeY
+0sQiI3uTOVZcrz3GaZfrVJTUQHhIQ84wSAfUaRbaDKVlsGg4j1rZJocZrtKiXFoQ
+afay88LB8I0MMBXGS6eM4Ep+ABD1Dp+awB7sOnuZOrvuWfNaULR4f8sGyyim/QjY
+ZsJzs5rF5JIRkrCspYEnNbg7vx1orAAJBCxyVFgmAOIp2rNsnoDbHXhXE1LLCNgF
+sIl6bfNbL/1hpJRWa6RegKxN9AiWCoDlKcqTOlHh5edI6ukk7oRSB7WJkcKgVSIA
+ITkR/USPckkT4ZXP+5fYsfKMGgmPX00W9muaq6+/qWRFxjP1GY39zOlAgMoMMz82
+AiBkYTLsp3L6SZ4f7GVLM8efNHFXk7cjjRDbN4GaGRzZhoz7yx3vGJaP/q9fssld
+PXpx/80pWMoSQQQ1o3ouW1XdZdV6rh8slBFoXeYpFQXLs3Q/j7njrK4drJniuHz5
+qySleNBceQp4y9l4FVC7G7t23VSRTHzcrff5wA+H+tVOjddzKC/L7rrZROsVk9uF
+RBTotQ4VHR/fLoic/7IXBjQMD0nkS4UpaG71v9Rk4RwsusZU0f34h4zmuFQ4nfrU
+hNoR35aP
+=9x1/
+-----END PGP SIGNATURE-----
+
+--=_MailMate_D3452F35-D86E-413E-A05C-9E5444344EF4_=--
