@@ -2,73 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0504E16560A
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 05:05:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47C20165607
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 05:05:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBTEFw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 Feb 2020 23:05:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38698 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbgBTEFw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 23:05:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
-        Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=Kq7wp/3ZP7gTIK7jipV4kVJHzGmrJEiRhYgVDvieYqM=; b=mctAs3+EnWu9H3KTwdv8HkNriX
-        Zf5DBd8nM/6dWl3LZQ9P0PsYrlMhN8RjanmlsByHUcrnD+uAuNiJrXlVaFcj4Gt7M90nizG+2n8a4
-        xY08vAgiaXtqLJmJ06bxOvRwsk4OQC7NxI6VBRZjDV2CYyNTx3lECsmX67nljiPTeVM6Ey/k7TMP5
-        UW4YotY7FHSszzEYooax/BWVDikDYG9sWfs/5JEwLG3BHYXjaWmR9n2yYaHTahBm5weDjfk043Jv3
-        fHxGeQT0WZyxHrMurB2aJcf3r1wfW6DCxPkQa2N3d5ft019BombygDDHjKoFXoQT3MNrS1T9q/HvJ
-        oXhaZQWw==;
-Received: from [38.126.112.138] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4d60-0001R5-DH
-        for linux-xfs@vger.kernel.org; Thu, 20 Feb 2020 04:05:52 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/2] xfs: ratelimit xfs_discard_page alert messages
-Date:   Wed, 19 Feb 2020 20:05:49 -0800
-Message-Id: <20200220040549.366547-3-hch@lst.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200220040549.366547-1-hch@lst.de>
-References: <20200220040549.366547-1-hch@lst.de>
+        id S1727954AbgBTEFY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Feb 2020 23:05:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31359 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727756AbgBTEFY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 23:05:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582171523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YhkVa7qtSHIWT/rrXPInexA2kKheunisZ4SZ1pmov+M=;
+        b=LdyRs9W1Dxl77QXoWxTVYh1f+EiydvqkN1iaXotuO+4mHZ2y/aOTsgKTpVGavC4x9c5txf
+        QcsuM+0dd8ir5WIL4iWoqaDohVakd4uHLisgG1idEQIWGgb+oyI3oDjmEZOEhuCUhLpWyN
+        O+7VGeKyIYvg2rx4euvsU634gSJ5ldk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-S52qvNFEOQmYSbDxKrtCRA-1; Wed, 19 Feb 2020 23:05:18 -0500
+X-MC-Unique: S52qvNFEOQmYSbDxKrtCRA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CDB6DB62;
+        Thu, 20 Feb 2020 04:05:17 +0000 (UTC)
+Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAD835C578;
+        Thu, 20 Feb 2020 04:05:16 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:15:39 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] generic: per-type quota timers set/get test
+Message-ID: <20200220041539.GD14282@dhcp-12-102.nay.redhat.com>
+Mail-Followup-To: Eric Sandeen <sandeen@sandeen.net>,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+References: <20200216181631.22560-1-zlang@redhat.com>
+ <e54ae15f-6363-4486-0546-030e45ed50bb@sandeen.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e54ae15f-6363-4486-0546-030e45ed50bb@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Use printk_ratelimit() to limit the amount of messages printed from
-xfs_discard_page.  Without that a failing device causes a large
-number of errors that doesn't really help debugging the underling
-issue.
+On Wed, Feb 19, 2020 at 08:57:58PM -0600, Eric Sandeen wrote:
+> On 2/16/20 12:16 PM, Zorro Lang wrote:
+> > --- /dev/null
+> > +++ b/tests/generic/593.out
+> > @@ -0,0 +1,32 @@
+> > +QA output created by 593
+> > +1. set project quota timer
+> > +*** Report for user quotas on device SCRATCH_DEV
+> > +Block grace time: 7days; Inode grace time: 7days
+> > +*** Report for group quotas on device SCRATCH_DEV
+> > +Block grace time: 7days; Inode grace time: 7days
+> > +*** Report for project quotas on device SCRATCH_DEV
+> > +Block grace time: 00:10; Inode grace time: 00:20
+> 
+> One other thing that might be an issue here, I'm not sure every
+> filesystem will default to 7 days if no other grace period is set ...?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_aops.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Make sense:) I just hope to test the default grace time by pass.
+How about:
+1) Get the default quota timer $string.
+2) Filter above default timer "$string" to "default".
+to avoid defferent default timer breaks the golden output.
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 58e937be24ce..acdda808fbdd 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -539,9 +539,10 @@ xfs_discard_page(
- 	if (XFS_FORCED_SHUTDOWN(mp))
- 		goto out_invalidate;
- 
--	xfs_alert(mp,
--		"page discard on page "PTR_FMT", inode 0x%llx, offset %llu.",
--			page, ip->i_ino, offset);
-+	if (printk_ratelimit())
-+		xfs_alert(mp,
-+			"page discard on page "PTR_FMT", inode 0x%llx, offset %llu.",
-+				page, ip->i_ino, offset);
- 
- 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
- 			PAGE_SIZE / i_blocksize(inode));
--- 
-2.24.1
+Thanks,
+Zorro
+
+> 
 
