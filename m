@@ -2,103 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F2D16563B
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 05:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6DD3165659
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 05:40:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBTEV2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 Feb 2020 23:21:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20409 "EHLO
+        id S1727576AbgBTEkf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Feb 2020 23:40:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58293 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727875AbgBTEV2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 23:21:28 -0500
+        with ESMTP id S1727469AbgBTEkf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Feb 2020 23:40:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582172487;
+        s=mimecast20190719; t=1582173634;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=BhgVAttufdZa4j2bpTzCBwjJrMorfRdj0GcIRI+8tPg=;
-        b=fR0G/yuPoulsIpMIufRO4TySYajIzZaxH/WDKGIB7+UUHtleBcRLN2B8lgu9EAfIoDEpOP
-        m+Jd0E9NoqAAbr8ih3BYagUkcFzU7dHgqF3hWc2wv+xi54WaYuepK0Td9656OBqKUiuUk0
-        cXl3KK5fv2mz2j9WX1To+VpHhVoqYsg=
+        bh=jfmLCJilxONRsC3YXQnzikRMggRyDvv0QESgjaBG6YU=;
+        b=fI3x0pjD7lf3VF/v2pGvPzqVK0/RJVF/UESaZ0aocjpnFMECJk4jZ7XkjPOXqh2W6dHuXu
+        ZIrCrBnS42NtVOwrxeiGr88p596GTVOPaxCGR1+rhqNCjNqvLXuNbhAnElehrjlPQmXT+c
+        Y+vYoHWZmLhEEWcBD3z0Uj+Ww0rsD7U=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-q_96cknJMmegqDN8Ivdmzw-1; Wed, 19 Feb 2020 23:21:23 -0500
-X-MC-Unique: q_96cknJMmegqDN8Ivdmzw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-318-nFLLulYhMZm9k3yJ9-CSaQ-1; Wed, 19 Feb 2020 23:40:32 -0500
+X-MC-Unique: nFLLulYhMZm9k3yJ9-CSaQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B660D107ACC4;
-        Thu, 20 Feb 2020 04:21:22 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D73E800D53;
+        Thu, 20 Feb 2020 04:40:31 +0000 (UTC)
 Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 332E25DA60;
-        Thu, 20 Feb 2020 04:21:21 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 12:31:44 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 044F019C58;
+        Thu, 20 Feb 2020 04:40:28 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:50:50 +0800
 From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>, fstests <fstests@vger.kernel.org>
-Subject: Re: [RFC PATCH] xfs: make sure our default quota warning limits and
- grace periods survive quotacheck
-Message-ID: <20200220043144.GE14282@dhcp-12-102.nay.redhat.com>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        xfs <linux-xfs@vger.kernel.org>, fstests <fstests@vger.kernel.org>
-References: <20200219003423.GB9511@magnolia>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     fstests <fstests@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] xfs: test that default grace periods init on first mount
+Message-ID: <20200220045050.GF14282@dhcp-12-102.nay.redhat.com>
+Mail-Followup-To: Eric Sandeen <sandeen@redhat.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+References: <7c6b4646-d7c5-cc03-9c90-c17daa22071d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219003423.GB9511@magnolia>
+In-Reply-To: <7c6b4646-d7c5-cc03-9c90-c17daa22071d@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:34:23PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Feb 19, 2020 at 09:26:29PM -0600, Eric Sandeen wrote:
+> There's currently a bug in how default grace periods get set up
+> before the very first quotacheck runs; we try to read the quota
+> inodes before they are populated, and so the grace periods remain
+> empty.  The /next/ mount fills them in.  This is a regression test
+> for that bug.
 > 
-> Make sure that the default quota grace period and maximum warning limits
-> set by the administrator survive quotacheck.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 > ---
-> This is the testcase to go with 'xfs: preserve default grace interval
-> during quotacheck', though Eric and I haven't figured out how we're
-> going to land that one...
-> ---
->  tests/xfs/913     |   69 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/913.out |   13 ++++++++++
->  tests/xfs/group   |    1 +
->  3 files changed, 83 insertions(+)
->  create mode 100755 tests/xfs/913
->  create mode 100644 tests/xfs/913.out
 > 
-> diff --git a/tests/xfs/913 b/tests/xfs/913
-
-Hi,
-
-Can "_require_xfs_quota_foreign" help this case to be a generic case?
-
+> diff --git a/tests/xfs/995 b/tests/xfs/995
 > new file mode 100755
-> index 00000000..94681b02
+> index 00000000..477855b8
 > --- /dev/null
-> +++ b/tests/xfs/913
-> @@ -0,0 +1,69 @@
+> +++ b/tests/xfs/995
+> @@ -0,0 +1,50 @@
 > +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2020 Red Hat, Inc.  All Rights Reserved.
 > +#
-> +# FS QA Test No. 913
+> +# FS QA Test 995
 > +#
-> +# Make sure that the quota default grace period and maximum warning limits
-> +# survive quotacheck.
-> +
+> +# Regression test xfs flaw which did not report proper quota default
+> +# grace periods until the 2nd mount of a new filesystem with quota.
+> +#
 > +seq=`basename $0`
 > +seqres=$RESULT_DIR/$seq
 > +echo "QA output created by $seq"
 > +
 > +here=`pwd`
 > +tmp=/tmp/$$
-> +status=1    # failure is the default!
+> +status=1	# failure is the default!
 > +trap "_cleanup; exit \$status" 0 1 2 3 15
 > +
 > +_cleanup()
@@ -112,87 +99,73 @@ Can "_require_xfs_quota_foreign" help this case to be a generic case?
 > +. ./common/filter
 > +. ./common/quota
 > +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_quota
-> +
+> +# remove previous $seqres.full before test
 > +rm -f $seqres.full
 > +
-> +# Format filesystem and set up quota limits
-> +_scratch_mkfs > $seqres.full
+> +# real QA test starts here
+> +_supported_fs generic
+> +_supported_os Linux
+> +_require_scratch
+> +_require_quota
+
+If this's xfs specified case, I think "_require_xfs_quota" might be better then
+_require_quota, at least it checks "XFS_QUOTA_PROG" and some xfs specified
+things.
+
+BTW, do you think "_require_xfs_quota_foreign" can help this case to be a
+generic case?
+
+> +
+> +_scratch_mkfs >$seqres.full 2>&1
 > +_qmount_option "usrquota"
-> +_scratch_mount >> $seqres.full
+> +_qmount
 > +
-> +$XFS_QUOTA_PROG -x -c 'timer -u 300m' $SCRATCH_MNT
-> +$XFS_QUOTA_PROG -x -c 'state' $SCRATCH_MNT | grep 'grace time'
+> +xfs_quota -x -c "state -u" $SCRATCH_MNT | grep "grace time"
+
+I think $XFS_QUOTA_PROG would be better than using xfs_quota directly.
+
 > +_scratch_unmount
-> +
-> +# Remount and check the limits
-> +_scratch_mount >> $seqres.full
-> +$XFS_QUOTA_PROG -x -c 'state' $SCRATCH_MNT | grep 'grace time'
-> +_scratch_unmount
-> +
-> +# Run repair to force quota check
-> +_scratch_xfs_repair >> $seqres.full 2>&1
-
-I've sent a case looks like do similar test as this:
-  [PATCH 1/2] generic: per-type quota timers set/get test
-
-But it doesn't do fsck before cycle-mount. And ...[below]
-
-> +
-> +# Remount (this time to run quotacheck) and check the limits.  There's a bug
-> +# in quotacheck where we would reset the ondisk default grace period to zero
-> +# while the incore copy stays at whatever was read in prior to quotacheck.
-> +# This will show up after the /next/ remount.
-> +_scratch_mount >> $seqres.full
-> +$XFS_QUOTA_PROG -x -c 'state' $SCRATCH_MNT | grep 'grace time'
-> +_scratch_unmount
-> +
-> +# Remount and check the limits
-> +_scratch_mount >> $seqres.full
-> +$XFS_QUOTA_PROG -x -c 'state' $SCRATCH_MNT | grep 'grace time'
-> +_scratch_unmount
-
-It doesn't do twice cycle mount either. Do you think the fsck is necessary?
-And do you think these two cases can be merged into one case?
-
-Thanks,
-Zorro
-
+> +_qmount
+> +xfs_quota -x -c "state -u" $SCRATCH_MNT | grep "grace time"
 > +
 > +# success, all done
 > +status=0
 > +exit
-> diff --git a/tests/xfs/913.out b/tests/xfs/913.out
+> diff --git a/tests/xfs/995.out b/tests/xfs/995.out
 > new file mode 100644
-> index 00000000..ee989388
+> index 00000000..d10017d1
 > --- /dev/null
-> +++ b/tests/xfs/913.out
-> @@ -0,0 +1,13 @@
-> +QA output created by 913
-> +Blocks grace time: [0 days 05:00:00]
-> +Inodes grace time: [0 days 05:00:00]
-> +Realtime Blocks grace time: [0 days 05:00:00]
-> +Blocks grace time: [0 days 05:00:00]
-> +Inodes grace time: [0 days 05:00:00]
-> +Realtime Blocks grace time: [0 days 05:00:00]
-> +Blocks grace time: [0 days 05:00:00]
-> +Inodes grace time: [0 days 05:00:00]
-> +Realtime Blocks grace time: [0 days 05:00:00]
-> +Blocks grace time: [0 days 05:00:00]
-> +Inodes grace time: [0 days 05:00:00]
-> +Realtime Blocks grace time: [0 days 05:00:00]
+> +++ b/tests/xfs/995.out
+> @@ -0,0 +1,7 @@
+> +QA output created by 995
+> +Blocks grace time: [7 days]
+> +Inodes grace time: [7 days]
+> +Realtime Blocks grace time: [7 days]
+> +Blocks grace time: [7 days]
+> +Inodes grace time: [7 days]
+> +Realtime Blocks grace time: [7 days]
+
+Hmm... but if the bug is on the default grace time itself, and different
+filesystems have different default timers, then I think a xfs specified case
+would be better. I don't have a better idea to make it a generic case.
+
+The case from me:
+  [PATCH 1/2] generic: per-type quota timers set/get test
+Although it trys to test default quota time too, but I think it can't verify
+this bug properly, especially if the default time isn't correctly at beginning.
+Feel free to correct me, if you have a better idea:)
+
+Thanks,
+Zorro
+
 > diff --git a/tests/xfs/group b/tests/xfs/group
-> index 056072fb..87b3c75d 100644
+> index 0cbd0647..235a2715 100644
 > --- a/tests/xfs/group
 > +++ b/tests/xfs/group
-> @@ -539,4 +539,5 @@
->  910 auto quick inobtcount
->  911 auto quick bigtime
->  912 auto quick label
-> +913 auto quick quota
->  997 auto quick mount
+> @@ -511,3 +511,4 @@
+>  511 auto quick quota
+>  512 auto quick acl attr
+>  513 auto mount
+> +995 auto quota quick
 > 
 
