@@ -2,147 +2,171 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BD2D16628A
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 17:26:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF6B6166320
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Feb 2020 17:33:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgBTQ0B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 20 Feb 2020 11:26:01 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:43833 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728736AbgBTQ0A (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 11:26:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582215960; x=1613751960;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=X3vmfbS8IkxLGV65HqfBlufWF4tDzJf0fyqnOfVxEyE=;
-  b=B+oDtAX6eHOjeZvUKk+AL/ZFk+KnGA4284hlRT5luenSjgYJ2OWmGBG+
-   JKfuBcIvMeqXKquJB6JARYuoCskkG62Ud7F7FTdyDoViFseHGzSoOpImd
-   yxpl44IzuDb79vHdpmW+KYfsVPW9RQXxAl0sS+oBd3tAevkrVA3OssuvU
-   tdnYF43U+EHSe0aHrS3vzvHOxxzhlq6ybZTpQhqvwCTZCZxwktQ/g0h03
-   bIbwc9+zappdIbliulU9U+QvviI0I1WFmUisNd179lcrHFbZx9Il3Id1/
-   u1Dh5GxcrQftLQOV7PsdBKkqpxDAQyPtg7pvtvHdPx2tmCPaeUqOUm9xf
-   A==;
-IronPort-SDR: ixHFQPo9adCRGESjtk+eD0URWf3Ja4L+NbyOSKSpI7W2UoH3NNrbWbcT9C6UT2igs15D4XKQJv
- /j9tdX1lejS80fMeqciSbHvl7wi/tTZSGvLbXx9+zhyjvXlllyisg4OlgsbiunqFTMRGmqB8Ll
- nXkRhn2N6HRexSgAt0a60NZs44MkIXJqLk9BCMOtBDTZptMVNfv0DTpRV5WJo+R8NtmDnvUFnV
- WrvyKGvql2zaKtwn//AWY1TzSzXOFsvtn/GNN/Eb3XA8lNf7K5Cw8OtekeWMpX7zR5mPes6ScF
- Cms=
-X-IronPort-AV: E=Sophos;i="5.70,465,1574092800"; 
-   d="scan'208";a="238402064"
-Received: from mail-bn8nam12lp2176.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.176])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Feb 2020 00:25:59 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V5mVaZFJBBKKn5DMjIU4tJnhG3hByRKvvM8nO+Js1f6zc3f38CpPijjOFzQ9N0Ow5F85IpSKJCbaeT54qmT6VHpvoLZ71wVl1AR8FZwVxoX9gzq5aAzteRTJPLltTVuj1VzU5YK1N3nFnhjjpUwtxugcNfzwPuGwBw93B9aZtaQgOwnOuUZtNKJlYc0WGx9xFy9NxOBtHyIJQBZBp568w4cWkRWwCKBnaS8bMBIfnjdvxVfqxW++l73OPxu+6ybFAWa9GAmO3jU4L8I9LnEoTRdMTaiiR6diFPHYOzXuVksmb68t58a3e/enuMxCODysG5R2kaRbf8TrQpEOtMdsfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XtIZa/cm4OkSGPYfvBwHKkiwcy02xn8oQgqz4TpJTRc=;
- b=TV5srcuaMQZT5DuLtOrNoqG7ghd0Tj+PQ/fe2MdPu3PNRitHi4fh58IM1uHlWOngZJo+fbhXouRgudHYYfl7KJC8eWgAKPsguTMUuqpmY7lCdYrd2WFtYUlqdqMcxtf/Jbb04VCOxzvG9l24Kn5pQDCH7Gb7GQGkclYfcbC6Jn4m9DQBH9YzBG5HZfyq4Ge6qUCQoBeCvaV6I7P7YCWHjcL8lJ4ZHA2tLldTRPVMXSYKDOH2onuYqmPH87Zd94Y/Vxn8c8sn+LVMofJ9dKGFoDlIPz2XmFMSpWBCqVQigbKLHkzhnsiqIOGGFflT1TMpSaVIZ/lYdxtTspkWZz/2Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XtIZa/cm4OkSGPYfvBwHKkiwcy02xn8oQgqz4TpJTRc=;
- b=lAQ3qQQImatuPtABw880+NXm5uJ14qwMNuxBgajSK2/XtsYcdwvBsEZntJkqssDfa1EseIwbypuLQEj79bZrZkcN65KirzTi8MnEtjWshPkBE2WYxqXLsTJ+ObfJltV1t/u9Dy1oIZRTTGRrDLJUulr0WmYPQzSTRtjLMABWuOg=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
- BYAPR04MB5301.namprd04.prod.outlook.com (20.178.49.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.29; Thu, 20 Feb 2020 16:25:58 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fdf8:bd6f:b33d:c2df]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fdf8:bd6f:b33d:c2df%3]) with mapi id 15.20.2750.016; Thu, 20 Feb 2020
- 16:25:58 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Pavel Reichl <preichl@redhat.com>
-CC:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v5 1/4] xfs: Refactor xfs_isilocked()
-Thread-Topic: [PATCH v5 1/4] xfs: Refactor xfs_isilocked()
-Thread-Index: AQHV42kEDs8e/WrrJU6iifDPQ+S/cQ==
-Date:   Thu, 20 Feb 2020 16:25:58 +0000
-Message-ID: <BYAPR04MB5749939FDB825A04AD40D9FF86130@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20200214185942.1147742-1-preichl@redhat.com>
- <DM6PR04MB57544CDC68D9DFAB48B61F1386140@DM6PR04MB5754.namprd04.prod.outlook.com>
- <CAJc7PzWrcXpcraAMEfMi6idTeYa9o009tZLOSzp3A6sC-km3DA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3d569896-f9c4-4d82-0bd3-08d7b621918a
-x-ms-traffictypediagnostic: BYAPR04MB5301:
-x-microsoft-antispam-prvs: <BYAPR04MB530162EB47BFA4D0C24FCC8486130@BYAPR04MB5301.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(199004)(189003)(316002)(7696005)(66556008)(8676002)(64756008)(81166006)(81156014)(66946007)(66476007)(66446008)(33656002)(6916009)(8936002)(76116006)(5660300002)(2906002)(186003)(9686003)(4326008)(6506007)(55016002)(71200400001)(86362001)(26005)(52536014)(478600001)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5301;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K3S+HKwamRrBn0BOn5R3mooJFSpt/UjWrzrc+rErQdjtidk3DsokNr3xk1h1StMWSgjS4As4BrmLtBjTVlfhX252MtqAW9D2rcYDCiMHE3k9LUq7WYLk5rb/jrXsogov+fzKOpaCILlVymCjG8njSVNnQg0/gtk3HutJD2u3xYYO3BGxPz9dgrlQEHIk5QAfzQirdTPgRRpfF7c+D2vFIF/ZDvKJhxCsLWDKePi/xAluX3z0aZiYGR8EM6jYje+3SQUJPFjALztu3qwhc/QHYglUHp/6NUEQQREiS1rELc+nQF99Y1HMv9fhEqUiDTRnrgyogLVNbJJqXOgZWP0sGB4LzlzR5WKsIn2p1njkxO75MO/8MUIy2Kvccr8Z6g3HS50J/3BNlgvYNngyZDwocue37DdfynnGvjXLYG6/SxW/YO4IEukC64Qa7knjWy0Y
-x-ms-exchange-antispam-messagedata: P06deLzc+X0LMPoL/aB2AnwvoDb50sBwhmbdna3HP1vBXHAEqf4bOIuiF0tZzgWk0e9QK5C3KyyRi2o8nyY3YXTKmxYu1FcF/mq6aQZ8D9Ozk5OaKgiZmpllQcgK6qrXiYlbEnb3NbcUa9ilxNTp1w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728413AbgBTQcs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 20 Feb 2020 11:32:48 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52348 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgBTQcr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 20 Feb 2020 11:32:47 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGVCT0098925;
+        Thu, 20 Feb 2020 16:32:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=FTYI2rf57qFKmy9u3jBDlYnYqczz/CLz4OVjzu82Z1E=;
+ b=LO7Fmk/KDnVN3ezdVZMqw61sik/zOyBD+Q5GGp6z5mx54GWjGnXQBfkrPfcQzrUM3os3
+ kDOBco/J6q6W87q6xFsEins9Ap3PtCV10MU3HLanN3R6Mu21VX82pZZGug0oBStuzjgV
+ o71gtPldYGrgrge7bf+EKi7OZHdCfT1EWbe7Sc5J61djjukDVSZLPzHgGKKrxWP3ssku
+ R2fJAi8tlJbFBUtdxXMLuSKg4+hsnoWuEB6tXgAvZbFYHZu9+FyDE/qarwejainY955R
+ Vmu9km9IlyL6ZSL3uLWrJOhmTlEMdVKVpL2/ZS2wrHacWL/Sp1CGMR7Jhsr13u8deyh+ BA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2y8uddaxjn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 16:32:28 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGS1rc079568;
+        Thu, 20 Feb 2020 16:30:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2y8ud6df1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 16:30:28 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KGUQvD018268;
+        Thu, 20 Feb 2020 16:30:26 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 08:30:26 -0800
+Date:   Thu, 20 Feb 2020 08:30:24 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200220163024.GV9506@magnolia>
+References: <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
+ <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
+ <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+ <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+ <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
+ <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
+ <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
+ <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
+ <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
+ <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d569896-f9c4-4d82-0bd3-08d7b621918a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 16:25:58.7284
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WHaesnBhpUTdLLdn6GdElWn+o2dk/CaCyzrMAvZUzIQCdk3EGr+uPXPV/wLDBuX9iS7jCKJZCGMUnC3lU1YHHtKkuPkYlchjzpYwtO+KOMs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5301
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200121
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 02/17/2020 02:56 AM, Pavel Reichl wrote:=0A=
-> On Sat, Feb 15, 2020 at 2:38 AM Chaitanya Kulkarni=0A=
-> <Chaitanya.Kulkarni@wdc.com>  wrote:=0A=
->> >=0A=
->> >Since it has more than one patch and version 5,=0A=
->> >I couldn't find the cover-letter and a change log for this=0A=
->> >series, is there a particular reason why it is not present or I=0A=
->> >missed it?=0A=
->> >=0A=
->> >On 02/14/2020 11:00 AM, Pavel Reichl wrote:=0A=
->>> > >Refactor xfs_isilocked() to use newly introduced __xfs_rwsem_islocke=
-d().=0A=
->>> > >__xfs_rwsem_islocked() is a helper function which encapsulates check=
-ing=0A=
->>> > >state of rw_semaphores hold by inode.=0A=
->>> > >=0A=
->>> > >=0A=
->> >=0A=
->> >=0A=
-> Hi Chaitanya,=0A=
->=0A=
-> sorry for the absence of the changelog I forgot to add it - that was=0A=
-> not on purpose.=0A=
->=0A=
-> To summarize the changes: I moved the asserts from the first patch to=0A=
-> the third as suggested by Eric and changed the commit messages as=0A=
-> suggested by Dave.=0A=
-Thanks.=0A=
->=0A=
-> Regarding the missing cover-letter it was same since version one and I=0A=
-> was not sure I should resend it with every new version, should I?=0A=
-It's okay, it just makes re-viewer's life easier to look for the change.=0A=
->=0A=
->   Thanks you for your comments.=0A=
->=0A=
-> Best regards=0A=
->=0A=
-> Pavel Reichl=0A=
->=0A=
->=0A=
-=0A=
+On Thu, Feb 20, 2020 at 08:20:28AM -0800, Ira Weiny wrote:
+> On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
+> > On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
+> > > Ira Weiny <ira.weiny@intel.com> writes:
+> > > > If my disassembly of read_pages is correct it looks like readpage is null which
+> > > > makes sense because all files should be IS_DAX() == true due to the mount option...
+> > > >
+> > > > But tracing code indicates that the patch:
+> > > >
+> > > > 	fs: remove unneeded IS_DAX() check
+> > > >
+> > > > ... may be the culprit and the following fix may work...
+> > > >
+> > > > diff --git a/mm/filemap.c b/mm/filemap.c
+> > > > index 3a7863ba51b9..7eaf74a2a39b 100644
+> > > > --- a/mm/filemap.c
+> > > > +++ b/mm/filemap.c
+> > > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+> > > >         if (!count)
+> > > >                 goto out; /* skip atime */
+> > > >  
+> > > > -       if (iocb->ki_flags & IOCB_DIRECT) {
+> > > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
+> > > >                 struct file *file = iocb->ki_filp;
+> > > >                 struct address_space *mapping = file->f_mapping;
+> > > >                 struct inode *inode = mapping->host;
+> > > 
+> > > Well, you'll have to up-level the inode variable instantiation,
+> > > obviously.  That solves this particular issue.
+> > 
+> > Well...  This seems to be a random issue.  I've had BMC issues with
+> > my server most of the day...  But even with this patch I still get the failure
+> > in read_pages().  :-/
+> > 
+> > And I have gotten it to both succeed and fail with qemu...  :-/
+> 
+> ... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
+> out factoring in the flag logic changes we have agreed upon...
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 62d9f622bad1..d592949ad396 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
+>                 inode->i_flags |= S_NOATIME;
+>         else
+>                 inode->i_flags &= ~S_NOATIME;
+> -       if (xflags & FS_XFLAG_DAX)
+> +
+> +       if (xfs_inode_enable_dax(ip))
+>                 inode->i_flags |= S_DAX;
+>         else
+>                 inode->i_flags &= ~S_DAX;
+> -
+>  }
+> 
+> But the one thing which tripped me up, and concerns me, is we have 2 functions
+> which set the inode flags.
+> 
+> xfs_diflags_to_iflags()
+> xfs_diflags_to_linux()
+> 
+> xfs_diflags_to_iflags() is geared toward initialization but logically they do
+> the same thing.  I see no reason to keep them separate.  Does anyone?
+> 
+> Based on this find, the discussion on behavior in this thread, and the comments
+> from Dave I'm reworking the series because the flag check/set functions have
+> all changed and I really want to be as clear as possible with both the patches
+> and the resulting code.[*]  So v4 should be out today including attempting to
+> document what we have discussed here and being as clear as possible on the
+> behavior.  :-D
+> 
+> Thanks so much for testing this!
+> 
+> Ira
+> 
+> [*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
+> really don't see a reason to keep it.
+> 
+
+I prefer you keep the one in xfs_iops.c since ioctls are a higher level
+function than general inode operations.
+
+--D
