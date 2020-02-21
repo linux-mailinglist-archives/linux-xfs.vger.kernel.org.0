@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C86167FC6
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2020 15:12:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90B52167FC2
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2020 15:12:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgBUOMA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Feb 2020 09:12:00 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59404 "EHLO
+        id S1728765AbgBUOMB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Feb 2020 09:12:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59414 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728754AbgBUOL7 (ORCPT
+        with ESMTP id S1728761AbgBUOL7 (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Feb 2020 09:11:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EPUYC+s6pguYeMcjLej9GTQUeR8yhOlfX2zNBapNT5U=; b=K/RXvHHF+59SamM3UVrKPZoq50
-        MIQwCarCM9FICui3mbLRJA1XmRwL5la/Tjmy4vIMA3d6hnNPHZQCClZGcON0iJbVH31USAF6atLDR
-        tjdcO1AoBCMMWd4l8P7GvAtdA02svqYd9sRgDeYJ7e0jpN/Sjd3UyJSF9VZOBVPCSE7wWNFwUIImb
-        UyRqHmSmDVpFXNGoHuHxOhZr3ozY1M5am+v8Ov8HzgCl09acnf7VKEbiENAZTfGtlgrScX+JY+5+R
-        9lDX5dH64mW72oT+5zm4rO3nbRt68J9CGso+/i24wfLI6xzgBzWtoOBm3TJKzkUxmq1yUk5m321rD
-        2lUjXW7g==;
+        bh=hgOI00QSO2OOUoBUAPD28REHlRO+qHzfg0pWMkdZOKk=; b=dFmYi+0eDnuCr0DaWyy4uVcDau
+        D8849c1o9FYw6vz5tnk9igfqODmKEg4ewr4KoIhakMiyx1MnRdUQlqUZR2ClgZ6vM4ZYTARsUZahu
+        7qwDdym17g0m3YvyYnWnYIvj6k9Dfinrxj5ZYBf5pTIkVM4R172o8hz8IMdTMRC6O3cYdQccWVHmi
+        OB12MrlWnM/qVSuF9G51GTYEHYlDa1LGiavPguRki6kPun3laGAZampBgal71j8PjJZI1mlmKIW9P
+        UJu4CW0VSExrw0o6lumOAx+wHss6MlS2mTPBBZexOVjMvyXwn3KVX2+2NCdACvQWLnUeCFjlO/rXa
+        nzqDDqUw==;
 Received: from [38.126.112.138] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5927-0000JN-2B; Fri, 21 Feb 2020 14:11:59 +0000
+        id 1j5927-0000JT-94; Fri, 21 Feb 2020 14:11:59 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     Allison Collins <allison.henderson@oracle.com>,
         Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 19/31] xfs: remove the unused ATTR_ENTRY macro
-Date:   Fri, 21 Feb 2020 06:11:42 -0800
-Message-Id: <20200221141154.476496-20-hch@lst.de>
+        Chandan Rajendra <chandanrlinux@gmail.com>
+Subject: [PATCH 20/31] xfs: open code ATTR_ENTSIZE
+Date:   Fri, 21 Feb 2020 06:11:43 -0800
+Message-Id: <20200221141154.476496-21-hch@lst.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200221141154.476496-1-hch@lst.de>
 References: <20200221141154.476496-1-hch@lst.de>
@@ -43,32 +43,45 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Replace a single use macro containing open-coded variants of
+standard helpers with direct calls to the standard helpers.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_attr.h | 8 --------
- 1 file changed, 8 deletions(-)
+ fs/xfs/xfs_attr_list.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index 0c8f7c7a6b65..31c0ffde4f59 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -69,14 +69,6 @@ typedef struct attrlist_ent {	/* data from attr_list() */
- 	char	a_name[1];	/* attr name (NULL terminated) */
- } attrlist_ent_t;
+diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+index 0fe12474a952..c97e6806cf1f 100644
+--- a/fs/xfs/xfs_attr_list.c
++++ b/fs/xfs/xfs_attr_list.c
+@@ -545,12 +545,6 @@ xfs_attr_list_int(
+ 	return error;
+ }
  
--/*
-- * Given a pointer to the (char*) buffer containing the attr_list() result,
-- * and an index, return a pointer to the indicated attribute in the buffer.
-- */
--#define	ATTR_ENTRY(buffer, index)		\
--	((attrlist_ent_t *)			\
--	 &((char *)buffer)[ ((attrlist_t *)(buffer))->al_offset[index] ])
+-#define	ATTR_ENTBASESIZE		/* minimum bytes used by an attr */ \
+-	(((struct attrlist_ent *) 0)->a_name - (char *) 0)
+-#define	ATTR_ENTSIZE(namelen)		/* actual bytes used by an attr */ \
+-	((ATTR_ENTBASESIZE + (namelen) + 1 + sizeof(uint32_t)-1) \
+-	 & ~(sizeof(uint32_t)-1))
 -
  /*
-  * Kernel-internal version of the attrlist cursor.
-  */
+  * Format an attribute and copy it out to the user's buffer.
+  * Take care to check values and protect against them changing later,
+@@ -586,7 +580,10 @@ xfs_attr_put_listent(
+ 
+ 	arraytop = sizeof(*alist) +
+ 			context->count * sizeof(alist->al_offset[0]);
+-	context->firstu -= ATTR_ENTSIZE(namelen);
++
++	/* decrement by the actual bytes used by the attr */
++	context->firstu -= round_up(offsetof(struct attrlist_ent, a_name) +
++			namelen + 1, sizeof(uint32_t));
+ 	if (context->firstu < arraytop) {
+ 		trace_xfs_attr_list_full(context);
+ 		alist->al_more = 1;
 -- 
 2.24.1
 
