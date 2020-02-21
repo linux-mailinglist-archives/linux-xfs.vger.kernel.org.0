@@ -2,35 +2,40 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A40167FB4
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2020 15:11:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 035F8167FB6
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2020 15:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgBUOLz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Feb 2020 09:11:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59254 "EHLO
+        id S1728344AbgBUOL4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Feb 2020 09:11:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59268 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgBUOLz (ORCPT
+        with ESMTP id S1728455AbgBUOLz (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Feb 2020 09:11:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=2BiIpatK+dZuW2zjP6EIk8sRgyGya9eA9Y60EBNq+ak=; b=P3IPABbFhupe8mlhRyWchvEhOV
-        b5C4kiLSaeoME4cNf9q3Jece2rYu0h/dhHbk08p/An7dR83AwJcVIuv9XS9DSMbZyooWaCVXwx0P1
-        +1zvAWOYUtF6kE7sl3QaTkEZbtvQfDfrFhI0t8iU6jn5UyXeYZg2pvZR1q2+IBYaOuswnwxxbGUnU
-        9QsCyYWfe8WNFruv3mHEn4j3QdF+GP7k/LO5/WamR3EvE6FU4xBL8p87BimT5wGYzy9IpRICrhMaE
-        ht6AQ2lJDiIdn+3tueY4NRiMqd+NW77EnTYkt/L6TDa8S9BJBvteAl6RUr2nj0cQEB1e5UWGtli4T
-        d++O5Y4A==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=4mPP/ff5n2vZ4KoU4urQYSn7o751n+nX5PbXfXPmoHg=; b=D/MOFX3XdXyHG/j145TBkiaeQK
+        T12BMv9/WF6Hp9iVtMOsuDBeGegCakfb9JpudvmnxJqemkupGt4ZjvZmFRWccLTzk6iI1TWauFV7f
+        Ln+HBo7Km7n9I2g2JSagQ0/rDItgLrR/mppvgZzY+aMZat3c/0ejdaD+r/oX9FCrHBoy0uCqF1DeS
+        P1DVWJMjXzEywg/Vf3jHkD+ot1QjMEsNJU/KUOyme6aE1o3SgJxdaqH40VrC8zW4OmF+8LlC/7KTt
+        4w1ptfbr3kAOSuBJ+AvvdQlbCw29+qZN1PlYPgDF40/Lz5ptbnuUn2yAqJPJnB040MfkimOVTNflJ
+        N3URErQg==;
 Received: from [38.126.112.138] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5922-0000G6-TG; Fri, 21 Feb 2020 14:11:54 +0000
+        id 1j5923-0000GB-3w; Fri, 21 Feb 2020 14:11:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Cc:     Allison Collins <allison.henderson@oracle.com>
-Subject: clean up the attr interface v5
-Date:   Fri, 21 Feb 2020 06:11:23 -0800
-Message-Id: <20200221141154.476496-1-hch@lst.de>
+Cc:     Allison Collins <allison.henderson@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Chandan Rajendra <chandanrlinux@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 01/31] xfs: reject invalid flags combinations in XFS_IOC_ATTRLIST_BY_HANDLE
+Date:   Fri, 21 Feb 2020 06:11:24 -0800
+Message-Id: <20200221141154.476496-2-hch@lst.de>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200221141154.476496-1-hch@lst.de>
+References: <20200221141154.476496-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -39,38 +44,48 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Also available as a git tree here:
+While the flags field in the ABI and the on-disk format allows for
+multiple namespace flags, an attribute can only exist in a single
+namespace at a time. Hence asking to list attributes that exist
+in multiple namespaces simultaneously is a logically invalid
+request and will return no results. Reject this case early with
+-EINVAL.
 
-    http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-attr-cleanup.5
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_ioctl.c   | 2 ++
+ fs/xfs/xfs_ioctl32.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-An xfsprogs tree porting over the libxfs changes is available here:
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d42de92cb283..d974bf099d45 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -317,6 +317,8 @@ xfs_attrlist_by_handle(
+ 	 */
+ 	if (al_hreq.flags & ~(ATTR_ROOT | ATTR_SECURE))
+ 		return -EINVAL;
++	if (al_hreq.flags == (ATTR_ROOT | ATTR_SECURE))
++		return -EINVAL;
+ 
+ 	dentry = xfs_handlereq_to_dentry(parfilp, &al_hreq.hreq);
+ 	if (IS_ERR(dentry))
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index 769581a79c58..9705172e5410 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -375,6 +375,8 @@ xfs_compat_attrlist_by_handle(
+ 	 */
+ 	if (al_hreq.flags & ~(ATTR_ROOT | ATTR_SECURE))
+ 		return -EINVAL;
++	if (al_hreq.flags == (ATTR_ROOT | ATTR_SECURE))
++		return -EINVAL;
+ 
+ 	dentry = xfs_compat_handlereq_to_dentry(parfilp, &al_hreq.hreq);
+ 	if (IS_ERR(dentry))
+-- 
+2.24.1
 
-    http://git.infradead.org/users/hch/xfsprogs.git/shortlog/refs/heads/attr-cleanup
-
-Changes since v4:
- - rename the attr_namespace field to attr_filter
- - drop "properly type the buffer field in struct
-   xfs_fsop_attrlist_handlere", this was causing too much discussion for
-   a trivial cleanup
- - improve a few commit messages and comments
- - improve the ATTR_REPLACE checks a little more
- - turn the xfs_forget_acl stub into an inline function
- - fix a 0 vs NULL sparse warning in xfs_ioc_attr_list
-
-Changes since v3:
- - clean up a cast
- - fixup a comment
- - fix a flags check to use the right flags (bisection only)
- - move a few hunks around to better spots in the series
-
-Changes since v2:
- - add more comments
- - fix up an error handling corner case in __xfs_set_acl
- - add more cowbell^H^H^H^H^H^H^Hbool
- - add a new patch to reject invalid namespaces flags in
-   XFS_IOC_ATTRLIST_BY_HANDLE
- - remove ATTR_ENTSIZE entirely
-
-Changes since v1:
- - rebased to for-next, which includes the fixes from the first
-   version
