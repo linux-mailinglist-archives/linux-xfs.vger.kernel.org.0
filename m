@@ -2,140 +2,254 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1A7169308
-	for <lists+linux-xfs@lfdr.de>; Sun, 23 Feb 2020 03:06:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACDB5169689
+	for <lists+linux-xfs@lfdr.de>; Sun, 23 Feb 2020 08:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgBWCG3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 22 Feb 2020 21:06:29 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46460 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgBWCG2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 22 Feb 2020 21:06:28 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N22WT0180098
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=teTQQnEJf3QN+HJIp2rzLY75Gl4GivkkdTo0XvHfuHw=;
- b=NmfTvUEVtpW7VIiZLnO9i9Jjb+ZpEQ7ZvjSZQLEzUy7+JOrN4T8ESd2Id6Nlz1LhPAMX
- 0NFrxzv7Y9MQyZk7BlaLnvGsx8i2DAE5gXyQBctL0Ps4l8+4aqev3gA8jd2sphozjpGM
- CujaPfoIAvalOK+sPw5Kf3apSE/Co9gSrR+XRxiBTwCLb02Cp6u/fPftQbKrqNW82f6Y
- Gxx9IDEJ20J8Km/ArEBwGmw2H1r5RtWbNDUQjHTmELEX8/5A/TX2Khh0nYv+qOQ9Hkfe
- ZOmmc81VBci5dtY7y9g7SJL1HPr7QF9D9AzERbai61LlCPQh3zwxhV0gyREvk9PxLcwo ZA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2yavxra00j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N1wT0h054436
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:26 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ybe38mf3p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:26 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01N26PmW028987
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:25 GMT
-Received: from localhost.localdomain (/67.1.3.112)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Feb 2020 02:06:24 +0000
-From:   Allison Collins <allison.henderson@oracle.com>
+        id S1726208AbgBWH2H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 23 Feb 2020 02:28:07 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58762 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725980AbgBWH2H (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 23 Feb 2020 02:28:07 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01N7NvwJ126335;
+        Sun, 23 Feb 2020 02:28:04 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yayaxn4j7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Feb 2020 02:28:04 -0500
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01N7Q6ng129703;
+        Sun, 23 Feb 2020 02:28:03 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yayaxn4hp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Feb 2020 02:28:03 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01N7P33r003892;
+        Sun, 23 Feb 2020 07:28:02 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 2yaux5smpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Feb 2020 07:28:02 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01N7S2HY49480146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 23 Feb 2020 07:28:02 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E781112062;
+        Sun, 23 Feb 2020 07:28:02 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6F8F112061;
+        Sun, 23 Feb 2020 07:27:59 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.102.2.13])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 23 Feb 2020 07:27:59 +0000 (GMT)
+From:   Chandan Rajendra <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v7 19/19] xfs: Remove xfs_attr_rmtval_remove
-Date:   Sat, 22 Feb 2020 19:06:11 -0700
-Message-Id: <20200223020611.1802-20-allison.henderson@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200223020611.1802-1-allison.henderson@oracle.com>
-References: <20200223020611.1802-1-allison.henderson@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002230014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 suspectscore=1 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002230014
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>, david@fromorbit.com,
+        chandan@linux.ibm.com, darrick.wong@oracle.com, bfoster@redhat.com
+Subject: [PATCH V4 1/7] xfs: Pass xattr name and value length explicitly to xfs_attr_leaf_newentsize
+Date:   Sun, 23 Feb 2020 13:00:38 +0530
+Message-Id: <20200223073044.14215-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-22_08:2020-02-21,2020-02-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 mlxlogscore=999 clxscore=1034 suspectscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002230063
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xfs_attr_rmtval_remove is no longer used.  Clear it out now
+This commit changes xfs_attr_leaf_newentsize() to explicitly accept name and
+value length instead of a pointer to struct xfs_da_args. A future commit will
+need to invoke xfs_attr_leaf_newentsize() from functions that do not have
+a struct xfs_da_args to pass in.
 
-Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_attr_remote.c | 42 -----------------------------------------
- fs/xfs/xfs_trace.h              |  1 -
- 2 files changed, 43 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index a0e79db..0cc0ec1 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -734,48 +734,6 @@ xfs_attr_rmtval_invalidate(
+Changelog:
+V1 -> V2:
+1. Use convenience variables to reduce indentation of code.
+
+V2 -> V3:
+1. Introduce 'struct xfs_attr_set_resv' to collect various block size
+   reservations when inserting an xattr.
+2. Add xfs_calc_attr_res() to calculate the total log reservation to
+   required when inserting an xattr.
+
+V3 -> V4:
+1. Rebase the patchset on top of Christoph's "Clean attr interface"
+   patchset. The patchset can be obtained from
+   https://github.com/chandanr/linux/tree/xfs-fix-attr-resv-calc-v4.
+2. Split the patchset into
+   - Patches which refactor the existing calculation in
+     xfs_attr_calc_size().
+   - One patch which fixes the calculation inside
+     xfs_attr_calc_size().
+3. Fix indentation issues.
+4. Pass attribute geometry pointer to xfs_attr_leaf_newentsize()
+   instead of a pointer to xfs_mount.
+
+ fs/xfs/libxfs/xfs_attr.c      |  3 ++-
+ fs/xfs/libxfs/xfs_attr_leaf.c | 39 +++++++++++++++++++++++------------
+ fs/xfs/libxfs/xfs_attr_leaf.h |  3 ++-
+ 3 files changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 23e0d8ce39f8c..1875210cc8e40 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -149,7 +149,8 @@ xfs_attr_calc_size(
+ 	 * Determine space new attribute will use, and if it would be
+ 	 * "local" or "remote" (note: local != inline).
+ 	 */
+-	size = xfs_attr_leaf_newentsize(args, local);
++	size = xfs_attr_leaf_newentsize(args->geo, args->namelen,
++			args->valuelen, local);
+ 	nblks = XFS_DAENTER_SPACE_RES(mp, XFS_ATTR_FORK);
+ 	if (*local) {
+ 		if (size > (args->geo->blksize / 2)) {
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index fae322105457a..65a3bf40c4f9d 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -1330,7 +1330,8 @@ xfs_attr3_leaf_add(
+ 	leaf = bp->b_addr;
+ 	xfs_attr3_leaf_hdr_from_disk(args->geo, &ichdr, leaf);
+ 	ASSERT(args->index >= 0 && args->index <= ichdr.count);
+-	entsize = xfs_attr_leaf_newentsize(args, NULL);
++	entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
++			args->valuelen, NULL);
+ 
+ 	/*
+ 	 * Search through freemap for first-fit on new name length.
+@@ -1403,6 +1404,7 @@ xfs_attr3_leaf_add_work(
+ 	struct xfs_attr_leaf_name_local *name_loc;
+ 	struct xfs_attr_leaf_name_remote *name_rmt;
+ 	struct xfs_mount	*mp;
++	int			entsize;
+ 	int			tmp;
+ 	int			i;
+ 
+@@ -1432,11 +1434,14 @@ xfs_attr3_leaf_add_work(
+ 	ASSERT(ichdr->freemap[mapindex].base < args->geo->blksize);
+ 	ASSERT((ichdr->freemap[mapindex].base & 0x3) == 0);
+ 	ASSERT(ichdr->freemap[mapindex].size >=
+-		xfs_attr_leaf_newentsize(args, NULL));
++		xfs_attr_leaf_newentsize(args->geo, args->namelen,
++				args->valuelen, NULL));
+ 	ASSERT(ichdr->freemap[mapindex].size < args->geo->blksize);
+ 	ASSERT((ichdr->freemap[mapindex].size & 0x3) == 0);
+ 
+-	ichdr->freemap[mapindex].size -= xfs_attr_leaf_newentsize(args, &tmp);
++	entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
++			args->valuelen, &tmp);
++	ichdr->freemap[mapindex].size -= entsize;
+ 
+ 	entry->nameidx = cpu_to_be16(ichdr->freemap[mapindex].base +
+ 				     ichdr->freemap[mapindex].size);
+@@ -1824,6 +1829,8 @@ xfs_attr3_leaf_figure_balance(
+ 	struct xfs_attr_leafblock	*leaf1 = blk1->bp->b_addr;
+ 	struct xfs_attr_leafblock	*leaf2 = blk2->bp->b_addr;
+ 	struct xfs_attr_leaf_entry	*entry;
++	struct xfs_da_args		*args;
++	int				entsize;
+ 	int				count;
+ 	int				max;
+ 	int				index;
+@@ -1833,14 +1840,16 @@ xfs_attr3_leaf_figure_balance(
+ 	int				foundit = 0;
+ 	int				tmp;
+ 
++	args = state->args;
+ 	/*
+ 	 * Examine entries until we reduce the absolute difference in
+ 	 * byte usage between the two blocks to a minimum.
+ 	 */
+ 	max = ichdr1->count + ichdr2->count;
+ 	half = (max + 1) * sizeof(*entry);
+-	half += ichdr1->usedbytes + ichdr2->usedbytes +
+-			xfs_attr_leaf_newentsize(state->args, NULL);
++	entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
++			args->valuelen, NULL);
++	half += ichdr1->usedbytes + ichdr2->usedbytes + entsize;
+ 	half /= 2;
+ 	lastdelta = state->args->geo->blksize;
+ 	entry = xfs_attr3_leaf_entryp(leaf1);
+@@ -1851,8 +1860,9 @@ xfs_attr3_leaf_figure_balance(
+ 		 * The new entry is in the first block, account for it.
+ 		 */
+ 		if (count == blk1->index) {
+-			tmp = totallen + sizeof(*entry) +
+-				xfs_attr_leaf_newentsize(state->args, NULL);
++			entsize = xfs_attr_leaf_newentsize(args->geo,
++					args->namelen, args->valuelen, NULL);
++			tmp = totallen + sizeof(*entry) + entsize;
+ 			if (XFS_ATTR_ABS(half - tmp) > lastdelta)
+ 				break;
+ 			lastdelta = XFS_ATTR_ABS(half - tmp);
+@@ -1887,8 +1897,9 @@ xfs_attr3_leaf_figure_balance(
+ 	 */
+ 	totallen -= count * sizeof(*entry);
+ 	if (foundit) {
+-		totallen -= sizeof(*entry) +
+-				xfs_attr_leaf_newentsize(state->args, NULL);
++		entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
++				args->valuelen, NULL);
++		totallen -= sizeof(*entry) + entsize;
+ 	}
+ 
+ 	*countarg = count;
+@@ -2664,20 +2675,22 @@ xfs_attr_leaf_entsize(xfs_attr_leafblock_t *leaf, int index)
+  */
+ int
+ xfs_attr_leaf_newentsize(
+-	struct xfs_da_args	*args,
++	struct xfs_da_geometry	*geo,
++	int			namelen,
++	int			valuelen,
+ 	int			*local)
+ {
+ 	int			size;
+ 
+-	size = xfs_attr_leaf_entsize_local(args->namelen, args->valuelen);
+-	if (size < xfs_attr_leaf_entsize_local_max(args->geo->blksize)) {
++	size = xfs_attr_leaf_entsize_local(namelen, valuelen);
++	if (size < xfs_attr_leaf_entsize_local_max(geo->blksize)) {
+ 		if (local)
+ 			*local = 1;
+ 		return size;
+ 	}
+ 	if (local)
+ 		*local = 0;
+-	return xfs_attr_leaf_entsize_remote(args->namelen);
++	return xfs_attr_leaf_entsize_remote(namelen);
  }
  
- /*
-- * Remove the value associated with an attribute by deleting the
-- * out-of-line buffer that it is stored on.
-- */
--int
--xfs_attr_rmtval_remove(
--	struct xfs_da_args      *args)
--{
--	xfs_dablk_t		lblkno;
--	int			blkcnt;
--	int			error = 0;
--	int			done = 0;
--
--	trace_xfs_attr_rmtval_remove(args);
--
--	error = xfs_attr_rmtval_invalidate(args);
--	if (error)
--		return error;
--	/*
--	 * Keep de-allocating extents until the remote-value region is gone.
--	 */
--	lblkno = args->rmtblkno;
--	blkcnt = args->rmtblkcnt;
--	while (!done) {
--		error = xfs_bunmapi(args->trans, args->dp, lblkno, blkcnt,
--				    XFS_BMAPI_ATTRFORK, 1, &done);
--		if (error)
--			return error;
--		error = xfs_defer_finish(&args->trans);
--		if (error)
--			return error;
--
--		/*
--		 * Close out trans and start the next one in the chain.
--		 */
--		error = xfs_trans_roll_inode(&args->trans, args->dp);
--		if (error)
--			return error;
--	}
--	return 0;
--}
--
--/*
-  * Remove the value associated with an attribute by deleting the out-of-line
-  * buffer that it is stored on. Returns EAGAIN for the caller to refresh the
-  * transaction and recall the function
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 159b8af..bf9a683 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1775,7 +1775,6 @@ DEFINE_ATTR_EVENT(xfs_attr_refillstate);
  
- DEFINE_ATTR_EVENT(xfs_attr_rmtval_get);
- DEFINE_ATTR_EVENT(xfs_attr_rmtval_set);
--DEFINE_ATTR_EVENT(xfs_attr_rmtval_remove);
- 
- #define DEFINE_DA_EVENT(name) \
- DEFINE_EVENT(xfs_da_class, name, \
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
+index 6dd2d937a42a3..7bc5dd6c4d66a 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.h
++++ b/fs/xfs/libxfs/xfs_attr_leaf.h
+@@ -96,7 +96,8 @@ void	xfs_attr3_leaf_unbalance(struct xfs_da_state *state,
+ xfs_dahash_t	xfs_attr_leaf_lasthash(struct xfs_buf *bp, int *count);
+ int	xfs_attr_leaf_order(struct xfs_buf *leaf1_bp,
+ 				   struct xfs_buf *leaf2_bp);
+-int	xfs_attr_leaf_newentsize(struct xfs_da_args *args, int *local);
++int	xfs_attr_leaf_newentsize(struct xfs_da_geometry	*geo, int namelen,
++			int valuelen, int *local);
+ int	xfs_attr3_leaf_read(struct xfs_trans *tp, struct xfs_inode *dp,
+ 			xfs_dablk_t bno, struct xfs_buf **bpp);
+ void	xfs_attr3_leaf_hdr_from_disk(struct xfs_da_geometry *geo,
 -- 
-2.7.4
+2.19.1
 
