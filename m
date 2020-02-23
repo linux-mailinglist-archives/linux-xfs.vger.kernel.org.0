@@ -2,220 +2,294 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37BA31692E4
-	for <lists+linux-xfs@lfdr.de>; Sun, 23 Feb 2020 03:06:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C1A1692E7
+	for <lists+linux-xfs@lfdr.de>; Sun, 23 Feb 2020 03:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgBWCGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 22 Feb 2020 21:06:04 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:45600 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgBWCGE (ORCPT
+        id S1727150AbgBWCGF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 22 Feb 2020 21:06:05 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56182 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgBWCGE (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sat, 22 Feb 2020 21:06:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N219wD188896
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N21cHI008549
         for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=t1hp1TcVcoOJrPcrMQC+jL3ZQAvzCk9eOwPQqE/O9v8=;
- b=lSRFAf9XCAUX/q+UAhtdC0FOg1Kvi4EQvIniOpkkiQ2wMbsl5SSTt357Gv4KpSQ4pnKo
- UfZaNeMcXOM0QYntjIlFnXkRqnHTfopg+s2Vo2hD9rZlDEwDvFsBLRizs4GO4regtHHB
- a3TJCh7H1JQV17TinkFazyxlsARi+Z4c6kGOSxxoYkuF2QuYSDr7BUAO5ro+Jjef7lUd
- dVT7beRLAdO0sI5w1y3l3jSM8G+BWxr69kUm+mVU04PDkRQpyHV2g36hKMMeJ1DysnEU
- ez6SAMSHN88nsffpJPRUHIdw0fzEuy+T1N8hRvNT7iTwnQx4xYHmFLZDxL0uimKOQVOw QQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2yauqu21ww-1
+ bh=+VrLHuCbVXAeD6ypWGOb9ahCgWzUM4de4F/NquD6hs8=;
+ b=zMhK4p9nrZbZxTD34d3OufVQsrk+oYYGkZizyLkIo/Xek+Mofof+65gb1mU3uQFpxdnU
+ 3U/ERQaJiGkdNgU07NRUYTV06OhJcfdah6PBlqVTf1a25eLyElS5AI9BGIsk1w8a0V4u
+ aAB/UhMydvZ0nnlPSO/vs4Hbk7yLG2F4FE6H03WNfiPXVJuR4uqt5/hWnHn8h0wgLdwb
+ J+Vd5d25fUSZ46jUGGQcj/9sp3mpnmC5YVsYeaitXtqjyU2iVz381h2id63v8fRU4osx
+ lxGeKQE+nq5xJPpvD97y0ftS8hSZLLazbQ0xpWe9FT/46izfbTSz8aMugBtDfXTGawh1 kA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yav8qa0sa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N1we3J054527
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N1wWEE081279
         for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2ybe38mcs8-1
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ybe0wr0q5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:01 +0000
 Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01N260kw013060
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01N260hr031312
         for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:00 GMT
 Received: from localhost.localdomain (/67.1.3.112)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Feb 2020 02:05:59 +0000
+        with ESMTP ; Sun, 23 Feb 2020 02:06:00 +0000
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v7 01/20] xfsprogs: Remove all strlen in all xfs_attr_* functions for attr names.
-Date:   Sat, 22 Feb 2020 19:05:35 -0700
-Message-Id: <20200223020554.1731-2-allison.henderson@oracle.com>
+Subject: [PATCH v7 02/20] xfsprogs: Replace attribute parameters with struct xfs_name
+Date:   Sat, 22 Feb 2020 19:05:36 -0700
+Message-Id: <20200223020554.1731-3-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223020554.1731-1-allison.henderson@oracle.com>
 References: <20200223020554.1731-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=1 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002230014
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
- clxscore=1015 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002230014
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 impostorscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002230014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This helps to pre-simplify the extra handling of the null terminator in delayed
-operations which use memcpy rather than strlen.  Later when we introduce parent
-pointers, attribute names will become binary, so strlen will not work at all.
-Removing uses of strlen now will help reduce complexities later
+This patch replaces the attribute name and length parameters with a single struct
+xfs_name parameter.  This helps to clean up the numbers of parameters being passed
+around and pre-simplifies the code some.
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- db/attrset.c         |  4 ++--
- libxfs/libxfs_priv.h |  9 +++++----
- libxfs/xfs_attr.c    | 12 ++++++++----
- libxfs/xfs_attr.h    |  8 +++++---
- 4 files changed, 20 insertions(+), 13 deletions(-)
+ db/attrset.c         | 11 ++++++++---
+ libxfs/libxfs_priv.h | 12 +++++-------
+ libxfs/xfs_attr.c    | 22 +++++++++-------------
+ libxfs/xfs_attr.h    | 12 +++++-------
+ libxfs/xfs_types.c   | 11 +++++++++++
+ libxfs/xfs_types.h   |  1 +
+ 6 files changed, 39 insertions(+), 30 deletions(-)
 
 diff --git a/db/attrset.c b/db/attrset.c
-index 5697250..5c0ec6e9 100644
+index 5c0ec6e9..4da85cb 100644
 --- a/db/attrset.c
 +++ b/db/attrset.c
-@@ -146,7 +146,7 @@ attr_set_f(
+@@ -16,6 +16,7 @@
+ #include "field.h"
+ #include "inode.h"
+ #include "malloc.h"
++#include "xfs_types.h"
+ 
+ static int		attr_set_f(int argc, char **argv);
+ static int		attr_remove_f(int argc, char **argv);
+@@ -68,6 +69,7 @@ attr_set_f(
+ {
+ 	xfs_inode_t	*ip = NULL;
+ 	char		*name, *value, *sp;
++	struct xfs_name	xname;
+ 	int		c, valuelen = 0, flags = 0;
+ 
+ 	if (cur_typ == NULL) {
+@@ -146,8 +148,9 @@ attr_set_f(
  		goto out;
  	}
  
--	if (libxfs_attr_set(ip, (unsigned char *)name,
-+	if (libxfs_attr_set(ip, (unsigned char *)name, strlen(name),
- 				(unsigned char *)value, valuelen, flags)) {
+-	if (libxfs_attr_set(ip, (unsigned char *)name, strlen(name),
+-				(unsigned char *)value, valuelen, flags)) {
++	xfs_name_init(&xname, name);
++	if (libxfs_attr_set(ip, &xname, (unsigned char *)value, valuelen,
++			    flags)) {
  		dbprintf(_("failed to set attr %s on inode %llu\n"),
  			name, (unsigned long long)iocur_top->ino);
-@@ -222,7 +222,7 @@ attr_remove_f(
+ 		goto out;
+@@ -172,6 +175,7 @@ attr_remove_f(
+ {
+ 	xfs_inode_t	*ip = NULL;
+ 	char		*name;
++	struct xfs_name	xname;
+ 	int		c, flags = 0;
+ 
+ 	if (cur_typ == NULL) {
+@@ -222,7 +226,8 @@ attr_remove_f(
  		goto out;
  	}
  
--	if (libxfs_attr_remove(ip, (unsigned char *)name, flags)) {
-+	if (libxfs_attr_remove(ip, (unsigned char *)name, strlen(name), flags)) {
+-	if (libxfs_attr_remove(ip, (unsigned char *)name, strlen(name), flags)) {
++	xfs_name_init(&xname, name);
++	if (libxfs_attr_remove(ip, &xname, flags)) {
  		dbprintf(_("failed to remove attr %s from inode %llu\n"),
  			name, (unsigned long long)iocur_top->ino);
  		goto out;
 diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index d944efc0..c25c5de 100644
+index c25c5de..f8637e8c 100644
 --- a/libxfs/libxfs_priv.h
 +++ b/libxfs/libxfs_priv.h
-@@ -610,11 +610,12 @@ static inline int test_and_set_bit(int nr, volatile unsigned long *addr)
+@@ -609,13 +609,11 @@ static inline int test_and_set_bit(int nr, volatile unsigned long *addr)
+ /* Keep static checkers quiet about nonstatic functions by exporting */
  int xfs_inode_hasattr(struct xfs_inode *ip);
  int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
- int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
--                unsigned char **value, int *valuelenp, int flags);
-+		 size_t namelen, unsigned char **value, int *valuelenp,
-+		 int flags);
- int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
--                 unsigned char *value, int valuelen, int flags);
--int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
--
-+		 size_t namelen, unsigned char *value, int valuelen, int flags);
-+int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
-+		    size_t namelen, int flags);
+-int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+-		 size_t namelen, unsigned char **value, int *valuelenp,
+-		 int flags);
+-int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+-		 size_t namelen, unsigned char *value, int valuelen, int flags);
+-int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
+-		    size_t namelen, int flags);
++int xfs_attr_get(struct xfs_inode *ip, struct xfs_name *name,
++		 unsigned char **value, int *valuelenp, int flags);
++int xfs_attr_set(struct xfs_inode *dp, struct xfs_name *name,
++		 unsigned char *value, int valuelen, int flags);
++int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name, int flags);
  int xfs_rtbuf_get(struct xfs_mount *mp, struct xfs_trans *tp,
  		  xfs_rtblock_t block, int issum, struct xfs_buf **bpp);
  int xfs_rtcheck_range(struct xfs_mount *mp, struct xfs_trans *tp,
 diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index ada1b5f..925094d 100644
+index 925094d..6e1f3a1 100644
 --- a/libxfs/xfs_attr.c
 +++ b/libxfs/xfs_attr.c
-@@ -61,6 +61,7 @@ xfs_attr_args_init(
+@@ -60,8 +60,7 @@ STATIC int
+ xfs_attr_args_init(
  	struct xfs_da_args	*args,
  	struct xfs_inode	*dp,
- 	const unsigned char	*name,
-+	size_t			namelen,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
  	int			flags)
  {
  
-@@ -73,7 +74,7 @@ xfs_attr_args_init(
+@@ -73,8 +72,8 @@ xfs_attr_args_init(
+ 	args->whichfork = XFS_ATTR_FORK;
  	args->dp = dp;
  	args->flags = flags;
- 	args->name = name;
--	args->namelen = strlen((const char *)name);
-+	args->namelen = namelen;
+-	args->name = name;
+-	args->namelen = namelen;
++	args->name = name->name;
++	args->namelen = name->len;
  	if (args->namelen >= MAXNAMELEN)
  		return -EFAULT;		/* match IRIX behaviour */
  
-@@ -138,6 +139,7 @@ int
+@@ -138,8 +137,7 @@ xfs_attr_get_ilocked(
+ int
  xfs_attr_get(
  	struct xfs_inode	*ip,
- 	const unsigned char	*name,
-+	size_t			namelen,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
  	unsigned char		**value,
  	int			*valuelenp,
  	int			flags)
-@@ -153,7 +155,7 @@ xfs_attr_get(
+@@ -155,7 +153,7 @@ xfs_attr_get(
  	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
  		return -EIO;
  
--	error = xfs_attr_args_init(&args, ip, name, flags);
-+	error = xfs_attr_args_init(&args, ip, name, namelen, flags);
+-	error = xfs_attr_args_init(&args, ip, name, namelen, flags);
++	error = xfs_attr_args_init(&args, ip, name, flags);
  	if (error)
  		return error;
  
-@@ -337,6 +339,7 @@ int
+@@ -338,8 +336,7 @@ xfs_attr_remove_args(
+ int
  xfs_attr_set(
  	struct xfs_inode	*dp,
- 	const unsigned char	*name,
-+	size_t			namelen,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
  	unsigned char		*value,
  	int			valuelen,
  	int			flags)
-@@ -352,7 +355,7 @@ xfs_attr_set(
+@@ -355,7 +352,7 @@ xfs_attr_set(
  	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
  		return -EIO;
  
--	error = xfs_attr_args_init(&args, dp, name, flags);
-+	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+-	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
++	error = xfs_attr_args_init(&args, dp, name, flags);
  	if (error)
  		return error;
  
-@@ -441,6 +444,7 @@ int
+@@ -443,8 +440,7 @@ out_trans_cancel:
+ int
  xfs_attr_remove(
  	struct xfs_inode	*dp,
- 	const unsigned char	*name,
-+	size_t			namelen,
+-	const unsigned char	*name,
+-	size_t			namelen,
++	struct xfs_name		*name,
  	int			flags)
  {
  	struct xfs_mount	*mp = dp->i_mount;
-@@ -452,7 +456,7 @@ xfs_attr_remove(
+@@ -456,7 +452,7 @@ xfs_attr_remove(
  	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
  		return -EIO;
  
--	error = xfs_attr_args_init(&args, dp, name, flags);
-+	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
+-	error = xfs_attr_args_init(&args, dp, name, namelen, flags);
++	error = xfs_attr_args_init(&args, dp, name, flags);
  	if (error)
  		return error;
  
 diff --git a/libxfs/xfs_attr.h b/libxfs/xfs_attr.h
-index 94badfa..106a2f2 100644
+index 106a2f2..44dd07a 100644
 --- a/libxfs/xfs_attr.h
 +++ b/libxfs/xfs_attr.h
-@@ -145,11 +145,13 @@ int xfs_attr_list_int(struct xfs_attr_list_context *);
+@@ -144,14 +144,12 @@ int xfs_attr_list_int_ilocked(struct xfs_attr_list_context *);
+ int xfs_attr_list_int(struct xfs_attr_list_context *);
  int xfs_inode_hasattr(struct xfs_inode *ip);
  int xfs_attr_get_ilocked(struct xfs_inode *ip, struct xfs_da_args *args);
- int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
--		 unsigned char **value, int *valuelenp, int flags);
-+		 size_t namelen, unsigned char **value, int *valuelenp,
-+		 int flags);
- int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
--		 unsigned char *value, int valuelen, int flags);
-+		 size_t namelen, unsigned char *value, int valuelen, int flags);
+-int xfs_attr_get(struct xfs_inode *ip, const unsigned char *name,
+-		 size_t namelen, unsigned char **value, int *valuelenp,
+-		 int flags);
+-int xfs_attr_set(struct xfs_inode *dp, const unsigned char *name,
+-		 size_t namelen, unsigned char *value, int valuelen, int flags);
++int xfs_attr_get(struct xfs_inode *ip, struct xfs_name *name,
++		 unsigned char **value, int *valuelenp, int flags);
++int xfs_attr_set(struct xfs_inode *dp, struct xfs_name *name,
++		 unsigned char *value, int valuelen, int flags);
  int xfs_attr_set_args(struct xfs_da_args *args);
--int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name, int flags);
-+int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
-+		    size_t namelen, int flags);
+-int xfs_attr_remove(struct xfs_inode *dp, const unsigned char *name,
+-		    size_t namelen, int flags);
++int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name, int flags);
  int xfs_attr_remove_args(struct xfs_da_args *args);
  int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
  		  int flags, struct attrlist_cursor_kern *cursor);
+diff --git a/libxfs/xfs_types.c b/libxfs/xfs_types.c
+index fa11372..363e5050 100644
+--- a/libxfs/xfs_types.c
++++ b/libxfs/xfs_types.c
+@@ -12,6 +12,17 @@
+ #include "xfs_bit.h"
+ #include "xfs_mount.h"
+ 
++/* Initialize a struct xfs_name with a null terminated string name */
++void
++xfs_name_init(
++	struct xfs_name *xname,
++	const char *name)
++{
++	xname->name = (unsigned char *)name;
++	xname->len = strlen(name);
++	xname->type = 0;
++}
++
+ /* Find the size of the AG, in blocks. */
+ xfs_agblock_t
+ xfs_ag_block_count(
+diff --git a/libxfs/xfs_types.h b/libxfs/xfs_types.h
+index 300b3e9..ecb2c58 100644
+--- a/libxfs/xfs_types.h
++++ b/libxfs/xfs_types.h
+@@ -182,6 +182,7 @@ enum xfs_ag_resv_type {
+  */
+ struct xfs_mount;
+ 
++void xfs_name_init(struct xfs_name *xname, const char *name);
+ xfs_agblock_t xfs_ag_block_count(struct xfs_mount *mp, xfs_agnumber_t agno);
+ bool xfs_verify_agbno(struct xfs_mount *mp, xfs_agnumber_t agno,
+ 		xfs_agblock_t agbno);
 -- 
 2.7.4
 
