@@ -2,81 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C72B21691A4
-	for <lists+linux-xfs@lfdr.de>; Sat, 22 Feb 2020 20:49:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9F21692E5
+	for <lists+linux-xfs@lfdr.de>; Sun, 23 Feb 2020 03:06:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgBVTt2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 22 Feb 2020 14:49:28 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36343 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVTt2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 22 Feb 2020 14:49:28 -0500
-Received: by mail-ed1-f68.google.com with SMTP id j17so6849360edp.3
-        for <linux-xfs@vger.kernel.org>; Sat, 22 Feb 2020 11:49:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JYLJKT/hQhs6KreC3CzVzSZgkLBmMBMygUpecQo/Ig=;
-        b=NoLB8KKMnfnSgBN0x935CKSXlBQr+CiCZeKwwIJVLKyJ077BKO4XgTCvaNfiQZ8BG7
-         g35Jwbxszi5+8QKJqrQp7SLcGgVpJWJ5J9aBjHlA/z3qh2K27R9ofVc3vRW7+atmQ6ZS
-         CpFVNGnkbNFlcX17OT/7ygHmyXycCZutgIDdUL9FvoVyuK9jwdfYFrFSifOzWEztejtV
-         LV0v4XspUiqX5OvVkccUoNzVwo1/iXOOWbEy39vdsWg2thZLR4z8zOuQH1VQCKHVyFym
-         y03KuWfyp/7Y2GzhSlkW12tSPKel68J1O1yWrXn8DYhV2rGhgG/g65EjM8TJ8L7BUoFn
-         T3cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JYLJKT/hQhs6KreC3CzVzSZgkLBmMBMygUpecQo/Ig=;
-        b=Z1HJGjIAMqKMnTnFvHT89tOjBve3EoXlzVa+3BYntk8lU5CBM8iOyoL02PEuGGleDJ
-         +Gr2n9kK1kaCd9FZvistZLfQ2F1UBQMxPN5FIBgDqFKDSfB8chh4feQu4oJzpFinFVki
-         pgipOG7yCeMHbhSqVpXOp3wPu/HPT1K+WpH2twffUOkPaSWSLog9sul8rA0lxeLeTxGR
-         mNM3l03JcW97TjcE7QwbtVxs1kxwW2zWLV129yPoPFP0FdbcnQfKRd4DWfASbkVROIzp
-         sQgWMReWqLRLY/YDVA12pvynSUrPNyPR651Q1j0Kxnm6myjJqbkyfgS71KCddlO6a4Jk
-         Dhew==
-X-Gm-Message-State: APjAAAXbBHqXVk9VFWf9dTYb8VVS2gPwMarVxhX1mHonNVufyifrHHIW
-        hkzoF68cu/ckow5iL+hCrTP9nLieG4MxffQMO5FA
-X-Google-Smtp-Source: APXvYqyAoIgaMVG07BP0crmGCNOJTZLLbPrr1b3JOXJUMDT67NRb2gouWu4bjjIeU0vNtjFgbsPywwmXYYf3zyzSxBs=
-X-Received: by 2002:a17:906:22cf:: with SMTP id q15mr39636640eja.77.1582400966197;
- Sat, 22 Feb 2020 11:49:26 -0800 (PST)
+        id S1726884AbgBWCGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 22 Feb 2020 21:06:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56180 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgBWCGE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 22 Feb 2020 21:06:04 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N25DrU010941
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=f/P8CUdyesReCWhyBGBs+a116kNq56q+7mAWre55LCg=;
+ b=TRj69qvdML4YMl4tQoylFLEB9hyajDzLm225y3daQ4AJMOAtNf1cwj7d6RAv6KC03pDW
+ i6/NUJmPEePze2lc9TG/rDIe/qeLZbyJnlCwDA6kx74o08gaR/I1iOpt0o8de0uv6yjO
+ kha1lIfw0dObUQ1LTFIAkNiXlCBXluOdUIgAtsNTmc2DYAp3TVcYOtThu8+eIHeUModt
+ oz+DS6ASRjndKIdb/5dCjqG1ppcujR9+qLcV5Rq8bW1IK10Gti9FLSNF45Zril/07gUs
+ /TFzcp/aUul8z9iGAWLqrQx9sjPazyLA4+6QNnm/ObXQl8U8LyCJKA3DoRRjvxPCG6gl lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yav8qa0s9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01N1w4ZT054030
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:01 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ybe38mcsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:01 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01N25xmm004454
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Feb 2020 02:06:00 GMT
+Received: from localhost.localdomain (/67.1.3.112)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 23 Feb 2020 02:05:59 +0000
+From:   Allison Collins <allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v7 00/20] xfsprogs: Delayed Ready Attributes
+Date:   Sat, 22 Feb 2020 19:05:34 -0700
+Message-Id: <20200223020554.1731-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200220153234.152426-1-richard_c_haines@btinternet.com>
- <20200220155731.GU9506@magnolia> <20200220155938.GA1306@infradead.org>
- <2862d0b2-e0a9-149d-16e5-22c3f5f82e9e@tycho.nsa.gov> <20200220160820.GA14640@infradead.org>
-In-Reply-To: <20200220160820.GA14640@infradead.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sat, 22 Feb 2020 14:49:15 -0500
-Message-ID: <CAHC9VhRXo=EZ4HbLa_W_waL4xtdE6M92em7aNh=wm_7hpozJ7g@mail.gmail.com>
-Subject: Re: [PATCH 0/1] selinux: Add xfs quota command types
-To:     Christoph Hellwig <hch@infradead.org>,
-        Richard Haines <richard_c_haines@btinternet.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002230014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9539 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002230014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:08 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Feb 20, 2020 at 11:06:10AM -0500, Stephen Smalley wrote:
-> > > The dquot_* routines are not generic quota code, but a specific
-> > > implementation used by most non-XFS file systems.  So if there is a bug
-> > > it is that the security call is not in the generic dispatch code.
-> >
-> > Hmm...any reason the security hook call couldn't be taken to
-> > quota_quotaon()?
->
-> I haven't touched the quota code for a while, but yes, the existing
-> calls should move to the quota_* routines in fs/quota/quota.c.  Note
-> that you still need to add checks, e.g. for Q_XSETQLIM.
+Hi all,
 
-Who wanted to submit a patch for this?  Christoph were you planning on
-fixing this?  If not, Richard, do you want to give it a try?
+This set applies the corresponding changes for delayed ready attributes to
+xfsprogs. I will pick up the reviews from the kernel side series and mirror
+them here.  
+
+This series can also be viewed on github here:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v7
+
+And also the extended delayed attribute and parent pointer series:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v7_extended
+
+Thanks all!
+Allison
+
+Allison Collins (20):
+  xfsprogs: Remove all strlen in all xfs_attr_* functions for attr
+    names.
+  xfsprogs: Replace attribute parameters with struct xfs_name
+  xfsprogs: Embed struct xfs_name in xfs_da_args
+  xfsprogs: Add xfs_has_attr and subroutines
+  xfsprogs: Check for -ENOATTR or -EEXIST
+  xfsprogs: Factor out new helper functions xfs_attr_rmtval_set
+  xfsprogs: Factor out trans handling in xfs_attr3_leaf_flipflags
+  xfsprogs: Factor out xfs_attr_leaf_addname helper
+  xfsprogs: Refactor xfs_attr_try_sf_addname
+  xfsprogs: Factor out trans roll from xfs_attr3_leaf_setflag
+  xfsprogs: Factor out xfs_attr_rmtval_invalidate
+  xfsprogs: Factor out trans roll in xfs_attr3_leaf_clearflag
+  xfsprogs: Add helper function xfs_attr_rmtval_unmap
+  xfsprogs: Add delay ready attr remove routines
+  xfsprogs: Add delay ready attr set routines
+  xfsprogs: Add helper function xfs_attr_node_shrink
+  xfsprogs: Simplify xfs_attr_set_iter
+  xfsprogs: Add helper function xfs_attr_leaf_mark_incomplete
+  xfsprogs: Add remote block helper functions
+  xfsprogs: Remove xfs_attr_rmtval_remove
+
+ db/attrset.c             |  11 +-
+ libxfs/libxfs_priv.h     |  11 +-
+ libxfs/xfs_attr.c        | 938 +++++++++++++++++++++++++++++++++--------------
+ libxfs/xfs_attr.h        |   9 +-
+ libxfs/xfs_attr_leaf.c   | 222 ++++++-----
+ libxfs/xfs_attr_leaf.h   |   3 +
+ libxfs/xfs_attr_remote.c | 260 +++++++++----
+ libxfs/xfs_attr_remote.h |   7 +-
+ libxfs/xfs_da_btree.c    |   6 +-
+ libxfs/xfs_da_btree.h    |  47 ++-
+ libxfs/xfs_dir2.c        |  18 +-
+ libxfs/xfs_dir2_block.c  |   6 +-
+ libxfs/xfs_dir2_leaf.c   |   6 +-
+ libxfs/xfs_dir2_node.c   |   8 +-
+ libxfs/xfs_dir2_sf.c     |  30 +-
+ libxfs/xfs_types.c       |  11 +
+ libxfs/xfs_types.h       |   1 +
+ 17 files changed, 1077 insertions(+), 517 deletions(-)
 
 -- 
-paul moore
-www.paul-moore.com
+2.7.4
+
