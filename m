@@ -2,83 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76F0316A5B6
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2020 13:05:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FEF516A6D3
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2020 14:06:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgBXMFr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Feb 2020 07:05:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19340 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727185AbgBXMFr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 07:05:47 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OC5GhH124305
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Feb 2020 07:05:46 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb12apu05-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Feb 2020 07:05:45 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Mon, 24 Feb 2020 12:05:44 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 12:05:41 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OC5ePo63176846
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 12:05:40 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25AC2A4060;
-        Mon, 24 Feb 2020 12:05:40 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36E18A405B;
-        Mon, 24 Feb 2020 12:05:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.91.136])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 12:05:38 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Allison Collins <allison.henderson@oracle.com>
-Subject: Re: [PATCH v7 01/19] xfs: Replace attribute parameters with struct xfs_name
-Date:   Mon, 24 Feb 2020 17:38:31 +0530
-Organization: IBM
-In-Reply-To: <20200223020611.1802-2-allison.henderson@oracle.com>
-References: <20200223020611.1802-1-allison.henderson@oracle.com> <20200223020611.1802-2-allison.henderson@oracle.com>
+        id S1727310AbgBXNGm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Feb 2020 08:06:42 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30765 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727299AbgBXNGl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 08:06:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582549600;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oah0i/vbgr0BqJ9gQWFT3/fK0/GSgl5Mx1voCiNhVIM=;
+        b=edAWu3ZEKQ15dtwbziMet+0GstbtJyDvgSojuNvjacpCVk3wqB0eIfIKTpy+8yabApx0Xe
+        xpwaIryT33LH1HbeRqtZCqz53/LtkIeXn2Qz4h07Z+MUjUeHiuvji2dAqmfuHdLkVWKlpK
+        tJXbQidd2sBYHGzEVC9oKCECei+wwQA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-ZwZYsvV0ObOqmyGOdfSlLQ-1; Mon, 24 Feb 2020 08:06:36 -0500
+X-MC-Unique: ZwZYsvV0ObOqmyGOdfSlLQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E1C8800D5B;
+        Mon, 24 Feb 2020 13:06:35 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFDDD60BF7;
+        Mon, 24 Feb 2020 13:06:34 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 08:06:32 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Allison Collins <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 01/19] xfs: Replace attribute parameters with struct
+ xfs_name
+Message-ID: <20200224130632.GA15761@bfoster>
+References: <20200223020611.1802-1-allison.henderson@oracle.com>
+ <20200223020611.1802-2-allison.henderson@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 20022412-0020-0000-0000-000003AD1492
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022412-0021-0000-0000-00002205258B
-Message-Id: <1635715.8B5ru1jVeS@localhost.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_03:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=10
- adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223020611.1802-2-allison.henderson@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sunday, February 23, 2020 7:35 AM Allison Collins wrote: 
+On Sat, Feb 22, 2020 at 07:05:53PM -0700, Allison Collins wrote:
 > This patch replaces the attribute name and length parameters with a single struct
 > xfs_name parameter.  This helps to clean up the numbers of parameters being passed
 > around and pre-simplifies the code some.
->
-
-I don't see any logical errors.
-
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-
+> 
 > Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 > ---
+
+Looks fine to me:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
 >  fs/xfs/libxfs/xfs_attr.c  | 22 +++++++++-------------
 >  fs/xfs/libxfs/xfs_attr.h  | 12 +++++-------
 >  fs/xfs/libxfs/xfs_types.c | 11 +++++++++++
@@ -453,11 +437,7 @@ Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 >  	if (!error)
 >  		xfs_forget_acl(inode, name, xflags);
 >  
+> -- 
+> 2.7.4
 > 
-
-
--- 
-chandan
-
-
 
