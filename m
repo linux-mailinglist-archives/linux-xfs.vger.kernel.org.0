@@ -2,165 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C57016B204
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2020 22:19:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8801416B27A
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2020 22:32:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgBXVTS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Feb 2020 16:19:18 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40068 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgBXVTR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 16:19:17 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OLJCHD009484;
-        Mon, 24 Feb 2020 21:19:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=NxkmwdgzTC6XP+GmKl3bHoEW0yG4izXtNagj5DrFATk=;
- b=ShyRVGgjH06RybW5g9R9Ab/3GrxreSsZKlthiFbNiz9Ut1MoEg7w+lIipceDzxuK/OWH
- GqQwtjok7k+rBdGQeWjc0SkYrbe9D9HpLygiWP1Oi9FrJm8yrE+Olxv5zBqw6MFgH//f
- Yg9E8eYxDU8ClEmCF26Q2/N8cI/BMb2QqPcZJkismD0V7nihaah2LKoBrA70eJdfVcYL
- TkLc2X4lzfxUbymYAZWRlxS2V40y/6CHNnczDJVUIACAAzsb4aVxZMFh71iF/V1WvPFF
- aDdnnLTrHvrNYHUT/R4v20pks8ONODVcXB3ebSXXLABclf/6xvndoMawWKWU6iekqrhq rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2ybvr4pcuv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 21:19:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OLI8a3058652;
-        Mon, 24 Feb 2020 21:19:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2ybe124sdn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 21:19:13 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01OLJC3e012225;
-        Mon, 24 Feb 2020 21:19:12 GMT
-Received: from [192.168.1.223] (/67.1.3.112)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 13:19:12 -0800
-Subject: Re: [PATCH v7 08/19] xfs: Refactor xfs_attr_try_sf_addname
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <20200223020611.1802-1-allison.henderson@oracle.com>
- <20200223020611.1802-9-allison.henderson@oracle.com>
- <20200224130819.GD15761@bfoster>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <0ea5ac1e-f30b-c4f4-d195-e30f646c6592@oracle.com>
-Date:   Mon, 24 Feb 2020 14:19:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727874AbgBXVcV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Feb 2020 16:32:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58886 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVcV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 16:32:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=emtDgV24Eo0XKJNO3XWaY50cgCvPe4AajCupipZ+mFM=; b=faavxfwYgJ6BV4aMG0yBGMTdvs
+        FIHOEugMta99lUrJ1bnzTZ/FRNYp6SPEABIaJ5EtGCi+eQP8a0kjK0ZbLdgXYa/37U/swNDVC13km
+        Va5rLvps0hefygpoSkbchuXiH08P6MV/rAg7EcSCaaM7QZSEw0JsM/CNamhza4du/dvIO9YVBTlnB
+        RoHdf0GoNG+qOIjDajjFjogi72piGjB1CilX1d9marpYm2pZ/fzynRHB+WFG63bofIN3ZLXSOH6JY
+        ttUElXB1HnhGmHknkGtgPrvb11HJuWiiU/SslxTdDxTUKWpXvJpAQegm1IrAR6sPxW+YVNdZRQbOd
+        Gj+d14cg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6LKu-0003kl-Dd; Mon, 24 Feb 2020 21:32:20 +0000
+Date:   Mon, 24 Feb 2020 13:32:20 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 01/24] mm: Move readahead prototypes from mm.h
+Message-ID: <20200224213220.GA13895@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-2-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200224130819.GD15761@bfoster>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240157
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219210103.32400-2-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 2/24/20 6:08 AM, Brian Foster wrote:
-> On Sat, Feb 22, 2020 at 07:06:00PM -0700, Allison Collins wrote:
->> To help pre-simplify xfs_attr_set_args, we need to hoist transacation handling up,
->> while modularizing the adjacent code down into helpers. In this patch, hoist the
->> commit in xfs_attr_try_sf_addname up into the calling function, and also pull the
->> attr list creation down.
->>
->> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
->> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
->> ---
+On Wed, Feb 19, 2020 at 01:00:40PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Reviewed-by: Brian Foster <bfoster@redhat.com>
-Alrighty, thank you!
+> The readahead code is part of the page cache so should be found in the
+> pagemap.h file.  force_page_cache_readahead is only used within mm,
+> so move it to mm/internal.h instead.  Remove the parameter names where
+> they add no value, and rename the ones which were actively misleading.
 
-Allison
-> 
->>   fs/xfs/libxfs/xfs_attr.c | 30 +++++++++++++++---------------
->>   1 file changed, 15 insertions(+), 15 deletions(-)
->>
->> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->> index b2f0780..71298b9 100644
->> --- a/fs/xfs/libxfs/xfs_attr.c
->> +++ b/fs/xfs/libxfs/xfs_attr.c
->> @@ -227,8 +227,13 @@ xfs_attr_try_sf_addname(
->>   	struct xfs_da_args	*args)
->>   {
->>   
->> -	struct xfs_mount	*mp = dp->i_mount;
->> -	int			error, error2;
->> +	int			error;
->> +
->> +	/*
->> +	 * Build initial attribute list (if required).
->> +	 */
->> +	if (dp->i_d.di_aformat == XFS_DINODE_FMT_EXTENTS)
->> +		xfs_attr_shortform_create(args);
->>   
->>   	error = xfs_attr_shortform_addname(args);
->>   	if (error == -ENOSPC)
->> @@ -241,12 +246,10 @@ xfs_attr_try_sf_addname(
->>   	if (!error && (args->name.type & ATTR_KERNOTIME) == 0)
->>   		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
->>   
->> -	if (mp->m_flags & XFS_MOUNT_WSYNC)
->> +	if (dp->i_mount->m_flags & XFS_MOUNT_WSYNC)
->>   		xfs_trans_set_sync(args->trans);
->>   
->> -	error2 = xfs_trans_commit(args->trans);
->> -	args->trans = NULL;
->> -	return error ? error : error2;
->> +	return error;
->>   }
->>   
->>   /*
->> @@ -258,7 +261,7 @@ xfs_attr_set_args(
->>   {
->>   	struct xfs_inode	*dp = args->dp;
->>   	struct xfs_buf          *leaf_bp = NULL;
->> -	int			error;
->> +	int			error, error2 = 0;
->>   
->>   	/*
->>   	 * If the attribute list is non-existent or a shortform list,
->> @@ -269,17 +272,14 @@ xfs_attr_set_args(
->>   	     dp->i_d.di_anextents == 0)) {
->>   
->>   		/*
->> -		 * Build initial attribute list (if required).
->> -		 */
->> -		if (dp->i_d.di_aformat == XFS_DINODE_FMT_EXTENTS)
->> -			xfs_attr_shortform_create(args);
->> -
->> -		/*
->>   		 * Try to add the attr to the attribute list in the inode.
->>   		 */
->>   		error = xfs_attr_try_sf_addname(dp, args);
->> -		if (error != -ENOSPC)
->> -			return error;
->> +		if (error != -ENOSPC) {
->> +			error2 = xfs_trans_commit(args->trans);
->> +			args->trans = NULL;
->> +			return error ? error : error2;
->> +		}
->>   
->>   		/*
->>   		 * It won't fit in the shortform, transform to a leaf block.
->> -- 
->> 2.7.4
->>
-> 
+Looks good,
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
