@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CDE316B667
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 01:12:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD7316B681
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 01:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbgBYAM0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Feb 2020 19:12:26 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48452 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBYAM0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 19:12:26 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P07d4C050110;
-        Tue, 25 Feb 2020 00:12:22 GMT
+        id S1728359AbgBYAOo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Feb 2020 19:14:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59770 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBYAOo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 19:14:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P09Lqr033747;
+        Tue, 25 Feb 2020 00:12:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=0CZKn5v/e+jLmhrjWQZv3eOlRUhanMzPSJnPr1xyio8=;
- b=pfiqzD3mwDoS397WtTLJQ0fpA2AdYEiA9kmGuNi9AAKr7R2yJiBYEhqWgqsZ0OXLfNuC
- 4s4JaK/y8tR3R22Y66gBgrhSFUdHCibxCNl3ntxE3wmMPdSS7I9q4jbdQmjeXhzByCrg
- yZq7poz6oATRp/5kev/U1t+uhOhPDAxfqZK4766qeIBEtoSW/8PRyYe2QT8MTFoy6iQJ
- NHWVYdhZKAN379rNorXZ+ikjD9pO7N7oVwOK1zKenkX614FVDuqm42hklZS1kq5y9NMW
- wuRUwxUFZZdhssWwcE3InHftNHBG+rfq2Kb9DLCjxJNrir3oxxqBfNBAoGZ2IphT9FAq /g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2ybvr4q3d3-1
+ bh=EgTBd1TKNt9Uro71QNVfaPIUzOJHv6U8+pnNxlIezoY=;
+ b=vpZi7vS9RElyfh4vtZBKiuP97f/A1si1YiB4lbm8i+nDzv/oN0vQl8upEh3k0EXjhFb9
+ cK754B6aaJfwZi+EQEn85l3X+eWmjhbPgClejcgWj1xaqiUAbaeFltQlJuJiRZIuCCn5
+ +cKRjyGkg+bOOs/dxe8D8shbCw6CoHzzEWlMLp6RtWOXLyfMHkD2L7OKooeKHyn7AZ9l
+ dyOLN0QBDiBwENtvKVJn3fztHOX92yzvlzVufxlWelB76ATQUfnIWQOO3e0bo7t43Vy/
+ 9DiSEsvo+20SSjlxMERd7QnLeQYt8RNCE+Ki4Wv6MggmEa4Sywju53CV2uhXEdvmvYfu Gw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ycppr8gp1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 00:12:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P07tV6108964;
-        Tue, 25 Feb 2020 00:12:21 GMT
+        Tue, 25 Feb 2020 00:12:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P08BVS158853;
+        Tue, 25 Feb 2020 00:12:28 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ybe12epv9-1
+        by aserp3020.oracle.com with ESMTP id 2yby5e9hdn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 00:12:21 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01P0CKYQ030920;
-        Tue, 25 Feb 2020 00:12:20 GMT
+        Tue, 25 Feb 2020 00:12:28 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01P0CQUM031040;
+        Tue, 25 Feb 2020 00:12:27 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 16:12:20 -0800
-Subject: [PATCH 08/25] libxfs: make libxfs_readbuf_verify return an error
- code
+        with ESMTP ; Mon, 24 Feb 2020 16:12:26 -0800
+Subject: [PATCH 09/25] libxfs: make libxfs_readbufr stash the error value in
+ b_error
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Date:   Mon, 24 Feb 2020 16:12:19 -0800
-Message-ID: <158258953956.451378.12584291966139198190.stgit@magnolia>
+Date:   Mon, 24 Feb 2020 16:12:25 -0800
+Message-ID: <158258954567.451378.10139972171777852896.stgit@magnolia>
 In-Reply-To: <158258948821.451378.9298492251721116455.stgit@magnolia>
 References: <158258948821.451378.9298492251721116455.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,15 +54,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=893 spamscore=0
- suspectscore=2 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240181
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=757 phishscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002240181
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=940 spamscore=0
- clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=2 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=815
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ spamscore=0 phishscore=0 mlxscore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002240181
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
@@ -71,73 +71,37 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Return the bp->b_error from libxfs_readbuf_verify instead of making
-callers check it.
+Make libxfs_readbufr stash the error value in b_error, which will make
+the behavior consistent between regular and multi-mapping buffers.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- libxfs/libxfs_io.h |    3 +--
- libxfs/rdwr.c      |   10 +++++++---
- repair/prefetch.c  |    5 +++--
- 3 files changed, 11 insertions(+), 7 deletions(-)
+ libxfs/rdwr.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 
-diff --git a/libxfs/libxfs_io.h b/libxfs/libxfs_io.h
-index 0370d685..d96b5318 100644
---- a/libxfs/libxfs_io.h
-+++ b/libxfs/libxfs_io.h
-@@ -206,8 +206,7 @@ libxfs_buf_read(
- 
- #endif /* XFS_BUF_TRACING */
- 
--extern void	libxfs_readbuf_verify(struct xfs_buf *bp,
--			const struct xfs_buf_ops *ops);
-+int libxfs_readbuf_verify(struct xfs_buf *bp, const struct xfs_buf_ops *ops);
- struct xfs_buf *libxfs_getsb(struct xfs_mount *mp);
- extern void	libxfs_bcache_purge(void);
- extern void	libxfs_bcache_free(void);
 diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-index 7100d4df..fb22c118 100644
+index fb22c118..9ee9d557 100644
 --- a/libxfs/rdwr.c
 +++ b/libxfs/rdwr.c
-@@ -939,14 +939,18 @@ libxfs_readbufr(struct xfs_buftarg *btp, xfs_daddr_t blkno, xfs_buf_t *bp,
+@@ -936,6 +936,7 @@ libxfs_readbufr(struct xfs_buftarg *btp, xfs_daddr_t blkno, xfs_buf_t *bp,
+ 		pthread_self(), __FUNCTION__, bytes, error,
+ 		(long long)LIBXFS_BBTOOFF64(blkno), (long long)blkno, bp);
+ #endif
++	bp->b_error = error;
  	return error;
  }
  
--void
--libxfs_readbuf_verify(struct xfs_buf *bp, const struct xfs_buf_ops *ops)
-+int
-+libxfs_readbuf_verify(
-+	struct xfs_buf		*bp,
-+	const struct xfs_buf_ops *ops)
- {
- 	if (!ops)
--		return;
-+		return bp->b_error;
-+
- 	bp->b_ops = ops;
- 	bp->b_ops->verify_read(bp);
- 	bp->b_flags &= ~LIBXFS_B_UNCHECKED;
-+	return bp->b_error;
+@@ -995,9 +996,7 @@ libxfs_readbuf(
+ 	 * contents. *cough* xfs_da_node_buf_ops *cough*.
+ 	 */
+ 	error = libxfs_readbufr(btp, blkno, bp, len, flags);
+-	if (error)
+-		bp->b_error = error;
+-	else
++	if (!error)
+ 		libxfs_readbuf_verify(bp, ops);
+ 	return bp;
  }
- 
- static struct xfs_buf *
-diff --git a/repair/prefetch.c b/repair/prefetch.c
-index 12272932..a3858f9a 100644
---- a/repair/prefetch.c
-+++ b/repair/prefetch.c
-@@ -400,9 +400,10 @@ pf_read_inode_dirs(
- 	int			icnt = 0;
- 	int			hasdir = 0;
- 	int			isadir;
-+	int			error;
- 
--	libxfs_readbuf_verify(bp, &xfs_inode_buf_ops);
--	if (bp->b_error)
-+	error = -libxfs_readbuf_verify(bp, &xfs_inode_buf_ops);
-+	if (error)
- 		return;
- 
- 	for (icnt = 0; icnt < (bp->b_bcount >> mp->m_sb.sb_inodelog); icnt++) {
 
