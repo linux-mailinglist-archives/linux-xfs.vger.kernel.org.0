@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6639516ECE5
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 18:43:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17ECD16ECE9
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 18:43:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgBYRnS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Feb 2020 12:43:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55326 "EHLO
+        id S1728367AbgBYRnk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Feb 2020 12:43:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57048 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbgBYRnS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 12:43:18 -0500
+        with ESMTP id S1728200AbgBYRnk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 12:43:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6Dtbm+7Fw7Q+otZHrqOp9bhFW3T/lt7mPxGD5sbhQyk=; b=tLjAN99dLbt2lSvih5GT/0Ki79
-        DXCsYXTaN/UL2lnrg495iocbNRHzaq1M1eM3ZdKUkrrnrNgC+pSRUpo8jeiPVvlruhPIBZdXzUqFL
-        5UDW7z6gx0lPIKqzx1dVIsVmGb6ch8Ceci/D6rXLZbCTBaq2LciUGFk8nsIqFMJU53fBxXWJDiCSO
-        +AtpQiD6HyE5hSShxZMQ80Ch2mg5+721jmA/XwGwtgG6QsGye3yyjllJ2+T5eFiZHCzNJLM+Jm6Oj
-        rwIPPi2WhLgHX3dMPuJQ/u8f/3T4VwaoZFseeSwLwvl+IY2ZJpLtFxiC8DWDNnh/wq99lnwMS6aQI
-        ijrMF55g==;
+        bh=fb0DLQ+w6pWWXa29NvW8ZkFYrIYLr4neBDFie4Ts6yo=; b=eQ+YnAEV44B4z4+2O+vnpElBkd
+        8JjmXFjnwJawRfo1Pj3g1uxcb2/444827t3vTvT8WIuDd7XGmQpo0yKwIcQ3dGDCrjHOIW8H7QQCC
+        vndqXXQCrQHEff163/J5ylraMYgCRtS0lBYz0gPILogboAcfTbnZkaCDWFjoWI+8gFUyv3LMANJKF
+        AT9IKnxCQs7BhIHlnpowVN/RIG6qRitzWvpkPdxnyNzxcqK7X5PFYmfp6xqra/IDKiggAOMgYMtnP
+        O+fqfRoCdkXLQj4Nrc38jSdhRkElMUO2IoDEDaUaYwsL7y793xjLEogbLqI8DUNtwCD1J7M+9Zvoj
+        fFSWL8pg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6eEn-0005fy-EX; Tue, 25 Feb 2020 17:43:17 +0000
-Date:   Tue, 25 Feb 2020 09:43:17 -0800
+        id 1j6eF9-0005zM-NY; Tue, 25 Feb 2020 17:43:39 +0000
+Date:   Tue, 25 Feb 2020 09:43:39 -0800
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/25] libxfs: remove LIBXFS_EXIT_ON_FAILURE
-Message-ID: <20200225174317.GH20570@infradead.org>
+Subject: Re: [PATCH 03/25] libxfs: remove LIBXFS_B_EXIT
+Message-ID: <20200225174339.GI20570@infradead.org>
 References: <158258948821.451378.9298492251721116455.stgit@magnolia>
- <158258950229.451378.9483745495391694498.stgit@magnolia>
+ <158258950834.451378.3980522186420601333.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158258950229.451378.9483745495391694498.stgit@magnolia>
+In-Reply-To: <158258950834.451378.3980522186420601333.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 04:11:42PM -0800, Darrick J. Wong wrote:
+On Mon, Feb 24, 2020 at 04:11:48PM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Now that the read-side users of LIBXFS_EXIT_ON_FAILURE are gone and the
-> only write-side callers are in mkfs which now checks for buffer write
-> failures, get rid of LIBXFS_EXIT_ON_FAILURE.
+> Now that we've removed all users of LIBXFS_B_EXIT, remove it as well.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 Looks good,
 
