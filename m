@@ -2,69 +2,174 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B19A116F30F
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2020 00:10:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B0E16F36B
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2020 00:29:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgBYXKi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Feb 2020 18:10:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53528 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729478AbgBYXKi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 18:10:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=JV+08fyLmp+zR7dnmFV4jUFnu1m+M3IHX6bxlmwVTw0=; b=AW9uUGQ/QhGmR8aeUubTo6QL9A
-        3iqCRbwf1otHSwm2OA0OrEx9gfNMvd5IHUydD0Z/XxyoOxxarn4FZsyKEXnApGttR1dyFlHcnmPFI
-        2I1AGphKQtNVqa36XOgcH0PuwEc+opdxIkEmuC9BolR6uX6IfEcMrCBRPlYiaQVeZyC1PivBePk+/
-        pM7zp+a7KXUW8Su2yZo9zQEhBxJsyWv3l9VWtAXEQMRQ97raqeUr9c9Pq/Lx6ZjKoLgjnb72Zi1iP
-        zR7n0YPUEuPPISHVfkTTQQmiPJpOmFcYeuB00yZ8+LFc5KrlzH/MSSje3ru/d0H2MmleA7Z/fGo1K
-        9vW6mPdQ==;
-Received: from [4.28.11.157] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6jLa-0003FK-70; Tue, 25 Feb 2020 23:10:38 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 30/30] xfs: clean up bufsize alignment in xfs_ioc_attr_list
-Date:   Tue, 25 Feb 2020 15:10:12 -0800
-Message-Id: <20200225231012.735245-31-hch@lst.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200225231012.735245-1-hch@lst.de>
-References: <20200225231012.735245-1-hch@lst.de>
+        id S1729838AbgBYX3e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Feb 2020 18:29:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43140 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729906AbgBYX0K (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 18:26:10 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PNNTXf056414;
+        Tue, 25 Feb 2020 23:26:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=gc0Boi/QFC0+w/Ku0r6VxNCG5OqN98AkGQx3eYhss3w=;
+ b=Fyc++Z1XjHCl7ZhhTCkJVXyePmwgB0kCC4JyM9nvkwsfjf4kHNt9BQO/+9q+96rv42VY
+ y4U3hguDMPAHAIrq8I3i11phoVjYBzmpLfYlQCbRgDfA8Op/AYP+v5iMTzULkgIxJKPo
+ xRtzrZRVa3bfGQD4requDNWl48lKVmmdU0jCigU1kTA+GXJETfnLe5uQJSKwkXcz3thP
+ s9dp3iwcZ5f+OfrzSUbebdmiOfYlVemCN2oSuEemF3zusjv0oTFir/yfKwiZTXhPj8iU
+ 5WPEpczeECwJCs9bOb+x6rNQTF/8I7GSMRzk5Me9K+GGeD7ftyQgrjm5edWm9r82GK6I dA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ydcsn839g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 23:26:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PNIHCj036598;
+        Tue, 25 Feb 2020 23:26:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2ydcs23ggr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 23:26:06 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01PNQ6sR017149;
+        Tue, 25 Feb 2020 23:26:06 GMT
+Received: from [192.168.1.9] (/67.1.3.112)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Feb 2020 15:26:06 -0800
+Subject: Re: [PATCH v7 07/19] xfs: Factor out xfs_attr_leaf_addname helper
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <20200223020611.1802-1-allison.henderson@oracle.com>
+ <20200223020611.1802-8-allison.henderson@oracle.com>
+ <20200225064207.GG10776@dread.disaster.area>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <ccd6525f-6054-c25a-52a9-d8e77eafe40a@oracle.com>
+Date:   Tue, 25 Feb 2020 16:26:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200225064207.GG10776@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002250162
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002250162
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Use the round_down macro, and use the size of the uint32 type we
-use in the callback that fills the buffer to make the code a little
-more clear - the size of it is always the same as int for platforms
-that Linux runs on.
 
-Suggested-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 58fd2d219972..c805fdf4ea39 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -415,7 +415,7 @@ xfs_ioc_attr_list(
- 	context.resynch = 1;
- 	context.attr_filter = xfs_attr_filter(flags);
- 	context.buffer = buffer;
--	context.bufsize = (bufsize & ~(sizeof(int)-1));  /* align */
-+	context.bufsize = round_down(bufsize, sizeof(uint32_t));
- 	context.firstu = context.bufsize;
- 	context.put_listent = xfs_ioc_attr_put_listent;
- 
--- 
-2.24.1
+On 2/24/20 11:42 PM, Dave Chinner wrote:
+> On Sat, Feb 22, 2020 at 07:05:59PM -0700, Allison Collins wrote:
+>> Factor out new helper function xfs_attr_leaf_try_add. Because new delayed attribute
+>> routines cannot roll transactions, we carve off the parts of xfs_attr_leaf_addname
+>> that we can use, and move the commit into the calling function.
+> 
+> 68-72 columns :P
+Yes, I had adjusted the configs on the editor and thought I had it 
+fixed.  Will fix
+> 
+>>
+>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+>> Reviewed-by: Brian Foster <bfoster@redhat.com>
+>> ---
+>>   fs/xfs/libxfs/xfs_attr.c | 88 +++++++++++++++++++++++++++++++-----------------
+>>   1 file changed, 57 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+>> index cf0cba7..b2f0780 100644
+>> --- a/fs/xfs/libxfs/xfs_attr.c
+>> +++ b/fs/xfs/libxfs/xfs_attr.c
+>> @@ -305,10 +305,30 @@ xfs_attr_set_args(
+>>   		}
+>>   	}
+>>   
+>> -	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
+>> +	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
+>>   		error = xfs_attr_leaf_addname(args);
+>> -	else
+>> -		error = xfs_attr_node_addname(args);
+>> +		if (error != -ENOSPC)
+>> +			return error;
+>> +
+>> +		/*
+>> +		 * Commit that transaction so that the node_addname()
+>> +		 * call can manage its own transactions.
+>> +		 */
+>> +		error = xfs_defer_finish(&args->trans);
+>> +		if (error)
+>> +			return error;
+>> +
+>> +		/*
+>> +		 * Commit the current trans (including the inode) and
+>> +		 * start a new one.
+>> +		 */
+>> +		error = xfs_trans_roll_inode(&args->trans, dp);
+>> +		if (error)
+>> +			return error;
+>> +
+>> +	}
+>> +
+>> +	error = xfs_attr_node_addname(args);
+>>   	return error;
+> 
+> 	return xfs_attr_node_addname(args);
+> 
+> better yet:
+> 
+> 	if (!xfs_bmap_one_block(dp, XFS_ATTR_FORK))
+> 		return xfs_attr_node_addname(args);
+> 
+> 	error = xfs_attr_leaf_addname(args);
+> 	if (error != -ENOSPC)
+> 		return error;
+> 	.....
+Sure, let me dig around first though, because that's going to move 
+around where the states appear in patch 14.  The set is admittedly a bit 
+of a balancing act :-)
 
+> 
+> BTW, I think I see the pattern now - isolate all the metadata
+> changes from the mechanism of rolling the transactions, which means
+> it can be converted to a set of operations connected by a generic
+> transaction rolling mechanism. It's all starting to make more sense
+> now :P
+Alrighty, I'm glad it's coming together. :-)
+
+> 
+>> @@ -679,31 +700,36 @@ xfs_attr_leaf_addname(
+>>   	retval = xfs_attr3_leaf_add(bp, args);
+>>   	if (retval == -ENOSPC) {
+>>   		/*
+>> -		 * Promote the attribute list to the Btree format, then
+>> -		 * Commit that transaction so that the node_addname() call
+>> -		 * can manage its own transactions.
+>> +		 * Promote the attribute list to the Btree format.
+>> +		 * Unless an error occurs, retain the -ENOSPC retval
+>>   		 */
+> 
+> Comments should use all 80 columns...
+Will fix
+
+Thanks for the reviews!
+Allison
+> 
+> Cheers,
+> 
+> Dave.
+> 
