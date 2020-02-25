@@ -2,26 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2850816B95A
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 06:57:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7BF516B963
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 07:00:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgBYF5H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Feb 2020 00:57:07 -0500
-Received: from sandeen.net ([63.231.237.45]:45650 "EHLO sandeen.net"
+        id S1725851AbgBYGAk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Feb 2020 01:00:40 -0500
+Received: from sandeen.net ([63.231.237.45]:45846 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgBYF5H (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:57:07 -0500
+        id S1725783AbgBYGAj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:00:39 -0500
 Received: from Liberator.local (unknown [4.28.11.157])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7C3FD11664;
-        Mon, 24 Feb 2020 23:56:42 -0600 (CST)
-Subject: Re: [PATCH 1/2] libxfs: zero the struct xfs_mount when unmounting the
- filesystem
+        by sandeen.net (Postfix) with ESMTPSA id 8CF242A78;
+        Tue, 25 Feb 2020 00:00:15 -0600 (CST)
+Subject: Re: [PATCH 2/2] libxfs: clean up libxfs_destroy
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <158258947401.451256.14269201133311837600.stgit@magnolia>
- <158258948007.451256.11063346596276638956.stgit@magnolia>
+ <158258948621.451256.5275982330161893261.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -65,15 +64,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <4dfc826f-5f46-1dd7-3232-a35bd7b16573@sandeen.net>
-Date:   Mon, 24 Feb 2020 21:57:03 -0800
+Message-ID: <341a74fc-ef66-8116-b433-4df7c81f1cec@sandeen.net>
+Date:   Mon, 24 Feb 2020 22:00:37 -0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <158258948007.451256.11063346596276638956.stgit@magnolia>
+In-Reply-To: <158258948621.451256.5275982330161893261.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -82,31 +81,11 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 2/24/20 4:11 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Since libxfs doesn't allocate the struct xfs_mount *, we can't just free
-> it during unmount.  Zero its contents to prevent any use-after-free.
+> It's weird that libxfs_init opens the three devices passed in via the
+> libxfs_xinit structure but libxfs_destroy doesn't actually close them.
+> Fix this inconsistency and remove all the open-coded device closing.
 
-seems fine but makes me wonder what prompted it.  Did we have a use
-after free?
+Seems better.  Part of me wishes the device open/close weren't hidden
+in init/destroy but from a quick glance that's harder to tease apart.
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  libxfs/init.c |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> 
-> diff --git a/libxfs/init.c b/libxfs/init.c
-> index d4804ead..197690df 100644
-> --- a/libxfs/init.c
-> +++ b/libxfs/init.c
-> @@ -904,6 +904,7 @@ libxfs_umount(
->  	if (mp->m_logdev_targp != mp->m_ddev_targp)
->  		kmem_free(mp->m_logdev_targp);
->  	kmem_free(mp->m_ddev_targp);
-> +	memset(mp, 0, sizeof(struct xfs_mount));
->  
->  	return error;
->  }
-> 
