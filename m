@@ -2,384 +2,855 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC2816BCD4
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 09:57:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8686216BD2E
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 10:23:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgBYI5J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Feb 2020 03:57:09 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39361 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729175AbgBYI5J (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 03:57:09 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 769743A1BCC;
-        Tue, 25 Feb 2020 19:57:06 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j6W1Z-0007rF-F3; Tue, 25 Feb 2020 19:57:05 +1100
-Date:   Tue, 25 Feb 2020 19:57:05 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 13/19] xfs: Add delay ready attr remove routines
-Message-ID: <20200225085705.GI10776@dread.disaster.area>
-References: <20200223020611.1802-1-allison.henderson@oracle.com>
- <20200223020611.1802-14-allison.henderson@oracle.com>
+        id S1726867AbgBYJXD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Feb 2020 04:23:03 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28752 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726764AbgBYJXD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 04:23:03 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01P9Koko182858
+        for <linux-xfs@vger.kernel.org>; Tue, 25 Feb 2020 04:23:02 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb0g4bawc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Tue, 25 Feb 2020 04:23:02 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Tue, 25 Feb 2020 09:23:00 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Feb 2020 09:22:57 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01P9Mu8p62259312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 09:22:56 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15FB44203F;
+        Tue, 25 Feb 2020 09:22:56 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1210642042;
+        Tue, 25 Feb 2020 09:22:55 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.72.199])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Feb 2020 09:22:54 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Allison Collins <allison.henderson@oracle.com>
+Subject: Re: [PATCH v7 02/19] xfs: Embed struct xfs_name in xfs_da_args
+Date:   Tue, 25 Feb 2020 12:26:40 +0530
+Organization: IBM
+In-Reply-To: <20200223020611.1802-3-allison.henderson@oracle.com>
+References: <20200223020611.1802-1-allison.henderson@oracle.com> <20200223020611.1802-3-allison.henderson@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200223020611.1802-14-allison.henderson@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=UIjSZZChOt3YotitUuAA:9
-        a=rFpL5r2-HN0EidKi:21 a=Dg46I8nL5tVPZHUn:21 a=QEXdDO2ut3YA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20022509-0028-0000-0000-000003DDC36C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022509-0029-0000-0000-000024A2DB3C
+Message-Id: <1687422.Vqy1S33cYi@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_02:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=11 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250077
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 07:06:05PM -0700, Allison Collins wrote:
-> This patch modifies the attr remove routines to be delay ready. This means they no
-> longer roll or commit transactions, but instead return -EAGAIN to have the calling
-> routine roll and refresh the transaction. In this series, xfs_attr_remove_args has
-> become xfs_attr_remove_iter, which uses a sort of state machine like switch to keep
-> track of where it was when EAGAIN was returned. xfs_attr_node_removename has also
-> been modified to use the switch, and a  new version of xfs_attr_remove_args
-> consists of a simple loop to refresh the transaction until the operation is
-> completed.
-> 
-> This patch also adds a new struct xfs_delattr_context, which we will use to keep
-> track of the current state of an attribute operation. The new xfs_delattr_state
-> enum is used to track various operations that are in progress so that we know not
-> to repeat them, and resume where we left off before EAGAIN was returned to cycle
-> out the transaction. Other members take the place of local variables that need
-> to retain their values across multiple function recalls.
-> 
-> Below is a state machine diagram for attr remove operations. The XFS_DAS_* states
+On Sunday, February 23, 2020 7:35 AM Allison Collins wrote: 
+> This patch embeds an xfs_name in xfs_da_args, replacing the name, namelen, and flags
+> members.  This helps to clean up the xfs_da_args structure and make it more uniform
+> with the new xfs_name parameter being passed around.
+>
 
-Ok, so I find all the DA/da prefixes in this code confusing,
-especially as they have very similar actual names. e.g. da_state
-vs delattr_state, DAS vs DA_STATE, etc.
+The statement "name = &args.name;" in xfs_attr_set() and xfs_attr_remove() was
+not apparent to me on first read. However your explaination to Amir's question
+about name.type being set in xfs_attr_args_init() made it clear.
 
-Basically, I can't tell from reading the code what "DA" the actual
-variable belongs to, and in a few months time I'll most definitely
-have forgotten and have to relearn it from scratch.
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 
-So while "Delayed Attributes" is a great name for the feature, I
-don't think it makes a great acronym for shortening variable names
-because of the conflict with the existing DA namespace prefix.
-
-Also, "dac" as shorthand for delattr context is also overloaded.
-"DAC" is "discretionary access control" and is quite widely used
-in the kernel (e.g. CAP_DAC_READ_SEARCH, CAP_DAC_OVERRIDE) so again
-I read thsi code and it doesn't make much sense.
-
-I haven't come up with a better name - "attribute iterator" is the
-best I've managed (marketing++ - XFS has AI now!) and shortening it
-down to ator would go a long way to alleviating my namespace
-confusion....
-
-> indicate places where the function would return -EAGAIN, and then immediately
-> resume from after being recalled by the calling function.  States marked as a
-> "subroutine state" indicate that they belong to a subroutine, and so the calling
-> function needs to pass them back to that subroutine to allow it to finish where
-> it left off. But they otherwise do not have a role in the calling function other
-> than just passing through.
-> 
->  xfs_attr_remove_iter()
->          XFS_DAS_RM_SHRINK     ─┐
->          (subroutine state)     │
->                                 │
->          XFS_DAS_RMTVAL_REMOVE ─┤
->          (subroutine state)     │
->                                 └─>xfs_attr_node_removename()
->                                                  │
->                                                  v
->                                          need to remove
->                                    ┌─n──  rmt blocks?
->                                    │             │
->                                    │             y
->                                    │             │
->                                    │             v
->                                    │  ┌─>XFS_DAS_RMTVAL_REMOVE
->                                    │  │          │
->                                    │  │          v
->                                    │  └──y── more blks
->                                    │         to remove?
->                                    │             │
->                                    │             n
->                                    │             │
->                                    │             v
->                                    │         need to
->                                    └─────> shrink tree? ─n─┐
->                                                  │         │
->                                                  y         │
->                                                  │         │
->                                                  v         │
->                                          XFS_DAS_RM_SHRINK │
->                                                  │         │
->                                                  v         │
->                                                 done <─────┘
-
-Nice.
-
-> 
 > Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 > ---
->  fs/xfs/libxfs/xfs_attr.c     | 114 +++++++++++++++++++++++++++++++++++++------
->  fs/xfs/libxfs/xfs_attr.h     |   1 +
->  fs/xfs/libxfs/xfs_da_btree.h |  30 ++++++++++++
->  fs/xfs/scrub/common.c        |   2 +
->  fs/xfs/xfs_acl.c             |   2 +
->  fs/xfs/xfs_attr_list.c       |   1 +
->  fs/xfs/xfs_ioctl.c           |   2 +
->  fs/xfs/xfs_ioctl32.c         |   2 +
->  fs/xfs/xfs_iops.c            |   2 +
->  fs/xfs/xfs_xattr.c           |   1 +
->  10 files changed, 141 insertions(+), 16 deletions(-)
+>  fs/xfs/libxfs/xfs_attr.c        |  37 +++++++-------
+>  fs/xfs/libxfs/xfs_attr_leaf.c   | 104 +++++++++++++++++++++-------------------
+>  fs/xfs/libxfs/xfs_attr_remote.c |   2 +-
+>  fs/xfs/libxfs/xfs_da_btree.c    |   6 ++-
+>  fs/xfs/libxfs/xfs_da_btree.h    |   4 +-
+>  fs/xfs/libxfs/xfs_dir2.c        |  18 +++----
+>  fs/xfs/libxfs/xfs_dir2_block.c  |   6 +--
+>  fs/xfs/libxfs/xfs_dir2_leaf.c   |   6 +--
+>  fs/xfs/libxfs/xfs_dir2_node.c   |   8 ++--
+>  fs/xfs/libxfs/xfs_dir2_sf.c     |  30 ++++++------
+>  fs/xfs/scrub/attr.c             |  12 ++---
+>  fs/xfs/xfs_trace.h              |  20 ++++----
+>  12 files changed, 130 insertions(+), 123 deletions(-)
 > 
 > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index 5d73bdf..cd3a3f7 100644
+> index 6717f47..9acdb23 100644
 > --- a/fs/xfs/libxfs/xfs_attr.c
 > +++ b/fs/xfs/libxfs/xfs_attr.c
-> @@ -368,11 +368,60 @@ xfs_has_attr(
->   */
->  int
->  xfs_attr_remove_args(
-> +	struct xfs_da_args	*args)
-> +{
-> +	int			error = 0;
-> +	int			err2 = 0;
-> +
-> +	do {
-> +		error = xfs_attr_remove_iter(args);
-> +		if (error && error != -EAGAIN)
-> +			goto out;
-> +
-> +		if (args->dac.flags & XFS_DAC_FINISH_TRANS) {
-> +			args->dac.flags &= ~XFS_DAC_FINISH_TRANS;
-> +
-> +			err2 = xfs_defer_finish(&args->trans);
-> +			if (err2) {
-> +				error = err2;
-> +				goto out;
-> +			}
-> +		}
-> +
-> +		err2 = xfs_trans_roll_inode(&args->trans, args->dp);
-> +		if (err2) {
-> +			error = err2;
-> +			goto out;
-> +		}
-> +
-> +	} while (error == -EAGAIN);
-> +out:
-> +	return error;
-> +}
-
-Brian commented on the structure of this loop better than I could.
-
-> +
-> +/*
-> + * Remove the attribute specified in @args.
-> + *
-> + * This function may return -EAGAIN to signal that the transaction needs to be
-> + * rolled.  Callers should continue calling this function until they receive a
-> + * return value other than -EAGAIN.
-> + */
-> +int
-> +xfs_attr_remove_iter(
->  	struct xfs_da_args      *args)
->  {
->  	struct xfs_inode	*dp = args->dp;
->  	int			error;
+> @@ -72,13 +72,12 @@ xfs_attr_args_init(
+>  	args->geo = dp->i_mount->m_attr_geo;
+>  	args->whichfork = XFS_ATTR_FORK;
+>  	args->dp = dp;
+> -	args->flags = flags;
+> -	args->name = name->name;
+> -	args->namelen = name->len;
+> -	if (args->namelen >= MAXNAMELEN)
+> +	memcpy(&args->name, name, sizeof(struct xfs_name));
+> +	args->name.type = flags;
+> +	if (args->name.len >= MAXNAMELEN)
+>  		return -EFAULT;		/* match IRIX behaviour */
 >  
-> +	/* State machine switch */
-> +	switch (args->dac.dela_state) {
-> +	case XFS_DAS_RM_SHRINK:
-> +	case XFS_DAS_RMTVAL_REMOVE:
-> +		goto node;
-> +	default:
-> +		break;
-> +	}
-
-Why separate out the state machine? Doesn't this shortcut the
-xfs_inode_hasattr() check? Shouldn't that come first?
-
-As it is:
-
-	case XFS_DAS_RM_SHRINK:
-	case XFS_DAS_RMTVAL_REMOVE:
-		return xfs_attr_node_removename(args);
-	default:
-		break;
-
-would be nicer, and if this is the only way we can get to
-xfs_attr_node_removename(), getting rid of it from the code
-below could be done, too.
-
-
-> +
->  	if (!xfs_inode_hasattr(dp)) {
->  		error = -ENOATTR;
->  	} else if (dp->i_d.di_aformat == XFS_DINODE_FMT_LOCAL) {
-> @@ -381,6 +430,7 @@ xfs_attr_remove_args(
->  	} else if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
->  		error = xfs_attr_leaf_removename(args);
->  	} else {
-> +node:
->  		error = xfs_attr_node_removename(args);
->  	}
->  
-> @@ -895,9 +945,8 @@ xfs_attr_leaf_removename(
->  		/* bp is gone due to xfs_da_shrink_inode */
->  		if (error)
->  			return error;
-> -		error = xfs_defer_finish(&args->trans);
-> -		if (error)
-> -			return error;
-> +
-> +		args->dac.flags |= XFS_DAC_FINISH_TRANS;
->  	}
+> -	args->hashval = xfs_da_hashname(args->name, args->namelen);
+> +	args->hashval = xfs_da_hashname(args->name.name, args->name.len);
 >  	return 0;
 >  }
-> @@ -1218,6 +1267,11 @@ xfs_attr_node_addname(
->   * This will involve walking down the Btree, and may involve joining
->   * leaf nodes and even joining intermediate nodes up to and including
->   * the root node (a special case of an intermediate node).
-> + *
-> + * This routine is meant to function as either an inline or delayed operation,
-> + * and may return -EAGAIN when the transaction needs to be rolled.  Calling
-> + * functions will need to handle this, and recall the function until a
-> + * successful error code is returned.
->   */
->  STATIC int
->  xfs_attr_node_removename(
-> @@ -1230,10 +1284,24 @@ xfs_attr_node_removename(
->  	struct xfs_inode	*dp = args->dp;
 >  
->  	trace_xfs_attr_node_removename(args);
-> +	state = args->dac.da_state;
-> +	blk = args->dac.blk;
+> @@ -236,7 +235,7 @@ xfs_attr_try_sf_addname(
+>  	 * Commit the shortform mods, and we're done.
+>  	 * NOTE: this is also the error path (EEXIST, etc).
+>  	 */
+> -	if (!error && (args->flags & ATTR_KERNOTIME) == 0)
+> +	if (!error && (args->name.type & ATTR_KERNOTIME) == 0)
+>  		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
+>  
+>  	if (mp->m_flags & XFS_MOUNT_WSYNC)
+> @@ -357,6 +356,9 @@ xfs_attr_set(
+>  	if (error)
+>  		return error;
+>  
+> +	/* Use name now stored in args */
+> +	name = &args.name;
 > +
-> +	/* State machine switch */
-> +	switch (args->dac.dela_state) {
-> +	case XFS_DAS_RMTVAL_REMOVE:
-> +		goto rm_node_blks;
-> +	case XFS_DAS_RM_SHRINK:
-> +		goto rm_shrink;
-> +	default:
-> +		break;
-> +	}
-
-This really is calling out for this function to be broken into three
-smaller functions. That would greatly simplify the code flow and
-logic here.
-
-> diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-> index ce7b039..ea873a5 100644
-> --- a/fs/xfs/libxfs/xfs_attr.h
-> +++ b/fs/xfs/libxfs/xfs_attr.h
-> @@ -155,6 +155,7 @@ int xfs_attr_set_args(struct xfs_da_args *args);
->  int xfs_attr_remove(struct xfs_inode *dp, struct xfs_name *name, int flags);
->  int xfs_has_attr(struct xfs_da_args *args);
->  int xfs_attr_remove_args(struct xfs_da_args *args);
-> +int xfs_attr_remove_iter(struct xfs_da_args *args);
->  int xfs_attr_list(struct xfs_inode *dp, char *buffer, int bufsize,
->  		  int flags, struct attrlist_cursor_kern *cursor);
->  bool xfs_attr_namecheck(const void *name, size_t length);
+>  	args.value = value;
+>  	args.valuelen = valuelen;
+>  	args.op_flags = XFS_DA_OP_ADDNAME | XFS_DA_OP_OKNOENT;
+> @@ -372,7 +374,7 @@ xfs_attr_set(
+>  	 */
+>  	if (XFS_IFORK_Q(dp) == 0) {
+>  		int sf_size = sizeof(xfs_attr_sf_hdr_t) +
+> -			XFS_ATTR_SF_ENTSIZE_BYNAME(args.namelen, valuelen);
+> +			XFS_ATTR_SF_ENTSIZE_BYNAME(name->len, valuelen);
+>  
+>  		error = xfs_bmap_add_attrfork(dp, sf_size, rsvd);
+>  		if (error)
+> @@ -457,6 +459,9 @@ xfs_attr_remove(
+>  	if (error)
+>  		return error;
+>  
+> +	/* Use name now stored in args */
+> +	name = &args.name;
+> +
+>  	/*
+>  	 * we have no control over the attribute names that userspace passes us
+>  	 * to remove, so we have to allow the name lookup prior to attribute
+> @@ -532,10 +537,10 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
+>  	trace_xfs_attr_sf_addname(args);
+>  
+>  	retval = xfs_attr_shortform_lookup(args);
+> -	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+> +	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
+>  		return retval;
+>  	} else if (retval == -EEXIST) {
+> -		if (args->flags & ATTR_CREATE)
+> +		if (args->name.type & ATTR_CREATE)
+>  			return retval;
+>  		retval = xfs_attr_shortform_remove(args);
+>  		if (retval)
+> @@ -545,15 +550,15 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
+>  		 * that the leaf format add routine won't trip over the attr
+>  		 * not being around.
+>  		 */
+> -		args->flags &= ~ATTR_REPLACE;
+> +		args->name.type &= ~ATTR_REPLACE;
+>  	}
+>  
+> -	if (args->namelen >= XFS_ATTR_SF_ENTSIZE_MAX ||
+> +	if (args->name.len >= XFS_ATTR_SF_ENTSIZE_MAX ||
+>  	    args->valuelen >= XFS_ATTR_SF_ENTSIZE_MAX)
+>  		return -ENOSPC;
+>  
+>  	newsize = XFS_ATTR_SF_TOTSIZE(args->dp);
+> -	newsize += XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
+> +	newsize += XFS_ATTR_SF_ENTSIZE_BYNAME(args->name.len, args->valuelen);
+>  
+>  	forkoff = xfs_attr_shortform_bytesfit(args->dp, newsize);
+>  	if (!forkoff)
+> @@ -598,11 +603,11 @@ xfs_attr_leaf_addname(
+>  	 * the given flags produce an error or call for an atomic rename.
+>  	 */
+>  	retval = xfs_attr3_leaf_lookup_int(bp, args);
+> -	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+> +	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
+>  		xfs_trans_brelse(args->trans, bp);
+>  		return retval;
+>  	} else if (retval == -EEXIST) {
+> -		if (args->flags & ATTR_CREATE) {	/* pure create op */
+> +		if (args->name.type & ATTR_CREATE) {	/* pure create op */
+>  			xfs_trans_brelse(args->trans, bp);
+>  			return retval;
+>  		}
+> @@ -872,10 +877,10 @@ xfs_attr_node_addname(
+>  		goto out;
+>  	blk = &state->path.blk[ state->path.active-1 ];
+>  	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+> -	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+> +	if ((args->name.type & ATTR_REPLACE) && (retval == -ENOATTR)) {
+>  		goto out;
+>  	} else if (retval == -EEXIST) {
+> -		if (args->flags & ATTR_CREATE)
+> +		if (args->name.type & ATTR_CREATE)
+>  			goto out;
+>  
+>  		trace_xfs_attr_node_replace(args);
+> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+> index fed537a..cb5ef66 100644
+> --- a/fs/xfs/libxfs/xfs_attr_leaf.c
+> +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+> @@ -464,7 +464,7 @@ xfs_attr_copy_value(
+>  	/*
+>  	 * No copy if all we have to do is get the length
+>  	 */
+> -	if (args->flags & ATTR_KERNOVAL) {
+> +	if (args->name.type & ATTR_KERNOVAL) {
+>  		args->valuelen = valuelen;
+>  		return 0;
+>  	}
+> @@ -679,27 +679,27 @@ xfs_attr_shortform_add(xfs_da_args_t *args, int forkoff)
+>  	sfe = &sf->list[0];
+>  	for (i = 0; i < sf->hdr.count; sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+>  #ifdef DEBUG
+> -		if (sfe->namelen != args->namelen)
+> +		if (sfe->namelen != args->name.len)
+>  			continue;
+> -		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+> +		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
+>  			continue;
+> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+> +		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
+>  			continue;
+>  		ASSERT(0);
+>  #endif
+>  	}
+>  
+>  	offset = (char *)sfe - (char *)sf;
+> -	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
+> +	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->name.len, args->valuelen);
+>  	xfs_idata_realloc(dp, size, XFS_ATTR_FORK);
+>  	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
+>  	sfe = (xfs_attr_sf_entry_t *)((char *)sf + offset);
+>  
+> -	sfe->namelen = args->namelen;
+> +	sfe->namelen = args->name.len;
+>  	sfe->valuelen = args->valuelen;
+> -	sfe->flags = XFS_ATTR_NSP_ARGS_TO_ONDISK(args->flags);
+> -	memcpy(sfe->nameval, args->name, args->namelen);
+> -	memcpy(&sfe->nameval[args->namelen], args->value, args->valuelen);
+> +	sfe->flags = XFS_ATTR_NSP_ARGS_TO_ONDISK(args->name.type);
+> +	memcpy(sfe->nameval, args->name.name, args->name.len);
+> +	memcpy(&sfe->nameval[args->name.len], args->value, args->valuelen);
+>  	sf->hdr.count++;
+>  	be16_add_cpu(&sf->hdr.totsize, size);
+>  	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
+> @@ -749,11 +749,11 @@ xfs_attr_shortform_remove(xfs_da_args_t *args)
+>  	for (i = 0; i < end; sfe = XFS_ATTR_SF_NEXTENTRY(sfe),
+>  					base += size, i++) {
+>  		size = XFS_ATTR_SF_ENTSIZE(sfe);
+> -		if (sfe->namelen != args->namelen)
+> +		if (sfe->namelen != args->name.len)
+>  			continue;
+> -		if (memcmp(sfe->nameval, args->name, args->namelen) != 0)
+> +		if (memcmp(sfe->nameval, args->name.name, args->name.len) != 0)
+>  			continue;
+> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+> +		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
+>  			continue;
+>  		break;
+>  	}
+> @@ -816,11 +816,11 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
+>  	sfe = &sf->list[0];
+>  	for (i = 0; i < sf->hdr.count;
+>  				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+> -		if (sfe->namelen != args->namelen)
+> +		if (sfe->namelen != args->name.len)
+>  			continue;
+> -		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+> +		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
+>  			continue;
+> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+> +		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
+>  			continue;
+>  		return -EEXIST;
+>  	}
+> @@ -847,13 +847,13 @@ xfs_attr_shortform_getvalue(
+>  	sfe = &sf->list[0];
+>  	for (i = 0; i < sf->hdr.count;
+>  				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+> -		if (sfe->namelen != args->namelen)
+> +		if (sfe->namelen != args->name.len)
+>  			continue;
+> -		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+> +		if (memcmp(args->name.name, sfe->nameval, args->name.len) != 0)
+>  			continue;
+> -		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+> +		if (!xfs_attr_namesp_match(args->name.type, sfe->flags))
+>  			continue;
+> -		return xfs_attr_copy_value(args, &sfe->nameval[args->namelen],
+> +		return xfs_attr_copy_value(args, &sfe->nameval[args->name.len],
+>  						sfe->valuelen);
+>  	}
+>  	return -ENOATTR;
+> @@ -912,13 +912,13 @@ xfs_attr_shortform_to_leaf(
+>  
+>  	sfe = &sf->list[0];
+>  	for (i = 0; i < sf->hdr.count; i++) {
+> -		nargs.name = sfe->nameval;
+> -		nargs.namelen = sfe->namelen;
+> -		nargs.value = &sfe->nameval[nargs.namelen];
+> +		nargs.name.name = sfe->nameval;
+> +		nargs.name.len = sfe->namelen;
+> +		nargs.value = &sfe->nameval[nargs.name.len];
+>  		nargs.valuelen = sfe->valuelen;
+>  		nargs.hashval = xfs_da_hashname(sfe->nameval,
+>  						sfe->namelen);
+> -		nargs.flags = XFS_ATTR_NSP_ONDISK_TO_ARGS(sfe->flags);
+> +		nargs.name.type = XFS_ATTR_NSP_ONDISK_TO_ARGS(sfe->flags);
+>  		error = xfs_attr3_leaf_lookup_int(bp, &nargs); /* set a->index */
+>  		ASSERT(error == -ENOATTR);
+>  		error = xfs_attr3_leaf_add(bp, &nargs);
+> @@ -1119,12 +1119,12 @@ xfs_attr3_leaf_to_shortform(
+>  			continue;
+>  		ASSERT(entry->flags & XFS_ATTR_LOCAL);
+>  		name_loc = xfs_attr3_leaf_name_local(leaf, i);
+> -		nargs.name = name_loc->nameval;
+> -		nargs.namelen = name_loc->namelen;
+> -		nargs.value = &name_loc->nameval[nargs.namelen];
+> +		nargs.name.name = name_loc->nameval;
+> +		nargs.name.len = name_loc->namelen;
+> +		nargs.value = &name_loc->nameval[nargs.name.len];
+>  		nargs.valuelen = be16_to_cpu(name_loc->valuelen);
+>  		nargs.hashval = be32_to_cpu(entry->hashval);
+> -		nargs.flags = XFS_ATTR_NSP_ONDISK_TO_ARGS(entry->flags);
+> +		nargs.name.type = XFS_ATTR_NSP_ONDISK_TO_ARGS(entry->flags);
+>  		xfs_attr_shortform_add(&nargs, forkoff);
+>  	}
+>  	error = 0;
+> @@ -1450,7 +1450,7 @@ xfs_attr3_leaf_add_work(
+>  				     ichdr->freemap[mapindex].size);
+>  	entry->hashval = cpu_to_be32(args->hashval);
+>  	entry->flags = tmp ? XFS_ATTR_LOCAL : 0;
+> -	entry->flags |= XFS_ATTR_NSP_ARGS_TO_ONDISK(args->flags);
+> +	entry->flags |= XFS_ATTR_NSP_ARGS_TO_ONDISK(args->name.type);
+>  	if (args->op_flags & XFS_DA_OP_RENAME) {
+>  		entry->flags |= XFS_ATTR_INCOMPLETE;
+>  		if ((args->blkno2 == args->blkno) &&
+> @@ -1474,15 +1474,16 @@ xfs_attr3_leaf_add_work(
+>  	 */
+>  	if (entry->flags & XFS_ATTR_LOCAL) {
+>  		name_loc = xfs_attr3_leaf_name_local(leaf, args->index);
+> -		name_loc->namelen = args->namelen;
+> +		name_loc->namelen = args->name.len;
+>  		name_loc->valuelen = cpu_to_be16(args->valuelen);
+> -		memcpy((char *)name_loc->nameval, args->name, args->namelen);
+> -		memcpy((char *)&name_loc->nameval[args->namelen], args->value,
+> +		memcpy((char *)name_loc->nameval, args->name.name,
+> +		       args->name.len);
+> +		memcpy((char *)&name_loc->nameval[args->name.len], args->value,
+>  				   be16_to_cpu(name_loc->valuelen));
+>  	} else {
+>  		name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
+> -		name_rmt->namelen = args->namelen;
+> -		memcpy((char *)name_rmt->name, args->name, args->namelen);
+> +		name_rmt->namelen = args->name.len;
+> +		memcpy((char *)name_rmt->name, args->name.name, args->name.len);
+>  		entry->flags |= XFS_ATTR_INCOMPLETE;
+>  		/* just in case */
+>  		name_rmt->valuelen = 0;
+> @@ -2409,23 +2410,25 @@ xfs_attr3_leaf_lookup_int(
+>  		}
+>  		if (entry->flags & XFS_ATTR_LOCAL) {
+>  			name_loc = xfs_attr3_leaf_name_local(leaf, probe);
+> -			if (name_loc->namelen != args->namelen)
+> +			if (name_loc->namelen != args->name.len)
+>  				continue;
+> -			if (memcmp(args->name, name_loc->nameval,
+> -							args->namelen) != 0)
+> +			if (memcmp(args->name.name, name_loc->nameval,
+> +							args->name.len) != 0)
+>  				continue;
+> -			if (!xfs_attr_namesp_match(args->flags, entry->flags))
+> +			if (!xfs_attr_namesp_match(args->name.type,
+> +						   entry->flags))
+>  				continue;
+>  			args->index = probe;
+>  			return -EEXIST;
+>  		} else {
+>  			name_rmt = xfs_attr3_leaf_name_remote(leaf, probe);
+> -			if (name_rmt->namelen != args->namelen)
+> +			if (name_rmt->namelen != args->name.len)
+>  				continue;
+> -			if (memcmp(args->name, name_rmt->name,
+> -							args->namelen) != 0)
+> +			if (memcmp(args->name.name, name_rmt->name,
+> +							args->name.len) != 0)
+>  				continue;
+> -			if (!xfs_attr_namesp_match(args->flags, entry->flags))
+> +			if (!xfs_attr_namesp_match(args->name.type,
+> +						   entry->flags))
+>  				continue;
+>  			args->index = probe;
+>  			args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
+> @@ -2467,16 +2470,17 @@ xfs_attr3_leaf_getvalue(
+>  	entry = &xfs_attr3_leaf_entryp(leaf)[args->index];
+>  	if (entry->flags & XFS_ATTR_LOCAL) {
+>  		name_loc = xfs_attr3_leaf_name_local(leaf, args->index);
+> -		ASSERT(name_loc->namelen == args->namelen);
+> -		ASSERT(memcmp(args->name, name_loc->nameval, args->namelen) == 0);
+> +		ASSERT(name_loc->namelen == args->name.len);
+> +		ASSERT(memcmp(args->name.name, name_loc->nameval,
+> +			      args->name.len) == 0);
+>  		return xfs_attr_copy_value(args,
+> -					&name_loc->nameval[args->namelen],
+> +					&name_loc->nameval[args->name.len],
+>  					be16_to_cpu(name_loc->valuelen));
+>  	}
+>  
+>  	name_rmt = xfs_attr3_leaf_name_remote(leaf, args->index);
+> -	ASSERT(name_rmt->namelen == args->namelen);
+> -	ASSERT(memcmp(args->name, name_rmt->name, args->namelen) == 0);
+> +	ASSERT(name_rmt->namelen == args->name.len);
+> +	ASSERT(memcmp(args->name.name, name_rmt->name, args->name.len) == 0);
+>  	args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
+>  	args->rmtblkno = be32_to_cpu(name_rmt->valueblk);
+>  	args->rmtblkcnt = xfs_attr3_rmt_blocks(args->dp->i_mount,
+> @@ -2692,7 +2696,7 @@ xfs_attr_leaf_newentsize(
+>  {
+>  	int			size;
+>  
+> -	size = xfs_attr_leaf_entsize_local(args->namelen, args->valuelen);
+> +	size = xfs_attr_leaf_entsize_local(args->name.len, args->valuelen);
+>  	if (size < xfs_attr_leaf_entsize_local_max(args->geo->blksize)) {
+>  		if (local)
+>  			*local = 1;
+> @@ -2700,7 +2704,7 @@ xfs_attr_leaf_newentsize(
+>  	}
+>  	if (local)
+>  		*local = 0;
+> -	return xfs_attr_leaf_entsize_remote(args->namelen);
+> +	return xfs_attr_leaf_entsize_remote(args->name.len);
+>  }
+>  
+>  
+> @@ -2754,8 +2758,8 @@ xfs_attr3_leaf_clearflag(
+>  		name = (char *)name_rmt->name;
+>  	}
+>  	ASSERT(be32_to_cpu(entry->hashval) == args->hashval);
+> -	ASSERT(namelen == args->namelen);
+> -	ASSERT(memcmp(name, args->name, namelen) == 0);
+> +	ASSERT(namelen == args->name.len);
+> +	ASSERT(memcmp(name, args->name.name, namelen) == 0);
+>  #endif /* DEBUG */
+>  
+>  	entry->flags &= ~XFS_ATTR_INCOMPLETE;
+> diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+> index 8b7f74b..df8aca5 100644
+> --- a/fs/xfs/libxfs/xfs_attr_remote.c
+> +++ b/fs/xfs/libxfs/xfs_attr_remote.c
+> @@ -397,7 +397,7 @@ xfs_attr_rmtval_get(
+>  
+>  	trace_xfs_attr_rmtval_get(args);
+>  
+> -	ASSERT(!(args->flags & ATTR_KERNOVAL));
+> +	ASSERT(!(args->name.type & ATTR_KERNOVAL));
+>  	ASSERT(args->rmtvaluelen == args->valuelen);
+>  
+>  	valuelen = args->rmtvaluelen;
+> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+> index 875e04f..30f27d7 100644
+> --- a/fs/xfs/libxfs/xfs_da_btree.c
+> +++ b/fs/xfs/libxfs/xfs_da_btree.c
+> @@ -2125,8 +2125,10 @@ xfs_da_compname(
+>  	const unsigned char *name,
+>  	int		len)
+>  {
+> -	return (args->namelen == len && memcmp(args->name, name, len) == 0) ?
+> -					XFS_CMP_EXACT : XFS_CMP_DIFFERENT;
+> +	if (args->name.len == len && !memcmp(args->name.name, name, len))
+> +		return XFS_CMP_EXACT;
+> +
+> +	return XFS_CMP_DIFFERENT;
+>  }
+>  
+>  int
 > diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-> index 14f1be3..3c78498 100644
+> index 0f4fbb0..14f1be3 100644
 > --- a/fs/xfs/libxfs/xfs_da_btree.h
 > +++ b/fs/xfs/libxfs/xfs_da_btree.h
-> @@ -50,9 +50,39 @@ enum xfs_dacmp {
->  };
->  
->  /*
-> + * Enum values for xfs_delattr_context.da_state
-> + *
-> + * These values are used by delayed attribute operations to keep track  of where
-> + * they were before they returned -EAGAIN.  A return code of -EAGAIN signals the
-> + * calling function to roll the transaction, and then recall the subroutine to
-> + * finish the operation.  The enum is then used by the subroutine to jump back
-> + * to where it was and resume executing where it left off.
-> + */
-> +enum xfs_delattr_state {
-> +	XFS_DAS_RM_SHRINK,	/* We are shrinking the tree */
-> +	XFS_DAS_RMTVAL_REMOVE,	/* We are removing remote value blocks */
-> +};
-> +
-> +/*
-> + * Defines for xfs_delattr_context.flags
-> + */
-> +#define	XFS_DAC_FINISH_TRANS	0x1 /* indicates to finish the transaction */
-> +
-> +/*
-> + * Context used for keeping track of delayed attribute operations
-> + */
-> +struct xfs_delattr_context {
-> +	struct xfs_da_state	*da_state;
-> +	struct xfs_da_state_blk *blk;
-> +	unsigned int		flags;
-> +	enum xfs_delattr_state	dela_state;
-> +};
-> +
-> +/*
->   * Structure to ease passing around component names.
+> @@ -54,12 +54,10 @@ enum xfs_dacmp {
 >   */
 >  typedef struct xfs_da_args {
-> +	struct xfs_delattr_context dac; /* context used for delay attr ops */
-
-Probably should put this at the end of the structure rather than the
-front.
-
-I'm also wondering if it should be kept separate to the da_args and
-contain a pointer to the da_args instead of being wrapped inside
-them.
-
-i.e. we put the iterating state structure on the stack, then
-
-	struct attr_iter	ater = {
-		.da_args = args,
-	};
-
-	do {
-		error = xfs_attr_remove_iter(&ater);
-		.....
-	
-And that largely separates the delayed attribute iteration state
-from the da_args that holds the internal attribute manipulation
-information.
-
 >  	struct xfs_da_geometry *geo;	/* da block geometry */
->  	struct xfs_name	name;		/* name, length and argument  flags*/
+> -	const uint8_t		*name;		/* string (maybe not NULL terminated) */
+> -	int		namelen;	/* length of string (maybe no NULL) */
+> +	struct xfs_name	name;		/* name, length and argument  flags*/
 >  	uint8_t		filetype;	/* filetype of inode for directories */
-> diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-> index 1887605..9a649d1 100644
-> --- a/fs/xfs/scrub/common.c
-> +++ b/fs/xfs/scrub/common.c
-> @@ -24,6 +24,8 @@
->  #include "xfs_rmap_btree.h"
->  #include "xfs_log.h"
->  #include "xfs_trans_priv.h"
-> +#include "xfs_da_format.h"
-> +#include "xfs_da_btree.h"
->  #include "xfs_attr.h"
->  #include "xfs_reflink.h"
->  #include "scrub/scrub.h"
+>  	uint8_t		*value;		/* set of bytes (maybe contain NULLs) */
+>  	int		valuelen;	/* length of value */
+> -	int		flags;		/* argument flags (eg: ATTR_NOCREATE) */
+>  	xfs_dahash_t	hashval;	/* hash value of name */
+>  	xfs_ino_t	inumber;	/* input/output inode number */
+>  	struct xfs_inode *dp;		/* directory inode to manipulate */
+> diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
+> index dd6fcaa..3aadddc 100644
+> --- a/fs/xfs/libxfs/xfs_dir2.c
+> +++ b/fs/xfs/libxfs/xfs_dir2.c
+> @@ -74,14 +74,14 @@ xfs_ascii_ci_compname(
+>  	enum xfs_dacmp		result;
+>  	int			i;
+>  
+> -	if (args->namelen != len)
+> +	if (args->name.len != len)
+>  		return XFS_CMP_DIFFERENT;
+>  
+>  	result = XFS_CMP_EXACT;
+>  	for (i = 0; i < len; i++) {
+> -		if (args->name[i] == name[i])
+> +		if (args->name.name[i] == name[i])
+>  			continue;
+> -		if (tolower(args->name[i]) != tolower(name[i]))
+> +		if (tolower(args->name.name[i]) != tolower(name[i]))
+>  			return XFS_CMP_DIFFERENT;
+>  		result = XFS_CMP_CASE;
+>  	}
+> @@ -265,8 +265,7 @@ xfs_dir_createname(
+>  		return -ENOMEM;
+>  
+>  	args->geo = dp->i_mount->m_dir_geo;
+> -	args->name = name->name;
+> -	args->namelen = name->len;
+> +	memcpy(&args->name, name, sizeof(struct xfs_name));
+>  	args->filetype = name->type;
+>  	args->hashval = xfs_dir2_hashname(dp->i_mount, name);
+>  	args->inumber = inum;
+> @@ -361,8 +360,7 @@ xfs_dir_lookup(
+>  	 */
+>  	args = kmem_zalloc(sizeof(*args), KM_NOFS);
+>  	args->geo = dp->i_mount->m_dir_geo;
+> -	args->name = name->name;
+> -	args->namelen = name->len;
+> +	memcpy(&args->name, name, sizeof(struct xfs_name));
+>  	args->filetype = name->type;
+>  	args->hashval = xfs_dir2_hashname(dp->i_mount, name);
+>  	args->dp = dp;
+> @@ -433,8 +431,7 @@ xfs_dir_removename(
+>  		return -ENOMEM;
+>  
+>  	args->geo = dp->i_mount->m_dir_geo;
+> -	args->name = name->name;
+> -	args->namelen = name->len;
+> +	memcpy(&args->name, name, sizeof(struct xfs_name));
+>  	args->filetype = name->type;
+>  	args->hashval = xfs_dir2_hashname(dp->i_mount, name);
+>  	args->inumber = ino;
+> @@ -494,8 +491,7 @@ xfs_dir_replace(
+>  		return -ENOMEM;
+>  
+>  	args->geo = dp->i_mount->m_dir_geo;
+> -	args->name = name->name;
+> -	args->namelen = name->len;
+> +	memcpy(&args->name, name, sizeof(struct xfs_name));
+>  	args->filetype = name->type;
+>  	args->hashval = xfs_dir2_hashname(dp->i_mount, name);
+>  	args->inumber = inum;
+> diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
+> index d6ced59..592e47c 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_block.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_block.c
+> @@ -355,7 +355,7 @@ xfs_dir2_block_addname(
+>  	if (error)
+>  		return error;
+>  
+> -	len = xfs_dir2_data_entsize(dp->i_mount, args->namelen);
+> +	len = xfs_dir2_data_entsize(dp->i_mount, args->name.len);
+>  
+>  	/*
+>  	 * Set up pointers to parts of the block.
+> @@ -539,8 +539,8 @@ xfs_dir2_block_addname(
+>  	 * Create the new data entry.
+>  	 */
+>  	dep->inumber = cpu_to_be64(args->inumber);
+> -	dep->namelen = args->namelen;
+> -	memcpy(dep->name, args->name, args->namelen);
+> +	dep->namelen = args->name.len;
+> +	memcpy(dep->name, args->name.name, args->name.len);
+>  	xfs_dir2_data_put_ftype(dp->i_mount, dep, args->filetype);
+>  	tagp = xfs_dir2_data_entry_tag_p(dp->i_mount, dep);
+>  	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
+> diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
+> index a131b52..24a7fda 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_leaf.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
+> @@ -653,7 +653,7 @@ xfs_dir2_leaf_addname(
+>  	xfs_dir2_leaf_hdr_from_disk(dp->i_mount, &leafhdr, leaf);
+>  	ents = leafhdr.ents;
+>  	bestsp = xfs_dir2_leaf_bests_p(ltp);
+> -	length = xfs_dir2_data_entsize(dp->i_mount, args->namelen);
+> +	length = xfs_dir2_data_entsize(dp->i_mount, args->name.len);
+>  
+>  	/*
+>  	 * See if there are any entries with the same hash value
+> @@ -856,8 +856,8 @@ xfs_dir2_leaf_addname(
+>  	 */
+>  	dep = (xfs_dir2_data_entry_t *)dup;
+>  	dep->inumber = cpu_to_be64(args->inumber);
+> -	dep->namelen = args->namelen;
+> -	memcpy(dep->name, args->name, dep->namelen);
+> +	dep->namelen = args->name.len;
+> +	memcpy(dep->name, args->name.name, dep->namelen);
+>  	xfs_dir2_data_put_ftype(dp->i_mount, dep, args->filetype);
+>  	tagp = xfs_dir2_data_entry_tag_p(dp->i_mount, dep);
+>  	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
+> diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+> index a0cc5e2..3c74efc 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_node.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_node.c
+> @@ -666,7 +666,7 @@ xfs_dir2_leafn_lookup_for_addname(
+>  		ASSERT(free->hdr.magic == cpu_to_be32(XFS_DIR2_FREE_MAGIC) ||
+>  		       free->hdr.magic == cpu_to_be32(XFS_DIR3_FREE_MAGIC));
+>  	}
+> -	length = xfs_dir2_data_entsize(mp, args->namelen);
+> +	length = xfs_dir2_data_entsize(mp, args->name.len);
+>  	/*
+>  	 * Loop over leaf entries with the right hash value.
+>  	 */
+> @@ -1911,7 +1911,7 @@ xfs_dir2_node_addname_int(
+>  	int			needscan = 0;	/* need to rescan data frees */
+>  	__be16			*tagp;		/* data entry tag pointer */
+>  
+> -	length = xfs_dir2_data_entsize(dp->i_mount, args->namelen);
+> +	length = xfs_dir2_data_entsize(dp->i_mount, args->name.len);
+>  	error = xfs_dir2_node_find_freeblk(args, fblk, &dbno, &fbp, &freehdr,
+>  					   &findex, length);
+>  	if (error)
+> @@ -1966,8 +1966,8 @@ xfs_dir2_node_addname_int(
+>  	/* Fill in the new entry and log it. */
+>  	dep = (xfs_dir2_data_entry_t *)dup;
+>  	dep->inumber = cpu_to_be64(args->inumber);
+> -	dep->namelen = args->namelen;
+> -	memcpy(dep->name, args->name, dep->namelen);
+> +	dep->namelen = args->name.len;
+> +	memcpy(dep->name, args->name.name, dep->namelen);
+>  	xfs_dir2_data_put_ftype(dp->i_mount, dep, args->filetype);
+>  	tagp = xfs_dir2_data_entry_tag_p(dp->i_mount, dep);
+>  	*tagp = cpu_to_be16((char *)dep - (char *)hdr);
+> diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
+> index 7b7f6fb..058c526 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_sf.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_sf.c
+> @@ -387,7 +387,7 @@ xfs_dir2_sf_addname(
+>  	/*
+>  	 * Compute entry (and change in) size.
+>  	 */
+> -	incr_isize = xfs_dir2_sf_entsize(dp->i_mount, sfp, args->namelen);
+> +	incr_isize = xfs_dir2_sf_entsize(dp->i_mount, sfp, args->name.len);
+>  	objchange = 0;
+>  
+>  	/*
+> @@ -470,7 +470,7 @@ xfs_dir2_sf_addname_easy(
+>  	/*
+>  	 * Grow the in-inode space.
+>  	 */
+> -	xfs_idata_realloc(dp, xfs_dir2_sf_entsize(mp, sfp, args->namelen),
+> +	xfs_idata_realloc(dp, xfs_dir2_sf_entsize(mp, sfp, args->name.len),
+>  			  XFS_DATA_FORK);
+>  	/*
+>  	 * Need to set up again due to realloc of the inode data.
+> @@ -480,9 +480,9 @@ xfs_dir2_sf_addname_easy(
+>  	/*
+>  	 * Fill in the new entry.
+>  	 */
+> -	sfep->namelen = args->namelen;
+> +	sfep->namelen = args->name.len;
+>  	xfs_dir2_sf_put_offset(sfep, offset);
+> -	memcpy(sfep->name, args->name, sfep->namelen);
+> +	memcpy(sfep->name, args->name.name, sfep->namelen);
+>  	xfs_dir2_sf_put_ino(mp, sfp, sfep, args->inumber);
+>  	xfs_dir2_sf_put_ftype(mp, sfep, args->filetype);
+>  
+> @@ -540,7 +540,7 @@ xfs_dir2_sf_addname_hard(
+>  	 */
+>  	for (offset = args->geo->data_first_offset,
+>  	      oldsfep = xfs_dir2_sf_firstentry(oldsfp),
+> -	      add_datasize = xfs_dir2_data_entsize(mp, args->namelen),
+> +	      add_datasize = xfs_dir2_data_entsize(mp, args->name.len),
+>  	      eof = (char *)oldsfep == &buf[old_isize];
+>  	     !eof;
+>  	     offset = new_offset + xfs_dir2_data_entsize(mp, oldsfep->namelen),
+> @@ -570,9 +570,9 @@ xfs_dir2_sf_addname_hard(
+>  	/*
+>  	 * Fill in the new entry, and update the header counts.
+>  	 */
+> -	sfep->namelen = args->namelen;
+> +	sfep->namelen = args->name.len;
+>  	xfs_dir2_sf_put_offset(sfep, offset);
+> -	memcpy(sfep->name, args->name, sfep->namelen);
+> +	memcpy(sfep->name, args->name.name, sfep->namelen);
+>  	xfs_dir2_sf_put_ino(mp, sfp, sfep, args->inumber);
+>  	xfs_dir2_sf_put_ftype(mp, sfep, args->filetype);
+>  	sfp->count++;
+> @@ -615,7 +615,7 @@ xfs_dir2_sf_addname_pick(
+>  	int			used;		/* data bytes used */
+>  
+>  	sfp = (xfs_dir2_sf_hdr_t *)dp->i_df.if_u1.if_data;
+> -	size = xfs_dir2_data_entsize(mp, args->namelen);
+> +	size = xfs_dir2_data_entsize(mp, args->name.len);
+>  	offset = args->geo->data_first_offset;
+>  	sfep = xfs_dir2_sf_firstentry(sfp);
+>  	holefit = 0;
+> @@ -887,7 +887,7 @@ xfs_dir2_sf_lookup(
+>  	/*
+>  	 * Special case for .
+>  	 */
+> -	if (args->namelen == 1 && args->name[0] == '.') {
+> +	if (args->name.len == 1 && args->name.name[0] == '.') {
+>  		args->inumber = dp->i_ino;
+>  		args->cmpresult = XFS_CMP_EXACT;
+>  		args->filetype = XFS_DIR3_FT_DIR;
+> @@ -896,8 +896,8 @@ xfs_dir2_sf_lookup(
+>  	/*
+>  	 * Special case for ..
+>  	 */
+> -	if (args->namelen == 2 &&
+> -	    args->name[0] == '.' && args->name[1] == '.') {
+> +	if (args->name.len == 2 &&
+> +	    args->name.name[0] == '.' && args->name.name[1] == '.') {
+>  		args->inumber = xfs_dir2_sf_get_parent_ino(sfp);
+>  		args->cmpresult = XFS_CMP_EXACT;
+>  		args->filetype = XFS_DIR3_FT_DIR;
+> @@ -984,7 +984,7 @@ xfs_dir2_sf_removename(
+>  	 * Calculate sizes.
+>  	 */
+>  	byteoff = (int)((char *)sfep - (char *)sfp);
+> -	entsize = xfs_dir2_sf_entsize(mp, sfp, args->namelen);
+> +	entsize = xfs_dir2_sf_entsize(mp, sfp, args->name.len);
+>  	newsize = oldsize - entsize;
+>  	/*
+>  	 * Copy the part if any after the removed entry, sliding it down.
+> @@ -1085,12 +1085,12 @@ xfs_dir2_sf_replace(
+>  	} else
+>  		i8elevated = 0;
+>  
+> -	ASSERT(args->namelen != 1 || args->name[0] != '.');
+> +	ASSERT(args->name.len != 1 || args->name.name[0] != '.');
+>  	/*
+>  	 * Replace ..'s entry.
+>  	 */
+> -	if (args->namelen == 2 &&
+> -	    args->name[0] == '.' && args->name[1] == '.') {
+> +	if (args->name.len == 2 &&
+> +	    args->name.name[0] == '.' && args->name.name[1] == '.') {
+>  		ino = xfs_dir2_sf_get_parent_ino(sfp);
+>  		ASSERT(args->inumber != ino);
+>  		xfs_dir2_sf_put_parent_ino(sfp, args->inumber);
+> diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
+> index d9f0dd4..d4a9fe4 100644
+> --- a/fs/xfs/scrub/attr.c
+> +++ b/fs/xfs/scrub/attr.c
+> @@ -147,17 +147,17 @@ xchk_xattr_listent(
+>  		return;
+>  	}
+>  
+> -	args.flags = ATTR_KERNOTIME;
+> +	args.name.type = ATTR_KERNOTIME;
+>  	if (flags & XFS_ATTR_ROOT)
+> -		args.flags |= ATTR_ROOT;
+> +		args.name.type |= ATTR_ROOT;
+>  	else if (flags & XFS_ATTR_SECURE)
+> -		args.flags |= ATTR_SECURE;
+> +		args.name.type |= ATTR_SECURE;
+>  	args.geo = context->dp->i_mount->m_attr_geo;
+>  	args.whichfork = XFS_ATTR_FORK;
+>  	args.dp = context->dp;
+> -	args.name = name;
+> -	args.namelen = namelen;
+> -	args.hashval = xfs_da_hashname(args.name, args.namelen);
+> +	args.name.name = name;
+> +	args.name.len = namelen;
+> +	args.hashval = xfs_da_hashname(args.name.name, args.name.len);
+>  	args.trans = context->tp;
+>  	args.value = xchk_xattr_valuebuf(sx->sc);
+>  	args.valuelen = valuelen;
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index a86be7f..159b8af 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -1633,7 +1633,7 @@ DECLARE_EVENT_CLASS(xfs_da_class,
+>  	TP_STRUCT__entry(
+>  		__field(dev_t, dev)
+>  		__field(xfs_ino_t, ino)
+> -		__dynamic_array(char, name, args->namelen)
+> +		__dynamic_array(char, name, args->name.len)
+>  		__field(int, namelen)
+>  		__field(xfs_dahash_t, hashval)
+>  		__field(xfs_ino_t, inumber)
+> @@ -1642,9 +1642,10 @@ DECLARE_EVENT_CLASS(xfs_da_class,
+>  	TP_fast_assign(
+>  		__entry->dev = VFS_I(args->dp)->i_sb->s_dev;
+>  		__entry->ino = args->dp->i_ino;
+> -		if (args->namelen)
+> -			memcpy(__get_str(name), args->name, args->namelen);
+> -		__entry->namelen = args->namelen;
+> +		if (args->name.len)
+> +			memcpy(__get_str(name), args->name.name,
+> +			       args->name.len);
+> +		__entry->namelen = args->name.len;
+>  		__entry->hashval = args->hashval;
+>  		__entry->inumber = args->inumber;
+>  		__entry->op_flags = args->op_flags;
+> @@ -1697,7 +1698,7 @@ DECLARE_EVENT_CLASS(xfs_attr_class,
+>  	TP_STRUCT__entry(
+>  		__field(dev_t, dev)
+>  		__field(xfs_ino_t, ino)
+> -		__dynamic_array(char, name, args->namelen)
+> +		__dynamic_array(char, name, args->name.len)
+>  		__field(int, namelen)
+>  		__field(int, valuelen)
+>  		__field(xfs_dahash_t, hashval)
+> @@ -1707,12 +1708,13 @@ DECLARE_EVENT_CLASS(xfs_attr_class,
+>  	TP_fast_assign(
+>  		__entry->dev = VFS_I(args->dp)->i_sb->s_dev;
+>  		__entry->ino = args->dp->i_ino;
+> -		if (args->namelen)
+> -			memcpy(__get_str(name), args->name, args->namelen);
+> -		__entry->namelen = args->namelen;
+> +		if (args->name.len)
+> +			memcpy(__get_str(name), args->name.name,
+> +			       args->name.len);
+> +		__entry->namelen = args->name.len;
+>  		__entry->valuelen = args->valuelen;
+>  		__entry->hashval = args->hashval;
+> -		__entry->flags = args->flags;
+> +		__entry->flags = args->name.type;
+>  		__entry->op_flags = args->op_flags;
+>  	),
+>  	TP_printk("dev %d:%d ino 0x%llx name %.*s namelen %d valuelen %d "
+> 
 
-Hmmm - why are these new includes necessary? You didn't add anything
-new to these files or common header files to make the includes
-needed....
 
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+chandan
+
+
+
