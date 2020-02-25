@@ -2,36 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC12616F30C
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2020 00:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9A316F30E
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2020 00:10:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgBYXKh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Feb 2020 18:10:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53494 "EHLO
+        id S1728936AbgBYXKi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Feb 2020 18:10:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53498 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbgBYXKh (ORCPT
+        with ESMTP id S1729391AbgBYXKh (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Feb 2020 18:10:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=/9ATVj99rfXDfeHkVaeosS8d/EjwPFIUYRgdPWDJbSE=; b=CEuKVUiuvznd5IHQLthq3fvJtz
-        p+bPB1iJozNo8e6+i+stcoaFJKFthM7sAtQoaXzTHZTzncRYTXSvfcPCIzS6mOQFUYGI7JAlMR/Fa
-        G4PO8uhEMou5gsBtrUa6S9WWPVxX1GV19erGq5cMHBq80ABHIk/TI1Yx/jEw8TDSCzZnmnrmKv6Id
-        yyTBW+Rl/cbBp2R1s4lYGIX2XwOy1mMHqdiMpR/0xMimei5GLh8uSfAhpVVQuogzoaNMDnTkY19e9
-        pi/6PmBvW63hSYJxA0qHDTExQfe/TX5moMcLR1Mcfnyuz08CuW+EZ8yvWXQ0o8s1t+433rk0DNqgQ
-        QCljiYgg==;
+        bh=t+ktxGnchaPmE9TYnxtVVkQZv6qU565o2QX20azveFc=; b=rcPgOil5fu4l44c2+avV7GUWp0
+        im2ukXmaWNZ5N0Zr1pRdbxAx+X14ZN/pXXAkOF+qchha1E+THCvslQ2g8kD/mYpIu/aNmUEL31zX6
+        Jy/Jgqtce+gJH4wF9mxhViFw0hHb5wdzPLfl9hd7c07KvtE9w3TJMw1WAyyrrZtNYPQEZp2psxzRz
+        OXx2wo4i4uDEzLBtkWVp7kCqqI+mmzoISM9wBIRhm6aJ9csOCzyGUh8lhNCLIRX+RIheVrudEmF1p
+        dclEEz0xfgiBD1LWrMMYtC9+hG9L+Uj1qcsnq845JizkYIG6EnbzLQANUKSgP7sKVqB7FhIK/ZHk1
+        UdlqJO0g==;
 Received: from [4.28.11.157] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6jLZ-0003Em-BU; Tue, 25 Feb 2020 23:10:37 +0000
+        id 1j6jLZ-0003Er-H1; Tue, 25 Feb 2020 23:10:37 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>,
-        Chandan Rajendra <chandanrlinux@gmail.com>,
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 25/30] xfs: improve xfs_forget_acl
-Date:   Tue, 25 Feb 2020 15:10:07 -0800
-Message-Id: <20200225231012.735245-26-hch@lst.de>
+Subject: [PATCH 26/30] xfs: clean up the ATTR_REPLACE checks
+Date:   Tue, 25 Feb 2020 15:10:08 -0800
+Message-Id: <20200225231012.735245-27-hch@lst.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200225231012.735245-1-hch@lst.de>
 References: <20200225231012.735245-1-hch@lst.de>
@@ -43,126 +42,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move the function to xfs_acl.c and provide a proper stub for the
-!CONFIG_XFS_POSIX_ACL case.  Lift the flags check to the caller as it
-nicely fits in there.
+Remove superflous braces, elses after return statements and use a goto
+label to merge common error handling.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_acl.c   | 16 ++++++++++++++++
- fs/xfs/xfs_acl.h   |  6 ++++--
- fs/xfs/xfs_ioctl.c |  4 ++--
- fs/xfs/xfs_xattr.c | 26 ++------------------------
- 4 files changed, 24 insertions(+), 28 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
-index 079656da3c18..c62265cb9062 100644
---- a/fs/xfs/xfs_acl.c
-+++ b/fs/xfs/xfs_acl.c
-@@ -266,3 +266,19 @@ xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 3b1db2afb104..495364927ea0 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -423,9 +423,9 @@ xfs_attr_shortform_addname(xfs_da_args_t *args)
+ 	trace_xfs_attr_sf_addname(args);
  
- 	return error;
- }
-+
-+/*
-+ * Invalidate any cached ACLs if the user has bypassed the ACL interface.
-+ * We don't validate the content whatsoever so it is caller responsibility to
-+ * provide data in valid format and ensure i_mode is consistent.
-+ */
-+void
-+xfs_forget_acl(
-+	struct inode		*inode,
-+	const char		*name)
-+{
-+	if (!strcmp(name, SGI_ACL_FILE))
-+		forget_cached_acl(inode, ACL_TYPE_ACCESS);
-+	else if (!strcmp(name, SGI_ACL_DEFAULT))
-+		forget_cached_acl(inode, ACL_TYPE_DEFAULT);
-+}
-diff --git a/fs/xfs/xfs_acl.h b/fs/xfs/xfs_acl.h
-index 94615e34bc86..c042c0868016 100644
---- a/fs/xfs/xfs_acl.h
-+++ b/fs/xfs/xfs_acl.h
-@@ -13,14 +13,16 @@ struct posix_acl;
- extern struct posix_acl *xfs_get_acl(struct inode *inode, int type);
- extern int xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type);
- extern int __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type);
-+void xfs_forget_acl(struct inode *inode, const char *name);
- #else
- static inline struct posix_acl *xfs_get_acl(struct inode *inode, int type)
- {
- 	return NULL;
- }
- # define xfs_set_acl					NULL
-+static inline void xfs_forget_acl(struct inode *inode, const char *name)
-+{
-+}
- #endif /* CONFIG_XFS_POSIX_ACL */
+ 	retval = xfs_attr_shortform_lookup(args);
+-	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
++	if (retval == -ENOATTR && (args->flags & ATTR_REPLACE))
+ 		return retval;
+-	} else if (retval == -EEXIST) {
++	if (retval == -EEXIST) {
+ 		if (args->flags & ATTR_CREATE)
+ 			return retval;
+ 		retval = xfs_attr_shortform_remove(args);
+@@ -489,14 +489,11 @@ xfs_attr_leaf_addname(
+ 	 * the given flags produce an error or call for an atomic rename.
+ 	 */
+ 	retval = xfs_attr3_leaf_lookup_int(bp, args);
+-	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
+-		xfs_trans_brelse(args->trans, bp);
+-		return retval;
+-	} else if (retval == -EEXIST) {
+-		if (args->flags & ATTR_CREATE) {	/* pure create op */
+-			xfs_trans_brelse(args->trans, bp);
+-			return retval;
+-		}
++	if (retval == -ENOATTR && (args->flags & ATTR_REPLACE))
++		goto out_brelse;
++	if (retval == -EEXIST) {
++		if (args->flags & ATTR_CREATE)	/* pure create op */
++			goto out_brelse;
  
--extern void xfs_forget_acl(struct inode *inode, const char *name, int xflags);
--
- #endif	/* __XFS_ACL_H__ */
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index c67d2277490d..d3b5d8336583 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -510,8 +510,8 @@ xfs_attrmulti_attr_set(
+ 		trace_xfs_attr_leaf_replace(args);
+ 
+@@ -637,6 +634,9 @@ xfs_attr_leaf_addname(
+ 		error = xfs_attr3_leaf_clearflag(args);
  	}
- 
- 	error = xfs_attr_set(&args);
--	if (!error)
--		xfs_forget_acl(inode, name, flags);
-+	if (!error && (flags & ATTR_ROOT))
-+		xfs_forget_acl(inode, name);
- 	kfree(args.value);
  	return error;
- }
-diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-index 260287552ad4..6e149fedd75a 100644
---- a/fs/xfs/xfs_xattr.c
-+++ b/fs/xfs/xfs_xattr.c
-@@ -39,28 +39,6 @@ xfs_xattr_get(const struct xattr_handler *handler, struct dentry *unused,
- 	return args.valuelen;
++out_brelse:
++	xfs_trans_brelse(args->trans, bp);
++	return retval;
  }
  
--void
--xfs_forget_acl(
--	struct inode		*inode,
--	const char		*name,
--	int			xflags)
--{
--	/*
--	 * Invalidate any cached ACLs if the user has bypassed the ACL
--	 * interface. We don't validate the content whatsoever so it is caller
--	 * responsibility to provide data in valid format and ensure i_mode is
--	 * consistent.
--	 */
--	if (xflags & ATTR_ROOT) {
--#ifdef CONFIG_XFS_POSIX_ACL
--		if (!strcmp(name, SGI_ACL_FILE))
--			forget_cached_acl(inode, ACL_TYPE_ACCESS);
--		else if (!strcmp(name, SGI_ACL_DEFAULT))
--			forget_cached_acl(inode, ACL_TYPE_DEFAULT);
--#endif
--	}
--}
--
- static int
- xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
- 		struct inode *inode, const char *name, const void *value,
-@@ -83,8 +61,8 @@ xfs_xattr_set(const struct xattr_handler *handler, struct dentry *unused,
- 		args.flags |= ATTR_REPLACE;
- 
- 	error = xfs_attr_set(&args);
--	if (!error)
--		xfs_forget_acl(inode, name, args.flags);
-+	if (!error && (handler->flags & ATTR_ROOT))
-+		xfs_forget_acl(inode, name);
- 	return error;
- }
+ /*
+@@ -763,9 +763,9 @@ xfs_attr_node_addname(
+ 		goto out;
+ 	blk = &state->path.blk[ state->path.active-1 ];
+ 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+-	if ((args->flags & ATTR_REPLACE) && (retval == -ENOATTR)) {
++	if (retval == -ENOATTR && (args->flags & ATTR_REPLACE))
+ 		goto out;
+-	} else if (retval == -EEXIST) {
++	if (retval == -EEXIST) {
+ 		if (args->flags & ATTR_CREATE)
+ 			goto out;
  
 -- 
 2.24.1
