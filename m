@@ -2,113 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED82516B697
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 01:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2381216B6DC
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2020 01:49:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgBYARu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Feb 2020 19:17:50 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40180 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbgBYARu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 19:17:50 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P08vxt130054;
-        Tue, 25 Feb 2020 00:15:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CW9/sa8p3Zts9fWBcJvIqgn7t/v2RTn1gZQMPBZFpM0=;
- b=c95K+GHSQTmmNmnyenG1rEHzfYXBzkW4GUWYwgE07oSfKpMV0fMNM1Fk3hPswHowjabt
- RmQqHfUGw+e0jFWq7qGzoItJw2H50o7BsMBlINVFmr/bcn6x5wtoFHLgr2BmUqJK9gAU
- PuN8lenHcr5g2GjWzp1xl4z2oA9M6evc3S2pPleM1xPZU2h9NiEU60EuaDVrjr/Nkuoy
- tFpIZCE7d2+UI3ObWd60Z7v8xgzfhMrzbzh/Ir9W95jUpcPOzv1hD6VsUwtYeqQr4zYm
- yO/FYa9iShvQ4FdPoOpBaU17tD+TbkYk8gT8e6ElpO3uPW4PdgVEM7DQSqKQUOKXAfNL FQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yavxrjs52-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 00:15:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P07vI8109297;
-        Tue, 25 Feb 2020 00:15:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2ybe12eubn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 00:15:43 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01P0Fgj1001999;
-        Tue, 25 Feb 2020 00:15:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 16:15:42 -0800
-Subject: [PATCH 14/14] xfs: remove unnecessary null pointer checks from
- _read_agf callers
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>
-Date:   Mon, 24 Feb 2020 16:15:40 -0800
-Message-ID: <158258974094.453666.13391513694204695960.stgit@magnolia>
-In-Reply-To: <158258964941.453666.10913737544282124969.stgit@magnolia>
-References: <158258964941.453666.10913737544282124969.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1728011AbgBYAtS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Feb 2020 19:49:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26857 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727976AbgBYAtS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Feb 2020 19:49:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582591757;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oIyQBMQQ4E5E0FKkSGs7lxKmKm/RkB+fqbnodqd6YjA=;
+        b=GZmJNCz8tdr67ot4izQefzMc8qqmViBDQzE7JsF5J+dtcycQ6WlD6IieRETsDD8fLp3jHm
+        4b+fCo5zwKA7pBiS5teac3SG6Ri+QrZCesFncK3tcgAykdcwbHEu592bbO+IjKcibXnceF
+        kdqUyUBI/ZkaaHtf0kfVXd2p75rE4d4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-74fZ6E2HMWufsYG4h5BEpw-1; Mon, 24 Feb 2020 19:49:16 -0500
+X-MC-Unique: 74fZ6E2HMWufsYG4h5BEpw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01D5B1005512;
+        Tue, 25 Feb 2020 00:49:15 +0000 (UTC)
+Received: from Liberator.local (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9234E26FDD;
+        Tue, 25 Feb 2020 00:49:14 +0000 (UTC)
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] xfs: mark ARM OABI as incompatible in Kconfig
+Cc:     linux-arm-kernel@lists.infradead.org
+Message-ID: <ee78c5dd-5ee4-994c-47e2-209e38a9e986@redhat.com>
+Date:   Mon, 24 Feb 2020 16:49:12 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240181
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+The old ARM OABI's structure alignment quirks break xfs disk structures,
+let's just move on and disallow it rather than playing whack-a-mole
+for the infrequent times someone selects this old config, which is
+usually during "make randconfig" tests.
 
-Source kernel commit: 706b8c5bc70391be510a5454f307db90b622b279
-
-Drop the null buffer pointer checks in all code that calls
-xfs_alloc_read_agf and doesn't pass XFS_ALLOC_FLAG_TRYLOCK because
-they're no longer necessary.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 ---
- libxfs/xfs_refcount.c |    6 ------
- 1 file changed, 6 deletions(-)
 
-
-diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index 71d29486..b8a45b15 100644
---- a/libxfs/xfs_refcount.c
-+++ b/libxfs/xfs_refcount.c
-@@ -1176,8 +1176,6 @@ xfs_refcount_finish_one(
- 				XFS_ALLOC_FLAG_FREEING, &agbp);
- 		if (error)
- 			return error;
--		if (XFS_IS_CORRUPT(tp->t_mountp, !agbp))
--			return -EFSCORRUPTED;
- 
- 		rcur = xfs_refcountbt_init_cursor(mp, tp, agbp, agno);
- 		if (!rcur) {
-@@ -1717,10 +1715,6 @@ xfs_refcount_recover_cow_leftovers(
- 	error = xfs_alloc_read_agf(mp, tp, agno, 0, &agbp);
- 	if (error)
- 		goto out_trans;
--	if (!agbp) {
--		error = -ENOMEM;
--		goto out_trans;
--	}
- 	cur = xfs_refcountbt_init_cursor(mp, tp, agbp, agno);
- 
- 	/* Find all the leftover CoW staging extents. */
+diff --git a/fs/xfs/Kconfig b/fs/xfs/Kconfig
+index e685299eb3d2..043624bd4ab2 100644
+--- a/fs/xfs/Kconfig
++++ b/fs/xfs/Kconfig
+@@ -2,6 +2,8 @@
+ config XFS_FS
+ 	tristate "XFS filesystem support"
+ 	depends on BLOCK
++	# We don't support OABI structure alignment on ARM
++	depends on (!ARM || AEABI)
+ 	select EXPORTFS
+ 	select LIBCRC32C
+ 	select FS_IOMAP
 
