@@ -2,200 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FC9170F8F
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 05:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF3A171083
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 06:33:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgB0ETE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Feb 2020 23:19:04 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:55016 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728221AbgB0ETE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Feb 2020 23:19:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01R4ErMv142249;
-        Thu, 27 Feb 2020 04:19:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=k1JhsTlB3Om2Vc6Ls5at5U4R1jKMqBUvnPkHxbGK6TU=;
- b=o0IzFlypseDFZJgmU5H8O9oMfgMVn6mxa0DemBh0aRlEojx3sAZqeDQUGlKJuBxHE99e
- 73IIK4nmD6jt0H0WB31QnDYFtljGk8Y1j0+buhP6fVssn7NczJa0+U+aI10Zbur0Hgs9
- vuCYQzZRHVIFQ0qm4PHfpmwMWkTZUvwgHTUAD0rlZXYZ2eBaYDGcISL6v7vhwq5HLFDm
- i1RlmrC5KbITsmGqIG/CY+LSMHr9vf3Zm780+dzMVyMPcbokhbSCl76+Fg4wdTKVE6Oy
- 2UCRfw9zf2deO97J9mnU2V/NbQmfyHCstWyHauw1+PPOkTJH+7nLgnGa/II6Xv9NuCM+ oQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ydcsng99t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 04:19:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01R4EWbc135463;
-        Thu, 27 Feb 2020 04:18:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ydcs7f2bf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 04:18:59 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01R4Iwbb020580;
-        Thu, 27 Feb 2020 04:18:58 GMT
-Received: from [192.168.1.223] (/67.1.3.112)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Feb 2020 20:18:58 -0800
-Subject: Re: [PATCH v7 13/19] xfs: Add delay ready attr remove routines
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-References: <20200223020611.1802-1-allison.henderson@oracle.com>
- <20200223020611.1802-14-allison.henderson@oracle.com>
- <20200225085705.GI10776@dread.disaster.area>
- <6075dabe-c503-05e4-ac3a-9eb028d40e9d@oracle.com>
- <20200226223417.GA10776@dread.disaster.area>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <3256b993-d673-3524-57ef-29e7205aa74a@oracle.com>
-Date:   Wed, 26 Feb 2020 21:18:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725805AbgB0Fci (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Feb 2020 00:32:38 -0500
+Received: from mga07.intel.com ([134.134.136.100]:22354 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbgB0Fci (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:32:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:37 -0800
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="231696544"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:36 -0800
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Date:   Wed, 26 Feb 2020 21:24:30 -0800
+Message-Id: <20200227052442.22524-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20200226223417.GA10776@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270029
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270029
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+From: Ira Weiny <ira.weiny@intel.com>
+
+Changes from V4:
+	* Open code the aops lock rather than add it to the xfs_ilock()
+	  subsystem (Darrick's comments were obsoleted by this change)
+	* Fix lkp build suggestions and bugs
+
+Changes from V3:
+	* Remove global locking...  :-D
+	* put back per inode locking and remove pre-mature optimizations
+	* Fix issues with Directories having IS_DAX() set
+	* Fix kernel crash issues reported by Jeff
+	* Add some clean up patches
+	* Consolidate diflags to iflags functions
+	* Update/add documentation
+	* Reorder/rename patches quite a bit
+
+Changes from V2:
+
+	* Move i_dax_sem to be a global percpu_rw_sem rather than per inode
+		Internal discussions with Dan determined this would be easier,
+		just as performant, and slightly less overhead that having it
+		in the SB as suggested by Jan
+	* Fix locking order in comments and throughout code
+	* Change "mode" to "state" throughout commits
+	* Add CONFIG_FS_DAX wrapper to disable inode_[un]lock_state() when not
+		configured
+	* Add static branch for which is activated by a device which supports
+		DAX in XFS
+	* Change "lock/unlock" to up/down read/write as appropriate
+		Previous names were over simplified
+	* Update comments/documentation
+
+	* Remove the xfs specific lock to the vfs (global) layer.
+	* Fix i_dax_sem locking order and comments
+
+	* Move 'i_mapped' count from struct inode to struct address_space and
+		rename it to mmap_count
+	* Add inode_has_mappings() call
+
+	* Fix build issues
+	* Clean up syntax spacing and minor issues
+	* Update man page text for STATX_ATTR_DAX
+	* Add reviewed-by's
+	* Rebase to 5.6
+
+	Rename patch:
+		from: fs/xfs: Add lock/unlock state to xfs
+		to: fs/xfs: Add write DAX lock to xfs layer
+	Add patch:
+		fs/xfs: Clarify lockdep dependency for xfs_isilocked()
+	Drop patch:
+		fs/xfs: Fix truncate up
 
 
-On 2/26/20 3:34 PM, Dave Chinner wrote:
-> On Tue, Feb 25, 2020 at 04:57:46PM -0800, Allison Collins wrote:
->> On 2/25/20 1:57 AM, Dave Chinner wrote:
->>> On Sat, Feb 22, 2020 at 07:06:05PM -0700, Allison Collins wrote:
->>>> +out:
->>>> +	return error;
->>>> +}
->>>
->>> Brian commented on the structure of this loop better than I could.
->>>
->>>> +
->>>> +/*
->>>> + * Remove the attribute specified in @args.
->>>> + *
->>>> + * This function may return -EAGAIN to signal that the transaction needs to be
->>>> + * rolled.  Callers should continue calling this function until they receive a
->>>> + * return value other than -EAGAIN.
->>>> + */
->>>> +int
->>>> +xfs_attr_remove_iter(
->>>>    	struct xfs_da_args      *args)
->>>>    {
->>>>    	struct xfs_inode	*dp = args->dp;
->>>>    	int			error;
->>>> +	/* State machine switch */
->>>> +	switch (args->dac.dela_state) {
->>>> +	case XFS_DAS_RM_SHRINK:
->>>> +	case XFS_DAS_RMTVAL_REMOVE:
->>>> +		goto node;
->>>> +	default:
->>>> +		break;
->>>> +	}
->>>
->>> Why separate out the state machine? Doesn't this shortcut the
->>> xfs_inode_hasattr() check? Shouldn't that come first?
->> Well, the idea is that when we first start the routine, we come in with
->> neither state set, and we fall through to the break.  So we execute the
->> check the first time through.
->>
->> Though now that you point it out, I should probably go back and put the
->> explicit numbering back in the enum (starting with 1) or they will default
->> to zero, which would be incorrect.  I had pulled it out in one of the last
->> reviews thinking it would be ok, but it should go back in.
->>
->>>
->>> As it is:
->>>
->>> 	case XFS_DAS_RM_SHRINK:
->>> 	case XFS_DAS_RMTVAL_REMOVE:
->>> 		return xfs_attr_node_removename(args);
->>> 	default:
->>> 		break;
->>>
->>> would be nicer, and if this is the only way we can get to
->>> xfs_attr_node_removename(c, getting rid of it from the code
->>> below could be done, too.
->> Well, the remove path is a lot simpler than the set path, so that trick does
->> work here :-)
->>
->> The idea though was to establish "jump points" with the "XFS_DAS_*" states.
->> Based on the state, we jump back to where we were.  We could break this
->> pattern for the remove path, but I dont think we'd want to do the same for
->> the others.  The set routine is a really big function that would end up
->> being inside a really big switch!
-> 
-> Right, which is why I think it should be factored into function
-> calls first, then the switch statement simply becomes a small set of
-> function calls.
-> 
-> We use that pattern quite a bit in the da_btree code to call
-> the correct dir/attr function based on the type of block we are
-> manipulating (i.e. based on da_state context). e.g. xfs_da3_split(),
-> xfs_da3_join(), etc.
-I see, sure will do.  The patches were ordered much that way in the last 
-version, so it wouldnt be hard to undo.
+At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
+consumption due to their inability to detect whether the kernel will
+instantiate page cache for a file, and cases where a global dax enable via a
+mount option is too coarse.
 
-> 
->>>>    	struct xfs_da_geometry *geo;	/* da block geometry */
->>>>    	struct xfs_name	name;		/* name, length and argument  flags*/
->>>>    	uint8_t		filetype;	/* filetype of inode for directories */
->>>> diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
->>>> index 1887605..9a649d1 100644
->>>> --- a/fs/xfs/scrub/common.c
->>>> +++ b/fs/xfs/scrub/common.c
->>>> @@ -24,6 +24,8 @@
->>>>    #include "xfs_rmap_btree.h"
->>>>    #include "xfs_log.h"
->>>>    #include "xfs_trans_priv.h"
->>>> +#include "xfs_da_format.h"
->>>> +#include "xfs_da_btree.h"
->>>>    #include "xfs_attr.h"
->>>>    #include "xfs_reflink.h"
->>>>    #include "scrub/scrub.h"
->>>
->>> Hmmm - why are these new includes necessary? You didn't add anything
->>> new to these files or common header files to make the includes
->>> needed....
->>
->> Because the delayed attr context uses things from those headers.  And we put
->> the context in xfs_da_args.  Now everything that uses xfs_da_args needs
->> those includes.  But maybe if we do what you suggest above, we wont need to.
->> :-)
-> 
-> put:
-> 
-> struct xfs_da_state;
-> 
-> and whatever other forward declarations are require for the pointer
-> types used in the delayed attr context at the top of xfs_attr.h.
-> 
-> These are just pointers in the structure, so we don't need the full
-> structure definitions if the pointers aren't actually dereferenced
-> by the code that includes the header file.
-Alrighty, will fix.
+The following patch series enables selecting the use of DAX on individual files
+and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
+scheme the dax mount option can be omitted to allow the per-file property to
+take effect.
 
-Thanks for the reviews!
-Allison
+The insight at LSF/MM was to separate the per-mount or per-file "physical"
+capability switch from an "effective" attribute for the file.
 
-> 
-> Cheers,
-> 
-> Dave.
-> 
+At LSF/MM we discussed the difficulties of switching the DAX state of a file
+with active mappings / page cache.  It was thought the races could be avoided
+by limiting DAX state flips to 0-length files.
+
+However, this turns out to not be true.[3] This is because address space
+operations (a_ops) may be in use at any time the inode is referenced and users
+have expressed a desire to be able to change the DAX state on a file with data
+in it.  For those reasons this patch set allows changing the DAX state flag on
+a file as long as it is not current mapped.
+
+Details of when and how DAX state can be changed on a file is included in a
+documentation patch.
+
+It should be noted that the physical DAX flag inheritance is not shown in this
+patch set as it was maintained from previous work on XFS.  The physical DAX
+flag and it's inheritance will need to be added to other file systems for user
+control. 
+
+As submitted this works on real hardware testing.
+
+
+[1] https://lwn.net/Articles/787973/
+[2] https://lwn.net/Articles/787233/
+[3] https://lkml.org/lkml/2019/10/20/96
+[4] https://patchwork.kernel.org/patch/11310511/
+
+
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+
+
+Ira Weiny (12):
+  fs/xfs: Remove unnecessary initialization of i_rwsem
+  fs: Remove unneeded IS_DAX() check
+  fs/stat: Define DAX statx attribute
+  fs/xfs: Isolate the physical DAX flag from enabled
+  fs/xfs: Create function xfs_inode_enable_dax()
+  fs: Add locking for a dynamic address space operations state
+  fs: Prevent DAX state change if file is mmap'ed
+  fs/xfs: Hold off aops users while changing DAX state
+  fs/xfs: Clean up locking in dax invalidate
+  fs/xfs: Allow toggle of effective DAX flag
+  fs/xfs: Remove xfs_diflags_to_linux()
+  Documentation/dax: Update Usage section
+
+ Documentation/filesystems/dax.txt | 84 +++++++++++++++++++++++++-
+ Documentation/filesystems/vfs.rst | 16 +++++
+ fs/attr.c                         |  1 +
+ fs/inode.c                        | 16 ++++-
+ fs/iomap/buffered-io.c            |  1 +
+ fs/open.c                         |  4 ++
+ fs/stat.c                         |  5 ++
+ fs/xfs/xfs_icache.c               |  5 +-
+ fs/xfs/xfs_inode.h                |  2 +
+ fs/xfs/xfs_ioctl.c                | 98 +++++++++++++++----------------
+ fs/xfs/xfs_iops.c                 | 69 +++++++++++++++-------
+ include/linux/fs.h                | 73 ++++++++++++++++++++++-
+ include/uapi/linux/stat.h         |  1 +
+ mm/fadvise.c                      |  7 ++-
+ mm/filemap.c                      |  4 ++
+ mm/huge_memory.c                  |  1 +
+ mm/khugepaged.c                   |  2 +
+ mm/mmap.c                         | 19 +++++-
+ mm/util.c                         |  9 ++-
+ 19 files changed, 328 insertions(+), 89 deletions(-)
+
+-- 
+2.21.0
+
