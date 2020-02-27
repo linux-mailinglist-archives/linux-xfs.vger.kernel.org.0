@@ -2,292 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F32D0171417
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 10:24:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD4B171414
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 10:24:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgB0JYq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Feb 2020 04:24:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8282 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728614AbgB0JYq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Feb 2020 04:24:46 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R9KnTm145660
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:44 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydq6x7apq-1
+        id S1728454AbgB0JYY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Feb 2020 04:24:24 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42716 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728614AbgB0JYY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Feb 2020 04:24:24 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R9Jp6I115398
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:23 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydqf8ejfj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:44 -0500
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:22 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Thu, 27 Feb 2020 09:24:42 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 27 Feb 2020 09:24:20 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 09:24:39 -0000
+        Thu, 27 Feb 2020 09:24:17 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R9OcpZ55443588
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R9OGdU58523770
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 09:24:38 GMT
+        Thu, 27 Feb 2020 09:24:16 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B34AA407B;
-        Thu, 27 Feb 2020 09:24:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7F84CA405D;
+        Thu, 27 Feb 2020 09:24:16 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B2C6A4055;
-        Thu, 27 Feb 2020 09:24:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4E6F5A4055;
+        Thu, 27 Feb 2020 09:24:14 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.85.71.82])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 09:24:35 +0000 (GMT)
+        Thu, 27 Feb 2020 09:24:13 +0000 (GMT)
 From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
 Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, david@fromorbit.com,
-        darrick.wong@oracle.com, amir73il@gmail.com
-Subject: Re: [PATCH V4 RESEND 7/7] xfs: Fix log reservation calculation for xattr insert operation
-Date:   Thu, 27 Feb 2020 14:44:11 +0530
+        darrick.wong@oracle.com, bfoster@redhat.com, amir73il@gmail.com
+Subject: Re: [PATCH V4 RESEND 1/7] xfs: Pass xattr name and value length explicitly to xfs_attr_leaf_newentsize
+Date:   Thu, 27 Feb 2020 14:57:07 +0530
 Organization: IBM
-In-Reply-To: <20200226185050.GD19695@bfoster>
-References: <20200224040044.30923-1-chandanrlinux@gmail.com> <2457163.KJ604EA27E@localhost.localdomain> <20200226185050.GD19695@bfoster>
+In-Reply-To: <20200226165852.GA10529@infradead.org>
+References: <20200224040044.30923-1-chandanrlinux@gmail.com> <20200224040044.30923-2-chandanrlinux@gmail.com> <20200226165852.GA10529@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 X-TM-AS-GCONF: 00
-x-cbid: 20022709-4275-0000-0000-000003A5EB9E
+x-cbid: 20022709-0012-0000-0000-0000038AB9E3
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022709-4276-0000-0000-000038BA2962
-Message-Id: <1915611.aRCDV9Np7A@localhost.localdomain>
+x-cbparentid: 20022709-0013-0000-0000-000021C76271
+Message-Id: <3674803.ahhNVcWJD3@localhost.localdomain>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-27_02:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 adultscore=0 impostorscore=0
- phishscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002270075
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=1
+ mlxlogscore=999 bulkscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 malwarescore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270075
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thursday, February 27, 2020 12:20 AM Brian Foster wrote: 
-> On Wed, Feb 26, 2020 at 04:51:13PM +0530, Chandan Rajendra wrote:
-> > On Tuesday, February 25, 2020 10:49 PM Brian Foster wrote: 
-> > > On Mon, Feb 24, 2020 at 09:30:44AM +0530, Chandan Rajendra wrote:
-> > > > Log space reservation for xattr insert operation can be divided into two
-> > > > parts,
-> > > > 1. Mount time
-> > > >    - Inode
-> > > >    - Superblock for accounting space allocations
-> > > >    - AGF for accounting space used by count, block number, rmap and refcnt
-> > > >      btrees.
-> > > > 
-> > > > 2. The remaining log space can only be calculated at run time because,
-> > > >    - A local xattr can be large enough to cause a double split of the dabtree.
-> > > >    - The value of the xattr can be large enough to be stored in remote
-> > > >      blocks. The contents of the remote blocks are not logged.
-> > > > 
-> > > >    The log space reservation could be,
-> > > >    - 2 * XFS_DA_NODE_MAXDEPTH number of blocks. Additional XFS_DA_NODE_MAXDEPTH
-> > > >      number of blocks are required if xattr is large enough to cause another
-> > > >      split of the dabtree path from root to leaf block.
-> > > >    - BMBT blocks for storing (2 * XFS_DA_NODE_MAXDEPTH) record
-> > > >      entries. Additional XFS_DA_NODE_MAXDEPTH number of blocks are required in
-> > > >      case of a double split of the dabtree path from root to leaf blocks.
-> > > >    - Space for logging blocks of count, block number, rmap and refcnt btrees.
-> > > > 
-> > > > Presently, mount time log reservation includes block count required for a
-> > > > single split of the dabtree. The dabtree block count is also taken into
-> > > > account by xfs_attr_calc_size().
-> > > > 
-> > > > Also, AGF log space reservation isn't accounted for.
-> > > > 
-> > > > Due to the reasons mentioned above, log reservation calculation for xattr
-> > > > insert operation gives an incorrect value.
-> > > > 
-> > > > Apart from the above, xfs_log_calc_max_attrsetm_res() passes byte count as
-> > > > an argument to XFS_NEXTENTADD_SPACE_RES() instead of block count.
-> > > > 
-> > > > To fix these issues, this commit changes xfs_attr_calc_size() to also
-> > > > calculate the number of dabtree blocks that need to be logged.
-> > > > 
-> > > > xfs_attr_set() uses the following values computed by xfs_attr_calc_size()
-> > > > 1. The number of dabtree blocks that need to be logged.
-> > > > 2. The number of remote blocks that need to be allocated.
-> > > > 3. The number of dabtree blocks that need to be allocated.
-> > > > 4. The number of bmbt blocks that need to be allocated.
-> > > > 5. The total number of blocks that need to be allocated.
-> > > > 
-> > > > ... to compute number of bytes that need to be reserved in the log.
-> > > > 
-> > > > This commit also modifies xfs_log_calc_max_attrsetm_res() to invoke
-> > > > xfs_attr_calc_size() to obtain the number of blocks to be logged which it uses
-> > > > to figure out the total number of bytes to be logged.
-> > > > 
-> > > > Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
-> > > > ---
-> > > >  fs/xfs/libxfs/xfs_attr.c       |  7 +++--
-> > > >  fs/xfs/libxfs/xfs_attr.h       |  3 ++
-> > > >  fs/xfs/libxfs/xfs_log_rlimit.c | 16 +++++------
-> > > >  fs/xfs/libxfs/xfs_trans_resv.c | 50 ++++++++++++++++------------------
-> > > >  fs/xfs/libxfs/xfs_trans_resv.h |  2 ++
-> > > >  5 files changed, 41 insertions(+), 37 deletions(-)
-> > > > 
-> > > > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> > > > index 1d62ce80d7949..f056f8597ee03 100644
-> > > > --- a/fs/xfs/libxfs/xfs_attr.c
-> > > > +++ b/fs/xfs/libxfs/xfs_attr.c
-> > > > @@ -182,9 +182,12 @@ xfs_attr_calc_size(
-> > > >  	size = xfs_attr_leaf_newentsize(mp->m_attr_geo, namelen, valuelen,
-> > > >  			local);
-> > > >  	resv->total_dablks = XFS_DAENTER_BLOCKS(mp, XFS_ATTR_FORK);
-> > > > +	resv->log_dablks = 2 * resv->total_dablks;
-> > > > +
-> > > >  	if (*local) {
-> > > >  		if (size > (blksize / 2)) {
-> > > >  			/* Double split possible */
-> > > > +			resv->log_dablks += resv->total_dablks;
-> > > 
-> > > I'm not quite clear on why log is double the total above, then we add an
-> > > increment of total here. Can you elaborate on this?
-> > 
-> > - resv->total_dablks = XFS_DAENTER_BLOCKS(mp, XFS_ATTR_FORK); 
-> > 
-> >   This gives the number of dabtree blocks that we might need to allocate. If
-> >   we do indeed allocate resv->total_dablks worth of blocks then it would mean
-> >   that we would have split blocks from the root node to the leaf node of the
-> >   dabtree. We would then need to log the following blocks,
-> >   - Blocks belonging to the original path from root node to the leaf node.
-> >   - The new set of blocks from the root node to the leaf node which resulted
-> >     from splitting the corresponding blocks in the original path.
-> >   Thus the number of blocks to be logged is 2 * resv->total_dablks.
-> > 
-> 
-> Got it.
-> 
-> > - Double split
-> >   If the size of the xattr is large enough to cause another split, then we
-> >   would need yet another set of new blocks for representing the path from root
-> >   to the leaf.  This is taken into consideration by 'resv->total_dablks *= 2'.
-> >   These new blocks might also need to logged. So resv->log_dablks should be
-> >   incremented by number of blocks b/w root node and the leaf. I now feel that
-> >   the statement could be rewritten in the following manner, 'resv->log_dablks
-> >   += XFS_DAENTER_BLOCKS(mp, XFS_ATTR_FORK)' if that makes it easier to
-> >   understand.
-> > 
-> 
-> Yeah, it might be clearer overall to not intertwine the fields.
-> 
-> > > 
-> > > >  			resv->total_dablks *= 2;
-> > > >  		}
-> > > >  		resv->rmt_blks = 0;
-> > > > @@ -349,9 +352,7 @@ xfs_attr_set(
-> > > >  				return error;
-> > > >  		}
-> > > >  
-> > > > -		tres.tr_logres = M_RES(mp)->tr_attrsetm.tr_logres +
-> > > > -				 M_RES(mp)->tr_attrsetrt.tr_logres *
-> > > > -					args->total;
-> > > > +		tres.tr_logres = xfs_calc_attr_res(mp, &resv);
-> > > 
-> > > So instead of using the runtime reservation calculation, we call this
-> > > new function that uses the block res structure and calculates log
-> > > reservation for us. Seems like a decent cleanup, but I'm still having
-> > > some trouble determining what is cleanup vs. what is fixing the res
-> > > calculation.
-> > 
-> > Log reservation calculation for xattr set operation in XFS is
-> > incorrect because,
-> > 
-> > - xfs_attr_set() computes the total log space reservation as the
-> >   sum of 
-> >   1. Mount time log reservation (M_RES(mp)->tr_attrsetm.tr_logres)
-> >      Here, XFS incorrectly includes the number of blocks from root
-> >      node to the leaf of a dabtree. This is incorrect because the
-> >      number of such paths (from root node to leaf) depends on the
-> >      size of the xattr. If the xattr is local but large enough to
-> >      cause a double split then we would need three times the
-> >      number of blocks in a path from root node to leaf. Hence the
-> >      number of dabtree blocks that need to be logged is something
-> >      that cannot be calculated at mount time.
-> > 
-> 
-> Ok, so the dabtree portion doesn't properly account for dabtree splits
-> and cannot do so as part of a mount time calculation.
-> 
-> >      Also, the mount log reservation calcuation does not account
-> >      for log space required for logging the AGF.
+On Wednesday, February 26, 2020 10:28 PM Christoph Hellwig wrote: 
+> > diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+> > index fae322105457a..65a3bf40c4f9d 100644
+> > --- a/fs/xfs/libxfs/xfs_attr_leaf.c
+> > +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+> > @@ -1403,6 +1404,7 @@ xfs_attr3_leaf_add_work(
+> >  	struct xfs_attr_leaf_name_local *name_loc;
+> >  	struct xfs_attr_leaf_name_remote *name_rmt;
+> >  	struct xfs_mount	*mp;
+> > +	int			entsize;
+> >  	int			tmp;
+> >  	int			i;
 > >  
+> > @@ -1432,11 +1434,14 @@ xfs_attr3_leaf_add_work(
+> >  	ASSERT(ichdr->freemap[mapindex].base < args->geo->blksize);
+> >  	ASSERT((ichdr->freemap[mapindex].base & 0x3) == 0);
+> >  	ASSERT(ichdr->freemap[mapindex].size >=
+> > -		xfs_attr_leaf_newentsize(args, NULL));
+> > +		xfs_attr_leaf_newentsize(args->geo, args->namelen,
+> > +				args->valuelen, NULL));
+> >  	ASSERT(ichdr->freemap[mapindex].size < args->geo->blksize);
+> >  	ASSERT((ichdr->freemap[mapindex].size & 0x3) == 0);
+> >  
+> > -	ichdr->freemap[mapindex].size -= xfs_attr_leaf_newentsize(args, &tmp);
+> > +	entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
+> > +			args->valuelen, &tmp);
+> > +	ichdr->freemap[mapindex].size -= entsize;
 > 
-> Ok.
->     
-> >   2. Run time log reservatation
-> >      This is calculated by multiplying two components,
-> >      - The first component consists of sum of the following
-> >        - Superblock
-> >        - The number of bytes for logging a single path from root
-> >          to leaf of a bmbt tree.
-> >      - The second component consists of,
-> >        - The number of dabtree blocks
-> >        - The number of bmbt blocks required for mapping new
-> >          dabtree blocks.
-> >      Here Bmbt blocks gets accounted twice. Also it does not make sense to
-> >      multiply these two components.
-> > 
+> As-is this entsize variable is a little pointless.  Please move the
+> assignment to it up and reuse it in the assert.
 > 
-> Hm, Ok. I think I follow, though I'm still curious if this was a
-> reproducible problem or not.
+> > @@ -1824,6 +1829,8 @@ xfs_attr3_leaf_figure_balance(
+> >  	struct xfs_attr_leafblock	*leaf1 = blk1->bp->b_addr;
+> >  	struct xfs_attr_leafblock	*leaf2 = blk2->bp->b_addr;
+> >  	struct xfs_attr_leaf_entry	*entry;
+> > +	struct xfs_da_args		*args;
+> > +	int				entsize;
+> >  	int				count;
+> >  	int				max;
+> >  	int				index;
+> > @@ -1833,14 +1840,16 @@ xfs_attr3_leaf_figure_balance(
+> >  	int				foundit = 0;
+> >  	int				tmp;
+> >  
+> > +	args = state->args;
 > 
-> > The other bug is related to calcuation performed in
-> > xfs_log_calc_max_attrsetm_res(),
-> > 1. The call to XFS_DAENTER_SPACE_RES() macro returns the number of
-> >    blocks required for a single split of dabtree and the
-> >    corresponding number of bmbt blocks required for mapping the new
-> >    dabtree blocks.
-> > 2. The space occupied by the attribute value is treated as if it
-> >    were a remote attribute and the space for it along with the
-> >    corresponding bmbt blocks required is added to the number of
-> >    blocks obtained in step 1.
-> > 3. This sum is then multiplied with the runtime reservation. Here
-> >    again Bmbt blocks gets accounted twice, once from the 'run time
-> >    reservation' and the other from the call to
-> >    XFS_DAENTER_SPACE_RES().
-> > 4. The result from step 3 is added to 'mount time log
-> >    reservation'. This means that the log space reservation is
-> >    accounted twice for dabtree blocks.
-> > 
-> > To solve these problems, the fix consists of,
-> > 1. Mounting time log reservation now includes only
-> >    - Inode
-> >    - Superblock
-> >    - AGF
-> >    i.e. we don't consider the dabtree logging space requirement
-> >    when calculating mount time log reservation.
-> > 
-> > 2. Run time log reservation
-> >    To calculate run time log reservation we change xfs_attr_calc_size()
-> >    to return, 
-> >    1. Number of Dabtree blocks required.
-> >    2. Number of Dabtree blocks that might need to be logged.
-> >    3. Number of remote blocks.
-> >    4. Number of Bmbt blocks that might be required.
-> > 
+> Please assign the value to the variable at the time of declaration.
 > 
-> Can we further break down some of these changes into smaller patches
-> that either fix one issue or do some refactoring? For example, one patch
-> could move the existing rt reservation out of ->tr_attrsetrt (removing
-> it) and establish the new xfs_calc_attr_res() function without changing
-> the reservation. Another patch could move the dabtree component from the
-> mount time to the runtime calculation. It's not clear to me if the
-> individual components of the new rt calculation can be further broken
-> down from there without risk of transient regression, but it seems we
-> should at least be able to rework the reservation calculation in a
-> single patch that does so from first principles with the necessary
-> refactoring work to accommodate the proper mount/run time components
-> already done..
+> >  	/*
+> >  	 * Examine entries until we reduce the absolute difference in
+> >  	 * byte usage between the two blocks to a minimum.
+> >  	 */
+> >  	max = ichdr1->count + ichdr2->count;
+> >  	half = (max + 1) * sizeof(*entry);
+> > -	half += ichdr1->usedbytes + ichdr2->usedbytes +
+> > -			xfs_attr_leaf_newentsize(state->args, NULL);
+> > +	entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
+> > +			args->valuelen, NULL);
+> > +	half += ichdr1->usedbytes + ichdr2->usedbytes + entsize;
+> >  	half /= 2;
+> >  	lastdelta = state->args->geo->blksize;
+> >  	entry = xfs_attr3_leaf_entryp(leaf1);
+> > @@ -1851,8 +1860,9 @@ xfs_attr3_leaf_figure_balance(
+> >  		 * The new entry is in the first block, account for it.
+> >  		 */
+> >  		if (count == blk1->index) {
+> > -			tmp = totallen + sizeof(*entry) +
+> > -				xfs_attr_leaf_newentsize(state->args, NULL);
+> > +			entsize = xfs_attr_leaf_newentsize(args->geo,
+> > +					args->namelen, args->valuelen, NULL);
+> > +			tmp = totallen + sizeof(*entry) + entsize;
+> >  			if (XFS_ATTR_ABS(half - tmp) > lastdelta)
+> >  				break;
+> >  			lastdelta = XFS_ATTR_ABS(half - tmp);
+> > @@ -1887,8 +1897,9 @@ xfs_attr3_leaf_figure_balance(
+> >  	 */
+> >  	totallen -= count * sizeof(*entry);
+> >  	if (foundit) {
+> > -		totallen -= sizeof(*entry) +
+> > -				xfs_attr_leaf_newentsize(state->args, NULL);
+> > +		entsize = xfs_attr_leaf_newentsize(args->geo, args->namelen,
+> > +				args->valuelen, NULL);
+> > +		totallen -= sizeof(*entry) + entsize;
+> 
+> AFAICS there is no need to assign the same value to entsize again and
+> again in this function.  It should be enough to assign to it once and
+> then reuse the value.
 > 
 
-Sure, I will try to break it down into as many logical patches as possible.
+Sorry about those redundant function calls. I will include the changes
+suggested in the next version of the patchset.
 
 -- 
 chandan
