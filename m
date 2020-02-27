@@ -2,40 +2,38 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FC2F17105A
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 06:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB57171090
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 06:38:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgB0Fc7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Feb 2020 00:32:59 -0500
-Received: from mga01.intel.com ([192.55.52.88]:17728 "EHLO mga01.intel.com"
+        id S1725928AbgB0Fiy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Feb 2020 00:38:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:22722 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgB0Fcr (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:32:47 -0500
+        id S1725730AbgB0Fix (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:38:53 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:46 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
 X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="261320404"
+   d="scan'208";a="241933233"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:46 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
 From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
+To:     fstests@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Dave Chinner <david@fromorbit.com>,
         Christoph Hellwig <hch@lst.de>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH V5 12/12] Documentation/dax: Update Usage section
-Date:   Wed, 26 Feb 2020 21:24:42 -0800
-Message-Id: <20200227052442.22524-13-ira.weiny@intel.com>
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] xfs/XXX: Add xfs/XXX
+Date:   Wed, 26 Feb 2020 21:38:47 -0800
+Message-Id: <20200227053847.1888-1-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200227052442.22524-1-ira.weiny@intel.com>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
@@ -45,109 +43,347 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Update the Usage section to reflect the new individual dax selection
-functionality.
+Add XXX to test the various setting of dax flags on files.
+
+The final fsx test was derived from Christophs test here but I wanted
+more direct function tests as well so I bundled this together.
+
+https://www.spinics.net/lists/linux-xfs/msg10124.html
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- Documentation/filesystems/dax.txt | 84 ++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 679729442fd2..32e37c550f76 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -20,8 +20,88 @@ Usage
- If you have a block device which supports DAX, you can make a filesystem
- on it as usual.  The DAX code currently only supports files with a block
- size equal to your kernel's PAGE_SIZE, so you may need to specify a block
--size when creating the filesystem.  When mounting it, use the "-o dax"
--option on the command line or add 'dax' to the options in /etc/fstab.
-+size when creating the filesystem.
+---
+This tests against V4 and V5:
+https://lore.kernel.org/lkml/20200227052442.22524-1-ira.weiny@intel.com/
+---
+ tests/xfs/999     | 279 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/999.out |  21 ++++
+ tests/xfs/group   |   1 +
+ 3 files changed, 301 insertions(+)
+ create mode 100755 tests/xfs/999
+ create mode 100644 tests/xfs/999.out
+
+diff --git a/tests/xfs/999 b/tests/xfs/999
+new file mode 100755
+index 000000000000..b123f1f39894
+--- /dev/null
++++ b/tests/xfs/999
+@@ -0,0 +1,279 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2019 Intel, Corp.  All Rights Reserved.
++#
++# FSQA Test No. 999 (temporary)
++#
++# Test setting of DAX flag
++#
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
 +
-+Enabling DAX on an individual file basis (XFS)
-+----------------------------------------------
++here=`pwd`
++status=1	# failure is the default!
 +
-+There are 2 per file dax flags.  One is a physical configuration setting and
-+the other a currently enabled state.
++dax_dir=$TEST_DIR/dax-dir
++dax_sub_dir=$TEST_DIR/dax-dir/dax-sub-dir
++dax_inh_file=$dax_dir/dax-inh-file
++dax_non_inh_file=$dax_dir/dax-non-inh-file
++non_dax=$TEST_DIR/non-dax
++dax_file=$TEST_DIR/dax-file
++dax_file_copy=$TEST_DIR/dax-file-copy
++dax_file_move=$TEST_DIR/dax-file-move
++data_file=$TEST_DIR/data-file
 +
-+The physical configuration setting is maintained on individual file and
-+directory inodes.  It is preserved within the file system.  This 'physical'
-+config setting can be set using an ioctl and/or an application such as "xfs_io
-+-c 'chattr [-+]x'".  Files and directories automatically inherit their physical
-+dax setting from their parent directory when created.  Therefore, setting the
-+physical dax setting at directory creation time can be used to set a default
-+behavior for that sub-tree.  Doing so on the root directory acts to set a
-+default for the entire file system.
++_cleanup() {
++	rm -rf $TEST_DIR/*
++}
 +
-+To clarify inheritance here are 3 examples:
++trap "_cleanup ; exit \$status" 0 1 2 3 15
 +
-+Example A:
++# get standard environment, filters and checks
++. ./common/rc
 +
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' a
-+mkdir a/b/c/d
-+mkdir a/e
++# real QA test starts here
++_supported_os Linux
++_require_xfs_io_command "lsattr"
++_require_xfs_io_command "chattr" "x"
++_require_xfs_io_command "statx"
++_require_test
 +
-+	dax: a,e
-+	no dax: b,c,d
++function mount_no_dax {
++	# mount SCRATCH_DEV with dax option, TEST_DEV not
++	export MOUNT_OPTIONS=""
++	export TEST_FS_MOUNT_OPTS=""
++	_test_unmount
++	_test_mount
++	_fs_options $TEST_DEV | grep -qw "dax"
++	if [ "$?" == "0" ]; then
++		_notrun "we need $TEST_DEV mount without dax"
++	fi
++}
 +
-+Example B:
++function mount_dax {
++	# mount SCRATCH_DEV with dax option, TEST_DEV not
++	export MOUNT_OPTIONS=""
++	export TEST_FS_MOUNT_OPTS=""
++	_test_unmount
++	_test_mount "-o dax"
++	_fs_options $TEST_DEV | grep -qw "dax"
++	if [ "$?" != "0" ]; then
++		_notrun "we need $TEST_DEV mount with dax"
++	fi
++}
 +
-+mkdir a
-+xfs_io 'chattr +x' a
-+mkdir -p a/b/c/d
++function check_phys_dax {
++	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
++	if [ "$?" != "0" ]; then
++		echo "FAILED: Did NOT find DAX flag on $1"
++		status=1; exit
++	fi
++}
 +
-+	dax: a,b,c,d
-+	no dax:
++function check_effective_dax {
++	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
++	masked=$(( $attr & 0x2000 ))
++	if [ "$masked" != "8192" ]; then
++		echo "FAILED: Did NOT find VFS DAX flag on $1"
++		status=1; exit
++	fi
++}
 +
-+Example C:
++function check_phys_no_dax {
++	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
++	if [ "$?" == "0" ]; then
++		echo "FAILED: Found DAX flag on $1"
++		status=1; exit
++	fi
++}
 +
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' c
-+mkdir a/b/c/d
++function check_effective_no_dax {
++	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
++	masked=$(( $attr & 0x2000 ))
++	if [ "$masked" == "8192" ]; then
++		echo "FAILED: Found VFS DAX flag on $1"
++		status=1; exit
++	fi
++}
 +
-+	dax: c,d
-+	no dax: a,b
++echo "running tests..."
++
++echo "   *** mount w/o dax flag."
++mount_no_dax
++
++echo "   *** mark dax-dir as dax enabled"
++mkdir $dax_dir
++xfs_io -c 'chattr +x' $dax_dir
++check_phys_dax $dax_dir
++
++echo "   *** check file inheritance"
++touch $dax_inh_file
++check_phys_dax $dax_inh_file
++check_effective_dax $dax_inh_file
++
++echo "   *** check directory inheritance"
++mkdir $dax_sub_dir
++check_phys_dax $dax_sub_dir
++
++echo "   *** check changing directory"
++xfs_io -c 'chattr -x' $dax_dir
++check_phys_no_dax $dax_dir
++check_effective_no_dax $dax_dir
++
++echo "   *** check non file inheritance"
++touch $dax_non_inh_file
++check_phys_no_dax $dax_non_inh_file
++check_effective_no_dax $dax_non_inh_file
++
++echo "   *** check that previous file stays enabled"
++check_phys_dax $dax_inh_file
++check_effective_dax $dax_inh_file
++
++echo "   *** Reset the directory"
++xfs_io -c 'chattr +x' $dax_dir
++check_phys_dax $dax_dir
 +
 +
-+The current inode enabled state is set when a file inode is loaded and it is
-+determined that the underlying media supports dax.
++# check mount override
++# ====================
 +
-+statx can be used to query the file's current enabled state.  NOTE that a
-+directory will never be operating in a dax state.  Therefore, the dax config
-+state must be queried to see what config state a file or sub-directory will
-+inherit from a directory.
++echo "   *** Remount fs with mount flag"
++mount_dax
++touch $non_dax
++check_phys_no_dax $non_dax
++check_effective_dax $non_dax
 +
-+NOTE: Setting a file or directory's config state with xfs_io is possible even
-+if the underlying media does not support dax.
++echo "   *** Check for non-dax files to be dax with mount option"
++check_effective_dax $dax_non_inh_file
++
++echo "   *** check for file dax flag 'sticky-ness' after remount"
++touch $dax_file
++xfs_io -c 'chattr +x' $dax_file
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++echo "   *** remount w/o mount flag"
++mount_no_dax
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++check_phys_no_dax $non_dax
++check_effective_no_dax $non_dax
 +
 +
-+Enabling dax on a file system wide basis ('-o dax' mount option)
-+----------------------------------------------------------------
++# Check non-zero file operations
++# ==============================
 +
-+The physical dax configuration of all files can be overridden using a mount
-+option.  In summary:
++echo "   *** file should change effective but page cache should be empty"
++$XFS_IO_PROG -f -c "pwrite 0 10000" $data_file > /dev/null
++xfs_io -c 'chattr +x' $data_file
++check_phys_dax $data_file
++check_effective_dax $data_file
 +
-+	(physical flag || mount option) && capable device == dax in effect
-+	(  <xfs_io>    ||  <'-o dax'> ) && capable device == <statx dax true>
 +
-+To enable the mount override, use "-o dax" on the command line or add
-+'dax' to the options in /etc/fstab
++# Check inheritance on cp, mv
++# ===========================
 +
-+Using the mount option does not change the physical configured state of
-+individual files.  Therefore, remounting _without_ the mount option will allow
-+the file system to set file's enabled state directly based on their config
-+setting.
++echo "   *** check inheritance on cp, mv"
++cp $non_dax $dax_dir/conv-dax
++check_phys_dax $dax_dir/conv-dax
++check_effective_dax $dax_dir/conv-dax
 +
-+NOTE: Setting a file or directory's physical config state is possible while the
-+file system is mounted with the dax override.  However, the file's enabled
-+state will continue to be overridden and "dax enabled" until the mount option
-+is removed and a remount performed.  At that point the file's physical config
-+state dictates the enabled state.
- 
- 
- Implementation Tips for Block Driver Writers
++echo "   *** Moved files 'don't inherit'"
++mv $non_dax $dax_dir/move-dax
++check_phys_no_dax $dax_dir/move-dax
++check_effective_no_dax $dax_dir/move-dax
++
++# Check preservation of phys on cp, mv
++# ====================================
++
++mv $dax_file $dax_file_move
++check_phys_dax $dax_file_move
++check_effective_dax $dax_file_move
++
++cp $dax_file_move $dax_file_copy
++check_phys_no_dax $dax_file_copy
++check_effective_no_dax $dax_file_copy
++
++
++# Verify no mode changes on mmap
++# ==============================
++
++echo "   *** check no mode change when mmaped"
++
++dd if=/dev/zero of=$dax_file bs=4096 count=10 > $tmp.log 2>&1
++
++# set known state.
++xfs_io -c 'chattr -x' $dax_file
++check_phys_no_dax $dax_file
++check_effective_no_dax $dax_file
++
++python3 - << EOF > $tmp.log 2>&1 &
++import mmap
++import time
++print ('mmaping "$dax_file"')
++f=open("$dax_file", "r+b")
++mm = mmap.mmap(f.fileno(), 0)
++print ('mmaped "$dax_file"')
++while True:
++	time.sleep(1)
++EOF
++pid=$!
++
++sleep 1
++
++# attempt to should fail
++xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
++check_phys_no_dax $dax_file
++check_effective_no_dax $dax_file
++
++kill -TERM $pid > /dev/null 2>&1
++wait $pid > /dev/null 2>&1
++
++# after mmap released should work
++xfs_io -c 'chattr +x' $dax_file
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++
++# Finally run the test stolen from Christoph Hellwig to test changing the mode
++# while performing a series of operations
++# =============================================================================
++
++function run_fsx {
++	options=$1
++
++	echo "   *** run 'fsx $options' racing with setting/clearing the DAX flag"
++	$here/ltp/fsx $options -N 20000 $dax_file > $tmp.log 2>&1 &
++	pid=$!
++
++	if [ ! -n "$pid" ]; then
++		echo "FAILED to start fsx"
++		exit 255
++	fi
++
++	# NOTE: fsx runs much faster than these mode changes.
++	for i in `seq 1 500`; do
++		xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
++		xfs_io -c 'chattr -x' $dax_file > /dev/null 2>&1
++	done
++
++	wait $pid
++	status=$?
++	if [ "$status" != "0" ]; then
++		cat /sys/kernel/debug/tracing/trace > trace_output
++		echo "FAILED: fsx exited with status : $status"
++		echo "        see trace_output"
++		head $dax_file.fsxlog
++		exit $status
++	fi
++	pid=""
++}
++
++run_fsx ""
++run_fsx "-A"
++run_fsx "-Z -r 4096 -w 4096"
++
++
++status=0 ; exit
+diff --git a/tests/xfs/999.out b/tests/xfs/999.out
+new file mode 100644
+index 000000000000..ccb13770ca4d
+--- /dev/null
++++ b/tests/xfs/999.out
+@@ -0,0 +1,21 @@
++QA output created by 999
++running tests...
++   *** mount w/o dax flag.
++   *** mark dax-dir as dax enabled
++   *** check file inheritance
++   *** check directory inheritance
++   *** check changing directory
++   *** check non file inheritance
++   *** check that previous file stays enabled
++   *** Reset the directory
++   *** Remount fs with mount flag
++   *** Check for non-dax files to be dax with mount option
++   *** check for file dax flag 'sticky-ness' after remount
++   *** remount w/o mount flag
++   *** file should change effective but page cache should be empty
++   *** check inheritance on cp, mv
++   *** Moved files 'don't inherit'
++   *** check no mode change when mmaped
++   *** run 'fsx ' racing with setting/clearing the DAX flag
++   *** run 'fsx -A' racing with setting/clearing the DAX flag
++   *** run 'fsx -Z -r 4096 -w 4096' racing with setting/clearing the DAX flag
+diff --git a/tests/xfs/group b/tests/xfs/group
+index 522d4bc44d1f..816883a268bf 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -511,3 +511,4 @@
+ 511 auto quick quota
+ 512 auto quick acl attr
+ 513 auto mount
++999 auto
 -- 
 2.21.0
 
