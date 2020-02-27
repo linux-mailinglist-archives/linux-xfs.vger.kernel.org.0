@@ -2,388 +2,196 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BB57171090
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 06:38:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92568171416
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Feb 2020 10:24:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgB0Fiy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Feb 2020 00:38:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22722 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB0Fix (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:38:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="241933233"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
-From:   ira.weiny@intel.com
-To:     fstests@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] xfs/XXX: Add xfs/XXX
-Date:   Wed, 26 Feb 2020 21:38:47 -0800
-Message-Id: <20200227053847.1888-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
+        id S1728653AbgB0JYi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Feb 2020 04:24:38 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57360 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728614AbgB0JYh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Feb 2020 04:24:37 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R9MFW4063347
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:37 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydcp5rem5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Feb 2020 04:24:37 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Thu, 27 Feb 2020 09:24:34 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Feb 2020 09:24:31 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R9OUwV57802756
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 09:24:30 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A782FA4055;
+        Thu, 27 Feb 2020 09:24:30 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91931A4053;
+        Thu, 27 Feb 2020 09:24:28 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.71.82])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Feb 2020 09:24:28 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
+        linux-xfs@vger.kernel.org, david@fromorbit.com,
+        darrick.wong@oracle.com, amir73il@gmail.com
+Subject: Re: [PATCH V4 RESEND 3/7] xfs: xfs_attr_calc_size: Calculate Bmbt blks only once
+Date:   Thu, 27 Feb 2020 14:29:16 +0530
+Organization: IBM
+In-Reply-To: <20200226164258.GC19695@bfoster>
+References: <20200224040044.30923-1-chandanrlinux@gmail.com> <9720921.4HTaHYPh1W@localhost.localdomain> <20200226164258.GC19695@bfoster>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20022709-0020-0000-0000-000003AE0A96
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022709-0021-0000-0000-0000220628FC
+Message-Id: <4371238.mKpYxNBjvR@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_02:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 mlxscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=1 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270075
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Wednesday, February 26, 2020 10:12 PM Brian Foster wrote: 
+> On Wed, Feb 26, 2020 at 08:33:12PM +0530, Chandan Rajendra wrote:
+> > On Tuesday, February 25, 2020 9:41 PM Brian Foster wrote: 
+> > > On Mon, Feb 24, 2020 at 09:30:40AM +0530, Chandan Rajendra wrote:
+> > > > The number of Bmbt blocks that is required can be calculated only once by
+> > > > passing the sum of total number of dabtree blocks and remote blocks to
+> > > > XFS_NEXTENTADD_SPACE_RES() macro.
+> > > > 
+> > > > Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+> > > > ---
+> > > 
+> > > According to the cover letter this is fixing a reservation calculation
+> > > issue, though the commit log kind of gives the impression it's a
+> > > refactor. Can you elaborate on what this fixes in the commit log?
+> > > 
+> > 
+> > XFS_NEXTENTADD_SPACE_RES() first figures out the number of Bmbt leaf blocks
+> > needed for mapping the 'block count' passed to it as the second argument.
+> > When calculating the number of leaf blocks, it accommodates the 'block count'
+> > argument in groups of XFS_MAX_CONTIG_EXTENTS_PER_BLOCK(mp). For each such
+> > group it decides that a bmbt leaf block is required. For each of the leaf
+> > blocks that needs to be allocated, it assumes that there will be a split of
+> > the bmbt tree from root to leaf. Hence it multiplies the number of leaf blocks
+> > with the maximum height of the tree.
+> > 
+> > With two individual calls to XFS_NEXTENTADD_SPACE_RES() (one is indirectly
+> > through the call to XFS_DAENTER_BMAPS() => XFS_DAENTER_BMAP1B() and the other
+> > is for remote attr blocks) we miss out on the opportunity to group the bmbt
+> > leaf blocks and hence overcompensate on the bmbt blocks calculation.
+> > 
+> > Please let me know if my understanding is incorrect.
+> > 
+> 
+> Ok, thanks. I think I follow the intent. This patch is actually intended
+> to reduce block reservation by simplifying this calculation, right?
 
-Add XXX to test the various setting of dax flags on files.
+I noticed xfs/132 test failing when I had changed the code to have 32-bit
+xattr extent counter. The corresponding mount failure was due to log size
+checks failing in xfs_log_mount(). The difference in value returned by
+xfs_log_calc_minimum_size() => xfs_log_get_max_trans_res() =>
+xfs_log_calc_max_attrsetm_res() was pretty large.
 
-The final fsx test was derived from Christophs test here but I wanted
-more direct function tests as well so I bundled this together.
+Upon code inspection I found the inconsistencies in
+xfs_log_calc_max_attrsetm_res() which are described in the cover letter and as
+part of the commit message of the last patch.
 
-https://www.spinics.net/lists/linux-xfs/msg10124.html
+After a quick chat with Dave on irc, we figured that the best approach was to
+convert xfs_attr_calc_size() into a helper function so that the size
+calculations for an xattr set operation is placed in a single function. These
+values can then be used by other functions like xfs_attr_set() and
+xfs_log_calc_max_attrsetm_res().
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Along the way, I found that the mount time reservation was incorrectly done as
+well. For E.g. dabtree splits getting accounted as part of mount time
+reservation was wrong. Due to these reasons and others listed in the cover
+letter I ended up changing the mount time and run time reservation
+calculations.
 
----
-This tests against V4 and V5:
-https://lore.kernel.org/lkml/20200227052442.22524-1-ira.weiny@intel.com/
----
- tests/xfs/999     | 279 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/999.out |  21 ++++
- tests/xfs/group   |   1 +
- 3 files changed, 301 insertions(+)
- create mode 100755 tests/xfs/999
- create mode 100644 tests/xfs/999.out
+Hence, The reduced reservation sizes are actually a side effect of fixing the
+inconsistencies.
 
-diff --git a/tests/xfs/999 b/tests/xfs/999
-new file mode 100755
-index 000000000000..b123f1f39894
---- /dev/null
-+++ b/tests/xfs/999
-@@ -0,0 +1,279 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2019 Intel, Corp.  All Rights Reserved.
-+#
-+# FSQA Test No. 999 (temporary)
-+#
-+# Test setting of DAX flag
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+status=1	# failure is the default!
-+
-+dax_dir=$TEST_DIR/dax-dir
-+dax_sub_dir=$TEST_DIR/dax-dir/dax-sub-dir
-+dax_inh_file=$dax_dir/dax-inh-file
-+dax_non_inh_file=$dax_dir/dax-non-inh-file
-+non_dax=$TEST_DIR/non-dax
-+dax_file=$TEST_DIR/dax-file
-+dax_file_copy=$TEST_DIR/dax-file-copy
-+dax_file_move=$TEST_DIR/dax-file-move
-+data_file=$TEST_DIR/data-file
-+
-+_cleanup() {
-+	rm -rf $TEST_DIR/*
-+}
-+
-+trap "_cleanup ; exit \$status" 0 1 2 3 15
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+
-+# real QA test starts here
-+_supported_os Linux
-+_require_xfs_io_command "lsattr"
-+_require_xfs_io_command "chattr" "x"
-+_require_xfs_io_command "statx"
-+_require_test
-+
-+function mount_no_dax {
-+	# mount SCRATCH_DEV with dax option, TEST_DEV not
-+	export MOUNT_OPTIONS=""
-+	export TEST_FS_MOUNT_OPTS=""
-+	_test_unmount
-+	_test_mount
-+	_fs_options $TEST_DEV | grep -qw "dax"
-+	if [ "$?" == "0" ]; then
-+		_notrun "we need $TEST_DEV mount without dax"
-+	fi
-+}
-+
-+function mount_dax {
-+	# mount SCRATCH_DEV with dax option, TEST_DEV not
-+	export MOUNT_OPTIONS=""
-+	export TEST_FS_MOUNT_OPTS=""
-+	_test_unmount
-+	_test_mount "-o dax"
-+	_fs_options $TEST_DEV | grep -qw "dax"
-+	if [ "$?" != "0" ]; then
-+		_notrun "we need $TEST_DEV mount with dax"
-+	fi
-+}
-+
-+function check_phys_dax {
-+	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
-+	if [ "$?" != "0" ]; then
-+		echo "FAILED: Did NOT find DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_effective_dax {
-+	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
-+	masked=$(( $attr & 0x2000 ))
-+	if [ "$masked" != "8192" ]; then
-+		echo "FAILED: Did NOT find VFS DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_phys_no_dax {
-+	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
-+	if [ "$?" == "0" ]; then
-+		echo "FAILED: Found DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_effective_no_dax {
-+	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
-+	masked=$(( $attr & 0x2000 ))
-+	if [ "$masked" == "8192" ]; then
-+		echo "FAILED: Found VFS DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+echo "running tests..."
-+
-+echo "   *** mount w/o dax flag."
-+mount_no_dax
-+
-+echo "   *** mark dax-dir as dax enabled"
-+mkdir $dax_dir
-+xfs_io -c 'chattr +x' $dax_dir
-+check_phys_dax $dax_dir
-+
-+echo "   *** check file inheritance"
-+touch $dax_inh_file
-+check_phys_dax $dax_inh_file
-+check_effective_dax $dax_inh_file
-+
-+echo "   *** check directory inheritance"
-+mkdir $dax_sub_dir
-+check_phys_dax $dax_sub_dir
-+
-+echo "   *** check changing directory"
-+xfs_io -c 'chattr -x' $dax_dir
-+check_phys_no_dax $dax_dir
-+check_effective_no_dax $dax_dir
-+
-+echo "   *** check non file inheritance"
-+touch $dax_non_inh_file
-+check_phys_no_dax $dax_non_inh_file
-+check_effective_no_dax $dax_non_inh_file
-+
-+echo "   *** check that previous file stays enabled"
-+check_phys_dax $dax_inh_file
-+check_effective_dax $dax_inh_file
-+
-+echo "   *** Reset the directory"
-+xfs_io -c 'chattr +x' $dax_dir
-+check_phys_dax $dax_dir
-+
-+
-+# check mount override
-+# ====================
-+
-+echo "   *** Remount fs with mount flag"
-+mount_dax
-+touch $non_dax
-+check_phys_no_dax $non_dax
-+check_effective_dax $non_dax
-+
-+echo "   *** Check for non-dax files to be dax with mount option"
-+check_effective_dax $dax_non_inh_file
-+
-+echo "   *** check for file dax flag 'sticky-ness' after remount"
-+touch $dax_file
-+xfs_io -c 'chattr +x' $dax_file
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+echo "   *** remount w/o mount flag"
-+mount_no_dax
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+check_phys_no_dax $non_dax
-+check_effective_no_dax $non_dax
-+
-+
-+# Check non-zero file operations
-+# ==============================
-+
-+echo "   *** file should change effective but page cache should be empty"
-+$XFS_IO_PROG -f -c "pwrite 0 10000" $data_file > /dev/null
-+xfs_io -c 'chattr +x' $data_file
-+check_phys_dax $data_file
-+check_effective_dax $data_file
-+
-+
-+# Check inheritance on cp, mv
-+# ===========================
-+
-+echo "   *** check inheritance on cp, mv"
-+cp $non_dax $dax_dir/conv-dax
-+check_phys_dax $dax_dir/conv-dax
-+check_effective_dax $dax_dir/conv-dax
-+
-+echo "   *** Moved files 'don't inherit'"
-+mv $non_dax $dax_dir/move-dax
-+check_phys_no_dax $dax_dir/move-dax
-+check_effective_no_dax $dax_dir/move-dax
-+
-+# Check preservation of phys on cp, mv
-+# ====================================
-+
-+mv $dax_file $dax_file_move
-+check_phys_dax $dax_file_move
-+check_effective_dax $dax_file_move
-+
-+cp $dax_file_move $dax_file_copy
-+check_phys_no_dax $dax_file_copy
-+check_effective_no_dax $dax_file_copy
-+
-+
-+# Verify no mode changes on mmap
-+# ==============================
-+
-+echo "   *** check no mode change when mmaped"
-+
-+dd if=/dev/zero of=$dax_file bs=4096 count=10 > $tmp.log 2>&1
-+
-+# set known state.
-+xfs_io -c 'chattr -x' $dax_file
-+check_phys_no_dax $dax_file
-+check_effective_no_dax $dax_file
-+
-+python3 - << EOF > $tmp.log 2>&1 &
-+import mmap
-+import time
-+print ('mmaping "$dax_file"')
-+f=open("$dax_file", "r+b")
-+mm = mmap.mmap(f.fileno(), 0)
-+print ('mmaped "$dax_file"')
-+while True:
-+	time.sleep(1)
-+EOF
-+pid=$!
-+
-+sleep 1
-+
-+# attempt to should fail
-+xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
-+check_phys_no_dax $dax_file
-+check_effective_no_dax $dax_file
-+
-+kill -TERM $pid > /dev/null 2>&1
-+wait $pid > /dev/null 2>&1
-+
-+# after mmap released should work
-+xfs_io -c 'chattr +x' $dax_file
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+
-+# Finally run the test stolen from Christoph Hellwig to test changing the mode
-+# while performing a series of operations
-+# =============================================================================
-+
-+function run_fsx {
-+	options=$1
-+
-+	echo "   *** run 'fsx $options' racing with setting/clearing the DAX flag"
-+	$here/ltp/fsx $options -N 20000 $dax_file > $tmp.log 2>&1 &
-+	pid=$!
-+
-+	if [ ! -n "$pid" ]; then
-+		echo "FAILED to start fsx"
-+		exit 255
-+	fi
-+
-+	# NOTE: fsx runs much faster than these mode changes.
-+	for i in `seq 1 500`; do
-+		xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
-+		xfs_io -c 'chattr -x' $dax_file > /dev/null 2>&1
-+	done
-+
-+	wait $pid
-+	status=$?
-+	if [ "$status" != "0" ]; then
-+		cat /sys/kernel/debug/tracing/trace > trace_output
-+		echo "FAILED: fsx exited with status : $status"
-+		echo "        see trace_output"
-+		head $dax_file.fsxlog
-+		exit $status
-+	fi
-+	pid=""
-+}
-+
-+run_fsx ""
-+run_fsx "-A"
-+run_fsx "-Z -r 4096 -w 4096"
-+
-+
-+status=0 ; exit
-diff --git a/tests/xfs/999.out b/tests/xfs/999.out
-new file mode 100644
-index 000000000000..ccb13770ca4d
---- /dev/null
-+++ b/tests/xfs/999.out
-@@ -0,0 +1,21 @@
-+QA output created by 999
-+running tests...
-+   *** mount w/o dax flag.
-+   *** mark dax-dir as dax enabled
-+   *** check file inheritance
-+   *** check directory inheritance
-+   *** check changing directory
-+   *** check non file inheritance
-+   *** check that previous file stays enabled
-+   *** Reset the directory
-+   *** Remount fs with mount flag
-+   *** Check for non-dax files to be dax with mount option
-+   *** check for file dax flag 'sticky-ness' after remount
-+   *** remount w/o mount flag
-+   *** file should change effective but page cache should be empty
-+   *** check inheritance on cp, mv
-+   *** Moved files 'don't inherit'
-+   *** check no mode change when mmaped
-+   *** run 'fsx ' racing with setting/clearing the DAX flag
-+   *** run 'fsx -A' racing with setting/clearing the DAX flag
-+   *** run 'fsx -Z -r 4096 -w 4096' racing with setting/clearing the DAX flag
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 522d4bc44d1f..816883a268bf 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -511,3 +511,4 @@
- 511 auto quick quota
- 512 auto quick acl attr
- 513 auto mount
-+999 auto
+> 
+> I'm not hugely familiar with the dabtree code, but is it possible the
+> existing reservations are written this way because each dabtree
+> extension along with a remote block allocation are independent
+> xfs_bmapi_write() calls? IOW, perhaps we cannot assume these can all
+> land in the same bmbt blocks across the xattr operation? ISTM that might
+> explain that XFS_DAENTER_BMAPS() calculates the reservation for a single
+> attr block and multiplies it by the max depth, but I could easily be
+> misunderstanding something.
+
+I think you are right. I will keep the bmbt calculations separate for dabtree
+and remote blocks and add them up at the end of the function.
+
+> 
+> What is the motivation for this patch btw? Have you observed a problem
+> or excessive reservation sizes, or is this by code inspection?
+> 
+> Brian
+> 
+> > > 
+> > > >  fs/xfs/libxfs/xfs_attr.c | 7 +++----
+> > > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+> > > > index 942ba552e0bdd..a708b142f69b6 100644
+> > > > --- a/fs/xfs/libxfs/xfs_attr.c
+> > > > +++ b/fs/xfs/libxfs/xfs_attr.c
+> > > > @@ -154,12 +154,10 @@ xfs_attr_calc_size(
+> > > >  	size = xfs_attr_leaf_newentsize(args->geo, args->namelen,
+> > > >  			args->valuelen, local);
+> > > >  	total_dablks = XFS_DAENTER_BLOCKS(mp, XFS_ATTR_FORK);
+> > > > -	bmbt_blks = XFS_DAENTER_BMAPS(mp, XFS_ATTR_FORK);
+> > > >  	if (*local) {
+> > > >  		if (size > (args->geo->blksize / 2)) {
+> > > >  			/* Double split possible */
+> > > >  			total_dablks *= 2;
+> > > > -			bmbt_blks *= 2;
+> > > >  		}
+> > > >  		rmt_blks = 0;
+> > > >  	} else {
+> > > > @@ -168,10 +166,11 @@ xfs_attr_calc_size(
+> > > >  		 * make room for the attribute value itself.
+> > > >  		 */
+> > > >  		rmt_blks = xfs_attr3_rmt_blocks(mp, args->valuelen);
+> > > > -		bmbt_blks += XFS_NEXTENTADD_SPACE_RES(mp, rmt_blks,
+> > > > -				XFS_ATTR_FORK);
+> > > >  	}
+> > > >  
+> > > > +	bmbt_blks = XFS_NEXTENTADD_SPACE_RES(mp, total_dablks + rmt_blks,
+> > > > +			XFS_ATTR_FORK);
+> > > > +
+> > > >  	return total_dablks + rmt_blks + bmbt_blks;
+> > > >  }
+> > > >  
+> > > 
+> > > 
+> > 
+> 
+> 
+
 -- 
-2.21.0
+chandan
+
+
 
