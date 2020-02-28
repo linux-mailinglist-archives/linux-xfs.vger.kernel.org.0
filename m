@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2236C174352
-	for <lists+linux-xfs@lfdr.de>; Sat, 29 Feb 2020 00:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B11C7174340
+	for <lists+linux-xfs@lfdr.de>; Sat, 29 Feb 2020 00:37:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1XjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 28 Feb 2020 18:39:00 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47008 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgB1XjA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Feb 2020 18:39:00 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SNbnd8160778;
-        Fri, 28 Feb 2020 23:38:53 GMT
+        id S1726418AbgB1XhB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 28 Feb 2020 18:37:01 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:41152 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1XhB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Feb 2020 18:37:01 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SNWjjk027726;
+        Fri, 28 Feb 2020 23:36:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=SgfvDRLQ00oMdtbW6ekG3r4LJwxjrp0JB0KuyMGdSsk=;
- b=PN8xt0B+7w0hHnbtkw8dogskN8+0Z98ChMXOMwiLDdeanLC/v0d7oaJ7oP4qLYtlYMVP
- sVQNFdqyEGNa92vc8HYHhfL/FM/CNYBLqQKu9Jt7wOJMuyPgO5nEHEEQ6A/SM3JanZoE
- qESLwnhlNoXapJwgzAt0Yasx1z0UHlLNAl+5Gf45E+A99xKZwAAwmm4ZwXyOoWmlbKAU
- Uo6+ZNh5yHf6L6IbjCny9VDhpZ8u0RCmDIhk6izyLV0oHvp+HsSRfj2Fhm2F1Pa04KkM
- Q2Ym7t+xhIrp5FKXRnUvnW45dTaV6+H2l+MjR8dJVdy6cjXrRiL1tJ+auUmrIIEGtiS+ vg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2yf0dmc5xh-1
+ bh=mIcHTThZUTNwsZunl6zJADMGhQk1+i3AxG9OhlQBNQE=;
+ b=WgbLmYGXfikEeLccLLHRFISVQmUYZdwQW3OQZXK1pafYGMpSZuBVgRLOhRTb1boXl0Ck
+ /BrcnJyUP+ht1Ab7NhhHkIcNp/2VnbXOChTixDvROhbP1x+8MxGXgMonkJ7+9njFhydw
+ AO+ksWbTb7mP+W+rbdv4emmpswfHXqykProhyuFH4Xtur7LdlcxcmlvMT4bJxPINVepF
+ c2vmGsb4CMWDSyvSr11HHAWLNGdhWkNo+2zvVBXwOvJ6ZXELIYq71n++5mfFOUIXVo9z
+ nQB/aQ1Z5byjhM3sV2KcacE2oF8sY/aq8SYnV0ZhSKmKT2/z40FiK4xMlKoi6CdD2HPD pQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2ydct3nt2f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 23:38:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SNWOlU155973;
-        Fri, 28 Feb 2020 23:36:53 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2ydcsgb6r0-1
+        Fri, 28 Feb 2020 23:36:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SNWXuB042483;
+        Fri, 28 Feb 2020 23:36:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2ydcs9vgq8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 23:36:53 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01SNaqwJ020345;
-        Fri, 28 Feb 2020 23:36:52 GMT
+        Fri, 28 Feb 2020 23:36:56 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01SNatLq024282;
+        Fri, 28 Feb 2020 23:36:55 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Feb 2020 15:36:48 -0800
-Subject: [PATCH 05/26] libxfs: replace libxfs_getbuf with libxfs_buf_get
+        with ESMTP ; Fri, 28 Feb 2020 15:36:54 -0800
+Subject: [PATCH 06/26] libxfs: replace libxfs_readbuf with libxfs_buf_read
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Date:   Fri, 28 Feb 2020 15:36:47 -0800
-Message-ID: <158293300761.1549542.5257443971275230708.stgit@magnolia>
+Date:   Fri, 28 Feb 2020 15:36:53 -0800
+Message-ID: <158293301390.1549542.12565245944595760860.stgit@magnolia>
 In-Reply-To: <158293297395.1549542.18143701542461010748.stgit@magnolia>
 References: <158293297395.1549542.18143701542461010748.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -53,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=2 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
  definitions=main-2002280170
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 clxscore=1015
- bulkscore=0 impostorscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=2 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280171
+ definitions=main-2002280170
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,368 +70,506 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Change all the libxfs_getbuf calls to libxfs_buf_get to match the
-kernel interface, since one is a #define of the other.
+Change all the libxfs_readbuf calls to libxfs_buf_read to match the
+kernel interface.  This enables us to hide libxfs_readbuf and simplify
+the userspace buffer interface further.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- include/cache.h          |    2 +-
+ copy/xfs_copy.c          |    4 ++-
+ db/init.c                |    2 +-
+ db/io.c                  |    2 +-
+ libxfs/init.c            |    8 +++----
  libxfs/libxfs_api_defs.h |    1 +
- libxfs/libxfs_io.h       |   21 ++++++++++++++++-----
- libxfs/libxfs_priv.h     |    1 -
- libxfs/rdwr.c            |   34 ++++++++++++++++------------------
- mkfs/xfs_mkfs.c          |    9 +++++----
- repair/phase5.c          |   30 +++++++++++++++---------------
- 7 files changed, 54 insertions(+), 44 deletions(-)
+ libxfs/libxfs_io.h       |   25 +++++++++++++++------
+ libxfs/rdwr.c            |   56 +++++++++++++++++++++++-----------------------
+ mkfs/xfs_mkfs.c          |    4 ++-
+ repair/attr_repair.c     |    6 ++---
+ repair/dino_chunks.c     |    4 ++-
+ repair/dinode.c          |    6 ++---
+ repair/phase3.c          |    2 +-
+ repair/prefetch.c        |    2 +-
+ repair/rt.c              |    4 ++-
+ repair/scan.c            |   12 +++++-----
+ 15 files changed, 75 insertions(+), 63 deletions(-)
 
 
-diff --git a/include/cache.h b/include/cache.h
-index 552b9248..334ad263 100644
---- a/include/cache.h
-+++ b/include/cache.h
-@@ -33,7 +33,7 @@ enum {
-  * For prefetch support, the top half of the range starts at
-  * CACHE_PREFETCH_PRIORITY and everytime the buffer is fetched and is at or
-  * above this priority level, it is reduced to below this level (refer to
-- * libxfs_getbuf).
-+ * libxfs_buf_get).
-  *
-  * If we have dirty nodes, we can't recycle them until they've been cleaned. To
-  * keep these out of the reclaimable lists (as there can be lots of them) give
+diff --git a/copy/xfs_copy.c b/copy/xfs_copy.c
+index 3e519471..9e9719a0 100644
+--- a/copy/xfs_copy.c
++++ b/copy/xfs_copy.c
+@@ -710,7 +710,7 @@ main(int argc, char **argv)
+ 
+ 	/* We don't yet know the sector size, so read maximal size */
+ 	libxfs_buftarg_init(&mbuf, xargs.ddev, xargs.logdev, xargs.rtdev);
+-	sbp = libxfs_readbuf(mbuf.m_ddev_targp, XFS_SB_DADDR,
++	sbp = libxfs_buf_read(mbuf.m_ddev_targp, XFS_SB_DADDR,
+ 			     1 << (XFS_MAX_SECTORSIZE_LOG - BBSHIFT), 0, NULL);
+ 	sb = &mbuf.m_sb;
+ 	libxfs_sb_from_disk(sb, XFS_BUF_TO_SBP(sbp));
+@@ -718,7 +718,7 @@ main(int argc, char **argv)
+ 	/* Do it again, now with proper length and verifier */
+ 	libxfs_buf_relse(sbp);
+ 	libxfs_purgebuf(sbp);
+-	sbp = libxfs_readbuf(mbuf.m_ddev_targp, XFS_SB_DADDR,
++	sbp = libxfs_buf_read(mbuf.m_ddev_targp, XFS_SB_DADDR,
+ 			     1 << (sb->sb_sectlog - BBSHIFT),
+ 			     0, &xfs_sb_buf_ops);
+ 	libxfs_buf_relse(sbp);
+diff --git a/db/init.c b/db/init.c
+index 15b4ec0c..8bad7e53 100644
+--- a/db/init.c
++++ b/db/init.c
+@@ -112,7 +112,7 @@ init(
+ 	 */
+ 	memset(&xmount, 0, sizeof(struct xfs_mount));
+ 	libxfs_buftarg_init(&xmount, x.ddev, x.logdev, x.rtdev);
+-	bp = libxfs_readbuf(xmount.m_ddev_targp, XFS_SB_DADDR,
++	bp = libxfs_buf_read(xmount.m_ddev_targp, XFS_SB_DADDR,
+ 			    1 << (XFS_MAX_SECTORSIZE_LOG - BBSHIFT), 0, NULL);
+ 
+ 	if (!bp || bp->b_error) {
+diff --git a/db/io.c b/db/io.c
+index a11b7bb1..163ccc89 100644
+--- a/db/io.c
++++ b/db/io.c
+@@ -545,7 +545,7 @@ set_cur(
+ 		bp = libxfs_readbuf_map(mp->m_ddev_targp, bbmap->b,
+ 					bbmap->nmaps, 0, ops);
+ 	} else {
+-		bp = libxfs_readbuf(mp->m_ddev_targp, blknum, len, 0, ops);
++		bp = libxfs_buf_read(mp->m_ddev_targp, blknum, len, 0, ops);
+ 		iocur_top->bbmap = NULL;
+ 	}
+ 
+diff --git a/libxfs/init.c b/libxfs/init.c
+index a30debe9..4697762e 100644
+--- a/libxfs/init.c
++++ b/libxfs/init.c
+@@ -450,7 +450,7 @@ rtmount_init(
+ 			(unsigned long long) mp->m_sb.sb_rblocks);
+ 		return -1;
+ 	}
+-	bp = libxfs_readbuf(mp->m_rtdev,
++	bp = libxfs_buf_read(mp->m_rtdev,
+ 			d - XFS_FSB_TO_BB(mp, 1), XFS_FSB_TO_BB(mp, 1), 0, NULL);
+ 	if (bp == NULL) {
+ 		fprintf(stderr, _("%s: realtime size check failed\n"),
+@@ -730,7 +730,7 @@ libxfs_mount(
+ 		return mp;
+ 
+ 	/* device size checks must pass unless we're a debugger. */
+-	bp = libxfs_readbuf(mp->m_dev, d - XFS_FSS_TO_BB(mp, 1),
++	bp = libxfs_buf_read(mp->m_dev, d - XFS_FSS_TO_BB(mp, 1),
+ 			XFS_FSS_TO_BB(mp, 1), 0, NULL);
+ 	if (!bp) {
+ 		fprintf(stderr, _("%s: data size check failed\n"), progname);
+@@ -743,7 +743,7 @@ libxfs_mount(
+ 	    mp->m_logdev_targp->dev != mp->m_ddev_targp->dev) {
+ 		d = (xfs_daddr_t) XFS_FSB_TO_BB(mp, mp->m_sb.sb_logblocks);
+ 		if ( (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_logblocks) ||
+-		     (!(bp = libxfs_readbuf(mp->m_logdev_targp,
++		     (!(bp = libxfs_buf_read(mp->m_logdev_targp,
+ 					d - XFS_FSB_TO_BB(mp, 1),
+ 					XFS_FSB_TO_BB(mp, 1), 0, NULL)))) {
+ 			fprintf(stderr, _("%s: log size checks failed\n"),
+@@ -770,7 +770,7 @@ libxfs_mount(
+ 	 * read the first one and let the user know to check the geometry.
+ 	 */
+ 	if (sbp->sb_agcount > 1000000) {
+-		bp = libxfs_readbuf(mp->m_dev,
++		bp = libxfs_buf_read(mp->m_dev,
+ 				XFS_AG_DADDR(mp, sbp->sb_agcount - 1, 0), 1,
+ 				0, NULL);
+ 		if (bp->b_error) {
 diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 8bca7ddf..6d86774f 100644
+index 6d86774f..57cf5f83 100644
 --- a/libxfs/libxfs_api_defs.h
 +++ b/libxfs/libxfs_api_defs.h
-@@ -44,6 +44,7 @@
- #define xfs_btree_del_cursor		libxfs_btree_del_cursor
+@@ -45,6 +45,7 @@
  #define xfs_btree_init_block		libxfs_btree_init_block
  #define xfs_buf_delwri_submit		libxfs_buf_delwri_submit
-+#define xfs_buf_get			libxfs_buf_get
+ #define xfs_buf_get			libxfs_buf_get
++#define xfs_buf_read			libxfs_buf_read
  #define xfs_buf_relse			libxfs_buf_relse
  #define xfs_bunmapi			libxfs_bunmapi
  #define xfs_calc_dquots_per_chunk	libxfs_calc_dquots_per_chunk
 diff --git a/libxfs/libxfs_io.h b/libxfs/libxfs_io.h
-index 3ddfc0c8..50b7cef8 100644
+index 50b7cef8..1b8318af 100644
 --- a/libxfs/libxfs_io.h
 +++ b/libxfs/libxfs_io.h
-@@ -139,7 +139,7 @@ extern struct cache_operations	libxfs_bcache_operations;
- #define libxfs_writebuf(buf, flags) \
- 	libxfs_trace_writebuf(__FUNCTION__, __FILE__, __LINE__, \
- 			      (buf), (flags))
--#define libxfs_getbuf(dev, daddr, len) \
-+#define libxfs_buf_get(dev, daddr, len) \
- 	libxfs_trace_getbuf(__FUNCTION__, __FILE__, __LINE__, \
- 			    (dev), (daddr), (len))
- #define libxfs_getbuf_map(dev, map, nmaps, flags) \
-@@ -159,8 +159,9 @@ extern xfs_buf_t *libxfs_trace_readbuf_map(const char *, const char *, int,
- 			const struct xfs_buf_ops *);
- extern int	libxfs_trace_writebuf(const char *, const char *, int,
- 			xfs_buf_t *, int);
--extern xfs_buf_t *libxfs_trace_getbuf(const char *, const char *, int,
--			struct xfs_buftarg *, xfs_daddr_t, int);
-+struct xfs_buf *libxfs_trace_getbuf(const char *func, const char *file,
+@@ -130,7 +130,7 @@ extern struct cache_operations	libxfs_bcache_operations;
+ 
+ #ifdef XFS_BUF_TRACING
+ 
+-#define libxfs_readbuf(dev, daddr, len, flags, ops) \
++#define libxfs_buf_read(dev, daddr, len, flags, ops) \
+ 	libxfs_trace_readbuf(__FUNCTION__, __FILE__, __LINE__, \
+ 			    (dev), (daddr), (len), (flags), (ops))
+ #define libxfs_readbuf_map(dev, map, nmaps, flags, ops) \
+@@ -151,9 +151,9 @@ extern struct cache_operations	libxfs_bcache_operations;
+ #define libxfs_buf_relse(buf) \
+ 	libxfs_trace_putbuf(__FUNCTION__, __FILE__, __LINE__, (buf))
+ 
+-extern xfs_buf_t *libxfs_trace_readbuf(const char *, const char *, int,
+-			struct xfs_buftarg *, xfs_daddr_t, int, int,
+-			const struct xfs_buf_ops *);
++struct xfs_buf *libxfs_trace_readbuf(const char *func, const char *file,
 +			int line, struct xfs_buftarg *btp, xfs_daddr_t daddr,
-+			size_t len);
- extern xfs_buf_t *libxfs_trace_getbuf_map(const char *, const char *, int,
- 			struct xfs_buftarg *, struct xfs_buf_map *, int, int);
- extern xfs_buf_t *libxfs_trace_getbuf_flags(const char *, const char *, int,
-@@ -175,14 +176,24 @@ extern xfs_buf_t *libxfs_readbuf(struct xfs_buftarg *, xfs_daddr_t, int, int,
++			size_t len, int flags, const struct xfs_buf_ops *ops);
+ extern xfs_buf_t *libxfs_trace_readbuf_map(const char *, const char *, int,
+ 			struct xfs_buftarg *, struct xfs_buf_map *, int, int,
+ 			const struct xfs_buf_ops *);
+@@ -171,8 +171,6 @@ extern void	libxfs_trace_putbuf (const char *, const char *, int,
+ 
+ #else
+ 
+-extern xfs_buf_t *libxfs_readbuf(struct xfs_buftarg *, xfs_daddr_t, int, int,
+-			const struct xfs_buf_ops *);
  extern xfs_buf_t *libxfs_readbuf_map(struct xfs_buftarg *, struct xfs_buf_map *,
  			int, int, const struct xfs_buf_ops *);
  extern int	libxfs_writebuf(xfs_buf_t *, int);
--extern xfs_buf_t *libxfs_getbuf(struct xfs_buftarg *, xfs_daddr_t, int);
- extern xfs_buf_t *libxfs_getbuf_map(struct xfs_buftarg *,
- 			struct xfs_buf_map *, int, int);
- extern xfs_buf_t *libxfs_getbuf_flags(struct xfs_buftarg *, xfs_daddr_t,
- 			int, unsigned int);
- void	libxfs_buf_relse(struct xfs_buf *bp);
+@@ -193,11 +191,24 @@ libxfs_buf_get(
+ 	return libxfs_getbuf_map(target, &map, 1, 0);
+ }
  
--#endif
 +static inline struct xfs_buf*
-+libxfs_buf_get(
++libxfs_buf_read(
 +	struct xfs_buftarg	*target,
 +	xfs_daddr_t		blkno,
-+	size_t			numblks)
++	size_t			numblks,
++	xfs_buf_flags_t		flags,
++	const struct xfs_buf_ops *ops)
 +{
 +	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
 +
-+	return libxfs_getbuf_map(target, &map, 1, 0);
++	return libxfs_readbuf_map(target, &map, 1, flags, ops);
 +}
 +
-+#endif /* XFS_BUF_TRACING */
+ #endif /* XFS_BUF_TRACING */
  
  extern void	libxfs_readbuf_verify(struct xfs_buf *bp,
  			const struct xfs_buf_ops *ops);
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 4bd3c462..0f26120f 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -377,7 +377,6 @@ roundup_64(uint64_t x, uint32_t y)
- 	(len) = __bar; /* no set-but-unused warning */	\
- 	NULL;						\
- })
--#define xfs_buf_get(devp,blkno,len)	(libxfs_getbuf((devp), (blkno), (len)))
- #define xfs_bwrite(bp)			libxfs_writebuf((bp), 0)
- #define xfs_buf_oneshot(bp)		((void) 0)
- 
+-extern xfs_buf_t *libxfs_getsb(struct xfs_mount *);
++struct xfs_buf *libxfs_getsb(struct xfs_mount *mp);
+ extern void	libxfs_bcache_purge(void);
+ extern void	libxfs_bcache_free(void);
+ extern void	libxfs_bcache_flush(void);
 diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-index a7f9c327..8fc9222e 100644
+index 8fc9222e..7b91ebf6 100644
 --- a/libxfs/rdwr.c
 +++ b/libxfs/rdwr.c
-@@ -30,7 +30,7 @@
-  * outside libxfs clears bp->b_error - very little code even checks it - so the
-  * libxfs code is tripping on stale errors left by the userspace code.
-  *
-- * We can't clear errors or zero buffer contents in libxfs_getbuf-* like we do
-+ * We can't clear errors or zero buffer contents in libxfs_buf_get-* like we do
-  * in the kernel, because those functions are used by the libxfs_readbuf_*
-  * functions and hence need to leave the buffers unchanged on cache hits. This
-  * is actually the only way to gather a write error from a libxfs_writebuf()
 @@ -44,7 +44,7 @@
   *
   * IOWs, userspace is behaving quite differently to the kernel and as a result
   * it leaks errors from reads, invalidations and writes through
-- * libxfs_getbuf/libxfs_readbuf.
-+ * libxfs_buf_get/libxfs_readbuf.
+- * libxfs_buf_get/libxfs_readbuf.
++ * libxfs_buf_get/libxfs_buf_read.
   *
   * The result of this is that until the userspace code outside libxfs is cleaned
   * up, functions that release buffers from userspace control (i.e
-@@ -391,7 +391,6 @@ libxfs_log_header(
- #undef libxfs_readbuf
+@@ -388,14 +388,11 @@ libxfs_log_header(
+ 
+ #ifdef XFS_BUF_TRACING
+ 
+-#undef libxfs_readbuf
  #undef libxfs_readbuf_map
  #undef libxfs_writebuf
--#undef libxfs_getbuf
  #undef libxfs_getbuf_map
  #undef libxfs_getbuf_flags
  
-@@ -400,7 +399,8 @@ xfs_buf_t	*libxfs_readbuf(struct xfs_buftarg *, xfs_daddr_t, int, int,
+-xfs_buf_t	*libxfs_readbuf(struct xfs_buftarg *, xfs_daddr_t, int, int,
+-				const struct xfs_buf_ops *);
  xfs_buf_t	*libxfs_readbuf_map(struct xfs_buftarg *, struct xfs_buf_map *,
  				int, int, const struct xfs_buf_ops *);
  int		libxfs_writebuf(xfs_buf_t *, int);
--xfs_buf_t	*libxfs_getbuf(struct xfs_buftarg *, xfs_daddr_t, int);
-+struct xfs_buf *libxfs_buf_get(struct xfs_buftarg *btp, xfs_daddr_t daddr,
-+				size_t len);
- xfs_buf_t	*libxfs_getbuf_map(struct xfs_buftarg *, struct xfs_buf_map *,
- 				int, int);
- xfs_buf_t	*libxfs_getbuf_flags(struct xfs_buftarg *, xfs_daddr_t, int,
-@@ -443,11 +443,19 @@ libxfs_trace_writebuf(const char *func, const char *file, int line, xfs_buf_t *b
- 	return libxfs_writebuf(bp, flags);
- }
+@@ -416,22 +413,21 @@ do {						\
+ 	}					\
+ } while (0)
  
 -xfs_buf_t *
--libxfs_trace_getbuf(const char *func, const char *file, int line,
--		struct xfs_buftarg *btp, xfs_daddr_t blkno, int len)
+-libxfs_trace_readbuf(const char *func, const char *file, int line,
+-		struct xfs_buftarg *btp, xfs_daddr_t blkno, int len, int flags,
+-		const struct xfs_buf_ops *ops)
 +struct xfs_buf *
-+libxfs_trace_getbuf(
++libxfs_trace_readbuf(
 +	const char		*func,
 +	const char		*file,
 +	int			line,
 +	struct xfs_buftarg	*btp,
 +	xfs_daddr_t		blkno,
-+	size_t			len)
++	size_t			len,
++	int			flags,
++	const struct xfs_buf_ops *ops)
  {
--	xfs_buf_t	*bp = libxfs_getbuf(btp, blkno, len);
+-	xfs_buf_t	*bp = libxfs_readbuf(btp, blkno, len, flags, ops);
+-	__add_trace(bp, func, file, line);
+-	return bp;
+-}
 +	struct xfs_buf		*bp;
 +	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
-+
-+	bp = libxfs_getbuf_map(target, &map, 1, 0);
+ 
+-xfs_buf_t *
+-libxfs_trace_readbuf_map(const char *func, const char *file, int line,
+-		struct xfs_buftarg *btp, struct xfs_buf_map *map, int nmaps, int flags,
+-		const struct xfs_buf_ops *ops)
+-{
+-	xfs_buf_t	*bp = libxfs_readbuf_map(btp, map, nmaps, flags, ops);
++	bp = libxfs_readbuf_map(btp, &map, 1, flags, ops);
  	__add_trace(bp, func, file, line);
  	return bp;
  }
-@@ -806,16 +814,6 @@ reset_buf_state(
- 				LIBXFS_B_UPTODATE);
+@@ -490,11 +486,12 @@ libxfs_trace_putbuf(const char *func, const char *file, int line, xfs_buf_t *bp)
+ #endif
+ 
+ 
+-xfs_buf_t *
+-libxfs_getsb(xfs_mount_t *mp)
++struct xfs_buf *
++libxfs_getsb(
++	struct xfs_mount	*mp)
+ {
+-	return libxfs_readbuf(mp->m_ddev_targp, XFS_SB_DADDR,
+-				XFS_FSS_TO_BB(mp, 1), 0, &xfs_sb_buf_ops);
++	return libxfs_buf_read(mp->m_ddev_targp, XFS_SB_DADDR,
++			XFS_FSS_TO_BB(mp, 1), 0, &xfs_sb_buf_ops);
  }
  
--struct xfs_buf *
--libxfs_getbuf(struct xfs_buftarg *btp, xfs_daddr_t blkno, int len)
--{
--	struct xfs_buf	*bp;
+ kmem_zone_t			*xfs_buf_zone;
+@@ -959,13 +956,16 @@ libxfs_readbuf_verify(struct xfs_buf *bp, const struct xfs_buf_ops *ops)
+ 	bp->b_flags &= ~LIBXFS_B_UNCHECKED;
+ }
+ 
 -
--	bp = libxfs_getbuf_flags(btp, blkno, len, 0);
--	reset_buf_state(bp);
--	return bp;
--}
--
- static struct xfs_buf *
- __libxfs_getbuf_map(struct xfs_buftarg *btp, struct xfs_buf_map *map,
- 		    int nmaps, int flags)
+-xfs_buf_t *
+-libxfs_readbuf(struct xfs_buftarg *btp, xfs_daddr_t blkno, int len, int flags,
+-		const struct xfs_buf_ops *ops)
++static struct xfs_buf *
++libxfs_readbuf(
++	struct xfs_buftarg	*btp,
++	xfs_daddr_t		blkno,
++	size_t			len,
++	int			flags,
++	const struct xfs_buf_ops *ops)
+ {
+-	xfs_buf_t	*bp;
+-	int		error;
++	struct xfs_buf		*bp;
++	int			error;
+ 
+ 	bp = libxfs_getbuf_flags(btp, blkno, len, 0);
+ 	if (!bp)
 diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 25bdf8df..cc84705c 100644
+index cc84705c..04b54cba 100644
 --- a/mkfs/xfs_mkfs.c
 +++ b/mkfs/xfs_mkfs.c
-@@ -3444,7 +3444,7 @@ prepare_devices(
- 	 * the end of the device.  (MD sb is ~64k from the end, take out a wider
- 	 * swath to be sure)
- 	 */
--	buf = libxfs_getbuf(mp->m_ddev_targp, (xi->dsize - whack_blks),
-+	buf = libxfs_buf_get(mp->m_ddev_targp, (xi->dsize - whack_blks),
- 			    whack_blks);
- 	memset(buf->b_addr, 0, WHACK_SIZE);
- 	libxfs_writebuf(buf, 0);
-@@ -3456,13 +3456,14 @@ prepare_devices(
- 	 * swap (somewhere around the page size), jfs (32k),
- 	 * ext[2,3] and reiserfs (64k) - and hopefully all else.
- 	 */
--	buf = libxfs_getbuf(mp->m_ddev_targp, 0, whack_blks);
-+	buf = libxfs_buf_get(mp->m_ddev_targp, 0, whack_blks);
- 	memset(buf->b_addr, 0, WHACK_SIZE);
- 	libxfs_writebuf(buf, 0);
- 	libxfs_purgebuf(buf);
+@@ -3574,7 +3574,7 @@ rewrite_secondary_superblocks(
+ 	struct xfs_buf		*buf;
  
- 	/* OK, now write the superblock... */
--	buf = libxfs_getbuf(mp->m_ddev_targp, XFS_SB_DADDR, XFS_FSS_TO_BB(mp, 1));
-+	buf = libxfs_buf_get(mp->m_ddev_targp, XFS_SB_DADDR,
-+			XFS_FSS_TO_BB(mp, 1));
- 	buf->b_ops = &xfs_sb_buf_ops;
- 	memset(buf->b_addr, 0, cfg->sectorsize);
- 	libxfs_sb_to_disk(buf->b_addr, sbp);
-@@ -3482,7 +3483,7 @@ prepare_devices(
+ 	/* rewrite the last superblock */
+-	buf = libxfs_readbuf(mp->m_dev,
++	buf = libxfs_buf_read(mp->m_dev,
+ 			XFS_AGB_TO_DADDR(mp, mp->m_sb.sb_agcount - 1,
+ 				XFS_SB_DADDR),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &xfs_sb_buf_ops);
+@@ -3590,7 +3590,7 @@ rewrite_secondary_superblocks(
+ 	if (mp->m_sb.sb_agcount <= 2)
+ 		return;
  
- 	/* finally, check we can write the last block in the realtime area */
- 	if (mp->m_rtdev_targp->dev && cfg->rtblocks > 0) {
--		buf = libxfs_getbuf(mp->m_rtdev_targp,
-+		buf = libxfs_buf_get(mp->m_rtdev_targp,
- 				    XFS_FSB_TO_BB(mp, cfg->rtblocks - 1LL),
- 				    BTOBB(cfg->blocksize));
- 		memset(buf->b_addr, 0, cfg->blocksize);
-diff --git a/repair/phase5.c b/repair/phase5.c
-index 7f7d3d18..cdbf6697 100644
---- a/repair/phase5.c
-+++ b/repair/phase5.c
-@@ -689,7 +689,7 @@ prop_freespace_cursor(xfs_mount_t *mp, xfs_agnumber_t agno,
- 
- 		bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(agbno);
- 
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 		lptr->agbno = agbno;
-@@ -767,7 +767,7 @@ build_freespace_tree(xfs_mount_t *mp, xfs_agnumber_t agno,
- 		lptr = &btree_curs->level[i];
- 
- 		agbno = get_next_blockaddr(agno, i, btree_curs);
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 
-@@ -877,7 +877,7 @@ build_freespace_tree(xfs_mount_t *mp, xfs_agnumber_t agno,
- 			lptr->agbno = get_next_blockaddr(agno, 0, btree_curs);
- 			bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(lptr->agbno);
- 
--			lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+			lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, lptr->agbno),
- 					XFS_FSB_TO_BB(mp, 1));
+-	buf = libxfs_readbuf(mp->m_dev,
++	buf = libxfs_buf_read(mp->m_dev,
+ 			XFS_AGB_TO_DADDR(mp, (mp->m_sb.sb_agcount - 1) / 2,
+ 				XFS_SB_DADDR),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &xfs_sb_buf_ops);
+diff --git a/repair/attr_repair.c b/repair/attr_repair.c
+index c63721ca..7edf54ad 100644
+--- a/repair/attr_repair.c
++++ b/repair/attr_repair.c
+@@ -405,7 +405,7 @@ rmtval_get(xfs_mount_t *mp, xfs_ino_t ino, blkmap_t *blkmap,
+ 			clearit = 1;
+ 			break;
  		}
-@@ -1054,7 +1054,7 @@ prop_ino_cursor(xfs_mount_t *mp, xfs_agnumber_t agno, bt_status_t *btree_curs,
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
+ 				    XFS_FSB_TO_BB(mp, 1), 0,
+ 				    &xfs_attr3_rmt_buf_ops);
+ 		if (!bp) {
+@@ -763,7 +763,7 @@ process_leaf_attr_level(xfs_mount_t	*mp,
+ 			goto error_out;
+ 		}
  
- 		bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(agbno);
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, dev_bno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, dev_bno),
+ 				    XFS_FSB_TO_BB(mp, 1), 0,
+ 				    &xfs_attr3_leaf_buf_ops);
+ 		if (!bp) {
+@@ -1093,7 +1093,7 @@ process_longform_attr(
+ 		return 1;
+ 	}
  
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
+-	bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
++	bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
+ 				XFS_FSB_TO_BB(mp, 1), 0, &xfs_da3_node_buf_ops);
+ 	if (!bp) {
+ 		do_warn(
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index 863c4531..76e9f773 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -39,7 +39,7 @@ check_aginode_block(xfs_mount_t	*mp,
+ 	 * tree and we wouldn't be here and we stale the buffers out
+ 	 * so no one else will overlap them.
+ 	 */
+-	bp = libxfs_readbuf(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, agbno),
++	bp = libxfs_buf_read(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, agbno),
+ 			XFS_FSB_TO_BB(mp, 1), 0, NULL);
+ 	if (!bp) {
+ 		do_warn(_("cannot read agbno (%u/%u), disk block %" PRId64 "\n"),
+@@ -656,7 +656,7 @@ process_inode_chunk(
+ 		pftrace("about to read off %llu in AG %d",
+ 			XFS_AGB_TO_DADDR(mp, agno, agbno), agno);
+ 
+-		bplist[bp_index] = libxfs_readbuf(mp->m_dev,
++		bplist[bp_index] = libxfs_buf_read(mp->m_dev,
  					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 		lptr->agbno = agbno;
-@@ -1104,7 +1104,7 @@ build_agi(xfs_mount_t *mp, xfs_agnumber_t agno, bt_status_t *btree_curs,
- 	xfs_agi_t	*agi;
- 	int		i;
+ 					XFS_FSB_TO_BB(mp,
+ 						M_IGEO(mp)->blocks_per_cluster),
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 2c6621d5..aa7d479a 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -748,7 +748,7 @@ get_agino_buf(
+ 		cluster_agino, cluster_daddr, cluster_blks);
+ #endif
  
--	agi_buf = libxfs_getbuf(mp->m_dev,
-+	agi_buf = libxfs_buf_get(mp->m_dev,
+-	bp = libxfs_readbuf(mp->m_dev, cluster_daddr, cluster_blks,
++	bp = libxfs_buf_read(mp->m_dev, cluster_daddr, cluster_blks,
+ 			0, &xfs_inode_buf_ops);
+ 	if (!bp) {
+ 		do_warn(_("cannot read inode (%u/%u), disk block %" PRIu64 "\n"),
+@@ -1179,7 +1179,7 @@ process_quota_inode(
+ 		fsbno = blkmap_get(blkmap, qbno);
+ 		dqid = (xfs_dqid_t)qbno * dqperchunk;
+ 
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, fsbno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, fsbno),
+ 				    dqchunklen, 0, &xfs_dquot_buf_ops);
+ 		if (!bp) {
+ 			do_warn(
+@@ -1284,7 +1284,7 @@ _("cannot read inode %" PRIu64 ", file block %d, NULL disk block\n"),
+ 
+ 		byte_cnt = XFS_FSB_TO_B(mp, blk_cnt);
+ 
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, fsbno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, fsbno),
+ 				    BTOBB(byte_cnt), 0, &xfs_symlink_buf_ops);
+ 		if (!bp) {
+ 			do_warn(
+diff --git a/repair/phase3.c b/repair/phase3.c
+index 1c6929ac..886acd1f 100644
+--- a/repair/phase3.c
++++ b/repair/phase3.c
+@@ -28,7 +28,7 @@ process_agi_unlinked(
+ 	xfs_agnumber_t		i;
+ 	int			agi_dirty = 0;
+ 
+-	bp = libxfs_readbuf(mp->m_dev,
++	bp = libxfs_buf_read(mp->m_dev,
  			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
- 			mp->m_sb.sb_sectsize/BBSIZE);
- 	agi_buf->b_ops = &xfs_agi_buf_ops;
-@@ -1174,7 +1174,7 @@ build_ino_tree(xfs_mount_t *mp, xfs_agnumber_t agno,
- 		lptr = &btree_curs->level[i];
+ 			mp->m_sb.sb_sectsize/BBSIZE, 0, &xfs_agi_buf_ops);
+ 	if (!bp)
+diff --git a/repair/prefetch.c b/repair/prefetch.c
+index f7ea9c8f..12272932 100644
+--- a/repair/prefetch.c
++++ b/repair/prefetch.c
+@@ -271,7 +271,7 @@ pf_scan_lbtree(
+ 	xfs_buf_t		*bp;
+ 	int			rc;
  
- 		agbno = get_next_blockaddr(agno, i, btree_curs);
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 
-@@ -1306,7 +1306,7 @@ build_ino_tree(xfs_mount_t *mp, xfs_agnumber_t agno,
- 			lptr->agbno = get_next_blockaddr(agno, 0, btree_curs);
- 			bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(lptr->agbno);
- 
--			lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+			lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, lptr->agbno),
- 					XFS_FSB_TO_BB(mp, 1));
+-	bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, dbno),
++	bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, dbno),
+ 			XFS_FSB_TO_BB(mp, 1), 0, &xfs_bmbt_buf_ops);
+ 	if (!bp)
+ 		return 0;
+diff --git a/repair/rt.c b/repair/rt.c
+index 3319829c..b514998d 100644
+--- a/repair/rt.c
++++ b/repair/rt.c
+@@ -193,7 +193,7 @@ process_rtbitmap(xfs_mount_t	*mp,
+ 			error = 1;
+ 			continue;
  		}
-@@ -1459,7 +1459,7 @@ prop_rmap_cursor(
- 
- 		bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(agbno);
- 
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 		lptr->agbno = agbno;
-@@ -1569,7 +1569,7 @@ build_rmap_tree(
- 		lptr = &btree_curs->level[i];
- 
- 		agbno = get_next_blockaddr(agno, i, btree_curs);
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 
-@@ -1668,7 +1668,7 @@ _("Insufficient memory to construct reverse-map cursor."));
- 			lptr->agbno = get_next_blockaddr(agno, 0, btree_curs);
- 			bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(lptr->agbno);
- 
--			lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+			lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, lptr->agbno),
- 					XFS_FSB_TO_BB(mp, 1));
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
+ 				XFS_FSB_TO_BB(mp, 1), NULL);
+ 		if (!bp) {
+ 			do_warn(_("can't read block %d for rtbitmap inode\n"),
+@@ -255,7 +255,7 @@ process_rtsummary(xfs_mount_t	*mp,
+ 			error++;
+ 			continue;
  		}
-@@ -1809,7 +1809,7 @@ prop_refc_cursor(
+-		bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
++		bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
+ 				XFS_FSB_TO_BB(mp, 1), NULL);
+ 		if (!bp) {
+ 			do_warn(_("can't read block %d for rtsummary inode\n"),
+diff --git a/repair/scan.c b/repair/scan.c
+index 1caab676..d89a3076 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -68,7 +68,7 @@ scan_sbtree(
+ {
+ 	xfs_buf_t	*bp;
  
- 		bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(agbno);
+-	bp = libxfs_readbuf(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, root),
++	bp = libxfs_buf_read(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, root),
+ 			XFS_FSB_TO_BB(mp, 1), 0, ops);
+ 	if (!bp) {
+ 		do_error(_("can't read btree block %d/%d\n"), agno, root);
+@@ -123,7 +123,7 @@ scan_lbtree(
+ 	int		dirty = 0;
+ 	bool		badcrc = false;
  
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 		lptr->agbno = agbno;
-@@ -1874,7 +1874,7 @@ build_refcount_tree(
- 		lptr = &btree_curs->level[i];
+-	bp = libxfs_readbuf(mp->m_dev, XFS_FSB_TO_DADDR(mp, root),
++	bp = libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, root),
+ 		      XFS_FSB_TO_BB(mp, 1), 0, ops);
+ 	if (!bp)  {
+ 		do_error(_("can't read btree block %d/%d\n"),
+@@ -2107,7 +2107,7 @@ scan_freelist(
+ 	if (be32_to_cpu(agf->agf_flcount) == 0)
+ 		return;
  
- 		agbno = get_next_blockaddr(agno, i, btree_curs);
--		lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+		lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, agbno),
- 					XFS_FSB_TO_BB(mp, 1));
+-	agflbuf = libxfs_readbuf(mp->m_dev,
++	agflbuf = libxfs_buf_read(mp->m_dev,
+ 				 XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
+ 				 XFS_FSS_TO_BB(mp, 1), 0, &xfs_agfl_buf_ops);
+ 	if (!agflbuf)  {
+@@ -2331,7 +2331,7 @@ scan_ag(
+ 		return;
+ 	}
  
-@@ -1961,7 +1961,7 @@ _("Insufficient memory to construct refcount cursor."));
- 			lptr->agbno = get_next_blockaddr(agno, 0, btree_curs);
- 			bt_hdr->bb_u.s.bb_rightsib = cpu_to_be32(lptr->agbno);
+-	sbbuf = libxfs_readbuf(mp->m_dev, XFS_AG_DADDR(mp, agno, XFS_SB_DADDR),
++	sbbuf = libxfs_buf_read(mp->m_dev, XFS_AG_DADDR(mp, agno, XFS_SB_DADDR),
+ 				XFS_FSS_TO_BB(mp, 1), 0, &xfs_sb_buf_ops);
+ 	if (!sbbuf)  {
+ 		objname = _("root superblock");
+@@ -2339,7 +2339,7 @@ scan_ag(
+ 	}
+ 	libxfs_sb_from_disk(sb, XFS_BUF_TO_SBP(sbbuf));
  
--			lptr->buf_p = libxfs_getbuf(mp->m_dev,
-+			lptr->buf_p = libxfs_buf_get(mp->m_dev,
- 					XFS_AGB_TO_DADDR(mp, agno, lptr->agbno),
- 					XFS_FSB_TO_BB(mp, 1));
- 		}
-@@ -1996,7 +1996,7 @@ build_agf_agfl(
- 	__be32			*freelist;
- 	int			error;
- 
--	agf_buf = libxfs_getbuf(mp->m_dev,
-+	agf_buf = libxfs_buf_get(mp->m_dev,
+-	agfbuf = libxfs_readbuf(mp->m_dev,
++	agfbuf = libxfs_buf_read(mp->m_dev,
  			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
- 			mp->m_sb.sb_sectsize/BBSIZE);
- 	agf_buf->b_ops = &xfs_agf_buf_ops;
-@@ -2068,7 +2068,7 @@ build_agf_agfl(
- 		platform_uuid_copy(&agf->agf_uuid, &mp->m_sb.sb_meta_uuid);
+ 			XFS_FSS_TO_BB(mp, 1), 0, &xfs_agf_buf_ops);
+ 	if (!agfbuf)  {
+@@ -2348,7 +2348,7 @@ scan_ag(
+ 	}
+ 	agf = XFS_BUF_TO_AGF(agfbuf);
  
- 	/* initialise the AGFL, then fill it if there are blocks left over. */
--	agfl_buf = libxfs_getbuf(mp->m_dev,
-+	agfl_buf = libxfs_buf_get(mp->m_dev,
- 			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
- 			mp->m_sb.sb_sectsize/BBSIZE);
- 	agfl_buf->b_ops = &xfs_agfl_buf_ops;
+-	agibuf = libxfs_readbuf(mp->m_dev,
++	agibuf = libxfs_buf_read(mp->m_dev,
+ 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &xfs_agi_buf_ops);
+ 	if (!agibuf)  {
 
