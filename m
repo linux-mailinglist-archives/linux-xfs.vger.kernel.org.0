@@ -2,26 +2,26 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5230D1749D3
-	for <lists+linux-xfs@lfdr.de>; Sat, 29 Feb 2020 23:45:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 832531749E0
+	for <lists+linux-xfs@lfdr.de>; Sat, 29 Feb 2020 23:52:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgB2Wpz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 29 Feb 2020 17:45:55 -0500
-Received: from sandeen.net ([63.231.237.45]:47992 "EHLO sandeen.net"
+        id S1727185AbgB2WwJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 29 Feb 2020 17:52:09 -0500
+Received: from sandeen.net ([63.231.237.45]:48304 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgB2Wpz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 29 Feb 2020 17:45:55 -0500
+        id S1726786AbgB2WwJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 29 Feb 2020 17:52:09 -0500
 Received: from BonnieLsiPhone.countryinn.local (50-78-99-146-static.hfc.comcastbusiness.net [50.78.99.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id E626E544;
-        Sat, 29 Feb 2020 16:45:23 -0600 (CST)
-Subject: Re: [PATCH 14/26] libxfs: convert libxfs_log_clear to use uncached
- buffers
+        by sandeen.net (Postfix) with ESMTPSA id 5F302544;
+        Sat, 29 Feb 2020 16:51:35 -0600 (CST)
+Subject: Re: [PATCH 26/26] libxfs: convert buffer priority get/set macros to
+ functions
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <158293297395.1549542.18143701542461010748.stgit@magnolia>
- <158293306846.1549542.6988917301256455028.stgit@magnolia>
+ <158293314326.1549542.4350225962633251739.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -65,12 +65,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <b31d2fd7-0e84-330b-32da-077c464533db@sandeen.net>
-Date:   Sat, 29 Feb 2020 14:45:51 -0800
+Message-ID: <dab38963-23a1-49f6-4abe-b9a9caa26de6@sandeen.net>
+Date:   Sat, 29 Feb 2020 14:52:03 -0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <158293306846.1549542.6988917301256455028.stgit@magnolia>
+In-Reply-To: <158293314326.1549542.4350225962633251739.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -79,17 +79,14 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2/28/20 3:37 PM, Darrick J. Wong wrote:
+On 2/28/20 3:39 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Convert the log clearing function to use uncached buffers like
-> everything else, instead of using the raw buffer get/put functions.
-> This will eventually enable us to hide them more effectively.
+> Convert these shouty macros to proper functions.  We can't make them
+> static inline functions unless I f the 'libxfs_bcache' reference.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-hch had a question about using libxfs_buf_get_uncached instead but
-that can be addressed/tidied up in another patch, trying to keep things
-moving and this doesn't really seem terribly problematic to me.
+I'll fix a couple new long lines on the way in.
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
