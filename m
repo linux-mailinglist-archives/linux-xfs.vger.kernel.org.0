@@ -2,66 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 799AE179B14
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 22:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE56F179B27
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 22:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgCDVjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 16:39:00 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33733 "EHLO
+        id S2388410AbgCDVlZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 16:41:25 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47105 "EHLO
         mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgCDVi7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 16:38:59 -0500
+        by vger.kernel.org with ESMTP id S2388338AbgCDVlZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 16:41:25 -0500
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 535F77E9F7E;
-        Thu,  5 Mar 2020 08:38:56 +1100 (AEDT)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DDF347E9E1B;
+        Thu,  5 Mar 2020 08:41:16 +1100 (AEDT)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9bjC-0004O9-Gr; Thu, 05 Mar 2020 08:38:54 +1100
-Date:   Thu, 5 Mar 2020 08:38:54 +1100
+        id 1j9blT-0004OI-Lp; Thu, 05 Mar 2020 08:41:15 +1100
+Date:   Thu, 5 Mar 2020 08:41:15 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 09/11] xfs: merge unmount record write iclog cleanup.
-Message-ID: <20200304213854.GB10776@dread.disaster.area>
+Subject: Re: [PATCH 06/11] xfs: move xlog_state_ioerror()
+Message-ID: <20200304214115.GC10776@dread.disaster.area>
 References: <20200304075401.21558-1-david@fromorbit.com>
- <20200304075401.21558-10-david@fromorbit.com>
- <20200304155332.GG17565@infradead.org>
+ <20200304075401.21558-7-david@fromorbit.com>
+ <20200304155140.GE17565@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304155332.GG17565@infradead.org>
+In-Reply-To: <20200304155140.GE17565@infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=wo4UJyXDnP8gnJ-Y_IkA:9
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=y1tgy3-oDF08Q_HeNA0A:9
         a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 07:53:32AM -0800, Christoph Hellwig wrote:
-> On Wed, Mar 04, 2020 at 06:53:59PM +1100, Dave Chinner wrote:
+On Wed, Mar 04, 2020 at 07:51:40AM -0800, Christoph Hellwig wrote:
+> On Wed, Mar 04, 2020 at 06:53:56PM +1100, Dave Chinner wrote:
 > > From: Dave Chinner <dchinner@redhat.com>
 > > 
-> > The unmount iclog handling is duplicated in both
-> > xfs_log_unmount_write() and xfs_log_write_unmount_record(). We only
-> > need one copy of it in xfs_log_unmount_write() because that is the
-> > only function that calls xfs_log_write_unmount_record().
+> > To clean up unmount record writing error handling, we need to move
+> > xlog_state_ioerror() higher up in the file. Also move the setting of
+> > the XLOG_IO_ERROR state to inside the function.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
 > 
-> The copy in xfs_log_unmount_write actually is dead code.  It only
-> is called in the XLOG_FORCED_SHUTDOWN case, in which case all iclogs
-> are marked as STATE_IOERROR, and thus xlog_state_release_iclog is
-> a no-op.  I really need to send the series out to clean this up
-> ASAP..
+> FYI, I have a pending series that kills xlog_state_ioerror and
+> XLOG_IO_ERROR.  Let me send that out now that Brians fix is in for-next.
 
-Well, this patch pretty much solves that "dead code" problem in that
-it now handles already shut down, error in unmount record write and
-successful unmount record write now. i.e. we run the same code in
-all cases now, so you'll only need to fix the IOERROR handling in
-one place :P
+Can you rebase that on top of this? removing IOERROR is a much more
+invasive and riskier set of state machine changes compared to what
+this patchset does. This patchset simplifies some of the error
+handling that handles IOERROR, too...
 
 Cheers,
 
