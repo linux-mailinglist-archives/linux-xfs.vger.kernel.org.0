@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DF63178BF7
+	by mail.lfdr.de (Postfix) with ESMTP id A26B6178BF8
 	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgCDHyH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726137AbgCDHyH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 4 Mar 2020 02:54:07 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43852 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726137AbgCDHyH (ORCPT
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34029 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728557AbgCDHyH (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:07 -0500
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8CB0D7EA137
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 244B13A2A29
         for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:03 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqv-0007lY-VI
-        for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:01 +1100
+        id 1j9Oqw-0007la-0T
+        for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:02 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqv-0005ce-Sk
+        id 1j9Oqv-0005ci-Tq
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:01 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 05/11] xfs: factor out unmount record writing
-Date:   Wed,  4 Mar 2020 18:53:55 +1100
-Message-Id: <20200304075401.21558-6-david@fromorbit.com>
+Subject: [PATCH 06/11] xfs: move xlog_state_ioerror()
+Date:   Wed,  4 Mar 2020 18:53:56 +1100
+Message-Id: <20200304075401.21558-7-david@fromorbit.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20200304075401.21558-1-david@fromorbit.com>
 References: <20200304075401.21558-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=20KFwNOVAAAA:8
-        a=RJ33b4CtU-wh5j9jekAA:9
+        a=bkf_lyP68qlAmJxVHm4A:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,110 +45,99 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Separate out the unmount record writing from the rest of the
-ticket and log state futzing necessary to make it work. This is
-a no-op, just makes the code cleaner and places the unmount record
-formatting and writing alongside the commit record formatting and
-writing code.
-
-We can also get rid of the ticket flag clearing before the
-xlog_write() call because it no longer cares about the state of
-XLOG_TIC_INITED.
+To clean up unmount record writing error handling, we need to move
+xlog_state_ioerror() higher up in the file. Also move the setting of
+the XLOG_IO_ERROR state to inside the function.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c | 59 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
+ fs/xfs/xfs_log.c | 59 ++++++++++++++++++++++++------------------------
+ 1 file changed, 30 insertions(+), 29 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 100eeaed4a7d..2e9f3baa7cc8 100644
+index 2e9f3baa7cc8..0de3c32d42b6 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -485,6 +485,38 @@ xfs_log_reserve(
-  *		marked as with WANT_SYNC.
-  */
+@@ -874,6 +874,36 @@ xfs_log_mount_cancel(
+ 	xfs_log_unmount(mp);
+ }
  
 +/*
-+ * Write out an unmount record using the ticket provided. We have to account for
-+ * the data space used in the unmount ticket as this write is not done from a
-+ * transaction context that has already done the accounting for us.
++ * Mark all iclogs IOERROR. l_icloglock is held by the caller.
 + */
-+static int
-+xlog_write_unmount(
-+	struct xlog		*log,
-+	struct xlog_ticket	*ticket,
-+	xfs_lsn_t		*lsn,
-+	uint			flags)
++STATIC int
++xlog_state_ioerror(
++	struct xlog	*log)
 +{
-+	/* the data section must be 32 bit size aligned */
-+	struct xfs_unmount_log_format magic = {
-+		.magic = XLOG_UNMOUNT_TYPE,
-+	};
-+	struct xfs_log_iovec reg = {
-+		.i_addr = &magic,
-+		.i_len = sizeof(magic),
-+		.i_type = XLOG_REG_TYPE_UNMOUNT,
-+	};
-+	struct xfs_log_vec vec = {
-+		.lv_niovecs = 1,
-+		.lv_iovecp = &reg,
-+	};
++	xlog_in_core_t	*iclog, *ic;
 +
-+	/* account for space used by record data */
-+	ticket->t_curr_res -= sizeof(magic);
++	log->l_flags |= XLOG_IO_ERROR;
 +
-+	return xlog_write(log, &vec, ticket, lsn, NULL, flags);
++	iclog = log->l_iclog;
++	if (iclog->ic_state != XLOG_STATE_IOERROR) {
++		/*
++		 * Mark all the incore logs IOERROR.
++		 * From now on, no log flushes will result.
++		 */
++		ic = iclog;
++		do {
++			ic->ic_state = XLOG_STATE_IOERROR;
++			ic = ic->ic_next;
++		} while (ic != iclog);
++		return 0;
++	}
++	/*
++	 * Return non-zero, if state transition has already happened.
++	 */
++	return 1;
 +}
 +
  /*
-  * Write out the commit record of a transaction associated with the given
-  * ticket to close off a running log write. Return the lsn of the commit record.
-@@ -843,31 +875,13 @@ xfs_log_mount_cancel(
- }
+  * Mark the filesystem clean by writing an unmount record to the head of the
+  * log.
+@@ -3770,34 +3800,6 @@ xlog_verify_iclog(
+ }	/* xlog_verify_iclog */
+ #endif
  
- /*
-- * Final log writes as part of unmount.
-- *
-- * Mark the filesystem clean as unmount happens.  Note that during relocation
-- * this routine needs to be executed as part of source-bag while the
-- * deallocation must not be done until source-end.
-+ * Mark the filesystem clean by writing an unmount record to the head of the
-+ * log.
-  */
+-/*
+- * Mark all iclogs IOERROR. l_icloglock is held by the caller.
+- */
+-STATIC int
+-xlog_state_ioerror(
+-	struct xlog	*log)
+-{
+-	xlog_in_core_t	*iclog, *ic;
 -
--/* Actually write the unmount record to disk. */
- static void
- xfs_log_write_unmount_record(
- 	struct xfs_mount	*mp)
- {
--	/* the data section must be 32 bit size aligned */
--	struct xfs_unmount_log_format magic = {
--		.magic = XLOG_UNMOUNT_TYPE,
--	};
--	struct xfs_log_iovec reg = {
--		.i_addr = &magic,
--		.i_len = sizeof(magic),
--		.i_type = XLOG_REG_TYPE_UNMOUNT,
--	};
--	struct xfs_log_vec vec = {
--		.lv_niovecs = 1,
--		.lv_iovecp = &reg,
--	};
- 	struct xlog		*log = mp->m_log;
- 	struct xlog_in_core	*iclog;
- 	struct xlog_ticket	*tic = NULL;
-@@ -892,10 +906,7 @@ xfs_log_write_unmount_record(
- 		flags &= ~XLOG_UNMOUNT_TRANS;
- 	}
+-	iclog = log->l_iclog;
+-	if (iclog->ic_state != XLOG_STATE_IOERROR) {
+-		/*
+-		 * Mark all the incore logs IOERROR.
+-		 * From now on, no log flushes will result.
+-		 */
+-		ic = iclog;
+-		do {
+-			ic->ic_state = XLOG_STATE_IOERROR;
+-			ic = ic->ic_next;
+-		} while (ic != iclog);
+-		return 0;
+-	}
+-	/*
+-	 * Return non-zero, if state transition has already happened.
+-	 */
+-	return 1;
+-}
+-
+ /*
+  * This is called from xfs_force_shutdown, when we're forcibly
+  * shutting down the filesystem, typically because of an IO error.
+@@ -3868,7 +3870,6 @@ xfs_log_force_umount(
+ 	 * Mark the log and the iclogs with IO error flags to prevent any
+ 	 * further log IO from being issued or completed.
+ 	 */
+-	log->l_flags |= XLOG_IO_ERROR;
+ 	retval = xlog_state_ioerror(log);
+ 	spin_unlock(&log->l_icloglock);
  
--	/* remove inited flag, and account for space used */
--	tic->t_flags = 0;
--	tic->t_curr_res -= sizeof(magic);
--	error = xlog_write(log, &vec, tic, &lsn, NULL, flags);
-+	error = xlog_write_unmount(log, tic, &lsn, flags);
- 	/*
- 	 * At this point, we're umounting anyway, so there's no point in
- 	 * transitioning log state to IOERROR. Just continue...
 -- 
 2.24.0.rc0
 
