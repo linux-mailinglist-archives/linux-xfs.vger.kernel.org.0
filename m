@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7546178BFC
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF63178BF7
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgCDHyI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 02:54:08 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33971 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728539AbgCDHyI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:08 -0500
+        id S1728569AbgCDHyH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 02:54:07 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43852 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726137AbgCDHyH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:07 -0500
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0DA8F3A29F6
-        for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:02 +1100 (AEDT)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8CB0D7EA137
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:03 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqv-0007lV-Tq
+        id 1j9Oqv-0007lY-VI
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:01 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqv-0005cc-RY
+        id 1j9Oqv-0005ce-Sk
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:01 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 04/11] xfs: merge xlog_commit_record with xlog_write_done()
-Date:   Wed,  4 Mar 2020 18:53:54 +1100
-Message-Id: <20200304075401.21558-5-david@fromorbit.com>
+Subject: [PATCH 05/11] xfs: factor out unmount record writing
+Date:   Wed,  4 Mar 2020 18:53:55 +1100
+Message-Id: <20200304075401.21558-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20200304075401.21558-1-david@fromorbit.com>
 References: <20200304075401.21558-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=20KFwNOVAAAA:8
-        a=Ogm-NnU_ru6a6b32IXgA:9
+        a=RJ33b4CtU-wh5j9jekAA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,111 +45,110 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-xlog_write_done() is just a thin wrapper around
-xlog_commit_record(), so they can be merged together easily. Convert
-all the xlog_commit_record() callers to use xlog_write_done() and
-merge the implementations.
+Separate out the unmount record writing from the rest of the
+ticket and log state futzing necessary to make it work. This is
+a no-op, just makes the code cleaner and places the unmount record
+formatting and writing alongside the commit record formatting and
+writing code.
+
+We can also get rid of the ticket flag clearing before the
+xlog_write() call because it no longer cares about the state of
+XLOG_TIC_INITED.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c | 60 +++++++++++++++---------------------------------
- 1 file changed, 19 insertions(+), 41 deletions(-)
+ fs/xfs/xfs_log.c | 59 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 24 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 702b38e4db6e..100eeaed4a7d 100644
+index 100eeaed4a7d..2e9f3baa7cc8 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -24,13 +24,6 @@
- kmem_zone_t	*xfs_log_ticket_zone;
- 
- /* Local miscellaneous function prototypes */
--STATIC int
--xlog_commit_record(
--	struct xlog		*log,
--	struct xlog_ticket	*ticket,
--	struct xlog_in_core	**iclog,
--	xfs_lsn_t		*commitlsnp);
--
- STATIC struct xlog *
- xlog_alloc_log(
- 	struct xfs_mount	*mp,
-@@ -493,7 +486,8 @@ xfs_log_reserve(
+@@ -485,6 +485,38 @@ xfs_log_reserve(
+  *		marked as with WANT_SYNC.
   */
  
- /*
-- * Write a commit record to the log to close off a running log write.
-+ * Write out the commit record of a transaction associated with the given
-+ * ticket to close off a running log write. Return the lsn of the commit record.
-  */
- int
- xlog_write_done(
-@@ -502,10 +496,26 @@ xlog_write_done(
- 	struct xlog_in_core	**iclog,
- 	xfs_lsn_t		*lsn)
- {
++/*
++ * Write out an unmount record using the ticket provided. We have to account for
++ * the data space used in the unmount ticket as this write is not done from a
++ * transaction context that has already done the accounting for us.
++ */
++static int
++xlog_write_unmount(
++	struct xlog		*log,
++	struct xlog_ticket	*ticket,
++	xfs_lsn_t		*lsn,
++	uint			flags)
++{
++	/* the data section must be 32 bit size aligned */
++	struct xfs_unmount_log_format magic = {
++		.magic = XLOG_UNMOUNT_TYPE,
++	};
 +	struct xfs_log_iovec reg = {
-+		.i_addr = NULL,
-+		.i_len = 0,
-+		.i_type = XLOG_REG_TYPE_COMMIT,
++		.i_addr = &magic,
++		.i_len = sizeof(magic),
++		.i_type = XLOG_REG_TYPE_UNMOUNT,
 +	};
 +	struct xfs_log_vec vec = {
 +		.lv_niovecs = 1,
 +		.lv_iovecp = &reg,
 +	};
-+	int	error;
 +
-+	ASSERT_ALWAYS(iclog);
++	/* account for space used by record data */
++	ticket->t_curr_res -= sizeof(magic);
 +
- 	if (XLOG_FORCED_SHUTDOWN(log))
- 		return -EIO;
- 
--	return xlog_commit_record(log, ticket, iclog, lsn);
-+	error = xlog_write(log, &vec, ticket, lsn, iclog, XLOG_COMMIT_TRANS);
-+	if (error)
-+		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+	return error;
++	return xlog_write(log, &vec, ticket, lsn, NULL, flags);
++}
++
+ /*
+  * Write out the commit record of a transaction associated with the given
+  * ticket to close off a running log write. Return the lsn of the commit record.
+@@ -843,31 +875,13 @@ xfs_log_mount_cancel(
  }
  
  /*
-@@ -1529,38 +1539,6 @@ xlog_alloc_log(
- 	return ERR_PTR(error);
- }	/* xlog_alloc_log */
- 
+- * Final log writes as part of unmount.
+- *
+- * Mark the filesystem clean as unmount happens.  Note that during relocation
+- * this routine needs to be executed as part of source-bag while the
+- * deallocation must not be done until source-end.
++ * Mark the filesystem clean by writing an unmount record to the head of the
++ * log.
+  */
 -
--/*
-- * Write out the commit record of a transaction associated with the given
-- * ticket.  Return the lsn of the commit record.
-- */
--STATIC int
--xlog_commit_record(
--	struct xlog		*log,
--	struct xlog_ticket	*ticket,
--	struct xlog_in_core	**iclog,
--	xfs_lsn_t		*commitlsnp)
--{
--	struct xfs_mount *mp = log->l_mp;
--	int	error;
+-/* Actually write the unmount record to disk. */
+ static void
+ xfs_log_write_unmount_record(
+ 	struct xfs_mount	*mp)
+ {
+-	/* the data section must be 32 bit size aligned */
+-	struct xfs_unmount_log_format magic = {
+-		.magic = XLOG_UNMOUNT_TYPE,
+-	};
 -	struct xfs_log_iovec reg = {
--		.i_addr = NULL,
--		.i_len = 0,
--		.i_type = XLOG_REG_TYPE_COMMIT,
+-		.i_addr = &magic,
+-		.i_len = sizeof(magic),
+-		.i_type = XLOG_REG_TYPE_UNMOUNT,
 -	};
 -	struct xfs_log_vec vec = {
 -		.lv_niovecs = 1,
 -		.lv_iovecp = &reg,
 -	};
--
--	ASSERT_ALWAYS(iclog);
--	error = xlog_write(log, &vec, ticket, commitlsnp, iclog,
--					XLOG_COMMIT_TRANS);
--	if (error)
--		xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
--	return error;
--}
--
- /*
-  * Push on the buffer cache code if we ever use more than 75% of the on-disk
-  * log space.  This code pushes on the lsn which would supposedly free up
+ 	struct xlog		*log = mp->m_log;
+ 	struct xlog_in_core	*iclog;
+ 	struct xlog_ticket	*tic = NULL;
+@@ -892,10 +906,7 @@ xfs_log_write_unmount_record(
+ 		flags &= ~XLOG_UNMOUNT_TRANS;
+ 	}
+ 
+-	/* remove inited flag, and account for space used */
+-	tic->t_flags = 0;
+-	tic->t_curr_res -= sizeof(magic);
+-	error = xlog_write(log, &vec, tic, &lsn, NULL, flags);
++	error = xlog_write_unmount(log, tic, &lsn, flags);
+ 	/*
+ 	 * At this point, we're umounting anyway, so there's no point in
+ 	 * transitioning log state to IOERROR. Just continue...
 -- 
 2.24.0.rc0
 
