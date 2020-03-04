@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C5BE178BF3
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 180CA178BF9
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgCDHyF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 02:54:05 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43674 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725283AbgCDHyF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:05 -0500
+        id S1728557AbgCDHyI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 02:54:08 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33973 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728531AbgCDHyI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:08 -0500
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 407937EA131
-        for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:03 +1100 (AEDT)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 1058A3A2A16
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:02 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqw-0007ll-3M
+        id 1j9Oqw-0007lr-6o
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:02 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqw-0005co-1G
+        id 1j9Oqw-0005ct-3C
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:02 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 08/11] xfs: rename the log unmount writing functions.
-Date:   Wed,  4 Mar 2020 18:53:58 +1100
-Message-Id: <20200304075401.21558-9-david@fromorbit.com>
+Subject: [PATCH 10/11] xfs: remove some stale comments from the log code
+Date:   Wed,  4 Mar 2020 18:54:00 +1100
+Message-Id: <20200304075401.21558-11-david@fromorbit.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20200304075401.21558-1-david@fromorbit.com>
 References: <20200304075401.21558-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=20KFwNOVAAAA:8
-        a=pDtEVDZtZgkmEOs7AtQA:9
+        a=HAJyDiJqIqQbgm0xHfYA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,63 +45,170 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The naming and calling conventions are a bit of a mess. Clean it up
-so the call chain looks like:
-
-	xfs_log_unmount_write(mp)
-	  xlog_unmount_write(log)
-	    xlog_write_unmount_record(log, ticket)
-
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_log.c | 71 ++++++++++++++----------------------------------
+ 1 file changed, 20 insertions(+), 51 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index a310ca9e7615..bdf604d31d8c 100644
+index a687c20dd77d..89956484848f 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -491,7 +491,7 @@ xfs_log_reserve(
-  * transaction context that has already done the accounting for us.
-  */
- static int
--xlog_write_unmount(
-+xlog_write_unmount_record(
- 	struct xlog		*log,
- 	struct xlog_ticket	*ticket,
- 	xfs_lsn_t		*lsn,
-@@ -903,10 +903,10 @@ xlog_state_ioerror(
-  * log.
-  */
- static void
--xfs_log_write_unmount_record(
--	struct xfs_mount	*mp)
-+xlog_unmount_write(
-+	struct xlog		*log)
- {
--	struct xlog		*log = mp->m_log;
-+	struct xfs_mount	*mp = log->l_mp;
- 	struct xlog_in_core	*iclog;
- 	struct xlog_ticket	*tic = NULL;
- 	xfs_lsn_t		lsn;
-@@ -930,7 +930,7 @@ xfs_log_write_unmount_record(
- 		flags &= ~XLOG_UNMOUNT_TRANS;
- 	}
+@@ -477,14 +477,6 @@ xfs_log_reserve(
+ 	return error;
+ }
  
--	error = xlog_write_unmount(log, tic, &lsn, flags);
-+	error = xlog_write_unmount_record(log, tic, &lsn, flags);
- 	/*
- 	 * At this point, we're umounting anyway, so there's no point in
- 	 * transitioning log state to IOERROR. Just continue...
-@@ -1006,7 +1006,7 @@ xfs_log_unmount_write(xfs_mount_t *mp)
- 	} while (iclog != first_iclog);
+-
+-/*
+- * NOTES:
+- *
+- *	1. currblock field gets updated at startup and after in-core logs
+- *		marked as with WANT_SYNC.
+- */
+-
+ /*
+  * Write out an unmount record using the ticket provided. We have to account for
+  * the data space used in the unmount ticket as this write is not done from a
+@@ -1968,7 +1960,7 @@ xlog_dealloc_log(
+ 	log->l_mp->m_log = NULL;
+ 	destroy_workqueue(log->l_ioend_workqueue);
+ 	kmem_free(log);
+-}	/* xlog_dealloc_log */
++}
+ 
+ /*
+  * Update counters atomically now that memcpy is done.
+@@ -2511,14 +2503,6 @@ xlog_write(
+ 	return error;
+ }
+ 
+-
+-/*****************************************************************************
+- *
+- *		State Machine functions
+- *
+- *****************************************************************************
+- */
+-
+ /*
+  * An iclog has just finished IO completion processing, so we need to update
+  * the iclog state and propagate that up into the overall log state. Hence we
+@@ -2887,8 +2871,8 @@ xlog_state_done_syncing(
+ 	 */
+ 	wake_up_all(&iclog->ic_write_wait);
+ 	spin_unlock(&log->l_icloglock);
+-	xlog_state_do_callback(log, aborted);	/* also cleans log */
+-}	/* xlog_state_done_syncing */
++	xlog_state_do_callback(log, aborted);
++}
+ 
+ 
+ /*
+@@ -3008,14 +2992,14 @@ xlog_state_get_iclog_space(
+ 
+ 	*logoffsetp = log_offset;
+ 	return 0;
+-}	/* xlog_state_get_iclog_space */
+-
+-/* The first cnt-1 times through here we don't need to
+- * move the grant write head because the permanent
+- * reservation has reserved cnt times the unit amount.
+- * Release part of current permanent unit reservation and
+- * reset current reservation to be one units worth.  Also
+- * move grant reservation head forward.
++}
++
++/*
++ * The first cnt-1 times a ticket goes through here we don't need to move the
++ * grant write head because the permanent reservation has reserved cnt times the
++ * unit amount.  Release part of current permanent unit reservation and reset
++ * current reservation to be one units worth.  Also move grant reservation head
++ * forward.
+  */
+ STATIC void
+ xlog_regrant_reserve_log_space(
+@@ -3047,7 +3031,7 @@ xlog_regrant_reserve_log_space(
+ 
+ 	ticket->t_curr_res = ticket->t_unit_res;
+ 	xlog_tic_reset_res(ticket);
+-}	/* xlog_regrant_reserve_log_space */
++}
+ 
+ 
+ /*
+@@ -3096,11 +3080,11 @@ xlog_ungrant_log_space(
+ }
+ 
+ /*
+- * This routine will mark the current iclog in the ring as WANT_SYNC
+- * and move the current iclog pointer to the next iclog in the ring.
+- * When this routine is called from xlog_state_get_iclog_space(), the
+- * exact size of the iclog has not yet been determined.  All we know is
+- * that every data block.  We have run out of space in this log record.
++ * This routine will mark the current iclog in the ring as WANT_SYNC and move
++ * the current iclog pointer to the next iclog in the ring.  When this routine
++ * is called from xlog_state_get_iclog_space(), the exact size of the iclog has
++ * not yet been determined.  All we know is that every data block.  We have run
++ * out of space in this log record.
+  */
+ STATIC void
+ xlog_state_switch_iclogs(
+@@ -3143,7 +3127,7 @@ xlog_state_switch_iclogs(
+ 	}
+ 	ASSERT(iclog == log->l_iclog);
+ 	log->l_iclog = iclog->ic_next;
+-}	/* xlog_state_switch_iclogs */
++}
+ 
+ /*
+  * Write out all data in the in-core log as of this exact moment in time.
+@@ -3397,14 +3381,6 @@ xlog_state_want_sync(
+ 	}
+ }
+ 
+-
+-/*****************************************************************************
+- *
+- *		TICKET functions
+- *
+- *****************************************************************************
+- */
+-
+ /*
+  * Free a used ticket when its refcount falls to zero.
+  */
+@@ -3562,13 +3538,6 @@ xlog_ticket_alloc(
+ 	return tic;
+ }
+ 
+-
+-/******************************************************************************
+- *
+- *		Log debug routines
+- *
+- ******************************************************************************
+- */
+ #if defined(DEBUG)
+ /*
+  * Make sure that the destination ptr is within the valid data region of
+@@ -3654,7 +3623,7 @@ xlog_verify_tail_lsn(
+ 	if (blocks < BTOBB(iclog->ic_offset) + 1)
+ 		xfs_emerg(log->l_mp, "%s: ran out of log space", __func__);
+     }
+-}	/* xlog_verify_tail_lsn */
++}
+ 
+ /*
+  * Perform a number of checks on the iclog before writing to disk.
+@@ -3757,7 +3726,7 @@ xlog_verify_iclog(
+ 		}
+ 		ptr += sizeof(xlog_op_header_t) + op_len;
+ 	}
+-}	/* xlog_verify_iclog */
++}
  #endif
- 	if (! (XLOG_FORCED_SHUTDOWN(log))) {
--		xfs_log_write_unmount_record(mp);
-+		xlog_unmount_write(log);
- 	} else {
- 		/*
- 		 * We're already in forced_shutdown mode, couldn't
+ 
+ /*
 -- 
 2.24.0.rc0
 
