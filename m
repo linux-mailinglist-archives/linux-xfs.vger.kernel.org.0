@@ -2,65 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5043179238
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 15:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A021179349
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 16:25:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgCDOW7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 09:22:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41146 "EHLO
+        id S1725897AbgCDPZP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 10:25:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42570 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDOW7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 09:22:59 -0500
+        with ESMTP id S1725765AbgCDPZP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 10:25:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=AnbrYHfpg3ftWazDwotORReAOaIVQFxlC0lPYzO9Yq8=; b=IIcJhveN6A4+vTmO7IuKo+YtEO
-        Y2gwjm6u8Yu2uWohjfQUqTGadI6U92dDBfsVWpS2yJAtT/L/IevjKw8lDK0j5siO++lIwZu67R+0t
-        RiaBM9PScHuj+6VbI7+ih1UPTh4iJqVjvGRCdQfZoZQtYfGoLYja12Aoe/qe8wGOgNeIq9sHTTK48
-        quQWCNVpBeRWBU6N1HPxQNAtjbXhEGBFCg7mkg/Onertb2gYdklEXkQ7J0lwkWyTfW3IMypKk5bH8
-        UtxmAEoHagsFl1vOMBGHuJq66oreUNJZMB2ji7xEkjwvawyiHH4mRwFzBUkZYZepWHjQoVr1k7kfT
-        xj5dy3VA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9UvL-0004Na-Cr; Wed, 04 Mar 2020 14:22:59 +0000
-Date:   Wed, 4 Mar 2020 06:22:59 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-xfs@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org,
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NLR1W71Y/VoqRQTjf9FpHr9ctwEcNNeQYoWDLtxQNh4=; b=oA5QWTME9j08l8wVRW8JreB/id
+        sTucpH7cYGXnG9ZWD13wHM+xZj331KRknVrTtl/8vBLeW0bbhYUCLyixdlYvOpsvTerk09jnasre1
+        +N7LVR9DBGNl0e+d+N4wY4eHS+QBSiJYBua72tK6j18zHkSzvtFDyZim3UznxMlWrCD1S2Wn8ohep
+        uvMFkd01bLEepBeoi97d//1z/NJNrZ/oa46EpP9WhHiya6GwIQgfWtWrjXNW6RYsILAguIxvKIkQ3
+        WBsuW1wN7lHzxN0Aw8g4I6t5s2pxe8xG0SpWSJ+UWg64Fnpn9Dzxr0mfdonSDCWdFECjADvyz/fdZ
+        zsvPJsUw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9Vtb-0007G4-32; Wed, 04 Mar 2020 15:25:15 +0000
+Date:   Wed, 4 Mar 2020 07:25:15 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Christoph Hellwig <hch@infradead.org>,
         "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH] iomap: Fix writepage tracepoint pgoff
-Message-ID: <20200304142259.GF29971@bombadil.infradead.org>
+Subject: Re: [PATCH] iomap: Fix writepage tracepoint pgoff
+Message-ID: <20200304152515.GA23148@infradead.org>
+References: <20200304142259.GF29971@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200304142259.GF29971@bombadil.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+On Wed, Mar 04, 2020 at 06:22:59AM -0800, Matthew Wilcox wrote:
+> From: Matthew Wilcox (Oracle) <willy@infradead.org>
+> 
+> page_offset() confusingly returns the number of bytes from the
+> beginning of the file and not the pgoff, which the tracepoint claims
+> to be returning.  We're already returning the number of bytes from the
+> beginning of the file in the 'offset' parameter, so correct the pgoff
+> to be what was apparently intended.
+> 
+> Fixes: 0b1b213fcf3a ("xfs: event tracing support")
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-page_offset() confusingly returns the number of bytes from the
-beginning of the file and not the pgoff, which the tracepoint claims
-to be returning.  We're already returning the number of bytes from the
-beginning of the file in the 'offset' parameter, so correct the pgoff
-to be what was apparently intended.
-
-Fixes: 0b1b213fcf3a ("xfs: event tracing support")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
-index d6ba705f938a..ebc89ec5e6c7 100644
---- a/fs/iomap/trace.h
-+++ b/fs/iomap/trace.h
-@@ -56,7 +56,7 @@ DECLARE_EVENT_CLASS(iomap_page_class,
- 	TP_fast_assign(
- 		__entry->dev = inode->i_sb->s_dev;
- 		__entry->ino = inode->i_ino;
--		__entry->pgoff = page_offset(page);
-+		__entry->pgoff = page->index;
- 		__entry->size = i_size_read(inode);
- 		__entry->offset = off;
- 		__entry->length = len;
-
+I wonder if tracing the byte offset and just changing the name
+might be more useful.  But I agree that we should fix it one way or
+another.
