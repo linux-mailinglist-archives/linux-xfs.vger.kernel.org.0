@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82C85178BFA
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C5BE178BF3
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2020 08:54:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgCDHyI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 02:54:08 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34031 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725271AbgCDHyI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:08 -0500
+        id S1728515AbgCDHyF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 02:54:05 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43674 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgCDHyF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 02:54:05 -0500
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4089A3A2A2B
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 407937EA131
         for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2020 18:54:03 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqw-0007li-24
+        id 1j9Oqw-0007ll-3M
         for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:02 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1j9Oqv-0005cl-Va
-        for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:01 +1100
+        id 1j9Oqw-0005co-1G
+        for linux-xfs@vger.kernel.org; Wed, 04 Mar 2020 18:54:02 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 07/11] xfs: clean up xlog_state_ioerror()
-Date:   Wed,  4 Mar 2020 18:53:57 +1100
-Message-Id: <20200304075401.21558-8-david@fromorbit.com>
+Subject: [PATCH 08/11] xfs: rename the log unmount writing functions.
+Date:   Wed,  4 Mar 2020 18:53:58 +1100
+Message-Id: <20200304075401.21558-9-david@fromorbit.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20200304075401.21558-1-david@fromorbit.com>
 References: <20200304075401.21558-1-david@fromorbit.com>
@@ -37,7 +37,7 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=20KFwNOVAAAA:8
-        a=oIrh420T3QSa8vw9ZH0A:9
+        a=pDtEVDZtZgkmEOs7AtQA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,63 +45,63 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
+The naming and calling conventions are a bit of a mess. Clean it up
+so the call chain looks like:
+
+	xfs_log_unmount_write(mp)
+	  xlog_unmount_write(log)
+	    xlog_write_unmount_record(log, ticket)
+
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ fs/xfs/xfs_log.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 0de3c32d42b6..a310ca9e7615 100644
+index a310ca9e7615..bdf604d31d8c 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -875,33 +875,27 @@ xfs_log_mount_cancel(
- }
- 
- /*
-- * Mark all iclogs IOERROR. l_icloglock is held by the caller.
-+ * Mark all iclogs IOERROR. l_icloglock is held by the caller. Returns 1 if the
-+ * log was already in an IO state, 0 otherwise. From now one, no log flushes
-+ * will occur.
+@@ -491,7 +491,7 @@ xfs_log_reserve(
+  * transaction context that has already done the accounting for us.
   */
- STATIC int
- xlog_state_ioerror(
--	struct xlog	*log)
+ static int
+-xlog_write_unmount(
++xlog_write_unmount_record(
+ 	struct xlog		*log,
+ 	struct xlog_ticket	*ticket,
+ 	xfs_lsn_t		*lsn,
+@@ -903,10 +903,10 @@ xlog_state_ioerror(
+  * log.
+  */
+ static void
+-xfs_log_write_unmount_record(
+-	struct xfs_mount	*mp)
++xlog_unmount_write(
 +	struct xlog		*log)
  {
--	xlog_in_core_t	*iclog, *ic;
-+	struct xlog_in_core	*iclog = log->l_iclog;
-+	struct xlog_in_core	*ic = iclog;
+-	struct xlog		*log = mp->m_log;
++	struct xfs_mount	*mp = log->l_mp;
+ 	struct xlog_in_core	*iclog;
+ 	struct xlog_ticket	*tic = NULL;
+ 	xfs_lsn_t		lsn;
+@@ -930,7 +930,7 @@ xfs_log_write_unmount_record(
+ 		flags &= ~XLOG_UNMOUNT_TRANS;
+ 	}
  
- 	log->l_flags |= XLOG_IO_ERROR;
-+	if (iclog->ic_state == XLOG_STATE_IOERROR)
-+		return 1;
- 
--	iclog = log->l_iclog;
--	if (iclog->ic_state != XLOG_STATE_IOERROR) {
--		/*
--		 * Mark all the incore logs IOERROR.
--		 * From now on, no log flushes will result.
--		 */
--		ic = iclog;
--		do {
--			ic->ic_state = XLOG_STATE_IOERROR;
--			ic = ic->ic_next;
--		} while (ic != iclog);
--		return 0;
--	}
--	/*
--	 * Return non-zero, if state transition has already happened.
--	 */
--	return 1;
-+	do {
-+		ic->ic_state = XLOG_STATE_IOERROR;
-+		ic = ic->ic_next;
-+	} while (ic != iclog);
-+
-+	return 0;
- }
- 
- /*
+-	error = xlog_write_unmount(log, tic, &lsn, flags);
++	error = xlog_write_unmount_record(log, tic, &lsn, flags);
+ 	/*
+ 	 * At this point, we're umounting anyway, so there's no point in
+ 	 * transitioning log state to IOERROR. Just continue...
+@@ -1006,7 +1006,7 @@ xfs_log_unmount_write(xfs_mount_t *mp)
+ 	} while (iclog != first_iclog);
+ #endif
+ 	if (! (XLOG_FORCED_SHUTDOWN(log))) {
+-		xfs_log_write_unmount_record(mp);
++		xlog_unmount_write(log);
+ 	} else {
+ 		/*
+ 		 * We're already in forced_shutdown mode, couldn't
 -- 
 2.24.0.rc0
 
