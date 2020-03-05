@@ -2,131 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0450179D44
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2020 02:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8036C179D8F
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2020 02:45:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725554AbgCEBXr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Mar 2020 20:23:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58522 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgCEBXr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 20:23:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0251Hpjj146074;
-        Thu, 5 Mar 2020 01:23:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xiuqJyxzhPnXULMHSJkFASYRMZGHxkhhdFOwj+9FCf8=;
- b=WKOz0KDT9TSx5yghIvq7EREUFWwNX5bZU0yFByZzxzWv3c4zljowwVV2mF1scmlFIRT2
- YeepvR1S0JHxjnSo7D1BBNPkdQx5pGWuHU3NtJNB/N/rXHouT7vafjUS+w9cmm7hEJkT
- tntFpbGYC8lFOhaBRpK2PFmpKv5S5jbJYW0bkPnCFHbZKtkS/hIh29+RgmsxYenFLEjY
- YpbVbXa+XqCaVIDnVKagBiEdLxfIqKHpbvE1xNZuih6dHZQ6/ODXDmbh6D0jZvs+9luG
- tTxVyfEDC7A26YrwiGSS9CrVxh9Om4zjKKSbt24UIzfCVK2wzJhydpM1HkMr+ZntPC14 hw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2yffcut4jn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Mar 2020 01:23:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0251IXNN010693;
-        Thu, 5 Mar 2020 01:23:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2yg1p91dkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Mar 2020 01:23:43 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0251Ngku029332;
-        Thu, 5 Mar 2020 01:23:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Mar 2020 01:23:42 +0000
-Date:   Wed, 4 Mar 2020 17:23:41 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
-Subject: Re: [PATCH 1/4] xfs: introduce fake roots for ag-rooted btrees
-Message-ID: <20200305012341.GN8045@magnolia>
-References: <158329250190.2423432.16958662769192587982.stgit@magnolia>
- <158329250827.2423432.18007812133503266256.stgit@magnolia>
- <20200305012054.GF10776@dread.disaster.area>
+        id S1725828AbgCEBpm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Mar 2020 20:45:42 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33198 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgCEBpm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Mar 2020 20:45:42 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A70FE3A28AD
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Mar 2020 12:45:38 +1100 (AEDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j9fZx-0005xA-Cz
+        for linux-xfs@vger.kernel.org; Thu, 05 Mar 2020 12:45:37 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j9fZx-0002vx-AI
+        for linux-xfs@vger.kernel.org; Thu, 05 Mar 2020 12:45:37 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/7] xfs: make btree cursor private unions anonymous
+Date:   Thu,  5 Mar 2020 12:45:30 +1100
+Message-Id: <20200305014537.11236-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.24.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305012054.GF10776@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=958 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003050004
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=SS2py6AdgQ4A:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+        a=s2OCZSvGNsbFMDbw-MgA:9 a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 12:20:54PM +1100, Dave Chinner wrote:
-> On Tue, Mar 03, 2020 at 07:28:28PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Create an in-core fake root for AG-rooted btree types so that callers
-> > can generate a whole new btree using the upcoming btree bulk load
-> > function without making the new tree accessible from the rest of the
-> > filesystem.  It is up to the individual btree type to provide a function
-> > to create a staged cursor (presumably with the appropriate callouts to
-> > update the fakeroot) and then commit the staged root back into the
-> > filesystem.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> .....
-> > @@ -188,6 +188,16 @@ union xfs_btree_cur_private {
-> >  	} abt;
-> >  };
-> >  
-> > +/* Private information for a AG-rooted btree. */
-> > +struct xfs_btree_priv_ag {			/* needed for BNO, CNT, INO */
-> > +	union {
-> > +		struct xfs_buf		*agbp;	/* agf/agi buffer pointer */
-> > +		struct xbtree_afakeroot	*afake;	/* fake ag header root */
-> > +	};
-> > +	xfs_agnumber_t			agno;	/* ag number */
-> > +	union xfs_btree_cur_private	priv;
-> > +};
-> > +
-> >  /*
-> >   * Btree cursor structure.
-> >   * This collects all information needed by the btree code in one place.
-> > @@ -209,11 +219,7 @@ typedef struct xfs_btree_cur
-> >  	xfs_btnum_t	bc_btnum;	/* identifies which btree type */
-> >  	int		bc_statoff;	/* offset of btre stats array */
-> >  	union {
-> > -		struct {			/* needed for BNO, CNT, INO */
-> > -			struct xfs_buf	*agbp;	/* agf/agi buffer pointer */
-> > -			xfs_agnumber_t	agno;	/* ag number */
-> > -			union xfs_btree_cur_private	priv;
-> > -		} a;
-> > +		struct xfs_btree_priv_ag a;
-> >  		struct {			/* needed for BMAP */
-> >  			struct xfs_inode *ip;	/* pointer to our inode */
-> >  			int		allocated;	/* count of alloced */
-> 
-> I don't really like the mess this is turning into. I'll write a
-> quick cleanup patch set for this union to make it much neater and
-> the code much less verbose before we make the code even more
-> unreadable. :/
+This is a "make things less verbose" cleanup from looking at the
+changes Darrick is making to add a staging/fake cursor to the union
+for bulk btree loading.
 
-Ok, thank you!
+The process is to create a @defines of the new name to the existing
+union name, then replace all users of each union via a script. Then
+the union is made anonymous and the members renamed to match the new
+code. Then the #defines get removed.
 
---D
+We do this for the bc_private union, then we name the ag and btree
+structures and make them use anonymous unions internally via the
+same process.
 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+That means we go from doubly nested private stuff like this:
+
+cur->bc_private.a.priv.abt.active
+
+To the much cleaner, less verbose and more readable:
+
+cur->bc_ag.abt.active
+
+Simples, yes?
+
+This series can be found at:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git/h?xfs-btree-cursor-cleanup
+
+Note: the code changes are all scripted, I have not done any
+followup to do things like aggregate split lines back into single
+lines as that is out of scope of the structure definition cleanup
+I'm trying to acheive here. That can be done in future as we modify
+the code that now has lines that can be merged....
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+
+
+Dave Chinner (7):
+  xfs: introduce new private btree cursor names
+  xfs: convert btree cursor ag private member name
+  xfs: convert btree cursor btree private member name
+  xfs: rename btree cursur private btree member flags
+  xfs: make btree cursor private union anonymous
+  xfs: make the btree cursor union members named structure
+  xfs: make the btree ag cursor private union anonymous
+
+ fs/xfs/libxfs/xfs_alloc.c          |  16 ++---
+ fs/xfs/libxfs/xfs_alloc_btree.c    |  24 +++----
+ fs/xfs/libxfs/xfs_bmap.c           |  46 ++++++------
+ fs/xfs/libxfs/xfs_bmap_btree.c     |  50 ++++++-------
+ fs/xfs/libxfs/xfs_btree.c          |  62 ++++++++--------
+ fs/xfs/libxfs/xfs_btree.h          |  51 ++++++-------
+ fs/xfs/libxfs/xfs_ialloc.c         |   2 +-
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |  20 +++---
+ fs/xfs/libxfs/xfs_refcount.c       | 110 ++++++++++++++---------------
+ fs/xfs/libxfs/xfs_refcount_btree.c |  28 ++++----
+ fs/xfs/libxfs/xfs_rmap.c           | 110 ++++++++++++++---------------
+ fs/xfs/libxfs/xfs_rmap_btree.c     |  28 ++++----
+ fs/xfs/scrub/agheader_repair.c     |   2 +-
+ fs/xfs/scrub/alloc.c               |   2 +-
+ fs/xfs/scrub/bmap.c                |   4 +-
+ fs/xfs/scrub/ialloc.c              |   8 +--
+ fs/xfs/scrub/refcount.c            |   2 +-
+ fs/xfs/scrub/rmap.c                |   2 +-
+ fs/xfs/scrub/trace.c               |   4 +-
+ fs/xfs/scrub/trace.h               |   4 +-
+ fs/xfs/xfs_fsmap.c                 |   4 +-
+ 21 files changed, 291 insertions(+), 288 deletions(-)
+
+-- 
+2.24.0.rc0
+
