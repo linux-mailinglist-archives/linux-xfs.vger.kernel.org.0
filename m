@@ -2,100 +2,152 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04E2317C59F
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Mar 2020 19:45:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 699FE17C5ED
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Mar 2020 20:08:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgCFSpF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Mar 2020 13:45:05 -0500
-Received: from buxtehude.debian.org ([209.87.16.39]:42996 "EHLO
-        buxtehude.debian.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgCFSpF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Mar 2020 13:45:05 -0500
-X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Mar 2020 13:45:04 EST
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1jAHy2-0004nD-UZ; Fri, 06 Mar 2020 18:45:02 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#695875: Build with libedit rather than libreadline5
-Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
-          695875@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 695875
-X-Debian-PR-Package: xfsprogs
-X-Debian-PR-Keywords: patch
-References: <20121213212730.25675.16201.reportbug@localhost>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 695875-submit@bugs.debian.org id=B695875.158352006316682
-          (code B ref 695875); Fri, 06 Mar 2020 18:45:02 +0000
-Received: (at 695875) by bugs.debian.org; 6 Mar 2020 18:41:03 +0000
-X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
-        (2018-09-13) on buxtehude.debian.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=4.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,TXREP
-        autolearn=ham autolearn_force=no
-        version=3.4.2-bugs.debian.org_2005_01_02
-X-Spam-Bayes: score:0.0000 Tokens: new, 14; hammy, 108; neutral, 22; spammy,
-        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3, 0.000-+--H*u:68.0,
-        0.000-+--sk:libread, 0.000-+--builddepend, 0.000-+--build-depend
-Received: from mail-wm1-x329.google.com ([2a00:1450:4864:20::329]:35582)
-        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <bastiangermann@fishpost.de>)
-        id 1jAHuA-0004Km-Uq
-        for 695875@bugs.debian.org; Fri, 06 Mar 2020 18:41:03 +0000
-Received: by mail-wm1-x329.google.com with SMTP id m3so3443567wmi.0
-        for <695875@bugs.debian.org>; Fri, 06 Mar 2020 10:41:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=sxqK7aklJt1I8I40+SPWFCL7MwHIQFI+NrHeVsF7Y8E=;
-        b=DrbO37AUWxyAOXyBGOfxoKILQAagIAOjbS8cIuG2FctvbLk9Wss0k5TgXE1AHNgrvt
-         BtoqwEcw1GtK0TIcgeMnnvlua23J1mnEy/Bf5JA1jQ9nqgK8g+kffS7pXpmurrLavQW/
-         5xyLqFISGDqpab16nJqvbZl1YY+YqFPCWgKZ4yTh52sPPkUOq0eb7eYMw7Qmfe8bQA6W
-         nzHtXHyQFEyHV4PNXarwmH6wFl74wYBJcOLaFWTDt7qajVf9IUstNRfFjRrpNPjpBcxF
-         RibPqjz/88PHDL0b0rU7BT49iKCVT9LgKzn6IkVizmRATjkAscuzqTmCv+5gkH1wYArT
-         Cx4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=sxqK7aklJt1I8I40+SPWFCL7MwHIQFI+NrHeVsF7Y8E=;
-        b=CjMqCQ58DoO6k5OgsX+svJvKNMyqiPrdZOnoNYhzX4tuSGT0BNVKCRffRINlBwTDBb
-         9F+TiGmn7T0cpWU9kiPyZPx9K2al2HRSB7DgKZ3g+Nd6nMpcBxzaRCPckdlMebbuJ0FK
-         mzoRQQ8fH4f9raNr+dqzZkB8GfQAix4ZhIlkCsGAXCE9puafACG5AKJSV3L9K8b/n+i5
-         GceNlGrf0IbxVhLtLGlmsW8Ba9o4kxxg7e1Mie3VROTtW/q9Bc/2L+P2KJJG3AxDrcC+
-         +ROCwuzS4oC2WAGqBn7ujSl2njwlBn0yvcfi3hnrAyaqaPtMvNf1q0MkmtoQOffgzfXk
-         ho5A==
-X-Gm-Message-State: ANhLgQ3GcquHQ79KYm0Nwr+sgXDdcVttRD4faprwQu5Co6iViS1LJDGC
-        Pl1Fpz4xyd/zrkKfynSOoUhSJ3IpXa4=
-X-Google-Smtp-Source: ADFU+vtvu34v59OQsslWELlJqXSgyLFSCCV6fOW2Cw6fAT7Up9bYLyQoB2CRRMaL/WkjS0Jd/Wm6RA==
-X-Received: by 2002:a1c:960c:: with SMTP id y12mr5227435wmd.9.1583520059853;
-        Fri, 06 Mar 2020 10:40:59 -0800 (PST)
-Received: from [192.168.178.68] (dslb-084-059-208-037.084.059.pools.vodafone-ip.de. [84.59.208.37])
-        by smtp.gmail.com with ESMTPSA id n24sm9198178wra.61.2020.03.06.10.40.59
-        for <695875@bugs.debian.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 10:40:59 -0800 (PST)
-To:     695875@bugs.debian.org
-From:   Bastian Germann <bastiangermann@fishpost.de>
-Message-ID: <790bc229-14bb-fb31-2242-d430db5add24@fishpost.de>
-Date:   Fri, 6 Mar 2020 19:40:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726485AbgCFTIN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Mar 2020 14:08:13 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38352 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFTIN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Mar 2020 14:08:13 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026J5EVV089969;
+        Fri, 6 Mar 2020 19:07:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=7IxeGuzA35+xrdEU4Ai5zObBFjpvvFOyDrantokfJbM=;
+ b=CzhGUG7VXYVaeeFYe9jbvpj2JAxdGUagmx3uBGsCUoEIEXa/hDJblYKNWneBboX28jLU
+ wYRpLcV8zdS2/X0EavL4sYuLUlj94o9p7X2lI0yfQkteKiG/vIfzaeB4QyUTPrpVmeDg
+ cZbEGo3SdU3AJ7Du8Y9r1wDbLN/6QI4ryQCi36hAcWUuUjQ/PDx8jsdOET6y++S2FsLL
+ /afiumowox7zzydRJCpY17EtBjmBA7AnUj3xtqyHTmG4vlw1y0z6k281yxCoiaAdXQxY
+ o/LKlU4DVTmDDkNowS01wzfbiB4nuJjrWoDO4KPbc+ZEJkwIMM6ax43LZTfUeCiUAQE6 +A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwrd13n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 19:07:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026J2g6Z116410;
+        Fri, 6 Mar 2020 19:07:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yg1pe0cd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 19:07:54 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 026J7op9026534;
+        Fri, 6 Mar 2020 19:07:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 11:07:50 -0800
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        lsf-pc <lsf-pc@lists.linuxfoundation.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>, bpf@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [LSFMMBPF TOPIC] Killing LSFMMBPF
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <b506a373-c127-b92e-9824-16e8267fc910@toxicpanda.com>
+        <20200306160548.GB25710@bombadil.infradead.org>
+        <1583516279.3653.71.camel@HansenPartnership.com>
+        <20200306180618.GN31668@ziepe.ca>
+Date:   Fri, 06 Mar 2020 14:07:47 -0500
+In-Reply-To: <20200306180618.GN31668@ziepe.ca> (Jason Gunthorpe's message of
+        "Fri, 6 Mar 2020 14:06:18 -0400")
+Message-ID: <yq1eeu51ev0.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=2
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060117
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Please let the package build-depend on libedit-dev rather than the
-orphaned libreadline-gplv2-dev. It is supported by upstream and its
-license is compatible.
 
-The configure option --enable-readline=yes would have to be changed to
---enable-editline=yes.
+Jason,
+
+> Yes, I can confirm this from another smaller hotel-style conference
+> I've been involved organizing on occasion. $600-$800 is required to
+> break even without major sponsorship $$ for the ~100 people mark, and
+> that is without the usual food and venue perks we see at
+> plumbers/lsfmm.
+
+Yep. Our actual per-person cost for LSF/MM/BPF is in excess of $1K. That
+limits who we can invite. Personally I absolutely hate the invitation
+aspect and process. But we are very constrained wrt. how many we can
+actually accommodate by the amount of funding we get. Things appear to
+be better this year, but sponsor mergers and acquisitions have been a
+major concern the past few years.
+
+The premise of LSF/MM/BPF is to provide a venue where the right people
+can talk low-latency, face to face. Without the distractions of a 1000
+person event setting. The reason LSF/MM/BPF has been free to attend has
+been to ensure that attendance fees wouldn't be a deterrent for the
+people who should be there. The downside is that the invitation process
+has been a deterrent for other, likely valuable, contributors.
+
+I would love for LSF/MM/BPF/BBQ to be an umbrella event like LPC where
+we could have miniconfs with all the relevant contributors for each
+topic area to be present. The addition of the 3rd day was done to
+facilitate that so that XFS folks, btrfs folks, etc. could congregate in
+a room to discuss things only they cared about. But the current
+attendance headcount cap means that not all topics can be covered due to
+crucial people missing.
+
+Also, there are several areas where I do think that the present LSF/MM
+format still has merit. First of all, not all topics are large enough to
+justify an entire miniconf or topic-specific workshop. We have many
+topics that can be covered in an hour or less and that's the end of
+that. The other aspect is that key people straddle multiple filesystems,
+subsystems, etc. If we *only* had XFS/btrfs/BPF miniconfs, scheduling
+would be near impossible. Hence the current division between scheduled
+days and workshop day. Also, we do have cross-track topics that need
+involvement across the board. I would personally be happy with 1 track
+day and 2 workshop days if we could get critical mass for the workshop
+topics.
+
+In the old days, when LSF tracks were 10-12 people each, I felt we got
+stuff done. Since then we have more than doubled the headcount for each
+track in an attempt to get more people involved. But I feel that the
+discussions are much less useful. Despite enforcing the no-slides rules,
+etc.
+
+If we combine sponsor funding with per-attendee fees to facilitate a
+larger event, the question becomes: What should the headcount limit be?
+200? 500? The reason I ask is that I think funding can be worked
+out. But I also think it is important enough that we don't exceed the
+"productive group size" too much for a given topic. And we usually put
+that somewhere between 10 and 15. It is very rare to see more than this
+many attendees actively participate in a discussion. This means for an
+attendee cap of 200, we should aim to have ~20 concurrent topics
+happening for it to be productive. Maybe slash that number in half to
+compensate for the people in the hallway tracks?
+
+One thing a few of us discussed a year or two ago was to have actual
+per-session headcount limits. And make people bid on the sessions they
+wanted to participate in and then cap each session at 15. That would
+obviously be very hard to schedule and enforce. But I still think we
+need to think about how we can bring N hundred people together and make
+sure they congregate in productive groups of 10-15. That's really the
+key as far as I'm concerned. We have tried the pure unconference
+approach and that wasn't very productive either. So we need to land
+somewhere in the middle...
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
