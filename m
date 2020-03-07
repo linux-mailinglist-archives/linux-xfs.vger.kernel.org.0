@@ -2,74 +2,174 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E54A17C700
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Mar 2020 21:26:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E637717CB72
+	for <lists+linux-xfs@lfdr.de>; Sat,  7 Mar 2020 04:14:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgCFU0H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Mar 2020 15:26:07 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47118 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725873AbgCFU0H (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Mar 2020 15:26:07 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-105.corp.google.com [104.133.0.105] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 026KPXT6005112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 6 Mar 2020 15:25:34 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 113E242045B; Fri,  6 Mar 2020 15:25:33 -0500 (EST)
-Date:   Fri, 6 Mar 2020 15:25:32 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        lsf-pc <lsf-pc@lists.linuxfoundation.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        Btrfs BTRFS <linux-btrfs@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [LSFMMBPF TOPIC] long live LFSMMBPF
-Message-ID: <20200306202532.GC12490@mit.edu>
-References: <b506a373-c127-b92e-9824-16e8267fc910@toxicpanda.com>
- <76B62C4B-6ECB-482B-BF7D-95F42E43E7EB@fb.com>
- <1583523705.3653.94.camel@HansenPartnership.com>
+        id S1726833AbgCGDOt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Mar 2020 22:14:49 -0500
+Received: from mail-yw1-f48.google.com ([209.85.161.48]:37876 "EHLO
+        mail-yw1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCGDOs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Mar 2020 22:14:48 -0500
+Received: by mail-yw1-f48.google.com with SMTP id i1so39350ywf.4;
+        Fri, 06 Mar 2020 19:14:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aZEHHT6lAR6svoMasB13SgNuVP0MyXR1N2GanpY6GnE=;
+        b=JWZbawBN+AvkFClWdbF9gaYKLkGD+MiEj3bA/grN4IT7mezq5F8r8qyrWuvH6DJyAd
+         k1NpQCsqIzkRn9yPsH7Yt8jY6O+71AS5vYRqRTcjD9ZuSjjUa0Dq6pQ2H8laXyATOUn4
+         HDg3yOA6C1H/+qoRlczbbGnt8ThWPfmV7uou6jiw5aHaPE6PoI/3We+RpiizN1/ESjcL
+         r7hk4JX7OuGRu/yyiT8TsP3RACXbcBqTVhtszcj3LwEqlv5s0eyvNg9YlT8/gwkCK+g6
+         UX4A8E+EWrVbzDefMxHkx4JoOPQgmLWDNTMe/zVW6gO+T7/z4pQ43Od8UewolW59znzh
+         8SjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aZEHHT6lAR6svoMasB13SgNuVP0MyXR1N2GanpY6GnE=;
+        b=BNi/rN9ER2qDm+OaS7WiJgvRklTBDya5H/vIsEXFuDkDricUby8+Xfr57pjdYwggoV
+         Y3Pjvi4ov41834qmZ0HMx/YTvWT/DA0gimA+YM89tIluDsB8SPOuGb3Gq/RsvYBndcXQ
+         OM8BlMHtmI9itzZArvBCzyKgSoVPqH/iKU14IOfw20/DaAPMnPUKyapqtxIrNnUA52aR
+         s0p0ZvMzN3TyflEA3NqjOzWLwPIiZEpHmfa2RaDtkpARGddBY81goHze1RCzdsiJ1pIU
+         ROj9n1r5/B8dZ/9aGLhwHCFmLm1UJeG5p9nhtYwFfF34Zxtl7OG3+kRkqGXnCgQbrb/F
+         vrDw==
+X-Gm-Message-State: ANhLgQ146Nf20Tlal6AhQrE1UCmKOWfRKppLRA11HyGnpDdmupYmgP2m
+        p25oRVgVBXZ+He7fde1SnB5EHJbREEsMppgzDIgrnYNh
+X-Google-Smtp-Source: ADFU+vv1lbhShZquHVK69ApmFg8EyJmgI9xs6Kpib/27Oz8EplISUurSto5A/rirLzgeUMlkWQzIJWqDS4ECqgOsgQA=
+X-Received: by 2002:a25:e805:: with SMTP id k5mr7218096ybd.14.1583550886710;
+ Fri, 06 Mar 2020 19:14:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583523705.3653.94.camel@HansenPartnership.com>
+References: <b506a373-c127-b92e-9824-16e8267fc910@toxicpanda.com>
+In-Reply-To: <b506a373-c127-b92e-9824-16e8267fc910@toxicpanda.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Fri, 6 Mar 2020 21:14:35 -0600
+Message-ID: <CAH2r5ms6epOL0sXRfNNTM_J=K-dnGYNS_wK1rgw1VBqipM6kxQ@mail.gmail.com>
+Subject: Re: [LSFMMBPF TOPIC] Killing LSFMMBPF
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     lsf-pc <lsf-pc@lists.linuxfoundation.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>, bpf@vger.kernel.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 11:41:45AM -0800, James Bottomley wrote:
-> And, for everyone who gave us feedback in the Plumbers surveys that co-
-> locating with a big conference is *not* what you want because of
-> various problems like hallway track disruptions due to other conference
-> traffic and simply the difficulty of finding people, the current model
-> under consideration is one conference organization (the LF) but two
-> separate venues, sort of like OpenStack used to do for their big
-> conference and design summit to minimize disruption and increase
-> developer focus.
+Don't forget about Vault - there were some very useful hallway
+discussions at Vault this year as well ... even if a bit smaller than
+it should be ...
 
-Ths is what I tried to push last year, which was to colocate LSF/MM
-and KS/MS in Austin, at the same time as OSS 2020, but in a separate
-hotel so we didn't have to deal with the cast of thousands which go to
-OSS.  I also liked it because OSS 2020 is in June, so it would have
-been from a spacing perspective it would have been an easy way to
-start moving MS/KS from the second half of the year into first half of
-the year.
+On Fri, Mar 6, 2020 at 8:36 AM Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> Hello,
+>
+> This has been a topic that I've been thinking about a lot recently, mostly
+> because of the giant amount of work that has been organizing LSFMMBPF.  I was
+> going to wait until afterwards to bring it up, hoping that maybe it was just me
+> being done with the whole process and that time would give me a different
+> perspective, but recent discussions has made it clear I'm not the only one.
+>
+> LSFMMBPF is not useful to me personally, and not an optimal use of the
+> communities time.  The things that we want to get out of LSFMMBPF are (generally)
+>
+> 1) Reach consensus on any multi-subsystem contentious changes that have come up
+> over the past year.
+>
+> 2) Inform our fellow developers of new things that we are working on that we
+> would like help with, or need to think about for the upcoming year.
+>
+> 3) "Hallway track".  We are after all a community, and I for one like spending
+> time with developers that I don't get to interact with on a daily basis.
+>
+> 4) Provide a way to help integrate new developers into the community with face
+> time.  It is far easier to work with people once you can put a face to a name,
+> and this is especially valuable for new developers.
+>
+> These are all really good goals, and why we love the idea of LSFMMBPF.  But
+> having attended these things every year for the last 13 years, it has become
+> less and less of these things, at least from my perspective.  A few problems (as
+> I see them) are
+>
+> 1) The invitation process.  We've tried many different things, and I think we
+> generally do a good job here, but the fact is if I don't know somebody I'm not
+> going to give them a very high rating, making it difficult to actually bring in
+> new people.
+>
+> 2) There are so many of us.  Especially with the addition of the BPF crowd we
+> are now larger than ever.  This makes problem #1 even more apparent, even if I
+> weighted some of the new people higher who's slot should they take instead?  I
+> have 0 problems finding 20 people in the FS community who should absolutely be
+> in the room.  But now I'm trying to squeeze in 1-5 extra people.  Propagate that
+> across all the tracks and now we're at an extra 20ish people.
+>
+> 3) Half the people I want to talk to aren't even in the room.  This may be a
+> uniquely file system track problem, but most of my work is in btrfs, and I want
+> to talk to my fellow btrfs developers.  But again, we're trying to invite an
+> entire community, so many of them simply don't request invitations, or just
+> don't get invited.
+>
+> 3) Sponsorships.  This is still the best way to get to all of the core
+> developers, so we're getting more and more sponsors in order to buy their slots
+> to get access to people.  This is working as intended, and I'm not putting down
+> our awesome sponsors, but this again adds to the amount of people that are
+> showing up at what is supposed to be a working conference.
+>
+> 4) Presentations.  90% of the conference is 1-2 people standing at the front of
+> the room, talking to a room of 20-100 people, with only a few people in the
+> audience who cares.  We do our best to curate the presentations so we're not
+> wasting peoples time, but in the end I don't care what David Howells is doing
+> with mount, I trust him to do the right thing and he really just needs to trap
+> Viro in a room to work it out, he doesn't need all of us.
+>
+> 5) Actually planning this thing.  I have been on the PC for at least the last 5
+> years, and this year I'm running the whole thing.  We specifically laid out
+> plans to rotate in new blood so this sort of thing stopped happening, and this
+> year we've done a good job of that.  However it is a giant amount of work for
+> anybody involved, especially for the whole conference chair.  Add in something
+> like COVID-19 to the mix and now I just want to burn the whole thing to the
+> ground.  Planning this thing is not free, it does require work and effort.
+>
+> So what do I propose?  I propose we kill LSFMMBPF.
+>
+> Many people have suggested this elsewhere, but I think we really need to
+> seriously consider it.  Most of us all go to the Linux Plumbers conference.  We
+> could accomplish our main goals with Plumbers without having to deal with all of
+> the above problems.
+>
+> 1) The invitation process.  This goes away.  The people/companies that want to
+> discuss things with the rest of us can all get to plumbers the normal way.  We
+> get new blood that we may miss through the invitation process because they can
+> simply register for Plumbers on their own.
+>
+> 2) Presentations.  We can have track miniconfs where we still curate talks, but
+> there could be much less of them and we could just use the time to do what
+> LSFMMBPF was meant to do, put us all in a room so we can hack on things together.
+>
+> 3) BOFs.  Now all of the xfs/btrfs/ext4 guys can show up, because again they
+> don't have to worry about some invitation process, and now real meetings can
+> happen between people that really want to talk to each other face to face.
+>
+> 4) Planning becomes much simpler.  I've organized miniconf's at plumbers before,
+> it is far simpler than LSFMMBPF.  You only have to worry about one thing, is
+> this presentation useful.  I no longer have to worry about am I inviting the
+> right people, do we have enough money to cover the space.  Is there enough space
+> for everybody?  Etc.
+>
+> I think this is worth a discussion at the very least.  Maybe killing LSFMMBPF is
+> too drastic, maybe there are some other ideas that would address the same
+> problems.  I'd love to hear the whole communities thoughts on this, because
+> after all this is supposed to be a community event, and we should all be heard.
+> Thanks,
+>
 
-But some folks pointed out (not without reason), that Palm Springs was
-a lot more fun than Austin, and OSS still has a somewhat bad
-reputation of having some really trashy talks, and so even in separate
-venue, there were people who really didn't like the idea.
 
-Because of this, when the LF (in December 2019) suggested moving the
-MS/KS to Austin as part of OSS, I didn't think we would have critical
-mass to overcome the reputation of talks like "#OSSummit: Seven
-Properties of Highly Secure IoT." and so I told Angela, "No, we really
-can't do this without something like LSF/MM to make sure we have
-critical mass for a second Linux systems conference."
+-- 
+Thanks,
 
-						- Ted
+Steve
