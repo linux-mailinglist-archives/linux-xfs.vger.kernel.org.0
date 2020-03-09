@@ -2,131 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F152517D89C
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2020 05:36:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CED7B17DA28
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2020 09:02:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbgCIEgF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 9 Mar 2020 00:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        id S1726215AbgCIICz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 9 Mar 2020 04:02:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:46546 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgCIEgF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 9 Mar 2020 00:36:05 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95EBD20674;
-        Mon,  9 Mar 2020 04:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583728564;
-        bh=95aZjjyluMSPfUmxYUpMbl+whha09PwjkKv5ZZumBk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQQ6DEN8+XJaawHtRNhj/z+JL18YZZxUvKHYoy1UUAkrkQf6O8L2J8vuWKAJKTXrk
-         8GGZPnH3C4FzAOG9dnoBPEyudRM524LjnLTBEGt4MC1TvcYLnOvQ+PrWRkbYRZKJn2
-         lYyzFzWrBSTO0fOGKXPrgg/6Bc231NkYRVrsuTuU=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-xfs@vger.kernel.org
-Cc:     linux-ext4@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Date:   Sun,  8 Mar 2020 21:34:30 -0700
-Message-Id: <20200309043430.143206-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200309010410.GA371527@sol.localdomain>
-References: <20200309010410.GA371527@sol.localdomain>
+        id S1725796AbgCIICz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:02:55 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0A1E368B20; Mon,  9 Mar 2020 09:02:53 +0100 (CET)
+Date:   Mon, 9 Mar 2020 09:02:52 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH 1/7] xfs: remove the unused return value from
+ xfs_log_unmount_write
+Message-ID: <20200309080252.GA31481@lst.de>
+References: <20200306143137.236478-1-hch@lst.de> <20200306143137.236478-2-hch@lst.de> <20200306160917.GD2773@bfoster>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306160917.GD2773@bfoster>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Fri, Mar 06, 2020 at 11:09:17AM -0500, Brian Foster wrote:
+> On Fri, Mar 06, 2020 at 07:31:31AM -0700, Christoph Hellwig wrote:
+> > Remove the ignored return value from xfs_log_unmount_write, and also
+> > remove a rather pointless assert on the return value from xfs_log_force.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> 
+> I guess there's going to be obvious conflicts with Dave's series and
+> some of these changes. I'm just going to ignore that and you guys can
+> figure it out. :)
 
-Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-during do_exit().  That can confuse things.  For example, if BSD process
-accounting is enabled and the accounting file has FS_SYNC_FL set and is
-located on an ext4 filesystem without a journal, then do_exit() ends up
-calling ext4_write_inode().  That triggers the
-WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-(appropriately) that inodes aren't written when allocating memory.
-
-Fix this in xfsaild() by using the helper functions to save and restore
-PF_MEMALLOC.
-
-This can be reproduced as follows in the kvm-xfstests test appliance
-modified to add the 'acct' Debian package, and with kvm-xfstests's
-recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
-
-	mkfs.ext2 -F /dev/vdb
-	mount /vdb -t ext4
-	touch /vdb/file
-	chattr +S /vdb/file
-	accton /vdb/file
-	mkfs.xfs -f /dev/vdc
-	mount /vdc
-	umount /vdc
-
-It causes:
-	WARNING: CPU: 0 PID: 332 at fs/ext4/inode.c:5097 ext4_write_inode+0x140/0x1a0
-	CPU: 0 PID: 332 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #5
-	[...]
-	RIP: 0010:ext4_write_inode+0x140/0x1a0 fs/ext4/inode.c:5097
-	[...]
-	Call Trace:
-	 write_inode fs/fs-writeback.c:1312 [inline]
-	 __writeback_single_inode+0x465/0x5f0 fs/fs-writeback.c:1511
-	 writeback_single_inode+0xad/0x120 fs/fs-writeback.c:1565
-	 sync_inode fs/fs-writeback.c:2602 [inline]
-	 sync_inode_metadata+0x3d/0x57 fs/fs-writeback.c:2622
-	 ext4_fsync_nojournal fs/ext4/fsync.c:94 [inline]
-	 ext4_sync_file+0x243/0x4b0 fs/ext4/fsync.c:172
-	 generic_write_sync include/linux/fs.h:2867 [inline]
-	 ext4_buffered_write_iter+0xe1/0x130 fs/ext4/file.c:277
-	 call_write_iter include/linux/fs.h:1901 [inline]
-	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-	 do_acct_process+0x122/0x170 kernel/acct.c:522
-	 slow_acct_process kernel/acct.c:581 [inline]
-	 acct_process+0x1d4/0x27c kernel/acct.c:607
-	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-	 kthread+0xf1/0x140 kernel/kthread.c:257
-	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-
-This case was originally reported by syzbot at
-https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-
-Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-v2: include more details in the commit message.
-
- fs/xfs/xfs_trans_ail.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 00cc5b8734be8..3bc570c90ad97 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -529,8 +529,9 @@ xfsaild(
- {
- 	struct xfs_ail	*ailp = data;
- 	long		tout = 0;	/* milliseconds */
-+	unsigned int	noreclaim_flag;
- 
--	current->flags |= PF_MEMALLOC;
-+	noreclaim_flag = memalloc_noreclaim_save();
- 	set_freezable();
- 
- 	while (1) {
-@@ -601,6 +602,7 @@ xfsaild(
- 		tout = xfsaild_push(ailp);
- 	}
- 
-+	memalloc_noreclaim_restore(noreclaim_flag);
- 	return 0;
- }
- 
--- 
-2.25.1
-
+I'm glad to rebase this on top of the parts of his series that I think
+make sense.  Just wanted to send this out for now to show what I have
+in mind in this area.
