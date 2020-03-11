@@ -2,162 +2,207 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B972F181E21
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 17:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2A1181E36
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 17:46:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgCKQmO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Mar 2020 12:42:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33126 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCKQmO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Mar 2020 12:42:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BGdtH7108790;
-        Wed, 11 Mar 2020 16:42:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=fVldC8M49mT69XgR03HjC8gWF3PHzPkPMgiEmPD9Pvo=;
- b=zIGXBGKpMqcpqdSvsSwjUMqRZsuygWu8iZxUN+qzebgEsW0TuLgy3ztTS4F08T+QwY4a
- gtMgQblj02+LkY6I2XeptIYJ5JWmz+YqxRnrz7SbGnqqgTBYJa4re09Z8ywJ4kZ4X1Hy
- Wl81WrYNTCUohv2vkgxLtxnKebyMhZzj0bfUg87NqTYUSEJJ9RdUmNib0d14nA/8ue+D
- Jih0+QBAzK6GEWwKtTa0f9LBWo0tfdqCeR0yTCsQ0YANPAN5qNwcYEqqh+oT3Lelqe13
- SSxK9CyBhJnAzKs3IldE7nrq3e1n7/MeH0309LX2+u3l+RPJzoNJLuKbaIghjgmNS+mo xA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yp7hm97kb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 16:42:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BGcSm0063058;
-        Wed, 11 Mar 2020 16:42:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yp8qx4frs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 16:42:11 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02BGgARQ027231;
-        Wed, 11 Mar 2020 16:42:11 GMT
+        id S1730174AbgCKQqE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Mar 2020 12:46:04 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54758 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbgCKQqE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Mar 2020 12:46:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BGgcFv176086
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 16:46:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=FNh3yTd3iTDVDTr6zJeB8wnIVGI+q29nxaJx+Pn97MA=;
+ b=j5S8+p28GkiIzC/NEZiNGpFtE6sED85U/docfWKKfzr74NdRDg+Xw2dH3sBxsF/QetMr
+ iomhPR6nnnKl1pET0CG6eA5awJYZX7Kk2Q5qyjXEHFkah9N5BbwSMrtXvd2blAs5t1AX
+ JjM5i0xRaL0Km8AdVHEXcrVa43gHCvTX946/2QF+AKcdCGJFMMeY2rtfU3THFUgV37eA
+ it223dork+M+H7S/ryCq6WnMOe0gStCDDPQ6yEdDPedaFM0HE6tpIlHNvsYBxC1dCU5s
+ bxugg90HaIbfcmONR09aRePfSfqOWsndzdLm0+4xHm+m1IkWqarxF1qJE26e5RSU9Ltm gA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ym31umw8v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 16:46:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BGbX7S049256
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 16:46:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yp8p42vfv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 16:46:01 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02BGk0FR012576
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 16:46:00 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Mar 2020 09:42:10 -0700
-Date:   Wed, 11 Mar 2020 09:42:09 -0700
+        with ESMTP ; Wed, 11 Mar 2020 09:46:00 -0700
+Date:   Wed, 11 Mar 2020 09:45:59 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/7] xfs: add a function to deal with corrupt buffers
- post-verifiers
-Message-ID: <20200311164209.GR1752567@magnolia>
-References: <158388763282.939165.6485358230553665775.stgit@magnolia>
- <158388763904.939165.1796274155705134706.stgit@magnolia>
- <20200311053559.GU10776@dread.disaster.area>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 3e6e8afd3abb
+Message-ID: <20200311164559.GG8045@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311053559.GU10776@dread.disaster.area>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
  definitions=main-2003110100
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110100
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110100
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 04:35:59PM +1100, Dave Chinner wrote:
-> On Tue, Mar 10, 2020 at 05:47:19PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Add a helper function to get rid of buffers that we have decided are
-> > corrupt after the verifiers have run.  This function is intended to
-> > handle metadata checks that can't happen in the verifiers, such as
-> > inter-block relationship checking.  Note that we now mark the buffer
-> > stale so that it will not end up on any LRU and will be purged on
-> > release.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> ....
-> > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> > index 11a97bc35f70..9d26e37f78f5 100644
-> > --- a/fs/xfs/xfs_buf.c
-> > +++ b/fs/xfs/xfs_buf.c
-> > @@ -16,6 +16,8 @@
-> >  #include "xfs_log.h"
-> >  #include "xfs_errortag.h"
-> >  #include "xfs_error.h"
-> > +#include "xfs_trans.h"
-> > +#include "xfs_buf_item.h"
-> >  
-> >  static kmem_zone_t *xfs_buf_zone;
-> >  
-> > @@ -1572,6 +1574,29 @@ xfs_buf_zero(
-> >  	}
-> >  }
-> >  
-> > +/*
-> > + * Log a message about and stale a buffer that a caller has decided is corrupt.
-> > + *
-> > + * This function should be called for the kinds of metadata corruption that
-> > + * cannot be detect from a verifier, such as incorrect inter-block relationship
-> > + * data.  Do /not/ call this function from a verifier function.
-> 
-> So if it's called from a read verifier, the buffer will not have the
-> XBF_DONE flag set on it. Maybe we should assert that this flag is
-> set on the buffer? Yes, I know XBF_DONE will be set at write time,
-> but most verifiers are called from both the read and write path so
-> it should catch invalid use at read time...
+Hi folks,
 
-<nod>
+The for-next branch of the xfs-linux repository at:
 
-> 
-> > + * The buffer must not be dirty prior to the call.  Afterwards, the buffer will
-> 
-> Why can't it be dirty?
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-There isn't a technical reason why this function cannot handle a dirty
-buffer, but it seems like a mistake in data handling to dirty a buffer
-and /then/ decide it's garbage.  That's what the lengthy assertion below
-is about...
+has just been updated.
 
-> > + * be marked stale, but b_error will not be set.  The caller is responsible for
-> > + * releasing the buffer or fixing it.
-> > + */
-> > +void
-> > +__xfs_buf_mark_corrupt(
-> > +	struct xfs_buf		*bp,
-> > +	xfs_failaddr_t		fa)
-> > +{
-> > +	ASSERT(bp->b_log_item == NULL ||
-> > +	       !(bp->b_log_item->bli_flags & XFS_BLI_DIRTY));
-> 
-> XFS_BLI_DIRTY isn't a complete definition of a dirty buffer. What it
-> means is "modifications to this buffer are not yet
-> committed to the journal". It may have been linked into a
-> transaction but not modified, but it can still be XFS_BLI_DIRTY
-> because it is in the CIL. IOWs, transactions can cancel safely
-> aborted even when the items in it are dirty as long as the
-> transaction itself is clean and made no modifications to the object.
-> 
-> Hence I'm not sure what you are trying to protect against here?
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
 
-...ah, ok, I'll just get rid of the assertion entirely then.
+The new head of the for-next branch is commit:
 
---D
+3e6e8afd3abb xfs: remove XFS_BUF_TO_SBP
 
-> 
-> The rest of the code looks fine.
-> 
-> Cheers,
-> 
-> Dave,
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+New Commits:
+
+Brian Foster (4):
+      [6b789c337a59] xfs: fix iclog release error check race with shutdown
+      [b73df17e4c5b] xfs: open code insert range extent split helper
+      [dd87f87d87fa] xfs: rework insert range into an atomic operation
+      [211683b21de9] xfs: rework collapse range into an atomic operation
+
+Christoph Hellwig (42):
+      [3d8f2821502d] xfs: ensure that the inode uid/gid match values match the icdinode ones
+      [542951592c99] xfs: remove the icdinode di_uid/di_gid members
+      [ba8adad5d036] xfs: remove the kuid/kgid conversion wrappers
+      [13b1f811b14e] xfs: ratelimit xfs_buf_ioerror_alert messages
+      [4ab45e259f31] xfs: ratelimit xfs_discard_page messages
+      [4d542e4c1e28] xfs: reject invalid flags combinations in XFS_IOC_ATTRLIST_BY_HANDLE
+      [5e81357435cc] xfs: remove the ATTR_INCOMPLETE flag
+      [0eb81a5f5c34] xfs: merge xfs_attr_remove into xfs_attr_set
+      [6cc4f4fff10d] xfs: merge xfs_attrmulti_attr_remove into xfs_attrmulti_attr_set
+      [2282a9e65177] xfs: use strndup_user in XFS_IOC_ATTRMULTI_BY_HANDLE
+      [d0ce64391128] xfs: factor out a helper for a single XFS_IOC_ATTRMULTI_BY_HANDLE op
+      [79f2280b9bfd] xfs: remove the name == NULL check from xfs_attr_args_init
+      [4df28c64e438] xfs: remove the MAXNAMELEN check from xfs_attr_args_init
+      [ead189adb8ab] xfs: turn xfs_da_args.value into a void pointer
+      [a25446224353] xfs: pass an initialized xfs_da_args structure to xfs_attr_set
+      [e5171d7e9894] xfs: pass an initialized xfs_da_args to xfs_attr_get
+      [c36f533f1407] xfs: remove the xfs_inode argument to xfs_attr_get_ilocked
+      [e513e25c380a] xfs: remove ATTR_KERNOVAL
+      [d49db18b247d] xfs: remove ATTR_ALLOC and XFS_DA_OP_ALLOCVAL
+      [1d7330199400] xfs: replace ATTR_KERNOTIME with XFS_DA_OP_NOTIME
+      [377f16ac6723] xfs: factor out a xfs_attr_match helper
+      [a9c8c69b4961] xfs: cleanup struct xfs_attr_list_context
+      [fe960087121a] xfs: remove the unused ATTR_ENTRY macro
+      [2f014aad03d8] xfs: open code ATTR_ENTSIZE
+      [3e7a779937a2] xfs: move the legacy xfs_attr_list to xfs_ioctl.c
+      [17e1dd83ea21] xfs: rename xfs_attr_list_int to xfs_attr_list
+      [f60463195179] xfs: lift common checks into xfs_ioc_attr_list
+      [eb241c747463] xfs: lift buffer allocation into xfs_ioc_attr_list
+      [53ac39fdb301] xfs: lift cursor copy in/out into xfs_ioc_attr_list
+      [5a3930e27ef9] xfs: improve xfs_forget_acl
+      [f3e93d95feef] xfs: clean up the ATTR_REPLACE checks
+      [d5f0f49a9bdd] xfs: clean up the attr flag confusion
+      [254f800f8104] xfs: remove XFS_DA_OP_INCOMPLETE
+      [e3a19cdea84a] xfs: embedded the attrlist cursor into struct xfs_attr_list_context
+      [f311d771a090] xfs: clean up bufsize alignment in xfs_ioc_attr_list
+      [ed02d13f5da8] xfs: only allocate the buffer size actually needed in __xfs_set_acl
+      [5680c3907361] xfs: switch xfs_attrmulti_attr_get to lazy attr buffer allocation
+      [183606d82446] xfs: remove the agfl_bno member from struct xfs_agfl
+      [4b97510859b2] xfs: remove the xfs_agfl_t typedef
+      [370c782b9843] xfs: remove XFS_BUF_TO_AGI
+      [9798f615ad2b] xfs: remove XFS_BUF_TO_AGF
+      [3e6e8afd3abb] xfs: remove XFS_BUF_TO_SBP
+
+Darrick J. Wong (1):
+      [93baa55af1a1] xfs: improve error message when we can't allocate memory for xfs_buf
+
+Eric Biggers (1):
+      [10a98cb16d80] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+
+Jules Irenge (1):
+      [daebba1b3609] xfs: Add missing annotation to xfs_ail_check()
+
+Qian Cai (1):
+      [4982bff1ace1] xfs: fix an undefined behaviour in _da3_path_shift
+
+Zheng Bin (1):
+      [d0c7feaf8767] xfs: add agf freeblocks verify in xfs_agf_verify
+
+
+Code Diffstat:
+
+ fs/xfs/libxfs/xfs_ag.c             |  16 +-
+ fs/xfs/libxfs/xfs_alloc.c          |  79 +++++----
+ fs/xfs/libxfs/xfs_alloc.h          |   9 +
+ fs/xfs/libxfs/xfs_alloc_btree.c    |  10 +-
+ fs/xfs/libxfs/xfs_attr.c           | 351 +++++++++++++------------------------
+ fs/xfs/libxfs/xfs_attr.h           | 114 +++---------
+ fs/xfs/libxfs/xfs_attr_leaf.c      | 119 +++++--------
+ fs/xfs/libxfs/xfs_attr_leaf.h      |   1 -
+ fs/xfs/libxfs/xfs_attr_remote.c    |   2 +-
+ fs/xfs/libxfs/xfs_bmap.c           |  32 +---
+ fs/xfs/libxfs/xfs_bmap.h           |   3 +-
+ fs/xfs/libxfs/xfs_da_btree.c       |   3 +-
+ fs/xfs/libxfs/xfs_da_btree.h       |  11 +-
+ fs/xfs/libxfs/xfs_da_format.h      |  12 --
+ fs/xfs/libxfs/xfs_format.h         |  15 +-
+ fs/xfs/libxfs/xfs_fs.h             |  32 +++-
+ fs/xfs/libxfs/xfs_ialloc.c         |  27 ++-
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |  10 +-
+ fs/xfs/libxfs/xfs_inode_buf.c      |   8 +-
+ fs/xfs/libxfs/xfs_inode_buf.h      |   2 -
+ fs/xfs/libxfs/xfs_refcount_btree.c |  12 +-
+ fs/xfs/libxfs/xfs_rmap_btree.c     |  12 +-
+ fs/xfs/libxfs/xfs_sb.c             |  17 +-
+ fs/xfs/scrub/agheader.c            |  20 +--
+ fs/xfs/scrub/agheader_repair.c     |  26 +--
+ fs/xfs/scrub/attr.c                |  17 +-
+ fs/xfs/scrub/repair.c              |   8 +-
+ fs/xfs/xfs_acl.c                   | 132 +++++++-------
+ fs/xfs/xfs_acl.h                   |   6 +-
+ fs/xfs/xfs_aops.c                  |   2 +-
+ fs/xfs/xfs_attr_list.c             | 167 ++----------------
+ fs/xfs/xfs_bmap_util.c             |  57 +++---
+ fs/xfs/xfs_buf.c                   |   7 +-
+ fs/xfs/xfs_discard.c               |   7 +-
+ fs/xfs/xfs_dquot.c                 |   4 +-
+ fs/xfs/xfs_icache.c                |   4 +
+ fs/xfs/xfs_inode.c                 |  24 ++-
+ fs/xfs/xfs_inode_item.c            |   4 +-
+ fs/xfs/xfs_ioctl.c                 | 347 +++++++++++++++++++++++-------------
+ fs/xfs/xfs_ioctl.h                 |  35 ++--
+ fs/xfs/xfs_ioctl32.c               |  99 ++---------
+ fs/xfs/xfs_iops.c                  |  23 ++-
+ fs/xfs/xfs_itable.c                |   4 +-
+ fs/xfs/xfs_linux.h                 |  27 +--
+ fs/xfs/xfs_log.c                   |  13 +-
+ fs/xfs/xfs_log_recover.c           |  12 +-
+ fs/xfs/xfs_mount.c                 |   2 +-
+ fs/xfs/xfs_qm.c                    |  35 ++--
+ fs/xfs/xfs_quota.h                 |   4 +-
+ fs/xfs/xfs_symlink.c               |   4 +-
+ fs/xfs/xfs_trace.h                 |  63 ++++---
+ fs/xfs/xfs_trans.c                 |   2 +-
+ fs/xfs/xfs_trans_ail.c             |   5 +-
+ fs/xfs/xfs_xattr.c                 |  92 ++++------
+ 54 files changed, 901 insertions(+), 1248 deletions(-)
