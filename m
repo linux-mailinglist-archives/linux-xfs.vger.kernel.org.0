@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 996A0180CF2
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 01:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E65B180D01
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 01:49:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgCKArJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Mar 2020 20:47:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33326 "EHLO
+        id S1727880AbgCKAtO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 Mar 2020 20:49:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35156 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKArJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Mar 2020 20:47:09 -0400
+        with ESMTP id S1727591AbgCKAtO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Mar 2020 20:49:14 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B0fcb6112652
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:07 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B0mcKe028338
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:49:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7kQAH04WXt+wkIZ6/u8GBh157tYjoJ3TQU+1Dg+cxRM=;
- b=gqwOROkSQB38M9yWB+z19XuTzuUXqfW96zqtkg+EBUYNOzrsPTHgMUQE6EzctUXq6NyZ
- 3qEs8bGYd7YMA79KdXSGf7wkTieQxjd4rGR2Cj+98es346TXwA8XKHe86UZ8lBqBIQg7
- UjpkStXMurF0f123KIl9u+duK0/n8jyVIvotBLM9JhiTB6izeeo6uYym5qP/oWqHwhO6
- EjWslPBY4Lxa3XcXwWDTp7epy+zRO+Dq65qseCVH7JnKsQmkRRS2F85PkrdwfvGv/Nrh
- 7xFCEK4Mh6hYSztVE+e+6S0l7Ck7Lxh8tWAgMsLRdtms6E2yGdxyzpkQX3zj6+aWRPeW 5Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2ym31ugq4c-1
+ bh=46EEkUwsWDCriuw6JSnqIs2Dm2VRwQTf9gqzKtyLSuM=;
+ b=w+60YZVSeyL4dYH2a5MMMYQtSjCYvWsVo1c5BLxfJf5v0WmbD1UPkGD9jZbO8lBuz0pk
+ UxbBDnUbGXlkibmw/ovPxbn2DYS293/szm6ogMeQSsTRR3rRbE4KEq3svJ32EQZ3yTle
+ /vdr2i5zWWpkSPGGVETrFvPyq51mevyzeiJ7EG1/noS2WelzrE9DpBNuURCOI8fIjaIF
+ iPoS/PiEjfezZIAlLH191xbbe9i+rA1jYOMyKG6x8L6hce/HFTD0ZMwJ000CRPPS+72V
+ bId8pZl5MVUGiV8Zkv5rd4t6NX3GPpK2XHOICZUDkXHfbqZsji1wrLZv4iid7mnCKtck 5g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ym31ugq90-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:07 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B0c9Dl087840
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yp8pv5agp-1
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:49:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B0bT4M039770
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yp8qrrnxf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:06 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02B0l5qG014283
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:05 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:12 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02B0lBY1019856
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Mar 2020 00:47:11 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 17:47:05 -0700
-Subject: [PATCH 1/2] xfs: fix use-after-free when aborting corrupt attr
- inactivation
+        with ESMTP ; Tue, 10 Mar 2020 17:47:11 -0700
+Subject: [PATCH 2/2] xfs: fix xfs_rmap_has_other_keys usage of ECANCELED
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 10 Mar 2020 17:47:04 -0700
-Message-ID: <158388762432.939081.11036027889087941270.stgit@magnolia>
+Date:   Tue, 10 Mar 2020 17:47:10 -0700
+Message-ID: <158388763048.939081.7269460615856522299.stgit@magnolia>
 In-Reply-To: <158388761806.939081.5340701470247161779.stgit@magnolia>
 References: <158388761806.939081.5340701470247161779.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=937 bulkscore=0 suspectscore=1 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110000
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 suspectscore=1 bulkscore=0 spamscore=0 mlxlogscore=948
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110000
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
  spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=1
- phishscore=0 mlxlogscore=992 mlxscore=0 malwarescore=0 clxscore=1015
+ phishscore=0 mlxlogscore=996 mlxscore=0 malwarescore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003110000
+ definitions=main-2003110001
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,27 +70,61 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Log the corrupt buffer before we release the buffer.
+In e7ee96dfb8c26, we converted all ITER_ABORT users to use ECANCELED
+instead, but we forgot to teach xfs_rmap_has_other_keys not to return
+that magic value to callers.  Fix it now.
 
-Fixes: a5155b870d687 ("xfs: always log corruption errors")
+Fixes: e7ee96dfb8c26 ("xfs: remove all *_ITER_ABORT values")
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_attr_inactive.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_rmap.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_attr_inactive.c b/fs/xfs/xfs_attr_inactive.c
-index bbfa6ba84dcd..fe8f60b59ec4 100644
---- a/fs/xfs/xfs_attr_inactive.c
-+++ b/fs/xfs/xfs_attr_inactive.c
-@@ -145,8 +145,8 @@ xfs_attr3_node_inactive(
- 	 * Since this code is recursive (gasp!) we must protect ourselves.
- 	 */
- 	if (level > XFS_DA_NODE_MAXDEPTH) {
--		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		xfs_buf_corruption_error(bp);
-+		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		return -EFSCORRUPTED;
- 	}
+diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+index ff9412f113c4..dae1a2bf28eb 100644
+--- a/fs/xfs/libxfs/xfs_rmap.c
++++ b/fs/xfs/libxfs/xfs_rmap.c
+@@ -2694,7 +2694,6 @@ struct xfs_rmap_key_state {
+ 	uint64_t			owner;
+ 	uint64_t			offset;
+ 	unsigned int			flags;
+-	bool				has_rmap;
+ };
  
+ /* For each rmap given, figure out if it doesn't match the key we want. */
+@@ -2709,7 +2708,6 @@ xfs_rmap_has_other_keys_helper(
+ 	if (rks->owner == rec->rm_owner && rks->offset == rec->rm_offset &&
+ 	    ((rks->flags & rec->rm_flags) & XFS_RMAP_KEY_FLAGS) == rks->flags)
+ 		return 0;
+-	rks->has_rmap = true;
+ 	return -ECANCELED;
+ }
+ 
+@@ -2731,7 +2729,7 @@ xfs_rmap_has_other_keys(
+ 	int				error;
+ 
+ 	xfs_owner_info_unpack(oinfo, &rks.owner, &rks.offset, &rks.flags);
+-	rks.has_rmap = false;
++	*has_rmap = false;
+ 
+ 	low.rm_startblock = bno;
+ 	memset(&high, 0xFF, sizeof(high));
+@@ -2739,11 +2737,12 @@ xfs_rmap_has_other_keys(
+ 
+ 	error = xfs_rmap_query_range(cur, &low, &high,
+ 			xfs_rmap_has_other_keys_helper, &rks);
+-	if (error < 0)
+-		return error;
++	if (error == -ECANCELED) {
++		*has_rmap = true;
++		return 0;
++	}
+ 
+-	*has_rmap = rks.has_rmap;
+-	return 0;
++	return error;
+ }
+ 
+ const struct xfs_owner_info XFS_RMAP_OINFO_SKIP_UPDATE = {
 
