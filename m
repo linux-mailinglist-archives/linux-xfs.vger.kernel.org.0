@@ -2,73 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8513181511
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 10:36:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF69F181CC2
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Mar 2020 16:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgCKJfy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Mar 2020 05:35:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37314 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgCKJfy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:35:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 46A1DACEF;
-        Wed, 11 Mar 2020 09:35:53 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+        id S1730031AbgCKPrf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Mar 2020 11:47:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46404 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730030AbgCKPre (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Mar 2020 11:47:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BFf1VG075913;
+        Wed, 11 Mar 2020 15:47:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=OB4fe357SDa3Nfjnb0CmiRTkS8JHgKyjJxCK9Ie8uKU=;
+ b=tcDhLnMRweN0Mdp+JziK+qDRBDUkkW+yj/7SD5qGHVtbrhTem8qb3Wib4dl/9jbOfA91
+ P5PGG6x1PhGHX046G4D7fWjp6xidNCpecLTV+EFYs75lAM30A8OWZf99OwM8EAAo/pSp
+ is1UjAw6OM6mTC8bONCWVNe/WTZYXqAajx5xkDxTPpDA1XeaPpZRnV3qTQQFKWYKhABS
+ CCeiBPAgSKKN33h+5cWclbXVaa0RwiGQpb013DIqG7bWxBR4NUF2E/leFYqX8xahRmNv
+ ADX4bNjg19d4PIh6jinj0yNNcShTWU0Rl3T43bgVoTJmCkP1rMvECTTyqJKx/PQSvIb0 XQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ym31umj5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 15:47:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02BFWb1x061465;
+        Wed, 11 Mar 2020 15:47:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ypv9vdh4y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 15:47:26 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02BFlPm2025545;
+        Wed, 11 Mar 2020 15:47:25 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Mar 2020 08:47:25 -0700
+Date:   Wed, 11 Mar 2020 08:47:25 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: [PATCH] xfs: Use scnprintf() for avoiding potential buffer overflow
-Date:   Wed, 11 Mar 2020 10:35:52 +0100
-Message-Id: <20200311093552.25354-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
+Subject: Re: [PATCH 2/2] xfs: fix xfs_rmap_has_other_keys usage of ECANCELED
+Message-ID: <20200311154725.GD8045@magnolia>
+References: <158388761806.939081.5340701470247161779.stgit@magnolia>
+ <158388763048.939081.7269460615856522299.stgit@magnolia>
+ <20200311064011.GA25435@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311064011.GA25435@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110098
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110098
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Since snprintf() returns the would-be-output size instead of the
-actual output size, the succeeding calls may go beyond the given
-buffer limit.  Fix it by replacing with scnprintf().
+On Tue, Mar 10, 2020 at 11:40:11PM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 10, 2020 at 05:47:10PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > In e7ee96dfb8c26, we converted all ITER_ABORT users to use ECANCELED
+> > instead, but we forgot to teach xfs_rmap_has_other_keys not to return
+> > that magic value to callers.  Fix it now.
+> 
+> This doesn't document the remap of the has_rmap flag.  As far as I can
+> tell that isn't needed now the caller checks for ECANCELED, but it
+> takes a while to figure that out.  It'll need to be documented properly
+> in the commit log.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- fs/xfs/xfs_stats.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+"Fix it now by using ECANCELED both to abort the iteration and to signal
+that we found another reverse mapping.  This enables us to drop the
+separate boolean flag." ?
 
-diff --git a/fs/xfs/xfs_stats.c b/fs/xfs/xfs_stats.c
-index 113883c4f202..f70f1255220b 100644
---- a/fs/xfs/xfs_stats.c
-+++ b/fs/xfs/xfs_stats.c
-@@ -57,13 +57,13 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
- 	/* Loop over all stats groups */
- 
- 	for (i = j = 0; i < ARRAY_SIZE(xstats); i++) {
--		len += snprintf(buf + len, PATH_MAX - len, "%s",
-+		len += scnprintf(buf + len, PATH_MAX - len, "%s",
- 				xstats[i].desc);
- 		/* inner loop does each group */
- 		for (; j < xstats[i].endpoint; j++)
--			len += snprintf(buf + len, PATH_MAX - len, " %u",
-+			len += scnprintf(buf + len, PATH_MAX - len, " %u",
- 					counter_val(stats, j));
--		len += snprintf(buf + len, PATH_MAX - len, "\n");
-+		len += scnprintf(buf + len, PATH_MAX - len, "\n");
- 	}
- 	/* extra precision counters */
- 	for_each_possible_cpu(i) {
-@@ -72,9 +72,9 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
- 		xs_read_bytes += per_cpu_ptr(stats, i)->s.xs_read_bytes;
- 	}
- 
--	len += snprintf(buf + len, PATH_MAX-len, "xpc %Lu %Lu %Lu\n",
-+	len += scnprintf(buf + len, PATH_MAX-len, "xpc %Lu %Lu %Lu\n",
- 			xs_xstrat_bytes, xs_write_bytes, xs_read_bytes);
--	len += snprintf(buf + len, PATH_MAX-len, "debug %u\n",
-+	len += scnprintf(buf + len, PATH_MAX-len, "debug %u\n",
- #if defined(DEBUG)
- 		1);
- #else
--- 
-2.16.4
-
+--D
