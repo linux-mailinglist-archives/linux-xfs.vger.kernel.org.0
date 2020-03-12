@@ -2,69 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C21D9183D7F
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Mar 2020 00:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28121183D81
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Mar 2020 00:47:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgCLXoZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Mar 2020 19:44:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39330 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgCLXoY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Mar 2020 19:44:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CNi3uL012442;
-        Thu, 12 Mar 2020 23:44:20 GMT
+        id S1726788AbgCLXrM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Mar 2020 19:47:12 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55110 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbgCLXrM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Mar 2020 19:47:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CNhMWc098697;
+        Thu, 12 Mar 2020 23:47:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=6a99d91zPyGOIKxSAccRM4ZeimqjRPBAY9JCQDRrrUg=;
- b=hSnIXkdaxwxh30MGOzAiNYgGE0aZm+WDNC2BWEhXcTmmg7TV7U9LUHV0qhBcifeE4IPi
- UI7nSQfd8X5nc05V1EcctjpOCW0qDNB5IfGQ1EYpCG9vS/HWpA2Zr2wNpjuJ7KxTEjF5
- 7krkQUJs4cRT/aRp2KxHx54E9qy+8bUn04LqordFEy0r5ThtBCh3x8vT/6+ZKZZ8wDUC
- 4YYSlXcaejIS+aqgrb3iKTJek/Mbo5VPssuVjkQZfSjqGhHPtMJWLq+BC1BXMALPBEUe
- eV+/3V2IAFQJkQ+FFk0QtIrl8wR4A0BaA0BaIznho3mRNtUcNy7GBR/UwvrP1h+102Kh bw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yqtag950t-1
+ bh=U74uySgOa6CTEtNPm+mWBFYj/RWbGcDy0oppQslOSR4=;
+ b=kU1F8x/xK+fhsNw0sMFy6zzqvojJK3X2OOxibF2SYDA8wSQx3RKbVhOrYpabmDaqba1J
+ 1voQ56RlVVu//6bl7TerPCknYYnT0CfGZo10C7YGoWZhuiDoB+u0hFfYnnu9xR8wKRpM
+ Hb/z4xc0W55zpAhAOC/lDzLPykC4iqIZZkvRWFlKSnQ8nkVkAJmqc/ibrqZ9MfBozEq8
+ 15SM7fkphjLPRgeJh6MTYFLXDSTEZeyCvzAkN9F0UGXFg2kRleV82LKXaYYLo8519j4W
+ bcDyHE/Uwow6W2HrJjl39w0mHuKVs4f2rfD9mo+NdA+kmUUmYOW2NBDWdZi01gfthBkC KQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yqtaes4xv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 23:44:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CNgIgn141485;
-        Thu, 12 Mar 2020 23:44:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yqtabag58-1
+        Thu, 12 Mar 2020 23:47:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02CNgHdI028792;
+        Thu, 12 Mar 2020 23:45:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yqtac4k7c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 23:44:20 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02CNiJTN029927;
-        Thu, 12 Mar 2020 23:44:19 GMT
+        Thu, 12 Mar 2020 23:45:08 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02CNj1uX010811;
+        Thu, 12 Mar 2020 23:45:02 GMT
 Received: from localhost (/10.145.179.117)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Mar 2020 16:44:18 -0700
-Date:   Thu, 12 Mar 2020 16:44:18 -0700
+        with ESMTP ; Thu, 12 Mar 2020 16:45:01 -0700
+Date:   Thu, 12 Mar 2020 16:45:01 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 6/7] xfs: make the btree cursor union members named
- structure
-Message-ID: <20200312234418.GR8045@magnolia>
-References: <158398468107.1307855.8287106235853942996.stgit@magnolia>
- <158398472029.1307855.3111787514328025615.stgit@magnolia>
- <20200312104929.GF60753@bfoster>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH 1/5] xfs: mark XLOG_FORCED_SHUTDOWN as unlikely
+Message-ID: <20200312234501.GS8045@magnolia>
+References: <20200312143959.583781-1-hch@lst.de>
+ <20200312143959.583781-2-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312104929.GF60753@bfoster>
+In-Reply-To: <20200312143959.583781-2-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003120117
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9558 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0 spamscore=0
  clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003120117
 Sender: linux-xfs-owner@vger.kernel.org
@@ -72,96 +69,35 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 06:49:29AM -0400, Brian Foster wrote:
-> On Wed, Mar 11, 2020 at 08:45:20PM -0700, Darrick J. Wong wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > we need to name the btree cursor private structures to be able
-> > to pull them out of the deeply nested structure definition they are
-> > in now.
-> > 
-> > Based on code extracted from a patchset by Darrick Wong.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_btree.h |   36 +++++++++++++++++++++---------------
-> >  1 file changed, 21 insertions(+), 15 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-> > index 12a2bc93371d..9884f543eb51 100644
-> > --- a/fs/xfs/libxfs/xfs_btree.h
-> > +++ b/fs/xfs/libxfs/xfs_btree.h
-> > @@ -188,6 +188,24 @@ union xfs_btree_cur_private {
-> >  	} abt;
-> >  };
-> >  
-> > +/* Per-AG btree information. */
-> > +struct xfs_btree_cur_ag {
-> > +	struct xfs_buf			*agbp;
-> > +	xfs_agnumber_t			agno;
-> > +	union xfs_btree_cur_private	priv;
-> > +};
-> > +
-> > +/* Btree-in-inode cursor information */
-> > +struct xfs_btree_cur_ino {
-> > +	struct xfs_inode	*ip;
-> > +	int			allocated;
-> > +	short			forksize;
-> > +	char			whichfork;
-> > +	char			flags;
-> > +#define	XFS_BTCUR_BMBT_WASDEL	(1 << 0)
-> > +#define	XFS_BTCUR_BMBT_INVALID_OWNER	(1 << 1)
-> > +};
-> > +
+On Thu, Mar 12, 2020 at 03:39:55PM +0100, Christoph Hellwig wrote:
+> A shutdown log is a slow failure path.  Add an unlikely annotation to
+> it.
 > 
-> Are all of the per-field comments dropped intentionally? These are
-> mostly self-explanatory, so either way:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-I think the comments were not that valuable, and that I can perhaps
-improve them:
-
-/* We are converting a delalloc reservation */
-#define	XFS_BTCUR_BMBT_WASDEL		(1 << 0)
-
-/* For extent swap, ignore owner check in verifier */
-#define	XFS_BTCUR_BMBT_INVALID_OWNER	(1 << 1)
-
-Anyway, thanks for reviewing this series.
+Seems reasonable...
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
-> Reviewed-by: Brian Foster <bfoster@redhat.com>
+> ---
+>  fs/xfs/xfs_log_priv.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> >  /*
-> >   * Btree cursor structure.
-> >   * This collects all information needed by the btree code in one place.
-> > @@ -209,21 +227,9 @@ typedef struct xfs_btree_cur
-> >  	xfs_btnum_t	bc_btnum;	/* identifies which btree type */
-> >  	int		bc_statoff;	/* offset of btre stats array */
-> >  	union {
-> > -		struct {			/* needed for BNO, CNT, INO */
-> > -			struct xfs_buf	*agbp;	/* agf/agi buffer pointer */
-> > -			xfs_agnumber_t	agno;	/* ag number */
-> > -			union xfs_btree_cur_private	priv;
-> > -		} bc_ag;
-> > -		struct {			/* needed for BMAP */
-> > -			struct xfs_inode *ip;	/* pointer to our inode */
-> > -			int		allocated;	/* count of alloced */
-> > -			short		forksize;	/* fork's inode space */
-> > -			char		whichfork;	/* data or attr fork */
-> > -			char		flags;		/* flags */
-> > -#define	XFS_BTCUR_BMBT_WASDEL	(1 << 0)		/* was delayed */
-> > -#define	XFS_BTCUR_BMBT_INVALID_OWNER	(1 << 1)		/* for ext swap */
-> > -		} bc_ino;
-> > -	};				/* per-btree type data */
-> > +		struct xfs_btree_cur_ag	bc_ag;
-> > +		struct xfs_btree_cur_ino bc_ino;
-> > +	};
-> >  } xfs_btree_cur_t;
-> >  
-> >  /* cursor flags */
-> > 
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index b192c5a9f9fd..e400170ff4af 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -402,7 +402,8 @@ struct xlog {
+>  #define XLOG_BUF_CANCEL_BUCKET(log, blkno) \
+>  	((log)->l_buf_cancel_table + ((uint64_t)blkno % XLOG_BC_TABLE_SIZE))
+>  
+> -#define XLOG_FORCED_SHUTDOWN(log)	((log)->l_flags & XLOG_IO_ERROR)
+> +#define XLOG_FORCED_SHUTDOWN(log) \
+> +	(unlikely((log)->l_flags & XLOG_IO_ERROR))
+>  
+>  /* common routines */
+>  extern int
+> -- 
+> 2.24.1
 > 
