@@ -2,77 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EB9183339
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Mar 2020 15:34:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23026183353
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Mar 2020 15:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCLOes (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Mar 2020 10:34:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53358 "EHLO
+        id S1727450AbgCLOkD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Mar 2020 10:40:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54938 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgCLOes (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Mar 2020 10:34:48 -0400
+        with ESMTP id S1727359AbgCLOkD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Mar 2020 10:40:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XjjsJbDLkOShvptxU5Ne7nBEmoit/32pztmYgg0aAjg=; b=Pd1MoWSQWbi78Y4pPu0KzufhEa
-        7Zt3mPjqti/7DDBkb8nEXmSsKHQH6XREEfBpYVRqalmz2jDk8k8s1EBBEmt/SBsI8g3zWV9gqjA7i
-        T4KGOCQcu1cl3AHXSNmCfCNcufyv9a617K5Ylr7prB9mIm1+M/tFWneAwqHScbNM9Jmwlblj5iqv3
-        W9Y6aNPz2J+fdNZIItWN4kJxYcKM/4zb2MXuiSFiIN/k36EfG5CRmuBmsZRCYu/wbClHiqdh5Q9vX
-        PFYSMYiwcijhgiO+t82o8et0GFhgSaGt3twHO0dgZghFX+AMC7XdgovyDdtcx7KO6vRKghZQmNzqP
-        Bdjm7Q8g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jCOv7-00055v-W4; Thu, 12 Mar 2020 14:34:45 +0000
-Date:   Thu, 12 Mar 2020 07:34:45 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Linux Filesystem Development List 
-        <linux-fsdevel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] writeback: avoid double-writing the inode on a lazytime
- expiration
-Message-ID: <20200312143445.GA19160@infradead.org>
-References: <20200306004555.GB225345@gmail.com>
- <20200307020043.60118-1-tytso@mit.edu>
- <20200311032009.GC46757@gmail.com>
- <20200311125749.GA7159@mit.edu>
- <20200312000716.GY10737@dread.disaster.area>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=VRGwnTE4yP8ACy6DOYgmJwrZlmEMWfybXXxtQFzQGNg=; b=iXBwhl0wpl6XsEspui5HUZIHIj
+        OvqxVPX6JMlyyaPVBwEHDPtumCWsUVh5wT9qQQXpboMxjkim+bh5yYtZ42TzVjvxUosm74RzT0h4e
+        UTX2lFm4KE0sI9FBhSMMAMDQtKQLOKf3SuonO8rAVot5/kd5hWoPJGIfA7/YxmlvMYDxzZiQFsSic
+        8pNrxgyTe84smETxQzYRtcad7a/dr9//EHOEZkPCYN6D4AXAb1muyO71pJxg3VxJNqCnwTwr1gM6C
+        QjzlcTP9RfHWH4JPNtaHhPxHIDFlMr4nDrfa/65/+JM3kzkrBPkFUC79kreA+tTGliyvTsjLD2CKt
+        y8UT0HYg==;
+Received: from [2001:4bb8:184:5cad:8026:d98c:a056:3e33] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCP0E-0006wB-1f; Thu, 12 Mar 2020 14:40:02 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-xfs@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>
+Subject: misc log cleanups
+Date:   Thu, 12 Mar 2020 15:39:54 +0100
+Message-Id: <20200312143959.583781-1-hch@lst.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312000716.GY10737@dread.disaster.area>
+Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:07:17AM +1100, Dave Chinner wrote:
-> > That's true, but when the timestamps were originally modified,
-> > dirty_inode() will be called with flag == I_DIRTY_TIME, which will
-> > *not* be a no-op; which is to say, XFS will force the timestamps to be
-> > updated on disk when the timestamps are first dirtied, because it
-> > doesn't support I_DIRTY_TIME.
-> 
-> We log the initial timestamp change, and then ignore timestamp
-> updates until the dirty time expires and the inode is set
-> I_DIRTY_SYNC via __mark_inode_dirty_sync(). IOWs, on expiry, we have
-> time stamps that may be 24 hours out of date in memory, and they
-> still need to be flushed to the journal.
-> 
-> However, your change does not mark the inode dirtying on expiry
-> anymore, so...
-> 
-> > So I think we're fine.
-> 
-> ... we're not fine. This breaks XFS and any other filesystem that
-> relies on a I_DIRTY_SYNC notification to handle dirty time expiry
-> correctly.
+Hi all,
 
-I haven't seen the original mail this replies to, but if we could
-get the lazytime expirty by some other means (e.g. an explicit
-callback), XFS could opt out of all the VFS inode tracking again,
-which would simplify a few things.
+this series contains the simple and uncontroversial patches from the
+"cleanup log I/O error handling", plus a few other trivial cleanups I
+found while refactoring that series.
