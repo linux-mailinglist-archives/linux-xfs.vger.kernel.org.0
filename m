@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13879182779
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Mar 2020 04:45:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B1DE182784
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Mar 2020 04:47:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbgCLDp1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Mar 2020 23:45:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43416 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387657AbgCLDp1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Mar 2020 23:45:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3dQiV123548;
-        Thu, 12 Mar 2020 03:45:23 GMT
+        id S1731078AbgCLDrd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Mar 2020 23:47:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37536 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730913AbgCLDrd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Mar 2020 23:47:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3hBPb181336;
+        Thu, 12 Mar 2020 03:47:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=A5rO2uiNABAb17Fuf9bZuBFqdIdLK+SHaTDV4xuoSMc=;
- b=0ZAjN9SB9j1PxASTBLusdhVey0gYJAJMoGLIVNEQ0cLy8PG8zdCSbINwtMSBCV5kP+yp
- uY0II9Yk1qm9vdMJP+LIUmNaQI+s0R/pBLhmIyoW9QQ5R2foBfFRlY5uIMHCs9FIBXb5
- 0fMGGnCxFJzzrdLrNMMIR1+H88O9NCj+NPCa0QWhS7vlmANBAIad6C7biHxMlEXRvKAk
- reWc6b1+TCKw/TwFY6Rspz+2bglq5ExkDthAp9WvK4TG6pMAPjezbZCjaenuqGKvKoql
- U+FkN16UG2LG8RtAzaWPwmHfVqMLHLaPPodISGCxHh6G8FVm727JS3wUCbKQYBuHc0X9 fg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yp7hmbj5e-1
+ bh=aHc65jiVxGui4PHmmG19a19Y+jLI4qA3km+DxO711QM=;
+ b=YzUYehCpDQLC8YiGInjKnTjyo4t0hLCsPf7dSnLXDORPAJoH9SRYCEnzY2fgEvn0kkAA
+ y1i/Fvb3t+zxRZh+NNgIosuZVFl8KSG84dfJpsO7rqDta4+0dS6cjvoXjEiJuBaNBxFY
+ 01AJ7nGwvMe5S1zp9gqa4umxS3x6ZfDErfpasODib3mL0yhUHKtNgqb5k28qvc4Wl+Kv
+ fKQDEtwlrwfqEQLKnkK7pen6cbpds85nwYJcRRzu3X0+kPt05mk2fbpZVvjtAEHPDWp1
+ 91XX6/KwmRhV2oA3CHDUEYNK8GTFimCakghvlXxex+8s8Suv2apX/jHRXtBc5ckHCe/g Bw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ym31uq7ce-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:45:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3cDYM096633;
-        Thu, 12 Mar 2020 03:45:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yp8qyav6f-1
+        Thu, 12 Mar 2020 03:47:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02C3cAHo055218;
+        Thu, 12 Mar 2020 03:45:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2yp8p5qypx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 03:45:22 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02C3jL1i022319;
-        Thu, 12 Mar 2020 03:45:21 GMT
+        Thu, 12 Mar 2020 03:45:28 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02C3jSEi017011;
+        Thu, 12 Mar 2020 03:45:28 GMT
 Received: from localhost (/10.159.134.61)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Mar 2020 20:45:21 -0700
-Subject: [PATCH 6/7] xfs: make the btree cursor union members named structure
+        with ESMTP ; Wed, 11 Mar 2020 20:45:28 -0700
+Subject: [PATCH 7/7] xfs: make the btree ag cursor private union anonymous
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
         Dave Chinner <dchinner@redhat.com>
-Date:   Wed, 11 Mar 2020 20:45:20 -0700
-Message-ID: <158398472029.1307855.3111787514328025615.stgit@magnolia>
+Date:   Wed, 11 Mar 2020 20:45:27 -0700
+Message-ID: <158398472694.1307855.12435739558591642821.stgit@magnolia>
 In-Reply-To: <158398468107.1307855.8287106235853942996.stgit@magnolia>
 References: <158398468107.1307855.8287106235853942996.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=1 bulkscore=0 spamscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=1 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
  definitions=main-2003120016
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9557 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=1 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003120016
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=1
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003120016
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,72 +71,248 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-we need to name the btree cursor private structures to be able
-to pull them out of the deeply nested structure definition they are
-in now.
+This is much less widely used than the bc_private union was, so this
+is done as a single patch. The named union xfs_btree_cur_private
+goes away and is embedded into the struct xfs_btree_cur_ag as an
+anonymous union, and the code is modified via this script:
 
-Based on code extracted from a patchset by Darrick Wong.
+$ sed -i 's/priv\.\([abt|refc]\)/\1/g' fs/xfs/*[ch] fs/xfs/*/*[ch]
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_btree.h |   36 +++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c          |   14 +++++++-------
+ fs/xfs/libxfs/xfs_alloc_btree.c    |    2 +-
+ fs/xfs/libxfs/xfs_btree.h          |   25 +++++++++++--------------
+ fs/xfs/libxfs/xfs_refcount.c       |   24 ++++++++++++------------
+ fs/xfs/libxfs/xfs_refcount_btree.c |    4 ++--
+ 5 files changed, 33 insertions(+), 36 deletions(-)
 
 
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 10ed68dfef5d..337822115bbc 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -151,7 +151,7 @@ xfs_alloc_lookup_eq(
+ 	cur->bc_rec.a.ar_startblock = bno;
+ 	cur->bc_rec.a.ar_blockcount = len;
+ 	error = xfs_btree_lookup(cur, XFS_LOOKUP_EQ, stat);
+-	cur->bc_ag.priv.abt.active = (*stat == 1);
++	cur->bc_ag.abt.active = (*stat == 1);
+ 	return error;
+ }
+ 
+@@ -171,7 +171,7 @@ xfs_alloc_lookup_ge(
+ 	cur->bc_rec.a.ar_startblock = bno;
+ 	cur->bc_rec.a.ar_blockcount = len;
+ 	error = xfs_btree_lookup(cur, XFS_LOOKUP_GE, stat);
+-	cur->bc_ag.priv.abt.active = (*stat == 1);
++	cur->bc_ag.abt.active = (*stat == 1);
+ 	return error;
+ }
+ 
+@@ -190,7 +190,7 @@ xfs_alloc_lookup_le(
+ 	cur->bc_rec.a.ar_startblock = bno;
+ 	cur->bc_rec.a.ar_blockcount = len;
+ 	error = xfs_btree_lookup(cur, XFS_LOOKUP_LE, stat);
+-	cur->bc_ag.priv.abt.active = (*stat == 1);
++	cur->bc_ag.abt.active = (*stat == 1);
+ 	return error;
+ }
+ 
+@@ -198,7 +198,7 @@ static inline bool
+ xfs_alloc_cur_active(
+ 	struct xfs_btree_cur	*cur)
+ {
+-	return cur && cur->bc_ag.priv.abt.active;
++	return cur && cur->bc_ag.abt.active;
+ }
+ 
+ /*
+@@ -908,7 +908,7 @@ xfs_alloc_cur_check(
+ 		deactivate = true;
+ out:
+ 	if (deactivate)
+-		cur->bc_ag.priv.abt.active = false;
++		cur->bc_ag.abt.active = false;
+ 	trace_xfs_alloc_cur_check(args->mp, cur->bc_btnum, bno, len, diff,
+ 				  *new);
+ 	return 0;
+@@ -1352,7 +1352,7 @@ xfs_alloc_walk_iter(
+ 		if (error)
+ 			return error;
+ 		if (i == 0)
+-			cur->bc_ag.priv.abt.active = false;
++			cur->bc_ag.abt.active = false;
+ 
+ 		if (count > 0)
+ 			count--;
+@@ -1467,7 +1467,7 @@ xfs_alloc_ag_vextent_locality(
+ 		if (error)
+ 			return error;
+ 		if (i) {
+-			acur->cnt->bc_ag.priv.abt.active = true;
++			acur->cnt->bc_ag.abt.active = true;
+ 			fbcur = acur->cnt;
+ 			fbinc = false;
+ 		}
+diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
+index 92d30c19519d..a28041fdf4c0 100644
+--- a/fs/xfs/libxfs/xfs_alloc_btree.c
++++ b/fs/xfs/libxfs/xfs_alloc_btree.c
+@@ -507,7 +507,7 @@ xfs_allocbt_init_cursor(
+ 
+ 	cur->bc_ag.agbp = agbp;
+ 	cur->bc_ag.agno = agno;
+-	cur->bc_ag.priv.abt.active = false;
++	cur->bc_ag.abt.active = false;
+ 
+ 	if (xfs_sb_version_hascrc(&mp->m_sb))
+ 		cur->bc_flags |= XFS_BTREE_CRC_BLOCKS;
 diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index 12a2bc93371d..9884f543eb51 100644
+index 9884f543eb51..0d10bbd5223a 100644
 --- a/fs/xfs/libxfs/xfs_btree.h
 +++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -188,6 +188,24 @@ union xfs_btree_cur_private {
- 	} abt;
+@@ -177,22 +177,19 @@ union xfs_btree_irec {
+ 	struct xfs_refcount_irec	rc;
  };
  
-+/* Per-AG btree information. */
-+struct xfs_btree_cur_ag {
-+	struct xfs_buf			*agbp;
-+	xfs_agnumber_t			agno;
-+	union xfs_btree_cur_private	priv;
-+};
-+
-+/* Btree-in-inode cursor information */
-+struct xfs_btree_cur_ino {
-+	struct xfs_inode	*ip;
-+	int			allocated;
-+	short			forksize;
-+	char			whichfork;
-+	char			flags;
-+#define	XFS_BTCUR_BMBT_WASDEL	(1 << 0)
-+#define	XFS_BTCUR_BMBT_INVALID_OWNER	(1 << 1)
-+};
-+
- /*
-  * Btree cursor structure.
-  * This collects all information needed by the btree code in one place.
-@@ -209,21 +227,9 @@ typedef struct xfs_btree_cur
- 	xfs_btnum_t	bc_btnum;	/* identifies which btree type */
- 	int		bc_statoff;	/* offset of btre stats array */
- 	union {
--		struct {			/* needed for BNO, CNT, INO */
--			struct xfs_buf	*agbp;	/* agf/agi buffer pointer */
--			xfs_agnumber_t	agno;	/* ag number */
--			union xfs_btree_cur_private	priv;
--		} bc_ag;
--		struct {			/* needed for BMAP */
--			struct xfs_inode *ip;	/* pointer to our inode */
--			int		allocated;	/* count of alloced */
--			short		forksize;	/* fork's inode space */
--			char		whichfork;	/* data or attr fork */
--			char		flags;		/* flags */
--#define	XFS_BTCUR_BMBT_WASDEL	(1 << 0)		/* was delayed */
--#define	XFS_BTCUR_BMBT_INVALID_OWNER	(1 << 1)		/* for ext swap */
--		} bc_ino;
--	};				/* per-btree type data */
-+		struct xfs_btree_cur_ag	bc_ag;
-+		struct xfs_btree_cur_ino bc_ino;
+-/* Per-AG btree private information. */
+-union xfs_btree_cur_private {
+-	struct {
+-		unsigned long	nr_ops;		/* # record updates */
+-		int		shape_changes;	/* # of extent splits */
+-	} refc;
+-	struct {
+-		bool		active;		/* allocation cursor state */
+-	} abt;
+-};
+-
+ /* Per-AG btree information. */
+ struct xfs_btree_cur_ag {
+-	struct xfs_buf			*agbp;
+-	xfs_agnumber_t			agno;
+-	union xfs_btree_cur_private	priv;
++	struct xfs_buf		*agbp;
++	xfs_agnumber_t		agno;
++	union {
++		struct {
++			unsigned long nr_ops;	/* # record updates */
++			int	shape_changes;	/* # of extent splits */
++		} refc;
++		struct {
++			bool	active;		/* allocation cursor state */
++		} abt;
 +	};
- } xfs_btree_cur_t;
+ };
  
- /* cursor flags */
+ /* Btree-in-inode cursor information */
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index ef3e706f1d94..2076627243b0 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -883,7 +883,7 @@ xfs_refcount_still_have_space(
+ {
+ 	unsigned long			overhead;
+ 
+-	overhead = cur->bc_ag.priv.refc.shape_changes *
++	overhead = cur->bc_ag.refc.shape_changes *
+ 			xfs_allocfree_log_count(cur->bc_mp, 1);
+ 	overhead *= cur->bc_mp->m_sb.sb_blocksize;
+ 
+@@ -891,17 +891,17 @@ xfs_refcount_still_have_space(
+ 	 * Only allow 2 refcount extent updates per transaction if the
+ 	 * refcount continue update "error" has been injected.
+ 	 */
+-	if (cur->bc_ag.priv.refc.nr_ops > 2 &&
++	if (cur->bc_ag.refc.nr_ops > 2 &&
+ 	    XFS_TEST_ERROR(false, cur->bc_mp,
+ 			XFS_ERRTAG_REFCOUNT_CONTINUE_UPDATE))
+ 		return false;
+ 
+-	if (cur->bc_ag.priv.refc.nr_ops == 0)
++	if (cur->bc_ag.refc.nr_ops == 0)
+ 		return true;
+ 	else if (overhead > cur->bc_tp->t_log_res)
+ 		return false;
+ 	return  cur->bc_tp->t_log_res - overhead >
+-		cur->bc_ag.priv.refc.nr_ops * XFS_REFCOUNT_ITEM_OVERHEAD;
++		cur->bc_ag.refc.nr_ops * XFS_REFCOUNT_ITEM_OVERHEAD;
+ }
+ 
+ /*
+@@ -968,7 +968,7 @@ xfs_refcount_adjust_extents(
+ 					error = -EFSCORRUPTED;
+ 					goto out_error;
+ 				}
+-				cur->bc_ag.priv.refc.nr_ops++;
++				cur->bc_ag.refc.nr_ops++;
+ 			} else {
+ 				fsbno = XFS_AGB_TO_FSB(cur->bc_mp,
+ 						cur->bc_ag.agno,
+@@ -1003,7 +1003,7 @@ xfs_refcount_adjust_extents(
+ 			error = xfs_refcount_update(cur, &ext);
+ 			if (error)
+ 				goto out_error;
+-			cur->bc_ag.priv.refc.nr_ops++;
++			cur->bc_ag.refc.nr_ops++;
+ 		} else if (ext.rc_refcount == 1) {
+ 			error = xfs_refcount_delete(cur, &found_rec);
+ 			if (error)
+@@ -1012,7 +1012,7 @@ xfs_refcount_adjust_extents(
+ 				error = -EFSCORRUPTED;
+ 				goto out_error;
+ 			}
+-			cur->bc_ag.priv.refc.nr_ops++;
++			cur->bc_ag.refc.nr_ops++;
+ 			goto advloop;
+ 		} else {
+ 			fsbno = XFS_AGB_TO_FSB(cur->bc_mp,
+@@ -1088,7 +1088,7 @@ xfs_refcount_adjust(
+ 	if (shape_changed)
+ 		shape_changes++;
+ 	if (shape_changes)
+-		cur->bc_ag.priv.refc.shape_changes++;
++		cur->bc_ag.refc.shape_changes++;
+ 
+ 	/* Now that we've taken care of the ends, adjust the middle extents */
+ 	error = xfs_refcount_adjust_extents(cur, new_agbno, new_aglen,
+@@ -1166,8 +1166,8 @@ xfs_refcount_finish_one(
+ 	 */
+ 	rcur = *pcur;
+ 	if (rcur != NULL && rcur->bc_ag.agno != agno) {
+-		nr_ops = rcur->bc_ag.priv.refc.nr_ops;
+-		shape_changes = rcur->bc_ag.priv.refc.shape_changes;
++		nr_ops = rcur->bc_ag.refc.nr_ops;
++		shape_changes = rcur->bc_ag.refc.shape_changes;
+ 		xfs_refcount_finish_one_cleanup(tp, rcur, 0);
+ 		rcur = NULL;
+ 		*pcur = NULL;
+@@ -1183,8 +1183,8 @@ xfs_refcount_finish_one(
+ 			error = -ENOMEM;
+ 			goto out_cur;
+ 		}
+-		rcur->bc_ag.priv.refc.nr_ops = nr_ops;
+-		rcur->bc_ag.priv.refc.shape_changes = shape_changes;
++		rcur->bc_ag.refc.nr_ops = nr_ops;
++		rcur->bc_ag.refc.shape_changes = shape_changes;
+ 	}
+ 	*pcur = rcur;
+ 
+diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
+index bf1a4cb3c7ac..e07a2c45f8ec 100644
+--- a/fs/xfs/libxfs/xfs_refcount_btree.c
++++ b/fs/xfs/libxfs/xfs_refcount_btree.c
+@@ -340,8 +340,8 @@ xfs_refcountbt_init_cursor(
+ 	cur->bc_ag.agno = agno;
+ 	cur->bc_flags |= XFS_BTREE_CRC_BLOCKS;
+ 
+-	cur->bc_ag.priv.refc.nr_ops = 0;
+-	cur->bc_ag.priv.refc.shape_changes = 0;
++	cur->bc_ag.refc.nr_ops = 0;
++	cur->bc_ag.refc.shape_changes = 0;
+ 
+ 	return cur;
+ }
 
