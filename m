@@ -2,27 +2,23 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 774471848C4
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Mar 2020 15:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DCD71848CC
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Mar 2020 15:07:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgCMOGj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Mar 2020 10:06:39 -0400
-Received: from sandeen.net ([63.231.237.45]:60294 "EHLO sandeen.net"
+        id S1726856AbgCMOHm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Mar 2020 10:07:42 -0400
+Received: from sandeen.net ([63.231.237.45]:60330 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgCMOGj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:06:39 -0400
+        id S1726647AbgCMOHm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:07:42 -0400
 Received: from Liberator.local (erlite [10.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6EC7611664;
-        Fri, 13 Mar 2020 09:05:50 -0500 (CDT)
+        by sandeen.net (Postfix) with ESMTPSA id 3A92F11664;
+        Fri, 13 Mar 2020 09:06:53 -0500 (CDT)
 Subject: Re: [PATCH] xfsprogs: don't warn about packed members
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+To:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
 References: <20191216215245.13666-1-david@fromorbit.com>
- <20200126110212.GA23829@infradead.org>
- <029fa407-6bf5-c8c0-450a-25bded280fec@sandeen.net>
- <20200312140910.GA11758@infradead.org>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -66,12 +62,12 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <b6c1fed7-9e98-7d35-c489-bcdd2a6f9a23@sandeen.net>
-Date:   Fri, 13 Mar 2020 09:06:38 -0500
+Message-ID: <2c3a3e1d-6882-f23c-a242-30653b617e56@sandeen.net>
+Date:   Fri, 13 Mar 2020 09:07:41 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200312140910.GA11758@infradead.org>
+In-Reply-To: <20191216215245.13666-1-david@fromorbit.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -80,23 +76,25 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 3/12/20 9:09 AM, Christoph Hellwig wrote:
-> On Mon, Jan 27, 2020 at 11:43:02AM -0600, Eric Sandeen wrote:
->> On 1/26/20 5:02 AM, Christoph Hellwig wrote:
->>> Eric, can you pick this one up?  The warnings are fairly annoying..
->>>
->>
->> Sorry, I had missed this one and/or the feedback on the original patch
->> wasn't resolved.  I tend to agree that turning off the warning globally
->> because we know /this/ one is OK seems somewhat suboptimal.
->>
->> Let me take a look again.
+On 12/16/19 3:52 PM, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
 > 
-> Can we get this queued up in xfsprogs?  These warnings are pretty
-> annoying..
+> gcc 9.2.1 throws lots of new warnings during the build like this:
+> 
+> xfs_format.h:790:3: warning: taking address of packed member of ‘struct xfs_agfl’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+>   790 |   &(XFS_BUF_TO_AGFL(bp)->agfl_bno[0]) : \
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> xfs_alloc.c:3149:13: note: in expansion of macro ‘XFS_BUF_TO_AGFL_BNO’
+>  3149 |  agfl_bno = XFS_BUF_TO_AGFL_BNO(mp, agflbp);
+>       |             ^~~~~~~~~~~~~~~~~~~
+> 
+> We know this packed structure aligned correctly, so turn off this
+> warning to shut gcc up.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
 
+I guess if it's good enough for the kernel ...
 
-Ok.  I don't really like disabling it globally but if it's good enough
-for the kernel... I'll add this to 5.5.0 and push out the release.
+I'll probably add a short note to the commit, and
 
--Eric
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
