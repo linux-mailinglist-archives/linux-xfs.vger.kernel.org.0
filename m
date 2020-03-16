@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49F34186DB3
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 15:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72A7F186DC7
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 15:49:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgCPOq6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 16 Mar 2020 10:46:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57114 "EHLO
+        id S1731582AbgCPOtL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 16 Mar 2020 10:49:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57432 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731445AbgCPOq6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 10:46:58 -0400
+        with ESMTP id S1731549AbgCPOtL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 10:49:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=5+2/fxqmRiuXtQcTQ8R4Q7CzfgmvYniXT8Mqcc2Bpxk=; b=urej1d8kSBedbTPuW/8yVYWiPs
-        oGFYQ6mK2TtAY/fYKqq+5S2XjumSfQzkhK+B7eG2RB8xm8CyGKEmM8f0IYPGCm0ZPGovvADcO6n/g
-        y8F7GKwhxXOV8pC0/ltZWpRWxS+SFmJjxqVzjf6HUi6EFMvERcNylN4D26hpuvSheSL2WxICVZA2i
-        La7E0w49GR0FuCMBzcLrVr54rz41XQnxXXHh33qXN9+JfyHyjqjwaDJcAWoarX+0moD6OMqs4tTwB
-        pFdWXZH45UjWslx2CXo5zFwiqt4e+TGSAop8ChEuHK8Du9Or1Lt/qqO/apk6rlYWTej/Y5KQ57VGT
-        3fTxnInA==;
+        bh=fo8/2wTa5CtmtlPQtM7qWjKZ+Bcm2Uvtz3QS4+jJFi0=; b=gektYv259R5TYi7yZ1cnHOw/cn
+        1BVsuIqo8DUEni1/q1h5Diqj+X3D05m9wZYJiU+pUlUu8LWLBJEMrQaCTzn9zrqixqZkmiq2907wJ
+        Qx54N6VDNQQKHI19xDKebOn8KWjUVq0TN2ABleoYVKss0n4sfORpreCr7AjbUYVWQZ423oFkheyCr
+        S3+IPvkX3Aj7xmytO8Sh6C3YMqzwDsGVfU9tOGWVdbVYarxMbHkMLOGxIplGGnBB9ACXoeOKuQ+6M
+        gk7iIzq3ajuzD+XunCC9LIy4wH2WwOIo5qBZjMiOquqzBSVZQ9zstHE+P3jgEGztXb+5inEbFjl9S
+        HLpHeCbA==;
 Received: from 089144202225.atnat0011.highway.a1.net ([89.144.202.225] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDr18-0006pB-3T; Mon, 16 Mar 2020 14:46:58 +0000
+        id 1jDr3H-0007BQ-7f; Mon, 16 Mar 2020 14:49:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 01/14] xfs: merge xlog_cil_push into xlog_cil_push_work
-Date:   Mon, 16 Mar 2020 15:42:20 +0100
-Message-Id: <20200316144233.900390-2-hch@lst.de>
+Subject: [PATCH 02/14] xfs: factor out a xlog_wait_on_iclog helper
+Date:   Mon, 16 Mar 2020 15:42:21 +0100
+Message-Id: <20200316144233.900390-3-hch@lst.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200316144233.900390-1-hch@lst.de>
 References: <20200316144233.900390-1-hch@lst.de>
@@ -41,100 +41,148 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xlog_cil_push is only called by xlog_cil_push_work, so merge the two
-functions.
+Factor out the shared code to wait for a log force into a new helper.
+This helper uses the XLOG_FORCED_SHUTDOWN check previous only used
+by the unmount code over the equivalent iclog ioerror state used by
+the other two functions.
+
+There is a slight behavior change in that the force of the unmount
+record is now accounted in the log force statistics.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log_cil.c | 46 +++++++++++++++++---------------------------
- 1 file changed, 18 insertions(+), 28 deletions(-)
+ fs/xfs/xfs_log.c | 76 ++++++++++++++++++++----------------------------
+ 1 file changed, 31 insertions(+), 45 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 48435cf2aa16..6a6278b8eb2d 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -626,24 +626,26 @@ xlog_cil_process_committed(
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 0986983ef6b5..955df2902c2c 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -859,6 +859,31 @@ xfs_log_mount_cancel(
+ 	xfs_log_unmount(mp);
  }
  
++/*
++ * Wait for the iclog to be written disk, or return an error if the log has been
++ * shut down.
++ */
++static int
++xlog_wait_on_iclog(
++	struct xlog_in_core	*iclog)
++		__releases(iclog->ic_log->l_icloglock)
++{
++	struct xlog		*log = iclog->ic_log;
++
++	if (!XLOG_FORCED_SHUTDOWN(log) &&
++	    iclog->ic_state != XLOG_STATE_ACTIVE &&
++	    iclog->ic_state != XLOG_STATE_DIRTY) {
++		XFS_STATS_INC(log->l_mp, xs_log_force_sleep);
++		xlog_wait(&iclog->ic_force_wait, &log->l_icloglock);
++	} else {
++		spin_unlock(&log->l_icloglock);
++	}
++
++	if (XLOG_FORCED_SHUTDOWN(log))
++		return -EIO;
++	return 0;
++}
++
  /*
-- * Push the Committed Item List to the log. If @push_seq flag is zero, then it
-- * is a background flush and so we can chose to ignore it. Otherwise, if the
-- * current sequence is the same as @push_seq we need to do a flush. If
-- * @push_seq is less than the current sequence, then it has already been
-+ * Push the Committed Item List to the log.
-+ *
-+ * If the current sequence is the same as xc_push_seq we need to do a flush. If
-+ * xc_push_seq is less than the current sequence, then it has already been
-  * flushed and we don't need to do anything - the caller will wait for it to
-  * complete if necessary.
+  * Final log writes as part of unmount.
   *
-- * @push_seq is a value rather than a flag because that allows us to do an
-- * unlocked check of the sequence number for a match. Hence we can allows log
-- * forces to run racily and not issue pushes for the same sequence twice. If we
-- * get a race between multiple pushes for the same sequence they will block on
-- * the first one and then abort, hence avoiding needless pushes.
-+ * xc_push_seq is checked unlocked against the sequence number for a match.
-+ * Hence we can allows log forces to run racily and not issue pushes for the
-+ * same sequence twice.  If we get a race between multiple pushes for the same
-+ * sequence they will block on the first one and then abort, hence avoiding
-+ * needless pushes.
-  */
--STATIC int
--xlog_cil_push(
--	struct xlog		*log)
-+static void
-+xlog_cil_push_work(
-+	struct work_struct	*work)
- {
--	struct xfs_cil		*cil = log->l_cilp;
-+	struct xfs_cil		*cil =
-+		container_of(work, struct xfs_cil, xc_push_work);
-+	struct xlog		*log = cil->xc_log;
- 	struct xfs_log_vec	*lv;
- 	struct xfs_cil_ctx	*ctx;
- 	struct xfs_cil_ctx	*new_ctx;
-@@ -657,9 +659,6 @@ xlog_cil_push(
- 	xfs_lsn_t		commit_lsn;
- 	xfs_lsn_t		push_seq;
+@@ -926,18 +951,7 @@ xfs_log_write_unmount_record(
+ 	atomic_inc(&iclog->ic_refcnt);
+ 	xlog_state_want_sync(log, iclog);
+ 	error = xlog_state_release_iclog(log, iclog);
+-	switch (iclog->ic_state) {
+-	default:
+-		if (!XLOG_FORCED_SHUTDOWN(log)) {
+-			xlog_wait(&iclog->ic_force_wait, &log->l_icloglock);
+-			break;
+-		}
+-		/* fall through */
+-	case XLOG_STATE_ACTIVE:
+-	case XLOG_STATE_DIRTY:
+-		spin_unlock(&log->l_icloglock);
+-		break;
+-	}
++	xlog_wait_on_iclog(iclog);
  
--	if (!cil)
--		return 0;
+ 	if (tic) {
+ 		trace_xfs_log_umount_write(log, tic);
+@@ -3230,9 +3244,6 @@ xfs_log_force(
+ 		 * previous iclog and go to sleep.
+ 		 */
+ 		iclog = iclog->ic_prev;
+-		if (iclog->ic_state == XLOG_STATE_ACTIVE ||
+-		    iclog->ic_state == XLOG_STATE_DIRTY)
+-			goto out_unlock;
+ 	} else if (iclog->ic_state == XLOG_STATE_ACTIVE) {
+ 		if (atomic_read(&iclog->ic_refcnt) == 0) {
+ 			/*
+@@ -3248,8 +3259,7 @@ xfs_log_force(
+ 			if (xlog_state_release_iclog(log, iclog))
+ 				goto out_error;
+ 
+-			if (be64_to_cpu(iclog->ic_header.h_lsn) != lsn ||
+-			    iclog->ic_state == XLOG_STATE_DIRTY)
++			if (be64_to_cpu(iclog->ic_header.h_lsn) != lsn)
+ 				goto out_unlock;
+ 		} else {
+ 			/*
+@@ -3269,17 +3279,8 @@ xfs_log_force(
+ 		;
+ 	}
+ 
+-	if (!(flags & XFS_LOG_SYNC))
+-		goto out_unlock;
 -
- 	new_ctx = kmem_zalloc(sizeof(*new_ctx), KM_NOFS);
- 	new_ctx->ticket = xlog_cil_ticket_alloc(log);
- 
-@@ -867,28 +866,19 @@ xlog_cil_push(
- 	spin_unlock(&cil->xc_push_lock);
- 
- 	/* release the hounds! */
--	return xfs_log_release_iclog(log->l_mp, commit_iclog);
-+	xfs_log_release_iclog(log->l_mp, commit_iclog);
-+	return;
- 
- out_skip:
- 	up_write(&cil->xc_ctx_lock);
- 	xfs_log_ticket_put(new_ctx->ticket);
- 	kmem_free(new_ctx);
+-	if (iclog->ic_state == XLOG_STATE_IOERROR)
+-		goto out_error;
+-	XFS_STATS_INC(mp, xs_log_force_sleep);
+-	xlog_wait(&iclog->ic_force_wait, &log->l_icloglock);
+-	if (iclog->ic_state == XLOG_STATE_IOERROR)
+-		return -EIO;
 -	return 0;
-+	return;
- 
- out_abort_free_ticket:
- 	xfs_log_ticket_put(tic);
- out_abort:
- 	xlog_cil_committed(ctx, true);
--	return -EIO;
--}
 -
--static void
--xlog_cil_push_work(
--	struct work_struct	*work)
--{
--	struct xfs_cil		*cil = container_of(work, struct xfs_cil,
--							xc_push_work);
--	xlog_cil_push(cil->xc_log);
- }
++	if (flags & XFS_LOG_SYNC)
++		return xlog_wait_on_iclog(iclog);
+ out_unlock:
+ 	spin_unlock(&log->l_icloglock);
+ 	return 0;
+@@ -3310,9 +3311,6 @@ __xfs_log_force_lsn(
+ 			goto out_unlock;
+ 	}
  
- /*
+-	if (iclog->ic_state == XLOG_STATE_DIRTY)
+-		goto out_unlock;
+-
+ 	if (iclog->ic_state == XLOG_STATE_ACTIVE) {
+ 		/*
+ 		 * We sleep here if we haven't already slept (e.g. this is the
+@@ -3346,20 +3344,8 @@ __xfs_log_force_lsn(
+ 			*log_flushed = 1;
+ 	}
+ 
+-	if (!(flags & XFS_LOG_SYNC) ||
+-	    (iclog->ic_state == XLOG_STATE_ACTIVE ||
+-	     iclog->ic_state == XLOG_STATE_DIRTY))
+-		goto out_unlock;
+-
+-	if (iclog->ic_state == XLOG_STATE_IOERROR)
+-		goto out_error;
+-
+-	XFS_STATS_INC(mp, xs_log_force_sleep);
+-	xlog_wait(&iclog->ic_force_wait, &log->l_icloglock);
+-	if (iclog->ic_state == XLOG_STATE_IOERROR)
+-		return -EIO;
+-	return 0;
+-
++	if (flags & XFS_LOG_SYNC)
++		return xlog_wait_on_iclog(iclog);
+ out_unlock:
+ 	spin_unlock(&log->l_icloglock);
+ 	return 0;
 -- 
 2.24.1
 
