@@ -2,41 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D13F187110
+	by mail.lfdr.de (Postfix) with ESMTP id E0574187111
 	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 18:23:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732062AbgCPRXP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 16 Mar 2020 13:23:15 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:49720 "EHLO
+        id S1732051AbgCPRXQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 16 Mar 2020 13:23:16 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29482 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731674AbgCPRXP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 13:23:15 -0400
+        by vger.kernel.org with ESMTP id S1731745AbgCPRXQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 13:23:16 -0400
+X-Greylist: delayed 6496 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 13:23:15 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584379394;
+        s=mimecast20190719; t=1584379395;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=aGWXXxT1m5h58goCw53QWFCg/y8Ow4m2zHnweK1DPZ0=;
-        b=ADGmONtQEw7WnB7e9AFV0tSkp8sa3FPi0e+pgE69W6Fjd2RqpQKElkTV5bB/y2Xu1AgVWN
-        nU2MI9LqhqSOKdpt/PBZiEJt0ZXUqVVTGk+8G4SVUj3ez6jpG4eM0L+8Zi+nuDZ5OAxDoA
-        9uxScI6p683uaLeHPttZAOc29989JgU=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GNI79X6LXUoSmyayTk7jy/34Q/yfZAWHYshJWxicvHg=;
+        b=c/B+z0ONgU9S7gFpUrZYZm3enLCzw9zO5vpulQTHNV74HhjSmzQiOOxuwrafyeiXTIFh3n
+        LRYu9KpIXnUmgfsGpO6c57Sdmb0EgL+6KKkyewNRiBFEM5i/ZLoMv7yS73p2cZ8BGkdKos
+        p2TjgQRj2RsPE4WWEWtTWjOpIsuv3n4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-A_MI1DOjOJaTWrqy2GelJw-1; Mon, 16 Mar 2020 13:23:12 -0400
-X-MC-Unique: A_MI1DOjOJaTWrqy2GelJw-1
+ us-mta-276-pIGEez63Od6bmYkH6ZYcUQ-1; Mon, 16 Mar 2020 13:23:13 -0400
+X-MC-Unique: pIGEez63Od6bmYkH6ZYcUQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03276198F34A
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C611198F34D
         for <linux-xfs@vger.kernel.org>; Mon, 16 Mar 2020 17:00:33 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC8375C1B2
-        for <linux-xfs@vger.kernel.org>; Mon, 16 Mar 2020 17:00:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 238115C1B2
+        for <linux-xfs@vger.kernel.org>; Mon, 16 Mar 2020 17:00:33 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 0/2] xfs: quotaoff shutdown fixes
-Date:   Mon, 16 Mar 2020 13:00:30 -0400
-Message-Id: <20200316170032.19552-1-bfoster@redhat.com>
+Subject: [PATCH 1/2] xfs: factor out quotaoff intent AIL removal and memory free
+Date:   Mon, 16 Mar 2020 13:00:31 -0400
+Message-Id: <20200316170032.19552-2-bfoster@redhat.com>
+In-Reply-To: <20200316170032.19552-1-bfoster@redhat.com>
+References: <20200316170032.19552-1-bfoster@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
@@ -45,24 +49,84 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+AIL removal of the quotaoff start intent and free of both intents is
+hardcoded to the ->iop_committed() handler of the end intent. Factor
+out the start intent handling code so it can be used in a future
+patch to properly handle quotaoff errors. Use xfs_trans_ail_remove()
+instead of the _delete() variant to acquire the AIL lock and also
+handle cases where an intent might not reside in the AIL at the
+time of a failure.
 
-This fixes a couple issues I noticed with quotaoff when working on the
-auto relog stuff. Patch 1 creates a helper and patch 2 uses it to
-address a shutdown hang and memory leak. Thoughts, reviews, flames
-appreciated.
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+---
+ fs/xfs/xfs_dquot_item.c | 29 ++++++++++++++++++++---------
+ fs/xfs/xfs_dquot_item.h |  1 +
+ 2 files changed, 21 insertions(+), 9 deletions(-)
 
-Brian
-
-Brian Foster (2):
-  xfs: factor out quotaoff intent AIL removal and memory free
-  xfs: fix unmount hang and memory leak on shutdown during quotaoff
-
- fs/xfs/xfs_dquot_item.c  | 44 ++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_dquot_item.h  |  1 +
- fs/xfs/xfs_qm_syscalls.c | 13 ++++++------
- 3 files changed, 43 insertions(+), 15 deletions(-)
-
+diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
+index d60647d7197b..2b816e9b4465 100644
+--- a/fs/xfs/xfs_dquot_item.c
++++ b/fs/xfs/xfs_dquot_item.c
+@@ -307,18 +307,10 @@ xfs_qm_qoffend_logitem_committed(
+ {
+ 	struct xfs_qoff_logitem	*qfe =3D QOFF_ITEM(lip);
+ 	struct xfs_qoff_logitem	*qfs =3D qfe->qql_start_lip;
+-	struct xfs_ail		*ailp =3D qfs->qql_item.li_ailp;
+=20
+-	/*
+-	 * Delete the qoff-start logitem from the AIL.
+-	 * xfs_trans_ail_delete() drops the AIL lock.
+-	 */
+-	spin_lock(&ailp->ail_lock);
+-	xfs_trans_ail_delete(ailp, &qfs->qql_item, SHUTDOWN_LOG_IO_ERROR);
++	xfs_qm_qoff_logitem_relse(qfs);
+=20
+-	kmem_free(qfs->qql_item.li_lv_shadow);
+ 	kmem_free(lip->li_lv_shadow);
+-	kmem_free(qfs);
+ 	kmem_free(qfe);
+ 	return (xfs_lsn_t)-1;
+ }
+@@ -336,6 +328,25 @@ static const struct xfs_item_ops xfs_qm_qoff_logitem=
+_ops =3D {
+ 	.iop_push	=3D xfs_qm_qoff_logitem_push,
+ };
+=20
++/*
++ * Delete the quotaoff intent from the AIL and free it. On success,
++ * this should only be called for the start item. It can be used for
++ * either on shutdown or abort.
++ */
++void
++xfs_qm_qoff_logitem_relse(
++	struct xfs_qoff_logitem	*qoff)
++{
++	struct xfs_log_item	*lip =3D &qoff->qql_item;
++
++	ASSERT(test_bit(XFS_LI_IN_AIL, &lip->li_flags) ||
++	       test_bit(XFS_LI_ABORTED, &lip->li_flags) ||
++	       XFS_FORCED_SHUTDOWN(lip->li_mountp));
++	xfs_trans_ail_remove(lip, SHUTDOWN_LOG_IO_ERROR);
++	kmem_free(lip->li_lv_shadow);
++	kmem_free(qoff);
++}
++
+ /*
+  * Allocate and initialize an quotaoff item of the correct quota type(s)=
+.
+  */
+diff --git a/fs/xfs/xfs_dquot_item.h b/fs/xfs/xfs_dquot_item.h
+index 3bb19e556ade..2b86a43d7ce2 100644
+--- a/fs/xfs/xfs_dquot_item.h
++++ b/fs/xfs/xfs_dquot_item.h
+@@ -28,6 +28,7 @@ void xfs_qm_dquot_logitem_init(struct xfs_dquot *dqp);
+ struct xfs_qoff_logitem	*xfs_qm_qoff_logitem_init(struct xfs_mount *mp,
+ 		struct xfs_qoff_logitem *start,
+ 		uint flags);
++void xfs_qm_qoff_logitem_relse(struct xfs_qoff_logitem *);
+ struct xfs_qoff_logitem	*xfs_trans_get_qoff_item(struct xfs_trans *tp,
+ 		struct xfs_qoff_logitem *startqoff,
+ 		uint flags);
 --=20
 2.21.1
 
