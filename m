@@ -2,407 +2,232 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFB17186DB0
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 15:46:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA30186DD5
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 15:51:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbgCPOqN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 16 Mar 2020 10:46:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729643AbgCPOqN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 10:46:13 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GEWYNJ083934
-        for <linux-xfs@vger.kernel.org>; Mon, 16 Mar 2020 10:46:12 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yrr5e2cdk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Mon, 16 Mar 2020 10:46:12 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Mon, 16 Mar 2020 14:46:10 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Mar 2020 14:46:08 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02GEk77w46661700
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Mar 2020 14:46:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B771EA405F;
-        Mon, 16 Mar 2020 14:46:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2039A4054;
-        Mon, 16 Mar 2020 14:46:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.73.127])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Mar 2020 14:46:06 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/5] xfs: remove the di_version field from struct icdinode
-Date:   Mon, 16 Mar 2020 20:19:07 +0530
-Organization: IBM
-In-Reply-To: <20200312142235.550766-6-hch@lst.de>
-References: <20200312142235.550766-1-hch@lst.de> <20200312142235.550766-6-hch@lst.de>
+        id S1731628AbgCPOv5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 16 Mar 2020 10:51:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34434 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729643AbgCPOv5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Mar 2020 10:51:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GEhYBW052792;
+        Mon, 16 Mar 2020 14:51:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=kUbVWJXojxPwWLvO5TqfpP55HcOFj8HMpAnHw4utrcI=;
+ b=BQuufXQy1ahFVoEooEaglwz8lWyWsAj8Dyo1v3x4iWWfE2PlIv4+ZDEwZyeBRhBfBkY+
+ rtU5ZmKkRNZgjcyb5z97iS9W5r5VZT6EIqWo6jmKDnSNudyHZH6yxU5qmIjfCVt0nMtB
+ uWEc8FxjG5xme007+f/FZh245k0WWqrpoViG5fp2D7UARVhtucGFt3dY0w+TQ9MNDbLO
+ CPwC+DaOmnpjGm2hgAIK0DeU/C2luVt8kM0KqtqZsbyoFOy0gHwaXox2M0jSYg38gUFX
+ 7MZUubg9VJohNPG8IQxd6eWCItNs3B+4Z/JCFfB/hlU93cevgrH3RkaEdSBnGxQSWh6V 9g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2yrqwmy8ky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 14:51:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02GEobTr041590;
+        Mon, 16 Mar 2020 14:51:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2ys8rcm5f1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Mar 2020 14:51:51 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02GEpnBX003959;
+        Mon, 16 Mar 2020 14:51:49 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Mar 2020 07:51:49 -0700
+Date:   Mon, 16 Mar 2020 07:51:49 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/5] xfs: add a new xfs_sb_version_has_large_dinode helper
+Message-ID: <20200316145149.GA256767@magnolia>
+References: <20200312142235.550766-1-hch@lst.de>
+ <20200312142235.550766-2-hch@lst.de>
+ <20200316131649.GE12313@bfoster>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 20031614-0028-0000-0000-000003E5B930
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031614-0029-0000-0000-000024AB0AAD
-Message-Id: <2575073.Eovd9JGMvs@localhost.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_03:2020-03-12,2020-03-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=1
- mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 phishscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003160068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316131649.GE12313@bfoster>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003160071
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
+ mlxscore=0 bulkscore=0 phishscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003160071
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thursday, March 12, 2020 7:52 PM Christoph Hellwig wrote: 
-> We know the version is 3 if on a v5 file system.   For earlier file
-> systems formats we always upgrade the remaining v1 inodes to v2 and
-> thus only use v2 inodes.  Use the xfs_sb_version_has_large_dinode
-> helper to check if we deal with small or large dinodes, and thus
-> remove the need for the di_version field in struct icdinode.
->
-
-I don't see any logical issues.
-
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/libxfs/xfs_inode_buf.c | 16 ++++++----------
->  fs/xfs/libxfs/xfs_inode_buf.h |  1 -
->  fs/xfs/xfs_bmap_util.c        | 16 ++++++++--------
->  fs/xfs/xfs_inode.c            | 16 ++--------------
->  fs/xfs/xfs_inode_item.c       |  8 +++-----
->  fs/xfs/xfs_ioctl.c            |  5 ++---
->  fs/xfs/xfs_iops.c             |  2 +-
->  fs/xfs/xfs_itable.c           |  2 +-
->  fs/xfs/xfs_log_recover.c      |  2 +-
->  9 files changed, 24 insertions(+), 44 deletions(-)
+On Mon, Mar 16, 2020 at 09:16:49AM -0400, Brian Foster wrote:
+> On Thu, Mar 12, 2020 at 03:22:31PM +0100, Christoph Hellwig wrote:
+> > Add a new wrapper to check if a file system supports the newer large
+> > dinode format.  Previously we uses xfs_sb_version_hascrc for that,
+> > which is technically correct but a little confusing to read.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  fs/xfs/libxfs/xfs_format.h     |  5 +++++
+> >  fs/xfs/libxfs/xfs_ialloc.c     |  4 ++--
+> >  fs/xfs/libxfs/xfs_inode_buf.c  | 12 ++++++++----
+> >  fs/xfs/libxfs/xfs_trans_resv.c |  2 +-
+> >  fs/xfs/xfs_buf_item.c          |  2 +-
+> >  fs/xfs/xfs_log_recover.c       |  2 +-
+> >  6 files changed, 18 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+> > index cd814f99da28..a28bf6a978ad 100644
+> > --- a/fs/xfs/libxfs/xfs_format.h
+> > +++ b/fs/xfs/libxfs/xfs_format.h
+> > @@ -497,6 +497,11 @@ static inline bool xfs_sb_version_hascrc(struct xfs_sb *sbp)
+> >  	return XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5;
+> >  }
+> >  
 > 
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> index 34ccf162abe1..7384b9194922 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> @@ -209,16 +209,14 @@ xfs_inode_from_disk(
->  	struct xfs_icdinode	*to = &ip->i_d;
->  	struct inode		*inode = VFS_I(ip);
->  
-> -
->  	/*
->  	 * Convert v1 inodes immediately to v2 inode format as this is the
->  	 * minimum inode version format we support in the rest of the code.
-> +	 * They will also be unconditionally written back to disk as v2 inodes.
->  	 */
-> -	to->di_version = from->di_version;
-> -	if (to->di_version == 1) {
-> +	if (unlikely(from->di_version == 1)) {
->  		set_nlink(inode, be16_to_cpu(from->di_onlink));
->  		to->di_projid = 0;
-> -		to->di_version = 2;
->  	} else {
->  		set_nlink(inode, be32_to_cpu(from->di_nlink));
->  		to->di_projid = (prid_t)be16_to_cpu(from->di_projid_hi) << 16 |
-> @@ -256,7 +254,7 @@ xfs_inode_from_disk(
->  	to->di_dmstate	= be16_to_cpu(from->di_dmstate);
->  	to->di_flags	= be16_to_cpu(from->di_flags);
->  
-> -	if (to->di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb)) {
->  		inode_set_iversion_queried(inode,
->  					   be64_to_cpu(from->di_changecount));
->  		to->di_crtime.tv_sec = be32_to_cpu(from->di_crtime.t_sec);
-> @@ -278,7 +276,6 @@ xfs_inode_to_disk(
->  	to->di_magic = cpu_to_be16(XFS_DINODE_MAGIC);
->  	to->di_onlink = 0;
->  
-> -	to->di_version = from->di_version;
->  	to->di_format = from->di_format;
->  	to->di_uid = cpu_to_be32(i_uid_read(inode));
->  	to->di_gid = cpu_to_be32(i_gid_read(inode));
-> @@ -307,7 +304,8 @@ xfs_inode_to_disk(
->  	to->di_dmstate = cpu_to_be16(from->di_dmstate);
->  	to->di_flags = cpu_to_be16(from->di_flags);
->  
-> -	if (from->di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb)) {
-> +		to->di_version = 3;
->  		to->di_changecount = cpu_to_be64(inode_peek_iversion(inode));
->  		to->di_crtime.t_sec = cpu_to_be32(from->di_crtime.tv_sec);
->  		to->di_crtime.t_nsec = cpu_to_be32(from->di_crtime.tv_nsec);
-> @@ -319,6 +317,7 @@ xfs_inode_to_disk(
->  		uuid_copy(&to->di_uuid, &ip->i_mount->m_sb.sb_meta_uuid);
->  		to->di_flushiter = 0;
->  	} else {
-> +		to->di_version = 2;
->  		to->di_flushiter = cpu_to_be16(from->di_flushiter);
->  	}
->  }
-> @@ -636,7 +635,6 @@ xfs_iread(
->  	    xfs_sb_version_has_large_dinode(&mp->m_sb) &&
->  	    !(mp->m_flags & XFS_MOUNT_IKEEP)) {
->  		VFS_I(ip)->i_generation = prandom_u32();
-> -		ip->i_d.di_version = 3;
->  		return 0;
->  	}
->  
-> @@ -678,7 +676,6 @@ xfs_iread(
->  		 * Partial initialisation of the in-core inode. Just the bits
->  		 * that xfs_ialloc won't overwrite or relies on being correct.
->  		 */
-> -		ip->i_d.di_version = dip->di_version;
->  		VFS_I(ip)->i_generation = be32_to_cpu(dip->di_gen);
->  		ip->i_d.di_flushiter = be16_to_cpu(dip->di_flushiter);
->  
-> @@ -692,7 +689,6 @@ xfs_iread(
->  		VFS_I(ip)->i_mode = 0;
->  	}
->  
-> -	ASSERT(ip->i_d.di_version >= 2);
->  	ip->i_delayed_blks = 0;
->  
->  	/*
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-> index 2683e1e2c4a6..4e24fad3deb0 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.h
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.h
-> @@ -16,7 +16,6 @@ struct xfs_dinode;
->   * format specific structures at the appropriate time.
->   */
->  struct xfs_icdinode {
-> -	int8_t		di_version;	/* inode version */
->  	int8_t		di_format;	/* format of di_c data */
->  	uint16_t	di_flushiter;	/* incremented on flush */
->  	uint32_t	di_projid;	/* owner's project id */
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index 3df4d0af9f22..6ca37944d71f 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -1449,12 +1449,12 @@ xfs_swap_extent_forks(
->  	 * event of a crash. Set the owner change log flags now and leave the
->  	 * bmbt scan as the last step.
->  	 */
-> -	if (ip->i_d.di_version == 3 &&
-> -	    ip->i_d.di_format == XFS_DINODE_FMT_BTREE)
-> -		(*target_log_flags) |= XFS_ILOG_DOWNER;
-> -	if (tip->i_d.di_version == 3 &&
-> -	    tip->i_d.di_format == XFS_DINODE_FMT_BTREE)
-> -		(*src_log_flags) |= XFS_ILOG_DOWNER;
-> +	if (xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb)) {
-> +		if (ip->i_d.di_format == XFS_DINODE_FMT_BTREE)
-> +			(*target_log_flags) |= XFS_ILOG_DOWNER;
-> +		if (tip->i_d.di_format == XFS_DINODE_FMT_BTREE)
-> +			(*src_log_flags) |= XFS_ILOG_DOWNER;
-> +	}
->  
->  	/*
->  	 * Swap the data forks of the inodes
-> @@ -1489,7 +1489,7 @@ xfs_swap_extent_forks(
->  		(*src_log_flags) |= XFS_ILOG_DEXT;
->  		break;
->  	case XFS_DINODE_FMT_BTREE:
-> -		ASSERT(ip->i_d.di_version < 3 ||
-> +		ASSERT(!xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb) ||
->  		       (*src_log_flags & XFS_ILOG_DOWNER));
->  		(*src_log_flags) |= XFS_ILOG_DBROOT;
->  		break;
-> @@ -1501,7 +1501,7 @@ xfs_swap_extent_forks(
->  		break;
->  	case XFS_DINODE_FMT_BTREE:
->  		(*target_log_flags) |= XFS_ILOG_DBROOT;
-> -		ASSERT(tip->i_d.di_version < 3 ||
-> +		ASSERT(!xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb) ||
->  		       (*target_log_flags & XFS_ILOG_DOWNER));
->  		break;
->  	}
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index ebfd8efb0efa..600c0b59bdd7 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -801,15 +801,6 @@ xfs_ialloc(
->  		return error;
->  	ASSERT(ip != NULL);
->  	inode = VFS_I(ip);
-> -
-> -	/*
-> -	 * We always convert v1 inodes to v2 now - we only support filesystems
-> -	 * with >= v2 inode capability, so there is no reason for ever leaving
-> -	 * an inode in v1 format.
-> -	 */
-> -	if (ip->i_d.di_version == 1)
-> -		ip->i_d.di_version = 2;
-> -
->  	inode->i_mode = mode;
->  	set_nlink(inode, nlink);
->  	inode->i_uid = current_fsuid();
-> @@ -847,14 +838,13 @@ xfs_ialloc(
->  	ip->i_d.di_dmstate = 0;
->  	ip->i_d.di_flags = 0;
->  
-> -	if (ip->i_d.di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&mp->m_sb)) {
->  		inode_set_iversion(inode, 1);
->  		ip->i_d.di_flags2 = 0;
->  		ip->i_d.di_cowextsize = 0;
->  		ip->i_d.di_crtime = tv;
->  	}
->  
-> -
->  	flags = XFS_ILOG_CORE;
->  	switch (mode & S_IFMT) {
->  	case S_IFIFO:
-> @@ -1115,7 +1105,6 @@ xfs_bumplink(
->  {
->  	xfs_trans_ichgtime(tp, ip, XFS_ICHGTIME_CHG);
->  
-> -	ASSERT(ip->i_d.di_version > 1);
->  	inc_nlink(VFS_I(ip));
->  	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
->  }
-> @@ -3798,7 +3787,6 @@ xfs_iflush_int(
->  	ASSERT(ip->i_d.di_format != XFS_DINODE_FMT_BTREE ||
->  	       ip->i_d.di_nextents > XFS_IFORK_MAXEXT(ip, XFS_DATA_FORK));
->  	ASSERT(iip != NULL && iip->ili_fields != 0);
-> -	ASSERT(ip->i_d.di_version > 1);
->  
->  	/* set *dip = inode's place in the buffer */
->  	dip = xfs_buf_offset(bp, ip->i_imap.im_boffset);
-> @@ -3859,7 +3847,7 @@ xfs_iflush_int(
->  	 * backwards compatibility with old kernels that predate logging all
->  	 * inode changes.
->  	 */
-> -	if (ip->i_d.di_version < 3)
-> +	if (!xfs_sb_version_has_large_dinode(&mp->m_sb))
->  		ip->i_d.di_flushiter++;
->  
->  	/* Check the inline fork data before we write out. */
-> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-> index 451f9b6b2806..5800bfda96b2 100644
-> --- a/fs/xfs/xfs_inode_item.c
-> +++ b/fs/xfs/xfs_inode_item.c
-> @@ -305,8 +305,6 @@ xfs_inode_to_log_dinode(
->  	struct inode		*inode = VFS_I(ip);
->  
->  	to->di_magic = XFS_DINODE_MAGIC;
-> -
-> -	to->di_version = from->di_version;
->  	to->di_format = from->di_format;
->  	to->di_uid = i_uid_read(inode);
->  	to->di_gid = i_gid_read(inode);
-> @@ -339,7 +337,8 @@ xfs_inode_to_log_dinode(
->  	/* log a dummy value to ensure log structure is fully initialised */
->  	to->di_next_unlinked = NULLAGINO;
->  
-> -	if (from->di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&ip->i_mount->m_sb)) {
-> +		to->di_version = 3;
->  		to->di_changecount = inode_peek_iversion(inode);
->  		to->di_crtime.t_sec = from->di_crtime.tv_sec;
->  		to->di_crtime.t_nsec = from->di_crtime.tv_nsec;
-> @@ -351,6 +350,7 @@ xfs_inode_to_log_dinode(
->  		uuid_copy(&to->di_uuid, &ip->i_mount->m_sb.sb_meta_uuid);
->  		to->di_flushiter = 0;
->  	} else {
-> +		to->di_version = 2;
->  		to->di_flushiter = from->di_flushiter;
->  	}
->  }
-> @@ -395,8 +395,6 @@ xfs_inode_item_format(
->  	struct xfs_log_iovec	*vecp = NULL;
->  	struct xfs_inode_log_format *ilf;
->  
-> -	ASSERT(ip->i_d.di_version > 1);
-> -
->  	ilf = xlog_prepare_iovec(lv, &vecp, XLOG_REG_TYPE_IFORMAT);
->  	ilf->ilf_type = XFS_LI_INODE;
->  	ilf->ilf_ino = ip->i_ino;
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index ad825ffa7e4c..a98909cc7ecb 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1263,7 +1263,7 @@ xfs_ioctl_setattr_xflags(
->  
->  	/* diflags2 only valid for v3 inodes. */
->  	di_flags2 = xfs_flags2diflags2(ip, fa->fsx_xflags);
-> -	if (di_flags2 && ip->i_d.di_version < 3)
-> +	if (di_flags2 && !xfs_sb_version_has_large_dinode(&mp->m_sb))
->  		return -EINVAL;
->  
->  	ip->i_d.di_flags = xfs_flags2diflags(ip, fa->fsx_xflags);
-> @@ -1601,7 +1601,6 @@ xfs_ioctl_setattr(
->  			olddquot = xfs_qm_vop_chown(tp, ip,
->  						&ip->i_pdquot, pdqp);
->  		}
-> -		ASSERT(ip->i_d.di_version > 1);
->  		ip->i_d.di_projid = fa->fsx_projid;
->  	}
->  
-> @@ -1614,7 +1613,7 @@ xfs_ioctl_setattr(
->  		ip->i_d.di_extsize = fa->fsx_extsize >> mp->m_sb.sb_blocklog;
->  	else
->  		ip->i_d.di_extsize = 0;
-> -	if (ip->i_d.di_version == 3 &&
-> +	if (xfs_sb_version_has_large_dinode(&mp->m_sb) &&
->  	    (ip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE))
->  		ip->i_d.di_cowextsize = fa->fsx_cowextsize >>
->  				mp->m_sb.sb_blocklog;
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 87093a05aad7..df2cd57e984e 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -557,7 +557,7 @@ xfs_vn_getattr(
->  	stat->blocks =
->  		XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
->  
-> -	if (ip->i_d.di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&mp->m_sb)) {
->  		if (request_mask & STATX_BTIME) {
->  			stat->result_mask |= STATX_BTIME;
->  			stat->btime = ip->i_d.di_crtime;
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index d10660469884..4d4dad557c2f 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -110,7 +110,7 @@ xfs_bulkstat_one_int(
->  	buf->bs_forkoff = XFS_IFORK_BOFF(ip);
->  	buf->bs_version = XFS_BULKSTAT_VERSION_V5;
->  
-> -	if (dic->di_version == 3) {
-> +	if (xfs_sb_version_has_large_dinode(&mp->m_sb)) {
->  		if (dic->di_flags2 & XFS_DIFLAG2_COWEXTSIZE)
->  			buf->bs_cowextsize_blks = dic->di_cowextsize;
->  	}
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index 79fc85a4ff08..9db6003d125b 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -2869,8 +2869,8 @@ xfs_recover_inode_owner_change(
->  		return -ENOMEM;
->  
->  	/* instantiate the inode */
-> +	ASSERT(dip->di_version >= 3);
->  	xfs_inode_from_disk(ip, dip);
-> -	ASSERT(ip->i_d.di_version >= 3);
->  
->  	error = xfs_iformat_fork(ip, dip);
->  	if (error)
+> A comment would be useful here to indicate what this means (i.e., we can
+> assume v3 inode format). The function name is a little vague too I
+> suppose (will the inode ever get larger than large? :P). I wonder if
+> something like _has_v3_inode() is more clear, but we can always change
+> it easily enough and either way is better than hascrc() IMO.
 > 
+> Brian
+> 
+> > +static inline bool xfs_sb_version_has_large_dinode(struct xfs_sb *sbp)
 
+/me agrees that this function ought to have a comment saying that
+"large_dinode" means v3 inodes.
 
--- 
-chandan
+Not sure about larger than large inodes though -- the last di_flags2
+could be made to mean "...and now expand structure by X bytes" whenever
+we run out of space.
 
+(The rest of the series looks ok to me)
 
+--D
 
+> > +{
+> > +	return XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5;
+> > +}
+> > +
+> >  static inline bool xfs_sb_version_has_pquotino(struct xfs_sb *sbp)
+> >  {
+> >  	return XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5;
+> > diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+> > index b4a404278935..6adffaa68fb8 100644
+> > --- a/fs/xfs/libxfs/xfs_ialloc.c
+> > +++ b/fs/xfs/libxfs/xfs_ialloc.c
+> > @@ -304,7 +304,7 @@ xfs_ialloc_inode_init(
+> >  	 * That means for v3 inode we log the entire buffer rather than just the
+> >  	 * inode cores.
+> >  	 */
+> > -	if (xfs_sb_version_hascrc(&mp->m_sb)) {
+> > +	if (xfs_sb_version_has_large_dinode(&mp->m_sb)) {
+> >  		version = 3;
+> >  		ino = XFS_AGINO_TO_INO(mp, agno, XFS_AGB_TO_AGINO(mp, agbno));
+> >  
+> > @@ -2872,7 +2872,7 @@ xfs_ialloc_setup_geometry(
+> >  	 * cannot change the behavior.
+> >  	 */
+> >  	igeo->inode_cluster_size_raw = XFS_INODE_BIG_CLUSTER_SIZE;
+> > -	if (xfs_sb_version_hascrc(&mp->m_sb)) {
+> > +	if (xfs_sb_version_has_large_dinode(&mp->m_sb)) {
+> >  		int	new_size = igeo->inode_cluster_size_raw;
+> >  
+> >  		new_size *= mp->m_sb.sb_inodesize / XFS_DINODE_MIN_SIZE;
+> > diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+> > index 17e88a8c8353..a5aa2f220c28 100644
+> > --- a/fs/xfs/libxfs/xfs_inode_buf.c
+> > +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+> > @@ -44,14 +44,18 @@ xfs_inobp_check(
+> >  }
+> >  #endif
+> >  
+> > +/*
+> > + * v4 and earlier file systems only support the small dinode, and must use the
+> > + * v1 or v2 inode formats.  v5 file systems support a larger dinode, and must
+> > + * use the v3 inode format.
+> > + */
+> >  bool
+> >  xfs_dinode_good_version(
+> >  	struct xfs_mount *mp,
+> >  	__u8		version)
+> >  {
+> > -	if (xfs_sb_version_hascrc(&mp->m_sb))
+> > +	if (xfs_sb_version_has_large_dinode(&mp->m_sb))
+> >  		return version == 3;
+> > -
+> >  	return version == 1 || version == 2;
+> >  }
+> >  
+> > @@ -454,7 +458,7 @@ xfs_dinode_verify(
+> >  
+> >  	/* Verify v3 integrity information first */
+> >  	if (dip->di_version >= 3) {
+> > -		if (!xfs_sb_version_hascrc(&mp->m_sb))
+> > +		if (!xfs_sb_version_has_large_dinode(&mp->m_sb))
+> >  			return __this_address;
+> >  		if (!xfs_verify_cksum((char *)dip, mp->m_sb.sb_inodesize,
+> >  				      XFS_DINODE_CRC_OFF))
+> > @@ -629,7 +633,7 @@ xfs_iread(
+> >  
+> >  	/* shortcut IO on inode allocation if possible */
+> >  	if ((iget_flags & XFS_IGET_CREATE) &&
+> > -	    xfs_sb_version_hascrc(&mp->m_sb) &&
+> > +	    xfs_sb_version_has_large_dinode(&mp->m_sb) &&
+> >  	    !(mp->m_flags & XFS_MOUNT_IKEEP)) {
+> >  		VFS_I(ip)->i_generation = prandom_u32();
+> >  		ip->i_d.di_version = 3;
+> > diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+> > index 7a9c04920505..294e23d47912 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_resv.c
+> > +++ b/fs/xfs/libxfs/xfs_trans_resv.c
+> > @@ -187,7 +187,7 @@ xfs_calc_inode_chunk_res(
+> >  			       XFS_FSB_TO_B(mp, 1));
+> >  	if (alloc) {
+> >  		/* icreate tx uses ordered buffers */
+> > -		if (xfs_sb_version_hascrc(&mp->m_sb))
+> > +		if (xfs_sb_version_has_large_dinode(&mp->m_sb))
+> >  			return res;
+> >  		size = XFS_FSB_TO_B(mp, 1);
+> >  	}
+> > diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+> > index 663810e6cd59..d004ae3455d7 100644
+> > --- a/fs/xfs/xfs_buf_item.c
+> > +++ b/fs/xfs/xfs_buf_item.c
+> > @@ -345,7 +345,7 @@ xfs_buf_item_format(
+> >  	 * occurs during recovery.
+> >  	 */
+> >  	if (bip->bli_flags & XFS_BLI_INODE_BUF) {
+> > -		if (xfs_sb_version_hascrc(&lip->li_mountp->m_sb) ||
+> > +		if (xfs_sb_version_has_large_dinode(&lip->li_mountp->m_sb) ||
+> >  		    !((bip->bli_flags & XFS_BLI_INODE_ALLOC_BUF) &&
+> >  		      xfs_log_item_in_current_chkpt(lip)))
+> >  			bip->__bli_format.blf_flags |= XFS_BLF_INODE_BUF;
+> > diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+> > index 6abc0863c9c3..e5e976b5cc11 100644
+> > --- a/fs/xfs/xfs_log_recover.c
+> > +++ b/fs/xfs/xfs_log_recover.c
+> > @@ -2997,7 +2997,7 @@ xlog_recover_inode_pass2(
+> >  	 * superblock flag to determine whether we need to look at di_flushiter
+> >  	 * to skip replay when the on disk inode is newer than the log one
+> >  	 */
+> > -	if (!xfs_sb_version_hascrc(&mp->m_sb) &&
+> > +	if (!xfs_sb_version_has_large_dinode(&mp->m_sb) &&
+> >  	    ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
+> >  		/*
+> >  		 * Deal with the wrap case, DI_MAX_FLUSH is less
+> > -- 
+> > 2.24.1
+> > 
+> 
