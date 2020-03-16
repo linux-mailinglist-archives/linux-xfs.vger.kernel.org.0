@@ -2,209 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 521001860A1
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 00:51:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94747186171
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Mar 2020 03:03:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgCOXvc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 15 Mar 2020 19:51:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37960 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgCOXvc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 15 Mar 2020 19:51:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02FNd5HB015558;
-        Sun, 15 Mar 2020 23:51:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=y9CNJE7+C+QnnXyVaKvz7mqPvc6XLY4cIN0O8sieVyw=;
- b=Ih2tyBB4uWFQxDM8IHUeyX8Lpxjhk8IiWAHmK2XJPR262fc+BzD5E9ju9IkHrqd49YP9
- jyRGpI0gTYD0UrFdDD1QA3nCBgaoarjq9Sh25f/KXjDDIBdGL03BtCiEPmjtT1TKq+Ia
- j+T5qqsP93mVPTZ9NGnjbaRRLNwWa7f8Vy7rBQ8kUMor/WoVQwKYFac5/Fg0566ao9yC
- sBL6y7zuRT/dORHBDHEsrgq/MK1IxdJi2Lh4kLJ30FySiMZmXOUGauXxWZvJ/qZjloUZ
- RRgUq3nhUW5TLuNLeP3ISSZwTbD3QR8VTmLA4LqnlTnTEaKV5tCaXleJFXw0Bjr5PISR sw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2yrppqv539-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Mar 2020 23:51:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02FNoRo0121866;
-        Sun, 15 Mar 2020 23:51:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2ys8yugbh9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Mar 2020 23:51:28 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02FNpR9M001635;
-        Sun, 15 Mar 2020 23:51:27 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 15 Mar 2020 16:51:27 -0700
-Subject: [PATCH 7/7] xfs: add support for rmap btree staging cursors
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
-Date:   Sun, 15 Mar 2020 16:51:26 -0700
-Message-ID: <158431628657.357791.17569681185422084457.stgit@magnolia>
-In-Reply-To: <158431623997.357791.9599758740528407024.stgit@magnolia>
-References: <158431623997.357791.9599758740528407024.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1729396AbgCPCDv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 15 Mar 2020 22:03:51 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54451 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729387AbgCPCDv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 15 Mar 2020 22:03:51 -0400
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E78263A4D07;
+        Mon, 16 Mar 2020 13:03:45 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jDf6U-00061N-TM; Mon, 16 Mar 2020 13:03:42 +1100
+Date:   Mon, 16 Mar 2020 13:03:42 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: Shutdown preventing umount
+Message-ID: <20200316020342.GP10776@dread.disaster.area>
+References: <20200314133107.4rv25sp4bvhbjjsx@two.firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003150129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9561 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=1 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003150129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314133107.4rv25sp4bvhbjjsx@two.firstfloor.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
+        a=7-415B0cAAAA:8 a=SoHpTpO9l86dxiEN2VAA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Sat, Mar 14, 2020 at 06:31:10AM -0700, Andi Kleen wrote:
+> 
+> Hi,
+> 
+> I had a cable problem on a USB connected XFS file system, triggering 
+> some IO errors, and the result was that any access to the mount point
+> resulted in EIO. This prevented unmounting the file system to recover
+> from the problem. 
 
-Add support for btree staging cursors for the rmap btrees.  This is
-needed both for online repair and also to convert xfs_repair to use
-btree bulk loading.
+Full dmesg output, please.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_rmap_btree.c |   67 ++++++++++++++++++++++++++++++++++------
- fs/xfs/libxfs/xfs_rmap_btree.h |    5 +++
- 2 files changed, 62 insertions(+), 10 deletions(-)
+> I also tried xfs_io with shutdown -f, but it had the same problem
+> because xfs_io couldn't access anything on the file system.
 
+Because the IO errors had already shut the filesystem down, as
+per the dmesg output you quoted below.
 
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index af7e4966416f..b7c05314d07c 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -14,6 +14,7 @@
- #include "xfs_trans.h"
- #include "xfs_alloc.h"
- #include "xfs_btree.h"
-+#include "xfs_btree_staging.h"
- #include "xfs_rmap.h"
- #include "xfs_rmap_btree.h"
- #include "xfs_trace.h"
-@@ -448,17 +449,12 @@ static const struct xfs_btree_ops xfs_rmapbt_ops = {
- 	.recs_inorder		= xfs_rmapbt_recs_inorder,
- };
- 
--/*
-- * Allocate a new allocation btree cursor.
-- */
--struct xfs_btree_cur *
--xfs_rmapbt_init_cursor(
-+static struct xfs_btree_cur *
-+xfs_rmapbt_init_common(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	struct xfs_buf		*agbp,
- 	xfs_agnumber_t		agno)
- {
--	struct xfs_agf		*agf = agbp->b_addr;
- 	struct xfs_btree_cur	*cur;
- 
- 	cur = kmem_zone_zalloc(xfs_btree_cur_zone, KM_NOFS);
-@@ -468,16 +464,67 @@ xfs_rmapbt_init_cursor(
- 	cur->bc_btnum = XFS_BTNUM_RMAP;
- 	cur->bc_flags = XFS_BTREE_CRC_BLOCKS | XFS_BTREE_OVERLAPPING;
- 	cur->bc_blocklog = mp->m_sb.sb_blocklog;
--	cur->bc_ops = &xfs_rmapbt_ops;
--	cur->bc_nlevels = be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]);
- 	cur->bc_statoff = XFS_STATS_CALC_INDEX(xs_rmap_2);
-+	cur->bc_ag.agno = agno;
-+	cur->bc_ops = &xfs_rmapbt_ops;
- 
-+	return cur;
-+}
-+
-+/* Create a new reverse mapping btree cursor. */
-+struct xfs_btree_cur *
-+xfs_rmapbt_init_cursor(
-+	struct xfs_mount	*mp,
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*agbp,
-+	xfs_agnumber_t		agno)
-+{
-+	struct xfs_agf		*agf = agbp->b_addr;
-+	struct xfs_btree_cur	*cur;
-+
-+	cur = xfs_rmapbt_init_common(mp, tp, agno);
-+	cur->bc_nlevels = be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]);
- 	cur->bc_ag.agbp = agbp;
--	cur->bc_ag.agno = agno;
-+	return cur;
-+}
-+
-+/* Create a new reverse mapping btree cursor with a fake root for staging. */
-+struct xfs_btree_cur *
-+xfs_rmapbt_stage_cursor(
-+	struct xfs_mount	*mp,
-+	struct xbtree_afakeroot	*afake,
-+	xfs_agnumber_t		agno)
-+{
-+	struct xfs_btree_cur	*cur;
- 
-+	cur = xfs_rmapbt_init_common(mp, NULL, agno);
-+	xfs_btree_stage_afakeroot(cur, afake);
- 	return cur;
- }
- 
-+/*
-+ * Install a new reverse mapping btree root.  Caller is responsible for
-+ * invalidating and freeing the old btree blocks.
-+ */
-+void
-+xfs_rmapbt_commit_staged_btree(
-+	struct xfs_btree_cur	*cur,
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*agbp)
-+{
-+	struct xfs_agf		*agf = agbp->b_addr;
-+	struct xbtree_afakeroot	*afake = cur->bc_ag.afake;
-+
-+	ASSERT(cur->bc_flags & XFS_BTREE_STAGING);
-+
-+	agf->agf_roots[cur->bc_btnum] = cpu_to_be32(afake->af_root);
-+	agf->agf_levels[cur->bc_btnum] = cpu_to_be32(afake->af_levels);
-+	agf->agf_rmap_blocks = cpu_to_be32(afake->af_blocks);
-+	xfs_alloc_log_agf(tp, agbp, XFS_AGF_ROOTS | XFS_AGF_LEVELS |
-+				    XFS_AGF_RMAP_BLOCKS);
-+	xfs_btree_commit_afakeroot(cur, tp, agbp, &xfs_rmapbt_ops);
-+}
-+
- /*
-  * Calculate number of records in an rmap btree block.
-  */
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.h b/fs/xfs/libxfs/xfs_rmap_btree.h
-index 820d668b063d..115c3455a734 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.h
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.h
-@@ -9,6 +9,7 @@
- struct xfs_buf;
- struct xfs_btree_cur;
- struct xfs_mount;
-+struct xbtree_afakeroot;
- 
- /* rmaps only exist on crc enabled filesystems */
- #define XFS_RMAP_BLOCK_LEN	XFS_BTREE_SBLOCK_CRC_LEN
-@@ -43,6 +44,10 @@ struct xfs_mount;
- struct xfs_btree_cur *xfs_rmapbt_init_cursor(struct xfs_mount *mp,
- 				struct xfs_trans *tp, struct xfs_buf *bp,
- 				xfs_agnumber_t agno);
-+struct xfs_btree_cur *xfs_rmapbt_stage_cursor(struct xfs_mount *mp,
-+		struct xbtree_afakeroot *afake, xfs_agnumber_t agno);
-+void xfs_rmapbt_commit_staged_btree(struct xfs_btree_cur *cur,
-+		struct xfs_trans *tp, struct xfs_buf *agbp);
- int xfs_rmapbt_maxrecs(int blocklen, int leaf);
- extern void xfs_rmapbt_compute_maxlevels(struct xfs_mount *mp);
- 
+> How is that supposed to work? Having to reboot just to recover
+> from IO errors doesn't seem to be very available.
+> 
+> I don't think shutdown should prevent unmounting.
 
+It doesn't. Something was leaked or not cleaned up properly,
+preventing the filesytem from being unmounted. You know, a bug...
+
+> From googling I found some old RHEL bugzilla that such a problem
+> was fixed in some RHEL release. Is that a regression? 
+
+RHEL has an upstream first policy, so whatever bug fix you find in
+a RHEL kernel is already in the upstream kernels.
+
+> This was on a 5.4.10 kernel.
+> 
+> I got lots of:
+> 
+>  XFS (...): metadata I/O error in "xfs_trans_read_buf_map" at daddr
+>  0x4a620288 len 8 error 5
+> 
+> Then some
+> 
+> XFS (...): writeback error on sector 7372099184
+> 
+> And finally:
+> 
+> XFS (...): log I/O error -5
+>  XFS (...): xfs_do_force_shutdown(0x2)
+> called from line 1250 of file fs/xfs/xfs_log.c. Return address =
+> 00000000f7956130
+> XFS (...): Log I/O Error Detected.
+> Shutting down filesystem
+> XFS (...): Please unmount the filesystem
+> and rectify the problem(s)
+> 
+> (very funny XFS!)
+> 
+> XFS (...): log I/O error -5
+> 
+> scsi 7:0:0:0: rejecting I/O to dead device
+
+Where is unmount stuck? 'echo w > /proc/sysrq-trigger' output if it
+is hung, 'echo l > /proc/sysrq-trigger' if it is spinning, please?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
