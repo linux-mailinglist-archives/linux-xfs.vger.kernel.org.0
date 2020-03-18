@@ -2,68 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2006C189FA8
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Mar 2020 16:30:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23621189FAB
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Mar 2020 16:31:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCRPav (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Mar 2020 11:30:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60470 "EHLO
+        id S1726495AbgCRPbi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Mar 2020 11:31:38 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32942 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCRPav (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Mar 2020 11:30:51 -0400
+        with ESMTP id S1726619AbgCRPbi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Mar 2020 11:31:38 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IFMwK4105617;
-        Wed, 18 Mar 2020 15:30:41 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IFMx7D107028;
+        Wed, 18 Mar 2020 15:31:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=yhEwCFGpiAMCpCo4ux/xOtf6GmhKURbdskOSVi67/c0=;
- b=gN5N3+dZEAP5iUPk+DM/1Ek1bxuXptBf9cCSBrW1pbqsW522ETK3OrN3QAIALmexJDlv
- vQhheYoQhLMdX/Cn2qLOgNxjVt78dZDk8+kWfOCw0k9ENXy6AcwOQtqEmAcc0jbIx08d
- wxnAtuh1Ydt+BhIyw21csb1QeX0O8iRtxFITxH4RPMD9C0PznBwqVapLMU4CQcljW5EC
- PTxrJzlsq0pOJH92NYkRVRXv3krerWEmrbLPRQo2X0WURzKzsWpj2IykjIfi/WLm928H
- HJroKj1m74S/SnUv5f5C8cLw6DidW+jgy/TuwXmS7N28ql80mazK+hyt3+Ap0daF3uk/ HA== 
+ bh=WKXeD42SKInVuX3g80nLM3efZ0JrSbly8FJaslbjMQA=;
+ b=yqTYK14B438MfDV0lLn5jnB6LG7sS1iAOkg+d8s95bYDkcEGRwHnTbXrRKaa5Uk/0D/d
+ Spe4QbDwV1v3M5wWVRGuPcg2jANRvejQlctJuXc+6mPwU+qo70gQyYrpp79jpVd9rxJw
+ y26rg/cT0jV7wRDqMfPvQZC4bTp1y8Qn0PuXnG54vuIJVg6yFqWNQ9ueX10lOV/8euSN
+ 6lqXGzyNp+2ZMLHbBDGkmNRSFwCKjXjCTyM8eafckjiR68EEuVHF07rjwOANre3iBcAD
+ Y2ox2paveAZoJNbIwC/QMJCYI/gd/n/V8a2yd6rkIUvrMOZwKRJIz2kV4MYg0PVJHhXC ew== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2yrpprbcbe-1
+        by userp2130.oracle.com with ESMTP id 2yrpprbcgg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 15:30:40 +0000
+        Wed, 18 Mar 2020 15:31:31 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IFLnjE133941;
-        Wed, 18 Mar 2020 15:30:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ys92gqakd-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IFLeZ0133381;
+        Wed, 18 Mar 2020 15:31:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ys92gqd3x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 15:30:40 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02IFUcTX032254;
-        Wed, 18 Mar 2020 15:30:39 GMT
+        Wed, 18 Mar 2020 15:31:30 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02IFVTDA021879;
+        Wed, 18 Mar 2020 15:31:29 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Mar 2020 08:30:38 -0700
-Date:   Wed, 18 Mar 2020 08:30:38 -0700
+        with ESMTP ; Wed, 18 Mar 2020 08:31:29 -0700
+Date:   Wed, 18 Mar 2020 08:31:28 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
         Chandan Rajendra <chandanrlinux@gmail.com>
-Subject: Re: [PATCH 4/5] xfs: simplify a check in
- xfs_ioctl_setattr_check_cowextsize
-Message-ID: <20200318153038.GY256767@magnolia>
+Subject: Re: [PATCH 3/5] xfs: simplify di_flags2 inheritance in xfs_ialloc
+Message-ID: <20200318153128.GZ256767@magnolia>
 References: <20200317185756.1063268-1-hch@lst.de>
- <20200317185756.1063268-5-hch@lst.de>
+ <20200317185756.1063268-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317185756.1063268-5-hch@lst.de>
+In-Reply-To: <20200317185756.1063268-4-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=810
  mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003180073
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
  suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
+ impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=855 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2003180073
 Sender: linux-xfs-owner@vger.kernel.org
@@ -71,38 +70,54 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 07:57:55PM +0100, Christoph Hellwig wrote:
-> Only v5 file systems can have the reflink feature, and those will
-> always use the large dinode format.  Remove the extra check for the
-> inode version.
+On Tue, Mar 17, 2020 at 07:57:54PM +0100, Christoph Hellwig wrote:
+> di_flags2 is initialized to zero for v4 and earlier file systems.  This
+> means di_flags2 can only be non-zero for a v5 file systems, in which
+> case both the parent and child inodes can store the field.  Remove the
+> extra di_version check, and also remove the rather pointless local
+> di_flags2 variable while at it.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > Reviewed-by: Brian Foster <bfoster@redhat.com>
 > Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 
-Looks good,
+Looks ok,
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/xfs_ioctl.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  fs/xfs/xfs_inode.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 5a1d2b9cb05a..ad825ffa7e4c 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1473,8 +1473,7 @@ xfs_ioctl_setattr_check_cowextsize(
->  	if (!(fa->fsx_xflags & FS_XFLAG_COWEXTSIZE))
->  		return 0;
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index d65d2509d5e0..dfb0a452a87d 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -907,20 +907,13 @@ xfs_ialloc(
 >  
-> -	if (!xfs_sb_version_hasreflink(&ip->i_mount->m_sb) ||
-> -	    ip->i_d.di_version != 3)
-> +	if (!xfs_sb_version_hasreflink(&ip->i_mount->m_sb))
->  		return -EINVAL;
->  
->  	if (fa->fsx_cowextsize == 0)
+>  			ip->i_d.di_flags |= di_flags;
+>  		}
+> -		if (pip &&
+> -		    (pip->i_d.di_flags2 & XFS_DIFLAG2_ANY) &&
+> -		    pip->i_d.di_version == 3 &&
+> -		    ip->i_d.di_version == 3) {
+> -			uint64_t	di_flags2 = 0;
+> -
+> +		if (pip && (pip->i_d.di_flags2 & XFS_DIFLAG2_ANY)) {
+>  			if (pip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE) {
+> -				di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
+> +				ip->i_d.di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
+>  				ip->i_d.di_cowextsize = pip->i_d.di_cowextsize;
+>  			}
+>  			if (pip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> -				di_flags2 |= XFS_DIFLAG2_DAX;
+> -
+> -			ip->i_d.di_flags2 |= di_flags2;
+> +				ip->i_d.di_flags2 |= XFS_DIFLAG2_DAX;
+>  		}
+>  		/* FALLTHROUGH */
+>  	case S_IFLNK:
 > -- 
 > 2.24.1
 > 
