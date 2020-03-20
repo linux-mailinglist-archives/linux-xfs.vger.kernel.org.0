@@ -2,272 +2,224 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A7C18CD44
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Mar 2020 12:52:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5657A18D0B1
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Mar 2020 15:25:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCTLwB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 20 Mar 2020 07:52:01 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:49833 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726814AbgCTLwA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 20 Mar 2020 07:52:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584705119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vay2uE4/QB4envo/zu0nnrwnCqE2yYBaEybF3nmpyuI=;
-        b=DIhlZWHlE5de8jzNNqkuAQUt6w4C6ULIa0bhe+BHzeoqE9BJyjKPkaWRXuiVJW21mVbZH9
-        0UidhADPR+Bj8uWiVSJVmcgMYDXx2Xx/LJMnsKtYhJMKZV4JvTt18PyqKgB3DPCQRNLTIv
-        njd5cHUJKvbXGueF8RH3qHpOQ3pvy0A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-5_dik0JbM1SlJ5C6SCWWSg-1; Fri, 20 Mar 2020 07:51:55 -0400
-X-MC-Unique: 5_dik0JbM1SlJ5C6SCWWSg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F5F68014D4;
-        Fri, 20 Mar 2020 11:51:54 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A75CD19C58;
-        Fri, 20 Mar 2020 11:51:53 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 07:51:51 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH 6/8] xfs: refactor xlog_state_clean_iclog
-Message-ID: <20200320115151.GA42814@bfoster>
-References: <20200320065311.28134-1-hch@lst.de>
- <20200320065311.28134-7-hch@lst.de>
+        id S1727835AbgCTOZQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 20 Mar 2020 10:25:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59716 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgCTOWd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 20 Mar 2020 10:22:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=jq1xqEfh1zKPMWFc0eKFngWbKFqaSlCjUUM4SK88mAo=; b=cPnzWaQhpjH/0rLywMuKzc+RbH
+        aeY46Kzgy6QRMVohOJqzMvB+j+3J4LDg4xNuOYFk/LcomQ15i8hybfxyzK14oCu2msCaLwR0hhuwD
+        I+aUQjt/TJmoBBkHHRaMPcitmlyA47zIjsNTn+J2mJ/c4qc7hcN6Lz22IDsHLxXYPOiGHXertPrer
+        7f5RofKfrqQrOEzYrc22wXm1RZfS8vNa23M2U17KUQiqOJIl5vBOOTxAsv1fQJHMqfApp9wsA5N67
+        52dh6pRc8M8qn1i0c/QDVA8UW0+fbROD2J8w+emiTxQvyMmVRo99f8dgYjSzKlP5QIxYch0UqvDB6
+        6SW5nsZA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFIXg-0000gx-VY; Fri, 20 Mar 2020 14:22:32 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: [PATCH v9 00/25] Change readahead API
+Date:   Fri, 20 Mar 2020 07:22:06 -0700
+Message-Id: <20200320142231.2402-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320065311.28134-7-hch@lst.de>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:53:09AM +0100, Christoph Hellwig wrote:
-> Factor out a few self-contained helpers from xlog_state_clean_iclog, and
-> update the documentation so it primarily documents why things happens
-> instead of how.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+This series adds a readahead address_space operation to replace the
+readpages operation.  The key difference is that pages are added to the
+page cache as they are allocated (and then looked up by the filesystem)
+instead of passing them on a list to the readpages operation and having
+the filesystem add them to the page cache.  It's a net reduction in
+code for each implementation, more efficient than walking a list, and
+solves the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
->  fs/xfs/xfs_log.c | 180 +++++++++++++++++++++++------------------------
->  1 file changed, 88 insertions(+), 92 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index 4f9303524efb..6facbb91b8a8 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -2540,111 +2540,107 @@ xlog_write(
->   *****************************************************************************
->   */
->  
-> +static void
-> +xlog_state_activate_iclog(
-> +	struct xlog_in_core	*iclog,
-> +	int			*iclogs_changed)
-> +{
-> +	ASSERT(list_empty_careful(&iclog->ic_callbacks));
-> +
-> +	/*
-> +	 * If the number of ops in this iclog indicate it just contains the
-> +	 * dummy transaction, we can change state into IDLE (the second time
-> +	 * around). Otherwise we should change the state into NEED a dummy.
-> +	 * We don't need to cover the dummy.
-> +	 */
-> +	if (*iclogs_changed == 0 &&
-> +	    iclog->ic_header.h_num_logops == cpu_to_be32(XLOG_COVER_OPS)) {
-> +		*iclogs_changed = 1;
-> +	} else {
-> +		/*
-> +		 * We have two dirty iclogs so start over.  This could also be
-> +		 * num of ops indicating this is not the dummy going out.
-> +		 */
-> +		*iclogs_changed = 2;
-> +	}
-> +
-> +	iclog->ic_state	= XLOG_STATE_ACTIVE;
-> +	iclog->ic_offset = 0;
-> +	iclog->ic_header.h_num_logops = 0;
-> +	memset(iclog->ic_header.h_cycle_data, 0,
-> +		sizeof(iclog->ic_header.h_cycle_data));
-> +	iclog->ic_header.h_lsn = 0;
-> +}
-> +
->  /*
-> - * An iclog has just finished IO completion processing, so we need to update
-> - * the iclog state and propagate that up into the overall log state. Hence we
-> - * prepare the iclog for cleaning, and then clean all the pending dirty iclogs
-> - * starting from the head, and then wake up any threads that are waiting for the
-> - * iclog to be marked clean.
-> - *
-> - * The ordering of marking iclogs ACTIVE must be maintained, so an iclog
-> - * doesn't become ACTIVE beyond one that is SYNCING.  This is also required to
-> - * maintain the notion that we use a ordered wait queue to hold off would be
-> - * writers to the log when every iclog is trying to sync to disk.
-> - *
-> - * Caller must hold the icloglock before calling us.
-> - *
-> - * State Change: !IOERROR -> DIRTY -> ACTIVE
-> + * Loop through all iclogs and mark all iclogs currently marked DIRTY as
-> + * ACTIVE after iclog I/O has completed.
->   */
-> -STATIC void
-> -xlog_state_clean_iclog(
-> +static void
-> +xlog_state_activate_iclogs(
->  	struct xlog		*log,
-> -	struct xlog_in_core	*dirty_iclog)
-> +	int			*iclogs_changed)
->  {
-> -	struct xlog_in_core	*iclog;
-> -	int			changed = 0;
-> -
-> -	/* Prepare the completed iclog. */
-> -	if (dirty_iclog->ic_state != XLOG_STATE_IOERROR)
-> -		dirty_iclog->ic_state = XLOG_STATE_DIRTY;
-> +	struct xlog_in_core	*iclog = log->l_iclog;
->  
-> -	/* Walk all the iclogs to update the ordered active state. */
-> -	iclog = log->l_iclog;
->  	do {
-> -		if (iclog->ic_state == XLOG_STATE_DIRTY) {
-> -			iclog->ic_state	= XLOG_STATE_ACTIVE;
-> -			iclog->ic_offset       = 0;
-> -			ASSERT(list_empty_careful(&iclog->ic_callbacks));
-> -			/*
-> -			 * If the number of ops in this iclog indicate it just
-> -			 * contains the dummy transaction, we can
-> -			 * change state into IDLE (the second time around).
-> -			 * Otherwise we should change the state into
-> -			 * NEED a dummy.
-> -			 * We don't need to cover the dummy.
-> -			 */
-> -			if (!changed &&
-> -			   (be32_to_cpu(iclog->ic_header.h_num_logops) ==
-> -			   		XLOG_COVER_OPS)) {
-> -				changed = 1;
-> -			} else {
-> -				/*
-> -				 * We have two dirty iclogs so start over
-> -				 * This could also be num of ops indicates
-> -				 * this is not the dummy going out.
-> -				 */
-> -				changed = 2;
-> -			}
-> -			iclog->ic_header.h_num_logops = 0;
-> -			memset(iclog->ic_header.h_cycle_data, 0,
-> -			      sizeof(iclog->ic_header.h_cycle_data));
-> -			iclog->ic_header.h_lsn = 0;
-> -		} else if (iclog->ic_state == XLOG_STATE_ACTIVE)
-> -			/* do nothing */;
-> -		else
-> -			break;	/* stop cleaning */
-> -		iclog = iclog->ic_next;
-> -	} while (iclog != log->l_iclog);
-> -
-> +		if (iclog->ic_state == XLOG_STATE_DIRTY)
-> +			xlog_state_activate_iclog(iclog, iclogs_changed);
-> +		/*
-> +		 * The ordering of marking iclogs ACTIVE must be maintained, so
-> +		 * an iclog doesn't become ACTIVE beyond one that is SYNCING.
-> +		 */
-> +		else if (iclog->ic_state != XLOG_STATE_ACTIVE)
-> +			break;
-> +	} while ((iclog = iclog->ic_next) != log->l_iclog);
-> +}
->  
-> +static int
-> +xlog_covered_state(
-> +	int			prev_state,
-> +	int			iclogs_changed)
-> +{
->  	/*
-> -	 * Wake up threads waiting in xfs_log_force() for the dirty iclog
-> -	 * to be cleaned.
-> +	 * We usually go to NEED. But we go to NEED2 if the changed indicates we
-> +	 * are done writing the dummy record.  If we are done with the second
-> +	 * dummy recored (DONE2), then we go to IDLE.
->  	 */
-> -	wake_up_all(&dirty_iclog->ic_force_wait);
-> +	switch (prev_state) {
-> +	case XLOG_STATE_COVER_IDLE:
-> +	case XLOG_STATE_COVER_NEED:
-> +	case XLOG_STATE_COVER_NEED2:
-> +		break;
-> +	case XLOG_STATE_COVER_DONE:
-> +		if (iclogs_changed == 1)
-> +			return XLOG_STATE_COVER_NEED2;
-> +		break;
-> +	case XLOG_STATE_COVER_DONE2:
-> +		if (iclogs_changed == 1)
-> +			return XLOG_STATE_COVER_IDLE;
-> +		break;
-> +	default:
-> +		ASSERT(0);
-> +	}
->  
-> -	/*
-> -	 * Change state for the dummy log recording.
-> -	 * We usually go to NEED. But we go to NEED2 if the changed indicates
-> -	 * we are done writing the dummy record.
-> -	 * If we are done with the second dummy recored (DONE2), then
-> -	 * we go to IDLE.
-> -	 */
-> -	if (changed) {
-> -		switch (log->l_covered_state) {
-> -		case XLOG_STATE_COVER_IDLE:
-> -		case XLOG_STATE_COVER_NEED:
-> -		case XLOG_STATE_COVER_NEED2:
-> -			log->l_covered_state = XLOG_STATE_COVER_NEED;
-> -			break;
-> +	return XLOG_STATE_COVER_NEED;
-> +}
->  
-> -		case XLOG_STATE_COVER_DONE:
-> -			if (changed == 1)
-> -				log->l_covered_state = XLOG_STATE_COVER_NEED2;
-> -			else
-> -				log->l_covered_state = XLOG_STATE_COVER_NEED;
-> -			break;
-> +STATIC void
-> +xlog_state_clean_iclog(
-> +	struct xlog		*log,
-> +	struct xlog_in_core	*dirty_iclog)
-> +{
-> +	int			iclogs_changed = 0;
->  
-> -		case XLOG_STATE_COVER_DONE2:
-> -			if (changed == 1)
-> -				log->l_covered_state = XLOG_STATE_COVER_IDLE;
-> -			else
-> -				log->l_covered_state = XLOG_STATE_COVER_NEED;
-> -			break;
-> +	if (dirty_iclog->ic_state != XLOG_STATE_IOERROR)
-> +		dirty_iclog->ic_state = XLOG_STATE_DIRTY;
->  
-> -		default:
-> -			ASSERT(0);
-> -		}
-> +	xlog_state_activate_iclogs(log, &iclogs_changed);
-> +	wake_up_all(&dirty_iclog->ic_force_wait);
-> +
-> +	if (iclogs_changed) {
-> +		log->l_covered_state = xlog_covered_state(log->l_covered_state,
-> +				iclogs_changed);
->  	}
->  }
->  
-> -- 
-> 2.25.1
-> 
+The only unconverted filesystems are those which use fscache.  Their
+conversion is pending Dave Howells' rewrite which will make the conversion
+substantially easier.  This should be completed by the end of the year.
 
+I want to thank the reviewers/testers; Dave Chinner, John Hubbard,
+Eric Biggers, Johannes Thumshirn, Dave Sterba, Zi Yan and Christoph
+Hellwig have done a marvellous job of providing constructive criticism.
+
+These patches pass an xfstests run on ext4, xfs & btrfs with no
+regressions that I can tell (some of the tests seem a little flaky before
+and remain flaky afterwards).
+
+This series can also be found at
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v9
+
+v9: No code changes.  Fixed a changelog and added some reviewed-by tags.
+
+v8:
+ - btrfs, ext4 and xfs all survive an xfstests run (thanks to Kent Overstreet
+   for providing the ktest framework)
+ - iomap restructuring dropped due to Christoph's opposition and the
+   redesign of readahead_page() meaning it wasn't needed any more.
+ - f2fs_mpage_readpages() made static again
+ - Made iomap_readahead() comment more useful
+ - Added kernel-doc for the entire readahead_control API
+ - Conditionally zero batch_count in readahead_page() (requested by John)
+ - Hold RCU read lock while iterating over the xarray in readahead_page_batch()
+ - Iterate over the correct pages in readahead_page_batch()
+ - Correct the return type of readahead_index() (spotted by Zi Yan)
+ - Added a 'skip_page' parameter to read_pages for better documentation
+   purposes and so we can reuse the readahead_control higher in the call
+   chain in future.
+ - Removed the use_list bool (requested by Christoph)
+ - Removed the explicit initialisation of _nr_pages to 0 (requested by
+   Christoph & John)
+ - Add comments explaining why nr_to_read is being capped (requested by John)
+ - Reshuffled some of the patches:
+   - Split out adding the readahead_control API from the three patches which
+     added it piecemeal
+   - Shift the final two mm patches to be with the other mm patches
+   - Split the f2fs "pass the inode" patch from the "convert to readahead"
+     patch, like ext4
+
+v7:
+ - Now passes an xfstests run on ext4!
+ - Documentation improvements
+ - Move the readahead prototypes out of mm.h (new patch)
+ - readahead_for_each* iterators are gone; replaced with readahead_page()
+   and readahead_page_batch()
+ - page_cache_readahead_limit() renamed to page_cache_readahead_unbounded()
+   and arguments changed
+ - iomap_readahead_actor() restructured differently
+ - The readahead code no longer uses the word 'offset' to reduce ambiguity
+ - read_pages() now maintains the rac so we can just call it and continue
+   instead of mucking around with branches
+ - More assertions
+ - More readahead functions return void
+
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
+
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
+
+Matthew Wilcox (Oracle) (25):
+  mm: Move readahead prototypes from mm.h
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Move readahead nr_pages check into read_pages
+  mm: Add new readahead_control API
+  mm: Use readahead_control to pass arguments
+  mm: Rename various 'offset' parameters to 'index'
+  mm: rename readahead loop variable to 'i'
+  mm: Remove 'page_offset' from readahead loop
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Move end_index check out of readahead loop
+  mm: Add page_cache_readahead_unbounded
+  mm: Document why we don't set PageReadahead
+  mm: Use memalloc_nofs_save in readahead path
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  ext4: Pass the inode to ext4_mpage_readpages
+  f2fs: Convert from readpages to readahead
+  f2fs: Pass the inode to f2fs_mpage_readpages
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
+
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  15 ++
+ block/blk-core.c                      |   1 +
+ drivers/staging/exfat/exfat_super.c   |   7 +-
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  46 ++---
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +-
+ fs/erofs/data.c                       |  39 ++--
+ fs/erofs/zdata.c                      |  29 +--
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   5 +-
+ fs/ext4/inode.c                       |  21 +-
+ fs/ext4/readpage.c                    |  25 +--
+ fs/ext4/verity.c                      |  35 +---
+ fs/f2fs/data.c                        |  50 ++---
+ fs/f2fs/f2fs.h                        |   3 -
+ fs/f2fs/verity.c                      |  35 +---
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  46 ++---
+ fs/gfs2/aops.c                        |  23 +--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                |  92 +++------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 +---
+ fs/nilfs2/inode.c                     |  15 +-
+ fs/ocfs2/aops.c                       |  34 ++--
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mm.h                    |  19 --
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               | 151 ++++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/fadvise.c                          |   6 +-
+ mm/internal.h                         |  12 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 278 ++++++++++++++++----------
+ 46 files changed, 580 insertions(+), 589 deletions(-)
+
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+-- 
+2.25.1
