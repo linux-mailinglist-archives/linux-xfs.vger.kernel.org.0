@@ -2,197 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9185191805
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Mar 2020 18:45:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC4619190C
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Mar 2020 19:26:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgCXRpV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Mar 2020 13:45:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54156 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRpU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 13:45:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=SK0iPtyANh19UBJzIvjAVNCxYDNIMyFeAHSobzjfq8k=; b=BHSEZ9Q4aJ7ZuSWIhBTWE759KH
-        0vXTFZL/YQWGnY/afiOIzNRqk7XRpqPYPqoEvBBuughm0EyHUWfONsHcC2p3gzRLFoU88nBdzFVYe
-        mcLIV0uLxqthur3KAj94Gbiy+zlZRcS6g/RxXcABRNGuSdGiIuDuB6aUattJ0xwGo1znBSHwF40qa
-        /hAToo9SZLzWLQ7UftFNdUN0McSMrGoe5pBOseo82KdvrOfaGZVYbjXj4FqKL5LnpLhme5WM/zEH8
-        YDmAXw4vMc7FcexD4+HnruYPreVoKheUvD09pdJSHtuZ5b5ru/974itjiNbBCHFpvRgAhTSkxexiD
-        2v1PiXXg==;
-Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGnc8-0003J5-3n; Tue, 24 Mar 2020 17:45:20 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Cc:     david@fromorbit.com, Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: [PATCH 8/8] xfs: remove some stale comments from the log code
-Date:   Tue, 24 Mar 2020 18:44:59 +0100
-Message-Id: <20200324174459.770999-9-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324174459.770999-1-hch@lst.de>
-References: <20200324174459.770999-1-hch@lst.de>
+        id S1727999AbgCXS0H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Mar 2020 14:26:07 -0400
+Received: from mail1.g1.pair.com ([66.39.3.162]:13168 "EHLO mail1.g1.pair.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727398AbgCXS0G (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 24 Mar 2020 14:26:06 -0400
+Received: from mail1.g1.pair.com (localhost [127.0.0.1])
+        by mail1.g1.pair.com (Postfix) with ESMTP id 298B95474CE;
+        Tue, 24 Mar 2020 14:26:06 -0400 (EDT)
+Received: from harpe.intellique.com (labo.djinux.com [82.225.196.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail1.g1.pair.com (Postfix) with ESMTPSA id A987B60AFA3;
+        Tue, 24 Mar 2020 14:26:05 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 19:26:10 +0100
+From:   Emmanuel Florac <eflorac@intellique.com>
+To:     Pawan Prakash Sharma <pawanprakash101@gmail.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: xfs duplicate UUID
+Message-ID: <20200324192610.0f19a868@harpe.intellique.com>
+In-Reply-To: <CABS7VHB2FJdCz+F+3y86wawmBSuaVmfnC57edHVsoRugAK2Nsg@mail.gmail.com>
+References: <CABS7VHBR1TqgdKEvN8pnRH8ZxZZUeEFm6pFfaygOzv0781QrRg@mail.gmail.com>
+        <20200324183819.36aa5448@harpe.intellique.com>
+        <CABS7VHB2FJdCz+F+3y86wawmBSuaVmfnC57edHVsoRugAK2Nsg@mail.gmail.com>
+Organization: Intellique
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-slackware-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/tObYrmr10NaIaJYd1mMz8Uu"; protocol="application/pgp-signature"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+--Sig_/tObYrmr10NaIaJYd1mMz8Uu
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_log.c | 59 +++++++++++-------------------------------------
- 1 file changed, 13 insertions(+), 46 deletions(-)
+Le Tue, 24 Mar 2020 23:14:03 +0530
+Pawan Prakash Sharma <pawanprakash101@gmail.com> =C3=A9crivait:
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 1d6ed696f717..521fe77e3aaa 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -463,14 +463,6 @@ xfs_log_reserve(
- 	return error;
- }
- 
--
--/*
-- * NOTES:
-- *
-- *	1. currblock field gets updated at startup and after in-core logs
-- *		marked as with WANT_SYNC.
-- */
--
- /*
-  * Write out an unmount record using the ticket provided. We have to account for
-  * the data space used in the unmount ticket as this write is not done from a
-@@ -1910,7 +1902,7 @@ xlog_dealloc_log(
- 	log->l_mp->m_log = NULL;
- 	destroy_workqueue(log->l_ioend_workqueue);
- 	kmem_free(log);
--}	/* xlog_dealloc_log */
-+}
- 
- /*
-  * Update counters atomically now that memcpy is done.
-@@ -2454,14 +2446,6 @@ xlog_write(
- 	return error;
- }
- 
--
--/*****************************************************************************
-- *
-- *		State Machine functions
-- *
-- *****************************************************************************
-- */
--
- static void
- xlog_state_activate_iclog(
- 	struct xlog_in_core	*iclog,
-@@ -2822,7 +2806,7 @@ xlog_state_done_syncing(
- 	 */
- 	wake_up_all(&iclog->ic_write_wait);
- 	spin_unlock(&log->l_icloglock);
--	xlog_state_do_callback(log);	/* also cleans log */
-+	xlog_state_do_callback(log);
- }
- 
- /*
-@@ -2942,13 +2926,14 @@ xlog_state_get_iclog_space(
- 
- 	*logoffsetp = log_offset;
- 	return 0;
--}	/* xlog_state_get_iclog_space */
-+}
- 
- /*
-- * The first cnt-1 times through here we don't need to move the grant write head
-- * because the permanent reservation has reserved cnt times the unit amount.
-- * Release part of current permanent unit reservation and reset current
-- * reservation to be one units worth.  Also move grant reservation head forward.
-+ * The first cnt-1 times a ticket goes through here we don't need to move the
-+ * grant write head because the permanent reservation has reserved cnt times the
-+ * unit amount.  Release part of current permanent unit reservation and reset
-+ * current reservation to be one units worth.  Also move grant reservation head
-+ * forward.
-  */
- void
- xlog_ticket_regrant(
-@@ -3030,12 +3015,8 @@ xlog_ticket_done(
- }
- 
- /*
-- * Mark the current iclog in the ring as WANT_SYNC and move the current iclog
-- * pointer to the next iclog in the ring.
-- *
-- * When called from xlog_state_get_iclog_space(), the exact size of the iclog
-- * has not yet been determined, all we know is that we have run out of space in
-- * the current iclog.
-+ * This routine will mark the current iclog in the ring as WANT_SYNC and move
-+ * the current iclog pointer to the next iclog in the ring.
-  */
- STATIC void
- xlog_state_switch_iclogs(
-@@ -3080,7 +3061,7 @@ xlog_state_switch_iclogs(
- 	}
- 	ASSERT(iclog == log->l_iclog);
- 	log->l_iclog = iclog->ic_next;
--}	/* xlog_state_switch_iclogs */
-+}
- 
- /*
-  * Write out all data in the in-core log as of this exact moment in time.
-@@ -3287,13 +3268,6 @@ xfs_log_force_lsn(
- 	return ret;
- }
- 
--/*****************************************************************************
-- *
-- *		TICKET functions
-- *
-- *****************************************************************************
-- */
--
- /*
-  * Free a used ticket when its refcount falls to zero.
-  */
-@@ -3450,13 +3424,6 @@ xlog_ticket_alloc(
- 	return tic;
- }
- 
--
--/******************************************************************************
-- *
-- *		Log debug routines
-- *
-- ******************************************************************************
-- */
- #if defined(DEBUG)
- /*
-  * Make sure that the destination ptr is within the valid data region of
-@@ -3542,7 +3509,7 @@ xlog_verify_tail_lsn(
- 	if (blocks < BTOBB(iclog->ic_offset) + 1)
- 		xfs_emerg(log->l_mp, "%s: ran out of log space", __func__);
-     }
--}	/* xlog_verify_tail_lsn */
-+}
- 
- /*
-  * Perform a number of checks on the iclog before writing to disk.
-@@ -3645,7 +3612,7 @@ xlog_verify_iclog(
- 		}
- 		ptr += sizeof(xlog_op_header_t) + op_len;
- 	}
--}	/* xlog_verify_iclog */
-+}
- #endif
- 
- /*
--- 
-2.25.1
+> > Did you try to mount it with the "nouuid" option? =20
+>=20
+> yes, that is working fine. I am able to mount it. But I am not sure
+> the side effect of doing that as there will not be any uuid generated
+> and xfsdump/xfsrestore might need that. Correct me if I am wrong.
+>=20
 
+Your problem is that the log is dirty. You need to mount it once to
+clean up the log, then you'll be able to change the UUID.
+
+--=20
+------------------------------------------------------------------------
+Emmanuel Florac     |   Direction technique
+                    |   Intellique
+                    |	<eflorac@intellique.com>
+                    |   +33 1 78 94 84 02
+------------------------------------------------------------------------
+
+--Sig_/tObYrmr10NaIaJYd1mMz8Uu
+Content-Type: application/pgp-signature
+Content-Description: Signature digitale OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iEUEARECAAYFAl56UMMACgkQX3jQXNUicVaDrACdHMrhl+zNBoUk1JCxQuVkaiiH
+DOsAmNSB+plhsPMVdEMSDVCDBIKgpRs=
+=m+0Y
+-----END PGP SIGNATURE-----
+
+--Sig_/tObYrmr10NaIaJYd1mMz8Uu--
