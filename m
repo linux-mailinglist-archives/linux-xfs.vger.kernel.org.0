@@ -2,87 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA2911917ED
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Mar 2020 18:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F144191806
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Mar 2020 18:45:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCXRok (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Mar 2020 13:44:40 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:45062 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgCXRok (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 13:44:40 -0400
-Received: by mail-io1-f46.google.com with SMTP id e20so18624576ios.12
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Mar 2020 10:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V6JedzL6u61A7D0hhMvUxsEO4hYeFJt1Ckp3ppCb1d0=;
-        b=bWmdgMQsgIbfDLCJHozH5GNK4iCLUIOuHVtKH1NPtkB4Yf8mhGk3qGQ3RLr7QSkUKr
-         6HzqeOYZ7ryLERZjvYmNP9Bn7vLeIXdB1gJb+M8i1CPE/I8otJZVLXRXfpW4Whz9Faye
-         ohCc97Zjb2PQRG5uiLzHRmghODvwOsC+wL6g0rpiYOlpp+Zu3CoDaDIi86eiI7slWekq
-         cx7WTPdyT5b0ueLRHJdGfHvjiAOVkHpKdqSLGP9249VRFz+Wawc77VdgUWLgkob7ddYa
-         ff/9g7jGf1z/ryyi1aemjKfTzO4SNP/Z6kThO7caBVaY1p3qacmsvwrRNn77mN/X3K5c
-         +UhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=V6JedzL6u61A7D0hhMvUxsEO4hYeFJt1Ckp3ppCb1d0=;
-        b=QjkPTPattBaTxj7Dr9FGx+cY3XxZ1kbt/G9ncknB/Cj9fMNa8IKNcy6lSt6wAx0nlV
-         KxSE7O0yxpeTLlHsNtU43SutQgnkJOePlIVCkmIhMnh+i+gpDNk7MjtbjdTEM3v8SDsN
-         CAEvp4qEE/DW4eLByyCSqvh1ATF7ntnOT/I+rR2E2rSWkbtzEk+8EPHnhuKKftZ5Ogxk
-         h0Db761ZcJrMtNas1Sg6ltINLs5GrG7+fP0jG/QqJcG/HOm+1lejAZkpXXHL+5P4Vf7N
-         monkvKDBBD2XJm8ttKF9ypCXmC7a7YuUDXZsQz6Egcxe+NHblmTCSpn5WCaFA9Fbx9ev
-         RGCA==
-X-Gm-Message-State: ANhLgQ3KYljBcRsVrrzKuITuxl9Nu+Ixn3V6cQ5mEiobpUnEO27QuGvB
-        L9/ng30VLHeBnThmJWRl2w8GYkw9F/tSKl+rFQpfLJKc
-X-Google-Smtp-Source: ADFU+vukT7vegJmhKa/so77cMoZxvjm22Ee84os6mIGjiY7TqKGTnuQpPU+s1UAQQ7xpXbiCfEatbOvVwkfP+GtqHYA=
-X-Received: by 2002:a5d:8a10:: with SMTP id w16mr13438055iod.153.1585071879338;
- Tue, 24 Mar 2020 10:44:39 -0700 (PDT)
+        id S1728005AbgCXRpV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Mar 2020 13:45:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54008 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbgCXRpB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 13:45:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=PV5J0mGLxU4eiHQQnH1GkoT6GYPqXAjVUwics11qB3w=; b=s0CU0o0/4Jc1xNI3jPBkrfcUHX
+        B5gTwLn0cxqfZBc4BECQJd2eTtHhW7fmpkaWaVSDioDUc9P5Jn9O7VEnPyg9dORNFwotd91SCCDC4
+        1DovjJW2Ib+X8n65bh+qfeullvsEWb5pzMPZPbdKNxMJ8l2rnXXsYD55lOJxfqpQ7vwAmlYAQ33vV
+        gCAalEOL/1V07s/BzLz0+YQ/Gn2mxBhcaWiHrqezMfOem0HYZHI2hBB0GGQu0IceTDYb0NEtJwR+/
+        LCba3js1wSginA3rhwGFXDaoYBtJiUEyEldPSPeuqIGjGA8MdDot28mDesRzKyd3UkhKHUUXhsTSp
+        SR6qTGoA==;
+Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGnbo-00021y-Vc; Tue, 24 Mar 2020 17:45:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-xfs@vger.kernel.org
+Cc:     david@fromorbit.com
+Subject: xfs: clean up log tickets and record writes v3
+Date:   Tue, 24 Mar 2020 18:44:51 +0100
+Message-Id: <20200324174459.770999-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CABS7VHBR1TqgdKEvN8pnRH8ZxZZUeEFm6pFfaygOzv0781QrRg@mail.gmail.com>
- <20200324183819.36aa5448@harpe.intellique.com>
-In-Reply-To: <20200324183819.36aa5448@harpe.intellique.com>
-From:   Pawan Prakash Sharma <pawanprakash101@gmail.com>
-Date:   Tue, 24 Mar 2020 23:14:03 +0530
-Message-ID: <CABS7VHB2FJdCz+F+3y86wawmBSuaVmfnC57edHVsoRugAK2Nsg@mail.gmail.com>
-Subject: Re: xfs duplicate UUID
-To:     Emmanuel Florac <eflorac@intellique.com>
-Cc:     linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> Did you try to mount it with the "nouuid" option?
+This series follows up on conversions about relogging infrastructure
+and the way xfs_log_done() does two things but only one of several
+callers uses both of those functions. It also pointed out that
+xfs_trans_commit() never writes to the log anymore, so only
+checkpoints pass a ticket to xlog_write() with this flag set and
+no transaction makes multiple calls to xlog_write() calls on the
+same ticket. Hence there's no real need for XLOG_TIC_INITED to track
+whether a ticket has written a start record to the log anymore.
 
-yes, that is working fine. I am able to mount it. But I am not sure
-the side effect of doing that as there will not be any uuid generated
-and xfsdump/xfsrestore might need that. Correct me if I am wrong.
+A lot of further cleanups fell out of this. Once we no longer use
+XLOG_TIC_INITED to carry state inside the write loop, the logic
+can be simplified in both xlog_write and xfs_log_done. xfs_log_done
+can be split up, and then the call chain can be flattened because
+xlog_write_done() and xlog_commit_record() are basically the same.
 
-Regards,
-Pawan.
+This then leads to cleanups writing both commit and unmount records.
 
-On Tue, Mar 24, 2020 at 11:08 PM Emmanuel Florac <eflorac@intellique.com> w=
-rote:
->
-> Le Tue, 24 Mar 2020 21:43:25 +0530
-> Pawan Prakash Sharma <pawanprakash101@gmail.com> =C3=A9crivait:
->
-> > Now, when I am creating a ZFS snapshot and ZFS clone and trying to
-> > mount the clone filesystem, I am getting duplicate UUID error and I am
-> > not able to moiunt it.
-> >
->
-> Did you try to mount it with the "nouuid" option?
->
-> --
-> ------------------------------------------------------------------------
-> Emmanuel Florac     |   Direction technique
->                     |   Intellique
->                     |   <eflorac@intellique.com>
->                     |   +33 1 78 94 84 02
-> ------------------------------------------------------------------------
+Finally, to complete what started all this, the XLOG_TIC_INITED flag
+is removed.
+
+A git tree is avaiblable here:
+
+    git://git.infradead.org/users/hch/xfs.git xlog-ticket-cleanup.3
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xlog-ticket-cleanup.3
+
+Changes since v2:
+ - fix a commit message typo
+ - move the XLOG_TIC_INITED earlier, and move another hunk to this patch
+ - keep checking for XLOG_FORCED_SHUTDOWN and skip regrants
+ - merge the two patches for refactoring and renaming the log unmount
+   record handling
+
+Changes since v1:
+ - taking this over from Dave (for now) as he is still injured, an it
+   interacts closely with my log error handling bits
+ - rebased on top of for-next + the "more log cleanups" series
+ - fix an accounting error in xlog_write
+ - use a bool for the ticket header in xlog_write
+ - add a new patch to split xlog_ticket_done
