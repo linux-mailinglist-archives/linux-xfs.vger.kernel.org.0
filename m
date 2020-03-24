@@ -2,64 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E319191D7A
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 00:24:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E52F191D9E
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 00:44:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgCXXY1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Mar 2020 19:24:27 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:51305 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726257AbgCXXY0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 19:24:26 -0400
+        id S1726943AbgCXXol (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Mar 2020 19:44:41 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58863 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726212AbgCXXol (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 19:44:41 -0400
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 88FC73A36AC;
-        Wed, 25 Mar 2020 10:24:25 +1100 (AEDT)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 368227EB12E;
+        Wed, 25 Mar 2020 10:44:39 +1100 (AEDT)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1jGsuG-0005MK-Tj; Wed, 25 Mar 2020 10:24:24 +1100
-Date:   Wed, 25 Mar 2020 10:24:24 +1100
+        id 1jGtDq-0005ZU-5V; Wed, 25 Mar 2020 10:44:38 +1100
+Date:   Wed, 25 Mar 2020 10:44:38 +1100
 From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: shutdown on failure to add page to log bio
-Message-ID: <20200324232424.GC10776@dread.disaster.area>
-References: <20200324165700.7575-1-bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 5/5] xfs_io: set exitcode on failure appropriately
+Message-ID: <20200324234438.GD10776@dread.disaster.area>
+References: <20200324001928.17894-1-david@fromorbit.com>
+ <20200324001928.17894-6-david@fromorbit.com>
+ <ca7c97de-f3ea-2bbb-98b6-26f8da1fca0c@sandeen.net>
+ <20200324231255.GZ10776@dread.disaster.area>
+ <20200324232401.GT29339@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324165700.7575-1-bfoster@redhat.com>
+In-Reply-To: <20200324232401.GT29339@magnolia>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=7-415B0cAAAA:8 a=Pxj_UvL8w9lO6SR3jQAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=4e34b6Gni3NOzRK8PJQA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:57:00PM -0400, Brian Foster wrote:
-> If the bio_add_page() call fails, we proceed to write out a
-> partially constructed log buffer. This corrupts the physical log
-> such that log recovery is not possible. Worse, persistent
-> occurrences of this error eventually lead to a BUG_ON() failure in
-> bio_split() as iclogs wrap the end of the physical log, which
-> triggers log recovery on subsequent mount.
+On Tue, Mar 24, 2020 at 04:24:01PM -0700, Darrick J. Wong wrote:
+> On Wed, Mar 25, 2020 at 10:12:55AM +1100, Dave Chinner wrote:
+> > On Tue, Mar 24, 2020 at 03:57:26PM -0500, Eric Sandeen wrote:
+> > > On 3/23/20 7:19 PM, Dave Chinner wrote:
+> > > > From: Dave Chinner <dchinner@redhat.com>
+> > > > 
+> > > > Many operations don't set the exitcode when they fail, resulting
+> > > > in xfs_io exiting with a zero (no failure) exit code despite the
+> > > > command failing and returning an error. The command return code is
+> > > > really a boolean to tell the libxcmd command loop whether to
+> > > > continue processing or not, while exitcode is the actual xfs_io exit
+> > > > code returned to the parent on exit.
+> > > > 
+> > > > This patchset just makes the code do the right thing. It's not the
+> > > > nicest code, but it's a start at producing correct behaviour.
+> > > > 
+> > > > Signed-Off-By: Dave Chinner <dchinner@redhat.com>
+> > > 
+> > > I wonder if there somewhere we could formally document these conventions...
+> > > 
+> > > Like maybe at least near the "exitcode" global declaration?
+> > 
+> > I really think we need to rework the way we do the error handling
+> > in the command line parsing for these utilities. One of the things I
+> > found in doing this is that most of the code does return error codes
+> > to the main function, only then to drop it on the floor and turn it
+> > into "exitcode = 1; return 0;" pair.
+> > 
+> > So I'm pondering how to make this much simpler - returning error
+> > codes from the command functions would be a much better idea,
+> > then have a command flag to indicate whether we continue on error or
+> > terminate.
+> > 
+> > That moves all the exit code handling out of the commands and
+> > provides consistent error handling for all commands and
+> > infrastructure - 0 = success, failure returns negative errno - and
+> > so should enable much more reliable and consistent error handling
+> > across all the utilities....
+> 
+> It seems reasonable to me, though I wonder how fstests will react to
+> that.  Then again, a lot of xfs_io error handling seems to be done via
+> grep so maybe it wouldn't be that bad. :)
 
-I'm a little unclear on how this can happen - the iclogbuf can only
-be 256kB - 64 pages - and we always allocation a bio with enough
-bvecs to hold 64 pages. And the ic_data buffer we are adding to the
-bio is also statically allocated so I'm left to wonder exactly how
-this is failing.
-
-i.e. this looks like code that shouldn't ever fail, yet it
-apparently is, and I have no idea what is causing that failure...
-
-That said, shutting down on failure is the right thing to do, so the
-code looks good. I just want to know how the bio_add_page() failure
-is occurring.
+Pretty much. I don't think it will have much impact at all. This
+patch hasn't caused any new failures in my fstests runs at all, so I
+don't think further work to simplify this functionality will cause
+new problems, either...
 
 Cheers,
 
