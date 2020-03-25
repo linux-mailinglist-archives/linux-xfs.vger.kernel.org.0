@@ -2,83 +2,182 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04CE3192857
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 13:29:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBB8219287A
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 13:34:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgCYM2s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Mar 2020 08:28:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55496 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbgCYM2q (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Mar 2020 08:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bOpFqUPJ9bS+4ZDNHjIcr3PqAyINL9efeQnE7Z928sM=; b=kNWzkfmPTk9pYHmfxP86DPRPIq
-        M/Ipv+fQiCkDkwXVpxqu3vzY7CjHK4yUGuRcjtkjXDrmI5QP67iBFuZ7wmzjWBRflzTR4Oc10Y3Tw
-        TxZGNoKsEh6OdYFpqm6hndtv7nBc0nbnSt/wF5ed6xS4syPSNC5uKBNw5gu3GTreDVpUkm2vzqIHs
-        2+NSFdsEglJWkR3iq/8Z4aBgwd4eOWC15tQTykGwIj32DdexPLlCe17ITG83vlBMg3Y7I0hu0ytef
-        96sPrnpgCWNGDBo9diiyYhgbp2R0CAcMwkft9oMIFOoTsjaSOofASaFSKdfAc4+7LfRhpUx2citl6
-        pM8QRVRA==;
-Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH59C-0003No-4o; Wed, 25 Mar 2020 12:28:38 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] fs: clean up generic_update_time a bit
-Date:   Wed, 25 Mar 2020 13:28:25 +0100
-Message-Id: <20200325122825.1086872-5-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200325122825.1086872-1-hch@lst.de>
-References: <20200325122825.1086872-1-hch@lst.de>
+        id S1726700AbgCYMdX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Mar 2020 08:33:23 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43870 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727177AbgCYMdX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Mar 2020 08:33:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585139601;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7e30IcRwkpFDSKRLUrKT2Gv7ZjOigwgrZRbkLiN5fQE=;
+        b=cGe4Vcc48aTMKMOo5kiF6BH51JyuwFiphP5G1YMnOLQE8riI2swCTlaEMcBIMZ3y/eyL2f
+        4Yoev1jL+Ru2ZYfHTHlvbUIR7U8JJxoX8z9wU1L+YIOwQi16lKjK6ojMYVwLcXQy85gRSj
+        iUm1Oo2UtcOkqG0OP3vjOOwkUASaWUk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-yK60_9orOvqG9rJY29AQJw-1; Wed, 25 Mar 2020 08:33:18 -0400
+X-MC-Unique: yK60_9orOvqG9rJY29AQJw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C116107ACC4;
+        Wed, 25 Mar 2020 12:33:17 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4BB010002AE;
+        Wed, 25 Mar 2020 12:33:16 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 08:33:14 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 1/8] xfs: don't try to write a start record into every
+ iclog
+Message-ID: <20200325123314.GC10922@bfoster>
+References: <20200324174459.770999-1-hch@lst.de>
+ <20200324174459.770999-2-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324174459.770999-2-hch@lst.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-There is no need both the sync and iflag variables - just use dirty as
-the indicator for which flag to pass to __mark_inode_dirty, as there
-is no point in passing both flags - __mark_inode_dirty will immediately
-clear I_DIRTY_TIME if I_DIRTY_SYNC is set.
+On Tue, Mar 24, 2020 at 06:44:52PM +0100, Christoph Hellwig wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> The xlog_write() function iterates over iclogs until it completes
+> writing all the log vectors passed in. The ticket tracks whether
+> a start record has been written or not, so only the first iclog gets
+> a start record. We only ever pass single use tickets to
+> xlog_write() so we only ever need to write a start record once per
+> xlog_write() call.
+> 
+> Hence we don't need to store whether we should write a start record
+> in the ticket as the callers provide all the information we need to
+> determine if a start record should be written. For the moment, we
+> have to ensure that we clear the XLOG_TIC_INITED appropriately so
+> the code in xfs_log_done() still works correctly for committing
+> transactions.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> [hch: use an need_start_rec bool]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_log.c | 63 ++++++++++++++++++++++++------------------------
+>  1 file changed, 32 insertions(+), 31 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index 2a90a483c2d6..bf071552094a 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+...
+> @@ -2372,25 +2359,29 @@ xlog_write(
+>  	int			record_cnt = 0;
+>  	int			data_cnt = 0;
+>  	int			error = 0;
+> +	bool			need_start_rec = true;
+>  
+>  	*start_lsn = 0;
+>  
+> -	len = xlog_write_calc_vec_length(ticket, log_vector);
+>  
+>  	/*
+>  	 * Region headers and bytes are already accounted for.
+>  	 * We only need to take into account start records and
+>  	 * split regions in this function.
+>  	 */
+> -	if (ticket->t_flags & XLOG_TIC_INITED)
+> -		ticket->t_curr_res -= sizeof(xlog_op_header_t);
+> +	if (ticket->t_flags & XLOG_TIC_INITED) {
+> +		ticket->t_curr_res -= sizeof(struct xlog_op_header);
+> +		ticket->t_flags &= ~XLOG_TIC_INITED;
+> +	}
+>  
+>  	/*
+>  	 * Commit record headers need to be accounted for. These
+>  	 * come in as separate writes so are easy to detect.
+>  	 */
+> -	if (flags & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS))
+> -		ticket->t_curr_res -= sizeof(xlog_op_header_t);
+> +	if (flags & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS)) {
+> +		ticket->t_curr_res -= sizeof(struct xlog_op_header);
+> +		need_start_rec = false;
+> +	}
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/inode.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Hmm.. I was asking for a comment update in v1 for this logic change.
+Looking through it again, what happens here if
+xfs_log_write_unmount_record() clears the UNMOUNT_TRANS flag for that
+summary counter check? That looks like a potential behavior change wrt
+to the start record..
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 96cf26ed4c7b..a7d19b1b15ac 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1662,7 +1662,6 @@ static int relatime_need_update(struct vfsmount *mnt, struct inode *inode,
- 
- int generic_update_time(struct inode *inode, struct timespec64 *time, int flags)
- {
--	int iflags = I_DIRTY_TIME;
- 	bool dirty = false;
- 
- 	if (flags & S_ATIME)
-@@ -1678,9 +1677,7 @@ int generic_update_time(struct inode *inode, struct timespec64 *time, int flags)
- 	     !(inode->i_sb->s_flags & SB_LAZYTIME)))
- 		dirty = true;
- 
--	if (dirty)
--		iflags |= I_DIRTY_SYNC;
--	__mark_inode_dirty(inode, iflags);
-+	__mark_inode_dirty(inode, dirty ? I_DIRTY_SYNC : I_DIRTY_TIME);
- 	return 0;
- }
- EXPORT_SYMBOL(generic_update_time);
--- 
-2.25.1
+Brian
+
+>  
+>  	if (ticket->t_curr_res < 0) {
+>  		xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
+> @@ -2399,6 +2390,8 @@ xlog_write(
+>  		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
+>  	}
+>  
+> +	len = xlog_write_calc_vec_length(ticket, log_vector, need_start_rec);
+> +
+>  	index = 0;
+>  	lv = log_vector;
+>  	vecp = lv->lv_iovecp;
+> @@ -2425,7 +2418,6 @@ xlog_write(
+>  		while (lv && (!lv->lv_niovecs || index < lv->lv_niovecs)) {
+>  			struct xfs_log_iovec	*reg;
+>  			struct xlog_op_header	*ophdr;
+> -			int			start_rec_copy;
+>  			int			copy_len;
+>  			int			copy_off;
+>  			bool			ordered = false;
+> @@ -2441,11 +2433,15 @@ xlog_write(
+>  			ASSERT(reg->i_len % sizeof(int32_t) == 0);
+>  			ASSERT((unsigned long)ptr % sizeof(int32_t) == 0);
+>  
+> -			start_rec_copy = xlog_write_start_rec(ptr, ticket);
+> -			if (start_rec_copy) {
+> -				record_cnt++;
+> +			/*
+> +			 * Before we start formatting log vectors, we need to
+> +			 * write a start record. Only do this for the first
+> +			 * iclog we write to.
+> +			 */
+> +			if (need_start_rec) {
+> +				xlog_write_start_rec(ptr, ticket);
+>  				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+> -						   start_rec_copy);
+> +						sizeof(struct xlog_op_header));
+>  			}
+>  
+>  			ophdr = xlog_write_setup_ophdr(log, ptr, ticket, flags);
+> @@ -2477,8 +2473,13 @@ xlog_write(
+>  				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+>  						   copy_len);
+>  			}
+> -			copy_len += start_rec_copy + sizeof(xlog_op_header_t);
+> +			copy_len += sizeof(struct xlog_op_header);
+>  			record_cnt++;
+> +			if (need_start_rec) {
+> +				copy_len += sizeof(struct xlog_op_header);
+> +				record_cnt++;
+> +				need_start_rec = false;
+> +			}
+>  			data_cnt += contwr ? copy_len : 0;
+>  
+>  			error = xlog_write_copy_finish(log, iclog, flags,
+> -- 
+> 2.25.1
+> 
 
