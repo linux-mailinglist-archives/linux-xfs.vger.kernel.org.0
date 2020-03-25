@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64CB7191EA4
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 02:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605D9191EAB
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Mar 2020 02:42:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgCYBmK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Mar 2020 21:42:10 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:55258 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727290AbgCYBmJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 21:42:09 -0400
+        id S1727239AbgCYBmP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Mar 2020 21:42:15 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46860 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727315AbgCYBmP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Mar 2020 21:42:15 -0400
 Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id CBD3B3A3AD7
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id CA8397EB97D
         for <linux-xfs@vger.kernel.org>; Wed, 25 Mar 2020 12:42:06 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1jGv3V-0006HB-NU
+        id 1jGv3V-0006HH-Oz
         for linux-xfs@vger.kernel.org; Wed, 25 Mar 2020 12:42:05 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.93)
         (envelope-from <david@fromorbit.com>)
-        id 1jGv3V-000362-FK
+        id 1jGv3V-000367-GH
         for linux-xfs@vger.kernel.org; Wed, 25 Mar 2020 12:42:05 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/8] xfs: Improve metadata buffer reclaim accountability
-Date:   Wed, 25 Mar 2020 12:42:01 +1100
-Message-Id: <20200325014205.11843-5-david@fromorbit.com>
+Subject: [PATCH 5/8] xfs: correctly acount for reclaimable slabs
+Date:   Wed, 25 Mar 2020 12:42:02 +1100
+Message-Id: <20200325014205.11843-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200325014205.11843-1-david@fromorbit.com>
 References: <20200325014205.11843-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
         a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=20KFwNOVAAAA:8
-        a=1dk79d6Hl8FtNpQQbMkA:9
+        a=yPCof4ZbAAAA:8 a=q-nAjRHzglZ9esTleQAA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -45,53 +45,31 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The buffer cache shrinker frees more than just the xfs_buf slab
-objects - it also frees the pages attached to the buffers. Make sure
-the memory reclaim code accounts for this memory being freed
-correctly, similar to how the inode shrinker accounts for pages
-freed from the page cache due to mapping invalidation.
-
-We also need to make sure that the mm subsystem knows these are
-reclaimable objects. We provide the memory reclaim subsystem with a
-a shrinker to reclaim xfs_bufs, so we should really mark the slab
-that way.
-
-We also have a lot of xfs_bufs in a busy system, spread them around
-like we do inodes.
+The XFS inode item slab actually reclaimed by inode shrinker
+callbacks from the memory reclaim subsystem. These should be marked
+as reclaimable so the mm subsystem has the full picture of how much
+memory it can actually reclaim from the XFS slab caches.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_buf.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index f880141a22681..9ec3eaf1c618f 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -327,6 +327,9 @@ xfs_buf_free(
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 2094386af8aca..68fea439d9743 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1861,7 +1861,8 @@ xfs_init_zones(void)
  
- 			__free_page(page);
- 		}
-+		if (current->reclaim_state)
-+			current->reclaim_state->reclaimed_slab +=
-+							bp->b_page_count;
- 	} else if (bp->b_flags & _XBF_KMEM)
- 		kmem_free(bp->b_addr);
- 	_xfs_buf_free_pages(bp);
-@@ -2114,9 +2117,11 @@ xfs_buf_delwri_pushbuf(
- int __init
- xfs_buf_init(void)
- {
--	xfs_buf_zone = kmem_cache_create("xfs_buf",
--					 sizeof(struct xfs_buf), 0,
--					 SLAB_HWCACHE_ALIGN, NULL);
-+	xfs_buf_zone = kmem_cache_create("xfs_buf", sizeof(struct xfs_buf), 0,
-+					 SLAB_HWCACHE_ALIGN |
-+					 SLAB_RECLAIM_ACCOUNT |
-+					 SLAB_MEM_SPREAD,
+ 	xfs_ili_zone = kmem_cache_create("xfs_ili",
+ 					 sizeof(struct xfs_inode_log_item), 0,
+-					 SLAB_MEM_SPREAD, NULL);
++					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
 +					 NULL);
- 	if (!xfs_buf_zone)
- 		goto out;
+ 	if (!xfs_ili_zone)
+ 		goto out_destroy_inode_zone;
  
 -- 
 2.26.0.rc2
