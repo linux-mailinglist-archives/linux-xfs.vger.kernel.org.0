@@ -2,70 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FEFC1944DF
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Mar 2020 18:01:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC5B9194A4D
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 Mar 2020 22:13:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCZRBt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Mar 2020 13:01:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:46717 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgCZRBt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:01:49 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 45C90227A81; Thu, 26 Mar 2020 18:01:45 +0100 (CET)
-Date:   Thu, 26 Mar 2020 18:01:45 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org,
-        Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: avoid double-writing the inode on a lazytime
- expiration
-Message-ID: <20200326170145.GA6387@lst.de>
-References: <20200325122825.1086872-1-hch@lst.de> <20200325122825.1086872-3-hch@lst.de> <20200326032212.GN10776@dread.disaster.area>
+        id S1727738AbgCZVNr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 Mar 2020 17:13:47 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45922 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbgCZVNr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Mar 2020 17:13:47 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t17so6811422qtn.12
+        for <linux-xfs@vger.kernel.org>; Thu, 26 Mar 2020 14:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/1/OO52zV4zfPyY211FtZXgbsoEWvBR8GMC/F8srMms=;
+        b=YTk56PtSWT84wx+a6+scXcMdLIOed+rGE5828Vd5joQfHrpmFW3jXl/TThemRwOuc4
+         ETGgZcc6qDWmtIBhU/U8DwEF204k0c4JlD1MsSWJyNRSn51HVedxZaCv5tl2P+sAQGJg
+         dTWPmpylCMYDYwLow4TZg/ToT4faXXPppm5orIXh7UWX3WqZ8EQ7XK0isUeUcEHYFJNF
+         nlpuouDNhuvlJ8qA7o9pPw8iMGkYD6FMguKhAni3SF77uMadpWdO+R0CcT39CHBh7l+K
+         umo+k2q1ub4p0Wf3TZ8wlWmkRPqE/HgFtD6FbDHMNHV6waR+/QqTTP/20MSDinPTN/ze
+         CxZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/1/OO52zV4zfPyY211FtZXgbsoEWvBR8GMC/F8srMms=;
+        b=RaL4yB9peKW9FnFQ1FxlyOR7K+rBz/lmCnY7lXfNcURbaoc3q0Eyxe7Gx6xkG/hmav
+         sBj16NIa7QuVDr5VO2jrGnjLW+HrmTYQF6nxqBDp87vvbyt666gxSl4iRYWHjAgyRNlA
+         NFP5278YePiuQ0IMye7behUc7wl8y9zJVZDtUGA0yOrH7YB7BEZsZOm/SqI0ffqUxgfp
+         oneMwH7/jxpA+4oDuhqIkwuigkTcqtosnWDDv91w8nFyvnMbH96ZpBXR2T3bSs5i/jrr
+         2kfsNLGy5/2sSHEBmApdjkDlTqG6GQRDG8DIis4QVB9uS0Y089g95DTFjTCUJTMfqah9
+         btOg==
+X-Gm-Message-State: ANhLgQ2yi/1DoQJtpVubNcnVHbsOW9PkfEfqzckl49MCjJ2UtEM8DTdU
+        eYGzVCm798ai1FyDc4zh3kgQ9juXWcj0xWr/FIc=
+X-Google-Smtp-Source: ADFU+vt4zir7R8uKJZSmaHkTQxErfoxP/5xSo/OEkYmsLYXLJEDYCeXzM9qh1m1ytLP9BpLl9WMqzS20H8LJt9v6gMo=
+X-Received: by 2002:ac8:7ca6:: with SMTP id z6mr11119284qtv.52.1585257211644;
+ Thu, 26 Mar 2020 14:13:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326032212.GN10776@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Received: by 2002:ac8:2a22:0:0:0:0:0 with HTTP; Thu, 26 Mar 2020 14:13:31
+ -0700 (PDT)
+Reply-To: ccbanknig@yahoo.co.jp
+From:   "Mrs. Liz" <mrsmaureencoleman626@gmail.com>
+Date:   Thu, 26 Mar 2020 22:13:31 +0100
+Message-ID: <CAMXLi7b96vC-6v2dhrmBOk0_czghR+A9UOUcx3+WBPsKNWgMFg@mail.gmail.com>
+Subject: Re: thank God i find you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 02:22:12PM +1100, Dave Chinner wrote:
-> On Wed, Mar 25, 2020 at 01:28:23PM +0100, Christoph Hellwig wrote:
-> > In the case that an inode has dirty timestamp for longer than the
-> > lazytime expiration timeout (or if all such inodes are being flushed
-> > out due to a sync or syncfs system call), we need to inform the file
-> > system that the inode is dirty so that the inode's timestamps can be
-> > copied out to the on-disk data structures.  That's because if the file
-> > system supports lazytime, it will have ignored the dirty_inode(inode,
-> > I_DIRTY_TIME) notification when the timestamp was modified in memory.q
-> > Previously, this was accomplished by calling mark_inode_dirty_sync(),
-> > but that has the unfortunate side effect of also putting the inode the
-> > writeback list, and that's not necessary in this case, since we will
-> > immediately call write_inode() afterwards.  Replace the call to
-> > mark_inode_dirty_sync() with a new lazytime_expired method to clearly
-> > separate out this case.
-> 
-> 
-> hmmm. Doesn't this cause issues with both iput() and
-> vfs_fsync_range() because they call mark_inode_dirty_sync() on
-> I_DIRTY_TIME inodes to move them onto the writeback list so they are
-> appropriately expired when the inode is written back.
+-- 
+i am Mrs Liz. 70 years old, Dumb and a widow. I was married to late
+Engr. Hamilton , my late husband was from California, USA who worked
+with Shell Development Company in London for Twenty-Six years before
+he died in the year August 9th 2016 after a brief illness that lasted
+only five days. when my late husband was alive he deposited the sum of
+8.4million pounds in a Bank in Ohio USA.
 
-True, we'd need to call ->lazytime_expired in the fsync path as well.
-While looking into this I've also noticed that lazytime is "enabled"
-unconditionally without a file system opt-in.  That means for file systems
-that don't rely on ->dirty_inode it kinda "just works" except that both
-Teds original fix and this one break that in one way or another.  This
-series just cleanly disables it, but Ted's two patches would fail to
-pass I_DIRTY_SYNC to ->write_inode.
+Following my ill health (Cancer of the Lungs), my Doctor told me that
+I may not live longer than required due to my health condition. am
+looking forward to seeing someone like you who can use this money in
+charitable works to help the needs. More details upon your response
 
-This whole area is such a mess..
+May God Bless You
+
+Mrs.Liz
