@@ -2,71 +2,197 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC5B9194A4D
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Mar 2020 22:13:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2AEB194E26
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Mar 2020 01:40:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgCZVNr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Mar 2020 17:13:47 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45922 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgCZVNr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Mar 2020 17:13:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t17so6811422qtn.12
-        for <linux-xfs@vger.kernel.org>; Thu, 26 Mar 2020 14:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/1/OO52zV4zfPyY211FtZXgbsoEWvBR8GMC/F8srMms=;
-        b=YTk56PtSWT84wx+a6+scXcMdLIOed+rGE5828Vd5joQfHrpmFW3jXl/TThemRwOuc4
-         ETGgZcc6qDWmtIBhU/U8DwEF204k0c4JlD1MsSWJyNRSn51HVedxZaCv5tl2P+sAQGJg
-         dTWPmpylCMYDYwLow4TZg/ToT4faXXPppm5orIXh7UWX3WqZ8EQ7XK0isUeUcEHYFJNF
-         nlpuouDNhuvlJ8qA7o9pPw8iMGkYD6FMguKhAni3SF77uMadpWdO+R0CcT39CHBh7l+K
-         umo+k2q1ub4p0Wf3TZ8wlWmkRPqE/HgFtD6FbDHMNHV6waR+/QqTTP/20MSDinPTN/ze
-         CxZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/1/OO52zV4zfPyY211FtZXgbsoEWvBR8GMC/F8srMms=;
-        b=RaL4yB9peKW9FnFQ1FxlyOR7K+rBz/lmCnY7lXfNcURbaoc3q0Eyxe7Gx6xkG/hmav
-         sBj16NIa7QuVDr5VO2jrGnjLW+HrmTYQF6nxqBDp87vvbyt666gxSl4iRYWHjAgyRNlA
-         NFP5278YePiuQ0IMye7behUc7wl8y9zJVZDtUGA0yOrH7YB7BEZsZOm/SqI0ffqUxgfp
-         oneMwH7/jxpA+4oDuhqIkwuigkTcqtosnWDDv91w8nFyvnMbH96ZpBXR2T3bSs5i/jrr
-         2kfsNLGy5/2sSHEBmApdjkDlTqG6GQRDG8DIis4QVB9uS0Y089g95DTFjTCUJTMfqah9
-         btOg==
-X-Gm-Message-State: ANhLgQ2yi/1DoQJtpVubNcnVHbsOW9PkfEfqzckl49MCjJ2UtEM8DTdU
-        eYGzVCm798ai1FyDc4zh3kgQ9juXWcj0xWr/FIc=
-X-Google-Smtp-Source: ADFU+vt4zir7R8uKJZSmaHkTQxErfoxP/5xSo/OEkYmsLYXLJEDYCeXzM9qh1m1ytLP9BpLl9WMqzS20H8LJt9v6gMo=
-X-Received: by 2002:ac8:7ca6:: with SMTP id z6mr11119284qtv.52.1585257211644;
- Thu, 26 Mar 2020 14:13:31 -0700 (PDT)
+        id S1726496AbgC0AkH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 Mar 2020 20:40:07 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55530 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbgC0AkG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Mar 2020 20:40:06 -0400
+Received: from dread.disaster.area (pa49-179-23-206.pa.nsw.optusnet.com.au [49.179.23.206])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 035347EBA49;
+        Fri, 27 Mar 2020 11:40:02 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jHd2X-0006GX-Mn; Fri, 27 Mar 2020 11:40:01 +1100
+Date:   Fri, 27 Mar 2020 11:40:01 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/8] xfs: Throttle commits on delayed background CIL push
+Message-ID: <20200327004001.GO10776@dread.disaster.area>
+References: <20200325014205.11843-1-david@fromorbit.com>
+ <20200325014205.11843-3-david@fromorbit.com>
+ <20200326052435.GK29351@magnolia>
+ <20200326113358.GC19262@bfoster>
 MIME-Version: 1.0
-Received: by 2002:ac8:2a22:0:0:0:0:0 with HTTP; Thu, 26 Mar 2020 14:13:31
- -0700 (PDT)
-Reply-To: ccbanknig@yahoo.co.jp
-From:   "Mrs. Liz" <mrsmaureencoleman626@gmail.com>
-Date:   Thu, 26 Mar 2020 22:13:31 +0100
-Message-ID: <CAMXLi7b96vC-6v2dhrmBOk0_czghR+A9UOUcx3+WBPsKNWgMFg@mail.gmail.com>
-Subject: Re: thank God i find you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326113358.GC19262@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=n/Z79dAqQwRlp4tcgfhWYA==:117 a=n/Z79dAqQwRlp4tcgfhWYA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
+        a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=RTNtLFkZ65nuxMM6XqYA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 07:33:58AM -0400, Brian Foster wrote:
+> On Wed, Mar 25, 2020 at 10:24:35PM -0700, Darrick J. Wong wrote:
+> > On Wed, Mar 25, 2020 at 12:41:59PM +1100, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > > 
+> > > In certain situations the background CIL push can be indefinitely
+> > > delayed. While we have workarounds from the obvious cases now, it
+> > > doesn't solve the underlying issue. This issue is that there is no
+> > > upper limit on the CIL where we will either force or wait for
+> > > a background push to start, hence allowing the CIL to grow without
+> > > bound until it consumes all log space.
+> > > 
+> > > To fix this, add a new wait queue to the CIL which allows background
+> > > pushes to wait for the CIL context to be switched out. This happens
+> > > when the push starts, so it will allow us to block incoming
+> > > transaction commit completion until the push has started. This will
+> > > only affect processes that are running modifications, and only when
+> > > the CIL threshold has been significantly overrun.
+> > > 
+> > > This has no apparent impact on performance, and doesn't even trigger
+> > > until over 45 million inodes had been created in a 16-way fsmark
+> > > test on a 2GB log. That was limiting at 64MB of log space used, so
+> > > the active CIL size is only about 3% of the total log in that case.
+> > > The concurrent removal of those files did not trigger the background
+> > > sleep at all.
+> > > 
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > Reviewed-by: Brian Foster <bfoster@redhat.com>
+> > 
+> > This looks reasonable to me, though considering the big long thread that
+> > erupted a few versions ago I'm seriously wondering what he thinks of all
+> > this?
+> > 
+> 
+> Hmmmm... this was my reply to the last post of this one:
+> 
+> https://lore.kernel.org/linux-xfs/20191101120426.GC59146@bfoster/
+> 
+> ... so I suspect that would still be my feedback if this patch wasn't
+> fixed up..? ;)
+
+Which actually took me some time to find because that email just
+points some other email.... :/
+
+I think in the end, that entire discussion ended up at two things
+once the behaviour of the throttle was iterated over and agreed upon
+as a decent compromise. I'll summarise below in line.
+
+
+> > > @@ -905,14 +911,36 @@ xlog_cil_push_background(
+> > >  	 * don't do a background push if we haven't used up all the
+> > >  	 * space available yet.
+> > >  	 */
+> > > -	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log))
+> > > +	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log)) {
+> > > +		up_read(&cil->xc_ctx_lock);
+> > >  		return;
+> > > +	}
+> > >  
+> > >  	spin_lock(&cil->xc_push_lock);
+> > >  	if (cil->xc_push_seq < cil->xc_current_sequence) {
+> > >  		cil->xc_push_seq = cil->xc_current_sequence;
+> > >  		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
+> > >  	}
+> > > +
+> > > +	/*
+> > > +	 * Drop the context lock now, we can't hold that if we need to sleep
+> > > +	 * because we are over the blocking threshold. The push_lock is still
+> > > +	 * held, so blocking threshold sleep/wakeup is still correctly
+> > > +	 * serialised here.
+> > > +	 */
+> > > +	up_read(&cil->xc_ctx_lock);
+> > > +
+> > > +	/*
+> > > +	 * If we are well over the space limit, throttle the work that is being
+> > > +	 * done until the push work on this context has begun.
+> > > +	 */
+> > > +	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
+> > > +		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
+> > > +		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
+> > > +		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
+> > > +		return;
+> > > +	}
+
+Biran asked to change this to a "<" check and switch the code in the
+branch and the function tail around. The code is not wrong or
+inconsistent with other code, and the change doesn't result in a
+reduction of code, just a different layout.
+
+OTOH, personal taste on my side is to prefer to keep lock/unlock
+pairs at the same indent level so at a glance it is obvious that
+they are paired and balanced.
+
+IOWs, this is just a question of personal taste...
+
+> > > diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> > > index 8c4be91f62d0d..dacab1817a1b0 100644
+> > > --- a/fs/xfs/xfs_log_priv.h
+> > > +++ b/fs/xfs/xfs_log_priv.h
+> > > @@ -240,6 +240,7 @@ struct xfs_cil_ctx {
+> > >  	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+> > >  	struct list_head	iclog_entry;
+> > >  	struct list_head	committing;	/* ctx committing list */
+> > > +	wait_queue_head_t	push_wait;	/* background push throttle */
+> > >  	struct work_struct	discard_endio_work;
+> > >  };
+> > >  
+> > > @@ -337,10 +338,33 @@ struct xfs_cil {
+> > >   *   buffer window (32MB) as measurements have shown this to be roughly the
+> > >   *   point of diminishing performance increases under highly concurrent
+> > >   *   modification workloads.
+> > > + *
+> > > + * To prevent the CIL from overflowing upper commit size bounds, we introduce a
+> > > + * new threshold at which we block committing transactions until the background
+> > > + * CIL commit commences and switches to a new context. While this is not a hard
+> > > + * limit, it forces the process committing a transaction to the CIL to block and
+> > > + * yeild the CPU, giving the CIL push work a chance to be scheduled and start
+> > > + * work. This prevents a process running lots of transactions from overfilling
+> > > + * the CIL because it is not yielding the CPU. We set the blocking limit at
+> > > + * twice the background push space threshold so we keep in line with the AIL
+> > > + * push thresholds.
+> > > + *
+> > > + * Note: this is not a -hard- limit as blocking is applied after the transaction
+> > > + * is inserted into the CIL and the push has been triggered. It is largely a
+> > > + * throttling mechanism that allows the CIL push to be scheduled and run. A hard
+> > > + * limit will be difficult to implement without introducing global serialisation
+> > > + * in the CIL commit fast path, and it's not at all clear that we actually need
+> > > + * such hard limits given the ~7 years we've run without a hard limit before
+> > > + * finding the first situation where a checkpoint size overflow actually
+> > > + * occurred. Hence the simple throttle, and an ASSERT check to tell us that
+> > > + * we've overrun the max size.
+> > >   */
+
+Brian also asked for this note to be removed and put into the commit
+message, which I had pulled out of the commit message and put into
+the code because someone else requested that....
+
+https://lore.kernel.org/linux-xfs/20190916163325.GZ2229799@magnolia/
+
+So, when personal tastes collide, the submitter has to choose
+between them. When review comments conflict, the submitter has
+to choose between them.
+
+I chose not to modify the patch, and that's the long and short of
+it...
+
+Cheers,
+
+Dave.
 -- 
-i am Mrs Liz. 70 years old, Dumb and a widow. I was married to late
-Engr. Hamilton , my late husband was from California, USA who worked
-with Shell Development Company in London for Twenty-Six years before
-he died in the year August 9th 2016 after a brief illness that lasted
-only five days. when my late husband was alive he deposited the sum of
-8.4million pounds in a Bank in Ohio USA.
-
-Following my ill health (Cancer of the Lungs), my Doctor told me that
-I may not live longer than required due to my health condition. am
-looking forward to seeing someone like you who can use this money in
-charitable works to help the needs. More details upon your response
-
-May God Bless You
-
-Mrs.Liz
+Dave Chinner
+david@fromorbit.com
