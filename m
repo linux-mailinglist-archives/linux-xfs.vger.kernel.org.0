@@ -2,105 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96BDB195A35
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Mar 2020 16:47:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E368195B59
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Mar 2020 17:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgC0Pq7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Mar 2020 11:46:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54530 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgC0Pq7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Mar 2020 11:46:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFhJlb037343;
-        Fri, 27 Mar 2020 15:45:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=JowM6eLik9VMWJheXYPkMCgmY1LpFTvWcjfQc9uy9qY=;
- b=aR5yVRn6MZ5CSllx9PwrnEPIjPWDeEWQen28vkKRkA6nbyHBasczhex5J88nTU1lP+nk
- 8S7mGnRWGDRqcGsgZrvKRh+qxZOPLWNw5mMF2B5W8mekzy+J8yuhKU0rAaUneyWUX/ff
- Q6BA/qpueC0NecrKU86YTi4H8d1aSF8OxDiC6Mi7J9xH59M3XIzIdaCwH3EdesPb8n9s
- wWN3RoYKVBcHNJoDLP9xa6X5BOYF/5QPKpVPCAXvk8ZAzJvRmMTbkXgZr5b9rvNAy3JL
- ceOk3JmJ7lj3nm6bKx+gI28zMOcbV1uFU2svt4NihItL+aAE5i8A3RrH9wgYrF0x6FnI Dw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 301459bvdb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 15:45:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFfkxH054160;
-        Fri, 27 Mar 2020 15:45:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 3003gp68qg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 15:45:54 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02RFjrec018168;
-        Fri, 27 Mar 2020 15:45:53 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Mar 2020 08:45:53 -0700
-Date:   Fri, 27 Mar 2020 08:45:51 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xiakaixu1987@gmail.com
-Cc:     linux-xfs@vger.kernel.org, Kaixu Xia <kaixuxia@tencent.com>
-Subject: Re: [PATCH] xfs: remove unnecessary judgment from xfs_create
-Message-ID: <20200327154551.GK29339@magnolia>
-References: <1585287956-2808-1-git-send-email-kaixuxia@tencent.com>
+        id S1727770AbgC0QoT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Mar 2020 12:44:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51894 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727769AbgC0QoT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Mar 2020 12:44:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585327457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8VplgkIHvoRqKTHOoYINfccKFd69hXV+8dud2H2LdgM=;
+        b=KUxS8HzwDGmSOe1/bZA8fpQ2/yRE3GboYVBjp8FwNM+LZLSbZcWwLZwb+OWYRYzCxeFG3I
+        O1c0fSfJbGAu71JdfV5W20PHMWX/1tJrlvX84joBZ6DzX/EFrJcCGpeWwOLBhxg1YxNGTw
+        zUUbO0rcZEKNdwN8vzlLu6eANHoM3ZU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-VUwkZHJpNNC4akkyWbbVkQ-1; Fri, 27 Mar 2020 12:44:16 -0400
+X-MC-Unique: VUwkZHJpNNC4akkyWbbVkQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11864800D4E;
+        Fri, 27 Mar 2020 16:44:15 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 946E75C1C3;
+        Fri, 27 Mar 2020 16:44:14 +0000 (UTC)
+Date:   Fri, 27 Mar 2020 12:44:12 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 0/2] xfs: a couple AIL pushing trylock fixes
+Message-ID: <20200327164412.GA29156@bfoster>
+References: <20200326131703.23246-1-bfoster@redhat.com>
+ <20200327153205.GH29339@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585287956-2808-1-git-send-email-kaixuxia@tencent.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 suspectscore=1 impostorscore=0 mlxscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270142
+In-Reply-To: <20200327153205.GH29339@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:45:56PM +0800, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
+On Fri, Mar 27, 2020 at 08:32:05AM -0700, Darrick J. Wong wrote:
+> On Thu, Mar 26, 2020 at 09:17:01AM -0400, Brian Foster wrote:
+> > Hi all,
+> > 
+> > Here's a couple more small fixes that fell out of the auto relog work.
+> > The dquot issue is actually a deadlock vector if we randomly relog dquot
+> > buffers (which is only done for test purposes), but I figure we should
+> > handle dquot buffers similar to how inode buffers are handled. Thoughts,
+> > reviews, flames appreciated.
 > 
-> Since the "no-allocation" reservations for file creations has
-> been removed, the resblks value should be larger than zero, so
-> remove unnecessary judgment.
+> Oops, I missed this one, will review now...
 > 
-> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-
-Seems reasonable, will test all this...
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> ---
->  fs/xfs/xfs_inode.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Do you think there needs to be an explicit testcase for this?  Or are
+> the current generic/{388,475} good enough?  I'm pretty sure I've seen
+> this exact deadlock on them every now and again, so we're probably
+> covered.
 > 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index c5077e6..e41bddf 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -1219,8 +1219,7 @@
->  	unlock_dp_on_error = false;
->  
->  	error = xfs_dir_createname(tp, dp, name, ip->i_ino,
-> -				   resblks ?
-> -					resblks - XFS_IALLOC_SPACE_RES(mp) : 0);
-> +					resblks - XFS_IALLOC_SPACE_RES(mp));
->  	if (error) {
->  		ASSERT(error != -ENOSPC);
->  		goto out_trans_cancel;
-> -- 
-> 1.8.3.1
+
+I'm actually not aware of a related upstream deadlock. That doesn't mean
+there isn't one of course, but the problem I hit was related to the
+random buffer relogging stuff in the auto relog series. I split these
+out because xfsaild is intended to be mostly async, so they seemed like a
+generic fixups..
+
+Brian
+
+> --D
 > 
+> 
+> > Brian
+> > 
+> > Brian Foster (2):
+> >   xfs: trylock underlying buffer on dquot flush
+> >   xfs: return locked status of inode buffer on xfsaild push
+> > 
+> >  fs/xfs/xfs_dquot.c      |  6 +++---
+> >  fs/xfs/xfs_dquot_item.c |  3 ++-
+> >  fs/xfs/xfs_inode_item.c |  3 ++-
+> >  fs/xfs/xfs_qm.c         | 14 +++++++++-----
+> >  4 files changed, 16 insertions(+), 10 deletions(-)
+> > 
+> > -- 
+> > 2.21.1
+> > 
+> 
+
