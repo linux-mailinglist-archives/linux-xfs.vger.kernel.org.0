@@ -2,98 +2,123 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 778B0195A13
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Mar 2020 16:41:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9970195A3A
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Mar 2020 16:47:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgC0PlV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Mar 2020 11:41:21 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38050 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0PlV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Mar 2020 11:41:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFeWQq012703;
-        Fri, 27 Mar 2020 15:41:17 GMT
+        id S1726758AbgC0Prh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Mar 2020 11:47:37 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55072 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgC0Prh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Mar 2020 11:47:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFhURw037428;
+        Fri, 27 Mar 2020 15:47:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=DPJmn0fzLoSH2G6oC49lqvF9Psl2H3tgoC+by28F9Us=;
- b=Em47dtt1sjys1mCWPCSgLzLqedBfq9z7sDeBTx2EEmjRVOXObBTMLH/ubSLwK+beHlo8
- a7VjVmbUX6jWU7UIUWO/NHaCAC1ncUW1RgEGuAYwMKkd05yMv1CwLvb+mN2zG9q+dF0t
- xJxHJnGj3zzJk645L40dN8uX4kUnZfcILdFItZ5tPT3Jr0lhTck4MXFy6Kn9s90TaXxg
- /Vd7lqpR11/fwCo6PGXyjoiQ+01BXYslMi2ATFwI+KZEJkThAxi5aandaUj8LKxuPtEl
- CEVzkJfKSUlIYbFPXSab8eTndpfijZg293ugW+YrrdOmXf7gz4Oi6lzqTHx9RVV8pMhh Gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 3019veayd0-1
+ bh=KhkLnNIrE8GElbr5ZjY9aLkJq8d1W5WeWK1nryy/KTI=;
+ b=Gr1pXUHOPdmDeCVnLWnUO1FH5r4vCbF2HGvhfw+LXfL70e1pnjPgbErunKA81zb7Nc++
+ 32G1exUYAgmo7M1Mx0XJgl5oP7eWJfQzpl99b7nQkz+5r7S+g59PfyQzlkrLcX0w7qOj
+ s4BebK5Nhs1SwTaZHMWluaE/otVmDFNYfGPMh5UFyhc/SoYZJN+Bn2rbsiSy+zroLnk+
+ ZMDUTiKrldlGuEcoDA0tuTp7EtjpzDePoKVucTWVqrWq0T9jq7Jo5YBryOsSmvKxo9On
+ QfFVz6/uNcL5sBykKCXyAayW2Qq5KkOVpxN4irrA07zNFOzuGDUq5P1xDAgVTk8IxeWm jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 301459bvnn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 15:41:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFcaGd046226;
-        Fri, 27 Mar 2020 15:39:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yxw4w366v-1
+        Fri, 27 Mar 2020 15:47:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02RFfxYd175780;
+        Fri, 27 Mar 2020 15:45:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 3006rahf2e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Mar 2020 15:39:16 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02RFdGRU014757;
-        Fri, 27 Mar 2020 15:39:16 GMT
+        Fri, 27 Mar 2020 15:45:31 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02RFjU7a029852;
+        Fri, 27 Mar 2020 15:45:30 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Mar 2020 08:39:16 -0700
-Date:   Fri, 27 Mar 2020 08:39:13 -0700
+        with ESMTP ; Fri, 27 Mar 2020 08:45:30 -0700
+Date:   Fri, 27 Mar 2020 08:45:28 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: return locked status of inode buffer on xfsaild
- push
-Message-ID: <20200327153913.GI29339@magnolia>
+Subject: Re: [PATCH 1/2] xfs: trylock underlying buffer on dquot flush
+Message-ID: <20200327154527.GJ29339@magnolia>
 References: <20200326131703.23246-1-bfoster@redhat.com>
- <20200326131703.23246-3-bfoster@redhat.com>
+ <20200326131703.23246-2-bfoster@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326131703.23246-3-bfoster@redhat.com>
+In-Reply-To: <20200326131703.23246-2-bfoster@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=940 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003270141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1015 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003270141
+ definitions=main-2003270142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9573 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270142
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:17:03AM -0400, Brian Foster wrote:
-> If the inode buffer backing a particular inode is locked,
-> xfs_iflush() returns -EAGAIN and xfs_inode_item_push() skips the
-> inode. It still returns success to xfsaild, however, which bypasses
-> the xfsaild backoff heuristic. Update xfs_inode_item_push() to
-> return locked status if the inode buffer couldn't be locked.
+On Thu, Mar 26, 2020 at 09:17:02AM -0400, Brian Foster wrote:
+> A dquot flush currently blocks on the buffer lock for the underlying
+> dquot buffer. In turn, this causes xfsaild to block rather than
+> continue processing other items in the meantime. Update
+> xfs_qm_dqflush() to trylock the buffer, similar to how inode buffers
+> are handled, and return -EAGAIN if the lock fails. Fix up any
+> callers that don't currently handle the error properly.
 > 
 > Signed-off-by: Brian Foster <bfoster@redhat.com>
 
-Seems pretty straightforward,
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Is xfs_qm_dquot_isolate returning LRU_RETRY an acceptable resolution (as
+opposed to, say, LRU_SKIP) for xfs_qm_dqflush returning -EAGAIN?
 
 --D
 
 > ---
->  fs/xfs/xfs_inode_item.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  fs/xfs/xfs_dquot.c      |  6 +++---
+>  fs/xfs/xfs_dquot_item.c |  3 ++-
+>  fs/xfs/xfs_qm.c         | 14 +++++++++-----
+>  3 files changed, 14 insertions(+), 9 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-> index 4a3d13d4a022..9a903babbcf7 100644
-> --- a/fs/xfs/xfs_inode_item.c
-> +++ b/fs/xfs/xfs_inode_item.c
-> @@ -552,7 +552,8 @@ xfs_inode_item_push(
+> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+> index 711376ca269f..af2c8e5ceea0 100644
+> --- a/fs/xfs/xfs_dquot.c
+> +++ b/fs/xfs/xfs_dquot.c
+> @@ -1105,8 +1105,8 @@ xfs_qm_dqflush(
+>  	 * Get the buffer containing the on-disk dquot
+>  	 */
+>  	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
+> -				   mp->m_quotainfo->qi_dqchunklen, 0, &bp,
+> -				   &xfs_dquot_buf_ops);
+> +				   mp->m_quotainfo->qi_dqchunklen, XBF_TRYLOCK,
+> +				   &bp, &xfs_dquot_buf_ops);
+>  	if (error)
+>  		goto out_unlock;
+>  
+> @@ -1177,7 +1177,7 @@ xfs_qm_dqflush(
+>  
+>  out_unlock:
+>  	xfs_dqfunlock(dqp);
+> -	return -EIO;
+> +	return error;
+>  }
+>  
+>  /*
+> diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
+> index cf65e2e43c6e..baad1748d0d1 100644
+> --- a/fs/xfs/xfs_dquot_item.c
+> +++ b/fs/xfs/xfs_dquot_item.c
+> @@ -189,7 +189,8 @@ xfs_qm_dquot_logitem_push(
 >  		if (!xfs_buf_delwri_queue(bp, buffer_list))
 >  			rval = XFS_ITEM_FLUSHING;
 >  		xfs_buf_relse(bp);
@@ -103,6 +128,54 @@ Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 >  
 >  	spin_lock(&lip->li_ailp->ail_lock);
 >  out_unlock:
+> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+> index de1d2c606c14..68c778d25c48 100644
+> --- a/fs/xfs/xfs_qm.c
+> +++ b/fs/xfs/xfs_qm.c
+> @@ -121,12 +121,11 @@ xfs_qm_dqpurge(
+>  {
+>  	struct xfs_mount	*mp = dqp->q_mount;
+>  	struct xfs_quotainfo	*qi = mp->m_quotainfo;
+> +	int			error = -EAGAIN;
+>  
+>  	xfs_dqlock(dqp);
+> -	if ((dqp->dq_flags & XFS_DQ_FREEING) || dqp->q_nrefs != 0) {
+> -		xfs_dqunlock(dqp);
+> -		return -EAGAIN;
+> -	}
+> +	if ((dqp->dq_flags & XFS_DQ_FREEING) || dqp->q_nrefs != 0)
+> +		goto out_unlock;
+>  
+>  	dqp->dq_flags |= XFS_DQ_FREEING;
+>  
+> @@ -139,7 +138,6 @@ xfs_qm_dqpurge(
+>  	 */
+>  	if (XFS_DQ_IS_DIRTY(dqp)) {
+>  		struct xfs_buf	*bp = NULL;
+> -		int		error;
+>  
+>  		/*
+>  		 * We don't care about getting disk errors here. We need
+> @@ -149,6 +147,8 @@ xfs_qm_dqpurge(
+>  		if (!error) {
+>  			error = xfs_bwrite(bp);
+>  			xfs_buf_relse(bp);
+> +		} else if (error == -EAGAIN) {
+> +			goto out_unlock;
+>  		}
+>  		xfs_dqflock(dqp);
+>  	}
+> @@ -174,6 +174,10 @@ xfs_qm_dqpurge(
+>  
+>  	xfs_qm_dqdestroy(dqp);
+>  	return 0;
+> +
+> +out_unlock:
+> +	xfs_dqunlock(dqp);
+> +	return error;
+>  }
+>  
+>  /*
 > -- 
 > 2.21.1
 > 
