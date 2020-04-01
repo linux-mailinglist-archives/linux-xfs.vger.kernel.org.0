@@ -2,125 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83A1419AEAB
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Apr 2020 17:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5AAA19AEF8
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Apr 2020 17:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732504AbgDAPZ2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Apr 2020 11:25:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33778 "EHLO
+        id S1732849AbgDAPms (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Apr 2020 11:42:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40874 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732742AbgDAPZ2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Apr 2020 11:25:28 -0400
+        with ESMTP id S1732705AbgDAPms (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Apr 2020 11:42:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=HPLjHLQGO8HhdcJF5uQET4ryRs12dglYKf2jvAP7O+w=; b=EQ8tkaKNIpNhPV0XAh5LBd+jZr
-        aJsmvoYzse+6QzBHabveVGmnemDd9Bw1ZyBO31AvYQABdz/s/OL6TnOAY4qG92C3a9l3VJRqDdbvI
-        7Ee/et9pfdTKZL3OwQ8eEYIv7sIFIaDi5Kp378f0EoHNbj9LutBV7GLi99iM1UG/faJ7Ld2KkAc/D
-        RhTeHwaWaMz7apDvCC434wDIuP3NhO9wcwYpXdfgmWXbsETrDxU8L/UWOgRU3reOwvn0tihCi3gAW
-        lA2iyblTMslzOoi9iTmf+361v2hCn7xWyya7gejBclwTWXIyjMwQJ5XdBgQi7Uj2nj1fk5w45aeT/
-        O5yAZNVQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJfF9-0005Pk-Vz; Wed, 01 Apr 2020 15:25:27 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     hch@infradead.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH 2/2] iomap: Convert page_mkwrite to iter API
-Date:   Wed,  1 Apr 2020 08:25:22 -0700
-Message-Id: <20200401152522.20737-3-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200401152522.20737-1-willy@infradead.org>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7w1gu0h3WVKpI8vXX0cRdx6WO7OoJ49pCp7LSb7NL/s=; b=ZtJDKO1HQ56O6VZ48ID4BxMC6W
+        r9uTyhAp8ks+KSMUTrKfYBQLeWhDRasTErGM3JQhCULRQvuspQ2agUEx9ACXbvAF3LoMny6qep2gE
+        tPNrJe1jFc77ywz28G9avTE3emKPHbPVqADIgqIWNuB3nMQq9lEeSyttTfcq1Mjk26azimJIyeX6U
+        yaKr3QNexhD+WtMDOdDkzhtc84yjbDWPuhBGJTlK+VHygSoJbN8IE+KsFo3oMv017+LAorVeSrJzu
+        18aLho2nN8yXSN8aTUaoghJ649udOuLIEFcSXRJHbOvCPmmNexrpuJbCHCj8EdSZZwfTNvMaMY+kF
+        D4gTJVKw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJfVw-0007Ts-GA; Wed, 01 Apr 2020 15:42:48 +0000
+Date:   Wed, 1 Apr 2020 08:42:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] iomap: Add iomap_iter API
+Message-ID: <20200401154248.GA2813@infradead.org>
 References: <20200401152522.20737-1-willy@infradead.org>
+ <20200401152522.20737-2-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401152522.20737-2-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> +loff_t iomap_iter(struct iomap_iter *iter, loff_t written)
+> +{
+> +	const struct iomap_ops *ops = iter->ops;
+> +	struct iomap *iomap = &iter->iomap;
+> +	struct iomap *srcmap = &iter->srcmap;
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 51 ++++++++++++++++--------------------------
- 1 file changed, 19 insertions(+), 32 deletions(-)
+I think it makes sense to only have members in the iter structure
+that this function modifies.  That is, just pass inode, ops and flags
+as explicit parameters.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 7c84c4c027c4..d91d1d5a0f84 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1051,50 +1051,37 @@ iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
- }
- EXPORT_SYMBOL_GPL(iomap_truncate_page);
- 
--static loff_t
--iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
--		void *data, struct iomap *iomap, struct iomap *srcmap)
--{
--	struct page *page = data;
--	int ret;
--
--	if (iomap->flags & IOMAP_F_BUFFER_HEAD) {
--		ret = __block_write_begin_int(page, pos, length, NULL, iomap);
--		if (ret)
--			return ret;
--		block_commit_write(page, 0, length);
--	} else {
--		WARN_ON_ONCE(!PageUptodate(page));
--		iomap_page_create(inode, page);
--		set_page_dirty(page);
--	}
--
--	return length;
--}
--
- vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
- {
- 	struct page *page = vmf->page;
- 	struct inode *inode = file_inode(vmf->vma->vm_file);
--	unsigned long length;
--	loff_t offset;
--	ssize_t ret;
-+	DEFINE_IOMAP_ITER(iter, inode, page_offset(page), 0,
-+			IOMAP_WRITE | IOMAP_FAULT, ops);
-+	loff_t ret, len = IOMAP_FIRST_CALL;
- 
- 	lock_page(page);
- 	ret = page_mkwrite_check_truncate(page, inode);
- 	if (ret < 0)
- 		goto out_unlock;
--	length = ret;
-+	iter.len = ret;
- 
--	offset = page_offset(page);
--	while (length > 0) {
--		ret = iomap_apply(inode, offset, length,
--				IOMAP_WRITE | IOMAP_FAULT, ops, page,
--				iomap_page_mkwrite_actor);
-+	for (;;) {
-+		ret = iomap_iter(&iter, len);
- 		if (unlikely(ret <= 0))
- 			goto out_unlock;
--		offset += ret;
--		length -= ret;
-+		len = ret;
-+
-+		if (iter.iomap.flags & IOMAP_F_BUFFER_HEAD) {
-+			ret = __block_write_begin_int(page, iter.pos, len,
-+					NULL, &iter.iomap);
-+			if (ret)
-+				goto out_unlock;
-+			block_commit_write(page, 0, len);
-+		} else {
-+			WARN_ON_ONCE(!PageUptodate(page));
-+			iomap_page_create(inode, page);
-+			set_page_dirty(page);
-+		}
- 	}
- 
- 	wait_for_stable_page(page);
--- 
-2.25.1
+OTOH the len argument / return value seems like something that would
+seems useful in the iter structure.  That would require renaming the
+current len to something like total_len..
+
+> +/* Magic value for first call to iterator */
+> +#define IOMAP_FIRST_CALL	LLONG_MIN
+
+Can we find a way to make a a zero initialized field the indicatator
+of the first call?  That way we don't need any knowledge of magic
+values in the callers.  And also don't need any special initializer
+value, but just leave it to the caller to initialize .pos and
+.total_len, and be done with it.
 
