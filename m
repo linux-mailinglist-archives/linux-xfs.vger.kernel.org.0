@@ -2,146 +2,138 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBA6519F5CF
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Apr 2020 14:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC28119F5E4
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Apr 2020 14:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgDFMac (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Apr 2020 08:30:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43733 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbgDFMab (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Apr 2020 08:30:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s4so345457pgk.10;
-        Mon, 06 Apr 2020 05:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=88EvbIlsqMA877V4g4WdYtSu+wV/32/AuYejppF3O7k=;
-        b=Ik/l16XeXSN4KHpMobdHofighcnvsttgzISn2u+lJt5a4c0x/HzWLWWZUK/CJJUeLU
-         MEwb3Y6ucuNMGXhM4LKeN7LCJ0/l8pwol4lJz34SJztrb0eaZcxy2gscFva0c5Rma+Dc
-         8lKeQEss0+4I6jK0TawCCAm234XdmBqwDyq0dq725NXS6sOa2it2EySQFbjrZeRZDvCF
-         pK28devdxi/ARNB2BXJt74RFQN2la+sJaYxeUFev5daT6o439fRpQcxZmqJSbr/S810Q
-         /7Tlc+8B20hskmzAlbYWGChyKx8GDqvHg10KEEpp+bebpTCqw8A9xwHnUzQG2jnBBK7i
-         JePw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=88EvbIlsqMA877V4g4WdYtSu+wV/32/AuYejppF3O7k=;
-        b=eIKK9now2hMnHMUN45UPbsEr+pLsHl4BXgepKIZv7rMdamoTQeRGfCeJy+41LL6HjP
-         n46YNko45CPjXdTK4XfNOuU/Xh1VC+LmuPkZVSvInlGsDc1GjsafhJNDlS9NJHScIwXj
-         TFD1xDgiSP+vvLPmRbYBeXPMNii/8rVkMlQ+Cia1bTHIDypeuGrjaTutTDgfZLr9ZfQC
-         +4zab09kJnVUr7qjX8H6TXfMVWmEb/NjT5wtIvGhoSLUF9T1jLmyEgJLJFvoAaGQ+Lq2
-         hZJQ3zv5j+uB85Qusk8A7+wTh/YBhio0cHOCTElDt65F7vVPNTWMuIwyfhBvGei5HPTk
-         Nffw==
-X-Gm-Message-State: AGi0PuaqaG6J5OadBWoBaA/lVdOMMOIbqDCvcpBlMHjcGjg0Vxgul/9o
-        wegC6rIJrULqhR60IKnxTiP2YaT4
-X-Google-Smtp-Source: APiQypI7URiGETxNzlsC80UvhBKNmpN6+2eBGg8pqX+SNvQO1h5X9IMK1d81C4RZWNMkyJFRBEnLmg==
-X-Received: by 2002:a63:141:: with SMTP id 62mr428606pgb.101.1586176228707;
-        Mon, 06 Apr 2020 05:30:28 -0700 (PDT)
-Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id g25sm3930494pfh.55.2020.04.06.05.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 05:30:27 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 20:31:07 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     Chandan Rajendra <chandanrlinux@gmail.com>
-Cc:     fstests@vger.kernel.org, chandan@linux.ibm.com, hch@infradead.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] common/xfs: Execute _xfs_check only when explicitly asked
-Message-ID: <20200406123030.GG3128153@desktop>
-References: <20200330101203.12049-1-chandanrlinux@gmail.com>
+        id S1728002AbgDFMgl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Apr 2020 08:36:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47463 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727951AbgDFMgk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Apr 2020 08:36:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586176599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Gv+WA8KVze5hIlbWfUIBcaEkVdQhSMsmdRBQ/Ebmv1k=;
+        b=Z5oSOeuEonmen6ip5fPFM7VFr2V88Ur++kWAQzqF5XMlo63+1c3UYkGpyPw8vmzr7Lz1jy
+        6a2MD2i3oOo+L/t6pklJo/k+5YHcNc46wvUn59v/cL2A5jT5c2v1xH3CC14wltYf/X7kR1
+        /HbM5xKNK+SfU4yqkAqFILyb6F3utGI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-513-sP-YKPnVNOuf3BbWzjzhHg-1; Mon, 06 Apr 2020 08:36:34 -0400
+X-MC-Unique: sP-YKPnVNOuf3BbWzjzhHg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F03A8014D5
+        for <linux-xfs@vger.kernel.org>; Mon,  6 Apr 2020 12:36:33 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56C8860BFB
+        for <linux-xfs@vger.kernel.org>; Mon,  6 Apr 2020 12:36:33 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [RFC v6 PATCH 00/10] xfs: automatic relogging experiment
+Date:   Mon,  6 Apr 2020 08:36:22 -0400
+Message-Id: <20200406123632.20873-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330101203.12049-1-chandanrlinux@gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 03:42:03PM +0530, Chandan Rajendra wrote:
-> fsstress when executed as part of some of the tests (e.g. generic/270)
-> invokes chown() syscall many times by passing random integers as value
-> for the uid argument. For each such syscall invocation for which there
-> is no on-disk quota block, xfs invokes xfs_dquot_disk_alloc() which
-> allocates a new block and instantiates all the quota structures mapped
-> by the newly allocated block. For filesystems with 64k block size, the
-> number of on-disk quota structures created will be 16 times more than
-> that for a filesystem with 4k block size.
-> 
-> xfs_db's check command (executed after test script finishes execution)
-> will try to read in all of the on-disk quota structures into
-> memory. This causes the OOM event to be triggered when reading from
-> filesystems with 64k block size. For filesystems with sufficiently large
-> amount of system memory, this causes the test to execute for a very long
-> time.
-> 
-> Due to the above stated reasons, this commit disables execution of
-> xfs_db's check command unless explictly asked by the user by setting
-> $EXECUTE_XFS_DB_CHECK variable.
-> 
-> Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
-> ---
->  README     |  2 ++
->  common/xfs | 17 +++++++++++++----
->  2 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/README b/README
-> index 094a7742..c47569cd 100644
-> --- a/README
-> +++ b/README
-> @@ -88,6 +88,8 @@ Preparing system for tests:
->                 run xfs_repair -n to check the filesystem; xfs_repair to rebuild
->                 metadata indexes; and xfs_repair -n (a third time) to check the
->                 results of the rebuilding.
-> +	     - set EXECUTE_XFS_DB_CHECK=1 to have _check_xfs_filesystem
-> +               run xfs_db's check command on the filesystem.
+Hi all,
 
-It seems spaces are used for indention instead of tab in README.
+Here's a v6 of the automatic relogging RFC. The primary difference in
+this version is a rework of the relog reservation model based on design
+discussion on v5. Rather than roll existing transactions and initialize
+a fixed size relog transaction, this version acquires worst case relog
+reservation directly from the transactions that enable relog of log
+items. This facilitates construction of arbitrary combinations of items
+in the relog transaction without risk of deadlock due to log reservation
+and/or lock ordering. See the associated commit log for further details
+on the approach.
 
->               - xfs_scrub, if present, will always check the test and scratch
->                 filesystems if they are still online at the end of the test.
->                 It is no longer necessary to set TEST_XFS_SCRUB.
-> diff --git a/common/xfs b/common/xfs
-> index d9a9784f..93ebab75 100644
-> --- a/common/xfs
-> +++ b/common/xfs
-> @@ -455,10 +455,19 @@ _check_xfs_filesystem()
->  		ok=0
->  	fi
->  
-> -	# xfs_check runs out of memory on large files, so even providing the test
-> -	# option (-t) to avoid indexing the free space trees doesn't make it pass on
-> -	# large filesystems. Avoid it.
-> -	if [ "$LARGE_SCRATCH_DEV" != yes ]; then
-> +	dbsize="$($XFS_INFO_PROG "${device}" | grep data.*bsize | sed -e 's/^.*bsize=//g' -e 's/\([0-9]*\).*$/\1/g')"
+Beyond that, there are various other fixes and tweaks from v5. For
+example, the log item relog callback is used unconditionally and
+abstracts more of the reservation management code, buffer relogging is a
+bit more restrictive and reliable, various helpers are refactored,
+freeze is partly addressed, etc.
 
-This is probably a left-over from v1 patch, which is not needed in v2.
+With regard to testing, this version survives a 1+ hour 80xcpu fsstress
+workload with random buffer relogging enabled without any notable issues
+and without observable reservation leaks. It also survives an fstests
+auto run without regression.
 
-> +
-> +	# xfs_check runs out of memory,
-> +	# 1. On large files. So even providing the test option (-t) to
-> +	# avoid indexing the free space trees doesn't make it pass on
-> +	# large filesystems.
-> +	# 2. When checking filesystems with large number of quota
-> +	# structures. This case happens consistently with 64k blocksize when
-> +	# creating large number of on-disk quota structures whose quota ids
-> +	# are spread across a large integer range.
-> +	#
-> +	# Hence avoid executing it unless explicitly asked by user.
-> +	if [ -n "$EXECUTE_XFS_DB_CHECK" -a "$LARGE_SCRATCH_DEV" != yes ]; then
->  		_xfs_check $extra_log_options $device 2>&1 > $tmp.fs_check
+Patches 1-5 are preparatory patches and core mechanism. Patch 6 uses
+relogging to address the longstanding quotaoff deadlock problem. Patches
+7-10 provide buffer relogging support and test code for DEBUG mode
+kernels to stress the relog mechanism via random buffer relogging.
 
-Looks fine to me, I'd like to see xfs_check being disabled. But it'd be
-great if xfs folks could ack it as well.
+Thoughts, reviews, flames appreciated.
 
-Thanks,
-Eryu
+Brian
 
->  	fi
->  	if [ -s $tmp.fs_check ]; then
-> -- 
-> 2.19.1
-> 
+rfcv6:
+- Rework relog reservation model.
+- Drop unnecessary log ticket t_task fix.
+- Use ->iop_relog() callback unconditionally.
+- Rudimentary freeze handling for random buffer relogging.
+- Various other fixes, tweaks and cleanups.
+rfcv5: https://lore.kernel.org/linux-xfs/20200227134321.7238-1-bfoster@re=
+dhat.com/
+- More fleshed out design to prevent log reservation deadlock and
+  locking problems.
+- Split out core patches between pre-reservation management, relog item
+  state management and relog mechanism.
+- Added experimental buffer relogging capability.
+rfcv4: https://lore.kernel.org/linux-xfs/20191205175037.52529-1-bfoster@r=
+edhat.com/
+- AIL based approach.
+rfcv3: https://lore.kernel.org/linux-xfs/20191125185523.47556-1-bfoster@r=
+edhat.com/
+- CIL based approach.
+rfcv2: https://lore.kernel.org/linux-xfs/20191122181927.32870-1-bfoster@r=
+edhat.com/
+- Different approach based on workqueue and transaction rolling.
+rfc: https://lore.kernel.org/linux-xfs/20191024172850.7698-1-bfoster@redh=
+at.com/
+
+Brian Foster (10):
+  xfs: automatic relogging item management
+  xfs: create helper for ticket-less log res ungrant
+  xfs: extra runtime reservation overhead for relog transactions
+  xfs: relog log reservation stealing and accounting
+  xfs: automatic log item relog mechanism
+  xfs: automatically relog the quotaoff start intent
+  xfs: prevent fs freeze with outstanding relog items
+  xfs: buffer relogging support prototype
+  xfs: create an error tag for random relog reservation
+  xfs: relog random buffers based on errortag
+
+ fs/xfs/libxfs/xfs_errortag.h |   4 +-
+ fs/xfs/libxfs/xfs_shared.h   |   1 +
+ fs/xfs/xfs_buf.c             |   4 +
+ fs/xfs/xfs_buf_item.c        |  52 ++++++++++++-
+ fs/xfs/xfs_dquot_item.c      |  26 +++++++
+ fs/xfs/xfs_error.c           |   3 +
+ fs/xfs/xfs_log.c             |  35 +++++++--
+ fs/xfs/xfs_log.h             |   4 +-
+ fs/xfs/xfs_log_cil.c         |   2 +-
+ fs/xfs/xfs_log_priv.h        |   1 +
+ fs/xfs/xfs_qm_syscalls.c     |  12 ++-
+ fs/xfs/xfs_super.c           |   4 +
+ fs/xfs/xfs_trace.h           |   4 +
+ fs/xfs/xfs_trans.c           |  75 ++++++++++++++++--
+ fs/xfs/xfs_trans.h           |  36 ++++++++-
+ fs/xfs/xfs_trans_ail.c       | 146 ++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_trans_buf.c       |  73 ++++++++++++++++++
+ fs/xfs/xfs_trans_priv.h      |  20 +++++
+ 18 files changed, 477 insertions(+), 25 deletions(-)
+
+--=20
+2.21.1
+
