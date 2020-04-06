@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B027019FD8C
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Apr 2020 20:52:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7296419FDA1
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Apr 2020 20:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgDFSwl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Apr 2020 14:52:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54408 "EHLO
+        id S1726197AbgDFSy5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Apr 2020 14:54:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56184 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgDFSwk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Apr 2020 14:52:40 -0400
+        with ESMTP id S1725957AbgDFSy4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Apr 2020 14:54:56 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036Ii3uq008246;
-        Mon, 6 Apr 2020 18:52:38 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036Ii2Nh008235;
+        Mon, 6 Apr 2020 18:54:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7lQZjAqnk3eE9LcbxDp1S5dNxnHPYAO/2Q38A22nDAA=;
- b=e1u6N4ZrTwodKWRnIYA71l8PZjGsGLzF1A8P6eOzHZhTOBMxD/QAXSq8+/k6cMrfH72S
- i36n222wsR8z+wW9WWHtanHGFdVoQ+stBYAhFJ4qo41z+vcMRaDD03XKVl8oc4pZ0YbM
- WIhX9jjGbesdmBktPJV9TzE35+ksr8zyNRX5r+qsZKHviLAIWgtR8Zl5JKBhh3uKBQ39
- b1gcVPYB3kRm1thYdb5MwZEdZje2sPDaAeYIqbpuD64mBdEikaHu89eyffpX+Bg7tTS9
- ihrrk5ZbDJSlNiaujkNS6XcA7Y1C9/4ahSBzoBIuAgWng1bStJpZJmSq/ZS4Z2QijUOx bA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 306hnr0qyw-1
+ bh=IEG62u8wtp/0Xws54c46GQDEElqwza1jiA6aytfKuxQ=;
+ b=OABW8c4EC6QRCf2ONYpMsvpqGZwAc4D6fbUv3DdED4ocJO0JBLq91Z8ezFoE/HrJ5jQP
+ kwWDG9GSljYhl46vbg5dHzeslygLlx5hkY++nF+/i2yMZEVTDzwI20u/1YhE9KRh6txW
+ pau4uq0qC21PzTTQRjXq/Zn0CcDvkZX7bXZn4sAyfIVMrMrCMaEPmfYw3HAurjeFP2X/
+ Dd2bXV/6RRk33qf0FaCH7TWdiYLmA05lYb+KnggXpTHMj4t+IL5ppjpBMd8otZdfuLq/
+ 3JpTXfdQShQm9l9bTjGwVAGE0n7OOaWAZJB0FhdKWqTl6JQDlfFVgp6Tu2VHJ0LO+9r/ vQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 306hnr0rac-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 18:52:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036IgQT5048387;
-        Mon, 6 Apr 2020 18:52:38 GMT
+        Mon, 06 Apr 2020 18:54:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036IhFuw116984;
+        Mon, 6 Apr 2020 18:52:47 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30839quhfr-1
+        by userp3030.oracle.com with ESMTP id 3073qdt86y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 18:52:38 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 036IqbKe028863;
-        Mon, 6 Apr 2020 18:52:37 GMT
+        Mon, 06 Apr 2020 18:52:47 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 036IqisS028880;
+        Mon, 6 Apr 2020 18:52:44 GMT
 Received: from localhost (/10.159.131.9)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Apr 2020 11:52:37 -0700
-Subject: [PATCH 2/5] libxfs: check return value of device flush when closing
- device
+        with ESMTP ; Mon, 06 Apr 2020 11:52:43 -0700
+Subject: [PATCH 3/5] xfs_db: clean up the salvage read callsites in set_cur()
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 06 Apr 2020 11:52:36 -0700
-Message-ID: <158619915636.469742.17283369979015724938.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <dchinner@redhat.com>
+Date:   Mon, 06 Apr 2020 11:52:42 -0700
+Message-ID: <158619916259.469742.7875972212442996405.stgit@magnolia>
 In-Reply-To: <158619914362.469742.7048317858423621957.stgit@magnolia>
 References: <158619914362.469742.7048317858423621957.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,8 +54,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004060146
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
@@ -71,42 +71,56 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Although the libxfs_umount function flushes all devices when unmounting
-the incore filesystem, the libxfs io code will flush the device again
-when the application close them.  Check and report any errors that might
-happen, though this is unlikely.
+Clean up the LIBXFS_READBUF_SALVAGE call sites in set_cur so that we
+use the return value directly instead of scraping it out later.
 
-Coverity-id: 1460464
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- libxfs/init.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ db/io.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 3e6436c1..cb8967bc 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -166,13 +166,18 @@ libxfs_device_close(dev_t dev)
+diff --git a/db/io.c b/db/io.c
+index 384e4c0f..6628d061 100644
+--- a/db/io.c
++++ b/db/io.c
+@@ -516,6 +516,7 @@ set_cur(
+ 	xfs_ino_t	ino;
+ 	uint16_t	mode;
+ 	const struct xfs_buf_ops *ops = type ? type->bops : NULL;
++	int		error;
  
- 	for (d = 0; d < MAX_DEVS; d++)
- 		if (dev_map[d].dev == dev) {
--			int	fd;
-+			int	fd, ret;
- 
- 			fd = dev_map[d].fd;
- 			dev_map[d].dev = dev_map[d].fd = 0;
- 
--			fsync(fd);
--			platform_flush_device(fd, dev);
-+			ret = platform_flush_device(fd, dev);
-+			if (ret) {
-+				ret = -errno;
-+				fprintf(stderr,
-+	_("%s: flush of device %lld failed, err=%d"),
-+						progname, (long long)dev, ret);
-+			}
- 			close(fd);
- 
+ 	if (iocur_sp < 0) {
+ 		dbprintf(_("set_cur no stack element to set\n"));
+@@ -542,20 +543,21 @@ set_cur(
+ 		if (!iocur_top->bbmap)
  			return;
+ 		memcpy(iocur_top->bbmap, bbmap, sizeof(struct bbmap));
+-		libxfs_buf_read_map(mp->m_ddev_targp, bbmap->b, bbmap->nmaps,
+-				LIBXFS_READBUF_SALVAGE, &bp, ops);
++		error = -libxfs_buf_read_map(mp->m_ddev_targp, bbmap->b,
++				bbmap->nmaps, LIBXFS_READBUF_SALVAGE, &bp,
++				ops);
+ 	} else {
+-		libxfs_buf_read(mp->m_ddev_targp, blknum, len,
++		error = -libxfs_buf_read(mp->m_ddev_targp, blknum, len,
+ 				LIBXFS_READBUF_SALVAGE, &bp, ops);
+ 		iocur_top->bbmap = NULL;
+ 	}
+ 
+ 	/*
+-	 * Keep the buffer even if the verifier says it is corrupted.
+-	 * We're a diagnostic tool, after all.
++	 * Salvage mode means that we still get a buffer even if the verifier
++	 * says the metadata is corrupt.  Therefore, the only errors we should
++	 * get are for IO errors or runtime errors.
+ 	 */
+-	if (!bp || (bp->b_error && bp->b_error != -EFSCORRUPTED &&
+-				   bp->b_error != -EFSBADCRC))
++	if (error)
+ 		return;
+ 	iocur_top->buf = bp->b_addr;
+ 	iocur_top->bp = bp;
 
