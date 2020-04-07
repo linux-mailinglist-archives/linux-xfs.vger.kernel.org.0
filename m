@@ -2,137 +2,201 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8831A1788
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Apr 2020 23:55:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6623C1A1785
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Apr 2020 23:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDGVzE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Apr 2020 17:55:04 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51946 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGVzE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Apr 2020 17:55:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037LmGGH182734;
-        Tue, 7 Apr 2020 21:55:01 GMT
+        id S1726395AbgDGVxS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Apr 2020 17:53:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43744 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGVxS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Apr 2020 17:53:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037Ln09A145007;
+        Tue, 7 Apr 2020 21:53:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=9rtjjTUKEAxGkE9w1oQDHCB1KFY/bwIGBzcNk66XQ6U=;
- b=P4jpwzPEOPJoNKVi1cGuEEe9xlMrzfwMOOv/F0PuHO8vOe+cuCLYwEbPyWOUYkPirTYQ
- cv5ZZpi95boqDUbyoV3ROygkWWi9P8N9PL7S+XzxliCOjYzgJGKJaYKQwPQRWb8yTvGs
- ZQJS9bfjR8ysicKcsgCOEv3Gcbju57ZRqkrUfnjndaPZpYZEiI/k7fO9Et95Jw4YF0xr
- w8/5Y8T3wH8lY8PGYwU7VUEdumu5hx0USUg+goONRi/CQXheE/Bj/U8oe8/Ptq1SvWyZ
- YrlwJVr2JnbMFZ1395spGC3V/HrYkoveNh+FFhf5llk8zGHe3T+9HTnF1XUO3rXyCjym rQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3091m381y8-1
+ bh=tHdWpM0T4AdWAkiFSNoN/h5xUKuw8tO0azYIUf2n38w=;
+ b=PDef3hbAReLZdl1FmzNWNHt/6It6NBlzEBCu49JWnw7oDqnJxZzHN33BvHHLoUmHnNs9
+ YvZXF94PEbNCdO4NfdDCu1XkrspkCqaZmyHLBqirAkpaGSarf3wgG+1tvQg4DkT1DSgz
+ FFR6twT9n0g1MG772QfieYQ7gnLSIkfOfr9rCDXGK1ReF0chzx+u2fhIzPeuu7thU413
+ oZTJ+3zT6M/GlDAJQ0rgLqo64KzRswy8FvqM3vLc+kRkXxDA9BeaaXcvOCIQQ92RN3KW
+ ch9MQEkGnGWhcaN6a3TAvt/MO7x7VnGhGjfWbUUZtgAuWl6bXquYAfm8Lla4HkIEyZbA aw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3091mng1pb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 21:55:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037LmTPn094881;
-        Tue, 7 Apr 2020 21:53:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3091mg8j68-1
+        Tue, 07 Apr 2020 21:53:15 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037LlHeP168245;
+        Tue, 7 Apr 2020 21:53:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 3091ky8ymp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 21:53:00 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 037LqxpH008499;
-        Tue, 7 Apr 2020 21:52:59 GMT
+        Tue, 07 Apr 2020 21:53:15 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037LrES3021012;
+        Tue, 7 Apr 2020 21:53:14 GMT
 Received: from [192.168.1.223] (/67.1.1.216)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 14:52:59 -0700
-Subject: Re: [PATCH v8 11/20] xfs: Add helper function xfs_attr_node_shrink
+        with ESMTP ; Tue, 07 Apr 2020 14:53:14 -0700
+Subject: Re: [PATCH v8 12/20] xfs: Removed unneeded xfs_trans_roll_inode calls
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <20200403221229.4995-1-allison.henderson@oracle.com>
- <20200403221229.4995-12-allison.henderson@oracle.com>
- <20200407141706.GB28936@bfoster>
+ <20200403221229.4995-13-allison.henderson@oracle.com>
+ <20200407141723.GC28936@bfoster>
 From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <b810a800-943f-9290-dfc9-2638c19f8165@oracle.com>
-Date:   Tue, 7 Apr 2020 14:52:58 -0700
+Message-ID: <416ff860-7c41-3e4c-3630-4610688f6da1@oracle.com>
+Date:   Tue, 7 Apr 2020 14:53:13 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200407141706.GB28936@bfoster>
+In-Reply-To: <20200407141723.GC28936@bfoster>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004070173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070173
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+
+
 On 4/7/20 7:17 AM, Brian Foster wrote:
-> On Fri, Apr 03, 2020 at 03:12:20PM -0700, Allison Collins wrote:
->> This patch adds a new helper function xfs_attr_node_shrink used to
->> shrink an attr name into an inode if it is small enough.  This helps to
->> modularize the greater calling function xfs_attr_node_removename.
+> On Fri, Apr 03, 2020 at 03:12:21PM -0700, Allison Collins wrote:
+>> Some calls to xfs_trans_roll_inode in the *_addname routines are not
+>> needed. If they are the last operations executed in these functions, and
+>> no further changes are made, then higher level routines will roll or
+>> commit the tranactions. The xfs_trans_roll in _removename is also not
+>> needed because invalidating blocks is not an incore change.
 >>
 >> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 >> ---
->>   fs/xfs/libxfs/xfs_attr.c | 67 ++++++++++++++++++++++++++++++------------------
->>   1 file changed, 42 insertions(+), 25 deletions(-)
+>>   fs/xfs/libxfs/xfs_attr.c | 30 ------------------------------
+>>   1 file changed, 30 deletions(-)
 >>
 >> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->> index db5a99c..27a9bb5 100644
+>> index 27a9bb5..4225a94 100644
 >> --- a/fs/xfs/libxfs/xfs_attr.c
 >> +++ b/fs/xfs/libxfs/xfs_attr.c
-> ...
->> @@ -1197,31 +1235,10 @@ xfs_attr_node_removename(
->>   	/*
->>   	 * If the result is small enough, push it all into the inode.
->>   	 */
->> -	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
+>> @@ -700,11 +700,6 @@ xfs_attr_leaf_addname(
+>>   				return error;
+>>   		}
+>>   
 >> -		/*
->> -		 * Have to get rid of the copy of this dabuf in the state.
+>> -		 * Commit the remove and start the next trans in series.
 >> -		 */
->> -		ASSERT(state->path.active == 1);
->> -		ASSERT(state->path.blk[0].bp);
->> -		state->path.blk[0].bp = NULL;
+>> -		error = xfs_trans_roll_inode(&args->trans, dp);
 >> -
->> -		error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
+> 
+> Ok, so it looks like the only caller immediately rolls again.
+> 
+>>   	} else if (args->rmtblkno > 0) {
+>>   		/*
+>>   		 * Added a "remote" value, just clear the incomplete flag.
+>> @@ -712,12 +707,6 @@ xfs_attr_leaf_addname(
+>>   		error = xfs_attr3_leaf_clearflag(args);
+>>   		if (error)
+>>   			return error;
+>> -
+>> -		/*
+>> -		 * Commit the flag value change and start the next trans in
+>> -		 * series.
+>> -		 */
+>> -		error = xfs_trans_roll_inode(&args->trans, args->dp);
+>>   	}
+> 
+> Same logic applies here. Makes sense.
+> 
+>>   	return error;
+>>   }
+>> @@ -1069,13 +1058,6 @@ xfs_attr_node_addname(
+>>   				goto out;
+>>   		}
+>>   
+>> -		/*
+>> -		 * Commit and start the next trans in the chain.
+>> -		 */
+>> -		error = xfs_trans_roll_inode(&args->trans, dp);
 >> -		if (error)
 >> -			goto out;
->> +	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
->> +		error = xfs_attr_node_shrink(args, state);
+>> -
+> 
+>  From here, we log the inode and commit, so that seems safe.
+> 
+> BTW, doesn't that mean the defer_finish() just above (after the
+> da3_join()) is unnecessary as well?
+Hmm, I think you're right.  Will clean out here too.
+
+> 
+>>   	} else if (args->rmtblkno > 0) {
+>>   		/*
+>>   		 * Added a "remote" value, just clear the incomplete flag.
+>> @@ -1083,14 +1065,6 @@ xfs_attr_node_addname(
+>>   		error = xfs_attr3_leaf_clearflag(args);
+>>   		if (error)
+>>   			goto out;
+>> -
+>> -		 /*
+>> -		  * Commit the flag value change and start the next trans in
+>> -		  * series.
+>> -		  */
+>> -		error = xfs_trans_roll_inode(&args->trans, args->dp);
+>> -		if (error)
+>> -			goto out;
+>>   	}
+>>   	retval = error = 0;
 >>   
->> -		if ((forkoff = xfs_attr_shortform_allfit(bp, dp))) {
->> -			error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
->> -			/* bp is gone due to xfs_da_shrink_inode */
->> -			if (error)
->> -				goto out;
->> -			error = xfs_defer_finish(&args->trans);
->> -			if (error)
->> -				goto out;
->> -		} else
->> -			xfs_trans_brelse(args->trans, bp);
->> -	}
->>   	error = 0;
+>> @@ -1189,10 +1163,6 @@ xfs_attr_node_removename(
+>>   		if (error)
+>>   			goto out;
+>>   
+>> -		error = xfs_trans_roll_inode(&args->trans, args->dp);
+>> -		if (error)
+>> -			goto out;
+>> -
 > 
-> Looks like the error handling is busted here..? We used to goto out, now
-> we always reset error to 0.
+> Hmm, not sure I follow this one. Don't we want to commit the incomplete
+> flag before proceeding? Or are we just saying it can be combined with
+> the first bunmap since that's going to roll anyways..?
 > 
-> Brian
-Ah, yes the error = 0; should have been removed along with the rest of 
-it.  Will remove. Thanks!
+> BTW, the commit log refers to the invalidation as "not incore," which I
+> think is opposite. :P xfs_attr_rmtval_invalidate() is incore-only in the
+> sense that it doesn't seem to use the transaction. Is that what you
+> mean?
+Yes, sorry, the commit should say in-core only.  We pulled this one out 
+in v5 for that reason.  It used to belong to the later "Add delay ready 
+attr remove routines" patch in v6 and v7. Then when we decided to clean 
+out these extra transaction rolls, because it simplifies the top level 
+transaction rolling.  So I decided to do the removename clean out in 
+this patch because it seemed appropriate.  In any case, will amend the 
+commit message.  Discussion thread just for brain refresh:
+
+https://lore.kernel.org/linux-xfs/27f6d1f2-8d7e-c759-31e1-6c4ac8c7ccad@oracle.com/
+
+Thanks for the reviews!  Will update!
 
 Allison
 
+
 > 
->> -
->>   out:
->>   	if (state)
->>   		xfs_da_state_free(state);
+> Brian
+> 
+>>   		error = xfs_attr_rmtval_remove(args);
+>>   		if (error)
+>>   			goto out;
 >> -- 
 >> 2.7.4
 >>
