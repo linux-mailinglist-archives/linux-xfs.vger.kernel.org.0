@@ -2,76 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D5261A52DB
-	for <lists+linux-xfs@lfdr.de>; Sat, 11 Apr 2020 18:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E69F1A5ABA
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Apr 2020 01:45:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgDKQOm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Apr 2020 12:14:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41618 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgDKQOm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Apr 2020 12:14:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4kLMPck/UQTFbc7P/dtGX9z+C5HE2yHjGcXQaPeD8UE=; b=E0NjrzbCb12cq87rjgyqkwADEW
-        WAHh8mUUwTfsCROLuFG0kbje7DyHccwxOL380SlXlKeGnNjF1bsciAybqAPEmO8A+J3X/1QtH19Xy
-        +53Ux1fcD5TfDsE20RWsl8RObPX1qW5c/K8rzmTk33ONfOLvRz5d9IxM2p2Mk2goeNMYjwze1O3GY
-        wsHu/ins6D7MCHyncSooKHUIilEp5z9YHm1zyBXzOE1V+Lb9jhS0nG2IcuDAzTWSwUQccjqgQR0Qa
-        hm8ooSvlQZJLMhV/HFq1p6r1rlkDX3/SDeHLpj5W2lvCoWJKUE7kUn1u3X1eAkHiiKTDk1FUnWZ8I
-        Q4A1BvHw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNImG-0002LU-1t; Sat, 11 Apr 2020 16:14:40 +0000
-Date:   Sat, 11 Apr 2020 09:14:39 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>
-Cc:     darrick.wong@oracle.com, hch@infradead.org, jack@suse.cz,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, riteshh@linux.ibm.com,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: Re: WARNING in iomap_apply
-Message-ID: <20200411161439.GE21484@bombadil.infradead.org>
-References: <00000000000048518b05a2fef23a@google.com>
+        id S1728073AbgDKXFp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 11 Apr 2020 19:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728061AbgDKXFo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E03EA21D7E;
+        Sat, 11 Apr 2020 23:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646344;
+        bh=DdOrStogyBn3qrKrdJtlOEpR6sizzEzYXH79mucax5Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O6oETVtUjsF3xFmdDMElHyJo+1toUzhMQw78TOIIJGJGjnq25Vob9Gz7o4jShWvu5
+         71pnu5dwhLEuC7X66k8bDXfzoYKJUxJk9XZv0X4l/cHdz057uK58WuG4FhMc1D+qea
+         xVM2PI4TwAyKyI1gaZqQiPg3wrUVrqhKqn2FWIk0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qian Cai <cai@lca.pw>, Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 093/149] xfs: fix an undefined behaviour in _da3_path_shift
+Date:   Sat, 11 Apr 2020 19:02:50 -0400
+Message-Id: <20200411230347.22371-93-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000048518b05a2fef23a@google.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 12:39:13AM -0700, syzbot wrote:
-> The bug was bisected to:
-> 
-> commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
-> Author: Ritesh Harjani <riteshh@linux.ibm.com>
-> Date:   Fri Feb 28 09:26:58 2020 +0000
-> 
->     ext4: move ext4_fiemap to use iomap framework
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
+From: Qian Cai <cai@lca.pw>
 
-This is:
+[ Upstream commit 4982bff1ace1196843f55536fcd4cc119738fe39 ]
 
-        if (WARN_ON(iomap.length == 0))
-                return -EIO;
+In xfs_da3_path_shift() "blk" can be assigned to state->path.blk[-1] if
+state->path.active is 1 (which is a valid state) when it tries to add an
+entry to a single dir leaf block and then to shift forward to see if
+there's a sibling block that would be a better place to put the new
+entry. This causes a UBSAN warning given negative array indices are
+undefined behavior in C. In practice the warning is entirely harmless
+given that "blk" is never dereferenced in this case, but it is still
+better to fix up the warning and slightly improve the code.
 
-and the call trace contains ext4_fiemap() so the syzbot bisection looks
-correct.
+ UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
+ index -1 is out of range for type 'xfs_da_state_blk_t [5]'
+ Call trace:
+  dump_backtrace+0x0/0x2c8
+  show_stack+0x20/0x2c
+  dump_stack+0xe8/0x150
+  __ubsan_handle_out_of_bounds+0xe4/0xfc
+  xfs_da3_path_shift+0x860/0x86c [xfs]
+  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
+  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
+  xfs_dir_createname+0x348/0x38c [xfs]
+  xfs_create+0x6b0/0x8b4 [xfs]
+  xfs_generic_create+0x12c/0x1f8 [xfs]
+  xfs_vn_mknod+0x3c/0x4c [xfs]
+  xfs_vn_create+0x34/0x44 [xfs]
+  do_last+0xd4c/0x10c8
+  path_openat+0xbc/0x2f4
+  do_filp_open+0x74/0xf4
+  do_sys_openat2+0x98/0x180
+  __arm64_sys_openat+0xf8/0x170
+  do_el0_svc+0x170/0x240
+  el0_sync_handler+0x150/0x250
+  el0_sync+0x164/0x180
 
->  iomap_fiemap+0x184/0x2c0 fs/iomap/fiemap.c:88
->  _ext4_fiemap+0x178/0x4f0 fs/ext4/extents.c:4860
->  ovl_fiemap+0x13f/0x200 fs/overlayfs/inode.c:467
->  ioctl_fiemap fs/ioctl.c:226 [inline]
->  do_vfs_ioctl+0x8d7/0x12d0 fs/ioctl.c:715
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/libxfs/xfs_da_btree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 875e04f82541f..e864c3d47f60a 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -1986,7 +1986,8 @@ xfs_da3_path_shift(
+ 	ASSERT(path != NULL);
+ 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
+ 	level = (path->active-1) - 1;	/* skip bottom layer in path */
+-	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
++	for (; level >= 0; level--) {
++		blk = &path->blk[level];
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
+ 					   blk->bp->b_addr);
+ 
+-- 
+2.20.1
+
