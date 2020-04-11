@@ -2,54 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A79A1A4F03
+	by mail.lfdr.de (Postfix) with ESMTP id F005B1A4F04
 	for <lists+linux-xfs@lfdr.de>; Sat, 11 Apr 2020 11:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgDKJNL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Apr 2020 05:13:11 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50410 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgDKJNL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Apr 2020 05:13:11 -0400
-Received: by mail-pj1-f65.google.com with SMTP id b7so1683421pju.0
+        id S1726070AbgDKJNM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 11 Apr 2020 05:13:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43319 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgDKJNM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Apr 2020 05:13:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x26so853464pgc.10
         for <linux-xfs@vger.kernel.org>; Sat, 11 Apr 2020 02:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=b/HrqhlALNMNsgAa6ZsrHkoGMszeeOK/UwinqGMTQKU=;
-        b=H35kJzH8EOXKtHluHYgXFd0hctq20+OnMRSqMmTFcrSL4gj5hMlD9dY+9mSuoLwm8n
-         3GlfTdUoYwNUmrttb8j6NK2+KUmBZSoVU+DruJ5A2jeZhy0BMAF+lR6QLOZy6/5DMMKx
-         1ghoQo7KcpnbsQNB5uOF5kE/uNDcPqiXRbPVvCVDYqJWCL72Mq/O+JMv/O/keHdIL9w/
-         zmXbqBV3HluezwQvi9dcyKs1gGZXgJC/myZAQ2b7R/VlewVrrNJaK1CMErNPyHcIwGzY
-         jNmkRWopNeVqHqkImSsaidQXy8pKjEeSqPjg2SQaOiuYfPiogaXTEvdmWSzHbMyj8My5
-         ftSA==
+        bh=jy1Zvve1cTB1l+zBWthvsgenMzAtaJtUDZEmAXv7mDU=;
+        b=KJYuHsidw9ALyYRPgPvVt3sCzaRRWJ2Ep8TFyyl1ADb9MoB/pDL3DRTu5Vi99dh4hQ
+         IBz5Zn1gWLx0ruWP8OBtwCDc1bnju6l/8fl+afrlhDJ3WgWBQa6SnJZMfgRZ+oBA+r4I
+         Diz2pyap4iG2JBvpB5saf0dn36qWq5D9AT+5aB+sSr3unXNYPw0davJOEhgtMX9FQj19
+         pNLf3RAZxZX8VQG3H3oxubS810qI5CwUFvlKxbCNiOYhwDma2e+lLgnHJaqfcL06U0ds
+         gAkI5vMSYhd6jRnHLz4pb/PK5eJ1snu65HSPN1+3u2muw32MDMXIUcmKX5MHvZeVsTVS
+         2RlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=b/HrqhlALNMNsgAa6ZsrHkoGMszeeOK/UwinqGMTQKU=;
-        b=Vm1HqOSGqQ0/+EaUe0XJ8UkN/3f7JYSBjRyZPU/xTxfDLuwdNAmcnjWZMRq5MJOeO7
-         nd2pppYv2TlQWEcuU06ARx4XCn9Y360z7vm63inrGdHV2CLn7SbQVou1iJOVhvODbKyC
-         XoDp6S9AIikxSLqlCyGwmpHuhnaDIX1kE1JgiralxKcNynCIYRd0+aBmnl0v2y20gnEb
-         pkG/Ys2tgLaMQarJyR64UWwJ6DHLPGI1SN3j3bQ6gEuRiQfpn7nvBCKZ65NYfkIVAbiU
-         SKWVjYhiaY7JoAPNFwiqZjzEy5kqPSzSNdpVV4kam18OGCAj/8RJYGZtI4y6hLtWI0CK
-         Kdtw==
-X-Gm-Message-State: AGi0PuajYcKiLrT75T1+xE1eKjDeaEcJokQEpF3Fyz6iUQPu0KgRigGN
-        KY/qjK94dnNc0QWsWQzhkMQv6Hk=
-X-Google-Smtp-Source: APiQypJ4rLlFuSkM1SQbXpFtkpxfE771F3FyTDB1EUTRbwBkPBOBd1329cLUN9M/zeCpXlyyK4OKXQ==
-X-Received: by 2002:a17:902:561:: with SMTP id 88mr8637784plf.78.1586596389470;
-        Sat, 11 Apr 2020 02:13:09 -0700 (PDT)
+        bh=jy1Zvve1cTB1l+zBWthvsgenMzAtaJtUDZEmAXv7mDU=;
+        b=hwQLiJZKk62fQ2PxhZy1p6H60F98zXHrUkybkRGhOeiMixiU25MaKKTVEoPhacn0R6
+         iHxE++mqbqLknFvcky4/S1eiL4KEKoz9grE9TDEZwCEaHPEtFYq5sBvJn0v9F1apoP17
+         IZtGPhUTMfL+RY9sZZodnp6XFJDguE4RpKb7HhqSAJxFLX/9VHggHOkYjLwoAsdLg9Ly
+         6JxY6ReNV2gkYU3sQCj5VZDkVxiSsKvVombgqSUnicAE4LeyZs1u5l5W1zeL6ssb5HKO
+         xg1cenLFT2oDvCFIQcoFzloVnncGi46x/fGIBgDzwxakGu94I/HiqKnd1iXd1SjsfsB8
+         aJ4Q==
+X-Gm-Message-State: AGi0PuY89ejk6LpZ2jkGKQAKR55ZK2Y0gnTtaiweBLDgLqE3ibOdtqED
+        fLXhkNZTMx4O7nHugD04ADWpm8I=
+X-Google-Smtp-Source: APiQypII7MiSoF5GRnsfuW07emf/93YSvIleIWHFShc2iJxDjHnhqvj7+SCza79ukglGpn5o8nsIYg==
+X-Received: by 2002:aa7:8b44:: with SMTP id i4mr9381647pfd.179.1586596390252;
+        Sat, 11 Apr 2020 02:13:10 -0700 (PDT)
 Received: from he-cluster.localdomain ([67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id n7sm3280364pgm.28.2020.04.11.02.13.08
+        by smtp.gmail.com with ESMTPSA id n7sm3280364pgm.28.2020.04.11.02.13.09
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
         Sat, 11 Apr 2020 02:13:09 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v2 3/6] xfs: reserve quota inode transaction space only when needed
-Date:   Sat, 11 Apr 2020 17:12:55 +0800
-Message-Id: <1586596378-10754-4-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH v2 4/6] xfs: remove unnecessary variable udqp from xfs_ioctl_setattr
+Date:   Sat, 11 Apr 2020 17:12:56 +0800
+Message-Id: <1586596378-10754-5-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1586596378-10754-1-git-send-email-kaixuxia@tencent.com>
 References: <1586596378-10754-1-git-send-email-kaixuxia@tencent.com>
@@ -60,34 +60,65 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-We share an inode between gquota and pquota with the older
-superblock that doesn't have separate pquotino, and for the
-need_alloc == false case we don't need to call xfs_dir_ialloc()
-function, so add the check if reserved free disk blocks is
-needed.
+The initial value of variable udqp is NULL, and we only set the
+flag XFS_QMOPT_PQUOTA in xfs_qm_vop_dqalloc() function, so only
+the pdqp value is initialized and the udqp value is still NULL.
+Since the udqp value is NULL in the rest part of xfs_ioctl_setattr()
+function, it is meaningless and do nothing. So remove it from
+xfs_ioctl_setattr().
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_qm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_ioctl.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 6678baab37de..b684b0410a52 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -780,7 +780,8 @@ xfs_qm_qino_alloc(
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index cdfb3cd9a25b..8ff91ab221aa 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1513,7 +1513,6 @@ xfs_ioctl_setattr(
+ 	struct fsxattr		old_fa;
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_trans	*tp;
+-	struct xfs_dquot	*udqp = NULL;
+ 	struct xfs_dquot	*pdqp = NULL;
+ 	struct xfs_dquot	*olddquot = NULL;
+ 	int			code;
+@@ -1536,7 +1535,7 @@ xfs_ioctl_setattr(
+ 	if (XFS_IS_QUOTA_ON(mp)) {
+ 		code = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
+ 				VFS_I(ip)->i_gid, fa->fsx_projid,
+-				XFS_QMOPT_PQUOTA, &udqp, NULL, &pdqp);
++				XFS_QMOPT_PQUOTA, NULL, NULL, &pdqp);
+ 		if (code)
+ 			return code;
  	}
+@@ -1560,7 +1559,7 @@ xfs_ioctl_setattr(
  
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_create,
--			XFS_QM_QINOCREATE_SPACE_RES(mp), 0, 0, &tp);
-+			need_alloc ? XFS_QM_QINOCREATE_SPACE_RES(mp) : 0,
-+			0, 0, &tp);
- 	if (error)
- 		return error;
+ 	if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_PQUOTA_ON(mp) &&
+ 	    ip->i_d.di_projid != fa->fsx_projid) {
+-		code = xfs_qm_vop_chown_reserve(tp, ip, udqp, NULL, pdqp,
++		code = xfs_qm_vop_chown_reserve(tp, ip, NULL, NULL, pdqp,
+ 				capable(CAP_FOWNER) ?  XFS_QMOPT_FORCE_RES : 0);
+ 		if (code)	/* out of quota */
+ 			goto error_trans_cancel;
+@@ -1626,7 +1625,6 @@ xfs_ioctl_setattr(
+ 	 * Release any dquot(s) the inode had kept before chown.
+ 	 */
+ 	xfs_qm_dqrele(olddquot);
+-	xfs_qm_dqrele(udqp);
+ 	xfs_qm_dqrele(pdqp);
  
+ 	return code;
+@@ -1634,7 +1632,6 @@ xfs_ioctl_setattr(
+ error_trans_cancel:
+ 	xfs_trans_cancel(tp);
+ error_free_dquots:
+-	xfs_qm_dqrele(udqp);
+ 	xfs_qm_dqrele(pdqp);
+ 	return code;
+ }
 -- 
 2.20.0
 
