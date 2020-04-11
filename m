@@ -2,36 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF9401A596B
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Apr 2020 01:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02BA1A54F8
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Apr 2020 01:08:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgDKXgj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Apr 2020 19:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
+        id S1728976AbgDKXIm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 11 Apr 2020 19:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgDKXIh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:37 -0400
+        id S1728972AbgDKXIl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C29842166E;
-        Sat, 11 Apr 2020 23:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6A620CC7;
+        Sat, 11 Apr 2020 23:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646517;
-        bh=o9Y5JwaEqjjDovOYzeRZmrwkwCuB2Pv3KkPost0bhmY=;
+        s=default; t=1586646521;
+        bh=qCa1GzfdGwFKk9X9humIXd6q1+OihmcS9vny16uEqFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mMDa1IUy8nc56hMlrOxb4/x4oD2oPiapikHtMmL91q8nVxvfT+lSAFV7MMTTf/wC
-         8YsnZHDUkcmMyTYK0Gbns8LzUslct2ga73sMHufwfn3ANEDQn85gS0jAj91TVOk/LN
-         uFzt9211oVxj/pq3d7VbFasZUmcycN50YcUdrUck=
+        b=q+egMDenuGjJ+01DWMTy3YFbSNv1KVjM7MLnKKjr+kUDwj9uPvHiTSVHCoLW/E/Og
+         Bx95pHDXpZ3Zm28fNyAhZLyfMIiaIyaAY2GZ4PxFiGys2C5ajq5D56yubVujk11XJr
+         uHnUDvx9duuvQtX87BCSNXjls0Z49i745moZIThQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Christoph Hellwig <hch@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 074/121] xfs: fix an undefined behaviour in _da3_path_shift
-Date:   Sat, 11 Apr 2020 19:06:19 -0400
-Message-Id: <20200411230706.23855-74-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 077/121] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Date:   Sat, 11 Apr 2020 19:06:22 -0400
+Message-Id: <20200411230706.23855-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -44,66 +45,99 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 4982bff1ace1196843f55536fcd4cc119738fe39 ]
+[ Upstream commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 ]
 
-In xfs_da3_path_shift() "blk" can be assigned to state->path.blk[-1] if
-state->path.active is 1 (which is a valid state) when it tries to add an
-entry to a single dir leaf block and then to shift forward to see if
-there's a sibling block that would be a better place to put the new
-entry. This causes a UBSAN warning given negative array indices are
-undefined behavior in C. In practice the warning is entirely harmless
-given that "blk" is never dereferenced in this case, but it is still
-better to fix up the warning and slightly improve the code.
+Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+during do_exit().  That can confuse things.  In particular, if BSD
+process accounting is enabled, then do_exit() writes data to an
+accounting file.  If that file has FS_SYNC_FL set, then this write
+occurs synchronously and can misbehave if PF_MEMALLOC is set.
 
- UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
- index -1 is out of range for type 'xfs_da_state_blk_t [5]'
- Call trace:
-  dump_backtrace+0x0/0x2c8
-  show_stack+0x20/0x2c
-  dump_stack+0xe8/0x150
-  __ubsan_handle_out_of_bounds+0xe4/0xfc
-  xfs_da3_path_shift+0x860/0x86c [xfs]
-  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
-  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
-  xfs_dir_createname+0x348/0x38c [xfs]
-  xfs_create+0x6b0/0x8b4 [xfs]
-  xfs_generic_create+0x12c/0x1f8 [xfs]
-  xfs_vn_mknod+0x3c/0x4c [xfs]
-  xfs_vn_create+0x34/0x44 [xfs]
-  do_last+0xd4c/0x10c8
-  path_openat+0xbc/0x2f4
-  do_filp_open+0x74/0xf4
-  do_sys_openat2+0x98/0x180
-  __arm64_sys_openat+0xf8/0x170
-  do_el0_svc+0x170/0x240
-  el0_sync_handler+0x150/0x250
-  el0_sync+0x164/0x180
+For example, if the accounting file is located on an XFS filesystem,
+then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
+doesn't get written when it should.  Or if the accounting file is
+located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
+in ext4_write_inode() is triggered and the inode doesn't get written.
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fix this in xfsaild() by using the helper functions to save and restore
+PF_MEMALLOC.
+
+This can be reproduced as follows in the kvm-xfstests test appliance
+modified to add the 'acct' Debian package, and with kvm-xfstests's
+recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+
+        mkfs.xfs -f /dev/vdb
+        mount /vdb
+        touch /vdb/file
+        chattr +S /vdb/file
+        accton /vdb/file
+        mkfs.xfs -f /dev/vdc
+        mount /vdc
+        umount /vdc
+
+It causes:
+	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
+	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
+	[...]
+	Call Trace:
+	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
+	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
+	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
+	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
+	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
+	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
+	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
+	 generic_write_sync include/linux/fs.h:2867 [inline]
+	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
+	 call_write_iter include/linux/fs.h:1901 [inline]
+	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
+	 __kernel_write+0x54/0xe0 fs/read_write.c:515
+	 do_acct_process+0x122/0x170 kernel/acct.c:522
+	 slow_acct_process kernel/acct.c:581 [inline]
+	 acct_process+0x1d4/0x27c kernel/acct.c:607
+	 do_exit+0x83d/0xbc0 kernel/exit.c:791
+	 kthread+0xf1/0x140 kernel/kthread.c:257
+	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+
+This bug was originally reported by syzbot at
+https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+
+Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_da_btree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_trans_ail.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index 8c3eafe280edf..201ce400daa7e 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -1986,7 +1986,8 @@ xfs_da3_path_shift(
- 	ASSERT(path != NULL);
- 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
- 	level = (path->active-1) - 1;	/* skip bottom layer in path */
--	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
-+	for (; level >= 0; level--) {
-+		blk = &path->blk[level];
- 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
- 					   blk->bp->b_addr);
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index 00cc5b8734be8..3bc570c90ad97 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -529,8 +529,9 @@ xfsaild(
+ {
+ 	struct xfs_ail	*ailp = data;
+ 	long		tout = 0;	/* milliseconds */
++	unsigned int	noreclaim_flag;
+ 
+-	current->flags |= PF_MEMALLOC;
++	noreclaim_flag = memalloc_noreclaim_save();
+ 	set_freezable();
+ 
+ 	while (1) {
+@@ -601,6 +602,7 @@ xfsaild(
+ 		tout = xfsaild_push(ailp);
+ 	}
+ 
++	memalloc_noreclaim_restore(noreclaim_flag);
+ 	return 0;
+ }
  
 -- 
 2.20.1
