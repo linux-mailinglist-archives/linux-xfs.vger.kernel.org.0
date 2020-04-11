@@ -2,54 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 719391A4F05
-	for <lists+linux-xfs@lfdr.de>; Sat, 11 Apr 2020 11:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E599E1A4F06
+	for <lists+linux-xfs@lfdr.de>; Sat, 11 Apr 2020 11:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgDKJNN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Apr 2020 05:13:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42347 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgDKJNM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Apr 2020 05:13:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g6so2025081pgs.9
-        for <linux-xfs@vger.kernel.org>; Sat, 11 Apr 2020 02:13:11 -0700 (PDT)
+        id S1726083AbgDKJNO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 11 Apr 2020 05:13:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38555 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgDKJNN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Apr 2020 05:13:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p8so2038869pgi.5
+        for <linux-xfs@vger.kernel.org>; Sat, 11 Apr 2020 02:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V4DfzuVS0fgzy2zelwMiqMPJIYS3Fe8zeCRFMWceglM=;
-        b=Fl1L0T8nVglfxrsYpuz8HKB1zfmUQxXwmgBIGupoyhDb032I5yrtXfKMC+xhlYoubb
-         X2mn3X40HPPELGOGJnj6WwO+ElH9rVaki+SgoT7cgTivi2JbWowYNsVm42aAFOhIoZ6d
-         GFTVjTdp14JemjahQCgmrxSeGxLqzoeVsxhc7nH9s2UmpY5M97v1GKCju24LmLuq+5Aq
-         lWgVUOGgDOfZI2sbqdnRRymrLus4U1J/LC9RRL7F9skdb/8IcboisbGi0OlqitKCdfuq
-         MMpJkXqL5214j1J2DPvcldwsNBelha0gYgK2y53o+vpzBsgc8jC7w73Gm3E3lEv6OYgs
-         PCVw==
+        bh=DE5oMrAOTMqfZrXI9tx5sMPIwlyGrg12kmcgPVi6T0Y=;
+        b=HAJF6JoYYi7tBQHZpCpI1MUq8wjd/5RRi+DcABu9+BCUrTDReGJCca3jErkYL84weZ
+         GIpts4Cg8ZzTZ9/h251iqLgYu9PfggaRyVDKGXbJEvUsOz1NwzTwAtBuJp+eJTomqq5j
+         XnUyq0WoKlzV+SEOpiIFr8T++VoyiONgD+EIpvqpwfr613sir94gsfPijJ9VGLN227Fp
+         gzPzSPqk4pq1uOEU1a/f/q3m5Rpdjm7c4LEMUm9N9F0up51EW+AxK+Z5Ay0buCJoNEHW
+         SStZojm4lxqfMl//zNKocLQeSYkUihHm1M80b4gOgZVF42PKxwlIgEujkQS/C4Zt23IE
+         MtRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=V4DfzuVS0fgzy2zelwMiqMPJIYS3Fe8zeCRFMWceglM=;
-        b=PD/srRbz2bNIgyi6UzX1TcURwfR7ADvd3k2RBdgFSu6dUauCXgM9t9FQbZcCzL7Rat
-         pjgQL+AspvTNJ6oj23oYpbZ0Q1mQykehccSrOEyQq2HF05AW5iJvQAYmAWydqQVNF5Wf
-         8WH7KmxvI6mp46CYA2Adm1D0G1SLWBcNo39zKUNfwbwcjfL8UzCBXKZ+oSfdpcBe5I3v
-         ZjtGbNEpushRuJ0/zYY61Xf33/sng/+0T+QDYhsTLcUiuUUX67HuJeJEVFszmYyvMGhM
-         bRXKQ0tOo7ZvSL7bTkRR0vLQnsoplrnw/bRmEj5LlwUD7e+nwGVqNA0jhCG6S3XXmZpS
-         dMTQ==
-X-Gm-Message-State: AGi0PuYsN5tFE0fuNOx/ILzOJ4wSsKs8XbpKyPx/z7MXi5xhTEaHyLfj
-        VrjZe5GHBACf8rf2+w/9ljZob/Y=
-X-Google-Smtp-Source: APiQypJdv3EpYPu4/PBMpUF4+uXRV02iT7rF1WRwx+/Iu6KrMHJmxWErwbz4V3qnnAUW/mp3MwgY/A==
-X-Received: by 2002:a62:1757:: with SMTP id 84mr8744019pfx.107.1586596390920;
-        Sat, 11 Apr 2020 02:13:10 -0700 (PDT)
+        bh=DE5oMrAOTMqfZrXI9tx5sMPIwlyGrg12kmcgPVi6T0Y=;
+        b=U7fmPJq7OGE6oUE/rqScw0k4+B7n41uMp8/E4GmM5THIM87VLCMcdXyTU4NWaYQA4p
+         Q4Pe700Y/kR6K3kVMXNz1RtqBnVBNk1+yXm7TPmwtkbmmMLTrYeZ2GEUmDzZG+EmL971
+         W48IemAIrp9NFAJD+Ppyxf0Hcd3blSXy326BJ/7+OJ362NcH40iB4bjt6d/a0RW0Pd6b
+         JVdLNGWmI4Zv2NqgXgJwkthW0h2rir1Gk5yEUAJB+Lqx9x1LOO1ksih5f3XZMMkBn98J
+         in4VKegiOlzd3TAHAjQMjArOiRzIEr9UYu8zjFuqyb5kUwZLEs4G/nYMX/7OFEBT/olF
+         I2UA==
+X-Gm-Message-State: AGi0PuaYoeAJfQ2DlwLPsSFsAkAoEEoq8Du6/4RhPgm/RSh66e4Hp4Kr
+        ++pvtfCLaJsV0HzFFfl5S/ktkH0=
+X-Google-Smtp-Source: APiQypKF514UbKYCvg1xtYesAGykHBkTopaOsX3Di7Ig8RIkuMMWNPmezBVrCICxBAq9Z6NxwctM9g==
+X-Received: by 2002:a62:8684:: with SMTP id x126mr8971508pfd.160.1586596391708;
+        Sat, 11 Apr 2020 02:13:11 -0700 (PDT)
 Received: from he-cluster.localdomain ([67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id n7sm3280364pgm.28.2020.04.11.02.13.10
+        by smtp.gmail.com with ESMTPSA id n7sm3280364pgm.28.2020.04.11.02.13.11
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 Apr 2020 02:13:10 -0700 (PDT)
+        Sat, 11 Apr 2020 02:13:11 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v2 5/6] xfs: remove unnecessary assertion from xfs_qm_vop_create_dqattach
-Date:   Sat, 11 Apr 2020 17:12:57 +0800
-Message-Id: <1586596378-10754-6-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH v2 6/6] xfs: simplify the flags setting in xfs_qm_scall_quotaon
+Date:   Sat, 11 Apr 2020 17:12:58 +0800
+Message-Id: <1586596378-10754-7-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1586596378-10754-1-git-send-email-kaixuxia@tencent.com>
 References: <1586596378-10754-1-git-send-email-kaixuxia@tencent.com>
@@ -60,29 +60,33 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-The check XFS_IS_QUOTA_RUNNING() has been done when enter the
-xfs_qm_vop_create_dqattach() function, it will return directly
-if the result is false, so the followed XFS_IS_QUOTA_RUNNING()
-assertion is unnecessary. If we truly care about this, the check
-also can be added to the condition of next if statements.
+Simplify the setting of the flags value, and only consider
+quota enforcement stuff here.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 ---
- fs/xfs/xfs_qm.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/xfs_qm_syscalls.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index b684b0410a52..fc93f88a9926 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1932,7 +1932,6 @@ xfs_qm_vop_create_dqattach(
- 		return;
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index 5d5ac65aa1cc..944486f2b287 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -357,11 +357,11 @@ xfs_qm_scall_quotaon(
+ 	int		error;
+ 	uint		qf;
  
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
--	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
+-	flags &= (XFS_ALL_QUOTA_ACCT | XFS_ALL_QUOTA_ENFD);
+ 	/*
+-	 * Switching on quota accounting must be done at mount time.
++	 * Switching on quota accounting must be done at mount time,
++	 * only consider quota enforcement stuff here.
+ 	 */
+-	flags &= ~(XFS_ALL_QUOTA_ACCT);
++	flags &= XFS_ALL_QUOTA_ENFD;
  
- 	if (udqp && XFS_IS_UQUOTA_ON(mp)) {
- 		ASSERT(ip->i_udquot == NULL);
+ 	if (flags == 0) {
+ 		xfs_debug(mp, "%s: zero flags, m_qflags=%x",
 -- 
 2.20.0
 
