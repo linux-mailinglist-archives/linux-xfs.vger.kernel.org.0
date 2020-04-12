@@ -2,143 +2,347 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A01D1A55E6
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Apr 2020 01:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A75F1A5D0A
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Apr 2020 08:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgDKXMz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Apr 2020 19:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgDKXMz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCFA20787;
-        Sat, 11 Apr 2020 23:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646775;
-        bh=agg1jRkFg+vwmbSWbEn9JEOCGyINNMhWS1tVFklRvgI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+SqjaSd0v7OWzsrMah7kfd18J88e5l3MHhDg8ov6YLZwlY/CWM/cSJuaTlBK2KGS
-         Uo0yfEHQXgxlX30zjywy2++ziPKOxvbsfbiW+prPCFx1GLGAPF+iyLnCxPh9yIeMdT
-         UmeFtSeYPjsqv+IVtl7mGnqr5Ej3g6Lv7INcCmV8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/66] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Date:   Sat, 11 Apr 2020 19:11:39 -0400
-Message-Id: <20200411231203.25933-42-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
-References: <20200411231203.25933-1-sashal@kernel.org>
+        id S1725832AbgDLGbu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Apr 2020 02:31:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15170 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725812AbgDLGbt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Apr 2020 02:31:49 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03C634aZ043052
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Apr 2020 02:31:47 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30btkc3h5p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Apr 2020 02:31:44 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Sun, 12 Apr 2020 07:30:47 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 12 Apr 2020 07:30:36 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03C6U5vo41419198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 12 Apr 2020 06:30:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8072A4053;
+        Sun, 12 Apr 2020 06:31:10 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65A6DA4040;
+        Sun, 12 Apr 2020 06:31:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.73.56])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 12 Apr 2020 06:31:08 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
+        linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
+        bfoster@redhat.com
+Subject: Re: [PATCH 2/2] xfs: Extend xattr extent counter to 32-bits
+Date:   Sun, 12 Apr 2020 12:04:13 +0530
+Organization: IBM
+In-Reply-To: <7594634.fbK8aHRXK3@localhost.localdomain>
+References: <20200404085203.1908-1-chandanrlinux@gmail.com> <20200407012000.GF21885@dread.disaster.area> <7594634.fbK8aHRXK3@localhost.localdomain>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20041206-0020-0000-0000-000003C646C2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041206-0021-0000-0000-0000221F1899
+Message-Id: <3077601.x7mL1aTcQV@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-11_06:2020-04-11,2020-04-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ impostorscore=0 adultscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 suspectscore=1 mlxlogscore=999 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004120050
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Friday, April 10, 2020 1:16 PM Chandan Rajendra wrote: 
+> On Tuesday, April 7, 2020 6:50 AM Dave Chinner wrote: 
+> > On Sat, Apr 04, 2020 at 02:22:03PM +0530, Chandan Rajendra wrote:
+> > > XFS has a per-inode xattr extent counter which is 16 bits wide. A workload
+> > > which
+> > > 1. Creates 1,000,000 255-byte sized xattrs,
+> > > 2. Deletes 50% of these xattrs in an alternating manner,
+> > > 3. Tries to create 400,000 new 255-byte sized xattrs
+> > > causes the following message to be printed on the console,
+> > > 
+> > > XFS (loop0): xfs_iflush_int: detected corrupt incore inode 131, total extents = -19916, nblocks = 102937, ptr ffff9ce33b098c00
+> > > XFS (loop0): xfs_do_force_shutdown(0x8) called from line 3739 of file fs/xfs/xfs_inode.c. Return address = ffffffffa4a94173
+> > > 
+> > > This indicates that we overflowed the 16-bits wide xattr extent counter.
+> > > 
+> > > I have been informed that there are instances where a single file has
+> > >  > 100 million hardlinks. With parent pointers being stored in xattr,
+> > > we will overflow the 16-bits wide xattr extent counter when large
+> > > number of hardlinks are created.
+> > > 
+> > > Hence this commit extends xattr extent counter to 32-bits. It also introduces
+> > > an incompat flag to prevent older kernels from mounting newer filesystems with
+> > > 32-bit wide xattr extent counter.
+> > > 
+> > > Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_format.h     | 28 +++++++++++++++++++++-------
+> > >  fs/xfs/libxfs/xfs_inode_buf.c  | 27 +++++++++++++++++++--------
+> > >  fs/xfs/libxfs/xfs_inode_fork.c |  3 ++-
+> > >  fs/xfs/libxfs/xfs_log_format.h |  5 +++--
+> > >  fs/xfs/libxfs/xfs_types.h      |  4 ++--
+> > >  fs/xfs/scrub/inode.c           |  7 ++++---
+> > >  fs/xfs/xfs_inode_item.c        |  3 ++-
+> > >  fs/xfs/xfs_log_recover.c       | 13 ++++++++++---
+> > >  8 files changed, 63 insertions(+), 27 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+> > > index 045556e78ee2c..0a4266b0d46e1 100644
+> > > --- a/fs/xfs/libxfs/xfs_format.h
+> > > +++ b/fs/xfs/libxfs/xfs_format.h
+> > > @@ -465,10 +465,12 @@ xfs_sb_has_ro_compat_feature(
+> > >  #define XFS_SB_FEAT_INCOMPAT_FTYPE	(1 << 0)	/* filetype in dirent */
+> > >  #define XFS_SB_FEAT_INCOMPAT_SPINODES	(1 << 1)	/* sparse inode chunks */
+> > >  #define XFS_SB_FEAT_INCOMPAT_META_UUID	(1 << 2)	/* metadata UUID */
+> > > +#define XFS_SB_FEAT_INCOMPAT_32BIT_AEXT_CNTR (1 << 3)
+> > >  #define XFS_SB_FEAT_INCOMPAT_ALL \
+> > >  		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
+> > >  		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
+> > > -		 XFS_SB_FEAT_INCOMPAT_META_UUID)
+> > > +		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
+> > > +		 XFS_SB_FEAT_INCOMPAT_32BIT_AEXT_CNTR)
+> > >  
+> > >  #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
+> > >  static inline bool
+> > > @@ -874,7 +876,7 @@ typedef struct xfs_dinode {
+> > >  	__be64		di_nblocks;	/* # of direct & btree blocks used */
+> > >  	__be32		di_extsize;	/* basic/minimum extent size for file */
+> > >  	__be32		di_nextents;	/* number of extents in data fork */
+> > > -	__be16		di_anextents;	/* number of extents in attribute fork*/
+> > > +	__be16		di_anextents_lo;/* lower part of xattr extent count */
+> > >  	__u8		di_forkoff;	/* attr fork offs, <<3 for 64b align */
+> > >  	__s8		di_aformat;	/* format of attr fork's data */
+> > >  	__be32		di_dmevmask;	/* DMIG event mask */
+> > > @@ -891,7 +893,8 @@ typedef struct xfs_dinode {
+> > >  	__be64		di_lsn;		/* flush sequence */
+> > >  	__be64		di_flags2;	/* more random flags */
+> > >  	__be32		di_cowextsize;	/* basic cow extent size for file */
+> > > -	__u8		di_pad2[12];	/* more padding for future expansion */
+> > > +	__be16		di_anextents_hi;/* higher part of xattr extent count */
+> > > +	__u8		di_pad2[10];	/* more padding for future expansion */
+> > 
+> > Ok, I think you've limited what we can do here by using this "fill
+> > holes" variable split. I've never liked doing this, and we've only
+> > done it in the past when we haven't had space in the inode to create
+> > a new 32 bit variable.
+> > 
+> > IOWs, this is a v5 format feature only, so we should just create a
+> > new variable:
+> > 
+> > 	__be32		di_attr_nextents;
+> > 
+> > With that in place, we can now do what we did extending the v1 inode
+> > link count (16 bits) to the v2 inode link count (32 bits).
+> > 
+> > That is, when the attribute count is going to overflow, we set a
+> > inode flag on disk to indicate that it now has a 32 bit extent count
+> > and uses that field in the inode, and we set a RO-compat feature
+> > flag in the superblock to indicate that there are 32 bit attr fork
+> > extent counts in use.
+> > 
+> > Old kernels can still read the filesystem, but see the extent count
+> > as "max" (65535) but can't modify the attr fork and hence corrupt
+> > the 32 bit count it knows nothing about.
+> > 
+> > If the kernel sees the RO feature bit set, it can set the inode flag
+> > on inodes it is modifying and update both the old and new counters
+> > appropriately when flushing the inode to disk (i.e. transparent
+> > conversion).
+> > 
+> > In future, mkfs can then set the RO feature flag by default so all
+> > new filesystems use the 32 bit counter.
+> > 
+> > >  	/* fields only written to during inode creation */
+> > >  	xfs_timestamp_t	di_crtime;	/* time created */
+> > > @@ -993,10 +996,21 @@ enum xfs_dinode_fmt {
+> > >  	((w) == XFS_DATA_FORK ? \
+> > >  		(dip)->di_format : \
+> > >  		(dip)->di_aformat)
+> > > -#define XFS_DFORK_NEXTENTS(dip,w) \
+> > > -	((w) == XFS_DATA_FORK ? \
+> > > -		be32_to_cpu((dip)->di_nextents) : \
+> > > -		be16_to_cpu((dip)->di_anextents))
+> > > +
+> > > +static inline int32_t XFS_DFORK_NEXTENTS(struct xfs_sb *sbp,
+> > 
+> > If you are converting a macro to static inline, then all the caller
+> > sites should be converted to lower case at the same time.
+> > 
+> > > +					struct xfs_dinode *dip, int whichfork)
+> > > +{
+> > > +	int32_t anextents;
+> > 
+> > Extent counts should be unsigned, as they are on disk.
+> > 
+> > > +
+> > > +	if (whichfork == XFS_DATA_FORK)
+> > > +		return be32_to_cpu((dip)->di_nextents);
+> > > +
+> > > +	anextents = be16_to_cpu((dip)->di_anextents_lo);
+> > > +	if (xfs_sb_version_has_v3inode(sbp))
+> > > +		anextents |= ((u32)(be16_to_cpu((dip)->di_anextents_hi)) << 16);
+> > > +
+> > > +	return anextents;
+> > > +}
+> > 
+> > No feature bit to indicate that 32 bit attribute extent counts are
+> > valid?
+> > 
+> > >  
+> > >  /*
+> > >   * For block and character special files the 32bit dev_t is stored at the
+> > > diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+> > > index 39c5a6e24915c..ced8195bd8c22 100644
+> > > --- a/fs/xfs/libxfs/xfs_inode_buf.c
+> > > +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+> > > @@ -232,7 +232,8 @@ xfs_inode_from_disk(
+> > >  	to->di_nblocks = be64_to_cpu(from->di_nblocks);
+> > >  	to->di_extsize = be32_to_cpu(from->di_extsize);
+> > >  	to->di_nextents = be32_to_cpu(from->di_nextents);
+> > > -	to->di_anextents = be16_to_cpu(from->di_anextents);
+> > > +	to->di_anextents = XFS_DFORK_NEXTENTS(&ip->i_mount->m_sb, from,
+> > > +				XFS_ATTR_FORK);
+> > 
+> > This should open code, but I'd prefer a compeltely separate
+> > variable...
+> > 
+> > >  	to->di_forkoff = from->di_forkoff;
+> > >  	to->di_aformat	= from->di_aformat;
+> > >  	to->di_dmevmask	= be32_to_cpu(from->di_dmevmask);
+> > > @@ -282,7 +283,7 @@ xfs_inode_to_disk(
+> > >  	to->di_nblocks = cpu_to_be64(from->di_nblocks);
+> > >  	to->di_extsize = cpu_to_be32(from->di_extsize);
+> > >  	to->di_nextents = cpu_to_be32(from->di_nextents);
+> > > -	to->di_anextents = cpu_to_be16(from->di_anextents);
+> > > +	to->di_anextents_lo = cpu_to_be16((u32)(from->di_anextents) & 0xffff);
+> > >  	to->di_forkoff = from->di_forkoff;
+> > >  	to->di_aformat = from->di_aformat;
+> > >  	to->di_dmevmask = cpu_to_be32(from->di_dmevmask);
+> > > @@ -296,6 +297,8 @@ xfs_inode_to_disk(
+> > >  		to->di_crtime.t_nsec = cpu_to_be32(from->di_crtime.tv_nsec);
+> > >  		to->di_flags2 = cpu_to_be64(from->di_flags2);
+> > >  		to->di_cowextsize = cpu_to_be32(from->di_cowextsize);
+> > > +		to->di_anextents_hi
+> > > +			= cpu_to_be16((u32)(from->di_anextents) >> 16);
+> > 
+> > Again, feature bit for on-disk format modifications needed...
+> > 
+> > >  		to->di_ino = cpu_to_be64(ip->i_ino);
+> > >  		to->di_lsn = cpu_to_be64(lsn);
+> > >  		memset(to->di_pad2, 0, sizeof(to->di_pad2));
+> > > @@ -335,7 +338,7 @@ xfs_log_dinode_to_disk(
+> > >  	to->di_nblocks = cpu_to_be64(from->di_nblocks);
+> > >  	to->di_extsize = cpu_to_be32(from->di_extsize);
+> > >  	to->di_nextents = cpu_to_be32(from->di_nextents);
+> > > -	to->di_anextents = cpu_to_be16(from->di_anextents);
+> > > +	to->di_anextents_lo = cpu_to_be16(from->di_anextents_lo);
+> > >  	to->di_forkoff = from->di_forkoff;
+> > >  	to->di_aformat = from->di_aformat;
+> > >  	to->di_dmevmask = cpu_to_be32(from->di_dmevmask);
+> > > @@ -349,6 +352,7 @@ xfs_log_dinode_to_disk(
+> > >  		to->di_crtime.t_nsec = cpu_to_be32(from->di_crtime.t_nsec);
+> > >  		to->di_flags2 = cpu_to_be64(from->di_flags2);
+> > >  		to->di_cowextsize = cpu_to_be32(from->di_cowextsize);
+> > > +		to->di_anextents_hi = cpu_to_be16(from->di_anextents_hi);
+> > >  		to->di_ino = cpu_to_be64(from->di_ino);
+> > >  		to->di_lsn = cpu_to_be64(from->di_lsn);
+> > >  		memcpy(to->di_pad2, from->di_pad2, sizeof(to->di_pad2));
+> > > @@ -365,7 +369,9 @@ xfs_dinode_verify_fork(
+> > >  	struct xfs_mount	*mp,
+> > >  	int			whichfork)
+> > >  {
+> > > -	uint32_t		di_nextents = XFS_DFORK_NEXTENTS(dip, whichfork);
+> > > +	uint32_t		di_nextents;
+> > > +
+> > > +	di_nextents = XFS_DFORK_NEXTENTS(&mp->m_sb, dip, whichfork);
+> > >  
+> > >  	switch (XFS_DFORK_FORMAT(dip, whichfork)) {
+> > >  	case XFS_DINODE_FMT_LOCAL:
+> > > @@ -436,6 +442,9 @@ xfs_dinode_verify(
+> > >  	uint16_t		flags;
+> > >  	uint64_t		flags2;
+> > >  	uint64_t		di_size;
+> > > +	int32_t			nextents;
+> > > +	int32_t			anextents;
+> > > +	int64_t			nblocks;
+> > 
+> > Extent counts need to be converted to unsigned in memory - they are
+> > unsigned on disk....
+> 
+> In the current code, we have,
+> 
+> #define MAXEXTNUM       ((xfs_extnum_t)0x7fffffff)      /* signed int */                                                                                                      
+> #define MAXAEXTNUM      ((xfs_aextnum_t)0x7fff)         /* signed short */
+> 
+> i.e. the maximum allowed data extent counter and xattr extent counter are
+> maximum possible values w.r.t signed int and signed short.
+> 
+> Can you please explain as to why signed maximum values were considered when
+> the corresponding on-disk data types are unsigned?
+> 
+> 
 
-[ Upstream commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 ]
+Ok. So the reason I asked that question was because I was wondering if
+changing the maximum number of extents for data and attr would cause a change
+the height of the corresponding bmbt trees (which in-turn could change the log
+reservation values). The following calculations prove otherwise,
 
-Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-during do_exit().  That can confuse things.  In particular, if BSD
-process accounting is enabled, then do_exit() writes data to an
-accounting file.  If that file has FS_SYNC_FL set, then this write
-occurs synchronously and can misbehave if PF_MEMALLOC is set.
+- 5 levels deep data bmbt tree.
+  |-------+------------------------+-------------------------------|
+  | level | number of nodes/leaves | Total Nr recs                 |
+  |-------+------------------------+-------------------------------|
+  |     0 |                      1 | 3 (max root recs)             |
+  |     1 |                      3 | 125 * 3 = 375                 |
+  |     2 |                    375 | 125 * 375 = 46875             |
+  |     3 |                  46875 | 125 * 46875 = 5859375         |
+  |     4 |                5859375 | 125 * 5859375 = 732421875     |
+  |     5 |              732421875 | 125 * 732421875 = 91552734375 |
+  |-------+------------------------+-------------------------------|
 
-For example, if the accounting file is located on an XFS filesystem,
-then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
-doesn't get written when it should.  Or if the accounting file is
-located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
-in ext4_write_inode() is triggered and the inode doesn't get written.
+- 3 levels deep attr bmbt tree.
+  |-------+------------------------+-----------------------|
+  | level | number of nodes/leaves | Total Nr recs         |
+  |-------+------------------------+-----------------------|
+  |     0 |                      1 | 2 (max root recs)     |
+  |     1 |                      2 | 125 * 2 = 250         |
+  |     2 |                    250 | 125 * 250 = 31250     |
+  |     3 |                  31250 | 125 * 31250 = 3906250 |
+  |-------+------------------------+-----------------------|
 
-Fix this in xfsaild() by using the helper functions to save and restore
-PF_MEMALLOC.
+- Data type to number of records
+  |-----------+-------------+-----------------|
+  | data type | max extents | max leaf blocks |
+  |-----------+-------------+-----------------|
+  | int32     |  2147483647 |        17179870 |
+  | uint32    |  4294967295 |        34359739 |
+  | int16     |       32767 |             263 |
+  | uint16    |       65535 |             525 |                                                                                                                  
+  |-----------+-------------+-----------------|
 
-This can be reproduced as follows in the kvm-xfstests test appliance
-modified to add the 'acct' Debian package, and with kvm-xfstests's
-recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+So data bmbt will still have a height of 5 and attr bmbt will continue to have
+a height of 3.
 
-        mkfs.xfs -f /dev/vdb
-        mount /vdb
-        touch /vdb/file
-        chattr +S /vdb/file
-        accton /vdb/file
-        mkfs.xfs -f /dev/vdc
-        mount /vdc
-        umount /vdc
-
-It causes:
-	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
-	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
-	[...]
-	Call Trace:
-	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
-	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
-	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
-	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
-	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
-	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
-	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
-	 generic_write_sync include/linux/fs.h:2867 [inline]
-	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
-	 call_write_iter include/linux/fs.h:1901 [inline]
-	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-	 do_acct_process+0x122/0x170 kernel/acct.c:522
-	 slow_acct_process kernel/acct.c:581 [inline]
-	 acct_process+0x1d4/0x27c kernel/acct.c:607
-	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-	 kthread+0xf1/0x140 kernel/kthread.c:257
-	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-
-This bug was originally reported by syzbot at
-https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-
-Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/xfs/xfs_trans_ail.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index d3a4e89bf4a0d..66f167aefd94f 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -520,8 +520,9 @@ xfsaild(
- {
- 	struct xfs_ail	*ailp = data;
- 	long		tout = 0;	/* milliseconds */
-+	unsigned int	noreclaim_flag;
- 
--	current->flags |= PF_MEMALLOC;
-+	noreclaim_flag = memalloc_noreclaim_save();
- 	set_freezable();
- 
- 	while (1) {
-@@ -592,6 +593,7 @@ xfsaild(
- 		tout = xfsaild_push(ailp);
- 	}
- 
-+	memalloc_noreclaim_restore(noreclaim_flag);
- 	return 0;
- }
- 
 -- 
-2.20.1
+chandan
+
+
 
