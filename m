@@ -2,76 +2,238 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B2A31A76F4
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Apr 2020 11:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E531A826B
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Apr 2020 17:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437357AbgDNJGg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 Apr 2020 05:06:36 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:44866 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437356AbgDNJGd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Apr 2020 05:06:33 -0400
-Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BD42158C655;
-        Tue, 14 Apr 2020 19:06:26 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jOHWT-0000BX-Nq; Tue, 14 Apr 2020 19:06:25 +1000
-Date:   Tue, 14 Apr 2020 19:06:25 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs: move inode flush to a workqueue
-Message-ID: <20200414090625.GW24067@dread.disaster.area>
-References: <158674021112.3253017.16592621806726469169.stgit@magnolia>
- <158674021749.3253017.16036198065081499968.stgit@magnolia>
- <20200413123109.GB57285@bfoster>
- <20200414003121.GD6742@magnolia>
+        id S2407367AbgDNPUN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Apr 2020 11:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405598AbgDNPCn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Apr 2020 11:02:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95C1C061BD3;
+        Tue, 14 Apr 2020 08:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=TRNBJXFfo71Y8egqdaT6VpTGk5rcBXea9Hgvx2jAnI8=; b=WLGUec2QeLxr5jFhRZK/AMUpHh
+        3GpjbxQMvq2bnfVy4jK+RwHmQuccOcS6DUgL5mzXpkaJV5rahz/w7eILVYUIu25E8aNjojZI6B2Pc
+        bm0lc6tqQdE1fyOli0vcKhdp3eEPpL/Os5xbkveRq8kymHDWEUCJblWO1mhgCOz7TmLroyNsL89JI
+        Zt4z0NBrbN+qX/LAo4LQnIqCpPZSSWHbysjHZfQ2woi8QkrTvDTLI3loFL0++3wlvO4y/1XKTrdN/
+        ZcWnbHTYDysml5KCCduPDPMSyGr3qJtl1wqf8mg1K/pWcAdIIUag5Ko3r7OuINpGDRTLjXm4G6IYz
+        GE5uUzpQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jON58-0006Np-QT; Tue, 14 Apr 2020 15:02:35 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: [PATCH v11 00/25] Change readahead API
+Date:   Tue, 14 Apr 2020 08:02:08 -0700
+Message-Id: <20200414150233.24495-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414003121.GD6742@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=7xklDLai8h8mgGp_7uIA:9
-        a=CjuIK1q_8ugA:10 a=XTfQIuIyIrcA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:31:21PM -0700, Darrick J. Wong wrote:
-> On Mon, Apr 13, 2020 at 08:31:09AM -0400, Brian Foster wrote:
-> > On Sun, Apr 12, 2020 at 06:10:17PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > Move the inode dirty data flushing to a workqueue so that multiple
-> > > threads can take advantage of a single thread's flush work.  The
-> > > ratelimiting technique was not successful, because threads that skipped
-> > > the inode flush scan due to ratelimiting would ENOSPC early and
-> > > apparently now there are complaints about that.  So make everyone wait.
-> > > 
-> > > Fixes: bdd4ee4f8407 ("xfs: ratelimit inode flush on buffered write ENOSPC")
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > 
-> > Seems reasonable in general, but do we really want to to dump a longish
-> > running filesystem sync to the system workqueue? It looks like there are
-> > a lot of existing users so I can't really tell if there are major
-> > restrictions or not, but it seems risk of disruption is higher than
-> > necessary if we dump one or more full fs syncs to it..
-> 
-> Hmm, I guess I should look at the other flush_work user (the CIL) to see
-> if there's any potential for conflicts.  IIRC the system workqueue will
-> spawn more threads if someone blocks too long, but maybe we ought to
-> use system_long_wq for these kinds of things...
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Why isn't this being put on the mp->m_sync_workqueue?
+This series adds a readahead address_space operation to replace the
+readpages operation.  The key difference is that pages are added to the
+page cache as they are allocated (and then looked up by the filesystem)
+instead of passing them on a list to the readpages operation and having
+the filesystem add them to the page cache.  It's a net reduction in
+code for each implementation, more efficient than walking a list, and
+solves the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
--Dave.
+The only unconverted filesystems are those which use fscache.  Their
+conversion is pending Dave Howells' rewrite which will make the conversion
+substantially easier.  This should be completed by the end of the year.
+
+I want to thank the reviewers/testers; Dave Chinner, John Hubbard,
+Eric Biggers, Johannes Thumshirn, Dave Sterba, Zi Yan, Christoph Hellwig
+and Miklos Szeredi have done a marvellous job of providing constructive
+criticism.
+
+These patches pass an xfstests run on ext4, xfs & btrfs with no
+regressions that I can tell (some of the tests seem a little flaky before
+and remain flaky afterwards).
+
+This series can also be found at
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v11
+
+v11: Rebased on v5.7-rc1
+ - Rewrote the fuse conversion to use __readahead_batch() and fix some bugs.
+
+v10: Rebased on linux-next 20200323
+ - Collected some more reviewed-by tags
+ - Simplify nr_to_read limits (Eric Biggers)
+ - Convert fs/exfat instead of drivers/staging/exfat (Namjae Jeon)
+ - Explicitly convert a pointer to a boolean in f2fs (Eric Biggers)
+
+v9: No code changes.  Fixed a changelog and added some reviewed-by tags.
+
+v8:
+ - btrfs, ext4 and xfs all survive an xfstests run (thanks to Kent Overstreet
+   for providing the ktest framework)
+ - iomap restructuring dropped due to Christoph's opposition and the
+   redesign of readahead_page() meaning it wasn't needed any more.
+ - f2fs_mpage_readpages() made static again
+ - Made iomap_readahead() comment more useful
+ - Added kernel-doc for the entire readahead_control API
+ - Conditionally zero batch_count in readahead_page() (requested by John)
+ - Hold RCU read lock while iterating over the xarray in readahead_page_batch()
+ - Iterate over the correct pages in readahead_page_batch()
+ - Correct the return type of readahead_index() (spotted by Zi Yan)
+ - Added a 'skip_page' parameter to read_pages for better documentation
+   purposes and so we can reuse the readahead_control higher in the call
+   chain in future.
+ - Removed the use_list bool (requested by Christoph)
+ - Removed the explicit initialisation of _nr_pages to 0 (requested by
+   Christoph & John)
+ - Add comments explaining why nr_to_read is being capped (requested by John)
+ - Reshuffled some of the patches:
+   - Split out adding the readahead_control API from the three patches which
+     added it piecemeal
+   - Shift the final two mm patches to be with the other mm patches
+   - Split the f2fs "pass the inode" patch from the "convert to readahead"
+     patch, like ext4
+
+v7:
+ - Now passes an xfstests run on ext4!
+ - Documentation improvements
+ - Move the readahead prototypes out of mm.h (new patch)
+ - readahead_for_each* iterators are gone; replaced with readahead_page()
+   and readahead_page_batch()
+ - page_cache_readahead_limit() renamed to page_cache_readahead_unbounded()
+   and arguments changed
+ - iomap_readahead_actor() restructured differently
+ - The readahead code no longer uses the word 'offset' to reduce ambiguity
+ - read_pages() now maintains the rac so we can just call it and continue
+   instead of mucking around with branches
+ - More assertions
+ - More readahead functions return void
+
+v6:
+ - Name the private members of readahead_control with a leading underscore
+   (suggested by Christoph Hellwig)
+ - Fix whitespace in rst file
+ - Remove misleading comment in btrfs patch
+ - Add readahead_next() API and use it in iomap
+ - Add iomap_readahead kerneldoc.
+ - Fix the mpage_readahead kerneldoc
+ - Make various readahead functions return void
+ - Keep readahead_index() and readahead_offset() pointing to the start of
+   this batch through the body.  No current user requires this, but it's
+   less surprising.
+ - Add kerneldoc for page_cache_readahead_limit
+ - Make page_idx an unsigned long, and rename it to just 'i'
+ - Get rid of page_offset local variable
+ - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+   by Michal Hocko)
+ - Resplit a lot of patches for more logical progression and easier review
+   (suggested by John Hubbard)
+ - Added sign-offs where received, and I deemed still relevant
+
+v5 switched to passing a readahead_control struct (mirroring the
+writepages_control struct passed to writepages).  This has a number of
+advantages:
+ - It fixes a number of bugs in various implementations, eg forgetting to
+   increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+   as a byte offset instead of a page offset.
+ - It allows us to change the arguments without changing all the
+   implementations of ->readahead which just call mpage_readahead() or
+   iomap_readahead()
+ - Figuring out which pages haven't been attempted by the implementation
+   is more natural this way.
+ - There's less code in each implementation.
+
+Matthew Wilcox (Oracle) (25):
+  mm: Move readahead prototypes from mm.h
+  mm: Return void from various readahead functions
+  mm: Ignore return value of ->readpages
+  mm: Move readahead nr_pages check into read_pages
+  mm: Add new readahead_control API
+  mm: Use readahead_control to pass arguments
+  mm: Rename various 'offset' parameters to 'index'
+  mm: rename readahead loop variable to 'i'
+  mm: Remove 'page_offset' from readahead loop
+  mm: Put readahead pages in cache earlier
+  mm: Add readahead address space operation
+  mm: Move end_index check out of readahead loop
+  mm: Add page_cache_readahead_unbounded
+  mm: Document why we don't set PageReadahead
+  mm: Use memalloc_nofs_save in readahead path
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  ext4: Pass the inode to ext4_mpage_readpages
+  f2fs: Convert from readpages to readahead
+  f2fs: Pass the inode to f2fs_mpage_readpages
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
+
+ Documentation/filesystems/locking.rst |   6 +-
+ Documentation/filesystems/vfs.rst     |  15 ++
+ block/blk-core.c                      |   1 +
+ fs/block_dev.c                        |   7 +-
+ fs/btrfs/extent_io.c                  |  43 ++--
+ fs/btrfs/extent_io.h                  |   3 +-
+ fs/btrfs/inode.c                      |  16 +-
+ fs/erofs/data.c                       |  39 ++--
+ fs/erofs/zdata.c                      |  29 +--
+ fs/exfat/inode.c                      |   7 +-
+ fs/ext2/inode.c                       |  10 +-
+ fs/ext4/ext4.h                        |   5 +-
+ fs/ext4/inode.c                       |  21 +-
+ fs/ext4/readpage.c                    |  25 +--
+ fs/ext4/verity.c                      |  35 +---
+ fs/f2fs/data.c                        |  50 ++---
+ fs/f2fs/f2fs.h                        |   3 -
+ fs/f2fs/verity.c                      |  35 +---
+ fs/fat/inode.c                        |   7 +-
+ fs/fuse/file.c                        |  99 +++-------
+ fs/gfs2/aops.c                        |  23 +--
+ fs/hpfs/file.c                        |   7 +-
+ fs/iomap/buffered-io.c                |  92 +++------
+ fs/iomap/trace.h                      |   2 +-
+ fs/isofs/inode.c                      |   7 +-
+ fs/jfs/inode.c                        |   7 +-
+ fs/mpage.c                            |  38 ++--
+ fs/nilfs2/inode.c                     |  15 +-
+ fs/ocfs2/aops.c                       |  34 ++--
+ fs/omfs/file.c                        |   7 +-
+ fs/qnx6/inode.c                       |   7 +-
+ fs/reiserfs/inode.c                   |   8 +-
+ fs/udf/inode.c                        |   7 +-
+ fs/xfs/xfs_aops.c                     |  13 +-
+ fs/zonefs/super.c                     |   7 +-
+ include/linux/fs.h                    |   2 +
+ include/linux/iomap.h                 |   3 +-
+ include/linux/mm.h                    |  19 --
+ include/linux/mpage.h                 |   4 +-
+ include/linux/pagemap.h               | 151 ++++++++++++++
+ include/trace/events/erofs.h          |   6 +-
+ include/trace/events/f2fs.h           |   6 +-
+ mm/fadvise.c                          |   6 +-
+ mm/internal.h                         |  12 +-
+ mm/migrate.c                          |   2 +-
+ mm/readahead.c                        | 275 ++++++++++++++++----------
+ 46 files changed, 583 insertions(+), 633 deletions(-)
+
+
+base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
