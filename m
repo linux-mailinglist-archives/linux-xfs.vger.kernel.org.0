@@ -2,268 +2,199 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0261A6CCF
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Apr 2020 21:47:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E29EF1A702A
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Apr 2020 02:31:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388111AbgDMTqc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Apr 2020 15:46:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2914 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387774AbgDMTqb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 13 Apr 2020 15:46:31 -0400
-IronPort-SDR: grEFM0nhMEbvPTaie49Xn6oP9QUTNd6QpZ4rtP0JOJkG7NUIu2hp+UniACxAuIp2Vhg+lQBn00
- skocZ4GfAY9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 12:46:30 -0700
-IronPort-SDR: e4mMITxY+fkq+PARmd2XJYn1qgoh2dn84nSTYeUzXAhlMWRZa9fI+jXQDxAMfekIN3a1LzDQ1n
- 9hWem+LTO3lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
-   d="scan'208";a="277010474"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Apr 2020 12:46:30 -0700
-Date:   Mon, 13 Apr 2020 12:46:10 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V7 8/9] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
-Message-ID: <20200413194609.GE1649878@iweiny-DESK2.sc.intel.com>
-References: <20200413054046.1560106-1-ira.weiny@intel.com>
- <20200413054046.1560106-9-ira.weiny@intel.com>
- <20200413161240.GX6742@magnolia>
+        id S2390457AbgDNAb2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Apr 2020 20:31:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40000 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390456AbgDNAb1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Apr 2020 20:31:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E0Dc5o186903;
+        Tue, 14 Apr 2020 00:31:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=C9DyXwY0IvzHehu8kJ0b/KlUy9/IKvHFB6n+FXK9eoI=;
+ b=iS46H0ccWezYz370H53i64fFT4M9x9Rqxzdsz245FMDZagjlGe53V+40vdSqwJuBoCsd
+ n8XR5XFQDeP65+YDDSVporc6zonA2nFLzsXW6KUjjaXkJT9j5hx/LfbcwNaGMCAkVoaQ
+ eKIaOlLrZfp4uzJ+2+QoC9/QULRdSxUX/7tK3t2N5B6XGrSQaxYRczyRtKzpeXd1xyRP
+ 4lTHHRxrxK2hQ1GNpmyG5O8/qVflwDgLMYfXfx7Z4O9l3ICWd92xWLi27gCD8j2nohe3
+ rVHsBGIgKZz2tbP2WGUSJTDuMzL0re3mRBBpyebOzLWsGMefgMYqratzC8/m5xEmJz/I Fg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30b6hphfrv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 00:31:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03E0D53I009634;
+        Tue, 14 Apr 2020 00:31:22 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30cta8gej9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 00:31:22 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03E0VMDW027544;
+        Tue, 14 Apr 2020 00:31:22 GMT
+Received: from localhost (/10.159.239.215)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Apr 2020 17:31:22 -0700
+Date:   Mon, 13 Apr 2020 17:31:21 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: move inode flush to a workqueue
+Message-ID: <20200414003121.GD6742@magnolia>
+References: <158674021112.3253017.16592621806726469169.stgit@magnolia>
+ <158674021749.3253017.16036198065081499968.stgit@magnolia>
+ <20200413123109.GB57285@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413161240.GX6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200413123109.GB57285@bfoster>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9590 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=2
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004140000
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:12:40AM -0700, Darrick J. Wong wrote:
-> On Sun, Apr 12, 2020 at 10:40:45PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Mon, Apr 13, 2020 at 08:31:09AM -0400, Brian Foster wrote:
+> On Sun, Apr 12, 2020 at 06:10:17PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > We only support changing FS_XFLAG_DAX on directories.  Files get their
-> > flag from the parent directory on creation only.  So no data
-> > invalidation needs to happen.
+> > Move the inode dirty data flushing to a workqueue so that multiple
+> > threads can take advantage of a single thread's flush work.  The
+> > ratelimiting technique was not successful, because threads that skipped
+> > the inode flush scan due to ratelimiting would ENOSPC early and
+> > apparently now there are complaints about that.  So make everyone wait.
 > > 
-> > Alter the xfs_ioctl_setattr_dax_invalidate() to be
-> > xfs_ioctl_setattr_dax_validate().  xfs_ioctl_setattr_dax_validate() now
-> > validates that any FS_XFLAG_DAX change is ok.
-> > 
-> > This also allows use to remove the join_flags logic.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
+> > Fixes: bdd4ee4f8407 ("xfs: ratelimit inode flush on buffered write ENOSPC")
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> > Changes from v6:
-> > 	Fix completely broken implementation and update commit message.
-> > 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
-> > 	and S_DAX changing on drop_caches
+> 
+> Seems reasonable in general, but do we really want to to dump a longish
+> running filesystem sync to the system workqueue? It looks like there are
+> a lot of existing users so I can't really tell if there are major
+> restrictions or not, but it seems risk of disruption is higher than
+> necessary if we dump one or more full fs syncs to it..
+
+Hmm, I guess I should look at the other flush_work user (the CIL) to see
+if there's any potential for conflicts.  IIRC the system workqueue will
+spawn more threads if someone blocks too long, but maybe we ought to
+use system_long_wq for these kinds of things...
+
+--D
+
+> Brian
+> 
+> >  fs/xfs/xfs_mount.h |    6 +++++-
+> >  fs/xfs/xfs_super.c |   40 ++++++++++++++++++++++------------------
+> >  2 files changed, 27 insertions(+), 19 deletions(-)
 > > 
-> > Changes from v5:
-> > 	New patch
-> > ---
-> >  fs/xfs/xfs_ioctl.c | 102 +++++++--------------------------------------
-> >  1 file changed, 16 insertions(+), 86 deletions(-)
 > > 
-> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > index c6cd92ef4a05..ba42a5fb5b05 100644
-> > --- a/fs/xfs/xfs_ioctl.c
-> > +++ b/fs/xfs/xfs_ioctl.c
-> > @@ -1145,63 +1145,23 @@ xfs_ioctl_setattr_xflags(
+> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > index 50c43422fa17..b2e4598fdf7d 100644
+> > --- a/fs/xfs/xfs_mount.h
+> > +++ b/fs/xfs/xfs_mount.h
+> > @@ -167,8 +167,12 @@ typedef struct xfs_mount {
+> >  	struct xfs_kobj		m_error_meta_kobj;
+> >  	struct xfs_error_cfg	m_error_cfg[XFS_ERR_CLASS_MAX][XFS_ERR_ERRNO_MAX];
+> >  	struct xstats		m_stats;	/* per-fs stats */
+> > -	struct ratelimit_state	m_flush_inodes_ratelimit;
+> >  
+> > +	/*
+> > +	 * Workqueue item so that we can coalesce multiple inode flush attempts
+> > +	 * into a single flush.
+> > +	 */
+> > +	struct work_struct	m_flush_inodes_work;
+> >  	struct workqueue_struct *m_buf_workqueue;
+> >  	struct workqueue_struct	*m_unwritten_workqueue;
+> >  	struct workqueue_struct	*m_cil_workqueue;
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index abf06bf9c3f3..dced03a4571d 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -516,6 +516,20 @@ xfs_destroy_mount_workqueues(
+> >  	destroy_workqueue(mp->m_buf_workqueue);
 > >  }
 > >  
-> >  /*
-> > - * If we are changing DAX flags, we have to ensure the file is clean and any
-> > - * cached objects in the address space are invalidated and removed. This
-> > - * requires us to lock out other IO and page faults similar to a truncate
-> > - * operation. The locks need to be held until the transaction has been committed
-> > - * so that the cache invalidation is atomic with respect to the DAX flag
-> > - * manipulation.
-> > + * Mark inodes with a changing FS_XFLAG_DAX, I_DONTCACHE
-> >   */
-> > -static int
 > > +static void
-> >  xfs_ioctl_setattr_dax_invalidate(
-> >  	struct xfs_inode	*ip,
-> > -	struct fsxattr		*fa,
-> > -	int			*join_flags)
-> > +	struct fsxattr		*fa)
-> >  {
-> > -	struct inode		*inode = VFS_I(ip);
-> > -	struct super_block	*sb = inode->i_sb;
-> > -	int			error;
-> > -
-> > -	*join_flags = 0;
-> > -
-> > -	/*
-> > -	 * It is only valid to set the DAX flag on regular files and
-> > -	 * directories on filesystems where the block size is equal to the page
-> > -	 * size. On directories it serves as an inherited hint so we don't
-> > -	 * have to check the device for dax support or flush pagecache.
-> > -	 */
-> > -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
-> > -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
-> > -
-> > -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
-> > -			return -EINVAL;
-> > -	}
-> > -
-> > -	/* If the DAX state is not changing, we have nothing to do here. */
-> > -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
-> > -		return 0;
-> > -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
-> > -		return 0;
-> > +	struct inode            *inode = VFS_I(ip);
-> >  
-> >  	if (S_ISDIR(inode->i_mode))
-> > -		return 0;
-> > -
-> > -	/* lock, flush and invalidate mapping in preparation for flag change */
-> > -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> > -	error = filemap_write_and_wait(inode->i_mapping);
-> > -	if (error)
-> > -		goto out_unlock;
-> > -	error = invalidate_inode_pages2(inode->i_mapping);
-> > -	if (error)
-> > -		goto out_unlock;
-> > -
-> > -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
-> > -	return 0;
-> > -
-> > -out_unlock:
-> > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> > -	return error;
-> > +		return;
-> 
-> We also need a check up here to skip the I_DONTCACHE setting if the
-> admin has set a mount option to override the inode flag.
-
-Yes that would be more optimal!
-
-Thanks,
-Ira
-
-> 
-> The rest looks good to me.
-> 
-> --D
-> 
-> > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
-> > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
-> > +		inode->i_state |= I_DONTCACHE;
-> >  }
-> >  
+> > +xfs_flush_inodes_worker(
+> > +	struct work_struct	*work)
+> > +{
+> > +	struct xfs_mount	*mp = container_of(work, struct xfs_mount,
+> > +						   m_flush_inodes_work);
+> > +	struct super_block	*sb = mp->m_super;
+> > +
+> > +	if (down_read_trylock(&sb->s_umount)) {
+> > +		sync_inodes_sb(sb);
+> > +		up_read(&sb->s_umount);
+> > +	}
+> > +}
+> > +
 > >  /*
-> > @@ -1209,17 +1169,10 @@ xfs_ioctl_setattr_dax_invalidate(
-> >   * have permission to do so. On success, return a clean transaction and the
-> >   * inode locked exclusively ready for further operation specific checks. On
-> >   * failure, return an error without modifying or locking the inode.
-> > - *
-> > - * The inode might already be IO locked on call. If this is the case, it is
-> > - * indicated in @join_flags and we take full responsibility for ensuring they
-> > - * are unlocked from now on. Hence if we have an error here, we still have to
-> > - * unlock them. Otherwise, once they are joined to the transaction, they will
-> > - * be unlocked on commit/cancel.
-> >   */
-> >  static struct xfs_trans *
-> >  xfs_ioctl_setattr_get_trans(
-> > -	struct xfs_inode	*ip,
-> > -	int			join_flags)
-> > +	struct xfs_inode	*ip)
+> >   * Flush all dirty data to disk. Must not be called while holding an XFS_ILOCK
+> >   * or a page lock. We use sync_inodes_sb() here to ensure we block while waiting
+> > @@ -526,15 +540,15 @@ void
+> >  xfs_flush_inodes(
+> >  	struct xfs_mount	*mp)
 > >  {
-> >  	struct xfs_mount	*mp = ip->i_mount;
-> >  	struct xfs_trans	*tp;
-> > @@ -1236,8 +1189,7 @@ xfs_ioctl_setattr_get_trans(
-> >  		goto out_unlock;
+> > -	struct super_block	*sb = mp->m_super;
+> > -
+> > -	if (!__ratelimit(&mp->m_flush_inodes_ratelimit))
+> > +	/*
+> > +	 * If flush_work() returns true then that means we waited for a flush
+> > +	 * which was already in progress.  Don't bother running another scan.
+> > +	 */
+> > +	if (flush_work(&mp->m_flush_inodes_work))
+> >  		return;
 > >  
-> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> > -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
-> > -	join_flags = 0;
-> > +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
-> >  
-> >  	/*
-> >  	 * CAP_FOWNER overrides the following restrictions:
-> > @@ -1258,8 +1210,6 @@ xfs_ioctl_setattr_get_trans(
-> >  out_cancel:
-> >  	xfs_trans_cancel(tp);
-> >  out_unlock:
-> > -	if (join_flags)
-> > -		xfs_iunlock(ip, join_flags);
-> >  	return ERR_PTR(error);
+> > -	if (down_read_trylock(&sb->s_umount)) {
+> > -		sync_inodes_sb(sb);
+> > -		up_read(&sb->s_umount);
+> > -	}
+> > +	schedule_work(&mp->m_flush_inodes_work);
+> > +	flush_work(&mp->m_flush_inodes_work);
 > >  }
 > >  
-> > @@ -1386,7 +1336,6 @@ xfs_ioctl_setattr(
-> >  	struct xfs_dquot	*pdqp = NULL;
-> >  	struct xfs_dquot	*olddquot = NULL;
-> >  	int			code;
-> > -	int			join_flags = 0;
-> >  
-> >  	trace_xfs_ioctl_setattr(ip);
-> >  
-> > @@ -1410,18 +1359,9 @@ xfs_ioctl_setattr(
-> >  			return code;
-> >  	}
-> >  
-> > -	/*
-> > -	 * Changing DAX config may require inode locking for mapping
-> > -	 * invalidation. These need to be held all the way to transaction commit
-> > -	 * or cancel time, so need to be passed through to
-> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
-> > -	 * appropriately.
-> > -	 */
-> > -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
-> > -	if (code)
-> > -		goto error_free_dquots;
-> > +	xfs_ioctl_setattr_dax_invalidate(ip, fa);
-> >  
-> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-> > +	tp = xfs_ioctl_setattr_get_trans(ip);
-> >  	if (IS_ERR(tp)) {
-> >  		code = PTR_ERR(tp);
-> >  		goto error_free_dquots;
-> > @@ -1552,7 +1492,6 @@ xfs_ioc_setxflags(
-> >  	struct fsxattr		fa;
-> >  	struct fsxattr		old_fa;
-> >  	unsigned int		flags;
-> > -	int			join_flags = 0;
-> >  	int			error;
-> >  
-> >  	if (copy_from_user(&flags, arg, sizeof(flags)))
-> > @@ -1569,18 +1508,9 @@ xfs_ioc_setxflags(
+> >  /* Catch misguided souls that try to use this interface on XFS */
+> > @@ -1369,17 +1383,6 @@ xfs_fc_fill_super(
 > >  	if (error)
-> >  		return error;
+> >  		goto out_free_names;
 > >  
 > > -	/*
-> > -	 * Changing DAX config may require inode locking for mapping
-> > -	 * invalidation. These need to be held all the way to transaction commit
-> > -	 * or cancel time, so need to be passed through to
-> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
-> > -	 * appropriately.
+> > -	 * Cap the number of invocations of xfs_flush_inodes to 16 for every
+> > -	 * quarter of a second.  The magic numbers here were determined by
+> > -	 * observation neither to cause stalls in writeback when there are a
+> > -	 * lot of IO threads and the fs is near ENOSPC, nor cause any fstest
+> > -	 * regressions.  YMMV.
 > > -	 */
-> > -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
-> > -	if (error)
-> > -		goto out_drop_write;
-> > +	xfs_ioctl_setattr_dax_invalidate(ip, &fa);
-> >  
-> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-> > +	tp = xfs_ioctl_setattr_get_trans(ip);
-> >  	if (IS_ERR(tp)) {
-> >  		error = PTR_ERR(tp);
-> >  		goto out_drop_write;
-> > -- 
-> > 2.25.1
+> > -	ratelimit_state_init(&mp->m_flush_inodes_ratelimit, HZ / 4, 16);
+> > -	ratelimit_set_flags(&mp->m_flush_inodes_ratelimit,
+> > -			RATELIMIT_MSG_ON_RELEASE);
+> > -
+> >  	error = xfs_init_mount_workqueues(mp);
+> >  	if (error)
+> >  		goto out_close_devices;
+> > @@ -1752,6 +1755,7 @@ static int xfs_init_fs_context(
+> >  	spin_lock_init(&mp->m_perag_lock);
+> >  	mutex_init(&mp->m_growlock);
+> >  	atomic_set(&mp->m_active_trans, 0);
+> > +	INIT_WORK(&mp->m_flush_inodes_work, xfs_flush_inodes_worker);
+> >  	INIT_DELAYED_WORK(&mp->m_reclaim_work, xfs_reclaim_worker);
+> >  	INIT_DELAYED_WORK(&mp->m_eofblocks_work, xfs_eofblocks_worker);
+> >  	INIT_DELAYED_WORK(&mp->m_cowblocks_work, xfs_cowblocks_worker);
 > > 
+> 
