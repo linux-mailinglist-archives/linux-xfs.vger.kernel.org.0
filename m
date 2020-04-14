@@ -2,115 +2,142 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD8E1A7160
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Apr 2020 05:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AAA31A7225
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Apr 2020 06:03:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404351AbgDNDAa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Apr 2020 23:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404224AbgDNDAa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Apr 2020 23:00:30 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3EA0C0A3BDC;
-        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f82so7217850ilh.8;
-        Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
-        b=PFv2e/MWAiprnN1BhiBDycrqJD137NITfKgcM7yyJdOWGGyV+BAY02xot6sVwbHfU+
-         uEptpiXO+doA8o30kbNcrmXTY7DmbhUtqjkyGQvFPMGlRMzVxd7tnHfoBetxg4uq/0Vw
-         BmRav/H54feN1KZotQw7H6sgqxeWFmzHa/5DgwsiS05E6rcS52FCF8fGHL290i5nf5M3
-         U8imVjIi/3FUdqzyBELP7Dlg06lKzJtiiWkcFt09N+wzhCSOwLoGA5sAdqMXJAxAZ9NL
-         rOri6Y6EQ0ZBpdrucsic1PNOat0LDsc7bgp/tkYl7E9aEXu6GbyM0Im6zpwd6DJKH+dD
-         PT1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NeqKXLYrWUpD8jNTcGC4+w/0QPeCB7it9q+iuJn3+6A=;
-        b=eDNIZUAPHiYKE0RMfKO3Ud7dY6cgfNcquZSRJKuw843xXgRh2+cVOX4u9HXq0YvIt4
-         /5aDZpXPCoG+TG3BIAUaOqS10oXStqbWSF3UIxN6SsDXHPKtktD70+6X9AhjqqLvI0TH
-         6Nj4eKP95nsFtp5RiMkcyCd116eHf+71DWK7oIt9J4A2HRjBckZK/ZEOzFalxwpeNmBr
-         lPqG+4up+fP/613XtpAvrzyojB2fsr7QTiJ6MtDgmj+ybXcXa5vqRqtS3QDgby+y4rdP
-         dxXafcRosJRaAH/rXYtOGTnDV3Po+ULzKAz03tpNbjFda0zwQJ+xMn7EtwksGlpO/s6K
-         dRhw==
-X-Gm-Message-State: AGi0PuYJ1QG01blnApoVL1QNvC4YZalSEEvnyPrJFPH8QxZXvR+qnc3l
-        VTw6In2TKWgT5Woq5w5U/TMXG2WOm+UJiF5jhkXR45Cd
-X-Google-Smtp-Source: APiQypIcccZX6FgExHTpUgHvvHh5LMPDLG+hilm7yJjaE8lpm5gSqgSU+a+4KO0VwFPvF16dB7XLOKXGMlciYxuN/C0=
-X-Received: by 2002:a92:394d:: with SMTP id g74mr19906784ila.250.1586833229197;
- Mon, 13 Apr 2020 20:00:29 -0700 (PDT)
+        id S1725991AbgDNEAp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Apr 2020 00:00:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:28534 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbgDNEAo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 14 Apr 2020 00:00:44 -0400
+IronPort-SDR: CfP8XdVa/CouJCM9TyOAvBdCUeYY7Qg3UsatnpdJwcrk4/TU8DLPv4PXZVurvX9Vn0gQ61ovch
+ upN7dwiL4wpQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 21:00:43 -0700
+IronPort-SDR: ac5JXNdae/2dlz5ZobRke4va6g04z64miNSjEFZk8tw3JwyRgewl6ftq6a23jBhVJldqOhhxVS
+ jhfgUcsf976A==
+X-IronPort-AV: E=Sophos;i="5.72,381,1580803200"; 
+   d="scan'208";a="253076242"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 21:00:43 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: [PATCH RFC 0/8] Enable ext4 support for per-file/directory DAX operations
+Date:   Mon, 13 Apr 2020 21:00:22 -0700
+Message-Id: <20200414040030.1802884-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CABV8kRw_jGxPqWc68Bj-uP_hSrKO0MmShOmtuzGQA2W3WHyCrg@mail.gmail.com>
- <CAOQ4uxhPKR34cXvWfF49z8mTGJm+oP2ibfohsXNdY7tXaOi4RA@mail.gmail.com>
- <CABV8kRxVA0j2qLkyWx+vULh2DxK2Ef4nPk-zXCikN8XmdBOFgQ@mail.gmail.com>
- <CAOQ4uxh2KKwORLC+gWEF=mWzBa3Kh4A4HgRoiad5N5qu06xjcg@mail.gmail.com> <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
-In-Reply-To: <CABV8kRxsGm2-RLsuWPQGc82=6+x8v8FtV0=a6MQS=Nt-Pv3V9A@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 14 Apr 2020 06:00:17 +0300
-Message-ID: <CAOQ4uxj1csY-Vn2suFZMseEZgvAZzhQ82TR+XtDRQ=cOzwvzzw@mail.gmail.com>
-Subject: Re: Same mountpoint restriction in FICLONE ioctls
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Steve French <smfrench@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:40 PM Keno Fischer <keno@juliacomputing.com> wrote:
->
-> > You make it sound like the heuristic decision must be made
-> > *after* trying to clone, but it can be made before and pass
-> > flags to the kernel whether or to fallback to copy.
->
-> True, though I simplified slightly. There's other things we try
-> first if the clone fails, like creating a hardlink. If cloning fails,
-> we also often only want to copy a part of the file (again
-> heuristically, whether more than what the program asked
-> for will be useful for debugging)
+From: Ira Weiny <ira.weiny@intel.com>
 
-Fair enough.
+Enable the same per file DAX support to ext4 as was done for xfs.  This series
+builds and depends on the V7 series for xfs.[1]
 
->
-> > copy_file_range(2) has an unused flags argument.
-> > Adding support for flags like:
-> > COPY_FILE_RANGE_BY_FS
-> > COPY_FILE_RANGE_BY_KERNEL
->
-> That would solve it of course, and I'd be happy with that
-> solution, but it seems like we'd end up with just another
-> spelling for the cloning ioctls then that have subtly different
-> semantics.
->
+To summarize:
 
-Yeh. Another spelling is a common way to change behavior.
-In fact, it is the only way if you want to avoid changing behavior
-of existing application.
+ 1. There exists an in-kernel access mode flag S_DAX that is set when
+    file accesses go directly to persistent memory, bypassing the page
+    cache.  Applications must call statx to discover the current S_DAX
+    state (STATX_ATTR_DAX).
 
-Generally speaking, syscall interface is an improvement over ioctl
-interface. Flags like:
-COPY_FILE_RANGE_REFLINK
-COPY_FILE_RANGE_NO_XDEV
-along with proper documentation, can help make the change of behavior
-explicit. The flags mentioned above would describe the existing
-FICLONERANGE semantics.
+ 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
+    inherited from the parent directory FS_XFLAG_DAX inode flag at file
+    creation time.  This advisory flag can be set or cleared at any
+    time, but doing so does not immediately affect the S_DAX state.
 
-But the thing is that the above is not just a fancy maneuver for relaxing the
-same mnt restriction of FICLONERANGE.
-I believe that enhancing the semantics of copy_file_range(2) has benefits
-beyond your use case.
-copy tools could make use of nfs/cifs server side copy without falling back
-to kernel copy.
+    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
+    and the fs is on pmem then it will enable S_DAX at inode load time;
+    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
 
-Thanks,
-Amir.
+ 3. There exists a dax= mount option.
+
+    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+
+    "-o dax=always" means "always set S_DAX (at least on pmem),
+                    and ignore FS_XFLAG_DAX."
+
+    "-o dax"        is an alias for "dax=always".
+
+    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+
+ 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
+    be set or cleared at any time.  The flag state is inherited by any files or
+    subdirectories when they are created within that directory.
+
+ 5. Programs that require a specific file access mode (DAX or not DAX)
+    can do one of the following:
+
+    (a) Create files in directories that the FS_XFLAG_DAX flag set as
+        needed; or
+
+    (b) Have the administrator set an override via mount option; or
+
+    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
+        must then cause the kernel to evict the inode from memory.  This
+        can be done by:
+
+        i>  Closing the file and re-opening the file and using statx to
+            see if the fs has changed the S_DAX flag; and
+
+        ii> If the file still does not have the desired S_DAX access
+            mode, either unmount and remount the filesystem, or close
+            the file and use drop_caches.
+
+ 6. It is expected that users who want to squeeze every last bit of performance
+    out of the particular rough and tumble bits of their storage will also be
+    exposed to the difficulties of what happens when the operating system can't
+    totally virtualize those hardware capabilities.  DAX is such a feature.
+
+
+[1] https://lore.kernel.org/lkml/20200407182958.568475-1-ira.weiny@intel.com/
+
+To: linux-kernel@vger.kernel.org
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+
+
+Ira Weiny (8):
+  fs/ext4: Narrow scope of DAX check in setflags
+  fs/ext4: Disallow verity if inode is DAX
+  fs/ext4: Disallow encryption if inode is DAX
+  fs/ext4: Introduce DAX inode flag
+  fs/ext4: Make DAX mount option a tri-state
+  fs/ext4: Update ext4_should_use_dax()
+  fs/ext4: Only change S_DAX on inode load
+  Documentation/dax: Update DAX enablement for ext4
+
+ Documentation/filesystems/dax.txt | 13 +------
+ fs/ext4/ext4.h                    | 16 ++++++---
+ fs/ext4/ialloc.c                  |  2 +-
+ fs/ext4/inode.c                   | 22 ++++++++----
+ fs/ext4/ioctl.c                   | 28 ++++++++++++---
+ fs/ext4/super.c                   | 57 +++++++++++++++++++++++--------
+ fs/ext4/verity.c                  |  5 ++-
+ 7 files changed, 99 insertions(+), 44 deletions(-)
+
+-- 
+2.25.1
+
