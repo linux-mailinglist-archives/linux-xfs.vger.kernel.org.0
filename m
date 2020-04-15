@@ -2,124 +2,203 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BB981A935D
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 08:40:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8720F1A93AB
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 08:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634927AbgDOGkZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Apr 2020 02:40:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22022 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634921AbgDOGkY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Apr 2020 02:40:24 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F6YMOm055860
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Apr 2020 02:40:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30dnmqtdyp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Apr 2020 02:40:23 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-xfs@vger.kernel.org> from <chandan@linux.ibm.com>;
-        Wed, 15 Apr 2020 07:39:47 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 Apr 2020 07:39:45 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F6dDV221758324
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 06:39:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3ED6AE058;
-        Wed, 15 Apr 2020 06:40:18 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 38166AE04D;
-        Wed, 15 Apr 2020 06:40:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.180.162])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Apr 2020 06:40:17 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v8 02/20] xfs: Check for -ENOATTR or -EEXIST
-Date:   Wed, 15 Apr 2020 12:13:23 +0530
-Organization: IBM
-In-Reply-To: <20200403221229.4995-3-allison.henderson@oracle.com>
-References: <20200403221229.4995-1-allison.henderson@oracle.com> <20200403221229.4995-3-allison.henderson@oracle.com>
+        id S2393626AbgDOGpe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Apr 2020 02:45:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21747 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393622AbgDOGp3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:45:29 -0400
+IronPort-SDR: YIPQLdZGWIVt2+SmmDbFhkbdExEfa/rG8BjYeOsvSuOLJQrvAiiXuHh6HMVS/N/fG2EJYaQOd7
+ QUFL0ElWTYYQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:29 -0700
+IronPort-SDR: 8wOyZmsnH6o5HJKHD8WuPlabeQWYPODhv7hf6PS23SuqFN0w4W6JXQ0yI+/Tzby9GnyIpXGqVm
+ H8h/cdISEcMQ==
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253435443"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:28 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>
+Subject: [PATCH V8 00/11] Enable per-file/per-directory DAX operations V8
+Date:   Tue, 14 Apr 2020 23:45:12 -0700
+Message-Id: <20200415064523.2244712-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 20041506-4275-0000-0000-000003C022D5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041506-4276-0000-0000-000038D5987F
-Message-Id: <3808247.e9iCYBVUDu@localhost.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- phishscore=0 adultscore=0 suspectscore=1 mlxlogscore=999 spamscore=0
- mlxscore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150046
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Saturday, April 4, 2020 3:42 AM Allison Collins wrote: 
-> Delayed operations cannot return error codes.  So we must check for
-> these conditions first before starting set or remove operations
->
+From: Ira Weiny <ira.weiny@intel.com>
 
-The changes are logically correct.
+Changes from V7:
+	Add DCACHE_DONTCACHE
+	If mount override don't worry about inode caching
+	Change mount flags to NEVER/ALWAYS
+	Clean up xfs_inode_enable_dax()
+	Clarify comments
+	Update documentation
 
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
+consumption due to their inability to detect whether the kernel will
+instantiate page cache for a file, and cases where a global dax enable via a
+mount option is too coarse.
 
-> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  fs/xfs/libxfs/xfs_attr.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index 2a0d3d3..f7e289e 100644
-> --- a/fs/xfs/libxfs/xfs_attr.c
-> +++ b/fs/xfs/libxfs/xfs_attr.c
-> @@ -404,6 +404,17 @@ xfs_attr_set(
->  				args->total, 0, quota_flags);
->  		if (error)
->  			goto out_trans_cancel;
-> +
-> +		error = xfs_has_attr(args);
-> +		if (error == -EEXIST && (args->attr_flags & XATTR_CREATE))
-> +			goto out_trans_cancel;
-> +
-> +		if (error == -ENOATTR && (args->attr_flags & XATTR_REPLACE))
-> +			goto out_trans_cancel;
-> +
-> +		if (error != -ENOATTR && error != -EEXIST)
-> +			goto out_trans_cancel;
-> +
->  		error = xfs_attr_set_args(args);
->  		if (error)
->  			goto out_trans_cancel;
-> @@ -411,6 +422,10 @@ xfs_attr_set(
->  		if (!args->trans)
->  			goto out_unlock;
->  	} else {
-> +		error = xfs_has_attr(args);
-> +		if (error != -EEXIST)
-> +			goto out_trans_cancel;
-> +
->  		error = xfs_attr_remove_args(args);
->  		if (error)
->  			goto out_trans_cancel;
-> 
+The following patch series enables the use of DAX on individual files and/or
+directories on xfs, and lays some groundwork to do so in ext4.  It further
+enhances the dax mount option to be a tri-state of 'always', 'never', or
+'iflag' (default).  Furthermore, it maintians '-o dax' to be equivalent to '-o
+dax=always'.
 
+The insight at LSF/MM was to separate the per-mount or per-file "physical"
+(FS_XFLAG_DAX) capability switch from an "effective" (S_DAX) attribute for the
+file.
+
+At LSF/MM we discussed the difficulties of switching the DAX state of a file
+with active mappings / page cache.  It was thought the races could be avoided
+by limiting DAX state flips to 0-length files.
+
+However, this turns out to not be true.[3][5] This is because address space
+operations (a_ops) may be in use at any time the inode is referenced.
+
+For this reason direct manipulation of the FS_XFLAG_DAX is allowed but the
+operation of the file (S_DAX) is not immediately changed.
+
+Details of when and how DAX state can be changed on a file is included in a
+documentation patch.
+
+It should be noted that FS_XFLAG_DAX inheritance is not shown in this patch set
+as it was maintained from previous work on XFS.  FS_XFLAG_DAX and it's
+inheritance will need to be added to other file systems for user control. 
+
+
+[1] https://lwn.net/Articles/787973/
+[2] https://lwn.net/Articles/787233/
+[3] https://lkml.org/lkml/2019/10/20/96
+[4] https://patchwork.kernel.org/patch/11310511/
+[5] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+
+
+To: linux-kernel@vger.kernel.org
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+
+Changes from V6:
+	Incorporate feedback on patches
+	Add ability to change FS_XFLAG_DAX on files at any time.
+		Add a don't cache flag to the VFS layer
+		Preserve internal XFS IDONTCACHE behavior for bulkstat
+		operations
+
+Changes from V5:
+	* make dax mount option a tri-state
+	* Reject changes to FS_XFLAG_DAX for regular files
+		- Allow only on directories
+	* Update documentation
+
+Changes from V4:
+	* Open code the aops lock rather than add it to the xfs_ilock()
+	  subsystem (Darrick's comments were obsoleted by this change)
+	* Fix lkp build suggestions and bugs
+
+Changes from V3:
+	* Remove global locking...  :-D
+	* put back per inode locking and remove pre-mature optimizations
+	* Fix issues with Directories having IS_DAX() set
+	* Fix kernel crash issues reported by Jeff
+	* Add some clean up patches
+	* Consolidate diflags to iflags functions
+	* Update/add documentation
+	* Reorder/rename patches quite a bit
+
+Changes from V2:
+
+	* Move i_dax_sem to be a global percpu_rw_sem rather than per inode
+		Internal discussions with Dan determined this would be easier,
+		just as performant, and slightly less overhead that having it
+		in the SB as suggested by Jan
+	* Fix locking order in comments and throughout code
+	* Change "mode" to "state" throughout commits
+	* Add CONFIG_FS_DAX wrapper to disable inode_[un]lock_state() when not
+		configured
+	* Add static branch for which is activated by a device which supports
+		DAX in XFS
+	* Change "lock/unlock" to up/down read/write as appropriate
+		Previous names were over simplified
+	* Update comments/documentation
+
+	* Remove the xfs specific lock to the vfs (global) layer.
+	* Fix i_dax_sem locking order and comments
+
+	* Move 'i_mapped' count from struct inode to struct address_space and
+		rename it to mmap_count
+	* Add inode_has_mappings() call
+
+	* Fix build issues
+	* Clean up syntax spacing and minor issues
+	* Update man page text for STATX_ATTR_DAX
+	* Add reviewed-by's
+	* Rebase to 5.6
+
+	Rename patch:
+		from: fs/xfs: Add lock/unlock state to xfs
+		to: fs/xfs: Add write DAX lock to xfs layer
+	Add patch:
+		fs/xfs: Clarify lockdep dependency for xfs_isilocked()
+	Drop patch:
+		fs/xfs: Fix truncate up
+
+Ira Weiny (11):
+  fs/xfs: Remove unnecessary initialization of i_rwsem
+  fs: Remove unneeded IS_DAX() check in io_is_direct()
+  fs/stat: Define DAX statx attribute
+  fs/xfs: Change XFS_MOUNT_DAX to XFS_MOUNT_DAX_ALWAYS
+  fs/xfs: Make DAX mount option a tri-state
+  fs/xfs: Create function xfs_inode_enable_dax()
+  fs/xfs: Combine xfs_diflags_to_linux() and xfs_diflags_to_iflags()
+  fs: Define I_DONTCACNE in VFS layer
+  fs: Introduce DCACHE_DONTCACHE
+  fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
+  Documentation/dax: Update Usage section
+
+ Documentation/filesystems/dax.txt | 166 +++++++++++++++++++++++++++++-
+ drivers/block/loop.c              |   6 +-
+ fs/dcache.c                       |   4 +
+ fs/inode.c                        |  15 +++
+ fs/stat.c                         |   3 +
+ fs/xfs/xfs_icache.c               |   4 +-
+ fs/xfs/xfs_inode.h                |   1 +
+ fs/xfs/xfs_ioctl.c                | 138 ++++---------------------
+ fs/xfs/xfs_iops.c                 |  72 ++++++++-----
+ fs/xfs/xfs_mount.h                |   3 +-
+ fs/xfs/xfs_super.c                |  46 ++++++++-
+ include/linux/dcache.h            |   2 +
+ include/linux/fs.h                |  14 +--
+ include/uapi/linux/stat.h         |   1 +
+ 14 files changed, 312 insertions(+), 163 deletions(-)
 
 -- 
-chandan
-
-
+2.25.1
 
