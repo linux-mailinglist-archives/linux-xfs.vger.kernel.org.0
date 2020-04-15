@@ -2,351 +2,165 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75DAD1AAA04
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 16:33:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D231AAB81
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 17:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394104AbgDOOdV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Apr 2020 10:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394098AbgDOOdN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:33:13 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13F5F22200;
-        Wed, 15 Apr 2020 14:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961172;
-        bh=tZEaf3VXusol79yiStwC6vmB24JiKcfIqq+xUsDyCP4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVjnPctcaWeLc8zV/sotemxwD5+YQauN/fCC6/LP5ysIMqcsv5LnBu6lxD+ZfmsEr
-         D5lXM713ewZblvWqixpOG3xFVXatY72Y1sq4yN807jA9CBc4F6GZTmoPvRn4DPg36p
-         ODQ18XeJc0CrEMCmrgZMiIAeUd7KcXIvF/FYzE1U=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOj5u-006kQP-99; Wed, 15 Apr 2020 16:32:50 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH 34/34] docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:47 +0200
-Message-Id: <8d1a6c3feb1f3ce662c101276145ca5ae28cb0d0.1586960617.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
-References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        id S1414630AbgDOPLt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Apr 2020 11:11:49 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49366 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730901AbgDOPLn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Apr 2020 11:11:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FF3gY5073535;
+        Wed, 15 Apr 2020 15:11:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=MOfRD5Cwea5AiSC2Q578nXPPlxyjV7Yye8pgBK2f8w8=;
+ b=FeKL6UhPMQbqcyY7ee3CsyLWbT39OUkh2vC+AQ4j6iStWi5nZNdQk/tF5wUs82V07zuI
+ KUjkaLMX36ovwLFQWfpVVmJasYIzugob0YYaPqJn/GY0Tm9rLKZTVX8KWlpeWk5r+toW
+ jPBsA/Oo2FtA7V5eDCS8lzF1cEdY85CJa9X9sGXQeadoJPUYxmqObu/s0lsBt/3CupEm
+ nT7PL3G+Kbh0/x663X20kuMfxp5X+tF3H/3TQZtOgYEOqGv32EsA5xtAEp613TUdTKfS
+ kasQzEo4dGDfKIgTTlt79Rn0DD30pONcmKnP2zJvxIxOk5adq4a6iG6wBacuu1smDjeL vw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30e0aa1h95-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 15:11:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FF7Axu112260;
+        Wed, 15 Apr 2020 15:11:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30dyveyqjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 15:11:27 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03FFBPIm031474;
+        Wed, 15 Apr 2020 15:11:25 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Apr 2020 08:11:24 -0700
+Date:   Wed, 15 Apr 2020 08:11:23 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 04/11] fs/xfs: Change XFS_MOUNT_DAX to
+ XFS_MOUNT_DAX_ALWAYS
+Message-ID: <20200415151123.GM6742@magnolia>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-5-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415064523.2244712-5-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004150112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=1 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150112
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document and section titles;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+On Tue, Apr 14, 2020 at 11:45:16PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> In prep for the new tri-state mount option which then introduces
+> XFS_MOUNT_DAX_NEVER.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/filesystems/index.rst           |   1 +
- ...a.txt => xfs-self-describing-metadata.rst} | 182 +++++++++---------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 94 insertions(+), 91 deletions(-)
- rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
+Looks straightforward,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 70c0e0b29e74..61d5be3f6f9a 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -122,4 +122,5 @@ Documentation for filesystem implementations.
-    virtiofs
-    vfat
-    xfs-delayed-logging-design
-+   xfs-self-describing-metadata
-    zonefs
-diff --git a/Documentation/filesystems/xfs-self-describing-metadata.txt b/Documentation/filesystems/xfs-self-describing-metadata.rst
-similarity index 83%
-rename from Documentation/filesystems/xfs-self-describing-metadata.txt
-rename to Documentation/filesystems/xfs-self-describing-metadata.rst
-index 8db0121d0980..51cdafe01ab1 100644
---- a/Documentation/filesystems/xfs-self-describing-metadata.txt
-+++ b/Documentation/filesystems/xfs-self-describing-metadata.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============================
- XFS Self Describing Metadata
------------------------------
-+============================
- 
- Introduction
--------------
-+============
- 
- The largest scalability problem facing XFS is not one of algorithmic
- scalability, but of verification of the filesystem structure. Scalabilty of the
-@@ -34,7 +37,7 @@ required for basic forensic analysis of the filesystem structure.
- 
- 
- Self Describing Metadata
--------------------------
-+========================
- 
- One of the problems with the current metadata format is that apart from the
- magic number in the metadata block, we have no other way of identifying what it
-@@ -142,7 +145,7 @@ modification occurred between the corruption being written and when it was
- detected.
- 
- Runtime Validation
--------------------
-+==================
- 
- Validation of self-describing metadata takes place at runtime in two places:
- 
-@@ -183,18 +186,18 @@ error occurs during this process, the buffer is again marked with a EFSCORRUPTED
- error for the higher layers to catch.
- 
- Structures
------------
-+==========
- 
--A typical on-disk structure needs to contain the following information:
-+A typical on-disk structure needs to contain the following information::
- 
--struct xfs_ondisk_hdr {
--        __be32  magic;		/* magic number */
--        __be32  crc;		/* CRC, not logged */
--        uuid_t  uuid;		/* filesystem identifier */
--        __be64  owner;		/* parent object */
--        __be64  blkno;		/* location on disk */
--        __be64  lsn;		/* last modification in log, not logged */
--};
-+    struct xfs_ondisk_hdr {
-+	    __be32  magic;		/* magic number */
-+	    __be32  crc;		/* CRC, not logged */
-+	    uuid_t  uuid;		/* filesystem identifier */
-+	    __be64  owner;		/* parent object */
-+	    __be64  blkno;		/* location on disk */
-+	    __be64  lsn;		/* last modification in log, not logged */
-+    };
- 
- Depending on the metadata, this information may be part of a header structure
- separate to the metadata contents, or may be distributed through an existing
-@@ -214,24 +217,24 @@ level of information is generally provided. For example:
- 	  well. hence the additional metadata headers change the overall format
- 	  of the metadata.
- 
--A typical buffer read verifier is structured as follows:
-+A typical buffer read verifier is structured as follows::
- 
--#define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
-+    #define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
- 
--static void
--xfs_foo_read_verify(
--	struct xfs_buf	*bp)
--{
--       struct xfs_mount *mp = bp->b_mount;
-+    static void
-+    xfs_foo_read_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	struct xfs_mount *mp = bp->b_mount;
- 
--        if ((xfs_sb_version_hascrc(&mp->m_sb) &&
--             !xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
--					XFS_FOO_CRC_OFF)) ||
--            !xfs_foo_verify(bp)) {
--                XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--                xfs_buf_ioerror(bp, EFSCORRUPTED);
--        }
--}
-+	    if ((xfs_sb_version_hascrc(&mp->m_sb) &&
-+		!xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
-+					    XFS_FOO_CRC_OFF)) ||
-+		!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+	    }
-+    }
- 
- The code ensures that the CRC is only checked if the filesystem has CRCs enabled
- by checking the superblock of the feature bit, and then if the CRC verifies OK
-@@ -239,83 +242,83 @@ by checking the superblock of the feature bit, and then if the CRC verifies OK
- 
- The verifier function will take a couple of different forms, depending on
- whether the magic number can be used to determine the format of the block. In
--the case it can't, the code is structured as follows:
-+the case it can't, the code is structured as follows::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--                return false;
-+	    if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--        if (!xfs_sb_version_hascrc(&mp->m_sb)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	}
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    }
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- If there are different magic numbers for the different formats, the verifier
--will look like:
-+will look like::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	} else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--		return false;
-+	    if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    } else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- Write verifiers are very similar to the read verifiers, they just do things in
--the opposite order to the read verifiers. A typical write verifier:
-+the opposite order to the read verifiers. A typical write verifier::
- 
--static void
--xfs_foo_write_verify(
--	struct xfs_buf	*bp)
--{
--	struct xfs_mount	*mp = bp->b_mount;
--	struct xfs_buf_log_item	*bip = bp->b_fspriv;
-+    static void
-+    xfs_foo_write_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_buf_log_item	*bip = bp->b_fspriv;
- 
--	if (!xfs_foo_verify(bp)) {
--		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--		xfs_buf_ioerror(bp, EFSCORRUPTED);
--		return;
--	}
-+	    if (!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+		    return;
-+	    }
- 
--	if (!xfs_sb_version_hascrc(&mp->m_sb))
--		return;
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb))
-+		    return;
- 
- 
--	if (bip) {
--		struct xfs_ondisk_hdr	*hdr = bp->b_addr;
--		hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
--	}
--	xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
--}
-+	    if (bip) {
-+		    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+		    hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
-+	    }
-+	    xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
-+    }
- 
- This will verify the internal structure of the metadata before we go any
- further, detecting corruptions that have occurred as the metadata has been
-@@ -324,7 +327,7 @@ update the LSN field (when it was last modified) and calculate the CRC on the
- metadata. Once this is done, we can issue the IO.
- 
- Inodes and Dquots
-------------------
-+=================
- 
- Inodes and dquots are special snowflakes. They have per-object CRC and
- self-identifiers, but they are packed so that there are multiple objects per
-@@ -347,4 +350,3 @@ XXX: inode unlinked list modification doesn't recalculate the inode CRC! None of
- the unlinked list modifications check or update CRCs, neither during unlink nor
- log recovery. So, it's gone unnoticed until now. This won't matter immediately -
- repair will probably complain about it - but it needs to be fixed.
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c52991586853..9f9454f12e06 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18552,7 +18552,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- F:	Documentation/ABI/testing/sysfs-fs-xfs
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/filesystems/xfs-delayed-logging-design.rst
--F:	Documentation/filesystems/xfs-self-describing-metadata.txt
-+F:	Documentation/filesystems/xfs-self-describing-metadata.rst
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
- F:	include/uapi/linux/fsmap.h
--- 
-2.25.2
+--D
 
+> ---
+>  fs/xfs/xfs_iops.c  | 2 +-
+>  fs/xfs/xfs_mount.h | 2 +-
+>  fs/xfs/xfs_super.c | 8 ++++----
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..a6e634631da8 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1248,7 +1248,7 @@ xfs_inode_supports_dax(
+>  		return false;
+>  
+>  	/* DAX mount option or DAX iflag must be set. */
+> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> +	if (!(mp->m_flags & XFS_MOUNT_DAX_ALWAYS) &&
+>  	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+>  		return false;
+>  
+> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> index 88ab09ed29e7..54bd74088936 100644
+> --- a/fs/xfs/xfs_mount.h
+> +++ b/fs/xfs/xfs_mount.h
+> @@ -233,7 +233,7 @@ typedef struct xfs_mount {
+>  						   allocator */
+>  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+>  
+> -#define XFS_MOUNT_DAX		(1ULL << 62)	/* TEST ONLY! */
+> +#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)	/* TEST ONLY! */
+>  
+>  /*
+>   * Max and min values for mount-option defined I/O
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 2094386af8ac..3863f41757d2 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -129,7 +129,7 @@ xfs_fs_show_options(
+>  		{ XFS_MOUNT_GRPID,		",grpid" },
+>  		{ XFS_MOUNT_DISCARD,		",discard" },
+>  		{ XFS_MOUNT_LARGEIO,		",largeio" },
+> -		{ XFS_MOUNT_DAX,		",dax" },
+> +		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
+>  		{ 0, NULL }
+>  	};
+>  	struct xfs_mount	*mp = XFS_M(root->d_sb);
+> @@ -1244,7 +1244,7 @@ xfs_fc_parse_param(
+>  		return 0;
+>  #ifdef CONFIG_FS_DAX
+>  	case Opt_dax:
+> -		mp->m_flags |= XFS_MOUNT_DAX;
+> +		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+>  		return 0;
+>  #endif
+>  	default:
+> @@ -1437,7 +1437,7 @@ xfs_fc_fill_super(
+>  	if (XFS_SB_VERSION_NUM(&mp->m_sb) == XFS_SB_VERSION_5)
+>  		sb->s_flags |= SB_I_VERSION;
+>  
+> -	if (mp->m_flags & XFS_MOUNT_DAX) {
+> +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS) {
+>  		bool rtdev_is_dax = false, datadev_is_dax;
+>  
+>  		xfs_warn(mp,
+> @@ -1451,7 +1451,7 @@ xfs_fc_fill_super(
+>  		if (!rtdev_is_dax && !datadev_is_dax) {
+>  			xfs_alert(mp,
+>  			"DAX unsupported by block device. Turning off DAX.");
+> -			mp->m_flags &= ~XFS_MOUNT_DAX;
+> +			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+>  		}
+>  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+>  			xfs_alert(mp,
+> -- 
+> 2.25.1
+> 
