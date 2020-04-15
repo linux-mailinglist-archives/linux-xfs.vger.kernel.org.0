@@ -2,84 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7EC1A9C15
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 13:24:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4CAB1AA448
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Apr 2020 15:23:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896902AbgDOLWe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Apr 2020 07:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896897AbgDOLWS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Apr 2020 07:22:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4600C061A0C;
-        Wed, 15 Apr 2020 04:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=p5k96MLyrJ0Kc/9UM6Xw8FfLDEnTX/dVH39aK5qAXAA=; b=ClQLKHw92puBJhU2nimC3BH8wA
-        355osRMfVxhDQVssm7Zm9jE6v3E3dRGs+Oc5jFRy3/jQbyNAsfVORzBRmGEfW7/HIf4gbDH2d4DT2
-        gL3rNu+X2XBNBJ3NpW/Bx0FlYJMdgdadGJM/y2cHwCtDUUl9b+KcgcTHyz2DkqV52KYqOQaeHmfVH
-        s2D+J2WiHScmuPaZ+HVg8gSTWAFyV0P0cKjdmyQFi/TapX8CRjBU8aFB/npLmiZAvjPQMvj6Rpgij
-        Vy0bfVHN0vosqBiQDXjyzG7mDrHdrpJGmw7wYW8mNvb2TBTAiSuOkc9Tu/G2eouAmkldMad/NLN38
-        jgC7ixKA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOg7U-0004jU-L2; Wed, 15 Apr 2020 11:22:16 +0000
-Date:   Wed, 15 Apr 2020 04:22:16 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        id S2632799AbgDONWi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Apr 2020 09:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408882AbgDOLfA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 816E82078A;
+        Wed, 15 Apr 2020 11:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950500;
+        bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AptoPI5UUuxPPUt6e+DVzYSG85R51t2DFmxZbd3ItlUS4pLc3pi3I8FHivBBbMROh
+         EpffLXeyMo3aCGzrHV4YoZZXCLipQxSscrMf2Ux0E82yZBPjiE6jkQu8OLUMNrUXl8
+         687GBGgfM2my/LCGtC33G75d8F/NQ+me5/vfvEcg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brian Foster <bfoster@redhat.com>, Zorro Lang <zlang@redhat.com>,
         Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v11 05/25] mm: Add new readahead_control API
-Message-ID: <20200415112216.GC5820@bombadil.infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-6-willy@infradead.org>
- <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
- <20200415021808.GA5820@bombadil.infradead.org>
- <20200414215616.f665d12f8549f52606784d1e@linux-foundation.org>
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 012/129] xfs: fix iclog release error check race with shutdown
+Date:   Wed, 15 Apr 2020 07:32:47 -0400
+Message-Id: <20200415113445.11881-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414215616.f665d12f8549f52606784d1e@linux-foundation.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:56:16PM -0700, Andrew Morton wrote:
-> On Tue, 14 Apr 2020 19:18:08 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-> > Hmm.  They don't seem that big to me.
-> 
-> They're really big!
+From: Brian Foster <bfoster@redhat.com>
 
-v5.7-rc1:	11636	    636	    224	  12496	   30d0	fs/iomap/buffered-io.o
-readahead_v11:	11528	    636	    224	  12388	   3064	fs/iomap/buffered-io.o
+[ Upstream commit 6b789c337a5963ae57cbc7fe9e41488c40a9b014 ]
 
-> > __readahead_batch is much bigger, but it's only used by btrfs and fuse,
-> > and it seemed unfair to make everybody pay the cost for a function only
-> > used by two filesystems.
-> 
-> Do we expect more filesystems to use these in the future?
+Prior to commit df732b29c8 ("xfs: call xlog_state_release_iclog with
+l_icloglock held"), xlog_state_release_iclog() always performed a
+locked check of the iclog error state before proceeding into the
+sync state processing code. As of this commit, part of
+xlog_state_release_iclog() was open-coded into
+xfs_log_release_iclog() and as a result the locked error state check
+was lost.
 
-I'm honestly not sure.  I think it'd be nice to be able to fill a bvec
-from the page cache directly, but I haven't tried to write that function
-yet.  If so, then it'd be appropriate to move that functionality into
-the core.
+The lockless check still exists, but this doesn't account for the
+possibility of a race with a shutdown being performed by another
+task causing the iclog state to change while the original task waits
+on ->l_icloglock. This has reproduced very rarely via generic/475
+and manifests as an assert failure in __xlog_state_release_iclog()
+due to an unexpected iclog state.
 
-> > > The code adds quite a few (inlined!) VM_BUG_ONs.  Can we plan to remove
-> > > them at some stage?  Such as, before Linus shouts at us :)
-> > 
-> > I'd be happy to remove them.  Various reviewers said things like "are you
-> > sure this can't happen?"
-> 
-> Yeah, these things tend to live for ever.  Please add a todo to remove
-> them after the code has matured?
+Restore the locked error state check in xlog_state_release_iclog()
+to ensure that an iclog state update via shutdown doesn't race with
+the iclog release state processing code.
 
-Sure!  I'm touching this code some more in the large pages patch set, so
-I can get rid of it there.
+Fixes: df732b29c807 ("xfs: call xlog_state_release_iclog with l_icloglock held")
+Reported-by: Zorro Lang <zlang@redhat.com>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/xfs_log.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index f6006d94a581e..796ff37d5bb5b 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -605,18 +605,23 @@ xfs_log_release_iclog(
+ 	struct xlog		*log = mp->m_log;
+ 	bool			sync;
+ 
+-	if (iclog->ic_state == XLOG_STATE_IOERROR) {
+-		xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
+-		return -EIO;
+-	}
++	if (iclog->ic_state == XLOG_STATE_IOERROR)
++		goto error;
+ 
+ 	if (atomic_dec_and_lock(&iclog->ic_refcnt, &log->l_icloglock)) {
++		if (iclog->ic_state == XLOG_STATE_IOERROR) {
++			spin_unlock(&log->l_icloglock);
++			goto error;
++		}
+ 		sync = __xlog_state_release_iclog(log, iclog);
+ 		spin_unlock(&log->l_icloglock);
+ 		if (sync)
+ 			xlog_sync(log, iclog);
+ 	}
+ 	return 0;
++error:
++	xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
++	return -EIO;
+ }
+ 
+ /*
+-- 
+2.20.1
+
