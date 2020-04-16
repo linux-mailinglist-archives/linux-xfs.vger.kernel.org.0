@@ -2,59 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B9E21ACF4A
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Apr 2020 20:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1391AD2BE
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 00:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389671AbgDPSCH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Apr 2020 14:02:07 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50297 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727794AbgDPSCG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Apr 2020 14:02:06 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03GI1hAl008861
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 14:01:43 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EA2DB42013D; Thu, 16 Apr 2020 14:01:42 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 14:01:42 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200416180142.GE5187@mit.edu>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-5-ira.weiny@intel.com>
- <20200415120846.GG6126@quack2.suse.cz>
- <20200415203924.GD2309605@iweiny-DESK2.sc.intel.com>
+        id S1728992AbgDPWT0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Apr 2020 18:19:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:44215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbgDPWT0 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:19:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 493DCv0b80z9sRN;
+        Fri, 17 Apr 2020 08:19:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587075563;
+        bh=uD3XGVR745G/z5OXTjHFa2cFPMbl/b4si7y+VRMxGNc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f5J9MBFIL+OVDZsuAvNTTFMikMTVBdZmDS6zkz/aMZO8++ah4GKbGsuu8HSflwlkd
+         li94a216zhf1FaHvKgE9E0DR30w6/WYux2aepoZaA0xD/7UtX4B5mXCo3WTSKx6jJj
+         SPgGI8yIZj8WwV6Fx5VuDmy/c1mSNXFIUgj9LEmEtKUrjdMs1hTBhqmUM9z/pj4nZS
+         VKr9EZnoGueCg5AvI1VuK5d/ppzWHIaqHPswau6h1Ey9TBhXV9Bt1jCDdIL4biOYRB
+         cH10PsThObX+5Ss/Fs+y9kRTchhBSZYx+AdXEopY7AAUc1veX7hieoGfRU8w9D9lPU
+         wFvadNKI5Sj+A==
+Date:   Fri, 17 Apr 2020 08:19:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the xfs tree
+Message-ID: <20200417081922.3b539711@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415203924.GD2309605@iweiny-DESK2.sc.intel.com>
+Content-Type: multipart/signed; boundary="Sig_/yCK/bVt__4zEY.GbscHcnsv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 01:39:25PM -0700, Ira Weiny wrote:
-> 
-> I'm on top of 5.6 released.  Did this get removed for 5.7?  I've heard there are
-> some boot issues with 5.7-rc1 so I'm holding out for rc2.
+--Sig_/yCK/bVt__4zEY.GbscHcnsv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, it got removed in 5.7-rc1 in commit 4337ecd1fe99.
+Hi all,
 
-The boot issues with 5.7-rc1 is why ext4.git tree is now based off of
-v5.7-rc1-35-g00086336a8d9: Merge tag 'efi-urgent-2020-04-15'....
+In commit
 
-You might want to see if 00086336a8d9 works for you (and if not, let
-the x86 and/or efi folks know).
+  63dc90feaa20 ("xfs: move inode flush to the sync workqueue")
 
-					- Ted
+Fixes tag
+
+  Fixes: bdd4ee4f8407 ("xfs: ratelimit inode flush on buffered write ENOSPC=
+")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: c6425702f21e ("xfs: ratelimit inode flush on buffered write ENOSPC")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/yCK/bVt__4zEY.GbscHcnsv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Y2eoACgkQAVBC80lX
+0GwZtwf9EZfqnje/VCx4ilazW38G2AlNbDOasNxzIfxpOShuwrHavN3BaVWrVi1M
+Jv9YyJfhci5FDgFu5hRR+ifoAwfhlVvFcAwN8faCNvEOtQiLgNTY7FvKcQXjE5Yl
+jTj3cG1g00lsjklOykO5IJ6y+CXE+g9SSH3/PJMzefsfeEGUdkYov8xfuovEIOjB
+N5UOonJNmg4/24O+sHse+BzXRfT61CPpJMycOJBu4mZ5bkAGewEWN0uHs8+zp/C4
+SQ4ujDtJy2s4P/HIWzxmEeleDNnLMpKG5YlXF7wKOBwe8XlMo1sfPYrUlW1jGlP+
+4WPVzC/wHxBHIYswOdYSkVzeQU3YYw==
+=CjB5
+-----END PGP SIGNATURE-----
+
+--Sig_/yCK/bVt__4zEY.GbscHcnsv--
