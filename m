@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F09A01AE09B
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 17:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68BE51AE09C
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 17:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgDQPJK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Apr 2020 11:09:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36719 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728867AbgDQPJI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 11:09:08 -0400
+        id S1728137AbgDQPJL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Apr 2020 11:09:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728865AbgDQPJJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 11:09:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1587136147;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yXO/dhQQgrEGWlnaDkvWqP+M920YOhxTGASDTDAGpqY=;
-        b=aXXV5vpUmmqRoQGZIrcd8bYJj2s4leumfPkT65+vcpi4EwYGmSzu6efAyZ/M8VVI5hIc7A
-        pOqCRi4vF+mchOmR7SqacffsgV+EsRmPG+U4SmZ4Ztlc4D8YyZhl4NMOZhRYkB0Jynq+GZ
-        i9JTLO21/FOQ/olT3F4s2WuaErtWFjA=
+        bh=LY7lZ1PcLq5bv52aF1mtRhEy/2hE+VeaEJJZbGXaUaM=;
+        b=HmOeYaN+Z9D02ZktM1cPYCrZhuELCK64T6zcpnm0RctRS/XQPi3rANO6qzH5uw+HWW69GZ
+        O2bDnyDx2fPNug5T18yr351UWWAlOzHtP5gAbbEvvP4/dAF9yTyOo7IZsvL3wgfJa/yV8b
+        rn8r7CbjyNlYRzc1M0omg3csPtxV8oc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-RhK-20rANbOiQu4NIwN2dQ-1; Fri, 17 Apr 2020 11:09:04 -0400
-X-MC-Unique: RhK-20rANbOiQu4NIwN2dQ-1
+ us-mta-465-R8b8JFTIPvKJ7gEBAQ7f1A-1; Fri, 17 Apr 2020 11:09:05 -0400
+X-MC-Unique: R8b8JFTIPvKJ7gEBAQ7f1A-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EAFE1088384
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B09D802681
         for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:04 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB64860BE0
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:03 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4393F60BE0
+        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:04 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 09/12] xfs: elide the AIL lock on log item failure tracking
-Date:   Fri, 17 Apr 2020 11:08:56 -0400
-Message-Id: <20200417150859.14734-10-bfoster@redhat.com>
+Subject: [PATCH 10/12] xfs: clean up AIL log item removal functions
+Date:   Fri, 17 Apr 2020 11:08:57 -0400
+Message-Id: <20200417150859.14734-11-bfoster@redhat.com>
 In-Reply-To: <20200417150859.14734-1-bfoster@redhat.com>
 References: <20200417150859.14734-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,227 +48,285 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The log item failed flag is used to indicate a log item was flushed
-but the underlying buffer was not successfully written to disk. If
-the error configuration allows for writeback retries, xfsaild uses
-the flag to resubmit the underlying buffer without acquiring the
-flush lock of the item.
+We have two AIL removal functions with slightly different semantics.
+xfs_trans_ail_delete() expects the caller to have the AIL lock and
+for the associated item to be AIL resident. If not, the filesystem
+is shut down. xfs_trans_ail_remove() acquires the AIL lock, checks
+that the item is AIL resident and calls the former if so.
 
-The flag is currently set and cleared under the AIL lock and buffer
-lock in the ->iop_error() callback, invoked via ->b_iodone() at I/O
-completion time. The flag is checked at xfsaild push time under AIL
-lock and cleared under buffer lock before resubmission. If I/O
-eventually succeeds, the flag is cleared in the _done() handler for
-the associated item type, again under AIL lock and buffer lock.
+These semantics lead to confused usage between the two. For example,
+the _remove() variant takes a shutdown parameter to pass to the
+_delete() variant, but immediately returns if the AIL bit is not
+set. This means that _remove() would never shut down if an item is
+not AIL resident, even though it appears that many callers would
+expect it to.
 
-As far as I can tell, the only reason for holding the AIL lock
-across sets/clears is to manage consistency between the log item
-bitop state and the temporary buffer pointer that is attached to the
-log item. The bit itself is used to manage consistency of the
-attached buffer, but is not enough to guarantee the buffer is still
-attached by the time xfsaild attempts to access it. However since
-failure state is always set or cleared under buffer lock (either via
-I/O completion or xfsaild), this particular case can be handled at
-item push time by verifying failure state once under buffer lock.
+Make the following changes to clean up both of these functions:
 
-Remove the AIL lock protection from the various bits of log item
-failure state management and simplify the surrounding code where
-applicable. Use the buffer lock in the xfsaild resubmit code to
-detect failure state changes and temporarily treat the item as
-locked.
+- Most callers of xfs_trans_ail_delete() acquire the AIL lock just
+  before the call. Update _delete() to acquire the lock and open
+  code the couple of callers that make additional checks under AIL
+  lock.
+- Drop the unnecessary ailp parameter from _delete().
+- Drop the unused shutdown parameter from _remove() and open code
+  the implementation.
+
+In summary, this leaves a _delete() variant that expects an AIL
+resident item and a _remove() helper that checks the AIL bit. Audit
+the existing callsites for use of the appropriate function and
+update as necessary.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_buf_item.c   |  4 ----
- fs/xfs/xfs_dquot.c      | 41 +++++++++++++++--------------------------
- fs/xfs/xfs_inode_item.c | 11 +++--------
- fs/xfs/xfs_trans_ail.c  | 12 ++++++++++--
- fs/xfs/xfs_trans_priv.h |  5 -----
- 5 files changed, 28 insertions(+), 45 deletions(-)
+ fs/xfs/xfs_bmap_item.c     |  2 +-
+ fs/xfs/xfs_buf_item.c      | 21 ++++++++-------------
+ fs/xfs/xfs_dquot.c         | 12 +++++++-----
+ fs/xfs/xfs_dquot_item.c    |  2 +-
+ fs/xfs/xfs_extfree_item.c  |  2 +-
+ fs/xfs/xfs_inode_item.c    |  6 +-----
+ fs/xfs/xfs_refcount_item.c |  2 +-
+ fs/xfs/xfs_rmap_item.c     |  2 +-
+ fs/xfs/xfs_trans_ail.c     |  3 ++-
+ fs/xfs/xfs_trans_priv.h    | 17 +++++++++--------
+ 10 files changed, 32 insertions(+), 37 deletions(-)
 
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index ee6f4229cebc..909221a4a8ab 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -51,7 +51,7 @@ xfs_bui_release(
+ {
+ 	ASSERT(atomic_read(&buip->bui_refcount) > 0);
+ 	if (atomic_dec_and_test(&buip->bui_refcount)) {
+-		xfs_trans_ail_remove(&buip->bui_item, SHUTDOWN_LOG_IO_ERROR);
++		xfs_trans_ail_delete(&buip->bui_item, SHUTDOWN_LOG_IO_ERROR);
+ 		xfs_bui_item_free(buip);
+ 	}
+ }
 diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 72d37a4609d8..6b000f855e13 100644
+index 6b000f855e13..1bf1c14d4ebb 100644
 --- a/fs/xfs/xfs_buf_item.c
 +++ b/fs/xfs/xfs_buf_item.c
-@@ -1046,7 +1046,6 @@ xfs_buf_do_callbacks_fail(
- 	struct xfs_buf		*bp)
+@@ -410,7 +410,6 @@ xfs_buf_item_unpin(
  {
- 	struct xfs_log_item	*lip;
--	struct xfs_ail		*ailp;
+ 	struct xfs_buf_log_item	*bip =3D BUF_ITEM(lip);
+ 	xfs_buf_t		*bp =3D bip->bli_buf;
+-	struct xfs_ail		*ailp =3D lip->li_ailp;
+ 	int			stale =3D bip->bli_flags & XFS_BLI_STALE;
+ 	int			freed;
+=20
+@@ -463,8 +462,7 @@ xfs_buf_item_unpin(
+ 			list_del_init(&bp->b_li_list);
+ 			bp->b_iodone =3D NULL;
+ 		} else {
+-			spin_lock(&ailp->ail_lock);
+-			xfs_trans_ail_delete(ailp, lip, SHUTDOWN_LOG_IO_ERROR);
++			xfs_trans_ail_delete(lip, SHUTDOWN_LOG_IO_ERROR);
+ 			xfs_buf_item_relse(bp);
+ 			ASSERT(bp->b_log_item =3D=3D NULL);
+ 		}
+@@ -568,7 +566,7 @@ xfs_buf_item_put(
+ 	 * state.
+ 	 */
+ 	if (aborted)
+-		xfs_trans_ail_remove(lip, SHUTDOWN_LOG_IO_ERROR);
++		xfs_trans_ail_delete(lip, SHUTDOWN_LOG_IO_ERROR);
+ 	xfs_buf_item_relse(bip->bli_buf);
+ 	return true;
+ }
+@@ -1209,22 +1207,19 @@ xfs_buf_iodone(
+ 	struct xfs_buf		*bp,
+ 	struct xfs_log_item	*lip)
+ {
+-	struct xfs_ail		*ailp =3D lip->li_ailp;
+-
+ 	ASSERT(BUF_ITEM(lip)->bli_buf =3D=3D bp);
+=20
+ 	xfs_buf_rele(bp);
 =20
  	/*
- 	 * Buffer log item errors are handled directly by xfs_buf_item_push()
-@@ -1058,13 +1057,10 @@ xfs_buf_do_callbacks_fail(
-=20
- 	lip =3D list_first_entry(&bp->b_li_list, struct xfs_log_item,
- 			li_bio_list);
--	ailp =3D lip->li_ailp;
+-	 * If we are forcibly shutting down, this may well be
+-	 * off the AIL already. That's because we simulate the
+-	 * log-committed callbacks to unpin these buffers. Or we may never
+-	 * have put this item on AIL because of the transaction was
+-	 * aborted forcibly. xfs_trans_ail_delete() takes care of these.
++	 * If we are forcibly shutting down, this may well be off the AIL
++	 * already. That's because we simulate the log-committed callbacks to
++	 * unpin these buffers. Or we may never have put this item on AIL
++	 * because of the transaction was aborted forcibly.
++	 * xfs_trans_ail_delete() takes care of these.
+ 	 *
+ 	 * Either way, AIL is useless if we're forcing a shutdown.
+ 	 */
 -	spin_lock(&ailp->ail_lock);
- 	list_for_each_entry(lip, &bp->b_li_list, li_bio_list) {
- 		if (lip->li_ops->iop_error)
- 			lip->li_ops->iop_error(lip, bp);
- 	}
--	spin_unlock(&ailp->ail_lock);
+-	xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
++	xfs_trans_ail_delete(lip, SHUTDOWN_CORRUPT_INCORE);
+ 	xfs_buf_item_free(BUF_ITEM(lip));
  }
-=20
- static bool
 diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 41750f797861..953059235130 100644
+index 953059235130..996751dd6302 100644
 --- a/fs/xfs/xfs_dquot.c
 +++ b/fs/xfs/xfs_dquot.c
-@@ -1023,34 +1023,23 @@ xfs_qm_dqflush_done(
+@@ -1021,6 +1021,7 @@ xfs_qm_dqflush_done(
+ 	struct xfs_dq_logitem	*qip =3D (struct xfs_dq_logitem *)lip;
+ 	struct xfs_dquot	*dqp =3D qip->qli_dquot;
  	struct xfs_ail		*ailp =3D lip->li_ailp;
++	xfs_lsn_t		tail_lsn;
 =20
  	/*
--	 * We only want to pull the item from the AIL if its
--	 * location in the log has not changed since we started the flush.
--	 * Thus, we only bother if the dquot's lsn has
--	 * not changed. First we check the lsn outside the lock
--	 * since it's cheaper, and then we recheck while
--	 * holding the lock before removing the dquot from the AIL.
-+	 * Only pull the item from the AIL if its location in the log has not
-+	 * changed since it was flushed. Do a lockless check first to reduce
-+	 * lock traffic.
- 	 */
--	if (test_bit(XFS_LI_IN_AIL, &lip->li_flags) &&
--	    ((lip->li_lsn =3D=3D qip->qli_flush_lsn) ||
--	     test_bit(XFS_LI_FAILED, &lip->li_flags))) {
--
--		/* xfs_trans_ail_delete() drops the AIL lock. */
--		spin_lock(&ailp->ail_lock);
--		if (lip->li_lsn =3D=3D qip->qli_flush_lsn) {
--			xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
--		} else {
--			/*
--			 * Clear the failed state since we are about to drop the
--			 * flush lock
--			 */
--			xfs_clear_li_failed(lip);
--			spin_unlock(&ailp->ail_lock);
--		}
--	}
-+	if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags) ||
-+	    lip->li_lsn !=3D qip->qli_flush_lsn)
-+		goto out;
+ 	 * Only pull the item from the AIL if its location in the log has not
+@@ -1032,10 +1033,11 @@ xfs_qm_dqflush_done(
+ 		goto out;
 =20
--	/*
--	 * Release the dq's flush lock since we're done with it.
--	 */
-+	spin_lock(&ailp->ail_lock);
-+	if (lip->li_lsn =3D=3D qip->qli_flush_lsn)
-+		/* xfs_trans_ail_delete() drops the AIL lock */
-+		xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
-+	else
-+		spin_unlock(&ailp->ail_lock);
-+
-+out:
-+	xfs_clear_li_failed(lip);
+ 	spin_lock(&ailp->ail_lock);
+-	if (lip->li_lsn =3D=3D qip->qli_flush_lsn)
+-		/* xfs_trans_ail_delete() drops the AIL lock */
+-		xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
+-	else
++	if (lip->li_lsn =3D=3D qip->qli_flush_lsn) {
++		/* xfs_ail_update_finish() drops the AIL lock */
++		tail_lsn =3D xfs_ail_delete_one(ailp, lip);
++		xfs_ail_update_finish(ailp, tail_lsn);
++	} else
+ 		spin_unlock(&ailp->ail_lock);
+=20
+ out:
+@@ -1137,7 +1139,7 @@ xfs_qm_dqflush(
+=20
+ out_abort:
+ 	dqp->dq_flags &=3D ~XFS_DQ_DIRTY;
+-	xfs_trans_ail_remove(lip, SHUTDOWN_CORRUPT_INCORE);
++	xfs_trans_ail_remove(lip);
+ 	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+ out_unlock:
  	xfs_dqfunlock(dqp);
+diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
+index 582b3796a0c9..f129cfcc36be 100644
+--- a/fs/xfs/xfs_dquot_item.c
++++ b/fs/xfs/xfs_dquot_item.c
+@@ -329,7 +329,7 @@ xfs_qm_qoff_logitem_relse(
+ 	ASSERT(test_bit(XFS_LI_IN_AIL, &lip->li_flags) ||
+ 	       test_bit(XFS_LI_ABORTED, &lip->li_flags) ||
+ 	       XFS_FORCED_SHUTDOWN(lip->li_mountp));
+-	xfs_trans_ail_remove(lip, SHUTDOWN_LOG_IO_ERROR);
++	xfs_trans_ail_remove(lip);
+ 	kmem_free(lip->li_lv_shadow);
+ 	kmem_free(qoff);
  }
-=20
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 6ea847f6e298..cd98eba24884 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -55,7 +55,7 @@ xfs_efi_release(
+ {
+ 	ASSERT(atomic_read(&efip->efi_refcount) > 0);
+ 	if (atomic_dec_and_test(&efip->efi_refcount)) {
+-		xfs_trans_ail_remove(&efip->efi_item, SHUTDOWN_LOG_IO_ERROR);
++		xfs_trans_ail_delete(&efip->efi_item, SHUTDOWN_LOG_IO_ERROR);
+ 		xfs_efi_item_free(efip);
+ 	}
+ }
 diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 1d4d256a2e96..0ae61844b224 100644
+index 0ae61844b224..f8dd9bb8c851 100644
 --- a/fs/xfs/xfs_inode_item.c
 +++ b/fs/xfs/xfs_inode_item.c
-@@ -682,9 +682,7 @@ xfs_iflush_done(
- 	 * Scan the buffer IO completions for other inodes being completed and
- 	 * attach them to the current inode log item.
- 	 */
--
- 	list_add_tail(&lip->li_bio_list, &tmp);
--
- 	list_for_each_entry_safe(blip, n, &bp->b_li_list, li_bio_list) {
- 		if (lip->li_cb !=3D xfs_iflush_done)
- 			continue;
-@@ -695,15 +693,13 @@ xfs_iflush_done(
- 		 * the AIL lock.
- 		 */
- 		iip =3D INODE_ITEM(blip);
--		if ((iip->ili_logged && blip->li_lsn =3D=3D iip->ili_flush_lsn) ||
--		    test_bit(XFS_LI_FAILED, &blip->li_flags))
-+		if (iip->ili_logged && blip->li_lsn =3D=3D iip->ili_flush_lsn)
- 			need_ail++;
- 	}
+@@ -763,11 +763,7 @@ xfs_iflush_abort(
+ 	xfs_inode_log_item_t	*iip =3D ip->i_itemp;
 =20
- 	/* make sure we capture the state of the initial inode. */
- 	iip =3D INODE_ITEM(lip);
--	if ((iip->ili_logged && lip->li_lsn =3D=3D iip->ili_flush_lsn) ||
--	    test_bit(XFS_LI_FAILED, &lip->li_flags))
-+	if (iip->ili_logged && lip->li_lsn =3D=3D iip->ili_flush_lsn)
- 		need_ail++;
-=20
- 	/*
-@@ -732,8 +728,6 @@ xfs_iflush_done(
- 				xfs_lsn_t lsn =3D xfs_ail_delete_one(ailp, blip);
- 				if (!tail_lsn && lsn)
- 					tail_lsn =3D lsn;
--			} else {
--				xfs_clear_li_failed(blip);
- 			}
- 		}
- 		xfs_ail_update_finish(ailp, tail_lsn);
-@@ -746,6 +740,7 @@ xfs_iflush_done(
- 	 */
- 	list_for_each_entry_safe(blip, n, &tmp, li_bio_list) {
- 		list_del_init(&blip->li_bio_list);
-+		xfs_clear_li_failed(blip);
- 		iip =3D INODE_ITEM(blip);
+ 	if (iip) {
+-		if (test_bit(XFS_LI_IN_AIL, &iip->ili_item.li_flags)) {
+-			xfs_trans_ail_remove(&iip->ili_item,
+-					     stale ? SHUTDOWN_LOG_IO_ERROR :
+-						     SHUTDOWN_CORRUPT_INCORE);
+-		}
++		xfs_trans_ail_remove(&iip->ili_item);
  		iip->ili_logged =3D 0;
- 		iip->ili_last_fields =3D 0;
+ 		/*
+ 		 * Clear the ili_last_fields bits now that we know that the
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index 8eeed73928cd..712939a015a9 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
+@@ -50,7 +50,7 @@ xfs_cui_release(
+ {
+ 	ASSERT(atomic_read(&cuip->cui_refcount) > 0);
+ 	if (atomic_dec_and_test(&cuip->cui_refcount)) {
+-		xfs_trans_ail_remove(&cuip->cui_item, SHUTDOWN_LOG_IO_ERROR);
++		xfs_trans_ail_delete(&cuip->cui_item, SHUTDOWN_LOG_IO_ERROR);
+ 		xfs_cui_item_free(cuip);
+ 	}
+ }
+diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
+index 4911b68f95dd..ff949b32c051 100644
+--- a/fs/xfs/xfs_rmap_item.c
++++ b/fs/xfs/xfs_rmap_item.c
+@@ -50,7 +50,7 @@ xfs_rui_release(
+ {
+ 	ASSERT(atomic_read(&ruip->rui_refcount) > 0);
+ 	if (atomic_dec_and_test(&ruip->rui_refcount)) {
+-		xfs_trans_ail_remove(&ruip->rui_item, SHUTDOWN_LOG_IO_ERROR);
++		xfs_trans_ail_delete(&ruip->rui_item, SHUTDOWN_LOG_IO_ERROR);
+ 		xfs_rui_item_free(ruip);
+ 	}
+ }
 diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 0c709651a2c6..6af609070143 100644
+index 6af609070143..80acdb89bd6e 100644
 --- a/fs/xfs/xfs_trans_ail.c
 +++ b/fs/xfs/xfs_trans_ail.c
-@@ -368,15 +368,23 @@ xfsaild_push_failed(
+@@ -872,13 +872,14 @@ xfs_ail_delete_one(
+  */
+ void
+ xfs_trans_ail_delete(
+-	struct xfs_ail		*ailp,
+ 	struct xfs_log_item	*lip,
+ 	int			shutdown_type)
  {
- 	struct xfs_buf		*bp =3D lip->li_buf;
++	struct xfs_ail		*ailp =3D lip->li_ailp;
+ 	struct xfs_mount	*mp =3D ailp->ail_mount;
+ 	xfs_lsn_t		tail_lsn;
 =20
--	if (!xfs_buf_trylock(bp))
-+	/*
-+	 * Log item state bits are racy so we cannot assume the temporary buffe=
-r
-+	 * pointer is set. Treat the item as locked if the pointer is clear or
-+	 * the failure state has changed once we've locked out I/O completion.
-+	 */
-+	if (!bp || !xfs_buf_trylock(bp))
- 		return XFS_ITEM_LOCKED;
-+	if (!test_bit(XFS_LI_FAILED, &lip->li_flags)) {
-+		xfs_buf_unlock(bp);
-+		return XFS_ITEM_LOCKED;
-+	}
-=20
- 	if (!xfs_buf_delwri_queue(bp, buffer_list)) {
- 		xfs_buf_unlock(bp);
- 		return XFS_ITEM_FLUSHING;
- 	}
-=20
--	/* protected by ail_lock */
- 	list_for_each_entry(lip, &bp->b_li_list, li_bio_list)
- 		xfs_clear_li_failed(lip);
-=20
++	spin_lock(&ailp->ail_lock);
+ 	if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
+ 		spin_unlock(&ailp->ail_lock);
+ 		if (!XFS_FORCED_SHUTDOWN(mp)) {
 diff --git a/fs/xfs/xfs_trans_priv.h b/fs/xfs/xfs_trans_priv.h
-index 35655eac01a6..9135afdcee9d 100644
+index 9135afdcee9d..7563c78e2997 100644
 --- a/fs/xfs/xfs_trans_priv.h
 +++ b/fs/xfs/xfs_trans_priv.h
-@@ -158,9 +158,6 @@ xfs_clear_li_failed(
- {
- 	struct xfs_buf	*bp =3D lip->li_buf;
+@@ -94,22 +94,23 @@ xfs_trans_ail_update(
+ xfs_lsn_t xfs_ail_delete_one(struct xfs_ail *ailp, struct xfs_log_item *=
+lip);
+ void xfs_ail_update_finish(struct xfs_ail *ailp, xfs_lsn_t old_lsn)
+ 			__releases(ailp->ail_lock);
+-void xfs_trans_ail_delete(struct xfs_ail *ailp, struct xfs_log_item *lip=
+,
+-		int shutdown_type);
++void xfs_trans_ail_delete(struct xfs_log_item *lip, int shutdown_type);
 =20
--	ASSERT(test_bit(XFS_LI_IN_AIL, &lip->li_flags));
--	lockdep_assert_held(&lip->li_ailp->ail_lock);
--
- 	if (test_and_clear_bit(XFS_LI_FAILED, &lip->li_flags)) {
- 		lip->li_buf =3D NULL;
- 		xfs_buf_rele(bp);
-@@ -172,8 +169,6 @@ xfs_set_li_failed(
- 	struct xfs_log_item	*lip,
- 	struct xfs_buf		*bp)
+ static inline void
+ xfs_trans_ail_remove(
+-	struct xfs_log_item	*lip,
+-	int			shutdown_type)
++	struct xfs_log_item	*lip)
  {
--	lockdep_assert_held(&lip->li_ailp->ail_lock);
--
- 	if (!test_and_set_bit(XFS_LI_FAILED, &lip->li_flags)) {
- 		xfs_buf_hold(bp);
- 		lip->li_buf =3D bp;
+ 	struct xfs_ail		*ailp =3D lip->li_ailp;
++	xfs_lsn_t		tail_lsn;
+=20
+ 	spin_lock(&ailp->ail_lock);
+-	/* xfs_trans_ail_delete() drops the AIL lock */
+-	if (test_bit(XFS_LI_IN_AIL, &lip->li_flags))
+-		xfs_trans_ail_delete(ailp, lip, shutdown_type);
+-	else
++	/* xfs_ail_update_finish() drops the AIL lock */
++	if (test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
++		tail_lsn =3D xfs_ail_delete_one(ailp, lip);
++		xfs_ail_update_finish(ailp, tail_lsn);
++	} else {
+ 		spin_unlock(&ailp->ail_lock);
++	}
+ }
+=20
+ void			xfs_ail_push(struct xfs_ail *, xfs_lsn_t);
 --=20
 2.21.1
 
