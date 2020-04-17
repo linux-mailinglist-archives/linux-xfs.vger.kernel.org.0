@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D2011AE099
+	by mail.lfdr.de (Postfix) with ESMTP id 7A58F1AE09A
 	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 17:09:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgDQPJI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1728288AbgDQPJI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Fri, 17 Apr 2020 11:09:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49411 "EHLO
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60498 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728874AbgDQPJH (ORCPT
+        with ESMTP id S1728852AbgDQPJH (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 11:09:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587136145;
+        s=mimecast20190719; t=1587136146;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J8NkgnJMXUkfNkR2+KWQu16cSSej33kNjPCb+IUTlGM=;
-        b=F3OEs92cZpviC+Oi/DC3hbyan3f4gyEp9qQiteLo+jNrIvVFsZT3fVJhTEOHHcyXKx5Yej
-        2z/qZuutUyVdQBQgf5YAVHGREBmnUsN+i9bhCVqfJzOC3feugdV+Qxd0Qk4AbS8S01APYv
-        dhd4fQclyR90n+wxSbRg1NUk+jBN1xY=
+        bh=r/P9fWlZZlP1VXzxENU8G2/Bi5QqxOKryo3/Ck9Brg8=;
+        b=aZHbdQ1/l5eWkomBj2qfo3iV/uq0DlkX3RZeoAxzAX/5YRpQnMiFIaG6SI4REWr/Fa4ajV
+        umsTgx7fiyc7RapZdTO2IU2kvRAW60rBcUqXFs+nD7qEQ9Rg6vy1LhCcH8RxGwxbIUefYJ
+        51UGlgid/UXElZl+d/6m4kwh6ftn+h8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-ZxSYfBVJO1uBHWRbesypUw-1; Fri, 17 Apr 2020 11:09:04 -0400
-X-MC-Unique: ZxSYfBVJO1uBHWRbesypUw-1
+ us-mta-37-ZGjLdPJVPP6Fbfs3zHXoiA-1; Fri, 17 Apr 2020 11:09:04 -0400
+X-MC-Unique: ZGjLdPJVPP6Fbfs3zHXoiA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3ACC21088380
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8EA380268B
         for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:03 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E7BDF60BE0
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F77760BE0
+        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:03 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 07/12] xfs: abort consistently on dquot flush failure
-Date:   Fri, 17 Apr 2020 11:08:54 -0400
-Message-Id: <20200417150859.14734-8-bfoster@redhat.com>
+Subject: [PATCH 08/12] xfs: remove unnecessary quotaoff intent item push handler
+Date:   Fri, 17 Apr 2020 11:08:55 -0400
+Message-Id: <20200417150859.14734-9-bfoster@redhat.com>
 In-Reply-To: <20200417150859.14734-1-bfoster@redhat.com>
 References: <20200417150859.14734-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,76 +48,57 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The dquot flush handler effectively aborts the dquot flush if the
-filesystem is already shut down, but doesn't actually shut down if
-the flush fails. Update xfs_qm_dqflush() to consistently abort the
-dquot flush and shutdown the fs if the flush fails with an
-unexpected error.
+The quotaoff intent item push handler unconditionally returns locked
+status because it remains AIL resident until removed by the
+quotafoff end intent. xfsaild_push_item() already returns pinned
+status for items (generally intents) without a push handler. This is
+effectively the same behavior for the purpose of quotaoff, so remove
+the unnecessary quotaoff push handler.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_dquot.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+ fs/xfs/xfs_dquot_item.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 73032c18a94a..41750f797861 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1068,6 +1068,7 @@ xfs_qm_dqflush(
- 	struct xfs_buf		**bpp)
- {
- 	struct xfs_mount	*mp =3D dqp->q_mount;
-+	struct xfs_log_item	*lip =3D &dqp->q_logitem.qli_item;
- 	struct xfs_buf		*bp;
- 	struct xfs_dqblk	*dqb;
- 	struct xfs_disk_dquot	*ddqp;
-@@ -1082,32 +1083,16 @@ xfs_qm_dqflush(
+diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
+index 5a7808299a32..582b3796a0c9 100644
+--- a/fs/xfs/xfs_dquot_item.c
++++ b/fs/xfs/xfs_dquot_item.c
+@@ -274,18 +274,6 @@ xfs_qm_qoff_logitem_format(
+ 	xlog_finish_iovec(lv, vecp, sizeof(struct xfs_qoff_logitem));
+ }
 =20
- 	xfs_qm_dqunpin_wait(dqp);
-=20
--	/*
--	 * This may have been unpinned because the filesystem is shutting
--	 * down forcibly. If that's the case we must not write this dquot
--	 * to disk, because the log record didn't make it to disk.
--	 *
--	 * We also have to remove the log item from the AIL in this case,
--	 * as we wait for an emptry AIL as part of the unmount process.
--	 */
--	if (XFS_FORCED_SHUTDOWN(mp)) {
--		struct xfs_log_item	*lip =3D &dqp->q_logitem.qli_item;
--		dqp->dq_flags &=3D ~XFS_DQ_DIRTY;
+-/*
+- * There isn't much you can do to push a quotaoff item.  It is simply
+- * stuck waiting for the log to be flushed to disk.
+- */
+-STATIC uint
+-xfs_qm_qoff_logitem_push(
+-	struct xfs_log_item	*lip,
+-	struct list_head	*buffer_list)
+-{
+-	return XFS_ITEM_LOCKED;
+-}
 -
--		xfs_trans_ail_remove(lip, SHUTDOWN_CORRUPT_INCORE);
--
--		error =3D -EIO;
--		goto out_unlock;
--	}
--
- 	/*
- 	 * Get the buffer containing the on-disk dquot
- 	 */
- 	error =3D xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
- 				   mp->m_quotainfo->qi_dqchunklen, XBF_TRYLOCK,
- 				   &bp, &xfs_dquot_buf_ops);
--	if (error)
-+	if (error =3D=3D -EAGAIN)
- 		goto out_unlock;
-+	if (error)
-+		goto out_abort;
+ STATIC xfs_lsn_t
+ xfs_qm_qoffend_logitem_committed(
+ 	struct xfs_log_item	*lip,
+@@ -318,14 +306,12 @@ static const struct xfs_item_ops xfs_qm_qoffend_log=
+item_ops =3D {
+ 	.iop_size	=3D xfs_qm_qoff_logitem_size,
+ 	.iop_format	=3D xfs_qm_qoff_logitem_format,
+ 	.iop_committed	=3D xfs_qm_qoffend_logitem_committed,
+-	.iop_push	=3D xfs_qm_qoff_logitem_push,
+ 	.iop_release	=3D xfs_qm_qoff_logitem_release,
+ };
 =20
- 	/*
- 	 * Calculate the location of the dquot inside the buffer.
-@@ -1161,6 +1146,10 @@ xfs_qm_dqflush(
- 	*bpp =3D bp;
- 	return 0;
+ static const struct xfs_item_ops xfs_qm_qoff_logitem_ops =3D {
+ 	.iop_size	=3D xfs_qm_qoff_logitem_size,
+ 	.iop_format	=3D xfs_qm_qoff_logitem_format,
+-	.iop_push	=3D xfs_qm_qoff_logitem_push,
+ 	.iop_release	=3D xfs_qm_qoff_logitem_release,
+ };
 =20
-+out_abort:
-+	dqp->dq_flags &=3D ~XFS_DQ_DIRTY;
-+	xfs_trans_ail_remove(lip, SHUTDOWN_CORRUPT_INCORE);
-+	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- out_unlock:
- 	xfs_dqfunlock(dqp);
- 	return error;
 --=20
 2.21.1
 
