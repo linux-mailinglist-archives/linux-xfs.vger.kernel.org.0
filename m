@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94DB71AE098
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 17:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACEBD1AE094
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 17:09:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgDQPJI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Apr 2020 11:09:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54979 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728858AbgDQPJG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 11:09:06 -0400
+        id S1728303AbgDQPJG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Apr 2020 11:09:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43900 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728852AbgDQPJF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 11:09:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1587136144;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5wdHauiDbb2jHLjxtcDVlN4iLnrrzaREoLO8WLv72kc=;
-        b=Oi3ZV8RirMpZeBbl/04uTj0Y2NPgtGV4kyfVeSad3ic272p6fdwIlWpSTWAVuVJpxoEfC5
-        8yRAHu/xSvyqjyMjiEhYK1V5ifkj2LHW0PW8lV4zWKhVyvq8GAjp5ybXnsj1J3aRpZ8/Ma
-        7W/DrBi4kV93gbp8nW/PpzEmbVrolzk=
+        bh=ekRja/0uHuj4J/sQPDKwWUNvXZRNoP5ryd+VAnwLquc=;
+        b=UmLo+r4Zz7GOq3YWNxPpRIASrsdEXQxZwzYJMolG9/Ekxfu+Oz+OA2X6vbfPo57Qmr5XfP
+        Ie5xSLspvO/8ST2mA7AykFuWDJdsO9zPqLl7kYuvm5IBO5ZOD1pkstPkOpdyMEunDEGHPQ
+        CP2cBpg/VYk7PFhmXeFtBNmgdi9bDiM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-OM_gzf75NWqSJEDzBUpq-g-1; Fri, 17 Apr 2020 11:09:01 -0400
-X-MC-Unique: OM_gzf75NWqSJEDzBUpq-g-1
+ us-mta-306-GydnFOsFOAaOM8sapZ0ovw-1; Fri, 17 Apr 2020 11:09:01 -0400
+X-MC-Unique: GydnFOsFOAaOM8sapZ0ovw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F65C8017FE
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0919E18C43C3
+        for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:01 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 499A360BE0
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B558D60BE0
         for <linux-xfs@vger.kernel.org>; Fri, 17 Apr 2020 15:09:00 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 01/12] xfs: refactor failed buffer resubmission into xfsaild
-Date:   Fri, 17 Apr 2020 11:08:48 -0400
-Message-Id: <20200417150859.14734-2-bfoster@redhat.com>
+Subject: [PATCH 02/12] xfs: factor out buffer I/O failure simulation code
+Date:   Fri, 17 Apr 2020 11:08:49 -0400
+Message-Id: <20200417150859.14734-3-bfoster@redhat.com>
 In-Reply-To: <20200417150859.14734-1-bfoster@redhat.com>
 References: <20200417150859.14734-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,220 +48,133 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Flush locked log items whose underlying buffers fail metadata
-writeback are tagged with a special flag to indicate that the flush
-lock is already held. This is currently implemented in the type
-specific ->iop_push() callback, but the processing required for such
-items is not type specific because we're only doing basic state
-management on the underlying buffer.
-
-Factor the failed log item handling out of the inode and dquot
-->iop_push() callbacks and open code the buffer resubmit helper into
-a single helper called from xfsaild_push_item(). This provides a
-generic mechanism for handling failed metadata buffer writeback with
-a bit less code.
+We use the same buffer I/O failure simulation code in a few
+different places. It's not much code, but it's not necessarily
+self-explanatory. Factor it into a helper and document it in one
+place.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_buf_item.c   | 39 ---------------------------------------
- fs/xfs/xfs_buf_item.h   |  2 --
- fs/xfs/xfs_dquot_item.c | 15 ---------------
- fs/xfs/xfs_inode_item.c | 15 ---------------
- fs/xfs/xfs_trans_ail.c  | 41 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 41 insertions(+), 71 deletions(-)
+ fs/xfs/xfs_buf.c      | 23 +++++++++++++++++++----
+ fs/xfs/xfs_buf.h      |  1 +
+ fs/xfs/xfs_buf_item.c | 22 +++-------------------
+ fs/xfs/xfs_inode.c    |  7 +------
+ 4 files changed, 24 insertions(+), 29 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 1545657c3ca0..8796adde2d12 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -1248,42 +1248,3 @@ xfs_buf_iodone(
- 	xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
- 	xfs_buf_item_free(BUF_ITEM(lip));
- }
--
--/*
-- * Requeue a failed buffer for writeback.
-- *
-- * We clear the log item failed state here as well, but we have to be ca=
-reful
-- * about reference counts because the only active reference counts on th=
-e buffer
-- * may be the failed log items. Hence if we clear the log item failed st=
-ate
-- * before queuing the buffer for IO we can release all active references=
- to
-- * the buffer and free it, leading to use after free problems in
-- * xfs_buf_delwri_queue. It makes no difference to the buffer or log ite=
-ms which
-- * order we process them in - the buffer is locked, and we own the buffe=
-r list
-- * so nothing on them is going to change while we are performing this ac=
-tion.
-- *
-- * Hence we can safely queue the buffer for IO before we clear the faile=
-d log
-- * item state, therefore  always having an active reference to the buffe=
-r and
-- * avoiding the transient zero-reference state that leads to use-after-f=
-ree.
-- *
-- * Return true if the buffer was added to the buffer list, false if it w=
-as
-- * already on the buffer list.
-- */
--bool
--xfs_buf_resubmit_failed_buffers(
--	struct xfs_buf		*bp,
--	struct list_head	*buffer_list)
--{
--	struct xfs_log_item	*lip;
--	bool			ret;
--
--	ret =3D xfs_buf_delwri_queue(bp, buffer_list);
--
--	/*
--	 * XFS_LI_FAILED set/clear is protected by ail_lock, caller of this
--	 * function already have it acquired
--	 */
--	list_for_each_entry(lip, &bp->b_li_list, li_bio_list)
--		xfs_clear_li_failed(lip);
--
--	return ret;
--}
-diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
-index 30114b510332..c9c57e2da932 100644
---- a/fs/xfs/xfs_buf_item.h
-+++ b/fs/xfs/xfs_buf_item.h
-@@ -59,8 +59,6 @@ void	xfs_buf_attach_iodone(struct xfs_buf *,
- 			      struct xfs_log_item *);
- void	xfs_buf_iodone_callbacks(struct xfs_buf *);
- void	xfs_buf_iodone(struct xfs_buf *, struct xfs_log_item *);
--bool	xfs_buf_resubmit_failed_buffers(struct xfs_buf *,
--					struct list_head *);
- bool	xfs_buf_log_check_iovec(struct xfs_log_iovec *iovec);
-=20
- extern kmem_zone_t	*xfs_buf_item_zone;
-diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-index baad1748d0d1..5a7808299a32 100644
---- a/fs/xfs/xfs_dquot_item.c
-+++ b/fs/xfs/xfs_dquot_item.c
-@@ -145,21 +145,6 @@ xfs_qm_dquot_logitem_push(
- 	if (atomic_read(&dqp->q_pincount) > 0)
- 		return XFS_ITEM_PINNED;
-=20
--	/*
--	 * The buffer containing this item failed to be written back
--	 * previously. Resubmit the buffer for IO
--	 */
--	if (test_bit(XFS_LI_FAILED, &lip->li_flags)) {
--		if (!xfs_buf_trylock(bp))
--			return XFS_ITEM_LOCKED;
--
--		if (!xfs_buf_resubmit_failed_buffers(bp, buffer_list))
--			rval =3D XFS_ITEM_FLUSHING;
--
--		xfs_buf_unlock(bp);
--		return rval;
--	}
--
- 	if (!xfs_dqlock_nowait(dqp))
- 		return XFS_ITEM_LOCKED;
-=20
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index f779cca2346f..1d4d256a2e96 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -497,21 +497,6 @@ xfs_inode_item_push(
- 	if (xfs_ipincount(ip) > 0)
- 		return XFS_ITEM_PINNED;
-=20
--	/*
--	 * The buffer containing this item failed to be written back
--	 * previously. Resubmit the buffer for IO.
--	 */
--	if (test_bit(XFS_LI_FAILED, &lip->li_flags)) {
--		if (!xfs_buf_trylock(bp))
--			return XFS_ITEM_LOCKED;
--
--		if (!xfs_buf_resubmit_failed_buffers(bp, buffer_list))
--			rval =3D XFS_ITEM_FLUSHING;
--
--		xfs_buf_unlock(bp);
--		return rval;
--	}
--
- 	if (!xfs_ilock_nowait(ip, XFS_ILOCK_SHARED))
- 		return XFS_ITEM_LOCKED;
-=20
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 564253550b75..0c709651a2c6 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -345,6 +345,45 @@ xfs_ail_delete(
- 	xfs_trans_ail_cursor_clear(ailp, lip);
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 9ec3eaf1c618..93942d8e35dd 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1248,6 +1248,24 @@ xfs_buf_ioerror_alert(
+ 			-bp->b_error);
  }
 =20
 +/*
-+ * Requeue a failed buffer for writeback.
-+ *
-+ * We clear the log item failed state here as well, but we have to be ca=
-reful
-+ * about reference counts because the only active reference counts on th=
-e buffer
-+ * may be the failed log items. Hence if we clear the log item failed st=
-ate
-+ * before queuing the buffer for IO we can release all active references=
- to
-+ * the buffer and free it, leading to use after free problems in
-+ * xfs_buf_delwri_queue. It makes no difference to the buffer or log ite=
-ms which
-+ * order we process them in - the buffer is locked, and we own the buffe=
-r list
-+ * so nothing on them is going to change while we are performing this ac=
-tion.
-+ *
-+ * Hence we can safely queue the buffer for IO before we clear the faile=
-d log
-+ * item state, therefore  always having an active reference to the buffe=
-r and
-+ * avoiding the transient zero-reference state that leads to use-after-f=
-ree.
++  * To simulate an I/O failure, the buffer must be locked and held with =
+at least
++ * three references. The LRU reference is dropped by the stale call. The=
+ buf
++ * item reference is dropped via ioend processing. The third reference i=
+s owned
++ * by the caller and is dropped on I/O completion if the buffer is XBF_A=
+SYNC.
 + */
-+static inline int
-+xfsaild_push_failed(
-+	struct xfs_log_item	*lip,
-+	struct list_head	*buffer_list)
++void
++xfs_buf_iofail(
++	struct xfs_buf	*bp,
++	int		flags)
 +{
-+	struct xfs_buf		*bp =3D lip->li_buf;
-+
-+	if (!xfs_buf_trylock(bp))
-+		return XFS_ITEM_LOCKED;
-+
-+	if (!xfs_buf_delwri_queue(bp, buffer_list)) {
-+		xfs_buf_unlock(bp);
-+		return XFS_ITEM_FLUSHING;
-+	}
-+
-+	/* protected by ail_lock */
-+	list_for_each_entry(lip, &bp->b_li_list, li_bio_list)
-+		xfs_clear_li_failed(lip);
-+
-+	xfs_buf_unlock(bp);
-+	return XFS_ITEM_SUCCESS;
++	bp->b_flags |=3D flags;
++	bp->b_flags &=3D ~XBF_DONE;
++	xfs_buf_stale(bp);
++	xfs_buf_ioerror(bp, -EIO);
++	xfs_buf_ioend(bp);
 +}
 +
- static inline uint
- xfsaild_push_item(
- 	struct xfs_ail		*ailp,
-@@ -365,6 +404,8 @@ xfsaild_push_item(
- 	 */
- 	if (!lip->li_ops->iop_push)
- 		return XFS_ITEM_PINNED;
-+	if (test_bit(XFS_LI_FAILED, &lip->li_flags))
-+		return xfsaild_push_failed(lip, &ailp->ail_buf_list);
- 	return lip->li_ops->iop_push(lip, &ailp->ail_buf_list);
+ int
+ xfs_bwrite(
+ 	struct xfs_buf		*bp)
+@@ -1480,10 +1498,7 @@ __xfs_buf_submit(
+=20
+ 	/* on shutdown we stale and complete the buffer immediately */
+ 	if (XFS_FORCED_SHUTDOWN(bp->b_mount)) {
+-		xfs_buf_ioerror(bp, -EIO);
+-		bp->b_flags &=3D ~XBF_DONE;
+-		xfs_buf_stale(bp);
+-		xfs_buf_ioend(bp);
++		xfs_buf_iofail(bp, 0);
+ 		return -EIO;
+ 	}
+=20
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 9a04c53c2488..a6bce4702b2e 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -263,6 +263,7 @@ extern void __xfs_buf_ioerror(struct xfs_buf *bp, int=
+ error,
+ 		xfs_failaddr_t failaddr);
+ #define xfs_buf_ioerror(bp, err) __xfs_buf_ioerror((bp), (err), __this_a=
+ddress)
+ extern void xfs_buf_ioerror_alert(struct xfs_buf *bp, xfs_failaddr_t fa)=
+;
++void xfs_buf_iofail(struct xfs_buf *, int);
+=20
+ extern int __xfs_buf_submit(struct xfs_buf *bp, bool);
+ static inline int xfs_buf_submit(struct xfs_buf *bp)
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index 8796adde2d12..72d37a4609d8 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -471,28 +471,12 @@ xfs_buf_item_unpin(
+ 		xfs_buf_relse(bp);
+ 	} else if (freed && remove) {
+ 		/*
+-		 * There are currently two references to the buffer - the active
+-		 * LRU reference and the buf log item. What we are about to do
+-		 * here - simulate a failed IO completion - requires 3
+-		 * references.
+-		 *
+-		 * The LRU reference is removed by the xfs_buf_stale() call. The
+-		 * buf item reference is removed by the xfs_buf_iodone()
+-		 * callback that is run by xfs_buf_do_callbacks() during ioend
+-		 * processing (via the bp->b_iodone callback), and then finally
+-		 * the ioend processing will drop the IO reference if the buffer
+-		 * is marked XBF_ASYNC.
+-		 *
+-		 * Hence we need to take an additional reference here so that IO
+-		 * completion processing doesn't free the buffer prematurely.
++		 * The buffer must be locked and held by the caller to simulate
++		 * an async I/O failure.
+ 		 */
+ 		xfs_buf_lock(bp);
+ 		xfs_buf_hold(bp);
+-		bp->b_flags |=3D XBF_ASYNC;
+-		xfs_buf_ioerror(bp, -EIO);
+-		bp->b_flags &=3D ~XBF_DONE;
+-		xfs_buf_stale(bp);
+-		xfs_buf_ioend(bp);
++		xfs_buf_iofail(bp, XBF_ASYNC);
+ 	}
  }
 =20
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index d1772786af29..b539ee221ce5 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -3629,12 +3629,7 @@ xfs_iflush_cluster(
+ 	 * xfs_buf_submit().
+ 	 */
+ 	ASSERT(bp->b_iodone);
+-	bp->b_flags |=3D XBF_ASYNC;
+-	bp->b_flags &=3D ~XBF_DONE;
+-	xfs_buf_stale(bp);
+-	xfs_buf_ioerror(bp, -EIO);
+-	xfs_buf_ioend(bp);
+-
++	xfs_buf_iofail(bp, XBF_ASYNC);
+ 	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+=20
+ 	/* abort the corrupt inode, as it was not attached to the buffer */
 --=20
 2.21.1
 
