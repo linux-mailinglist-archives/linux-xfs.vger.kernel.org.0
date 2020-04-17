@@ -2,184 +2,272 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8C51AE3B0
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Apr 2020 19:20:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EAA51AE84B
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Apr 2020 00:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgDQRTi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Apr 2020 13:19:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38364 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgDQRTh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 17 Apr 2020 13:19:37 -0400
-IronPort-SDR: aEyryLCkhgfAPbbLSBdFjw6ieQacCmrTcjjGIE+toJ7E4OuZzeL1F+7hB6d78l7yuyZTA34FAn
- 2kQHnsVR4uvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 10:19:36 -0700
-IronPort-SDR: PLkem773MNJbcn2ONOYkpbZvrY7xDpNrF167sHCQ6p1V8QhAE99GtvdakzYl9hbOr8WqAiOY9d
- 8jS1H0TzeeTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,395,1580803200"; 
-   d="scan'208";a="428292211"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2020 10:19:36 -0700
-Date:   Fri, 17 Apr 2020 10:19:36 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200417171936.GT2309605@iweiny-DESK2.sc.intel.com>
-References: <20200417022036.GQ2309605@iweiny-DESK2.sc.intel.com>
- <324CEF76-20AA-40F5-A31B-6E0B1CCED736@dilger.ca>
+        id S1728787AbgDQWhM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Apr 2020 18:37:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48408 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbgDQWhM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Apr 2020 18:37:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HMXio2094023;
+        Fri, 17 Apr 2020 22:37:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ES68vyUa74zj/2MAMbVu8KCB6x89O/+TRSdfhK1itbg=;
+ b=Rs5tF+5Hjo3ufRn98U6zwMwxEI8x1l5Z/+ktiJ/Ko0mCcxJIxmAfa5HwK206XeIZnvJp
+ 6lKQFblNdNx36Hn1vYIIpspVGXoe2k2AIL9TQK8MdUwCvx9gANKqZR/S0d0I8F/MNYzm
+ gmaou+xYPzUbUBFqMPCfd9pgUr2i2POSs95ESWDJhrTi9VIqSo7VFDOcexDCq88vJd8Y
+ +lBPa0MzRaBSJ7iyVZoIdNTn1O070SRE7gb9F4oZgfKrmGEIQ1hQMZlJqQjjGAV6VUkP
+ 3ZllSI2eoFlhY7Wuhadp/fj4E70OquXx46lBdv4V8yJz5wWPafEmkYZaLSG+WoMel5pd lA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30e0aaf1vj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 22:37:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03HMXKAZ034580;
+        Fri, 17 Apr 2020 22:37:08 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30dn92as1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Apr 2020 22:37:08 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03HMb6Kg023432;
+        Fri, 17 Apr 2020 22:37:07 GMT
+Received: from [192.168.1.223] (/67.1.142.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Apr 2020 15:37:06 -0700
+Subject: Re: [PATCH 01/12] xfs: refactor failed buffer resubmission into
+ xfsaild
+To:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+References: <20200417150859.14734-1-bfoster@redhat.com>
+ <20200417150859.14734-2-bfoster@redhat.com>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <3b56ec9b-8b7d-bdb0-2748-e8d711bb480c@oracle.com>
+Date:   Fri, 17 Apr 2020 15:37:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <324CEF76-20AA-40F5-A31B-6E0B1CCED736@dilger.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200417150859.14734-2-bfoster@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9594 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=2 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004170165
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 12:43:39AM -0600, Andreas Dilger wrote:
-> We still need to store an on-disk DAX flag for Ext4, and at that point it
-> doesn't make sense not to expose it via the standard Ext4 chattr utility.
-> 
-> So having EXT4_DAX_FL (== FS_DAX_FL) is no extra effort to add.
 
-I'll leave it exposed then.
 
-Thanks,
-Ira
+On 4/17/20 8:08 AM, Brian Foster wrote:
+> Flush locked log items whose underlying buffers fail metadata
+> writeback are tagged with a special flag to indicate that the flush
+> lock is already held. This is currently implemented in the type
+> specific ->iop_push() callback, but the processing required for such
+> items is not type specific because we're only doing basic state
+> management on the underlying buffer.
+> 
+> Factor the failed log item handling out of the inode and dquot
+> ->iop_push() callbacks and open code the buffer resubmit helper into
+> a single helper called from xfsaild_push_item(). This provides a
+> generic mechanism for handling failed metadata buffer writeback with
+> a bit less code.
+> 
+> Signed-off-by: Brian Foster <bfoster@redhat.com>
+Ok, I traced it through, and I think the re-factor is equivalent
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 
+> ---
+>   fs/xfs/xfs_buf_item.c   | 39 ---------------------------------------
+>   fs/xfs/xfs_buf_item.h   |  2 --
+>   fs/xfs/xfs_dquot_item.c | 15 ---------------
+>   fs/xfs/xfs_inode_item.c | 15 ---------------
+>   fs/xfs/xfs_trans_ail.c  | 41 +++++++++++++++++++++++++++++++++++++++++
+>   5 files changed, 41 insertions(+), 71 deletions(-)
 > 
-> Cheers, Andreas
+> diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+> index 1545657c3ca0..8796adde2d12 100644
+> --- a/fs/xfs/xfs_buf_item.c
+> +++ b/fs/xfs/xfs_buf_item.c
+> @@ -1248,42 +1248,3 @@ xfs_buf_iodone(
+>   	xfs_trans_ail_delete(ailp, lip, SHUTDOWN_CORRUPT_INCORE);
+>   	xfs_buf_item_free(BUF_ITEM(lip));
+>   }
+> -
+> -/*
+> - * Requeue a failed buffer for writeback.
+> - *
+> - * We clear the log item failed state here as well, but we have to be careful
+> - * about reference counts because the only active reference counts on the buffer
+> - * may be the failed log items. Hence if we clear the log item failed state
+> - * before queuing the buffer for IO we can release all active references to
+> - * the buffer and free it, leading to use after free problems in
+> - * xfs_buf_delwri_queue. It makes no difference to the buffer or log items which
+> - * order we process them in - the buffer is locked, and we own the buffer list
+> - * so nothing on them is going to change while we are performing this action.
+> - *
+> - * Hence we can safely queue the buffer for IO before we clear the failed log
+> - * item state, therefore  always having an active reference to the buffer and
+> - * avoiding the transient zero-reference state that leads to use-after-free.
+> - *
+> - * Return true if the buffer was added to the buffer list, false if it was
+> - * already on the buffer list.
+> - */
+> -bool
+> -xfs_buf_resubmit_failed_buffers(
+> -	struct xfs_buf		*bp,
+> -	struct list_head	*buffer_list)
+> -{
+> -	struct xfs_log_item	*lip;
+> -	bool			ret;
+> -
+> -	ret = xfs_buf_delwri_queue(bp, buffer_list);
+> -
+> -	/*
+> -	 * XFS_LI_FAILED set/clear is protected by ail_lock, caller of this
+> -	 * function already have it acquired
+> -	 */
+> -	list_for_each_entry(lip, &bp->b_li_list, li_bio_list)
+> -		xfs_clear_li_failed(lip);
+> -
+> -	return ret;
+> -}
+> diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
+> index 30114b510332..c9c57e2da932 100644
+> --- a/fs/xfs/xfs_buf_item.h
+> +++ b/fs/xfs/xfs_buf_item.h
+> @@ -59,8 +59,6 @@ void	xfs_buf_attach_iodone(struct xfs_buf *,
+>   			      struct xfs_log_item *);
+>   void	xfs_buf_iodone_callbacks(struct xfs_buf *);
+>   void	xfs_buf_iodone(struct xfs_buf *, struct xfs_log_item *);
+> -bool	xfs_buf_resubmit_failed_buffers(struct xfs_buf *,
+> -					struct list_head *);
+>   bool	xfs_buf_log_check_iovec(struct xfs_log_iovec *iovec);
+>   
+>   extern kmem_zone_t	*xfs_buf_item_zone;
+> diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
+> index baad1748d0d1..5a7808299a32 100644
+> --- a/fs/xfs/xfs_dquot_item.c
+> +++ b/fs/xfs/xfs_dquot_item.c
+> @@ -145,21 +145,6 @@ xfs_qm_dquot_logitem_push(
+>   	if (atomic_read(&dqp->q_pincount) > 0)
+>   		return XFS_ITEM_PINNED;
+>   
+> -	/*
+> -	 * The buffer containing this item failed to be written back
+> -	 * previously. Resubmit the buffer for IO
+> -	 */
+> -	if (test_bit(XFS_LI_FAILED, &lip->li_flags)) {
+> -		if (!xfs_buf_trylock(bp))
+> -			return XFS_ITEM_LOCKED;
+> -
+> -		if (!xfs_buf_resubmit_failed_buffers(bp, buffer_list))
+> -			rval = XFS_ITEM_FLUSHING;
+> -
+> -		xfs_buf_unlock(bp);
+> -		return rval;
+> -	}
+> -
+>   	if (!xfs_dqlock_nowait(dqp))
+>   		return XFS_ITEM_LOCKED;
+>   
+> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
+> index f779cca2346f..1d4d256a2e96 100644
+> --- a/fs/xfs/xfs_inode_item.c
+> +++ b/fs/xfs/xfs_inode_item.c
+> @@ -497,21 +497,6 @@ xfs_inode_item_push(
+>   	if (xfs_ipincount(ip) > 0)
+>   		return XFS_ITEM_PINNED;
+>   
+> -	/*
+> -	 * The buffer containing this item failed to be written back
+> -	 * previously. Resubmit the buffer for IO.
+> -	 */
+> -	if (test_bit(XFS_LI_FAILED, &lip->li_flags)) {
+> -		if (!xfs_buf_trylock(bp))
+> -			return XFS_ITEM_LOCKED;
+> -
+> -		if (!xfs_buf_resubmit_failed_buffers(bp, buffer_list))
+> -			rval = XFS_ITEM_FLUSHING;
+> -
+> -		xfs_buf_unlock(bp);
+> -		return rval;
+> -	}
+> -
+>   	if (!xfs_ilock_nowait(ip, XFS_ILOCK_SHARED))
+>   		return XFS_ITEM_LOCKED;
+>   
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 564253550b75..0c709651a2c6 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -345,6 +345,45 @@ xfs_ail_delete(
+>   	xfs_trans_ail_cursor_clear(ailp, lip);
+>   }
+>   
+> +/*
+> + * Requeue a failed buffer for writeback.
+> + *
+> + * We clear the log item failed state here as well, but we have to be careful
+> + * about reference counts because the only active reference counts on the buffer
+> + * may be the failed log items. Hence if we clear the log item failed state
+> + * before queuing the buffer for IO we can release all active references to
+> + * the buffer and free it, leading to use after free problems in
+> + * xfs_buf_delwri_queue. It makes no difference to the buffer or log items which
+> + * order we process them in - the buffer is locked, and we own the buffer list
+> + * so nothing on them is going to change while we are performing this action.
+> + *
+> + * Hence we can safely queue the buffer for IO before we clear the failed log
+> + * item state, therefore  always having an active reference to the buffer and
+> + * avoiding the transient zero-reference state that leads to use-after-free.
+> + */
+> +static inline int
+> +xfsaild_push_failed(
+> +	struct xfs_log_item	*lip,
+> +	struct list_head	*buffer_list)
+> +{
+> +	struct xfs_buf		*bp = lip->li_buf;
+> +
+> +	if (!xfs_buf_trylock(bp))
+> +		return XFS_ITEM_LOCKED;
+> +
+> +	if (!xfs_buf_delwri_queue(bp, buffer_list)) {
+> +		xfs_buf_unlock(bp);
+> +		return XFS_ITEM_FLUSHING;
+> +	}
+> +
+> +	/* protected by ail_lock */
+> +	list_for_each_entry(lip, &bp->b_li_list, li_bio_list)
+> +		xfs_clear_li_failed(lip);
+> +
+> +	xfs_buf_unlock(bp);
+> +	return XFS_ITEM_SUCCESS;
+> +}
+> +
+>   static inline uint
+>   xfsaild_push_item(
+>   	struct xfs_ail		*ailp,
+> @@ -365,6 +404,8 @@ xfsaild_push_item(
+>   	 */
+>   	if (!lip->li_ops->iop_push)
+>   		return XFS_ITEM_PINNED;
+> +	if (test_bit(XFS_LI_FAILED, &lip->li_flags))
+> +		return xfsaild_push_failed(lip, &ailp->ail_buf_list);
+>   	return lip->li_ops->iop_push(lip, &ailp->ail_buf_list);
+>   }
+>   
 > 
-> > On Apr 16, 2020, at 20:20, Ira Weiny <ira.weiny@intel.com> wrote:
-> > 
-> > ﻿On Thu, Apr 16, 2020 at 06:57:31PM -0700, Darrick J. Wong wrote:
-> >>> On Thu, Apr 16, 2020 at 05:37:19PM -0700, Ira Weiny wrote:
-> >>> On Thu, Apr 16, 2020 at 03:49:37PM -0700, Darrick J. Wong wrote:
-> >>>> On Thu, Apr 16, 2020 at 03:33:27PM -0700, Ira Weiny wrote:
-> >>>>> On Thu, Apr 16, 2020 at 09:25:04AM -0700, Darrick J. Wong wrote:
-> >>>>>> On Mon, Apr 13, 2020 at 09:00:26PM -0700, ira.weiny@intel.com wrote:
-> >>>>>>> From: Ira Weiny <ira.weiny@intel.com>
-> >>>>>>> 
-> >>>>>>> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> >>>>>>> 
-> >>>>>>> Set the flag to be user visible and changeable.  Set the flag to be
-> >>>>>>> inherited.  Allow applications to change the flag at any time.
-> >>>>>>> 
-> >>>>>>> Finally, on regular files, flag the inode to not be cached to facilitate
-> >>>>>>> changing S_DAX on the next creation of the inode.
-> >>>>>>> 
-> >>>>>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> >>>>>>> ---
-> >>>>>>> fs/ext4/ext4.h  | 13 +++++++++----
-> >>>>>>> fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
-> >>>>>>> 2 files changed, 29 insertions(+), 5 deletions(-)
-> >>>>>>> 
-> >>>>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> >>>>>>> index 61b37a052052..434021fcec88 100644
-> >>>>>>> --- a/fs/ext4/ext4.h
-> >>>>>>> +++ b/fs/ext4/ext4.h
-> >>>>>>> @@ -415,13 +415,16 @@ struct flex_groups {
-> >>>>>>> #define EXT4_VERITY_FL            0x00100000 /* Verity protected inode */
-> >>>>>>> #define EXT4_EA_INODE_FL            0x00200000 /* Inode used for large EA */
-> >>>>>>> #define EXT4_EOFBLOCKS_FL        0x00400000 /* Blocks allocated beyond EOF */
-> >>>>>>> +
-> >>>>>>> +#define EXT4_DAX_FL            0x00800000 /* Inode is DAX */
-> >>>>>> 
-> >>>>>> Sooo, fun fact about ext4 vs. the world--
-> >>>>>> 
-> >>>>>> The GETFLAGS/SETFLAGS ioctl, since it came from ext2, shares the same
-> >>>>>> flag values as the ondisk inode flags in ext*.  Therefore, each of these
-> >>>>>> EXT4_[whatever]_FL values are supposed to have a FS_[whatever]_FL
-> >>>>>> equivalent in include/uapi/linux/fs.h.
-> >>>>> 
-> >>>>> Interesting...
-> >>>>> 
-> >>>>>> 
-> >>>>>> (Note that the "[whatever]" is a straight translation since the same
-> >>>>>> uapi header also defines the FS_XFLAG_[xfswhatever] flag values; ignore
-> >>>>>> those.)
-> >>>>>> 
-> >>>>>> Evidently, FS_NOCOW_FL already took 0x800000, but ext4.h was never
-> >>>>>> updated to note that the value was taken.  I think Ted might be inclined
-> >>>>>> to reserve the ondisk inode bit just in case ext4 ever does support copy
-> >>>>>> on write, though that's his call. :)
-> >>>>> 
-> >>>>> Seems like I should change this...  And I did not realize I was inherently
-> >>>>> changing a bit definition which was exposed to other FS's...
-> >>>> 
-> >>>> <nod> This whole thing is a mess, particularly now that we have two vfs
-> >>>> ioctls to set per-fs inode attributes, both of which were inherited from
-> >>>> other filesystems... :(
-> >>>> 
-> >>> 
-> >>> Ok I've changed it.
-> >>> 
-> >>>> 
-> >>>>>> 
-> >>>>>> Long story short - can you use 0x1000000 for this instead, and add the
-> >>>>>> corresponding value to the uapi fs.h?  I guess that also means that we
-> >>>>>> can change FS_XFLAG_DAX (in the form of FS_DAX_FL in FSSETFLAGS) after
-> >>>>>> that.
-> >>>>> 
-> >>>>> :-/
-> >>>>> 
-> >>>>> Are there any potential users of FS_XFLAG_DAX now?
-> >>>> 
-> >>>> Yes, it's in the userspace ABI so we can't get rid of it.
-> >>>> 
-> >>>> (FWIW there are several flags that exist in both FS_XFLAG_* and FS_*_FL
-> >>>> form.)
-> >>>> 
-> >>>>> From what it looks like, changing FS_XFLAG_DAX to FS_DAX_FL would be pretty
-> >>>>> straight forward.  Just to be sure, looks like XFS converts the FS_[xxx]_FL to
-> >>>>> FS_XFLAGS_[xxx] in xfs_merge_ioc_xflags()?  But it does not look like all the
-> >>>>> FS_[xxx]_FL flags are converted.  Is is that XFS does not support those
-> >>>>> options?  Or is it depending on the VFS layer for some of them?
-> >>>> 
-> >>>> XFS doesn't support most of the FS_*_FL flags.
-> >>> 
-> >>> If FS_XFLAG_DAX needs to continue to be user visible I think we need to keep
-> >>> that flag and we should not expose the EXT4_DAX_FL flag...
-> >>> 
-> >>> I think that works for XFS.
-> >>> 
-> >>> But for ext4 it looks like EXT4_FL_XFLAG_VISIBLE was intended to be used for
-> >>> [GET|SET]XATTR where EXT4_FL_USER_VISIBLE was intended to for [GET|SET]FLAGS...
-> >>> But if I don't add EXT4_DAX_FL in EXT4_FL_XFLAG_VISIBLE my test fails.
-> >>> 
-> >>> I've been playing with the flags and looking at the code and I _thought_ the
-> >>> following patch would ensure that FS_XFLAG_DAX is the only one visible but for
-> >>> some reason FS_XFLAG_DAX can't be set with this patch.  I still need the
-> >>> EXT4_FL_USER_VISIBLE mask altered...  Which I believe would expose EXT4_DAX_FL
-> >>> directly as well.
-> >>> 
-> >>> Jan, Ted?  Any ideas?  Or should we expose EXT4_DAX_FL and FS_XFLAG_DAX in
-> >>> ext4?
-> >> 
-> >> Both flags should be exposed through their respective ioctl interfaces
-> >> in both filesystems.  That way we don't have to add even more verbiage
-> >> to the documentation to instruct userspace programmers on how to special
-> >> case ext4 and XFS for the same piece of functionality.
-> > 
-> > Wouldn't it be more confusing for the user to have 2 different flags which do
-> > the same thing?
-> > 
-> > I would think that using FS_XFLAG_DAX _only_ (for both ext4 and xfs) would be
-> > easier without special cases?
-> > 
-> > Ira
-> > 
