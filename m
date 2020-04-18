@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 090AB1AEDA1
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Apr 2020 15:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B036C1AEE6C
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Apr 2020 16:17:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgDRNxF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 18 Apr 2020 09:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
+        id S1726372AbgDROJW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Apr 2020 10:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgDRNs1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:27 -0400
+        id S1726353AbgDROJW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB11F221F4;
-        Sat, 18 Apr 2020 13:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C60221F4;
+        Sat, 18 Apr 2020 14:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217706;
-        bh=eKkMLoWmmxBEA0EEWrqjo0000MnuLIWuCTCdkeZCa5U=;
+        s=default; t=1587218961;
+        bh=ljguKWcrb/KvyvbAtOdOVUE5y9/pc510QajRM4oGwfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9ofWDHi2kxOtbpMQbSV98Rn322Jp3OOQaezRkNOpD0n2bV0eyeIIp2G8wdIZiGif
-         omCxhHC9GzEGmYDhIbs8W1f8GQD7qm5gaUrrtyv245n8u7MGYReBZqByMm88bcvU/c
-         qFdcst746MaDMDi9COQ1U3C0yrDYqH1aPMJPgdt4=
+        b=VKyib27qw46DYwg4BB+3x5fI/xjTL9dNhWBP6fo2sjFIVzS2PtkdlacmbCDvdoNCW
+         BUOdY9/MjCCpFXDQ06OH35DbZDSJTqWBA5TjY4towmFtsJH4V+eUFmpbUQrroynAx/
+         3lqqf/mshqZIL4AcaLSL8BvvCwdLfUt6oEWCW488=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
@@ -30,12 +30,12 @@ Cc:     Dave Chinner <dchinner@redhat.com>,
         Allison Collins <allison.henderson@oracle.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 09/73] xfs: correctly acount for reclaimable slabs
-Date:   Sat, 18 Apr 2020 09:47:11 -0400
-Message-Id: <20200418134815.6519-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 09/75] xfs: correctly acount for reclaimable slabs
+Date:   Sat, 18 Apr 2020 10:08:04 -0400
+Message-Id: <20200418140910.8280-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
-References: <20200418134815.6519-1-sashal@kernel.org>
+In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
+References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,10 +65,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 2094386af8aca..68fea439d9743 100644
+index d9ae27ddf253b..6c8e3789e0768 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -1861,7 +1861,8 @@ xfs_init_zones(void)
+@@ -1872,7 +1872,8 @@ xfs_init_zones(void)
  
  	xfs_ili_zone = kmem_cache_create("xfs_ili",
  					 sizeof(struct xfs_inode_log_item), 0,
