@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54A2D1B34D9
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9C01B34C9
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:06:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDVCI2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 Apr 2020 22:08:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39114 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgDVCI1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:08:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M2366j074525
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:08:25 GMT
+        id S1726228AbgDVCGc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 Apr 2020 22:06:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43752 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVCGc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:06:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M252ik168288
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=quTTPhC6z4rEGG6A4tcI0q+WL4F5pbERhOPZiiUFwO0=;
- b=r36GQT41ZVYTtcekNCwuYjuFh7yYJryU+ND1yShygecP6Da3oCwWqj7zwQRBnDSjI8kj
- XPh/p2ixj6hHJoeYJbt35d8coBQyiHa9BPJlifyuy/Sa75w8K5mKkaqsKm/R/2W/ffGS
- FzbajI52hzC9cLmtezRF48GEaqDOeG8bZZwYIVhZtVZmsyvhppLJIWlNfWuISAzpJiHj
- GQG0Vye7AKXDUFFB/Kxp1TLvd/bNts3hSSiw4w34CJFGM7eEn1ZhsYQV8lyyhv6RmnzR
- VENrcXEucWOtJfmbMgcRBET7nJCNQKmJf/ld9JGdq7HooSd30suZnj+Yf1OI2ocTpptn SA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30ft6n81n8-1
+ bh=UloAvMV62cnZnTV0yfjFmIh3mkTjLAhIeTEwtv3fI1M=;
+ b=sPQVXPQtnBQPcZ9FOtTOpmw8oUxkQPYZ4D7qbOVjPG8Ml/3reMKKa9Zb3o9FHyhwOquq
+ cEzVsCPwzgL2I3O60a8nPZ4wxPqmDaofLfbxyEqbRGdx9qwP3S/wqx3fG6OoD5KmDymF
+ 3XhbP+kNfNPubeZR8gIq+5644YnXXLjIJ/RyKQNULrBJEctCzdOOvUPR6C1tJXmuZoKG
+ ElK7Lj4r5HHbq2Lw7wOWw0PFOISG1yyiTUV1k/I2JwHDkcSu824zN14ucr+tJ8UBoGZI
+ CnQO3nvl/lDt9AEulaL3bdyi+WLdOGIZ+1DGE5j1INaxY75WKr/I8MIr/PM0ZhWyssYn Jw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30grpgmhk1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:08:25 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M22ZKR054077
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30gbbfgegu-1
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M23So3179024
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30gb91fnsq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:24 +0000
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:30 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03M26NQK013969
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:23 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03M26TTA014752
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:30 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 19:06:23 -0700
-Subject: [PATCH 03/19] xfs: refactor log recovery item dispatch for pass2
- readhead functions
+        with ESMTP ; Tue, 21 Apr 2020 19:06:29 -0700
+Subject: [PATCH 04/19] xfs: refactor log recovery item dispatch for pass1
+ commit functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 21 Apr 2020 19:06:21 -0700
-Message-ID: <158752118180.2140829.13805128567366066982.stgit@magnolia>
+Date:   Tue, 21 Apr 2020 19:06:28 -0700
+Message-ID: <158752118861.2140829.15933917079805307080.stgit@magnolia>
 In-Reply-To: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 References: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=1 malwarescore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004220014
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220014
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=1 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,344 +71,311 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Move the pass2 readhead code into the per-item source code files and use
+Move the pass1 commit code into the per-item source code files and use
 the dispatch function to call them.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_log_recover.h |   19 ++++++
- fs/xfs/xfs_buf_item.c           |   18 +++++
- fs/xfs/xfs_dquot_item.c         |   39 ++++++++++++
- fs/xfs/xfs_inode_item.c         |   28 ++++++++
- fs/xfs/xfs_log_recover.c        |  129 +--------------------------------------
- 5 files changed, 108 insertions(+), 125 deletions(-)
+ fs/xfs/libxfs/xfs_log_recover.h |    5 ++
+ fs/xfs/xfs_buf_item.c           |   62 ++++++++++++++++++++++
+ fs/xfs/xfs_buf_item.h           |    1 
+ fs/xfs/xfs_dquot_item.c         |   28 ++++++++++
+ fs/xfs/xfs_log_recover.c        |  109 +--------------------------------------
+ 5 files changed, 98 insertions(+), 107 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_log_recover.h b/fs/xfs/libxfs/xfs_log_recover.h
-index 60a6afb93049..010fc22e5fdf 100644
+index 010fc22e5fdf..dca12058bb98 100644
 --- a/fs/xfs/libxfs/xfs_log_recover.h
 +++ b/fs/xfs/libxfs/xfs_log_recover.h
-@@ -23,6 +23,8 @@ enum xlog_recover_reorder {
- 
- typedef enum xlog_recover_reorder (*xlog_recover_reorder_fn)(
+@@ -25,6 +25,8 @@ typedef enum xlog_recover_reorder (*xlog_recover_reorder_fn)(
  		struct xlog_recover_item *item);
-+typedef void (*xlog_recover_ra_pass2_fn)(struct xlog *log,
+ typedef void (*xlog_recover_ra_pass2_fn)(struct xlog *log,
+ 		struct xlog_recover_item *item);
++typedef int (*xlog_recover_commit_pass1_fn)(struct xlog *log,
 +		struct xlog_recover_item *item);
  
  struct xlog_recover_item_type {
  	/*
-@@ -34,6 +36,9 @@ struct xlog_recover_item_type {
- 	 */
- 	enum xlog_recover_reorder	reorder;
- 	xlog_recover_reorder_fn		reorder_fn;
+@@ -39,6 +41,9 @@ struct xlog_recover_item_type {
+ 
+ 	/* Start readahead for pass2, if provided. */
+ 	xlog_recover_ra_pass2_fn	ra_pass2_fn;
 +
-+	/* Start readahead for pass2, if provided. */
-+	xlog_recover_ra_pass2_fn	ra_pass2_fn;
++	/* Do whatever work we need to do for pass1, if provided. */
++	xlog_recover_commit_pass1_fn	commit_pass1_fn;
  };
  
  extern const struct xlog_recover_item_type xlog_icreate_item_type;
-@@ -88,4 +93,18 @@ struct xlog_recover {
- #define	XLOG_RECOVER_PASS1	1
- #define	XLOG_RECOVER_PASS2	2
- 
-+/*
-+ * This structure is used during recovery to record the buf log items which
-+ * have been canceled and should not be replayed.
-+ */
-+struct xfs_buf_cancel {
-+	xfs_daddr_t		bc_blkno;
-+	uint			bc_len;
-+	int			bc_refcount;
-+	struct list_head	bc_list;
-+};
-+
-+struct xfs_buf_cancel *xlog_peek_buffer_cancelled(struct xlog *log,
-+		xfs_daddr_t blkno, uint len, unsigned short flags);
-+
- #endif	/* __XFS_LOG_RECOVER_H__ */
 diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index bf7480e18889..1ad514cc501c 100644
+index 1ad514cc501c..351c42f354e3 100644
 --- a/fs/xfs/xfs_buf_item.c
 +++ b/fs/xfs/xfs_buf_item.c
-@@ -1302,6 +1302,24 @@ xlog_buf_reorder_fn(
- 	return XLOG_REORDER_BUFFER_LIST;
+@@ -29,7 +29,7 @@ static inline struct xfs_buf_log_item *BUF_ITEM(struct xfs_log_item *lip)
+ STATIC void	xfs_buf_do_callbacks(struct xfs_buf *bp);
+ 
+ /* Is this log iovec plausibly large enough to contain the buffer log format? */
+-bool
++STATIC bool
+ xfs_buf_log_check_iovec(
+ 	struct xfs_log_iovec		*iovec)
+ {
+@@ -1319,7 +1319,67 @@ xlog_recover_buffer_ra_pass2(
+ 				buf_f->blf_len, NULL);
  }
  
-+STATIC void
-+xlog_recover_buffer_ra_pass2(
-+	struct xlog                     *log,
-+	struct xlog_recover_item        *item)
++/*
++ * Build up the table of buf cancel records so that we don't replay
++ * cancelled data in the second pass.  For buffer records that are
++ * not cancel records, there is nothing to do here so we just return.
++ *
++ * If we get a cancel record which is already in the table, this indicates
++ * that the buffer was cancelled multiple times.  In order to ensure
++ * that during pass 2 we keep the record in the table until we reach its
++ * last occurrence in the log, we keep a reference count in the cancel
++ * record in the table to tell us how many times we expect to see this
++ * record during the second pass.
++ */
++STATIC int
++xlog_recover_buffer_pass1(
++	struct xlog			*log,
++	struct xlog_recover_item	*item)
 +{
-+	struct xfs_buf_log_format	*buf_f = item->ri_buf[0].i_addr;
-+	struct xfs_mount		*mp = log->l_mp;
++	xfs_buf_log_format_t	*buf_f = item->ri_buf[0].i_addr;
++	struct list_head	*bucket;
++	struct xfs_buf_cancel	*bcp;
 +
-+	if (xlog_peek_buffer_cancelled(log, buf_f->blf_blkno,
-+			buf_f->blf_len, buf_f->blf_flags)) {
-+		return;
++	if (!xfs_buf_log_check_iovec(&item->ri_buf[0])) {
++		xfs_err(log->l_mp, "bad buffer log item size (%d)",
++				item->ri_buf[0].i_len);
++		return -EFSCORRUPTED;
 +	}
 +
-+	xfs_buf_readahead(mp->m_ddev_targp, buf_f->blf_blkno,
-+				buf_f->blf_len, NULL);
++	/*
++	 * If this isn't a cancel buffer item, then just return.
++	 */
++	if (!(buf_f->blf_flags & XFS_BLF_CANCEL)) {
++		trace_xfs_log_recover_buf_not_cancel(log, buf_f);
++		return 0;
++	}
++
++	/*
++	 * Insert an xfs_buf_cancel record into the hash table of them.
++	 * If there is already an identical record, bump its reference count.
++	 */
++	bucket = XLOG_BUF_CANCEL_BUCKET(log, buf_f->blf_blkno);
++	list_for_each_entry(bcp, bucket, bc_list) {
++		if (bcp->bc_blkno == buf_f->blf_blkno &&
++		    bcp->bc_len == buf_f->blf_len) {
++			bcp->bc_refcount++;
++			trace_xfs_log_recover_buf_cancel_ref_inc(log, buf_f);
++			return 0;
++		}
++	}
++
++	bcp = kmem_alloc(sizeof(struct xfs_buf_cancel), 0);
++	bcp->bc_blkno = buf_f->blf_blkno;
++	bcp->bc_len = buf_f->blf_len;
++	bcp->bc_refcount = 1;
++	list_add_tail(&bcp->bc_list, bucket);
++
++	trace_xfs_log_recover_buf_cancel_add(log, buf_f);
++	return 0;
 +}
 +
  const struct xlog_recover_item_type xlog_buf_item_type = {
  	.reorder_fn		= xlog_buf_reorder_fn,
-+	.ra_pass2_fn		= xlog_recover_buffer_ra_pass2,
+ 	.ra_pass2_fn		= xlog_recover_buffer_ra_pass2,
++	.commit_pass1_fn	= xlog_recover_buffer_pass1,
  };
+diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
+index 30114b510332..4a054b11011a 100644
+--- a/fs/xfs/xfs_buf_item.h
++++ b/fs/xfs/xfs_buf_item.h
+@@ -61,7 +61,6 @@ void	xfs_buf_iodone_callbacks(struct xfs_buf *);
+ void	xfs_buf_iodone(struct xfs_buf *, struct xfs_log_item *);
+ bool	xfs_buf_resubmit_failed_buffers(struct xfs_buf *,
+ 					struct list_head *);
+-bool	xfs_buf_log_check_iovec(struct xfs_log_iovec *iovec);
+ 
+ extern kmem_zone_t	*xfs_buf_item_zone;
+ 
 diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-index 2558586b4d45..d4c794abf900 100644
+index d4c794abf900..e3a54b1fb20a 100644
 --- a/fs/xfs/xfs_dquot_item.c
 +++ b/fs/xfs/xfs_dquot_item.c
-@@ -386,8 +386,47 @@ xfs_qm_qoff_logitem_init(
- 	return qf;
- }
+@@ -429,6 +429,34 @@ const struct xlog_recover_item_type xlog_dquot_item_type = {
+ 	.ra_pass2_fn		= xlog_recover_dquot_ra_pass2,
+ };
  
-+STATIC void
-+xlog_recover_dquot_ra_pass2(
++/*
++ * Recover QUOTAOFF records. We simply make a note of it in the xlog
++ * structure, so that we know not to do any dquot item or dquot buffer recovery,
++ * of that type.
++ */
++STATIC int
++xlog_recover_quotaoff_pass1(
 +	struct xlog			*log,
 +	struct xlog_recover_item	*item)
 +{
-+	struct xfs_mount	*mp = log->l_mp;
-+	struct xfs_disk_dquot	*recddq;
-+	struct xfs_dq_logformat	*dq_f;
-+	uint			type;
-+	int			len;
++	xfs_qoff_logformat_t	*qoff_f = item->ri_buf[0].i_addr;
++	ASSERT(qoff_f);
 +
++	/*
++	 * The logitem format's flag tells us if this was user quotaoff,
++	 * group/project quotaoff or both.
++	 */
++	if (qoff_f->qf_flags & XFS_UQUOTA_ACCT)
++		log->l_quotaoffs_flag |= XFS_DQ_USER;
++	if (qoff_f->qf_flags & XFS_PQUOTA_ACCT)
++		log->l_quotaoffs_flag |= XFS_DQ_PROJ;
++	if (qoff_f->qf_flags & XFS_GQUOTA_ACCT)
++		log->l_quotaoffs_flag |= XFS_DQ_GROUP;
 +
-+	if (mp->m_qflags == 0)
-+		return;
-+
-+	recddq = item->ri_buf[1].i_addr;
-+	if (recddq == NULL)
-+		return;
-+	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot))
-+		return;
-+
-+	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
-+	ASSERT(type);
-+	if (log->l_quotaoffs_flag & type)
-+		return;
-+
-+	dq_f = item->ri_buf[0].i_addr;
-+	ASSERT(dq_f);
-+	ASSERT(dq_f->qlf_len == 1);
-+
-+	len = XFS_FSB_TO_BB(mp, dq_f->qlf_len);
-+	if (xlog_peek_buffer_cancelled(log, dq_f->qlf_blkno, len, 0))
-+		return;
-+
-+	xfs_buf_readahead(mp->m_ddev_targp, dq_f->qlf_blkno, len,
-+			  &xfs_dquot_buf_ra_ops);
++	return 0;
 +}
 +
- const struct xlog_recover_item_type xlog_dquot_item_type = {
- 	.reorder		= XLOG_REORDER_INODE_LIST,
-+	.ra_pass2_fn		= xlog_recover_dquot_ra_pass2,
- };
- 
  const struct xlog_recover_item_type xlog_quotaoff_item_type = {
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index b04e9c5330b7..bb0fe064aa1b 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -846,6 +846,34 @@ xfs_inode_item_format_convert(
- 	return 0;
- }
- 
-+STATIC void
-+xlog_recover_inode_ra_pass2(
-+	struct xlog                     *log,
-+	struct xlog_recover_item        *item)
-+{
-+	struct xfs_inode_log_format	ilf_buf;
-+	struct xfs_inode_log_format	*ilfp;
-+	struct xfs_mount		*mp = log->l_mp;
-+	int			error;
-+
-+	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
-+		ilfp = item->ri_buf[0].i_addr;
-+	} else {
-+		ilfp = &ilf_buf;
-+		memset(ilfp, 0, sizeof(*ilfp));
-+		error = xfs_inode_item_format_convert(&item->ri_buf[0], ilfp);
-+		if (error)
-+			return;
-+	}
-+
-+	if (xlog_peek_buffer_cancelled(log, ilfp->ilf_blkno, ilfp->ilf_len, 0))
-+		return;
-+
-+	xfs_buf_readahead(mp->m_ddev_targp, ilfp->ilf_blkno,
-+				ilfp->ilf_len, &xfs_inode_buf_ra_ops);
-+}
-+
- const struct xlog_recover_item_type xlog_inode_item_type = {
  	.reorder		= XLOG_REORDER_INODE_LIST,
-+	.ra_pass2_fn		= xlog_recover_inode_ra_pass2,
++	.commit_pass1_fn	= xlog_recover_quotaoff_pass1,
  };
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index e7a9f899f657..9ee8eb9b93a2 100644
+index 9ee8eb9b93a2..12e864ef6d43 100644
 --- a/fs/xfs/xfs_log_recover.c
 +++ b/fs/xfs/xfs_log_recover.c
-@@ -55,17 +55,6 @@ STATIC int
- xlog_do_recovery_pass(
-         struct xlog *, xfs_daddr_t, xfs_daddr_t, int, xfs_daddr_t *);
- 
--/*
-- * This structure is used during recovery to record the buf log items which
-- * have been canceled and should not be replayed.
-- */
--struct xfs_buf_cancel {
--	xfs_daddr_t		bc_blkno;
--	uint			bc_len;
--	int			bc_refcount;
--	struct list_head	bc_list;
--};
--
- /*
-  * Sector aligned buffer routines for buffer create/read/write/access
-  */
-@@ -2009,12 +1998,12 @@ xlog_recover_buffer_pass1(
-  * entry in the buffer cancel record table. If it is, return the cancel
-  * buffer structure to the caller.
-  */
--STATIC struct xfs_buf_cancel *
-+struct xfs_buf_cancel *
- xlog_peek_buffer_cancelled(
- 	struct xlog		*log,
- 	xfs_daddr_t		blkno,
- 	uint			len,
--	unsigned short			flags)
-+	unsigned short		flags)
- {
- 	struct list_head	*bucket;
- 	struct xfs_buf_cancel	*bcp;
-@@ -3900,117 +3889,6 @@ xlog_recover_do_icreate_pass2(
- 				     length, be32_to_cpu(icl->icl_gen));
+@@ -1934,65 +1934,6 @@ xlog_recover_reorder_trans(
+ 	return error;
  }
  
--STATIC void
--xlog_recover_buffer_ra_pass2(
--	struct xlog                     *log,
--	struct xlog_recover_item        *item)
--{
--	struct xfs_buf_log_format	*buf_f = item->ri_buf[0].i_addr;
--	struct xfs_mount		*mp = log->l_mp;
--
--	if (xlog_peek_buffer_cancelled(log, buf_f->blf_blkno,
--			buf_f->blf_len, buf_f->blf_flags)) {
--		return;
--	}
--
--	xfs_buf_readahead(mp->m_ddev_targp, buf_f->blf_blkno,
--				buf_f->blf_len, NULL);
--}
--
--STATIC void
--xlog_recover_inode_ra_pass2(
--	struct xlog                     *log,
--	struct xlog_recover_item        *item)
--{
--	struct xfs_inode_log_format	ilf_buf;
--	struct xfs_inode_log_format	*ilfp;
--	struct xfs_mount		*mp = log->l_mp;
--	int			error;
--
--	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
--		ilfp = item->ri_buf[0].i_addr;
--	} else {
--		ilfp = &ilf_buf;
--		memset(ilfp, 0, sizeof(*ilfp));
--		error = xfs_inode_item_format_convert(&item->ri_buf[0], ilfp);
--		if (error)
--			return;
--	}
--
--	if (xlog_peek_buffer_cancelled(log, ilfp->ilf_blkno, ilfp->ilf_len, 0))
--		return;
--
--	xfs_buf_readahead(mp->m_ddev_targp, ilfp->ilf_blkno,
--				ilfp->ilf_len, &xfs_inode_buf_ra_ops);
--}
--
--STATIC void
--xlog_recover_dquot_ra_pass2(
+-/*
+- * Build up the table of buf cancel records so that we don't replay
+- * cancelled data in the second pass.  For buffer records that are
+- * not cancel records, there is nothing to do here so we just return.
+- *
+- * If we get a cancel record which is already in the table, this indicates
+- * that the buffer was cancelled multiple times.  In order to ensure
+- * that during pass 2 we keep the record in the table until we reach its
+- * last occurrence in the log, we keep a reference count in the cancel
+- * record in the table to tell us how many times we expect to see this
+- * record during the second pass.
+- */
+-STATIC int
+-xlog_recover_buffer_pass1(
 -	struct xlog			*log,
 -	struct xlog_recover_item	*item)
 -{
--	struct xfs_mount	*mp = log->l_mp;
--	struct xfs_disk_dquot	*recddq;
--	struct xfs_dq_logformat	*dq_f;
--	uint			type;
--	int			len;
+-	xfs_buf_log_format_t	*buf_f = item->ri_buf[0].i_addr;
+-	struct list_head	*bucket;
+-	struct xfs_buf_cancel	*bcp;
 -
+-	if (!xfs_buf_log_check_iovec(&item->ri_buf[0])) {
+-		xfs_err(log->l_mp, "bad buffer log item size (%d)",
+-				item->ri_buf[0].i_len);
+-		return -EFSCORRUPTED;
+-	}
 -
--	if (mp->m_qflags == 0)
--		return;
+-	/*
+-	 * If this isn't a cancel buffer item, then just return.
+-	 */
+-	if (!(buf_f->blf_flags & XFS_BLF_CANCEL)) {
+-		trace_xfs_log_recover_buf_not_cancel(log, buf_f);
+-		return 0;
+-	}
 -
--	recddq = item->ri_buf[1].i_addr;
--	if (recddq == NULL)
--		return;
--	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot))
--		return;
+-	/*
+-	 * Insert an xfs_buf_cancel record into the hash table of them.
+-	 * If there is already an identical record, bump its reference count.
+-	 */
+-	bucket = XLOG_BUF_CANCEL_BUCKET(log, buf_f->blf_blkno);
+-	list_for_each_entry(bcp, bucket, bc_list) {
+-		if (bcp->bc_blkno == buf_f->blf_blkno &&
+-		    bcp->bc_len == buf_f->blf_len) {
+-			bcp->bc_refcount++;
+-			trace_xfs_log_recover_buf_cancel_ref_inc(log, buf_f);
+-			return 0;
+-		}
+-	}
 -
--	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
--	ASSERT(type);
--	if (log->l_quotaoffs_flag & type)
--		return;
+-	bcp = kmem_alloc(sizeof(struct xfs_buf_cancel), 0);
+-	bcp->bc_blkno = buf_f->blf_blkno;
+-	bcp->bc_len = buf_f->blf_len;
+-	bcp->bc_refcount = 1;
+-	list_add_tail(&bcp->bc_list, bucket);
 -
--	dq_f = item->ri_buf[0].i_addr;
--	ASSERT(dq_f);
--	ASSERT(dq_f->qlf_len == 1);
--
--	len = XFS_FSB_TO_BB(mp, dq_f->qlf_len);
--	if (xlog_peek_buffer_cancelled(log, dq_f->qlf_blkno, len, 0))
--		return;
--
--	xfs_buf_readahead(mp->m_ddev_targp, dq_f->qlf_blkno, len,
--			  &xfs_dquot_buf_ra_ops);
+-	trace_xfs_log_recover_buf_cancel_add(log, buf_f);
+-	return 0;
 -}
 -
--STATIC void
--xlog_recover_ra_pass2(
+ /*
+  * Check to see whether the buffer being recovered has a corresponding
+  * entry in the buffer cancel record table. If it is, return the cancel
+@@ -3196,33 +3137,6 @@ xlog_recover_inode_pass2(
+ 	return error;
+ }
+ 
+-/*
+- * Recover QUOTAOFF records. We simply make a note of it in the xlog
+- * structure, so that we know not to do any dquot item or dquot buffer recovery,
+- * of that type.
+- */
+-STATIC int
+-xlog_recover_quotaoff_pass1(
 -	struct xlog			*log,
 -	struct xlog_recover_item	*item)
 -{
+-	xfs_qoff_logformat_t	*qoff_f = item->ri_buf[0].i_addr;
+-	ASSERT(qoff_f);
+-
+-	/*
+-	 * The logitem format's flag tells us if this was user quotaoff,
+-	 * group/project quotaoff or both.
+-	 */
+-	if (qoff_f->qf_flags & XFS_UQUOTA_ACCT)
+-		log->l_quotaoffs_flag |= XFS_DQ_USER;
+-	if (qoff_f->qf_flags & XFS_PQUOTA_ACCT)
+-		log->l_quotaoffs_flag |= XFS_DQ_PROJ;
+-	if (qoff_f->qf_flags & XFS_GQUOTA_ACCT)
+-		log->l_quotaoffs_flag |= XFS_DQ_GROUP;
+-
+-	return 0;
+-}
+-
+ /*
+  * Recover a dquot record
+  */
+@@ -3897,30 +3811,15 @@ xlog_recover_commit_pass1(
+ {
+ 	trace_xfs_log_recover_item_recover(log, trans, item, XLOG_RECOVER_PASS1);
+ 
 -	switch (ITEM_TYPE(item)) {
 -	case XFS_LI_BUF:
--		xlog_recover_buffer_ra_pass2(log, item);
--		break;
+-		return xlog_recover_buffer_pass1(log, item);
+-	case XFS_LI_QUOTAOFF:
+-		return xlog_recover_quotaoff_pass1(log, item);
 -	case XFS_LI_INODE:
--		xlog_recover_inode_ra_pass2(log, item);
--		break;
--	case XFS_LI_DQUOT:
--		xlog_recover_dquot_ra_pass2(log, item);
--		break;
 -	case XFS_LI_EFI:
 -	case XFS_LI_EFD:
--	case XFS_LI_QUOTAOFF:
+-	case XFS_LI_DQUOT:
+-	case XFS_LI_ICREATE:
 -	case XFS_LI_RUI:
 -	case XFS_LI_RUD:
 -	case XFS_LI_CUI:
 -	case XFS_LI_CUD:
 -	case XFS_LI_BUI:
 -	case XFS_LI_BUD:
+-		/* nothing to do in pass 1 */
+-		return 0;
 -	default:
--		break;
--	}
--}
--
++	if (!item->ri_type) {
+ 		xfs_warn(log->l_mp, "%s: invalid item type (%d)",
+ 			__func__, ITEM_TYPE(item));
+ 		ASSERT(0);
+ 		return -EFSCORRUPTED;
+ 	}
++	if (!item->ri_type->commit_pass1_fn)
++		return 0;
++	return item->ri_type->commit_pass1_fn(log, item);
+ }
+ 
  STATIC int
- xlog_recover_commit_pass1(
- 	struct xlog			*log,
-@@ -4147,7 +4025,8 @@ xlog_recover_commit_trans(
- 			error = xlog_recover_commit_pass1(log, trans, item);
- 			break;
- 		case XLOG_RECOVER_PASS2:
--			xlog_recover_ra_pass2(log, item);
-+			if (item->ri_type && item->ri_type->ra_pass2_fn)
-+				item->ri_type->ra_pass2_fn(log, item);
- 			list_move_tail(&item->ri_list, &ra_list);
- 			items_queued++;
- 			if (items_queued >= XLOG_RECOVER_COMMIT_QUEUE_MAX) {
 
