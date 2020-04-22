@@ -2,94 +2,184 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01ECD1B4C3F
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 19:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 159461B4CE1
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 20:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDVRyk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 13:54:40 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20479 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726623AbgDVRyj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587578078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tqbvuLcnhlqYFqFsNvgbMp6MYXdnKuiLgts+y2qlyFE=;
-        b=AkkwinSTqDZvbsIg39mGfLIRUme1D9hCPSYRQxB/ybYlRayes64yCrQfKOdH5Xi+12nSsj
-        p54AiCXUCVEhfpkmmqwS9gmWRuk+yQpRTrXUAg2/vMAh/0b12YT0eqK8yqDiEo+tDlxYxW
-        nR9WFsIiguEbH/iPLoqxnpicPm6WF3I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-VSF_aigQPM-Xc7xi3jwbFg-1; Wed, 22 Apr 2020 13:54:37 -0400
-X-MC-Unique: VSF_aigQPM-Xc7xi3jwbFg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30DF213FA
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:36 +0000 (UTC)
-Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E04DD6084A
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:35 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 13/13] xfs: remove unused shutdown types
-Date:   Wed, 22 Apr 2020 13:54:29 -0400
-Message-Id: <20200422175429.38957-14-bfoster@redhat.com>
-In-Reply-To: <20200422175429.38957-1-bfoster@redhat.com>
-References: <20200422175429.38957-1-bfoster@redhat.com>
+        id S1726628AbgDVSvX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 14:51:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46413 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgDVSvW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:51:22 -0400
+IronPort-SDR: qA3ucP6gC5+IQx3Xsjgf+YjHMnYXASXGXj6l7UCQyGwuaPg3FYQqVJyb2uuzftZAqoG7yqgKRM
+ 0s/PzybHF6Ag==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:51:21 -0700
+IronPort-SDR: qqIquuGL482KeAk9Fi2fpLDL6RgzKTQLdO3ZrjDmL6Yf3xRhccswmwkjvWiLXWUe5Hc3zejhOa
+ XdCI2ppN3jtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="290931747"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Apr 2020 11:51:21 -0700
+Date:   Wed, 22 Apr 2020 11:51:21 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 03/11] fs/stat: Define DAX statx attribute
+Message-ID: <20200422185121.GL3372712@iweiny-DESK2.sc.intel.com>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-4-ira.weiny@intel.com>
+ <20200422162951.GE6733@magnolia>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422162951.GE6733@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Both types control shutdown messaging and neither is used in the
-current codebase.
+On Wed, Apr 22, 2020 at 09:29:51AM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 21, 2020 at 12:17:45PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > In order for users to determine if a file is currently operating in DAX
+> > state (effective DAX).  Define a statx attribute value and set that
+> > attribute if the effective DAX flag is set.
+> > 
+> > To go along with this we propose the following addition to the statx man
+> > page:
+> > 
+> > STATX_ATTR_DAX
+> > 
+> > 	The file is in the DAX (cpu direct access) state.  DAX state
+> > 	attempts to minimize software cache effects for both I/O and
+> > 	memory mappings of this file.  It requires a file system which
+> > 	has been configured to support DAX.
+> > 
+> > 	DAX generally assumes all accesses are via cpu load / store
+> > 	instructions which can minimize overhead for small accesses, but
+> > 	may adversely affect cpu utilization for large transfers.
+> > 
+> > 	File I/O is done directly to/from user-space buffers and memory
+> > 	mapped I/O may be performed with direct memory mappings that
+> > 	bypass kernel page cache.
+> > 
+> > 	While the DAX property tends to result in data being transferred
+> > 	synchronously, it does not give the same guarantees of O_SYNC
+> > 	where data and the necessary metadata are transferred together.
+> > 
+> > 	A DAX file may support being mapped with the MAP_SYNC flag,
+> > 	which enables a program to use CPU cache flush instructions to
+> > 	persist CPU store operations without an explicit fsync(2).  See
+> > 	mmap(2) for more information.
+> 
+> One thing I hadn't noticed before -- this is a change to userspace API,
+> so please cc this series to linux-api@vger.kernel.org when you send V10.
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_fsops.c | 5 +----
- fs/xfs/xfs_mount.h | 2 --
- 2 files changed, 1 insertion(+), 6 deletions(-)
+Right!  Glad you caught me on this because I was just preparing to send V10.
 
-diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
-index 3e61d0cc23f8..ef1d5bb88b93 100644
---- a/fs/xfs/xfs_fsops.c
-+++ b/fs/xfs/xfs_fsops.c
-@@ -504,10 +504,7 @@ xfs_do_force_shutdown(
- 	} else if (logerror) {
- 		xfs_alert_tag(mp, XFS_PTAG_SHUTDOWN_LOGERROR,
- 			"Log I/O Error Detected. Shutting down filesystem");
--	} else if (flags & SHUTDOWN_DEVICE_REQ) {
--		xfs_alert_tag(mp, XFS_PTAG_SHUTDOWN_IOERROR,
--			"All device paths lost. Shutting down filesystem");
--	} else if (!(flags & SHUTDOWN_REMOTE_REQ)) {
-+	} else {
- 		xfs_alert_tag(mp, XFS_PTAG_SHUTDOWN_IOERROR,
- 			"I/O Error Detected. Shutting down filesystem");
- 	}
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index b2e4598fdf7d..07b5ba7e5fbd 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -259,8 +259,6 @@ void xfs_do_force_shutdown(struct xfs_mount *mp, int =
-flags, char *fname,
- #define SHUTDOWN_LOG_IO_ERROR	0x0002	/* write attempt to the log failed =
-*/
- #define SHUTDOWN_FORCE_UMOUNT	0x0004	/* shutdown from a forced unmount *=
-/
- #define SHUTDOWN_CORRUPT_INCORE	0x0008	/* corrupt in-memory data structu=
-res */
--#define SHUTDOWN_REMOTE_REQ	0x0010	/* shutdown came from remote cell */
--#define SHUTDOWN_DEVICE_REQ	0x0020	/* failed all paths to the device */
-=20
- /*
-  * Flags for xfs_mountfs
---=20
-2.21.1
+Is there someone I could directly mail who needs to look at this?  I guess I
+thought we had the important FS people involved for this type of API change.
+:-/
 
+> 
+> Also, I've started to think about commit order sequencing for actually
+> landing this series.  Usually I try to put vfs and documentation things
+> before xfs stuff, which means I came up with:
+> 
+> vfs       xfs          I_DONTCACHE
+> 2 3 11    1 4 5 6 7    8 9 10
+> 
+> Note that I separated the DONTCACHE part because it touches VFS
+> internals, which implies a higher standard of review (aka Al) and I do
+> not wish to hold up the 2-3-11-1-4-5-6-7 patches if the dontcache part
+> becomes contentious.
+> 
+> What do you think of that ordering?
+
+I think 1 stands on it's own separate from this series...  so I would keep it
+first.  Moving Documentation up is easy.
+
+I've changed to this order...
+
+prelim   vfs       xfs        I_DONTCACHE
+1        2 3 11    4 5 6 7    8 9 10
+
+Which is pretty much the same now that I look at it!  ;-)
+
+> 
+> (Heck, maybe I'll just put patch 1 in the queue for 5.8 right now...)
+
+IMHO, I think 1 and 2 can go.
+
+While patch 2 is in the VFS layer it is very much a DAX thing.  Jan and
+Christoph approved it.  I think even Dave approved the version before I
+removed io_is_direct() but I don't recall now.
+
+Dan and I also discussed it internally when I first found the issue.  So I'm
+very confident in it!  :-D
+
+Unfortunately, 3 and 10 are the critical pieces to the feature.  So we could
+move 3 out later after 8 and 9 are approved.  But I don't think it buys us
+much to have the tri-state go in without the rest.
+
+Ira
+
+> 
+> --D
+> 
+> > Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V2:
+> > 	Update man page text with comments from Darrick, Jan, Dan, and
+> > 	Dave.
+> > ---
+> >  fs/stat.c                 | 3 +++
+> >  include/uapi/linux/stat.h | 1 +
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/fs/stat.c b/fs/stat.c
+> > index 030008796479..894699c74dde 100644
+> > --- a/fs/stat.c
+> > +++ b/fs/stat.c
+> > @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+> >  	if (IS_AUTOMOUNT(inode))
+> >  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
+> >  
+> > +	if (IS_DAX(inode))
+> > +		stat->attributes |= STATX_ATTR_DAX;
+> > +
+> >  	if (inode->i_op->getattr)
+> >  		return inode->i_op->getattr(path, stat, request_mask,
+> >  					    query_flags);
+> > diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+> > index ad80a5c885d5..e5f9d5517f6b 100644
+> > --- a/include/uapi/linux/stat.h
+> > +++ b/include/uapi/linux/stat.h
+> > @@ -169,6 +169,7 @@ struct statx {
+> >  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+> >  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+> >  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+> > +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
+> >  
+> >  
+> >  #endif /* _UAPI_LINUX_STAT_H */
+> > -- 
+> > 2.25.1
+> > 
