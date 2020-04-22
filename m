@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0FB61B34CE
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:06:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7C9B1B34DC
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:09:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgDVCG7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 Apr 2020 22:06:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42440 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVCG7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:06:59 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M22WPC104835
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:57 GMT
+        id S1726355AbgDVCJF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 Apr 2020 22:09:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45288 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgDVCJF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:09:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M28St0170954
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:09:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=wbvTsVAVHSTk8iJ+jsjEn+0ekXWaSOBgxtU2TmnsnpY=;
- b=kSSO1mBPuQi/klukyQ02CzD5BKEpXJ+u8iQej6KtYxo0wYYJJc/cTHkE0uMIPO8bN6kt
- hnkVLYRGmlvNd3oOx1xZ65kyaDzgyefWMrIAC5z2/gBOwFo3pgBq6t8vPM6pu7zv5G1g
- PplQzoc3H4OiO+6OPXir/ns5s0HWA7M9lLGPw1uSYAiIntGcVrfKhprI/+S0EVEaPbow
- ySPaxdHt1zdv9G0O6Sex/iRj3rVl9lc8xJNaD6mrvmctB32N9oBr1nStmnP9LreK3VFk
- ZMZ83yhCrkWNSp/aUCX83hiv33uz4svznL45uX5IeAgPMUCGB51v2E2G/fHdxiY/rZvb uQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30fsgm03es-1
+ bh=/MaZfaJ3MrvQ5XgbtALEqgVGQAFjOKhoni6F3kLbsFM=;
+ b=Kr5GtNxaxFXkg2gYIzGq0Wg4sirUsKWKXpyffjReZp9QDRKvOqgzfvrQ4lYvpIZR8SUR
+ 80agnpzkIpe6xmXY58HbTZoZLpkKGSPCYUgnvJgooCKQCr9sc2iuzFukzGO8jmVUH7/u
+ vvcVQvpfne+Qq90nRT/EZjjOpCmKOYjGDrH7SUehtMh/EEIPlGWXwhFJWb0BASbDtAD1
+ s35ZnoIlgo2cWvQJ4zQdJYv9Wz9XRYnfNkfIE9R0twy3Ry74jByA384/JwKJAZoMHJA8
+ 4kUB6Qipm0miUQk33xr+veUP5gYd61BdPpK8vfQr41OOLGwsTs75tV4QZ03GQ7lZs7vD Cg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30grpgmhrk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M21aZM064780
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:56 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:09:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M23TBA179062
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:02 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30gb3t4msr-1
+        by userp3020.oracle.com with ESMTP id 30gb91fpc6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:56 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03M26tCt014897
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:06:55 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:02 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03M271mT014983
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:01 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 19:06:55 -0700
-Subject: [PATCH 08/19] xfs: refactor log recovery dquot item dispatch for
+        with ESMTP ; Tue, 21 Apr 2020 19:07:01 -0700
+Subject: [PATCH 09/19] xfs: refactor log recovery icreate item dispatch for
  pass2 commit functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 21 Apr 2020 19:06:54 -0700
-Message-ID: <158752121423.2140829.9196079596663134146.stgit@magnolia>
+Date:   Tue, 21 Apr 2020 19:07:00 -0700
+Message-ID: <158752122050.2140829.10077536743035207298.stgit@magnolia>
 In-Reply-To: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 References: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=3 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=3 impostorscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=1 malwarescore=0 phishscore=0 spamscore=0
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004220014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=1 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220015
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,269 +71,316 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Move the log dquot item pass2 commit code into the per-item source code
+Move the log icreate item pass2 commit code into the per-item source code
 files and use the dispatch function to call it.  We do these one at a
 time because there's a lot of code to move.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_dquot_item.c  |  110 +++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_log_recover.c |  112 ----------------------------------------------
- 2 files changed, 110 insertions(+), 112 deletions(-)
+ fs/xfs/xfs_icreate_item.c |  132 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_log_recover.c  |  126 -------------------------------------------
+ 2 files changed, 132 insertions(+), 126 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-index e3a54b1fb20a..986112288630 100644
---- a/fs/xfs/xfs_dquot_item.c
-+++ b/fs/xfs/xfs_dquot_item.c
-@@ -424,9 +424,119 @@ xlog_recover_dquot_ra_pass2(
- 			  &xfs_dquot_buf_ra_ops);
+diff --git a/fs/xfs/xfs_icreate_item.c b/fs/xfs/xfs_icreate_item.c
+index 0a1ed4dc1c3d..15415421ea81 100644
+--- a/fs/xfs/xfs_icreate_item.c
++++ b/fs/xfs/xfs_icreate_item.c
+@@ -6,13 +6,19 @@
+ #include "xfs.h"
+ #include "xfs_fs.h"
+ #include "xfs_shared.h"
++#include "xfs_format.h"
+ #include "xfs_log_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_inode.h"
+ #include "xfs_trans.h"
+ #include "xfs_trans_priv.h"
+ #include "xfs_icreate_item.h"
+ #include "xfs_log.h"
+ #include "xfs_log_priv.h"
+ #include "xfs_log_recover.h"
++#include "xfs_ialloc.h"
++#include "xfs_trace.h"
+ 
+ kmem_zone_t	*xfs_icreate_zone;		/* inode create item zone */
+ 
+@@ -110,6 +116,132 @@ xfs_icreate_log(
+ 	set_bit(XFS_LI_DIRTY, &icp->ic_item.li_flags);
  }
  
 +/*
-+ * Recover a dquot record
++ * This routine is called when an inode create format structure is found in a
++ * committed transaction in the log.  It's purpose is to initialise the inodes
++ * being allocated on disk. This requires us to get inode cluster buffers that
++ * match the range to be initialised, stamped with inode templates and written
++ * by delayed write so that subsequent modifications will hit the cached buffer
++ * and only need writing out at the end of recovery.
 + */
 +STATIC int
-+xlog_recover_dquot_pass2(
-+	struct xlog			*log,
-+	struct list_head		*buffer_list,
-+	struct xlog_recover_item	*item,
-+	xfs_lsn_t			current_lsn)
++xlog_recover_do_icreate_pass2(
++	struct xlog		*log,
++	struct list_head	*buffer_list,
++	struct xlog_recover_item *item,
++	xfs_lsn_t		current_lsn)
 +{
-+	xfs_mount_t		*mp = log->l_mp;
-+	xfs_buf_t		*bp;
-+	struct xfs_disk_dquot	*ddq, *recddq;
-+	xfs_failaddr_t		fa;
-+	int			error;
-+	xfs_dq_logformat_t	*dq_f;
-+	uint			type;
++	struct xfs_mount	*mp = log->l_mp;
++	struct xfs_icreate_log	*icl;
++	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
++	xfs_agnumber_t		agno;
++	xfs_agblock_t		agbno;
++	unsigned int		count;
++	unsigned int		isize;
++	xfs_agblock_t		length;
++	int			bb_per_cluster;
++	int			cancel_count;
++	int			nbufs;
++	int			i;
 +
-+
-+	/*
-+	 * Filesystems are required to send in quota flags at mount time.
-+	 */
-+	if (mp->m_qflags == 0)
-+		return 0;
-+
-+	recddq = item->ri_buf[1].i_addr;
-+	if (recddq == NULL) {
-+		xfs_alert(log->l_mp, "NULL dquot in %s.", __func__);
-+		return -EFSCORRUPTED;
-+	}
-+	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot)) {
-+		xfs_alert(log->l_mp, "dquot too small (%d) in %s.",
-+			item->ri_buf[1].i_len, __func__);
-+		return -EFSCORRUPTED;
++	icl = (struct xfs_icreate_log *)item->ri_buf[0].i_addr;
++	if (icl->icl_type != XFS_LI_ICREATE) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad type");
++		return -EINVAL;
 +	}
 +
-+	/*
-+	 * This type of quotas was turned off, so ignore this record.
-+	 */
-+	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
-+	ASSERT(type);
-+	if (log->l_quotaoffs_flag & type)
-+		return 0;
++	if (icl->icl_size != 1) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad icl size");
++		return -EINVAL;
++	}
++
++	agno = be32_to_cpu(icl->icl_ag);
++	if (agno >= mp->m_sb.sb_agcount) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agno");
++		return -EINVAL;
++	}
++	agbno = be32_to_cpu(icl->icl_agbno);
++	if (!agbno || agbno == NULLAGBLOCK || agbno >= mp->m_sb.sb_agblocks) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agbno");
++		return -EINVAL;
++	}
++	isize = be32_to_cpu(icl->icl_isize);
++	if (isize != mp->m_sb.sb_inodesize) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad isize");
++		return -EINVAL;
++	}
++	count = be32_to_cpu(icl->icl_count);
++	if (!count) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad count");
++		return -EINVAL;
++	}
++	length = be32_to_cpu(icl->icl_length);
++	if (!length || length >= mp->m_sb.sb_agblocks) {
++		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad length");
++		return -EINVAL;
++	}
 +
 +	/*
-+	 * At this point we know that quota was _not_ turned off.
-+	 * Since the mount flags are not indicating to us otherwise, this
-+	 * must mean that quota is on, and the dquot needs to be replayed.
-+	 * Remember that we may not have fully recovered the superblock yet,
-+	 * so we can't do the usual trick of looking at the SB quota bits.
++	 * The inode chunk is either full or sparse and we only support
++	 * m_ino_geo.ialloc_min_blks sized sparse allocations at this time.
++	 */
++	if (length != igeo->ialloc_blks &&
++	    length != igeo->ialloc_min_blks) {
++		xfs_warn(log->l_mp,
++			 "%s: unsupported chunk length", __FUNCTION__);
++		return -EINVAL;
++	}
++
++	/* verify inode count is consistent with extent length */
++	if ((count >> mp->m_sb.sb_inopblog) != length) {
++		xfs_warn(log->l_mp,
++			 "%s: inconsistent inode count and chunk length",
++			 __FUNCTION__);
++		return -EINVAL;
++	}
++
++	/*
++	 * The icreate transaction can cover multiple cluster buffers and these
++	 * buffers could have been freed and reused. Check the individual
++	 * buffers for cancellation so we don't overwrite anything written after
++	 * a cancellation.
++	 */
++	bb_per_cluster = XFS_FSB_TO_BB(mp, igeo->blocks_per_cluster);
++	nbufs = length / igeo->blocks_per_cluster;
++	for (i = 0, cancel_count = 0; i < nbufs; i++) {
++		xfs_daddr_t	daddr;
++
++		daddr = XFS_AGB_TO_DADDR(mp, agno,
++				agbno + i * igeo->blocks_per_cluster);
++		if (xlog_check_buffer_cancelled(log, daddr, bb_per_cluster, 0))
++			cancel_count++;
++	}
++
++	/*
++	 * We currently only use icreate for a single allocation at a time. This
++	 * means we should expect either all or none of the buffers to be
++	 * cancelled. Be conservative and skip replay if at least one buffer is
++	 * cancelled, but warn the user that something is awry if the buffers
++	 * are not consistent.
 +	 *
-+	 * The other possibility, of course, is that the quota subsystem was
-+	 * removed since the last mount - ENOSYS.
++	 * XXX: This must be refined to only skip cancelled clusters once we use
++	 * icreate for multiple chunk allocations.
 +	 */
-+	dq_f = item->ri_buf[0].i_addr;
-+	ASSERT(dq_f);
-+	fa = xfs_dquot_verify(mp, recddq, dq_f->qlf_id, 0);
-+	if (fa) {
-+		xfs_alert(mp, "corrupt dquot ID 0x%x in log at %pS",
-+				dq_f->qlf_id, fa);
-+		return -EFSCORRUPTED;
-+	}
-+	ASSERT(dq_f->qlf_len == 1);
-+
-+	/*
-+	 * At this point we are assuming that the dquots have been allocated
-+	 * and hence the buffer has valid dquots stamped in it. It should,
-+	 * therefore, pass verifier validation. If the dquot is bad, then the
-+	 * we'll return an error here, so we don't need to specifically check
-+	 * the dquot in the buffer after the verifier has run.
-+	 */
-+	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dq_f->qlf_blkno,
-+				   XFS_FSB_TO_BB(mp, dq_f->qlf_len), 0, &bp,
-+				   &xfs_dquot_buf_ops);
-+	if (error)
-+		return error;
-+
-+	ASSERT(bp);
-+	ddq = xfs_buf_offset(bp, dq_f->qlf_boffset);
-+
-+	/*
-+	 * If the dquot has an LSN in it, recover the dquot only if it's less
-+	 * than the lsn of the transaction we are replaying.
-+	 */
-+	if (xfs_sb_version_hascrc(&mp->m_sb)) {
-+		struct xfs_dqblk *dqb = (struct xfs_dqblk *)ddq;
-+		xfs_lsn_t	lsn = be64_to_cpu(dqb->dd_lsn);
-+
-+		if (lsn && lsn != -1 && XFS_LSN_CMP(lsn, current_lsn) >= 0) {
-+			goto out_release;
-+		}
++	ASSERT(!cancel_count || cancel_count == nbufs);
++	if (cancel_count) {
++		if (cancel_count != nbufs)
++			xfs_warn(mp,
++	"WARNING: partial inode chunk cancellation, skipped icreate.");
++		trace_xfs_log_recover_icreate_cancel(log, icl);
++		return 0;
 +	}
 +
-+	memcpy(ddq, recddq, item->ri_buf[1].i_len);
-+	if (xfs_sb_version_hascrc(&mp->m_sb)) {
-+		xfs_update_cksum((char *)ddq, sizeof(struct xfs_dqblk),
-+				 XFS_DQUOT_CRC_OFF);
-+	}
-+
-+	ASSERT(dq_f->qlf_size == 2);
-+	ASSERT(bp->b_mount == mp);
-+	bp->b_iodone = xlog_recover_iodone;
-+	xfs_buf_delwri_queue(bp, buffer_list);
-+
-+out_release:
-+	xfs_buf_relse(bp);
-+	return 0;
++	trace_xfs_log_recover_icreate_recover(log, icl);
++	return xfs_ialloc_inode_init(mp, NULL, buffer_list, count, agno, agbno,
++				     length, be32_to_cpu(icl->icl_gen));
 +}
 +
- const struct xlog_recover_item_type xlog_dquot_item_type = {
- 	.reorder		= XLOG_REORDER_INODE_LIST,
- 	.ra_pass2_fn		= xlog_recover_dquot_ra_pass2,
-+	.commit_pass2_fn	= xlog_recover_dquot_pass2,
+ const struct xlog_recover_item_type xlog_icreate_item_type = {
+ 	.reorder		= XLOG_REORDER_BUFFER_LIST,
++	.commit_pass2_fn	= xlog_recover_do_icreate_pass2,
  };
- 
- /*
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 2abcca26e4c7..5b3c5df22e88 100644
+index 5b3c5df22e88..18b797ca4a6c 100644
 --- a/fs/xfs/xfs_log_recover.c
 +++ b/fs/xfs/xfs_log_recover.c
-@@ -2012,115 +2012,6 @@ xlog_check_buffer_cancelled(
- 	return 1;
+@@ -2445,130 +2445,6 @@ xlog_recover_bud_pass2(
+ 	return 0;
  }
  
 -/*
-- * Recover a dquot record
+- * This routine is called when an inode create format structure is found in a
+- * committed transaction in the log.  It's purpose is to initialise the inodes
+- * being allocated on disk. This requires us to get inode cluster buffers that
+- * match the range to be initialised, stamped with inode templates and written
+- * by delayed write so that subsequent modifications will hit the cached buffer
+- * and only need writing out at the end of recovery.
 - */
 -STATIC int
--xlog_recover_dquot_pass2(
--	struct xlog			*log,
--	struct list_head		*buffer_list,
--	struct xlog_recover_item	*item,
--	xfs_lsn_t			current_lsn)
+-xlog_recover_do_icreate_pass2(
+-	struct xlog		*log,
+-	struct list_head	*buffer_list,
+-	xlog_recover_item_t	*item)
 -{
--	xfs_mount_t		*mp = log->l_mp;
--	xfs_buf_t		*bp;
--	struct xfs_disk_dquot	*ddq, *recddq;
--	xfs_failaddr_t		fa;
--	int			error;
--	xfs_dq_logformat_t	*dq_f;
--	uint			type;
+-	struct xfs_mount	*mp = log->l_mp;
+-	struct xfs_icreate_log	*icl;
+-	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
+-	xfs_agnumber_t		agno;
+-	xfs_agblock_t		agbno;
+-	unsigned int		count;
+-	unsigned int		isize;
+-	xfs_agblock_t		length;
+-	int			bb_per_cluster;
+-	int			cancel_count;
+-	int			nbufs;
+-	int			i;
 -
--
--	/*
--	 * Filesystems are required to send in quota flags at mount time.
--	 */
--	if (mp->m_qflags == 0)
--		return 0;
--
--	recddq = item->ri_buf[1].i_addr;
--	if (recddq == NULL) {
--		xfs_alert(log->l_mp, "NULL dquot in %s.", __func__);
--		return -EFSCORRUPTED;
--	}
--	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot)) {
--		xfs_alert(log->l_mp, "dquot too small (%d) in %s.",
--			item->ri_buf[1].i_len, __func__);
--		return -EFSCORRUPTED;
+-	icl = (struct xfs_icreate_log *)item->ri_buf[0].i_addr;
+-	if (icl->icl_type != XFS_LI_ICREATE) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad type");
+-		return -EINVAL;
 -	}
 -
--	/*
--	 * This type of quotas was turned off, so ignore this record.
--	 */
--	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
--	ASSERT(type);
--	if (log->l_quotaoffs_flag & type)
--		return 0;
+-	if (icl->icl_size != 1) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad icl size");
+-		return -EINVAL;
+-	}
+-
+-	agno = be32_to_cpu(icl->icl_ag);
+-	if (agno >= mp->m_sb.sb_agcount) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agno");
+-		return -EINVAL;
+-	}
+-	agbno = be32_to_cpu(icl->icl_agbno);
+-	if (!agbno || agbno == NULLAGBLOCK || agbno >= mp->m_sb.sb_agblocks) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agbno");
+-		return -EINVAL;
+-	}
+-	isize = be32_to_cpu(icl->icl_isize);
+-	if (isize != mp->m_sb.sb_inodesize) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad isize");
+-		return -EINVAL;
+-	}
+-	count = be32_to_cpu(icl->icl_count);
+-	if (!count) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad count");
+-		return -EINVAL;
+-	}
+-	length = be32_to_cpu(icl->icl_length);
+-	if (!length || length >= mp->m_sb.sb_agblocks) {
+-		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad length");
+-		return -EINVAL;
+-	}
 -
 -	/*
--	 * At this point we know that quota was _not_ turned off.
--	 * Since the mount flags are not indicating to us otherwise, this
--	 * must mean that quota is on, and the dquot needs to be replayed.
--	 * Remember that we may not have fully recovered the superblock yet,
--	 * so we can't do the usual trick of looking at the SB quota bits.
+-	 * The inode chunk is either full or sparse and we only support
+-	 * m_ino_geo.ialloc_min_blks sized sparse allocations at this time.
+-	 */
+-	if (length != igeo->ialloc_blks &&
+-	    length != igeo->ialloc_min_blks) {
+-		xfs_warn(log->l_mp,
+-			 "%s: unsupported chunk length", __FUNCTION__);
+-		return -EINVAL;
+-	}
+-
+-	/* verify inode count is consistent with extent length */
+-	if ((count >> mp->m_sb.sb_inopblog) != length) {
+-		xfs_warn(log->l_mp,
+-			 "%s: inconsistent inode count and chunk length",
+-			 __FUNCTION__);
+-		return -EINVAL;
+-	}
+-
+-	/*
+-	 * The icreate transaction can cover multiple cluster buffers and these
+-	 * buffers could have been freed and reused. Check the individual
+-	 * buffers for cancellation so we don't overwrite anything written after
+-	 * a cancellation.
+-	 */
+-	bb_per_cluster = XFS_FSB_TO_BB(mp, igeo->blocks_per_cluster);
+-	nbufs = length / igeo->blocks_per_cluster;
+-	for (i = 0, cancel_count = 0; i < nbufs; i++) {
+-		xfs_daddr_t	daddr;
+-
+-		daddr = XFS_AGB_TO_DADDR(mp, agno,
+-				agbno + i * igeo->blocks_per_cluster);
+-		if (xlog_check_buffer_cancelled(log, daddr, bb_per_cluster, 0))
+-			cancel_count++;
+-	}
+-
+-	/*
+-	 * We currently only use icreate for a single allocation at a time. This
+-	 * means we should expect either all or none of the buffers to be
+-	 * cancelled. Be conservative and skip replay if at least one buffer is
+-	 * cancelled, but warn the user that something is awry if the buffers
+-	 * are not consistent.
 -	 *
--	 * The other possibility, of course, is that the quota subsystem was
--	 * removed since the last mount - ENOSYS.
+-	 * XXX: This must be refined to only skip cancelled clusters once we use
+-	 * icreate for multiple chunk allocations.
 -	 */
--	dq_f = item->ri_buf[0].i_addr;
--	ASSERT(dq_f);
--	fa = xfs_dquot_verify(mp, recddq, dq_f->qlf_id, 0);
--	if (fa) {
--		xfs_alert(mp, "corrupt dquot ID 0x%x in log at %pS",
--				dq_f->qlf_id, fa);
--		return -EFSCORRUPTED;
--	}
--	ASSERT(dq_f->qlf_len == 1);
--
--	/*
--	 * At this point we are assuming that the dquots have been allocated
--	 * and hence the buffer has valid dquots stamped in it. It should,
--	 * therefore, pass verifier validation. If the dquot is bad, then the
--	 * we'll return an error here, so we don't need to specifically check
--	 * the dquot in the buffer after the verifier has run.
--	 */
--	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dq_f->qlf_blkno,
--				   XFS_FSB_TO_BB(mp, dq_f->qlf_len), 0, &bp,
--				   &xfs_dquot_buf_ops);
--	if (error)
--		return error;
--
--	ASSERT(bp);
--	ddq = xfs_buf_offset(bp, dq_f->qlf_boffset);
--
--	/*
--	 * If the dquot has an LSN in it, recover the dquot only if it's less
--	 * than the lsn of the transaction we are replaying.
--	 */
--	if (xfs_sb_version_hascrc(&mp->m_sb)) {
--		struct xfs_dqblk *dqb = (struct xfs_dqblk *)ddq;
--		xfs_lsn_t	lsn = be64_to_cpu(dqb->dd_lsn);
--
--		if (lsn && lsn != -1 && XFS_LSN_CMP(lsn, current_lsn) >= 0) {
--			goto out_release;
--		}
+-	ASSERT(!cancel_count || cancel_count == nbufs);
+-	if (cancel_count) {
+-		if (cancel_count != nbufs)
+-			xfs_warn(mp,
+-	"WARNING: partial inode chunk cancellation, skipped icreate.");
+-		trace_xfs_log_recover_icreate_cancel(log, icl);
+-		return 0;
 -	}
 -
--	memcpy(ddq, recddq, item->ri_buf[1].i_len);
--	if (xfs_sb_version_hascrc(&mp->m_sb)) {
--		xfs_update_cksum((char *)ddq, sizeof(struct xfs_dqblk),
--				 XFS_DQUOT_CRC_OFF);
--	}
--
--	ASSERT(dq_f->qlf_size == 2);
--	ASSERT(bp->b_mount == mp);
--	bp->b_iodone = xlog_recover_iodone;
--	xfs_buf_delwri_queue(bp, buffer_list);
--
--out_release:
--	xfs_buf_relse(bp);
--	return 0;
+-	trace_xfs_log_recover_icreate_recover(log, icl);
+-	return xfs_ialloc_inode_init(mp, NULL, buffer_list, count, agno, agbno,
+-				     length, be32_to_cpu(icl->icl_gen));
 -}
 -
- /*
-  * This routine is called to create an in-core extent free intent
-  * item from the efi format structure which was logged on disk.
-@@ -2740,9 +2631,6 @@ xlog_recover_commit_pass2(
+ STATIC int
+ xlog_recover_commit_pass1(
+ 	struct xlog			*log,
+@@ -2631,8 +2507,6 @@ xlog_recover_commit_pass2(
  				trans->r_lsn);
  
  	switch (ITEM_TYPE(item)) {
--	case XFS_LI_DQUOT:
--		return xlog_recover_dquot_pass2(log, buffer_list, item,
--						trans->r_lsn);
- 	case XFS_LI_ICREATE:
- 		return xlog_recover_do_icreate_pass2(log, buffer_list, item);
+-	case XFS_LI_ICREATE:
+-		return xlog_recover_do_icreate_pass2(log, buffer_list, item);
  	case XFS_LI_QUOTAOFF:
+ 		/* nothing to do in pass2 */
+ 		return 0;
 
