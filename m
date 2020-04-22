@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C9B1B34DC
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E1D11B34CF
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 04:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDVCJF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 Apr 2020 22:09:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45288 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgDVCJF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:09:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M28St0170954
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:09:02 GMT
+        id S1726024AbgDVCHL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 Apr 2020 22:07:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38118 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVCHK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Apr 2020 22:07:10 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M22du1074051
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=/MaZfaJ3MrvQ5XgbtALEqgVGQAFjOKhoni6F3kLbsFM=;
- b=Kr5GtNxaxFXkg2gYIzGq0Wg4sirUsKWKXpyffjReZp9QDRKvOqgzfvrQ4lYvpIZR8SUR
- 80agnpzkIpe6xmXY58HbTZoZLpkKGSPCYUgnvJgooCKQCr9sc2iuzFukzGO8jmVUH7/u
- vvcVQvpfne+Qq90nRT/EZjjOpCmKOYjGDrH7SUehtMh/EEIPlGWXwhFJWb0BASbDtAD1
- s35ZnoIlgo2cWvQJ4zQdJYv9Wz9XRYnfNkfIE9R0twy3Ry74jByA384/JwKJAZoMHJA8
- 4kUB6Qipm0miUQk33xr+veUP5gYd61BdPpK8vfQr41OOLGwsTs75tV4QZ03GQ7lZs7vD Cg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30grpgmhrk-1
+ bh=SYjayO/pqA/4+aqn01DhweS/dPOD0ESt9+lODcrmztg=;
+ b=kW8P7vADyM1yQvv2ZVb4ZsSFowSPEJNAY7F9fyyUW8GmYkTWAgSXA9Zj0j3E4ByOCbpk
+ q9zjIqE3VVGgznt6lefWwxK2NgE7BvSYO/kC/pFD5H0eJNWD6bdZOx3r00jClrmFo8jJ
+ yVqFzmY0AOB3kqJvGp9qzBo1K14i/cLU06z40ezlwxRU9kFjjxIAkEINMtbE0PRBVGJZ
+ YbDbIwkpmkdS3p59gQzKSVtIhzytnDhm0J7GsgEEotCQWVBe/2B8ClYGzrYjHHoWbC+W
+ NlPxonDUiqsYASCQBt/2Grbf2SfHKOHPW6snXVnZvmn5OFoYLbQZIq6zIn1Uj5UjUVhi xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30ft6n81jg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:09:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M23TBA179062
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30gb91fpc6-1
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M21cQ1065041
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30gb3t4n1s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:02 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03M271mT014983
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:01 GMT
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:08 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03M27807017755
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 02:07:08 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 19:07:01 -0700
-Subject: [PATCH 09/19] xfs: refactor log recovery icreate item dispatch for
+        with ESMTP ; Tue, 21 Apr 2020 19:07:07 -0700
+Subject: [PATCH 10/19] xfs: refactor log recovery quotaoff item dispatch for
  pass2 commit functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 21 Apr 2020 19:07:00 -0700
-Message-ID: <158752122050.2140829.10077536743035207298.stgit@magnolia>
+Date:   Tue, 21 Apr 2020 19:07:06 -0700
+Message-ID: <158752122672.2140829.3691203963610665663.stgit@magnolia>
 In-Reply-To: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 References: <158752116283.2140829.12265815455525398097.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
@@ -54,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 suspectscore=1 malwarescore=0 phishscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220014
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=1 bulkscore=0 clxscore=1015
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=1 bulkscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220015
+ definitions=main-2004220014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220014
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,316 +71,44 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Move the log icreate item pass2 commit code into the per-item source code
+Move the log quotaoff item pass2 commit code into the per-item source code
 files and use the dispatch function to call it.  We do these one at a
 time because there's a lot of code to move.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_icreate_item.c |  132 +++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_log_recover.c  |  126 -------------------------------------------
- 2 files changed, 132 insertions(+), 126 deletions(-)
+ fs/xfs/xfs_log_recover.c |   14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_icreate_item.c b/fs/xfs/xfs_icreate_item.c
-index 0a1ed4dc1c3d..15415421ea81 100644
---- a/fs/xfs/xfs_icreate_item.c
-+++ b/fs/xfs/xfs_icreate_item.c
-@@ -6,13 +6,19 @@
- #include "xfs.h"
- #include "xfs_fs.h"
- #include "xfs_shared.h"
-+#include "xfs_format.h"
- #include "xfs_log_format.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
-+#include "xfs_inode.h"
- #include "xfs_trans.h"
- #include "xfs_trans_priv.h"
- #include "xfs_icreate_item.h"
- #include "xfs_log.h"
- #include "xfs_log_priv.h"
- #include "xfs_log_recover.h"
-+#include "xfs_ialloc.h"
-+#include "xfs_trace.h"
- 
- kmem_zone_t	*xfs_icreate_zone;		/* inode create item zone */
- 
-@@ -110,6 +116,132 @@ xfs_icreate_log(
- 	set_bit(XFS_LI_DIRTY, &icp->ic_item.li_flags);
- }
- 
-+/*
-+ * This routine is called when an inode create format structure is found in a
-+ * committed transaction in the log.  It's purpose is to initialise the inodes
-+ * being allocated on disk. This requires us to get inode cluster buffers that
-+ * match the range to be initialised, stamped with inode templates and written
-+ * by delayed write so that subsequent modifications will hit the cached buffer
-+ * and only need writing out at the end of recovery.
-+ */
-+STATIC int
-+xlog_recover_do_icreate_pass2(
-+	struct xlog		*log,
-+	struct list_head	*buffer_list,
-+	struct xlog_recover_item *item,
-+	xfs_lsn_t		current_lsn)
-+{
-+	struct xfs_mount	*mp = log->l_mp;
-+	struct xfs_icreate_log	*icl;
-+	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
-+	xfs_agnumber_t		agno;
-+	xfs_agblock_t		agbno;
-+	unsigned int		count;
-+	unsigned int		isize;
-+	xfs_agblock_t		length;
-+	int			bb_per_cluster;
-+	int			cancel_count;
-+	int			nbufs;
-+	int			i;
-+
-+	icl = (struct xfs_icreate_log *)item->ri_buf[0].i_addr;
-+	if (icl->icl_type != XFS_LI_ICREATE) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad type");
-+		return -EINVAL;
-+	}
-+
-+	if (icl->icl_size != 1) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad icl size");
-+		return -EINVAL;
-+	}
-+
-+	agno = be32_to_cpu(icl->icl_ag);
-+	if (agno >= mp->m_sb.sb_agcount) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agno");
-+		return -EINVAL;
-+	}
-+	agbno = be32_to_cpu(icl->icl_agbno);
-+	if (!agbno || agbno == NULLAGBLOCK || agbno >= mp->m_sb.sb_agblocks) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agbno");
-+		return -EINVAL;
-+	}
-+	isize = be32_to_cpu(icl->icl_isize);
-+	if (isize != mp->m_sb.sb_inodesize) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad isize");
-+		return -EINVAL;
-+	}
-+	count = be32_to_cpu(icl->icl_count);
-+	if (!count) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad count");
-+		return -EINVAL;
-+	}
-+	length = be32_to_cpu(icl->icl_length);
-+	if (!length || length >= mp->m_sb.sb_agblocks) {
-+		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad length");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * The inode chunk is either full or sparse and we only support
-+	 * m_ino_geo.ialloc_min_blks sized sparse allocations at this time.
-+	 */
-+	if (length != igeo->ialloc_blks &&
-+	    length != igeo->ialloc_min_blks) {
-+		xfs_warn(log->l_mp,
-+			 "%s: unsupported chunk length", __FUNCTION__);
-+		return -EINVAL;
-+	}
-+
-+	/* verify inode count is consistent with extent length */
-+	if ((count >> mp->m_sb.sb_inopblog) != length) {
-+		xfs_warn(log->l_mp,
-+			 "%s: inconsistent inode count and chunk length",
-+			 __FUNCTION__);
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * The icreate transaction can cover multiple cluster buffers and these
-+	 * buffers could have been freed and reused. Check the individual
-+	 * buffers for cancellation so we don't overwrite anything written after
-+	 * a cancellation.
-+	 */
-+	bb_per_cluster = XFS_FSB_TO_BB(mp, igeo->blocks_per_cluster);
-+	nbufs = length / igeo->blocks_per_cluster;
-+	for (i = 0, cancel_count = 0; i < nbufs; i++) {
-+		xfs_daddr_t	daddr;
-+
-+		daddr = XFS_AGB_TO_DADDR(mp, agno,
-+				agbno + i * igeo->blocks_per_cluster);
-+		if (xlog_check_buffer_cancelled(log, daddr, bb_per_cluster, 0))
-+			cancel_count++;
-+	}
-+
-+	/*
-+	 * We currently only use icreate for a single allocation at a time. This
-+	 * means we should expect either all or none of the buffers to be
-+	 * cancelled. Be conservative and skip replay if at least one buffer is
-+	 * cancelled, but warn the user that something is awry if the buffers
-+	 * are not consistent.
-+	 *
-+	 * XXX: This must be refined to only skip cancelled clusters once we use
-+	 * icreate for multiple chunk allocations.
-+	 */
-+	ASSERT(!cancel_count || cancel_count == nbufs);
-+	if (cancel_count) {
-+		if (cancel_count != nbufs)
-+			xfs_warn(mp,
-+	"WARNING: partial inode chunk cancellation, skipped icreate.");
-+		trace_xfs_log_recover_icreate_cancel(log, icl);
-+		return 0;
-+	}
-+
-+	trace_xfs_log_recover_icreate_recover(log, icl);
-+	return xfs_ialloc_inode_init(mp, NULL, buffer_list, count, agno, agbno,
-+				     length, be32_to_cpu(icl->icl_gen));
-+}
-+
- const struct xlog_recover_item_type xlog_icreate_item_type = {
- 	.reorder		= XLOG_REORDER_BUFFER_LIST,
-+	.commit_pass2_fn	= xlog_recover_do_icreate_pass2,
- };
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 5b3c5df22e88..18b797ca4a6c 100644
+index 18b797ca4a6c..5e7e5c66327e 100644
 --- a/fs/xfs/xfs_log_recover.c
 +++ b/fs/xfs/xfs_log_recover.c
-@@ -2445,130 +2445,6 @@ xlog_recover_bud_pass2(
- 	return 0;
+@@ -2502,20 +2502,16 @@ xlog_recover_commit_pass2(
+ {
+ 	trace_xfs_log_recover_item_recover(log, trans, item, XLOG_RECOVER_PASS2);
+ 
+-	if (item->ri_type && item->ri_type->commit_pass2_fn)
+-		return item->ri_type->commit_pass2_fn(log, buffer_list, item,
+-				trans->r_lsn);
+-
+-	switch (ITEM_TYPE(item)) {
+-	case XFS_LI_QUOTAOFF:
+-		/* nothing to do in pass2 */
+-		return 0;
+-	default:
++	if (!item->ri_type) {
+ 		xfs_warn(log->l_mp, "%s: invalid item type (%d)",
+ 			__func__, ITEM_TYPE(item));
+ 		ASSERT(0);
+ 		return -EFSCORRUPTED;
+ 	}
++	if (!item->ri_type->commit_pass2_fn)
++		return 0;
++	return item->ri_type->commit_pass2_fn(log, buffer_list, item,
++			trans->r_lsn);
  }
  
--/*
-- * This routine is called when an inode create format structure is found in a
-- * committed transaction in the log.  It's purpose is to initialise the inodes
-- * being allocated on disk. This requires us to get inode cluster buffers that
-- * match the range to be initialised, stamped with inode templates and written
-- * by delayed write so that subsequent modifications will hit the cached buffer
-- * and only need writing out at the end of recovery.
-- */
--STATIC int
--xlog_recover_do_icreate_pass2(
--	struct xlog		*log,
--	struct list_head	*buffer_list,
--	xlog_recover_item_t	*item)
--{
--	struct xfs_mount	*mp = log->l_mp;
--	struct xfs_icreate_log	*icl;
--	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
--	xfs_agnumber_t		agno;
--	xfs_agblock_t		agbno;
--	unsigned int		count;
--	unsigned int		isize;
--	xfs_agblock_t		length;
--	int			bb_per_cluster;
--	int			cancel_count;
--	int			nbufs;
--	int			i;
--
--	icl = (struct xfs_icreate_log *)item->ri_buf[0].i_addr;
--	if (icl->icl_type != XFS_LI_ICREATE) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad type");
--		return -EINVAL;
--	}
--
--	if (icl->icl_size != 1) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad icl size");
--		return -EINVAL;
--	}
--
--	agno = be32_to_cpu(icl->icl_ag);
--	if (agno >= mp->m_sb.sb_agcount) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agno");
--		return -EINVAL;
--	}
--	agbno = be32_to_cpu(icl->icl_agbno);
--	if (!agbno || agbno == NULLAGBLOCK || agbno >= mp->m_sb.sb_agblocks) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad agbno");
--		return -EINVAL;
--	}
--	isize = be32_to_cpu(icl->icl_isize);
--	if (isize != mp->m_sb.sb_inodesize) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad isize");
--		return -EINVAL;
--	}
--	count = be32_to_cpu(icl->icl_count);
--	if (!count) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad count");
--		return -EINVAL;
--	}
--	length = be32_to_cpu(icl->icl_length);
--	if (!length || length >= mp->m_sb.sb_agblocks) {
--		xfs_warn(log->l_mp, "xlog_recover_do_icreate_trans: bad length");
--		return -EINVAL;
--	}
--
--	/*
--	 * The inode chunk is either full or sparse and we only support
--	 * m_ino_geo.ialloc_min_blks sized sparse allocations at this time.
--	 */
--	if (length != igeo->ialloc_blks &&
--	    length != igeo->ialloc_min_blks) {
--		xfs_warn(log->l_mp,
--			 "%s: unsupported chunk length", __FUNCTION__);
--		return -EINVAL;
--	}
--
--	/* verify inode count is consistent with extent length */
--	if ((count >> mp->m_sb.sb_inopblog) != length) {
--		xfs_warn(log->l_mp,
--			 "%s: inconsistent inode count and chunk length",
--			 __FUNCTION__);
--		return -EINVAL;
--	}
--
--	/*
--	 * The icreate transaction can cover multiple cluster buffers and these
--	 * buffers could have been freed and reused. Check the individual
--	 * buffers for cancellation so we don't overwrite anything written after
--	 * a cancellation.
--	 */
--	bb_per_cluster = XFS_FSB_TO_BB(mp, igeo->blocks_per_cluster);
--	nbufs = length / igeo->blocks_per_cluster;
--	for (i = 0, cancel_count = 0; i < nbufs; i++) {
--		xfs_daddr_t	daddr;
--
--		daddr = XFS_AGB_TO_DADDR(mp, agno,
--				agbno + i * igeo->blocks_per_cluster);
--		if (xlog_check_buffer_cancelled(log, daddr, bb_per_cluster, 0))
--			cancel_count++;
--	}
--
--	/*
--	 * We currently only use icreate for a single allocation at a time. This
--	 * means we should expect either all or none of the buffers to be
--	 * cancelled. Be conservative and skip replay if at least one buffer is
--	 * cancelled, but warn the user that something is awry if the buffers
--	 * are not consistent.
--	 *
--	 * XXX: This must be refined to only skip cancelled clusters once we use
--	 * icreate for multiple chunk allocations.
--	 */
--	ASSERT(!cancel_count || cancel_count == nbufs);
--	if (cancel_count) {
--		if (cancel_count != nbufs)
--			xfs_warn(mp,
--	"WARNING: partial inode chunk cancellation, skipped icreate.");
--		trace_xfs_log_recover_icreate_cancel(log, icl);
--		return 0;
--	}
--
--	trace_xfs_log_recover_icreate_recover(log, icl);
--	return xfs_ialloc_inode_init(mp, NULL, buffer_list, count, agno, agbno,
--				     length, be32_to_cpu(icl->icl_gen));
--}
--
  STATIC int
- xlog_recover_commit_pass1(
- 	struct xlog			*log,
-@@ -2631,8 +2507,6 @@ xlog_recover_commit_pass2(
- 				trans->r_lsn);
- 
- 	switch (ITEM_TYPE(item)) {
--	case XFS_LI_ICREATE:
--		return xlog_recover_do_icreate_pass2(log, buffer_list, item);
- 	case XFS_LI_QUOTAOFF:
- 		/* nothing to do in pass2 */
- 		return 0;
 
