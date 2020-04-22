@@ -2,269 +2,150 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 891711B4F2C
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 23:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0551B5046
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 00:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgDVVVw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 17:21:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1886 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgDVVVo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:21:44 -0400
-IronPort-SDR: 30VjgZZgWcmhzo2gJEurIHnRH8AGW/9QuoNqUhtXOZf6De7a6+eMNlVHlQZHoRbyjufKAOehq4
- iklVC69suUVw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:21:42 -0700
-IronPort-SDR: +UfSJ3vT630rslmHCLLJkrGSXxLTIxjSrEl/bNe9/lnYTE5TcVzHTLzh0ZlpCWP8BDQ314QWsI
- jvpBEHaECbzA==
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="246080472"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:21:42 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>,
+        id S1726788AbgDVWZn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 18:25:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48302 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgDVWZm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 18:25:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MMOaLB163294;
+        Wed, 22 Apr 2020 22:25:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=MA01F9i7md6cDJPnsrbe6KvCCh4h1MO98DgTZHi6cxM=;
+ b=b3w+fAH30ieSYsoB0Md575EgPZLjRWennPIMhoN0ZHWNiNIMFx044h+qGJ1kZrO8Hzqu
+ 1VWEWxU/NRNkTJCllwTEUU0umiGYLSUSPaBbmm/xvPRRsCYj1Yr058lexsHKJoWNhphw
+ RmWXWdvcAhQ0iUOEJtt42bHLR2fGW+CF/ITh3MVushpDjKeHWKZ6bKUivHxOdNXhEkFg
+ R5KePc17xdOAB06mjfy0MWxfH/tYZrDOS9xnOK7AcJ46k9CKgsPY/eXaR7sruD3n0Lve
+ 55+5kgZY3qxztuGAgfDgxizSlmamI3tyuboiI3Y3GEyMAbg9mRTFImJsKxYrhhls/v4o VA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30grpgt02e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 22:25:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MMMO7h181632;
+        Wed, 22 Apr 2020 22:25:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30gb1kdfpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 22:25:25 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03MMPI2P015972;
+        Wed, 22 Apr 2020 22:25:18 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 15:25:18 -0700
+Date:   Wed, 22 Apr 2020 15:25:16 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH V10 11/11] fs/xfs: Update xfs_ioctl_setattr_dax_invalidate()
-Date:   Wed, 22 Apr 2020 14:21:02 -0700
-Message-Id: <20200422212102.3757660-12-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200422212102.3757660-1-ira.weiny@intel.com>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>, djwong@kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: Virtual XFS Developer Meetings
+Message-ID: <20200422222516.GP6749@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220169
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hi everyone,
 
-Because of the separation of FS_XFLAG_DAX from S_DAX and the delayed
-setting of S_DAX, data invalidation no longer needs to happen when
-FS_XFLAG_DAX is changed.
+I propose that we hold our own virtual XFS developer summit.  Physical
+proximity is way too risky for the forseeable future, so let's make do
+with online discussions and conferencing.  LSFMM 2020 was officially
+cancelled a short time ago.
 
-Change xfs_ioctl_setattr_dax_invalidate() to be
-xfs_ioctl_dax_check_set_cache() and alter the code to reflect the new
-functionality.
+Unlike in-person events, we cannot pin everyone into a single time zone
+for an extended meeting, and we can't have a hallway BOF.  On the plus
+side, we can finally invite /everyone/ to the table!  Let's use this
+email thread to make a list of topics for future discussions.  I can
+think of a few topic categories to start:
 
-Furthermore, we no longer need the locking so we remove the join_flags
-logic.
+ 1. Development process problems that people would like to address.
+ 2. Matching patch authors with patch reviewers.
+ 3. Old features that we ought to retire.
+ 4. New feature development roadmap.
+ 5. Anything else that people think is important.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Once we have a list of specific topics matched with people who are
+interested in that topic, I think it best to start each of those
+conversations in separate threads on linux-xfs where everyone can see
+them.  If the participants feel that they'd get more out of an
+interactive session, we have plenty of options for doing that:
 
----
-Changes from V9:
-	Change name of function to xfs_ioctl_setattr_prepare_dax()
+The first option of course is the IRC channel (#xfs on freenode) from
+which it is easy to paste the irc logs into linux-xfs for archiving and
+further public comment.
 
-Changes from V8:
-	Change name of function to xfs_ioctl_dax_check_set_cache()
-	Update commit message
-	Fix bit manipulations
+For actual video conferencing, we also have tools such as Jitsi,
+BigBlueButton, BlueJeans, and Zoom.  I'm willing to sit in on video
+meetings to take notes for linux-xfs and/or post the recordings online.
+As a side note for anyone wanting to take advantage of videochats --
+I'd prefer to keep this to one hourlong meeting per day.
 
-Changes from V7:
-	Use new flag_inode_dontcache()
-	Skip don't cache if mount over ride is active.
+Please remember this is not an edict passed on from high to shake up
+everything; it is merely this maintainer suggesting that we explore
+other tactics for building things together.  In the end, everything that
+goes into making decisions still must be communicated via linux-xfs, and
+patches still have to earn Reviewed-by tags.  We do, however, have
+flexibility in how we get there.
 
-Changes from v6:
-	Fix completely broken implementation and update commit message.
-	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
-	and S_DAX changing on drop_caches
+Here are some topics that have been mentioned to me at least in passing
+over the last few months.  I'll start the first five topics since
+they're the ones I was going to put on the agenda for an XFS meeting at
+LSFMM until that all blew away.
 
-Changes from v5:
-	New patch
----
- fs/xfs/xfs_ioctl.c | 108 +++++++++------------------------------------
- 1 file changed, 20 insertions(+), 88 deletions(-)
+ - Refactoring the Review Process (me, Eric, Dave)
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 104495ac187c..aa1a8bd7d68d 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1245,64 +1245,26 @@ xfs_ioctl_setattr_xflags(
- 	return 0;
- }
- 
--/*
-- * If we are changing DAX flags, we have to ensure the file is clean and any
-- * cached objects in the address space are invalidated and removed. This
-- * requires us to lock out other IO and page faults similar to a truncate
-- * operation. The locks need to be held until the transaction has been committed
-- * so that the cache invalidation is atomic with respect to the DAX flag
-- * manipulation.
-- */
--static int
--xfs_ioctl_setattr_dax_invalidate(
-+static void
-+xfs_ioctl_setattr_prepare_dax(
- 	struct xfs_inode	*ip,
--	struct fsxattr		*fa,
--	int			*join_flags)
-+	struct fsxattr		*fa)
- {
--	struct inode		*inode = VFS_I(ip);
--	struct super_block	*sb = inode->i_sb;
--	int			error;
--
--	*join_flags = 0;
--
--	/*
--	 * It is only valid to set the DAX flag on regular files and
--	 * directories on filesystems where the block size is equal to the page
--	 * size. On directories it serves as an inherited hint so we don't
--	 * have to check the device for dax support or flush pagecache.
--	 */
--	if (fa->fsx_xflags & FS_XFLAG_DAX) {
--		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
--
--		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
--			return -EINVAL;
--	}
--
--	/* If the DAX state is not changing, we have nothing to do here. */
--	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
--		return 0;
--	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
--		return 0;
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct inode            *inode = VFS_I(ip);
- 
- 	if (S_ISDIR(inode->i_mode))
--		return 0;
--
--	/* lock, flush and invalidate mapping in preparation for flag change */
--	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
--	error = filemap_write_and_wait(inode->i_mapping);
--	if (error)
--		goto out_unlock;
--	error = invalidate_inode_pages2(inode->i_mapping);
--	if (error)
--		goto out_unlock;
--
--	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
--	return 0;
-+		return;
- 
--out_unlock:
--	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
--	return error;
-+	if ((mp->m_flags & XFS_MOUNT_DAX_ALWAYS) ||
-+	    (mp->m_flags & XFS_MOUNT_DAX_NEVER))
-+		return;
- 
-+	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
-+	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
-+		mark_inode_dontcache(inode);
- }
- 
- /*
-@@ -1310,17 +1272,10 @@ xfs_ioctl_setattr_dax_invalidate(
-  * have permission to do so. On success, return a clean transaction and the
-  * inode locked exclusively ready for further operation specific checks. On
-  * failure, return an error without modifying or locking the inode.
-- *
-- * The inode might already be IO locked on call. If this is the case, it is
-- * indicated in @join_flags and we take full responsibility for ensuring they
-- * are unlocked from now on. Hence if we have an error here, we still have to
-- * unlock them. Otherwise, once they are joined to the transaction, they will
-- * be unlocked on commit/cancel.
-  */
- static struct xfs_trans *
- xfs_ioctl_setattr_get_trans(
--	struct xfs_inode	*ip,
--	int			join_flags)
-+	struct xfs_inode	*ip)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
- 	struct xfs_trans	*tp;
-@@ -1337,8 +1292,7 @@ xfs_ioctl_setattr_get_trans(
- 		goto out_unlock;
- 
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
--	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
--	join_flags = 0;
-+	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 
- 	/*
- 	 * CAP_FOWNER overrides the following restrictions:
-@@ -1359,8 +1313,6 @@ xfs_ioctl_setattr_get_trans(
- out_cancel:
- 	xfs_trans_cancel(tp);
- out_unlock:
--	if (join_flags)
--		xfs_iunlock(ip, join_flags);
- 	return ERR_PTR(error);
- }
- 
-@@ -1486,7 +1438,6 @@ xfs_ioctl_setattr(
- 	struct xfs_dquot	*pdqp = NULL;
- 	struct xfs_dquot	*olddquot = NULL;
- 	int			code;
--	int			join_flags = 0;
- 
- 	trace_xfs_ioctl_setattr(ip);
- 
-@@ -1510,18 +1461,9 @@ xfs_ioctl_setattr(
- 			return code;
- 	}
- 
--	/*
--	 * Changing DAX config may require inode locking for mapping
--	 * invalidation. These need to be held all the way to transaction commit
--	 * or cancel time, so need to be passed through to
--	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
--	 * appropriately.
--	 */
--	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
--	if (code)
--		goto error_free_dquots;
-+	xfs_ioctl_setattr_prepare_dax(ip, fa);
- 
--	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-+	tp = xfs_ioctl_setattr_get_trans(ip);
- 	if (IS_ERR(tp)) {
- 		code = PTR_ERR(tp);
- 		goto error_free_dquots;
-@@ -1651,7 +1593,6 @@ xfs_ioc_setxflags(
- 	struct fsxattr		fa;
- 	struct fsxattr		old_fa;
- 	unsigned int		flags;
--	int			join_flags = 0;
- 	int			error;
- 
- 	if (copy_from_user(&flags, arg, sizeof(flags)))
-@@ -1668,18 +1609,9 @@ xfs_ioc_setxflags(
- 	if (error)
- 		return error;
- 
--	/*
--	 * Changing DAX config may require inode locking for mapping
--	 * invalidation. These need to be held all the way to transaction commit
--	 * or cancel time, so need to be passed through to
--	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
--	 * appropriately.
--	 */
--	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
--	if (error)
--		goto out_drop_write;
-+	xfs_ioctl_setattr_prepare_dax(ip, &fa);
- 
--	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-+	tp = xfs_ioctl_setattr_get_trans(ip);
- 	if (IS_ERR(tp)) {
- 		error = PTR_ERR(tp);
- 		goto out_drop_write;
--- 
-2.25.1
+ - Deferred inode inactivation and nonblocking inode reclaim (me, Amir)
 
+ - 64bit timestamps (me, Amir)
+
+ - Atomic extent swaps (me)
+
+ - Online fsck (me)
+
+ - Deprecating the v4 format (Dave)
+
+ - Parent Pointers (Amir)
+
+ - Range Locks (Amir)
+
+ - DAX bashing session (Dan)
+
+ - Widening the inode fork extent counters (Chandan)
+
+ - Dirty buffer region bitmap tracking (Chandan)
+
+ - Add your pet item here! :)
+
+Thoughts, suggestions, and flames appreciated!
+
+--D
