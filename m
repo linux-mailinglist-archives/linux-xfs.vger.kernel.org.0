@@ -2,95 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 217EE1B5045
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 00:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D83F1B505C
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 00:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgDVWZl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 18:25:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39852 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgDVWZk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 18:25:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MMNkmb133233
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 22:25:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=FX84oopRS31ky5mlFfonEw/DkgFVlSu7d38bVtiN66Y=;
- b=ujYWlF+UDdzTw1V18uLUrF0PDm8NRnxNtUp1ll9GcJPKN1EimalAFo9HYK06WXZMGn2o
- mHpUy0FCyB96JEBbcUO8OqntHCvj4moOOWNJGLrcorqEcUeSjxdky+JLLma6Kifo8ggB
- FP32yDD5PbVYJjJ3zEe4QN5o4swM0umity7KSgYkcm6UeR0vQU6MuFjGZoMa4Dueqa/3
- 00Sz1LMoak4i/T/e9svsQoLA5BBJMHtf5nHzFF/BJJALUODq69FlCWMOOp/o5FSPUMjW
- hTshCSQOOwL8JA5XX16l7LUepeijMmtZXd68aD3fRImWmmn0oz80yJb+Pf8NusW42GKA 6g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30jhyc4bs9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 22:25:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MMNYR9174602
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 22:25:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30gb93huct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 22:25:38 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MMPbRH009922
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 22:25:37 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 15:25:37 -0700
-Date:   Wed, 22 Apr 2020 15:25:36 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: Refactoring the Review Process
-Message-ID: <20200422222536.GE6741@magnolia>
+        id S1725961AbgDVWas (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 18:30:48 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47394 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbgDVWar (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 18:30:47 -0400
+Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 955F53A38CC;
+        Thu, 23 Apr 2020 08:30:43 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jRNtB-0006df-8P; Thu, 23 Apr 2020 08:30:41 +1000
+Date:   Thu, 23 Apr 2020 08:30:41 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chandan Rajendra <chandan@linux.ibm.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chandan Rajendra <chandanrlinux@gmail.com>,
+        linux-xfs@vger.kernel.org, bfoster@redhat.com
+Subject: Re: [PATCH 2/2] xfs: Extend xattr extent counter to 32-bits
+Message-ID: <20200422223041.GE27860@dread.disaster.area>
+References: <20200404085203.1908-1-chandanrlinux@gmail.com>
+ <20200413185547.GF6749@magnolia>
+ <3846384.T6aiutkDcA@localhost.localdomain>
+ <2468041.fvziTNUSPq@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- clxscore=1015 suspectscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220169
+In-Reply-To: <2468041.fvziTNUSPq@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=7-415B0cAAAA:8
+        a=DRyh8TDzYkSSwyMG1gYA:9 a=duKX2EbbUvfq8-ZM:21 a=Zmd738MsrX2beEEE:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi everyone,
+On Wed, Apr 22, 2020 at 03:08:00PM +0530, Chandan Rajendra wrote:
+> On Monday, April 20, 2020 10:08 AM Chandan Rajendra wrote: 
+> > On Tuesday, April 14, 2020 12:25 AM Darrick J. Wong wrote: 
+> > > That said, it was very helpful to point out that the current MAXEXTNUM /
+> > > MAXAEXTNUM symbols stop short of using all 32 (or 16) bits.
+> > > 
+> > > Can we use this new feature flag + inode flag to allow 4294967295
+> > > extents in either fork?
+> > 
+> > Sure.
+> > 
+> > I have already tested that having 4294967295 as the maximum data extent count
+> > does not cause any regressions.
+> > 
+> > Also, Dave was of the opinion that data extent counter be increased to
+> > 64-bit. I think I should include that change along with this feature flag
+> > rather than adding a new one in the near future.
+> > 
+> > 
+> 
+> Hello Dave & Darrick,
+> 
+> Can you please look into the following design decision w.r.t using 32-bit and
+> 64-bit unsigned counters for xattr and data extents.
+> 
+> Maximum extent counts.
+> |-----------------------+----------------------|
+> | Field width (in bits) |          Max extents |
+> |-----------------------+----------------------|
+> |                    32 |           4294967295 |
+> |                    48 |      281474976710655 |
+> |                    64 | 18446744073709551615 |
+> |-----------------------+----------------------|
 
-Writing and reviewing code in isolation hasn't always served me well.  I
-really enjoyed my experiences developing the reflink code (~2015) being
-able to chat with Dave in the evenings about the design of particular
-algorithms, or how certain XFS structures really worked, and to learn
-the history behind this and that subsystem.
+These huge numbers are impossible to compare visually.  Once numbers
+go beyond 7-9 digits, you need to start condensing them in reports.
+Humans are, in general, unable to handle strings of digits longer
+than 7-9 digits at all well...
 
-Returning to first principles, I perceive that the purpose of our review
-processes is to make sure there aren't any obvious design flaws or
-implementation errors in the code we put back to the git repo by
-ensuring that at least one other XFS developer actually understands
-what's going on.
+Can you condense them by using scientific representation i.e. XEy,
+which gives:
 
-In other words, I am interested in testing the pair programming
-paradigm.  Given that we have zero physical locality, I suspect this
-will work better with an interactive medium and between people who are
-in nearby time zones.  I also suspect that this might be better used for
-more focussed activities such as code walkthroughs and reviews.  Still,
-I'm willing to entertain the possibility of using this as a second means
-to get a patchset to a Reviewed-by.
+|-----------------------+-------------|
+| Field width (in bits) | Max extents |
+|-----------------------+-------------|
+|                    32 |      4.3E09 |
+|                    48 |      2.8E14 |
+|                    64 |      1.8E19 |
+|-----------------------+-------------|
 
-I also speculate that this might be a good mentoring opportunity for us
-to trade productivity tips and disseminate 'institutional' knowledge
-between people.  I for one am happy to help others learn more about the
-code base in exchange for learning more about the parts of XFS with
-which I'm less familiar.  (I bet Allison knows more about how xattrs
-work than I do at this point...)
+It's much easier to compare differences visually because it's not
+only 4 digits, not 20. The other alternative is to use k,m,g,t,p,e
+suffixes to indicate magnitude (4.3g, 280t, 18e), but using
+exponentials make the numbers easier to do calculations on
+directly...
 
---D
+> |-------------------+-----|
+> | Minimum node recs | 125 |
+> | Minimum leaf recs | 125 |
+> |-------------------+-----|
+
+Please show your working. I'm assuming this is 50% * 4kB /
+sizeof(bmbt_rec), so you are working out limits based on 4kB block
+size? Realistically, worse case behaviour will be with the minimum
+supported block size, which in this case will be 1kB....
+
+> Data bmbt tree height (MINDBTPTRS == 3)
+> |-------+------------------------+-------------------------|
+> | Level | Number of nodes/leaves |           Total Nr recs |
+> |       |                        | (nr nodes/leaves * 125) |
+> |-------+------------------------+-------------------------|
+> |     0 |                      1 |                       3 |
+> |     1 |                      3 |                     375 |
+> |     2 |                    375 |                   46875 |
+> |     3 |                  46875 |                 5859375 |
+> |     4 |                5859375 |               732421875 |
+> |     5 |              732421875 |             91552734375 |
+> |     6 |            91552734375 |          11444091796875 |
+> |     7 |         11444091796875 |        1430511474609375 |
+> |     8 |       1430511474609375 |      178813934326171875 |
+> |     9 |     178813934326171875 |    22351741790771484375 |
+> |-------+------------------------+-------------------------|
+> 
+> For counting data extents, even though we theoretically have 64 bits at our
+> disposal, I think we should have (2 ** 48) - 1 as the maximum number of
+> extents. This gives 281474976710655 (i.e. ~281 trillion extents). With this,
+> bmbt tree's height grows by just two more levels (i.e. it grows from the
+> current maximum height of 5 to 7). Please let me know your opinion on this.
+
+We shouldn't make up arbitrary limits when we can calculate them exactly.
+i.e. 2^63 max file size, 1kB block size (2^10), means max fragments
+is 2^53 entries. On a 64kB block size (2^16), we have a max extent
+count of 2^47....
+
+i.e. 2^48 would be an acceptible limit for 1kB block size, but it is
+not correct for 64kB block size filesystems....
+
+> Attr bmbt tree height (MINABTPTRS == 2)
+> |-------+------------------------+-------------------------|
+> | Level | Number of nodes/leaves |           Total Nr recs |
+> |       |                        | (nr nodes/leaves * 125) |
+> |-------+------------------------+-------------------------|
+> |     0 |                      1 |                       2 |
+> |     1 |                      2 |                     250 |
+> |     2 |                    250 |                   31250 |
+> |     3 |                  31250 |                 3906250 |
+> |     4 |                3906250 |               488281250 |
+> |     5 |              488281250 |             61035156250 |
+> |-------+------------------------+-------------------------|
+> 
+> For xattr extents, (2 ** 32) - 1 = 4294967295 (~ 4 billion extents). So this
+> will cause the corresponding bmbt's maximum height to go from 3 to 5.
+> This probably won't cause any regression.
+
+We already have the XFS_DA_NODE_MAXDEPTH set to 5, so changing the
+attr fork extent count makes no difference to the attribute fork
+bmbt reservations. i.e. the bmbt reservations are defined by the
+dabtree structure limits, not the maximum extent count the fork can
+hold.
+
+The data fork to 64 bits has no impact on the directory
+reservations, either, because the number of extents in the directory
+is bound by the directory segment size of 32GB. i.e. a directory can
+hold, at most, 32GB of dirent data, which means there's a hard limit
+on the number of dabtree entries somewhere in the order of a few
+hundred million. That's where XFS_DA_NODE_MAXDEPTH comes from - it's
+large enough to index a max sized directory, and the BMBT overhead
+is derived from that...
+
+> Meanwhile, I will work on finding the impact of increasing the
+> height of these two trees on log reservation.
+
+It should not change it substantially - 2 blocks per bmbt
+reservation per transaction is what I'd expect from the numbers
+presented...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
