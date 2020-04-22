@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5FF71B4C3D
+	by mail.lfdr.de (Postfix) with ESMTP id BF9751B4C3B
 	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 19:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDVRyj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 13:54:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25893 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726181AbgDVRyj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:39 -0400
+        id S1726596AbgDVRyi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 13:54:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20671 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726181AbgDVRyh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587578078;
+        s=mimecast20190719; t=1587578077;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=s4T0As95MK09tujQ+DGhyj/FaSlPnZk1+GzV43TvEVw=;
-        b=f442QKc0Aqkn2gmoDeN9liVzXHaFVwomsoDeG/KmnElwZVwsoeDcfi7IxJGttiuiBwgXyt
-        JjLSQgOeqX+bdGMXeKAwC2WHbZ8XzAPcveq0lMYD8BwDHWnaW4FyNbQU2Rz7j6RYoeO3/y
-        uXHDdltQY6ndNJ3KIJxAGCtsqRZZqg4=
+        bh=0e5fOUH64fddNALnOZfmkIk+DgSIwzcUVUYhwAp6eLs=;
+        b=He4Anehwd+OD91tZ4cD4OTZ1RYIInn69i1JEiO082fdgSM+Ek9zGF2uRBG8uiad/DDBJnK
+        Z3A7ZNHeESy+A8quCGYBWvzpfkb2QeQY8/ziYHkf7kfzh8naxuEZ5TCNqRwRA6t7qDKurE
+        LF8DLxMqaKHUGZkJ4AC8MlOXgdGkFhI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-C7PgCMMIO4-YSWglMR-63w-1; Wed, 22 Apr 2020 13:54:33 -0400
-X-MC-Unique: C7PgCMMIO4-YSWglMR-63w-1
+ us-mta-209-pUafGSg1O_eTAXOiatAA8g-1; Wed, 22 Apr 2020 13:54:34 -0400
+X-MC-Unique: pUafGSg1O_eTAXOiatAA8g-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DA4C100CCC2
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8971A809881
         for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:33 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDBCC6084A
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43D776084A
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:33 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 06/13] xfs: fix duplicate verification from xfs_qm_dqflush()
-Date:   Wed, 22 Apr 2020 13:54:22 -0400
-Message-Id: <20200422175429.38957-7-bfoster@redhat.com>
+Subject: [PATCH v2 07/13] xfs: abort consistently on dquot flush failure
+Date:   Wed, 22 Apr 2020 13:54:23 -0400
+Message-Id: <20200422175429.38957-8-bfoster@redhat.com>
 In-Reply-To: <20200422175429.38957-1-bfoster@redhat.com>
 References: <20200422175429.38957-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,38 +48,90 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
-read verifier by checking the dquot in the on-disk buffer. Instead,
-verify the in-core variant before it is flushed to the buffer.
+The dquot flush handler effectively aborts the dquot flush if the
+filesystem is already shut down, but doesn't actually shut down if
+the flush fails. Update xfs_qm_dqflush() to consistently abort the
+dquot flush and shutdown the fs if the flush fails with an
+unexpected error.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/xfs_dquot.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_dquot.c | 32 ++++++++++----------------------
+ 1 file changed, 10 insertions(+), 22 deletions(-)
 
 diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index af2c8e5ceea0..265feb62290d 100644
+index 265feb62290d..ffe607733c50 100644
 --- a/fs/xfs/xfs_dquot.c
 +++ b/fs/xfs/xfs_dquot.c
-@@ -1116,13 +1116,12 @@ xfs_qm_dqflush(
- 	dqb =3D bp->b_addr + dqp->q_bufoffset;
- 	ddqp =3D &dqb->dd_diskdq;
+@@ -1068,6 +1068,7 @@ xfs_qm_dqflush(
+ 	struct xfs_buf		**bpp)
+ {
+ 	struct xfs_mount	*mp =3D dqp->q_mount;
++	struct xfs_log_item	*lip =3D &dqp->q_logitem.qli_item;
+ 	struct xfs_buf		*bp;
+ 	struct xfs_dqblk	*dqb;
+ 	struct xfs_disk_dquot	*ddqp;
+@@ -1083,32 +1084,16 @@ xfs_qm_dqflush(
+=20
+ 	xfs_qm_dqunpin_wait(dqp);
 =20
 -	/*
--	 * A simple sanity check in case we got a corrupted dquot.
+-	 * This may have been unpinned because the filesystem is shutting
+-	 * down forcibly. If that's the case we must not write this dquot
+-	 * to disk, because the log record didn't make it to disk.
+-	 *
+-	 * We also have to remove the log item from the AIL in this case,
+-	 * as we wait for an emptry AIL as part of the unmount process.
 -	 */
--	fa =3D xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
-+	/* sanity check the in-core structure before we flush */
-+	fa =3D xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id)=
-,
-+			      0);
- 	if (fa) {
+-	if (XFS_FORCED_SHUTDOWN(mp)) {
+-		struct xfs_log_item	*lip =3D &dqp->q_logitem.qli_item;
+-		dqp->dq_flags &=3D ~XFS_DQ_DIRTY;
+-
+-		xfs_trans_ail_remove(lip, SHUTDOWN_CORRUPT_INCORE);
+-
+-		error =3D -EIO;
+-		goto out_unlock;
+-	}
+-
+ 	/*
+ 	 * Get the buffer containing the on-disk dquot
+ 	 */
+ 	error =3D xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
+ 				   mp->m_quotainfo->qi_dqchunklen, XBF_TRYLOCK,
+ 				   &bp, &xfs_dquot_buf_ops);
+-	if (error)
++	if (error =3D=3D -EAGAIN)
+ 		goto out_unlock;
++	if (error)
++		goto out_abort;
+=20
+ 	/*
+ 	 * Calculate the location of the dquot inside the buffer.
+@@ -1123,9 +1108,8 @@ xfs_qm_dqflush(
  		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
--				be32_to_cpu(ddqp->d_id), fa);
-+				be32_to_cpu(dqp->q_core.d_id), fa);
+ 				be32_to_cpu(dqp->q_core.d_id), fa);
  		xfs_buf_relse(bp);
- 		xfs_dqfunlock(dqp);
- 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+-		xfs_dqfunlock(dqp);
+-		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+-		return -EFSCORRUPTED;
++		error =3D -EFSCORRUPTED;
++		goto out_abort;
+ 	}
+=20
+ 	/* This is the only portion of data that needs to persist */
+@@ -1174,6 +1158,10 @@ xfs_qm_dqflush(
+ 	*bpp =3D bp;
+ 	return 0;
+=20
++out_abort:
++	dqp->dq_flags &=3D ~XFS_DQ_DIRTY;
++	xfs_trans_ail_remove(lip, SHUTDOWN_CORRUPT_INCORE);
++	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+ out_unlock:
+ 	xfs_dqfunlock(dqp);
+ 	return error;
 --=20
 2.21.1
 
