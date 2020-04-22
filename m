@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A80A1B4C36
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 19:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 118611B4C38
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 19:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbgDVRyg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 13:54:36 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34486 "EHLO
+        id S1726436AbgDVRyh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 13:54:37 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42254 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726066AbgDVRyg (ORCPT
+        by vger.kernel.org with ESMTP id S1726116AbgDVRyg (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587578074;
+        s=mimecast20190719; t=1587578075;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=onKKjuZzTBHBazkIKmPNkqHIik6QYAnkCFDoCE1W+W8=;
-        b=hTucQUdQX0CO9KggdLLcO3nSoPgmxzXSpyxjjcsRip5+ImT6yChnSvihQ7D2xWk5WNY9kx
-        ngxbaIsuqw/FIeHyegtgQM4BA0n0KhmMeXQkuuliyUkJL9pS0niZLhjEdcRtXyTpXvarUL
-        pPwMG0trSfPvNNqg6nisgo+b+KVGFds=
+        bh=LwN86eiQLeLWIzHje4NoJJ/KI0nDURYGcSgUyC/ugUg=;
+        b=B7yRmQq0eQ24bKhuzFyvU2UIFRsVaUf1HTr5N/66s6AA85qkBibSm7ttE1DLJQXW6hJKc/
+        LflV2kFkrpgyvgc7ChDmdC9HBh5aRaITKOTR2CWN8pF93IrwRGzd1A4FjCZAuXsVWTeFyG
+        emRrlyAhl19IHr1CzRHP1cfx2IVh3tk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-O2xTNheyNECXhcIpRASzBQ-1; Wed, 22 Apr 2020 13:54:33 -0400
-X-MC-Unique: O2xTNheyNECXhcIpRASzBQ-1
+ us-mta-290-Pzj5KKotPs67RFP5bGy4Pw-1; Wed, 22 Apr 2020 13:54:33 -0400
+X-MC-Unique: Pzj5KKotPs67RFP5bGy4Pw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3DC3613FC
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7B9C100CCC1
         for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:32 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECBBA6084C
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 631886084A
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:32 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 04/13] xfs: remove unnecessary shutdown check from xfs_iflush()
-Date:   Wed, 22 Apr 2020 13:54:20 -0400
-Message-Id: <20200422175429.38957-5-bfoster@redhat.com>
+Subject: [PATCH v2 05/13] xfs: ratelimit unmount time per-buffer I/O error message
+Date:   Wed, 22 Apr 2020 13:54:21 -0400
+Message-Id: <20200422175429.38957-6-bfoster@redhat.com>
 In-Reply-To: <20200422175429.38957-1-bfoster@redhat.com>
 References: <20200422175429.38957-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,63 +48,102 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The shutdown check in xfs_iflush() duplicates checks down in the
-buffer code. If the fs is shut down, xfs_trans_read_buf_map() always
-returns an error and falls into the same error path. Remove the
-unnecessary check along with the warning in xfs_imap_to_bp()
-that generates excessive noise in the log if the fs is shut down.
+At unmount time, XFS emits a warning for every in-core buffer that
+might have undergone a write error. In practice this behavior is
+probably reasonable given that the filesystem is likely short lived
+once I/O errors begin to occur consistently. Under certain test or
+otherwise expected error conditions, this can spam the logs and slow
+down the unmount.
+
+We already have a ratelimit state defined for buffers failing
+writeback. Fold this state into the buftarg and reuse it for the
+unmount time errors.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_inode_buf.c |  7 +------
- fs/xfs/xfs_inode.c            | 13 -------------
- 2 files changed, 1 insertion(+), 19 deletions(-)
+ fs/xfs/xfs_buf.c      | 13 +++++++++++--
+ fs/xfs/xfs_buf.h      |  1 +
+ fs/xfs/xfs_buf_item.c | 10 +---------
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.=
-c
-index 39c5a6e24915..b102e611bf54 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -172,12 +172,7 @@ xfs_imap_to_bp(
- 				   (int)imap->im_len, buf_flags, &bp,
- 				   &xfs_inode_buf_ops);
- 	if (error) {
--		if (error =3D=3D -EAGAIN) {
--			ASSERT(buf_flags & XBF_TRYLOCK);
--			return error;
--		}
--		xfs_warn(mp, "%s: xfs_trans_read_buf() returned error %d.",
--			__func__, error);
-+		ASSERT(error !=3D -EAGAIN || (buf_flags & XBF_TRYLOCK));
- 		return error;
- 	}
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 7a6bc617f0a9..c28a93d2fd8c 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1684,10 +1684,12 @@ xfs_wait_buftarg(
+ 			struct xfs_buf *bp;
+ 			bp =3D list_first_entry(&dispose, struct xfs_buf, b_lru);
+ 			list_del_init(&bp->b_lru);
+-			if (bp->b_flags & XBF_WRITE_FAIL) {
++			if (bp->b_flags & XBF_WRITE_FAIL &&
++			    ___ratelimit(&bp->b_target->bt_ioerror_rl,
++					 "XFS: Corruption Alert")) {
+ 				xfs_alert(btp->bt_mount,
+ "Corruption Alert: Buffer at daddr 0x%llx had permanent write failures!"=
+,
+-					(long long)bp->b_bn);
++					  (long long)bp->b_bn);
+ 				xfs_alert(btp->bt_mount,
+ "Please run xfs_repair to determine the extent of the problem.");
+ 			}
+@@ -1828,6 +1830,13 @@ xfs_alloc_buftarg(
+ 	btp->bt_bdev =3D bdev;
+ 	btp->bt_daxdev =3D dax_dev;
 =20
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 6cdb9fbe2d89..aa490efdcaa8 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -3657,19 +3657,6 @@ xfs_iflush(
- 		return 0;
- 	}
++	/*
++	 * Buffer IO error rate limiting. Limit it to no more than 10 messages
++	 * per 30 seconds so as to not spam logs too much on repeated errors.
++	 */
++	ratelimit_state_init(&btp->bt_ioerror_rl, 30 * HZ,
++			     DEFAULT_RATELIMIT_BURST);
++
+ 	if (xfs_setsize_buftarg_early(btp, bdev))
+ 		goto error_free;
 =20
--	/*
--	 * This may have been unpinned because the filesystem is shutting
--	 * down forcibly. If that's the case we must not write this inode
--	 * to disk, because the log record didn't make it to disk.
--	 *
--	 * We also have to remove the log item from the AIL in this case,
--	 * as we wait for an empty AIL as part of the unmount process.
--	 */
--	if (XFS_FORCED_SHUTDOWN(mp)) {
--		error =3D -EIO;
--		goto abort;
--	}
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 598b93b17d95..10492f68fd4b 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -91,6 +91,7 @@ typedef struct xfs_buftarg {
+ 	struct list_lru		bt_lru;
+=20
+ 	struct percpu_counter	bt_io_count;
++	struct ratelimit_state	bt_ioerror_rl;
+ } xfs_buftarg_t;
+=20
+ struct xfs_buf;
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index e34298227f87..23cbfeb82183 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -480,14 +480,6 @@ xfs_buf_item_unpin(
+ 	}
+ }
+=20
+-/*
+- * Buffer IO error rate limiting. Limit it to no more than 10 messages p=
+er 30
+- * seconds so as to not spam logs too much on repeated detection of the =
+same
+- * buffer being bad..
+- */
 -
- 	/*
- 	 * Get the buffer containing the on-disk inode. We are doing a try-lock
- 	 * operation here, so we may get an EAGAIN error. In that case, return
+-static DEFINE_RATELIMIT_STATE(xfs_buf_write_fail_rl_state, 30 * HZ, 10);
+-
+ STATIC uint
+ xfs_buf_item_push(
+ 	struct xfs_log_item	*lip,
+@@ -518,7 +510,7 @@ xfs_buf_item_push(
+=20
+ 	/* has a previous flush failed due to IO errors? */
+ 	if ((bp->b_flags & XBF_WRITE_FAIL) &&
+-	    ___ratelimit(&xfs_buf_write_fail_rl_state, "XFS: Failing async writ=
+e")) {
++	    ___ratelimit(&bp->b_target->bt_ioerror_rl, "XFS: Failing async writ=
+e")) {
+ 		xfs_warn(bp->b_mount,
+ "Failing async write on buffer block 0x%llx. Retrying async write.",
+ 			 (long long)bp->b_bn);
 --=20
 2.21.1
 
