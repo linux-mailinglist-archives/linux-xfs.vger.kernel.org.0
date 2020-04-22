@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39BA21B4C41
+	by mail.lfdr.de (Postfix) with ESMTP id 06D4D1B4C40
 	for <lists+linux-xfs@lfdr.de>; Wed, 22 Apr 2020 19:54:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgDVRyn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 13:54:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53133 "EHLO
+        id S1726623AbgDVRyk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 13:54:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36357 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726605AbgDVRym (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:42 -0400
+        by vger.kernel.org with ESMTP id S1726605AbgDVRyk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 13:54:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587578080;
+        s=mimecast20190719; t=1587578078;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cpdA9hEC3ZXhUqyPOjEasn75VCzfbNs7MWujmkwUoz8=;
-        b=hE+OPs0m+0Zr1uuO11spi2/SKNniwiGqHbI+5I/ffhYZYJsFyEQakQ/fZ3Q67XrNKjSasc
-        yz0anIHdmLjD7solK5exU/p4CquksfC9Yh61KEqSuf2hjMmZZ6FJxVZmuLCfGOmz93mQdQ
-        SKHwrSHrtOS5TTs3FZb818h9D3Bjb44=
+        bh=yQO7C5tkSZhmSxt/KZrxZrFrQuw5t2vwDNmNjag/kII=;
+        b=CZcHh4zOp11zIF/cbRArBBHBq1Udm6wkcvNsMkAuVZIDFAh/GiHNhgHVM138DZc40kBQrn
+        ypMKQ7rmuybXNmpfjFvsZWdiDqnMC6XA+FZrDR85jvlTLT7Kl3vFCyphTkooZWVvhJJ5dY
+        MhPqChi7Hu9HKlYle/ogHwrWQAdZBDM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-AbB1Iq7OMeiWxL6EbPWRUA-1; Wed, 22 Apr 2020 13:54:38 -0400
-X-MC-Unique: AbB1Iq7OMeiWxL6EbPWRUA-1
+ us-mta-245-ic3A-tNtOByf2TkcbzhqsA-1; Wed, 22 Apr 2020 13:54:36 -0400
+X-MC-Unique: ic3A-tNtOByf2TkcbzhqsA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FDAC8017FF
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B98C8100CCC4
         for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:35 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09FB46084A
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74AF76084A
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 17:54:35 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 11/13] xfs: remove unused iflush stale parameter
-Date:   Wed, 22 Apr 2020 13:54:27 -0400
-Message-Id: <20200422175429.38957-12-bfoster@redhat.com>
+Subject: [PATCH v2 12/13] xfs: random buffer write failure errortag
+Date:   Wed, 22 Apr 2020 13:54:28 -0400
+Message-Id: <20200422175429.38957-13-bfoster@redhat.com>
 In-Reply-To: <20200422175429.38957-1-bfoster@redhat.com>
 References: <20200422175429.38957-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,84 +48,84 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The stale parameter was used to control the now unused shutdown
-parameter of xfs_trans_ail_remove().
+Introduce an error tag to randomly fail async buffer writes. This is
+primarily to facilitate testing of the XFS error configuration
+mechanism.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/xfs_icache.c     | 2 +-
- fs/xfs/xfs_inode.c      | 2 +-
- fs/xfs/xfs_inode_item.c | 7 +++----
- fs/xfs/xfs_inode_item.h | 2 +-
- 4 files changed, 6 insertions(+), 7 deletions(-)
+ fs/xfs/libxfs/xfs_errortag.h | 4 +++-
+ fs/xfs/xfs_buf.c             | 6 ++++++
+ fs/xfs/xfs_error.c           | 3 +++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8bf1d15be3f6..7032efcb6814 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1128,7 +1128,7 @@ xfs_reclaim_inode(
- 	if (XFS_FORCED_SHUTDOWN(ip->i_mount)) {
- 		xfs_iunpin_wait(ip);
- 		/* xfs_iflush_abort() drops the flush lock */
--		xfs_iflush_abort(ip, false);
-+		xfs_iflush_abort(ip);
- 		goto reclaim;
- 	}
- 	if (xfs_ipincount(ip)) {
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index aa490efdcaa8..01df6836ae18 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -3701,7 +3701,7 @@ xfs_iflush(
- 	return 0;
-=20
- abort:
--	xfs_iflush_abort(ip, false);
-+	xfs_iflush_abort(ip);
- shutdown:
- 	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 	return error;
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index f8f2475804bd..111016f1fd14 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -757,10 +757,9 @@ xfs_iflush_done(
-  */
- void
- xfs_iflush_abort(
--	xfs_inode_t		*ip,
--	bool			stale)
-+	struct xfs_inode		*ip)
- {
--	xfs_inode_log_item_t	*iip =3D ip->i_itemp;
-+	struct xfs_inode_log_item	*iip =3D ip->i_itemp;
-=20
- 	if (iip) {
- 		xfs_trans_ail_delete(&iip->ili_item, 0);
-@@ -788,7 +787,7 @@ xfs_istale_done(
- 	struct xfs_buf		*bp,
- 	struct xfs_log_item	*lip)
- {
--	xfs_iflush_abort(INODE_ITEM(lip)->ili_inode, true);
-+	xfs_iflush_abort(INODE_ITEM(lip)->ili_inode);
- }
+diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
+index 79e6c4fb1d8a..2486dab19023 100644
+--- a/fs/xfs/libxfs/xfs_errortag.h
++++ b/fs/xfs/libxfs/xfs_errortag.h
+@@ -55,7 +55,8 @@
+ #define XFS_ERRTAG_FORCE_SCRUB_REPAIR			32
+ #define XFS_ERRTAG_FORCE_SUMMARY_RECALC			33
+ #define XFS_ERRTAG_IUNLINK_FALLBACK			34
+-#define XFS_ERRTAG_MAX					35
++#define XFS_ERRTAG_BUF_IOERROR				35
++#define XFS_ERRTAG_MAX					36
 =20
  /*
-diff --git a/fs/xfs/xfs_inode_item.h b/fs/xfs/xfs_inode_item.h
-index 07a60e74c39c..a68c114b79a0 100644
---- a/fs/xfs/xfs_inode_item.h
-+++ b/fs/xfs/xfs_inode_item.h
-@@ -34,7 +34,7 @@ extern void xfs_inode_item_init(struct xfs_inode *, str=
-uct xfs_mount *);
- extern void xfs_inode_item_destroy(struct xfs_inode *);
- extern void xfs_iflush_done(struct xfs_buf *, struct xfs_log_item *);
- extern void xfs_istale_done(struct xfs_buf *, struct xfs_log_item *);
--extern void xfs_iflush_abort(struct xfs_inode *, bool);
-+extern void xfs_iflush_abort(struct xfs_inode *);
- extern int xfs_inode_item_format_convert(xfs_log_iovec_t *,
- 					 struct xfs_inode_log_format *);
+  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
+@@ -95,5 +96,6 @@
+ #define XFS_RANDOM_FORCE_SCRUB_REPAIR			1
+ #define XFS_RANDOM_FORCE_SUMMARY_RECALC			1
+ #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
++#define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
+=20
+ #endif /* __XFS_ERRORTAG_H_ */
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index c28a93d2fd8c..4d2151deacef 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1289,6 +1289,12 @@ xfs_buf_bio_end_io(
+ 	struct bio		*bio)
+ {
+ 	struct xfs_buf		*bp =3D (struct xfs_buf *)bio->bi_private;
++	struct xfs_mount	*mp =3D bp->b_mount;
++
++	if (!bio->bi_status &&
++	    (bp->b_flags & XBF_WRITE) && (bp->b_flags & XBF_ASYNC) &&
++	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BUF_IOERROR))
++		bio->bi_status =3D errno_to_blk_status(-EIO);
+=20
+ 	/*
+ 	 * don't overwrite existing errors - otherwise we can lose errors on
+diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
+index a21e9cc6516a..7f6e20899473 100644
+--- a/fs/xfs/xfs_error.c
++++ b/fs/xfs/xfs_error.c
+@@ -53,6 +53,7 @@ static unsigned int xfs_errortag_random_default[] =3D {
+ 	XFS_RANDOM_FORCE_SCRUB_REPAIR,
+ 	XFS_RANDOM_FORCE_SUMMARY_RECALC,
+ 	XFS_RANDOM_IUNLINK_FALLBACK,
++	XFS_RANDOM_BUF_IOERROR,
+ };
+=20
+ struct xfs_errortag_attr {
+@@ -162,6 +163,7 @@ XFS_ERRORTAG_ATTR_RW(buf_lru_ref,	XFS_ERRTAG_BUF_LRU_=
+REF);
+ XFS_ERRORTAG_ATTR_RW(force_repair,	XFS_ERRTAG_FORCE_SCRUB_REPAIR);
+ XFS_ERRORTAG_ATTR_RW(bad_summary,	XFS_ERRTAG_FORCE_SUMMARY_RECALC);
+ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
++XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
+=20
+ static struct attribute *xfs_errortag_attrs[] =3D {
+ 	XFS_ERRORTAG_ATTR_LIST(noerror),
+@@ -199,6 +201,7 @@ static struct attribute *xfs_errortag_attrs[] =3D {
+ 	XFS_ERRORTAG_ATTR_LIST(force_repair),
+ 	XFS_ERRORTAG_ATTR_LIST(bad_summary),
+ 	XFS_ERRORTAG_ATTR_LIST(iunlink_fallback),
++	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
+ 	NULL,
+ };
 =20
 --=20
 2.21.1
