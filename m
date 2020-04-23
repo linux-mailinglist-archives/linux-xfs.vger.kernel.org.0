@@ -2,141 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 184851B5299
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 04:38:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A603F1B534D
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 06:09:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDWChm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 22:37:42 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50995 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726054AbgDWChl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 22:37:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587609460;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LkZ/8MWeqZ5S/vYO3vYlYpPdDs7AyCkbzSxgRUvre8Q=;
-        b=BWfSTJ0Tk+Y5/7Q+5KXMv9XBod7+mpUrWit/GkjeZPZ6VYFFCVcHFegDuOv8e6cXezoEBt
-        qcwO+JJeyatuH6N5yPktbenKOuOxYourGpp8Bdlc3NLUmwY5L/YkMXZ5KvFTTCRr7XJsIW
-        ovGCTecFcySX81pcVKZzJ4rm6W0uJ2c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-LKNGaf8GOV6rjnkoWzOJzw-1; Wed, 22 Apr 2020 22:36:36 -0400
-X-MC-Unique: LKNGaf8GOV6rjnkoWzOJzw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C5B61005510
-        for <linux-xfs@vger.kernel.org>; Thu, 23 Apr 2020 02:36:35 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 213255DA7B
-        for <linux-xfs@vger.kernel.org>; Thu, 23 Apr 2020 02:36:35 +0000 (UTC)
-To:     linux-xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH] xfs: define printk_once variants for xfs messages
-Message-ID: <c3aee5bb-806a-d51d-0c0f-b0d6a10fa737@redhat.com>
-Date:   Wed, 22 Apr 2020 21:36:34 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        id S1726002AbgDWEJM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 Apr 2020 00:09:12 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39680 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725562AbgDWEJM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Apr 2020 00:09:12 -0400
+Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id BF3603A444F;
+        Thu, 23 Apr 2020 14:09:09 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jRTAh-0000Am-Kl; Thu, 23 Apr 2020 14:09:07 +1000
+Date:   Thu, 23 Apr 2020 14:09:07 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] xfs: refactor failed buffer resubmission into
+ xfsaild
+Message-ID: <20200423040907.GF27860@dread.disaster.area>
+References: <20200422175429.38957-1-bfoster@redhat.com>
+ <20200422175429.38957-2-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422175429.38957-2-bfoster@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
+        a=7-415B0cAAAA:8 a=DhvvQXkdXMoQHAluRbsA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-There are a couple places where we directly call printk_once() and one
-of them doesn't follow the standard xfs subsystem printk format as a
-result.
+On Wed, Apr 22, 2020 at 01:54:17PM -0400, Brian Foster wrote:
+> Flush locked log items whose underlying buffers fail metadata
+> writeback are tagged with a special flag to indicate that the flush
+> lock is already held. This is currently implemented in the type
+> specific ->iop_push() callback, but the processing required for such
+> items is not type specific because we're only doing basic state
+> management on the underlying buffer.
+> 
+> Factor the failed log item handling out of the inode and dquot
+> ->iop_push() callbacks and open code the buffer resubmit helper into
+> a single helper called from xfsaild_push_item(). This provides a
+> generic mechanism for handling failed metadata buffer writeback with
+> a bit less code.
+> 
+> Signed-off-by: Brian Foster <bfoster@redhat.com>
+> Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 
-#define printk_once variants to go with our existing printk_ratelimited
-#defines so we can do one-shot printks in a consistent manner.
+Looks good.
 
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
-
-diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
-index 0b05e10995a0..802a96190d22 100644
---- a/fs/xfs/xfs_message.h
-+++ b/fs/xfs/xfs_message.h
-@@ -31,15 +31,27 @@ void xfs_debug(const struct xfs_mount *mp, const char *fmt, ...)
- }
- #endif
- 
--#define xfs_printk_ratelimited(func, dev, fmt, ...)		\
-+#define xfs_printk_ratelimited(func, dev, fmt, ...)			\
- do {									\
- 	static DEFINE_RATELIMIT_STATE(_rs,				\
- 				      DEFAULT_RATELIMIT_INTERVAL,	\
- 				      DEFAULT_RATELIMIT_BURST);		\
- 	if (__ratelimit(&_rs))						\
--		func(dev, fmt, ##__VA_ARGS__);			\
-+		func(dev, fmt, ##__VA_ARGS__);				\
- } while (0)
- 
-+#define xfs_printk_once(func, dev, fmt, ...)			\
-+({								\
-+	static bool __section(.data.once) __print_once;		\
-+	bool __ret_print_once = !__print_once; 			\
-+								\
-+	if (!__print_once) {					\
-+		__print_once = true;				\
-+		func(dev, fmt, ##__VA_ARGS__);			\
-+	}							\
-+	unlikely(__ret_print_once);				\
-+})
-+
- #define xfs_emerg_ratelimited(dev, fmt, ...)				\
- 	xfs_printk_ratelimited(xfs_emerg, dev, fmt, ##__VA_ARGS__)
- #define xfs_alert_ratelimited(dev, fmt, ...)				\
-@@ -57,6 +69,11 @@ do {									\
- #define xfs_debug_ratelimited(dev, fmt, ...)				\
- 	xfs_printk_ratelimited(xfs_debug, dev, fmt, ##__VA_ARGS__)
- 
-+#define xfs_warn_once(dev, fmt, ...)				\
-+	xfs_printk_once(xfs_warn, dev, fmt, ##__VA_ARGS__)
-+#define xfs_notice_once(dev, fmt, ...)				\
-+	xfs_printk_once(xfs_notice, dev, fmt, ##__VA_ARGS__)
-+
- void assfail(struct xfs_mount *mp, char *expr, char *f, int l);
- void asswarn(struct xfs_mount *mp, char *expr, char *f, int l);
- 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index c5513e5a226a..bb91f04266b9 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -1300,10 +1300,9 @@ xfs_mod_fdblocks(
- 		spin_unlock(&mp->m_sb_lock);
- 		return 0;
- 	}
--	printk_once(KERN_WARNING
--		"Filesystem \"%s\": reserve blocks depleted! "
--		"Consider increasing reserve pool size.",
--		mp->m_super->s_id);
-+	xfs_warn_once(mp,
-+"Reserve blocks depleted! Consider increasing reserve pool size.");
-+
- fdblocks_enospc:
- 	spin_unlock(&mp->m_sb_lock);
- 	return -ENOSPC;
-diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-index bb3008d390aa..b101feb2aab4 100644
---- a/fs/xfs/xfs_pnfs.c
-+++ b/fs/xfs/xfs_pnfs.c
-@@ -58,9 +58,8 @@ xfs_fs_get_uuid(
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
- 
--	printk_once(KERN_NOTICE
--"XFS (%s): using experimental pNFS feature, use at your own risk!\n",
--		mp->m_super->s_id);
-+	xfs_notice_once(mp,
-+"Using experimental pNFS feature, use at your own risk!");
- 
- 	if (*len < sizeof(uuid_t))
- 		return -EINVAL;
-
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
