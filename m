@@ -2,96 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 711341B510C
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 01:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 525981B52AD
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 Apr 2020 04:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgDVX4D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Apr 2020 19:56:03 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47418 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgDVX4D (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 19:56:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MNrHh7133993
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 23:56:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=Wm/+4S/fDCfalJNu6bDt+6VMZ948lVsRDhKlhVXjRuk=;
- b=fqS3lEFrjIaYrTge4Nh1uf4ekRwOTrTqLKB7uL5mK9rEP4O2KWp2WFJiEksO5ZwETPkh
- s/aooCPCnu7rYyNRnyWGy8xyaMUA2NYW7PJN004IMvLxYO4J/wnOo+sDeBBBUjmDZOXp
- SDbE5e8dDGeEBG0UMe+vYak5zOJSMaoT3WSs823tfwfUBIdUelLytNSNVz3PLjb42xu9
- DXkxv1u1Y9fICI+rW8cpQkaEybqzV7nfpspJWZhJvbxTCW5H11bHHLa47oO5+Q9h0eYO
- PHk7VCksXYmk4HyoWJgftfvfJ/q/dyINB1Y4vbUqsCtoPGWzi5m/Dvk8k9hSiLjkYhnu /A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30jvq4rqm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 23:56:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MNqZEk092901
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 23:56:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30gbbj9jyr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 23:56:00 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03MNu0dJ017331
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Apr 2020 23:56:00 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 16:55:59 -0700
-Date:   Wed, 22 Apr 2020 16:55:59 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [XFS SUMMIT] Online Fsck Status Update
-Message-ID: <20200422235559.GK6742@magnolia>
+        id S1726472AbgDWCor (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Apr 2020 22:44:47 -0400
+Received: from mgwkm03.jp.fujitsu.com ([202.219.69.170]:30664 "EHLO
+        mgwkm03.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDWCor (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Apr 2020 22:44:47 -0400
+X-Greylist: delayed 671 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 22:44:44 EDT
+Received: from kw-mxq.gw.nic.fujitsu.com (unknown [192.168.231.130]) by mgwkm03.jp.fujitsu.com with smtp
+         id 0abc_3579_5544f71c_4878_43bc_a3de_fa2088113603;
+        Thu, 23 Apr 2020 11:33:27 +0900
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+        by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id BF869AC00FD;
+        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
+Received: from [10.133.121.138] (VPC-Y08P0560080.g01.fujitsu.local [10.133.121.138])
+        by m3050.s.css.fujitsu.com (Postfix) with ESMTP id A3A30403;
+        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
+Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
+To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <20200422212102.3757660-1-ira.weiny@intel.com>
+ <20200422212102.3757660-5-ira.weiny@intel.com>
+From:   Yasunori Goto <y-goto@fujitsu.com>
+Message-ID: <2282176d-60c5-0e4b-3cf9-7a7682de380d@fujitsu.com>
+Date:   Thu, 23 Apr 2020 11:33:26 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220182
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
- clxscore=1015 bulkscore=0 spamscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220182
+In-Reply-To: <20200422212102.3757660-5-ira.weiny@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi everyone,
+Hello,
 
-This one is meant to be a status update about where I am with online
-repair.  The btree bulk loading code went upstream for 5.7, which will
-enable us to refactor a lot of boilerplate code out of xfs_repair.
+I'm trying use your patch now, and I have a small comment in this document.
 
-At this point, I have finished fleshing out nearly all of the online
-repair functionality.  We can rebuild all per-AG btrees and the inode
-fork mapping btrees.  With the deferred inactivation series and fs
-freezing, we can also rebuild the rmapbt and run quotacheck on a frozen
-filesystem, which means that quotas can be repaired too.
+On 2020/04/23 6:20, ira.weiny@intel.com wrote:
 
-More recently, I've written repair code for the realtime bitmap and
-summary files; and preliminary versions of extended attribute and
-directory salvaging.  With the new atomic extent swap series, I can now
-commit rebuilt metadata atomically.
+> +To clarify inheritance here are 3 examples:
+> +
+> +Example A:
+> +
+> +mkdir -p a/b/c
+> +xfs_io 'chattr +x' a
 
-However, the directory tree reconstruction part is /very/ difficult to
-achieve without parent pointers, since we cannot easily reconnect
-orphaned files without scanning the entire directory tree under fs
-freeze.  We also can't do nlink verification easily without parent
-pointer validation.
+Probably, "-c" is necessary here.
 
---D
+xfs_io -c 'chattr +x' a
 
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-rtsummary
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-ag-btrees
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-inodes
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-inode-data
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-fsfile-metadata
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-metadata-atomically
+
+> +mkdir a/b/c/d
+> +mkdir a/e
+> +
+> +	dax: a,e
+> +	no dax: b,c,d
+> +
+> +Example B:
+> +
+> +mkdir a
+> +xfs_io 'chattr +x' a
+ditto
+> +mkdir -p a/b/c/d
+> +
+> +	dax: a,b,c,d
+> +	no dax:
+> +
+> +Example C:
+> +
+> +mkdir -p a/b/c
+> +xfs_io 'chattr +x' c
+ditto
+> +mkdir a/b/c/d
+> +
+> +	dax: c,d
+> +	no dax: a,b
+> +
+> +
+
+---
+
+Yasunori Goto
+
