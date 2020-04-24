@@ -2,123 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9DD21B8246
-	for <lists+linux-xfs@lfdr.de>; Sat, 25 Apr 2020 00:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A732E1B8253
+	for <lists+linux-xfs@lfdr.de>; Sat, 25 Apr 2020 01:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgDXW7p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Apr 2020 18:59:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725874AbgDXW7o (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Apr 2020 18:59:44 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OMcR9B037035;
-        Fri, 24 Apr 2020 18:54:32 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30kpq4tdb5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 18:54:32 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OMjp95017314;
-        Fri, 24 Apr 2020 22:54:30 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 30fs65hjqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 22:54:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OMrJBv63046068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 22:53:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51CA64C046;
-        Fri, 24 Apr 2020 22:54:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6521D4C040;
-        Fri, 24 Apr 2020 22:54:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.185.245])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Apr 2020 22:54:25 +0000 (GMT)
-Subject: Re: [PATCH 1/2] fibmap: Warn and return an error in case of block >
- INT_MAX
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jan Kara <jack@suse.com>, tytso@mit.edu,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linux-ext4@vger.kernel.org
-References: <cover.1587670914.git.riteshh@linux.ibm.com>
- <e34d1ac05d29aeeb982713a807345a0aaafc7fe0.1587670914.git.riteshh@linux.ibm.com>
- <20200424191739.GA217280@gmail.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Sat, 25 Apr 2020 04:24:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726038AbgDXXF6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Apr 2020 19:05:58 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:42023 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgDXXF6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Apr 2020 19:05:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587769558; x=1619305558;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=rWJ3FYSUDBhtgg2HwAWLYSU0m92N3Fm0EkeAxiCPd8U=;
+  b=U755vYzxSiMWPSo+6HFGrJcimtmLmkCA0+6JSK0mw+Ere80eKZnw4xFJ
+   UvGP8JfTm70Bv+1I+q0/mnexnlOS4928rZDynl8QTklD+xNUWzXo17OeJ
+   B7gZb4HwTT/VzBJpkNFSq8N39RR5AAMrlbsRH9MnAmHmkwbBizPXLbnhz
+   o=;
+IronPort-SDR: mfTedI26INg96UQ0DLqe5Mo6R3kgG5IPNsWEq3lktJodG3l4+3L1KY1OMs0pD54A8NTtlwx8I5
+ XJFo0LPaCNeQ==
+X-IronPort-AV: E=Sophos;i="5.73,313,1583193600"; 
+   d="scan'208";a="27301188"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Apr 2020 23:05:45 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id D27CBA271E;
+        Fri, 24 Apr 2020 23:05:43 +0000 (UTC)
+Received: from EX13D30UWC001.ant.amazon.com (10.43.162.128) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 23:05:43 +0000
+Received: from u3c3f5cfe23135f.ant.amazon.com (10.43.162.70) by
+ EX13D30UWC001.ant.amazon.com (10.43.162.128) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 23:05:43 +0000
+From:   Suraj Jitindar Singh <surajjs@amazon.com>
+To:     <stable@vger.kernel.org>
+CC:     <sjitindarsingh@gmail.com>, <linux-xfs@vger.kernel.org>,
+        "Suraj Jitindar Singh" <surajjs@amazon.com>
+Subject: [PATCH STABLE v4.14.y 0/2] xfs: Backport two fixes
+Date:   Fri, 24 Apr 2020 16:05:30 -0700
+Message-ID: <20200424230532.2852-1-surajjs@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200424191739.GA217280@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200424225425.6521D4C040@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_13:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- adultscore=0 clxscore=1015 suspectscore=0 mlxscore=0 priorityscore=1501
- phishscore=0 spamscore=0 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240169
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.70]
+X-ClientProxiedBy: EX13D43UWC004.ant.amazon.com (10.43.162.42) To
+ EX13D30UWC001.ant.amazon.com (10.43.162.128)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This series backports two patches which fix known bugs in the xfs
+filesystem code to the v4.14.y stable tree.
 
+They are each verified by the xfs tests xfs/439 and generic/585
+respectively.
 
-On 4/25/20 12:47 AM, Eric Biggers wrote:
-> On Fri, Apr 24, 2020 at 12:52:17PM +0530, Ritesh Harjani wrote:
->> We better warn the fibmap user and not return a truncated and therefore
->> an incorrect block map address if the bmap() returned block address
->> is greater than INT_MAX (since user supplied integer pointer).
->>
->> It's better to WARN all user of ioctl_fibmap() and return a proper error
->> code rather than silently letting a FS corruption happen if the user tries
->> to fiddle around with the returned block map address.
->>
->> We fix this by returning an error code of -ERANGE and returning 0 as the
->> block mapping address in case if it is > INT_MAX.
->>
->> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
->> ---
->>   fs/ioctl.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/fs/ioctl.c b/fs/ioctl.c
->> index f1d93263186c..3489f3a12c1d 100644
->> --- a/fs/ioctl.c
->> +++ b/fs/ioctl.c
->> @@ -71,6 +71,11 @@ static int ioctl_fibmap(struct file *filp, int __user *p)
->>   	block = ur_block;
->>   	error = bmap(inode, &block);
->>   
->> +	if (block > INT_MAX) {
->> +		error = -ERANGE;
->> +		WARN(1, "would truncate fibmap result\n");
->> +	}
->> +
-> 
-> WARN() is only for kernel bugs.  This case would be a userspace bug, not a
-> kernel bug, right?  If so, it should use pr_warn(), not WARN().
+The first patch applies cleanly.
 
-Ok, I see.
-Let me replace WARN() with below pr_warn() line then. If no objections,
-then will send this in a v2 with both patches combined as Darrick
-suggested. - (with Reviewed-by tags of Jan & Christoph).
+The second patch required slight massage due to the last code block
+being removed having changed slightly upstream due to rework. I think
+the backport is functionally equivalent.
+Only thing is I request comment that it is correct to use the following
+error path:
 
-pr_warn("fibmap: this would truncate fibmap result\n");
+	ASSERT(VFS_I(wip)->i_nlink == 0);
+	error = xfs_iunlink_remove(tp, wip);
+	if (error)
+>	       goto out_trans_cancel;
 
+The old error patch out_bmap_cancel still exists here. However as
+nothing can have modified the deferred ops struct at this point I
+believe it is sufficient to go to the "out_trans_cancel" error label.
 
-> 
-> - Eric
-> 
+Darrick J. Wong (1):
+  xfs: validate sb_logsunit is a multiple of the fs blocksize
+
+kaixuxia (1):
+  xfs: Fix deadlock between AGI and AGF with RENAME_WHITEOUT
+
+ fs/xfs/xfs_inode.c | 85 +++++++++++++++++++++++-----------------------
+ fs/xfs/xfs_log.c   | 14 +++++++-
+ 2 files changed, 55 insertions(+), 44 deletions(-)
+
+-- 
+2.17.1
+
