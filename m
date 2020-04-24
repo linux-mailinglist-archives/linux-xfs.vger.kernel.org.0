@@ -2,38 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D452F1B74AE
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Apr 2020 14:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E991B747A
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Apr 2020 14:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgDXM2K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Apr 2020 08:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
+        id S1728183AbgDXM0t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Apr 2020 08:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgDXMYW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:22 -0400
+        id S1728552AbgDXMYt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E22D2176D;
-        Fri, 24 Apr 2020 12:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1546F20776;
+        Fri, 24 Apr 2020 12:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731062;
-        bh=JZcSxVs6Vogo/4ImjganqkXWmCApOZMcFXYZyCiTFXY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMjlhXovtYQQ7eEMKc+0kWdBThkPq6dshc3J3nSZmurGQD3FglrzDw/3t1CpD6E1s
-         bLzZ+NXD0fn4lH6yjPXrpVhJYojB2YAznp86IYzPx6Gbo+t237A4qB7RIGeqq8lAOx
-         2Rv6E5kX/9fOfilBJGTNZrR1/GoYJ7pk4O/Xm2Mg=
+        s=default; t=1587731088;
+        bh=CUiDohPDP8ZlDP+N9vTBD3Uh15zGs4LLW3aiX76VKF0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ixkTeEk9Txov1/zzIEvMtEADkNLkDW7r5j/nkttIKrEcTF2ruYiujm3IySZcuUbyE
+         HHy5Z0DDY+vN3ISCKG0IOvI7h60UGLWsLDXBpdcNL6/LdXuQbuwGzQc6JMIOkQteKl
+         jVxd4irGJUlGcGCeizb9lSZwESS9Es/owgnd/Uaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
         Brian Foster <bfoster@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/21] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
-Date:   Fri, 24 Apr 2020 08:24:00 -0400
-Message-Id: <20200424122419.10648-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/13] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
+Date:   Fri, 24 Apr 2020 08:24:34 -0400
+Message-Id: <20200424122447.10882-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
-References: <20200424122419.10648-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 37e603bf15913..db7f9fdd20a30 100644
+index 17d3c964a2a23..6b753b969f7b8 100644
 --- a/fs/xfs/xfs_reflink.c
 +++ b/fs/xfs/xfs_reflink.c
-@@ -1125,6 +1125,7 @@ xfs_reflink_remap_extent(
+@@ -1162,6 +1162,7 @@ xfs_reflink_remap_extent(
  		uirec.br_startblock = irec->br_startblock + rlen;
  		uirec.br_startoff = irec->br_startoff + rlen;
  		uirec.br_blockcount = unmap_len - rlen;
