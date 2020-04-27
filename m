@@ -2,351 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2C561BB021
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 23:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32FB41BB15C
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Apr 2020 00:06:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgD0VRx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Apr 2020 17:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD0VR2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:17:28 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 258612222A;
-        Mon, 27 Apr 2020 21:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588022245;
-        bh=GPH6dsgPIHXze49Zrhyo4dTiwhqFaCAXRAs3Zi+NpLs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDAweM4MJ69ihTiA3yTTzV8U6j+nV/KfZwYOwt/CqhESrSBPiyKItzE4iXUjYglx4
-         kl0nV6ikGtOWjBBOAzWywdZ1niq6YRkfWg3O3+bmkkMz9BQuoFmuQmSAbOFNdf2DgE
-         Z2ztfRMEKzLc4L32InKRPPwL4z+CsdSCBM/JgTmo=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jTB7z-000Hlq-DE; Mon, 27 Apr 2020 23:17:23 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v3 28/29] docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:20 +0200
-Message-Id: <7c26b200e12cfc07b9bd379612452d845a8d1474.1588021877.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
-References: <cover.1588021877.git.mchehab+huawei@kernel.org>
+        id S1726483AbgD0WGV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Apr 2020 18:06:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58302 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgD0WGU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Apr 2020 18:06:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RM2lFP190941;
+        Mon, 27 Apr 2020 22:06:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=izlqrJ0CK9RODZXQrmAxQtWoDporb/zUuXL476iSC4g=;
+ b=Tyec2B1ZQqWZm6O0zoMctTRXkrMs29o1P7dMpVTdVEqneDBrchc8bTuzAcplABwW2Q+a
+ TQlEH7GKPTvnkGhUiiLf38bgMy5RC6poLQYtSKlcOtRicqxFCG/09O0au1qH5BaW7iZH
+ HwpEl6bvg1PAiI1qXbvO1Zc8vwqJ1AmWx1yEYgxfQMUbK+8VXNuG9/W+/tibBRrJfpf5
+ txb/UFEdbCcaMseCf74E/pZZuxd8Ew7LIlC2SfJDkRCIrtZWO7vYO8qIn3rd+Mk0o33z
+ 6EtEHScLiOoJ+icF2TK/k8pOOpu5HcAyktLODuLMlyKTAqQHxM7ISRkY/qmAIjcrU5Ng Zg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucfvbn0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 22:06:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RM2tHR037859;
+        Mon, 27 Apr 2020 22:04:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30my0arndx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 22:04:14 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RM4DbW007335;
+        Mon, 27 Apr 2020 22:04:13 GMT
+Received: from localhost (/10.159.157.85)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Apr 2020 15:04:13 -0700
+Date:   Mon, 27 Apr 2020 15:04:12 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/19] xfs: refactor log recovery item sorting into a
+ generic dispatch structure
+Message-ID: <20200427220412.GY6742@magnolia>
+References: <158752116283.2140829.12265815455525398097.stgit@magnolia>
+ <158752117554.2140829.4901314701479350791.stgit@magnolia>
+ <20200425181307.GA16698@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200425181307.GA16698@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270179
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270179
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document and section titles;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+On Sat, Apr 25, 2020 at 11:13:07AM -0700, Christoph Hellwig wrote:
+> > +
+> > +/* Sorting hat for log items as they're read in. */
+> > +enum xlog_recover_reorder {
+> > +	XLOG_REORDER_UNKNOWN,
+> > +	XLOG_REORDER_BUFFER_LIST,
+> > +	XLOG_REORDER_CANCEL_LIST,
+> > +	XLOG_REORDER_INODE_BUFFER_LIST,
+> > +	XLOG_REORDER_INODE_LIST,
+> 
+> XLOG_REORDER_INODE_LIST seems a bit misnamed as it really is the
+> "misc" or "no reorder" list.  I guess the naming comes from the
+> local inode_list variable, but maybe we need to fix that as well?
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/filesystems/index.rst           |   1 +
- ...a.txt => xfs-self-describing-metadata.rst} | 182 +++++++++---------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 94 insertions(+), 91 deletions(-)
- rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
+Yes, thanks for the series fixing that.
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 24d122ab4b39..a4fefb62c931 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -119,4 +119,5 @@ Documentation for filesystem implementations.
-    virtiofs
-    vfat
-    xfs-delayed-logging-design
-+   xfs-self-describing-metadata
-    zonefs
-diff --git a/Documentation/filesystems/xfs-self-describing-metadata.txt b/Documentation/filesystems/xfs-self-describing-metadata.rst
-similarity index 83%
-rename from Documentation/filesystems/xfs-self-describing-metadata.txt
-rename to Documentation/filesystems/xfs-self-describing-metadata.rst
-index 8db0121d0980..51cdafe01ab1 100644
---- a/Documentation/filesystems/xfs-self-describing-metadata.txt
-+++ b/Documentation/filesystems/xfs-self-describing-metadata.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============================
- XFS Self Describing Metadata
------------------------------
-+============================
- 
- Introduction
--------------
-+============
- 
- The largest scalability problem facing XFS is not one of algorithmic
- scalability, but of verification of the filesystem structure. Scalabilty of the
-@@ -34,7 +37,7 @@ required for basic forensic analysis of the filesystem structure.
- 
- 
- Self Describing Metadata
--------------------------
-+========================
- 
- One of the problems with the current metadata format is that apart from the
- magic number in the metadata block, we have no other way of identifying what it
-@@ -142,7 +145,7 @@ modification occurred between the corruption being written and when it was
- detected.
- 
- Runtime Validation
--------------------
-+==================
- 
- Validation of self-describing metadata takes place at runtime in two places:
- 
-@@ -183,18 +186,18 @@ error occurs during this process, the buffer is again marked with a EFSCORRUPTED
- error for the higher layers to catch.
- 
- Structures
------------
-+==========
- 
--A typical on-disk structure needs to contain the following information:
-+A typical on-disk structure needs to contain the following information::
- 
--struct xfs_ondisk_hdr {
--        __be32  magic;		/* magic number */
--        __be32  crc;		/* CRC, not logged */
--        uuid_t  uuid;		/* filesystem identifier */
--        __be64  owner;		/* parent object */
--        __be64  blkno;		/* location on disk */
--        __be64  lsn;		/* last modification in log, not logged */
--};
-+    struct xfs_ondisk_hdr {
-+	    __be32  magic;		/* magic number */
-+	    __be32  crc;		/* CRC, not logged */
-+	    uuid_t  uuid;		/* filesystem identifier */
-+	    __be64  owner;		/* parent object */
-+	    __be64  blkno;		/* location on disk */
-+	    __be64  lsn;		/* last modification in log, not logged */
-+    };
- 
- Depending on the metadata, this information may be part of a header structure
- separate to the metadata contents, or may be distributed through an existing
-@@ -214,24 +217,24 @@ level of information is generally provided. For example:
- 	  well. hence the additional metadata headers change the overall format
- 	  of the metadata.
- 
--A typical buffer read verifier is structured as follows:
-+A typical buffer read verifier is structured as follows::
- 
--#define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
-+    #define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
- 
--static void
--xfs_foo_read_verify(
--	struct xfs_buf	*bp)
--{
--       struct xfs_mount *mp = bp->b_mount;
-+    static void
-+    xfs_foo_read_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	struct xfs_mount *mp = bp->b_mount;
- 
--        if ((xfs_sb_version_hascrc(&mp->m_sb) &&
--             !xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
--					XFS_FOO_CRC_OFF)) ||
--            !xfs_foo_verify(bp)) {
--                XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--                xfs_buf_ioerror(bp, EFSCORRUPTED);
--        }
--}
-+	    if ((xfs_sb_version_hascrc(&mp->m_sb) &&
-+		!xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
-+					    XFS_FOO_CRC_OFF)) ||
-+		!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+	    }
-+    }
- 
- The code ensures that the CRC is only checked if the filesystem has CRCs enabled
- by checking the superblock of the feature bit, and then if the CRC verifies OK
-@@ -239,83 +242,83 @@ by checking the superblock of the feature bit, and then if the CRC verifies OK
- 
- The verifier function will take a couple of different forms, depending on
- whether the magic number can be used to determine the format of the block. In
--the case it can't, the code is structured as follows:
-+the case it can't, the code is structured as follows::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--                return false;
-+	    if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--        if (!xfs_sb_version_hascrc(&mp->m_sb)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	}
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    }
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- If there are different magic numbers for the different formats, the verifier
--will look like:
-+will look like::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	} else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--		return false;
-+	    if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    } else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- Write verifiers are very similar to the read verifiers, they just do things in
--the opposite order to the read verifiers. A typical write verifier:
-+the opposite order to the read verifiers. A typical write verifier::
- 
--static void
--xfs_foo_write_verify(
--	struct xfs_buf	*bp)
--{
--	struct xfs_mount	*mp = bp->b_mount;
--	struct xfs_buf_log_item	*bip = bp->b_fspriv;
-+    static void
-+    xfs_foo_write_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_buf_log_item	*bip = bp->b_fspriv;
- 
--	if (!xfs_foo_verify(bp)) {
--		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--		xfs_buf_ioerror(bp, EFSCORRUPTED);
--		return;
--	}
-+	    if (!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+		    return;
-+	    }
- 
--	if (!xfs_sb_version_hascrc(&mp->m_sb))
--		return;
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb))
-+		    return;
- 
- 
--	if (bip) {
--		struct xfs_ondisk_hdr	*hdr = bp->b_addr;
--		hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
--	}
--	xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
--}
-+	    if (bip) {
-+		    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+		    hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
-+	    }
-+	    xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
-+    }
- 
- This will verify the internal structure of the metadata before we go any
- further, detecting corruptions that have occurred as the metadata has been
-@@ -324,7 +327,7 @@ update the LSN field (when it was last modified) and calculate the CRC on the
- metadata. Once this is done, we can issue the IO.
- 
- Inodes and Dquots
-------------------
-+=================
- 
- Inodes and dquots are special snowflakes. They have per-object CRC and
- self-identifiers, but they are packed so that there are multiple objects per
-@@ -347,4 +350,3 @@ XXX: inode unlinked list modification doesn't recalculate the inode CRC! None of
- the unlinked list modifications check or update CRCs, neither during unlink nor
- log recovery. So, it's gone unnoticed until now. This won't matter immediately -
- repair will probably complain about it - but it needs to be fixed.
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0a4d2fefe5f2..25dcb5ce2417 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18591,7 +18591,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- F:	Documentation/ABI/testing/sysfs-fs-xfs
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/filesystems/xfs-delayed-logging-design.rst
--F:	Documentation/filesystems/xfs-self-describing-metadata.txt
-+F:	Documentation/filesystems/xfs-self-describing-metadata.rst
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
- F:	include/uapi/linux/fsmap.h
--- 
-2.25.4
+> > +typedef enum xlog_recover_reorder (*xlog_recover_reorder_fn)(
+> > +		struct xlog_recover_item *item);
+> 
+> This typedef doesn't actually seem to help with anything (neither
+> with just thіs patch nor the final tree).
 
+Fair enough.
+
+> > +
+> > +struct xlog_recover_item_type {
+> > +	/*
+> > +	 * These two items decide how to sort recovered log items during
+> > +	 * recovery.  If reorder_fn is non-NULL it will be called; otherwise,
+> > +	 * reorder will be used to decide.  See the comment above
+> > +	 * xlog_recover_reorder_trans for more details about what the values
+> > +	 * mean.
+> > +	 */
+> > +	enum xlog_recover_reorder	reorder;
+> > +	xlog_recover_reorder_fn		reorder_fn;
+> 
+> I'd just use reorder_fn and skip the simple field.  Just one way to do
+> things even if it adds a tiny amount of boilerplate code.
+
+<nod>
+
+> > +	case XFS_LI_INODE:
+> > +		return &xlog_inode_item_type;
+> > +	case XFS_LI_DQUOT:
+> > +		return &xlog_dquot_item_type;
+> > +	case XFS_LI_QUOTAOFF:
+> > +		return &xlog_quotaoff_item_type;
+> > +	case XFS_LI_IUNLINK:
+> > +		/* Not implemented? */
+> 
+> Not implemented!  I think we need a prep patch to remove this first.
+
+The thing I can't tell is if XFS_LI_IUNLINK is a code point reserved
+from some long-ago log item that fell out, or reserved for some future
+project?
+
+Either way, this case doesn't need to be there.
+
+> > @@ -1851,41 +1890,34 @@ xlog_recover_reorder_trans(
+> >  
+> >  	list_splice_init(&trans->r_itemq, &sort_list);
+> >  	list_for_each_entry_safe(item, n, &sort_list, ri_list) {
+> > -		xfs_buf_log_format_t	*buf_f = item->ri_buf[0].i_addr;
+> > +		enum xlog_recover_reorder	fate = XLOG_REORDER_UNKNOWN;
+> > +
+> > +		item->ri_type = xlog_item_for_type(ITEM_TYPE(item));
+> 
+> I wonder if just passing the whole item to xlog_item_for_type would
+> make more sense.  It would then need a different name, of course.
+
+xlog_set_item_type(item); yes.
+
+> > +		if (item->ri_type) {
+> > +			if (item->ri_type->reorder_fn)
+> > +				fate = item->ri_type->reorder_fn(item);
+> > +			else
+> > +				fate = item->ri_type->reorder;
+> > +		}
+> 
+> I think for the !item->ri_type we should immediately jump to what
+> currently is the XLOG_REORDER_UNKNOWN case, and thus avoid even
+> adding XLOG_REORDER_UNKNOWN to the enum.  The added benefit is that
+> any item without a reorder_fn could then be treated as on what
+> currently is the inode_list, but needs a btter name.
+
+Ok.
+
+--D
