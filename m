@@ -2,120 +2,223 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5D7C1BAFB3
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 22:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C881BB049
+	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 23:19:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgD0Uqp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Apr 2020 16:46:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD0Uqp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Apr 2020 16:46:45 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292A7C03C1A7
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Apr 2020 13:46:45 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id j14so15034110lfg.9
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Apr 2020 13:46:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
-        b=XXUouBL3HsVdD5w4SVkh5b5D8g9+OFHyEx+DyQoaqHU6zlLiC7Dv4gWIn8To8ExMgw
-         NntG+tgahRdl4PgQkAptOglp72S4qq9gaTpBKYXOGyoVBKVhhZlHK+aoAtOs0FgfdNnG
-         Q4eXzMDYFO1E9IXcsn+dcaRD4uEyvCywvcRfE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
-        b=PFxoJrME3eIdlWBe7uYAWrMqZ/PMLJV8SNWywBzBSqPvcstdnwwyTn+FvCA8PjQorr
-         aO6s4WyrWO7gVr//ZC3P226mLWjClw77s9fTUQB+cF+SAynsnzppHN/IrcDxTyK3hF6o
-         AHKJ+WSCPjAoxc/p8S1VC6+YReTCQiQian9QfCtF6wQqZINUTGf7XDhXZGLSx4uIVAHn
-         znj+rvvFKBDO1kjHJGLFiw9an2nYGHDGeL+FbJ75yIFCaFbCSljQm9up9diOCRZgBGm5
-         x+p/H/s45ZMO2TcTELX4khEZomhu1m2hXHSUVpIJknhrb/wViLR2RBJdNfNJR/mE1oSy
-         utjQ==
-X-Gm-Message-State: AGi0PubQHegx38e1TFm1wdpXsmBrfiC6z7nStbNIhkBTQN0M5rjiMGkW
-        CQbY4V+WQ3aE67f2JDB19FIi+66wMjg=
-X-Google-Smtp-Source: APiQypJtMu/7PH/QY6r03F7QWfQct0FQFvKDs8aRTFUsaSd/E8pYhTYmZRkr6UjySVxrGEwkgm95jQ==
-X-Received: by 2002:a19:e041:: with SMTP id g1mr16404730lfj.70.1588020402701;
-        Mon, 27 Apr 2020 13:46:42 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id i18sm12162143lfo.57.2020.04.27.13.46.41
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id h6so15083387lfc.0
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
-X-Received: by 2002:a19:240a:: with SMTP id k10mr16839809lfk.30.1588020401250;
- Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
+        id S1726361AbgD0VRZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Apr 2020 17:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgD0VRZ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:17:25 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F552075E;
+        Mon, 27 Apr 2020 21:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588022243;
+        bh=diHIQNdW9tXwNaigHoaDIpMGH+WAB2UEy0sdibZm2Fc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P4ErDB3UqWrQeqbLqijoEa8kkqGyrk6Qu0y5yI2MKzjqNm6ch/xu4WEb6bki8G/bw
+         w+R3JWBW/0iVAtsV2f2EZCbEipIeFB47JUs0l47yQSuVBVgGt6XiHW+EvIw5b5nHYD
+         JW8gpsqNwh6fZ1haUh2NStOV0V/kj5diMisolXXs=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jTB7y-000Hjc-03; Mon, 27 Apr 2020 23:17:22 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-cachefs@redhat.com, codalist@coda.cs.cmu.edu,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-xfs@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH v3 00/29] Convert files to ReST - part 2
+Date:   Mon, 27 Apr 2020 23:16:52 +0200
+Message-Id: <cover.1588021877.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
- <20200427172959.GB3936841@kroah.com> <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
- <20200427174611.GA4035548@kroah.com> <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
- <20200427183629.GA20158@kroah.com> <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
- <CAHk-=wgN=Ox112_O=GQ-kwMxYduix9gZFsr1GXXJWLpDpNDm5g@mail.gmail.com> <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
-In-Reply-To: <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 27 Apr 2020 13:46:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
-Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 1:39 PM Joe Perches <joe@perches.com> wrote:
->
-> > The fact is, there *is * a reason to avoid the pedantic "change to new
-> > version" - pointless churn.
->
-> Have you *looked* at this proposed change?
->
-> It just changes // SPDX comments to /* */ in .h files.
+This is the second part of a series I wrote sometime ago where I manually
+convert lots of files to be properly parsed by Sphinx as ReST files.
 
-That's not what I was reacting to - it was you arguing with Greg about
-how we use the legacy format.
+As it touches on lot of stuff, this series is based on today's linux-next, 
+at tag next-20190617.
 
-I really don't care at all about the comment character choices
-(either), but wanted to point out that as far as the kernel is
-concerned, the "deprecated" spdx keys simply arent' deprecated, they
-are just as valid.
+The first version of this series had 57 patches. The first part with 28 patches
+were already merged. Right now, there are still ~76  patches pending applying
+(including this series), and that's because I opted to do ~1 patch per converted
+ directory.
 
-> Piecemeal changes aren't great.
+That sounds too much to be send on a single round. So, I'm opting to split
+it on 3 parts for the conversion, plus a final patch adding orphaned books
+to existing ones. 
 
-Piecemeal changes are fine, when the change doesn't have to be done AT ALL.
+Those patches should probably be good to be merged either by subsystem
+maintainers or via the docs tree.
 
-There is simply no point in EVER changing "GPL-2.0" into
-"GPL-2.0-only" etc, unless the thing is then touched for some other
-reason (which it may never be).
+I opted to mark new files not included yet to the main index.rst (directly or
+indirectly) with the :orphan: tag, in order to avoid adding warnings to the
+build system. This should be removed after we find a "home" for all
+the converted files within the new document tree arrangement, after I
+submit the third part.
 
-Scripted changes are not as useful as you think. They often cause
-unnecessary noise in other respects.
+Both this series and  the other parts of this work are on my devel git tree,
+at:
 
-I'm constantly seeing stupid pointless work due to irrelevant patches
-that then show up in "get_maintainer" output because they show up as
-changes to drivbers that nobody cares about.
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v5.1
 
-Or "git blame -C" things that I have to ignore and go past that
-history because the scripted change showed an (uninteresting) change.
+The final output in html (after all patches I currently have, including 
+the upcoming series) can be seen at:
 
-The fact is, pointless churn is BAD. It's a real expense. The whole
-"get it over with once" argument is simply completely wrong.
+	https://www.infradead.org/~mchehab/rst_conversion/
 
-There are real advantages to "don't touch stuff that doesn't actively
-need touching".
+It contains all pending work from my side related to the conversion, plus
+the patches I finished a first version today with contains the renaming 
+patches and de-orphan changes.
 
-              Linus
+---
+
+Version 3:
+
+- Rebased on the top of next-20200424
+- configfs.rst conversion moved to the end of the series;
+- avoided almost all markups at configfs.rst while still preserving
+  a reasonable output and not generating build warnings.
+
+Version 2:
+
+- Removed patches merged via other trees;
+- rebased on the top of today's linux-next (next-20190617);
+- Fix a typo on one patch's description;
+- Added received acks.
+
+Mauro Carvalho Chehab (29):
+  docs: filesystems: convert caching/object.txt to ReST
+  docs: filesystems: convert caching/fscache.txt to ReST format
+  docs: filesystems: caching/netfs-api.txt: convert it to ReST
+  docs: filesystems: caching/operations.txt: convert it to ReST
+  docs: filesystems: caching/cachefiles.txt: convert to ReST
+  docs: filesystems: caching/backend-api.txt: convert it to ReST
+  docs: filesystems: convert cifs/cifsroot.txt to ReST
+  docs: filesystems: convert automount-support.txt to ReST
+  docs: filesystems: convert coda.txt to ReST
+  docs: filesystems: convert devpts.txt to ReST
+  docs: filesystems: convert dnotify.txt to ReST
+  docs: filesystems: convert fiemap.txt to ReST
+  docs: filesystems: convert files.txt to ReST
+  docs: filesystems: convert fuse-io.txt to ReST
+  docs: filesystems: convert locks.txt to ReST
+  docs: filesystems: convert mandatory-locking.txt to ReST
+  docs: filesystems: convert mount_api.txt to ReST
+  docs: filesystems: convert quota.txt to ReST
+  docs: filesystems: convert seq_file.txt to ReST
+  docs: filesystems: convert sharedsubtree.txt to ReST
+  docs: filesystems: split spufs.txt into 3 separate files
+  docs: filesystems: convert spufs/spu_create.txt to ReST
+  docs: filesystems: convert spufs/spufs.txt to ReST
+  docs: filesystems: convert spufs/spu_run.txt to ReST
+  docs: filesystems: convert sysfs-pci.txt to ReST
+  docs: filesystems: convert sysfs-tagging.txt to ReST
+  docs: filesystems: convert xfs-delayed-logging-design.txt to ReST
+  docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
+  docs: filesystems: convert configfs.txt to ReST
+
+ Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
+ ...ount-support.txt => automount-support.rst} |   23 +-
+ .../{backend-api.txt => backend-api.rst}      |  165 +-
+ .../{cachefiles.txt => cachefiles.rst}        |  139 +-
+ Documentation/filesystems/caching/fscache.rst |  565 ++++++
+ Documentation/filesystems/caching/fscache.txt |  448 -----
+ Documentation/filesystems/caching/index.rst   |   14 +
+ .../caching/{netfs-api.txt => netfs-api.rst}  |  172 +-
+ .../caching/{object.txt => object.rst}        |   43 +-
+ .../{operations.txt => operations.rst}        |   45 +-
+ .../cifs/{cifsroot.txt => cifsroot.rst}       |   56 +-
+ Documentation/filesystems/coda.rst            | 1670 ++++++++++++++++
+ Documentation/filesystems/coda.txt            | 1676 -----------------
+ .../{configfs/configfs.txt => configfs.rst}   |  131 +-
+ Documentation/filesystems/devpts.rst          |   36 +
+ Documentation/filesystems/devpts.txt          |   26 -
+ .../filesystems/{dnotify.txt => dnotify.rst}  |   11 +-
+ .../filesystems/{fiemap.txt => fiemap.rst}    |  133 +-
+ .../filesystems/{files.txt => files.rst}      |   15 +-
+ .../filesystems/{fuse-io.txt => fuse-io.rst}  |    6 +
+ Documentation/filesystems/index.rst           |   23 +
+ .../filesystems/{locks.txt => locks.rst}      |   14 +-
+ ...tory-locking.txt => mandatory-locking.rst} |   25 +-
+ .../{mount_api.txt => mount_api.rst}          |  329 ++--
+ Documentation/filesystems/proc.rst            |    2 +-
+ .../filesystems/{quota.txt => quota.rst}      |   41 +-
+ .../{seq_file.txt => seq_file.rst}            |   61 +-
+ .../{sharedsubtree.txt => sharedsubtree.rst}  |  394 ++--
+ Documentation/filesystems/spufs/index.rst     |   13 +
+ .../filesystems/spufs/spu_create.rst          |  131 ++
+ Documentation/filesystems/spufs/spu_run.rst   |  138 ++
+ .../{spufs.txt => spufs/spufs.rst}            |  304 +--
+ .../{sysfs-pci.txt => sysfs-pci.rst}          |   23 +-
+ .../{sysfs-tagging.txt => sysfs-tagging.rst}  |   22 +-
+ ...ign.txt => xfs-delayed-logging-design.rst} |   65 +-
+ ...a.txt => xfs-self-describing-metadata.rst} |  182 +-
+ Documentation/iio/iio_configfs.rst            |    2 +-
+ Documentation/usb/gadget_configfs.rst         |    4 +-
+ MAINTAINERS                                   |   14 +-
+ fs/cachefiles/Kconfig                         |    4 +-
+ fs/coda/Kconfig                               |    2 +-
+ fs/configfs/inode.c                           |    2 +-
+ fs/configfs/item.c                            |    2 +-
+ fs/fscache/Kconfig                            |    8 +-
+ fs/fscache/cache.c                            |    8 +-
+ fs/fscache/cookie.c                           |    2 +-
+ fs/fscache/object.c                           |    4 +-
+ fs/fscache/operation.c                        |    2 +-
+ fs/locks.c                                    |    2 +-
+ include/linux/configfs.h                      |    2 +-
+ include/linux/fs_context.h                    |    2 +-
+ include/linux/fscache-cache.h                 |    4 +-
+ include/linux/fscache.h                       |   42 +-
+ include/linux/lsm_hooks.h                     |    2 +-
+ 54 files changed, 3843 insertions(+), 3408 deletions(-)
+ rename Documentation/filesystems/{automount-support.txt => automount-support.rst} (92%)
+ rename Documentation/filesystems/caching/{backend-api.txt => backend-api.rst} (87%)
+ rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
+ create mode 100644 Documentation/filesystems/caching/fscache.rst
+ delete mode 100644 Documentation/filesystems/caching/fscache.txt
+ create mode 100644 Documentation/filesystems/caching/index.rst
+ rename Documentation/filesystems/caching/{netfs-api.txt => netfs-api.rst} (91%)
+ rename Documentation/filesystems/caching/{object.txt => object.rst} (95%)
+ rename Documentation/filesystems/caching/{operations.txt => operations.rst} (90%)
+ rename Documentation/filesystems/cifs/{cifsroot.txt => cifsroot.rst} (72%)
+ create mode 100644 Documentation/filesystems/coda.rst
+ delete mode 100644 Documentation/filesystems/coda.txt
+ rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
+ create mode 100644 Documentation/filesystems/devpts.rst
+ delete mode 100644 Documentation/filesystems/devpts.txt
+ rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (90%)
+ rename Documentation/filesystems/{fiemap.txt => fiemap.rst} (70%)
+ rename Documentation/filesystems/{files.txt => files.rst} (95%)
+ rename Documentation/filesystems/{fuse-io.txt => fuse-io.rst} (95%)
+ rename Documentation/filesystems/{locks.txt => locks.rst} (91%)
+ rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
+ rename Documentation/filesystems/{mount_api.txt => mount_api.rst} (79%)
+ rename Documentation/filesystems/{quota.txt => quota.rst} (81%)
+ rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
+ rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
+ create mode 100644 Documentation/filesystems/spufs/index.rst
+ create mode 100644 Documentation/filesystems/spufs/spu_create.rst
+ create mode 100644 Documentation/filesystems/spufs/spu_run.rst
+ rename Documentation/filesystems/{spufs.txt => spufs/spufs.rst} (57%)
+ rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
+ rename Documentation/filesystems/{sysfs-tagging.txt => sysfs-tagging.rst} (72%)
+ rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (97%)
+ rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
+
+-- 
+2.25.4
+
+
