@@ -2,184 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3EE51BAB45
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 19:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C971BABA5
+	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 19:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbgD0RaC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Apr 2020 13:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgD0RaC (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:30:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8224206D9;
-        Mon, 27 Apr 2020 17:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588008601;
-        bh=ZdSG41fFUlbC/UHMat4zJ2C7QtQ3OkJpXWPhWLCwozw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E6nTa2bR+ycpBp1H1A9OnuHkKwx/PwOvQkehou+5mBKQoMtScpAGilGmZhWaOHpcU
-         iVNXFzB1eQL8jTiCLd3i9fzlbf3zEZRjI3nGvvDH9tyA+CFa+6VJXkI7r5l7C4XVFG
-         DHRRgEW+jV01RgqTIg9PrtCSi3PQ+BOYJoZchWs8=
-Date:   Mon, 27 Apr 2020 19:29:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1726342AbgD0Rsz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Apr 2020 13:48:55 -0400
+Received: from smtprelay0230.hostedemail.com ([216.40.44.230]:60996 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726223AbgD0Rsz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Apr 2020 13:48:55 -0400
+X-Greylist: delayed 413 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 13:48:54 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id D5F0218029148
+        for <linux-xfs@vger.kernel.org>; Mon, 27 Apr 2020 17:42:02 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id ED6CD3CF6;
+        Mon, 27 Apr 2020 17:42:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:421:599:960:967:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:2393:2525:2553:2560:2563:2682:2685:2693:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3870:3871:3872:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4250:4321:5007:6117:6119:7809:7901:7903:7904:9025:10004:10400:10450:10455:10848:11026:11232:11657:11658:11914:12043:12048:12297:12555:12740:12760:12895:13439:14096:14097:14181:14659:14721:19904:19999:21080:21433:21627:21788:21939:21990:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
+X-HE-Tag: bee19_2e797eea40b41
+X-Filterd-Recvd-Size: 3336
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 17:41:59 +0000 (UTC)
+Message-ID: <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>
 Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200427172959.GB3936841@kroah.com>
-References: <20200425133504.GA11354@nishad>
- <20200427155617.GY6749@magnolia>
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Apr 2020 10:41:58 -0700
+In-Reply-To: <20200427172959.GB3936841@kroah.com>
+References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
+         <20200427172959.GB3936841@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427155617.GY6749@magnolia>
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
-> On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
-> > This patch corrects the SPDX License Identifier style in
-> > header files related to XFS File System support.
-> > For C header files Documentation/process/license-rules.rst
-> > mandates C-like comments (opposed to C source files where
-> > C++ style should be used).
+On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
+> On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
+> > On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> > > This patch corrects the SPDX License Identifier style in
+> > > header files related to XFS File System support.
+> > > For C header files Documentation/process/license-rules.rst
+> > > mandates C-like comments (opposed to C source files where
+> > > C++ style should be used).
+> > > 
+> > > Changes made by using a script provided by Joe Perches here:
+> > > https://lkml.org/lkml/2019/2/7/46.
+[]
+> > > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+[]
+> > > @@ -1,4 +1,4 @@
+> > > -// SPDX-License-Identifier: GPL-2.0+
+> > > +/* SPDX-License-Identifier: GPL-2.0+ */
 > > 
-> > Changes made by using a script provided by Joe Perches here:
-> > https://lkml.org/lkml/2019/2/7/46.
+> > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
+> > is deprecated in some newer version of the SPDX standard?
 > > 
-> > Suggested-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> > ---
-> >  fs/xfs/kmem.h                      | 2 +-
-> >  fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
-> >  fs/xfs/libxfs/xfs_alloc.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_attr.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
-> >  fs/xfs/libxfs/xfs_bit.h            | 2 +-
-> >  fs/xfs/libxfs/xfs_bmap.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_btree.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_da_format.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_defer.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_dir2.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_errortag.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_format.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_fs.h             | 2 +-
-> >  fs/xfs/libxfs/xfs_health.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
-> >  fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_log_format.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_refcount.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
-> >  fs/xfs/libxfs/xfs_rmap.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_sb.h             | 2 +-
-> >  fs/xfs/libxfs/xfs_shared.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_types.h          | 2 +-
-> >  fs/xfs/mrlock.h                    | 2 +-
-> >  fs/xfs/scrub/bitmap.h              | 2 +-
-> >  fs/xfs/scrub/btree.h               | 2 +-
-> >  fs/xfs/scrub/common.h              | 2 +-
-> >  fs/xfs/scrub/dabtree.h             | 2 +-
-> >  fs/xfs/scrub/health.h              | 2 +-
-> >  fs/xfs/scrub/repair.h              | 2 +-
-> >  fs/xfs/scrub/scrub.h               | 2 +-
-> >  fs/xfs/scrub/trace.h               | 2 +-
-> >  fs/xfs/scrub/xfs_scrub.h           | 2 +-
-> >  fs/xfs/xfs.h                       | 2 +-
-> >  fs/xfs/xfs_acl.h                   | 2 +-
-> >  fs/xfs/xfs_aops.h                  | 2 +-
-> >  fs/xfs/xfs_bmap_item.h             | 2 +-
-> >  fs/xfs/xfs_bmap_util.h             | 2 +-
-> >  fs/xfs/xfs_buf.h                   | 2 +-
-> >  fs/xfs/xfs_buf_item.h              | 2 +-
-> >  fs/xfs/xfs_dquot.h                 | 2 +-
-> >  fs/xfs/xfs_dquot_item.h            | 2 +-
-> >  fs/xfs/xfs_error.h                 | 2 +-
-> >  fs/xfs/xfs_export.h                | 2 +-
-> >  fs/xfs/xfs_extent_busy.h           | 2 +-
-> >  fs/xfs/xfs_extfree_item.h          | 2 +-
-> >  fs/xfs/xfs_filestream.h            | 2 +-
-> >  fs/xfs/xfs_fsmap.h                 | 2 +-
-> >  fs/xfs/xfs_fsops.h                 | 2 +-
-> >  fs/xfs/xfs_icache.h                | 2 +-
-> >  fs/xfs/xfs_icreate_item.h          | 2 +-
-> >  fs/xfs/xfs_inode.h                 | 2 +-
-> >  fs/xfs/xfs_inode_item.h            | 2 +-
-> >  fs/xfs/xfs_ioctl.h                 | 2 +-
-> >  fs/xfs/xfs_ioctl32.h               | 2 +-
-> >  fs/xfs/xfs_iomap.h                 | 2 +-
-> >  fs/xfs/xfs_iops.h                  | 2 +-
-> >  fs/xfs/xfs_itable.h                | 2 +-
-> >  fs/xfs/xfs_linux.h                 | 2 +-
-> >  fs/xfs/xfs_log.h                   | 2 +-
-> >  fs/xfs/xfs_log_priv.h              | 2 +-
-> >  fs/xfs/xfs_mount.h                 | 2 +-
-> >  fs/xfs/xfs_mru_cache.h             | 2 +-
-> >  fs/xfs/xfs_ondisk.h                | 2 +-
-> >  fs/xfs/xfs_qm.h                    | 2 +-
-> >  fs/xfs/xfs_quota.h                 | 2 +-
-> >  fs/xfs/xfs_refcount_item.h         | 2 +-
-> >  fs/xfs/xfs_reflink.h               | 2 +-
-> >  fs/xfs/xfs_rmap_item.h             | 2 +-
-> >  fs/xfs/xfs_rtalloc.h               | 2 +-
-> >  fs/xfs/xfs_stats.h                 | 2 +-
-> >  fs/xfs/xfs_super.h                 | 2 +-
-> >  fs/xfs/xfs_symlink.h               | 2 +-
-> >  fs/xfs/xfs_sysctl.h                | 2 +-
-> >  fs/xfs/xfs_sysfs.h                 | 2 +-
-> >  fs/xfs/xfs_trace.h                 | 2 +-
-> >  fs/xfs/xfs_trans.h                 | 2 +-
-> >  fs/xfs/xfs_trans_priv.h            | 2 +-
-> >  92 files changed, 92 insertions(+), 92 deletions(-)
-> > 
-> > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> > index 6143117770e9..fc87ea9f6843 100644
-> > --- a/fs/xfs/kmem.h
-> > +++ b/fs/xfs/kmem.h
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: GPL-2.0
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> >  /*
-> >   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
-> >   * All Rights Reserved.
-> > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
-> > index c0352edc8e41..f3fd0ee9a7f7 100644
-> > --- a/fs/xfs/libxfs/xfs_ag_resv.h
-> > +++ b/fs/xfs/libxfs/xfs_ag_resv.h
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: GPL-2.0+
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > <shrug>
 > 
-> I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
-> is deprecated in some newer version of the SPDX standard?
-> 
-> <shrug>
+> The kernel follows the "older" SPDX standard, but will accept either,
+> it's up to the author.  It is all documented in LICENSES/ if people
+> really want to make sure.
 
-The kernel follows the "older" SPDX standard, but will accept either,
-it's up to the author.  It is all documented in LICENSES/ if people
-really want to make sure.
+I think the kernel should prefer the "newer" SPDX standard
+for any/all changes to these lines.
+---
+ LICENSES/preferred/GPL-2.0 | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-thanks,
+diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
+index ff0812..c50f93 100644
+--- a/LICENSES/preferred/GPL-2.0
++++ b/LICENSES/preferred/GPL-2.0
+@@ -8,13 +8,13 @@ Usage-Guide:
+   tag/value pairs into a comment according to the placement
+   guidelines in the licensing rules documentation.
+   For 'GNU General Public License (GPL) version 2 only' use:
+-    SPDX-License-Identifier: GPL-2.0
+-  or
+     SPDX-License-Identifier: GPL-2.0-only
++  or the deprecated alternative
++    SPDX-License-Identifier: GPL-2.0
+   For 'GNU General Public License (GPL) version 2 or any later version' use:
+-    SPDX-License-Identifier: GPL-2.0+
+-  or
+     SPDX-License-Identifier: GPL-2.0-or-later
++  or the deprecated alternative
++    SPDX-License-Identifier: GPL-2.0+
+ License-Text:
+ 
+ 		    GNU GENERAL PUBLIC LICENSE
 
-greg k-h
+
