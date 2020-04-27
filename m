@@ -2,184 +2,313 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 684ED1BAAC7
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 19:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6206D1BAAB9
+	for <lists+linux-xfs@lfdr.de>; Mon, 27 Apr 2020 19:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgD0RH6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Apr 2020 13:07:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47890 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgD0RH5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Apr 2020 13:07:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RH2hB4059422;
-        Mon, 27 Apr 2020 17:03:33 GMT
+        id S1726397AbgD0RGp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Apr 2020 13:06:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49514 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgD0RGp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Apr 2020 13:06:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RH3E1G001732;
+        Mon, 27 Apr 2020 17:06:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=F5vNBlNks7+V9Ura3tnSVb4cLLVgSGwpdLcQf/JSqiA=;
- b=Zn9ekTn0SmcTlZf46/yiQzzhhQZdgWOuQnKHQxNqShYucibslWIk+nDIMrRPuHCcKddH
- 71DwC6XZUJXnPQC6l0NPmMG2t1z0oY42uX+aU1KGHMZg+AXGUFmVS9N37+VBxeo/AKZ6
- NdR8rCLkOfsc6ZtqOb3VyVPVzgaM56qZ4ohZVecO6Z1cCsCNgw3sdryCXpopf7mJlbJR
- OCPxWWLbn1S2Up5/sBudphILCskESJgZbo8FzIZh/jfP1rD8Qm2W2FHgYqcMcfPqecBD
- BOZgKYDQA6BHVHMiKRVnr/Dyh6yBABYz6ejm4roLLdAESPVjAt49d2fgr5K68y/N7mK1 vQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30nucftver-1
+ bh=vkIr73cY0VlIVk0mNLayzJjx/zktGFZeYmsqppdRypo=;
+ b=kRKLh+9xD3DCJzkK/p9IOymkXtbNXgXrfRGRMvqdKlRf94I3DvaffPztsEiWc/XRt7Ta
+ fuJuVqs0aApFro5oDRQZpo012CEXcFYYLqBFgXp5L8cVf4utDVlvjLMq+sQ4gzE1BDkf
+ cLKMNrtoHcs+5o7UAdzkiRSkk7yNH1UdlGZTzclv03PCw0DCUszRGnYhc6fYa3GIGm8T
+ 9iKOCYLhAXe8luscsqScyiXD1cM1xg1tpOVz22ReICHPAJpyaECvgWpLysVvSCqlDbhz
+ AJYjBt5LDPoPGcKJWjmwFgMvE5g0KcndeLQFC+3j4D4cMPHNakXsF+eTNqjPDioLMSqg hQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30p2p00aaq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 17:03:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RH1srY171074;
-        Mon, 27 Apr 2020 17:03:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30mxwwkav3-1
+        Mon, 27 Apr 2020 17:06:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RH2vn9055130;
+        Mon, 27 Apr 2020 17:06:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30my0a0gac-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 17:03:32 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03RH3Vsx004695;
-        Mon, 27 Apr 2020 17:03:32 GMT
+        Mon, 27 Apr 2020 17:06:36 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RH6YLO022388;
+        Mon, 27 Apr 2020 17:06:34 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 10:03:31 -0700
-Date:   Mon, 27 Apr 2020 10:03:30 -0700
+        with ESMTP ; Mon, 27 Apr 2020 10:06:33 -0700
+Date:   Mon, 27 Apr 2020 10:06:32 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Anthony Iliopoulos <ailiop@suse.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] common/fuzzy: don't attempt online scrubbing unless
- supported
-Message-ID: <20200427170330.GO6742@magnolia>
-References: <20200421113643.24224-1-ailiop@suse.com>
- <20200421153717.GY6742@magnolia>
- <20200424110330.GV1329@technoir>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfsprogs: remove libreadline support
+Message-ID: <20200427170632.GP6742@magnolia>
+References: <20200427072603.1238216-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424110330.GV1329@technoir>
+In-Reply-To: <20200427072603.1238216-1-hch@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=9 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=9 mlxlogscore=999 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004270139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270139
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 01:03:30PM +0200, Anthony Iliopoulos wrote:
-> On Tue, Apr 21, 2020 at 08:37:17AM -0700, Darrick J. Wong wrote:
-> > On Tue, Apr 21, 2020 at 01:36:42PM +0200, Anthony Iliopoulos wrote:
-> > > Many xfs metadata fuzzing tests invoke xfs_scrub to detect online errors
-> > > even when _scratch_xfs_fuzz_metadata is invoked with "offline". This
-> > > causes those tests to fail with output mismatches on kernels that don't
-> > > enable CONFIG_XFS_ONLINE_SCRUB. Bypass scrubbing when not supported.
-> > > 
-> > > Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
-> > > ---
-> > >  common/fuzzy | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/common/fuzzy b/common/fuzzy
-> > > index 988203b1..83ddc3e8 100644
-> > > --- a/common/fuzzy
-> > > +++ b/common/fuzzy
-> > > @@ -238,7 +238,7 @@ __scratch_xfs_fuzz_field_test() {
-> > >  	if [ $res -eq 0 ]; then
-> > >  		# Try an online scrub unless we're fuzzing ag 0's sb,
-> > >  		# which scrub doesn't know how to fix.
-> > > -		if [ "${repair}" != "none" ]; then
-> > > +		if _supports_xfs_scrub "${SCRATCH_MNT}" "${SCRATCH_DEV}"; then
-> > 
-> > Huh?
-> > 
-> > This changes the behavior of the repair=none fuzz tests, which mutate
-> > filesystems and then write to them without running any checking tools
-> > whatsoever to see if we can trip over the mutations with only regular
-> > filesystem operations.  Whereas before, we'd skip xfs_scrub, now we
-> > always run it if it's supported.
+On Mon, Apr 27, 2020 at 09:26:03AM +0200, Christoph Hellwig wrote:
+> libreadline has been relicensed to GPLv3 and thus incompatible to
+> xfsprogs many years ago, and all the distros have dropped or are
+> in the stages of dropping the last GPLv2 version.  As the BSD
+> licensed libeditline provides the same functionality there is no
+> need to keep the obsolete libreadline support around.
 > 
-> oops...right, we want to let the verifiers catch the errors here.
-> 
-> Speaking of which, I've been staring at the scripts but it's not clear
-> to me how the repair=none fuzz tests are expected to function. Many of
-> those tests corrupt AG metadata headers (e.g. the AGI lsn), which means
-> mount bails out with an error. But the golden output doesn't account for
-> that, so those tests will fail (e.g. xfs/456).
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-None of the dangerous_fuzz* tests have golden output.  I've thought
-about posting the ones that are in my dev tree, but there's probably
-not much point until I/we finish fixing the things that repair misses.
-Ditto with scrub.
+Seems reasonable, but did you notice that xfs_io segfaults if you build
+with libedit and feed stdin garbage/EOF? :)
 
-TBH I wrote all these field fuzzers solely as a means to fuzz things
-systematically, and didn't think too hard about using them as regression
-tests.  Back when I introduced the dangerous_norepair tests, it was
-success enough if the kernel didn't crash.  I /think/ we've tightened
-things up enough that it's time to move on to more careful checking for
-runtime errors.
-
-> Further, for things like inode metadata fuzzing where the fs is usually
-> mountable, the tests will always succeed irrespective of the verifiers
-> firing or not (e.g. xfs/465).
-> 
-> I'd assume all those repair=none tests would need to check dmesg for
-> metadata corruptions, so something like:
-> 
-> --- a/common/fuzzy
-> +++ b/common/fuzzy
-> @@ -254,3 +254,3 @@ __scratch_xfs_fuzz_field_test() {
->  		__scratch_xfs_fuzz_unmount
-> -	else
-> +	elif [ "${repair}" != "none" ]; then
->  		(>&2 echo "re-mount failed ($res) with ${field} = ${fuzzverb}.")
-
-Hmm, seems reasonable.  The _scratch_fuzz_modify helper probably needs
-to be modified to complain if the fs writes actually succeed.
-
-> --- a/tests/xfs/456
-> +++ b/tests/xfs/456
-> @@ -43,2 +43,5 @@ echo "Done fuzzing AGI"
-> 
-> +_check_dmesg_for "Metadata corruption detected" || \
-> +	_fail "Missing metadata corruption messages!"
-
-I'd put this at the end of __scratch_xfs_fuzz_field_test, since there
-are dozens of tests that use this function, not just xfs/456.
-
-The long term goal is to make all the corruption bailouts report
-themselves to the online health system so that userspace can query the
-filesystem status (via xfs_spaceman) without having to scrape dmesg.
+Anyway this is a straightforward removal, so:
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
-> +
->  # success, all done
+
+> ---
+>  configure.ac         |  7 -------
+>  db/Makefile          |  5 -----
+>  db/input.c           | 26 ++------------------------
+>  growfs/Makefile      |  3 ---
+>  include/builddefs.in |  2 --
+>  io/Makefile          |  4 ----
+>  libxcmd/Makefile     |  5 -----
+>  libxcmd/input.c      | 18 ++----------------
+>  quota/Makefile       |  5 -----
+>  spaceman/Makefile    |  4 ----
+>  10 files changed, 4 insertions(+), 75 deletions(-)
 > 
-> If this makes sense, I'll send a separate patch to address it, and fix
-> all repair=none tests as above.
+> diff --git a/configure.ac b/configure.ac
+> index c609ff6a..0d1ca43e 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -42,13 +42,6 @@ AC_ARG_ENABLE(blkid,
+>  	enable_blkid=yes)
+>  AC_SUBST(enable_blkid)
+>  
+> -AC_ARG_ENABLE(readline,
+> -[  --enable-readline=[yes/no] Enable readline command editing [default=no]],
+> -	test $enable_readline = yes && libreadline="-lreadline",
+> -	enable_readline=no)
+> -AC_SUBST(libreadline)
+> -AC_SUBST(enable_readline)
+> -
+>  AC_ARG_ENABLE(editline,
+>  [  --enable-editline=[yes/no] Enable editline command editing [default=no]],
+>  	test $enable_editline = yes && libeditline="-ledit",
+> diff --git a/db/Makefile b/db/Makefile
+> index ed9f56c2..9bd9bf51 100644
+> --- a/db/Makefile
+> +++ b/db/Makefile
+> @@ -21,11 +21,6 @@ LLDLIBS	= $(LIBXFS) $(LIBXLOG) $(LIBFROG) $(LIBUUID) $(LIBRT) $(LIBPTHREAD)
+>  LTDEPENDENCIES = $(LIBXFS) $(LIBXLOG) $(LIBFROG)
+>  LLDFLAGS += -static-libtool-libs
+>  
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LLDLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -CFLAGS += -DENABLE_READLINE
+> -endif
+> -
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LLDLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+>  CFLAGS += -DENABLE_EDITLINE
+> diff --git a/db/input.c b/db/input.c
+> index 4d6c7376..553025bc 100644
+> --- a/db/input.c
+> +++ b/db/input.c
+> @@ -13,10 +13,7 @@
+>  #include "malloc.h"
+>  #include "init.h"
+>  
+> -#if defined(ENABLE_READLINE)
+> -# include <readline/history.h>
+> -# include <readline/readline.h>
+> -#elif defined(ENABLE_EDITLINE)
+> +#ifdef ENABLE_EDITLINE
+>  # include <histedit.h>
+>  #endif
+>  
+> @@ -211,26 +208,7 @@ fetchline_internal(void)
+>  	return rval;
+>  }
+>  
+> -#ifdef ENABLE_READLINE
+> -char *
+> -fetchline(void)
+> -{
+> -	char	*line;
+> -
+> -	if (inputstacksize == 1) {
+> -		line = readline(get_prompt());
+> -		if (!line)
+> -			dbprintf("\n");
+> -		else if (line && *line) {
+> -			add_history(line);
+> -			logprintf("%s", line);
+> -		}
+> -	} else {
+> -		line = fetchline_internal();
+> -	}
+> -	return line;
+> -}
+> -#elif defined(ENABLE_EDITLINE)
+> +#ifdef ENABLE_EDITLINE
+>  static char *el_get_prompt(EditLine *e) { return get_prompt(); }
+>  char *
+>  fetchline(void)
+> diff --git a/growfs/Makefile b/growfs/Makefile
+> index 4104cc0d..a107d348 100644
+> --- a/growfs/Makefile
+> +++ b/growfs/Makefile
+> @@ -10,9 +10,6 @@ LTCOMMAND = xfs_growfs
+>  CFILES = xfs_growfs.c
+>  
+>  LLDLIBS = $(LIBXFS) $(LIBXCMD) $(LIBFROG) $(LIBUUID) $(LIBRT) $(LIBPTHREAD)
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LLDLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -endif
+>  
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LLDLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+> diff --git a/include/builddefs.in b/include/builddefs.in
+> index 6ed9d295..30b2727a 100644
+> --- a/include/builddefs.in
+> +++ b/include/builddefs.in
+> @@ -25,7 +25,6 @@ LIBUUID = @libuuid@
+>  LIBPTHREAD = @libpthread@
+>  LIBTERMCAP = @libtermcap@
+>  LIBEDITLINE = @libeditline@
+> -LIBREADLINE = @libreadline@
+>  LIBBLKID = @libblkid@
+>  LIBDEVMAPPER = @libdevmapper@
+>  LIBXFS = $(TOPDIR)/libxfs/libxfs.la
+> @@ -82,7 +81,6 @@ RPM_VERSION	= @rpm_version@
+>  ENABLE_SHARED	= @enable_shared@
+>  ENABLE_GETTEXT	= @enable_gettext@
+>  ENABLE_EDITLINE	= @enable_editline@
+> -ENABLE_READLINE	= @enable_readline@
+>  ENABLE_BLKID	= @enable_blkid@
+>  ENABLE_SCRUB	= @enable_scrub@
+>  
+> diff --git a/io/Makefile b/io/Makefile
+> index 1112605e..71741926 100644
+> --- a/io/Makefile
+> +++ b/io/Makefile
+> @@ -68,10 +68,6 @@ ifeq ($(HAVE_SYNCFS),yes)
+>  LCFLAGS += -DHAVE_SYNCFS
+>  endif
+>  
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LLDLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -endif
+> -
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LLDLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+>  endif
+> diff --git a/libxcmd/Makefile b/libxcmd/Makefile
+> index f9bc1c5c..70e54308 100644
+> --- a/libxcmd/Makefile
+> +++ b/libxcmd/Makefile
+> @@ -14,11 +14,6 @@ LTLDFLAGS += -static
+>  
+>  CFILES = command.c input.c help.c quit.c
+>  
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LCFLAGS += -DENABLE_READLINE
+> -LTLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -endif
+> -
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LCFLAGS += -DENABLE_EDITLINE
+>  LTLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+> diff --git a/libxcmd/input.c b/libxcmd/input.c
+> index 137856e3..203110df 100644
+> --- a/libxcmd/input.c
+> +++ b/libxcmd/input.c
+> @@ -9,10 +9,7 @@
+>  #include <ctype.h>
+>  #include <stdbool.h>
+>  
+> -#if defined(ENABLE_READLINE)
+> -# include <readline/history.h>
+> -# include <readline/readline.h>
+> -#elif defined(ENABLE_EDITLINE)
+> +#ifdef ENABLE_EDITLINE
+>  # include <histedit.h>
+>  #endif
+>  
+> @@ -28,18 +25,7 @@ get_prompt(void)
+>  	return prompt;
+>  }
+>  
+> -#if defined(ENABLE_READLINE)
+> -char *
+> -fetchline(void)
+> -{
+> -	char	*line;
+> -
+> -	line = readline(get_prompt());
+> -	if (line && *line)
+> -		add_history(line);
+> -	return line;
+> -}
+> -#elif defined(ENABLE_EDITLINE)
+> +#ifdef ENABLE_EDITLINE
+>  static char *el_get_prompt(EditLine *e) { return get_prompt(); }
+>  char *
+>  fetchline(void)
+> diff --git a/quota/Makefile b/quota/Makefile
+> index 384f023a..da5a1489 100644
+> --- a/quota/Makefile
+> +++ b/quota/Makefile
+> @@ -14,11 +14,6 @@ LLDLIBS = $(LIBXCMD) $(LIBFROG)
+>  LTDEPENDENCIES = $(LIBXCMD) $(LIBFROG)
+>  LLDFLAGS = -static
+>  
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LLDLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -CFLAGS += -DENABLE_READLINE
+> -endif
+> -
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LLDLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+>  CFLAGS += -DENABLE_EDITLINE
+> diff --git a/spaceman/Makefile b/spaceman/Makefile
+> index d01aa74a..2a366918 100644
+> --- a/spaceman/Makefile
+> +++ b/spaceman/Makefile
+> @@ -14,10 +14,6 @@ LLDLIBS = $(LIBXCMD) $(LIBFROG)
+>  LTDEPENDENCIES = $(LIBXCMD) $(LIBFROG)
+>  LLDFLAGS = -static
+>  
+> -ifeq ($(ENABLE_READLINE),yes)
+> -LLDLIBS += $(LIBREADLINE) $(LIBTERMCAP)
+> -endif
+> -
+>  ifeq ($(ENABLE_EDITLINE),yes)
+>  LLDLIBS += $(LIBEDITLINE) $(LIBTERMCAP)
+>  endif
+> -- 
+> 2.26.1
 > 
-> > The open-coded repair conditionals scattered through this funciton
-> > probably ought to be refactored into helpers, e.g.
-> > 
-> > __fuzz_want_scrub_check() {
-> > 	local repair="$1"
-> > 	local field="$2"
-> > 
-> > 	test "${repair}" != "none" && \
-> > 		_supports_xfs_scrub "${SCRATCH_MNT}" "${SCRATCH_DEV}" && \
-> > 		[ "${field}" != "sb 0" ]
-> > }
-> > 
-> > if [ $res -eq 0 ]; then
-> > 	# Try an online scrub...
-> > 	if __fuzz_want_scrub_check "${repair}" "${field}"; then
-> > 		_scratch_scrub -n -a 1 -e continue 2>&1
-> > 		...
-> 
-> Will do that and send a v2, thanks for the review!
