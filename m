@@ -2,746 +2,319 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96BE81BD299
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Apr 2020 04:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B00E1BD3BA
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Apr 2020 06:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgD2Cqy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Apr 2020 22:46:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39696 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726544AbgD2Cqx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Apr 2020 22:46:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03T2ha3E121509
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 02:46:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=80FcyABMUDnw0Ir9b2fsosl5qdQV3SDgzLRcwf85W8g=;
- b=mvu2+btvtV5m5IkxfaU8Ascl1uUdL5bVNO2evt+rvesVWkUWCog0nLlkwMsDKq8qtlfq
- NqluzOqWmUR+YfAb3IVHpch7mCdJUQzCbT3dAS2uwqM478rSJm5WPcay9BkPbrKZoyjB
- ut4v/aVfm45hIO9/thUcoNqIdWnj7ecFJDmzaRbtZau8vDBrp1E6Jw0HCnZJzJDJ7e+/
- WZodYYBRLQ/qlbBsjsyj3M2nM+IegixL5o6PBQG5tcAEICGopgo9XWNqsIhe9upOL9dP
- Ddi+ht94RdQBcJJRKKUjsl4jVjgeWDbYHtc9Bhs4UCFQaeifsWNFHGAYjrqUTR0QD0w8 ig== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30p2p08p59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 02:46:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03T2g3OY039232
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 02:46:48 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30mxru06kn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 02:46:48 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03T2kmF9016532
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 02:46:48 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 19:46:47 -0700
-Subject: [PATCH 5/5] xfs: use atomic extent swapping to repair directories
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 28 Apr 2020 19:46:45 -0700
-Message-ID: <158812840567.169849.10189780953079405106.stgit@magnolia>
-In-Reply-To: <158812837421.169849.625434931406278072.stgit@magnolia>
-References: <158812837421.169849.625434931406278072.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        id S1726682AbgD2EaK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Apr 2020 00:30:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50602 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgD2EaK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 29 Apr 2020 00:30:10 -0400
+IronPort-SDR: jYZu44eXIBWA/fryfc467h1uVuDbLuH3bhwiT52xp6J0v1AYh4DITp9+QJfXdz41VwkD2VZYPb
+ cZIGfeUer8NA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 21:30:09 -0700
+IronPort-SDR: gHgCiSj+Hez8F35uvvT9L8FD60mHGRbRpB8J+xGO4FEygI0TT2sBHolNaIU2dFvZBlsLXX1z9G
+ 2OEDGXIQkZVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
+   d="scan'208";a="294066666"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga008.jf.intel.com with ESMTP; 28 Apr 2020 21:30:08 -0700
+Date:   Tue, 28 Apr 2020 21:30:08 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11.1] Documentation/dax: Update Usage section
+Message-ID: <20200429043008.GA410031@iweiny-DESK2.sc.intel.com>
+References: <20200428002142.404144-5-ira.weiny@intel.com>
+ <20200428222145.409961-1-ira.weiny@intel.com>
+ <28f97c0b-6c7f-7496-b57d-0342a4dcc0af@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=3
- mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=3 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28f97c0b-6c7f-7496-b57d-0342a4dcc0af@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Tue, Apr 28, 2020 at 07:21:18PM -0700, Randy Dunlap wrote:
+> On 4/28/20 3:21 PM, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Update the Usage section to reflect the new individual dax selection
+> > functionality.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V11:
+> > 	Minor changes from Darrick
+> > 
+> > Changes from V10:
+> > 	Clarifications from Dave
+> > 	Add '-c' to xfs_io examples
+> > 
+> > Changes from V9:
+> > 	Fix missing ')'
+> > 	Fix trialing '"'
+> 
+> trailing
 
-When repairing a directory online, stage the new directory contents in a
-temporary file and use the atomic extent swapping mechanism to commit
-the results in bulk.  As a side effect of this patch, directory
-inactivation will be able to purge any leftover dir blocks.
+Thanks
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_swapext.c |   34 ++++
- fs/xfs/scrub/dir.c          |   12 +
- fs/xfs/scrub/dir_repair.c   |  415 +++++++++++++++++++++++++++++++++++++++++--
- fs/xfs/xfs_inode.c          |   49 +++++
- 4 files changed, 488 insertions(+), 22 deletions(-)
+> 
+> > 
+> > Changes from V8:
+> > 	Updates from Darrick
+> > 
+> > Changes from V7:
+> > 	Cleanups/clarifications from Darrick and Dan
+> > 
+> > Changes from V6:
+> > 	Update to allow setting FS_XFLAG_DAX any time.
+> > 	Update with list of behaviors from Darrick
+> > 	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
+> > 
+> > Changes from V5:
+> > 	Update to reflect the agreed upon semantics
+> > 	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> > ---
+> >  Documentation/filesystems/dax.txt | 142 +++++++++++++++++++++++++++++-
+> >  1 file changed, 139 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+> > index 679729442fd2..dc1c1aa36cc2 100644
+> > --- a/Documentation/filesystems/dax.txt
+> > +++ b/Documentation/filesystems/dax.txt
+> > @@ -17,11 +17,147 @@ For file mappings, the storage device is mapped directly into userspace.
+> >  Usage
+> >  -----
+> >  
+> > -If you have a block device which supports DAX, you can make a filesystem
+> > +If you have a block device which supports DAX, you can make a file system
+> >  on it as usual.  The DAX code currently only supports files with a block
+> >  size equal to your kernel's PAGE_SIZE, so you may need to specify a block
+> > -size when creating the filesystem.  When mounting it, use the "-o dax"
+> > -option on the command line or add 'dax' to the options in /etc/fstab.
+> > +size when creating the file system.
+> > +
+> > +Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
+> 
+> Why "file system" in the first paragraph when "filesystem" is used here and below?
 
+AFAIK they are interchangeable.  https://en.wikipedia.org/wiki/File_system
 
-diff --git a/fs/xfs/libxfs/xfs_swapext.c b/fs/xfs/libxfs/xfs_swapext.c
-index f16f7d9a0b66..afdc516428bd 100644
---- a/fs/xfs/libxfs/xfs_swapext.c
-+++ b/fs/xfs/libxfs/xfs_swapext.c
-@@ -23,6 +23,7 @@
- #include "xfs_da_format.h"
- #include "xfs_da_btree.h"
- #include "xfs_attr_leaf.h"
-+#include "xfs_dir2_priv.h"
- 
- /* Information to help us reset reflink flag / CoW fork state after a swap. */
- 
-@@ -233,6 +234,37 @@ xfs_swapext_attr_to_shortform2(
- 	return xfs_attr3_leaf_to_shortform(bp, &args, forkoff);
- }
- 
-+/* Convert inode2's block dir fork back to shortform, if possible.. */
-+STATIC int
-+xfs_swapext_dir_to_shortform2(
-+	struct xfs_trans		*tp,
-+	struct xfs_swapext_intent	*sxi)
-+{
-+	struct xfs_da_args	args = {
-+		.dp		= sxi->si_ip2,
-+		.geo		= tp->t_mountp->m_dir_geo,
-+		.whichfork	= XFS_DATA_FORK,
-+		.trans		= tp,
-+	};
-+	struct xfs_dir2_sf_hdr	sfh;
-+	struct xfs_buf		*bp;
-+	int			size;
-+	int			error;
-+
-+	if (!xfs_bmap_one_block(sxi->si_ip2, XFS_DATA_FORK))
-+		return 0;
-+
-+	error = xfs_dir3_block_read(tp, sxi->si_ip2, &bp);
-+	if (error)
-+		return error;
-+
-+	size = xfs_dir2_block_sfsize(sxi->si_ip2, bp->b_addr, &sfh);
-+	if (size > XFS_IFORK_DSIZE(sxi->si_ip2))
-+		return 0;
-+
-+	return xfs_dir2_block_to_sf(&args, bp, size, &sfh);
-+}
-+
- #define XFS_SWAP_EXTENT_POST_PROCESSING (XFS_SWAP_EXTENT_TO_SHORTFORM2)
- 
- /* Do we have more work to do to finish this operation? */
-@@ -265,6 +297,8 @@ xfs_swapext_finish_one(
- 		if (sxi->si_flags & XFS_SWAP_EXTENT_TO_SHORTFORM2) {
- 			if (sxi->si_flags & XFS_SWAP_EXTENT_ATTR_FORK)
- 				error = xfs_swapext_attr_to_shortform2(tp, sxi);
-+			else if (S_ISDIR(VFS_I(sxi->si_ip2)->i_mode))
-+				error = xfs_swapext_dir_to_shortform2(tp, sxi);
- 			sxi->si_flags &= ~XFS_SWAP_EXTENT_TO_SHORTFORM2;
- 			return error;
- 		}
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index e318dd46cb15..948b7440e591 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -18,6 +18,7 @@
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/dabtree.h"
-+#include "scrub/repair.h"
- 
- /* Set us up to scrub directories. */
- int
-@@ -28,6 +29,17 @@ xchk_setup_directory(
- 	unsigned int		sz;
- 	int			error;
- 
-+#ifdef CONFIG_XFS_ONLINE_REPAIR
-+	if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR) {
-+		if (!xfs_sb_version_hasatomicswap(&sc->mp->m_sb))
-+			return -EOPNOTSUPP;
-+
-+		error = xrep_create_tempfile(sc, S_IFDIR);
-+		if (error)
-+			return error;
-+	}
-+#endif
-+
- 	if (sc->flags & XCHK_TRY_HARDER) {
- 		error = xchk_fs_freeze(sc);
- 		if (error)
-diff --git a/fs/xfs/scrub/dir_repair.c b/fs/xfs/scrub/dir_repair.c
-index b299f8b35ce4..3004505c55a9 100644
---- a/fs/xfs/scrub/dir_repair.c
-+++ b/fs/xfs/scrub/dir_repair.c
-@@ -25,6 +25,8 @@
- #include "xfs_bmap_btree.h"
- #include "xfs_trans_space.h"
- #include "xfs_iwalk.h"
-+#include "xfs_swapext.h"
-+#include "xfs_bmap_util.h"
- #include "scrub/xfs_scrub.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
-@@ -78,6 +80,9 @@ struct xrep_dir {
- 	 * found a good candidate.
- 	 */
- 	xfs_ino_t		parent_ino;
-+
-+	/* nlink value of the corrected directory. */
-+	xfs_nlink_t		new_nlink;
- };
- 
- /*
-@@ -523,7 +528,6 @@ xrep_dir_reset_fork(
- 	dp->i_d.di_size = 0;
- 
- 	/* Reinitialize the short form directory. */
--	set_nlink(VFS_I(dp), 2);
- 	args->geo = sc->mp->m_dir_geo;
- 	args->dp = dp;
- 	args->trans = sc->tp;
-@@ -610,10 +614,10 @@ xrep_dir_insert_rec(
- 	if (error)
- 		return error;
- 
--	trace_xrep_dir_insert_rec(rd->sc->ip, namebuf, key->namelen, key->ino,
--			key->ftype);
-+	trace_xrep_dir_insert_rec(rd->sc->tempip, namebuf, key->namelen,
-+			key->ino, key->ftype);
- 
--	error = xfs_qm_dqattach(rd->sc->ip);
-+	error = xfs_qm_dqattach(rd->sc->tempip);
- 	if (error)
- 		return error;
- 
-@@ -626,18 +630,19 @@ xrep_dir_insert_rec(
- 	if (error)
- 		return error;
- 
--	xfs_ilock(rd->sc->ip, XFS_ILOCK_EXCL);
--	xfs_trans_ijoin(tp, rd->sc->ip, XFS_ILOCK_EXCL);
-+	xfs_ilock(rd->sc->tempip, XFS_ILOCK_EXCL);
-+	xfs_trans_ijoin(tp, rd->sc->tempip, XFS_ILOCK_EXCL);
- 
- 	name.len = key->namelen;
- 	name.type = key->ftype;
--	error = xfs_dir_createname(tp, rd->sc->ip, &name, key->ino, resblks);
-+	error = xfs_dir_createname(tp, rd->sc->tempip, &name, key->ino,
-+			resblks);
- 	if (error)
- 		goto err;
- 
- 	if (name.type == XFS_DIR3_FT_DIR)
--		inc_nlink(VFS_I(rd->sc->ip));
--	xfs_trans_log_inode(tp, rd->sc->ip, XFS_ILOG_CORE);
-+		rd->new_nlink++;
-+	xfs_trans_log_inode(tp, rd->sc->tempip, XFS_ILOG_CORE);
- 	return xfs_trans_commit(tp);
- 
- err:
-@@ -645,6 +650,356 @@ xrep_dir_insert_rec(
- 	return error;
- }
- 
-+/*
-+ * Prepare both inodes' directory forks for extent swapping.  Promote the
-+ * tempfile from short format to leaf format, and if the file being repaired
-+ * has a short format attr fork, turn it into an empty extent list.
-+ */
-+STATIC int
-+xrep_dir_swap_prep(
-+	struct xfs_scrub	*sc,
-+	bool			temp_local,
-+	bool			ip_local)
-+{
-+	int			error;
-+
-+	/*
-+	 * If the tempfile's attributes are in shortform format, convert that
-+	 * to a single leaf extent so that we can use the atomic extent swap.
-+	 */
-+	if (temp_local) {
-+		struct xfs_da_args	args = {
-+			.dp		= sc->tempip,
-+			.geo		= sc->mp->m_dir_geo,
-+			.whichfork	= XFS_DATA_FORK,
-+			.trans		= sc->tp,
-+			.total		= 1,
-+		};
-+
-+		error = xfs_dir2_sf_to_block(&args);
-+		if (error)
-+			return error;
-+
-+		error = xfs_defer_finish(&sc->tp);
-+		if (error)
-+			return error;
-+	}
-+
-+	/*
-+	 * If the file being repaired had a shortform attribute fork, convert
-+	 * that to an empty extent list in preparation for the atomic extent
-+	 * swap.
-+	 */
-+	if (ip_local) {
-+		struct xfs_ifork	*ifp;
-+
-+		sc->ip->i_d.di_format = XFS_DINODE_FMT_EXTENTS;
-+		sc->ip->i_d.di_nextents = 0;
-+
-+		ifp = XFS_IFORK_PTR(sc->ip, XFS_DATA_FORK);
-+		xfs_ifork_reset(ifp);
-+		ifp->if_bytes = 0;
-+		ifp->if_u1.if_root = NULL;
-+		ifp->if_height = 0;
-+		ifp->if_flags |= XFS_IFEXTENTS;
-+
-+		xfs_trans_log_inode(sc->tp, sc->ip,
-+				XFS_ILOG_CORE | XFS_ILOG_DDATA);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set the owner for this directory block to the directory being repaired.
-+ * Return the magic number that we found, or the usual negative error.
-+ */
-+STATIC int
-+xrep_dir_reset_owner(
-+	struct xfs_scrub		*sc,
-+	xfs_dablk_t			dabno,
-+	struct xfs_buf			*bp,
-+	unsigned int			*magic)
-+{
-+	struct xfs_da_geometry		*geo = sc->mp->m_dir_geo;
-+	struct xfs_dir3_data_hdr	*data3 = bp->b_addr;
-+	struct xfs_da3_blkinfo		*info3 = bp->b_addr;
-+	struct xfs_dir3_free_hdr	*free3 = bp->b_addr;
-+	struct xfs_dir2_data_entry	*dep;
-+
-+	/* Directory data blocks. */
-+	if (dabno < geo->leafblk) {
-+		*magic = be32_to_cpu(data3->hdr.magic);
-+		if (*magic != XFS_DIR3_BLOCK_MAGIC &&
-+		    *magic != XFS_DIR3_DATA_MAGIC)
-+			return -EFSCORRUPTED;
-+
-+		/*
-+		 * If this is a block format directory, it's possible that the
-+		 * block was created as part of converting the temp directory
-+		 * from short format to block format in order to use the atomic
-+		 * extent swap.  In that case, the '.' entry will be set to
-+		 * the temp dir, so find the dot entry and reset it.
-+		 */
-+		if (*magic == XFS_DIR3_BLOCK_MAGIC) {
-+			dep = bp->b_addr + geo->data_entry_offset;
-+			if (dep->namelen != 1 || dep->name[0] != '.')
-+				return -EFSCORRUPTED;
-+
-+			dep->inumber = cpu_to_be64(sc->ip->i_ino);
-+		}
-+
-+		data3->hdr.owner = be64_to_cpu(sc->ip->i_ino);
-+		return 0;
-+	}
-+
-+	/* Directory leaf and da node blocks. */
-+	if (dabno < geo->freeblk) {
-+		*magic = be16_to_cpu(info3->hdr.magic);
-+		switch (*magic) {
-+		case XFS_DA3_NODE_MAGIC:
-+		case XFS_DIR3_LEAF1_MAGIC:
-+		case XFS_DIR3_LEAFN_MAGIC:
-+			break;
-+		default:
-+			return -EFSCORRUPTED;
-+		}
-+
-+		info3->owner = be64_to_cpu(sc->ip->i_ino);
-+		return 0;
-+	}
-+
-+	/* Directory free blocks. */
-+	*magic = be32_to_cpu(free3->hdr.magic);
-+	if (*magic != XFS_DIR3_FREE_MAGIC)
-+		return -EFSCORRUPTED;
-+
-+	free3->hdr.owner = be64_to_cpu(sc->ip->i_ino);
-+	return 0;
-+}
-+
-+/*
-+ * If the buffer didn't have buffer ops set, we need to set them now that we've
-+ * dirtied the directory block.
-+ */
-+STATIC void
-+xrep_dir_set_verifier(
-+	unsigned int		magic,
-+	struct xfs_buf		*bp)
-+{
-+	switch (magic) {
-+	case XFS_DIR3_BLOCK_MAGIC:
-+		bp->b_ops = &xfs_dir3_block_buf_ops;
-+		break;
-+	case XFS_DIR3_DATA_MAGIC:
-+		bp->b_ops = &xfs_dir3_data_buf_ops;
-+		break;
-+	case XFS_DA3_NODE_MAGIC:
-+		bp->b_ops = &xfs_da3_node_buf_ops;
-+		break;
-+	case XFS_DIR3_LEAF1_MAGIC:
-+		bp->b_ops = &xfs_dir3_leaf1_buf_ops;
-+		break;
-+	case XFS_DIR3_LEAFN_MAGIC:
-+		bp->b_ops = &xfs_dir3_leafn_buf_ops;
-+		break;
-+	case XFS_DIR3_FREE_MAGIC:
-+		bp->b_ops = &xfs_dir3_free_buf_ops;
-+		break;
-+	}
-+
-+	xfs_buf_set_ref(bp, XFS_DIR_BTREE_REF);
-+}
-+
-+/*
-+ * Change the owner field of every block in the data fork to match the
-+ * directory being repaired.
-+ */
-+STATIC int
-+xrep_dir_swap_owner(
-+	struct xfs_scrub		*sc)
-+{
-+	struct xfs_bmbt_irec		map;
-+	struct xfs_da_geometry		*geo = sc->mp->m_dir_geo;
-+	struct xfs_buf			*bp;
-+	xfs_fileoff_t			offset = 0;
-+	xfs_fileoff_t			end = XFS_MAX_FILEOFF;
-+	xfs_dablk_t			dabno;
-+	int				nmap;
-+	int				error;
-+
-+	for (offset = 0;
-+	     offset < end;
-+	     offset = map.br_startoff + map.br_blockcount) {
-+		nmap = 1;
-+		error = xfs_bmapi_read(sc->tempip, offset, end - offset,
-+				&map, &nmap, 0);
-+		if (error)
-+			return error;
-+		if (nmap != 1)
-+			return -EFSCORRUPTED;
-+		if (!xfs_bmap_is_real_extent(&map))
-+			continue;
-+
-+
-+		for (dabno = round_up(map.br_startoff, geo->fsbcount);
-+		     dabno < map.br_startoff + map.br_blockcount;
-+		     dabno += geo->fsbcount) {
-+			unsigned int	magic;
-+
-+			error = xfs_da_read_buf(sc->tp, sc->tempip,
-+					dabno, 0, &bp, XFS_DATA_FORK, NULL);
-+			if (error)
-+				return error;
-+			if (!bp)
-+				return -EFSCORRUPTED;
-+
-+			error = xrep_dir_reset_owner(sc, dabno, bp, &magic);
-+			if (error) {
-+				xfs_trans_brelse(sc->tp, bp);
-+				return error;
-+			}
-+
-+			if (bp->b_ops == NULL)
-+				xrep_dir_set_verifier(magic, bp);
-+
-+			xfs_trans_ordered_buf(sc->tp, bp);
-+			xfs_trans_brelse(sc->tp, bp);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * If both files' directory structure are in short format, we can copy
-+ * the short format data from the tempfile to the repaired file if it'll
-+ * fit.
-+ */
-+STATIC void
-+xrep_dir_swap_local(
-+	struct xfs_scrub	*sc,
-+	int			newsize)
-+{
-+	struct xfs_ifork	*ifp1, *ifp2;
-+
-+	ifp1 = XFS_IFORK_PTR(sc->tempip, XFS_DATA_FORK);
-+	ifp2 = XFS_IFORK_PTR(sc->ip, XFS_DATA_FORK);
-+
-+	xfs_idata_realloc(sc->ip, ifp2->if_bytes - ifp1->if_bytes,
-+			XFS_DATA_FORK);
-+
-+	memcpy(ifp2->if_u1.if_data, ifp1->if_u1.if_data, newsize);
-+	xfs_trans_log_inode(sc->tp, sc->ip, XFS_ILOG_CORE | XFS_ILOG_DDATA);
-+}
-+
-+struct xfs_name xfs_name_dot = { (unsigned char *)".", 1, XFS_DIR3_FT_DIR };
-+
-+/* Swap the temporary directory's data fork with the one being repaired. */
-+STATIC int
-+xrep_dir_swap(
-+	struct xrep_dir		*rd)
-+{
-+	struct xfs_scrub	*sc = rd->sc;
-+	unsigned int		resblks;
-+	bool			ip_local, temp_local;
-+	int			error;
-+
-+	resblks = xfs_swap_range_calc_resblks(sc->tempip, sc->ip,
-+			XFS_DATA_FORK, XFS_MAX_FILEOFF);
-+	error = xchk_trans_alloc(sc, max(1U, resblks));
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * Lock and join the inodes to the tansaction so that transaction commit
-+	 * or cancel will unlock the inodes from this point onwards.
-+	 */
-+	xfs_lock_two_inodes(sc->ip, XFS_ILOCK_EXCL, sc->tempip,
-+			XFS_ILOCK_EXCL);
-+	sc->temp_ilock_flags |= XFS_ILOCK_EXCL;
-+	sc->ilock_flags |= XFS_ILOCK_EXCL;
-+	xfs_trans_ijoin(sc->tp, sc->ip, 0);
-+	xfs_trans_ijoin(sc->tp, sc->tempip, 0);
-+
-+	/*
-+	 * Reset the temporary directory's '.' entry to point to the directory
-+	 * we're repairing.  Note: shortform directories lack the dot entry.
-+	 *
-+	 * It's possible that this replacement could also expand a sf tempdir
-+	 * into block format.
-+	 */
-+	if (XFS_IFORK_FORMAT(sc->tempip, XFS_DATA_FORK) !=
-+			XFS_DINODE_FMT_LOCAL) {
-+		error = xfs_dir_replace(sc->tp, sc->tempip, &xfs_name_dot,
-+				sc->ip->i_ino, resblks);
-+		if (error)
-+			return error;
-+	}
-+
-+	/*
-+	 * Reset the temporary directory's '..' entry to point to the parent
-+	 * that we found.  The temporary directory was created with the root
-+	 * directory as the parent, so we can skip this if repairing a
-+	 * subdirectory of the root.
-+	 *
-+	 * It's also possible that this replacement could also expand a sf
-+	 * tempdir into block format.
-+	 */
-+	if (rd->parent_ino != sc->mp->m_rootip->i_ino) {
-+		error = xfs_dir_replace(sc->tp, rd->sc->tempip,
-+				&xfs_name_dotdot, rd->parent_ino, resblks);
-+		if (error)
-+			return error;
-+	}
-+
-+	/* XXX: do we need to roll the transaction here? */
-+
-+	/*
-+	 * Changing the dot and dotdot entries could have changed the shape of
-+	 * the directory, so we recompute these.
-+	 */
-+	ip_local = XFS_IFORK_FORMAT(sc->ip, XFS_DATA_FORK) ==
-+				XFS_DINODE_FMT_LOCAL;
-+	temp_local = XFS_IFORK_FORMAT(sc->tempip, XFS_DATA_FORK) ==
-+				XFS_DINODE_FMT_LOCAL;
-+
-+	/*
-+	 * If the both files have a local format data fork and the rebuilt
-+	 * directory data would fit in the repaired file's data fork, copy
-+	 * the contents from the tempfile and declare ourselves done.
-+	 */
-+	if (ip_local && temp_local) {
-+		if (sc->tempip->i_d.di_size <= XFS_IFORK_DSIZE(sc->ip)) {
-+			xrep_dir_swap_local(sc, sc->tempip->i_d.di_size);
-+			set_nlink(VFS_I(sc->ip), rd->new_nlink);
-+			return 0;
-+		}
-+	}
-+
-+	/* Otherwise, make sure both data forks are in block-mapping mode. */
-+	error = xrep_dir_swap_prep(sc, temp_local, ip_local);
-+	if (error)
-+		return error;
-+
-+	/* Rewrite the owner field of all attr blocks in the temporary file. */
-+	error = xrep_dir_swap_owner(sc);
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * Set nlink of the directory under repair to the number of
-+	 * subdirectories that will be in the new directory data.  Do this in
-+	 * the same transaction sequence that (atomically) commits the new
-+	 * data.
-+	 */
-+	set_nlink(VFS_I(sc->ip), rd->new_nlink);
-+
-+	return xfs_swapext_atomic(&sc->tp, sc->tempip, sc->ip, XFS_DATA_FORK,
-+			0, 0, NULLFILEOFF,
-+			XFS_SWAPEXT_SET_SIZES | XFS_SWAPEXT_TO_SHORTFORM2);
-+}
-+
- /*
-  * Insert all the attributes that we collected.
-  *
-@@ -669,6 +1024,10 @@ xrep_dir_rebuild_tree(
- 	if (error)
- 		return error;
- 
-+	/*
-+	 * Drop the ILOCK so that we don't pin the tail of the log.  We still
-+	 * hold the IOLOCK (aka i_rwsem) which will prevent directory access.
-+	 */
- 	xfs_iunlock(rd->sc->ip, XFS_ILOCK_EXCL);
- 	rd->sc->ilock_flags &= ~XFS_ILOCK_EXCL;
- 
-@@ -680,8 +1039,30 @@ xrep_dir_rebuild_tree(
- 	if (error)
- 		return error;
- 
--	/* Re-add every entry to the directory. */
--	return xfbma_iter_del(rd->dir_entries, xrep_dir_insert_rec, rd);
-+	/* Re-add every entry to the temporary directory. */
-+	error = xfbma_iter_del(rd->dir_entries, xrep_dir_insert_rec, rd);
-+	if (error)
-+		return error;
-+
-+	/* Swap the tempdir's data fork with the file being repaired. */
-+	error = xrep_dir_swap(rd);
-+	if (error)
-+		return error;
-+
-+	/*
-+	 * Now reset the data fork of the temp directory to an empty shortform
-+	 * directory because inactivation does nothing for directories.  We're
-+	 * done with the inode that we want to repair, so roll the transaction
-+	 * and drop its ILOCK before we tackle the temporary file.
-+	 */
-+	error = xfs_trans_roll_inode(&rd->sc->tp, rd->sc->tempip);
-+	if (error)
-+		return error;
-+	xfs_iunlock(rd->sc->ip, XFS_ILOCK_EXCL);
-+	rd->sc->ilock_flags &= ~XFS_ILOCK_EXCL;
-+
-+	return xrep_dir_reset_fork(rd->sc, rd->sc->tempip,
-+			rd->sc->mp->m_rootip->i_ino);
- }
- 
- /*
-@@ -821,6 +1202,7 @@ xrep_dir(
- 	struct xrep_dir		rd = {
- 		.sc		= sc,
- 		.parent_ino	= NULLFSINO,
-+		.new_nlink	= 2,
- 	};
- 	int			error;
- 
-@@ -860,17 +1242,6 @@ xrep_dir(
- 	if (error)
- 		goto out;
- 
--	/*
--	 * Invalidate and truncate all data fork extents.  This is the point at
--	 * which we are no longer able to bail out gracefully.  We commit the
--	 * transaction here because the rebuilding step allocates its own
--	 * transactions.
--	 */
--	xfs_trans_ijoin(sc->tp, sc->ip, 0);
--	error = xrep_dir_reset_fork(sc, sc->ip, rd.parent_ino);
--	if (error)
--		goto out;
--
- 	/* Now rebuild the directory information. */
- 	error = xrep_dir_rebuild_tree(&rd);
- out:
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 080c8838fba5..301fb9afbfde 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -17,6 +17,7 @@
- #include "xfs_inode.h"
- #include "xfs_dir2.h"
- #include "xfs_attr.h"
-+#include "xfs_bit.h"
- #include "xfs_trans_space.h"
- #include "xfs_trans.h"
- #include "xfs_buf_item.h"
-@@ -1292,6 +1293,49 @@ xfs_release(
- 	return 0;
- }
- 
-+/*
-+ * Mark all the buffers attached to this directory stale.  In theory we should
-+ * never be freeing a directory with any blocks at all, but this covers the
-+ * case where we've recovered a directory swap with a "temporary" directory
-+ * created by online repair and now need to dump it.
-+ */
-+STATIC void
-+xfs_inactive_dir(
-+	struct xfs_inode	*dp)
-+{
-+	struct xfs_iext_cursor	icur;
-+	struct xfs_bmbt_irec	got;
-+	struct xfs_mount	*mp = dp->i_mount;
-+	struct xfs_da_geometry	*geo = mp->m_dir_geo;
-+	struct xfs_ifork	*ifp = XFS_IFORK_PTR(dp, XFS_DATA_FORK);
-+	struct xfs_buf		*bp;
-+	xfs_fileoff_t		off;
-+
-+	/*
-+	 * Invalidate each directory block.  All directory blocks are of
-+	 * fsbcount length and alignment, so we only need to walk those same
-+	 * offsets.  We hold the only reference to this inode, so we must wait
-+	 * for the buffer locks.
-+	 */
-+	for_each_xfs_iext(ifp, &icur, &got) {
-+		for (off = round_up(got.br_startoff, geo->fsbcount);
-+		     off < got.br_startoff + got.br_blockcount;
-+		     off += geo->fsbcount) {
-+			xfs_fsblock_t	fsbno;
-+
-+			fsbno = (off - got.br_startoff) + got.br_startblock;
-+			bp = xfs_buf_incore(mp->m_ddev_targp,
-+					XFS_FSB_TO_DADDR(mp, fsbno),
-+					XFS_FSB_TO_BB(mp, geo->fsbcount),
-+					XBF_SCAN_STALE);
-+			if (bp) {
-+				xfs_buf_stale(bp);
-+				xfs_buf_relse(bp);
-+			}
-+		}
-+	}
-+}
-+
- /*
-  * xfs_inactive_truncate
-  *
-@@ -1694,6 +1738,11 @@ xfs_inactive(
- 	     ip->i_d.di_nextents > 0 || ip->i_delayed_blks > 0))
- 		truncate = 1;
- 
-+	if (S_ISDIR(VFS_I(ip)->i_mode) && ip->i_d.di_nextents > 0) {
-+		xfs_inactive_dir(ip);
-+		truncate = 1;
-+	}
-+
- 	if (S_ISLNK(VFS_I(ip)->i_mode))
- 		error = xfs_inactive_symlink(ip);
- 	else if (truncate)
+But consistency is a reasonable request.
 
+The rest of the doc (save 1 place) uses filesystem so I will adopt that here,
+and clean up that 1 place.
+
+> 
+> > +is different.
+> > +
+> > +Enabling DAX on ext4 and ext2
+> > +-----------------------------
+> > +
+> > +When mounting the filesystem, use the "-o dax" option on the command line or
+> > +add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
+> > +within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
+> > +
+> > +
+> > +Enabling DAX on xfs
+> > +-------------------
+> > +
+> > +Summary
+> > +-------
+> > +
+> > + 1. There exists an in-kernel file access mode flag S_DAX that corresponds to
+> > +    the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
+> > +    about this access mode.
+> > +
+> > + 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to regular
+> > +    files and directories. This advisory flag can be set or cleared at any
+> > +    time, but doing so does not immediately affect the S_DAX state.
+> > +
+> > + 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this flag will
+> > +    be inherited by all regular files and subdirectories that are subsequently
+> > +    created in this directory. Files and subdirectories that exist at the time
+> > +    this flag is set or cleared on the parent directory are not modified by
+> > +    this modification of the parent directory.
+> > +
+> > + 4. There exists dax mount options which can override FS_XFLAG_DAX in the
+> 
+>              exist
+
+Ah yea,
+Done.
+
+> 
+> > +    setting of the S_DAX flag.  Given underlying storage which supports DAX the
+> > +    following hold:
+> > +
+> > +    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> > +
+> > +    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> > +
+> > +    "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
+> > +
+> > +    "-o dax"        is a legacy option which is an alias for "dax=always".
+> > +		    This may be removed in the future so "-o dax=always" is
+> > +		    the preferred method for specifying this behavior.
+> > +
+> > +    NOTE: Modifications to and the inheritance behavior of FS_XFLAG_DAX remain
+> > +    the same even when the file system is mounted with a dax option.  However,
+> > +    in-core inode state (S_DAX) will be overridden until the file system is
+> 
+>                                      "file system" (2 times above)
+
+Done.
+
+> 
+> > +    remounted with dax=inode and the inode is evicted from kernel memory.
+> > +
+> > + 5. The S_DAX policy can be changed via:
+> > +
+> > +    a) Setting the parent directory FS_XFLAG_DAX as needed before files are
+> > +       created
+> > +
+> > +    b) Setting the appropriate dax="foo" mount option
+> > +
+> > +    c) Changing the FS_XFLAG_DAX on existing regular files and directories.
+> 
+>                        FS_XFLAGS_DAX flag on
+
+Done.
+
+> 
+> > +       This has runtime constraints and limitations that are described in 6)
+> > +       below.
+> > +
+> > + 6. When changing the S_DAX policy via toggling the persistent FS_XFLAG_DAX flag,
+> > +    the change in behaviour for existing regular files may not occur
+> > +    immediately.  If the change must take effect immediately, the administrator
+> > +    needs to:
+> > +
+> > +    a) stop the application so there are no active references to the data set
+> > +       the policy change will affect
+> > +
+> > +    b) evict the data set from kernel caches so it will be re-instantiated when
+> > +       the application is restarted. This can be achieved by:
+> > +
+> > +       i. drop-caches
+> > +       ii. a filesystem unmount and mount cycle
+> 
+> filesystem
+
+Done.
+
+> 
+> > +       iii. a system reboot
+> > +
+> > +
+> > +Details
+> > +-------
+> > +
+> > +There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
+> > +and the other is a volatile flag indicating the active state of the feature
+> > +(S_DAX).
+> > +
+> > +FS_XFLAG_DAX is preserved within the file system.  This persistent config
+> 
+> file system
+
+Done.
+
+> 
+> > +setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
+> > +(see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
+> > +
+> > +New files and directories automatically inherit FS_XFLAG_DAX from
+> > +their parent directory _when_ _created_.  Therefore, setting FS_XFLAG_DAX at
+> > +directory creation time can be used to set a default behavior for an entire
+> > +sub-tree.
+> > +
+> > +To clarify inheritance, here are 3 examples:
+> > +
+> > +Example A:
+> > +
+> > +mkdir -p a/b/c
+> > +xfs_io -c 'chattr +x' a
+> > +mkdir a/b/c/d
+> > +mkdir a/e
+> > +
+> > +	dax: a,e
+> > +	no dax: b,c,d
+> > +
+> > +Example B:
+> > +
+> > +mkdir a
+> > +xfs_io -c 'chattr +x' a
+> > +mkdir -p a/b/c/d
+> > +
+> > +	dax: a,b,c,d
+> > +	no dax:
+> > +
+> > +Example C:
+> > +
+> > +mkdir -p a/b/c
+> > +xfs_io -c 'chattr +x' c
+> > +mkdir a/b/c/d
+> > +
+> > +	dax: c,d
+> > +	no dax: a,b
+> > +
+> > +
+> > +The current enabled state (S_DAX) is set when a file inode is instantiated in
+> > +memory by the kernel.  It is set based on the underlying media support, the
+> > +value of FS_XFLAG_DAX and the file system's dax mount option.
+> > +
+> > +statx can be used to query S_DAX.  NOTE that only regular files will ever have
+> > +S_DAX set and therefore statx will never indicate that S_DAX is set on
+> > +directories.
+> > +
+> > +Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs even if
+> 
+>            the FS_XFLAG_DAX flag
+
+Done.
+
+> 
+> > +the underlying media does not support dax and/or the file system is overridden
+> 
+> file system
+> 
+> Just be consistent, please.
+
+Fair enough,
+Done.
+
+> 
+> > +with a mount option.
+> > +
+> >  
+> >  
+> >  Implementation Tips for Block Driver Writers
+> > 
+> 
+> thanks.
+
+NP, Thank you!
+Ira
+
+> -- 
+> ~Randy
+> 
