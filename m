@@ -2,165 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DB0D1BE517
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Apr 2020 19:22:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E409A1BEC6A
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Apr 2020 01:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgD2RWI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 Apr 2020 13:22:08 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24601 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726869AbgD2RWH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 13:22:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588180926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mfemXV+L67J29eQ8gxOefH3jnpUvuNGdf8W/IJPxLaY=;
-        b=SAD7C22/+6zyTHMfKjxB+BE6JkeV3DpcFb4ut7n+897SE5AXziNor1bw5+ZD5voxB/B5NN
-        B6PRybeOxXV+M7i5ihu5BHf17u2Th7Em2EVBqdSg9GLDH5boxnXgteljqKsO50/iunj2pn
-        VxW5I+1gE/9TDJllpWlk+crr39MqdNk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-fTuKwygFOlyEpcTLMljyew-1; Wed, 29 Apr 2020 13:22:04 -0400
-X-MC-Unique: fTuKwygFOlyEpcTLMljyew-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD182107ACF6
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 17:22:03 +0000 (UTC)
-Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 67F525C220
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 17:22:03 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v3 17/17] xfs: remove unused iget_flags param from xfs_imap_to_bp()
-Date:   Wed, 29 Apr 2020 13:21:53 -0400
-Message-Id: <20200429172153.41680-18-bfoster@redhat.com>
-In-Reply-To: <20200429172153.41680-1-bfoster@redhat.com>
-References: <20200429172153.41680-1-bfoster@redhat.com>
+        id S1726481AbgD2XFo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Apr 2020 19:05:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47478 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgD2XFo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 19:05:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TN3CEC040190
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 23:05:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=iV7/vM6jLGRYuhswjUzufIM/4JfcQSiHKe5DU1fsckI=;
+ b=dajqklijMvhNqAKiVgNa1MJ/NKM2dRRBT9IvfywEku+HZJ+kIm5oCm2ZtLuOpI3/8iWa
+ 9VpE6nJl/VyE/3JQ04Y0TG/cbQ9lR1f83GydY2pVEU9kkRMDafsgHZzc3L3q+HkFIQkB
+ jLldTaCwauB7Q+Y97rppcwUfRLkBOsxPBBSsokXzko96NsrVxqZxsT4SJUWwqGssbDX0
+ r6Z694yxXJ0mI8nsMrooQUTYwoHowLSEQ3YEi/HHFJBZlLfKmer03/Rx4tnINoq641tt
+ aS7N+oGirl0Wd3yWmeavxjCpMtq5vevjdTZYCBdjH+SQiEPgaipHDP+OlceJteDHwSnz oQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30nucg8g5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 23:05:43 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TN2nhg182066
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 23:05:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30mxpm3w9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 23:05:42 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03TN5f7o025134
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 23:05:41 GMT
+Received: from localhost (/10.159.128.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Apr 2020 16:05:41 -0700
+Date:   Wed, 29 Apr 2020 16:05:40 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Allison Collins <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v8 10/20] xfs: Add helper function
+ __xfs_attr_rmtval_remove
+Message-ID: <20200429230540.GV6742@magnolia>
+References: <20200403221229.4995-1-allison.henderson@oracle.com>
+ <20200403221229.4995-11-allison.henderson@oracle.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403221229.4995-11-allison.henderson@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290168
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-iget_flags is unused in xfs_imap_to_bp(). Remove the parameter and
-fix up the callers.
+On Fri, Apr 03, 2020 at 03:12:19PM -0700, Allison Collins wrote:
+> This function is similar to xfs_attr_rmtval_remove, but adapted to
+> return EAGAIN for new transactions. We will use this later when we
+> introduce delayed attributes.  This function will eventually replace
+> xfs_attr_rmtval_remove
+> 
+> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+> Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/libxfs/xfs_inode_buf.c | 5 ++---
- fs/xfs/libxfs/xfs_inode_buf.h | 2 +-
- fs/xfs/scrub/ialloc.c         | 3 +--
- fs/xfs/xfs_inode.c            | 7 +++----
- fs/xfs/xfs_log_recover.c      | 2 +-
- 5 files changed, 8 insertions(+), 11 deletions(-)
+Seems reasonable, but oh my the transaction roll hoisting is complex...
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.=
-c
-index b102e611bf54..81a010422bea 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -161,8 +161,7 @@ xfs_imap_to_bp(
- 	struct xfs_imap		*imap,
- 	struct xfs_dinode       **dipp,
- 	struct xfs_buf		**bpp,
--	uint			buf_flags,
--	uint			iget_flags)
-+	uint			buf_flags)
- {
- 	struct xfs_buf		*bp;
- 	int			error;
-@@ -621,7 +620,7 @@ xfs_iread(
- 	/*
- 	 * Get pointers to the on-disk inode and the buffer containing it.
- 	 */
--	error =3D xfs_imap_to_bp(mp, tp, &ip->i_imap, &dip, &bp, 0, iget_flags)=
-;
-+	error =3D xfs_imap_to_bp(mp, tp, &ip->i_imap, &dip, &bp, 0);
- 	if (error)
- 		return error;
-=20
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.=
-h
-index 9b373dcf9e34..d9b4781ac9fd 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.h
-+++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -48,7 +48,7 @@ struct xfs_imap {
-=20
- int	xfs_imap_to_bp(struct xfs_mount *, struct xfs_trans *,
- 		       struct xfs_imap *, struct xfs_dinode **,
--		       struct xfs_buf **, uint, uint);
-+		       struct xfs_buf **, uint);
- int	xfs_iread(struct xfs_mount *, struct xfs_trans *,
- 		  struct xfs_inode *, uint);
- void	xfs_dinode_calc_crc(struct xfs_mount *, struct xfs_dinode *);
-diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
-index 64c217eb06a7..6517d67e8d51 100644
---- a/fs/xfs/scrub/ialloc.c
-+++ b/fs/xfs/scrub/ialloc.c
-@@ -278,8 +278,7 @@ xchk_iallocbt_check_cluster(
- 			&XFS_RMAP_OINFO_INODES);
-=20
- 	/* Grab the inode cluster buffer. */
--	error =3D xfs_imap_to_bp(mp, bs->cur->bc_tp, &imap, &dip, &cluster_bp,
--			0, 0);
-+	error =3D xfs_imap_to_bp(mp, bs->cur->bc_tp, &imap, &dip, &cluster_bp, =
-0);
- 	if (!xchk_btree_xref_process_error(bs->sc, bs->cur, 0, &error))
- 		return error;
-=20
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index e0d9a5bf7507..4f915b91b9fd 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2172,7 +2172,7 @@ xfs_iunlink_update_inode(
-=20
- 	ASSERT(xfs_verify_agino_or_null(mp, agno, next_agino));
-=20
--	error =3D xfs_imap_to_bp(mp, tp, &ip->i_imap, &dip, &ibp, 0, 0);
-+	error =3D xfs_imap_to_bp(mp, tp, &ip->i_imap, &dip, &ibp, 0);
- 	if (error)
- 		return error;
-=20
-@@ -2302,7 +2302,7 @@ xfs_iunlink_map_ino(
- 		return error;
- 	}
-=20
--	error =3D xfs_imap_to_bp(mp, tp, imap, dipp, bpp, 0, 0);
-+	error =3D xfs_imap_to_bp(mp, tp, imap, dipp, bpp, 0);
- 	if (error) {
- 		xfs_warn(mp, "%s: xfs_imap_to_bp returned error %d.",
- 				__func__, error);
-@@ -3665,8 +3665,7 @@ xfs_iflush(
- 	 * If we get any other error, we effectively have a corruption situatio=
-n
- 	 * and we cannot flush the inode. Abort the flush and shut down.
- 	 */
--	error =3D xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &bp, XBF_TRYLOCK,
--			       0);
-+	error =3D xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &bp, XBF_TRYLOCK)=
-;
- 	if (error =3D=3D -EAGAIN) {
- 		xfs_ifunlock(ip);
- 		return error;
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 11c3502b07b1..6a98fd9f00b3 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -4987,7 +4987,7 @@ xlog_recover_process_one_iunlink(
- 	/*
- 	 * Get the on disk inode to find the next inode in the bucket.
- 	 */
--	error =3D xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &ibp, 0, 0);
-+	error =3D xfs_imap_to_bp(mp, NULL, &ip->i_imap, &dip, &ibp, 0);
- 	if (error)
- 		goto fail_iput;
-=20
---=20
-2.21.1
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
+--D
+
+> ---
+>  fs/xfs/libxfs/xfs_attr_remote.c | 25 +++++++++++++++++++++++++
+>  fs/xfs/libxfs/xfs_attr_remote.h |  1 +
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+> index 4d51969..fd4be9d 100644
+> --- a/fs/xfs/libxfs/xfs_attr_remote.c
+> +++ b/fs/xfs/libxfs/xfs_attr_remote.c
+> @@ -711,3 +711,28 @@ xfs_attr_rmtval_remove(
+>  	}
+>  	return 0;
+>  }
+> +
+> +/*
+> + * Remove the value associated with an attribute by deleting the out-of-line
+> + * buffer that it is stored on. Returns EAGAIN for the caller to refresh the
+> + * transaction and recall the function
+> + */
+> +int
+> +__xfs_attr_rmtval_remove(
+> +	struct xfs_da_args	*args)
+> +{
+> +	int	error, done;
+> +
+> +	/*
+> +	 * Unmap value blocks for this attr.
+> +	 */
+> +	error = xfs_bunmapi(args->trans, args->dp, args->rmtblkno,
+> +			    args->rmtblkcnt, XFS_BMAPI_ATTRFORK, 1, &done);
+> +	if (error)
+> +		return error;
+> +
+> +	if (!done)
+> +		return -EAGAIN;
+> +
+> +	return 0;
+> +}
+> diff --git a/fs/xfs/libxfs/xfs_attr_remote.h b/fs/xfs/libxfs/xfs_attr_remote.h
+> index eff5f95..ee3337b 100644
+> --- a/fs/xfs/libxfs/xfs_attr_remote.h
+> +++ b/fs/xfs/libxfs/xfs_attr_remote.h
+> @@ -14,4 +14,5 @@ int xfs_attr_rmtval_remove(struct xfs_da_args *args);
+>  int xfs_attr_rmtval_stale(struct xfs_inode *ip, struct xfs_bmbt_irec *map,
+>  		xfs_buf_flags_t incore_flags);
+>  int xfs_attr_rmtval_invalidate(struct xfs_da_args *args);
+> +int __xfs_attr_rmtval_remove(struct xfs_da_args *args);
+>  #endif /* __XFS_ATTR_REMOTE_H__ */
+> -- 
+> 2.7.4
+> 
