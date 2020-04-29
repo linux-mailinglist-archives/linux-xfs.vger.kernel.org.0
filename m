@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F20871BE50C
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Apr 2020 19:22:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4B4A1BE519
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Apr 2020 19:22:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgD2RWC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 Apr 2020 13:22:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35327 "EHLO
+        id S1726838AbgD2RWL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Apr 2020 13:22:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56937 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726456AbgD2RWC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 13:22:02 -0400
+        with ESMTP id S1726871AbgD2RWK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 13:22:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588180921;
+        s=mimecast20190719; t=1588180929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eaVnMNzLgjsDLIghB+i41GYdXbS5JF45e8x/ksVbC8U=;
-        b=jN96zV9XzLy6pRd23PNP3itGrMl8dXCmWFNzB9DkKSzqe7TLELXBU4+7nkwDH9c7FrR7nb
-        c4PmeLVpt3mPdCrM2lkLNuOftcui3kMIiB0njK4HFYNnbo0MHz+BIZ8KoVnPq5xYERyWgP
-        96uwUSeW1YKiB8W2/nrBwHPoYhAggng=
+        bh=UAY1aJ0IaAlwI9nZwvfD338WAGWfSiNZa33Bu9coGzs=;
+        b=NTUk9BHlwl084FogeMd/lcgnhBsJGPb2LctMhuM5TkNvwNINSoXGQ5FeKGwDgLh3qobw6B
+        TtLhLkVBIwRvEGRm5NMv7Agbv0RcAN5fAwhwuoDiwIKhS2CezcwmNeUd0+HHloaUs7fR5/
+        9H3n7Nd1VwF+SZjwRFa3UXm7O08krro=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-rzXae0LUNQeFc02bUzSkXA-1; Wed, 29 Apr 2020 13:21:59 -0400
-X-MC-Unique: rzXae0LUNQeFc02bUzSkXA-1
+ us-mta-317-XbpiFbMpMhCVvcWrHn_ttg-1; Wed, 29 Apr 2020 13:22:07 -0400
+X-MC-Unique: XbpiFbMpMhCVvcWrHn_ttg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53F06107ACCD
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D86931005510
         for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 17:21:58 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 00A9E5C1BE
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 17:21:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 844DD5C1BE
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Apr 2020 17:21:58 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v3 07/17] xfs: ratelimit unmount time per-buffer I/O error alert
-Date:   Wed, 29 Apr 2020 13:21:43 -0400
-Message-Id: <20200429172153.41680-8-bfoster@redhat.com>
+Subject: [PATCH v3 08/17] xfs: fix duplicate verification from xfs_qm_dqflush()
+Date:   Wed, 29 Apr 2020 13:21:44 -0400
+Message-Id: <20200429172153.41680-9-bfoster@redhat.com>
 In-Reply-To: <20200429172153.41680-1-bfoster@redhat.com>
 References: <20200429172153.41680-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,66 +48,40 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-At unmount time, XFS emits an alert for every in-core buffer that
-might have undergone a write error. In practice this behavior is
-probably reasonable given that the filesystem is likely short lived
-once I/O errors begin to occur consistently. Under certain test or
-otherwise expected error conditions, this can spam the logs and slow
-down the unmount.
-
-Now that we have a ratelimit mechanism specifically for buffer
-alerts, reuse it for the per-buffer alerts in xfs_wait_buftarg().
-Also lift the final repair message out of the loop so it always
-prints and assert that the metadata error handling code has shut
-down the fs.
+The pre-flush dquot verification in xfs_qm_dqflush() duplicates the
+read verifier by checking the dquot in the on-disk buffer. Instead,
+verify the in-core variant before it is flushed to the buffer.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/xfs/xfs_dquot.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 594d5e1df6f8..8f0f605de579 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1657,7 +1657,8 @@ xfs_wait_buftarg(
- 	struct xfs_buftarg	*btp)
- {
- 	LIST_HEAD(dispose);
--	int loop =3D 0;
-+	int			loop =3D 0;
-+	bool			write_fail =3D false;
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index af2c8e5ceea0..265feb62290d 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -1116,13 +1116,12 @@ xfs_qm_dqflush(
+ 	dqb =3D bp->b_addr + dqp->q_bufoffset;
+ 	ddqp =3D &dqb->dd_diskdq;
 =20
- 	/*
- 	 * First wait on the buftarg I/O count for all in-flight buffers to be
-@@ -1685,17 +1686,23 @@ xfs_wait_buftarg(
- 			bp =3D list_first_entry(&dispose, struct xfs_buf, b_lru);
- 			list_del_init(&bp->b_lru);
- 			if (bp->b_flags & XBF_WRITE_FAIL) {
--				xfs_alert(btp->bt_mount,
-+				write_fail =3D true;
-+				xfs_buf_alert_ratelimited(bp,
-+					"XFS: Corruption Alert",
- "Corruption Alert: Buffer at daddr 0x%llx had permanent write failures!"=
+-	/*
+-	 * A simple sanity check in case we got a corrupted dquot.
+-	 */
+-	fa =3D xfs_dqblk_verify(mp, dqb, be32_to_cpu(ddqp->d_id), 0);
++	/* sanity check the in-core structure before we flush */
++	fa =3D xfs_dquot_verify(mp, &dqp->q_core, be32_to_cpu(dqp->q_core.d_id)=
 ,
- 					(long long)bp->b_bn);
--				xfs_alert(btp->bt_mount,
--"Please run xfs_repair to determine the extent of the problem.");
- 			}
- 			xfs_buf_rele(bp);
- 		}
- 		if (loop++ !=3D 0)
- 			delay(100);
- 	}
-+
-+	if (write_fail) {
-+		ASSERT(XFS_FORCED_SHUTDOWN(btp->bt_mount));
-+		xfs_alert(btp->bt_mount,
-+	      "Please run xfs_repair to determine the extent of the problem.");
-+	}
- }
-=20
- static enum lru_status
++			      0);
+ 	if (fa) {
+ 		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
+-				be32_to_cpu(ddqp->d_id), fa);
++				be32_to_cpu(dqp->q_core.d_id), fa);
+ 		xfs_buf_relse(bp);
+ 		xfs_dqfunlock(dqp);
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
 --=20
 2.21.1
 
