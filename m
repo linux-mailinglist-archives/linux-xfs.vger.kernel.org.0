@@ -2,94 +2,93 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 491EC1BECCC
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Apr 2020 02:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FCD91BED26
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Apr 2020 02:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgD3AAu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 Apr 2020 20:00:50 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48674 "EHLO
+        id S1726350AbgD3Atj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Apr 2020 20:49:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46372 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgD3AAu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 20:00:50 -0400
+        with ESMTP id S1726309AbgD3Ati (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Apr 2020 20:49:38 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TNxQiF124761;
-        Thu, 30 Apr 2020 00:00:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=08/vUSSJ+rQ0muWhYwsOxJk9xgk5EWluD1tb9YdoeXI=;
- b=SoXy6j7s0b7xITFFpL8vh3vrugj71b03/6hc6LsPbk0kf0WuMbPcAlRpICR18ALoDLxR
- h77SDspQZuxd3ZqmnN9Z0k7yBLO5JpifnXBpDMEHr8O6n2Vt5BrdeGaSQV7Z5d/gojnk
- ZnqvBqEf0iJWMuOvOaoe0VNvYM4QPs5mQ0WUWn3oTLWdfvwsTg8U0J23qRIUYaULm2J6
- Qm60seO5u07OFhtyRP8kpqypWiZF3VKnbXY878u/G+DkjlReiPO2EdjkUz1rGTouO169
- Vb7MKE6QGoPuxNIiU2H+901NfzonitBubphdRNp/oGfEwvH5clPxsoaHJu+5zMPV6Xyh bA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30nucg8m6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 00:00:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TNukEr141585;
-        Wed, 29 Apr 2020 23:58:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30mxpm6yjm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 23:58:29 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03TNwS2j003897;
-        Wed, 29 Apr 2020 23:58:28 GMT
-Received: from localhost (/10.159.128.65)
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U0nbsi193253
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 00:49:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=Rrj18lcVYpnogim5AHTLzTJq13uAS/Vg//GXC/kLS4I=;
+ b=eDJjiPYvr6zyF0Zh8hKKet6CMM87mydYMdatVAVskX8gf+dAyWfG63Goj6X7jeiEM6Sa
+ Z38Ln1yKKKP7PpECU0SwnmDMqrmwgZs/mtZ8PkVIinFot3ooguo71ID9KK8ztmtX3e7D
+ 5BKJ3d9R78MU0kCB9pTc8pzWePgM1NFJugIRr/CpocdG7hdQY3/+L1sNJj+cYUlEbPAQ
+ DkWttq4yGX9ilPH+BAo/vrDwIZQjQr+sHtd9sJI4YlaDi4i2tYc0Piq3Hof7ClKK9G2i
+ S0YAapDnGq4EMMYiZ4Yvr96KcvjtHpaFMBPdiIFgqxlv+B0TTOeyExt7Mkbk+GE0Vmcm 7A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucg8qa3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 00:49:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U0l6OM119943
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 00:47:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30my0jqyra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 00:47:37 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03U0laAI003579
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 00:47:36 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Apr 2020 16:58:28 -0700
-Date:   Wed, 29 Apr 2020 16:58:19 -0700
+        with ESMTP ; Wed, 29 Apr 2020 17:47:36 -0700
+Subject: [PATCH v2 00/21] xfs: refactor log recovery
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] xfs: teach deferred op freezer to freeze and thaw
- inodes
-Message-ID: <20200429235818.GX6742@magnolia>
-References: <158752128766.2142108.8793264653760565688.stgit@magnolia>
- <158752130655.2142108.9338576917893374360.stgit@magnolia>
- <20200425190137.GA16009@infradead.org>
- <20200427113752.GE4577@bfoster>
- <20200428221747.GH6742@magnolia>
- <20200429113803.GA33986@bfoster>
- <20200429114819.GA24120@infradead.org>
- <20200429142807.GU6742@magnolia>
- <20200429145557.GA26461@infradead.org>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Wed, 29 Apr 2020 17:47:35 -0700
+Message-ID: <158820765488.467894.15408191148091671053.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429145557.GA26461@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290177
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
  mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
  lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290177
+ engine=8.12.0-2003020000 definitions=main-2004300001
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:55:57AM -0700, Christoph Hellwig wrote:
-> On Wed, Apr 29, 2020 at 07:28:07AM -0700, Darrick J. Wong wrote:
-> > Hmm.  Actually now that I think harder about it, the bmap item is
-> > completely incore and fields are selectively copied to the log item.
-> > This means that regular IO could set bi_owner = <some inode number> and
-> > bi_ip = <the incore inode>.  Recovery IO can set bi_owner but leave
-> > bi_ip NULL, and then the bmap item replay can iget as needed.  Now we
-> > don't need this freeze/thaw thing at all.
-> 
-> Yes, that sounds pretty reasonable.
+Hi all,
 
-OTOH I was talking to Dave and we decided to try the simpler solution of
-retaining the inode reference unless someone can show that the more
-complex machinery is required.
+This series refactors log recovery by moving recovery code for each log
+item type into the source code for the rest of that log item type and
+using dispatch function pointers to virtualize the interactions.  This
+dramatically reduces the amount of code in xfs_log_recover.c and
+increases cohesion throughout the log code.
+
+In this second version, we dispense with the extra indirection for log
+intent items.  During log recovery pass 2, committing of the recovered
+intent and intent-done items is done directly by creating
+xlog_recover_item_types for all intent types.  The recovery functions
+that do the work are now called directly through the xfs_log_item ops
+structure.  Recovery item sorting is less intrusive, and the buffer and
+inode recovery code are in separate files now.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-log-recovery
