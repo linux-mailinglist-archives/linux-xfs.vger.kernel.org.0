@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63B2D1C0A87
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 00:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E8BF1C0A85
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 00:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgD3WrM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 30 Apr 2020 18:47:12 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48398 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgD3WrK (ORCPT
+        id S1727778AbgD3WrL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 30 Apr 2020 18:47:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58864 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgD3WrK (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Thu, 30 Apr 2020 18:47:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UMhfqJ047471
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UMhJQL063530
         for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=auLu4E7jafcZXoiir7sWzdxLX7GhCz+Bs7hlrQNgwnE=;
- b=0STxmtgGvJdc9Co5fkf14hP/FGHfXSDpXKYJUK7Oh2Wf54+8RdIgOfin3/OUmiCdu0TQ
- rK6u8/6BubOhk5gUNcbjVT5hXN1Rr8BQthNw8HyFM0VOf7vWXlSTNfuwlSGPkrz1k8uf
- p369oLjyA7BNhs8jTSW9zeKJ0UFOBHsqGSqnj5oyzLzUQZStu+cP6nydLgWo3Obz4yvu
- 3DJOx65O/4xhPAFA2EOErxDjRZ/xXbWlXDOkeieDvh+4bY/bkxKvqXTvcmRt2HaAwZX5
- crqWjVHYyJKQnVAu8jJ80INpHMiNq6lUAQGQfOw21BlSKW7ZcE5xXff+GAZh6Fg2DO5Z RQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30r7f5r26h-1
+ bh=qS/huGSEeO0peQve8+GwCsv19WKf/nAFb30FHyNGCRo=;
+ b=dfEEMcq/0buAjwUAnmvq3yonrrylBdko4vc0K67eh8o7KboUT2hL+ubS6Qi7EUXYGtJH
+ vXdaMAn/y5PKF9qKsRuc9i8kqnAG5tlAVaL3dB2ZytbuV2sdRF1MYadnsgSyWiLZ4BXC
+ YNOTc3jGBF4kCPXvHOjvVme1Hse1nKOXlhC0Bbrr+nDuKv4ZCubaFurnKdUV4libr0z3
+ hX4oWV3zxDeaHZq/BI27TWqYNc5DohWcsP8BaOeQXBD/JpUlJcCAuSHzWam2msPEj6Fn
+ I4Q/4/rBcQeJTnGkhsb8TmCL7GOrAOj+HV5r8acKHhoB6WZorDuW6dCKD6ymq/8AUE08 9A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30r7f8027w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UMgGXc141594
-        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30qtg23dqe-1
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UMgR19015834
+        for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30r7f298fg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:08 +0000
 Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03UMl8R2011751
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03UMl8ft031992
         for <linux-xfs@vger.kernel.org>; Thu, 30 Apr 2020 22:47:08 GMT
 Received: from localhost.localdomain (/67.1.142.158)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Apr 2020 15:47:07 -0700
+        with ESMTP ; Thu, 30 Apr 2020 15:47:08 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v9 11/43] xfsprogs: replace ATTR_KERNOTIME with XFS_DA_OP_NOTIME
-Date:   Thu, 30 Apr 2020 15:46:28 -0700
-Message-Id: <20200430224700.4183-12-allison.henderson@oracle.com>
+Subject: [PATCH v9 12/43] xfsprogs: factor out a xfs_attr_match helper
+Date:   Thu, 30 Apr 2020 15:46:29 -0700
+Message-Id: <20200430224700.4183-13-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200430224700.4183-1-allison.henderson@oracle.com>
 References: <20200430224700.4183-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 phishscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004300167
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=1 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004300167
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ spamscore=0 malwarescore=0 clxscore=1015 phishscore=0 mlxscore=0
+ lowpriorityscore=0 suspectscore=1 adultscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300167
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-op_flags with the XFS_DA_OP_* flags is the usual place for in-kernel
-only flags, so move the notime flag there.
+Factor out a helper that compares an on-disk attr vs the name, length and
+flags specified in struct xfs_da_args.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
@@ -73,78 +73,141 @@ Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- libxfs/xfs_attr.c     | 4 ++--
- libxfs/xfs_attr.h     | 8 +-------
- libxfs/xfs_da_btree.h | 2 ++
- 3 files changed, 5 insertions(+), 9 deletions(-)
+ libxfs/xfs_attr_leaf.c | 80 +++++++++++++++++++-------------------------------
+ 1 file changed, 30 insertions(+), 50 deletions(-)
 
-diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index 7adc547..6298891 100644
---- a/libxfs/xfs_attr.c
-+++ b/libxfs/xfs_attr.c
-@@ -186,7 +186,7 @@ xfs_attr_try_sf_addname(
- 	 * Commit the shortform mods, and we're done.
- 	 * NOTE: this is also the error path (EEXIST, etc).
- 	 */
--	if (!error && (args->flags & ATTR_KERNOTIME) == 0)
-+	if (!error && !(args->op_flags & XFS_DA_OP_NOTIME))
- 		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
+diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
+index fb07d1d..86e3135 100644
+--- a/libxfs/xfs_attr_leaf.c
++++ b/libxfs/xfs_attr_leaf.c
+@@ -442,14 +442,21 @@ xfs_attr3_leaf_read(
+  * Namespace helper routines
+  *========================================================================*/
  
- 	if (mp->m_flags & XFS_MOUNT_WSYNC)
-@@ -389,7 +389,7 @@ xfs_attr_set(
- 	if (mp->m_flags & XFS_MOUNT_WSYNC)
- 		xfs_trans_set_sync(args->trans);
+-/*
+- * If namespace bits don't match return 0.
+- * If all match then return 1.
+- */
+-STATIC int
+-xfs_attr_namesp_match(int arg_flags, int ondisk_flags)
++static bool
++xfs_attr_match(
++	struct xfs_da_args	*args,
++	uint8_t			namelen,
++	unsigned char		*name,
++	int			flags)
+ {
+-	return XFS_ATTR_NSP_ONDISK(ondisk_flags) == XFS_ATTR_NSP_ARGS_TO_ONDISK(arg_flags);
++	if (args->namelen != namelen)
++		return false;
++	if (memcmp(args->name, name, namelen) != 0)
++		return false;
++	if (XFS_ATTR_NSP_ARGS_TO_ONDISK(args->flags) !=
++	    XFS_ATTR_NSP_ONDISK(flags))
++		return false;
++	return true;
+ }
  
--	if ((args->flags & ATTR_KERNOTIME) == 0)
-+	if (!(args->op_flags & XFS_DA_OP_NOTIME))
- 		xfs_trans_ichgtime(args->trans, dp, XFS_ICHGTIME_CHG);
+ static int
+@@ -675,15 +682,8 @@ xfs_attr_shortform_add(xfs_da_args_t *args, int forkoff)
+ 	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count; sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+-#ifdef DEBUG
+-		if (sfe->namelen != args->namelen)
+-			continue;
+-		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+-			continue;
+-		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+-			continue;
+-		ASSERT(0);
+-#endif
++		ASSERT(!xfs_attr_match(args, sfe->namelen, sfe->nameval,
++			sfe->flags));
+ 	}
  
- 	/*
-diff --git a/libxfs/xfs_attr.h b/libxfs/xfs_attr.h
-index a6de050..0f36939 100644
---- a/libxfs/xfs_attr.h
-+++ b/libxfs/xfs_attr.h
-@@ -33,19 +33,13 @@ struct xfs_attr_list_context;
- #define ATTR_CREATE	0x0010	/* pure create: fail if attr already exists */
- #define ATTR_REPLACE	0x0020	/* pure set: fail if attr does not exist */
- 
--#define ATTR_KERNOTIME	0x1000	/* [kernel] don't update inode timestamps */
--
--#define ATTR_KERNEL_FLAGS \
--	(ATTR_KERNOTIME)
--
- #define XFS_ATTR_FLAGS \
- 	{ ATTR_DONTFOLLOW, 	"DONTFOLLOW" }, \
- 	{ ATTR_ROOT,		"ROOT" }, \
- 	{ ATTR_TRUST,		"TRUST" }, \
- 	{ ATTR_SECURE,		"SECURE" }, \
- 	{ ATTR_CREATE,		"CREATE" }, \
--	{ ATTR_REPLACE,		"REPLACE" }, \
--	{ ATTR_KERNOTIME,	"KERNOTIME" }
-+	{ ATTR_REPLACE,		"REPLACE" }
- 
- /*
-  * The maximum size (into the kernel or returned from the kernel) of an
-diff --git a/libxfs/xfs_da_btree.h b/libxfs/xfs_da_btree.h
-index dd1ac52..d93cb83 100644
---- a/libxfs/xfs_da_btree.h
-+++ b/libxfs/xfs_da_btree.h
-@@ -88,6 +88,7 @@ typedef struct xfs_da_args {
- #define XFS_DA_OP_ADDNAME	0x0004	/* this is an add operation */
- #define XFS_DA_OP_OKNOENT	0x0008	/* lookup/add op, ENOENT ok, else die */
- #define XFS_DA_OP_CILOOKUP	0x0010	/* lookup to return CI name if found */
-+#define XFS_DA_OP_NOTIME	0x0020	/* don't update inode timestamps */
- #define XFS_DA_OP_INCOMPLETE	0x0040	/* lookup INCOMPLETE attr keys */
- 
- #define XFS_DA_OP_FLAGS \
-@@ -96,6 +97,7 @@ typedef struct xfs_da_args {
- 	{ XFS_DA_OP_ADDNAME,	"ADDNAME" }, \
- 	{ XFS_DA_OP_OKNOENT,	"OKNOENT" }, \
- 	{ XFS_DA_OP_CILOOKUP,	"CILOOKUP" }, \
-+	{ XFS_DA_OP_NOTIME,	"NOTIME" }, \
- 	{ XFS_DA_OP_INCOMPLETE,	"INCOMPLETE" }
- 
- /*
+ 	offset = (char *)sfe - (char *)sf;
+@@ -746,13 +746,9 @@ xfs_attr_shortform_remove(xfs_da_args_t *args)
+ 	for (i = 0; i < end; sfe = XFS_ATTR_SF_NEXTENTRY(sfe),
+ 					base += size, i++) {
+ 		size = XFS_ATTR_SF_ENTSIZE(sfe);
+-		if (sfe->namelen != args->namelen)
+-			continue;
+-		if (memcmp(sfe->nameval, args->name, args->namelen) != 0)
+-			continue;
+-		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+-			continue;
+-		break;
++		if (xfs_attr_match(args, sfe->namelen, sfe->nameval,
++				sfe->flags))
++			break;
+ 	}
+ 	if (i == end)
+ 		return -ENOATTR;
+@@ -813,13 +809,9 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+-		if (sfe->namelen != args->namelen)
+-			continue;
+-		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+-			continue;
+-		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+-			continue;
+-		return -EEXIST;
++		if (xfs_attr_match(args, sfe->namelen, sfe->nameval,
++				sfe->flags))
++			return -EEXIST;
+ 	}
+ 	return -ENOATTR;
+ }
+@@ -844,14 +836,10 @@ xfs_attr_shortform_getvalue(
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+-		if (sfe->namelen != args->namelen)
+-			continue;
+-		if (memcmp(args->name, sfe->nameval, args->namelen) != 0)
+-			continue;
+-		if (!xfs_attr_namesp_match(args->flags, sfe->flags))
+-			continue;
+-		return xfs_attr_copy_value(args, &sfe->nameval[args->namelen],
+-						sfe->valuelen);
++		if (xfs_attr_match(args, sfe->namelen, sfe->nameval,
++				sfe->flags))
++			return xfs_attr_copy_value(args,
++				&sfe->nameval[args->namelen], sfe->valuelen);
+ 	}
+ 	return -ENOATTR;
+ }
+@@ -2406,23 +2394,15 @@ xfs_attr3_leaf_lookup_int(
+ 		}
+ 		if (entry->flags & XFS_ATTR_LOCAL) {
+ 			name_loc = xfs_attr3_leaf_name_local(leaf, probe);
+-			if (name_loc->namelen != args->namelen)
+-				continue;
+-			if (memcmp(args->name, name_loc->nameval,
+-							args->namelen) != 0)
+-				continue;
+-			if (!xfs_attr_namesp_match(args->flags, entry->flags))
++			if (!xfs_attr_match(args, name_loc->namelen,
++					name_loc->nameval, entry->flags))
+ 				continue;
+ 			args->index = probe;
+ 			return -EEXIST;
+ 		} else {
+ 			name_rmt = xfs_attr3_leaf_name_remote(leaf, probe);
+-			if (name_rmt->namelen != args->namelen)
+-				continue;
+-			if (memcmp(args->name, name_rmt->name,
+-							args->namelen) != 0)
+-				continue;
+-			if (!xfs_attr_namesp_match(args->flags, entry->flags))
++			if (!xfs_attr_match(args, name_rmt->namelen,
++					name_rmt->name, entry->flags))
+ 				continue;
+ 			args->index = probe;
+ 			args->rmtvaluelen = be32_to_cpu(name_rmt->valuelen);
 -- 
 2.7.4
 
