@@ -2,334 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B084D1C11DC
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 14:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EE601C16F6
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 16:09:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgEAMHI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 May 2020 08:07:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728485AbgEAMHI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 May 2020 08:07:08 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041C3HLi053900;
-        Fri, 1 May 2020 08:07:05 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mdggkf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 08:07:05 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 041C1DvI015935;
-        Fri, 1 May 2020 12:07:02 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5vmtm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 12:07:02 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 041C70DZ64553322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 May 2020 12:07:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A159511C054;
-        Fri,  1 May 2020 12:07:00 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1DF111C050;
-        Fri,  1 May 2020 12:06:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.72.180])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 May 2020 12:06:59 +0000 (GMT)
-From:   Chandan Rajendra <chandan@linux.ibm.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1730770AbgEANz1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 May 2020 09:55:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44512 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729328AbgEANd4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 May 2020 09:33:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588340034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t9D2JZPJ+Pw2/8tYLdIGsWmapimHns09dJ634nWvJYs=;
+        b=FUM3K2VMhxhw+62N/RVpEQwAZxUOQ03BOemzlDMXgCWJWR6tfI/+IZz5MFZuH8WYS3c803
+        7AcCPpvgcX9r70Ol1waIhepPXwP+NckAFeoUO186nDlvMEL3P4GvcW1YfCUyE+g/yvBOZ0
+        ivCsF6UsKQBGS5DzLj/xTGMaUpZiGSY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-Rv-MlDdRMTGg_oVn5TRFXA-1; Fri, 01 May 2020 09:33:53 -0400
+X-MC-Unique: Rv-MlDdRMTGg_oVn5TRFXA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AD558018AC;
+        Fri,  1 May 2020 13:33:52 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA1986084C;
+        Fri,  1 May 2020 13:33:51 +0000 (UTC)
+Date:   Fri, 1 May 2020 09:33:49 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/21] xfs: refactor log recovery item dispatch for pass2 readhead functions
-Date:   Fri, 01 May 2020 17:40:02 +0530
-Message-ID: <4890365.NoYZ9p2UQH@localhost.localdomain>
-Organization: IBM
-In-Reply-To: <158820766792.467894.3995732139270270438.stgit@magnolia>
-References: <158820765488.467894.15408191148091671053.stgit@magnolia> <158820766792.467894.3995732139270270438.stgit@magnolia>
+Subject: Re: [PATCH 01/12] xfs: xfs_bmapi_read doesn't take a fork id as the
+ last argument
+Message-ID: <20200501133349.GH40250@bfoster>
+References: <20200501081424.2598914-1-hch@lst.de>
+ <20200501081424.2598914-2-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_06:2020-04-30,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=1 clxscore=1015 phishscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005010095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501081424.2598914-2-hch@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thursday, April 30, 2020 6:17 AM Darrick J. Wong wrote: 
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, May 01, 2020 at 10:14:13AM +0200, Christoph Hellwig wrote:
+> The last argument to xfs_bmapi_raad contains XFS_BMAPI_* flags, not the
+> fork.  Given that XFS_DATA_FORK evaluates to 0 no real harm is done,
+> but let's fix this anyway.
 > 
-> Move the pass2 readhead code into the per-item source code files and use
-> the dispatch function to call them.
->
-
-Readahead is issued for buf, inode and dquot items similar to how it is done in
-the present code.
-
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/libxfs/xfs_log_recover.h |    6 ++
->  fs/xfs/xfs_buf_item_recover.c   |   11 +++++
->  fs/xfs/xfs_dquot_item.c         |   34 ++++++++++++++
->  fs/xfs/xfs_inode_item_recover.c |   19 ++++++++
->  fs/xfs/xfs_log_recover.c        |   95 +--------------------------------------
->  5 files changed, 73 insertions(+), 92 deletions(-)
-> 
-> 
-> diff --git a/fs/xfs/libxfs/xfs_log_recover.h b/fs/xfs/libxfs/xfs_log_recover.h
-> index 38ae9c371edb..1463eba47254 100644
-> --- a/fs/xfs/libxfs/xfs_log_recover.h
-> +++ b/fs/xfs/libxfs/xfs_log_recover.h
-> @@ -29,6 +29,9 @@ struct xlog_recover_item_type {
->  	 * values mean.
->  	 */
->  	enum xlog_recover_reorder (*reorder_fn)(struct xlog_recover_item *item);
-> +
-> +	/* Start readahead for pass2, if provided. */
-> +	void (*ra_pass2_fn)(struct xlog *log, struct xlog_recover_item *item);
->  };
->  
->  extern const struct xlog_recover_item_type xlog_icreate_item_type;
-> @@ -90,4 +93,7 @@ struct xlog_recover {
->  #define	XLOG_RECOVER_PASS1	1
->  #define	XLOG_RECOVER_PASS2	2
->  
-> +void xlog_buf_readahead(struct xlog *log, xfs_daddr_t blkno, uint len,
-> +		const struct xfs_buf_ops *ops);
-> +
->  #endif	/* __XFS_LOG_RECOVER_H__ */
-> diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-> index 07ddf58209c3..c756b8e55fde 100644
-> --- a/fs/xfs/xfs_buf_item_recover.c
-> +++ b/fs/xfs/xfs_buf_item_recover.c
-> @@ -32,6 +32,17 @@ xlog_buf_reorder_fn(
->  	return XLOG_REORDER_BUFFER_LIST;
->  }
->  
-> +STATIC void
-> +xlog_recover_buffer_ra_pass2(
-> +	struct xlog                     *log,
-> +	struct xlog_recover_item        *item)
-> +{
-> +	struct xfs_buf_log_format	*buf_f = item->ri_buf[0].i_addr;
-> +
-> +	xlog_buf_readahead(log, buf_f->blf_blkno, buf_f->blf_len, NULL);
-> +}
-> +
->  const struct xlog_recover_item_type xlog_buf_item_type = {
->  	.reorder_fn		= xlog_buf_reorder_fn,
-> +	.ra_pass2_fn		= xlog_recover_buffer_ra_pass2,
->  };
-> diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-> index 3bd5b6c7e235..2a05d1239423 100644
-> --- a/fs/xfs/xfs_dquot_item.c
-> +++ b/fs/xfs/xfs_dquot_item.c
-> @@ -386,7 +386,41 @@ xfs_qm_qoff_logitem_init(
->  	return qf;
->  }
->  
-> +STATIC void
-> +xlog_recover_dquot_ra_pass2(
-> +	struct xlog			*log,
-> +	struct xlog_recover_item	*item)
-> +{
-> +	struct xfs_mount	*mp = log->l_mp;
-> +	struct xfs_disk_dquot	*recddq;
-> +	struct xfs_dq_logformat	*dq_f;
-> +	uint			type;
-> +
-> +	if (mp->m_qflags == 0)
-> +		return;
-> +
-> +	recddq = item->ri_buf[1].i_addr;
-> +	if (recddq == NULL)
-> +		return;
-> +	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot))
-> +		return;
-> +
-> +	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
-> +	ASSERT(type);
-> +	if (log->l_quotaoffs_flag & type)
-> +		return;
-> +
-> +	dq_f = item->ri_buf[0].i_addr;
-> +	ASSERT(dq_f);
-> +	ASSERT(dq_f->qlf_len == 1);
-> +
-> +	xlog_buf_readahead(log, dq_f->qlf_blkno,
-> +			XFS_FSB_TO_BB(mp, dq_f->qlf_len),
-> +			&xfs_dquot_buf_ra_ops);
-> +}
-> +
->  const struct xlog_recover_item_type xlog_dquot_item_type = {
-> +	.ra_pass2_fn		= xlog_recover_dquot_ra_pass2,
->  };
->  
->  const struct xlog_recover_item_type xlog_quotaoff_item_type = {
-> diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-> index 478f0a5c08ab..d97d8caa4652 100644
-> --- a/fs/xfs/xfs_inode_item_recover.c
-> +++ b/fs/xfs/xfs_inode_item_recover.c
-> @@ -21,5 +21,24 @@
->  #include "xfs_log_priv.h"
->  #include "xfs_log_recover.h"
->  
-> +STATIC void
-> +xlog_recover_inode_ra_pass2(
-> +	struct xlog                     *log,
-> +	struct xlog_recover_item        *item)
-> +{
-> +	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
-> +		struct xfs_inode_log_format	*ilfp = item->ri_buf[0].i_addr;
-> +
-> +		xlog_buf_readahead(log, ilfp->ilf_blkno, ilfp->ilf_len,
-> +				   &xfs_inode_buf_ra_ops);
-> +	} else {
-> +		struct xfs_inode_log_format_32	*ilfp = item->ri_buf[0].i_addr;
-> +
-> +		xlog_buf_readahead(log, ilfp->ilf_blkno, ilfp->ilf_len,
-> +				   &xfs_inode_buf_ra_ops);
-> +	}
-> +}
-> +
->  const struct xlog_recover_item_type xlog_inode_item_type = {
-> +	.ra_pass2_fn		= xlog_recover_inode_ra_pass2,
->  };
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index 8ab107680883..b61323cc5a11 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -2045,7 +2045,7 @@ xlog_put_buffer_cancelled(
->  	return true;
->  }
->  
-> -static void
-> +void
->  xlog_buf_readahead(
->  	struct xlog		*log,
->  	xfs_daddr_t		blkno,
-> @@ -3912,96 +3912,6 @@ xlog_recover_do_icreate_pass2(
->  				     length, be32_to_cpu(icl->icl_gen));
->  }
->  
-> -STATIC void
-> -xlog_recover_buffer_ra_pass2(
-> -	struct xlog                     *log,
-> -	struct xlog_recover_item        *item)
-> -{
-> -	struct xfs_buf_log_format	*buf_f = item->ri_buf[0].i_addr;
-> -
-> -	xlog_buf_readahead(log, buf_f->blf_blkno, buf_f->blf_len, NULL);
-> -}
-> -
-> -STATIC void
-> -xlog_recover_inode_ra_pass2(
-> -	struct xlog                     *log,
-> -	struct xlog_recover_item        *item)
-> -{
-> -	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
-> -		struct xfs_inode_log_format	*ilfp = item->ri_buf[0].i_addr;
-> -
-> -		xlog_buf_readahead(log, ilfp->ilf_blkno, ilfp->ilf_len,
-> -				   &xfs_inode_buf_ra_ops);
-> -	} else {
-> -		struct xfs_inode_log_format_32	*ilfp = item->ri_buf[0].i_addr;
-> -
-> -		xlog_buf_readahead(log, ilfp->ilf_blkno, ilfp->ilf_len,
-> -				   &xfs_inode_buf_ra_ops);
-> -	}
-> -}
-> -
-> -STATIC void
-> -xlog_recover_dquot_ra_pass2(
-> -	struct xlog			*log,
-> -	struct xlog_recover_item	*item)
-> -{
-> -	struct xfs_mount	*mp = log->l_mp;
-> -	struct xfs_disk_dquot	*recddq;
-> -	struct xfs_dq_logformat	*dq_f;
-> -	uint			type;
-> -
-> -	if (mp->m_qflags == 0)
-> -		return;
-> -
-> -	recddq = item->ri_buf[1].i_addr;
-> -	if (recddq == NULL)
-> -		return;
-> -	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot))
-> -		return;
-> -
-> -	type = recddq->d_flags & (XFS_DQ_USER | XFS_DQ_PROJ | XFS_DQ_GROUP);
-> -	ASSERT(type);
-> -	if (log->l_quotaoffs_flag & type)
-> -		return;
-> -
-> -	dq_f = item->ri_buf[0].i_addr;
-> -	ASSERT(dq_f);
-> -	ASSERT(dq_f->qlf_len == 1);
-> -
-> -	xlog_buf_readahead(log, dq_f->qlf_blkno,
-> -			XFS_FSB_TO_BB(mp, dq_f->qlf_len),
-> -			&xfs_dquot_buf_ra_ops);
-> -}
-> -
-> -STATIC void
-> -xlog_recover_ra_pass2(
-> -	struct xlog			*log,
-> -	struct xlog_recover_item	*item)
-> -{
-> -	switch (ITEM_TYPE(item)) {
-> -	case XFS_LI_BUF:
-> -		xlog_recover_buffer_ra_pass2(log, item);
-> -		break;
-> -	case XFS_LI_INODE:
-> -		xlog_recover_inode_ra_pass2(log, item);
-> -		break;
-> -	case XFS_LI_DQUOT:
-> -		xlog_recover_dquot_ra_pass2(log, item);
-> -		break;
-> -	case XFS_LI_EFI:
-> -	case XFS_LI_EFD:
-> -	case XFS_LI_QUOTAOFF:
-> -	case XFS_LI_RUI:
-> -	case XFS_LI_RUD:
-> -	case XFS_LI_CUI:
-> -	case XFS_LI_CUD:
-> -	case XFS_LI_BUI:
-> -	case XFS_LI_BUD:
-> -	default:
-> -		break;
-> -	}
-> -}
-> -
->  STATIC int
->  xlog_recover_commit_pass1(
->  	struct xlog			*log,
-> @@ -4138,7 +4048,8 @@ xlog_recover_commit_trans(
->  			error = xlog_recover_commit_pass1(log, trans, item);
->  			break;
->  		case XLOG_RECOVER_PASS2:
-> -			xlog_recover_ra_pass2(log, item);
-> +			if (item->ri_type && item->ri_type->ra_pass2_fn)
-> +				item->ri_type->ra_pass2_fn(log, item);
->  			list_move_tail(&item->ri_list, &ra_list);
->  			items_queued++;
->  			if (items_queued >= XLOG_RECOVER_COMMIT_QUEUE_MAX) {
-> 
-> 
 
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
--- 
-chandan
-
-
+>  fs/xfs/libxfs/xfs_rtbitmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+> index f42c74cb8be53..9498ced947be9 100644
+> --- a/fs/xfs/libxfs/xfs_rtbitmap.c
+> +++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+> @@ -66,7 +66,7 @@ xfs_rtbuf_get(
+>  
+>  	ip = issum ? mp->m_rsumip : mp->m_rbmip;
+>  
+> -	error = xfs_bmapi_read(ip, block, 1, &map, &nmap, XFS_DATA_FORK);
+> +	error = xfs_bmapi_read(ip, block, 1, &map, &nmap, 0);
+>  	if (error)
+>  		return error;
+>  
+> -- 
+> 2.26.2
+> 
 
