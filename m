@@ -2,59 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6F861C1C3E
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 19:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D373E1C1C65
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 May 2020 19:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgEARuQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 May 2020 13:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729697AbgEARuQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 May 2020 13:50:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673A2C061A0C
-        for <linux-xfs@vger.kernel.org>; Fri,  1 May 2020 10:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zE1l4+w/c4K4zY7qPz/LPCGZ9iDcdRqqKvNknvkpa7U=; b=pBVOOSseNshou8NxV1iUAotGTQ
-        wkcCxxIK0dO5vZcj5xsLPOD5HWMGV1dSdkAxz7RTF33GZZUq/6sxb8rNY+UpJkL3l0ufFsKbp4xXa
-        d9P9foDpXmB5NgXuc+SFrGuFqdjkPndxhRUpRExKs8yCTvSRc1+2Hg7SNMypAO5Hc5n/CzAjzfrsU
-        cbWYH/o8bYH04MSWtK6rdBG2dgdIw62d7mXt9SkXZ2XPGPUMIM7joAupODOKvvBTjRYHe+AopyXcH
-        plJhh2ZVJDUbHPrDdUYcTyQ5xbAYu5GvCDweOMfrVg6WygfEBqZ2W5Bo95/bZRF0XKpe6zV5M9XGF
-        RacJjFBA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUZnh-0000Ay-7i; Fri, 01 May 2020 17:50:13 +0000
-Date:   Fri, 1 May 2020 10:50:13 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3 03/17] xfs: simplify inode flush error handling
-Message-ID: <20200501175013.GA23470@infradead.org>
-References: <20200429172153.41680-1-bfoster@redhat.com>
- <20200429172153.41680-4-bfoster@redhat.com>
- <20200430183703.GD6742@magnolia>
- <20200501091730.GA20187@infradead.org>
- <20200501101721.GA625@infradead.org>
- <20200501174305.GW6742@magnolia>
+        id S1729419AbgEAR6s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 May 2020 13:58:48 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60222 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbgEAR6s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 May 2020 13:58:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 041HliFj006052;
+        Fri, 1 May 2020 17:58:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=NWBvjzekptehOQzNt2LsBL5SsS12mBFiM+eSZvxwSTI=;
+ b=GaWb3vpZ6ZdjFHKGhaW73yo88Ob4stg8Kyu0YbIeLQvtQbiJuGu4BfO/0JxImMM2ODHk
+ v1knim2MzwjYHbyNYFe3aGng4XIA5EZGRaGZrkHIxvrwwfP/cfXZjXrJzVYp/ZnXQIBr
+ ZE3en0A8oFwJonyD4EB2TSNTt83d3zZdFfir90+ik6Q+dEl9TEGCCafkm7Kl49WRXPXt
+ w7ubzhVsGNqEJsesG6xyhZgl7wYY7846ZgR6G6pFbFSfNDCf02rIFuiMeYmjB8nSZwim
+ rVOuUebGx3U3mstuty/EQYL/F7HvzA0QymAnETsn4yKl3EoWxs8nxGujIB8qpudgsj9i OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30r7f5ucwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 May 2020 17:58:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 041Hl0CI059269;
+        Fri, 1 May 2020 17:56:43 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30r7fbe3df-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 May 2020 17:56:43 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 041HuhsM001653;
+        Fri, 1 May 2020 17:56:43 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 01 May 2020 10:56:42 -0700
+Date:   Fri, 1 May 2020 10:56:42 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 09/21] xfs: refactor log recovery EFI item dispatch for
+ pass2 commit functions
+Message-ID: <20200501175641.GX6742@magnolia>
+References: <158820765488.467894.15408191148091671053.stgit@magnolia>
+ <158820771414.467894.16178249031828526203.stgit@magnolia>
+ <20200501102844.GA13329@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501174305.GW6742@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200501102844.GA13329@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9608 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005010137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9608 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005010137
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 01, 2020 at 10:43:05AM -0700, Darrick J. Wong wrote:
-> On Fri, May 01, 2020 at 03:17:21AM -0700, Christoph Hellwig wrote:
-> > Oh, and forgot one thing - can we remove the weird _fn postfixes in
-> > the recovery method names?
+On Fri, May 01, 2020 at 03:28:44AM -0700, Christoph Hellwig wrote:
+> > +STATIC int
+> > +xlog_recover_extfree_done_commit_pass2(
+> > +	struct xlog			*log,
+> > +	struct list_head		*buffer_list,
+> > +	struct xlog_recover_item	*item,
+> > +	xfs_lsn_t			lsn)
+> > +{
 > 
-> Assuming you meant this in context of my log recovery refactoring
-> series, yes.
+> ...
+> 
+> > +	return 0;
+> > +}
+> > +
+> >  const struct xlog_recover_item_type xlog_extfree_intent_item_type = {
+> > +	.commit_pass2_fn	= xlog_recover_extfree_intent_commit_pass2,
+> >  };
+> >  
+> >  const struct xlog_recover_item_type xlog_extfree_done_item_type = {
+> > +	.commit_pass2_fn	= xlog_recover_extfree_done_commit_pass2,
+> >  };
+> 
+> Nipick: It would be nice to keep all the efi vs efd code together
+> with their ops vectors?  Same for the other intent ops.
 
-Yes, sorry.
+Ok, will do.
+
+--D
