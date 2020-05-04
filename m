@@ -2,190 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0216E1C4926
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 23:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5E671C4943
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 23:53:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgEDVhr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 May 2020 17:37:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38390 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgEDVhq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 17:37:46 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LbhtS131479;
-        Mon, 4 May 2020 21:37:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=d4PtFsPj38sTFYmiQTuXgjxtp8+zZOBAjQyMqYhiVy4=;
- b=a/yMLkXVm36UgywNt6EI5qTk/u1xJnssd3qio4XaJTeVKdGuLSBShlcybZ0DYVw8Hmov
- Ls5YDmn1/KPR5oJp27volNFfOkGAFjeazkdxytkcajRjCCjd9eblULqPiAWUTe+Sk0fA
- xwq2ka9ZDyuO8Sjj3e3UjlWYRpQqNzvKqp7sOpY9W/EGji74C6qDunyC++r8pz5y7LYP
- H38qAmoyTvulZjUWL90L93IidCNRMRD57LkrCRQQ3YNVOB7C8yvzBfkqehiU0Si2enB2
- SBLEE4A+aPpy33hPO5TXfy8XqaDGmxqhYH/BVQxbNOkOS+YXx1hlMz6y8JoRTatGr5wE gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30s1gn1ar4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:37:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LarM6080862;
-        Mon, 4 May 2020 21:37:42 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30sjdrg00t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:37:42 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044LbgHY030047;
-        Mon, 4 May 2020 21:37:42 GMT
-Received: from [192.168.1.223] (/67.1.142.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 14:37:42 -0700
-Subject: Re: [PATCH v9 12/24] xfs: Add helper function xfs_attr_node_shrink
+        id S1727855AbgEDVxM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 May 2020 17:53:12 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57536 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727071AbgEDVxL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 17:53:11 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id B961358C05D;
+        Tue,  5 May 2020 07:53:08 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jVj1P-0008Ju-BP; Tue, 05 May 2020 07:53:07 +1000
+Date:   Tue, 5 May 2020 07:53:07 +1000
+From:   Dave Chinner <david@fromorbit.com>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-References: <20200430225016.4287-1-allison.henderson@oracle.com>
- <20200430225016.4287-13-allison.henderson@oracle.com>
- <20200504132737.GC54625@bfoster>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <e965f10e-c238-60ef-6f9a-f4e029d22ec7@oracle.com>
-Date:   Mon, 4 May 2020 14:37:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH v4 00/17] xfs: flush related error handling cleanups
+Message-ID: <20200504215307.GL2040@dread.disaster.area>
+References: <20200504141154.55887-1-bfoster@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504132737.GC54625@bfoster>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040170
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504141154.55887-1-bfoster@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
+        a=7k71l0T3oZIsjjbRGVQA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 5/4/20 6:27 AM, Brian Foster wrote:
-> On Thu, Apr 30, 2020 at 03:50:04PM -0700, Allison Collins wrote:
->> This patch adds a new helper function xfs_attr_node_shrink used to
->> shrink an attr name into an inode if it is small enough.  This helps to
->> modularize the greater calling function xfs_attr_node_removename.
->>
->> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
->> ---
+On Mon, May 04, 2020 at 10:11:37AM -0400, Brian Foster wrote:
+> Hi all,
 > 
-> Reviewed-by: Brian Foster <bfoster@redhat.com>
-Great!  Thanks!
-
-Allison
-
+> I think everything has been reviewed to this point. Only minor changes
+> noted below in this release. A git repo is available here[1].
 > 
->>   fs/xfs/libxfs/xfs_attr.c | 68 ++++++++++++++++++++++++++++++------------------
->>   1 file changed, 42 insertions(+), 26 deletions(-)
->>
->> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
->> index 4fdfab9..d83443c 100644
->> --- a/fs/xfs/libxfs/xfs_attr.c
->> +++ b/fs/xfs/libxfs/xfs_attr.c
->> @@ -1108,6 +1108,45 @@ xfs_attr_node_addname(
->>   }
->>   
->>   /*
->> + * Shrink an attribute from leaf to shortform
->> + */
->> +STATIC int
->> +xfs_attr_node_shrink(
->> +	struct xfs_da_args	*args,
->> +	struct xfs_da_state     *state)
->> +{
->> +	struct xfs_inode	*dp = args->dp;
->> +	int			error, forkoff;
->> +	struct xfs_buf		*bp;
->> +
->> +	/*
->> +	 * Have to get rid of the copy of this dabuf in the state.
->> +	 */
->> +	ASSERT(state->path.active == 1);
->> +	ASSERT(state->path.blk[0].bp);
->> +	state->path.blk[0].bp = NULL;
->> +
->> +	error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
->> +	if (error)
->> +		return error;
->> +
->> +	forkoff = xfs_attr_shortform_allfit(bp, dp);
->> +	if (forkoff) {
->> +		error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
->> +		/* bp is gone due to xfs_da_shrink_inode */
->> +		if (error)
->> +			return error;
->> +
->> +		error = xfs_defer_finish(&args->trans);
->> +		if (error)
->> +			return error;
->> +	} else
->> +		xfs_trans_brelse(args->trans, bp);
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->>    * Remove a name from a B-tree attribute list.
->>    *
->>    * This will involve walking down the Btree, and may involve joining
->> @@ -1120,8 +1159,7 @@ xfs_attr_node_removename(
->>   {
->>   	struct xfs_da_state	*state;
->>   	struct xfs_da_state_blk	*blk;
->> -	struct xfs_buf		*bp;
->> -	int			retval, error, forkoff;
->> +	int			retval, error;
->>   	struct xfs_inode	*dp = args->dp;
->>   
->>   	trace_xfs_attr_node_removename(args);
->> @@ -1206,30 +1244,8 @@ xfs_attr_node_removename(
->>   	/*
->>   	 * If the result is small enough, push it all into the inode.
->>   	 */
->> -	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
->> -		/*
->> -		 * Have to get rid of the copy of this dabuf in the state.
->> -		 */
->> -		ASSERT(state->path.active == 1);
->> -		ASSERT(state->path.blk[0].bp);
->> -		state->path.blk[0].bp = NULL;
->> -
->> -		error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
->> -		if (error)
->> -			goto out;
->> -
->> -		if ((forkoff = xfs_attr_shortform_allfit(bp, dp))) {
->> -			error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
->> -			/* bp is gone due to xfs_da_shrink_inode */
->> -			if (error)
->> -				goto out;
->> -			error = xfs_defer_finish(&args->trans);
->> -			if (error)
->> -				goto out;
->> -		} else
->> -			xfs_trans_brelse(args->trans, bp);
->> -	}
->> -	error = 0;
->> +	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
->> +		error = xfs_attr_node_shrink(args, state);
->>   
->>   out:
->>   	if (state)
->> -- 
->> 2.7.4
->>
-> 
+> The only outstanding feedback that I'm aware of is Dave's comment on
+> patch 7 of v3 [2] regarding the shutdown assert check. I'm not aware of
+> any means to get through xfs_wait_buftarg() with a dirty buffer that
+> hasn't undergone the permanant error sequence and thus shut down the fs.
+
+# echo 0 > /sys/fs/xfs/<dev>/fail_at_unmount
+
+And now any error with a "retry forever" config (the default) will
+be collected by xfs_buftarg_wait() without a preceeding shutdown as
+xfs_buf_iodone_callback_error() will not treat it as a permanent
+error during unmount. i.e. this doesn't trigger:
+
+        /* At unmount we may treat errors differently */
+        if ((mp->m_flags & XFS_MOUNT_UNMOUNTING) && mp->m_fail_unmount)
+                goto permanent_error;
+
+and so the error handling just marks it with a write error and lets
+it go for a write retry in future. These are then collected in
+xfs_buftarg_wait() as nothing is going to retry them once unmount
+gets to this point...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
