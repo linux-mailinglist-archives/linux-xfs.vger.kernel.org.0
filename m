@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CEE81C3C7E
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 16:12:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6FDB1C3C8F
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 16:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgEDOMD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 May 2020 10:12:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25901 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728985AbgEDOMD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 10:12:03 -0400
+        id S1729042AbgEDOMR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 May 2020 10:12:17 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33914 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729032AbgEDOMR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 10:12:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588601521;
+        s=mimecast20190719; t=1588601535;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dDK21OIZ8aIxPwWAPcll5OEFAjri9JkEVWrnbJiVevA=;
-        b=UgbRp8hWbR7EqXh80L6gORKBQY/lY+x+sL81JngQzT6mJcIXlt19dsem0S2QKwttXCfpn8
-        wghoViqbasNVFQ+Vn+pSyYrHIrARen8UpI9wl3UD4DhtNJ/yBExbH6PigAQhDyXOWluLku
-        s+LFUAN17ksVwkG8FyDBjEsXGteV/V4=
+        bh=CviHaV2KBxppL0JNJx/PRgyDM45Z5huS2DRdJq8knZQ=;
+        b=NbjLe+DpSQ/pf8NusrE4Z9DoBoYKPDzbWK/kj+kde46GZDE1+CxXPcV9bBVTCrSgvT1w7+
+        eDQcwqbobbh3h8cozKdb8YRBQMkaby/UFf8ydvmn6Lz+XPTu8N/hdpLwTSBGzqX3Cyvv1V
+        SjJsSzbA2qO/jsSzqaKL/6K1FVfATw8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-XkY47VggMPGDYEhf87oHQQ-1; Mon, 04 May 2020 10:11:58 -0400
-X-MC-Unique: XkY47VggMPGDYEhf87oHQQ-1
+ us-mta-58-sPMaUKMMNLasuKjU4OUZmA-1; Mon, 04 May 2020 10:11:58 -0400
+X-MC-Unique: sPMaUKMMNLasuKjU4OUZmA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24B5E18FF670
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91811107ACF6
         for <linux-xfs@vger.kernel.org>; Mon,  4 May 2020 14:11:57 +0000 (UTC)
 Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D39C919C4F
-        for <linux-xfs@vger.kernel.org>; Mon,  4 May 2020 14:11:56 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B6A319C4F
+        for <linux-xfs@vger.kernel.org>; Mon,  4 May 2020 14:11:57 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v4 05/17] xfs: reset buffer write failure state on successful completion
-Date:   Mon,  4 May 2020 10:11:42 -0400
-Message-Id: <20200504141154.55887-6-bfoster@redhat.com>
+Subject: [PATCH v4 06/17] xfs: refactor ratelimited buffer error messages into helper
+Date:   Mon,  4 May 2020 10:11:43 -0400
+Message-Id: <20200504141154.55887-7-bfoster@redhat.com>
 In-Reply-To: <20200504141154.55887-1-bfoster@redhat.com>
 References: <20200504141154.55887-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,74 +48,161 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The buffer write failure flag is intended to control the internal
-write retry that XFS has historically implemented to help mitigate
-the severity of transient I/O errors. The flag is set when a buffer
-is resubmitted from the I/O completion path due to a previous
-failure. It is checked on subsequent I/O completions to skip the
-internal retry and fall through to the higher level configurable
-error handling mechanism. The flag is cleared in the synchronous and
-delwri submission paths and also checked in various places to log
-write failure messages.
+XFS has some inconsistent log message rate limiting with respect to
+buffer alerts. The metadata I/O error notification uses the generic
+ratelimited alert, the buffer push code uses a custom rate limit and
+the similar quiesce time failure checks are not rate limited at all
+(when they should be).
 
-There are a couple minor problems with the current usage of this
-flag. One is that we issue an internal retry after every submission
-from xfsaild due to how delwri submission clears the flag. This
-results in double the expected or configured number of write
-attempts when under sustained failures. Another more subtle issue is
-that the flag is never cleared on successful I/O completion. This
-can cause xfs_wait_buftarg() to suggest that dirty buffers are being
-thrown away due to the existence of the flag, when the reality is
-that the flag might still be set because the write succeeded on the
-retry.
+The custom rate limit defined in the buf item code is specifically
+crafted for buffer alerts. It is more aggressive than generic rate
+limiting code because it must accommodate a high frequency of I/O
+error events in a relative short timeframe.
 
-Clear the write failure flag on successful I/O completion to address
-both of these problems. This means that the internal retry attempt
-occurs once since the last time a buffer write failed and that
-various other contexts only see the flag set when the immediately
-previous write attempt has failed.
+Factor out the custom rate limit state from the buf item code into a
+per-buftarg rate limit so various alerts are limited based on the
+target. Define a buffer alert helper function and use it for the
+buffer alerts that are already ratelimited.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_buf.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_buf.c      | 15 +++++++++++----
+ fs/xfs/xfs_buf.h      |  1 +
+ fs/xfs/xfs_buf_item.c | 17 ++++-------------
+ fs/xfs/xfs_message.c  | 22 ++++++++++++++++++++++
+ fs/xfs/xfs_message.h  |  3 +++
+ 5 files changed, 41 insertions(+), 17 deletions(-)
 
 diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index d5d6a68bb1e6..fd76a84cefdd 100644
+index fd76a84cefdd..594d5e1df6f8 100644
 --- a/fs/xfs/xfs_buf.c
 +++ b/fs/xfs/xfs_buf.c
-@@ -1197,8 +1197,10 @@ xfs_buf_ioend(
- 		bp->b_ops->verify_read(bp);
+@@ -1244,10 +1244,10 @@ xfs_buf_ioerror_alert(
+ 	struct xfs_buf		*bp,
+ 	xfs_failaddr_t		func)
+ {
+-	xfs_alert_ratelimited(bp->b_mount,
+-"metadata I/O error in \"%pS\" at daddr 0x%llx len %d error %d",
+-			func, (uint64_t)XFS_BUF_ADDR(bp), bp->b_length,
+-			-bp->b_error);
++	xfs_buf_alert_ratelimited(bp, "XFS: metadata IO error",
++		"metadata I/O error in \"%pS\" at daddr 0x%llx len %d error %d",
++				  func, (uint64_t)XFS_BUF_ADDR(bp),
++				  bp->b_length, -bp->b_error);
+ }
+=20
+ /*
+@@ -1828,6 +1828,13 @@ xfs_alloc_buftarg(
+ 	btp->bt_bdev =3D bdev;
+ 	btp->bt_daxdev =3D dax_dev;
+=20
++	/*
++	 * Buffer IO error rate limiting. Limit it to no more than 10 messages
++	 * per 30 seconds so as to not spam logs too much on repeated errors.
++	 */
++	ratelimit_state_init(&btp->bt_ioerror_rl, 30 * HZ,
++			     DEFAULT_RATELIMIT_BURST);
++
+ 	if (xfs_setsize_buftarg_early(btp, bdev))
+ 		goto error_free;
+=20
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 06ea3eef866e..050c53b739e2 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -91,6 +91,7 @@ typedef struct xfs_buftarg {
+ 	struct list_lru		bt_lru;
+=20
+ 	struct percpu_counter	bt_io_count;
++	struct ratelimit_state	bt_ioerror_rl;
+ } xfs_buftarg_t;
+=20
+ struct xfs_buf;
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index b452a399a441..1f7acffc99ba 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -481,14 +481,6 @@ xfs_buf_item_unpin(
+ 	}
+ }
+=20
+-/*
+- * Buffer IO error rate limiting. Limit it to no more than 10 messages p=
+er 30
+- * seconds so as to not spam logs too much on repeated detection of the =
+same
+- * buffer being bad..
+- */
+-
+-static DEFINE_RATELIMIT_STATE(xfs_buf_write_fail_rl_state, 30 * HZ, 10);
+-
+ STATIC uint
+ xfs_buf_item_push(
+ 	struct xfs_log_item	*lip,
+@@ -518,11 +510,10 @@ xfs_buf_item_push(
+ 	trace_xfs_buf_item_push(bip);
+=20
+ 	/* has a previous flush failed due to IO errors? */
+-	if ((bp->b_flags & XBF_WRITE_FAIL) &&
+-	    ___ratelimit(&xfs_buf_write_fail_rl_state, "XFS: Failing async writ=
+e")) {
+-		xfs_warn(bp->b_mount,
+-"Failing async write on buffer block 0x%llx. Retrying async write.",
+-			 (long long)bp->b_bn);
++	if (bp->b_flags & XBF_WRITE_FAIL) {
++		xfs_buf_alert_ratelimited(bp, "XFS: Failing async write",
++	    "Failing async write on buffer block 0x%llx. Retrying async write."=
+,
++					  (long long)bp->b_bn);
  	}
 =20
--	if (!bp->b_error)
-+	if (!bp->b_error) {
-+		bp->b_flags &=3D ~XBF_WRITE_FAIL;
- 		bp->b_flags |=3D XBF_DONE;
-+	}
+ 	if (!xfs_buf_delwri_queue(bp, buffer_list))
+diff --git a/fs/xfs/xfs_message.c b/fs/xfs/xfs_message.c
+index e0f9d3b6abe9..bc66d95c8d4c 100644
+--- a/fs/xfs/xfs_message.c
++++ b/fs/xfs/xfs_message.c
+@@ -117,3 +117,25 @@ xfs_hex_dump(const void *p, int length)
+ {
+ 	print_hex_dump(KERN_ALERT, "", DUMP_PREFIX_OFFSET, 16, 1, p, length, 1)=
+;
+ }
++
++void
++xfs_buf_alert_ratelimited(
++	struct xfs_buf		*bp,
++	const char		*rlmsg,
++	const char		*fmt,
++	...)
++{
++	struct xfs_mount	*mp =3D bp->b_mount;
++	struct va_format	vaf;
++	va_list			args;
++
++	/* use the more aggressive per-target rate limit for buffers */
++	if (!___ratelimit(&bp->b_target->bt_ioerror_rl, rlmsg))
++		return;
++
++	va_start(args, fmt);
++	vaf.fmt =3D fmt;
++	vaf.va =3D &args;
++	__xfs_printk(KERN_ALERT, mp, &vaf);
++	va_end(args);
++}
+diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
+index 0b05e10995a0..6be2ebe3a7b9 100644
+--- a/fs/xfs/xfs_message.h
++++ b/fs/xfs/xfs_message.h
+@@ -62,4 +62,7 @@ void asswarn(struct xfs_mount *mp, char *expr, char *f,=
+ int l);
 =20
- 	if (bp->b_iodone)
- 		(*(bp->b_iodone))(bp);
-@@ -1274,7 +1276,7 @@ xfs_bwrite(
+ extern void xfs_hex_dump(const void *p, int length);
 =20
- 	bp->b_flags |=3D XBF_WRITE;
- 	bp->b_flags &=3D ~(XBF_ASYNC | XBF_READ | _XBF_DELWRI_Q |
--			 XBF_WRITE_FAIL | XBF_DONE);
-+			 XBF_DONE);
-=20
- 	error =3D xfs_buf_submit(bp);
- 	if (error)
-@@ -1996,7 +1998,7 @@ xfs_buf_delwri_submit_buffers(
- 		 * synchronously. Otherwise, drop the buffer from the delwri
- 		 * queue and submit async.
- 		 */
--		bp->b_flags &=3D ~(_XBF_DELWRI_Q | XBF_WRITE_FAIL);
-+		bp->b_flags &=3D ~_XBF_DELWRI_Q;
- 		bp->b_flags |=3D XBF_WRITE;
- 		if (wait_list) {
- 			bp->b_flags &=3D ~XBF_ASYNC;
++void xfs_buf_alert_ratelimited(struct xfs_buf *bp, const char *rlmsg,
++			       const char *fmt, ...);
++
+ #endif	/* __XFS_MESSAGE_H */
 --=20
 2.21.1
 
