@@ -2,135 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBD81C3B45
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 15:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C8531C3C89
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 May 2020 16:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgEDNa3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 May 2020 09:30:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34202 "EHLO
+        id S1729013AbgEDOMJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 May 2020 10:12:09 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37608 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726404AbgEDNa3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 09:30:29 -0400
+        by vger.kernel.org with ESMTP id S1729000AbgEDOMJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 10:12:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588599027;
+        s=mimecast20190719; t=1588601527;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Th0/XxMgoyf798jPzQmoNByPw1ZSy60ZdfSfw+/Ccyw=;
-        b=ClvkAunTx/OWBbvQVJtCeynbMZQJezs3ay6G0jthdID1EwzdJ3fXSr8BMDu9DSwOUiDUFE
-        b+Ziq45zLqHEwN2130Ffx54hFjVB+gKpgOMZC1VewhDi0lHeKwsitxe7pPjt2htKEnRr+4
-        rN9VPnQIcHiI0p+BhGzIGeJMwisSir4=
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=f+KQllpEXSezBNAose/wvqg+/OQoBt2E1id9F+H5VZ8=;
+        b=cSS3tyX8i1Y2BMYnSxTjXVApZ5/zzJBguI/E1YUiH1D2HFNhtWoL/Pa8SzSKM0YI/e3Zlr
+        6HbyBBsXTkbNvYXqjIFUOQD6S6fhMGWFv4sovHqxwEJUdBotcmtR9Ys22ZjJBBBh+HlyCK
+        0C+EUvv/XPl33gajtmm5edX43q+O1tI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-TQKcZNYPNNuY9jF9dGD52w-1; Mon, 04 May 2020 09:30:25 -0400
-X-MC-Unique: TQKcZNYPNNuY9jF9dGD52w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-450-h8fd6DrgOzOKwNqKYE1zoQ-1; Mon, 04 May 2020 10:11:55 -0400
+X-MC-Unique: h8fd6DrgOzOKwNqKYE1zoQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDD56835B40;
-        Mon,  4 May 2020 13:30:24 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6FE5460C80;
-        Mon,  4 May 2020 13:30:24 +0000 (UTC)
-Date:   Mon, 4 May 2020 09:30:22 -0400
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E61C58014C0
+        for <linux-xfs@vger.kernel.org>; Mon,  4 May 2020 14:11:54 +0000 (UTC)
+Received: from bfoster.bos.redhat.com (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E0F81C92D
+        for <linux-xfs@vger.kernel.org>; Mon,  4 May 2020 14:11:54 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
-To:     Allison Collins <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v9 13/24] xfs: Remove unneeded xfs_trans_roll_inode calls
-Message-ID: <20200504133022.GD54625@bfoster>
-References: <20200430225016.4287-1-allison.henderson@oracle.com>
- <20200430225016.4287-14-allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v4 00/17] xfs: flush related error handling cleanups
+Date:   Mon,  4 May 2020 10:11:37 -0400
+Message-Id: <20200504141154.55887-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430225016.4287-14-allison.henderson@oracle.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:50:05PM -0700, Allison Collins wrote:
-> Some calls to xfs_trans_roll_inode and xfs_defer_finish routines are not
-> needed. If they are the last operations executed in these functions, and
-> no further changes are made, then higher level routines will roll or
-> commit the tranactions. The xfs_trans_roll in _removename is also not
-> needed because invalidating blocks is an incore-only change.
-> 
-> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-> ---
->  fs/xfs/libxfs/xfs_attr.c | 40 ----------------------------------------
->  1 file changed, 40 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index d83443c..af47566 100644
-> --- a/fs/xfs/libxfs/xfs_attr.c
-> +++ b/fs/xfs/libxfs/xfs_attr.c
-...
-> @@ -784,9 +770,6 @@ xfs_attr_leaf_removename(
->  		/* bp is gone due to xfs_da_shrink_inode */
->  		if (error)
->  			return error;
-> -		error = xfs_defer_finish(&args->trans);
-> -		if (error)
-> -			return error;
->  	}
->  	return 0;
+Hi all,
 
-Looks like this could be simplified to return error at the end of the
-function. Some of the others might have similar simplifications
-available.
+I think everything has been reviewed to this point. Only minor changes
+noted below in this release. A git repo is available here[1].
 
->  }
-> @@ -1074,13 +1057,6 @@ xfs_attr_node_addname(
->  				goto out;
->  		}
->  
-> -		/*
-> -		 * Commit and start the next trans in the chain.
-> -		 */
-> -		error = xfs_trans_roll_inode(&args->trans, dp);
-> -		if (error)
-> -			goto out;
-> -
+The only outstanding feedback that I'm aware of is Dave's comment on
+patch 7 of v3 [2] regarding the shutdown assert check. I'm not aware of
+any means to get through xfs_wait_buftarg() with a dirty buffer that
+hasn't undergone the permanant error sequence and thus shut down the fs.
+I'm personally fine with any option among dropping the assert, keeping
+it or replacing it with a shutdown invocation because atm I don't see it
+making much of a functional difference, but I left it alone because the
+patch is otherwise reviewed.
 
-There's an xfs_defer_finish() before this roll. Is that not also
-extraneous? It looks like we return straight up to xfs_attr_set() (trans
-commit) from here..
-
->  	} else if (args->rmtblkno > 0) {
->  		/*
->  		 * Added a "remote" value, just clear the incomplete flag.
-...
-> @@ -1194,10 +1158,6 @@ xfs_attr_node_removename(
->  		if (error)
->  			goto out;
->  
-> -		error = xfs_trans_roll_inode(&args->trans, args->dp);
-> -		if (error)
-> -			goto out;
-> -
-
-I'm still a bit on the fence about this one. At first glance it looks
-like it's not necessary, but technically we're changing behavior by
-combining setting the inactive flag and the first remote block unmap,
-right? If so, that seems fairly reasonable, but it's hard to say for
-sure with the state of the xattr transaction reservations...
-
-Looking around some more, I suppose this could be analogous to the
-!remote remove case where an entry is removed and a potential dabtree
-join occurs under the same transaction. If that's the best argument we
-have, however, I might suggest to split this one out into an independent
-patch and let the commit log describe what's going on in more detail.
-That way it's more obvious to reviewers and if it's wrong it's easier to
-revert.
+Thoughts, reviews, flames appreciated.
 
 Brian
 
->  		error = xfs_attr_rmtval_invalidate(args);
->  		if (error)
->  			return error;
-> -- 
-> 2.7.4
-> 
+[1] https://github.com/bsfost/linux-xfs/tree/xfs-flush-error-handling-cle=
+anups-v4
+[2] https://lore.kernel.org/linux-xfs/20200501112408.GB40250@bfoster/
+
+v4:
+- Remove unnecessary xfs_trans_ail_delete() comment.
+- Add Fixes: tag to dqflush duplicate verification patch.
+v3: https://lore.kernel.org/linux-xfs/20200429172153.41680-1-bfoster@redh=
+at.com/
+- Drop flags param from xfs_buf_ioend_fail().
+- Fix up iflush error handling patch subject and comments.
+- Drop failed buffer ->ail_lock bypass patch.
+- Split up AIL removal cleanup patch and dropped switch of call from
+  xfs_buf_item_put().
+- Rework XBF_WRITE_FAIL to reflect current buffer state.
+- Create helper for ratelimited buffer alerts and use appropriately.
+- Use BLK_STS_IOERR instead of errno_to_blk_status().
+- Drop unused param from xfs_imap_to_bp().
+v2: https://lore.kernel.org/linux-xfs/20200422175429.38957-1-bfoster@redh=
+at.com/
+- Rename some helper functions.
+- Fix up dquot flush verifier instead of removing it.
+- Drop quotaoff push handler removal patch.
+- Reuse existing ratelimit state for buffer error messages.
+- Combine AIL removal helpers.
+- Refactor iflush error handling rework to update log item.
+- Remove unused shutdown types.
+v1: https://lore.kernel.org/linux-xfs/20200417150859.14734-1-bfoster@redh=
+at.com/
+
+Brian Foster (17):
+  xfs: refactor failed buffer resubmission into xfsaild
+  xfs: factor out buffer I/O failure code
+  xfs: simplify inode flush error handling
+  xfs: remove unnecessary shutdown check from xfs_iflush()
+  xfs: reset buffer write failure state on successful completion
+  xfs: refactor ratelimited buffer error messages into helper
+  xfs: ratelimit unmount time per-buffer I/O error alert
+  xfs: fix duplicate verification from xfs_qm_dqflush()
+  xfs: abort consistently on dquot flush failure
+  xfs: acquire ->ail_lock from xfs_trans_ail_delete()
+  xfs: use delete helper for items expected to be in AIL
+  xfs: drop unused shutdown parameter from xfs_trans_ail_remove()
+  xfs: combine xfs_trans_ail_[remove|delete]()
+  xfs: remove unused iflush stale parameter
+  xfs: random buffer write failure errortag
+  xfs: remove unused shutdown types
+  xfs: remove unused iget_flags param from xfs_imap_to_bp()
+
+ fs/xfs/libxfs/xfs_errortag.h  |   4 +-
+ fs/xfs/libxfs/xfs_inode_buf.c |  12 +--
+ fs/xfs/libxfs/xfs_inode_buf.h |   2 +-
+ fs/xfs/scrub/ialloc.c         |   3 +-
+ fs/xfs/xfs_bmap_item.c        |   2 +-
+ fs/xfs/xfs_buf.c              |  65 ++++++++++++----
+ fs/xfs/xfs_buf.h              |   2 +
+ fs/xfs/xfs_buf_item.c         | 106 +++++---------------------
+ fs/xfs/xfs_buf_item.h         |   2 -
+ fs/xfs/xfs_dquot.c            |  47 +++++-------
+ fs/xfs/xfs_dquot_item.c       |  17 +----
+ fs/xfs/xfs_error.c            |   3 +
+ fs/xfs/xfs_extfree_item.c     |   2 +-
+ fs/xfs/xfs_fsops.c            |   5 +-
+ fs/xfs/xfs_icache.c           |   2 +-
+ fs/xfs/xfs_inode.c            | 139 ++++++++++++----------------------
+ fs/xfs/xfs_inode_item.c       |  28 +------
+ fs/xfs/xfs_inode_item.h       |   2 +-
+ fs/xfs/xfs_log_recover.c      |   2 +-
+ fs/xfs/xfs_message.c          |  22 ++++++
+ fs/xfs/xfs_message.h          |   3 +
+ fs/xfs/xfs_mount.h            |   2 -
+ fs/xfs/xfs_refcount_item.c    |   2 +-
+ fs/xfs/xfs_rmap_item.c        |   2 +-
+ fs/xfs/xfs_trans_ail.c        |  68 +++++++++++------
+ fs/xfs/xfs_trans_priv.h       |  18 +----
+ 26 files changed, 231 insertions(+), 331 deletions(-)
+
+--=20
+2.21.1
 
