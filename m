@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D7D71C4B56
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 May 2020 03:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B87FC1C4B58
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 May 2020 03:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEEBMM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 May 2020 21:12:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37178 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgEEBML (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 21:12:11 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04515Kbx056190
-        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:10 GMT
+        id S1726636AbgEEBMU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 May 2020 21:12:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47276 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEEBMU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 May 2020 21:12:20 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04513o0e055583
+        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=JR4Zk8HWxV5UvWQbIoLn45oQ0D5ppRu2obvJI+KBJA0=;
- b=jV5VArVEjWXbn6/uMPkYHUKl1tt7JC7GcfSFWH33g71CvJ1W0Ds9u1vY7rBA4kf0R87E
- mcYER3qF2yVmZSG2wIheCUXIhDtn38o03Gaq1viVmcsWdnSHhVT7Fb+wFYyXaY3ZnIRN
- WYnYthR9tpTYL8imy1GDOz4MGRIW/Q22PX8A1OGeitFhyT2YO3vmgGbOSp2y1dY2SCZy
- rVCKFe4cGxDARyQ7jCH14zHm26fDBN+oDZfUSMPAyiG2UcFHobc0E7SEYUJ1V4+2uq3Y
- TR7Na0EcUR6VWEHZD/2CVTY/gciproUsRhSr9z04mQv37FLgM8+bF7HY3OTAE3QOOAeS YQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30s0tma18p-1
+ bh=ppdIFug4Vnk7f8ylxF4phXpYKIxQzJa7KAFXIkct1aY=;
+ b=jHH5lXocr81vRSwsSZKA4K8HZkUaRt8W1kCKNLBkHeNmqP9ESZSyVJV2OGy4WNq9sEaD
+ BpIuS0AW1TlujtQEZDcgflaGY3G7OcKFJdXA8CZW72KLC39bh9Bn2PAiSbU9768M3uZz
+ Gg309yLkuXnJI69F08kY0tn+RM1IP4f8r6uoGuVKSpgBkV3AeK2fC3YOr6pkJ56EQDa3
+ TSe9tkvAu4bSzzSL9tMZF3laNVdaSWejKAf1MQQJWUgbdhCAqPavA50wJNsUkP6FcFtO
+ Q3HC2iA3JxHPCUKuR8x7+FDvPSh/+7SWjoFE8/8pDMs/gP+PqhIjYH7f52mPN6uv5krj 2w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gn1vkk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 05 May 2020 01:12:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04515l9w057428
-        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30t1r3qn1g-1
+        for <linux-xfs@vger.kernel.org>; Tue, 05 May 2020 01:12:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04516m16149576
+        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30sjjxaqv5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 05 May 2020 01:12:09 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0451C9K5016330
-        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:09 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 05 May 2020 01:12:18 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0451CHZt014996
+        for <linux-xfs@vger.kernel.org>; Tue, 5 May 2020 01:12:17 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 18:12:08 -0700
-Subject: [PATCH 15/28] xfs: refactor recovered RUI log item playback
+        with ESMTP ; Mon, 04 May 2020 18:12:14 -0700
+Subject: [PATCH 16/28] xfs: refactor recovered CUI log item playback
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 04 May 2020 18:12:07 -0700
-Message-ID: <158864112778.182683.3049865779495487697.stgit@magnolia>
+Date:   Mon, 04 May 2020 18:12:14 -0700
+Message-ID: <158864113397.182683.5812513715201193839.stgit@magnolia>
 In-Reply-To: <158864103195.182683.2056162574447133617.stgit@magnolia>
 References: <158864103195.182683.2056162574447133617.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=3
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 mlxscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005050005
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=3
- phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050005
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=3 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050005
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -76,183 +76,183 @@ to call them.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_log_recover.c |   48 ++--------------------------------------------
- fs/xfs/xfs_rmap_item.c   |   44 ++++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_rmap_item.h   |    3 ---
+ fs/xfs/xfs_log_recover.c   |   48 ++------------------------------------------
+ fs/xfs/xfs_refcount_item.c |   44 ++++++++++++++++++++++++++++++++--------
+ fs/xfs/xfs_refcount_item.h |    3 ---
  3 files changed, 37 insertions(+), 58 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index f12e14719202..da66484acaa7 100644
+index da66484acaa7..ad5ac97ed0c7 100644
 --- a/fs/xfs/xfs_log_recover.c
 +++ b/fs/xfs/xfs_log_recover.c
 @@ -2553,46 +2553,6 @@ xlog_recover_process_data(
  	return 0;
  }
  
--/* Recover the RUI if necessary. */
+-/* Recover the CUI if necessary. */
 -STATIC int
--xlog_recover_process_rui(
--	struct xfs_mount		*mp,
+-xlog_recover_process_cui(
+-	struct xfs_trans		*parent_tp,
 -	struct xfs_ail			*ailp,
 -	struct xfs_log_item		*lip)
 -{
--	struct xfs_rui_log_item		*ruip;
+-	struct xfs_cui_log_item		*cuip;
 -	int				error;
 -
 -	/*
--	 * Skip RUIs that we've already processed.
+-	 * Skip CUIs that we've already processed.
 -	 */
--	ruip = container_of(lip, struct xfs_rui_log_item, rui_item);
--	if (test_bit(XFS_RUI_RECOVERED, &ruip->rui_flags))
+-	cuip = container_of(lip, struct xfs_cui_log_item, cui_item);
+-	if (test_bit(XFS_CUI_RECOVERED, &cuip->cui_flags))
 -		return 0;
 -
 -	spin_unlock(&ailp->ail_lock);
--	error = xfs_rui_recover(mp, ruip);
+-	error = xfs_cui_recover(parent_tp, cuip);
 -	spin_lock(&ailp->ail_lock);
 -
 -	return error;
 -}
 -
--/* Release the RUI since we're cancelling everything. */
+-/* Release the CUI since we're cancelling everything. */
 -STATIC void
--xlog_recover_cancel_rui(
+-xlog_recover_cancel_cui(
 -	struct xfs_mount		*mp,
 -	struct xfs_ail			*ailp,
 -	struct xfs_log_item		*lip)
 -{
--	struct xfs_rui_log_item		*ruip;
+-	struct xfs_cui_log_item		*cuip;
 -
--	ruip = container_of(lip, struct xfs_rui_log_item, rui_item);
+-	cuip = container_of(lip, struct xfs_cui_log_item, cui_item);
 -
 -	spin_unlock(&ailp->ail_lock);
--	xfs_rui_release(ruip);
+-	xfs_cui_release(cuip);
 -	spin_lock(&ailp->ail_lock);
 -}
 -
- /* Recover the CUI if necessary. */
+ /* Recover the BUI if necessary. */
  STATIC int
- xlog_recover_process_cui(
-@@ -2797,10 +2757,8 @@ xlog_recover_process_intents(
- 		 */
+ xlog_recover_process_bui(
+@@ -2758,10 +2718,8 @@ xlog_recover_process_intents(
  		switch (lip->li_type) {
  		case XFS_LI_EFI:
+ 		case XFS_LI_RUI:
 -			error = lip->li_ops->iop_recover(lip, parent_tp);
 -			break;
- 		case XFS_LI_RUI:
--			error = xlog_recover_process_rui(log->l_mp, ailp, lip);
+ 		case XFS_LI_CUI:
+-			error = xlog_recover_process_cui(parent_tp, ailp, lip);
 +			error = lip->li_ops->iop_recover(lip, parent_tp);
  			break;
- 		case XFS_LI_CUI:
- 			error = xlog_recover_process_cui(parent_tp, ailp, lip);
-@@ -2853,13 +2811,11 @@ xlog_recover_cancel_intents(
- 
+ 		case XFS_LI_BUI:
+ 			error = xlog_recover_process_bui(parent_tp, ailp, lip);
+@@ -2812,13 +2770,11 @@ xlog_recover_cancel_intents(
  		switch (lip->li_type) {
  		case XFS_LI_EFI:
-+		case XFS_LI_RUI:
+ 		case XFS_LI_RUI:
++		case XFS_LI_CUI:
  			spin_unlock(&ailp->ail_lock);
  			lip->li_ops->iop_release(lip);
  			spin_lock(&ailp->ail_lock);
  			break;
--		case XFS_LI_RUI:
--			xlog_recover_cancel_rui(log->l_mp, ailp, lip);
+-		case XFS_LI_CUI:
+-			xlog_recover_cancel_cui(log->l_mp, ailp, lip);
 -			break;
- 		case XFS_LI_CUI:
- 			xlog_recover_cancel_cui(log->l_mp, ailp, lip);
+ 		case XFS_LI_BUI:
+ 			xlog_recover_cancel_bui(log->l_mp, ailp, lip);
  			break;
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index c87f4e429c12..e763dd8ed0a6 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index 28b41f5dd6bc..5b72eebd8764 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
 @@ -24,6 +24,8 @@
- kmem_zone_t	*xfs_rui_zone;
- kmem_zone_t	*xfs_rud_zone;
+ kmem_zone_t	*xfs_cui_zone;
+ kmem_zone_t	*xfs_cud_zone;
  
-+static const struct xfs_item_ops xfs_rui_item_ops;
++static const struct xfs_item_ops xfs_cui_item_ops;
 +
- static inline struct xfs_rui_log_item *RUI_ITEM(struct xfs_log_item *lip)
+ static inline struct xfs_cui_log_item *CUI_ITEM(struct xfs_log_item *lip)
  {
- 	return container_of(lip, struct xfs_rui_log_item, rui_item);
-@@ -46,7 +48,7 @@ xfs_rui_item_free(
+ 	return container_of(lip, struct xfs_cui_log_item, cui_item);
+@@ -46,7 +48,7 @@ xfs_cui_item_free(
   * committed vs unpin operations in bulk insert operations. Hence the reference
-  * count to ensure only the last caller frees the RUI.
+  * count to ensure only the last caller frees the CUI.
   */
 -void
 +STATIC void
- xfs_rui_release(
- 	struct xfs_rui_log_item	*ruip)
+ xfs_cui_release(
+ 	struct xfs_cui_log_item	*cuip)
  {
-@@ -124,13 +126,6 @@ xfs_rui_item_release(
- 	xfs_rui_release(RUI_ITEM(lip));
+@@ -125,13 +127,6 @@ xfs_cui_item_release(
+ 	xfs_cui_release(CUI_ITEM(lip));
  }
  
--static const struct xfs_item_ops xfs_rui_item_ops = {
--	.iop_size	= xfs_rui_item_size,
--	.iop_format	= xfs_rui_item_format,
--	.iop_unpin	= xfs_rui_item_unpin,
--	.iop_release	= xfs_rui_item_release,
+-static const struct xfs_item_ops xfs_cui_item_ops = {
+-	.iop_size	= xfs_cui_item_size,
+-	.iop_format	= xfs_cui_item_format,
+-	.iop_unpin	= xfs_cui_item_unpin,
+-	.iop_release	= xfs_cui_item_release,
 -};
 -
  /*
-  * Allocate and initialize an rui item with the given number of extents.
+  * Allocate and initialize an cui item with the given number of extents.
   */
-@@ -468,7 +463,7 @@ const struct xfs_defer_op_type xfs_rmap_update_defer_type = {
-  * Process an rmap update intent item that was recovered from the log.
-  * We need to update the rmapbt.
+@@ -425,7 +420,7 @@ const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
+  * Process a refcount update intent item that was recovered from the log.
+  * We need to update the refcountbt.
   */
 -int
 +STATIC int
- xfs_rui_recover(
- 	struct xfs_mount		*mp,
- 	struct xfs_rui_log_item		*ruip)
-@@ -588,6 +583,37 @@ xfs_rui_recover(
+ xfs_cui_recover(
+ 	struct xfs_trans		*parent_tp,
+ 	struct xfs_cui_log_item		*cuip)
+@@ -573,6 +568,37 @@ xfs_cui_recover(
  	return error;
  }
  
-+/* Recover the RUI if necessary. */
++/* Recover the CUI if necessary. */
 +STATIC int
-+xfs_rui_item_recover(
++xfs_cui_item_recover(
 +	struct xfs_log_item		*lip,
 +	struct xfs_trans		*tp)
 +{
 +	struct xfs_ail			*ailp = lip->li_ailp;
-+	struct xfs_rui_log_item		*ruip = RUI_ITEM(lip);
++	struct xfs_cui_log_item		*cuip = CUI_ITEM(lip);
 +	int				error;
 +
 +	/*
-+	 * Skip RUIs that we've already processed.
++	 * Skip CUIs that we've already processed.
 +	 */
-+	if (test_bit(XFS_RUI_RECOVERED, &ruip->rui_flags))
++	if (test_bit(XFS_CUI_RECOVERED, &cuip->cui_flags))
 +		return 0;
 +
 +	spin_unlock(&ailp->ail_lock);
-+	error = xfs_rui_recover(tp->t_mountp, ruip);
++	error = xfs_cui_recover(tp, cuip);
 +	spin_lock(&ailp->ail_lock);
 +
 +	return error;
 +}
 +
-+static const struct xfs_item_ops xfs_rui_item_ops = {
-+	.iop_size	= xfs_rui_item_size,
-+	.iop_format	= xfs_rui_item_format,
-+	.iop_unpin	= xfs_rui_item_unpin,
-+	.iop_release	= xfs_rui_item_release,
-+	.iop_recover	= xfs_rui_item_recover,
++static const struct xfs_item_ops xfs_cui_item_ops = {
++	.iop_size	= xfs_cui_item_size,
++	.iop_format	= xfs_cui_item_format,
++	.iop_unpin	= xfs_cui_item_unpin,
++	.iop_release	= xfs_cui_item_release,
++	.iop_recover	= xfs_cui_item_recover,
 +};
 +
  /*
-  * This routine is called to create an in-core extent rmap update
-  * item from the rui format structure which was logged on disk.
-diff --git a/fs/xfs/xfs_rmap_item.h b/fs/xfs/xfs_rmap_item.h
-index 89bd192779f8..48a77a6f5c94 100644
---- a/fs/xfs/xfs_rmap_item.h
-+++ b/fs/xfs/xfs_rmap_item.h
-@@ -77,7 +77,4 @@ struct xfs_rud_log_item {
- extern struct kmem_zone	*xfs_rui_zone;
- extern struct kmem_zone	*xfs_rud_zone;
+  * Copy an CUI format buffer from the given buf, and into the destination
+  * CUI format structure.  The CUI/CUD items were designed not to need any
+diff --git a/fs/xfs/xfs_refcount_item.h b/fs/xfs/xfs_refcount_item.h
+index ebe12779eaac..cfaa857673a6 100644
+--- a/fs/xfs/xfs_refcount_item.h
++++ b/fs/xfs/xfs_refcount_item.h
+@@ -77,7 +77,4 @@ struct xfs_cud_log_item {
+ extern struct kmem_zone	*xfs_cui_zone;
+ extern struct kmem_zone	*xfs_cud_zone;
  
--void xfs_rui_release(struct xfs_rui_log_item *);
--int xfs_rui_recover(struct xfs_mount *mp, struct xfs_rui_log_item *ruip);
+-void xfs_cui_release(struct xfs_cui_log_item *);
+-int xfs_cui_recover(struct xfs_trans *parent_tp, struct xfs_cui_log_item *cuip);
 -
- #endif	/* __XFS_RMAP_ITEM_H__ */
+ #endif	/* __XFS_REFCOUNT_ITEM_H__ */
 
