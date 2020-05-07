@@ -2,110 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 586FE1C7F91
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 May 2020 03:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F9A1C7FC6
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 May 2020 03:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgEGBEc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 May 2020 21:04:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53530 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgEGBEb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 May 2020 21:04:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470xYXN123239;
-        Thu, 7 May 2020 01:04:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=hoHALx1LCbK3g+Dnwqt1yz17Ay2/IhnQRh180inp4RE=;
- b=Dj9LKPaFUij8Y4d/SU/l73/Mmtp/3RcXnQjfnOa3IWEX02LMt/j6FFq1iHm10/uUEvOB
- jkb2Zn6Js7BZJ3+jWaZCpil5CRnjOFRJaWbPCsZMQAAP5g7I/rFQ0I89CWm4+BKjpphT
- K82uxPHt2iEgsDms7ckqT/oi2sz8Ud2o3uE1AJDUXr5n2+ZTfdAaff+gy8/Bg6UJ+iuq
- utzz5a7lQ3fMdqaJP6aRGT0UrufWg0TVUNQx4Z10FHW86UF2afsLGEhWTGPsuJnAec3W
- kahLImgaBTlYozoeZArLCNsfX/bsQ23lWMr1PgjEuc2CSwyvupHQ9gLF0Zk+kI6TxVsJ XQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30usgq4jhj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 01:04:28 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470upDs190094;
-        Thu, 7 May 2020 01:04:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30sjdwswd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 01:04:28 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04714Rd4028944;
-        Thu, 7 May 2020 01:04:27 GMT
-Received: from localhost (/10.159.237.186)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 18:04:27 -0700
-Subject: [PATCH 25/25] xfs: remove unnecessary includes from xfs_log_recover.c
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org
-Date:   Wed, 06 May 2020 18:04:23 -0700
-Message-ID: <158881346355.189971.17393800521171400725.stgit@magnolia>
-In-Reply-To: <158881329912.189971.14392758631836955942.stgit@magnolia>
-References: <158881329912.189971.14392758631836955942.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S1727970AbgEGBTg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 May 2020 21:19:36 -0400
+Received: from sandeen.net ([63.231.237.45]:57144 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgEGBTg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 6 May 2020 21:19:36 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id BEE752B49;
+        Wed,  6 May 2020 20:19:28 -0500 (CDT)
+Subject: Re: PROBLEM: XFS in-memory corruption with reflinks and duperemove:
+ XFS (dm-4): Internal error xfs_trans_cancel at line 1048 of file
+ fs/xfs/xfs_trans.c. Caller xfs_reflink_remap_extent+0x100/0x560
+To:     =?UTF-8?B?RWR3aW4gVMO2csO2aw==?= <edwin@etorok.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <f6c749739dc135ebd7a9321195a616b15c772082.camel@etorok.net>
+ <20200421171616.GH6749@magnolia>
+ <acc12ecd2c183c93f8af770b2302498cb30e83f4.camel@etorok.net>
+ <20200504152135.GA13811@magnolia>
+ <583e618512f15f10b3dee8857a92235950c862e7.camel@etorok.net>
+ <20200505005811.GC5716@magnolia>
+ <124EB800-8712-4C36-8B35-41363A558269@etorok.net>
+ <20200506224749.GA6730@magnolia>
+ <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
+ nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
+ WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
+ vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
+ ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
+ sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
+ BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
+ gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
+ LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
+ dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
+ bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
+ aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
+ UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
+ EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
+ sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
+ 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
+ gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
+ 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
+ 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
+ WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
+ Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
+ X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
+ SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
+ 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
+ GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
+ 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
+ Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
+ ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
+ TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
+ gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
+ AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
+ YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
+ mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
+ LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
+ LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
+ MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
+ JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
+ Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
+ m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
+ fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
+Message-ID: <3fa09c4e-6233-2216-f7c8-a28bd7dcaf04@sandeen.net>
+Date:   Wed, 6 May 2020 20:19:34 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=1 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070004
+In-Reply-To: <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On 5/6/20 6:20 PM, Edwin Török wrote:
+>> (Obviously, a full metadump would be useful for confirming the shape
+>> of
+>> the refcount btree, but...first things first let's look at the
+>> filefrag
+>> output.)
+> I'll try to gather one, and find a place to store/share it.
+> 
+> Best regards,
+> --Edwin
 
-Remove unnecessary includes from the log recovery code.
+Metadumps are compact to start with and usually compress pretty well.
+Obviously a very large filesystem with lots of metadata will take some
+space, but it might not be that bad.
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- fs/xfs/xfs_log_recover.c |    8 --------
- 1 file changed, 8 deletions(-)
-
-
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 572e6707362a..ec015df55b77 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -18,21 +18,13 @@
- #include "xfs_log.h"
- #include "xfs_log_priv.h"
- #include "xfs_log_recover.h"
--#include "xfs_inode_item.h"
--#include "xfs_extfree_item.h"
- #include "xfs_trans_priv.h"
- #include "xfs_alloc.h"
- #include "xfs_ialloc.h"
--#include "xfs_quota.h"
- #include "xfs_trace.h"
- #include "xfs_icache.h"
--#include "xfs_bmap_btree.h"
- #include "xfs_error.h"
--#include "xfs_dir2.h"
--#include "xfs_rmap_item.h"
- #include "xfs_buf_item.h"
--#include "xfs_refcount_item.h"
--#include "xfs_bmap_item.h"
- 
- #define BLK_AVG(blk1, blk2)	((blk1+blk2) >> 1)
- 
-
+-Eric
