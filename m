@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A50FE1C7F94
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 May 2020 03:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB59D1C7F8C
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 May 2020 03:03:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgEGBE4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 May 2020 21:04:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54808 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbgEGBEz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 May 2020 21:04:55 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470vnWa130580;
-        Thu, 7 May 2020 01:02:51 GMT
+        id S1728323AbgEGBDC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 May 2020 21:03:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52404 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgEGBDC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 May 2020 21:03:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470xPQZ123199;
+        Thu, 7 May 2020 01:02:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=yJgypV4buUclhFzaHHYHb+gk+Wp6NBl1F6rdqV+JD2k=;
- b=KWkWYT7+dbfsGkMmilx4YL8K5kwO5c17ab8wNWbsZ3Z0Qpc66o3Oe10I10U5c09PRGBx
- e6v9yhkL84pvw+qQnnAFxuH/eFQjNPZXL1/Zv1jLFHc1bfv1S1Laa8H+bz93kQaXh2Ao
- hZrZNxZdHFFWBp4r8gGsU92olSBMxcqGYpG1zsbAQNFqMpxBT1mxax3458FSi25FngXW
- 7UeS+GaD65fjXrsRLfUMpPgcPdU4CCBN31vw2u0/liNaY6//dGQwSNpO9W/LLaEpe7xW
- jjLEzZLfFypvgJSjDGei4iZV05zJCU1OpA5Gx4WOOVZPIj2czT8I0UW2TUJprRftYfeq 9Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30s1gnda3s-1
+ bh=WSf8QVKpCOloQyHwmcJWGJIs4Pq591e8Hby0+z2H0SQ=;
+ b=lQIxgnDWmUxDfVlXZ36Wv0DU56R2ktK7MTblPihIBE/wpquMvCPuDFtVFB8o/VVnxRxd
+ sdBkeCJR3Xri1VZe9SzMmS9bVjwL6pJXChU3H2L2Q3pwTEiY5pOnHOuMLJR8EhfFradB
+ sOQVcdQE8GR8DFUCEHk0x2ue7Dv1F35IN2i14UlUa8BNZ40TyCAQFRKgf5pX7LhAcsw1
+ UoNfgHTWNviJWreeEndHSsTn1uWb/ah04ZagLD9NQRaoEFkXncsiLWkZ28VDaZsBOlgK
+ YSo1esAIn3Gl5GmtP+tKD6d6SHQCLCJBeGrvsh1iM/VYG0f1AZBTtR239Kw5aL04/8+E FQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30usgq4jed-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 01:02:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470wdVn052106;
-        Thu, 7 May 2020 01:02:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30us7p3k7n-1
+        Thu, 07 May 2020 01:02:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470vWZj150937;
+        Thu, 7 May 2020 01:02:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjnmbk8s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 01:02:51 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04712oOW028366;
-        Thu, 7 May 2020 01:02:50 GMT
+        Thu, 07 May 2020 01:02:56 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04712u3K004317;
+        Thu, 7 May 2020 01:02:56 GMT
 Received: from localhost (/10.159.237.186)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 18:02:49 -0700
-Subject: [PATCH 10/25] xfs: refactor log recovery RUI item dispatch for pass2
+        with ESMTP ; Wed, 06 May 2020 18:02:56 -0700
+Subject: [PATCH 11/25] xfs: refactor log recovery CUI item dispatch for pass2
  commit functions
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Wed, 06 May 2020 18:02:46 -0700
-Message-ID: <158881336613.189971.18086586536895108564.stgit@magnolia>
+Date:   Wed, 06 May 2020 18:02:52 -0700
+Message-ID: <158881337243.189971.8705314240407916941.stgit@magnolia>
 In-Reply-To: <158881329912.189971.14392758631836955942.stgit@magnolia>
 References: <158881329912.189971.14392758631836955942.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,16 +55,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=3
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=3
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070004
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=3 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070004
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070004
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -72,109 +72,136 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Move the rmap update intent and intent-done pass2 commit code into the
-per-item source code files and use dispatch functions to call them.  We
-do these one at a time because there's a lot of code to move.  No
+Move the refcount update intent and intent-done pass2 commit code into
+the per-item source code files and use dispatch functions to call them.
+We do these one at a time because there's a lot of code to move.  No
 functional changes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log_recover.c |   97 -------------------------------------------
- fs/xfs/xfs_rmap_item.c   |  104 +++++++++++++++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_rmap_item.h   |    4 --
- 3 files changed, 101 insertions(+), 104 deletions(-)
+ fs/xfs/xfs_log_recover.c   |  124 ------------------------------------------
+ fs/xfs/xfs_refcount_item.c |  129 +++++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_refcount_item.h |    2 -
+ 3 files changed, 127 insertions(+), 128 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 26f0f84f2528..875d79d88018 100644
+index 875d79d88018..0bce57088693 100644
 --- a/fs/xfs/xfs_log_recover.c
 +++ b/fs/xfs/xfs_log_recover.c
-@@ -2034,99 +2034,6 @@ xlog_buf_readahead(
+@@ -2034,126 +2034,6 @@ xlog_buf_readahead(
  		xfs_buf_readahead(log->l_mp->m_ddev_targp, blkno, len, ops);
  }
  
 -/*
-- * This routine is called to create an in-core extent rmap update
-- * item from the rui format structure which was logged on disk.
-- * It allocates an in-core rui, copies the extents from the format
-- * structure into it, and adds the rui to the AIL with the given
+- * Copy an CUI format buffer from the given buf, and into the destination
+- * CUI format structure.  The CUI/CUD items were designed not to need any
+- * special alignment handling.
+- */
+-static int
+-xfs_cui_copy_format(
+-	struct xfs_log_iovec		*buf,
+-	struct xfs_cui_log_format	*dst_cui_fmt)
+-{
+-	struct xfs_cui_log_format	*src_cui_fmt;
+-	uint				len;
+-
+-	src_cui_fmt = buf->i_addr;
+-	len = xfs_cui_log_format_sizeof(src_cui_fmt->cui_nextents);
+-
+-	if (buf->i_len == len) {
+-		memcpy(dst_cui_fmt, src_cui_fmt, len);
+-		return 0;
+-	}
+-	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
+-	return -EFSCORRUPTED;
+-}
+-
+-/*
+- * This routine is called to create an in-core extent refcount update
+- * item from the cui format structure which was logged on disk.
+- * It allocates an in-core cui, copies the extents from the format
+- * structure into it, and adds the cui to the AIL with the given
 - * LSN.
 - */
 -STATIC int
--xlog_recover_rui_pass2(
+-xlog_recover_cui_pass2(
 -	struct xlog			*log,
 -	struct xlog_recover_item	*item,
 -	xfs_lsn_t			lsn)
 -{
 -	int				error;
 -	struct xfs_mount		*mp = log->l_mp;
--	struct xfs_rui_log_item		*ruip;
--	struct xfs_rui_log_format	*rui_formatp;
+-	struct xfs_cui_log_item		*cuip;
+-	struct xfs_cui_log_format	*cui_formatp;
 -
--	rui_formatp = item->ri_buf[0].i_addr;
+-	cui_formatp = item->ri_buf[0].i_addr;
 -
--	ruip = xfs_rui_init(mp, rui_formatp->rui_nextents);
--	error = xfs_rui_copy_format(&item->ri_buf[0], &ruip->rui_format);
+-	cuip = xfs_cui_init(mp, cui_formatp->cui_nextents);
+-	error = xfs_cui_copy_format(&item->ri_buf[0], &cuip->cui_format);
 -	if (error) {
--		xfs_rui_item_free(ruip);
+-		xfs_cui_item_free(cuip);
 -		return error;
 -	}
--	atomic_set(&ruip->rui_next_extent, rui_formatp->rui_nextents);
+-	atomic_set(&cuip->cui_next_extent, cui_formatp->cui_nextents);
 -
 -	spin_lock(&log->l_ailp->ail_lock);
 -	/*
--	 * The RUI has two references. One for the RUD and one for RUI to ensure
--	 * it makes it into the AIL. Insert the RUI into the AIL directly and
--	 * drop the RUI reference. Note that xfs_trans_ail_update() drops the
+-	 * The CUI has two references. One for the CUD and one for CUI to ensure
+-	 * it makes it into the AIL. Insert the CUI into the AIL directly and
+-	 * drop the CUI reference. Note that xfs_trans_ail_update() drops the
 -	 * AIL lock.
 -	 */
--	xfs_trans_ail_update(log->l_ailp, &ruip->rui_item, lsn);
--	xfs_rui_release(ruip);
+-	xfs_trans_ail_update(log->l_ailp, &cuip->cui_item, lsn);
+-	xfs_cui_release(cuip);
 -	return 0;
 -}
 -
 -
 -/*
-- * This routine is called when an RUD format structure is found in a committed
-- * transaction in the log. Its purpose is to cancel the corresponding RUI if it
-- * was still in the log. To do this it searches the AIL for the RUI with an id
-- * equal to that in the RUD format structure. If we find it we drop the RUD
-- * reference, which removes the RUI from the AIL and frees it.
+- * This routine is called when an CUD format structure is found in a committed
+- * transaction in the log. Its purpose is to cancel the corresponding CUI if it
+- * was still in the log. To do this it searches the AIL for the CUI with an id
+- * equal to that in the CUD format structure. If we find it we drop the CUD
+- * reference, which removes the CUI from the AIL and frees it.
 - */
 -STATIC int
--xlog_recover_rud_pass2(
+-xlog_recover_cud_pass2(
 -	struct xlog			*log,
 -	struct xlog_recover_item	*item)
 -{
--	struct xfs_rud_log_format	*rud_formatp;
--	struct xfs_rui_log_item		*ruip = NULL;
+-	struct xfs_cud_log_format	*cud_formatp;
+-	struct xfs_cui_log_item		*cuip = NULL;
 -	struct xfs_log_item		*lip;
--	uint64_t			rui_id;
+-	uint64_t			cui_id;
 -	struct xfs_ail_cursor		cur;
 -	struct xfs_ail			*ailp = log->l_ailp;
 -
--	rud_formatp = item->ri_buf[0].i_addr;
--	ASSERT(item->ri_buf[0].i_len == sizeof(struct xfs_rud_log_format));
--	rui_id = rud_formatp->rud_rui_id;
+-	cud_formatp = item->ri_buf[0].i_addr;
+-	if (item->ri_buf[0].i_len != sizeof(struct xfs_cud_log_format)) {
+-		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, log->l_mp);
+-		return -EFSCORRUPTED;
+-	}
+-	cui_id = cud_formatp->cud_cui_id;
 -
 -	/*
--	 * Search for the RUI with the id in the RUD format structure in the
+-	 * Search for the CUI with the id in the CUD format structure in the
 -	 * AIL.
 -	 */
 -	spin_lock(&ailp->ail_lock);
 -	lip = xfs_trans_ail_cursor_first(ailp, &cur, 0);
 -	while (lip != NULL) {
--		if (lip->li_type == XFS_LI_RUI) {
--			ruip = (struct xfs_rui_log_item *)lip;
--			if (ruip->rui_format.rui_id == rui_id) {
+-		if (lip->li_type == XFS_LI_CUI) {
+-			cuip = (struct xfs_cui_log_item *)lip;
+-			if (cuip->cui_format.cui_id == cui_id) {
 -				/*
--				 * Drop the RUD reference to the RUI. This
--				 * removes the RUI from the AIL and frees it.
+-				 * Drop the CUD reference to the CUI. This
+-				 * removes the CUI from the AIL and frees it.
 -				 */
 -				spin_unlock(&ailp->ail_lock);
--				xfs_rui_release(ruip);
+-				xfs_cui_release(cuip);
 -				spin_lock(&ailp->ail_lock);
 -				break;
 -			}
@@ -189,71 +216,86 @@ index 26f0f84f2528..875d79d88018 100644
 -}
 -
  /*
-  * Copy an CUI format buffer from the given buf, and into the destination
-  * CUI format structure.  The CUI/CUD items were designed not to need any
-@@ -2385,10 +2292,6 @@ xlog_recover_commit_pass2(
+  * Copy an BUI format buffer from the given buf, and into the destination
+  * BUI format structure.  The BUI/BUD items were designed not to need any
+@@ -2292,10 +2172,6 @@ xlog_recover_commit_pass2(
  				trans->r_lsn);
  
  	switch (ITEM_TYPE(item)) {
--	case XFS_LI_RUI:
--		return xlog_recover_rui_pass2(log, item, trans->r_lsn);
--	case XFS_LI_RUD:
--		return xlog_recover_rud_pass2(log, item);
- 	case XFS_LI_CUI:
- 		return xlog_recover_cui_pass2(log, item, trans->r_lsn);
- 	case XFS_LI_CUD:
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 0f3af9f05764..44049dbdb161 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
+-	case XFS_LI_CUI:
+-		return xlog_recover_cui_pass2(log, item, trans->r_lsn);
+-	case XFS_LI_CUD:
+-		return xlog_recover_cud_pass2(log, item);
+ 	case XFS_LI_BUI:
+ 		return xlog_recover_bui_pass2(log, item, trans->r_lsn);
+ 	case XFS_LI_BUD:
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index 2a9465d9a77f..7ccdeafdb7e7 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
 @@ -18,6 +18,7 @@
  #include "xfs_log.h"
- #include "xfs_rmap.h"
+ #include "xfs_refcount.h"
  #include "xfs_error.h"
 +#include "xfs_log_priv.h"
  #include "xfs_log_recover.h"
  
- kmem_zone_t	*xfs_rui_zone;
-@@ -28,7 +29,7 @@ static inline struct xfs_rui_log_item *RUI_ITEM(struct xfs_log_item *lip)
- 	return container_of(lip, struct xfs_rui_log_item, rui_item);
+ kmem_zone_t	*xfs_cui_zone;
+@@ -28,7 +29,7 @@ static inline struct xfs_cui_log_item *CUI_ITEM(struct xfs_log_item *lip)
+ 	return container_of(lip, struct xfs_cui_log_item, cui_item);
  }
  
 -void
 +STATIC void
- xfs_rui_item_free(
- 	struct xfs_rui_log_item	*ruip)
+ xfs_cui_item_free(
+ 	struct xfs_cui_log_item	*cuip)
  {
-@@ -133,7 +134,7 @@ static const struct xfs_item_ops xfs_rui_item_ops = {
+@@ -134,7 +135,7 @@ static const struct xfs_item_ops xfs_cui_item_ops = {
  /*
-  * Allocate and initialize an rui item with the given number of extents.
+  * Allocate and initialize an cui item with the given number of extents.
   */
--struct xfs_rui_log_item *
-+STATIC struct xfs_rui_log_item *
- xfs_rui_init(
+-struct xfs_cui_log_item *
++STATIC struct xfs_cui_log_item *
+ xfs_cui_init(
  	struct xfs_mount		*mp,
  	uint				nextents)
-@@ -161,7 +162,7 @@ xfs_rui_init(
-  * RUI format structure.  The RUI/RUD items were designed not to need any
-  * special alignment handling.
-  */
--int
-+STATIC int
- xfs_rui_copy_format(
- 	struct xfs_log_iovec		*buf,
- 	struct xfs_rui_log_format	*dst_rui_fmt)
-@@ -587,10 +588,107 @@ xfs_rui_recover(
+@@ -572,10 +573,134 @@ xfs_cui_recover(
  	return error;
  }
  
 +/*
-+ * This routine is called to create an in-core extent rmap update
-+ * item from the rui format structure which was logged on disk.
-+ * It allocates an in-core rui, copies the extents from the format
-+ * structure into it, and adds the rui to the AIL with the given
++ * Copy an CUI format buffer from the given buf, and into the destination
++ * CUI format structure.  The CUI/CUD items were designed not to need any
++ * special alignment handling.
++ */
++static int
++xfs_cui_copy_format(
++	struct xfs_log_iovec		*buf,
++	struct xfs_cui_log_format	*dst_cui_fmt)
++{
++	struct xfs_cui_log_format	*src_cui_fmt;
++	uint				len;
++
++	src_cui_fmt = buf->i_addr;
++	len = xfs_cui_log_format_sizeof(src_cui_fmt->cui_nextents);
++
++	if (buf->i_len == len) {
++		memcpy(dst_cui_fmt, src_cui_fmt, len);
++		return 0;
++	}
++	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
++	return -EFSCORRUPTED;
++}
++
++/*
++ * This routine is called to create an in-core extent refcount update
++ * item from the cui format structure which was logged on disk.
++ * It allocates an in-core cui, copies the extents from the format
++ * structure into it, and adds the cui to the AIL with the given
 + * LSN.
 + */
 +STATIC int
-+xlog_recover_rui_commit_pass2(
++xlog_recover_cui_commit_pass2(
 +	struct xlog			*log,
 +	struct list_head		*buffer_list,
 +	struct xlog_recover_item	*item,
@@ -261,77 +303,80 @@ index 0f3af9f05764..44049dbdb161 100644
 +{
 +	int				error;
 +	struct xfs_mount		*mp = log->l_mp;
-+	struct xfs_rui_log_item		*ruip;
-+	struct xfs_rui_log_format	*rui_formatp;
++	struct xfs_cui_log_item		*cuip;
++	struct xfs_cui_log_format	*cui_formatp;
 +
-+	rui_formatp = item->ri_buf[0].i_addr;
++	cui_formatp = item->ri_buf[0].i_addr;
 +
-+	ruip = xfs_rui_init(mp, rui_formatp->rui_nextents);
-+	error = xfs_rui_copy_format(&item->ri_buf[0], &ruip->rui_format);
++	cuip = xfs_cui_init(mp, cui_formatp->cui_nextents);
++	error = xfs_cui_copy_format(&item->ri_buf[0], &cuip->cui_format);
 +	if (error) {
-+		xfs_rui_item_free(ruip);
++		xfs_cui_item_free(cuip);
 +		return error;
 +	}
-+	atomic_set(&ruip->rui_next_extent, rui_formatp->rui_nextents);
++	atomic_set(&cuip->cui_next_extent, cui_formatp->cui_nextents);
 +
 +	spin_lock(&log->l_ailp->ail_lock);
 +	/*
-+	 * The RUI has two references. One for the RUD and one for RUI to ensure
-+	 * it makes it into the AIL. Insert the RUI into the AIL directly and
-+	 * drop the RUI reference. Note that xfs_trans_ail_update() drops the
++	 * The CUI has two references. One for the CUD and one for CUI to ensure
++	 * it makes it into the AIL. Insert the CUI into the AIL directly and
++	 * drop the CUI reference. Note that xfs_trans_ail_update() drops the
 +	 * AIL lock.
 +	 */
-+	xfs_trans_ail_update(log->l_ailp, &ruip->rui_item, lsn);
-+	xfs_rui_release(ruip);
++	xfs_trans_ail_update(log->l_ailp, &cuip->cui_item, lsn);
++	xfs_cui_release(cuip);
 +	return 0;
 +}
 +
- const struct xlog_recover_item_ops xlog_rui_item_ops = {
- 	.item_type		= XFS_LI_RUI,
-+	.commit_pass2		= xlog_recover_rui_commit_pass2,
+ const struct xlog_recover_item_ops xlog_cui_item_ops = {
+ 	.item_type		= XFS_LI_CUI,
++	.commit_pass2		= xlog_recover_cui_commit_pass2,
  };
  
 +/*
-+ * This routine is called when an RUD format structure is found in a committed
-+ * transaction in the log. Its purpose is to cancel the corresponding RUI if it
-+ * was still in the log. To do this it searches the AIL for the RUI with an id
-+ * equal to that in the RUD format structure. If we find it we drop the RUD
-+ * reference, which removes the RUI from the AIL and frees it.
++ * This routine is called when an CUD format structure is found in a committed
++ * transaction in the log. Its purpose is to cancel the corresponding CUI if it
++ * was still in the log. To do this it searches the AIL for the CUI with an id
++ * equal to that in the CUD format structure. If we find it we drop the CUD
++ * reference, which removes the CUI from the AIL and frees it.
 + */
 +STATIC int
-+xlog_recover_rud_commit_pass2(
++xlog_recover_cud_commit_pass2(
 +	struct xlog			*log,
 +	struct list_head		*buffer_list,
 +	struct xlog_recover_item	*item,
 +	xfs_lsn_t			lsn)
 +{
-+	struct xfs_rud_log_format	*rud_formatp;
-+	struct xfs_rui_log_item		*ruip = NULL;
++	struct xfs_cud_log_format	*cud_formatp;
++	struct xfs_cui_log_item		*cuip = NULL;
 +	struct xfs_log_item		*lip;
-+	uint64_t			rui_id;
++	uint64_t			cui_id;
 +	struct xfs_ail_cursor		cur;
 +	struct xfs_ail			*ailp = log->l_ailp;
 +
-+	rud_formatp = item->ri_buf[0].i_addr;
-+	ASSERT(item->ri_buf[0].i_len == sizeof(struct xfs_rud_log_format));
-+	rui_id = rud_formatp->rud_rui_id;
++	cud_formatp = item->ri_buf[0].i_addr;
++	if (item->ri_buf[0].i_len != sizeof(struct xfs_cud_log_format)) {
++		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, log->l_mp);
++		return -EFSCORRUPTED;
++	}
++	cui_id = cud_formatp->cud_cui_id;
 +
 +	/*
-+	 * Search for the RUI with the id in the RUD format structure in the
++	 * Search for the CUI with the id in the CUD format structure in the
 +	 * AIL.
 +	 */
 +	spin_lock(&ailp->ail_lock);
 +	lip = xfs_trans_ail_cursor_first(ailp, &cur, 0);
 +	while (lip != NULL) {
-+		if (lip->li_type == XFS_LI_RUI) {
-+			ruip = (struct xfs_rui_log_item *)lip;
-+			if (ruip->rui_format.rui_id == rui_id) {
++		if (lip->li_type == XFS_LI_CUI) {
++			cuip = (struct xfs_cui_log_item *)lip;
++			if (cuip->cui_format.cui_id == cui_id) {
 +				/*
-+				 * Drop the RUD reference to the RUI. This
-+				 * removes the RUI from the AIL and frees it.
++				 * Drop the CUD reference to the CUI. This
++				 * removes the CUI from the AIL and frees it.
 +				 */
 +				spin_unlock(&ailp->ail_lock);
-+				xfs_rui_release(ruip);
++				xfs_cui_release(cuip);
 +				spin_lock(&ailp->ail_lock);
 +				break;
 +			}
@@ -345,23 +390,21 @@ index 0f3af9f05764..44049dbdb161 100644
 +	return 0;
 +}
 +
- const struct xlog_recover_item_ops xlog_rud_item_ops = {
- 	.item_type		= XFS_LI_RUD,
-+	.commit_pass2		= xlog_recover_rud_commit_pass2,
+ const struct xlog_recover_item_ops xlog_cud_item_ops = {
+ 	.item_type		= XFS_LI_CUD,
++	.commit_pass2		= xlog_recover_cud_commit_pass2,
  };
-diff --git a/fs/xfs/xfs_rmap_item.h b/fs/xfs/xfs_rmap_item.h
-index 8708e4a5aa5c..89bd192779f8 100644
---- a/fs/xfs/xfs_rmap_item.h
-+++ b/fs/xfs/xfs_rmap_item.h
-@@ -77,10 +77,6 @@ struct xfs_rud_log_item {
- extern struct kmem_zone	*xfs_rui_zone;
- extern struct kmem_zone	*xfs_rud_zone;
+diff --git a/fs/xfs/xfs_refcount_item.h b/fs/xfs/xfs_refcount_item.h
+index e47530f30489..ebe12779eaac 100644
+--- a/fs/xfs/xfs_refcount_item.h
++++ b/fs/xfs/xfs_refcount_item.h
+@@ -77,8 +77,6 @@ struct xfs_cud_log_item {
+ extern struct kmem_zone	*xfs_cui_zone;
+ extern struct kmem_zone	*xfs_cud_zone;
  
--struct xfs_rui_log_item *xfs_rui_init(struct xfs_mount *, uint);
--int xfs_rui_copy_format(struct xfs_log_iovec *buf,
--		struct xfs_rui_log_format *dst_rui_fmt);
--void xfs_rui_item_free(struct xfs_rui_log_item *);
- void xfs_rui_release(struct xfs_rui_log_item *);
- int xfs_rui_recover(struct xfs_mount *mp, struct xfs_rui_log_item *ruip);
+-struct xfs_cui_log_item *xfs_cui_init(struct xfs_mount *, uint);
+-void xfs_cui_item_free(struct xfs_cui_log_item *);
+ void xfs_cui_release(struct xfs_cui_log_item *);
+ int xfs_cui_recover(struct xfs_trans *parent_tp, struct xfs_cui_log_item *cuip);
  
 
