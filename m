@@ -2,149 +2,173 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DE181CB278
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 17:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E59D1CB27F
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 17:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEHPFY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 May 2020 11:05:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43823 "EHLO
+        id S1728120AbgEHPFw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 May 2020 11:05:52 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38167 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgEHPFY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 11:05:24 -0400
+        by vger.kernel.org with ESMTP id S1728128AbgEHPFv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 11:05:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588950323;
+        s=mimecast20190719; t=1588950350;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=2z4WpSAAM0SVeRJea7jYFa7nWhcBVRwcOr+OMQ6+L/M=;
-        b=BWqic2P+qsRrfPrtOWxNyYQYXMH6LkfwWHAZSPWgJGDEJdy6aly8t2Fvh/dwCGmNYL8WyH
-        tKpfr0nQs702B4EReg+ASKqvFR0ZV8/oXt36EgpSN1GxW2h3TFwXp7M1vl6Yif0eSugSYm
-        hRcHg78Koids8lJuVVU/QD/SrVlyiOE=
+        bh=O3Yf5AaHr7PZk9aNELu/wAcrJBIo5NoCEmxqPatxfBQ=;
+        b=cLwl2CUk61KnudhJn2AO/RVTSYMCOEt50ui3p2BQG2dk6g2xCF6KJFH5TH41wzXIwWgSrI
+        cFxBstdnt5trAaROQF1ZXcbvyFC3mRH/sCWhuGRoZOAOLhyU6L9tbIjv9h8dISQ+GH+qOn
+        iggnU+VvFVsDGv8wxoTrWWLxSMJD4FY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-247-Np6elmJKNA6P5sP4mN3DRA-1; Fri, 08 May 2020 11:05:19 -0400
-X-MC-Unique: Np6elmJKNA6P5sP4mN3DRA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-505-PEiJiUZVPpSjkMlWLmDFgQ-1; Fri, 08 May 2020 11:05:47 -0400
+X-MC-Unique: PEiJiUZVPpSjkMlWLmDFgQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 320C583DC11;
-        Fri,  8 May 2020 15:05:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F607835B42;
+        Fri,  8 May 2020 15:05:46 +0000 (UTC)
 Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA82F60F8A;
-        Fri,  8 May 2020 15:05:17 +0000 (UTC)
-Date:   Fri, 8 May 2020 11:05:16 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6D212E199;
+        Fri,  8 May 2020 15:05:45 +0000 (UTC)
+Date:   Fri, 8 May 2020 11:05:43 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 04/12] xfs: handle unallocated inodes in
- xfs_inode_from_disk
-Message-ID: <20200508150516.GE27577@bfoster>
+Subject: Re: [PATCH 08/12] xfs: remove xfs_ifork_ops
+Message-ID: <20200508150543.GF27577@bfoster>
 References: <20200508063423.482370-1-hch@lst.de>
- <20200508063423.482370-5-hch@lst.de>
+ <20200508063423.482370-9-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508063423.482370-5-hch@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200508063423.482370-9-hch@lst.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:34:15AM +0200, Christoph Hellwig wrote:
-> Handle inodes with a 0 di_mode in xfs_inode_from_disk, instead of partially
-> duplicating inode reading in xfs_iread.
+On Fri, May 08, 2020 at 08:34:19AM +0200, Christoph Hellwig wrote:
+> xfs_ifork_ops add up to two indirect calls per inode read and flush,
+> despite just having a single instance in the kernel.  In xfsprogs
+> phase6 in xfs_repair overrides the verify_dir method to deal with inodes
+> that do not have a valid parent, but that can be fixed pretty easily
+> by ensuring they always have a valid looking parent.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
 
+Code looks fine, but I assume we'll want a repair fix completed and
+merged before wiping this out:
+
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/libxfs/xfs_inode_buf.c | 50 ++++++++++-------------------------
->  1 file changed, 14 insertions(+), 36 deletions(-)
+>  fs/xfs/libxfs/xfs_inode_fork.c | 19 +++++--------------
+>  fs/xfs/libxfs/xfs_inode_fork.h | 15 ++-------------
+>  fs/xfs/xfs_inode.c             |  4 ++--
+>  3 files changed, 9 insertions(+), 29 deletions(-)
 > 
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> index abdecc80579e3..686a026b5f6ed 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> @@ -192,6 +192,17 @@ xfs_inode_from_disk(
->  	ASSERT(ip->i_cowfp == NULL);
->  	ASSERT(ip->i_afp == NULL);
+> diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+> index 5fadfa9a17eb9..e346e143f1053 100644
+> --- a/fs/xfs/libxfs/xfs_inode_fork.c
+> +++ b/fs/xfs/libxfs/xfs_inode_fork.c
+> @@ -673,18 +673,10 @@ xfs_ifork_init_cow(
+>  	ip->i_cnextents = 0;
+>  }
 >  
-> +	/*
-> +	 * First get the permanent information that is needed to allocate an
-> +	 * inode. If the inode is unused, mode is zero and we shouldn't mess
-> +	 * with the unitialized part of it.
-> +	 */
-> +	to->di_flushiter = be16_to_cpu(from->di_flushiter);
-> +	inode->i_generation = be32_to_cpu(from->di_gen);
-> +	inode->i_mode = be16_to_cpu(from->di_mode);
-> +	if (!inode->i_mode)
-> +		return 0;
-> +
->  	/*
->  	 * Convert v1 inodes immediately to v2 inode format as this is the
->  	 * minimum inode version format we support in the rest of the code.
-> @@ -209,7 +220,6 @@ xfs_inode_from_disk(
->  	to->di_format = from->di_format;
->  	i_uid_write(inode, be32_to_cpu(from->di_uid));
->  	i_gid_write(inode, be32_to_cpu(from->di_gid));
-> -	to->di_flushiter = be16_to_cpu(from->di_flushiter);
+> -/* Default fork content verifiers. */
+> -struct xfs_ifork_ops xfs_default_ifork_ops = {
+> -	.verify_attr	= xfs_attr_shortform_verify,
+> -	.verify_dir	= xfs_dir2_sf_verify,
+> -	.verify_symlink	= xfs_symlink_shortform_verify,
+> -};
+> -
+>  /* Verify the inline contents of the data fork of an inode. */
+>  xfs_failaddr_t
+>  xfs_ifork_verify_data(
+> -	struct xfs_inode	*ip,
+> -	struct xfs_ifork_ops	*ops)
+> +	struct xfs_inode	*ip)
+>  {
+>  	/* Non-local data fork, we're done. */
+>  	if (ip->i_d.di_format != XFS_DINODE_FMT_LOCAL)
+> @@ -693,9 +685,9 @@ xfs_ifork_verify_data(
+>  	/* Check the inline data fork if there is one. */
+>  	switch (VFS_I(ip)->i_mode & S_IFMT) {
+>  	case S_IFDIR:
+> -		return ops->verify_dir(ip);
+> +		return xfs_dir2_sf_verify(ip);
+>  	case S_IFLNK:
+> -		return ops->verify_symlink(ip);
+> +		return xfs_symlink_shortform_verify(ip);
+>  	default:
+>  		return NULL;
+>  	}
+> @@ -704,13 +696,12 @@ xfs_ifork_verify_data(
+>  /* Verify the inline contents of the attr fork of an inode. */
+>  xfs_failaddr_t
+>  xfs_ifork_verify_attr(
+> -	struct xfs_inode	*ip,
+> -	struct xfs_ifork_ops	*ops)
+> +	struct xfs_inode	*ip)
+>  {
+>  	/* There has to be an attr fork allocated if aformat is local. */
+>  	if (ip->i_d.di_aformat != XFS_DINODE_FMT_LOCAL)
+>  		return NULL;
+>  	if (!XFS_IFORK_PTR(ip, XFS_ATTR_FORK))
+>  		return __this_address;
+> -	return ops->verify_attr(ip);
+> +	return xfs_attr_shortform_verify(ip);
+>  }
+> diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+> index 8487b0c88a75e..3f84d33abd3b7 100644
+> --- a/fs/xfs/libxfs/xfs_inode_fork.h
+> +++ b/fs/xfs/libxfs/xfs_inode_fork.h
+> @@ -176,18 +176,7 @@ extern struct kmem_zone	*xfs_ifork_zone;
 >  
->  	/*
->  	 * Time is signed, so need to convert to signed 32 bit before
-> @@ -223,8 +233,6 @@ xfs_inode_from_disk(
->  	inode->i_mtime.tv_nsec = (int)be32_to_cpu(from->di_mtime.t_nsec);
->  	inode->i_ctime.tv_sec = (int)be32_to_cpu(from->di_ctime.t_sec);
->  	inode->i_ctime.tv_nsec = (int)be32_to_cpu(from->di_ctime.t_nsec);
-> -	inode->i_generation = be32_to_cpu(from->di_gen);
-> -	inode->i_mode = be16_to_cpu(from->di_mode);
+>  extern void xfs_ifork_init_cow(struct xfs_inode *ip);
 >  
->  	to->di_size = be64_to_cpu(from->di_size);
->  	to->di_nblocks = be64_to_cpu(from->di_nblocks);
-> @@ -653,39 +661,9 @@ xfs_iread(
->  		goto out_brelse;
+> -typedef xfs_failaddr_t (*xfs_ifork_verifier_t)(struct xfs_inode *);
+> -
+> -struct xfs_ifork_ops {
+> -	xfs_ifork_verifier_t	verify_symlink;
+> -	xfs_ifork_verifier_t	verify_dir;
+> -	xfs_ifork_verifier_t	verify_attr;
+> -};
+> -extern struct xfs_ifork_ops	xfs_default_ifork_ops;
+> -
+> -xfs_failaddr_t xfs_ifork_verify_data(struct xfs_inode *ip,
+> -		struct xfs_ifork_ops *ops);
+> -xfs_failaddr_t xfs_ifork_verify_attr(struct xfs_inode *ip,
+> -		struct xfs_ifork_ops *ops);
+> +xfs_failaddr_t xfs_ifork_verify_data(struct xfs_inode *ip);
+> +xfs_failaddr_t xfs_ifork_verify_attr(struct xfs_inode *ip);
+>  
+>  #endif	/* __XFS_INODE_FORK_H__ */
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index ab31a5dec7aab..25c00ffe18409 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -3718,7 +3718,7 @@ xfs_inode_verify_forks(
+>  	struct xfs_ifork	*ifp;
+>  	xfs_failaddr_t		fa;
+>  
+> -	fa = xfs_ifork_verify_data(ip, &xfs_default_ifork_ops);
+> +	fa = xfs_ifork_verify_data(ip);
+>  	if (fa) {
+>  		ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
+>  		xfs_inode_verifier_error(ip, -EFSCORRUPTED, "data fork",
+> @@ -3726,7 +3726,7 @@ xfs_inode_verify_forks(
+>  		return false;
 >  	}
 >  
-> -	/*
-> -	 * If the on-disk inode is already linked to a directory
-> -	 * entry, copy all of the inode into the in-core inode.
-> -	 * xfs_iformat_fork() handles copying in the inode format
-> -	 * specific information.
-> -	 * Otherwise, just get the truly permanent information.
-> -	 */
-> -	if (dip->di_mode) {
-> -		error = xfs_inode_from_disk(ip, dip);
-> -		if (error)  {
-> -#ifdef DEBUG
-> -			xfs_alert(mp, "%s: xfs_iformat() returned error %d",
-> -				__func__, error);
-> -#endif /* DEBUG */
-> -			goto out_brelse;
-> -		}
-> -	} else {
-> -		/*
-> -		 * Partial initialisation of the in-core inode. Just the bits
-> -		 * that xfs_ialloc won't overwrite or relies on being correct.
-> -		 */
-> -		VFS_I(ip)->i_generation = be32_to_cpu(dip->di_gen);
-> -		ip->i_d.di_flushiter = be16_to_cpu(dip->di_flushiter);
-> -
-> -		/*
-> -		 * Make sure to pull in the mode here as well in
-> -		 * case the inode is released without being used.
-> -		 * This ensures that xfs_inactive() will see that
-> -		 * the inode is already free and not try to mess
-> -		 * with the uninitialized part of it.
-> -		 */
-> -		VFS_I(ip)->i_mode = 0;
-> -	}
-> +	error = xfs_inode_from_disk(ip, dip);
-> +	if (error)
-> +		goto out_brelse;
->  
->  	ip->i_delayed_blks = 0;
->  
+> -	fa = xfs_ifork_verify_attr(ip, &xfs_default_ifork_ops);
+> +	fa = xfs_ifork_verify_attr(ip);
+>  	if (fa) {
+>  		ifp = XFS_IFORK_PTR(ip, XFS_ATTR_FORK);
+>  		xfs_inode_verifier_error(ip, -EFSCORRUPTED, "attr fork",
 > -- 
 > 2.26.2
 > 
