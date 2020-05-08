@@ -2,105 +2,331 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB1F1CB1CB
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 16:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B87271CB27A
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 17:05:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgEHO2H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 May 2020 10:28:07 -0400
-Received: from sandeen.net ([63.231.237.45]:59664 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgEHO2G (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 8 May 2020 10:28:06 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728015AbgEHPFa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 May 2020 11:05:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36791 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726767AbgEHPFa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 11:05:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588950327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0NYwrt/3dObdNxTaVx7cwvIWU04LK6h4NPQPfDObiC0=;
+        b=hsIwGnasx6lmnmc0GwK8SWhjzUJgo7w8IV28IOwvN4cRH2b8nQYYVZhVEX/ei1L0xvLa17
+        pIiR0sBo6YfrYKQD0UQkuLxjyy0ZzMG+NT0QDMQZJE82JI1ElK9kzzR/zmQWkTbUUHvUM+
+        8pu11+xf5KB+PTEpCELg7EMLSBsn3E8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-IgGfWIkTPBWYoJQte5P1cQ-1; Fri, 08 May 2020 11:05:12 -0400
+X-MC-Unique: IgGfWIkTPBWYoJQte5P1cQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6BB8D4D7;
-        Fri,  8 May 2020 09:27:56 -0500 (CDT)
-Subject: Re: [PATCH 1/2] xfs: group quota should return EDQUOT when prj quota
- enabled
-To:     Christoph Hellwig <hch@infradead.org>,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-References: <447d7fec-2eff-fa99-cd19-acdf353c80d4@redhat.com>
- <cb095532-b72b-6369-7304-3b589568f0fe@redhat.com>
- <20200508071336.GA26853@infradead.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <e6e82690-3dbd-7777-057e-55d8bb41c47b@sandeen.net>
-Date:   Fri, 8 May 2020 09:28:04 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C6B0107ACF4;
+        Fri,  8 May 2020 15:05:11 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FAE9707DA;
+        Fri,  8 May 2020 15:05:10 +0000 (UTC)
+Date:   Fri, 8 May 2020 11:05:08 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 03/12] xfs: split xfs_iformat_fork
+Message-ID: <20200508150508.GD27577@bfoster>
+References: <20200508063423.482370-1-hch@lst.de>
+ <20200508063423.482370-4-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200508071336.GA26853@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508063423.482370-4-hch@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/8/20 2:13 AM, Christoph Hellwig wrote:
-> On Thu, May 07, 2020 at 10:38:33PM -0500, Eric Sandeen wrote:
->> Long ago, group & project quota were mutually exclusive, and so
->> when we turned on XFS_QMOPT_ENOSPC ("return ENOSPC if project quota
->> is exceeded") when project quota was enabled, we only needed to
->> disable it again for user quota.
->>
->> When group & project quota got separated, this got missed, and as a
->> result if project quota is enabled and group quota is exceeded, the
->> error code returned is incorrectly returned as ENOSPC not EDQUOT.
->>
->> Fix this by stripping XFS_QMOPT_ENOSPC out of flags for group
->> quota when we try to reserve the space.
+On Fri, May 08, 2020 at 08:34:14AM +0200, Christoph Hellwig wrote:
+> xfs_iformat_fork is a weird catchall.  Split it into one helper for
+> the data fork and one for the attr fork, and then call both helper
+> as well as the COW fork initialization from xfs_inode_from_disk.  Order
+> the COW fork initialization after the attr fork initialization given
+> that it can't fail to simplify the error handling.
 > 
-> Looks weird, but given that it has historical precedence, and you fix
-> all this mess up in the next patch:
+> Note that the newly split helpers are moved down the file in
+> xfs_inode_fork.c to avoid the need for forward declarations.
 > 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
 
-Thanks.  I could roll it all up into one patch if that's better, this
-seemed half weird / half more-obvious....
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
--Eric
+>  fs/xfs/libxfs/xfs_inode_buf.c  |  20 +++-
+>  fs/xfs/libxfs/xfs_inode_fork.c | 186 +++++++++++++++------------------
+>  fs/xfs/libxfs/xfs_inode_fork.h |   3 +-
+>  3 files changed, 103 insertions(+), 106 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+> index dc00ce6fc4a2f..abdecc80579e3 100644
+> --- a/fs/xfs/libxfs/xfs_inode_buf.c
+> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+> @@ -187,6 +187,10 @@ xfs_inode_from_disk(
+>  {
+>  	struct xfs_icdinode	*to = &ip->i_d;
+>  	struct inode		*inode = VFS_I(ip);
+> +	int			error;
+> +
+> +	ASSERT(ip->i_cowfp == NULL);
+> +	ASSERT(ip->i_afp == NULL);
+>  
+>  	/*
+>  	 * Convert v1 inodes immediately to v2 inode format as this is the
+> @@ -242,7 +246,21 @@ xfs_inode_from_disk(
+>  		to->di_cowextsize = be32_to_cpu(from->di_cowextsize);
+>  	}
+>  
+> -	return xfs_iformat_fork(ip, from);
+> +	error = xfs_iformat_data_fork(ip, from);
+> +	if (error)
+> +		return error;
+> +	if (XFS_DFORK_Q(from)) {
+> +		error = xfs_iformat_attr_fork(ip, from);
+> +		if (error)
+> +			goto out_destroy_data_fork;
+> +	}
+> +	if (xfs_is_reflink_inode(ip))
+> +		xfs_ifork_init_cow(ip);
+> +	return 0;
+> +
+> +out_destroy_data_fork:
+> +	xfs_idestroy_fork(ip, XFS_DATA_FORK);
+> +	return error;
+>  }
+>  
+>  void
+> diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+> index 3e9a42f1e23b9..5fadfa9a17eb9 100644
+> --- a/fs/xfs/libxfs/xfs_inode_fork.c
+> +++ b/fs/xfs/libxfs/xfs_inode_fork.c
+> @@ -26,110 +26,6 @@
+>  
+>  kmem_zone_t *xfs_ifork_zone;
+>  
+> -STATIC int xfs_iformat_local(xfs_inode_t *, xfs_dinode_t *, int, int);
+> -STATIC int xfs_iformat_extents(xfs_inode_t *, xfs_dinode_t *, int);
+> -STATIC int xfs_iformat_btree(xfs_inode_t *, xfs_dinode_t *, int);
+> -
+> -/*
+> - * Copy inode type and data and attr format specific information from the
+> - * on-disk inode to the in-core inode and fork structures.  For fifos, devices,
+> - * and sockets this means set i_rdev to the proper value.  For files,
+> - * directories, and symlinks this means to bring in the in-line data or extent
+> - * pointers as well as the attribute fork.  For a fork in B-tree format, only
+> - * the root is immediately brought in-core.  The rest will be read in later when
+> - * first referenced (see xfs_iread_extents()).
+> - */
+> -int
+> -xfs_iformat_fork(
+> -	struct xfs_inode	*ip,
+> -	struct xfs_dinode	*dip)
+> -{
+> -	struct inode		*inode = VFS_I(ip);
+> -	struct xfs_attr_shortform *atp;
+> -	int			size;
+> -	int			error = 0;
+> -	xfs_fsize_t             di_size;
+> -
+> -	switch (inode->i_mode & S_IFMT) {
+> -	case S_IFIFO:
+> -	case S_IFCHR:
+> -	case S_IFBLK:
+> -	case S_IFSOCK:
+> -		ip->i_d.di_size = 0;
+> -		inode->i_rdev = xfs_to_linux_dev_t(xfs_dinode_get_rdev(dip));
+> -		break;
+> -
+> -	case S_IFREG:
+> -	case S_IFLNK:
+> -	case S_IFDIR:
+> -		switch (dip->di_format) {
+> -		case XFS_DINODE_FMT_LOCAL:
+> -			di_size = be64_to_cpu(dip->di_size);
+> -			size = (int)di_size;
+> -			error = xfs_iformat_local(ip, dip, XFS_DATA_FORK, size);
+> -			break;
+> -		case XFS_DINODE_FMT_EXTENTS:
+> -			error = xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
+> -			break;
+> -		case XFS_DINODE_FMT_BTREE:
+> -			error = xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
+> -			break;
+> -		default:
+> -			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+> -					dip, sizeof(*dip), __this_address);
+> -			return -EFSCORRUPTED;
+> -		}
+> -		break;
+> -
+> -	default:
+> -		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
+> -				sizeof(*dip), __this_address);
+> -		return -EFSCORRUPTED;
+> -	}
+> -	if (error)
+> -		return error;
+> -
+> -	if (xfs_is_reflink_inode(ip)) {
+> -		ASSERT(ip->i_cowfp == NULL);
+> -		xfs_ifork_init_cow(ip);
+> -	}
+> -
+> -	if (!XFS_DFORK_Q(dip))
+> -		return 0;
+> -
+> -	ASSERT(ip->i_afp == NULL);
+> -	ip->i_afp = kmem_zone_zalloc(xfs_ifork_zone, KM_NOFS);
+> -
+> -	switch (dip->di_aformat) {
+> -	case XFS_DINODE_FMT_LOCAL:
+> -		atp = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
+> -		size = be16_to_cpu(atp->hdr.totsize);
+> -
+> -		error = xfs_iformat_local(ip, dip, XFS_ATTR_FORK, size);
+> -		break;
+> -	case XFS_DINODE_FMT_EXTENTS:
+> -		error = xfs_iformat_extents(ip, dip, XFS_ATTR_FORK);
+> -		break;
+> -	case XFS_DINODE_FMT_BTREE:
+> -		error = xfs_iformat_btree(ip, dip, XFS_ATTR_FORK);
+> -		break;
+> -	default:
+> -		xfs_inode_verifier_error(ip, error, __func__, dip,
+> -				sizeof(*dip), __this_address);
+> -		error = -EFSCORRUPTED;
+> -		break;
+> -	}
+> -	if (error) {
+> -		kmem_cache_free(xfs_ifork_zone, ip->i_afp);
+> -		ip->i_afp = NULL;
+> -		if (ip->i_cowfp)
+> -			kmem_cache_free(xfs_ifork_zone, ip->i_cowfp);
+> -		ip->i_cowfp = NULL;
+> -		xfs_idestroy_fork(ip, XFS_DATA_FORK);
+> -	}
+> -	return error;
+> -}
+> -
+>  void
+>  xfs_init_local_fork(
+>  	struct xfs_inode	*ip,
+> @@ -325,6 +221,88 @@ xfs_iformat_btree(
+>  	return 0;
+>  }
+>  
+> +int
+> +xfs_iformat_data_fork(
+> +	struct xfs_inode	*ip,
+> +	struct xfs_dinode	*dip)
+> +{
+> +	struct inode		*inode = VFS_I(ip);
+> +
+> +	switch (inode->i_mode & S_IFMT) {
+> +	case S_IFIFO:
+> +	case S_IFCHR:
+> +	case S_IFBLK:
+> +	case S_IFSOCK:
+> +		ip->i_d.di_size = 0;
+> +		inode->i_rdev = xfs_to_linux_dev_t(xfs_dinode_get_rdev(dip));
+> +		return 0;
+> +	case S_IFREG:
+> +	case S_IFLNK:
+> +	case S_IFDIR:
+> +		switch (dip->di_format) {
+> +		case XFS_DINODE_FMT_LOCAL:
+> +			return xfs_iformat_local(ip, dip, XFS_DATA_FORK,
+> +					be64_to_cpu(dip->di_size));
+> +		case XFS_DINODE_FMT_EXTENTS:
+> +			return xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
+> +		case XFS_DINODE_FMT_BTREE:
+> +			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
+> +		default:
+> +			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+> +					dip, sizeof(*dip), __this_address);
+> +			return -EFSCORRUPTED;
+> +		}
+> +		break;
+> +	default:
+> +		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
+> +				sizeof(*dip), __this_address);
+> +		return -EFSCORRUPTED;
+> +	}
+> +}
+> +
+> +static uint16_t
+> +xfs_dfork_attr_shortform_size(
+> +	struct xfs_dinode		*dip)
+> +{
+> +	struct xfs_attr_shortform	*atp =
+> +		(struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
+> +
+> +	return be16_to_cpu(atp->hdr.totsize);
+> +}
+> +
+> +int
+> +xfs_iformat_attr_fork(
+> +	struct xfs_inode	*ip,
+> +	struct xfs_dinode	*dip)
+> +{
+> +	int			error = 0;
+> +
+> +	ip->i_afp = kmem_zone_zalloc(xfs_ifork_zone, KM_NOFS);
+> +	switch (dip->di_aformat) {
+> +	case XFS_DINODE_FMT_LOCAL:
+> +		error = xfs_iformat_local(ip, dip, XFS_ATTR_FORK,
+> +				xfs_dfork_attr_shortform_size(dip));
+> +		break;
+> +	case XFS_DINODE_FMT_EXTENTS:
+> +		error = xfs_iformat_extents(ip, dip, XFS_ATTR_FORK);
+> +		break;
+> +	case XFS_DINODE_FMT_BTREE:
+> +		error = xfs_iformat_btree(ip, dip, XFS_ATTR_FORK);
+> +		break;
+> +	default:
+> +		xfs_inode_verifier_error(ip, error, __func__, dip,
+> +				sizeof(*dip), __this_address);
+> +		error = -EFSCORRUPTED;
+> +		break;
+> +	}
+> +
+> +	if (error) {
+> +		kmem_cache_free(xfs_ifork_zone, ip->i_afp);
+> +		ip->i_afp = NULL;
+> +	}
+> +	return error;
+> +}
+> +
+>  /*
+>   * Reallocate the space for if_broot based on the number of records
+>   * being added or deleted as indicated in rec_diff.  Move the records
+> diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+> index 668ee942be224..8487b0c88a75e 100644
+> --- a/fs/xfs/libxfs/xfs_inode_fork.h
+> +++ b/fs/xfs/libxfs/xfs_inode_fork.h
+> @@ -88,7 +88,8 @@ struct xfs_ifork {
+>  
+>  struct xfs_ifork *xfs_iext_state_to_fork(struct xfs_inode *ip, int state);
+>  
+> -int		xfs_iformat_fork(struct xfs_inode *, struct xfs_dinode *);
+> +int		xfs_iformat_data_fork(struct xfs_inode *, struct xfs_dinode *);
+> +int		xfs_iformat_attr_fork(struct xfs_inode *, struct xfs_dinode *);
+>  void		xfs_iflush_fork(struct xfs_inode *, struct xfs_dinode *,
+>  				struct xfs_inode_log_item *, int);
+>  void		xfs_idestroy_fork(struct xfs_inode *, int);
+> -- 
+> 2.26.2
+> 
+
