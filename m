@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C22961CA3FA
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 08:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE59C1CA401
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 08:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgEHGed (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 May 2020 02:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
+        id S1727093AbgEHGef (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 May 2020 02:34:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727094AbgEHGec (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 02:34:32 -0400
+        by vger.kernel.org with ESMTP id S1727082AbgEHGef (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 02:34:35 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BB0C05BD43
-        for <linux-xfs@vger.kernel.org>; Thu,  7 May 2020 23:34:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C73DC05BD43
+        for <linux-xfs@vger.kernel.org>; Thu,  7 May 2020 23:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=ePri7BjWuK/XQ25/wv8X+5XyBLVunACIa2W4GrbF2iM=; b=UI7N7gnxPTY9oqf61Xw3Xg8ki+
-        DYIAW8FgWaHgIOYNaCIvrBhbJVyWF0/lLiGgsjPu4SwjiaETemyCv3s3DIAD18bTGKUs0MIe2pD/9
-        Be9tl/1kqddBZ8Tpx+FXyWaluCHvW+093/5kfPLMfIDWnDCDCN3WYN5av+F4f+CQVLotgMW5SRLJY
-        QfJY/8uqe/yjXO3/2JkLURmG4/Fa6SCwrhYEW0cJB9rJH3WJyGk0/hS5JvDhXkip5C+GVzJ3fR7N9
-        pP+FSQMz8rP/BeiuWwTj/bPdsSF3m+4lNAD+J2lTw5z6hsePG9SBKhooYOEsNjqZmL+NSFTEnE1Lx
-        46jmkp1Q==;
+        bh=3ylWhjhg3jYDaVKNyXXY9gM2c/ELrRK0dvG2AtSjYFY=; b=Rq3/HNevjr8YCX9LYgxqHk1tnw
+        La6Q+S7wx74ez6oIq8zPyQncAy5Saj4gVeKyNIHzxKHvoOqrXYufXNm0BNWYcXCQJFe0FxUi1uRcX
+        wOVZSinfkypQOTJ8FV8utaf9IZuBXI0za0mk+RdHHMH2dlKJ0RLeYPCVf3stqZh3cqNT90gAuJ5wu
+        3x9trJTbGllhzVBStSgSsVKwA9qXxNV/JUft7oqSaUR3olS2WoF1qWF1b35qxngazD4++awE21pkk
+        yzY4NQ5fDZCi0l0XJuwhvRIdXvFzhJ6HbplojdaxYZ0ADR43A/wZJ3ggOLEaGn3hXkn5AaSEhm6SO
+        zXuRtZ/w==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWwae-0002tw-EX
-        for linux-xfs@vger.kernel.org; Fri, 08 May 2020 06:34:32 +0000
+        id 1jWwag-0002uQ-R1
+        for linux-xfs@vger.kernel.org; Fri, 08 May 2020 06:34:35 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 03/12] xfs: split xfs_iformat_fork
-Date:   Fri,  8 May 2020 08:34:14 +0200
-Message-Id: <20200508063423.482370-4-hch@lst.de>
+Subject: [PATCH 04/12] xfs: handle unallocated inodes in xfs_inode_from_disk
+Date:   Fri,  8 May 2020 08:34:15 +0200
+Message-Id: <20200508063423.482370-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508063423.482370-1-hch@lst.de>
 References: <20200508063423.482370-1-hch@lst.de>
@@ -44,278 +44,96 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xfs_iformat_fork is a weird catchall.  Split it into one helper for
-the data fork and one for the attr fork, and then call both helper
-as well as the COW fork initialization from xfs_inode_from_disk.  Order
-the COW fork initialization after the attr fork initialization given
-that it can't fail to simplify the error handling.
-
-Note that the newly split helpers are moved down the file in
-xfs_inode_fork.c to avoid the need for forward declarations.
+Handle inodes with a 0 di_mode in xfs_inode_from_disk, instead of partially
+duplicating inode reading in xfs_iread.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_inode_buf.c  |  20 +++-
- fs/xfs/libxfs/xfs_inode_fork.c | 186 +++++++++++++++------------------
- fs/xfs/libxfs/xfs_inode_fork.h |   3 +-
- 3 files changed, 103 insertions(+), 106 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.c | 50 ++++++++++-------------------------
+ 1 file changed, 14 insertions(+), 36 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index dc00ce6fc4a2f..abdecc80579e3 100644
+index abdecc80579e3..686a026b5f6ed 100644
 --- a/fs/xfs/libxfs/xfs_inode_buf.c
 +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -187,6 +187,10 @@ xfs_inode_from_disk(
- {
- 	struct xfs_icdinode	*to = &ip->i_d;
- 	struct inode		*inode = VFS_I(ip);
-+	int			error;
-+
-+	ASSERT(ip->i_cowfp == NULL);
-+	ASSERT(ip->i_afp == NULL);
+@@ -192,6 +192,17 @@ xfs_inode_from_disk(
+ 	ASSERT(ip->i_cowfp == NULL);
+ 	ASSERT(ip->i_afp == NULL);
  
++	/*
++	 * First get the permanent information that is needed to allocate an
++	 * inode. If the inode is unused, mode is zero and we shouldn't mess
++	 * with the unitialized part of it.
++	 */
++	to->di_flushiter = be16_to_cpu(from->di_flushiter);
++	inode->i_generation = be32_to_cpu(from->di_gen);
++	inode->i_mode = be16_to_cpu(from->di_mode);
++	if (!inode->i_mode)
++		return 0;
++
  	/*
  	 * Convert v1 inodes immediately to v2 inode format as this is the
-@@ -242,7 +246,21 @@ xfs_inode_from_disk(
- 		to->di_cowextsize = be32_to_cpu(from->di_cowextsize);
+ 	 * minimum inode version format we support in the rest of the code.
+@@ -209,7 +220,6 @@ xfs_inode_from_disk(
+ 	to->di_format = from->di_format;
+ 	i_uid_write(inode, be32_to_cpu(from->di_uid));
+ 	i_gid_write(inode, be32_to_cpu(from->di_gid));
+-	to->di_flushiter = be16_to_cpu(from->di_flushiter);
+ 
+ 	/*
+ 	 * Time is signed, so need to convert to signed 32 bit before
+@@ -223,8 +233,6 @@ xfs_inode_from_disk(
+ 	inode->i_mtime.tv_nsec = (int)be32_to_cpu(from->di_mtime.t_nsec);
+ 	inode->i_ctime.tv_sec = (int)be32_to_cpu(from->di_ctime.t_sec);
+ 	inode->i_ctime.tv_nsec = (int)be32_to_cpu(from->di_ctime.t_nsec);
+-	inode->i_generation = be32_to_cpu(from->di_gen);
+-	inode->i_mode = be16_to_cpu(from->di_mode);
+ 
+ 	to->di_size = be64_to_cpu(from->di_size);
+ 	to->di_nblocks = be64_to_cpu(from->di_nblocks);
+@@ -653,39 +661,9 @@ xfs_iread(
+ 		goto out_brelse;
  	}
  
--	return xfs_iformat_fork(ip, from);
-+	error = xfs_iformat_data_fork(ip, from);
-+	if (error)
-+		return error;
-+	if (XFS_DFORK_Q(from)) {
-+		error = xfs_iformat_attr_fork(ip, from);
-+		if (error)
-+			goto out_destroy_data_fork;
-+	}
-+	if (xfs_is_reflink_inode(ip))
-+		xfs_ifork_init_cow(ip);
-+	return 0;
-+
-+out_destroy_data_fork:
-+	xfs_idestroy_fork(ip, XFS_DATA_FORK);
-+	return error;
- }
- 
- void
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 3e9a42f1e23b9..5fadfa9a17eb9 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -26,110 +26,6 @@
- 
- kmem_zone_t *xfs_ifork_zone;
- 
--STATIC int xfs_iformat_local(xfs_inode_t *, xfs_dinode_t *, int, int);
--STATIC int xfs_iformat_extents(xfs_inode_t *, xfs_dinode_t *, int);
--STATIC int xfs_iformat_btree(xfs_inode_t *, xfs_dinode_t *, int);
--
--/*
-- * Copy inode type and data and attr format specific information from the
-- * on-disk inode to the in-core inode and fork structures.  For fifos, devices,
-- * and sockets this means set i_rdev to the proper value.  For files,
-- * directories, and symlinks this means to bring in the in-line data or extent
-- * pointers as well as the attribute fork.  For a fork in B-tree format, only
-- * the root is immediately brought in-core.  The rest will be read in later when
-- * first referenced (see xfs_iread_extents()).
-- */
--int
--xfs_iformat_fork(
--	struct xfs_inode	*ip,
--	struct xfs_dinode	*dip)
--{
--	struct inode		*inode = VFS_I(ip);
--	struct xfs_attr_shortform *atp;
--	int			size;
--	int			error = 0;
--	xfs_fsize_t             di_size;
--
--	switch (inode->i_mode & S_IFMT) {
--	case S_IFIFO:
--	case S_IFCHR:
--	case S_IFBLK:
--	case S_IFSOCK:
--		ip->i_d.di_size = 0;
--		inode->i_rdev = xfs_to_linux_dev_t(xfs_dinode_get_rdev(dip));
--		break;
--
--	case S_IFREG:
--	case S_IFLNK:
--	case S_IFDIR:
--		switch (dip->di_format) {
--		case XFS_DINODE_FMT_LOCAL:
--			di_size = be64_to_cpu(dip->di_size);
--			size = (int)di_size;
--			error = xfs_iformat_local(ip, dip, XFS_DATA_FORK, size);
--			break;
--		case XFS_DINODE_FMT_EXTENTS:
--			error = xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
--			break;
--		case XFS_DINODE_FMT_BTREE:
--			error = xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
--			break;
--		default:
--			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
--					dip, sizeof(*dip), __this_address);
--			return -EFSCORRUPTED;
+-	/*
+-	 * If the on-disk inode is already linked to a directory
+-	 * entry, copy all of the inode into the in-core inode.
+-	 * xfs_iformat_fork() handles copying in the inode format
+-	 * specific information.
+-	 * Otherwise, just get the truly permanent information.
+-	 */
+-	if (dip->di_mode) {
+-		error = xfs_inode_from_disk(ip, dip);
+-		if (error)  {
+-#ifdef DEBUG
+-			xfs_alert(mp, "%s: xfs_iformat() returned error %d",
+-				__func__, error);
+-#endif /* DEBUG */
+-			goto out_brelse;
 -		}
--		break;
+-	} else {
+-		/*
+-		 * Partial initialisation of the in-core inode. Just the bits
+-		 * that xfs_ialloc won't overwrite or relies on being correct.
+-		 */
+-		VFS_I(ip)->i_generation = be32_to_cpu(dip->di_gen);
+-		ip->i_d.di_flushiter = be16_to_cpu(dip->di_flushiter);
 -
--	default:
--		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
--				sizeof(*dip), __this_address);
--		return -EFSCORRUPTED;
+-		/*
+-		 * Make sure to pull in the mode here as well in
+-		 * case the inode is released without being used.
+-		 * This ensures that xfs_inactive() will see that
+-		 * the inode is already free and not try to mess
+-		 * with the uninitialized part of it.
+-		 */
+-		VFS_I(ip)->i_mode = 0;
 -	}
--	if (error)
--		return error;
--
--	if (xfs_is_reflink_inode(ip)) {
--		ASSERT(ip->i_cowfp == NULL);
--		xfs_ifork_init_cow(ip);
--	}
--
--	if (!XFS_DFORK_Q(dip))
--		return 0;
--
--	ASSERT(ip->i_afp == NULL);
--	ip->i_afp = kmem_zone_zalloc(xfs_ifork_zone, KM_NOFS);
--
--	switch (dip->di_aformat) {
--	case XFS_DINODE_FMT_LOCAL:
--		atp = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
--		size = be16_to_cpu(atp->hdr.totsize);
--
--		error = xfs_iformat_local(ip, dip, XFS_ATTR_FORK, size);
--		break;
--	case XFS_DINODE_FMT_EXTENTS:
--		error = xfs_iformat_extents(ip, dip, XFS_ATTR_FORK);
--		break;
--	case XFS_DINODE_FMT_BTREE:
--		error = xfs_iformat_btree(ip, dip, XFS_ATTR_FORK);
--		break;
--	default:
--		xfs_inode_verifier_error(ip, error, __func__, dip,
--				sizeof(*dip), __this_address);
--		error = -EFSCORRUPTED;
--		break;
--	}
--	if (error) {
--		kmem_cache_free(xfs_ifork_zone, ip->i_afp);
--		ip->i_afp = NULL;
--		if (ip->i_cowfp)
--			kmem_cache_free(xfs_ifork_zone, ip->i_cowfp);
--		ip->i_cowfp = NULL;
--		xfs_idestroy_fork(ip, XFS_DATA_FORK);
--	}
--	return error;
--}
--
- void
- xfs_init_local_fork(
- 	struct xfs_inode	*ip,
-@@ -325,6 +221,88 @@ xfs_iformat_btree(
- 	return 0;
- }
++	error = xfs_inode_from_disk(ip, dip);
++	if (error)
++		goto out_brelse;
  
-+int
-+xfs_iformat_data_fork(
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip)
-+{
-+	struct inode		*inode = VFS_I(ip);
-+
-+	switch (inode->i_mode & S_IFMT) {
-+	case S_IFIFO:
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFSOCK:
-+		ip->i_d.di_size = 0;
-+		inode->i_rdev = xfs_to_linux_dev_t(xfs_dinode_get_rdev(dip));
-+		return 0;
-+	case S_IFREG:
-+	case S_IFLNK:
-+	case S_IFDIR:
-+		switch (dip->di_format) {
-+		case XFS_DINODE_FMT_LOCAL:
-+			return xfs_iformat_local(ip, dip, XFS_DATA_FORK,
-+					be64_to_cpu(dip->di_size));
-+		case XFS_DINODE_FMT_EXTENTS:
-+			return xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
-+		case XFS_DINODE_FMT_BTREE:
-+			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
-+		default:
-+			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
-+					dip, sizeof(*dip), __this_address);
-+			return -EFSCORRUPTED;
-+		}
-+		break;
-+	default:
-+		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
-+				sizeof(*dip), __this_address);
-+		return -EFSCORRUPTED;
-+	}
-+}
-+
-+static uint16_t
-+xfs_dfork_attr_shortform_size(
-+	struct xfs_dinode		*dip)
-+{
-+	struct xfs_attr_shortform	*atp =
-+		(struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
-+
-+	return be16_to_cpu(atp->hdr.totsize);
-+}
-+
-+int
-+xfs_iformat_attr_fork(
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip)
-+{
-+	int			error = 0;
-+
-+	ip->i_afp = kmem_zone_zalloc(xfs_ifork_zone, KM_NOFS);
-+	switch (dip->di_aformat) {
-+	case XFS_DINODE_FMT_LOCAL:
-+		error = xfs_iformat_local(ip, dip, XFS_ATTR_FORK,
-+				xfs_dfork_attr_shortform_size(dip));
-+		break;
-+	case XFS_DINODE_FMT_EXTENTS:
-+		error = xfs_iformat_extents(ip, dip, XFS_ATTR_FORK);
-+		break;
-+	case XFS_DINODE_FMT_BTREE:
-+		error = xfs_iformat_btree(ip, dip, XFS_ATTR_FORK);
-+		break;
-+	default:
-+		xfs_inode_verifier_error(ip, error, __func__, dip,
-+				sizeof(*dip), __this_address);
-+		error = -EFSCORRUPTED;
-+		break;
-+	}
-+
-+	if (error) {
-+		kmem_cache_free(xfs_ifork_zone, ip->i_afp);
-+		ip->i_afp = NULL;
-+	}
-+	return error;
-+}
-+
- /*
-  * Reallocate the space for if_broot based on the number of records
-  * being added or deleted as indicated in rec_diff.  Move the records
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index 668ee942be224..8487b0c88a75e 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.h
-+++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -88,7 +88,8 @@ struct xfs_ifork {
+ 	ip->i_delayed_blks = 0;
  
- struct xfs_ifork *xfs_iext_state_to_fork(struct xfs_inode *ip, int state);
- 
--int		xfs_iformat_fork(struct xfs_inode *, struct xfs_dinode *);
-+int		xfs_iformat_data_fork(struct xfs_inode *, struct xfs_dinode *);
-+int		xfs_iformat_attr_fork(struct xfs_inode *, struct xfs_dinode *);
- void		xfs_iflush_fork(struct xfs_inode *, struct xfs_dinode *,
- 				struct xfs_inode_log_item *, int);
- void		xfs_idestroy_fork(struct xfs_inode *, int);
 -- 
 2.26.2
 
