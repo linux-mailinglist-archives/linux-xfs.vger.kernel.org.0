@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0D31CA40E
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 08:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21A821CA412
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 08:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgEHGew (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 May 2020 02:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
+        id S1727772AbgEHGey (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 May 2020 02:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727116AbgEHGew (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 02:34:52 -0400
+        by vger.kernel.org with ESMTP id S1727768AbgEHGey (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 02:34:54 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EC1C05BD43
-        for <linux-xfs@vger.kernel.org>; Thu,  7 May 2020 23:34:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F95C05BD43
+        for <linux-xfs@vger.kernel.org>; Thu,  7 May 2020 23:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=1bWPliNmHGYRPjtNurbmgREo4+Ml2XLCTG5WvWyexBE=; b=icMQZjJ6QQVpyevQFOdu6VEk5m
-        /JkRpGhltkvQL83ipvcnRPDhcHOSaJ8BhpfK682f+hWP6vmB/vfyCCkg2AU2YM5oRwK4H9eOq41h2
-        7Yio/AFU1NIveG/4wCvvdlSvz7CizcePqatJQxlvB4CK7pflu04OoNPKuWBz0j4I+c3b28HSfrbLk
-        q9DP2/VxNCjacCfYUelLucI8H7kQFWGb3eBvPvtUHLcxzRz66VphBvQZorWydoR7Ih9gZGGuLnlsg
-        tJu+28sBGbsbiNazkR+EU1n0GboSwhw2ya3X6BAgl27w7tuedJkKqdMqsgIhEthxKQSSsErKO9tPR
-        Oq2oJY0g==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
+        Reply-To:Cc:Content-Type:Content-ID:Content-Description;
+        bh=sDwXDTLufmWpa/ZSfyKKEd+1LRDyaH1VUuMhBDBwN1o=; b=QDZL/5ZsYnxuwDYk7FUnbvQ/X8
+        G120lHhJiuSLsF1fX3DGnSCGKuCucqp9K6+sdJCgk0MkH1tR1M3gK5HJyEp/MxNZ8MW7WagBnGse7
+        O8xGWIG8x++/j34a1lL0tS9sm3Z/BwABsD2tHIOSD9oGGcVJM7rtnMrllAl8SdMQvg2+QXSXuodkd
+        dNxGi78IMzJGbNN2dLr0/h81Uezx9SMSBtMzMEldEro9tOfYuJQZnGa7Cqt4+TiHPGcnafpeiAqOD
+        /3kxapzC3oVRTOfzQHfzBUGiQXHhXieDFit461CBXWgS96cwW5cRQIYfUjqkJ2bvwyboX0OqBp5F0
+        G7z6kE3Q==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWwax-0002wg-Gd; Fri, 08 May 2020 06:34:51 +0000
+        id 1jWwaz-0002wz-SD
+        for linux-xfs@vger.kernel.org; Fri, 08 May 2020 06:34:54 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>
-Subject: [PATCH 11/12] xfs: remove the special COW fork handling in xfs_bmapi_read
-Date:   Fri,  8 May 2020 08:34:22 +0200
-Message-Id: <20200508063423.482370-12-hch@lst.de>
+Subject: [PATCH 12/12] xfs: remove the NULL fork handling in xfs_bmapi_read
+Date:   Fri,  8 May 2020 08:34:23 +0200
+Message-Id: <20200508063423.482370-13-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508063423.482370-1-hch@lst.de>
 References: <20200508063423.482370-1-hch@lst.de>
@@ -44,46 +44,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-We don't call xfs_bmapi_read for the COW fork anymore, so remove the
-special casing.
+Now that we fully verify the inode forks before they are added to the
+inode cache, the crash reported in
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=204031
+
+can't happen anymore, as we'll never let an inode that has inconsistent
+nextents counts vs the presence of an in-core attr fork leak into the
+inactivate code path.  So remove the work around to try to handle the
+case, and just return an error and warn if the fork is not present.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c | 22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index fda13cd7add0e..76be1a18e2442 100644
+index 76be1a18e2442..34518a6dc7376 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3902,8 +3902,7 @@ xfs_bmapi_read(
- 	int			whichfork = xfs_bmapi_whichfork(flags);
+@@ -3891,7 +3891,8 @@ xfs_bmapi_read(
+ 	int			flags)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+-	struct xfs_ifork	*ifp;
++	int			whichfork = xfs_bmapi_whichfork(flags);
++	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
+ 	struct xfs_bmbt_irec	got;
+ 	xfs_fileoff_t		obno;
+ 	xfs_fileoff_t		end;
+@@ -3899,12 +3900,14 @@ xfs_bmapi_read(
+ 	int			error;
+ 	bool			eof = false;
+ 	int			n = 0;
+-	int			whichfork = xfs_bmapi_whichfork(flags);
  
  	ASSERT(*nmap >= 1);
--	ASSERT(!(flags & ~(XFS_BMAPI_ATTRFORK|XFS_BMAPI_ENTIRE|
--			   XFS_BMAPI_COWFORK)));
-+	ASSERT(!(flags & ~(XFS_BMAPI_ATTRFORK | XFS_BMAPI_ENTIRE)));
+ 	ASSERT(!(flags & ~(XFS_BMAPI_ATTRFORK | XFS_BMAPI_ENTIRE)));
  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_SHARED|XFS_ILOCK_EXCL));
  
++	if (WARN_ON_ONCE(!ifp))
++		return -EFSCORRUPTED;
++
  	if (XFS_IS_CORRUPT(mp, !xfs_ifork_has_extents(ip, whichfork)) ||
-@@ -3918,16 +3917,6 @@ xfs_bmapi_read(
+ 	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
+ 		return -EFSCORRUPTED;
+@@ -3915,21 +3918,6 @@ xfs_bmapi_read(
  
- 	ifp = XFS_IFORK_PTR(ip, whichfork);
- 	if (!ifp) {
--		/* No CoW fork?  Return a hole. */
--		if (whichfork == XFS_COW_FORK) {
--			mval->br_startoff = bno;
--			mval->br_startblock = HOLESTARTBLOCK;
--			mval->br_blockcount = len;
--			mval->br_state = XFS_EXT_NORM;
--			*nmap = 1;
--			return 0;
--		}
+ 	XFS_STATS_INC(mp, xs_blk_mapr);
+ 
+-	ifp = XFS_IFORK_PTR(ip, whichfork);
+-	if (!ifp) {
+-		/*
+-		 * A missing attr ifork implies that the inode says we're in
+-		 * extents or btree format but failed to pass the inode fork
+-		 * verifier while trying to load it.  Treat that as a file
+-		 * corruption too.
+-		 */
+-#ifdef DEBUG
+-		xfs_alert(mp, "%s: inode %llu missing fork %d",
+-				__func__, ip->i_ino, whichfork);
+-#endif /* DEBUG */
+-		return -EFSCORRUPTED;
+-	}
 -
- 		/*
- 		 * A missing attr ifork implies that the inode says we're in
- 		 * extents or btree format but failed to pass the inode fork
+ 	if (!(ifp->if_flags & XFS_IFEXTENTS)) {
+ 		error = xfs_iread_extents(NULL, ip, whichfork);
+ 		if (error)
 -- 
 2.26.2
 
