@@ -2,61 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2E11CA4EA
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 09:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C3F1CAA3C
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 May 2020 14:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgEHHON (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 May 2020 03:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725991AbgEHHOM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 03:14:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984D9C05BD43
-        for <linux-xfs@vger.kernel.org>; Fri,  8 May 2020 00:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=r/LyrlXb5rdgMeSw8DJxERe3oZsYhQmr0s7bqhgyiHs=; b=ome/glbaHxDUpsVwpE8NyBpZ9k
-        QrGqgtoT/7QyGaWKui+HA/PcNdE7uDkSWk1EH16//ISgbazC75aHyjVsChgDcHSA9yL5yVNppfg64
-        9T45PAxg3Rexv4Wo0J1h4KbwQypSLQ5z/FJVhRIUwScG1LhE0F88MoP0bzBLK1vcPXMHwAT4+MP0n
-        EKcrkFyTDRby6AcPf8hGXABnbek2JWfZ/XeoU2TpisV7BoM6ogLF+qccQgOCAOOEFVU2safaIGBZS
-        H8OtOd+Z6XA9Uls/sbIbZAKB+74hjR17iCL1jyxMmheciL1xqbtiK8cDrPeRsyRrKeQ+Q+6AgDmIb
-        Z+wEqt5w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWxD2-0007Qe-GR; Fri, 08 May 2020 07:14:12 +0000
-Date:   Fri, 8 May 2020 00:14:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 2/2] xfs: remove XFS_QMOPT_ENOSPC flag
-Message-ID: <20200508071412.GB26853@infradead.org>
-References: <447d7fec-2eff-fa99-cd19-acdf353c80d4@redhat.com>
- <11a44fb8-d59d-2e57-73bd-06e216efa5e7@redhat.com>
+        id S1726618AbgEHMFM convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 8 May 2020 08:05:12 -0400
+Received: from mail.palitramed.ru ([84.53.237.5]:50419 "EHLO
+        mail.palitramed.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEHMFM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 May 2020 08:05:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.palitramed.ru (Postfix) with ESMTP id 484981DE5194;
+        Fri,  8 May 2020 12:34:26 +0300 (MSK)
+Received: from mail.palitramed.ru ([127.0.0.1])
+        by localhost (mail.palitramed.ru [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id eWQXt7bWM3jF; Fri,  8 May 2020 12:34:26 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.palitramed.ru (Postfix) with ESMTP id 2911E1DE51F5;
+        Fri,  8 May 2020 12:34:25 +0300 (MSK)
+X-Virus-Scanned: amavisd-new at palitramed.ru
+Received: from mail.palitramed.ru ([127.0.0.1])
+        by localhost (mail.palitramed.ru [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id WxI2cDxsN7nL; Fri,  8 May 2020 12:34:25 +0300 (MSK)
+Received: from [192.168.8.100] (unknown [154.120.82.24])
+        by mail.palitramed.ru (Postfix) with ESMTPA id 999891DE51EA;
+        Fri,  8 May 2020 12:34:19 +0300 (MSK)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11a44fb8-d59d-2e57-73bd-06e216efa5e7@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: for your information and immediate action!!
+To:     Recipients <gigltd@gigltd.net>
+From:   "Admin" <gigltd@gigltd.net>
+Date:   Fri, 08 May 2020 02:34:24 -0700
+Reply-To: admin_info12@indamail.hu
+X-Antivirus: Avast (VPS 200506-2, 05/06/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-Id: <20200508093419.999891DE51EA@mail.palitramed.ru>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 07, 2020 at 11:00:34PM -0500, Eric Sandeen wrote:
-> The only place we return -EDQUOT, and therefore need to make a decision
-> about returning -ENOSPC for project quota instead, is in xfs_trans_dqresv().
-> 
-> So there's no reason to be setting and clearing XFS_QMOPT_ENOSPC at higher
-> levels; if xfs_trans_dqresv has failed, test if the dqp we were were handed
-> is a project quota and if so, return -ENOSPC instead of EDQUOT.  The
-> complexity is just a leftover from when project & group quota were mutually
-> exclusive and shared some codepaths.
-> 
-> The prior patch was the trivial bugfix, this is the slightly more involved
-> cleanup.
+This is transfer to your provided bank account details below.
+ Bank name: Nordea Bank
+ Bank Branch : Vantaa-Finland,
+ Swift BIC:NDEAFIHH,
+ Account Name: Paivikki Riikonen
+ IBAN: FI2112345600423078
+We will appreciate if you can confirm this to be true as we will not be held liable for unauthorised transfer.
+Yours faithfully,
 
-Nice:
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
