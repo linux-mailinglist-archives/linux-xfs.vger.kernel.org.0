@@ -2,54 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A2361CC2C5
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A994D1CC2C6
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgEIQgS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37268 "EHLO
+        id S1728005AbgEIQgW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727787AbgEIQgS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:36:18 -0400
+        by vger.kernel.org with ESMTP id S1727787AbgEIQgV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:36:21 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B33C061A0C
-        for <linux-xfs@vger.kernel.org>; Sat,  9 May 2020 09:36:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8367C061A0C
+        for <linux-xfs@vger.kernel.org>; Sat,  9 May 2020 09:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dSMuqF/cI4p4GjP4WYAws0EN1J+ef6lgYzHEus+MhUo=; b=p2rDAHySucObDZJsEME5Ch3hDA
-        fuwgUg+BQ50S4gHmHSeEeadE10gQtmbhbyqBooL0j7Zawdhc9P/FUIN+E5iI13lQZ/117bv6HBAr0
-        q1mNk/gQpkigeWLTv4VaqgU0ENB0RqRZavwhyia+rSW3sgPFTJdKig6Zczgq0oU8uiz3eBE2tv4El
-        OCIwvQmb8KpsefbqqRANoRApwkVVBYYAamwwI++mOB3MasLk6TqzgxEFg4JGfWLJcVqMrnJAON0UY
-        kMbKM/+FBNPypjdXf3taiB77+X807XU+t9HM77OgRSkvbF+e43ILSm3oiYIzMKrrTwJVfqiD7M5CC
-        +Wkpsheg==;
+        bh=mwflHJqrYsPg1B8IQ6D05GSF151NauEFeEKqylDm5RA=; b=uHrhsYYGn44uXEUACRHbDK8Gdg
+        K0nI8jgUw6g+BUVm8UNbCTHP/VICu7C5dBisSVo45aE5tKm9RdDAC7v8Z91SBsp3kwHhh0URRPSBm
+        OMI+OT9mzYFOm3/iW/v1IcyT2GiWD6m1Cr0ORWf/65BDYq1xnDQoeBswRVfupMtMJtyjl9q8173Ml
+        Zs02+DF9mrE9Ouv31W6sxU8R1Uk9enS4hAC/ieNg8ikvx2Fgvfgxfsh9cyJwXOa87X3OsKJQQzTID
+        2FQ4w2D6CqymO0ev6ee5V+nGTMonxFrf0snwyEMWhWCTKyc7NiXf86vKhLR4ytgA/kBJU2kUyqgPZ
+        AdSNI4KA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXSSF-0008Gj-Hg; Sat, 09 May 2020 16:35:59 +0000
-Date:   Sat, 9 May 2020 09:35:59 -0700
+        id 1jXSSa-0008IG-18; Sat, 09 May 2020 16:36:20 +0000
+Date:   Sat, 9 May 2020 09:36:20 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     xiakaixu1987@gmail.com
-Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
-        Kaixu Xia <kaixuxia@tencent.com>
-Subject: Re: [PATCH] xfs: fix the warning message in xfs_validate_sb_common()
-Message-ID: <20200509163559.GA23078@infradead.org>
-References: <1589036387-15975-1-git-send-email-kaixuxia@tencent.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] libxcmd: don't crash if el_gets returns null
+Message-ID: <20200509163620.GB23078@infradead.org>
+References: <158904177147.982835.3876574696663645345.stgit@magnolia>
+ <158904177769.982835.13533960280738735171.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589036387-15975-1-git-send-email-kaixuxia@tencent.com>
+In-Reply-To: <158904177769.982835.13533960280738735171.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, May 09, 2020 at 10:59:47PM +0800, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
+On Sat, May 09, 2020 at 09:29:37AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> The warning message should be PQUOTA/GQUOTA_{ENFD|CHKD} can't along
-> with superblock earlier than version 5, so fix it.
+> el_gets returns NULL if it fails to read any characters (due to EOF or
+> errors occurred).  strdup will crash if it is fed a NULL string, so
+> check the return value to avoid segfaulting.
 
-Looks good,
+Didn't I review this already?
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
