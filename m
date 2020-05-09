@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B502B1CC2BF
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE5D31CC2AE
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgEIQcn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:32:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38922 "EHLO
+        id S1728451AbgEIQa6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:30:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37648 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgEIQcn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:32:43 -0400
+        with ESMTP id S1728371AbgEIQa6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:30:58 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GODwC064954;
-        Sat, 9 May 2020 16:32:41 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GO5VA064951;
+        Sat, 9 May 2020 16:30:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=v5VFNryt1NupKWD/nU4TADy/N80IJVBueKidb1F+n9M=;
- b=I2ui8v9WbphELprwfPx9Zh/9T4krxPJVZsQoY3/2TWStxU6fgRzx0Y1U6r41gKczE+Cd
- bLRzam4XiuOhtLKhywPEUS2/eP6ImSIgT2xc2nVoI8JhGgV0R+BGzBYXlzaGN+sfMzUi
- IFN1tOZd9SEkC3G9q3SDFPhI0NZRzFus/0ePlWyrS9zfrWazs6z5RUP69XM/WEBtXv7D
- JD0GOyIE/kND8DYGlQFHgSLj4cvWWN1lZW/LMoBh2S0sH9E32wLovToNRaxFUPRes+G+
- 7OY0HpeRKs4RKaniUtQIztjuxqNG1FxhetTyD4R2WhLkpYgMVeiCGE61OumjWQ7qsFyT oQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30wx8n86rk-1
+ bh=rAj1LsSlIP0qV7s64OtGwWZqQvR8hJiJ+de/nhpE7LM=;
+ b=AGblrWiQrp9i5VbHKWOcyV9Y/4QjMhUhiFpK97UY0TryPFOolyOPgQsNUIUuqSn/uQ1k
+ Lru5PqO6pEtmYa9XscahU4hqB5ZZPb3XTr6Loj8dFcWNpnfKct1xTDXTLe6082xRC2sZ
+ OYhl2eYtP/OLsTtHCoSbJkB8O1YNoT6jovCORdrDSz+nhQ+PYtx511UeJ3zYXK5m9327
+ irqRzjmA5K3IaJIknjEBuh6diVq3TUkx09QfWCZpYy4KZyG8tisP0NKUWBkwQSamTpTM
+ BE8k64OFKntO6Wc41VrqIlHWxm96YK3ZiBc7BWftEAuCnGRhCGdlMlzKTw9BvJp51QGP 5w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30wx8n86nn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:32:41 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GWVPA117431;
-        Sat, 9 May 2020 16:32:40 GMT
+        Sat, 09 May 2020 16:30:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GRdQl132594;
+        Sat, 9 May 2020 16:30:55 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30wwwpnjsc-1
+        by userp3030.oracle.com with ESMTP id 30wwxb5hrk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:32:32 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 049GUmHD025272;
-        Sat, 9 May 2020 16:30:48 GMT
+        Sat, 09 May 2020 16:30:55 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 049GUski025275;
+        Sat, 9 May 2020 16:30:54 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 May 2020 09:30:48 -0700
-Subject: [PATCH 08/16] xfs_repair: complain about bad interior btree pointers
+        with ESMTP ; Sat, 09 May 2020 09:30:54 -0700
+Subject: [PATCH 09/16] xfs_repair: convert to libxfs_verify_agbno
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sat, 09 May 2020 09:30:48 -0700
-Message-ID: <158904184818.982941.1861210055263598397.stgit@magnolia>
+Date:   Sat, 09 May 2020 09:30:54 -0700
+Message-ID: <158904185435.982941.16817943726460132539.stgit@magnolia>
 In-Reply-To: <158904179213.982941.9666913277909349291.stgit@magnolia>
 References: <158904179213.982941.9666913277909349291.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005090141
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=2 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005090141
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
  adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 suspectscore=2 clxscore=1015
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005090140
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,122 +70,201 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Actually complain about garbage btree node pointers, don't just silently
-ignore them.
+Convert the homegrown verify_agbno callers to use the libxfs function,
+as needed.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
  libxfs/libxfs_api_defs.h |    1 +
- repair/scan.c            |   55 +++++++++++++++++++++++++++++++++-------------
- 2 files changed, 41 insertions(+), 15 deletions(-)
+ repair/dinode.c          |   11 -----------
+ repair/dinode.h          |    5 -----
+ repair/scan.c            |   36 +++++++++++++++++++++++-------------
+ 4 files changed, 24 insertions(+), 29 deletions(-)
 
 
 diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 4462036b..7b264ff2 100644
+index 7b264ff2..c03f0efa 100644
 --- a/libxfs/libxfs_api_defs.h
 +++ b/libxfs/libxfs_api_defs.h
-@@ -180,6 +180,7 @@
- #define xfs_trans_roll_inode		libxfs_trans_roll_inode
- #define xfs_trans_roll			libxfs_trans_roll
+@@ -20,6 +20,7 @@
+ #define xfs_agfl_walk			libxfs_agfl_walk
  
-+#define xfs_verify_agbno		libxfs_verify_agbno
- #define xfs_verify_cksum		libxfs_verify_cksum
- #define xfs_verify_dir_ino		libxfs_verify_dir_ino
- #define xfs_verify_ino			libxfs_verify_ino
+ #define xfs_ag_init_headers		libxfs_ag_init_headers
++#define xfs_ag_block_count		libxfs_ag_block_count
+ 
+ #define xfs_alloc_ag_max_usable		libxfs_alloc_ag_max_usable
+ #define xfs_allocbt_maxrecs		libxfs_allocbt_maxrecs
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 1f1cc26b..b343534c 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -255,17 +255,6 @@ verify_dfsbno_range(xfs_mount_t	*mp,
+ 	return (XR_DFSBNORANGE_VALID);
+ }
+ 
+-int
+-verify_agbno(xfs_mount_t	*mp,
+-		xfs_agnumber_t	agno,
+-		xfs_agblock_t	agbno)
+-{
+-	xfs_sb_t	*sbp = &mp->m_sb;;
+-
+-	/* range check ag #, ag block.  range-checking offset is pointless */
+-	return verify_ag_bno(sbp, agno, agbno) == 0;
+-}
+-
+ static int
+ process_rt_rec(
+ 	xfs_mount_t		*mp,
+diff --git a/repair/dinode.h b/repair/dinode.h
+index 98238357..c8e563b5 100644
+--- a/repair/dinode.h
++++ b/repair/dinode.h
+@@ -9,11 +9,6 @@
+ struct blkmap;
+ struct prefetch_args;
+ 
+-int
+-verify_agbno(xfs_mount_t	*mp,
+-		xfs_agnumber_t	agno,
+-		xfs_agblock_t	agbno);
+-
+ int
+ verify_dfsbno(xfs_mount_t	*mp,
+ 		xfs_fsblock_t	fsbno);
 diff --git a/repair/scan.c b/repair/scan.c
-index fff54ecf..719ad035 100644
+index 719ad035..8e81c552 100644
 --- a/repair/scan.c
 +++ b/repair/scan.c
-@@ -779,6 +779,14 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 	for (i = 0; i < numrecs; i++)  {
- 		xfs_agblock_t		agbno = be32_to_cpu(pp[i]);
+@@ -678,14 +678,14 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 			len = be32_to_cpu(rp[i].ar_blockcount);
+ 			end = b + len;
  
-+		if (!libxfs_verify_agbno(mp, agno, agbno)) {
-+			do_warn(
-+	_("bad btree pointer (%u) in %sbt block %u/%u\n"),
-+				agbno, name, agno, bno);
-+			suspect++;
-+			return;
-+		}
-+
- 		/*
- 		 * XXX - put sibling detection right here.
- 		 * we know our sibling chain is good.  So as we go,
-@@ -788,10 +796,8 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 		 * pointer mismatch, try and extract as much data
- 		 * as possible.
- 		 */
--		if (agbno != 0 && verify_agbno(mp, agno, agbno)) {
--			scan_sbtree(agbno, level, agno, suspect, scan_allocbt,
--				    0, magic, priv, ops);
--		}
-+		scan_sbtree(agbno, level, agno, suspect, scan_allocbt, 0,
-+				magic, priv, ops);
- 	}
+-			if (b == 0 || !verify_agbno(mp, agno, b)) {
++			if (!libxfs_verify_agbno(mp, agno, b)) {
+ 				do_warn(
+ 	_("invalid start block %u in record %u of %s btree block %u/%u\n"),
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+ 			if (len == 0 || end <= b ||
+-			    !verify_agbno(mp, agno, end - 1)) {
++			    !libxfs_verify_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
+@@ -950,6 +950,16 @@ rmap_in_order(
+ 	return offset > lastoffset;
  }
  
-@@ -1234,10 +1240,16 @@ _("%s rmap btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 			continue;
- 		}
- 
--		if (agbno != 0 && verify_agbno(mp, agno, agbno)) {
--			scan_sbtree(agbno, level, agno, suspect, scan_rmapbt, 0,
--				    magic, priv, ops);
-+		if (!libxfs_verify_agbno(mp, agno, agbno)) {
-+			do_warn(
-+	_("bad btree pointer (%u) in %sbt block %u/%u\n"),
-+				agbno, name, agno, bno);
-+			suspect++;
-+			return;
- 		}
++static inline bool
++verify_rmap_agbno(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno,
++	xfs_agblock_t		agbno)
++{
++	return agbno < libxfs_ag_block_count(mp, agno);
++}
 +
-+		scan_sbtree(agbno, level, agno, suspect, scan_rmapbt, 0, magic,
-+				priv, ops);
++
+ static void
+ scan_rmapbt(
+ 	struct xfs_btree_block	*block,
+@@ -1068,14 +1078,14 @@ _("%s rmap btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 			end = key.rm_startblock + key.rm_blockcount;
+ 
+ 			/* Make sure agbno & len make sense. */
+-			if (!verify_agbno(mp, agno, b)) {
++			if (!verify_rmap_agbno(mp, agno, b)) {
+ 				do_warn(
+ 	_("invalid start block %u in record %u of %s btree block %u/%u\n"),
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+ 			if (len == 0 || end <= b ||
+-			    !verify_agbno(mp, agno, end - 1)) {
++			    !verify_rmap_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
+@@ -1363,14 +1373,14 @@ _("leftover CoW extent has invalid startblock in record %u of %s btree block %u/
+ 			}
+ 			end = agb + len;
+ 
+-			if (!verify_agbno(mp, agno, agb)) {
++			if (!libxfs_verify_agbno(mp, agno, agb)) {
+ 				do_warn(
+ 	_("invalid start block %u in record %u of %s btree block %u/%u\n"),
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+ 			if (len == 0 || end <= agb ||
+-			    !verify_agbno(mp, agno, end - 1)) {
++			    !libxfs_verify_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
+@@ -2171,7 +2181,7 @@ scan_agfl(
+ {
+ 	struct agfl_state	*as = priv;
+ 
+-	if (verify_agbno(mp, as->agno, bno))
++	if (libxfs_verify_agbno(mp, as->agno, bno))
+ 		set_bmap(as->agno, bno, XR_E_FREE);
+ 	else
+ 		do_warn(_("bad agbno %u in agfl, agno %d\n"),
+@@ -2244,7 +2254,7 @@ validate_agf(
+ 	uint32_t		magic;
+ 
+ 	bno = be32_to_cpu(agf->agf_roots[XFS_BTNUM_BNO]);
+-	if (bno != 0 && verify_agbno(mp, agno, bno)) {
++	if (libxfs_verify_agbno(mp, agno, bno)) {
+ 		magic = xfs_sb_version_hascrc(&mp->m_sb) ? XFS_ABTB_CRC_MAGIC
+ 							 : XFS_ABTB_MAGIC;
+ 		scan_sbtree(bno, be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]),
+@@ -2256,7 +2266,7 @@ validate_agf(
  	}
  
- out:
-@@ -1454,10 +1466,16 @@ _("extent (%u/%u) len %u claimed, state is %d\n"),
- 	for (i = 0; i < numrecs; i++)  {
- 		xfs_agblock_t		agbno = be32_to_cpu(pp[i]);
+ 	bno = be32_to_cpu(agf->agf_roots[XFS_BTNUM_CNT]);
+-	if (bno != 0 && verify_agbno(mp, agno, bno)) {
++	if (libxfs_verify_agbno(mp, agno, bno)) {
+ 		magic = xfs_sb_version_hascrc(&mp->m_sb) ? XFS_ABTC_CRC_MAGIC
+ 							 : XFS_ABTC_MAGIC;
+ 		scan_sbtree(bno, be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]),
+@@ -2276,7 +2286,7 @@ validate_agf(
+ 		priv.last_rec.rm_owner = XFS_RMAP_OWN_UNKNOWN;
+ 		priv.nr_blocks = 0;
+ 		bno = be32_to_cpu(agf->agf_roots[XFS_BTNUM_RMAP]);
+-		if (bno != 0 && verify_agbno(mp, agno, bno)) {
++		if (libxfs_verify_agbno(mp, agno, bno)) {
+ 			scan_sbtree(bno,
+ 				    be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]),
+ 				    agno, 0, scan_rmapbt, 1, XFS_RMAP_CRC_MAGIC,
+@@ -2294,7 +2304,7 @@ validate_agf(
  
--		if (agbno != 0 && verify_agbno(mp, agno, agbno)) {
--			scan_sbtree(agbno, level, agno, suspect, scan_refcbt, 0,
--				    magic, priv, ops);
-+		if (!libxfs_verify_agbno(mp, agno, agbno)) {
-+			do_warn(
-+	_("bad btree pointer (%u) in %sbt block %u/%u\n"),
-+				agbno, name, agno, bno);
-+			suspect++;
-+			return;
- 		}
-+
-+		scan_sbtree(agbno, level, agno, suspect, scan_refcbt, 0, magic,
-+				priv, ops);
- 	}
- out:
- 	if (suspect)
-@@ -2125,11 +2143,18 @@ _("%sbt btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 	}
+ 	if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+ 		bno = be32_to_cpu(agf->agf_refcount_root);
+-		if (bno != 0 && verify_agbno(mp, agno, bno)) {
++		if (libxfs_verify_agbno(mp, agno, bno)) {
+ 			struct refc_priv	priv;
  
- 	for (i = 0; i < numrecs; i++)  {
--		if (be32_to_cpu(pp[i]) != 0 && verify_agbno(mp, agno,
--							be32_to_cpu(pp[i])))
--			scan_sbtree(be32_to_cpu(pp[i]), level, agno,
--					suspect, scan_inobt, 0, magic, priv,
--					ops);
-+		xfs_agblock_t	agbno = be32_to_cpu(pp[i]);
-+
-+		if (!libxfs_verify_agbno(mp, agno, agbno)) {
-+			do_warn(
-+	_("bad btree pointer (%u) in %sbt block %u/%u\n"),
-+				agbno, name, agno, bno);
-+			suspect++;
-+			return;
-+		}
-+
-+		scan_sbtree(be32_to_cpu(pp[i]), level, agno, suspect,
-+				scan_inobt, 0, magic, priv, ops);
- 	}
- }
+ 			memset(&priv, 0, sizeof(priv));
+@@ -2342,7 +2352,7 @@ validate_agi(
+ 	uint32_t		magic;
  
+ 	bno = be32_to_cpu(agi->agi_root);
+-	if (bno != 0 && verify_agbno(mp, agno, bno)) {
++	if (libxfs_verify_agbno(mp, agno, bno)) {
+ 		magic = xfs_sb_version_hascrc(&mp->m_sb) ? XFS_IBT_CRC_MAGIC
+ 							 : XFS_IBT_MAGIC;
+ 		scan_sbtree(bno, be32_to_cpu(agi->agi_level),
+@@ -2355,7 +2365,7 @@ validate_agi(
+ 
+ 	if (xfs_sb_version_hasfinobt(&mp->m_sb)) {
+ 		bno = be32_to_cpu(agi->agi_free_root);
+-		if (bno != 0 && verify_agbno(mp, agno, bno)) {
++		if (libxfs_verify_agbno(mp, agno, bno)) {
+ 			magic = xfs_sb_version_hascrc(&mp->m_sb) ?
+ 					XFS_FIBT_CRC_MAGIC : XFS_FIBT_MAGIC;
+ 			scan_sbtree(bno, be32_to_cpu(agi->agi_free_level),
 
