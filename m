@@ -2,62 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 882361CC2A8
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CE171CC2AA
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgEIQ3z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:29:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36888 "EHLO
+        id S1728433AbgEIQaC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:30:02 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37002 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgEIQ3z (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:29:55 -0400
+        with ESMTP id S1728371AbgEIQaC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:30:02 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GPIPB065534;
-        Sat, 9 May 2020 16:29:53 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GOnLU065426;
+        Sat, 9 May 2020 16:30:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=43s8mr6AAHMDPoi64JCX5ywtifFieMdUiCTzR5ScWqg=;
- b=MpizPKUJ+nZ2BPqZL8iXJm1j0xrDkrkIVczvc5Mwqg29O/AcwySdG6V7jz3ppUT51C+B
- DBoRFNLug7VXjfANtUK1B2hU3GgPYt4c38HoJS8HLMTYcrUrHRYwfJjx3HLIdWYWtaqw
- uQgSpIh/gHOn6OSLrMgW6t22KvnBkIQNBUahCfcm+l8TeO77GOY2X+PESCNfSzUs9PIr
- bniBUvtjyui9J+hTeIvs6wzfKdbw8SPttLmFYZtHqf7eEJrtMwAeHO93g2NXJzYtuJX7
- GThSiEEfvVdmRkYzRnjzk9fA1JXadZBUxh5w5fa52S+lk2epxO40028kUciEX2aVn6Oz mQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30wx8n86ky-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=BMArBvVwY8+92epLm2Hj7Lav0ew0sb6EjqdzAn2eKJY=;
+ b=qrhSu/xoQQxqXmOe5ODk1pWJVFOdxGIChK8IMUnE14mGQpxoji2QUHzzk+8N3mQ3Wgmm
+ tEabVCuqzccl3RpAu5i61RIdY9ZnVf7s9e3Km2Q77JwvzpqnwMhcCQgWp5N91GEMlMf0
+ f+CLZz4vru13D6PGBcyjUf8cFbTI5iTLpuVuHqnUzXIQJjfqnMOgdJvqWKQhnR8+CLq3
+ +OtYmPCXu8mYwSmuQggnuh0Cm+g2Zs4/v4vGNSF/bYJv7ZNGqrUVkQqDyWwFtDn8gGyu
+ 4RJfQghX1H7FjYoAuQGSqPmJJWa/tcO1EC2JxopoqcsDCEfaHSgH8GNxxPriqNPS0dmF gw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30wx8n86mc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:29:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GOEEQ100489;
-        Sat, 9 May 2020 16:29:52 GMT
+        Sat, 09 May 2020 16:30:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GTuiM112505;
+        Sat, 9 May 2020 16:29:59 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30wwwpnhen-1
+        by userp3020.oracle.com with ESMTP id 30wx11cu46-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:29:52 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GTq1R020272;
-        Sat, 9 May 2020 16:29:52 GMT
+        Sat, 09 May 2020 16:29:59 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GTxoM020280;
+        Sat, 9 May 2020 16:29:59 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 May 2020 09:29:52 -0700
-Subject: [PATCH 00/16] xfs_repair: catch things that xfs_check misses
+        with ESMTP ; Sat, 09 May 2020 09:29:58 -0700
+Subject: [PATCH 01/16] xfs_repair: fix missing dir buffer corruption checks
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sat, 09 May 2020 09:29:52 -0700
-Message-ID: <158904179213.982941.9666913277909349291.stgit@magnolia>
+Date:   Sat, 09 May 2020 09:29:58 -0700
+Message-ID: <158904179840.982941.17275782452712518850.stgit@magnolia>
+In-Reply-To: <158904179213.982941.9666913277909349291.stgit@magnolia>
+References: <158904179213.982941.9666913277909349291.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=966 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005090140
+ definitions=main-2005090141
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=993 phishscore=0
  lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005090140
@@ -66,27 +68,63 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-A long-time goal of mine is to get rid of xfs_check from fstests,
-because it is deprecated, adds quite a bit of runtime to the test suite,
-and consumes memory like crazy.  We've not been able to do that for lack
-of even a basic field-by-field corruption detection comparison between
-check and repair, so I temporarily modified the dangerous_repair tests
-to warn when check finds something but repair says clean.
+Both callers of da_read_buf do not adequately check for verifier
+failures in the (salvage mode) buffer that gets returned.  This leads to
+repair sometimes failing to complain about corrupt directories when run
+with -n, which leads to an incorrect return value of 0 (all clean).
 
-The patches below teach xfs_repair to complain about things that it
-previously did not catch but xfs_check did.  The one remaining gap is
-the lack of quota counter checking, which will be sent in a separate
-series once I've worked out all the bugs.
+Found by running xfs/496 against lhdr.stale = middlebit.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ repair/da_util.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
 
---D
+diff --git a/repair/da_util.c b/repair/da_util.c
+index 5061880f..92c04337 100644
+--- a/repair/da_util.c
++++ b/repair/da_util.c
+@@ -140,11 +140,24 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
+ 		if (whichfork == XFS_DATA_FORK &&
+ 		    (nodehdr.magic == XFS_DIR2_LEAFN_MAGIC ||
+ 		    nodehdr.magic == XFS_DIR3_LEAFN_MAGIC)) {
++			int bad = 0;
++
+ 			if (i != -1) {
+ 				do_warn(
+ _("found non-root LEAFN node in inode %" PRIu64 " bno = %u\n"),
+ 					da_cursor->ino, bno);
++				bad++;
+ 			}
++
++			/* corrupt leafn node; rebuild the dir. */
++			if (!bad &&
++			    (bp->b_error == -EFSBADCRC ||
++			     bp->b_error == -EFSCORRUPTED)) {
++				do_warn(
++_("corrupt %s LEAFN block %u for inode %" PRIu64 "\n"),
++					FORKNAME(whichfork), bno, da_cursor->ino);
++			}
++
+ 			*rbno = 0;
+ 			libxfs_buf_relse(bp);
+ 			return 1;
+@@ -599,6 +612,14 @@ _("bad level %d in %s block %u for inode %" PRIu64 "\n"),
+ 				dabno, cursor->ino);
+ 			bad++;
+ 		}
++		if (!bad &&
++		    (bp->b_error == -EFSCORRUPTED ||
++		     bp->b_error == -EFSBADCRC)) {
++			do_warn(
++_("corruption error reading %s block %u for inode %" PRIu64 "\n"),
++				FORKNAME(whichfork), dabno, cursor->ino);
++			bad++;
++		}
+ 		if (bad) {
+ #ifdef XR_DIR_TRACE
+ 			fprintf(stderr, "verify_da_path returns 1 (bad) #4\n");
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=check-vs-repair
