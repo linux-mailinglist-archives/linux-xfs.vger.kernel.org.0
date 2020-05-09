@@ -2,74 +2,129 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F03A01CC30A
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 19:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2E81CC313
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 19:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgEIRIv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 13:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgEIRIv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 13:08:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 416ADC061A0C
-        for <linux-xfs@vger.kernel.org>; Sat,  9 May 2020 10:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CNfaJAlkZ5+taG4+UUVfCfpz62h6NDsXWWDBkdrPqzs=; b=aqsjiTfpPasA6iYdYqdct66/Hj
-        Fi6OigsylcBB63jhKOrycxWASNnHaGiPOfpjsbtKFr+63Ozw8GUqF5Ek+Bz9gjqMljPdjqeC45mD7
-        HzFVB2XTPHXpG0F46EaimrM08G0TNQD2cYo7iIpOW/x4pwYGGVYCJBJW+4QYAIH+CJSLWpKtbQ1O4
-        pBetgvj2cZl4ENGK/myDTR28MCx5ikZP43qr7UVv3Ij8dhZPk6pT38QY3A9d4e859X47nVk1jOM0D
-        OQ+1H44rlRlimyID0vp/yTVH6r94TSVubBYv/MYLwWzwqbUvnEUMIfIuL9iH1vnBHfmcKkAeyBBnL
-        /7w+2yNQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXSy2-0000sR-4k; Sat, 09 May 2020 17:08:50 +0000
-Date:   Sat, 9 May 2020 10:08:50 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1728171AbgEIRLP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 13:11:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48464 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgEIRLP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 13:11:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049H8lYQ131048;
+        Sat, 9 May 2020 17:11:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Vk+NwDSv2P1mEHi4e9vorg11fc6X0UR3wK6DrI8lX1Q=;
+ b=Q9XNrkjl4jGYs/ygJJDUjeqw0EFtxkBDta+a9NM2mJo/Bo8PvnLzPpFhKhpfglqVwHuG
+ cr7JsipDEjpJhqH4NPE5fAHdsJn0xuh9/vITKGmmNxFpQHCJ9FdeMakipYZjsyMxp8ct
+ Z+dipgWXYYshZpS0BmqI2hEuop7iIfLG5U/WwLRVDk9Ml2vI6bir6pn3rJys9745zj+v
+ n0OFcxAADZKFw227aPqZEldLSFez789uzLTgEDhNyVsKNfr9GLmqvtQAfIFqHCxQqiSr
+ YQaCbeL5XwL1l+++l6B//9FR7OD7t+A+YKixxWrCQP9+puGJrmt0v1Kjwt9w2lXaP5ea 1w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30x0gh80n8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 09 May 2020 17:11:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049H7bnA015835;
+        Sat, 9 May 2020 17:09:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30wwxb6rn2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 09 May 2020 17:09:11 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049H9AlD032328;
+        Sat, 9 May 2020 17:09:10 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 09 May 2020 10:09:10 -0700
+Date:   Sat, 9 May 2020 10:09:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
 Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/16] xfs_repair: fix missing dir buffer corruption
- checks
-Message-ID: <20200509170850.GA12777@infradead.org>
-References: <158904179213.982941.9666913277909349291.stgit@magnolia>
- <158904179840.982941.17275782452712518850.stgit@magnolia>
+Subject: Re: [PATCH 5/8] db: validate name and namelen in attr_set_f and
+ attr_remove_f
+Message-ID: <20200509170909.GS6714@magnolia>
+References: <20200509170125.952508-1-hch@lst.de>
+ <20200509170125.952508-6-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158904179840.982941.17275782452712518850.stgit@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200509170125.952508-6-hch@lst.de>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=2 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005090147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ suspectscore=2 priorityscore=1501 malwarescore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005090147
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, May 09, 2020 at 09:29:58AM -0700, Darrick J. Wong wrote:
-> @@ -140,11 +140,24 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
->  		if (whichfork == XFS_DATA_FORK &&
->  		    (nodehdr.magic == XFS_DIR2_LEAFN_MAGIC ||
->  		    nodehdr.magic == XFS_DIR3_LEAFN_MAGIC)) {
-> +			int bad = 0;
-> +
->  			if (i != -1) {
->  				do_warn(
->  _("found non-root LEAFN node in inode %" PRIu64 " bno = %u\n"),
->  					da_cursor->ino, bno);
-> +				bad++;
->  			}
-> +
-> +			/* corrupt leafn node; rebuild the dir. */
-> +			if (!bad &&
-> +			    (bp->b_error == -EFSBADCRC ||
-> +			     bp->b_error == -EFSCORRUPTED)) {
-> +				do_warn(
-> +_("corrupt %s LEAFN block %u for inode %" PRIu64 "\n"),
-> +					FORKNAME(whichfork), bno, da_cursor->ino);
-> +			}
-> +
+On Sat, May 09, 2020 at 07:01:22PM +0200, Christoph Hellwig wrote:
+> libxfs has stopped validating these parameters internally, so do it
+> in the xfs_db commands.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-So this doesn't really change any return value, but just the error
-message.  But looking at this code I wonder why we don't check
-b_error first thing after reading the buffer, as checking the magic
-for a corrupt buffer seems a little pointless.
+IIRC the VFS checks these parameters so that libxfs doesn't have to,
+right?
+
+If so,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> ---
+>  db/attrset.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/db/attrset.c b/db/attrset.c
+> index 0a464983..e3575271 100644
+> --- a/db/attrset.c
+> +++ b/db/attrset.c
+> @@ -130,7 +130,16 @@ attr_set_f(
+>  	}
+>  
+>  	args.name = (const unsigned char *)argv[optind];
+> +	if (!args.name) {
+> +		dbprintf(_("invalid name\n"));
+> +		return 0;
+> +	}
+> +
+>  	args.namelen = strlen(argv[optind]);
+> +	if (args.namelen >= MAXNAMELEN) {
+> +		dbprintf(_("name too long\n"));
+> +		return 0;
+> +	}
+>  
+>  	if (args.valuelen) {
+>  		args.value = memalign(getpagesize(), args.valuelen);
+> @@ -216,7 +225,16 @@ attr_remove_f(
+>  	}
+>  
+>  	args.name = (const unsigned char *)argv[optind];
+> +	if (!args.name) {
+> +		dbprintf(_("invalid name\n"));
+> +		return 0;
+> +	}
+> +
+>  	args.namelen = strlen(argv[optind]);
+> +	if (args.namelen >= MAXNAMELEN) {
+> +		dbprintf(_("name too long\n"));
+> +		return 0;
+> +	}
+>  
+>  	if (libxfs_iget(mp, NULL, iocur_top->ino, 0, &args.dp,
+>  			&xfs_default_ifork_ops)) {
+> -- 
+> 2.26.2
+> 
