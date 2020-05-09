@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6CC1CC2BD
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 922AB1CC2B2
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:32:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEIQcj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:32:39 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50736 "EHLO
+        id S1728467AbgEIQba (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:31:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50046 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgEIQcj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:32:39 -0400
+        with ESMTP id S1728371AbgEIQba (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:31:30 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GMgq1072390;
-        Sat, 9 May 2020 16:32:37 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GMgWi072358;
+        Sat, 9 May 2020 16:31:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Y3JLv4WzXAz0sZTCbqLX8b5a8FGWgnaMYxqrtjCtXmQ=;
- b=hSVAeicveZnCGmY9oFWJ4v76u1Us6CrmYsyHxe7ukEH4S6p1BYIhf4A4wedocT3sSCBC
- Mx8vKBmCzr8JVNP3TyvkXMAuuFwu3UGK96DUYgcIrfLzMjrqVNawxaUbc31bOJwcuHqZ
- 9addo0zqGgeC0bi4jS24SciPmnKCrZ34OJexvVvSbBP0T07ANuVS4Z1hYxmjlomvCovF
- KbCsUaAmEF0Xk45crnxmaHYszVmhIVCDYrXZw/K/b5Ow97ZP7KxHMjEAdEOC0gAv2UvE
- VIF29RFNT+T0A169vZ5o+uyMuvrj7rItxyQIp2NinGQmBzcqvRiHMkjxL7GhKFRMIYAV Xg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30wkxqs6j6-1
+ bh=93kcITJPBGmsmP93nLZWoLRoycKunbQGeMuqK6ma1p0=;
+ b=IA9TNS8eizA0NChTk4wHpIvZHB/stxG8LUZtPOn4op8woe9VZV1zppe59A4uFn0nFmaZ
+ PN4fir0ykVVwlBFZ9y/pUfYQJ7zOYCCtK3S2ICnmr9i04StlFpV1moc7gNlgLdJbX79i
+ bkg4+eniQrB/9QM1hKMQ1+WICEkRKhR7oFW0KLTWwqQG6C/BC5albWVcIQBuFUNbQ7Ae
+ o6MvttgLc1rt4LsAATObH62rP2fllhcc/VUCGCVQnOJP9qvMt9F8GokTfX6pFBGFZDf0
+ mvebmt7JO7pAeY+uesQcp16kw/Er4z9j8t6zNLGanOnHJbiEdMl1g+AG+lbM3hAbH8y/ UQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30wkxqs6fx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:32:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GWVob117487;
-        Sat, 9 May 2020 16:32:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30wwwpnk3g-1
+        Sat, 09 May 2020 16:31:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GTIVU097742;
+        Sat, 9 May 2020 16:31:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30wx18589h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:32:31 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 049GVKEV025464;
-        Sat, 9 May 2020 16:31:20 GMT
+        Sat, 09 May 2020 16:31:27 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GVQpI026021;
+        Sat, 9 May 2020 16:31:26 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 May 2020 09:31:20 -0700
-Subject: [PATCH 13/16] xfs_repair: mark entire free space btree record as
- free1
+        with ESMTP ; Sat, 09 May 2020 09:31:26 -0700
+Subject: [PATCH 14/16] xfs_repair: complain about free space only seen by one
+ btree
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sat, 09 May 2020 09:31:20 -0700
-Message-ID: <158904188022.982941.11510270346760102443.stgit@magnolia>
+Date:   Sat, 09 May 2020 09:31:26 -0700
+Message-ID: <158904188639.982941.5408652247371014933.stgit@magnolia>
 In-Reply-To: <158904179213.982941.9666913277909349291.stgit@magnolia>
 References: <158904179213.982941.9666913277909349291.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,8 +54,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 suspectscore=2 malwarescore=0 mlxlogscore=999 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2 phishscore=0
+ mlxscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005090141
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
@@ -71,31 +71,43 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-In scan_allocbt, we iterate each free space btree record (of both bnobt
-and cntbt) in the hopes of pushing all the free space from UNKNOWN to
-FREE1 to FREE.  Unfortunately, the first time we see a free space record
-we only set the first block of that record to FREE1, which means that
-the second time we see the record, the first block will get set to FREE,
-but the rest of the free space will only make it to FREE1.  This is
-incorrect state, so we need to fix that.
+During the free space btree walk, scan_allocbt claims in a comment that
+we'll catch FREE1 blocks (i.e. blocks that were seen by only one free
+space btree) later.  This never happens, with the result that xfs_repair
+in dry-run mode can return 0 on a filesystem with corrupt free space
+btrees.
+
+Found by fuzzing xfs/358 with numrecs = middlebit (or sub).
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- repair/scan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ repair/phase4.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 
-diff --git a/repair/scan.c b/repair/scan.c
-index 76079247..505cfc53 100644
---- a/repair/scan.c
-+++ b/repair/scan.c
-@@ -719,7 +719,7 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 				state = get_bmap_ext(agno, b, end, &blen);
- 				switch (state) {
- 				case XR_E_UNKNOWN:
--					set_bmap(agno, b, XR_E_FREE1);
-+					set_bmap_ext(agno, b, blen, XR_E_FREE1);
- 					break;
- 				case XR_E_FREE1:
- 					/*
+diff --git a/repair/phase4.c b/repair/phase4.c
+index 8197db06..a43413c7 100644
+--- a/repair/phase4.c
++++ b/repair/phase4.c
+@@ -306,6 +306,12 @@ phase4(xfs_mount_t *mp)
+ 		for (j = ag_hdr_block; j < ag_end; j += blen)  {
+ 			bstate = get_bmap_ext(i, j, ag_end, &blen);
+ 			switch (bstate) {
++			case XR_E_FREE1:
++				if (no_modify)
++					do_warn(
++	_("free space (%u,%u-%u) only seen by one free space btree\n"),
++						i, j, j + blen - 1);
++				break;
+ 			case XR_E_BAD_STATE:
+ 			default:
+ 				do_warn(
+@@ -313,7 +319,6 @@ phase4(xfs_mount_t *mp)
+ 					i, j);
+ 				/* fall through .. */
+ 			case XR_E_UNKNOWN:
+-			case XR_E_FREE1:
+ 			case XR_E_FREE:
+ 			case XR_E_INUSE:
+ 			case XR_E_INUSE_FS:
 
