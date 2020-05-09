@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D9391CC2C3
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:34:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A65C1CC2B3
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgEIQeg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:34:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40118 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgEIQeg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:34:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GRVrm196495;
-        Sat, 9 May 2020 16:34:34 GMT
+        id S1728073AbgEIQbm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:31:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50154 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbgEIQbm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:31:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GMgTp072385;
+        Sat, 9 May 2020 16:31:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Fdf52R4FgDG8+87NbjhQUrm6qxcxC2rdXAbHCCmuCDI=;
- b=q9Hq8YzfII5rbdtb+1XNYbcWCkKUxEAAT5X1/llbvOHYyjH+jrOKzU6p6jjKO7LCYzs/
- Ngkb+IvRbXuJKR6B2k2U0liK/h3NM9ZDmFlR9boU3nMjsQ17ag70awBJIf+aem8OqSX+
- FkV6J3FnrtvMbrOIaWuRODehaH/NzmF7ld9gvA/PY5T9+E9lIV800TF3kv4slq+WdIXh
- JkiWeAfYkwlFXrkcR5qjP/M/dhNTb8c3XDbwMYxVXwaLmdfqk4LgThD7fxY0GhW91Ped
- rbi3AB1+WnY4P8tB0ENodUq5Xh7A+Yf+yPXUCnAoukTMiSLhzMMV4EtraSUXFC6X75xR ig== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30wmfm157k-1
+ bh=0Qtg7UjJxFWWTPtNUYmwhjV+9UYKWURXZ/RAYms1+QE=;
+ b=yPLeu53owU+KaXgaa1jomSo8ymnaf9f+VAdGc6tnCqZ9Vw/KcqQ3G4sgeq7gjR21sCjv
+ 6MOFULoeD1SaExmy6W/QmaDsqLJSoTfBEkkCeo21AFV2COjk2yANGsafxtxw2BRiVTGU
+ pXAlDmbtB2RPNh6jnFKdBDwe//1PoGCqtzXOa8PpG3AOJqcleAu7IyfCFa4hdbQhmEg+
+ cuedMuuOQ8TjBf9CJKK7hbmviAU0QTjBx1sE8rP6nhiOsqnHNN+QAP050TMi1DbkgbCg
+ OhONeEX2ErKYHdN37YJ+rbxC4z8lHgz4jzwV7iPo3BPNgfVQscuSrIOOOvEO/iwvXLAH Zg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30wkxqs6g6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:34:34 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GWUNc117316;
-        Sat, 9 May 2020 16:32:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30wwwpnk5y-1
+        Sat, 09 May 2020 16:31:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GTuGp112434;
+        Sat, 9 May 2020 16:31:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30wx11cvnp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:32:32 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GVWgU020810;
-        Sat, 9 May 2020 16:31:32 GMT
+        Sat, 09 May 2020 16:31:39 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 049GVcHX005052;
+        Sat, 9 May 2020 16:31:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 May 2020 09:31:32 -0700
-Subject: [PATCH 15/16] xfs_repair: complain about extents in unknown state
+        with ESMTP ; Sat, 09 May 2020 09:31:38 -0700
+Subject: [PATCH 16/16] xfs_repair: complain about any nonzero inprogress
+ value, not just 1
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sat, 09 May 2020 09:31:32 -0700
-Message-ID: <158904189253.982941.5576924652917825655.stgit@magnolia>
+Date:   Sat, 09 May 2020 09:31:38 -0700
+Message-ID: <158904189872.982941.14116905127710550275.stgit@magnolia>
 In-Reply-To: <158904179213.982941.9666913277909349291.stgit@magnolia>
 References: <158904179213.982941.9666913277909349291.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 suspectscore=2 malwarescore=0 mlxlogscore=996 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005090141
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- suspectscore=2 clxscore=1015 lowpriorityscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005090140
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005090139
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,28 +71,28 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-During phase 4, if we find any extents that are unaccounted for, report
-the entire extent, not just the first block.
+Complain about the primary superblock having any non-zero sb_inprogress
+value, not just 1.  This brings repair's behavior into alignment with
+xfs_check and the kernel.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- repair/phase4.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ repair/sb.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 
-diff --git a/repair/phase4.c b/repair/phase4.c
-index a43413c7..191b4842 100644
---- a/repair/phase4.c
-+++ b/repair/phase4.c
-@@ -315,8 +315,8 @@ phase4(xfs_mount_t *mp)
- 			case XR_E_BAD_STATE:
- 			default:
- 				do_warn(
--				_("unknown block state, ag %d, block %d\n"),
--					i, j);
-+				_("unknown block state, ag %d, blocks %u-%u\n"),
-+					i, j, j + blen - 1);
- 				/* fall through .. */
- 			case XR_E_UNKNOWN:
- 			case XR_E_FREE:
+diff --git a/repair/sb.c b/repair/sb.c
+index 91a36dd3..17ce43cc 100644
+--- a/repair/sb.c
++++ b/repair/sb.c
+@@ -369,8 +369,7 @@ verify_sb(char *sb_buf, xfs_sb_t *sb, int is_primary_sb)
+ 		return(XR_BAD_VERSION);
+ 
+ 	/* does sb think mkfs really finished ? */
+-
+-	if (is_primary_sb && sb->sb_inprogress == 1)
++	if (is_primary_sb && sb->sb_inprogress)
+ 		return(XR_BAD_INPROGRESS);
+ 
+ 	/*
 
