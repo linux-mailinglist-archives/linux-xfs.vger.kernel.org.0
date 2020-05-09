@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D96311CC2AB
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50B921CC2C1
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 18:32:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgEIQaI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 12:30:08 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37260 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgEIQaH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:30:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GRVLL196448;
-        Sat, 9 May 2020 16:30:06 GMT
+        id S1728410AbgEIQct (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 12:32:49 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50822 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgEIQcp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 May 2020 12:32:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GMgWj072358;
+        Sat, 9 May 2020 16:32:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=DyqNSYDZ1JSnuUr1b0wnR+zVBqN1cxVp3ocfAR6K3L8=;
- b=RiuyQ/6wAmPrQ6qMJ2yt5yaSAvAX0Syty76g61/4cHbFiNs2y/3AfUvzXujY6fGe7XAE
- GWbTYske5WwD6hKAagldCW86+9fR+jsCO5mUyLDDJWneNh80HL4LBkoq3841ODakc8yC
- h3TiK4FM/6Ofqy0FRNGR5x649w+llj+4p4RRGbKs/w0BAot10iMKZPlL/2II1mVOHRCj
- D0DQOR56ljg5pT+haUetEOysSgp7gbw6QqE2Ln1bAPFqaLoGD3qt0d/EF6Q5XZYHiUyp
- 9s5yH0LxjWp/gmhgGovGz0/Cdr45dwOJhvbWg3R2DiAlMfeJ8funM7kEMSeqkVaPCazA bg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30wmfm14yy-1
+ bh=f++7BFIHVMBNgLAEB8a0e8OUHCMIqY5TfZTmLGsT4CM=;
+ b=IugF8J5ZOdEADyYSEp4JA6NGCnv4JNv+ThjH7a+zAa+KCIiiMPnV3UagV/su48pI9+Ph
+ 3f/F0jnFcoKbJHysYbq3sAZD3KIUFdw2gAF2TCWksoCxVeCQLB0dBDHiu6tIpYlCFSw5
+ Z06qM+qO/tji31n5hX66jYfKfJB0RuPc2UMaFpLep4xi0gUMYcTjvZMYPA5NCzuZjVDg
+ vBnzQu23nHpU0MWCRUDBHgUnpTVhRU+w6G4nbbAiMhhQ8bmcDQP8ltWzX+AsZJRvo18b
+ dFBnd4w7BS3DZjgnmSX0EzFgMYbcey/lmaz0DkT/FwJJd9Nglc/gifNfsC7z84xRo5u7 RA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30wkxqs6jk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:30:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GTIJW097759;
-        Sat, 9 May 2020 16:30:05 GMT
+        Sat, 09 May 2020 16:32:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 049GWaN1118560;
+        Sat, 9 May 2020 16:32:43 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30wx1857fk-1
+        by aserp3020.oracle.com with ESMTP id 30wwwpnjdf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 May 2020 16:30:05 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GU5X0020315;
-        Sat, 9 May 2020 16:30:05 GMT
+        Sat, 09 May 2020 16:32:42 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 049GUBFM020319;
+        Sat, 9 May 2020 16:30:11 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 May 2020 09:30:04 -0700
-Subject: [PATCH 02/16] xfs_repair: warn when we would have rebuilt a directory
+        with ESMTP ; Sat, 09 May 2020 09:30:11 -0700
+Subject: [PATCH 03/16] xfs_repair: check for AG btree records that would wrap
+ around
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sat, 09 May 2020 09:30:05 -0700
-Message-ID: <158904180502.982941.12047148158523698696.stgit@magnolia>
+Date:   Sat, 09 May 2020 09:30:11 -0700
+Message-ID: <158904181121.982941.11919205494567354626.stgit@magnolia>
 In-Reply-To: <158904179213.982941.9666913277909349291.stgit@magnolia>
 References: <158904179213.982941.9666913277909349291.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,16 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
- mlxscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=977
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005090141
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9616 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005090140
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005090139
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,31 +71,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-longform_dir2_entry_check should warn the user when we would have
-rebuilt a directory had -n not been given on the command line.  The
-missing warning results in repair returning 0 (all clean) when in fact
-there were things that it would have fixed.
+For AG btree types, make sure that each record's length is not so huge
+that integer wraparound would happen.
 
-Found by running xfs/496 against lents[0].hashval = middlebit.
+Found via xfs/358 fuzzing recs[1].blockcount = ones.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- repair/phase6.c |    3 +++
- 1 file changed, 3 insertions(+)
+ repair/scan.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 
-diff --git a/repair/phase6.c b/repair/phase6.c
-index a938e802..75e273c8 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -2426,6 +2426,9 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
- 		*num_illegal = 0;
- 		*need_dot = 0;
- 	} else {
-+		if (fixit || dotdot_update)
-+			do_warn(
-+	_("would rebuild directory inode %" PRIu64 "\n"), ino);
- 		for (i = 0; i < num_bps; i++)
- 			if (bplist[i])
- 				libxfs_buf_relse(bplist[i]);
+diff --git a/repair/scan.c b/repair/scan.c
+index 5c8d8b23..1ddb5763 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -684,7 +684,8 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+-			if (len == 0 || !verify_agbno(mp, agno, end - 1)) {
++			if (len == 0 || end <= b ||
++			    !verify_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
+@@ -1066,7 +1067,8 @@ _("%s rmap btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+-			if (len == 0 || !verify_agbno(mp, agno, end - 1)) {
++			if (len == 0 || end <= b ||
++			    !verify_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
+@@ -1353,7 +1355,8 @@ _("leftover CoW extent has invalid startblock in record %u of %s btree block %u/
+ 					b, i, name, agno, bno);
+ 				continue;
+ 			}
+-			if (len == 0 || !verify_agbno(mp, agno, end - 1)) {
++			if (len == 0 || end <= agb ||
++			    !verify_agbno(mp, agno, end - 1)) {
+ 				do_warn(
+ 	_("invalid length %u in record %u of %s btree block %u/%u\n"),
+ 					len, i, name, agno, bno);
 
