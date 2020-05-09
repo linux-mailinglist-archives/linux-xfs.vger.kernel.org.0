@@ -2,25 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2211CC328
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 19:23:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CDE1CC333
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 May 2020 19:32:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgEIRXo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 May 2020 13:23:44 -0400
-Received: from sandeen.net ([63.231.237.45]:58402 "EHLO sandeen.net"
+        id S1727863AbgEIRcD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 May 2020 13:32:03 -0400
+Received: from sandeen.net ([63.231.237.45]:58766 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgEIRXo (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 9 May 2020 13:23:44 -0400
+        id S1726214AbgEIRcD (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 9 May 2020 13:32:03 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7DF214D7;
-        Sat,  9 May 2020 12:23:32 -0500 (CDT)
-Subject: Re: [PATCH 4/8] db: cleanup attr_set_f and attr_remove_f
-To:     Christoph Hellwig <hch@lst.de>
+        by sandeen.net (Postfix) with ESMTPSA id BC69B4D7;
+        Sat,  9 May 2020 12:31:51 -0500 (CDT)
+Subject: Re: [PATCH 3/8] db: add a comment to agfl_crc_flds
+To:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <20200509170125.952508-1-hch@lst.de>
- <20200509170125.952508-5-hch@lst.de>
+ <20200509170125.952508-4-hch@lst.de> <20200509170712.GQ6714@magnolia>
+ <20200509171011.GA31656@lst.de>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -64,175 +66,47 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <e7c3ed39-d007-8d9c-d718-ed5c60f92225@sandeen.net>
-Date:   Sat, 9 May 2020 12:23:42 -0500
+Message-ID: <d3683956-96b8-1308-9e66-2db56432da17@sandeen.net>
+Date:   Sat, 9 May 2020 12:32:01 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200509170125.952508-5-hch@lst.de>
+In-Reply-To: <20200509171011.GA31656@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/9/20 12:01 PM, Christoph Hellwig wrote:
-> Don't use local variables for information that is set in the da_args
-> structure.
-
-I'm on the fence about this one; Darrick had missed setting a couple
-of necessary structure members, so I actually see some value in assigning them
-all right before we call into libxfs_attr_set .... it makes it very clear what's
-being sent in to libxfs_attr_set.
-
--Eric
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  db/attrset.c | 67 ++++++++++++++++++++++------------------------------
->  1 file changed, 28 insertions(+), 39 deletions(-)
+On 5/9/20 12:10 PM, Christoph Hellwig wrote:
+> On Sat, May 09, 2020 at 10:07:12AM -0700, Darrick J. Wong wrote:
+>> On Sat, May 09, 2020 at 07:01:20PM +0200, Christoph Hellwig wrote:
+>>> Explain the bno field that is not actually part of the structure
+>>> anymore.
+>>>
+>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>> ---
+>>>  db/agfl.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/db/agfl.c b/db/agfl.c
+>>> index 45e4d6f9..ce7a2548 100644
+>>> --- a/db/agfl.c
+>>> +++ b/db/agfl.c
+>>> @@ -47,6 +47,7 @@ const field_t	agfl_crc_flds[] = {
+>>>  	{ "uuid", FLDT_UUID, OI(OFF(uuid)), C1, 0, TYP_NONE },
+>>>  	{ "lsn", FLDT_UINT64X, OI(OFF(lsn)), C1, 0, TYP_NONE },
+>>>  	{ "crc", FLDT_CRC, OI(OFF(crc)), C1, 0, TYP_NONE },
+>>> +	/* the bno array really is behind the actual structure */
+>>
+>> Er... the bno array comes /after/ the actual structure, right?
 > 
-> diff --git a/db/attrset.c b/db/attrset.c
-> index 1ff2eb85..0a464983 100644
-> --- a/db/attrset.c
-> +++ b/db/attrset.c
-> @@ -67,10 +67,9 @@ attr_set_f(
->  	int			argc,
->  	char			**argv)
->  {
-> -	struct xfs_inode	*ip = NULL;
-> -	struct xfs_da_args	args = { NULL };
-> -	char			*name, *value, *sp;
-> -	int			c, valuelen = 0;
-> +	struct xfs_da_args	args = { };
-> +	char			*sp;
-> +	int			c;
->  
->  	if (cur_typ == NULL) {
->  		dbprintf(_("no current type\n"));
-> @@ -111,8 +110,9 @@ attr_set_f(
->  
->  		/* value length */
->  		case 'v':
-> -			valuelen = (int)strtol(optarg, &sp, 0);
-> -			if (*sp != '\0' || valuelen < 0 || valuelen > 64*1024) {
-> +			args.valuelen = strtol(optarg, &sp, 0);
-> +			if (*sp != '\0' ||
-> +			    args.valuelen < 0 || args.valuelen > 64 * 1024) {
->  				dbprintf(_("bad attr_set valuelen %s\n"), optarg);
->  				return 0;
->  			}
-> @@ -129,35 +129,29 @@ attr_set_f(
->  		return 0;
->  	}
->  
-> -	name = argv[optind];
-> +	args.name = (const unsigned char *)argv[optind];
-> +	args.namelen = strlen(argv[optind]);
->  
-> -	if (valuelen) {
-> -		value = (char *)memalign(getpagesize(), valuelen);
-> -		if (!value) {
-> -			dbprintf(_("cannot allocate buffer (%d)\n"), valuelen);
-> +	if (args.valuelen) {
-> +		args.value = memalign(getpagesize(), args.valuelen);
-> +		if (!args.value) {
-> +			dbprintf(_("cannot allocate buffer (%d)\n"),
-> +				args.valuelen);
->  			goto out;
->  		}
-> -		memset(value, 'v', valuelen);
-> -	} else {
-> -		value = NULL;
-> +		memset(args.value, 'v', args.valuelen);
->  	}
->  
-> -	if (libxfs_iget(mp, NULL, iocur_top->ino, 0, &ip,
-> +	if (libxfs_iget(mp, NULL, iocur_top->ino, 0, &args.dp,
->  			&xfs_default_ifork_ops)) {
->  		dbprintf(_("failed to iget inode %llu\n"),
->  			(unsigned long long)iocur_top->ino);
->  		goto out;
->  	}
->  
-> -	args.dp = ip;
-> -	args.name = (unsigned char *)name;
-> -	args.namelen = strlen(name);
-> -	args.value = value;
-> -	args.valuelen = valuelen;
-> -
->  	if (libxfs_attr_set(&args)) {
->  		dbprintf(_("failed to set attr %s on inode %llu\n"),
-> -			name, (unsigned long long)iocur_top->ino);
-> +			args.name, (unsigned long long)iocur_top->ino);
->  		goto out;
->  	}
->  
-> @@ -166,10 +160,10 @@ attr_set_f(
->  
->  out:
->  	mp->m_flags &= ~LIBXFS_MOUNT_COMPAT_ATTR;
-> -	if (ip)
-> -		libxfs_irele(ip);
-> -	if (value)
-> -		free(value);
-> +	if (args.dp)
-> +		libxfs_irele(args.dp);
-> +	if (args.value)
-> +		free(args.value);
->  	return 0;
->  }
->  
-> @@ -178,9 +172,7 @@ attr_remove_f(
->  	int			argc,
->  	char			**argv)
->  {
-> -	struct xfs_inode	*ip = NULL;
-> -	struct xfs_da_args	args = { NULL };
-> -	char			*name;
-> +	struct xfs_da_args	args = { };
->  	int			c;
->  
->  	if (cur_typ == NULL) {
-> @@ -223,23 +215,20 @@ attr_remove_f(
->  		return 0;
->  	}
->  
-> -	name = argv[optind];
-> +	args.name = (const unsigned char *)argv[optind];
-> +	args.namelen = strlen(argv[optind]);
->  
-> -	if (libxfs_iget(mp, NULL, iocur_top->ino, 0, &ip,
-> +	if (libxfs_iget(mp, NULL, iocur_top->ino, 0, &args.dp,
->  			&xfs_default_ifork_ops)) {
->  		dbprintf(_("failed to iget inode %llu\n"),
->  			(unsigned long long)iocur_top->ino);
->  		goto out;
->  	}
->  
-> -	args.dp = ip;
-> -	args.name = (unsigned char *)name;
-> -	args.namelen = strlen(name);
-> -	args.value = NULL;
-> -
->  	if (libxfs_attr_set(&args)) {
->  		dbprintf(_("failed to remove attr %s from inode %llu\n"),
-> -			name, (unsigned long long)iocur_top->ino);
-> +			(unsigned char *)args.name,
-> +			(unsigned long long)iocur_top->ino);
->  		goto out;
->  	}
->  
-> @@ -248,7 +237,7 @@ attr_remove_f(
->  
->  out:
->  	mp->m_flags &= ~LIBXFS_MOUNT_COMPAT_ATTR;
-> -	if (ip)
-> -		libxfs_irele(ip);
-> +	if (args.dp)
-> +		libxfs_irele(args.dp);
->  	return 0;
->  }
-> 
+> Yes.  That's what I mean, but after seems to be less confusing.
+so:
+
+/* the bno array is after the actual structure */
+
+right?  I can just do that on merge.
+
