@@ -2,42 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298111CC788
-	for <lists+linux-xfs@lfdr.de>; Sun, 10 May 2020 09:11:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B0991CC789
+	for <lists+linux-xfs@lfdr.de>; Sun, 10 May 2020 09:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEJHLT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 May 2020 03:11:19 -0400
-Received: from verein.lst.de ([213.95.11.211]:59176 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgEJHLT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 10 May 2020 03:11:19 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 170E868C7B; Sun, 10 May 2020 09:11:17 +0200 (CEST)
-Date:   Sun, 10 May 2020 09:11:16 +0200
+        id S1726906AbgEJHO6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 May 2020 03:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726743AbgEJHO6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 May 2020 03:14:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F458C061A0C
+        for <linux-xfs@vger.kernel.org>; Sun, 10 May 2020 00:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=mmFwmnBFZp6SC1NErGwqkY1fcIN6pLt7xlaczxMvVng=; b=dYc+zvOemC/cq3tHg0a3LrmKm4
+        Jj0P+zrjVB1PsVJwsHggeHN8ONk6/hvERa1OH75ewsS3RxNfa9xCbmD8xX8N4lZh/QvdVD+/pgGuZ
+        50QGWwcVX/IPxgxMQLBvVpKRKb2rel/bb6gQBiSaWHJb9MBMNLvwDRGF0wk7sac4+oHNTVree5iv8
+        GO3DhXDsBDODoApbyGMS8ldIHIrzCASaAR209vj+tpZ4sDQn4ub0Xgge9ZjWWUv1jni21fexKtKne
+        YfRm5GUn1zW3b0WTAoUVO9qV35mRya9mVJg8CquX3nZ8r65Z+7JMZqupDMD4Y+1tqf+qud94pIz7a
+        szEEAHaQ==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXgAr-0007i5-IQ; Sun, 10 May 2020 07:14:57 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/8] db: add a comment to agfl_crc_flds
-Message-ID: <20200510071116.GB17094@lst.de>
-References: <20200509170125.952508-1-hch@lst.de> <20200509170125.952508-4-hch@lst.de> <20200509170712.GQ6714@magnolia> <20200509171011.GA31656@lst.de> <d3683956-96b8-1308-9e66-2db56432da17@sandeen.net>
+To:     sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH] libxfs-apply: use git am instead of patch
+Date:   Sun, 10 May 2020 09:14:55 +0200
+Message-Id: <20200510071455.986111-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3683956-96b8-1308-9e66-2db56432da17@sandeen.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, May 09, 2020 at 12:32:01PM -0500, Eric Sandeen wrote:
-> > Yes.  That's what I mean, but after seems to be less confusing.
-> so:
-> 
-> /* the bno array is after the actual structure */
-> 
-> right?  I can just do that on merge.
+If neither guilt or stgit are used default to git am instead of patch
+so that all the commit information is properly propagated.
 
-Looks ok.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ tools/libxfs-apply | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/libxfs-apply b/tools/libxfs-apply
+index deb9c225..3258272d 100755
+--- a/tools/libxfs-apply
++++ b/tools/libxfs-apply
+@@ -395,8 +395,8 @@ apply_patch()
+ 			fi
+ 		fi
+ 	else
+-		echo "Applying with patch utility:"
+-		patch -p1 < $_new_patch.2
++		echo "Applying with git am:"
++		git am -s $_new_patch.2
+ 		echo "Patch was applied in $REPO; check for rejects, etc"
+ 	fi
+ 
+-- 
+2.26.2
+
