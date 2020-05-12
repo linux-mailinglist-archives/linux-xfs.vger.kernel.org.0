@@ -2,101 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 657251CFBE2
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 May 2020 19:20:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B1111CFC2A
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 May 2020 19:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgELRUX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 12 May 2020 13:20:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23245 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726287AbgELRUX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 May 2020 13:20:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589304021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7FchGEQ91A0wj2P47gni+3T63SF72TigpTaGYiA+5mg=;
-        b=hnSzyLvclskQh3JrnOdUZ875KulRp1g9GsXUgEaci5ojotWCDwVTdfXiGQvrU0K/YzxdzM
-        1ytWxJxH1Xaxl+PUQOCeGu98Ly47YKHxQrFZEglx+O2XjubVDEn9xSg636cHWL3q9VP+Mo
-        Fic1wc5Ias25tAbOU9e0bod0D5YiYXA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-BkxRH8T0N0SB2utPIXBdng-1; Tue, 12 May 2020 13:20:20 -0400
-X-MC-Unique: BkxRH8T0N0SB2utPIXBdng-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 086F81B18BC0;
-        Tue, 12 May 2020 17:20:19 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75D9D60C80;
-        Tue, 12 May 2020 17:20:18 +0000 (UTC)
-Date:   Tue, 12 May 2020 13:20:16 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH RFC] xfs: warn instead of fail verifier on empty attr3
- leaf block
-Message-ID: <20200512172016.GJ37029@bfoster>
-References: <20200511185016.33684-1-bfoster@redhat.com>
- <20200512081037.GB28206@infradead.org>
- <20200512155320.GD6714@magnolia>
+        id S1726367AbgELR3o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 May 2020 13:29:44 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54644 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELR3n (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 May 2020 13:29:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CHD4fE126956;
+        Tue, 12 May 2020 17:29:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=f92tz4hCzc7caoysQJgOQvqePErN1abE88PhfHwhqlI=;
+ b=in2VXdiGk4cpzhAxI2dfBFnTFo3P0yS8EU14KADV7v7LQCAJ7dPgmmALzyHtlWNLEMMu
+ WYGuJEZHIMya6eumE9/sjdbqj51fQrG8APmP3np+Pro1dWf2PvH8Px23AytFU5d/LEiG
+ RShRkQOK4c/fbJ507mS6FCBpaXrQJ8whRudVDtHtEbbSluXQ1CJ3nTsP4nhCJQRPHSHv
+ LvGJ5VeTbK7f7nNisAdXY3QFq2lf+qRlrOOIPcVK9RE53MWNC7u1gzFuicb4VRJKUYn0
+ OaxQIqo8aV8IM5f785aLcAiQSIhLsaXxVCBxO4+/IOMW2AJ9ENXTs+sW5yPUteAXIQo/ Bg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30x3mbvd8w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 17:29:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CHCYtu077816;
+        Tue, 12 May 2020 17:29:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30xbgkdhpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 May 2020 17:29:27 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04CHTQGJ001181;
+        Tue, 12 May 2020 17:29:27 GMT
+Received: from localhost (/10.159.139.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 May 2020 10:29:26 -0700
+Date:   Tue, 12 May 2020 10:29:25 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
+Subject: [PATCH v2 01/16] xfs_repair: fix missing dir buffer corruption checks
+Message-ID: <20200512172925.GJ6714@magnolia>
+References: <158904179213.982941.9666913277909349291.stgit@magnolia>
+ <158904179840.982941.17275782452712518850.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512155320.GD6714@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <158904179840.982941.17275782452712518850.stgit@magnolia>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 suspectscore=3 phishscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005120132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 suspectscore=3 bulkscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120132
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:53:20AM -0700, Darrick J. Wong wrote:
-> On Tue, May 12, 2020 at 01:10:37AM -0700, Christoph Hellwig wrote:
-> > On Mon, May 11, 2020 at 02:50:16PM -0400, Brian Foster wrote:
-> > > Signed-off-by: Brian Foster <bfoster@redhat.com>
-> > > ---
-> > > 
-> > > What do folks think of something like this? We have a user report of a
-> > > corresponding read verifier failure while processing unlinked inodes.
-> > > This presumably means the attr fork was put in this state because the
-> > > format conversion and xattr set are not atomic. For example, the
-> > > filesystem crashed after the format conversion transaction hit the log
-> > > but before the xattr set transaction. The subsequent recovery succeeds
-> > > according to the logic below, but if the attr didn't hit the log the
-> > > leaf block remains empty and sets a landmine for the next read attempt.
-> > > This either prevents further xattr operations on the inode or prevents
-> > > the inode from being removed from the unlinked list due to xattr
-> > > inactivation failure.
-> > > 
-> > > I've not confirmed that this is how the user got into this state, but
-> > > I've confirmed that it's possible. We have a couple band aids now (this
-> > > and the writeback variant) that intend to deal with this problem and
-> > > still haven't quite got it right, so personally I'm inclined to accept
-> > > the reality that an empty attr leaf block is an expected state based on
-> > > our current xattr implementation and just remove the check from the
-> > > verifier (at least until we have atomic sets). I turned it into a
-> > > warning/comment for the purpose of discussion. Thoughts?
-> > 
-> > If the transaction is not atomic I don't think we should even
-> > warn in this case, even if it is unlikely to happen..
-> 
-> I was gonna say, I think we've messed this up enough that I think we
-> just have to accept empty attr leaf blocks. :/
-> 
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-That makes at least 3 votes (including me) to drop the check so I'll
-send a real patch after some regression testing. Thanks.
+The da_read_buf() function operates in "salvage" mode, which means that
+if the verifiers fail, it will return a buffer with b_error set.  The
+callers of da_read_buf, however, do not adequately check for verifier
+errors, which means that repair can fail to flag a corrupt filesystem.
 
-Brian
+Fix the callers to do this properly.  The dabtree block walker and the
+dabtree path checker functions to complain any time the da node / leafn
+verifiers fail.  Fix the directory block walking functions to complain
+about EFSCORRUPTED, since they already dealt with EFSBADCRC.
 
-> I also think we should improve the ability to scan for and invalidate
-> incore buffers so that we can invalidate and truncate the attr fork
-> extents directly from an extent walk loop.  It seems a little silly that
-> we have to walk the dabtree just to find out where multiblock remote
-> attr value structures might be hiding.
-> 
-> --D
-> 
+Found by running xfs/496 against lhdr.stale = middlebit.
 
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: check for corruption before checking magics; expand corruption
+checks to other da_read_buf callers
+---
+ repair/da_util.c |   25 ++++++++++++++++---------
+ repair/dir2.c    |   21 +++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 9 deletions(-)
+
+diff --git a/repair/da_util.c b/repair/da_util.c
+index 5061880f..7239c2e2 100644
+--- a/repair/da_util.c
++++ b/repair/da_util.c
+@@ -134,6 +134,15 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
+ 			goto error_out;
+ 		}
+ 
++		/* corrupt leafn/node; rebuild the dir. */
++		if (bp->b_error == -EFSBADCRC || bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
++				FORKNAME(whichfork), bno, da_cursor->ino);
++			libxfs_buf_relse(bp);
++			goto error_out;
++		}
++
+ 		node = bp->b_addr;
+ 		libxfs_da3_node_hdr_from_disk(mp, &nodehdr, node);
+ 
+@@ -160,15 +169,6 @@ _("bad %s magic number 0x%x in inode %" PRIu64 " bno = %u\n"),
+ 			goto error_out;
+ 		}
+ 
+-		/* corrupt node; rebuild the dir. */
+-		if (bp->b_error == -EFSBADCRC || bp->b_error == -EFSCORRUPTED) {
+-			libxfs_buf_relse(bp);
+-			do_warn(
+-_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
+-				FORKNAME(whichfork), bno, da_cursor->ino);
+-			goto error_out;
+-		}
+-
+ 		if (nodehdr.count > geo->node_ents) {
+ 			do_warn(
+ _("bad %s record count in inode %" PRIu64 ", count = %d, max = %d\n"),
+@@ -562,6 +562,13 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
+ 				FORKNAME(whichfork), dabno, cursor->ino);
+ 			return 1;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED || bp->b_error == -EFSBADCRC) {
++			do_warn(
++_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
++				FORKNAME(whichfork), dabno, cursor->ino);
++			libxfs_buf_relse(bp);
++			return 1;
++		}
+ 
+ 		newnode = bp->b_addr;
+ 		libxfs_da3_node_hdr_from_disk(mp, &nodehdr, newnode);
+diff --git a/repair/dir2.c b/repair/dir2.c
+index cbbce601..b374bc7b 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -983,6 +983,13 @@ _("can't read block %u for directory inode %" PRIu64 "\n"),
+ 			mp->m_dir_geo->datablk, ino);
+ 		return 1;
+ 	}
++	if (bp->b_error == -EFSCORRUPTED) {
++		do_warn(
++_("corrupt directory block %u for inode %" PRIu64 "\n"),
++			mp->m_dir_geo->datablk, ino);
++		libxfs_buf_relse(bp);
++		return 1;
++	}
+ 	/*
+ 	 * Verify the block
+ 	 */
+@@ -1122,6 +1129,13 @@ _("can't read file block %u for directory inode %" PRIu64 "\n"),
+ 				da_bno, ino);
+ 			goto error_out;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt directory leafn block %u for inode %" PRIu64 "\n"),
++				da_bno, ino);
++			libxfs_buf_relse(bp);
++			goto error_out;
++		}
+ 		leaf = bp->b_addr;
+ 		libxfs_dir2_leaf_hdr_from_disk(mp, &leafhdr, leaf);
+ 		/*
+@@ -1324,6 +1338,13 @@ _("can't read block %" PRIu64 " for directory inode %" PRIu64 "\n"),
+ 				dbno, ino);
+ 			continue;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt directory data block %lu for inode %" PRIu64 "\n"),
++				dbno, ino);
++			libxfs_buf_relse(bp);
++			continue;
++		}
+ 		data = bp->b_addr;
+ 		if (!(be32_to_cpu(data->magic) == XFS_DIR2_DATA_MAGIC ||
+ 		      be32_to_cpu(data->magic) == XFS_DIR3_DATA_MAGIC))
