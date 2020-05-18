@@ -2,139 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA1AF1D6DA0
-	for <lists+linux-xfs@lfdr.de>; Sun, 17 May 2020 23:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 741621D6E41
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 May 2020 02:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgEQVsD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 17 May 2020 17:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbgEQVra (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 17 May 2020 17:47:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E159C05BD0D
-        for <linux-xfs@vger.kernel.org>; Sun, 17 May 2020 14:47:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so9562774wra.7
-        for <linux-xfs@vger.kernel.org>; Sun, 17 May 2020 14:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KhLF+EAo4dGVe9BW/cZoXpOODpgV89tLSnKlct0jr14=;
-        b=OnCwteZT1cB8ocCGH1aeVFrR4EgF5VX00CwdKk8KWUvXv5ftfo0fsjEkaKXrYyqAko
-         mv8QW8YvOau+ddNZijQJPWJlc875CMZRCq5jPs47LtKcK0iAs7w4XKAdfWadVkwF5yh0
-         vbZ8lxoep7MmAuEH6k47PeqCAdK68/ugEpDe30/qtwZ9iClzkmuyh8DAmed8tdkPBipP
-         jtwANFKLPWtFlbDtTJ0ozTDQyrJ/8MF+yVMxoywDnUPV0eAnzFwGIvF1UFAWTh1jfkPy
-         frPno0kwJWfIWzY+KzjmatENTMD8D9ajyV22QBav5R+pK9+lpGb7JXY4w7s1coccPTEN
-         Jq9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KhLF+EAo4dGVe9BW/cZoXpOODpgV89tLSnKlct0jr14=;
-        b=Pvt3yMCi0mxXe2PiaI2jxIt3awmx1bTzFZ+8EqjmVErbiniC0fGqw+fKPXF5IIs8oj
-         01uMlDOWlkWZwxPTMGDVrsoSpWkXMH0Qu1HI7eUvJLG5XROCvp1xdl30rFsTEbnTJEuZ
-         NEA0+XsTBsVmZAjLOdzTpDcIW9aoGn4xS4TIuBalqLaVsJOKMegKV8L3+pKgWxudDgHM
-         pLdOic/POFBEFQsSylQTzTiXu6lC755fjN6Bkm8lwY/LQN7b2dxOIUcv4Uj8ebRnps0J
-         vC3vq5fkb6HPr9qFKB7zPXV5+1WV7CnKYjWlfCIKK+0LVgbhHJMGPYyT0Oa0BW+6LKNU
-         4JeA==
-X-Gm-Message-State: AOAM5320ktomhBrS71VnrbpK6N2TOQSk6/egE5WJ2WXeeoYFELu39Xc7
-        NL3Uc7XuX7jv6hlnWScvOjVyzw==
-X-Google-Smtp-Source: ABdhPJxxkRT4OGk3cy6v3FeXQDoR5/LNYOrP29Np5Cq4jtgQoATViCQkp2walv4nqYI4LHoZCE16MQ==
-X-Received: by 2002:a5d:5228:: with SMTP id i8mr16279223wra.359.1589752049269;
-        Sun, 17 May 2020 14:47:29 -0700 (PDT)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:bc3e:92a1:7010:2763])
-        by smtp.gmail.com with ESMTPSA id v126sm14441244wmb.4.2020.05.17.14.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 14:47:28 -0700 (PDT)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     akpm@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        david@fromorbit.com, hch@infradead.org, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH 06/10] iomap: use attach/detach_page_private
-Date:   Sun, 17 May 2020 23:47:14 +0200
-Message-Id: <20200517214718.468-7-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+        id S1726680AbgERAaZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 17 May 2020 20:30:25 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:50575 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726675AbgERAaZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 17 May 2020 20:30:25 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id F207FD7DDAD;
+        Mon, 18 May 2020 10:30:21 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jaTfg-00018e-Ic; Mon, 18 May 2020 10:30:20 +1000
+Date:   Mon, 18 May 2020 10:30:20 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/5] [RFC] xfs: per-cpu CIL lists
+Message-ID: <20200518003020.GN2040@dread.disaster.area>
+References: <20200512092811.1846252-1-david@fromorbit.com>
+ <20200512092811.1846252-5-david@fromorbit.com>
+ <20200513170237.GB45326@bfoster>
+ <20200513233358.GH2040@dread.disaster.area>
+ <20200514134446.GC50441@bfoster>
+ <20200514224638.GM2040@dread.disaster.area>
+ <20200515172649.GA55234@bfoster>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515172649.GA55234@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
+        a=_D3LhmNpZy6Tw4pHRTMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Since the new pair function is introduced, we can call them to clean the
-code in iomap.
+On Fri, May 15, 2020 at 01:26:49PM -0400, Brian Foster wrote:
+> Ok, that might prohibit using a bitop in the commit path. I'd still like
+> to see actual numbers on that, though, just to see where on the spectrum
+> it lands. I'm also wondering if the fast path logic mentioned above
+> could be implemented like the following (using bitops instead of the
+> spinlock):
+> 
+> 	if (test_bit(XLOG_CIL_EMPTY, ...) &&
+> 	    test_and_clear_bit(XLOG_CIL_EMPTY, ...)) {
+> 		<steal CIL res>
+> 	}
+> 
+> That type of pattern seems to be used in at least a few other places in
+> the kernel (e.g. filemap_check_errors(), wb_start_writeback(),
+> __blk_mq_tag_busy()), presumably for similar reasons.
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: linux-xfs@vger.kernel.org
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
-No change since RFC V3.
+Ok, that seems reasonable given that there is other code using the
+same pattern to avoid atomic ops. Overhead will be no different to
+the test/lock/retest pattern I've been using...
 
-RFC V2 -> RFC V3
-1. rename clear_page_private to detach_page_private.
+Cheers,
 
-RFC -> RFC V2
-1. change the name of new functions to attach/clear_page_private.
-2. call attach_page_private(newpage, clear_page_private(page)) to
-   cleanup code further as suggested by Matthew Wilcox.
-3. don't return attach_page_private in iomap_page_create per the
-   comment from Christoph Hellwig.
-
- fs/iomap/buffered-io.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 890c8fcda4f3..a1ed7620fbac 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -59,24 +59,19 @@ iomap_page_create(struct inode *inode, struct page *page)
- 	 * migrate_page_move_mapping() assumes that pages with private data have
- 	 * their count elevated by 1.
- 	 */
--	get_page(page);
--	set_page_private(page, (unsigned long)iop);
--	SetPagePrivate(page);
-+	attach_page_private(page, iop);
- 	return iop;
- }
- 
- static void
- iomap_page_release(struct page *page)
- {
--	struct iomap_page *iop = to_iomap_page(page);
-+	struct iomap_page *iop = detach_page_private(page);
- 
- 	if (!iop)
- 		return;
- 	WARN_ON_ONCE(atomic_read(&iop->read_count));
- 	WARN_ON_ONCE(atomic_read(&iop->write_count));
--	ClearPagePrivate(page);
--	set_page_private(page, 0);
--	put_page(page);
- 	kfree(iop);
- }
- 
-@@ -526,14 +521,8 @@ iomap_migrate_page(struct address_space *mapping, struct page *newpage,
- 	if (ret != MIGRATEPAGE_SUCCESS)
- 		return ret;
- 
--	if (page_has_private(page)) {
--		ClearPagePrivate(page);
--		get_page(newpage);
--		set_page_private(newpage, page_private(page));
--		set_page_private(page, 0);
--		put_page(page);
--		SetPagePrivate(newpage);
--	}
-+	if (page_has_private(page))
-+		attach_page_private(newpage, detach_page_private(page));
- 
- 	if (mode != MIGRATE_SYNC_NO_COPY)
- 		migrate_page_copy(newpage, page);
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
