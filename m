@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEAC91D8C90
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 May 2020 02:51:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E6E1D8C8B
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 May 2020 02:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgESAvW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 May 2020 20:51:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48800 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgESAvW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 May 2020 20:51:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J0lYSk188260;
-        Tue, 19 May 2020 00:51:15 GMT
+        id S1726696AbgESAtZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 May 2020 20:49:25 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59180 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbgESAtZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 May 2020 20:49:25 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J0l4d1144876;
+        Tue, 19 May 2020 00:49:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=4Wtum3YfHf7+50WpRzJMVVEnXKsE1tNN8Tz4blVOqkc=;
- b=Gfd4A/ZXgn/dGfCm89KqAJnPE/oWSmJF53Mr7KS6FEhG6/IjNbxDWKdtKw+nGu7Q4en4
- FYhcbpGEIxkriqywLPzQGH4KtEdzv4XN9qwjf2aI1xNk/A8piSSwWbxO0EII+Lkx7wHb
- SwuSeVJaQLyiuxLmoYSajZ+09+my94e0qor6FoJpFhS68z6S9zFuJlkyQQUvEg053a68
- rysXi9mmh2qe1n81N+0a8wHjSNhHPUBbHvNq0gahQcyByYo1Q4BwkoGCv/6QV+Qr8CvU
- DSg5WVyhYutA1THFXTgt6Z4mFWHq2cvlUH4MlMo2Ql8shDTlPborpdkGk6hqPsc1kxeM Bw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 3128tna2w3-1
+ bh=e+hR/OBeuw9R4ZaZ29O4B/39n7TlbQkoxTCaAWlSAgc=;
+ b=PZwzPrXxCHGNpLvSOcTa03QQw9RPuvuJPffmcUwu1CKMHmzy2pYVVF8rQyE3islXUFaU
+ NlsKv+9FbyvvkgerziGjtQy0Ue5T3LoFRh/aXT5xegWfznzNWBmhexzhDjOD1gbcj7pj
+ 1Y/UECo/YLujqJXXBCRrQHED2/tks5EAFjbGSc4PQTPRjU7czOjxvXpznhI51D7fsrF/
+ fzc/TLk4m1IX0OIJbmZNnPeurEdWYEWtsjOmFB56MXHbqt20QPxtx09i5WA9togzRADI
+ /JwgkcrMQkAKiVH/9/JTc2NoTnUlTyVfWq5Tq6bS0MaUoJN6CmiC6wCiMyIsS66/kUoc fQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3127kr26t5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 00:51:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J0iMS9121457;
-        Tue, 19 May 2020 00:49:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 312t3wrb2b-1
+        Tue, 19 May 2020 00:49:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J0h41C142472;
+        Tue, 19 May 2020 00:49:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 312sxrjj1q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 00:49:14 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04J0nDTX001313;
-        Tue, 19 May 2020 00:49:13 GMT
+        Tue, 19 May 2020 00:49:20 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04J0nJAu014523;
+        Tue, 19 May 2020 00:49:20 GMT
 Received: from localhost (/10.159.132.30)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 17:49:13 -0700
-Subject: [PATCH 1/3] xfs: force writes to delalloc regions to unwritten
+        with ESMTP ; Mon, 18 May 2020 17:49:19 -0700
+Subject: [PATCH 2/3] xfs: don't fail unwritten extent conversion on writeback
+ due to edquot
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        hch@infradead.org, bfoster@redhat.com
-Date:   Mon, 18 May 2020 17:49:11 -0700
-Message-ID: <158984935136.619853.1558687512700172480.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, bfoster@redhat.com
+Date:   Mon, 18 May 2020 17:49:17 -0700
+Message-ID: <158984935767.619853.515097571114256885.stgit@magnolia>
 In-Reply-To: <158984934500.619853.3585969653869086436.stgit@magnolia>
 References: <158984934500.619853.3585969653869086436.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,15 +54,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 suspectscore=1 mlxscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005190005
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=1 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005190005
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0 spamscore=0
- clxscore=1015 cotscore=-2147483648 suspectscore=1 lowpriorityscore=0
- adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=1 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2004280000 definitions=main-2005190005
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
@@ -71,66 +71,33 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When writing to a delalloc region in the data fork, commit the new
-allocations (of the da reservation) as unwritten so that the mappings
-are only marked written once writeback completes successfully.  This
-fixes the problem of stale data exposure if the system goes down during
-targeted writeback of a specific region of a file, as tested by
-generic/042.
+During writeback, it's possible for the quota block reservation in
+xfs_iomap_write_unwritten to fail with EDQUOT because we hit the quota
+limit.  This causes writeback errors for data that was already written
+to disk, when it's not even guaranteed that the bmbt will expand to
+exceed the quota limit.  Irritatingly, this condition is reported to
+userspace as EIO by fsync, which is confusing.
+
+We wrote the data, so allow the reservation.  That might put us slightly
+above the hard limit, but it's better than losing data after a write.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_bmap.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_iomap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index fda13cd7add0..825d170e1503 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4193,17 +4193,7 @@ xfs_bmapi_allocate(
- 	bma->got.br_blockcount = bma->length;
- 	bma->got.br_state = XFS_EXT_NORM;
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index bb590a267a7f..ac970b13b1f8 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -563,7 +563,7 @@ xfs_iomap_write_unwritten(
+ 		xfs_trans_ijoin(tp, ip, 0);
  
--	/*
--	 * In the data fork, a wasdelay extent has been initialized, so
--	 * shouldn't be flagged as unwritten.
--	 *
--	 * For the cow fork, however, we convert delalloc reservations
--	 * (extents allocated for speculative preallocation) to
--	 * allocated unwritten extents, and only convert the unwritten
--	 * extents to real extents when we're about to write the data.
--	 */
--	if ((!bma->wasdel || (bma->flags & XFS_BMAPI_COWFORK)) &&
--	    (bma->flags & XFS_BMAPI_PREALLOC))
-+	if (bma->flags & XFS_BMAPI_PREALLOC)
- 		bma->got.br_state = XFS_EXT_UNWRITTEN;
+ 		error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0,
+-				XFS_QMOPT_RES_REGBLKS);
++				XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_FORCE_RES);
+ 		if (error)
+ 			goto error_on_bmapi_transaction;
  
- 	if (bma->wasdel)
-@@ -4611,8 +4601,24 @@ xfs_bmapi_convert_delalloc(
- 	bma.offset = bma.got.br_startoff;
- 	bma.length = max_t(xfs_filblks_t, bma.got.br_blockcount, MAXEXTLEN);
- 	bma.minleft = xfs_bmapi_minleft(tp, ip, whichfork);
-+
-+	/*
-+	 * When we're converting the delalloc reservations backing dirty pages
-+	 * in the page cache, we must be careful about how we create the new
-+	 * extents:
-+	 *
-+	 * New CoW fork extents are created unwritten, turned into real extents
-+	 * when we're about to write the data to disk, and mapped into the data
-+	 * fork after the write finishes.  End of story.
-+	 *
-+	 * New data fork extents must be mapped in as unwritten and converted
-+	 * to real extents after the write succeeds to avoid exposing stale
-+	 * disk contents if we crash.
-+	 */
- 	if (whichfork == XFS_COW_FORK)
- 		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
-+	else
-+		bma.flags = XFS_BMAPI_PREALLOC;
- 
- 	if (!xfs_iext_peek_prev_extent(ifp, &bma.icur, &bma.prev))
- 		bma.prev.br_startoff = NULLFILEOFF;
 
