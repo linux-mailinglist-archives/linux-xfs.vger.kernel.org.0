@@ -2,25 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8880A1D8D50
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 May 2020 03:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66DFA1D8D6B
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 May 2020 03:57:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgESBz7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 May 2020 21:55:59 -0400
-Received: from sandeen.net ([63.231.237.45]:36132 "EHLO sandeen.net"
+        id S1726293AbgESB5h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 May 2020 21:57:37 -0400
+Received: from sandeen.net ([63.231.237.45]:36218 "EHLO sandeen.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgESBz7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 May 2020 21:55:59 -0400
+        id S1726285AbgESB5h (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 May 2020 21:57:37 -0400
 Received: from [10.0.0.4] (liberator [10.0.0.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 6B9DB323BFE;
-        Mon, 18 May 2020 20:55:33 -0500 (CDT)
-Subject: Re: [PATCH 1/3] xfs_db: don't crash if el_gets returns null
+        by sandeen.net (Postfix) with ESMTPSA id 169ACB77;
+        Mon, 18 May 2020 20:57:11 -0500 (CDT)
+Subject: Re: [PATCH 2/3] xfs_db: fix rdbmap_boundscheck
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
 References: <158984953155.623441.15225705949586714685.stgit@magnolia>
- <158984953767.623441.453227281468842512.stgit@magnolia>
+ <158984954380.623441.11000410439582315428.stgit@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
 Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
@@ -64,15 +64,15 @@ Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
  Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
  m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
  fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <56359b9f-8774-67ef-9d6c-52627178929d@sandeen.net>
-Date:   Mon, 18 May 2020 20:55:57 -0500
+Message-ID: <6590fd47-f3f7-6cf5-ec28-4d37f9643e31@sandeen.net>
+Date:   Mon, 18 May 2020 20:57:35 -0500
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <158984953767.623441.453227281468842512.stgit@magnolia>
+In-Reply-To: <158984954380.623441.11000410439582315428.stgit@magnolia>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -81,51 +81,32 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 5/18/20 7:52 PM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> el_gets returns NULL if it fails to read any characters (due to EOF or
-> errors occurred).  strdup will crash if it is fed a NULL string, so
-> check the return value to avoid segfaulting.
+> This predicate should check the a rt block number against number of
+> rtblocks, not the number of AG blocks.  Ooops.
 > 
+> Fixes: 7161cd21b3ed ("xfs_db: bounds-check access to the dbmap array")
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+welp, sorry I missed this on regression testing;.
 
 Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 
 > ---
->  db/input.c |   23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
+>  db/check.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > 
-> diff --git a/db/input.c b/db/input.c
-> index 553025bc..448e84b0 100644
-> --- a/db/input.c
-> +++ b/db/input.c
-> @@ -230,14 +230,21 @@ fetchline(void)
->  	}
+> diff --git a/db/check.c b/db/check.c
+> index c6fce605..12c03b6d 100644
+> --- a/db/check.c
+> +++ b/db/check.c
+> @@ -1490,7 +1490,7 @@ static inline bool
+>  rdbmap_boundscheck(
+>  	xfs_rfsblock_t	bno)
+>  {
+> -	return bno < mp->m_sb.sb_agblocks;
+> +	return bno < mp->m_sb.sb_rblocks;
+>  }
 >  
->  	if (inputstacksize == 1) {
-> -		line = xstrdup(el_gets(el, &count));
-> -		if (line) {
-> -			if (count > 0)
-> -				line[count-1] = '\0';
-> -			if (*line) {
-> -				history(hist, &hevent, H_ENTER, line);
-> -				logprintf("%s", line);
-> -			}
-> +		const char	*cmd;
-> +
-> +		cmd = el_gets(el, &count);
-> +		if (!cmd)
-> +			return NULL;
-> +
-> +		line = xstrdup(cmd);
-> +		if (!line)
-> +			return NULL;
-> +
-> +		if (count > 0)
-> +			line[count-1] = '\0';
-> +		if (*line) {
-> +			history(hist, &hevent, H_ENTER, line);
-> +			logprintf("%s", line);
->  		}
->  	} else {
->  		line = fetchline_internal();
+>  static void
 > 
