@@ -2,60 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A4201DA772
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 03:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F7F11DA764
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 03:45:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgETBrO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 May 2020 21:47:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37268 "EHLO
+        id S1726595AbgETBpY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 May 2020 21:45:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36326 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgETBrO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 May 2020 21:47:14 -0400
+        with ESMTP id S1726352AbgETBpY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 May 2020 21:45:24 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1lBxf027009;
-        Wed, 20 May 2020 01:47:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=NvgtAjMeMcsTDKCxs32G4AI/yqi+6YNFRbgdwpNnpOU=;
- b=IT92+JnzYjSir32hKgIY2Drmpo5ZMWa4JHPFWDVGYYte8ndx0klLzVHzbgXhxmzXIO/r
- EqQEZ9TDDIWzr0Q+vyzUt040EkRJNlNuC0RP/V4PmeCGW0wgA+VZis6n39IRfUKTTzeG
- /MsFdAdByhuvV1zRy7veeOC8HdKibvgGs9MmHAMmIL/9WEvZtL/txxHIXqN3r3iSMtQz
- w2TwxHp41UEGT9h+tnpV8w2vAxnL11vpehMONH9xycI8nh5m96cUvjmcl1IEnc9uLtgT
- x9I4ty2UlHzLMTM82/jP2LTvIophIIZsRbElV9sy2oYr4QhMD1LpkqbmHdYBdx4qGqQU Ww== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3127kr8jff-1
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1hYJM024721;
+        Wed, 20 May 2020 01:45:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=yUzmpvI+5aj8wohbD+dXqUFD5JUWHGDREeypIORMzGo=;
+ b=iL3CBvhLBFlOEkL93N9KWLQ9kz4Tt4IHV8zEMTtkQu5RiOxFJpAM2/eHFEOUmbFr3eTO
+ qEIWTTBg3ueE09WlSe2T9pJDjn7J7xsYl3V5f0RU3cmowy6J8BxyWkrD/aOILwRvJCpz
+ jIzbKkAMJtq8fkaHxcKap2/LZgmzft8P4nUXhSR3xHSmsDB3w/99Uggp263+xgzFr0uS
+ W/eLsvwFpR8IsfxA9Jsjl4zsslaxEeoD8Bt8ZOOERnkvvDC/vA17WoFILCToW4hJcgu+
+ OBy6LZgkXQQDVrTQwb/kmsZNikjCeNQsUJM/DvnzsUipkAkEdLoTGJoAvHTp1nmS5Evy lQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 3127kr8jbv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 01:47:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1h8Yh032600;
-        Wed, 20 May 2020 01:45:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 312sxtudej-1
+        Wed, 20 May 2020 01:45:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1gZAP142979;
+        Wed, 20 May 2020 01:45:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 313gj2kakh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 01:45:06 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04K1j5bc024008;
-        Wed, 20 May 2020 01:45:05 GMT
+        Wed, 20 May 2020 01:45:19 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04K1jJWp008174;
+        Wed, 20 May 2020 01:45:19 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 May 2020 18:45:05 -0700
-Date:   Tue, 19 May 2020 18:45:04 -0700
+        with ESMTP ; Tue, 19 May 2020 18:45:19 -0700
+Subject: [PATCH v3 00/11] xfs: refactor incore inode walking
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: inode iterator cleanups
-Message-ID: <20200520014504.GT17627@magnolia>
-References: <20200518170437.1218883-1-hch@lst.de>
- <20200519012337.GE17635@magnolia>
- <20200519064017.GA24876@lst.de>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de
+Date:   Tue, 19 May 2020 18:45:18 -0700
+Message-ID: <158993911808.976105.13679179790848338795.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519064017.GA24876@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005200011
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
@@ -63,35 +60,29 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phis
  bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
  suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200012
+ engine=8.12.0-2004280000 definitions=main-2005200011
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:40:17AM +0200, Christoph Hellwig wrote:
-> On Mon, May 18, 2020 at 06:23:37PM -0700, Darrick J. Wong wrote:
-> > On Mon, May 18, 2020 at 07:04:31PM +0200, Christoph Hellwig wrote:
-> > > Hi all,
-> > > 
-> > > this series cleans up a bunch of lose ends in the inode iterator
-> > > functions.
-> > 
-> > Funny, I was going to send a series next cycle that refactors a fair
-> > amount of the incore inode iterators and then collapses the
-> > free_cowblocks/free_eofblocks code into a single worker and radix tree
-> > tag that takes care of all the speculative preallocation extent gc
-> > stuff...
-> > 
-> > incore walks:
-> > https://lore.kernel.org/linux-xfs/157784075463.1360343.1278255546758019580.stgit@magnolia/
-> 
-> Except for the last few those seem non-brainers tat would could merge
-> ASAP..
-> 
-> The rest also doesn't look bad, so I'll happily defer this series.
-> OTOH the first on really should go in, either your or my version :)
+Hi all,
 
-Well, I'll send the set for a formal review... :)
+This series prepares the incore inode walking code used by the
+eofblocks/cowblocks scanner to handle deferred inode inactivation.
+First we clean up the eofblocks/cowblocks incore inode walking code to
+get rid of some of the warts left by reflink development.  Next, we
+rip out the many trivial wrapper functions that don't add much value.
+Finally, we refactor the various helpers and predicate functions to
+reduce open-coded logic.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=incore-inode-walk
