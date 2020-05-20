@@ -2,74 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B667F1DAB24
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 08:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E58F31DAB2D
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 08:57:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgETG4E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 May 2020 02:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S1726401AbgETG5o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 May 2020 02:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgETG4E (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 May 2020 02:56:04 -0400
+        with ESMTP id S1726369AbgETG5n (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 May 2020 02:57:43 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494EFC061A0E
-        for <linux-xfs@vger.kernel.org>; Tue, 19 May 2020 23:56:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE474C061A0E
+        for <linux-xfs@vger.kernel.org>; Tue, 19 May 2020 23:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nKPk8F0seUktS7UaDCTPtJ51lLKAlTPzdAAYzw91RzU=; b=YRAzqUjIS52ZoAlzsZOw2GVgLF
-        MREfP03YRhmbsUkMSPO2jP3X3JhU3T7oKDC/VE0qUaNUDLUhO6PznN5MKJfCLLobQeZol7UQUbK4N
-        jDtSTBvyDvP9JglWw8hD/QG76kcSqeoJ0wCbu8PahVV/lsfxqx5INs5/edZrj/fEtnM0+ta/3WCEY
-        FY+HM2vr7vSgavMENhu+3WXKtlFGf/GRovGoMuztQuh4/H2/09F3WxfeNAlssFY5HQw3akxIVcpLi
-        hECnKDtQ9rcNh/WgV9NY6XbxGWEkIfzklER+GHuK1qGb+WwMFmEa4DkqEqqQMEIhfAhXpm3vE9YJC
-        lE5RIabA==;
+        bh=O+/bo5qVkNc4jdpYOO1OHH+32yZTAMnHqLPp+/yJCNM=; b=QF5WQ3xfdy+71VPjd1dylykdnC
+        5Bzk8eGVRAT+gEXXVqFkV/nnBgsZEg7wUPsXhPMvcLG5g7crtEMzl4F+PfSljrwU7ETKABpECPQKm
+        jMegSzLgCiU5YwFUxqLK+n8j9CxM6UgGRJpYiczHYe8yQakzV5kAbnUWTfK+FDh2PRznqiMeygpT+
+        pOarO03dWcbqEYnIr6ulp2iqujSeiLo/NLaZxS+14gVDL4SWU8JyQIzT6uYBJIqgSEdWcAcMBY4Ya
+        7MaXsgPZD8JqzMPesSlCoy/cn12U7VViFwzBgDdMIjGpSYXxrc3toyFgaxUZcRrOo58Brv61l9HCp
+        ryRBcNJA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbIe4-0002ts-5G; Wed, 20 May 2020 06:56:04 +0000
-Date:   Tue, 19 May 2020 23:56:04 -0700
+        id 1jbIff-00031Q-LS; Wed, 20 May 2020 06:57:43 +0000
+Date:   Tue, 19 May 2020 23:57:43 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: reduce free inode accounting overhead
-Message-ID: <20200520065604.GB25811@infradead.org>
-References: <20200519214840.2570159-1-david@fromorbit.com>
- <20200519214840.2570159-3-david@fromorbit.com>
+Subject: Re: [PATCH 1/2] xfs: separate read-only variables in struct xfs_mount
+Message-ID: <20200520065743.GC25811@infradead.org>
+References: <20200519222310.2576434-1-david@fromorbit.com>
+ <20200519222310.2576434-2-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519214840.2570159-3-david@fromorbit.com>
+In-Reply-To: <20200519222310.2576434-2-david@fromorbit.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:48:40AM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Shaokun Zhang reported that XFs was using substantial CPU time in
-
-s/XFs/XFS/
-
->  	if (idelta) {
-> -		error = xfs_mod_icount(mp, idelta);
-> -		ASSERT(!error);
-> +		percpu_counter_add_batch(&mp->m_icount, idelta,
-> +					 XFS_ICOUNT_BATCH);
-> +		if (idelta < 0)
-> +			ASSERT(__percpu_counter_compare(&mp->m_icount, 0,
-> +							XFS_ICOUNT_BATCH) >= 0);
->  	}
->  
->  	if (ifreedelta) {
-> -		error = xfs_mod_ifree(mp, ifreedelta);
-> -		ASSERT(!error);
-> +		percpu_counter_add(&mp->m_ifree, ifreedelta);
-> +		if (ifreedelta < 0)
-> +			ASSERT(percpu_counter_compare(&mp->m_ifree, 0) >= 0);
-
-I'd be tempted to just remove the ASSERTS entirely, as they are still
-pretty heavy handed for debug kernels.
+Shouldn't m_errortag and m_errortag_kobj also go into the read-mostly
+section?
 
 Otherwise looks good:
 
