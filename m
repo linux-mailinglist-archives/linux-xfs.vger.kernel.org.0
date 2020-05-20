@@ -2,180 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28EC91DB4DB
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 15:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1DC71DB6D8
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 16:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgETNXo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 May 2020 09:23:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43075 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726436AbgETNXm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 May 2020 09:23:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589981020;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UYRwh1VnrXmQY2XXYF2SQivpQYK9LwoL5Wmhd8VjJmQ=;
-        b=NnnWo9++zJvb8yjLO9RgbuEdyQxAxcBIIbkCPFgwCQ/X3WtL7Rkp6ff8F3YgNsOz/51GLl
-        KYkkVJRGf8hC8DnRTzXD09P2vJda9u3L1lRZEwF+pr3QX2c95NNSB+pFakOZDGL0SIRo5Q
-        JN3MGRQ/Jn1Plyw6jxk5jQUxQjd6ZXU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-LIHTqcUDPmChgi0SinNMQg-1; Wed, 20 May 2020 09:23:37 -0400
-X-MC-Unique: LIHTqcUDPmChgi0SinNMQg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E85A1005512;
-        Wed, 20 May 2020 13:23:36 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 300A7707BA;
-        Wed, 20 May 2020 13:23:36 +0000 (UTC)
-Date:   Wed, 20 May 2020 09:23:34 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Subject: Re: [PATCH 3/3] xfs: measure all contiguous previous extents for
- prealloc size
-Message-ID: <20200520132334.GA36554@bfoster>
-References: <158984934500.619853.3585969653869086436.stgit@magnolia>
- <158984936387.619853.12262802837092587871.stgit@magnolia>
- <20200519124827.GC23387@bfoster>
+        id S1727076AbgETO14 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 May 2020 10:27:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46948 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbgETO1z (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 20 May 2020 10:27:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E161CAF73;
+        Wed, 20 May 2020 14:27:55 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4B63B1E126F; Wed, 20 May 2020 16:27:52 +0200 (CEST)
+Date:   Wed, 20 May 2020 16:27:52 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Petr =?utf-8?B?UMOtc2HFmQ==?= <ppisar@redhat.com>
+Subject: Re: [PATCH] quota-tools: Set FS_DQ_TIMER_MASK for individual xfs
+ grace times
+Message-ID: <20200520142752.GF30597@quack2.suse.cz>
+References: <72a454f1-c2ee-b777-90db-6bdfd4a8572c@redhat.com>
+ <20200514102036.GC9569@quack2.suse.cz>
+ <00c2c5d4-a584-ad7d-c602-e516a8015562@sandeen.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="opJtzjQTFsWo+cga"
 Content-Disposition: inline
-In-Reply-To: <20200519124827.GC23387@bfoster>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <00c2c5d4-a584-ad7d-c602-e516a8015562@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:48:27AM -0400, Brian Foster wrote:
-> On Mon, May 18, 2020 at 05:49:23PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > When we're estimating a new speculative preallocation length for an
-> > extending write, we should walk backwards through the extent list to
-> > determine the number of number of blocks that are physically and
-> > logically contiguous with the write offset, and use that as an input to
-> > the preallocation size computation.
-> > 
-> > This way, preallocation length is truly measured by the effectiveness of
-> > the allocator in giving us contiguous allocations without being
-> > influenced by the state of a given extent.  This fixes both the problem
-> > where ZERO_RANGE within an EOF can reduce preallocation, and prevents
-> > the unnecessary shrinkage of preallocation when delalloc extents are
-> > turned into unwritten extents.
-> > 
-> > This was found as a regression in xfs/014 after changing delalloc writes
-> > to create unwritten extents during writeback.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/xfs/xfs_iomap.c |   63 +++++++++++++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 52 insertions(+), 11 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > index ac970b13b1f8..2dffd56a433c 100644
-> > --- a/fs/xfs/xfs_iomap.c
-> > +++ b/fs/xfs/xfs_iomap.c
-...
-> > @@ -413,15 +453,16 @@ xfs_iomap_prealloc_size(
-> >  	 * preallocation size.
-> >  	 *
-> >  	 * If the extent is a hole, then preallocation is essentially disabled.
-> > -	 * Otherwise we take the size of the preceding data extent as the basis
-> > -	 * for the preallocation size. If the size of the extent is greater than
-> > -	 * half the maximum extent length, then use the current offset as the
-> > -	 * basis. This ensures that for large files the preallocation size
-> > -	 * always extends to MAXEXTLEN rather than falling short due to things
-> > -	 * like stripe unit/width alignment of real extents.
-> > +	 * Otherwise we take the size of the contiguous preceding data extents
-> > +	 * as the basis for the preallocation size. If the size of the extent
+
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue 19-05-20 12:19:14, Eric Sandeen wrote:
+> On 5/14/20 5:20 AM, Jan Kara wrote:
+> >> I'm putting together xfstests cases for this, if you want to wait
+> >> for those, that's fine.  Thanks!
+> > Yeah, that looks like a good thing to do. Also FS_DQ_LIMIT_MASK contains
+> > real-time limits bits which quota tools aren't able to manipulate in any
+> > way so maybe not setting those bits would be wiser... Will you send a patch
+> > or should I just fix it?
 > 
-> I'd refer to it as the "size of the contiguous range" or some such since
-> we're now talking about aggregating many extents to form the prealloc
-> basis.
+> I've sent those tests now, btw.
 > 
-> I am a little curious if there's any noticeable impact from having to
-> perform the worst case extent walk in this path. For example, suppose we
-> had a speculatively preallocated file where we started writing (i.e.
-> converting) every other unwritten block such that this path had to walk
-> an extent per block until hitting the 8g max (8g == 2097152 4k blocks).
-> I guess the hope is that either most of those blocks wouldn't have been
-> written back and converted by the time we'd trigger the next post-eof
-> prealloc or that it would just be a wash in the stream of staggered
-> writes falling into our max sized preallocations. Either way, I think
-> it's more important to maintain the existing heuristic so this seems
-> reasonable from that perspective.
-> 
+> I agree that the whole section of flag-setting is a bit odd, I hadn't
+> intended to clean it up right now.  I'd be happy to review though if you
+> found the time.  :)
 
-I had a system spinning yesterday to create this worst case condition
-across a couple max sized extents. Testing out the preallocation path, I
-see a hit from ~5ms to ~35ms between the baseline variant and the
-updated calculation algorithm. Note that the baseline here is only doing
-a 16 block prealloc vs. 8gb with the fix, but regardless a 30ms
-difference for an 8gb allocation doesn't really seem noticeable enough
-to matter. IOW, I think we can disgregard this particular concern...
+Patch attached :)
 
-> This scenario also makes me wonder if we should consider continuing to
-> do write time file size extension zeroing in certain cases vs. leaving
-> around unwritten extents. For example, the current post-eof prealloc
-> behavior is that writes that jump over current EOF will zero (via
-> buffered writes) any allocated blocks (delalloc or physical) between
-> current EOF and the start of the write. That behavior doesn't change
-> with delalloc -> unwritten if the prealloc is still delalloc at the time
-> of the extending write, but we'd presumably skip those zeroing writes if
-> the prealloc had been converted to real+unwritten first. Hmm.. that does
-> seem a little random to me, particularly if somebody starts to see
-> unwritten extents sprinkled throughout a file that never explicitly saw
-> preallocation. Perhaps we should avoid converting post-eof blocks? OTOH,
-> unwritten probably makes sense for large jumps in EOF vs zeroing GBs of
-> blocks, so one could argue that we should convert such ranges (if still
-> delalloc) rather than zero them at all. Thoughts? We should probably
-> work this out one way or another before landing the delalloc ->
-> unwritten behavior..
-> 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
-Thinking about this one a little more.. it seems it's probably not worth
-conditionally changing post-eof conversion behavior. Since there are
-cases where we probably want post-eof prealloc to remain as unwritten if
-it's carried within i_size, that would either be extra code for post-eof
-blocks or would split up any kind of heuristic for manually zeroing such
-blocks. ISTM that the right approach might be to convert all delalloc ->
-unwritten (as this series already does), then perhaps consider a write
-time heuristic that would perform manual zeroing of extents if certain
-conditions are met (e.g., for unwritten extents under a certain size).
+--opJtzjQTFsWo+cga
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment; filename="0001-Fix-limits-setting-on-XFS-filesystem.patch"
 
-The remaining question to me is whether we should include something like
-that before changing delalloc behavior or consider it separately as an
-optimization...
+From 1814341547753865bcbd92bbe62af51f3e6866dd Mon Sep 17 00:00:00 2001
+From: Jan Kara <jack@suse.cz>
+Date: Wed, 20 May 2020 16:22:52 +0200
+Subject: [PATCH] Fix limits setting on XFS filesystem
 
-Brian
+xfs_commit_dquot() always set FS_DQ_LIMIT_MASK when calling
+Q_XFS_SETQLIM. So far this wasn't a problem since quota tools didn't
+support setting of anything else for XFS but now that kernel will start
+supporting setting of grace times for XFS, we need to be more careful
+and set limits bits only if we really want to update them. Also
+FS_DQ_LIMIT_MASK contains real-time limits as well. Quota tools
+currently don't support them in any way so avoid telling kernel to set
+them.
 
-P.S., BTW I forgot to mention on my last pass of this series that it
-probably makes sense to reorder these behavioral fixup patches to
-precede the patch that actually changes delalloc to allocate unwritten
-extents.
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ quotaio_xfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Brian
-> 
-> > +	 * is greater than half the maximum extent length, then use the current
-> > +	 * offset as the basis. This ensures that for large files the
-> > +	 * preallocation size always extends to MAXEXTLEN rather than falling
-> > +	 * short due to things like stripe unit/width alignment of real
-> > +	 * extents.
-> >  	 */
-> > -	if (prev.br_blockcount <= (MAXEXTLEN >> 1))
-> > -		alloc_blocks = prev.br_blockcount << 1;
-> > +	if (plen <= (MAXEXTLEN >> 1))
-> > +		alloc_blocks = plen << 1;
-> >  	else
-> >  		alloc_blocks = XFS_B_TO_FSB(mp, offset);
-> >  	if (!alloc_blocks)
-> > 
-> 
+diff --git a/quotaio_xfs.c b/quotaio_xfs.c
+index a4d6f67b0c5a..3333bb1645d9 100644
+--- a/quotaio_xfs.c
++++ b/quotaio_xfs.c
+@@ -165,7 +165,9 @@ static int xfs_commit_dquot(struct dquot *dquot, int flags)
+ 		if (flags & COMMIT_USAGE) /* block usage */
+ 			xdqblk.d_fieldmask |= FS_DQ_BCOUNT;
+ 	} else {
+-		xdqblk.d_fieldmask |= FS_DQ_LIMIT_MASK;
++		if (flags & COMMIT_LIMITS) /* warn/limit */
++			xdqblk.d_fieldmask |= FS_DQ_BSOFT | FS_DQ_BHARD |
++						FS_DQ_ISOFT | FS_DQ_IHARD;
+ 		if (flags & COMMIT_TIMES) /* indiv grace period */
+ 			xdqblk.d_fieldmask |= FS_DQ_TIMER_MASK;
+ 	}
+-- 
+2.16.4
 
+
+--opJtzjQTFsWo+cga--
