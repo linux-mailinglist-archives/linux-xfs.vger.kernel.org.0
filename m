@@ -2,161 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01B7E1DA705
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 03:14:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A4201DA772
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 May 2020 03:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgETBOj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 May 2020 21:14:39 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:58819 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgETBOi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 May 2020 21:14:38 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id CFEF7D7A31B;
-        Wed, 20 May 2020 11:14:33 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jbDJW-0001Q7-BI; Wed, 20 May 2020 11:14:30 +1000
-Date:   Wed, 20 May 2020 11:14:30 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1726938AbgETBrO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 May 2020 21:47:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37268 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbgETBrO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 May 2020 21:47:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1lBxf027009;
+        Wed, 20 May 2020 01:47:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=NvgtAjMeMcsTDKCxs32G4AI/yqi+6YNFRbgdwpNnpOU=;
+ b=IT92+JnzYjSir32hKgIY2Drmpo5ZMWa4JHPFWDVGYYte8ndx0klLzVHzbgXhxmzXIO/r
+ EqQEZ9TDDIWzr0Q+vyzUt040EkRJNlNuC0RP/V4PmeCGW0wgA+VZis6n39IRfUKTTzeG
+ /MsFdAdByhuvV1zRy7veeOC8HdKibvgGs9MmHAMmIL/9WEvZtL/txxHIXqN3r3iSMtQz
+ w2TwxHp41UEGT9h+tnpV8w2vAxnL11vpehMONH9xycI8nh5m96cUvjmcl1IEnc9uLtgT
+ x9I4ty2UlHzLMTM82/jP2LTvIophIIZsRbElV9sy2oYr4QhMD1LpkqbmHdYBdx4qGqQU Ww== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3127kr8jff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 01:47:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1h8Yh032600;
+        Wed, 20 May 2020 01:45:06 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 312sxtudej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 01:45:06 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04K1j5bc024008;
+        Wed, 20 May 2020 01:45:05 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 May 2020 18:45:05 -0700
+Date:   Tue, 19 May 2020 18:45:04 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [XFS SUMMIT] Deprecating V4 on-disk format
-Message-ID: <20200520011430.GS2040@dread.disaster.area>
-References: <20200513023618.GA2040@dread.disaster.area>
- <20200519062338.GH17627@magnolia>
+Subject: Re: inode iterator cleanups
+Message-ID: <20200520014504.GT17627@magnolia>
+References: <20200518170437.1218883-1-hch@lst.de>
+ <20200519012337.GE17635@magnolia>
+ <20200519064017.GA24876@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519062338.GH17627@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
-        a=rX3DrgsQOmbXhv9XyLgA:9 a=r_4S-qBi8RMIXnkB:21 a=A6MUwPdZ-W_0Vq8o:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200519064017.GA24876@lst.de>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200012
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:23:38PM -0700, Darrick J. Wong wrote:
-> On Wed, May 13, 2020 at 12:36:18PM +1000, Dave Chinner wrote:
+On Tue, May 19, 2020 at 08:40:17AM +0200, Christoph Hellwig wrote:
+> On Mon, May 18, 2020 at 06:23:37PM -0700, Darrick J. Wong wrote:
+> > On Mon, May 18, 2020 at 07:04:31PM +0200, Christoph Hellwig wrote:
+> > > Hi all,
+> > > 
+> > > this series cleans up a bunch of lose ends in the inode iterator
+> > > functions.
 > > 
-> > Topic: Deprecating V4 On-disk Format
+> > Funny, I was going to send a series next cycle that refactors a fair
+> > amount of the incore inode iterators and then collapses the
+> > free_cowblocks/free_eofblocks code into a single worker and radix tree
+> > tag that takes care of all the speculative preallocation extent gc
+> > stuff...
 > > 
-> > Scope:
-> > 	Long term life cycle planning
-> > 	Supporting old filesystems with new kernels.
-> > 	Unfixable integrity issues in v4 format.
-> > 	Reducing feature matrix for testing
-> > 
-> > Proposal:
-> > 
-> > The CRC-enabled V5 format has been the upstream default format now
-> > since commit 566ebd5ae5fa ("mkfs: default to CRC enabled
-> > filesystems") dated May 11 2015 (5 years ago!) and released in
-> > xfsprogs v3.2.3. It is the default in all major distros, and has
-> > been for some time.
-> > 
-> > We know that the v4 format has unfixable integrity issues apart from
-> > the obvious lack of CRCs and self-describing metadata structures; it
-> > has race conditions in log recovery realted to inode creation and
-> > other such issues that could only be solved with an on-disk format
-> > change of some kind. We are not adding new features to v4 formats,
-> > so anyone wanting to use new XFS features must use v5 format
-> > filesystems.
-> > 
-> > We also know that the number of v4 filesysetms in production is
-> > slowly decreasing as systems are replaced as part of the natural
-> > life cycle of production systems.
-> > 
-> > All this adds up to the realisation that existing v4 filesystems are
-> > effectively in the "Maintenance Mode" era of the software life
-> > cycle. The next stage in the life cycle is "Phasing Out" before we
-> > drop support for it altogether, also know around here as
-> > "deprecated" which is a sign that support will "soon" cease.
-> > 
-> > I'd like to move the v4 format to the "deprecated" state as a signal
-> > to users that it should really not be considered viable for new
-> > systems. New systems running modern kernels and userspace should
-> > all be using the v5 format, so this mostly only affects existing
-> > filesystems.
-> > 
-> > Note: I am not proposing that we drop support for the v4 format any
-> > time soon. What I am proposing is an "end of lifecycle" tag similar
-> > to the way we use EXPERIMENTAL to indicate that the functionality is
-> > available but we don't recommend it for production systems yet.
-> > 
-> > Hence what I am proposing is that we introduce a DEPRECATED alert at
-> > mount time to inform users that the functionality exists, but it
-> > will not be maintained indefinitely into the future. For distros
-> > with a ten year support life, this means that a near-future release
-> > will pick up the DEPRECATED tag but still support the filesystem for
-> > the support life of that release. A "future +1" release may not
-> > support the v4 format at all.
+> > incore walks:
+> > https://lore.kernel.org/linux-xfs/157784075463.1360343.1278255546758019580.stgit@magnolia/
 > 
-> /me regrets that he is frequently failing to clear enough space out of
-> his schedule to respond to all of these adequately.  But here goes,
-> random thoughts at 23:23. :/
+> Except for the last few those seem non-brainers tat would could merge
+> ASAP..
 > 
-> > Discussion points:
-> > 
-> > - How practical is this?
-> 
-> Well, we've killed off old features before... v1 inodes, v2 directories,
-> etc.  So clearly this can be done, given enough preparation time.
-> 
-> And we probably ought to do it, before we start to resemble the ext4
-> quota nightmare.
+> The rest also doesn't look bad, so I'll happily defer this series.
+> OTOH the first on really should go in, either your or my version :)
 
-*nod*
+Well, I'll send the set for a formal review... :)
 
-> 
-> > - What should we have mkfs do when directed to create a v4 format
-> >   filesystem?
-> 
-> It probably ought to print a warning...
-> 
-> That said, way back when we were arguing with the syzbot people, one of
-> us suggested that we hide V4 behind a CONFIG_XFS_DEPRECATED=y option, so
-> that people who want to harden their kernel against the unfixable
-> structural problems in the V4 format could effectively lose V4 support
-> early.  Maybe we should add that for a few years?
-
-That sounds like a good idea - being able to config it out provides
-a mechanism to isolate v4 only code paths over time....
-
-> > - How long before we decide to remove v4 support from the upstream
-> >   kernel and tools? 5 years after deprecation? 10 years?
-> 
-> That probably depends a lot on how much our respective employers want to
-> keep those old XFSes going.  Some of our customers are about ready to
-> certify that they can support their distro defaults changing from ext3
-> to XFS v4, but those folks have support contracts that won't terminate
-> until whenever the so^Hun goes out.
-
-Well, there's a difference between what a distro that heavily
-patches the upstream kernel is willing to support and what upstream
-supports. And, realistically, v4 is going to be around for at least
-one more major distro release, which means the distro support time
-window is still going to be in the order of 15 years.
-
-However, with the way typical enterprise feature policies work, a
-feature needs to be deprecated for a major release before it can be
-removed.
-
-So, realistically, the deprecation decision is not for the near term
-- it's for dropping support in the "current + 2" major release that
-nobody is even thinking about yet. i.e. if we don't deprecate it
-in the next couple of years, then we'll still need to be
-maintaining the v4 filesystem format in upstream for the next 15
-years. Which, IMO, is about 10 years too long...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--D
