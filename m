@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B65EE1DDE66
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 May 2020 05:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C021DDE62
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 May 2020 05:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgEVDum (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 May 2020 23:50:42 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:41999 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728208AbgEVDum (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 May 2020 23:50:42 -0400
+        id S1728222AbgEVDul (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 May 2020 23:50:41 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33023 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728097AbgEVDuk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 May 2020 23:50:40 -0400
 Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 9D0D61A7F3C
-        for <linux-xfs@vger.kernel.org>; Fri, 22 May 2020 13:50:33 +1000 (AEST)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A8CB03A3270
+        for <linux-xfs@vger.kernel.org>; Fri, 22 May 2020 13:50:34 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1jbyha-0002VS-Jt
+        id 1jbyha-0002VV-LI
         for linux-xfs@vger.kernel.org; Fri, 22 May 2020 13:50:30 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.93)
         (envelope-from <david@fromorbit.com>)
-        id 1jbyha-00CgHy-Ax
+        id 1jbyha-00CgI3-Ct
         for linux-xfs@vger.kernel.org; Fri, 22 May 2020 13:50:30 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 10/24] xfs: clean up the buffer iodone callback functions
-Date:   Fri, 22 May 2020 13:50:15 +1000
-Message-Id: <20200522035029.3022405-11-david@fromorbit.com>
+Subject: [PATCH 11/24] xfs: get rid of log item callbacks
+Date:   Fri, 22 May 2020 13:50:16 +1000
+Message-Id: <20200522035029.3022405-12-david@fromorbit.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be
 In-Reply-To: <20200522035029.3022405-1-david@fromorbit.com>
 References: <20200522035029.3022405-1-david@fromorbit.com>
@@ -36,7 +36,7 @@ Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
         a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=sTwFKg_x9MkA:10 a=20KFwNOVAAAA:8 a=QrwaDmlbODsJXtoaXeEA:9
+        a=sTwFKg_x9MkA:10 a=20KFwNOVAAAA:8 a=IxSPRu1M28NFb9wgbagA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -44,286 +44,116 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Now that we've sorted inode and dquot buffers, we can apply the same
-cleanups to dirty buffers with buffer log items. They only have one
-callback, too, so we don't need the log item callback. Collapse the
-iodone functions and remove all the now unnecessary infrastructure
-around callback processing.
+They are not used anymore, so remove them from the log item and the
+buffer iodone attachment interfaces.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_buf_item.c  | 139 +++++++++--------------------------------
- fs/xfs/xfs_buf_item.h  |   1 -
- fs/xfs/xfs_trans_buf.c |   2 -
- 3 files changed, 29 insertions(+), 113 deletions(-)
+ fs/xfs/xfs_buf_item.c | 17 -----------------
+ fs/xfs/xfs_buf_item.h |  3 ---
+ fs/xfs/xfs_dquot.c    |  6 +++---
+ fs/xfs/xfs_inode.c    |  5 +++--
+ fs/xfs/xfs_trans.h    |  3 ---
+ 5 files changed, 6 insertions(+), 28 deletions(-)
 
 diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 57e5d37f6852e..d44b3e3f46613 100644
+index d44b3e3f46613..d855a2b7486c5 100644
 --- a/fs/xfs/xfs_buf_item.c
 +++ b/fs/xfs/xfs_buf_item.c
-@@ -30,7 +30,7 @@ static inline struct xfs_buf_log_item *BUF_ITEM(struct xfs_log_item *lip)
- 	return container_of(lip, struct xfs_buf_log_item, bli_item);
+@@ -955,23 +955,6 @@ xfs_buf_item_relse(
+ 	xfs_buf_item_free(bip);
  }
  
--STATIC void	xfs_buf_do_callbacks(struct xfs_buf *bp);
-+static void xfs_buf_item_done(struct xfs_buf *bp);
- 
- /* Is this log iovec plausibly large enough to contain the buffer log format? */
- bool
-@@ -462,9 +462,8 @@ xfs_buf_item_unpin(
- 		 * the AIL lock.
- 		 */
- 		if (bip->bli_flags & XFS_BLI_STALE_INODE) {
--			lip->li_cb(bp, lip);
-+			xfs_buf_item_done(bp);
- 			xfs_iflush_done(bp);
--			bp->b_log_item = NULL;
- 		} else {
- 			xfs_trans_ail_delete(lip, SHUTDOWN_LOG_IO_ERROR);
- 			xfs_buf_item_relse(bp);
-@@ -973,46 +972,6 @@ xfs_buf_attach_iodone(
- 	list_add_tail(&lip->li_bio_list, &bp->b_li_list);
- }
- 
+-
 -/*
-- * We can have many callbacks on a buffer. Running the callbacks individually
-- * can cause a lot of contention on the AIL lock, so we allow for a single
-- * callback to be able to scan the remaining items in bp->b_li_list for other
-- * items of the same type and callback to be processed in the first call.
-- *
-- * As a result, the loop walking the callback list below will also modify the
-- * list. it removes the first item from the list and then runs the callback.
-- * The loop then restarts from the new first item int the list. This allows the
-- * callback to scan and modify the list attached to the buffer and we don't
-- * have to care about maintaining a next item pointer.
+- * Add the given log item with its callback to the list of callbacks
+- * to be called when the buffer's I/O completes.
 - */
--STATIC void
--xfs_buf_do_callbacks(
--	struct xfs_buf		*bp)
+-void
+-xfs_buf_attach_iodone(
+-	struct xfs_buf		*bp,
+-	void			(*cb)(struct xfs_buf *, struct xfs_log_item *),
+-	struct xfs_log_item	*lip)
 -{
--	struct xfs_buf_log_item *blip = bp->b_log_item;
--	struct xfs_log_item	*lip;
+-	ASSERT(xfs_buf_islocked(bp));
 -
--	/* If there is a buf_log_item attached, run its callback */
--	if (blip) {
--		lip = &blip->bli_item;
--		lip->li_cb(bp, lip);
--	}
--
--	while (!list_empty(&bp->b_li_list)) {
--		lip = list_first_entry(&bp->b_li_list, struct xfs_log_item,
--				       li_bio_list);
--
--		/*
--		 * Remove the item from the list, so we don't have any
--		 * confusion if the item is added to another buf.
--		 * Don't touch the log item after calling its
--		 * callback, because it could have freed itself.
--		 */
--		list_del_init(&lip->li_bio_list);
--		lip->li_cb(bp, lip);
--	}
+-	lip->li_cb = cb;
+-	list_add_tail(&lip->li_bio_list, &bp->b_li_list);
 -}
 -
  /*
   * Invoke the error state callback for each log item affected by the failed I/O.
   *
-@@ -1025,8 +984,8 @@ STATIC void
- xfs_buf_do_callbacks_fail(
- 	struct xfs_buf		*bp)
- {
-+	struct xfs_ail		*ailp = bp->b_mount->m_ail;
- 	struct xfs_log_item	*lip;
--	struct xfs_ail		*ailp;
- 
- 	/*
- 	 * Buffer log item errors are handled directly by xfs_buf_item_push()
-@@ -1036,9 +995,6 @@ xfs_buf_do_callbacks_fail(
- 	if (list_empty(&bp->b_li_list))
- 		return;
- 
--	lip = list_first_entry(&bp->b_li_list, struct xfs_log_item,
--			li_bio_list);
--	ailp = lip->li_ailp;
- 	spin_lock(&ailp->ail_lock);
- 	list_for_each_entry(lip, &bp->b_li_list, li_bio_list) {
- 		if (lip->li_ops->iop_error)
-@@ -1051,22 +1007,11 @@ static bool
- xfs_buf_iodone_callback_error(
- 	struct xfs_buf		*bp)
- {
--	struct xfs_buf_log_item	*bip = bp->b_log_item;
--	struct xfs_log_item	*lip;
--	struct xfs_mount	*mp;
-+	struct xfs_mount	*mp = bp->b_mount;
- 	static ulong		lasttime;
- 	static xfs_buftarg_t	*lasttarg;
- 	struct xfs_error_cfg	*cfg;
- 
--	/*
--	 * The failed buffer might not have a buf_log_item attached or the
--	 * log_item list might be empty. Get the mp from the available
--	 * xfs_log_item
--	 */
--	lip = list_first_entry_or_null(&bp->b_li_list, struct xfs_log_item,
--				       li_bio_list);
--	mp = lip ? lip->li_mountp : bip->bli_item.li_mountp;
--
- 	/*
- 	 * If we've already decided to shutdown the filesystem because of
- 	 * I/O errors, there's no point in giving this a retry.
-@@ -1171,14 +1116,27 @@ xfs_buf_had_callback_errors(
- }
- 
- static void
--xfs_buf_run_callbacks(
-+xfs_buf_item_done(
- 	struct xfs_buf		*bp)
- {
-+	struct xfs_buf_log_item	*bip = bp->b_log_item;
- 
--	if (xfs_buf_had_callback_errors(bp))
-+	if (!bip)
- 		return;
--	xfs_buf_do_callbacks(bp);
-+
-+	/*
-+	 * If we are forcibly shutting down, this may well be off the AIL
-+	 * already. That's because we simulate the log-committed callbacks to
-+	 * unpin these buffers. Or we may never have put this item on AIL
-+	 * because of the transaction was aborted forcibly.
-+	 * xfs_trans_ail_delete() takes care of these.
-+	 *
-+	 * Either way, AIL is useless if we're forcing a shutdown.
-+	 */
-+	xfs_trans_ail_delete(&bip->bli_item, SHUTDOWN_CORRUPT_INCORE);
- 	bp->b_log_item = NULL;
-+	xfs_buf_item_free(bip);
-+	xfs_buf_rele(bp);
- }
- 
- /*
-@@ -1188,19 +1146,10 @@ void
- xfs_buf_inode_iodone(
- 	struct xfs_buf		*bp)
- {
--	struct xfs_buf_log_item *blip = bp->b_log_item;
--	struct xfs_log_item	*lip;
--
- 	if (xfs_buf_had_callback_errors(bp))
- 		return;
- 
--	/* If there is a buf_log_item attached, run its callback */
--	if (blip) {
--		lip = &blip->bli_item;
--		lip->li_cb(bp, lip);
--		bp->b_log_item = NULL;
--	}
--
-+	xfs_buf_item_done(bp);
- 	xfs_iflush_done(bp);
- 	xfs_buf_ioend_finish(bp);
- }
-@@ -1212,59 +1161,29 @@ void
- xfs_buf_dquot_iodone(
- 	struct xfs_buf		*bp)
- {
--	struct xfs_buf_log_item *blip = bp->b_log_item;
--	struct xfs_log_item	*lip;
--
- 	if (xfs_buf_had_callback_errors(bp))
- 		return;
- 
- 	/* a newly allocated dquot buffer might have a log item attached */
--	if (blip) {
--		lip = &blip->bli_item;
--		lip->li_cb(bp, lip);
--		bp->b_log_item = NULL;
--	}
--
-+	xfs_buf_item_done(bp);
- 	xfs_dquot_done(bp);
- 	xfs_buf_ioend_finish(bp);
- }
- 
- /*
-  * Dirty buffer iodone callback function.
-+ *
-+ * Note that for things like remote attribute buffers, there may not be a buffer
-+ * log item here, so processing the buffer log item must remain be optional.
-  */
- void
- xfs_buf_dirty_iodone(
- 	struct xfs_buf		*bp)
- {
--	xfs_buf_run_callbacks(bp);
-+	if (xfs_buf_had_callback_errors(bp))
-+		return;
-+
-+	xfs_buf_item_done(bp);
- 	xfs_buf_ioend_finish(bp);
- }
- 
--/*
-- * This is the iodone() function for buffers which have been
-- * logged.  It is called when they are eventually flushed out.
-- * It should remove the buf item from the AIL, and free the buf item.
-- * It is called by xfs_buf_iodone_callbacks() above which will take
-- * care of cleaning up the buffer itself.
-- */
--void
--xfs_buf_iodone(
--	struct xfs_buf		*bp,
--	struct xfs_log_item	*lip)
--{
--	ASSERT(BUF_ITEM(lip)->bli_buf == bp);
--
--	xfs_buf_rele(bp);
--
--	/*
--	 * If we are forcibly shutting down, this may well be off the AIL
--	 * already. That's because we simulate the log-committed callbacks to
--	 * unpin these buffers. Or we may never have put this item on AIL
--	 * because of the transaction was aborted forcibly.
--	 * xfs_trans_ail_delete() takes care of these.
--	 *
--	 * Either way, AIL is useless if we're forcing a shutdown.
--	 */
--	xfs_trans_ail_delete(lip, SHUTDOWN_CORRUPT_INCORE);
--	xfs_buf_item_free(BUF_ITEM(lip));
--}
 diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
-index 96f994ec90915..3f436efb0b67a 100644
+index 3f436efb0b67a..ecfad1915a86b 100644
 --- a/fs/xfs/xfs_buf_item.h
 +++ b/fs/xfs/xfs_buf_item.h
-@@ -57,7 +57,6 @@ bool	xfs_buf_item_dirty_format(struct xfs_buf_log_item *);
- void	xfs_buf_attach_iodone(struct xfs_buf *,
- 			      void(*)(struct xfs_buf *, struct xfs_log_item *),
- 			      struct xfs_log_item *);
--void	xfs_buf_iodone(struct xfs_buf *, struct xfs_log_item *);
+@@ -54,9 +54,6 @@ void	xfs_buf_item_relse(struct xfs_buf *);
+ bool	xfs_buf_item_put(struct xfs_buf_log_item *);
+ void	xfs_buf_item_log(struct xfs_buf_log_item *, uint, uint);
+ bool	xfs_buf_item_dirty_format(struct xfs_buf_log_item *);
+-void	xfs_buf_attach_iodone(struct xfs_buf *,
+-			      void(*)(struct xfs_buf *, struct xfs_log_item *),
+-			      struct xfs_log_item *);
  void	xfs_buf_inode_iodone(struct xfs_buf *);
  void	xfs_buf_dquot_iodone(struct xfs_buf *);
  void	xfs_buf_dirty_iodone(struct xfs_buf *);
-diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
-index 69e0ebe94a915..11cd666cd99a6 100644
---- a/fs/xfs/xfs_trans_buf.c
-+++ b/fs/xfs/xfs_trans_buf.c
-@@ -475,7 +475,6 @@ xfs_trans_dirty_buf(
- 	bp->b_flags |= XBF_DONE;
- 
- 	ASSERT(atomic_read(&bip->bli_refcount) > 0);
--	bip->bli_item.li_cb = xfs_buf_iodone;
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 1d7f34a9bc989..34fc1bcb1eefd 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -1191,11 +1191,11 @@ xfs_qm_dqflush(
+ 	}
  
  	/*
- 	 * If we invalidated the buffer within this transaction, then
-@@ -644,7 +643,6 @@ xfs_trans_stale_inode_buf(
- 	ASSERT(atomic_read(&bip->bli_refcount) > 0);
+-	 * Attach an iodone routine so that we can remove this dquot from the
+-	 * AIL and release the flush lock once the dquot is synced to disk.
++	 * Attach the dquot to the buffer so that we can remove this dquot from
++	 * the AIL and release the flush lock once the dquot is synced to disk.
+ 	 */
+ 	bp->b_flags |= _XBF_DQUOTS;
+-	xfs_buf_attach_iodone(bp, NULL, &dqp->q_logitem.qli_item);
++	list_add_tail(&dqp->q_logitem.qli_item.li_bio_list, &bp->b_li_list);
  
- 	bip->bli_flags |= XFS_BLI_STALE_INODE;
--	bip->bli_item.li_cb = xfs_buf_iodone;
+ 	/*
+ 	 * If the buffer is pinned then push on the log so we won't
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index c75d625de7945..c5529853f513c 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -2690,7 +2690,8 @@ xfs_ifree_cluster(
+ 			xfs_trans_ail_copy_lsn(mp->m_ail, &iip->ili_flush_lsn,
+ 						&iip->ili_item.li_lsn);
+ 
+-			xfs_buf_attach_iodone(bp, NULL, &iip->ili_item);
++			list_add_tail(&iip->ili_item.li_bio_list,
++						&bp->b_li_list);
+ 
+ 			if (ip != free_ip)
+ 				xfs_iunlock(ip, XFS_ILOCK_EXCL);
+@@ -3840,7 +3841,7 @@ xfs_iflush_int(
+ 	 * the flush lock.
+ 	 */
  	bp->b_flags |= _XBF_INODES;
- 	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_DINO_BUF);
- }
+-	xfs_buf_attach_iodone(bp, NULL, &iip->ili_item);
++	list_add_tail(&iip->ili_item.li_bio_list, &bp->b_li_list);
+ 
+ 	/* generate the checksum. */
+ 	xfs_dinode_calc_crc(mp, dip);
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index 8308bf6d7e404..d27429e3a82a6 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -37,9 +37,6 @@ struct xfs_log_item {
+ 	unsigned long			li_flags;	/* misc flags */
+ 	struct xfs_buf			*li_buf;	/* real buffer pointer */
+ 	struct list_head		li_bio_list;	/* buffer item list */
+-	void				(*li_cb)(struct xfs_buf *,
+-						 struct xfs_log_item *);
+-							/* buffer item iodone */
+ 							/* callback func */
+ 	const struct xfs_item_ops	*li_ops;	/* function list */
+ 
 -- 
 2.26.2.761.g0e0b3e54be
 
