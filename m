@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFAC21DDD7D
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 May 2020 04:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10FA21DDD83
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 May 2020 04:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEVCyA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 May 2020 22:54:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35454 "EHLO
+        id S1727835AbgEVC4I (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 May 2020 22:56:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36546 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgEVCyA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 May 2020 22:54:00 -0400
+        with ESMTP id S1727770AbgEVC4H (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 May 2020 22:56:07 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04M2lOa1110467;
-        Fri, 22 May 2020 02:53:56 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04M2meZi123404;
+        Fri, 22 May 2020 02:54:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=AkPEHSWnqzym6gaeuMDK+fBbCjyHTOKfN89IQW2CCa8=;
- b=A8B9FtsICpIb6myB4pexRYO1hclBEHIVJbquZuV0yu+5eiobbsKLjGZ0nYEzHdJeSp/G
- nurl76TjSCTyjiUhMmPt4E6yvXPuzOrdCDN/1N7k3sdGfS3YlzXTI7QEBMxziogMpKg+
- o73e+AZdKPzVsJL9TpbI1v8wyPTH0izv4Y4H13y1sLRFCNbAP3AupO902GZ4iiDFi3LW
- lntMTWaPZJz1C/xuV2giLipjbNhXMKjct1zeRptehPANhhSzfallEZWvjR/ptjzTguDC
- NKlLppUv4s1yuo355k0bkMVjAE2ScV/GUh5w+/wBSrjzrunCsSkSRCUf/sAV+gZt2Tc5 oA== 
+ bh=uiOC/fAJkZeZ9ACDLE93T4gNlzupIPPPvoiU7vtHj4E=;
+ b=tsD4UKBriq1KNYa419imWV4hn+twA+4qOYTZRbeNGm28MqgkjMMcwhufhjNXry9zQTfG
+ jBTh3GEyFM2omSYgx+SYmOjLdmS2WnmpIiO+YQsqceIhtHMBApNoMm+oquKTeoRax5h1
+ dl5f6sqYOTDhqWEJOlAEby3IVlDstO8lLG8U8kfcQIfMlusKJy+VzG2pPj/8ft2Wmq6m
+ nGQR6SQ04meCNNoeaWTiYDULMvQtup+lJitSCppCeNVsjV5YZm6XFBZ5ryhU/yhCVMGE
+ Pj268qUZz0C08MZeNNGTcqtsArNLkrIuXBt2/FPXRIGCgP4jh+UpMGhKNspiad0ExZ5Z Rg== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127krkk1b-1
+        by userp2130.oracle.com with ESMTP id 3127krkk1k-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 02:53:56 +0000
+        Fri, 22 May 2020 02:54:02 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04M2nF1T173983;
-        Fri, 22 May 2020 02:53:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 312t3d3x6t-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04M2nG8q174128;
+        Fri, 22 May 2020 02:54:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 312t3d3xeb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 May 2020 02:53:55 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04M2rs7Y015385;
-        Fri, 22 May 2020 02:53:54 GMT
+        Fri, 22 May 2020 02:54:01 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04M2s1oc030147;
+        Fri, 22 May 2020 02:54:01 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 19:53:54 -0700
-Subject: [PATCH 04/12] xfs: remove xfs_inode_ag_iterator_flags
+        with ESMTP ; Thu, 21 May 2020 19:54:00 -0700
+Subject: [PATCH 05/12] xfs: remove flags argument from xfs_inode_ag_walk
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        hch@lst.de
-Date:   Thu, 21 May 2020 19:53:53 -0700
-Message-ID: <159011603321.77079.320022599197428040.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de
+Date:   Thu, 21 May 2020 19:53:59 -0700
+Message-ID: <159011603978.77079.10531037194098683108.stgit@magnolia>
 In-Reply-To: <159011600616.77079.14748275956667624732.stgit@magnolia>
 References: <159011600616.77079.14748275956667624732.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -71,122 +70,196 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Combine xfs_inode_ag_iterator_flags and xfs_inode_ag_iterator_tag into a
-single wrapper function since there's only one caller of the _flags
-variant.
+The incore inode walk code passes a flags argument and a pointer from
+the xfs_inode_ag_iterator caller all the way to the iteration function.
+We can reduce the function complexity by passing flags through the
+private pointer.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_icache.c      |   43 +++++++++++++------------------------------
- fs/xfs/xfs_icache.h      |    5 +----
- fs/xfs/xfs_qm_syscalls.c |    4 ++--
- 3 files changed, 16 insertions(+), 36 deletions(-)
+ fs/xfs/xfs_icache.c      |   43 +++++++++++++++++--------------------------
+ fs/xfs/xfs_icache.h      |    4 ++--
+ fs/xfs/xfs_qm_syscalls.c |   15 ++++++++-------
+ 3 files changed, 27 insertions(+), 35 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 6aafb547f21a..6d7f3014d547 100644
+index 6d7f3014d547..53c6cc7bc02a 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -956,38 +956,22 @@ xfs_cowblocks_worker(
- 	xfs_queue_cowblocks(mp);
- }
- 
--int
--xfs_inode_ag_iterator_flags(
-+/* Fetch the next (possibly tagged) per-AG structure. */
-+static inline struct xfs_perag *
-+xfs_inode_walk_get_perag(
+@@ -790,9 +790,7 @@ STATIC int
+ xfs_inode_ag_walk(
  	struct xfs_mount	*mp,
+ 	struct xfs_perag	*pag,
 -	int			(*execute)(struct xfs_inode *ip, int flags,
 -					   void *args),
 -	int			flags,
--	void			*args,
--	int			iter_flags)
-+	xfs_agnumber_t		agno,
-+	int			tag)
- {
--	struct xfs_perag	*pag;
--	int			error = 0;
--	int			last_error = 0;
--	xfs_agnumber_t		ag;
--
--	ag = 0;
--	while ((pag = xfs_perag_get(mp, ag))) {
--		ag = pag->pag_agno + 1;
--		error = xfs_inode_ag_walk(mp, pag, execute, flags, args,
--				XFS_ICI_NO_TAG, iter_flags);
--		xfs_perag_put(pag);
--		if (error) {
--			last_error = error;
--			if (error == -EFSCORRUPTED)
--				break;
--		}
--	}
--	return last_error;
-+	if (tag == XFS_ICI_NO_TAG)
-+		return xfs_perag_get(mp, agno);
-+	return xfs_perag_get_tag(mp, agno, tag);
- }
- 
- int
--xfs_inode_ag_iterator_tag(
-+xfs_inode_ag_iterator(
++	int			(*execute)(struct xfs_inode *ip, void *args),
+ 	void			*args,
+ 	int			tag,
+ 	int			iter_flags)
+@@ -868,7 +866,7 @@ xfs_inode_ag_walk(
+ 			if ((iter_flags & XFS_AGITER_INEW_WAIT) &&
+ 			    xfs_iflags_test(batch[i], XFS_INEW))
+ 				xfs_inew_wait(batch[i]);
+-			error = execute(batch[i], flags, args);
++			error = execute(batch[i], args);
+ 			xfs_irele(batch[i]);
+ 			if (error == -EAGAIN) {
+ 				skipped++;
+@@ -972,9 +970,7 @@ int
+ xfs_inode_ag_iterator(
  	struct xfs_mount	*mp,
-+	int			iter_flags,
- 	int			(*execute)(struct xfs_inode *ip, int flags,
- 					   void *args),
- 	int			flags,
-@@ -1000,10 +984,10 @@ xfs_inode_ag_iterator_tag(
- 	xfs_agnumber_t		ag;
- 
+ 	int			iter_flags,
+-	int			(*execute)(struct xfs_inode *ip, int flags,
+-					   void *args),
+-	int			flags,
++	int			(*execute)(struct xfs_inode *ip, void *args),
+ 	void			*args,
+ 	int			tag)
+ {
+@@ -986,7 +982,7 @@ xfs_inode_ag_iterator(
  	ag = 0;
--	while ((pag = xfs_perag_get_tag(mp, ag, tag))) {
-+	while ((pag = xfs_inode_walk_get_perag(mp, ag, tag))) {
+ 	while ((pag = xfs_inode_walk_get_perag(mp, ag, tag))) {
  		ag = pag->pag_agno + 1;
- 		error = xfs_inode_ag_walk(mp, pag, execute, flags, args, tag,
--					  0);
-+				iter_flags);
+-		error = xfs_inode_ag_walk(mp, pag, execute, flags, args, tag,
++		error = xfs_inode_ag_walk(mp, pag, execute, args, tag,
+ 				iter_flags);
  		xfs_perag_put(pag);
  		if (error) {
- 			last_error = error;
-@@ -1523,8 +1507,7 @@ __xfs_icache_free_eofblocks(
- 	if (eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC))
- 		flags = SYNC_WAIT;
+@@ -1443,12 +1439,14 @@ xfs_inode_match_id_union(
+ STATIC int
+ xfs_inode_free_eofblocks(
+ 	struct xfs_inode	*ip,
+-	int			flags,
+ 	void			*args)
+ {
+-	int ret = 0;
+-	struct xfs_eofblocks *eofb = args;
+-	int match;
++	struct xfs_eofblocks	*eofb = args;
++	bool			wait;
++	int			match;
++	int			ret;
++
++	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
  
--	return xfs_inode_ag_iterator_tag(mp, execute, flags,
--					 eofb, tag);
-+	return xfs_inode_ag_iterator(mp, 0, execute, flags, eofb, tag);
+ 	if (!xfs_can_free_eofblocks(ip, false)) {
+ 		/* inode could be preallocated or append-only */
+@@ -1461,8 +1459,7 @@ xfs_inode_free_eofblocks(
+ 	 * If the mapping is dirty the operation can block and wait for some
+ 	 * time. Unless we are waiting, skip it.
+ 	 */
+-	if (!(flags & SYNC_WAIT) &&
+-	    mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_DIRTY))
++	if (!wait && mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_DIRTY))
+ 		return 0;
+ 
+ 	if (eofb) {
+@@ -1484,10 +1481,11 @@ xfs_inode_free_eofblocks(
+ 	 * scanner moving and revisit the inode in a subsequent pass.
+ 	 */
+ 	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
+-		if (flags & SYNC_WAIT)
+-			ret = -EAGAIN;
+-		return ret;
++		if (wait)
++			return -EAGAIN;
++		return 0;
+ 	}
++
+ 	ret = xfs_free_eofblocks(ip);
+ 	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
+ 
+@@ -1498,16 +1496,10 @@ static int
+ __xfs_icache_free_eofblocks(
+ 	struct xfs_mount	*mp,
+ 	struct xfs_eofblocks	*eofb,
+-	int			(*execute)(struct xfs_inode *ip, int flags,
+-					   void *args),
++	int			(*execute)(struct xfs_inode *ip, void *args),
+ 	int			tag)
+ {
+-	int flags = SYNC_TRYLOCK;
+-
+-	if (eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC))
+-		flags = SYNC_WAIT;
+-
+-	return xfs_inode_ag_iterator(mp, 0, execute, flags, eofb, tag);
++	return xfs_inode_ag_iterator(mp, 0, execute, eofb, tag);
  }
  
  int
+@@ -1732,7 +1724,6 @@ xfs_prep_free_cowblocks(
+ STATIC int
+ xfs_inode_free_cowblocks(
+ 	struct xfs_inode	*ip,
+-	int			flags,
+ 	void			*args)
+ {
+ 	struct xfs_eofblocks	*eofb = args;
 diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index 0556fa32074f..2d5ab9957d9f 100644
+index 2d5ab9957d9f..e7f86ebd7b22 100644
 --- a/fs/xfs/xfs_icache.h
 +++ b/fs/xfs/xfs_icache.h
-@@ -71,10 +71,7 @@ int xfs_inode_free_quota_cowblocks(struct xfs_inode *ip);
- void xfs_cowblocks_worker(struct work_struct *);
+@@ -72,8 +72,8 @@ void xfs_cowblocks_worker(struct work_struct *);
  void xfs_queue_cowblocks(struct xfs_mount *);
  
--int xfs_inode_ag_iterator_flags(struct xfs_mount *mp,
+ int xfs_inode_ag_iterator(struct xfs_mount *mp, int iter_flags,
 -	int (*execute)(struct xfs_inode *ip, int flags, void *args),
--	int flags, void *args, int iter_flags);
--int xfs_inode_ag_iterator_tag(struct xfs_mount *mp,
-+int xfs_inode_ag_iterator(struct xfs_mount *mp, int iter_flags,
- 	int (*execute)(struct xfs_inode *ip, int flags, void *args),
- 	int flags, void *args, int tag);
+-	int flags, void *args, int tag);
++	int (*execute)(struct xfs_inode *ip, void *args),
++	void *args, int tag);
  
+ int xfs_icache_inode_is_allocated(struct xfs_mount *mp, struct xfs_trans *tp,
+ 				  xfs_ino_t ino, bool *inuse);
 diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 5d5ac65aa1cc..a9460bdcca87 100644
+index a9460bdcca87..4b61a683a43e 100644
 --- a/fs/xfs/xfs_qm_syscalls.c
 +++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -772,6 +772,6 @@ xfs_qm_dqrele_all_inodes(
- 	uint		 flags)
+@@ -729,9 +729,10 @@ xfs_qm_scall_getquota_next(
+ STATIC int
+ xfs_dqrele_inode(
+ 	struct xfs_inode	*ip,
+-	int			flags,
+ 	void			*args)
+ {
++	uint			*flags = args;
++
+ 	/* skip quota inodes */
+ 	if (ip == ip->i_mount->m_quotainfo->qi_uquotaip ||
+ 	    ip == ip->i_mount->m_quotainfo->qi_gquotaip ||
+@@ -743,15 +744,15 @@ xfs_dqrele_inode(
+ 	}
+ 
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	if ((flags & XFS_UQUOTA_ACCT) && ip->i_udquot) {
++	if ((*flags & XFS_UQUOTA_ACCT) && ip->i_udquot) {
+ 		xfs_qm_dqrele(ip->i_udquot);
+ 		ip->i_udquot = NULL;
+ 	}
+-	if ((flags & XFS_GQUOTA_ACCT) && ip->i_gdquot) {
++	if ((*flags & XFS_GQUOTA_ACCT) && ip->i_gdquot) {
+ 		xfs_qm_dqrele(ip->i_gdquot);
+ 		ip->i_gdquot = NULL;
+ 	}
+-	if ((flags & XFS_PQUOTA_ACCT) && ip->i_pdquot) {
++	if ((*flags & XFS_PQUOTA_ACCT) && ip->i_pdquot) {
+ 		xfs_qm_dqrele(ip->i_pdquot);
+ 		ip->i_pdquot = NULL;
+ 	}
+@@ -768,10 +769,10 @@ xfs_dqrele_inode(
+  */
+ void
+ xfs_qm_dqrele_all_inodes(
+-	struct xfs_mount *mp,
+-	uint		 flags)
++	struct xfs_mount	*mp,
++	uint			flags)
  {
  	ASSERT(mp->m_quotainfo);
--	xfs_inode_ag_iterator_flags(mp, xfs_dqrele_inode, flags, NULL,
--				    XFS_AGITER_INEW_WAIT);
-+	xfs_inode_ag_iterator(mp, XFS_AGITER_INEW_WAIT, xfs_dqrele_inode,
-+			flags, NULL, XFS_ICI_NO_TAG);
+ 	xfs_inode_ag_iterator(mp, XFS_AGITER_INEW_WAIT, xfs_dqrele_inode,
+-			flags, NULL, XFS_ICI_NO_TAG);
++			&flags, XFS_ICI_NO_TAG);
  }
 
