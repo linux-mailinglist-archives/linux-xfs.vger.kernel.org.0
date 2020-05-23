@@ -2,65 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B89E51DFA04
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 20:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1009D1DFB22
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 23:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgEWSAw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 May 2020 14:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgEWSAn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 14:00:43 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2CEC0253F7
-        for <linux-xfs@vger.kernel.org>; Sat, 23 May 2020 11:00:40 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id c12so1068530qtq.11
-        for <linux-xfs@vger.kernel.org>; Sat, 23 May 2020 11:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=vhvRG4iP0p/cCM0/gHqK0xx0MaMNF3/azTtn5P0fCT1b4XLjGRAoR85FXgvwYtowP6
-         J1ev3dPiedOMtPyOzUYmKFEqsj6BkIi2lR8s0YRNLylOZ8MbeWQpwNTWDXPX57LUrKeO
-         FLL54WToKnc9WyFCTQNZdn8yjuqVF61dsdwJrbIWn1f8+mXNgwQXd1Xox425XdFJLCTr
-         UNYtD5Mkr7J8HytQpl125rrGiBWdOVTtdeDic18s2v1Ex5H4EMrCDseWe8z8QJUA2DPl
-         pMcmWf9nM5lni1dYRbVMyTKtLHSFCzrJM5oRvB7Hp9K31CMWsqtaG47ZQbJG6ZEre6uU
-         kwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=W1APWfvc91B5eMvNPBYg3hmpezd0GsNWwtyw38uIMDACkSIR2j3oGepHXz1tilKGAv
-         Rh1TPSK3kRbU2sHSoUVYgUNoqjTj75E19Qt/hCbRwZujqJZheRaF0qsx9Fl0IFhuIRKZ
-         wpQ44OFtQAZoAOqK8YKF2OPa5CcTdFQk4QevSpl0t0foNsJ41DoB53gt5b0TsUvqy7m8
-         IOlNQT2gayEYZyNg0pxqozILCILWyBlPegEF9M+T/2LtO1EjS7yhpOHws0Lduz4RoBSV
-         kH+VzJwJMYEdcUW4qIvy1evxxVAjVvJnimiuvbrr1FDKcv3MrfVDlJxi3Piy9U7wNskQ
-         cdGw==
-X-Gm-Message-State: AOAM530XQUNpXpz9TvEZiPmQlKdDYI553e7P/5CGrWGiA9sfZw5bgDk6
-        uchAqddQWx60mYsGu12IB9D5Pu1+MboMZ8y1Gv4=
-X-Google-Smtp-Source: ABdhPJw4JSLl4s8hKmdikxPHOZTjp7LuShJQWo5DKJXfhdyHNpRWrWLXX1iWw/azZwGF2Nz0kU5bTrWvyq5YmK6naS0=
-X-Received: by 2002:ac8:1e16:: with SMTP id n22mr21502226qtl.78.1590256838401;
- Sat, 23 May 2020 11:00:38 -0700 (PDT)
+        id S2387986AbgEWVWz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 May 2020 17:22:55 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:34040 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387586AbgEWVWy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 17:22:54 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 1F750D79217;
+        Sun, 24 May 2020 07:22:49 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jcbbS-0000LF-9x; Sun, 24 May 2020 07:22:46 +1000
+Date:   Sun, 24 May 2020 07:22:46 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 00/24] xfs: rework inode flushing to make inode reclaim
+ fully asynchronous
+Message-ID: <20200523212246.GF2040@dread.disaster.area>
+References: <20200522035029.3022405-1-david@fromorbit.com>
+ <20200522040401.GE2040@dread.disaster.area>
+ <20200523161833.GF8230@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a37:9fd3:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:37
- -0700 (PDT)
-Reply-To: mrs.chantala2055@gmail.com
-From:   mrs chantal <mrs.chantalas1@gmail.com>
-Date:   Sat, 23 May 2020 18:00:37 +0000
-Message-ID: <CAMdkyyDY_0O7YgysHCjgRTJ=8-B7XurK7o1razRHDVOjgr2V2g@mail.gmail.com>
-Subject: jjCompliment
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200523161833.GF8230@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=jMzBtkicp1Uh4BhHB8oA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
-    letter to solicit your partnership to transfer $13.5 Million US
-    Dollars.I shall send you more information and procedures when I receive
-    positive response From you. Please send me a message in My private
-    email address is ( mrschantal066@gmail.com  )
-    Best Regards
-    MrS.Chantal
+On Sat, May 23, 2020 at 09:18:33AM -0700, Darrick J. Wong wrote:
+> On Fri, May 22, 2020 at 02:04:01PM +1000, Dave Chinner wrote:
+> > 
+> > FWIW, I forgot to put it in the original description - the series
+> > can be pulled from my git tree here:
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-async-inode-reclaim
+> 
+> Hmm, so I tried this out with quotas enabled and hit this in xfs/438:
+
+Yeah, I found another bug about 2 hours after I send this - the
+iodone error ->li_error callouts are not handled correctly, but I
+haven't seen this one.
+
+> 
+> MKFS_OPTIONS="-m reflink=1,rmapbt=1 -i sparse=1 /dev/sdf
+> MOUNT_OPTIONS="-o usrquota,grpquota,prjquota"
+> 
+>  BUG: kernel NULL pointer dereference, address: 0000000000000020
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 0 P4D 0 
+>  Oops: 0000 [#1] PREEMPT SMP
+>  CPU: 3 PID: 824887 Comm: xfsaild/dm-0 Tainted: G        W         5.7.0-rc4-djw #rc4
+>  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1ubuntu1 04/01/2014
+>  RIP: 0010:do_raw_spin_trylock+0x5/0x40
+>  Code: 64 de 81 48 89 ef e8 ba fe ff ff eb 8b 89 c6 48 89 ef e8 de dc ff ff 66 90 eb 8b 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 <8b> 07 85 c0 75 28 ba 01 00 00 00 f0 0f b1 17 75 1d 65 8b 05 83 d8
+>  RSP: 0018:ffffc90000afbdc0 EFLAGS: 00010086
+>  RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>  RDX: ffff888070ee0000 RSI: 0000000000000000 RDI: 0000000000000020
+>  RBP: 0000000000000020 R08: 0000000000000001 R09: 0000000000000001
+>  R10: 0000000000000000 R11: ffffc90000afbc3d R12: 0000000000000038
+>  R13: 0000000000000202 R14: 0000000000000003 R15: ffff88800688a600
+>  FS:  0000000000000000(0000) GS:ffff88807e000000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000000000000020 CR3: 000000003bba2001 CR4: 00000000001606a0
+>  Call Trace:
+>   _raw_spin_lock_irqsave+0x47/0x80
+>   ? down_trylock+0xf/0x30
+>   down_trylock+0xf/0x30
+>   xfs_buf_trylock+0x1a/0x1f0 [xfs]
+>   xfsaild+0xb69/0x1320 [xfs]
+>   kthread+0x130/0x170
+
+Where is xfsaild calling xfs_buf_trylock directly?
+
+Oh, resubmission of failed inode and dquot items, which may well be
+the same problem as I mentioned above. I'll try to reproduce on
+Monday...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
