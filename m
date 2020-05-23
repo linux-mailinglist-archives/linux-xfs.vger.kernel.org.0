@@ -2,136 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B5E21DF855
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 18:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B89E51DFA04
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 20:00:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbgEWQyX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 May 2020 12:54:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56418 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387598AbgEWQyW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 12:54:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGphDt186125;
-        Sat, 23 May 2020 16:52:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=G7VeQAoH3f3ZiroFAPiCj3OwVvceReyVqyqs9j1imIQ=;
- b=MyV0hOpGVpCaPqomhbq06EolttoZXE/X43A2HrgSPlgnMDvXb9q7BPeonbzrSULR7nv5
- bMuKkoBK8CnRA0xGbqohIuClPGypa3SYZUKIKcQb0K2+fUwF6ZA7HPx8NQHoK2OISL4G
- BnnzWd1Tqv28ei4YXqUJE85hufcMsseTnXepTW51uu7ReKlBZN0kmJ/I72KT43q0JU2P
- IDilZVkFu2LRfI4SMWL2gzNUe1Zxs9VzkRsy8wGfmhh3yN7to265+3mAXA+g6glbtCjD
- kZ5uFTpVGUuHnM7beq0IJIQHjQgcN4uOQNB+uD2d4wprwcq4BwJ9VO28BLQZy5slExAD NA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 316vfn14gj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 23 May 2020 16:52:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGhLxX131613;
-        Sat, 23 May 2020 16:50:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 316un1a3au-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 May 2020 16:50:00 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04NGnxKQ006716;
-        Sat, 23 May 2020 16:49:59 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 23 May 2020 09:49:59 -0700
-Subject: [PATCH 4/4] xfs: force writes to delalloc regions to unwritten
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
-        linux-xfs@vger.kernel.org, hch@infradead.org, bfoster@redhat.com
-Date:   Sat, 23 May 2020 09:49:58 -0700
-Message-ID: <159025259804.493629.14105390886258058200.stgit@magnolia>
-In-Reply-To: <159025257178.493629.12621189512718182426.stgit@magnolia>
-References: <159025257178.493629.12621189512718182426.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S2388233AbgEWSAw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 May 2020 14:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728382AbgEWSAn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 14:00:43 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2CEC0253F7
+        for <linux-xfs@vger.kernel.org>; Sat, 23 May 2020 11:00:40 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id c12so1068530qtq.11
+        for <linux-xfs@vger.kernel.org>; Sat, 23 May 2020 11:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=vhvRG4iP0p/cCM0/gHqK0xx0MaMNF3/azTtn5P0fCT1b4XLjGRAoR85FXgvwYtowP6
+         J1ev3dPiedOMtPyOzUYmKFEqsj6BkIi2lR8s0YRNLylOZ8MbeWQpwNTWDXPX57LUrKeO
+         FLL54WToKnc9WyFCTQNZdn8yjuqVF61dsdwJrbIWn1f8+mXNgwQXd1Xox425XdFJLCTr
+         UNYtD5Mkr7J8HytQpl125rrGiBWdOVTtdeDic18s2v1Ex5H4EMrCDseWe8z8QJUA2DPl
+         pMcmWf9nM5lni1dYRbVMyTKtLHSFCzrJM5oRvB7Hp9K31CMWsqtaG47ZQbJG6ZEre6uU
+         kwNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=W1APWfvc91B5eMvNPBYg3hmpezd0GsNWwtyw38uIMDACkSIR2j3oGepHXz1tilKGAv
+         Rh1TPSK3kRbU2sHSoUVYgUNoqjTj75E19Qt/hCbRwZujqJZheRaF0qsx9Fl0IFhuIRKZ
+         wpQ44OFtQAZoAOqK8YKF2OPa5CcTdFQk4QevSpl0t0foNsJ41DoB53gt5b0TsUvqy7m8
+         IOlNQT2gayEYZyNg0pxqozILCILWyBlPegEF9M+T/2LtO1EjS7yhpOHws0Lduz4RoBSV
+         kH+VzJwJMYEdcUW4qIvy1evxxVAjVvJnimiuvbrr1FDKcv3MrfVDlJxi3Piy9U7wNskQ
+         cdGw==
+X-Gm-Message-State: AOAM530XQUNpXpz9TvEZiPmQlKdDYI553e7P/5CGrWGiA9sfZw5bgDk6
+        uchAqddQWx60mYsGu12IB9D5Pu1+MboMZ8y1Gv4=
+X-Google-Smtp-Source: ABdhPJw4JSLl4s8hKmdikxPHOZTjp7LuShJQWo5DKJXfhdyHNpRWrWLXX1iWw/azZwGF2Nz0kU5bTrWvyq5YmK6naS0=
+X-Received: by 2002:ac8:1e16:: with SMTP id n22mr21502226qtl.78.1590256838401;
+ Sat, 23 May 2020 11:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 phishscore=0 spamscore=0 suspectscore=1 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005230138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=1
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005230139
+Received: by 2002:a37:9fd3:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:37
+ -0700 (PDT)
+Reply-To: mrs.chantala2055@gmail.com
+From:   mrs chantal <mrs.chantalas1@gmail.com>
+Date:   Sat, 23 May 2020 18:00:37 +0000
+Message-ID: <CAMdkyyDY_0O7YgysHCjgRTJ=8-B7XurK7o1razRHDVOjgr2V2g@mail.gmail.com>
+Subject: jjCompliment
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
-
-When writing to a delalloc region in the data fork, commit the new
-allocations (of the da reservation) as unwritten so that the mappings
-are only marked written once writeback completes successfully.  This
-fixes the problem of stale data exposure if the system goes down during
-targeted writeback of a specific region of a file, as tested by
-generic/042.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/libxfs/xfs_bmap.c |   29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index fda13cd7add0..f8fe83c9348d 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4193,17 +4193,7 @@ xfs_bmapi_allocate(
- 	bma->got.br_blockcount = bma->length;
- 	bma->got.br_state = XFS_EXT_NORM;
- 
--	/*
--	 * In the data fork, a wasdelay extent has been initialized, so
--	 * shouldn't be flagged as unwritten.
--	 *
--	 * For the cow fork, however, we convert delalloc reservations
--	 * (extents allocated for speculative preallocation) to
--	 * allocated unwritten extents, and only convert the unwritten
--	 * extents to real extents when we're about to write the data.
--	 */
--	if ((!bma->wasdel || (bma->flags & XFS_BMAPI_COWFORK)) &&
--	    (bma->flags & XFS_BMAPI_PREALLOC))
-+	if (bma->flags & XFS_BMAPI_PREALLOC)
- 		bma->got.br_state = XFS_EXT_UNWRITTEN;
- 
- 	if (bma->wasdel)
-@@ -4611,8 +4601,23 @@ xfs_bmapi_convert_delalloc(
- 	bma.offset = bma.got.br_startoff;
- 	bma.length = max_t(xfs_filblks_t, bma.got.br_blockcount, MAXEXTLEN);
- 	bma.minleft = xfs_bmapi_minleft(tp, ip, whichfork);
-+
-+	/*
-+	 * When we're converting the delalloc reservations backing dirty pages
-+	 * in the page cache, we must be careful about how we create the new
-+	 * extents:
-+	 *
-+	 * New CoW fork extents are created unwritten, turned into real extents
-+	 * when we're about to write the data to disk, and mapped into the data
-+	 * fork after the write finishes.  End of story.
-+	 *
-+	 * New data fork extents must be mapped in as unwritten and converted
-+	 * to real extents after the write succeeds to avoid exposing stale
-+	 * disk contents if we crash.
-+	 */
-+	bma.flags = XFS_BMAPI_PREALLOC;
- 	if (whichfork == XFS_COW_FORK)
--		bma.flags = XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC;
-+		bma.flags |= XFS_BMAPI_COWFORK;
- 
- 	if (!xfs_iext_peek_prev_extent(ifp, &bma.icur, &bma.prev))
- 		bma.prev.br_startoff = NULLFILEOFF;
-
+     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
+    letter to solicit your partnership to transfer $13.5 Million US
+    Dollars.I shall send you more information and procedures when I receive
+    positive response From you. Please send me a message in My private
+    email address is ( mrschantal066@gmail.com  )
+    Best Regards
+    MrS.Chantal
