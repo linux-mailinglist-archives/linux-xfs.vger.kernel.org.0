@@ -2,192 +2,168 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C1E1DF380
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 02:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AE6A1DF3E2
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 03:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731183AbgEWA1y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 May 2020 20:27:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49578 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731182AbgEWA1w (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 May 2020 20:27:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04N0HiRg018811;
-        Sat, 23 May 2020 00:27:44 GMT
+        id S2387473AbgEWBgW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 May 2020 21:36:22 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42090 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbgEWBgV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 May 2020 21:36:21 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04N1SmD1184969;
+        Sat, 23 May 2020 01:36:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=xyoDk6skD58S87zY/clT5MdU8pgyN0/O6EozA4Jx200=;
- b=val8OBCA4HE6Rf78b/dply3pNk3tVJSgZbmhtlTCJn61aTnNUNfKqliZcCRVyP0nwxSy
- 2qpYm2sHPpFKgru49+cgEQN3191TcjXfjb5qIP14FGl83Q9121UYMwCP5dPCaPyojCSb
- cuemNfZ5Wh2ukviBvTi7xekghIBvjfWMLCGm3SNbC/f0xZ0iWOf1j1iuyxTKsGFVrqA5
- cem5AzBYkpkPkGEMvMZN/A2tbTWVbxOM5QQaXg4OzvwoI5oEe8EOKytK/Yry0uMXRYzp
- m6/2QBMJx817WRf1N5i8sXGL63HsR0RqzBm7KoDlToUco5B6B8kWsalvkKP05rd9Bzkl UQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 316qrvr5rm-1
+ bh=OJ+398Y77KMIS/OYRGR4ghY9Zk7DDasG7RT1xCh0OjY=;
+ b=vgsA+jwyJO4YBjJ+EE/4Z89r6FElXx5axi9sxDxfHILjpi4eDil2oZiEVpQEzhx6unXm
+ dd5rVV9MEWJLkZpmITOn2zqESVevr7PmwGkXz4HniOWE6YdHYgvTx0uRo+b473pKMYUF
+ nG9I22Ds8NOgI55S240hXkioIAmiele+C0TQr8Xfe9p+ngznd7pL1CXWk9gXWiFt2B6n
+ bPxqV+brzoZlQ/hNuxjgIM8qqjBDfgLQx5eYzazWUADJExQ3SpY1cI1g07pjOmvIDLXa
+ mLZUMJ0LU0l+LTd1jxaZS1OcbpNMrsyVD7bdv99e3YcZr/fMUnNhoNXKB1Uk2McyPewX xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31284mg8rt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 23 May 2020 00:27:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04N0HIHG062666;
-        Sat, 23 May 2020 00:27:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 312t3g5mn7-1
+        Sat, 23 May 2020 01:36:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04N1WjiH081628;
+        Sat, 23 May 2020 01:36:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 316sv8gw34-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 May 2020 00:27:43 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04N0RgJG014859;
-        Sat, 23 May 2020 00:27:42 GMT
+        Sat, 23 May 2020 01:36:17 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04N1aHUc021215;
+        Sat, 23 May 2020 01:36:17 GMT
 Received: from localhost (/10.159.153.228)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 22 May 2020 17:27:42 -0700
-Date:   Fri, 22 May 2020 17:27:41 -0700
+        with ESMTP ; Fri, 22 May 2020 18:36:16 -0700
+Date:   Fri, 22 May 2020 18:36:14 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Subject: Re: [PATCH 2/4] xfs: measure all contiguous previous extents for
- prealloc size
-Message-ID: <20200523002741.GD8230@magnolia>
-References: <159011597442.76931.7800023221007221972.stgit@magnolia>
- <159011598984.76931.15076402801787913960.stgit@magnolia>
- <20200522112722.GA50656@bfoster>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH] xfs: transfer freed blocks to blk res when lazy
+ accounting
+Message-ID: <20200523013614.GE8230@magnolia>
+References: <20200522171828.53440-1-bfoster@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522112722.GA50656@bfoster>
+In-Reply-To: <20200522171828.53440-1-bfoster@redhat.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=1 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=1
+ adultscore=0 phishscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005230000
+ definitions=main-2005230010
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- malwarescore=0 cotscore=-2147483648 suspectscore=1 adultscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005230000
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005230009
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 22, 2020 at 07:27:22AM -0400, Brian Foster wrote:
-> On Thu, May 21, 2020 at 07:53:09PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > When we're estimating a new speculative preallocation length for an
-> > extending write, we should walk backwards through the extent list to
-> > determine the number of number of blocks that are physically and
-> > logically contiguous with the write offset, and use that as an input to
-> > the preallocation size computation.
-> > 
-> > This way, preallocation length is truly measured by the effectiveness of
-> > the allocator in giving us contiguous allocations without being
-> > influenced by the state of a given extent.  This fixes both the problem
-> > where ZERO_RANGE within an EOF can reduce preallocation, and prevents
-> > the unnecessary shrinkage of preallocation when delalloc extents are
-> > turned into unwritten extents.
-> > 
-> > This was found as a regression in xfs/014 after changing delalloc writes
-> > to create unwritten extents during writeback.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/xfs/xfs_iomap.c |   37 +++++++++++++++++++++++++------------
-> >  1 file changed, 25 insertions(+), 12 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > index ac970b13b1f8..6a308af93893 100644
-> > --- a/fs/xfs/xfs_iomap.c
-> > +++ b/fs/xfs/xfs_iomap.c
-> > @@ -377,15 +377,17 @@ xfs_iomap_prealloc_size(
-> >  	loff_t			count,
-> >  	struct xfs_iext_cursor	*icur)
-> >  {
-> > +	struct xfs_iext_cursor	ncur = *icur; /* struct copy */
-> > +	struct xfs_bmbt_irec	prev, got;
-> >  	struct xfs_mount	*mp = ip->i_mount;
-> >  	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
-> >  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
-> > -	struct xfs_bmbt_irec	prev;
-> > -	int			shift = 0;
-> >  	int64_t			freesp;
-> >  	xfs_fsblock_t		qblocks;
-> > -	int			qshift = 0;
-> >  	xfs_fsblock_t		alloc_blocks = 0;
-> > +	xfs_extlen_t		plen;
-> > +	int			shift = 0;
-> > +	int			qshift = 0;
-> >  
-> >  	if (offset + count <= XFS_ISIZE(ip))
-> >  		return 0;
-> > @@ -413,16 +415,27 @@ xfs_iomap_prealloc_size(
-> >  	 * preallocation size.
-> >  	 *
-> >  	 * If the extent is a hole, then preallocation is essentially disabled.
-> > -	 * Otherwise we take the size of the preceding data extent as the basis
-> > -	 * for the preallocation size. If the size of the extent is greater than
-> > -	 * half the maximum extent length, then use the current offset as the
-> > -	 * basis. This ensures that for large files the preallocation size
-> > -	 * always extends to MAXEXTLEN rather than falling short due to things
-> > -	 * like stripe unit/width alignment of real extents.
-> > +	 * Otherwise we take the size of the preceding data extents as the basis
-> > +	 * for the preallocation size. Note that we don't care if the previous
-> > +	 * extents are written or not.
-> > +	 *
-> > +	 * If the size of the extents is greater than half the maximum extent
-> > +	 * length, then use the current offset as the basis. This ensures that
-> > +	 * for large files the preallocation size always extends to MAXEXTLEN
-> > +	 * rather than falling short due to things like stripe unit/width
-> > +	 * alignment of real extents.
-> >  	 */
-> > -	if (prev.br_blockcount <= (MAXEXTLEN >> 1))
-> > -		alloc_blocks = prev.br_blockcount << 1;
-> > -	else
-> > +	plen = prev.br_blockcount;
+On Fri, May 22, 2020 at 01:18:28PM -0400, Brian Foster wrote:
+> Signed-off-by: Brian Foster <bfoster@redhat.com>
+> ---
 > 
-> If prev is initialized by peeking the previous extent, then it looks
-> like the first iteration of this loop compares the immediately previous
-> extent with itself..
+> Darrick mentioned on IRC a few days ago that he'd seen an issue that
+> looked similar to the problem with the rmapbt based extent swap
+> algorithm when the associated inodes happen to bounce between extent and
+> btree format. That problem caused repeated bmapbt block allocations and
+> frees that exhausted the transaction block reservation across the
+> sequence of transaction rolls. The workaround for that was to use an
+> oversized block reservation, but that is not a generic or efficient
+> solution.
+> 
+> I was originally playing around with some hacks to set an optional base
+> block reservation on the transaction that we would attempt to replenish
+> across transaction roll sequences as the block reservation depletes, but
+> eventually noticed that there isn't much difference between stuffing
+> block frees in the transaction reservation counter vs. the delta counter
+> when lazy sb accounting is enabled (which is required for v5 supers). As
+> such, the following patch seems to address the rmapbt issue in my
+> isolated tests.
+> 
+> I think one tradeoff with this logic is that chains of rolling/freeing
+> transactions would now aggregate freed space until the final transaction
+> commits vs. as transactions roll. It's not immediately clear to me how
+> much of an issue that is, but it sounds a bit dicey when considering
+> things like truncates of large files. This behavior could still be tied
+> to a transaction flag to restrict its use to situations like rmapbt
+> swapext, however. Anyways, this is mostly untested outside of the extent
+> swap use case so I wanted to throw this on the list as an RFC for now
+> and see if anybody has thoughts or other ideas.
 
-D'oh.  I misported that when I was munging patches around.  Since we
-copy *icur to ncur, we can replace the previous peek against icur with a
-call to xfs_iext_prev_extent on ncur.
+Hmm, well, this /would/ fix the immediate problem of running out of
+block reservation, but I wonder if there are other weird subtleties.
+If we're nearly out of space and we're mounted with -odiscard and the
+disk is really slow at processing discard, can we encounter weird
+failure cases where we end up stuck waiting for the extent busy tree to
+say that one of our pingponged blocks is ok to use again?
 
-> > +	while (xfs_iext_prev_extent(ifp, &ncur, &got)) {
-> > +		if (plen > MAXEXTLEN / 2 ||
-> > +		    got.br_startoff + got.br_blockcount != prev.br_startoff ||
-> > +		    got.br_startblock + got.br_blockcount != prev.br_startblock)
-> 
-> We should probably check for nullstartblock (delalloc) extents
-> explicitly here rather than rely on the calculation to fail.
+In the meantime, I noticed that xfs/227 on a pmem fs (or possibly
+anything with synchronous writes?) and reflink+rmap enabled seemed to
+fail pretty consistently.  In a hastily done and incomprehensi{ve,ble}
+survey I noted that I couldn't make the disastrous pingpong happen if
+there were more than ~4 blocks in the bmapbt, so maybe this would help
+there.
 
-Ok.
-
-> > +			break;
-> > +		plen += got.br_blockcount;
-> 
-> 
-> 
-> > +		prev = got;
-> > +	}
-> > +	alloc_blocks = plen * 2;
-> 
-> Why do we replace the bit shifts with division/multiplication? I'd
-> prefer to see the former for obvious power of 2 operations, even if this
-> happens to be 32-bit arithmetic. I don't see any particular reason to
-> change it in this patch.
-
-Fair enough.  Thanks for catching those things.
+In unrelated news, I also tried fixing the log recovery defer ops chain
+transactions to absorb the unused block reservations that the
+xfs_*i_item_recover functions created, but that just made fdblocks be
+wrong.  But it didn't otherwise blow up! :P
 
 --D
 
 > Brian
 > 
-> > +	if (alloc_blocks > MAXEXTLEN)
-> >  		alloc_blocks = XFS_B_TO_FSB(mp, offset);
-> >  	if (!alloc_blocks)
-> >  		goto check_writeio;
-> > 
+>  fs/xfs/xfs_bmap_util.c | 11 -----------
+>  fs/xfs/xfs_trans.c     |  4 ++++
+>  2 files changed, 4 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+> index f37f5cc4b19f..74b3bad6c414 100644
+> --- a/fs/xfs/xfs_bmap_util.c
+> +++ b/fs/xfs/xfs_bmap_util.c
+> @@ -1628,17 +1628,6 @@ xfs_swap_extents(
+>  		 */
+>  		resblks = XFS_SWAP_RMAP_SPACE_RES(mp, ipnext, w);
+>  		resblks +=  XFS_SWAP_RMAP_SPACE_RES(mp, tipnext, w);
+> -
+> -		/*
+> -		 * Handle the corner case where either inode might straddle the
+> -		 * btree format boundary. If so, the inode could bounce between
+> -		 * btree <-> extent format on unmap -> remap cycles, freeing and
+> -		 * allocating a bmapbt block each time.
+> -		 */
+> -		if (ipnext == (XFS_IFORK_MAXEXT(ip, w) + 1))
+> -			resblks += XFS_IFORK_MAXEXT(ip, w);
+> -		if (tipnext == (XFS_IFORK_MAXEXT(tip, w) + 1))
+> -			resblks += XFS_IFORK_MAXEXT(tip, w);
+>  	}
+>  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0, 0, &tp);
+>  	if (error)
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index 28b983ff8b11..b421d27445c1 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -370,6 +370,10 @@ xfs_trans_mod_sb(
+>  			tp->t_blk_res_used += (uint)-delta;
+>  			if (tp->t_blk_res_used > tp->t_blk_res)
+>  				xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+> +		} else if (delta > 0 &&
+> +			   xfs_sb_version_haslazysbcount(&mp->m_sb)) {
+> +			tp->t_blk_res += delta;
+> +			delta = 0;
+>  		}
+>  		tp->t_fdblocks_delta += delta;
+>  		if (xfs_sb_version_haslazysbcount(&mp->m_sb))
+> -- 
+> 2.21.1
 > 
