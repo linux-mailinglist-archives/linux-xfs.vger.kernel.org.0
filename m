@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 455EF1DF84E
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 18:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 418B81DF851
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 May 2020 18:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgEWQuP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 May 2020 12:50:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46072 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgEWQuP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 12:50:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGlQwB074855;
-        Sat, 23 May 2020 16:49:47 GMT
+        id S1728025AbgEWQuV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 May 2020 12:50:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54090 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728141AbgEWQuV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 23 May 2020 12:50:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGgmdx166029;
+        Sat, 23 May 2020 16:49:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=+GLLkkq20CbJDfrJVLxF/aTpn0jqEbBs7OiogyC0XHQ=;
- b=KsDq33rIef2Q8Je0smDDz83Z6pk4oLJp9KQNidGpEL4Cf98Y4iMci3ORqAN5AP6rPJma
- 4e8ggl6dD3RE1TgPV9GiKGwD06uSwBd/UJhxVPGBlqb4MJJokJdtQxUHevypvrD/yKm9
- yW16CA/GptQ5bw8GyZcihsz6H7zMMaxeXqS8e6hWABY55WkELjaJt/ioj2Ol3nmWHLNJ
- Fajdw9/rk+qFyGQu4B2h9v4e4zTXpwbgFsxKmyOanpO+IBNhbktqUtHZd0Lenr6h2Dxy
- zaqaKF54j+fiLQuE3Q7idpWMLMXMoCV2vqkXiWMdtbf2lI2xaMpbq8VoLa1ZHLXmS7DE qQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 316u8qh85w-1
+ bh=Hot8KZSSw4YfVcYxKFbdndsjw5WsBJbctc4ukq1uqI8=;
+ b=xiddDvwQVhgew2Oku9cRQBc7SUPhMGwAD4Ee1dnfSE2r1D8NzGVemJ4Dj+jElS2tDRwZ
+ QUyeOHcjpqDtRebq05QTb5RycTq2x9DbRNJmbW4z4EntM3e6Ip0wb7H6ScvoLOAKlI7A
+ bBGZaZ4+LA2jb5rwjZPEbE8CJte6ghYViEJ3hSbBsmOaYTh9/o9b2haWlvZ6fPiQDg8t
+ H9d5KqSQ2g0bKrFc0RjSHL0Bpa1Scs65tDKetpEmGm+GJ81U/RWjcLIqbr2lxMP8xdzW
+ 3J1sgaBdWp7nTy+ZghKjssBewF4gubeLut0rnDsoX2ei6FxlPr/9CCscYyXj9EM6FEE2 Pw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 316vfn14d8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 23 May 2020 16:49:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGgdbk183316;
-        Sat, 23 May 2020 16:49:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 316rxrvrhr-1
+        Sat, 23 May 2020 16:49:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04NGnLPt169015;
+        Sat, 23 May 2020 16:49:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 316u5huss0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 May 2020 16:49:47 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04NGnkZ3006609;
-        Sat, 23 May 2020 16:49:46 GMT
+        Sat, 23 May 2020 16:49:53 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04NGnr6e029996;
+        Sat, 23 May 2020 16:49:53 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 23 May 2020 09:49:46 -0700
-Subject: [PATCH 2/4] xfs: measure all contiguous previous extents for prealloc
- size
+        with ESMTP ; Sat, 23 May 2020 09:49:52 -0700
+Subject: [PATCH 3/4] xfs: refactor xfs_iomap_prealloc_size
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, bfoster@redhat.com
-Date:   Sat, 23 May 2020 09:49:45 -0700
-Message-ID: <159025258515.493629.3176219395358340970.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, bfoster@redhat.com
+Date:   Sat, 23 May 2020 09:49:51 -0700
+Message-ID: <159025259150.493629.14462334296980108072.stgit@magnolia>
 In-Reply-To: <159025257178.493629.12621189512718182426.stgit@magnolia>
 References: <159025257178.493629.12621189512718182426.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,16 +55,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- phishscore=0 spamscore=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005230138
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=1 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005230139
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=1
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005230138
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=1
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005230138
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,98 +72,160 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we're estimating a new speculative preallocation length for an
-extending write, we should walk backwards through the extent list to
-determine the number of number of blocks that are physically and
-logically contiguous with the write offset, and use that as an input to
-the preallocation size computation.
+Refactor xfs_iomap_prealloc_size to be the function that dynamically
+computes the per-file preallocation size by moving the allocsize= case
+to the caller.  Break up the huge comment preceding the function to
+annotate the relevant parts of the code, and remove the impossible
+check_writeio case.
 
-This way, preallocation length is truly measured by the effectiveness of
-the allocator in giving us contiguous allocations without being
-influenced by the state of a given extent.  This fixes both the problem
-where ZERO_RANGE within an EOF can reduce preallocation, and prevents
-the unnecessary shrinkage of preallocation when delalloc extents are
-turned into unwritten extents.
-
-This was found as a regression in xfs/014 after changing delalloc writes
-to create unwritten extents during writeback.
-
+Suggested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_iomap.c |   40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ fs/xfs/xfs_iomap.c |   83 ++++++++++++++++++++++------------------------------
+ 1 file changed, 35 insertions(+), 48 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index ac970b13b1f8..de990365397e 100644
+index de990365397e..ad695c77a472 100644
 --- a/fs/xfs/xfs_iomap.c
 +++ b/fs/xfs/xfs_iomap.c
-@@ -377,15 +377,17 @@ xfs_iomap_prealloc_size(
- 	loff_t			count,
- 	struct xfs_iext_cursor	*icur)
- {
-+	struct xfs_iext_cursor	ncur = *icur;
-+	struct xfs_bmbt_irec	prev, got;
- 	struct xfs_mount	*mp = ip->i_mount;
- 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
- 	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
--	struct xfs_bmbt_irec	prev;
--	int			shift = 0;
- 	int64_t			freesp;
- 	xfs_fsblock_t		qblocks;
--	int			qshift = 0;
- 	xfs_fsblock_t		alloc_blocks = 0;
-+	xfs_extlen_t		plen;
-+	int			shift = 0;
-+	int			qshift = 0;
+@@ -352,22 +352,10 @@ xfs_quota_calc_throttle(
+ }
  
- 	if (offset + count <= XFS_ISIZE(ip))
+ /*
+- * If we are doing a write at the end of the file and there are no allocations
+- * past this one, then extend the allocation out to the file system's write
+- * iosize.
+- *
+  * If we don't have a user specified preallocation size, dynamically increase
+  * the preallocation size as the size of the file grows.  Cap the maximum size
+  * at a single extent or less if the filesystem is near full. The closer the
+- * filesystem is to full, the smaller the maximum prealocation.
+- *
+- * As an exception we don't do any preallocation at all if the file is smaller
+- * than the minimum preallocation and we are using the default dynamic
+- * preallocation scheme, as it is likely this is the only write to the file that
+- * is going to be done.
+- *
+- * We clean up any extra space left over when the file is closed in
+- * xfs_inactive().
++ * filesystem is to being full, the smaller the maximum preallocation.
+  */
+ STATIC xfs_fsblock_t
+ xfs_iomap_prealloc_size(
+@@ -389,41 +377,28 @@ xfs_iomap_prealloc_size(
+ 	int			shift = 0;
+ 	int			qshift = 0;
+ 
+-	if (offset + count <= XFS_ISIZE(ip))
+-		return 0;
+-
+-	if (!(mp->m_flags & XFS_MOUNT_ALLOCSIZE) &&
+-	    (XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_allocsize_blocks)))
++	/*
++	 * As an exception we don't do any preallocation at all if the file is
++	 * smaller than the minimum preallocation and we are using the default
++	 * dynamic preallocation scheme, as it is likely this is the only write
++	 * to the file that is going to be done.
++	 */
++	if (XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_allocsize_blocks))
  		return 0;
-@@ -400,7 +402,7 @@ xfs_iomap_prealloc_size(
+ 
+ 	/*
+-	 * If an explicit allocsize is set, the file is small, or we
+-	 * are writing behind a hole, then use the minimum prealloc:
++	 * Use the minimum preallocation size for small files or if we are
++	 * writing right after a hole.
  	 */
- 	if ((mp->m_flags & XFS_MOUNT_ALLOCSIZE) ||
- 	    XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_dalign) ||
--	    !xfs_iext_peek_prev_extent(ifp, icur, &prev) ||
-+	    !xfs_iext_prev_extent(ifp, &ncur, &prev) ||
+-	if ((mp->m_flags & XFS_MOUNT_ALLOCSIZE) ||
+-	    XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_dalign) ||
++	if (XFS_ISIZE(ip) < XFS_FSB_TO_B(mp, mp->m_dalign) ||
+ 	    !xfs_iext_prev_extent(ifp, &ncur, &prev) ||
  	    prev.br_startoff + prev.br_blockcount < offset_fsb)
  		return mp->m_allocsize_blocks;
  
-@@ -413,16 +415,28 @@ xfs_iomap_prealloc_size(
- 	 * preallocation size.
- 	 *
- 	 * If the extent is a hole, then preallocation is essentially disabled.
--	 * Otherwise we take the size of the preceding data extent as the basis
--	 * for the preallocation size. If the size of the extent is greater than
--	 * half the maximum extent length, then use the current offset as the
--	 * basis. This ensures that for large files the preallocation size
--	 * always extends to MAXEXTLEN rather than falling short due to things
--	 * like stripe unit/width alignment of real extents.
-+	 * Otherwise we take the size of the preceding data extents as the basis
-+	 * for the preallocation size. Note that we don't care if the previous
-+	 * extents are written or not.
-+	 *
+ 	/*
+-	 * Determine the initial size of the preallocation. We are beyond the
+-	 * current EOF here, but we need to take into account whether this is
+-	 * a sparse write or an extending write when determining the
+-	 * preallocation size.  Hence we need to look up the extent that ends
+-	 * at the current write offset and use the result to determine the
+-	 * preallocation size.
+-	 *
+-	 * If the extent is a hole, then preallocation is essentially disabled.
+-	 * Otherwise we take the size of the preceding data extents as the basis
+-	 * for the preallocation size. Note that we don't care if the previous
+-	 * extents are written or not.
+-	 *
+-	 * If the size of the extents is greater than half the maximum extent
+-	 * length, then use the current offset as the basis. This ensures that
+-	 * for large files the preallocation size always extends to MAXEXTLEN
+-	 * rather than falling short due to things like stripe unit/width
+-	 * alignment of real extents.
++	 * Take the size of the preceding data extents as the basis for the
++	 * preallocation size. Note that we don't care if the previous extents
++	 * are written or not.
+ 	 */
+ 	plen = prev.br_blockcount;
+ 	while (xfs_iext_prev_extent(ifp, &ncur, &got)) {
+@@ -435,19 +410,25 @@ xfs_iomap_prealloc_size(
+ 		plen += got.br_blockcount;
+ 		prev = got;
+ 	}
++
++	/*
 +	 * If the size of the extents is greater than half the maximum extent
-+	 * length, then use the current offset as the basis. This ensures that
++	 * length, then use the current offset as the basis.  This ensures that
 +	 * for large files the preallocation size always extends to MAXEXTLEN
 +	 * rather than falling short due to things like stripe unit/width
 +	 * alignment of real extents.
- 	 */
--	if (prev.br_blockcount <= (MAXEXTLEN >> 1))
--		alloc_blocks = prev.br_blockcount << 1;
--	else
-+	plen = prev.br_blockcount;
-+	while (xfs_iext_prev_extent(ifp, &ncur, &got)) {
-+		if (plen > MAXEXTLEN / 2 ||
-+		    isnullstartblock(got.br_startblock) ||
-+		    got.br_startoff + got.br_blockcount != prev.br_startoff ||
-+		    got.br_startblock + got.br_blockcount != prev.br_startblock)
-+			break;
-+		plen += got.br_blockcount;
-+		prev = got;
-+	}
-+	alloc_blocks = plen << 1;
-+	if (alloc_blocks > MAXEXTLEN)
++	 */
+ 	alloc_blocks = plen << 1;
+ 	if (alloc_blocks > MAXEXTLEN)
  		alloc_blocks = XFS_B_TO_FSB(mp, offset);
- 	if (!alloc_blocks)
- 		goto check_writeio;
+-	if (!alloc_blocks)
+-		goto check_writeio;
+ 	qblocks = alloc_blocks;
+ 
+ 	/*
+ 	 * MAXEXTLEN is not a power of two value but we round the prealloc down
+ 	 * to the nearest power of two value after throttling. To prevent the
+-	 * round down from unconditionally reducing the maximum supported prealloc
+-	 * size, we round up first, apply appropriate throttling, round down and
+-	 * cap the value to MAXEXTLEN.
++	 * round down from unconditionally reducing the maximum supported
++	 * prealloc size, we round up first, apply appropriate throttling,
++	 * round down and cap the value to MAXEXTLEN.
+ 	 */
+ 	alloc_blocks = XFS_FILEOFF_MIN(roundup_pow_of_two(MAXEXTLEN),
+ 				       alloc_blocks);
+@@ -508,7 +489,6 @@ xfs_iomap_prealloc_size(
+ 	 */
+ 	while (alloc_blocks && alloc_blocks >= freesp)
+ 		alloc_blocks >>= 4;
+-check_writeio:
+ 	if (alloc_blocks < mp->m_allocsize_blocks)
+ 		alloc_blocks = mp->m_allocsize_blocks;
+ 	trace_xfs_iomap_prealloc_size(ip, alloc_blocks, shift,
+@@ -975,9 +955,16 @@ xfs_buffered_write_iomap_begin(
+ 	if (error)
+ 		goto out_unlock;
+ 
+-	if (eof) {
+-		prealloc_blocks = xfs_iomap_prealloc_size(ip, allocfork, offset,
+-				count, &icur);
++	if (eof && offset + count > XFS_ISIZE(ip)) {
++		/*
++		 * Determine the initial size of the preallocation.
++		 * We clean up any extra preallocation when the file is closed.
++		 */
++		if (mp->m_flags & XFS_MOUNT_ALLOCSIZE)
++			prealloc_blocks = mp->m_allocsize_blocks;
++		else
++			prealloc_blocks = xfs_iomap_prealloc_size(ip, allocfork,
++						offset, count, &icur);
+ 		if (prealloc_blocks) {
+ 			xfs_extlen_t	align;
+ 			xfs_off_t	end_offset;
 
