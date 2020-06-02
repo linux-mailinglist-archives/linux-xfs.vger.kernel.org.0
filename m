@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C72E1EB491
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:29:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE44C1EB477
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgFBE3k (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:29:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48042 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFBE3k (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:29:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524ILne121680;
-        Tue, 2 Jun 2020 04:27:36 GMT
+        id S1725900AbgFBEZr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:25:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33746 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgFBEZr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:25:47 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524Hvo4107049;
+        Tue, 2 Jun 2020 04:25:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GX4OYNA+UG6kfHNmM9f1YoQqzYOa7eOJvmrVvIPngh8=;
- b=So4P20Q1+6LEzj8PTTbokdDxWPIogqAqunIcZr/GCPHs812lIi41kLjgoZBUa9M1alce
- X3dlvOm1/Nr4+6XY1n8XaLukoCN6YJVd2ubWJwHHvsN4/FPo6qUdWICgAw+NFXNYi0qu
- 8Myt8pJbwBmC8Ojn5b4e1xcedBceinTmAj3PyqM8tsXfMckXBhYIhqDGLF5VBbmF8bGq
- p/yGo0ydNa1TOwYEXo+HYjTdfFEVLeDNEtFFefk4DN89nJBhQ39kzyzVHs37lNq4x7Xx
- uLFHHNdJ1s88VESkcsqgEQ28N4NGW5uuq8rTHTPrY6sQINSlwjWa8jVmLtSFS0YtZDdi NA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31d5qr20rt-1
+ bh=P+U+IoRBI7cVMkghKY1uOtC1GtaFENvsDXFcVl545yk=;
+ b=XaxqIZefP/HtnR7tdkcIg1oiG9MMLLLsikJkgmRJJ+n6HQb2XFxlcrQCkZDbwZQwz8nq
+ 2xPtxaOcuJ2SrpsDIY1BZMpVpCdeevQQhemVeUjltRm0tX+NNtxmslkTWbTTtyfnACX1
+ pBb/ask5UNhjCpcfIcCo/6heFAGu3Sh01dfz62CUAqYx3ceN0/tDkAHG2WWK+lQXzVaZ
+ roBAjuo1FyX2nD819YZDOWMW2+p3zX/YtM1W3NcSLSK7hgQNxfItTudYHoFeYMTk+5QZ
+ nOsgrVEGIk27nKjab4UHXLfgljtSH4FeFSYAEvMgk+yp9fx1U+1IYNgsRM71EwA0x0/x 4w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31bfem1t8h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 04:27:36 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HuYc126657;
-        Tue, 2 Jun 2020 04:25:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31c25mnfu6-1
+        Tue, 02 Jun 2020 04:25:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524JMRD102175;
+        Tue, 2 Jun 2020 04:25:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31c12ng417-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 04:25:35 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0524PZr8020900;
-        Tue, 2 Jun 2020 04:25:35 GMT
+        Tue, 02 Jun 2020 04:25:42 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524PfkR020486;
+        Tue, 2 Jun 2020 04:25:41 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jun 2020 21:25:35 -0700
-Subject: [PATCH 05/17] xfs_repair: fix bnobt and refcountbt record order
- checks
+        with ESMTP ; Mon, 01 Jun 2020 21:25:41 -0700
+Subject: [PATCH 06/17] xfs_repair: check for out-of-order inobt records
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Mon, 01 Jun 2020 21:25:34 -0700
-Message-ID: <159107193410.313760.7458420982893800558.stgit@magnolia>
+Date:   Mon, 01 Jun 2020 21:25:40 -0700
+Message-ID: <159107194026.313760.17246981571184212290.stgit@magnolia>
 In-Reply-To: <159107190111.313760.8056083399475334567.stgit@magnolia>
 References: <159107190111.313760.8056083399475334567.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,15 +53,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006020024
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
- mlxscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 adultscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2004280000 definitions=main-2006020024
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
@@ -71,41 +70,42 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The bnobt and refcountbt scanners attempt to check that records are in
-the correct order.  However, the lastblock variable in both functions
-ought to be set to the end of the previous record (instead of the start)
-because otherwise we fail to catch overlapping records, which are not
-allowed in either btree type.
-
-Found by running xfs/410 with recs[1].blockcount = middlebit.
+Make sure that the inode btree records are in order.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- repair/scan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ repair/scan.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 
 diff --git a/repair/scan.c b/repair/scan.c
-index 1ddb5763..2d156d64 100644
+index 2d156d64..7c46ab89 100644
 --- a/repair/scan.c
 +++ b/repair/scan.c
-@@ -699,7 +699,7 @@ _("%s freespace btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 	"out-of-order bno btree record %d (%u %u) block %u/%u\n"),
- 						i, b, len, agno, bno);
- 				} else {
--					lastblock = b;
-+					lastblock = end - 1;
- 				}
- 			} else {
- 				agcnts->fdblocks += len;
-@@ -1396,7 +1396,7 @@ _("extent (%u/%u) len %u claimed, state is %d\n"),
- 	"out-of-order %s btree record %d (%u %u) block %u/%u\n"),
- 					name, i, b, len, agno, bno);
- 			} else {
--				lastblock = b;
-+				lastblock = end - 1;
- 			}
+@@ -1947,6 +1947,7 @@ scan_inobt(
+ 	const struct xfs_buf_ops *ops)
+ {
+ 	struct aghdr_cnts	*agcnts = priv;
++	xfs_agino_t		lastino = 0;
+ 	int			i;
+ 	int			numrecs;
+ 	int			state;
+@@ -2029,7 +2030,16 @@ _("inode btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 		 * the block.  skip processing of bogus records.
+ 		 */
+ 		for (i = 0; i < numrecs; i++) {
++			xfs_agino_t	startino;
++
+ 			freecount = inorec_get_freecount(mp, &rp[i]);
++			startino = be32_to_cpu(rp[i].ir_startino);
++			if (i > 0 && startino <= lastino)
++				do_warn(_(
++	"out-of-order ino btree record %d (%u) block %u/%u\n"),
++						i, startino, agno, bno);
++			else
++				lastino = startino + XFS_INODES_PER_CHUNK - 1;
  
- 			/* Is this record mergeable with the last one? */
+ 			if (magic == XFS_IBT_MAGIC ||
+ 			    magic == XFS_IBT_CRC_MAGIC) {
 
