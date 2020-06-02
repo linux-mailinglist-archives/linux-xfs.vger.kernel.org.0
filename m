@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA281EB47E
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC1B1EB475
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:25:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgFBE1O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:27:14 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34406 "EHLO
+        id S1725787AbgFBEZY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:25:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33526 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgFBE1O (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:27:14 -0400
+        with ESMTP id S1725781AbgFBEZY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:25:24 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HODo106930;
-        Tue, 2 Jun 2020 04:27:11 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HLmn106921;
+        Tue, 2 Jun 2020 04:25:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Vd29LH/YNdn0VZY/kCU+SsC+OGiJthMBLsLp9uCiEIo=;
- b=K+2csg9o+PxwePGiWcqGGdEpe0vlcVAZhjrBYo/OG1aG0kpht+3AW4L6sxjungcyP51w
- rz5lI83CBMUO2BoBJEM78An2S4JhFD7kW1TAoMcc440H9g2+RZYVPgmMIBPcYaMgTTIf
- /2dQx1nKswmca7/Yvms18Uen/uupSDUGoP5Sud/LBR+WoDqcVsbaqNUjCfT6sajEf3/g
- lvCn7oleGn44NifrGTjtaQPTk7GMMEgvXz0/kjMshtkcI5CxoHBF1a6NY+PV9/+HAuKc
- oDP+OJud8PrENggjIjcbDel4ELClc0+CfLzEcNN4gy3Fl8+Empu4UHxLdL3iYDiZpjNd Gw== 
+ bh=YDcCzvPWwIOrFQb6qFvuy7GbWhGiPNN5BAHmj0HSvSs=;
+ b=bfgI+zi3xlJm7+sE+wr3eZGYmViIAUe/dmerJt9ZB7gpAJVFPUK5dpRVx3lNkSsKekxu
+ y4A9noLPJYgHkIXrvvbjjdjSwzujeTpq/snTmT3+Xb6v0BYrPPnuN2yqakm24fyi4hZV
+ o1qZ79XMchkglrfFI6omJloi+SYX056A71YIZ0cCDTSPLIOrVzAW3m/FG8S72D4+jQdp
+ iNByJjmzjj5VDm4CCXA6nApVJbWoIpiojRXwfSRuFE1JreJ/cSdpY/LA7AvVCJYXVWFZ
+ Zh5ZLtWgncdHQkLCW3Qb0aJjorDkAKdsxhGtUpPUn2Wxpbw1Ogh1FkCGizP1l8Mr5jVF BQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31bfem1tb6-1
+        by aserp2120.oracle.com with ESMTP id 31bfem1t7r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 04:27:11 +0000
+        Tue, 02 Jun 2020 04:25:18 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HwW2040219;
-        Tue, 2 Jun 2020 04:25:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31c18sgg0f-1
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524I1fd040399;
+        Tue, 2 Jun 2020 04:25:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31c18sgg34-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 04:25:11 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524PADL020245;
-        Tue, 2 Jun 2020 04:25:10 GMT
+        Tue, 02 Jun 2020 04:25:17 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0524PGQd020761;
+        Tue, 2 Jun 2020 04:25:16 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jun 2020 21:25:10 -0700
-Subject: [PATCH 01/17] xfs_quota: fix unsigned int id comparisons
+        with ESMTP ; Mon, 01 Jun 2020 21:25:16 -0700
+Subject: [PATCH 02/17] xfs_repair: fix missing dir buffer corruption checks
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 01 Jun 2020 21:25:07 -0700
-Message-ID: <159107190741.313760.11195530788081068638.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 01 Jun 2020 21:25:15 -0700
+Message-ID: <159107191545.313760.9884644443421173377.stgit@magnolia>
 In-Reply-To: <159107190111.313760.8056083399475334567.stgit@magnolia>
 References: <159107190111.313760.8056083399475334567.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -70,67 +70,120 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Fix compiler warnings about unsigned int comparisons by replacing them
-with an explicit check for the one possible invalid value (-1U).
-id_from_string sets exitcode to nonzero when it sees this value, so the
-call sites don't have to do that.
+The da_read_buf() function operates in "salvage" mode, which means that
+if the verifiers fail, it will return a buffer with b_error set.  The
+callers of da_read_buf, however, do not adequately check for verifier
+errors, which means that repair can fail to flag a corrupt filesystem.
 
-Coverity-id: 1463855, 1463856, 1463857
-Fixes: 67a73d6139d0 ("xfs_quota: refactor code to generate id from name")
-Fixes: 36dc471cc9bb ("xfs_quota: allow individual timer extension")
+Fix the callers to do this properly.  The dabtree block walker and the
+dabtree path checker functions to complain any time the da node / leafn
+verifiers fail.  Fix the directory block walking functions to complain
+about EFSCORRUPTED, since they already dealt with EFSBADCRC.
+
+Found by running xfs/496 against lhdr.stale = middlebit.
+
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- quota/edit.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ repair/da_util.c |   25 ++++++++++++++++---------
+ repair/dir2.c    |   21 +++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 9 deletions(-)
 
 
-diff --git a/quota/edit.c b/quota/edit.c
-index cf9508bf..01d358f7 100644
---- a/quota/edit.c
-+++ b/quota/edit.c
-@@ -307,11 +307,11 @@ limit_f(
+diff --git a/repair/da_util.c b/repair/da_util.c
+index 5061880f..7239c2e2 100644
+--- a/repair/da_util.c
++++ b/repair/da_util.c
+@@ -134,6 +134,15 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
+ 			goto error_out;
+ 		}
  
- 
- 	id = id_from_string(name, type);
--	if (id >= 0)
--		set_limits(id, type, mask, fs_path->fs_name,
--			   &bsoft, &bhard, &isoft, &ihard, &rtbsoft, &rtbhard);
--	else
--		exitcode = -1;
-+	if (id == -1)
-+		return 0;
++		/* corrupt leafn/node; rebuild the dir. */
++		if (bp->b_error == -EFSBADCRC || bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
++				FORKNAME(whichfork), bno, da_cursor->ino);
++			libxfs_buf_relse(bp);
++			goto error_out;
++		}
 +
-+	set_limits(id, type, mask, fs_path->fs_name,
-+		   &bsoft, &bhard, &isoft, &ihard, &rtbsoft, &rtbhard);
- 	return 0;
- }
+ 		node = bp->b_addr;
+ 		libxfs_da3_node_hdr_from_disk(mp, &nodehdr, node);
  
-@@ -545,9 +545,10 @@ timer_f(
- 	if (name)
- 		id = id_from_string(name, type);
+@@ -160,15 +169,6 @@ _("bad %s magic number 0x%x in inode %" PRIu64 " bno = %u\n"),
+ 			goto error_out;
+ 		}
  
--	if (id >= 0)
--		set_timer(id, type, mask, fs_path->fs_name, value);
-+	if (id == -1)
-+		return 0;
+-		/* corrupt node; rebuild the dir. */
+-		if (bp->b_error == -EFSBADCRC || bp->b_error == -EFSCORRUPTED) {
+-			libxfs_buf_relse(bp);
+-			do_warn(
+-_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
+-				FORKNAME(whichfork), bno, da_cursor->ino);
+-			goto error_out;
+-		}
+-
+ 		if (nodehdr.count > geo->node_ents) {
+ 			do_warn(
+ _("bad %s record count in inode %" PRIu64 ", count = %d, max = %d\n"),
+@@ -562,6 +562,13 @@ _("can't read %s block %u for inode %" PRIu64 "\n"),
+ 				FORKNAME(whichfork), dabno, cursor->ino);
+ 			return 1;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED || bp->b_error == -EFSBADCRC) {
++			do_warn(
++_("corrupt %s tree block %u for inode %" PRIu64 "\n"),
++				FORKNAME(whichfork), dabno, cursor->ino);
++			libxfs_buf_relse(bp);
++			return 1;
++		}
  
-+	set_timer(id, type, mask, fs_path->fs_name, value);
- 	return 0;
- }
- 
-@@ -642,11 +643,10 @@ warn_f(
+ 		newnode = bp->b_addr;
+ 		libxfs_da3_node_hdr_from_disk(mp, &nodehdr, newnode);
+diff --git a/repair/dir2.c b/repair/dir2.c
+index cbbce601..b374bc7b 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -983,6 +983,13 @@ _("can't read block %u for directory inode %" PRIu64 "\n"),
+ 			mp->m_dir_geo->datablk, ino);
+ 		return 1;
  	}
- 
- 	id = id_from_string(name, type);
--	if (id >= 0)
--		set_warnings(id, type, mask, fs_path->fs_name, value);
--	else
--		exitcode = -1;
-+	if (id == -1)
-+		return 0;
- 
-+	set_warnings(id, type, mask, fs_path->fs_name, value);
- 	return 0;
- }
- 
++	if (bp->b_error == -EFSCORRUPTED) {
++		do_warn(
++_("corrupt directory block %u for inode %" PRIu64 "\n"),
++			mp->m_dir_geo->datablk, ino);
++		libxfs_buf_relse(bp);
++		return 1;
++	}
+ 	/*
+ 	 * Verify the block
+ 	 */
+@@ -1122,6 +1129,13 @@ _("can't read file block %u for directory inode %" PRIu64 "\n"),
+ 				da_bno, ino);
+ 			goto error_out;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt directory leafn block %u for inode %" PRIu64 "\n"),
++				da_bno, ino);
++			libxfs_buf_relse(bp);
++			goto error_out;
++		}
+ 		leaf = bp->b_addr;
+ 		libxfs_dir2_leaf_hdr_from_disk(mp, &leafhdr, leaf);
+ 		/*
+@@ -1324,6 +1338,13 @@ _("can't read block %" PRIu64 " for directory inode %" PRIu64 "\n"),
+ 				dbno, ino);
+ 			continue;
+ 		}
++		if (bp->b_error == -EFSCORRUPTED) {
++			do_warn(
++_("corrupt directory data block %lu for inode %" PRIu64 "\n"),
++				dbno, ino);
++			libxfs_buf_relse(bp);
++			continue;
++		}
+ 		data = bp->b_addr;
+ 		if (!(be32_to_cpu(data->magic) == XFS_DIR2_DATA_MAGIC ||
+ 		      be32_to_cpu(data->magic) == XFS_DIR3_DATA_MAGIC))
 
