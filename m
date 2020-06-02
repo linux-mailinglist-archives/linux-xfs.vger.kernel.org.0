@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B82DF1EB492
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 553151EB478
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgFBE3w (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:29:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35814 "EHLO
+        id S1725793AbgFBEZ7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:25:59 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33840 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgFBE3w (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:29:52 -0400
+        with ESMTP id S1725781AbgFBEZ7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:25:59 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524GvGD106525;
-        Tue, 2 Jun 2020 04:27:48 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524Gfsg106493;
+        Tue, 2 Jun 2020 04:25:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=KJZzEwctKaE+IzYXEBAXzxTx1R5uomN41GZbLM6VwmI=;
- b=YW/EHLnDYdSm7O6cfoUwbjlo1XPw/93BXdGbQBPJSGGTlt5bfLhFlbZt9sFZBow6fYQt
- CulprSqMeznchLkG4foCyuqEa8Irp+xi95rNoHTmJXuHPFpyb4dg8MkfmD0sH/MPyw3d
- MdRAjBjhklHNQvVMLXU/T4lt6B15jD4tbwIcoHpbmH/ct+8GDy7GvTEjIZ9VHPuwSBS0
- gATH50b5n2RLo90d8yHm85Qa5I0gP60TZDMyuVwTFd91GzUbAcs3R0kVs52M4a0sBeMx
- Env2kiSZLXwfne4/1i2WAISnN0Fr7OTAzS/v0MDxJWeNaSA7jjaZ6JvRyUQooBU2XRAp yQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31bfem1tc9-1
+ bh=FTGHLV7G+ugo0tkrFuj4rLHZRCw962nJ8h/xSYiWln0=;
+ b=HB+qM4bm+6ghzuCgzdTVXBDd6B3RcZ5o0PZfDawy5fJ2iDyxYAsbsQn6XGYtAkTKodJR
+ mPKRWpUhOAZ8svNmjhKJeRvlaiKGIFLUcXRDX/hg5JUBQdZqAmxbfNdTvcOVKerFODKT
+ fBawLxM8XK5wqwwdvIV2lOTkxdwLHhPZJz7Kz0MDOEUkLrto3AOAWQud0SbqJVjB3JrF
+ BsHPQChhWr/57ZLJvuJ1PAXOINTrSsJ9Pfi7sGdJAkty6zGqThBG+PIVHzHGEN0P42lk
+ ftDpnXPXLpABES5OB1AmdZhewDyvoYRLnkTLIrjb+BlprmfTUJm4E7Ju/gxFq/kf1XTL xg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31bfem1t8r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 04:27:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HuhQ126583;
-        Tue, 2 Jun 2020 04:25:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31c25mng7q-1
+        Tue, 02 Jun 2020 04:25:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524Hvdq040061;
+        Tue, 2 Jun 2020 04:25:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31c18sggfv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 04:25:48 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524Pl3v019672;
-        Tue, 2 Jun 2020 04:25:47 GMT
+        Tue, 02 Jun 2020 04:25:54 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524PsuT020597;
+        Tue, 2 Jun 2020 04:25:54 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jun 2020 21:25:47 -0700
-Subject: [PATCH 07/17] xfs_repair: fix rmapbt record order check
+        with ESMTP ; Mon, 01 Jun 2020 21:25:53 -0700
+Subject: [PATCH 08/17] xfs_repair: tag inobt vs finobt errors properly
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Mon, 01 Jun 2020 21:25:46 -0700
-Message-ID: <159107194648.313760.17092174816202906919.stgit@magnolia>
+Date:   Mon, 01 Jun 2020 21:25:52 -0700
+Message-ID: <159107195269.313760.9235612924680444467.stgit@magnolia>
 In-Reply-To: <159107190111.313760.8056083399475334567.stgit@magnolia>
 References: <159107190111.313760.8056083399475334567.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,8 +53,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006020024
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
@@ -70,72 +70,98 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The rmapbt record order checks here don't quite work properly.  For
-non-shared filesystems, we fail to check that the startblock of the nth
-record comes entirely after the previous record.
-
-However, for filesystems with shared blocks (reflink) we correctly check
-that the startblock/owner/offset of the nth record comes after the
-previous one.
-
-Therefore, make the reflink fs checks use "laststartblock" to preserve
-that functionality while making the non-reflink fs checks use
-"lastblock" to fix the problem outlined above.
+Amend the generic inode btree block scanner function to tag correctly
+which tree it's complaining about.  Previously, dubious finobt headers
+would be attributed to the "inode btree", which is at best ambiguous
+and misleading at worst.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- repair/scan.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ repair/scan.c |   36 ++++++++++++++++++++++++++----------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
 
 
 diff --git a/repair/scan.c b/repair/scan.c
-index 7c46ab89..7508f7e8 100644
+index 7508f7e8..fff54ecf 100644
 --- a/repair/scan.c
 +++ b/repair/scan.c
-@@ -925,15 +925,15 @@ struct rmap_priv {
- static bool
- rmap_in_order(
- 	xfs_agblock_t	b,
--	xfs_agblock_t	lastblock,
-+	xfs_agblock_t	laststartblock,
- 	uint64_t	owner,
- 	uint64_t	lastowner,
- 	uint64_t	offset,
- 	uint64_t	lastoffset)
+@@ -1949,6 +1949,7 @@ scan_inobt(
+ 	const struct xfs_buf_ops *ops)
  {
--	if (b > lastblock)
-+	if (b > laststartblock)
- 		return true;
--	else if (b < lastblock)
-+	else if (b < laststartblock)
- 		return false;
- 
- 	if (owner > lastowner)
-@@ -964,6 +964,7 @@ scan_rmapbt(
- 	int			hdr_errors = 0;
+ 	struct aghdr_cnts	*agcnts = priv;
++	char			*name;
+ 	xfs_agino_t		lastino = 0;
+ 	int			i;
  	int			numrecs;
- 	int			state;
-+	xfs_agblock_t		laststartblock = 0;
- 	xfs_agblock_t		lastblock = 0;
- 	uint64_t		lastowner = 0;
- 	uint64_t		lastoffset = 0;
-@@ -1101,14 +1102,15 @@ _("%s rmap btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
- 			/* Check for out of order records. */
- 			if (i == 0) {
- advance:
--				lastblock = b;
-+				laststartblock = b;
-+				lastblock = end - 1;
- 				lastowner = owner;
- 				lastoffset = offset;
- 			} else {
- 				bool bad;
+@@ -1961,17 +1962,32 @@ scan_inobt(
  
- 				if (xfs_sb_version_hasreflink(&mp->m_sb))
--					bad = !rmap_in_order(b, lastblock,
-+					bad = !rmap_in_order(b, laststartblock,
- 							owner, lastowner,
- 							offset, lastoffset);
- 				else
+ 	hdr_errors = 0;
+ 
++	switch (magic) {
++	case XFS_FIBT_MAGIC:
++	case XFS_FIBT_CRC_MAGIC:
++		name = "fino";
++		break;
++	case XFS_IBT_MAGIC:
++	case XFS_IBT_CRC_MAGIC:
++		name = "ino";
++		break;
++	default:
++		name = "(unknown)";
++		assert(0);
++		break;
++	}
++
+ 	if (be32_to_cpu(block->bb_magic) != magic) {
+-		do_warn(_("bad magic # %#x in inobt block %d/%d\n"),
+-			be32_to_cpu(block->bb_magic), agno, bno);
++		do_warn(_("bad magic # %#x in %sbt block %d/%d\n"),
++			be32_to_cpu(block->bb_magic), name, agno, bno);
+ 		hdr_errors++;
+ 		bad_ino_btree = 1;
+ 		if (suspect)
+ 			return;
+ 	}
+ 	if (be16_to_cpu(block->bb_level) != level) {
+-		do_warn(_("expected level %d got %d in inobt block %d/%d\n"),
+-			level, be16_to_cpu(block->bb_level), agno, bno);
++		do_warn(_("expected level %d got %d in %sbt block %d/%d\n"),
++			level, be16_to_cpu(block->bb_level), name, agno, bno);
+ 		hdr_errors++;
+ 		bad_ino_btree = 1;
+ 		if (suspect)
+@@ -1993,8 +2009,8 @@ scan_inobt(
+ 	default:
+ 		set_bmap(agno, bno, XR_E_MULT);
+ 		do_warn(
+-_("inode btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+-			state, agno, bno, suspect);
++_("%sbt btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
++			name, state, agno, bno, suspect);
+ 	}
+ 
+ 	numrecs = be16_to_cpu(block->bb_numrecs);
+@@ -2016,8 +2032,8 @@ _("inode btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 
+ 		if (hdr_errors)  {
+ 			bad_ino_btree = 1;
+-			do_warn(_("dubious inode btree block header %d/%d\n"),
+-				agno, bno);
++			do_warn(_("dubious %sbt btree block header %d/%d\n"),
++				name, agno, bno);
+ 			suspect++;
+ 		}
+ 
+@@ -2038,8 +2054,8 @@ _("inode btree block claimed (state %d), agno %d, bno %d, suspect %d\n"),
+ 			startino = be32_to_cpu(rp[i].ir_startino);
+ 			if (i > 0 && startino <= lastino)
+ 				do_warn(_(
+-	"out-of-order ino btree record %d (%u) block %u/%u\n"),
+-						i, startino, agno, bno);
++	"out-of-order %s btree record %d (%u) block %u/%u\n"),
++						name, i, startino, agno, bno);
+ 			else
+ 				lastino = startino + XFS_INODES_PER_CHUNK - 1;
+ 
 
