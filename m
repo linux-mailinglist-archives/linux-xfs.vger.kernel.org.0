@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA80B1EB495
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8FD41EB489
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:28:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbgFBEa0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:30:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48430 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFBEa0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:30:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524I2J6121433;
-        Tue, 2 Jun 2020 04:28:21 GMT
+        id S1725921AbgFBE2d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:28:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48780 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFBE2c (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:28:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524IJor107049;
+        Tue, 2 Jun 2020 04:28:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=txP3NwgyJoEAunm6pAdqdtMEcNC34AmBQ0nS60+YkQI=;
- b=jnm0++/g2KOwNBfkBXDc+XBKoI4sosHI2YBdn40+ijAkxRO8J7K5COjtrv1NqjCCdPci
- Fc+BZJ6JavQ3kPtKi2cjtg9NWb2Hs/9PrcM9HKxGYLmLO6Y8JvKv3/9nx4zoVJyPfvGa
- x0wdwk9u002yUMhGBYtML5OVUYJps9SGScciBDQ97tVbsUN7UYRo7F1WCtoKqHxtWYdX
- Kre97URJZO/2z2VPODyjw5oAJcLzhFUVfQq6J9qsdXltC1q/ZubDe/1pGPnfawV2Lb39
- NFGXBGb6g+r9xhJbV9NuaF4uDaIF9Z13UPYQNg+GYbzLhCPji/7/9fzRfZ83rvA8NPQ9 fg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31d5qr20tf-1
+ bh=VN7EVmpkuqUtOud8ZRlSEDNsdrgxcc/DBS+d0OAkSs0=;
+ b=hF5/B/iDPVRa03SP/Of0cF0Y+aWtLgpwF8qTtDwPiEn6dr1IIfWuXnOBBLyVKTQABKfJ
+ GAlYUVNtqHjztZLMstbNEu7t8niJtfqTby5S+Z/ki5Kt8AjdUd9TQXGaeXH6kvE547+N
+ IhpSE3/LiD2rO94nwEC2YWD4kBOxkUeBFcSW0bLJoMh7ctkHGBbMsMXUC6sxCIzY6iCW
+ U6mm4drRR6o4oS+dHR40pTyBw7ubnskIYKsyrBGuNdnfUQ7xDcV65Zs2IjjCpDmMMo2A
+ +fWiuyLw8m/aOFt4r/AX+ukehgiT76bHpMPuSg2HipA2gheOAWVk5nGnwHAIm4+e4g9N 6Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31bewqswnk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 04:28:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524Huks126748;
-        Tue, 2 Jun 2020 04:26:20 GMT
+        Tue, 02 Jun 2020 04:28:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524Hwrg040181;
+        Tue, 2 Jun 2020 04:26:27 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31c25mnh94-1
+        by userp3020.oracle.com with ESMTP id 31c18sggt1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 04:26:20 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524QK90019890;
-        Tue, 2 Jun 2020 04:26:20 GMT
+        Tue, 02 Jun 2020 04:26:27 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524QQeX020002;
+        Tue, 2 Jun 2020 04:26:26 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jun 2020 21:26:20 -0700
-Subject: [PATCH 12/17] xfs_repair: remove verify_dfsbno
+        with ESMTP ; Mon, 01 Jun 2020 21:26:26 -0700
+Subject: [PATCH 13/17] xfs_repair: remove verify_aginum
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Mon, 01 Jun 2020 21:26:18 -0700
-Message-ID: <159107197805.313760.6515122377279848689.stgit@magnolia>
+Date:   Mon, 01 Jun 2020 21:26:25 -0700
+Message-ID: <159107198538.313760.17599234824681924862.stgit@magnolia>
 In-Reply-To: <159107190111.313760.8056083399475334567.stgit@magnolia>
 References: <159107190111.313760.8056083399475334567.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006020024
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
- mlxscore=0 lowpriorityscore=0 suspectscore=2 spamscore=0 adultscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020024
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020024
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,131 +70,163 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Replace this homegrown helper with its libxfs equivalent.
+Replace this homegrown inode pointer verification function with the
+libxfs checking helper.  This one is a little tricky because this
+function (unlike all of its verify_* siblings) returned 1 for bad and 0
+for good, so we must invert the checking logic.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- repair/attr_repair.c |    2 +-
- repair/dinode.c      |   21 +--------------------
- repair/dinode.h      |    4 ----
- repair/prefetch.c    |    9 +++++----
- repair/scan.c        |    2 +-
- 5 files changed, 8 insertions(+), 30 deletions(-)
+ libxfs/libxfs_api_defs.h |    1 +
+ repair/dino_chunks.c     |    6 +++--
+ repair/dinode.c          |   51 ----------------------------------------------
+ repair/dinode.h          |    5 -----
+ repair/scan.c            |    4 ++--
+ 5 files changed, 6 insertions(+), 61 deletions(-)
 
 
-diff --git a/repair/attr_repair.c b/repair/attr_repair.c
-index 5f884033..6cec0f70 100644
---- a/repair/attr_repair.c
-+++ b/repair/attr_repair.c
-@@ -1092,7 +1092,7 @@ process_longform_attr(
- 	}
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 69f79a08..be06c763 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -182,6 +182,7 @@
+ #define xfs_trans_roll			libxfs_trans_roll
  
- 	/* FIX FOR bug 653709 -- EKN */
--	if (!xfs_verify_fsbno(mp, bno)) {
-+	if (!libxfs_verify_fsbno(mp, bno)) {
- 		do_warn(
- 	_("block in attribute fork of inode %" PRIu64 " is not valid\n"), ino);
- 		return 1;
+ #define xfs_verify_agbno		libxfs_verify_agbno
++#define xfs_verify_agino		libxfs_verify_agino
+ #define xfs_verify_cksum		libxfs_verify_cksum
+ #define xfs_verify_dir_ino		libxfs_verify_dir_ino
+ #define xfs_verify_fsbno		libxfs_verify_fsbno
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index 6685a4d2..399d4998 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -1124,7 +1124,7 @@ check_uncertain_aginodes(xfs_mount_t *mp, xfs_agnumber_t agno)
+ 
+ 			agino = i + irec->ino_startnum;
+ 
+-			if (verify_aginum(mp, agno, agino))
++			if (!libxfs_verify_agino(mp, agno, agino))
+ 				continue;
+ 
+ 			if (nrec != NULL && nrec->ino_startnum <= agino &&
+@@ -1133,7 +1133,7 @@ check_uncertain_aginodes(xfs_mount_t *mp, xfs_agnumber_t agno)
+ 				continue;
+ 
+ 			if ((nrec = find_inode_rec(mp, agno, agino)) == NULL)
+-				if (!verify_aginum(mp, agno, agino))
++				if (libxfs_verify_agino(mp, agno, agino))
+ 					if (verify_aginode_chunk(mp, agno,
+ 							agino, &start))
+ 						got_some = 1;
+@@ -1215,7 +1215,7 @@ process_uncertain_aginodes(xfs_mount_t *mp, xfs_agnumber_t agno)
+ 			 * good tree), bad inode numbers, and inode numbers
+ 			 * pointing to bogus inodes
+ 			 */
+-			if (verify_aginum(mp, agno, agino))
++			if (!libxfs_verify_agino(mp, agno, agino))
+ 				continue;
+ 
+ 			if (nrec != NULL && nrec->ino_startnum <= agino &&
 diff --git a/repair/dinode.c b/repair/dinode.c
-index 135703d9..67adddd7 100644
+index 67adddd7..526ecde3 100644
 --- a/repair/dinode.c
 +++ b/repair/dinode.c
-@@ -203,25 +203,6 @@ verify_aginum(xfs_mount_t	*mp,
- 	return verify_ag_bno(sbp, agno, agbno);
- }
+@@ -152,57 +152,6 @@ clear_dinode(xfs_mount_t *mp, xfs_dinode_t *dino, xfs_ino_t ino_num)
+  * misc. inode-related utility routines
+  */
  
 -/*
-- * return 1 if block number is good, 0 if out of range
+- * verify_ag_bno is heavily used. In the common case, it
+- * performs just two number of compares
+- * Returns 1 for bad ag/bno pair or 0 if it's valid.
+- */
+-static __inline int
+-verify_ag_bno(xfs_sb_t *sbp,
+-		xfs_agnumber_t agno,
+-		xfs_agblock_t agbno)
+-{
+-	if (agno < (sbp->sb_agcount - 1))
+-		return (agbno >= sbp->sb_agblocks);
+-	if (agno == (sbp->sb_agcount - 1))
+-		return (agbno >= (sbp->sb_dblocks -
+-				((xfs_rfsblock_t)(sbp->sb_agcount - 1) *
+-				 sbp->sb_agblocks)));
+-	return 1;
+-}
+-
+-/*
+- * have a separate routine to ensure that we don't accidentally
+- * lose illegally set bits in the agino by turning it into an FSINO
+- * to feed to the above routine
 - */
 -int
--verify_dfsbno(xfs_mount_t	*mp,
--		xfs_fsblock_t	fsbno)
+-verify_aginum(xfs_mount_t	*mp,
+-		xfs_agnumber_t	agno,
+-		xfs_agino_t	agino)
 -{
--	xfs_agnumber_t	agno;
 -	xfs_agblock_t	agbno;
 -	xfs_sb_t	*sbp = &mp->m_sb;;
 -
 -	/* range check ag #, ag block.  range-checking offset is pointless */
 -
--	agno = XFS_FSB_TO_AGNO(mp, fsbno);
--	agbno = XFS_FSB_TO_AGBNO(mp, fsbno);
+-	if (agino == 0 || agino == NULLAGINO)
+-		return(1);
 -
--	return verify_ag_bno(sbp, agno, agbno) == 0;
+-	/*
+-	 * agino's can't be too close to NULLAGINO because the min blocksize
+-	 * is 9 bits and at most 1 bit of that gets used for the inode offset
+-	 * so if the agino gets shifted by the # of offset bits and compared
+-	 * to the legal agbno values, a bogus agino will be too large.  there
+-	 * will be extra bits set at the top that shouldn't be set.
+-	 */
+-	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
+-	if (agbno == 0)
+-		return 1;
+-
+-	return verify_ag_bno(sbp, agno, agbno);
 -}
 -
  #define XR_DFSBNORANGE_VALID	0
  #define XR_DFSBNORANGE_BADSTART	1
  #define XR_DFSBNORANGE_BADEND	2
-@@ -835,7 +816,7 @@ _("bad numrecs 0 in inode %" PRIu64 " bmap btree root block\n"),
- 		 * btree, we'd do it right here.  For now, if there's a
- 		 * problem, we'll bail out and presumably clear the inode.
- 		 */
--		if (!verify_dfsbno(mp, get_unaligned_be64(&pp[i])))  {
-+		if (!libxfs_verify_fsbno(mp, get_unaligned_be64(&pp[i])))  {
- 			do_warn(
- _("bad bmap btree ptr 0x%" PRIx64 " in ino %" PRIu64 "\n"),
- 				get_unaligned_be64(&pp[i]), lino);
 diff --git a/repair/dinode.h b/repair/dinode.h
-index c8e563b5..4bf7affd 100644
+index 4bf7affd..1bd0e0b7 100644
 --- a/repair/dinode.h
 +++ b/repair/dinode.h
-@@ -9,10 +9,6 @@
- struct blkmap;
- struct prefetch_args;
+@@ -68,11 +68,6 @@ verify_uncertain_dinode(xfs_mount_t *mp,
+ 		xfs_agnumber_t agno,
+ 		xfs_agino_t ino);
  
 -int
--verify_dfsbno(xfs_mount_t	*mp,
--		xfs_fsblock_t	fsbno);
+-verify_aginum(xfs_mount_t	*mp,
+-		xfs_agnumber_t	agno,
+-		xfs_agino_t	agino);
 -
- void
- convert_extent(
- 	xfs_bmbt_rec_t		*rp,
-diff --git a/repair/prefetch.c b/repair/prefetch.c
-index 3ac49db1..686bf7be 100644
---- a/repair/prefetch.c
-+++ b/repair/prefetch.c
-@@ -188,8 +188,9 @@ pf_read_bmbt_reclist(
- 				(irec.br_startoff >= fs_max_file_offset))
- 			goto out_free;
- 
--		if (!verify_dfsbno(mp, irec.br_startblock) || !verify_dfsbno(mp,
--				irec.br_startblock + irec.br_blockcount - 1))
-+		if (!libxfs_verify_fsbno(mp, irec.br_startblock) ||
-+		    !libxfs_verify_fsbno(mp, irec.br_startblock +
-+					     irec.br_blockcount - 1))
- 			goto out_free;
- 
- 		if (!args->dirs_only && ((irec.br_startoff +
-@@ -337,7 +338,7 @@ pf_scanfunc_bmap(
- 
- 	for (i = 0; i < numrecs; i++) {
- 		dbno = get_unaligned_be64(&pp[i]);
--		if (!verify_dfsbno(mp, dbno))
-+		if (!libxfs_verify_fsbno(mp, dbno))
- 			return 0;
- 		if (!pf_scan_lbtree(dbno, level, isadir, args, pf_scanfunc_bmap))
- 			return 0;
-@@ -379,7 +380,7 @@ pf_read_btinode(
- 
- 	for (i = 0; i < numrecs; i++) {
- 		dbno = get_unaligned_be64(&pp[i]);
--		if (!verify_dfsbno(mp, dbno))
-+		if (!libxfs_verify_fsbno(mp, dbno))
- 			break;
- 		if (!pf_scan_lbtree(dbno, level, isadir, args, pf_scanfunc_bmap))
- 			break;
+ int
+ process_uncertain_aginodes(xfs_mount_t		*mp,
+ 				xfs_agnumber_t	agno);
 diff --git a/repair/scan.c b/repair/scan.c
-index 8e81c552..dcd4864d 100644
+index dcd4864d..76079247 100644
 --- a/repair/scan.c
 +++ b/repair/scan.c
-@@ -491,7 +491,7 @@ _("inode %" PRIu64 " bad # of bmap records (%u, min - %u, max - %u)\n"),
- 		 * we'd do it right here.  For now, if there's a problem,
- 		 * we'll bail out and presumably clear the inode.
- 		 */
--		if (!verify_dfsbno(mp, be64_to_cpu(pp[i])))  {
-+		if (!libxfs_verify_fsbno(mp, be64_to_cpu(pp[i])))  {
- 			do_warn(
- _("bad bmap btree ptr 0x%llx in ino %" PRIu64 "\n"),
- 			       (unsigned long long) be64_to_cpu(pp[i]), ino);
+@@ -1561,7 +1561,7 @@ verify_single_ino_chunk_align(
+ 	 * (NULLAGINO). if it gets closer, the agino number will be illegal as
+ 	 * the agbno will be too large.
+ 	 */
+-	if (verify_aginum(mp, agno, ino)) {
++	if (!libxfs_verify_agino(mp, agno, ino)) {
+ 		do_warn(
+ _("bad starting inode # (%" PRIu64 " (0x%x 0x%x)) in %s rec, skipping rec\n"),
+ 			lino, agno, ino, inobt_name);
+@@ -1569,7 +1569,7 @@ _("bad starting inode # (%" PRIu64 " (0x%x 0x%x)) in %s rec, skipping rec\n"),
+ 		return ++suspect;
+ 	}
+ 
+-	if (verify_aginum(mp, agno,
++	if (!libxfs_verify_agino(mp, agno,
+ 			ino + XFS_INODES_PER_CHUNK - 1)) {
+ 		do_warn(
+ _("bad ending inode # (%" PRIu64 " (0x%x 0x%zx)) in %s rec, skipping rec\n"),
 
