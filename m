@@ -2,180 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62F4F1EB414
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:04:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C56C11EB47D
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbgFBEEh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFBEEh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:04:37 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C5FC061A0E
-        for <linux-xfs@vger.kernel.org>; Mon,  1 Jun 2020 21:04:37 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p5so10504133ile.6
-        for <linux-xfs@vger.kernel.org>; Mon, 01 Jun 2020 21:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fifCfaZW/GsCIL1D5aAtR9JeZYH5AKHn1Hsk1/Pt9V8=;
-        b=BfL6qEQzJeOCb4/NYcEZIVJrvIAQg51ML1X+3R1k1mplHBO5PO7G4+GYnWjgmxgmyA
-         HuJlcI6W6a6m4YPpGtbcjfCffutzdZq1PjCyjd9xpe1livJkZBtSMeRIen2cdgIOdcON
-         rA6liOx5wePllSg33hP8AdKExZLlgrSX+xqEnNxYIHfA7oQ8abJQdExrX57rosQ6bYx1
-         FEyeWWjF9gmDVnRqCqJeNQGA5ongx6eESzR/ZtOV+SASA+zk8n/38xzwF7hCV1qyI79c
-         jaYitL9ewMXAnd7Y5h9CX+z5vGhs5tYa0fA0ECDMkq5gP0CJMF1u+HqkIz/ytjzMd2PA
-         kYKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fifCfaZW/GsCIL1D5aAtR9JeZYH5AKHn1Hsk1/Pt9V8=;
-        b=RbnKFP365L6NGCw/CDZBD2Qr1B19jAI/WNXy3OScO0klbEGW4ZuLi2lmkJh//q6COd
-         ulgOnUSQdx1jxlM4A9rvXTcBLoF0xocQ9Z44S7Okdl3C1kgzjp3+rJfcc9VGBaXy5Yfj
-         CcFC+R4sXGmajaIULt2DulZ1u+ZqpAMLzfIbyaxxIBDw1+kW5lqnidHfBFfMXLB/e/VH
-         7YyKc3XoEV3vPLXeLdFzHZ9jDgW1QcuKfv5RoI/BdaF2KljtSg0+I7d2jdKah9IeiH8/
-         /JWyOzmiOSDvAEKJe2RVdiE3AitM4k9jkzgIrhhjcHPJPtFUz/A0+5yj3FAVQCRR6Kh1
-         jjGQ==
-X-Gm-Message-State: AOAM530OhEeCZKbJPdBm+SbzYXyqWE7sWOj7tWMWPLRTgiuebilgkv47
-        2f+P4LbxEwubEnNUzFYXeGYDJXYUSViTSN5Ev+8=
-X-Google-Smtp-Source: ABdhPJzEDLfEHRo3zSUMoa+tjOOEtHyRyeU8dm5xoRO7A0wwfdhWrFj9VhlKDjQhQo/iUYRWmm31tVqvPsSICC3h/4I=
-X-Received: by 2002:a92:1b86:: with SMTP id f6mr24951216ill.9.1591070676240;
- Mon, 01 Jun 2020 21:04:36 -0700 (PDT)
+        id S1725944AbgFBE1N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:27:13 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46908 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgFBE1N (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:27:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524I2oW121439;
+        Tue, 2 Jun 2020 04:27:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=rVWoaCv0go7DJ/OljhwYuc36ObUPA8lfGwF8CVIYoT4=;
+ b=zvFi338ZS/q/dIea2axBG/bRKt3uPLi6Uaj01n0MWA0T4Po37HFeon0OCihe7/weD0Ja
+ 6Sn++8sk3HnO1p1cCQkUA8HyUl7XQvEykgVRPFg1lR9yhct7f8/8cTKMdcRpKP5CN5DG
+ Q08pCsIKvDa7rAg25UvcF1+ZsgN4nN6QYIFd+W5eLzlTuZth4YHqvWmaqsRsNZ4jQiSI
+ ZoKMz0vUhdd5ePbjz4GZoUq4gmfp8OpAtyYewSpibtHl4ZzC32dn8DSfnqEvfMTbNClP
+ I0KysrCyp0sBR1b4jNJe0IcvPYI1cKVo+vupaa4VyWZZfFL3Ioq27lecxRFaMf0+sxtr wQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31d5qr20r1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 04:27:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HwHC040137;
+        Tue, 2 Jun 2020 04:25:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31c18sgfy8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 04:25:08 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524P2YN019415;
+        Tue, 2 Jun 2020 04:25:02 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jun 2020 21:25:02 -0700
+Subject: [PATCH v2 00/17] xfs_repair: catch things that xfs_check misses
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sandeen@sandeen.net, darrick.wong@oracle.com
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 01 Jun 2020 21:25:01 -0700
+Message-ID: <159107190111.313760.8056083399475334567.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <157784106066.1364230.569420432829402226.stgit@magnolia>
- <157784114490.1364230.7521571821422773694.stgit@magnolia> <CAOQ4uxgvnuVtfxz41W+FuTxy2GZ5QZwwUhacHgfMzJMKJ_db1g@mail.gmail.com>
- <20200602000917.GE2162697@magnolia>
-In-Reply-To: <20200602000917.GE2162697@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 2 Jun 2020 07:04:24 +0300
-Message-ID: <CAOQ4uxj9OEEo4SdPAnY231+t5v_niR8vQ3a1ZTZJ14oJtFJ1Sg@mail.gmail.com>
-Subject: Re: [PATCH 13/14] xfs: enable bigtime for quota timers
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020024
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020024
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 3:09 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> On Sun, May 31, 2020 at 08:07:59PM +0300, Amir Goldstein wrote:
-> > On Wed, Jan 1, 2020 at 3:12 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> > >
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > >
-> > > Enable the bigtime feature for quota timers.  We decrease the accuracy
-> > > of the timers to ~4s in exchange for being able to set timers up to the
-> > > bigtime maximum.
-> > >
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  fs/xfs/libxfs/xfs_dquot_buf.c  |   72 ++++++++++++++++++++++++++++++++++++++--
-> > >  fs/xfs/libxfs/xfs_format.h     |   22 ++++++++++++
-> > >  fs/xfs/libxfs/xfs_quota_defs.h |   11 ++++--
-> > >  fs/xfs/scrub/quota.c           |    5 +++
-> > >  fs/xfs/xfs_dquot.c             |   71 +++++++++++++++++++++++++++++++--------
-> > >  fs/xfs/xfs_ondisk.h            |    6 +++
-> > >  fs/xfs/xfs_qm.c                |   13 ++++---
-> > >  fs/xfs/xfs_qm.h                |    8 ++--
-> > >  fs/xfs/xfs_qm_syscalls.c       |   19 ++++++-----
-> > >  9 files changed, 186 insertions(+), 41 deletions(-)
-> > >
-> > >
-> > > diff --git a/fs/xfs/libxfs/xfs_dquot_buf.c b/fs/xfs/libxfs/xfs_dquot_buf.c
-> > > index 72e0fcfef580..2b5d51a6d64b 100644
-> > > --- a/fs/xfs/libxfs/xfs_dquot_buf.c
-> > > +++ b/fs/xfs/libxfs/xfs_dquot_buf.c
-> > > @@ -40,6 +40,8 @@ xfs_dquot_verify(
-> > >         xfs_dqid_t              id,
-> > >         uint                    type)   /* used only during quotacheck */
-> > >  {
-> > > +       uint8_t                 dtype;
-> > > +
-> > >         /*
-> > >          * We can encounter an uninitialized dquot buffer for 2 reasons:
-> > >          * 1. If we crash while deleting the quotainode(s), and those blks got
-> > > @@ -60,11 +62,22 @@ xfs_dquot_verify(
-> > >         if (ddq->d_version != XFS_DQUOT_VERSION)
-> > >                 return __this_address;
-> > >
-> > > -       if (type && ddq->d_flags != type)
-> > > +       dtype = ddq->d_flags & XFS_DQ_ALLTYPES;
-> >
-> > Suggest dtype = XFS_DQ_TYPE(ddq->d_flags);
-> >
-> > [...]
-> >
-> > > @@ -540,13 +551,28 @@ xfs_dquot_from_disk(
-> > >         dqp->q_res_icount = be64_to_cpu(ddqp->d_icount);
-> > >         dqp->q_res_rtbcount = be64_to_cpu(ddqp->d_rtbcount);
-> > >
-> > > -       xfs_dquot_from_disk_timestamp(&tv, ddqp->d_btimer);
-> > > +       xfs_dquot_from_disk_timestamp(ddqp, &tv, ddqp->d_btimer);
-> > >         dqp->q_btimer = tv.tv_sec;
-> > > -       xfs_dquot_from_disk_timestamp(&tv, ddqp->d_itimer);
-> > > +       xfs_dquot_from_disk_timestamp(ddqp, &tv, ddqp->d_itimer);
-> > >         dqp->q_itimer = tv.tv_sec;
-> > > -       xfs_dquot_from_disk_timestamp(&tv, ddqp->d_rtbtimer);
-> > > +       xfs_dquot_from_disk_timestamp(ddqp, &tv, ddqp->d_rtbtimer);
-> > >         dqp->q_rtbtimer = tv.tv_sec;
-> > >
-> > > +       /* Upgrade to bigtime if possible. */
-> > > +       if (xfs_dquot_add_bigtime(dqp->q_mount, iddq)) {
-> > > +               tv.tv_sec = xfs_dquot_clamp_timer(iddq, dqp->q_btimer);
-> > > +               xfs_dquot_to_disk_timestamp(iddq, &iddq->d_btimer, &tv);
-> > > +               dqp->q_btimer = tv.tv_sec;
-> > > +
-> > > +               tv.tv_sec = xfs_dquot_clamp_timer(iddq, dqp->q_itimer);
-> > > +               xfs_dquot_to_disk_timestamp(iddq, &iddq->d_itimer, &tv);
-> > > +               dqp->q_itimer = tv.tv_sec;
-> > > +
-> > > +               tv.tv_sec = xfs_dquot_clamp_timer(iddq, dqp->q_rtbtimer);
-> > > +               xfs_dquot_to_disk_timestamp(iddq, &iddq->d_rtbtimer, &tv);
-> > > +               dqp->q_rtbtimer = tv.tv_sec;
-> > > +       }
-> > > +
-> >
-> > This is better than the inode timestamp conversion because at
-> > least the bigtime flag incore is always consistent with the incore values.
-> > But I think it would be safer if the conversion happened inside the helper.
->
-> This code, like the inode timestamp handling code, reads the ondisk
-> timer value into the incore dquot, and sets the bigtime flag on the
-> incore dquot.  We then wait until someone dirties the dquot to transform
-> the ondisk dquot to be in bigtime format with the flag set.
->
-> The dquot conversion is /much/ messier than the inode, because the dquot
-> infrastructure maintains an incore copy of the ondisk dquot as well as
-> an incore time64_t value, and we have to keep that whole mess
-> consistent.
->
+Hi all,
 
-I see. That's what got me confused about how the inode timestamp incore
-values are stored.
+A long-time goal of mine is to get rid of xfs_check from fstests,
+because it is deprecated, adds quite a bit of runtime to the test suite,
+and consumes memory like crazy.  We've not been able to do that for lack
+of even a basic field-by-field corruption detection comparison between
+check and repair, so I temporarily modified the dangerous_repair tests
+to warn when check finds something but repair says clean.
 
-> TBH someone should probably go fix the incore dquots to have only the
-> incore values (instead of the embedded xfs_disk_dquot) but I'd rather
-> that go in as a cleanup after adding this series, because this series is
-> already 13 patches, and if you combine cleaning up dquots with hch's
-> incore inode removal now we have Yet Another Friggin 40-patch series.
->
+The patches below teach xfs_repair to complain about things that it
+previously did not catch but xfs_check did.  The one remaining gap is
+the lack of quota counter checking, which will be sent in a separate
+series once I've worked out all the bugs.
 
-Fare enough, but until someone does go and fix this code, my comment
-still stands.
+v2: mostly minor updates and add a bunch of RVB tags.  Also pick up the
+one quota fix because why not...
 
-This patch calls xfs_dquot_add_bigtime() in three call sites.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Two of them are correct because the values of timers is 0.
-The one above is correct because it shifts the embedded timer
-values right after the call.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-IMO it would be a better practice to keep this conversion
-containers in a helper xfs_dquot_upgrade_bigtime() and
-explicitly check for the 0 value case.
+--D
 
-Thanks,
-Amir.
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=check-vs-repair
+---
+ libxfs/libxfs_api_defs.h |    4 +
+ quota/edit.c             |   22 +++---
+ repair/attr_repair.c     |    2 -
+ repair/da_util.c         |   25 +++++--
+ repair/dino_chunks.c     |    6 +-
+ repair/dinode.c          |  109 +++----------------------------
+ repair/dinode.h          |   14 ----
+ repair/dir2.c            |   21 ++++++
+ repair/phase4.c          |   11 ++-
+ repair/phase6.c          |    3 +
+ repair/prefetch.c        |    9 +--
+ repair/sb.c              |    3 -
+ repair/scan.c            |  160 ++++++++++++++++++++++++++++++++--------------
+ 13 files changed, 196 insertions(+), 193 deletions(-)
+
