@@ -2,117 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4FD51EB47C
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6DCC1EB48C
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jun 2020 06:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725841AbgFBE1K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 00:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgFBE1K (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:27:10 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD09AC061A0E
-        for <linux-xfs@vger.kernel.org>; Mon,  1 Jun 2020 21:27:09 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y18so9413367iow.3
-        for <linux-xfs@vger.kernel.org>; Mon, 01 Jun 2020 21:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZpQSkvGr7eCjQ0hn61eqDB5628vI0yYPp4JRgF7TGJI=;
-        b=D0NVJtEpKdpimj43M892SGFfktpuRhKBH3iZ9qf5LnZ/vL7bN+pQjf+tk/2DNgG8qa
-         Bu5HkO3TdZoBihBTfugMXWNcWRTkAPwrEXloh1nIUVzTdCSoaQCGISPKsrmQhkb66qN5
-         JbGeVj1+NQOMGc6/YHy2QI2aCVnlG2z0EZMkC0x74sUgDDGy20QZl/Cp9HKieoFYzgFW
-         i5XZ7jAMfZjI+Gz1PCUBnkmoS33WwkXei8T2XHKeVsEbw7seUqrP+4nwQh8uyplqanu0
-         ET/NBm9vUIv1Ckix3e/ga5PW7s00yX0H1alqnTEjPQU0u4G4pE93NqAxg27nJzXQLKWJ
-         PCFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZpQSkvGr7eCjQ0hn61eqDB5628vI0yYPp4JRgF7TGJI=;
-        b=gFTHN7/HP01uHMXG+OK1sN2JOz9Tzr1m02K0uB3RIIyS3oDJ5FdSiqW137kOUO6ch2
-         MIqXAdxOR9dNq3y3SNyUpcwSD/zOMGCGtEE/UFgqNM+4R/Vsrj77pGGkk1pcZe3ORH86
-         MHDC61XOFdoNHKNpcJhoPPzXsuQOeqpkfkDXdBvYdfudycyC5yiXbhpdyGiqBf2RKKJj
-         dJAmH45RBsNWgdgPWxSMdpjqAoixACKJc0eTNWqukcbja7BVpSEZNCb9SVPt5TcWWEIP
-         GFKPsphyvfTiZcZcfHIKdNCtJccK4vZ2/+SIq7/JIT+b9qvgKZcssgJsQAKmhU3wCnz2
-         d+/Q==
-X-Gm-Message-State: AOAM531f9btqA6OKI8+Vkj9gOas7etdSc+/yMuEAOCyD0jxkhVxjj82s
-        d6cuuH2LBobTcyA13BDr0Yx2Cn3xv3QHG7tlA4Lj2L1V
-X-Google-Smtp-Source: ABdhPJzah5aIMk23Uly4BsQ5x6XlHg/c0ZBadNHWVcl0PqxGAknjK5G3yPD3itcsu352xVCCEMg52IgIsyghkB7CAGc=
-X-Received: by 2002:a05:6602:2437:: with SMTP id g23mr21679681iob.5.1591072029035;
- Mon, 01 Jun 2020 21:27:09 -0700 (PDT)
+        id S1725966AbgFBE3F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 00:29:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35430 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFBE3F (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 00:29:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524I5HG107526;
+        Tue, 2 Jun 2020 04:29:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Aa3vQaJvpCUEHa03s/pUDzMK9CQezfQIMlk5yEn9Rsw=;
+ b=qnSIZqXjjYkHSSVKMDS9OAGIT3af3QjQKDq3xrsCYvFqZ+cO8GKDOYYFFtBi8ZdpnQeW
+ +UjegosoAVws4Ja4lqv2JRrkrz1U2w/IkfKhqs4yYdHz0aRyutRHC/zj8o+6SU2Up8g5
+ Qh/mqlxNZ25RM83Y3qJxaLvfa7wumI+DWbCHnoVkhxRv9D3o7qjPLIM2Xq+z8wQvv7Mr
+ MY7rRM1i0HlEsiprQNA39zUQvOB7pNO1VLOZvBcuV6AZXj5AT8wsTIISWz6F3gmMNMNM
+ CMMRhyboosYabSgknMmkEbI2oFiYYfFQVvAMyKa6ntw4JRVs5ustxffIpfDbCIaCZ2Mx Yg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31bfem1ter-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 04:29:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0524HxxB040289;
+        Tue, 2 Jun 2020 04:27:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31c18sgh55-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 04:27:01 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0524R0ZL021490;
+        Tue, 2 Jun 2020 04:27:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jun 2020 21:27:00 -0700
+Subject: [PATCH 01/12] xfs_repair: drop lostblocks from build_agf_agfl
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     sandeen@sandeen.net, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
+Date:   Mon, 01 Jun 2020 21:26:59 -0700
+Message-ID: <159107201957.315004.49440739053731951.stgit@magnolia>
+In-Reply-To: <159107201290.315004.4447998785149331259.stgit@magnolia>
+References: <159107201290.315004.4447998785149331259.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <157784106066.1364230.569420432829402226.stgit@magnolia>
- <157784113220.1364230.3763399684650880969.stgit@magnolia> <CAOQ4uxj9_6AHPkBmPUpqZ_-nnqgzkwPT4xik=Xi1XQ61JJcTFw@mail.gmail.com>
- <20200601231751.GD2162697@magnolia>
-In-Reply-To: <20200601231751.GD2162697@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 2 Jun 2020 07:26:57 +0300
-Message-ID: <CAOQ4uxgGNx7jz3v22s2xXYTuPUXNtQZ9UGg4aP50tYqzFBetvQ@mail.gmail.com>
-Subject: Re: [PATCH 11/14] xfs: widen ondisk timestamps to deal with y2038 problem
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=2 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020024
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020024
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 2:17 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> On Sun, May 31, 2020 at 03:30:42PM +0300, Amir Goldstein wrote:
-> > > @@ -265,17 +278,35 @@ xfs_inode_from_disk(
-> > >         if (to->di_version == 3) {
-> > >                 inode_set_iversion_queried(inode,
-> > >                                            be64_to_cpu(from->di_changecount));
-> > > -               xfs_inode_from_disk_timestamp(&to->di_crtime, &from->di_crtime);
-> > > +               xfs_inode_from_disk_timestamp(from, &to->di_crtime,
-> > > +                               &from->di_crtime);
-> > >                 to->di_flags2 = be64_to_cpu(from->di_flags2);
-> > >                 to->di_cowextsize = be32_to_cpu(from->di_cowextsize);
-> > > +               /*
-> > > +                * Convert this inode's timestamps to bigtime format the next
-> > > +                * time we write it out to disk.
-> > > +                */
-> > > +               if (xfs_sb_version_hasbigtime(&mp->m_sb))
-> > > +                       to->di_flags2 |= XFS_DIFLAG2_BIGTIME;
-> > >         }
-> >
-> > This feels wrong.
-> > incore inode has a union for timestamp.
-> > This flag should indicate how the union should be interpreted
-> > otherwise it is going to be very easy to stumble on that in future code.
->
-> Hm?  I think you've gotten it backwards.
->
-> The incore inode (struct xfs_icdinode) has a struct timespec64.
->
-> The ondisk inode (struct xfs_dinode) has a union xfs_timestamp.
->
-> xfs_inode_from_disk_timestamp uses the ondisk inode (from) to convert
-> the ondisk timestamp (&from->di_crtime) to the incore inode
-> (&to->di_crtime).
->
-> In other words, we use the ondisk flag and union to load the ondisk
-> timestamp into a format-agnostic incore structure.  Then we set BIGTIME
-> in the incore inode (to->di_flags2).
->
-> If and when we write the inode back out to disk, we'll see that BIGTIME
-> is set in the incore inode, and convert the incore structure into the
-> bigtime encoding on disk.
->
-> > So either convert incore timestamp now or check hasbigtime when
-> > we write to disk.
->
-> That's more or less what this is doing.  We read the timestamp in from
-> disk in whatever format it's in, and then set ourselves up to write it
-> back out in bigtime format.
->
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-I stand corrected. xfs_ictimestamp got me confused.
-Everything does look consistent.
+We don't do anything with this parameter, so get rid of it.
 
-Thanks,
-Amir.
+Fixes: ef4332b8 ("xfs_repair: add freesp btree block overflow to the free space")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ repair/phase5.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+
+diff --git a/repair/phase5.c b/repair/phase5.c
+index 677297fe..c9b278bd 100644
+--- a/repair/phase5.c
++++ b/repair/phase5.c
+@@ -2049,7 +2049,6 @@ build_agf_agfl(
+ 	struct bt_status	*bno_bt,
+ 	struct bt_status	*bcnt_bt,
+ 	xfs_extlen_t		freeblks,	/* # free blocks in tree */
+-	int			lostblocks,	/* # blocks that will be lost */
+ 	struct bt_status	*rmap_bt,
+ 	struct bt_status	*refcnt_bt,
+ 	struct xfs_slab		*lost_fsb)
+@@ -2465,9 +2464,9 @@ phase5_func(
+ 		/*
+ 		 * set up agf and agfl
+ 		 */
+-		build_agf_agfl(mp, agno, &bno_btree_curs,
+-				&bcnt_btree_curs, freeblks1, extra_blocks,
+-				&rmap_btree_curs, &refcnt_btree_curs, lost_fsb);
++		build_agf_agfl(mp, agno, &bno_btree_curs, &bcnt_btree_curs,
++				freeblks1, &rmap_btree_curs,
++				&refcnt_btree_curs, lost_fsb);
+ 		/*
+ 		 * build inode allocation tree.
+ 		 */
+
