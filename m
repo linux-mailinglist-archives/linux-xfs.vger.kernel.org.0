@@ -2,149 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0343C1EC7BF
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jun 2020 05:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64BFB1EC808
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jun 2020 05:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgFCDTh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Jun 2020 23:19:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25645 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725884AbgFCDTh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 23:19:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591154375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8TZXjHZE+DVMbMl2MLiInRcnh+dVX5N7gXSqdqupY5s=;
-        b=Ju4a83MsoxG9499bXMSpAzEeRg1Y+P/1CNm7hH5DBnZJYLfB50+ZdVXp8zdi1aD3Bd8Qhf
-        Lmja3azSrxCMp+IugpP4TjZQXAHPAHTZROUVoBMpRtGaLBgFRDyjDIS1/thHBzBYw4aWU0
-        vl2B0lWeU+IdLgru1V/xiRAKOop6UDg=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-7CQ8J8YkO_yU0p9Yfvu7lw-1; Tue, 02 Jun 2020 23:19:33 -0400
-X-MC-Unique: 7CQ8J8YkO_yU0p9Yfvu7lw-1
-Received: by mail-pg1-f197.google.com with SMTP id n22so1081557pgd.18
-        for <linux-xfs@vger.kernel.org>; Tue, 02 Jun 2020 20:19:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8TZXjHZE+DVMbMl2MLiInRcnh+dVX5N7gXSqdqupY5s=;
-        b=EPTlaaGNaI3YrYHORsmWCi/QKy1Yl/AnJlwFdv0bVbeeKlXDdVFo+t3TFbg+0YV8TC
-         CErXSgQ/8qyDn7rHchnos5tWhRWTtw2/pX8KgHdgiNWt3ph7npDVqII+9bDwpqt39ual
-         zQ+qRc0FoeDRnNVC57GrpEjBA19beK0F925+rXbgWBWkAszQnhU8VcngCdw4V7zaXNnQ
-         IbX+YcuYKnVo0gsJZM7vkRut11wUYEDTgIJiXMHNkJaFe60D2R8KE1YMnvsBJE+29+70
-         Bv2b27E2xofNKc6uYY54WRktyZUxDat1AagD/xOZuAvKD9DYF7je7GCJ0D+5EgR0yNzw
-         OGIA==
-X-Gm-Message-State: AOAM530B1mrj9aUxPkvex+Ge8bvnARTpbsAYoeRTBJ3MnAxBFgksplC8
-        ztFalOlt/4QR+KHGcKItp8fEpW2iLS++dttZwktjC192yPPs+3fRDXx+AXUm/h3E2xaQszay9VE
-        WHMCGvCVlvqGg9MteYnRX
-X-Received: by 2002:a63:f959:: with SMTP id q25mr26030159pgk.137.1591154372164;
-        Tue, 02 Jun 2020 20:19:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzRjkykzT3gv0q0++JgULxplGod53Jr/ey3jExndRR9l+yjuBe5Y4Lrc4S5QbnkErAhbzVcYw==
-X-Received: by 2002:a63:f959:: with SMTP id q25mr26030143pgk.137.1591154371853;
-        Tue, 02 Jun 2020 20:19:31 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id fy21sm462318pjb.38.2020.06.02.20.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 20:19:31 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 11:19:21 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: get rid of unnecessary xfs_perag_{get,put} pairs
-Message-ID: <20200603031921.GB16546@xiangao.remote.csb>
-References: <20200602145238.1512-1-hsiangkao@redhat.com>
- <20200603012734.GL2040@dread.disaster.area>
- <20200603014039.GB12304@xiangao.remote.csb>
- <20200603030241.GM2040@dread.disaster.area>
+        id S1726119AbgFCDvY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Jun 2020 23:51:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55354 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFCDvY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Jun 2020 23:51:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0533mFXx106894;
+        Wed, 3 Jun 2020 03:51:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=SJ6Xy9EhhO1mahYBwFQo6lySQegNoTnkZHQ5lceiC3E=;
+ b=xy2oKhR+YdTN8HSbkhjBP4oL+y1wFKDBlnPtTuMd9vJlp3hpHCGBcZysDPWuD/W3vKUU
+ fZWsx4SU9zretsUJgXDt8Bzd6tDDnlcmsysQ54jIQzWSOXFgh/KoGpM9z0KaSTt2sYmO
+ 40JzzBJvgfodLJrI4EBHpipih7Kjrt2RtnX0Ja2h5h5+RYAkRmOqY/t7BXliXfqIdL0w
+ F/p9eleUj3wEu4V2yRk30Nd6t4SflCR3IuoISPSZ1N9kkaDojRDtUrBgiEkZgflr2N3s
+ C+D2e9ywJT+60c0u65NjgXCsli6rzg+E0QFDhsKyfKD8ZtOC7FfdM0JeaGpddaKgICyj nA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31dkrum2ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 03:51:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0533hwFj115116;
+        Wed, 3 Jun 2020 03:49:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31c25que0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 03:49:06 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0533n2ma024413;
+        Wed, 3 Jun 2020 03:49:02 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 20:49:02 -0700
+Date:   Tue, 2 Jun 2020 20:49:00 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     ira.weiny@intel.com, fstests@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
+Message-ID: <20200603034900.GZ8230@magnolia>
+References: <20200413054419.1560503-1-ira.weiny@intel.com>
+ <20200413163025.GB6742@magnolia>
+ <5ED61324.6010300@cn.fujitsu.com>
+ <20200602181444.GD8230@magnolia>
+ <5ED7033D.7020009@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603030241.GM2040@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5ED7033D.7020009@cn.fujitsu.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006030027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=1 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030027
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:02:41PM +1000, Dave Chinner wrote:
-> On Wed, Jun 03, 2020 at 09:40:39AM +0800, Gao Xiang wrote:
-> > On Wed, Jun 03, 2020 at 11:27:34AM +1000, Dave Chinner wrote:
-> > > On Tue, Jun 02, 2020 at 10:52:38PM +0800, Gao Xiang wrote:
-> > > >  fs/xfs/libxfs/xfs_ag.c             |  4 ++--
-> > > >  fs/xfs/libxfs/xfs_alloc.c          | 22 ++++++-----------
-> > > >  fs/xfs/libxfs/xfs_alloc_btree.c    | 10 ++++----
-> > > >  fs/xfs/libxfs/xfs_ialloc.c         | 28 ++++++----------------
-> > > >  fs/xfs/libxfs/xfs_refcount_btree.c |  5 ++--
-> > > >  fs/xfs/libxfs/xfs_rmap_btree.c     |  5 ++--
-> > > >  fs/xfs/xfs_inode.c                 | 38 +++++++++---------------------
-> > > >  7 files changed, 35 insertions(+), 77 deletions(-)
+On Wed, Jun 03, 2020 at 09:56:13AM +0800, Xiao Yang wrote:
+> On 2020/6/3 2:14, Darrick J. Wong wrote:
+> > On Tue, Jun 02, 2020 at 04:51:48PM +0800, Xiao Yang wrote:
+> > > On 2020/4/14 0:30, Darrick J. Wong wrote:
+> > > > This might be a good time to introduce a few new helpers:
+> > > > 
+> > > > _require_scratch_dax ("Does $SCRATCH_DEV support DAX?")
+> > > > _require_scratch_dax_mountopt ("Does the fs support the DAX mount options?")
+> > > > _require_scratch_daX_iflag ("Does the fs support FS_XFLAG_DAX?")
+> > > Hi Darrick,
 > > > 
-> > > There were more places using this pattern than I thought. :)
-> > > 
-> > > With an updated commit message,
-> > > 
-> > > Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> > > Now, I am trying to introduce these new helpers and have some questions:
+> > > 1) There are five testcases related to old dax implementation, should we
+> > > only convert them to new dax implementation or make them compatible with old
+> > > and new dax implementation?
 > > 
-> > Thanks for your review. b.t.w, would you tend to drop all extra ASSERTs
-> > or leave these ASSERTs for a while to catch potential issues on this
-> > patch?...
+> > What is the 'old' DAX implementation?  ext2 XIP?
+> Hi Darrick,
 > 
-> We typically use ASSERT() statements to document assumptions the
-> function implementation makes. e.g. if we expect that the inode is
-> locked on entry to a function, rather than adding that as a comment
-> we'll do:
+> Thanks for your quick feedback.
 > 
-> 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> Right, the 'old' DAX implementation means old dax mount option(i.e. -o dax)
+> 
+> Compare new and old dax mount option on ext4 and xfs, is the following logic
+> right?
+> -o dax=always == -o dax
+> -o dax=never == without dax
+> -o dax=inode == nothing
 
-Yes, that's the typical use for most filesystems.
+No.  -o dax=always is the same as -o dax.
+dax=inode was and still is the behavior you got with no option at all.
+-o dax=never is a new option.
 
-> 
-> That way our debug builds validate that all the callers of the
-> function are doing the right thing.
-> 
-> I frequently add ASSERT()s when debugging my code, but then remove
-> once I've found the issue. Typically I'm adding asserts to cover
-> conditions I know shouldn't occur, but could be caused by a bug and
-> I try to place the asserts to catch the issue earlier than what I'm
-> currently seeing. Depending on which debug assert fires first, I'll
-> change/add/remove asserts to further narrow down the problem.
-> 
-> Hence the ASSERTs I tend to leave in the code are either documenting
-> assumptions or were the ones that were most helpful in debugging the
-> changes I was making.
-> 
-> I did think about the asserts you added, wondering if they were
-> necessary. But then I noticed they were replicating a pattern in
-> other parts of the code so they seemed like a reasonable addition.
+> Of course, we should uses new option if ext4/xfs supports new dax mount
+> option on distros.  But should we fallback to use old option if ext4/xfs
+> doesn't support new dax mount option on some old distros?
+> btw:
+> it seems hard for testcases to use two different sets of mount options(i.e.
+> old and new) so do you have any suggestion?
 
-Okay... I will follow your suggestion and fold in all remaining
-ASSERTs (was not in this version) about this pattern. Will sort
-out the next version later...
+Try dax=never, it should work on any type of storage device if the
+kernel implements the "new" mount options at all.
 
-> 
-> > And in addition I will try to find more potential cases, if
-> > not, I will just send out with updated commit messages (maybe without
-> > iunlink orphan inode related part, just to confirm?).
-> 
-> Your original patch is fine including those iunlink bits. I was was
-> simply pointing out that spending more time cleaning up the iunlink
-> code wasn't worth spending time on because I've got much more
-> substantial changes that address those issues already...
+--D
 
-Okay...
-
-Thanks,
-Gao Xiang
-
+> > 
+> > > 2) I think _require_xfs_io_command "chattr" "x" is enough to check if fs
+> > > supports FS_XFLAG_DAX.  Is it necessary to add _require_scratch_dax_iflag()?
+> > > like this:
+> > > _require_scratch_dax_iflag()
+> > > {
+> > > 	_require_xfs_io_command "chattr" "x"
+> > > }
+> > 
+> > I suggested that list based on the major control knobs that will be
+> > visible to userspace programs.  Even if this is just a one-line helper,
+> > its name is useful for recognizing which of those knobs we're looking
+> > for.
+> > 
+> > Yes, you could probably save a trivial amount of time by skipping one
+> > iteration of bash function calling, but now everyone has to remember
+> > that the xfs_io chattr "x" flag means the dax inode flag, and not
+> > confuse it for chmod +x or something else.
 > 
-> Cheers,
+> Got it, thanks for your detailed explanation.
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> Best Regards,
+> Xiao Yang
+> > 
+> > --D
+> > 
+> > > Best Regards,
+> > > Xiao Yang
+> > > 
+> > > 
+> > 
+> > 
+> > .
+> > 
 > 
-
+> 
+> 
