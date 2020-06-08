@@ -2,35 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64CFA1F2A59
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jun 2020 02:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AF161F2A44
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jun 2020 02:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbgFIAHF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Jun 2020 20:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
+        id S1732868AbgFIAGU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Jun 2020 20:06:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730712AbgFHXVA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:00 -0400
+        id S1728187AbgFHXVI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E6B120814;
-        Mon,  8 Jun 2020 23:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93C1020872;
+        Mon,  8 Jun 2020 23:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658460;
-        bh=GBr6lo6dKfe4RZ2WPZnbUBTyniXVN/QBPvZbF4eMus0=;
+        s=default; t=1591658468;
+        bh=QAMWE1/DBYx5+V1FZnPPGk7MNCHZVe3zjX7evAGd5dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPwfALpGAAi6xV/S/pIY2uv+XFXxrIWhHGmppsZvXyEkr0YPp2SLSN5PvZQsekByX
-         aysJ/RXfraW2B1YE94r1eDWy7hK7M+6uAfd+IrMkQWFI4Eoaasv8yc4ejbbmO8CP4h
-         iCgy/cqheVJd2gdeA4AcMk97I3iVx0Vp7H19AaCE=
+        b=FOJQ4xYGnWEZUZ7tzqkQiAC1FTbNzRp9HnFjgn7ygDxSDUEptSdyRXGAsAEidIVUp
+         5Q9au3TGd25nwLiTl/Uy3Y7DLVEb83cTAoja8Wx+1akVguFhOrTOmbclfAJsvgCzyP
+         Nl5gdubDovZ6qjLY675fIjYtciXhXycTe5WN6Fno=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+Cc:     Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 100/175] xfs: clean up the error handling in xfs_swap_extents
-Date:   Mon,  8 Jun 2020 19:17:33 -0400
-Message-Id: <20200608231848.3366970-100-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 106/175] xfs: reset buffer write failure state on successful completion
+Date:   Mon,  8 Jun 2020 19:17:39 -0400
+Message-Id: <20200608231848.3366970-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -43,34 +45,81 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 8bc3b5e4b70d28f8edcafc3c9e4de515998eea9e ]
+[ Upstream commit b6983e80b03bd4fd42de71993b3ac7403edac758 ]
 
-Make sure we release resources properly if we cannot clean out the COW
-extents in preparation for an extent swap.
+The buffer write failure flag is intended to control the internal
+write retry that XFS has historically implemented to help mitigate
+the severity of transient I/O errors. The flag is set when a buffer
+is resubmitted from the I/O completion path due to a previous
+failure. It is checked on subsequent I/O completions to skip the
+internal retry and fall through to the higher level configurable
+error handling mechanism. The flag is cleared in the synchronous and
+delwri submission paths and also checked in various places to log
+write failure messages.
 
-Fixes: 96987eea537d6c ("xfs: cancel COW blocks before swapext")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+There are a couple minor problems with the current usage of this
+flag. One is that we issue an internal retry after every submission
+from xfsaild due to how delwri submission clears the flag. This
+results in double the expected or configured number of write
+attempts when under sustained failures. Another more subtle issue is
+that the flag is never cleared on successful I/O completion. This
+can cause xfs_wait_buftarg() to suggest that dirty buffers are being
+thrown away due to the existence of the flag, when the reality is
+that the flag might still be set because the write succeeded on the
+retry.
+
+Clear the write failure flag on successful I/O completion to address
+both of these problems. This means that the internal retry attempt
+occurs once since the last time a buffer write failed and that
+various other contexts only see the flag set when the immediately
+previous write attempt has failed.
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_bmap_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_buf.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 4f443703065e..0c71acc1b831 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1760,7 +1760,7 @@ xfs_swap_extents(
- 	if (xfs_inode_has_cow_data(tip)) {
- 		error = xfs_reflink_cancel_cow_range(tip, 0, NULLFILEOFF, true);
- 		if (error)
--			return error;
-+			goto out_unlock;
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 0abba171aa89..1264ac63e4e5 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1162,8 +1162,10 @@ xfs_buf_ioend(
+ 		bp->b_ops->verify_read(bp);
  	}
  
- 	/*
+-	if (!bp->b_error)
++	if (!bp->b_error) {
++		bp->b_flags &= ~XBF_WRITE_FAIL;
+ 		bp->b_flags |= XBF_DONE;
++	}
+ 
+ 	if (bp->b_iodone)
+ 		(*(bp->b_iodone))(bp);
+@@ -1223,7 +1225,7 @@ xfs_bwrite(
+ 
+ 	bp->b_flags |= XBF_WRITE;
+ 	bp->b_flags &= ~(XBF_ASYNC | XBF_READ | _XBF_DELWRI_Q |
+-			 XBF_WRITE_FAIL | XBF_DONE);
++			 XBF_DONE);
+ 
+ 	error = xfs_buf_submit(bp);
+ 	if (error)
+@@ -1929,7 +1931,7 @@ xfs_buf_delwri_submit_buffers(
+ 		 * synchronously. Otherwise, drop the buffer from the delwri
+ 		 * queue and submit async.
+ 		 */
+-		bp->b_flags &= ~(_XBF_DELWRI_Q | XBF_WRITE_FAIL);
++		bp->b_flags &= ~_XBF_DELWRI_Q;
+ 		bp->b_flags |= XBF_WRITE;
+ 		if (wait_list) {
+ 			bp->b_flags &= ~XBF_ASYNC;
 -- 
 2.25.1
 
