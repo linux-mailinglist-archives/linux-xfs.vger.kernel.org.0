@@ -2,471 +2,242 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 509B81F4E1D
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jun 2020 08:24:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3AE61F5556
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Jun 2020 15:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgFJGY2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Jun 2020 02:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgFJGY2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jun 2020 02:24:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE47C03E96B
-        for <linux-xfs@vger.kernel.org>; Tue,  9 Jun 2020 23:24:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j1so664715pfe.4
-        for <linux-xfs@vger.kernel.org>; Tue, 09 Jun 2020 23:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=As5DYQ6SHOw1wjwTJoWa7310GGCu5VSjCa+ORD94Zwc=;
-        b=hdidln+R4i8hAzeBAkU3YImRmtjAtJan4XsJ28Ljqh2G3hhSFbbVDNwY/waGLC3o6v
-         RaHdVwtZl0xfPISLkDEd1+4gzHDU6dkkyFo5g1IbhS/Hu380knTL+ugjFs7rApCMp+Du
-         kClLcpA0PRTJPWYrq1Vls51CytGarVK4CRSW2CtPYrBiXB5uEBwPDrOOvrb2hbDGGqaW
-         GLUnnOVjUJJfhKzgbuh9p9sV0ADGtcDcl/aUjrn4MMB2cmqfOPMaIyYl9cOgcyVw8FrA
-         nuBowepRg/X2mOpN+7EXsoBRTyhuMD9tjwtY250EiwhenfPGQvq37pxFtL1Pr3wiaMHX
-         7uEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=As5DYQ6SHOw1wjwTJoWa7310GGCu5VSjCa+ORD94Zwc=;
-        b=gxKDP0HmJJuExtbStwG6YMGLdeJ1NJAkeCFyYeY+oRtionWa8Vm39ypG25HJgNalcu
-         plZ2JWWbFmLueP3H3lO0CKyp6p55JDgirkFDj2oN2ZSZkGTEjcPPQsoYFgi9dqECqCWZ
-         yPDNmWoi8sV75765fCPcnJNeU+FGTDpBkKC9N2GKQASUe03FLPfBRgc3eY0HxZW/PxEu
-         gLdBrBYEjuqvXomKuaswbOISnvCCqt6/DSpaMMlP2G+ZA2tbgCVrDcv7mRI9dlmsrrqX
-         pC4NthxLccPU33n1fRU0eKokOZvzjvRgO+iKQoarPhe2pAbZlE1rbqvi3vI5b4dlrfaL
-         wBpA==
-X-Gm-Message-State: AOAM53109UadvxRqqXRSqhwase20umbOWAyRMXkpgfaYywFEvqdLriHq
-        s3EAWgE/hTSMyY8a4IKuLg0=
-X-Google-Smtp-Source: ABdhPJxp+1Q0FJ5dZMLEFghMVmONGtlSn0yjV4LnewhE6TgR9zAzcMkbwsJoGMTy77GZrLn96eTZ1w==
-X-Received: by 2002:a63:d70f:: with SMTP id d15mr1478382pgg.322.1591770267114;
-        Tue, 09 Jun 2020 23:24:27 -0700 (PDT)
-Received: from garuda.localnet ([122.171.171.148])
-        by smtp.gmail.com with ESMTPSA id s197sm11978126pfc.188.2020.06.09.23.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 23:24:26 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, bfoster@redhat.com,
-        hch@infradead.org
-Subject: Re: [PATCH 2/7] xfs: Check for per-inode extent count overflow
-Date:   Wed, 10 Jun 2020 11:54:13 +0530
-Message-ID: <1739746.qGurkL4Txz@garuda>
-In-Reply-To: <20200609170734.GA11245@magnolia>
-References: <20200606082745.15174-1-chandanrlinux@gmail.com> <6293256.TnI8RiW99x@garuda> <20200609170734.GA11245@magnolia>
+        id S1729162AbgFJNGi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Jun 2020 09:06:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41989 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729189AbgFJNGi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Jun 2020 09:06:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591794396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TS7kRd60LgrqEmCTzNpa2/nwePtrIRuwlVeuDr9uOe0=;
+        b=c3byaYsnvYLSfSrsGvfob8WcqzacImBpVeCo2sorbHh7MoYn2YHuQdE2ZhGjg3BrHgnhkY
+        Y5RdK1rGBiVg+tsQhLUgdZRpYQZyFp6bxz5Wpy6CWJYwRhs0iiOKhu2wfIet1SLsvp4wDY
+        aoxwm5xtz87LHFl1lMa874yvDQKpLYc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-OpPAg1iGM3CknLkAWUvEKA-1; Wed, 10 Jun 2020 09:06:32 -0400
+X-MC-Unique: OpPAg1iGM3CknLkAWUvEKA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CD39100CCC1;
+        Wed, 10 Jun 2020 13:06:31 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D615160C87;
+        Wed, 10 Jun 2020 13:06:30 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 09:06:28 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 28/30] xfs: rework xfs_iflush_cluster() dirty inode
+ iteration
+Message-ID: <20200610130628.GA50747@bfoster>
+References: <20200604074606.266213-1-david@fromorbit.com>
+ <20200604074606.266213-29-david@fromorbit.com>
+ <20200609131155.GB40899@bfoster>
+ <20200609220139.GJ2040@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609220139.GJ2040@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tuesday 9 June 2020 10:37:34 PM IST Darrick J. Wong wrote:
-> On Tue, Jun 09, 2020 at 07:52:48PM +0530, Chandan Babu R wrote:
-> > On Monday 8 June 2020 10:02:16 PM IST Darrick J. Wong wrote:
-> > > On Mon, Jun 08, 2020 at 09:24:25AM -0700, Darrick J. Wong wrote:
-> > > > On Sat, Jun 06, 2020 at 01:57:40PM +0530, Chandan Babu R wrote:
-> > > > > The following error message was noticed when a workload added one
-> > > > > million xattrs, deleted 50% of them and then inserted 400,000 new
-> > > > > xattrs.
-> > > > > 
-> > > > > XFS (loop0): xfs_iflush_int: detected corrupt incore inode 131, total extents = -19916, nblocks = 102937, ptr ffff9ce33b098c00
-> > > > > 
-> > > > > The error message was printed during unmounting the filesystem. The
-> > > > > value printed under "total extents" indicates that we overflowed the
-> > > > > per-inode signed 16-bit xattr extent counter.
-> > > > > 
-> > > > > Instead of letting this silent corruption occur, this patch checks for
-> > > > > extent counter (both data and xattr) overflow before we assign the
-> > > > > new value to the corresponding in-memory extent counter.
-> > > > > 
-> > > > > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-> > > > > ---
-> > > > >  fs/xfs/libxfs/xfs_bmap.c       | 92 +++++++++++++++++++++++++++-------
-> > > > >  fs/xfs/libxfs/xfs_inode_fork.c | 29 +++++++++++
-> > > > >  fs/xfs/libxfs/xfs_inode_fork.h |  1 +
-> > > > >  3 files changed, 104 insertions(+), 18 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> > > > > index edc63dba007f..798fca5c52af 100644
-> > > > > --- a/fs/xfs/libxfs/xfs_bmap.c
-> > > > > +++ b/fs/xfs/libxfs/xfs_bmap.c
-> > > > > @@ -906,7 +906,10 @@ xfs_bmap_local_to_extents(
-> > > > >  	xfs_iext_first(ifp, &icur);
-> > > > >  	xfs_iext_insert(ip, &icur, &rec, 0);
-> > > > >  
-> > > > > -	ifp->if_nextents = 1;
-> > > > > +	error = xfs_next_set(ip, whichfork, 1);
-> > > > > +	if (error)
-> > > > > +		goto done;
-> > > > 
-> > > > Are you sure that if_nextents == 0 is a precondition here?  Technically
-> > > > speaking, this turns an assignment into an increment operation.
-> > > > 
-> > > > > +
-> > > > >  	ip->i_d.di_nblocks = 1;
-> > > > >  	xfs_trans_mod_dquot_byino(tp, ip,
-> > > > >  		XFS_TRANS_DQ_BCOUNT, 1L);
-> > > > > @@ -1594,7 +1597,10 @@ xfs_bmap_add_extent_delay_real(
-> > > > >  		xfs_iext_remove(bma->ip, &bma->icur, state);
-> > > > >  		xfs_iext_prev(ifp, &bma->icur);
-> > > > >  		xfs_iext_update_extent(bma->ip, state, &bma->icur, &LEFT);
-> > > > > -		ifp->if_nextents--;
-> > > > > +
-> > > > > +		error = xfs_next_set(bma->ip, whichfork, -1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (bma->cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -1698,7 +1704,10 @@ xfs_bmap_add_extent_delay_real(
-> > > > >  		PREV.br_startblock = new->br_startblock;
-> > > > >  		PREV.br_state = new->br_state;
-> > > > >  		xfs_iext_update_extent(bma->ip, state, &bma->icur, &PREV);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(bma->ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (bma->cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -1764,7 +1773,10 @@ xfs_bmap_add_extent_delay_real(
-> > > > >  		 * The left neighbor is not contiguous.
-> > > > >  		 */
-> > > > >  		xfs_iext_update_extent(bma->ip, state, &bma->icur, new);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(bma->ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (bma->cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -1851,7 +1863,10 @@ xfs_bmap_add_extent_delay_real(
-> > > > >  		 * The right neighbor is not contiguous.
-> > > > >  		 */
-> > > > >  		xfs_iext_update_extent(bma->ip, state, &bma->icur, new);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(bma->ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (bma->cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -1937,7 +1952,10 @@ xfs_bmap_add_extent_delay_real(
-> > > > >  		xfs_iext_next(ifp, &bma->icur);
-> > > > >  		xfs_iext_insert(bma->ip, &bma->icur, &RIGHT, state);
-> > > > >  		xfs_iext_insert(bma->ip, &bma->icur, &LEFT, state);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(bma->ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (bma->cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -2141,7 +2159,11 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  		xfs_iext_remove(ip, icur, state);
-> > > > >  		xfs_iext_prev(ifp, icur);
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &LEFT);
-> > > > > -		ifp->if_nextents -= 2;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, -2);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > > +
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > >  		else {
-> > > > > @@ -2193,7 +2215,11 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  		xfs_iext_remove(ip, icur, state);
-> > > > >  		xfs_iext_prev(ifp, icur);
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &LEFT);
-> > > > > -		ifp->if_nextents--;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, -1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > > +
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > >  		else {
-> > > > > @@ -2235,7 +2261,10 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  		xfs_iext_remove(ip, icur, state);
-> > > > >  		xfs_iext_prev(ifp, icur);
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &PREV);
-> > > > > -		ifp->if_nextents--;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, -1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -2343,7 +2372,10 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &PREV);
-> > > > >  		xfs_iext_insert(ip, icur, new, state);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -2419,7 +2451,10 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &PREV);
-> > > > >  		xfs_iext_next(ifp, icur);
-> > > > >  		xfs_iext_insert(ip, icur, new, state);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -2471,7 +2506,10 @@ xfs_bmap_add_extent_unwritten_real(
-> > > > >  		xfs_iext_next(ifp, icur);
-> > > > >  		xfs_iext_insert(ip, icur, &r[1], state);
-> > > > >  		xfs_iext_insert(ip, icur, &r[0], state);
-> > > > > -		ifp->if_nextents += 2;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, 2);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL)
-> > > > >  			rval = XFS_ILOG_CORE | XFS_ILOG_DEXT;
-> > > > > @@ -2787,7 +2825,10 @@ xfs_bmap_add_extent_hole_real(
-> > > > >  		xfs_iext_remove(ip, icur, state);
-> > > > >  		xfs_iext_prev(ifp, icur);
-> > > > >  		xfs_iext_update_extent(ip, state, icur, &left);
-> > > > > -		ifp->if_nextents--;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, -1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL) {
-> > > > >  			rval = XFS_ILOG_CORE | xfs_ilog_fext(whichfork);
-> > > > > @@ -2886,7 +2927,10 @@ xfs_bmap_add_extent_hole_real(
-> > > > >  		 * Insert a new entry.
-> > > > >  		 */
-> > > > >  		xfs_iext_insert(ip, icur, new, state);
-> > > > > -		ifp->if_nextents++;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		if (cur == NULL) {
-> > > > >  			rval = XFS_ILOG_CORE | xfs_ilog_fext(whichfork);
-> > > > > @@ -5083,7 +5127,10 @@ xfs_bmap_del_extent_real(
-> > > > >  		 */
-> > > > >  		xfs_iext_remove(ip, icur, state);
-> > > > >  		xfs_iext_prev(ifp, icur);
-> > > > > -		ifp->if_nextents--;
-> > > > > +
-> > > > > +		error = xfs_next_set(ip, whichfork, -1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > >  
-> > > > >  		flags |= XFS_ILOG_CORE;
-> > > > >  		if (!cur) {
-> > > > > @@ -5193,7 +5240,10 @@ xfs_bmap_del_extent_real(
-> > > > >  		} else
-> > > > >  			flags |= xfs_ilog_fext(whichfork);
-> > > > >  
-> > > > > -		ifp->if_nextents++;
-> > > > > +		error = xfs_next_set(ip, whichfork, 1);
-> > > > > +		if (error)
-> > > > > +			goto done;
-> > > > > +
-> > > > >  		xfs_iext_next(ifp, icur);
-> > > > >  		xfs_iext_insert(ip, icur, &new, state);
-> > > > >  		break;
-> > > > > @@ -5660,7 +5710,10 @@ xfs_bmse_merge(
-> > > > >  	 * Update the on-disk extent count, the btree if necessary and log the
-> > > > >  	 * inode.
-> > > > >  	 */
-> > > > > -	ifp->if_nextents--;
-> > > > > +	error = xfs_next_set(ip, whichfork, -1);
-> > > > > +	if (error)
-> > > > > +		goto done;
-> > > > > +
-> > > > >  	*logflags |= XFS_ILOG_CORE;
-> > > > >  	if (!cur) {
-> > > > >  		*logflags |= XFS_ILOG_DEXT;
-> > > > > @@ -6047,7 +6100,10 @@ xfs_bmap_split_extent(
-> > > > >  	/* Add new extent */
-> > > > >  	xfs_iext_next(ifp, &icur);
-> > > > >  	xfs_iext_insert(ip, &icur, &new, 0);
-> > > > > -	ifp->if_nextents++;
-> > > > > +
-> > > > > +	error = xfs_next_set(ip, whichfork, 1);
-> > > > > +	if (error)
-> > > > > +		goto del_cursor;
-> > > > >  
-> > > > >  	if (cur) {
-> > > > >  		error = xfs_bmbt_lookup_eq(cur, &new, &i);
-> > > > > diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-> > > > > index 28b366275ae0..3bf5a2c391bd 100644
-> > > > > --- a/fs/xfs/libxfs/xfs_inode_fork.c
-> > > > > +++ b/fs/xfs/libxfs/xfs_inode_fork.c
-> > > > > @@ -728,3 +728,32 @@ xfs_ifork_verify_local_attr(
-> > > > >  
-> > > > >  	return 0;
-> > > > >  }
-> > > > > +
-> > > > > +int
-> > > > > +xfs_next_set(
-> > > > 
-> > > > "next"... please choose an abbreviation that doesn't collide with a
-> > > > common English word.
-> > > > 
-> > > > > +	struct xfs_inode	*ip,
-> > > > > +	int			whichfork,
-> > > > > +	int			delta)
-> > > > 
-> > > > Delta?  I thought this was a setter function?
-> > > > 
-> > > > > +{
-> > > > > +	struct xfs_ifork	*ifp;
-> > > > > +	int64_t			nr_exts;
-> > > > > +	int64_t			max_exts;
-> > > > > +
-> > > > > +	ifp = XFS_IFORK_PTR(ip, whichfork);
-> > > > > +
-> > > > > +	if (whichfork == XFS_DATA_FORK || whichfork == XFS_COW_FORK)
-> > > > > +		max_exts = MAXEXTNUM;
-> > > > > +	else if (whichfork == XFS_ATTR_FORK)
-> > > > > +		max_exts = MAXAEXTNUM;
-> > > > > +	else
-> > > > > +		ASSERT(0);
-> > > > > +
-> > > > > +	nr_exts = ifp->if_nextents + delta;
-> > > > 
-> > > > Nope, it's a modify function all right.  Then it should be named:
-> > > > 
-> > > > xfs_nextents_mod(ip, whichfork, delta)
-> > > > 
-> > > > > +	if ((delta > 0 && nr_exts > max_exts)
-> > > > > +		|| (delta < 0 && nr_exts < 0))
-> > > > 
-> > > > Line these up, please.  e.g.,
-> > > > 
-> > > > 	if ((delta > 0 && nr_exts > max_exts) ||
-> > > >             (delta < 0 && nr_exts < 0))
-> 
-> HA even the maintainer gets it wrong. :(
-> 
-> > > > 
-> > > > --D
-> > > > 
-> > > > > +		return -EOVERFLOW;
+On Wed, Jun 10, 2020 at 08:01:39AM +1000, Dave Chinner wrote:
+> On Tue, Jun 09, 2020 at 09:11:55AM -0400, Brian Foster wrote:
+> > On Thu, Jun 04, 2020 at 05:46:04PM +1000, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
 > > > 
-> > > Oh, also, shouldn't this be EFBIG ("File too big")?
-> > 
-> > True, EFBIG is more appropriate than EOVERFLOW in this case.
-> > 
-> > Darrick, I have one question. The purpose of this patch is to fix the zero day
-> > bug where we overflow extent counter silently and get to know about it only
-> > when flushing the incore inode to disk. Patches that come later in the series
-> > modify the extent count limits to 2^32 (for xattr fork) and 2^47 (for data
-> > fork). If this patch is not required to be sent to stable release, I will drop
-> > it from the series.
-> 
-> I would leave it in the series, unless you mean to send this as a
-> separate cleanup ahead of everything else?
-> 
-> Now that I think about it, this probably should become its own cleanup
-> series.  I just realized that if we error out EFBIG in the middle of a
-> bmap function, we're probably going to end up cancelling a dirty
-> transaction, which will cause an fs shutdown.  Since xfs cannot undo the
-> effects of a dirty transaction, we have to be able to error out earlier
-> in the transaction sequence so that we can back out to userspace without
-> affecting the filesystem.
-> 
-> IOWs, this means that any code path that could increase an inode's
-> extent count will have to check the the inode (after we take the ILOCK)
-> to make sure that it can accomodate however many more extents we're
-> adding.
-> 
-> static int
-> xfs_trans_inode_reserve_extent_count(ip, whichfork, nrtoadd)
-> {
-> 	if (MAX{,A}EXTNUM - XFS_IFORK_PTR(ip, whichfork)->if_nextents < nrtoadd)
-> 		return -EFBIG;
-> 	return 0;
-> }
-> 
-> 	error = xfs_trans_alloc(..., &tp);
-> 	if (error)
-> 		goto out;
-> 
-> 	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> 	xfs_trans_ijoin(ip, 0);
-> 
-> 	error = xfs_trans_inode_reserve_extent_count(ip, whichfork, nrtoadd)
-> 	if (error)
-> 		goto out;
-> 
-> 	error = xfs_trans_reserve_quota_nblks(tp, ip, ...);
-> 	if (error)
-> 		goto out;
-> 
-> ...or something like that.  And now suddenly this grows into its own
-> cleanup series. :/
-
-
-Ok. I will work on the cleanup series while we are reaching consensus on the
-log reservation changes.
-
-Thanks once again for the suggestions.
-
-> 
-> > Also, I can't have a "fixes" tag because this is a zero
-> > day bug.
-> 
-> Everything is a zero day now... but establishing a base for this one is
-> probably not going to be easy since I bet the overflow has existed since
-> the beginning.
-> 
-> --D
-> 
-> > 
+> > > Now that we have all the dirty inodes attached to the cluster
+> > > buffer, we don't actually have to do radix tree lookups to find
+> > > them. Sure, the radix tree is efficient, but walking a linked list
+> > > of just the dirty inodes attached to the buffer is much better.
 > > > 
-> > > --D
+> > > We are also no longer dependent on having a locked inode passed into
+> > > the function to determine where to start the lookup. This means we
+> > > can drop it from the function call and treat all inodes the same.
 > > > 
-> > > > > +
-> > > > > +	ifp->if_nextents = nr_exts;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-> > > > > index a4953e95c4f3..a84ae42ace79 100644
-> > > > > --- a/fs/xfs/libxfs/xfs_inode_fork.h
-> > > > > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> > > > > @@ -173,4 +173,5 @@ extern void xfs_ifork_init_cow(struct xfs_inode *ip);
-> > > > >  int xfs_ifork_verify_local_data(struct xfs_inode *ip);
-> > > > >  int xfs_ifork_verify_local_attr(struct xfs_inode *ip);
-> > > > >  
-> > > > > +int xfs_next_set(struct xfs_inode *ip, int whichfork, int delta);
-> > > > >  #endif	/* __XFS_INODE_FORK_H__ */
+> > > We also make xfs_iflush_cluster skip inodes marked with
+> > > XFS_IRECLAIM. This we avoid races with inodes that reclaim is
+> > > actively referencing or are being re-initialised by inode lookup. If
+> > > they are actually dirty, they'll get written by a future cluster
+> > > flush....
 > > > 
+> > > We also add a shutdown check after obtaining the flush lock so that
+> > > we catch inodes that are dirty in memory and may have inconsistent
+> > > state due to the shutdown in progress. We abort these inodes
+> > > directly and so they remove themselves directly from the buffer list
+> > > and the AIL rather than having to wait for the buffer to be failed
+> > > and callbacks run to be processed correctly.
+> > > 
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > >  fs/xfs/xfs_inode.c      | 148 ++++++++++++++++------------------------
+> > >  fs/xfs/xfs_inode.h      |   2 +-
+> > >  fs/xfs/xfs_inode_item.c |   2 +-
+> > >  3 files changed, 62 insertions(+), 90 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > > index 8566bd0f4334d..931a483d5b316 100644
+> > > --- a/fs/xfs/xfs_inode.c
+> > > +++ b/fs/xfs/xfs_inode.c
+> > > @@ -3611,117 +3611,94 @@ xfs_iflush(
+> > >   */
+> > >  int
+> > >  xfs_iflush_cluster(
+> > > -	struct xfs_inode	*ip,
+> > >  	struct xfs_buf		*bp)
+> > >  {
+> > ...
+> > > +	/*
+> > > +	 * We must use the safe variant here as on shutdown xfs_iflush_abort()
+> > > +	 * can remove itself from the list.
+> > > +	 */
+> > > +	list_for_each_entry_safe(lip, n, &bp->b_li_list, li_bio_list) {
+> > > +		iip = (struct xfs_inode_log_item *)lip;
+> > > +		ip = iip->ili_inode;
+> > >  
+> > >  		/*
+> > > -		 * because this is an RCU protected lookup, we could find a
+> > > -		 * recently freed or even reallocated inode during the lookup.
+> > > -		 * We need to check under the i_flags_lock for a valid inode
+> > > -		 * here. Skip it if it is not valid or the wrong inode.
+> > > +		 * Quick and dirty check to avoid locks if possible.
+> > >  		 */
+> > > -		spin_lock(&cip->i_flags_lock);
+> > > -		if (!cip->i_ino ||
+> > > -		    __xfs_iflags_test(cip, XFS_ISTALE)) {
+> > > -			spin_unlock(&cip->i_flags_lock);
+> > > +		if (__xfs_iflags_test(ip, XFS_IRECLAIM | XFS_IFLOCK))
+> > > +			continue;
+> > > +		if (xfs_ipincount(ip))
+> > >  			continue;
+> > > -		}
+> > >  
+> > >  		/*
+> > > -		 * Once we fall off the end of the cluster, no point checking
+> > > -		 * any more inodes in the list because they will also all be
+> > > -		 * outside the cluster.
+> > > +		 * The inode is still attached to the buffer, which means it is
+> > > +		 * dirty but reclaim might try to grab it. Check carefully for
+> > > +		 * that, and grab the ilock while still holding the i_flags_lock
+> > > +		 * to guarantee reclaim will not be able to reclaim this inode
+> > > +		 * once we drop the i_flags_lock.
+> > >  		 */
+> > > -		if ((XFS_INO_TO_AGINO(mp, cip->i_ino) & mask) != first_index) {
+> > > -			spin_unlock(&cip->i_flags_lock);
+> > > -			break;
+> > > +		spin_lock(&ip->i_flags_lock);
+> > > +		ASSERT(!__xfs_iflags_test(ip, XFS_ISTALE));
 > > 
-> > 
+> > What prevents a race with staling an inode here?
+> 
+> xfs_buf_item_release() does not drop the buffer lock when stale
+> buffers are committed. Hence the buffer it held locked until it is
+> committed to the journal, and unpinning the buffer on journal IO
+> completion runs xfs_iflush_done() -> xfs_iflush_abort() on all the
+> stale attached inodes. At which point, they are removed from the
+> buffer and the buffer is unlocked..
+> 
+> Hence we cannot run here with stale inodes attached to the buffer
+> because the buffer is locked the entire time stale inodes are
+> attached.
 > 
 
--- 
-chandan
+Ok, so it's actually that the earlier ISTALE check on the inode is more
+of an optimization since if we saw the flag set, we'd never be able to
+lock the buffer anyways.
 
+> > The push open codes an
+> > unlocked (i.e. no memory barrier) check before it acquires the buffer
+> > lock, so afaict it's technically possible to race and grab the buffer
+> > immediately after the cluster was freed. If that could happen, it looks
+> > like we'd also queue the buffer for write.
+> 
+> Not that I can tell, because we'll fail to get the buffer lock under
+> the AIL lock until the stale buffer is unpinned, but the unpin
+> occurs under the buffer lock and that removes the buffer from the
+> AIL. Hence there's no way the AIL pushing can actually push an inode
+> cluster buffer that has stale inodes attached to it...
+> 
 
+Makes sense.
+
+> > That also raises the question.. between this patch and the earlier push
+> > rework, why do we queue the buffer for write when nothing might have
+> > been flushed by this call?
+> 
+> Largely because I never observed a failure to flush at least one
+> inode so I didn't really consider it worth the additional complexity
+> in error handling in the push code. I've really been concerned about
+> the other end of the scale where we try to push the same buffer 30+
+> times for each IO.
+> 
+> You are right in that it could happen - perhaps just returning EAGAIN
+> if clcount == 0 at the end of the function is all that is necessary
+> and translating that to XFS_ITEM_LOCKED in the push function would
+> work.
+> 
+
+That sounds reasonable enough to cover that case.
+
+> > > -		 * check is not sufficient.
+> > > +		 * If we are shut down, unpin and abort the inode now as there
+> > > +		 * is no point in flushing it to the buffer just to get an IO
+> > > +		 * completion to abort the buffer and remove it from the AIL.
+> > >  		 */
+> > > -		if (!cip->i_ino) {
+> > > -			xfs_ifunlock(cip);
+> > > -			xfs_iunlock(cip, XFS_ILOCK_SHARED);
+> > > +		if (XFS_FORCED_SHUTDOWN(mp)) {
+> > > +			xfs_iunpin_wait(ip);
+> > 
+> > Note that we have an unlocked check above that skips pinned inodes.
+> 
+> Right, but we could be racing with a transaction commit that pinned
+> the inode and a shutdown. As the comment says: it's a quick and
+> dirty check to avoid trying to get locks when we know that it is
+> unlikely we can flush the inode without blocking. We still have to
+> recheck that state once we have the ILOCK....
+> 
+
+Right, but that means we can just as easily skip the shutdown processing
+(which waits for unpin) if a particular inode is pinned. So which is
+supposed to happen in the shutdown case?
+
+ISTM that either could happen. As a result this kind of looks like
+random logic to me. IIUC we rely on potentially coming back through the
+cluster flush path multiple times if inodes are pinned because of the
+racy pin/shutdown checks. If that's the case, then why not push the
+shutdown check to after the locked pin count check, skip the
+xfs_iunpin_wait() call entirely and then proceed to abort the flush at
+the same point we'd call xfs_iflush() if the fs weren't shutdown?
+
+FWIW, I'm also kind of wondering if we need this shutdown check at all
+now that this path doesn't have to accommodate reclaim. We follow up
+with failing the buffer in the exit path, but there's no guarantee there
+aren't other inodes that are passed over due to the pin checks,
+trylocks, etc. Can we just flush the inodes as normal and let xfsaild
+fail the buffers on submission without additional shutdown checks?
+
+Brian
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
 
