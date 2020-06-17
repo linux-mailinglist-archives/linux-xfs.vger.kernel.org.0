@@ -2,414 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B0AB1FCD1B
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Jun 2020 14:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBDB11FCDC1
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Jun 2020 14:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgFQMKJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 17 Jun 2020 08:10:09 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29610 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726355AbgFQMKJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 08:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592395806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NE5DsvyVaUpiPPUpgAdp+uClNiGt2yzPk8T3DbaD3z0=;
-        b=HQMCEzJ+Xz/HUCKi+eE538oC/xcbBu+0sIzzY6HvA/Ne+lLsPlVhxlkBg1iKwDQjDrIVbO
-        abtKYFbzqajLyMz78A9trqGmyrDQpJXTLpgwe5oLc7B4hxu/NF2Qyu7qlkJN615lld70wf
-        TEkUru1Zo0SipqT+hMazIEYrv6Ci4Xc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-Efctqmy7P8qJMX_8O1DM-Q-1; Wed, 17 Jun 2020 08:10:04 -0400
-X-MC-Unique: Efctqmy7P8qJMX_8O1DM-Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EACAB5AECE;
-        Wed, 17 Jun 2020 12:10:03 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6595019C79;
-        Wed, 17 Jun 2020 12:10:03 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 08:10:01 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 06/12] xfs_repair: create a new class of btree rebuild
- cursors
-Message-ID: <20200617121001.GE27169@bfoster>
-References: <159107201290.315004.4447998785149331259.stgit@magnolia>
- <159107205193.315004.2458726856192120217.stgit@magnolia>
+        id S1726652AbgFQMvw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 17 Jun 2020 08:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbgFQMvw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 08:51:52 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2293CC061794
+        for <linux-xfs@vger.kernel.org>; Wed, 17 Jun 2020 05:51:51 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id g129so1300468vsc.4
+        for <linux-xfs@vger.kernel.org>; Wed, 17 Jun 2020 05:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=J0VpeRSOJK/TFNJp5yzWMw9fGCcpvggw0aTUG92BVzQ=;
+        b=ZKu+9aqdvUwtLpcD7J4C6lBsgUyWhv6hsdFiirPA8rfuyV8UFVKPYwKVJpqr4UE2pU
+         B4BBgF/5tKeNtxlSugc0jyZ8n0Vx0ufUBYt6dnMT0Drxi3+fSSFxiSJ+IwH7V+9HmHyx
+         Rzunxw0ZWu5KXdV3WniWP9uaKBqvwhm3IwDF2Os1MtKolweQYfHW62nbS/WFDRsTvLko
+         qCJlyeq1K+77p6mYxectZSzbUHPK6ZA/hIvm1lKTRB89RRf5VNMgoLDF0JcvOIKLJNLi
+         6ZVgFiaqXCUReYOAGh6bZ7jZTr1+NZfUwO7BGDkr7SdTCt49iDVzZsvDFBewoWeU8EOa
+         Uetg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=J0VpeRSOJK/TFNJp5yzWMw9fGCcpvggw0aTUG92BVzQ=;
+        b=blYu+sDU49DqS8OtpRVoLnrDkGUU0a8y2CGB01hY6jLfAzmf7nyzsJk6k6lsaV1rKo
+         jIWShPoDQAph/T07DZWiGLEe3hD8GalDUMPQzUCm2tQHCOOWpY7xGCo96u7IuYoKgK7b
+         H6eBpmRRUh0oevxkNvb1bzlG/4ERyx9Bed570Jrlk4UB5T4QA3hddbsQGL57TjlNnkRw
+         rHIg/WWqxG9nowq2FtdVYrK+2cl3ibVs1t6KUZ0cKUfPmLUk5orzYHqhZv2TSoRd7S1t
+         XBPRoKHttZR22bl9PepDw4vqMD/S8dy8un2FZ7yOvgKDnZAGRE0Rjlu30mZt8j0Pv+rc
+         8NhQ==
+X-Gm-Message-State: AOAM531UlGQPwVbZDBjLVsTon4thsKMDsauPkHlY1a6cnnSHsCMWA12m
+        dO/V0C7V09xcQh2cYBBPEaEhkFAbYmN5697OzBE=
+X-Google-Smtp-Source: ABdhPJzrmrd/rglMr9DszowcG6Y0QAXwn/An5GjuB6XamBLTeQ4zmrnw8MDcDhu2dntdER4iErQzEM4lO6pfcS/fcBc=
+X-Received: by 2002:a05:6102:215:: with SMTP id z21mr5411787vsp.172.1592398310094;
+ Wed, 17 Jun 2020 05:51:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159107205193.315004.2458726856192120217.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Received: by 2002:ab0:40a9:0:0:0:0:0 with HTTP; Wed, 17 Jun 2020 05:51:49
+ -0700 (PDT)
+Reply-To: sctnld11170@tlen.pl
+From:   "Mr. Scott Donald" <mes64543@gmail.com>
+Date:   Wed, 17 Jun 2020 05:51:49 -0700
+Message-ID: <CAF4hjb9HbTFrvT60_D2AxdTDO1u7dvGfuv1j=7BUKW97ffC-sw@mail.gmail.com>
+Subject: Hello, Please
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 09:27:31PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Create some new support structures and functions to assist phase5 in
-> using the btree bulk loader to reconstruct metadata btrees.  This is the
-> first step in removing the open-coded AG btree rebuilding code.
-> 
-> Note: The code in this patch will not be used anywhere until the next
-> patch, so warnings about unused symbols are expected.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
+Dear Friend,
+I'm Mr. Scott Donald a Successful business Man. dealing with
+Exportation, I got your mail contact through search to let you know my
+Ugly Situation Am a dying Man here in Los Angeles California Hospital
+Bed in (USA), I Lost my Wife and my only Daughter for Covid-19 I'm
+dying with same symptoms. my Doctor open-up to me that I don't have
+enough time to live anymore, I have a project that I am about to hand
+over to you. I have already instructed the Barclays Bank of London to
+transfer my fund sum of =C2=A33,7M GBP to you as to enable you to give 50%
+to Charitable Home and take 50% I have given all I have here in
+America to Charitable home I ask my Doctor to help me keep you notice
+when I'm no more please, allow me to see you on my Doctor whats-app
+video call very urgent please, here is my Doctor Whats-app Number for
+urgent notice +13019692737
 
-I still find it odd to include the phase5.c changes in this patch when
-it amounts to the addition of a single unused parameter, but I'll defer
-to the maintainer on that. Otherwise LGTM:
+Hope To Hear From You. I'm sending this email to you for the second
+time yet no response from you.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+My Regards.
 
->  repair/Makefile   |    4 +
->  repair/agbtree.c  |  152 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  repair/agbtree.h  |   29 ++++++++++
->  repair/bulkload.c |   37 +++++++++++++
->  repair/bulkload.h |    2 +
->  repair/phase5.c   |   41 ++++++++------
->  6 files changed, 244 insertions(+), 21 deletions(-)
->  create mode 100644 repair/agbtree.c
->  create mode 100644 repair/agbtree.h
-> 
-> 
-> diff --git a/repair/Makefile b/repair/Makefile
-> index 62d84bbf..f6a6e3f9 100644
-> --- a/repair/Makefile
-> +++ b/repair/Makefile
-> @@ -9,11 +9,11 @@ LSRCFILES = README
->  
->  LTCOMMAND = xfs_repair
->  
-> -HFILES = agheader.h attr_repair.h avl.h bulkload.h bmap.h btree.h \
-> +HFILES = agheader.h agbtree.h attr_repair.h avl.h bulkload.h bmap.h btree.h \
->  	da_util.h dinode.h dir2.h err_protos.h globals.h incore.h protos.h \
->  	rt.h progress.h scan.h versions.h prefetch.h rmap.h slab.h threads.h
->  
-> -CFILES = agheader.c attr_repair.c avl.c bulkload.c bmap.c btree.c \
-> +CFILES = agheader.c agbtree.c attr_repair.c avl.c bulkload.c bmap.c btree.c \
->  	da_util.c dino_chunks.c dinode.c dir2.c globals.c incore.c \
->  	incore_bmc.c init.c incore_ext.c incore_ino.c phase1.c \
->  	phase2.c phase3.c phase4.c phase5.c phase6.c phase7.c \
-> diff --git a/repair/agbtree.c b/repair/agbtree.c
-> new file mode 100644
-> index 00000000..e4179a44
-> --- /dev/null
-> +++ b/repair/agbtree.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2020 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> + */
-> +#include <libxfs.h>
-> +#include "err_protos.h"
-> +#include "slab.h"
-> +#include "rmap.h"
-> +#include "incore.h"
-> +#include "bulkload.h"
-> +#include "agbtree.h"
-> +
-> +/* Initialize a btree rebuild context. */
-> +static void
-> +init_rebuild(
-> +	struct repair_ctx		*sc,
-> +	const struct xfs_owner_info	*oinfo,
-> +	xfs_agblock_t			free_space,
-> +	struct bt_rebuild		*btr)
-> +{
-> +	memset(btr, 0, sizeof(struct bt_rebuild));
-> +
-> +	bulkload_init_ag(&btr->newbt, sc, oinfo);
-> +	bulkload_estimate_ag_slack(sc, &btr->bload, free_space);
-> +}
-> +
-> +/*
-> + * Update this free space record to reflect the blocks we stole from the
-> + * beginning of the record.
-> + */
-> +static void
-> +consume_freespace(
-> +	xfs_agnumber_t		agno,
-> +	struct extent_tree_node	*ext_ptr,
-> +	uint32_t		len)
-> +{
-> +	struct extent_tree_node	*bno_ext_ptr;
-> +	xfs_agblock_t		new_start = ext_ptr->ex_startblock + len;
-> +	xfs_extlen_t		new_len = ext_ptr->ex_blockcount - len;
-> +
-> +	/* Delete the used-up extent from both extent trees. */
-> +#ifdef XR_BLD_FREE_TRACE
-> +	fprintf(stderr, "releasing extent: %u [%u %u]\n", agno,
-> +			ext_ptr->ex_startblock, ext_ptr->ex_blockcount);
-> +#endif
-> +	bno_ext_ptr = find_bno_extent(agno, ext_ptr->ex_startblock);
-> +	ASSERT(bno_ext_ptr != NULL);
-> +	get_bno_extent(agno, bno_ext_ptr);
-> +	release_extent_tree_node(bno_ext_ptr);
-> +
-> +	ext_ptr = get_bcnt_extent(agno, ext_ptr->ex_startblock,
-> +			ext_ptr->ex_blockcount);
-> +	release_extent_tree_node(ext_ptr);
-> +
-> +	/*
-> +	 * If we only used part of this last extent, then we must reinsert the
-> +	 * extent to maintain proper sorting order.
-> +	 */
-> +	if (new_len > 0) {
-> +		add_bno_extent(agno, new_start, new_len);
-> +		add_bcnt_extent(agno, new_start, new_len);
-> +	}
-> +}
-> +
-> +/* Reserve blocks for the new btree. */
-> +static void
-> +reserve_btblocks(
-> +	struct xfs_mount	*mp,
-> +	xfs_agnumber_t		agno,
-> +	struct bt_rebuild	*btr,
-> +	uint32_t		nr_blocks)
-> +{
-> +	struct extent_tree_node	*ext_ptr;
-> +	uint32_t		blocks_allocated = 0;
-> +	uint32_t		len;
-> +	int			error;
-> +
-> +	while (blocks_allocated < nr_blocks)  {
-> +		xfs_fsblock_t	fsbno;
-> +
-> +		/*
-> +		 * Grab the smallest extent and use it up, then get the
-> +		 * next smallest.  This mimics the init_*_cursor code.
-> +		 */
-> +		ext_ptr = findfirst_bcnt_extent(agno);
-> +		if (!ext_ptr)
-> +			do_error(
-> +_("error - not enough free space in filesystem\n"));
-> +
-> +		/* Use up the extent we've got. */
-> +		len = min(ext_ptr->ex_blockcount, nr_blocks - blocks_allocated);
-> +		fsbno = XFS_AGB_TO_FSB(mp, agno, ext_ptr->ex_startblock);
-> +		error = bulkload_add_blocks(&btr->newbt, fsbno, len);
-> +		if (error)
-> +			do_error(_("could not set up btree reservation: %s\n"),
-> +				strerror(-error));
-> +
-> +		error = rmap_add_ag_rec(mp, agno, ext_ptr->ex_startblock, len,
-> +				btr->newbt.oinfo.oi_owner);
-> +		if (error)
-> +			do_error(_("could not set up btree rmaps: %s\n"),
-> +				strerror(-error));
-> +
-> +		consume_freespace(agno, ext_ptr, len);
-> +		blocks_allocated += len;
-> +	}
-> +#ifdef XR_BLD_FREE_TRACE
-> +	fprintf(stderr, "blocks_allocated = %d\n",
-> +		blocks_allocated);
-> +#endif
-> +}
-> +
-> +/* Feed one of the new btree blocks to the bulk loader. */
-> +static int
-> +rebuild_claim_block(
-> +	struct xfs_btree_cur	*cur,
-> +	union xfs_btree_ptr	*ptr,
-> +	void			*priv)
-> +{
-> +	struct bt_rebuild	*btr = priv;
-> +
-> +	return bulkload_claim_block(cur, &btr->newbt, ptr);
-> +}
-> +
-> +/*
-> + * Scoop up leftovers from a rebuild cursor for later freeing, then free the
-> + * rebuild context.
-> + */
-> +void
-> +finish_rebuild(
-> +	struct xfs_mount	*mp,
-> +	struct bt_rebuild	*btr,
-> +	struct xfs_slab		*lost_fsb)
-> +{
-> +	struct bulkload_resv	*resv, *n;
-> +
-> +	for_each_bulkload_reservation(&btr->newbt, resv, n) {
-> +		while (resv->used < resv->len) {
-> +			xfs_fsblock_t	fsb = resv->fsbno + resv->used;
-> +			int		error;
-> +
-> +			error = slab_add(lost_fsb, &fsb);
-> +			if (error)
-> +				do_error(
-> +_("Insufficient memory saving lost blocks.\n"));
-> +			resv->used++;
-> +		}
-> +	}
-> +
-> +	bulkload_destroy(&btr->newbt, 0);
-> +}
-> diff --git a/repair/agbtree.h b/repair/agbtree.h
-> new file mode 100644
-> index 00000000..50ea3c60
-> --- /dev/null
-> +++ b/repair/agbtree.h
-> @@ -0,0 +1,29 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2020 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> + */
-> +#ifndef __XFS_REPAIR_AG_BTREE_H__
-> +#define __XFS_REPAIR_AG_BTREE_H__
-> +
-> +/* Context for rebuilding a per-AG btree. */
-> +struct bt_rebuild {
-> +	/* Fake root for staging and space preallocations. */
-> +	struct bulkload	newbt;
-> +
-> +	/* Geometry of the new btree. */
-> +	struct xfs_btree_bload	bload;
-> +
-> +	/* Staging btree cursor for the new tree. */
-> +	struct xfs_btree_cur	*cur;
-> +
-> +	/* Tree-specific data. */
-> +	union {
-> +		struct xfs_slab_cursor	*slab_cursor;
-> +	};
-> +};
-> +
-> +void finish_rebuild(struct xfs_mount *mp, struct bt_rebuild *btr,
-> +		struct xfs_slab *lost_fsb);
-> +
-> +#endif /* __XFS_REPAIR_AG_BTREE_H__ */
-> diff --git a/repair/bulkload.c b/repair/bulkload.c
-> index 4c69fe0d..9a6ca0c2 100644
-> --- a/repair/bulkload.c
-> +++ b/repair/bulkload.c
-> @@ -95,3 +95,40 @@ bulkload_claim_block(
->  		ptr->s = cpu_to_be32(XFS_FSB_TO_AGBNO(cur->bc_mp, fsb));
->  	return 0;
->  }
-> +
-> +/*
-> + * Estimate proper slack values for a btree that's being reloaded.
-> + *
-> + * Under most circumstances, we'll take whatever default loading value the
-> + * btree bulk loading code calculates for us.  However, there are some
-> + * exceptions to this rule:
-> + *
-> + * (1) If someone turned one of the debug knobs.
-> + * (2) The AG has less than ~9% space free.
-> + *
-> + * Note that we actually use 3/32 for the comparison to avoid division.
-> + */
-> +void
-> +bulkload_estimate_ag_slack(
-> +	struct repair_ctx	*sc,
-> +	struct xfs_btree_bload	*bload,
-> +	unsigned int		free)
-> +{
-> +	/*
-> +	 * The global values are set to -1 (i.e. take the bload defaults)
-> +	 * unless someone has set them otherwise, so we just pull the values
-> +	 * here.
-> +	 */
-> +	bload->leaf_slack = bload_leaf_slack;
-> +	bload->node_slack = bload_node_slack;
-> +
-> +	/* No further changes if there's more than 3/32ths space left. */
-> +	if (free >= ((sc->mp->m_sb.sb_agblocks * 3) >> 5))
-> +		return;
-> +
-> +	/* We're low on space; load the btrees as tightly as possible. */
-> +	if (bload->leaf_slack < 0)
-> +		bload->leaf_slack = 0;
-> +	if (bload->node_slack < 0)
-> +		bload->node_slack = 0;
-> +}
-> diff --git a/repair/bulkload.h b/repair/bulkload.h
-> index 79f81cb0..01f67279 100644
-> --- a/repair/bulkload.h
-> +++ b/repair/bulkload.h
-> @@ -53,5 +53,7 @@ int bulkload_add_blocks(struct bulkload *bkl, xfs_fsblock_t fsbno,
->  void bulkload_destroy(struct bulkload *bkl, int error);
->  int bulkload_claim_block(struct xfs_btree_cur *cur, struct bulkload *bkl,
->  		union xfs_btree_ptr *ptr);
-> +void bulkload_estimate_ag_slack(struct repair_ctx *sc,
-> +		struct xfs_btree_bload *bload, unsigned int free);
->  
->  #endif /* __XFS_REPAIR_BULKLOAD_H__ */
-> diff --git a/repair/phase5.c b/repair/phase5.c
-> index 75c480fd..8175aa6f 100644
-> --- a/repair/phase5.c
-> +++ b/repair/phase5.c
-> @@ -18,6 +18,8 @@
->  #include "progress.h"
->  #include "slab.h"
->  #include "rmap.h"
-> +#include "bulkload.h"
-> +#include "agbtree.h"
->  
->  /*
->   * we maintain the current slice (path from root to leaf)
-> @@ -2288,28 +2290,29 @@ keep_fsinos(xfs_mount_t *mp)
->  
->  static void
->  phase5_func(
-> -	xfs_mount_t	*mp,
-> -	xfs_agnumber_t	agno,
-> -	struct xfs_slab	*lost_fsb)
-> +	struct xfs_mount	*mp,
-> +	xfs_agnumber_t		agno,
-> +	struct xfs_slab		*lost_fsb)
->  {
-> -	uint64_t	num_inos;
-> -	uint64_t	num_free_inos;
-> -	uint64_t	finobt_num_inos;
-> -	uint64_t	finobt_num_free_inos;
-> -	bt_status_t	bno_btree_curs;
-> -	bt_status_t	bcnt_btree_curs;
-> -	bt_status_t	ino_btree_curs;
-> -	bt_status_t	fino_btree_curs;
-> -	bt_status_t	rmap_btree_curs;
-> -	bt_status_t	refcnt_btree_curs;
-> -	int		extra_blocks = 0;
-> -	uint		num_freeblocks;
-> -	xfs_extlen_t	freeblks1;
-> +	struct repair_ctx	sc = { .mp = mp, };
-> +	struct agi_stat		agi_stat = {0,};
-> +	uint64_t		num_inos;
-> +	uint64_t		num_free_inos;
-> +	uint64_t		finobt_num_inos;
-> +	uint64_t		finobt_num_free_inos;
-> +	bt_status_t		bno_btree_curs;
-> +	bt_status_t		bcnt_btree_curs;
-> +	bt_status_t		ino_btree_curs;
-> +	bt_status_t		fino_btree_curs;
-> +	bt_status_t		rmap_btree_curs;
-> +	bt_status_t		refcnt_btree_curs;
-> +	int			extra_blocks = 0;
-> +	uint			num_freeblocks;
-> +	xfs_extlen_t		freeblks1;
->  #ifdef DEBUG
-> -	xfs_extlen_t	freeblks2;
-> +	xfs_extlen_t		freeblks2;
->  #endif
-> -	xfs_agblock_t	num_extents;
-> -	struct agi_stat	agi_stat = {0,};
-> +	xfs_agblock_t		num_extents;
->  
->  	if (verbose)
->  		do_log(_("        - agno = %d\n"), agno);
-> 
-
+Mr. Scott Donald
+CEO
