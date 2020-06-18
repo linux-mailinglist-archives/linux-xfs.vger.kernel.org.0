@@ -2,95 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E89C11FE16B
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jun 2020 03:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99FB81FDF0C
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jun 2020 03:39:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbgFRByi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 17 Jun 2020 21:54:38 -0400
-Received: from sonic313-22.consmr.mail.ir2.yahoo.com ([77.238.179.189]:46307
-        "EHLO sonic313-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731532AbgFRBZ4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 21:25:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592443553; bh=+NKq2YP/4c3bLm2HmGhxa/KCZOXr0NIUKHs/ECuC0yk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=N2lwg812GwPpiTS4iqO9ykinfCgsLawHRj1BUy+6/KF45iNoRdhYW3WzVS5emneIieyJED09zJTHtUpFP3luCB/hYsnAb7TSqVlbtBaS09VXIjYCScDamlrLuwDR7Pc/rCQsR94QJ0x9mydy54NXiUTyCHij9nY9G5is29C9+hCp3AKenv8XPKkT1QJFUY45NQXNyBUztVX5IcTVq6pJxuSSSuZJ4SFotVIxkaNxJgIopv2IxgNYEzu7JQT8jkKElDoXy+S1EMPVFxTXHvaHvPLFiaI8JT1Jn5hQnMkwDUz0tscWbkF8paW3ICSObyz7N4eGvxkEG1FQjQgik962fg==
-X-YMail-OSG: ptlCYzoVM1nMFORtpRlcrn33UEafr1yKwfASbWRUUKdQ.5gdngsRaPsgv5jrVF7
- y_N5yek44t.jXXnFWPOYHR9sZRhR6GoJxykL4R1tphQrrVjjJHYSwHSfhokX.8NWJjToRkkOCezf
- MX0I679XD74sbDcK0ctg.WQ1cEhCGvDf6MvlZrCWLwB5go1Mex7amG.gehrxR6FMdVl4STiTbTfX
- AJhqg9x_9ze8qXmroyclLQ2Ru_nHgl8v6S2Ur47RGVe_yFmhiZaqsPFcnSyIYi.KjcAHXmBfh59h
- kyzXo71wcd_P4DRtiNW1f18QV7cx5gN4ySgZHS.dFbwRHEgGVBNjLpRqfnurONbkmfkR98tKBN4T
- TQb1vT54DZdRGQ2OFoVh2lnmHqaSfBg.5tbXydbVEevVVDpS88FjK5a9ovW1C96bo.C26PGwJ._7
- woQVavfrzpIQ3G3NOVndVAfnORyXapfCli1HR_whGUMxqRTOsB4_Xfk9hHoD0SktFehDSzzMb.PF
- L1n4IL0MtuMRCXEXsvlmtNQOVGJ.9c84uSCyXULkR5VOuDJOeYXNUylVVSHmYUPz9Na_iVbzcZPi
- qG8H1yQqBrUc6nBL8D6_XDQMhFYRmBmKrd4NCuFrTeMd8bsPatWnU8PymwEhauRYAQDs52WbtrUQ
- jTeelKy6shdtD_Mhgjm81IVP8d1nX.ZQNSNjyJy8LdJ3TEtzW20m_5fRiI6VkRuP_2taATVyhViv
- lhYPkjLyHks.CrrfSOFcHrODVjx86DKJtMooe6z9mcSBysBowU17ltfeKchAZ9yoNLeRYdyQcuse
- v8luWnWALjuWVqtrO_wZPn8lsfNLuqnw1rg80.wzIgmofYD9jysn7VkQPoiWODMv0bc6ulnQvhQH
- 6MN0cE4598g2aAy.NnRDvC2E.o73xUnr15Pua_ixduJlmrudQSGMROs1upfZLlbTsb1RT92YTYZb
- hN1rMRDyCcdfUWQozgJ0JzZ6zIDqy0KDQKH1erONfgweNdk.3KeHHgQUuEpRcDobYIGHraOIE8yZ
- ZIBAuaYlXXaFgTdgRdjJaOmEPBxIUBfG3H_Me43EFk7YX3zcUshxKpH9j0WC9kJZxuXZRn3afiwG
- rnsGEj2.ICuqCXjbDGt0OKzCareXIlMlTwNN33usEyaJZAFDDqn0dt1NBUOcqiajmEOrlHKgpFzT
- TOLYbRewrSzFkgIgnQ3IsjY1UxmlgD64aiOTu43_gVHHSgWsrlZFNCMcgbHFhi4GRXh9MsUIIavF
- 5K8PTfLpSmKTq212kDmE_mvczM_TwaO9S6.ntghrrUS2OnpK1rwgcTTsmoGlw1ZkQrRklSbiz907
- 7MPw-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ir2.yahoo.com with HTTP; Thu, 18 Jun 2020 01:25:53 +0000
-Date:   Thu, 18 Jun 2020 01:25:53 +0000 (UTC)
-From:   "Mrs. Mina A. Brunel" <mrs.mainaabrunel126@gmail.com>
-Reply-To: mrsminaaaliyahbrunel344@gmail.com
-Message-ID: <1329745505.4360115.1592443553580@mail.yahoo.com>
-Subject: My Dear in the lord
+        id S1732534AbgFRBi0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 17 Jun 2020 21:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732547AbgFRBab (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 21:30:31 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056DAC061755;
+        Wed, 17 Jun 2020 18:30:30 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b27so4094827qka.4;
+        Wed, 17 Jun 2020 18:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BgQL6jr7f4Pok+oRfrdP837PZf1178oPJYqZuFJeOOM=;
+        b=PsoyNROs97j1k2IGHTBbgdA1UmsBzqoIU4M9fAiqotRAMt2bltVbCKEquho2syZZ8a
+         hBoONSygFB18Ey8vU3Y3DQic30cQ34dLKddxAqW74b0hN7xln8EFfDmJL+yPMf/RCQNH
+         +8UC8geUs0OFu6oPvSUOl+BjoSKT73x8hLu8Si+8xsOkIMmw8utndSm2YFEl1d+2y3Vy
+         SIETCtxkGsv/mNz/kre1pCMonY3xKajSxgHkH/I7UvrRTq7w9Pzn1JyiTVainKp1tjST
+         nk6zyaFXLinCbFwP//4BjNJKz5i+UuVUcENob2yJ9qKKHk2e/d5ZQGjn3BcUUjMDc3I8
+         A+HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BgQL6jr7f4Pok+oRfrdP837PZf1178oPJYqZuFJeOOM=;
+        b=r8T9rzT07whmPCoah12mDClWmTH/na8nIVIvMrjfUYkn0O+MKzWTepn6IS8xL3s3up
+         aFONMUT4MysG2B/u5/smkzvgSAP4F1X9gfALpfSHxQlW8XAxaHYOTDZ55gS6PVe6FuS6
+         NWUESj7yFFXCjc8M3lC2n1iaByG+Dm9ZfHCGWPITxdxYMOxAGr20rnRJPC6Q7hSBvrsK
+         cDfDNIW3cRE4i16a0eBc+cRM79m6PnbXHgjZOwJZ6chWN9ym1Z8OfHSrWZZQP6DD1bRW
+         E0/qCHrpCK39MVTtMAKrbY0bwE+8BtRqxK4qgjfA6R9sAkEY9gr4tmqlfoCn7sSE7DKf
+         s/Zw==
+X-Gm-Message-State: AOAM530qwgOtAZjmUwycuYwlCiXs8mciam2q7i4TEstW7jSAnNbfHQQB
+        mxrhFM5Fj7npDyvxFigNTg==
+X-Google-Smtp-Source: ABdhPJwmfKV/RiX9rrG5aWDGqFvBQuR28QYYzJpTADtHrTUuB7rzV/CkW5/nnvBH2d+2wQJphU09nA==
+X-Received: by 2002:a37:63c2:: with SMTP id x185mr1621171qkb.82.1592443829168;
+        Wed, 17 Jun 2020 18:30:29 -0700 (PDT)
+Received: from gabell (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
+        by smtp.gmail.com with ESMTPSA id d78sm1642255qkg.106.2020.06.17.18.30.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jun 2020 18:30:28 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 21:30:26 -0400
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Eric Sandeen <sandeen@sandeen.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] fs: i_version mntopt gets visible through /proc/mounts
+Message-ID: <20200618013026.ewnhvf64nb62k2yx@gabell>
+References: <20200616202123.12656-1-msys.mizuma@gmail.com>
+ <20200617080314.GA7147@infradead.org>
+ <20200617155836.GD13815@fieldses.org>
+ <24692989-2ee0-3dcc-16d8-aa436114f5fb@sandeen.net>
+ <20200617172456.GP11245@magnolia>
+ <8f0df756-4f71-9d96-7a52-45bf51482556@sandeen.net>
+ <20200617181816.GA18315@fieldses.org>
+ <4cbb5cbe-feb4-2166-0634-29041a41a8dc@sandeen.net>
+ <20200617184507.GB18315@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <1329745505.4360115.1592443553580.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16119 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617184507.GB18315@fieldses.org>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Wed, Jun 17, 2020 at 02:45:07PM -0400, J. Bruce Fields wrote:
+> On Wed, Jun 17, 2020 at 01:28:11PM -0500, Eric Sandeen wrote:
+> > but mount(8) has already exposed this interface:
+> > 
+> >        iversion
+> >               Every time the inode is modified, the i_version field will be incremented.
+> > 
+> >        noiversion
+> >               Do not increment the i_version inode field.
+> > 
+> > so now what?
+> 
+> It's not like anyone's actually depending on i_version *not* being
+> incremented.  (Can you even observe it from userspace other than over
+> NFS?)
+> 
+> So, just silently turn on the "iversion" behavior and ignore noiversion,
+> and I doubt you're going to break any real application.
 
+I suppose it's probably good to remain the options for user compatibility,
+however, it seems that iversion and noiversiont are useful for
+only ext4.
+How about moving iversion and noiversion description on mount(8)
+to ext4 specific option?
 
-My Dear in the lord
+And fixing the remount issue for XFS (maybe btrfs has the same
+issue as well)?
+For XFS like as:
 
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..2ddd634cfb0b 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1748,6 +1748,9 @@ xfs_fc_reconfigure(
+                        return error;
+        }
 
-My name is Mrs. Mina A. Brunel I am a Norway Citizen who is living in Burki=
-na Faso, I am married to Mr. Brunel Patrice, a politician who owns a small =
-gold company in Burkina Faso; He died of Leprosy and Radesyge, in the year =
-February 2010, During his lifetime he deposited the sum of =E2=82=AC 8.5 Mi=
-llion Euro) Eight million, Five hundred thousand Euros in a bank in Ouagado=
-ugou the capital city of Burkina Faso in West Africa. The money was from th=
-e sale of his company and death benefits payment and entitlements of my dec=
-eased husband by his company.
++       if (XFS_SB_VERSION_NUM(&mp->m_sb) == XFS_SB_VERSION_5)
++               mp->m_super->s_flags |= SB_I_VERSION;
++
+        return 0;
+ }
 
-I am sending you this message with heavy tears in my eyes and great sorrow =
-in my heart, and also praying that it will reach you in good health because=
- I am not in good health, I sleep every night without knowing if I may be a=
-live to see the next day. I am suffering from long time cancer and presentl=
-y I am partially suffering from Leprosy, which has become difficult for me =
-to move around. I was married to my late husband for more than 6 years with=
-out having a child and my doctor confided that I have less chance to live, =
-having to know when the cup of death will come, I decided to contact you to=
- claim the fund since I don't have any relation I grew up from an orphanage=
- home.
-
-I have decided to donate this money for the support of helping Motherless b=
-abies/Less privileged/Widows and churches also to build the house of God be=
-cause I am dying and diagnosed with cancer for about 3 years ago. I have de=
-cided to donate from what I have inherited from my late husband to you for =
-the good work of Almighty God; I will be going in for an operation surgery =
-soon.
-
-Now I want you to stand as my next of kin to claim the funds for charity pu=
-rposes. Because of this money remains unclaimed after my death, the bank ex=
-ecutives or the government will take the money as unclaimed fund and maybe =
-use it for selfishness and worthless ventures, I need a very honest person =
-who can claim this money and use it for Charity works, for orphanages, wido=
-ws and also build schools and churches for less privilege that will be name=
-d after my late husband and my name.
-
-I need your urgent answer to know if you will be able to execute this proje=
-ct, and I will give you more information on how the fund will be transferre=
-d to your bank account or online banking.
-
-Thanks
-Mrs. Mina A. Brunel
+Thanks,
+Masa
