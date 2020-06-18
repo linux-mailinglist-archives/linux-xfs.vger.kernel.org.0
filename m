@@ -2,131 +2,119 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D76531FDEF3
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jun 2020 03:39:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1541FDF21
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jun 2020 03:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731976AbgFRBhP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 17 Jun 2020 21:37:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45666 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732922AbgFRBhD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 21:37:03 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05I1VwwD020779;
-        Thu, 18 Jun 2020 01:36:32 GMT
+        id S1732998AbgFRBjK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 17 Jun 2020 21:39:10 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56176 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732508AbgFRBjJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 17 Jun 2020 21:39:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05I1b029041625;
+        Thu, 18 Jun 2020 01:39:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=NjO9T+ItUssJ7a0CFcdru+/uu2SQQSgoZuGDk/82NMM=;
- b=r2fNIwyDn5uoXDgXjExVguYuEbEMerprYiys7ZMPD+7osHM1ln5t2f7dicDoFNGe9IKd
- rDhDLKJqpONP5xAMuKnK0fqxmvihg9iJ6nFjE3aLnvOSLTExkQdTn7FgjgikSesNep6O
- pswIQP9kgVtDRoQpXFchm2F6Fw48ahQHLfXFJaYER2F4dbA5nGHNzXOyoesPk/olLgk2
- 5UL+i49w+U9sDH8slraHP7xquGfRQqHrraUTF1ANJLL8i6CIr9/a6QMTWPcd0NavwOTs
- 3Jtqck99LpSg0y+4g2YGb3aENcGu1E/Lx3ilmitYLpE2+9pDDgStPzE/zb1SLNUJtQJo dg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31qg354d3h-1
+ bh=ZNRhFbsEVEkKKSlXU9prNIrsFxXt4SEIe0tUGgiS1NI=;
+ b=jz6PSOTL1QPpPrk8IhQPhJUzeNzdiCKUBT+tuOyD+fPe9adpoY6mBBw9jU5kD2Ih6g3l
+ ELqucGhqXwSGNLgxY9/3JIlmpCoFT1FOmhZyvsuPUFsvfSbyMtfoqz7BlDfk0+fS4dJv
+ Lxj/IArOIzAumpYzywwXRD7g0hI4oRDbobEBu2xT1I1ENcYTvDiTwe1UkjikC6ZDpvBV
+ dW7ZQR3RronbERZEr6k6wDjACqXfOfhtH2PcSZqlJjiYiUvl8Tlp99Hx4AqkqKH6bJ82
+ UIgd3rT/Tddh/9OMxrYizD6Oespecnmane8JXwS8GkOyrvrwIIOb1BXSoiDRUXiLpdyf fQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31qeckw0ds-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 01:36:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05I1TCex141282;
-        Thu, 18 Jun 2020 01:36:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31q66qprqe-1
+        Thu, 18 Jun 2020 01:39:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05I1bhjn064536;
+        Thu, 18 Jun 2020 01:39:03 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31q65ympkb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 01:36:31 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05I1aSXr014206;
-        Thu, 18 Jun 2020 01:36:29 GMT
+        Thu, 18 Jun 2020 01:39:02 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05I1d1UO011446;
+        Thu, 18 Jun 2020 01:39:01 GMT
 Received: from localhost (/10.159.233.73)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jun 2020 18:36:28 -0700
-Date:   Wed, 17 Jun 2020 18:36:27 -0700
+        with ESMTP ; Wed, 17 Jun 2020 18:39:00 -0700
+Date:   Wed, 17 Jun 2020 18:39:01 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200618013627.GQ11245@magnolia>
-References: <20200617175310.20912-1-longman@redhat.com>
- <20200617175310.20912-3-longman@redhat.com>
- <20200618004505.GG2005@dread.disaster.area>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>
+Subject: Re: [PATCH] iomap: Make sure iomap_end is called after iomap_begin
+Message-ID: <20200618013901.GR11245@magnolia>
+References: <20200615160244.741244-1-agruenba@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618004505.GG2005@dread.disaster.area>
+In-Reply-To: <20200615160244.741244-1-agruenba@redhat.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 phishscore=0 suspectscore=1 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006180008
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006180009
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
- clxscore=1015 malwarescore=0 impostorscore=0 adultscore=0
- cotscore=-2147483648 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- suspectscore=1 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006180008
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 malwarescore=0
+ clxscore=1015 adultscore=0 suspectscore=1 spamscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006180009
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:45:05AM +1000, Dave Chinner wrote:
-> On Wed, Jun 17, 2020 at 01:53:10PM -0400, Waiman Long wrote:
-> >  fs/xfs/xfs_log.c   |  9 +++++++++
-> >  fs/xfs/xfs_trans.c | 31 +++++++++++++++++++++++++++----
-> >  2 files changed, 36 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> > index 00fda2e8e738..33244680d0d4 100644
-> > --- a/fs/xfs/xfs_log.c
-> > +++ b/fs/xfs/xfs_log.c
-> > @@ -830,8 +830,17 @@ xlog_unmount_write(
-> >  	xfs_lsn_t		lsn;
-> >  	uint			flags = XLOG_UNMOUNT_TRANS;
-> >  	int			error;
-> > +	unsigned long		pflags;
-> >  
-> > +	/*
-> > +	 * xfs_log_reserve() allocates memory. This can lead to fs reclaim
-> > +	 * which may conflicts with the unmount process. To avoid that,
-> > +	 * disable fs reclaim for this allocation.
-> > +	 */
-> > +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-> >  	error = xfs_log_reserve(mp, 600, 1, &tic, XFS_LOG, 0);
-> > +	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-> > +
-> >  	if (error)
-> >  		goto out_err;
+On Mon, Jun 15, 2020 at 06:02:44PM +0200, Andreas Gruenbacher wrote:
+> Make sure iomap_end is always called when iomap_begin succeeds: the
+> filesystem may take locks in iomap_begin and release them in iomap_end,
+> for example.
 > 
-> The more I look at this, the more I think Darrick is right and I
-> somewhat misinterpretted what he meant by "the top of the freeze
-> path".
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> ---
+>  fs/iomap/apply.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> i.e. setting PF_MEMALLOC_NOFS here is out of place - only one caller
-> of xlog_unmount_write requires PF_MEMALLOC_NOFS
-> context. That context should be set in the caller that requires this
-> context, and in this case it is xfs_fs_freeze(). This is top of the
-> final freeze state processing (what I think Darrick meant), not the
-> top of the freeze syscall call chain (what I thought he meant).
+> diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
+> index 76925b40b5fd..c00a14d825db 100644
+> --- a/fs/iomap/apply.c
+> +++ b/fs/iomap/apply.c
+> @@ -46,10 +46,10 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+>  	ret = ops->iomap_begin(inode, pos, length, flags, &iomap, &srcmap);
+>  	if (ret)
+>  		return ret;
+> -	if (WARN_ON(iomap.offset > pos))
+> -		return -EIO;
+> -	if (WARN_ON(iomap.length == 0))
+> -		return -EIO;
+> +	if (WARN_ON(iomap.offset > pos) || WARN_ON(iomap.length == 0)) {
 
-Aha!  Yes, that's exactly what I meant.  Sorry we all kinda muddled
-around for a few days. :/
+<urk> Forgot to actually review the original patch. :P
+
+Why combine these WARN_ON?  Before, you could distinguish between your
+iomap_begin method returning zero length vs. bad offset.
 
 --D
 
-> So if set PF_MEMALLOC_NOFS setting in xfs_fs_freeze(), it covers all
-> the allocations in this problematic path, and it should obliviates
-> the need for the first patch in the series altogether.
+> +		written = -EIO;
+> +		goto out;
+> +	}
+>  
+>  	trace_iomap_apply_dstmap(inode, &iomap);
+>  	if (srcmap.type != IOMAP_HOLE)
+> @@ -80,6 +80,7 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+>  	written = actor(inode, pos, length, data, &iomap,
+>  			srcmap.type != IOMAP_HOLE ? &srcmap : &iomap);
+>  
+> +out:
+>  	/*
+>  	 * Now the data has been copied, commit the range we've copied.  This
+>  	 * should not fail unless the filesystem has had a fatal error.
 > 
-> Cheers,
-> 
-> Dave.
+> base-commit: 97e0204907ac4c42c6e94ef466a047523f34b853
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> 2.26.2
+> 
