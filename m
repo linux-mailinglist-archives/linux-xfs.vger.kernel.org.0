@@ -2,176 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9623200160
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 06:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FEA0200581
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 11:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgFSErm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jun 2020 00:47:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38414 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFSErm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 00:47:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05J4gUJr070413;
-        Fri, 19 Jun 2020 04:47:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=3J2oETwsXiNOLram6rYS34PrIGCRJJRD72P4x/eLKOY=;
- b=tStn+cjJdRMjeVXe3v72XCjJQueFFMUZ290G9htLpDMQsmEnZO4GMtQ6mhKdxegIKAJQ
- WI06wV3isVEtLXOWhCemm500o1QpeINOAay/f9aobwcIkuJus8fAMFe35R+awtWywwdR
- UT0w1bwlnIHtxRiARmpMOo4QYZ1nsBykcFW6wrBiPPelS5zD8N8UdB+x7coXTKIIHaCA
- Nu4wq4zyWJzMHs6BxqS+NXV+GHop6DiT5lm3RnEPr+njAWVtioD4EnapMCCC7FrbeMB1
- D2PrcFY7km6JJAWxJsL+rwnCxPP+BPr48ntMjBcnC9ZwYGpo2mhglTBmcbtwG15gwDGy DA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 31q6604ns6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 04:47:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05J4lNTe074775;
-        Fri, 19 Jun 2020 04:47:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31q66uaaqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 04:47:36 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05J4lZih020824;
-        Fri, 19 Jun 2020 04:47:35 GMT
-Received: from localhost (/10.159.234.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 18 Jun 2020 21:47:35 -0700
-Date:   Thu, 18 Jun 2020 21:47:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     peter green <plugwash@p10link.net>,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: Bug#953537: xfsdump fails to install in /usr merged system.
-Message-ID: <20200619044734.GB11245@magnolia>
-References: <998fa1cb-9e9f-93cf-15f0-e97e5ec54e9a@p10link.net>
+        id S1731525AbgFSJkp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jun 2020 05:40:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55568 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731027AbgFSJkp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 05:40:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592559643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=owa0qFAPsKpu74jXgvEbAGd5tDvX5jYwWR6WKxTC83E=;
+        b=i/c7Aj1n1FNNHjecNMi3NofSRXcNkVOh0GV3EMqh8cb3AZBSjUjtFagBTpYa95yFdi9J0w
+        xX7VpO/KRQXGGvhcXTCaOjkCwRl7HOufxRHVFrlEOafUf75ZIs1B3FOwXyFxb19Yk+uFMr
+        SpfGxSjUEIvfUzedbQ4cE6+PxKuGbiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-E2DQ6Q59N3WWMbSJVCOn4A-1; Fri, 19 Jun 2020 05:39:29 -0400
+X-MC-Unique: E2DQ6Q59N3WWMbSJVCOn4A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7B8107B265;
+        Fri, 19 Jun 2020 09:39:26 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.195.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9A15D9E8;
+        Fri, 19 Jun 2020 09:39:18 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org
+Subject: [RFC PATCH 0/2] gfs2 readahead regression in v5.8-rc1
+Date:   Fri, 19 Jun 2020 11:39:14 +0200
+Message-Id: <20200619093916.1081129-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <998fa1cb-9e9f-93cf-15f0-e97e5ec54e9a@p10link.net>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006190031
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 clxscore=1011 mlxlogscore=999 suspectscore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006190030
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 05:05:00AM +0100, peter green wrote:
-> (original message was sent to nathans@redhat.com
-> 953537@bugs.debian.org and linux-xfs@vger.kernel.org re-sending as
-> plain-text only to linux-xfs@vger.kernel.org)
-> 
-> This bug has now caused xfsdump to be kicked out of testing which is
-> making amanda unbuildable in testing.
+Hello,
 
-Uhoh...
+can the two patches in this set still be considered for v5.8?
 
-> 
-> 
-> > Yes, what's really needed here is for a change to be merged upstream
-> > (as all other deb packaging artifacts are) otherwise this will keep
-> > getting lost in time.
-> To make it easier to upstream this I whipped up a patch that should
-> solve the issue while only modifying the debian packaging and not
-> touching the upstream makefiles. It is attached to this message and if
-> I get no response I will likely do some further testing and then NMU
-> it in Debian.
-> 
-> One issue I noticed is it's not all all obvious who upstream is. The
-> sgi website listed in README seems to be long dead and there are no
-> obvious upstream results in a google search for xfsdump. Gentoos page
-> on xfsdump links to https://xfs.wiki.kernel.org but that page makes no
-> mention of xfsdump.
-> 
-> I eventually poked around on git.kernel.org and my best guess is that
-> https://git.kernel.org/pub/scm/fs/xfs/xfsdump-dev.git/ is the upstream
-> git repository and linux-xfs@vger.kernel.org is the appropriate
-> mailing list, I would appreciate comments on whether or not this is
-> correct and updates to the documentation to reflect whatever the
-> correct location is.
+Commit d4388340ae0b ("fs: convert mpage_readpages to mpage_readahead")
+which converts gfs2 and other filesystems to use the new ->readahead
+address space operation is leading to deadlocks between the inode glocks
+and page locks: ->readahead is called with the pages to readahead
+already locked.  When gfs2_readahead then tries to lock the associated
+inode glock, another process already holding the inode glock may be
+trying to lock the same pages.
 
-Yep, you've found us. :)
+We could work around this in gfs by using a LM_FLAG_TRY lock in
+->readahead for now.  The real reason for this deadlock is that gfs2
+shouldn't be taking the inode glock in ->readahead in the first place
+though, so I'd prefer to fix this "properly" instead.  Unfortunately,
+this depends on a new IOCB_CACHED flag for generic_file_read_iter.
 
-Uh... seeing how /sbin seems to be a symlink to /usr/sbin on more and
-more distros now, how about we just change the upstream makefile to dump
-them in /usr/sbin and forget all about the symlinks?
+A previous version was posted in November:
 
-(He says, wondering what the actual maintainer will say...)
+https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/
 
---D
+Thanks,
+Andreas
 
-> diff -Nru xfsdump-3.1.9/debian/changelog xfsdump-3.1.9+nmu1/debian/changelog
-> --- xfsdump-3.1.9/debian/changelog	2020-01-31 17:30:58.000000000 +0000
-> +++ xfsdump-3.1.9+nmu1/debian/changelog	2020-06-19 01:01:18.000000000 +0000
-> @@ -1,3 +1,13 @@
-> +xfsdump (3.1.9+nmu1) UNRELEASED; urgency=medium
-> +
-> +  * Non-maintainer upload.
-> +  * Create and remove symlinks in postinst/preinst rather than including them
-> +    in the package to support merged user systems. Based on a patch from
-> +    Goffredo Baroncelli but adjusted to avoid the need for modifying upstream
-> +    non-debian files. ( Closes: 953537 )
-> +
-> + -- Peter Michael Green <plugwash@debian.org>  Fri, 19 Jun 2020 01:01:18 +0000
-> +
->  xfsdump (3.1.9) unstable; urgency=low
->  
->    * New upstream release
-> diff -Nru xfsdump-3.1.9/debian/rules xfsdump-3.1.9+nmu1/debian/rules
-> --- xfsdump-3.1.9/debian/rules	2020-01-31 17:30:58.000000000 +0000
-> +++ xfsdump-3.1.9+nmu1/debian/rules	2020-06-19 01:01:18.000000000 +0000
-> @@ -44,6 +44,9 @@
->  	-rm -rf $(dirme)
->  	$(pkgme) $(MAKE) -C . install
->  	$(pkgme) $(MAKE) dist
-> +	#remove the symlinks in /usr/sbin, the postinst will create them
-> +	#if appropriate for the users system 
-> +	rm -f debian/xfsdump/usr/sbin/xfsdump debian/xfsdump/usr/sbin/xfsrestore
->  	dh_installdocs
->  	dh_installchangelogs
->  	dh_strip
-> diff -Nru xfsdump-3.1.9/debian/xfsdump.postinst xfsdump-3.1.9+nmu1/debian/xfsdump.postinst
-> --- xfsdump-3.1.9/debian/xfsdump.postinst	1970-01-01 00:00:00.000000000 +0000
-> +++ xfsdump-3.1.9+nmu1/debian/xfsdump.postinst	2020-06-19 00:59:32.000000000 +0000
-> @@ -0,0 +1,12 @@
-> +#!/bin/sh
-> +set -e
-> +
-> +if [ "$1" = 'configure' ]; then
-> +  for file in xfsdump xfsrestore; do
-> +    if [ ! -e /usr/sbin/$file ]; then
-> +      ln -s /sbin/$file /usr/sbin/$file
-> +    fi
-> +  done
-> +fi
-> +
-> +#DEBHELPER#
-> diff -Nru xfsdump-3.1.9/debian/xfsdump.preinst xfsdump-3.1.9+nmu1/debian/xfsdump.preinst
-> --- xfsdump-3.1.9/debian/xfsdump.preinst	1970-01-01 00:00:00.000000000 +0000
-> +++ xfsdump-3.1.9+nmu1/debian/xfsdump.preinst	2020-06-19 01:01:18.000000000 +0000
-> @@ -0,0 +1,12 @@
-> +#!/bin/sh
-> +set -e
-> +
-> +if [ "$1" = 'remove' ]; then
-> +  for file in xfsdump xfsrestore; do
-> +    if [ -L /usr/sbin/$file ]; then
-> +      rm /usr/sbin/$file
-> +    fi
-> +  done
-> +fi
-> +
-> +#DEBHELPER#
+Andreas Gruenbacher (2):
+  fs: Add IOCB_CACHED flag for generic_file_read_iter
+  gfs2: Rework read and page fault locking
+
+ fs/gfs2/aops.c     | 27 ++------------------
+ fs/gfs2/file.c     | 61 ++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fs.h |  1 +
+ mm/filemap.c       | 16 ++++++++++--
+ 4 files changed, 76 insertions(+), 29 deletions(-)
+
+
+base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
+-- 
+2.26.2
 
