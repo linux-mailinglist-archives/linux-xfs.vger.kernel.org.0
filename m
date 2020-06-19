@@ -2,221 +2,187 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CDA9200785
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 13:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53210200830
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 13:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732574AbgFSLL5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jun 2020 07:11:57 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33975 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732588AbgFSLLQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 07:11:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592565052;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yNxawvTutXZ+5uJfem1ze84V209XLEUo3wX7SsgbaE0=;
-        b=dQoOgfGTsI5zMWWBqZbFvuh1LpHx5/JWRjmie58e9cTMs8Qv5a0a0wW2CbpPD1FpXY4oLR
-        DDKgzmZIde8mLFCWJnChUAcz+iGgjRFaiMtVpwtLChh4028UHciGzO5s5xGPA+HbyPNGt1
-        SozhTqyp5B5Y6D1l0seKw6r/6NNrz8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-qvN41upeOiu4CQAcWL9jdg-1; Fri, 19 Jun 2020 07:10:50 -0400
-X-MC-Unique: qvN41upeOiu4CQAcWL9jdg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95A281800D42;
-        Fri, 19 Jun 2020 11:10:49 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F60019D61;
-        Fri, 19 Jun 2020 11:10:49 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 07:10:47 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 12/12] xfs_repair: use bitmap to track blocks lost during
- btree construction
-Message-ID: <20200619111047.GB36770@bfoster>
-References: <159107201290.315004.4447998785149331259.stgit@magnolia>
- <159107209039.315004.11590903544086845302.stgit@magnolia>
+        id S1732343AbgFSL4D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jun 2020 07:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732225AbgFSL4B (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 07:56:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E19C06174E;
+        Fri, 19 Jun 2020 04:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qkiSuMBHq1jJPg79H69BLQzOTNgh3NSXy1sjSUD7sso=; b=YmQH+Tq34JCOA4Fpp+Ct6KEZnt
+        8L0h3XQhFTfcl+EZx9PD/QmFfjIZnpy4HoPgNnfBqHv64Iq5KfuRrtvHpLcfBtAlvvzZLZIa6wd8f
+        WBdUMayWL2szYgJzuQAOr0qIZuM5ocftxFPIzNGVjJSWVMSlvpoZeOYI4S4AGQO8Nb0yis8YPFDTs
+        gFrJkRAnXtTDuea5wOUzzuns5noEUpSfRbZfvMS0JhmrqudLco3NaWgMJzebBPpoOvVOvwgRaFW3F
+        NclEHximP3q4U57rebPA25c4PcGKBj5TM+IBkvwcGuWphYM+ITP6Po2I7wixaC/wuvOd6BghDK1It
+        5dgYN/wg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmFcc-0002c8-O0; Fri, 19 Jun 2020 11:55:50 +0000
+Date:   Fri, 19 Jun 2020 04:55:50 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] gfs2: Rework read and page fault locking
+Message-ID: <20200619115550.GY8681@bombadil.infradead.org>
+References: <20200619093916.1081129-1-agruenba@redhat.com>
+ <20200619093916.1081129-3-agruenba@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159107209039.315004.11590903544086845302.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200619093916.1081129-3-agruenba@redhat.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 09:28:10PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Use the incore bitmap structure to track blocks that were lost
-> during btree construction.  This makes it somewhat more efficient.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  repair/agbtree.c |   21 ++++++++--------
->  repair/agbtree.h |    2 +-
->  repair/phase5.c  |   72 ++++++++++++++++++++++--------------------------------
->  3 files changed, 41 insertions(+), 54 deletions(-)
-> 
-> 
-...
-> diff --git a/repair/phase5.c b/repair/phase5.c
-> index 439c1065..446f7ec0 100644
-> --- a/repair/phase5.c
-> +++ b/repair/phase5.c
-...
-> @@ -211,7 +212,7 @@ build_agf_agfl(
->  	struct bt_rebuild	*btr_cnt,
->  	struct bt_rebuild	*btr_rmap,
->  	struct bt_rebuild	*btr_refc,
-> -	struct xfs_slab		*lost_fsb)
-> +	struct bitmap		*lost_blocks)
+On Fri, Jun 19, 2020 at 11:39:16AM +0200, Andreas Gruenbacher wrote:
+>  static int gfs2_readpage(struct file *file, struct page *page)
 >  {
-
-Looks like another case of an unused parameter here, otherwise looks
-good:
-
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-
->  	struct extent_tree_node	*ext_ptr;
->  	struct xfs_buf		*agf_buf, *agfl_buf;
-> @@ -428,7 +429,7 @@ static void
->  phase5_func(
->  	struct xfs_mount	*mp,
->  	xfs_agnumber_t		agno,
-> -	struct xfs_slab		*lost_fsb)
-> +	struct bitmap		*lost_blocks)
->  {
->  	struct repair_ctx	sc = { .mp = mp, };
->  	struct bt_rebuild	btr_bno;
-> @@ -543,7 +544,7 @@ _("unable to rebuild AG %u.  Not enough free space in on-disk AG.\n"),
->  	 * set up agf and agfl
->  	 */
->  	build_agf_agfl(mp, agno, &btr_bno, &btr_cnt, &btr_rmap, &btr_refc,
-> -			lost_fsb);
-> +			lost_blocks);
+> -	struct address_space *mapping = page->mapping;
+> -	struct gfs2_inode *ip = GFS2_I(mapping->host);
+> -	struct gfs2_holder gh;
+>  	int error;
 >  
->  	build_inode_btrees(&sc, agno, &btr_ino, &btr_fino);
->  
-> @@ -553,15 +554,15 @@ _("unable to rebuild AG %u.  Not enough free space in on-disk AG.\n"),
->  	/*
->  	 * tear down cursors
->  	 */
-> -	finish_rebuild(mp, &btr_bno, lost_fsb);
-> -	finish_rebuild(mp, &btr_cnt, lost_fsb);
-> -	finish_rebuild(mp, &btr_ino, lost_fsb);
-> +	finish_rebuild(mp, &btr_bno, lost_blocks);
-> +	finish_rebuild(mp, &btr_cnt, lost_blocks);
-> +	finish_rebuild(mp, &btr_ino, lost_blocks);
->  	if (xfs_sb_version_hasfinobt(&mp->m_sb))
-> -		finish_rebuild(mp, &btr_fino, lost_fsb);
-> +		finish_rebuild(mp, &btr_fino, lost_blocks);
->  	if (xfs_sb_version_hasrmapbt(&mp->m_sb))
-> -		finish_rebuild(mp, &btr_rmap, lost_fsb);
-> +		finish_rebuild(mp, &btr_rmap, lost_blocks);
->  	if (xfs_sb_version_hasreflink(&mp->m_sb))
-> -		finish_rebuild(mp, &btr_refc, lost_fsb);
-> +		finish_rebuild(mp, &btr_refc, lost_blocks);
->  
->  	/*
->  	 * release the incore per-AG bno/bcnt trees so the extent nodes
-> @@ -572,48 +573,33 @@ _("unable to rebuild AG %u.  Not enough free space in on-disk AG.\n"),
->  	PROG_RPT_INC(prog_rpt_done[agno], 1);
->  }
->  
-> -/* Inject lost blocks back into the filesystem. */
-> +/* Inject this unused space back into the filesystem. */
->  static int
-> -inject_lost_blocks(
-> -	struct xfs_mount	*mp,
-> -	struct xfs_slab		*lost_fsbs)
-> +inject_lost_extent(
-> +	uint64_t		start,
-> +	uint64_t		length,
-> +	void			*arg)
->  {
-> -	struct xfs_trans	*tp = NULL;
-> -	struct xfs_slab_cursor	*cur = NULL;
-> -	xfs_fsblock_t		*fsb;
-> +	struct xfs_mount	*mp = arg;
-> +	struct xfs_trans	*tp;
->  	int			error;
->  
-> -	error = init_slab_cursor(lost_fsbs, NULL, &cur);
-> +	error = -libxfs_trans_alloc_rollable(mp, 16, &tp);
->  	if (error)
->  		return error;
->  
-> -	while ((fsb = pop_slab_cursor(cur)) != NULL) {
-> -		error = -libxfs_trans_alloc_rollable(mp, 16, &tp);
-> -		if (error)
-> -			goto out_cancel;
-> -
-> -		error = -libxfs_free_extent(tp, *fsb, 1,
-> -				&XFS_RMAP_OINFO_ANY_OWNER, XFS_AG_RESV_NONE);
-> -		if (error)
-> -			goto out_cancel;
-> -
-> -		error = -libxfs_trans_commit(tp);
-> -		if (error)
-> -			goto out_cancel;
-> -		tp = NULL;
-> -	}
-> +	error = -libxfs_free_extent(tp, start, length,
-> +			&XFS_RMAP_OINFO_ANY_OWNER, XFS_AG_RESV_NONE);
+> -	unlock_page(page);
+> -	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+> -	error = gfs2_glock_nq(&gh);
+> -	if (unlikely(error))
+> -		goto out;
+> -	error = AOP_TRUNCATED_PAGE;
+> -	lock_page(page);
+> -	if (page->mapping == mapping && !PageUptodate(page))
+> -		error = __gfs2_readpage(file, page);
+> -	else
+> -		unlock_page(page);
+> -	gfs2_glock_dq(&gh);
+> -out:
+> -	gfs2_holder_uninit(&gh);
+> -	if (error && error != AOP_TRUNCATED_PAGE)
+> +	error = __gfs2_readpage(file, page);
 > +	if (error)
-> +		return error;
->  
-> -out_cancel:
-> -	if (tp)
-> -		libxfs_trans_cancel(tp);
-> -	free_slab_cursor(&cur);
-> -	return error;
-> +	return -libxfs_trans_commit(tp);
->  }
->  
->  void
->  phase5(xfs_mount_t *mp)
+>  		lock_page(page);
+>  	return error;
+
+I don't think this is right.  If you return an error from ->readpage, I'm
+pretty sure you're supposed to unlock that page.  Looking at
+generic_file_buffered_read():
+
+                error = mapping->a_ops->readpage(filp, page);
+                if (unlikely(error)) {
+                        if (error == AOP_TRUNCATED_PAGE) {
+                                put_page(page);
+                                error = 0;
+                                goto find_page;
+                        }
+                        goto readpage_error;
+                }
+...
+readpage_error:
+                put_page(page);
+                goto out;
+...
+out:
+        ra->prev_pos = prev_index;
+        ra->prev_pos <<= PAGE_SHIFT;
+        ra->prev_pos |= prev_offset;
+
+        *ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+        file_accessed(filp);
+        return written ? written : error;
+
+so we don't call unlock_page() in generic code, which means the next time
+we try to get this page, we'll do ...
+
+                page = find_get_page(mapping, index);
+...
+                if (!PageUptodate(page)) {
+                        error = wait_on_page_locked_killable(page);
+and presumably we'll wait forever because nobody is going to unlock this
+page?
+
+> @@ -598,16 +582,9 @@ static void gfs2_readahead(struct readahead_control *rac)
 >  {
-> -	struct xfs_slab		*lost_fsb;
-> +	struct bitmap		*lost_blocks = NULL;
->  	xfs_agnumber_t		agno;
->  	int			error;
+>  	struct inode *inode = rac->mapping->host;
+>  	struct gfs2_inode *ip = GFS2_I(inode);
+> -	struct gfs2_holder gh;
 >  
-> @@ -656,12 +642,12 @@ phase5(xfs_mount_t *mp)
->  	if (sb_fdblocks_ag == NULL)
->  		do_error(_("cannot alloc sb_fdblocks_ag buffers\n"));
+> -	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+> -	if (gfs2_glock_nq(&gh))
+> -		goto out_uninit;
+>  	if (!gfs2_is_stuffed(ip))
+>  		mpage_readahead(rac, gfs2_block_map);
+> -	gfs2_glock_dq(&gh);
+> -out_uninit:
+> -	gfs2_holder_uninit(&gh);
+>  }
+
+Not for this patch, obviously, but why do you go to the effort of using
+iomap_readpage() to implement gfs2_readpage(), but don't use iomap for
+gfs2_readahead()?  Far more pages are brought in through ->readahead
+than are brought in through ->readpage.
+
+>  static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  {
+> +	struct gfs2_inode *ip;
+> +	struct gfs2_holder gh;
+> +	size_t written = 0;
+>  	ssize_t ret;
 >  
-> -	error = init_slab(&lost_fsb, sizeof(xfs_fsblock_t));
-> +	error = bitmap_alloc(&lost_blocks);
->  	if (error)
-> -		do_error(_("cannot alloc lost block slab\n"));
-> +		do_error(_("cannot alloc lost block bitmap\n"));
->  
->  	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++)
-> -		phase5_func(mp, agno, lost_fsb);
-> +		phase5_func(mp, agno, lost_blocks);
->  
->  	print_final_rpt();
->  
-> @@ -704,10 +690,10 @@ _("unable to add AG %u reverse-mapping data to btree.\n"), agno);
->  	 * Put blocks that were unnecessarily reserved for btree
->  	 * reconstruction back into the filesystem free space data.
->  	 */
-> -	error = inject_lost_blocks(mp, lost_fsb);
-> +	error = bitmap_iterate(lost_blocks, inject_lost_extent, mp);
->  	if (error)
->  		do_error(_("Unable to reinsert lost blocks into filesystem.\n"));
-> -	free_slab(&lost_fsb);
-> +	bitmap_free(&lost_blocks);
->  
->  	bad_ino_btree = 0;
->  
-> 
+> +	gfs2_holder_mark_uninitialized(&gh);
+>  	if (iocb->ki_flags & IOCB_DIRECT) {
+>  		ret = gfs2_file_direct_read(iocb, to);
+
+Again, future work, but you probably want to pass in &gh here so you
+don't have to eat up another 32 bytes or so of stack space on an unused
+gfs2_holder.
+
+>  		if (likely(ret != -ENOTBLK))
+>  			return ret;
+>  		iocb->ki_flags &= ~IOCB_DIRECT;
+>  	}
+> -	return generic_file_read_iter(iocb, to);
+> +	iocb->ki_flags |= IOCB_CACHED;
+> +	ret = generic_file_read_iter(iocb, to);
+> +	iocb->ki_flags &= ~IOCB_CACHED;
+> +	if (ret >= 0) {
+> +		if (!iov_iter_count(to))
+> +			return ret;
+> +		written = ret;
+> +	} else {
+> +		switch(ret) {
+> +		case -EAGAIN:
+> +			if (iocb->ki_flags & IOCB_NOWAIT)
+> +				return ret;
+> +			break;
+> +		case -ECANCELED:
+> +			break;
+> +		default:
+> +			return ret;
+> +		}
+> +	}
+
+I'm wondering if we want to do this in common code rather than making it
+something special only a few filesystems do (either because they care
+about workloads with many threads accessing the same file, or because
+their per-file locks are very heavy-weight).
 
