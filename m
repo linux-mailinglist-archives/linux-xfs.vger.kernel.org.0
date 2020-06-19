@@ -2,77 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E895420140E
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 18:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A065A20184E
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Jun 2020 19:01:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391400AbgFSQHr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Jun 2020 12:07:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55150 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391245AbgFSPIc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 11:08:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592579311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ekfNBp4LhaeldweXzxt1Y3e5nQyJLwRxW69/ByaQ7Fw=;
-        b=MvWTaWo6paaDnLvaHrAP97jUioum45Jea/wfS8vjgsL5FkMfb4H8A7NjASd/55U1ien164
-        lw4muElyDXmz9frRAJ34OzFq93rM8pf0ha8n22J7n2F6YPEO3TibJshAF3jt6lOjlMuG2O
-        oNBccwk6wcPzWOVB6d/UyxRuHfzuw5Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-GAiLBo89OQ-_9mut8R-4Ow-1; Fri, 19 Jun 2020 11:08:27 -0400
-X-MC-Unique: GAiLBo89OQ-_9mut8R-4Ow-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E8E488018D9;
-        Fri, 19 Jun 2020 15:08:25 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-31.rdu2.redhat.com [10.10.117.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D56755D9E8;
-        Fri, 19 Jun 2020 15:08:17 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200617175310.20912-1-longman@redhat.com>
- <20200617175310.20912-3-longman@redhat.com>
- <20200619132155.GA27677@infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9ac58106-d7f5-fda2-2695-c68b5072f696@redhat.com>
-Date:   Fri, 19 Jun 2020 11:08:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S2387472AbgFSOgK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Jun 2020 10:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387467AbgFSOgJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Jun 2020 10:36:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A676C06174E
+        for <linux-xfs@vger.kernel.org>; Fri, 19 Jun 2020 07:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0wxzzyfRen+6zphIYc5mmFRpiOy81MsoiuZdogrZxyw=; b=LyUCkS24UEAIhDNdPuCti2fZ4L
+        3P5GIRjEV61Qo8/Tln1HOCEm57GnjMc1JBJTjJIywydY0O6Gte1EmEZtybhNcS70XyseLaz2DJeC3
+        pS0NcrZ8xq2GOPoIInhQJ1xbtciaIHrNU19gIrzbJlQMy5/nIu1VynLyCYhrrw7UurHBC8rhMSboS
+        6WRUVsQSWGBuFyp2yxJjo46RiLsn016xiNuPgvf4tXZiPK0S1l5FA+kaS08xicyvpH9cr6VRtTE7U
+        JJLRhym5oHNsnebsG/wxJcSf5cQIv1AD57Qg3+13/nLtoh9wrGCYiN/Txf2NvLNXtX4wxEfwT0qIW
+        VT42z8WQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmI7k-0002CS-NV; Fri, 19 Jun 2020 14:36:08 +0000
+Date:   Fri, 19 Jun 2020 07:36:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
+        linux-xfs@vger.kernel.org, david@fromorbit.com, bfoster@redhat.com,
+        hch@infradead.org
+Subject: Re: [PATCH 2/7] xfs: Check for per-inode extent count overflow
+Message-ID: <20200619143608.GB29528@infradead.org>
+References: <20200606082745.15174-1-chandanrlinux@gmail.com>
+ <20200606082745.15174-3-chandanrlinux@gmail.com>
+ <20200608162425.GC1334206@magnolia>
+ <1885585.BIgNe5D0sC@garuda>
+ <20200609171003.GB11245@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20200619132155.GA27677@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609171003.GB11245@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/19/20 9:21 AM, Christoph Hellwig wrote:
-> I find it really confusing that we record this in current->flags.
-> per-thread state makes total sense for not dipping into fs reclaim.
-> But for annotating something related to memory allocation passing flags
-> seems a lot more descriptive to me, as it is about particular locks.
->
-I am dropping this patchset as just using PF_MEMALLOC_NOFS is good enough.
-
-Cheers,
-Longman
-
+I'm lost in 4 layers of full quotes.  Can someone summarize the
+discussion without hundreds of lines of irrelevant quotes?
