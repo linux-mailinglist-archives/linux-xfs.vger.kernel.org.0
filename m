@@ -2,184 +2,155 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C8D72023D7
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Jun 2020 14:54:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAD63202570
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Jun 2020 19:00:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgFTMyS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Jun 2020 08:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgFTMyR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Jun 2020 08:54:17 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2839BC06174E
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Jun 2020 05:54:17 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n2so5204120pld.13
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Jun 2020 05:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z8vfQui5QUSW10H/nufM5+Q38waV3hNc3wro827xuLo=;
-        b=ENWX3R+VbmQr2jH00lkDKj1g9jQJYD0PP7TRkrw9VyTl2GBmgPlx5fS9CdqAKiB2E4
-         TmPBnNG+i413GcAyqecdHPaKD1Z7Q8Hx6n6eQ51lhD781BPfGH3a+ZUagrTLeLng0Ifw
-         FzY5i9y5a/E54JkcRkVK/JAXC6gaN/MFhYSE5djkGgDCw9c43+5XK/7SlZ/ElARZ8DkQ
-         3nqKvzuSJl5RRlUFIuOuyziPNZB12EKgD8J/lOLivY04wsZSBQVq1q/U36w7jWtRR7xT
-         BTVnjpe85IX40WYGj784DwMKQ7jE+5pKCV8tBhSpAFWhPSudu1rrvAWGhs5vqtry+lBX
-         42yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z8vfQui5QUSW10H/nufM5+Q38waV3hNc3wro827xuLo=;
-        b=avKazUj3CnnK2Vrdrnx0D4pzq1W//coLbznKfPFoW6AUkVAhMQUi4vEkYjIjUrqv3O
-         i+MnTaT9f17QVaE3jthpX5BAmyq5TiXXVFW+dj92K7GB7KyLFrRx+smXIgSYK5dc72pZ
-         9CfGfmq3rlPwrZdER1upx4EyvLsK5uMMhsDD/np6xrDF1dYXKISb6OP338U4bYmMazL9
-         O6C5cMVGl+gJB7KHPEusgI/SreKdolW/HqWSb9ygJVpcEhumJWdhiDqDvsZpEgfBDgHU
-         aB88yRefeEQ2wiyBo2lB/lAzZlBuQq4Gqnv2SV8XlmXhADxi1mhI+671Q8ULaqsZCYu1
-         dfFQ==
-X-Gm-Message-State: AOAM532MWyWxbaO1F0QWNBl4vtdksfmamf41nvVAA4pSjN9ctzm0u4p9
-        thWe0AqcZude8ihxMUm0c2n9nGNe
-X-Google-Smtp-Source: ABdhPJxvvlIfbKd6CdpJCQ4FiLrsVUWeVn6YfDZMUerfNei1s4BdoGvcPnyTdJwIM6I7qh1DaI7rfQ==
-X-Received: by 2002:a17:90a:4d4e:: with SMTP id l14mr8560554pjh.10.1592657656170;
-        Sat, 20 Jun 2020 05:54:16 -0700 (PDT)
-Received: from garuda.localnet ([171.61.66.69])
-        by smtp.gmail.com with ESMTPSA id n69sm8886091pjc.25.2020.06.20.05.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 05:54:15 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, david@fromorbit.com, bfoster@redhat.com
-Subject: Re: [PATCH 2/7] xfs: Check for per-inode extent count overflow
-Date:   Sat, 20 Jun 2020 18:23:37 +0530
-Message-ID: <1932444.5ZnB01jybz@garuda>
-In-Reply-To: <20200619143608.GB29528@infradead.org>
-References: <20200606082745.15174-1-chandanrlinux@gmail.com> <20200609171003.GB11245@magnolia> <20200619143608.GB29528@infradead.org>
+        id S1727884AbgFTRAs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 20 Jun 2020 13:00:48 -0400
+Received: from sandeen.net ([63.231.237.45]:35640 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbgFTRAs (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 20 Jun 2020 13:00:48 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id CB328D5E;
+        Sat, 20 Jun 2020 12:00:19 -0500 (CDT)
+Subject: Re: [PATCH] fs: i_version mntopt gets visible through /proc/mounts
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs <linux-xfs@vger.kernel.org>, jlayton@redhat.com
+References: <20200618013026.ewnhvf64nb62k2yx@gabell>
+ <20200618030539.GH2005@dread.disaster.area>
+ <20200618034535.h5ho7pd4eilpbj3f@gabell>
+ <20200618223948.GI2005@dread.disaster.area>
+ <20200619022005.GA25414@fieldses.org>
+ <20200619024455.GN2005@dread.disaster.area>
+ <20200619204033.GB1564@fieldses.org>
+ <20200619221044.GO2005@dread.disaster.area>
+ <20200619222843.GB2650@fieldses.org>
+ <20200620014957.GQ2005@dread.disaster.area>
+ <20200620015633.GA1516@fieldses.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <d6f9cac3-eec0-a88e-4eab-7673728db52c@sandeen.net>
+Date:   Sat, 20 Jun 2020 12:00:43 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200620015633.GA1516@fieldses.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Friday 19 June 2020 8:06:08 PM IST Christoph Hellwig wrote:
-> I'm lost in 4 layers of full quotes.  Can someone summarize the
-> discussion without hundreds of lines of irrelevant quotes?
+On 6/19/20 8:56 PM, J. Bruce Fields wrote:
+> On Sat, Jun 20, 2020 at 11:49:57AM +1000, Dave Chinner wrote:
+
+...
+
+>> However, other people have different opinions on this matter (and we
+>> know that from the people who considered XFS v4 -> v5 going slower
+>> because iversion a major regression), and so we must acknowledge
+>> those opinions even if we don't agree with them.
 > 
+> Do you have any of those reports handy?  Were there numbers?
 
-XFS does not check for possible overflow of per-inode extent counter fields
-when adding extents to either data or attr fork.
+I can't answer that but did a little digging.  MS_I_VERSION as an option
+appeared here:
 
-For e.g.
+commit 7a224228ed79d587ece2304869000aad1b8e97dd
+Author: Jean Noel Cordenner <jean-noel.cordenner@bull.net>
+Date:   Mon Jan 28 23:58:27 2008 -0500
 
-1. Insert 5 million xattrs (each having a value size of 255 bytes) and then
-   delete 50% of them in an alternating  manner. 
-   ./benchmark-xattrs -l 255 -n 5000000 -s 50 -f $mntpnt/testfile-0
+    vfs: Add 64 bit i_version support
+    
+    The i_version field of the inode is changed to be a 64-bit counter that
+    is set on every inode creation and that is incremented every time the
+    inode data is modified (similarly to the "ctime" time-stamp).
+    The aim is to fulfill a NFSv4 requirement for rfc3530.
+    This first part concerns the vfs, it converts the 32-bit i_version in
+    the generic inode to a 64-bit, a flag is added in the super block in
+    order to check if the feature is enabled and the i_version is
+    incremented in the vfs.
+    
+    Signed-off-by: Mingming Cao <cmm@us.ibm.com>
+    Signed-off-by: Jean Noel Cordenner <jean-noel.cordenner@bull.net>
+    Signed-off-by: Kalpak Shah <kalpak@clusterfs.com>
 
-   benchmark-xattrs.c and related sources can be obtained from
-   https://github.com/chandanr/xfs-xattr-benchmark/blob/master/src/
-   
-2. This causes 98511 extents to be created in the attr fork of the inode.
-   xfsaild/loop0  2035 [003]  9643.390490: probe:xfs_iflush_int: (ffffffffac6225c0) if_nextents=98511 inode=131
+and ext4's Opt_i_version mount option appeared here:
 
-3. The incore inode fork extent counter is a signed 32-bit quantity. However
-   the on-disk extent counter is an unsigned 16-bit quantity and hence cannot
-   hold 98511 extents.
+commit 25ec56b518257a56d2ff41a941d288e4b5ff9488
+Author: Jean Noel Cordenner <jean-noel.cordenner@bull.net>
+Date:   Mon Jan 28 23:58:27 2008 -0500
 
-4. The following incorrect value is stored in the attr extent counter
-   # xfs_db -f -c 'inode 131' -c 'print core.naextents' /dev/loop0
-   core.naextents = -32561
+    ext4: Add inode version support in ext4
+    
+    This patch adds 64-bit inode version support to ext4. The lower 32 bits
+    are stored in the osd1.linux1.l_i_version field while the high 32 bits
+    are stored in the i_version_hi field newly created in the ext4_inode.
+    This field is incremented in case the ext4_inode is large enough. A
+    i_version mount option has been added to enable the feature.
+    
+    Signed-off-by: Mingming Cao <cmm@us.ibm.com>
+    Signed-off-by: Andreas Dilger <adilger@clusterfs.com>
+    Signed-off-by: Kalpak Shah <kalpak@clusterfs.com>
+    Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+    Signed-off-by: Jean Noel Cordenner <jean-noel.cordenner@bull.net>
 
-As an aside, Please note that the sequence of events causing counter overflow
-that have been described in this patch's description is not applicable since
-the patches have been rebased on xfs-ifork-cleanup.2 which causes a signed
-32-bit (xfs_extnum_t) quantity to be used to store the extent counter in
-memory. However, the "on-disk counter overflow" bug still exists as was
-described above.
+so the optional enablement was there on day one, without any real explanation
+of why.
 
-To prevent the overflow bug from occuring silently, this patch now checks for
-the overflow condition before incrementing the in-core value and returns an
-error if a possible overflow is detected.
-
-Darrick pointed out that returning an error code can cause the transaction to
-be aborted because it is most likely to be dirty. Hence his suggestion (to
-which I agree) was to check for possible overflow just after starting a
-transaction and obtaining the inode's i_lock.
-
-Also, since we are extending the data and xattr extent counters to 32 and 47
-bits in the later patches the value of log reservations will change since they
-are a function of maximum height of BMBT trees. The maximum of height of BMBT
-trees are themselves calculated based on the maximum number of xattr and data
-extents. Due to this, "min log size" can end up being larger than what was
-calculated during mkfs.xfs time. This can cause mount to fail as shown by the
-following call trace which was generated when executing xfs/306 test,
-
- XFS (loop0): Mounting V5 Filesystem
- XFS (loop0): Log size 8906 blocks too small, minimum size is 9075 blocks
- XFS (loop0): AAIEEE! Log failed size checks. Abort!
- XFS: Assertion failed: 0, file: fs/xfs/xfs_log.c, line: 711
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 12821 at fs/xfs/xfs_message.c:112 assfail+0x25/0x28
- Modules linked in:
- CPU: 0 PID: 12821 Comm: mount Tainted: G        W         5.6.0-rc6-next-20200320-chandan-00003-g071c2af3f4de #1
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
- RIP: 0010:assfail+0x25/0x28
- Code: ff ff 0f 0b c3 0f 1f 44 00 00 41 89 c8 48 89 d1 48 89 f2 48 c7 c6 40 b7 4b b3 e8 82 f9 ff ff 80 3d 83 d6 64 01 00 74 02 0f $
- RSP: 0018:ffffb05b414cbd78 EFLAGS: 00010246
- RAX: 0000000000000000 RBX: ffff9d9d501d5000 RCX: 0000000000000000
- RDX: 00000000ffffffc0 RSI: 000000000000000a RDI: ffffffffb346dc65
- RBP: ffff9da444b49a80 R08: 0000000000000000 R09: 0000000000000000
- R10: 000000000000000a R11: f000000000000000 R12: 00000000ffffffea
- R13: 000000000000000e R14: 0000000000004594 R15: ffff9d9d501d5628
- FS:  00007fd6c5d17c80(0000) GS:ffff9da44d800000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000002 CR3: 00000008a48c0000 CR4: 00000000000006f0
- Call Trace:
-  xfs_log_mount+0xf8/0x300
-  xfs_mountfs+0x46e/0x950
-  xfs_fc_fill_super+0x318/0x510
-  ? xfs_mount_free+0x30/0x30
-  get_tree_bdev+0x15c/0x250
-  vfs_get_tree+0x25/0xb0
-  do_mount+0x740/0x9b0
-  ? memdup_user+0x41/0x80
-  __x64_sys_mount+0x8e/0xd0
-  do_syscall_64+0x48/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7fd6c5f2ccda
- Code: 48 8b 0d b9 e1 0b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f $
- RSP: 002b:00007ffe00dfb9f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
- RAX: ffffffffffffffda RBX: 0000560c1aaa92c0 RCX: 00007fd6c5f2ccda
- RDX: 0000560c1aaae110 RSI: 0000560c1aaad040 RDI: 0000560c1aaa94d0
- RBP: 00007fd6c607d204 R08: 0000000000000000 R09: 0000560c1aaadde0
- R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
- R13: 0000000000000000 R14: 0000560c1aaa94d0 R15: 0000560c1aaae110
- ---[ end trace 6436391b468bc652 ]---
- XFS (loop0): log mount failed
-
-The corresponding filesystem was created using mkfs options
-"-m rmapbt=1,reflink=1 -b size=1k -d size=20m -n size=64k".
-
-To prevent such incidents, we are contemplating on using the following
-approach,
-1. Use existing constants for max extent counts (i.e. signed 2^16 for xattrs
-   and signed 2^32 for data extents).
-2. Compute max bmbt heights, log reservations and hence min log size during
-   mount time.
-3. Later, during the mount lifetime of the filesystem, when we are about to
-   overflow the extent counter we use larger values (2^32 for xattr and 2^47
-   for data) for max extent count and then recompute log reservations and min
-   logsize. At this point, if on-disk log size is smaller than min log size
-   we return with an error.
-4. Otherwise, we set an RO-feature flag and use the revised log reservations
-   for future transactions.
-
-Please let me know your opinion on the above approaches.
-   
---
-chandan
-
-
-
+-Eric
