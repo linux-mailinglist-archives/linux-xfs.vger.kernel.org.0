@@ -2,153 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E82E72031CB
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 10:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 990132032EE
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 11:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgFVIQU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Jun 2020 04:16:20 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46182 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725938AbgFVIQR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 04:16:17 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C187A3A3721
-        for <linux-xfs@vger.kernel.org>; Mon, 22 Jun 2020 18:16:12 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jnHcd-00046W-0f
-        for linux-xfs@vger.kernel.org; Mon, 22 Jun 2020 18:16:07 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.93)
-        (envelope-from <david@fromorbit.com>)
-        id 1jnHcc-007d6h-Od
-        for linux-xfs@vger.kernel.org; Mon, 22 Jun 2020 18:16:06 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 30/30] xfs: remove xfs_inobp_check()
-Date:   Mon, 22 Jun 2020 18:16:05 +1000
-Message-Id: <20200622081605.1818434-31-david@fromorbit.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be
-In-Reply-To: <20200622081605.1818434-1-david@fromorbit.com>
-References: <20200622081605.1818434-1-david@fromorbit.com>
+        id S1725907AbgFVJIP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jun 2020 05:08:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26841 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726618AbgFVJIP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 05:08:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592816893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RCKX5GS7JWN5V5e59N4MpanE/MlwLHSwobXRaeohnIs=;
+        b=N1hluJ66vpcPSxGbzcySdZZdGmnnPFXD/tgjMgs3SgE9KLrpqcGt6mttIY8p0Pd42wwJGC
+        98EMvSZghcNmQ6Z+yyWLcKY+BZ/zLlU3iru7E0zWyTrw4N1A9gVMzOxUdbUq9PAmfN/pnh
+        x7oGwyCB23iNjaAcIbV0go3C8Hj2TSY=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-473-ejD8UXntN_aoANfWXQm6uQ-1; Mon, 22 Jun 2020 05:08:12 -0400
+X-MC-Unique: ejD8UXntN_aoANfWXQm6uQ-1
+Received: by mail-oo1-f70.google.com with SMTP id v9so8283774oov.1
+        for <linux-xfs@vger.kernel.org>; Mon, 22 Jun 2020 02:08:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RCKX5GS7JWN5V5e59N4MpanE/MlwLHSwobXRaeohnIs=;
+        b=aaBPc5DLbKhU8fjYWen+f9HiufRb5iOL+nzPy8/nTKPRv6/jtoclezsZmn5eGiH3Vu
+         LPBji0X4vge4pjmh3V5p+1FzssWzxnUuiJXlyJhWaXvBXYzfP5Fo23VMtmjwhfB5xD5W
+         fqQseZC6Wut455kxzqdw4U5DJpOJm7o5St7YF8OV63g7u9Y0TfzbyP1lMKhR/4VGl86c
+         UyZz6sjWPk69iTGJPOd+/8f+SPzvSvt7cHM3Us1ZwvQMVSfPTi7RrDSI4kvXw8kxDVOI
+         KVVbtgd4rOqjHlMdMW6jYn9NocdXzqXvGKEwSuC41z8KITlgf0rfvBUEJ+VG2wfJrAm/
+         zdrw==
+X-Gm-Message-State: AOAM533oBENFzfcRvpy9iASdyZKcH1VP9BV58hiVXAMJZ0g7m8M5nAi+
+        GOrnmy5WEkM7IZfOWKHpfxb/FZVKArQRHEBAKKr/w8TISoLBJlhjjaUXJ8mt9jNdWz4qQIaZSyf
+        aRqwxWborwpLlZYaUGbPLJOnoBz4aeKDAx0xX
+X-Received: by 2002:aca:5049:: with SMTP id e70mr12026834oib.72.1592816891188;
+        Mon, 22 Jun 2020 02:08:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyf1UlkS0QUbrHlpUEpl7yyMoJOq+l/zWCgfs0PQCmZvMH3Mzx49MdVcvg1uxxRhc751A7eZ3hkcs/YxKB3XPU=
+X-Received: by 2002:aca:5049:: with SMTP id e70mr12026813oib.72.1592816890888;
+ Mon, 22 Jun 2020 02:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=nTHF0DUjJn0A:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
-        a=DPGN0NLpbuj1Jjrhi_sA:9
+References: <20200618122408.1054092-1-agruenba@redhat.com> <20200619131347.GA22412@infradead.org>
+In-Reply-To: <20200619131347.GA22412@infradead.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Mon, 22 Jun 2020 11:07:59 +0200
+Message-ID: <CAHc6FU7uKUV-R+qJ9ifLAJkS6aPoG_6qWe7y7wJOb7EbWRL4dQ@mail.gmail.com>
+Subject: Re: [PATCH v2] iomap: Make sure iomap_end is called after iomap_begin
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Fri, Jun 19, 2020 at 3:25 PM Christoph Hellwig <hch@infradead.org> wrote:
+> On Thu, Jun 18, 2020 at 02:24:08PM +0200, Andreas Gruenbacher wrote:
+> > Make sure iomap_end is always called when iomap_begin succeeds.
+> >
+> > Without this fix, iomap_end won't be called when a filesystem's
+> > iomap_begin operation returns an invalid mapping, bypassing any
+> > unlocking done in iomap_end.  With this fix, the unlocking would
+> > at least still happen.
+> >
+> > This iomap_apply bug was found by Bob Peterson during code review.
+> > It's unlikely that such iomap_begin bugs will survive to affect
+> > users, so backporting this fix seems unnecessary.
+> >
+> > Fixes: ae259a9c8593 ("fs: introduce iomap infrastructure")
+> > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> > ---
+> >  fs/iomap/apply.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
+> > index 76925b40b5fd..32daf8cb411c 100644
+> > --- a/fs/iomap/apply.c
+> > +++ b/fs/iomap/apply.c
+> > @@ -46,10 +46,11 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
+> >       ret = ops->iomap_begin(inode, pos, length, flags, &iomap, &srcmap);
+> >       if (ret)
+> >               return ret;
+> > -     if (WARN_ON(iomap.offset > pos))
+> > -             return -EIO;
+> > -     if (WARN_ON(iomap.length == 0))
+> > -             return -EIO;
+> > +     if (WARN_ON(iomap.offset > pos) ||
+> > +         WARN_ON(iomap.length == 0)) {
+> > +             written = -EIO;
+> > +             goto out;
+> > +     }
+>
+> As said before please don't merge these for no good reason.
 
-This debug code is called on every xfs_iflush() call, which then
-checks every inode in the buffer for non-zero unlinked list field.
-Hence it checks every inode in the cluster buffer every time a
-single inode on that cluster it flushed. This is resulting in:
+I really didn't expect this tiny patch to require much discussion at
+all, but just to be clear ... do you actually object to this very
+patch that explicitly doesn't merge the two checks and keeps them on
+two separate lines so that the warning messages will report different
+line numbers, or are you fine with that?
 
--   38.91%     5.33%  [kernel]  [k] xfs_iflush
-   - 17.70% xfs_iflush
-      - 9.93% xfs_inobp_check
-           4.36% xfs_buf_offset
-
-10% of the CPU time spent flushing inodes is repeatedly checking
-unlinked fields in the buffer. We don't need to do this.
-
-The other place we call xfs_inobp_check() is
-xfs_iunlink_update_dinode(), and this is after we've done this
-assert for the agino we are about to write into that inode:
-
-	ASSERT(xfs_verify_agino_or_null(mp, agno, next_agino));
-
-which means we've already checked that the agino we are about to
-write is not 0 on debug kernels. The inode buffer verifiers do
-everything else we need, so let's just remove this debug code.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_inode_buf.c | 24 ------------------------
- fs/xfs/libxfs/xfs_inode_buf.h |  6 ------
- fs/xfs/xfs_inode.c            |  2 --
- 3 files changed, 32 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 1af97235785c..6b6f67595bf4 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -20,30 +20,6 @@
- 
- #include <linux/iversion.h>
- 
--/*
-- * Check that none of the inode's in the buffer have a next
-- * unlinked field of 0.
-- */
--#if defined(DEBUG)
--void
--xfs_inobp_check(
--	xfs_mount_t	*mp,
--	xfs_buf_t	*bp)
--{
--	int		i;
--	xfs_dinode_t	*dip;
--
--	for (i = 0; i < M_IGEO(mp)->inodes_per_cluster; i++) {
--		dip = xfs_buf_offset(bp, i * mp->m_sb.sb_inodesize);
--		if (!dip->di_next_unlinked)  {
--			xfs_alert(mp,
--	"Detected bogus zero next_unlinked field in inode %d buffer 0x%llx.",
--				i, (long long)bp->b_bn);
--		}
--	}
--}
--#endif
--
- /*
-  * If we are doing readahead on an inode buffer, we might be in log recovery
-  * reading an inode allocation buffer that hasn't yet been replayed, and hence
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-index 865ac493c72a..6b08b9d060c2 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.h
-+++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -52,12 +52,6 @@ int	xfs_inode_from_disk(struct xfs_inode *ip, struct xfs_dinode *from);
- void	xfs_log_dinode_to_disk(struct xfs_log_dinode *from,
- 			       struct xfs_dinode *to);
- 
--#if defined(DEBUG)
--void	xfs_inobp_check(struct xfs_mount *, struct xfs_buf *);
--#else
--#define	xfs_inobp_check(mp, bp)
--#endif /* DEBUG */
--
- xfs_failaddr_t xfs_dinode_verify(struct xfs_mount *mp, xfs_ino_t ino,
- 			   struct xfs_dinode *dip);
- xfs_failaddr_t xfs_inode_validate_extsize(struct xfs_mount *mp,
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 05017475c766..bae84b3eeb9a 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2165,7 +2165,6 @@ xfs_iunlink_update_dinode(
- 	xfs_dinode_calc_crc(mp, dip);
- 	xfs_trans_inode_buf(tp, ibp);
- 	xfs_trans_log_buf(tp, ibp, offset, offset + sizeof(xfs_agino_t) - 1);
--	xfs_inobp_check(mp, ibp);
- }
- 
- /* Set an in-core inode's unlinked pointer and return the old value. */
-@@ -3558,7 +3557,6 @@ xfs_iflush(
- 	xfs_iflush_fork(ip, dip, iip, XFS_DATA_FORK);
- 	if (XFS_IFORK_Q(ip))
- 		xfs_iflush_fork(ip, dip, iip, XFS_ATTR_FORK);
--	xfs_inobp_check(mp, bp);
- 
- 	/*
- 	 * We've recorded everything logged in the inode, so we'd like to clear
--- 
-2.26.2.761.g0e0b3e54be
+Thanks,
+Andreas
 
