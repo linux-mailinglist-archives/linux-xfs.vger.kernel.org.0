@@ -2,150 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4E6203AFA
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 17:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C78203BE7
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 18:02:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgFVPdy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Jun 2020 11:33:54 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44336 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgFVPdx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 11:33:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MFHgVn134070;
-        Mon, 22 Jun 2020 15:33:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=vhdwrZxq0gMFzOpTPwfV3kU1iwmUd+pnFHQG4TFwHoA=;
- b=BQPpTfUux5toBtoWaJwsmCyoJ4NnoI8rRcsyI3VmAHw4qZ/Mts3pbSLTqGhb1KPyEy0v
- 2AzOOB7OjS2mwqHdJqod0jBIV78NwRHc034f2svTGAxFrism09HPsaGcizLwzjHlNXKK
- qtpdG096LtYHsMKpL7+7f5bOL4zWE08F4JLqq/20XDzyAEl/mGoJB3Li8c1krpvGmU9F
- PFcsR8BN6zkbkbPlIycfsMG9kXeD1dRTVsEdgWnP5aZ7H4+IOAwqem7tBwgVTXKrUqzy
- NvI02uk70M1/qtZkQnvT14DwKAWeZ8cn1hQG3HtA2zW5jcwT5oCRBfKSxRMyYZT8kU88 jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31sebb84fm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 15:33:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MFI6lA079022;
-        Mon, 22 Jun 2020 15:33:51 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31sv7qaky5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 15:33:51 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05MFXofJ015238;
-        Mon, 22 Jun 2020 15:33:50 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jun 2020 15:33:50 +0000
-Date:   Mon, 22 Jun 2020 08:33:49 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Bill O'Donnell" <billodo@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2] xfsprogs: xfs_quota command error message improvement
-Message-ID: <20200622153349.GE11245@magnolia>
-References: <20200622131319.7717-1-billodo@redhat.com>
+        id S1729303AbgFVQCp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jun 2020 12:02:45 -0400
+Received: from sonic310-24.consmr.mail.ne1.yahoo.com ([66.163.186.205]:41469
+        "EHLO sonic310-24.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729855AbgFVQCn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 12:02:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841762; bh=cK2qy9Lv5SAgMg9nAvfVmkJPj46H3ss3vOVyjpHm6Nk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=pj4oXOE2OyHYdknQwXt6M/Ur0kBv147g1Kmcf7tcKmW6vP7QkIs/0Ep6iSdvVbItbqmxz5qvNv2Knn1CCHx1JXfWNGArujlCeYSuykFkZJxjCzXbA8w0wLvpau2QmrFe2PrXbdJtSp7sZvV+Fn+MSxxEAMjJwUYy035jS7THEfRj7uQyYShNvBfOmlxWp2S02TFvKY3T8mKwBfr51HZEWkQMAbMayIdgv5piHcdL/TZX2mXpkwvJPu8ioALMGRwKiiqoZPpjEvgEgk393Eu5ga4kGIVQY4hlCVIOpCvBFLDvIoZ1lAST79npmmV4flo+Zn04KnSvOcS2Gzu1cuLEgg==
+X-YMail-OSG: SBQnKXIVM1mTNgCK3zLXZz0mAqCLAu_qYFGTOP1_.16Lsm0yAbmVuUiRbzcAPRx
+ vFd64NNq0aBErGk8jZQmppt557BbRNs40UvRgt28TV6psc53_bk_.g63XmJg2TkYReecI3VnjPsk
+ vju7RXS_pQjXBebXy5sx0mNpmwNtjf7jE8lIrTc8fGjR0sYWzBYOY4pHHnM.7Lauc3pLU2rqmfq.
+ N7Eit2GLqPlx80aoZ9B84PI5p3X1w6hee3o5FcuQFao_7h1_YXe_MfCcrR.gA1nwVxWyYYHuZUlo
+ KB7qFK6lyMf4FYzujm8bcK.NiCMUKrpWEcnHWksbbt9Lidz3yAVXOZ1DOCm2iJZVhfBqB90PWDdD
+ h9DjnulgZkLSenlO3C4dAuGFDD70yrVPPubueGjAmM0VCHZkyGbtX4g9G9ELFZ0rfJAWVeCrntaJ
+ XaP_CoyrETUNdsTiKKKrLFuFdLIhozHA4a9YaA3ECDZQJcSRzNTD.tKwjjQ_7Yw1BwQ_7NdJPUKY
+ yaaZU_NqX5rmJ3eOWg.8QmQ0HNdNbxjHkrCRz5wTMoxSSrmcKke4bGYKz.EHuPpXSr1zn2RBZrqn
+ 0jivrLuvPfq1ve7lQAwBnuycFHVXUVpNHIaX5hcOm8QQ_uWM_9ddO_MgB1mRbgBrOT5v2LfWivzh
+ AIjUglErrBFUtol1mHqzoU4Y3yqpEd1xqtTUvJKl4emys_ReYiECF5UFCnt0.U6q.leVTajuX1ut
+ CpUrzbOXptEgtWupy64dMHIXwDCONaj2q7iNyI289LiZatE6zPKi4nsl_7Uig2CFqiqY35ypdg45
+ vL3S8mRwuJYQSBlCWVwW6FLdKvoJP1KT8kzHpkeOhqpIeXXPVO96fLi5gHRH_vcRbKCB5b.BrOyt
+ qBu_hRvFPBbweIXJHLEdIUxsusdFvM3.V0Im6IpQN1SPaG.hkbdS9Vv.0uVcQnH2OgItiTskowjj
+ GGFcGVYA8FFmbLVWVJGIyYCpshqNp7PujWUFrYuVnMHPHmrjFdKOwc85CX7SBwGI86eny_IcdNEy
+ ulKoRKDpCZOpfZdoCF_uJY6oWCtHdhthdlC1E0pmFjMadzzuvN0DhIAxEFdT_LxHuG4kDeoEmUFj
+ KND82BquRO.SJnAaTVZSmG5DktRTx5DjQmMl.agQCbe6XpJqssdIfCnjU3SrWVrQ0C8HJbqKyJFN
+ 3zq6LevTDXZ82iM1gRZIyhjWzD3WCk78Tg.K.mHveW2E5gTCIBBzx1f_4iMXufrf2M8GQ.KFDB8R
+ irEjMrrOq2MPQdOh8jzM5g0pA6w4rrjQajW2nEKfW7COn7pVCPueyyketOuFwvj.0NSx3dDesGg-
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 16:02:42 +0000
+Date:   Mon, 22 Jun 2020 16:02:39 +0000 (UTC)
+From:   Karim Zakari <kariim1960z@gmail.com>
+Reply-To: kzakari04@gmail.com
+Message-ID: <941580334.1864237.1592841759009@mail.yahoo.com>
+Subject: URGENT REPLY.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622131319.7717-1-billodo@redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=1 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
- lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1011 impostorscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220115
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <941580334.1864237.1592841759009.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:13:19AM -0500, Bill O'Donnell wrote:
-> Make the error messages for rudimentary xfs_quota commands
-> (off, enable, disable) more user friendly, instead of the
-> terse sys error outputs.
-> 
-> Signed-off-by: Bill O'Donnell <billodo@redhat.com>
 
-Yay, another sharp edge smoothed down,
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Good-Day Friend,
 
---D
+ Hope you are doing great Today. I have a proposed business deal worthy (US$16.5 Million Dollars) that will benefit both parties. This is legitimate' legal and your personality will not be compromised.
 
-> ---
-> 
-> v2: enable internationalization and capitalize new message strings.
-> 
->  quota/state.c | 34 ++++++++++++++++++++++++++++------
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/quota/state.c b/quota/state.c
-> index 8f9718f1..7c9fe517 100644
-> --- a/quota/state.c
-> +++ b/quota/state.c
-> @@ -306,8 +306,15 @@ enable_enforcement(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAON, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAON");
-> +	if (xfsquotactl(XFS_QUOTAON, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr, _("Quota enforcement already enabled.\n"));
-> +		else if (errno == EINVAL)
-> +			fprintf(stderr,
-> +				_("Can't enable when quotas are off.\n"));
-> +		else
-> +			perror("XFS_QUOTAON");
-> +	}
->  	else if (flags & VERBOSE_FLAG)
->  		state_quotafile_mount(stdout, type, mount, flags);
->  }
-> @@ -328,8 +335,16 @@ disable_enforcement(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAOFF");
-> +	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr,
-> +				_("Quota enforcement already disabled.\n"));
-> +		else if (errno == EINVAL)
-> +			fprintf(stderr,
-> +				_("Can't disable when quotas are off.\n"));
-> +		else
-> +			perror("XFS_QUOTAOFF");
-> +	}
->  	else if (flags & VERBOSE_FLAG)
->  		state_quotafile_mount(stdout, type, mount, flags);
->  }
-> @@ -350,8 +365,15 @@ quotaoff(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAOFF");
-> +	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr, _("Quota already off.\n"));
-> +		else if (errno == EINVAL)
-> +			fprintf(stderr,
-> +				_("Can't disable when quotas are off.\n"));
-> +		else
-> +			perror("XFS_QUOTAOFF");
-> +	}
->  	else if (flags & VERBOSE_FLAG)
->  		state_quotafile_mount(stdout, type, mount, flags);
->  }
-> -- 
-> 2.26.2
-> 
+Waiting for your response for more details, As you are willing to execute this business opportunity with me.
+
+Sincerely Yours,
+Mr. Karim Zakari.
