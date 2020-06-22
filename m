@@ -2,369 +2,338 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38CDE2030E5
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 09:55:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 776F82031C9
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 10:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbgFVHz3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Jun 2020 03:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731488AbgFVHz2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 03:55:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFDDC061794
-        for <linux-xfs@vger.kernel.org>; Mon, 22 Jun 2020 00:55:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x22so8061926pfn.3
-        for <linux-xfs@vger.kernel.org>; Mon, 22 Jun 2020 00:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ImlV+3v9n2Dm5CqXpeW5LzdbbMr+Z9p0UL4gvvMX/y0=;
-        b=HZkHVfSKaQhzq0Ic7poMC1Mini8j77YxUgTS87PE9CzeWCixUnzhXNWLSeW1cFdNch
-         68nl/hsby0z8XezvB9saleBost8eZe/+0EonxgrU1u0qoKTJpSOuDgpL0cvTUqyvE+Ns
-         WOj6MA/X2xtY5POKCMEI/c4m+3TULePNmO2FIER+237KP2YQX3QgbptiI+D+7+j86A6z
-         0IIPDu1lqOBcR7mvmXH4RRAShMO9+UFeoHC9dk5gOM2KXe4weqJ1+8cn7xwjEMlGPOZx
-         CI3dmQPFgIeXHR03AwFsetXIGQAJvtSr2tSyVbJLk/1QCnnxkUHvzt/Z7uP0IO/fOE6R
-         0hqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ImlV+3v9n2Dm5CqXpeW5LzdbbMr+Z9p0UL4gvvMX/y0=;
-        b=szAwLsx+1FUtNtrdJLHtLHnfc37mwUklyPuXd+FzNVOFOsmUcXVW2cIxZJLnNZK2nl
-         ITA4TjzDS/ieKDj7kpAe9tBtB9O+ADVfafqeCpjrTlcPEn1/slEio2KetSWO4E+qDpro
-         kBAl66duVqmkNPqt3/OES0nJUf/Px4zuol7NzFwuTzdhiX8kvyU4gxKXzV8GvMXzznGF
-         8efw/KRHCHFhmM0rSgIL/dH7/BMz6+LSCdEjA8Jx8gG3UNOOJkJo4QN1CbzK0j6Wm3Jo
-         3c8BIcmU4R3q6340v/vXgJcYGtIlGfftsBYIFKVxVyIGmIzKWLxmfQ50+qljRMmke6lh
-         pZcQ==
-X-Gm-Message-State: AOAM530kSZDRIcIa9kvkISjUCjcjQAaYcu5vXk1b3AKJdaUqOZAHpFTG
-        xgvynYLOYiiHWyQkxOegt6x4Hn9F
-X-Google-Smtp-Source: ABdhPJzpV8+B6CeCpZa2bd540QHGt32xWhJzuNqu63tZans/nw0ZK5nwLVhrjCbEh6wuxRNnxpgEtw==
-X-Received: by 2002:a63:ef4e:: with SMTP id c14mr4603566pgk.259.1592812526818;
-        Mon, 22 Jun 2020 00:55:26 -0700 (PDT)
-Received: from garuda.localnet ([122.179.34.42])
-        by smtp.gmail.com with ESMTPSA id n65sm12916957pfn.17.2020.06.22.00.55.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:55:26 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/15] xfs: move the di_projid field to struct xfs_inode
-Date:   Mon, 22 Jun 2020 13:25:23 +0530
-Message-ID: <4272243.osSWmPdsuN@garuda>
-In-Reply-To: <20200620071102.462554-3-hch@lst.de>
-References: <20200620071102.462554-1-hch@lst.de> <20200620071102.462554-3-hch@lst.de>
+        id S1726023AbgFVIQR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jun 2020 04:16:17 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:53113 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725925AbgFVIQQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 04:16:16 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 37FE21A8545
+        for <linux-xfs@vger.kernel.org>; Mon, 22 Jun 2020 18:16:08 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jnHcb-000455-M0
+        for linux-xfs@vger.kernel.org; Mon, 22 Jun 2020 18:16:05 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.93)
+        (envelope-from <david@fromorbit.com>)
+        id 1jnHcb-007d4J-C3
+        for linux-xfs@vger.kernel.org; Mon, 22 Jun 2020 18:16:05 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 00/30] xfs: rework inode flushing to make inode reclaim fully asynchronous
+Date:   Mon, 22 Jun 2020 18:15:35 +1000
+Message-Id: <20200622081605.1818434-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=nTHF0DUjJn0A:10 a=VwQbUJbxAAAA:8 a=vvNgrGt1SS_uFXXw5pUA:9
+        a=8VqsRQj4LL5VN0dl:21 a=h6NIQ3nkZZA8NiuA:21 a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Saturday 20 June 2020 12:40:49 PM IST Christoph Hellwig wrote:
-> In preparation of removing the historic icinode struct, move the projid
-> field into the containing xfs_inode structure.
->
+Hi folks,
 
-The changes look good to me.
+Inode flushing requires that we first lock an inode, then check it,
+then lock the underlying buffer, flush the inode to the buffer and
+finally add the inode to the buffer to be unlocked on IO completion.
+We then walk all the other cached inodes in the buffer range and
+optimistically lock and flush them to the buffer without blocking.
 
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+This cluster write effectively repeats the same code we do with the
+initial inode, except now it has to special case that initial inode
+that is already locked. Hence we have multiple copies of very
+similar code, and it is a result of inode cluster flushing being
+based on a specific inode rather than grabbing the buffer and
+flushing all available inodes to it.
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/libxfs/xfs_inode_buf.c | 8 ++++----
->  fs/xfs/libxfs/xfs_inode_buf.h | 1 -
->  fs/xfs/xfs_bmap_util.c        | 2 +-
->  fs/xfs/xfs_dquot.c            | 2 +-
->  fs/xfs/xfs_icache.c           | 4 ++--
->  fs/xfs/xfs_inode.c            | 6 +++---
->  fs/xfs/xfs_inode.h            | 3 ++-
->  fs/xfs/xfs_inode_item.c       | 4 ++--
->  fs/xfs/xfs_ioctl.c            | 8 ++++----
->  fs/xfs/xfs_iops.c             | 2 +-
->  fs/xfs/xfs_itable.c           | 2 +-
->  fs/xfs/xfs_qm.c               | 8 ++++----
->  fs/xfs/xfs_qm_bhv.c           | 2 +-
->  13 files changed, 26 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> index 6f84ea85fdd837..b064cb8072c84a 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> @@ -218,10 +218,10 @@ xfs_inode_from_disk(
->  	 */
->  	if (unlikely(from->di_version == 1)) {
->  		set_nlink(inode, be16_to_cpu(from->di_onlink));
-> -		to->di_projid = 0;
-> +		ip->i_projid = 0;
->  	} else {
->  		set_nlink(inode, be32_to_cpu(from->di_nlink));
-> -		to->di_projid = (prid_t)be16_to_cpu(from->di_projid_hi) << 16 |
-> +		ip->i_projid = (prid_t)be16_to_cpu(from->di_projid_hi) << 16 |
->  					be16_to_cpu(from->di_projid_lo);
->  	}
->  
-> @@ -290,8 +290,8 @@ xfs_inode_to_disk(
->  	to->di_format = xfs_ifork_format(&ip->i_df);
->  	to->di_uid = cpu_to_be32(i_uid_read(inode));
->  	to->di_gid = cpu_to_be32(i_gid_read(inode));
-> -	to->di_projid_lo = cpu_to_be16(from->di_projid & 0xffff);
-> -	to->di_projid_hi = cpu_to_be16(from->di_projid >> 16);
-> +	to->di_projid_lo = cpu_to_be16(ip->i_projid & 0xffff);
-> +	to->di_projid_hi = cpu_to_be16(ip->i_projid >> 16);
->  
->  	memset(to->di_pad, 0, sizeof(to->di_pad));
->  	to->di_atime.t_sec = cpu_to_be32(inode->i_atime.tv_sec);
-> diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-> index 865ac493c72a24..b826d81b356956 100644
-> --- a/fs/xfs/libxfs/xfs_inode_buf.h
-> +++ b/fs/xfs/libxfs/xfs_inode_buf.h
-> @@ -17,7 +17,6 @@ struct xfs_dinode;
->   */
->  struct xfs_icdinode {
->  	uint16_t	di_flushiter;	/* incremented on flush */
-> -	uint32_t	di_projid;	/* owner's project id */
->  	xfs_fsize_t	di_size;	/* number of bytes in file */
->  	xfs_rfsblock_t	di_nblocks;	/* # of direct & btree blocks used */
->  	xfs_extlen_t	di_extsize;	/* basic/minimum extent size for file */
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index f37f5cc4b19ffe..e42553884c23cf 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -1217,7 +1217,7 @@ xfs_swap_extents_check_format(
->  	if (XFS_IS_QUOTA_ON(ip->i_mount) &&
->  	    (!uid_eq(VFS_I(ip)->i_uid, VFS_I(tip)->i_uid) ||
->  	     !gid_eq(VFS_I(ip)->i_gid, VFS_I(tip)->i_gid) ||
-> -	     ip->i_d.di_projid != tip->i_d.di_projid))
-> +	     ip->i_projid != tip->i_projid))
->  		return -EINVAL;
->  
->  	/* Should never get a local format */
-> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index d5b7f03e93c8db..912b978a6a72d5 100644
-> --- a/fs/xfs/xfs_dquot.c
-> +++ b/fs/xfs/xfs_dquot.c
-> @@ -868,7 +868,7 @@ xfs_qm_id_for_quotatype(
->  	case XFS_DQ_GROUP:
->  		return i_gid_read(VFS_I(ip));
->  	case XFS_DQ_PROJ:
-> -		return ip->i_d.di_projid;
-> +		return ip->i_projid;
->  	}
->  	ASSERT(0);
->  	return 0;
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 660e7abd4e8b76..a3bbd6e4bb6fc8 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -1439,7 +1439,7 @@ xfs_inode_match_id(
->  		return false;
->  
->  	if ((eofb->eof_flags & XFS_EOF_FLAGS_PRID) &&
-> -	    ip->i_d.di_projid != eofb->eof_prid)
-> +	    ip->i_projid != eofb->eof_prid)
->  		return false;
->  
->  	return true;
-> @@ -1463,7 +1463,7 @@ xfs_inode_match_id_union(
->  		return true;
->  
->  	if ((eofb->eof_flags & XFS_EOF_FLAGS_PRID) &&
-> -	    ip->i_d.di_projid == eofb->eof_prid)
-> +	    ip->i_projid == eofb->eof_prid)
->  		return true;
->  
->  	return false;
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 88a9e496480216..40e4d3ed29a798 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -806,7 +806,7 @@ xfs_ialloc(
->  	set_nlink(inode, nlink);
->  	inode->i_uid = current_fsuid();
->  	inode->i_rdev = rdev;
-> -	ip->i_d.di_projid = prid;
-> +	ip->i_projid = prid;
->  
->  	if (pip && XFS_INHERIT_GID(pip)) {
->  		inode->i_gid = VFS_I(pip)->i_gid;
-> @@ -1398,7 +1398,7 @@ xfs_link(
->  	 * the tree quota mechanism could be circumvented.
->  	 */
->  	if (unlikely((tdp->i_d.di_flags & XFS_DIFLAG_PROJINHERIT) &&
-> -		     tdp->i_d.di_projid != sip->i_d.di_projid)) {
-> +		     tdp->i_projid != sip->i_projid)) {
->  		error = -EXDEV;
->  		goto error_return;
->  	}
-> @@ -3264,7 +3264,7 @@ xfs_rename(
->  	 * tree quota mechanism would be circumvented.
->  	 */
->  	if (unlikely((target_dp->i_d.di_flags & XFS_DIFLAG_PROJINHERIT) &&
-> -		     target_dp->i_d.di_projid != src_ip->i_d.di_projid)) {
-> +		     target_dp->i_projid != src_ip->i_projid)) {
->  		error = -EXDEV;
->  		goto out_trans_cancel;
->  	}
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index dadcf19458960d..51ea9d53407863 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -54,6 +54,7 @@ typedef struct xfs_inode {
->  	/* Miscellaneous state. */
->  	unsigned long		i_flags;	/* see defined flags below */
->  	uint64_t		i_delayed_blks;	/* count of delay alloc blks */
-> +	uint32_t		i_projid;	/* owner's project id */
->  
->  	struct xfs_icdinode	i_d;		/* most of ondisk inode */
->  
-> @@ -175,7 +176,7 @@ static inline prid_t
->  xfs_get_initial_prid(struct xfs_inode *dp)
->  {
->  	if (dp->i_d.di_flags & XFS_DIFLAG_PROJINHERIT)
-> -		return dp->i_d.di_projid;
-> +		return dp->i_projid;
->  
->  	return XFS_PROJID_DEFAULT;
->  }
-> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-> index ba47bf65b772be..e546b4b58ce2e0 100644
-> --- a/fs/xfs/xfs_inode_item.c
-> +++ b/fs/xfs/xfs_inode_item.c
-> @@ -308,8 +308,8 @@ xfs_inode_to_log_dinode(
->  	to->di_format = xfs_ifork_format(&ip->i_df);
->  	to->di_uid = i_uid_read(inode);
->  	to->di_gid = i_gid_read(inode);
-> -	to->di_projid_lo = from->di_projid & 0xffff;
-> -	to->di_projid_hi = from->di_projid >> 16;
-> +	to->di_projid_lo = ip->i_projid & 0xffff;
-> +	to->di_projid_hi = ip->i_projid >> 16;
->  
->  	memset(to->di_pad, 0, sizeof(to->di_pad));
->  	memset(to->di_pad3, 0, sizeof(to->di_pad3));
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index a40f88cf3ab786..d93f4fc40fd99e 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1110,7 +1110,7 @@ xfs_fill_fsxattr(
->  	fa->fsx_extsize = ip->i_d.di_extsize << ip->i_mount->m_sb.sb_blocklog;
->  	fa->fsx_cowextsize = ip->i_d.di_cowextsize <<
->  			ip->i_mount->m_sb.sb_blocklog;
-> -	fa->fsx_projid = ip->i_d.di_projid;
-> +	fa->fsx_projid = ip->i_projid;
->  	if (ifp && (ifp->if_flags & XFS_IFEXTENTS))
->  		fa->fsx_nextents = xfs_iext_count(ifp);
->  	else
-> @@ -1518,7 +1518,7 @@ xfs_ioctl_setattr(
->  	}
->  
->  	if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_PQUOTA_ON(mp) &&
-> -	    ip->i_d.di_projid != fa->fsx_projid) {
-> +	    ip->i_projid != fa->fsx_projid) {
->  		code = xfs_qm_vop_chown_reserve(tp, ip, NULL, NULL, pdqp,
->  				capable(CAP_FOWNER) ?  XFS_QMOPT_FORCE_RES : 0);
->  		if (code)	/* out of quota */
-> @@ -1555,12 +1555,12 @@ xfs_ioctl_setattr(
->  		VFS_I(ip)->i_mode &= ~(S_ISUID|S_ISGID);
->  
->  	/* Change the ownerships and register project quota modifications */
-> -	if (ip->i_d.di_projid != fa->fsx_projid) {
-> +	if (ip->i_projid != fa->fsx_projid) {
->  		if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_PQUOTA_ON(mp)) {
->  			olddquot = xfs_qm_vop_chown(tp, ip,
->  						&ip->i_pdquot, pdqp);
->  		}
-> -		ip->i_d.di_projid = fa->fsx_projid;
-> +		ip->i_projid = fa->fsx_projid;
->  	}
->  
->  	/*
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index d66528fa365707..5440f555c9cc2c 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -696,7 +696,7 @@ xfs_setattr_nonsize(
->  		 */
->  		ASSERT(udqp == NULL);
->  		ASSERT(gdqp == NULL);
-> -		error = xfs_qm_vop_dqalloc(ip, uid, gid, ip->i_d.di_projid,
-> +		error = xfs_qm_vop_dqalloc(ip, uid, gid, ip->i_projid,
->  					   qflags, &udqp, &gdqp, NULL);
->  		if (error)
->  			return error;
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index 16ca97a7ff00fb..97b3b794dd4ada 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -84,7 +84,7 @@ xfs_bulkstat_one_int(
->  	/* xfs_iget returns the following without needing
->  	 * further change.
->  	 */
-> -	buf->bs_projectid = ip->i_d.di_projid;
-> +	buf->bs_projectid = ip->i_projid;
->  	buf->bs_ino = ino;
->  	buf->bs_uid = i_uid_read(inode);
->  	buf->bs_gid = i_gid_read(inode);
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index d6cd833173447a..ea22dcf868b474 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -346,7 +346,7 @@ xfs_qm_dqattach_locked(
->  	}
->  
->  	if (XFS_IS_PQUOTA_ON(mp) && !ip->i_pdquot) {
-> -		error = xfs_qm_dqattach_one(ip, ip->i_d.di_projid, XFS_DQ_PROJ,
-> +		error = xfs_qm_dqattach_one(ip, ip->i_projid, XFS_DQ_PROJ,
->  				doalloc, &ip->i_pdquot);
->  		if (error)
->  			goto done;
-> @@ -1711,7 +1711,7 @@ xfs_qm_vop_dqalloc(
->  		}
->  	}
->  	if ((flags & XFS_QMOPT_PQUOTA) && XFS_IS_PQUOTA_ON(mp)) {
-> -		if (ip->i_d.di_projid != prid) {
-> +		if (ip->i_projid != prid) {
->  			xfs_iunlock(ip, lockflags);
->  			error = xfs_qm_dqget(mp, (xfs_dqid_t)prid, XFS_DQ_PROJ,
->  					true, &pq);
-> @@ -1844,7 +1844,7 @@ xfs_qm_vop_chown_reserve(
->  	}
->  
->  	if (XFS_IS_PQUOTA_ON(ip->i_mount) && pdqp &&
-> -	    ip->i_d.di_projid != be32_to_cpu(pdqp->q_core.d_id)) {
-> +	    ip->i_projid != be32_to_cpu(pdqp->q_core.d_id)) {
->  		pdq_delblks = pdqp;
->  		if (delblks) {
->  			ASSERT(ip->i_pdquot);
-> @@ -1942,7 +1942,7 @@ xfs_qm_vop_create_dqattach(
->  	}
->  	if (pdqp && XFS_IS_PQUOTA_ON(mp)) {
->  		ASSERT(ip->i_pdquot == NULL);
-> -		ASSERT(ip->i_d.di_projid == be32_to_cpu(pdqp->q_core.d_id));
-> +		ASSERT(ip->i_projid == be32_to_cpu(pdqp->q_core.d_id));
->  
->  		ip->i_pdquot = xfs_qm_dqhold(pdqp);
->  		xfs_trans_mod_dquot(tp, pdqp, XFS_TRANS_DQ_ICOUNT, 1);
-> diff --git a/fs/xfs/xfs_qm_bhv.c b/fs/xfs/xfs_qm_bhv.c
-> index fc2fa418919f7f..b616ad772a6df8 100644
-> --- a/fs/xfs/xfs_qm_bhv.c
-> +++ b/fs/xfs/xfs_qm_bhv.c
-> @@ -60,7 +60,7 @@ xfs_qm_statvfs(
->  	struct xfs_mount	*mp = ip->i_mount;
->  	struct xfs_dquot	*dqp;
->  
-> -	if (!xfs_qm_dqget(mp, ip->i_d.di_projid, XFS_DQ_PROJ, false, &dqp)) {
-> +	if (!xfs_qm_dqget(mp, ip->i_projid, XFS_DQ_PROJ, false, &dqp)) {
->  		xfs_fill_statvfs_from_dquot(statp, dqp);
->  		xfs_qm_dqput(dqp);
->  	}
-> 
+The problem with this at the moment is that we we can't look up the
+buffer until we have guaranteed that an inode is held exclusively
+and it's not going away while we get the buffer through an imap
+lookup. Hence we are kinda stuck locking an inode before we can look
+up the buffer.
 
+This is also a result of inodes being detached from the cluster
+buffer except when IO is being done. This has the further problem
+that the cluster buffer can be reclaimed from memory and then the
+inode can be dirtied. At this point cleaning the inode requires a
+read-modify-write cycle on the cluster buffer. If we then are put
+under memory pressure, cleaning that dirty inode to reclaim it
+requires allocating memory for the cluster buffer and this leads to
+all sorts of problems.
+
+We used synchronous inode writeback in reclaim as a throttle that
+provided a forwards progress mechanism when RMW cycles were required
+to clean inodes. Async writeback of inodes (e.g. via the AIL) would
+immediately exhaust remaining memory reserves trying to allocate
+inode cluster after inode cluster. The synchronous writeback of an
+inode cluster allowed reclaim to release the inode cluster and have
+it freed almost immediately which could then be used to allocate the
+next inode cluster buffer. Hence the IO based throttling mechanism
+largely guaranteed forwards progress in inode reclaim. By removing
+the requirement for require memory allocation for inode writeback
+filesystem level, we can issue writeback asynchrnously and not have
+to worry about the memory exhaustion anymore.
+
+Another issue is that if we have slow disks, we can build up dirty
+inodes in memory that can then take hours for an operation like
+unmount to flush. A RMW cycle per inode on a slow RAID6 device can
+mean we only clean 50 inodes a second, and when there are hundreds
+of thousands of dirty inodes that need to be cleaned this can take a
+long time. PInning the cluster buffers will greatly speed up inode
+writeback on slow storage systems like this.
+
+These limitations all stem from the same source: inode writeback is
+inode centric, And they are largely solved by the same architectural
+change: make inode writeback cluster buffer centric.  This series is
+makes that architectural change.
+
+Firstly, we start by pinning the inode backing buffer in memory
+when an inode is marked dirty (i.e. when it is logged). By tracking
+the number of dirty inodes on a buffer as a counter rather than a
+flag, we avoid the problem of overlapping inode dirtying and buffer
+flushing racing to set/clear the dirty flag. Hence as long as there
+is a dirty inode in memory, the buffer will not be able to be
+reclaimed. We can safely do this inode cluster buffer lookup when we
+dirty an inode as we do not hold the buffer locked - we merely take
+a reference to it and then release it - and hence we don't cause any
+new lock order issues.
+
+When the inode is finally cleaned, the reference to the buffer can
+be removed from the inode log item and the buffer released. This is
+done from the inode completion callbacks that are attached to the
+buffer when the inode is flushed.
+
+Pinning the cluster buffer in this way immediately avoids the RMW
+problem in inode writeback and reclaim contexts by moving the memory
+allocation and the blocking buffer read into the transaction context
+that dirties the inode.  This inverts our dirty inode throttling
+mechanism - we now throttle the rate at which we can dirty inodes to
+rate at which we can allocate memory and read inode cluster buffers
+into memory rather than via throttling reclaim to rate at which we
+can clean dirty inodes.
+
+Hence if we are under memory pressure, we'll block on memory
+allocation when trying to dirty the referenced inode, rather than in
+the memory reclaim path where we are trying to clean unreferenced
+inodes to free memory.  Hence we no longer have to guarantee
+forwards progress in inode reclaim as we aren't doing memory
+allocation, and that means we can remove inode writeback from the
+XFS inode shrinker completely without changing the system tolerance
+for low memory operation.
+
+Tracking the buffers via the inode log item also allows us to
+completely rework the inode flushing mechanism. While the inode log
+item is in the AIL, it is safe for the AIL to access any member of
+the log item. Hence the AIL push mechanisms can access the buffer
+attached to the inode without first having to lock the inode.
+
+This means we can essentially lock the buffer directly and then
+call xfs_iflush_cluster() without first going through xfs_iflush()
+to find the buffer. Hence we can remove xfs_iflush() altogether,
+because the two places that call it - the inode item push code and
+inode reclaim - no longer need to flush inodes directly.
+
+This can be further optimised by attaching the inode to the cluster
+buffer when the inode is dirtied. i.e. when we add the buffer
+reference to the inode log item, we also attach the inode to the
+buffer for IO processing. This leads to the dirty inodes always
+being attached to the buffer and hence we no longer need to add them
+when we flush the inode and remove them when IO completes. Instead
+the inodes are attached when the node log item is dirtied, and
+removed when the inode log item is cleaned.
+
+With this structure in place, we no longer need to do
+lookups to find the dirty inodes in the cache to attach to the
+buffer in xfs_iflush_cluster() - they are already attached to the
+buffer. Hence when the AIL pushes an inode, we just grab the buffer
+from the log item, and then walk the buffer log item list to lock
+and flush the dirty inodes attached to the buffer.
+
+This greatly simplifies inode writeback, and removes another memory
+allocation from the inode writeback path (the array used for the
+radix tree gang lookup). And while the radix tree lookups are fast,
+walking the linked list of dirty inodes is faster.
+
+There is followup work I am doing that uses the inode cluster buffer
+as a replacement in the AIL for tracking dirty inodes. This part of
+the series is not ready yet as it has some intricate locking
+requirements. That is an optimisation, so I've left that out because
+solving the inode reclaim blocking problems is the important part of
+this work.
+
+In short, this series simplifies inode writeback and fixes the long
+standing inode reclaim blocking issues without requiring any changes
+to the memory reclaim infrastructure.
+
+Note: dquots should probably be converted to cluster flushing in a
+similar way, as they have many of the same issues as inode flushing.
+
+Thoughts, comments and improvemnts welcome.
+
+-Dave.
+
+Version 4:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-async-inode-reclaim-4
+
+- rebase on 5.8-rc2 + for-next
+- fix buffer retry logic braino (p13)
+- removed unnecessary asserts (p24)
+- removed unnecessary delwri queue checks from
+  xfs_inode_item_push (p24)
+- rework return value from xfs_iflush_cluster to indicate -EAGAIN if
+  no inodes were flushed and handle that case in the caller. (p28)
+- rewrite comment about shutdown case in xfs_iflush_cluster (p28)
+- always clear XFS_LI_FAILED for items requiring AIL processing
+  (p29)
+
+
+Version 3
+
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-async-inode-reclaim-3
+
+- rebase on 5.7 + for-next
+- update comments (p3)
+- update commit message (p4)
+- renamed xfs_buf_ioerror_sync() (p13)
+- added enum for return value from xfs_buf_iodone_error() (p13)
+- moved clearing of buffer error to iodone functions (p13)
+- whitespace (p13)
+- rebase p14 (p13 conflicts)
+- rebase p16 (p13 conflicts)
+- removed a superfluous assert (p16)
+- moved comment and check in xfs_iflush_done() from p16 to p25
+- rebase p25 (p16 conflicts)
+
+
+
+Version 2
+
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-async-inode-reclaim-2
+
+- describe ili_lock better (p2)
+- clean up inode logging code some more (p2)
+- move "early read completion" for xfs_buf_ioend() up into p3 from
+  p4.
+- fixed conflicts in p4 due to p3 changes.
+- fixed conflicts in p5 due to p4 changes.
+- s/_XBF_LOGRCVY/_XBF_LOG_RECOVERY/ (p5)
+- renamed the buf log item iodone callback to xfs_buf_item_iodone and
+  reused the xfs_buf_iodone() name for the catch-all buffer write
+  iodone completion. (p6)
+- history update for commit message (p7)
+- subject update for p8
+- rework loop in xfs_dquot_done() (p9)
+- Fixed conflicts in p10 due to p6 changes
+- got rid of entire comments around li_cb (p11)
+- new patch to rework buffer io error callbacks
+- new patch to unwind ->iop_error calls and remove ->iop_error
+- new patch to lift xfs_clear_li_failed() out of
+  xfs_ail_delete_one()
+- rebased p12 on all the prior changes
+- reworked LI_FAILED handling when pinning inodes to the cluster
+  buffer (p12) 
+- fixed comment about holding buffer references in
+  xfs_trans_log_inode() (p12)
+- fixed indenting of xfs_iflush_abort() (p12)
+- added comments explaining "skipped" indoe reclaim return value
+  (p14)
+- cleaned up error return stack in xfs_reclaim_inode() (p14)
+- cleaned up skipped return in xfs_reclaim_inodes() (p14)
+- fixed bug where skipped wasn't incremented if reclaim cursor was
+  not zero. This could leave inodes between the start of the AG and
+  the cursor unreclaimed (p15)
+- reinstate the patch removing SYNC_WAIT from xfs_reclaim_inodes().
+  Exposed "skipped" bug in p15.
+- cleaned up inode reclaim comments (p18)
+- split p19 into two - one to change xfs_ifree_cluster(), one
+  for the buffer pinning.
+- xfs_ifree_mark_inode_stale() now takes the cluster buffer and we
+  get the perag from that rather than having to do a lookup in
+  xfs_ifree_cluster().
+- moved extra IO reference for xfs_iflush_cluster() from AIL pushing
+  to initial xfs_iflush_cluster rework (p22 -> p20)
+- fixed static declaration on xfs_iflush() (p22)
+- fixed incorrect EIO return from xfs_iflush_cluster()
+- rebase p23 because it all rejects now.
+- fix INODE_ITEM() usage in p23
+- removed long lines from commit message in p24
+- new patch to fix logging of XFS_ISTALE inodes which pushes dirty
+  inodes through reclaim.
+
+
+
+Dave Chinner (30):
+  xfs: Don't allow logging of XFS_ISTALE inodes
+  xfs: remove logged flag from inode log item
+  xfs: add an inode item lock
+  xfs: mark inode buffers in cache
+  xfs: mark dquot buffers in cache
+  xfs: mark log recovery buffers for completion
+  xfs: call xfs_buf_iodone directly
+  xfs: clean up whacky buffer log item list reinit
+  xfs: make inode IO completion buffer centric
+  xfs: use direct calls for dquot IO completion
+  xfs: clean up the buffer iodone callback functions
+  xfs: get rid of log item callbacks
+  xfs: handle buffer log item IO errors directly
+  xfs: unwind log item error flagging
+  xfs: move xfs_clear_li_failed out of xfs_ail_delete_one()
+  xfs: pin inode backing buffer to the inode log item
+  xfs: make inode reclaim almost non-blocking
+  xfs: remove IO submission from xfs_reclaim_inode()
+  xfs: allow multiple reclaimers per AG
+  xfs: don't block inode reclaim on the ILOCK
+  xfs: remove SYNC_TRYLOCK from inode reclaim
+  xfs: remove SYNC_WAIT from xfs_reclaim_inodes()
+  xfs: clean up inode reclaim comments
+  xfs: rework stale inodes in xfs_ifree_cluster
+  xfs: attach inodes to the cluster buffer when dirtied
+  xfs: xfs_iflush() is no longer necessary
+  xfs: rename xfs_iflush_int()
+  xfs: rework xfs_iflush_cluster() dirty inode iteration
+  xfs: factor xfs_iflush_done
+  xfs: remove xfs_inobp_check()
+
+ fs/xfs/libxfs/xfs_inode_buf.c   |  27 +-
+ fs/xfs/libxfs/xfs_inode_buf.h   |   6 -
+ fs/xfs/libxfs/xfs_trans_inode.c | 110 +++++--
+ fs/xfs/xfs_buf.c                |  40 ++-
+ fs/xfs/xfs_buf.h                |  48 ++-
+ fs/xfs/xfs_buf_item.c           | 419 +++++++++++------------
+ fs/xfs/xfs_buf_item.h           |   8 +-
+ fs/xfs/xfs_buf_item_recover.c   |   5 +-
+ fs/xfs/xfs_dquot.c              |  29 +-
+ fs/xfs/xfs_dquot.h              |   1 +
+ fs/xfs/xfs_dquot_item.c         |  18 -
+ fs/xfs/xfs_dquot_item_recover.c |   2 +-
+ fs/xfs/xfs_file.c               |   9 +-
+ fs/xfs/xfs_icache.c             | 333 ++++++-------------
+ fs/xfs/xfs_icache.h             |   2 +-
+ fs/xfs/xfs_inode.c              | 567 ++++++++++++--------------------
+ fs/xfs/xfs_inode.h              |   2 +-
+ fs/xfs/xfs_inode_item.c         | 303 +++++++++--------
+ fs/xfs/xfs_inode_item.h         |  24 +-
+ fs/xfs/xfs_inode_item_recover.c |   2 +-
+ fs/xfs/xfs_log_recover.c        |   5 +-
+ fs/xfs/xfs_mount.c              |  15 +-
+ fs/xfs/xfs_mount.h              |   1 -
+ fs/xfs/xfs_super.c              |   3 -
+ fs/xfs/xfs_trans.h              |   5 -
+ fs/xfs/xfs_trans_ail.c          |  10 +-
+ fs/xfs/xfs_trans_buf.c          |  15 +-
+ 27 files changed, 889 insertions(+), 1120 deletions(-)
 
 -- 
-chandan
-
-
+2.26.2.761.g0e0b3e54be
 
