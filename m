@@ -2,59 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C78203BE7
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 18:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6A1A203C53
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jun 2020 18:15:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgFVQCp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Jun 2020 12:02:45 -0400
-Received: from sonic310-24.consmr.mail.ne1.yahoo.com ([66.163.186.205]:41469
-        "EHLO sonic310-24.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729855AbgFVQCn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 12:02:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841762; bh=cK2qy9Lv5SAgMg9nAvfVmkJPj46H3ss3vOVyjpHm6Nk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=pj4oXOE2OyHYdknQwXt6M/Ur0kBv147g1Kmcf7tcKmW6vP7QkIs/0Ep6iSdvVbItbqmxz5qvNv2Knn1CCHx1JXfWNGArujlCeYSuykFkZJxjCzXbA8w0wLvpau2QmrFe2PrXbdJtSp7sZvV+Fn+MSxxEAMjJwUYy035jS7THEfRj7uQyYShNvBfOmlxWp2S02TFvKY3T8mKwBfr51HZEWkQMAbMayIdgv5piHcdL/TZX2mXpkwvJPu8ioALMGRwKiiqoZPpjEvgEgk393Eu5ga4kGIVQY4hlCVIOpCvBFLDvIoZ1lAST79npmmV4flo+Zn04KnSvOcS2Gzu1cuLEgg==
-X-YMail-OSG: SBQnKXIVM1mTNgCK3zLXZz0mAqCLAu_qYFGTOP1_.16Lsm0yAbmVuUiRbzcAPRx
- vFd64NNq0aBErGk8jZQmppt557BbRNs40UvRgt28TV6psc53_bk_.g63XmJg2TkYReecI3VnjPsk
- vju7RXS_pQjXBebXy5sx0mNpmwNtjf7jE8lIrTc8fGjR0sYWzBYOY4pHHnM.7Lauc3pLU2rqmfq.
- N7Eit2GLqPlx80aoZ9B84PI5p3X1w6hee3o5FcuQFao_7h1_YXe_MfCcrR.gA1nwVxWyYYHuZUlo
- KB7qFK6lyMf4FYzujm8bcK.NiCMUKrpWEcnHWksbbt9Lidz3yAVXOZ1DOCm2iJZVhfBqB90PWDdD
- h9DjnulgZkLSenlO3C4dAuGFDD70yrVPPubueGjAmM0VCHZkyGbtX4g9G9ELFZ0rfJAWVeCrntaJ
- XaP_CoyrETUNdsTiKKKrLFuFdLIhozHA4a9YaA3ECDZQJcSRzNTD.tKwjjQ_7Yw1BwQ_7NdJPUKY
- yaaZU_NqX5rmJ3eOWg.8QmQ0HNdNbxjHkrCRz5wTMoxSSrmcKke4bGYKz.EHuPpXSr1zn2RBZrqn
- 0jivrLuvPfq1ve7lQAwBnuycFHVXUVpNHIaX5hcOm8QQ_uWM_9ddO_MgB1mRbgBrOT5v2LfWivzh
- AIjUglErrBFUtol1mHqzoU4Y3yqpEd1xqtTUvJKl4emys_ReYiECF5UFCnt0.U6q.leVTajuX1ut
- CpUrzbOXptEgtWupy64dMHIXwDCONaj2q7iNyI289LiZatE6zPKi4nsl_7Uig2CFqiqY35ypdg45
- vL3S8mRwuJYQSBlCWVwW6FLdKvoJP1KT8kzHpkeOhqpIeXXPVO96fLi5gHRH_vcRbKCB5b.BrOyt
- qBu_hRvFPBbweIXJHLEdIUxsusdFvM3.V0Im6IpQN1SPaG.hkbdS9Vv.0uVcQnH2OgItiTskowjj
- GGFcGVYA8FFmbLVWVJGIyYCpshqNp7PujWUFrYuVnMHPHmrjFdKOwc85CX7SBwGI86eny_IcdNEy
- ulKoRKDpCZOpfZdoCF_uJY6oWCtHdhthdlC1E0pmFjMadzzuvN0DhIAxEFdT_LxHuG4kDeoEmUFj
- KND82BquRO.SJnAaTVZSmG5DktRTx5DjQmMl.agQCbe6XpJqssdIfCnjU3SrWVrQ0C8HJbqKyJFN
- 3zq6LevTDXZ82iM1gRZIyhjWzD3WCk78Tg.K.mHveW2E5gTCIBBzx1f_4iMXufrf2M8GQ.KFDB8R
- irEjMrrOq2MPQdOh8jzM5g0pA6w4rrjQajW2nEKfW7COn7pVCPueyyketOuFwvj.0NSx3dDesGg-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 16:02:42 +0000
-Date:   Mon, 22 Jun 2020 16:02:39 +0000 (UTC)
-From:   Karim Zakari <kariim1960z@gmail.com>
-Reply-To: kzakari04@gmail.com
-Message-ID: <941580334.1864237.1592841759009@mail.yahoo.com>
-Subject: URGENT REPLY.
+        id S1729343AbgFVQPk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Jun 2020 12:15:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52946 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbgFVQPk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Jun 2020 12:15:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MG1apv035164;
+        Mon, 22 Jun 2020 16:15:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+ARcNTVj9JeieFQM4yNAXTATUkdDa5jjVt9oS6gn01s=;
+ b=zXW2LN44QkQzB+wg2bdjney+ZHeJXZkDVupqzNM61sHhh0UrCEqLbyP50RUs8nrHFrN6
+ 7St/EJEAoRChJYdx6EehqC+TNk8ULnA2+6RgmhaBiRGGGYrMN3czqlWKktwZC6JX2nNr
+ v55YrachthYkX79AONZHfn+4RE1htKDzNTG1RxcIK+Q990hyS/4YxgVa9+NSEkL96sdG
+ iU2Qv3Rdn27AfTRUCRV71UkyZ3ZM5q3WYgelT8iWviOeSTDM9MzTiOA/DcfBbEJMUF6H
+ CtmEfAmnvcE0KMgwEnJhZef1lygp/ITR1NFsYPTrxKHK3A2xVBiATE9r15qVF3Rgf8ku Vw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31sebb8c1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 16:15:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MFx4dY153421;
+        Mon, 22 Jun 2020 16:15:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31svcvagch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 16:15:34 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05MGFXRP007654;
+        Mon, 22 Jun 2020 16:15:33 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jun 2020 16:15:33 +0000
+Date:   Mon, 22 Jun 2020 09:15:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild@lists.01.org, Dan Carpenter <error27@gmail.com>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [kbuild] fs/xfs/libxfs/xfs_bmap.c:5563 __xfs_bunmapi() warn:
+ Function too hairy. No more merges.
+Message-ID: <20200622161532.GD11242@magnolia>
+References: <202006210453.AJzaq6rh%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <941580334.1864237.1592841759009.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006210453.AJzaq6rh%lkp@intel.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
+ lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1011 impostorscore=0
+ malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006220117
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Sun, Jun 21, 2020 at 04:03:02AM +0800, kernel test robot wrote:
+> CC: kbuild-all@lists.01.org
+> CC: linux-kernel@vger.kernel.org
+> TO: Dave Chinner <dchinner@redhat.com>
+> CC: "Darrick J. Wong" <darrick.wong@oracle.com>
+> CC: Christoph Hellwig <hch@lst.de>
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   4333a9b0b67bb4e8bcd91bdd80da80b0ec151162
+> commit: b0dff466c00975a3e3ec97e6b0266bfd3e4805d6 xfs: separate read-only variables in struct xfs_mount
+> date:   3 weeks ago
+> :::::: branch date: 24 hours ago
+> :::::: commit date: 3 weeks ago
+> config: i386-randconfig-m021-20200621 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> New smatch warnings:
+> fs/xfs/libxfs/xfs_bmap.c:5563 __xfs_bunmapi() warn: Function too hairy.  No more merges.
+> 
+> Old smatch warnings:
+> fs/xfs/libxfs/xfs_bmap.c:5450 __xfs_bunmapi() error: we previously assumed 'tp' could be null (see line 5290)
+> fs/xfs/libxfs/xfs_bmap.c:6123 __xfs_bmap_add() error: potential null dereference 'bi'.  (kmem_alloc returns null)
 
+Er... does this mean that smatch is smarter about kmem_alloc now?
 
-Good-Day Friend,
+Or merely that something/someone tweaked the hair threshold downwards?
 
- Hope you are doing great Today. I have a proposed business deal worthy (US$16.5 Million Dollars) that will benefit both parties. This is legitimate' legal and your personality will not be compromised.
+<-- his personal hair threshold is much longer now that it's March 98th.
 
-Waiting for your response for more details, As you are willing to execute this business opportunity with me.
+--D
 
-Sincerely Yours,
-Mr. Karim Zakari.
+> 
+> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b0dff466c00975a3e3ec97e6b0266bfd3e4805d6
+> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> git remote update linus
+> git checkout b0dff466c00975a3e3ec97e6b0266bfd3e4805d6
+> vim +5563 fs/xfs/libxfs/xfs_bmap.c
+
+<snip> a ton of git blame output
