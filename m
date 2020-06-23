@@ -2,90 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E5B20670C
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jun 2020 00:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B503A2067B3
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jun 2020 00:53:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387757AbgFWWOm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jun 2020 18:14:42 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:48101 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387609AbgFWWOl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 18:14:41 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id EBAA2D5C6E9;
-        Wed, 24 Jun 2020 08:14:38 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jnrBX-0000hq-HI; Wed, 24 Jun 2020 08:14:31 +1000
-Date:   Wed, 24 Jun 2020 08:14:31 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: use MMAPLOCK around filemap_map_pages()
-Message-ID: <20200623221431.GB2005@dread.disaster.area>
-References: <20200623052059.1893966-1-david@fromorbit.com>
- <20200623211910.GG7606@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623211910.GG7606@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=eSglUqIqSMLvk5Se81QA:9 a=Bp1ua9J24Lt_N_46:21 a=wXGZdZFFRqYmG6m3:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        id S2387765AbgFWWwU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jun 2020 18:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387717AbgFWWwT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 18:52:19 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21617C0613ED
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 15:30:03 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f18so106268qkh.1
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 15:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
+        b=QWQq5RDGTnwX3WnqevkbBWkazZh8odQfl932pZ3UbY0dCGQegngCVgx95WkZVr6BnO
+         65ZIHrqmao0uN6GenF/4y4CW/OcmRkJXPzNKvRDmcXb7ZC7erhMA93XdDlwZ6l3vBF1f
+         GxHnbtJycGks7s5BOlmqFZKUgWd+grPqJxni7VbGgMA8zUApStYLutkeT0rlrIBOHI08
+         3Cql55Igvie4tl+36H8VyJCyQqgV0RR76/eI9IGW+so79IAWGhwE2UWaR81yETHij9Y+
+         SmTPqigtUan78yqLcCU63BGCxEuDALLbhJ89gWLbCtwqVG4DBdoucn263Wyo8rE2fDql
+         8TgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
+        b=OgouDVi9Jp923xdF1fPZ5lKF4ZQSfzmBn+Ai9fVeT1caPsCsLgqR5dQBs6O5cj4pPC
+         liVvfg5DRU16h58uAZ0F0uWm1914AavCzJgdKwUVInxoKZ1w3rykJrigKl5w33KlMyrB
+         Ozl/nsxZ+KbX2ti4BPNIUZEaTv+CqQhYQFF3he0U2LAQYje8G9dm4M+TlNQCo5bfv8EU
+         ySMSHm3/8jqj2pc0iWwd7PqpypINwMxpxIMZHrCpwslnAY8GJ6FSvLyoyAarpFCfNmK4
+         H5q1ic+Ij0ek0T/D9l60F66JWEpZk8TAWy9jswtVWR92rYRMeHmSFHMC4j2jOqROxFTM
+         iJrg==
+X-Gm-Message-State: AOAM530jtIwxzytK9gY9t1+4BO//hN5DmOPP0alF9NeElxQTZVBMBPyJ
+        NPeBmPngDhB4v3Smpv+1PbUSNTkVvVnmJQ==
+X-Google-Smtp-Source: ABdhPJwk15aS1BWBT2iEbMasfTOJdZ8L9kYNLCwIeSkqEjFH3YWtkSFhBbq1XdpbSIFrixrWCXSxpg==
+X-Received: by 2002:a37:5ac1:: with SMTP id o184mr6623255qkb.498.1592951401983;
+        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
+Received: from ?IPv6:2600:1000:b118:1dc0:18a:ef24:8000:54d8? ([2600:1000:b118:1dc0:18a:ef24:8000:54d8])
+        by smtp.gmail.com with ESMTPSA id 207sm1764428qki.134.2020.06.23.15.30.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
+Date:   Tue, 23 Jun 2020 18:29:58 -0400
+Message-Id: <CBC5DC63-241C-4291-8686-21CF758AC91B@lca.pw>
+References: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-xfs@vger.kernel.org
+In-Reply-To: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:19:10PM -0700, Darrick J. Wong wrote:
-> On Tue, Jun 23, 2020 at 03:20:59PM +1000, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > The page faultround path ->map_pages is implemented in XFS via
-> 
-> What does "faultround" mean?
 
-Typo - fault-around.
 
-i.e. when we take a read page fault, the do_read_fault() code first
-opportunistically tries to map a range of pages surrounding
-surrounding the faulted page into the PTEs, not just the faulted
-page. It uses ->map_pages() to do the page cache lookups for
-cached pages in the range of the fault around and then inserts them
-into the PTES is if finds any.
+> On Jun 23, 2020, at 6:13 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
+>=20
+> Ok I tested this. I can't use your script to repro because
+> - I don't have a setup with xfs, and the splat points at an issue in xfs
+> - reproducing lockdep splats in shrinker callbacks is always a bit tricky
 
-If the fault-around pass did not find the page fault page in cache
-(i.e. vmf->page remains null) then it calls into do_fault(), which
-ends up calling ->fault, which we then lock the MMAPLOCK and call
-into filemap_fault() to populate the page cache and read the data
-into it.
+What=E2=80=99s xfs setup are you talking about? This is simple xfs rootfs an=
+d then trigger swapping. Nothing tricky here as it hit on multiple machines w=
+ithin a few seconds on linux-next.
 
-So, essentially, fault-around is a mechanism to reduce page faults
-in the situation where previous readahead has brought adjacent pages
-into the page cache by optimistically mapping up to
-fault_around_bytes into PTEs on any given read page fault.
+> Summary: Everything is working as expected, there's no change in the
+> lockdep annotations.
+> I really think the problem is that either your testcase doesn't hit
+> the issue reliably enough, or that you're not actually testing the
+> same kernels and there's some other changes (xfs most likely, but
+> really it could be anywhere) which is causing this regression. I'm
+> rather convinced now after this test that it's not my stuff.
 
-> I'm pretty convinced that this is merely another round of whackamole wrt
-> taking the MMAPLOCK before relying on or doing anything to pages in the
-> page cache, I just can't tell if 'faultround' is jargon or typo.
-
-Well, it's whack-a-mole in that this is the first time I've actually
-looked at what map_pages does. I knew there was fault-around in the
-page fault path, but I know that it had it's own method for
-page cache lookups and pte mapping, nor that it had it's own
-truncate race checks to ensure it didn't map pages invalidated by
-truncate into the PTEs.
-
-There's so much technical debt hidden in the kernel code base. The
-fact we're still finding places that assume only truncate can
-invalidate the page cache over a file range indicates just how deep
-this debt runs...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Well, the memory pressure workloads have been running for years on daily lin=
+ux-next builds and never saw this one happened once. Also, the reverting is O=
+NLY to revert your patch on the top of linux-next will stop the splat, so th=
+ere is no not testing the same kernel at all.=
