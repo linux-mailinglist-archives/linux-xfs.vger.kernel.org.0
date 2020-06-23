@@ -2,104 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEEAA205073
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jun 2020 13:16:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 125942050C6
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jun 2020 13:32:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgFWLQx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jun 2020 07:16:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52820 "EHLO
+        id S1732466AbgFWLc2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jun 2020 07:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732507AbgFWLQw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 07:16:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C3AC061796
-        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 04:16:51 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k6so7631526wrn.3
-        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 04:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=E6E/hlNpiM6PnoAOVZ+7voPc9wpxPmWA12rEiYoj/bAUsYe0AJbyTzI9pZwPUUDdPP
-         2sshPYcb9oIsA99JTikTl0u76qfHNPIW2jIbz6C+DLselDK71HuKa++SqaGTSZ4p4+te
-         gTQ9UTEVmk4+r2eFXVbrvBf8ptXVBuknudxlYS3vrFAv18ZetPr28ECYav3lG+E2L5JM
-         St9yzES6OGBMLQpZbQAQLmSOp9Akg+wflxGB71dvTLo/TJoexQV6LE+g+JoBlfC2QAg7
-         b+ja973yyVQOwbfrTF90BaaIQGUXchEhek4sdIUmlBpL8Ak1D79EOMoTbcuGCplWvTHT
-         W4hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=IlAlKnGnuWalqVa8+k+0/s3q8kmtJqYn2s3gYUC/hEJEZSooHLEqYnKIHQaxszAbZP
-         tr+YKILEaARb08+N0xGSYvwMDyNsik1TNM75yHnJYmXcDP3JWWxbDpyuHl3WNDI/lUUq
-         5SZloihLDPHxqfsjmJZFTPeRx5+42mnH9EyQYzwAsaqGf/796gNI6sBCk0FA1Epj3rVO
-         E8eBDDIgh/vuYgaHEiwr6eBD1Q15TpLjO7dawSWQAHCgDOK07xyAJVb/P4jPKFDSiuMV
-         EFfXBynrNuHp2NLlt5BsYqjBrJTlTsIO4ZwBsVysLAXPu3Ae8VOfNvE94XqgCHu4k8RQ
-         Trlg==
-X-Gm-Message-State: AOAM532n9FMAyLvrTz9NdtyQvV4tywui9OgCAuOHJUxMfGFwgSZybuNM
-        f1hi2ldKS50Ezlf0egCb5i2wmbshY2actemHmPg=
-X-Google-Smtp-Source: ABdhPJzZ1QWBbLEVEJDiR8ozgNL3BKht/bHhiiCQZFbEUfR5i8VLBKqhwlX7a4NXmF6FqxDOEk5UW9nntOQTLpvDlps=
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr24071305wrv.162.1592911009833;
- Tue, 23 Jun 2020 04:16:49 -0700 (PDT)
+        with ESMTP id S1732450AbgFWLc0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 07:32:26 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A654DC061573;
+        Tue, 23 Jun 2020 04:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nU2p89RvjTFjAGOQygxX4Hxib0SVdt+Fk8yoHdziDoQ=; b=sPxY8Eb/Vs+HUyBqnPAu9cx4lU
+        EcuS1rdqgJKKm75FyITu5nEgDaOJl9fOVjzjVbmFE8RlJKsZN3dThJiBIYOm7nD4mUSxxAjI3vANE
+        Y5O5PvZ94lUcuQ0hpQXhO1H1z9TzGqsECb4do6JfJcdBPfrEw1ryHMI5L/mhfnRC1MvFOmhwlou2o
+        MzCHdUgaLGsOq2g2tjyda8p+eQqRiH2f0wJQQXPtiTklLXvRVWTMjKB4cE4AT4OsszU/zYB83JOGU
+        sPBVQd6EJSo6/OVlrQVzBr++P7e8Ud1ii3dCvFXLvqZFsMda6WudhngD8JYZoU11hThDE6a96SKmY
+        Y+Q0GZvQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnh9o-0007DX-A2; Tue, 23 Jun 2020 11:32:04 +0000
+Date:   Tue, 23 Jun 2020 12:32:04 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andreas Gr??nbacher <andreas.gruenbacher@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>
+Subject: Re: [PATCH v2] iomap: Make sure iomap_end is called after iomap_begin
+Message-ID: <20200623113204.GA27620@infradead.org>
+References: <20200618122408.1054092-1-agruenba@redhat.com>
+ <20200619131347.GA22412@infradead.org>
+ <CAHc6FU7uKUV-R+qJ9ifLAJkS6aPoG_6qWe7y7wJOb7EbWRL4dQ@mail.gmail.com>
+ <20200623103605.GA20464@infradead.org>
+ <CAHpGcM+bCGJMB_k842pr57Ms1VMC6fva++XXaN+aF7rZ2roAvQ@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:16:49
- -0700 (PDT)
-Reply-To: sarahkoffi389@yahoo.co.jp
-From:   Sarah Koffi <paulwiliam782@gmail.com>
-Date:   Tue, 23 Jun 2020 12:16:49 +0100
-Message-ID: <CAHqcnY16ZzcoYpU31SEco0sXeb2W5Dq2VVpzQr8ZENW9eKiFTA@mail.gmail.com>
-Subject: Greetings From Mrs. Sarah Koffi
-To:     sarahkoffi389@yahoo.co.jp
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHpGcM+bCGJMB_k842pr57Ms1VMC6fva++XXaN+aF7rZ2roAvQ@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Greetings From Mrs. Sarah Koffi
+On Tue, Jun 23, 2020 at 12:51:00PM +0200, Andreas Gr??nbacher wrote:
+> > Yes, it merges the WARN_ONs, and thus reduces their usefulness.  How
+> > about a patch that just fixes your reported issue insted of messing up
+> > other things for no good reason?
+> 
+> So you're saying you prefer this:
+> 
+> +       if (WARN_ON(iomap.offset > pos)) {
+> +               written = -EIO;
+> +               goto out;
+> +       }
+> +       if (WARN_ON(iomap.length == 0)) {
+> +               written = -EIO;
+> +               goto out;
+> +       }
+> 
+> to this:
+> 
+> +       if (WARN_ON(iomap.offset > pos) ||
+> +           WARN_ON(iomap.length == 0)) {
+> +               written = -EIO;
+> +               goto out;
+> +       }
+> 
+> Well fine, you don't need to accuse me of messing up things for that.
 
-I'm contacting you based on your good profiles I read and for a good
-reasons, I am in search of a property to buy in your country as I
-intended to come over to your
-country for investment, Though I have not meet with you before but I
-believe that one has to risk confiding in someone to succeed sometimes
-in life.
-
-My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
-Federal Government of Sudan and he has a personal Oil firm in Bentiu
-Oil zone town and Upper
-Nile city. What I have experience physically, I don't wish to
-experience it again in my life due to the recent civil Ethnic war
-cause by our President Mr. Salva Kiir
-and the rebel leader Mr Riek Machar, I have been Under United Nation
-refuge camp in chad to save my life and that of my little daughter.
-
-Though, I do not know how you will feel to my proposal, but the truth
-is that I sneaked into Chad our neighboring country where I am living
-now as a refugee.
-I escaped with my little daughter when the rebels bust into our house
-and killed my husband as one of the big oil dealers in the country,
-ever since then, I have being on the run.
-
-I left my country and move to Chad our neighboring country with the
-little ceasefire we had, due to the face to face peace meeting accord
-coordinated by the US Secretary of State, Mr John Kerry and United
-Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
-and the rebel leader Mr Riek Machar to stop this war.
-
-I want to solicit for your partnership with trust to invest the $8
-million dollars deposited by my late husband in Bank because my life
-is no longer safe in our country, since the rebels are looking for the
-families of all the oil business men in the country to kill, saying
-that they are they one that is milking the country dry.
-
-I will offer you 20% of the total fund for your help while I will
-partner with you for the investment in your country.
-If I get your reply.
-
-I will wait to hear from you so as to give you details.With love from
-
- i need you to contact me here sarahkoffi389@yahoo.co.jp
-
-Mrs. Sarah Koffi
+Yes.  And we had discussion on exactly that on the previous iteration..
