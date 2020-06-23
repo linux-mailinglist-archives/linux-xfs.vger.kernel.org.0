@@ -2,118 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E3C2051F6
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jun 2020 14:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03501205261
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jun 2020 14:25:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbgFWMKj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Jun 2020 08:10:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20033 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732713AbgFWMKi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 08:10:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592914237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ps+uU4QO1xLq+CXBByK3xY2sdeGxwyitBVjJb0Z2AZM=;
-        b=gHjzMe+gr4b2jkxuheS5MoxLBdjyrXkOx4B3s1kEFesE78UbUkIzt6V96bjNptK3gbwc6Y
-        yaeIkXqp7KkTpLAItdK3xLEOg/THzG7RnaYV8ZsMhu2D+YfSM1ySIn0utdUUBSYsN7D5PL
-        LGVgNDAwxpvVy274cgveQcOGmis4hRI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-489-m0v8Qq-DN5KvmVZOmvXs_A-1; Tue, 23 Jun 2020 08:10:34 -0400
-X-MC-Unique: m0v8Qq-DN5KvmVZOmvXs_A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFB03184D142;
-        Tue, 23 Jun 2020 12:10:33 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 789CF5C1D4;
-        Tue, 23 Jun 2020 12:10:33 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 08:10:31 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>, Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v2] xfs: don't eat an EIO/ENOSPC writeback error when
- scrubbing data fork
-Message-ID: <20200623121031.GB55038@bfoster>
-References: <20200623035010.GF7606@magnolia>
+        id S1732541AbgFWMZY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Jun 2020 08:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729611AbgFWMZX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Jun 2020 08:25:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D905DC061755
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 05:25:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so20333218wru.0
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Jun 2020 05:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
+        b=N0Gm+T8euiE5zHESh+d1m58i3vhcPNLqx0qGbw9lMXupeXSREYf/kqf+2X4mdwYkRp
+         24a+lCh6aDe/S6I3s4iZBz/i/mnsvInKLy76BZ9lsD2uN0iENZYEKaiQ9FJ5NMEFf0wm
+         SrU/2gXJVDw3Z3b87NIM/clQ4G9KUold9V1eAtYB/aZS2cXarl7+906ndAd10I12K+dy
+         BZ73tTsjT/gz1LoEs5umCeo2bBAh+w8rNeGAzPGXJd6k//3v+t2cX1e9YCnXmFUkrrXJ
+         A2ImL175Zud0A8z+U9oMvmzGHLbmmWdYzEF9/u5q/Is+MCi0fxsg6VqG6Oz2zZyrRvUt
+         o01w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
+        b=g7w5i/OPCybsh62E0NTHubNbCcgeTqRywxMD2MyhVkWaAJaLL1A17/7QWS0XWmQfGb
+         AijcbzRSos/RaIxB/0WYMj6pQQU+mJbBzXhY63sPGYnjM/s/+ZFsRFks/GkaKodyIwJF
+         x2fZvYBqm4alYdb9EZe4oz18eq/vC2nDVeHgHoP6FwsegySUEjMoySq+hYN6SKDqy99e
+         EIe6d75Hceaf3p3wIFcormWOUVN7CXr54/1w+nqyY6sDY2HMZOwTLJWcHKqD1TxZ3x49
+         lMbUt1deT8byZMf80MgkMAJSCdPX+79cMMShHBa/THMQLsELgFqh7UdqHOo15I32Gz/A
+         BSDg==
+X-Gm-Message-State: AOAM533/FDaNfYyICwGMsX0v7rnEX6Jk88E8yLI7AgAdBgB9tg2kQYmE
+        vd5ZK3lEmQcSCnsBYhny992/AuRmfjwcRFPNojY=
+X-Google-Smtp-Source: ABdhPJxB0BEb3AxEK+LY7oX/fB0keGG747WC5Yvo4439wz7hQqSFwK/ggGblL3XVtxpzTOF39GV/CMeCmntA1y+kBXg=
+X-Received: by 2002:a5d:4d8b:: with SMTP id b11mr25142624wru.341.1592915121707;
+ Tue, 23 Jun 2020 05:25:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623035010.GF7606@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a5d:42c4:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 05:25:21
+ -0700 (PDT)
+Reply-To: bektery@outlook.com
+From:   YAVUZ BEKTER <bariskamx@gmail.com>
+Date:   Tue, 23 Jun 2020 05:25:21 -0700
+Message-ID: <CABZeqGcSUmNi4mzFCyZhiL-pJgESZKhe1T7+m--io1wRejsucw@mail.gmail.com>
+Subject: Hello.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:50:10PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> The data fork scrubber calls filemap_write_and_wait to flush dirty pages
-> and delalloc reservations out to disk prior to checking the data fork's
-> extent mappings.  Unfortunately, this means that scrub can consume the
-> EIO/ENOSPC errors that would otherwise have stayed around in the address
-> space until (we hope) the writer application calls fsync to persist data
-> and collect errors.  The end result is that programs that wrote to a
-> file might never see the error code and proceed as if nothing were
-> wrong.
-> 
-> xfs_scrub is not in a position to notify file writers about the
-> writeback failure, and it's only here to check metadata, not file
-> contents.  Therefore, if writeback fails, we should stuff the error code
-> back into the address space so that an fsync by the writer application
-> can pick that up.
-> 
-> Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
-> v2: explain why it's ok to keep going even if writeback fails
-> ---
->  fs/xfs/scrub/bmap.c |   19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-> index 7badd6dfe544..0d7062b7068b 100644
-> --- a/fs/xfs/scrub/bmap.c
-> +++ b/fs/xfs/scrub/bmap.c
-> @@ -47,7 +47,24 @@ xchk_setup_inode_bmap(
->  	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
->  		inode_dio_wait(VFS_I(sc->ip));
->  		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
-> -		if (error)
-> +		if (error == -ENOSPC || error == -EIO) {
-> +			/*
-> +			 * If writeback hits EIO or ENOSPC, reflect it back
-> +			 * into the address space mapping so that a writer
-> +			 * program calling fsync to look for errors will still
-> +			 * capture the error.
-> +			 *
-> +			 * However, we continue into the extent mapping checks
-> +			 * because write failures do not necessarily imply
-> +			 * anything about the correctness of the file metadata.
-> +			 * The metadata and the file data could be on
-> +			 * completely separate devices; a media failure might
-> +			 * only affect a subset of the disk, etc.  We properly
-> +			 * account for delalloc extents, so leaving them in
-> +			 * memory is fine.
-> +			 */
-> +			mapping_set_error(VFS_I(sc->ip)->i_mapping, error);
-
-I think the more appropriate thing to do is open code the data write and
-wait and use the variants of the latter that don't consume address space
-errors in the first place (i.e. filemap_fdatawait_keep_errors()). Then
-we wouldn't need the special error handling branch or perhaps the first
-part of the comment. Hm?
-
-Brian
-
-> +		} else if (error)
->  			goto out;
->  	}
->  
-> 
-
+I am the foreign operations director of Bank of Turkey.
+My name is Mr, Yavuz. I have a sensitive investment project to discuss
+with you, please reply now.
+________________________
+Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
+Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
+met u, antwoord dan nu.
