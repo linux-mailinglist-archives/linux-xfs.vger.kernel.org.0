@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56409209D85
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jun 2020 13:32:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA4B9209D7E
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jun 2020 13:32:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404387AbgFYLcO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Jun 2020 07:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        id S2404320AbgFYLb7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Jun 2020 07:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404294AbgFYLcN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jun 2020 07:32:13 -0400
+        with ESMTP id S2404274AbgFYLb6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jun 2020 07:31:58 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB69C061573;
-        Thu, 25 Jun 2020 04:32:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CEAC061795;
+        Thu, 25 Jun 2020 04:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=m3zIJR1GLxQvWQCzE4jnGcCRy0+cfvlIlDcMBi87b1U=; b=Yz6d60HFl8ZOkmuYN8KDj8d4N1
-        /pvduhtSNLhN+lYKmZ5AKUNIlGSutu7dEYip3ios1IG5YtI76FG7MW20IWOi5HxsHaCo1W5eZEsz1
-        QbVUirW1fbnx8U0HVpL4QAhNPmRttImTnF6nn8WDIVLw3T5bfgN+83mRgi4tdvZ7DR9MbBSHlLwyh
-        bzOC4VEcVd922wuCLAGA4ZPQ8RrS3ui1ckYcySCVvhd5rKIiHjC9JwGULQMVHeZQeEUkxRGV9jH9P
-        hnKygg85pw7NTrrdiaxJJ83Z+TwmWHnVNe3/BD8JSOWQRMO4Jag5ZuZ8rA1+s7Jdok+pLIbE4DcYY
-        tis6kWcg==;
+        bh=25KfWqTg5VgYg3/Dyq0fuOQ2ndu57hg32uRL8rzgLQM=; b=hMZIKCkEzhGgbe7QeG+ypRFK/O
+        qk5gq28BAHhlWFdwae7+1BKIcUcsn8Gsec4d1/FOm89F3owYZdYRN+Z7dxR8EwX1ryuxs5Qdlzztm
+        GiiMOPMto2/02VlUcETaNqI3K8ggTBChPeDZ7L7ah8hdi2N/TzJBsI8zpUByP5HI4vKWa/VKCuYiY
+        m1HDAbN2U7h85AjVikVhadfIROzsOemw2XieblpHZyhvlfB/UFzUsULjKMFgJszZkEcF2glew+P2i
+        3PI+EVE6gCanw/RAdqMvGgcCC0tI8oc3d3pvvIqXMHnfPozLveID5hj+mCWbbNp19qETJT6EwIJz/
+        K24Fe3Ig==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joQ6X-0001ze-A5; Thu, 25 Jun 2020 11:31:41 +0000
+        id 1joQ6X-0001zi-Ea; Thu, 25 Jun 2020 11:31:41 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-xfs@vger.kernel.org, dm-devel@redhat.com,
         Mikulas Patocka <mpatocka@redhat.com>,
         Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: [PATCH 5/6] mm: Replace PF_MEMALLOC_NOIO with memalloc_nocma
-Date:   Thu, 25 Jun 2020 12:31:21 +0100
-Message-Id: <20200625113122.7540-6-willy@infradead.org>
+Subject: [PATCH 6/6] mm: Add memalloc_nowait
+Date:   Thu, 25 Jun 2020 12:31:22 +0100
+Message-Id: <20200625113122.7540-7-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200625113122.7540-1-willy@infradead.org>
 References: <20200625113122.7540-1-willy@infradead.org>
@@ -45,83 +45,117 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-We're short on PF_* flags, so make memalloc_nocma its own bit where we
-have plenty of space.
+Similar to memalloc_noio() and memalloc_nofs(), memalloc_nowait()
+guarantees we will not sleep to reclaim memory.  Use it to simplify
+dm-bufio's allocations.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/sched.h    |  2 +-
- include/linux/sched/mm.h | 15 +++++++--------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ drivers/md/dm-bufio.c    | 30 ++++++++----------------------
+ include/linux/sched.h    |  1 +
+ include/linux/sched/mm.h | 12 ++++++++----
+ 3 files changed, 17 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index 6d1565021d74..140ada9a2c8f 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -412,23 +412,6 @@ static void *alloc_buffer_data(struct dm_bufio_client *c, gfp_t gfp_mask,
+ 
+ 	*data_mode = DATA_MODE_VMALLOC;
+ 
+-	/*
+-	 * __vmalloc allocates the data pages and auxiliary structures with
+-	 * gfp_flags that were specified, but pagetables are always allocated
+-	 * with GFP_KERNEL, no matter what was specified as gfp_mask.
+-	 *
+-	 * Consequently, we must set per-process flag PF_MEMALLOC_NOIO so that
+-	 * all allocations done by this process (including pagetables) are done
+-	 * as if GFP_NOIO was specified.
+-	 */
+-	if (gfp_mask & __GFP_NORETRY) {
+-		unsigned noio_flag = memalloc_noio_save();
+-		void *ptr = __vmalloc(c->block_size, gfp_mask);
+-
+-		memalloc_noio_restore(noio_flag);
+-		return ptr;
+-	}
+-
+ 	return __vmalloc(c->block_size, gfp_mask);
+ }
+ 
+@@ -866,9 +849,6 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 	 * dm-bufio is resistant to allocation failures (it just keeps
+ 	 * one buffer reserved in cases all the allocations fail).
+ 	 * So set flags to not try too hard:
+-	 *	GFP_NOWAIT: don't wait; if we need to sleep we'll release our
+-	 *		    mutex and wait ourselves.
+-	 *	__GFP_NORETRY: don't retry and rather return failure
+ 	 *	__GFP_NOMEMALLOC: don't use emergency reserves
+ 	 *	__GFP_NOWARN: don't print a warning in case of failure
+ 	 *
+@@ -877,7 +857,9 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 	 */
+ 	while (1) {
+ 		if (dm_bufio_cache_size_latch != 1) {
+-			b = alloc_buffer(c, GFP_NOWAIT | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			unsigned nowait_flag = memalloc_nowait_save();
++			b = alloc_buffer(c, GFP_KERNEL | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			memalloc_nowait_restore(nowait_flag);
+ 			if (b)
+ 				return b;
+ 		}
+@@ -886,8 +868,12 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 			return NULL;
+ 
+ 		if (dm_bufio_cache_size_latch != 1 && !tried_noio_alloc) {
++			unsigned noio_flag;
++
+ 			dm_bufio_unlock(c);
+-			b = alloc_buffer(c, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			noio_flag = memalloc_noio_save();
++			b = alloc_buffer(c, GFP_KERNEL | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			memalloc_noio_restore(noio_flag);
+ 			dm_bufio_lock(c);
+ 			if (b)
+ 				return b;
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index eaf36ae1fde2..90336850e940 100644
+index 90336850e940..b1c2cddd366c 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
 @@ -803,6 +803,7 @@ struct task_struct {
  #endif
  	unsigned			memalloc_noio:1;
  	unsigned			memalloc_nofs:1;
-+	unsigned			memalloc_nocma:1;
++	unsigned			memalloc_nowait:1;
+ 	unsigned			memalloc_nocma:1;
  
  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
- 
-@@ -1514,7 +1515,6 @@ extern struct pid *cad_pid;
- #define PF_UMH			0x02000000	/* I'm an Usermodehelper process */
- #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
- #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
--#define PF_MEMALLOC_NOCMA	0x10000000	/* All allocation request will have _GFP_MOVABLE cleared */
- #define PF_IO_WORKER		0x20000000	/* Task is an IO worker */
- #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
- #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
 diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 08bc9d0606a8..6f7b59a848a6 100644
+index 6f7b59a848a6..6484569f50df 100644
 --- a/include/linux/sched/mm.h
 +++ b/include/linux/sched/mm.h
-@@ -175,12 +175,11 @@ static inline bool in_vfork(struct task_struct *tsk)
- 
- /*
-  * Applies per-task gfp context to the given allocation flags.
-- * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
-  */
+@@ -179,12 +179,16 @@ static inline bool in_vfork(struct task_struct *tsk)
  static inline gfp_t current_gfp_context(gfp_t flags)
  {
--	if (unlikely((current->flags & PF_MEMALLOC_NOCMA) ||
--		     current->memalloc_noio || current->memalloc_nofs)) {
-+	if (unlikely(current->memalloc_noio || current->memalloc_nofs ||
-+		     current->memalloc_nocma)) {
+ 	if (unlikely(current->memalloc_noio || current->memalloc_nofs ||
+-		     current->memalloc_nocma)) {
++		     current->memalloc_nocma) || current->memalloc_nowait) {
  		/*
- 		 * NOIO implies both NOIO and NOFS and it is a weaker context
- 		 * so always make sure it makes precedence
-@@ -190,7 +189,8 @@ static inline gfp_t current_gfp_context(gfp_t flags)
+-		 * NOIO implies both NOIO and NOFS and it is a weaker context
+-		 * so always make sure it makes precedence
++		 * Clearing DIRECT_RECLAIM means we won't get to the point
++		 * of testing IO or FS, so we don't need to bother clearing
++		 * them.  noio implies neither IO nor FS and it is a weaker
++		 * context so always make sure it takes precedence.
+ 		 */
+-		if (current->memalloc_noio)
++		if (current->memalloc_nowait)
++			flags &= ~__GFP_DIRECT_RECLAIM;
++		else if (current->memalloc_noio)
+ 			flags &= ~(__GFP_IO | __GFP_FS);
  		else if (current->memalloc_nofs)
  			flags &= ~__GFP_FS;
- #ifdef CONFIG_CMA
--		if (current->flags & PF_MEMALLOC_NOCMA)
-+		/* memalloc_nocma implies no allocation from movable region */
-+		if (current->memalloc_nocma)
- 			flags &= ~__GFP_MOVABLE;
- #endif
- 	}
-@@ -286,15 +286,14 @@ static inline void memalloc_noreclaim_restore(unsigned int flags)
- #ifdef CONFIG_CMA
- static inline unsigned int memalloc_nocma_save(void)
- {
--	unsigned int flags = current->flags & PF_MEMALLOC_NOCMA;
--
--	current->flags |= PF_MEMALLOC_NOCMA;
-+	unsigned int flags = current->memalloc_nocma;
-+	current->memalloc_nocma = 1;
- 	return flags;
- }
- 
- static inline void memalloc_nocma_restore(unsigned int flags)
- {
--	current->flags = (current->flags & ~PF_MEMALLOC_NOCMA) | flags;
-+	current->memalloc_nocma = flags ? 1 : 0;
- }
- #else
- static inline unsigned int memalloc_nocma_save(void)
 -- 
 2.27.0
 
