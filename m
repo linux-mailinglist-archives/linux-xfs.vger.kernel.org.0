@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5577C209831
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jun 2020 03:19:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11E62209825
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jun 2020 03:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388928AbgFYBTy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jun 2020 21:19:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54128 "EHLO
+        id S2388928AbgFYBR7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jun 2020 21:17:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52840 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388930AbgFYBTy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jun 2020 21:19:54 -0400
+        with ESMTP id S2388863AbgFYBR6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jun 2020 21:17:58 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P18EwR062715;
-        Thu, 25 Jun 2020 01:19:51 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P18TKV062755;
+        Thu, 25 Jun 2020 01:17:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=iOIz7iJRT4RnvHofFJ+IFuiI0IFSC/27gmbFEfesA6o=;
- b=QCHuwpPOtjAPGpElcWqS2+iahyTMwhaoqgvyUTCrLZNlGPBM35eTPDLICKAwSXQWe7bH
- oYhzsEJZCzTENS9ZmkXudPTzalrdjTOKiP3sFfTf8TaP5Aa1xr/61k13ax1Yc7lzktYn
- 2Z6npnc2GDz0bwUn/jYLcU2mdnqLhTp9okUynBdH7EvqzeGaXh1sInOEhwvHUQ8q7CgJ
- VCNNBshASPu1XpLxjy1xVElh+HQVmLdUadQ7g4sAuh1cSrX89trKDLp5USBCUz8DHxDi
- pyhN9W0ORp6kz2ErqKKYuh20Hj06o1cKWi0eQSquzFJso9SR8BZkcBfMscUHFMo/PwAk sg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31uustnvvp-1
+ bh=DJsKRkSho2zNcXgsT1dRbJf/6CnPAPmD1rib0EBL8F8=;
+ b=mykunHYt6CVYmU9Tay26dOZuPD2klYFk/KCVyR+378HGdnI8msZtXIgxJzYmJBv+7sNn
+ wzSW3IBkbzbK27uAfWa+QuH3UVJKW8IvlTwx/Gf9ZgrvaA8MHVkyhuWQgHmiCuH/kceb
+ 7gzgDLKeBlXZ4r3utsqa4eBQ0F+XwhOZe0hbVFYgn+LusAbsn4W2zB2qX7bhaMs8TY1L
+ kaw3at98iZ6i58kNsbKSx2BPGBjhDu4O6q0cno+xINniQGiPSo/Mie3OErcVG2gbwT9l
+ iNrYwUiRn5j7jy2Fhd129b2coYEHwrlxSx9qj/kQq9h7ED0sTlBkxqG6VzKpMLjdapK+ 9A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31uustnvqn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 01:19:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P17tRo180600;
-        Thu, 25 Jun 2020 01:17:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 31uur0fx2a-1
+        Thu, 25 Jun 2020 01:17:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P18WQR013795;
+        Thu, 25 Jun 2020 01:17:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31uur85aht-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 01:17:50 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05P1HlGu009682;
-        Thu, 25 Jun 2020 01:17:49 GMT
+        Thu, 25 Jun 2020 01:17:54 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05P1HsbW012978;
+        Thu, 25 Jun 2020 01:17:54 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 01:17:46 +0000
-Subject: [PATCH 1/9] xfs: fix reflink quota reservation accounting error
+        with ESMTP ; Thu, 25 Jun 2020 01:17:54 +0000
+Subject: [PATCH 2/9] xfs: rename xfs_bmap_is_real_extent to is_written_extent
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, edwin@etorok.net
-Date:   Wed, 24 Jun 2020 18:17:45 -0700
-Message-ID: <159304786592.874036.13697964290841630094.stgit@magnolia>
+Date:   Wed, 24 Jun 2020 18:17:52 -0700
+Message-ID: <159304787204.874036.10765296473918147829.stgit@magnolia>
 In-Reply-To: <159304785928.874036.4735877085735285950.stgit@magnolia>
 References: <159304785928.874036.4735877085735285950.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,10 +53,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 suspectscore=1 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006250004
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=1 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250004
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
  cotscore=-2147483648 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
@@ -70,55 +70,73 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Quota reservations are supposed to account for the blocks that might be
-allocated due to a bmap btree split.  Reflink doesn't do this, so fix
-this to make the quota accounting more accurate before we start
-rearranging things.
+The name of this predicate is a little misleading -- it decides if the
+extent mapping is allocated and written.  Change the name to be more
+direct, as we're going to add a new predicate in the next patch.
 
-Fixes: 862bb360ef56 ("xfs: reflink extents from one file to another")
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_reflink.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.h     |    2 +-
+ fs/xfs/libxfs/xfs_rtbitmap.c |    2 +-
+ fs/xfs/xfs_reflink.c         |    6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 
+diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+index 6028a3c825ba..2b18338d0643 100644
+--- a/fs/xfs/libxfs/xfs_bmap.h
++++ b/fs/xfs/libxfs/xfs_bmap.h
+@@ -163,7 +163,7 @@ static inline int xfs_bmapi_whichfork(int bmapi_flags)
+  * Return true if the extent is a real, allocated extent, or false if it is  a
+  * delayed allocation, and unwritten extent or a hole.
+  */
+-static inline bool xfs_bmap_is_real_extent(struct xfs_bmbt_irec *irec)
++static inline bool xfs_bmap_is_written_extent(struct xfs_bmbt_irec *irec)
+ {
+ 	return irec->br_state != XFS_EXT_UNWRITTEN &&
+ 		irec->br_startblock != HOLESTARTBLOCK &&
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index 9498ced947be..1d9fa8a300f1 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -70,7 +70,7 @@ xfs_rtbuf_get(
+ 	if (error)
+ 		return error;
+ 
+-	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_real_extent(&map)))
++	if (XFS_IS_CORRUPT(mp, nmap == 0 || !xfs_bmap_is_written_extent(&map)))
+ 		return -EFSCORRUPTED;
+ 
+ 	ASSERT(map.br_startblock != NULLFSBLOCK);
 diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 107bf2a2f344..d89201d40891 100644
+index d89201d40891..22fdea6d69d3 100644
 --- a/fs/xfs/xfs_reflink.c
 +++ b/fs/xfs/xfs_reflink.c
-@@ -1003,6 +1003,7 @@ xfs_reflink_remap_extent(
- 	xfs_filblks_t		rlen;
- 	xfs_filblks_t		unmap_len;
- 	xfs_off_t		newlen;
-+	int64_t			qres;
- 	int			error;
+@@ -179,7 +179,7 @@ xfs_reflink_trim_around_shared(
+ 	int			error = 0;
  
- 	unmap_len = irec->br_startoff + irec->br_blockcount - destoff;
-@@ -1025,13 +1026,19 @@ xfs_reflink_remap_extent(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, 0);
- 
--	/* If we're not just clearing space, then do we have enough quota? */
--	if (real_extent) {
--		error = xfs_trans_reserve_quota_nblks(tp, ip,
--				irec->br_blockcount, 0, XFS_QMOPT_RES_REGBLKS);
--		if (error)
--			goto out_cancel;
--	}
-+	/*
-+	 * Reserve quota for this operation.  We don't know if the first unmap
-+	 * in the dest file will cause a bmap btree split, so we always reserve
-+	 * at least enough blocks for that split.  If the extent being mapped
-+	 * in is written, we need to reserve quota for that too.
-+	 */
-+	qres = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
-+	if (real_extent)
-+		qres += irec->br_blockcount;
-+	error = xfs_trans_reserve_quota_nblks(tp, ip, qres, 0,
-+			XFS_QMOPT_RES_REGBLKS);
-+	if (error)
-+		goto out_cancel;
- 
- 	trace_xfs_reflink_remap(ip, irec->br_startoff,
- 				irec->br_blockcount, irec->br_startblock);
+ 	/* Holes, unwritten, and delalloc extents cannot be shared */
+-	if (!xfs_is_cow_inode(ip) || !xfs_bmap_is_real_extent(irec)) {
++	if (!xfs_is_cow_inode(ip) || !xfs_bmap_is_written_extent(irec)) {
+ 		*shared = false;
+ 		return 0;
+ 	}
+@@ -655,7 +655,7 @@ xfs_reflink_end_cow_extent(
+ 	 * preallocations can leak into the range we are called upon, and we
+ 	 * need to skip them.
+ 	 */
+-	if (!xfs_bmap_is_real_extent(&got)) {
++	if (!xfs_bmap_is_written_extent(&got)) {
+ 		*end_fsb = del.br_startoff;
+ 		goto out_cancel;
+ 	}
+@@ -996,7 +996,7 @@ xfs_reflink_remap_extent(
+ 	xfs_off_t		new_isize)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+-	bool			real_extent = xfs_bmap_is_real_extent(irec);
++	bool			real_extent = xfs_bmap_is_written_extent(irec);
+ 	struct xfs_trans	*tp;
+ 	unsigned int		resblks;
+ 	struct xfs_bmbt_irec	uirec;
 
