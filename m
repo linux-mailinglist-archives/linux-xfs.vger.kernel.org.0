@@ -2,171 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBBB1207CA0
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Jun 2020 22:04:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB6C220982C
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Jun 2020 03:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406267AbgFXUEU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Jun 2020 16:04:20 -0400
-Received: from sandeen.net ([63.231.237.45]:40114 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406359AbgFXUEU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:04:20 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 2EF0915B26;
-        Wed, 24 Jun 2020 15:03:46 -0500 (CDT)
-Subject: Re: [PATCH v3] xfsprogs: xfs_quota command error message improvement
-To:     Bill O'Donnell <billodo@redhat.com>, linux-xfs@vger.kernel.org
-References: <20200624154626.197456-1-billodo@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
- nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
- WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
- vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
- ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
- sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
- BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
- gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
- LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
- dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
- bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
- aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
- UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
- EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
- sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
- 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
- gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
- 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
- 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
- WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
- Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
- X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
- SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
- 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
- GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
- 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
- Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
- ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
- TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
- gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
- AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
- YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
- mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
- LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
- LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
- MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
- JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
- Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
- m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
- fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <99f8230a-3048-daec-60af-e95f455a2878@sandeen.net>
-Date:   Wed, 24 Jun 2020 15:04:18 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        id S2389070AbgFYBSu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Jun 2020 21:18:50 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49334 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388942AbgFYBSu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Jun 2020 21:18:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P17hud082296;
+        Thu, 25 Jun 2020 01:18:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=pfy6lR2OXDMssL28IJMvNeyzJBwVUI30Bi8/x5M0EKw=;
+ b=oy1ROjM7YM/QtCxV6p3WIOZJlWE3cT1y4xaoSq0TSMeC2sd1/LdgfeO5+atujgeVw4zK
+ j+sHFJxZPPV7gYyTKHdoU2cRkROLVxaRdqgisdkhsmIqjg6Hou5GLfGb2zBG3ddOdkiK
+ tlv6DKDB7QKS1sMDpRao5/1NOSoUM5uziOqPhKZOZjdJPs4M2coxVL4pE99KCZ85iuuq
+ XTdE2n8FwHkZHY/DN5cnmTUp80N9EI2nvhe07Fyy1XP/HlE9D7VRX4ANKf7SdcO5UJh1
+ WPLS26Seb6RJ7UucXY2T4E2kPMDxiZ6+VKBAHIG5RzGN0XKqOeLZkmr8GlSZc7mbEyST fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 31uut5nuyr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jun 2020 01:18:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P19Lqs009150;
+        Thu, 25 Jun 2020 01:16:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31uurrnmst-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 01:16:45 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05P1GiwJ012605;
+        Thu, 25 Jun 2020 01:16:45 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jun 2020 01:16:44 +0000
+Date:   Wed, 24 Jun 2020 18:16:43 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Cc:     Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH v4] xfs: don't eat an EIO/ENOSPC writeback error when
+ scrubbing data fork
+Message-ID: <20200625011643.GJ7625@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20200624154626.197456-1-billodo@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=1 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250004
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 suspectscore=1
+ phishscore=0 impostorscore=0 cotscore=-2147483648 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006250004
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/24/20 10:46 AM, Bill O'Donnell wrote:
-> Make the error messages for rudimentary xfs_quota commands
-> (off, enable, disable) more user friendly, instead of the
-> terse sys error outputs.
-> 
-> Signed-off-by: Bill O'Donnell <billodo@redhat.com>
-> ---
-> 
-> v3: remove EINVAL case from the OFF case
-> v2: enable internationalization and capitalize new message strings
-> 
->  quota/state.c | 31 +++++++++++++++++++++++++------
->  1 file changed, 25 insertions(+), 6 deletions(-)
-> 
-> diff --git a/quota/state.c b/quota/state.c
-> index 8f9718f1..76b6ceda 100644
-> --- a/quota/state.c
-> +++ b/quota/state.c
-> @@ -306,8 +306,15 @@ enable_enforcement(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAON, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAON");
-> +	if (xfsquotactl(XFS_QUOTAON, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr, _("Quota enforcement already enabled.\n"));
-> +		else if (errno == EINVAL)
-> +			fprintf(stderr,
-> +				_("Can't enable when quotas are off.\n"));
-> +		else
-> +			perror("XFS_QUOTAON");
-> +	}
->  	else if (flags & VERBOSE_FLAG)
->  		state_quotafile_mount(stdout, type, mount, flags);
->  }
-> @@ -328,8 +335,16 @@ disable_enforcement(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAOFF");
-> +	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr,
-> +				_("Quota enforcement already disabled.\n"));
-> +		else if (errno == EINVAL)
-> +			fprintf(stderr,
-> +				_("Can't disable when quotas are off.\n"));
-> +		else
-> +			perror("XFS_QUOTAOFF");
-> +	}
->  	else if (flags & VERBOSE_FLAG)
->  		state_quotafile_mount(stdout, type, mount, flags);
->  }
-> @@ -350,8 +365,12 @@ quotaoff(
->  		return;
->  	}
->  	dir = mount->fs_name;
-> -	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0)
-> -		perror("XFS_QUOTAOFF");
-> +	if (xfsquotactl(XFS_QUOTAOFF, dir, type, 0, (void *)&qflags) < 0) {
-> +		if (errno == EEXIST)
-> +			fprintf(stderr, _("Quota already off.\n"));
-> +		else
-> +			perror("XFS_QUOTAOFF");
-> +	}
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Hm...
+The data fork scrubber calls filemap_write_and_wait to flush dirty pages
+and delalloc reservations out to disk prior to checking the data fork's
+extent mappings.  Unfortunately, this means that scrub can consume the
+EIO/ENOSPC errors that would otherwise have stayed around in the address
+space until (we hope) the writer application calls fsync to persist data
+and collect errors.  The end result is that programs that wrote to a
+file might never see the error code and proceed as if nothing were
+wrong.
 
-# mount -o quota /dev/pmem0p1 /mnt/test
-# xfs_quota -x -c "off" /mnt/test
-# xfs_quota -x -c "off" /mnt/test
-XFS_QUOTAOFF: Function not implemented
+xfs_scrub is not in a position to notify file writers about the
+writeback failure, and it's only here to check metadata, not file
+contents.  Therefore, if writeback fails, we should stuff the error code
+back into the address space so that an fsync by the writer application
+can pick that up.
 
-If the last quota type is turned off, I guess we get ENOSYS.
+Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v4: remove if block that only had a gigantic comment
+v3: don't play this game where we clear the mapping error only to re-set it
+v2: explain why it's ok to keep going even if writeback fails
+---
+ fs/xfs/scrub/bmap.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-Until then, we get EEXIST, as you handle above. i.e. if I mount with all 3 quota types:
-
-# mount -o gquota -o uquota -opquota /dev/pmem0p1 /mnt/test
-# xfs_quota -x -c off /mnt/test
-# xfs_quota -x -c off /mnt/test
-Quota already off.
-# xfs_quota -x -c "off -g" /mnt/test
-# xfs_quota -x -c "off -g" /mnt/test
-Quota already off.
-# xfs_quota -x -c "off -p" /mnt/test
-# xfs_quota -x -c "off -p" /mnt/test
-XFS_QUOTAOFF: Function not implemented
-
-we can see the difference.  So this might need a bit more logic (and probably some
-kernel code reading?) to make things consistent.
-
--Eric
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 7badd6dfe544..955302e7cdde 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -45,9 +45,27 @@ xchk_setup_inode_bmap(
+ 	 */
+ 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
+ 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
++		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
++
+ 		inode_dio_wait(VFS_I(sc->ip));
+-		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
+-		if (error)
++
++		/*
++		 * Try to flush all incore state to disk before we examine the
++		 * space mappings for the data fork.  Leave accumulated errors
++		 * in the mapping for the writer threads to consume.
++		 *
++		 * On ENOSPC or EIO writeback errors, we continue into the
++		 * extent mapping checks because write failures do not
++		 * necessarily imply anything about the correctness of the file
++		 * metadata.  The metadata and the file data could be on
++		 * completely separate devices; a media failure might only
++		 * affect a subset of the disk, etc.  We can handle delalloc
++		 * extents in the scrubber, so leaving them in memory is fine.
++		 */
++		error = filemap_fdatawrite(mapping);
++		if (!error)
++			error = filemap_fdatawait_keep_errors(mapping);
++		if (error && (error != -ENOSPC && error != -EIO))
+ 			goto out;
+ 	}
+ 
