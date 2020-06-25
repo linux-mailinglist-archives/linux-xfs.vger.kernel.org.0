@@ -2,54 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB9D20A901
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 Jun 2020 01:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4119020A907
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 Jun 2020 01:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgFYXau (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Jun 2020 19:30:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52248 "EHLO
+        id S1728659AbgFYXaw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Jun 2020 19:30:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52270 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgFYXas (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jun 2020 19:30:48 -0400
+        with ESMTP id S1728681AbgFYXat (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Jun 2020 19:30:49 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNT47i013454
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:47 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNUmXt014777
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=VZnTMvcfnDvpDga0mHFQsOPeJG+DW3Nwhtm9Iv0ppxo=;
- b=pBF2igJTfxkmNkKhN29bUWgPu5fa827IwSAKnaYChYGxJacfVoZ3VzW5oz735F46ciq1
- 1l2DTPylP64v2pVdlg8ko5H2LgtDqLDit7BP9517ArnAqjV6mozojP1MqkTybyqA+q+9
- B0ppY00VFlz+bcmR26y4NvFROGkOZq0NQVg2DpVAde66Mu4oFiFlhfu3n/YX5s1peTVg
- uTGbRJh1cit7MQW58lOG+CMvlLVqU+phdYrjCjkMlzRFAIQM61STZpbIJaj9n1OazFJy
- EprrUXs1hKaA7D+ZDln+Z5rcfsd85gYpZ+KQA6PiBHG2niKyEDxJnTpZeee6pmSiXOEa 1Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31uustu9aa-1
+ bh=yOLP8iBWcY6oTlIqzIvdQhtcaK+i5B/EQKIqMxf0ejo=;
+ b=xtnmQKedUgmgUjTjpwp+qhVmuQZLV4ON8JdNx2Ww24alcbHtKK673UJOeCsXFquiZY7h
+ RXtGqpurrrCrSReWwFgLBbqBsP6CrY5aNKKDg1J8clAt7Eq/rn6r71l9vdX9laAb/fTK
+ 7mtsT+sxxOfMAeguNP88iDDi8CGJXHREG1t3VJrVYJGWoLwKPbWYicJUV8G/jMCmwyw+
+ 7L3cK/JHHZQUYOUvWt3CBnPCDWgbxDYbctWtG7DLk8KaolANjb6XsvpyJmdx49QODw24
+ ccFSpJIarBHPvjVRNyKZVoGMuQx4CViEjMVHGVp8f83AZangGhiZKURmDAIG4OHqztSs sg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31uustu9ab-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNRSjj015488
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:46 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNSIw7117238
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:47 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31uurt9kue-1
+        by aserp3020.oracle.com with ESMTP id 31uuram5pr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:46 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:47 +0000
 Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PNUkGo008475
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PNUkfS008479
         for <linux-xfs@vger.kernel.org>; Thu, 25 Jun 2020 23:30:46 GMT
 Received: from localhost.localdomain (/67.1.142.158)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 23:30:45 +0000
+        with ESMTP ; Thu, 25 Jun 2020 23:30:46 +0000
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v10 12/25] xfs: Add helper function xfs_attr_node_shrink
-Date:   Thu, 25 Jun 2020 16:30:05 -0700
-Message-Id: <20200625233018.14585-13-allison.henderson@oracle.com>
+Subject: [PATCH v10 13/25] xfs: Remove unneeded xfs_trans_roll_inode calls
+Date:   Thu, 25 Jun 2020 16:30:06 -0700
+Message-Id: <20200625233018.14585-14-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200625233018.14585-1-allison.henderson@oracle.com>
 References: <20200625233018.14585-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006250136
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
@@ -63,110 +63,129 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch adds a new helper function xfs_attr_node_shrink used to
-shrink an attr name into an inode if it is small enough.  This helps to
-modularize the greater calling function xfs_attr_node_removename.
+Some calls to xfs_trans_roll_inode and xfs_defer_finish routines are not
+needed. If they are the last operations executed in these functions, and
+no further changes are made, then higher level routines will roll or
+commit the tranactions.
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_attr.c | 68 ++++++++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 26 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c | 61 ++++++------------------------------------------
+ 1 file changed, 7 insertions(+), 54 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 9094031..4eff875 100644
+index 4eff875..1a78023 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -1109,6 +1109,45 @@ xfs_attr_node_addname(
+@@ -693,34 +693,15 @@ xfs_attr_leaf_addname(
+ 		/*
+ 		 * If the result is small enough, shrink it all into the inode.
+ 		 */
+-		if ((forkoff = xfs_attr_shortform_allfit(bp, dp))) {
++		forkoff = xfs_attr_shortform_allfit(bp, dp);
++		if (forkoff)
+ 			error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
+ 			/* bp is gone due to xfs_da_shrink_inode */
+-			if (error)
+-				return error;
+-			error = xfs_defer_finish(&args->trans);
+-			if (error)
+-				return error;
+-		}
+-
+-		/*
+-		 * Commit the remove and start the next trans in series.
+-		 */
+-		error = xfs_trans_roll_inode(&args->trans, dp);
+-
+ 	} else if (args->rmtblkno > 0) {
+ 		/*
+ 		 * Added a "remote" value, just clear the incomplete flag.
+ 		 */
+ 		error = xfs_attr3_leaf_clearflag(args);
+-		if (error)
+-			return error;
+-
+-		/*
+-		 * Commit the flag value change and start the next trans in
+-		 * series.
+-		 */
+-		error = xfs_trans_roll_inode(&args->trans, args->dp);
+ 	}
+ 	return error;
+ }
+@@ -780,15 +761,11 @@ xfs_attr_leaf_removename(
+ 	/*
+ 	 * If the result is small enough, shrink it all into the inode.
+ 	 */
+-	if ((forkoff = xfs_attr_shortform_allfit(bp, dp))) {
+-		error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
++	forkoff = xfs_attr_shortform_allfit(bp, dp);
++	if (forkoff)
++		return xfs_attr3_leaf_to_shortform(bp, args, forkoff);
+ 		/* bp is gone due to xfs_da_shrink_inode */
+-		if (error)
+-			return error;
+-		error = xfs_defer_finish(&args->trans);
+-		if (error)
+-			return error;
+-	}
++
+ 	return 0;
  }
  
- /*
-+ * Shrink an attribute from leaf to shortform
-+ */
-+STATIC int
-+xfs_attr_node_shrink(
-+	struct xfs_da_args	*args,
-+	struct xfs_da_state     *state)
-+{
-+	struct xfs_inode	*dp = args->dp;
-+	int			error, forkoff;
-+	struct xfs_buf		*bp;
-+
-+	/*
-+	 * Have to get rid of the copy of this dabuf in the state.
-+	 */
-+	ASSERT(state->path.active == 1);
-+	ASSERT(state->path.blk[0].bp);
-+	state->path.blk[0].bp = NULL;
-+
-+	error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
-+	if (error)
-+		return error;
-+
-+	forkoff = xfs_attr_shortform_allfit(bp, dp);
-+	if (forkoff) {
-+		error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
-+		/* bp is gone due to xfs_da_shrink_inode */
-+		if (error)
-+			return error;
-+
-+		error = xfs_defer_finish(&args->trans);
-+		if (error)
-+			return error;
-+	} else
-+		xfs_trans_brelse(args->trans, bp);
-+
-+	return 0;
-+}
-+
-+/*
-  * Remove a name from a B-tree attribute list.
-  *
-  * This will involve walking down the Btree, and may involve joining
-@@ -1121,8 +1160,7 @@ xfs_attr_node_removename(
- {
- 	struct xfs_da_state	*state;
- 	struct xfs_da_state_blk	*blk;
--	struct xfs_buf		*bp;
--	int			retval, error, forkoff;
-+	int			retval, error;
- 	struct xfs_inode	*dp = args->dp;
- 
- 	trace_xfs_attr_node_removename(args);
-@@ -1207,30 +1245,8 @@ xfs_attr_node_removename(
- 	/*
- 	 * If the result is small enough, push it all into the inode.
- 	 */
--	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
--		/*
--		 * Have to get rid of the copy of this dabuf in the state.
--		 */
--		ASSERT(state->path.active == 1);
--		ASSERT(state->path.blk[0].bp);
--		state->path.blk[0].bp = NULL;
--
--		error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
--		if (error)
--			goto out;
--
--		if ((forkoff = xfs_attr_shortform_allfit(bp, dp))) {
--			error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
--			/* bp is gone due to xfs_da_shrink_inode */
--			if (error)
--				goto out;
+@@ -1070,18 +1047,8 @@ xfs_attr_node_addname(
+ 			error = xfs_da3_join(state);
+ 			if (error)
+ 				goto out;
 -			error = xfs_defer_finish(&args->trans);
 -			if (error)
 -				goto out;
--		} else
--			xfs_trans_brelse(args->trans, bp);
--	}
--	error = 0;
-+	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
-+		error = xfs_attr_node_shrink(args, state);
+ 		}
  
- out:
- 	if (state)
+-		/*
+-		 * Commit and start the next trans in the chain.
+-		 */
+-		error = xfs_trans_roll_inode(&args->trans, dp);
+-		if (error)
+-			goto out;
+-
+ 	} else if (args->rmtblkno > 0) {
+ 		/*
+ 		 * Added a "remote" value, just clear the incomplete flag.
+@@ -1089,14 +1056,6 @@ xfs_attr_node_addname(
+ 		error = xfs_attr3_leaf_clearflag(args);
+ 		if (error)
+ 			goto out;
+-
+-		 /*
+-		  * Commit the flag value change and start the next trans in
+-		  * series.
+-		  */
+-		error = xfs_trans_roll_inode(&args->trans, args->dp);
+-		if (error)
+-			goto out;
+ 	}
+ 	retval = error = 0;
+ 
+@@ -1135,16 +1094,10 @@ xfs_attr_node_shrink(
+ 	if (forkoff) {
+ 		error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
+ 		/* bp is gone due to xfs_da_shrink_inode */
+-		if (error)
+-			return error;
+-
+-		error = xfs_defer_finish(&args->trans);
+-		if (error)
+-			return error;
+ 	} else
+ 		xfs_trans_brelse(args->trans, bp);
+ 
+-	return 0;
++	return error;
+ }
+ 
+ /*
 -- 
 2.7.4
 
