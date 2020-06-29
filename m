@@ -2,72 +2,141 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D20C920D54B
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jun 2020 21:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FD920D6CC
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jun 2020 22:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgF2TQO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 29 Jun 2020 15:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731941AbgF2TQM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jun 2020 15:16:12 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3BDC08C5DF
-        for <linux-xfs@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f23so18405796iof.6
-        for <linux-xfs@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
-        b=E57soH+fAZU9oM/uuDn4bCNx2wALmvA7rwFsDeo/VdmyR4hSt+vRDMPW0qpAcJ9V/h
-         UbYJ9fIR9BUAZrS+1TfrEzBoFSxbLFUBB/IIzj7rfy4Y1SyxPmM/cs9fEremwVWV5m5u
-         b9v38myIgTBJNjasjLIOUO/K2CJS7vPJsURIlWBEC7RA0ax+vZbkexDjvFbqaAUgNm/w
-         yj4NkgHNxXLdKOO4AZsIv5vnXx8YMl4s3e1fTXh2Hp6rhwVI9k4nzVvvlc/OSvXrfpbl
-         +6DOlsrKa8IKCRxKxdcbetpm2uz+ZUKJBnziwlMhGJ11qW6bGQPIDGjYXF06+gry04Zz
-         3NGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
-        b=D6XjcwZC6on1q8mY/o9T0EaE+vrmDc8Xa5/x2cCQU2sSVaqllvF2bizmhLgoURjlIl
-         4SAVah4xt71EiKoVsTGW9zVrYOfwRG200V295GOeHF2Vxw5mYbtkw1/hqtdQLqN+2P6L
-         1k/sCBdI7MslAUGAiVe6dPhfzyZJvxnxlzmMHFDGM0vfvM9X3tNo3bOvlw9qBqoXOfJf
-         SDCSoFPleScyfvOukGQk+zivT6JGV8umiyq/JyubUMX+f17oqbWKKOq8r5rbCtdxsa7p
-         7bPkvwY7qNOvl6as6v0kndkP7T4/W4PopWJQG6V4tqYpXeabF+o/1SUmw0w/MrkbcTpm
-         RtJQ==
-X-Gm-Message-State: AOAM530qOKl+lgfv8+f2TjXGj+56lpzbHriKbUz9WL0/gnRzwq4wh5Pi
-        UrsFro5hyvvj9WO7u1wXBSjvA0P+lAFXjkNIcPQ=
-X-Google-Smtp-Source: ABdhPJyNR5zXZ8o09DSJzsSA3OSccnAxM/c9AxKQjYYOZlXvOMCiHs1YW/1gQi1Sa70TQ2VOPtabshfviWRkV7+ICnM=
-X-Received: by 2002:a6b:db17:: with SMTP id t23mr18236117ioc.4.1593458159284;
- Mon, 29 Jun 2020 12:15:59 -0700 (PDT)
+        id S1728084AbgF2TYJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 29 Jun 2020 15:24:09 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30840 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732234AbgF2TYI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jun 2020 15:24:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593458647;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=clmwb/CbsbEbkY8yDMKGA0eXiWryHnB4mJrykLZvHm0=;
+        b=Y45zEN/UoXQ8MxpOGOlZSFVdZzVNdGM9KHutMrqxsNLokNJS/yBdKNaD513Bom3x/h6f1/
+        7K2MegYYt2VSclBZj+AHOhyB4EGMLKR1NslPQbykRyMy+futeghHJmmplt7jC4gdOdgEJo
+        ChHHVBTIB5JkFG281ap67UWMD0LCcbk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-66-RwyZVw6PMq-FCx4r0a6lsw-1; Mon, 29 Jun 2020 08:22:31 -0400
+X-MC-Unique: RwyZVw6PMq-FCx4r0a6lsw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20D221054F8B;
+        Mon, 29 Jun 2020 12:22:30 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEE415C240;
+        Mon, 29 Jun 2020 12:22:29 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 08:22:28 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs_repair: try to fill the AGFL before we fix the
+ freelist
+Message-ID: <20200629122228.GB10449@bfoster>
+References: <159311834667.1065505.8056215626287130285.stgit@magnolia>
+ <159311835912.1065505.9943855193663354771.stgit@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a05:6602:1588:0:0:0:0 with HTTP; Mon, 29 Jun 2020 12:15:58
- -0700 (PDT)
-Reply-To: mrs.victoria.alexander2@gmail.com
-From:   "mrs.victoria alexander" <markalexandermilley321@gmail.com>
-Date:   Mon, 29 Jun 2020 12:15:58 -0700
-Message-ID: <CAP7XNCwEGQ+-Q==u4yk4yvJdk1X+gsfSU6pUV_hROjmF=p-DHw@mail.gmail.com>
-Subject: Hello,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159311835912.1065505.9943855193663354771.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear friend,
+On Thu, Jun 25, 2020 at 01:52:39PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> In commit 9851fd79bfb1, we added a slight amount of slack to the free
+> space btrees being reconstructed so that the initial fix_freelist call
+> (which is run against a totally empty AGFL) would never have to split
+> either free space btree in order to populate the free list.
+> 
+> The new btree bulk loading code in xfs_repair can re-create this
+> situation because it can set the slack values to zero if the filesystem
+> is very full.  However, these days repair has the infrastructure needed
+> to ensure that overestimations of the btree block counts end up on the
+> AGFL or get freed back into the filesystem at the end of phase 5.
+> 
+> Fix this problem by reserving blocks to a separate AGFL block
+> reservation, and checking that between this new reservation and any
+> overages in the bnobt/cntbt fakeroots, we have enough blocks sitting
+> around to populate the AGFL with the minimum number of blocks it needs
+> to handle a split in the bno/cnt/rmap btrees.
+> 
+> Note that we reserve blocks for the new bnobt/cntbt/AGFL at the very end
+> of the reservation steps in phase 5, so the extra allocation should not
+> cause repair to fail if it can't find blocks for btrees.
+> 
+> Fixes: 9851fd79bfb1 ("repair: AGFL rebuild fails if btree split required")
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  repair/agbtree.c |   78 +++++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 68 insertions(+), 10 deletions(-)
+> 
+> 
+> diff --git a/repair/agbtree.c b/repair/agbtree.c
+> index 339b1489..7a4f316c 100644
+> --- a/repair/agbtree.c
+> +++ b/repair/agbtree.c
+...
+> @@ -262,25 +286,59 @@ _("Unable to compute free space by block btree geometry, error %d.\n"), -error);
+...
+> +
+> +		/*
+> +		 * Now try to fill the bnobt/cntbt cursors with extra blocks to
+> +		 * populate the AGFL.  If we don't get all the blocks we want,
+> +		 * stop trying to fill the AGFL.
+> +		 */
+> +		wanted = (int64_t)btr_bno->bload.nr_blocks +
+> +				(min_agfl_len / 2) - bno_blocks;
+> +		if (wanted > 0 && fill_agfl) {
+> +			got = reserve_agblocks(sc->mp, agno, btr_bno, wanted);
+> +			if (wanted > got)
+> +				fill_agfl = false;
+> +			btr_bno->bload.nr_blocks += got;
+> +		}
+> +
+> +		wanted = (int64_t)btr_cnt->bload.nr_blocks +
+> +				(min_agfl_len / 2) - cnt_blocks;
+> +		if (wanted > 0 && fill_agfl) {
+> +			got = reserve_agblocks(sc->mp, agno, btr_cnt, wanted);
+> +			if (wanted > got)
+> +				fill_agfl = false;
+> +			btr_cnt->bload.nr_blocks += got;
+> +		}
 
+It's a little hard to follow this with the nr_blocks sampling and
+whatnot, but I think I get the idea. What's the reason for splitting the
+AGFL res requirement evenly across the two cursors? These AGFL blocks
+all fall into the same overflow pool, right? I was wondering why we
+couldn't just attach the overflow to one, or check one for the full res
+and then the other if more blocks are needed.
 
-I have a business container transaction what that some of( $13million dollars)
+In thinking about it a bit more, wouldn't the whole algorithm be more
+simple if we reserved the min AGFL requirement first, optionally passed
+'agfl_res' to reserve_btblocks() such that subsequent reservations can
+steal from it (and then fail if it depletes), then stuff what's left in
+one (or both, if there's a reason for that) of the cursors at the end?
 
- I would like to discuss with you. If you are interested, please
-contact my email
+Brian
 
-address (mrs.victoria.alexander2@gmail.com)
+>  
+>  		/* Ok, now how many free space records do we have? */
+>  		*nr_extents = count_bno_extents_blocks(agno, &num_freeblocks);
+>  	} while (1);
+> -
+> -	*extra_blocks = (bno_blocks - btr_bno->bload.nr_blocks) +
+> -			(cnt_blocks - btr_cnt->bload.nr_blocks);
+>  }
+>  
+>  /* Rebuild the free space btrees. */
+> 
 
-My WhatsApp number but only message (+19293737780)
-
-Please do not reply if you are not ready
-Thanks
