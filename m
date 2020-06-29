@@ -2,84 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D3420D478
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jun 2020 21:14:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D20C920D54B
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jun 2020 21:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgF2TIj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 29 Jun 2020 15:08:39 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39741 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730880AbgF2TI0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jun 2020 15:08:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593457704;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=n2qVe7QVtMWlsu3tW293XYJBZ3r5SYGfqQyhGd9NB2s=;
-        b=FK5qFAeNANqld3bC3idPx5R9BJwMfVKnx2X3Kc4DmkwoY69uGZZ1wLqeKkU80xjjjmdYVT
-        KpLrly0jEJXPI9ARJpVlPnKPW4gytpbKOaDKlKt6Jerj5jhlMqh8+MvzLcu/v9WMeuAQG9
-        Dm3j4OWcgHLOSegfjevVeo7NWznJh5w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-L3fpmOSlM7CetVm3iyl5YQ-1; Mon, 29 Jun 2020 15:08:13 -0400
-X-MC-Unique: L3fpmOSlM7CetVm3iyl5YQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3B1210059A3;
-        Mon, 29 Jun 2020 19:08:11 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 074F960BF3;
-        Mon, 29 Jun 2020 19:08:10 +0000 (UTC)
-From:   Eric Sandeen <sandeen@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     cgroups@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] doc: cgroup: add f2fs and xfs to supported list for writeback
-Message-ID: <c8271324-9132-388c-5242-d7699f011892@redhat.com>
-Date:   Mon, 29 Jun 2020 14:08:09 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        id S1731698AbgF2TQO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 29 Jun 2020 15:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731941AbgF2TQM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Jun 2020 15:16:12 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3BDC08C5DF
+        for <linux-xfs@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f23so18405796iof.6
+        for <linux-xfs@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=E57soH+fAZU9oM/uuDn4bCNx2wALmvA7rwFsDeo/VdmyR4hSt+vRDMPW0qpAcJ9V/h
+         UbYJ9fIR9BUAZrS+1TfrEzBoFSxbLFUBB/IIzj7rfy4Y1SyxPmM/cs9fEremwVWV5m5u
+         b9v38myIgTBJNjasjLIOUO/K2CJS7vPJsURIlWBEC7RA0ax+vZbkexDjvFbqaAUgNm/w
+         yj4NkgHNxXLdKOO4AZsIv5vnXx8YMl4s3e1fTXh2Hp6rhwVI9k4nzVvvlc/OSvXrfpbl
+         +6DOlsrKa8IKCRxKxdcbetpm2uz+ZUKJBnziwlMhGJ11qW6bGQPIDGjYXF06+gry04Zz
+         3NGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=D6XjcwZC6on1q8mY/o9T0EaE+vrmDc8Xa5/x2cCQU2sSVaqllvF2bizmhLgoURjlIl
+         4SAVah4xt71EiKoVsTGW9zVrYOfwRG200V295GOeHF2Vxw5mYbtkw1/hqtdQLqN+2P6L
+         1k/sCBdI7MslAUGAiVe6dPhfzyZJvxnxlzmMHFDGM0vfvM9X3tNo3bOvlw9qBqoXOfJf
+         SDCSoFPleScyfvOukGQk+zivT6JGV8umiyq/JyubUMX+f17oqbWKKOq8r5rbCtdxsa7p
+         7bPkvwY7qNOvl6as6v0kndkP7T4/W4PopWJQG6V4tqYpXeabF+o/1SUmw0w/MrkbcTpm
+         RtJQ==
+X-Gm-Message-State: AOAM530qOKl+lgfv8+f2TjXGj+56lpzbHriKbUz9WL0/gnRzwq4wh5Pi
+        UrsFro5hyvvj9WO7u1wXBSjvA0P+lAFXjkNIcPQ=
+X-Google-Smtp-Source: ABdhPJyNR5zXZ8o09DSJzsSA3OSccnAxM/c9AxKQjYYOZlXvOMCiHs1YW/1gQi1Sa70TQ2VOPtabshfviWRkV7+ICnM=
+X-Received: by 2002:a6b:db17:: with SMTP id t23mr18236117ioc.4.1593458159284;
+ Mon, 29 Jun 2020 12:15:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Received: by 2002:a05:6602:1588:0:0:0:0 with HTTP; Mon, 29 Jun 2020 12:15:58
+ -0700 (PDT)
+Reply-To: mrs.victoria.alexander2@gmail.com
+From:   "mrs.victoria alexander" <markalexandermilley321@gmail.com>
+Date:   Mon, 29 Jun 2020 12:15:58 -0700
+Message-ID: <CAP7XNCwEGQ+-Q==u4yk4yvJdk1X+gsfSU6pUV_hROjmF=p-DHw@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-f2fs and xfs have both added support for cgroup writeback:
+Dear friend,
 
-578c647 f2fs: implement cgroup writeback support
-adfb5fb xfs: implement cgroup aware writeback
 
-so add them to the supported list in the docs.
+I have a business container transaction what that some of( $13million dollars)
 
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
+ I would like to discuss with you. If you are interested, please
+contact my email
 
-TBH I wonder about the wisdom of having this detail in
-the doc, as it apparently gets missed quite often ...
+address (mrs.victoria.alexander2@gmail.com)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index ce3e05e..4f82afa 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1684,9 +1684,9 @@ per-cgroup dirty memory states are examined and the more restrictive
- of the two is enforced.
- 
- cgroup writeback requires explicit support from the underlying
--filesystem.  Currently, cgroup writeback is implemented on ext2, ext4
--and btrfs.  On other filesystems, all writeback IOs are attributed to
--the root cgroup.
-+filesystem.  Currently, cgroup writeback is implemented on ext2, ext4,
-+btrfs, f2fs, and xfs.  On other filesystems, all writeback IOs are 
-+attributed to the root cgroup.
- 
- There are inherent differences in memory and writeback management
- which affects how cgroup ownership is tracked.  Memory is tracked per
+My WhatsApp number but only message (+19293737780)
 
+Please do not reply if you are not ready
+Thanks
