@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CFD7211115
+	by mail.lfdr.de (Postfix) with ESMTP id 18634211114
 	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jul 2020 18:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732344AbgGAQv0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1732542AbgGAQv0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 1 Jul 2020 12:51:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49272 "EHLO
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55287 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732559AbgGAQvY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 12:51:24 -0400
+        with ESMTP id S1732546AbgGAQvX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 12:51:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593622283;
+        s=mimecast20190719; t=1593622282;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J6ERAzvMnQufPex/eRMnULXuuof0eCu/aeKjMvuYp3Q=;
-        b=fRxF51LLKdm8yQc09i2QN9sgizkU5xK5Iiqh+hBvG6cmJqMvcvVv4RgnAx/EsiSnCY9nP7
-        2pNB2KNSBMtvFzDMMh30sfeeQYDHycHR6qlcGb+dLuiB4csZ5yM9zTTX4/yyCH20M5KDzY
-        r6n0DPYqFFGLgqWNQSGpA/7xxjR9pm0=
+        bh=zHW36s/snJE2ggr6hpkbMpu5eR3RUmCUNf25VBddjNA=;
+        b=gGoVevKHRYxKcYJ8goto06FdzYhojRBykerUFU++F8EuBBy92xlz+rTJm0WuJaXlHUwbTX
+        iHfqboIRMk+McIqCOwXkT7gI3Wbj080w2Fw9uhOun+gSjrS6nwNob3YphAib8IHzGSk6oP
+        yntBZQk9vP2G7OVU0e+j+JGvXpDATxU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-GG_PNNtTOX2TTnAydKktMw-1; Wed, 01 Jul 2020 12:51:20 -0400
-X-MC-Unique: GG_PNNtTOX2TTnAydKktMw-1
+ us-mta-91-_yTHETGtNbipXHbnfr9duw-1; Wed, 01 Jul 2020 12:51:21 -0400
+X-MC-Unique: _yTHETGtNbipXHbnfr9duw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACC3A18FF662
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 16:51:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23FC9107ACCD
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 16:51:20 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-120-48.rdu2.redhat.com [10.10.120.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 695995C3FD
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D44055C3FD
         for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 16:51:19 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 06/10] xfs: automatically relog the quotaoff start intent
-Date:   Wed,  1 Jul 2020 12:51:12 -0400
-Message-Id: <20200701165116.47344-7-bfoster@redhat.com>
+Subject: [PATCH 07/10] xfs: prevent fs freeze with outstanding relog items
+Date:   Wed,  1 Jul 2020 12:51:13 -0400
+Message-Id: <20200701165116.47344-8-bfoster@redhat.com>
 In-Reply-To: <20200701165116.47344-1-bfoster@redhat.com>
 References: <20200701165116.47344-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,151 +48,61 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The quotaoff operation has a rare but longstanding deadlock vector
-in terms of how the operation is logged. A quotaoff start intent is
-logged (synchronously) at the onset to ensure recovery can handle
-the operation if interrupted before in-core changes are made. This
-quotaoff intent pins the log tail while the quotaoff sequence scans
-and purges dquots from all in-core inodes. While this operation
-generally doesn't generate much log traffic on its own, it can be
-time consuming. If unrelated, concurrent filesystem activity
-consumes remaining log space before quotaoff is able to acquire log
-reservation for the quotaoff end intent, the filesystem locks up
-indefinitely.
+The automatic relog mechanism is currently incompatible with
+filesystem freeze in a generic sense. Freeze protection is currently
+implemented via locks that cannot be held on return to userspace,
+which means we can't hold a superblock write reference for the
+duration relogging is enabled on an item. It's too late to block
+when the freeze sequence calls into the filesystem because the
+transaction subsystem has already begun to be frozen. Not only can
+this block the relog transaction, but blocking any unrelated
+transaction essentially prevents a particular operation from
+progressing to the point where it can disable relogging on an item.
+Therefore marking the relog transaction as "nowrite" does not solve
+the problem.
 
-quotaoff cannot allocate the end intent before the scan because the
-latter can result in transaction allocation itself in certain
-indirect cases (releasing an inode, for example). Further, rolling
-the original transaction is difficult because the scanning work
-occurs multiple layers down where caller context is lost and not
-much information is available to determine how often to roll the
-transaction.
+This is not a problem in practice because the two primary use cases
+already exclude freeze via other means. quotaoff holds ->s_umount
+read locked across the operation and scrub explicitly takes a
+superblock write reference, both of which block freeze of the
+transaction subsystem for the duration of relog enabled items.
 
-To address this problem, enable automatic relogging of the quotaoff
-start intent. This automatically relogs the intent whenever AIL
-pushing finds the item at the tail of the log. When quotaoff
-completes, wait for relogging to complete as the end intent expects
-to be able to permanently remove the start intent from the log
-subsystem. This ensures that the log tail is kept moving during a
-particularly long quotaoff operation and avoids the log reservation
-deadlock.
-
-Note that the quotaoff reservation calculation does not need to be
-updated for relog as it already (incorrectly) accounts for two
-quotaoff intents.
+As a fallback for future use cases and the upcoming random buffer
+relogging test code, fail fs freeze attempts when the global relog
+reservation counter is elevated to prevent deadlock. This is a
+partial punt of the problem as compared to teaching freeze to wait
+on relogged items because the only current dependency is test code.
+In other words, this patch prevents deadlock if a user happens to
+issue a freeze in conjunction with random buffer relog injection.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/xfs_dquot_item.c  | 26 ++++++++++++++++++++++++--
- fs/xfs/xfs_qm_syscalls.c | 12 +++++++++++-
- 2 files changed, 35 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_super.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-index 349c92d26570..86dcb6932aab 100644
---- a/fs/xfs/xfs_dquot_item.c
-+++ b/fs/xfs/xfs_dquot_item.c
-@@ -17,6 +17,7 @@
- #include "xfs_trans_priv.h"
- #include "xfs_qm.h"
- #include "xfs_log.h"
-+#include "xfs_log_priv.h"
- 
- static inline struct xfs_dq_logitem *DQUOT_ITEM(struct xfs_log_item *lip)
- {
-@@ -275,14 +276,17 @@ xfs_qm_qoff_logitem_format(
- }
- 
- /*
-- * There isn't much you can do to push a quotaoff item.  It is simply
-- * stuck waiting for the log to be flushed to disk.
-+ * The quotaoff log item is stuck in the log until quotaoff completes. Either
-+ * relog it to keep the tail moving or consider it locked.
-  */
- STATIC uint
- xfs_qm_qoff_logitem_push(
- 	struct xfs_log_item	*lip,
- 	struct list_head	*buffer_list)
- {
-+
-+	if (xfs_item_needs_relog(lip))
-+		return XFS_ITEM_RELOG;
- 	return XFS_ITEM_LOCKED;
- }
- 
-@@ -314,6 +318,23 @@ xfs_qm_qoff_logitem_release(
- 	}
- }
- 
-+STATIC void
-+xfs_qm_qoff_logitem_relog(
-+	struct xfs_log_item	*lip,
-+	struct xfs_trans	*tp)
-+{
-+	int			res;
-+
-+	res = xfs_relog_calc_res(lip);
-+
-+	xfs_trans_add_item(tp, lip);
-+	tp->t_ticket->t_curr_res += res;
-+	tp->t_ticket->t_unit_res += res;
-+	tp->t_log_res += res;
-+	tp->t_flags |= XFS_TRANS_DIRTY;
-+	set_bit(XFS_LI_DIRTY, &lip->li_flags);
-+}
-+
- static const struct xfs_item_ops xfs_qm_qoffend_logitem_ops = {
- 	.iop_size	= xfs_qm_qoff_logitem_size,
- 	.iop_format	= xfs_qm_qoff_logitem_format,
-@@ -327,6 +348,7 @@ static const struct xfs_item_ops xfs_qm_qoff_logitem_ops = {
- 	.iop_format	= xfs_qm_qoff_logitem_format,
- 	.iop_push	= xfs_qm_qoff_logitem_push,
- 	.iop_release	= xfs_qm_qoff_logitem_release,
-+	.iop_relog	= xfs_qm_qoff_logitem_relog,
- };
- 
- /*
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 7effd7a28136..5602ed2b7e8d 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -18,6 +18,7 @@
- #include "xfs_quota.h"
- #include "xfs_qm.h"
- #include "xfs_icache.h"
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..f77af5298a80 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -35,6 +35,7 @@
+ #include "xfs_refcount_item.h"
+ #include "xfs_bmap_item.h"
+ #include "xfs_reflink.h"
 +#include "xfs_trans_priv.h"
  
- STATIC int
- xfs_qm_log_quotaoff(
-@@ -29,12 +30,14 @@ xfs_qm_log_quotaoff(
- 	int			error;
- 	struct xfs_qoff_logitem	*qoffi;
+ #include <linux/magic.h>
+ #include <linux/fs_context.h>
+@@ -914,6 +915,9 @@ xfs_fs_freeze(
+ {
+ 	struct xfs_mount	*mp = XFS_M(sb);
  
--	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_quotaoff, 0, 0, 0, &tp);
-+	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_quotaoff, 0, 0,
-+				XFS_TRANS_RELOG, &tp);
- 	if (error)
- 		goto out;
- 
- 	qoffi = xfs_trans_get_qoff_item(tp, NULL, flags & XFS_ALL_QUOTA_ACCT);
- 	xfs_trans_log_quotaoff_item(tp, qoffi);
-+	xfs_trans_relog_item(tp, &qoffi->qql_item);
- 
- 	spin_lock(&mp->m_sb_lock);
- 	mp->m_sb.sb_qflags = (mp->m_qflags & ~(flags)) & XFS_MOUNT_QUOTA_ALL;
-@@ -71,6 +74,13 @@ xfs_qm_log_quotaoff_end(
- 	if (error)
- 		return error;
- 
-+	/*
-+	 * startqoff must be in the AIL and not the CIL when the end intent
-+	 * commits to ensure it is not readded to the AIL out of order. Wait on
-+	 * relog activity to drain to isolate startqoff to the AIL.
-+	 */
-+	xfs_trans_relog_item_cancel(tp, &(*startqoff)->qql_item, true);
++	if (WARN_ON_ONCE(atomic64_read(&mp->m_ail->ail_relog_res)))
++		return -EAGAIN;
 +
- 	qoffi = xfs_trans_get_qoff_item(tp, *startqoff,
- 					flags & XFS_ALL_QUOTA_ACCT);
- 	xfs_trans_log_quotaoff_item(tp, qoffi);
+ 	xfs_stop_block_reaping(mp);
+ 	xfs_save_resvblks(mp);
+ 	xfs_quiesce_attr(mp);
 -- 
 2.21.3
 
