@@ -2,75 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93AB7210644
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jul 2020 10:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4930C210663
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jul 2020 10:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgGAIcf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Jul 2020 04:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
+        id S1728812AbgGAIeu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Jul 2020 04:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgGAIc3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 04:32:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B13C03E979;
-        Wed,  1 Jul 2020 01:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vXiGSDx0OBTNUoDDVLCHJpE3R5npVOLQYlpMjYD89gk=; b=qdapIMox4Ek2eTE/n0txbbOjGF
-        oJGKiOEgDQ9amafICkn7wMpGQazpixnCsCP9vzB1sWllWfYlQ8DIw/BDrv8it538xchboPP1a3fnT
-        /r7lFtLJtFEe6qnkJAw62zmPT8rzrymyJ0nyAnw3cv66pExz0H6f2mtFbMKtbsSNR4N0LR36rhtwO
-        F0i0ZUtDzzu+A9TrM/ZBHha+soKQAt4lO4WQQDJtMr2tjHFNu5+PkR/hO/DfBja+fSrsZGFpUIUZL
-        IBFfzOqiowRXWGc4J2ORzoUaahAdW3PFVchNzsU3fVXrakWnQC9lWtXr6awjsuselgLhI1YRCo/YC
-        rWe3CgMQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqYAK-0006UI-BJ; Wed, 01 Jul 2020 08:32:24 +0000
-Date:   Wed, 1 Jul 2020 09:32:24 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Eric Sandeen <sandeen@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] doc: cgroup: add f2fs and xfs to supported list for
- writeback
-Message-ID: <20200701083224.GI20101@infradead.org>
-References: <c8271324-9132-388c-5242-d7699f011892@redhat.com>
- <20200630054217.GA27221@infradead.org>
- <59265a9d-ee0f-4432-3f86-00d076aeb8e8@sandeen.net>
+        with ESMTP id S1728721AbgGAIet (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 04:34:49 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FFAC061755
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 01:34:49 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e18so11352749pgn.7
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jul 2020 01:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yFWJZ1nvPFQxKkNEV6qkZkIkFJY6Z8UVdCBPGFYvbdk=;
+        b=JXzvzO3nvd2HnLqHtzV8eQShe0/TR6Rw7/XYDerjClmPDKGXwk7gnNRRriigD5M4Gd
+         R83bQyg0LvQzlnSTS4FCMMlCb56+gZUczh/RxutWe1sGNPAHvX8rPNnjTlrfSLZey+0j
+         WyIlbHefb9eR79czmoIh+kKqprkVivPE98U9Sp+vRMYtmIrQY+IQiVctO9Q6ZehvOVNT
+         XYXOIqqttenaX8OFpr8s5sNF1KmXtW2B9KJ4sDcnABcoZ48NKe/2aLJby3T069Ez6HBC
+         iAy+86aq+Mk6K6QqXJsZPXiayTA3EBcN5LP3GqLE1oXDzfosiWf7Gmv4I8ijc7Aktf02
+         LeVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yFWJZ1nvPFQxKkNEV6qkZkIkFJY6Z8UVdCBPGFYvbdk=;
+        b=TAI2nFH0JVP6RvPS6LsR5LOXK+gjGdDMWulk4YaW0Gr54BUDHMFaWx7JpmxZ+5m13i
+         /3Zahj1+TFt3V8Hr2zwWKVhRYf3qrKDyzcTHXswSiou0WtClCWtz++RCt2QAxw7Oy2ZX
+         OdFJ2dbQeuEFN69imQhx2VNLD4iEoUof4bLWCXe0FW8YfPhjRGIlkaXfvGxk05sPMXWA
+         Lcyulz7AKHozmAnFN0SauvKAp1iR8I/KNoPQX6CM+LjZx53h2HgaLfvPunha+odatA8M
+         DQIjxvFlG+85+OzsYr6sV7ed/P7v+UanC6znj1ijJF7FIQoYVdborWIbpwrUR2c1hDK6
+         65mw==
+X-Gm-Message-State: AOAM532bUm5qPNe4CMiJiCTe29+HKWxw8a1do5UJT+P+miPao1o8Db07
+        k3XmWa3rGhehTorr9Ba0IiqUaykZ
+X-Google-Smtp-Source: ABdhPJy+3ueqgSnrzr0/LKgChuvMxuWBCR7elohwKrQK07HWDRxIZJM2iuaTFlLVSMN5dcXWC4byAA==
+X-Received: by 2002:a62:cf42:: with SMTP id b63mr16641765pfg.322.1593592489344;
+        Wed, 01 Jul 2020 01:34:49 -0700 (PDT)
+Received: from garuda.localnet ([122.171.188.144])
+        by smtp.gmail.com with ESMTPSA id 130sm4929278pfw.176.2020.07.01.01.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 01:34:49 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/18] xfs: fix inode quota reservation checks
+Date:   Wed, 01 Jul 2020 14:03:00 +0530
+Message-ID: <1800809.xzDrfeQqv9@garuda>
+In-Reply-To: <159353172261.2864738.3201442261854530990.stgit@magnolia>
+References: <159353170983.2864738.16885438169173786208.stgit@magnolia> <159353172261.2864738.3201442261854530990.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59265a9d-ee0f-4432-3f86-00d076aeb8e8@sandeen.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:59:34AM -0500, Eric Sandeen wrote:
-> On 6/30/20 12:42 AM, Christoph Hellwig wrote:
-> > On Mon, Jun 29, 2020 at 02:08:09PM -0500, Eric Sandeen wrote:
-> >> f2fs and xfs have both added support for cgroup writeback:
-> >>
-> >> 578c647 f2fs: implement cgroup writeback support
-> >> adfb5fb xfs: implement cgroup aware writeback
-> >>
-> >> so add them to the supported list in the docs.
-> >>
-> >> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-> >> ---
-> >>
-> >> TBH I wonder about the wisdom of having this detail in
-> >> the doc, as it apparently gets missed quite often ...
-> > 
-> > I'd rather remove the list of file systems.  It has no chance of
-> > staying uptodate.
+On Tuesday 30 June 2020 9:12:02 PM IST Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Is there any way for a user to know whether a filesytem does or doesn't
-> support it, in practice?
+> xfs_trans_dqresv is the function that we use to make reservations
+> against resource quotas.  Each resource contains two counters: the
+> q_core counter, which tracks resources allocated on disk; and the dquot
+> reservation counter, which tracks how much of that resource has either
+> been allocated or reserved by threads that are working on metadata
+> updates.
+> 
+> For disk blocks, we compare the proposed reservation counter against the
+> hard and soft limits to decide if we're going to fail the operation.
+> However, for inodes we inexplicably compare against the q_core counter,
+> not the incore reservation count.
+> 
+> Since the q_core counter is always lower than the reservation count and
+> we unlock the dquot between reservation and transaction commit, this
+> means that multiple threads can reserve the last inode count before we
+> hit the hard limit, and when they commit, we'll be well over the hard
+> limit.
+> 
+> Fix this by checking against the incore inode reservation counter, since
+> we would appear to maintain that correctly (and that's what we report in
+> GETQUOTA).
+>
 
-git-grep SB_I_CGROUPWB
+As mentioned above, q_core.d_icount's value can be less than what has been
+reserved by various running tasks. Hence deriving new reservation count from
+q_core.d_icount is incorrect.
+
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/xfs_trans_dquot.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> 
+> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+> index c0f73b82c055..ed0ce8b301b4 100644
+> --- a/fs/xfs/xfs_trans_dquot.c
+> +++ b/fs/xfs/xfs_trans_dquot.c
+> @@ -647,7 +647,7 @@ xfs_trans_dqresv(
+>  			}
+>  		}
+>  		if (ninos > 0) {
+> -			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
+> +			total_count = dqp->q_res_icount + ninos;
+>  			timer = be32_to_cpu(dqp->q_core.d_itimer);
+>  			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+>  			warnlimit = defq->iwarnlimit;
+> 
+> 
+
+
+-- 
+chandan
+
+
+
