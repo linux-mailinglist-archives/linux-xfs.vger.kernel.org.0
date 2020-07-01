@@ -2,59 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD0821061F
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jul 2020 10:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4BA2210664
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jul 2020 10:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgGAI1p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Jul 2020 04:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50798 "EHLO
+        id S1728813AbgGAIew (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Jul 2020 04:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728450AbgGAI1o (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 04:27:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CC3C061755
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 01:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HWRUIH7nQ5n9/cjG2TP+TwPxD3+3l5RtpwKILN2cTmI=; b=oPnKx/rBTP3KbXktuRKFL7qHKd
-        36rkzowbmdCFj5tIcMxeP+rkn2nXcZ1nQ0tK20JD03OCZjoCf0Lrn9jvNil9JVe4P7Qa2gvJmP6OC
-        UsqNDzl5c+SPeRMVR9YNfSYdvQAO260Ipa85nwZPzL9hSbYOdpoSc4BajtCJhT99uWVxHQvkchOj+
-        8TUQmkEi0beEwk0H15Je2kq0UUEaTQrrLuyuNojmPz9Lrx9/5QtcVZqRPfzEG8I/Jamwc5HQWrZMM
-        HxtrGq8/1Rc+PP4C0ye18/qZu8DJi1HQp98OAbB1oZtvim7nRxMLlguNVihmTfkftBbdVJ0vSe4f5
-        Pz7Ml6dA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqY5l-0006ID-5v; Wed, 01 Jul 2020 08:27:41 +0000
-Date:   Wed, 1 Jul 2020 09:27:41 +0100
-From:   Christoph Hellwig <hch@infradead.org>
+        with ESMTP id S1728721AbgGAIew (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jul 2020 04:34:52 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1153AC061755
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jul 2020 01:34:52 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e8so11368080pgc.5
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Jul 2020 01:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DO+YrgKOds4/Wzm1X15yq52Qm5648n5bkoBdk5nUqyU=;
+        b=LgNAZwOxAWrroQb7u59fS5gVOT9NdA8EykQCH312AhAQT6u1mHPmpOrwT4QFA+9MSs
+         5TCoBVEANLPf00xku5YiqKMQVgS+b3GpxRrxgwqG/u62QlaB209auoFQL6vJaqbXS9Kv
+         XvGFJSpyVcahXEEEQmuc9S0WVCb60BofIACPLr5tn+AQunF5+HkqHZ47jBmDX77auo0x
+         LkqVHtYSyECxOudE3oefPiiM5ETDulxNUMOsEK086mkK2gQmu+TRjS4c0vNoHkZWkATk
+         NnYg3QnF0mL+IUclN1z/eoggqBNi/aV1BPKawyFrNIEDigf1AU21CpDlcI/dqVrVbHLL
+         cVtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DO+YrgKOds4/Wzm1X15yq52Qm5648n5bkoBdk5nUqyU=;
+        b=AHxEthU85tfavV9Gqb5v6OEn8ppZMKY5JJo+0JUqEuKcKpqDmRBqy3KCKe/8ucTP6h
+         hwHMmKAqvB6mwI/9VfV6rnkeKMF8NmiMsNeVaSs/3AeiZtRBw9dSK9WeMWUwnQNSYvL4
+         sh0eagGzHA4Pudv1SWJTsszetKjqUe3+JBhRc7odSOWsOq9Bwica0fIMiNbsM4lQJEMa
+         aFIP3/Ffr1YHJp6AZBvquqn4FuHbtkvzp5xsZYKgf8c/vc2iGI1PD2HB3K2G1sgNuYdA
+         QjYxhm/BDtEHJV0wDdwwYLuzYGcqobuojsbQ0T/mIMY5KIsoZWSVYBV2mDI7ta5UaXhS
+         bAcA==
+X-Gm-Message-State: AOAM532QVCDnY+9hgGpiocwPIg3PcRqhNIqY+R92BNMipLKR9EvsyDzR
+        8m12Dona/R/IUtEhAeCa4MOGTE3S
+X-Google-Smtp-Source: ABdhPJz+/XBf7y00QVPT4IK1LZkGIhYumUg9j+xyU8VTbxcFQEa2mMtqG64kjgCzTP/E197wlLhmeQ==
+X-Received: by 2002:a63:5a17:: with SMTP id o23mr18900289pgb.218.1593592491623;
+        Wed, 01 Jul 2020 01:34:51 -0700 (PDT)
+Received: from garuda.localnet ([122.171.188.144])
+        by smtp.gmail.com with ESMTPSA id 21sm5057430pfu.124.2020.07.01.01.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 01:34:51 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
-        edwin@etorok.net
-Subject: Re: [PATCH 9/9] xfs: move helpers that lock and unlock two inodes
- against userspace IO
-Message-ID: <20200701082741.GH20101@infradead.org>
-References: <159304785928.874036.4735877085735285950.stgit@magnolia>
- <159304791766.874036.17659898139855742701.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/18] xfs: clear XFS_DQ_FREEING if we can't lock the dquot buffer to flush
+Date:   Wed, 01 Jul 2020 14:02:15 +0530
+Message-ID: <5478435.i7RmhvRWad@garuda>
+In-Reply-To: <159353171640.2864738.7967439700762859129.stgit@magnolia>
+References: <159353170983.2864738.16885438169173786208.stgit@magnolia> <159353171640.2864738.7967439700762859129.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159304791766.874036.17659898139855742701.stgit@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 06:18:37PM -0700, Darrick J. Wong wrote:
+On Tuesday 30 June 2020 9:11:56 PM IST Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Move the double-inode locking helpers to xfs_inode.c since they're not
-> specific to reflink.
-> 
+> In commit 8d3d7e2b35ea, we changed xfs_qm_dqpurge to bail out if we
+> can't lock the dquot buf to flush the dquot.  This prevents the AIL from
+> blocking on the dquot, but it also forgets to clear the FREEING flag on
+> its way out.  A subsequent purge attempt will see the FREEING flag is
+> set and bail out, which leads to dqpurge_all failing to purge all the
+> dquots.  This causes unmounts and quotaoff operations to hang.
+>
+
+xfs_qm_dqpurge() checks for the presence of XFS_DQ_FREEING. If it is set, it
+indicates that another task is freeing this dquot.
+
+A failed read operation could return -EAGAIN and hence xfs_qm_dqpurge()
+returning without clearing XFS_DQ_FREEING would mean that future invocations
+of this function would turn out to be a nop and hence the corresponding dquot
+would linger around forever. Hence the fix is correct.
+
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+
+> Fixes: 8d3d7e2b35ea ("xfs: trylock underlying buffer on dquot flush")
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Reviewed-by: Brian Foster <bfoster@redhat.com>
+> ---
+>  fs/xfs/xfs_qm.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> 
+> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+> index d6cd83317344..938023dd8ce5 100644
+> --- a/fs/xfs/xfs_qm.c
+> +++ b/fs/xfs/xfs_qm.c
+> @@ -148,6 +148,7 @@ xfs_qm_dqpurge(
+>  			error = xfs_bwrite(bp);
+>  			xfs_buf_relse(bp);
+>  		} else if (error == -EAGAIN) {
+> +			dqp->dq_flags &= ~XFS_DQ_FREEING;
+>  			goto out_unlock;
+>  		}
+>  		xfs_dqflock(dqp);
+> 
+> 
 
-Looks good:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+-- 
+chandan
+
+
+
