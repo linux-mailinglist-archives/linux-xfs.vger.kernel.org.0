@@ -2,53 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1D921501E
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Jul 2020 00:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F40C215016
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Jul 2020 00:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgGEWQb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 5 Jul 2020 18:16:31 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58044 "EHLO
+        id S1728314AbgGEWOf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 5 Jul 2020 18:14:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57130 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgGEWQb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 5 Jul 2020 18:16:31 -0400
+        with ESMTP id S1728103AbgGEWOf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 5 Jul 2020 18:14:35 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 065MCTC6080647;
-        Sun, 5 Jul 2020 22:16:27 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 065MD2EJ080767;
+        Sun, 5 Jul 2020 22:14:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Zh3H6zq9iwUw47LvVWoPFgcBodgbLWSdX7+gbmm4Vak=;
- b=ZYAKXtlpmzRi2S03A5hmiUsSG/cicGtp2IOgF8TNHUOLXOTclBj29x5Qq76BAlFFKKDv
- Y6yMJ3em2qWM0/vFb9Jmw2a0dQ1dvcfR7Jn+ZMNrmHqIp9pxa4YgUSZiCpomPCygT8QK
- GVHmaFNNEfo2A22X6OgtZsIQYz5am4R/gNtlcdW0tsdsAq4LEHHpwWu9qM+C480TSTCY
- Yq+eCKFYXeAajhEz1v5x/RWPo+5RnxRuKmajC0EBOJcykjHhEBIEUkOmcaMaNlrK1W7a
- u4snN1Sd+uIKKmPtUEmYbWLbMb4Z3A0z2ZQ//fO6JdfXnGqw+PBHz8QbQc6M6ZvcI82N 1g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 322kv63b30-1
+ bh=XCdgYIbXEIcYoBxzAPbI8da57OmluHM2lfnVDAWMxRY=;
+ b=0cVGamirgbxa3faiofbQz93aBKVRvzYEmQObE4i/SgirAQfzLd4h1HkMnHXBulNDuBLI
+ 2Q7mp5wsKq1FYf42GZ1XVKS3EmL3Gkn0OMx2QEVqaEI9nFfTn2SRi3VW1Jc2rQY5G5Pk
+ gedTp2C3AopmRrLwrOt0pXWWna4cl65z+YH+Re6KyReF7V45GPp4c789lR++1k/Nrbzu
+ W67aOjWP6wV8g5X+HOexA79XA5hVFHCYd77wx48h0KXQZAli592jAEh/RBCSlXrAu2Qs
+ 2FHPhANdUpE6EmkmjfKCKh4bF2yFLCKvyCuvnIZev87oR5gNJlZHOd2XnnS3E8C4+z5D jA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 322kv63b0p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 05 Jul 2020 22:16:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 065MD1WK111439;
-        Sun, 5 Jul 2020 22:14:26 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 3233nx9bbs-1
+        Sun, 05 Jul 2020 22:14:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 065ME5Hf101097;
+        Sun, 5 Jul 2020 22:14:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 3233pubkcr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 05 Jul 2020 22:14:26 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 065MEPim003472;
-        Sun, 5 Jul 2020 22:14:25 GMT
+        Sun, 05 Jul 2020 22:14:32 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 065MEVvi026655;
+        Sun, 5 Jul 2020 22:14:31 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 05 Jul 2020 15:14:25 -0700
-Subject: [PATCH 17/22] xfs: refactor xfs_qm_scall_setqlim
+        with ESMTP ; Sun, 05 Jul 2020 15:14:31 -0700
+Subject: [PATCH 18/22] xfs: refactor xfs_trans_dqresv
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>,
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org
-Date:   Sun, 05 Jul 2020 15:14:24 -0700
-Message-ID: <159398726399.425236.13574105173650620585.stgit@magnolia>
+Date:   Sun, 05 Jul 2020 15:14:30 -0700
+Message-ID: <159398727041.425236.2306790843137673592.stgit@magnolia>
 In-Reply-To: <159398715269.425236.15910213189856396341.stgit@magnolia>
 References: <159398715269.425236.15910213189856396341.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,10 +55,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9673 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007050172
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007050172
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9673 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
  malwarescore=0 suspectscore=1 mlxlogscore=999 phishscore=0 spamscore=0
@@ -73,230 +72,215 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Now that we can pass around quota resource and limit structures, clean
-up the open-coded field setting in xfs_qm_scall_setqlim.
+Now that we've refactored the resource usage and limits into
+per-resource structures, we can refactor some of the open-coded
+reservation limit checking in xfs_trans_dqresv.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/xfs_qm_syscalls.c |  164 ++++++++++++++++++++++++++--------------------
- 1 file changed, 93 insertions(+), 71 deletions(-)
+ fs/xfs/xfs_trans_dquot.c |  153 +++++++++++++++++++++++-----------------------
+ 1 file changed, 78 insertions(+), 75 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 580546f3ab40..2e3e36b5eaad 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -436,6 +436,58 @@ xfs_qm_scall_quotaon(
- #define XFS_QC_MASK \
- 	(QC_LIMIT_MASK | QC_TIMER_MASK | QC_WARNS_MASK)
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index 130d97871a3d..7f847cfba885 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -554,6 +554,58 @@ xfs_quota_warn(
+ 			   mp->m_super->s_dev, type);
+ }
  
 +/*
-+ * Adjust limits of this quota, and the defaults if passed in.  Returns true
-+ * if the new limits made sense and were applied, false otherwise.
++ * Decide if we can make an additional reservation against a quota resource.
++ * Returns an inode QUOTA_NL_ warning code and whether or not it's fatal.
++ *
++ * Note that we assume that the numeric difference between the inode and block
++ * warning codes will always be 3 since it's userspace ABI now, and will never
++ * decrease the quota reservation, so the *BELOW messages are irrelevant.
 + */
-+static inline bool
-+xfs_setqlim_limits(
-+	struct xfs_mount	*mp,
++static inline int
++xfs_dqresv_check(
 +	struct xfs_dquot_res	*res,
 +	struct xfs_quota_limits	*qlim,
-+	xfs_qcnt_t		hard,
-+	xfs_qcnt_t		soft,
-+	const char		*tag)
++	int64_t			delta,
++	bool			*fatal)
 +{
-+	/* The hard limit can't be less than the soft limit. */
-+	if (hard != 0 && hard < soft) {
-+		xfs_debug(mp, "%shard %lld < %ssoft %lld", tag, hard, tag,
-+				soft);
-+		return false;
++	xfs_qcnt_t		hardlimit = res->hardlimit;
++	xfs_qcnt_t		softlimit = res->softlimit;
++	xfs_qcnt_t		total_count = res->reserved + delta;
++
++	BUILD_BUG_ON(QUOTA_NL_BHARDWARN     != QUOTA_NL_IHARDWARN + 3);
++	BUILD_BUG_ON(QUOTA_NL_BSOFTLONGWARN != QUOTA_NL_ISOFTLONGWARN + 3);
++	BUILD_BUG_ON(QUOTA_NL_BSOFTWARN     != QUOTA_NL_ISOFTWARN + 3);
++
++	*fatal = false;
++	if (delta <= 0)
++		return QUOTA_NL_NOWARN;
++
++	if (!hardlimit)
++		hardlimit = qlim->hard;
++	if (!softlimit)
++		softlimit = qlim->soft;
++
++	if (hardlimit && total_count > hardlimit) {
++		*fatal = true;
++		return QUOTA_NL_IHARDWARN;
 +	}
 +
-+	res->hardlimit = hard;
-+	res->softlimit = soft;
-+	if (qlim) {
-+		qlim->hard = hard;
-+		qlim->soft = soft;
++	if (softlimit && total_count > softlimit) {
++		time64_t	now = ktime_get_real_seconds();
++
++		if ((res->timer != 0 && now > res->timer) ||
++		    (res->warnings != 0 && res->warnings >= qlim->warn)) {
++			*fatal = true;
++			return QUOTA_NL_ISOFTLONGWARN;
++		}
++
++		return QUOTA_NL_ISOFTWARN;
 +	}
 +
-+	return true;
-+}
-+
-+static inline void
-+xfs_setqlim_warns(
-+	struct xfs_dquot_res	*res,
-+	struct xfs_quota_limits	*qlim,
-+	int			warns)
-+{
-+	res->warnings = warns;
-+	if (qlim)
-+		qlim->warn = warns;
-+}
-+
-+static inline void
-+xfs_setqlim_timer(
-+	struct xfs_dquot_res	*res,
-+	struct xfs_quota_limits	*qlim,
-+	s64			timer)
-+{
-+	res->timer = timer;
-+	if (qlim)
-+		qlim->time = timer;
++	return QUOTA_NL_NOWARN;
 +}
 +
  /*
-  * Adjust quota limits, and start/stop timers accordingly.
-  */
-@@ -450,6 +502,8 @@ xfs_qm_scall_setqlim(
- 	struct xfs_dquot	*dqp;
- 	struct xfs_trans	*tp;
+  * This reserves disk blocks and inodes against a dquot.
+  * Flags indicate if the dquot is to be locked here and also
+@@ -569,99 +621,51 @@ xfs_trans_dqresv(
+ 	long			ninos,
+ 	uint			flags)
+ {
+-	xfs_qcnt_t		hardlimit;
+-	xfs_qcnt_t		softlimit;
+-	time64_t		timer;
+-	xfs_qwarncnt_t		warns;
+-	xfs_qwarncnt_t		warnlimit;
+-	xfs_qcnt_t		total_count;
+-	xfs_qcnt_t		*resbcountp;
+ 	struct xfs_quotainfo	*q = mp->m_quotainfo;
  	struct xfs_def_quota	*defq;
-+	struct xfs_dquot_res	*res;
+-
++	struct xfs_dquot_res	*blkres;
 +	struct xfs_quota_limits	*qlim;
- 	int			error;
- 	xfs_qcnt_t		hard, soft;
  
-@@ -489,102 +543,70 @@ xfs_qm_scall_setqlim(
- 	xfs_trans_dqjoin(tp, dqp);
+ 	xfs_dqlock(dqp);
+ 
+ 	defq = xfs_get_defquota(q, xfs_dquot_type(dqp));
+ 
+ 	if (flags & XFS_TRANS_DQ_RES_BLKS) {
+-		hardlimit = dqp->q_blk.hardlimit;
+-		if (!hardlimit)
+-			hardlimit = defq->blk.hard;
+-		softlimit = dqp->q_blk.softlimit;
+-		if (!softlimit)
+-			softlimit = defq->blk.soft;
+-		timer = dqp->q_blk.timer;
+-		warns = dqp->q_blk.warnings;
+-		warnlimit = defq->blk.warn;
+-		resbcountp = &dqp->q_blk.reserved;
++		blkres = &dqp->q_blk;
++		qlim = &defq->blk;
+ 	} else {
+-		ASSERT(flags & XFS_TRANS_DQ_RES_RTBLKS);
+-		hardlimit = dqp->q_rtb.hardlimit;
+-		if (!hardlimit)
+-			hardlimit = defq->rtb.hard;
+-		softlimit = dqp->q_rtb.softlimit;
+-		if (!softlimit)
+-			softlimit = defq->rtb.soft;
+-		timer = dqp->q_rtb.timer;
+-		warns = dqp->q_rtb.warnings;
+-		warnlimit = defq->rtb.warn;
+-		resbcountp = &dqp->q_rtb.reserved;
++		blkres = &dqp->q_rtb;
++		qlim = &defq->rtb;
+ 	}
+ 
+ 	if ((flags & XFS_QMOPT_FORCE_RES) == 0 && dqp->q_id &&
+ 	    ((XFS_IS_UQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISUDQ(dqp)) ||
+ 	     (XFS_IS_GQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISGDQ(dqp)) ||
+ 	     (XFS_IS_PQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISPDQ(dqp)))) {
+-		if (nblks > 0) {
++		int		quota_nl;
++		bool		fatal;
++
++		/*
++		 * dquot is locked already. See if we'd go over the hardlimit
++		 * or exceed the timelimit if we'd reserve resources.
++		 */
++		quota_nl = xfs_dqresv_check(blkres, qlim, nblks, &fatal);
++		if (quota_nl != QUOTA_NL_NOWARN) {
+ 			/*
+-			 * dquot is locked already. See if we'd go over the
+-			 * hardlimit or exceed the timelimit if we allocate
+-			 * nblks.
++			 * Quota block warning codes are 3 more than the inode
++			 * codes, which we check above.
+ 			 */
+-			total_count = *resbcountp + nblks;
+-			if (hardlimit && total_count > hardlimit) {
+-				xfs_quota_warn(mp, dqp, QUOTA_NL_BHARDWARN);
++			xfs_quota_warn(mp, dqp, quota_nl + 3);
++			if (fatal)
+ 				goto error_return;
+-			}
+-			if (softlimit && total_count > softlimit) {
+-				if ((timer != 0 &&
+-				     ktime_get_real_seconds() > timer) ||
+-				    (warns != 0 && warns >= warnlimit)) {
+-					xfs_quota_warn(mp, dqp,
+-						       QUOTA_NL_BSOFTLONGWARN);
+-					goto error_return;
+-				}
+-
+-				xfs_quota_warn(mp, dqp, QUOTA_NL_BSOFTWARN);
+-			}
+ 		}
+-		if (ninos > 0) {
+-			total_count = dqp->q_ino.reserved + ninos;
+-			timer = dqp->q_ino.timer;
+-			warns = dqp->q_ino.warnings;
+-			warnlimit = defq->ino.warn;
+-			hardlimit = dqp->q_ino.hardlimit;
+-			if (!hardlimit)
+-				hardlimit = defq->ino.hard;
+-			softlimit = dqp->q_ino.softlimit;
+-			if (!softlimit)
+-				softlimit = defq->ino.soft;
+ 
+-			if (hardlimit && total_count > hardlimit) {
+-				xfs_quota_warn(mp, dqp, QUOTA_NL_IHARDWARN);
++		quota_nl = xfs_dqresv_check(&dqp->q_ino, &defq->ino, ninos,
++				&fatal);
++		if (quota_nl != QUOTA_NL_NOWARN) {
++			xfs_quota_warn(mp, dqp, quota_nl);
++			if (fatal)
+ 				goto error_return;
+-			}
+-			if (softlimit && total_count > softlimit) {
+-				if  ((timer != 0 &&
+-				      ktime_get_real_seconds() > timer) ||
+-				     (warns != 0 && warns >= warnlimit)) {
+-					xfs_quota_warn(mp, dqp,
+-						       QUOTA_NL_ISOFTLONGWARN);
+-					goto error_return;
+-				}
+-				xfs_quota_warn(mp, dqp, QUOTA_NL_ISOFTWARN);
+-			}
+ 		}
+ 	}
+ 
+@@ -669,9 +673,8 @@ xfs_trans_dqresv(
+ 	 * Change the reservation, but not the actual usage.
+ 	 * Note that q_blk.reserved = q_blk.count + resv
+ 	 */
+-	(*resbcountp) += (xfs_qcnt_t)nblks;
+-	if (ninos != 0)
+-		dqp->q_ino.reserved += (xfs_qcnt_t)ninos;
++	blkres->reserved += (xfs_qcnt_t)nblks;
++	dqp->q_ino.reserved += (xfs_qcnt_t)ninos;
  
  	/*
-+	 * Update quota limits, warnings, and timers, and the defaults
-+	 * if we're touching id == 0.
-+	 *
- 	 * Make sure that hardlimits are >= soft limits before changing.
-+	 *
-+	 * Update warnings counter(s) if requested.
-+	 *
-+	 * Timelimits for the super user set the relative time the other users
-+	 * can be over quota for this file system. If it is zero a default is
-+	 * used.  Ditto for the default soft and hard limit values (already
-+	 * done, above), and for warnings.
-+	 *
-+	 * For other IDs, userspace can bump out the grace period if over
-+	 * the soft limit.
- 	 */
-+
-+	/* Blocks on the data device. */
- 	hard = (newlim->d_fieldmask & QC_SPC_HARD) ?
- 		(xfs_qcnt_t) XFS_B_TO_FSB(mp, newlim->d_spc_hardlimit) :
- 			dqp->q_blk.hardlimit;
- 	soft = (newlim->d_fieldmask & QC_SPC_SOFT) ?
- 		(xfs_qcnt_t) XFS_B_TO_FSB(mp, newlim->d_spc_softlimit) :
- 			dqp->q_blk.softlimit;
--	if (hard == 0 || hard >= soft) {
--		dqp->q_blk.hardlimit = hard;
--		dqp->q_blk.softlimit = soft;
-+	res = &dqp->q_blk;
-+	qlim = id == 0 ? &defq->blk : NULL;
-+
-+	if (xfs_setqlim_limits(mp, res, qlim, hard, soft, "blk"))
- 		xfs_dquot_set_prealloc_limits(dqp);
--		if (id == 0) {
--			defq->blk.hard = hard;
--			defq->blk.soft = soft;
--		}
--	} else {
--		xfs_debug(mp, "blkhard %Ld < blksoft %Ld", hard, soft);
--	}
-+	if (newlim->d_fieldmask & QC_SPC_WARNS)
-+		xfs_setqlim_warns(res, qlim, newlim->d_spc_warns);
-+	if (newlim->d_fieldmask & QC_SPC_TIMER)
-+		xfs_setqlim_timer(res, qlim, newlim->d_spc_timer);
-+
-+	/* Blocks on the realtime device. */
- 	hard = (newlim->d_fieldmask & QC_RT_SPC_HARD) ?
- 		(xfs_qcnt_t) XFS_B_TO_FSB(mp, newlim->d_rt_spc_hardlimit) :
- 			dqp->q_rtb.hardlimit;
- 	soft = (newlim->d_fieldmask & QC_RT_SPC_SOFT) ?
- 		(xfs_qcnt_t) XFS_B_TO_FSB(mp, newlim->d_rt_spc_softlimit) :
- 			dqp->q_rtb.softlimit;
--	if (hard == 0 || hard >= soft) {
--		dqp->q_rtb.hardlimit = hard;
--		dqp->q_rtb.softlimit = soft;
--		if (id == 0) {
--			defq->rtb.hard = hard;
--			defq->rtb.soft = soft;
--		}
--	} else {
--		xfs_debug(mp, "rtbhard %Ld < rtbsoft %Ld", hard, soft);
--	}
-+	res = &dqp->q_rtb;
-+	qlim = id == 0 ? &defq->rtb : NULL;
- 
-+	xfs_setqlim_limits(mp, res, qlim, hard, soft, "rtb");
-+	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
-+		xfs_setqlim_warns(res, qlim, newlim->d_rt_spc_warns);
-+	if (newlim->d_fieldmask & QC_RT_SPC_TIMER)
-+		xfs_setqlim_timer(res, qlim, newlim->d_rt_spc_timer);
-+
-+	/* Inodes */
- 	hard = (newlim->d_fieldmask & QC_INO_HARD) ?
- 		(xfs_qcnt_t) newlim->d_ino_hardlimit :
- 			dqp->q_ino.hardlimit;
- 	soft = (newlim->d_fieldmask & QC_INO_SOFT) ?
- 		(xfs_qcnt_t) newlim->d_ino_softlimit :
- 			dqp->q_ino.softlimit;
--	if (hard == 0 || hard >= soft) {
--		dqp->q_ino.hardlimit = hard;
--		dqp->q_ino.softlimit = soft;
--		if (id == 0) {
--			defq->ino.hard = hard;
--			defq->ino.soft = soft;
--		}
--	} else {
--		xfs_debug(mp, "ihard %Ld < isoft %Ld", hard, soft);
--	}
-+	res = &dqp->q_ino;
-+	qlim = id == 0 ? &defq->ino : NULL;
- 
--	/*
--	 * Update warnings counter(s) if requested
--	 */
--	if (newlim->d_fieldmask & QC_SPC_WARNS)
--		dqp->q_blk.warnings = newlim->d_spc_warns;
-+	xfs_setqlim_limits(mp, res, qlim, hard, soft, "ino");
- 	if (newlim->d_fieldmask & QC_INO_WARNS)
--		dqp->q_ino.warnings = newlim->d_ino_warns;
--	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
--		dqp->q_rtb.warnings = newlim->d_rt_spc_warns;
--
--	if (id == 0) {
--		if (newlim->d_fieldmask & QC_SPC_WARNS)
--			defq->blk.warn = newlim->d_spc_warns;
--		if (newlim->d_fieldmask & QC_INO_WARNS)
--			defq->ino.warn = newlim->d_ino_warns;
--		if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
--			defq->rtb.warn = newlim->d_rt_spc_warns;
--	}
--
--	/*
--	 * Timelimits for the super user set the relative time the other users
--	 * can be over quota for this file system. If it is zero a default is
--	 * used.  Ditto for the default soft and hard limit values (already
--	 * done, above), and for warnings.
--	 *
--	 * For other IDs, userspace can bump out the grace period if over
--	 * the soft limit.
--	 */
--	if (newlim->d_fieldmask & QC_SPC_TIMER)
--		dqp->q_blk.timer = newlim->d_spc_timer;
-+		xfs_setqlim_warns(res, qlim, newlim->d_ino_warns);
- 	if (newlim->d_fieldmask & QC_INO_TIMER)
--		dqp->q_ino.timer = newlim->d_ino_timer;
--	if (newlim->d_fieldmask & QC_RT_SPC_TIMER)
--		dqp->q_rtb.timer = newlim->d_rt_spc_timer;
--
--	if (id == 0) {
--		if (newlim->d_fieldmask & QC_SPC_TIMER)
--			defq->blk.time = newlim->d_spc_timer;
--		if (newlim->d_fieldmask & QC_INO_TIMER)
--			defq->ino.time = newlim->d_ino_timer;
--		if (newlim->d_fieldmask & QC_RT_SPC_TIMER)
--			defq->rtb.time = newlim->d_rt_spc_timer;
--	}
-+		xfs_setqlim_timer(res, qlim, newlim->d_ino_timer);
- 
- 	if (id != 0) {
- 		/*
+ 	 * note the reservation amt in the trans struct too,
 
