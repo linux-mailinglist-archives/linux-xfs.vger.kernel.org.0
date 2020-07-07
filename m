@@ -2,73 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB953216E9D
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jul 2020 16:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0C7C216EC4
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jul 2020 16:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGGOUl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jul 2020 10:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGOUl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jul 2020 10:20:41 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A05C061755
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jul 2020 07:20:40 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id g6so739350ybo.11
-        for <linux-xfs@vger.kernel.org>; Tue, 07 Jul 2020 07:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=QiIvUXEMSbhv4aTIL/lb/CF18a7ih2Gjm2vHJ+Sw6zk=;
-        b=QE611IKF91Ov91ajtTtCl5nz1QAW4ibGrGyqxiqqpEzzyAqGvn8vycXtKjmWH7GpLs
-         Q8i4l6XI/AXL2/5XrIC6sNyN6PTZlOQyrg8iV+UUSgDcC8e5p+s8QqX6vAZ//INEUVCE
-         rV333+YOuc1rLin64RjjAD4dvJqy2h+qF8jzJ9XxZqOpXHUDyUdXWYslHMb17ArOiJ5j
-         WOarcrLNPCLPGc8/+zVbORlv071c/U4tbfbJt39d/NCedjAaL/Vx6UzjKVMgFQs/4QhI
-         WIBGr78XM4WGmiJit+zuI/JWjeLCfHNI/4Mxq4mGzhzgO81C7P1HYLt+IIlGkD6JmiQr
-         jmkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=QiIvUXEMSbhv4aTIL/lb/CF18a7ih2Gjm2vHJ+Sw6zk=;
-        b=DNMOWtzOJJJljIJsIHgQxOA4kycCGiH1z2xl6ibMODghGHEHtOBfjst6hHJ5sC8773
-         8wMeccCAzKl5P1/YZUmsd0RMPiFLWcfcp7a4k4eMV/v3UmG2NEwB8TdbJVYS2noxbGXt
-         n3tWkhW3aHdHxPAu4EJnpnwlbV+rZOTsgLJMXk4K43+kwOSAlLNVEjSZin15qWHqbMSl
-         /6OJ5ObJWoVe/lVZ7JfnsTu8etuEqAHw13ZAyzx1/aEoJaIMdRbqVzILl+cgHe134/7h
-         4wQKmU4Z6iXQ6n9zWCPM0Qtx2beyW4p6YQkF+EPwnkB3NiG3n6mwcYGaFnyToOQqCj5T
-         IQSQ==
-X-Gm-Message-State: AOAM532/V7dgg4nsg0qmZexc8H5yGpAjtJe3/How1e/dit8ReaQ0i5lD
-        iiKpt34LnGfQBXgaMohEkzwicjEixa2AKL81B48=
-X-Google-Smtp-Source: ABdhPJxAQ37DOON3uCzTI6iypNKSjk71sVPxV9CwRFphn7Nq+ljsqPmsmixp/D3UoGj/XFfZjBG71JTtoTV1M1TgS/Q=
-X-Received: by 2002:a25:6d02:: with SMTP id i2mr93169707ybc.365.1594131640316;
- Tue, 07 Jul 2020 07:20:40 -0700 (PDT)
+        id S1725944AbgGGObB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jul 2020 10:31:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59190 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727995AbgGGObB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:31:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D97A6AC6E;
+        Tue,  7 Jul 2020 14:30:59 +0000 (UTC)
+Date:   Tue, 7 Jul 2020 09:30:56 -0500
+From:   Goldwyn Rodrigues <rgoldwyn@suse.de>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, fdmanana@gmail.com, dsterba@suse.cz,
+        david@fromorbit.com, cluster-devel@redhat.com,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: always fall back to buffered I/O after invalidation failures,
+ was: Re: [PATCH 2/6] iomap: IOMAP_DIO_RWF_NO_STALE_PAGECACHE return if page
+ invalidation fails
+Message-ID: <20200707143056.t7zf3xqvocty64td@fiona>
+References: <20200629192353.20841-1-rgoldwyn@suse.de>
+ <20200629192353.20841-3-rgoldwyn@suse.de>
+ <20200701075310.GB29884@lst.de>
+ <20200707124346.xnr5gtcysuzehejq@fiona>
+ <20200707125705.GK25523@casper.infradead.org>
+ <20200707134952.3niqhxngwh3gus54@fiona>
+ <20200707140120.GJ7606@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a25:440a:0:0:0:0:0 with HTTP; Tue, 7 Jul 2020 07:20:39 -0700 (PDT)
-Reply-To: sunnyabula0@gmail.com
-From:   Sunny Abula <hawjulmoi@gmail.com>
-Date:   Tue, 7 Jul 2020 07:20:39 -0700
-Message-ID: <CAJdfahTCCcjN1-JJX1RmZ_+QZ=78Kg+50peb_xqtaR+paT0+xA@mail.gmail.com>
-Subject: hello dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707140120.GJ7606@magnolia>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear friend,
-I emailed you weeks ago without getting a response. On my first
-message I mentioned about my late client that died without a last WILL
-and STESTAMENT,his relatives I could not get in touch with for years
-now, but both of you have the same last name so it will be very easy
-to present you as his official next of kin. I am compelled to do this
-because I would not want the bank to push the funds into their
-treasury as unclaimed inheritance. If you are interested, do let me
-know so that I can give you comprehensive details on how we are to get
-this done. Therefore, I would like to present you as the beneficiary
-or next kin because of the similarity in Last name; so I want you to
-work with me to secure it for our mutual benefit do let me know of
-your interest by contacted me urgently.
+On  7:01 07/07, Darrick J. Wong wrote:
+> On Tue, Jul 07, 2020 at 08:49:52AM -0500, Goldwyn Rodrigues wrote:
+> > On 13:57 07/07, Matthew Wilcox wrote:
+> > > On Tue, Jul 07, 2020 at 07:43:46AM -0500, Goldwyn Rodrigues wrote:
+> > > > On  9:53 01/07, Christoph Hellwig wrote:
+> > > > > On Mon, Jun 29, 2020 at 02:23:49PM -0500, Goldwyn Rodrigues wrote:
+> > > > > > From: Goldwyn Rodrigues <rgoldwyn@suse.com>
+> > > > > > 
+> > > > > > For direct I/O, add the flag IOMAP_DIO_RWF_NO_STALE_PAGECACHE to indicate
+> > > > > > that if the page invalidation fails, return back control to the
+> > > > > > filesystem so it may fallback to buffered mode.
+> > > > > > 
+> > > > > > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > > > Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+> > > > > 
+> > > > > I'd like to start a discussion of this shouldn't really be the
+> > > > > default behavior.  If we have page cache that can't be invalidated it
+> > > > > actually makes a whole lot of sense to not do direct I/O, avoid the
+> > > > > warnings, etc.
+> > > > > 
+> > > > > Adding all the relevant lists.
+> > > > 
+> > > > Since no one responded so far, let me see if I can stir the cauldron :)
+> > > > 
+> > > > What error should be returned in case of such an error? I think the
+> > > 
+> > > Christoph's message is ambiguous.  I don't know if he means "fail the
+> > > I/O with an error" or "satisfy the I/O through the page cache".  I'm
+> > > strongly in favour of the latter.  Indeed, I'm in favour of not invalidating
+> > > the page cache at all for direct I/O.  For reads, I think the page cache
+> > > should be used to satisfy any portion of the read which is currently
+> > 
+> > That indeed would make reads faster. How about if the pages are dirty
+> > during DIO reads?
+> > Should a direct I/O read be responsible for making sure that the dirty
+> > pages are written back. Technically direct I/O reads is that we are
+> > reading from the device.
+> 
+> The filemap_write_and_wait_range should persist that data, right?
 
-Thanks!
-Law chez Rustico Lawson-Banku Esq.
+Right. filemap_write_and_wait_range() would not make sense for writes
+though.
+
+> 
+> > > cached.  For writes, I think we should write into the page cache pages
+> > > which currently exist, and then force those pages to be written back,
+> > > but left in cache.
+> > 
+> > Yes, that makes sense.
+> > If this is implemented, what would be the difference between O_DIRECT
+> > and O_DSYNC, if any?
+> 
+> Presumably a direct write would proceed as it does today if there's no
+> pagecache at all?
+> 
+
+Yes, correct. Just that it would leave pages in the cache instead of
+invalidating it after DIO write is complete.
+
+-- 
+Goldwyn
