@@ -2,155 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F4AC216E70
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jul 2020 16:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1383B216E90
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jul 2020 16:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgGGONQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jul 2020 10:13:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21646 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726900AbgGGONQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jul 2020 10:13:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594131194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MPqCsE7HqxAJ6Im+aZc6PTyD9We/DvyQryMp1kZyf0s=;
-        b=Mdj3nQuhSsorWSY4scGZALdm8KpeNpvxWsn1Phh8hPpta4aUn/THdgx6c6I0kRF/e4P30N
-        9K+MSBmWRkLHp6KIBTgi+LzrV2auSGGwiOlbN0lwxSpIZQf+7onOk+fVOid6c4IMb20mzs
-        /fv6YilfgJDFBqGiekdOinX82x1gEFg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472--vH1ABrXOResK8YJRL83kg-1; Tue, 07 Jul 2020 10:13:12 -0400
-X-MC-Unique: -vH1ABrXOResK8YJRL83kg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18900107ACCA;
-        Tue,  7 Jul 2020 14:13:11 +0000 (UTC)
-Received: from bfoster (ovpn-112-122.rdu2.redhat.com [10.10.112.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 813A85C1BB;
-        Tue,  7 Jul 2020 14:13:10 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 10:13:08 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] xfs_repair: try to fill the AGFL before we fix the
- freelist
-Message-ID: <20200707141308.GA55781@bfoster>
-References: <159370361029.3579756.1711322369086095823.stgit@magnolia>
- <159370362968.3579756.14752877317465395252.stgit@magnolia>
- <20200707125906.GB37141@bfoster>
- <20200707140708.GK7606@magnolia>
+        id S1728329AbgGGOSi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jul 2020 10:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgGGOSi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jul 2020 10:18:38 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E963CC061755
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Jul 2020 07:18:37 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id 187so20689411ybq.2
+        for <linux-xfs@vger.kernel.org>; Tue, 07 Jul 2020 07:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=QiIvUXEMSbhv4aTIL/lb/CF18a7ih2Gjm2vHJ+Sw6zk=;
+        b=tLvUpeEjQOTAKlRDI6MSOmcVuDYMUgeUrhEqpBE8zS32dUG1lOFprVa2J71xzeQzLv
+         0BIflyMdrxa+63ccmGNww0TLm8fV7h67tLRM6GLw5syH63Gp1QhFUnK4nGJv/jQktakg
+         T9CFiy+BCOAj3UIzG+hJ8Ms6iHd0O2Op2Azf7CoF0VuAeFXmS+NhP4gVvD3RNEHJNTJi
+         9JD+psKhL14YnioThz5oAk9ovifNwhh8j2wGUjymEdxPHerD0cFcyTg1rEyMZDJIKx+o
+         YxTAyG6KZ54wvbfDtOacpuJKJU8Tfk0y26G3vf2HEKWrxV2FrdX/npfEicriuSbhW2YD
+         Wplw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=QiIvUXEMSbhv4aTIL/lb/CF18a7ih2Gjm2vHJ+Sw6zk=;
+        b=OmzML3qc3IVVRZvj71R5w4bfav3mjN82AAXe5XZPWTsymCJuwrCBl/kVTcyEKFK2lN
+         dn966Pcv8oqz0+uRKMa8KVr5ckEK5e1CRyKPwov9S8+Rd2G9T9ahfHmRcNCm6EpZzMjq
+         TxJrz4piFfgLYn1NsUy+qv1LllVAqtwwHfZGrpPSdqlTN2sxdWJY69odyVwtxOSHOKsb
+         1J9UGBMBNKUg3db5N6I511QAQR65Hum0hzbtOmFIN4h/qVGHBkXQiMxfgxQDfVP0RvkE
+         JRKB9z7C7OUoWA/tdxG0hhwLlE3puAiMuSGzSIsMDz1CWaMox2BU/6Yt32FHggKKKxSr
+         wR4A==
+X-Gm-Message-State: AOAM532nuii1+WHpS2/H1gYHRlkvVqUDWh0m39dY4DMCW3TC9tmPvrQi
+        CUyCDAl2e97KzvwM0l163dx1Ps1DdA5sYywAllQ=
+X-Google-Smtp-Source: ABdhPJz47P9wptXF6/KgfGneUswjRoyY8Pd0rN9tuvg48cgelt+fdoWuEQm6UdQp8COhVRm2Bh6u9xpSFZVALjidII8=
+X-Received: by 2002:a25:c711:: with SMTP id w17mr5724232ybe.465.1594131516411;
+ Tue, 07 Jul 2020 07:18:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200707140708.GK7606@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a25:440a:0:0:0:0:0 with HTTP; Tue, 7 Jul 2020 07:18:36 -0700 (PDT)
+Reply-To: sunnyabula0@gmail.com
+From:   Sunny Abula <hawjulmoi@gmail.com>
+Date:   Tue, 7 Jul 2020 07:18:36 -0700
+Message-ID: <CAJdfahRi1UJyR1h5js0ipaSMPmET=7VfeuhqGzg-=+QL056XCA@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 07:07:08AM -0700, Darrick J. Wong wrote:
-> On Tue, Jul 07, 2020 at 08:59:06AM -0400, Brian Foster wrote:
-> > On Thu, Jul 02, 2020 at 08:27:09AM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > In commit 9851fd79bfb1, we added a slight amount of slack to the free
-> > > space btrees being reconstructed so that the initial fix_freelist call
-> > > (which is run against a totally empty AGFL) would never have to split
-> > > either free space btree in order to populate the free list.
-> > > 
-> > > The new btree bulk loading code in xfs_repair can re-create this
-> > > situation because it can set the slack values to zero if the filesystem
-> > > is very full.  However, these days repair has the infrastructure needed
-> > > to ensure that overestimations of the btree block counts end up on the
-> > > AGFL or get freed back into the filesystem at the end of phase 5.
-> > > 
-> > > Fix this problem by reserving extra blocks in the bnobt reservation, and
-> > > checking that there are enough overages in the bnobt/cntbt fakeroots to
-> > > populate the AGFL with the minimum number of blocks it needs to handle a
-> > > split in the bno/cnt/rmap btrees.
-> > > 
-> > > Note that we reserve blocks for the new bnobt/cntbt/AGFL at the very end
-> > > of the reservation steps in phase 5, so the extra allocation should not
-> > > cause repair to fail if it can't find blocks for btrees.
-> > > 
-> > > Fixes: 9851fd79bfb1 ("repair: AGFL rebuild fails if btree split required")
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  repair/agbtree.c |   51 ++++++++++++++++++++++++++++++++++++++++++++-------
-> > >  1 file changed, 44 insertions(+), 7 deletions(-)
-> > > 
-> > > 
-> > > diff --git a/repair/agbtree.c b/repair/agbtree.c
-> > > index de8015ec..9f64d54b 100644
-> > > --- a/repair/agbtree.c
-> > > +++ b/repair/agbtree.c
-> > ...
-> > > @@ -268,16 +288,33 @@ _("Unable to compute free space by length btree geometry, error %d.\n"), -error)
-> > >  				 btr_cnt->bload.nr_blocks;
-> > >  
-> > >  		/* We don't need any more blocks, so we're done. */
-> > > -		if (delta_bno >= 0 && delta_cnt >= 0) {
-> > > +		if (delta_bno >= 0 && delta_cnt >= 0 &&
-> > > +		    delta_bno + delta_cnt >= agfl_goal) {
-> > >  			*extra_blocks = delta_bno + delta_cnt;
-> > >  			break;
-> > >  		}
-> > >  
-> > >  		/* Allocate however many more blocks we need this time. */
-> > > -		if (delta_bno < 0)
-> > > +		if (delta_bno < 0) {
-> > >  			reserve_btblocks(sc->mp, agno, btr_bno, -delta_bno);
-> > > -		if (delta_cnt < 0)
-> > > +			delta_bno = 0;
-> > > +		}
-> > > +		if (delta_cnt < 0) {
-> > >  			reserve_btblocks(sc->mp, agno, btr_cnt, -delta_cnt);
-> > > +			delta_cnt = 0;
-> > > +		}
-> > > +
-> > > +		/*
-> > > +		 * Try to fill the bnobt cursor with extra blocks to populate
-> > > +		 * the AGFL.  If we don't get all the blocks we want, stop
-> > > +		 * trying to fill the AGFL because the AG is totally out of
-> > > +		 * space.
-> > > +		 */
-> > > +		agfl_wanted = agfl_goal - (delta_bno + delta_cnt);
-> > > +		if (agfl_wanted > 0 &&
-> > > +		    agfl_wanted != reserve_agblocks(sc->mp, agno, btr_bno,
-> > > +						    agfl_wanted))
-> > > +			agfl_goal = 0;
-> > 
-> > Nit: can we split off the function call so it's not embedded in the if
-> > condition? With that tweak:
-> 
-> It occurs to me that we don't care how much we fall short of the
-> requested allocation.  I could change reserve_agblocks to return true if
-> it got all the blocks it was asked to get, and then that becomes:
-> 
-> 		if (agfl_wanted > 0 &&
-> 		    !reserve_agblocks(sc->mp, agno, btr_bno, agfl_wanted)
-> 			agfl_goal = 0;
-> 
-> How does that sound?
-> 
+Dear friend,
+I emailed you weeks ago without getting a response. On my first
+message I mentioned about my late client that died without a last WILL
+and STESTAMENT,his relatives I could not get in touch with for years
+now, but both of you have the same last name so it will be very easy
+to present you as his official next of kin. I am compelled to do this
+because I would not want the bank to push the funds into their
+treasury as unclaimed inheritance. If you are interested, do let me
+know so that I can give you comprehensive details on how we are to get
+this done. Therefore, I would like to present you as the beneficiary
+or next kin because of the similarity in Last name; so I want you to
+work with me to secure it for our mutual benefit do let me know of
+your interest by contacted me urgently.
 
-Looks readable enough to me, thanks.
-
-Brian
-
-> --D
-> 
-> > Reviewed-by: Brian Foster <bfoster@redhat.com>
-> > 
-> > >  
-> > >  		/* Ok, now how many free space records do we have? */
-> > >  		*nr_extents = count_bno_extents_blocks(agno, &num_freeblocks);
-> > > 
-> > 
-> 
-
+Thanks!
+Law chez Rustico Lawson-Banku Esq.
