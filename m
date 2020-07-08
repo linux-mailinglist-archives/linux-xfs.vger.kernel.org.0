@@ -2,62 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D370F218005
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jul 2020 08:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C66EB218776
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jul 2020 14:33:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgGHGzR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jul 2020 02:55:17 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:58095 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726194AbgGHGzR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jul 2020 02:55:17 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 799B3D59974;
-        Wed,  8 Jul 2020 16:55:13 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jt3z6-0003hJ-1d; Wed, 08 Jul 2020 16:55:12 +1000
-Date:   Wed, 8 Jul 2020 16:55:12 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use fallthrough pseudo-keyword
-Message-ID: <20200708065512.GN2005@dread.disaster.area>
-References: <20200707200504.GA4796@embeddedor>
- <20200707205036.GL7606@magnolia>
- <96f58df8a489093fb239cea8d36768b921269056.camel@perches.com>
+        id S1729217AbgGHMdg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jul 2020 08:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729261AbgGHMdd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jul 2020 08:33:33 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89E3C08E9A9
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Jul 2020 05:33:31 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id i3so34253226qtq.13
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Jul 2020 05:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=CtDA46Te1kJYGFqAkgr9Vub/YrG6WB2S+VlEURQEEM4x6m9sjli+Jz/yotFRmV/AMR
+         T/h2d+e8At09eChsFX2C+mUFLH+FsdwAy78KAtzHqTPpG69rhvmbmMUpZSALFUdgKxT3
+         rKV4TF8A0J+Za5tWsTPtObTKnCJJSeTUvLM0KCUCLapZUiUA/CE0qJguNsnmAcBYT7Bw
+         PUSSiRKtit7eL05YbTu8d4vZk3Rk52mtpEQs926eluhEg6IUrqIesfOKILheZFFzZp0P
+         0kRnPxRkSyAb2gIupk6cQmoDhkGW5ga2ONIfRh7Ui0T+vXHI9OfE4hLpnUDNkQjQgdsE
+         pxTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=A4RUABFR+NOnXKVyLFL0BwlaNqsV7GXwIFPEaXf14BfiPjyh7jJGJDzz9VtQJ37zHe
+         GUMEto59oQ6I8Dg6E+95s0I4x1niVApcmdTmqXs+6Q24zmyjvysG2A8xOynh7iobw3md
+         UY3Kwx7sKqMpUL5sz0nPiFAVVlr6tWV915ugNk8LuFY9pwdqzyPUo+/kz5aVk/VJAOSK
+         AM67e03pNrb3AXwk0PosyMk46TcU+WpmHR7zXuQXM/O19ueGriiATUF8n0rjWsu9EBQr
+         xhr9gS5ANhv+ax1kXHaf3Q2uaspBExhv1DRhRWdcMHBcFI/AN7PImBGkGcAxkt74hlex
+         DlxA==
+X-Gm-Message-State: AOAM5330q1aO5BzY6dEGj0Ua2y3AyMua117yt3Kqn1weyVUgf44bMmTZ
+        3A4mcGoY6a5o59y0COpY3JBjChDqpOjf8Z19ilLoYlhPmX4=
+X-Google-Smtp-Source: ABdhPJy69qBRFRW2d2u+0xyGHVfmVbQRW6SQ4gKLQIvGwSNWfhZDhNcIlxNh+7AirNZFy3An0aJSkt25Q8y7juQZu8o=
+X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr64754290jas.56.1594211609022;
+ Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96f58df8a489093fb239cea8d36768b921269056.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8
-        a=AdeI-h9QSvwSZK6rD4QA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Received: by 2002:a05:6602:1582:0:0:0:0 with HTTP; Wed, 8 Jul 2020 05:33:28
+ -0700 (PDT)
+Reply-To: mmsafiatou057@gmail.com
+From:   "Mrs. Safitaou Zoungrana" <richardlaurentdr@gmail.com>
+Date:   Wed, 8 Jul 2020 12:33:28 +0000
+Message-ID: <CALJAiTVXhrKZYOHVoupnx6hmXXD0i2k4MOSO6HW+mj1BAydXhA@mail.gmail.com>
+Subject: My Dear Beloved One,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 06:48:29PM -0700, Joe Perches wrote:
-> On Tue, 2020-07-07 at 13:50 -0700, Darrick J. Wong wrote:
-> > On Tue, Jul 07, 2020 at 03:05:04PM -0500, Gustavo A. R. Silva wrote:
-> > > Replace the existing /* fall through */ comments and its variants with
-> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > > fall-through markings when it is the case.
-> []
-> > I don't get it, what's the point?  Are gcc/clang
-> > refusing to support -Wimplicit-fallthrough=[1-4] past a certain date?
-> 
-> clang doesn't support comments
+My Dear Beloved One,
 
-So fix the damn compiler.
+I greet you in the name of God almighty the givers of all good things
+in life. Please kindly pardon me for any inconvenience this letter may
+cost you because I know it may come to you as a surprise as we have no
+previous correspondence.  I sent this mail praying for it to reach you
+in good health, since I myself are in a very critical health condition
+in which I sleep every night without knowing if I may be alive to see
+the next day.
 
--Dave
--- 
-Dave Chinner
-david@fromorbit.com
+I am Mrs. Safiatou Zoungrana,  the wife of late Engineer Ralph
+Alphonso Zoungrana from Paris France but based here in Burkina Faso
+West Africa since eight years ago as a business woman dealing with
+gold exportation and Sales. We have been married for years before his
+sudden death although we were childless. I have been diagnosed with
+ovarian cancer and I have been battling with the sickness when my late
+lovely husband of a blessed memory was alive. May his soul rest in
+peace, Amen.
+
+My late Husband left the sum of =E2=82=AC7.900.000.00 Seven Million Nine
+Hundred Thousand Euros in a fix/suspense account in one of the prime
+bank here in Burkina Faso. Recently, my Doctor told me that I have few
+days to live due to the cancer problem. The one that disturbs me most
+is my blood pressure sickness.
+
+Having known my health condition I decided to seek for your kind
+assistance to transfer this fund into your account and you will use it
+to establish an orphanage home in my name. I will give you more
+details about the project as soon as I receive your reply in my
+private email (mmsafiatou057@gmail.com) to handle this project because
+I do not want to state all here until I see your reply, desire and
+commitment to handle this project.
+
+My Regards to your family.
+Mrs. Safiatou Zoungrana.
