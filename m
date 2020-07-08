@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B8AC21882F
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jul 2020 14:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35685218831
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jul 2020 14:56:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgGHM4b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jul 2020 08:56:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48056 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729000AbgGHM4V (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jul 2020 08:56:21 -0400
+        id S1728759AbgGHM4e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jul 2020 08:56:34 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45554 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729122AbgGHM4X (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jul 2020 08:56:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594212980;
+        s=mimecast20190719; t=1594212981;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GU0UHPzCc048daRkKrQVD7mnrk6b3HDIf7306WMe/r8=;
-        b=MqPTJh6j4YjPs5zAO0tT0S+dOYgbQv627zHYLg8aT7CBUfqANBORmPQRuycyHZtC3YL1mM
-        r3r0SHroXdbWTkO3/bk6modVrvBedGqjjy7ANrGSnvC74rQLx0Pz81rNJoHZEKsFZKZaBI
-        kicvCHSQODa7c9BjkmdgMc4dxP6cAKo=
+        bh=LMLb2qZoSVu03BXx+vGPzqIar79gY1bq6IR2KeUnBTI=;
+        b=YptntORd+56gqotvRxuBdXpVAh2zE6wnysyT5KyFLZJx96hhwNOXYZCXG2ux9lPyy84kGs
+        EpGc8OxpVlR3sdLmrk7yKtDOyr/8kaZyKLSF1SgflQFDwPqfe61BQ6TRsbtPjunrj8OgVk
+        fLtHh9go3TgUiJan4w0HkU41xJ1KMZo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-wRjahmwdO2SWd_rnFDhxlw-1; Wed, 08 Jul 2020 08:56:18 -0400
-X-MC-Unique: wRjahmwdO2SWd_rnFDhxlw-1
+ us-mta-247-iVajLQxzMWa31SfBEYx3qA-1; Wed, 08 Jul 2020 08:56:20 -0400
+X-MC-Unique: iVajLQxzMWa31SfBEYx3qA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC01F1005510
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Jul 2020 12:56:17 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B81F193F56D
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Jul 2020 12:56:19 +0000 (UTC)
 Received: from eorzea.redhat.com (unknown [10.40.194.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BC1E60E3E
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Jul 2020 12:56:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A211D60E3E
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Jul 2020 12:56:18 +0000 (UTC)
 From:   Carlos Maiolino <cmaiolino@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 3/4] xfs: Modify xlog_ticket_alloc() to use kernel's MM API
-Date:   Wed,  8 Jul 2020 14:56:07 +0200
-Message-Id: <20200708125608.155645-4-cmaiolino@redhat.com>
+Subject: [PATCH 4/4] xfs: remove xfs_zone_{alloc,zalloc} helpers
+Date:   Wed,  8 Jul 2020 14:56:08 +0200
+Message-Id: <20200708125608.155645-5-cmaiolino@redhat.com>
 In-Reply-To: <20200708125608.155645-1-cmaiolino@redhat.com>
 References: <20200708125608.155645-1-cmaiolino@redhat.com>
 MIME-Version: 1.0
@@ -48,71 +48,76 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-change xlog_ticket_alloc() to use default kmem_cache_zalloc(), and
-modify its callers to pass MM flags as arguments.
+All their users have been converted to use MM API directly, no need to
+keep them around anymore.
 
 Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 ---
- fs/xfs/xfs_log.c      | 7 ++++---
- fs/xfs/xfs_log_cil.c  | 2 +-
- fs/xfs/xfs_log_priv.h | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ fs/xfs/kmem.c      | 21 ---------------------
+ fs/xfs/kmem.h      |  8 --------
+ fs/xfs/xfs_trace.h |  1 -
+ 3 files changed, 30 deletions(-)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 00fda2e8e7380..6d40d479e34a1 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -433,7 +433,8 @@ xfs_log_reserve(
- 	XFS_STATS_INC(mp, xs_try_logspace);
+diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+index f1366475c389c..e841ed781a257 100644
+--- a/fs/xfs/kmem.c
++++ b/fs/xfs/kmem.c
+@@ -115,24 +115,3 @@ kmem_realloc(const void *old, size_t newsize, xfs_km_flags_t flags)
+ 		congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 	} while (1);
+ }
+-
+-void *
+-kmem_zone_alloc(kmem_zone_t *zone, xfs_km_flags_t flags)
+-{
+-	int	retries = 0;
+-	gfp_t	lflags = kmem_flags_convert(flags);
+-	void	*ptr;
+-
+-	trace_kmem_zone_alloc(kmem_cache_size(zone), flags, _RET_IP_);
+-	do {
+-		ptr = kmem_cache_alloc(zone, lflags);
+-		if (ptr || (flags & KM_MAYFAIL))
+-			return ptr;
+-		if (!(++retries % 100))
+-			xfs_err(NULL,
+-		"%s(%u) possible memory allocation deadlock in %s (mode:0x%x)",
+-				current->comm, current->pid,
+-				__func__, lflags);
+-		congestion_wait(BLK_RW_ASYNC, HZ/50);
+-	} while (1);
+-}
+diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+index 34cbcfde92281..8e8555817e6d3 100644
+--- a/fs/xfs/kmem.h
++++ b/fs/xfs/kmem.h
+@@ -85,14 +85,6 @@ kmem_zalloc_large(size_t size, xfs_km_flags_t flags)
+ #define kmem_zone	kmem_cache
+ #define kmem_zone_t	struct kmem_cache
  
- 	ASSERT(*ticp == NULL);
--	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent, 0);
-+	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent,
-+				(GFP_KERNEL | __GFP_NOFAIL));
- 	*ticp = tic;
- 
- 	xlog_grant_push_ail(log, tic->t_cnt ? tic->t_unit_res * tic->t_cnt
-@@ -3409,12 +3410,12 @@ xlog_ticket_alloc(
- 	int			cnt,
- 	char			client,
- 	bool			permanent,
--	xfs_km_flags_t		alloc_flags)
-+	gfp_t			alloc_flags)
+-extern void *kmem_zone_alloc(kmem_zone_t *, xfs_km_flags_t);
+-
+-static inline void *
+-kmem_zone_zalloc(kmem_zone_t *zone, xfs_km_flags_t flags)
+-{
+-	return kmem_zone_alloc(zone, flags | KM_ZERO);
+-}
+-
+ static inline struct page *
+ kmem_to_page(void *addr)
  {
- 	struct xlog_ticket	*tic;
- 	int			unit_res;
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 460136628a795..d8f5f3d99bb8f 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -3582,7 +3582,6 @@ DEFINE_KMEM_EVENT(kmem_alloc);
+ DEFINE_KMEM_EVENT(kmem_alloc_io);
+ DEFINE_KMEM_EVENT(kmem_alloc_large);
+ DEFINE_KMEM_EVENT(kmem_realloc);
+-DEFINE_KMEM_EVENT(kmem_zone_alloc);
  
--	tic = kmem_zone_zalloc(xfs_log_ticket_zone, alloc_flags);
-+	tic = kmem_cache_zalloc(xfs_log_ticket_zone, alloc_flags);
- 	if (!tic)
- 		return NULL;
- 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 9ed90368ab311..636c53a62cd3f 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -38,7 +38,7 @@ xlog_cil_ticket_alloc(
- 	struct xlog_ticket *tic;
- 
- 	tic = xlog_ticket_alloc(log, 0, 1, XFS_TRANSACTION, 0,
--				KM_NOFS);
-+				(GFP_NOFS | __GFP_NOFAIL));
- 
- 	/*
- 	 * set the current reservation to zero so we know to steal the basic
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 75a62870b63af..039b5cf6e692e 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -465,7 +465,7 @@ xlog_ticket_alloc(
- 	int		count,
- 	char		client,
- 	bool		permanent,
--	xfs_km_flags_t	alloc_flags);
-+	gfp_t		alloc_flags);
- 
- 
- static inline void
+ TRACE_EVENT(xfs_check_new_dalign,
+ 	TP_PROTO(struct xfs_mount *mp, int new_dalign, xfs_ino_t calc_rootino),
 -- 
 2.26.2
 
