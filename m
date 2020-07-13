@@ -2,69 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A0C421DB72
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jul 2020 18:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 019B121DB9B
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jul 2020 18:22:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgGMQR0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Jul 2020 12:17:26 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58146 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMQR0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 12:17:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DG21N9124921;
-        Mon, 13 Jul 2020 16:17:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
+        id S1729937AbgGMQWn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Jul 2020 12:22:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57996 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729933AbgGMQWm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 12:22:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DG2ojU153707;
+        Mon, 13 Jul 2020 16:22:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=TlDCoReV9rMEoB2HMYQU5BwIjms9dZi4+RwYhYC0Cjs=;
- b=VlL6EK2cIEZkOzrOcZOid7kRnUBL4X3YJ0PGtwPgtyaXCeNcKOVhTNm1huHGhO0QH2Is
- 8YUYmGgUVjJ8rpFMqpHvr93Sm51G5vp754spHg3xBo8HHaqm/kdC6sb6GEGsCeovL6Q0
- WZD4DvFj5j+cVj4lEiAB6MDYq+XO9CjqCwigVpG07K1t2NYltGkBE4+FAqmWU/0M7RzA
- CUAWLXBlCM8iuwKDagQPu73UCPlHfBLMA0YFLwaUvwXAk0rpPuWYv5btKdTPBXcBecu1
- neYe0EAB57+walMW2nsZQ7PHlg4h4l+l4Z8y+AMg6r0iWrzopUSsmc9yXPi7Al7xH0f9 lg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274ur02jh-1
+ bh=sSyBJNwZ2pXoRhGFlR+eKBcFGzkVt6ECSjfcpBLJueY=;
+ b=S9HtlaTyvLXOUbM0ew0NDNAzfsjqlbZFLhAGepZwRNxM3BzEyZp6EN8zD0uoIjAIOtXe
+ dI7RtkvsohZwLqXHl+V2xi1IAAyxjvlsqikyfCcLxASYqvHdMn98dfJNxKTKszxG2RzL
+ VfT9HSyr/y/euSWGYQNQ7IW3FBhJDhj7RXjo2LUnkgcin1QgmGHmgvJFOAkPPzMD52ZJ
+ Vl3ax538r9IDjGR3BNYrugWQX2JXrHEwNgQL8BXkvn1PHIQqZQRRNS3Aj2+PI0SzP8P7
+ SKwYFxU0zS8Xxs6pZ5TlTIpSkBL9UfLCV706v+y971mWD9KC6VJ3TG3Xxw2odu1fxjZJ Ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32762n7xj4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 16:17:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DG3XfB062639;
-        Mon, 13 Jul 2020 16:17:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 327q6qhahg-1
+        Mon, 13 Jul 2020 16:22:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06DGJXDd023176;
+        Mon, 13 Jul 2020 16:20:35 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 327q0mjpbg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jul 2020 16:17:20 +0000
+        Mon, 13 Jul 2020 16:20:35 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DGHKEB015922;
-        Mon, 13 Jul 2020 16:17:20 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06DGKYQb002855;
+        Mon, 13 Jul 2020 16:20:34 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 09:17:19 -0700
-Date:   Mon, 13 Jul 2020 09:17:18 -0700
+        with ESMTP ; Mon, 13 Jul 2020 09:20:33 -0700
+Date:   Mon, 13 Jul 2020 09:20:33 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH V2 1/5] xfs: Remove kmem_zone_alloc() usage
-Message-ID: <20200713161718.GW7606@magnolia>
-References: <20200710091536.95828-1-cmaiolino@redhat.com>
- <20200710091536.95828-2-cmaiolino@redhat.com>
- <20200710160804.GA10364@infradead.org>
- <20200710222132.GC2005@dread.disaster.area>
- <20200713091610.kooniclgd3curv73@eorzea>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     linux-xfs@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] xfs: remove duplicated include from xfs_buf_item.c
+Message-ID: <20200713162033.GX7606@magnolia>
+References: <20200711073458.27029-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713091610.kooniclgd3curv73@eorzea>
+In-Reply-To: <20200711073458.27029-1-yuehaibing@huawei.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007130119
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007130120
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=1 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ clxscore=1011 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ bulkscore=0 suspectscore=1 phishscore=0 adultscore=0 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007130119
 Sender: linux-xfs-owner@vger.kernel.org
@@ -72,54 +67,34 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:16:10AM +0200, Carlos Maiolino wrote:
-> Hi Dave, Christoph.
+On Sat, Jul 11, 2020 at 07:34:58AM +0000, YueHaibing wrote:
+> Remove duplicated include.
 > 
-> > > > -	ip = kmem_zone_alloc(xfs_inode_zone, 0);
-> > > > +
-> > > > +	if (current->flags & PF_MEMALLOC_NOFS)
-> > > > +		gfp_mask |= __GFP_NOFAIL;
-> > > 
-> > > I'm a little worried about this change in beavior here.  Can we
-> > > just keep the unconditional __GFP_NOFAIL and if we really care do the
-> > > change separately after the series?  At that point it should probably
-> > > use the re-added PF_FSTRANS flag as well.
-> 
-> > Checking PF_FSTRANS was what I suggested should be done here, not
-> > PF_MEMALLOC_NOFS...
-> 
-> 
-> No problem in splitting this change into 2 patches, 1 by unconditionally use
-> __GFP_NOFAIL, and another changing the behavior to use NOFAIL only inside a
-> transaction.
-> 
-> Regarding the PF_FSTRANS flag, I opted by PF_MEMALLOC_NOFS after reading the
-> commit which removed PF_FSTRANS initially (didn't mean to ignore your suggestion
-> Dave, my apologies if I sounded like that), but I actually didn't find any commit
-> re-adding PF_FSTRANS back. I searched most trees but couldn't find any commit
-> re-adding it back, could you guys please point me out where is the commit adding
-> it back?
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I suspect Dave is referring to:
-
-"xfs: reintroduce PF_FSTRANS for transaction reservation recursion
-protection" by Yang Shao.
-
-AFAICT it hasn't cleared akpm yet, so it's not in his quiltpile, and as
-he doesn't use git there won't be a commit until it ends up in
-mainline...
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
-> > 
-> > Cheers,
-> > 
-> > Dave.
-> > -- 
-> > Dave Chinner
-> > david@fromorbit.com
-> > 
+> ---
+>  fs/xfs/xfs_buf_item.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> -- 
-> Carlos
+> diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+> index e9428c30862a..ed1bf1d99483 100644
+> --- a/fs/xfs/xfs_buf_item.c
+> +++ b/fs/xfs/xfs_buf_item.c
+> @@ -19,7 +19,6 @@
+>  #include "xfs_quota.h"
+>  #include "xfs_dquot_item.h"
+>  #include "xfs_dquot.h"
+> -#include "xfs_trans_priv.h"
+>  #include "xfs_trace.h"
+>  #include "xfs_log.h"
+>  
+> 
+> 
+> 
+> 
 > 
