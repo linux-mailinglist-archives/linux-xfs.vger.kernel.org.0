@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4794821E534
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD6721E528
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGNBfi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Jul 2020 21:35:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60136 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNBfi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:35:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1WwGJ127992;
-        Tue, 14 Jul 2020 01:33:33 GMT
+        id S1726437AbgGNBdk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Jul 2020 21:33:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54132 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGNBdk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:33:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1XZDk162734;
+        Tue, 14 Jul 2020 01:33:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=W6Cp4UbnNyCLoOigZWfj9/APjCVD0I0it3UpLvkyXv8=;
- b=vAu8SsnsdU8upk2Blw3GuHihnm/jz6PuAu5prct2TiBK/7SzOGKMBPPZS1/U4xZlrVPs
- nkfAyBbhxf+wce1+8nZVgKjiqjSkJLyvaeBcZ0Iw/+almaFOxt7WUrWXmFuAkDnlUuU1
- UCynqJWjFVvEAu88ut7a5wpK2zHBZbVk41d6UhI9pCvK2rbqzVBgx60VQ1Xnhu2O8p0+
- AfE+iJex0NIhGar+X3Uqp+/43fb+VnimpitFtwLfm3/3UjrIxRdw/7ylCMzQ3fXFetfG
- oOtYe4jZUqFaMByWNAp2iyNREoA6BT696+m10Li4mTHLYu7sZ8kASs9u05VdU3D5ffY5 yA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32762naa05-1
+ bh=kIEeTj8L8qc0v1a4tjWDImf7612GG1ek9eWE8AyBGBM=;
+ b=sRuQUq43vGxOSWUWKJpVN2+/hoJlOAD/Rtx+M1VwF4mppbm4oZhkYotAf8p1H9Hpib86
+ lFM/meODougpoC2yKWKUkszTA3qkpbBE6U+RC/TuOUstpSEjGs8Uy1/bbM+lsyakQRrM
+ l9GwmyALFZzgXm49WXRCVq1U0FM4gE74l1g3gbB7n6MtV7HrQUdchEI34GRbmD5dX8A3
+ JPFt0uKbVDVBad60SyKUM5J8SY0vClwNnvfmr4FbY3UxxclzR42mj0sFiIcjCVUOMgqL
+ KCvxiiDM7QohfWXTAQEgKnoSRS+eIzRNxWA3cRK8TifXimYw4HOzk6g4Unhsp5uIh30U cg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 3275cm2dcv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 01:33:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1XWlb153797;
-        Tue, 14 Jul 2020 01:33:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 327qb28mek-1
+        Tue, 14 Jul 2020 01:33:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1Wapf063345;
+        Tue, 14 Jul 2020 01:33:38 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 327qbwgyex-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 01:33:32 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06E1XUxO010592;
-        Tue, 14 Jul 2020 01:33:30 GMT
+        Tue, 14 Jul 2020 01:33:38 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E1XbxD012820;
+        Tue, 14 Jul 2020 01:33:37 GMT
 Received: from localhost (/10.159.128.100)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 18:33:30 -0700
-Subject: [PATCH 19/26] xfs: remove unnecessary arguments from quota adjust
- functions
+        with ESMTP ; Mon, 13 Jul 2020 18:33:36 -0700
+Subject: [PATCH 20/26] xfs: refactor quota exceeded test
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Mon, 13 Jul 2020 18:33:29 -0700
-Message-ID: <159469040969.2914673.15978249157939197734.stgit@magnolia>
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>, linux-xfs@vger.kernel.org
+Date:   Mon, 13 Jul 2020 18:33:36 -0700
+Message-ID: <159469041620.2914673.13835099039036173215.stgit@magnolia>
 In-Reply-To: <159469028734.2914673.17856142063205791176.stgit@magnolia>
 References: <159469028734.2914673.17856142063205791176.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=1 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007140009
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 suspectscore=1 phishscore=0 adultscore=0 impostorscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007140009
 Sender: linux-xfs-owner@vger.kernel.org
@@ -72,105 +70,122 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-struct xfs_dquot already has a pointer to the xfs mount, so remove the
-redundant parameter from xfs_qm_adjust_dq*.
+Refactor the open-coded test for whether or not we're over quota.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_dquot.c       |    4 ++--
- fs/xfs/xfs_dquot.h       |    6 ++----
- fs/xfs/xfs_qm.c          |    4 ++--
- fs/xfs/xfs_qm_syscalls.c |    2 +-
- fs/xfs/xfs_trans_dquot.c |    4 ++--
- 5 files changed, 9 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_dquot.c |   91 +++++++++++++++-------------------------------------
+ 1 file changed, 26 insertions(+), 65 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 9b924743eea7..4e19aac586f4 100644
+index 4e19aac586f4..aeefe82e0e5e 100644
 --- a/fs/xfs/xfs_dquot.c
 +++ b/fs/xfs/xfs_dquot.c
-@@ -67,9 +67,9 @@ xfs_qm_dqdestroy(
-  */
- void
- xfs_qm_adjust_dqlimits(
--	struct xfs_mount	*mp,
- 	struct xfs_dquot	*dq)
- {
-+	struct xfs_mount	*mp = dq->q_mount;
- 	struct xfs_quotainfo	*q = mp->m_quotainfo;
- 	struct xfs_def_quota	*defq;
- 	int			prealloc = 0;
-@@ -113,9 +113,9 @@ xfs_qm_adjust_dqlimits(
-  */
- void
- xfs_qm_adjust_dqtimers(
--	struct xfs_mount	*mp,
- 	struct xfs_dquot	*dq)
- {
-+	struct xfs_mount	*mp = dq->q_mount;
- 	struct xfs_quotainfo	*qi = mp->m_quotainfo;
- 	struct xfs_def_quota	*defq;
+@@ -98,6 +98,29 @@ xfs_qm_adjust_dqlimits(
+ 		xfs_dquot_set_prealloc_limits(dq);
+ }
  
-diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-index 9bcfa3330f25..f55e40dfb9ed 100644
---- a/fs/xfs/xfs_dquot.h
-+++ b/fs/xfs/xfs_dquot.h
-@@ -188,10 +188,8 @@ void xfs_dquot_to_disk(struct xfs_disk_dquot *ddqp, struct xfs_dquot *dqp);
- void		xfs_qm_dqdestroy(struct xfs_dquot *dqp);
- int		xfs_qm_dqflush(struct xfs_dquot *dqp, struct xfs_buf **bpp);
- void		xfs_qm_dqunpin_wait(struct xfs_dquot *dqp);
--void		xfs_qm_adjust_dqtimers(struct xfs_mount *mp,
--						struct xfs_dquot *d);
--void		xfs_qm_adjust_dqlimits(struct xfs_mount *mp,
--						struct xfs_dquot *d);
-+void		xfs_qm_adjust_dqtimers(struct xfs_dquot *d);
-+void		xfs_qm_adjust_dqlimits(struct xfs_dquot *d);
- xfs_dqid_t	xfs_qm_id_for_quotatype(struct xfs_inode *ip,
- 				xfs_dqtype_t type);
- int		xfs_qm_dqget(struct xfs_mount *mp, xfs_dqid_t id,
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 19e37749d8f5..96171f4406e9 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1101,8 +1101,8 @@ xfs_qm_quotacheck_dqadjust(
- 	 * There are no timers for the default values set in the root dquot.
- 	 */
- 	if (dqp->q_id) {
--		xfs_qm_adjust_dqlimits(mp, dqp);
--		xfs_qm_adjust_dqtimers(mp, dqp);
-+		xfs_qm_adjust_dqlimits(dqp);
-+		xfs_qm_adjust_dqtimers(dqp);
- 	}
++/*
++ * Determine if this quota counter is over either limit and set the quota
++ * timers as appropriate.
++ */
++static inline void
++xfs_qm_adjust_res_timer(
++	struct xfs_dquot_res	*res,
++	struct xfs_quota_limits	*qlim)
++{
++	ASSERT(res->hardlimit == 0 || res->softlimit <= res->hardlimit);
++
++	if ((res->softlimit && res->count > res->softlimit) ||
++	    (res->hardlimit && res->count > res->hardlimit)) {
++		if (res->timer == 0)
++			res->timer = ktime_get_real_seconds() + qlim->time;
++	} else {
++		if (res->timer == 0)
++			res->warnings = 0;
++		else
++			res->timer = 0;
++	}
++}
++
+ /*
+  * Check the limits and timers of a dquot and start or reset timers
+  * if necessary.
+@@ -122,71 +145,9 @@ xfs_qm_adjust_dqtimers(
+ 	ASSERT(dq->q_id);
+ 	defq = xfs_get_defquota(qi, dq->q_type);
  
- 	dqp->q_flags |= XFS_DQFLAG_DIRTY;
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index b0c932086d59..aea4be4da424 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -594,7 +594,7 @@ xfs_qm_scall_setqlim(
- 		 * is on or off. We don't really want to bother with iterating
- 		 * over all ondisk dquots and turning the timers on/off.
- 		 */
--		xfs_qm_adjust_dqtimers(mp, dqp);
-+		xfs_qm_adjust_dqtimers(dqp);
- 	}
- 	dqp->q_flags |= XFS_DQFLAG_DIRTY;
- 	xfs_trans_log_dquot(tp, dqp);
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index f08d37747e7e..53c133fd4f18 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -382,8 +382,8 @@ xfs_trans_apply_dquot_deltas(
- 			 * Start/reset the timer(s) if needed.
- 			 */
- 			if (dqp->q_id) {
--				xfs_qm_adjust_dqlimits(tp->t_mountp, dqp);
--				xfs_qm_adjust_dqtimers(tp->t_mountp, dqp);
-+				xfs_qm_adjust_dqlimits(dqp);
-+				xfs_qm_adjust_dqtimers(dqp);
- 			}
+-#ifdef DEBUG
+-	if (dq->q_blk.hardlimit)
+-		ASSERT(dq->q_blk.softlimit <= dq->q_blk.hardlimit);
+-	if (dq->q_ino.hardlimit)
+-		ASSERT(dq->q_ino.softlimit <= dq->q_ino.hardlimit);
+-	if (dq->q_rtb.hardlimit)
+-		ASSERT(dq->q_rtb.softlimit <= dq->q_rtb.hardlimit);
+-#endif
+-
+-	if (!dq->q_blk.timer) {
+-		if ((dq->q_blk.softlimit &&
+-		     (dq->q_blk.count > dq->q_blk.softlimit)) ||
+-		    (dq->q_blk.hardlimit &&
+-		     (dq->q_blk.count > dq->q_blk.hardlimit))) {
+-			dq->q_blk.timer = ktime_get_real_seconds() +
+-					defq->blk.time;
+-		} else {
+-			dq->q_blk.warnings = 0;
+-		}
+-	} else {
+-		if ((!dq->q_blk.softlimit ||
+-		     (dq->q_blk.count <= dq->q_blk.softlimit)) &&
+-		    (!dq->q_blk.hardlimit ||
+-		    (dq->q_blk.count <= dq->q_blk.hardlimit))) {
+-			dq->q_blk.timer = 0;
+-		}
+-	}
+-
+-	if (!dq->q_ino.timer) {
+-		if ((dq->q_ino.softlimit &&
+-		     (dq->q_ino.count > dq->q_ino.softlimit)) ||
+-		    (dq->q_ino.hardlimit &&
+-		     (dq->q_ino.count > dq->q_ino.hardlimit))) {
+-			dq->q_ino.timer = ktime_get_real_seconds() +
+-					defq->ino.time;
+-		} else {
+-			dq->q_ino.warnings = 0;
+-		}
+-	} else {
+-		if ((!dq->q_ino.softlimit ||
+-		     (dq->q_ino.count <= dq->q_ino.softlimit))  &&
+-		    (!dq->q_ino.hardlimit ||
+-		     (dq->q_ino.count <= dq->q_ino.hardlimit))) {
+-			dq->q_ino.timer = 0;
+-		}
+-	}
+-
+-	if (!dq->q_rtb.timer) {
+-		if ((dq->q_rtb.softlimit &&
+-		     (dq->q_rtb.count > dq->q_rtb.softlimit)) ||
+-		    (dq->q_rtb.hardlimit &&
+-		     (dq->q_rtb.count > dq->q_rtb.hardlimit))) {
+-			dq->q_rtb.timer = ktime_get_real_seconds() +
+-					defq->rtb.time;
+-		} else {
+-			dq->q_rtb.warnings = 0;
+-		}
+-	} else {
+-		if ((!dq->q_rtb.softlimit ||
+-		     (dq->q_rtb.count <= dq->q_rtb.softlimit)) &&
+-		    (!dq->q_rtb.hardlimit ||
+-		     (dq->q_rtb.count <= dq->q_rtb.hardlimit))) {
+-			dq->q_rtb.timer = 0;
+-		}
+-	}
++	xfs_qm_adjust_res_timer(&dq->q_blk, &defq->blk);
++	xfs_qm_adjust_res_timer(&dq->q_ino, &defq->ino);
++	xfs_qm_adjust_res_timer(&dq->q_rtb, &defq->rtb);
+ }
  
- 			dqp->q_flags |= XFS_DQFLAG_DIRTY;
+ /*
 
