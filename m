@@ -2,54 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BDC21EADC
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 10:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65D0D21EB5A
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 10:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgGNIFd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 Jul 2020 04:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
+        id S1725820AbgGNIaV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Jul 2020 04:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNIFc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jul 2020 04:05:32 -0400
+        with ESMTP id S1725801AbgGNIaV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jul 2020 04:30:21 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C69C061755
-        for <linux-xfs@vger.kernel.org>; Tue, 14 Jul 2020 01:05:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BE8C061755;
+        Tue, 14 Jul 2020 01:30:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BkA95QGuVJ5mUtrdDbXwFL/kE7nP8u8mHS3oEhznYk0=; b=N5oPqY2pLP3gCh6HtMiMqpAfbj
-        VO8++JXJ+eoogqVGs5jDx4R8yqMH0fH3YvEKFGxmWx40MVlnIH/fvOxLjICX58iP+2av6OdalHzGS
-        9Bo2TVqDcnQdvBgX4IUDFxdogeG7CzzuUfIp/UCon0gAaI4ZYAdJ9vWSB+Jz5beS06ccCpw5v3r8R
-        jUAeTg6AuTGukzP0bz5HJHDcb6OSJil12LMbhJtffxveUA0lC+UblFQs3Jm3MZqiSOYFGCpSls+88
-        woC+1g8aeopmna+tXFzLA53t+gwLKYsP5TWR11CAvtZJsXYDBN2WRl7HuXlcAhtxbSWhMcOvQAGhP
-        VoHVKJRg==;
+        bh=J+0osK+Fxg+72fGn0wO7G+VSVT9u39niv0zQodGewxA=; b=GGFZ/32ztn1yvRwa28bhdMwZlc
+        qWlF3sGTc2CTy9vUmQ+NIs3pHRCdsTz/Khl28pOpmNq8DpsBys6DI54/F79jBOAnaFs6R8zpVR4vI
+        Kspqwp7LX0fz8DJaj0tZuKspeQFVvn+ivL7Yya1UCNCcr/oo2ffsAoWAzU8n2JASWhtCgr0oA4P7k
+        Q12H534IzTd43L9pRUnQ8lOOSwZHndFvHxKb56fdl78UAzZ7xK2GZ2BBuN5waqJuN6o19fDCYcuvp
+        jLgEDBNgUUvE92EWafVAh0R2BfUpw+07yXA1eM6nuf98/f+AgCO8koDjWmeTinvvX9889dJvOzJPW
+        J7/GOjEw==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvFwQ-0007F0-OK; Tue, 14 Jul 2020 08:05:30 +0000
-Date:   Tue, 14 Jul 2020 09:05:30 +0100
+        id 1jvGK8-0008DC-8v; Tue, 14 Jul 2020 08:30:00 +0000
+Date:   Tue, 14 Jul 2020 09:30:00 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 08/26] xfs: move the ondisk dquot flags to their own
- namespace
-Message-ID: <20200714080530.GL19883@infradead.org>
-References: <159469028734.2914673.17856142063205791176.stgit@magnolia>
- <159469033930.2914673.6332873477280477365.stgit@magnolia>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] fs: i_version mntopt gets visible through /proc/mounts
+Message-ID: <20200714083000.GA31189@infradead.org>
+References: <20200617172456.GP11245@magnolia>
+ <8f0df756-4f71-9d96-7a52-45bf51482556@sandeen.net>
+ <20200617181816.GA18315@fieldses.org>
+ <4cbb5cbe-feb4-2166-0634-29041a41a8dc@sandeen.net>
+ <20200617184507.GB18315@fieldses.org>
+ <20200618013026.ewnhvf64nb62k2yx@gabell>
+ <20200618030539.GH2005@dread.disaster.area>
+ <20200618034535.h5ho7pd4eilpbj3f@gabell>
+ <20200618223948.GI2005@dread.disaster.area>
+ <0404aff7-a1d9-c054-f709-521458d7901d@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159469033930.2914673.6332873477280477365.stgit@magnolia>
+In-Reply-To: <0404aff7-a1d9-c054-f709-521458d7901d@sandeen.net>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> +/*
-> + * flags for q_flags field in the dquot.
-> + */
-> +#define XFS_DQFLAG_DIRTY	0x0008		/* dquot is dirty */
-> +#define XFS_DQFLAG_FREEING	0x0010		/* dquot is being torn down */
+On Mon, Jul 13, 2020 at 04:45:19PM -0700, Eric Sandeen wrote:
+> I wandered back into this thread for some reason ... ;)
+> 
+> Since iversion/noiversion is /already/ advertised as a vfs-level mount option,
+> wouldn't exposing it in /proc/mounts solve the original problem here?
+> 
+> ("i_version" is wrong, because it's ext4-specific, but "iversion" is handled
+> by the vfs, so it's meaningful for any filesystems, and it will also trivially
+> allow mount(2) to preserve it across remounts for all filesystems that set it by
+> default.)
+> 
+> Seems like that's the fastest path to fixing the current problems, even if a
+> long-term goal may be to deprecate it altogether.
 
-I think it might make sense to start with the first available flag
-here.
+But they should not be exposed as a mount option.  E.g. for XFS we
+decide internally if we have a useful i_version or not, totally
+independent of the mount option that leaked into the VFS.  So we'll
+need to fix how the flag is used before doing any new work in this area.
