@@ -2,53 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5200421E526
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:33:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 896D521E532
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgGNBdF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Jul 2020 21:33:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38688 "EHLO
+        id S1726777AbgGNBfK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Jul 2020 21:35:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39896 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNBdF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:33:05 -0400
+        with ESMTP id S1726364AbgGNBfK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:35:10 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1W2Us096116;
-        Tue, 14 Jul 2020 01:33:01 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1WATO096166;
+        Tue, 14 Jul 2020 01:35:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Y6Up9/NHN2GXlf8brv8LPoucOu3gHg4S9QYz+/2OGbs=;
- b=F8nMOv5u7brT/TwKqBBL9rNR4NXy/G5OeOgePq4S04Pj3QSJMqHXcLuc0zkJe2TYS9cH
- CmFGn4SqyC2nA5O2IJXDuYXk63WZ1fZBZR+7H9UK9kqeImv3oH5khnQC/Okf/PE7pJ0A
- ahQ82L92xd2tRLFygMcCH61FjT9ee12rv0Wo2sk8SAjLTD3bZlgZw8Sb9KcQ+JVyRGPA
- GQbIiF8OgUzxKzcNCdVXznoBmd8dzibgqt/60CYcaiRYfO4us/nzbFxfIcGciw3hAZOq
- Vi5y8Pe1IFUaH5imPWk4wYzNB2xYWePvYmYFkGH/eQ6EINpS1/7ER1rG6IOpxT1hFZbk UQ== 
+ bh=FY6n7o/VwDNuTkYjRmsKJHl9hpqUOWzCYohOt4DVFs8=;
+ b=tPthFCMQNYuxQZx6Q0z95nMnx9UYO4ehp+JYfpjAFHngvND2IwkKJGWMvHZ1wEoeXcwH
+ 4p9mNORTx9eUKycs7tX2UO9I3g69tO2zCImwT2zXq2LB9JJTTPYpfMsE+rvlTPxWLZAe
+ M9Sgrctj0iw6wfv5gpjS/ebbpOkNUJ9CB58IoLWe8NysRumrK38ySX05r/3jN0X+oXKd
+ od9AyZTobTKm/CTuf0eodVTN6ZMRi3raD52M3XGPYfApSM/KeauS5loul6aoYVh3Ctkr
+ x9/w5j97edhFuegSyh+tC6mf/61vR2zrP9KBwVKbMPaVkIKcNnOKOLzGbjiIF4QSMbsz zw== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274ur2eyu-1
+        by userp2130.oracle.com with ESMTP id 3274ur2f5c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 01:33:01 +0000
+        Tue, 14 Jul 2020 01:35:05 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1TYel107212;
-        Tue, 14 Jul 2020 01:33:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 327q6r5an4-1
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1TXY7107101;
+        Tue, 14 Jul 2020 01:33:05 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 327q6r5apu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 01:33:01 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06E1X0GA010414;
-        Tue, 14 Jul 2020 01:33:00 GMT
+        Tue, 14 Jul 2020 01:33:05 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E1X4gS012614;
+        Tue, 14 Jul 2020 01:33:05 GMT
 Received: from localhost (/10.159.128.100)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 18:32:58 -0700
-Subject: [PATCH 14/26] xfs: stop using q_core counters in the quota code
+        with ESMTP ; Mon, 13 Jul 2020 18:33:04 -0700
+Subject: [PATCH 15/26] xfs: stop using q_core warning counters in the quota
+ code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         Christoph Hellwig <hch@lst.de>,
         Allison Collins <allison.henderson@oracle.com>,
         linux-xfs@vger.kernel.org
-Date:   Mon, 13 Jul 2020 18:32:57 -0700
-Message-ID: <159469037759.2914673.15484195176963523690.stgit@magnolia>
+Date:   Mon, 13 Jul 2020 18:33:04 -0700
+Message-ID: <159469038408.2914673.1587745334091299301.stgit@magnolia>
 In-Reply-To: <159469028734.2914673.17856142063205791176.stgit@magnolia>
 References: <159469028734.2914673.17856142063205791176.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -73,371 +74,183 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add counter fields to the incore dquot, and use that instead of the ones
-in qcore.  This eliminates a bunch of endian conversions and will
-eventually allow us to remove qcore entirely.
+Add warning counter fields to the incore dquot, and use that instead of
+the ones in qcore.  This eliminates a bunch of endian conversions and
+will eventually allow us to remove qcore entirely.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/scrub/quota.c     |   18 ++++++------------
- fs/xfs/xfs_dquot.c       |   47 +++++++++++++++++++++++++---------------------
- fs/xfs/xfs_dquot.h       |    3 +++
- fs/xfs/xfs_qm.c          |    6 +++---
- fs/xfs/xfs_qm.h          |    6 +++---
- fs/xfs/xfs_trace.h       |    4 ++--
- fs/xfs/xfs_trans_dquot.c |   34 +++++++++++++--------------------
- 7 files changed, 56 insertions(+), 62 deletions(-)
+ fs/xfs/xfs_dquot.c       |   14 +++++++++++---
+ fs/xfs/xfs_dquot.h       |    8 ++++++++
+ fs/xfs/xfs_qm.c          |   12 ++++++------
+ fs/xfs/xfs_qm_syscalls.c |   12 ++++++------
+ fs/xfs/xfs_trans_dquot.c |    6 +++---
+ 5 files changed, 34 insertions(+), 18 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
-index ca20c260e760..d002af3ab164 100644
---- a/fs/xfs/scrub/quota.c
-+++ b/fs/xfs/scrub/quota.c
-@@ -83,9 +83,6 @@ xchk_quota_item(
- 	struct xfs_disk_dquot	*d = &dq->q_core;
- 	struct xfs_quotainfo	*qi = mp->m_quotainfo;
- 	xfs_fileoff_t		offset;
--	unsigned long long	bcount;
--	unsigned long long	icount;
--	unsigned long long	rcount;
- 	xfs_ino_t		fs_icount;
- 	int			error = 0;
- 
-@@ -129,9 +126,6 @@ xchk_quota_item(
- 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
- 
- 	/* Check the resource counts. */
--	bcount = be64_to_cpu(d->d_bcount);
--	icount = be64_to_cpu(d->d_icount);
--	rcount = be64_to_cpu(d->d_rtbcount);
- 	fs_icount = percpu_counter_sum(&mp->m_icount);
- 
- 	/*
-@@ -140,15 +134,15 @@ xchk_quota_item(
- 	 * if there are no quota limits.
- 	 */
- 	if (xfs_sb_version_hasreflink(&mp->m_sb)) {
--		if (mp->m_sb.sb_dblocks < bcount)
-+		if (mp->m_sb.sb_dblocks < dq->q_blk.count)
- 			xchk_fblock_set_warning(sc, XFS_DATA_FORK,
- 					offset);
- 	} else {
--		if (mp->m_sb.sb_dblocks < bcount)
-+		if (mp->m_sb.sb_dblocks < dq->q_blk.count)
- 			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK,
- 					offset);
- 	}
--	if (icount > fs_icount || rcount > mp->m_sb.sb_rblocks)
-+	if (dq->q_ino.count > fs_icount || dq->q_rtb.count > mp->m_sb.sb_rblocks)
- 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
- 
- 	/*
-@@ -160,15 +154,15 @@ xchk_quota_item(
- 		goto out;
- 
- 	if (dq->q_blk.hardlimit != 0 &&
--	    bcount > dq->q_blk.hardlimit)
-+	    dq->q_blk.count > dq->q_blk.hardlimit)
- 		xchk_fblock_set_warning(sc, XFS_DATA_FORK, offset);
- 
- 	if (dq->q_ino.hardlimit != 0 &&
--	    icount > dq->q_ino.hardlimit)
-+	    dq->q_ino.count > dq->q_ino.hardlimit)
- 		xchk_fblock_set_warning(sc, XFS_DATA_FORK, offset);
- 
- 	if (dq->q_rtb.hardlimit != 0 &&
--	    rcount > dq->q_rtb.hardlimit)
-+	    dq->q_rtb.count > dq->q_rtb.hardlimit)
- 		xchk_fblock_set_warning(sc, XFS_DATA_FORK, offset);
- 
- out:
 diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 730639a654e0..2de6ce12d690 100644
+index 2de6ce12d690..44a082cb6b87 100644
 --- a/fs/xfs/xfs_dquot.c
 +++ b/fs/xfs/xfs_dquot.c
-@@ -134,9 +134,9 @@ xfs_qm_adjust_dqtimers(
- 
- 	if (!d->d_btimer) {
- 		if ((dq->q_blk.softlimit &&
--		     (be64_to_cpu(d->d_bcount) > dq->q_blk.softlimit)) ||
-+		     (dq->q_blk.count > dq->q_blk.softlimit)) ||
- 		    (dq->q_blk.hardlimit &&
--		     (be64_to_cpu(d->d_bcount) > dq->q_blk.hardlimit))) {
-+		     (dq->q_blk.count > dq->q_blk.hardlimit))) {
+@@ -140,7 +140,7 @@ xfs_qm_adjust_dqtimers(
  			d->d_btimer = cpu_to_be32(ktime_get_real_seconds() +
  					defq->btimelimit);
  		} else {
-@@ -144,18 +144,18 @@ xfs_qm_adjust_dqtimers(
+-			d->d_bwarns = 0;
++			dq->q_blk.warnings = 0;
  		}
  	} else {
  		if ((!dq->q_blk.softlimit ||
--		     (be64_to_cpu(d->d_bcount) <= dq->q_blk.softlimit)) &&
-+		     (dq->q_blk.count <= dq->q_blk.softlimit)) &&
- 		    (!dq->q_blk.hardlimit ||
--		    (be64_to_cpu(d->d_bcount) <= dq->q_blk.hardlimit))) {
-+		    (dq->q_blk.count <= dq->q_blk.hardlimit))) {
- 			d->d_btimer = 0;
- 		}
- 	}
- 
- 	if (!d->d_itimer) {
- 		if ((dq->q_ino.softlimit &&
--		     (be64_to_cpu(d->d_icount) > dq->q_ino.softlimit)) ||
-+		     (dq->q_ino.count > dq->q_ino.softlimit)) ||
- 		    (dq->q_ino.hardlimit &&
--		     (be64_to_cpu(d->d_icount) > dq->q_ino.hardlimit))) {
-+		     (dq->q_ino.count > dq->q_ino.hardlimit))) {
+@@ -159,7 +159,7 @@ xfs_qm_adjust_dqtimers(
  			d->d_itimer = cpu_to_be32(ktime_get_real_seconds() +
  					defq->itimelimit);
  		} else {
-@@ -163,18 +163,18 @@ xfs_qm_adjust_dqtimers(
+-			d->d_iwarns = 0;
++			dq->q_ino.warnings = 0;
  		}
  	} else {
  		if ((!dq->q_ino.softlimit ||
--		     (be64_to_cpu(d->d_icount) <= dq->q_ino.softlimit))  &&
-+		     (dq->q_ino.count <= dq->q_ino.softlimit))  &&
- 		    (!dq->q_ino.hardlimit ||
--		     (be64_to_cpu(d->d_icount) <= dq->q_ino.hardlimit))) {
-+		     (dq->q_ino.count <= dq->q_ino.hardlimit))) {
- 			d->d_itimer = 0;
- 		}
- 	}
- 
- 	if (!d->d_rtbtimer) {
- 		if ((dq->q_rtb.softlimit &&
--		     (be64_to_cpu(d->d_rtbcount) > dq->q_rtb.softlimit)) ||
-+		     (dq->q_rtb.count > dq->q_rtb.softlimit)) ||
- 		    (dq->q_rtb.hardlimit &&
--		     (be64_to_cpu(d->d_rtbcount) > dq->q_rtb.hardlimit))) {
-+		     (dq->q_rtb.count > dq->q_rtb.hardlimit))) {
+@@ -178,7 +178,7 @@ xfs_qm_adjust_dqtimers(
  			d->d_rtbtimer = cpu_to_be32(ktime_get_real_seconds() +
  					defq->rtbtimelimit);
  		} else {
-@@ -182,9 +182,9 @@ xfs_qm_adjust_dqtimers(
+-			d->d_rtbwarns = 0;
++			dq->q_rtb.warnings = 0;
  		}
  	} else {
  		if ((!dq->q_rtb.softlimit ||
--		     (be64_to_cpu(d->d_rtbcount) <= dq->q_rtb.softlimit)) &&
-+		     (dq->q_rtb.count <= dq->q_rtb.softlimit)) &&
- 		    (!dq->q_rtb.hardlimit ||
--		     (be64_to_cpu(d->d_rtbcount) <= dq->q_rtb.hardlimit))) {
-+		     (dq->q_rtb.count <= dq->q_rtb.hardlimit))) {
- 			d->d_rtbtimer = 0;
- 		}
- 	}
-@@ -545,13 +545,17 @@ xfs_dquot_from_disk(
- 	dqp->q_rtb.hardlimit = be64_to_cpu(ddqp->d_rtb_hardlimit);
- 	dqp->q_rtb.softlimit = be64_to_cpu(ddqp->d_rtb_softlimit);
+@@ -549,6 +549,10 @@ xfs_dquot_from_disk(
+ 	dqp->q_ino.count = be64_to_cpu(ddqp->d_icount);
+ 	dqp->q_rtb.count = be64_to_cpu(ddqp->d_rtbcount);
  
-+	dqp->q_blk.count = be64_to_cpu(ddqp->d_bcount);
-+	dqp->q_ino.count = be64_to_cpu(ddqp->d_icount);
-+	dqp->q_rtb.count = be64_to_cpu(ddqp->d_rtbcount);
++	dqp->q_blk.warnings = be16_to_cpu(ddqp->d_bwarns);
++	dqp->q_ino.warnings = be16_to_cpu(ddqp->d_iwarns);
++	dqp->q_rtb.warnings = be16_to_cpu(ddqp->d_rtbwarns);
 +
  	/*
  	 * Reservation counters are defined as reservation plus current usage
  	 * to avoid having to add every time.
- 	 */
--	dqp->q_blk.reserved = be64_to_cpu(ddqp->d_bcount);
--	dqp->q_ino.reserved = be64_to_cpu(ddqp->d_icount);
--	dqp->q_rtb.reserved = be64_to_cpu(ddqp->d_rtbcount);
-+	dqp->q_blk.reserved = dqp->q_blk.count;
-+	dqp->q_ino.reserved = dqp->q_ino.count;
-+	dqp->q_rtb.reserved = dqp->q_rtb.count;
- 
- 	/* initialize the dquot speculative prealloc thresholds */
- 	xfs_dquot_set_prealloc_limits(dqp);
-@@ -572,6 +576,10 @@ xfs_dquot_to_disk(
- 	ddqp->d_ino_softlimit = cpu_to_be64(dqp->q_ino.softlimit);
- 	ddqp->d_rtb_hardlimit = cpu_to_be64(dqp->q_rtb.hardlimit);
- 	ddqp->d_rtb_softlimit = cpu_to_be64(dqp->q_rtb.softlimit);
+@@ -580,6 +584,10 @@ xfs_dquot_to_disk(
+ 	ddqp->d_bcount = cpu_to_be64(dqp->q_blk.count);
+ 	ddqp->d_icount = cpu_to_be64(dqp->q_ino.count);
+ 	ddqp->d_rtbcount = cpu_to_be64(dqp->q_rtb.count);
 +
-+	ddqp->d_bcount = cpu_to_be64(dqp->q_blk.count);
-+	ddqp->d_icount = cpu_to_be64(dqp->q_ino.count);
-+	ddqp->d_rtbcount = cpu_to_be64(dqp->q_rtb.count);
++	ddqp->d_bwarns = cpu_to_be16(dqp->q_blk.warnings);
++	ddqp->d_iwarns = cpu_to_be16(dqp->q_ino.warnings);
++	ddqp->d_rtbwarns = cpu_to_be16(dqp->q_rtb.warnings);
  }
  
  /* Allocate and initialize the dquot buffer for this in-core dquot. */
-@@ -1143,18 +1151,15 @@ xfs_qm_dqflush_check(
- 	if (dqp->q_id == 0)
- 		return NULL;
- 
--	if (dqp->q_blk.softlimit &&
--	    be64_to_cpu(ddq->d_bcount) > dqp->q_blk.softlimit &&
-+	if (dqp->q_blk.softlimit && dqp->q_blk.count > dqp->q_blk.softlimit &&
- 	    !ddq->d_btimer)
- 		return __this_address;
- 
--	if (dqp->q_ino.softlimit &&
--	    be64_to_cpu(ddq->d_icount) > dqp->q_ino.softlimit &&
-+	if (dqp->q_ino.softlimit && dqp->q_ino.count > dqp->q_ino.softlimit &&
- 	    !ddq->d_itimer)
- 		return __this_address;
- 
--	if (dqp->q_rtb.softlimit &&
--	    be64_to_cpu(ddq->d_rtbcount) > dqp->q_rtb.softlimit &&
-+	if (dqp->q_rtb.softlimit && dqp->q_rtb.count > dqp->q_rtb.softlimit &&
- 	    !ddq->d_rtbtimer)
- 		return __this_address;
- 
 diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-index 26f325b84023..f470731d3cfd 100644
+index f470731d3cfd..4c6460637e55 100644
 --- a/fs/xfs/xfs_dquot.h
 +++ b/fs/xfs/xfs_dquot.h
-@@ -31,6 +31,9 @@ struct xfs_dquot_res {
- 	/* Total resources allocated and reserved. */
- 	xfs_qcnt_t		reserved;
- 
-+	/* Total resources allocated. */
-+	xfs_qcnt_t		count;
-+
+@@ -37,6 +37,14 @@ struct xfs_dquot_res {
  	/* Absolute and preferred limits. */
  	xfs_qcnt_t		hardlimit;
  	xfs_qcnt_t		softlimit;
++
++	/*
++	 * For root dquots, this is the maximum number of warnings that will
++	 * be issued for this quota type.  Otherwise, this is the number of
++	 * warnings issued against this quota.  Note that none of this is
++	 * implemented.
++	 */
++	xfs_qwarncnt_t		warnings;
+ };
+ 
+ /*
 diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index c20fcbd4c7ac..b7b1049640d8 100644
+index b7b1049640d8..5633c03109c0 100644
 --- a/fs/xfs/xfs_qm.c
 +++ b/fs/xfs/xfs_qm.c
-@@ -1087,14 +1087,14 @@ xfs_qm_quotacheck_dqadjust(
- 	 * Adjust the inode count and the block count to reflect this inode's
- 	 * resource usage.
- 	 */
--	be64_add_cpu(&dqp->q_core.d_icount, 1);
-+	dqp->q_ino.count++;
- 	dqp->q_ino.reserved++;
- 	if (nblks) {
--		be64_add_cpu(&dqp->q_core.d_bcount, nblks);
-+		dqp->q_blk.count += nblks;
- 		dqp->q_blk.reserved += nblks;
- 	}
- 	if (rtblks) {
--		be64_add_cpu(&dqp->q_core.d_rtbcount, rtblks);
-+		dqp->q_rtb.count += rtblks;
- 		dqp->q_rtb.reserved += rtblks;
- 	}
+@@ -614,12 +614,12 @@ xfs_qm_init_timelimits(
+ 		defq->itimelimit = be32_to_cpu(ddqp->d_itimer);
+ 	if (ddqp->d_rtbtimer)
+ 		defq->rtbtimelimit = be32_to_cpu(ddqp->d_rtbtimer);
+-	if (ddqp->d_bwarns)
+-		defq->bwarnlimit = be16_to_cpu(ddqp->d_bwarns);
+-	if (ddqp->d_iwarns)
+-		defq->iwarnlimit = be16_to_cpu(ddqp->d_iwarns);
+-	if (ddqp->d_rtbwarns)
+-		defq->rtbwarnlimit = be16_to_cpu(ddqp->d_rtbwarns);
++	if (dqp->q_blk.warnings)
++		defq->bwarnlimit = dqp->q_blk.warnings;
++	if (dqp->q_ino.warnings)
++		defq->iwarnlimit = dqp->q_ino.warnings;
++	if (dqp->q_rtb.warnings)
++		defq->rtbwarnlimit = dqp->q_rtb.warnings;
  
-diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-index 48ddde099f6b..0e4ceb0dcfbc 100644
---- a/fs/xfs/xfs_qm.h
-+++ b/fs/xfs/xfs_qm.h
-@@ -26,9 +26,9 @@ extern struct kmem_zone	*xfs_qm_dqtrxzone;
- 	!dqp->q_rtb.softlimit && \
- 	!dqp->q_ino.hardlimit && \
- 	!dqp->q_ino.softlimit && \
--	!dqp->q_core.d_bcount && \
--	!dqp->q_core.d_rtbcount && \
--	!dqp->q_core.d_icount)
-+	!dqp->q_blk.count && \
-+	!dqp->q_rtb.count && \
-+	!dqp->q_ino.count)
- 
- /* Defaults for each quota type: time limits, warn limits, usage limits */
- struct xfs_def_quota {
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 216e68ee83c2..b6541f7d1b7d 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -882,8 +882,8 @@ DECLARE_EVENT_CLASS(xfs_dquot_class,
- 		__entry->flags = dqp->q_flags;
- 		__entry->nrefs = dqp->q_nrefs;
- 		__entry->res_bcount = dqp->q_blk.reserved;
--		__entry->bcount = be64_to_cpu(dqp->q_core.d_bcount);
--		__entry->icount = be64_to_cpu(dqp->q_core.d_icount);
-+		__entry->bcount = dqp->q_blk.count;
-+		__entry->icount = dqp->q_ino.count;
- 		__entry->blk_hardlimit = dqp->q_blk.hardlimit;
- 		__entry->blk_softlimit = dqp->q_blk.softlimit;
- 		__entry->ino_hardlimit = dqp->q_ino.hardlimit;
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 66e36574c887..96d4691df26e 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -309,7 +309,6 @@ xfs_trans_apply_dquot_deltas(
- 	int			i, j;
- 	struct xfs_dquot	*dqp;
- 	struct xfs_dqtrx	*qtrx, *qa;
--	struct xfs_disk_dquot	*d;
- 	int64_t			totalbdelta;
- 	int64_t			totalrtbdelta;
- 
-@@ -341,7 +340,6 @@ xfs_trans_apply_dquot_deltas(
- 			/*
- 			 * adjust the actual number of blocks used
- 			 */
--			d = &dqp->q_core;
- 
- 			/*
- 			 * The issue here is - sometimes we don't make a blkquota
-@@ -362,25 +360,22 @@ xfs_trans_apply_dquot_deltas(
- 				qtrx->qt_delrtb_delta;
- #ifdef DEBUG
- 			if (totalbdelta < 0)
--				ASSERT(be64_to_cpu(d->d_bcount) >=
--				       -totalbdelta);
-+				ASSERT(dqp->q_blk.count >= -totalbdelta);
- 
- 			if (totalrtbdelta < 0)
--				ASSERT(be64_to_cpu(d->d_rtbcount) >=
--				       -totalrtbdelta);
-+				ASSERT(dqp->q_rtb.count >= -totalrtbdelta);
- 
- 			if (qtrx->qt_icount_delta < 0)
--				ASSERT(be64_to_cpu(d->d_icount) >=
--				       -qtrx->qt_icount_delta);
-+				ASSERT(dqp->q_ino.count >= -qtrx->qt_icount_delta);
- #endif
- 			if (totalbdelta)
--				be64_add_cpu(&d->d_bcount, (xfs_qcnt_t)totalbdelta);
-+				dqp->q_blk.count += totalbdelta;
- 
- 			if (qtrx->qt_icount_delta)
--				be64_add_cpu(&d->d_icount, (xfs_qcnt_t)qtrx->qt_icount_delta);
-+				dqp->q_ino.count += qtrx->qt_icount_delta;
- 
- 			if (totalrtbdelta)
--				be64_add_cpu(&d->d_rtbcount, (xfs_qcnt_t)totalrtbdelta);
-+				dqp->q_rtb.count += totalrtbdelta;
- 
- 			/*
- 			 * Get any default limits in use.
-@@ -467,12 +462,9 @@ xfs_trans_apply_dquot_deltas(
- 					    (xfs_qcnt_t)qtrx->qt_icount_delta;
- 			}
- 
--			ASSERT(dqp->q_blk.reserved >=
--				be64_to_cpu(dqp->q_core.d_bcount));
--			ASSERT(dqp->q_ino.reserved >=
--				be64_to_cpu(dqp->q_core.d_icount));
--			ASSERT(dqp->q_rtb.reserved >=
--				be64_to_cpu(dqp->q_core.d_rtbcount));
-+			ASSERT(dqp->q_blk.reserved >= dqp->q_blk.count);
-+			ASSERT(dqp->q_ino.reserved >= dqp->q_ino.count);
-+			ASSERT(dqp->q_rtb.reserved >= dqp->q_rtb.count);
- 		}
- 	}
+ 	xfs_qm_dqdestroy(dqp);
  }
-@@ -682,7 +674,7 @@ xfs_trans_dqresv(
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index 7aebd588bdf7..4352169b644c 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -548,11 +548,11 @@ xfs_qm_scall_setqlim(
+ 	 * Update warnings counter(s) if requested
+ 	 */
+ 	if (newlim->d_fieldmask & QC_SPC_WARNS)
+-		ddq->d_bwarns = cpu_to_be16(newlim->d_spc_warns);
++		dqp->q_blk.warnings = newlim->d_spc_warns;
+ 	if (newlim->d_fieldmask & QC_INO_WARNS)
+-		ddq->d_iwarns = cpu_to_be16(newlim->d_ino_warns);
++		dqp->q_ino.warnings = newlim->d_ino_warns;
+ 	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
+-		ddq->d_rtbwarns = cpu_to_be16(newlim->d_rt_spc_warns);
++		dqp->q_rtb.warnings = newlim->d_rt_spc_warns;
+ 
+ 	if (id == 0) {
+ 		if (newlim->d_fieldmask & QC_SPC_WARNS)
+@@ -627,13 +627,13 @@ xfs_qm_scall_getquota_fill_qc(
+ 	dst->d_ino_count = dqp->q_ino.reserved;
+ 	dst->d_spc_timer = be32_to_cpu(dqp->q_core.d_btimer);
+ 	dst->d_ino_timer = be32_to_cpu(dqp->q_core.d_itimer);
+-	dst->d_ino_warns = be16_to_cpu(dqp->q_core.d_iwarns);
+-	dst->d_spc_warns = be16_to_cpu(dqp->q_core.d_bwarns);
++	dst->d_ino_warns = dqp->q_ino.warnings;
++	dst->d_spc_warns = dqp->q_blk.warnings;
+ 	dst->d_rt_spc_hardlimit = XFS_FSB_TO_B(mp, dqp->q_rtb.hardlimit);
+ 	dst->d_rt_spc_softlimit = XFS_FSB_TO_B(mp, dqp->q_rtb.softlimit);
+ 	dst->d_rt_space = XFS_FSB_TO_B(mp, dqp->q_rtb.reserved);
+ 	dst->d_rt_spc_timer = be32_to_cpu(dqp->q_core.d_rtbtimer);
+-	dst->d_rt_spc_warns = be16_to_cpu(dqp->q_core.d_rtbwarns);
++	dst->d_rt_spc_warns = dqp->q_rtb.warnings;
  
  	/*
- 	 * Change the reservation, but not the actual usage.
--	 * Note that q_blk.reserved = q_core.d_bcount + resv
-+	 * Note that q_blk.reserved = q_blk.count + resv
- 	 */
- 	(*resbcountp) += (xfs_qcnt_t)nblks;
- 	if (ninos != 0)
-@@ -707,9 +699,9 @@ xfs_trans_dqresv(
- 					    XFS_TRANS_DQ_RES_INOS,
- 					    ninos);
+ 	 * Internally, we don't reset all the timers when quota enforcement
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index 96d4691df26e..995636a63685 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -599,7 +599,7 @@ xfs_trans_dqresv(
+ 		if (!softlimit)
+ 			softlimit = defq->bsoftlimit;
+ 		timer = be32_to_cpu(dqp->q_core.d_btimer);
+-		warns = be16_to_cpu(dqp->q_core.d_bwarns);
++		warns = dqp->q_blk.warnings;
+ 		warnlimit = defq->bwarnlimit;
+ 		resbcountp = &dqp->q_blk.reserved;
+ 	} else {
+@@ -611,7 +611,7 @@ xfs_trans_dqresv(
+ 		if (!softlimit)
+ 			softlimit = defq->rtbsoftlimit;
+ 		timer = be32_to_cpu(dqp->q_core.d_rtbtimer);
+-		warns = be16_to_cpu(dqp->q_core.d_rtbwarns);
++		warns = dqp->q_rtb.warnings;
+ 		warnlimit = defq->rtbwarnlimit;
+ 		resbcountp = &dqp->q_rtb.reserved;
  	}
--	ASSERT(dqp->q_blk.reserved >= be64_to_cpu(dqp->q_core.d_bcount));
--	ASSERT(dqp->q_rtb.reserved >= be64_to_cpu(dqp->q_core.d_rtbcount));
--	ASSERT(dqp->q_ino.reserved >= be64_to_cpu(dqp->q_core.d_icount));
-+	ASSERT(dqp->q_blk.reserved >= dqp->q_blk.count);
-+	ASSERT(dqp->q_rtb.reserved >= dqp->q_rtb.count);
-+	ASSERT(dqp->q_ino.reserved >= dqp->q_ino.count);
- 
- 	xfs_dqunlock(dqp);
- 	return 0;
+@@ -646,7 +646,7 @@ xfs_trans_dqresv(
+ 		if (ninos > 0) {
+ 			total_count = dqp->q_ino.reserved + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+-			warns = be16_to_cpu(dqp->q_core.d_iwarns);
++			warns = dqp->q_ino.warnings;
+ 			warnlimit = defq->iwarnlimit;
+ 			hardlimit = dqp->q_ino.hardlimit;
+ 			if (!hardlimit)
 
