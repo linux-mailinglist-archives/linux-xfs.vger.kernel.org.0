@@ -2,67 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB7E521E518
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7703021E519
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Jul 2020 03:31:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgGNBbk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 13 Jul 2020 21:31:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37632 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgGNBbk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:31:40 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1SDbM092876;
-        Tue, 14 Jul 2020 01:31:32 GMT
+        id S1726437AbgGNBbp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 13 Jul 2020 21:31:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57416 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgGNBbo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 13 Jul 2020 21:31:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1Qv0k123715;
+        Tue, 14 Jul 2020 01:31:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=SnmhEYxTqfL3ErM9gHoSbSQA78Fs+xK6pg/Aq21aIPM=;
- b=seOuD+z0VJ2rs4qFxf+7bXY0BmEseVIcOhKv7AzJiOoySm1WErEBo+zDaxmrddh9mUdI
- VZDEFYKfIF3ZI2c260bnw3ERQ+yr1+tNgeDRwFAjzYRugeTc6k27xcwHKKi/TlL4Shuy
- 0PivfoNWJ36u3yL2xRG2bgSsg/jWhS+ZPk6r9T+F32LTwF5q/R80rshavzdIrPOM3AN7
- PLU65VkMbvhUuZLW1M3AyK/TSUizH3RWhrMa2/o55pByUj5ugbHkhYG7eC/RLqjxZRSI
- bsSVmGpgKLyZXU4E+LbQ1JXyPC9L7Wb0giMoZk1tfIL4IEY3oOfq4HNpcTdOpElrTePY 7Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3274ur2etq-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Xv/Q4douvq1ZcbgxhhJsPOc2uJ+D2ZfL9pxC9SgTnmk=;
+ b=lp/WAgVYd/ZvXCtAxl/bWtfY2wYnljL8ilLaVwihsaxvjmDkNWC5TG1cKyMXkEYjXiul
+ knvHorfpSuLLw4DFgdM1BFVWJzKhwRLNbqOPZvy5KD8lQ7rhDDNf+Ljverro5iRHrmn9
+ JYXT1ORcllVKIhoJzVIHJdmF8iQ+UMnbK5/63iGg0+k+LGkEHioMgoTMQxJqFRDdOkvi
+ Xu+5nh70D7QJfr67fdDFj+yrO3rlrKQh1iYiraoICrOLFZWtU3ZdctKrWnV5WyKGvAQY
+ SMRZ5WP2PiMa1C4xUIYsI9z+hPyDpE/NtWEKFH/lnepE2X0c2rmwgMQkASWZR+iuqAVr TA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32762na9sd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 01:31:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1Sain055071;
-        Tue, 14 Jul 2020 01:31:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 327qbwgwr6-1
+        Tue, 14 Jul 2020 01:31:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E1RXgX164462;
+        Tue, 14 Jul 2020 01:31:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 327q0n6k2h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 01:31:32 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E1VSl1012066;
-        Tue, 14 Jul 2020 01:31:28 GMT
+        Tue, 14 Jul 2020 01:31:36 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06E1VZaD013339;
+        Tue, 14 Jul 2020 01:31:35 GMT
 Received: from localhost (/10.159.128.100)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jul 2020 18:31:28 -0700
-Subject: [PATCH v3 00/26] xfs: remove xfs_disk_quot from incore dquot
+        with ESMTP ; Mon, 13 Jul 2020 18:31:35 -0700
+Subject: [PATCH 01/26] xfs: clear XFS_DQ_FREEING if we can't lock the dquot
+ buffer to flush
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>,
+Cc:     Allison Collins <allison.henderson@oracle.com>,
         Chandan Babu R <chandanrlinux@gmail.com>,
-        Allison Collins <allison.henderson@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>,
         Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Date:   Mon, 13 Jul 2020 18:31:27 -0700
-Message-ID: <159469028734.2914673.17856142063205791176.stgit@magnolia>
+        Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
+Date:   Mon, 13 Jul 2020 18:31:34 -0700
+Message-ID: <159469029441.2914673.6445405362770062253.stgit@magnolia>
+In-Reply-To: <159469028734.2914673.17856142063205791176.stgit@magnolia>
+References: <159469028734.2914673.17856142063205791176.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140008
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140008
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ bulkscore=0 suspectscore=3 phishscore=0 adultscore=0 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007140008
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,68 +74,69 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This series replaces q_core (the ondisk quota structure) in the incore
-dquot structure with a quota resource control structure containing the
-count, reservation, limits, timers, and warnings.  Each dquot gets three
-of these resource control structures (blocks, inodes, rt blocks).
+In commit 8d3d7e2b35ea, we changed xfs_qm_dqpurge to bail out if we
+can't lock the dquot buf to flush the dquot.  This prevents the AIL from
+blocking on the dquot, but it also forgets to clear the FREEING flag on
+its way out.  A subsequent purge attempt will see the FREEING flag is
+set and bail out, which leads to dqpurge_all failing to purge all the
+dquots.
 
-Doing this enables us to remove a whole lot of noisy endian conversions
-in the quota code, and enables us to refactor a bunch of open-coded
-logic to pass around pointers to quota resource control structs.
+(copy-pasting from Dave Chinner's identical patch)
 
-Note that these cleanups are a prerequisite for the bigtime patchset, as
-it depends on incore quota timers being time64_t to take advantage of
-the 64-bit time functions in the kernel with fewer places to trip over
-the ondisk format.
+This was found by inspection after having xfs/305 hang 1 in ~50
+iterations in a quotaoff operation:
 
-In v2 we do some more work cleaning up the d_flags/dq_flags mess,
-finally add the dquot cluster size to the ondisk format declarations
-(because the cluster size actually /does/ affect that), shorten some of
-the long names from v1, and fix quota warning count having been broken
-for years.
+[ 8872.301115] xfs_quota       D13888 92262  91813 0x00004002
+[ 8872.302538] Call Trace:
+[ 8872.303193]  __schedule+0x2d2/0x780
+[ 8872.304108]  ? do_raw_spin_unlock+0x57/0xd0
+[ 8872.305198]  schedule+0x6e/0xe0
+[ 8872.306021]  schedule_timeout+0x14d/0x300
+[ 8872.307060]  ? __next_timer_interrupt+0xe0/0xe0
+[ 8872.308231]  ? xfs_qm_dqusage_adjust+0x200/0x200
+[ 8872.309422]  schedule_timeout_uninterruptible+0x2a/0x30
+[ 8872.310759]  xfs_qm_dquot_walk.isra.0+0x15a/0x1b0
+[ 8872.311971]  xfs_qm_dqpurge_all+0x7f/0x90
+[ 8872.313022]  xfs_qm_scall_quotaoff+0x18d/0x2b0
+[ 8872.314163]  xfs_quota_disable+0x3a/0x60
+[ 8872.315179]  kernel_quotactl+0x7e2/0x8d0
+[ 8872.316196]  ? __do_sys_newstat+0x51/0x80
+[ 8872.317238]  __x64_sys_quotactl+0x1e/0x30
+[ 8872.318266]  do_syscall_64+0x46/0x90
+[ 8872.319193]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 8872.320490] RIP: 0033:0x7f46b5490f2a
+[ 8872.321414] Code: Bad RIP value.
 
-In v3 we separate the incore dquot's dq_flags fields into separate q_type
-and q_flags fields, and introduce a new xfs_dqtype_t to make it obvious
-when a function operates on a *single* quota type.  This also makes it
-easier to validate that outside functions aren't going to screw up the
-incore dquot state.
+Returning -EAGAIN from xfs_qm_dqpurge() without clearing the
+XFS_DQ_FREEING flag means the xfs_qm_dqpurge_all() code can never
+free the dquot, and we loop forever waiting for the XFS_DQ_FREEING
+flag to go away on the dquot that leaked it via -EAGAIN.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=remove-quota-qcore
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=remove-quota-qcore
+Fixes: 8d3d7e2b35ea ("xfs: trylock underlying buffer on dquot flush")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_dquot_buf.c   |   26 ++-
- fs/xfs/libxfs/xfs_format.h      |   29 +++
- fs/xfs/libxfs/xfs_quota_defs.h  |   54 ++++--
- fs/xfs/scrub/quota.c            |   86 +++------
- fs/xfs/scrub/repair.c           |   10 +
- fs/xfs/scrub/repair.h           |    4 
- fs/xfs/xfs_buf_item_recover.c   |    8 -
- fs/xfs/xfs_dquot.c              |  368 +++++++++++++++++++++------------------
- fs/xfs/xfs_dquot.h              |  119 ++++++++-----
- fs/xfs/xfs_dquot_item.c         |    8 +
- fs/xfs/xfs_dquot_item_recover.c |   12 +
- fs/xfs/xfs_icache.c             |    4 
- fs/xfs/xfs_iomap.c              |   42 ++--
- fs/xfs/xfs_qm.c                 |  196 ++++++++++-----------
- fs/xfs/xfs_qm.h                 |  104 +++++------
- fs/xfs/xfs_qm_bhv.c             |   22 +-
- fs/xfs/xfs_qm_syscalls.c        |  257 ++++++++++++++-------------
- fs/xfs/xfs_quota.h              |   10 +
- fs/xfs/xfs_quotaops.c           |   26 +--
- fs/xfs/xfs_trace.h              |  172 +++++++++++++++++-
- fs/xfs/xfs_trans_dquot.c        |  349 +++++++++++++++++++------------------
- 21 files changed, 1075 insertions(+), 831 deletions(-)
+ fs/xfs/xfs_qm.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index d6cd83317344..938023dd8ce5 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -148,6 +148,7 @@ xfs_qm_dqpurge(
+ 			error = xfs_bwrite(bp);
+ 			xfs_buf_relse(bp);
+ 		} else if (error == -EAGAIN) {
++			dqp->dq_flags &= ~XFS_DQ_FREEING;
+ 			goto out_unlock;
+ 		}
+ 		xfs_dqflock(dqp);
 
