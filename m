@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16F6A220EDA
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jul 2020 16:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DA17220EDD
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jul 2020 16:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgGOOIl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jul 2020 10:08:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26081 "EHLO
+        id S1728606AbgGOOIo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jul 2020 10:08:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54601 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728326AbgGOOIl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jul 2020 10:08:41 -0400
+        with ESMTP id S1728626AbgGOOIn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jul 2020 10:08:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594822120;
+        s=mimecast20190719; t=1594822122;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hfn/hyw1xORmef0X+t2LjUPP3d0gwPynLPISJBIEoao=;
-        b=YA9t53PflTl8/IGI1K+yZwYVyDHS7rwzujZwjWJTFsdeS25rbgpY2Cii00R6vKGOhmFUvZ
-        3BATHq+19IEQ6za7aKiCslNRcQeWrU1wenoZz88fntEP7NTSxgFmbBhzp3c7pmADzbBido
-        Hxz423+F5VizFEiVXfRnWkJtETZLW3w=
+        bh=t/yrvPgAp4fm1thhPUXgOPPQ2hkQ3D18gag6YlgIJwU=;
+        b=cZR5j79LhGZ2Yc/0Xwu/acqMg6zsKqnEEMNWT0dsBovlx1t2mTesy/4bukSTEfu7I9Fnw5
+        UIfjSGPA+mpTSqaRfwdUyO3afIvVWXmyH+mErlLRMoQTe0RRpHU+/vooAj2FHmPAuiGj0/
+        2uvcOQ9k2xbGTkHW0mz6P9AqFROQiDI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-KoyZs9HIO3Kl6Sd4NfOVAw-1; Wed, 15 Jul 2020 10:08:38 -0400
-X-MC-Unique: KoyZs9HIO3Kl6Sd4NfOVAw-1
+ us-mta-294-D8voqtL5NyiN0iOnnYvSgA-1; Wed, 15 Jul 2020 10:08:38 -0400
+X-MC-Unique: D8voqtL5NyiN0iOnnYvSgA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F93B107ACCA
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED24C800400
         for <linux-xfs@vger.kernel.org>; Wed, 15 Jul 2020 14:08:37 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-113-214.rdu2.redhat.com [10.10.113.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 529975D9C5
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B10D85D9CA
         for <linux-xfs@vger.kernel.org>; Wed, 15 Jul 2020 14:08:37 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/4] repair: set the in-core inode parent in phase 3
-Date:   Wed, 15 Jul 2020 10:08:33 -0400
-Message-Id: <20200715140836.10197-2-bfoster@redhat.com>
+Subject: [PATCH 2/4] repair: don't double check dir2 sf parent in phase 4
+Date:   Wed, 15 Jul 2020 10:08:34 -0400
+Message-Id: <20200715140836.10197-3-bfoster@redhat.com>
 In-Reply-To: <20200715140836.10197-1-bfoster@redhat.com>
 References: <20200715140836.10197-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -48,51 +48,31 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The inode processing code checks and resets invalid parent values on
-physical inodes in phase 3 but waits to update the parent value in
-the in-core tracking until phase 4. There doesn't appear to be any
-specific reason for the latter beyond caution. In reality, the only
-reason this doesn't cause problems is that phase 3 replaces an
-invalid on-disk parent with another invalid value, so the in-core
-parent returned by phase 4 translates to NULLFSINO.
-
-This is subtle and fragile. To eliminate this duplicate processing
-behavior and break the subtle dependency of requiring an invalid
-dummy value in physical directory inodes, update the in-core parent
-tracking structure at the same point in phase 3 that physical inodes
-are updated. Invalid on-disk parent values will still translate to
-NULLFSINO for the in-core tracking to be identified by later phases.
-This ensures that if a valid dummy value is placed in a physical
-inode (such as rootino) with an invalid parent in phase 3, phase 4
-won't mistakenly return the valid dummy value to be incorrectly set
-in the in-core tracking over the NULLFSINO value that represents the
-broken on-disk state.
+The shortform parent ino verification code runs once in phase 3
+(ino_discovery == true) and once in phase 4 (ino_discovery ==
+false). This is unnecessary and leads to duplicate error messages if
+repair replaces an invalid parent value with zero because zero is
+still an invalid value. Skip the check in phase 4.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- repair/dino_chunks.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ repair/dir2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
-index 6685a4d2..96ed6a5b 100644
---- a/repair/dino_chunks.c
-+++ b/repair/dino_chunks.c
-@@ -859,14 +859,7 @@ next_readbuf:
- 		 */
- 		if (isa_dir)  {
- 			set_inode_isadir(ino_rec, irec_offset);
--			/*
--			 * we always set the parent but
--			 * we may as well wait until
--			 * phase 4 (no inode discovery)
--			 * because the parent info will
--			 * be solid then.
--			 */
--			if (!ino_discovery)  {
-+			if (ino_discovery)  {
- 				ASSERT(parent != 0);
- 				set_inode_parent(ino_rec, irec_offset, parent);
- 				ASSERT(parent ==
+diff --git a/repair/dir2.c b/repair/dir2.c
+index cbbce601..caf6963d 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -480,6 +480,9 @@ _("corrected entry offsets in directory %" PRIu64 "\n"),
+ 	 * check parent (..) entry
+ 	 */
+ 	*parent = libxfs_dir2_sf_get_parent_ino(sfp);
++	if (!ino_discovery)
++		return 0;
++
+ 
+ 	/*
+ 	 * if parent entry is bogus, null it out.  we'll fix it later .
 -- 
 2.21.3
 
