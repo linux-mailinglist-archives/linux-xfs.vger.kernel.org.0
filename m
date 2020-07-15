@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB02F22021B
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jul 2020 03:55:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1AF022021C
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jul 2020 03:55:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgGOBzR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 Jul 2020 21:55:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46612 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgGOBzR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jul 2020 21:55:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F1mwiS076377;
-        Wed, 15 Jul 2020 01:55:14 GMT
+        id S1726964AbgGOBzY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Jul 2020 21:55:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50480 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbgGOBzY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Jul 2020 21:55:24 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F1l5vP167743;
+        Wed, 15 Jul 2020 01:55:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=aF+V7i5aq4iL21ASx/b3+fdzDQqtc+CMULBwTKkWoGw=;
- b=FYPiKvXX4NITfNBOUVHJJubwG/29cpyinUyP+X0Yb6g5n2m4Vm5TY4Nofsn1bdYaXuOi
- 4lpNzVeU/u9dEfKHRpUoLr0tcRM63EyGLPlQezN6oQ3ETrElSyqsIQK9/Y4UkBbswlnz
- XS4sXf4DwhZLOsKotTCkediqhmVPrx0BgQ4WXmYwhPqNuits+CQVAI1EZxJ+47nJW0cX
- v+kTJMh00g8D18ZRXvxVshw0P4mKstdB1rTfTPL+MoXQP0AUrIOms/UexdIQdCNLjTuf
- 0Ap/niOc7+pOUO1S7xoyKMpAbkg30dKgxfacskl6ANJxbZP03+WJP+cx2fKbOO/QiRf+ aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3274ur8q8p-1
+ bh=VpiUfdsFfxj1Jd4AmCnaV5lVucHYwq94cm56aN0VceE=;
+ b=m0DypsREh54TqnyfKVM7Fv6gqTH54fmuuayAy+3ERR140rwr3DFjVAHlXo5FGU54a6Qn
+ oZXAQU/EqEa2gBI7AAUNoFsV3S6VqZu25+sbpSYR/VjLjucx4TTg1hykL1sm92Cvj+dg
+ YZ05hp2d2WDmXiCZzXyTO6f27AMYopqHFoq/kTwQboo58UBv9BWsshISnjdJpT4EDbgq
+ QramTiH/17/M7VLk24g2UMbyWXYuMHNym2zokE4ZWFNgYf3mJN1jzQrjvMueNt1e5Ak4
+ hWsMf/1aLheYqZJRzP/NuHyXwyjoafmNbsR3hxc7ALRPnaDXGmX4ubIHydk0zs6qo21d hg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 3275cm8mxg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 01:55:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F1la6V184491;
-        Wed, 15 Jul 2020 01:53:13 GMT
+        Wed, 15 Jul 2020 01:55:21 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F1lbLA080785;
+        Wed, 15 Jul 2020 01:53:20 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 327qb5wucf-1
+        by aserp3030.oracle.com with ESMTP id 327q0qa80j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 01:53:13 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06F1rDrJ019121;
-        Wed, 15 Jul 2020 01:53:13 GMT
+        Wed, 15 Jul 2020 01:53:20 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06F1rKOk019266;
+        Wed, 15 Jul 2020 01:53:20 GMT
 Received: from localhost (/10.159.237.234)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 18:53:12 -0700
-Subject: [PATCH 24/26] xfs: assume the default quota limits are always set in
- xfs_qm_adjust_dqlimits
+        with ESMTP ; Tue, 14 Jul 2020 18:53:20 -0700
+Subject: [PATCH 25/26] xfs: actually bump warning counts when we send warnings
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Tue, 14 Jul 2020 18:53:11 -0700
-Message-ID: <159477799136.3263162.16638446868281519003.stgit@magnolia>
+Date:   Tue, 14 Jul 2020 18:53:18 -0700
+Message-ID: <159477799812.3263162.13957383827318048593.stgit@magnolia>
 In-Reply-To: <159477783164.3263162.2564345443708779029.stgit@magnolia>
 References: <159477783164.3263162.2564345443708779029.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=919 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=1 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150013
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150013
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=1 phishscore=0 spamscore=0 mlxlogscore=925 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007150013
 Sender: linux-xfs-owner@vger.kernel.org
@@ -71,47 +70,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-We always initialize the default quota limits to something nowadays, so
-we don't need to check that the defaults are set to something before
-using them.
+Currently, xfs quotas have the ability to send netlink warnings when a
+user exceeds the limits.  They also have all the support code necessary
+to convert softlimit warnings into failures if the number of warnings
+exceeds a limit set by the administrator.  Unfortunately, we never
+actually increase the warning counter, so this never actually happens.
+Make it so we actually do something useful with the warning counts.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_dquot.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_trans_dquot.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index e44f80700005..2b52913073b3 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -77,21 +77,21 @@ xfs_qm_adjust_dqlimits(
- 	ASSERT(dq->q_id);
- 	defq = xfs_get_defquota(q, dq->q_type);
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index 78201ff3696b..cbd92d8b693d 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -596,6 +596,7 @@ xfs_dqresv_check(
+ 			return QUOTA_NL_ISOFTLONGWARN;
+ 		}
  
--	if (defq->blk.soft && !dq->q_blk.softlimit) {
-+	if (!dq->q_blk.softlimit) {
- 		dq->q_blk.softlimit = defq->blk.soft;
- 		prealloc = 1;
++		res->warnings++;
+ 		return QUOTA_NL_ISOFTWARN;
  	}
--	if (defq->blk.hard && !dq->q_blk.hardlimit) {
-+	if (!dq->q_blk.hardlimit) {
- 		dq->q_blk.hardlimit = defq->blk.hard;
- 		prealloc = 1;
- 	}
--	if (defq->ino.soft && !dq->q_ino.softlimit)
-+	if (!dq->q_ino.softlimit)
- 		dq->q_ino.softlimit = defq->ino.soft;
--	if (defq->ino.hard && !dq->q_ino.hardlimit)
-+	if (!dq->q_ino.hardlimit)
- 		dq->q_ino.hardlimit = defq->ino.hard;
--	if (defq->rtb.soft && !dq->q_rtb.softlimit)
-+	if (!dq->q_rtb.softlimit)
- 		dq->q_rtb.softlimit = defq->rtb.soft;
--	if (defq->rtb.hard && !dq->q_rtb.hardlimit)
-+	if (!dq->q_rtb.hardlimit)
- 		dq->q_rtb.hardlimit = defq->rtb.hard;
  
- 	if (prealloc)
 
