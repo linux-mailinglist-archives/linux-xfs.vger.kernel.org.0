@@ -2,92 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1209222E61
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jul 2020 00:06:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9DC5222F06
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jul 2020 01:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgGPWGK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jul 2020 18:06:10 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:40099 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726007AbgGPWGK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 18:06:10 -0400
+        id S1726333AbgGPXcj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jul 2020 19:32:39 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39080 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726113AbgGPXcj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 19:32:39 -0400
 Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 3C2C1D59DF1;
-        Fri, 17 Jul 2020 08:06:06 +1000 (AEST)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C7F773A4164;
+        Fri, 17 Jul 2020 09:32:35 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1jwC0z-0000p9-O4; Fri, 17 Jul 2020 08:06:05 +1000
-Date:   Fri, 17 Jul 2020 08:06:05 +1000
+        id 1jwDMg-0001MG-1N; Fri, 17 Jul 2020 09:32:34 +1000
+Date:   Fri, 17 Jul 2020 09:32:34 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/4] repair: use fs root ino for dummy parent value
- instead of zero
-Message-ID: <20200716220605.GM2005@dread.disaster.area>
-References: <20200715140836.10197-1-bfoster@redhat.com>
- <20200715140836.10197-4-bfoster@redhat.com>
- <20200715222216.GH2005@dread.disaster.area>
- <20200716104103.GB26218@bfoster>
+Subject: Re: [PATCH 01/11] xfs: drop the type parameter from xfs_dquot_verify
+Message-ID: <20200716233234.GN2005@dread.disaster.area>
+References: <159488191927.3813063.6443979621452250872.stgit@magnolia>
+ <159488192588.3813063.14434497860489645794.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716104103.GB26218@bfoster>
+In-Reply-To: <159488192588.3813063.14434497860489645794.stgit@magnolia>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
         a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=cVBLk4NVIW_AA7u7hokA:9 a=y3QdnymCw1F_V5lu:21 a=8AtYZZoPygbbD5fp:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=lloFehcQa8CKRPW5UqkA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 06:41:03AM -0400, Brian Foster wrote:
-> On Thu, Jul 16, 2020 at 08:22:16AM +1000, Dave Chinner wrote:
-> > On Wed, Jul 15, 2020 at 10:08:35AM -0400, Brian Foster wrote:
-> > > If a directory inode has an invalid parent ino on disk, repair
-> > > replaces the invalid value with a dummy value of zero in the buffer
-> > > and NULLFSINO in the in-core parent tracking. The zero value serves
-> > > no functional purpose as it is still an invalid value and the parent
-> > > must be repaired by phase 6 based on the in-core state before the
-> > > buffer can be written out.  Instead, use the root fs inode number as
-> > > a catch all for invalid parent values so phase 6 doesn't have to
-> > > create custom verifier infrastructure just to work around this
-> > > behavior.
-> > > 
-> > > Signed-off-by: Brian Foster <bfoster@redhat.com>
-> > 
-> > Reasonale, but wouldn't it be better to use lost+found as the dummy
-> > parent inode (i.e. the orphanage inode)? Because if the parent can't
-> > be found and the inode reconnected correctly, we're going to put it
-> > in lost+found, anyway?
-> > 
+On Wed, Jul 15, 2020 at 11:45:25PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> That was my first thought when I originally wrote this, but there's
-> several reasons I didn't end up doing that. The orphanage isn't created
-> until much later in repair and only if we end up with orphaned inodes.
-> We'd have to change that in order to use a dummy parent inode number
-> that corresponds to a valid orphanage, and TBH I'm not even sure if it's
-> always going to be safe to expect an inode allocation to work at this
-> point in repair.
+> xfs_qm_reset_dqcounts (i.e. quotacheck) is the only xfs_dqblk_verify
+> caller that actually knows the specific quota type that it's looking
+> for.  Since everything else just pass in type==0 (including the buffer
+> verifier), drop the parameter and open-code the check like
+> xfs_dquot_from_disk already does.
 > 
-> Further, it's still too early to tell whether these directories are
-> orphaned because the directory scan in phase 6 can easily repair
-> missing/broken parent information. The scenarios I used to test this
-> functionality didn't involve the orphanage at all, so now we not only
-> need to change when/how the orphanage is created, but need to free it if
-> it ends up unused before we exit (which could be via any number of
-> do_error() calls before we ever get close to phase 6).
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Fair enough - can you please capture all this in the commit message
-to preserve the explanation of why the root inode was chosen and
-not lost+found?
+Looks fine.
 
-Cheers,
-
-Dave.
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 -- 
 Dave Chinner
 david@fromorbit.com
