@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FB9F221CC8
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jul 2020 08:48:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02762221CC9
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jul 2020 08:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgGPGrn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jul 2020 02:47:43 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43308 "EHLO
+        id S1728115AbgGPGrt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jul 2020 02:47:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43362 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgGPGrm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 02:47:42 -0400
+        with ESMTP id S1728036AbgGPGrt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 02:47:49 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G6l2RC167325
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:47:41 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G6lAn5167363
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:47:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=j1dd8A2qTuvJUEpQSHJqlrMAp8+CI1a9pkf8yOKxCaI=;
- b=MwaA+n2+ewxUEpKih+MUtvmwr1qcp6erTcsbrkx/lj3bHm9Oq+5YbMFtuOUqajMxTxCW
- uOAb+u10in1P3t6HQ5xiFihYqVSmjsnejf+kACQEyJXo8HLUVsZ/Tj+W8a8K7ArX0avW
- G2q7EhK+SGTR5R098IFB9IQmUiBynEGw9+jR7YS6gegJaRy6SJ2CjW5+kjmk7vjHFgAX
- vXNIestpLtt3djQJXHELpnxuMiuhYcjZIAablsYwoC74wVpZPSpIjBblz4xX1zYkpiXv
- GXeZ1G7wPVAnhlaG7e4jpYkcXSAY7ON7qkChqxaRi7haRSWVwB/8IVM2KWsAbp+CyIW/ 9A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 3275cmff5e-1
+ bh=bMdahKgd+2x1pbvpfxSvQ9wBmALTHeIHcJ+2IEVr+RY=;
+ b=iXYdppdrFE4eX1CnaLd6/NGF+fPMGMrvnmwds0ejNASjyy810P8iExWxc2kv5fLgPs0O
+ Eh+kruBbyTvxG8fUgJGsV4myOg8ig5eu8NkeWIY0yU/u6Jnjm8swSpZOXSl0XAfmxWP/
+ obHNNRB5/+Q111m3Z4clz0JDeQhfaTCptBFfwzdATFRTufJMRS6nQPi9LOvGlkqJZq5n
+ fH+8D/zfubRFsgVqpoM4O9BrEFmGwc4eIE5VvxiexC9J8nB/RxsMOsnnPaHxt8BQm1Qo
+ oAcF7x2WCRpIHE7aZpfrJG6aV0A3PU3+gjHQzi83nQsVsYXNBF8+DRhIn4CC7R++NFMi /Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 3275cmff5v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:47:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G6gieL024544
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:41 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:47:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G6hfRY142964
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:47 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 327qc2jqwq-1
+        by aserp3020.oracle.com with ESMTP id 327qba7403-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:40 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06G6jeIW011432
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:40 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:47 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06G6jkkf011553
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jul 2020 06:45:46 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 23:45:40 -0700
-Subject: [PATCH 03/11] xfs: refactor testing if a particular dquot is being
- enforced
+        with ESMTP ; Wed, 15 Jul 2020 23:45:46 -0700
+Subject: [PATCH 04/11] xfs: remove the XFS_QM_IS[UGP]DQ macros
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 15 Jul 2020 23:45:39 -0700
-Message-ID: <159488193887.3813063.5488114906141814243.stgit@magnolia>
+Date:   Wed, 15 Jul 2020 23:45:45 -0700
+Message-ID: <159488194524.3813063.1536581067461068233.stgit@magnolia>
 In-Reply-To: <159488191927.3813063.6443979621452250872.stgit@magnolia>
 References: <159488191927.3813063.6443979621452250872.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,12 +53,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=1 bulkscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007160050
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 priorityscore=1501
  bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
  impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
@@ -71,84 +70,100 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Create a small helper to test if enforcement is enabled for a
-given incore dquot and replace the open-code logic testing.
+Remove these macros and use xfs_dquot_type() for everything.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_dquot.h       |   17 +++++++++++++++++
- fs/xfs/xfs_qm_syscalls.c |    9 ++-------
- fs/xfs/xfs_trans_dquot.c |    4 +---
- 3 files changed, 20 insertions(+), 10 deletions(-)
+ fs/xfs/xfs_dquot.h       |    9 ++++++---
+ fs/xfs/xfs_qm.h          |   11 -----------
+ fs/xfs/xfs_trans_dquot.c |   15 ++++++++++-----
+ 3 files changed, 16 insertions(+), 19 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-index 17a21677723f..fcf9bd676615 100644
+index fcf9bd676615..60bccb5f7435 100644
 --- a/fs/xfs/xfs_dquot.h
 +++ b/fs/xfs/xfs_dquot.h
-@@ -156,6 +156,23 @@ static inline struct xfs_dquot *xfs_inode_dquot(struct xfs_inode *ip, int type)
- 	}
+@@ -128,6 +128,12 @@ static inline void xfs_dqunlock(struct xfs_dquot *dqp)
+ 	mutex_unlock(&dqp->q_qlock);
  }
  
-+/* Decide if the dquot's limits are actually being enforced. */
-+static inline bool
-+xfs_dquot_is_enforced(
-+	const struct xfs_dquot	*dqp)
++static inline int
++xfs_dquot_type(const struct xfs_dquot *dqp)
 +{
-+	switch (dqp->dq_flags & XFS_DQTYPE_REC_MASK) {
-+	case XFS_DQTYPE_USER:
-+		return XFS_IS_UQUOTA_ENFORCED(dqp->q_mount);
-+	case XFS_DQTYPE_GROUP:
-+		return XFS_IS_GQUOTA_ENFORCED(dqp->q_mount);
-+	case XFS_DQTYPE_PROJ:
-+		return XFS_IS_PQUOTA_ENFORCED(dqp->q_mount);
-+	}
-+	ASSERT(0);
-+	return false;
++	return dqp->dq_flags & XFS_DQTYPE_REC_MASK;
 +}
 +
- /*
-  * Check whether a dquot is under low free space conditions. We assume the quota
-  * is enabled and enforced.
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 119c3d7d5f51..f7dbc702e4d6 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -660,19 +660,14 @@ xfs_qm_scall_getquota_fill_qc(
- 	 * gets turned off. No need to confuse the user level code,
- 	 * so return zeroes in that case.
- 	 */
--	if ((!XFS_IS_UQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_USER) ||
--	    (!XFS_IS_GQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_GROUP) ||
--	    (!XFS_IS_PQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_PROJ)) {
-+	if (!xfs_dquot_is_enforced(dqp)) {
- 		dst->d_spc_timer = 0;
- 		dst->d_ino_timer = 0;
- 		dst->d_rt_spc_timer = 0;
- 	}
+ static inline int xfs_this_quota_on(struct xfs_mount *mp, int type)
+ {
+ 	switch (type & XFS_DQTYPE_REC_MASK) {
+@@ -192,9 +198,6 @@ void xfs_dquot_to_disk(struct xfs_disk_dquot *ddqp, struct xfs_dquot *dqp);
  
- #ifdef DEBUG
--	if (((XFS_IS_UQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_USER) ||
--	     (XFS_IS_GQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_GROUP) ||
--	     (XFS_IS_PQUOTA_ENFORCED(mp) && type == XFS_DQTYPE_PROJ)) &&
--	    dqp->q_id != 0) {
-+	if (xfs_dquot_is_enforced(dqp) && dqp->q_id != 0) {
- 		if ((dst->d_space > dst->d_spc_softlimit) &&
- 		    (dst->d_spc_softlimit > 0)) {
- 			ASSERT(dst->d_spc_timer != 0);
+ #define XFS_DQ_IS_LOCKED(dqp)	(mutex_is_locked(&((dqp)->q_qlock)))
+ #define XFS_DQ_IS_DIRTY(dqp)	((dqp)->q_flags & XFS_DQFLAG_DIRTY)
+-#define XFS_QM_ISUDQ(dqp)	((dqp)->dq_flags & XFS_DQTYPE_USER)
+-#define XFS_QM_ISPDQ(dqp)	((dqp)->dq_flags & XFS_DQTYPE_PROJ)
+-#define XFS_QM_ISGDQ(dqp)	((dqp)->dq_flags & XFS_DQTYPE_GROUP)
+ 
+ void		xfs_qm_dqdestroy(struct xfs_dquot *dqp);
+ int		xfs_qm_dqflush(struct xfs_dquot *dqp, struct xfs_buf **bpp);
+diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+index 21bc67d4962c..f04af35349d7 100644
+--- a/fs/xfs/xfs_qm.h
++++ b/fs/xfs/xfs_qm.h
+@@ -101,17 +101,6 @@ xfs_quota_inode(xfs_mount_t *mp, uint dq_flags)
+ 	return NULL;
+ }
+ 
+-static inline int
+-xfs_dquot_type(struct xfs_dquot *dqp)
+-{
+-	if (XFS_QM_ISUDQ(dqp))
+-		return XFS_DQTYPE_USER;
+-	if (XFS_QM_ISGDQ(dqp))
+-		return XFS_DQTYPE_GROUP;
+-	ASSERT(XFS_QM_ISPDQ(dqp));
+-	return XFS_DQTYPE_PROJ;
+-}
+-
+ extern void	xfs_trans_mod_dquot(struct xfs_trans *tp, struct xfs_dquot *dqp,
+ 				    uint field, int64_t delta);
+ extern void	xfs_trans_dqjoin(struct xfs_trans *, struct xfs_dquot *);
 diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index ea61e279f831..d7d710d25bbd 100644
+index d7d710d25bbd..19d3e283aafa 100644
 --- a/fs/xfs/xfs_trans_dquot.c
 +++ b/fs/xfs/xfs_trans_dquot.c
-@@ -650,9 +650,7 @@ xfs_trans_dqresv(
- 	}
+@@ -156,14 +156,19 @@ xfs_trans_get_dqtrx(
+ 	int			i;
+ 	struct xfs_dqtrx	*qa;
  
- 	if ((flags & XFS_QMOPT_FORCE_RES) == 0 && dqp->q_id &&
--	    ((XFS_IS_UQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISUDQ(dqp)) ||
--	     (XFS_IS_GQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISGDQ(dqp)) ||
--	     (XFS_IS_PQUOTA_ENFORCED(dqp->q_mount) && XFS_QM_ISPDQ(dqp)))) {
-+	    xfs_dquot_is_enforced(dqp)) {
- 		int		quota_nl;
- 		bool		fatal;
+-	if (XFS_QM_ISUDQ(dqp))
++	switch (xfs_dquot_type(dqp)) {
++	case XFS_DQTYPE_USER:
+ 		qa = tp->t_dqinfo->dqs[XFS_QM_TRANS_USR];
+-	else if (XFS_QM_ISGDQ(dqp))
++		break;
++	case XFS_DQTYPE_GROUP:
+ 		qa = tp->t_dqinfo->dqs[XFS_QM_TRANS_GRP];
+-	else if (XFS_QM_ISPDQ(dqp))
++		break;
++	case XFS_DQTYPE_PROJ:
+ 		qa = tp->t_dqinfo->dqs[XFS_QM_TRANS_PRJ];
+-	else
++		break;
++	default:
+ 		return NULL;
++	}
  
+ 	for (i = 0; i < XFS_QM_TRANS_MAXDQS; i++) {
+ 		if (qa[i].qt_dquot == NULL ||
+@@ -713,7 +718,7 @@ xfs_trans_dqresv(
+ 
+ error_return:
+ 	xfs_dqunlock(dqp);
+-	if (XFS_QM_ISPDQ(dqp))
++	if (xfs_dquot_type(dqp) == XFS_DQTYPE_PROJ)
+ 		return -ENOSPC;
+ 	return -EDQUOT;
+ }
 
