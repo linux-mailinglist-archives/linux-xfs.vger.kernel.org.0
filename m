@@ -2,134 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76E1022199D
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jul 2020 03:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AF112219B2
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jul 2020 04:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGPBsI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jul 2020 21:48:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42874 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGPBsH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jul 2020 21:48:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G1WAlq166704;
-        Thu, 16 Jul 2020 01:48:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=zr+EHWUF+aV9s/J/Kdy3dUa1fjf7lQyN00if1jicjHM=;
- b=swy56HIJKC5uHbT5Q+HOe9JAK6A2hfcC+Mc5W84QE0hFHZqrpoumTfPljLcnIPGN28+5
- 2xt2fxhnAhh2gCp+On/GRvQGa30DcYQ0ap+QG1yCW0+zhnY3VHmrho1Awf/uo/QUBD3y
- MdnXN/QiVKhh2X9Xy5wO9szWI9MH2rcQwukZAcqfj5s2BQVO49hbdVVcaRDfPlIjEXyp
- 2YfnabDzzFRvdUSszMl5lA1J4ZuueIy2R5Z8Cf/2F8JyPD933K0XeOBTbHDuDkPu3SDi
- +vcfmiepidWqp9Cycmx4iWydN3zgm/SRw+J0sYHqTuMEA6Z7p4etW+XpbWeOGdqdrUhs gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3274uremey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 01:48:03 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06G1Wgrs081158;
-        Thu, 16 Jul 2020 01:48:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 327qc25165-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 01:48:02 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06G1m15w025652;
-        Thu, 16 Jul 2020 01:48:01 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 18:48:00 -0700
-Date:   Wed, 15 Jul 2020 18:47:59 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
+        id S1726960AbgGPCCV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jul 2020 22:02:21 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:56210 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726796AbgGPCCV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jul 2020 22:02:21 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id B81CE5F1812;
+        Thu, 16 Jul 2020 12:02:16 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jvtDt-00027i-LT; Thu, 16 Jul 2020 12:02:09 +1000
+Date:   Thu, 16 Jul 2020 12:02:09 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
 Subject: Re: [PATCH] xfs: fix inode allocation block res calculation
  precedence
-Message-ID: <20200716014759.GH3151642@magnolia>
+Message-ID: <20200716020209.GK2005@dread.disaster.area>
 References: <20200715193310.22002-1-bfoster@redhat.com>
  <20200715222935.GI2005@dread.disaster.area>
+ <20200716014759.GH3151642@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715222935.GI2005@dread.disaster.area>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160009
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=5 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160009
+In-Reply-To: <20200716014759.GH3151642@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=yfOv0ADgII1o1NBEPHwA:9 a=oVsgy_YJIYrHwS7q:21 a=yKepPxqi-PQYBw2A:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:29:35AM +1000, Dave Chinner wrote:
-> On Wed, Jul 15, 2020 at 03:33:10PM -0400, Brian Foster wrote:
-> > The block reservation calculation for inode allocation is supposed
-> > to consist of the blocks required for the inode chunk plus
-> > (maxlevels-1) of the inode btree multiplied by the number of inode
-> > btrees in the fs (2 when finobt is enabled, 1 otherwise).
+On Wed, Jul 15, 2020 at 06:47:59PM -0700, Darrick J. Wong wrote:
+> On Thu, Jul 16, 2020 at 08:29:35AM +1000, Dave Chinner wrote:
+> > On Wed, Jul 15, 2020 at 03:33:10PM -0400, Brian Foster wrote:
+> > > The block reservation calculation for inode allocation is supposed
+> > > to consist of the blocks required for the inode chunk plus
+> > > (maxlevels-1) of the inode btree multiplied by the number of inode
+> > > btrees in the fs (2 when finobt is enabled, 1 otherwise).
+> > > 
+> > > Instead, the macro returns (ialloc_blocks + 2) due to a precedence
+> > > error in the calculation logic. This leads to block reservation
+> > > overruns via generic/531 on small block filesystems with finobt
+> > > enabled. Add braces to fix the calculation and reserve the
+> > > appropriate number of blocks.
+> > > 
+> > > Fixes: 9d43b180af67 ("xfs: update inode allocation/free transaction reservations for finobt")
+> > > Signed-off-by: Brian Foster <bfoster@redhat.com>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_trans_space.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_trans_space.h b/fs/xfs/libxfs/xfs_trans_space.h
+> > > index 88221c7a04cc..c6df01a2a158 100644
+> > > --- a/fs/xfs/libxfs/xfs_trans_space.h
+> > > +++ b/fs/xfs/libxfs/xfs_trans_space.h
+> > > @@ -57,7 +57,7 @@
+> > >  	XFS_DAREMOVE_SPACE_RES(mp, XFS_DATA_FORK)
+> > >  #define	XFS_IALLOC_SPACE_RES(mp)	\
+> > >  	(M_IGEO(mp)->ialloc_blks + \
+> > > -	 (xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1 * \
+> > > +	 ((xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1) * \
+> > >  	  (M_IGEO(mp)->inobt_maxlevels - 1)))
 > > 
-> > Instead, the macro returns (ialloc_blocks + 2) due to a precedence
-> > error in the calculation logic. This leads to block reservation
-> > overruns via generic/531 on small block filesystems with finobt
-> > enabled. Add braces to fix the calculation and reserve the
-> > appropriate number of blocks.
+> > Ugh. THese macros really need rewriting as static inline functions.
+> > This would not have happened if it were written as:
 > > 
-> > Fixes: 9d43b180af67 ("xfs: update inode allocation/free transaction reservations for finobt")
-> > Signed-off-by: Brian Foster <bfoster@redhat.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_trans_space.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > static inline int
+> > xfs_ialloc_space_res(struct xfs_mount *mp)
+> > {
+> > 	int	res = M_IGEO(mp)->ialloc_blks;
 > > 
-> > diff --git a/fs/xfs/libxfs/xfs_trans_space.h b/fs/xfs/libxfs/xfs_trans_space.h
-> > index 88221c7a04cc..c6df01a2a158 100644
-> > --- a/fs/xfs/libxfs/xfs_trans_space.h
-> > +++ b/fs/xfs/libxfs/xfs_trans_space.h
-> > @@ -57,7 +57,7 @@
-> >  	XFS_DAREMOVE_SPACE_RES(mp, XFS_DATA_FORK)
-> >  #define	XFS_IALLOC_SPACE_RES(mp)	\
-> >  	(M_IGEO(mp)->ialloc_blks + \
-> > -	 (xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1 * \
-> > +	 ((xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1) * \
-> >  	  (M_IGEO(mp)->inobt_maxlevels - 1)))
+> > 	res += M_IGEO(mp)->inobt_maxlevels - 1;
+> > 	if (xfs_sb_version_hasfinobt(&mp->m_sb))
+> > 		res += M_IGEO(mp)->inobt_maxlevels - 1;
+> > 	return res;
+> > }
+> > 
+> > Next question: why is this even a macro that is calculated on demand
+> > instead of a read-only constant held in inode geometry calculated
+> > at mount time? Then it doesn't even need to be an inline function
+> > and can just be rolled into xfs_ialloc_setup_geometry()....
 > 
-> Ugh. THese macros really need rewriting as static inline functions.
-> This would not have happened if it were written as:
-> 
-> static inline int
-> xfs_ialloc_space_res(struct xfs_mount *mp)
-> {
-> 	int	res = M_IGEO(mp)->ialloc_blks;
-> 
-> 	res += M_IGEO(mp)->inobt_maxlevels - 1;
-> 	if (xfs_sb_version_hasfinobt(&mp->m_sb))
-> 		res += M_IGEO(mp)->inobt_maxlevels - 1;
-> 	return res;
-> }
-> 
-> Next question: why is this even a macro that is calculated on demand
-> instead of a read-only constant held in inode geometry calculated
-> at mount time? Then it doesn't even need to be an inline function
-> and can just be rolled into xfs_ialloc_setup_geometry()....
+> Yeah, I hate those macros too.  Fixing all that sounds like a <cough>
+> cleanup series for someone, but in the meantime this is easy enough to
+> backport to stable kernels.
 
-Yeah, I hate those macros too.  Fixing all that sounds like a <cough>
-cleanup series for someone, but in the meantime this is easy enough to
-backport to stable kernels.
+Well, I'm not suggesting that we have to fix all of them at once.
+Just converting this specific one to a IGEO variable is probably
+only 20 lines of code, which is still an "easy to backport" fix.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+i.e. XFS_IALLOC_SPACE_RES() is used in just 7 places in the code,
+4 of them are in that same header file, so it's a simple, standalone
+patch that fixes the bug by addressing the underlying cause of
+the problem (i.e. nasty macro!).
 
---D
+Historically speaking , we have cleaned up stuff like this to fix
+the bug, not done a one liner and then left fixing the root cause to
+some larger chunk of future work. The "one-liner" approach is
+largely a recent invention. I look at this sort of thing as being
+similar to cleaning up typedefs: we remove typedefs as we change
+surrounding code, thereby slowly remove them over time. We could
+just remove them all as one big patchset, but we don't do that
+because of all the outstanding work it would cause conflicts in.
 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Perhaps we've lost sight of the fact that doing things in little
+chunks on demand actually results in a lot of good cleanup change
+over time. We really don't have to do cleanups as one huge chunk of
+work all at once....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
