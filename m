@@ -2,116 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFD1C223031
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jul 2020 03:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5993122303B
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jul 2020 03:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgGQBJX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Jul 2020 21:09:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49414 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbgGQBJW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 21:09:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06H12RpR189306;
-        Fri, 17 Jul 2020 01:09:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=yZ6tmIXQOFerKREbPltSyNNs7lCT0sUVIUAS2o5zUaA=;
- b=r/0XSuZPG3E5pzCQu+An3bVPiXlK3kAsOUyI/bRlgWY7REW/SnrAwEIrkamLIIi78OhI
- ppnT7A7tKyTaS0w+kfDfK0sVYB+BQDodd2fWA/ksstYKbjHcHtMFNltviG/WriZfAC80
- VkEmgCUEU7eHBYYOVBFHo2J71ON6jG5La2lZuPiPzp6c6SHtZSs4HT/uHYT6g4jcS2nd
- yyGqOjVZqsWTk+S1iJRSyY8BTGhZahdbp3HUQADHezWjS9Q6aLRwp7Tykuj+OQHq1/15
- PNpGXgGHKuoZHH1MW43+td3leL/M9oQNIeGiuWae1G8AqmQ4Kzo2mtFeC9uG3EOdeLUx 5w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3274urmkvv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 01:09:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06H131MS113388;
-        Fri, 17 Jul 2020 01:07:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 327qc4hr60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jul 2020 01:07:20 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06H17I9A030991;
-        Fri, 17 Jul 2020 01:07:18 GMT
-Received: from localhost (/10.159.154.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jul 2020 18:07:18 -0700
-Date:   Thu, 16 Jul 2020 18:07:15 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
+        id S1726820AbgGQBLn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Jul 2020 21:11:43 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:47277 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726636AbgGQBLn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Jul 2020 21:11:43 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id D98B45ECBFC;
+        Fri, 17 Jul 2020 11:11:40 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jwEuZ-0001tf-FU; Fri, 17 Jul 2020 11:11:39 +1000
+Date:   Fri, 17 Jul 2020 11:11:39 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 08/11] xfs: replace a few open-coded XFS_DQTYPE_REC_MASK
- uses
-Message-ID: <20200717010715.GL3151642@magnolia>
+Subject: Re: [PATCH 10/11] xfs: improve ondisk dquot flags checking
+Message-ID: <20200717011139.GY2005@dread.disaster.area>
 References: <159488191927.3813063.6443979621452250872.stgit@magnolia>
- <159488197022.3813063.2727213433560259185.stgit@magnolia>
- <20200717000242.GU2005@dread.disaster.area>
+ <159488198306.3813063.16348101518917273554.stgit@magnolia>
+ <20200717001359.GW2005@dread.disaster.area>
+ <20200717010528.GK3151642@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717000242.GU2005@dread.disaster.area>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007170004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=1 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007170004
+In-Reply-To: <20200717010528.GK3151642@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=dK6iRUtyjZiKHoUV-ngA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:02:42AM +1000, Dave Chinner wrote:
-> On Wed, Jul 15, 2020 at 11:46:10PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Jul 16, 2020 at 06:05:28PM -0700, Darrick J. Wong wrote:
+> On Fri, Jul 17, 2020 at 10:13:59AM +1000, Dave Chinner wrote:
+> > On Wed, Jul 15, 2020 at 11:46:23PM -0700, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > Create an XFS_DQTYPE_ANY mask for ondisk dquots flags, and use that to
+> > > ensure that we never accept any garbage flags when we're loading dquots.
+> > > While we're at it, restructure the quota type flag checking to use the
+> > > proper masking.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_dquot_buf.c |   11 ++++++++---
+> > >  fs/xfs/libxfs/xfs_format.h    |    2 ++
+> > >  2 files changed, 10 insertions(+), 3 deletions(-)
 > > 
-> > Fix a few places where we open-coded this mask constant.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/xfs/xfs_dquot_item_recover.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/xfs_dquot_item_recover.c b/fs/xfs/xfs_dquot_item_recover.c
-> > index d7eb85c7d394..93178341569a 100644
-> > --- a/fs/xfs/xfs_dquot_item_recover.c
-> > +++ b/fs/xfs/xfs_dquot_item_recover.c
-> > @@ -39,7 +39,7 @@ xlog_recover_dquot_ra_pass2(
-> >  	if (item->ri_buf[1].i_len < sizeof(struct xfs_disk_dquot))
-> >  		return;
-> >  
-> > -	type = recddq->d_flags & (XFS_DQTYPE_USER | XFS_DQTYPE_PROJ | XFS_DQTYPE_GROUP);
-> > +	type = recddq->d_flags & XFS_DQTYPE_REC_MASK;
-> >  	ASSERT(type);
-> >  	if (log->l_quotaoffs_flag & type)
-> >  		return;
-> > @@ -91,7 +91,7 @@ xlog_recover_dquot_commit_pass2(
-> >  	/*
-> >  	 * This type of quotas was turned off, so ignore this record.
-> >  	 */
-> > -	type = recddq->d_flags & (XFS_DQTYPE_USER | XFS_DQTYPE_PROJ | XFS_DQTYPE_GROUP);
-> > +	type = recddq->d_flags & XFS_DQTYPE_REC_MASK;
+> > Ok, I looked at this and questioned why it existed and why the
+> > code didn't just use XFS_DQTYPE_REC_MASK directly. I think this
+> > change exists because you plan on adding a new on-disk flag for
+> > bigtime support and hence XFS_DQTYPE_ANY will grow to include the
+> > new flag, right?
 > 
-> Couldn't these both be converted to xfs_dquot_type(recddq)?
-
-xfs_dquot_type takes a pointer to a incore dquot, not a struct
-xfs_disk_dquot, so no.
-
---D
-
-> Cheers,
+> Correct.
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> > If so, can you add that to the commit message?
+> 
+> Ok, will do.
+
+Thanks. With that:
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
