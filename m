@@ -2,131 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E643D224784
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jul 2020 02:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2FAE2248BD
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jul 2020 06:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgGRAmG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Jul 2020 20:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbgGRAmG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:42:06 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD49D20759;
-        Sat, 18 Jul 2020 00:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595032925;
-        bh=/1rAyGat83oAOmSiVA4ydtrSEo9zRVg0c/t7EMZcIdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mYkgYxgsdHKRmYVlDNK7pvJCEBRS4vRnhBqjKnDGtLjQk30LQEQWZJCD8s9yM5Esv
-         M9VvPkwzkpKFOrMvijTiC8zAoh3Ok2Vxw+p48pqoMqtpoZjjA08VMVA9asI9PWIifY
-         Ng/zeSG53TWDmhHOlmf4UGxQDo6XblTQIPoN/FPg=
-Date:   Fri, 17 Jul 2020 17:42:03 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v2] fs/direct-io: fix one-time init of ->s_dio_done_wq
-Message-ID: <20200718004203.GA2183@sol.localdomain>
-References: <20200717050510.95832-1-ebiggers@kernel.org>
- <20200718001536.GB2005@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200718001536.GB2005@dread.disaster.area>
+        id S1725868AbgGREfx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Jul 2020 00:35:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60400 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgGREfx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Jul 2020 00:35:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4ZqsP075499
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:35:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2020-01-29;
+ bh=HVXc4pJ7tMXoWpK3w7tP3bbkGGKd0JWv1uhqpDfK/wM=;
+ b=Q+Qoh8/+kYuIc52Zm+96yiQ5NlAF3VLia+oCPe1h28FTtnktrwWz0YVNSF727rxXfGlp
+ t95+KxWU+6f3GAZY7uzkHt5mQWkFl79sNt+YaLXtDXwyhaa5KHHIT3pwOYz9Jf1v6n5k
+ 55gKcw9TcQDx3GLFi04OuXVSGnwYOYf3TvqNns06XuLth8nkQcQ9ubo/OOAzlhWe6jsN
+ YEHctifx0fd6eSAq8zT8i14Cry0o+OMm4NLMrGCSMye2N8mkk+9WsJeEirDJAPa34iEB
+ g5UfVRAE+XAHSHzTa/S7KXEuFqQ7GrN4uxvSZ9olPDeRak4W3xHeXWw+tw3Gi3N1r+/a 7g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32brgr05gr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:35:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4XlBX169288
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32brw1w76u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:51 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06I4Xo6k003162
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:50 GMT
+Received: from localhost.localdomain (/67.1.142.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jul 2020 21:33:50 -0700
+From:   Allison Collins <allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v11 00/26] xfsprogs: Delay Ready Attributes
+Date:   Fri, 17 Jul 2020 21:33:16 -0700
+Message-Id: <20200718043342.6432-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 adultscore=0 spamscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007180030
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007180030
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Dave,
+Hi all,
 
-On Sat, Jul 18, 2020 at 10:15:36AM +1000, Dave Chinner wrote:
-> On Thu, Jul 16, 2020 at 10:05:10PM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Correctly implement the "one-time" init pattern for ->s_dio_done_wq.
-> > This fixes the following issues:
-> > 
-> > - The LKMM doesn't guarantee that the workqueue will be seen initialized
-> >   before being used, if another CPU allocated it.  With regards to
-> >   specific CPU architectures, this is true on at least Alpha, but it may
-> >   be true on other architectures too if the internal implementation of
-> >   workqueues causes use of the workqueue to involve a control
-> >   dependency.  (There doesn't appear to be a control dependency
-> >   currently, but it's hard to tell and it could change in the future.)
-> > 
-> > - The preliminary checks for sb->s_dio_done_wq are a data race, since
-> >   they do a plain load of a concurrently modified variable.  According
-> >   to the C standard, this undefined behavior.  In practice, the kernel
-> >   does sometimes makes assumptions about data races might be okay in
-> >   practice, but these rules are undocumented and not uniformly agreed
-> >   upon, so it's best to avoid cases where they might come into play.
-> > 
-> > Following the guidance for one-time init I've proposed at
-> > https://lkml.kernel.org/r/20200717044427.68747-1-ebiggers@kernel.org,
-> > replace it with the simplest implementation that is guaranteed to be
-> > correct while still achieving the following properties:
-> > 
-> >     - Doesn't make direct I/O users contend on a mutex in the fast path.
-> > 
-> >     - Doesn't allocate the workqueue when it will never be used.
-> > 
-> > Fixes: 7b7a8665edd8 ("direct-io: Implement generic deferred AIO completions")
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> > 
-> > v2: new implementation using smp_load_acquire() + smp_store_release()
-> >     and a mutex.
-> 
-> A mutex?
-> 
-> That's over-engineered premature optimisation - the allocation path
-> is a slow path that will only ever be hit only on the first few
-> direct IOs if an app manages to synchronise it's first ever
-> concurrent DIOs to different files perfectly. There is zero need to
-> "optimise" the code like this.
+This set applies the corresponding changes for delayed ready attributes to
+xfsprogs. I will pick up the reviews from the kernel side series and mirror
+them here.  This set also includes some patches from the kernel side that have
+not yet been ported.  They are not part of the delayed ready attr set, but
+they are required in order for the kernel side ports to seat correctly.
 
-You're completely misunderstanding the point of this change.  The mutex version
-is actually simpler and easier to get right than the cmpxchg() version (which
-what I'm replacing) -- see the tools/memory-model/Documentation/ patch I've
-proposed which explains this.  In fact the existing use of cmpxchg() is wrong,
-since cmpxchg() doesn't guarantee an ACQUIRE barrier on failure.
+This series can also be viewed on github here:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v11
 
-> 
-> I've already suggested that we get rid of this whole dynamic
-> initialisation code out of the direct IO path altogether for good
-> reason: all of this goes away and we don't have to care about
-> optimising it for performance at all.
-> 
-> We have two options as I see it: always allocate the workqueue on
-> direct IO capable filesytsems in their ->fill_super() method, or
-> allocate it on the first open(O_DIRECT) where we check if O_DIRECT
-> is supported by the filesystem.
-> 
-> i.e. do_dentry_open() does this:
-> 
->         /* NB: we're sure to have correct a_ops only after f_op->open */
->         if (f->f_flags & O_DIRECT) {
->                 if (!f->f_mapping->a_ops || !f->f_mapping->a_ops->direct_IO)
->                         return -EINVAL;
->         }
-> 
-> Allocate the work queue there, and we don't need to care about how
-> fast or slow setting up the workqueue is and so there is zero need
-> to optimise it for speed.
+And also the extended delayed attribute and parent pointer series:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v11_extended
 
-You also suggested about 4 other different things, so I don't know which one you
-actually want.  Now you're still suggesting multiple different things.
+Thanks all!
+Allison
 
-Not having to add filesystem-specific code to nearly every filesystem and not
-allocating the workqueue when it won't be used are desirable properties to have,
-and I think worth using one-time-init for.
 
-Multiple threads can execute do_dentry_open() concurrently on the same
-filesystem, so we'd still have to use one-time init for that.  Is your proposal
-to do that and use the implementation where the mutex is unconditionally taken?
+Allison Collins (25):
+  xfsprogs: Add xfs_has_attr and subroutines
+  xfsprogs: Check for -ENOATTR or -EEXIST
+  xfsprogs: Factor out new helper functions xfs_attr_rmtval_set
+  xfsprogs: Pull up trans handling in xfs_attr3_leaf_flipflags
+  xfsprogs: Split apart xfs_attr_leaf_addname
+  xfsprogs: Refactor xfs_attr_try_sf_addname
+  xfsprogs: Pull up trans roll from xfs_attr3_leaf_setflag
+  xfsprogs: Factor out xfs_attr_rmtval_invalidate
+  xfsprogs: Pull up trans roll in xfs_attr3_leaf_clearflag
+  xfsprogs: Refactor xfs_attr_rmtval_remove
+  xfsprogs: Pull up xfs_attr_rmtval_invalidate
+  xfsprogs: Add helper function xfs_attr_node_shrink
+  xfsprogs: Remove unneeded xfs_trans_roll_inode calls
+  xfsprogs: Remove xfs_trans_roll in xfs_attr_node_removename
+  xfsprogs: Add helpers xfs_attr_is_shortform and xfs_attr_set_shortform
+  xfsprogs: Add helper function xfs_attr_leaf_mark_incomplete
+  xfsprogs: Add remote block helper functions
+  xfsprogs: Add helper function xfs_attr_node_removename_setup
+  xfsprogs: Add helper function xfs_attr_node_removename_rmt
+  xfsprogs: Simplify xfs_attr_leaf_addname
+  xfsprogs: Simplify xfs_attr_node_addname
+  xfsprogs: Lift -ENOSPC handler from xfs_attr_leaf_addname
+  xfsprogs: Add delay ready attr remove routines
+  xfsprogs: Add delay ready attr set routines
+  xfsprogs: Rename __xfs_attr_rmtval_remove
 
-- Eric
+Brian Foster (1):
+  xfs: random buffer write failure errortag
+
+ include/libxfs.h         |    1 +
+ io/inject.c              |    1 +
+ libxfs/xfs_attr.c        | 1197 +++++++++++++++++++++++++++++++---------------
+ libxfs/xfs_attr.h        |  198 ++++++++
+ libxfs/xfs_attr_leaf.c   |  116 +++--
+ libxfs/xfs_attr_leaf.h   |    3 +
+ libxfs/xfs_attr_remote.c |  258 +++++++---
+ libxfs/xfs_attr_remote.h |    8 +-
+ libxfs/xfs_errortag.h    |    4 +-
+ 9 files changed, 1265 insertions(+), 521 deletions(-)
+
+-- 
+2.7.4
+
