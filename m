@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AF7F2248B6
+	by mail.lfdr.de (Postfix) with ESMTP id 1DF8E2248B5
 	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jul 2020 06:34:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgGREeA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 18 Jul 2020 00:34:00 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59570 "EHLO
+        id S1726179AbgGREd7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Jul 2020 00:33:59 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:59562 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgGREd7 (ORCPT
+        with ESMTP id S1725963AbgGREd7 (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Jul 2020 00:33:59 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4W1s3051663
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4WG5W051725
         for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=tzVni6vCXrbdYOArdDFNSqzFxoZc20260j5Fd+XinwI=;
- b=Nj39s8pfFgs+8te/Yze0TDd+CvfuWkZE/681fBZ6vSNfHdoCPXtVgH3IYI+6rHlmWql5
- L0EEQHAiMzBvz9l0VIkO5V63mnCiwNJ+NjHFDQBcuLCy5dhpBTSOpoaaKTrMFJ61YAEo
- g/IZ+TzDKR+S6Nayg0tq+8aHUm9gdWHptyEcCkZ/4VWCTESvgFYGyfDO7+ObI2RKImv6
- MUxJmnIQlZsoRMByUXwYhuk7Myd9Yyfd1jFtBpCSeyVrSYQHC2V7QafrCUm7MgD3FdT3
- 1mHY5tp2of0ziK9APhJ7paDz21XUtzlSuMCsEQxTbDC0iYxkgdWdSIfZcPwfKs+QUh1S 1g== 
+ bh=hp/QhrrGwwUdNPPt3cdqQJlJivrzjE4EzgbHussUlKw=;
+ b=B6XPzwYQIsE3kf9xIHJFj6m1LSnXd6ZzVJukpTeE4FjUMNXiNI0IVB0gzrkzBNgcihgM
+ mSVJHrz0rmfNeaC27gVYUlF/9C3MdYKv0ZtDPq0LaOlnPDEHg2DfOszpmz88FMpwpJGL
+ t3YyZy36PIEAB9LHR1OM73+oiMeG3JL1B+DPA0TkmwylJFVt5US/nwM3EA7VeF03q2/n
+ AHM/Ulker1Bdfyv3a/X0IdOyfl6hi7NBONbXOpcvtnyrgeQ9tj03ZHoRoZZt8GIYtYwE
+ 29XeimgZT4sWZ5C5xyqsKVVtohj39xSHsnTXrX6wF4iugnWGEn3Ce0fcB5vgS6l3gNwd vw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 32bpkarbjg-1
+        by aserp2130.oracle.com with ESMTP id 32bpkarbjd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
         for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4XnI8058277
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 32br1n3nha-1
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4XnKW058336
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32br1n3nh9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 +0000
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:57 +0000
 Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06I4XvHG008275
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06I4XvPJ019784
         for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:57 GMT
 Received: from localhost.localdomain (/67.1.142.158)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 21:33:56 -0700
+        with ESMTP ; Fri, 17 Jul 2020 21:33:57 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v11 22/26] xfsprogs: Simplify xfs_attr_node_addname
-Date:   Fri, 17 Jul 2020 21:33:38 -0700
-Message-Id: <20200718043342.6432-23-allison.henderson@oracle.com>
+Subject: [PATCH v11 23/26] xfsprogs: Lift -ENOSPC handler from xfs_attr_leaf_addname
+Date:   Fri, 17 Jul 2020 21:33:39 -0700
+Message-Id: <20200718043342.6432-24-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718043342.6432-1-allison.henderson@oracle.com>
 References: <20200718043342.6432-1-allison.henderson@oracle.com>
@@ -63,161 +63,67 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Invert the rename logic in xfs_attr_node_addname to simplify the
-delayed attr logic later.
+Lift -ENOSPC handler from xfs_attr_leaf_addname.  This will help to
+reorganize transitions between the attr forms later.
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- libxfs/xfs_attr.c | 125 ++++++++++++++++++++++++++----------------------------
- 1 file changed, 61 insertions(+), 64 deletions(-)
+ libxfs/xfs_attr.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
 diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index 0cf48ed..6ff064d 100644
+index 6ff064d..6827440 100644
 --- a/libxfs/xfs_attr.c
 +++ b/libxfs/xfs_attr.c
-@@ -1030,80 +1030,77 @@ restart:
+@@ -299,6 +299,13 @@ xfs_attr_set_args(
  			return error;
- 	}
  
--	/*
--	 * If this is an atomic rename operation, we must "flip" the
--	 * incomplete flags on the "new" and "old" attribute/value pairs
--	 * so that one disappears and one appears atomically.  Then we
--	 * must remove the "old" attribute/value pair.
--	 */
--	if (args->op_flags & XFS_DA_OP_RENAME) {
--		/*
--		 * In a separate transaction, set the incomplete flag on the
--		 * "old" attr and clear the incomplete flag on the "new" attr.
--		 */
--		error = xfs_attr3_leaf_flipflags(args);
--		if (error)
--			goto out;
-+	if (!(args->op_flags & XFS_DA_OP_RENAME)) {
  		/*
--		 * Commit the flag value change and start the next trans in
--		 * series
-+		 * Added a "remote" value, just clear the incomplete flag.
- 		 */
--		error = xfs_trans_roll_inode(&args->trans, args->dp);
--		if (error)
--			goto out;
-+		if (args->rmtblkno > 0)
-+			error = xfs_attr3_leaf_clearflag(args);
-+		retval = error;
-+		goto out;
-+	}
- 
--		/*
--		 * Dismantle the "old" attribute/value pair by removing
--		 * a "remote" value (if it exists).
--		 */
--		xfs_attr_restore_rmt_blk(args);
-+	/*
-+	 * If this is an atomic rename operation, we must "flip" the incomplete
-+	 * flags on the "new" and "old" attribute/value pairs so that one
-+	 * disappears and one appears atomically.  Then we must remove the "old"
-+	 * attribute/value pair.
-+	 *
-+	 * In a separate transaction, set the incomplete flag on the "old" attr
-+	 * and clear the incomplete flag on the "new" attr.
-+	 */
-+	error = xfs_attr3_leaf_flipflags(args);
-+	if (error)
-+		goto out;
-+	/*
-+	 * Commit the flag value change and start the next trans in series
-+	 */
-+	error = xfs_trans_roll_inode(&args->trans, args->dp);
-+	if (error)
-+		goto out;
- 
--		if (args->rmtblkno) {
--			error = xfs_attr_rmtval_invalidate(args);
--			if (error)
--				return error;
-+	/*
-+	 * Dismantle the "old" attribute/value pair by removing a "remote" value
-+	 * (if it exists).
-+	 */
-+	xfs_attr_restore_rmt_blk(args);
- 
--			error = xfs_attr_rmtval_remove(args);
--			if (error)
--				return error;
--		}
-+	if (args->rmtblkno) {
-+		error = xfs_attr_rmtval_invalidate(args);
++		 * Promote the attribute list to the Btree format.
++		 */
++		error = xfs_attr3_leaf_to_node(args);
 +		if (error)
 +			return error;
++
++		/*
+ 		 * Finish any deferred work items and roll the transaction once
+ 		 * more.  The goal here is to call node_addname with the inode
+ 		 * and transaction in the same state (inode locked and joined,
+@@ -603,7 +610,7 @@ xfs_attr_leaf_try_add(
+ 	struct xfs_da_args	*args,
+ 	struct xfs_buf		*bp)
+ {
+-	int			retval, error;
++	int			retval;
  
--		/*
--		 * Re-find the "old" attribute entry after any split ops.
--		 * The INCOMPLETE flag means that we will find the "old"
--		 * attr, not the "new" one.
--		 */
--		args->attr_filter |= XFS_ATTR_INCOMPLETE;
--		state = xfs_da_state_alloc();
--		state->args = args;
--		state->mp = mp;
--		state->inleaf = 0;
--		error = xfs_da3_node_lookup_int(state, &retval);
-+		error = xfs_attr_rmtval_remove(args);
- 		if (error)
--			goto out;
-+			return error;
-+	}
- 
--		/*
--		 * Remove the name and update the hashvals in the tree.
--		 */
--		blk = &state->path.blk[ state->path.active-1 ];
--		ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
--		error = xfs_attr3_leaf_remove(blk->bp, args);
--		xfs_da3_fixhashpath(state, &state->path);
-+	/*
-+	 * Re-find the "old" attribute entry after any split ops. The INCOMPLETE
-+	 * flag means that we will find the "old" attr, not the "new" one.
-+	 */
-+	args->attr_filter |= XFS_ATTR_INCOMPLETE;
-+	state = xfs_da_state_alloc();
-+	state->args = args;
-+	state->mp = mp;
-+	state->inleaf = 0;
-+	error = xfs_da3_node_lookup_int(state, &retval);
-+	if (error)
-+		goto out;
- 
--		/*
--		 * Check to see if the tree needs to be collapsed.
--		 */
--		if (retval && (state->path.active > 1)) {
--			error = xfs_da3_join(state);
--			if (error)
--				goto out;
--		}
-+	/*
-+	 * Remove the name and update the hashvals in the tree.
-+	 */
-+	blk = &state->path.blk[state->path.active-1];
-+	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
-+	error = xfs_attr3_leaf_remove(blk->bp, args);
-+	xfs_da3_fixhashpath(state, &state->path);
- 
--	} else if (args->rmtblkno > 0) {
--		/*
--		 * Added a "remote" value, just clear the incomplete flag.
--		 */
--		error = xfs_attr3_leaf_clearflag(args);
-+	/*
-+	 * Check to see if the tree needs to be collapsed.
-+	 */
-+	if (retval && (state->path.active > 1)) {
-+		error = xfs_da3_join(state);
- 		if (error)
- 			goto out;
+ 	/*
+ 	 * Look up the given attribute in the leaf block.  Figure out if
+@@ -635,20 +642,10 @@ xfs_attr_leaf_try_add(
  	}
+ 
+ 	/*
+-	 * Add the attribute to the leaf block, transitioning to a Btree
+-	 * if required.
++	 * Add the attribute to the leaf block
+ 	 */
+-	retval = xfs_attr3_leaf_add(bp, args);
+-	if (retval == -ENOSPC) {
+-		/*
+-		 * Promote the attribute list to the Btree format. Unless an
+-		 * error occurs, retain the -ENOSPC retval
+-		 */
+-		error = xfs_attr3_leaf_to_node(args);
+-		if (error)
+-			return error;
+-	}
+-	return retval;
++	return xfs_attr3_leaf_add(bp, args);
++
+ out_brelse:
+ 	xfs_trans_brelse(args->trans, bp);
+ 	return retval;
 -- 
 2.7.4
 
