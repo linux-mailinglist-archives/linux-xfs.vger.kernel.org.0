@@ -2,139 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16F6F2248B8
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Jul 2020 06:34:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFCD42254EB
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 02:15:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgGREeB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 18 Jul 2020 00:34:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42880 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgGREeA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Jul 2020 00:34:00 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4XEW0004112
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=oP+YKbNhlU+Da/kDakPYx0A5+PRysWyjhD3nmTCQK/U=;
- b=RWFSL6GMHJpEuiOZLB53rPQ3LooLK64w8+28CbrPnkvj18ZycXzUfaDXnKBcr5GQX5/l
- qtft1nhRN1ynGihVnVRbsHOUFQcnI5n3319gH7LtTR+MQYNoJ4VTVJsCH4WOGZyod+bd
- L18HJDjoYa20UxdV/pS0Zp/YrtPZH6XZLVfL60zIOfFXZ9mBOxre88R/KsoNoJd/fEqR
- XnKOqYy5cC7HvKH9OhLUwkxGVj8DHaY1bhex1CP9XTmQ/lBRf8JOO0vkrl5DmiLk89GJ
- kAUj/flIIwVxKoE7SrPK9VUg50BysauIMH1yql1NzLkVjys7E3oi8ux+20T0dV+vZ6I6 yg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32bs1m03r8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06I4Xnlw058278
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32br1n3nhp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06I4XwGS003191
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Jul 2020 04:33:58 GMT
-Received: from localhost.localdomain (/67.1.142.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 Jul 2020 21:33:58 -0700
-From:   Allison Collins <allison.henderson@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v11 26/26] xfsprogs: Rename __xfs_attr_rmtval_remove
-Date:   Fri, 17 Jul 2020 21:33:42 -0700
-Message-Id: <20200718043342.6432-27-allison.henderson@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718043342.6432-1-allison.henderson@oracle.com>
-References: <20200718043342.6432-1-allison.henderson@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 suspectscore=1 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007180030
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007180030
+        id S1726582AbgGTAPQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 19 Jul 2020 20:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgGTAPQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jul 2020 20:15:16 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC44C0619D2;
+        Sun, 19 Jul 2020 17:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=lmPUz5RY+t3kg/qQNhfp48GVHKH8kF2wEhafpnF3ESY=; b=XJYPZYrFTuQsqM/t46dbY2ZbGR
+        3ohJH+0xXg9SVHBdOQ7Zfk0Fs/qlOOIxPl/bItupy3eFHAjJQmWFHg0tZFgwujKx9uvJfafw1EcG/
+        p7Kq/GP0sAIdhTYbHcFzSS99uKMz2geIL1Tqw6BGM4BUM0h09EbugVycJiYXo/Nt5ywSX3pp2EB1O
+        QamqKrGP6syeWRh0IAOjvI7khJwXQNdhwK2RMvocLxrK3eCE7ir//T3QxcbWiplNF8iYiCisHKLa3
+        UhCjnWbmom8tIWqSbJk3aoHvuZnir+xeExEYMl4PrO3yiHXE6CnPB8I8sHsrCvDvnYa8n2zZLEOj/
+        XTmTulNg==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxJSb-00042j-DW; Mon, 20 Jul 2020 00:15:13 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH] xfs: xfs_btree_staging.h: delete duplicated words
+Date:   Sun, 19 Jul 2020 17:15:09 -0700
+Message-Id: <20200720001509.656-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that xfs_attr_rmtval_remove is gone, rename __xfs_attr_rmtval_remove
-to xfs_attr_rmtval_remove
+Drop the repeated words "with" and "be" in comments.
 
-Signed-off-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
 ---
- libxfs/xfs_attr.c        | 6 +++---
- libxfs/xfs_attr_remote.c | 2 +-
- libxfs/xfs_attr_remote.h | 3 +--
- 3 files changed, 5 insertions(+), 6 deletions(-)
+ fs/xfs/libxfs/xfs_btree_staging.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index 4b974e6..38eff50 100644
---- a/libxfs/xfs_attr.c
-+++ b/libxfs/xfs_attr.c
-@@ -880,7 +880,7 @@ das_flip_flag:
- 		return error;
- das_rm_lblk:
- 	if (args->rmtblkno) {
--		error = __xfs_attr_rmtval_remove(dac);
-+		error = xfs_attr_rmtval_remove(dac);
- 		if (error == -EAGAIN)
- 			dac->dela_state = XFS_DAS_RM_LBLK;
- 		if (error)
-@@ -1245,7 +1245,7 @@ das_flip_flag:
+--- linux-next-20200717.orig/fs/xfs/libxfs/xfs_btree_staging.h
++++ linux-next-20200717/fs/xfs/libxfs/xfs_btree_staging.h
+@@ -18,7 +18,7 @@ struct xbtree_afakeroot {
+ 	unsigned int		af_blocks;
+ };
  
- das_rm_nblk:
- 	if (args->rmtblkno) {
--		error = __xfs_attr_rmtval_remove(dac);
-+		error = xfs_attr_rmtval_remove(dac);
+-/* Cursor interactions with with fake roots for AG-rooted btrees. */
++/* Cursor interactions with fake roots for AG-rooted btrees. */
+ void xfs_btree_stage_afakeroot(struct xfs_btree_cur *cur,
+ 		struct xbtree_afakeroot *afake);
+ void xfs_btree_commit_afakeroot(struct xfs_btree_cur *cur, struct xfs_trans *tp,
+@@ -45,7 +45,7 @@ struct xbtree_ifakeroot {
+ 	unsigned int		if_extents;
+ };
  
- 		if (error == -EAGAIN) {
- 			dac->dela_state = XFS_DAS_RM_NBLK;
-@@ -1404,7 +1404,7 @@ xfs_attr_node_remove_rmt (
+-/* Cursor interactions with with fake roots for inode-rooted btrees. */
++/* Cursor interactions with fake roots for inode-rooted btrees. */
+ void xfs_btree_stage_ifakeroot(struct xfs_btree_cur *cur,
+ 		struct xbtree_ifakeroot *ifake,
+ 		struct xfs_btree_ops **new_ops);
+@@ -90,7 +90,7 @@ struct xfs_btree_bload {
+ 
  	/*
- 	 * May return -EAGAIN to request that the caller recall this function
+ 	 * Number of free records to leave in each leaf block.  If the caller
+-	 * sets this to -1, the slack value will be calculated to be be halfway
++	 * sets this to -1, the slack value will be calculated to be halfway
+ 	 * between maxrecs and minrecs.  This typically leaves the block 75%
+ 	 * full.  Note that slack values are not enforced on inode root blocks.
  	 */
--	error = __xfs_attr_rmtval_remove(dac);
-+	error = xfs_attr_rmtval_remove(dac);
- 	if (error)
- 		return error;
- 
-diff --git a/libxfs/xfs_attr_remote.c b/libxfs/xfs_attr_remote.c
-index e8221d9..aa4aed8a 100644
---- a/libxfs/xfs_attr_remote.c
-+++ b/libxfs/xfs_attr_remote.c
-@@ -738,7 +738,7 @@ xfs_attr_rmtval_invalidate(
-  * transaction and re-call the function
-  */
- int
--__xfs_attr_rmtval_remove(
-+xfs_attr_rmtval_remove(
- 	struct xfs_delattr_context	*dac)
- {
- 	struct xfs_da_args		*args = dac->da_args;
-diff --git a/libxfs/xfs_attr_remote.h b/libxfs/xfs_attr_remote.h
-index 124f7ce..ede5f27 100644
---- a/libxfs/xfs_attr_remote.h
-+++ b/libxfs/xfs_attr_remote.h
-@@ -10,11 +10,10 @@ int xfs_attr3_rmt_blocks(struct xfs_mount *mp, int attrlen);
- 
- int xfs_attr_rmtval_get(struct xfs_da_args *args);
- int xfs_attr_rmtval_set(struct xfs_da_args *args);
--int xfs_attr_rmtval_remove(struct xfs_da_args *args);
- int xfs_attr_rmtval_stale(struct xfs_inode *ip, struct xfs_bmbt_irec *map,
- 		xfs_buf_flags_t incore_flags);
- int xfs_attr_rmtval_invalidate(struct xfs_da_args *args);
--int __xfs_attr_rmtval_remove(struct xfs_delattr_context *dac);
-+int xfs_attr_rmtval_remove(struct xfs_delattr_context *dac);
- int xfs_attr_rmt_find_hole(struct xfs_da_args *args);
- int xfs_attr_rmtval_set_value(struct xfs_da_args *args);
- int xfs_attr_rmtval_set_blk(struct xfs_delattr_context *dac);
--- 
-2.7.4
-
