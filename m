@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E5522571C
+	by mail.lfdr.de (Postfix) with ESMTP id 34E0F22571B
 	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 07:38:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbgGTFia (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jul 2020 01:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        id S1726017AbgGTFi1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jul 2020 01:38:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGTFia (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:30 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66168C0619D2
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:30 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w17so8142547ply.11
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:30 -0700 (PDT)
+        with ESMTP id S1725805AbgGTFi1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECA2C0619D2
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u5so8485282pfn.7
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LHavFBz4lVXGlWJKgvN9JTdGbCfJxIJEYuUbcHITUTc=;
-        b=UNPFbDWvuYv48qr8FEB31Xx2VAEWTYgdVdJYzKTZBBXecUxfIeeIW9eCkljARP5n4N
-         GNz+wj4VRQ6iNXepdojv8GgZ/CmqjGelMZkHcvjc4tAJiwRmH22LEokYrjAFAzfHVyR7
-         6A7B47dVGoOqXkWCImdO998cLwTayt7MhDa0IMasAnHlMxI67i2goLWQkw9Wpmdwbl7V
-         ecMcVzF/UuiW1e6Hyz5/b8LBgmOKEXEyg0l3Xu8Zw4QPNvuiQIL0A/jPn6PsRFRhS/Tu
-         Xv73/Uem+IZwotr/HuOpcPcuinh9NRVREPtclTHNwF4CxXiMwqpnZVgmIpEUXlysTQeI
-         1llA==
+        bh=TK5CdTR6UFf9rmSQmh49JPQPiM+liD85kSjrxRzLWKE=;
+        b=NDse7yybzVjDJ11imObuWu3MBn6uPbRAf7oiLc2//OQ71QZ2UoaGVSTkEP307j0Gq0
+         B7hgWick2aGt2Q8KACGARc5VvyErl0lewWTl9ysA10I5mbazZIWWcts7QlCVpQ+U4oGr
+         HZPps9n7meEgVj12NxbeBrXBFtI4CEqnAPpZA6VJ8jNjtVGeqROmXSBN0ydhzBBccWUa
+         5pO1tu4AtBnAbpI0XmvfKy5f+XnTH21f8SJ7Atn+ypc2VN7Mdc95ntvPfpAFspp/woKS
+         TtwrsqOH+2soExBv5jjj0CDjNdCO4Vjv+APFwxblRwLy8uQ/1DZN7cZwCBMWkANIPa/J
+         ZrFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LHavFBz4lVXGlWJKgvN9JTdGbCfJxIJEYuUbcHITUTc=;
-        b=TsfHPRDTvmJz+b2joivRPoimcWGysDX3NjVyO0voG+UkRvnU7pd31wkDNiGCLUo6/s
-         K61Z7cP4DR/SPicBkR7GuyFGj5/MLuO3TugC9r0DclsIXrU1tiZqMVpY7+zkpm1Q7pUb
-         NE0qu9n3aRVzZZuM+QFoXH8Q0S4qIjsi0h10KpzRLXYG/eZHD7SoS96oqobTOjaSQKUg
-         IOwZKHR5WS2pD2LuaabVHDgtAPw0gMI+4t47meJfSYvGtH/dJNq1MHdi/uPQp+nfZ+B7
-         JwSFY8XaA5pGr3l8O90/yfIobusc3CR+EOX7sLSn+zkvH5MNV5ZM5n8jnqcz2p7fAzPX
-         yakw==
-X-Gm-Message-State: AOAM533MBcNYnEqUsFG5quRKfm0fxihGurwtA7d4UhXTL0GWxdz8MkC6
-        afqnj0GLIBrSZRrMW02dIOk=
-X-Google-Smtp-Source: ABdhPJwesGDBXJ1B/kUk1bQLVnTu0epUo4ALVCDdUyX/CLViGKUTq7zjlu7oTj9pDT4MbCHGYgR0yA==
-X-Received: by 2002:a17:90b:4ace:: with SMTP id mh14mr21892881pjb.139.1595223509994;
-        Sun, 19 Jul 2020 22:38:29 -0700 (PDT)
+        bh=TK5CdTR6UFf9rmSQmh49JPQPiM+liD85kSjrxRzLWKE=;
+        b=btMqKzygXysj5axq4Xf0aEn/0lnbz5msb185ppFvF4Ew9N7QEJ+U2i+7Awdp/aS2a6
+         /6+nTNmhORlRc2diSafflHfPskTeqNfgYqP1znxsP1kor54sHTVVySsT1E9hO1gt2rnm
+         oi2TJim2KgZIAU7IJHajXVqVA5QZi8mQw+cUP1JvZg59Vpmlh5eJg9TUmC486bcY6uer
+         hVi3I/RM/sYeF4n6LZLyPWztUM8siTWqdc9rbULSTR7sG3bYSka1n3YIskkv4UPhkJmk
+         qqCF6vcEKzAwCPxvGsGFJkDjkf7eB9fjYG97p95tylbe2/ukBwfBzUMVdexrSK09UVy4
+         sK6w==
+X-Gm-Message-State: AOAM530PtCkjdUll/Nm3k9BO1trf86aVG+ceA5W2YdfsWAzrnUqiEePz
+        9adDQauIOM7/QfssJABGx2UTVMuu
+X-Google-Smtp-Source: ABdhPJzSbhomWWzhSKMI/YGitpCuDhPpfN5YZkGGCesyftL0yg3SFWWSMUX2Hb4AloS+OVdog6AbVg==
+X-Received: by 2002:a63:b508:: with SMTP id y8mr18052553pge.106.1595223506833;
+        Sun, 19 Jul 2020 22:38:26 -0700 (PDT)
 Received: from garuda.localnet ([122.171.166.148])
-        by smtp.gmail.com with ESMTPSA id d12sm15375520pfh.196.2020.07.19.22.38.27
+        by smtp.gmail.com with ESMTPSA id s30sm14672229pgn.34.2020.07.19.22.38.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 22:38:29 -0700 (PDT)
+        Sun, 19 Jul 2020 22:38:26 -0700 (PDT)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 10/26] xfs: stop using q_core.d_flags in the quota code
-Date:   Mon, 20 Jul 2020 11:07:55 +0530
-Message-ID: <2350111.MRUA8jnVdy@garuda>
-In-Reply-To: <159477790082.3263162.2486913704651505901.stgit@magnolia>
-References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477790082.3263162.2486913704651505901.stgit@magnolia>
+Subject: Re: [PATCH 24/26] xfs: assume the default quota limits are always set in xfs_qm_adjust_dqlimits
+Date:   Mon, 20 Jul 2020 11:08:05 +0530
+Message-ID: <2472470.UBcdlpre6e@garuda>
+In-Reply-To: <159477799136.3263162.16638446868281519003.stgit@magnolia>
+References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477799136.3263162.16638446868281519003.stgit@magnolia>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -63,11 +63,12 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wednesday 15 July 2020 7:21:40 AM IST Darrick J. Wong wrote:
+On Wednesday 15 July 2020 7:23:11 AM IST Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Use the incore dq_flags to figure out the dquot type.  This is the first
-> step towards removing xfs_disk_dquot from the incore dquot.
+> We always initialize the default quota limits to something nowadays, so
+> we don't need to check that the defaults are set to something before
+> using them.
 >
 
 The changes look good to me.
@@ -77,108 +78,42 @@ Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_dquot.c      |   34 ++++++++++++++++++++++++++++++++--
->  fs/xfs/xfs_dquot.h      |    2 ++
->  fs/xfs/xfs_dquot_item.c |    6 ++++--
->  3 files changed, 38 insertions(+), 4 deletions(-)
+>  fs/xfs/xfs_dquot.c |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
 > 
 > diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index 6fcea0d3989e..93b5b7277cb8 100644
+> index e44f80700005..2b52913073b3 100644
 > --- a/fs/xfs/xfs_dquot.c
 > +++ b/fs/xfs/xfs_dquot.c
-> @@ -568,6 +568,15 @@ xfs_dquot_from_disk(
->  	return 0;
->  }
+> @@ -77,21 +77,21 @@ xfs_qm_adjust_dqlimits(
+>  	ASSERT(dq->q_id);
+>  	defq = xfs_get_defquota(q, dq->q_type);
 >  
-> +/* Copy the in-core quota fields into the on-disk buffer. */
-> +void
-> +xfs_dquot_to_disk(
-> +	struct xfs_disk_dquot	*ddqp,
-> +	struct xfs_dquot	*dqp)
-> +{
-> +	memcpy(ddqp, &dqp->q_core, sizeof(struct xfs_disk_dquot));
-> +}
-> +
->  /* Allocate and initialize the dquot buffer for this in-core dquot. */
->  static int
->  xfs_qm_dqread_alloc(
-> @@ -1122,6 +1131,19 @@ xfs_dquot_done(
+> -	if (defq->blk.soft && !dq->q_blk.softlimit) {
+> +	if (!dq->q_blk.softlimit) {
+>  		dq->q_blk.softlimit = defq->blk.soft;
+>  		prealloc = 1;
 >  	}
->  }
->  
-> +/* Check incore dquot for errors before we flush. */
-> +static xfs_failaddr_t
-> +xfs_qm_dqflush_check(
-> +	struct xfs_dquot	*dqp)
-> +{
-> +	if (dqp->q_type != XFS_DQTYPE_USER &&
-> +	    dqp->q_type != XFS_DQTYPE_GROUP &&
-> +	    dqp->q_type != XFS_DQTYPE_PROJ)
-> +		return __this_address;
-> +
-> +	return NULL;
-> +}
-> +
->  /*
->   * Write a modified dquot to disk.
->   * The dquot must be locked and the flush lock too taken by caller.
-> @@ -1180,8 +1202,16 @@ xfs_qm_dqflush(
->  		goto out_abort;
+> -	if (defq->blk.hard && !dq->q_blk.hardlimit) {
+> +	if (!dq->q_blk.hardlimit) {
+>  		dq->q_blk.hardlimit = defq->blk.hard;
+>  		prealloc = 1;
 >  	}
+> -	if (defq->ino.soft && !dq->q_ino.softlimit)
+> +	if (!dq->q_ino.softlimit)
+>  		dq->q_ino.softlimit = defq->ino.soft;
+> -	if (defq->ino.hard && !dq->q_ino.hardlimit)
+> +	if (!dq->q_ino.hardlimit)
+>  		dq->q_ino.hardlimit = defq->ino.hard;
+> -	if (defq->rtb.soft && !dq->q_rtb.softlimit)
+> +	if (!dq->q_rtb.softlimit)
+>  		dq->q_rtb.softlimit = defq->rtb.soft;
+> -	if (defq->rtb.hard && !dq->q_rtb.hardlimit)
+> +	if (!dq->q_rtb.hardlimit)
+>  		dq->q_rtb.hardlimit = defq->rtb.hard;
 >  
-> -	/* This is the only portion of data that needs to persist */
-> -	memcpy(ddqp, &dqp->q_core, sizeof(struct xfs_disk_dquot));
-> +	fa = xfs_qm_dqflush_check(dqp);
-> +	if (fa) {
-> +		xfs_alert(mp, "corrupt dquot ID 0x%x in memory at %pS",
-> +				be32_to_cpu(dqp->q_core.d_id), fa);
-> +		xfs_buf_relse(bp);
-> +		error = -EFSCORRUPTED;
-> +		goto out_abort;
-> +	}
-> +
-> +	xfs_dquot_to_disk(ddqp, dqp);
->  
->  	/*
->  	 * Clear the dirty field and remember the flush lsn for later use.
-> diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-> index 7f3f734bced8..84399d1d8188 100644
-> --- a/fs/xfs/xfs_dquot.h
-> +++ b/fs/xfs/xfs_dquot.h
-> @@ -151,6 +151,8 @@ static inline bool xfs_dquot_lowsp(struct xfs_dquot *dqp)
->  	return false;
->  }
->  
-> +void xfs_dquot_to_disk(struct xfs_disk_dquot *ddqp, struct xfs_dquot *dqp);
-> +
->  #define XFS_DQ_IS_LOCKED(dqp)	(mutex_is_locked(&((dqp)->q_qlock)))
->  #define XFS_DQ_IS_DIRTY(dqp)	((dqp)->q_flags & XFS_DQFLAG_DIRTY)
->  #define XFS_QM_ISUDQ(dqp)	((dqp)->q_type == XFS_DQTYPE_USER)
-> diff --git a/fs/xfs/xfs_dquot_item.c b/fs/xfs/xfs_dquot_item.c
-> index d7e4de7151d7..fc21e48c889c 100644
-> --- a/fs/xfs/xfs_dquot_item.c
-> +++ b/fs/xfs/xfs_dquot_item.c
-> @@ -45,6 +45,7 @@ xfs_qm_dquot_logitem_format(
->  	struct xfs_log_item	*lip,
->  	struct xfs_log_vec	*lv)
->  {
-> +	struct xfs_disk_dquot	ddq;
->  	struct xfs_dq_logitem	*qlip = DQUOT_ITEM(lip);
->  	struct xfs_log_iovec	*vecp = NULL;
->  	struct xfs_dq_logformat	*qlf;
-> @@ -58,8 +59,9 @@ xfs_qm_dquot_logitem_format(
->  	qlf->qlf_boffset = qlip->qli_dquot->q_bufoffset;
->  	xlog_finish_iovec(lv, vecp, sizeof(struct xfs_dq_logformat));
->  
-> -	xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_DQUOT,
-> -			&qlip->qli_dquot->q_core,
-> +	xfs_dquot_to_disk(&ddq, qlip->qli_dquot);
-> +
-> +	xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_DQUOT, &ddq,
->  			sizeof(struct xfs_disk_dquot));
->  }
->  
+>  	if (prealloc)
 > 
 > 
 
