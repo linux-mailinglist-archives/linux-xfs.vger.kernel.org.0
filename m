@@ -2,107 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0AC22571A
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 07:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF48226358
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 17:32:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgGTFiY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jul 2020 01:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGTFiY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C45C0619D2
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:24 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id 72so8160439ple.0
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gzznrkQJ6dik1VklimjQucPMfv3ssP7Q98Ey7PQvNng=;
-        b=tEHK1RtNnEAO3ntNaklT5b84bjYVZV4+bKkElVo1a2wfWdnkaqfxRlCmE+HI/d7ikk
-         6IqMFKU1qu1OAZ+ghjia1bbgUn24dFNXVOkjLf0E5Pa6qd046rbdxCOyCk5s0TbDTVwE
-         WUrE2sIhoZ5ggfiXo8TbMA9Qe2wu/JhQ3X+bBVfCuPTMHpvEqlw/6AH3S5p48dQDEJpt
-         jMYGb7EENzMhwB9+pA/Khzcs1axapgn4gHgUvEw9KhII7aRPmFAKCMXJufk8pcREXOXM
-         l/U6yL+0yhZm48El8juFU3zdk6WMZ07OJi67OwwdqXRCwDRw5h23gZee2xdYw3Ub1hY+
-         PHEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gzznrkQJ6dik1VklimjQucPMfv3ssP7Q98Ey7PQvNng=;
-        b=HaMqQco90zYkyII8rvGsIA9BWvpiWqevV3tUabHAfxZvlj6EfGz+0qKoxm6nezfbpq
-         ciXRL3K6fIg4Ie7pgbmr970/Bktqi7PiUCjA6ES8aIU7oq7j0AuxNYVPP1IDg27xBTYj
-         ACmxwGTHYagVnSGbFwZ5yHk7t5n2aecGHr+lrrJpZBhplGkg4r3wQTHzfufMQmAvr+7b
-         ldnq0gsqNNloKtvOyxAZHn5Cs1Zo/HcBRIjfGZaEcaMuy7uy+2vJo0U1IhY1cjb98o74
-         uPdwnDhnN1uu9jIJTPQ4AQpDB6HayYwOFkoWYpXvfBJEAks3qBrivUUwENAKxjlFoslR
-         cvFQ==
-X-Gm-Message-State: AOAM532MFrrTHgnek3XqM+co8KPaa6w8goOoUMeD52b4v8H2keVEyWZB
-        rZ40mLPTMkfDsRtA80wlnD4=
-X-Google-Smtp-Source: ABdhPJzOcPvBseWejL2KJKTAFf4JGuTehvLi4+hFPNrqDcQbj+APxC0bjjDT0Nzqh4duz5/neHERFQ==
-X-Received: by 2002:a17:902:7483:: with SMTP id h3mr16079412pll.114.1595223503803;
-        Sun, 19 Jul 2020 22:38:23 -0700 (PDT)
-Received: from garuda.localnet ([122.171.166.148])
-        by smtp.gmail.com with ESMTPSA id j8sm15708892pfd.145.2020.07.19.22.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 22:38:23 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
+        id S1726769AbgGTPcL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jul 2020 11:32:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37969 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726858AbgGTPcL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 11:32:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595259129;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WuO0ceoCrlI5WXUN1sWSIg1Q1X5L1heUQCujYy6OI5U=;
+        b=dr+FFtEEHZfOORQeyMRiWp/aHfxgHzNtEgn3UM/mCXO2a6zYQkdVWUW3RtEszHOP1OjVn9
+        jdn3Mr3/5HeXjAPO8tCjMi+G/couIHL6uyg+KCWx5D5qEll+7JnQcOIIbVSzcmh3oXtrWT
+        tMbu4TSjkcHbr+X75CCgL1GxKADoAmw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-vnxIcrmOOIilaeTxaZfx1A-1; Mon, 20 Jul 2020 11:32:07 -0400
+X-MC-Unique: vnxIcrmOOIilaeTxaZfx1A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69853106B247;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4433C710A4;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Received: from zmail18.collab.prod.int.phx2.redhat.com (zmail18.collab.prod.int.phx2.redhat.com [10.5.83.21])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0DB6D94EE2;
+        Mon, 20 Jul 2020 15:32:06 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 11:32:03 -0400 (EDT)
+From:   Waiman Long <longman@redhat.com>
+Reply-To: Waiman Long <longman@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 25/26] xfs: actually bump warning counts when we send warnings
-Date:   Mon, 20 Jul 2020 11:08:13 +0530
-Message-ID: <1711545.bsSymtsJ8m@garuda>
-In-Reply-To: <159477799812.3263162.13957383827318048593.stgit@magnolia>
-References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477799812.3263162.13957383827318048593.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>
+Message-ID: <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200713164112.GZ7606@magnolia>
+References: <20200707191629.13911-1-longman@redhat.com> <20200713164112.GZ7606@magnolia>
+Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.113.230, 10.4.195.2]
+Thread-Topic: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Thread-Index: WmhqTmYfplYkpIlak7AmgyVLRnpP0Q==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wednesday 15 July 2020 7:23:18 AM IST Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+
+
+----- Original Message -----
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
+To: "Waiman Long" <longman@redhat.com>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, "Dave Chinner" <david@fromorbit.com>, "Qian Cai" <cai@lca.pw>, "Eric Sandeen" <sandeen@redhat.com>
+Sent: Monday, July 13, 2020 12:41:12 PM
+Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+
+On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
+> Depending on the workloads, the following circular locking dependency
+> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+> lock) may show up:
 > 
-> Currently, xfs quotas have the ability to send netlink warnings when a
-> user exceeds the limits.  They also have all the support code necessary
-> to convert softlimit warnings into failures if the number of warnings
-> exceeds a limit set by the administrator.  Unfortunately, we never
-> actually increase the warning counter, so this never actually happens.
-> Make it so we actually do something useful with the warning counts.
->
-
-The changes look good to me.
-
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_trans_dquot.c |    1 +
->  1 file changed, 1 insertion(+)
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.0.0-rc1+ #60 Tainted: G        W
+> ------------------------------------------------------
+> fsfreeze/4346 is trying to acquire lock:
+> 0000000026f1d784 (fs_reclaim){+.+.}, at:
+> fs_reclaim_acquire.part.19+0x5/0x30
 > 
+> but task is already holding lock:
+> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
 > 
-> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-> index 78201ff3696b..cbd92d8b693d 100644
-> --- a/fs/xfs/xfs_trans_dquot.c
-> +++ b/fs/xfs/xfs_trans_dquot.c
-> @@ -596,6 +596,7 @@ xfs_dqresv_check(
->  			return QUOTA_NL_ISOFTLONGWARN;
->  		}
->  
-> +		res->warnings++;
->  		return QUOTA_NL_ISOFTWARN;
->  	}
->  
+> which lock already depends on the new lock.
+>   :
+>  Possible unsafe locking scenario:
 > 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(sb_internal);
+>                                lock(fs_reclaim);
+>                                lock(sb_internal);
+>   lock(fs_reclaim);
 > 
+>  *** DEADLOCK ***
+> 
+> 4 locks held by fsfreeze/4346:
+>  #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+>  #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+>  #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+>  #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> 
+> stack backtrace:
+> Call Trace:
+>  dump_stack+0xe0/0x19a
+>  print_circular_bug.isra.10.cold.34+0x2f4/0x435
+>  check_prev_add.constprop.19+0xca1/0x15f0
+>  validate_chain.isra.14+0x11af/0x3b50
+>  __lock_acquire+0x728/0x1200
+>  lock_acquire+0x269/0x5a0
+>  fs_reclaim_acquire.part.19+0x29/0x30
+>  fs_reclaim_acquire+0x19/0x20
+>  kmem_cache_alloc+0x3e/0x3f0
+>  kmem_zone_alloc+0x79/0x150
+>  xfs_trans_alloc+0xfa/0x9d0
+>  xfs_sync_sb+0x86/0x170
+>  xfs_log_sbcount+0x10f/0x140
+>  xfs_quiesce_attr+0x134/0x270
+>  xfs_fs_freeze+0x4a/0x70
+>  freeze_super+0x1af/0x290
+>  do_vfs_ioctl+0xedc/0x16c0
+>  ksys_ioctl+0x41/0x80
+>  __x64_sys_ioctl+0x73/0xa9
+>  do_syscall_64+0x18f/0xd23
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> This is a false positive as all the dirty pages are flushed out before
+> the filesystem can be frozen.
+> 
+> One way to avoid this splat is to add GFP_NOFS to the affected allocation
+> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
+> This shouldn't matter unless the system is really running out of memory.
+> In that particular case, the filesystem freeze operation may fail while
+> it was succeeding previously.
+> 
+> Without this patch, the command sequence below will show that the lock
+> dependency chain sb_internal -> fs_reclaim exists.
+> 
+>  # fsfreeze -f /home
+>  # fsfreeze --unfreeze /home
+>  # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+> 
+> After applying the patch, such sb_internal -> fs_reclaim lock dependency
+> chain can no longer be found. Because of that, the locking dependency
+> warning will not be shown.
+> 
+> Suggested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
+Looks good to me,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
--- 
-chandan
+Will this patch be merged into the xfs tree soon?
 
-
+Thanks,
+Longman
 
