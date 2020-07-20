@@ -2,168 +2,141 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA17226ABE
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 18:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7957C226F0A
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 21:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgGTPtD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jul 2020 11:49:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42125 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730720AbgGTPrC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 11:47:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595260021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hQ1H7l9Ohk9cYexEWkkOl7WIuCDqSZlPZluQHWvxb1I=;
-        b=K64e+By0Ok8vfbRotOtKcGeXuftLqivKDiQUBzmuerU+WRhbOB2q2GyqT5m1rf4/ATEs4z
-        jtoVh2uO5GOIzeI3InnWBZ7AHrVtPAou9cGeXhzdsnrd0LgauUd2GBl3s5QxcQCQFtyCsA
-        nCe+yUwUWJilcsa/v44+EE5ZiBcBa7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-kQ0JMy5zMwax-kYED5mPiQ-1; Mon, 20 Jul 2020 11:46:59 -0400
-X-MC-Unique: kQ0JMy5zMwax-kYED5mPiQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729431AbgGTT3s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jul 2020 15:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgGTT3s (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:29:48 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DC0818A1DFE;
-        Mon, 20 Jul 2020 15:46:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-113-230.rdu2.redhat.com [10.10.113.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46C8C7EF81;
-        Mon, 20 Jul 2020 15:46:57 +0000 (UTC)
-Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20200707191629.13911-1-longman@redhat.com>
- <20200713164112.GZ7606@magnolia>
- <104087053.24407245.1595259123778.JavaMail.zimbra@redhat.com>
- <20200720154043.GV7625@magnolia>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d5218324-ee26-464b-8db6-3ca05ba98f3d@redhat.com>
-Date:   Mon, 20 Jul 2020 11:46:56 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A1E620773;
+        Mon, 20 Jul 2020 19:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595273387;
+        bh=p9MSRNwJssID8LsizQqfdqvIlunqUMeWXc/JgkGaXi0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GquwQiP/sRX76vVq9CjrWtrz91gsYU5skbVXwteYGpXuvF418/XjmOcLHqQld9G4K
+         3lrNMhrkXTB+kT0/xVAH8alRXHtdekNe4EKq+z+QZWLPKSTLoxRZA4ah54G8TlsWnh
+         O+8/ei1YQ2RJZjTF7+98Xty5tQ+lTjHyqb+CbM1Y=
+Date:   Mon, 20 Jul 2020 12:29:45 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Satya Tangirala <satyat@google.com>
+Cc:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] iomap: support direct I/O with fscrypt using
+ blk-crypto
+Message-ID: <20200720192945.GG1292162@gmail.com>
+References: <20200717014540.71515-1-satyat@google.com>
+ <20200717014540.71515-4-satyat@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200720154043.GV7625@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717014540.71515-4-satyat@google.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 7/20/20 11:40 AM, Darrick J. Wong wrote:
-> On Mon, Jul 20, 2020 at 11:32:03AM -0400, Waiman Long wrote:
->>
->> ----- Original Message -----
->> From: "Darrick J. Wong" <darrick.wong@oracle.com>
->> To: "Waiman Long" <longman@redhat.com>
->> Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, "Dave Chinner" <david@fromorbit.com>, "Qian Cai" <cai@lca.pw>, "Eric Sandeen" <sandeen@redhat.com>
->> Sent: Monday, July 13, 2020 12:41:12 PM
->> Subject: Re: [PATCH v6] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
->>
->> On Tue, Jul 07, 2020 at 03:16:29PM -0400, Waiman Long wrote:
->>> Depending on the workloads, the following circular locking dependency
->>> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
->>> lock) may show up:
->>>
->>> ======================================================
->>> WARNING: possible circular locking dependency detected
->>> 5.0.0-rc1+ #60 Tainted: G        W
->>> ------------------------------------------------------
->>> fsfreeze/4346 is trying to acquire lock:
->>> 0000000026f1d784 (fs_reclaim){+.+.}, at:
->>> fs_reclaim_acquire.part.19+0x5/0x30
->>>
->>> but task is already holding lock:
->>> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
->>>
->>> which lock already depends on the new lock.
->>>    :
->>>   Possible unsafe locking scenario:
->>>
->>>         CPU0                    CPU1
->>>         ----                    ----
->>>    lock(sb_internal);
->>>                                 lock(fs_reclaim);
->>>                                 lock(sb_internal);
->>>    lock(fs_reclaim);
->>>
->>>   *** DEADLOCK ***
->>>
->>> 4 locks held by fsfreeze/4346:
->>>   #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
->>>   #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
->>>   #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
->>>   #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
->>>
->>> stack backtrace:
->>> Call Trace:
->>>   dump_stack+0xe0/0x19a
->>>   print_circular_bug.isra.10.cold.34+0x2f4/0x435
->>>   check_prev_add.constprop.19+0xca1/0x15f0
->>>   validate_chain.isra.14+0x11af/0x3b50
->>>   __lock_acquire+0x728/0x1200
->>>   lock_acquire+0x269/0x5a0
->>>   fs_reclaim_acquire.part.19+0x29/0x30
->>>   fs_reclaim_acquire+0x19/0x20
->>>   kmem_cache_alloc+0x3e/0x3f0
->>>   kmem_zone_alloc+0x79/0x150
->>>   xfs_trans_alloc+0xfa/0x9d0
->>>   xfs_sync_sb+0x86/0x170
->>>   xfs_log_sbcount+0x10f/0x140
->>>   xfs_quiesce_attr+0x134/0x270
->>>   xfs_fs_freeze+0x4a/0x70
->>>   freeze_super+0x1af/0x290
->>>   do_vfs_ioctl+0xedc/0x16c0
->>>   ksys_ioctl+0x41/0x80
->>>   __x64_sys_ioctl+0x73/0xa9
->>>   do_syscall_64+0x18f/0xd23
->>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> This is a false positive as all the dirty pages are flushed out before
->>> the filesystem can be frozen.
->>>
->>> One way to avoid this splat is to add GFP_NOFS to the affected allocation
->>> calls by using the memalloc_nofs_save()/memalloc_nofs_restore() pair.
->>> This shouldn't matter unless the system is really running out of memory.
->>> In that particular case, the filesystem freeze operation may fail while
->>> it was succeeding previously.
->>>
->>> Without this patch, the command sequence below will show that the lock
->>> dependency chain sb_internal -> fs_reclaim exists.
->>>
->>>   # fsfreeze -f /home
->>>   # fsfreeze --unfreeze /home
->>>   # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
->>>
->>> After applying the patch, such sb_internal -> fs_reclaim lock dependency
->>> chain can no longer be found. Because of that, the locking dependency
->>> warning will not be shown.
->>>
->>> Suggested-by: Dave Chinner <david@fromorbit.com>
->>> Signed-off-by: Waiman Long <longman@redhat.com>
->> Looks good to me,
->> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
->>
->> Will this patch be merged into the xfs tree soon?
-> It should appear in for-next in the next day or so.  I am trying to push
-> there only every other couple of weeks to reduce the amount of developer
-> tree rebasing that has to go on when people are trying to land a complex
-> series.
->
-> --D
+On Fri, Jul 17, 2020 at 01:45:36AM +0000, Satya Tangirala wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Wire up iomap direct I/O with the fscrypt additions for direct I/O,
+> and set bio crypt contexts on bios when appropriate.
+> 
+> Make iomap_dio_bio_actor() call fscrypt_limit_io_pages() to ensure that
+> DUNs remain contiguous within a bio, since it works directly with logical
+> ranges and can't call fscrypt_mergeable_bio() on each page.
 
-Thanks for the clarification.
+This commit message is still confusing.
 
-Cheers,
-Longman
+How about the following:
 
+"Wire up iomap direct I/O with the fscrypt additions for direct I/O.
+This allows ext4 to support direct I/O on encrypted files when inline
+encryption is enabled.
+
+This change consists of two parts:
+
+- Set a bio_crypt_ctx on bios for encrypted files, so that the file
+  contents get encrypted (or decrypted).
+
+- Ensure that encryption data unit numbers (DUNs) are contiguous within
+  each bio.  Use the new function fscrypt_limit_io_pages() for this,
+  since the iomap code works directly with logical ranges and thus
+  doesn't have a chance to call fscrypt_mergeable_bio() on each page.
+
+Note that fscrypt_limit_io_pages() is normally a no-op, as normally the
+DUNs simply increment along with the logical blocks.  But it's needed to
+handle an edge case in one of the fscrypt IV generation methods."
+
+> @@ -183,11 +184,14 @@ static void
+>  iomap_dio_zero(struct iomap_dio *dio, struct iomap *iomap, loff_t pos,
+>  		unsigned len)
+>  {
+> +	struct inode *inode = file_inode(dio->iocb->ki_filp);
+>  	struct page *page = ZERO_PAGE(0);
+>  	int flags = REQ_SYNC | REQ_IDLE;
+>  	struct bio *bio;
+>  
+>  	bio = bio_alloc(GFP_KERNEL, 1);
+> +	fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+> +				  GFP_KERNEL);
+>  	bio_set_dev(bio, iomap->bdev);
+>  	bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
+>  	bio->bi_private = dio;
+
+iomap_dio_zero() is only used on partial filesystem blocks.  But, we
+only allow direct I/O on encrypted files when the I/O is
+filesystem-block-aligned.
+
+So this part appears to be unnecessary.
+
+How about replacing it with:
+
+	/* encrypted direct I/O is guaranteed to be fs-block aligned */
+	WARN_ON_ONCE(fscrypt_needs_contents_encryption(inode));
+
+> @@ -253,6 +257,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		ret = nr_pages;
+>  		goto out;
+>  	}
+> +	nr_pages = fscrypt_limit_io_pages(inode, pos, nr_pages);
+>  
+>  	if (need_zeroout) {
+>  		/* zero out from the start of the block to the write offset */
+> @@ -270,6 +275,8 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		}
+>  
+>  		bio = bio_alloc(GFP_KERNEL, nr_pages);
+> +		fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+> +					  GFP_KERNEL);
+>  		bio_set_dev(bio, iomap->bdev);
+>  		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
+>  		bio->bi_write_hint = dio->iocb->ki_hint;
+> @@ -307,6 +314,7 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		copied += n;
+>  
+>  		nr_pages = iov_iter_npages(dio->submit.iter, BIO_MAX_PAGES);
+> +		nr_pages = fscrypt_limit_io_pages(inode, pos, nr_pages);
+>  		iomap_dio_submit_bio(dio, iomap, bio, pos);
+>  		pos += n;
+>  	} while (nr_pages);
+
+I think the part at the end is wrong.
+
+We want to limit the *next* bio, not the current one.
+
+So 'pos' needs to be updated first.
+
+I think it should be:
+
+                iomap_dio_submit_bio(dio, iomap, bio, pos);
+                pos += n;
+                nr_pages = iov_iter_npages(dio->submit.iter, BIO_MAX_PAGES);
+                nr_pages = fscrypt_limit_io_pages(inode, pos, nr_pages);
