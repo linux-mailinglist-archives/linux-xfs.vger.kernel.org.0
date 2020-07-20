@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E0F22571B
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 07:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD0AC22571A
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 07:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgGTFi1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Jul 2020 01:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
+        id S1726015AbgGTFiY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jul 2020 01:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGTFi1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:27 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECA2C0619D2
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:27 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u5so8485282pfn.7
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:27 -0700 (PDT)
+        with ESMTP id S1725805AbgGTFiY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:24 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C45C0619D2
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:24 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 72so8160439ple.0
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TK5CdTR6UFf9rmSQmh49JPQPiM+liD85kSjrxRzLWKE=;
-        b=NDse7yybzVjDJ11imObuWu3MBn6uPbRAf7oiLc2//OQ71QZ2UoaGVSTkEP307j0Gq0
-         B7hgWick2aGt2Q8KACGARc5VvyErl0lewWTl9ysA10I5mbazZIWWcts7QlCVpQ+U4oGr
-         HZPps9n7meEgVj12NxbeBrXBFtI4CEqnAPpZA6VJ8jNjtVGeqROmXSBN0ydhzBBccWUa
-         5pO1tu4AtBnAbpI0XmvfKy5f+XnTH21f8SJ7Atn+ypc2VN7Mdc95ntvPfpAFspp/woKS
-         TtwrsqOH+2soExBv5jjj0CDjNdCO4Vjv+APFwxblRwLy8uQ/1DZN7cZwCBMWkANIPa/J
-         ZrFw==
+        bh=gzznrkQJ6dik1VklimjQucPMfv3ssP7Q98Ey7PQvNng=;
+        b=tEHK1RtNnEAO3ntNaklT5b84bjYVZV4+bKkElVo1a2wfWdnkaqfxRlCmE+HI/d7ikk
+         6IqMFKU1qu1OAZ+ghjia1bbgUn24dFNXVOkjLf0E5Pa6qd046rbdxCOyCk5s0TbDTVwE
+         WUrE2sIhoZ5ggfiXo8TbMA9Qe2wu/JhQ3X+bBVfCuPTMHpvEqlw/6AH3S5p48dQDEJpt
+         jMYGb7EENzMhwB9+pA/Khzcs1axapgn4gHgUvEw9KhII7aRPmFAKCMXJufk8pcREXOXM
+         l/U6yL+0yhZm48El8juFU3zdk6WMZ07OJi67OwwdqXRCwDRw5h23gZee2xdYw3Ub1hY+
+         PHEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TK5CdTR6UFf9rmSQmh49JPQPiM+liD85kSjrxRzLWKE=;
-        b=btMqKzygXysj5axq4Xf0aEn/0lnbz5msb185ppFvF4Ew9N7QEJ+U2i+7Awdp/aS2a6
-         /6+nTNmhORlRc2diSafflHfPskTeqNfgYqP1znxsP1kor54sHTVVySsT1E9hO1gt2rnm
-         oi2TJim2KgZIAU7IJHajXVqVA5QZi8mQw+cUP1JvZg59Vpmlh5eJg9TUmC486bcY6uer
-         hVi3I/RM/sYeF4n6LZLyPWztUM8siTWqdc9rbULSTR7sG3bYSka1n3YIskkv4UPhkJmk
-         qqCF6vcEKzAwCPxvGsGFJkDjkf7eB9fjYG97p95tylbe2/ukBwfBzUMVdexrSK09UVy4
-         sK6w==
-X-Gm-Message-State: AOAM530PtCkjdUll/Nm3k9BO1trf86aVG+ceA5W2YdfsWAzrnUqiEePz
-        9adDQauIOM7/QfssJABGx2UTVMuu
-X-Google-Smtp-Source: ABdhPJzSbhomWWzhSKMI/YGitpCuDhPpfN5YZkGGCesyftL0yg3SFWWSMUX2Hb4AloS+OVdog6AbVg==
-X-Received: by 2002:a63:b508:: with SMTP id y8mr18052553pge.106.1595223506833;
-        Sun, 19 Jul 2020 22:38:26 -0700 (PDT)
+        bh=gzznrkQJ6dik1VklimjQucPMfv3ssP7Q98Ey7PQvNng=;
+        b=HaMqQco90zYkyII8rvGsIA9BWvpiWqevV3tUabHAfxZvlj6EfGz+0qKoxm6nezfbpq
+         ciXRL3K6fIg4Ie7pgbmr970/Bktqi7PiUCjA6ES8aIU7oq7j0AuxNYVPP1IDg27xBTYj
+         ACmxwGTHYagVnSGbFwZ5yHk7t5n2aecGHr+lrrJpZBhplGkg4r3wQTHzfufMQmAvr+7b
+         ldnq0gsqNNloKtvOyxAZHn5Cs1Zo/HcBRIjfGZaEcaMuy7uy+2vJo0U1IhY1cjb98o74
+         uPdwnDhnN1uu9jIJTPQ4AQpDB6HayYwOFkoWYpXvfBJEAks3qBrivUUwENAKxjlFoslR
+         cvFQ==
+X-Gm-Message-State: AOAM532MFrrTHgnek3XqM+co8KPaa6w8goOoUMeD52b4v8H2keVEyWZB
+        rZ40mLPTMkfDsRtA80wlnD4=
+X-Google-Smtp-Source: ABdhPJzOcPvBseWejL2KJKTAFf4JGuTehvLi4+hFPNrqDcQbj+APxC0bjjDT0Nzqh4duz5/neHERFQ==
+X-Received: by 2002:a17:902:7483:: with SMTP id h3mr16079412pll.114.1595223503803;
+        Sun, 19 Jul 2020 22:38:23 -0700 (PDT)
 Received: from garuda.localnet ([122.171.166.148])
-        by smtp.gmail.com with ESMTPSA id s30sm14672229pgn.34.2020.07.19.22.38.25
+        by smtp.gmail.com with ESMTPSA id j8sm15708892pfd.145.2020.07.19.22.38.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jul 2020 22:38:26 -0700 (PDT)
+        Sun, 19 Jul 2020 22:38:23 -0700 (PDT)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 24/26] xfs: assume the default quota limits are always set in xfs_qm_adjust_dqlimits
-Date:   Mon, 20 Jul 2020 11:08:05 +0530
-Message-ID: <2472470.UBcdlpre6e@garuda>
-In-Reply-To: <159477799136.3263162.16638446868281519003.stgit@magnolia>
-References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477799136.3263162.16638446868281519003.stgit@magnolia>
+Subject: Re: [PATCH 25/26] xfs: actually bump warning counts when we send warnings
+Date:   Mon, 20 Jul 2020 11:08:13 +0530
+Message-ID: <1711545.bsSymtsJ8m@garuda>
+In-Reply-To: <159477799812.3263162.13957383827318048593.stgit@magnolia>
+References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477799812.3263162.13957383827318048593.stgit@magnolia>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -63,12 +63,15 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wednesday 15 July 2020 7:23:11 AM IST Darrick J. Wong wrote:
+On Wednesday 15 July 2020 7:23:18 AM IST Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> We always initialize the default quota limits to something nowadays, so
-> we don't need to check that the defaults are set to something before
-> using them.
+> Currently, xfs quotas have the ability to send netlink warnings when a
+> user exceeds the limits.  They also have all the support code necessary
+> to convert softlimit warnings into failures if the number of warnings
+> exceeds a limit set by the administrator.  Unfortunately, we never
+> actually increase the warning counter, so this never actually happens.
+> Make it so we actually do something useful with the warning counts.
 >
 
 The changes look good to me.
@@ -78,42 +81,22 @@ Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_dquot.c |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  fs/xfs/xfs_trans_dquot.c |    1 +
+>  1 file changed, 1 insertion(+)
 > 
 > 
-> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index e44f80700005..2b52913073b3 100644
-> --- a/fs/xfs/xfs_dquot.c
-> +++ b/fs/xfs/xfs_dquot.c
-> @@ -77,21 +77,21 @@ xfs_qm_adjust_dqlimits(
->  	ASSERT(dq->q_id);
->  	defq = xfs_get_defquota(q, dq->q_type);
+> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+> index 78201ff3696b..cbd92d8b693d 100644
+> --- a/fs/xfs/xfs_trans_dquot.c
+> +++ b/fs/xfs/xfs_trans_dquot.c
+> @@ -596,6 +596,7 @@ xfs_dqresv_check(
+>  			return QUOTA_NL_ISOFTLONGWARN;
+>  		}
 >  
-> -	if (defq->blk.soft && !dq->q_blk.softlimit) {
-> +	if (!dq->q_blk.softlimit) {
->  		dq->q_blk.softlimit = defq->blk.soft;
->  		prealloc = 1;
+> +		res->warnings++;
+>  		return QUOTA_NL_ISOFTWARN;
 >  	}
-> -	if (defq->blk.hard && !dq->q_blk.hardlimit) {
-> +	if (!dq->q_blk.hardlimit) {
->  		dq->q_blk.hardlimit = defq->blk.hard;
->  		prealloc = 1;
->  	}
-> -	if (defq->ino.soft && !dq->q_ino.softlimit)
-> +	if (!dq->q_ino.softlimit)
->  		dq->q_ino.softlimit = defq->ino.soft;
-> -	if (defq->ino.hard && !dq->q_ino.hardlimit)
-> +	if (!dq->q_ino.hardlimit)
->  		dq->q_ino.hardlimit = defq->ino.hard;
-> -	if (defq->rtb.soft && !dq->q_rtb.softlimit)
-> +	if (!dq->q_rtb.softlimit)
->  		dq->q_rtb.softlimit = defq->rtb.soft;
-> -	if (defq->rtb.hard && !dq->q_rtb.hardlimit)
-> +	if (!dq->q_rtb.hardlimit)
->  		dq->q_rtb.hardlimit = defq->rtb.hard;
 >  
->  	if (prealloc)
 > 
 > 
 
