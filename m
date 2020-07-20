@@ -2,167 +2,148 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE6F22565A
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 05:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C0F22571D
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jul 2020 07:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgGTD6q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 19 Jul 2020 23:58:46 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47530 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726123AbgGTD6p (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jul 2020 23:58:45 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4A771821524;
-        Mon, 20 Jul 2020 13:58:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jxMwq-0002md-Mq; Mon, 20 Jul 2020 13:58:40 +1000
-Date:   Mon, 20 Jul 2020 13:58:40 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 00/10] xfs: automatic relogging
-Message-ID: <20200720035840.GD2005@dread.disaster.area>
-References: <20200701165116.47344-1-bfoster@redhat.com>
- <20200702115144.GH2005@dread.disaster.area>
- <20200702185209.GA58137@bfoster>
- <20200703004940.GI2005@dread.disaster.area>
- <20200706160306.GA21048@bfoster>
- <20200706174257.GG7606@magnolia>
- <20200707113743.GA33690@bfoster>
- <20200708164428.GC7625@magnolia>
- <20200709121530.GA56848@bfoster>
+        id S1726109AbgGTFid (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Jul 2020 01:38:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGTFid (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Jul 2020 01:38:33 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42638C0619D2
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:33 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so9628542pje.0
+        for <linux-xfs@vger.kernel.org>; Sun, 19 Jul 2020 22:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5V/ccJ0QWicIjnpCSXrFuUIvhDQbSqp+jRyNCcabuK0=;
+        b=EUg8pA7UG03/zMFblxBvvHHXxM0PTIAxcDK7+AAF3NCaMSMFUrTS1Hmq6WOiaucTN7
+         VkReX0mxkeyydCdcJ2eWYdvPfq4im1DW6HynwzXQ7fDTHHMEQhi0NQ3kNrBRkaVoAiZw
+         uZ8AtTuLInweUdix1U46V3oeyq0ZMjH4WLmwyZQgncl4FQlOx9rRAjuW5MDciSeDXCHn
+         mHHza09l43bgaPltii40vPxRe+60yyvQTovVFPAOXffonmj6JSXJvGcIWj+IZg2mAeMJ
+         1MgV1brY/F+obOO9JsPYhWYHwhZRTMDNGxFNSGfDJJ6K3uOtuAU94JfhJV+jKEg0Gdkl
+         Tb+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5V/ccJ0QWicIjnpCSXrFuUIvhDQbSqp+jRyNCcabuK0=;
+        b=oIELdRg69zjghUEbgx+ZpuWbspAjn2rRW2x+AC5CSSh8R9CYIp6+VakD59QJQ9VRBu
+         V/bweVGz04mHwiPWtGFQb4LEQyht7az1lfdqKiYBj/lTrg+AyPFLVxv54NnWBdSHGCFo
+         2lVfdZlHYBuRltZpEcY0iRzTb1sOi2ifa/6XNhhQmpria6vdtb54OpGOrPuu1miAeu/i
+         adg7JDuo+7XtYQL0NEUn6eIGkre6VQpZsP/KgJi2Yew8PpxK2rqJp5nSAKDlseEvrZhR
+         Tm08JaQ2+5LrGqDHc/yvxz1IHGlHWsgwkW9so1h8lVwKAoRKDbLXg0Qoq+3WfjSk3XLJ
+         KNfQ==
+X-Gm-Message-State: AOAM531Ww0roSieNlZeavwLYDi+qc2MEuAEFmJb2SKYf4cBk/p9xm6En
+        uFB/i+Ev13UZJvzdjlpYIvh6iCTp
+X-Google-Smtp-Source: ABdhPJwL9vOw/kRYlC3cixM82CRXEaMgDtB94tn/w3zaFBX3bnAQ4fvL8MkCOXEjOQEJgz1mx0M3iA==
+X-Received: by 2002:a17:902:7281:: with SMTP id d1mr14269120pll.247.1595223512800;
+        Sun, 19 Jul 2020 22:38:32 -0700 (PDT)
+Received: from garuda.localnet ([122.171.166.148])
+        by smtp.gmail.com with ESMTPSA id a16sm14198606pgj.27.2020.07.19.22.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jul 2020 22:38:32 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 09/26] xfs: make XFS_DQUOT_CLUSTER_SIZE_FSB part of the ondisk format
+Date:   Mon, 20 Jul 2020 11:07:45 +0530
+Message-ID: <1785002.aZXFcyIeaH@garuda>
+In-Reply-To: <159477789339.3263162.3626376647868941894.stgit@magnolia>
+References: <159477783164.3263162.2564345443708779029.stgit@magnolia> <159477789339.3263162.3626376647868941894.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709121530.GA56848@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8
-        a=_2VJTg5ke6Nig_IZf44A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 08:15:30AM -0400, Brian Foster wrote:
-> On Wed, Jul 08, 2020 at 09:44:28AM -0700, Darrick J. Wong wrote:
-> > On Tue, Jul 07, 2020 at 07:37:43AM -0400, Brian Foster wrote:
-> > > > 
-> > > 
-> > > Thanks. I think I get the general idea. We're reworking the
-> > > ->iop_relog() handler to complete and replace the current intent (rather
-> > > than just relog the original intent, which is what this series did for
-> > > the quotaoff case) in the current dfops transaction and allow the dfops
-> > > code to update its reference to the item. The part that's obviously
-> > > missing is some kind of determination on when we actually need to relog
-> > > the outstanding intents vs. using a fixed roll count.
-> > 
-> > <nod>  I don't consider myself sufficiently ail-smart to know how to do
-> > that part. :)
-> > 
-> > > I suppose we could do something like I was mentioning in my other reply
-> > > on the AIL pushing issue Dave pointed out where we'd set a bit on
-> > > certain items that are tail pinned and in need of relog. That sounds
-> > > like overkill given this use case is currently self-contained to dfops.
-> > 
-> > That might be a useful optimization -- every time defer_finish rolls the
-> > transaction, check the items to see if any of them have
-> > XFS_LI_RELOGMEPLEASE set, and if any of them do, or we hit our (now
-> > probably higher than 7) fixed roll count, we'll relog as desired to keep
-> > the log moving forward.
-> > 
+On Wednesday 15 July 2020 7:21:33 AM IST Darrick xJ. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> It's an optimization in some sense to prevent unnecessary relogs, but
-> the intent would be to avoid the need for a fixed count by notifying
-> when a relog is needed to a transaction that should be guaranteed to
-> have the reservation necessary to do so. I'm not sure it's worth the
-> complexity if there were some reason we still needed to fall back to a
-> hard count.
-
-FWIW, relogging would only ever be necessary if
-xfs_log_item_in_current_chkpt() returned false for an item we are
-considering relogging. Otherwise, it's already queued for the next
-journal checkpoint and there's no need to relog it until the
-checkpoint commits....
-
-> > > Perhaps the other idea of factoring out the threshold determination
-> > > logic from xlog_grant_push_ail() might be useful.
-> > > 
-> > > For example, if the current free reservation is below the calculated
-> > > threshold (with need_bytes == 0), return a threshold LSN based on the
-> > > current tail. Instead of using that to push the AIL, compare it to
-> > > ->li_lsn of each intent and relog any that are inside the threshold LSN
-> > > (which will probably be all of them in practice since they are part of
-> > > the same transaction). We'd probably need to identify intents that have
-> > > been recently relogged so the process doesn't repeat until the CIL
-> > > drains and the li_lsn eventually changes. Hmm.. I did have an
-> > > XFS_LI_IN_CIL state tracking patch around somewhere for debugging
-> > > purposes that might actually be sufficient for that. We could also
-> > > consider stashing a "relog push" LSN somewhere (similar to the way AIL
-> > > pushing works) and perhaps use that to avoid repeated relogs on a chain,
-> > > but it's not immediately clear to me how well that would fit into the
-> > > dfops mechanism...
-> > 
-> > ...is there a sane way for dfops to query the threshold LSN so that it
-> > could compare against the li_lsn of each item it holds?
-> > 
+> Move the dquot cluster size #define to xfs_format.h.  It is an important
+> part of the ondisk format because the ondisk dquot record size is not an
+> even power of two, which means that the buffer size we use is
+> significant here because the kernel leaves slack space at the end of the
+> buffer to avoid having to deal with a dquot record crossing a block
+> boundary.
 > 
-> I'd start with just trying to reuse the logic in xlog_grant_push_ail()
-> (i.e. just factor out the AIL push). That function starts with a check
-> on available log reservation to filter out unnecessary pushes, then
-> calculates the AIL push LSN by adding the amount of log space we need to
-> free up to the current log tail. In this case we're not pushing the AIL,
-> but I think we'd be able to use the same threshold calculation logic to
-> determine when to relog intents that happen to reside within the range
-> from the current tail to the calculated threshold.
+> This is also an excuse to fix one of the longstanding discrepancies
+> between kernel and userspace libxfs headers.
 
-Hmmmm. I'm kinda wanting to pull the AIL away from the demand-based
-tail pushing that xlog_grant_push_ail() does. Distance from the tail
-doesn't really tell us how quickly that distance will be consumed
-by ongoing operations....
+The changes look good to me.
 
-One of the problems we have at the moment is that the AIL will sit
-at under 75% full and do nothing at all (because the
-xlog_grant_push_ail() call does nothing at <75% full) until we get
-memory pressure or the log worker comes along every 30s and calls
-xfs_ail_push_all().
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 
-The result is that when we are under bursty workloads, we don't
-keep pushing metadata out to free up log space - our working space
-to soak up bursts is only 25% of the journal, which we can fill in a
-couple of seconds, even on a 2GB log. SO under sustained bursty
-worklaods, we really only have 25% of the log available at most,
-rather than continuing to write back past the 75% threshold so the
-next burst can have, say, 50% of the log space available to soak up
-the burst.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/libxfs/xfs_format.h |   16 ++++++++++++++++
+>  fs/xfs/xfs_qm.h            |   11 -----------
+>  2 files changed, 16 insertions(+), 11 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+> index 79fbabeb476c..76d34b77031a 100644
+> --- a/fs/xfs/libxfs/xfs_format.h
+> +++ b/fs/xfs/libxfs/xfs_format.h
+> @@ -1209,6 +1209,22 @@ typedef struct xfs_dqblk {
+>  
+>  #define XFS_DQUOT_CRC_OFF	offsetof(struct xfs_dqblk, dd_crc)
+>  
+> +/*
+> + * This defines the unit of allocation of dquots.
+> + *
+> + * Currently, it is just one file system block, and a 4K blk contains 30
+> + * (136 * 30 = 4080) dquots. It's probably not worth trying to make
+> + * this more dynamic.
+> + *
+> + * However, if this number is changed, we have to make sure that we don't
+> + * implicitly assume that we do allocations in chunks of a single filesystem
+> + * block in the dquot/xqm code.
+> + *
+> + * This is part of the ondisk format because the structure size is not a power
+> + * of two, which leaves slack at the end of the disk block.
+> + */
+> +#define XFS_DQUOT_CLUSTER_SIZE_FSB	(xfs_filblks_t)1
+> +
+>  /*
+>   * Remote symlink format and access functions.
+>   */
+> diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+> index 27789272da95..c5d0716b378e 100644
+> --- a/fs/xfs/xfs_qm.h
+> +++ b/fs/xfs/xfs_qm.h
+> @@ -30,17 +30,6 @@ extern struct kmem_zone	*xfs_qm_dqtrxzone;
+>  	!dqp->q_core.d_rtbcount && \
+>  	!dqp->q_core.d_icount)
+>  
+> -/*
+> - * This defines the unit of allocation of dquots.
+> - * Currently, it is just one file system block, and a 4K blk contains 30
+> - * (136 * 30 = 4080) dquots. It's probably not worth trying to make
+> - * this more dynamic.
+> - * XXXsup However, if this number is changed, we have to make sure that we don't
+> - * implicitly assume that we do allocations in chunks of a single filesystem
+> - * block in the dquot/xqm code.
+> - */
+> -#define XFS_DQUOT_CLUSTER_SIZE_FSB	(xfs_filblks_t)1
+> -
+>  /* Defaults for each quota type: time limits, warn limits, usage limits */
+>  struct xfs_def_quota {
+>  	time64_t	btimelimit;	/* limit for blks timer */
+> 
+> 
 
-i.e. if we have frequent bursts and the IO subsystem can soak up the
-metadata writeback rate, we should be writing back faster so that
-the bursts can hit the transaction reservation fast path for
-longer...
 
-IOWs, I'd like to see the AIL move more towards a mechanism that
-balances a time-averaged rate of inserts (journal checkpoint
-completions) with a time-averaged rate of removals (metadata IO
-completions) rather than working to a free fixed space target.
-If the workload is sustained, then this effective ends up the same
-as we have now with transactions waiting for log reservation space,
-but we should end up draining the AIL down further when than we
-currently do when incoming work tails off.
-
-I suspect that we could work into this a "need to be relogged within
-X seconds" trigger for active reloggable items in the AIL, such that
-if the top layer deferops sees the flag set on any item in the
-processing of the deferops it relogs all the reloggable items in the
-current set...
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+chandan
+
+
+
