@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0554122946A
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Jul 2020 11:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E8CE22946C
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Jul 2020 11:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgGVJFd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Jul 2020 05:05:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24458 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731079AbgGVJFc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Jul 2020 05:05:32 -0400
+        id S1731079AbgGVJFf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Jul 2020 05:05:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52477 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726821AbgGVJFf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Jul 2020 05:05:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595408731;
+        s=mimecast20190719; t=1595408733;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/hCC8z6EIi8pZCdO9mckF8PAfwbmcGn/wX9EIQL+UkY=;
-        b=RUjVvgc17ohf0kq/WILPIkfUDHhvu6/sREiRP0MUIHfIv6S76IW2G37AdGZkMPq3vJG8OZ
-        iVpSWV5T7HFnOHOnKaIMO64/X3VpJi9QtfS62UrPY4EPXk/R+RLYRcYl0oqhhP2zFoE6L/
-        oFVjnu9Tk3501tHm5xeXDmO+5G0kiws=
+        bh=/YRNdaRonx+aPybyeFu8IWe4p/QPJORz4FAJpHobIWE=;
+        b=ZIFM5ghqaGDd0brUU1DTJPnNrzj9eRG0fdGA9PK840ZdtjpvTjdOcZqX3leminlqOb9JUK
+        Ty+DqXjSt5li6Y5Bk2yu2nfO8oU5WgBqTeKNQmFUsFVhmFrJGD2SMb3r7p0yS0KwziXcbd
+        E8/dexgfLPM20KSxgd9EksuUHHFBiRg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-fgHQT_n3OuGmPicp7ZpCkg-1; Wed, 22 Jul 2020 05:05:29 -0400
-X-MC-Unique: fgHQT_n3OuGmPicp7ZpCkg-1
+ us-mta-155-YIjOcWeOO_ybdBri6Ec7dw-1; Wed, 22 Jul 2020 05:05:30 -0400
+X-MC-Unique: YIjOcWeOO_ybdBri6Ec7dw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C80E618C63C1
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Jul 2020 09:05:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD3A118C63C0
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Jul 2020 09:05:29 +0000 (UTC)
 Received: from eorzea.redhat.com (unknown [10.40.194.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A55DBA66
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Jul 2020 09:05:27 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 301DEBA66
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Jul 2020 09:05:28 +0000 (UTC)
 From:   Carlos Maiolino <cmaiolino@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/5] xfs: remove xfs_zone_{alloc,zalloc} helpers
-Date:   Wed, 22 Jul 2020 11:05:17 +0200
-Message-Id: <20200722090518.214624-5-cmaiolino@redhat.com>
+Subject: [PATCH 5/5] xfs: Refactor xfs_da_state_alloc() helper
+Date:   Wed, 22 Jul 2020 11:05:18 +0200
+Message-Id: <20200722090518.214624-6-cmaiolino@redhat.com>
 In-Reply-To: <20200722090518.214624-1-cmaiolino@redhat.com>
 References: <20200722090518.214624-1-cmaiolino@redhat.com>
 MIME-Version: 1.0
@@ -48,78 +48,175 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-All their users have been converted to use MM API directly, no need to
-keep them around anymore.
+Every call to xfs_da_state_alloc() also requires setting up state->args
+and state->mp
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Change xfs_da_state_alloc() to receive an xfs_da_args_t as argument and
+return a xfs_da_state_t with both args and mp already set.
+
 Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 ---
- fs/xfs/kmem.c      | 21 ---------------------
- fs/xfs/kmem.h      |  8 --------
- fs/xfs/xfs_trace.h |  1 -
- 3 files changed, 30 deletions(-)
 
-diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
-index f1366475c389c..e841ed781a257 100644
---- a/fs/xfs/kmem.c
-+++ b/fs/xfs/kmem.c
-@@ -115,24 +115,3 @@ kmem_realloc(const void *old, size_t newsize, xfs_km_flags_t flags)
- 		congestion_wait(BLK_RW_ASYNC, HZ/50);
- 	} while (1);
- }
--
--void *
--kmem_zone_alloc(kmem_zone_t *zone, xfs_km_flags_t flags)
--{
--	int	retries = 0;
--	gfp_t	lflags = kmem_flags_convert(flags);
--	void	*ptr;
--
--	trace_kmem_zone_alloc(kmem_cache_size(zone), flags, _RET_IP_);
--	do {
--		ptr = kmem_cache_alloc(zone, lflags);
--		if (ptr || (flags & KM_MAYFAIL))
--			return ptr;
--		if (!(++retries % 100))
--			xfs_err(NULL,
--		"%s(%u) possible memory allocation deadlock in %s (mode:0x%x)",
--				current->comm, current->pid,
--				__func__, lflags);
--		congestion_wait(BLK_RW_ASYNC, HZ/50);
--	} while (1);
--}
-diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-index 34cbcfde92281..8e8555817e6d3 100644
---- a/fs/xfs/kmem.h
-+++ b/fs/xfs/kmem.h
-@@ -85,14 +85,6 @@ kmem_zalloc_large(size_t size, xfs_km_flags_t flags)
- #define kmem_zone	kmem_cache
- #define kmem_zone_t	struct kmem_cache
+Changelog:
+	V3:
+		- Originally this patch removed xfs_da_state_alloc(),
+		  per hch's suggestion, instead of removing, it has been
+		  refactored, to also set state->{args,mp} which removes
+		  a few lines of code.
+
+ fs/xfs/libxfs/xfs_attr.c      | 17 +++++------------
+ fs/xfs/libxfs/xfs_da_btree.c  |  8 ++++++--
+ fs/xfs/libxfs/xfs_da_btree.h  |  2 +-
+ fs/xfs/libxfs/xfs_dir2_node.c | 17 +++++------------
+ fs/xfs/scrub/dabtree.c        |  4 +---
+ 5 files changed, 18 insertions(+), 30 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 3b1bd6e112f89..52e01fc0c5d04 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -750,9 +750,7 @@ xfs_attr_node_addname(
+ 	dp = args->dp;
+ 	mp = dp->i_mount;
+ restart:
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = mp;
++	state = xfs_da_state_alloc(args);
  
--extern void *kmem_zone_alloc(kmem_zone_t *, xfs_km_flags_t);
--
--static inline void *
--kmem_zone_zalloc(kmem_zone_t *zone, xfs_km_flags_t flags)
--{
--	return kmem_zone_alloc(zone, flags | KM_ZERO);
--}
--
- static inline struct page *
- kmem_to_page(void *addr)
+ 	/*
+ 	 * Search to see if name already exists, and get back a pointer
+@@ -899,9 +897,8 @@ xfs_attr_node_addname(
+ 		 * attr, not the "new" one.
+ 		 */
+ 		args->attr_filter |= XFS_ATTR_INCOMPLETE;
+-		state = xfs_da_state_alloc();
+-		state->args = args;
+-		state->mp = mp;
++		state = xfs_da_state_alloc(args);
++
+ 		state->inleaf = 0;
+ 		error = xfs_da3_node_lookup_int(state, &retval);
+ 		if (error)
+@@ -975,9 +972,7 @@ xfs_attr_node_removename(
+ 	 * Tie a string around our finger to remind us where we are.
+ 	 */
+ 	dp = args->dp;
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = dp->i_mount;
++	state = xfs_da_state_alloc(args);
+ 
+ 	/*
+ 	 * Search to see if name exists, and get back a pointer to it.
+@@ -1207,9 +1202,7 @@ xfs_attr_node_get(xfs_da_args_t *args)
+ 
+ 	trace_xfs_attr_node_get(args);
+ 
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = args->dp->i_mount;
++	state = xfs_da_state_alloc(args);
+ 
+ 	/*
+ 	 * Search to see if name exists, and get back a pointer to it.
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index a4e1f01daf3d8..47da88154b434 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -79,9 +79,13 @@ kmem_zone_t *xfs_da_state_zone;	/* anchor for state struct zone */
+  * We don't put them on the stack since they're large.
+  */
+ xfs_da_state_t *
+-xfs_da_state_alloc(void)
++xfs_da_state_alloc(xfs_da_args_t *args)
  {
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 50c478374a31b..627fe4fef9ac7 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -3536,7 +3536,6 @@ DEFINE_KMEM_EVENT(kmem_alloc);
- DEFINE_KMEM_EVENT(kmem_alloc_io);
- DEFINE_KMEM_EVENT(kmem_alloc_large);
- DEFINE_KMEM_EVENT(kmem_realloc);
--DEFINE_KMEM_EVENT(kmem_zone_alloc);
+-	return kmem_cache_zalloc(xfs_da_state_zone, GFP_NOFS | __GFP_NOFAIL);
++	xfs_da_state_t *state = kmem_cache_zalloc(xfs_da_state_zone,
++						  GFP_NOFS | __GFP_NOFAIL);
++	state->args = args;
++	state->mp = args->dp->i_mount;
++	return state;
+ }
  
- TRACE_EVENT(xfs_check_new_dalign,
- 	TP_PROTO(struct xfs_mount *mp, int new_dalign, xfs_ino_t calc_rootino),
+ /*
+diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+index 6e25de6621e4f..bb039dcb0cce4 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.h
++++ b/fs/xfs/libxfs/xfs_da_btree.h
+@@ -219,7 +219,7 @@ enum xfs_dacmp xfs_da_compname(struct xfs_da_args *args,
+ 				const unsigned char *name, int len);
+ 
+ 
+-xfs_da_state_t *xfs_da_state_alloc(void);
++xfs_da_state_t *xfs_da_state_alloc(xfs_da_args_t *args);
+ void xfs_da_state_free(xfs_da_state_t *state);
+ 
+ void	xfs_da3_node_hdr_from_disk(struct xfs_mount *mp,
+diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+index 6ac4aad98cd76..5d51265d29d6f 100644
+--- a/fs/xfs/libxfs/xfs_dir2_node.c
++++ b/fs/xfs/libxfs/xfs_dir2_node.c
+@@ -2015,9 +2015,7 @@ xfs_dir2_node_addname(
+ 	/*
+ 	 * Allocate and initialize the state (btree cursor).
+ 	 */
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = args->dp->i_mount;
++	state = xfs_da_state_alloc(args);
+ 	/*
+ 	 * Look up the name.  We're not supposed to find it, but
+ 	 * this gives us the insertion point.
+@@ -2086,9 +2084,8 @@ xfs_dir2_node_lookup(
+ 	/*
+ 	 * Allocate and initialize the btree cursor.
+ 	 */
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = args->dp->i_mount;
++	state = xfs_da_state_alloc(args);
++
+ 	/*
+ 	 * Fill in the path to the entry in the cursor.
+ 	 */
+@@ -2139,9 +2136,7 @@ xfs_dir2_node_removename(
+ 	/*
+ 	 * Allocate and initialize the btree cursor.
+ 	 */
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = args->dp->i_mount;
++	state = xfs_da_state_alloc(args);
+ 
+ 	/* Look up the entry we're deleting, set up the cursor. */
+ 	error = xfs_da3_node_lookup_int(state, &rval);
+@@ -2206,9 +2201,7 @@ xfs_dir2_node_replace(
+ 	/*
+ 	 * Allocate and initialize the btree cursor.
+ 	 */
+-	state = xfs_da_state_alloc();
+-	state->args = args;
+-	state->mp = args->dp->i_mount;
++	state = xfs_da_state_alloc(args);
+ 
+ 	/*
+ 	 * We have to save new inode number and ftype since
+diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+index 44b15015021f3..e56786f0a13c8 100644
+--- a/fs/xfs/scrub/dabtree.c
++++ b/fs/xfs/scrub/dabtree.c
+@@ -476,9 +476,7 @@ xchk_da_btree(
+ 	ds.dargs.whichfork = whichfork;
+ 	ds.dargs.trans = sc->tp;
+ 	ds.dargs.op_flags = XFS_DA_OP_OKNOENT;
+-	ds.state = xfs_da_state_alloc();
+-	ds.state->args = &ds.dargs;
+-	ds.state->mp = mp;
++	ds.state = xfs_da_state_alloc(&ds.dargs);
+ 	ds.sc = sc;
+ 	ds.private = private;
+ 	if (whichfork == XFS_ATTR_FORK) {
 -- 
 2.26.2
 
