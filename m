@@ -2,65 +2,141 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6735522BF75
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 09:36:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D2CF22C4BF
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 14:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGXHgm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 03:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        id S1726800AbgGXML5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 08:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgGXHgm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 03:36:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBC4C0619D3
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 00:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jPWSjFqV2AeXXx4TRZ3nZzNy0yJKNQcU/3sTZCZ1lnk=; b=j/GJPcn/x1a5di4J4jgWBDPzgP
-        jg+rlkG/Gd0XHl6vitRHmVMXQBr9JjQj50TvYYyuBxeVBiOKZqEQsehHP9+DVyCdjv3IU6fQHubHd
-        EnA9zwDr3WHWyUAZ5mUWHi/dOVZkg0dKDHaC5BqrPFH8/c8mBhO5apfFT9btu2uFgaUs5tC6UoExR
-        5Yyy7oc5A9bVMxfhf4Aod1yGTCom0urP5NzH+DuJSi70BppQLir2ogQS/e2ioeZP0ljqOBtTtzGbv
-        AVuTKgtk8irVJo0PgCmtMUfukLEbStM8DNCpWYJbsHuHeHDRShnwQ3f+mTjsQD+MoAfF/zmWhNPsr
-        lr/ni0HA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jysFz-0006hj-Nz; Fri, 24 Jul 2020 07:36:39 +0000
-Date:   Fri, 24 Jul 2020 08:36:39 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: Need to slow things down for a few days...
-Message-ID: <20200724073639.GA23472@infradead.org>
-References: <20200723172113.GP3151642@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723172113.GP3151642@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        with ESMTP id S1726280AbgGXMLu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 08:11:50 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C7DC0619E4
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 05:11:50 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id 4so5333393pjf.5
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 05:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=iD4FUEMenVr5lbrZY3MfjlLwUfP0+0if0gfZ+EqYyLI=;
+        b=LU3Hl6Xb+kMb570dums3X91bS1lNWjAd6VAivVVwirnidnc44D39+JcML+BJHAGiYb
+         /hLd0zQi1FE3LxsnU7ZCOiHAwNYFdEQm0Bw4lVG08rIUvLsp792e/7XMSZZKpfCuj9Wi
+         Mc8RxN2om8nGrDd3CaWoXZVr6lkr8/IILg3NAUhby99DW4FbyIdip+AGS2zLfcAtbz/F
+         O9L2jZzffcKwr1Nl0ZHrIcY6HnWsZBa3k0OuPKOQb9xFpTMvj12C/tW6+hn7DR9DEsn4
+         VKLlFLHhKUhRXgHCiOcqBzkEP20Hlp9PqlgiscGHlUoNdDb1QOOHybUTJiChgSWV7ZW+
+         1eeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=iD4FUEMenVr5lbrZY3MfjlLwUfP0+0if0gfZ+EqYyLI=;
+        b=hdQCayqPpVq/eRH0KFokjkUbyfan8yP1GhI1EHAvdh3mup0dQj5fNS5jkErUngNRF8
+         91G/obwXs0YFR9FHM74vlBhWlrM3PK89HNyyJ6ZucDEfly9AQH1Z+LLwyl4DLEP93PJE
+         U9yHJEy/si6k6l8MLuxB4LoW71vnxtxAuWu5jC/w6DrzL2JGIGtBEEjrFHPn3FyAsK4B
+         wm+0QPHzi4bVODLZDagouy0tkuEcXwxqHvbWN2o7UreJyHQhOjGE9SoqilCk8GxQn2kl
+         /inArSJJe7CU8HndUPxSmQWsWzcHJV+5QMSjAvjYFdsw6J8+cLeAz1u1wAIbnCuARP0S
+         ZgRQ==
+X-Gm-Message-State: AOAM532qiG+rChtqn+BoJlvHpmEwrR1WBpcWdYAp+DRVOb/8NfMvqrxP
+        Qp/yFJbVloO0nz8+3APr2zI1uV4TErk=
+X-Google-Smtp-Source: ABdhPJyWpT2NfcWEy4aLcDx08oXPKDl45eq2YPnQvm8sfH2moUaX/HTt1lJWyIEHpqxaEqJ3QKBmMRx778Y=
+X-Received: by 2002:a63:4b44:: with SMTP id k4mr2076411pgl.305.1595592709047;
+ Fri, 24 Jul 2020 05:11:49 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 12:11:36 +0000
+Message-Id: <20200724121143.1589121-1-satyat@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH v5 0/7] add support for direct I/O with fscrypt using blk-crypto
+From:   Satya Tangirala <satyat@google.com>
+To:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org, Satya Tangirala <satyat@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:21:13AM -0700, Darrick J. Wong wrote:
-> Hi everyone,
-> 
-> I wrenched my back last night (blah blah too much internal process
-> stress and sitting) and need a few days rest.  I still intend to make a
-> post-rc6 for-next push, though I've noticed that fstests runtime has
-> slipped by about 30%.
-> 
-> I can't tell if it's the result of iomap directio falling back to
-> buffered writes, or Carlos' kmem conversion, or even Allison's delayed
-> attrs series, but I'll know in a few hours.  I added all three a few
-> days ago to see what would happen. :P
-> 
-> In the meantime, I'll be hobbling along in the slow lane because sitting
-> down is not a good idea and I can only standing-desk it for so long. :(
+This patch series adds support for direct I/O with fscrypt using
+blk-crypto. It has been rebased on fscrypt/master (i.e. the "master"
+branch of the fscrypt tree at
+https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git)
 
-Oh well, get better soon!
+Patch 1 adds two functions to fscrypt that need to be called to determine
+if direct I/O is supported for a request.
+
+Patches 2 and 3 modify direct-io and iomap respectively to set bio crypt
+contexts on bios when appropriate by calling into fscrypt.
+
+Patches 4 and 5 allow ext4 and f2fs direct I/O to support fscrypt without
+falling back to buffered I/O.
+
+Patches 6 and 7 update the fscrypt documentation for inline encryption
+support and direct I/O. The documentation now notes the required conditions
+for inline encryption and direct I/O on encrypted files.
+
+This patch series was tested by running xfstests with test_dummy_encryption
+with and without the 'inlinecrypt' mount option, and there were no
+meaningful regressions. One regression was for generic/587 on ext4,
+but that test isn't compatible with test_dummy_encryption in the first
+place, and the test "incorrectly" passes without the 'inlinecrypt' mount
+option - a patch will be sent out to exclude that test when
+test_dummy_encryption is turned on with ext4 (like the other quota related
+tests that use user visible quota files). The other regression was for
+generic/252 on ext4, which does direct I/O with a buffer aligned to the
+block device's blocksize, but not necessarily aligned to the filesystem's
+block size, which direct I/O with fscrypt requires.
+
+Changes v4 => v5:
+ - replace fscrypt_limit_io_pages() with fscrypt_limit_io_block(), which
+   is now called by individual filesystems (currently only ext4) instead
+   of the iomap code. This new function serves the same end purpose as
+   the one it replaces (ensuring that DUNs within a bio are contiguous)
+   but operates purely with blocks instead of with pages.
+ - make iomap_dio_zero() set bio_crypt_ctx's again, instead of just a
+   WARN_ON() since some folks prefer that instead.
+ - add Reviewed-by's
+
+Changes v3 => v4:
+ - Fix bug in iomap_dio_bio_actor() where fscrypt_limit_io_pages() was
+   being called too early (thanks Eric!)
+ - Improve comments and fix formatting in documentation
+ - iomap_dio_zero() is only called to zero out partial blocks, but
+   direct I/O is only supported on encrypted files when I/O is
+   blocksize aligned, so it doesn't need to set encryption contexts on
+   bios. Replace setting the encryption context with a WARN_ON(). (Eric)
+
+Changes v2 => v3:
+ - add changelog to coverletter
+
+Changes v1 => v2:
+ - Fix bug in f2fs caused by replacing f2fs_post_read_required() with
+   !fscrypt_dio_supported() since the latter doesn't check for
+   compressed inodes unlike the former.
+ - Add patches 6 and 7 for fscrypt documentation
+ - cleanups and comments
+
+Eric Biggers (5):
+  fscrypt: Add functions for direct I/O support
+  direct-io: add support for fscrypt using blk-crypto
+  iomap: support direct I/O with fscrypt using blk-crypto
+  ext4: support direct I/O with fscrypt using blk-crypto
+  f2fs: support direct I/O with fscrypt using blk-crypto
+
+Satya Tangirala (2):
+  fscrypt: document inline encryption support
+  fscrypt: update documentation for direct I/O support
+
+ Documentation/filesystems/fscrypt.rst | 36 +++++++++++--
+ fs/crypto/crypto.c                    |  8 +++
+ fs/crypto/inline_crypt.c              | 75 +++++++++++++++++++++++++++
+ fs/direct-io.c                        | 15 +++++-
+ fs/ext4/file.c                        | 10 ++--
+ fs/ext4/inode.c                       |  7 +++
+ fs/f2fs/f2fs.h                        |  6 ++-
+ fs/iomap/direct-io.c                  |  6 +++
+ include/linux/fscrypt.h               | 19 +++++++
+ 9 files changed, 173 insertions(+), 9 deletions(-)
+
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
